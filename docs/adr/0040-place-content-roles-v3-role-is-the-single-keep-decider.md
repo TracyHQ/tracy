@@ -55,8 +55,15 @@
 - The Slot fit check stops tying `replace` to `kind` in a version 3 map; the role check judges it instead. A picture
   measured as an avatar with a person role is replaced; the build gives it a neutral substitute when the business has
   no photo of that person.
-- Capture (whole-unit slots, WordPress coverage, rule tables), the mechanical rules R2 to R9 and the LLM judge are
-  separate changes (#41 to #44); they write and enforce version 3.
+- Capture (whole-unit slots, WordPress coverage, rule tables) and the LLM judge are separate changes (#42 to #44);
+  they write and enforce version 3.
+- The mechanical rules R2 to R9 (#41) are computed by the content coverage audit (audit 1.2.0) and committed in
+  `content-coverage.json` as `labelRules`; the Road to live Content coverage step reads only that block. A failing rule
+  holds a release not shown on Design inspiration and warns for a live one; R1 (the fact-role share) is a number and
+  never holds. They hold only for a `place-content-roles/3` map (`labelRules.blockingVocabularies` in the coverage
+  policy): a version 2 map is measured and listed but never holds, so no released template is held before it adopts
+  version 3. A coverage file without `labelRules` (audit 1.1.0) is not judged. R9 ignores accepted reasons: a fact the
+  map misses stays the demo's on the customer's site.
 - JA Boxing 1.0.8 is the first contract expected in version 3; every template adopts it with its next release.
 
 ## Alternatives rejected

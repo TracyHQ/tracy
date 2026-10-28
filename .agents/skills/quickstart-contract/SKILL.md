@@ -375,6 +375,10 @@ path):
      `client-name`, `price`… per `apps/tracy-web/src/lib/fact-fields.json`) ask for evidence whatever the module is called —
      "Home - Stats" does not match `Statistics`, a hero has four counters. Without the flag the `contracts` gate is red for a new profile;
      for an already captured profile run `node scripts/regate-contract.mjs <profile folder>` BEFORE cutting the plugin (after that the bytes are pinned).
+   - `--whole-units` always for a new profile (spec #37 C1, C2): a heading, sentence or list item that the HTML helper cuts into
+     several text pieces becomes ONE slot on its element, and the rule tables group each link-list item (label and link) into one card.
+     Add `--role-vocabulary 3` only with the release that moves the template to `place-content-roles/3` (it writes `article.title`,
+     `editorial.navigation_url` and `editorial.illustration`, and derives `customize` from the role); the default stays 2.
    - `--file-roots`: `templates/$TPL` + the template's own framework code (`plugins/system/t4` or
      `plugins/system/t3`) + `modules/mod_ja_acm` + `media`, only folders that actually exist in the pack's webroot:
 
@@ -482,6 +486,22 @@ path):
    `packages/cms/tracy-quickstart-tools/content-coverage/hygiene-rules.json`, thresholds in
    `apps/tracy-web/src/lib/content-coverage/policy.json` (changed only by a product owner decision).
    Exit 0 = pass. Exit 1 = holes or page problems remain → **section 7b**.
+   Run it with `TRACY_VISION_API_KEY` set so the **label judge** looks at every component (crop with numbered slots plus
+   its slot table) and writes `labelJudge` into `content-coverage.json`: per slot right or wrong with a suggested role.
+   Relabel every slot listed as a wrong fact/editorial group (it holds Publish for a new release), check each finer
+   mismatch, and run the audit again: only changed slots are judged again. Without a key the slots stay `not judged`
+   and Road to live warns.
+   Then **look at the map on the real pages** with the verify viewer (needs the `--fit` map written above; the contract is read
+   from the tree for the version you are cutting):
+
+   ```bash
+   node packages/cms/tracy-quickstart-tools/content-coverage/verify-viewer.mjs \
+     --site "$VERIFY_URL" --template ja-boxing/j6 --version "$VER" --out "$WORK/verify"
+   ```
+
+   Open `"$WORK/verify/index.html"` (not committed). Fix every slot under *Not located* or *Not shown* that a visitor can see,
+   and judge each red or amber slot by eye; the tool marks, a person decides. Details: the tools README, section
+   `verify-viewer.mjs`.
    Re-capturing the contract means **measuring again**: the file records the sha256 of `content-map.json` and `presentation-lock.json`; a
    mismatch makes /ops treat it as not measured.
 8. **Slot roles (in `content-map.json`)** — there is no sidecar: every text and image slot carries `role` and `group`, and the

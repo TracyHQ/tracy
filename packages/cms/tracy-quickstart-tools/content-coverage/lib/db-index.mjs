@@ -4,10 +4,10 @@ import { normText, letterCount, compact } from './normalize.mjs'
 
 // Tables that hold copies, logs or installer metadata: a hit there says nothing about where a page's text comes from.
 const NOISE =
-  /^(assets|extensions|schemas|session|action_log.*|action_logs.*|update.*|finder_.*|ucm_.*|history|contentitem_tag_map|workflow.*|mail_templates|overrider|postinstall_messages|guidedtour.*|scheduler_tasks|privacy_.*|user_keys|user_mfa|webauthn_credentials|messages.*|banner_tracks|content_frontpage|content_rating|user_notes|viewlevels|usergroups|tuf_metadata|content_types|.*_configuration|.*_config|acym_(?!form).*|claudecowork_.*|.*_log|.*_logs)$/
+  /^(assets|extensions|schemas|session|action_log.*|action_logs.*|update.*|finder_.*|ucm_.*|history|contentitem_tag_map|workflow.*|mail_templates|overrider|postinstall_messages|guidedtour.*|scheduler_tasks|privacy_.*|user_keys|user_mfa|webauthn_credentials|messages.*|banner_tracks|content_frontpage|content_rating|user_notes|viewlevels|usergroups|tuf_metadata|content_types|.*_configuration|.*_config|acym_(?!form).*|claudecowork_.*|.*_log|.*_logs|commentmeta|usermeta|term_relationships|termmeta|actionscheduler_.*)$/
 // Identifier/config columns: equal to a visible word by coincidence, never the source of it.
 const NOISE_COLUMNS =
-  /^(alias|path|link|position|module|element|type|menutype|profile_key|field_mappings|content_history_options|regex|note|language|img|access|params_schema|metakey|password|activation|otpKey|otep|lastResetTime|resetCount|checked_out_time|publish_up|publish_down|created|modified|asset_id|lft|rgt|checked_out|hits|version|lastvisitDate|registerDate)$/
+  /^(alias|path|link|position|module|element|type|menutype|profile_key|field_mappings|content_history_options|regex|note|language|img|access|params_schema|metakey|password|activation|otpKey|otep|lastResetTime|resetCount|checked_out_time|publish_up|publish_down|created|modified|asset_id|lft|rgt|checked_out|hits|version|lastvisitDate|registerDate|post_name|post_type|post_status|post_mime_type|post_password|post_content_filtered|guid|comment_status|ping_status|to_ping|pinged|menu_order|post_parent|option_name|autoload|meta_key|user_login|user_pass|user_nicename|user_status|user_activation_key)$/
 
 function flatten(value, path, out) {
   if (typeof value === 'string') {
@@ -48,7 +48,7 @@ export function buildDbIndex(dumpFile, siteConfig = {}) {
       const id = row.id ?? row.extension_id ?? Object.values(row)[0]
       for (const [column, v] of Object.entries(row)) {
         if (v === null || NOISE_COLUMNS.test(column) || letterCount(v) < 1) continue
-        if (table === 'users' && !/^(name|username|params)$/.test(column)) continue
+        if (table === 'users' && !/^(name|username|params|display_name)$/.test(column)) continue
         for (const f of flatten(v, [], [])) {
           cells.push({
             table,
@@ -101,7 +101,7 @@ export function searchDb(index, { norm, raw }, limit = 4) {
     if (exact.length >= limit) break
   }
   const rank = (c) =>
-    /^(configuration\.php|content|modules|menu|categories|template_styles|contact_details|tags|fields_values)$/.test(
+    /^(configuration\.php|content|modules|menu|categories|template_styles|contact_details|tags|fields_values|posts|options|terms|postmeta)$/.test(
       c.table
     )
       ? 0

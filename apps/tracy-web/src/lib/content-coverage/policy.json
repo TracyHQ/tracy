@@ -1,7 +1,7 @@
 {
   "schemaVersion": "tracy-content-coverage-policy/v1",
   "about": "How the measured content coverage of a contract (content-coverage.json beside it, written by packages/cms/tracy-quickstart-tools/content-coverage) weighs on the Road to live step Content coverage. A hole is a piece of demo text, an image or a link a visitor sees that the content map does not declare. capture: the value sits in the site database (locked: the presentation lock pins its field, which keeps demo CONTENT the customer can never change, so it is still a hole; undeclared: in neither file). template: written in the template's own files or language strings. core: Joomla or framework strings, never a hole. unknown: found in no source the audit could read. Page hygiene (hygiene list): things a customer must never see, found in the same crawl: a raw language constant, PHP error text, an unfilled placeholder; what counts as one is packages/cms/tracy-quickstart-tools/content-coverage/hygiene-rules.json. Edit this file to change the threshold; no code change is needed.",
-  "platforms": ["joomla"],
+  "platforms": ["joomla", "wordpress"],
   "rolesPlatforms": ["joomla", "wordpress", "emdash"],
   "fitPlatforms": ["joomla"],
   "blockingClasses": ["capture", "template", "unknown"],
@@ -15,8 +15,15 @@
   "minToolVersion": "1.1.0",
   "rolesHoldNewRelease": true,
   "fitHoldNewRelease": true,
+  "labelRulesHoldNewRelease": true,
+  "labelJudgeHoldNewRelease": true,
+  "labelRules": {
+    "blocking": ["R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"],
+    "reportedOnly": ["R1"],
+    "blockingVocabularies": ["place-content-roles/3"]
+  },
   "reasons": {
-    "platforms": "Only the Joomla audit exists (it reads the Joomla database dump and template sources); holes and page hygiene of a WordPress or EmDash contract are not measured yet.",
+    "platforms": "The audit runs on Joomla and WordPress contracts (it reads the site database dump and the template or theme sources); holes and page hygiene of an EmDash contract are not measured yet.",
     "rolesPlatforms": "ADR 0038: the slot roles group is judged for every platform that binds slot roles, whether or not the audit measures it: a new release without roles is held from Publish, a live one warns.",
     "fitPlatforms": "ADR 0039: Slot fit is measured by the content coverage audit, which exists for Joomla only; a WordPress or EmDash contract gets Slot fit, and this group, when its audit does.",
     "blockingClasses": "Start strict (owner, 24/10/2026): every unexplained hole a customer could not change through the contract holds Publish. Joomla core strings never do.",
@@ -28,6 +35,9 @@
     "maxUnacceptedHygiene": "Any page problem without an accepted reason holds Publish.",
     "rolesHoldNewRelease": "ADR 0038 decision Q2: a release not shown on Design inspiration whose content map leaves text or image slots without a role, or declares no roles at all (every template released before ADR 0038), is held from Publish; a release already shown only warns. Set false to make the roles group warn only.",
     "fitHoldNewRelease": "ADR 0039 decision 7: a release not shown on Design inspiration whose content map has no Slot fit, leaves text or image slots without a fit, or carries a broken fit (such as a keep flag that disagrees with the measured kind) is held from Publish; a release already shown only warns. Set false to make the Slot fit group warn only.",
-    "minToolVersion": "1.1.0 measures page hygiene; a file from 1.0.0 never looked, so it is measured again."
+    "minToolVersion": "1.1.0 measures page hygiene; a file from 1.0.0 never looked, so it is measured again.",
+    "labelRulesHoldNewRelease": "ADR 0040: the mechanical label rules R2 to R9 are computed by the content coverage audit and committed in content-coverage.json (labelRules); a release not shown on Design inspiration with a failing rule is held from Publish, a release already shown only warns. Set false to make the group warn only.",
+    "labelJudgeHoldNewRelease": "Spec #37: the LLM label judge of the content coverage audit commits per slot right or wrong with a suggested role (labelJudge in content-coverage.json). A slot it puts on the other side of fact/editorial (a fact labelled editorial, a claim inside editorial text) holds a release not shown on Design inspiration; a release already shown only warns. A finer role mismatch, or slots the model did not judge, only warn: a missing model is never a pass. It takes the label rules' blockingVocabularies. Set false to make it warn only.",
+    "labelRules": "blocking: the rules that hold. reportedOnly: shown as a number, never hold (R1, the fact-role share). blockingVocabularies: only a content map of these role vocabulary versions is judged; a version 2 map is reported and not blocking until its template adopts version 3, so released templates are not suddenly held."
   }
 }

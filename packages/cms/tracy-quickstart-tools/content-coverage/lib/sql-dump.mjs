@@ -95,8 +95,12 @@ export function readDump(file) {
     for (const r of rows) list.push(Object.fromEntries(r.map((v, k) => [cols[k] ?? `col${k}`, v])))
     tables.set(name, list)
   }
-  // Joomla prefix: the one that has a `<prefix>content` table.
-  const contentTable = [...columns.keys()].find((t) => /^[a-z0-9]+_content$/i.test(t))
-  const prefix = contentTable ? contentTable.replace(/content$/, '') : ''
+  // Joomla prefix: the one that has a `<prefix>content` table; WordPress: the one that has `<prefix>posts` and `<prefix>options`.
+  const contentTable =
+    [...columns.keys()].find((t) => /^[a-z0-9]+_content$/i.test(t)) ??
+    [...columns.keys()].find(
+      (t) => /^[a-z0-9]+_posts$/i.test(t) && columns.has(t.replace(/posts$/, 'options'))
+    )
+  const prefix = contentTable ? contentTable.replace(/(content|posts)$/, '') : ''
   return { tables, prefix }
 }

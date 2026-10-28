@@ -138,6 +138,24 @@ export const en = {
   'cms-readiness.coverage.fitNone.detail':
     'Captured before Slot fit existed. Measure it for the next version.',
   'cms-readiness.coverage.list.noFit': 'Slots without a fit',
+  'cms-readiness.coverage.labels_one': '{count} label rule failing',
+  'cms-readiness.coverage.labels_other': '{count} label rules failing',
+  'cms-readiness.coverage.labels.detail':
+    'Relabel the listed slots in Claude Code, then run the audit again.',
+  'cms-readiness.coverage.judge.wrongGroup_one': '{count} slot in the wrong group',
+  'cms-readiness.coverage.judge.wrongGroup_other': '{count} slots in the wrong group',
+  'cms-readiness.coverage.judge.mismatch_one': '{count} slot role to check',
+  'cms-readiness.coverage.judge.mismatch_other': '{count} slot roles to check',
+  'cms-readiness.coverage.judge.notJudged_one': '{count} slot not judged',
+  'cms-readiness.coverage.judge.notJudged_other': '{count} slots not judged',
+  'cms-readiness.coverage.judge.detail':
+    'Relabel the listed slots in Claude Code, then run the audit so the judge looks again.',
+  'cms-readiness.coverage.judge.mismatch.detail':
+    'The judge suggests other roles. Check them in the next version.',
+  'cms-readiness.coverage.judge.notJudged.detail':
+    'No vision model judged these labels. Run the audit with a vision key.',
+  'cms-readiness.coverage.list.judgeWrongGroup': 'Fact or editorial group wrong',
+  'cms-readiness.coverage.list.judgeMismatch': 'Another role suggested',
 
   'cms-readiness.ds.notAtProbe': '{step} · Not measured with preview probe v{probe}',
   'cms-readiness.ds.notAtProbe.none': '{version} has no measurement at preview probe v{probe}.',

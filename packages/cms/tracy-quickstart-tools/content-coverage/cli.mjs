@@ -14,6 +14,12 @@
 //     [--fit]   Slot fit (ADR 0039): measure a `fit` on every text and image slot from this run and settle each
 //               picture's keep flag by its kind; with --write the content map gets them, BEFORE content-coverage.json
 //               is built, so the coverage file names the map with its fit. Without --write: <out>/content-map.fit.json.
+//     [--no-judge] [--judge-max-calls 150] [--judge-max-cents 300]
+//               The LLM label judge (spec #37): with TRACY_VISION_API_KEY set (TRACY_VISION_URL, TRACY_VISION_MODEL as
+//               for the server) a vision model looks once per component at its crop with numbered slots and says
+//               whether each slot's role is right; verdicts are cached per slot in content-coverage.json, so only
+//               changed slots are judged again. No key or --no-judge: nothing is sent and unjudged slots stay
+//               `not judged`. The caps bound one run; what is past them stays `not judged`.
 //
 // Exit: 0 the policy passes · 1 holes, page problems (or an incomplete run) hold Publish · 2 usage or run error.
 import { execFileSync } from 'node:child_process'
@@ -24,6 +30,7 @@ import { fileURLToPath } from 'node:url'
 import { COVERAGE_POLICY, judgeCoverage } from '../../../../apps/tracy-web/src/lib/content-coverage/judge.js'
 import { guessEntity, runAudit, summarize } from './lib/audit.mjs'
 import { createClassifier } from './lib/classify.mjs'
+import { runLabelJudge } from './lib/label-judge-run.mjs'
 import { loadContract } from './lib/contract.mjs'
 import { buildCoverageFile, COVERAGE_FILE } from './lib/coverage-file.mjs'
 import { buildDbIndex } from './lib/db-index.mjs'
@@ -37,7 +44,7 @@ import { measureSlotFit } from './lib/slot-fit.mjs'
 import { buildSourceIndex } from './lib/sources.mjs'
 
 const USAGE =
-  'usage: cli.mjs --site <url> --contract <dir> --out <dir> [--db-dump f] [--webroot d] [--site-config f] [--max-pages 150] [--viewports desktop,phone] [--write] [--no-report] [--report-only | --reclassify] [--fit]'
+  'usage: cli.mjs --site <url> --contract <dir> --out <dir> [--db-dump f] [--webroot d] [--site-config f] [--max-pages 150] [--viewports desktop,phone] [--write] [--no-report] [--report-only | --reclassify] [--fit] [--no-judge] [--judge-max-calls n] [--judge-max-cents n]'
 
 function parseArgs(argv) {
   const o = {}
@@ -60,7 +67,7 @@ function loadIndexes(o, contract) {
   const siteConfig = readSiteConfig({ siteConfig: o['site-config'], webroot: o.webroot })
   const dbIndex = o['db-dump'] && existsSync(o['db-dump']) ? buildDbIndex(o['db-dump'], siteConfig) : null
   const webrootOk = o.webroot && existsSync(o.webroot) && statSync(o.webroot).isDirectory()
-  const sourceIndex = webrootOk ? buildSourceIndex(o.webroot, contract.template) : null
+  const sourceIndex = webrootOk ? buildSourceIndex(o.webroot, contract.template, contract.platform) : null
   return { siteConfig, dbIndex, sourceIndex }
 }
 
@@ -180,7 +187,8 @@ async function main() {
 
   const target = join(contractDir, COVERAGE_FILE)
   const previous = existsSync(target) ? JSON.parse(readFileSync(target, 'utf8')) : null
-  const doc = buildCoverageFile({ result, contract, previous })
+  const labelJudge = await runLabelJudge({ o, result, contract, outDir, chromium, previous })
+  const doc = buildCoverageFile({ result, contract, previous, labelJudge })
   writeFileSync(join(outDir, COVERAGE_FILE), `${JSON.stringify(doc, null, 2)}\n`)
   if (o.write) writeFileSync(target, `${JSON.stringify(doc, null, 2)}\n`)
   const verdict = judgeCoverage(doc, COVERAGE_POLICY)
@@ -201,6 +209,22 @@ async function main() {
         incomplete: verdict.incomplete,
         written: o.write ? target : null,
         slotFit,
+        labelRules: {
+          applies: doc.labelRules.applies,
+          factSharePercent: doc.labelRules.r1.percent,
+          failing: Object.fromEntries(
+            Object.entries(doc.labelRules.rules)
+              .filter(([, r]) => r.count > 0)
+              .map(([id, r]) => [id, r.count])
+          )
+        },
+        labelJudge: {
+          state: labelJudge.state,
+          reason: labelJudge.reason,
+          calls: labelJudge.calls,
+          cents: labelJudge.cents,
+          ...labelJudge.counts
+        },
         findings,
         report: o['no-report'] ? null : join(outDir, 'report.html')
       },
