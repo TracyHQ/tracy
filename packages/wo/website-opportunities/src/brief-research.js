@@ -43,7 +43,7 @@ const mediaOfBrief = (m) => ({
   sourceUrl: m.source_url,
   // The post a picture belongs to: a review's on a listing, the place's own post on a social page (dish photos read it).
   ...(m.post_id ? { postId: m.post_id } : {}),
-  ...(['tripadvisor', 'google-maps'].includes(m.source)
+  ...(['tripadvisor', 'google-maps', 'google-places'].includes(m.source)
     ? { postId: m.post_id, credit: m.credit ?? null }
     : {}),
   labels: m.labels ?? null,

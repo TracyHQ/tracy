@@ -35,6 +35,7 @@ import {
   assetCategoryOf,
   assetLabelsOf
 } from './pictures/asset-labels.mjs'
+import { UPLOADER_ROLES, assetOriginOf } from './pictures/asset-origin.mjs'
 import { researchWhatsappOf } from './business-phones.mjs'
 import {
   briefFactErrors,
@@ -451,6 +452,8 @@ export function buildBrief({
       // What a vision model saw, when one looked; else the source's word (`assetCategoryOf`).
       category: assetCategoryOf(m),
       sha256: m.sha256,
+      // Where it came from, who must be credited and who uploaded it (`asset-origin.mjs`).
+      ...assetOriginOf(m),
       ...assetLabelsOf(m)
     }))
   const stale = []
@@ -1236,8 +1239,11 @@ function currentSiteSection(c) {
 
 // ---------- validation (hand-written mirror of brief-schema.json plus cross-field rules) ----------
 
-export function validateBrief(brief) {
+export function validateBrief(brief, { legacy = false } = {}) {
   const errors = []
+  // Assets must say where they came from. A brief stored before that (schema 1, or read with `legacy`) has none: readers
+  // tolerate it, every new write requires it.
+  const originRequired = !legacy && brief?.schemaVersion !== 1
   const err = (path, msg) => errors.push(`${path}: ${msg}`)
   if (!isObj(brief)) return { ok: false, errors: ['brief: must be an object'] }
   for (const k of BRIEF_REQUIRED) if (!(k in brief)) err(k, 'is required')
@@ -1334,6 +1340,18 @@ export function validateBrief(brief) {
           err(`assets[${i}].category`, `must be one of ${CATEGORIES.join(', ')}`)
         if (!/^[0-9a-f]{64}$/.test(a.sha256 ?? ''))
           err(`assets[${i}].sha256`, 'must be 64 lowercase hex characters')
+        if (originRequired) {
+          if (!nonEmpty(a.source)) err(`assets[${i}].source`, 'must be a non-empty string')
+          if (typeof a.credit !== 'string')
+            err(`assets[${i}].credit`, 'must be a string, empty when the source names no one')
+          if (!UPLOADER_ROLES.includes(a.uploaderRole))
+            err(`assets[${i}].uploaderRole`, `must be one of ${UPLOADER_ROLES.join(', ')}`)
+        } else {
+          if ('source' in a && !nonEmpty(a.source)) err(`assets[${i}].source`, 'must be a non-empty string')
+          if ('credit' in a && typeof a.credit !== 'string') err(`assets[${i}].credit`, 'must be a string')
+          if ('uploaderRole' in a && !UPLOADER_ROLES.includes(a.uploaderRole))
+            err(`assets[${i}].uploaderRole`, `must be one of ${UPLOADER_ROLES.join(', ')}`)
+        }
         // The labels (F08) are optional: a brief made before them has none.
         for (const [field, allowed] of [
           ['orientation', ASSET_ORIENTATIONS],

@@ -746,6 +746,19 @@
             "description": "Broad category: a source menu photo stays menu; else what a vision model saw (people, space, food); else the caption keywords read at collection."
           },
           "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Where the picture was collected (website, instagram, google-places…). Required on every new write; a brief stored before it has none."
+          },
+          "credit": {
+            "type": "string",
+            "description": "The attribution its source requires shown, authors with their link; empty only when the source names no one. Required on every new write."
+          },
+          "uploaderRole": {
+            "enum": ["owner", "customer", "unknown"],
+            "description": "Who uploaded it: the business, a customer, or not known. Required on every new write."
+          },
           "width": {
             "type": ["integer", "null"],
             "minimum": 1,

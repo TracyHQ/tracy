@@ -114,6 +114,10 @@ test("the brief's assets carry size, orientation, grade and content, and still v
     // What the model saw sets the category (venue-exterior is a space).
     category: 'space',
     sha256: byId.get('pool').sha256,
+    // The fixture row names its source and no author.
+    source: 'google-places',
+    credit: '',
+    uploaderRole: 'unknown',
     width: 2000,
     height: 1200,
     orientation: 'landscape',

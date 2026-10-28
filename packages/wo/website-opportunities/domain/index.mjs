@@ -247,6 +247,7 @@ export {
   orientationOf,
   resolutionGradeOf
 } from './pictures/asset-labels.mjs'
+export { UPLOADER_ROLES, assetOriginOf } from './pictures/asset-origin.mjs'
 export {
   planPlacement,
   drawPlan,
