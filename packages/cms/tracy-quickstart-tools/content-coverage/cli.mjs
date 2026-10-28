@@ -12,8 +12,9 @@
 //     [--max-pages 150] [--viewports desktop,phone] [--write] [--no-report] \
 //     [--report-only | --reclassify]   (rebuild from an existing findings.json, no browser run)
 //     [--fit]   Slot fit (ADR 0039): measure a `fit` on every text and image slot from this run and settle each
-//               picture's keep flag by its kind; with --write the content map gets them, BEFORE content-coverage.json
-//               is built, so the coverage file names the map with its fit. Without --write: <out>/content-map.fit.json.
+//               picture's keep flag by its kind (in a place-content-roles/3 map every keep flag follows the role,
+//               ADR 0040); with --write the content map gets them, BEFORE content-coverage.json is built, so the
+//               coverage file names the map with its fit. Without --write: <out>/content-map.fit.json.
 //     [--no-judge] [--judge-max-calls 150] [--judge-max-cents 300]
 //               The LLM label judge (spec #37): with TRACY_VISION_API_KEY set (TRACY_VISION_URL, TRACY_VISION_MODEL as
 //               for the server) a vision model looks once per component at its crop with numbered slots and says
