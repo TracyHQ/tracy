@@ -84,6 +84,16 @@
       "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
     },
     {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.8/content-map.json",
+      "oid": "12ab7c17bf2119036b4f03374e9acbacf1638299",
+      "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.8/presentation-lock.json",
+      "oid": "01232c87b1e9113922bf4002332d0a2b869c7abb",
+      "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
+    },
+    {
       "path": "packages/locale/tracy-locale-vi/lib/client.js",
       "oid": "bee4e091abc742c2967d7be83dc6aa6e51192c84",
       "reason": "Exact generated translation bundle for PR #53. Rebuilt from its localized JSON dictionaries and checked for byte-for-byte reproducibility; authored executable source remains subject to English policy."
