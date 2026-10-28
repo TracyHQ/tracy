@@ -1,0 +1,1 @@
+{"id":"REG-PR-1181-brief-restart-partial-words","verdict":"PASS","commit":"a0e0d7247b61e72c75dac95acd92256940ab2fee","ran_at":"2026-10-28T17:24:59.868Z","evidence":"tests/regression/.runs/2026-10-28-a0e0d7247/REG-PR-1181-brief-restart-partial-words.log"}
