@@ -183,14 +183,14 @@ export function judgeLabelRules(doc, { live }, policy = COVERAGE_POLICY) {
  * `content-coverage.json` beside `labelRules`; this never calls a model. It belongs to the label rules group and takes
  * its policy: only maps of `policy.labelRules.blockingVocabularies` are judged. A slot the judge says belongs to the
  * other side of fact/editorial holds a release not shown on Design inspiration (`policy.labelJudgeHoldNewRelease`) and
- * warns for one already shown; a finer role mismatch warns; slots the model did not judge warn, so a missing model is
+ * warns for one already shown; a finer role mismatch warns; slots nobody judged warn, so a missing verdict is
  * never read as a pass.
  *
  *   none         the file has no `labelJudge` block (an audit before 1.3.0): not judged, nothing held
  *   reported     the map's vocabulary is not judged yet (version 2): listed, never holds or warns
  *   wrong-group  at least one slot is on the wrong side of fact/editorial
  *   mismatch     at least one slot has a finer wrong role
- *   not-judged   the model judged no slot (no model, the caps, a failure): warns
+ *   not-judged   no slot was judged (the request not answered yet, --no-judge, no crop): warns
  *   partly       some located slots were not judged: warns
  *   ready        every located slot was judged and is right
  * @param {any} doc a coverage file `coverageFileProblem` accepts

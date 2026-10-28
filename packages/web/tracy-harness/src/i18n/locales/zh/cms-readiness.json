@@ -35,7 +35,7 @@
   "cms-readiness.coverage.judge.mismatch.detail": "The judge suggests other roles. Check them in the next version.",
   "cms-readiness.coverage.judge.mismatch_one": "{count} slot role to check",
   "cms-readiness.coverage.judge.mismatch_other": "{count} slot roles to check",
-  "cms-readiness.coverage.judge.notJudged.detail": "No vision model judged these labels. Run the audit with a vision key.",
+  "cms-readiness.coverage.judge.notJudged.detail": "Nobody has judged these labels yet. Run the audit, then answer its judge request with record-judge.",
   "cms-readiness.coverage.judge.notJudged_one": "{count} slot not judged",
   "cms-readiness.coverage.judge.notJudged_other": "{count} slots not judged",
   "cms-readiness.coverage.judge.wrongGroup_one": "{count} slot in the wrong group",

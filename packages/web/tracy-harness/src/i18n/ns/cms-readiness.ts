@@ -153,7 +153,7 @@ export const en = {
   'cms-readiness.coverage.judge.mismatch.detail':
     'The judge suggests other roles. Check them in the next version.',
   'cms-readiness.coverage.judge.notJudged.detail':
-    'No vision model judged these labels. Run the audit with a vision key.',
+    'Nobody has judged these labels yet. Run the audit, then answer its judge request with record-judge.',
   'cms-readiness.coverage.list.judgeWrongGroup': 'Fact or editorial group wrong',
   'cms-readiness.coverage.list.judgeMismatch': 'Another role suggested',
 
