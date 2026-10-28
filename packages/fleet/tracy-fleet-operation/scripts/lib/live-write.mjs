@@ -178,7 +178,13 @@ function viaPost(target, body, headers) {
       (res) => {
         const chunks = []
         res.on('data', (c) => chunks.push(c))
-        res.on('end', () => resolve({ status: res.statusCode, text: Buffer.concat(chunks).toString('utf8') }))
+        res.on('end', () =>
+          resolve({
+            status: res.statusCode,
+            text: Buffer.concat(chunks).toString('utf8'),
+            retryAfter: res.headers['retry-after']
+          })
+        )
       }
     )
     req.on('timeout', () => req.destroy(new Error('timeout')))
@@ -191,11 +197,12 @@ function viaPost(target, body, headers) {
 async function call(endpoint, token, action, params = {}) {
   let status
   let text
+  let retryAfter
   const target = route(endpoint)
   const body = JSON.stringify({ token, action, params })
   const headers = { 'content-type': 'application/json', 'user-agent': USER_AGENT }
   try {
-    if (target) ({ status, text } = await viaPost(target, body, headers))
+    if (target) ({ status, text, retryAfter } = await viaPost(target, body, headers))
     else {
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -205,15 +212,29 @@ async function call(endpoint, token, action, params = {}) {
         redirect: 'error'
       })
       status = response.status
+      retryAfter = response.headers.get('retry-after')
       text = await response.text()
     }
   } catch (error) {
     throw new Transient(`${action}: ${error.cause?.code ?? error.code ?? error.message ?? error.name}`)
   }
   const reply = engineReply(text)
+  if (reply && !reply.ok && ['unauthorized', 'forbidden', 'bad_token'].includes(reply.error))
+    throw new WriteFailed('TOKEN_REFUSED')
+  if (status === 401) throw new WriteFailed('LIVE_PASSWORD_PROTECTED')
+  if (status === 403) throw new WriteFailed('LIVE_BLOCKED')
+  if (status === 429) {
+    const error = new Transient(`${action} answered 429`)
+    error.code = 'LIVE_RATE_LIMITED'
+    const seconds = /^\s*\d+\s*$/.test(String(retryAfter ?? '')) ? Number(retryAfter) : null
+    const date = seconds === null ? Date.parse(String(retryAfter ?? '')) : NaN
+    error.retryAfterMs =
+      seconds !== null ? seconds * 1000 : Number.isFinite(date) ? Math.max(0, date - Date.now()) : 0
+    throw error
+  }
   if (reply === null) {
-    if (status === 429 || status >= 500) throw new Transient(`${action} answered ${status}`)
-    throw new WriteFailed('NOT_THE_ENGINE', `${action} answered ${status}`)
+    if (status >= 500) throw new Transient(`${action} answered ${status}`)
+    throw new WriteFailed(status === 200 ? 'LIVE_BLOCKED' : 'NOT_THE_ENGINE', `${action} answered ${status}`)
   }
   if (!reply.ok) {
     if (['unauthorized', 'forbidden', 'bad_token'].includes(reply.error))
@@ -236,8 +257,10 @@ async function retried(fn, tries = TRIES, onTransient = () => {}) {
     } catch (error) {
       if (!(error instanceof Transient)) throw error
       onTransient()
-      if (attempt >= tries) throw new WriteFailed('SITE_RESOURCE_LIMIT', error.message)
-      await sleep(500 * 2 ** attempt)
+      if (attempt >= tries) throw new WriteFailed(error.code ?? 'SITE_RESOURCE_LIMIT', error.message)
+      // A long Retry-After is a refusal, never permission to retry sooner. Avoid timer overflow.
+      if (error.retryAfterMs > 2_147_483_647) throw new WriteFailed('LIVE_RATE_LIMITED')
+      await sleep(Math.max(500 * 2 ** attempt, error.retryAfterMs ?? 0))
     }
   }
 }
@@ -249,15 +272,18 @@ async function door(endpoint, token) {
   const front = endpoint.replace(/\/administrator\/index\.php\?/, '/index.php?')
   for (const other of [admin, front]) if (!doors.includes(other)) doors.push(other)
   let last
+  let blocked
   for (const candidate of doors) {
     try {
       await retried(() => call(candidate, token, 'core.manifest'))
       return candidate
     } catch (error) {
       last = error
-      if (error.code === 'TOKEN_REFUSED') throw error
+      if (error.code === 'LIVE_BLOCKED') blocked = error
+      if (['TOKEN_REFUSED', 'LIVE_PASSWORD_PROTECTED', 'LIVE_RATE_LIMITED'].includes(error.code)) throw error
     }
   }
+  if (blocked) throw blocked
   throw last instanceof WriteFailed ? last : new WriteFailed('UNREACHABLE')
 }
 

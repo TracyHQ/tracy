@@ -212,6 +212,13 @@ export function pushPhaseOf(
 
 /** Why a phase did not finish, in a sentence a customer can act on; the code stays for support. */
 export function pushFailureText(code: string, t: Translate, max = 200): string {
+  const liveErrors: Record<string, string> = {
+    LIVE_BLOCKED: 'sync.error.liveBlocked',
+    LIVE_PASSWORD_PROTECTED: 'sync.error.livePassword',
+    LIVE_RATE_LIMITED: 'sync.error.liveRateLimited',
+    TOKEN_REFUSED: 'sync.error.liveToken'
+  }
+  if (liveErrors[code]) return t(liveErrors[code])
   if (code === 'PUSH_SITE_BUSY' || code === 'SYNC_SITE_BUSY') return t('push.error.busy')
   if (code === 'PUSH_SYNC_RUNNING') return t('push.error.syncRunning')
   if (code === 'PREVIEW_EXPIRED') return t('push.status.expiredBody')

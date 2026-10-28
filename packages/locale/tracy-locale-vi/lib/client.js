@@ -4048,7 +4048,11 @@ window.__ModuleLoader__.load({
               "sync.error.interruptedKept": "Một lần đồng bộ trước bị dừng do Tracy cập nhật trong lúc đang đưa thay đổi vào bản sao này, và bản sao đã thay đổi kể từ đó. Tracy để nguyên bản sao. Để hoàn tác lần đồng bộ ấy, hãy khôi phục điểm sao lưu “Before restore” trong Backups, rồi đồng bộ lại.",
               "sync.error.liveUnreachable": "Tracy không đọc được site gốc của bạn. Bản sao này không bị thay đổi gì. Hãy kiểm tra site còn online và Claude Cowork vẫn còn được cài trên đó.",
               "sync.error.copyChanged": "Bản sao này thay đổi trong lúc đồng bộ nên chưa có gì được đưa vào. Hãy thử lại.",
-              "sync.error.noSpace": "Máy chủ của Tracy không còn đủ chỗ cho lượt đồng bộ này. Bản sao này chưa bị thay đổi gì. Hãy liên hệ chúng tôi."
+              "sync.error.noSpace": "Máy chủ của Tracy không còn đủ chỗ cho lượt đồng bộ này. Bản sao này chưa bị thay đổi gì. Hãy liên hệ chúng tôi.",
+              "sync.error.liveBlocked": "Site live trả về phản hồi bị chặn hoặc không phải từ engine. Kiểm tra tường lửa hoặc bảo vệ bot và cho phép các yêu cầu của Tracy.",
+              "sync.error.livePassword": "Site live yêu cầu mật khẩu HTTP. Cho phép Tracy truy cập endpoint Claude Cowork mà không cần mật khẩu đó, rồi thử lại.",
+              "sync.error.liveRateLimited": "Site live đang giới hạn yêu cầu. Chờ trước khi thử lại; Tracy tuân theo thời gian Retry-After của site.",
+              "sync.error.liveToken": "Site live từ chối token Claude Cowork. Kết nối lại site live bằng token hiện tại rồi thử lại."
       },
       "tracy-tab-link": {
               "launcher.open": "Mở danh sách tab",
