@@ -131,7 +131,7 @@
   "login.notAdmitted": "Địa chỉ này chưa có trong danh sách chờ của Tracy. Hãy tham gia danh sách chờ, chúng tôi sẽ gửi email cho bạn các bước tiếp theo.",
   "login.orContinueWith": "hoặc tiếp tục với",
   "login.orUseEmail": "hoặc dùng email",
-  "login.pitchLede": "Vẫn loay hoay trong trang quản trị CMS chỉ để sửa một dòng chữ? Nói với Tracy điều bạn muốn trong một câu, thế là xong.",
+  "login.pitchLede": "Vẫn loay hoay trong trang admin của CMS chỉ để sửa một dòng chữ? Nói với Tracy điều bạn muốn trong một câu, thế là xong.",
   "login.pitchTitle": "Cách nhanh hơn để vận hành website trên chính CMS bạn tin dùng.",
   "login.rateLimited": "Đã có quá nhiều yêu cầu mã đăng nhập. Hãy thử lại sau.",
   "login.resend": "Gửi mã mới",

@@ -131,7 +131,7 @@
   "login.notAdmitted": "Questo indirizzo non è ancora nella lista d’attesa di Tracy. Entri nella lista d’attesa e le invieremo un’email con i passaggi successivi.",
   "login.orContinueWith": "oppure continui con",
   "login.orUseEmail": "oppure usi la sua email",
-  "login.pitchLede": "Ancora alle prese con il pannello del CMS solo per cambiare una riga di testo? Dica a Tracy cosa vuole in una frase, ed è fatto.",
+  "login.pitchLede": "Ancora alle prese con l’admin del CMS solo per cambiare una riga di testo? Dica a Tracy cosa vuole in una frase, ed è fatto.",
   "login.pitchTitle": "Un modo più rapido di gestire il suo sito, sul CMS di cui si fida già.",
   "login.rateLimited": "Sono stati richiesti troppi codici di accesso. Riprovi più tardi.",
   "login.resend": "Invia un nuovo codice",

@@ -131,7 +131,7 @@
   "login.notAdmitted": "Diese Adresse steht noch nicht auf der Tracy-Warteliste. Setzen Sie sich auf die Warteliste, und wir senden Ihnen die nächsten Schritte per Email.",
   "login.orContinueWith": "oder weiter mit",
   "login.orUseEmail": "oder mit Ihrer Email",
-  "login.pitchLede": "Kämpfen Sie noch mit dem CMS-Backend, nur um eine Textzeile zu ändern? Sagen Sie Tracy in einem Satz, was Sie möchten, und es ist erledigt.",
+  "login.pitchLede": "Kämpfen Sie noch mit dem CMS-admin, nur um eine Textzeile zu ändern? Sagen Sie Tracy in einem Satz, was Sie möchten, und es ist erledigt.",
   "login.pitchTitle": "Ihre Website schneller betreiben, auf dem CMS, dem Sie schon vertrauen.",
   "login.rateLimited": "Es wurden zu viele Anmeldecodes angefordert. Versuchen Sie es später erneut.",
   "login.resend": "Neuen Code senden",

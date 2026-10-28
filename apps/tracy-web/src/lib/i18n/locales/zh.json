@@ -131,7 +131,7 @@
   "login.notAdmitted": "此地址尚未加入 Tracy 候补名单。请加入候补名单，我们会通过 email 告知您后续步骤。",
   "login.orContinueWith": "或使用以下方式继续",
   "login.orUseEmail": "或使用 email",
-  "login.pitchLede": "还在为改一行文字而在 CMS 后台里来回折腾？用一句话告诉 Tracy 您想要什么，就能完成。",
+  "login.pitchLede": "还在 CMS 的 admin 后台里为改一行文字来回折腾？用一句话告诉 Tracy 您想要什么，就能完成。",
   "login.pitchTitle": "在您已信赖的 CMS 上，更快地运营您的网站。",
   "login.rateLimited": "请求的登录验证码过多。请稍后再试。",
   "login.resend": "发送新验证码",

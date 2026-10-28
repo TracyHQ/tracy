@@ -131,7 +131,7 @@
   "login.notAdmitted": "Esta dirección aún no está en la lista de espera de Tracy. Únase a la lista de espera y le enviaremos los siguientes pasos por email.",
   "login.orContinueWith": "o continúe con",
   "login.orUseEmail": "o use su email",
-  "login.pitchLede": "¿Todavía lidiando con el panel de su CMS solo para cambiar una línea de texto? Dígale a Tracy lo que quiere en una frase, y listo.",
+  "login.pitchLede": "¿Todavía lidiando con el admin de su CMS solo para cambiar una línea de texto? Dígale a Tracy lo que quiere en una frase, y listo.",
   "login.pitchTitle": "Una forma más rápida de gestionar su web, en el CMS en el que ya confía.",
   "login.rateLimited": "Se solicitaron demasiados códigos de inicio de sesión. Inténtelo de nuevo más tarde.",
   "login.resend": "Enviar un código nuevo",
