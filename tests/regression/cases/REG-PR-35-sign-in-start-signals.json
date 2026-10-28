@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-35-sign-in-start-signals",
+  "kind": "feat",
+  "title": "/login records when a signed-out person starts signing in (login.code_requested, login.oauth_started), with the source and never the address",
+  "pr": 35,
+  "area": "usage/funnel",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: POST /login (JSON) with an address and utm fields; with another address and no utm; with 'not-an-address'.",
+    "S2: GET /signin/google with utm fields; without; GET /signin/github on a deployment where GitHub is not configured.",
+    "S3: GET /signin/google 31 times from one client address."
+  ],
+  "expect": [
+    "S1: 200, 200, 400; two login.code_requested rows with account_id null, the first {source, medium, content} cleaned, the second {}; no row holds the address.",
+    "S2: 302, 302, 404; two login.oauth_started rows, {provider: 'google', source, medium, content} and {provider: 'google'}.",
+    "S3: every answer is 302; exactly 30 login.oauth_started rows."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/identity/route.js (recordSignInStart, POST /login, GET /signin/:provider); apps/tracy-web/src/lib/ops-signal.js (FIELDS)"
+  },
+  "evidence": "Issue #33: the step between a visit to /login and a first sign-in could only be read from rate_bucket rows, swept after about two days",
+  "fence": "Usage never stands in the way of signing in: a start row holds no address, is capped per client address, and a failure to record it never fails the request",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=login.code_requested|login.oauth_started|sign-in starts stop",
+      "apps/tracy-web/test/sign-in-source.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "POST /login records one login.code_requested per accepted request",
+      "GET /signin/google records one login.oauth_started",
+      "sign-in starts stop being recorded at the hourly cap"
+    ]
+  }
+}
