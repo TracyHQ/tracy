@@ -456,6 +456,16 @@ function withoutNulls(value) {
 }
 
 export function inventoryInvariant(records) {
+  // The articles a Joomla menu item opens on their own are pages; every other article is a post of a blog or a list.
+  const pageArticles = new Set(
+    records
+      .filter((r) => r.identity?.kind === 'menuItem')
+      .flatMap((r) =>
+        [...String(r.data?.link ?? '').matchAll(/[?&]view=article&id=(\d+)(?=[&:]|$)/g)].map((m) =>
+          Number(m[1])
+        )
+      )
+  )
   return records
     .map((record) => {
       const data = marksLists(pictureValues(withoutNulls(record.data)))
@@ -487,6 +497,13 @@ export function inventoryInvariant(records) {
         (record.editorialFields ?? []).includes('post_content')
       )
         data.post_content = '$copy'
+      // …and so is a Joomla blog post's: a template article no menu item opens on its own (local measure 28/10/2026:
+      // Death & Co's nine posts, written from the research without the template's quote block, failed native-structure
+      // on every check). An article a menu item opens is a page; its markup stays structure.
+      if (record.identity?.kind === 'article' && data && !pageArticles.has(Number(record.identity.id)))
+        for (const field of ['introtext', 'fulltext'])
+          if ((record.editorialFields ?? []).includes(field) && typeof data[field] === 'string')
+            data[field] = '$copy'
       // An EmDash menu written again gets new item ids: its items are known by position, their tree and targets kept.
       let relations = record.relations
       if (record.key?.startsWith('menu/') && Array.isArray(data?.items)) {

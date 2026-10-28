@@ -696,6 +696,49 @@ test("Joomla: a contact's webpage set to the business's site keeps the structure
     )
 })
 
+// Local measure 28/10/2026: Death & Co's blog posts written from the research without the template's quote block.
+test('Joomla: a blog post rewritten in other markup keeps the structure; a page article does not', () => {
+  const site = (article1, article2) => ({
+    complete: true,
+    records: [
+      {
+        key: 'article/1',
+        identity: { kind: 'article', id: 1 },
+        publication: {},
+        routes: [],
+        relations: {},
+        editorialFields: ['title', 'introtext', 'fulltext'],
+        data: article1
+      },
+      {
+        key: 'article/2',
+        identity: { kind: 'article', id: 2 },
+        publication: {},
+        routes: [],
+        relations: {},
+        editorialFields: ['title', 'introtext', 'fulltext'],
+        data: article2
+      },
+      {
+        key: 'menuItem/101',
+        identity: { kind: 'menuItem', id: 101 },
+        publication: {},
+        routes: [],
+        relations: {},
+        editorialFields: ['title'],
+        data: { link: 'index.php?option=com_content&view=article&id=2' }
+      }
+    ]
+  })
+  const template = {
+    introtext: '<p>Intro words</p>',
+    fulltext: '<p>Body</p><figure class="area-blockquote"><blockquote><p>Quote</p></blockquote></figure>'
+  }
+  const rewritten = { introtext: 'A new intro', fulltext: 'A new body in one paragraph' }
+  assert.equal(compareAgentInventory(site(template, template), site(rewritten, template)).pass, true)
+  assert.equal(compareAgentInventory(site(template, template), site(template, rewritten)).pass, false)
+})
+
 // lrsweep rig, JA Spa j6 (24/10/2026): Claude Cowork's `content.list` gives a menu item no `url`, so the item that opens
 // /index.php/contact had no route, and the residue sweep said "the site has no Contact page" for 17 links. Its route
 // is read off its own row (`path`, `home`, `type`) in the address form the site's other rows show.
