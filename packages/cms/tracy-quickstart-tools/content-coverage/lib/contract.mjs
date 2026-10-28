@@ -90,7 +90,9 @@ export function loadContract(dir, siteUrl) {
           }
         }
       }
-      if (letterCount(n) >= 3) textList.push({ norm: n, key: s.key })
+      // A phone number or a figure in a field of its own has no letter: count digits too, as for a segment above, so
+      // a block that prints it after a label slot ("or CALL: (239) 555-0108") is that pair, not a hole.
+      if (letterCount(n) >= 3 || alnumCount(n) >= 7) textList.push({ norm: n, key: s.key })
     }
   }
   textList.sort((a, b) => b.norm.length - a.norm.length)

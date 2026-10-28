@@ -28,7 +28,7 @@ const MAPS = execFileSync('git', ['ls-files', 'packages/cms/*/contracts/*content
   .filter(Boolean)
 const read = (file) => JSON.parse(readFileSync(path.join(ROOT, file), 'utf8'))
 
-test('every committed content map still passes the role and Slot fit checks, none is a version 3 map', () => {
+test('every committed content map still passes the role and Slot fit checks; only a version 3 map lets the role decide keep', () => {
   assert.ok(MAPS.length > 0)
   let declared = 0
   for (const file of MAPS) {
@@ -37,7 +37,8 @@ test('every committed content map still passes the role and Slot fit checks, non
     const fit = checkContentMapFit(map)
     assert.deepEqual(roles.errors, [], file)
     assert.deepEqual(fit.errors, [], file)
-    assert.equal(roleDecidesKeep(map), false, file)
+    // JA Boxing 1.0.8 is the first version 3 map (ADR 0040); every older map keeps its version 2 reading
+    assert.equal(roleDecidesKeep(map), map.roleVocabularyVersion === 'place-content-roles/3', file)
     if (roles.declared) declared += 1
   }
   assert.ok(declared >= 3, 'the JA Boxing contracts with roles are among them')

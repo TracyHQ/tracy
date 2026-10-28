@@ -205,6 +205,8 @@ export const en = {
   'ds.loading': 'Reading the site…',
   'ds.noSite': 'Open a site to choose its design system.',
   'ds.retry': 'Try again',
+  'ds.setup.required': 'Finish building your site before choosing a design system.',
+  'ds.setup.open': 'Open Build',
   'ds.worn.label': 'Wearing now',
   // The Template default popup's way back (13/10/2026; 15/10/2026): the worn system taken off, an apply of its own.
   'ds.worn.back': 'Back to template default',

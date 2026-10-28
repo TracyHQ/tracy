@@ -517,6 +517,10 @@ a system → 409 `DS_PREVIEW_UNAVAILABLE` (`NO_SLOT`), and the popup says it can
 `DS_PREVIEW_FAILED`, the popup offers Try again. The main button is still **Try on <site>** (a real apply, Keep/Undo). The popup calls the site by
 the name the site gives itself on its home page (`name` of the words door); `/api/sites` only has the address (`displayName` is the domain).
 
+A newly claimed fleet site with neither an attachment nor an address returns `supported: false`,
+`canApply: false`, `reason: SITE_NOT_READY` without reading a container or the library. The tab explains
+that the site must finish building and opens the existing site’s Build tab; this press starts no build.
+
 **Design system library — Refero only** (12/10/2026). The Design system tab and the **Pick a design system** card of the
 Add site form read the same list: the door **`GET /api/design-system/library`** (signed-in seat,
 [`design-system-library-doors.js`](apps/tracy-web/src/sites/design-system-library-doors.js)) returns every Refero system in

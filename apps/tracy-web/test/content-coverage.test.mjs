@@ -696,3 +696,23 @@ test('fit group: the released JA Boxing 1.0.7 contract carries a complete Slot f
   assert.equal(hero.fit.kind, 'cutout')
   assert.equal(hero.fit.transparent, true)
 })
+
+test('label rules group: the released JA Boxing 1.0.8 contract (role vocabulary 3) holds nothing: every rule at 0, every located slot judged right, its style-guide page demo-only', () => {
+  const root = path.join(import.meta.dirname, '../../../packages/cms/tracy-joomla-quickstart/contracts')
+  const contracts = readContracts(root)
+  const at = (over) => release({ setting: { ...release().setting, version: '1.0.8' }, ...over })
+  const step = stepOf(roadOf(at({}), { contracts }))
+  assert.deepEqual(
+    [step.params.labelHolds, step.params.labelFailing, step.params.judgeState, step.params.judgeHolds],
+    [false, [], 'ready', false]
+  )
+  assert.deepEqual([step.params.judgeWrongGroupCount, step.params.judgeMismatchCount], [0, 0])
+  assert.deepEqual([step.params.fitState, step.params.fitHolds], ['ready', false])
+  const map = JSON.parse(readFileSync(path.join(root, 'ja-boxing/j6/1.0.8/content-map.json'), 'utf8'))
+  assert.equal(map.roleVocabularyVersion, 'place-content-roles/3')
+  const typography = map.entities.find((entity) => entity.key === 'article-17')
+  assert.equal(typography?.demoOnly, true)
+  // the Private Training phone has a slot of its own (ja-products #57), not a line inside the description
+  const phone = map.slots.find((slot) => slot.key === 'module-177.14')
+  assert.deepEqual([phone?.role, phone?.sample], ['contact.phone', '(239) 555-0108'])
+})
