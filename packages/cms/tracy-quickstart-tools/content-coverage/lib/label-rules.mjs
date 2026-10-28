@@ -13,11 +13,14 @@
 //   R7  siblings of a repeat share a role
 //   R8  adjacent short slots of one entity on one line are flagged as a cut heading
 //   R9  a fact-like hole blocks (an accepted reason does not lift it: a fact the map misses stays the demo's)
+//
+// Slots of a demo-only entity (a style-guide page, `demo-only.mjs`) are left out of R1 to R8; R9 reads every hole.
 import {
   ROLE_VOCABULARY_V3,
   isFactRole,
   isRole
 } from '../../../../wo/website-opportunities/domain/place-content-roles.mjs'
+import { demoOnlyEntities } from './demo-only.mjs'
 import { factKindsOf } from './fact-samples.mjs'
 
 export const LABEL_RULES_VERSION = 'label-rules/1'
@@ -65,7 +68,12 @@ function repeatOf(slot) {
     }
     return String(p)
   })
-  return idx.length > 0 ? { pattern: `${slot.entity ?? ''}/${parts.join('/')}`, tuple: idx.join('.') } : null
+  // Pieces of one HTML field (an image and three text spans of one description) are not siblings of each other: the
+  // place inside the field (its xpath without positions) is part of the pattern.
+  const inField = typeof slot.xpath === 'string' ? `|${slot.xpath.replace(/\[\d+\]/g, '')}` : ''
+  return idx.length > 0
+    ? { pattern: `${slot.entity ?? ''}/${parts.join('/')}${inField}`, tuple: idx.join('.') }
+    : null
 }
 
 /** Slots that share a pattern and show at least two index tuples: the repeats of the map. */
@@ -208,7 +216,8 @@ function factShare(slots) {
  * @returns {{ version: string, roleVocabularyVersion: string | null, applies: boolean, r1: {facts: number, slots: number, percent: number}, rules: Record<string, {title: string, count: number, keys: string[]}> }}
  */
 export function labelRulesOf({ map, pages = [], holes = [] }) {
-  const slots = Array.isArray(map?.slots) ? map.slots : []
+  const demoOnly = demoOnlyEntities(map)
+  const slots = (Array.isArray(map?.slots) ? map.slots : []).filter((s) => !demoOnly.has(s?.entity))
   const version = map?.roleVocabularyVersion ?? null
   const repeats = repeatsOf(slots)
   const found = {
