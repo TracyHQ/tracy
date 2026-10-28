@@ -63,6 +63,15 @@ async function world({ cards = CARDS, resolve = PUBLIC, objects, extraEnv = {}, 
   const real = await websiteOpportunitiesDomain()
   const domain = {
     ...real,
+    // These doors are tested with places that collected no photo: their briefs are ready by decree here (readiness has
+    // its own tests, `brief-readiness.test.mjs` and the demo runner's).
+    briefReadinessOf: () => ({
+      version: 'brief-readiness/1',
+      verdict: 'pass',
+      next: 'build',
+      checks: [],
+      ownerQuestions: []
+    }),
     geocode: async () => ({ label: 'Hoi An', lat: 15.88, lon: 108.33 }),
     approxLocationOf: async (ip) => {
       approxAsked.push(ip)

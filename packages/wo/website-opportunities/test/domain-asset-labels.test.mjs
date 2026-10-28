@@ -114,12 +114,24 @@ test("the brief's assets carry size, orientation, grade and content, and still v
     // What the model saw sets the category (venue-exterior is a space).
     category: 'space',
     sha256: byId.get('pool').sha256,
+    // The fixture row names its source and no author.
+    source: 'google-places',
+    credit: '',
+    uploaderRole: 'unknown',
     width: 2000,
     height: 1200,
     orientation: 'landscape',
     quality: 'high',
     content: 'venue-exterior',
-    caption: 'The outdoor pool at dusk'
+    caption: 'The outdoor pool at dusk',
+    // A label made before the brief's closed list links nothing and says nothing of boxes or graphics (#48).
+    depicts: { id: 'general', evidence: { via: 'vision' } },
+    portraitOf: null,
+    role: null,
+    faceBoxes: [],
+    peopleCount: null,
+    isGraphic: null,
+    isOwnPhoto: null
   })
   assert.equal(byId.get('thumb').content, 'unlabelled')
   assert.equal(byId.get('thumb').quality, 'low')

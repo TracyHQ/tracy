@@ -81,3 +81,17 @@ test('broad food labels cannot certify a named product even when one candidate f
   assert.doesNotMatch(proposal.reason, /matching the frame/)
   assert.ok(proposal.alternatives.every((p) => p.identity === 'unverified'))
 })
+
+test('picture placer keeps a photo the vision model calls a graphic out of every photo frame (#48)', () => {
+  const banner = photo('banner', 'interior')
+  banner.labels.vision.labels.isGraphic = true
+  for (const f of [frame('hero'), frame('card', { underWords: false })]) {
+    const [out] = placePictures({ frames: [f], media: [banner] }).proposals
+    assert.equal(out.photo, null, f.frameId)
+  }
+  const [kept] = placePictures({
+    frames: [frame('card', { underWords: false })],
+    media: [banner, photo('room')]
+  }).proposals
+  assert.equal(kept.photo, 'room')
+})

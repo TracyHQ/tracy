@@ -101,15 +101,23 @@ export function photographsOnly(media, brand) {
  * @returns {{id: string, width: number, height: number, source: string|null}[]}
  */
 export function heroCandidates(media, brand) {
-  return photographsOnly(media, brand)
-    .map((m, i) => ({ m, i, labels: assetLabelsOf(m) }))
-    .filter(({ m, labels }) => area(m) > 0 && !NOT_A_HERO.has(labels.content))
-    .sort((a, b) => heroScore(b.labels) - heroScore(a.labels) || area(b.m) - area(a.m) || a.i - b.i)
-    .slice(0, HERO_CANDIDATES)
-    .map(({ m }) => ({
-      id: m.id,
-      width: Number(m.width),
-      height: Number(m.height),
-      source: m.source ?? null
-    }))
+  return (
+    photographsOnly(media, brand)
+      .map((m, i) => ({ m, i, labels: assetLabelsOf(m) }))
+      // A picture a vision model calls a graphic (a banner, a flyer) never opens a site, whatever it shows (#48).
+      .filter(
+        ({ m, labels }) =>
+          area(m) > 0 &&
+          !NOT_A_HERO.has(labels.content) &&
+          (m.vision ?? m.labels?.vision?.labels)?.isGraphic !== true
+      )
+      .sort((a, b) => heroScore(b.labels) - heroScore(a.labels) || area(b.m) - area(a.m) || a.i - b.i)
+      .slice(0, HERO_CANDIDATES)
+      .map(({ m }) => ({
+        id: m.id,
+        width: Number(m.width),
+        height: Number(m.height),
+        source: m.source ?? null
+      }))
+  )
 }
