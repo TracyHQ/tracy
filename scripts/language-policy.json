@@ -107,6 +107,31 @@
       "path": "packages/locale/tracy-locales/lib/client.js",
       "oid": "8366f9fcda5de2b431afcc1eaa191250282b2f63",
       "reason": "Exact regenerated language bundle for the PR #53 CI follow-up. Italian, Spanish and Chinese setup translations retain the required site term. The bundle reproduces from the localized JSON; future bytes still need review."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "68c645fe578fb2e7943bf191bba1b524ce962eae",
+      "reason": "Reviewed PR #92 generated interface translations for live access refusals; JSON sources are language dictionaries and the final bundles reproduce from the build scripts. Earlier output is retained only for commit-history validation."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "87073aedea878898422d7282155bb29b066a1567",
+      "reason": "Reviewed PR #92 generated interface translations for live access refusals; JSON sources are language dictionaries and the final bundles reproduce from the build scripts. Earlier output is retained only for commit-history validation."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "a545aeb683d97c1a46504d8c8ff2b47cf92846ed",
+      "reason": "Reviewed PR #92 generated interface translations for live access refusals; JSON sources are language dictionaries and the final bundles reproduce from the build scripts. Earlier output is retained only for commit-history validation."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "5ac40fe6527eebeaf11c5498ae8c6b6b2117464f",
+      "reason": "Reviewed PR #92 generated interface translation bundle after merging develop; JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "86ecd8bec58ef5d375c7298ac0878c62bd44dd15",
+      "reason": "Reviewed PR #92 generated interface translation bundle after merging develop; JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
     }
   ]
 }
