@@ -223,6 +223,17 @@ export function lookCarried(last, readPages, reused) {
     measured: `the last look, carried while the sweep runs; ${changed.length} page(s) read anew since`
   }
 }
+/**
+ * Whether the sweep has the brand writer wear the business's imported logo: a header with no logo of the business
+ * (`header-brand` `LOGO_NOT_IN_HEADER`), a CMS whose logo dsh's tools do not set (not WordPress), and not worn
+ * already in this build.
+ * @param {any[]} checks @param {{platform: string, logo: {url: string} | null, worn?: string | null}} at
+ */
+export function businessLogoDue(checks, { platform, logo, worn = null }) {
+  if (platform === 'wordpress' || !logo || worn === logo.url) return false
+  const brand = checks.find((c) => c?.id === 'header-brand')
+  return Boolean(brand && !brand.pass && (brand.detail ?? []).some((d) => d?.code === 'LOGO_NOT_IN_HEADER'))
+}
 /** Sweep rounds already run inside the counted check now running (`qa.residueSweeps` of this attempt). */
 function sweepRoundsOf(state) {
   const swept = state.build.qa?.residueSweeps
@@ -868,11 +879,32 @@ export function createClientDemoService(deps) {
     })
     const thin = leadsThin(Math.max(plan.thinLeads ?? 0, state.build.qa?.residueSweeps?.thinLeads ?? 0))
     if (thin) checks.push(thin)
+    // 🔒 THE BUSINESS'S OWN LOGO IS WORN BY THE BRAND WRITER TOO (local measure 28/10/2026): a Joomla T4 header keeps its
+    // logo in the template's site settings, the agent's tool has no door to them, and every check of a Death & Co
+    // build named the Fresco logo in all seven headers. Where the header shows no logo of the business and the build
+    // imported it, the sweep has the brand writer wear it as it wears a drawn wordmark (`wornLogo`), once a build.
+    const logoCall = businessLogoDue(read, {
+      platform: site.platform,
+      logo,
+      worn: state.build.qa?.brandLogoWorn
+    })
+      ? await businessLogoCall(state, logo)
+      : null
+    if (logoCall) plan.calls = [...plan.calls, logoCall]
     const worn = await wornLogo(plan, {
       platform: site?.platform,
       wear: deps.wearLogo ? (input) => deps.wearLogo(state.build, site, input) : null,
       now
     })
+    if (
+      logoCall &&
+      !worn.calls.includes(logoCall) &&
+      !worn.unresolved?.some((u) => u.file === logoCall.params.find)
+    )
+      await pool.query(`update wo_build set qa=qa||$2::jsonb where id=$1`, [
+        state.build.id,
+        JSON.stringify({ brandLogoWorn: logo.url })
+      ])
     const sweep = sweepOf(worn)
     const lookStarted = now()
     // 🔒 A ROUND THAT SWEEPS IS NOT LOOKED AT (28/10/2026). Its answer is the sweep's calls and is not counted; dsh runs
@@ -928,6 +960,23 @@ export function createClientDemoService(deps) {
       // What a sweep with no call to run still names unresolved (a slot the replace job refuses to empty, a linked
       // title with no sourced words): kept on the check's answer, so the QA lists it (`sweepUnresolvedOf`).
       unswept: worn.calls.length === 0 ? worn.unresolved : []
+    }
+  }
+  /**
+   * The sweep's call that has the brand writer wear the business's logo: only when `header-brand` found a header with
+   * no logo of the business, and the logo's bytes are the research's own; null otherwise.
+   */
+  async function businessLogoCall(state, logo) {
+    const id = state.revision.brief?.brand?.logo
+    if (typeof id !== 'string' || !deps.objects) return null
+    try {
+      const row = (await buildPlaced(pool, state.build.account_id, state.revision)).find((r) => r.id === id)
+      const stored = row?.object_key ? await deps.objects.get(row.object_key) : null
+      if (!stored?.ok) return null
+      const bytes = Buffer.from(await stored.arrayBuffer())
+      return { action: 'logo', params: { png: bytes.toString('base64'), path: '/', find: logo.url } }
+    } catch {
+      return null
     }
   }
   /** This look with the faults the last look found on the pages kept unchanged (`kept`), judged as one. */

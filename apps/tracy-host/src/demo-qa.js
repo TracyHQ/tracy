@@ -3680,12 +3680,14 @@ export function checkCollectedUsed(
  * @param {PageRead[]} reads
  */
 /**
- * Where a Joomla template keeps its logo, said once with the first finding: T4 uses the native
- * `template.siteSettings` door; T3 keeps the logo in the template style (local round 35, 26/10/2026: a Death & Co build
- * tried the template style eight ways and then wrote over the template's own `logo.png`).
+ * Where a Joomla template keeps its logo, said once with the first finding: a T4 template keeps it in its site
+ * settings, which the agent's tool does not reach, so Tracy's sweep has the brand writer put the business's logo there
+ * (`client-demo.js` `businessLogoDue`, local measure 28/10/2026: the door this named answered NOT_ON_THIS_PLATFORM and the
+ * agent guessed template-style params for six checks); T3 keeps the logo in the template style (local round 35,
+ * 26/10/2026: a Death & Co build tried the template style eight ways and then wrote over the template's own `logo.png`).
  */
 const JOOMLA_LOGO_PLACE =
-  ' — on Joomla T4 use tracy_site template.siteSettings {operation:"read", template:"<template>"}, then {operation:"set", template:"<template>", profiles:{"<profile>":{site_logo:"<imported picture path>"}}} for the returned profiles; this native door records Undo and preserves the other settings. Do not edit template files. On T3 use the template style’s logo setting (content.update {kind:"templateStyle"})'
+  ' — on Joomla T4 Tracy puts the business’s logo in the header itself after this check (the template’s site settings): never edit template files or template-style params for it; if a later check still names it, leave it for the reviewer. On T3 use the template style’s logo setting (content.update {kind:"templateStyle"})'
 
 export function checkHeaderBrand(reads, { collected = null, placedSources = {}, platform = null } = {}) {
   const expected =

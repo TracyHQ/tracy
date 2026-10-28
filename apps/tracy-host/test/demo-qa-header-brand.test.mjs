@@ -43,11 +43,11 @@ test('header-brand: the collected logo in the header passes; the name alone, or 
     ],
     { ...withLogo, platform: 'joomla' }
   )
-  assert.match(joomla.detail[0].fix, /template\.siteSettings/)
-  assert.match(joomla.detail[0].fix, /operation:"read"[\s\S]*operation:"set"[\s\S]*site_logo/)
-  assert.doesNotMatch(joomla.detail[0].fix, /mkdir|\bcp\b/)
-  assert.doesNotMatch(joomla.detail[1].fix, /template\.siteSettings/)
-  assert.doesNotMatch(nameOnly.detail[0].fix, /template\.siteSettings/)
+  // 28/10/2026: the agent's tool has no door to a T4 template's site settings; Tracy's sweep wears the logo there.
+  assert.match(joomla.detail[0].fix, /on Joomla T4 Tracy puts the business’s logo in the header itself/)
+  assert.doesNotMatch(joomla.detail[0].fix, /template\.siteSettings|mkdir|\bcp\b/)
+  assert.doesNotMatch(joomla.detail[1].fix, /Joomla T4/)
+  assert.doesNotMatch(nameOnly.detail[0].fix, /Joomla T4/)
 })
 
 test("header-brand: the sweep's fitted copy of the logo passes when the page read matches it to the logo", () => {

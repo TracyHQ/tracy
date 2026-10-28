@@ -3407,3 +3407,27 @@ test("a WordPress button's address in its block comment and its <a> is one link 
   // The button's anchor, the image's anchor and the navigation link: three links shown, three counted.
   assert.equal(links[0].params.expect, 3)
 })
+
+// Local measure 28/10/2026: a Joomla T4 build kept the template's logo in all seven headers through every check.
+test("the sweep wears the business's own logo where a header shows none, once a build, never on WordPress", async () => {
+  const { businessLogoDue } = await import('../src/opportunities-build/client-demo.js')
+  const logo = { url: 'images/tracy-content/abc.jpg' }
+  const missing = [{ id: 'header-brand', pass: false, detail: [{ code: 'LOGO_NOT_IN_HEADER' }] }]
+  assert.equal(businessLogoDue(missing, { platform: 'joomla', logo }), true)
+  assert.equal(businessLogoDue(missing, { platform: 'emdash', logo }), true)
+  assert.equal(businessLogoDue(missing, { platform: 'wordpress', logo }), false)
+  assert.equal(businessLogoDue(missing, { platform: 'joomla', logo, worn: logo.url }), false)
+  assert.equal(businessLogoDue(missing, { platform: 'joomla', logo: null }), false)
+  // A header failing for another reason (the name only) is not a missing logo.
+  assert.equal(
+    businessLogoDue([{ id: 'header-brand', pass: false, detail: [{ code: 'NAME_NOT_IN_HEADER' }] }], {
+      platform: 'joomla',
+      logo
+    }),
+    false
+  )
+  assert.equal(
+    businessLogoDue([{ id: 'header-brand', pass: true, detail: [] }], { platform: 'joomla', logo }),
+    false
+  )
+})
