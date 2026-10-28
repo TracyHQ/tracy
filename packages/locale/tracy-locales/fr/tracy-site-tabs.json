@@ -1209,5 +1209,9 @@
   "sync.error.interruptedKept": "Une synchronisation précédente a été arrêtée par une mise à jour de Tracy pendant qu’elle appliquait des changements à cette copie, et cette copie a changé depuis. Tracy l’a laissée telle quelle. Pour annuler cette synchronisation, restaurez le point de sauvegarde « Before restore » dans Backups, puis synchronisez à nouveau.",
   "sync.error.liveUnreachable": "Tracy n’a pas pu lire votre site d’origine. Rien n’a été changé sur cette copie. Vérifiez que le site est en ligne et que Claude Cowork y est toujours installé.",
   "sync.error.copyChanged": "Cette copie a changé pendant la synchronisation, donc rien n’a été mis en place. Réessayez.",
-  "sync.error.noSpace": "Le serveur de Tracy manquait de place pour cette synchronisation. Rien n’a été modifié sur cette copie. Contactez-nous."
+  "sync.error.noSpace": "Le serveur de Tracy manquait de place pour cette synchronisation. Rien n’a été modifié sur cette copie. Contactez-nous.",
+  "sync.error.liveBlocked": "Votre site en ligne a renvoyé une réponse bloquée ou qui ne provient pas du moteur. Vérifiez le pare-feu ou la protection contre les robots et autorisez les requêtes de Tracy.",
+  "sync.error.livePassword": "Votre site en ligne exige un mot de passe HTTP. Autorisez Tracy à accéder au point de terminaison Claude Cowork sans ce mot de passe, puis réessayez.",
+  "sync.error.liveRateLimited": "Votre site en ligne limite les requêtes. Patientez avant de réessayer ; Tracy respecte le délai Retry-After.",
+  "sync.error.liveToken": "Votre site en ligne a refusé le jeton Claude Cowork. Reconnectez-le avec son jeton actuel, puis réessayez."
 }

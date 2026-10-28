@@ -1209,5 +1209,9 @@
   "sync.error.interruptedKept": "Una sincronizzazione precedente è stata interrotta da un aggiornamento di Tracy mentre applicava modifiche a questa copia, e da allora la copia è cambiata. Tracy l’ha lasciata così com’è. Per annullare quella sincronizzazione, ripristina il punto di backup “Before restore” in Backups, poi sincronizza di nuovo.",
   "sync.error.liveUnreachable": "Tracy non è riuscito a leggere il tuo site originale. In questa copia non è cambiato nulla. Controlla che il site sia online e che Claude Cowork sia ancora installato.",
   "sync.error.copyChanged": "Questa copia è cambiata durante la sincronizzazione, quindi non è stato applicato nulla. Riprova.",
-  "sync.error.noSpace": "Sul server di Tracy non c’era spazio per questa sincronizzazione. Su questa copia non è cambiato nulla. Contattaci."
+  "sync.error.noSpace": "Sul server di Tracy non c’era spazio per questa sincronizzazione. Su questa copia non è cambiato nulla. Contattaci.",
+  "sync.error.liveBlocked": "Il sito online ha restituito una risposta bloccata o non proveniente dal motore. Controlla il firewall o la protezione dai bot e consenti le richieste di Tracy.",
+  "sync.error.livePassword": "Il sito online richiede una password HTTP. Consenti a Tracy di accedere all’endpoint Claude Cowork senza questa password, poi riprova.",
+  "sync.error.liveRateLimited": "Il sito online sta limitando le richieste. Attendi prima di riprovare; Tracy rispetta il ritardo Retry-After.",
+  "sync.error.liveToken": "Il sito online ha rifiutato il token Claude Cowork. Ricollegalo con il token attuale, poi riprova."
 }

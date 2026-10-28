@@ -1,0 +1,2 @@
+- **Name the reason a live site refuses sync and respect its retry delay.** — David · #77 · `fix/sync-network-errors` · 2026-10-29
+  **Affects:** Sync from live and Sync to live distinguish firewall/non-engine replies, HTTP password protection, rate limits and refused tokens. Reads wait for Retry-After; uncertain writes are still never resent. All eight interface languages carry the recovery instructions.

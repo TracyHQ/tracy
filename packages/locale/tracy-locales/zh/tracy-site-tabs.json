@@ -1209,5 +1209,9 @@
   "sync.error.interruptedKept": "之前的一次同步在向此副本写入更改时因 Tracy 更新而停止，此后此副本又有了改动。Tracy 保持原样未动。若要撤销那次同步，请在 Backups 中恢复备份点“Before restore”，然后再次同步。",
   "sync.error.liveUnreachable": "Tracy 无法读取你的原始 site。此副本没有任何更改。请检查 site 是否在线，以及 Claude Cowork 是否仍安装在上面。",
   "sync.error.copyChanged": "同步期间此副本发生了变化，因此没有放入任何内容。请重试。",
-  "sync.error.noSpace": "Tracy 的服务器没有足够空间完成此次同步。此副本没有任何改动。请联系我们。"
+  "sync.error.noSpace": "Tracy 的服务器没有足够空间完成此次同步。此副本没有任何改动。请联系我们。",
+  "sync.error.liveBlocked": "线上网站返回了被拦截或并非来自引擎的响应。请检查防火墙或机器人防护，并允许 Tracy 的请求。",
+  "sync.error.livePassword": "线上网站需要 HTTP 密码。请允许 Tracy 无需该密码即可访问 Claude Cowork 端点，然后重试。",
+  "sync.error.liveRateLimited": "线上网站正在限制请求。请稍后重试；Tracy 会遵守 Retry-After 指定的等待时间。",
+  "sync.error.liveToken": "线上网站拒绝了 Claude Cowork 令牌。请使用当前令牌重新连接线上网站，然后重试。"
 }

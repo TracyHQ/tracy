@@ -1513,7 +1513,7 @@ read_live() {
       python3 -c 'import json,sys
 a = json.loads(sys.argv[1])
 if a.get("code") == "LIVE_BUSY": print("!! the live site kept changing: " + str(a.get("detail") or "")[:300], file=sys.stderr)
-print(json.dumps({"ok": False, "code": "LIVE_BUSY" if a.get("code") == "LIVE_BUSY" else "LIVE_READ_FAILED", "read": a}))' "$pulled"
+print(json.dumps({"ok": False, "code": a["code"] if a.get("code") in ("LIVE_BUSY", "LIVE_BLOCKED", "LIVE_PASSWORD_PROTECTED", "LIVE_RATE_LIMITED", "TOKEN_REFUSED") else "LIVE_READ_FAILED", "read": a}))' "$pulled"
       return 1
     fi
     printf '%s\n' "$pulled" > "$DIR/live-read.json"
