@@ -1795,20 +1795,28 @@ test(
     // 🔒 A started check answers at once and runs on; its status carries the counted result (dev 24/10/2026:
     // every long check call was cut at Cloudflare's ~100 s and its result dropped as unheard).
     let finishLook
+    let finished = false
+    // A NUL in what the check read (local 25/10/2026): jsonb refuses `\u0000`, the save threw unheard and
+    // every later status read the running check as lost, so the demo never finished.
+    const nulLook = () => ({
+      id: 'looks-finished',
+      pass: false,
+      looked: true,
+      detail: [{ page: '/', viewport: 'phone', kind: 'text', where: 'menu\u0000tab' }]
+    })
     const looking = new Promise((entered) => {
+      // The first look waits to be let go; a later one in the same check (the full read that confirms a failing
+      // incremental one, `measure`) answers at once.
       w.deps.demoLook = () =>
-        new Promise((resolve) => {
-          // A NUL in what the check read (local 25/10/2026): jsonb refuses `\u0000`, the save threw unheard and
-          // every later status read the running check as lost, so the demo never finished.
-          finishLook = () =>
-            resolve({
-              id: 'looks-finished',
-              pass: false,
-              looked: true,
-              detail: [{ page: '/', viewport: 'phone', kind: 'text', where: 'menu\u0000tab' }]
+        finished
+          ? Promise.resolve(nulLook())
+          : new Promise((resolve) => {
+              finishLook = () => {
+                finished = true
+                resolve(nulLook())
+              }
+              entered()
             })
-          entered()
-        })
     })
     const checking = await capability.call(auth, { operation: 'check.start' })
     assert.equal(checking.running, true, JSON.stringify(checking))
@@ -2386,6 +2394,114 @@ test(
           call.params.data?.date === day
       ),
       JSON.stringify(checked.sweep ?? checked)
+    )
+  }
+)
+
+test(
+  'dev 27/10/2026: the check after a sweep round asks the host to read again only the pages whose document changed',
+  opts,
+  async () => {
+    // ja-diner (dev 27/10/2026): each of six sweep rounds' checks read and looked at the whole site, ~60 min in one call.
+    const w = await world({ historical: false, agentWorkflow: true, chatMode: 'client-send/1' })
+    const home = await w.deps.readNativeInventory()
+    const post = {
+      key: 'posts/spring-menu',
+      identity: { collection: 'posts', id: 'spring-menu', slug: 'spring-menu', locale: 'en' },
+      publication: { status: 'published' },
+      routes: ['/posts/spring-menu'],
+      relations: {},
+      dateField: 'date',
+      data: { title: 'Spring menu', date: '2021-09-10' },
+      editorialFields: ['title', 'date']
+    }
+    w.deps.readNativeInventory = async () => ({ ...home, records: [...home.records, post] })
+    const actionId = (await w.accept()).body.actions[0].id
+    const prepared = await w.deps.clientDemo.prepare({ accountId: w.account, actionId })
+    const sent = await w.deps.clientDemo.send({
+      accountId: w.account,
+      actionId,
+      body: {
+        sessionId: prepared.chat.sessionId,
+        briefHash: prepared.brief.hash,
+        nativeRequestId: 'native-user'
+      }
+    })
+    const capability = agentDemoCapabilities({
+      pool: w.pool,
+      objects: null,
+      now: w.deps.now,
+      lifecycle: (auth, params, held) => w.deps.clientDemo.operation(auth, params, held)
+    })
+    const auth = {
+      siteKey: prepared.chat.siteKey,
+      accountId: w.account,
+      sessionId: prepared.chat.sessionId,
+      turnId: 'user-turn'
+    }
+    await w.pool.query(
+      `insert into site_turn(turn_id,site_key,session_id,turn,actor,title,state,rpc_id,opened_at) values('user-turn',$1,$2,1,'builder@test.example','User brief','open',$3,$4)`,
+      [auth.siteKey, auth.sessionId, sent.submission.nativeRequestId, new Date(w.deps.now())]
+    )
+    const research = await capability.call(auth, { operation: 'read', part: 'catalogue' })
+    await capability.call(auth, { operation: 'provision.start' })
+    const status = await capability.call(auth, { operation: 'provision.status' })
+    assert.equal(status.ready, true, JSON.stringify(status))
+    const plan = await capability.call(auth, { operation: 'plan.read' })
+    const saved = await capability.call(auth, {
+      operation: 'plan.save',
+      plan: {
+        version: 'agent-demo/1',
+        researchHash: research.hash,
+        structureHash: plan.structureHash,
+        rows: [
+          {
+            page: '/',
+            section: 'body',
+            goal: 'Keep layout',
+            sourceIds: [],
+            assetIds: [],
+            target: { kind: 'emdash', collection: 'pages', id: 'home', path: 'body' },
+            operation: 'retain',
+            verify: 'Read page'
+          }
+        ]
+      }
+    })
+    assert.equal(saved.ok, true, JSON.stringify(saved))
+    const build = (await w.pool.query('select created_at, content from wo_build')).rows[0]
+    assert.equal(build.content.agentDemo.plan.structure, undefined, 'the saved plan holds no structure')
+    const looked = []
+    const qa = w.deps.demoQa
+    w.deps.demoQa = async (site, args) => {
+      looked.push(args)
+      return qa(site, args)
+    }
+    // The first check reads every page; it answers with the sweep's calls, uncounted.
+    const swept = await capability.call(auth, { operation: 'check' })
+    assert.ok((swept.sweep?.calls ?? []).length > 0, JSON.stringify(swept.sweep ?? swept))
+    assert.equal(looked[0].incremental, false)
+    assert.equal((await w.pool.query('select qa from wo_build')).rows[0].qa.clientCheckAttempts ?? 0, 0)
+    // The check after the round keeps each page whose document the sweep did not change (`checkIsIncremental`).
+    // Review 27/10/2026: a kept read is the page as it loaded, before lazy content scrolled in, so it can still show
+    // a label the sweep renamed. Here the incremental read fails on such a label; the full read does not see it.
+    w.deps.demoQa = async (site, args) => {
+      looked.push(args)
+      const answer = await qa(site, args)
+      if (!args.incremental) return answer
+      const stale = { id: 'no-demo-words', pass: false, measured: 'kept read', detail: [{ page: '/' }] }
+      return { ...answer, body: { ...answer.body, checks: [...answer.body.checks, stale] } }
+    }
+    const counted = await capability.call(auth, { operation: 'check' })
+    assert.equal(looked[1].incremental, true)
+    // The same sweep planned again: no round follows, the check is counted, so the failure is read again in full first.
+    assert.equal(looked[2]?.incremental, false, 'a failing incremental check is confirmed by a full read')
+    assert.equal(looked.length, 3)
+    const qaRow = (await w.pool.query('select qa from wo_build')).rows[0].qa
+    assert.equal(qaRow.clientCheckAttempts, 1)
+    assert.ok(
+      !counted.checks.some((c) => c.measured === 'kept read'),
+      'the counted answer is the full read, never the kept one'
     )
   }
 )

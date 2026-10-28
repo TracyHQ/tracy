@@ -146,6 +146,33 @@ export function sweepDecision(swept, attempts, sweep) {
     return { go: false, rounds, stopped: 'no-progress' }
   return { go: true, rounds }
 }
+/**
+ * Whether the next check may keep the last read of every page whose document did not change (`incremental`): after a
+ * counted check, and after a sweep round of the current one. A ROUND'S CHECK READS ONLY WHAT THE SWEEP CHANGED
+ * (dev 27/10/2026): ja-diner's first check read and looked at the whole site after each of its 6 rounds, ~60 min in
+ * one tool call, though each round wrote some pages only. The host fingerprints each page as served and reads again
+ * only those whose document changed, so a page the sweep wrote, or one showing a shared part it wrote (a footer, a
+ * menu, a post list), is read and looked at anew and every other keeps its last read (`demo-qa-browser.js`). A pass
+ * found that way is still confirmed by a full read before it counts (`measure`), so a passing check means what it did.
+ * @param {{clientCheckAttempts?: number, residueSweeps?: {attempt?: number, n?: number}} | null | undefined} qa
+ */
+export function checkIsIncremental(qa) {
+  const attempts = qa?.clientCheckAttempts ?? 0
+  const swept = qa?.residueSweeps
+  return attempts > 0 || (swept?.attempt === attempts && (swept.n ?? 0) > 0)
+}
+/**
+ * The template category names the sweep rounds of the current counted check sent a rename for (`planSweep`
+ * `renamedBefore`); a new counted check starts with none.
+ * @param {{clientCheckAttempts?: number, residueSweeps?: {attempt?: number, renamed?: string[]}} | null | undefined} qa
+ * @returns {string[]}
+ */
+export function renamedBeforeOf(qa) {
+  const swept = qa?.residueSweeps
+  return swept?.attempt === (qa?.clientCheckAttempts ?? 0) && Array.isArray(swept.renamed)
+    ? swept.renamed
+    : []
+}
 /** A turn record closed this recently may still be reopened by a turn-stopping steer (see `endedUnchecked`). */
 const STEER_GRACE_MS = 120_000
 const QA_FAILURES = new Set(['DEMO_BASELINE_UNAVAILABLE', 'AGENT_DEMO_ENDED_UNCHECKED'])
@@ -650,14 +677,21 @@ export function createClientDemoService(deps) {
   }
   /** Reads, shoots and looks at the site: minutes on a whole site. Saves nothing. */
   /**
-   * One check of the site: incremental after the first (pages whose document did not change keep their last read,
-   * plan "10/10" §7 S6), and a pass found that way is confirmed by a full read before it counts — the last check
-   * that passes a build has read every page anew (council 26/10/2026).
+   * One check of the site: incremental after the first and after a sweep round (pages whose document did not change
+   * keep their last read, plan "10/10" §7 S6; `checkIsIncremental`), and a pass found that way is confirmed by a full
+   * read before it counts — the last check that passes a build has read every page anew (council 26/10/2026).
+   * 🔒 A KEPT READ IS NEVER THE EVIDENCE FOR A COUNTED FAILURE (review 27/10/2026): a page's fingerprint is its
+   * document as loaded, before lazy content scrolls in, and the look keeps the last look's faults on kept pages
+   * (`keptLook`), so an incremental check can fail on what a write already changed. A failing incremental check that
+   * would be counted (no sweep round follows it, `sweepDecision`) is read again in full, and that read is the answer;
+   * one a sweep round follows costs no attempt and is measured again after the round.
    */
   async function measure(auth, state) {
-    const incremental = (state.build.qa?.clientCheckAttempts ?? 0) > 0
+    const incremental = checkIsIncremental(state.build.qa)
     const first = await measureOnce(auth, state, incremental)
-    if (!incremental || !first.pass) return first
+    if (!incremental) return first
+    const attempts = state.build.qa?.clientCheckAttempts ?? 0
+    if (!first.pass && sweepDecision(state.build.qa?.residueSweeps, attempts, first.sweep).go) return first
     return measureOnce(auth, state, false)
   }
   async function measureOnce(auth, state, incremental) {
@@ -766,6 +800,8 @@ export function createClientDemoService(deps) {
       design: checks.find((check) => check.id === 'no-demo-pictures')?.unresolved ?? [],
       // A template category the page still names takes a name from the written posts' research topics.
       categories: templateCategoriesOf(checks),
+      // …and one an earlier round of this counted check sent a rename for, still shown, is reported, not sent again.
+      renamedBefore: renamedBeforeOf(state.build.qa),
       topicNames: postTopicNames(checkedPlan(state.build.content.agentDemo), checkedResearch(state.revision)),
       // The logo is the logo's, never a photo laid in a picture's place.
       media: importedMedia(state.build, checkedResearch(state.revision)).filter((m) => m.url !== logo?.url),
@@ -863,7 +899,8 @@ export function createClientDemoService(deps) {
           left: outcome.sweep.left ?? 0,
           // Kept past the round that wrote the placeholder, so the check that passes still says so.
           thinLeads: Math.max(swept?.thinLeads ?? 0, outcome.sweep.thinLeads ?? 0),
-          terms: swept?.terms === true || outcome.sweep.calls.some((call) => call.action === 'terms')
+          terms: swept?.terms === true || outcome.sweep.calls.some((call) => call.action === 'terms'),
+          renamed: [...new Set([...renamedBeforeOf(state.build.qa), ...(outcome.sweep.renamed ?? [])])]
         },
         ...(job ? { clientCheck: doneCheck(job, result) } : {})
       })
