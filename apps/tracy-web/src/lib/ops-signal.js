@@ -11,6 +11,7 @@ const NOTIFY = new Set([
   'site.create',
   'site.import',
   'site.stuck',
+  'invitations.queue_paused',
   'ops.daily',
   'discord.linked',
   'discord.bug_report',
@@ -48,6 +49,8 @@ const FIELDS = {
   'onboard.step': ['run_id', 'flow', 'step'],
   'onboard.exit': ['run_id', 'flow', 'step', 'end'],
   'site.undo': ['moment', 'ok', 'refusal'],
+  // An Invitations send queue the cron paused (`invitations/real-queue.js`); it waits for a person.
+  'invitations.queue_paused': ['campaign_id', 'reason'],
   'site.go_live': ['domain'],
   'site.delete': ['platform', 'age_days'],
   'team.invite': ['role'],
@@ -219,6 +222,8 @@ export function signalText(event, label) {
     return `🌐 ${prefix} New site (import registered)\n${actor}\nSite: ${site} · Platform: ${clean(d.platform)}`
   if (event.kind === 'site.stuck')
     return `🔴 ${prefix} Customer stuck: ${clean(d.step)} failed\n${actor}\nSite: ${site} · ${clean(d.platform)}\nReason: ${clean(d.reason)}${stuckWhere(d.detail)}${signIn(d)}`
+  if (event.kind === 'invitations.queue_paused')
+    return `⏸ ${prefix} Invitations send queue paused: ${clean(d.reason)}\nCampaign: ${clean(d.campaign_id)}\nNothing more is sent until someone resumes it in /ops › Invitations › Send.`
   if (event.kind === 'discord.linked')
     return `💬 ${prefix} Discord member verified\n${actor}\nDiscord user: ${discordUser(d)}`
   if (event.kind === 'discord.bug_report')
