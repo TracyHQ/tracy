@@ -176,3 +176,33 @@ data: blocking classes, whether locked content counts, how many unexplained hole
 are allowed, the audit version a file needs: 1.1.0 measures page hygiene, so a 1.0.0 file is measured again). A
 file measured on another map or lock is stale and counts as not measured. A release already
 published only warns.
+
+### `content-coverage/verify-viewer.mjs` — look at the content map on the real pages
+
+A page for a person to check a content map with their eyes, run after `--fit` has written the map. One block
+per component (a Joomla module, an article, a contact): on the left a screenshot of the template site with every
+slot of that component outlined and numbered (desktop 1440 and phone 390), on the right a table with the same
+numbers and each slot's key, sample, role (Fact or Editorial), group, `fit` and measured box.
+
+```
+node packages/cms/tracy-quickstart-tools/content-coverage/verify-viewer.mjs \
+  --site <url of a site built from the quickstart> --template ja-boxing/j6 --version <x.y.z> \
+  --out <empty folder outside the repo> [--max-pages 80] [--reuse]
+```
+
+`--template` + `--version` read the contract from `packages/cms/tracy-joomla-quickstart/contracts/`; `--contract <dir>`
+takes any contract folder instead (`--version` is then only the label on the page). `--reuse` keeps the audit findings
+and module boxes already in `<out>/.audit`. Open `<out>/index.html`; nothing it writes is committed.
+
+- **Not located.** A slot with no visible element matched to it is listed apart with the reason (matched only a
+  hidden element, nothing on the audited pages, the same sample as another component's slot, a match outside the
+  component's area). A position is never guessed.
+- **Not shown.** A slot with no visible match whose `fit` says `measured: false` (no audited page shows it) is
+  listed in its own section.
+- **Suspicious.** Four mechanical rules mark a slot red or amber: a face or signature picture whose role is not
+  `person.*`/`quote.*`; text that looks like a real figure but has an `editorial.*` role; a Fact role whose `fit`
+  says keep; `fit` not measured although the slot is shown. Everything else is for the person to judge.
+
+It reuses the audit (`runAudit`, so the same lazy-content wake and the same smooth-scroll handling as `--fit`),
+is read-only on the site, and covers the Joomla module wrappers (`Mod<N>`) of the T4 template.
+`packages/cms/tracy-quickstart-tools/test/content-map-verify-viewer.test.mjs` covers the locating and the page.

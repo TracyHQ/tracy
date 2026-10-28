@@ -482,6 +482,17 @@ path):
    `packages/cms/tracy-quickstart-tools/content-coverage/hygiene-rules.json`, thresholds in
    `apps/tracy-web/src/lib/content-coverage/policy.json` (changed only by a product owner decision).
    Exit 0 = pass. Exit 1 = holes or page problems remain → **section 7b**.
+   Then **look at the map on the real pages** with the verify viewer (needs the `--fit` map written above; the contract is read
+   from the tree for the version you are cutting):
+
+   ```bash
+   node packages/cms/tracy-quickstart-tools/content-coverage/verify-viewer.mjs \
+     --site "$VERIFY_URL" --template ja-boxing/j6 --version "$VER" --out "$WORK/verify"
+   ```
+
+   Open `"$WORK/verify/index.html"` (not committed). Fix every slot under *Not located* or *Not shown* that a visitor can see,
+   and judge each red or amber slot by eye; the tool marks, a person decides. Details: the tools README, section
+   `verify-viewer.mjs`.
    Re-capturing the contract means **measuring again**: the file records the sha256 of `content-map.json` and `presentation-lock.json`; a
    mismatch makes /ops treat it as not measured.
 8. **Slot roles (in `content-map.json`)** — there is no sidecar: every text and image slot carries `role` and `group`, and the
