@@ -206,7 +206,7 @@ export const PEOPLE_ROUTES = [
     path: '/login',
     summary: 'Mail a sign-in code to an address',
     description:
-      'Stores a hashed six-digit code for the address and emails it. Accepts JSON (answers `{ok:true}`, or 400 `INVALID_EMAIL`) or a plain HTML form post (answers the page at its code step). The code expires after a short window. Codes mailed per hour are capped per address and per client address; over either cap answers 429 `RATE_LIMITED` (JSON) or the sign-in page with a message (form post), and no code is written or mailed.',
+      'Stores a hashed six-digit code for the address and emails it. Accepts JSON (answers `{ok:true}`, or 400 `INVALID_EMAIL`) or a plain HTML form post (answers the page at its code step). The code expires after a short window. Codes mailed per hour are capped per address and per client address; over either cap answers 429 `RATE_LIMITED` (JSON) or the sign-in page with a message (form post), and no code is written or mailed. An accepted request records a `login.code_requested` usage signal with the cleaned `utm_*` values only, never the address, at most 30 an hour per client address.',
     audience: ['customer', 'public'],
     auth: 'none',
     internal: false,
@@ -398,7 +398,7 @@ export const PEOPLE_ROUTES = [
     path: '/signin/:provider',
     summary: 'Start a Google or GitHub sign-in',
     description:
-      'Records a one-time OAuth state, sets it as a short-lived cookie, and redirects to the provider. A provider that is unknown or not configured on this deployment answers 404.',
+      'Records a one-time OAuth state, sets it as a short-lived cookie, and redirects to the provider. A provider that is unknown or not configured on this deployment answers 404. A start records a `login.oauth_started` usage signal with the provider and the cleaned `utm_*` values, at most 30 an hour per client address.',
     audience: ['customer', 'public'],
     auth: 'none',
     internal: false,

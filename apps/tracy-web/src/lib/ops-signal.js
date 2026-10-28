@@ -62,6 +62,10 @@ const FIELDS = {
   // A signed-out visit to `/login` whose link carried `utm_*` (`POST /login/visit`, sent by the page's own
   // script so a mail scanner fetching the link is not counted). No account, no address: only the source.
   'login.visited': ['source', 'medium', 'campaign', 'content'],
+  // The two ways a signed-out person starts signing in (`identity/route.js` `recordSignInStart`): an email
+  // code asked for, and a Google or GitHub sign-in begun. No account, no address: the source, and the provider.
+  'login.code_requested': ['source', 'medium', 'campaign', 'content'],
+  'login.oauth_started': ['provider', 'source', 'medium', 'campaign', 'content'],
   'beta.waitlist': ['via'],
   'beta.waitlist_form': ['platforms', 'role', 'site_count'],
   'ops.daily': ['day', 'counts', 'active', 'badges', 'sources'],
