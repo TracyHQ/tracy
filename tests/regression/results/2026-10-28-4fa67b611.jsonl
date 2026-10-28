@@ -1,0 +1,1 @@
+{"id":"REG-PR-69-sync-field-asset-ids","verdict":"PASS","commit":"4fa67b611ac806ec1c3ab49a4e4ce46c9e5952d3","ran_at":"2026-10-28T15:55:48.442Z","evidence":"tests/regression/.runs/2026-10-28-4fa67b611/REG-PR-69-sync-field-asset-ids.log"}
