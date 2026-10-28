@@ -526,16 +526,32 @@ async function drawFor(job, hold) {
   if (!needMain && !needShared) return []
   const budget = (job.budgetMs ?? BEFORE_HOLD_MS) - hold.spentMs
   const started = now()
-  const left = () => budget - (now() - started)
+  // 🔒 A read that timed out spent the budget. The timer runs on its own clock while `now` counts whole
+  // ms, so right after a timeout the clock can still read 1 ms left, and that ms must not draw a page.
+  let spent = false
+  const left = () => (spent ? 0 : budget - (now() - started))
+  /**
+   * A read inside the budget: `failed` when it fails, null when the budget ran out first (and then
+   * nothing else is drawn).
+   * @template T
+   * @param {Promise<T>} promise @param {T} failed
+   * @returns {Promise<T | null>}
+   */
+  const inBudget = async (promise, failed) => {
+    const got = await within(promise, left(), failed)
+    if (got === null) spent = true
+    return got
+  }
   /** @type {string[]} */
   const drew = []
   try {
     let reach = job.reach
     // Where an element only some pages show is, asked once, inside the budget.
     if (reach.shared === 'some' && reach.usedOn === undefined && job.usage !== undefined && left() > 0) {
-      const usage = await within(job.usage(reach), left(), null)
-      if (usage?.all === true) reach = { ...reach, shared: 'site' }
-      else if (usage !== null) reach = { ...reach, usedOn: usage.pages }
+      const usage = await inBudget(job.usage(reach), false)
+      if (usage === false || usage === null) reach = job.reach
+      else if (usage.all === true) reach = { ...reach, shared: 'site' }
+      else reach = { ...reach, usedOn: usage.pages }
     }
     /** @type {string | null} */
     let main = null
@@ -557,7 +573,7 @@ async function drawFor(job, hold) {
         const fits = main === null || reach.shared === 'site' || pageOf(main) === pageOf(early.path)
         const wanted = main === null ? ask.fallback === undefined : fits
         if (wanted) {
-          const got = await within(early.picture, left(), /** @type {Drawn | string} */ ('capture-ERROR'))
+          const got = await inBudget(early.picture, /** @type {Drawn | string} */ ('capture-ERROR'))
           if (got === null || typeof got === 'string') why = got ?? 'capture-timeout'
           else if (main === null) {
             ask.fallback = got
@@ -601,7 +617,7 @@ async function drawFor(job, hold) {
         break
       }
       const at = now()
-      const got = await within(job.draw(view), left(), /** @type {Capture} */ ({ ok: false, code: 'ERROR' }))
+      const got = await inBudget(job.draw(view), /** @type {Capture} */ ({ ok: false, code: 'ERROR' }))
       if (got === null) {
         if (page.main) ask.missing = 'capture-timeout'
         break
