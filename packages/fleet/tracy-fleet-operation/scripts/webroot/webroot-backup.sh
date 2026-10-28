@@ -698,9 +698,12 @@ PYEOF
   if [[ "$live_trig_ok" != 1 ]] || ! tracy_db_triggers_sql "$tmpdb" > "$new_trig" \
      || ! tracy_db_foreign_keys prepare --plan "$fk_plan" --live "$db" --stage "$tmpdb" \
           --old-tables "$trig/old-tables" --new-tables "$trig/new-tables" --trash "$trash" >&2 \
+     || [[ "${TRACY_TEST_FAIL_STAGE_TRIGGERS:-}" == 1 ]] \
      || ! tracy_db_drop_triggers "$tmpdb" >&2; then
     rm -rf "$trig"
     files_back
+    # No live DDL has run. Retire the plan before removing its stage evidence.
+    rm -f "$fk_plan"
     tracy_db_exec mariadb -uroot -e "DROP DATABASE IF EXISTS \`$tmpdb\`" >/dev/null 2>&1 || true
     step swap failed
     restore_answer 0 RESTORE_FAILED swap 1 "the database triggers could not be read; the old database and files are in place"; return
@@ -715,8 +718,11 @@ PYEOF
     tracy_db_foreign_keys rollback --plan "$fk_plan" >&2 || rolled=0
     rm -rf "$trig"
     files_back || rolled=0
-    tracy_db_exec mariadb -uroot -e "DROP DATABASE IF EXISTS \`$tmpdb\`; DROP DATABASE IF EXISTS \`$trash\`" >/dev/null 2>&1 || true
-    [[ "$rolled" != 1 ]] || rm -f "$fk_plan"
+    if [[ "$rolled" == 1 ]]; then
+      rm -f "$fk_plan"
+      tracy_db_exec mariadb -uroot -e "DROP DATABASE IF EXISTS \`$tmpdb\`; DROP DATABASE IF EXISTS \`$trash\`" >/dev/null 2>&1 || true
+    fi
+    # An incomplete rollback keeps stage/trash evidence for foreign-key recovery.
     step swap failed
     restore_answer 0 RESTORE_FAILED swap "$rolled" "the database swap was refused; the old database and files are in place"; return
   fi
@@ -767,8 +773,8 @@ PYEOF
     restore_answer 0 RESTORE_FAILED check "$rolled" "the restored database did not check out ($now_n tables, expected $RESTORE_TABLES)"; return
   fi
   rm -rf "$trig"
-  tracy_db_exec mariadb -uroot -e "DROP DATABASE IF EXISTS \`$tmpdb\`" >/dev/null 2>&1 || true
   rm -f "$fk_plan"
+  tracy_db_exec mariadb -uroot -e "DROP DATABASE IF EXISTS \`$tmpdb\`" >/dev/null 2>&1 || true
   step check done
   restore_answer 1 "" "" "" ""
 }

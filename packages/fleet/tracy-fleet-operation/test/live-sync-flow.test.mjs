@@ -1527,3 +1527,33 @@ test(
     }
   }
 )
+
+test('a pre-swap trigger failure retires its foreign-key plan before cleaning the stage', opts, () => {
+  const s = stack(`CREATE TABLE jos_parent (id INT PRIMARY KEY); INSERT INTO jos_parent VALUES (1);
+CREATE TABLE jos_child (id INT PRIMARY KEY, parent_id INT, title VARCHAR(40), CONSTRAINT child_parent FOREIGN KEY (parent_id) REFERENCES jos_parent(id) ON DELETE RESTRICT);
+INSERT INTO jos_child VALUES (1,1,'base');`)
+  try {
+    sql(
+      "ALTER TABLE jos_child DROP FOREIGN KEY child_parent; ALTER TABLE jos_child ADD CONSTRAINT child_parent FOREIGN KEY (parent_id) REFERENCES jos_parent(id) ON DELETE CASCADE; UPDATE jos_child SET title='live';",
+      'livesrc'
+    )
+    const dir = s.read()
+    assert.equal(s.merge(dir).state, 'ready')
+    const answer = s.run(SYNC, ['--op', 'apply', '--dir', dir], () => ({
+      TRACY_TEST_FAIL_STAGE_TRIGGERS: '1'
+    }))
+    assert.equal(answer.ok, false)
+    assert.equal(existsSync(join(s.priv, '.restore-foreign-keys.json')), false)
+    const graph = () =>
+      rows(
+        "SELECT delete_rule FROM information_schema.referential_constraints WHERE constraint_schema='joomla' AND constraint_name='child_parent'"
+      )
+    assert.deepEqual(graph(), [['RESTRICT']], 'the live graph was never replaced by the staged CASCADE graph')
+    assert.deepEqual(rows('SELECT title FROM jos_child'), [['base']])
+    // Recovery on the next sync must leave the old graph alone after stage cleanup.
+    s.merge(s.read())
+    assert.deepEqual(graph(), [['RESTRICT']])
+  } finally {
+    s.dispose()
+  }
+})

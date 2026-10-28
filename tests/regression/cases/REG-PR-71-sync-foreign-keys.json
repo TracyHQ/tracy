@@ -20,8 +20,8 @@
       "node",
       "--test",
       "--test-reporter=tap",
-      "--test-name-pattern=generated columns recompute|foreign keys|referenced parent",
-      "--test-name-pattern=generated columns recompute|generated-only|foreign keys|referenced parent"
+      "--test-name-pattern=generated columns recompute|generated-only|foreign keys|referenced parent",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs"
     ],
     "tests": [
       "whole-table sync preserves foreign keys and can replace a referenced parent",
