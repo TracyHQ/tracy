@@ -4099,25 +4099,42 @@ export async function runDemoQa({ asked, base, read, now = Date.now, readAtOnce 
   const routeReads = []
   const routesUnread = []
   const routeStarted = now()
+  // 🔒 ROUTES A FEW AT ONCE TOO (28/10/2026): a WordPress template's ~40 post routes were read one after another,
+  // 150–180 s of every read of the site, while its pages already went `readAtOnce` at a time. They go in waves the
+  // same way, each wave started only inside `routeBudgetMs`, and are handled in route order, so what is read and every
+  // verdict from it are the one-at-a-time run's.
+  const routesDue = []
   for (const path of asked.routes ?? []) {
     if (seen.has(routeKey(path)) || reads.some((r) => routeKey(r.path) === routeKey(path))) continue
     seen.add(routeKey(path))
+    routesDue.push(path)
+  }
+  for (let i = 0; i < routesDue.length; ) {
     if (now() - routeStarted > (asked.routeBudgetMs ?? 0)) {
-      routesUnread.push(path)
-      continue
+      routesUnread.push(...routesDue.slice(i))
+      break
     }
-    const url = new URL(path, base)
-    if (url.origin !== origin) continue
-    const r = await read(url.href, path, { ...options, discover: false })
-    const skipped = notAPage(r, path, 'route')
-    visited.push({
-      path,
-      status: r.status ?? null,
-      finalPath: finalPathOf(r) ?? path,
-      from: 'route',
-      ...(skipped ? { skipped } : {})
-    })
-    if (!skipped) routeReads.push(r)
+    const wave = routesDue.slice(i, i + Math.max(1, readAtOnce))
+    i += wave.length
+    const results = await Promise.all(
+      wave.map((path) => {
+        const url = new URL(path, base)
+        return url.origin === origin ? read(url.href, path, { ...options, discover: false }) : null
+      })
+    )
+    for (const [k, path] of wave.entries()) {
+      const r = results[k]
+      if (!r) continue
+      const skipped = notAPage(r, path, 'route')
+      visited.push({
+        path,
+        status: r.status ?? null,
+        finalPath: finalPathOf(r) ?? path,
+        from: 'route',
+        ...(skipped ? { skipped } : {})
+      })
+      if (!skipped) routeReads.push(r)
+    }
   }
   const everyRead = [...reads, ...routeReads]
   const residue = residueOf(everyRead, asked)

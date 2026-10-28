@@ -1225,21 +1225,38 @@ test('runDemoQa with three tabs gives the one-tab result, page by page, whatever
   const run = async (readAtOnce) => {
     let open = 0
     let most = 0
+    let routesOpen = 0
+    let routesMost = 0
     const read = async (url, path) => {
       open++
       most = Math.max(most, open)
+      if (path.startsWith('/post-')) routesMost = Math.max(routesMost, ++routesOpen)
       await new Promise((r) => setTimeout(r, path === '/' ? 1 : 30 - path.length))
       open--
+      if (path.startsWith('/post-')) routesOpen--
       return page({ path, url, navLinks: path === '/' ? ['/a', '/bb', '/ccc', '/dddd', '/eeeee'] : [] })
     }
-    const asked = demoQaBody({ label: 'acme', platform: 'wordpress', discover: true })
+    // Routes too (28/10/2026): a template's post routes were read one after another.
+    const routes = Array.from({ length: 7 }, (_, i) => `/post-${i}/`)
+    const asked = demoQaBody({
+      label: 'acme',
+      platform: 'wordpress',
+      discover: true,
+      routes,
+      routeBudgetMs: 60_000
+    })
     const result = await runDemoQa({ asked, base: 'http://127.0.0.1:5000/', read, readAtOnce })
-    return { result, most }
+    return { result, most, routesMost }
   }
   const one = await run(1)
   const three = await run(3)
   assert.equal(one.most, 1)
   assert.equal(three.most, 3)
+  assert.equal(three.routesMost, 3)
+  assert.deepEqual(
+    three.result.routes,
+    Array.from({ length: 7 }, (_, i) => `/post-${i}/`)
+  )
   const { durationMs: _a, ...a } = one.result
   const { durationMs: _b, ...b } = three.result
   assert.deepEqual(JSON.parse(JSON.stringify(b)), JSON.parse(JSON.stringify(a)))
