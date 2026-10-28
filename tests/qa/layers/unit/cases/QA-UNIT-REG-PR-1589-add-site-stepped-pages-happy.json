@@ -33,7 +33,7 @@
     "bare entry starts with Adding, choice cards advance, and Back keeps the platform",
     "the starting gallery requests thumbnails without loading a full desktop shot",
     "Open preview stays in the wizard, frames the demo and Use selects and closes",
-    "preview pager walks only the filtered designs and selection stays on step three"
+    "preview pager walks only the filtered designs and Use selects and moves on to the address"
   ],
   "redProof": null,
   "legacyIds": ["REG-PR-1589-add-site-stepped-pages"],
@@ -65,7 +65,7 @@
     "bare entry starts with Adding, choice cards advance, and Back keeps the platform",
     "the starting gallery requests thumbnails without loading a full desktop shot",
     "Open preview stays in the wizard, frames the demo and Use selects and closes",
-    "preview pager walks only the filtered designs and selection stays on step three"
+    "preview pager walks only the filtered designs and Use selects and moves on to the address"
   ],
   "timeoutS": 600
 }
