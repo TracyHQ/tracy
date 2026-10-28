@@ -9,6 +9,7 @@ import { test } from 'node:test'
 import { isFactRole } from '../../../wo/website-opportunities/domain/place-content-roles.mjs'
 import { locate } from '../content-coverage/lib/verify/locate.mjs'
 import { buildHtml } from '../content-coverage/lib/verify/page-html.mjs'
+import { suspicion } from '../content-coverage/lib/verify/suspicion.mjs'
 
 const slot = (key, extra = {}) => ({
   key,
@@ -114,4 +115,14 @@ test('the page shows the numbered slots, both unlocated lists and the suspicious
   assert.match(html, /lv-red[\s\S]*module-7\.badge/)
   assert.match(html, /Not located on a page \(2\)/)
   assert.match(html, /Not shown on any page, fit not measured \(1\)/)
+})
+
+test('rule 1 accepts faces that prove a number (stat.proof_image, ADR 0040) and still marks a signature under it', () => {
+  const picture = (kind, role) =>
+    slot(`module-7.${kind}`, { type: 'image', role, fit: { measured: true, kind, replace: 'photo' } })
+  const rules = (s) => suspicion(s, true, isFactRole).map((f) => f.rule)
+  assert.deepEqual(rules(picture('avatar-group', 'stat.proof_image')), [])
+  assert.deepEqual(rules(picture('avatar', 'stat.proof_image')), [])
+  assert.deepEqual(rules(picture('signature', 'stat.proof_image')), [1])
+  assert.deepEqual(rules(picture('avatar-group', 'editorial.illustration')), [1])
 })

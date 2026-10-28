@@ -8,6 +8,7 @@ import { test } from 'node:test'
 
 import { measureSlotFit } from '../content-coverage/lib/slot-fit.mjs'
 import { checkContentMapFit } from '../../../wo/website-opportunities/domain/content-map-fit.mjs'
+import { keepDerivationProblems } from '../../../wo/website-opportunities/domain/content-map-keep-decision.mjs'
 
 const rect = (w, h) => ({ x: 0, y: 0, w, h })
 const vp = (w, h, look = {}) => ({ visible: true, count: 1, rect: rect(w, h), look })
@@ -287,4 +288,119 @@ test('words two slots share measure both, and the tighter of two boxes is the li
   const out = measureSlotFit({ map, findings }).map
   for (const key of ['module-2.0', 'module-3.0'])
     assert.deepEqual(out.slots.find((s) => s.key === key).fit.maxChars, { desktop: 20 })
+})
+
+/**
+ * A `place-content-roles/3` map (ADR 0040 decision 3): the role alone decides keep or replace, so the measured kind
+ * describes shape only and never sets `customize` or `fit.replace`. Every slot, file and business is invented.
+ */
+function v3Fixture() {
+  const pic = (key, role, sample, extra = {}) => ({
+    key,
+    entity: key.split('.')[0],
+    type: 'image',
+    sample,
+    label: `${key} / picture`,
+    role,
+    customize: 'keep',
+    ...extra
+  })
+  const map = {
+    roleVocabularyVersion: 'place-content-roles/3',
+    slots: [
+      // A trainer face measured as an avatar: a person's picture, so the business's own photo replaces it.
+      pic('userProfile-9101.0', 'person.image', 'images/demo/team/avatar-wren.jpg'),
+      // A hero cut-out with a business role: replaced by the business's picture.
+      pic('module-21.1', 'business.hero_image', 'images/demo/hero/boxer.png'),
+      // A signature under a quote: the quote's author picture.
+      pic('module-22.3', 'quote.author_image', 'images/demo/quote/sign.png'),
+      // Faces next to a member count.
+      pic('module-23.3', 'stat.proof_image', 'images/demo/stats/avatars.png'),
+      // An icon the role keeps.
+      pic('module-24.0', 'editorial.item_icon', 'images/demo/icons/glove.png', { customize: undefined }),
+      // A photograph the role keeps as part of the design.
+      pic('module-25.0', 'editorial.design_element', 'images/demo/texture/ring.jpg', {
+        customize: undefined
+      }),
+      // A business logo: only the business logo replaces it.
+      pic('siteSetting-4.0', 'business.logo', 'images/demo/logo/logo.png'),
+      // A text whose role keeps it, and a fact text capture marked keep.
+      {
+        key: 'module-26.0',
+        entity: 'module-26',
+        type: 'url',
+        sample: '/classes',
+        role: 'editorial.navigation_url'
+      },
+      {
+        key: 'module-26.1',
+        entity: 'module-26',
+        type: 'text',
+        sample: 'Call 000-0100',
+        role: 'contact.phone',
+        customize: 'keep'
+      }
+    ]
+  }
+  const box = (key, file, w, h, fw, fh, alpha) =>
+    image(`http://site.test/${file}`, [key], { desktop: vp(w, h) }, { width: fw, height: fh, alpha })
+  const findings = {
+    pages: [
+      {
+        items: [
+          box('userProfile-9101.0', 'images/demo/team/avatar-wren.jpg', 80, 80, 160, 160, false),
+          box('module-21.1', 'images/demo/hero/boxer.png', 587, 480, 1175, 960, true),
+          box('module-22.3', 'images/demo/quote/sign.png', 150, 60, 300, 120, true),
+          box('module-23.3', 'images/demo/stats/avatars.png', 216, 56, 432, 112, true),
+          box('module-24.0', 'images/demo/icons/glove.png', 64, 64, 128, 128, false),
+          box('module-25.0', 'images/demo/texture/ring.jpg', 704, 302, 1408, 604, false),
+          box('siteSetting-4.0', 'images/demo/logo/logo.png', 195, 56, 390, 112, true)
+        ]
+      }
+    ]
+  }
+  return { map, findings }
+}
+
+test('in a version 3 map the role, not the measured kind, sets customize and fit.replace', () => {
+  const { map, findings } = v3Fixture()
+  const out = measureSlotFit({ map, findings }).map
+  const expect = {
+    'userProfile-9101.0': ['avatar', 'photo', undefined],
+    'module-21.1': ['cutout', 'photo', undefined],
+    'module-22.3': ['signature', 'photo', undefined],
+    'module-23.3': ['avatar-group', 'photo', undefined],
+    'module-24.0': ['icon', 'keep', 'keep'],
+    'module-25.0': ['photo', 'keep', 'keep'],
+    'siteSetting-4.0': ['logo', 'logo', undefined]
+  }
+  for (const [key, [kind, replace, customize]] of Object.entries(expect)) {
+    const slot = slotOf(out, key)
+    assert.equal(slot.fit.kind, kind, `${key} kind`)
+    assert.equal(slot.fit.replace, replace, `${key} replace`)
+    assert.equal(slot.customize, customize, `${key} customize`)
+  }
+  // A replaced face is cut to its box like any photo; a kept picture is never cut.
+  assert.equal(slotOf(out, 'userProfile-9101.0').fit.crop, 'cover')
+  assert.equal(slotOf(out, 'module-25.0').fit.crop, 'none')
+  // Non-picture slots follow their role too.
+  assert.equal(slotOf(out, 'module-26.0').customize, 'keep')
+  assert.equal(slotOf(out, 'module-26.1').customize, undefined)
+  // The result passes the contract check that the role decides (ADR 0040 decision 3).
+  for (const slot of out.slots) assert.deepEqual(keepDerivationProblems(slot), [], slot.key)
+  assert.deepEqual(checkContentMapFit(out).errors, [])
+})
+
+test('a version 2 map with the same roles still keeps faces, signatures and cut-outs by their kind', () => {
+  const { map, findings } = v3Fixture()
+  map.roleVocabularyVersion = 'place-content-roles/2'
+  const out = measureSlotFit({ map, findings }).map
+  for (const key of ['userProfile-9101.0', 'module-21.1', 'module-22.3', 'module-23.3']) {
+    assert.equal(slotOf(out, key).fit.replace, 'keep', key)
+    assert.equal(slotOf(out, key).customize, 'keep', key)
+    assert.equal(slotOf(out, key).fit.crop, 'none', key)
+  }
+  assert.equal(slotOf(out, 'module-25.0').fit.replace, 'photo')
+  assert.equal(slotOf(out, 'module-25.0').customize, undefined)
+  assert.equal(slotOf(out, 'module-26.1').customize, 'keep')
 })
