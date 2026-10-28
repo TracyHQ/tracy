@@ -10,6 +10,7 @@ import { checkBusinessReading, readingSourcesOf } from '../domain/business-readi
 import { renderAgentPrompt } from '../domain/agent-prompt.mjs'
 import { siteNameOf } from '../domain/held-name.mjs'
 import {
+  factsWithoutHeldQuotes,
   heldReviewsSplit,
   isHeldReviewQuote,
   readingWithoutHeldReviews,
@@ -112,23 +113,14 @@ const quotesHeld = (s) => {
   if (HELD_SENTENCES.some((h) => t.includes(fold(h)))) return true
   return t.split(' ').length >= 4 && [REVIEW_A, REVIEW_C].some((r) => fold(r.text).includes(t))
 }
-/** Every string in a value, with its path, less the entries the brief marks as held (`skip`). */
-function strings(value, path = '', skip = () => false, out = []) {
-  if (skip(path, value)) return out
+/** Every string in a value, with its path. */
+function strings(value, path = '', out = []) {
   if (typeof value === 'string') out.push([path, value])
-  else if (Array.isArray(value)) value.forEach((v, i) => strings(v, `${path}[${i}]`, skip, out))
+  else if (Array.isArray(value)) value.forEach((v, i) => strings(v, `${path}[${i}]`, out))
   else if (value && typeof value === 'object')
-    for (const [k, v] of Object.entries(value)) strings(v, path ? `${path}.${k}` : k, skip, out)
+    for (const [k, v] of Object.entries(value)) strings(v, path ? `${path}.${k}` : k, out)
   return out
 }
-// A held person's own entries: the fact kept off the site and the reading's team entry it decides.
-const heldEntryOf = (brief) => {
-  const off = new Set(brief.facts.filter((f) => f.field === 'team' && f.onSite === false).map((f) => f.id))
-  return (path, v) =>
-    (/^facts\[\d+\]$/.test(path) && off.has(v?.id)) ||
-    (/^reading\.team\[\d+\]$/.test(path) && (off.has(v?.factId) || v?.onSite === false))
-}
-
 test('a quote is from a held review when it names a held person, cites a held review or is part of one', () => {
   const held = [{ ...REVIEW_A, namesHeld: ['Alex'] }]
   const review = (quote, author) => ({ quote, source: { kind: 'review', author, ref: 'review:1' } })
@@ -139,6 +131,29 @@ test('a quote is from a held review when it names a held person, cites a held re
   // Owner text is never a held review, whatever words a guest repeats.
   const bio = { quote: 'padel lessons', source: { kind: 'bio', ref: 'bio' } }
   assert.equal(isHeldReviewQuote(bio, { names: ['Alex'], held }), false)
+})
+
+test("a fact's evidence keeps its source but no held review's words; owner text and usable reviews keep theirs", () => {
+  const opts = { names: ['Alex'], held: reviewsNamingHeld(g.reviews, ['Alex']) }
+  const fact = (id, ...evidence) => ({ id, field: 'team', value: { name: id }, evidence, onSite: false })
+  const facts = [
+    fact('a', { source: 'google', ref: 'place', quote: 'padel coaching with Alex and Sam' }),
+    fact('b', { source: 'instagram', ref: IG, quote: 'European Coaching in Dubai' }),
+    fact('c', { source: 'google', ref: 'place', quote: 'Lovely coaches who teach my two daughters tennis' })
+  ]
+  assert.deepEqual(
+    factsWithoutHeldQuotes(facts, opts).map((f) => f.evidence),
+    [
+      [{ source: 'google', ref: 'place' }],
+      [{ source: 'instagram', ref: IG, quote: 'European Coaching in Dubai' }],
+      [{ source: 'google', ref: 'place', quote: 'Lovely coaches who teach my two daughters tennis' }]
+    ]
+  )
+  assert.equal(factsWithoutHeldQuotes(facts, {}), facts)
+  // The contract lets a held person's team entry carry no quote, and every other reading item still needs one.
+  const schema = JSON.parse(readFileSync(new URL('../domain/brief-schema.json', import.meta.url), 'utf8'))
+  assert.ok(!schema.$defs.teamItem.required.includes('quote'))
+  assert.ok(schema.$defs.readingItem.required.includes('quote'))
 })
 
 test('a held review is named, never quoted: its split keeps no text', () => {
@@ -204,10 +219,10 @@ test('the reading less held reviews keeps owner text and usable reviews only', (
     r.services.map((s) => s.label),
     ['Swimming Lessons']
   )
-  // The held person's own entry stays: it is how the brief knows to hold them.
+  // The held person's own entry stays, named and where it was read, never with the held review's words.
   assert.deepEqual(
-    r.team.map((p) => p.label),
-    ['Alex']
+    r.team.map((p) => [p.label, p.source.author, 'quote' in p]),
+    [['Alex', REVIEW_A.author, false]]
   )
   // Without held names or reviews, the reading is as it was.
   assert.equal(readingWithoutHeldReviews(read, {}), read)
@@ -227,8 +242,19 @@ test('3. the kind of business and every other quote pick evidence from owner tex
     /- Kind of business: "coaching" \(read from the business's own texts: bio: "European Coaching in Dubai"\)/
   )
   // The whole brief, its markdown with the review sources and the agent prompt quote no held review.
-  const json = strings(brief, '', heldEntryOf(brief)).filter(([, s]) => quotesHeld(s))
+  // Held entries included (#1791, 28/10/2026): a held person's fact and team entry name them and where they were read,
+  // never with a held review's words, so every string of the brief JSON is checked.
+  const json = strings(brief).filter(([, s]) => quotesHeld(s))
   assert.deepEqual(json, [])
+  const heldFacts = brief.facts.filter((f) => f.field === 'team' && f.onSite === false)
+  assert.deepEqual(
+    heldFacts.map((f) => [f.value.name, f.evidence.length > 0, f.evidence.some((e) => 'quote' in e)]),
+    [['Alex', true, false]]
+  )
+  assert.deepEqual(
+    brief.reading.team.map((p) => [p.label, p.factId === heldFacts[0].id, 'quote' in p]),
+    [['Alex', true, false]]
+  )
   const full = renderBriefWithReviews(domain, brief)
   const prompt = renderAgentPrompt({ revision: { id: 'r', n: 1, cms: 'wordpress', brief } })
   for (const [what, text] of [

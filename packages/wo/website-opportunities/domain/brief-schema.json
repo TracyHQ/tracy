@@ -19,8 +19,16 @@
   ],
   "$defs": {
     "readingItem": {
+      "allOf": [{ "$ref": "#/$defs/readingItemFields" }],
+      "required": ["id", "label", "quote", "source"]
+    },
+    "teamItem": {
+      "allOf": [{ "$ref": "#/$defs/readingItemFields" }],
+      "required": ["id", "label", "source"],
+      "description": "A team entry: quoted like any reading item, except a person held off the site, who is named with where they were read and no quote, since the reviews naming them are never quoted."
+    },
+    "readingItemFields": {
       "type": "object",
-      "required": ["id", "label", "quote", "source"],
       "properties": {
         "id": { "type": "string", "minLength": 1 },
         "label": { "type": "string", "minLength": 1, "description": "The item in words of its quote." },
@@ -865,7 +873,7 @@
         },
         "services": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
         "audience": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
-        "team": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
+        "team": { "type": "array", "items": { "$ref": "#/$defs/teamItem" } },
         "story": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
         "about": { "type": "string", "description": "The About line, made only of quoted words." }
       }
