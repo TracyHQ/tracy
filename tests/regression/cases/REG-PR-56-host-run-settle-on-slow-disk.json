@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-56-host-run-settle-on-slow-disk",
+  "kind": "fix",
+  "title": "The paced Add site run tests settle on a slow disk instead of failing after about 100 ms of loop turns",
+  "pr": 56,
+  "area": "add-site/run",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test: node --import tsx --test --test-reporter=tap scripts/test/host-run.test.ts",
+    "S2: Read the lines for the tests 'a paced run still settles when the disk answers late' and 'a run id on the real clock is one the fleet handover accepts'."
+  ],
+  "expect": [
+    "Both tests report ok. The first keeps every libuv thread busy for about one second while a paced run goes through (pre-fix: 'run did not settle' after 20000 loop turns). The second shows a real-clock run id passes the fleet handover's safe-id check."
+  ],
+  "selectors": {},
+  "evidence": "CI run 40675889623 (build check, tests 2/2), 28/10/2026: attempt 1 failed 'run did not settle' and 'both parts must run' in scripts/test/host-run.test.ts, attempt 2 passed on the same commit.",
+  "fence": "scripts/test/host-run.test.ts pacedSettled: a wall-clock deadline (performance.now) instead of a count of setImmediate turns.",
+  "run": {
+    "cmd": ["node", "--import", "tsx", "--test", "--test-reporter=tap", "scripts/test/host-run.test.ts"],
+    "tests": [
+      "a paced run still settles when the disk answers late",
+      "a run id on the real clock is one the fleet handover accepts"
+    ]
+  }
+}

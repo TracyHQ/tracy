@@ -5,6 +5,7 @@ import * as rolesModule from '../domain/place-content-roles.mjs'
 import {
   DEFAULT_NEUTRAL_BY_ROLE,
   PLACE_CONTENT_ROLES,
+  PLACE_CONTENT_ROLES_V3,
   isFactRole,
   isRole,
   validateSlotRoles
@@ -133,14 +134,15 @@ test('place-content-roles vocabulary is frozen, re-exported from domain/index.mj
 })
 
 test('DEFAULT_NEUTRAL_BY_ROLE covers every vocabulary role with a valid §7 policy and contains no forbidden neutral text', () => {
-  for (const role of PLACE_CONTENT_ROLES) {
+  for (const role of [...PLACE_CONTENT_ROLES, ...PLACE_CONTENT_ROLES_V3]) {
     assert.ok(
       Object.prototype.hasOwnProperty.call(DEFAULT_NEUTRAL_BY_ROLE, role),
       `DEFAULT_NEUTRAL_BY_ROLE missing role: ${role}`
     )
   }
 
-  // Validate every default neutral rule through validateSlotRoles behaviour.
+  // Validate every default neutral rule through validateSlotRoles behaviour, each against the version that lists it.
+  const defaultsOf = (roles) => Object.fromEntries(roles.map((role) => [role, DEFAULT_NEUTRAL_BY_ROLE[role]]))
   const docWithAllDefaults = makeValidDoc({
     groups: [
       {
@@ -149,7 +151,7 @@ test('DEFAULT_NEUTRAL_BY_ROLE covers every vocabulary role with a valid §7 poli
         entityKind: 'business',
         itemIndex: 0,
         requiredRoles: ['business.name'],
-        neutral: { ...DEFAULT_NEUTRAL_BY_ROLE }
+        neutral: defaultsOf(PLACE_CONTENT_ROLES)
       }
     ],
     bindings: [
@@ -162,6 +164,10 @@ test('DEFAULT_NEUTRAL_BY_ROLE covers every vocabulary role with a valid §7 poli
     ]
   })
   assert.deepEqual(validateSlotRoles(docWithAllDefaults), { ok: true, errors: [] })
+  const v3Doc = structuredClone(docWithAllDefaults)
+  v3Doc.roleVocabularyVersion = 'place-content-roles/3'
+  v3Doc.groups[0].neutral = defaultsOf(PLACE_CONTENT_ROLES_V3)
+  assert.deepEqual(validateSlotRoles(v3Doc), { ok: true, errors: [] })
 
   const serializedModule = JSON.stringify(rolesModule).toLowerCase()
   for (const forbidden of FORBIDDEN_NEUTRAL_TEXTS) {

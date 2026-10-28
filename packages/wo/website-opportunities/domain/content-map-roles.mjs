@@ -12,17 +12,25 @@
 //
 // and, at the top level of the map, the vocabulary the roles were bound against:
 //
-//   "roleVocabularyVersion": "place-content-roles/2"
+//   "roleVocabularyVersion": "place-content-roles/2"   (or "place-content-roles/3", ADR 0040)
+//
+// A version 3 map may also declare repeatable lists (`content-map-repeatable-lists.mjs`), and in it the role alone
+// decides whether a slot keeps the demo's content: `customize` and a picture's `fit.replace` must follow from the role
+// (`content-map-keep-decision.mjs`).
 //
 // What a slot no fact fills shows, which kinds a card may borrow from and which roles a kind needs all come from the
 // vocabulary; the map states none of them. Released content maps are never edited (their hash is bound on every site),
 // so roles appear only in contract versions released after ADR 0038.
+import { keepDerivationProblems } from './content-map-keep-decision.mjs'
+import { repeatableListProblems } from './content-map-repeatable-lists.mjs'
 import {
+  CONTENT_MAP_ROLE_VOCABULARY_VERSIONS,
   DEFAULT_NEUTRAL_BY_ROLE,
-  GROUP_KINDS,
-  ROLE_VOCABULARY_VERSION,
+  GROUP_KINDS_V3,
+  ROLE_VOCABULARY_V3,
   SLOT_ROLES_SCHEMA_VERSION,
   isFactRole,
+  isGroupKind,
   isRole,
   modeOfRole
 } from './place-content-roles.mjs'
@@ -44,12 +52,13 @@ export function contentMapDeclaresRoles(contentMap) {
   )
 }
 
-function groupProblem(group) {
+function groupProblem(group, version) {
   if (!group || typeof group !== 'object' || Array.isArray(group))
     return 'group must be an object {id, item, kind}'
   if (typeof group.id !== 'string' || !group.id.trim()) return 'group needs a non-empty id'
   if (!Number.isInteger(group.item) || group.item < 0) return 'group item must be a whole number from 0'
-  if (!has(GROUP_KINDS, group.kind)) return `group kind ${JSON.stringify(group.kind)} is not a known kind`
+  if (version === undefined ? !has(GROUP_KINDS_V3, group.kind) : !isGroupKind(group.kind, version))
+    return `group kind ${JSON.stringify(group.kind)} is not a known kind`
   return null
 }
 
@@ -64,10 +73,13 @@ function groupProblem(group) {
 export function checkContentMapRoles(contentMap) {
   if (!contentMapDeclaresRoles(contentMap)) return { declared: false, ok: true, errors: [] }
   const errors = []
-  if (contentMap.roleVocabularyVersion !== ROLE_VOCABULARY_VERSION)
+  const version = contentMap.roleVocabularyVersion
+  if (!CONTENT_MAP_ROLE_VOCABULARY_VERSIONS.includes(version))
     errors.push(
-      `roleVocabularyVersion must be "${ROLE_VOCABULARY_VERSION}", got ${JSON.stringify(contentMap.roleVocabularyVersion)}`
+      `roleVocabularyVersion must be one of ${CONTENT_MAP_ROLE_VOCABULARY_VERSIONS.map((v) => `"${v}"`).join(', ')}, got ${JSON.stringify(version)}`
     )
+  // An unknown version is reported above; its roles are judged as the version capture writes.
+  const rolesOf = CONTENT_MAP_ROLE_VOCABULARY_VERSIONS.includes(version) ? version : undefined
 
   const seen = new Set()
   /** @type {Map<string, {item: number, kind: string, slotKey: string, roles: Set<string>}>} */
@@ -80,15 +92,17 @@ export function checkContentMapRoles(contentMap) {
 
     if (!has(slot, 'role')) {
       if (ROLE_REQUIRED_TYPES.has(slot?.type)) errors.push(`${named} has no role`)
-    } else if (!isRole(slot.role)) {
+    } else if (!isRole(slot.role, rolesOf)) {
       errors.push(`${named} has unknown role ${JSON.stringify(slot.role)}`)
     }
+    if (version === ROLE_VOCABULARY_V3)
+      for (const problem of keepDerivationProblems(slot)) errors.push(`${named} ${problem}`)
 
     if (!has(slot, 'group')) {
       if (isFactRole(slot?.role)) errors.push(`${named} has fact role "${slot.role}" and needs a group`)
       continue
     }
-    const problem = groupProblem(slot.group)
+    const problem = groupProblem(slot.group, rolesOf)
     if (problem) {
       errors.push(`${named}: ${problem}`)
       continue
@@ -108,10 +122,11 @@ export function checkContentMapRoles(contentMap) {
   }
 
   for (const [id, group] of groups) {
-    const missing = GROUP_KINDS[group.kind].requiredRoles.filter((role) => !group.roles.has(role))
+    const missing = GROUP_KINDS_V3[group.kind].requiredRoles.filter((role) => !group.roles.has(role))
     if (missing.length > 0)
       errors.push(`group "${id}" (${group.kind}) lacks the role(s) its kind needs: ${missing.join(', ')}`)
   }
+  errors.push(...repeatableListProblems(contentMap, groups))
   return { declared: true, ok: errors.length === 0, errors }
 }
 
@@ -135,9 +150,9 @@ export function slotRolesOfContentMap(contentMap, { contract = null, cms = null 
         id,
         groupId: id,
         entityKind: kind,
-        allowedKinds: [...GROUP_KINDS[kind].allowedKinds],
+        allowedKinds: [...GROUP_KINDS_V3[kind].allowedKinds],
         itemIndex: item,
-        requiredRoles: [...GROUP_KINDS[kind].requiredRoles],
+        requiredRoles: [...GROUP_KINDS_V3[kind].requiredRoles],
         neutral: {}
       }
       groups.set(id, group)
