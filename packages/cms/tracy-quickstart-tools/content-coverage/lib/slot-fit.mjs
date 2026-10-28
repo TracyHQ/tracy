@@ -43,7 +43,13 @@ const capacity = (look, box) => perLine(look, box) * linesOf(look)
  * Per slot key: for a picture the widest visible box and the first look per viewport, and the file the page measured;
  * for a text the box and look that hold the fewest characters per viewport.
  */
-function evidenceOf(findings) {
+const wordsOf = (v) =>
+  String(v ?? '')
+    .replace(/<[^>]+>|\(\(\/?[a-z][^()]*\)\)/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+
+function evidenceOf(findings, samples = new Map()) {
   /** @type {Map<string, {boxes: Record<string, any>, looks: Record<string, any>, file: any, value: string}>} */
   const bySlot = new Map()
   for (const page of findings?.pages ?? [])
@@ -51,18 +57,35 @@ function evidenceOf(findings) {
       if (item.status !== 'matched' || !Array.isArray(item.slots) || item.slots.length === 0) continue
       // A text measures its slot only when it shows that slot's words whole (`exact`, or exact but for spaces and
       // punctuation). Words several slots share (the same title in two places) measure each of them; the tightest box wins.
-      if (item.kind === 'text' && !/^exact( ignoring spaces\/punctuation)?$/.test(String(item.matchBy)))
+      // A block several slots make up together (`composite`: "Join over <span>100k</span> of creatives", a label
+      // beside an email link) measures each of them too: the piece may take the block's room minus the other
+      // pieces' words (`reserve`), which stay as they are.
+      const composite = item.kind === 'text' && item.matchBy === 'composite' && item.slots.length > 1
+      if (
+        item.kind === 'text' &&
+        !composite &&
+        !/^exact( ignoring spaces\/punctuation)?$/.test(String(item.matchBy))
+      )
         continue
       if (item.kind !== 'text' && item.kind !== 'image') continue
       for (const key of item.slots) {
-        const ev = bySlot.get(key) ?? { boxes: {}, looks: {}, file: null, value: item.value }
+        const ev = bySlot.get(key) ?? { boxes: {}, looks: {}, reserve: {}, file: null, value: item.value }
+        const reserve = composite
+          ? Math.max(0, wordsOf(item.value).length - wordsOf(samples.get(key)).length)
+          : 0
         for (const [vp, v] of Object.entries(item.viewports ?? {})) {
           if (!v?.visible || !(v.rect?.w >= 2) || !(v.rect?.h >= 2)) continue
           const b = { width: v.rect.w, height: v.rect.h }
           if (item.kind === 'text') {
-            if (v.look && (!ev.looks[vp] || capacity(v.look, b) < capacity(ev.looks[vp], ev.boxes[vp]))) {
+            const room = (look, box, r) => capacity(look, box) - r
+            if (
+              v.look &&
+              (!ev.looks[vp] ||
+                room(v.look, b, reserve) < room(ev.looks[vp], ev.boxes[vp], ev.reserve[vp] ?? 0))
+            ) {
               ev.boxes[vp] = b
               ev.looks[vp] = v.look
+              ev.reserve[vp] = reserve
             }
             continue
           }
@@ -155,7 +178,7 @@ function textFit(slot, ev) {
     boxes[vp] = ev.boxes[vp]
     lines[vp] = linesOf(look)
     // The demo's own words fit by definition: a box measured narrower than them (a label shrunk to its text) holds them.
-    maxChars[vp] = Math.max(length, capacity(look, ev.boxes[vp]), 1)
+    maxChars[vp] = Math.max(length, capacity(look, ev.boxes[vp]) - (ev.reserve?.[vp] ?? 0), 1)
   }
   const first = ev.looks.desktop ?? ev.looks[vps[0]]
   return {
@@ -210,7 +233,7 @@ function settleCustomizeByRole(slot) {
  * @param {{map: any, findings: any}} input
  */
 export function measureSlotFit({ map, findings }) {
-  const evidence = evidenceOf(findings)
+  const evidence = evidenceOf(findings, new Map((map.slots ?? []).map((s) => [s.key, s.sample])))
   const out = structuredClone(map)
   const byRole = roleDecidesKeep(out)
   const summary = {

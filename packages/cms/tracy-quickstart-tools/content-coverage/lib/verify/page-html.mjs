@@ -87,7 +87,7 @@ function block(c, ctx) {
     )
     .join('')
   return `<section class="comp" data-page="${c.page}" id="${esc(c.id)}">
-<header><h2><span class="mono">${esc(c.entity)}</span> ${flagged ? `<span class="badge red">${flagged} suspicious</span>` : ''}</h2>
+<header><h2><span class="mono">${esc(c.entity)}</span> ${flagged ? `<span class="badge red">${flagged} suspicious</span>` : ''}${c.demoOnly ? ' <span class="badge">demo only, not judged</span>' : ''}</h2>
 <div class="muted small">Page ${esc(p.label)}${c.home ? '' : ' (the rest of this component shows on another page)'} · ${c.rows.length} slots</div></header>
 <div class="grid"><div class="shots">${imgs || '<div class="muted">No crop (the area lies outside the page screenshot)</div>'}</div>
 <div class="tablewrap"><table>${HEAD}<tbody>${c.rows.map((r) => row(r, ctx, c.page)).join('')}</tbody></table></div></div></section>`

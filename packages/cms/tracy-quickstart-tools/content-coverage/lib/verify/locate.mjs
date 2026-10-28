@@ -1,7 +1,9 @@
 // Turn the coverage audit's findings into components: every slot the audit matched to a VISIBLE element gets that
 // element's box (document space, per viewport); slots group by entity on the page where most of them show.
 // Never guesses a position: a slot without a visible matched element is listed as not located, with the reason.
+// A demo-only entity (a style-guide page, `../demo-only.mjs`) is located and shown like any other, never marked suspicious.
 
+import { demoOnlyEntities } from '../demo-only.mjs'
 import { suspicion } from './suspicion.mjs'
 
 const PAD = { desktop: 20, phone: 10 }
@@ -13,6 +15,8 @@ const center = (r) => ({ x: r.x + r.w / 2, y: r.y + r.h / 2 })
 
 export function locate({ map, findings, isFactRole, mods = {} }) {
   const pages = findings.pages.map((p) => ({ n: p.n, url: p.url, title: p.title, shots: p.shots }))
+  const demoOnly = demoOnlyEntities(map)
+  const flagsOf = (slot, located) => (demoOnly.has(slot.entity) ? [] : suspicion(slot, located, isFactRole))
   /** key -> [{ page, rects:{desktop,phone}, by }] visible candidates; hidden: keys matched only to hidden elements */
   const cands = new Map()
   const hidden = new Set()
@@ -77,7 +81,14 @@ export function locate({ map, findings, isFactRole, mods = {} }) {
       }
       const pageN = pool[0].page
       const id = `${entity}@${pageN}`
-      const b = blocks.get(id) ?? { id, entity, page: pageN, home: pageN === home, rows: [] }
+      const b = blocks.get(id) ?? {
+        id,
+        entity,
+        page: pageN,
+        home: pageN === home,
+        demoOnly: demoOnly.has(entity),
+        rows: []
+      }
       b.rows.push({ slot: s, pool })
       blocks.set(id, b)
     }
@@ -156,7 +167,9 @@ export function locate({ map, findings, isFactRole, mods = {} }) {
       )[0]
       r.rects = best.rects
       r.by = best.by
-      r.flags = suspicion(r.slot, true, isFactRole)
+      // Rule 4 asks for a box the text could be measured in: a slot shown only through a link or an attribute (a video
+      // id inside an embed URL, an email inside its mailto) has none, and its fit honestly says not measured.
+      r.flags = flagsOf(r.slot, best.kind === 'text' || best.kind === 'image')
       kept.push(r)
     }
     if (!kept.length) continue
@@ -184,8 +197,8 @@ export function locate({ map, findings, isFactRole, mods = {} }) {
   }
   components.sort((a, b) => a.page - b.page || a.top - b.top)
 
-  for (const r of notShown) r.flags = suspicion(r.slot, false, isFactRole)
-  for (const r of notLocated) r.flags = suspicion(r.slot, false, isFactRole)
+  for (const r of notShown) r.flags = flagsOf(r.slot, false)
+  for (const r of notLocated) r.flags = flagsOf(r.slot, false)
   const rows = components.flatMap((c) => c.rows)
   const counts = {
     components: components.length,
