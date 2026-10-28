@@ -1046,12 +1046,16 @@ function coverageGaps(plan, bundle, guide, leads = []) {
   // writes one per topic the research holds, and the narrower topics a split gives are the residue sweep's to write
   // (`postDraftsOf`, product owner 25/10/2026). Review 26/10/2026: counted against the split topics, a plan the sweep
   // would complete (one story of three facts for three posts, the story written) was sent back.
+  // 🔒 …UP TO `PLAN_POSTS_MAX` OF THEM IN THE PLAN (local measure 28/10/2026): an EmDash template of 126 posts and a
+  // research of as many topics asked the agent for 126 written posts in one plan; it reached 36, ran out of its
+  // context and ended the turn with no plan. The plan writes the first posts in the guide's order; the build writes the
+  // posts left from the topics left (`postDraftsOf`), so every template post is still written while a topic holds.
   const posts = postCoverage(plan, bundle)
-  const asked = Math.min(posts.templatePosts, posts.researchTopics)
+  const asked = postsAsked(posts)
   if (posts.written < asked)
     gaps.push({
       path: 'coverage.posts',
-      message: `The template has ${posts.templatePosts} posts and the research ${posts.researchTopics} topics; ${posts.written} are written. Write one post per topic on the template's own post records, in the guide's order; the build writes the posts left from the facts no written post uses.${bodylessPosts(plan)}`,
+      message: `The template has ${posts.templatePosts} posts and the research ${posts.researchTopics} topics; ${posts.written} are written. Write ${asked === posts.templatePosts ? 'one post per topic' : `the first ${asked} posts, one per topic,`} on the template's own post records, in the guide's order; the build writes the posts left from the facts no written post uses.${bodylessPosts(plan)}`,
       expected: asked
     })
   if (
@@ -1250,6 +1254,12 @@ export function templatePostTitles(plan) {
  * the topics once split while there are fewer than posts (`topics`); `thin` when posts are left that no research
  * fact is left for (`editorial-guide.mjs` `thinResearch`).
  */
+/** The most template posts a plan must write itself; the build writes the rest from the topics left (`postDraftsOf`). */
+export const PLAN_POSTS_MAX = 12
+/** The template posts a plan must write: one per research topic, as many as the template has, at most `PLAN_POSTS_MAX`. */
+export const postsAsked = ({ templatePosts, researchTopics }) =>
+  Math.min(templatePosts, researchTopics, PLAN_POSTS_MAX)
+
 export function postCoverage(plan, bundle) {
   const records = plan?.structure?.inventory?.records ?? []
   const own = records.filter((record) => isTemplatePost(record, records))

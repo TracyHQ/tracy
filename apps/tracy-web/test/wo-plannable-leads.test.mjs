@@ -48,3 +48,12 @@ test('with the inventory not read whole, every lead stays the plan’s', () => {
   assert.deepEqual(plannableLeads(leads, structure(false)), leads)
   assert.deepEqual(plannableLeads(leads, undefined), leads)
 })
+
+// Local measure 28/10/2026: an EmDash template of 126 posts asked the agent for 126 written posts in one plan.
+test('a plan writes one post per topic, as many as the template has, at most twelve; the build writes the rest', async () => {
+  const { postsAsked, PLAN_POSTS_MAX } = await import('../src/opportunities-build/agent-demo.js')
+  assert.equal(PLAN_POSTS_MAX, 12)
+  assert.equal(postsAsked({ templatePosts: 9, researchTopics: 140 }), 9)
+  assert.equal(postsAsked({ templatePosts: 21, researchTopics: 4 }), 4)
+  assert.equal(postsAsked({ templatePosts: 126, researchTopics: 130 }), 12)
+})
