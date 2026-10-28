@@ -17,6 +17,7 @@
  */
 import assert from 'node:assert/strict'
 import { execFileSync, spawn, spawnSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import {
   chmodSync,
   existsSync,
@@ -29,7 +30,6 @@ import {
   symlinkSync,
   writeFileSync
 } from 'node:fs'
-import { createHash } from 'node:crypto'
 import { createServer } from 'node:http'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
@@ -219,6 +219,11 @@ function liveEngine(liveDir, { templateFiles = null } = {}) {
     req.on('end', () => {
       const { token, action, params = {} } = JSON.parse(body)
       state.calls.push(action)
+      if (state.blockBatch && action === 'content.batch') {
+        res.writeHead(403, { 'content-type': 'text/html' })
+        res.end('blocked')
+        return
+      }
       const answer = (value) => {
         res.writeHead(200, { 'content-type': 'application/json' })
         res.end(JSON.stringify(value))
@@ -569,6 +574,7 @@ test('preview, apply, a second preview and Undo: the copy’s changes reach the 
       ['--op', 'apply', '--preview-id', previewId, '--push-id', pushId],
       engine
     )
+    assert.equal(pushed.failed.length, 0, JSON.stringify(pushed))
     assert.equal(pushed.ok, true, JSON.stringify(pushed))
     assert.equal(pushed.state, 'partial')
     assert.deepEqual(
@@ -769,6 +775,42 @@ test('template files: a template’s own CSS goes through the live site’s temp
     assert.equal(readFileSync(join(s.live, 'templates/t4/css/custom.css'), 'utf8'), '.a {}\n')
     assert.ok(!existsSync(join(s.live, 'templates/t4/css/new.css')), 'the file the push added is gone again')
     assert.equal(readFileSync(join(s.webroot, 'templates/t4/css/new.css'), 'utf8'), '.n { color: blue }\n')
+  } finally {
+    await engine.close()
+    s.dispose()
+  }
+})
+
+test('the shell preserves partial writes and Undo after a firewall blocks a later batch', {
+  ...opts,
+  timeout: 900_000
+}, async () => {
+  const s = stack()
+  const engine = await liveEngine(s.live)
+  try {
+    sql("UPDATE jos_content SET title='After' WHERE id=1", 'joomla')
+    const path = 'media/templates/site/cassiopeia/css/user.css'
+    write(s.webroot, { [path]: '.b { color: green }\n' })
+    const previewId = id()
+    assert.equal((await s.runPush(['--op', 'preview', '--preview-id', previewId], engine)).answer.ok, true)
+    engine.blockBatch = true
+    const pushId = id()
+    const args = ['--op', 'apply', '--preview-id', previewId, '--push-id', pushId]
+    const { answer } = await s.runPush(args, engine)
+    assert.equal(answer.ok, false)
+    assert.equal(answer.state, 'partial')
+    assert.deepEqual(
+      answer.written.map((w) => w.id),
+      [`file:${path}`]
+    )
+    assert.equal(readFileSync(join(s.live, path), 'utf8'), '.b { color: green }\n')
+    const repeated = (await s.runPush(args, engine)).answer
+    assert.equal(repeated.repeated, true)
+    assert.deepEqual(repeated.written, answer.written)
+    engine.blockBatch = false
+    const back = (await s.runPush(['--op', 'undo', '--push-id', pushId], engine)).answer
+    assert.equal(back.restored.length, 1, JSON.stringify(back))
+    assert.equal(readFileSync(join(s.live, path), 'utf8'), '.b {}\n')
   } finally {
     await engine.close()
     s.dispose()
