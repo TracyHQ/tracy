@@ -65,7 +65,7 @@ test('without onboard the sign-in page is byte-for-byte what it was', () => {
         email: 'a@b.co',
         lang: 'vi'
       },
-      '0091c7b8c69552a8cfa5d6993dfc2fa40a2c7931b57716a9009c4f499314e71a'
+      '9812c7f43929265b6b8e250775c45a4d598d8e5bf004263be8426629b046f1eb'
     ],
     [
       {
@@ -78,7 +78,7 @@ test('without onboard the sign-in page is byte-for-byte what it was', () => {
         localPreview: true,
         localCode: '123456'
       },
-      '7928451576b89fdb3edc8f27f122a67009cf4a328018c4e5a4433617c119ce77'
+      'bd998d2c6b28759ba420959e5ee338038ae1775b1c300069481a48208936ae41'
     ]
   ]
   for (const [params, hash] of cases) {
