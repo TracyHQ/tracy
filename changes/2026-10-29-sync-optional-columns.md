@@ -1,2 +1,2 @@
-- **Respect stock Joomla schemas when keeping dependent records during sync.** — David · #86 · `fix/sync-joomla-schema` · 2026-10-29
+- **Respect stock Joomla schemas when keeping dependent records during sync.** — David · #93 · `fix/sync-joomla-schema` · 2026-10-29
   **Affects:** Contacts and banners without asset_id no longer generate invalid dependent-row SQL. Optional reference columns must exist on both sides; schema changes remain held. A separate isolated Docker CI job executes the live sync/push MariaDB suites and refuses skipped tests.

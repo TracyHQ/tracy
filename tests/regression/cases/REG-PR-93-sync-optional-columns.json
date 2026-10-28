@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-93-sync-optional-columns",
+  "kind": "fix",
+  "title": "Stock Joomla optional dependent columns cannot produce invalid SQL",
+  "pr": 93,
+  "area": "sync/database",
+  "cms": ["jo"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": ["Run the MariaDB database merge suite with stock contact/banner column shapes."],
+  "expect": [
+    "No asset_id is required for stock contacts or banners.",
+    "Article title changes still merge when unrelated optional columns are absent.",
+    "Either-side schema differences remain kept instead of generating invalid SQL.",
+    "Existing held contact and field dependents remain protected."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs"
+    ],
+    "tests": [
+      "stock Joomla contacts and banners without asset_id do not break dependent-row SQL",
+      "held contacts and custom fields keep live dependent rows off the copy"
+    ]
+  }
+}
