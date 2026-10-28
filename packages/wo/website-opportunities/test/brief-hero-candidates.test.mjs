@@ -60,7 +60,7 @@ test("Harbour Sport Club's hero offers its three largest Google photos, the logo
   const md = domain.renderBriefMarkdown(brief)
   assert.match(
     md,
-    new RegExp(`Hero candidates \\(largest first, pick one\\): ${google[0]} \\(1600x2133, google-places\\)`)
+    new RegExp(`Hero candidates \\(best first, pick one\\): ${google[0]} \\(1600x2133, google-places\\)`)
   )
 })
 

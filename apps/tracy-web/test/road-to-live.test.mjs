@@ -24,12 +24,12 @@ import { DS_SEVERITY, phaseTwoOf } from '../src/lib/template-design-system-readi
 /**
  * A content coverage file with no hole, measured on the map and lock written beside it: every profile
  * `indexWith` makes is measured clean unless the test says otherwise (`coverage: false`). Its content
- * map declares a role on every text slot (ADR 0038); `roles: false` writes the map of a contract
+ * map declares a role and a Slot fit on every text slot (ADR 0038, ADR 0039); `roles: false` writes the map of a contract
  * released before ADR 0038, which declares none, so Content coverage holds Publish on it.
  */
 function writeCleanCoverage(at, id, { roles = true } = {}) {
   const map = roles
-    ? '{"roleVocabularyVersion":"place-content-roles/2","slots":[{"key":"a","type":"text","role":"editorial.heading"}]}'
+    ? '{"roleVocabularyVersion":"place-content-roles/2","slotFitVersion":"slot-fit/1","slots":[{"key":"a","type":"text","role":"editorial.heading","fit":{"measured":false}}]}'
     : '{"slots":[]}'
   const lock = '{"entities":{}}'
   writeFileSync(path.join(at, 'content-map.json'), map)

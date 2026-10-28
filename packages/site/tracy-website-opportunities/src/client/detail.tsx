@@ -62,7 +62,7 @@ import {
 import { MediaRow } from './media-row.tsx'
 import { MenuBlock } from './menu-block.tsx'
 import { PlaceProfileBlock } from './place-profile-block.tsx'
-import { nameOnSite, nameRowView } from './profile-name-model.ts'
+import { heldNameOf, nameOnSite, nameRowView } from './profile-name-model.ts'
 import { ProfileNameRow } from './profile-name-row.tsx'
 import { hoursRowView } from './profile-hours-model.ts'
 import { type HoursChoice, type HoursSaved, ProfileHoursRow } from './profile-hours-row.tsx'
@@ -156,10 +156,16 @@ function usePlaceProfile(
   api: Api,
   id: string,
   refresh: string
-): { profile: unknown; decisions: unknown; failed: boolean } {
-  const [state, setState] = useState<{ profile: unknown; decisions: unknown; failed: boolean }>({
+): { profile: unknown; decisions: unknown; siteName: unknown; failed: boolean } {
+  const [state, setState] = useState<{
+    profile: unknown
+    decisions: unknown
+    siteName: unknown
+    failed: boolean
+  }>({
     profile: null,
     decisions: null,
+    siteName: null,
     failed: false
   })
   useEffect(() => {
@@ -171,9 +177,11 @@ function usePlaceProfile(
           ? {
               profile: answer.body?.profile ?? null,
               decisions: answer.body?.decisions ?? null,
+              // While the brief holds the business name: the neutral identity the site goes by instead.
+              siteName: answer.body?.siteName ?? null,
               failed: false
             }
-          : { profile: null, decisions: null, failed: true }
+          : { profile: null, decisions: null, siteName: null, failed: true }
       )
     })
     return () => {
@@ -375,7 +383,8 @@ export function DetailView({
   const profile = isRecord(body.profile) ? body.profile : null
   // The name the site carries (the person's pick, else the one the sources agree on) titles the page.
   const shownName = nameOnSite(profile, row.name)
-  const nameRow = nameRowView(profile)
+  // A name the brief holds off the site says so, with the neutral identity the site goes by (#1791).
+  const nameRow = nameRowView(profile, heldNameOf(placeProfile.decisions, placeProfile.siteName))
   const saveName = async (name: string): Promise<boolean> => {
     const answer = await api.setName(id, name)
     if (!answer.ok) return false

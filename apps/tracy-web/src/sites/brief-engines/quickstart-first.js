@@ -117,7 +117,8 @@ export function quickstartSources(source, { researchOf = embeddedResearch } = {}
   for (const [key, value] of Object.entries(business)) add(`business.${key}`, value)
   add('profile.bio', profile.bio)
   add('profile.amenities', profile.googlePlace?.amenities)
-  for (const [n, review] of quickstartReviews(profile).entries()) add(`profile.reviews.${n}`, review)
+  for (const [n, review] of quickstartReviews(profile, source.brief).entries())
+    add(`profile.reviews.${n}`, review)
   // 🔒 Everything research collected of the place itself is a source (product owner, 26/10/2026): its website's pages, its
   // own posts, Google's rating and its social figures, each with where it came from.
   const pages = (researchOf(source)?.sources ?? [])
@@ -297,7 +298,7 @@ export function createQuickstartFirstEngine({
           ctx,
           business: prepared.source.brief.business,
           checkpoint,
-          reviews: quickstartReviews(prepared.source.profile_effective)
+          reviews: quickstartReviews(prepared.source.profile_effective, prepared.source.brief)
         })
         const result = {
           ...filled,
@@ -591,7 +592,7 @@ export function createQuickstartFirstEngine({
             base: reader.base,
             navigationFallback: true,
             bindings,
-            referenceUrls: quickstartReviews(prepared.source.profile_effective).map(
+            referenceUrls: quickstartReviews(prepared.source.profile_effective, prepared.source.brief).map(
               (review) => review.provenance.url
             )
           })
@@ -614,7 +615,7 @@ export function createQuickstartFirstEngine({
         pins: quickstartFactCopy(
           record,
           prepared.source.brief.business,
-          quickstartReviews(prepared.source.profile_effective)
+          quickstartReviews(prepared.source.profile_effective, prepared.source.brief)
         )
       }))
       const pins = new Map(facts.map((f) => [f.key, f.pins]))
@@ -660,7 +661,7 @@ export function createQuickstartFirstEngine({
         ctx,
         business: prepared.source.brief.business,
         checkpoint,
-        reviews: quickstartReviews(prepared.source.profile_effective)
+        reviews: quickstartReviews(prepared.source.profile_effective, prepared.source.brief)
       })
       const identity = await quickstartIdentity({
         adapter,
@@ -687,10 +688,12 @@ export function createQuickstartFirstEngine({
         reviewFallback,
         links: { state: 'verified', receipts: linkReceipts },
         coverage: adapter.coverage ?? [],
-        reviewProvenance: quickstartReviews(prepared.source.profile_effective).map((review) => ({
-          author: review.author,
-          ...review.provenance
-        })),
+        reviewProvenance: quickstartReviews(prepared.source.profile_effective, prepared.source.brief).map(
+          (review) => ({
+            author: review.author,
+            ...review.provenance
+          })
+        ),
         needsVisualCheck: true,
         baseline: baseline?.baseline ?? null
       }

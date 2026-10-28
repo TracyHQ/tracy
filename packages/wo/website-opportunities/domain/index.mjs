@@ -67,6 +67,18 @@ export {
   slotRolesOfContentMap
 } from './content-map-roles.mjs'
 export {
+  ICON_PX,
+  PICTURE_KINDS,
+  SLOT_FIT_TOLERANCE,
+  SLOT_FIT_VERSION,
+  checkContentMapFit,
+  contentMapDeclaresFit,
+  pictureKindOf,
+  pictureReplaceOf,
+  slotFitOf,
+  slotFitOfContentMap
+} from './content-map-fit.mjs'
+export {
   neutralItemName,
   SECTION_ACTIONS,
   sectionAction,
@@ -196,7 +208,7 @@ export {
   withAcceptedDishPhotos,
   DISH_PHOTOS_MATCHER
 } from './dish-photos.mjs'
-export { slotMap, SLOT_MAP_VERSION } from './pictures/slot-map.mjs'
+export { slotMap, protectedPicture, SLOT_MAP_VERSION } from './pictures/slot-map.mjs'
 export {
   labelPicture,
   nearCopies,
@@ -206,10 +218,21 @@ export {
 } from './pictures/picture-labels.mjs'
 export { heroCandidates, withoutNearCopies, NEAR_COPY_BITS } from './pictures/brief-media.mjs'
 export {
+  ASSET_CONTENT,
+  ASSET_CONTENT_KINDS,
+  ASSET_ORIENTATIONS,
+  ASSET_QUALITIES,
+  assetLabelsOf,
+  orientationOf,
+  resolutionGradeOf
+} from './pictures/asset-labels.mjs'
+export {
   planPlacement,
   drawPlan,
   outputSize,
   cropBox,
+  shapeFit,
+  fitCrop,
   ROLES,
   PLANNER_VERSION,
   MAX_SCALE,

@@ -130,7 +130,7 @@ test('the About line uses only quoted words; removed items leave it; a review-on
   )
   assert.equal(
     aboutLineOf('Ace Coach', read),
-    'Ace Coach offers Swiss coaching in Lisbon: Tennis & Padel and swimming lessons, for all ages and levels.'
+    'Ace Coach offers Swiss coaching in Lisbon: tennis & padel and swimming lessons, for all ages and levels.'
   )
   const picked = withReadingPicks(read, { removed: [read.services[0].id], shown: [] })
   assert.deepEqual(

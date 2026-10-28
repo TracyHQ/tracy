@@ -55,7 +55,7 @@ const fail = (code, why = null) => Object.assign(new Error(code), { code, ...(wh
 const recipeFail = (why) => fail('AGENT_DEMO_IMAGE_RECIPE_INVALID', why)
 
 /** A slot's shape as a number: `1.5`, `"3/2"` or `"3:2"` (the forms a slot's size is written in). */
-function aspectOf(value) {
+export function aspectOf(value) {
   if (typeof value === 'number') return value
   const m =
     typeof value === 'string' ? value.trim().match(/^(\d+(?:\.\d+)?)\s*[/:]\s*(\d+(?:\.\d+)?)$/) : null

@@ -1,3 +1,4 @@
+import { siteNameOf } from 'website-opportunities/domain/held-name.mjs'
 import { isAgentDemo } from './agent-demo.js'
 import { demoSelectionMatchesRevision } from '../lib/quickstart-selection.js'
 /** Durable one-click demo orchestration, using the existing revision, build and hand-off services. */
@@ -342,8 +343,8 @@ export function createDemoRunner(deps) {
             qa?.workflow !== 'quickstart-first/1' ||
             qa.machineChecks?.version !== 1 ||
             qa.machineChecks?.identity?.state !== 'verified' ||
-            !revision.brief.business?.name ||
-            qa.machineChecks.identity.actual !== revision.brief.business.name ||
+            !siteNameOf(revision.brief) ||
+            qa.machineChecks.identity.actual !== siteNameOf(revision.brief) ||
             ['structure', 'coverage', 'pictures', 'links', 'demoResidue'].some(
               (key) =>
                 qa.machineChecks[key] !== true &&

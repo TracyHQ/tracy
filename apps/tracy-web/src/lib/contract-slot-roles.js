@@ -19,6 +19,10 @@
  *   handMap  the template's hand-written map, or null; returned with every source, since the Joomla and WordPress pins
  *            and the EmDash copy start from it and lay a ready doc over it
  *
+ * Every answer also carries `fit`, the content map's Slot fit (ADR 0039, `slotFitOfContentMap` in the WO domain):
+ * `{state: 'ready' | 'invalid' | 'missing', version, slots: {<key>: fit}, groups, missing}`, read from the same content
+ * map, so a caller that plans pictures or words gets each slot's shape from the one door it already reads roles from.
+ *
  * A content map that declares roles is the whole answer: when its roles are broken it is `invalid` and the sidecar is
  * not read, so a broken declaration is never hidden behind an older one.
  */
@@ -29,6 +33,7 @@ import {
   contentMapDeclaresRoles,
   handMapApplies,
   isFactRole,
+  slotFitOfContentMap,
   slotRolesFor,
   slotRolesOfContentMap
 } from 'website-opportunities/domain'
@@ -81,7 +86,7 @@ function contractIdOf(contractDir) {
  * @returns {{source: 'content-map' | 'field-map' | 'sidecar' | 'hand-map' | 'none',
  *   state: 'missing' | 'stale' | 'invalid' | 'ready', doc?: any, errors?: string[], gaps: string[], handMap: any}}
  */
-export function readSlotRoles(contractDir, { template = null, cms = null } = {}) {
+function readRoles(contractDir, { template = null, cms = null } = {}) {
   if (!contractDir) {
     const handMap = handMapOf(cms, template)
     return { source: handMap ? 'hand-map' : 'none', state: 'missing', gaps: [], handMap }
@@ -122,6 +127,16 @@ export function readSlotRoles(contractDir, { template = null, cms = null } = {})
   const sidecar = slotRolesOf(contractDir)
   if (sidecar.state !== 'missing') return { source: 'sidecar', ...sidecar, handMap }
   return { source: handMap ? 'hand-map' : 'none', ...sidecar, handMap }
+}
+
+/**
+ * @param {string | null | undefined} contractDir - the folder of one contract version
+ * @param {{template?: string | null, cms?: string | null}} [options] - which hand-written map to fall back to
+ */
+export function readSlotRoles(contractDir, options = {}) {
+  const roles = readRoles(contractDir, options)
+  const contentMap = contractDir ? contentMapOf(contractDir) : null
+  return { ...roles, fit: slotFitOfContentMap(contentMap ?? { slots: [] }) }
 }
 
 /**

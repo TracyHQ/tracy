@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-10-28: The name the site goes by while the business name is held
+
+Changed (internal, not in the public reference): `GET /api/website-opportunities/:id/place-profile` also answers `siteName` while the latest brief holds the business name off the site and the owner has not shown it since: the neutral identity the site goes by instead (the brief's home page title made without the name). Absent otherwise.
+
 ## 2026-10-27: Templates pages served at tracy.ai
 
 Added: `GET /templates/sitemap.xml` and `GET /templates/llms.txt`, the same sitemap and plain text as `/sitemap.xml` and `/llms.txt`, under `/templates/` so they also exist on the public origin. Changed: on the production deployment the Templates pages, sitemap, llms.txt and JSON-LD state `https://tracy.ai` addresses; a direct `GET`/`HEAD` of any `/templates*` address there answers 301 to the same path and query on `https://tracy.ai`, except a request from that host's Cloudflare Worker (`CF-Worker: tracy.ai`), which is served the page. `/robots.txt` names `<public origin>/templates/sitemap.xml`; the old `/design-inspiration` addresses move to `https://tracy.ai/templates/...` in one hop.

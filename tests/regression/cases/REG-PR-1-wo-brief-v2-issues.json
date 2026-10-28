@@ -1,0 +1,59 @@
+{
+  "id": "REG-PR-1-wo-brief-v2-issues",
+  "kind": "feat",
+  "title": "WO brief v2 follow-ups: provider retry and full sources, own-marks name hold, contact channels, hero and SEO from the brief, labelled assets, brand accent on links by contrast",
+  "pr": 1,
+  "area": "website-opportunities/brief",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the domain tests of packages/wo/website-opportunities for provider retry, the brief sources list, the own-marks name hold, the display name, hero, SEO and praise, and asset labels.",
+    "S2: Run the client profile facts and detail tests of packages/site/tracy-website-opportunities.",
+    "S3: Run the brief picture labels revision test of apps/tracy-web.",
+    "S4: Run the brand accent tests of apps/tracy-web (links by contrast against the template page grounds), of site-build-core design-check (the page's accent is on the palette) and of the tracy-host demo QA (link tokens allowed).",
+    "S5: Run the grading-scratch tests of packages/wo/website-opportunities (other name in the brief, contact line order, unknown video size, DM evidence, held names in reviews, duplicate conflicts and links, source counts, service casing, no dash in the markdown).",
+    "S6: Run the second grading tests: packages/wo/website-opportunities grading scratches A to E, apps/tracy-web held reviews on the site, apps/tracy-host demo QA withheld values.",
+    "S7: Run the held-name tests: packages/wo/website-opportunities grading scratch F (brief brand, place profile decision, slot fill) and apps/tracy-web held name on the site (agent demo research brand, collected name).",
+    "S8: Run the held-name site tests: packages/wo/website-opportunities grading scratch G and apps/tracy-web held name on the site (G tests)."
+  ],
+  "expect": [
+    "S1: every test passes: 429/5xx retried within bounds and 402 never, every tried provider listed with its code, a name that disagrees with the logo or social display name held off the site and never printed, displayName reads Name (Branch), the hero is key message 1 plus up to three on-site services, the home SEO block is held by acceptance, generated prose has no em or en dash, assets carry size, orientation, quality, content and caption labels.",
+    "S2: the card shows the held name row and the new amenity labels.",
+    "S3: vision labels land on the brief assets of a revision within the picture cap.",
+    "S4: an accent at 4.5:1 or more on every page ground paints the links (--ds-c-accent-text); a pale accent on white, or a light accent failing a dark ground, leaves the links the template colour; the design check no longer reports the accent role values as OFF_PALETTE_COLOR but still reports a stray colour; look-kept allows exactly the link tokens the build was given.",
+    "S5: every test passes: the brief names the business's other name with its marks and prints neither name in copy; the contact line follows the call to action and By appointment carries its source; unknown video size is null; a DM channel quotes only invitation sentences and Google's website never corroborates it; no review naming a held person is offered for the site; one name conflict per other name and no duplicate other link; Google Places counts what it gave and complete never reads pending; services read in sentence case; no em or en dash outside quotes in the markdown.",
+    "S6: every test passes: By appointment is inferred from implausible all-week hours with no hours excerpt as its quote; each contact channel is named once in the call to action's order; the quickstart fill and the agent demo's research offer no review naming a held person; Tennis Lessons In Dubai reads tennis lessons in Dubai; the other name is a withheld name value, flagged in a page's text, title or meta description and not when only the logo shows it.",
+    "S7: every test passes: while the business name is held, brand.name is null with nameHeld pointing to the Missing name entry and the brand carries neither the held name nor a handle; the place profile's brand name is decided off with the business name and no hero name slot falls back to it; the agent demo's brand part names nobody but keeps the logo, and the collected name is null.",
+    "S8: every test passes: while the business name is held, the site name is the brief's name-free home page title; the build row's business, the quickstart name source, the site title pin and the WordPress blogname written and read back, the visit cards, the about line, the editorial dossier, the legacy hero title, the agent prompt and the collected name all carry that identity and never the held name or a handle; a name on the site still names the site."
+  ],
+  "selectors": {
+    "test": "packages/wo/website-opportunities/test/provider-retry.test.mjs"
+  },
+  "evidence": "The site brief v2 follow-ups (ported from the private repository); these test files fence each change",
+  "fence": "pure domain functions, the card models and the revision labelling with stubbed vision; no database needed",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/wo/website-opportunities/test/provider-retry.test.mjs",
+      "packages/wo/website-opportunities/test/brief-sources.test.mjs",
+      "packages/wo/website-opportunities/test/domain-place-profile-own-marks.test.mjs",
+      "packages/wo/website-opportunities/test/domain-brief-display-name.test.mjs",
+      "packages/wo/website-opportunities/test/domain-brief-hero-seo-praise.test.mjs",
+      "packages/wo/website-opportunities/test/domain-asset-labels.test.mjs",
+      "packages/wo/website-opportunities/test/domain-brief-grading-scratches.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-profile-facts.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-detail.test.mjs",
+      "apps/tracy-web/test/wo-brief-picture-labels-revision.test.mjs",
+      "apps/tracy-web/test/wo-brand-on-site.test.mjs",
+      "apps/tracy-web/test/ds-slot-page-grounds.test.mjs",
+      "packages/site/tracy-site-build-core/test/design-check.test.mjs",
+      "apps/tracy-host/test/demo-qa.test.mjs",
+      "apps/tracy-web/test/held-reviews-on-site.test.mjs",
+      "apps/tracy-host/test/demo-qa-withheld.test.mjs",
+      "packages/wo/website-opportunities/test/domain-hours-check.test.mjs",
+      "apps/tracy-web/test/held-name-on-site.test.mjs"
+    ]
+  }
+}

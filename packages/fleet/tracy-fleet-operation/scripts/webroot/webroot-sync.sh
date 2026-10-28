@@ -61,6 +61,8 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 LIB_DIR="${TRACY_LIB_DIR:-$HERE/../lib}"
 # shellcheck source=../lib/roots.sh
 . "$LIB_DIR/roots.sh"
+# shellcheck source=../lib/heavy-slots.sh
+. "$LIB_DIR/heavy-slots.sh"
 # shellcheck source=../lib/webroot-repo-git.sh
 . "$LIB_DIR/webroot-repo-git.sh"
 # shellcheck source=../lib/webroot-platform.sh
@@ -134,10 +136,9 @@ answer_refusal() { # code [detail]
 HEAVY_LOCK="${TRACY_HEAVY_LOCK:-/var/lock/tracy-webroot-heavy.lock}"
 run_heavy() {
   if [[ -n "${TRACY_HEAVY_LOCK_HELD:-}" ]] || ! command -v flock >/dev/null 2>&1; then "$@"; return; fi
-  exec 9>"$HEAVY_LOCK"
-  if ! flock -n 9; then
-    echo "==> [${SECONDS}s] waiting for another site's heavy webroot job (one at a time per machine)" >&2
-    flock -w 1800 9 || { echo "another heavy webroot job is running; try again shortly" >&2; exit 1; }
+  if ! heavy_try "$HEAVY_LOCK"; then
+    echo "==> [${SECONDS}s] waiting for another site's heavy webroot job (the machine's heavy jobs are full)" >&2
+    heavy_wait "$HEAVY_LOCK" 1800 || { echo "another heavy webroot job is running; try again shortly" >&2; exit 1; }
   fi
   export TRACY_HEAVY_LOCK_HELD=1
   "$@"
@@ -606,6 +607,37 @@ commit_tree() { # tree message [parent]
 }
 
 # ── merge ────────────────────────────────────────────────────────────────────────────────────
+# load_reads <base dump> <base kind> <platform>: the two reads of the live site into scratch schemas
+# (SCHEMA_BASE, SCHEMA_LIVE), normalised, as `merge` runs it in the background beside the copy's dump.
+# A table both reads hold alike loads into neither (`same_tables`). It answers with its status only
+# (its lines go to stderr like every step's): 0 loaded, 1 a load the server refused, 2 the base and
+# 3 the live read not normalised.
+load_reads() {
+  local base_dump="$1" base_kind="$2" platform="$3"
+  local alike="$DIR/same-tables.txt"
+  same_tables "$base_dump" "$DIR/live/db.sql.gz" "$alike"
+  if [[ -s "$alike" ]]; then
+    echo "==> [${SECONDS}s] the live read: $(grep -c . "$alike") table(s) as the base holds them, loaded into neither" >&2
+  fi
+  # The two loads share nothing: side by side, as the server allows (9 s one after the other on
+  # the stand, 22/10/2026). Each one's failure still stops the sync, once both have ended.
+  local loads=() load failed=0
+  load_schema "$SCHEMA_BASE" "$base_dump" "$alike" & loads+=("$!")
+  load_schema "$SCHEMA_LIVE" "$DIR/live/db.sql.gz" "$alike" & loads+=("$!")
+  for load in "${loads[@]}"; do wait "$load" || failed=1; done
+  if [[ "$failed" == 0 && -s "$alike" && "$platform" == wordpress ]] && ! same_home; then
+    echo "==> [${SECONDS}s] the live site's address moved between its reads: loading every table" >&2
+    load_more "$SCHEMA_BASE" "$base_dump" "$alike" & loads=("$!")
+    load_more "$SCHEMA_LIVE" "$DIR/live/db.sql.gz" "$alike" & loads+=("$!")
+    for load in "${loads[@]}"; do wait "$load" || failed=1; done
+  fi
+  if [[ "$failed" != 0 ]] || ! scratch_loaded "$SCHEMA_BASE" "$SCHEMA_LIVE"; then return 1; fi
+  if [[ "$base_kind" != built ]] && ! engine normalise --schema "$SCHEMA_BASE" --platform "$platform" --prefix "$PREFIX" >&2; then
+    return 2
+  fi
+  engine normalise --schema "$SCHEMA_LIVE" --platform "$platform" --prefix "$PREFIX" >&2 || return 3
+}
+
 merge() {
   [[ -d "$REPO" ]] && g rev-parse --verify HEAD >/dev/null 2>&1 || { answer_refusal NO_HISTORY; return; }
   local platform
@@ -619,16 +651,41 @@ merge() {
   local stamp
   stamp="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
+  local previous="" theirs_commit
+  previous="$(g rev-parse --verify --quiet "$LIVE_REF^{commit}" || true)"
   # 1. ours: the copy sealed (whatever was edited outside Tracy is in the history) and dumped.
   echo "==> [${SECONDS}s] the copy: sealing its files" >&2
   TRACY_WEBROOT_LOCK_HELD=1 bash "$HERE/webroot-git.sh" --label "$LABEL" --op seal-outside >&2
   local ours_commit
   ours_commit="$(g rev-parse HEAD)"
-  echo "==> [${SECONDS}s] the copy: dumping its database" >&2
+  # 3. base.
+  local base_commit base_dump base_kind
+  if [[ -n "$previous" && -f "$LIVE_BASE_DUMP" ]]; then
+    base_commit="$previous" base_dump="$LIVE_BASE_DUMP" base_kind=last-sync
+  elif [[ -f "$DIR/base/webroot.tar" && -f "$DIR/base/db.sql.gz" ]]; then
+    base_commit="$(commit_tree "$(tree_of_archive "$DIR/base/webroot.tar" base)" "live: read at import")"
+    base_dump="$DIR/base/db.sql.gz" base_kind=import
+  elif g rev-parse --verify --quiet "refs/tags/tracy-baseline^{commit}" >/dev/null \
+       && [[ -f "$(tracy_backup_dir)/v1.mysql.gz" ]]; then
+    base_commit="$(g rev-parse "tracy-baseline^{commit}")" base_dump="$(tracy_backup_dir)/v1.mysql.gz" base_kind=built
+  else
+    answer_refusal NO_BASE "neither a last sync, an import archive nor an Initial backup with its database"
+    return
+  fi
+  echo "==> [${SECONDS}s] base: $base_kind ($base_commit)" >&2
+
+  # The two reads of the live site load into their scratch schemas beside the copy's dump: they share
+  # nothing with it (a WordPress sync spent 10 s dumping the copy, then 9 s loading the reads, one after
+  # the other; dev, 2026-10-27). `load_reads` prints no answer of its own: its status says how it ended.
+  echo "==> [${SECONDS}s] the live read and its base: loading beside the copy's dump" >&2
   drop_scratch
   trap drop_scratch EXIT
+  local reads
+  load_reads "$base_dump" "$base_kind" "$platform" & reads=$!
+  echo "==> [${SECONDS}s] the copy: dumping its database" >&2
   local loaded=0
   load_ours || loaded=$?
+  if [[ "$loaded" != 0 ]]; then wait "$reads" 2>/dev/null || true; fi
   if [[ "$loaded" == 1 ]]; then answer_refusal COPY_BUSY "the copy's database kept changing"; return; fi
   if [[ "$loaded" != 0 ]]; then
     drop_scratch
@@ -647,12 +704,10 @@ merge() {
   schema_checksums "$SCHEMA_OURS" > "$DIR/ours-loaded.checksums.tmp" & loaded_sums=$!
 
   # 2. theirs: the read of the live site, as a commit whose parent is the last read (if any).
-  local previous="" theirs_commit
-  previous="$(g rev-parse --verify --quiet "$LIVE_REF^{commit}" || true)"
   # A first read laid over the copy as built (`first_read_manifest`) names that commit in D/live-over.
   local over="$previous"
   [[ -n "$over" || ! -f "$DIR/live-over" ]] || over="$(g rev-parse --verify --quiet "$(cat "$DIR/live-over")^{commit}" || true)"
-  if [[ -f "$DIR/live/deleted.json" && -z "$over" ]]; then answer_refusal NO_LIVE_READ "changes without a last read"; return; fi
+  if [[ -f "$DIR/live/deleted.json" && -z "$over" ]]; then wait "$reads" 2>/dev/null || true; answer_refusal NO_LIVE_READ "changes without a last read"; return; fi
   echo "==> [${SECONDS}s] the live read: its files as a tree" >&2
   local theirs_tree
   theirs_commit="$(theirs_of_last_merge)"
@@ -667,22 +722,6 @@ merge() {
     theirs_commit="$(commit_tree "$theirs_tree" "live: read $stamp" "$previous")"
   fi
 
-  # 3. base.
-  local base_commit base_dump base_kind
-  if [[ -n "$previous" && -f "$LIVE_BASE_DUMP" ]]; then
-    base_commit="$previous" base_dump="$LIVE_BASE_DUMP" base_kind=last-sync
-  elif [[ -f "$DIR/base/webroot.tar" && -f "$DIR/base/db.sql.gz" ]]; then
-    base_commit="$(commit_tree "$(tree_of_archive "$DIR/base/webroot.tar" base)" "live: read at import")"
-    base_dump="$DIR/base/db.sql.gz" base_kind=import
-  elif g rev-parse --verify --quiet "refs/tags/tracy-baseline^{commit}" >/dev/null \
-       && [[ -f "$(tracy_backup_dir)/v1.mysql.gz" ]]; then
-    base_commit="$(g rev-parse "tracy-baseline^{commit}")" base_dump="$(tracy_backup_dir)/v1.mysql.gz" base_kind=built
-  else
-    answer_refusal NO_BASE "neither a last sync, an import archive nor an Initial backup with its database"
-    return
-  fi
-  echo "==> [${SECONDS}s] base: $base_kind ($base_commit)" >&2
-
   # 4. files.
   # An engine that stops answers in words, last: the job's reader takes the last JSON line it sees,
   # and a traceback leaves the normaliser's `{"ok": true, …}` as that line (20/10/2026).
@@ -692,41 +731,29 @@ merge() {
   if ! engine files --repo "$REPO" --base "$base_commit" --ours "$ours_commit" --theirs "$theirs_commit" \
     --platform "$platform" --prefer ours ${DECISIONS:+--decisions "$DECISIONS"} \
     ${PUSHED_FILES_ARG[@]+"${PUSHED_FILES_ARG[@]}"} > "$DIR/files.json"; then
+    wait "$reads" 2>/dev/null || true
     answer_refusal MERGE_FAILED "the file merge stopped$(engine_said "$DIR/files.json")"; return
   fi
 
-  # 5. database: the two reads of the live site into scratch schemas beside the copy's (loaded at 1),
-  # normalised. A table both reads hold alike loads into neither (`same_tables`).
-  echo "==> [${SECONDS}s] files merged; loading the three databases" >&2
-  local alike="$DIR/same-tables.txt"
-  same_tables "$base_dump" "$DIR/live/db.sql.gz" "$alike"
-  if [[ -s "$alike" ]]; then
-    echo "==> [${SECONDS}s] the live read: $(grep -c . "$alike") table(s) as the base holds them, loaded into neither" >&2
-  fi
-  # The two loads share nothing: side by side, as the server allows (9 s one after the other on
-  # the stand, 22/10/2026). Each one's failure still stops the sync, once both have ended.
-  local loads=() load failed=0
-  load_schema "$SCHEMA_BASE" "$base_dump" "$alike" & loads+=("$!")
-  load_schema "$SCHEMA_LIVE" "$DIR/live/db.sql.gz" "$alike" & loads+=("$!")
-  for load in "${loads[@]}"; do wait "$load" || failed=1; done
-  if [[ "$failed" == 0 && -s "$alike" && "$platform" == wordpress ]] && ! same_home; then
-    echo "==> [${SECONDS}s] the live site's address moved between its reads: loading every table" >&2
-    load_more "$SCHEMA_BASE" "$base_dump" "$alike" & loads=("$!")
-    load_more "$SCHEMA_LIVE" "$DIR/live/db.sql.gz" "$alike" & loads+=("$!")
-    for load in "${loads[@]}"; do wait "$load" || failed=1; done
-  fi
-  if [[ "$failed" != 0 ]] || ! scratch_loaded "$SCHEMA_BASE" "$SCHEMA_LIVE" "$SCHEMA_OURS"; then
-    echo "loading the three databases failed" >&2
+  # 5. database: the reads' loads (started beside the copy's dump) waited for; then the merge.
+  local said_reads=0
+  wait "$reads" || said_reads=$?
+  case "$said_reads" in
+    0) ;;
+    2) answer_refusal MERGE_FAILED "the base could not be normalised"; return ;;
+    3) answer_refusal MERGE_FAILED "the live read could not be normalised"; return ;;
+    *)
+      echo "loading the three databases failed" >&2
+      drop_scratch
+      trap - EXIT
+      answer_refusal MERGE_FAILED "$SCRATCH_REFUSED"
+      return ;;
+  esac
+  if ! scratch_loaded "$SCHEMA_OURS"; then
     drop_scratch
     trap - EXIT
     answer_refusal MERGE_FAILED "$SCRATCH_REFUSED"
     return
-  fi
-  if [[ "$base_kind" != built ]] && ! engine normalise --schema "$SCHEMA_BASE" --platform "$platform" --prefix "$PREFIX" >&2; then
-    answer_refusal MERGE_FAILED "the base could not be normalised"; return
-  fi
-  if ! engine normalise --schema "$SCHEMA_LIVE" --platform "$platform" --prefix "$PREFIX" >&2; then
-    answer_refusal MERGE_FAILED "the live read could not be normalised"; return
   fi
   if wait "$loaded_sums" && [[ -s "$DIR/ours-loaded.checksums.tmp" ]]; then
     mv "$DIR/ours-loaded.checksums.tmp" "$DIR/ours-loaded.checksums"
@@ -1029,13 +1056,17 @@ remember_read() { # theirs_commit
     "$DIR/db.json" "$ID_MAP.tmp" && chmod 600 "$ID_MAP.tmp" && mv "$ID_MAP.tmp" "$ID_MAP"
   cp "$DIR/live/db.sql.gz" "$LIVE_BASE_DUMP.tmp" && chmod 600 "$LIVE_BASE_DUMP.tmp" && mv "$LIVE_BASE_DUMP.tmp" "$LIVE_BASE_DUMP"
   # Where each table's gzip member lies in it (live-pull.mjs `writeDump`): the next read takes an
-  # unmoved table's bytes as they are. A read written without one leaves none behind.
-  if [[ -f "$DIR/live/db.sql.gz.index.json" ]]; then
-    cp "$DIR/live/db.sql.gz.index.json" "$LIVE_BASE_DUMP.index.json.tmp" && chmod 600 "$LIVE_BASE_DUMP.index.json.tmp" \
-      && mv "$LIVE_BASE_DUMP.index.json.tmp" "$LIVE_BASE_DUMP.index.json"
-  else
-    rm -f "$LIVE_BASE_DUMP.index.json"
-  fi
+  # unmoved table's bytes as they are. And each big table's range checksums (`writeRanges`): the next
+  # read of a moved one asks only for the ranges that moved. A read written without one leaves none.
+  local beside
+  for beside in index.json ranges.json; do
+    if [[ -f "$DIR/live/db.sql.gz.$beside" ]]; then
+      cp "$DIR/live/db.sql.gz.$beside" "$LIVE_BASE_DUMP.$beside.tmp" && chmod 600 "$LIVE_BASE_DUMP.$beside.tmp" \
+        && mv "$LIVE_BASE_DUMP.$beside.tmp" "$LIVE_BASE_DUMP.$beside"
+    else
+      rm -f "$LIVE_BASE_DUMP.$beside"
+    fi
+  done
   # The read in place holds what a push wrote: the next base needs no word about it.
   rm -f "$PUSHED"
   remember_kept
@@ -1402,7 +1433,7 @@ copy_token() {
 }
 
 forget() {
-  rm -f "$LIVE_BASE_DUMP" "$LIVE_BASE_DUMP.index.json" "$SYNC_DIR/live-manifest.json" "$LIVE_FINGERPRINT" "$KEPT"
+  rm -f "$LIVE_BASE_DUMP" "$LIVE_BASE_DUMP.index.json" "$LIVE_BASE_DUMP.ranges.json" "$SYNC_DIR/live-manifest.json" "$LIVE_FINGERPRINT" "$KEPT"
   g update-ref -d "$LIVE_REF" 2>/dev/null || true
   # Every run's folder but this job's own; a sync that began meanwhile reads before it locks, and
   # its folder is newer than a day — the sweep's age (`sweep_runs`) is what leaves it.

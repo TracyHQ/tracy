@@ -1,6 +1,7 @@
 import { visionLabelOf } from './demo-photo-labels.js'
 import { isAgentDemo, checkedResearch, agentDemoPrompt, researchHash } from './agent-demo.js'
 import { renderBriefWithReviews } from 'website-opportunities/src/review-sources.js'
+import { briefWithResearch } from './revision-research.js'
 /**
  * Handing a provisioned demo site to its agent (plan §5 step 8): the opportunity's own pictures go
  * into the site through the REAL Apply door (`media.upload`, as the person who pressed, with their

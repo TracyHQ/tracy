@@ -10,6 +10,9 @@ import { candidateAsRead } from './candidate-as-read.mjs'
 import { researchWhatsappOf } from './business-phones.mjs'
 import { defaultOfferingKind, statedTradeOf, tradeOfPlace, tradeOfSchemaType } from './trades.mjs'
 import { emptyPlaceProfile, sourceRef, webAddress } from './place-profile.mjs'
+import { ownMarkNamesOf } from './own-marks.mjs'
+import { nameKey } from './business-name.mjs'
+import { directMessageUrlOf, ownChannelInvitesOf, socialNetworkOfUrl } from './own-channels.mjs'
 
 const VERSION = 'place-profile-from-research/1'
 const SOCIAL_NETWORKS = new Set(['facebook', 'instagram', 'tiktok', 'youtube'])
@@ -32,7 +35,8 @@ const canonical = (value) =>
 const hash = (value) => createHash('sha256').update(canonical(value)).digest('hex').slice(0, 24)
 /**
  * Why a fact stays off the site until the owner switches it on (#1791): `derivation.method` names the check and
- * `reason` starts with its code, `implausible-all-week-hours`, `few-reviews` or `owner-left-off`. The on-site rules
+ * `reason` starts with its code, `implausible-all-week-hours`, `few-reviews`, `owner-left-off` or
+ * `name-differs-from-own-marks`. The on-site rules
  * (`fact-assessment.mjs`) read the code; the fact itself, its id and its evidence are unchanged.
  */
 export const ON_SITE_CHECK = 'on-site-check'
@@ -225,6 +229,55 @@ export function placeProfileFromResearch({
     const key = google.internationalPhoneNumber ? 'internationalPhoneNumber' : 'nationalPhoneNumber'
     doc.business.phone = fact(google[key], googleSource(), `$.business.phoneFrom.${key}`, {
       locator: { kind: 'jsonPath', value: `$.googlePlace.${key}` }
+    })
+  }
+  // 🔒 A name the business's own marks do not carry (#1791, `own-marks.mjs`): its logo or its social page calls it
+  // something else. The name stays what the sources chose, held off the site by rule until the owner confirms it or
+  // picks the other name; the other names are a conflict of the name, each citing the marks that give it.
+  const logoRead = (brand.logoResearch ?? profile.brand?.logoResearch)?.chosen ?? null
+  const ownNames =
+    doc.business.name && profile.nameCheck?.state !== 'chosen'
+      ? ownMarkNamesOf({ chosen: doc.business.name.value, claims: profile.nameClaims, logo: logoRead })
+      : []
+  // The handles that only back one of those names (`harbour.sportclub` behind "Harbour Sport Club"): the name's
+  // conflict cites them, so they are no second conflict of their own (one conflict per other name).
+  const backingHandles = new Set(
+    ownNames.flatMap((n) => n.marks.filter((m) => m.via === 'handle').map((m) => nameKey(m.text)))
+  )
+  if (ownNames.length) {
+    const held = doc.business.name
+    const markRef = (m) =>
+      m.source === 'logo'
+        ? evidenceFor(
+            sourceOf('logo', webAddress(logoRead?.url)),
+            { kind: 'jsonPath', value: '$.brand.logoResearch.chosen.readsAs' },
+            m.text,
+            { method: 'logo-reading', version: logoRead?.recognised ?? 'unrecorded' }
+          )
+        : evidenceFor(
+            sourceFor(m.source),
+            { kind: 'jsonPath', value: `$.profile.nameClaims[${m.index}]` },
+            m.text
+          )
+    const marks = [...new Set(ownNames.flatMap((n) => n.marks.map((m) => m.source)))].join(' and ')
+    const why = `its own ${marks} call it ${ownNames.map((n) => n.name).join(' or ')}, not ${held.value}`
+    held.derivation = onSiteCheck('name-differs-from-own-marks', why)
+    doc.conflicts.push({
+      id: id('conflict', 'own-marks', 'business.name'),
+      target: 'business.name',
+      reason: `name-differs-from-own-marks: ${why}`,
+      values: [
+        {
+          id: id('fact', 'own-marks', ['$.business.name', held.value]),
+          value: held.value,
+          evidenceRefs: [...held.evidenceRefs]
+        },
+        ...ownNames.map((n) => ({
+          id: id('fact', 'own-marks', ['$.ownMarks', n.name]),
+          value: n.name,
+          evidenceRefs: [...new Set(n.marks.map(markRef))]
+        }))
+      ]
     })
   }
   const profileHours = strings(profile.hours).length > 0
@@ -706,17 +759,31 @@ export function placeProfileFromResearch({
     const url = webAddress(cleanSocialUrl(typeof value === 'string' ? value : value?.url, kind))
     if (!url) return
     if (doc.links.some((l) => l.value.kind === kind && l.value.url === url)) return
+    // A link of no known kind that another link already holds (the Instagram page listed again) is no second link.
+    if (kind === 'other' && doc.links.some((l) => l.value.url === url)) return
     doc.links.push(fact({ kind, url }, source, path))
   }
-  if (profile.website ?? google.website)
-    addLink(
-      'website',
-      profile.website ?? google.website,
-      profile.website ? profileSource('website', profile.website).source : googleSource(),
-      '$.profile.website'
-    )
+  // A website field that holds a social page (Google's website field set to the Instagram page) is no website: it is
+  // one more source for that social link (#1791), never a second row with the same address.
+  const websiteUrl = profile.website ?? google.website
+  const websiteSource = () =>
+    profile.website ? profileSource('website', profile.website).source : googleSource()
+  const websiteNetwork = socialNetworkOfUrl(websiteUrl)
+  if (websiteUrl && !websiteNetwork) addLink('website', websiteUrl, websiteSource(), '$.profile.website')
   for (const [kind, url] of Object.entries(profile.socials ?? {}))
     addLink(kind, url, sourceFor(kind, url), `$.profile.socials.${kind}`)
+  if (websiteNetwork) {
+    const url = webAddress(cleanSocialUrl(websiteUrl, websiteNetwork))
+    const social = doc.links.find((l) => l.value.kind === websiteNetwork && l.value.url === url)
+    if (social) {
+      const ref = evidenceFor(
+        websiteSource(),
+        { kind: 'jsonPath', value: profile.website ? '$.profile.website' : '$.googlePlace.website' },
+        url
+      )
+      if (!social.evidenceRefs.includes(ref)) social.evidenceRefs.push(ref)
+    } else addLink(websiteNetwork, websiteUrl, websiteSource(), '$.profile.website')
+  }
   // The WhatsApp number (#1780 item 16, #1791): one a source labels WhatsApp cites that source; one inferred from a UAE
   // mobile cites the phone it was inferred from and says it is inferred (`derivation.method: 'inferred'`).
   const whatsapp = researchWhatsappOf({ profile, candidate, googlePlace: google })
@@ -751,9 +818,79 @@ export function placeProfileFromResearch({
       addLink(kind, value, sourceFor(value.source ?? 'research'), `$.profile.${key}[${i}]`)
     )
   }
-  for (const [key, values] of Object.entries(profile.evidence ?? {})) {
-    if (list(values).length < 2) continue
-    const alternatives = values.map((v, i) =>
+  // The channels the business invites people to use in its own words (#1791, `own-channels.mjs`): "DM us" on its
+  // Instagram makes an Instagram DM channel, "WhatsApp us" backs the WhatsApp button. Each rests on the sentence that
+  // says it (its quote) and on the page the message goes to; a WhatsApp number Tracy inferred is then no longer only
+  // inferred. A channel needs its page: "DM us" with no Instagram link of the place names no address.
+  const ownWords = []
+  if (profile.bio) {
+    const { source } = profileSource('bio', profile.bio)
+    ownWords.push({ text: profile.bio, source, readOn: source.kind, locator: '$.profile.bio' })
+  }
+  for (const post of allPosts) {
+    const url = webAddress(post.url)
+    ownWords.push({
+      text: post.caption ?? post.text,
+      source: sourceFor(post.source, url),
+      readOn: post.source,
+      locator: url ? { kind: 'post', value: url } : '$.posts'
+    })
+  }
+  const OWN_WORDS = { method: 'own-channel-words', version: 'own-channels/1' }
+  for (const words of ownWords)
+    for (const invite of ownChannelInvitesOf(words.text, words.readOn)) {
+      const quoteRef = () =>
+        evidenceFor(
+          words.source,
+          typeof words.locator === 'string' ? { kind: 'jsonPath', value: words.locator } : words.locator,
+          invite.quote,
+          OWN_WORDS
+        )
+      if (invite.channel === 'whatsapp') {
+        const wa = doc.links.find((l) => l.value.kind === 'whatsapp')
+        if (!wa) continue
+        const ref = quoteRef()
+        if (!wa.evidenceRefs.includes(ref)) wa.evidenceRefs.push(ref)
+        if (wa.derivation?.method === 'inferred')
+          wa.derivation = {
+            method: 'own-words',
+            version: OWN_WORDS.version,
+            ...(wa.derivation.inputRefs ? { inputRefs: wa.derivation.inputRefs } : {}),
+            reason: 'own-channel: the business invites WhatsApp messages in its own words'
+          }
+        continue
+      }
+      const network = invite.channel.replace(/-dm$/, '')
+      const page = doc.links.find((l) => l.value.kind === network)
+      if (!page) continue
+      const ref = quoteRef()
+      const held = doc.links.find((l) => l.value.kind === invite.channel)
+      if (held) {
+        if (!held.evidenceRefs.includes(ref)) held.evidenceRefs.push(ref)
+        continue
+      }
+      // 🔒 Its evidence is the business's invitation sentences only: the page it goes to is its input (`inputRefs`),
+      // never a quote, and a source that only lists the page (Google's website field) says nothing about messages.
+      doc.links.push({
+        id: id('fact', 'own-channel', [invite.channel, page.value.url]),
+        value: { kind: invite.channel, url: directMessageUrlOf(network, page.value.url) },
+        evidenceRefs: [ref],
+        derivation: {
+          method: 'own-words',
+          version: OWN_WORDS.version,
+          inputRefs: [page.id],
+          reason: `own-channel: the business invites messages on ${network} in its own words`
+        }
+      })
+    }
+  for (const [key, all] of Object.entries(profile.evidence ?? {})) {
+    const values = list(all)
+      .map((v, i) => ({ v, i }))
+      .filter(
+        ({ v }) => !(key === 'name' && typeof v?.value === 'string' && backingHandles.has(nameKey(v.value)))
+      )
+    if (values.length < 2) continue
+    const alternatives = values.map(({ v, i }) =>
       fact(v.value, sourceFor(v.sources?.[0]), `$.profile.evidence.${key}[${i}]`)
     )
     doc.conflicts.push({

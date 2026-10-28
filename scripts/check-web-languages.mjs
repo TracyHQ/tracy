@@ -94,7 +94,9 @@ export const SAME_IN = {
   'tpl.footer.privacy': ['it', 'nl'],
   'tpl.facts.style': ['fr'],
   'tpl.footer.product': ['nl'],
-  'tpl.footer.legal': ['es']
+  'tpl.footer.legal': ['es'],
+  // German, Italian and Dutch use the loanword "Community", as the tracy.ai footer does.
+  'tpl.footer.community': ['de', 'it', 'nl']
 }
 
 export function webLanguageProblems({ en, languages, files, webLanguages }) {

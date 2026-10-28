@@ -420,7 +420,26 @@ export const AMENITY_IDS = [
   'dineIn',
   'goodForChildren',
   'goodForGroups',
-  'allowsDogs'
+  'allowsDogs',
+  // Attributes any trade can have (Google's restroom, accessibility, parking and payment options).
+  'restroom',
+  'goodForWatchingSports',
+  'curbsidePickup',
+  'wheelchairAccessibleEntrance',
+  'wheelchairAccessibleParking',
+  'wheelchairAccessibleRestroom',
+  'wheelchairAccessibleSeating',
+  'freeParkingLot',
+  'paidParkingLot',
+  'freeStreetParking',
+  'paidStreetParking',
+  'valetParking',
+  'freeGarageParking',
+  'paidGarageParking',
+  'acceptsCreditCards',
+  'acceptsDebitCards',
+  'acceptsCashOnly',
+  'acceptsNfc'
 ] as const
 export type AmenityId = (typeof AMENITY_IDS)[number]
 

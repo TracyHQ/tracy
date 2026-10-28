@@ -314,6 +314,17 @@ async function abilities(endpoint, token) {
             hashPaths: Math.max(1, Math.min(500, Math.floor(Number(info.files_hash.max_paths))))
           }
         : null,
+    // Checksums of a table's rows range by range, and one range read again (claude-cowork `db.range_checksums`).
+    ranges:
+      Number(info.db_range_checksums?.version) >= 1 && Number(info.db_range_checksums.max_starts) > 0
+        ? {
+            maxStarts: Math.max(1, Math.min(5000, Math.floor(Number(info.db_range_checksums.max_starts)))),
+            maxLimit: Math.max(
+              50,
+              Math.min(5000, Math.floor(Number(info.db_range_checksums.max_limit) || 2000))
+            )
+          }
+        : null,
     // How many named files one pack may carry: the changed files file.read will not serve.
     packPaths:
       Number(info.files_pack?.max_paths) > 0
@@ -774,14 +785,16 @@ function digestOf(path, table) {
 /**
  * One read of the database, a file per table: `{tables, rows, reread, parts: [{table, path, digest}]}`.
  * `only` reads just those tables (into the same files), keeping `previous` for the others; `partial`:
- * those tables are all that is wanted (`sameRows`).
+ * those tables are all that is wanted (`sameRows`). `ranges` (`{kept, dump, skip}`, an engine that
+ * answers `db.range_checksums`): a table with ranges `kept` beside the last read `dump` is read range
+ * by range (`spliceRanges`), and a big one read whole has its ranges taken (`takeRanges`).
  */
 async function readDatabase(
   endpoint,
   token,
   scratch,
   ability,
-  { only = null, previous = null, reuse = null, partial = false, seeded = null } = {}
+  { only = null, previous = null, reuse = null, partial = false, seeded = null, ranges = null } = {}
 ) {
   const { tables: listed } = await retried(() => call(endpoint, token, 'db.tables'))
   const all = listed.filter((t) => !isTracyCopy(t))
@@ -799,8 +812,39 @@ async function readDatabase(
       tables: [{ table, rows: null, count: true, housekeeping: false }]
     })
   const began = Date.now()
+  // A table that moved since the last read and kept its ranges: only the ranges that moved are asked for.
+  const spliced = new Map()
+  const index = ranges?.kept && ability.ranges ? readIndex(ranges.dump) : null
+  for (const table of index ? tables : []) {
+    const was = ranges.kept.get(table)
+    const at = index.get(table)
+    if (!was || !at || isVolatile(table)) continue
+    try {
+      const member = { file: ranges.dump, offset: at.offset, length: at.length }
+      const got = await spliceRanges(
+        endpoint,
+        token,
+        table,
+        was,
+        member,
+        ranges.skip,
+        ability,
+        join(scratch, 'ranges')
+      )
+      if (got.part) spliced.set(table, got.part)
+      note(
+        got.part
+          ? `database: ${table}: ${got.moved} of ${got.of} range(s) moved, ${got.rows} row(s) read`
+          : `database: ${table}: read whole (${got.whole})`
+      )
+    } catch (error) {
+      if (error.code === 'TOKEN_REFUSED') throw error
+      note(`database: ${table}: ranges not answered (${error.code ?? 'error'}); read whole`)
+    }
+  }
+  const whole = tables.filter((table) => !spliced.has(table))
   if (ability.dumpMany) {
-    let pending = tables
+    let pending = whole
     for (let attempt = 1; pending.length; attempt++) {
       const got = await pullMany(endpoint, token, pending, fileOf, limits, ability.dumpMany)
       for (const [table, read] of got) reads.set(table, read)
@@ -810,7 +854,7 @@ async function readDatabase(
       if (pending.length) note(`database: ${pending.slice(0, 5).join(', ')} moved while read; again`)
     }
   } else
-    for (const table of tables) {
+    for (const table of whole) {
       for (let attempt = 1; ; attempt++) {
         const read = await pullTable(endpoint, token, table, fileOf(table), limits)
         reads.set(table, read)
@@ -831,16 +875,33 @@ async function readDatabase(
       `database: ${reads.size} table(s) asked for in ${Math.round((Date.now() - began) / 100) / 10}s (rows: ${largest.join(', ')})`
     )
   }
+  // The ranges of each big table just read whole, for the next read to compare with.
+  const ranged = new Map()
+  for (const table of ranges && ability.ranges ? reads.keys() : []) {
+    try {
+      const taken = await takeRanges(endpoint, token, { table, path: fileOf(table) }, ranges.skip, ability)
+      if (taken) ranged.set(table, taken)
+    } catch (error) {
+      if (error.code === 'TOKEN_REFUSED') throw error
+    }
+  }
   const kept = new Map([
     ...(reuse ?? new Map()),
     ...have,
-    ...(previous?.parts ?? []).map((p) => [p.table, p])
+    ...(previous?.parts ?? []).map((p) => [p.table, p]),
+    ...spliced
   ])
   const parts = all
     .filter((table) => reads.has(table) || kept.has(table))
     .map((table) =>
       reads.has(table)
-        ? { table, path: fileOf(table), digest: digestOf(fileOf(table), table), rows: reads.get(table).rows }
+        ? {
+            table,
+            path: fileOf(table),
+            digest: digestOf(fileOf(table), table),
+            rows: reads.get(table).rows,
+            ...(ranged.has(table) ? { ranges: ranged.get(table) } : {})
+          }
         : kept.get(table)
     )
   if (!partial && parts.length !== all.length)
@@ -1086,6 +1147,243 @@ function partPath(part, dir) {
 }
 
 /**
+ * Ranges of a big table. A table of RANGE_MIN_BYTES of dump and more, read whole, is cut into ranges
+ * of its rows by its one integer key — about RANGE_BYTES of dump, at most RANGE_ROWS rows, each — and
+ * the site's checksum of each range (claude-cowork's `db.range_checksums`) is kept beside the read
+ * (`<dump>.ranges.json`). When the table moves, the next read asks for the same ranges, reads again
+ * only those whose checksum moved (`db.dump_after`) and keeps the last read's rows for the others: a
+ * WordPress sync read the 135 000 rows of `wp_postmeta` again, 15 s, for one edited title (dev,
+ * 27/10/2026). Anything that does not add up — a count, a key out of its range, a refusal — reads
+ * the table whole, as before.
+ */
+const RANGE_BYTES = Number(process.env.TRACY_SYNC_RANGE_BYTES) || 512 * 1024
+const RANGE_ROWS = 2000
+const RANGE_MIN_BYTES = Number(process.env.TRACY_SYNC_RANGE_MIN_BYTES) || 2 * 1024 * 1024
+const RANGES_VERSION = 1
+const rangesOf = (dump) => `${dump}.ranges.json`
+const countOf = (range) => Number(String(range).split(':')[0])
+
+/** The table's one integer key column and its place in a row, from its CREATE TABLE; null when it has none. */
+function rangeKey(head) {
+  const create = head.slice(head.indexOf('CREATE TABLE'))
+  const primary = /^\s*PRIMARY KEY \(`((?:[^`]|``)+)`\)/m.exec(create)
+  if (!primary) return null
+  const columns = [...create.matchAll(/^ {2}`((?:[^`]|``)+)` (\S+)/gm)]
+  const pos = columns.findIndex((column) => column[1] === primary[1])
+  if (pos < 0 || !/^(tiny|small|medium|big)?int\b/i.test(columns[pos][2])) return null
+  return { key: primary[1].replace(/``/g, '`'), pos }
+}
+
+/** A table's dump cut into its lines before the rows and each row with its key (`pos` in the tuple). */
+function keyedRows(bytes, pos) {
+  const head = []
+  const rows = []
+  const scan = rowScanner({
+    onOther: (b) => {
+      if (!rows.length) head.push(Buffer.from(b))
+    },
+    onTuple: (tuple) => rows.push({ key: BigInt(tupleValues(tuple.toString('latin1'), pos + 1)[pos]), tuple })
+  })
+  scan.write(bytes)
+  scan.end()
+  return { head: Buffer.concat(head).toString('utf8'), rows }
+}
+
+/** INTERVAL(): how many of the ascending `starts` are at or below `key` — the range it is in. */
+function rangeOf(key, starts) {
+  let lo = 0
+  let hi = starts.length
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1
+    if (starts[mid] <= key) lo = mid + 1
+    else hi = mid
+  }
+  return lo
+}
+
+const SAFE = BigInt(Number.MAX_SAFE_INTEGER)
+/** Each range's rows counted, `starts` cutting them: what `db.range_checksums` counts. */
+const countsOf = (rows, starts) => {
+  const counts = Array.from({ length: starts.length + 1 }, () => 0)
+  for (const row of rows) counts[rangeOf(row.key, starts)]++
+  return counts
+}
+
+/**
+ * The ranges of a table this read took whole (`part.path`), as `{key, pos, starts, ranges}`, or null:
+ * not big enough, no one integer key, or the site's counts are not the rows read (it moved since).
+ */
+async function takeRanges(endpoint, token, part, skip, ability) {
+  if (!ability.ranges || isVolatile(part.table) || statSync(part.path).size < RANGE_MIN_BYTES) return null
+  const bytes = readFileSync(part.path)
+  const at = bytes.indexOf('INSERT INTO ')
+  const found = rangeKey(bytes.subarray(0, at < 0 ? bytes.length : at).toString('utf8'))
+  if (!found) return null
+  const { rows } = keyedRows(bytes, found.pos)
+  let starts = []
+  let size = 0
+  let count = 0
+  for (const row of rows) {
+    if (count && (size >= RANGE_BYTES || count >= RANGE_ROWS)) {
+      starts.push(row.key)
+      size = 0
+      count = 0
+    }
+    size += row.tuple.length
+    count++
+  }
+  if (starts.length > ability.ranges.maxStarts) {
+    const step = Math.ceil(starts.length / ability.ranges.maxStarts)
+    starts = starts.filter((_, i) => i % step === step - 1)
+  }
+  if (starts.some((start) => start > SAFE || start < -SAFE)) return null
+  const { ranges } = await retried(() =>
+    call(endpoint, token, 'db.range_checksums', {
+      table: part.table,
+      key: found.key,
+      starts: starts.map(Number),
+      skip_columns: skip
+    })
+  )
+  if (!Array.isArray(ranges) || ranges.length !== starts.length + 1) return null
+  const counts = countsOf(rows, starts)
+  if (ranges.some((range, i) => countOf(range) !== counts[i])) return null
+  return { key: found.key, pos: found.pos, starts: starts.map(Number), ranges }
+}
+
+/**
+ * A table that moved, from the last read's rows (`member`) and its kept ranges (`was`): the ranges
+ * whose checksum moved read again, the others kept. `{part, rows, moved, of}` — the part as a whole
+ * read now would write it (the site's CREATE TABLE now, the rows in key order), the rows read and
+ * how many ranges moved of how many — or `{whole: why}`: the table is read whole.
+ */
+async function spliceRanges(endpoint, token, table, was, member, skip, ability, dir) {
+  const now = await retried(() =>
+    call(endpoint, token, 'db.range_checksums', {
+      table,
+      key: was.key,
+      starts: was.starts,
+      skip_columns: skip
+    })
+  )
+  if (!Array.isArray(now.ranges) || now.ranges.length !== was.ranges.length || typeof now.create !== 'string')
+    return { whole: 'an answer of another shape' }
+  const moved = now.ranges.flatMap((range, i) => (range === was.ranges[i] ? [] : [i]))
+  // None moved though the table's checksum did: a write between the two questions. Most moved: one
+  // whole read costs less than many range reads.
+  if (!moved.length) return { whole: 'no range moved' }
+  if (moved.length * 2 > now.ranges.length)
+    return { whole: `${moved.length} of ${now.ranges.length} ranges moved` }
+  const starts = was.starts.map(BigInt)
+  const kept = Array.from({ length: now.ranges.length }, () => [])
+  for (const row of keyedRows(readFileSync(partPath({ member }, dir)), was.pos).rows)
+    kept[rangeOf(row.key, starts)].push(row)
+  // The last read's rows are the ones its ranges were taken over.
+  if (kept.some((rows, i) => rows.length !== countOf(was.ranges[i])))
+    return { whole: 'the last read is not what its ranges counted' }
+  let read = 0
+  for (const i of moved) {
+    const want = countOf(now.ranges[i])
+    const got = []
+    let after = i === 0 ? null : Number(starts[i - 1] - 1n)
+    while (got.length < want) {
+      const chunk = await retried(() =>
+        call(endpoint, token, 'db.dump_after', {
+          table,
+          key: was.key,
+          after,
+          limit: Math.min(want - got.length, ability.ranges.maxLimit)
+        })
+      )
+      const { rows } = keyedRows(Buffer.from(chunk.sql_b64 ?? '', 'base64'), was.pos)
+      if (!rows.length) break
+      got.push(...rows)
+      const last = rows.at(-1).key
+      if (last > SAFE) return { whole: 'a key past what JSON carries' }
+      after = Number(last)
+    }
+    if (got.length !== want || got.some((row) => rangeOf(row.key, starts) !== i))
+      return { whole: 'a range read again is not what its checksum counted' }
+    kept[i] = got
+    read += got.length
+  }
+  // As DbDumper heads a table, then the rows in key order: range by range.
+  mkdirSync(dir, { recursive: true, mode: 0o700 })
+  const path = join(dir, `s${member.offset}.sql`)
+  const out = writer(path, false)
+  const name = table.replace(/`/g, '``')
+  await out.write(
+    `-- table \`${table}\`\nDROP TABLE IF EXISTS \`${name}\`;\n${now.create ? `${now.create};\n` : ''}`
+  )
+  const insert = `INSERT INTO \`${name}\` VALUES `
+  let batch = []
+  let size = 0
+  const flush = async () => {
+    if (!batch.length) return
+    await out.write(
+      Buffer.concat([Buffer.from(insert), ...batch.flatMap((t, i) => (i ? [COMMA, t] : [t])), END])
+    )
+    batch = []
+    size = 0
+  }
+  let rows = 0
+  for (const range of kept)
+    for (const row of range) {
+      batch.push(row.tuple)
+      size += row.tuple.length
+      rows++
+      if (size >= 1024 * 1024) await flush()
+    }
+  await flush()
+  await out.close()
+  return {
+    part: {
+      table,
+      path,
+      digest: digestOf(path, table),
+      rows,
+      ranges: { key: was.key, pos: was.pos, starts: was.starts, ranges: now.ranges }
+    },
+    rows: read,
+    moved: moved.length,
+    of: now.ranges.length
+  }
+}
+const COMMA = Buffer.from(',')
+const END = Buffer.from(';\n')
+
+/** The ranges kept beside a read (`writeRanges`) as `Map<table, {key, pos, starts, ranges}>`, or null:
+ * none, taken another way, or not that dump's (its size says, as its index's does). */
+function readRanges(dump, skip) {
+  try {
+    const kept = JSON.parse(readFileSync(rangesOf(dump), 'utf8'))
+    if (kept?.version !== RANGES_VERSION || kept.rules !== DIGEST_RULES) return null
+    if (JSON.stringify(kept.skip) !== JSON.stringify(skip) || kept.bytes !== statSync(dump).size) return null
+    if (!readIndex(dump)) return null
+    return new Map(Object.entries(kept.tables ?? {}))
+  } catch {
+    return null
+  }
+}
+
+/** The ranges of the parts that have them, beside the dump just written; none at all, no file. */
+function writeRanges(dump, parts, skip) {
+  const tables = Object.fromEntries(parts.filter((p) => p.ranges).map((p) => [p.table, p.ranges]))
+  if (!Object.keys(tables).length) return rmSync(rangesOf(dump), { force: true })
+  writeFileSync(
+    rangesOf(dump),
+    JSON.stringify({
+      version: RANGES_VERSION,
+      rules: DIGEST_RULES,
+      skip,
+      bytes: statSync(dump).size,
+      tables
+    }),
+    { mode: 0o600 }
+  )
+}
+
+/**
  * The database as it stood still. With the site's table checksums (claude-cowork 0.24.51): ONE read,
  * kept when no table's checksum moved across it — the tables that did are read again, alone, and a
  * table whose two reads in a row agree row for row (`rowDigest`, the rows the site rewrites by itself
@@ -1108,7 +1406,11 @@ async function pullDatabase(
     let before = checksumsBefore ?? (await tableChecksums(endpoint, token, skip))
     // Only the tables that moved since the last applied read are read; the others are that read's.
     const reuse = last && before ? await reusableTables(last, before, join(scratch, 'base')) : null
-    let read = await readDatabase(endpoint, token, join(scratch, 'a'), ability, { reuse, seeded })
+    // The ranges kept beside that read: an unmoved table keeps its own, a moved one is read by them.
+    const kept = ability.ranges && last ? readRanges(last.dump, skip) : null
+    for (const [table, part] of reuse ?? []) if (kept?.has(table)) part.ranges = kept.get(table)
+    const ranges = ability.ranges ? { kept, dump: last?.dump, skip } : null
+    let read = await readDatabase(endpoint, token, join(scratch, 'a'), ability, { reuse, seeded, ranges })
     // A checksum covers every row: WordPress's `wp_options` moves with each WP-Cron tick (`cron`, the
     // transients), so its checksum never holds still on a site with visitors, and comparing checksums
     // alone made every read of it busy (dev, 24/10/2026). Its two reads compared row by row decide.
@@ -1122,6 +1424,13 @@ async function pullDatabase(
       if (moved === null) break // A table the server gives no checksum for: the two-read way below.
       if (moved.length === 0) {
         const digests = await writeDump(path, read.parts, scratch)
+        // A table settled by two reads that agree still moves (its rows the site rewrites by itself):
+        // its ranges may not be its rows. It is read whole next time and its ranges taken then.
+        writeRanges(
+          path,
+          read.parts.filter((p) => !settled.has(p.table)),
+          skip
+        )
         return {
           tables: read.tables,
           tablesRead: read.tablesRead,
@@ -1143,7 +1452,8 @@ async function pullDatabase(
       // Each round in a folder of its own: the read before stays, to be compared with.
       read = await readDatabase(endpoint, token, join(scratch, `r${round}`), ability, {
         only: new Set(moved),
-        previous: read
+        previous: read,
+        ranges: ranges && { kept: null, skip }
       })
       for (const part of read.parts) {
         const prior = was.get(part.table)
@@ -1626,7 +1936,10 @@ async function sameRows(endpoint, token, ability, stored, fingerprint, scratch) 
   try {
     const read = await readDatabase(endpoint, token, scratch, ability, {
       only: new Set(moved),
-      partial: true
+      partial: true,
+      ranges: ability.ranges
+        ? { kept: readRanges(base, ability.fingerprint.skip), dump: base, skip: ability.fingerprint.skip }
+        : null
     })
     // The last read's digests from its index when it has one: nothing of it unpacked.
     const index = readIndex(base)

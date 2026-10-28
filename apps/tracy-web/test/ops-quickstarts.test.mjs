@@ -54,6 +54,8 @@ const questionnaire = (owner, label) => ({
  * predate ADR 0038 and are never edited, so the harness answers for them; `realRoles` reads the contract instead.
  */
 const ROLES_READY = () => ({ state: 'ready' })
+/** The same for Slot fit (ADR 0039): the released contracts these fixtures borrow predate it. */
+const FIT_READY = () => ({ state: 'ready' })
 
 function harness(pool, { opsFetch, extraEnv, realRoles = false } = {}) {
   const config = readConfig({
@@ -67,7 +69,7 @@ function harness(pool, { opsFetch, extraEnv, realRoles = false } = {}) {
     host,
     mail: { send: async () => {} },
     sites: dbSitesResolver(pool, config),
-    ...(realRoles ? {} : { rolesOf: ROLES_READY }),
+    ...(realRoles ? {} : { rolesOf: ROLES_READY, fitOf: FIT_READY }),
     ...(opsFetch ? { fetchImpl: opsFetch } : {})
   })
   const cookieFor = async (email) => `tracy_sess=${await mintSession(email, config.sessionSecret)}`

@@ -69,7 +69,7 @@ test('normalization preserves verbatim reviews, provenance and deduplicates sour
   assert.equal(reviews[0].author, 'Lan')
 })
 
-test('adapter restricts endpoint, bearer headers and review bounds without redirects or retry', async () => {
+test('adapter restricts endpoint, bearer headers and review bounds without redirects; retries only 429 and 5xx', async () => {
   let calls = 0
   const got = await litescrapeCall(
     'reviews',
@@ -92,14 +92,23 @@ test('adapter restricts endpoint, bearer headers and review bounds without redir
   await assert.rejects(litescrapeCall('not-allowed', {}, { key: 'private-key' }), {
     code: 'INVALID_OPERATION'
   })
-  for (const status of [401, 402, 429, 500, 503]) {
+  // 401 and 402 (paid quota spent) are final; a 429 or 5xx is tried again, within the wait budget.
+  for (const [status, tries] of [
+    [401, 1],
+    [402, 1],
+    [429, 3],
+    [500, 3],
+    [503, 3]
+  ]) {
     let attempts = 0
+    const waits = []
     await assert.rejects(
       litescrapeCall(
         'search',
         {},
         {
           key: 'private-key',
+          retry: { sleep: async (ms) => void waits.push(ms) },
           fetch: async () => {
             attempts++
             return response({ secret: 'private-key' }, status)
@@ -108,7 +117,8 @@ test('adapter restricts endpoint, bearer headers and review bounds without redir
       ),
       { code: `HTTP_${status}` }
     )
-    assert.equal(attempts, 1)
+    assert.equal(attempts, tries, `HTTP ${status}`)
+    assert.equal(waits.length, tries - 1)
   }
   for (const body of [{}, { reviews: null }, { error: 'provider secret', reviews: [] }])
     await assert.rejects(

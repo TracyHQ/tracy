@@ -12,6 +12,7 @@ import { bornSiteAddress } from '../lib/site-address.js'
 
 import { contractStatus, contractWarnings } from '../lib/brief-support.js'
 import { defaultContracts } from '../lib/contracts.js'
+import { fitOfRelease } from '../lib/content-coverage/fit.js'
 import { rolesOfRelease } from '../lib/content-coverage/roles.js'
 import { checkAgain, kickReadiness, readinessForRoad, readinessRows } from '../lib/customize-readiness.js'
 import {
@@ -157,7 +158,9 @@ export function quickstartRoutes({
   doorHealth = null,
   // The slot roles group of Content coverage (ADR 0038). A test hands in its own answer: the released
   // contracts its fixtures borrow are never edited (ADR 0038 decision 6), so they cannot gain roles.
-  rolesOf = rolesOfRelease
+  rolesOf = rolesOfRelease,
+  // The Slot fit group of Content coverage (ADR 0039), the same way: released contracts never gain Slot fit.
+  fitOf = fitOfRelease
 }) {
   const app = new Hono()
 
@@ -255,6 +258,7 @@ export function quickstartRoutes({
         doorHealth: doorHealth?.of(r.tag) ?? null,
         contracts,
         roles: rolesOf(r, contracts),
+        fit: fitOf(r, contracts),
         siblings: id ? sameTemplate(releases, id) : [],
         readiness: readinessForRoad(checks, r),
         dsReadiness: dsReadinessOf(dsChecks, r)
@@ -853,6 +857,7 @@ export function quickstartRoutes({
       failed: (await failedDemosByTag(pool)).get(tag) ?? null,
       contracts,
       roles: rolesOf(release, contracts),
+      fit: fitOf(release, contracts),
       siblings: builds,
       readiness: readinessForRoad(await readinessRows(pool), release),
       dsReadiness: dsReadinessOf(await dsReadinessRows(pool), release),

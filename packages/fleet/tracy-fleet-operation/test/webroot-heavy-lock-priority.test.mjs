@@ -147,18 +147,22 @@ const until = async (check, ms = 10000) => {
 test('an Initial backup queued behind another heavy job says it is waiting, then names its own step', async () => {
   const s = stack(0)
   const other = holdLock(s.lock)
+  const second = holdLock(`${s.lock}.1`)
   try {
     await other.held
+    await second.held
     const job = run('bash', [BACKUP, '--label', LABEL, '--op', 'initial-backup'], { env: env(s) })
     assert.ok(await until(() => WAITING.test(job.out.stderr)), `no waiting line; stderr:\n${job.out.stderr}`)
     assert.doesNotMatch(job.out.stderr, RESUMED)
     other.release()
+    second.release()
     const result = await job.done
     // The backup itself may stop later (this stack has no database); the narration is the subject.
     assert.match(result.stderr, RESUMED)
     assert.ok(result.stderr.search(WAITING) < result.stderr.search(RESUMED), 'waiting comes first')
   } finally {
     other.release()
+    second.release()
     s.dispose()
   }
 })

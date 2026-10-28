@@ -77,7 +77,10 @@ p.add_argument('--languages',default='');p.add_argument('--counts-from',default=
 # contract never held: contacts, tags and custom field definitions. A string field holding markup becomes
 # one slot per text and attribute in it (`xpath` beside `jsonPath`). Every slot these rules add carries
 # `customize: "keep"`: it is DECLARED, so the site agent finds and edits it on request, and the Customize
-# engine leaves it as the demo wrote it. The Claude Cowork plugin reads `jsonPath` without `nestedJson`, and
+# engine leaves it as the demo wrote it. For a PICTURE that keep is provisional: without a render this script cannot tell
+# a class photo from an icon, so the content coverage audit's Slot fit (`cli.mjs --fit`, ADR 0039) measures each one and
+# sets the flag from its kind (a photo loses it; an icon, face, signature, cut-out, decoration or map keeps it). JA Boxing
+# 1.0.5 kept 198 of its 257 pictures this way. The Claude Cowork plugin reads `jsonPath` without `nestedJson`, and
 # `xpath` beside it, from 0.24.58. Off by default so every published profile re-captures byte for byte.
 p.add_argument('--full-coverage',action='store_true')
 # Slot roles (ADR 0038): every text and image slot of the content map carries a `role` and a `group`. A recapture
@@ -315,7 +318,7 @@ for kind,table in tables.items():
      link=r'(link|url|href)[-_]?\d*$' if a.link_fields_by_role else r'link$|url$'
      typ='image' if ft=='media' else 'url' if re.search(link,name) or ft=='url' else 'text'
      # A picture field named like an option (`img-icon`) was dropped by the name rule above; it is
-     # declared now, but Customize keeps it (its own picture planner never had it).
+     # declared now, kept until Slot fit measures its kind (`cli.mjs --fit`, ADR 0039).
      # They come after the module's other slots, so the keys the old rules made stay what they were.
      if re.search(r'color|class|style|layout|icon|width|height|column|align|animation',name):
       later.append((typ,node,path,name));return

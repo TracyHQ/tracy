@@ -36,7 +36,7 @@ before(async () => {
         export { createElement } from 'react'
         export { renderToStaticMarkup } from 'react-dom/server'
         export { ProfileNameRow } from './profile-name-row.tsx'
-        export { nameKey, nameOnSite, nameRowView } from './profile-name-model.ts'
+        export { heldNameOf, nameKey, nameOnSite, nameRowView } from './profile-name-model.ts'
       `,
       resolveDir: path.join(here, '..', 'src', 'client'),
       loader: 'tsx'
@@ -102,7 +102,8 @@ test('unchecked and the sources disagree: Check this, what each source says (its
       }
     ],
     other: 'Padel & Tennis Coach',
-    open: true
+    open: true,
+    held: null
   })
   const html = draw(view)
   assert.match(html, /\[name\.label\]/)
@@ -174,4 +175,80 @@ test('no decision on the profile: no row; the title falls back to the opportunit
 test('nameKey compares names as the server does', () => {
   assert.equal(lib.nameKey('harbour.sportclub'), lib.nameKey('Harbour Sport Club'))
   assert.equal(lib.nameKey('Padel & Tennis Coach'), lib.nameKey('padel and tennis coach'))
+})
+
+// Dev, brief revision 8 (28/10/2026): the name the sources agree on is held off the site because the business's own
+// marks call it something else; the row read "Name on the site: Padel & Tennis Coach" with nothing to say it was held.
+const AGREED_HELD = {
+  name: 'Padel & Tennis Coach',
+  state: 'agreed',
+  suggested: 'Padel & Tennis Coach',
+  current: 'Padel & Tennis Coach',
+  disagree: false,
+  options: [
+    {
+      name: 'Padel & Tennis Coach',
+      sources: [{ source: 'google' }, { source: 'listing', label: 'magicpin' }]
+    }
+  ]
+}
+const HELD_DECISIONS = [
+  {
+    factId: 'f1',
+    field: 'name',
+    confidence: 'corroborated',
+    onSite: false,
+    decidedBy: 'rule',
+    reasons: ['name-differs-from-own-marks']
+  },
+  { factId: 'f2', field: 'phone', confidence: 'single-source', onSite: true, decidedBy: 'rule', reasons: [] }
+]
+
+test('a held name says it is not on the site, which neutral name the site goes by instead, and why', () => {
+  const held = lib.heldNameOf(HELD_DECISIONS, 'Coaching team in Dubai')
+  assert.deepEqual(held, {
+    siteName: 'Coaching team in Dubai',
+    decidedBy: 'rule',
+    reasons: ['name-differs-from-own-marks']
+  })
+  const view = lib.nameRowView(profile(AGREED_HELD), held)
+  assert.equal(view.name, 'Padel & Tennis Coach')
+  assert.deepEqual(view.held, held)
+  const html = draw(view)
+  assert.match(html, /\[name\.label\.held\]/)
+  assert.doesNotMatch(html, /\[name\.label\]/)
+  assert.match(html, /tracy-wo-name-chip is-held/)
+  assert.match(html, /\[name\.chip\.held\]/)
+  assert.match(html, /\[name\.held\.uses\{&quot;name&quot;:&quot;Coaching team in Dubai&quot;\}\]/)
+  assert.match(html, /\[facts\.reason\.name-differs-from-own-marks\]/)
+})
+
+test('a held name with no neutral identity, or held by the owner, says so', () => {
+  const owner = lib.heldNameOf(
+    [
+      {
+        factId: 'f1',
+        field: 'name',
+        confidence: 'corroborated',
+        onSite: false,
+        decidedBy: 'owner',
+        reasons: []
+      }
+    ],
+    undefined
+  )
+  assert.deepEqual(owner, { siteName: null, decidedBy: 'owner', reasons: [] })
+  const html = draw(lib.nameRowView(profile(AGREED_HELD), owner))
+  assert.match(html, /\[name\.held\.none\]/)
+  assert.match(html, /\[name\.held\.owner\]/)
+  assert.doesNotMatch(html, /facts\.reason/)
+})
+
+test('counter-case: a name on the site is no held name, whatever siteName says', () => {
+  const on = HELD_DECISIONS.map((d) => (d.field === 'name' ? { ...d, onSite: true } : d))
+  assert.equal(lib.heldNameOf(on, 'Coaching team in Dubai'), null)
+  assert.equal(lib.heldNameOf(null, 'x'), null)
+  const html = draw(lib.nameRowView(profile(AGREED_HELD), null))
+  assert.match(html, /\[name\.label\]/)
+  assert.doesNotMatch(html, /name\.held|is-held/)
 })

@@ -631,7 +631,8 @@ export function createWebsiteBuilder(deps) {
         accountId: who.accountId,
         opportunityId: opp.id,
         domain,
-        now
+        now,
+        pictureLabels: deps.pictureLabels ?? null
       })
       if ('error' in result && result.error === 'NOT_FOUND') return notFound(c, 'opportunity')
       if ('error' in result)

@@ -9,6 +9,7 @@
 // people are 2 to 12 bits apart. So a picture whose measured numbers say graphic (`looksGraphic`) is never matched by
 // fingerprint, only by its sha256.
 import { hammingDistance, looksGraphic } from './picture-labels.mjs'
+import { assetLabelsOf, heroScore, NOT_A_HERO } from './asset-labels.mjs'
 
 export const NEAR_COPY_BITS = 13
 const HERO_CANDIDATES = 3
@@ -78,14 +79,21 @@ function logoIdsOf(brand) {
 export function photographsOnly(media, brand) {
   const logos = logoIdsOf(brand)
   return media.filter(
-    (m) => m.kind === 'image' && !logos.has(m.id) && !PROFILE_PICTURE.test(String(m.sourceUrl ?? ''))
+    (m) =>
+      m.kind === 'image' &&
+      !logos.has(m.id) &&
+      !PROFILE_PICTURE.test(String(m.sourceUrl ?? '')) &&
+      // A picture a vision model saw as a logo is one too, whatever the logo research chose (F08).
+      assetLabelsOf(m).content !== 'logo'
   )
 }
 
 /**
- * Up to three pictures to open the site with, the most pixels first: images of known size that are neither a logo nor
- * a profile picture. Portrait is allowed (a business's Google photos may all be portrait); the build step's picture
- * planner makes the pick and the crop. Empty when nothing qualifies: a hero never falls back to the logo.
+ * Up to three pictures to open the site with, best first: images of known size that are neither a logo, a profile
+ * picture nor a graphic of words. Best = the most of landscape, a high resolution grade and people at work or the venue
+ * (`heroScore`, F08), then the most pixels. Portrait is allowed (a business's Google photos may all be portrait); the
+ * build step's picture planner makes the pick and the crop. Empty when nothing qualifies: a hero never falls back to the
+ * logo.
  * @param {{id: string, kind: string, width?: number|null, height?: number|null, source?: string, sourceUrl?: string|null}[]} media
  *   a brief's media
  * @param {{logo?: string, logoResearch?: {chosen?: {mediaId?: string}|null, candidates?: {mediaId?: string, via?: string,
@@ -94,9 +102,9 @@ export function photographsOnly(media, brand) {
  */
 export function heroCandidates(media, brand) {
   return photographsOnly(media, brand)
-    .map((m, i) => ({ m, i }))
-    .filter(({ m }) => area(m) > 0)
-    .sort((a, b) => area(b.m) - area(a.m) || a.i - b.i)
+    .map((m, i) => ({ m, i, labels: assetLabelsOf(m) }))
+    .filter(({ m, labels }) => area(m) > 0 && !NOT_A_HERO.has(labels.content))
+    .sort((a, b) => heroScore(b.labels) - heroScore(a.labels) || area(b.m) - area(a.m) || a.i - b.i)
     .slice(0, HERO_CANDIDATES)
     .map(({ m }) => ({
       id: m.id,

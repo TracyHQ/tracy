@@ -464,9 +464,15 @@ path):
    cd "$TCH_WT" && node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
      --site "$VERIFY_URL" --contract "$P/$VER" \
      --db-dump "$PACK_DATABASE" --webroot "$WORK/chup/webroot" \
-     --out "$WORK/coverage" --write
+     --out "$WORK/coverage" --write --fit
    ```
 
+   `--fit` measures **Slot fit** ([ADR 0039](../../../docs/adr/0039-slot-fit-lives-in-content-map.md)) in the same
+   crawl and writes it into `content-map.json` before the coverage file: each picture slot's kind, box per viewport,
+   aspect and whether its demo file is transparent, each text slot's characters and lines per viewport. It also sets
+   each picture's `customize: "keep"` from its kind (kept: icon, logo, avatar, signature, cut-out, decoration, map;
+   replaceable: photo, video still). Never edit `fit` by hand; read the `slotFit` summary in the JSON line (kinds,
+   kept count, `cutouts`) and look at any kind that surprises you in the report before committing.
    It writes `content-coverage.json` next to the contract (committed with the contract) and `"$WORK/coverage/report.html"` (screenshots
    with holes circled, **not committed**). The same scan also checks **page hygiene**: raw language
    constants (`TPL_FOLLOW_US`, `COM_FINDER_…` in text or in `aria-label`/`placeholder`/`title`),

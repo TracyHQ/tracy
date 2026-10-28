@@ -325,3 +325,54 @@ test('the label limit is 60 and a longer edit is cut to it', () => {
   const before = lib.keyMessagesView(reading(messages))
   assert.equal(lib.withLabel(before, 0, 'x'.repeat(100))[0].label.length, 60)
 })
+
+// The name its own logo and Instagram do not carry (fictional Harbour Sport Club): held off by rule, with the other
+// name and the marks that give it, confirmed by the same Show control as every fact.
+const named = {
+  business: { name: fact('f_name', 'Padel & Tennis Coach') },
+  links: [fact('f_dm', { kind: 'instagram-dm', url: 'https://ig.me/m/harbour.sportclub' })],
+  sources: [
+    { id: 's_logo', kind: 'logo' },
+    { id: 's_ig', kind: 'instagram' }
+  ],
+  evidence: [
+    { id: 'e_logo', sourceId: 's_logo' },
+    { id: 'e_ig', sourceId: 's_ig' }
+  ],
+  conflicts: [
+    {
+      id: 'c_name',
+      target: 'business.name',
+      reason: 'name-differs-from-own-marks: its own logo and instagram call it Harbour Sport Club',
+      values: [
+        { id: 'f_name_copy', value: 'Padel & Tennis Coach', evidenceRefs: ['ev_1'] },
+        { id: 'f_other', value: 'Harbour Sport Club', evidenceRefs: ['e_logo', 'e_ig'] }
+      ]
+    }
+  ]
+}
+const namedDecisions = [
+  d('f_name', 'name', { onSite: false, reasons: ['name-differs-from-own-marks'] }),
+  d('f_dm', 'contactChannels')
+]
+
+test('a name its own marks do not carry says why, names the other name and its marks, and offers Show', () => {
+  const rows = lib.factRowsView(named, namedDecisions)
+  assert.equal(rows.length, namedDecisions.length, 'one row per decision')
+  const name = rows.find((r) => r.id === 'f_name')
+  assert.deepEqual(name.alsoCalled, [{ name: 'Harbour Sport Club', sources: ['logo', 'instagram'] }])
+  assert.deepEqual(lib.reasonKeys(name), ['facts.reason.name-differs-from-own-marks'])
+  const html = drawFacts([name])
+  assert.match(html, /\[facts\.reason\.name-differs-from-own-marks\]/)
+  assert.match(html, /\[facts\.alsoCalled\{&quot;name&quot;:&quot;Harbour Sport Club&quot;/)
+  assert.match(html, /&quot;sources&quot;:&quot;\[name\.source\.logo\](,| and) Instagram&quot;/)
+  assert.match(html, /\[facts\.show\]/)
+  // Another fact has no other names.
+  assert.deepEqual(rows.find((r) => r.id === 'f_dm').alsoCalled, [])
+})
+
+test('the Instagram DM channel is a row under the Contact channels label', () => {
+  const rows = lib.factRowsView(named, namedDecisions).filter((r) => r.id === 'f_dm')
+  assert.equal(rows[0].label, 'https://ig.me/m/harbour.sportclub')
+  assert.match(drawFacts(rows), /\[field\.contactChannels\]/)
+})

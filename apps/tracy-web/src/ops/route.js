@@ -246,7 +246,8 @@ export function opsRoutes(deps) {
       host,
       fetchImpl,
       doorHealth: deps.doorHealth ?? null,
-      ...(deps.rolesOf ? { rolesOf: deps.rolesOf } : {})
+      ...(deps.rolesOf ? { rolesOf: deps.rolesOf } : {}),
+      ...(deps.fitOf ? { fitOf: deps.fitOf } : {})
     })
   )
   // Admin attention (04/10/2026): read-only.

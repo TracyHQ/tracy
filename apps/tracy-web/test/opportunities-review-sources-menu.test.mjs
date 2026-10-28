@@ -66,7 +66,7 @@ test('dishes read off photos reach the brief as menu items with their photo as s
     false
   )
   const md = renderBriefWithReviews(domain, brief)
-  assert.match(md, /"Shawarma plate": "AED 38" — .*menu-1\.jpg.*unverified/)
+  assert.match(md, /"Shawarma plate": "AED 38", .*menu-1\.jpg.*unverified/)
   assert.doesNotMatch(md, /[Dd]o not invent|[Nn]ever facts/)
 })
 

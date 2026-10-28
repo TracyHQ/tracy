@@ -54,7 +54,11 @@ function engine({
     calls: [],
     refuse: {},
     next: 1000,
-    platform
+    platform,
+    slow: 0,
+    updates: [],
+    open: new Set(),
+    overlaps: []
   }
   const trash = (kind) =>
     platform === 'wordpress' ? ['post_status', 'trash'] : [kind === 'article' ? 'state' : 'published', -2]
@@ -100,6 +104,26 @@ function engine({
     let body = ''
     req.on('data', (c) => (body += c))
     req.on('end', () => {
+      const { action, params = {} } = JSON.parse(body)
+      // A slow `content.update` (state.slow ms): how many are in flight at once, and which records.
+      if (action === 'content.update' && state.slow) {
+        const at = { kind: params.kind, id: params.id, key: params.key ?? null, start: Date.now() }
+        state.inflight = (state.inflight ?? 0) + 1
+        state.maxInflight = Math.max(state.maxInflight ?? 0, state.inflight)
+        state.updates.push(at)
+        state.open.add(at)
+        state.overlaps.push([...state.open].filter((o) => o !== at).map((o) => ({ ...o })))
+        setTimeout(() => {
+          state.inflight--
+          state.open.delete(at)
+          at.end = Date.now()
+          handle()
+        }, state.slow)
+        return
+      }
+      handle()
+    })
+    const handle = () => {
       const { token, action, params = {} } = JSON.parse(body)
       state.calls.push({ action, params })
       const answer = (status, value) => {
@@ -257,7 +281,7 @@ function engine({
         })
       }
       return answer(200, { ok: false, error: 'bad_params', message: `unknown action ${action}` })
-    })
+    }
   })
   return new Promise((resolve) =>
     server.listen(0, '127.0.0.1', () => {
@@ -413,10 +437,10 @@ function pushDir(items, platform = 'joomla') {
   return dir
 }
 
-function writer(live, args, token = TOKEN) {
+function writer(live, args, token = TOKEN, env = {}) {
   return new Promise((resolve) => {
     const child = spawn('node', [WRITE, ...args], {
-      env: { ...process.env, TRACY_SYNC_ENDPOINT: live.endpoint, TRACY_SYNC_TOKEN: token }
+      env: { ...process.env, ...env, TRACY_SYNC_ENDPOINT: live.endpoint, TRACY_SYNC_TOKEN: token }
     })
     let out = ''
     let err = ''
@@ -1542,5 +1566,160 @@ test('template files: info reads the door, its switches and the roots the live s
     await on.close()
     await off.close()
     await older.close()
+  }
+})
+
+// ── items written side by side (`sideBySide`) ───────────────────────────────────────────────
+const wpPost = (id) => ({ ID: id, post_title: `Old ${id}`, post_status: 'publish' })
+const postItem = (id, extra = {}) => ({
+  ...update(id, { post_title: `New ${id}` }, { post_title: `Old ${id}` }),
+  id: `post:${id}`,
+  kind: 'post',
+  spec: 'post',
+  ...extra
+})
+/** Which records may not be written at the same time (live-write.mjs `laneOf`, for these kinds). */
+const laneOfCall = (u) =>
+  ['post', 'postmeta'].includes(u.kind)
+    ? `post:${u.id}`
+    : u.kind === 'menuItem'
+      ? 'menu'
+      : `${u.kind}:${u.id}`
+
+test('WordPress: independent posts go to the live site side by side, at most four at once — the same answer as one at a time, sooner', async () => {
+  const ids = [20, 21, 22, 23, 24, 25, 26, 27]
+  const make = async () => {
+    const live = await engine({
+      platform: 'wordpress',
+      records: { post: Object.fromEntries(ids.map((i) => [i, wpPost(i)])) }
+    })
+    live.slow = 150
+    return live
+  }
+  const one = await make()
+  const four = await make()
+  try {
+    const t1 = Date.now()
+    const dir1 = pushDir(
+      ids.map((i) => postItem(i)),
+      'wordpress'
+    )
+    const a1 = (await writer(one, ['apply', dir1, dir1], TOKEN, { TRACY_LIVE_WRITE_CONCURRENCY: '1' })).answer
+    const s1 = Date.now() - t1
+    const t4 = Date.now()
+    const dir4 = pushDir(
+      ids.map((i) => postItem(i)),
+      'wordpress'
+    )
+    const a4 = (await apply(four, dir4)).answer
+    const s4 = Date.now() - t4
+    assert.equal(a4.state, 'applied', JSON.stringify(a4))
+    assert.deepEqual(
+      a4.written.map((w) => w.id),
+      a1.written.map((w) => w.id),
+      'the answer lists the items in the changeset’s order, as one at a time does'
+    )
+    assert.equal(one.maxInflight, 1)
+    assert.ok(four.maxInflight > 1 && four.maxInflight <= 4, `in flight at most: ${four.maxInflight}`)
+    for (const i of ids) assert.equal(four.records.post[i].post_title, `New ${i}`)
+    assert.ok(s4 < s1 * 0.6, `side by side ${s4} ms, one at a time ${s1} ms`)
+    // What each item held before is kept for Undo, every one of them.
+    const before = JSON.parse(readFileSync(join(dir4, 'before.json'), 'utf8'))
+    assert.deepEqual(Object.keys(before.items).sort(), ids.map((i) => `post:${i}`).sort())
+  } finally {
+    await one.close()
+    await four.close()
+  }
+})
+
+test('side by side, never two writes of one lane at once — a post and its meta, the menu — and a dependant only after its dependency ended', async () => {
+  const live = await engine({
+    platform: 'wordpress',
+    records: {
+      post: { 30: wpPost(30), 31: wpPost(31) },
+      postmeta: { '30:_x': { value: 'a' } },
+      menuItem: { 40: { id: '40', title: 'A' }, 41: { id: '41', title: 'B' }, 42: { id: '42', title: 'C' } }
+    }
+  })
+  live.slow = 120
+  try {
+    const menu = (id, title) => ({
+      ...update(id, { title }, { title: { 40: 'A', 41: 'B', 42: 'C' }[id] }),
+      id: `menuItem:${id}`,
+      kind: 'menuItem',
+      spec: 'menuItem'
+    })
+    const items = [
+      postItem(30),
+      {
+        ...update(30, { value: 'b' }, { value: 'a' }),
+        id: 'postmeta:30:_x',
+        kind: 'postmeta',
+        spec: 'postmeta',
+        key: '_x'
+      },
+      menu(40, 'A2'),
+      menu(41, 'B2'),
+      menu(42, 'C2'),
+      {
+        id: 'post:new:50',
+        kind: 'post',
+        spec: 'post',
+        op: 'create',
+        title: 'Made',
+        liveId: null,
+        key: null,
+        ident: 0,
+        creates: 'posts:50',
+        write: { post_title: 'Made' },
+        expect: {},
+        dependsOn: [],
+        seed: []
+      },
+      postItem(31, { dependsOn: ['post:new:50'] })
+    ]
+    const { answer } = await apply(live, pushDir(items, 'wordpress'))
+    assert.equal(answer.state, 'applied', JSON.stringify(answer))
+    assert.ok(live.maxInflight > 1, 'some went side by side')
+    for (const [i, open] of live.overlaps.entries()) {
+      const lane = laneOfCall(live.updates[i])
+      assert.ok(!open.some((o) => laneOfCall(o) === lane), `${lane} written twice at once`)
+    }
+    const made = live.updates.find((u) => u.kind === 'post' && u.id === 0)
+    const after = live.updates.find((u) => u.kind === 'post' && u.id === 31)
+    assert.ok(after.start >= made.end, 'the dependant started after its dependency ended')
+    assert.deepEqual(
+      live.updates.filter((u) => u.kind === 'menuItem').map((u) => u.id),
+      [40, 41, 42],
+      'one lane keeps the changeset’s order'
+    )
+  } finally {
+    await live.close()
+  }
+})
+
+test('a live site that answers busy even once is written one item at a time from then on', async () => {
+  const ids = [60, 61, 62, 63, 64, 65, 66, 67]
+  const live = await engine({
+    platform: 'wordpress',
+    records: { post: Object.fromEntries(ids.map((i) => [i, wpPost(i)])) }
+  })
+  live.slow = 100
+  live.refuse['content.get'] = 503
+  try {
+    const { answer } = await apply(
+      live,
+      pushDir(
+        ids.map((i) => postItem(i)),
+        'wordpress'
+      )
+    )
+    assert.equal(answer.state, 'applied', JSON.stringify(answer))
+    const firstEnd = Math.min(...live.updates.map((u) => u.end))
+    for (const [i, u] of live.updates.entries())
+      if (u.start > firstEnd)
+        assert.ok(live.overlaps[i].length <= 1, `after the strain, ${live.overlaps[i].length + 1} in flight`)
+  } finally {
+    await live.close()
   }
 })

@@ -1285,6 +1285,11 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
     ...(wordmark ? { wordmark: drawWordmark(wordmark) } : {}),
     ...(spot ? { wordmarkSpot: logoSpot() } : {}),
     text: (document.body.innerText ?? '').slice(0, 300_000),
+    // What a search result shows of the page: `withheld-not-shown` reads them as the page's text (never an image).
+    title: (document.title ?? '').slice(0, 1000),
+    metaDescription: (
+      document.querySelector('meta[name="description"]')?.getAttribute('content') ?? ''
+    ).slice(0, 2000),
     // A single post's own body (WordPress, Joomla, EmDash article markup): `no-copied-reviews` reads it alone.
     postText:
       document

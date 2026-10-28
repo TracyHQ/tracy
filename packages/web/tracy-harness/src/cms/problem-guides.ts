@@ -517,12 +517,18 @@ function coverageOutside(ctx: GuideContext, p: Record<string, unknown>, problem:
       ...(shown.length > 0 ? [`First holes: ${shown.join('; ')}.`] : []),
       ...(problems.length > 0 ? [`Page problems: ${problems.join('; ')}.`] : []),
       'Work in a tch checkout with the quickstart-contract skill (.agents/skills/quickstart-contract/SKILL.md: K8 is section 7 step 7, its fix loop section 7b). Fix everything in ONE round, before the PR, so every fix lands in one PR:',
-      `1. Measure. Build a local site from this release (tracy-dev restore), unpack its webroot, keep its database file, then run: node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs --site <local site url> --contract packages/cms/tracy-joomla-quickstart/contracts/${contract} --db-dump <database file of the release> --webroot <unpacked webroot> --out <empty folder outside the repo> --write`,
+      `1. Measure. Build a local site from this release (tracy-dev restore), unpack its webroot, keep its database file, then run: node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs --site <local site url> --contract packages/cms/tracy-joomla-quickstart/contracts/${contract} --db-dump <database file of the release> --webroot <unpacked webroot> --out <empty folder outside the repo> --write${fitLeft(p) ? ' --fit' : ''}`,
       '2. Read report.html in that folder: holes by class, then Page hygiene.',
       '3. capture (the value is in the site database): the capture rules miss it, in packages/cms/tracy-joomla-quickstart/scripts/capture-contract.py and the contract door of the Claude Cowork plugin. Fix the rule for every template, test first; never edit one contract by hand. Demo content the presentation lock pins is a hole too: carve it out of the lock. Then capture the contract again.',
       `4. template (written in the template files), and every page problem (a raw language constant, PHP error text, an unfilled placeholder): fix the template source in ${REPO}, build the next quickstart version in the same package format as this release, and capture again on it. ${LANGUAGE_STRINGS}`,
       '5. core: nothing to do.',
       ...(rolesLeft(p) ? [`The contract also ${rolesProblem(p)}`, ...rolesSteps(ctx, p, ['5a', '5b'])] : []),
+      ...(fitLeft(p)
+        ? [
+            `The content map also ${fitProblem(p)}`,
+            ...fitSteps(ctx, p, rolesLeft(p) ? ['5c', '5d'] : ['5a', '5b'])
+          ]
+        : []),
       '6. Only what is truly not demo content a customer sees gets an "accepted" reason of at least 12 characters on its line in content-coverage.json. Never lower the threshold.',
       "7. Measure again until the command exits 0, commit content-coverage.json beside the contract in the same PR as the fixes, then follow the skill's sections 8 and 9 for the order of the plugin release, the pin, the PR and the release.",
       'Stop before every commit, push, PR, release and upload, and wait for my go.',
@@ -591,6 +597,7 @@ function slotRolesOutside(ctx: GuideContext, p: Record<string, unknown>): Outsid
       ...(keys.length > 0 ? [`Slots without a role: ${keys.join(', ')}.`] : []),
       'Work in a tch checkout with the quickstart-contract skill (.agents/skills/quickstart-contract/SKILL.md). Fix it in ONE round, before the PR:',
       ...rolesSteps(ctx, p, ['1', '2']),
+      ...(fitLeft(p) ? [`The content map also ${fitProblem(p)}`, ...fitSteps(ctx, p, ['2a', '2b'])] : []),
       '3. Measure the content coverage again (the contract changed) and commit content-coverage.json beside the contract in the same PR.',
       'Stop before every commit, push, PR and merge, and wait for my go.',
       'Once the PR is merged and CI has deployed this server, Content coverage on the Road to live reads the new contract.'
@@ -616,6 +623,80 @@ function rolesLists(p: Record<string, unknown>) {
         {
           heading: tr('cms-readiness.coverage.list.noRole'),
           count: Number(p.rolesCount ?? keys.length),
+          lines: keys
+        }
+      ]
+    : []
+}
+
+/** Whether the Slot fit group has something to say: anything but a ready fit, or a platform it does not judge. */
+const fitLeft = (p: Record<string, unknown>) =>
+  typeof p.fitState === 'string' && p.fitState !== 'ready' && p.fitState !== 'not-applicable'
+
+/** The slot keys the Slot fit group names (the first eight the server sends). */
+const fitKeysOf = (p: Record<string, unknown>): string[] => list(p.fitShown)
+
+/**
+ * What is wrong with the Slot fit of a content map, as one clause for a prompt (English: its reader is the model).
+ * @param p the content-coverage step's params
+ */
+function fitProblem(p: Record<string, unknown>): string {
+  const keys = fitKeysOf(p)
+  const count = Number(p.fitCount ?? keys.length)
+  const named = keys.length > 0 ? ` (${keys.join(', ')}${count > keys.length ? ', ...' : ''})` : ''
+  if (p.fitState === 'missing')
+    return `leaves ${count} text or image slot${count === 1 ? '' : 's'} without a fit${named}.`
+  if (p.fitState === 'invalid')
+    return `has an invalid Slot fit declaration: ${str(p.fitReason) ?? 'no reason given'}.`
+  return `declares no Slot fit (it was captured before ADR 0039; ${count} text or image slot${count === 1 ? '' : 's'}).`
+}
+
+/**
+ * The steps that measure Slot fit, shared by its own prompt, the roles prompt and the whole coverage fix loop. Slot fit
+ * is measured by the content coverage audit, never written by hand, and only enters a new contract version (ADR 0039).
+ */
+function fitSteps(ctx: GuideContext, p: Record<string, unknown>, labels: [string, string]): string[] {
+  const nextDir = slotRolesContractDir(ctx, p).replace(/\/[^/]*$/, '/<next version>')
+  return [
+    `${labels[0]}. Slot fit: measure it with the content coverage audit, adding --write --fit (section 7 step 7): node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs --site <local site url> --contract <the next contract version> --db-dump <database file> --webroot <unpacked webroot> --out <empty folder outside the repo> --write --fit. It writes slotFitVersion, fitGroups and a fit on every text and image slot of content-map.json, and sets each picture's customize "keep" from its measured kind. Never write a fit by hand.`,
+    `${labels[1]}. A released content map never changes (ADR 0039, docs/adr/0039-slot-fit-lives-in-content-map.md): Slot fit goes into the next contract version. Run node scripts/slot-roles/check.mjs ${nextDir} until it exits 0 (it checks Slot fit too).`
+  ]
+}
+
+/**
+ * The paste-ready prompt for the Slot fit group of Content coverage (ADR 0039 decision 7): which release, what is
+ * missing, and how to measure Slot fit for the next contract version.
+ */
+function slotFitOutside(ctx: GuideContext, p: Record<string, unknown>): OutsideFix {
+  return {
+    label: claudeCode(),
+    text: [
+      `The Slot fit of the release ${ctx.tag} (${ctx.cms}${ctx.version ? ` ${ctx.version}` : ''}) on ${REPO}: its content map ${fitProblem(p)}`,
+      'Work in a tch checkout with the quickstart-contract skill (.agents/skills/quickstart-contract/SKILL.md). Fix it in ONE round, before the PR:',
+      ...fitSteps(ctx, p, ['1', '2']),
+      '3. The same run measures the content coverage again: commit content-map.json and content-coverage.json of the new contract version in the same PR.',
+      'Stop before every commit, push, PR and merge, and wait for my go.',
+      'Once the PR is merged and CI has deployed this server, Content coverage on the Road to live reads the new contract.'
+    ].join('\n'),
+    doc: COVERAGE_SKILL_DOC
+  }
+}
+
+/** The Slot fit group's headline in the step title: what is counted. */
+function fitCounted(p: Record<string, unknown>): string {
+  if (p.fitState === 'missing') return tr('cms-readiness.coverage.noFit', { count: Number(p.fitCount ?? 0) })
+  if (p.fitState === 'invalid') return tr('cms-readiness.coverage.fitInvalid')
+  return tr('cms-readiness.coverage.fitNone')
+}
+
+/** The list of slots without a fit, for the panel (only when the map declares Slot fit: else it is every slot). */
+function fitLists(p: Record<string, unknown>) {
+  const keys = fitKeysOf(p)
+  return p.fitState === 'missing' && keys.length > 0
+    ? [
+        {
+          heading: tr('cms-readiness.coverage.list.noFit'),
+          count: Number(p.fitCount ?? keys.length),
           lines: keys
         }
       ]
@@ -1071,7 +1152,8 @@ export function guideOf(s: RoadStep, ctx: GuideContext): StepGuide {
       const counted = [
         ...(holes > 0 || problems === 0 ? [tr('cms-readiness.coverage.holes', { count: holes })] : []),
         ...(problems > 0 ? [tr('cms-readiness.coverage.pageProblems', { count: problems })] : []),
-        ...(rolesLeft(p) ? [rolesCounted(p)] : [])
+        ...(rolesLeft(p) ? [rolesCounted(p)] : []),
+        ...(fitLeft(p) ? [fitCounted(p)] : [])
       ]
       const what = [
         ...(holes > 0
@@ -1099,7 +1181,8 @@ export function guideOf(s: RoadStep, ctx: GuideContext): StepGuide {
               }
             ]
           : []),
-        ...rolesLists(p)
+        ...rolesLists(p),
+        ...fitLists(p)
       ]
       return g(
         tr('cms-readiness.coverage.counted', {
@@ -1138,15 +1221,39 @@ export function guideOf(s: RoadStep, ctx: GuideContext): StepGuide {
             : p.rolesState === 'missing'
               ? tr('cms-readiness.coverage.noRole.detail')
               : (str(p.rolesReason) ?? tr('cms-readiness.coverage.rolesInvalid.detail')).slice(0, 90)
+      const lists = [...rolesLists(p), ...fitLists(p)]
       return g(
         tr('cms-readiness.coverage.counted', {
           step: STEP_TITLE['content-coverage'],
-          counted: rolesCounted(p)
+          counted: [rolesCounted(p), ...(fitLeft(p) ? [fitCounted(p)] : [])].join(', ')
         }),
         {
           detail,
-          ...(rolesLists(p).length > 0 ? { lists: rolesLists(p) } : {}),
+          ...(lists.length > 0 ? { lists } : {}),
           outside: slotRolesOutside(ctx, p)
+        }
+      )
+    }
+    // 3d. Slot fit, the fourth group of Content coverage (ADR 0039): measured into content-map.json by the audit
+    case 'coverage-fit':
+    case 'coverage-live-fit': {
+      const detail =
+        s.code === 'coverage-live-fit'
+          ? tr('cms-readiness.common.liveFixNext')
+          : p.fitState === 'none'
+            ? tr('cms-readiness.coverage.fitNone.detail')
+            : p.fitState === 'missing'
+              ? tr('cms-readiness.coverage.noFit.detail')
+              : (str(p.fitReason) ?? tr('cms-readiness.coverage.fitInvalid.detail')).slice(0, 90)
+      return g(
+        tr('cms-readiness.coverage.counted', {
+          step: STEP_TITLE['content-coverage'],
+          counted: fitCounted(p)
+        }),
+        {
+          detail,
+          ...(fitLists(p).length > 0 ? { lists: fitLists(p) } : {}),
+          outside: slotFitOutside(ctx, p)
         }
       )
     }

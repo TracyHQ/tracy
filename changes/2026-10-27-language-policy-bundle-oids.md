@@ -1,0 +1,3 @@
+- **The language bundle exceptions follow the rebuilt bundles** — Akemi (Claude) · `akemi/language-policy-bundle-oids` · 2026-10-27
+  **Affects:** the website opportunities follow-up pull request (#1). The onboarding labels merged into develop changed the language packs, so the rebased follow-up rebuilt `packages/locale/tracy-locales/lib/client.js` and `packages/locale/tracy-locale-vi/lib/client.js`, and their blobs no longer matched the reviewed `objects` entries. The two entries now name the rebuilt blobs.
+  **Why / Measured:** `language-policy` flagged 62 bundle lines on #1 only because the pinned blob changed. Running `checkRange` with this policy on #1: 0 bundle findings.

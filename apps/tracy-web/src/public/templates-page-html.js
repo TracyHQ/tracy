@@ -188,7 +188,7 @@ ${THEME_BOOT_SCRIPT}
 <style>${TEMPLATES_CSS}</style>${head}</head><body>
 ${header(appOrigin, w)}
 ${body}
-${footer(year, w)}
+${footer(year, w, appOrigin)}
 ${CHROME_SCRIPT}${tail}
 </body></html>`
 }

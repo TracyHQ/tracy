@@ -3095,3 +3095,38 @@ test('cta-real: footer fragments and redirected aliases retain destination ident
   const booking = { ...link, href: '/about/', text: 'Book a table', booking: true }
   assert.equal(checkCtaReal([page({ ctas: [booking] })]).pass, false)
 })
+
+test('demoQaBody keeps the link tokens of the brand accent, where the build gave them, and the gate allows them', () => {
+  const sent = {
+    '--ds-c-accent': '#9c2a1e',
+    '--ds-c-accent-hover': '#89251a',
+    '--ds-c-accent-active': '#7a2118',
+    '--ds-c-accent-on': '#ffffff',
+    '--ds-c-accent-text': '#9c2a1e',
+    '--ds-c-accent-text-hover': '#89251a'
+  }
+  const asked = demoQaBody({ label: 'acme', platform: 'joomla', accentTokens: sent })
+  assert.deepEqual(asked.accentTokens, sent)
+  const template = {
+    path: 'templates/tracy/css/template.css',
+    rules: 1,
+    sentinel: null,
+    sentinelFound: null,
+    text: ''
+  }
+  const custom = (text) => ({
+    path: 'templates/tracy/css/custom.css',
+    rules: 1,
+    sentinel: null,
+    sentinelFound: null,
+    text
+  })
+  const baseline = baselineOf([page({ sheets: [template, custom('.x{margin:0}')], styles: [], inline: [] })])
+  const rule = `:root{${Object.entries(sent)
+    .map(([t, v]) => `${t}:${v}`)
+    .join(';')}}`
+  assert.equal(
+    checkLookKept([page({ sheets: [template, custom(rule)], styles: [], inline: [] })], baseline, asked).pass,
+    true
+  )
+})

@@ -728,6 +728,37 @@ export function quickstartContractOf({ platform, tag: asked, version }) {
 }
 
 /**
+ * The page grounds a site built from quickstart `tag` paints, as `#rrggbb`: the template's own `--bg` as its slot
+ * contract records it (`baseTokens`, the side the page opens on) and its dark side's (`darkTokens`), each read through
+ * the `extends` chain, each once. What the demo's brand accent is measured against before it paints the links
+ * (`opportunities-build/brand-on-site.js`, ADR 0023 amended 26/10/2026). Empty when no contract names the tag or the
+ * contract records no ground (a WordPress contract whose base look is a tokens file): the links then keep the
+ * template's colour, since nothing proves the accent reads there.
+ * @param {{ platform: string | null | undefined, tag: string | null | undefined }} q
+ * @returns {string[]}
+ */
+export function pageGroundsOf({ platform, tag: asked }) {
+  if (typeof asked !== 'string' || asked === '') return []
+  const tag = publishedTagOf(asked.split('@')[0])
+  let name = null
+  if (platform === 'wordpress') name = wordpressContractOfTag(slotContracts(), tag)?.name ?? null
+  else if (platform === 'joomla' || platform === 'emdash')
+    name = contractsNamingTag(platform, tag)[0]?.name ?? null
+  if (!name) return []
+  const out = []
+  for (const key of ['baseTokens', 'darkTokens']) {
+    const tokens = contractFieldOf(name, key).value
+    const bg = tokens && typeof tokens === 'object' ? String(/** @type {any} */ (tokens)['--bg'] ?? '') : ''
+    const m = /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.exec(bg.trim())
+    if (!m) continue
+    const h = m[1].toLowerCase()
+    const hex = `#${h.length === 3 ? [...h].map((c) => c + c).join('') : h}`
+    if (!out.includes(hex)) out.push(hex)
+  }
+  return out
+}
+
+/**
  * The template key (a contract's `template`, `<cms>/<template>`) a site built from quickstart `tag` on `platform` runs,
  * whatever release it is: what the customer lock (`design-system-customer-lock.js`) is keyed by. Joomla, EmDash: the
  * contract whose `minVersion` names the tag; WordPress: the contract made for that quickstart. Null when no contract

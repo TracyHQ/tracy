@@ -30,6 +30,13 @@ Stage lines, exactly in the form `==> [Ns] stage: <name>` (web reads the name to
 | apply | `writing` (write to live) → `settling` (Sync from live after writing; absent when no item was written, and with `settle: "later"`) |
 | undo | `undoing` (revert on live) → `settling` (same) |
 
+Items written alone (everything but a Joomla `content.batch` lot and the template door's batches) go to the live
+site up to `TRACY_LIVE_WRITE_CONCURRENCY` (4) at once (2026-10-27): an item starts once the items it depends on have
+ended, and one lane — a live record with its meta, a WordPress menu, the terms, the options, a Joomla tree, the doors
+of their own (files, media, site identity, template settings) — is written one item at a time in the changeset's
+order. A live site that answers busy even once (a 429, a 5xx, a timeout) is written one item at a time from then on.
+Journal, `before.json` and the answer are as with one at a time; the answer keeps the changeset's order.
+
 `settle: "later"` (apply, undo; `--settle-later`, 27/10/2026): the job answers as soon as the writes are done, with
 `"sync": {"ok": true, "state": "later"}`. tracy-web then starts the Sync from live itself (`webroot-sync`, an ordinary
 `site_sync` row), handing the push's write lease `push:<id>` to it as `sync:<id>` in one statement, so no Apply runs between

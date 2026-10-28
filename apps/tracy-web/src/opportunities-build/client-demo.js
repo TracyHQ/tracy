@@ -1,4 +1,5 @@
 /** Client-submitted demo chat: reserve identity and evidence; never dispatch an agent prompt. */
+import { nameHeldOf, siteNameOf } from 'website-opportunities/domain/held-name.mjs'
 import { createHash, randomUUID } from 'node:crypto'
 import { mintSession } from '../lib/session.js'
 import {
@@ -229,7 +230,8 @@ export function createClientDemoService(deps) {
           ops: (await deps.runtime()).settings,
           now,
           // 🔒 Asked as the demo's account, through the same door an operator presses (logo-research.js).
-          logoResearch: { research: logoResearchDoor({ request, origin, cookie: state.cookie }) }
+          logoResearch: { research: logoResearchDoor({ request, origin, cookie: state.cookie }) },
+          pictureLabels: deps.pictureLabels ?? null
         })
         // 🔒 Never waited for here: this runs inside HTTP requests (`/v1/demos`). The caller asks again, and the
         // runner's `reconcile` prepares it once the research is done or its minute is over.
@@ -278,7 +280,10 @@ export function createClientDemoService(deps) {
         throw error(claim.code ?? 'DEMO_SESSION_UNAVAILABLE', response.status >= 500 ? 503 : 409)
       const bundle = checkedResearch(state.revision)
       const ownSite = state.action.selection?.ownSite === true
-      const business = bundle.profile?.name ?? state.revision.brief?.business?.name ?? 'this business'
+      // A business name the brief holds off the site is named nowhere the agent builds from: its neutral identity is.
+      const business = nameHeldOf(state.revision.brief)
+        ? (siteNameOf(state.revision.brief) ?? 'this business')
+        : (bundle.profile?.name ?? state.revision.brief?.business?.name ?? 'this business')
       // The message a person sees as theirs is one plain sentence, a customer's own site's (`own-site.js`) as a demo's:
       // the steps travel in the research catalogue (`agent-demo.js` `clientSendSteps`), which the `tracy_demo` tool's
       // own description says to read first (tracy-site-tools) — no tool call in the person's words.
@@ -674,7 +679,10 @@ export function createClientDemoService(deps) {
     )
     // The business's own logo where the research found one; else its name, drawn as a wordmark in the theme's type.
     const logo = importedLogo(state.build, state.revision.brief?.brand)
-    const name = checkedResearch(state.revision).profile?.name ?? state.revision.brief?.business?.name
+    // 🔒 No wordmark of a business name the brief holds off the site: its neutral identity instead (`held-name.mjs`).
+    const name = nameHeldOf(state.revision.brief)
+      ? siteNameOf(state.revision.brief)
+      : (checkedResearch(state.revision).profile?.name ?? state.revision.brief?.business?.name)
     const measured = await deps.demoQa(site, {
       pages: ['/'],
       discover: true,

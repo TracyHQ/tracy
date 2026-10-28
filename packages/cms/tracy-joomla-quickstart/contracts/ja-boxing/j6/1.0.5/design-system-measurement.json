@@ -13328,12 +13328,10 @@
           "bySystem": 0
         },
         "empty-box": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "div.container-inner"
-          ],
-          "bySystem": 1
+          "count": 0,
+          "unique": 0,
+          "where": [],
+          "bySystem": 0
         },
         "foreign-colour": {
           "count": 0,
@@ -13348,11 +13346,9 @@
           "bySystem": 0
         },
         "harsh-border": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "a.link-underline"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "heading-edge": {
@@ -13655,12 +13651,10 @@
           "bySystem": 0
         },
         "empty-box": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "div.container-inner"
-          ],
-          "bySystem": 1
+          "count": 0,
+          "unique": 0,
+          "where": [],
+          "bySystem": 0
         },
         "foreign-colour": {
           "count": 0,
@@ -13675,11 +13669,9 @@
           "bySystem": 0
         },
         "harsh-border": {
-          "count": 1,
-          "unique": 1,
-          "where": [
-            "a.link-underline"
-          ],
+          "count": 0,
+          "unique": 0,
+          "where": [],
           "bySystem": 0
         },
         "heading-edge": {
@@ -24885,7 +24877,7 @@
     "/index.php/about-us/our-trainers",
     "/index.php/about-us/our-trainers/darlene-robertson"
   ],
-  "previewMeasuredAt": "2026-10-27T12:44:38.498Z",
+  "previewMeasuredAt": "2026-10-27T15:17:33.905Z",
   "previewParity": {
     "probeVersion": 10,
     "popup": "live, live/door",

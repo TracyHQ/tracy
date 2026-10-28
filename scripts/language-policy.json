@@ -30,12 +30,12 @@
   "objects": [
     {
       "path": "packages/locale/tracy-locales/lib/client.js",
-      "oid": "fa10ebe2115baa953bd484df29ecb8626a265a88",
+      "oid": "03e1ed22b52f0a141604670b80c5af755d7eaf37",
       "reason": "Bundle built from the interface language packs above, including the website opportunities labels; reviewed build output."
     },
     {
       "path": "packages/locale/tracy-locale-vi/lib/client.js",
-      "oid": "43f12e3a08ea82fab2ed491f3c41a6d28868b697",
+      "oid": "53f190aee37b9ae3a50cea008e6ea36ab0af2b66",
       "reason": "Bundle built from the Vietnamese interface language pack above, including the website opportunities labels; reviewed build output."
     },
     {
@@ -65,6 +65,16 @@
     },
     {
       "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.6/presentation-lock.json",
+      "oid": "976fd27e671cb92c7ce0748adc98ca9af227990e",
+      "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.7/content-map.json",
+      "oid": "3575b301defc3f0440ef0d87c4f297f46b6895af",
+      "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.7/presentation-lock.json",
       "oid": "976fd27e671cb92c7ce0748adc98ca9af227990e",
       "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
     }

@@ -85,9 +85,9 @@
     "quickstart/ja-boxing/j6": "1.0.2"
   },
   "maxVersion": {
-    "quickstart/ja-boxing/j6": "1.0.5"
+    "quickstart/ja-boxing/j6": "1.0.7"
   },
-  "maxVersionNote": "1.0.5 27/10/2026: built from the 1.0.4 installer (release-batch.mjs build --overlay), one stylesheet rule added (a footer column that holds no module is not drawn, ja-products #52), nothing else; release-batch verify finds the default look pixel-identical to 1.0.4 on desktop and phone. 1.0.4 25/10/2026: built from the 1.0.3 installer (release-batch.mjs build --overlay), the 1.0.3 stylesheets unchanged; four template overrides take image alt text from the article (ja-products #51) and js/template.js reads ?theme=dark|light for the template preview (TCH #1717); measured on the 1.0.4 installer in both schemes (design-system-measurement.json of 1.0.4). 1.0.3 24/10/2026: the 1.0.2 stylesheets unchanged (release-joomla.mjs --no-tokenize), T4 2.6.4, demo copy without the TITLE placeholder and three PHP-warning fixes; every fix of the base contract of the same day (keptButtons, light wordmark, T4 font variables, Acym field, raised band, social hover) is inherited through extends and measured on the 1.0.3 installer in both schemes (design-system-measurement.json of 1.0.3).",
+  "maxVersionNote": "1.0.7 28/10/2026: the 1.0.6 installer byte for byte (same SHA-256), cut only to carry a content contract with Slot fit (ADR 0039); no stylesheet, template file or demo row changed, so the 1.0.6 measurement describes the same bytes; not measured again on its own installer. 1.0.6 27/10/2026: built from the 1.0.5 installer (release-batch.mjs build --overlay), phone and tablet rules only (ja-products #55: the hero shows its boxer picture under the text on phones, larger phone headings, footer link menus side by side); release-batch verify against the same build without tokenizing finds the default look pixel-identical on desktop and phone, and desktop is pixel-identical to 1.0.5. 1.0.5 27/10/2026: built from the 1.0.4 installer (release-batch.mjs build --overlay), one stylesheet rule added (a footer column that holds no module is not drawn, ja-products #52), nothing else; release-batch verify finds the default look pixel-identical to 1.0.4 on desktop and phone. 1.0.4 25/10/2026: built from the 1.0.3 installer (release-batch.mjs build --overlay), the 1.0.3 stylesheets unchanged; four template overrides take image alt text from the article (ja-products #51) and js/template.js reads ?theme=dark|light for the template preview (TCH #1717); measured on the 1.0.4 installer in both schemes (design-system-measurement.json of 1.0.4). 1.0.3 24/10/2026: the 1.0.2 stylesheets unchanged (release-joomla.mjs --no-tokenize), T4 2.6.4, demo copy without the TITLE placeholder and three PHP-warning fixes; every fix of the base contract of the same day (keptButtons, light wordmark, T4 font variables, Acym field, raised band, social hover) is inherited through extends and measured on the 1.0.3 installer in both schemes (design-system-measurement.json of 1.0.3).",
   "sideRulesNote": "24/10/2026 (modes): the popup press toggles only body.dark-active. On a dark system the page opens with dark-active and no light-active, so pressing Light removed dark-active and nothing added light-active: the template's runtime variables (hairlines, --white, input tints, item backgrounds) kept the values of its dark default on a light page. sideRules.light therefore gives the same runtime variables, as roles (a role is the worn side's value, so the same list serves both sides), to a body that has no light-active; a light-active body keeps the template's own light values. The rest of the block repeats the base contract's, because a child contract replaces a top-level key.",
   "pictureRules": {
     ".acm-features.style-5 .item .icon.icon-1:before": {
@@ -165,6 +165,15 @@
       "background-color": "surface",
       "border-color": "border",
       "color": "fg"
+    },
+    ".link-underline": {
+      "border-bottom-color": "border"
+    },
+    ".vertical-lines .container-inner": {
+      "border-color": "border-soft"
+    },
+    ".vertical-lines .col:not(:first-child)": {
+      "border-color": "border-soft"
     },
     ".btn.btn-link, .btn.btn-outline-info": {
       "color": "accent-text"

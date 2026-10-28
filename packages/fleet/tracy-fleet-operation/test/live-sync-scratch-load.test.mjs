@@ -111,7 +111,12 @@ test('both scripts check their scratch loads by hand and say why they stopped', 
     fn(SYNC, 'merge'),
     /answer_refusal MERGE_FAILED "the copy's database could not be read[^"]*\$\{LOAD_OURS_WHY/
   )
-  assert.match(fn(SYNC, 'merge'), /scratch_loaded "\$SCHEMA_BASE" "\$SCHEMA_LIVE" "\$SCHEMA_OURS"/)
+  // The two reads load beside the copy's dump (`load_reads`, in the background): each checks its own
+  // schemas, and the merge waits for it and checks the copy's before merging.
+  assert.match(fn(SYNC, 'load_reads'), /scratch_loaded "\$SCHEMA_BASE" "\$SCHEMA_LIVE"; then return 1/)
+  assert.match(fn(SYNC, 'merge'), /load_reads "\$base_dump" "\$base_kind" "\$platform" & reads=\$!/)
+  assert.match(fn(SYNC, 'merge'), /wait "\$reads" \|\| said_reads=\$\?/)
+  assert.match(fn(SYNC, 'merge'), /scratch_loaded "\$SCHEMA_OURS"/)
   assert.match(fn(SYNC, 'resume_held'), /\|\| ! scratch_loaded "\$SCHEMA_OURS"/)
   assert.match(fn(PUSH, 'changeset'), /answer_refusal SCRATCH_DB_FAILED/)
   assert.match(fn(PUSH, 'copy_checksums'), /\|\| return 1/)

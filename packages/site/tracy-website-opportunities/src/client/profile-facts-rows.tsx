@@ -7,6 +7,7 @@ import { type JSX, useState } from 'react'
 import { Button } from '@tracy/ui'
 
 import { FIELD_KEYS, type FactRowView, reasonKeys, spelledField } from './profile-facts-model.ts'
+import { joined, sourceLabel } from './profile-name-row.tsx'
 import type { Translate } from './strings.ts'
 
 export function ProfileFactsRows({
@@ -59,6 +60,14 @@ export function ProfileFactsRows({
               {reasonKeys(row).map((key) => (
                 <span key={key} className="tracy-wo-muted tracy-wo-small">
                   {t(key)}
+                </span>
+              ))}
+              {row.alsoCalled.map((other) => (
+                <span key={other.name} className="tracy-wo-muted tracy-wo-small">
+                  {t('facts.alsoCalled', {
+                    name: other.name,
+                    sources: joined(other.sources.map((key) => sourceLabel(t, { key, label: null })))
+                  })}
                 </span>
               ))}
               <span className="tracy-wo-row tracy-wo-wrap tracy-wo-name-actions">

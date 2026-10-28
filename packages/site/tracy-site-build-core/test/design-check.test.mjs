@@ -190,3 +190,57 @@ test("a family Astro's font API renamed with its hash is the family the token na
     ['Comic Sans MS']
   )
 })
+
+// The brand accent a demo takes from the business's logo (ADR 0023, amended 26/10/2026) lives in the accent role
+// variables on the page's root: the probe reads them there, and judge counts them as the site's accent, not drift.
+const brickPage = {
+  href: 'http://demo.test/',
+  seen: 3,
+  accent: { '--ds-c-accent': '#9c2a1e', '--ds-c-accent-text': ' #9c2a1e', '--ds-c-accent-hover': '#89251a' },
+  samples: [
+    { prop: 'background-color', value: 'rgb(156, 42, 30)', count: 2, where: ['a.btn'] },
+    { prop: 'color', value: 'rgb(156, 42, 30)', count: 5, where: ['a'] },
+    { prop: 'background-color', value: 'rgb(137, 37, 26)', count: 1, where: ['a.btn'] },
+    { prop: 'color', value: 'rgb(255, 0, 255)', count: 1, where: ['.stray'] }
+  ]
+}
+
+test('the accent the page sets on its accent roles is on the palette; any other colour is still off', () => {
+  const r = judge(brickPage, paletteOf(tokens))
+  assert.ok(
+    !r.colors.offenders.some((o) => o.value === 'rgb(156, 42, 30)'),
+    'the accent and its link variant'
+  )
+  assert.ok(!r.colors.offenders.some((o) => o.value === 'rgb(137, 37, 26)'), 'the accent hover')
+  const stray = r.colors.offenders.find((o) => o.value === 'rgb(255, 0, 255)')
+  assert.equal(stray.band, 'off')
+  // Without the accent read, the same page reports the accent as drift (what the demo saw before).
+  const blind = judge({ ...brickPage, accent: undefined }, paletteOf(tokens))
+  assert.ok(blind.colors.offenders.some((o) => o.value === 'rgb(156, 42, 30)'))
+})
+
+test('only accent role variables count as the accent: another --ds-c-* value on the root is still judged', () => {
+  const r = judge(
+    { ...brickPage, accent: { '--ds-c-bg': '#ff00ff', '--ds-c-accent': 'not a colour' } },
+    paletteOf(tokens)
+  )
+  assert.ok(r.colors.offenders.some((o) => o.value === 'rgb(255, 0, 255)'))
+  assert.ok(r.colors.offenders.some((o) => o.value === 'rgb(156, 42, 30)'))
+})
+
+test('the probe reads the accent role variables off the page root', () => {
+  const fn = new Function('document', 'getComputedStyle', 'window', `return (${STYLE_PROBE})`)
+  const rootStyle = {
+    getPropertyValue: (name) => ({ '--ds-c-accent': ' #9c2a1e', '--ds-c-accent-text': '#9c2a1e' })[name] ?? ''
+  }
+  const doc = {
+    body: { querySelectorAll: () => [] },
+    documentElement: { tagName: 'HTML' },
+    location: { href: 'http://x/' }
+  }
+  const out = fn(doc, () => rootStyle, { getComputedStyle: () => rootStyle })
+  assert.deepEqual(out.accent, { '--ds-c-accent': '#9c2a1e', '--ds-c-accent-text': '#9c2a1e' })
+  // A page with no root element (the stand-in above) still answers.
+  const bare = fn({ body: { querySelectorAll: () => [] }, location: { href: 'http://x/' } }, () => null, {})
+  assert.deepEqual(bare.accent, {})
+})

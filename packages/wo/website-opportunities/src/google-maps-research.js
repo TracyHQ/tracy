@@ -35,7 +35,7 @@ export const controlError = (error) =>
 
 export async function researchGoogleMaps(
   ctx,
-  { pool, now, fetch: fetchImpl, chargeable, row, google, save, tried }
+  { pool, now, fetch: fetchImpl, retry, chargeable, row, google, save, tried }
 ) {
   if (
     ctx.prefetch ||
@@ -67,8 +67,17 @@ export async function researchGoogleMaps(
     data.cache?.version === CACHE_VERSION && data.cache.placeId === placeId
       ? { ...data.cache }
       : { version: CACHE_VERSION, placeId }
+  // Every HTTP try of this run, in order, with its code: a 429 retried twice reads as three tries in the brief
+  // (`brief-sources.mjs`), not as one.
+  const attempts = sameJob && Array.isArray(row?.coverage?.attempts) ? [...row.coverage.attempts] : []
   let pending = true
-  const coverage = () => ({ version: GOOGLE_MAPS_VERSION, pipelineJobId: job.id, pipeline, pending })
+  const coverage = () => ({
+    version: GOOGLE_MAPS_VERSION,
+    pipelineJobId: job.id,
+    pipeline,
+    pending,
+    attempts
+  })
   const persist = async () =>
     fenced(pool, lease, (db) =>
       db.query(
@@ -116,15 +125,44 @@ export async function researchGoogleMaps(
       async () => {
         pipeline[operation] = { state: 'sent' }
         await persist()
+        const tries = []
+        // A try that got an HTTP answer is settled by what the call made of it (a 200 can still be an
+        // APPLICATION_ERROR); a try that failed at HTTP keeps its own code.
+        const settle = (error) => {
+          const outcome = error
+            ? {
+                provider: 'serpapi',
+                step: operation,
+                status: 'failed',
+                reason: error?.code ?? 'PROVIDER_ERROR'
+              }
+            : { provider: 'serpapi', step: operation, status: 'complete' }
+          if (!tries.length || tries.at(-1) === null) tries[Math.max(tries.length - 1, 0)] = outcome
+          attempts.push(...tries)
+        }
         try {
           const result = await googleMapsSerpapiCall(operation, params, {
             key: ctx.keys.serpapi,
-            fetch: fetchImpl
+            fetch: fetchImpl,
+            retry,
+            onTry: ({ error }) =>
+              tries.push(
+                error
+                  ? {
+                      provider: 'serpapi',
+                      step: operation,
+                      status: 'failed',
+                      reason: error.code ?? 'PROVIDER_ERROR'
+                    }
+                  : null
+              )
           })
+          settle(null)
           pipeline[operation] = { state: 'done', result }
           await persist()
           return result
         } catch (error) {
+          settle(error)
           if (!['TIMEOUT', 'PROVIDER_ERROR'].includes(error?.code)) {
             pipeline[operation] = { state: 'failed', code: error?.code ?? 'PROVIDER_ERROR' }
             await persist()

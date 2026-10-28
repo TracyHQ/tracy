@@ -44,7 +44,7 @@ export function tripadvisorProviders(settings, keys) {
 /** Nothing client-supplied enters this function: Google facts came from the server's source snapshot. */
 export async function researchTripadvisor(
   ctx,
-  { pool, now, fetch: fetchImpl, chargeable, row, google, save, tried }
+  { pool, now, fetch: fetchImpl, retry, chargeable, row, google, save, tried }
 ) {
   if (
     ctx.prefetch ||
@@ -114,7 +114,7 @@ export async function researchTripadvisor(
             serpapi: serpapiTripadvisorCall,
             rapidapi: oneapiTripadvisorCall,
             litescrape: litescrapeCall
-          }[provider](operation, params, { key: ctx.keys[provider], fetch: fetchImpl })
+          }[provider](operation, params, { key: ctx.keys[provider], fetch: fetchImpl, retry })
         } catch (error) {
           // A timeout/network failure may have been billed; preserve the sent checkpoint.
           if (!['TIMEOUT', 'PROVIDER_ERROR'].includes(error?.code)) {

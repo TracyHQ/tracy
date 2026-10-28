@@ -45,8 +45,9 @@ TARBALL="/tmp/webroot-read-$LABEL.tar.gz"
 # behind other heavy work instead of running on top of it.
 # Under the heavy lock: ionice only, never nice (webroot-git.sh, "NEVER `nice` WORK THAT HOLDS THE
 # HEAVY LOCK").
-exec 9>/var/lock/tracy-webroot-heavy.lock
-flock -w 1800 9 || { echo "another heavy webroot job is running; try again shortly" >&2; exit 1; }
+# shellcheck source=../lib/heavy-slots.sh
+. "$HERE/../lib/heavy-slots.sh"
+heavy_wait /var/lock/tracy-webroot-heavy.lock 1800 || { echo "another heavy webroot job is running; try again shortly" >&2; exit 1; }
 
 # The platform is read from the webroot itself, like every diagnostic script here (lib/webroot-platform.sh).
 # Unknown means `-`, NOT "assume Joomla": the exclude list below decides
