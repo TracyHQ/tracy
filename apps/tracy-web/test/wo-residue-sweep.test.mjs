@@ -15,6 +15,7 @@ import {
 } from '../../tracy-host/src/demo-qa.js'
 import { readResidueInPage } from '../../tracy-host/src/demo-residue-page.js'
 import { LR_BRIEF, ORIGIN, lrRead } from '../../tracy-host/test/fixtures/residue/lr.mjs'
+import { visionKey } from '../src/lib/picture-vision.js'
 import { editorialLeads, postDraftsOf, templatePostsLeft } from '../src/opportunities-build/agent-demo.js'
 import {
   LINKED_TITLE_WHY,
@@ -821,7 +822,9 @@ test("a template picture becomes an imported photo of the frame's shape, a diffe
 
 test('a frame takes the best photo first: food, a room or the building before a video frame, a blurry one or a face; none is dropped', async () => {
   const { importedMedia } = await import('../src/opportunities-build/client-demo.js')
-  const vision = (subject, quality = 'good') => ({ vision: { labels: { subject, quality } } })
+  const vision = (subject, quality = 'good') => ({
+    vision: { model: 'v', key: visionKey({ model: 'v' }), labels: { subject, quality } }
+  })
   const post = 'https://www.instagram.com/p/abc/'
   const bundle = {
     media: [

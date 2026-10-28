@@ -32,8 +32,27 @@ import { validateDesignInspiration } from '../../apps/tracy-web/src/lib/tracy-se
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const CARD = 'tracy_design_inspiration.json'
-// Release dossiers live in `tasks/`, which the public export leaves out.
-const NO_TASKS = existsSync(path.join(ROOT, 'tasks')) ? false : 'tasks/ is internal and not in this tree'
+// Release dossiers live in `tasks/`, which the public export leaves out. Judged by the dossiers, not by the folder:
+// a stray note under `tasks/` is not a release.
+const NO_TASKS = holdsReleases(ROOT) ? false : 'tasks/ release dossiers are internal and not in this tree'
+
+/**
+ * Whether `<root>/tasks/*` holds anything named `release`, whatever its type. lstat, not existsSync: a dangling link
+ * or a file in a release's place is a malformed dossier the checks must report, not a reason to skip them.
+ */
+export function holdsReleases(root) {
+  const tasks = path.join(root, 'tasks')
+  if (!existsSync(tasks)) return false
+  return readdirSync(tasks, { withFileTypes: true }).some((entry) => {
+    if (!entry.isDirectory()) return false
+    try {
+      lstatSync(path.join(tasks, entry.name, 'release'))
+      return true
+    } catch {
+      return false
+    }
+  })
+}
 
 /** The problems of every release card under `<root>/tasks`, each named by its file; `cards` says how many were read. */
 export function checkCards(root) {
@@ -177,6 +196,30 @@ test('an empty tree is not a pass: no release means no cards read', () => {
   try {
     mkdirSync(path.join(root, 'tasks'))
     assert.deepEqual(checkCards(root), { problems: [], cards: 0 })
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('a malformed release still switches the repository checks on: a dangling link is a release to report', () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'release-cards-'))
+  try {
+    mkdirSync(path.join(root, 'tasks', 'notes-only'), { recursive: true })
+    writeFileSync(path.join(root, 'tasks', 'stray-note.md'), '# not a release\n')
+    assert.equal(holdsReleases(root), false, 'a note and a folder without release are not releases')
+    mkdirSync(path.join(root, 'tasks', 'dangling'))
+    symlinkSync(path.join(root, 'nowhere'), path.join(root, 'tasks', 'dangling', 'release'))
+    assert.equal(holdsReleases(root), true)
+    assert.deepEqual(checkCards(root).problems, ['tasks/dangling/release is not a directory'])
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('no tasks/ at all holds no release', () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'release-cards-'))
+  try {
+    assert.equal(holdsReleases(root), false)
   } finally {
     rmSync(root, { recursive: true, force: true })
   }
