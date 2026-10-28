@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-30-invitations-queue-amember-retry",
+  "kind": "fix",
+  "title": "An Invitations send queue waits and asks aMember again for 30 minutes before pausing, and tells the ops topic when the cron pauses it",
+  "pr": 30,
+  "area": "ops/invitations",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Run the Invitations real send test file from this branch against a private PostgreSQL (TEST_DATABASE_URL), with a fake aMember that stops answering and a fake clock past the retry window."
+  ],
+  "expect": [
+    "While aMember fails for less than AMEMBER_RETRY_MS the queue stays running, the cron pass answers waiting REAL_MEMBERSHIP_UNKNOWN, and no item is sent or skipped.",
+    "A clear aMember answer in between clears amember_failing_since, so the window starts again from the next failure.",
+    "Once aMember has failed for the whole window the queue pauses with reason REAL_MEMBERSHIP_UNKNOWN.",
+    "Every pause the cron makes records one invitations.queue_paused signal with campaign_id and reason, and its ops topic text names the reason and the campaign.",
+    "Gmail not answering, the budget reached and sending turned off still pause at once."
+  ],
+  "selectors": {
+    "queueStart": "/api/ops/invitations/real/campaigns/:id/queue/start",
+    "signal": "ops_signal kind invitations.queue_paused"
+  },
+  "fence": "Synthetic customers, fake aMember and fake Gmail transport on a private PostgreSQL; no live source, no mailbox, no Telegram.",
+  "run": {
+    "needs": ["postgres"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/invitations-real-send.test.mjs"
+    ],
+    "tests": [
+      "send queue: aMember not answering waits and asks again, pauses only after the retry window, and tells the ops topic"
+    ]
+  }
+}

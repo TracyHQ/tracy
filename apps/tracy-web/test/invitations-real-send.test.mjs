@@ -967,6 +967,104 @@ test(
 )
 
 test(
+  'send queue: aMember not answering waits and asks again, pauses only after the retry window, and tells the ops topic',
+  opts,
+  async () =>
+    withRealDb(async ({ pool, keys }) => {
+      const { startRealQueue, readRealQueue, runRealQueues, resumeRealQueue, AMEMBER_RETRY_MS } =
+        await import('../src/invitations/real-queue.js')
+      const { createOpsSignal } = await import('../src/lib/ops-signal.js')
+      createOpsSignal({ pool, config: {}, log: { warn() {}, log() {}, error() {} } })
+      const g = google({ send: () => Response.json({ id: `gmail-${Math.random()}`, threadId: 't' }) })
+      await connect(pool, g.fetcher)
+      const { c, rid } = await approvedDraft({ pool, keys })
+      const others = (
+        await pool.query('select recipient_id from invitations_real_draft where recipient_id<>$1', [rid])
+      ).rows.map((r) => r.recipient_id)
+      for (const id of others) {
+        const d = await readRealRecipient({ ...c, recipientId: id })
+        c.revision = (
+          await approveRealDraft({ ...c, recipientId: id, draftRevision: d.draft.revision })
+        ).revision
+      }
+      const cfg = pilot({ pilotMax: 10, pacingSeconds: 0 })
+      await startRealQueue({
+        pool,
+        keys,
+        config: cfg,
+        campaignId: c.campaignId,
+        actorId: c.actorId,
+        groups: { group_1: 10 }
+      })
+      let down = true
+      let asked = 0
+      const fetcher = async (url, init) => {
+        if (!String(url).includes('check-access')) return g.fetcher(url, init)
+        asked++
+        return down
+          ? Response.json({ error: true, message: 'API Error 10001' })
+          : Response.json({ ok: true, user_id: 1, subscriptions: { 10: '2099-01-01' } })
+      }
+      const failingSince = async () =>
+        (await pool.query('select amember_failing_since from invitations_real_queue')).rows[0]
+          .amember_failing_since
+      const pausedSignals = async () =>
+        (await pool.query("select data from ops_signal where kind='invitations.queue_paused'")).rows.map(
+          (r) => r.data
+        )
+
+      // aMember down: the pass waits; nothing is sent, skipped or paused, and the first failure is kept.
+      for (let pass = 0; pass < 2; pass++) {
+        const r = await runRealQueues({ pool, keys, config: cfg, fetcher })
+        assert.deepEqual([r.sent, r.paused], [0, []])
+      }
+      assert.equal(asked, 2, 'asked again on the next pass')
+      const first = await failingSince()
+      assert.ok(first, 'the first failure is kept')
+      let q = await readRealQueue({ pool, keys, campaignId: c.campaignId })
+      assert.equal(q.state, 'running')
+      assert.deepEqual(q.counts, { pending: 3, sent: 0, skipped: 0 })
+      assert.equal(g.calls.send, 0)
+      assert.deepEqual(await pausedSignals(), [])
+
+      // aMember back inside the window: the next email goes out and the failing run is over.
+      down = false
+      assert.equal((await runRealQueues({ pool, keys, config: cfg, fetcher })).sent, 1)
+      assert.equal(await failingSince(), null)
+
+      // Down again past the window: the queue pauses for a person, and the ops topic is told once.
+      down = true
+      await runRealQueues({ pool, keys, config: cfg, fetcher })
+      await pool.query(
+        "update invitations_real_queue set amember_failing_since = clock_timestamp() - ($1::bigint * interval '1 millisecond')",
+        [AMEMBER_RETRY_MS + 60_000]
+      )
+      const r = await runRealQueues({ pool, keys, config: cfg, fetcher })
+      assert.deepEqual(
+        r.paused.map((p) => p.reason),
+        ['REAL_MEMBERSHIP_UNKNOWN']
+      )
+      q = await readRealQueue({ pool, keys, campaignId: c.campaignId })
+      assert.deepEqual([q.state, q.pauseReason], ['paused', 'REAL_MEMBERSHIP_UNKNOWN'])
+      assert.deepEqual(q.counts, { pending: 2, sent: 1, skipped: 0 })
+      assert.deepEqual(await pausedSignals(), [
+        { campaign_id: c.campaignId, reason: 'REAL_MEMBERSHIP_UNKNOWN' }
+      ])
+      const { signalText } = await import('../src/lib/ops-signal.js')
+      assert.match(
+        signalText({ kind: 'invitations.queue_paused', data: (await pausedSignals())[0] }, 'DEV'),
+        /^⏸ \[DEV\] Invitations send queue paused: REAL_MEMBERSHIP_UNKNOWN\nCampaign: .+\n.*resumes it in \/ops › Invitations › Send\.$/
+      )
+      assert.equal(await failingSince(), null)
+
+      // A person resumes: the window starts afresh, so one more failure waits instead of pausing at once.
+      await resumeRealQueue({ pool, keys, campaignId: c.campaignId })
+      assert.deepEqual((await runRealQueues({ pool, keys, config: cfg, fetcher })).paused, [])
+      assert.equal((await readRealQueue({ pool, keys, campaignId: c.campaignId })).state, 'running')
+    })
+)
+
+test(
   'send queue: each group stops at its own number sent, groups take turns, skips do not count, a new start sends the rest',
   opts,
   async () =>
