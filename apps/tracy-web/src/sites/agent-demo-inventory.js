@@ -169,7 +169,9 @@ const volatile = new Set([
  * build's to make real, as `cta-real` asks — a `#` that becomes the business's page is no changed structure (dev
  * 24/10/2026, a dental site's only failing check).
  */
-const LINK_KEY = /(?:^|[^a-z])(?:link|url|href)(?:[^a-z]|$)/i
+// A Joomla contact's `webpage` is its link too (local measure 28/10/2026: Death & Co's contact took the business's site
+// where the template left it empty, and native-structure read a changed record for the rest of the build).
+const LINK_KEY = /(?:^|[^a-z])(?:link|url|href|webpage|website)(?:[^a-z]|$)/i
 /** A date a record shows (`date`, `eventDate`, `published_date`) is its words: a build dates the business's own news. */
 const DATE_KEY = /(?:^|_)date$|[a-z]Date$/
 /**

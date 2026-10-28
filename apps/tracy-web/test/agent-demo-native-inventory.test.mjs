@@ -669,6 +669,33 @@ test('Joomla: a contact link relabelled keeps the structure; its address removed
   )
 })
 
+// Local measure 28/10/2026: Death & Co's contact took the business's site in the `webpage` the template left as words.
+test("Joomla: a contact's webpage set to the business's site keeps the structure", () => {
+  const contact = (data) => ({
+    complete: true,
+    records: [
+      {
+        key: 'contact/1',
+        identity: { kind: 'contact', id: 1 },
+        publication: {},
+        routes: [],
+        relations: {},
+        editorialFields: [],
+        data
+      }
+    ]
+  })
+  for (const was of ['', 'Fresco', 'https://www.joomlart.com'])
+    assert.equal(
+      compareAgentInventory(
+        contact({ alias: 'fresco', webpage: was }),
+        contact({ alias: 'fresco', webpage: 'https://www.deathandcompany.com/' })
+      ).pass,
+      true,
+      was
+    )
+})
+
 // lrsweep rig, JA Spa j6 (24/10/2026): Claude Cowork's `content.list` gives a menu item no `url`, so the item that opens
 // /index.php/contact had no route, and the residue sweep said "the site has no Contact page" for 17 links. Its route
 // is read off its own row (`path`, `home`, `type`) in the address form the site's other rows show.
