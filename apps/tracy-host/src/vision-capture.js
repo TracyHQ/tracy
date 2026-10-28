@@ -7,6 +7,9 @@ export const VISION_MAX_HEIGHT = 40_000
 export const VISION_MAX_TILES = 80
 export const VISION_TILE_BYTES = 640 * 1024
 const OVERLAP = 128
+/** How long and how often the page's layout is read again before its first tile. */
+const SETTLE_MS = 500
+const SETTLE_TRIES = 6
 
 /** Read only layout anchors: fixed/sticky bands are excluded from the vertical coverage of later tiles. */
 async function geometry(page) {
@@ -220,7 +223,19 @@ export function createVisionCapturer({ launched, prepare, streams = 1 }) {
             }
             await page.evaluate(() => scrollTo(0, 0))
             await page.waitForTimeout(350)
+            // 🔒 THE LAYOUT SETTLES BEFORE THE FIRST TILE (local measure 28/10/2026): pictures the scroll above asked for
+            // arrived during the tiles, moved what was already shot, and two EmDash news pages ended CAPTURE_LAYOUT_CHANGED
+            // on every look, so a look with no fault could not pass. Two reads half a second apart must agree, a few times
+            // at most; a page that never settles is shot as before and still says so.
             let previous = await geometry(page)
+            for (let i = 0; i < SETTLE_TRIES; i++) {
+              signal.throwIfAborted()
+              await page.waitForTimeout(SETTLE_MS)
+              const now = await geometry(page)
+              const still = now.height === previous.height && !moved(previous, now, now.height)
+              previous = now
+              if (still) break
+            }
             documentHeight = previous.height
             yield { type: 'view-start', ...identity, documentHeight }
             while (covered < documentHeight && tiles < VISION_MAX_TILES) {
