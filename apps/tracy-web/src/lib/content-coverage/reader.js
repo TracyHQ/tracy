@@ -24,13 +24,30 @@ export const COVERAGE_FILE = 'content-coverage.json'
 const memo = new Map()
 
 const sha256 = (file) => createHash('sha256').update(readFileSync(file)).digest('hex')
+// A file's stamp: modification time in nanoseconds plus size. A write inside the clock's
+// granularity can keep the time, so the memo below also refuses to trust a stamp that is too
+// recent (the racy-file rule git uses for its index).
 const mtime = (file) => {
   try {
-    return String(statSync(file).mtimeMs)
+    const stat = statSync(file, { bigint: true })
+    return `${stat.mtimeNs}:${stat.size}`
   } catch {
     return 'missing'
   }
 }
+
+/** A stamp read this close to a file's last write may hide a second write in the same tick. */
+const RACY_MS = 2000
+
+/** @param {string} stamp */
+const newestWriteMs = (stamp) =>
+  Math.max(
+    0,
+    ...stamp
+      .split('|')
+      .filter((part) => part !== 'missing')
+      .map((part) => Number(BigInt(part.split(':')[0]) / 1000000n))
+  )
 
 /**
  * @param {{ id: string, dir?: string } | null | undefined} contract what `contractFor` answered
@@ -44,9 +61,9 @@ export function coverageOfContract(contract) {
   // Re-read only when one of the three files changed: /ops builds every road on each list read.
   const stamp = [file, map, lock].map(mtime).join('|')
   const seen = memo.get(file)
-  if (seen && seen.stamp === stamp) return seen.value
+  if (seen && seen.stamp === stamp && seen.readAt - newestWriteMs(stamp) > RACY_MS) return seen.value
   const value = readCoverage(contract, { file, map, lock })
-  memo.set(file, { stamp, value })
+  memo.set(file, { stamp, value, readAt: Date.now() })
   return value
 }
 

@@ -6,7 +6,7 @@
  */
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, statSync, utimesSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
@@ -149,6 +149,23 @@ test('the threshold is data: the same file passes under a looser policy', () => 
     loose
   )
   assert.equal(verdict.holds, false)
+})
+
+test('the reader re-reads a map written in the same clock tick as its last read', () => {
+  const { contracts } = profile(doc())
+  const contract = [...contracts.values()][0]
+  const mapFile = path.join(contract.dir, 'content-map.json')
+  // Whole milliseconds, so restoring the time below gives back exactly the same stamp.
+  const tick = new Date(Math.floor(statSync(mapFile).mtimeMs))
+  utimesSync(mapFile, tick, tick)
+  assert.equal(coverageOfContract(contract).state, 'measured')
+  // Same size, same modification time: only the bytes differ, as when two writes share a tick.
+  const original = readFileSync(mapFile, 'utf8')
+  const sameLength = original.includes('\n') ? original.replace('\n', ' ') : `${original.slice(0, -1)} `
+  assert.equal(sameLength.length, original.length)
+  writeFileSync(mapFile, sameLength)
+  utimesSync(mapFile, tick, tick)
+  assert.equal(coverageOfContract(contract).state, 'stale')
 })
 
 test('a failed page or a cut crawl is an incomplete measurement and holds', () => {
