@@ -738,6 +738,7 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
 - **After pushing:** live ids of newly created records go into the id map, and the places written go into `sync/pushed.json`; Sync from live runs again
   and the merge takes those places as base before comparing (`live_sync.py --pushed`, `DbMerge.seed_pushed`), so a record Tracy
   just created is not copied back to the copy twice. `pushed.json` is dropped when a sync run puts its read in place (`remember_read`).
+- **Optional CMS schema:** dependent-row rules are used only when their parent key, parent reference and dependent column exist in both schemas. Stock Joomla contacts and banners do not need an asset_id column. The Live Sync Integration workflow runs the real MariaDB sync/push suites on an isolated GitHub-hosted Docker VM; skipped cases fail that job.
 - **Retention:** `<private>/<label>/push/previews/<id>/` (changeset; swept after 24 hours), `<private>/<label>/push/<id>/`
   (`before.json` 0600 = the live values at write time + a re-read after writing, `journal.jsonl` to resume when cut off; 30 days).
   Before each mutation, `requests.json` durably stores its item identity and preimage, then stores the engine ACK before

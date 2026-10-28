@@ -1,0 +1,56 @@
+name: Live Sync Integration
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [develop, main]
+    paths:
+      - 'packages/fleet/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'apps/tracy-host/**'
+      - 'deploy/**'
+      - '.github/workflows/live-sync-integration.yml'
+      - '.node-version'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: live-sync-integration-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  integration:
+    name: live sync and push with real MariaDB
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out the tested tree
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+          submodules: false
+      - name: Use the repository Node version
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      - name: Require the isolated VM Docker daemon and test image
+        run: |
+          docker info
+          docker pull mariadb:11
+      - name: Run every live sync and push suite without skipped tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          node --test --test-concurrency=1 --test-reporter=tap \
+            packages/fleet/tracy-fleet-operation/test/live-sync*.test.mjs \
+            packages/fleet/tracy-fleet-operation/test/live-push*.test.mjs \
+            packages/fleet/tracy-fleet-operation/test/live-write*.test.mjs \
+            | tee "$RUNNER_TEMP/live-sync-integration.tap"
+          if grep -Eq '^ok .*# SKIP|^# skipped [1-9]' "$RUNNER_TEMP/live-sync-integration.tap"; then
+            echo 'Live integration tests must execute; skipped tests are a failure.' >&2
+            exit 1
+          fi

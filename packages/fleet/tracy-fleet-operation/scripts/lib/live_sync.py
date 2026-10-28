@@ -2016,6 +2016,16 @@ class DbMerge:
             return list(known)
         return None
 
+    def dependent_columns_exist(self, parent: str, table: str, column: str, holds: str | None) -> bool:
+        """Optional CMS columns must exist on both sides before a dependent rule emits SQL."""
+        key = self.ids.key(parent)
+        for schema in self.schemas[1:]:
+            parent_columns = {c for c, _ in schema.columns.get(self.prefix + parent, [])}
+            child_columns = {c for c, _ in schema.columns.get(self.prefix + table, [])}
+            if not {key, holds or key} <= parent_columns or column not in child_columns:
+                return False
+        return True
+
     def kept_record_rows(self, name: str) -> str | None:
         """A condition on a row `r` of table `name` (in the copy's schema): it belongs to a record
         the merged copy holds and the live site does not (`dependents`). None when no rule names
@@ -2028,7 +2038,7 @@ class DbMerge:
                 continue
             key = q(self.ids.key(parent))
             for table, column, where, holds in rules:
-                if table != name:
+                if table != name or not self.dependent_columns_exist(parent, table, column, holds):
                     continue
                 cond = (f"r.{q(column)} IN (SELECT p.{q(holds or self.ids.key(parent))} FROM {self.ref('ours', full)} p"
                         f" WHERE NOT EXISTS (SELECT 1 FROM {self.ref('theirs', full)} x WHERE x.{key} = p.{key}))")
@@ -2049,7 +2059,7 @@ class DbMerge:
             if not self.held_records.get(parent):
                 continue
             for table, column, where, holds in rules:
-                if table == name:
+                if table == name and self.dependent_columns_exist(parent, table, column, holds):
                     out.append((parent, column, where, holds or self.ids.key(parent)))
         return out
 
