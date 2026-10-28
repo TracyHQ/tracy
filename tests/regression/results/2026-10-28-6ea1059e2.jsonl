@@ -1,0 +1,1 @@
+{"id":"REG-PR-68-sync-held-contact-fields","verdict":"PASS","commit":"6ea1059e29f81749c4ea2d03152f2504ad2c262b","ran_at":"2026-10-28T15:05:01.717Z","evidence":"tests/regression/.runs/2026-10-28-6ea1059e2/REG-PR-68-sync-held-contact-fields.log"}
