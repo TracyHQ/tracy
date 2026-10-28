@@ -1,2 +1,2 @@
-- **Keep durable live-write receipts so interrupted Sync to live never resends an unanswered mutation.** — David · #74 · `fix/sync-create-retry` · 2026-10-29
+- **Keep durable live-write receipts so interrupted Sync to live never resends an unanswered mutation.** — David · #83 · `fix/sync-create-retry` · 2026-10-29
   **Affects:** Sync to live and Undo on Joomla and WordPress. Rebuild the fleet dsh image when deploying this change. An unknown write outcome stays held for live-site verification; acknowledged writes keep their original Undo evidence even when read-back fails.
