@@ -520,3 +520,99 @@ test('a retry gets a fresh input check and its real usage is charged', async () 
   assert.notEqual(sent[0], sent[1])
   assert.equal(charged.length, requests)
 })
+
+/** A model that names one fault per tile it was shown, answering after `delayOf(call)` ms. */
+function tileJudge(fake, { delayOf = () => 0, failAt = null } = {}) {
+  let call = 0
+  let open = 0
+  const seen = { most: 0, sent: 0 }
+  const fetchImpl = async (_url, init) => {
+    const n = ++call
+    seen.sent++
+    open++
+    seen.most = Math.max(seen.most, open)
+    try {
+      await new Promise((resolve) => setTimeout(resolve, delayOf(n)))
+      if (failAt === n) return new Response('busy', { status: 503 })
+      const body = JSON.parse(init.body)
+      const faults = labels({ body }).map((label) => {
+        const [, page, viewport, tile] = label.match(/^Page (\S+), (desktop|phone), tile (\d+)/)
+        return { page, viewport, kind: 'layout', where: `tile ${tile}`, fix: 'repair it' }
+      })
+      return new Response(
+        JSON.stringify({
+          usage: { prompt_tokens: 100, completion_tokens: 10 },
+          choices: [{ message: { content: JSON.stringify({ imageCode: 'ABC12345', faults }) } }]
+        })
+      )
+    } finally {
+      open--
+    }
+  }
+  return { fetchImpl, seen, ...{ capture: fake.capture, challengeFor: fake.challengeFor } }
+}
+const verdict = (r) => ({
+  pass: r.pass,
+  looked: r.looked,
+  measured: r.measured,
+  detail: r.detail,
+  unlooked: r.unlooked,
+  calls: r.usage?.calls
+})
+
+test('vision calls overlap the capture, at most the limit in flight, and give the serial verdict', async () => {
+  // Later calls answer first, and 48 tiles name more faults than the 30 kept: the kept ones are the serial run's.
+  const delayOf = (n) => [80, 5, 40][n % 3]
+  const pages = ['/', '/menu']
+  const serialFake = await fakes({ faults: [] }, { height: 10604 })
+  const serial = tileJudge(serialFake, { delayOf })
+  const one = await createDemoLook({ ...serial, visionFor: door, callsAtOnce: 1 })({}, { pages })
+  const overlapFake = await fakes({ faults: [] }, { height: 10604 })
+  const overlap = tileJudge(overlapFake, { delayOf })
+  const three = await createDemoLook({ ...overlap, visionFor: door, callsAtOnce: 3 })({}, { pages })
+  assert.equal(serial.seen.most, 1)
+  assert.equal(overlap.seen.most, 3)
+  assert.equal(one.detail.length, 30)
+  assert.deepEqual(verdict(three), verdict(one))
+})
+
+test('a failed call while later calls are in flight keeps the serial verdict and stops the rest', async () => {
+  const pages = ['/', '/menu']
+  const results = []
+  for (const callsAtOnce of [1, 3]) {
+    const fake = await fakes({ faults: [] }, { height: 4000 })
+    // Call 3 fails and so does its retry (call 4 serially; the retry follows later sends when overlapped).
+    let failing = 0
+    const judge = tileJudge(fake, { delayOf: (n) => (n % 2 ? 5 : 1) })
+    const fetchImpl = async (url, init) => {
+      const body = JSON.parse(init.body)
+      const first = labels({ body })[0]
+      if (first.startsWith('Page /, phone, tile 1,')) {
+        failing++
+        return new Response('busy', { status: 503 })
+      }
+      return judge.fetchImpl(url, init)
+    }
+    const r = await createDemoLook({ ...fake, fetchImpl, visionFor: door, callsAtOnce })({}, { pages })
+    assert.equal(failing, 2, 'the failed batch is asked twice, as before')
+    results.push(verdict(r))
+  }
+  assert.equal(results[0].pass, false)
+  assert.ok(results[0].unlooked.some((u) => u.why === 'VISION_FAILED'))
+  assert.deepEqual(results[1], results[0])
+})
+
+test('a stream that breaks after sending calls applies them as the serial run did', async () => {
+  const pages = ['/', '/menu']
+  // No terminal manifest: the capture ends with calls still in flight when they overlap.
+  const change = (frames) => frames.filter((f) => f.type !== 'end')
+  const results = []
+  for (const callsAtOnce of [1, 3]) {
+    const fake = await fakes({ faults: [] }, { height: 4000, change })
+    const judge = tileJudge(fake, { delayOf: (n) => [9, 1, 4][n % 3] })
+    results.push(verdict(await createDemoLook({ ...judge, visionFor: door, callsAtOnce })({}, { pages })))
+  }
+  assert.equal(results[0].pass, false)
+  assert.ok(results[0].detail.length > 0)
+  assert.deepEqual(results[1], results[0])
+})

@@ -34,12 +34,17 @@ import { modelTokensOf } from 'website-opportunities/src/wo-model-tokens.js'
  */
 // look/10 also requires an image-only input check before any tile is acknowledged.
 export const LOOK_PROMPT_VERSION = 'look/10'
-/** Page plus route cap; capture and model work stay serial in two-page streams for bounded RAM. */
+/** Page plus route cap; capture stays serial in two-page streams for bounded RAM. */
 export const LOOK_MAX_PAGES = 165
 /** Routes per signed capture request; model batches have their own tile and encoded-byte ceilings. */
 export const LOOK_BATCH_PAGES = 2
-/** Capture/model work is serial to keep active page and image payloads bounded. */
-export const LOOK_AT_ONCE = 1
+/**
+ * Vision calls in flight while the capture goes on. One browser tab still shoots one tile at a time; only the
+ * model waits overlap, each call holding at most `MAX_BATCH_BYTES`. Answers apply strictly in the order the
+ * tiles were sent, so faults, acknowledgements and the fault cap are the serial run's. At 1 the capture waits
+ * for every call, as before 28/10/2026, when the look cost capture time plus every call's wait.
+ */
+export const LOOK_CALLS_AT_ONCE = 3
 const VIEWPORTS = Object.freeze({ 1440: 'desktop', 390: 'phone' })
 const MAX_BATCH_BYTES = 4 * 1024 * 1024
 const MAX_BATCH_TILES = 3
@@ -212,8 +217,10 @@ export function createDemoLook({
   chargeable = (_spec, fn) => fn(),
   fetchImpl = fetch,
   challengeFor = createVisionChallenge,
-  now = Date.now
+  now = Date.now,
+  callsAtOnce = LOOK_CALLS_AT_ONCE
 }) {
+  const inFlight = Math.max(1, Math.floor(callsAtOnce) || 1)
   return async function look(
     site,
     {
@@ -260,8 +267,8 @@ export function createDemoLook({
     const invalid = () => {
       throw Object.assign(new Error('Invalid vision capture manifest'), { code: 'VISION_STREAM_INVALID' })
     }
-    let challenge = await challengeFor()
-    const contentFor = (batch) => [
+    const firstChallenge = await challengeFor()
+    const contentFor = (batch, challenge = firstChallenge) => [
       { type: 'text', text: `${DEMO_LOOK_SYSTEM}\n${IMAGE_CODE_INSTRUCTION}` },
       { type: 'image_url', image_url: { url: challenge.image } },
       ...batch.flatMap((tile) => [
@@ -272,36 +279,63 @@ export function createDemoLook({
         { type: 'image_url', image_url: { url: tile.image } }
       ])
     ]
-    const requestFor = (batch) =>
+    const requestFor = (batch, challenge) =>
       JSON.stringify({
         model: door.model,
         temperature: 0,
         response_format: { type: 'json_object' },
-        messages: [{ role: 'user', content: contentFor(batch) }]
+        messages: [{ role: 'user', content: contentFor(batch, challenge) }]
       })
     // Reserve room for the next fresh PNG; every real request is also checked before sending.
-    const emptyRequestBytes = Buffer.byteLength(requestFor([])) + 64 * 1024
+    const emptyRequestBytes = Buffer.byteLength(requestFor([], firstChallenge)) + 64 * 1024
     let pendingBytes = emptyRequestBytes
+    // Calls sent and not yet applied, oldest first; `stopCalls` cancels the ones a failure made pointless.
+    let calls = []
+    let stopCalls = new AbortController()
+    let visionFailed = false
+    /** One batch's call (and its one retry); never rejects, so a call nobody awaits yet cannot go unhandled. */
+    const ask = async (batch, callSignal) => {
+      try {
+        let challenge = await challengeFor()
+        const requestBody = requestFor(batch, challenge)
+        if (Buffer.byteLength(requestBody) > MAX_BATCH_BYTES) invalid()
+        let result = await judge(batch, requestBody, challenge, callSignal)
+        if (
+          ['VISION_FAILED', 'VISION_ANSWER_UNREADABLE', 'VISION_IMAGE_UNREADABLE'].includes(result.why) &&
+          !callSignal.aborted &&
+          !signal?.aborted
+        ) {
+          challenge = await challengeFor()
+          const retryBody = requestFor(batch, challenge)
+          if (Buffer.byteLength(retryBody) > MAX_BATCH_BYTES) invalid()
+          result = await judge(batch, retryBody, challenge, callSignal)
+        }
+        return { result }
+      } catch (error) {
+        return { error }
+      }
+    }
     const flush = async (streamSignal) => {
-      if (!pending.length) return
-      const batch = pending
-      pending = []
-      pendingBytes = emptyRequestBytes
-      challenge = await challengeFor()
-      const requestBody = requestFor(batch)
-      if (Buffer.byteLength(requestBody) > MAX_BATCH_BYTES) invalid()
-      let result = await judge(batch, requestBody, streamSignal)
-      if (
-        ['VISION_FAILED', 'VISION_ANSWER_UNREADABLE', 'VISION_IMAGE_UNREADABLE'].includes(result.why) &&
-        !streamSignal?.aborted &&
-        !signal?.aborted
-      ) {
-        challenge = await challengeFor()
-        const retryBody = requestFor(batch)
-        if (Buffer.byteLength(retryBody) > MAX_BATCH_BYTES) invalid()
-        result = await judge(batch, retryBody, streamSignal)
+      if (pending.length) {
+        const batch = pending
+        pending = []
+        pendingBytes = emptyRequestBytes
+        // Not tied to the stream's signal: the host client aborts that one whenever a stream ends, and a call sent
+        // before a stream broke still answers, as it did serially.
+        calls.push({ batch, streamSignal, answer: ask(batch, stopCalls.signal) })
+      }
+      while (calls.length >= inFlight) await applyNext()
+    }
+    /** Applies the oldest call's answer: the serial run's step, in the serial run's order. */
+    const applyNext = async () => {
+      const { batch, streamSignal, answer } = calls.shift()
+      const { result, error } = await answer
+      if (error) {
+        visionFailed = true
+        throw error
       }
       if (result.why) {
+        visionFailed = true
         said = result.said ?? null
         throw Object.assign(new Error(result.why), { code: result.why })
       }
@@ -340,6 +374,7 @@ export function createDemoLook({
       if (frame.type === 'end') {
         if (frame.version !== 'vision-tiles/1' || typeof frame.complete !== 'boolean') invalid()
         await flush(streamSignal)
+        while (calls.length) await applyNext()
         terminal = true
         terminalValid = true
         streamWhy ??= frame.reason ?? null
@@ -449,6 +484,28 @@ export function createDemoLook({
         streamWhy = typeof error?.code === 'string' ? error.code : 'VISION_STREAM_FAILED'
         said ??= String(error?.message ?? error).slice(0, 160)
       }
+      // Calls still in flight when the stream ended. A stream that broke on its own (a deadline, a bad frame) had
+      // sent them before it broke, so they apply as the serial run applied them, and the first of them to fail is
+      // the reason, as it was serially. A failed call or a stop cancels the rest instead.
+      if (visionFailed || signal?.aborted) stopCalls.abort()
+      // The stream's own signal is aborted once it ended, whatever happened; these calls no longer depend on it.
+      for (const call of calls) call.streamSignal = null
+      while (calls.length && !stopCalls.signal.aborted) {
+        const streamSaid = said
+        said = null
+        try {
+          await applyNext()
+          said = streamSaid
+        } catch (error) {
+          stopCalls.abort()
+          streamWhy = typeof error?.code === 'string' ? error.code : 'VISION_STREAM_FAILED'
+          said ??= String(error?.message ?? error).slice(0, 160)
+        }
+      }
+      await Promise.all(calls.map((call) => call.answer))
+      calls = []
+      stopCalls = new AbortController()
+      visionFailed = false
       pending = []
       pendingBytes = emptyRequestBytes
       for (const layout of batch)
@@ -512,7 +569,7 @@ export function createDemoLook({
       usage
     }
 
-    async function judge(pairs, requestBody, streamSignal) {
+    async function judge(pairs, requestBody, challenge, callSignal) {
       let body
       try {
         body = await chargeable(
@@ -543,7 +600,7 @@ export function createDemoLook({
               body: requestBody,
               signal: AbortSignal.any([
                 AbortSignal.timeout(CALL_MS),
-                ...(streamSignal ? [streamSignal] : []),
+                ...(callSignal ? [callSignal] : []),
                 ...(signal ? [signal] : [])
               ])
             })
