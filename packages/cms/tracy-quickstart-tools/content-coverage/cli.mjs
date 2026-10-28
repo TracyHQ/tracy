@@ -12,8 +12,9 @@
 //     [--max-pages 150] [--viewports desktop,phone] [--write] [--no-report] \
 //     [--report-only | --reclassify]   (rebuild from an existing findings.json, no browser run)
 //     [--fit]   Slot fit (ADR 0039): measure a `fit` on every text and image slot from this run and settle each
-//               picture's keep flag by its kind; with --write the content map gets them, BEFORE content-coverage.json
-//               is built, so the coverage file names the map with its fit. Without --write: <out>/content-map.fit.json.
+//               picture's keep flag by its kind (in a place-content-roles/3 map every keep flag follows the role,
+//               ADR 0040); with --write the content map gets them, BEFORE content-coverage.json is built, so the
+//               coverage file names the map with its fit. Without --write: <out>/content-map.fit.json.
 //     [--no-judge]
 //               The label judge (spec #37): no model is called. For every component with a slot whose verdict is not
 //               cached in content-coverage.json, the audit writes <out>/label-judge/request.json (the question, the

@@ -87,6 +87,21 @@ test('a directory listed recursively is the whole directory, at any depth', () =
   ])
 })
 
+test('a runner module in tests/regression is the directory own entries, never the case and result data', () => {
+  const only = inputsFor('scripts', ['tests/regression/catalogue.mjs', 'tests/regression/run.mjs'], isDir)
+  assert.deepEqual(only.inputs, ['$TURBO_ROOT$/tests/regression/*'])
+  const reads = [
+    'tests/regression/catalogue.mjs',
+    'tests/regression/cases/REG-001.json',
+    'tests/regression/results/a.jsonl'
+  ]
+  assert.deepEqual(inputsFor('scripts', reads, isDir).inputs, [
+    '$TURBO_ROOT$/tests/regression/*',
+    '$TURBO_ROOT$/tests/regression/cases/**',
+    '$TURBO_ROOT$/tests/regression/results/**'
+  ])
+})
+
 const generated = [
   {
     path: 'vendor/tracy/dsh-passwords/dist',

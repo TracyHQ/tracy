@@ -1,1 +1,0 @@
-{"id":"REG-PR-1739-pattern-read-as-blocks","verdict":"PASS","commit":"7a4d71df47c1f4a05f5f8376147ee259b6433d38","ran_at":"2026-10-25T18:13:25.368Z","evidence":"tests/regression/.runs/2026-10-25-7a4d71df4/REG-PR-1739-pattern-read-as-blocks.log"}

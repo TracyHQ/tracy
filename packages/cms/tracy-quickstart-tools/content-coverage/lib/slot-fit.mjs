@@ -6,6 +6,15 @@
 // declares `customize: "keep"` because, without a render, it cannot tell a class photo from an icon. Here it can: a photo
 // loses the flag (a build may replace it), an icon, a face, a signature, a cut-out, decoration or a map gets it, and a
 // logo keeps what capture said (the business logo replaces it through its own door).
+//
+// That reading holds for a `place-content-roles/2` map only. In a version 3 map the slot's role is the only decider
+// (ADR 0040 decision 3): `customize` and a picture's `fit.replace` are derived from the role, and the measured kind
+// describes shape only. A trainer face measured as an avatar with role `person.image` is replaced, not kept.
+import {
+  customizeOfRole,
+  pictureReplaceOfRole,
+  roleDecidesKeep
+} from '../../../../wo/website-opportunities/domain/content-map-keep-decision.mjs'
 import {
   SLOT_FIT_TOLERANCE,
   SLOT_FIT_VERSION,
@@ -86,14 +95,22 @@ function focusOf(look) {
   return null
 }
 
-function cropOf(kind, look) {
-  if (kind === 'logo') return 'contain'
-  if (pictureReplaceOf(kind) === 'keep') return 'none'
+function cropOf(kind, replace, look) {
+  if (kind === 'logo' || replace === 'logo') return 'contain'
+  if (replace === 'keep') return 'none'
   const fit = String(look?.objectFit ?? look?.backgroundSize ?? '')
   return /contain|scale-down/.test(fit) ? 'contain' : 'cover'
 }
 
-function pictureFit(slot, ev) {
+/**
+ * What a build may put in the place of a picture: from its role in a version 3 map (a slot without a known role keeps
+ * the old reading, which the role check reports on its own), else from its measured kind.
+ */
+function replaceOf(slot, kind, byRole) {
+  return (byRole && pictureReplaceOfRole(slot.role)) || pictureReplaceOf(kind)
+}
+
+function pictureFit(slot, ev, byRole) {
   const file = fileOf(slot.sample)
   const words = [slot.label, slot.column, ...(slot.jsonPath ?? []).filter((p) => typeof p === 'string')].join(
     ' '
@@ -104,7 +121,7 @@ function pictureFit(slot, ev) {
   const source = raw ? { width: raw.width, height: raw.height, format: formatOf(file) } : null
   const { kind } = pictureKindOf({ words, file, source: raw, boxes })
   const transparent = typeof raw?.alpha === 'boolean' ? raw.alpha : null
-  const replace = pictureReplaceOf(kind)
+  const replace = replaceOf(slot, kind, byRole)
   if (!shown) return { measured: false, kind, replace, transparent, source }
   const main = boxes.desktop ?? Object.values(boxes)[0]
   const look = ev.looks.desktop ?? Object.values(ev.looks)[0] ?? null
@@ -118,7 +135,7 @@ function pictureFit(slot, ev) {
     aspect: round4(main.width / main.height),
     tolerance: SLOT_FIT_TOLERANCE,
     minWidth: Math.round(1.5 * Math.max(...Object.values(boxes).map((b) => b.width))),
-    crop: cropOf(kind, look)
+    crop: cropOf(kind, replace, look)
   }
   const focus = focusOf(look)
   return focus ? { ...fit, focus } : fit
@@ -178,14 +195,24 @@ function fitGroupsOf(slots) {
   return out
 }
 
+/** A version 3 slot's `customize` from its role (ADR 0040 decision 3); a slot without a known role is left as it is. */
+function settleCustomizeByRole(slot) {
+  if (pictureReplaceOfRole(slot.role) === null) return
+  const customize = customizeOfRole(slot.role)
+  if (customize) slot.customize = customize
+  else delete slot.customize
+}
+
 /**
  * The content map with a `fit` on every text and image slot, `slotFitVersion` and `fitGroups`, and each picture's keep
- * flag set from its kind; plus a summary for the packaging report. The input map is not changed.
+ * flag set from its kind (a version 2 map) or every slot's keep flag from its role (a version 3 map, ADR 0040); plus a
+ * summary for the packaging report. The input map is not changed.
  * @param {{map: any, findings: any}} input
  */
 export function measureSlotFit({ map, findings }) {
   const evidence = evidenceOf(findings)
   const out = structuredClone(map)
+  const byRole = roleDecidesKeep(out)
   const summary = {
     pictures: { total: 0, measured: 0, byKind: {}, kept: 0, keepBefore: 0, keptByKind: {}, cutouts: [] },
     text: { total: 0, measured: 0 }
@@ -195,9 +222,10 @@ export function measureSlotFit({ map, findings }) {
       const p = summary.pictures
       p.total += 1
       if (slot.customize === 'keep') p.keepBefore += 1
-      slot.fit = pictureFit(slot, evidence.get(slot.key))
-      if (slot.fit.replace === 'keep') slot.customize = 'keep'
-      if (slot.fit.replace === 'photo') delete slot.customize
+      slot.fit = pictureFit(slot, evidence.get(slot.key), byRole)
+      if (byRole && pictureReplaceOfRole(slot.role) !== null) settleCustomizeByRole(slot)
+      else if (slot.fit.replace === 'keep') slot.customize = 'keep'
+      else if (slot.fit.replace === 'photo') delete slot.customize
       if (slot.fit.measured) p.measured += 1
       p.byKind[slot.fit.kind] = (p.byKind[slot.fit.kind] ?? 0) + 1
       if (slot.customize === 'keep') {
@@ -209,7 +237,8 @@ export function measureSlotFit({ map, findings }) {
       summary.text.total += 1
       slot.fit = textFit(slot, evidence.get(slot.key))
       if (slot.fit.measured) summary.text.measured += 1
-    }
+      if (byRole) settleCustomizeByRole(slot)
+    } else if (byRole) settleCustomizeByRole(slot)
   }
   out.slotFitVersion = SLOT_FIT_VERSION
   out.fitGroups = fitGroupsOf(out.slots ?? [])

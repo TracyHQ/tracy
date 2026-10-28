@@ -96,7 +96,7 @@ const STANDALONE = /^packages\/cms\/tracy-emdash-theme-(?:base|business|saas)\//
 const GLOBAL =
   /^(?:\.github\/workflows\/tracy-ci\.yml|\.node-version|package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|scripts\/check-(?:all|tests)\.ts|scripts\/ci\/|scripts\/test-timings\.json|vendor\/tracy\/deepseek-harness(?:\/|$))/
 const DOCS =
-  /^(?:(?:docs|tasks)\/.*\.md$|tasks\/(?:bang-chung|evidence)\/|tests\/regression\/|\.github\/pull_request_template\.md$|(?:AGENTS|CLAUDE|CONTEXT|DESIGN|SYSTEM|README)\.md$)/
+  /^(?:(?:docs|tasks)\/.*\.md$|changes\/[^/]+\.md$|tasks\/(?:bang-chung|evidence)\/|tests\/regression\/|\.github\/pull_request_template\.md$|(?:AGENTS|CLAUDE|CONTEXT|DESIGN|SYSTEM|README)\.md$)/
 
 /**
  * Vendored skill trees whose change runs the `checks` row plus only the tests that read the tree.
@@ -226,8 +226,8 @@ export const TEMPLATE_DATA = [
 ]
 /** Gates every template-data run keeps: biome format and the typecheck of JSON imports, and doc pointers. */
 // `turbo-config` imports check-tests.ts, so its closure names every data tree, and it simply always
-// runs: on a pull request it measures only the Turbo tasks whose inputs the diff touches (for template
-// data, the suites that read it), and checks the generated config of every task in a few seconds.
+// runs: on a pull request it is `--structure-only` (since 28/10/2026), checking the generated config
+// and ignored inputs of every task without tracing a suite; the nightly measures what suites read.
 export const TEMPLATE_DATA_ALWAYS = ['lint', 'doc-links', 'turbo-config']
 
 const CODE = /\.[cm]?[jt]sx?$/

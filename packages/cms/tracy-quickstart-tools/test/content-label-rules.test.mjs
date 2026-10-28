@@ -132,6 +132,26 @@ test('R5: a fact role that keeps, or a face, signature or cut-out under a non-pe
   assert.deepEqual(rule(labelRulesOf({ map: wrongRole }), 'R5').keys, ['about.cutout'])
 })
 
+test('R5: faces that prove a number pass with stat.proof_image (ADR 0040); a signature or cut-out under it fails', () => {
+  const map = cleanMap()
+  const picture = (key, kind) => ({
+    key,
+    type: 'image',
+    sample: `images/demo/stats/${key}.png`,
+    role: 'stat.proof_image',
+    group: grp('stats.0', 0, 'stat'),
+    fit: { measured: true, kind, replace: 'photo' }
+  })
+  map.slots.push(
+    text('stats.value', '5k+', 'stat.value', { group: grp('stats.0', 0, 'stat') }),
+    picture('strip', 'avatar-group'),
+    picture('face', 'avatar'),
+    picture('sign', 'signature'),
+    picture('cut', 'cutout')
+  )
+  assert.deepEqual(rule(labelRulesOf({ map }), 'R5').keys, ['sign', 'cut'])
+})
+
 test('R6: a link or list item inside a fact slot fails', () => {
   const map = cleanMap()
   map.slots.push(

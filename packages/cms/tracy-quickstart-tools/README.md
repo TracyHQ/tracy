@@ -174,7 +174,7 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   first failing keys, and R1 (the fact-role share) as a number only. R2 a phone, email, address, price or hours sample
   needs a contact or price role · R3 every URL slot has a role · R4 indexed repeats are grouped and a CTA URL shares a
   group with its label · R5 no keep on a fact role, and faces, signatures and cut-outs need a person, quote or business
-  role · R6 no link or list item inside a fact slot · R7 siblings share a role · R8 adjacent short slots on one line
+  role (faces that prove a number may carry `stat.proof_image`) · R6 no link or list item inside a fact slot · R7 siblings share a role · R8 adjacent short slots on one line
   are a cut heading · R9 a fact-like hole (an accepted reason does not lift it). Road to live holds a new release on any
   failing rule in a `place-content-roles/3` map and warns for a live one; a version 2 map is listed and never holds.
 - **Label judge (audit 1.4.0, spec #37).** The agent that runs the release is the judge; the audit calls no model and
