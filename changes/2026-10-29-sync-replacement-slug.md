@@ -1,2 +1,2 @@
-- **Keep a replacement page at its intended address and preserve that address on Undo.** — David · #76 · `fix/sync-slug-replacement` · 2026-10-29
+- **Keep a replacement page at its intended address and preserve that address on Undo.** — David · #91 · `fix/sync-slug-replacement` · 2026-10-29
   **Affects:** WordPress same-scope delete/create pairs run in dependency order; a skipped or conflicting removal blocks its replacement. Undo keeps the original trashed when the customer edited the replacement. Joomla same-alias pairs remain held because trash does not free the alias.
