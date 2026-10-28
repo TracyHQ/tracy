@@ -161,7 +161,9 @@ test('the reader re-reads a map written in the same clock tick as its last read'
   assert.equal(coverageOfContract(contract).state, 'measured')
   // Same size, same modification time: only the bytes differ, as when two writes share a tick.
   const original = readFileSync(mapFile, 'utf8')
-  const sameLength = original.includes('\n') ? original.replace('\n', ' ') : `${original.slice(0, -1)} `
+  const cut = original.indexOf('\n')
+  const sameLength =
+    cut >= 0 ? `${original.slice(0, cut)} ${original.slice(cut + 1)}` : `${original.slice(0, -1)} `
   assert.equal(sameLength.length, original.length)
   writeFileSync(mapFile, sameLength)
   utimesSync(mapFile, tick, tick)

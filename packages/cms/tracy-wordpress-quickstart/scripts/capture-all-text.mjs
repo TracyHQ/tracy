@@ -19,9 +19,19 @@ export const decodeEntities = (text) =>
     .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
     .replace(/&(amp|lt|gt|quot|apos|nbsp);/g, (_, n) => ENTITIES[n])
 
+/** Markup with every tag gone, stripped until nothing changes so a tag split by another tag cannot survive. */
+const withoutTags = (html) => {
+  let text = html
+  for (let before = ''; before !== text; ) {
+    before = text
+    text = text.replace(/<[^>]*>/g, '')
+  }
+  return text
+}
+
 /** The words a visitor reads in some markup: tags gone, `<br>` a space, entities decoded, blanks collapsed. */
 export const visibleText = (html) =>
-  decodeEntities(html.replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]*>/g, ''))
+  decodeEntities(withoutTags(html.replace(/<br\s*\/?>/gi, ' ')))
     .replace(/\s+/g, ' ')
     .trim()
 
