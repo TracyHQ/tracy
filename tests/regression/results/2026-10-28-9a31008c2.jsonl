@@ -1,0 +1,1 @@
+{"id":"REG-PR-30-invitations-queue-amember-retry","verdict":"PASS","commit":"9a31008c2002a2c72fa8ba711ccd4a135897604d","ran_at":"2026-10-28T04:38:41.111Z","evidence":"tests/regression/.runs/2026-10-28-9a31008c2/REG-PR-30-invitations-queue-amember-retry.log"}

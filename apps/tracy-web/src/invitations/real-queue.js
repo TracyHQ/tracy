@@ -5,11 +5,19 @@
  * time, suppression, once per customer, the pilot budget and the 180 s pacing. A customer refusal
  * (no active plan, unsubscribed, no longer approved) skips that email; anything that may concern
  * every email (aMember or Gmail not answering, budget reached, sending off) pauses the queue for a
- * person. An unknown outcome is never resent: the queue pauses until it is checked in Gmail. */
+ * person. An unknown outcome is never resent: the queue pauses until it is checked in Gmail.
+ *
+ * aMember not answering is the one of those that is usually over in minutes (measured 27 and 28/10/2026:
+ * both queues paused at 00:01-00:06 Vietnam time and lay still until a person resumed them the next
+ * morning). So it does not pause at once: the queue waits and asks again on each later pass, and pauses
+ * only once aMember has failed for `AMEMBER_RETRY_MS` without one clear answer in between. Nothing is
+ * sent or skipped while it waits, so a retry can neither double-send nor lose a customer. Every pause
+ * the cron makes is told to the ops topic (`invitations.queue_paused`). */
 import { REAL_GROUPS, listRealRecipients, readRealRecipient } from './real-import.js'
 import { realRecord } from './real-fields.js'
 import { realError, realId, realTransaction } from './real-store.js'
 import { sendRealInvitation } from './real-send.js'
+import { opsFor } from '../lib/ops-signal.js'
 
 // Refusals that concern one customer only: skip and go on.
 const SKIP = new Set([
@@ -22,6 +30,8 @@ const SKIP = new Set([
 ])
 // Not now: try again on a later pass.
 const WAIT = new Set(['REAL_PILOT_PACING', 'REAL_SEND_BUSY'])
+/** How long aMember may keep failing before the queue pauses for a person. */
+export const AMEMBER_RETRY_MS = 30 * 60_000
 
 async function queueRow(db, campaignId) {
   return (await db.query('select * from invitations_real_queue where campaign_id=$1', [campaignId])).rows[0]
@@ -136,7 +146,7 @@ export async function startRealQueue({ pool, keys, config, campaignId, actorId, 
     await db.query(
       `insert into invitations_real_queue(campaign_id,state,actor_id) values($1,'running',$2)
        on conflict(campaign_id) do update set state='running',pause_reason=null,actor_id=$2,
-         started_at=clock_timestamp(),updated_at=clock_timestamp()`,
+         amember_failing_since=null,started_at=clock_timestamp(),updated_at=clock_timestamp()`,
       [state.row.id, actorId]
     )
     await db.query('delete from invitations_real_queue_group where campaign_id=$1', [state.row.id])
@@ -154,7 +164,7 @@ async function setState({ pool, keys, campaignId, from, to, reason = null }) {
     const q = await queueRow(db, state.row.id)
     if (!q || !from.includes(q.state)) throw realError('REAL_QUEUE_STATE', 409)
     await db.query(
-      'update invitations_real_queue set state=$2,pause_reason=$3,updated_at=clock_timestamp() where campaign_id=$1',
+      'update invitations_real_queue set state=$2,pause_reason=$3,amember_failing_since=null,updated_at=clock_timestamp() where campaign_id=$1',
       [state.row.id, to, reason]
     )
   })
@@ -166,8 +176,27 @@ export const resumeRealQueue = (input) => setState({ ...input, from: ['paused'],
 
 const pause = (pool, campaignId, reason) =>
   pool.query(
-    "update invitations_real_queue set state='paused',pause_reason=$2,updated_at=clock_timestamp() where campaign_id=$1 and state='running'",
+    "update invitations_real_queue set state='paused',pause_reason=$2,amember_failing_since=null,updated_at=clock_timestamp() where campaign_id=$1 and state='running'",
     [campaignId, reason]
+  )
+
+/** aMember failed for this queue: when it first did (kept), and how long ago that was, in ms. */
+async function amemberFailing(pool, campaignId) {
+  const row = (
+    await pool.query(
+      `update invitations_real_queue set amember_failing_since=coalesce(amember_failing_since, clock_timestamp())
+        where campaign_id=$1 returning extract(epoch from clock_timestamp() - amember_failing_since) * 1000 as ms`,
+      [campaignId]
+    )
+  ).rows[0]
+  return Number(row?.ms ?? 0)
+}
+
+/** aMember answered (a send went out, or a customer was refused by name): the failing run is over. */
+const amemberAnswered = (pool, campaignId) =>
+  pool.query(
+    'update invitations_real_queue set amember_failing_since=null where campaign_id=$1 and amember_failing_since is not null',
+    [campaignId]
   )
 const settle = (pool, campaignId, recipientId, fields) =>
   pool.query(
@@ -226,13 +255,19 @@ async function runOne({ pool, keys, config, fetcher, q }) {
       const code =
         typeof error?.code === 'string' && /^REAL_[A-Z0-9_]+$/.test(error.code) ? error.code : 'REAL_INTERNAL'
       if (SKIP.has(code)) {
+        // A refusal by name (aMember said no plan, or it never needed asking) ends a failing run.
+        await amemberAnswered(pool, campaignId)
         await settle(pool, campaignId, item.recipient_id, { state: 'skipped', reason: code })
         continue
       }
       if (WAIT.has(code)) return { waiting: code }
+      // aMember not answering: ask again on a later pass, until it has failed for the whole window.
+      if (code === 'REAL_MEMBERSHIP_UNKNOWN' && (await amemberFailing(pool, campaignId)) < AMEMBER_RETRY_MS)
+        return { waiting: code }
       await pause(pool, campaignId, code)
       return { paused: code }
     }
+    await amemberAnswered(pool, campaignId)
     if (row.state === 'failed') {
       await settle(pool, campaignId, item.recipient_id, {
         state: 'skipped',
@@ -273,5 +308,14 @@ export async function runRealQueues({ pool, keys, config, fetcher = fetch }) {
       paused.push({ campaignId: q.campaign_id, reason })
     }
   }
+  // A queue the cron paused waits for a person: say so on the ops topic now, not the next morning.
+  // One signal per pause (the queue's own start time and the pause minute name it).
+  for (const p of paused)
+    await opsFor(pool)
+      .record('invitations.queue_paused', {
+        data: { campaign_id: p.campaignId, reason: p.reason },
+        dedupeKey: `invitations-queue-paused:${p.campaignId}:${Math.floor(Date.now() / 60_000)}`
+      })
+      .catch(() => null)
   return { sent, paused }
 }

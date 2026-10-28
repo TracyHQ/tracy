@@ -346,6 +346,28 @@ export function identityRoutes({
     return c.body(null, 204)
   })
 
+  /**
+   * The two ways a signed-out person starts signing in from `/login`: an email code asked for
+   * (`login.code_requested`, `POST /login` accepted) and a provider sign-in begun (`login.oauth_started`,
+   * `GET /signin/:provider`). Usage only: next to `login.visited` and `account.first_sign_in` they show,
+   * for each source, how many visits went on to start and how many finished. Kept like a visit: the
+   * cleaned source values (and the provider), never the address, at most `LOGIN_VISITS_PER_IP_PER_HOUR`
+   * a client address. Sign-in never waits on it and never fails because of it.
+   */
+  const signInStartRate = pool ? null : memoryRateLimiter()
+  const recordSignInStart = async (c, kind, data) => {
+    if (!signal) return
+    try {
+      const bucket = `login-start:${await sha256Hex(clientIp(c))}`
+      const over = pool
+        ? await overLimitOrClosed(pool, bucket, LOGIN_VISITS_PER_IP_PER_HOUR, now())
+        : signInStartRate.overLimit(bucket, LOGIN_VISITS_PER_IP_PER_HOUR, now())
+      if (!over) await signal.record(kind, { data })
+    } catch {
+      // A usage row is never worth a failed sign-in.
+    }
+  }
+
   // Review round 2, finding 2: both doors below used to answer JSON only, and the page's own
   // forms carried no method/action/name to post with — a sign-in page that needs JavaScript to
   // submit fails silently for anyone whose script did not load, and this is the one page nobody
@@ -461,6 +483,7 @@ export function identityRoutes({
       }
       return c.json({ code: 'RATE_LIMITED' }, 429)
     }
+    await recordSignInStart(c, 'login.code_requested', source ?? {})
     if (beta?.access.enabled) {
       await beta.enqueue(email, undefined, requestLanguage(c), source)
       if (isFormPost)
@@ -1392,6 +1415,7 @@ export function identityRoutes({
     const source = requestSource(new URL(c.req.url).searchParams, next, config.origin)
     const state = randomState()
     await store.putState({ state, provider, next, expiresAt: now() + OAUTH_STATE_TTL_MS, source })
+    await recordSignInStart(c, 'login.oauth_started', { provider, ...source })
     c.header('set-cookie', stateCookie(state, optsFor(c)))
     return c.redirect(authorizeUrl(provider, config, state), 302)
   })
