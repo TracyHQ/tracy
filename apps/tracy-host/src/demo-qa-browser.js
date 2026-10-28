@@ -43,6 +43,20 @@ const HASH_MAX_BYTES = 16 * 1024 * 1024
  * @param {{demoHosts?: string[], siteHosts?: string[], serveFrom?: string | null, serveFromIsProxy?: boolean, proxySiteLabel?: string | null, sentinels?: Record<string, string | null>, discover?: boolean, loadCapMs?: number, gotoMs?: number}} [options]
  * @returns {Promise<import('./demo-qa.js').PageRead>}
  */
+/**
+ * A served document with what changes on every request taken out: Joomla's form token (the `csrf.token` script option
+ * and the hidden input named by it), WordPress nonces, and CSP nonces. Nothing a visitor sees.
+ * @param {string} html
+ */
+export function stableHtml(html) {
+  return html
+    .replace(/("csrf\.token"\s*:\s*")[0-9a-f]{32}(")/g, '$1$2')
+    .replace(/(<input\b[^>]*\btype="hidden"[^>]*\bname=")[0-9a-f]{32}("[^>]*\bvalue="1")/g, '$1$2')
+    .replace(/(<input\b[^>]*\bname="_wpnonce"[^>]*\bvalue=")[0-9a-f]{10}(")/g, '$1$2')
+    .replace(/("(?:_wpnonce|nonce|_ajax_nonce)"\s*:\s*")[0-9a-f]{10}(")/g, '$1$2')
+    .replace(/(\snonce=")[A-Za-z0-9+/=_-]{8,}(")/g, '$1$2')
+}
+
 export async function readDemoPage(
   page,
   url,
@@ -162,6 +176,8 @@ export async function readDemoPage(
     }
     read.status = response?.status() ?? null
     read.finalUrl = landed.get(page.url()) ?? page.url()
+    // The document as the server sent it, before any script ran: what the fingerprint below is made of.
+    const served = typeof response?.text === 'function' ? await response.text().catch(() => null) : null
     const left = Math.max(1, loadCapMs - (Date.now() - started))
     const loaded = await page
       .waitForLoadState('load', { timeout: left })
@@ -179,8 +195,18 @@ export async function readDemoPage(
     // words over pictures shot, the phone width) is skipped. A shared header, footer or menu changed changes every
     // page's document, so every page is read again; a page whose scripts write a different document each load is
     // simply read again. A check that passes this way is confirmed by a full one (`client-demo.js`).
+    // 🔒 THE DOCUMENT AS SERVED, ITS PER-REQUEST TOKENS OUT (local measure 28/10/2026): fingerprinted after scripts ran,
+    // a real CMS page differed on every load (a slider's classes, Joomla's form token), and every incremental read of
+    // a 29- to 48-page site answered "0 unchanged". The served document with its per-request tokens taken out
+    // (`stableHtml`) changes when the page's content does; a page the server answers differently each time is simply
+    // read again.
     if (loaded) {
-      const html = typeof page.content === 'function' ? await page.content().catch(() => null) : null
+      const html =
+        typeof served === 'string'
+          ? stableHtml(served)
+          : typeof page.content === 'function'
+            ? await page.content().catch(() => null)
+            : null
       if (typeof html === 'string') {
         read.fingerprint = createHash('sha256')
           .update(`${read.status}\n${read.finalUrl}\n${html}`)
