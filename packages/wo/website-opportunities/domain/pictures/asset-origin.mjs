@@ -52,6 +52,14 @@ export function uploaderRoleOf(m) {
   return 'unknown'
 }
 
+/**
+ * Whether a picture must name who took it: one from a third party (a Google or Tripadvisor author, a guest). The
+ * business's own channels and its own uploads are credited to the business itself.
+ */
+export function creditRequiredOf(m) {
+  return !OWN_CHANNELS.has(m?.source) && m?.uploaderRole !== 'owner'
+}
+
 /** The three fields every brief asset carries. */
 export function assetOriginOf(m) {
   return {
