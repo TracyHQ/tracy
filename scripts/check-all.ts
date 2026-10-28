@@ -31,13 +31,11 @@ interface Gate {
  * self-contained, or a plugin whose name disagrees with itself, makes the content gates'
  * findings beside the point.
  */
-/** `turbo-config` on a pull request measures only the tasks the diff touches; see the gate below. */
+/** `turbo-config` traces no suite on a pull request (structure only); see the gate below. */
 const TURBO_CONFIG_ARGS: readonly string[] =
-  process.env.TRACY_TURBO_TASK_AUDITS === '1'
+  process.env.TRACY_TURBO_TASK_AUDITS === '1' || process.env.GITHUB_EVENT_NAME === 'pull_request'
     ? ['--check', '--structure-only']
-    : process.env.GITHUB_EVENT_NAME === 'pull_request'
-      ? ['--check', '--changed-since', 'HEAD^1']
-      : ['--check']
+    : ['--check']
 
 const GATES: readonly Gate[] = [
   // Cheapest and catches the most: lint + typecheck + format, all three read-only. First because
@@ -77,15 +75,18 @@ const GATES: readonly Gate[] = [
   // request into develop; this gate turns that into a red `checks` row instead of silence.
   // Audited Turbo tasks measure reads during their test run, before Turbo can cache success.
   // Only their planner-selected checks row delegates measurement; structure and ignored-input
-  // checks still run here. Legacy/fallback/release/nightly paths keep the measurement below.
+  // checks still run here. Nightly and manual runs without Turbo data keep the measurement below.
   // Since 12/10/2026 it also MEASURES: it runs every task's suite under the read tracer and is red
   // when a suite reads a path its task's hash does not cover (Turbo would serve a stale green once
   // that file changes) or when a hashed file is ignored by git (the plan job's checkout lacks it,
   // so its hash would differ from the rows'). That is the whole workers + interop + vendor suite
-  // once more, with the database: the price of the hash meaning what it says. On a pull request
-  // only the tasks whose inputs the diff touches are measured (`--changed-since HEAD^1`, the base
-  // tip of the merge commit; the reasoning is at the top of the script) — a docs-only or
-  // template-data pull request measures few or none. Everywhere else, the nightly included: all.
+  // once more, with the database: the price of the hash meaning what it says.
+  // ON A PULL REQUEST IT TRACES NOTHING (28/10/2026): `--structure-only`, the structure and the
+  // ignored-input checks of every task, in seconds. Measuring only the tasks the diff touched
+  // (`--changed-since HEAD^1`) still cost the `checks` row 8.3 and 26.0 minutes on two pull requests
+  // (26 of 51 tasks traced) while every other gate took seconds to 2 minutes. The measurement runs
+  // on the nightly and on manual runs instead — everywhere outside a pull request, a local
+  // `pnpm build:check` included — so a suite reading a path its hash misses is red within a day.
   { name: 'turbo-config', script: 'ci/turbo-setup.mjs', args: TURBO_CONFIG_ARGS },
   { name: 'self-contained', script: 'check-self-contained.ts' },
   { name: 'plugin-identity', script: 'check-plugin-identity.ts' },
