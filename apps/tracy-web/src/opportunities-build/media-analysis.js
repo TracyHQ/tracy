@@ -58,3 +58,17 @@ export async function doneAnalyses(pool, shas, vision) {
   )
   return new Map(rows.map((r) => [r.media_sha256, r.result]))
 }
+
+/**
+ * Opens done labels of these shas under this key for asking again: a label made against another closed list of the
+ * brief's offerings and people (`picture-links.mjs closedListDigest`). The caller then claims them as usual.
+ */
+export async function reopenAnalyses(pool, shas, vision) {
+  const unique = [...new Set(shas)]
+  if (unique.length === 0) return
+  await pool.query(
+    `update wo_media_analysis set state = 'failed', updated_at = now()
+     where media_sha256 = any($1::text[]) and model = $2 and version = $3 and state = 'done'`,
+    [unique, vision.door.model, vision.key]
+  )
+}

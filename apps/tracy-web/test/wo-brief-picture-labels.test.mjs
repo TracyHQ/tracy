@@ -207,7 +207,7 @@ test('a vision failure labels nothing, frees its claims for a later build, and s
     asked: 3,
     labelled: 0,
     cached: 0,
-    max: 24,
+    max: 60,
     reason: 'LLM_HTTP_503',
     unlabelled: Object.fromEntries(media.map((m) => [m.id, 'vision_failed']))
   })
@@ -236,7 +236,7 @@ test('without a vision model nothing is asked and the brief says so', opts, asyn
     asked: 0,
     labelled: 0,
     cached: 0,
-    max: 24,
+    max: 60,
     reason: 'no_vision_model',
     unlabelled: { a: 'no_vision_model' }
   })

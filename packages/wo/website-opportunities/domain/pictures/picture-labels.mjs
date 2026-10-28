@@ -273,8 +273,13 @@ export function labelPicture(picture) {
     subjectFrom = 'vision'
   }
   const ranked = Object.entries(subjects).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+  // A vision model's own graphic flag (#48) is a look, not a guess from numbers: such a picture takes no photo place.
+  const isGraphic = vision?.isGraphic === true
   const graphic =
-    looksGraphic(picture.features) || vision?.subject === 'poster' || vision?.subject === 'menu-board'
+    isGraphic ||
+    looksGraphic(picture.features) ||
+    vision?.subject === 'poster' ||
+    vision?.subject === 'menu-board'
   const textPresence = vision
     ? vision.textPresence === 'present' || vision.hasTextOverlay
       ? 'present'
@@ -292,6 +297,7 @@ export function labelPicture(picture) {
     subjects,
     subjectFrom,
     graphic,
+    isGraphic,
     collage: vision?.isCollage === true,
     textPresence,
     quality: typeof vision?.quality === 'string' ? vision.quality : 'unknown',

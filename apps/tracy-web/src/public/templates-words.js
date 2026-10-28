@@ -50,6 +50,7 @@ export function wordsFor(lang = 'en') {
       label: t('tpl.nav.label'),
       templates: t('tpl.nav.templates'),
       help: t('tpl.nav.help'),
+      downloadApp: t('tpl.nav.downloadApp'),
       getStarted: t('tpl.nav.getStarted'),
       openMenu: t('tpl.nav.openMenu'),
       closeMenu: t('tpl.nav.closeMenu')

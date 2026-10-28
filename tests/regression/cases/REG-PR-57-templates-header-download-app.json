@@ -1,0 +1,23 @@
+{
+  "id": "REG-PR-57-templates-header-download-app",
+  "kind": "fix",
+  "title": "The public Templates header shows Download app beside Get Started, in the bar and in the phone menu",
+  "pr": 57,
+  "area": "tracy-web/templates-header",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["S1: Render the Templates header with the English words and list its links in order."],
+  "expect": [
+    "S1: Free Templates, Help Center, Download app, Get Started in the phone menu, then Download app and Get Started in the bar; both Download app links point to https://tracy.ai/download/."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/public/templates-chrome-html.js",
+    "tool": "tests/regression/scripts/REG-PR-57-templates-header-download-app.mjs"
+  },
+  "evidence": "Before this change the Templates header had no Download app button, while the tracy.ai menu keeps it beside Get Started",
+  "fence": "Static render of the header function; the public Templates page test covers the full page",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-57-templates-header-download-app.mjs"]
+  }
+}

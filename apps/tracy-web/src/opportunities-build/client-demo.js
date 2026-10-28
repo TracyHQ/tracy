@@ -18,7 +18,8 @@ import {
   templatePostTitles,
   templatePostsLeft
 } from './agent-demo.js'
-import { deterministicBuildId, suggestedLabel, startBuild, settleBuild } from './builds.js'
+import { liveReadinessOf } from './live-readiness.js'
+import { deterministicBuildId, readinessOfBuild, suggestedLabel, startBuild, settleBuild } from './builds.js'
 import { revisionForAction } from './revisions.js'
 import { logoResearchDoor, logoResearchNote } from './logo-research.js'
 import { withBuildChoice } from './build-choice.js'
@@ -267,6 +268,9 @@ export function createClientDemoService(deps) {
         if (made.error) throw error(made.error)
         state.revision = made.revision
       }
+      // A blocked brief claims no site and no chat (#50): the same verdict `startBuild` honours.
+      if (!state.build && readinessOfBuild(state.revision, domain)?.verdict === 'block')
+        throw error('BRIEF_NOT_READY')
       if (!state.build)
         state.build = (
           await insertBuild(pool, {
@@ -917,6 +921,7 @@ export function createClientDemoService(deps) {
     // Counted as the server QA counts its rounds, so every reader of `qa.rounds`/`qa.repairs` sees the checks.
     const rounds = state.build.qa?.rounds ?? []
     const repaired = attempts > 0 && state.build.qa?.machinePassed === false
+    const live = liveReadinessOf(state.revision?.brief?.readiness, checks)
     await pool.query(`update wo_build set qa=qa||$2::jsonb where id=$1`, [
       state.build.id,
       checkJson({
@@ -929,7 +934,9 @@ export function createClientDemoService(deps) {
             at: new Date(now()).toISOString(),
             checks: summary(checks),
             failed: checks.filter((c) => !c.pass && !c.skipped),
-            ...(sweep?.stopped ? { sweepStopped: sweep.stopped } : {})
+            ...(sweep?.stopped ? { sweepStopped: sweep.stopped } : {}),
+            // What the live site shows of the brief (#50, `live-readiness.js`).
+            ...(live ? { readiness: live } : {})
           }
         ],
         repairs: (state.build.qa?.repairs ?? 0) + (repaired ? 1 : 0),

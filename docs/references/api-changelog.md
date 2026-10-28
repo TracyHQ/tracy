@@ -965,3 +965,4 @@ the operation (`METHOD /path`), parameter, field or action — added, changed or
   not part of this public API and not covered by this changelog.
 
 - 18 October 2026 — PR #1426 adds internal GET/POST `/api/ops/speech/providers/:provider/models`: independent metadata caches, server-only credentials, and no inference or selection/revision changes. Models incompatible with the STT/TTS transport are rejected; VoiceStudio ASR is read-only. Public API v1 is unchanged.
+- 28 October 2026 — adds internal GET `/api/ops/wo/revisions/:revId/labels`, `/api/ops/wo/places/:id/briefs` and `/api/ops/wo/revisions/:revId/assets/:assetId/image` (staff read of a brief revision's photo labels, links and readiness). Public API v1 is unchanged.

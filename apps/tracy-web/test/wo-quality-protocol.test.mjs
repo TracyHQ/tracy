@@ -25,6 +25,20 @@ beforeEach(db.reset)
 after(db.close)
 const tag = 'synthetic/emdash',
   sha = 'a'.repeat(64)
+/**
+ * The domain with every brief ready: the synthetic cafe collected no photo, and these tests are about the quality
+ * protocol, not brief readiness (`brief-readiness.test.mjs`).
+ */
+const readyDomain = async () => ({
+  ...(await websiteOpportunitiesDomain()),
+  briefReadinessOf: () => ({
+    version: 'brief-readiness/1',
+    verdict: 'pass',
+    next: 'build',
+    checks: [],
+    ownerQuestions: []
+  })
+})
 async function world() {
   const account = (
     await db.pool.query("insert into account(email)values('quality-protocol@example.test')returning id")
@@ -51,7 +65,7 @@ async function world() {
   // The brief and its one build's choice are made the way the quality runner makes them (`revisionForAction`).
   const prepared = await revisionForAction(db.pool, {
     action,
-    domain: await websiteOpportunitiesDomain(),
+    domain: await readyDomain(),
     ops: { defaultCms: 'emdash' },
     templates: async () => [{ id: 'business', platforms: [{ platform: 'emdash', tag, version: '1' }] }],
     editorial: async (frozen) => {
@@ -132,7 +146,7 @@ test(
     const deps = {
       pool: db.pool,
       config: { origin: 'http://tracy.test', sessionSecret: 's'.repeat(32) },
-      loadDomain: websiteOpportunitiesDomain,
+      loadDomain: readyDomain,
       runtime: async () => ({ settings: {} }),
       switchOn: async () => true,
       log: { warn() {}, error() {} },

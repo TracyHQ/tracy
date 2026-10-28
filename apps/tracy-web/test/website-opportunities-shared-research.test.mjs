@@ -2176,7 +2176,12 @@ test(
         (m) => m.source === 'tripadvisor' && m.credit.sourceUrl && m.sourceUrl
       )
     )
-    assert.ok(made.revision.brief.assets.every((m) => m.credit.provider === 'TripAdvisor'))
+    // The brief asset's credit is plain text (#47); the manifest above keeps the provider's full credit.
+    assert.ok(
+      made.revision.brief.assets.every(
+        (m) => m.source === 'tripadvisor' && typeof m.credit === 'string' && m.uploaderRole !== undefined
+      )
+    )
     assert.equal(made.revision.brief.reviewSources.tripadvisor.reviews[0].photos[0].mediaId, attached.id)
     for (const text of [review.authorUrl, review.authorAvatarUrl, review.photos[0].url, attached.id])
       assert.ok(made.revision.brief_md.includes(text))

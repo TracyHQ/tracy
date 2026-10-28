@@ -8,6 +8,7 @@
  */
 import { createHash } from 'node:crypto'
 import { escapeHtml } from '../lib/html.js'
+import { DOWNLOAD_ICON } from './templates-button-icons.js'
 import { WEB_LANGUAGES } from '../lib/i18n/index.js'
 import { LINKS, WORDS, landingPage } from './templates-words.js'
 
@@ -43,15 +44,15 @@ export const INLINE_SCRIPT_SOURCES = [THEME_BOOT_BODY, CHROME_BODY].map(
 )
 
 /**
- * Same bar as tracy.ai, with the new menu: Free Templates, Help Center, Get Started.
+ * Same bar as tracy.ai, with the new menu: Free Templates, Help Center, Download app, Get Started.
  * `appOrigin` is the app's own address, so Get Started works when the page is served from another host.
  */
 export function header(appOrigin = '', w = WORDS) {
   const n = w.nav
   return `<div class="nav-shell"><nav class="top" aria-label="${escapeHtml(n.label)}"><div class="nav-inner">
 <a class="brand" href="${LINKS.home}">${LOGO}</a>
-<div class="nav-links" id="navlinks"><a class="here" href="/templates/">${escapeHtml(n.templates)}</a><a href="${landingPage(w.lang, 'help')}">${escapeHtml(n.help)}</a><a class="btn btn-primary btn-sm nav-cta-drop" href="${appOrigin}/">${escapeHtml(n.getStarted)}</a></div>
-<div class="nav-tools"><a class="btn btn-primary btn-sm nav-cta" href="${appOrigin}/">${escapeHtml(n.getStarted)}</a></div>
+<div class="nav-links" id="navlinks"><a class="here" href="/templates/">${escapeHtml(n.templates)}</a><a href="${landingPage(w.lang, 'help')}">${escapeHtml(n.help)}</a><a class="btn btn-ghost btn-sm nav-dl-drop" href="${LINKS.download}">${DOWNLOAD_ICON}${escapeHtml(n.downloadApp)}</a><a class="btn btn-primary btn-sm nav-cta-drop" href="${appOrigin}/">${escapeHtml(n.getStarted)}</a></div>
+<div class="nav-tools"><a class="btn btn-ghost btn-sm nav-dl" href="${LINKS.download}">${DOWNLOAD_ICON}${escapeHtml(n.downloadApp)}</a><a class="btn btn-primary btn-sm nav-cta" href="${appOrigin}/">${escapeHtml(n.getStarted)}</a></div>
 <button class="navtoggle" type="button" id="navtoggle" aria-controls="navlinks" aria-expanded="false" aria-label="${escapeHtml(n.openMenu)}" data-label-open="${escapeHtml(n.openMenu)}" data-label-close="${escapeHtml(n.closeMenu)}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button>
 </div></nav></div>`
 }

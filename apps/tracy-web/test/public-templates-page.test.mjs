@@ -654,12 +654,14 @@ test('the header is the tracy.ai bar with the new menu: Free Templates, Help Cen
       [
         ['/templates/', 'Free Templates'],
         ['https://tracy.ai/help/', 'Help Center'],
+        ['https://tracy.ai/download/', 'Download app'],
         [`${ORIGIN}/`, 'Get Started'],
+        ['https://tracy.ai/download/', 'Download app'],
         [`${ORIGIN}/`, 'Get Started']
       ],
-      'menu, then the call to action in the phone panel and in the bar'
+      'menu, then Download app and the call to action in the phone panel and in the bar'
     )
-    assert.doesNotMatch(nav, /Start free|Download|nav-dl/)
+    assert.doesNotMatch(nav, /Start free/)
     assert.match(nav, /<a class="here" href="\/templates\/">Free Templates<\/a>/)
     assert.ok(
       nav.includes('<a class="brand" href="https://tracy.ai/"><img src="https://tracy.ai/assets/logo.png"')
