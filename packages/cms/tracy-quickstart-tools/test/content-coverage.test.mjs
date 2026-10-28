@@ -46,7 +46,10 @@ function contractDir() {
       { key: 'article-2.heading', type: 'text', sample: 'Ring Ready Now', xpath: '/html/body/div/h2' },
       { key: 'module-90.video', type: 'text', sample: '7CZ5I-PZjEg' },
       { key: 'module-90.email', type: 'text', sample: 'sale@getfit.com' },
-      { key: 'module-90.info', type: 'html', sample: '<p>Call us: <span>(239) 555-0108</span></p>' }
+      { key: 'module-90.info', type: 'html', sample: '<p>Call us: <span>(239) 555-0108</span></p>' },
+      // A label and a phone number in fields of their own, printed as one list item ("or CALL: <a>number</a>").
+      { key: 'module-90.phone-label', type: 'text', sample: 'or CALL:' },
+      { key: 'module-90.phone', type: 'text', sample: '(239) 555-0177' }
     ],
     pages: [{ entity: 'menu-101', route: 'home' }]
   })
@@ -114,6 +117,16 @@ test('a phone number declared inside a field of markup is declared: a segment wi
   assert.equal(byValue(items, '(239) 555-0108').status, 'matched')
   // another number is not covered by it
   assert.notEqual(byValue(items, '(239) 555-0199').status, 'matched')
+})
+
+test('a block made of a label slot and a phone slot is that pair: a figure slot with no letter still counts', () => {
+  // JA Boxing 1.0.8: "or CALL: (239) 555-0108" is one list item printed from two fields; the number has no letter.
+  const { items } = audit([{ kind: 'text', value: 'or CALL: (239) 555-0177' }])
+  const block = items[0]
+  assert.deepEqual(
+    [block.status, block.matchBy, [...block.slots].sort()],
+    ['matched', 'composite', ['module-90.phone', 'module-90.phone-label']]
+  )
 })
 
 test('a word-bounded piece of a whole-unit slot is that slot; a piece cut inside a word is not', () => {
