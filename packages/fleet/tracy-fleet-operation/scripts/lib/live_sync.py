@@ -2323,6 +2323,10 @@ class DbMerge:
                 conflict = None
                 if pick == "theirs":
                     take_rows.append(keys)
+                    # Delete/modify rows were excluded from the automatic imported count above.
+                    # An explicit live choice applies that deletion or restores the live row.
+                    if (no_m or no_t) and self.counted(name):
+                        self.counts["records"] += 1
                 elif pick != "ours":
                     conflict = {"id": rid, "kind": "row", "table": table, "reason": reason,
                                 "key": dict(zip(pk, key)), "_keys": keys, "_columns": None}
