@@ -359,6 +359,12 @@ export interface Diagnostic {
   package_bytes?: number
   /** On a refused sign-in: whether the username had an email address's shape. Never the value. */
   username_is_email?: boolean
+  /** On a `call_failed`: the engine call that stopped (`DIAGNOSTIC_ACTIONS`). */
+  action?: string
+  /** What came back instead of the engine's reply (`DIAGNOSTIC_ANSWERS`), never its text. */
+  answer?: string
+  /** The engine's own refusal code (`DIAGNOSTIC_ENGINE_ERRORS`, else `other`). */
+  engine_error?: string
 }
 
 export type InstallRoadName = 'url_install' | 'upload_install'

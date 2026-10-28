@@ -118,6 +118,10 @@ const stuckWhere = (value) => {
   if (detail.status) parts.push(`HTTP ${detail.status}`)
   if (detail.path) parts.push(detail.path)
   if (detail.error) parts.push(detail.error)
+  // "Where: export/no_engine_reply · HTTP 200 · db.dump · answered php_notice"
+  if (detail.action) parts.push(detail.action)
+  if (detail.answer) parts.push(`answered ${detail.answer}`)
+  if (detail.engine_error) parts.push(`engine ${detail.engine_error}`)
   return `\nWhere: ${parts.join(' · ')}${installRoads(detail)}${sizes(detail)}`
 }
 // "Sign-in: password · username is an email address": how the run came in (the row's own
