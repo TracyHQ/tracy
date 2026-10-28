@@ -1642,6 +1642,8 @@ export async function makeDemoQa({
     }
     signal.addEventListener('abort', abort, { once: true })
     const siteKey = `${asked.label ?? ''}|${base}`
+    // What an incremental read found, said once a run (28/10/2026: every incremental read answered "0 unchanged").
+    const seen = { read: 0, last: 0, unchanged: 0, unprinted: 0 }
     try {
       signal.throwIfAborted()
       // Each page has its own tab; `runDemoQa` reads `tabsAtOnce` at a time to bound decoded images.
@@ -1653,14 +1655,19 @@ export async function makeDemoQa({
           signal.throwIfAborted()
           const page = await context.newPage()
           try {
+            const previous = asked.incremental ? lastReads.get(JSON.stringify([siteKey, path])) : null
             const r = await readDemoPage(page, url, path, {
               ...options,
               serveFrom,
               serveFromIsProxy,
               proxySiteLabel,
-              previous: asked.incremental ? lastReads.get(JSON.stringify([siteKey, path])) : null
+              previous
             })
             signal.throwIfAborted()
+            seen.read++
+            if (previous) seen.last++
+            if (r.reused) seen.unchanged++
+            if (!r.fingerprint) seen.unprinted++
             if (r.fingerprint && !r.error && !r.reused)
               lastReads.set(JSON.stringify([siteKey, path]), { fingerprint: r.fingerprint, read: r })
             return r
@@ -1670,6 +1677,10 @@ export async function makeDemoQa({
         }
       })
       signal.throwIfAborted()
+      if (asked.incremental)
+        log.log?.(
+          `[host] demo-qa ${asked.label ?? ''}: ${seen.read} read, ${seen.last} with a last read, ${seen.unchanged} unchanged, ${seen.unprinted} with no fingerprint`
+        )
       return result
     } finally {
       signal.removeEventListener('abort', abort)
