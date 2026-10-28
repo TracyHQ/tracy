@@ -1,0 +1,1 @@
+{"id":"REG-PR-39-sign-in-first-screen","verdict":"PASS","commit":"94e4f8e00dde932f4e125907a4a39fcbec8ad990","ran_at":"2026-10-28T09:42:48.000Z","evidence":"tests/regression/.runs/2026-10-28-94e4f8e00/REG-PR-39-sign-in-first-screen.log"}
