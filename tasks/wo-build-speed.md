@@ -44,4 +44,28 @@ local site before the next.
 
 ## Research
 
-To fill in from the code reading.
+Every external wait of one place's research runs one after another, and nothing recorded how long each stage took:
+
+| Stage | Waits, in order |
+|---|---|
+| discovery | Google Place Details, then (no website) social search: Facebook then Instagram, up to 3 queries each |
+| collection | Google Maps (place → overview → menu), TripAdvisor, then website (up to 40 pages, 15 s each; an Apify browser run up to 240 s when thin), Facebook, Instagram, TikTok, YouTube (providers in turn, Apify runs up to 270 s) |
+| media | up to 300 pictures + 50 from Maps/TripAdvisor, downloaded one by one (60 s timeout, videos up to 200 MB) |
+| profile | PageSpeed (60 s), menu links, menu file, up to 24 menu-photo vision calls in turn, business reading (one model call) |
+| brand | logo check, up to 6 vision calls in turn |
+
+Done in this PR: media five at a time (a video alone), written in list order; PageSpeed, menu and business reading
+at once, landing in the serial order; one log line per run with each stage's seconds.
+
+Not done, and why:
+- Collection in two waves (Maps, TripAdvisor, website and known socials together): the old Apify path keeps one
+  `progress.apifyRun` slot, progress writes overwrite each other, and the pause/budget early returns assume one source
+  at a time. Worth it (1–4 min) but needs its own change.
+- Menu-photo and logo vision calls: their stop rules (four not-menus in a row, three failures) are order-bound; reading
+  ahead would spend calls past a stop.
+- Website pages three at a time: which 40 pages are read could change, and small sites answer 429.
+
+## Measures
+
+One WordPress build (Levain Bakery on JA Restaurant) before and after, on the local stand, one build at a time.
+Results in the PR description.
