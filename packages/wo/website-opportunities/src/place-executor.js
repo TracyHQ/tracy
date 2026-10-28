@@ -95,6 +95,8 @@ const searchPart = (network) => `${network}-search`
 
 /** `collector_version` of a snapshot source this code collected. */
 const COLLECTOR_VERSION = 'wo-place-1'
+/** Pictures a research run downloads at once (a video waits for its turn alone). */
+const MEDIA_AT_ONCE = 5
 
 export function createPlaceRunner(h) {
   const { pool, now, log } = h
@@ -215,13 +217,18 @@ export function createPlaceRunner(h) {
       // The logo's retry runs its own stages only; a one-source run runs them all so the profile follows what it found.
       const stages = job.only_source === 'logo' ? LOGO_ONLY_STAGES : h.stages
       let stage = stages.includes(job.stage) ? job.stage : stages[0]
+      // Where a research run's minutes go, one line per run (28/10/2026: nothing said it before).
+      const spent = []
       while (stage !== 'done') {
         if (await ctx.pausePoint(null)) return void (await finish(ctx.stopOutcome))
+        const stageStarted = now()
         const outcome = await STAGES[stage](ctx)
+        spent.push(`${stage} ${((now() - stageStarted) / 1000).toFixed(1)}s`)
         if (outcome?.state) return void (await finish(outcome))
         stage = stages[stages.indexOf(stage) + 1]
         if (!(await checkpoint(pool, lease, { stage }))) throw new StaleLeaseError(job.id)
       }
+      if (spent.length) log.info?.(`[opportunities] place job ${job.id}: ${spent.join(', ')}`)
       if (!(await finish({ state: 'completed' }))) throw new StaleLeaseError(job.id)
       // What this run read from Google itself is offered to the shared hub (only with `HUB_CONTRIBUTE=1`).
       if (h.hub && !prefetch)
@@ -921,22 +928,34 @@ export function createPlaceRunner(h) {
               .slice(0, 20),
             ...candidates.filter((m) => m.source === GOOGLE_MAPS_SOURCE && m.category !== 'menu').slice(0, 20)
           ]
-      for (let i = 0; i < todo.length; i += 1) {
+      // 🔒 DOWNLOADS AT ONCE, WRITES IN ORDER (28/10/2026): one picture after another, up to 300 of them, was minutes
+      // of a research run. `MEDIA_AT_ONCE` download together (a video alone, for memory); each is then kept in list
+      // order, so the row a picture's hash keeps (`keepMedia`, the first) and every pause point are the serial run's.
+      for (let i = 0; i < todo.length; i += MEDIA_AT_ONCE) {
         if (i % 10 === 0 && (await ctx.pausePoint({ media: { done: i, total: todo.length } })))
           return ctx.stopOutcome
-        const held = known.get(todo[i].url)
+        const chunk = todo.slice(i, i + MEDIA_AT_ONCE)
         // Already a media row of this place (another snapshot stored it): shown again, not downloaded again.
-        if (held) await fenced(pool, lease, (db) => show(db, snapshotId, held))
-        else {
-          const record = await h.mediaRecord(domain, owner, todo[i])
-          if ([TRIPADVISOR_SOURCE, GOOGLE_MAPS_SOURCE].includes(todo[i].source)) {
-            record.credit = todo[i].credit
-            record.provider = todo[i].provider
-            if (todo[i].category === 'menu') record.category = 'menu'
-            if (todo[i].source === GOOGLE_MAPS_SOURCE) record.palette = null
+        const early = chunk.map((m) =>
+          known.get(m.url) || m.kind === 'video' ? null : h.mediaRecord(domain, owner, m)
+        )
+        // A failed download throws at its own turn below, after the ones before it are kept, as it did serially.
+        for (const download of early) download?.catch(() => {})
+        for (const [k, m] of chunk.entries()) {
+          const held = known.get(m.url)
+          if (held) {
+            await fenced(pool, lease, (db) => show(db, snapshotId, held))
+            continue
+          }
+          const record = await (early[k] ?? h.mediaRecord(domain, owner, m))
+          if ([TRIPADVISOR_SOURCE, GOOGLE_MAPS_SOURCE].includes(m.source)) {
+            record.credit = m.credit
+            record.provider = m.provider
+            if (m.category === 'menu') record.category = 'menu'
+            if (m.source === GOOGLE_MAPS_SOURCE) record.palette = null
           }
           const mediaId = await fenced(pool, lease, (db) => keepMedia(db, snapshotId, record))
-          known.set(todo[i].url, mediaId)
+          known.set(m.url, mediaId)
         }
       }
       for (const optionalSource of [TRIPADVISOR_SOURCE, GOOGLE_MAPS_SOURCE]) {
