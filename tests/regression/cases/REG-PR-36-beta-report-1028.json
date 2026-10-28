@@ -1,0 +1,81 @@
+{
+  "id": "REG-PR-36-beta-report-1028",
+  "kind": "fix",
+  "title": "Beta report 28/10: imports and live syncs read past PHP notices, call_failed says where, page.look reads its own home page, look.set beats theme.json CSS, one every-page question a turn, a silent copy is not warming up, the visual check draws without a site browser, the installer stands in a missing collation",
+  "pr": 36,
+  "area": "beta/report-2026-10-28",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1 (1a): an engine reply with PHP 8.5's curl_close() deprecation printed ahead of its JSON reaches the import, Sync from live and Sync to live.",
+    "S2 (1a): an engine call answered by a page, by PHP notices alone, or by the engine's own refusal stops the import.",
+    "S3 (2b): the browser, pointed at a site's loopback, is sent to exactly that site's public origin (page.look style, page.text's browser, the customer view).",
+    "S4 (3a): look.set scope site on a WordPress block theme whose theme.json styles.css sets the token again on :root.",
+    "S5 (2a): the customer says yes to a look every page shows, then the agent writes a part every page shows in the same message; then a delete; then a new message.",
+    "S6 (1b): COMPONENT_NOT_ON_FLEET_COPY timeout with transient false reaches the agent.",
+    "S7 (2c): the visual check draws a page whose site container has no browser, and a turn with no held write has no before.",
+    "S8 (3b): a dump naming utf8mb4_uca1400_* and utf8mb4_0900_* collations is planned against a server that lacks them."
+  ],
+  "expect": [
+    "S1: the reply is read; the export, the live read and the live write finish.",
+    "S2: call_failed with diagnostic export/no_engine_reply (status, action, answer kind) or export/engine_refused (engine code, else other); site.stuck keeps it and the alert prints it.",
+    "S3: the browser is asked once more as the public origin, served from the container loopback; any other address stays REDIRECTED_OFF_SITE.",
+    "S4: the appended selector is :root:not(.\\#); a token that is only a theme.json variable keeps :root.",
+    "S5: the shared write runs without CONFIRM_FIRST; the delete answers CONFIRM_FIRST; the new message asks again.",
+    "S6: the next says the copy has not answered for a long while, do not retry, it needs checking.",
+    "S7: dsh's browser draws the view pinned to the container (via 127.0.0.1:<port>), serving the site's own images and fonts only; the skip reads no-before: not-held.",
+    "S8: uca1400 -> utf8mb4_unicode_520_ci, as_cs -> utf8mb4_bin, a known collation unchanged, rows untouched."
+  ],
+  "selectors": {
+    "files": "packages/site/tracy-add-site/src/host/doors.mjs, packages/tools/tracy-site-tools/src/host/page.mjs, look-set.mjs, call-memory.mjs, view.mjs, exec.mjs, packages/fleet/tracy-fleet-operation/scripts/lib/export-installer.php",
+    "exports": "engineReply, afterPhpNotices, answerKind, publicRetarget, browseAsSite, siteWideAgreed, captureView host, ti_collation_plan"
+  },
+  "evidence": "tch-internal marketing/strategy/launch/2026-10-16-tong-ket-tuan-beta/loi-can-sua-2026-10-28.md (beta data 23-28/10/2026); php:8.5-cli prints the curl_close() deprecation ahead of the JSON; MariaDB 10.4 and MySQL 8.0 refuse the dumped table with 1273 and create the planned one",
+  "fence": "Engine reply reader, browser off-site guard, look.set specificity, confirm memory, fleet copy refusal, host-mode view, installer collation plan",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=publicRetarget:\\ exactly\\ the\\ public\\ origin\\ becomes\\ the\\ public\\ route,\\ pinned\\ to\\ the\\ same\\ container\\ port|publicRetarget:\\ anything\\ but\\ exactly\\ the\\ public\\ origin\\ stays\\ off\\-site|browseAsSite:\\ one\\ more\\ run\\ as\\ the\\ public\\ origin,\\ and\\ only\\ one|page\\.look\\ \\{style\\}\\ of\\ the\\ home\\ page:\\ the\\ site’s\\ own\\ public\\ redirect\\ is\\ read,\\ not\\ refused|page\\.text’s\\ browser\\ and\\ the\\ customer\\ view\\ take\\ the\\ same\\ road|🔒\\ WordPress,\\ a\\ block\\ theme:\\ a\\ preset\\ theme\\.json’s\\ own\\ styles\\.css\\ sets\\ again\\ on\\ :root\\ is\\ beaten,\\ not\\ tied\\ \\(wp\\-ja\\-fresco,\\ LOOK_SET_NO_EFFECT\\ 26/10/2026\\)|🔒\\ a\\ yes\\ to\\ a\\ change\\ every\\ page\\ shows\\ covers\\ the\\ rest\\ of\\ the\\ turn\\ —\\ not\\ a\\ new\\ message,\\ a\\ No,\\ a\\ delete\\ or\\ an\\ old\\ yes|🔒\\ a\\ yes\\ to\\ a\\ change\\ every\\ page\\ shows\\ in\\ this\\ turn\\ covers\\ a\\ shared\\ write\\ next;\\ a\\ delete,\\ or\\ a\\ new\\ message,\\ still\\ asks\\ \\(beta\\ report\\ 26/10/2026\\)|refusalNext:\\ each\\ door\\ code\\ names\\ the\\ next\\ step\\ —\\ the\\ customer,\\ the\\ call,\\ or\\ a\\ repair\\ —\\ and\\ never\\ a\\ way\\ round|captureView:\\ where\\ the\\ site\\ has\\ no\\ browser,\\ the\\ visual\\ check’s\\ picture\\ is\\ drawn\\ by\\ dsh’s\\ own,\\ pinned\\ to\\ the\\ container|🔒\\ host\\ mode,\\ a\\ view\\ \\(the\\ visual\\ check\\):\\ the\\ site’s\\ own\\ pictures\\ and\\ fonts\\ come\\ from\\ its\\ container\\ too;\\ nothing\\ else\\ does|🔒\\ no\\ claim\\ without\\ both\\ pictures\\ of\\ the\\ right\\ page,\\ a\\ write,\\ a\\ model\\ or\\ a\\ picture\\ now|the\\ engine\\ reply\\ after\\ PHP\\ notices\\ is\\ the\\ engine\\ reply;\\ HTML\\ or\\ plain\\ notices,\\ one\\ or\\ several|only\\ PHP\\ notice\\ lines\\ are\\ taken\\ off,\\ and\\ what\\ remains\\ must\\ be\\ the\\ engine|what\\ came\\ back\\ instead\\ of\\ the\\ engine\\ is\\ named\\ by\\ kind,\\ never\\ by\\ its\\ text|PHP\\ 8\\.5\\ notices\\ printed\\ before\\ each\\ engine\\ reply\\ \\(curl_close\\ deprecated\\)\\ do\\ not\\ stop\\ the\\ export|call_failed\\ keeps\\ where\\ it\\ stopped,\\ from\\ closed\\ sets:\\ the\\ call,\\ the\\ status,\\ what\\ came\\ back\\ or\\ the\\ engine’s\\ code|a\\ call_failed\\ diagnostic\\ keeps\\ the\\ engine\\ call,\\ what\\ came\\ back\\ and\\ the\\ engine\\ code,\\ from\\ closed\\ sets|a\\ host\\ that\\ prints\\ PHP\\ notices\\ ahead\\ of\\ each\\ answer\\ is\\ read\\ all\\ the\\ same\\ \\(PHP\\ 8\\.5\\ curl_close\\)|a\\ host\\ that\\ prints\\ PHP\\ notices\\ ahead\\ of\\ each\\ answer\\ is\\ written\\ all\\ the\\ same\\ \\(PHP\\ 8\\.5\\ curl_close\\)|export\\ installer:\\ serialized\\ replace,\\ dump\\ reader,\\ tar\\ names\\ and\\ config\\ editors",
+      "packages/tools/tracy-site-tools/test/public-retarget.test.mjs",
+      "packages/tools/tracy-site-tools/test/look-set.test.mjs",
+      "packages/tools/tracy-site-tools/test/call-memory.test.mjs",
+      "packages/tools/tracy-site-tools/test/site-call.test.mjs",
+      "packages/tools/tracy-site-tools/test/site.test.mjs",
+      "packages/tools/tracy-site-tools/test/view.test.mjs",
+      "packages/tools/tracy-site-tools/test/design-check-host-browser.test.mjs",
+      "packages/tools/tracy-site-tools/test/visual-check.test.mjs",
+      "packages/site/tracy-add-site/test/doors.test.mjs",
+      "packages/site/tracy-add-site/test/export-site-limits.test.mjs",
+      "apps/tracy-web/test/beta-operation-signal.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-write.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/export-installer.test.mjs"
+    ],
+    "tests": [
+      "publicRetarget: exactly the public origin becomes the public route, pinned to the same container port",
+      "publicRetarget: anything but exactly the public origin stays off-site",
+      "browseAsSite: one more run as the public origin, and only one",
+      "page.look {style} of the home page: the site’s own public redirect is read, not refused",
+      "page.text’s browser and the customer view take the same road",
+      "🔒 WordPress, a block theme: a preset theme.json’s own styles.css sets again on :root is beaten, not tied (wp-ja-fresco, LOOK_SET_NO_EFFECT 26/10/2026)",
+      "🔒 a yes to a change every page shows covers the rest of the turn — not a new message, a No, a delete or an old yes",
+      "🔒 a yes to a change every page shows in this turn covers a shared write next; a delete, or a new message, still asks (beta report 26/10/2026)",
+      "refusalNext: each door code names the next step — the customer, the call, or a repair — and never a way round",
+      "captureView: where the site has no browser, the visual check’s picture is drawn by dsh’s own, pinned to the container",
+      "🔒 host mode, a view (the visual check): the site’s own pictures and fonts come from its container too; nothing else does",
+      "🔒 no claim without both pictures of the right page, a write, a model or a picture now",
+      "the engine reply after PHP notices is the engine reply; HTML or plain notices, one or several",
+      "only PHP notice lines are taken off, and what remains must be the engine",
+      "what came back instead of the engine is named by kind, never by its text",
+      "PHP 8.5 notices printed before each engine reply (curl_close deprecated) do not stop the export",
+      "call_failed keeps where it stopped, from closed sets: the call, the status, what came back or the engine’s code",
+      "a call_failed diagnostic keeps the engine call, what came back and the engine code, from closed sets",
+      "a host that prints PHP notices ahead of each answer is read all the same (PHP 8.5 curl_close)",
+      "a host that prints PHP notices ahead of each answer is written all the same (PHP 8.5 curl_close)",
+      "export installer: serialized replace, dump reader, tar names and config editors"
+    ]
+  }
+}
