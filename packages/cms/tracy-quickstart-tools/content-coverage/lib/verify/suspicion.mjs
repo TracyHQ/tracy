@@ -18,15 +18,18 @@ export function suspicion(slot, located, isFactRole) {
   const out = []
   const role = String(slot.role ?? '')
   const kind = slot.fit?.kind
+  // Faces that prove a number ("5k happy members" beside a strip of faces) have their own role (ADR 0040).
+  const proofFaces = role === 'stat.proof_image' && ['avatar', 'avatar-group'].includes(kind)
   if (
     slot.type === 'image' &&
     ['avatar', 'avatar-group', 'signature'].includes(kind) &&
-    !/^(person|quote)\./.test(role)
+    !/^(person|quote)\./.test(role) &&
+    !proofFaces
   )
     out.push({
       rule: 1,
       level: 'red',
-      reason: `Picture of kind ${kind} (a face or a signature) but the role is not person.* or quote.*`
+      reason: `Picture of kind ${kind} (a face or a signature) but the role is not person.*, quote.* or, for faces, stat.proof_image`
     })
   if (slot.type === 'text' && role.startsWith('editorial.')) {
     const hit = FACTY.find(([re]) => re.test(stripTags(slot.sample)))

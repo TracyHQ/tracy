@@ -7,7 +7,8 @@
 //   R2  a phone, email, address, price or hours sample needs a contact or price role
 //   R3  every URL slot has a role
 //   R4  an indexed repeat is grouped (one group per item); a CTA URL shares a group with its label
-//   R5  no keep on a fact role; a face, signature or cut-out picture needs a person, quote or business role
+//   R5  no keep on a fact role; a face, signature or cut-out picture needs a person, quote or business role (faces
+//       may also prove a number: `stat.proof_image`, ADR 0040)
 //   R6  no link or list item inside a fact slot
 //   R7  siblings of a repeat share a role
 //   R8  adjacent short slots of one entity on one line are flagged as a cut heading
@@ -49,6 +50,9 @@ const CTA_LABEL_ROLES = new Set([
 const CTA_URL_ROLES = new Set(['contact.cta_url', 'offering.cta_url', 'package.cta_url'])
 const PERSON_LIKE = /^(?:person|quote|business)\./
 const FACE_KINDS = new Set(['avatar', 'avatar-group', 'signature', 'cutout'])
+/** Faces that prove a number ("5k happy members" beside a strip of faces) have their own role (ADR 0040). */
+const PROOF_FACE_KINDS = new Set(['avatar', 'avatar-group'])
+const PROOF_ROLE = 'stat.proof_image'
 
 /** `['team','team[name]',2]` → the pattern `team/team[name]/#` and the index tuple `2`; null when nothing is indexed. */
 function repeatOf(slot) {
@@ -120,7 +124,9 @@ function r5(slots) {
   for (const s of slots) {
     const fact = isFactRole(s.role)
     const keeps = s.customize === 'keep' || (s.type === 'image' && s.fit?.replace === 'keep')
-    const face = s.type === 'image' && FACE_KINDS.has(s.fit?.kind) && !PERSON_LIKE.test(roleOf(s))
+    const kind = s.fit?.kind
+    const proof = roleOf(s) === PROOF_ROLE && PROOF_FACE_KINDS.has(kind)
+    const face = s.type === 'image' && FACE_KINDS.has(kind) && !PERSON_LIKE.test(roleOf(s)) && !proof
     if ((fact && keeps) || face) out.push(s.key)
   }
   return out
