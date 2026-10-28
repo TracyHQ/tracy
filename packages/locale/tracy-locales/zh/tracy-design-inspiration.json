@@ -123,7 +123,7 @@
   "ds.note": "更改颜色、字体和形状。你的页面和文字保持不变。",
   "ds.pick": "选择一个进行 preview。",
   "ds.retry": "重试",
-  "ds.setup.required": "完成网站构建后再选择设计系统。",
+  "ds.setup.required": "完成 site 构建后再选择设计系统。",
   "ds.setup.open": "打开构建",
   "ds.search": "搜索",
   "ds.tab.title": "设计系统",

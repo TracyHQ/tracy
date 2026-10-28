@@ -17,7 +17,8 @@
     "Unbuilt sites return HTTP 200 with SITE_NOT_READY, canApply false and no container or library calls.",
     "Provisioned and attached legacy sites still read their container; imports retain SITE_IMPORTED.",
     "The panel explains unfinished setup without a generic read error or retry button.",
-    "Open Build requests tracy:build:wordpress with the existing site key, without apply or undo."
+    "Open Build requests tracy:build:wordpress with the existing site key, without apply or undo.",
+    "Every shipped translation retains the required site term."
   ],
   "selectors": {
     "read": "/api/sites/:key/design-system",
@@ -27,10 +28,13 @@
   "run": {
     "cmd": [
       "node",
+      "--import",
+      "tsx",
       "--test",
       "--test-reporter=tap",
       "apps/tracy-web/test/design-system-site-setup.test.mjs",
-      "packages/design/tracy-design-inspiration/test/design-system-site-setup.test.mjs"
+      "packages/design/tracy-design-inspiration/test/design-system-site-setup.test.mjs",
+      "scripts/test/kept-terms.test.ts"
     ],
     "tests": [
       "unbuilt wordpress:",
@@ -39,7 +43,8 @@
       "a provisioned site still reads",
       "an attached legacy site",
       "an imported site keeps",
-      "an unbuilt site explains setup"
+      "an unbuilt site explains setup",
+      "every shipped catalogue keeps every listed term"
     ]
   }
 }
