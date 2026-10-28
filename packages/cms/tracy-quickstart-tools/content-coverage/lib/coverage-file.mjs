@@ -2,13 +2,15 @@
 // Compact on purpose: counts per class and one line per distinct hole, never screenshots or pages.
 // /ops reads it (apps/tracy-web/src/lib/content-coverage/) and holds Publish on unexplained holes
 // and on page hygiene findings (raw language constants, PHP errors, unfilled placeholders).
+import { labelRulesOf } from './label-rules.mjs'
 import { normText } from './normalize.mjs'
 import { rootCause } from './root-cause.mjs'
 
 export const SCHEMA = 'tracy-content-coverage/v1'
 /** Bump when a change makes the audit see more (or less): /ops can then ask for a new measurement. */
 // 1.1.0 (24/10/2026): page hygiene (`hygiene` list); a 1.0.0 file never looked, so /ops asks again.
-export const TOOL_VERSION = '1.1.0'
+// 1.2.0 (28/10/2026): mechanical label rules R2 to R9 and R1 (`labelRules`, ADR 0040); a 1.1.0 file has none.
+export const TOOL_VERSION = '1.2.0'
 export const COVERAGE_FILE = 'content-coverage.json'
 
 /** The prototype's letters, in the words the policy and /ops use. */
@@ -167,7 +169,19 @@ export function buildCoverageFile({
     counts,
     coverage: Object.fromEntries(Object.entries(counts).map(([k, c]) => [k, percent(c)])),
     holes,
-    hygiene: hygieneOf(result, previous)
+    hygiene: hygieneOf(result, previous),
+    // Rules R2 to R9 over the map, the page snapshots and every hole found (core strings are skipped by R9 itself).
+    labelRules: labelRulesOf({
+      map: contract.map,
+      pages: result.pages,
+      holes: [...unique.values()]
+        .filter((it) => it.status === 'hole')
+        .map((it) => ({
+          kind: it.kind === 'attr' || it.kind === 'meta' ? `${it.kind}:${it.attr}` : it.kind,
+          value: shownValue(it),
+          class: CLASS_NAME[it.class] ?? 'unknown'
+        }))
+    })
   }
 }
 

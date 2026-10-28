@@ -163,6 +163,14 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   JA `((span))` leftovers, `%token%`, a field word such as `TITLE` left in upper case inside sentence
   case copy; real all-caps headings and lorem ipsum are left alone). The patterns are data:
   `content-coverage/hygiene-rules.json`. Each problem holds Publish like a hole.
+- **Label rules (audit 1.2.0, ADR 0040).** The file also carries `labelRules`: the mechanical rules R2 to R9 over
+  the content map, the page snapshots and the holes (`content-coverage/lib/label-rules.mjs`), each with a count and its
+  first failing keys, and R1 (the fact-role share) as a number only. R2 a phone, email, address, price or hours sample
+  needs a contact or price role · R3 every URL slot has a role · R4 indexed repeats are grouped and a CTA URL shares a
+  group with its label · R5 no keep on a fact role, and faces, signatures and cut-outs need a person, quote or business
+  role · R6 no link or list item inside a fact slot · R7 siblings share a role · R8 adjacent short slots on one line
+  are a cut heading · R9 a fact-like hole (an accepted reason does not lift it). Road to live holds a new release on any
+  failing rule in a `place-content-roles/3` map and warns for a live one; a version 2 map is listed and never holds.
 - **Accepting a hole or a page problem.** Only when it is truly not demo content a customer sees: add
   `"accepted": "<reason>"` to that line (English, at least 12 characters). The next `--write` keeps it.
 - **Exit.** `0` the policy passes · `1` holes, page problems (or an incomplete run) hold Publish ·

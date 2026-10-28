@@ -139,3 +139,41 @@ export function judgeFit(fit, { live }, policy = COVERAGE_POLICY) {
   const holds = !live && policy.fitHoldNewRelease !== false
   return { holds, warns: !holds }
 }
+
+/**
+ * The verdict on the label rules group (ADR 0040, spec #37), read from the `labelRules` block the audit committed in
+ * `content-coverage.json`; this never measures anything. R2 to R9 hold a release not shown on Design inspiration when
+ * one fails (`policy.labelRules.blocking`), a release already shown only warns. R1 is a number and never holds. A map
+ * whose role vocabulary is not in `policy.labelRules.blockingVocabularies` (version 2) is `reported`: its failing rules
+ * are listed and nothing holds. A file measured before the rules existed has none (`none`).
+ *
+ *   none      the file has no `labelRules` block (an audit before 1.2.0): not judged
+ *   reported  failing rules are listed, the map's vocabulary is not judged yet: never holds
+ *   ready     the map is judged and no blocking rule fails
+ *   failing   at least one blocking rule fails
+ * @param {any} doc a coverage file `coverageFileProblem` accepts
+ * @param {{ live: boolean }} about
+ * @param {any} [policy]
+ * @returns {{ state: 'none' | 'reported' | 'ready' | 'failing', holds: boolean, warns: boolean, failing: Array<{rule: string, title: string, count: number, keys: string[]}>, factShare: number | null }}
+ */
+export function judgeLabelRules(doc, { live }, policy = COVERAGE_POLICY) {
+  const block = doc?.labelRules
+  if (!block || typeof block !== 'object' || typeof block.rules !== 'object' || block.rules === null)
+    return { state: 'none', holds: false, warns: false, failing: [], factShare: null }
+  const failing = Object.entries(block.rules)
+    .filter(([, r]) => Number(r?.count) > 0)
+    .map(([rule, r]) => ({
+      rule,
+      title: String(r.title ?? rule),
+      count: Number(r.count),
+      keys: Array.isArray(r.keys) ? r.keys.map(String) : []
+    }))
+  const factShare = Number.isFinite(block.r1?.percent) ? block.r1.percent : null
+  const settings = policy.labelRules ?? {}
+  if (!(settings.blockingVocabularies ?? []).includes(block.roleVocabularyVersion))
+    return { state: 'reported', holds: false, warns: false, failing, factShare }
+  const blocking = failing.filter((f) => (settings.blocking ?? []).includes(f.rule))
+  if (blocking.length === 0) return { state: 'ready', holds: false, warns: false, failing, factShare }
+  const holds = !live && policy.labelRulesHoldNewRelease !== false
+  return { state: 'failing', holds, warns: !holds, failing, factShare }
+}

@@ -201,6 +201,15 @@ async function main() {
         incomplete: verdict.incomplete,
         written: o.write ? target : null,
         slotFit,
+        labelRules: {
+          applies: doc.labelRules.applies,
+          factSharePercent: doc.labelRules.r1.percent,
+          failing: Object.fromEntries(
+            Object.entries(doc.labelRules.rules)
+              .filter(([, r]) => r.count > 0)
+              .map(([id, r]) => [id, r.count])
+          )
+        },
         findings,
         report: o['no-report'] ? null : join(outDir, 'report.html')
       },
