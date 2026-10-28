@@ -2292,7 +2292,7 @@ class DbMerge:
             taken = " OR ".join(f"({differs(c, 'rt', 'rb')} AND NOT {differs(c, 'rm', 'rb')})" for c in edited) or "FALSE"
             got = self.sql.run(
                 f"SELECT IFNULL(SUM(k.cls = 'T' AND (k.hb IS NULL OR k.ht IS NULL OR ({live_edit}))), 0)"
-                f" + IFNULL(SUM(k.cls = 'X' AND ({taken})), 0) FROM {k} k"
+                f" + IFNULL(SUM(k.cls = 'X' AND k.ht IS NOT NULL AND k.hm IS NOT NULL AND ({taken})), 0) FROM {k} k"
                 f" LEFT JOIN {b} rb ON {on('k', 'rb')} LEFT JOIN {m} rm ON {on('k', 'rm')}"
                 f" LEFT JOIN {t} rt ON {on('k', 'rt')};"
             )
@@ -2331,6 +2331,10 @@ class DbMerge:
                 conflict = None
                 if pick == "theirs":
                     take_rows.append(keys)
+                    # Delete/modify rows were excluded from the automatic imported count above.
+                    # An explicit live choice applies that deletion or restores the live row.
+                    if (no_m or no_t) and self.counted(name):
+                        self.counts["records"] += 1
                 elif pick != "ours":
                     conflict = {"id": rid, "kind": "row", "table": table, "reason": reason,
                                 "key": dict(zip(pk, key)), "_keys": keys, "_columns": None}

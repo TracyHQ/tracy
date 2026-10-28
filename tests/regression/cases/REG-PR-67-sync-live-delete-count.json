@@ -1,0 +1,25 @@
+{
+  "id": "REG-PR-67-sync-live-delete-count",
+  "kind": "fix",
+  "title": "A retained live deletion contributes zero imported records",
+  "pr": 67,
+  "area": "sync/live",
+  "cms": ["jo"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": ["Run the MariaDB database merge suite."],
+  "expect": [
+    "A deleted live article edited on the copy remains and records is zero. An applied live deletion counts as one."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=a live delete kept as a copy edit is not counted as taken",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs"
+    ],
+    "tests": ["a live delete kept as a copy edit is not counted as taken"]
+  },
+  "selectors": {}
+}
