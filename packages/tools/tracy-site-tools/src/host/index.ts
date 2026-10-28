@@ -177,6 +177,7 @@ import {
   parseMediaCopy,
   dockerExec,
   hostBrowserExec,
+  hostBrowserTarget,
   hostChromeOf,
   looksLikeMissingBinary,
   mcpArgv,
@@ -215,6 +216,7 @@ import {
 import { emdashMediaScan, measureReplaced } from './media-emdash.mjs'
 import { LOOK_FAILED_NEXT, lookParamsProblem, styleRequest } from './look-style.mjs'
 import {
+  browseAsSite,
   clampChars,
   contentDoor,
   fetchPageHtml,
@@ -2069,14 +2071,8 @@ async function renderedPageText(
 ): Promise<unknown> {
   const target = lookTarget(label, path, internalPort)
   if (!target.ok) return { ok: false, code: 'BAD_PATH', error: target.error }
-  const probe = await inContainerProbe(
-    config,
-    label,
-    internalPort,
-    target,
-    hostPublicOrigin(config, label),
-    door
-  )
+  const publicOrigin = hostPublicOrigin(config, label)
+  const probe = await inContainerProbe(config, label, internalPort, target, publicOrigin, door)
   if (!probe.ok) return probe.result
   const btarget = browserTargetFor(label, probe, internalPort, target)
   if (btarget === null)
@@ -2086,17 +2082,22 @@ async function renderedPageText(
       error: `${target.path} asks to be served on a port this site does not expose here.`,
       next: `Read a path this site serves itself; the words behind that page: ${door}.`
     }
-  const run = await runExec(config, {
-    argv: browserArgv({
-      container: btarget.container,
-      mode: 'dom',
-      url: btarget.url,
-      origin: btarget.origin,
-      resolverRule: btarget.resolverRule,
-      via: btarget.via
-    }),
-    timeoutMs: LOOK_TIMEOUT_MS,
-    maxBuffer: 16 * 1024 * 1024
+  const { res: run } = await browseAsSite({
+    target: btarget,
+    publicOrigin,
+    launch: (t) =>
+      runExec(config, {
+        argv: browserArgv({
+          container: t.container,
+          mode: 'dom',
+          url: t.url,
+          origin: t.origin,
+          resolverRule: t.resolverRule,
+          via: t.via
+        }),
+        timeoutMs: LOOK_TIMEOUT_MS,
+        maxBuffer: 16 * 1024 * 1024
+      })
   })
   const browser = parseBrowser(run.stdout)
   if (looksLikeMissingBinary(run) || (!browser.ok && browser.kind === 'no-browser'))
@@ -2398,7 +2399,8 @@ async function pageLook(
       req: styled.req,
       url: shownUrl,
       path: target.path,
-      cap: clampChars(params.maxChars, 2000)
+      cap: clampChars(params.maxChars, 2000),
+      publicOrigin
     })
     const ruler = await slotWork
     if (ruler?.slot) return slotPinNotes(answer, ruler.slot)
@@ -2419,19 +2421,27 @@ async function pageLook(
       next: LOOK_FAILED_NEXT
     }
   }
-  const run = await runExec(config, {
-    argv: browserArgv({
-      container: btarget.container,
-      mode: 'shot',
-      url: btarget.url,
-      origin: btarget.origin,
-      file: containerLookFile(label, ts),
-      resolverRule: btarget.resolverRule,
-      via: btarget.via
-    }),
-    timeoutMs: LOOK_TIMEOUT_MS,
-    maxBuffer: 8 * 1024 * 1024
+  const shot = await browseAsSite({
+    target: btarget,
+    publicOrigin,
+    launch: (t) =>
+      runExec(config, {
+        argv: browserArgv({
+          container: t.container,
+          mode: 'shot',
+          url: t.url,
+          origin: t.origin,
+          file: containerLookFile(label, ts),
+          resolverRule: t.resolverRule,
+          via: t.via
+        }),
+        timeoutMs: LOOK_TIMEOUT_MS,
+        maxBuffer: 8 * 1024 * 1024
+      })
   })
+  const run = shot.res
+  // Asked again as the site's own public origin: the picture is of that address.
+  if (shot.target !== btarget) shownUrl = shot.target.url
   const browser = parseBrowser(run.stdout)
   // 🔒 THE FLIP (F2 §3.7): once the static read has run, `page.text` needs no browser, so the next
   // names it; on the pre-F2 road it would fail the same way, and the next stays the content door.
@@ -2526,16 +2536,22 @@ function lookSetMeasure(
           code: 'REDIRECTED_OFF_SITE',
           error: `${target.path} asks to be served on a port this site does not expose here.`
         }
-      return { ok: true as const, target: b, url: target.url, path: target.path }
+      return { ok: true as const, target: b, url: target.url, path: target.path, publicOrigin }
     }
     if (!gate.ok) return gate.answer as Record<string, unknown>
-    return { ok: true as const, target: gate.target, url: gate.url, path: target.path }
+    return { ok: true as const, target: gate.target, url: gate.url, path: target.path, publicOrigin }
   }
   return async (req: Record<string, unknown>, asked: string) => {
     if (!opened.has(asked)) opened.set(asked, open(asked))
     const at = (await opened.get(asked)) as Record<string, any>
     if (at.ok !== true) return at
-    const read = (await styleRead({ run, target: at.target, req: req as any, path: at.path })) as Record<
+    const read = (await styleRead({
+      run,
+      target: at.target,
+      req: req as any,
+      path: at.path,
+      publicOrigin: at.publicOrigin
+    })) as Record<
       string,
       any
     >
@@ -6302,20 +6318,38 @@ export function apply(ctx: HostContext, config: Config = {}): void {
       return { ok: false, why: `${at} is served on a port this site does not expose here` }
     const measured = await measurePage({
       target: btarget,
-      runInContainer: (t) =>
-        runExec(config, {
-          argv: browserArgv({
-            container: t.container,
-            mode: 'styles',
-            url: t.url,
-            origin: t.origin,
-            resolverRule: t.resolverRule,
-            via: t.via
-          }),
-          timeoutMs: LOOK_TIMEOUT_MS,
-          maxBuffer: 8 * 1024 * 1024
-        }),
-      runOnHost: (t, chrome) => (config.hostBrowser ?? hostBrowserExec)({ chrome, target: t }),
+      runInContainer: async (t) =>
+        (
+          await browseAsSite({
+            target: t,
+            publicOrigin,
+            launch: (at) =>
+              runExec(config, {
+                argv: browserArgv({
+                  container: at.container,
+                  mode: 'styles',
+                  url: at.url,
+                  origin: at.origin,
+                  resolverRule: at.resolverRule,
+                  via: at.via
+                }),
+                timeoutMs: LOOK_TIMEOUT_MS,
+                maxBuffer: 8 * 1024 * 1024
+              })
+          })
+        ).res,
+      runOnHost: async (t, chrome) =>
+        (
+          await browseAsSite({
+            target: { ...t, resolverRule: '' },
+            publicOrigin,
+            launch: (at) =>
+              (config.hostBrowser ?? hostBrowserExec)({
+                chrome,
+                target: hostBrowserTarget(at) ?? t
+              })
+          })
+        ).res,
       hostChrome: config.hostChrome !== undefined ? config.hostChrome : hostChromeOf(process.env, existsSync)
     })
     if (!measured.ok) return { ok: false, why: measured.why }

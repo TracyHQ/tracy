@@ -31333,6 +31333,41 @@ function browserTargetForRoute(label, route, pathAndQuery, internalPort) {
   const url = loopbackUrl(route.connectPort, pathAndQuery);
   return { url, origin: new URL(url).origin, container: route.container, resolverRule: "", via: "" };
 }
+function publicRetarget(target, leftFor, publicOrigin) {
+  if (typeof publicOrigin !== "string" || publicOrigin === "") return null;
+  let to;
+  let pub;
+  try {
+    to = new URL(String(leftFor));
+    pub = new URL(publicOrigin);
+  } catch {
+    return null;
+  }
+  if (to.origin !== pub.origin || target.origin === pub.origin) return null;
+  const pinned = hostBrowserTarget(target);
+  if (pinned === null) return null;
+  const connectPort = Number(pinned.via.slice("127.0.0.1:".length));
+  return browserTargetForRoute(
+    "",
+    {
+      kind: "public",
+      origin: pub.origin,
+      host: pub.host,
+      proto: pub.protocol === "https:" ? "https" : "http",
+      connectPort,
+      container: target.container
+    },
+    to.pathname + to.search,
+    connectPort
+  );
+}
+async function browseAsSite({ target, publicOrigin = null, launch }) {
+  const res = await launch(target);
+  const b = parseBrowser(res.stdout);
+  if (b.ok || b.kind !== "offsite") return { res, target };
+  const again = publicRetarget(target, b.error, publicOrigin);
+  return again === null ? { res, target } : { res: await launch(again), target: again };
+}
 function isThinPage(html, page) {
   return String(page?.text ?? "").length < THIN_TEXT_CHARS && /<script\b/i.test(String(html ?? ""));
 }
@@ -31599,20 +31634,24 @@ async function fetchPageHtml(input) {
   const answer = pageRefusal(read, String(input.path ?? "/"), input.door ?? contentDoor());
   return { ...read, ...answer };
 }
-async function browserDom({ run, label, internalPort, route, pathAndQuery }) {
+async function browserDom({ run, label, internalPort, route, pathAndQuery, publicOrigin = null }) {
   const t = browserTargetForRoute(label, route, pathAndQuery, internalPort);
   if (t === null) return { ok: false, kind: "port", error: "a port this site does not expose here" };
-  const res = await run({
-    argv: browserArgv({
-      container: t.container,
-      mode: "dom",
-      url: t.url,
-      origin: t.origin,
-      resolverRule: t.resolverRule,
-      via: t.via
-    }),
-    timeoutMs: BROWSER_EXEC_MS,
-    maxBuffer: 16 * 1024 * 1024
+  const { res } = await browseAsSite({
+    target: t,
+    publicOrigin,
+    launch: (at) => run({
+      argv: browserArgv({
+        container: at.container,
+        mode: "dom",
+        url: at.url,
+        origin: at.origin,
+        resolverRule: at.resolverRule,
+        via: at.via
+      }),
+      timeoutMs: BROWSER_EXEC_MS,
+      maxBuffer: 16 * 1024 * 1024
+    })
   });
   const b = parseBrowser(res.stdout);
   if (looksLikeMissingBinary(res) || !b.ok && b.kind === "no-browser")
@@ -32200,7 +32239,13 @@ async function pageText(input) {
       door
     })
   );
-  const dom = input.browserDom ?? ((at) => browserDom({ run: input.run, label: input.label, internalPort: input.internalPort, ...at }));
+  const dom = input.browserDom ?? ((at) => browserDom({
+    run: input.run,
+    label: input.label,
+    internalPort: input.internalPort,
+    publicOrigin: input.publicOrigin ?? null,
+    ...at
+  }));
   const answers = [];
   for (const [i, read] of reads.entries()) {
     const path22 = asked.targets[i].path;
@@ -32332,24 +32377,28 @@ var STYLE_NO_BROWSER = Object.freeze({
   error: "this site's container has no browser, so computed styles cannot be read here",
   next: "No computed style without a browser: find the rule in the theme's stylesheet files instead, or tell the customer."
 });
-async function styleLook({ run, target, req, url, path: path22, cap }) {
-  const read = await styleRead({ run, target, req, path: path22 });
+async function styleLook({ run, target, req, url, path: path22, cap, publicOrigin = null }) {
+  const read = await styleRead({ run, target, req, path: path22, publicOrigin });
   if (read.ok !== true) return read;
   return styleAnswer(read.payload, { url, path: path22, viewport: req.viewport, cap });
 }
-async function styleRead({ run, target, req, path: path22 }) {
-  const res = await run({
-    argv: browserArgv({
-      container: target.container,
-      mode: "style",
-      url: target.url,
-      origin: target.origin,
-      file: JSON.stringify(req),
-      resolverRule: target.resolverRule,
-      via: target.via
-    }),
-    timeoutMs: BROWSER_EXEC_MS,
-    maxBuffer: 4 * 1024 * 1024
+async function styleRead({ run, target, req, path: path22, publicOrigin = null }) {
+  const { res } = await browseAsSite({
+    target,
+    publicOrigin,
+    launch: (at) => run({
+      argv: browserArgv({
+        container: at.container,
+        mode: "style",
+        url: at.url,
+        origin: at.origin,
+        file: JSON.stringify(req),
+        resolverRule: at.resolverRule,
+        via: at.via
+      }),
+      timeoutMs: BROWSER_EXEC_MS,
+      maxBuffer: 4 * 1024 * 1024
+    })
   });
   const b = parseBrowser(res.stdout);
   if (looksLikeMissingBinary(res) || !b.ok && b.kind === "no-browser") return { ...STYLE_NO_BROWSER };
@@ -46257,20 +46306,23 @@ async function captureView({
   const checked = await gate({ run, label, internalPort, publicOrigin, path: target.path, door });
   if ("legacy" in checked) return { ok: false, code: "NO_CURL" };
   if (!checked.ok) return { ok: false, code: String(checked.answer.code ?? "REFUSED") };
-  const t = checked.target;
-  const res = await run({
-    argv: browserArgv({
-      container: t.container,
-      mode: "view",
-      url: t.url,
-      origin: t.origin,
-      file: JSON.stringify({ w: view2.w, h: view2.h, y: view2.y, dark: view2.dark }),
-      resolverRule: t.resolverRule,
-      via: t.via,
-      deadlineMs: VIEW_DEADLINE_MS
-    }),
-    timeoutMs: VIEW_EXEC_MS,
-    maxBuffer: VIEW_MAX_BUFFER
+  const { res } = await browseAsSite({
+    target: checked.target,
+    publicOrigin,
+    launch: (t) => run({
+      argv: browserArgv({
+        container: t.container,
+        mode: "view",
+        url: t.url,
+        origin: t.origin,
+        file: JSON.stringify({ w: view2.w, h: view2.h, y: view2.y, dark: view2.dark }),
+        resolverRule: t.resolverRule,
+        via: t.via,
+        deadlineMs: VIEW_DEADLINE_MS
+      }),
+      timeoutMs: VIEW_EXEC_MS,
+      maxBuffer: VIEW_MAX_BUFFER
+    })
   });
   const out = parseBrowser(res.stdout);
   if (looksLikeMissingBinary(res) || !out.ok && out.kind === "no-browser")
@@ -47303,14 +47355,8 @@ async function pageText3(config, sitesRoot, label, params, facts = {}) {
 async function renderedPageText(config, label, internalPort, path22, params, cap, door) {
   const target = lookTarget(label, path22, internalPort);
   if (!target.ok) return { ok: false, code: "BAD_PATH", error: target.error };
-  const probe = await inContainerProbe(
-    config,
-    label,
-    internalPort,
-    target,
-    hostPublicOrigin(config, label),
-    door
-  );
+  const publicOrigin = hostPublicOrigin(config, label);
+  const probe = await inContainerProbe(config, label, internalPort, target, publicOrigin, door);
   if (!probe.ok) return probe.result;
   const btarget = browserTargetFor(label, probe, internalPort, target);
   if (btarget === null)
@@ -47320,17 +47366,21 @@ async function renderedPageText(config, label, internalPort, path22, params, cap
       error: `${target.path} asks to be served on a port this site does not expose here.`,
       next: `Read a path this site serves itself; the words behind that page: ${door}.`
     };
-  const run = await runExec(config, {
-    argv: browserArgv({
-      container: btarget.container,
-      mode: "dom",
-      url: btarget.url,
-      origin: btarget.origin,
-      resolverRule: btarget.resolverRule,
-      via: btarget.via
-    }),
-    timeoutMs: LOOK_TIMEOUT_MS,
-    maxBuffer: 16 * 1024 * 1024
+  const { res: run } = await browseAsSite({
+    target: btarget,
+    publicOrigin,
+    launch: (t) => runExec(config, {
+      argv: browserArgv({
+        container: t.container,
+        mode: "dom",
+        url: t.url,
+        origin: t.origin,
+        resolverRule: t.resolverRule,
+        via: t.via
+      }),
+      timeoutMs: LOOK_TIMEOUT_MS,
+      maxBuffer: 16 * 1024 * 1024
+    })
   });
   const browser = parseBrowser(run.stdout);
   if (looksLikeMissingBinary(run) || !browser.ok && browser.kind === "no-browser")
@@ -47500,7 +47550,8 @@ async function pageLook(ctx, exec, config, sitesRoot, label, params, facts = {})
       req: styled.req,
       url: shownUrl,
       path: target.path,
-      cap: clampChars(params.maxChars, 2e3)
+      cap: clampChars(params.maxChars, 2e3),
+      publicOrigin
     });
     const ruler = await slotWork;
     if (ruler?.slot) return slotPinNotes(answer, ruler.slot);
@@ -47518,19 +47569,25 @@ async function pageLook(ctx, exec, config, sitesRoot, label, params, facts = {})
       next: LOOK_FAILED_NEXT
     };
   }
-  const run = await runExec(config, {
-    argv: browserArgv({
-      container: btarget.container,
-      mode: "shot",
-      url: btarget.url,
-      origin: btarget.origin,
-      file: containerLookFile(label, ts),
-      resolverRule: btarget.resolverRule,
-      via: btarget.via
-    }),
-    timeoutMs: LOOK_TIMEOUT_MS,
-    maxBuffer: 8 * 1024 * 1024
+  const shot = await browseAsSite({
+    target: btarget,
+    publicOrigin,
+    launch: (t) => runExec(config, {
+      argv: browserArgv({
+        container: t.container,
+        mode: "shot",
+        url: t.url,
+        origin: t.origin,
+        file: containerLookFile(label, ts),
+        resolverRule: t.resolverRule,
+        via: t.via
+      }),
+      timeoutMs: LOOK_TIMEOUT_MS,
+      maxBuffer: 8 * 1024 * 1024
+    })
   });
+  const run = shot.res;
+  if (shot.target !== btarget) shownUrl = shot.target.url;
   const browser = parseBrowser(run.stdout);
   if (looksLikeMissingBinary(run) || !browser.ok && browser.kind === "no-browser")
     return lookNoBrowserAnswer(curlRan, door);
@@ -47588,16 +47645,22 @@ function lookSetMeasure(config, sitesRoot, label, facts = {}) {
           code: "REDIRECTED_OFF_SITE",
           error: `${target.path} asks to be served on a port this site does not expose here.`
         };
-      return { ok: true, target: b, url: target.url, path: target.path };
+      return { ok: true, target: b, url: target.url, path: target.path, publicOrigin };
     }
     if (!gate.ok) return gate.answer;
-    return { ok: true, target: gate.target, url: gate.url, path: target.path };
+    return { ok: true, target: gate.target, url: gate.url, path: target.path, publicOrigin };
   };
   return async (req, asked) => {
     if (!opened.has(asked)) opened.set(asked, open(asked));
     const at = await opened.get(asked);
     if (at.ok !== true) return at;
-    const read = await styleRead({ run, target: at.target, req, path: at.path });
+    const read = await styleRead({
+      run,
+      target: at.target,
+      req,
+      path: at.path,
+      publicOrigin: at.publicOrigin
+    });
     return read.ok === true ? { ok: true, payload: read.payload, url: at.url } : read;
   };
 }
@@ -50183,19 +50246,30 @@ ${text6}`);
       return { ok: false, why: `${at} is served on a port this site does not expose here` };
     const measured = await measurePage({
       target: btarget,
-      runInContainer: (t) => runExec(config, {
-        argv: browserArgv({
-          container: t.container,
-          mode: "styles",
-          url: t.url,
-          origin: t.origin,
-          resolverRule: t.resolverRule,
-          via: t.via
-        }),
-        timeoutMs: LOOK_TIMEOUT_MS,
-        maxBuffer: 8 * 1024 * 1024
-      }),
-      runOnHost: (t, chrome) => (config.hostBrowser ?? hostBrowserExec)({ chrome, target: t }),
+      runInContainer: async (t) => (await browseAsSite({
+        target: t,
+        publicOrigin,
+        launch: (at2) => runExec(config, {
+          argv: browserArgv({
+            container: at2.container,
+            mode: "styles",
+            url: at2.url,
+            origin: at2.origin,
+            resolverRule: at2.resolverRule,
+            via: at2.via
+          }),
+          timeoutMs: LOOK_TIMEOUT_MS,
+          maxBuffer: 8 * 1024 * 1024
+        })
+      })).res,
+      runOnHost: async (t, chrome) => (await browseAsSite({
+        target: { ...t, resolverRule: "" },
+        publicOrigin,
+        launch: (at2) => (config.hostBrowser ?? hostBrowserExec)({
+          chrome,
+          target: hostBrowserTarget(at2) ?? t
+        })
+      })).res,
       hostChrome: config.hostChrome !== void 0 ? config.hostChrome : hostChromeOf(process.env, existsSync4)
     });
     if (!measured.ok) return { ok: false, why: measured.why };

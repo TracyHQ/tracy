@@ -51,7 +51,7 @@
 import { SESSION_ID } from './deploy-hold.mjs'
 import { browserArgv, looksLikeMissingBinary, parseBrowser } from './exec.mjs'
 import { pictureRef, readsImages, sessionRoute } from './look.mjs'
-import { pageLookGate } from './page.mjs'
+import { browseAsSite, pageLookGate } from './page.mjs'
 import { lookTarget } from './site.mjs'
 
 /** The producer of the notice that carries the picture; also how a reader finds it in a session log. */
@@ -636,20 +636,24 @@ export async function captureView({
   // No curl in the container is a site image this feature has nothing to say about: no picture.
   if ('legacy' in checked) return { ok: false, code: 'NO_CURL' }
   if (!checked.ok) return { ok: false, code: String(checked.answer.code ?? 'REFUSED') }
-  const t = checked.target
-  const res = await run({
-    argv: browserArgv({
-      container: t.container,
-      mode: 'view',
-      url: t.url,
-      origin: t.origin,
-      file: JSON.stringify({ w: view.w, h: view.h, y: view.y, dark: view.dark }),
-      resolverRule: t.resolverRule,
-      via: t.via,
-      deadlineMs: VIEW_DEADLINE_MS
-    }),
-    timeoutMs: VIEW_EXEC_MS,
-    maxBuffer: VIEW_MAX_BUFFER
+  const { res } = await browseAsSite({
+    target: checked.target,
+    publicOrigin,
+    launch: (t) =>
+      run({
+        argv: browserArgv({
+          container: t.container,
+          mode: 'view',
+          url: t.url,
+          origin: t.origin,
+          file: JSON.stringify({ w: view.w, h: view.h, y: view.y, dark: view.dark }),
+          resolverRule: t.resolverRule,
+          via: t.via,
+          deadlineMs: VIEW_DEADLINE_MS
+        }),
+        timeoutMs: VIEW_EXEC_MS,
+        maxBuffer: VIEW_MAX_BUFFER
+      })
   })
   const out = parseBrowser(res.stdout)
   if (looksLikeMissingBinary(res) || (!out.ok && out.kind === 'no-browser'))
