@@ -886,7 +886,12 @@ async function reimportedSite(pool, adminAnswer) {
     ['fijitrips.example', 'fijitrips-example-5254d120', 'local', 'joomla', 'migrated', 52001]
   )
   await seatRow(pool, 'fijitrips.example', 'owner@x.y', 'owner')
-  await writeComponent(pool, 'fijitrips.example', { endpoint: LIVE_ADMIN, token: 't'.repeat(24) }, 'owner@x.y')
+  await writeComponent(
+    pool,
+    'fijitrips.example',
+    { endpoint: LIVE_ADMIN, token: 't'.repeat(24) },
+    'owner@x.y'
+  )
   const calls = []
   const fetchImpl = async (input, init) => {
     const url = String(input)
@@ -894,7 +899,10 @@ async function reimportedSite(pool, adminAnswer) {
     calls.push({ url, action: body?.action })
     if (url === COPY_ADMIN) return adminAnswer()
     if (url !== COPY) return new Response(JSON.stringify({ ok: true, reached: 'live' }), { status: 200 })
-    const answer = body?.action === 'core.manifest' ? { ok: true, manifest: { platform: 'joomla' } } : { ok: true, reached: 'copy' }
+    const answer =
+      body?.action === 'core.manifest'
+        ? { ok: true, manifest: { platform: 'joomla' } }
+        : { ok: true, reached: 'copy' }
     return new Response(JSON.stringify(answer), { status: 200 })
   }
   return { calls, fetchImpl }
@@ -908,7 +916,10 @@ test(
     const network = await reimportedSite(pool, () => {
       throw new TypeError('fetch failed', { cause: new Error('unexpected redirect') })
     })
-    const { send, cookieFor } = harness(pool, { fetchImpl: network.fetchImpl, envOverrides: { HOST_NAME: 'local' } })
+    const { send, cookieFor } = harness(pool, {
+      fetchImpl: network.fetchImpl,
+      envOverrides: { HOST_NAME: 'local' }
+    })
     const warn = console.warn
     console.warn = () => {}
     let res
@@ -930,7 +941,11 @@ test(
         ['front', 'content.update']
       ]
     )
-    assert.equal(network.calls.some((c) => c.url.startsWith('https://fijitrips.example')), false, 'never the live site')
+    assert.equal(
+      network.calls.some((c) => c.url.startsWith('https://fijitrips.example')),
+      false,
+      'never the live site'
+    )
     const cred = await currentComponent(pool, 'fijitrips.example')
     assert.equal(cred.config.endpoint, COPY)
     assert.equal(cred.config.liveEndpoint, LIVE_ADMIN)
@@ -962,7 +977,11 @@ test(
       console.warn = warn
     }
     assert.equal(res.status, 409)
-    assert.deepEqual(await res.json(), { code: 'COMPONENT_NOT_ON_FLEET_COPY', copyReason: 'not_json', transient: false })
+    assert.deepEqual(await res.json(), {
+      code: 'COMPONENT_NOT_ON_FLEET_COPY',
+      copyReason: 'not_json',
+      transient: false
+    })
   }
 )
 

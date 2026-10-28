@@ -19,15 +19,19 @@ before(async () => {
       const json = (status, value) =>
         res.writeHead(status, { 'content-type': 'application/json' }).end(JSON.stringify(value))
       const path = req.url ?? ''
-      if (path.startsWith('/redirect')) return res.writeHead(301, { location: 'https://copy.example/x' }).end()
-      if (path.startsWith('/fatal')) return res.writeHead(500, { 'content-type': 'text/html' }).end('<b>Fatal error</b>')
+      if (path.startsWith('/redirect'))
+        return res.writeHead(301, { location: 'https://copy.example/x' }).end()
+      if (path.startsWith('/fatal'))
+        return res.writeHead(500, { 'content-type': 'text/html' }).end('<b>Fatal error</b>')
       if (path.startsWith('/gateway')) return res.writeHead(502).end('Bad Gateway')
       if (path.startsWith('/slow')) return setTimeout(() => json(200, { ok: true }), 1500)
-      if (path.startsWith('/offline')) return res.writeHead(200, { 'content-type': 'text/html' }).end('<html>Site offline</html>')
+      if (path.startsWith('/offline'))
+        return res.writeHead(200, { 'content-type': 'text/html' }).end('<html>Site offline</html>')
       if (path.startsWith('/guest')) return json(403, { error: true, code: 403, message: 'Forbidden' })
       const { token } = JSON.parse(body || '{}')
       if (token !== 'good') return json(200, { ok: false, error: 'unauthorized' })
-      if (path.startsWith('/wordpress')) return json(200, { ok: true, platform: 'wordpress', manifest: { platform: 'wordpress' } })
+      if (path.startsWith('/wordpress'))
+        return json(200, { ok: true, platform: 'wordpress', manifest: { platform: 'wordpress' } })
       if (path.startsWith('/broken')) return json(200, { ok: false, error: 'manifest_failed' })
       return json(200, { ok: true, platform: 'joomla', manifest: { platform: 'joomla' } })
     })
@@ -64,7 +68,8 @@ test('a door that answers without the plugin is the door, never a wrong token', 
   assert.equal(await ask(`${base}/offline`), 'not_json', 'an offline front end')
   assert.equal(await ask(`${base}/guest`), 'not_engine', "Joomla's own JSON 403 for a guest")
   for (const why of ['not_json', 'not_engine', 'redirected']) assert.ok(DOOR_WHYS.has(why), why)
-  for (const why of ['unauthorized', 'timeout', 'unreachable', 'no_copy', 'copy_error']) assert.ok(!DOOR_WHYS.has(why), why)
+  for (const why of ['unauthorized', 'timeout', 'unreachable', 'no_copy', 'copy_error'])
+    assert.ok(!DOOR_WHYS.has(why), why)
 })
 
 test('the plugin itself refusing is the token, the CMS or its answer', async () => {
@@ -78,22 +83,29 @@ const CONFIG = { hostName: 'prod1', siteDomain: 'tracy.ai' }
 const Q = '?option=com_claudecowork&task=api.exec&format=json'
 
 test('🔒 a Joomla copy is asked on both its doors, the registered one first; the path under the webroot is kept', () => {
-  assert.deepEqual(copyDoorsFor(`https://www.traumferien-azoren.de/administrator/index.php${Q}`, SITE, CONFIG), [
-    `http://traumferien-azoren-de-web-1/administrator/index.php${Q}`,
-    `http://traumferien-azoren-de-web-1/index.php${Q}`
-  ])
+  assert.deepEqual(
+    copyDoorsFor(`https://www.traumferien-azoren.de/administrator/index.php${Q}`, SITE, CONFIG),
+    [
+      `http://traumferien-azoren-de-web-1/administrator/index.php${Q}`,
+      `http://traumferien-azoren-de-web-1/index.php${Q}`
+    ]
+  )
   assert.deepEqual(copyDoorsFor(`https://traumferien-azoren.de/index.php${Q}`, SITE, CONFIG), [
     `http://traumferien-azoren-de-web-1/index.php${Q}`,
     `http://traumferien-azoren-de-web-1/administrator/index.php${Q}`
   ])
-  assert.deepEqual(copyDoorsFor(`https://example.de/office/administrator/index.php${Q}`, SITE, CONFIG)[1], `http://traumferien-azoren-de-web-1/office/index.php${Q}`)
+  assert.deepEqual(
+    copyDoorsFor(`https://example.de/office/administrator/index.php${Q}`, SITE, CONFIG)[1],
+    `http://traumferien-azoren-de-web-1/office/index.php${Q}`
+  )
 })
 
 test('a WordPress copy, another component or a non-URL has its one door, or none', () => {
   const wp = { ...SITE, platform: 'wordpress' }
-  assert.deepEqual(copyDoorsFor('https://example.com/wp-admin/admin-ajax.php?action=claude_cowork', wp, CONFIG), [
-    'http://traumferien-azoren-de-web-1/wp-admin/admin-ajax.php?action=claude_cowork'
-  ])
+  assert.deepEqual(
+    copyDoorsFor('https://example.com/wp-admin/admin-ajax.php?action=claude_cowork', wp, CONFIG),
+    ['http://traumferien-azoren-de-web-1/wp-admin/admin-ajax.php?action=claude_cowork']
+  )
   assert.equal(copyDoorsFor('https://example.de/index.php?option=com_other', SITE, CONFIG).length, 1)
   assert.deepEqual(copyDoorsFor('not a url', SITE, CONFIG), [])
 })

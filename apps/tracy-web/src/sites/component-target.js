@@ -131,14 +131,16 @@ export async function verifyCopy({ fetchImpl, endpoint, token, platform, budgetM
   } catch {
     body = null
   }
-  const engine = body !== null && typeof body === 'object' && !Array.isArray(body) && typeof body.ok === 'boolean'
+  const engine =
+    body !== null && typeof body === 'object' && !Array.isArray(body) && typeof body.ok === 'boolean'
   if (!engine) {
     // A gateway answering for a copy whose web server is not up yet; any other 5xx is the site's own.
     if (response.status === 502 || response.status === 503 || response.status === 504) return 'unreachable'
     if (response.status >= 500) return 'copy_error'
     return body === null ? 'not_json' : 'not_engine'
   }
-  if (response.status === 401 || response.status === 403 || body.error === 'unauthorized') return 'unauthorized'
+  if (response.status === 401 || response.status === 403 || body.error === 'unauthorized')
+    return 'unauthorized'
   if (response.status >= 500) return 'unreachable'
   if (!response.ok || body.ok !== true) return 'refused'
   if (body.manifest?.platform !== platform) return 'platform_mismatch'
