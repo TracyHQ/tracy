@@ -146,6 +146,42 @@ export function sweepDecision(swept, attempts, sweep) {
     return { go: false, rounds, stopped: 'no-progress' }
   return { go: true, rounds }
 }
+/**
+ * The look a sweep round carries instead of looking: the last look as it stands, with every page read anew since then
+ * (not `reused`) named unlooked and its faults dropped, so a later check keeps only verdicts newer than each page's
+ * last change. With no look before, the round is plainly not looked at.
+ */
+export function lookCarried(last, readPages, reused) {
+  const changed = readPages.filter((page) => !reused.has(page))
+  if (!last || !last.looked)
+    return {
+      id: 'looks-finished',
+      pass: false,
+      looked: false,
+      measured: 'not looked at in a sweep round; the check after the sweep looks',
+      expected:
+        'a vision model saw no visible fault from top to footer on every page at desktop and phone width',
+      detail: []
+    }
+  const unlooked = [
+    ...(Array.isArray(last.unlooked) ? last.unlooked : []).filter((u) => !changed.includes(u?.page)),
+    ...changed.map((page) => ({ page, why: 'CHANGED_SINCE_LOOK', viewports: ['desktop', 'phone'] }))
+  ]
+  return {
+    ...last,
+    pass: false,
+    looked: unlooked.length ? 'partly' : true,
+    seen: (Array.isArray(last.seen) ? last.seen : []).filter((page) => !changed.includes(page)),
+    detail: (Array.isArray(last.detail) ? last.detail : []).filter((f) => !changed.includes(f?.page)),
+    unlooked,
+    measured: `the last look, carried while the sweep runs; ${changed.length} page(s) read anew since`
+  }
+}
+/** Sweep rounds already run inside the counted check now running (`qa.residueSweeps` of this attempt). */
+function sweepRoundsOf(state) {
+  const swept = state.build.qa?.residueSweeps
+  return swept?.attempt === (state.build.qa?.clientCheckAttempts ?? 0) ? (swept.n ?? 0) : 0
+}
 /** A turn record closed this recently may still be reopened by a turn-stopping steer (see `endedUnchecked`). */
 const STEER_GRACE_MS = 120_000
 const QA_FAILURES = new Set(['DEMO_BASELINE_UNAVAILABLE', 'AGENT_DEMO_ENDED_UNCHECKED'])
@@ -655,7 +691,9 @@ export function createClientDemoService(deps) {
    * that passes a build has read every page anew (council 26/10/2026).
    */
   async function measure(auth, state) {
-    const incremental = (state.build.qa?.clientCheckAttempts ?? 0) > 0
+    // A sweep round's read is incremental too (28/10/2026): the round before it read every page minutes ago and only
+    // what the sweep wrote changed. Every round re-read the whole site, up to six times inside one check.
+    const incremental = (state.build.qa?.clientCheckAttempts ?? 0) > 0 || sweepRoundsOf(state) > 0
     const first = await measureOnce(auth, state, incremental)
     if (!incremental || !first.pass) return first
     return measureOnce(auth, state, false)
@@ -704,34 +742,15 @@ export function createClientDemoService(deps) {
     })
     const readAt = now()
     if (!measured.ok || !Array.isArray(measured.body?.checks)) throw error('DEMO_QA_UNAVAILABLE')
-    // What a visitor sees: the pages the QA read, shot at both widths and looked at (`demo-look.js`). In an incremental
-    // check a page whose document did not change keeps the faults the last look found on it (plan "10/10" §7 S6).
     const readPages = [
       ...(Array.isArray(measured.body.pages) ? measured.body.pages : ['/']),
       ...(Array.isArray(measured.body.routes) ? measured.body.routes : [])
     ]
     const reused =
       incremental && Array.isArray(measured.body.reused) ? new Set(measured.body.reused) : new Set()
-    const lastLook = reused.size
+    const lastLook = incremental
       ? (state.build.qa?.clientCheck?.result?.checks ?? []).find((c) => c?.id === 'looks-finished')
       : null
-    const kept = reusableLookPages(lastLook, readPages, reused)
-    const fresh = readPages.filter((p) => !kept.includes(p))
-    const lookNow = deps.demoLook
-      ? await deps.demoLook(site, {
-          pages: fresh.length ? fresh : ['/'],
-          accountId: auth.accountId,
-          opportunityId: state.action.opportunity_id,
-          budgetMs: LOOK_MS,
-          buildId: state.build.id
-        })
-      : null
-    const look = lookNow && kept.length ? keptLook(lookNow, lastLook, kept) : lookNow
-    // Where a check's minutes go, one line per check (28/10/2026: nothing said it before).
-    const s = (ms) => (ms / 1000).toFixed(1)
-    console.info(
-      `[demo-check] ${site.site_key} ${incremental ? 'incremental' : 'full'}: inventory ${s(inventoryAt - started)}s, page reads ${s(readAt - inventoryAt)}s, look ${s(now() - readAt)}s (${fresh.length} page(s) looked at, ${kept.length} kept)`
-    )
     const sourced = checkResearchSourced(state.build.content.agentDemo.structure.inventory, inventory, {
       research: checkedResearch(state.revision),
       business: state.revision.brief?.business ?? null
@@ -742,8 +761,7 @@ export function createClientDemoService(deps) {
       : measured.body.checks
     // Words the host measured over a photo are judged by that measure, never also by the look (`deferToMeasure`).
     const contrast = read.find((c) => c?.id === 'contrast-readable')
-    const judged = look ? deferToMeasure(look, contrast?.measuredOver) : null
-    const checks = [
+    const head = [
       ...read,
       structure,
       sourced,
@@ -755,10 +773,10 @@ export function createClientDemoService(deps) {
           ...(Array.isArray(measured.body.routes) ? measured.body.routes : [])
         ],
         records: Array.isArray(inventory?.records) ? inventory.records : []
-      }),
-      ...(judged ? [judged] : []),
-      ...[logoResearchNote(state.action.selection?.logoResearch)].filter(Boolean)
+      })
     ]
+    // The look's verdict (`looks-finished`) goes after these, once the sweep is planned (below).
+    const checks = [...head, ...[logoResearchNote(state.action.selection?.logoResearch)].filter(Boolean)]
     const records = Array.isArray(inventory?.records) ? inventory.records : []
     const plan = planSweep(measured.body.residue ?? null, {
       // A template post's date becomes the build day.
@@ -808,10 +826,48 @@ export function createClientDemoService(deps) {
       wear: deps.wearLogo ? (input) => deps.wearLogo(state.build, site, input) : null,
       now
     })
+    const sweep = sweepOf(worn)
+    const lookStarted = now()
+    // 🔒 A ROUND THAT SWEEPS IS NOT LOOKED AT (28/10/2026). Its answer is the sweep's calls and is not counted; dsh runs
+    // them and checks again, and that check looks. A look here (up to `LOOK_MS`, every page at both widths) was thrown
+    // away, up to six times in one check. The last look is carried instead, every page read anew since it named
+    // unlooked, so no later check keeps a verdict on a page that changed after it was looked at (`lookCarried`).
+    const sweeping = sweepDecision(
+      state.build.qa?.residueSweeps,
+      state.build.qa?.clientCheckAttempts ?? 0,
+      sweep
+    ).go
+    // What a visitor sees: the pages the QA read, shot at both widths and looked at (`demo-look.js`). In an incremental
+    // check a page whose document did not change keeps the faults the last look found on it (plan "10/10" §7 S6).
+    let kept = []
+    let fresh = []
+    let judged = null
+    if (sweeping) judged = lookCarried(lastLook, readPages, reused)
+    else {
+      kept = reusableLookPages(lastLook, readPages, reused)
+      fresh = readPages.filter((p) => !kept.includes(p))
+      const lookNow = deps.demoLook
+        ? await deps.demoLook(site, {
+            pages: fresh.length ? fresh : ['/'],
+            accountId: auth.accountId,
+            opportunityId: state.action.opportunity_id,
+            budgetMs: LOOK_MS,
+            buildId: state.build.id
+          })
+        : null
+      const look = lookNow && kept.length ? keptLook(lookNow, lastLook, kept) : lookNow
+      judged = look ? deferToMeasure(look, contrast?.measuredOver) : null
+    }
+    if (judged) checks.splice(head.length, 0, judged)
+    // Where a check's minutes go, one line per check (28/10/2026: nothing said it before).
+    const secs = (ms) => (ms / 1000).toFixed(1)
+    console.info(
+      `[demo-check] ${site.site_key} ${incremental ? 'incremental' : 'full'}${sweeping ? ' sweep round' : ''}: inventory ${secs(inventoryAt - started)}s, page reads ${secs(readAt - inventoryAt)}s (${readPages.length} page(s), ${reused.size} unchanged), ${sweeping ? 'look skipped' : `look ${secs(now() - lookStarted)}s (${fresh.length} page(s) looked at, ${kept.length} kept)`}`
+    )
     return {
       checks: checksForAgent(checks),
       pass: checks.length > 0 && checks.every((check) => check.pass === true && !check.skipped),
-      sweep: sweepOf(worn),
+      sweep,
       // What a sweep with no call to run still names unresolved (a slot the replace job refuses to empty, a linked
       // title with no sourced words): kept on the check's answer, so the QA lists it (`sweepUnresolvedOf`).
       unswept: worn.calls.length === 0 ? worn.unresolved : []
@@ -826,6 +882,7 @@ export function createClientDemoService(deps) {
       pass: now.pass === true && carried.length === 0,
       detail,
       kept,
+      seen: [...new Set([...(Array.isArray(now.seen) ? now.seen : []), ...kept])],
       measured: `${now.measured ?? ''}; ${kept.length} unchanged pages keep the last look (${carried.length} faults)`
     }
   }

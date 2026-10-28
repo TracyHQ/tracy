@@ -464,6 +464,46 @@ test('unchanged pages cannot reuse a cropped or unversioned vision verdict after
   )
 })
 
+// 28/10/2026: a ~50-page site never fits one look; what a cut-short look saw whole stays seen while unchanged.
+test('a look cut short keeps the pages it saw whole, never one it did not see', () => {
+  const pages = ['/', '/menu', '/blog/a']
+  const unchanged = new Set(['/', '/menu', '/blog/a'])
+  const partly = (seen) => ({ looked: 'partly', version: LOOK_PROMPT_VERSION, seen })
+  assert.deepEqual(reusableLookPages(partly(['/', '/menu']), pages, unchanged), ['/', '/menu'])
+  // A changed page is never kept, seen or not.
+  assert.deepEqual(reusableLookPages(partly(['/', '/menu']), pages, new Set(['/menu'])), ['/menu'])
+  // A partial look that names nothing keeps nothing; a page it never saw is never kept.
+  assert.deepEqual(
+    reusableLookPages({ looked: 'partly', version: LOOK_PROMPT_VERSION }, pages, unchanged),
+    []
+  )
+  assert.deepEqual(reusableLookPages(partly([]), pages, unchanged), [])
+  assert.deepEqual(
+    reusableLookPages({ looked: false, version: LOOK_PROMPT_VERSION, seen: pages }, pages, unchanged),
+    []
+  )
+})
+
+test('a look names the pages it saw whole: a page cut by the time budget is not among them', async () => {
+  const fake = await fakes({ faults: [] }, { height: 4000 })
+  const whole = await createDemoLook({ ...fake, visionFor: door })({}, { pages: ['/', '/menu'] })
+  assert.deepEqual(whole.seen, ['/', '/menu'])
+  // The clock jumps past the budget after the first stream: the second stream's pages are not seen.
+  let streams = 0
+  const capture = async (site, layouts, options) => {
+    streams++
+    return fake.capture(site, layouts, options)
+  }
+  const cut = await createDemoLook({
+    ...fake,
+    capture,
+    visionFor: door,
+    now: () => (streams > 1 ? 10_000 : 0)
+  })({}, { pages: ['/', '/menu', '/blog/a'], budgetMs: 5_000 })
+  assert.equal(cut.looked, 'partly')
+  assert.deepEqual(cut.seen, ['/', '/menu'])
+})
+
 test('a clean verdict without a readable image code cannot acknowledge any tiles', async () => {
   for (const imageCode of [undefined, null, 'WRONG123']) {
     const fake = await fakes({ faults: [], imageCode })
@@ -615,4 +655,40 @@ test('a stream that breaks after sending calls applies them as the serial run di
   assert.equal(results[0].pass, false)
   assert.ok(results[0].detail.length > 0)
   assert.deepEqual(results[1], results[0])
+})
+
+// 28/10/2026: a sweep round is not looked at; it carries the last look, never a verdict on a page changed since.
+test('a sweep round carries the last look with every page read anew since then named unlooked', async () => {
+  const { lookCarried } = await import('../src/opportunities-build/client-demo.js')
+  const last = {
+    id: 'looks-finished',
+    pass: false,
+    looked: true,
+    version: LOOK_PROMPT_VERSION,
+    seen: ['/', '/menu'],
+    detail: [
+      { page: '/', viewport: 'phone', kind: 'text', where: 'hero', fix: 'tone the photo' },
+      { page: '/menu', viewport: 'desktop', kind: 'photo', where: 'dish', fix: 'crop' }
+    ],
+    unlooked: []
+  }
+  const pages = ['/', '/menu', '/blog/a']
+  const carried = lookCarried(last, pages, new Set(['/', '/blog/a']))
+  assert.equal(carried.pass, false)
+  assert.equal(carried.looked, 'partly')
+  assert.deepEqual(
+    carried.detail.map((f) => f.page),
+    ['/']
+  )
+  assert.deepEqual(
+    carried.unlooked.map((u) => u.page),
+    ['/menu']
+  )
+  // The next round keeps only what was seen after its last change: never '/menu' (changed), never '/blog/a' (not seen).
+  assert.deepEqual(carried.seen, ['/'])
+  assert.deepEqual(reusableLookPages(carried, pages, new Set(pages)), ['/'])
+  // No look before: plainly not looked at, and nothing to keep.
+  const none = lookCarried(null, pages, new Set())
+  assert.deepEqual([none.pass, none.looked], [false, false])
+  assert.deepEqual(reusableLookPages(none, pages, new Set(pages)), [])
 })

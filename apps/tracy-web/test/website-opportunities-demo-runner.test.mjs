@@ -2375,6 +2375,11 @@ test(
       looked.push(args)
       return qa(site, args)
     }
+    const visions = []
+    w.deps.demoLook = async (_site, args) => {
+      visions.push(args.pages)
+      return { id: 'looks-finished', pass: true, looked: true, version: 'look/10', detail: [] }
+    }
     const checked = await capability.call(auth, { operation: 'check' })
     assert.deepEqual(looked[0].templateTitles, ['Spring menu'])
     const day = new Date(build.created_at).toISOString().slice(0, 10)
@@ -2387,6 +2392,21 @@ test(
       ),
       JSON.stringify(checked.sweep ?? checked)
     )
+    // 28/10/2026: a round that sweeps is not counted and is not looked at; the check after the sweep looks.
+    assert.deepEqual(visions, [])
+    const notLooked = checked.checks.find((c) => c.id === 'looks-finished')
+    assert.deepEqual([notLooked?.pass, notLooked?.looked], [false, false])
+    // The read after a sweep round is incremental: only what the sweep wrote is read anew.
+    const again = await capability.call(auth, { operation: 'check' })
+    assert.equal(looked[1].incremental, true)
+    assert.equal(
+      again.sweep?.calls?.length ?? 0,
+      0,
+      'the same calls planned again stop the sweep: this check counts'
+    )
+    // Looked at once, or twice when it passed: an incremental pass is confirmed by a whole read and look.
+    assert.equal(visions.length, again.pass ? 2 : 1)
+    assert.equal(again.checks.find((c) => c.id === 'looks-finished')?.looked, true)
   }
 )
 

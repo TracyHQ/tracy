@@ -170,9 +170,17 @@ export function lookLayouts(pages) {
 
 /** Reuse only complete verdicts produced by this capture/prompt contract; old crops are never evidence. */
 export function reusableLookPages(lastLook, readPages, reused) {
-  return lastLook?.looked === true && lastLook.version === LOOK_PROMPT_VERSION
-    ? readPages.filter((page) => reused.has(page))
-    : []
+  if (!lastLook?.looked || lastLook.version !== LOOK_PROMPT_VERSION) return []
+  // 🔒 A LOOK CUT SHORT STILL SAW SOME PAGES WHOLE (28/10/2026). A site with its template posts is ~50 pages; a look runs
+  // out of `LOOK_MS` part way, and keeping nothing from it made every check start again from the first page, so such a
+  // site was never looked at whole. The pages a look names `seen` (both widths, top to footer) stay seen while
+  // unchanged. A partial look that names none keeps nothing; a whole look from before `seen` keeps every page it read.
+  const seen = Array.isArray(lastLook.seen)
+    ? new Set(lastLook.seen)
+    : lastLook.looked === true
+      ? null
+      : new Set()
+  return readPages.filter((page) => reused.has(page) && (!seen || seen.has(page)))
 }
 
 /** The model's answer held to the closed kinds and to the pages and viewports it was shown. */
@@ -555,10 +563,13 @@ export function createDemoLook({
         version: LOOK_PROMPT_VERSION,
         unlooked
       }
+    const unseen = new Set(unlooked.map((u) => u.page))
     return {
       id: 'looks-finished',
       pass: unlooked.length === 0 && faults.length === 0,
       looked: unlooked.length ? 'partly' : true,
+      // The pages looked at whole, at both widths: what a later check may keep while they stay unchanged.
+      seen: layouts.map((layout) => layout.path).filter((page) => !unseen.has(page)),
       version: LOOK_PROMPT_VERSION,
       model: door.model,
       measured: `${faults.length} visible faults on ${layouts.length - unlooked.length} of ${layouts.length} pages (${pictures} viewport tiles)`,
