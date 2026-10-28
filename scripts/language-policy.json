@@ -29,6 +29,11 @@
   "lines": [],
   "objects": [
     {
+      "path": "apps/tracy-web/src/lib/quickstart-releases.js",
+      "oid": "907ed3c9ccab76fbcaecde39d14991e3dfbd65ac",
+      "reason": "Reviewed text: the release reader after the move to JoomlArt-Products/joomlart-products. Its previous object carried two literal NUL separators, now written as \\u0000 escapes, so that old object cannot be decoded as text."
+    },
+    {
       "path": "packages/locale/tracy-locales/lib/client.js",
       "oid": "03e1ed22b52f0a141604670b80c5af755d7eaf37",
       "reason": "Bundle built from the interface language packs above, including the website opportunities labels; reviewed build output."
