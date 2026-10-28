@@ -42,6 +42,16 @@ export function createMatcher(contract, siteUrl) {
       urlIdx.set(r, [...(urlIdx.get(r) ?? []), ...keys])
     }
   }
+  // Whole-unit slots (capture --whole-units): the xpath names an element, the sample joins its pieces with spaces, and
+  // the page shows those pieces as separate blocks ("Our" <br> "Classes"). A block that is a word-bounded piece of
+  // such a sample is that slot's text.
+  const wholeUnits = (contract.map?.slots ?? [])
+    .filter(
+      (s) =>
+        s.type === 'text' && typeof s.xpath === 'string' && !/(text\(\)(\[\d+\])?|@[\w-]+)$/.test(s.xpath)
+    )
+    .map((s) => ({ norm: normText(s.sample), key: s.key }))
+    .filter((s) => s.norm)
   const textCache = new Map()
   const site = new URL(siteUrl)
 
@@ -61,6 +71,10 @@ export function createMatcher(contract, siteUrl) {
     if (!res && v.length >= 20 && letterCount(v) >= 12) {
       const hit = textList.find((s) => s.norm.length > v.length && s.norm.includes(v))
       if (hit) res = { status: 'matched', by: 'fragment-of-slot', slots: [hit.key] }
+    }
+    if (!res) {
+      const hits = wholeUnits.filter((s) => s.norm.length > v.length && occurrences(s.norm, v).length)
+      if (hits.length) res = { status: 'matched', by: 'piece-of-whole-unit', slots: hits.map((s) => s.key) }
     }
     if (!res) {
       // Composite block: remove every slot sample found inside it; what is left is unmatched.

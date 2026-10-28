@@ -177,6 +177,12 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   role (faces that prove a number may carry `stat.proof_image`) · R6 no link or list item inside a fact slot · R7 siblings share a role · R8 adjacent short slots on one line
   are a cut heading · R9 a fact-like hole (an accepted reason does not lift it). Road to live holds a new release on any
   failing rule in a `place-content-roles/3` map and warns for a live one; a version 2 map is listed and never holds.
+- **Demo-only entities (a style-guide page).** A template may ship a page that only shows its own styles (JA Boxing's
+  "Typography" article: sample headings cut in pieces, progress bars, buttons). The content map marks that entity
+  `"demoOnly": true` (on the entity in `entities`, beside `key`, `kind` and `sourceId`; never a role). Its slots are
+  left out of R1 to R8 and the verify viewer never marks them suspicious (`content-coverage/lib/demo-only.mjs`). The
+  mark changes nothing else: the page is still captured, audited for holes, counted by R9 and shipped as the template
+  ships it. Mark only a page whose every word is a style sample; a page with any business fact is not demo-only.
 - **Label judge (audit 1.4.0, spec #37).** The agent that runs the release is the judge; the audit calls no model and
   needs no key. For every component with a slot whose verdict is not cached, it writes `<out>/label-judge/request.json`:
   the question, the allowed verdicts and version 3 roles, the answer format, and per component its crop with numbered
@@ -230,7 +236,9 @@ and module boxes already in `<out>/.audit`. Open `<out>/index.html`; nothing it 
   listed in its own section.
 - **Suspicious.** Four mechanical rules mark a slot red or amber: a face or signature picture whose role is not
   `person.*`/`quote.*`; text that looks like a real figure but has an `editorial.*` role; a Fact role whose `fit`
-  says keep; `fit` not measured although the slot is shown. Everything else is for the person to judge.
+  says keep; `fit` not measured although the slot is shown as text or a picture (a slot shown only through a link or
+  an attribute, such as an email inside its mailto, has no box to measure). A demo-only entity is shown with a
+  "demo only, not judged" badge and never marked. Everything else is for the person to judge.
 
 It reuses the audit (`runAudit`, so the same lazy-content wake and the same smooth-scroll handling as `--fit`),
 is read-only on the site, and covers the Joomla module wrappers (`Mod<N>`) of the T4 template.
