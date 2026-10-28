@@ -869,6 +869,122 @@ test(
   }
 )
 
+/**
+ * 🔒 THE COPY'S OTHER DOOR (beta report 26/10/2026). A Joomla site whose front end was gated when it
+ * was imported again keeps its ADMINISTRATOR door registered; on the copy that door may not reach the
+ * plugin while the front door does. Each door is asked, the registered one first, and the door that
+ * answered is the one kept — never the live site.
+ */
+const LIVE_ADMIN =
+  'https://fijitrips.example/administrator/index.php?option=com_claudecowork&task=api.exec&format=json'
+const COPY_ADMIN =
+  'http://fijitrips-example-5254d120-web-1/administrator/index.php?option=com_claudecowork&task=api.exec&format=json'
+
+async function reimportedSite(pool, adminAnswer) {
+  await pool.query(
+    'insert into site (site_key, label, host, platform, origin, port) values ($1, $2, $3, $4, $5, $6)',
+    ['fijitrips.example', 'fijitrips-example-5254d120', 'local', 'joomla', 'migrated', 52001]
+  )
+  await seatRow(pool, 'fijitrips.example', 'owner@x.y', 'owner')
+  await writeComponent(
+    pool,
+    'fijitrips.example',
+    { endpoint: LIVE_ADMIN, token: 't'.repeat(24) },
+    'owner@x.y'
+  )
+  const calls = []
+  const fetchImpl = async (input, init) => {
+    const url = String(input)
+    const body = init?.body ? JSON.parse(init.body) : null
+    calls.push({ url, action: body?.action })
+    if (url === COPY_ADMIN) return adminAnswer()
+    if (url !== COPY) return new Response(JSON.stringify({ ok: true, reached: 'live' }), { status: 200 })
+    const answer =
+      body?.action === 'core.manifest'
+        ? { ok: true, manifest: { platform: 'joomla' } }
+        : { ok: true, reached: 'copy' }
+    return new Response(JSON.stringify(answer), { status: 200 })
+  }
+  return { calls, fetchImpl }
+}
+
+test(
+  'apply: a re-imported Joomla copy whose registered administrator door redirects is reached on its front door',
+  opts,
+  async () => {
+    const { pool } = db
+    const network = await reimportedSite(pool, () => {
+      throw new TypeError('fetch failed', { cause: new Error('unexpected redirect') })
+    })
+    const { send, cookieFor } = harness(pool, {
+      fetchImpl: network.fetchImpl,
+      envOverrides: { HOST_NAME: 'local' }
+    })
+    const warn = console.warn
+    console.warn = () => {}
+    let res
+    try {
+      res = await send('POST', '/api/sites/fijitrips.example/apply', await cookieFor('owner@x.y'), {
+        action: 'content.update',
+        params: { kind: 'option', key: 'x', fields: { value: 1 } }
+      })
+    } finally {
+      console.warn = warn
+    }
+    assert.equal(res.status, 200)
+    assert.deepEqual(await res.json(), { ok: true, reached: 'copy' })
+    assert.deepEqual(
+      network.calls.map((c) => [c.url === COPY_ADMIN ? 'admin' : c.url === COPY ? 'front' : c.url, c.action]),
+      [
+        ['admin', 'core.manifest'],
+        ['front', 'core.manifest'],
+        ['front', 'content.update']
+      ]
+    )
+    assert.equal(
+      network.calls.some((c) => new URL(c.url).hostname === 'fijitrips.example'),
+      false,
+      'never the live site'
+    )
+    const cred = await currentComponent(pool, 'fijitrips.example')
+    assert.equal(cred.config.endpoint, COPY)
+    assert.equal(cred.config.liveEndpoint, LIVE_ADMIN)
+  }
+)
+
+test(
+  'apply: a copy whose doors redirect and answer a page is refused as such, not as warming up',
+  opts,
+  async () => {
+    const { pool } = db
+    const network = await reimportedSite(pool, () => {
+      throw new TypeError('fetch failed', { cause: new Error('unexpected redirect') })
+    })
+    const gated = async (input, init) =>
+      String(input) === COPY
+        ? new Response('<html>Site offline</html>', { status: 200, headers: { 'content-type': 'text/html' } })
+        : network.fetchImpl(input, init)
+    const { send, cookieFor } = harness(pool, { fetchImpl: gated, envOverrides: { HOST_NAME: 'local' } })
+    const warn = console.warn
+    console.warn = () => {}
+    let res
+    try {
+      res = await send('POST', '/api/sites/fijitrips.example/apply', await cookieFor('owner@x.y'), {
+        action: 'info',
+        params: {}
+      })
+    } finally {
+      console.warn = warn
+    }
+    assert.equal(res.status, 409)
+    assert.deepEqual(await res.json(), {
+      code: 'COMPONENT_NOT_ON_FLEET_COPY',
+      copyReason: 'not_json',
+      transient: false
+    })
+  }
+)
+
 test(
   'apply: an imported copy that refuses the token is refused unauthorized on the first answer — no retry',
   opts,
