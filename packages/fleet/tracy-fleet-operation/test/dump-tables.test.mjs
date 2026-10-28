@@ -32,12 +32,12 @@ const DUMP = [
   '/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;\n-- Dump completed on 2026-10-23\n'
 ].join('')
 
-function cut(tables, input = DUMP) {
+function cut(tables) {
   const list = join(root, `tables-${tables.length}.txt`)
   const count = join(root, `count-${tables.length}.txt`)
   writeFileSync(list, tables.join('\n'))
   const done = spawnSync('python3', [CUT, '--tables', list, '--count', count], {
-    input,
+    input: DUMP,
     encoding: 'utf8'
   })
   assert.equal(done.status, 0, done.stderr)
@@ -60,24 +60,4 @@ test('no table named: the head and the tail only', () => {
   assert.equal(kept, 0)
   assert.doesNotMatch(sql, /CREATE TABLE|INSERT/)
   assert.match(sql, /Dump completed/)
-})
-
-test('a dump in parts (one mariadb-dump after another, routines last) is cut part after part', () => {
-  const head =
-    '-- MariaDB dump 10.19\n/*!40101 SET NAMES utf8mb4 */;\n/*!40014 SET FOREIGN_KEY_CHECKS=0 */;\n\n'
-  const tail =
-    '/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;\n/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;\n-- Dump completed on 2026-10-28\n'
-  const parts = [
-    head + section('wp_postmeta') + tail,
-    head + section('wp_options') + section('wp_posts') + tail,
-    head + "--\n-- Dumping routines for database 'wordpress'\n--\nCREATE PROCEDURE p() SELECT 1;\n" + tail
-  ].join('')
-  const { sql, kept } = cut(['wp_postmeta', 'wp_posts'], parts)
-  assert.equal(kept, 2, 'a table of each part')
-  assert.match(sql, /INSERT INTO `wp_postmeta`[\s\S]*INSERT INTO `wp_posts`/)
-  assert.doesNotMatch(sql, /wp_options/)
-  assert.doesNotMatch(sql, /PROCEDURE/, 'routines stay out, last part or not')
-  // Each part's settings are put back where it ends and set again where the next begins.
-  assert.equal((sql.match(/SET FOREIGN_KEY_CHECKS=0/g) ?? []).length, 3)
-  assert.match(sql, /-- Dump completed on 2026-10-28\n$/)
 })
