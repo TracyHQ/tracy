@@ -899,7 +899,10 @@ def sql_str(value: str) -> str:
     return "'" + value.replace("\\", "\\\\").replace("'", "''") + "'"
 
 
-from foreign_keys import capture as capture_foreign_keys, rebase as rebase_foreign_key, add_sql as foreign_key_sql
+_FOREIGN_KEYS = _load("foreign_keys", HERE / "foreign_keys.py")
+capture_foreign_keys = _FOREIGN_KEYS.capture
+rebase_foreign_key = _FOREIGN_KEYS.rebase
+foreign_key_sql = _FOREIGN_KEYS.add_sql
 
 
 class Schema:
