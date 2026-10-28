@@ -296,7 +296,7 @@ test.after(() => {
 const ORIGIN = 'http://127.0.0.1'
 let seq = 0
 /** Run the shipped script as the host command would, with the fakes first on PATH. */
-async function hostRun({ pause = [], env = {} } = {}) {
+async function hostRun({ pause = [], env = {}, mode = undefined, file = undefined } = {}) {
   const n = seq++
   const logs = {
     cdp: join(dir, `cdp-${n}.log`),
@@ -308,7 +308,9 @@ async function hostRun({ pause = [], env = {} } = {}) {
   const c = hostBrowserCommand({
     chrome: join(dir, 'chromium'),
     target: { url: `${ORIGIN}/`, origin: ORIGIN, container: 'northgate-web-1', via: '127.0.0.1:80' },
-    dockerHost: null
+    dockerHost: null,
+    ...(mode ? { mode } : {}),
+    ...(file ? { file } : {})
   })
   const { stdout } = await execFileP(c.file, [...c.args, '300', '8000', '2000'], {
     env: {
@@ -380,6 +382,30 @@ test('🔒 host mode: nothing from another origin and nothing but documents and 
   assert.equal(r.docker.length, 0)
   assert.equal(r.cdp.filter((m) => m.method === 'Fetch.continueRequest').length, 0)
   assert.equal(r.cdp.filter((m) => m.method === 'Fetch.failRequest').length, 5)
+})
+
+test('🔒 host mode, a view (the visual check): the site’s own pictures and fonts come from its container too; nothing else does', async () => {
+  const r = await hostRun({
+    mode: 'view',
+    file: JSON.stringify({ w: 640, h: 800, y: 0 }),
+    pause: [
+      { resourceType: 'Image', request: { method: 'GET', url: `${ORIGIN}/images/logo.png`, headers: {} } },
+      { resourceType: 'Font', request: { method: 'GET', url: `${ORIGIN}/fonts/a.woff2`, headers: {} } },
+      { resourceType: 'Image', request: { method: 'GET', url: 'http://10.0.0.5/x.png', headers: {} } },
+      { resourceType: 'Script', request: { method: 'GET', url: `${ORIGIN}/app.js`, headers: {} } },
+      { resourceType: 'Image', request: { method: 'POST', url: `${ORIGIN}/images/logo.png`, headers: {} } }
+    ]
+  })
+  assert.deepEqual(r.docker.map((a) => a.at(-1)).sort(), [
+    'http://127.0.0.1:80/fonts/a.woff2',
+    'http://127.0.0.1:80/images/logo.png'
+  ])
+  for (const a of r.docker)
+    assert.deepEqual(a.slice(0, 5), ['exec', '-u', 'www-data', 'northgate-web-1', 'curl'])
+  assert.equal(r.cdp.filter((m) => m.method === 'Fetch.continueRequest').length, 0)
+  assert.equal(r.cdp.filter((m) => m.method === 'Fetch.failRequest').length, 3)
+  const i = r.cdp.findIndex((m) => m.method === 'Emulation.setScriptExecutionDisabled')
+  assert.ok(i !== -1 && r.cdp[i].params.value === true, 'no page script in a view either')
 })
 
 test('🔒 host mode: a main-frame document off the site still ends OFFSITE', async () => {

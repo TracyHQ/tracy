@@ -15,25 +15,8 @@ export const PLATFORM_NAMES = Object.freeze({ wordpress: 'WordPress', joomla: 'J
 /** Platform names reserved under `/templates/`: a template id can never take one (the gallery filter chips use them, and old platform addresses redirect). */
 export const RESERVED_SEGMENTS = Object.freeze(Object.keys(PLATFORM_NAMES))
 
-/**
- * The landing site's origin. Every deployment's Templates pages link to the one landing site (dev and
- * laptops have none of their own), so this default is the only value today.
- */
-const DEFAULT_LANDING_ORIGIN = 'https://tracy.ai'
-
-/** Pages on the landing site and elsewhere that the header and footer link to. */
-export const LINKS = Object.freeze({
-  home: `${DEFAULT_LANDING_ORIGIN}/`,
-  github: 'https://github.com/TracyHQ/tracy',
-  youtube: 'https://www.youtube.com/@tracydotai',
-  x: 'https://x.com/tracydotai',
-  logo: `${DEFAULT_LANDING_ORIGIN}/assets/logo.png`,
-  download: `${DEFAULT_LANDING_ORIGIN}/download/`,
-  discord: 'https://discord.gg/BM9TMRcEBb',
-  // The landing site's own backdrop, so the section reads as part of tracy.ai (approved mockup).
-  backdropLight: `${DEFAULT_LANDING_ORIGIN}/assets/bg.jpg`,
-  backdropDark: `${DEFAULT_LANDING_ORIGIN}/assets/bg-dark.jpg`
-})
+/** Pages on the landing site and elsewhere that the header and footer link to (`lib/public-links.js`). */
+export { LINKS }
 
 /** The languages the landing site has its own pages for, under `/<lang>/`; every other language reads the English root pages. */
 const LANDING_LANGUAGES = Object.freeze(['de', 'fr', 'es', 'it', 'nl'])
@@ -45,6 +28,7 @@ export function landingPage(lang, page) {
 }
 
 import { translator } from '../lib/i18n/index.js'
+import { DEFAULT_LANDING_ORIGIN, LINKS } from '../lib/public-links.js'
 
 /** Joins names the way a sentence does: "A", "A and B", "A, B and C" (the "and" follows the language). */
 export function joinNames(names, t = translator('en')) {
@@ -66,6 +50,7 @@ export function wordsFor(lang = 'en') {
       label: t('tpl.nav.label'),
       templates: t('tpl.nav.templates'),
       help: t('tpl.nav.help'),
+      downloadApp: t('tpl.nav.downloadApp'),
       getStarted: t('tpl.nav.getStarted'),
       openMenu: t('tpl.nav.openMenu'),
       closeMenu: t('tpl.nav.closeMenu')

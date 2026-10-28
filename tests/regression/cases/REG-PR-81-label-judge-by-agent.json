@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-81-label-judge-by-agent",
+  "kind": "feat",
+  "title": "The label judge asks the release agent through a request file and records its verdicts strictly",
+  "pr": 81,
+  "area": "quickstart/content-coverage",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the label judge test file of the quickstart tools."],
+  "expect": [
+    "The audit writes a request for uncached slots only; record-judge accepts a complete verdicts file, refuses missing slots, bad roles and unknown keys, and a rerun on unchanged content asks nothing."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-quickstart-tools/test/content-label-judge.test.mjs"
+    ],
+    "tests": [
+      "the audit calls no model: it writes a request for every located slot without a cached verdict",
+      "record-judge takes a complete answer and writes the block Road to live reads",
+      "record-judge refuses a missing slot, a bad role, an unknown key and an unknown field, and writes nothing",
+      "a rerun on unchanged content asks nothing: the recorded verdicts are the cache"
+    ]
+  },
+  "selectors": {}
+}

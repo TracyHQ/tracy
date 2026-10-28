@@ -1000,6 +1000,11 @@ test('refusalNext: each door code names the next step — the customer, the call
       answer: { code: 'COMPONENT_NOT_ON_FLEET_COPY', copyReason: 'unreachable', transient: true },
       has: [/still warming up/, /Retry the same call/]
     },
+    // 28/10: a copy silent for a day is not warming up — no retry, the customer is told it needs checking.
+    {
+      answer: { code: 'COMPONENT_NOT_ON_FLEET_COPY', copyReason: 'timeout', transient: false },
+      has: [/has not answered for a long while/, /Do not retry/, /needs checking/, /do not write another way/]
+    },
     {
       answer: { code: 'COMPONENT_NOT_ON_FLEET_COPY', copyReason: 'unauthorized', transient: false },
       has: [/does not accept the token/, /pairing again/, /do not write another way/]
@@ -1007,6 +1012,19 @@ test('refusalNext: each door code names the next step — the customer, the call
     {
       answer: { code: 'COMPONENT_NOT_ON_FLEET_COPY', copyReason: 'platform_mismatch', transient: false },
       has: [/different CMS/, /import needs checking/]
+    },
+    // 28/10: what waiting does not change is said as what it is, and never "retry in a moment".
+    {
+      answer: { code: 'COMPONENT_NOT_ON_FLEET_COPY', copyReason: 'redirected', transient: false },
+      has: [/something other than the plugin/, /Do not retry/, /do not write another way/]
+    },
+    {
+      answer: { code: 'COMPONENT_NOT_ON_FLEET_COPY', copyReason: 'no_copy', transient: false },
+      has: [/No hosted copy/, /import needs checking/, /do not write another way/]
+    },
+    {
+      answer: { code: 'COMPONENT_NOT_ON_FLEET_COPY', copyReason: 'copy_error', transient: false },
+      has: [/server error/, /Do not retry/]
     },
     {
       answer: { code: 'COWORK_WEB_UNREACHABLE', error: 'fetch failed' },
@@ -2874,4 +2892,13 @@ test('planCall: content.renderedWords is the engine’s own call, refused to the
     )
     assert.ok(!out.actions?.includes('content.renderedWords'), 'never offered back')
   }
+})
+
+test('CONFIRM_FIRST retry explains missing consent without widening the approved call', () => {
+  const next =
+    refusalNext({ ok: false, code: 'CONFIRM_FIRST', confirmationMissing: true }, { platform: 'wordpress' }) ??
+    ''
+  assert.match(next, /confirm:true is not consent/)
+  assert.match(next, /wait for the customer/)
+  assert.ok(next.length <= 200)
 })

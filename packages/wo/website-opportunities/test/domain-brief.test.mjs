@@ -136,12 +136,23 @@ test('sections only reference assets listed in the brief', () => {
     kind: 'image',
     category: 'food',
     sha256: sha('m1'),
+    source: 'unknown',
+    credit: '',
+    uploaderRole: 'unknown',
     width: null,
     height: null,
     orientation: 'unknown',
     quality: 'unknown',
     content: 'unlabelled',
-    sizeUnknownReason: 'not_measured'
+    sizeUnknownReason: 'not_measured',
+    // Nothing looked at it and no words name an item: general, and nothing guessed (#48).
+    depicts: { id: 'general', evidence: { via: 'none' } },
+    portraitOf: null,
+    role: null,
+    faceBoxes: [],
+    peopleCount: null,
+    isGraphic: null,
+    isOwnPhoto: null
   })
 })
 

@@ -1,0 +1,2 @@
+{"id":"REG-PR-69-sync-field-asset-ids","verdict":"PASS","commit":"b3391bf0c2484f98f1d39ed4c25c3fac732da8ec","ran_at":"2026-10-28T15:22:46.833Z","evidence":"tests/regression/.runs/2026-10-28-b3391bf0c/REG-PR-69-sync-field-asset-ids.log"}
+{"id":"REG-PR-69-sync-field-asset-ids","verdict":"PASS","commit":"b3391bf0c2484f98f1d39ed4c25c3fac732da8ec","ran_at":"2026-10-28T15:23:02.771Z","evidence":"tests/regression/.runs/2026-10-28-b3391bf0c/REG-PR-69-sync-field-asset-ids.log"}

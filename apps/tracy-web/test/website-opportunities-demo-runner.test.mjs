@@ -38,6 +38,13 @@ before(db.open)
 beforeEach(db.reset)
 after(db.close)
 
+const READY = { version: 'brief-readiness/1', verdict: 'pass', next: 'build', checks: [], ownerQuestions: [] }
+
+/** The domain with every brief's readiness decreed (`READY` unless a test names another). */
+function readyByDecree(domain, readiness = READY) {
+  return { ...domain, briefReadinessOf: () => structuredClone(readiness) }
+}
+
 async function world({
   lostCreateReceipt = false,
   lostPromptReceipt = false,
@@ -46,7 +53,9 @@ async function world({
   historical = true,
   agentWorkflow = false,
   chatMode = undefined,
-  automatic = true
+  automatic = true,
+  // `'measured'`: the brief's own readiness; an object: that readiness; none: ready by decree.
+  readiness = READY
 } = {}) {
   const pool = db.pool
   const account = (
@@ -65,7 +74,10 @@ async function world({
   const sessions = new Set()
   const allocations = []
   const messages = new Map()
-  const domain = await websiteOpportunitiesDomain()
+  // These worlds test provisioning, hand-off and QA, not brief readiness: their fictional restaurant has no photos, so
+  // its brief is ready by decree here (readiness has its own tests, `wo-brief-readiness-build.test.mjs`).
+  const measured = await websiteOpportunitiesDomain()
+  const domain = readiness === 'measured' ? measured : readyByDecree(measured, readiness)
   const request = async (path, init = {}) => {
     if (path === '/api/templates')
       return Response.json({
@@ -3253,3 +3265,61 @@ test(
     assert.deepEqual({ stage: row.stage, attention: row.attention }, { stage: 'demo', attention: true })
   }
 )
+
+test(
+  'a blocked brief starts no build: the action stops BRIEF_NOT_READY and the revision keeps its owner questions',
+  opts,
+  async () => {
+    // The fictional restaurant of these worlds has no photo at all: measured, its brief blocks.
+    const w = await world({ readiness: 'measured' })
+    await w.accept()
+    await w.runner().drain()
+    const action = (await w.pool.query('select status, error from wo_demo_action')).rows[0]
+    assert.deepEqual([action.status, action.error], ['failed', 'BRIEF_NOT_READY'])
+    assert.equal(w.creates(), 0, 'the create door was never asked')
+    assert.equal((await w.pool.query('select id from wo_build')).rowCount, 0)
+    const { readiness } = (await w.pool.query('select brief from wo_revision')).rows[0].brief
+    assert.equal(readiness.verdict, 'block')
+    const blocked = readiness.checks.filter((c) => c.verdict === 'block').map((c) => c.id)
+    assert.ok(blocked.includes('own-usable-photos'), blocked.join(', '))
+    assert.ok(readiness.ownerQuestions.some((q) => q.id === 'owner.photos'))
+  }
+)
+
+test('a warned brief builds and its build carries the owner questions', opts, async () => {
+  const warned = {
+    version: 'brief-readiness/1',
+    verdict: 'warn',
+    next: 'build-and-ask',
+    checks: [{ id: 'people-with-portrait', verdict: 'warn', measured: { people: 1, portrayed: 0 } }],
+    ownerQuestions: [
+      { id: 'owner.portraits', field: 'portraits', question: 'Can you send a portrait photo of Ines Marlow?' }
+    ]
+  }
+  const w = await world({ readiness: warned })
+  await w.accept()
+  await w.runner().drain()
+  assert.equal(w.creates(), 1, 'the build went ahead')
+  const build = (await w.pool.query('select receipt from wo_build')).rows[0]
+  assert.deepEqual(build.receipt.readiness, {
+    verdict: 'warn',
+    next: 'build-and-ask',
+    checks: ['people-with-portrait'],
+    ownerQuestions: warned.ownerQuestions
+  })
+  // After the build, each QA round says what the live site shows of the brief; this host judged neither site check.
+  const { qa } = (await w.pool.query('select qa from wo_build')).rows[0]
+  const [rpcId] = w.messages.keys()
+  await w.pool.query(
+    `insert into site_turn(turn_id,site_key,session_id,turn,actor,title,state,rpc_id,opened_at,closed_at)
+     values ('demo-turn-1','pho-ba.localhost',$1,1,'builder@test.example','Build demo','closed',$2,$3,$3)`,
+    [qa.sessionId, rpcId, new Date(w.deps.now())]
+  )
+  assert.equal((await claimAndRunQa(w.pool, w.deps)).ran, 1)
+  const round = (await w.pool.query('select qa from wo_build')).rows[0].qa.rounds.at(-1)
+  assert.equal(round.readiness.verdict, 'unknown')
+  assert.deepEqual(round.readiness.brief, {
+    verdict: 'warn',
+    checks: [{ id: 'people-with-portrait', verdict: 'warn', on: 'brief' }]
+  })
+})

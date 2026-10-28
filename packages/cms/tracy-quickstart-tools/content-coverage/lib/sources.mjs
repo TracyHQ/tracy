@@ -66,16 +66,23 @@ function iniStrings(body) {
   return out
 }
 
-export function buildSourceIndex(webroot, template) {
+export function buildSourceIndex(webroot, template, platform = 'joomla') {
   const files = []
   const ini = []
-  for (const f of walk(webroot, [])) {
+  // WordPress: only the theme is the site's own text; wp-admin, wp-includes and plugins are core and never read.
+  const wordpress = platform === 'wordpress'
+  const themeDir = join(webroot, 'wp-content/themes', template)
+  for (const f of walk(wordpress ? themeDir : webroot, [])) {
     const rel = relative(webroot, f).split('\\').join('/')
     // Other templates installed on the site (Cassiopeia, Atum) are not this site's front end.
-    if (rel.startsWith('templates/') && !rel.toLowerCase().startsWith(`templates/${template.toLowerCase()}/`))
+    if (
+      !wordpress &&
+      rel.startsWith('templates/') &&
+      !rel.toLowerCase().startsWith(`templates/${template.toLowerCase()}/`)
+    )
       continue
     const body = readFileSync(f, 'utf8')
-    const origin = originOf(rel, template)
+    const origin = wordpress ? { cls: 'b', label: 'theme file' } : originOf(rel, template)
     if (rel.endsWith('.ini')) for (const s of iniStrings(body)) ini.push({ rel, origin, ...s })
     else
       files.push({

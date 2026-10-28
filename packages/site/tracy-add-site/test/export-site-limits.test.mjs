@@ -664,6 +664,80 @@ test('legacy db.dump dump_failed is call_failed after one dump call', async () =
   assert.deepEqual(calls, ['db.dump'])
 })
 
+test('PHP 8.5 notices printed before each engine reply (curl_close deprecated) do not stop the export', async () => {
+  // What PHP 8.5 prints with display_errors on, measured with php:8.5-cli (28/10/2026).
+  const NOTICE =
+    '<br />\n<b>Deprecated</b>:  Function curl_close() is deprecated since 8.5, as it has no effect since PHP 8.0 in <b>/home/u1/public_html/wp-content/plugins/claude-cowork/lib/Uploader.php</b> on line <b>53</b><br />\n'
+  const onCall = (action, params, res) => {
+    if (action !== 'db.dump') return false
+    const sql = '-- all rows\n'
+    res.writeHead(200, { 'content-type': 'application/json' }).end(
+      NOTICE +
+        JSON.stringify({
+          ok: true,
+          sql_b64: Buffer.from(sql).toString('base64'),
+          next_cursor: '3',
+          done: true,
+          rows: 3,
+          total: 3
+        })
+    )
+    return true
+  }
+  await withEngine({ rows: 3, onCall }, async (engine) => {
+    const result = await exporter.exportDatabase(engine.endpoint, 'tok', engine.artifacts)
+    assert.equal(result.tables, 1)
+    assert.match(gunzipSync(engine.stored()).toString(), /-- all rows/)
+  })
+})
+
+test('call_failed keeps where it stopped, from closed sets: the call, the status, what came back or the engine’s code', async () => {
+  await assert.rejects(
+    exportFixture({
+      tableReply: { tables: ['wp_posts'] },
+      options: { platform: 'wordpress' },
+      responseFor: () => ({ __status: 200, __body: '<!DOCTYPE html><html><body>Please wait…</body></html>' })
+    }),
+    (error) => {
+      assert.equal(error.reason, 'call_failed')
+      assert.deepEqual(error.diagnostic, {
+        at: 'export',
+        check: 'no_engine_reply',
+        status: 200,
+        action: 'db.dump',
+        answer: 'html'
+      })
+      assert.match(error.detail, /db\.dump answered 200 without an engine reply/)
+      return true
+    }
+  )
+  await assert.rejects(
+    exportFixture({
+      tableReply: { tables: ['wp_posts'] },
+      options: { platform: 'wordpress' },
+      responseFor: () => ({ ok: false, error: 'dump_failed', message: 'Unknown column' })
+    }),
+    (error) => {
+      assert.deepEqual(error.diagnostic, {
+        at: 'export',
+        check: 'engine_refused',
+        status: 200,
+        action: 'db.dump',
+        engine_error: 'dump_failed'
+      })
+      return true
+    }
+  )
+  await assert.rejects(
+    exportFixture({
+      tableReply: { tables: ['wp_posts'] },
+      options: { platform: 'wordpress' },
+      responseFor: () => ({ ok: false, error: 'hunter2', message: 'x' })
+    }),
+    (error) => error.diagnostic?.engine_error === 'other'
+  )
+})
+
 test('db.dump_many dump_failed is call_failed without retrying', async () => {
   const calls = []
   await assert.rejects(

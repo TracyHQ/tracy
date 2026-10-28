@@ -504,6 +504,9 @@ print("full" if d.get("ok") else "not", f["kind"] or "-", f["tables"] if f["tabl
   if [[ "$kind" != "$(tracy_backup_kind)" ]]; then
     echo "{\"ok\":false,\"code\":\"BACKUP_KIND_MISMATCH\",\"version\":$VERSION}"; return
   fi
+  if [[ "$kind" == mysql ]] && ! tracy_db_foreign_keys recover --plan "$STACK/.restore-foreign-keys.json" >&2; then
+    restore_answer 0 RESTORE_FAILED verify 0 "the previous foreign-key cutover needs recovery"; return
+  fi
   # 1. verify — the point's dump(s) hash to its tag (read just above, right before use).
   step verify done
   # A sync's restore (--only-tables): the tables it changed load into the scratch schema while the
@@ -671,9 +674,12 @@ PYEOF
   # Tables move bare (lib/site-backup.sh "triggers"): both schemas' triggers are kept as SQL, dropped,
   # and the restored set is loaded into the live schema once the tables are there. The live site
   # runs without triggers only for the milliseconds between the drop and the load.
-  local trig live_trig new_trig triggers_ok=1
+  local trig live_trig new_trig triggers_ok=1 fk_plan
   trig="$(mktemp -d "/tmp/restore-triggers-$LABEL.XXXXXX")"
   live_trig="$trig/live.sql" new_trig="$trig/restored.sql"
+  fk_plan="$STACK/.restore-foreign-keys.json"
+  printf '%s\n' "$live" > "$trig/old-tables"
+  printf '%s\n' "$restored" > "$trig/new-tables"
   local moved=()
   local one
   if [[ -n "$ONLY_TABLES" ]]; then
@@ -690,25 +696,38 @@ PYEOF
     tracy_db_triggers_sql "$db" > "$live_trig" || live_trig_ok=0
   fi
   if [[ "$live_trig_ok" != 1 ]] || ! tracy_db_triggers_sql "$tmpdb" > "$new_trig" \
+     || ! tracy_db_foreign_keys prepare --plan "$fk_plan" --live "$db" --stage "$tmpdb" \
+          --old-tables "$trig/old-tables" --new-tables "$trig/new-tables" --trash "$trash" >&2 \
+     || [[ "${TRACY_TEST_FAIL_STAGE_TRIGGERS:-}" == 1 ]] \
      || ! tracy_db_drop_triggers "$tmpdb" >&2; then
     rm -rf "$trig"
     files_back
+    # No live DDL has run. Retire the plan before removing its stage evidence.
+    rm -f "$fk_plan"
     tracy_db_exec mariadb -uroot -e "DROP DATABASE IF EXISTS \`$tmpdb\`" >/dev/null 2>&1 || true
     step swap failed
     restore_answer 0 RESTORE_FAILED swap 1 "the database triggers could not be read; the old database and files are in place"; return
   fi
-  if ! drop_live_triggers >&2 || ! tracy_db_exec mariadb -uroot -e "$sql" >&2; then
+  if ! drop_live_triggers >&2 || ! tracy_db_foreign_keys drop-before --plan "$fk_plan" >&2 \
+     || ! { [[ "${TRACY_TEST_KILL_AT:-}" != restore-foreign-keys ]] || kill -KILL 0; } \
+     || ! tracy_db_exec mariadb -uroot -e "$sql" >&2; then
     # Whatever was dropped comes back: the live tables never moved.
     local rolled=1
     drop_live_triggers >/dev/null 2>&1 || true
     tracy_db_load_triggers "$db" "$live_trig" >&2 || rolled=0
+    tracy_db_foreign_keys rollback --plan "$fk_plan" >&2 || rolled=0
     rm -rf "$trig"
     files_back || rolled=0
-    tracy_db_exec mariadb -uroot -e "DROP DATABASE IF EXISTS \`$tmpdb\`; DROP DATABASE IF EXISTS \`$trash\`" >/dev/null 2>&1 || true
+    if [[ "$rolled" == 1 ]]; then
+      rm -f "$fk_plan"
+      tracy_db_exec mariadb -uroot -e "DROP DATABASE IF EXISTS \`$tmpdb\`; DROP DATABASE IF EXISTS \`$trash\`" >/dev/null 2>&1 || true
+    fi
+    # An incomplete rollback keeps stage/trash evidence for foreign-key recovery.
     step swap failed
     restore_answer 0 RESTORE_FAILED swap "$rolled" "the database swap was refused; the old database and files are in place"; return
   fi
   tracy_db_load_triggers "$db" "$new_trig" >&2 || triggers_ok=0
+  tracy_db_foreign_keys apply --plan "$fk_plan" >&2 || triggers_ok=0
   step swap done
 
   # 6. check the live database. (TRACY_TEST_FAIL_AFTER_SWAP: the test suite's way to make this
@@ -738,16 +757,23 @@ PYEOF
       while IFS= read -r one; do [[ -z "$one" ]] || in_now+=("$one"); done <<< "$restored"
     fi
     if { if [[ -n "$ONLY_TABLES" ]]; then tracy_db_drop_triggers_of "$db" ${in_now[@]+"${in_now[@]}"}; else tracy_db_drop_triggers "$db"; fi; } >&2 \
-       && tracy_db_exec mariadb -uroot -e "$back" >&2 \
-       && tracy_db_load_triggers "$db" "$live_trig" >&2 && files_back; then rolled=1; fi
+       && tracy_db_foreign_keys drop-after --plan "$fk_plan" >&2 \
+       && tracy_db_exec mariadb -uroot -e "$back" >&2; then
+      rolled=1
+      tracy_db_load_triggers "$db" "$live_trig" >&2 || rolled=0
+      tracy_db_foreign_keys rollback --plan "$fk_plan" >&2 || rolled=0
+      files_back || rolled=0
+    fi
+    [[ "$rolled" != 1 ]] || rm -f "$fk_plan"
     rm -rf "$trig"
     step check failed
     if [[ "$triggers_ok" != 1 ]]; then
-      restore_answer 0 RESTORE_FAILED check "$rolled" "the restored database triggers did not load"; return
+      restore_answer 0 RESTORE_FAILED check "$rolled" "the restored database triggers or foreign keys did not load"; return
     fi
     restore_answer 0 RESTORE_FAILED check "$rolled" "the restored database did not check out ($now_n tables, expected $RESTORE_TABLES)"; return
   fi
   rm -rf "$trig"
+  rm -f "$fk_plan"
   tracy_db_exec mariadb -uroot -e "DROP DATABASE IF EXISTS \`$tmpdb\`" >/dev/null 2>&1 || true
   step check done
   restore_answer 1 "" "" "" ""

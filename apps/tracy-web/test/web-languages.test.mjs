@@ -94,7 +94,13 @@ test('loginPage: <html lang> and the copy follow the language, for every languag
     const html = loginPage({ origin: 'http://tracy.test', lang })
     assert.ok(html.startsWith(`<!doctype html><html lang="${HTML_LANG[lang]}">`), lang)
     assert.equal(htmlLang(lang), HTML_LANG[lang])
-    for (const key of ['login.heroTitle', 'login.continueWithEmail', 'login.verify', 'login.resend']) {
+    for (const key of [
+      'login.heroTitle',
+      'login.pitchTitle',
+      'login.emailMeCode',
+      'login.verify',
+      'login.resend'
+    ]) {
       const text = translate(lang, key).replaceAll("'", '&#39;')
       assert.ok(html.includes(text), `${lang}: ${key}`)
     }

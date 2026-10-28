@@ -737,8 +737,8 @@ export const BROWSER_SCRIPT =
   // FAIL CLOSED here too: a route that is not a loopback port is refused, never dialled.
   "else if(via&&(!viaM||Number(viaM[1])<1||Number(viaM[1])>65535)){done('TRACY_BROWSER ERR the public route is not a loopback port')}" +
   // FAIL CLOSED in host mode: a container that is not a plain name, no container port, or a mode
-  // other than the style probe (the one caller) is refused before chromium starts.
-  "else if(serveIn&&(!/^[a-z0-9][a-z0-9_.-]{0,127}$/.test(serveIn)||!viaM||mode!=='styles')){done('TRACY_BROWSER ERR the host route needs a container name, its loopback port and the styles mode')}" +
+  // other than the style probe and the customer's view (its two callers) is refused before chromium starts.
+  "else if(serveIn&&(!/^[a-z0-9][a-z0-9_.-]{0,127}$/.test(serveIn)||!viaM||(mode!=='styles'&&mode!=='view'))){done('TRACY_BROWSER ERR the host route needs a container name, its loopback port and the styles or view mode')}" +
   "else if(mode==='style'&&!req){done('TRACY_BROWSER ERR the style request is not a JSON object with props')}" +
   "else if(mode==='view'&&!vreq){done('TRACY_BROWSER ERR the view request is not a JSON object with w, h and y')}else{" +
   "flags.push('--user-data-dir='+profile);" +
@@ -816,10 +816,12 @@ export const BROWSER_SCRIPT =
   ')return;const p=m.params||{};const rid=p.requestId,ru=(p.request&&p.request.url)||"";' +
   "let allow=true;if(p.resourceType==='Document'&&p.frameId===topFrame){try{allow=new URL(ru).origin===origin}catch{allow=false}}" +
   // the page's own public origin is served from loopback; everything else goes its ordinary way.
-  // host mode: this site's documents and stylesheets from its container; everything else is failed,
-  // never continued (continuing would let chromium dial from dsh's networks).
+  // host mode: this site's documents and stylesheets from its container — and for a view, the
+  // site's own pictures and fonts too, or the picture is a page without them; everything else is
+  // failed, never continued (continuing would let chromium dial from dsh's networks).
   'if(allow&&serveIn){let own=false;try{own=new URL(ru).origin===origin}catch{}' +
-  "if(own&&(p.resourceType==='Document'||p.resourceType==='Stylesheet')&&(p.request&&p.request.method)==='GET')return serveExec(p);" +
+  "const kind=p.resourceType;const served=kind==='Document'||kind==='Stylesheet'||(mode==='view'&&(kind==='Image'||kind==='Font'));" +
+  "if(own&&served&&(p.request&&p.request.method)==='GET')return serveExec(p);" +
   "send('Fetch.failRequest',{requestId:rid,errorReason:'BlockedByClient'},sid).catch(()=>{});return}" +
   'if(allow&&via){let own=false;try{own=new URL(ru).origin===origin}catch{}if(own)return serve(p)}' +
   "if(allow){send('Fetch.continueRequest',{requestId:rid},sid).catch(()=>{})}" +
@@ -1057,17 +1059,35 @@ export function hostBrowserTarget(target) {
 }
 
 /**
- * The command that runs {@link BROWSER_SCRIPT} in dsh's own node, in `styles` mode, against a
- * {@link hostBrowserTarget}. The browser, the container and its port ride in env (never in the
- * script text); `DOCKER_HOST` is the daemon dsh's own transport uses, so the script's per-request
- * `docker exec … curl` goes where every other exec of this plugin goes.
- * @param {{ chrome: string, target: { url: string, origin: string, container: string, via: string }, dockerHost: string | null | undefined }} input
+ * The command that runs {@link BROWSER_SCRIPT} in dsh's own node, in `styles` mode (or `view`, with
+ * its frame as `file` and its own deadline), against a {@link hostBrowserTarget}. The browser, the
+ * container and its port ride in env (never in the script text); `DOCKER_HOST` is the daemon dsh's
+ * own transport uses, so the script's per-request `docker exec … curl` goes where every other exec
+ * of this plugin goes.
+ * @param {{ chrome: string, target: { url: string, origin: string, container: string, via: string }, dockerHost: string | null | undefined,
+ *   mode?: 'styles' | 'view', file?: string, settleMs?: number, deadlineMs?: number }} input
  * @returns {{ file: string, args: string[], env: Record<string, string> }}
  */
-export function hostBrowserCommand({ chrome, target, dockerHost }) {
+export function hostBrowserCommand({
+  chrome,
+  target,
+  dockerHost,
+  mode = 'styles',
+  file = '',
+  settleMs = BROWSER_SETTLE_MS,
+  deadlineMs
+}) {
   return {
     file: process.execPath,
-    args: ['-e', BROWSER_SCRIPT, 'styles', target.url, target.origin, ''],
+    args: [
+      '-e',
+      BROWSER_SCRIPT,
+      mode,
+      target.url,
+      target.origin,
+      file,
+      ...(deadlineMs === undefined ? [] : [String(settleMs), String(deadlineMs)])
+    ],
     env: {
       TRACY_CHROME: chrome,
       TRACY_SERVE_CONTAINER: target.container,
@@ -1086,16 +1106,27 @@ export const HOST_BROWSER_TIMEOUT_MS = BROWSER_DEADLINE_MS + BROWSER_FLUSH_MS + 
 /**
  * The impure runner for {@link hostBrowserCommand}: dsh's node, in dsh. Same result shape as
  * {@link dockerExec}, so the same parsers and clean-exit rule read it.
- * @param {{ chrome: string, target: { url: string, origin: string, container: string, via: string }, timeoutMs?: number, maxBuffer?: number }} input
+ * @param {{ chrome: string, target: { url: string, origin: string, container: string, via: string }, timeoutMs?: number, maxBuffer?: number,
+ *   mode?: 'styles' | 'view', file?: string, deadlineMs?: number }} input
  * @returns {Promise<{ code: number | null, stdout: string, stderr: string, timedOut: boolean, spawnError?: string }>}
  */
 export function hostBrowserExec({
   chrome,
   target,
   timeoutMs = HOST_BROWSER_TIMEOUT_MS,
-  maxBuffer = 8 * 1024 * 1024
+  maxBuffer = 8 * 1024 * 1024,
+  mode = 'styles',
+  file = '',
+  deadlineMs
 }) {
-  const c = hostBrowserCommand({ chrome, target, dockerHost: resolveDockerHost(undefined, process.env) })
+  const c = hostBrowserCommand({
+    chrome,
+    target,
+    dockerHost: resolveDockerHost(undefined, process.env),
+    mode,
+    file,
+    ...(deadlineMs === undefined ? {} : { deadlineMs })
+  })
   return new Promise((resolve) => {
     execFile(
       c.file,

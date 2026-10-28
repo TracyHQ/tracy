@@ -74,6 +74,22 @@ test('a poster or menu board never takes a hero, even a wide food one (C10)', ()
   assert.equal(plan.placements.length, 0)
 })
 
+test('a picture the vision model calls a graphic takes no photo place, not even one that allows words (#48)', () => {
+  const vision = { subject: 'food', textPresence: 'absent', quality: 'good', isGraphic: true }
+  for (const role of ['dish', 'article', 'gallery', 'hero']) {
+    const fit = fitOf(pic('g', 2400, 1600, 'grilled fish platter', { vision }), group('g1', role))
+    assert.equal(fit, null, role)
+  }
+  assert.equal(pic('g', 2400, 1600, 'x', { vision }).graphic, true)
+  assert.notEqual(
+    fitOf(
+      pic('p', 2400, 1600, 'grilled fish platter', { vision: { ...vision, isGraphic: false } }),
+      group('g1', 'dish')
+    ),
+    null
+  )
+})
+
 test('a hero without a vision label must be wide enough to be a photograph; a square food picture is not', () => {
   const plan = planPlacement({
     groups: [group('slide-1', 'hero', { demo: { width: 1400, height: 1400 } })],

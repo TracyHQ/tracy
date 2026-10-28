@@ -1068,7 +1068,7 @@ test('scope "site" on a shorthand its rule sets side by side from tokens: the ru
   assert.match(out.reach, /every element the rule `\.tracy \.wp-block-button__link` paints, on every page/)
 })
 
-test('🔒 WordPress, a block theme: a token a design-system slot sets in global styles (after Additional CSS there) is set again MORE specific; one on :root stays :root', async () => {
+test('🔒 WordPress, a block theme: a token a design-system slot sets in global styles (after Additional CSS there) is set again MORE specific; so is one on :root that no theme.json makes a variable', async () => {
   const HI = ':root:root:root:root:root:root'
   const row = (/** @type {string} */ by) => ({
     value: '#1d4ed8',
@@ -1098,8 +1098,67 @@ test('🔒 WordPress, a block theme: a token a design-system slot sets in global
   // WordPress 7.1.3 prints a block theme's Additional CSS inside global styles BEFORE theme.json's own
   // `styles.css`, where the slot writes `:root`×6 — the same selector there would lose by order
   assert.equal(await run(HI), `${HI}:not(.\\#)`)
-  // theme.json's variables stand on `:root` before it: `:root` alone wins by order, as before
-  assert.equal(await run(':root'), ':root')
+  // `--tb-accent` is no theme.json variable: on `:root` in global styles it is CSS (theme.json's own
+  // `styles.css`, printed after the Additional CSS), so `:root` alone would lose by order. A theme.json
+  // variable keeps `:root` (the scope "site" test above).
+  assert.equal(await run(':root'), ':root:not(.\\#)')
+})
+
+test('🔒 WordPress, a block theme: a preset theme.json’s own styles.css sets again on :root is beaten, not tied (wp-ja-fresco, LOOK_SET_NO_EFFECT 26/10/2026)', async () => {
+  const THEME = 'wp-ja-fresco'
+  const themeJson = JSON.stringify({
+    version: 3,
+    settings: { color: { palette: [{ slug: 'bg', color: '#0a0b0a' }] } },
+    styles: {
+      css: ':root{color-scheme:light dark;--wp--preset--color--bg:light-dark(var(--ds-c-bg, #0a0b0a),var(--ds-c-bg, #0a0b0a));}'
+    }
+  })
+  const bgRow = (/** @type {string} */ hex) => ({
+    value: hex === '#0a0b0a' ? 'rgb(10, 11, 10)' : 'rgb(42, 43, 38)',
+    hex,
+    set: 'background: var(--wp--preset--color--bg)',
+    by: '.tracy-header',
+    sheet: `/wp-content/themes/${THEME}/assets/css/tracy.css`,
+    line: 163,
+    tokens: [
+      {
+        name: '--wp--preset--color--bg',
+        value: '#0a0b0a',
+        by: ':root',
+        sheet: 'global-styles-inline-css',
+        on: '<html>'
+      }
+    ]
+  })
+  const info = {
+    el: '<header.tracy-header>',
+    text: '',
+    unique: 'header.tracy-header',
+    body: `home page page-id-7 wp-theme-${THEME} tracy`,
+    sheets: ['global-styles-inline-css', `/wp-content/themes/${THEME}/assets/css/tracy.css`]
+  }
+  const site = fakeSite({
+    'wp-config.php': '<?php\n',
+    [`wp-content/themes/${THEME}/theme.json`]: themeJson,
+    [`wp-content/themes/${THEME}/assets/css/tracy.css`]:
+      '.tracy-header {\n  background: var(--wp--preset--color--bg);\n}\n'
+  })
+  const { measure } = readings(
+    wpButton({ 'background-color': bgRow('#0a0b0a') }, info),
+    wpButton({ 'background-color': bgRow('#2a2b26') }, info)
+  )
+  const out = /** @type {any} */ (
+    await lookSet({
+      params: { target: { selector: 'header' }, props: { 'background-color': '#2a2b26' }, scope: 'site' },
+      platform: 'wordpress',
+      siteRoot: site.siteRoot,
+      measure,
+      io: site.io
+    })
+  )
+  assert.equal(out.ok, true, JSON.stringify(out))
+  assert.equal(appendedSelector(site.custom.css), ':root:not(.\\#)', site.custom.css)
+  assert.match(site.custom.css, /--wp--preset--color--bg: #2a2b26;/)
 })
 
 test('🔒 the receipt names the element it matched and its place: nth counts from 0, and nth:1 is the SECOND match (dskeepjo)', async () => {

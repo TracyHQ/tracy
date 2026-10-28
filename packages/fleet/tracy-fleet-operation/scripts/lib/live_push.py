@@ -2171,6 +2171,39 @@ class Changeset:
         creates = {i["creates"]: i["id"] for i in self.items if i.get("creates")}
         for item in self.items:
             item["dependsOn"] = sorted({creates[d] for d in item["dependsOn"] if d in creates and creates[d] != item["id"]})
+        # Only replacement pairs change order: a confirmed trash must free the exact address
+        # before the new record asks the CMS to allocate it. Other removals keep their old order.
+        for item in self.items:
+            if item["op"] != "create":
+                continue
+            values = item.get("write", {})
+            slug = values.get("post_name") if self.platform == "wordpress" else values.get("alias")
+            if not slug:
+                continue
+            for old in self.items:
+                if old["op"] != "delete" or old["kind"] != item["kind"]:
+                    continue
+                expected = old.get("expect", {})
+                if self.platform == "wordpress":
+                    post_type = values.get("post_type")
+                    # Hierarchical/custom post types have CMS-specific scopes. Conservative extra
+                    # dependencies within one type are harmless; never couple unrelated types.
+                    same_scope = post_type == self.post_type_of(old["spec"], old)
+                    if post_type == "page":
+                        same_scope = same_scope and values.get("post_parent", "0") == expected.get("post_parent", "0")
+                    match = same_scope and slug == expected.get("post_name")
+                else:
+                    scope = {"article": ("catid",), "contact": ("catid",),
+                             "category": ("parent_id", "extension"), "menuItem": ("parent_id", "menutype", "language")}.get(item["kind"], ())
+                    match = slug == expected.get("alias") and all(values.get(k) == expected.get(k) for k in scope)
+                if match:
+                    item["dependsOn"] = sorted(set(item["dependsOn"]) | {old["id"]})
+                    item.setdefault("replaces", []).append(old["id"])
+                    # Joomla keeps aliases occupied in trash. Name the conflict before writing
+                    # instead of silently allocating another URL or permanently deleting content.
+                    if self.platform == "joomla":
+                        item["conflict"] = {"reason": "changed-on-live", "fields": ["alias"]}
+                        old["conflict"] = {"reason": "changed-on-live", "fields": ["alias"]}
         done: list[dict] = []
         placed: set[str] = set()
         seq = {i["id"]: at for at, i in enumerate(self.items)}

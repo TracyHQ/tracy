@@ -160,6 +160,11 @@ export async function startGitHubStub(opts) {
     }
     return send(404, { message: 'Not Found' })
   })
+  // No idle keep-alive timeout. The stub shares its event loop with the test process, whose other cases
+  // run synchronous git; with Node's default (5s, plus a 1s buffer) an idle socket could be timed out
+  // after a client had already sent its next request on it but before this loop read that request, and
+  // the client saw ECONNRESET ("fetch failed"). close() still drops idle sockets.
+  server.keepAliveTimeout = 0
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve))
   const addr = /** @type {import('node:net').AddressInfo} */ (server.address())
   base = `http://127.0.0.1:${addr.port}`

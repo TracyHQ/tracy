@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-89-sync-partial-apply",
+  "kind": "fix",
+  "title": "Failed Apply drains requests and retains acknowledged writes for Undo",
+  "pr": 89,
+  "area": "sync/live",
+  "cms": ["jo", "wp"],
+  "needs": ["python3"],
+  "flaky_model": false,
+  "steps": ["Run the fault-injecting live writer tests."],
+  "expect": [
+    "A read refusal stops scheduling and drains delayed parallel siblings before saving the partial result.",
+    "A blocked batch retains earlier acknowledged writes and their Undo snapshots.",
+    "All changeset items are accounted for as written, failed or skipped."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/live-write.test.mjs"
+    ],
+    "tests": [
+      "a stopped parallel Apply drains acknowledged siblings and preserves a complete undoable partial result",
+      "a blocked batch retains earlier writes in the failed Apply answer and Undo"
+    ]
+  }
+}

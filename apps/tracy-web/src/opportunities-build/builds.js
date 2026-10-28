@@ -138,6 +138,8 @@ export async function startBuild({
         next: 'Create a new revision with a template this deployment offers for the revision’s CMS.'
       }
     }
+  const readiness = readinessOfBuild(revision, domain)
+  if (readiness?.verdict === 'block') return readinessRefusal(readiness)
   const buildId = deterministicBuildId(accountId, revision.id, requestId)
   const existing = await pool.query('select * from wo_build where account_id = $1 and request_id = $2', [
     accountId,
@@ -245,7 +247,9 @@ export async function startBuild({
     body: answer.body,
     at: new Date().toISOString(),
     ...(demoActionId ? { demoActionId } : {}),
-    ...(pagePlan ? { pagePlan } : {})
+    ...(pagePlan ? { pagePlan } : {}),
+    // A warned brief builds, and what it lacks goes with the build as questions for the owner (#50).
+    ...(readiness?.verdict === 'warn' ? { readiness: readinessNote(readiness) } : {})
   }
   const saved = await saveBuildReceipt(pool, row.id, {
     state: answer.ok ? 'provisioning' : 'refused',
@@ -261,6 +265,45 @@ export async function startBuild({
       code: answer.body?.code ?? 'SITE_CREATE_REFUSED',
       next: 'Read `build.receipt` for the create door’s answer; fix it and press again with the same requestId.',
       build
+    }
+  }
+}
+
+/**
+ * The readiness a build honours (#50): the one measured with the brief, measured again only when the build's template
+ * names the kinds of cards it shows (the one check a template-free brief cannot make). A brief stored before readiness
+ * was measured carries none and builds as it did.
+ */
+export function readinessOfBuild(revision, domain) {
+  const stored = revision?.brief?.readiness
+  if (!stored) return null
+  const kinds = revision.template?.contentKinds
+  return Array.isArray(kinds) && typeof domain?.briefReadinessOf === 'function'
+    ? domain.briefReadinessOf(revision.brief, { templateKinds: kinds })
+    : stored
+}
+
+/** What a build keeps of a readiness: its verdict, next step, the checks that were not passed and the owner questions. */
+function readinessNote(readiness) {
+  return {
+    verdict: readiness.verdict,
+    next: readiness.next,
+    checks: readiness.checks.filter((c) => c.verdict === 'block' || c.verdict === 'warn').map((c) => c.id),
+    ownerQuestions: readiness.ownerQuestions ?? []
+  }
+}
+
+/** A blocked brief starts no build: the owner is asked, or the place is researched again. */
+function readinessRefusal(readiness) {
+  return {
+    status: 409,
+    body: {
+      code: 'BRIEF_NOT_READY',
+      next:
+        readiness.next === 'research-again'
+          ? 'Research the place again: its photos are not labelled or their sources are missing. Then make a new revision.'
+          : 'Ask the owner the questions in `readiness.ownerQuestions`, then make a new revision with the answers.',
+      readiness: readinessNote(readiness)
     }
   }
 }

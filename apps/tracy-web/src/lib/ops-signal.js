@@ -35,7 +35,7 @@ const FIELDS = {
   // `detail`: where a Joomla import stopped (step, check, HTTP status, bare path, error code), shaped
   // field by field in `sites/route.js` before it reaches here.
   'site.stuck': ['step', 'reason', 'platform', 'attempt', 'sign_in', 'detail'],
-  'site.edit': ['action', 'ok', 'refusal', 'from_comment'],
+  'site.edit': ['action', 'ok', 'refusal', 'copy_reason', 'from_comment'],
   // Usage (`tasks/todo-do-dung-that.md`): a person opened a site's workspace page (one per half hour),
   // and the Add site wizard opened, by the id the wizard drew for that opening — `site.create` carries
   // the same `wizard_id`, so an opening with no create after a day is a wizard left before Create.
@@ -125,6 +125,10 @@ const stuckWhere = (value) => {
   if (detail.status) parts.push(`HTTP ${detail.status}`)
   if (detail.path) parts.push(detail.path)
   if (detail.error) parts.push(detail.error)
+  // "Where: export/no_engine_reply · HTTP 200 · db.dump · answered php_notice"
+  if (detail.action) parts.push(detail.action)
+  if (detail.answer) parts.push(`answered ${detail.answer}`)
+  if (detail.engine_error) parts.push(`engine ${detail.engine_error}`)
   return `\nWhere: ${parts.join(' · ')}${installRoads(detail)}${sizes(detail)}`
 }
 // "Sign-in: password · username is an email address": how the run came in (the row's own

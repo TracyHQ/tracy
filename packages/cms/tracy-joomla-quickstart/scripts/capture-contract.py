@@ -88,6 +88,20 @@ p.add_argument('--full-coverage',action='store_true')
 # (the packaging agent reviewed them), the rule tables place the rest, and what they cannot place is listed on stdout
 # (and in `--unplaced-report`, a file kept outside the contract) for the agent to bind from sample and position.
 p.add_argument('--previous-map',default='');p.add_argument('--unplaced-report',default='')
+# Whole units (spec #37 C1, C2): the HTML helper answers one slot per text node, so a heading cut by a `<br>` or a `<span>`
+# ("NO1 <span>boxing</span> since 2008") came out as three slots no build can rewrite as one sentence. With this flag the
+# text pieces of one heading, paragraph, list item, caption or cell become ONE text slot whose `xpath` is that element
+# (the plugin's xpath grammar already resolves an element; a text range inside it belongs to the slot), and a fragment
+# with no such element at all (an ACM field holding `THE <br> WORKOUT`) is one slot for the whole field. A list item
+# keeps its own slot, and its link stays a url slot beside it; the rule tables group them. A unit with a word inside
+# a link (or any element carrying href/src/alt/title) is NOT merged: the plugin keeps that element when it writes a
+# whole unit, so the link would lose its words; its pieces stay separate text slots as without the flag. Off by default so every
+# published profile re-captures byte for byte.
+p.add_argument('--whole-units',action='store_true')
+# The role vocabulary this capture WRITES (`roleVocabularyVersion`). 2 is what every released map carries. 3 (ADR 0040)
+# adds the roles the whole-unit and list rules need to say what they found: article.title, editorial.navigation_url,
+# editorial.illustration. Off by default: switching is a release decision, made with Road to live.
+p.add_argument('--role-vocabulary',choices=['2','3'],default='2')
 a=p.parse_args()
 menutypes=[s for s in a.menutypes.split(',') if s]
 template=a.template
@@ -132,9 +146,60 @@ if a.skip_unshipped_block_modules:
   if block and not (root/('templates/'+template+'/acm')/block).is_dir():unshipped.add(r['id'])
  inv['modules_menu']=[r for r in inv['modules_menu'] if r['moduleid'] not in unshipped]
 # ── --full-coverage: the rules that declare the rest of what a visitor reads ──────────────────────
+# The elements whose text a reader takes as one piece: a heading, a sentence, a list item, a caption, a cell, a button.
+# `a` and `span` are not: they sit inside one of these.
+UNIT_TAGS={'h1','h2','h3','h4','h5','h6','p','li','dt','dd','figcaption','summary','th','td','button','label'}
+HTML_ROOT='/html/body/div'
+def text_unit(xpath):
+ """The xpath of the nearest unit element above a text node's xpath, or None."""
+ segs=xpath.strip('/').split('/')
+ if not segs or not re.fullmatch(r'text\(\)(\[\d+\])?',segs[-1]):return None
+ for i in range(len(segs)-2,-1,-1):
+  if re.fullmatch(r'[a-z0-9]+',re.sub(r'\[\d+\]$','',segs[i])) and re.sub(r'\[\d+\]$','',segs[i]) in UNIT_TAGS:return '/'+'/'.join(segs[:i+1])
+ return None
+# The attributes the helper answers as slots of their own. The plugin writes a whole-unit slot as one text node and
+# KEEPS every element carrying one of these (ContentSlots::writeUnit), so a word inside such an element cannot be
+# part of a merged unit: `<p>Call <a href="tel:...">us</a> today</p>` would be written `<p>New text<a href="tel:..."></a></p>`,
+# a link with no words. A unit holding such a piece keeps its pieces as separate text slots, each written in place.
+SLOT_ATTRS=('href','src','alt','title')
+def slotted_elements(hs):
+ """The xpaths of the elements that carry an attribute slot (`.../a` for `.../a/@href`)."""
+ out=set()
+ for h in hs:
+  x=h.get('xpath')
+  if isinstance(x,str) and '/@' in x and x.rsplit('/@',1)[1] in SLOT_ATTRS:out.add(x.rsplit('/@',1)[0])
+ return out
+def inside_slotted(xpath,unit,slotted):
+ """Whether an element between the unit and the text node at `xpath` (both excluded) carries an attribute slot."""
+ segs=xpath[len(unit):].strip('/').split('/')[:-1];at=unit
+ for seg in segs:
+  at=at+'/'+seg
+  if at in slotted:return True
+ return False
+def whole_units(hs):
+ """Merge the text slots the HTML helper cut out of one unit element into one slot on that element."""
+ texts=[h for h in hs if h.get('type')=='text' and isinstance(h.get('xpath'),str) and '/@' not in h['xpath']]
+ units={id(h):text_unit(h['xpath']) for h in texts}
+ # No unit element anywhere in the fragment: the fragment is the unit (a heading field with `<br>`, a one-line note).
+ if texts and not any(units.values()) and all(h['xpath'].startswith(HTML_ROOT+'/') for h in texts):units={id(h):HTML_ROOT for h in texts}
+ members=collections.defaultdict(list)
+ for h in texts:
+  if units[id(h)]:members[units[id(h)]].append(h)
+ slotted=slotted_elements(hs)
+ apart={u for u,ms in members.items() if any(inside_slotted(m['xpath'],u,slotted) for m in ms)}
+ out=[];done=set()
+ for h in hs:
+  unit=units.get(id(h))
+  if not unit or len(members[unit])<2 or unit in apart:out.append(h);continue
+  if unit in done:continue
+  done.add(unit)
+  sample=re.sub(r'\s+',' ',' '.join(m['sample'] for m in members[unit])).strip()
+  out.append({**h,'sample':sample,'xpath':unit})
+ return out
 def html_slots(body):
  script='require $argv[1]; echo json_encode(ContentSlots::htmlSlots(stream_get_contents(STDIN)));'
- return json.loads(subprocess.check_output(['php','-r',script,a.slots_helper],input=body.encode())) if body.strip() else []
+ hs=json.loads(subprocess.check_output(['php','-r',script,a.slots_helper],input=body.encode())) if body.strip() else []
+ return whole_units(hs) if a.whole_units else hs
 def form_types(files):
  """Field name -> type from Joomla form XML (`<field>` and JoomlArt's `<item>`), first declaration wins."""
  types={}
@@ -330,9 +395,7 @@ for kind,table in tables.items():
    columns=['content'] if kind=='module' and row['module']=='mod_custom' and row['title'].startswith(a.module_prefix) else ['introtext','fulltext'] if kind=='article' else []
    for col in columns:
     body=row[col]
-    script='require $argv[1]; echo json_encode(ContentSlots::htmlSlots(stream_get_contents(STDIN)));'
-    hs=json.loads(subprocess.check_output(['php','-r',script,a.slots_helper],input=body.encode())) if body.strip() else []
-    for h in hs:add(col,h['type'],h['sample'],xpath=h['xpath'],label=row['title'])
+    for h in html_slots(body):add(col,h['type'],h['sample'],xpath=h['xpath'],label=row['title'])
   # Labels remain content; identities use stable aliases rather than mutable titles.
   if kind in ['article','menuItem']:add('title','text',row['title'],label=row['title'])
   if a.full_coverage:declare_everything(kind,row,add)
@@ -538,7 +601,7 @@ if a.previous_map:
    sl['role']=before['role']
    if 'group' in before:sl['group']=before['group']
 # The rule tables fill in every slot still without a role; slots that kept one are left as they are.
-proposed=subprocess.run(['node',str(repo_root/'scripts/slot-roles/rule-tables.mjs'),'joomla'],input=json.dumps(content_map).encode(),capture_output=True,cwd=repo_root)
+proposed=subprocess.run(['node',str(repo_root/'scripts/slot-roles/rule-tables.mjs'),'joomla','--vocabulary',a.role_vocabulary],input=json.dumps(content_map).encode(),capture_output=True,cwd=repo_root)
 if proposed.returncode:sys.exit('Contract not written:\n- slot role rule tables failed: '+proposed.stderr.decode().strip())
 proposal=json.loads(proposed.stdout)
 content_map=proposal['contentMap'];unplaced=proposal['unplaced']

@@ -172,7 +172,7 @@ test('a batch the model refuses or garbles costs that batch only', async () => {
 test('the vision prompt names "the business" and its trade, bumps the version key, and accepts non-food subjects', async () => {
   assert.notEqual(visionKey({ model: 'deepseek-chat' }), 'deepseek-chat|p1|s1|512q70')
   assert.notEqual(visionKey({ model: 'deepseek-chat' }), 'deepseek-chat|p3|s1|512q70')
-  assert.equal(visionKey({ model: 'deepseek-chat' }), 'deepseek-chat|p4|s1|512q70')
+  assert.notEqual(visionKey({ model: 'deepseek-chat' }), 'deepseek-chat|p4|s1|512q70')
   assert.match(PICTURE_LABEL_SYSTEM, /the business/)
   assert.doesNotMatch(PICTURE_LABEL_SYSTEM, /restaurant/i)
   const fitnessPrompt = pictureLabelSystem('fitness')

@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-58-hold-budget-timeout",
+  "kind": "fix",
+  "title": "The visual check's before-hold draws nothing more once a read inside its budget timed out, even if the clock still reads time left",
+  "pr": 58,
+  "area": "site-changes/visual-check",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the check-pages test of tracy-site-tools, which holds a module write whose assignment read never answers while the injected clock stays frozen."
+  ],
+  "expect": [
+    "S1: the test 'a read that timed out spends the budget even when the clock still reads time left' passes: nothing is drawn and the hold reports no drawn page."
+  ],
+  "selectors": {
+    "tool": "packages/tools/tracy-site-tools/test/check-pages.test.mjs"
+  },
+  "evidence": "A CI run drew ['/'] where [] was expected (budget 40 ms, the usage read never resolves): the timer fired while Date.now still read 1 ms left",
+  "fence": "drawFor in check-pages.mjs marks the budget spent when a read inside it times out",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-name-pattern=a read that timed out spends the budget",
+      "packages/tools/tracy-site-tools/test/check-pages.test.mjs"
+    ]
+  }
+}

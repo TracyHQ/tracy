@@ -52,9 +52,11 @@ function harness() {
 // inline-script branch and its sentence changed; the previous pages.js still renders the old hashes.
 // Retaken 24/10/2026 after the local stand's sign-in learned to fill the shown code and send it
 // (`fillLocalCode`, LOCAL_LOGIN_PREVIEW only): only the inline script changed.
+// Retaken 28/10/2026 after the first screen (issue #33): the pitch beside the card, Google first,
+// the links under it and the mistyped-domain hint; the previous pages.js still renders the old hashes.
 test('without onboard the sign-in page is byte-for-byte what it was', () => {
   const cases = [
-    [{ origin: ORIGIN }, 'd5f3bd6174e3eb14490676d97832385dfc6a6f54395ae31233f824482588cce0'],
+    [{ origin: ORIGIN }, '93d3207d911b847610704dee2aee318923433620f172a3354f5787be3e0b9a2f'],
     [
       {
         origin: ORIGIN,
@@ -63,7 +65,7 @@ test('without onboard the sign-in page is byte-for-byte what it was', () => {
         email: 'a@b.co',
         lang: 'vi'
       },
-      'be6cdb1a1a16a838e0bb886fe323a2e23a9e07a4ef172d8d7a9aab3719afc5c7'
+      '9812c7f43929265b6b8e250775c45a4d598d8e5bf004263be8426629b046f1eb'
     ],
     [
       {
@@ -76,7 +78,7 @@ test('without onboard the sign-in page is byte-for-byte what it was', () => {
         localPreview: true,
         localCode: '123456'
       },
-      '47c35ddf049b7ca8983d94cacbb17b14360ee587f55075d880e8ae437d31102f'
+      'bd998d2c6b28759ba420959e5ee338038ae1775b1c300069481a48208936ae41'
     ]
   ]
   for (const [params, hash] of cases) {

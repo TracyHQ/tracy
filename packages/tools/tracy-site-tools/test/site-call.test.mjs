@@ -4085,6 +4085,11 @@ test('tiers: a destructive call is refused CONFIRM_FIRST — nothing sent, the m
 
   assert.deepEqual([first.code, first.tier, sent.length], ['CONFIRM_FIRST', 'destructive', 0])
   assert.match(first.next, /ask_user_question/)
+  const retry = await call(wordpress({ send }), { ...deletePost, confirm: true })
+  assert.equal(retry.code, 'CONFIRM_FIRST')
+  assert.equal(retry.confirmationMissing, true)
+  assert.match(retry.next, /No recorded yes for this exact call/)
+  assert.equal(sent.length, 0)
 })
 
 test('tiers: after the customer answered, the call runs once without confirm; the next message does not unlock it again', async () => {

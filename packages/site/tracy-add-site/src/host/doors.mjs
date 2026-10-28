@@ -58,13 +58,79 @@ export function isEngineAnswer(value) {
  * @returns {Record<string, unknown> | null}
  */
 export function engineReply(text) {
-  let parsed
+  const parsed = parseJson(text)
+  if (isEngineAnswer(parsed)) return /** @type {Record<string, unknown>} */ (parsed)
+  // The engine's JSON with PHP's own notices printed in front of it is still the engine's reply.
+  const rest = afterPhpNotices(text)
+  if (rest === null) return null
+  const again = parseJson(rest)
+  return isEngineAnswer(again) ? /** @type {Record<string, unknown>} */ (again) : null
+}
+
+/** @param {string} text */
+function parseJson(text) {
   try {
-    parsed = JSON.parse(text)
+    return JSON.parse(text)
   } catch {
-    return null
+    return undefined
   }
-  return isEngineAnswer(parsed) ? /** @type {Record<string, unknown>} */ (parsed) : null
+}
+
+/**
+ * One line of PHP's report of a problem it SURVIVED, as `display_errors` prints it — with
+ * `html_errors` (`<br />` / `<b>Deprecated</b>:  … on line <b>53</b><br />`) or without
+ * (`Deprecated: … on line 53`, `PHP Deprecated: …`). A fatal is not one: the request died there.
+ */
+const PHP_NOTICE_LINE =
+  /^(?:<br\s*\/?>)?\s*(?:PHP\s+)?(?:<b>)?(?:Deprecated|Notice|Warning|Strict Standards|User Deprecated|User Notice|User Warning)(?:<\/b>)?:\s.*\bon line\b/i
+
+/**
+ * The body after the PHP notices printed in front of it, or null when it does not start with one.
+ *
+ * 🔒 WHY (beta report, 27/10/2026). A host that shows PHP's errors on the page prints every notice
+ * the engine survives into its answer, ahead of the JSON: the engine's own buffer (`FatalGuard`) is
+ * flushed as it is when nothing died. PHP 8.5 deprecates `curl_close()`, which the engine's uploader
+ * calls after every part, so on such a host each `db.dump` / `files.pack` answer came back as
+ * "Deprecated: Function curl_close() is deprecated … on line 53" plus the engine's JSON: read as not
+ * the engine, the import stopped as `call_failed` after its first part, three times in a row. Only
+ * whole lines in PHP's own notice form are taken off, and what remains must be an engine answer.
+ * @param {string} text
+ * @returns {string | null}
+ */
+export function afterPhpNotices(text) {
+  const lines = String(text).split(/\r?\n/)
+  let k = 0
+  let notices = 0
+  while (k < lines.length) {
+    const line = lines[k].trim()
+    if (line === '' || /^<br\s*\/?>$/i.test(line)) k += 1
+    else if (PHP_NOTICE_LINE.test(line)) {
+      notices += 1
+      k += 1
+    } else break
+  }
+  return notices > 0 && k < lines.length ? lines.slice(k).join('\n') : null
+}
+
+/**
+ * What a body that was not an engine reply looked like, as one of `DIAGNOSTIC_ANSWERS`: never its
+ * text, which can name the host's folders or carry a gate's markup.
+ * @param {string} text
+ * @returns {'empty' | 'php_fatal' | 'php_notice' | 'html' | 'json' | 'text'}
+ */
+export function answerKind(text) {
+  const t = String(text ?? '').trim()
+  if (t === '') return 'empty'
+  if (/\b(?:Fatal error|Parse error|Uncaught\s+\w+)\b/.test(t)) return 'php_fatal'
+  if (
+    PHP_NOTICE_LINE.test(
+      t.split(/\r?\n/).find((line) => line.trim() !== '' && !/^<br\s*\/?>$/i.test(line.trim())) ?? ''
+    )
+  )
+    return 'php_notice'
+  if (t.startsWith('<')) return 'html'
+  if (parseJson(t) !== undefined) return 'json'
+  return 'text'
 }
 
 /**

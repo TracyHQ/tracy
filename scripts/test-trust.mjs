@@ -6,7 +6,7 @@
  *   node scripts/test-trust.mjs --cohort <name> --check-receipt <run dir>
  *
  * A cohort (`scripts/test-trust-<name>.json`) names test files and mutants. A mutant is one recorded,
- * exact text replacement in one product file (the convention of `tests/qa/layers/api/red.mjs`).
+ * exact text replacement in one product file.
  * Everything a test run may load is copied into a scratch tree under `--out`, at its repo-relative
  * place; the worktree is only read. What is copied, and nothing else:
  *   - each test file and what it reaches through literal relative imports;
@@ -107,9 +107,8 @@ const hashAll = (base, files) =>
   Object.fromEntries(files.map((f) => [f, sha256(readFileSync(join(base, f)))]))
 
 /**
- * Apply a mutant: the text to replace must occur exactly once. Same rule and same hash as
- * `applyMutation`/`mutationHash` of `tests/qa/layers/api/red.mjs`, kept here because that module
- * loads the API layer's harness, whose computed imports this tool could not bind a receipt to.
+ * Apply a mutant: the text to replace must occur exactly once (the rule and hash of the former QA
+ * API layer's `applyMutation`/`mutationHash`, which now live only here).
  */
 export function applyMutation(source, mutant) {
   const first = source.indexOf(mutant.find)
