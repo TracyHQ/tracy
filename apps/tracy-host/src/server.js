@@ -57,7 +57,12 @@ export async function start({
   // `playwright install`) — the route then answers 503 NO_BROWSER, never a crash.
   const shoot = await makeShoot({ log, visionStreams: config.browserRuns })
   const outline = await makeOutline({ log })
-  const demoQa = await makeDemoQa({ log, runsAtOnce: config.browserRuns, tabsAtOnce: config.demoQaTabs })
+  const demoQa = await makeDemoQa({
+    log,
+    runsAtOnce: config.browserRuns,
+    tabsAtOnce: config.demoQaTabs,
+    readCacheBytes: config.demoReadCacheBytes
+  })
   log.log(
     `[host] browser work at once: ${config.browserRuns} QA run(s) and capture(s), ${config.demoQaTabs} tab(s) a run`
   )

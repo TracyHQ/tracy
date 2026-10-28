@@ -1606,7 +1606,8 @@ export async function makeDemoQa({
   log = console,
   playwright = null,
   runsAtOnce = 1,
-  tabsAtOnce = READ_AT_ONCE
+  tabsAtOnce = READ_AT_ONCE,
+  readCacheBytes = undefined
 } = {}) {
   try {
     playwright ??= await import('playwright')
@@ -1622,7 +1623,7 @@ export async function makeDemoQa({
     return browser
   }
   /** The last read of each page, per site, for an incremental check (`readDemoPage` `previous`). */
-  const lastReads = new DemoReadCache()
+  const lastReads = new DemoReadCache(readCacheBytes ? { maxBytes: readCacheBytes } : {})
   const run = async ({
     asked,
     base,

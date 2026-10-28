@@ -56,3 +56,12 @@ test('one slot is the old one-at-a-time queue, with its bounded waiting line', a
   a()
   ;(await waiting)()
 })
+
+test("the incremental QA's read cache holds a few sites of ~50 pages: a 32nd of the memory, 64 to 512 MB", async () => {
+  const { demoReadCacheBytesOf } = await import('../src/browser-room.js')
+  const MB = 1024 * 1024
+  assert.equal(demoReadCacheBytesOf({}, 1 * GB), 64 * MB)
+  assert.equal(demoReadCacheBytesOf({}, 8 * GB), 256 * MB)
+  assert.equal(demoReadCacheBytesOf({}, 64 * GB), 512 * MB)
+  assert.equal(demoReadCacheBytesOf({ TRACY_DEMO_QA_CACHE_MB: '100' }, 64 * GB), 100 * MB)
+})

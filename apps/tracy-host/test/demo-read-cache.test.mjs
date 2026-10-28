@@ -23,10 +23,19 @@ test('QA cache expires reads and retains no screenshot or base64 payload', () =>
   for (const value of [
     { screenshot: 'large' },
     { nested: { base64: 'large' } },
-    { src: 'data:image/png;base64,abc' }
+    { src: `data:image/png;base64,${'A'.repeat(20_000)}` }
   ]) {
     cache.set('image', value)
     assert.equal(cache.get('image'), null)
+  }
+  // 28/10/2026: a page's own stylesheet inlines small pictures (T4's form-select arrow); its read is kept.
+  const sheets = new DemoReadCache()
+  for (const css of [
+    `.form-select{--t4-form-select-bg-img:url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg'%3e%3c/svg%3e")}`,
+    '.icon{background:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==)}'
+  ]) {
+    sheets.set('sheet', { fingerprint: 'f', read: { cssRules: css } })
+    assert.notEqual(sheets.get('sheet'), null, css.slice(0, 40))
   }
   cache.set('a', { fingerprint: 'same', read: { text: 'all evidence' } })
   time = 10

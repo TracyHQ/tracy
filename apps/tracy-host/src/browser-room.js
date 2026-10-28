@@ -31,3 +31,15 @@ export function demoQaTabsOf(env, memory = hostMemoryBytes()) {
   if (Number.isInteger(n) && n > 0) return n
   return memory >= 16 * GB ? 3 : 1
 }
+
+/**
+ * The bytes the incremental QA's read cache may hold (`DemoReadCache`, counted four times a read's JSON):
+ * `TRACY_DEMO_QA_CACHE_MB`, else a 32nd of the memory, between 64 and 512 MB. 🔒 A read is ~0.7 MB of JSON (a Joomla
+ * page with its sheets' rules), so the 16 MB the cache had held about five pages, and reading a 29-page site in order
+ * pushed out every page before its next read (local measure 28/10/2026: "0 with a last read" on every run).
+ */
+export function demoReadCacheBytesOf(env, memory = hostMemoryBytes()) {
+  const mb = Number(env.TRACY_DEMO_QA_CACHE_MB)
+  if (Number.isInteger(mb) && mb > 0) return mb * 1024 * 1024
+  return Math.max(64 * 1024 * 1024, Math.min(512 * 1024 * 1024, Math.floor(memory / 32)))
+}
