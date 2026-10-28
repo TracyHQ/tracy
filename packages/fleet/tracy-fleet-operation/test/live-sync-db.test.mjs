@@ -1282,4 +1282,3 @@ test('a live delete kept as a copy edit is not counted as taken', opts, () => {
   assert.equal(chosenLive.counts.records, 1)
   assert.deepEqual(rows('SELECT title FROM sm.jos_content WHERE id=1'), [['Live edit']])
 })
-
