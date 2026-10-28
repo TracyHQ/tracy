@@ -5,6 +5,7 @@ import { mkdtempSync, rmSync } from 'node:fs'
 import { createServer } from 'node:http'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
+import { performance } from 'node:perf_hooks'
 import { test } from 'node:test'
 
 const lib = new URL('../scripts/lib/', import.meta.url)
@@ -109,7 +110,8 @@ for (const direction of ['pull', 'push']) {
 
 test('the stand route preserves an HTTP-date Retry-After header for both directions', async () => {
   for (const direction of ['pull', 'push']) {
-    const date = new Date(Date.now() + 120_000).toUTCString()
+    // The spawned transport uses the real clock, even when this test's Date is shifted.
+    const date = new Date(performance.timeOrigin + performance.now() + 120_000).toUTCString()
     const live = await stand((_req, res) => {
       res.writeHead(429, { 'retry-after': date })
       res.end('slow down')
