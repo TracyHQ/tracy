@@ -155,8 +155,8 @@ test('the reader re-reads a map written in the same clock tick as its last read'
   const { contracts } = profile(doc())
   const contract = [...contracts.values()][0]
   const mapFile = path.join(contract.dir, 'content-map.json')
-  // Whole milliseconds, so restoring the time below gives back exactly the same stamp.
-  const tick = new Date(Math.floor(statSync(mapFile).mtimeMs))
+  // A write just now, in whole milliseconds, so restoring the time below gives back exactly the same stamp.
+  const tick = new Date(Math.floor(Date.now()))
   utimesSync(mapFile, tick, tick)
   assert.equal(coverageOfContract(contract).state, 'measured')
   // Same size, same modification time: only the bytes differ, as when two writes share a tick.
