@@ -177,3 +177,60 @@ export function judgeLabelRules(doc, { live }, policy = COVERAGE_POLICY) {
   const holds = !live && policy.labelRulesHoldNewRelease !== false
   return { state: 'failing', holds, warns: !holds, failing, factShare }
 }
+
+/**
+ * The verdict on the LLM label judge (spec #37), read from the `labelJudge` block the audit committed in
+ * `content-coverage.json` beside `labelRules`; this never calls a model. It belongs to the label rules group and takes
+ * its policy: only maps of `policy.labelRules.blockingVocabularies` are judged. A slot the judge says belongs to the
+ * other side of fact/editorial holds a release not shown on Design inspiration (`policy.labelJudgeHoldNewRelease`) and
+ * warns for one already shown; a finer role mismatch warns; slots the model did not judge warn, so a missing model is
+ * never read as a pass.
+ *
+ *   none         the file has no `labelJudge` block (an audit before 1.3.0): not judged, nothing held
+ *   reported     the map's vocabulary is not judged yet (version 2): listed, never holds or warns
+ *   wrong-group  at least one slot is on the wrong side of fact/editorial
+ *   mismatch     at least one slot has a finer wrong role
+ *   not-judged   the model judged no slot (no model, the caps, a failure): warns
+ *   partly       some located slots were not judged: warns
+ *   ready        every located slot was judged and is right
+ * @param {any} doc a coverage file `coverageFileProblem` accepts
+ * @param {{ live: boolean }} about
+ * @param {any} [policy]
+ */
+export function judgeLabelJudge(doc, { live }, policy = COVERAGE_POLICY) {
+  const block = doc?.labelJudge
+  const none = {
+    state: 'none',
+    holds: false,
+    warns: false,
+    reason: null,
+    wrongGroup: [],
+    mismatch: [],
+    notJudged: 0
+  }
+  if (!block || typeof block !== 'object' || !Array.isArray(block.slots)) return none
+  const of = (s) => ({
+    key: String(s.key),
+    role: s.role ?? null,
+    suggested: s.suggested ?? null,
+    why: String(s.why ?? '')
+  })
+  const wrong = block.slots.filter((s) => s?.verdict === 'wrong')
+  const base = {
+    reason: typeof block.reason === 'string' ? block.reason : null,
+    wrongGroup: wrong.filter((s) => s.groupWrong === true).map(of),
+    mismatch: wrong.filter((s) => s.groupWrong !== true).map(of),
+    notJudged: Number(block.counts?.notJudged ?? 0)
+  }
+  if (!(policy.labelRules?.blockingVocabularies ?? []).includes(block.roleVocabularyVersion))
+    return { ...base, state: 'reported', holds: false, warns: false }
+  if (base.wrongGroup.length > 0) {
+    const holds = !live && policy.labelJudgeHoldNewRelease !== false
+    return { ...base, state: 'wrong-group', holds, warns: !holds }
+  }
+  if (base.mismatch.length > 0) return { ...base, state: 'mismatch', holds: false, warns: true }
+  if (block.state === 'not-judged' || block.state === 'partly')
+    return { ...base, state: block.state, holds: false, warns: true }
+  if (block.state !== 'judged') return { ...base, state: 'not-judged', holds: false, warns: true }
+  return { ...base, state: 'ready', holds: false, warns: false }
+}

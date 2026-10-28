@@ -16,6 +16,7 @@
   "rolesHoldNewRelease": true,
   "fitHoldNewRelease": true,
   "labelRulesHoldNewRelease": true,
+  "labelJudgeHoldNewRelease": true,
   "labelRules": {
     "blocking": ["R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9"],
     "reportedOnly": ["R1"],
@@ -36,6 +37,7 @@
     "fitHoldNewRelease": "ADR 0039 decision 7: a release not shown on Design inspiration whose content map has no Slot fit, leaves text or image slots without a fit, or carries a broken fit (such as a keep flag that disagrees with the measured kind) is held from Publish; a release already shown only warns. Set false to make the Slot fit group warn only.",
     "minToolVersion": "1.1.0 measures page hygiene; a file from 1.0.0 never looked, so it is measured again.",
     "labelRulesHoldNewRelease": "ADR 0040: the mechanical label rules R2 to R9 are computed by the content coverage audit and committed in content-coverage.json (labelRules); a release not shown on Design inspiration with a failing rule is held from Publish, a release already shown only warns. Set false to make the group warn only.",
+    "labelJudgeHoldNewRelease": "Spec #37: the LLM label judge of the content coverage audit commits per slot right or wrong with a suggested role (labelJudge in content-coverage.json). A slot it puts on the other side of fact/editorial (a fact labelled editorial, a claim inside editorial text) holds a release not shown on Design inspiration; a release already shown only warns. A finer role mismatch, or slots the model did not judge, only warn: a missing model is never a pass. It takes the label rules' blockingVocabularies. Set false to make it warn only.",
     "labelRules": "blocking: the rules that hold. reportedOnly: shown as a number, never hold (R1, the fact-role share). blockingVocabularies: only a content map of these role vocabulary versions is judged; a version 2 map is reported and not blocking until its template adopts version 3, so released templates are not suddenly held."
   }
 }

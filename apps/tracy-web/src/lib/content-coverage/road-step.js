@@ -29,10 +29,22 @@
  * The label rules group (ADR 0040, spec #37) is the fifth, judged by `judgeLabelRules` from the `labelRules` block the
  * audit committed in the coverage file (this step never runs the audit): when only a failing rule is left the code is
  * `coverage-labels` (todo) or `coverage-live-labels` (warn). R1 is a number (`labelFactShare`) and never holds.
+ *
+ * The LLM label judge (spec #37) rides in the same group with its own verdict (`judgeLabelJudge`), read from the
+ * `labelJudge` block committed beside `labelRules`: a slot on the wrong side of fact/editorial holds a new release
+ * (`coverage-judge`, todo); a finer mismatch, slots the model did not judge, or a wrong group on a live release warn
+ * (`coverage-judge-warn`).
  */
 import { contractFor } from '../contracts.js'
 import { shownOnInspiration } from '../quickstart-releases.js'
-import { COVERAGE_POLICY, judgeCoverage, judgeFit, judgeLabelRules, judgeRoles } from './judge.js'
+import {
+  COVERAGE_POLICY,
+  judgeCoverage,
+  judgeFit,
+  judgeLabelJudge,
+  judgeLabelRules,
+  judgeRoles
+} from './judge.js'
 import { coverageOfContract } from './reader.js'
 
 export const COVERAGE_STEP = 'content-coverage'
@@ -99,6 +111,26 @@ const labelParamsOf = (verdict) => ({
   labelWarns: verdict.warns
 })
 
+/** How many judged slots per list the step names itself. */
+const SHOWN_JUDGED = 8
+
+/**
+ * The label judge as flat step params: its state, the slots on the wrong side of fact/editorial and the finer
+ * mismatches (the first ones, with their counts), how many located slots were not judged and why, and its verdict.
+ * @param {ReturnType<typeof judgeLabelJudge>} verdict
+ */
+const judgeParamsOf = (verdict) => ({
+  judgeState: verdict.state,
+  judgeReason: verdict.reason,
+  judgeWrongGroup: verdict.wrongGroup.slice(0, SHOWN_JUDGED),
+  judgeWrongGroupCount: verdict.wrongGroup.length,
+  judgeMismatch: verdict.mismatch.slice(0, SHOWN_JUDGED),
+  judgeMismatchCount: verdict.mismatch.length,
+  judgeNotJudged: verdict.notJudged,
+  judgeHolds: verdict.holds,
+  judgeWarns: verdict.warns
+})
+
 /** Hole groups by cause, largest first, so the panel says WHERE the gap is, not only how big. */
 function causesOf(blocking) {
   /** @type {Map<string, { cause: string, class: string, count: number }>} */
@@ -148,7 +180,8 @@ export function contentCoverageStep(
     ...rolesParamsOf(roles, rolesVerdict),
     ...fitParamsOf(fitGroup, fitVerdict),
     // Until a measurement is read there is nothing to judge: the group is empty, never a pass or a fail.
-    ...labelParamsOf(judgeLabelRules(null, { live }, policy))
+    ...labelParamsOf(judgeLabelRules(null, { live }, policy)),
+    ...judgeParamsOf(judgeLabelJudge(null, { live }, policy))
   }
   const failing = live ? 'warn' : 'todo'
   if (!measured) {
@@ -172,9 +205,11 @@ export function contentCoverageStep(
   const doc = coverage.doc
   const verdict = judgeCoverage(doc, policy)
   const labelVerdict = judgeLabelRules(doc, { live }, policy)
+  const judgeVerdict = judgeLabelJudge(doc, { live }, policy)
   const params = {
     ...base,
     ...labelParamsOf(labelVerdict),
+    ...judgeParamsOf(judgeVerdict),
     live,
     measuredAt: doc.measuredAt ?? null,
     toolVersion: doc.tool?.version ?? null,
@@ -208,9 +243,11 @@ export function contentCoverageStep(
   if (rolesVerdict.holds) return put(COVERAGE_STEP, 'todo', 'coverage-roles', params)
   if (fitVerdict.holds) return put(COVERAGE_STEP, 'todo', 'coverage-fit', params)
   if (labelVerdict.holds) return put(COVERAGE_STEP, 'todo', 'coverage-labels', params)
+  if (judgeVerdict.holds) return put(COVERAGE_STEP, 'todo', 'coverage-judge', params)
   if (rolesVerdict.warns) return put(COVERAGE_STEP, 'warn', 'coverage-live-roles', params)
   if (fitVerdict.warns) return put(COVERAGE_STEP, 'warn', 'coverage-live-fit', params)
   if (labelVerdict.warns) return put(COVERAGE_STEP, 'warn', 'coverage-live-labels', params)
+  if (judgeVerdict.warns) return put(COVERAGE_STEP, 'warn', 'coverage-judge-warn', params)
   return put(COVERAGE_STEP, 'done', 'coverage-ready', params)
 }
 
@@ -259,6 +296,22 @@ function labelReasonText(p) {
   return `Label rules: ${rules}`
 }
 
+/**
+ * The label judge in words, for the publish refusal: each slot on the wrong side of fact/editorial with the role the
+ * judge suggests.
+ * @param {Record<string, any>} p the step's params
+ */
+function judgeReasonText(p) {
+  const count = Number(p.judgeWrongGroupCount ?? 0)
+  const shown = (Array.isArray(p.judgeWrongGroup) ? p.judgeWrongGroup : [])
+    .map((s) => `${s.key} ${s.role} -> ${s.suggested}`)
+    .join(', ')
+  return `Label judge: ${count} slot${count === 1 ? '' : 's'} in the wrong fact/editorial group (${shown}${count > (p.judgeWrongGroup?.length ?? 0) ? ', ...' : ''})`
+}
+
+const JUDGE_FIX =
+  ' Relabel those slots in content-map.json (a fact needs a fact role; a claim inside a heading is claim.heading), then run the content coverage audit again so the judge looks at them (a released content map never changes, so ship the fix with the next contract version).'
+
 const LABEL_FIX =
   ' Fix the labels in content-map.json during capture, per the quickstart-contract skill, then measure again (a released content map never changes, so ship the fix with the next contract version).'
 
@@ -288,29 +341,34 @@ export function contentCoverageRefusal(step) {
     ...(p.incomplete ? [String(p.incomplete)] : []),
     ...(p.rolesHolds ? [rolesReasonText(p)] : []),
     ...(p.fitHolds ? [fitReasonText(p)] : []),
-    ...(p.labelHolds ? [labelReasonText(p)] : [])
+    ...(p.labelHolds ? [labelReasonText(p)] : []),
+    ...(p.judgeHolds ? [judgeReasonText(p)] : [])
   ]
   const rolesFix =
     ' Bind the roles in content-map.json during capture, per the quickstart-contract skill, then measure again.'
-  const fitFix = (p.fitHolds ? FIT_FIX : '') + (p.labelHolds ? LABEL_FIX : '')
+  const fitFix =
+    (p.fitHolds ? FIT_FIX : '') + (p.labelHolds ? LABEL_FIX : '') + (p.judgeHolds ? JUDGE_FIX : '')
+  const judgeToo = p.judgeHolds ? [judgeReasonText(p)] : []
   const onlyRoles = holes === 0 && problems === 0 && !p.incomplete
   const reason =
-    step?.code === 'coverage-labels'
-      ? `Content coverage: ${[...(p.fitHolds ? [fitReasonText(p)] : []), labelReasonText(p)].join(', and ')}.${LABEL_FIX}`
-      : step?.code === 'coverage-fit'
-        ? `Content coverage: ${[fitReasonText(p), ...(p.labelHolds ? [labelReasonText(p)] : [])].join(', and ')}.${FIT_FIX}${p.labelHolds ? LABEL_FIX : ''}`
-        : step?.code === 'coverage-roles'
-          ? `Content coverage: ${[rolesReasonText(p), ...(p.fitHolds ? [fitReasonText(p)] : []), ...(p.labelHolds ? [labelReasonText(p)] : [])].join(', and ')}.${rolesFix}${fitFix}`
-          : step?.code === 'coverage-holes' && onlyRoles
-            ? `Content coverage: ${parts.join(', and ')}.${p.rolesHolds ? rolesFix : ''}${fitFix}`
-            : step?.code === 'coverage-holes' && holes === 0 && problems === 0
-              ? `Content coverage of ${version} is incomplete: ${String(p.incomplete ?? 'pages were not measured')}. Measure it again and commit content-coverage.json.`
-              : step?.code === 'coverage-holes'
-                ? `Content coverage: ${parts.join(', and ')}. Fix them (the capture rules, or the template for its own strings and page problems) or accept each with a reason in content-coverage.json, then measure again.${p.rolesHolds ? rolesFix : ''}${fitFix}`
-                : step?.code === 'coverage-stale'
-                  ? `Content coverage of ${version} is stale: ${String(p.reason ?? 'the contract changed')}. Measure it again with the content coverage audit and commit content-coverage.json.`
-                  : step?.code === 'coverage-invalid'
-                    ? `Content coverage of ${version} cannot be read: ${String(p.reason ?? 'no reason given')}. Measure it again and commit content-coverage.json.`
-                    : `Content coverage of ${version} is not measured yet. Measure it with the content coverage audit (quickstart-contract skill, step 7) and commit content-coverage.json beside the contract.`
+    step?.code === 'coverage-judge'
+      ? `Content coverage: ${judgeReasonText(p)}.${JUDGE_FIX}`
+      : step?.code === 'coverage-labels'
+        ? `Content coverage: ${[...(p.fitHolds ? [fitReasonText(p)] : []), labelReasonText(p), ...judgeToo].join(', and ')}.${LABEL_FIX}${p.judgeHolds ? JUDGE_FIX : ''}`
+        : step?.code === 'coverage-fit'
+          ? `Content coverage: ${[fitReasonText(p), ...(p.labelHolds ? [labelReasonText(p)] : []), ...judgeToo].join(', and ')}.${FIT_FIX}${p.labelHolds ? LABEL_FIX : ''}${p.judgeHolds ? JUDGE_FIX : ''}`
+          : step?.code === 'coverage-roles'
+            ? `Content coverage: ${[rolesReasonText(p), ...(p.fitHolds ? [fitReasonText(p)] : []), ...(p.labelHolds ? [labelReasonText(p)] : []), ...judgeToo].join(', and ')}.${rolesFix}${fitFix}`
+            : step?.code === 'coverage-holes' && onlyRoles
+              ? `Content coverage: ${parts.join(', and ')}.${p.rolesHolds ? rolesFix : ''}${fitFix}`
+              : step?.code === 'coverage-holes' && holes === 0 && problems === 0
+                ? `Content coverage of ${version} is incomplete: ${String(p.incomplete ?? 'pages were not measured')}. Measure it again and commit content-coverage.json.`
+                : step?.code === 'coverage-holes'
+                  ? `Content coverage: ${parts.join(', and ')}. Fix them (the capture rules, or the template for its own strings and page problems) or accept each with a reason in content-coverage.json, then measure again.${p.rolesHolds ? rolesFix : ''}${fitFix}`
+                  : step?.code === 'coverage-stale'
+                    ? `Content coverage of ${version} is stale: ${String(p.reason ?? 'the contract changed')}. Measure it again with the content coverage audit and commit content-coverage.json.`
+                    : step?.code === 'coverage-invalid'
+                      ? `Content coverage of ${version} cannot be read: ${String(p.reason ?? 'no reason given')}. Measure it again and commit content-coverage.json.`
+                      : `Content coverage of ${version} is not measured yet. Measure it with the content coverage audit (quickstart-contract skill, step 7) and commit content-coverage.json beside the contract.`
   return { error: 'CONTENT_COVERAGE_NOT_READY', reason }
 }

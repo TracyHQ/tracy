@@ -28,7 +28,21 @@ function overlay(rows, vp, region) {
     .join('\n')
 }
 
-export async function renderCrops({ chromium, model, auditDir, outDir }) {
+/** A component's region grown by `margin` pixels on every side, held inside the shot. */
+function grown(r, margin, shot) {
+  if (!margin) return r
+  const x = Math.max(0, r.x - margin)
+  const y = Math.max(0, r.y - margin)
+  return {
+    x,
+    y,
+    w: Math.min(shot.width, r.x + r.w + margin) - x,
+    h: Math.min(shot.height, r.y + r.h + margin) - y
+  }
+}
+
+/** `margin`: extra page kept around each component (the label judge shows the model where it sits). */
+export async function renderCrops({ chromium, model, auditDir, outDir, margin = 0 }) {
   const imgDir = join(outDir, 'images')
   mkdirSync(imgDir, { recursive: true })
   const browser = await chromium.launch()
@@ -50,7 +64,7 @@ export async function renderCrops({ chromium, model, auditDir, outDir }) {
         await page.goto(pathToFileURL(html).href)
         await page.waitForFunction(() => document.images[0]?.complete)
         for (const c of comps) {
-          const r = c.region[vp]
+          const r = grown(c.region[vp], margin, shot)
           const h = Math.min(r.h, shot.height - r.y)
           if (h < 10) continue
           await page.evaluate((s) => (document.getElementById('ov').innerHTML = s), overlay(c.rows, vp, r))

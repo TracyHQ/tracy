@@ -752,6 +752,91 @@ function labelRulesOutside(ctx: GuideContext, p: Record<string, unknown>): Outsi
   }
 }
 
+/** The judged slots of one list a step carries (spec #37), as sent; anything not shaped like one is dropped. */
+const judgedOf = (v: unknown) =>
+  (Array.isArray(v) ? v : [])
+    .filter((x): x is Record<string, unknown> => !!x && typeof x === 'object' && typeof x.key === 'string')
+    .map((x) => ({
+      key: String(x.key),
+      role: str(x.role) ?? 'no role',
+      suggested: str(x.suggested) ?? '',
+      why: str(x.why) ?? ''
+    }))
+
+/** The label judge's headline in the step title: wrong groups first, then finer mismatches, then what it never judged. */
+function judgeCounted(p: Record<string, unknown>): string {
+  if (p.judgeState === 'wrong-group')
+    return tr('cms-readiness.coverage.judge.wrongGroup', { count: Number(p.judgeWrongGroupCount ?? 0) })
+  if (p.judgeState === 'mismatch')
+    return tr('cms-readiness.coverage.judge.mismatch', { count: Number(p.judgeMismatchCount ?? 0) })
+  return tr('cms-readiness.coverage.judge.notJudged', { count: Number(p.judgeNotJudged ?? 0) })
+}
+
+/** The label judge's lists: slots on the wrong side of fact/editorial, then finer mismatches, each with its suggestion. */
+function judgeLists(p: Record<string, unknown>) {
+  const line = (x: { key: string; role: string; suggested: string }) =>
+    `${x.key}: ${x.role} -> ${x.suggested}`
+  const wrong = judgedOf(p.judgeWrongGroup)
+  const finer = judgedOf(p.judgeMismatch)
+  return [
+    ...(wrong.length > 0
+      ? [
+          {
+            heading: tr('cms-readiness.coverage.list.judgeWrongGroup'),
+            count: Number(p.judgeWrongGroupCount ?? wrong.length),
+            lines: wrong.map(line)
+          }
+        ]
+      : []),
+    ...(finer.length > 0
+      ? [
+          {
+            heading: tr('cms-readiness.coverage.list.judgeMismatch'),
+            count: Number(p.judgeMismatchCount ?? finer.length),
+            lines: finer.map(line)
+          }
+        ]
+      : [])
+  ]
+}
+
+/**
+ * The paste-ready prompt for the label judge of Content coverage (spec #37): which slots the vision model says are
+ * labelled wrong and what it suggests, or how to let it judge at all. English: its reader is the model.
+ */
+function labelJudgeOutside(ctx: GuideContext, p: Record<string, unknown>): OutsideFix {
+  const contractDir = slotRolesContractDir(ctx, p)
+  const said = (xs: ReturnType<typeof judgedOf>, total: number) =>
+    `${xs.map((x) => `${x.key} is labelled ${x.role}, the judge suggests ${x.suggested}${x.why ? ` (${x.why})` : ''}`).join('; ')}${total > xs.length ? ', ...' : ''}`
+  const wrong = judgedOf(p.judgeWrongGroup)
+  const finer = judgedOf(p.judgeMismatch)
+  const notJudged = Number(p.judgeNotJudged ?? 0)
+  return {
+    label: claudeCode(),
+    text: [
+      `The label judge of the release ${ctx.tag} (${ctx.cms}${ctx.version ? ` ${ctx.version}` : ''}) on ${REPO} looked at each component with its numbered slots.`,
+      ...(wrong.length > 0
+        ? [`Wrong fact/editorial group: ${said(wrong, Number(p.judgeWrongGroupCount ?? wrong.length))}.`]
+        : []),
+      ...(finer.length > 0
+        ? [`Another role suggested: ${said(finer, Number(p.judgeMismatchCount ?? finer.length))}.`]
+        : []),
+      ...(notJudged > 0
+        ? [
+            `${notJudged} located slot${notJudged === 1 ? ' was' : 's were'} not judged (${str(p.judgeReason) ?? 'no reason given'}).`
+          ]
+        : []),
+      'Work in a tch checkout with the quickstart-contract skill (.agents/skills/quickstart-contract/SKILL.md). Fix it in ONE round, before the PR:',
+      `1. Relabel. For each listed slot, look at it on the page and in ${contractDir}/content-map.json; when the judge is right, set the suggested "role" (a fact needs a fact role; a heading that carries a number, an award or a year is claim.heading). When the judge is wrong, keep the role and say why in the PR.`,
+      '2. Run node scripts/slot-roles/check.mjs on that contract folder until it exits 0.',
+      '3. Run the content coverage audit again with --write and TRACY_VISION_API_KEY set (section 7 step 7 of the skill). Only changed slots are judged again. Read labelJudge in content-coverage.json: no slot may stay in the wrong group. Commit content-map.json and content-coverage.json in the same PR.',
+      'Stop before every commit, push, PR and merge, and wait for my go.',
+      'Once the PR is merged and CI has deployed this server, Content coverage on the Road to live reads the new file.'
+    ].join('\n'),
+    doc: COVERAGE_SKILL_DOC
+  }
+}
+
 const DS_DOC = {
   label: 'tasks/spec-template-design-system-readiness.md',
   href: `${DOCS}tasks/spec-template-design-system-readiness.md`
@@ -1323,6 +1408,29 @@ export function guideOf(s: RoadStep, ctx: GuideContext): StepGuide {
           outside: labelRulesOutside(ctx, p)
         }
       )
+    // 3f. The LLM label judge (spec #37), in the label rules group: verdicts committed by the audit
+    case 'coverage-judge':
+    case 'coverage-judge-warn': {
+      const lists = judgeLists(p)
+      return g(
+        tr('cms-readiness.coverage.counted', {
+          step: STEP_TITLE['content-coverage'],
+          counted: judgeCounted(p)
+        }),
+        {
+          detail:
+            s.code === 'coverage-judge'
+              ? tr('cms-readiness.coverage.judge.detail')
+              : p.live === true
+                ? tr('cms-readiness.common.liveFixNext')
+                : p.judgeState === 'mismatch'
+                  ? tr('cms-readiness.coverage.judge.mismatch.detail')
+                  : tr('cms-readiness.coverage.judge.notJudged.detail'),
+          ...(lists.length > 0 ? { lists } : {}),
+          outside: labelJudgeOutside(ctx, p)
+        }
+      )
+    }
     // 4. Customize your site (ADR 0029 §4): the readiness check of this version
     case 'customize-waiting':
       return g(STEP_TITLE.customize)

@@ -211,6 +211,34 @@ const LABELS_FAILING = {
   labelHolds: true,
   labelWarns: false
 }
+/** The label judge (spec #37): a phone labelled editorial, a claim heading labelled editorial, one finer mismatch. */
+const JUDGE_WRONG = {
+  ...COVERAGE_BASE,
+  judgeState: 'wrong-group',
+  judgeReason: null,
+  judgeWrongGroup: [
+    {
+      key: 'module-12.phone',
+      role: 'editorial.paragraph',
+      suggested: 'contact.phone',
+      why: 'a phone number'
+    },
+    {
+      key: 'module-9.title',
+      role: 'editorial.heading',
+      suggested: 'claim.heading',
+      why: 'a ranking and a year'
+    }
+  ],
+  judgeWrongGroupCount: 3,
+  judgeMismatch: [
+    { key: 'module-13.intro', role: 'editorial.paragraph', suggested: 'editorial.heading', why: 'a heading' }
+  ],
+  judgeMismatchCount: 1,
+  judgeNotJudged: 0,
+  judgeHolds: true,
+  judgeWarns: false
+}
 const COVERAGE_HOLES = {
   ...COVERAGE_BASE,
   coverage: { text: 88.4, images: 61.5, links: 100 },
@@ -297,6 +325,12 @@ const EVERY_CODE = [
     'content-coverage',
     'coverage-live-labels',
     { ...LABELS_FAILING, live: true, labelHolds: false, labelWarns: true }
+  ],
+  ['content-coverage', 'coverage-judge', JUDGE_WRONG],
+  [
+    'content-coverage',
+    'coverage-judge-warn',
+    { ...JUDGE_WRONG, live: true, judgeHolds: false, judgeWarns: true }
   ],
   ['customize', 'customize-waiting', { passed: 0, total: 0, mustFix: [], worthFixing: [] }],
   ['customize', 'customize-not-checked', { passed: 0, total: 0, mustFix: [], worthFixing: [] }],
@@ -1623,4 +1657,94 @@ test('Content coverage on WordPress: the prompt measures the WordPress contract 
   )
   assert.match(prompt, /tracy-wordpress-quickstart\/scripts\/capture-contract\.mjs \(run it with --all-text/)
   assert.doesNotMatch(prompt, /capture-contract\.py|tracy-joomla-quickstart/)
+})
+
+test('label judge of Content coverage: lists the wrongly labelled slots with the suggested role and gives ONE prompt', () => {
+  const held = mod.guideOf(
+    { step: 'content-coverage', state: 'todo', code: 'coverage-judge', params: JUDGE_WRONG },
+    JOOMLA
+  )
+  assert.equal(held.title, 'Content coverage · 3 slots in the wrong group')
+  assert.equal(
+    held.detail,
+    'Relabel the listed slots in Claude Code, then run the audit so the judge looks again.'
+  )
+  assert.deepEqual(held.lists, [
+    {
+      heading: 'Fact or editorial group wrong',
+      count: 3,
+      lines: [
+        'module-12.phone: editorial.paragraph -> contact.phone',
+        'module-9.title: editorial.heading -> claim.heading'
+      ]
+    },
+    {
+      heading: 'Another role suggested',
+      count: 1,
+      lines: ['module-13.intro: editorial.paragraph -> editorial.heading']
+    }
+  ])
+  const prompt = held.outside.text
+  assert.match(prompt, /label judge of the release quickstart\/ja-restaurant\/j6 \(Joomla 1\.0\.2\)/)
+  assert.match(
+    prompt,
+    /module-12\.phone is labelled editorial\.paragraph, the judge suggests contact\.phone \(a phone number\)/
+  )
+  assert.match(prompt, /, \.\.\./)
+  assert.match(prompt, /labelJudge in content-coverage\.json/)
+  assert.match(prompt, /wait for my go/)
+
+  const live = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'warn',
+      code: 'coverage-judge-warn',
+      params: { ...JUDGE_WRONG, live: true, judgeHolds: false, judgeWarns: true }
+    },
+    JOOMLA
+  )
+  assert.equal(live.detail, 'Live, so it stays published. Fix it in the next version.')
+
+  const finer = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'warn',
+      code: 'coverage-judge-warn',
+      params: {
+        ...JUDGE_WRONG,
+        judgeState: 'mismatch',
+        judgeWrongGroup: [],
+        judgeWrongGroupCount: 0,
+        judgeHolds: false,
+        judgeWarns: true
+      }
+    },
+    JOOMLA
+  )
+  assert.equal(finer.title, 'Content coverage · 1 slot role to check')
+
+  const unjudged = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'warn',
+      code: 'coverage-judge-warn',
+      params: {
+        ...JUDGE_WRONG,
+        judgeState: 'not-judged',
+        judgeReason: 'NO_VISION_MODEL',
+        judgeWrongGroup: [],
+        judgeWrongGroupCount: 0,
+        judgeMismatch: [],
+        judgeMismatchCount: 0,
+        judgeNotJudged: 40,
+        judgeHolds: false,
+        judgeWarns: true
+      }
+    },
+    JOOMLA
+  )
+  assert.equal(unjudged.title, 'Content coverage · 40 slots not judged')
+  assert.equal(unjudged.detail, 'No vision model judged these labels. Run the audit with a vision key.')
+  assert.equal(unjudged.lists, undefined)
+  assert.match(unjudged.outside.text, /TRACY_VISION_API_KEY/)
 })

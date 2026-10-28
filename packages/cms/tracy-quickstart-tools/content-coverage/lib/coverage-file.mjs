@@ -10,7 +10,8 @@ export const SCHEMA = 'tracy-content-coverage/v1'
 /** Bump when a change makes the audit see more (or less): /ops can then ask for a new measurement. */
 // 1.1.0 (24/10/2026): page hygiene (`hygiene` list); a 1.0.0 file never looked, so /ops asks again.
 // 1.2.0 (28/10/2026): mechanical label rules R2 to R9 and R1 (`labelRules`, ADR 0040); a 1.1.0 file has none.
-export const TOOL_VERSION = '1.2.0'
+// 1.3.0 (28/10/2026): the LLM label judge's verdicts (`labelJudge`, `label-judge.mjs`); a 1.2.0 file has none.
+export const TOOL_VERSION = '1.3.0'
 export const COVERAGE_FILE = 'content-coverage.json'
 
 /** The prototype's letters, in the words the policy and /ops use. */
@@ -88,14 +89,16 @@ const emptyBucket = () => ({
 })
 
 /**
- * @param {{ result: any, contract: any, previous?: any, measuredAt?: string }} input
- *   `result` = what `runAudit` returned; `previous` = the file this run replaces (accepted reasons carry over)
+ * @param {{ result: any, contract: any, previous?: any, measuredAt?: string, labelJudge?: any }} input
+ *   `result` = what `runAudit` returned; `previous` = the file this run replaces (accepted reasons carry over);
+ *   `labelJudge` = the LLM label judge's block (`judgeLabels`), written beside `labelRules` when given
  */
 export function buildCoverageFile({
   result,
   contract,
   previous = null,
-  measuredAt = new Date().toISOString()
+  measuredAt = new Date().toISOString(),
+  labelJudge = null
 }) {
   const accepted = new Map()
   for (const h of Array.isArray(previous?.holes) ? previous.holes : []) {
@@ -181,7 +184,9 @@ export function buildCoverageFile({
           value: shownValue(it),
           class: CLASS_NAME[it.class] ?? 'unknown'
         }))
-    })
+    }),
+    // The LLM label judge (spec #37): per slot right or wrong with a suggested role; also the cache of the next run.
+    ...(labelJudge ? { labelJudge } : {})
   }
 }
 

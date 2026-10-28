@@ -486,6 +486,11 @@ path):
    `packages/cms/tracy-quickstart-tools/content-coverage/hygiene-rules.json`, thresholds in
    `apps/tracy-web/src/lib/content-coverage/policy.json` (changed only by a product owner decision).
    Exit 0 = pass. Exit 1 = holes or page problems remain → **section 7b**.
+   Run it with `TRACY_VISION_API_KEY` set so the **label judge** looks at every component (crop with numbered slots plus
+   its slot table) and writes `labelJudge` into `content-coverage.json`: per slot right or wrong with a suggested role.
+   Relabel every slot listed as a wrong fact/editorial group (it holds Publish for a new release), check each finer
+   mismatch, and run the audit again: only changed slots are judged again. Without a key the slots stay `not judged`
+   and Road to live warns.
    Then **look at the map on the real pages** with the verify viewer (needs the `--fit` map written above; the contract is read
    from the tree for the version you are cutting):
 
