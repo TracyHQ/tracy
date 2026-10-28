@@ -978,6 +978,28 @@ function leadTarget(row, structure) {
 }
 
 /**
+ * 🔒 A LEAD NO RECORD OR SLOT HOLDS IS NOT THE PLAN'S (local stand 28/10/2026). JA Fresco's contact page prints "Write a
+ * Message" from a template language string: the inventory read all 162 records and no record field and no contract
+ * slot holds those words, so no lead row could ever target them (`leadTarget` `misses`) and the gate asked for one
+ * anyway — nine refusals, and the agent ended its turn with no plan, no picture and no check. When the inventory is
+ * complete, a lead whose words nothing frozen holds is left to the sweep, which reads the page after the turn and
+ * writes the line it still finds there, as an unreadable target already is.
+ * @param {Array<{page: string, at?: string | null, text: string}>} leads `editorialLeads`
+ * @param {Record<string, any> | undefined} structure the build's frozen structure
+ */
+export function plannableLeads(leads = [], structure) {
+  if (!structure?.inventory?.complete) return leads
+  const held = readText({ records: structure.inventory.records ?? [], contract: structure.contract ?? null })
+  return leads.filter((lead) => {
+    // A line the theme cut short ("…") is held by its whole field: its words up to the cut.
+    const words = readText(lead.text)
+      .replace(/(?:\.\.\.|…)$/, '')
+      .trim()
+    return !words || held.includes(words)
+  })
+}
+
+/**
  * Which of the template's page leads a plan writes: `written` where a rewrite row's target holds the line,
  * `deferred` where its target cannot be read (left to the sweep), `missing` where no row covers it.
  * @param {Record<string, any>} plan
@@ -2238,7 +2260,10 @@ export function agentDemoCapabilities({
         structureHash: build.content?.agentDemo?.structureHash ?? null,
         plan: build.content?.agentDemo?.plan ?? null,
         planGuide: agentPlanGuide(bundle, build.content?.agentDemo?.structure),
-        editorialLeads: editorialLeads(build.qa?.baseline)
+        editorialLeads: plannableLeads(
+          editorialLeads(build.qa?.baseline),
+          build.content?.agentDemo?.structure
+        )
       }
     }
     if (params.operation === 'structure.read') {
@@ -2367,7 +2392,7 @@ export function agentDemoCapabilities({
         { ...params.plan, structure: build.content.agentDemo.structure },
         bundle,
         {
-          leads: editorialLeads(build.qa?.baseline),
+          leads: plannableLeads(editorialLeads(build.qa?.baseline), build.content.agentDemo.structure),
           inventoryInvariant,
           baseline: build.qa?.baseline ?? null,
           // The collected photos' sizes, the research's first and the stored rows' over them.
