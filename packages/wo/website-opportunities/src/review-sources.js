@@ -1,4 +1,5 @@
 import { heldPeopleOf, heldReviewsSplit } from '../domain/held-reviews.mjs'
+import { creditTextOf, uploaderRoleOf } from '../domain/pictures/asset-origin.mjs'
 
 /** A review source whose reviews naming someone the brief holds off the site move to `heldReviews` (`held-reviews.mjs`). */
 const withHeldReviews = (source, names) =>
@@ -75,7 +76,10 @@ export function addReviewSources(brief, profile) {
             sourceUrl: photo.url,
             ...(menuIds.has(asset.id) ? { category: 'other', sourceCategory: 'menu' } : {}),
             postId: photo.postId,
-            credit: photo.credit
+            // A brief asset's credit is one plain string and its uploader a role (`asset-origin.mjs`, #47): a review
+            // photo is the guest's.
+            credit: creditTextOf(photo),
+            uploaderRole: uploaderRoleOf({ credit: photo.credit })
           }
         : menuIds.has(asset.id)
           ? { ...asset, category: 'other', sourceCategory: 'menu' }

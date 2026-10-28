@@ -249,6 +249,22 @@ export {
 } from './pictures/asset-labels.mjs'
 export { UPLOADER_ROLES, assetOriginOf } from './pictures/asset-origin.mjs'
 export {
+  GENERAL,
+  PHOTO_ROLES,
+  assetRelationsOf,
+  closedListDigest,
+  closedListOf,
+  heldVisionLinks,
+  ownershipOf
+} from './pictures/picture-links.mjs'
+export {
+  BRIEF_ITEM_ROUTES,
+  itemKindsOfBrief,
+  ownerQuestionsOf,
+  routeTableErrors,
+  routesOfBrief
+} from './brief-item-routes.mjs'
+export {
   planPlacement,
   drawPlan,
   outputSize,

@@ -123,7 +123,15 @@ test("the brief's assets carry size, orientation, grade and content, and still v
     orientation: 'landscape',
     quality: 'high',
     content: 'venue-exterior',
-    caption: 'The outdoor pool at dusk'
+    caption: 'The outdoor pool at dusk',
+    // A label made before the brief's closed list links nothing and says nothing of boxes or graphics (#48).
+    depicts: { id: 'general', evidence: { via: 'vision' } },
+    portraitOf: null,
+    role: null,
+    faceBoxes: [],
+    peopleCount: null,
+    isGraphic: null,
+    isOwnPhoto: null
   })
   assert.equal(byId.get('thumb').content, 'unlabelled')
   assert.equal(byId.get('thumb').quality, 'low')

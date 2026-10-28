@@ -31,6 +31,7 @@ import {
   opportunityOf
 } from 'website-opportunities/src/brief-research.js'
 import { placeViewOf } from 'website-opportunities/src/place-view.js'
+import { closedListOf } from 'website-opportunities/domain/pictures/picture-links.mjs'
 import { withSocialStats } from 'website-opportunities/src/place-social-stats.js'
 import { qualityHash } from './quality-dossier.js'
 import { makeBuildChoice, withBuildChoice } from './build-choice.js'
@@ -438,7 +439,11 @@ async function withPictureLabelling(pool, args) {
       media: read.media ?? [],
       brand: briefBrand(read.brand),
       accountId: args.accountId,
-      trade: read.opportunity?.candidate?.trade ?? opp?.candidate?.trade ?? null
+      trade: read.opportunity?.candidate?.trade ?? opp?.candidate?.trade ?? null,
+      // The brief's offerings and people the model may link a photo to, and the name that marks the business's own
+      // Google photos (#48).
+      closedList: closedListOf(read.profile?.businessReading),
+      businessName: read.profile?.name ?? read.opportunity?.name ?? opp?.name ?? null
     })
     return { ...args, pictureLabelling: answer }
   } catch {

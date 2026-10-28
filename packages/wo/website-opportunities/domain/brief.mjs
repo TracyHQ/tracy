@@ -36,6 +36,7 @@ import {
   assetLabelsOf
 } from './pictures/asset-labels.mjs'
 import { UPLOADER_ROLES, assetOriginOf } from './pictures/asset-origin.mjs'
+import { PHOTO_ROLES, assetRelationsOf, closedListOf } from './pictures/picture-links.mjs'
 import { researchWhatsappOf } from './business-phones.mjs'
 import {
   briefFactErrors,
@@ -444,6 +445,9 @@ export function buildBrief({
 
   // Assets and which of them are usable as current content; each with its size, orientation, resolution grade and, when
   // a vision model looked at it, what it shows and a caption (`asset-labels.mjs`, F08).
+  // Each also links to the offering it shows and the person it portrays, from this brief's own items only, with the role
+  // it can fill, its boxes, people count, graphic flag and whether it is the business's own (`picture-links.mjs`, #48).
+  const linkContext = { list: closedListOf(reading), posts, businessName: name }
   const assets = media
     .filter((m) => nonEmpty(m?.id))
     .map((m) => ({
@@ -454,7 +458,8 @@ export function buildBrief({
       sha256: m.sha256,
       // Where it came from, who must be credited and who uploaded it (`asset-origin.mjs`).
       ...assetOriginOf(m),
-      ...assetLabelsOf(m)
+      ...assetLabelsOf(m),
+      ...assetRelationsOf(m, linkContext)
     }))
   const stale = []
   const staleIds = new Set()
@@ -1239,6 +1244,42 @@ function currentSiteSection(c) {
 
 // ---------- validation (hand-written mirror of brief-schema.json plus cross-field rules) ----------
 
+/** A box `[x, y, width, height]` in fractions of the picture. */
+const isBox = (b) =>
+  Array.isArray(b) &&
+  b.length === 4 &&
+  b.every((n) => typeof n === 'number' && n >= 0 && n <= 1) &&
+  b[2] > 0 &&
+  b[3] > 0 &&
+  b[0] + b[2] <= 1.001 &&
+  b[1] + b[3] <= 1.001
+const isLink = (l) => isObj(l) && nonEmpty(l.id) && isObj(l.evidence) && nonEmpty(l.evidence.via)
+
+/** The shape errors of an asset's relations and placing labels (`picture-links.mjs`), each `{field, msg}`. */
+function assetRelationErrors(a) {
+  const out = []
+  if ('depicts' in a && !isLink(a.depicts))
+    out.push({ field: 'depicts', msg: 'must be {id, evidence: {via}}' })
+  if ('portraitOf' in a && a.portraitOf !== null && !isLink(a.portraitOf))
+    out.push({ field: 'portraitOf', msg: 'must be {id, evidence: {via}} or null' })
+  if ('role' in a && a.role !== null && !PHOTO_ROLES.includes(a.role))
+    out.push({ field: 'role', msg: `must be null or one of ${PHOTO_ROLES.join(', ')}` })
+  if ('subjectBox' in a && !isBox(a.subjectBox))
+    out.push({ field: 'subjectBox', msg: 'must be [x, y, width, height] in fractions' })
+  if ('faceBoxes' in a && !(Array.isArray(a.faceBoxes) && a.faceBoxes.every(isBox)))
+    out.push({ field: 'faceBoxes', msg: 'must be a list of [x, y, width, height] in fractions' })
+  if (
+    'peopleCount' in a &&
+    a.peopleCount !== null &&
+    !(Number.isInteger(a.peopleCount) && a.peopleCount >= 0)
+  )
+    out.push({ field: 'peopleCount', msg: 'must be a whole number, or null when no model looked' })
+  for (const field of ['isGraphic', 'isOwnPhoto'])
+    if (field in a && a[field] !== null && typeof a[field] !== 'boolean')
+      out.push({ field, msg: 'must be a boolean, or null when not known' })
+  return out
+}
+
 export function validateBrief(brief, { legacy = false } = {}) {
   const errors = []
   // Assets must say where they came from. A brief stored before that (schema 1, or read with `legacy`) has none: readers
@@ -1367,6 +1408,8 @@ export function validateBrief(brief, { legacy = false } = {}) {
             err(`assets[${i}].${side}`, 'must be a positive integer, or null when unknown')
         if ('caption' in a && !(nonEmpty(a.caption) && a.caption.length < 125))
           err(`assets[${i}].caption`, 'must be a non-empty string under 125 characters')
+        // The relations (#48) are optional: a brief made before them has none.
+        for (const error of assetRelationErrors(a)) err(`assets[${i}].${error.field}`, error.msg)
       })
   }
 

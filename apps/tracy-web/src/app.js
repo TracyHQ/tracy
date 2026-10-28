@@ -1425,7 +1425,7 @@ export function buildApp(deps) {
       siteChecks,
       socialStats,
       // What the brief's photographs show, labelled when the brief is made (F08): the build's vision door, key and cache,
-      // at most TRACY_BRIEF_VISION_MAX_PICTURES (24) pictures, billed to the research caps. `deps.…PictureLabels`: a test's own.
+      // every own photo plus others up to TRACY_BRIEF_VISION_MAX_PICTURES (60) in total, billed to the research caps. `deps.…PictureLabels`: a test's own.
       pictureLabels:
         deps.websiteOpportunitiesPictureLabels ??
         createBriefPictureLabels({
