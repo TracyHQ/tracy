@@ -149,9 +149,12 @@ async function settleImages(page) {
   })
 }
 
-/** The launcher and request fencing are the ordinary screenshotter's, so this mode adds no idle browser. */
-export function createVisionCapturer({ launched, prepare }) {
-  const acquire = visionSlot()
+/**
+ * The launcher and request fencing are the ordinary screenshotter's, so this mode adds no idle browser. `streams`
+ * captures run at once on this host (`browserRunsOf`), each one tab shooting one tile at a time.
+ */
+export function createVisionCapturer({ launched, prepare, streams = 1 }) {
+  const acquire = visionSlot(8, streams)
   return async function* capture({
     layouts,
     base,

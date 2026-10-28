@@ -1220,6 +1220,31 @@ test('runDemoQa reads home alone, then the rest a few at once, and keeps page or
   assert.deepEqual(result.reused, [])
 })
 
+// 28/10/2026: a host with room reads a check's pages a few at once; the verdict is the one-at-a-time verdict.
+test('runDemoQa with three tabs gives the one-tab result, page by page, whatever finishes first', async () => {
+  const run = async (readAtOnce) => {
+    let open = 0
+    let most = 0
+    const read = async (url, path) => {
+      open++
+      most = Math.max(most, open)
+      await new Promise((r) => setTimeout(r, path === '/' ? 1 : 30 - path.length))
+      open--
+      return page({ path, url, navLinks: path === '/' ? ['/a', '/bb', '/ccc', '/dddd', '/eeeee'] : [] })
+    }
+    const asked = demoQaBody({ label: 'acme', platform: 'wordpress', discover: true })
+    const result = await runDemoQa({ asked, base: 'http://127.0.0.1:5000/', read, readAtOnce })
+    return { result, most }
+  }
+  const one = await run(1)
+  const three = await run(3)
+  assert.equal(one.most, 1)
+  assert.equal(three.most, 3)
+  const { durationMs: _a, ...a } = one.result
+  const { durationMs: _b, ...b } = three.result
+  assert.deepEqual(JSON.parse(JSON.stringify(b)), JSON.parse(JSON.stringify(a)))
+})
+
 // Plan "10/10" §7 S5 (26/10/2026): the build's words are written page by page from the baseline's reading of each page.
 test("the baseline keeps each page's words in order, headings and buttons marked, forms and nav left out", () => {
   const b = baselineOf(

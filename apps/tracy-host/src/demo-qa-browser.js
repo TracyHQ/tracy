@@ -14,10 +14,11 @@
 import { createHash } from 'node:crypto'
 import { LAUNCH_ARGS } from './browser.js'
 import { DemoReadCache } from './demo-read-cache.js'
-import { qaDeadline, waitForQaSlot } from './demo-qa-deadline.js'
-import { DEMO_QA_LOAD_CAP_MS, FILLER_SOURCE, hostIn, navPathsOf, runDemoQa } from './demo-qa.js'
+import { qaDeadline } from './demo-qa-deadline.js'
+import { DEMO_QA_LOAD_CAP_MS, FILLER_SOURCE, hostIn, navPathsOf, READ_AT_ONCE, runDemoQa } from './demo-qa.js'
 import { readResidueInPage } from './demo-residue-page.js'
 import { selfNamedServer } from './self-named.js'
+import { visionSlot } from './vision-stream.js'
 import {
   classOfFamily,
   fitWordmark,
@@ -1575,7 +1576,12 @@ function drawWordmarkInPage({ fit, font, colour, box, scale }) {
  * context per run. Null when Playwright is absent, so the route answers 503 NO_BROWSER.
  */
 
-export async function makeDemoQa({ log = console, playwright = null } = {}) {
+export async function makeDemoQa({
+  log = console,
+  playwright = null,
+  runsAtOnce = 1,
+  tabsAtOnce = READ_AT_ONCE
+} = {}) {
   try {
     playwright ??= await import('playwright')
   } catch {
@@ -1612,10 +1618,11 @@ export async function makeDemoQa({ log = console, playwright = null } = {}) {
     const siteKey = `${asked.label ?? ''}|${base}`
     try {
       signal.throwIfAborted()
-      // Each page has its own tab; `runDemoQa` reads one at a time to bound decoded images.
+      // Each page has its own tab; `runDemoQa` reads `tabsAtOnce` at a time to bound decoded images.
       const result = await runDemoQa({
         asked,
         base,
+        readAtOnce: tabsAtOnce,
         read: async (url, path, options) => {
           signal.throwIfAborted()
           const page = await context.newPage()
@@ -1643,25 +1650,21 @@ export async function makeDemoQa({ log = console, playwright = null } = {}) {
       await close()
     }
   }
-  // A browser context and its decoded images are the expensive part. A host owns only one QA run at a time,
-  // including requests for different sites; the queue holds request metadata, never page payloads.
-  let queue = Promise.resolve()
+  // A browser context and its decoded images are the expensive part. A host owns `runsAtOnce` QA runs at a time
+  // (`browserRunsOf`: one on a small host), including requests for different sites; the queue holds request
+  // metadata, never page payloads. An expired waiter leaves the queue; a run gives its slot back only once its
+  // context has closed, so no run starts beside one still closing.
+  const slot = visionSlot(Infinity, runsAtOnce)
   return async (input) => {
     const deadline = qaDeadline(input.asked, input.signal)
-    const before = queue
-    let release
-    const done = new Promise((resolve) => {
-      release = resolve
-    })
-    // An expired waiter may release its own placeholder immediately, but later requests still wait
-    // for its predecessor. They must never pass a run whose context is still closing.
-    queue = before.then(() => done)
+    let release = null
     try {
-      await waitForQaSlot(before, deadline.signal)
+      release = await slot(deadline.signal)
+      deadline.signal.throwIfAborted()
       return await run({ ...input, signal: deadline.signal })
     } finally {
       deadline.dispose()
-      release()
+      release?.()
     }
   }
 }

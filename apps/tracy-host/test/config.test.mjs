@@ -1,6 +1,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { readConfig, ConfigError } from '../src/config.js'
+import { browserRunsOf, demoQaTabsOf } from '../src/browser-room.js'
 
 const fullEnv = {
   HOST_NAME: 'local',
@@ -25,7 +26,9 @@ test('readConfig: reads hostName, hostSecret, sitesRoot, privateRoot and scripts
     localReleasesDir: null,
     exportOverHttp: false,
     demoInstallSlots: 2,
-    demoInstallMinFreeMb: 600
+    demoInstallMinFreeMb: 600,
+    browserRuns: browserRunsOf(fullEnv),
+    demoQaTabs: demoQaTabsOf(fullEnv)
   })
 })
 

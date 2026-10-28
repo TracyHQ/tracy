@@ -3962,10 +3962,13 @@ function judgeWith(reads, asked, routeReads = []) {
  * Read every page (home first; with `discover`, then the pages home's nav links to) and judge them.
  * @param {{asked: any, base: string, read: (url: string, path: string, options: object) => Promise<PageRead>}} input
  */
-/** Pages a check reads at once after home, each in its own tab (`runDemoQa`). */
+/**
+ * Pages a check reads at once after home, each in its own tab (`runDemoQa`), on a small host. A host with more
+ * memory reads more at once (`demoQaTabsOf`).
+ */
 export const READ_AT_ONCE = 1
 
-export async function runDemoQa({ asked, base, read, now = Date.now }) {
+export async function runDemoQa({ asked, base, read, now = Date.now, readAtOnce = READ_AT_ONCE }) {
   const started = now()
   const origin = new URL(base).origin
   const sentinels = Object.fromEntries(
@@ -4044,12 +4047,12 @@ export async function runDemoQa({ asked, base, read, now = Date.now }) {
   }
   // 🔒 HOME ALONE, THEN THE REST A FEW AT ONCE (plan "10/10" §7 S3, 26/10/2026): one check read up to ~15 pages one
   // after another at 2.6–6 s each. Home is read first by itself (it finds the nav's pages); the others are read
-  // `READ_AT_ONCE` at a time, each in its own tab (`makeDemoQa`), never more than the pages left under the cap, and
+  // `readAtOnce` at a time, each in its own tab (`makeDemoQa`), never more than the pages left under the cap, and
   // handled in page order — so the reads, and every verdict judged from them, are the same as one at a time.
   let i = 0
   while (i < pages.length && reads.length < maxPages) {
     if (now() - started > (asked.budgetMs ?? Infinity)) throw qaDeadlineError()
-    const wave = i === 0 ? 1 : Math.min(READ_AT_ONCE, maxPages - reads.length)
+    const wave = i === 0 ? 1 : Math.min(Math.max(1, readAtOnce), maxPages - reads.length)
     const batch = []
     while (batch.length < wave && i < pages.length) {
       const index = i++

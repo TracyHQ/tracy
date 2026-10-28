@@ -32,7 +32,7 @@ import { buildChangesOf } from '../lib/agent-demo-changes.js'
 /** This shape's name, kept with the packs. */
 export const COPY_VERSION = 'demo-copy/1'
 /** Page calls run at once after the brief. */
-export const PAGES_AT_ONCE = 2
+export const PAGES_AT_ONCE = 4
 /**
  * The most blocks one call writes: a longer page goes in parts, each with the same brief and purpose (local round 35,
  * 26/10/2026: a Joomla bar's menu page of 80-odd cocktails, prices and notes came back as JSON cut off mid-string,

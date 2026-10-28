@@ -661,6 +661,7 @@ export function createClientDemoService(deps) {
     return measureOnce(auth, state, false)
   }
   async function measureOnce(auth, state, incremental) {
+    const started = now()
     const site = (await pool.query('select * from site where site_key=$1', [state.build.site_key])).rows[0]
     // 🔒 The live records first: the QA reads each template post where it answers now (`currentQaRoutes`), and a
     // rewritten post takes a slug from its new title. The photo labels are read beside them (plan "10/10" §7 S3).
@@ -672,6 +673,7 @@ export function createClientDemoService(deps) {
       }),
       sourceSubjectsOf(pool, state)
     ])
+    const inventoryAt = now()
     const structure = deps.compareNativeInventory(
       state.build.content.agentDemo.structure.inventory,
       inventory,
@@ -700,6 +702,7 @@ export function createClientDemoService(deps) {
       // `photos-fit`: what each photo shows, from the labels `media.look` made (`demo-photo-labels.js`).
       sourceSubjects
     })
+    const readAt = now()
     if (!measured.ok || !Array.isArray(measured.body?.checks)) throw error('DEMO_QA_UNAVAILABLE')
     // What a visitor sees: the pages the QA read, shot at both widths and looked at (`demo-look.js`). In an incremental
     // check a page whose document did not change keeps the faults the last look found on it (plan "10/10" §7 S6).
@@ -724,6 +727,11 @@ export function createClientDemoService(deps) {
         })
       : null
     const look = lookNow && kept.length ? keptLook(lookNow, lastLook, kept) : lookNow
+    // Where a check's minutes go, one line per check (28/10/2026: nothing said it before).
+    const s = (ms) => (ms / 1000).toFixed(1)
+    console.info(
+      `[demo-check] ${site.site_key} ${incremental ? 'incremental' : 'full'}: inventory ${s(inventoryAt - started)}s, page reads ${s(readAt - inventoryAt)}s, look ${s(now() - readAt)}s (${fresh.length} page(s) looked at, ${kept.length} kept)`
+    )
     const sourced = checkResearchSourced(state.build.content.agentDemo.structure.inventory, inventory, {
       research: checkedResearch(state.revision),
       business: state.revision.brief?.business ?? null
