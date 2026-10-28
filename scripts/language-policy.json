@@ -77,6 +77,11 @@
       "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.7/presentation-lock.json",
       "oid": "976fd27e671cb92c7ce0748adc98ca9af227990e",
       "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
+    },
+    {
+      "path": "apps/tracy-web/src/lib/quickstart-releases.js",
+      "oid": "907ed3c9ccab76fbcaecde39d14991e3dfbd65ac",
+      "reason": "Reviewed text: the release reader after the move to JoomlArt-Products/joomlart-products. Its previous object carried two literal NUL separators, now written as \\u0000 escapes, so that old object cannot be decoded as text."
     }
   ]
 }
