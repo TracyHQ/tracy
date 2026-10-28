@@ -1169,7 +1169,7 @@ test(
 test('renumbered assets update custom fields and every other core asset reference', opts, () => {
   const tables = [
     'fields',
-    'fieldgroups',
+    'fields_groups',
     'contact_details',
     'banners',
     'workflows',
