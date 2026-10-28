@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-27-ci-red-stale-test-expectations",
+  "kind": "fix",
+  "title": "Build check tests match the code and CI: release cards switch on by a release entry, photo fixture carries the label shape",
+  "pr": 27,
+  "area": "ci/build-check",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: In a temporary tree with a task note and a task folder without release, ask holdsReleases; then add a dangling tasks/<x>/release link and ask again, and run checkCards.",
+    "S2: Run the photo-selection test of the residue sweep with labelled photos."
+  ],
+  "expect": [
+    "S1: false, then true; checkCards reports exactly 'tasks/dangling/release is not a directory'.",
+    "S2: food, a room or the building come before a video frame, a blurry one or a face; none is dropped."
+  ],
+  "selectors": {
+    "file": "scripts/test/release-cards.test.mjs",
+    "exports": "holdsReleases, checkCards"
+  },
+  "evidence": "27/10/2026: build check (checks, tests 1/2, tests 2/2, tests e2e) failed on every PR into develop with 'only 0 release cards found' and the photo-selection deep-equal mismatch",
+  "fence": "The switch-on condition of the release-card repository checks and the photo label fixture",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=malformed release|task folder that is a link|best photo first",
+      "scripts/test/release-cards.test.mjs",
+      "apps/tracy-web/test/wo-residue-sweep.test.mjs"
+    ],
+    "tests": [
+      "a malformed release still switches the repository checks on: a dangling link is a release to report",
+      "a task folder that is a link is walked like a real one: its release switches the checks on and is read",
+      "a frame takes the best photo first: food, a room or the building before a video frame, a blurry one or a face; none is dropped"
+    ]
+  }
+}
