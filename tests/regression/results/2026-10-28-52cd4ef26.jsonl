@@ -1,0 +1,1 @@
+{"id":"REG-PR-28-publishers-never-push-main","verdict":"PASS","commit":"52cd4ef2658fb1ebd62a8ee05927b1b5402fa47e","ran_at":"2026-10-28T04:12:19.845Z","evidence":"tests/regression/.runs/2026-10-28-52cd4ef26/REG-PR-28-publishers-never-push-main.log"}
