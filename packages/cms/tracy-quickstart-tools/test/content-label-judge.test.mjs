@@ -1,15 +1,22 @@
 /**
- * The LLM label judge of the content coverage audit (spec #37, issue #44): given a content map, the audit's page
- * snapshots and a judge, the audit asks once per component whether each slot's role is right, caches the answer per
- * slot content hash, and never calls a slot passed it did not judge. The judge here is a stub; no model is called.
- * Every business, person, phone and page is invented.
+ * The label judge of the content coverage audit (spec #37, issues #44 and #46): the audit calls no model. For the slots
+ * without a cached verdict it writes a judge request (crops plus slot tables); the agent that runs the release answers
+ * it, and record-judge checks the answers strictly and writes the `labelJudge` block Road to live reads. Verdicts are
+ * cached per slot content hash, so a rerun asks only for what changed. Every business, person, phone and page is
+ * invented.
  */
 import assert from 'node:assert/strict'
+import { spawnSync } from 'node:child_process'
+import { mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { dirname, join } from 'node:path'
 import { test } from 'node:test'
+import { fileURLToPath } from 'node:url'
 
+import { judgeLabelJudge } from '../../../../apps/tracy-web/src/lib/content-coverage/judge.js'
 import { buildCoverageFile } from '../content-coverage/lib/coverage-file.mjs'
-import { judgeLabels, slotHash } from '../content-coverage/lib/label-judge.mjs'
-import { createVisionJudge } from '../content-coverage/lib/label-judge-vision.mjs'
+import { prepareLabelJudge, slotHash } from '../content-coverage/lib/label-judge.mjs'
+import { recordLabelJudge } from '../content-coverage/lib/label-judge-record.mjs'
 
 const V3 = 'place-content-roles/3'
 const text = (key, sample, role, extra = {}) => ({
@@ -76,48 +83,109 @@ const FINDINGS = {
   ]
 }
 
-/** A stub judge: wrong for the phone and the claim, a finer mismatch on the intro, right for the rest. */
-function stubJudge(answers = {}) {
-  const calls = []
-  return {
-    calls,
-    model: 'stub-vision',
-    ceilingCents: 2,
-    async judge(unit) {
-      calls.push(unit)
-      const say = {
-        'module-12.phone': { verdict: 'wrong', suggestedRole: 'contact.phone', why: 'a phone number' },
-        'module-12.claim': { verdict: 'wrong', suggestedRole: 'claim.heading', why: 'a ranking and a year' },
-        'module-13.intro': { verdict: 'wrong', suggestedRole: 'editorial.heading', why: 'set as a heading' },
-        ...answers
-      }
-      return {
-        slots: unit.slots.map((s) => ({ n: s.n, ...(say[s.key] ?? { verdict: 'right' }) })),
-        cents: 1
-      }
-    }
-  }
+const CONTRACT = {
+  manifest: { id: 'quickstart/ironreed/j6/1.0.0' },
+  sha256: { contentMap: 'a'.repeat(64), presentationLock: 'b'.repeat(64) },
+  map: mapOf()
 }
-const crop = async (components) => new Map(components.map((c) => [c.id, 'data:image/jpeg;base64,AAAA']))
-const run = (over = {}) =>
-  judgeLabels({ map: mapOf(), findings: FINDINGS, mods: {}, crop, previous: null, ...over })
+
+/** A crop stand-in: records what was cropped and names one file per component. */
+function cropper() {
+  const asked = []
+  const crop = async (components) => {
+    asked.push(components.map((c) => c.entity))
+    return new Map(components.map((c) => [c.id, `images/${c.entity}-p${c.page}-desktop.jpg`]))
+  }
+  return { asked, crop }
+}
+const prepare = (over = {}) =>
+  prepareLabelJudge({
+    map: mapOf(),
+    findings: FINDINGS,
+    mods: {},
+    previous: null,
+    contract: CONTRACT,
+    crop: cropper().crop,
+    ...over
+  })
+const keysOf = (request) => request.components.flatMap((c) => c.slots.map((s) => s.key))
 const entry = (block, key) => block.slots.find((s) => s.key === key)
 
-test('a fact slot labelled editorial is reported wrong with a suggested role, one call per component', async () => {
-  const ask = stubJudge()
-  const block = await run({ ask })
-  assert.equal(ask.calls.length, 2)
-  assert.equal(block.state, 'judged')
+/** The agent's answers: wrong for the phone and the claim, a finer mismatch on the intro, right for the rest. */
+function answersFor(request, over = {}) {
+  const say = {
+    'module-12.phone': { verdict: 'wrong', suggestedRole: 'contact.phone', why: 'a phone number' },
+    'module-12.claim': { verdict: 'wrong', suggestedRole: 'claim.heading', why: 'a ranking and a year' },
+    'module-13.intro': { verdict: 'wrong', suggestedRole: 'editorial.heading', why: 'set as a heading' },
+    ...over
+  }
+  return {
+    judgedBy: 'agent',
+    slots: keysOf(request).map((key) => ({ key, ...(say[key] ?? { verdict: 'right' }) }))
+  }
+}
+
+test('the audit calls no model: it writes a request for every located slot without a cached verdict', async () => {
+  const { asked, crop } = cropper()
+  const { block, request } = await prepare({ crop })
+  assert.deepEqual(asked, [['module-12', 'module-13']])
+  assert.deepEqual(
+    [block.state, block.reason, block.judgedBy, block.counts.notJudged],
+    ['not-judged', 'AWAITING_AGENT', null, 5]
+  )
+  assert.deepEqual(keysOf(request).sort(), [
+    'module-12.claim',
+    'module-12.phone',
+    'module-12.title',
+    'module-13.intro',
+    'module-13.title'
+  ])
+  // URL slots are left to the mechanical rules.
+  assert.equal(keysOf(request).includes('module-13.link'), false)
+  assert.equal(request.contract.contentMapSha256, 'a'.repeat(64))
+})
+
+test('the request carries the question, the allowed answers and per component its crop and slot table', async () => {
+  const { request } = await prepare()
+  assert.match(request.question, /a heading that carries a claim is claim\.heading/)
+  assert.deepEqual(request.allowedVerdicts, ['right', 'wrong'])
+  assert.deepEqual(
+    request.allowedRoles.find((r) => r.role === 'claim.heading'),
+    { role: 'claim.heading', group: 'fact' }
+  )
+  const unit = request.components.find((c) => c.module.entity === 'module-12')
+  assert.equal(unit.crop, 'images/module-12-p1-desktop.jpg')
+  assert.deepEqual(unit.page, { title: 'Ironreed Boxing Club', url: 'https://ironreed-boxing.example/' })
+  assert.deepEqual(unit.module, { entity: 'module-12', title: 'Our coaches', position: 'section-3' })
+  assert.deepEqual(unit.neighbours, ['Classes'])
+  assert.deepEqual(unit.slots[1], {
+    n: 2,
+    key: 'module-12.phone',
+    kind: 'text',
+    sample: '(555) 014-2290',
+    role: 'editorial.paragraph',
+    group: null,
+    fit: null
+  })
+})
+
+test('record-judge takes a complete answer and writes the block Road to live reads', async () => {
+  const { request } = await prepare()
+  const { problems, block } = recordLabelJudge({ request, verdicts: answersFor(request) })
+  assert.deepEqual(problems, [])
+  assert.deepEqual(
+    [block.state, block.reason, block.judgedBy, block.applies],
+    ['judged', null, 'agent', true]
+  )
   const phone = entry(block, 'module-12.phone')
   assert.deepEqual(
     [phone.verdict, phone.role, phone.suggested, phone.groupWrong],
     ['wrong', 'editorial.paragraph', 'contact.phone', true]
   )
-  const claim = entry(block, 'module-12.claim')
-  assert.deepEqual([claim.verdict, claim.suggested, claim.groupWrong], ['wrong', 'claim.heading', true])
-  const intro = entry(block, 'module-13.intro')
-  assert.deepEqual([intro.verdict, intro.suggested, intro.groupWrong], ['wrong', 'editorial.heading', false])
-  assert.equal(entry(block, 'module-12.title').verdict, 'right')
+  assert.deepEqual(
+    [entry(block, 'module-13.intro').suggested, entry(block, 'module-13.intro').groupWrong],
+    ['editorial.heading', false]
+  )
   assert.deepEqual(block.counts, {
     slots: 5,
     located: 5,
@@ -128,155 +196,132 @@ test('a fact slot labelled editorial is reported wrong with a suggested role, on
     wrongGroup: 2,
     mismatch: 1
   })
-  // URL slots are left to the mechanical rules.
-  assert.equal(entry(block, 'module-13.link'), undefined)
-})
-
-test('the judge sees the crop, the slot table and the page, module and neighbour context', async () => {
-  const ask = stubJudge()
-  await run({ ask })
-  const unit = ask.calls.find((u) => u.module.entity === 'module-12')
-  assert.equal(unit.image, 'data:image/jpeg;base64,AAAA')
-  assert.deepEqual(unit.page, { title: 'Ironreed Boxing Club', url: 'https://ironreed-boxing.example/' })
-  assert.deepEqual(unit.module, { entity: 'module-12', title: 'Our coaches', position: 'section-3' })
-  assert.deepEqual(unit.neighbours, ['Classes'])
-  assert.deepEqual(unit.slots[1], {
-    n: 2,
-    key: 'module-12.phone',
-    sample: '(555) 014-2290',
-    role: 'editorial.paragraph',
-    group: null,
-    fit: null
-  })
-})
-
-test('a second run on unchanged content makes no model call', async () => {
-  const first = await run({ ask: stubJudge() })
-  const ask = stubJudge()
-  const second = await run({ ask, previous: { labelJudge: first } })
-  assert.equal(ask.calls.length, 0)
-  assert.equal(second.state, 'judged')
-  assert.deepEqual(second.slots, first.slots)
-  assert.equal(second.calls, 0)
-})
-
-test('a changed slot asks again for its component only', async () => {
-  const first = await run({ ask: stubJudge() })
-  const ask = stubJudge()
-  const map = mapOf(V3, { intro: { sample: 'Train hard, then rest' } })
-  const second = await run({ ask, map, previous: { labelJudge: first } })
+  const read = judgeLabelJudge({ labelJudge: block }, { live: false })
   assert.deepEqual(
-    ask.calls.map((u) => u.module.entity),
-    ['module-13']
+    [read.state, read.holds, read.wrongGroup.length, read.mismatch.length],
+    ['wrong-group', true, 2, 1]
   )
-  assert.notEqual(entry(second, 'module-13.intro').hash, entry(first, 'module-13.intro').hash)
-  assert.equal(entry(second, 'module-13.intro').hash, slotHash(map.slots[4]))
 })
 
-test('with no model the result is not judged, never passed', async () => {
-  const block = await run({ ask: null })
-  assert.equal(block.state, 'not-judged')
-  assert.equal(block.reason, 'NO_VISION_MODEL')
-  assert.equal(block.slots.length, 0)
-  assert.equal(block.counts.judged, 0)
-  assert.equal(block.counts.notJudged, 5)
+test('record-judge refuses a missing slot, a bad role, an unknown key and an unknown field, and writes nothing', async () => {
+  const { request } = await prepare()
+  const refused = (verdicts) => recordLabelJudge({ request, verdicts })
+  const full = answersFor(request)
+
+  const missing = refused({ ...full, slots: full.slots.filter((s) => s.key !== 'module-13.title') })
+  assert.equal(missing.block, null)
+  assert.deepEqual(missing.problems, ['module-13.title: not answered'])
+
+  const badRole = refused(
+    answersFor(request, { 'module-12.phone': { verdict: 'wrong', suggestedRole: 'business.hotline' } })
+  )
+  assert.equal(badRole.block, null)
+  assert.match(
+    badRole.problems[0],
+    /module-12\.phone: suggestedRole "business\.hotline" is not a place-content-roles\/3 role/
+  )
+
+  const unknown = refused({ ...full, slots: [...full.slots, { key: 'module-99.title', verdict: 'right' }] })
+  assert.deepEqual(unknown.problems, ['"module-99.title" was not asked in this request'])
+
+  const field = refused({ ...full, model: 'some-model' })
+  assert.deepEqual(field.problems, ['unknown field "model" in the verdicts file'])
+
+  const twice = refused({ ...full, slots: [...full.slots, full.slots[0]] })
+  assert.match(twice.problems[0], /answered more than once/)
+
+  const odd = refused(answersFor(request, { 'module-12.title': { verdict: 'maybe' } }))
+  assert.deepEqual(odd.problems, ['module-12.title: verdict must be "right" or "wrong"'])
+
+  const same = refused(
+    answersFor(request, { 'module-12.title': { verdict: 'wrong', suggestedRole: 'editorial.heading' } })
+  )
+  assert.match(same.problems[0], /suggestedRole is the current role/)
 })
 
-test('a model that fails leaves its component not judged', async () => {
-  const ask = stubJudge()
-  ask.judge = async () => {
-    throw Object.assign(new Error('vision 503'), { code: 'VISION_REFUSED' })
-  }
-  const block = await run({ ask })
-  assert.equal(block.state, 'not-judged')
-  assert.equal(block.reason, 'VISION_FAILED')
+test('a rerun on unchanged content asks nothing: the recorded verdicts are the cache', async () => {
+  const { request } = await prepare()
+  const first = recordLabelJudge({ request, verdicts: answersFor(request) }).block
+  const { asked, crop } = cropper()
+  const again = await prepare({ crop, previous: { labelJudge: first } })
+  assert.equal(again.request, null)
+  assert.deepEqual(asked, [])
+  assert.equal(again.block.state, 'judged')
+  assert.deepEqual(again.block.slots, first.slots)
+  assert.equal(again.block.judgedBy, 'agent')
 })
 
-test('cost is bounded: past the call cap the rest is not judged', async () => {
-  const ask = stubJudge()
-  const block = await run({ ask, limits: { maxCalls: 1, maxCents: 100 } })
-  assert.equal(ask.calls.length, 1)
-  assert.equal(block.state, 'partly')
-  assert.equal(block.reason, 'BUDGET_EXCEEDED')
-  assert.equal(block.counts.notJudged, 2)
-  const cents = await run({ ask: stubJudge(), limits: { maxCalls: 10, maxCents: 2 } })
-  assert.equal(cents.calls, 1)
-  assert.equal(cents.reason, 'BUDGET_EXCEEDED')
+test('a changed slot is asked again alone; the cached slots of its component are context only', async () => {
+  const { request } = await prepare()
+  const first = recordLabelJudge({ request, verdicts: answersFor(request) }).block
+  const map = mapOf(V3, { intro: { sample: 'Train hard, then rest' } })
+  const { asked, crop } = cropper()
+  const second = await prepare({ map, crop, previous: { labelJudge: first } })
+  assert.deepEqual(asked, [['module-13']])
+  assert.deepEqual(keysOf(second.request), ['module-13.intro'])
+  assert.deepEqual(second.request.components[0].alreadyJudged, [
+    { n: 1, key: 'module-13.title', role: 'editorial.heading', verdict: 'right' }
+  ])
+  assert.deepEqual([second.block.state, second.block.counts.judged], ['partly', 4])
+  const third = recordLabelJudge({
+    request: second.request,
+    verdicts: { slots: [{ key: 'module-13.intro', verdict: 'right' }] }
+  }).block
+  assert.equal(third.state, 'judged')
+  assert.equal(entry(third, 'module-13.intro').hash, slotHash(map.slots[4]))
+  assert.equal(entry(third, 'module-12.phone').suggested, 'contact.phone')
 })
 
-test('a suggested role outside the version 3 vocabulary is not taken: that slot is not judged', async () => {
-  const ask = stubJudge({ 'module-12.phone': { verdict: 'wrong', suggestedRole: 'business.hotline' } })
-  const block = await run({ ask })
-  assert.equal(entry(block, 'module-12.phone'), undefined)
-  assert.equal(block.state, 'partly')
-  assert.equal(block.reason, 'ANSWER_UNREADABLE')
-})
-
-test('a version 2 map is not sent to the model', async () => {
-  const ask = stubJudge()
-  const block = await run({ ask, map: mapOf('place-content-roles/2') })
-  assert.equal(ask.calls.length, 0)
-  assert.deepEqual([block.state, block.reason, block.applies], ['not-judged', 'VOCABULARY_NOT_V3', false])
+test('with --no-judge, or a version 2 map, nothing is asked and the slots stay not judged', async () => {
+  const off = await prepare({ unavailable: 'NOT_RUN' })
+  assert.deepEqual([off.request, off.block.state, off.block.reason], [null, 'not-judged', 'NOT_RUN'])
+  assert.equal(off.block.counts.notJudged, 5)
+  const v2 = await prepare({ map: mapOf('place-content-roles/2') })
+  assert.deepEqual(
+    [v2.request, v2.block.state, v2.block.reason, v2.block.applies],
+    [null, 'not-judged', 'VOCABULARY_NOT_V3', false]
+  )
 })
 
 test('the verdicts are written into the committed coverage file beside labelRules', async () => {
-  const labelJudge = await run({ ask: stubJudge() })
-  const contract = {
-    manifest: { id: 'quickstart/ironreed/j6/1.0.0' },
-    sha256: { contentMap: 'a'.repeat(64), presentationLock: 'b'.repeat(64) },
-    map: mapOf()
-  }
-  const result = {
-    pages: [],
-    failures: [],
-    summary: { pages: 1, mappedPages: 1, unmappedPages: 0 }
-  }
-  const doc = buildCoverageFile({ result, contract, labelJudge })
+  const { request } = await prepare()
+  const labelJudge = recordLabelJudge({ request, verdicts: answersFor(request) }).block
+  const result = { pages: [], failures: [], summary: { pages: 1, mappedPages: 1, unmappedPages: 0 } }
+  const doc = buildCoverageFile({ result, contract: CONTRACT, labelJudge })
   assert.ok(doc.labelRules)
   assert.equal(doc.labelJudge.state, 'judged')
-  assert.equal(doc.tool.version, '1.3.0')
-  const none = buildCoverageFile({ result, contract })
-  assert.equal(none.labelJudge, undefined)
+  assert.equal(doc.tool.version, '1.4.0')
+  assert.equal(buildCoverageFile({ result, contract: CONTRACT }).labelJudge, undefined)
 })
 
-test('the vision call sends the input check, the table and the crop, and refuses an answer that did not read the check', async () => {
-  const sent = []
-  const reply = (content) => ({
-    ok: true,
-    json: async () => ({
-      choices: [{ message: { content: JSON.stringify(content) } }],
-      usage: { prompt_tokens: 3000, completion_tokens: 200 }
+const RECORD = join(dirname(fileURLToPath(import.meta.url)), '../content-coverage/record-judge.mjs')
+
+test('the record-judge command writes labelJudge into the coverage file, and leaves it alone when refused', async () => {
+  const dir = mkdtempSync(join(tmpdir(), 'record-judge-'))
+  const coverage = join(dir, 'content-coverage.json')
+  const before = { contract: { id: CONTRACT.manifest.id, contentMapSha256: 'a'.repeat(64) }, holes: [] }
+  writeFileSync(coverage, `${JSON.stringify(before, null, 2)}\n`)
+  const { request } = await prepare()
+  const requestFile = join(dir, 'request.json')
+  writeFileSync(requestFile, JSON.stringify({ ...request, coverageFiles: [coverage] }))
+  const run = (verdicts) => {
+    const file = join(dir, 'verdicts.json')
+    writeFileSync(file, JSON.stringify(verdicts))
+    return spawnSync(process.execPath, [RECORD, '--request', requestFile, '--verdicts', file], {
+      encoding: 'utf8'
     })
-  })
-  let answer = { imageCode: '12345678', slots: [{ n: 1, verdict: 'right' }] }
-  const vision = createVisionJudge({
-    door: { url: 'https://vision.example/v1/chat', key: 'test-key', model: 'deepseek-chat' },
-    fetchImpl: async (_url, init) => {
-      sent.push(JSON.parse(init.body))
-      return reply(answer)
-    },
-    check: {
-      create: async () => ({ expectedCode: '12345678', image: 'data:image/png;base64,CHECK' }),
-      instruction: 'Read the code.',
-      matches: (a, c) => a?.imageCode === c.expectedCode
-    }
-  })
-  const unit = {
-    page: { title: 'Ironreed Boxing Club', url: 'https://ironreed-boxing.example/' },
-    module: { entity: 'module-12', title: 'Our coaches', position: 'section-3' },
-    neighbours: ['Classes'],
-    slots: [{ n: 1, key: 'module-12.phone', sample: '(555) 014-2290', role: 'editorial.paragraph' }],
-    image: 'data:image/jpeg;base64,CROP'
   }
-  const out = await vision.judge(unit)
-  assert.deepEqual(out.slots, [{ n: 1, verdict: 'right' }])
-  assert.equal(out.cents, 1)
-  assert.ok(vision.ceilingCents >= 1)
-  const content = sent[0].messages[0].content
-  assert.match(content[0].text, /claim\.heading \(fact\)/)
-  assert.equal(content[1].image_url.url, 'data:image/png;base64,CHECK')
-  assert.match(content[2].text, /module-12\.phone/)
-  assert.equal(content[3].image_url.url, 'data:image/jpeg;base64,CROP')
-  answer = { imageCode: '00000000', slots: [{ n: 1, verdict: 'right' }] }
-  await assert.rejects(vision.judge(unit), /input check/)
+  const bad = run({ slots: [] })
+  assert.equal(bad.status, 1)
+  assert.match(bad.stderr, /refused, nothing written/)
+  assert.deepEqual(JSON.parse(readFileSync(coverage, 'utf8')), before)
+
+  const good = run(answersFor(request))
+  assert.equal(good.status, 0, good.stderr)
+  const after = JSON.parse(readFileSync(coverage, 'utf8'))
+  assert.deepEqual(after.holes, [])
+  assert.deepEqual(
+    [after.labelJudge.state, after.labelJudge.judgedBy, after.labelJudge.counts.wrongGroup],
+    ['judged', 'agent', 2]
+  )
 })

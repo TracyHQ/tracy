@@ -32,7 +32,7 @@
  *
  * The LLM label judge (spec #37) rides in the same group with its own verdict (`judgeLabelJudge`), read from the
  * `labelJudge` block committed beside `labelRules`: a slot on the wrong side of fact/editorial holds a new release
- * (`coverage-judge`, todo); a finer mismatch, slots the model did not judge, or a wrong group on a live release warn
+ * (`coverage-judge`, todo); a finer mismatch, slots nobody judged, or a wrong group on a live release warn
  * (`coverage-judge-warn`).
  */
 import { contractFor } from '../contracts.js'

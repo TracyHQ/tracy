@@ -14,12 +14,12 @@
 //     [--fit]   Slot fit (ADR 0039): measure a `fit` on every text and image slot from this run and settle each
 //               picture's keep flag by its kind; with --write the content map gets them, BEFORE content-coverage.json
 //               is built, so the coverage file names the map with its fit. Without --write: <out>/content-map.fit.json.
-//     [--no-judge] [--judge-max-calls 150] [--judge-max-cents 300]
-//               The LLM label judge (spec #37): with TRACY_VISION_API_KEY set (TRACY_VISION_URL, TRACY_VISION_MODEL as
-//               for the server) a vision model looks once per component at its crop with numbered slots and says
-//               whether each slot's role is right; verdicts are cached per slot in content-coverage.json, so only
-//               changed slots are judged again. No key or --no-judge: nothing is sent and unjudged slots stay
-//               `not judged`. The caps bound one run; what is past them stays `not judged`.
+//     [--no-judge]
+//               The label judge (spec #37): no model is called. For every component with a slot whose verdict is not
+//               cached in content-coverage.json, the audit writes <out>/label-judge/request.json (the question, the
+//               allowed answers, and per component its crop with numbered slots and the slots to judge). The agent
+//               that runs the release answers it and records the answers with record-judge.mjs. Until then, and with
+//               --no-judge, those slots stay `not judged`, never right.
 //
 // Exit: 0 the policy passes · 1 holes, page problems (or an incomplete run) hold Publish · 2 usage or run error.
 import { execFileSync } from 'node:child_process'
@@ -44,7 +44,7 @@ import { measureSlotFit } from './lib/slot-fit.mjs'
 import { buildSourceIndex } from './lib/sources.mjs'
 
 const USAGE =
-  'usage: cli.mjs --site <url> --contract <dir> --out <dir> [--db-dump f] [--webroot d] [--site-config f] [--max-pages 150] [--viewports desktop,phone] [--write] [--no-report] [--report-only | --reclassify] [--fit] [--no-judge] [--judge-max-calls n] [--judge-max-cents n]'
+  'usage: cli.mjs --site <url> --contract <dir> --out <dir> [--db-dump f] [--webroot d] [--site-config f] [--max-pages 150] [--viewports desktop,phone] [--write] [--no-report] [--report-only | --reclassify] [--fit] [--no-judge]'
 
 function parseArgs(argv) {
   const o = {}
@@ -187,7 +187,9 @@ async function main() {
 
   const target = join(contractDir, COVERAGE_FILE)
   const previous = existsSync(target) ? JSON.parse(readFileSync(target, 'utf8')) : null
-  const labelJudge = await runLabelJudge({ o, result, contract, outDir, chromium, previous })
+  const coverageFiles = [join(outDir, COVERAGE_FILE), ...(o.write ? [target] : [])]
+  const judge = await runLabelJudge({ o, result, contract, outDir, chromium, previous, coverageFiles })
+  const labelJudge = judge.block
   const doc = buildCoverageFile({ result, contract, previous, labelJudge })
   writeFileSync(join(outDir, COVERAGE_FILE), `${JSON.stringify(doc, null, 2)}\n`)
   if (o.write) writeFileSync(target, `${JSON.stringify(doc, null, 2)}\n`)
@@ -221,9 +223,9 @@ async function main() {
         labelJudge: {
           state: labelJudge.state,
           reason: labelJudge.reason,
-          calls: labelJudge.calls,
-          cents: labelJudge.cents,
-          ...labelJudge.counts
+          ...labelJudge.counts,
+          asked: judge.asked,
+          request: judge.requestFile
         },
         findings,
         report: o['no-report'] ? null : join(outDir, 'report.html')
