@@ -1,0 +1,25 @@
+{
+  "id": "REG-PR-66-stub-keepalive-busy-loop",
+  "kind": "fix",
+  "title": "The GitHub API stub answers a request sent on a kept-alive socket while the test loop is busy, instead of resetting it",
+  "pr": 66,
+  "area": "fleet/github-pr-publish",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test packages/fleet/tracy-fleet-operation/test/github-api-stub.test.mjs. A child process sends GET /user, then POST /graphql on the same kept-alive socket while the test process holds its event loop for 7 s from the check phase."
+  ],
+  "expect": [
+    "S1: the test passes: the child prints status 200 and the stub logged GET /user then POST /graphql; no ECONNRESET / fetch failed."
+  ],
+  "selectors": {
+    "test": "packages/fleet/tracy-fleet-operation/test/github-api-stub.test.mjs",
+    "stub": "packages/fleet/tracy-fleet-operation/test/github-api-stub.mjs"
+  },
+  "evidence": "CI: wo-export-public conflict twice failed with POST /pulls: network error reaching the loopback stub (fetch failed). Stress before the fix 6 of 15 failed, after 0 of 31; the new test is red 3 of 3 on the old stub",
+  "fence": "The stub HTTP server keep-alive behaviour: no idle timeout racing a busy test event loop",
+  "run": {
+    "cmd": ["node", "--test", "packages/fleet/tracy-fleet-operation/test/github-api-stub.test.mjs"]
+  }
+}

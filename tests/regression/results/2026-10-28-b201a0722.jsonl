@@ -1,0 +1,1 @@
+{"id":"REG-PR-66-stub-keepalive-busy-loop","verdict":"PASS","commit":"b201a0722ac0c2195f2b095e721c3b634056cecd","ran_at":"2026-10-28T14:21:34.687Z","evidence":"tests/regression/.runs/2026-10-28-b201a0722/REG-PR-66-stub-keepalive-busy-loop.log"}
