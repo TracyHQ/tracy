@@ -644,10 +644,12 @@ export function createClientDemoService(deps) {
       state.build = await settleBuild({ pool, request, origin, cookie: state.cookie, build: state.build })
       if (params.operation === 'provision.status')
         return { ok: true, ...(await ready(state)), jobId: state.build.site_job_id }
-      if (params.operation === 'check.start') return checkStart(auth, state)
+      // `sweepBatches`: the dsh sends a page's sweep words as one call and sets a refused pair aside (`planSweep`).
+      const sweep = { batches: params.sweepBatches === true }
+      if (params.operation === 'check.start') return checkStart(auth, state, sweep)
       if (params.operation !== 'check') throw error('AGENT_DEMO_BAD_OPERATION')
       checkAllowed(state)
-      const outcome = await measure(auth, state)
+      const outcome = await measure(auth, state, sweep)
       await throwIfStopped(state)
       // 🔒 A CHECK NOBODY HEARD IS NOT COUNTED (pilot 24/10/2026): the agent's call gave up waiting at its
       // timeout while this check ran on, so it was counted, the agent called again, and three counted checks
@@ -686,15 +688,15 @@ export function createClientDemoService(deps) {
    * would be counted (no sweep round follows it, `sweepDecision`) is read again in full, and that read is the answer;
    * one a sweep round follows costs no attempt and is measured again after the round.
    */
-  async function measure(auth, state) {
+  async function measure(auth, state, sweep = {}) {
     const incremental = checkIsIncremental(state.build.qa)
-    const first = await measureOnce(auth, state, incremental)
+    const first = await measureOnce(auth, state, incremental, sweep)
     if (!incremental) return first
     const attempts = state.build.qa?.clientCheckAttempts ?? 0
     if (!first.pass && sweepDecision(state.build.qa?.residueSweeps, attempts, first.sweep).go) return first
-    return measureOnce(auth, state, false)
+    return measureOnce(auth, state, false, sweep)
   }
-  async function measureOnce(auth, state, incremental) {
+  async function measureOnce(auth, state, incremental, { batches = false } = {}) {
     const site = (await pool.query('select * from site where site_key=$1', [state.build.site_key])).rows[0]
     // 🔒 The live records first: the QA reads each template post where it answers now (`currentQaRoutes`), and a
     // rewritten post takes a slug from its new title. The photo labels are read beside them (plan "10/10" §7 S3).
@@ -827,7 +829,8 @@ export function createClientDemoService(deps) {
       // A lead or a description is the agent's to write while counted checks remain after this one.
       checksLeft: Math.max(0, DEMO_CHECKS - (state.build.qa?.clientCheckAttempts ?? 0) - 1),
       // The term descriptions are read and cleared once a build (`planSweep`).
-      sweepTerms: state.build.qa?.residueSweeps?.terms !== true
+      sweepTerms: state.build.qa?.residueSweeps?.terms !== true,
+      batches
     })
     const thin = leadsThin(Math.max(plan.thinLeads ?? 0, state.build.qa?.residueSweeps?.thinLeads ?? 0))
     if (thin) checks.push(thin)
@@ -947,7 +950,7 @@ export function createClientDemoService(deps) {
    * (any replica reads it); one whose process restarted reads as lost, uncounted, and the next start runs
    * a new one. A result is counted once, when it is saved, heard or not.
    */
-  async function checkStart(auth, state) {
+  async function checkStart(auth, state, sweep = {}) {
     const job = state.build.qa?.clientCheck
     if (job?.state === 'running' && !checkLost(job)) return { ok: true, running: true, checkId: job.id }
     checkAllowed(state)
@@ -961,11 +964,11 @@ export function createClientDemoService(deps) {
       state.build.id,
       JSON.stringify({ clientCheck: started })
     ])
-    const run = runCheck(auth, state, started).finally(() => runningChecks.delete(started.id))
+    const run = runCheck(auth, state, started, sweep).finally(() => runningChecks.delete(started.id))
     runningChecks.set(started.id, run)
     return { ok: true, running: true, checkId: started.id }
   }
-  async function runCheck(auth, state, job) {
+  async function runCheck(auth, state, job, sweep = {}) {
     const beat = setInterval(() => {
       pool
         .query(
@@ -977,7 +980,7 @@ export function createClientDemoService(deps) {
     beat.unref?.()
     let outcome
     try {
-      outcome = await measure(auth, state)
+      outcome = await measure(auth, state, sweep)
     } catch (failure) {
       outcome = { code: failure.code ?? 'DEMO_QA_UNAVAILABLE' }
     } finally {
@@ -1023,7 +1026,7 @@ export function createClientDemoService(deps) {
 }
 
 /**
- * A counted check's sweep that ended with calls still planned: no calls to run, why it stopped, and what is left,
+ * A counted check's sweep that ended with changes still planned: no calls to run, why it stopped, and what is left,
  * reported unresolved; `shown` stays so dsh can check the last round's `cleared` rows against it.
  * @param {{calls: any[], unresolved?: any[], left?: number, shown?: string[]}} sweep
  * @param {'bound' | 'no-progress'} why
@@ -1040,8 +1043,8 @@ export function sweepStopped(sweep, why, rounds) {
         field: 'sweep',
         why:
           why === 'bound'
-            ? `the sweep reached its bound of ${SWEEP_ROUNDS_MAX} rounds with ${left} calls still planned`
-            : `the sweep's round ${rounds} cleared nothing: ${left} calls still planned`
+            ? `the sweep reached its bound of ${SWEEP_ROUNDS_MAX} rounds with ${left} changes still planned`
+            : `the sweep's round ${rounds} cleared nothing: ${left} changes still planned`
       }
     ],
     shown: sweep.shown ?? []

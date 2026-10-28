@@ -408,3 +408,331 @@ test('without a sweep runner the check answers its sweep calls as they are', asy
   }
   assert.deepEqual(await runDemoLifecycle({ operation: 'check' }, async () => answer), answer)
 })
+
+// ── A page's pairs as one call (dev ja-diner WordPress, 27/10/2026) ─────────────────────────────────────────────
+
+/**
+ * A replace job as `locateAll` is: every pair located on the page as it stands, the first refusal wins and names its
+ * pair (`change`), nothing is written; else every pair is written in one save of the page's record.
+ * @param {Record<string, string>} pages
+ */
+function pageJob(pages) {
+  const saves = []
+  const sent = []
+  const count = (text, find) => text.split(find).length - 1
+  const job = async ({ params }) => {
+    sent.push(params)
+    const { path, changes: list, ...one } = params
+    const changes = list ?? [{ find: one.find, replace: one.replace, expect: one.expect }]
+    const named = (i) => (changes.length > 1 ? { change: i } : {})
+    const text = pages[path]
+    const places = changes.reduce((n, c) => n + count(text, c.find), 0)
+    if (places > 40) return { ok: false, code: 'TOO_MANY', count: places }
+    for (const [i, c] of changes.entries()) {
+      const n = count(text, c.find)
+      if (n === 0) return { ok: false, code: 'NOT_FOUND', ...named(i) }
+      if (changes.some((o, j) => j !== i && o.find.length > c.find.length && o.find.includes(c.find)))
+        return { ok: false, code: 'BAD_PARAMS', ...named(i) }
+      if (c.expect !== undefined && n !== c.expect)
+        return { ok: false, code: 'COUNT_MISMATCH', count: n, ...named(i) }
+    }
+    let after = text
+    for (const c of changes) after = after.replaceAll(c.find, c.replace)
+    pages[path] = after
+    saves.push(path)
+    return { ok: true, count: places }
+  }
+  return { job, saves, sent }
+}
+
+const pageCall = (path, changes) => ({ action: 'content.replace', params: { path, all: 'page', changes } })
+
+test("a page's pairs in one call save its record once; a refused pair is set aside, reported as its own, the rest sent again", async () => {
+  const pages = { '/home-red/': 'Smoked Venison Burger · $24.00 · Slow cooked · Ask' }
+  const { job, saves, sent } = pageJob(pages)
+  const round = sweepRound(job)
+  const all = await round(
+    pageCall('/home-red/', [
+      { find: 'Smoked Venison Burger', replace: 'Menu item', expect: 1 },
+      { find: '$24.00', replace: '', expect: 1 },
+      { find: 'Slow cooked', replace: '', expect: 1 }
+    ])
+  )
+  assert.deepEqual(saves, ['/home-red/'])
+  assert.deepEqual(
+    all.pairs.map((p) => [p.find, p.done.ok]),
+    [
+      ['Smoked Venison Burger', true],
+      ['$24.00', true],
+      ['Slow cooked', true]
+    ]
+  )
+  // A miscounted pair: the job writes nothing and names it; it answers that refusal, the others go again together.
+  pages['/'] = 'Grilled Salmon · Grilled Salmon · $9.00 · Fresh daily'
+  const some = await round(
+    pageCall('/', [
+      { find: 'Grilled Salmon', replace: 'Menu item', expect: 1 },
+      { find: '$9.00', replace: '', expect: 1 },
+      { find: 'Fresh daily', replace: '', expect: 1 }
+    ])
+  )
+  assert.deepEqual(
+    some.pairs.map((p) => [p.find, p.done.ok === true ? 'ok' : p.done.code]),
+    [
+      ['Grilled Salmon', 'COUNT_MISMATCH'],
+      ['$9.00', 'ok'],
+      ['Fresh daily', 'ok']
+    ]
+  )
+  assert.deepEqual(saves, ['/home-red/', '/'])
+  assert.equal(pages['/'], 'Grilled Salmon · Grilled Salmon ·  · ')
+  // The words an earlier write of the round cleared answer cleared, never NOT_FOUND, inside a call too.
+  pages['/about/'] = 'Slow cooked · Open late'
+  pages['/menu/'] = 'Open late'
+  const shared = await round(
+    pageCall('/menu/', [
+      { find: 'Smoked Venison Burger', replace: 'Menu item', expect: 1 },
+      { find: 'Open late', replace: '', expect: 1 }
+    ])
+  )
+  assert.deepEqual(
+    shared.pairs.map((p) => [p.find, p.done.ok, p.done.cleared ?? null]),
+    [
+      ['Smoked Venison Burger', true, 'smoked venison burger'],
+      ['Open late', true, null]
+    ]
+  )
+  assert.deepEqual(sent.at(-1), { path: '/menu/', all: 'page', find: 'Open late', replace: '', expect: 1 })
+})
+
+test('a pair sharing words with another of its call is sent alone after the rest; a refusal naming no pair sends each alone', async () => {
+  const pages = { '/': 'Ask about our menu · Ask · Today' }
+  const { job, saves, sent } = pageJob(pages)
+  const round = sweepRound(job)
+  const overlap = await round(
+    pageCall('/', [
+      { find: 'Ask about our menu', replace: 'Contact', expect: 1 },
+      { find: 'Ask', replace: 'Contact', expect: 1 },
+      { find: 'Today', replace: '', expect: 1 }
+    ])
+  )
+  assert.deepEqual(
+    overlap.pairs.map((p) => [p.find, p.done.ok]),
+    [
+      ['Ask about our menu', true],
+      ['Today', true],
+      ['Ask', true]
+    ]
+  )
+  assert.equal(pages['/'], 'Contact · Contact · ')
+  assert.deepEqual(saves, ['/', '/'])
+  // Over the job's 40 places for one call (TOO_MANY names no pair): each pair is sent alone, as before.
+  pages['/menu/'] = `${'$5.00 '.repeat(30)}${'$7.00 '.repeat(15)}`
+  sent.length = 0
+  const over = await round(
+    pageCall('/menu/', [
+      { find: '$5.00', replace: '', expect: 30 },
+      { find: '$7.00', replace: '', expect: 15 }
+    ])
+  )
+  assert.deepEqual(
+    over.pairs.map((p) => [p.find, p.done.ok]),
+    [
+      ['$5.00', true],
+      ['$7.00', true]
+    ]
+  )
+  assert.deepEqual(
+    sent.map((p) => (p.changes ? p.changes.length : p.find)),
+    [2, '$5.00', '$7.00']
+  )
+})
+
+test('the check tells tracy-web it sends a page as one call, and a batched round reports each refused pair', async () => {
+  const pages = { '/': 'Grilled Salmon · Grilled Salmon · $9.00' }
+  const { job } = pageJob(pages)
+  const asked = []
+  let round = 0
+  const result = await runDemoLifecycle(
+    { operation: 'check' },
+    async (params) => {
+      asked.push(params)
+      if (params.operation !== 'check.start') return { ok: false, code: 'AGENT_DEMO_BAD_OPERATION' }
+      round += 1
+      return round === 1
+        ? {
+            ok: true,
+            pass: false,
+            checks: [],
+            sweep: {
+              calls: [
+                pageCall('/', [
+                  { find: 'Grilled Salmon', replace: 'Menu item', expect: 1 },
+                  { find: '$9.00', replace: '', expect: 1 }
+                ])
+              ]
+            }
+          }
+        : { ok: true, pass: false, checks: [], sweep: { calls: [] } }
+    },
+    { sweep: job }
+  )
+  assert.equal(asked[0].sweepBatches, true)
+  // A pair refused before any write inside a page's call is a refusal, never marked unknown.
+  assert.equal('unknown' in result.swept[0].refused[0], false)
+  assert.deepEqual(result.swept, [
+    {
+      calls: 1,
+      refused: [{ action: 'content.replace', find: 'Grilled Salmon', code: 'COUNT_MISMATCH' }],
+      cleared: 0,
+      unresolved: 0
+    }
+  ])
+})
+
+// 28/10/2026: a grouped write whose receipt was lost was sent again pair by pair, so "Menu item" became
+// "Menu item for customer for customer" and the price it had written read as NOT_FOUND.
+test('a grouped call whose outcome is unknown is never sent again: each pair answers that outcome, the page as written', async () => {
+  const lostWays = [
+    ['a thrown call', () => Promise.reject(new Error('socket hang up')), 'SWEEP_CALL_FAILED'],
+    [
+      'an unknown outcome',
+      async () => ({ ok: false, code: 'OUTCOME_UNKNOWN', written: 0 }),
+      'OUTCOME_UNKNOWN'
+    ],
+    [
+      'a gateway status',
+      async () => ({ ok: false, code: 'COWORK_WEB_BAD_RESPONSE', httpStatus: 502 }),
+      'COWORK_WEB_BAD_RESPONSE'
+    ],
+    // A refusal of a pre-write kind that says a record was written (an undone write) is no proof either.
+    [
+      'an undone write',
+      async () => ({ ok: false, code: 'VALUE_NOT_ALLOWED', written: 1, reverted: false }),
+      'VALUE_NOT_ALLOWED'
+    ]
+  ]
+  for (const [label, receipt, code] of lostWays) {
+    const pages = { '/': 'Menu item · Price · Ask about it · Ask' }
+    const { job } = pageJob(pages)
+    let sends = 0
+    // A refusal before any write comes back as the job gave it; a write lands whole and only its answer is lost.
+    const lossy = async (call) => {
+      sends += 1
+      const done = await job(call)
+      return done.ok === true ? receipt() : done
+    }
+    const answered = await sweepRound(lossy)(
+      pageCall('/', [
+        { find: 'Ask about it', replace: 'Contact', expect: 1 },
+        { find: 'Menu item', replace: 'Menu item for customer', expect: 1 },
+        { find: 'Ask', replace: 'Contact', expect: 1 },
+        { find: 'Price', replace: 'Cost', expect: 1 }
+      ])
+    )
+    // The overlap is refused before any write and the rest goes again once; its lost answer ends the call, and the
+    // shorter pair waiting for it is kept back for the next check.
+    assert.equal(sends, 2, label)
+    assert.equal(pages['/'], 'Menu item for customer · Cost · Contact · Ask', label)
+    for (const row of answered.pairs) assert.notEqual(row.done.code, 'NOT_FOUND', `${label}: ${row.find}`)
+    assert.deepEqual(
+      answered.pairs.map((p) => [p.find, p.done.ok === true ? 'ok' : p.done.code]),
+      [
+        ['Ask about it', code],
+        ['Menu item', code],
+        ['Price', code],
+        ['Ask', 'SWEEP_NOT_SENT']
+      ],
+      label
+    )
+  }
+})
+
+test('a refusal that proves nothing was written is split and sent again; a grouped write with a lost receipt is sent once', async () => {
+  // Lost receipt, no overlap: one send, the page written once.
+  const pages = { '/': 'Menu item · Price' }
+  const { job, saves } = pageJob(pages)
+  const sent = []
+  const lost = async (call) => {
+    sent.push(call.params)
+    await job(call)
+    throw new Error('timeout')
+  }
+  const once = await sweepRound(lost)(
+    pageCall('/', [
+      { find: 'Menu item', replace: 'Menu item for customer', expect: 1 },
+      { find: 'Price', replace: 'Cost', expect: 1 }
+    ])
+  )
+  assert.equal(sent.length, 1)
+  assert.deepEqual(saves, ['/'])
+  assert.equal(pages['/'], 'Menu item for customer · Cost')
+  assert.deepEqual(
+    once.pairs.map((p) => p.done.code),
+    ['SWEEP_CALL_FAILED', 'SWEEP_CALL_FAILED']
+  )
+  // A refusal before any write naming no pair (over the job's 40 places): each pair alone, once.
+  pages['/menu/'] = `Menu item · ${'$5.00 '.repeat(30)}${'$7.00 '.repeat(15)}`
+  const before = sent.length
+  const fine = pageJob(pages)
+  const split = await sweepRound(async (call) => {
+    sent.push(call.params)
+    return fine.job(call)
+  })(
+    pageCall('/menu/', [
+      { find: 'Menu item', replace: 'Menu item for customer', expect: 1 },
+      { find: '$5.00', replace: '', expect: 30 },
+      { find: '$7.00', replace: '', expect: 15 }
+    ])
+  )
+  assert.deepEqual(
+    sent.slice(before).map((p) => (p.changes ? p.changes.length : p.find)),
+    [3, 'Menu item', '$5.00', '$7.00']
+  )
+  assert.ok(split.pairs.every((p) => p.done.ok === true))
+  assert.match(pages['/menu/'], /^Menu item for customer · \s*$/)
+})
+
+test("a sweep row whose write's answer was lost says unknown: never one to write again; a refusal before any write does not", async () => {
+  let round = 0
+  const result = await runDemoLifecycle(
+    { operation: 'check' },
+    async () => {
+      round += 1
+      return round === 1
+        ? {
+            ok: true,
+            pass: false,
+            checks: [],
+            sweep: {
+              calls: [
+                pageCall('/', [
+                  { find: 'Menu item', replace: 'Menu item for customer', expect: 1 },
+                  { find: 'Price', replace: 'Cost', expect: 1 }
+                ]),
+                {
+                  action: 'content.replace',
+                  params: { path: '/about/', find: 'Ask', replace: 'Contact', expect: 2 }
+                }
+              ]
+            }
+          }
+        : { ok: true, pass: false, checks: [], sweep: { calls: [] } }
+    },
+    {
+      sweep: async (call) =>
+        call.params.path === '/'
+          ? { ok: false, code: 'OUTCOME_UNKNOWN' }
+          : { ok: false, code: 'COUNT_MISMATCH', count: 1 }
+    }
+  )
+  assert.deepEqual(result.swept[0].refused, [
+    { action: 'content.replace', find: 'Menu item', code: 'OUTCOME_UNKNOWN', unknown: true },
+    { action: 'content.replace', find: 'Price', code: 'OUTCOME_UNKNOWN', unknown: true },
+    { action: 'content.replace', find: 'Ask', code: 'COUNT_MISMATCH' }
+  ])
+  // A refusal before any write is a refusal, never marked unknown.
+  const prewrite = result.swept[0].refused.find((r) => r.code === 'COUNT_MISMATCH')
+  assert.equal(prewrite.unknown, undefined)
+  assert.equal('unknown' in prewrite, false)
+})

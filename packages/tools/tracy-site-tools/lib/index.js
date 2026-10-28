@@ -2206,6 +2206,28 @@ function createBuildTurns(most = 500) {
   };
 }
 
+// src/host/refused-before-write.mjs
+var BEFORE_WRITE = /* @__PURE__ */ new Set([
+  "BAD_PARAMS",
+  "NOT_FOUND",
+  "NOT_EDITABLE",
+  "AMBIGUOUS",
+  "COUNT_MISMATCH",
+  "TOO_MANY",
+  "VALUE_NOT_ALLOWED",
+  "CONFIRM_FIRST",
+  "SITE_IDENTITY",
+  "SITE_BUSY"
+]);
+function refusedBeforeWrite(answer) {
+  if (answer === null || typeof answer !== "object" || Array.isArray(answer)) return false;
+  const a = (
+    /** @type {Record<string, unknown>} */
+    answer
+  );
+  return a.ok === false && typeof a.code === "string" && BEFORE_WRITE.has(a.code) && !(Number(a.written) > 0) && a.reverted === void 0 && a.partial === void 0 && a.undo === void 0 && a.apply_id === void 0 && a.applyId === void 0;
+}
+
 // src/host/turn-stop.mjs
 var TURN_STOPPED = "TURN_STOPPED";
 function stoppedAnswer(extra = {}) {
@@ -2241,6 +2263,7 @@ function stoppableSleep(sleep, signal) {
 }
 
 // src/host/demo-lifecycle.mjs
+var NOT_SENT = Object.freeze({ ok: false, code: "SWEEP_NOT_SENT" });
 async function runDemoLifecycle(params, send, { signal = null, sleep = pause, now = Date.now, sweep = null } = {}) {
   if (signal?.aborted) return stoppedAnswer();
   if (params.operation === "check") return sweptCheck(send, { signal, sleep, now, sweep });
@@ -2265,8 +2288,8 @@ var CHECK_WAIT_MS = 6e5;
 var CHECK_POLL_MS = 5e3;
 var CHECK_POLL_MISSES = 6;
 async function runCheck(send, { signal, sleep, now }) {
-  let answer = await send({ operation: "check.start" });
-  if (answer?.code === "AGENT_DEMO_BAD_OPERATION") return send({ operation: "check" });
+  let answer = await send({ operation: "check.start", sweepBatches: true });
+  if (answer?.code === "AGENT_DEMO_BAD_OPERATION") return send({ operation: "check", sweepBatches: true });
   const until = now() + CHECK_WAIT_MS;
   let misses = 0;
   while (answer?.running === true) {
@@ -2299,22 +2322,30 @@ async function sweptCheck(send, { signal, sleep, now, sweep }) {
     if (calls.length === 0 || sweep === null || round >= SWEEPS_MAX || signal?.aborted)
       return heard(answer, sweeps);
     const refused3 = [];
+    let sent = 0;
     const sendOne = sweepRound(sweep);
     for (const call of calls) {
       if (signal?.aborted) return stoppedAnswer({ lastReceipt: heard(answer, []) });
-      const done = await sendOne(call);
-      if (done?.ok === true && typeof done.cleared === "string")
-        unseen.push({ path: call.params?.path ?? null, find: call.params?.find ?? null, by: done.cleared });
-      if (done?.ok !== true)
-        refused3.push({
-          action: call.action,
-          find: call.params?.find ?? null,
-          code: done?.code ?? "SWEEP_CALL_FAILED",
-          // 🔒 A FAILURE WITH NO CODE KEEPS ITS WORDS (lrsweep rig, JA Diner wp7, 25/10/2026): 80 featured-picture
-          // writes of one build failed with no code of the site's, and with the error dropped nothing said why.
-          ...(done?.code ?? "SWEEP_CALL_FAILED") === "SWEEP_CALL_FAILED" && done?.error ? { error: String(done.error).slice(0, 160) } : {},
-          ...done?.unresolved === true ? { waits: true } : {}
-        });
+      const answered = await sendOne(call);
+      const rows = Array.isArray(answered?.pairs) ? answered.pairs : [{ find: call.params?.find ?? null, done: answered }];
+      for (const { find, done } of rows) {
+        sent++;
+        if (done?.ok === true && typeof done.cleared === "string")
+          unseen.push({ path: call.params?.path ?? null, find, by: done.cleared });
+        if (done?.ok !== true)
+          refused3.push({
+            action: call.action,
+            find,
+            code: done?.code ?? "SWEEP_CALL_FAILED",
+            // 🔒 A FAILURE WITH NO CODE KEEPS ITS WORDS (lrsweep rig, JA Diner wp7, 25/10/2026): 80 featured-picture
+            // writes of one build failed with no code of the site's, and with the error dropped nothing said why.
+            ...(done?.code ?? "SWEEP_CALL_FAILED") === "SWEEP_CALL_FAILED" && done?.error ? { error: String(done.error).slice(0, 160) } : {},
+            ...done?.unresolved === true ? { waits: true } : {},
+            // A replace whose answer proves nothing (lost, thrown, unknown) may have written its words: never a pair to
+            // send again unread; the check after this round reads the page.
+            ...call.action === "content.replace" && done?.code !== NOT_SENT.code && !refusedBeforeWrite(done) ? { unknown: true } : {}
+          });
+      }
     }
     sweeps.push({
       calls: calls.length,
@@ -2322,8 +2353,7 @@ async function sweptCheck(send, { signal, sleep, now, sweep }) {
       cleared: unseen.length,
       unresolved: Array.isArray(answer.sweep.unresolved) ? answer.sweep.unresolved.length : 0
     });
-    if (refused3.length === calls.length && refused3.every((r) => r.waits === true))
-      return heard(answer, sweeps);
+    if (refused3.length === sent && refused3.every((r) => r.waits === true)) return heard(answer, sweeps);
   }
 }
 function confirmCleared(entry, rows, answer) {
@@ -2359,14 +2389,18 @@ function heard(answer, sweeps) {
 var wordsKey = (text6) => String(text6 ?? "").toLowerCase().replace(/\s+/g, " ").trim();
 function sweepRound(sweep) {
   const written = [];
-  return async (call) => {
-    const done = await sweep(call).catch((failure) => ({
-      ok: false,
-      code: "SWEEP_CALL_FAILED",
-      error: String(failure?.message ?? failure)
-    }));
+  const sent = (call) => sweep(call).catch((failure) => ({
+    ok: false,
+    code: "SWEEP_CALL_FAILED",
+    error: String(failure?.message ?? failure)
+  }));
+  const one = async (call) => {
+    const done = await sent(call);
     if (call.action !== "content.replace") return done;
-    const find = wordsKey(call.params?.find);
+    return heldBy(call.params?.find, done);
+  };
+  const heldBy = (words, done) => {
+    const find = wordsKey(words);
     if (done?.ok === true) written.push(find);
     else if (done?.code === "NOT_FOUND" && find !== "") {
       const by = written.find((w) => w.includes(find));
@@ -2374,6 +2408,42 @@ function sweepRound(sweep) {
     }
     return done;
   };
+  return async (call) => {
+    const changes = call.action === "content.replace" ? call.params?.changes : void 0;
+    if (!Array.isArray(changes)) return one(call);
+    return { ok: true, pairs: await batch(call, changes) };
+  };
+  async function batch(call, changes) {
+    const { changes: _changes, ...base3 } = call.params;
+    const alone = (pair) => ({ action: call.action, params: { ...base3, ...pair } });
+    const rows = [];
+    const after = [];
+    let queue = [...changes];
+    while (queue.length > 0) {
+      const done = await sent(
+        queue.length === 1 ? alone(queue[0]) : { action: call.action, params: { ...base3, changes: queue } }
+      );
+      if (done?.ok === true) {
+        for (const pair of queue) rows.push({ find: pair.find, done: heldBy(pair.find, done) });
+        break;
+      }
+      if (!refusedBeforeWrite(done)) {
+        for (const pair of queue) rows.push({ find: pair.find, done });
+        break;
+      }
+      const at = queue.length === 1 ? 0 : Number.isInteger(done?.change) && done.change >= 0 && done.change < queue.length ? done.change : null;
+      if (at === null) {
+        for (const pair of queue) rows.push({ find: pair.find, done: await one(alone(pair)) });
+        break;
+      }
+      if (queue.length > 1 && done?.code === "BAD_PARAMS") after.push(queue[at]);
+      else rows.push({ find: queue[at].find, done: heldBy(queue[at].find, done) });
+      queue = queue.filter((_pair, i) => i !== at);
+    }
+    const known = rows.every((r) => r.done?.ok === true || refusedBeforeWrite(r.done));
+    for (const pair of after) rows.push({ find: pair.find, done: known ? await one(alone(pair)) : NOT_SENT });
+    return rows;
+  }
 }
 function onTheWay(answer) {
   return ["COWORK_WEB_UNREACHABLE", "COWORK_WEB_BAD_RESPONSE"].includes(answer?.code) || typeof answer?.httpStatus === "number" && answer.httpStatus >= 500;
@@ -21083,7 +21153,7 @@ var REPLACE_KEYS = Object.freeze([
   "expect",
   "href"
 ]);
-var REPLACE_CHANGE_KEYS = Object.freeze(["find", "replace", "href"]);
+var REPLACE_CHANGE_KEYS = Object.freeze(["find", "replace", "href", "expect"]);
 var REPLACE_HREF_MAX = 2048;
 var REPLACE_RESTORE_KEYS = Object.freeze(["at", "value", "was", "now"]);
 var REPLACE_MAX_RESTORE = 2e3;
@@ -21446,6 +21516,20 @@ function planReplace(params) {
           return unknownKey(`changes[${i}].${key2}`, key2, REPLACE_CHANGE_KEYS);
       const change = checkChange(c, `changes[${i}].`);
       if ("ok" in change) return change;
+      if (c.expect !== void 0 && c.expect !== null) {
+        const own = (
+          /** @type {number} */
+          c.expect
+        );
+        if (!Number.isInteger(own) || own < 1 || own > REPLACE_MAX_TARGETS)
+          return badType(
+            `changes[${i}].expect`,
+            `a whole number 1 to ${REPLACE_MAX_TARGETS}`,
+            c.expect,
+            '{changes:[{find, replace, expect:2}], all:"page"}'
+          );
+        change.expect = own;
+      }
       const key = foldForMatch(change.find);
       if (seen.has(key))
         return refuse2(
@@ -22117,6 +22201,21 @@ function countRefusal(results, { all, expect, confirmed, dryRun }) {
       replaceText("tooManyNext"),
       { would: would.slice(0, REPLACE_MAX_TARGETS), count: places }
     );
+  for (let i = 0; i < results.length; i += 1) {
+    const r = results[i];
+    const own = r.change.expect;
+    if (own === void 0 || r.places === own) continue;
+    return refuse2(
+      "COUNT_MISMATCH",
+      replaceText("countMismatchError", { expect: own, n: r.places, find: r.change.find }),
+      replaceText("countMismatchNext", { n: r.places }),
+      {
+        would: r.targets.map((t) => wouldOf(t, r.change)),
+        count: r.places,
+        ...results.length > 1 ? { change: i } : {}
+      }
+    );
+  }
   if (expect !== null && places !== expect)
     return refuse2(
       "COUNT_MISMATCH",
@@ -22124,13 +22223,15 @@ function countRefusal(results, { all, expect, confirmed, dryRun }) {
       replaceText("countMismatchNext", { n: places }),
       { would, count: places }
     );
-  const exact = results.every((r) => r.targets.every((t) => t.exact));
-  if (all && expect === null && !confirmed && !dryRun && (places > REPLACE_CONFIRM_OVER || !exact))
+  const loose2 = results.filter((r) => r.change.expect === void 0);
+  const unconfirmed = loose2.reduce((n, r) => n + r.places, 0);
+  const exact = loose2.every((r) => r.targets.every((t) => t.exact));
+  if (all && expect === null && loose2.length > 0 && !confirmed && !dryRun && (unconfirmed > REPLACE_CONFIRM_OVER || !exact))
     return refuse2(
       "VALUE_NOT_ALLOWED",
-      replaceText("confirmCountError", { n: places, how: exact ? "" : REPLACE_NEXT.confirmCountHow }),
-      replaceText(exact ? "confirmCountNext" : "confirmCountInexactNext", { n: places }),
-      { rule: "confirm-count", would, count: places }
+      replaceText("confirmCountError", { n: unconfirmed, how: exact ? "" : REPLACE_NEXT.confirmCountHow }),
+      replaceText(exact ? "confirmCountNext" : "confirmCountInexactNext", { n: unconfirmed }),
+      { rule: "confirm-count", would, count: unconfirmed }
     );
   return null;
 }
@@ -22488,6 +22589,9 @@ function followHref(href, find, replace) {
 }
 
 // src/host/copy-apply.mjs
+var UNKNOWN_NEXT = "The words under unknown may already be on the site (their answer was lost): in about 30 s read their page with tracy_site page.text {path}, and write only the words it still shows as they were; never send them again unread.";
+var LIST_MAX = 30;
+var CUT_NEXT = "A page whose answer has notListed lists only the first of them: read that page with tracy_site page.text {path} and write only the template words it still shows; nothing is known to be on the site beyond what is listed as placed.";
 var pathOf3 = (pack) => pack.path === "*shared*" ? "/" : pack.path;
 async function applyCopy({ read, replace, page, signal = null }) {
   const got = await read(page);
@@ -22496,13 +22600,18 @@ async function applyCopy({ read, replace, page, signal = null }) {
   if (!packs.length)
     return { ok: false, code: "COPY_NOTHING_TO_APPLY", next: 'tracy_demo {operation:"copy.write"} first.' };
   const pages = [];
+  let left = 0;
+  let unsure = false;
+  let cut4 = false;
   for (const pack of packs) {
     if (signal?.aborted) break;
     const path22 = pathOf3(pack);
     const notPlaced = [];
+    const unknown = [];
     const again = [];
     const setAside = (one, answer) => {
-      if (answer?.code === "AMBIGUOUS") again.push([one, "page"]);
+      if (!refusedBeforeWrite(answer)) unknown.push({ find: one.find, code: answer?.code ?? null });
+      else if (answer?.code === "AMBIGUOUS") again.push([one, "page"]);
       else notPlaced.push({ find: one.find, code: answer?.code ?? null });
     };
     let placed = 0;
@@ -22513,6 +22622,11 @@ async function applyCopy({ read, replace, page, signal = null }) {
         const answer = await replace(path22, chunk);
         if (answer?.ok !== false) {
           placed += chunk.length;
+          break;
+        }
+        if (!refusedBeforeWrite(answer)) {
+          for (const one of chunk) unknown.push({ find: one.find, code: answer?.code ?? null });
+          chunk = [];
           break;
         }
         const at = Number.isInteger(answer.change) ? answer.change : chunk.length === 1 ? 0 : null;
@@ -22532,24 +22646,40 @@ async function applyCopy({ read, replace, page, signal = null }) {
     for (const [one, all] of again) {
       if (signal?.aborted) break;
       let answer = await replace(path22, [one], { all });
-      if (answer?.ok === false && Number.isInteger(answer.count) && answer.rule === "confirm-count")
+      if (refusedBeforeWrite(answer) && Number.isInteger(answer.count) && answer.rule === "confirm-count")
         answer = await replace(path22, [one], { all, expect: answer.count });
-      if (answer?.ok === false) notPlaced.push({ find: one.find, code: answer.code ?? null });
+      if (answer?.ok === false)
+        (refusedBeforeWrite(answer) ? notPlaced : unknown).push({ find: one.find, code: answer.code ?? null });
       else placed += 1;
     }
+    const lists = { notPlaced, unknown, issues: pack.issues ?? [] };
+    const notListed = Object.fromEntries(
+      Object.entries(lists).filter(([, list]) => list.length > LIST_MAX).map(([key, list]) => [key, list.length - LIST_MAX])
+    );
     pages.push({
       page: pack.path === "*shared*" ? "shared (header and footer)" : path22,
       placed,
-      ...notPlaced.length ? { notPlaced: notPlaced.slice(0, 30) } : {},
-      ...(pack.issues ?? []).length ? { issues: pack.issues.slice(0, 30) } : {}
+      ...Object.fromEntries(
+        Object.entries(lists).filter(([, list]) => list.length > 0).map(([key, list]) => [key, list.slice(0, LIST_MAX)])
+      ),
+      ...Object.keys(notListed).length ? { notListed } : {}
     });
+    left += notPlaced.length + lists.issues.length;
+    unsure ||= unknown.length > 0;
+    cut4 ||= Object.keys(notListed).length > 0;
   }
-  const left = pages.reduce((n, p) => n + (p.notPlaced?.length ?? 0) + (p.issues?.length ?? 0), 0);
-  return {
-    ok: true,
-    pages,
-    next: left ? "Write only what is listed under notPlaced and issues, on its page, with content.replace or the record it lives in; everything else is on the site." : "Every page\u2019s words are on the site; go on with the pictures and the checks."
-  };
+  const next = [];
+  if (left)
+    next.push(
+      cut4 ? "Write what is listed under notPlaced and issues, on its page, with content.replace or the record it lives in." : "Write only what is listed under notPlaced and issues, on its page, with content.replace or the record it lives in; everything else is on the site."
+    );
+  else if (!cut4)
+    next.push(
+      unsure ? "Every other page\u2019s words are on the site." : "Every page\u2019s words are on the site; go on with the pictures and the checks."
+    );
+  if (unsure) next.push(UNKNOWN_NEXT);
+  if (cut4) next.push(CUT_NEXT);
+  return { ok: true, pages, next: next.join(" ") };
 }
 
 // src/host/build-fence.mjs
@@ -38409,7 +38539,7 @@ async function replaceRendered(input) {
     }));
     if (plan.all === false && plan.expect === null) {
       for (const [i, c] of changes.entries())
-        if (placesOf2(i) > 1)
+        if (c.expect === void 0 && placesOf2(i) > 1)
           return refuse5(
             "AMBIGUOUS",
             renderedText("ambiguousError", { find: c.find, n: placesOf2(i), path: path22 }),
@@ -38417,6 +38547,15 @@ async function replaceRendered(input) {
             { find: c.find, candidates: shown3.slice(0, 4) }
           );
     }
+    for (const [i, c] of changes.entries())
+      if (c.expect !== void 0 && placesOf2(i) !== c.expect)
+        return refuse5(
+          "COUNT_MISMATCH",
+          replaceText("countMismatchError", { expect: c.expect, n: placesOf2(i), find: c.find }),
+          replaceText("countMismatchNext", { n: placesOf2(i) }),
+          { would: shown3, count: placesOf2(i), ...changes.length > 1 ? { change: i } : {} }
+        );
+    const unconfirmed = changes.reduce((n, c, i) => n + (c.expect === void 0 ? placesOf2(i) : 0), 0);
     if (plan.expect !== null && places !== plan.expect)
       return refuse5(
         "COUNT_MISMATCH",
@@ -38428,12 +38567,12 @@ async function replaceRendered(input) {
         replaceText("countMismatchNext", { n: places }),
         { would: shown3, count: places }
       );
-    if (plan.all && plan.expect === null && input.confirmed !== true && !plan.dryRun && places > REPLACE_CONFIRM_OVER)
+    if (plan.all && plan.expect === null && input.confirmed !== true && !plan.dryRun && unconfirmed > REPLACE_CONFIRM_OVER)
       return refuse5(
         "VALUE_NOT_ALLOWED",
-        replaceText("confirmCountError", { n: places, how: "" }),
-        replaceText("confirmCountNext", { n: places }),
-        { rule: "confirm-count", would: shown3, count: places }
+        replaceText("confirmCountError", { n: unconfirmed, how: "" }),
+        replaceText("confirmCountNext", { n: unconfirmed }),
+        { rule: "confirm-count", would: shown3, count: unconfirmed }
       );
     if (rebase) {
       const identity2 = (r) => [r.kind, r.name ?? "", r.anchor, r.old].join("\0");
