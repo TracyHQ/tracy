@@ -211,7 +211,7 @@ export const EXCLUDE = [
   '!$TURBO_ROOT$/**/__pycache__/**',
   '!$TURBO_ROOT$/**/.DS_Store',
   // The logs of the regression runner (`tests/regression/run.mjs`), ignored by git: found in the hash
-  // of the two tasks that take `tests/regression/**`, on the first tree where the runner had run.
+  // of the two tasks that took `tests/regression/**`, on the first tree where the runner had run.
   '!$TURBO_ROOT$/tests/regression/.runs/**',
   ...GENERATED.map(excludeGlob)
 ]
