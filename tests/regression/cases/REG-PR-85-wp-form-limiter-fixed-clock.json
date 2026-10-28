@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-85-wp-form-limiter-fixed-clock",
+  "kind": "fix",
+  "title": "The WordPress theme form-limiter tests hold on a ten-minute boundary between two requests and pin five places per window exactly",
+  "pr": 85,
+  "area": "cms/wordpress-theme",
+  "cms": ["wp"],
+  "needs": ["php"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the repo root at the commit under test, with `php` on PATH (or a docker daemon): node --test --test-reporter=tap packages/cms/tracy-wordpress-theme/test/wp-ja-morgan-forms.test.mjs packages/cms/tracy-wordpress-theme/test/wp-ja-restaurant-forms.test.mjs",
+    "S2: Read the lines for the window cases of both bases (overlays, src): the reminder once per window, five addresses per client per window, five accounts per client per hour."
+  ],
+  "expect": [
+    "Every window case reports ok in both files. Each request runs on the `now` the case gives it (pre-fix: PHP's real clock, so a 600 s boundary between request 8 and 9 gave `[0, 1]` for `[0, 0]`). The client is mailed for exactly five distinct addresses and registers exactly five accounts, is still held in the window's last second, and gets five places again in the next window."
+  ],
+  "selectors": {
+    "test": "packages/cms/tracy-wordpress-theme/test/wp-ja-morgan-forms.test.mjs",
+    "twin": "packages/cms/tracy-wordpress-theme/test/wp-ja-restaurant-forms.test.mjs",
+    "limiter": "packages/cms/tracy-wordpress-theme/overlays/wp-ja-morgan/inc/groups/account.php wp_ja_morgan_rate_reserve"
+  },
+  "evidence": "CI run 40716937675 (build check, tests 2/2), 28/10/2026: 'overlays: one client cannot mail more than five addresses per window' failed with [0, 1] for [0, 0]. Under real PHP with libfaketime moving PHP's clock across 15:40:00 before request 9, the old test gave exactly [0, 1]; the new test passes at 59 boundary positions and fails for a client or registration limit of 4 or 6, a constant window index, and \\time().",
+  "fence": "The test probe loads account.php inside a namespace whose time() answers the request's `now`; the window cases assert exact per-request mails and accounts, the last second of a window and the first of the next.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-wordpress-theme/test/wp-ja-morgan-forms.test.mjs",
+      "packages/cms/tracy-wordpress-theme/test/wp-ja-restaurant-forms.test.mjs"
+    ],
+    "tests": [
+      "overlays: the reminder mails a known address once per window",
+      "overlays: one client cannot mail more than five addresses per window",
+      "overlays: registration creates at most five accounts per client per hour",
+      "src: the reminder mails a known address once per window",
+      "src: one client cannot mail more than five addresses per window",
+      "src: registration creates at most five accounts per client per hour"
+    ]
+  }
+}
