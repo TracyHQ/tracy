@@ -6,7 +6,14 @@
  */
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
+import { execFileSync } from 'node:child_process'
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
 import { lastJson, stageOf, timingOf, view } from '../src/sites/live-sync.js'
+
+const SYNC_SCRIPT = fileURLToPath(
+  new URL('../../../packages/fleet/tracy-fleet-operation/scripts/webroot/webroot-sync.sh', import.meta.url)
+)
 
 const OUTPUT = [
   '==> [0s] reading the live site',
@@ -109,4 +116,43 @@ test('the live read’s timing line is progress, never the answer of a script th
       .state,
     'applied'
   )
+})
+
+/**
+ * The read's timing line as webroot-sync.sh itself prints it, run from the script's own snippet: a
+ * hand-typed line in compact JSON hid that Python's `json.dumps` writes `{"ok": true, …}` and every
+ * row's `read` stayed null. tracy-host's test runs it the same way (`syncProgressLine`).
+ */
+function scriptReadLine(answer) {
+  const script = readFileSync(SYNC_SCRIPT, 'utf8')
+  const m =
+    /python3 -c '(import json,sys\nr = json\.loads\(sys\.argv\[1\]\)\nprint\(json\.dumps\(\{"ok": True, "liveReadAt"[^']*)' "\$pulled" >&2/.exec(
+      script
+    )
+  assert.ok(m, 'webroot-sync.sh prints the read timing line with the snippet this test runs')
+  return execFileSync('python3', ['-c', m[1], JSON.stringify(answer)], { encoding: 'utf8' }).trim()
+}
+
+test('the read line the real script prints is read for its mode, seconds and parts', () => {
+  const line = scriptReadLine({
+    ok: true,
+    liveReadAt: '2026-10-23T09:00:00Z',
+    mode: 'incremental',
+    seconds: 9.8,
+    timing: { fingerprint: 2.1, database: 7.6 },
+    tables: { secret: 'never printed' }
+  })
+  assert.ok(!line.includes('never printed'))
+  assert.deepEqual(timingOf(`==> [0s] reading the live site\n${line}\n{"ok":true,"state":"applied"}`).read, {
+    mode: 'incremental',
+    seconds: 9.8,
+    parts: { fingerprint: 2.1, database: 7.6 }
+  })
+})
+
+test('an older host that prints the read line with spaces is read the same', () => {
+  const spaced =
+    '{"ok": true, "liveReadAt": "x", "mode": "incremental", "seconds": 2, "timing": {"database": 1.5}}'
+  assert.deepEqual(timingOf(spaced).read, { mode: 'incremental', seconds: 2, parts: { database: 1.5 } })
+  assert.equal(lastJson(`${spaced}\n`), null)
 })

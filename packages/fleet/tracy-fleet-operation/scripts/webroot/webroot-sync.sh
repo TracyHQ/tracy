@@ -1497,9 +1497,11 @@ print(json.dumps({"ok": False, "code": "LIVE_BUSY" if a.get("code") == "LIVE_BUS
     # The read's end and its own timing in the job's output as they happen (tracy-host keeps both as
     # the sync's progress, tracy-web `timingOf`): the answer above goes to a file, and a slow read was
     # not told from a slow merge (#1649). Only the timing: the read's answer holds no value of the site.
+    # Compact JSON, the form the readers were first written for; they parse it, so a spaced line from an
+    # older host is read too.
     python3 -c 'import json,sys
 r = json.loads(sys.argv[1])
-print(json.dumps({"ok": True, "liveReadAt": r.get("liveReadAt"), **{k: r[k] for k in ("mode", "unchanged", "seconds", "timing") if k in r}}))' "$pulled" >&2
+print(json.dumps({"ok": True, "liveReadAt": r.get("liveReadAt"), **{k: r[k] for k in ("mode", "unchanged", "seconds", "timing") if k in r}}, separators=(",", ":")))' "$pulled" >&2
     echo "==> [${SECONDS}s] the live site read" >&2
     # The read took only what differs from the copy as built: its changes are laid over that commit.
     if [[ "$manifest" == "$DIR/first-manifest.json" && -f "$DIR/live/deleted.json" ]]; then
