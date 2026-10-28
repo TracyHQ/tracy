@@ -60,7 +60,7 @@ function loadIndexes(o, contract) {
   const siteConfig = readSiteConfig({ siteConfig: o['site-config'], webroot: o.webroot })
   const dbIndex = o['db-dump'] && existsSync(o['db-dump']) ? buildDbIndex(o['db-dump'], siteConfig) : null
   const webrootOk = o.webroot && existsSync(o.webroot) && statSync(o.webroot).isDirectory()
-  const sourceIndex = webrootOk ? buildSourceIndex(o.webroot, contract.template) : null
+  const sourceIndex = webrootOk ? buildSourceIndex(o.webroot, contract.template, contract.platform) : null
   return { siteConfig, dbIndex, sourceIndex }
 }
 

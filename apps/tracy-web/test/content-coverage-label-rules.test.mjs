@@ -46,7 +46,7 @@ function labelRules(failing = {}, over = {}) {
   }
 }
 
-function profile(version, rules, { omit = false, holes = [] } = {}) {
+function profile(version, rules, { omit = false, holes = [], platform = 'joomla' } = {}) {
   const map = mapOf(version)
   const doc = {
     schemaVersion: 'tracy-content-coverage/v1',
@@ -65,7 +65,7 @@ function profile(version, rules, { omit = false, holes = [] } = {}) {
   mkdirSync(at, { recursive: true })
   writeFileSync(
     path.join(at, 'manifest.json'),
-    JSON.stringify({ id: `${TAG}/1.0.2`, platform: 'joomla', quickstart: { release: TAG, version: '1.0.2' } })
+    JSON.stringify({ id: `${TAG}/1.0.2`, platform, quickstart: { release: TAG, version: '1.0.2' } })
   )
   writeFileSync(path.join(at, 'content-map.json'), map)
   writeFileSync(path.join(at, 'presentation-lock.json'), LOCK)
@@ -193,4 +193,19 @@ test('roles and Slot fit come first, and the refusal still names the label rules
   const step = stepOf(roadOf(release(), { contracts }))
   assert.equal(step.code, 'coverage-labels')
   assert.match(refusalOf(step, release()).reason, /R9/)
+})
+
+test('a WordPress contract is judged by the same label rules, from the same committed file', () => {
+  const wp = release({ setting: { ...release().setting, platform: 'wordpress' }, platform: 'wordpress' })
+  const clean = stepOf(roadOf(wp, { contracts: profile(V3, labelRules(), { platform: 'wordpress' }) }))
+  assert.deepEqual(fields(clean), ['done', 'coverage-ready', 'ready', false, false])
+  const failing = profile(V3, labelRules({ R3: ['home.paragraph.2.link.1'] }), { platform: 'wordpress' })
+  const held = stepOf(roadOf(wp, { contracts: failing }))
+  assert.deepEqual(fields(held).slice(0, 2), ['todo', 'coverage-labels'])
+  assert.match(refusalOf(held, wp).reason, /R3/)
+  const shown = { ...wp, inspiration: { template: 'ja-boxing' }, inspirationHidden: false }
+  assert.deepEqual(fields(stepOf(roadOf(shown, { contracts: failing }))).slice(0, 2), [
+    'warn',
+    'coverage-live-labels'
+  ])
 })

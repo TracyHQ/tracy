@@ -31,6 +31,7 @@ import {
 import { editorialRoleOf } from './editorial-defaults.mjs'
 import { FACT_FAMILY_ROLES, factFamilyPlacement } from './rule-tables-facts.mjs'
 import { proposeMarkupBindings } from './rule-tables-markup.mjs'
+import { proposeWordpressLinks } from './rule-tables-wordpress-links.mjs'
 
 export { FACT_FAMILY_ROLES }
 
@@ -796,6 +797,19 @@ export function proposeContentMapRoles(contentMap, { cms, vocabulary = ROLE_VOCA
   const roleOnlyBySlot = new Map(roleOnly.map((b) => [b.slotKey, b.role]))
   const groupOf = new Map(groups.map((g) => [g.groupId, g]))
   const bySlot = new Map(bindings.map((b) => [b.slotKey, b]))
+  // A version 3 WordPress map labels its buttons, menu links and links inside a sentence (issue #43).
+  if (cms === 'wordpress' && vocabulary3) {
+    const placed = new Set([...bySlot.keys(), ...roleOnlyBySlot.keys()])
+    const links = proposeWordpressLinks(open.filter((slot) => !placed.has(String(slot.key))))
+    for (const [slotKey, b] of links) {
+      if (b.groupId === null) {
+        roleOnlyBySlot.set(slotKey, b.role)
+        continue
+      }
+      groupOf.set(b.groupId, { groupId: b.groupId, itemIndex: b.itemIndex, entityKind: b.entityKind })
+      bySlot.set(slotKey, { slotKey, ...b })
+    }
+  }
   for (const slot of open) {
     const binding = bySlot.get(String(slot.key))
     if (!binding) {

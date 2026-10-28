@@ -307,19 +307,22 @@ test('a platform with no content map or field map at all does not need the step'
   assert.equal(stepOf(roadOf(shop, { contracts })).code, 'coverage-not-needed')
 })
 
-test('WordPress: holes and page hygiene are not measured, but the slot roles group is judged like on Joomla', () => {
+test("WordPress: the audit result is read like Joomla's, and the slot roles group is judged beside it", () => {
   const { contracts, wp } = wordpressProfile(MAP)
+  const measured = { state: 'measured', doc: doc() }
   const missing = { state: 'missing', count: 3, shown: ['a', 'b', 'c'], reason: null }
-  const ready = stepOf(roadOf(wp, { contracts, roles: { state: 'ready' } }))
-  assert.deepEqual([ready.state, ready.code], ['done', 'coverage-not-needed'])
-  const held = stepOf(roadOf(wp, { contracts, roles: missing }))
+  const ready = stepOf(roadOf(wp, { contracts, coverage: measured, roles: { state: 'ready' } }))
+  assert.deepEqual([ready.state, ready.code], ['done', 'coverage-ready'])
+  const held = stepOf(roadOf(wp, { contracts, coverage: measured, roles: missing }))
   assert.deepEqual(roleFields(held), ['todo', 'coverage-roles', 'missing', 3])
-  assert.equal(held.params.holes, undefined)
-  const none = stepOf(roadOf(wp, { contracts, roles: { state: 'none' } }))
+  assert.equal(held.params.holes, 0)
+  const none = stepOf(roadOf(wp, { contracts, coverage: measured, roles: { state: 'none' } }))
   assert.deepEqual([none.state, none.code], ['todo', 'coverage-roles'])
   const shown = { ...wp, inspiration: { template: 'ja-boxing' }, inspirationHidden: false }
-  const warned = stepOf(roadOf(shown, { contracts, roles: missing }))
+  const warned = stepOf(roadOf(shown, { contracts, coverage: measured, roles: missing }))
   assert.deepEqual([warned.state, warned.code], ['warn', 'coverage-live-roles'])
+  const holes = stepOf(roadOf(wp, { contracts, coverage: { state: 'measured', doc: doc([hole()]) } }))
+  assert.deepEqual([holes.state, holes.code, holes.params.holes], ['todo', 'coverage-holes', 1])
   const blocked = {
     step: 'published',
     state: 'blocked',
@@ -330,16 +333,24 @@ test('WordPress: holes and page hygiene are not measured, but the slot roles gro
   assert.match(publishRefusalOf([held, blocked], wp).reason, /3 text or image slots have no role/)
 })
 
+test('WordPress: a contract with no measurement waits for the audit, a live one only warns', () => {
+  const { contracts, wp } = wordpressProfile(MAP)
+  const none = stepOf(roadOf(wp, { contracts }))
+  assert.deepEqual([none.state, none.code], ['todo', 'coverage-not-measured'])
+  const shown = { ...wp, inspiration: { template: 'ja-boxing' }, inspirationHidden: false }
+  const warned = stepOf(roadOf(shown, { contracts }))
+  assert.deepEqual([warned.state, warned.code], ['warn', 'coverage-not-measured'])
+})
+
 test('WordPress: the roles are read from the content map of its own contract', () => {
+  const measured = { state: 'measured', doc: doc() }
   const missing = wordpressProfile(MAP_MISSING_ROLES)
-  assert.deepEqual(roleFields(stepOf(roadOf(missing.wp, { contracts: missing.contracts }))), [
-    'todo',
-    'coverage-roles',
-    'missing',
-    10
-  ])
+  assert.deepEqual(
+    roleFields(stepOf(roadOf(missing.wp, { contracts: missing.contracts, coverage: measured }))),
+    ['todo', 'coverage-roles', 'missing', 10]
+  )
   const full = wordpressProfile(MAP)
-  assert.equal(stepOf(roadOf(full.wp, { contracts: full.contracts })).state, 'done')
+  assert.equal(stepOf(roadOf(full.wp, { contracts: full.contracts, coverage: measured })).state, 'done')
 })
 
 test('EmDash: the roles group is judged too, whatever the contract state', () => {
@@ -622,10 +633,10 @@ test('fit group: holes keep their verdict, and Slot fit rides along in the refus
 
 test('fit group: WordPress and EmDash are not judged until their audit measures Slot fit', () => {
   const { contracts, wp } = wordpressProfile(MAP_WITHOUT_FIT)
-  const step = stepOf(roadOf(wp, { contracts }))
+  const step = stepOf(roadOf(wp, { contracts, coverage: { state: 'measured', doc: doc() } }))
   assert.deepEqual(
     [step.state, step.code, step.params.fitState, step.params.fitHolds],
-    ['done', 'coverage-not-needed', 'not-applicable', false]
+    ['done', 'coverage-ready', 'not-applicable', false]
   )
 })
 
