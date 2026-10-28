@@ -136,6 +136,10 @@ function engine({
         // `phpNotice`: a host that prints PHP's notices ahead of every answer (PHP 8.5, display_errors on)
         res.end((state.phpNotice ?? '') + JSON.stringify(value))
       }
+      if (state.failGetId === Number(params.id) && action === 'content.get')
+        return answer(403, { blocked: true })
+      if (state.blockWriteKind === params.kind && action === 'content.update')
+        return answer(403, { blocked: true })
       const refusal = state.refuse[action]
       if (refusal) {
         delete state.refuse[action]
@@ -248,6 +252,8 @@ function engine({
         else {
           const [column, value] = trash(params.kind)
           row[column] = String(value)
+          if (platform === 'wordpress' && params.kind === 'post' && row.post_name)
+            row.post_name += '__trashed'
         }
         return answer(200, { ok: true, kind: params.kind, id: params.id, trashed: true })
       }
@@ -1919,6 +1925,177 @@ test('a worker killed after create cannot resend that create when Apply restarts
   } finally {
     child?.kill('SIGKILL')
     live.heldResponse?.destroy()
+    await live.close()
+  }
+})
+
+test('a replacement waits for the confirmed delete, and Undo restores the exact original slug', async () => {
+  for (const mode of ['confirmed', 'unconfirmed', 'conflict', 'edited-replacement', 'create-failed']) {
+    const original = {
+      id: '10',
+      post_title: 'Old about',
+      post_name: 'about',
+      post_status: 'publish',
+      post_type: 'page'
+    }
+    const live = await engine({ platform: 'wordpress', records: { post: { 10: { ...original } } } })
+    const removed = update(10, {}, original, {
+      id: 'post:10',
+      kind: 'post',
+      spec: 'post',
+      op: 'delete',
+      trash: ['post_status', 'trash']
+    })
+    const created = update(
+      20,
+      { post_title: 'New about', post_name: 'about', post_status: 'publish', post_type: 'page' },
+      {},
+      {
+        id: 'post:new:20',
+        kind: 'post',
+        spec: 'post',
+        op: 'create',
+        liveId: null,
+        creates: 'posts:20',
+        dependsOn: [removed.id],
+        replaces: [removed.id]
+      }
+    )
+    const dir = pushDir([removed, created], 'wordpress')
+    try {
+      if (mode === 'conflict') live.records.post[10].post_title = 'Customer title'
+      if (mode === 'create-failed') live.refuse['content.update'] = { error: 'invalid_params' }
+      const { answer } = await apply(live, dir, mode === 'unconfirmed' ? [] : ['--confirm-deletes'])
+      if (mode === 'unconfirmed' || mode === 'conflict') {
+        assert.equal(answer.written.length, 0, JSON.stringify(answer))
+        assert.equal(
+          live.calls.filter((c) => ['content.update', 'content.delete'].includes(c.action)).length,
+          0
+        )
+        continue
+      }
+      if (mode === 'create-failed') {
+        assert.equal(answer.written.length, 1, JSON.stringify(answer))
+        const back = (await undo(live, dir)).answer
+        assert.equal(back.restored.length, 1, JSON.stringify(back))
+        assert.equal(live.records.post[10].post_name, 'about')
+        continue
+      }
+      assert.equal(answer.written.length, 2, JSON.stringify(answer))
+      assert.deepEqual(
+        live.calls
+          .filter((c) => ['content.update', 'content.delete'].includes(c.action))
+          .map((c) => c.action),
+        ['content.delete', 'content.update']
+      )
+      const newId = answer.created['posts:20']
+      // WordPress appends __trashed when trashing a post; Undo must restore its original address.
+      live.records.post[10].post_name = 'about__trashed'
+      if (mode === 'edited-replacement') live.records.post[newId].post_title = 'Customer replacement'
+      if (mode === 'edited-original-slug') live.records.post[10].post_name = 'customer-parked'
+      const back = (await undo(live, dir)).answer
+      if (mode === 'edited-original-slug') {
+        assert.equal(live.records.post[10].post_name, 'customer-parked')
+        assert.equal(live.records.post[10].post_status, 'trash')
+        assert.ok(back.kept.some((i) => i.id === removed.id && i.fields.includes('post_name')))
+      } else if (mode === 'edited-replacement') {
+        assert.equal(live.records.post[10].post_status, 'trash')
+        assert.ok(
+          back.kept.some((i) => i.id === removed.id && i.reason === 'depends-on-failed'),
+          JSON.stringify(back)
+        )
+      } else {
+        assert.equal(back.restored.length, 2, JSON.stringify(back))
+        assert.equal(live.records.post[10].post_status, 'publish')
+        assert.equal(live.records.post[10].post_name, 'about')
+        assert.equal(live.records.post[newId].post_status, 'trash')
+      }
+    } finally {
+      await live.close()
+    }
+  }
+})
+
+test('a Joomla alias replacement held in preview never trashes the original or writes its dependents', async () => {
+  const live = await engine({ records: { article: { 1: article(1, { alias: 'about' }) } } })
+  try {
+    const conflict = { reason: 'changed-on-live', fields: ['alias'] }
+    const removed = update(1, {}, {}, { op: 'delete', trash: ['state', -2], conflict })
+    const created = update(
+      2,
+      { alias: 'about' },
+      {},
+      { op: 'create', creates: 'content:2', dependsOn: [removed.id], conflict }
+    )
+    const dependent = update(3, { introtext: 'new' }, {}, { op: 'create', dependsOn: [created.id] })
+    const { answer } = await apply(live, pushDir([removed, created, dependent]), ['--confirm-deletes'])
+    assert.equal(answer.written.length, 0)
+    assert.equal(live.records.article[1].state, '1')
+    assert.equal(
+      live.calls.filter((c) => ['content.batch', 'content.update', 'content.delete'].includes(c.action))
+        .length,
+      0
+    )
+  } finally {
+    await live.close()
+  }
+})
+
+test('a stopped parallel Apply drains acknowledged siblings and preserves a complete undoable partial result', async () => {
+  const live = await engine({
+    platform: 'wordpress',
+    records: {
+      post: {
+        1: wpPost(1),
+        2: wpPost(2),
+        3: wpPost(3),
+        4: wpPost(4),
+        5: wpPost(5)
+      }
+    }
+  })
+  try {
+    live.slow = 150
+    live.failGetId = 2
+    const dir = pushDir(
+      [1, 2, 3, 4, 5].map((id) => postItem(id)),
+      'wordpress'
+    )
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.ok, false)
+    assert.equal(answer.state, 'partial')
+    assert.deepEqual(
+      answer.written.map((w) => w.id),
+      ['post:1', 'post:3', 'post:4']
+    )
+    assert.equal(answer.written.length + answer.skipped.length + answer.failed.length, 5)
+    assert.deepEqual(JSON.parse(readFileSync(join(dir, 'written.json'), 'utf8')), answer)
+    assert.equal(live.records.post[5].post_title, 'Old 5', 'no pending writes start after failure')
+    live.failGetId = null
+    const back = await undo(live, dir)
+    assert.equal(back.answer.restored.length, 3)
+    for (const id of [1, 3, 4]) assert.equal(live.records.post[id].post_title, `Old ${id}`)
+  } finally {
+    await live.close()
+  }
+})
+
+test('a blocked batch retains earlier writes in the failed Apply answer and Undo', async () => {
+  const live = await engine({ records: { article: { 1: article(1), 2: article(2) } } })
+  try {
+    live.refuse['content.batch'] = 403
+    const dir = pushDir([
+      update(9, { title: 'Made', state: 1 }, {}, { op: 'create', creates: 'article:9' }),
+      update(1, { title: 'After' }, { title: 'Article 1' }),
+      update(2, { title: 'After 2' }, { title: 'Article 2' })
+    ])
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.ok, false)
+    assert.equal(answer.state, 'partial')
+    assert.equal(answer.written.length, 1)
+    assert.equal(answer.failed.length, 2)
+    assert.equal((await undo(live, dir)).answer.restored.length, 1)
+  } finally {
     await live.close()
   }
 })

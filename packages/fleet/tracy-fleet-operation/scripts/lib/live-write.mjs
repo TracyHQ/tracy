@@ -633,6 +633,7 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         liveId: address.id,
         key: item.key ?? null,
         before: current,
+        replaces: item.replaces ?? [],
         written: fields,
         restore: item.restore ?? {},
         trash: item.trash ?? null
@@ -661,6 +662,7 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         liveId,
         key: item.key ?? null,
         before: current,
+        replaces: item.replaces ?? [],
         written: fields,
         after,
         restore: item.restore ?? {},
@@ -1003,6 +1005,7 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         liveId: address.id,
         key: item.key ?? null,
         before: current,
+        replaces: item.replaces ?? [],
         written: fields,
         after,
         restore: item.restore ?? {},
@@ -1211,14 +1214,15 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
     // Ended AND counted: a dependant waits for this, not for the journal line alone, so it never
     // starts between its dependency's failure and that failure blocking it.
     const finished = new Set()
+    let stopped = null
     const finish = (item) => {
       const entry = done.get(item.id)
       if (entry && entry.state !== 'written') blocked.add(item.id)
       finished.add(item.id)
     }
-    while (pending.length || running.size) {
+    while ((pending.length && !stopped) || running.size) {
       const held = new Set()
-      for (let i = 0; i < pending.length && running.size < (strained ? 1 : CONCURRENCY); ) {
+      for (let i = 0; !stopped && i < pending.length && running.size < (strained ? 1 : CONCURRENCY); ) {
         const item = pending[i]
         const lane = laneOf(item, platform)
         const ready = item.dependsOn.every((d) => !ids.has(d) || finished.has(d))
@@ -1231,11 +1235,17 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         lanes.add(lane)
         running.set(
           item.id,
-          single(item).finally(() => {
-            lanes.delete(lane)
-            running.delete(item.id)
-            finish(item)
-          })
+          single(item)
+            .catch((error) => {
+              stopped ??= error
+              if (!done.has(item.id))
+                journal({ id: item.id, state: 'failed', extra: { error: error.code ?? 'WRITE_FAILED' } })
+            })
+            .finally(() => {
+              lanes.delete(lane)
+              running.delete(item.id)
+              finish(item)
+            })
         )
       }
       if (running.size) await Promise.race(running.values())
@@ -1246,43 +1256,60 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         finish(item)
       }
     }
+    if (stopped) throw stopped
   }
 
+  let stopped = null
   let at = 0
-  while (at < queue.length) {
-    const item = queue[at]
-    if (isTemplateFile(item)) {
-      const group = []
-      while (at < queue.length && isTemplateFile(queue[at])) group.push(queue[at++])
-      await templateFiles(group)
-    } else if (
-      platform === 'joomla' &&
-      item.op === 'update' &&
-      !OWN_DOOR.has(item.kind) &&
-      !item.dependsOn.some((d) => !done.has(d))
-    ) {
-      const group = []
-      let bytes = 0
-      while (at < queue.length && group.length < BATCH_ITEMS) {
-        const next = queue[at]
-        if (next.op !== 'update' || OWN_DOOR.has(next.kind)) break
-        const size = JSON.stringify(next.write).length
-        if (group.length && bytes + size > BATCH_BYTES) break
-        group.push(next)
-        bytes += size
-        at++
+  try {
+    while (at < queue.length) {
+      const item = queue[at]
+      if (isTemplateFile(item)) {
+        const group = []
+        while (at < queue.length && isTemplateFile(queue[at])) group.push(queue[at++])
+        await templateFiles(group)
+      } else if (
+        platform === 'joomla' &&
+        item.op === 'update' &&
+        !OWN_DOOR.has(item.kind) &&
+        !item.dependsOn.some((d) => !done.has(d))
+      ) {
+        const group = []
+        let bytes = 0
+        while (at < queue.length && group.length < BATCH_ITEMS) {
+          const next = queue[at]
+          if (next.op !== 'update' || OWN_DOOR.has(next.kind)) break
+          const size = JSON.stringify(next.write).length
+          if (group.length && bytes + size > BATCH_BYTES) break
+          group.push(next)
+          bytes += size
+          at++
+        }
+        await lot(group)
+      } else {
+        // Every item up to the next template file or Joomla lot is written alone: side by side, by lane.
+        const run = []
+        while (at < queue.length && !isTemplateFile(queue[at]) && !lotStarts(queue[at])) run.push(queue[at++])
+        if (!run.length) run.push(queue[at++])
+        await sideBySide(run)
       }
-      await lot(group)
-    } else {
-      // Every item up to the next template file or Joomla lot is written alone: side by side, by lane.
-      const run = []
-      while (at < queue.length && !isTemplateFile(queue[at]) && !lotStarts(queue[at])) run.push(queue[at++])
-      if (!run.length) run.push(queue[at++])
-      await sideBySide(run)
+      for (const g of queue.slice(0, at)) {
+        const entry = done.get(g.id)
+        if (entry && entry.state !== 'written') blocked.add(g.id)
+      }
     }
-    for (const g of queue.slice(0, at)) {
-      const entry = done.get(g.id)
-      if (entry && entry.state !== 'written') blocked.add(g.id)
+  } catch (error) {
+    stopped = error
+    for (const item of queue) {
+      if (done.has(item.id)) continue
+      const receipt = Object.values(requests.entries).find(
+        (r) => r.state === 'sending' && r.recovery?.some((r) => r.item.id === item.id)
+      )
+      journal({
+        id: item.id,
+        state: receipt ? 'failed' : 'skipped',
+        extra: receipt ? { error: 'WRITE_OUTCOME_UNKNOWN' } : { reason: 'apply-stopped' }
+      })
     }
   }
   for (const item of queue) {
@@ -1300,7 +1327,8 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         ? 'partial'
         : 'applied'
   const result = {
-    ok: true,
+    ok: !stopped,
+    ...(stopped ? { code: stopped.code ?? 'WRITE_FAILED' } : {}),
     state,
     applyId,
     written,
@@ -1466,6 +1494,15 @@ async function undo(pushDir) {
   for (const out of order) {
     undoItemId = out.id
     const snap = before.items[out.id]
+    if (
+      order.some(
+        (other) =>
+          before.items[other.id]?.replaces?.includes(out.id) && !restored.some((r) => r.id === other.id)
+      )
+    ) {
+      kept.push({ ...out, reason: 'depends-on-failed' })
+      continue
+    }
     if (!snap) {
       kept.push({ ...out, reason: 'nothing-kept' })
       continue
@@ -1561,13 +1598,21 @@ async function undo(pushDir) {
     const fields =
       snap.op === 'delete'
         ? snap.trash
-          ? [snap.trash[0]]
+          ? [
+              snap.trash[0],
+              ...(platform === 'wordpress' && snap.kind === 'post' && snap.before?.post_name
+                ? ['post_name']
+                : [])
+            ]
           : []
         : Object.keys(snap.written ?? {}).filter((f) => !(snap.op === 'create' && f === 'parent_id'))
     const moved = []
     for (const field of fields) {
       if (field === 'move_after') continue
-      const want = snap.op === 'delete' ? snap.trash?.[1] : (left?.[field] ?? snap.written?.[field])
+      const want =
+        snap.op === 'delete' && field === snap.trash?.[0]
+          ? snap.trash[1]
+          : (left?.[field] ?? snap.written?.[field])
       const have = now?.[field]
       if (field === 'categories' || field === 'tags') {
         const read = field === 'categories' ? 'post_category' : 'tags_input'
@@ -1600,7 +1645,12 @@ async function undo(pushDir) {
         await ask('content.update', {
           apply_id: applyId,
           ...params,
-          fields: { [column]: snap.before?.[column] }
+          fields: {
+            [column]: snap.before?.[column],
+            ...(platform === 'wordpress' && snap.kind === 'post' && snap.before?.post_name
+              ? { post_name: snap.before.post_name }
+              : {})
+          }
         })
       } else if (snap.op === 'move') {
         if (!snap.restore?.parent_id) {

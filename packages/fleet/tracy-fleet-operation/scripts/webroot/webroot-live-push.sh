@@ -342,7 +342,7 @@ PYEOF
               $([[ "$CONFIRM_DELETES" == 1 ]] && echo --confirm-deletes) \
               $([[ "$CONFIRM_PHP" == 1 ]] && echo --confirm-php) | tail -1)"
     if [[ "$(python3 -c 'import json,sys; print(json.loads(sys.argv[1] or "{}").get("ok"))' "$said")" != True ]]; then
-      engine_refusal "$said"; return 0
+      if [[ ! -f "$PUSH_DIR/written.json" ]]; then engine_refusal "$said"; return 0; fi
     fi
   fi
   local written

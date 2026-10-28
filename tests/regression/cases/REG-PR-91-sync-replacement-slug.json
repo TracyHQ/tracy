@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-91-sync-replacement-slug",
+  "kind": "fix",
+  "title": "A replacement keeps its page address and Undo restores the original slug safely",
+  "pr": 91,
+  "area": "sync/live",
+  "cms": ["wp", "jo"],
+  "needs": ["python3"],
+  "flaky_model": false,
+  "steps": ["Run changeset generation and writer replacement cases."],
+  "expect": [
+    "Only a matching WordPress slug in the same type and parent scope depends on its deletion.",
+    "Unconfirmed or conflicting deletion prevents creation; a failed create leaves the original available for Undo.",
+    "Undo restores the original slug, and preserves customer edits to either record.",
+    "Joomla alias replacement holds both records and dependents without mutations."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=replacement|precedes its replacement",
+      "packages/fleet/tracy-fleet-operation/test/live-push-changeset.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-write.test.mjs"
+    ],
+    "tests": [
+      "WordPress: only a delete freeing the same page slug and parent precedes its replacement",
+      "Joomla: a replacement alias held by trash conflicts both records before the original is removed",
+      "a replacement waits for the confirmed delete, and Undo restores the exact original slug",
+      "a Joomla alias replacement held in preview never trashes the original or writes its dependents"
+    ]
+  }
+}

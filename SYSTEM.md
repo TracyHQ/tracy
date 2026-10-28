@@ -734,6 +734,7 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   `content.batch` with `expected`), otherwise `conflict`; at most 200 items; deletes only when the owner confirms. Places where a
   sync run kept Tracy's version even though the customer also edited (`sync/kept.json`, names only, no values) are
   `changed-on-both`, never overwritten.
+- **Replacement addresses:** a WordPress delete that frees the same slug in the same post type/parent scope is a prerequisite of its replacement. Unconfirmed or conflicting deletes block that create. Undo removes the replacement first and restores the original slug; a customer-edited replacement holds both records. Joomla trash keeps aliases occupied, so both sides of a same-alias replacement are held before writing.
 - **After pushing:** live ids of newly created records go into the id map, and the places written go into `sync/pushed.json`; Sync from live runs again
   and the merge takes those places as base before comparing (`live_sync.py --pushed`, `DbMerge.seed_pushed`), so a record Tracy
   just created is not copied back to the copy twice. `pushed.json` is dropped when a sync run puts its read in place (`remember_read`).
@@ -745,6 +746,8 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   interrupted write or incomplete rollback is `WRITE_OUTCOME_UNKNOWN`: no automatic resend and dependent items stay held.
   Only an explicit `writer_busy` refusal retries a mutation; transient reads still retry. Apply and Undo share an OS lock
   per push directory; Undo keeps separate receipts in `undo-requests.json`. Receipts and snapshots are private (0600).
+  A stopped apply drains in-flight writes before saving its complete partial result in `written.json`. The shell still records
+  acknowledged live IDs and reports the written/conflict/failed/skipped lists with the error, so the failed push remains undoable.
   **undo** is a reverse CAS: it restores "before" only where live still holds exactly the value the push left; the copy keeps Tracy's changes.
 - The web door, lease `push:<id>`, owner-only, switch `site-sync-to-live`, audit: on the tracy-web side.
 - Screen (25/10/2026): one flow of the Publish tab (`@tracy/core` `site-tabs/publish/PushStep.tsx`, Review › Send), opened from the Sync to live row of the ••• menu or by choosing "Send changes to your live site" in the tab; the old My Sites dialog was removed.
@@ -1971,7 +1974,9 @@ can still be read, running jobs stop at the next checkpoint with `paused` + `FEA
   the build still goes through `POST /api/sites` itself, keeping that door's permission/quota/template/site_design checks.
   The build receipt keeps `demoActionId`: an accepted failure of the current action does not re-provision on its own because of
   app/DB clock drift. Fill Retry keeps `timings.woRetryActionId` in the same `failed → queued` transaction; the same action does not
-  restart a fill that just failed, and does not create a brief for a site that has been replaced. A lost provision receipt may
+  restart a fill that just failed, and does not create a brief for a site that has been replaced. A recovery that interrupted
+  `applying` records `timings.lostFrom`; Create and Retry leave that row stopped even when no apply ID was saved,
+  because a write may have reached the site before its receipt was recorded. A lost provision receipt may
   replay the same `buildId` within the attempt limit; it is the same site, with no promise of exactly one POST. Dying after
   the fill is queued still follows the brief runner's lost-worker detection and needs a new Retry once failed.
   EmDash recognises WO through the link `site_creation.build_id` → `wo_build` before picking a model (callback
