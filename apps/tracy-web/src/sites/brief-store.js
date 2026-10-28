@@ -9,6 +9,10 @@ import { briefOf, CURRENT_BRIEF as CURRENT } from '../lib/site-brief-row.js'
  * at most once (`claimWork`, `markProvisioned`) are decided by the database, not by a variable.
  */
 
+/** The sentence a failed row carries when its worker died just as writing began, before any write was kept on the row. */
+export const LOST_PLACING =
+  'Tracy restarted just as your text and pictures were being placed, so the site may still have the template’s own words.'
+
 /** @typedef {'queued'|'preparing'|'ready'|'applying'|'applied'|'failed'} BriefState */
 
 // A site's own row (`CURRENT_BRIEF`, #1013) lives in lib/ so other domains read it too.
@@ -60,11 +64,12 @@ export async function restartBrief(pool, siteKey, brief, retryActionId = null) {
        brief = $2::jsonb, updated_at = now()
      where site_key = $1 and state = 'failed'
        and coalesce(timings->>'lostFrom', '') <> 'applying'
+       and error is distinct from $4::text
        and ($3::text is null or (
          timings->>'woRetryActionId' is distinct from $3::text
          and not exists (select 1 from site s where s.site_key=b.site_key and s.created_at>b.created_at)
        ))`,
-    [siteKey, JSON.stringify(brief), retryActionId]
+    [siteKey, JSON.stringify(brief), retryActionId, LOST_PLACING]
   )
   return rowCount === 1
 }

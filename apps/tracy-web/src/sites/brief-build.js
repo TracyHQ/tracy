@@ -38,6 +38,7 @@ import {
   briefOf,
   claimWork,
   isOpen,
+  LOST_PLACING,
   markProvisioned,
   putBrief,
   restartBrief,
@@ -97,9 +98,7 @@ export const LOST_WORK =
 export const LOST_PART =
   'Tracy restarted while your text and pictures were being placed, so only part of them reached the site; the rest keeps the template’s words.'
 
-/** The sentence a failed row carries when its worker died just as writing began, before any write was kept on the row. */
-export const LOST_PLACING =
-  'Tracy restarted just as your text and pictures were being placed, so the site may still have the template’s own words.'
+export { LOST_PLACING }
 
 /**
  * How an open row whose worker died with its process ends (TCH #887: a deploy in the middle of `apply` used to read as "the

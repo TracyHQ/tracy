@@ -1148,3 +1148,18 @@ test(
     assert.deepEqual(row.brief, { about: 'Original' })
   }
 )
+
+test('a legacy uncertain-placement row without phase metadata cannot be replayed', dbOpts, async () => {
+  const { pool } = db
+  await pool.query(
+    `insert into site_brief (site_key, platform, brief, state, error)
+    values ('legacy-unknown.tracy.test', 'wordpress', '{"about":"Original"}', 'failed', $1)`,
+    [LOST_PLACING]
+  )
+  const b = builds(pool, { wordpress: engine() })
+  assert.deepEqual(
+    await b.start({ siteKey: 'legacy-unknown.tracy.test', platform: 'wordpress', brief: { about: 'Retry' } }),
+    { started: false }
+  )
+  assert.equal((await briefOf(pool, 'legacy-unknown.tracy.test')).error, LOST_PLACING)
+})
