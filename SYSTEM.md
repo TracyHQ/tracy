@@ -744,6 +744,8 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   interrupted write or incomplete rollback is `WRITE_OUTCOME_UNKNOWN`: no automatic resend and dependent items stay held.
   Only an explicit `writer_busy` refusal retries a mutation; transient reads still retry. Apply and Undo share an OS lock
   per push directory; Undo keeps separate receipts in `undo-requests.json`. Receipts and snapshots are private (0600).
+  A stopped apply drains in-flight writes before saving its complete partial result in `written.json`. The shell still records
+  acknowledged live IDs and reports the written/conflict/failed/skipped lists with the error, so the failed push remains undoable.
   **undo** is a reverse CAS: it restores "before" only where live still holds exactly the value the push left; the copy keeps Tracy's changes.
 - The web door, lease `push:<id>`, owner-only, switch `site-sync-to-live`, audit: on the tracy-web side.
 - Screen (25/10/2026): one flow of the Publish tab (`@tracy/core` `site-tabs/publish/PushStep.tsx`, Review › Send), opened from the Sync to live row of the ••• menu or by choosing "Send changes to your live site" in the tab; the old My Sites dialog was removed.
