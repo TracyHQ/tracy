@@ -27,11 +27,6 @@ export const EYE_ICON = svg(
   '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></g>'
 )
 
-/** lucide Download: the header "Download app" button. */
-export const DOWNLOAD_ICON = svg(
-  '<g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V3"/><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="m7 10 5 5 5-5"/></g>'
-)
-
 const PLATFORM_ICONS = { wordpress: WORDPRESS, joomla: JOOMLA, emdash: EMDASH }
 
 /** The logo of a CMS, or '' for a platform with no icon in the repo. */
