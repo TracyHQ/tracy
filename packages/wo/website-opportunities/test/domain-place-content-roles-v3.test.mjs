@@ -152,6 +152,7 @@ test('version 3 lists every new role, the split decorative picture and the artic
     'the default version is the one capture writes'
   )
   assert.equal(domain.ROLE_VOCABULARY_VERSION, V2)
+  // test-quality: contract during the expand step a content map may name either vocabulary
   assert.deepEqual(domain.CONTENT_MAP_ROLE_VOCABULARY_VERSIONS, [V2, V3])
   for (const role of domain.FACT_ROLES) assert.equal(domain.isRole(role, V3), true, role)
   for (const role of domain.FACT_ROLES_ADDED_IN_V3) assert.equal(domain.isFactRole(role), true, role)
