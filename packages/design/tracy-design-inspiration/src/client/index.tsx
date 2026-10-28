@@ -607,6 +607,10 @@ export function apply(ctx: {
           <DesignSystemTab
             siteKey={((tab.meta ?? {}) as Meta).siteKey ?? currentSiteKey()}
             t={t}
+            onBuild={(platform) => {
+              const siteKey = ((tab.meta ?? {}) as Meta).siteKey ?? currentSiteKey()
+              if (siteKey) ctx.betterSidebar.openTab?.({ type: `tracy:build:${platform}`, meta: { siteKey } })
+            }}
             onChanged={reloadBrowserTabs}
             onApplied={() => {
               // WHERE A TRY LANDS (Akemi, 13/10/2026, D1): the normal workspace, the chat on the left and the

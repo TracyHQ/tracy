@@ -1340,3 +1340,42 @@ test('WordPress: a menu entry both sides changed since the last sync is a confli
   assert.deepEqual(items['option:timezone_string'].expect, { $absent: true })
   assert.equal(items['option:timezone_string'].op, 'create')
 })
+
+test('WordPress: only a delete freeing the same page slug and parent precedes its replacement', () => {
+  for (const [oldFields, nextFields, replaces] of [
+    [{}, {}, true],
+    [{}, { post_parent: '99' }, false],
+    [{ post_type: 'post' }, {}, false],
+    [{}, { post_name: 'another' }, false]
+  ]) {
+    const answer = changeset('wordpress', {
+      homes: HOMES,
+      entities: { posts: { base: [10], copy: [20] } },
+      kinds: {
+        post: kind(
+          [post(10, { post_name: 'about', ...oldFields })],
+          [post(20, { post_name: 'about', ...nextFields })],
+          ['ID']
+        )
+      }
+    })
+    const removed = answer.items.find((i) => i.op === 'delete')
+    const created = answer.items.find((i) => i.op === 'create')
+    assert.ok(removed && created, JSON.stringify(answer))
+    assert.equal(created.dependsOn.includes(removed.id), replaces)
+    if (replaces) {
+      assert.deepEqual(created.replaces, [removed.id])
+      assert.ok(answer.items.indexOf(removed) < answer.items.indexOf(created))
+    }
+  }
+})
+
+test('Joomla: a replacement alias held by trash conflicts both records before the original is removed', () => {
+  const answer = changeset('joomla', {
+    entities: { content: { base: [1], copy: [2] } },
+    kinds: { article: kind([article(1, { alias: 'about' })], [article(2, { alias: 'about' })]) }
+  })
+  assert.equal(answer.items.length, 2)
+  for (const item of answer.items)
+    assert.deepEqual(item.conflict, { reason: 'changed-on-live', fields: ['alias'] })
+})

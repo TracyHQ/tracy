@@ -742,7 +742,7 @@ function labelRulesOutside(ctx: GuideContext, p: Record<string, unknown>): Outsi
     text: [
       `The label rules of the release ${ctx.tag} (${ctx.cms}${ctx.version ? ` ${ctx.version}` : ''}) on ${REPO} fail: ${rules.join('; ')}.`,
       'Work in a tch checkout with the quickstart-contract skill (.agents/skills/quickstart-contract/SKILL.md). Fix it in ONE round, before the PR:',
-      `1. Relabel. For each listed slot, read its sample and its place in ${contractDir}/content-map.json and correct its "role" and "group" (a fact such as a phone, price, hours, name or number needs a contact or price role, never an editorial one; every URL slot needs a role; a repeated block is one group per item; a call to action shares a group with its label; a face needs a person, quote or business role). A hole listed under R9 is a fact the content map misses: capture it, do not accept it.`,
+      `1. Relabel. For each listed slot, read its sample and its place in ${contractDir}/content-map.json and correct its "role" and "group" (a fact such as a phone, price, hours, name or number needs a contact or price role, never an editorial one; every URL slot needs a role; a repeated block is one group per item; a call to action shares a group with its label; a face needs a person, quote or business role, or stat.proof_image when the faces prove a number). A hole listed under R9 is a fact the content map misses: capture it, do not accept it.`,
       '2. Run node scripts/slot-roles/check.mjs on that contract folder until it exits 0.',
       '3. Run the content coverage audit again with --write (section 7 step 7 of the skill) and read labelRules in content-coverage.json: every blocking rule must show a count of 0. Commit content-map.json and content-coverage.json in the same PR.',
       'Stop before every commit, push, PR and merge, and wait for my go.',
@@ -801,8 +801,8 @@ function judgeLists(p: Record<string, unknown>) {
 }
 
 /**
- * The paste-ready prompt for the label judge of Content coverage (spec #37): which slots the vision model says are
- * labelled wrong and what it suggests, or how to let it judge at all. English: its reader is the model.
+ * The paste-ready prompt for the label judge of Content coverage (spec #37): which slots the judge (the agent that ran
+ * the release) says are labelled wrong and what it suggests, or how to get them judged at all. English: its reader is the model.
  */
 function labelJudgeOutside(ctx: GuideContext, p: Record<string, unknown>): OutsideFix {
   const contractDir = slotRolesContractDir(ctx, p)
@@ -829,7 +829,7 @@ function labelJudgeOutside(ctx: GuideContext, p: Record<string, unknown>): Outsi
       'Work in a tch checkout with the quickstart-contract skill (.agents/skills/quickstart-contract/SKILL.md). Fix it in ONE round, before the PR:',
       `1. Relabel. For each listed slot, look at it on the page and in ${contractDir}/content-map.json; when the judge is right, set the suggested "role" (a fact needs a fact role; a heading that carries a number, an award or a year is claim.heading). When the judge is wrong, keep the role and say why in the PR.`,
       '2. Run node scripts/slot-roles/check.mjs on that contract folder until it exits 0.',
-      '3. Run the content coverage audit again with --write and TRACY_VISION_API_KEY set (section 7 step 7 of the skill). Only changed slots are judged again. Read labelJudge in content-coverage.json: no slot may stay in the wrong group. Commit content-map.json and content-coverage.json in the same PR.',
+      '3. Run the content coverage audit again with --write (section 7 step 7 of the skill). It asks only about changed slots, in label-judge/request.json under --out: look at each crop yourself, write your verdicts and record them with content-coverage/record-judge.mjs. Read labelJudge in content-coverage.json: no slot may stay in the wrong group. Commit content-map.json and content-coverage.json in the same PR.',
       'Stop before every commit, push, PR and merge, and wait for my go.',
       'Once the PR is merged and CI has deployed this server, Content coverage on the Road to live reads the new file.'
     ].join('\n'),

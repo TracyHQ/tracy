@@ -42,6 +42,8 @@ function contractDir() {
       { key: 'article-2.title', type: 'text', sample: 'Advanced Boxing' },
       { key: 'article-2.intro', type: 'html', sample: '<p>Train like a champion every single day.</p>' },
       { key: 'article-2.image', type: 'image', sample: 'images/joomlart/classes/intro-1.jpg' },
+      // A whole-unit slot (capture --whole-units): the xpath names the heading, the sample joins its pieces.
+      { key: 'article-2.heading', type: 'text', sample: 'Ring Ready Now', xpath: '/html/body/div/h2' },
       { key: 'module-90.video', type: 'text', sample: '7CZ5I-PZjEg' },
       { key: 'module-90.email', type: 'text', sample: 'sale@getfit.com' },
       { key: 'module-90.info', type: 'html', sample: '<p>Call us: <span>(239) 555-0108</span></p>' }
@@ -112,6 +114,23 @@ test('a phone number declared inside a field of markup is declared: a segment wi
   assert.equal(byValue(items, '(239) 555-0108').status, 'matched')
   // another number is not covered by it
   assert.notEqual(byValue(items, '(239) 555-0199').status, 'matched')
+})
+
+test('a word-bounded piece of a whole-unit slot is that slot; a piece cut inside a word is not', () => {
+  // The page shows "Ring Ready" <br> "Now" as two blocks; each is a piece of the one heading slot, which a writer
+  // replaces as a whole.
+  const { items } = audit([
+    { kind: 'text', value: 'Ring Ready' },
+    { kind: 'text', value: 'Now' },
+    { kind: 'text', value: 'Rea' }
+  ])
+  const piece = byValue(items, 'Ring Ready')
+  assert.deepEqual(
+    [piece.status, piece.matchBy, piece.slots],
+    ['matched', 'piece-of-whole-unit', ['article-2.heading']]
+  )
+  assert.equal(byValue(items, 'Now').status, 'matched')
+  assert.notEqual(byValue(items, 'Rea').status, 'matched')
 })
 
 test('a price is demo content: numeric-only text is not ignored, and is found in the database; a bare counter is core', () => {

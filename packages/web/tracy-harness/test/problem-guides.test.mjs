@@ -1618,6 +1618,11 @@ test('label rules group of Content coverage: names the failing rules and gives O
     /R3 URL slot without a role \(14: home\.paragraph\.2\.link\.1, home\.button\.1\.url, \.\.\.\)/
   )
   assert.match(prompt, /node scripts\/slot-roles\/check\.mjs/)
+  // R5 (ADR 0040): faces that prove a number may carry stat.proof_image.
+  assert.match(
+    prompt,
+    /a face needs a person, quote or business role, or stat\.proof_image when the faces prove a number/
+  )
   assert.match(prompt, /audit again with --write/)
   assert.match(prompt, /wait for my go/)
 
@@ -1731,7 +1736,7 @@ test('label judge of Content coverage: lists the wrongly labelled slots with the
       params: {
         ...JUDGE_WRONG,
         judgeState: 'not-judged',
-        judgeReason: 'NO_VISION_MODEL',
+        judgeReason: 'AWAITING_AGENT',
         judgeWrongGroup: [],
         judgeWrongGroupCount: 0,
         judgeMismatch: [],
@@ -1744,7 +1749,12 @@ test('label judge of Content coverage: lists the wrongly labelled slots with the
     JOOMLA
   )
   assert.equal(unjudged.title, 'Content coverage · 40 slots not judged')
-  assert.equal(unjudged.detail, 'No vision model judged these labels. Run the audit with a vision key.')
+  assert.equal(
+    unjudged.detail,
+    'Nobody has judged these labels yet. Run the audit, then answer its judge request with record-judge.'
+  )
   assert.equal(unjudged.lists, undefined)
-  assert.match(unjudged.outside.text, /TRACY_VISION_API_KEY/)
+  assert.match(unjudged.outside.text, /label-judge\/request\.json under --out: look at each crop yourself/)
+  assert.match(unjudged.outside.text, /record-judge\.mjs/)
+  assert.doesNotMatch(unjudged.outside.text, /TRACY_VISION|API_KEY|vision key/)
 })

@@ -1,3 +1,0 @@
-{"id":"REG-PR-1739-hano-copy-pictures-memory","verdict":"PASS","commit":"ee96cb3f4ee5b18d15b90d09d26467105c16a6f8","ran_at":"2026-10-26T20:03:47.979Z","evidence":"tests/regression/.runs/2026-10-26-ee96cb3f4/REG-PR-1739-hano-copy-pictures-memory.log"}
-{"id":"REG-PR-1739-over-picture-contrast","verdict":"PASS","commit":"ee96cb3f4ee5b18d15b90d09d26467105c16a6f8","ran_at":"2026-10-26T20:03:51.710Z","evidence":"tests/regression/.runs/2026-10-26-ee96cb3f4/REG-PR-1739-over-picture-contrast.log"}
-{"id":"REG-PR-1739-vision-shot-coverage","verdict":"PASS","commit":"ee96cb3f4ee5b18d15b90d09d26467105c16a6f8","ran_at":"2026-10-26T20:03:53.394Z","evidence":"tests/regression/.runs/2026-10-26-ee96cb3f4/REG-PR-1739-vision-shot-coverage.log"}

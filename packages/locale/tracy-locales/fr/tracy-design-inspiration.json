@@ -123,6 +123,8 @@
   "ds.note": "Change les couleurs, les polices et les formes. Vos pages et vos textes restent tels quels.",
   "ds.pick": "Choisissez-en une pour la voir en preview.",
   "ds.retry": "Réessayer",
+  "ds.setup.required": "Terminez la création de votre site avant de choisir un système de design.",
+  "ds.setup.open": "Ouvrir la création",
   "ds.search": "Rechercher",
   "ds.tab.title": "Système de design",
   "ds.undo": "Annuler",

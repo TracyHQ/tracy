@@ -2,7 +2,7 @@
 /**
  * Test stand-in for the Claude Cowork plugin's `lib/ContentSlots.php` that answers like the real helper does: one slot
  * per text node (`.../text()`, `text()[n]` when an element holds several), one url slot per `href`, one image slot per
- * `src`, each with an absolute xpath under the synthetic root `/html/body/div`. A sibling index is written only when the
+ * `src`, one text slot per `alt` and `title`, each with an absolute xpath under the synthetic root `/html/body/div`. A sibling index is written only when the
  * element has same-named siblings. Used by the tests of `--whole-units`.
  */
 final class ContentSlots
@@ -45,7 +45,7 @@ final class ContentSlots
                     }
                 }
                 $childPath = $path . '/' . $child->tagName . ($same > 1 ? '[' . $position . ']' : '');
-                foreach (['href' => 'url', 'src' => 'image'] as $attribute => $type) {
+                foreach (['href' => 'url', 'src' => 'image', 'alt' => 'text', 'title' => 'text'] as $attribute => $type) {
                     if ($child->hasAttribute($attribute) && trim($child->getAttribute($attribute)) !== '') {
                         $out[] = ['type' => $type, 'sample' => $child->getAttribute($attribute), 'xpath' => $childPath . '/@' . $attribute];
                     }

@@ -1508,6 +1508,8 @@ window.__ModuleLoader__.load({
               "ds.note": "Đổi màu, phông chữ và hình dạng. Trang và chữ của bạn giữ nguyên.",
               "ds.pick": "Chọn một mục để xem preview.",
               "ds.retry": "Thử lại",
+              "ds.setup.required": "Hoàn tất dựng site trước khi chọn design system.",
+              "ds.setup.open": "Mở Dựng site",
               "ds.search": "Tìm",
               "ds.tab.title": "Hệ thiết kế",
               "ds.undo": "Hoàn tác",

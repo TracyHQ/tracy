@@ -177,16 +177,26 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   role (faces that prove a number may carry `stat.proof_image`) · R6 no link or list item inside a fact slot · R7 siblings share a role · R8 adjacent short slots on one line
   are a cut heading · R9 a fact-like hole (an accepted reason does not lift it). Road to live holds a new release on any
   failing rule in a `place-content-roles/3` map and warns for a live one; a version 2 map is listed and never holds.
-- **Label judge (audit 1.3.0, spec #37).** With `TRACY_VISION_API_KEY` set (`TRACY_VISION_URL`, `TRACY_VISION_MODEL` as
-  for the server), a vision model looks once per component at its crop with numbered slots (the verify viewer's crops,
-  with a margin) and its slot table (key, sample, role, group, fit) plus the page title and URL, the module title and
-  position and the neighbouring components' titles, and says per slot right or wrong with a suggested version 3 role
-  (`content-coverage/lib/label-judge.mjs`). It targets what the rules cannot see: a fact labelled editorial, and a claim
-  (a number, an award) inside editorial text. The verdicts are written as `labelJudge` beside `labelRules` and are also
-  the cache: a slot whose content hash is unchanged is never sent again. Cost is bounded per run
-  (`--judge-max-calls`, default 150; `--judge-max-cents`, default 300); past the caps, without a key, or with
-  `--no-judge`, slots stay `not judged`, never right. Road to live holds a new release when a slot sits on the wrong
-  side of fact/editorial (`coverage-judge`) and warns on finer mismatches, unjudged slots and live releases
+- **Demo-only entities (a style-guide page).** A template may ship a page that only shows its own styles (JA Boxing's
+  "Typography" article: sample headings cut in pieces, progress bars, buttons). The content map marks that entity
+  `"demoOnly": true` (on the entity in `entities`, beside `key`, `kind` and `sourceId`; never a role). Its slots are
+  left out of R1 to R8 and the verify viewer never marks them suspicious (`content-coverage/lib/demo-only.mjs`). The
+  mark changes nothing else: the page is still captured, audited for holes, counted by R9 and shipped as the template
+  ships it. Mark only a page whose every word is a style sample; a page with any business fact is not demo-only.
+- **Label judge (audit 1.4.0, spec #37).** The agent that runs the release is the judge; the audit calls no model and
+  needs no key. For every component with a slot whose verdict is not cached, it writes `<out>/label-judge/request.json`:
+  the question, the allowed verdicts and version 3 roles, the answer format, and per component its crop with numbered
+  slots (the verify viewer's crops, with a margin, in `<out>/label-judge/images/`), the page title and URL, the module
+  title and position, the neighbouring components' titles, and the slots to judge (number, key, kind, sample, role,
+  group, fit). The agent answers in a verdicts file (`{"judgedBy": "agent", "slots": [{"key", "verdict": "right" |
+  "wrong", "suggestedRole", "why"}]}`) and records it with `content-coverage/record-judge.mjs --request <file>
+  --verdicts <file>`, which refuses the whole file on a missing, unknown or doubled key, a verdict other than right or
+  wrong, or a suggested role outside `place-content-roles/3` (`content-coverage/lib/label-judge-record.mjs`), and
+  otherwise writes `labelJudge` (with `judgedBy`) into the coverage files the request names. It targets what the rules
+  cannot see: a fact labelled editorial, and a claim (a number, an award) inside editorial text. The verdicts are also
+  the cache: a slot whose content hash is unchanged is never asked again. Until answered, or with `--no-judge`, slots
+  stay `not judged`, never right. Road to live holds a new release when a slot sits on the wrong side of
+  fact/editorial (`coverage-judge`) and warns on finer mismatches, unjudged slots and live releases
   (`coverage-judge-warn`); a version 2 map is listed and never holds.
 - **Accepting a hole or a page problem.** Only when it is truly not demo content a customer sees: add
   `"accepted": "<reason>"` to that line (English, at least 12 characters). The next `--write` keeps it.
@@ -226,7 +236,9 @@ and module boxes already in `<out>/.audit`. Open `<out>/index.html`; nothing it 
   listed in its own section.
 - **Suspicious.** Four mechanical rules mark a slot red or amber: a face or signature picture whose role is not
   `person.*`/`quote.*`; text that looks like a real figure but has an `editorial.*` role; a Fact role whose `fit`
-  says keep; `fit` not measured although the slot is shown. Everything else is for the person to judge.
+  says keep; `fit` not measured although the slot is shown as text or a picture (a slot shown only through a link or
+  an attribute, such as an email inside its mailto, has no box to measure). A demo-only entity is shown with a
+  "demo only, not judged" badge and never marked. Everything else is for the person to judge.
 
 It reuses the audit (`runAudit`, so the same lazy-content wake and the same smooth-scroll handling as `--fit`),
 is read-only on the site, and covers the Joomla module wrappers (`Mod<N>`) of the T4 template.

@@ -217,7 +217,7 @@ const planOf = (changed, extra = {}) =>
   planMatrix({ event: 'pull_request', baseRef: 'develop', changed, allFiles: dataFiles, ...extra })
 
 test('a reviewed skill re-pin runs the checks row only', () => {
-  const p = planOf([`${SKILL}SKILL.md`, `${SKILL}IMPORT-NOTE.md`, 'tasks/nhat-ky/2026-10-09-x.md'])
+  const p = planOf([`${SKILL}SKILL.md`, `${SKILL}IMPORT-NOTE.md`, 'changes/2026-10-09-x.md'])
   assert.deepEqual(groups(p), ['checks'])
   assert.equal(p.runsAll, false)
   assert.equal(p.related.workers.length, 0)
@@ -262,8 +262,23 @@ test('a data file renamed, a missing mapped test, an unmapped vendor path and re
   assert.equal(groups(planOf([])).length, 7)
 })
 
+test('a journal entry under changes/ never forces the full suite', () => {
+  const journal = 'changes/2026-10-28-x.md'
+  const files = [...dataFiles, journal]
+  const lane = planOf([journal], { allFiles: files, readText: () => '' })
+  assert.equal(lane.related.lane, 'template-data')
+  assert.equal(lane.runsAll, false)
+  assert.match(lane.matrix.include.find((r) => r.group === 'checks').args, /--only vocabulary/)
+  const code = 'packages/site/tracy-add-site/src/a.js'
+  const withCode = planOf([journal, code], { allFiles: files })
+  assert.equal(withCode.runsAll, false)
+  assert.equal(withCode.related.full, false)
+  assert.deepEqual(groups(withCode), groups(planOf([code], { allFiles: files })))
+  assert.ok(groups(withCode).includes('tests related'))
+})
+
 test('a T4 skill re-pin runs checks plus its declared readers, no interop, e2e or EmDash row', () => {
-  const p = planOf([`${T4.prefix}SKILL.md`, `${T4.prefix}IMPORT-NOTE.md`, 'tasks/nhat-ky/2026-10-09-x.md'])
+  const p = planOf([`${T4.prefix}SKILL.md`, `${T4.prefix}IMPORT-NOTE.md`, 'changes/2026-10-09-x.md'])
   assert.deepEqual(groups(p), RELATED)
   assert.equal(p.runsAll, false)
   assert.deepEqual(p.related.workers, T4.readers)

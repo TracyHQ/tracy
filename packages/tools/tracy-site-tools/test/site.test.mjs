@@ -1013,6 +1013,19 @@ test('refusalNext: each door code names the next step — the customer, the call
       answer: { code: 'COMPONENT_NOT_ON_FLEET_COPY', copyReason: 'platform_mismatch', transient: false },
       has: [/different CMS/, /import needs checking/]
     },
+    // 28/10: what waiting does not change is said as what it is, and never "retry in a moment".
+    {
+      answer: { code: 'COMPONENT_NOT_ON_FLEET_COPY', copyReason: 'redirected', transient: false },
+      has: [/something other than the plugin/, /Do not retry/, /do not write another way/]
+    },
+    {
+      answer: { code: 'COMPONENT_NOT_ON_FLEET_COPY', copyReason: 'no_copy', transient: false },
+      has: [/No hosted copy/, /import needs checking/, /do not write another way/]
+    },
+    {
+      answer: { code: 'COMPONENT_NOT_ON_FLEET_COPY', copyReason: 'copy_error', transient: false },
+      has: [/server error/, /Do not retry/]
+    },
     {
       answer: { code: 'COWORK_WEB_UNREACHABLE', error: 'fetch failed' },
       has: [/retry once, then tell the customer/]

@@ -38,6 +38,7 @@ import {
   briefOf,
   claimWork,
   isOpen,
+  LOST_PLACING,
   markProvisioned,
   putBrief,
   restartBrief,
@@ -97,9 +98,7 @@ export const LOST_WORK =
 export const LOST_PART =
   'Tracy restarted while your text and pictures were being placed, so only part of them reached the site; the rest keeps the template’s words.'
 
-/** The sentence a failed row carries when its worker died just as writing began, before any write was kept on the row. */
-export const LOST_PLACING =
-  'Tracy restarted just as your text and pictures were being placed, so the site may still have the template’s own words.'
+export { LOST_PLACING }
 
 /**
  * How an open row whose worker died with its process ends (TCH #887: a deploy in the middle of `apply` used to read as "the
@@ -249,7 +248,7 @@ export function createBriefBuilds({
       const ending = lostEnding(row)
       const { rowCount } = await pool.query(
         `update site_brief set state = $3, stage = null, error = $4,
-           timings = timings || jsonb_build_object('lost', $5::text), updated_at = now()
+           timings = timings || jsonb_build_object('lost', $5::text, 'lostFrom', $2::text), updated_at = now()
          where site_key = $1 and state = $2 and updated_at = $6::timestamptz`,
         [row.site_key, row.state, ending.state, ending.error, LOST_ON_RESTART, row.seen]
       )
@@ -640,7 +639,11 @@ export function createBriefBuilds({
     // read on the database clock that stamped `updated_at`, not compared with this process's clock.
     if (!running.has(siteKey) && Number(row.idle_ms) > cap.staleMs) {
       const ending = lostEnding(row)
-      const taken = await advanceBrief(pool, siteKey, [row.state], { ...ending, stage: null })
+      const taken = await advanceBrief(pool, siteKey, [row.state], {
+        ...ending,
+        stage: null,
+        timings: { lostFrom: row.state }
+      })
       // Another process settled the row between the read and the write: say what it settled.
       if (!taken) return gate(siteKey)
       return { open: false, step: null, state: ending.state, error: ending.error }

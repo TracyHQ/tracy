@@ -93,7 +93,9 @@ p.add_argument('--previous-map',default='');p.add_argument('--unplaced-report',d
 # text pieces of one heading, paragraph, list item, caption or cell become ONE text slot whose `xpath` is that element
 # (the plugin's xpath grammar already resolves an element; a text range inside it belongs to the slot), and a fragment
 # with no such element at all (an ACM field holding `THE <br> WORKOUT`) is one slot for the whole field. A list item
-# keeps its own slot, and its link stays a url slot beside it; the rule tables group them. Off by default so every
+# keeps its own slot, and its link stays a url slot beside it; the rule tables group them. A unit with a word inside
+# a link (or any element carrying href/src/alt/title) is NOT merged: the plugin keeps that element when it writes a
+# whole unit, so the link would lose its words; its pieces stay separate text slots as without the flag. Off by default so every
 # published profile re-captures byte for byte.
 p.add_argument('--whole-units',action='store_true')
 # The role vocabulary this capture WRITES (`roleVocabularyVersion`). 2 is what every released map carries. 3 (ADR 0040)
@@ -155,19 +157,43 @@ def text_unit(xpath):
  for i in range(len(segs)-2,-1,-1):
   if re.fullmatch(r'[a-z0-9]+',re.sub(r'\[\d+\]$','',segs[i])) and re.sub(r'\[\d+\]$','',segs[i]) in UNIT_TAGS:return '/'+'/'.join(segs[:i+1])
  return None
+# The attributes the helper answers as slots of their own. The plugin writes a whole-unit slot as one text node and
+# KEEPS every element carrying one of these (ContentSlots::writeUnit), so a word inside such an element cannot be
+# part of a merged unit: `<p>Call <a href="tel:...">us</a> today</p>` would be written `<p>New text<a href="tel:..."></a></p>`,
+# a link with no words. A unit holding such a piece keeps its pieces as separate text slots, each written in place.
+SLOT_ATTRS=('href','src','alt','title')
+def slotted_elements(hs):
+ """The xpaths of the elements that carry an attribute slot (`.../a` for `.../a/@href`)."""
+ out=set()
+ for h in hs:
+  x=h.get('xpath')
+  if isinstance(x,str) and '/@' in x and x.rsplit('/@',1)[1] in SLOT_ATTRS:out.add(x.rsplit('/@',1)[0])
+ return out
+def inside_slotted(xpath,unit,slotted):
+ """Whether an element between the unit and the text node at `xpath` (both excluded) carries an attribute slot."""
+ segs=xpath[len(unit):].strip('/').split('/')[:-1];at=unit
+ for seg in segs:
+  at=at+'/'+seg
+  if at in slotted:return True
+ return False
 def whole_units(hs):
  """Merge the text slots the HTML helper cut out of one unit element into one slot on that element."""
- texts=[h for h in hs if h.get('type')=='text' and isinstance(h.get('xpath'),str)]
+ texts=[h for h in hs if h.get('type')=='text' and isinstance(h.get('xpath'),str) and '/@' not in h['xpath']]
  units={id(h):text_unit(h['xpath']) for h in texts}
  # No unit element anywhere in the fragment: the fragment is the unit (a heading field with `<br>`, a one-line note).
  if texts and not any(units.values()) and all(h['xpath'].startswith(HTML_ROOT+'/') for h in texts):units={id(h):HTML_ROOT for h in texts}
  members=collections.defaultdict(list)
  for h in texts:
   if units[id(h)]:members[units[id(h)]].append(h)
+ slotted=slotted_elements(hs)
+ apart={u for u,ms in members.items() if any(inside_slotted(m['xpath'],u,slotted) for m in ms)}
+ # A unit that holds an element carrying an attribute slot anywhere inside it (an <img src> beside the words) also
+ # keeps its pieces: one text node written over the unit would drop the words around that element.
+ apart|={u for u in members if any(e.startswith(u+'/') for e in slotted)}
  out=[];done=set()
  for h in hs:
   unit=units.get(id(h))
-  if not unit or len(members[unit])<2:out.append(h);continue
+  if not unit or len(members[unit])<2 or unit in apart:out.append(h);continue
   if unit in done:continue
   done.add(unit)
   sample=re.sub(r'\s+',' ',' '.join(m['sample'] for m in members[unit])).strip()

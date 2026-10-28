@@ -11,7 +11,8 @@
  *     `config/mode-matrix.json`) → that file alone, or the directory's own entries when the suite
  *     listed the directory — widening those to the whole directory would make every task depend on
  *     every script;
- *   - anything deeper → its parent directory.
+ *   - anything deeper → its parent directory, except inside a `SPLIT` directory, whose own entries
+ *     and each of its subfolders are separate inputs (below);
  * A run that read the dsh submodule gets `TRACY_DSH_COMMIT` in `env`: Turbo hashes files through the
  * parent repository's git index, which holds the submodule as one commit id, not its files.
  * A file git ignores cannot be an input: the plan job's checkout never has it. A read of one is
@@ -32,6 +33,17 @@ import path from 'node:path'
 const IGNORED = /^scripts\/ci\/trace-reads\.mjs$/
 
 export const DSH = 'vendor/tracy/deepseek-harness'
+
+/**
+ * Directories never widened to the whole tree (28/10/2026). A file directly inside one stands for the
+ * directory's own entries (`tests/regression/*`), a subfolder listed for its entries, and a file
+ * deeper for its parent as anywhere else. `tests/regression` holds the runner modules next to the
+ * case and result data (about 6.8 MB that every pull request adds to): a suite that imports only
+ * `catalogue.mjs` must not miss its cache on each new case or result line. A suite that does read
+ * the cases or results still gets `cases/**` or `results/**` from those reads.
+ */
+export const SPLIT = ['tests/regression']
+const splitOf = (file) => SPLIT.find((dir) => file.startsWith(`${dir}/`)) ?? null
 
 /** The package, app or vendor tree a path lies in, or null (`packages/cms/tracy-seeder/src/a.mjs`). */
 export function treeOf(file) {
@@ -100,6 +112,8 @@ export function inputsFor(owner, reads, isDir, isIgnored = () => false, generate
     if (tree) globs.add(`${tree}/**`)
     else if (recursive) globs.add(`${file}/**`)
     else if (parts.length <= 2) globs.add(isDir(file) ? `${file}/*` : file)
+    else if (splitOf(file) && parts.length === splitOf(file).split('/').length + 1)
+      globs.add(isDir(file) ? `${file}/*` : `${splitOf(file)}/*`)
     else globs.add(`${parts.slice(0, -1).join('/')}/**`)
   }
   // A glob already covered by a wider tree adds nothing.

@@ -1,0 +1,2 @@
+- **Prevent Create and WO Retry from replaying a brief whose placement was interrupted before its first apply receipt.** — David · TracyHQ/tch#887 · #90 · `fix/brief-unknown-restart` · 2026-10-29
+  **Affects:** Both startup and poll recovery preserve the interrupted phase in the brief timings. A failed applying row remains stopped so a retry cannot overwrite text already on the site. This closes the remaining gap after the earlier partial-write recovery fix.

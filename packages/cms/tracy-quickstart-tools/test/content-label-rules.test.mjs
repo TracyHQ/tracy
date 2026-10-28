@@ -189,6 +189,41 @@ test('R7: siblings of a repeat with different roles fail', () => {
   assert.deepEqual(rule(res, 'R7').keys, ['team.1.n'])
 })
 
+test('R7: the pieces of one HTML field in a repeat are not siblings of each other; the same piece across items is', () => {
+  // Each item's description field holds an icon and words: the icon of item 0 and the icon of item 1 are siblings, the
+  // icon and the words of one item are not, so their different roles are right.
+  const map = cleanMap()
+  for (const i of [0, 1]) {
+    const at = { jsonPath: ['perks', 'perks[desc]', i], group: grp(`perks.${i}`, i, 'offering') }
+    map.slots.push(
+      {
+        key: `perks.${i}.icon`,
+        type: 'image',
+        sample: `images/demo/perk-${i}.svg`,
+        role: 'editorial.item_icon',
+        xpath: '/html/body/div/p/img/@src',
+        ...at
+      },
+      text(`perks.${i}.words`, ['Warm rolls', 'Cold brew'][i], 'editorial.paragraph', {
+        xpath: '/html/body/div/p/text()[1]',
+        ...at
+      })
+    )
+  }
+  assert.deepEqual(fails(labelRulesOf({ map })), [])
+  map.slots.find((s) => s.key === 'perks.1.words').role = 'editorial.heading'
+  map.slots.push(
+    text('perks.2.words', 'Rye loaves', 'editorial.paragraph', {
+      xpath: '/html/body/div/p/text()[1]',
+      jsonPath: ['perks', 'perks[desc]', 2],
+      group: grp('perks.2', 2, 'offering')
+    })
+  )
+  const res = labelRulesOf({ map })
+  assert.deepEqual(fails(res), ['R7'])
+  assert.deepEqual(rule(res, 'R7').keys, ['perks.1.words'])
+})
+
 const item = (value, slot, rect, tag = 'span') => ({
   kind: 'text',
   value,
@@ -220,6 +255,41 @@ test('R8: adjacent short slots of one entity on one line are flagged as a cut he
   const res = labelRulesOf({ map, pages })
   assert.deepEqual(fails(res), ['R8'])
   assert.deepEqual(rule(res, 'R8').keys, ['h.a + h.b'])
+})
+
+test('slots of a demo-only entity (a style-guide page) are left out of the label rules; holes are not', () => {
+  // A style-guide article shows "Example heading" cut in pieces and sample progress bars: the same layout on a page the
+  // map does not mark would fail R8, the marked one does not. R9 still reads every hole.
+  const build = (demoOnly) => {
+    const map = cleanMap()
+    map.entities = [
+      { key: 'article-17', kind: 'article', sourceId: 17, ...(demoOnly ? { demoOnly: true } : {}) }
+    ]
+    map.slots.push(
+      text('article-17.a', 'Example', 'editorial.heading', { entity: 'article-17' }),
+      text('article-17.b', 'heading', 'editorial.heading', { entity: 'article-17' }),
+      text('article-17.c', 'Call (555) 010-2299', 'editorial.paragraph', { entity: 'article-17' })
+    )
+    const pages = [
+      {
+        url: 'https://site.example/typography',
+        items: [
+          item('Example', 'article-17.a', { x: 100, y: 200, w: 80, h: 40 }),
+          item('heading', 'article-17.b', { x: 186, y: 200, w: 80, h: 40 })
+        ]
+      }
+    ]
+    const holes = [{ kind: 'text', value: 'Call 555 010 3344', class: 'capture' }]
+    return labelRulesOf({ map, pages, holes })
+  }
+  assert.deepEqual(fails(build(false)), ['R2', 'R8', 'R9'])
+  const res = build(true)
+  assert.deepEqual(fails(res), ['R9'])
+  assert.equal(
+    res.r1.slots,
+    labelRulesOf({ map: cleanMap() }).r1.slots,
+    'R1 counts no slot of the style-guide page'
+  )
 })
 
 test('R9: a fact-like hole fails and an accepted reason does not lift it; other holes do not', () => {
@@ -258,7 +328,7 @@ test('the committed coverage file carries the rule results', () => {
   }
   const contract = { manifest: { id: 'x/j6/1.0.0' }, sha256: { contentMap: 'a', presentationLock: 'b' }, map }
   const doc = buildCoverageFile({ result, contract })
-  assert.equal(doc.tool.version, '1.3.0')
+  assert.equal(doc.tool.version, '1.4.0')
   assert.equal(doc.labelRules.rules.R3.count, 1)
   assert.deepEqual(doc.labelRules.rules.R3.keys, ['foot.link'])
   assert.equal(doc.labelRules.applies, true)

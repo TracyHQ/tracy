@@ -1933,6 +1933,15 @@ function fleetCopyNext(why, transient) {
       return `The hosted copy of this imported site does not accept the token Tracy holds for it; ${untouched}. Tell the customer its Claude Cowork plugin needs pairing again; do not write another way.`
     case 'platform_mismatch':
       return `The hosted copy answers as a different CMS than this site was imported as; ${untouched}. Tell the customer the import needs checking; do not write another way.`
+    // 28/10/2026 (`verifyCopy`): failures that waiting does not change, each said as what it is.
+    case 'redirected':
+    case 'not_engine':
+    case 'not_json':
+      return `The hosted copy's Claude Cowork door answers with something other than the plugin (a redirect or a page); ${untouched}. Do not retry: tell the customer the hosted copy needs checking by Tracy's team; do not write another way.`
+    case 'no_copy':
+      return `No hosted copy of this imported site answers under its name; ${untouched}. Do not retry: tell the customer the import needs checking by Tracy's team; do not write another way.`
+    case 'copy_error':
+      return `The hosted copy of this imported site answers with a server error; ${untouched}. Do not retry: tell the customer the hosted copy needs checking by Tracy's team; do not write another way.`
     case 'no_registered_component':
     case 'no_copy_address':
       return `This imported site has no usable Claude Cowork plugin registration; ${untouched}. Tell the customer the site must be connected again first; do not write another way.`

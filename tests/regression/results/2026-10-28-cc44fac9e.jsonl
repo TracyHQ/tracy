@@ -1,1 +1,0 @@
-{"id":"REG-PR-32-sync-held-record-rows","verdict":"PASS","commit":"cc44fac9e12aa4f3ff9cf78ad0af351681235ce4","ran_at":"2026-10-28T07:24:42.212Z","evidence":"tests/regression/.runs/2026-10-28-cc44fac9e/REG-PR-32-sync-held-record-rows.log"}

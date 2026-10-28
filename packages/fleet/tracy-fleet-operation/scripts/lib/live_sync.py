@@ -745,7 +745,11 @@ POLICIES = {
             ("history", {"key": "version_id"}),
             ("redirect_links", {}),
             ("assets", {"refs": [("assets", "parent_id", None), ("content", "asset_id", None),
-                                 ("categories", "asset_id", None), ("modules", "asset_id", None)]}),
+                                 ("categories", "asset_id", None), ("modules", "asset_id", None),
+                                 ("fields", "asset_id", None), ("fields_groups", "asset_id", None),
+                                 ("contact_details", "asset_id", None), ("banners", "asset_id", None),
+                                 ("workflows", "asset_id", None), ("workflow_stages", "asset_id", None),
+                                 ("workflow_transitions", "asset_id", None)]}),
         ],
         "normalise": [
             "UPDATE `{prefix}extensions`\n"
@@ -893,6 +897,12 @@ class Sql:
 
 def sql_str(value: str) -> str:
     return "'" + value.replace("\\", "\\\\").replace("'", "''") + "'"
+
+
+_FOREIGN_KEYS = _load("foreign_keys", HERE / "foreign_keys.py")
+capture_foreign_keys = _FOREIGN_KEYS.capture
+rebase_foreign_key = _FOREIGN_KEYS.rebase
+foreign_key_sql = _FOREIGN_KEYS.add_sql
 
 
 class Schema:
@@ -1391,6 +1401,7 @@ class DbMerge:
     def __init__(self, sql: Sql, base: str, ours: str, theirs: str, work: str, platform: str,
                  prefix: str, decisions: dict, id_map: dict | None = None, pushed: list | None = None):
         self.sql, self.platform, self.prefix, self.decisions = sql, platform, prefix, decisions
+        self._writable = {}
         # What "Sync to live" wrote on the live site since the base was read (`seed_pushed`).
         self.pushed = [p for p in (pushed or []) if isinstance(p, dict) and isinstance(p.get("table"), str)]
         self.seeded = 0
@@ -1438,6 +1449,13 @@ class DbMerge:
         return ", ".join(f"COALESCE(MD5(CAST(r.{q(c)} AS BINARY)), '-')" for c in keep) or "''"
 
     def run(self) -> dict:
+        self.sql.run("SET FOREIGN_KEY_CHECKS=0;")
+        try:
+            return self._run()
+        finally:
+            self.sql.run("SET FOREIGN_KEY_CHECKS=1;")
+
+    def _run(self) -> dict:
         self.sql.database = self.names["ours"]
         # Where a merge's time goes, on stderr (webroot-sync.sh keeps it in the job's log).
         started = time.monotonic()
@@ -1480,6 +1498,7 @@ class DbMerge:
         B, M, T = (s[self.names[k]] for k in ("base", "ours", "theirs"))
         self.schemas = (B, M, T)
         self.theirs = T
+        self.foreign_keys = capture_foreign_keys(self.sql, self.names["theirs"])
         self.sql.run(f"DROP DATABASE IF EXISTS {q(self.work)}; CREATE DATABASE {q(self.work)};")
         try:
             locks = self.keep_session_columns(M)
@@ -1706,6 +1725,21 @@ class DbMerge:
         self.ids.renumber(self.names["theirs"], entity, rule, [(live, mine)])
         self.ids.added.append({"table": entity, "live": raw, "copy": mine, "why": "pushed"})
 
+    def writable_columns(self, side: str, table: str) -> list[str]:
+        schema = self.names[side]
+        if (schema, table) not in self._writable:
+            rows = self.sql.run(f"SELECT column_name FROM information_schema.columns WHERE table_schema = {sql_str(schema)}"
+                                f" AND table_name = {sql_str(table)} AND extra NOT LIKE '%VIRTUAL GENERATED%'"
+                                " AND extra NOT LIKE '%STORED GENERATED%' ORDER BY ordinal_position;")
+            self._writable[(schema, table)] = [r[0] for r in rows]
+        return self._writable[(schema, table)]
+
+    def copy_rows_sql(self, target: str, source: str, table: str, alias: str = "r", verb: str = "INSERT") -> str:
+        cols = self.writable_columns(source, table)
+        listed = ", ".join(q(c) for c in cols)
+        selected = ", ".join(f"{alias}.{q(c)}" for c in cols)
+        return f"{verb} INTO {self.ref(target, table)} ({listed}) SELECT {selected} FROM {self.ref(source, table)} {alias}"
+
     def seed_pushed(self, phase: str) -> None:
         b, m, t = self.names["base"], self.names["ours"], self.names["theirs"]
         script = ["SET FOREIGN_KEY_CHECKS = 0;"]
@@ -1724,7 +1758,7 @@ class DbMerge:
                 rows = rec.get("rows")
                 if rows in ("ours", "theirs"):
                     script.append(f"DELETE r FROM {self.ref('base', table)} r WHERE {self._match('r', match)};")
-                    script.append(f"INSERT INTO {self.ref('base', table)} SELECT r.* FROM {self.ref(rows, table)} r"
+                    script.append(self.copy_rows_sql("base", rows, table) +
                                   f" WHERE {self._match('r', match)};")
                     continue
                 pk = self._pk(t, table)
@@ -1733,10 +1767,10 @@ class DbMerge:
                     f"SELECT column_name FROM information_schema.columns WHERE table_schema = {sql_str(t)}"
                     f" AND table_name = {sql_str(table)};")]
                 # A row the push made: the live site's, as the base's.
-                script.append(f"INSERT INTO {self.ref('base', table)} SELECT r.* FROM {self.ref('theirs', table)} r"
+                script.append(self.copy_rows_sql("base", "theirs", table) +
                               f" WHERE {self._match('r', match)} AND {self._absent(table, 'r', pk, all_columns)};")
                 side = "ours" if rec.get("from", "ours") == "ours" else "theirs"
-                sets = ", ".join(f"bb.{q(c)} = s.{q(c)}" for c in columns if c in all_columns)
+                sets = ", ".join(f"bb.{q(c)} = s.{q(c)}" for c in columns if c in all_columns and c in self.writable_columns("base", table))
                 if sets:
                     script.append(f"UPDATE {self.ref('base', table)} bb, {self.ref(side, table)} s SET {sets}"
                                   f" WHERE {self._match('bb', match)} AND {self._match('s', match)};")
@@ -1756,7 +1790,7 @@ class DbMerge:
                 if column not in cols:
                     continue
                 cond = f" AND ({self.ids.cond(t, where)})" if where else ""
-                script.append(f"INSERT INTO {self.ref('base', full)} SELECT r.* FROM {self.ref('theirs', full)} r"
+                script.append(self.copy_rows_sql("base", "theirs", full) +
                               f" WHERE CAST(r.{q(column)} AS CHAR) = {sql_str(ident)}{cond}"
                               f" AND {self._absent(full, 'r', self._pk(t, full), cols)};")
             for ref_table, column, template in rule.get("names", []):
@@ -1768,7 +1802,7 @@ class DbMerge:
                     f" AND table_name = {sql_str(full)};")]
                 if column not in cols:
                     continue
-                script.append(f"INSERT INTO {self.ref('base', full)} SELECT r.* FROM {self.ref('theirs', full)} r"
+                script.append(self.copy_rows_sql("base", "theirs", full) +
                               f" WHERE r.{q(column)} = {sql_str(template.format(id=ident))}"
                               f" AND {self._absent(full, 'r', self._pk(t, full), cols)};")
         if len(script) > 1:
@@ -1857,7 +1891,7 @@ class DbMerge:
         skip = (p.get("derivedColumns", {}).get(name, set()) | p.get("bookkeepingColumns", {}).get(name, set())
                 | p.get("sessionColumns", set()) | p.get("mirrorColumns", {}).get(name, set())
                 | self.named(p.get("volatileColumns", set()), name) | self.named(p.get("counterColumns", set()), name))
-        return [c for c, _ in M.columns[table] if c not in key and c not in skip]
+        return [c for c in self.writable_columns("ours", table) if c not in key and c not in skip]
 
     def live_records(self, table: str, name: str, key: list[str], M: Schema) -> int:
         """The rows of a table the copy left alone that the live site added, deleted, or changed in a
@@ -1875,7 +1909,20 @@ class DbMerge:
     def take_table(self, table: str) -> None:
         """The live site's whole table, structure included, in place of the copy's."""
         m, t = self.ref("ours", table), self.ref("theirs", table)
-        self.sql.run(f"DROP TABLE IF EXISTS {m}; CREATE TABLE {m} LIKE {t}; INSERT INTO {m} SELECT * FROM {t};")
+        keys = [k for k in self.foreign_keys if k["table"] == table]
+        writable = self.sql.run(f"SELECT column_name FROM information_schema.columns WHERE table_schema = {sql_str(self.names['theirs'])}"
+                                f" AND table_name = {sql_str(table)} AND extra NOT LIKE '%VIRTUAL GENERATED%'"
+                                " AND extra NOT LIKE '%STORED GENERATED%' ORDER BY ordinal_position;")
+        cols = ", ".join(q(row[0]) for row in writable)
+        if cols:
+            insert = f"INSERT INTO {m} ({cols}) SELECT {cols} FROM {t};"
+        else:
+            # A generated-only table has no writable projection; preserve its row count.
+            count = int(self.sql.run(f"SELECT COUNT(*) FROM {t};")[0][0])
+            insert = "\n".join(f"INSERT INTO {m} () VALUES " + ",".join("()" for _ in range(min(1000, count - start))) + ";"
+                               for start in range(0, count, 1000))
+        self.sql.run(f"DROP TABLE IF EXISTS {m}; CREATE TABLE {m} LIKE {t};" + insert
+                     + "\n".join(foreign_key_sql(rebase_foreign_key(k, self.names["theirs"], self.names["ours"])) for k in keys))
         self.counts["tablesFromTheirs"] += 1
 
     def table_conflict(self, table: str, reason: str) -> str:
@@ -2030,7 +2077,7 @@ class DbMerge:
             return
         m, b = self.ref("ours", table), self.ref("base", table)
         names = {c for c, _ in self.schemas[0].columns.get(table, [])}
-        cols = [c for c, _ in self.schemas[2].columns[table] if c in names]
+        cols = [c for c in self.writable_columns("theirs", table) if c in names]
         match = key if key and all(c in names for c in key) else None
         if not cols:
             return
@@ -2184,7 +2231,7 @@ class DbMerge:
         volatile = self.named(self.policy.get("volatileColumns", set()), name)
         counters = self.named(self.policy.get("counterColumns", set()), name)
         mirror = self.policy.get("mirrorColumns", {}).get(name, set())
-        columns = [c for c, _ in M.columns[table] if c not in pk and c not in derived and c not in bookkeeping]
+        columns = [c for c in self.writable_columns("ours", table) if c not in pk and c not in derived and c not in bookkeeping]
         # A mirror column is merged like any other (the side that changed it), but a clash on it is the
         # record it mirrors' to name, never its own.
         hard = [c for c in columns if c not in volatile and c not in counters and c not in mirror]
@@ -2398,7 +2445,7 @@ class DbMerge:
         apply = [
             "SET FOREIGN_KEY_CHECKS = 0;",
             f"DELETE r FROM {m} r JOIN {k} k ON {on('k', 'r')} WHERE k.cls = 'T' AND k.ht IS NULL;",
-            f"REPLACE INTO {m} SELECT rt.* FROM {t} rt JOIN {k} k ON {on('k', 'rt')} WHERE k.cls = 'T';",
+            self.copy_rows_sql("ours", "theirs", table, "rt", "REPLACE") + f" JOIN {k} k ON {on('k', 'rt')} WHERE k.cls = 'T';",
         ]
         if columns:
             def take(c: str) -> str:
@@ -2415,7 +2462,7 @@ class DbMerge:
         for keys in take_rows:
             where = self.key_where("r", pk, keys)
             apply.append(f"DELETE r FROM {m} r WHERE {where};")
-            apply.append(f"REPLACE INTO {m} SELECT r.* FROM {t} r WHERE {where};")
+            apply.append(self.copy_rows_sql("ours", "theirs", table, "r", "REPLACE") + f" WHERE {where};")
         for c, keys in take_cols:
             apply.append(f"UPDATE {m} rm JOIN {t} rt ON {on('rm', 'rt')} SET rm.{q(c)} = rt.{q(c)}"
                          f" WHERE {self.key_where('rm', pk, keys)};")

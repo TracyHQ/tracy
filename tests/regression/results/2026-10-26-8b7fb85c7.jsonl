@@ -1,2 +1,0 @@
-{"id":"REG-PR-1739-over-picture-contrast","verdict":"PASS","commit":"8b7fb85c77b833c8f98031f4f17683b5419bb3d4","ran_at":"2026-10-26T19:51:37.947Z","evidence":"tests/regression/.runs/2026-10-26-8b7fb85c7/REG-PR-1739-over-picture-contrast.log"}
-{"id":"REG-PR-1739-vision-shot-coverage","verdict":"PASS","commit":"8b7fb85c77b833c8f98031f4f17683b5419bb3d4","ran_at":"2026-10-26T19:51:40.857Z","evidence":"tests/regression/.runs/2026-10-26-8b7fb85c7/REG-PR-1739-vision-shot-coverage.log"}

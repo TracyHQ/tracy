@@ -35,18 +35,16 @@ const PHONE = wrong('coaches.phone', 'editorial.paragraph', 'contact.phone', tru
 const CLAIM = wrong('hero.title', 'editorial.heading', 'claim.heading', true)
 const FINER = wrong('classes.intro', 'editorial.paragraph', 'editorial.heading', false)
 
-/** The `labelJudge` block the audit commits. */
+/** The `labelJudge` block record-judge commits. */
 function judgeBlock(slots, over = {}) {
   const wrongs = slots.filter((s) => s.verdict === 'wrong')
   return {
     version: 'label-judge/1',
     roleVocabularyVersion: V3,
     applies: true,
-    model: 'stub-vision',
+    judgedBy: 'agent',
     state: 'judged',
     reason: null,
-    calls: 3,
-    cents: 2,
     counts: {
       slots: slots.length,
       located: slots.length,
@@ -173,12 +171,12 @@ test('a wrong group only warns for a release already shown on Design inspiration
 test('a result the model never gave is not judged, never a pass', () => {
   const block = judgeBlock([], {
     state: 'not-judged',
-    reason: 'NO_VISION_MODEL',
+    reason: 'AWAITING_AGENT',
     counts: { ...judgeBlock([]).counts, slots: 6, located: 6, notJudged: 6 }
   })
   const step = stepOf(roadOf(release(), { contracts: profile(block) }))
   assert.deepEqual(fields(step), ['warn', 'coverage-judge-warn', 'not-judged', false, true])
-  assert.equal(step.params.judgeReason, 'NO_VISION_MODEL')
+  assert.equal(step.params.judgeReason, 'AWAITING_AGENT')
   assert.equal(step.params.judgeNotJudged, 6)
 })
 

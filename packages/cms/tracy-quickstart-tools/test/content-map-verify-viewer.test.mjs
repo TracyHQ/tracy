@@ -126,3 +126,53 @@ test('rule 1 accepts faces that prove a number (stat.proof_image, ADR 0040) and 
   assert.deepEqual(rules(picture('signature', 'stat.proof_image')), [1])
   assert.deepEqual(rules(picture('avatar-group', 'editorial.illustration')), [1])
 })
+
+test('rule 4 asks for a measurable box: a slot shown only through a link is not marked, one shown as text is', () => {
+  // An email shown only inside its mailto has no box its words are drawn in, so its fit honestly says not measured.
+  const map = {
+    slots: [
+      slot('module-7.email', { sample: 'hello@bakery.example', fit: { measured: false } }),
+      slot('module-7.hours', { sample: 'Open from seven', fit: { measured: false } })
+    ]
+  }
+  const findings = {
+    pages: [
+      {
+        n: 1,
+        url: 'https://bakery.example/',
+        title: 'Home',
+        shots: {},
+        items: [
+          { ...matched('module-7.email', rect(100), rect(80)), kind: 'link', matchBy: 'address slot' },
+          matched('module-7.hours', rect(140), rect(110))
+        ]
+      }
+    ]
+  }
+  const m = locate({ map, findings, isFactRole, mods: MODS })
+  const flags = Object.fromEntries(m.components[0].rows.map((r) => [r.slot.key, r.flags.map((f) => f.rule)]))
+  assert.deepEqual(flags, { 'module-7.email': [], 'module-7.hours': [4] })
+})
+
+test('a demo-only entity (a style-guide page) is located and shown but never marked suspicious', () => {
+  const map = { ...MAP, entities: [{ key: 'module-7', kind: 'module', sourceId: 7, demoOnly: true }] }
+  const m = locate({ map, findings: FINDINGS, isFactRole, mods: MODS })
+  assert.deepEqual(
+    m.components[0].rows.map((r) => [r.slot.key, r.flags]),
+    [
+      ['module-7.title', []],
+      ['module-7.badge', []]
+    ]
+  )
+  assert.equal(m.counts.suspicious, 0)
+  const html = buildHtml({
+    model: m,
+    label: '9.9.9',
+    site: 'https://bakery.example/',
+    generatedAt: FINDINGS.generatedAt,
+    isFactRole
+  })
+  assert.match(html, /demo only, not judged/)
+  // The same map without the mark still flags the figure filed as editorial.
+  assert.equal(model().counts.suspicious, 1)
+})
