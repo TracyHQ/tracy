@@ -27,22 +27,16 @@
  * the write left (a reverse compare-and-set); an item the customer changed since is kept and named.
  *
  * The answer is the last stdout line. The client is live-pull.mjs's (the same envelope, the same
- * doors, the same retries on 429/5xx and the network only), kept in step by hand.
+ * doors), kept in step by hand. Reads retry transient failures; writes retry only an explicit
+ * writer_busy refusal. An unanswered mutation remains uncertain and is never sent again.
  * 🔒 The token arrives in the environment and goes only into request bodies: never on a command line,
  * into a file, a log line or an answer.
  */
 import { createHash } from 'node:crypto'
-import {
-  appendFileSync,
-  chmodSync,
-  existsSync,
-  mkdirSync,
-  readFileSync,
-  renameSync,
-  writeFileSync
-} from 'node:fs'
+import { closeSync, existsSync, fsyncSync, mkdirSync, openSync, readFileSync, writeFileSync } from 'node:fs'
 import { request } from 'node:http'
 import { join } from 'node:path'
+import { durablePrivate, lockWriter, mutation, writeRequests } from './live-write-requests.mjs'
 
 const USER_AGENT = 'Mozilla/5.0 (compatible; TracyBot/1.0; +https://tracy.ai)'
 const REQUEST_TIMEOUT_MS = 120_000
@@ -105,6 +99,23 @@ class Refused extends Error {
   constructor(action, reply) {
     super(`${action}: ${reply.error}`)
     this.reply = reply
+    this.definitelyRefused =
+      [
+        'conflict',
+        'locked',
+        'revision_stale',
+        'not_found',
+        'refused',
+        'php_lint_failed',
+        'too_large',
+        'php_disabled',
+        'invalid_params',
+        'invalid_kind',
+        'unsupported',
+        'disabled',
+        'unsafe_path'
+      ].includes(reply.error) ||
+      (reply.error === 'batch_failed' && /every write.*taken back/.test(String(reply.message ?? '')))
   }
 }
 
@@ -208,7 +219,11 @@ async function call(endpoint, token, action, params = {}) {
     if (['unauthorized', 'forbidden', 'bad_token'].includes(reply.error))
       throw new WriteFailed('TOKEN_REFUSED')
     // Another write holds the site's write lock for a moment: asked again, like a busy server.
-    if (reply.error === 'writer_busy') throw new Transient(`${action}: writer_busy`)
+    if (reply.error === 'writer_busy') {
+      const busy = new Transient(`${action}: writer_busy`)
+      busy.definitelyRefused = true
+      throw busy
+    }
     throw new Refused(action, reply)
   }
   return reply
@@ -287,12 +302,7 @@ const blobOf = (bytes) =>
     .update(Buffer.concat([Buffer.from(`blob ${bytes.length}\0`), bytes]))
     .digest('hex')
 
-function writePrivate(path, value) {
-  const tmp = `${path}.tmp`
-  writeFileSync(tmp, JSON.stringify(value), { mode: 0o600 })
-  chmodSync(tmp, 0o600)
-  renameSync(tmp, path)
-}
+const writePrivate = durablePrivate
 
 const readJson = (path, fallback) => (existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : fallback)
 
@@ -302,7 +312,21 @@ function keepBytes(pushDir, bytes) {
   mkdirSync(dir, { recursive: true, mode: 0o700 })
   const name = blobOf(bytes)
   const path = join(dir, name)
-  if (!existsSync(path)) writeFileSync(path, bytes, { mode: 0o600 })
+  if (!existsSync(path)) {
+    const fd = openSync(path, 'w', 0o600)
+    try {
+      writeFileSync(fd, bytes)
+      fsyncSync(fd)
+    } finally {
+      closeSync(fd)
+    }
+    const directory = openSync(dir, 'r')
+    try {
+      fsyncSync(directory)
+    } finally {
+      closeSync(directory)
+    }
+  }
   return name
 }
 
@@ -378,9 +402,13 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
   // A live site that answered busy or slow even once (a 429, a 5xx, a timeout) is written one item
   // at a time from then on: a small shared host is the customer's, and its visitors come first.
   let strained = false
-  const ask = (action, params) =>
+  const requests = writeRequests(pushDir, live)
+  const ask = (action, params, recovery = []) =>
     retried(
-      () => call(live, token, action, params),
+      () =>
+        mutation(action, params)
+          ? requests.send(action, params, () => call(live, token, action, params), recovery, recover)
+          : call(live, token, action, params),
       TRIES,
       () => {
         strained = true
@@ -402,11 +430,64 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
   const journal = (entry) => {
     done.set(entry.id, entry)
     if (entry.created) Object.assign(created, entry.created)
-    appendFileSync(journalPath, `${JSON.stringify(entry)}\n`, { mode: 0o600 })
+    const fd = openSync(journalPath, 'a', 0o600)
+    try {
+      writeFileSync(fd, `${JSON.stringify(entry)}\n`)
+      fsyncSync(fd)
+    } finally {
+      closeSync(fd)
+    }
   }
   const keep = (item, snapshot) => {
     before.items[item.id] = snapshot
     writePrivate(beforePath, before)
+  }
+
+  // Receipts contain the preimage before sending and the ACK before any read-back. Replaying a
+  // receipt never sends HTTP: a killed worker can finish the journal without another mutation.
+  function recover(receipt) {
+    for (const { item, snapshot, mode } of receipt.recovery ?? []) {
+      if (done.get(item.id)?.state === 'written') continue
+      const answer = receipt.reply
+      if (receipt.state !== 'acknowledged') continue
+      let snap = { ...snapshot }
+      let extra = {}
+      let made
+      if (mode === 'content') {
+        const liveId = item.op === 'create' ? answer.id : snap.liveId
+        if (item.op === 'create' && !(Number(liveId) > 0)) {
+          journal({ id: item.id, state: 'failed', extra: { error: 'WRITE_OUTCOME_UNKNOWN' } })
+          continue
+        }
+        snap.liveId = liveId
+        extra = { liveId }
+        if (item.creates && item.op === 'create') made = { [item.creates]: liveId }
+      } else if (mode === 'upload') {
+        const attachment = Number(answer.attachment ?? 0)
+        if (item.creates && !(attachment > 0)) {
+          journal({ id: item.id, state: 'failed', extra: { error: 'WRITE_OUTCOME_UNKNOWN' } })
+          continue
+        }
+        if (attachment > 0) extra = { liveId: attachment }
+        if (item.creates) made = { [item.creates]: attachment }
+      } else if (mode === 'template') {
+        const f = (answer.files ?? []).find((f) => f.path === item.path) ?? {}
+        snap = { ...snap, undoId: answer.undo_id ?? null, before: f.before ?? null, after: f.after ?? null }
+        if (answer.undo_id) {
+          before.templateUndo = [...new Set([...(before.templateUndo ?? []), answer.undo_id])]
+          extra = { undoId: answer.undo_id }
+        }
+      }
+      keep(item, snap)
+      journal({ id: item.id, state: 'written', ...(made ? { created: made } : {}), extra })
+    }
+  }
+  for (const receipt of Object.values(requests.entries)) {
+    recover(receipt)
+    if (receipt.state === 'sending')
+      for (const { item } of receipt.recovery ?? [])
+        if (done.get(item.id)?.state !== 'written')
+          journal({ id: item.id, state: 'failed', extra: { error: 'WRITE_OUTCOME_UNKNOWN' } })
   }
 
   const written = []
@@ -425,8 +506,9 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
   const queue = []
   for (const item of changeset.items) {
     const had = done.get(item.id)
-    if (had?.state === 'written') {
+    if (had?.state === 'written' || had?.extra?.error === 'WRITE_OUTCOME_UNKNOWN') {
       ended(had, item)
+      if (had.state !== 'written') blocked.add(item.id)
       continue
     }
     // Changed on both sides since the last sync (the sync kept Tracy's on the copy): the push would
@@ -519,16 +601,34 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
             live: Object.fromEntries(off.map((f) => [f, shown(current?.[f])]))
           }
         })
+      const snapshot = {
+        kind: item.kind,
+        op: item.op,
+        liveId: address.id,
+        key: item.key ?? null,
+        before: current,
+        written: fields,
+        restore: item.restore ?? {},
+        trash: item.trash ?? null
+      }
+      const recovery = [{ item, snapshot, mode: 'content' }]
       let answer
-      if (item.op === 'delete') answer = await ask('content.delete', { apply_id: applyId, ...address })
+      if (item.op === 'delete')
+        answer = await ask('content.delete', { apply_id: applyId, ...address }, recovery)
       else {
         const params = { apply_id: applyId, ...address, fields }
         if (item.op === 'create') params.id = 0
         if (item.bodyRevision && revision) params.expected_body_revision = revision
-        answer = await ask('content.update', params)
+        answer = await ask('content.update', params, recovery)
       }
+      if (done.get(item.id)?.state !== 'written') return
       const liveId = item.op === 'create' ? answer.id : address.id
-      const after = await readBack(item, liveId)
+      let after
+      try {
+        after = await readBack(item, liveId)
+      } catch {
+        return
+      }
       keep(item, {
         kind: item.kind,
         op: item.op,
@@ -540,13 +640,10 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         restore: item.restore ?? {},
         trash: item.trash ?? null
       })
-      return journal({
-        id: item.id,
-        state: 'written',
-        ...(item.creates && item.op === 'create' ? { created: { [item.creates]: liveId } } : {}),
-        extra: { liveId }
-      })
+      return
     } catch (error) {
+      if (error.code === 'WRITE_OUTCOME_UNKNOWN')
+        return journal({ id: item.id, state: 'failed', extra: { error: error.code } })
       if (error instanceof Refused) {
         const reply = error.reply
         if (reply.error === 'locked') {
@@ -634,12 +731,25 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
     // the path already has, which is the number the rest of the push needs.
     if (liveBlob === item.blob && platform !== 'wordpress')
       return journal({ id: item.id, state: 'written', extra: { already: true } })
-    const answer = await ask('media.upload', {
-      apply_id: applyId,
+    const snapshot = {
+      kind: item.kind === 'file' ? 'file' : 'media',
+      op: 'upload',
       path: item.path,
-      content_b64: bytes.toString('base64'),
-      ...(platform === 'wordpress' ? { sha256: createHash('sha256').update(bytes).digest('hex') } : {})
-    })
+      before: liveBlob
+        ? { blob: liveBlob, ...(item.kind === 'file' ? { stored: keepBytes(pushDir, liveBytes) } : {}) }
+        : null,
+      written: { blob: item.blob }
+    }
+    const answer = await ask(
+      'media.upload',
+      {
+        apply_id: applyId,
+        path: item.path,
+        content_b64: bytes.toString('base64'),
+        ...(platform === 'wordpress' ? { sha256: createHash('sha256').update(bytes).digest('hex') } : {})
+      },
+      [{ item, snapshot, mode: 'upload' }]
+    )
     keep(item, {
       kind: item.kind === 'file' ? 'file' : 'media',
       op: 'upload',
@@ -649,6 +759,7 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         : null,
       written: { blob: item.blob }
     })
+    if (done.get(item.id)?.state !== 'written') return
     const attachment = Number(answer.attachment ?? 0)
     return journal({
       id: item.id,
@@ -675,7 +786,12 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         extra: { reason: 'changed-on-live', fields: ['file'] }
       })
     const stored = keepBytes(pushDir, bytes)
-    await ask('media.delete', { apply_id: applyId, path: item.path })
+    await ask('media.delete', { apply_id: applyId, path: item.path }, [
+      {
+        item,
+        snapshot: { kind: 'file', op: 'delete', path: item.path, before: { blob: item.baseBlob, stored } }
+      }
+    ])
     keep(item, { kind: 'file', op: 'delete', path: item.path, before: { blob: item.baseBlob, stored } })
     return journal({ id: item.id, state: 'written' })
   }
@@ -686,7 +802,17 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
     const off = Object.keys(item.expect ?? {}).filter((k) => !same(now[k], item.expect[k]))
     if (off.length)
       return journal({ id: item.id, state: 'conflict', extra: { reason: 'changed-on-live', fields: off } })
-    const answer = await ask('site.identity', { operation: 'set', apply_id: applyId, fields })
+    const answer = await ask('site.identity', { operation: 'set', apply_id: applyId, fields }, [
+      {
+        item,
+        snapshot: {
+          kind: 'siteIdentity',
+          op: 'update',
+          before: Object.fromEntries(Object.keys(fields).map((k) => [k, now[k] ?? null])),
+          written: fields
+        }
+      }
+    ])
     const keys = Object.keys(fields)
     keep(item, {
       kind: 'siteIdentity',
@@ -715,12 +841,28 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
     const off = keys.filter((k) => !same(now[k], item.expect?.[k] ?? ''))
     if (off.length)
       return journal({ id: item.id, state: 'conflict', extra: { reason: 'changed-on-live', fields: off } })
-    const answer = await ask('template.siteSettings', {
-      operation: 'set',
-      apply_id: applyId,
-      template,
-      ...(profiles ? { profiles: { [profile]: values } } : { fields: values })
-    })
+    const answer = await ask(
+      'template.siteSettings',
+      {
+        operation: 'set',
+        apply_id: applyId,
+        template,
+        ...(profiles ? { profiles: { [profile]: values } } : { fields: values })
+      },
+      [
+        {
+          item,
+          snapshot: {
+            kind: 'templateSettings',
+            op: 'update',
+            key: template,
+            profile,
+            before: now,
+            written: values
+          }
+        }
+      ]
+    )
     keep(item, {
       kind: 'templateSettings',
       op: 'update',
@@ -787,7 +929,24 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
       .digest('hex')
       .slice(0, 16)}`
     try {
-      await ask('content.batch', { apply_id: applyId, request_id: requestId, operations })
+      await ask(
+        'content.batch',
+        { apply_id: applyId, request_id: requestId, operations },
+        ready.map(({ item, address, fields, current }) => ({
+          item,
+          mode: 'content',
+          snapshot: {
+            kind: item.kind,
+            op: item.op,
+            liveId: address.id,
+            key: item.key ?? null,
+            before: current,
+            written: fields,
+            restore: item.restore ?? {},
+            trash: item.trash ?? null
+          }
+        }))
+      )
     } catch (error) {
       if (!(error instanceof Refused)) throw error
       // Refused whole (a row open in the editor, a value moved since the read, a write the engine took
@@ -806,7 +965,12 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
       return
     }
     for (const { item, address, fields, current } of ready) {
-      const after = await readBack(item, address.id)
+      let after
+      try {
+        after = await readBack(item, address.id)
+      } catch {
+        continue
+      }
       keep(item, {
         kind: item.kind,
         op: item.op,
@@ -892,7 +1056,21 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
     while (pending.length) {
       let answer
       try {
-        answer = await ask('template.files.write', { apply_id: applyId, files: pending.map((f) => f.file) })
+        answer = await ask(
+          'template.files.write',
+          { apply_id: applyId, files: pending.map((f) => f.file) },
+          pending.map(({ item }) => ({
+            item,
+            mode: 'template',
+            snapshot: {
+              kind: 'file',
+              door: 'template',
+              op: item.op,
+              path: item.path,
+              written: { blob: item.op === 'delete' ? null : item.blob }
+            }
+          }))
+        )
       } catch (error) {
         if (!(error instanceof Refused)) throw error
         const reply = error.reply
@@ -958,7 +1136,7 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
       }
       const undoId = typeof answer.undo_id === 'string' ? answer.undo_id : null
       if (undoId) {
-        before.templateUndo = [...(before.templateUndo ?? []), undoId]
+        before.templateUndo = [...new Set([...(before.templateUndo ?? []), undoId])]
         writePrivate(beforePath, before)
       }
       const said = new Map((answer.files ?? []).map((f) => [f.path, f]))
@@ -1135,7 +1313,16 @@ async function undo(pushDir) {
   const applyId = `tracy-push-undo-${pushId}`
   const live = await door(endpoint, token)
   const platform = readJson(join(pushDir, 'push.json'), {}).platform ?? 'joomla'
-  const ask = (action, params) => retried(() => call(live, token, action, params))
+  const requests = writeRequests(pushDir, live, 'undo-requests.json')
+  let undoItemId = 'template-files'
+  const ask = (action, params) =>
+    retried(() =>
+      mutation(action, params)
+        ? requests.send(action, params, () => call(live, token, action, params), [
+            { item: { id: undoItemId } }
+          ])
+        : call(live, token, action, params)
+    )
   const restored = []
   const kept = []
   const failed = []
@@ -1251,6 +1438,7 @@ async function undo(pushDir) {
   const order = [...writtenAnswer.written].reverse()
   progress(t0, `taking back ${order.length} item(s) on the live site`)
   for (const out of order) {
+    undoItemId = out.id
     const snap = before.items[out.id]
     if (!snap) {
       kept.push({ ...out, reason: 'nothing-kept' })
@@ -1481,14 +1669,26 @@ async function main(argv) {
   const [op, ...rest] = argv
   if (op === 'apply') {
     const [previewDir, pushDir] = rest
-    return apply(previewDir, pushDir, {
-      confirmDeletes: rest.includes('--confirm-deletes'),
-      confirmPhp: rest.includes('--confirm-php'),
-      limit: Number(flag(rest, '--limit', DEFAULT_LIMIT)) || DEFAULT_LIMIT,
-      webroot: flag(rest, '--webroot')
-    })
+    const release = await lockWriter(pushDir)
+    try {
+      return await apply(previewDir, pushDir, {
+        confirmDeletes: rest.includes('--confirm-deletes'),
+        confirmPhp: rest.includes('--confirm-php'),
+        limit: Number(flag(rest, '--limit', DEFAULT_LIMIT)) || DEFAULT_LIMIT,
+        webroot: flag(rest, '--webroot')
+      })
+    } finally {
+      await release()
+    }
   }
-  if (op === 'undo') return undo(rest[0])
+  if (op === 'undo') {
+    const release = await lockWriter(rest[0])
+    try {
+      return await undo(rest[0])
+    } finally {
+      await release()
+    }
+  }
   if (op === 'info') {
     const endpoint = process.env.TRACY_SYNC_ENDPOINT ?? ''
     const token = process.env.TRACY_SYNC_TOKEN ?? ''

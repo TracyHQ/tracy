@@ -127,6 +127,11 @@ function engine({
       const { token, action, params = {} } = JSON.parse(body)
       state.calls.push({ action, params })
       const answer = (status, value) => {
+        if (state.holdAnswer === action) {
+          state.held = true
+          state.heldResponse = res
+          return
+        }
         res.writeHead(status, { 'content-type': 'application/json' })
         // `phpNotice`: a host that prints PHP's notices ahead of every answer (PHP 8.5, display_errors on)
         res.end((state.phpNotice ?? '') + JSON.stringify(value))
@@ -209,6 +214,12 @@ function engine({
             return answer(200, { ok: false, error: 'revision_stale' })
         }
         const done = update(params)
+        if (state.dropAfterUpdate) {
+          state.dropAfterUpdate = false
+          req.socket.destroy()
+          return
+        }
+        if (state.failReadback) state.refuse['content.get'] = 503
         if (!done) return answer(200, { ok: false, error: 'write_failed', message: 'target does not exist' })
         return answer(200, { ok: true, ...done })
       }
@@ -687,7 +698,7 @@ test('deletes wait for the owner’s word; over the limit waits for the next pus
 test('a busy site is asked again; a refused token stops before anything is written', async () => {
   const live = await engine({ records: { article: { 1: article(1) } } })
   try {
-    live.refuse['content.batch'] = 503
+    live.refuse['content.batch'] = { error: 'writer_busy' }
     const { answer } = await apply(live, pushDir([update(1, { title: 'One' }, { title: 'Article 1' })]))
     assert.equal(answer.state, 'applied')
     const dir = pushDir([update(1, { title: 'x' }, { title: 'One' })])
@@ -1609,7 +1620,8 @@ test('WordPress: independent posts go to the live site side by side, at most fou
       platform: 'wordpress',
       records: { post: Object.fromEntries(ids.map((i) => [i, wpPost(i)])) }
     })
-    live.slow = 150
+    // Keep network latency above durable receipt fsync overhead on the test disk.
+    live.slow = 350
     return live
   }
   const one = await make()
@@ -1736,6 +1748,176 @@ test('a live site that answers busy even once is written one item at a time from
       if (u.start > firstEnd)
         assert.ok(live.overlaps[i].length <= 1, `after the strain, ${live.overlaps[i].length + 1} in flight`)
   } finally {
+    await live.close()
+  }
+})
+
+test('lost create response is uncertain and Apply never creates it again or starts its dependents', async () => {
+  const live = await engine({ platform: 'wordpress' })
+  try {
+    live.dropAfterUpdate = true
+    const made = update(1, { post_title: 'Once' }, {}, { kind: 'post', op: 'create', creates: 'post:1' })
+    const dir = pushDir(
+      [
+        made,
+        update(
+          2,
+          { post_title: 'Dependent' },
+          {},
+          {
+            kind: 'post',
+            op: 'create',
+            dependsOn: [made.id]
+          }
+        )
+      ],
+      'wordpress'
+    )
+    for (let n = 0; n < 2; n++) {
+      const { answer } = await apply(live, dir)
+      assert.equal(answer.failed[0].error, 'WRITE_OUTCOME_UNKNOWN')
+      assert.equal(answer.skipped[0].reason, 'depends-on-failed')
+    }
+    assert.equal(Object.keys(live.records.post).length, 1)
+    assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 1)
+  } finally {
+    await live.close()
+  }
+})
+
+test('a failed read-back preserves the create ACK and Undo evidence without another create', async () => {
+  const live = await engine({ platform: 'wordpress' })
+  try {
+    live.failReadback = true
+    const dir = pushDir(
+      [
+        update(
+          1,
+          { post_title: 'Once', post_status: 'publish' },
+          {},
+          {
+            kind: 'post',
+            op: 'create',
+            creates: 'post:1'
+          }
+        )
+      ],
+      'wordpress'
+    )
+    assert.equal((await apply(live, dir)).answer.written.length, 1)
+    assert.equal((await apply(live, dir)).answer.written.length, 1)
+    assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 1)
+    delete live.refuse['content.get']
+    live.failReadback = false
+    assert.equal((await undo(live, dir)).answer.restored.length, 1)
+  } finally {
+    await live.close()
+  }
+})
+
+test('an ACK recovers its original preimage after a cut before the item journal', async () => {
+  const live = await engine({
+    platform: 'wordpress',
+    records: { post: { 1: { id: '1', post_title: 'Before' } } }
+  })
+  try {
+    const dir = pushDir(
+      [update(1, { post_title: 'After' }, { post_title: 'Before' }, { kind: 'post' })],
+      'wordpress'
+    )
+    assert.equal((await apply(live, dir)).answer.written.length, 1)
+    for (const name of ['journal.jsonl', 'before.json', 'written.json']) rmSync(join(dir, name))
+    assert.equal((await apply(live, dir)).answer.written.length, 1)
+    assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 1)
+    assert.equal((await undo(live, dir)).answer.restored.length, 1)
+    assert.equal(live.records.post[1].post_title, 'Before')
+  } finally {
+    await live.close()
+  }
+})
+
+test('two Apply processes cannot mutate the same push concurrently', async () => {
+  const live = await engine({ platform: 'wordpress' })
+  try {
+    live.slow = 400
+    const dir = pushDir([update(1, { post_title: 'Once' }, {}, { kind: 'post', op: 'create' })], 'wordpress')
+    const answers = await Promise.all([apply(live, dir), apply(live, dir)])
+    assert.equal(answers.filter((r) => r.answer.code === 'PUSH_BUSY').length, 1)
+    assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 1)
+  } finally {
+    await live.close()
+  }
+})
+
+test('two distinct creates with identical fields retain distinct live IDs', async () => {
+  const live = await engine({ platform: 'wordpress' })
+  try {
+    const dir = pushDir(
+      [1, 2].map((id) =>
+        update(
+          id,
+          { post_title: 'Same' },
+          {},
+          {
+            kind: 'post',
+            op: 'create',
+            creates: `post:${id}`
+          }
+        )
+      ),
+      'wordpress'
+    )
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.written.length, 2)
+    assert.notEqual(answer.created['post:1'], answer.created['post:2'])
+    assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 2)
+  } finally {
+    await live.close()
+  }
+})
+
+test('a batch with incomplete rollback is never sent again after Apply restarts', async () => {
+  const live = await engine({ records: { article: { 1: article(1) } } })
+  try {
+    live.refuse['content.batch'] = {
+      error: 'batch_failed',
+      message: 'some writes stay on the site; could not be taken back'
+    }
+    const dir = pushDir([update(1, { title: 'After' }, { title: 'Article 1' })])
+    await apply(live, dir)
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.failed[0].error, 'WRITE_OUTCOME_UNKNOWN')
+    assert.equal(live.calls.filter((c) => c.action === 'content.batch').length, 1)
+    assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 0)
+  } finally {
+    await live.close()
+  }
+})
+
+test('a worker killed after create cannot resend that create when Apply restarts', async () => {
+  const live = await engine({ platform: 'wordpress' })
+  let child
+  try {
+    live.holdAnswer = 'content.update'
+    const dir = pushDir([update(1, { post_title: 'Once' }, {}, { kind: 'post', op: 'create' })], 'wordpress')
+    child = spawn('node', [WRITE, 'apply', dir, dir], {
+      env: { ...process.env, TRACY_SYNC_ENDPOINT: live.endpoint, TRACY_SYNC_TOKEN: TOKEN },
+      stdio: 'ignore'
+    })
+    for (let i = 0; i < 500 && !live.held; i++) await new Promise((resolve) => setTimeout(resolve, 10))
+    assert.equal(live.held, true)
+    const closed = new Promise((resolve) => child.once('close', resolve))
+    child.kill('SIGKILL')
+    await closed
+    live.heldResponse.destroy()
+    live.holdAnswer = null
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.failed[0].error, 'WRITE_OUTCOME_UNKNOWN')
+    assert.equal(Object.keys(live.records.post).length, 1)
+    assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 1)
+  } finally {
+    child?.kill('SIGKILL')
+    live.heldResponse?.destroy()
     await live.close()
   }
 })
