@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-24-wo-demo-category-rename-on-archive",
+  "kind": "fix",
+  "title": "A template category shown on posts is renamed once on its archive; one no text replace can rename is reported on the first check and never keeps sweep rounds going",
+  "pr": 24,
+  "area": "wo-demo/residue-sweep",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Plan a sweep (planSweep) for a WordPress site whose residue shows the template category 'Restaurant News' on two post pages, with the category's archive in the inventory.",
+    "S2: Plan the same residue on Joomla, and on WordPress with the category linked off the site."
+  ],
+  "expect": [
+    "S1: exactly one rename call for the category, on its own archive route; no call on the post pages.",
+    "S2: no call; the category is listed unresolved and is not counted in the plan's `left`."
+  ],
+  "selectors": {
+    "file": "apps/tracy-web/src/opportunities-build/residue-sweep.js",
+    "exports": "planSweep"
+  },
+  "evidence": "Dev 27/10/2026: a WordPress ja-diner demo check ran six sweep rounds in about an hour, planning the same category renames on post pages each round, and ended pass:false with four template category names still shown",
+  "fence": "Category and tag rename planning in the residue sweep",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=template category",
+      "apps/tracy-web/test/wo-residue-sweep.test.mjs"
+    ],
+    "tests": [
+      "dev 27/10/2026: a template category shown on posts is renamed once, on its own archive, never per post page",
+      "a template category no text replace can rename is reported on the first check that sees it, never planned, never in `left`"
+    ]
+  }
+}

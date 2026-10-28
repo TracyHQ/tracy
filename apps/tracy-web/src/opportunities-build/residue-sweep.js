@@ -933,8 +933,9 @@ const TERM_PLATFORMS = new Set(['wordpress', 'joomla', 'emdash'])
  *   theme's type when there is none (`demo-qa.js`). `design`: the template pictures the QA passed as the theme's
  *   design (`no-demo-pictures` `unresolved`), reported by name, never written. `contact`: the research's phone,
  *   email, website and address, which a template's own contact fact takes (`contactFactOf`). `checksLeft`: the
- *   counted checks left after this one; while any remain, prose is left for the agent (`isProse`).
- * @returns {{calls: Array<{action: string, params: Record<string, any>}>, unresolved: Array<Record<string, any>>, left: number, shown: string[]}}
+ *   counted checks left after this one; while any remain, prose is left for the agent (`isProse`). `renamedBefore`:
+ *   the template category names an earlier sweep round of this counted check sent a rename for (`renamed`).
+ * @returns {{calls: Array<{action: string, params: Record<string, any>}>, unresolved: Array<Record<string, any>>, renamed: string[], left: number, shown: string[]}}
  */
 export function planSweep(
   residue,
@@ -953,6 +954,7 @@ export function planSweep(
     design = [],
     categories = [],
     topicNames = [],
+    renamedBefore = [],
     leadLine = null,
     postFacts = [],
     postDrafts = [],
@@ -1759,10 +1761,33 @@ export function planSweep(
   const free = names.filter((n) => !kept.has(n))
   const renamed = new Map()
   const onPage = new Set()
+  // A TERM'S NAME IS WRITTEN ON ITS OWN ARCHIVE, AND ONLY ON WORDPRESS (dev 27/10/2026): ja-diner's four template
+  // categories were planned on the post pages that show them, six rounds in a row, and stayed. The replace job reads a
+  // term only where the page names its id — WordPress prints it on the category's or tag's own archive (`<body class=
+  // "category-<id>">`, `replace-wordpress.mjs` `archiveOf`); a post's category link is a road to that page, never a
+  // write. On Joomla a category title has no content slot and on EmDash a taxonomy label is not writable by a replace:
+  // no text replace clears them, so they are reported unresolved on the first check, never planned, never in `left`.
+  // A rename already sent in an earlier round of this counted check (`renamedBefore`) whose name the page still shows
+  // did not take: it is reported the same way rather than planned again.
+  const tried = new Set(renamedBefore)
   for (const c of named) {
     const { was } = c
-    if (names.includes(was) || onPage.has(`${c.page}\u0000${was}`)) continue
-    onPage.add(`${c.page}\u0000${was}`)
+    const archive = typeof c.category === 'string' && c.category.startsWith('/') ? c.category : null
+    const path = archive ?? c.page
+    if (names.includes(was) || onPage.has(`${path}\u0000${was}`)) continue
+    onPage.add(`${path}\u0000${was}`)
+    const cannot =
+      platform !== 'wordpress'
+        ? `a ${platform} category or tag name is not words a text replace can write: rename it through its own door`
+        : !archive
+          ? 'the page links this category to no page of the site, and a term is renamed only on its own archive'
+          : tried.has(was)
+            ? "renamed on its own archive in an earlier round, the page still shows the template's name"
+            : null
+    if (cannot) {
+      unresolved.push({ ...c, field: 'category', why: cannot })
+      continue
+    }
     if (!renamed.has(was)) renamed.set(was, free[renamed.size] ?? null)
     const to = renamed.get(was)
     if (!to) {
@@ -1775,16 +1800,19 @@ export function planSweep(
     }
     lanes.term.push({
       action: 'content.replace',
-      params: { find: was, replace: to, path: c.page, all: 'page' }
+      params: { find: was, replace: to, path, all: 'page' }
     })
   }
   const firstOf = (e) => (Array.isArray(e) ? e[0] : e)
   for (const lane of [lanes.price, lanes.dish, lanes.title, lanes.passage])
     lane.sort((a, b) => firstOf(b).params.find.length - firstOf(a).params.find.length)
   const asked = Object.values(lanes).flat(2)
+  const calls = fairShare(lanes, SWEEP_MAX_CALLS)
   return {
-    calls: fairShare(lanes, SWEEP_MAX_CALLS),
+    calls,
     unresolved,
+    // The template category names this round sends a rename for: one that still shows next round did not take.
+    renamed: lanes.term.filter((c) => calls.includes(c)).map((c) => c.params.find),
     // The page leads this read left with no sourced line: they say the placeholder.
     thinLeads,
     // Every call this read asks for, before the cap: what a round must make smaller (`client-demo.js` `settle`).

@@ -326,7 +326,10 @@ test('interleaved jobs are kept apart; a file in two shards is refused', () => {
 })
 
 const SHA = 'a'.repeat(40)
-const REPO = 'TracyHQ/tch'
+// The repository `run` reads by default: the runner's own (`GITHUB_REPOSITORY`) in Actions, TracyHQ/tch elsewhere.
+const REPO = CI_REPOSITORY
+const swapCase = (s: string): string =>
+  [...s].map((c) => (c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase())).join('')
 interface RunLike {
   id: number
   run_attempt: number
@@ -371,7 +374,7 @@ const goodJobs = (extra: object = {}) => jobsOf(RUN, extra)
 test('only a green Linux pull-request run into develop is eligible', () => {
   assert.equal(refusal(RUN, { pulls: PULLS, jobs: goodJobs() }, 2, REPO), null)
   // Repository names compare without case, as GitHub does.
-  assert.equal(refusal(RUN, { pulls: PULLS, jobs: goodJobs() }, 2, 'tracyhq/TCH'), null)
+  assert.equal(refusal(RUN, { pulls: PULLS, jobs: goodJobs() }, 2, swapCase(REPO)), null)
   const cases: [string, unknown, unknown, unknown, RegExp][] = [
     ['a push', goodRun(1, { event: 'push' }), PULLS, goodJobs(), /event is push/],
     ['the nightly', goodRun(1, { event: 'schedule' }), PULLS, goodJobs(), /event is schedule/],
@@ -860,7 +863,7 @@ test('refresh: eligible runs only, a written table that then verifies; --check-c
     /14: pull request #7 base is main/,
     /15: its log has no tracy-test-timing line/,
     /16: .*linux runner/,
-    /18: no pull request of its branch in TracyHQ\/tch holds its commit/,
+    new RegExp(`18: no pull request of its branch in ${REPO} holds its commit`),
     /19: job .* belongs to another run, attempt or commit/,
     /20: the reporter said it failed/
   ]) {

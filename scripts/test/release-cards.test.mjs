@@ -32,16 +32,35 @@ import { validateDesignInspiration } from '../../apps/tracy-web/src/lib/tracy-se
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const CARD = 'tracy_design_inspiration.json'
-// Release dossiers live in `tasks/`, which the public export leaves out.
-const NO_TASKS = existsSync(path.join(ROOT, 'tasks')) ? false : 'tasks/ is internal and not in this tree'
+// Release dossiers live in `tasks/`, which the public export leaves out. Judged by the dossiers, not by the folder:
+// a stray note under `tasks/` is not a release.
+const NO_TASKS = holdsReleases(ROOT) ? false : 'tasks/ release dossiers are internal and not in this tree'
+
+/**
+ * Whether `<root>/tasks/*` holds anything named `release`, whatever its type. lstat, not existsSync: a dangling link
+ * or a file in a release's place is a malformed dossier the checks must report, not a reason to skip them.
+ */
+export function holdsReleases(root) {
+  const tasks = path.join(root, 'tasks')
+  if (!existsSync(tasks)) return false
+  // No dirent type filter: a task folder that is a link counts like a real one; `<file>/release` throws ENOTDIR.
+  return readdirSync(tasks).some((task) => {
+    try {
+      lstatSync(path.join(tasks, task, 'release'))
+      return true
+    } catch {
+      return false
+    }
+  })
+}
 
 /** The problems of every release card under `<root>/tasks`, each named by its file; `cards` says how many were read. */
 export function checkCards(root) {
   const problems = []
   let cards = 0
   const tasks = path.join(root, 'tasks')
+  // The same entries `holdsReleases` sees: a linked task folder is walked, a file has no `release` under it.
   for (const entry of readdirSync(tasks, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue
     const release = path.join(tasks, entry.name, 'release')
     let kind
     try {
@@ -177,6 +196,44 @@ test('an empty tree is not a pass: no release means no cards read', () => {
   try {
     mkdirSync(path.join(root, 'tasks'))
     assert.deepEqual(checkCards(root), { problems: [], cards: 0 })
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('a malformed release still switches the repository checks on: a dangling link is a release to report', () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'release-cards-'))
+  try {
+    mkdirSync(path.join(root, 'tasks', 'notes-only'), { recursive: true })
+    writeFileSync(path.join(root, 'tasks', 'stray-note.md'), '# not a release\n')
+    assert.equal(holdsReleases(root), false, 'a note and a folder without release are not releases')
+    mkdirSync(path.join(root, 'tasks', 'dangling'))
+    symlinkSync(path.join(root, 'nowhere'), path.join(root, 'tasks', 'dangling', 'release'))
+    assert.equal(holdsReleases(root), true)
+    assert.deepEqual(checkCards(root).problems, ['tasks/dangling/release is not a directory'])
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('no tasks/ at all holds no release', () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'release-cards-'))
+  try {
+    assert.equal(holdsReleases(root), false)
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('a task folder that is a link is walked like a real one: its release switches the checks on and is read', () => {
+  const root = scratch({ real: JSON.stringify(goodCard()) })
+  try {
+    mkdirSync(path.join(root, 'elsewhere', 'release'), { recursive: true })
+    writeFileSync(path.join(root, 'elsewhere', 'release', CARD), JSON.stringify(goodCard()))
+    rmSync(path.join(root, 'tasks', 'real'), { recursive: true })
+    symlinkSync(path.join(root, 'elsewhere'), path.join(root, 'tasks', 'linked'))
+    assert.equal(holdsReleases(root), true)
+    assert.deepEqual(checkCards(root), { problems: [], cards: 1 })
   } finally {
     rmSync(root, { recursive: true, force: true })
   }

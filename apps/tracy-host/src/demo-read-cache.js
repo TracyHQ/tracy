@@ -42,3 +42,31 @@ export class DemoReadCache {
       this.drop(this.entries.keys().next().value)
   }
 }
+
+/**
+ * 🔒 A KEPT READ IS NEVER THE EVIDENCE FOR A FINDING (review 27/10/2026): a page's fingerprint is its document as
+ * loaded, before the walk that scrolls lazy content in (`readDemoPage`), so a write that changed only what loads on
+ * scroll (a category label, a card list) left the fingerprint as it was and the old read, with its old residue, was
+ * kept. Every page a failing check or the residue ledger names is read in full on the next check: these are the pages
+ * a sweep writes and the ones whose words a failure rests on. A page with no finding may keep its read; a failure that
+ * names no page is confirmed by a full check before it counts (tracy-web `client-demo.js` `measure`).
+ * @param {{checks?: Array<Record<string, any>>, residue?: unknown} | null | undefined} result - `runDemoQa`'s
+ * @returns {Set<string>} the pages, by the path they were read at
+ */
+export function pagesWithFindings(result) {
+  const pages = new Set()
+  /** @param {unknown} value @param {number} depth */
+  const walk = (value, depth) => {
+    if (depth > 8 || value === null || typeof value !== 'object') return
+    if (Array.isArray(value)) {
+      for (const item of value) walk(item, depth + 1)
+      return
+    }
+    const page = /** @type {Record<string, unknown>} */ (value).page
+    if (typeof page === 'string') pages.add(page)
+    for (const item of Object.values(value)) walk(item, depth + 1)
+  }
+  for (const check of result?.checks ?? []) if (check && check.pass !== true) walk(check, 0)
+  walk(result?.residue, 0)
+  return pages
+}

@@ -1333,7 +1333,7 @@
     "src/lib/display-locale.ts": "sha256:a2366fb935787f8d54f7df36e22e5bd3969d4bf50c96155ef02ff8ef516124a6",
     "src/lib/ds-slot.ts": "sha256:abb05ee8286be80098b7a48902eb18c979de6c2689afa5784460847916ef35f7",
     "src/lib/font-subsets.mjs": "sha256:736e34fffe763d32ed64fbaf3892ef0a973f49c66d7534d3e3850d948552d37a",
-    "src/lib/form-embed-words.ts": "sha256:3e4125c2c21dda7ce8dabf9cced439e70112c498014904da07a6266708d372c5",
+    "src/lib/form-embed-words.ts": "sha256:0f341c8e6aea0a904c3a60eb1f5644dc51edf5dbbdc79512a8249fbc82ec3a66",
     "src/lib/hreflang-plugin.ts": "sha256:24284c2861f5dbc8a61d0d308e2c215fbf34d7c9cf401e22424ed7904b8ed26e",
     "src/lib/hreflang.ts": "sha256:259fdd499937508d8f43b963e80132dc7570171128ac3b1839b6d02ab28cc3aa",
     "src/lib/i18n.ts": "sha256:88324cf24a73a748800d10606fd0d5e7086b523d7d385745831800d6efeab5fe",

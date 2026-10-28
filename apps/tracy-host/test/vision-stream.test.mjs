@@ -230,8 +230,17 @@ test('Node HTTP adapter propagates a disconnected slow consumer back to generato
   const result = await fetch(`http://127.0.0.1:${server.address().port}`)
   const reader = result.body.getReader()
   await reader.read()
-  await new Promise((resolve) => setTimeout(resolve, 100))
-  assert.ok(produced < 40, `socket/adapter buffering must be bounded: ${produced} tiles`)
+  // Loopback socket buffers absorb several MiB before backpressure reaches the generator, and Linux
+  // grows them while the stream runs, so the plateau is machine-dependent: wait for it, then hold it.
+  let settled = -1
+  let steady = 0
+  for (let attempt = 0; attempt < 40 && steady < 6; attempt++) {
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    steady = produced === settled ? steady + 1 : 0
+    settled = produced
+  }
+  assert.equal(steady, 6, `production must stop while the consumer does not read: ${produced} tiles`)
+  assert.ok(produced < 100 && !cleaned, `socket/adapter buffering must be bounded: ${produced} tiles`)
   await reader.cancel()
   for (let attempt = 0; attempt < 50 && !cleaned; attempt++)
     await new Promise((resolve) => setTimeout(resolve, 20))

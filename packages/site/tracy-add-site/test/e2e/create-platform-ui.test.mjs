@@ -770,8 +770,9 @@ test('bare entry starts with Adding, choice cards advance, and Back keeps the pl
     assert.equal(await page.locator('[data-wizard-continue]').count(), 0)
     await page.getByText('Create a new site', { exact: true }).click()
     assert.equal(await currentStep(page), 'platform')
+    // A platform card is a choice card too: the press itself moves on, no Continue needed.
     await page.getByRole('button', { name: 'WordPress', exact: true }).click()
-    await page.locator('[data-wizard-continue]').click()
+    await page.locator('[data-wizard-current="design"]').waitFor()
     assert.equal(await currentStep(page), 'design')
     await page.locator('[data-wizard-back]').click()
     assert.equal(await selected(page), 'WordPress')
@@ -810,8 +811,9 @@ test('a template entry lands on address and editing Review returns there directl
     assert.equal(await currentStep(page), 'review')
     assert.match(await page.locator('[data-wizard-review-row="address"]').innerText(), /edited-address/)
     await page.locator('[data-wizard-review-row="platform"]').getByRole('button').click()
+    // The platform card advances by itself, and from a Review edit that is straight back to Review.
     await page.getByRole('button', { name: 'Joomla', exact: true }).click()
-    await page.locator('[data-wizard-continue]').click()
+    await page.locator('[data-wizard-current="review"]').waitFor()
     assert.equal(await currentStep(page), 'review')
     assert.match(await page.locator('[data-wizard-review-row="platform"]').innerText(), /Joomla/)
     assert.equal(await page.evaluate(() => window.__harness.posts.length), 0)
@@ -928,7 +930,10 @@ test('Open preview stays in the wizard, frames the demo and Use selects and clos
     assert.equal(page.context().pages().length, 1)
     await popup.getByRole('button', { name: 'Use Tracy Business', exact: true }).click()
     await popup.waitFor({ state: 'detached' })
-    assert.equal(await currentStep(page), 'design')
+    // Use confirms the design and moves on once its support is known (`confirmedDesign` in wizard.tsx);
+    // back on Design, it is the pick.
+    await page.locator('[data-wizard-current="address"]').waitFor()
+    await goToStep(page, 'design')
     assert.equal(await card.getAttribute('aria-pressed'), 'true')
   })
 })
@@ -975,7 +980,7 @@ test('a template whose demo has no dark mode shows no Light | Dark switch', asyn
   })
 })
 
-test('preview pager walks only the filtered designs and selection stays on step three', async () => {
+test('preview pager walks only the filtered designs and Use selects and moves on to the address', async () => {
   await withPage('start=plus', async (page) => {
     await formReady(page)
     const gallery = page.locator('[data-start-template-gallery]')
@@ -991,7 +996,10 @@ test('preview pager walks only the filtered designs and selection stays on step 
     assert.equal(await popup.getAttribute('data-start-template-preview'), 'tracy')
     await popup.getByRole('button', { name: 'Use Tracy Base', exact: true }).click()
     await popup.waitFor({ state: 'detached' })
-    assert.equal(await currentStep(page), 'design')
+    // Use confirms the design and moves on once its support is known (`confirmedDesign` in wizard.tsx);
+    // back on Design, it is the pick.
+    await page.locator('[data-wizard-current="address"]').waitFor()
+    await goToStep(page, 'design')
     assert.equal(await card.getAttribute('aria-pressed'), 'true')
     assert.deepEqual(await create(page, 'draft-selection'), {
       label: 'draft-selection',

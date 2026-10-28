@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { DemoReadCache } from '../src/demo-read-cache.js'
+import { DemoReadCache, pagesWithFindings } from '../src/demo-read-cache.js'
 
 test('QA cache is bounded by bytes and entries and evicts least recently used reads', () => {
   const cache = new DemoReadCache({ maxBytes: 400, maxEntries: 2 })
@@ -32,6 +32,28 @@ test('QA cache expires reads and retains no screenshot or base64 payload', () =>
   time = 10
   assert.equal(cache.get('a'), null)
   assert.equal(cache.bytes, 0)
+})
+
+// Review 27/10/2026: a sweep renamed a category a post page lists below the fold; the page's document as loaded was the
+// same, its old read was kept, and the old label failed a check a full read passes.
+test('every page a failing check or the residue ledger names is read in full next time; a passing check keeps none out', () => {
+  const pages = pagesWithFindings({
+    checks: [
+      { id: 'pages-load', pass: true, detail: [{ page: '/fine/' }] },
+      {
+        id: 'no-demo-words',
+        pass: false,
+        detail: [{ page: '/blog/a-post/', words: 'restaurant news' }],
+        categories: [{ page: '/blog/b-post/', category: '/category/restaurant-news/' }]
+      },
+      { id: 'no-demo-pictures', pass: false, pictures: [{ where: { page: '/menu/' } }] },
+      { id: 'collected-used', pass: false, measured: 'the review is not on the site' }
+    ],
+    residue: { items: [{ page: '/about/', field: 'dish', text: 'Smoked Venison' }] }
+  })
+  assert.deepEqual([...pages].sort(), ['/about/', '/blog/a-post/', '/blog/b-post/', '/menu/'])
+  assert.deepEqual([...pagesWithFindings({ checks: [{ id: 'pages-load', pass: true }] })], [])
+  assert.deepEqual([...pagesWithFindings(null)], [])
 })
 
 test('host QA serializes different sites so decoded page images do not multiply across requests', async () => {

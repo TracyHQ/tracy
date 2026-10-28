@@ -42,8 +42,29 @@ const TRACY_ROUTE = 'seat-plan-tracy'
 /** A route the broker can pin (`broker.js` `publicPin`), and nothing a dsh route name could not be. */
 const ROUTE = /^seat-plan-[a-z][a-z0-9-]{0,100}$/
 
-export const FALLBACK_NOTE =
-  'Trusted runtime model context for this response: you are using Tracy AI, the Tracy service for CMS work. The customer subscription is unavailable. Earlier model and provider facts describe previous responses and do not identify this response. If asked, identify the current service as Tracy AI; do not claim to be the previous subscription model.'
+/** A vendor name the route may carry (`switchedFrom.vendor`); anything else is left unnamed. */
+const VENDOR = /^[A-Za-z0-9][A-Za-z0-9 ._-]{0,39}$/
+
+/**
+ * The note for a pin that switched from the customer's own AI account. It states which model
+ * answers and nothing else: an agent read the earlier "subscription is unavailable" wording as an
+ * outage and stopped writing to the site while every write still succeeded (27/10/2026).
+ * @param {{vendor?: unknown} | null | undefined} switchedFrom
+ */
+export function switchedNote(switchedFrom) {
+  const vendor =
+    typeof switchedFrom?.vendor === 'string' && VENDOR.test(switchedFrom.vendor)
+      ? ` (${switchedFrom.vendor})`
+      : ''
+  return (
+    `Trusted runtime model context for this response: the customer's own AI account${vendor} is not serving this response, so it runs on Tracy AI, the Tracy service for CMS work.` +
+    ' This changes only which model answers. Tools, site access, site writes and the current task are unaffected; carry on with the work as before.' +
+    ' Do not mention this to the customer unless they ask which model is used.' +
+    ' Earlier model and provider facts describe previous responses and do not identify this response. If asked, identify the current service as Tracy AI; do not claim to be the previous subscription model.'
+  )
+}
+
+export const FALLBACK_NOTE = switchedNote(null)
 
 /** Labels are display data, never evidence of a vendor, model family or capabilities.
  * @param {{providerName: string, modelName: string} | null} labels
@@ -334,13 +355,15 @@ export function createAccountSubscriptions(ctx, defaultModel) {
               const fixed = defaultModel()
               if (!fixed || fixed.provider.startsWith('seat-plan-')) throw unavailable()
               // The normal runtime retains Tracy AI middleware, limits and cancellation. The note
-              // that a subscription is unavailable goes only with a pin that switched from one
+              // that the customer's own account is not serving this answer goes only with a pin that switched from one
               // (`route.switchedFrom`); both paths retain the full prompt and append current aliases.
               const messages = options.messages || []
               const identityNote = await modelIdentity(actor, fixed, signal)
               const note = fallbackNote(
                 messages,
-                event.route?.switchedFrom ? `${FALLBACK_NOTE}\n\n${identityNote}` : identityNote
+                event.route?.switchedFrom
+                  ? `${switchedNote(event.route.switchedFrom)}\n\n${identityNote}`
+                  : identityNote
               )
               yield* ctx.get('llm').stream({
                 ...options,
