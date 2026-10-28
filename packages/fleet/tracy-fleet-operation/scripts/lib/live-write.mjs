@@ -607,6 +607,7 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         liveId: address.id,
         key: item.key ?? null,
         before: current,
+        replaces: item.replaces ?? [],
         written: fields,
         restore: item.restore ?? {},
         trash: item.trash ?? null
@@ -635,6 +636,7 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         liveId,
         key: item.key ?? null,
         before: current,
+        replaces: item.replaces ?? [],
         written: fields,
         after,
         restore: item.restore ?? {},
@@ -977,6 +979,7 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         liveId: address.id,
         key: item.key ?? null,
         before: current,
+        replaces: item.replaces ?? [],
         written: fields,
         after,
         restore: item.restore ?? {},
@@ -1440,6 +1443,15 @@ async function undo(pushDir) {
   for (const out of order) {
     undoItemId = out.id
     const snap = before.items[out.id]
+    if (
+      order.some(
+        (other) =>
+          before.items[other.id]?.replaces?.includes(out.id) && !restored.some((r) => r.id === other.id)
+      )
+    ) {
+      kept.push({ ...out, reason: 'depends-on-failed' })
+      continue
+    }
     if (!snap) {
       kept.push({ ...out, reason: 'nothing-kept' })
       continue
@@ -1535,13 +1547,21 @@ async function undo(pushDir) {
     const fields =
       snap.op === 'delete'
         ? snap.trash
-          ? [snap.trash[0]]
+          ? [
+              snap.trash[0],
+              ...(platform === 'wordpress' && snap.kind === 'post' && snap.before?.post_name
+                ? ['post_name']
+                : [])
+            ]
           : []
         : Object.keys(snap.written ?? {}).filter((f) => !(snap.op === 'create' && f === 'parent_id'))
     const moved = []
     for (const field of fields) {
       if (field === 'move_after') continue
-      const want = snap.op === 'delete' ? snap.trash?.[1] : (left?.[field] ?? snap.written?.[field])
+      const want =
+        snap.op === 'delete' && field === snap.trash?.[0]
+          ? snap.trash[1]
+          : (left?.[field] ?? snap.written?.[field])
       const have = now?.[field]
       if (field === 'categories' || field === 'tags') {
         const read = field === 'categories' ? 'post_category' : 'tags_input'
@@ -1574,7 +1594,12 @@ async function undo(pushDir) {
         await ask('content.update', {
           apply_id: applyId,
           ...params,
-          fields: { [column]: snap.before?.[column] }
+          fields: {
+            [column]: snap.before?.[column],
+            ...(platform === 'wordpress' && snap.kind === 'post' && snap.before?.post_name
+              ? { post_name: snap.before.post_name }
+              : {})
+          }
         })
       } else if (snap.op === 'move') {
         if (!snap.restore?.parent_id) {

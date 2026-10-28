@@ -248,6 +248,8 @@ function engine({
         else {
           const [column, value] = trash(params.kind)
           row[column] = String(value)
+          if (platform === 'wordpress' && params.kind === 'post' && row.post_name)
+            row.post_name += '__trashed'
         }
         return answer(200, { ok: true, kind: params.kind, id: params.id, trashed: true })
       }
@@ -1919,6 +1921,118 @@ test('a worker killed after create cannot resend that create when Apply restarts
   } finally {
     child?.kill('SIGKILL')
     live.heldResponse?.destroy()
+    await live.close()
+  }
+})
+
+test('a replacement waits for the confirmed delete, and Undo restores the exact original slug', async () => {
+  for (const mode of ['confirmed', 'unconfirmed', 'conflict', 'edited-replacement', 'create-failed']) {
+    const original = {
+      id: '10',
+      post_title: 'Old about',
+      post_name: 'about',
+      post_status: 'publish',
+      post_type: 'page'
+    }
+    const live = await engine({ platform: 'wordpress', records: { post: { 10: { ...original } } } })
+    const removed = update(10, {}, original, {
+      id: 'post:10',
+      kind: 'post',
+      spec: 'post',
+      op: 'delete',
+      trash: ['post_status', 'trash']
+    })
+    const created = update(
+      20,
+      { post_title: 'New about', post_name: 'about', post_status: 'publish', post_type: 'page' },
+      {},
+      {
+        id: 'post:new:20',
+        kind: 'post',
+        spec: 'post',
+        op: 'create',
+        liveId: null,
+        creates: 'posts:20',
+        dependsOn: [removed.id],
+        replaces: [removed.id]
+      }
+    )
+    const dir = pushDir([removed, created], 'wordpress')
+    try {
+      if (mode === 'conflict') live.records.post[10].post_title = 'Customer title'
+      if (mode === 'create-failed') live.refuse['content.update'] = { error: 'invalid_params' }
+      const { answer } = await apply(live, dir, mode === 'unconfirmed' ? [] : ['--confirm-deletes'])
+      if (mode === 'unconfirmed' || mode === 'conflict') {
+        assert.equal(answer.written.length, 0, JSON.stringify(answer))
+        assert.equal(
+          live.calls.filter((c) => ['content.update', 'content.delete'].includes(c.action)).length,
+          0
+        )
+        continue
+      }
+      if (mode === 'create-failed') {
+        assert.equal(answer.written.length, 1, JSON.stringify(answer))
+        const back = (await undo(live, dir)).answer
+        assert.equal(back.restored.length, 1, JSON.stringify(back))
+        assert.equal(live.records.post[10].post_name, 'about')
+        continue
+      }
+      assert.equal(answer.written.length, 2, JSON.stringify(answer))
+      assert.deepEqual(
+        live.calls
+          .filter((c) => ['content.update', 'content.delete'].includes(c.action))
+          .map((c) => c.action),
+        ['content.delete', 'content.update']
+      )
+      const newId = answer.created['posts:20']
+      // WordPress appends __trashed when trashing a post; Undo must restore its original address.
+      live.records.post[10].post_name = 'about__trashed'
+      if (mode === 'edited-replacement') live.records.post[newId].post_title = 'Customer replacement'
+      if (mode === 'edited-original-slug') live.records.post[10].post_name = 'customer-parked'
+      const back = (await undo(live, dir)).answer
+      if (mode === 'edited-original-slug') {
+        assert.equal(live.records.post[10].post_name, 'customer-parked')
+        assert.equal(live.records.post[10].post_status, 'trash')
+        assert.ok(back.kept.some((i) => i.id === removed.id && i.fields.includes('post_name')))
+      } else if (mode === 'edited-replacement') {
+        assert.equal(live.records.post[10].post_status, 'trash')
+        assert.ok(
+          back.kept.some((i) => i.id === removed.id && i.reason === 'depends-on-failed'),
+          JSON.stringify(back)
+        )
+      } else {
+        assert.equal(back.restored.length, 2, JSON.stringify(back))
+        assert.equal(live.records.post[10].post_status, 'publish')
+        assert.equal(live.records.post[10].post_name, 'about')
+        assert.equal(live.records.post[newId].post_status, 'trash')
+      }
+    } finally {
+      await live.close()
+    }
+  }
+})
+
+test('a Joomla alias replacement held in preview never trashes the original or writes its dependents', async () => {
+  const live = await engine({ records: { article: { 1: article(1, { alias: 'about' }) } } })
+  try {
+    const conflict = { reason: 'changed-on-live', fields: ['alias'] }
+    const removed = update(1, {}, {}, { op: 'delete', trash: ['state', -2], conflict })
+    const created = update(
+      2,
+      { alias: 'about' },
+      {},
+      { op: 'create', creates: 'content:2', dependsOn: [removed.id], conflict }
+    )
+    const dependent = update(3, { introtext: 'new' }, {}, { op: 'create', dependsOn: [created.id] })
+    const { answer } = await apply(live, pushDir([removed, created, dependent]), ['--confirm-deletes'])
+    assert.equal(answer.written.length, 0)
+    assert.equal(live.records.article[1].state, '1')
+    assert.equal(
+      live.calls.filter((c) => ['content.batch', 'content.update', 'content.delete'].includes(c.action))
+        .length,
+      0
+    )
+  } finally {
     await live.close()
   }
 })
