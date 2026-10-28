@@ -739,6 +739,11 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   just created is not copied back to the copy twice. `pushed.json` is dropped when a sync run puts its read in place (`remember_read`).
 - **Retention:** `<private>/<label>/push/previews/<id>/` (changeset; swept after 24 hours), `<private>/<label>/push/<id>/`
   (`before.json` 0600 = the live values at write time + a re-read after writing, `journal.jsonl` to resume when cut off; 30 days).
+  Before each mutation, `requests.json` durably stores its item identity and preimage, then stores the engine ACK before
+  read-back. Resume recovers acknowledged writes and their Undo evidence without sending them again. A lost answer,
+  interrupted write or incomplete rollback is `WRITE_OUTCOME_UNKNOWN`: no automatic resend and dependent items stay held.
+  Only an explicit `writer_busy` refusal retries a mutation; transient reads still retry. Apply and Undo share an OS lock
+  per push directory; Undo keeps separate receipts in `undo-requests.json`. Receipts and snapshots are private (0600).
   **undo** is a reverse CAS: it restores "before" only where live still holds exactly the value the push left; the copy keeps Tracy's changes.
 - The web door, lease `push:<id>`, owner-only, switch `site-sync-to-live`, audit: on the tracy-web side.
 - Screen (25/10/2026): one flow of the Publish tab (`@tracy/core` `site-tabs/publish/PushStep.tsx`, Review › Send), opened from the Sync to live row of the ••• menu or by choosing "Send changes to your live site" in the tab; the old My Sites dialog was removed.

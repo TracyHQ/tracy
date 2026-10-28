@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-83-sync-write-receipts",
+  "kind": "fix",
+  "title": "Interrupted live writes never duplicate records and retain Undo preimages",
+  "pr": 83,
+  "area": "sync/live",
+  "cms": ["jo", "wp"],
+  "needs": ["python3"],
+  "flaky_model": false,
+  "steps": ["Run the live writer against the fault-injecting HTTP engine fixture."],
+  "expect": [
+    "Lost create responses and killed workers never resend an uncertain write.",
+    "Acknowledged creates survive read-back failure and restart with usable Undo evidence.",
+    "Identical create payloads retain distinct item identities; concurrent Apply processes share a lock.",
+    "Incomplete batch rollback stays uncertain; explicit writer-busy refusals remain retryable."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/live-write.test.mjs"
+    ],
+    "tests": [
+      "lost create response is uncertain and Apply never creates it again or starts its dependents",
+      "a failed read-back preserves the create ACK and Undo evidence without another create",
+      "an ACK recovers its original preimage after a cut before the item journal",
+      "two Apply processes cannot mutate the same push concurrently",
+      "two distinct creates with identical fields retain distinct live IDs",
+      "a batch with incomplete rollback is never sent again after Apply restarts",
+      "a worker killed after create cannot resend that create when Apply restarts"
+    ]
+  }
+}
