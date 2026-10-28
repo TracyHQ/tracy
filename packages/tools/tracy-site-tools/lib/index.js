@@ -33395,6 +33395,10 @@ var PRESETS = Object.freeze({
   shadow: [["settings", "shadow", "presets"], "shadow"]
 });
 var dig = (obj, at) => at.reduce((o, k) => o !== null && typeof o === "object" ? o[k] : void 0, obj);
+function themeJsonCssSets(json, token) {
+  const css = dig(json, ["styles", "css"]);
+  return typeof css === "string" && cssDeclarations(css).some((d) => d.name === token);
+}
 function themeJsonPath(json, token) {
   const preset = /^--wp--preset--(color|gradient|font-size|font-family|spacing|shadow)--(.+)$/.exec(token);
   if (preset !== null) {
@@ -33556,7 +33560,7 @@ async function lookSet({
   const onPage = req.scope === "element" && chrome ? null : pageClass;
   const unique = typeof info.unique === "string" && info.unique !== "" ? info.unique : null;
   const appends = [];
-  const append = (selector, decl, after, note, within3 = media, beat = [0, 0, 0], layer = null) => {
+  const append = (selector, decl, after, note, within3 = media, beat = [0, 0, 0], layer = null, late = false) => {
     const same = appends.find(
       (a) => a.selector === selector && a.note === note && a.media === within3 && a.layer === layer
     );
@@ -33564,7 +33568,8 @@ async function lookSet({
       same.decls.push(decl);
       same.after = Math.max(same.after, after);
       if (compareSpec(beat, same.beat) > 0) same.beat = beat;
-    } else appends.push({ selector, media: within3, decls: [decl], after, note, beat, layer });
+      same.late = same.late || late;
+    } else appends.push({ selector, media: within3, decls: [decl], after, note, beat, layer, late });
   };
   const tokens = [];
   const reach = [];
@@ -33742,7 +33747,9 @@ async function lookSet({
     return true;
   };
   const wpTokenRule = async (t) => {
-    if (t.sheet !== null && /global-styles-inline-css/.test(t.sheet))
+    let late = false;
+    if (t.sheet !== null && /global-styles-inline-css/.test(t.sheet)) {
+      let variable = false;
       for (const theme of wpThemes(info)) {
         const bytes3 = await io.read(`${webroot}/wp-content/themes/${theme}/theme.json`);
         if (bytes3 === null) continue;
@@ -33752,12 +33759,16 @@ async function lookSet({
         } catch {
           continue;
         }
+        if (themeJsonCssSets(json, t.token)) late = true;
+        if (variable) continue;
         const at = themeJsonPath(json, t.token);
         if (at === null) continue;
+        variable = true;
         for (const name2 of themeJsonSameValue(json, at.old, t.token))
           if (!sameValue.includes(name2)) sameValue.push(name2);
-        break;
       }
+      if (!variable) late = true;
+    }
     const fileSheet = editableSheet(platform, t.sheet);
     const bytes2 = fileSheet === null ? null : await io.read(`${webroot}${fileSheet}`);
     if (bytes2 !== null) {
@@ -33769,12 +33780,13 @@ async function lookSet({
         return {
           selectors: picked.decl.theme ? ":root" : picked.decl.selectors.join(", "),
           media: inMedia[0] ?? null,
-          important: picked.decl.important
+          important: picked.decl.important,
+          late
         };
       }
     }
     const where = parseBy(t.by);
-    return where === null || where.cut ? null : { selectors: where.selectors, media: where.media, important: false };
+    return where === null || where.cut ? null : { selectors: where.selectors, media: where.media, important: false, late };
   };
   const slotOwned = tokens.find((t) => t.sheet === DS_SLOT_SHEET);
   if (slotOwned !== void 0)
@@ -33801,7 +33813,9 @@ async function lookSet({
         posOf(t.sheet),
         `${t.token}, every page`,
         placed.media,
-        specificity(placed.selectors)
+        specificity(placed.selectors),
+        null,
+        placed.late
       );
       continue;
     }
@@ -33843,7 +33857,7 @@ async function lookSet({
     if (notPrinted !== null) return { ...refuse9(notPrinted.why), ...notPrinted.answer };
     const own = printed >= 0 ? printed : merged ? sheets.findIndex((sheet) => /global-styles-inline-css/.test(sheet)) : sheets.length;
     for (const a of appends)
-      if (a.after > own || merged && own >= 0 && a.after === own && compareSpec(a.beat, [0, 1, 0]) > 0)
+      if (a.after > own || merged && own >= 0 && a.after === own && (compareSpec(a.beat, [0, 1, 0]) > 0 || a.late))
         a.selector = beyond(a.selector, a.beat);
     const tail = appends.map((a) => ruleText(a)).join("\n");
     custom = {
