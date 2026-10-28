@@ -1,0 +1,1 @@
+{"id":"REG-PR-96-sync-delete-undo","verdict":"PASS","commit":"fcbdaf24e1feb55009f74ec7035efc99d28a8fbf","ran_at":"2026-10-28T18:18:12.584Z","evidence":"tests/regression/.runs/2026-10-28-fcbdaf24e/REG-PR-96-sync-delete-undo.log"}
