@@ -942,7 +942,7 @@ test(
       ]
     )
     assert.equal(
-      network.calls.some((c) => c.url.startsWith('https://fijitrips.example')),
+      network.calls.some((c) => new URL(c.url).hostname === 'fijitrips.example'),
       false,
       'never the live site'
     )
