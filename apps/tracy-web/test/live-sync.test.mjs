@@ -821,19 +821,27 @@ test(
         detail: 'the database kept changing (ng_content (2 rows); ng_weblinks (1 row))'
       })
     }
-    const net = network({
-      answers: {
-        'webroot-sync': { ok: false, code: 'LIVE_READ_FAILED', read: { ok: false, code: 'TOKEN_REFUSED' } }
-      }
-    })
-    await db.reset()
-    const { send, cookieFor } = harness(pool, net.fetchImpl)
-    await importedSite(pool)
-    const owner = await cookieFor('owner@x.y')
-    await send('POST', '/api/sites/shop.example/sync', owner)
-    const { sync } = await (await send('GET', '/api/sites/shop.example/sync', owner)).json()
-    assert.equal(sync.error, 'LIVE_READ_FAILED', 'any other failed read stays what it was')
-    assert.equal(sync.busy, null)
+    for (const code of [
+      'TOKEN_REFUSED',
+      'LIVE_PASSWORD_PROTECTED',
+      'LIVE_BLOCKED',
+      'LIVE_RATE_LIMITED',
+      'UNKNOWN_READ_FAILURE'
+    ]) {
+      const net = network({
+        answers: {
+          'webroot-sync': { ok: false, code: 'LIVE_READ_FAILED', read: { ok: false, code } }
+        }
+      })
+      await db.reset()
+      const { send, cookieFor } = harness(pool, net.fetchImpl)
+      await importedSite(pool)
+      const owner = await cookieFor('owner@x.y')
+      await send('POST', '/api/sites/shop.example/sync', owner)
+      const { sync } = await (await send('GET', '/api/sites/shop.example/sync', owner)).json()
+      assert.equal(sync.error, code === 'UNKNOWN_READ_FAILURE' ? 'LIVE_READ_FAILED' : code)
+      assert.equal(sync.busy, null)
+    }
   }
 )
 
