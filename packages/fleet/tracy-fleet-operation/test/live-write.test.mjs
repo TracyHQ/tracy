@@ -136,6 +136,10 @@ function engine({
         // `phpNotice`: a host that prints PHP's notices ahead of every answer (PHP 8.5, display_errors on)
         res.end((state.phpNotice ?? '') + JSON.stringify(value))
       }
+      if (state.failGetId === Number(params.id) && action === 'content.get')
+        return answer(403, { blocked: true })
+      if (state.blockWriteKind === params.kind && action === 'content.update')
+        return answer(403, { blocked: true })
       const refusal = state.refuse[action]
       if (refusal) {
         delete state.refuse[action]
@@ -1918,6 +1922,65 @@ test('a worker killed after create cannot resend that create when Apply restarts
   } finally {
     child?.kill('SIGKILL')
     live.heldResponse?.destroy()
+    await live.close()
+  }
+})
+
+test('a stopped parallel Apply drains acknowledged siblings and preserves a complete undoable partial result', async () => {
+  const live = await engine({
+    platform: 'wordpress',
+    records: {
+      post: {
+        1: wpPost(1),
+        2: wpPost(2),
+        3: wpPost(3),
+        4: wpPost(4),
+        5: wpPost(5)
+      }
+    }
+  })
+  try {
+    live.slow = 150
+    live.failGetId = 2
+    const dir = pushDir(
+      [1, 2, 3, 4, 5].map((id) => postItem(id)),
+      'wordpress'
+    )
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.ok, false)
+    assert.equal(answer.state, 'partial')
+    assert.deepEqual(
+      answer.written.map((w) => w.id),
+      ['post:1', 'post:3', 'post:4']
+    )
+    assert.equal(answer.written.length + answer.skipped.length + answer.failed.length, 5)
+    assert.deepEqual(JSON.parse(readFileSync(join(dir, 'written.json'), 'utf8')), answer)
+    assert.equal(live.records.post[5].post_title, 'Old 5', 'no pending writes start after failure')
+    live.failGetId = null
+    const back = await undo(live, dir)
+    assert.equal(back.answer.restored.length, 3)
+    for (const id of [1, 3, 4]) assert.equal(live.records.post[id].post_title, `Old ${id}`)
+  } finally {
+    await live.close()
+  }
+})
+
+test('a blocked batch retains earlier writes in the failed Apply answer and Undo', async () => {
+  const live = await engine({ records: { article: { 1: article(1), 2: article(2) } } })
+  try {
+    live.refuse['content.batch'] = 403
+    const dir = pushDir([
+      update(9, { title: 'Made', state: 1 }, {}, { op: 'create', creates: 'article:9' }),
+      update(1, { title: 'After' }, { title: 'Article 1' }),
+      update(2, { title: 'After 2' }, { title: 'Article 2' })
+    ])
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.ok, false)
+    assert.equal(answer.state, 'partial')
+    assert.equal(answer.written.length, 1)
+    assert.equal(answer.failed.length, 2)
+    assert.equal((await undo(live, dir)).answer.restored.length, 1)
+  } finally {
     await live.close()
   }
 })
