@@ -36,6 +36,7 @@ import {
   PROBE_MAX_HOPS,
   browserArgv,
   fetchArgv,
+  hostBrowserTarget,
   looksLikeMissingBinary,
   loopbackUrl,
   parseBrowser,
@@ -315,6 +316,77 @@ export function browserTargetForRoute(label, route, pathAndQuery, internalPort) 
   }
   const url = loopbackUrl(route.connectPort, pathAndQuery)
   return { url, origin: new URL(url).origin, container: route.container, resolverRule: '', via: '' }
+}
+
+/**
+ * @typedef {{ url: string, origin: string, container: string, resolverRule: string, via: string }} BrowserTarget
+ */
+
+/**
+ * The browser target to ask again when the browser was sent to EXACTLY this site's public origin: the
+ * second rule of D4 (the module header), applied to a redirect only the browser saw. Null when the
+ * address is anything else, when the target already was that origin (asking again would loop), or
+ * when the target's container port cannot be pinned.
+ *
+ * 🔒 WHY THE BROWSER NEEDS IT TOO. The static read sees a server redirect only on a hop that answers
+ * in time: a home page slower than one hop's budget ends the read as `slow` on the loopback route, and
+ * the browser, addressed at loopback, then meets the site's own `301 → https://<label>.<domain>/` and
+ * refused it. Reported 26/10/2026 on a fresh WordPress site: `page.look {path:"/"}` answered
+ * "/ left this site for https://<label>.<domain>/ in the browser" for its own home page, while
+ * /contact read fine. A JavaScript or `<meta refresh>` redirect to the public origin meets the same
+ * guard. The new target is the one `nextHop` follows: the public origin served from this container's
+ * loopback port, the public name resolving to nothing.
+ * @param {BrowserTarget} target - the target the browser was pointed at.
+ * @param {unknown} leftFor - the address the browser left for (`parseBrowser`'s `offsite` error).
+ * @param {string | null | undefined} publicOrigin - `publicOriginFor(…).origin`.
+ * @returns {BrowserTarget | null}
+ */
+export function publicRetarget(target, leftFor, publicOrigin) {
+  if (typeof publicOrigin !== 'string' || publicOrigin === '') return null
+  /** @type {URL} */
+  let to
+  /** @type {URL} */
+  let pub
+  try {
+    to = new URL(String(leftFor))
+    pub = new URL(publicOrigin)
+  } catch {
+    return null
+  }
+  if (to.origin !== pub.origin || target.origin === pub.origin) return null
+  const pinned = hostBrowserTarget(target)
+  if (pinned === null) return null
+  const connectPort = Number(pinned.via.slice('127.0.0.1:'.length))
+  return browserTargetForRoute(
+    '',
+    {
+      kind: 'public',
+      origin: pub.origin,
+      host: pub.host,
+      proto: pub.protocol === 'https:' ? 'https' : 'http',
+      connectPort,
+      container: target.container
+    },
+    to.pathname + to.search,
+    connectPort
+  )
+}
+
+/**
+ * Run the browser at `target`, and once more AS this site's public origin when it was sent there
+ * ({@link publicRetarget}). Every browser road goes through here, so none of them calls the site's
+ * own public address "off this site". Only the second run is answered; any other `OFFSITE` stays the
+ * refusal it was.
+ * @template {{ stdout: string }} R
+ * @param {{ target: BrowserTarget, publicOrigin?: string | null, launch: (t: BrowserTarget) => Promise<R> }} input
+ * @returns {Promise<{ res: R, target: BrowserTarget }>}
+ */
+export async function browseAsSite({ target, publicOrigin = null, launch }) {
+  const res = await launch(target)
+  const b = parseBrowser(res.stdout)
+  if (b.ok || b.kind !== 'offsite') return { res, target }
+  const again = publicRetarget(target, b.error, publicOrigin)
+  return again === null ? { res, target } : { res: await launch(again), target: again }
 }
 
 // ── What the read found ────────────────────────────────────────────────────────────────────────────
@@ -754,23 +826,29 @@ export async function fetchPageHtml(input) {
  * `port`; and 🔒 a `TRACY_BROWSER OK` line is a whole document ONLY with a clean exit (code 0, no
  * spawn error, no timeout) — a stdout past `maxBuffer` surfaces as `code: null` + `spawnError` with
  * the OK prefix still readable over half a page.
- * @param {{ run: Run, label: string, internalPort: number, route: PageRoute, pathAndQuery: string }} input
+ * @param {{ run: Run, label: string, internalPort: number, route: PageRoute, pathAndQuery: string,
+ *   publicOrigin?: string | null }} input
  * @returns {Promise<BrowserDom>}
  */
-export async function browserDom({ run, label, internalPort, route, pathAndQuery }) {
+export async function browserDom({ run, label, internalPort, route, pathAndQuery, publicOrigin = null }) {
   const t = browserTargetForRoute(label, route, pathAndQuery, internalPort)
   if (t === null) return { ok: false, kind: 'port', error: 'a port this site does not expose here' }
-  const res = await run({
-    argv: browserArgv({
-      container: t.container,
-      mode: 'dom',
-      url: t.url,
-      origin: t.origin,
-      resolverRule: t.resolverRule,
-      via: t.via
-    }),
-    timeoutMs: BROWSER_EXEC_MS,
-    maxBuffer: 16 * 1024 * 1024
+  const { res } = await browseAsSite({
+    target: t,
+    publicOrigin,
+    launch: (at) =>
+      run({
+        argv: browserArgv({
+          container: at.container,
+          mode: 'dom',
+          url: at.url,
+          origin: at.origin,
+          resolverRule: at.resolverRule,
+          via: at.via
+        }),
+        timeoutMs: BROWSER_EXEC_MS,
+        maxBuffer: 16 * 1024 * 1024
+      })
   })
   const b = parseBrowser(res.stdout)
   if (looksLikeMissingBinary(res) || (!b.ok && b.kind === 'no-browser'))
@@ -1676,7 +1754,13 @@ export async function pageText(input) {
   const dom =
     input.browserDom ??
     ((/** @type {{ route: PageRoute, pathAndQuery: string }} */ at) =>
-      browserDom({ run: input.run, label: input.label, internalPort: input.internalPort, ...at }))
+      browserDom({
+        run: input.run,
+        label: input.label,
+        internalPort: input.internalPort,
+        publicOrigin: input.publicOrigin ?? null,
+        ...at
+      }))
   /** @type {unknown[]} */
   const answers = []
   for (const [i, read] of reads.entries()) {
@@ -1852,11 +1936,11 @@ export const STYLE_NO_BROWSER = Object.freeze({
  * the exec finished cleanly.
  * @param {{ run: Run, target: { url: string, origin: string, container: string, resolverRule: string, via: string },
  *   req: { text?: string, selector?: string, nth: number, props: string[], viewport: 'desktop' | 'tablet' | 'mobile' },
- *   url: string, path: string, cap?: number }} input
+ *   url: string, path: string, cap?: number, publicOrigin?: string | null }} input
  * @returns {Promise<Record<string, unknown>>}
  */
-export async function styleLook({ run, target, req, url, path, cap }) {
-  const read = await styleRead({ run, target, req, path })
+export async function styleLook({ run, target, req, url, path, cap, publicOrigin = null }) {
+  const read = await styleRead({ run, target, req, path, publicOrigin })
   if (read.ok !== true) return read
   return styleAnswer(read.payload, { url, path, viewport: req.viewport, cap })
 }
@@ -1868,22 +1952,27 @@ export async function styleLook({ run, target, req, url, path, cap }) {
  * stylesheet and token from before it writes, and its new values from after.
  * @param {{ run: Run, target: { url: string, origin: string, container: string, resolverRule: string, via: string },
  *   req: { text?: string, selector?: string, nth: number, props: string[], viewport: 'desktop' | 'tablet' | 'mobile', set?: boolean },
- *   path: string }} input
+ *   path: string, publicOrigin?: string | null }} input
  * @returns {Promise<{ ok: true, payload: any } | Record<string, unknown>>}
  */
-export async function styleRead({ run, target, req, path }) {
-  const res = await run({
-    argv: browserArgv({
-      container: target.container,
-      mode: 'style',
-      url: target.url,
-      origin: target.origin,
-      file: JSON.stringify(req),
-      resolverRule: target.resolverRule,
-      via: target.via
-    }),
-    timeoutMs: BROWSER_EXEC_MS,
-    maxBuffer: 4 * 1024 * 1024
+export async function styleRead({ run, target, req, path, publicOrigin = null }) {
+  const { res } = await browseAsSite({
+    target,
+    publicOrigin,
+    launch: (at) =>
+      run({
+        argv: browserArgv({
+          container: at.container,
+          mode: 'style',
+          url: at.url,
+          origin: at.origin,
+          file: JSON.stringify(req),
+          resolverRule: at.resolverRule,
+          via: at.via
+        }),
+        timeoutMs: BROWSER_EXEC_MS,
+        maxBuffer: 4 * 1024 * 1024
+      })
   })
   const b = parseBrowser(res.stdout)
   if (looksLikeMissingBinary(res) || (!b.ok && b.kind === 'no-browser')) return { ...STYLE_NO_BROWSER }

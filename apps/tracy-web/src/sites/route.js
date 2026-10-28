@@ -358,6 +358,31 @@ const FLEET_COPY_BUDGETS_MS = Object.freeze([30_000, 60_000])
 /** The reasons worth a second try, and a retry by the agent. */
 const FLEET_COPY_TRANSIENT = new Set(['timeout', 'unreachable'])
 
+/**
+ * Every reason `pairFleetCopy` gives, the closed set a `site.edit` signal may name (`copy_reason`).
+ */
+const FLEET_COPY_WHYS = new Set([
+  'timeout',
+  'unreachable',
+  'unauthorized',
+  'not_json',
+  'refused',
+  'platform_mismatch',
+  'no_registered_component',
+  'no_copy_address'
+])
+
+/**
+ * How long a copy may stay "warming up" before the refusal stops saying a retry will help.
+ *
+ * 🔒 A COPY THAT HAS NOT ANSWERED FOR A DAY IS NOT WARMING UP (beta report, 26/10/2026). A re-imported
+ * Joomla site's copy failed verification on every write from 25/10 18:51 to 26/10 22:31, and each
+ * refusal told the agent to retry in a moment, so the customer was told the same for a day. Past this
+ * long without one verified call the refusal is no longer `transient`: the agent tells the customer
+ * the copy needs checking, and the `site.edit` signal names why (`copy_reason`).
+ */
+const FLEET_COPY_WARM_MS = 10 * 60_000
+
 /** @param {unknown} error @returns {boolean} true when an `AbortSignal.timeout` cut the call. */
 const isTimeout = (error) =>
   error instanceof Error && (error.name === 'TimeoutError' || error.name === 'AbortError')
@@ -1673,6 +1698,9 @@ export function sitesRoutes({
     }
     return { siteKey: own.site_key }
   }
+
+  /** When each imported site's copy first failed to verify since it last did (`FLEET_COPY_WARM_MS`). */
+  const copyFailingSince = new Map()
 
   /**
    * Move an IMPORTED site's component onto its fleet copy (`component-target.js` says why the
@@ -6238,6 +6266,11 @@ export function sitesRoutes({
             !answered.body?.code &&
             !answered.body?.error,
           refusal: refusalCodeOf(answered.body),
+          // Why an imported site's copy was not verified, from `pairFleetCopy`'s closed set.
+          ...(answered.body?.code === 'COMPONENT_NOT_ON_FLEET_COPY' &&
+          FLEET_COPY_WHYS.has(answered.body?.copyReason)
+            ? { copy_reason: answered.body.copyReason }
+            : {}),
           from_comment: call.comment == null ? null : Boolean(commentNumbers(call.comment)?.length),
           moment: call.params?.apply_id ?? null
         }
@@ -6628,15 +6661,18 @@ export function sitesRoutes({
       const paired = await pairFleetCopy(site, auth.email)
       if (paired.cred === null) {
         if (heldLease) await releaseWriteLease(pool, { siteKey, sessionId: chatSession, turnId })
+        const since = copyFailingSince.get(siteKey) ?? Date.now()
+        copyFailingSince.set(siteKey, since)
         return reply(
           {
             code: 'COMPONENT_NOT_ON_FLEET_COPY',
             copyReason: paired.why,
-            transient: FLEET_COPY_TRANSIENT.has(paired.why)
+            transient: FLEET_COPY_TRANSIENT.has(paired.why) && Date.now() - since < FLEET_COPY_WARM_MS
           },
           409
         )
       }
+      copyFailingSince.delete(siteKey)
       cred = paired.cred
       // The whole call keeps the budget it always had (`FLEET_COPY_BUDGETS_MS`).
       componentBudgetMs = Math.max(1_000, COMPONENT_TIMEOUT_MS - (Date.now() - pairingFrom))

@@ -156,10 +156,58 @@ test('an import diagnostic keeps only values from closed sets, the same ones the
     roads: [accepted.DIAGNOSTIC_ROADS, worker.DIAGNOSTIC_ROADS],
     causes: [accepted.DIAGNOSTIC_CAUSES, worker.DIAGNOSTIC_CAUSES],
     limits: [accepted.DIAGNOSTIC_LIMITS, worker.DIAGNOSTIC_LIMITS],
-    signIns: [accepted.DIAGNOSTIC_SIGN_INS, worker.DIAGNOSTIC_SIGN_INS]
+    signIns: [accepted.DIAGNOSTIC_SIGN_INS, worker.DIAGNOSTIC_SIGN_INS],
+    actions: [accepted.DIAGNOSTIC_ACTIONS, worker.DIAGNOSTIC_ACTIONS],
+    answers: [accepted.DIAGNOSTIC_ANSWERS, worker.DIAGNOSTIC_ANSWERS],
+    engineErrors: [accepted.DIAGNOSTIC_ENGINE_ERRORS, worker.DIAGNOSTIC_ENGINE_ERRORS]
   }
   for (const [name, [web, host]] of Object.entries(pairs))
     assert.deepEqual([...web].sort(), [...host].sort(), name)
+})
+
+test('a call_failed diagnostic keeps the engine call, what came back and the engine code, from closed sets', () => {
+  const { importDiagnostic } = accepted
+  assert.deepEqual(
+    importDiagnostic({
+      at: 'export',
+      check: 'no_engine_reply',
+      status: 200,
+      action: 'db.dump',
+      answer: 'php_notice'
+    }),
+    { at: 'export', check: 'no_engine_reply', status: 200, action: 'db.dump', answer: 'php_notice' }
+  )
+  // a value outside the lists is dropped, an engine code outside them is `other`
+  assert.deepEqual(
+    importDiagnostic({
+      at: 'export',
+      check: 'engine_refused',
+      action: '/home/u1/secret',
+      answer: '<html>',
+      engine_error: 'hunter2'
+    }),
+    { at: 'export', check: 'engine_refused', engine_error: 'other' }
+  )
+  const text = signalText(
+    {
+      kind: 'site.stuck',
+      site_key: 'import.localhost',
+      data: {
+        step: 'reading_content',
+        reason: 'call_failed',
+        platform: 'wordpress',
+        detail: {
+          at: 'export',
+          check: 'no_engine_reply',
+          status: 200,
+          action: 'db.dump',
+          answer: 'php_notice'
+        }
+      }
+    },
+    'DEV'
+  )
+  assert.match(text, /\nWhere: export\/no_engine_reply · HTTP 200 · db\.dump · answered php_notice$/)
 })
 
 test('an install diagnostic keeps each road and the PHP limits, from closed sets, and the alert shows them', () => {

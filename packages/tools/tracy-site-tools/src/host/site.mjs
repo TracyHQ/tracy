@@ -683,7 +683,7 @@ export function refusalNext(answer, given = {}) {
       return `This conversation is ${here}, and ${there} is its own workspace — nothing here can reach it, and there is no other way in. If the customer wants ${there} changed, tell them to open its workspace and ask there; then carry on with ${here} only.`
     }
     case 'COMPONENT_NOT_ON_FLEET_COPY':
-      return fleetCopyNext(a.copyReason)
+      return fleetCopyNext(a.copyReason, a.transient)
     case 'COWORK_WEB_UNREACHABLE':
       return 'Tracy could not be reached; retry once, then tell the customer.'
     // ── The door is there, it was handed a signature, and it could not read it ───────────────────
@@ -905,6 +905,8 @@ export function refusalNext(answer, given = {}) {
       // other roads (an unpublish) instead of asking once more for the one thing the door reads.
       if (a.typed === true)
         return 'The customer typed words instead of choosing, which opens nothing: ask_user_question with this ask once more (id as given), asking them to pick an option; still none: tell them nothing changed.'
+      if (a.confirmationMissing === true)
+        return 'No recorded yes for this exact call; confirm:true is not consent. Use ask_user_question with this ask (id unchanged, options in order); wait for the customer, then retry with confirm:true.'
       if (typeof a.languages === 'number' && a.languages > 1)
         return "ask_user_question with this answer's ask (id as given, options in order, customer's words); one answer covers every language: on the first, the same call with confirm:true removes them all"
       if (typeof a.otherLanguages === 'number' && a.otherLanguages > 0)
@@ -1915,13 +1917,17 @@ function emdashSiteNext(action) {
  * half a second a moment later. A cold copy is now a retry; an answer that will not change by
  * waiting names who can repair it. Never "write another way": the live site is not the fallback.
  * @param {unknown} why
+ * @param {unknown} [transient] - tracy-web's `transient`: false once the copy has failed for long.
  * @returns {string}
  */
-function fleetCopyNext(why) {
+function fleetCopyNext(why, transient) {
   const untouched = 'nothing was written and the live site was not touched'
   switch (why) {
     case 'timeout':
     case 'unreachable':
+      // A copy that has not answered for a long while is not warming up (tracy-web `FLEET_COPY_WARM_MS`).
+      if (transient === false)
+        return `The hosted copy of this imported site has not answered for a long while; ${untouched}. Do not retry: tell the customer the copy is not answering and needs checking by Tracy's team; do not write another way.`
       return `The hosted copy of this imported site is still warming up; ${untouched}. Retry the same call in a moment; if it is refused again, tell the customer the copy is not answering yet.`
     case 'unauthorized':
       return `The hosted copy of this imported site does not accept the token Tracy holds for it; ${untouched}. Tell the customer its Claude Cowork plugin needs pairing again; do not write another way.`

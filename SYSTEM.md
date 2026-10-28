@@ -111,6 +111,12 @@ Three places run this same shape:
 
 Env and pitfalls of the dev machine: [`may-dev.md`](docs/references/may-dev.md).
 
+The site agent's visual check can draw its before/after pictures with dsh's browser when the site's
+container has none (`tracy-site-tools` `captureView`, host mode `view`). Chromium has no network
+route: same-origin documents, stylesheets, images and fonts are fetched through that site's
+`docker exec curl`; page scripts stay disabled and other requests fail. This fallback is used only
+for visual-check captures. It cannot evaluate changes that require page scripts or external assets.
+
 ## 3. Where the browser lands
 
 Every request reaches `tracy-web` first. [`app.js`](apps/tracy-web/src/app.js) mounts, in order:

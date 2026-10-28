@@ -177,6 +177,7 @@ import {
   parseMediaCopy,
   dockerExec,
   hostBrowserExec,
+  hostBrowserTarget,
   hostChromeOf,
   looksLikeMissingBinary,
   mcpArgv,
@@ -215,6 +216,7 @@ import {
 import { emdashMediaScan, measureReplaced } from './media-emdash.mjs'
 import { LOOK_FAILED_NEXT, lookParamsProblem, styleRequest } from './look-style.mjs'
 import {
+  browseAsSite,
   clampChars,
   contentDoor,
   fetchPageHtml,
@@ -393,6 +395,8 @@ import { isTurnStopped, stoppableSleep, stoppedAnswer } from './turn-stop.mjs'
 import { asksAttachment, filesTabPictures, mediaUpload, readChatPicture } from './upload.mjs'
 import type { AttachmentReader } from './upload.mjs'
 import {
+  VIEW_EXEC_MS,
+  VIEW_MAX_BUFFER,
   VIEW_PLUGIN,
   agentReadsImages,
   captureView,
@@ -2069,14 +2073,8 @@ async function renderedPageText(
 ): Promise<unknown> {
   const target = lookTarget(label, path, internalPort)
   if (!target.ok) return { ok: false, code: 'BAD_PATH', error: target.error }
-  const probe = await inContainerProbe(
-    config,
-    label,
-    internalPort,
-    target,
-    hostPublicOrigin(config, label),
-    door
-  )
+  const publicOrigin = hostPublicOrigin(config, label)
+  const probe = await inContainerProbe(config, label, internalPort, target, publicOrigin, door)
   if (!probe.ok) return probe.result
   const btarget = browserTargetFor(label, probe, internalPort, target)
   if (btarget === null)
@@ -2086,17 +2084,22 @@ async function renderedPageText(
       error: `${target.path} asks to be served on a port this site does not expose here.`,
       next: `Read a path this site serves itself; the words behind that page: ${door}.`
     }
-  const run = await runExec(config, {
-    argv: browserArgv({
-      container: btarget.container,
-      mode: 'dom',
-      url: btarget.url,
-      origin: btarget.origin,
-      resolverRule: btarget.resolverRule,
-      via: btarget.via
-    }),
-    timeoutMs: LOOK_TIMEOUT_MS,
-    maxBuffer: 16 * 1024 * 1024
+  const { res: run } = await browseAsSite({
+    target: btarget,
+    publicOrigin,
+    launch: (t) =>
+      runExec(config, {
+        argv: browserArgv({
+          container: t.container,
+          mode: 'dom',
+          url: t.url,
+          origin: t.origin,
+          resolverRule: t.resolverRule,
+          via: t.via
+        }),
+        timeoutMs: LOOK_TIMEOUT_MS,
+        maxBuffer: 16 * 1024 * 1024
+      })
   })
   const browser = parseBrowser(run.stdout)
   if (looksLikeMissingBinary(run) || (!browser.ok && browser.kind === 'no-browser'))
@@ -2398,7 +2401,8 @@ async function pageLook(
       req: styled.req,
       url: shownUrl,
       path: target.path,
-      cap: clampChars(params.maxChars, 2000)
+      cap: clampChars(params.maxChars, 2000),
+      publicOrigin
     })
     const ruler = await slotWork
     if (ruler?.slot) return slotPinNotes(answer, ruler.slot)
@@ -2419,19 +2423,27 @@ async function pageLook(
       next: LOOK_FAILED_NEXT
     }
   }
-  const run = await runExec(config, {
-    argv: browserArgv({
-      container: btarget.container,
-      mode: 'shot',
-      url: btarget.url,
-      origin: btarget.origin,
-      file: containerLookFile(label, ts),
-      resolverRule: btarget.resolverRule,
-      via: btarget.via
-    }),
-    timeoutMs: LOOK_TIMEOUT_MS,
-    maxBuffer: 8 * 1024 * 1024
+  const shot = await browseAsSite({
+    target: btarget,
+    publicOrigin,
+    launch: (t) =>
+      runExec(config, {
+        argv: browserArgv({
+          container: t.container,
+          mode: 'shot',
+          url: t.url,
+          origin: t.origin,
+          file: containerLookFile(label, ts),
+          resolverRule: t.resolverRule,
+          via: t.via
+        }),
+        timeoutMs: LOOK_TIMEOUT_MS,
+        maxBuffer: 8 * 1024 * 1024
+      })
   })
+  const run = shot.res
+  // Asked again as the site's own public origin: the picture is of that address.
+  if (shot.target !== btarget) shownUrl = shot.target.url
   const browser = parseBrowser(run.stdout)
   // 🔒 THE FLIP (F2 §3.7): once the static read has run, `page.text` needs no browser, so the next
   // names it; on the pre-F2 road it would fail the same way, and the next stays the content door.
@@ -2526,19 +2538,22 @@ function lookSetMeasure(
           code: 'REDIRECTED_OFF_SITE',
           error: `${target.path} asks to be served on a port this site does not expose here.`
         }
-      return { ok: true as const, target: b, url: target.url, path: target.path }
+      return { ok: true as const, target: b, url: target.url, path: target.path, publicOrigin }
     }
     if (!gate.ok) return gate.answer as Record<string, unknown>
-    return { ok: true as const, target: gate.target, url: gate.url, path: target.path }
+    return { ok: true as const, target: gate.target, url: gate.url, path: target.path, publicOrigin }
   }
   return async (req: Record<string, unknown>, asked: string) => {
     if (!opened.has(asked)) opened.set(asked, open(asked))
     const at = (await opened.get(asked)) as Record<string, any>
     if (at.ok !== true) return at
-    const read = (await styleRead({ run, target: at.target, req: req as any, path: at.path })) as Record<
-      string,
-      any
-    >
+    const read = (await styleRead({
+      run,
+      target: at.target,
+      req: req as any,
+      path: at.path,
+      publicOrigin: at.publicOrigin
+    })) as Record<string, any>
     return read.ok === true ? { ok: true, payload: read.payload, url: at.url } : read
   }
 }
@@ -2918,16 +2933,44 @@ export function apply(ctx: HostContext, config: Config = {}): void {
    * `config.viewContext: false` — the door then keeps nothing and no step is given a picture.
    */
   const viewsOn = config.viewContext !== false
-  /** One page of a site drawn in its own container, in one window and scroll (`captureView`). */
-  const drawView = async (label: string, view: Parameters<typeof captureView>[0]['view']) => {
+  /**
+   * One page of a site drawn in its own container, in one window and scroll (`captureView`). `check`:
+   * drawn for the visual check, which falls back on dsh's own browser where the container has none
+   * (`captureView` `host`); the conversation's own picture of the page does not.
+   */
+  const drawView = async (
+    label: string,
+    view: Parameters<typeof captureView>[0]['view'],
+    { check = false }: { check?: boolean } = {}
+  ) => {
     const sitesRoot = resolveSitesRoot(undefined)
+    const chrome = check
+      ? config.hostChrome !== undefined
+        ? config.hostChrome
+        : hostChromeOf(process.env, existsSync)
+      : null
     return captureView({
       label,
       view,
       internalPort: await sitePortFor(config, sitesRoot, label),
       publicOrigin: hostPublicOrigin(config, label),
       run: (input) => runExec(config, input),
-      door: contentDoor(NO_SITE_FACTS)
+      door: contentDoor(NO_SITE_FACTS),
+      host: chrome
+        ? {
+            chrome,
+            run: ({ target, file, deadlineMs }) =>
+              hostBrowserExec({
+                chrome,
+                target,
+                mode: 'view',
+                file,
+                deadlineMs,
+                timeoutMs: VIEW_EXEC_MS,
+                maxBuffer: VIEW_MAX_BUFFER
+              })
+          }
+        : null
     })
   }
   // Words a page in Voice said it is about to send (`voice-reply.mjs`): the step that takes them gets
@@ -2937,9 +2980,9 @@ export function apply(ctx: HostContext, config: Config = {}): void {
     // A conversation whose turn is running is not drawn for while they write ahead (`chats` is made
     // further down; the store only asks when a report comes in, after the plugin is applied).
     busy: (sessionId) => chats.running().includes(sessionId),
-    capture: async ({ label, view }) => {
+    capture: async ({ label, view, check }) => {
       try {
-        return await drawView(label, view)
+        return await drawView(label, view, { check: check === true })
       } catch (error) {
         warn(
           `[site-tools] the page open on ${label} could not be pictured: ${error instanceof Error ? error.message : String(error)}`
@@ -4346,7 +4389,7 @@ export function apply(ctx: HostContext, config: Config = {}): void {
           turn,
           events,
           eyes: () => pickEyes(llm, route, config.lookModel),
-          capture: (view) => drawView(label, view),
+          capture: (view) => drawView(label, view, { check: true }),
           store: (jpeg) => storePicture(ctx, { jpeg } as Parameters<typeof storePicture>[1]),
           llm,
           ...(signal ? { signal } : {})
@@ -4658,7 +4701,11 @@ export function apply(ctx: HostContext, config: Config = {}): void {
         const ask = turnAsks.get(root)
         if (ask === undefined || ask.checked || (turn !== null && ask.turn !== turn)) return decision
         const label = sessionSite(exec?.agent)
-        if (label === null) return decision
+        if (label === null) {
+          // Said at the check (`no-before-no-site`): a write from a session standing in no site's folder.
+          ask.missing ??= 'no-site'
+          return decision
+        }
         const postTypeOf = (id: number) => memory.readOf(sessionId, { kind: 'post', id })?.postType ?? null
         if (asksFirst(call, { postTypeOf })) return decision
         const reach = writeReach(call, {
@@ -5329,6 +5376,7 @@ export function apply(ctx: HostContext, config: Config = {}): void {
         return withNext({
           ok: false,
           code: 'CONFIRM_FIRST',
+          ...(confirm === true ? { confirmationMissing: true } : {}),
           action: plan.action,
           tier: 'mutating',
           consequence: consequence.reason,
@@ -6302,20 +6350,38 @@ export function apply(ctx: HostContext, config: Config = {}): void {
       return { ok: false, why: `${at} is served on a port this site does not expose here` }
     const measured = await measurePage({
       target: btarget,
-      runInContainer: (t) =>
-        runExec(config, {
-          argv: browserArgv({
-            container: t.container,
-            mode: 'styles',
-            url: t.url,
-            origin: t.origin,
-            resolverRule: t.resolverRule,
-            via: t.via
-          }),
-          timeoutMs: LOOK_TIMEOUT_MS,
-          maxBuffer: 8 * 1024 * 1024
-        }),
-      runOnHost: (t, chrome) => (config.hostBrowser ?? hostBrowserExec)({ chrome, target: t }),
+      runInContainer: async (t) =>
+        (
+          await browseAsSite({
+            target: t,
+            publicOrigin,
+            launch: (at) =>
+              runExec(config, {
+                argv: browserArgv({
+                  container: at.container,
+                  mode: 'styles',
+                  url: at.url,
+                  origin: at.origin,
+                  resolverRule: at.resolverRule,
+                  via: at.via
+                }),
+                timeoutMs: LOOK_TIMEOUT_MS,
+                maxBuffer: 8 * 1024 * 1024
+              })
+          })
+        ).res,
+      runOnHost: async (t, chrome) =>
+        (
+          await browseAsSite({
+            target: { ...t, resolverRule: '' },
+            publicOrigin,
+            launch: (at) =>
+              (config.hostBrowser ?? hostBrowserExec)({
+                chrome,
+                target: hostBrowserTarget(at) ?? t
+              })
+          })
+        ).res,
       hostChrome: config.hostChrome !== undefined ? config.hostChrome : hostChromeOf(process.env, existsSync)
     })
     if (!measured.ok) return { ok: false, why: measured.why }

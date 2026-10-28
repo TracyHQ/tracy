@@ -128,7 +128,8 @@ function engine({
       state.calls.push({ action, params })
       const answer = (status, value) => {
         res.writeHead(status, { 'content-type': 'application/json' })
-        res.end(JSON.stringify(value))
+        // `phpNotice`: a host that prints PHP's notices ahead of every answer (PHP 8.5, display_errors on)
+        res.end((state.phpNotice ?? '') + JSON.stringify(value))
       }
       const refusal = state.refuse[action]
       if (refusal) {
@@ -507,6 +508,21 @@ test('an update is written where the live site still holds the base value; what 
     assert.equal(before.items['article:1'].before.title, 'Article 1')
     assert.equal(before.items['article:1'].after.title, 'New one')
     assert.equal(statSync(join(dir, 'before.json')).mode & 0o777, 0o600)
+  } finally {
+    await live.close()
+  }
+})
+
+test('a host that prints PHP notices ahead of each answer is written all the same (PHP 8.5 curl_close)', async () => {
+  const live = await engine({ records: { article: { 1: article(1) } } })
+  live.phpNotice =
+    '<br />\n<b>Deprecated</b>:  Function curl_close() is deprecated since 8.5, as it has no effect since PHP 8.0 in <b>/home/u1/public_html/plugins/Uploader.php</b> on line <b>53</b><br />\n'
+  try {
+    const dir = pushDir([update(1, { title: 'New one' }, { title: 'Article 1' })])
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.ok, true, JSON.stringify(answer))
+    assert.equal(answer.state, 'applied')
+    assert.equal(live.records.article[1].title, 'New one')
   } finally {
     await live.close()
   }
