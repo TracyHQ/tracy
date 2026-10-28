@@ -18,8 +18,29 @@
  * A pair the page shows but no record of its own holds (`NOT_EDITABLE`: a post's title on a list page) stays an
  * issue for its native record's editor. A page pack never expands its write to records elsewhere on the site.
  * Either retry that asks for its count (`confirm-count`) is sent once more with the count it read.
+ *
+ * 🔒 ONLY A REFUSAL THAT PROVES NOTHING WAS WRITTEN IS SENT AGAIN (28/10/2026, `refusedBeforeWrite`): a lost
+ * receipt, a timeout or an unknown outcome may have written the whole call, and a pair whose new words hold its old
+ * ones would be written twice. Such pairs are never listed under `notPlaced`, which the agent is told to write: they
+ * are listed under `unknown`, with the answer's code, and the `next` says to read the page first and write only the
+ * words it still shows as they were (28/10/2026). `notPlaced` holds only pairs proven unwritten.
  */
+import { refusedBeforeWrite } from './refused-before-write.mjs'
 import { REPLACE_MAX_CHANGES } from './replace.mjs'
+
+/**
+ * What `next` says of pairs whose write's answer was lost: they may be on the site already, and a pair whose new words
+ * hold its old ones would be written twice if sent unread.
+ */
+export const UNKNOWN_NEXT =
+  'The words under unknown may already be on the site (their answer was lost): in about 30 s read their page with tracy_site page.text {path}, and write only the words it still shows as they were; never send them again unread.'
+
+/** How many entries of each list (`notPlaced`, `unknown`, `issues`) one page's answer carries. */
+export const LIST_MAX = 30
+
+/** What `next` says when a page's list was cut: the rest are counted, not named, so they are read for. */
+export const CUT_NEXT =
+  'A page whose answer has notListed lists only the first of them: read that page with tracy_site page.text {path} and write only the template words it still shows; nothing is known to be on the site beyond what is listed as placed.'
 
 /** The page a pack is placed from. */
 const pathOf = (/** @type {{ path: string }} */ pack) => (pack.path === '*shared*' ? '/' : pack.path)
@@ -37,15 +58,22 @@ export async function applyCopy({ read, replace, page, signal = null }) {
   if (!packs.length)
     return { ok: false, code: 'COPY_NOTHING_TO_APPLY', next: 'tracy_demo {operation:"copy.write"} first.' }
   const pages = []
+  let left = 0
+  let unsure = false
+  let cut = false
   for (const pack of packs) {
     if (signal?.aborted) break
     const path = pathOf(pack)
+    /** @type {{find: string, code: unknown}[]} */
     const notPlaced = []
+    /** Pairs whose write may have landed: read before anything is written again. @type {{find: string, code: unknown}[]} */
+    const unknown = []
     /** @type {[{find: string, replace: string}, 'page'][]} */
     const again = []
     // Only page-scoped retries are allowed. Editorial records shared with another page keep their own writer.
     const setAside = (/** @type {{find: string, replace: string}} */ one, /** @type {any} */ answer) => {
-      if (answer?.code === 'AMBIGUOUS') again.push([one, 'page'])
+      if (!refusedBeforeWrite(answer)) unknown.push({ find: one.find, code: answer?.code ?? null })
+      else if (answer?.code === 'AMBIGUOUS') again.push([one, 'page'])
       else notPlaced.push({ find: one.find, code: answer?.code ?? null })
     }
     let placed = 0
@@ -57,6 +85,11 @@ export async function applyCopy({ read, replace, page, signal = null }) {
         const answer = await replace(path, chunk)
         if (answer?.ok !== false) {
           placed += chunk.length
+          break
+        }
+        if (!refusedBeforeWrite(answer)) {
+          for (const one of chunk) unknown.push({ find: one.find, code: answer?.code ?? null })
+          chunk = []
           break
         }
         const at = Number.isInteger(answer.change) ? answer.change : chunk.length === 1 ? 0 : null
@@ -79,24 +112,51 @@ export async function applyCopy({ read, replace, page, signal = null }) {
       if (signal?.aborted) break
       let answer = await replace(path, [one], { all })
       // More places than a change writes unasked: the count the job read is the one it is told to expect.
-      if (answer?.ok === false && Number.isInteger(answer.count) && answer.rule === 'confirm-count')
+      if (refusedBeforeWrite(answer) && Number.isInteger(answer.count) && answer.rule === 'confirm-count')
         answer = await replace(path, [one], { all, expect: answer.count })
-      if (answer?.ok === false) notPlaced.push({ find: one.find, code: answer.code ?? null })
+      if (answer?.ok === false)
+        (refusedBeforeWrite(answer) ? notPlaced : unknown).push({ find: one.find, code: answer.code ?? null })
       else placed += 1
     }
+    const lists = { notPlaced, unknown, issues: pack.issues ?? [] }
+    // 🔒 A CUT LIST SAYS WHAT IT LEFT OUT (28/10/2026): 40 pairs of unknown outcome listed 30, and `next` said
+    // every other page's words were on the site. Each list keeps its first `LIST_MAX` for the answer's size; the rest
+    // are counted under `notListed`, and `next` then claims nothing about them.
+    const notListed = Object.fromEntries(
+      Object.entries(lists)
+        .filter(([, list]) => list.length > LIST_MAX)
+        .map(([key, list]) => [key, list.length - LIST_MAX])
+    )
     pages.push({
       page: pack.path === '*shared*' ? 'shared (header and footer)' : path,
       placed,
-      ...(notPlaced.length ? { notPlaced: notPlaced.slice(0, 30) } : {}),
-      ...((pack.issues ?? []).length ? { issues: pack.issues.slice(0, 30) } : {})
+      ...Object.fromEntries(
+        Object.entries(lists)
+          .filter(([, list]) => list.length > 0)
+          .map(([key, list]) => [key, list.slice(0, LIST_MAX)])
+      ),
+      ...(Object.keys(notListed).length ? { notListed } : {})
     })
+    // Counted whole, not as listed: what `next` says is left.
+    left += notPlaced.length + lists.issues.length
+    unsure ||= unknown.length > 0
+    cut ||= Object.keys(notListed).length > 0
   }
-  const left = pages.reduce((n, p) => n + (p.notPlaced?.length ?? 0) + (p.issues?.length ?? 0), 0)
-  return {
-    ok: true,
-    pages,
-    next: left
-      ? 'Write only what is listed under notPlaced and issues, on its page, with content.replace or the record it lives in; everything else is on the site.'
-      : 'Every page’s words are on the site; go on with the pictures and the checks.'
-  }
+  /** @type {string[]} */
+  const next = []
+  if (left)
+    next.push(
+      cut
+        ? 'Write what is listed under notPlaced and issues, on its page, with content.replace or the record it lives in.'
+        : 'Write only what is listed under notPlaced and issues, on its page, with content.replace or the record it lives in; everything else is on the site.'
+    )
+  else if (!cut)
+    next.push(
+      unsure
+        ? 'Every other page’s words are on the site.'
+        : 'Every page’s words are on the site; go on with the pictures and the checks.'
+    )
+  if (unsure) next.push(UNKNOWN_NEXT)
+  if (cut) next.push(CUT_NEXT)
+  return { ok: true, pages, next: next.join(' ') }
 }

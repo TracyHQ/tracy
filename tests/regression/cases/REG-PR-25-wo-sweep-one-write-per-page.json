@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-25-wo-sweep-one-write-per-page",
+  "kind": "fix",
+  "title": "The residue sweep writes a page's words in one call, and a grouped call whose outcome is unknown is never sent again",
+  "pr": 25,
+  "area": "wo-demo/residue-sweep",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run a sweep round (sweepRound) with two pairs of one page in one call, one of them refused by name.",
+    "S2: Run a sweep round whose grouped call writes 'Menu item' -> 'Menu item for customer' and 'Price' -> 'Cost', then loses its answer (thrown, OUTCOME_UNKNOWN, 502, undone write).",
+    "S3: Run a sweep round whose grouped call is refused before any write without naming a pair."
+  ],
+  "expect": [
+    "S1: the record is saved once; the refused pair is reported as its own refusal and the rest is sent again.",
+    "S2: exactly one call is sent; the page reads 'Menu item for customer · Cost'; no pair reads NOT_FOUND.",
+    "S3: the call is split and each pair sent again."
+  ],
+  "selectors": {
+    "file": "packages/tools/tracy-site-tools/src/host/demo-lifecycle.mjs",
+    "exports": "refusedBeforeWrite (refused-before-write.mjs)"
+  },
+  "evidence": "Dev 27/10/2026: one WordPress ja-diner demo check wrote 362 post updates over 65 posts; the four colour copies of Home took 58 content.update rows each. 28/10/2026: a first grouped version resent a call whose answer was lost and replaced 'Menu item' twice",
+  "fence": "Grouping and resend guard of the dsh residue sweep",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=save its record once|never sent again|split and sent again",
+      "packages/tools/tracy-site-tools/test/demo-lifecycle.test.mjs"
+    ],
+    "tests": [
+      "a page's pairs in one call save its record once; a refused pair is set aside, reported as its own, the rest sent again",
+      "a grouped call whose outcome is unknown is never sent again: each pair answers that outcome, the page as written",
+      "a refusal that proves nothing was written is split and sent again; a grouped write with a lost receipt is sent once"
+    ]
+  }
+}

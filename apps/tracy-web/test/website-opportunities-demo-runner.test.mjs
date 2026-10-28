@@ -2591,14 +2591,28 @@ test(
         n: 0,
         selector: 'div.dish-info > h4.dish-name'
       }
-      return { ...measured, body: { ...measured.body, residue: { items: [dish] } } }
+      return {
+        ...measured,
+        body: { ...measured.body, residue: { items: [dish, { ...dish, text: 'Grilled Salmon Fillet' }] } }
+      }
     }
-    const checked = await capability.call(auth, { operation: 'check' })
-    const replaced = (checked.sweep?.calls ?? []).filter((call) => call.params?.find === 'Smoked Venison')
+    // A dsh that sends a page's pairs as one call says so (`sweepBatches`): the page's words are one call.
+    const checked = await capability.call(auth, { operation: 'check', sweepBatches: true })
+    const words = (checked.sweep?.calls ?? []).filter((call) => call.action === 'content.replace')
+    // The Vietnamese for "service", escaped so the source stays ASCII.
+    const service = 'D\u1ecbch v\u1ee5'
     assert.deepEqual(
-      replaced.map((call) => call.params.replace),
+      words.map((call) => [call.params.path, call.params.changes?.map((c) => [c.find, c.replace, c.expect])]),
       // This fixture's trade sells services, so the item's neutral name is the Vietnamese one for a service.
-      ['Dịch vụ'],
+      [
+        [
+          '/',
+          [
+            ['Grilled Salmon Fillet', service, 1],
+            ['Smoked Venison', service, 1]
+          ]
+        ]
+      ],
       JSON.stringify(checked.sweep ?? checked)
     )
   }
