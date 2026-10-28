@@ -2441,6 +2441,8 @@ export function buildApp(deps) {
       '/',
       opsRoutes({
         prefetch: app.dubaiPrefetch ?? null,
+        // The place pictures of a brief revision are read through the same objects Website Opportunities uses.
+        objects: placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch),
         pool: deps.pool,
         config: deps.config,
         doorHealth,
