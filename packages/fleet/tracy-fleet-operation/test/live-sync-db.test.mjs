@@ -1404,7 +1404,6 @@ test('a live delete kept as a copy edit is not counted as taken', opts, () => {
   assert.deepEqual(rows('SELECT title FROM sm.jos_content WHERE id=1'), [['Live edit']])
 })
 
-
 test('renumbered assets update custom fields and every other core asset reference', opts, () => {
   const tables = [
     'fields',
@@ -1442,4 +1441,3 @@ USE st; INSERT INTO jos_assets VALUES (155,'com_content.field.3');` +
   }
   assert.deepEqual(rows('SELECT name FROM sm.jos_assets WHERE id=155'), [['com_content.category.2']])
 })
-
