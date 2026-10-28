@@ -114,9 +114,15 @@ export const MAX_SYNC_PROGRESS = 60
  */
 export function syncProgressLine(line) {
   if (/^==> \[\d+s\] /.test(line)) return line.slice(0, 200)
-  if (line.startsWith('{"ok":true,') && line.includes('"liveReadAt"') && !line.includes('"state"'))
-    return line.length <= 2048 ? line : null
-  return null
+  // Parsed, never matched by its first bytes: older scripts print Python's `json.dumps` form
+  // (`{"ok": true, …}`), which a prefix match dropped.
+  if (!line.startsWith('{') || !line.includes('"liveReadAt"') || line.length > 2048) return null
+  try {
+    const r = JSON.parse(line)
+    return r?.ok === true && r.liveReadAt !== undefined && r.state === undefined ? line : null
+  } catch {
+    return null
+  }
 }
 /** One sync's folder name, chosen by tracy-web (a row id); it becomes a path, so it is fenced here. */
 export const SYNC_ID = /^[a-f0-9-]{8,64}$/

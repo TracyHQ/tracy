@@ -332,7 +332,12 @@ test('pure pieces: an applied sync names what it left out of the live site, and 
     table: 'ng_phocacart_products',
     reason: 'added-both',
     key: { id: '6' },
-    values: { base: null, ours: { title: { text: 'Tracy mug' } }, theirs: { title: { text: 'Live mug' } } }
+    values: { base: null, ours: { title: { text: 'Tracy mug' } }, theirs: { title: { text: 'Live mug' } } },
+    belonging: [
+      { table: 'ng_phocacart_product_categories', key: { product_id: '6', category_id: '2' } },
+      { table: 'ng_phocacart_product_images', key: { id: '1' }, changed: true }
+    ],
+    belongingCount: 2
   }
   const skipped = {
     id: 'db:ng_action_logs:["37"]',
@@ -394,6 +399,9 @@ test('pure pieces: an applied sync names what it left out of the live site, and 
     'the skipped log rows stay in the record'
   )
   assert.equal(applied.dropped[0].values.theirs.title.text, 'Live mug')
+  // The held product's own rows left out with it: named with it, so its category is not lost silently.
+  assert.deepEqual(applied.dropped[0].belonging, held.belonging)
+  assert.equal(applied.dropped[0].belongingCount, 2)
   assert.deepEqual(applied.kept[0], {
     id: 'file:configuration.php#sitename',
     kind: 'setting',
@@ -411,6 +419,7 @@ test('pure pieces: an applied sync names what it left out of the live site, and 
   const waiting = view({ ...at, state: 'needs_resolution' })
   assert.deepEqual(waiting.dropped, [])
   assert.equal(waiting.held.length, 1)
+  assert.deepEqual(waiting.held[0].belonging, held.belonging)
 })
 
 test(
