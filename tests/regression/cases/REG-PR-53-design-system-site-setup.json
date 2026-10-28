@@ -1,0 +1,50 @@
+{
+  "id": "REG-PR-53-design-system-site-setup",
+  "kind": "fix",
+  "title": "Unbuilt sites return setup state and open their existing Build tab",
+  "pr": 53,
+  "area": "design-system/site-setup",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the design-system site-setup route and real-plugin DOM tests.",
+    "Read an unattached fleet claim with no address for WordPress, Joomla and EmDash.",
+    "Read provisioned, attached legacy and imported sites.",
+    "Mount the real plugin over SITE_NOT_READY and press Open Build."
+  ],
+  "expect": [
+    "Unbuilt sites return HTTP 200 with SITE_NOT_READY, canApply false and no container or library calls.",
+    "Provisioned and attached legacy sites still read their container; imports retain SITE_IMPORTED.",
+    "The panel explains unfinished setup without a generic read error or retry button.",
+    "Open Build requests tracy:build:wordpress with the existing site key, without apply or undo.",
+    "Every shipped translation retains the required site term."
+  ],
+  "selectors": {
+    "read": "/api/sites/:key/design-system",
+    "setup": "[data-design-system-setup]"
+  },
+  "fence": "The current site row's attachment and address prevent a reserved or reused name from triggering a container read before provision.",
+  "run": {
+    "cmd": [
+      "node",
+      "--import",
+      "tsx",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/design-system-site-setup.test.mjs",
+      "packages/design/tracy-design-inspiration/test/design-system-site-setup.test.mjs",
+      "scripts/test/kept-terms.test.ts"
+    ],
+    "tests": [
+      "unbuilt wordpress:",
+      "unbuilt joomla:",
+      "unbuilt emdash:",
+      "a provisioned site still reads",
+      "an attached legacy site",
+      "an imported site keeps",
+      "an unbuilt site explains setup",
+      "every shipped catalogue keeps every listed term"
+    ]
+  }
+}

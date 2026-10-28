@@ -1,0 +1,50 @@
+{
+  "id": "REG-PR-97-quickstart-tools-whole-units-demo-only",
+  "kind": "fix",
+  "title": "Quickstart contract tools keep whole-unit slots writable and measurable, and skip demo-only entities in the label rules and the verify viewer",
+  "pr": 97,
+  "area": "quickstart-contract/content-coverage",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run the run.cmd below (the content coverage tests and the Joomla capture tests).",
+    "S2: Read the TAP result of each test named in run.tests."
+  ],
+  "expect": [
+    "capture --whole-units keeps <p><img src> Train <b>hard</b> daily</p> as an image slot plus three text slots, not one merged text slot.",
+    "A block 'Ring Ready' matches the whole-unit slot 'Ring Ready Now' by piece-of-whole-unit; 'Rea' does not match.",
+    "R7 does not flag an icon and the words of one item description; it flags the same piece with a different role across items.",
+    "A slot inside a composite block gets maxChars equal to the block's capacity minus the other pieces' characters.",
+    "Viewer rule 4 does not mark a slot shown only through a link; it marks one shown as text.",
+    "An entity marked demoOnly: true has no slot in R1 to R8 and no suspicious flag in the viewer; R9 still counts every hole."
+  ],
+  "selectors": {
+    "capture": "packages/cms/tracy-joomla-quickstart/scripts/capture-contract.py (whole_units)",
+    "rules": "packages/cms/tracy-quickstart-tools/content-coverage/lib/label-rules.mjs, demo-only.mjs",
+    "viewer": "packages/cms/tracy-quickstart-tools/content-coverage/lib/verify/locate.mjs"
+  },
+  "evidence": "Capturing and auditing the JA Boxing 1.0.8 contract (#46): words beside an image were dropped, heading pieces were reported as holes, and the Typography style-guide article failed R8 six times.",
+  "fence": "Pure functions and the capture script over fictional fixtures; no browser and no stand.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-quickstart-tools/test/content-coverage.test.mjs",
+      "packages/cms/tracy-quickstart-tools/test/content-label-rules.test.mjs",
+      "packages/cms/tracy-quickstart-tools/test/slot-fit.test.mjs",
+      "packages/cms/tracy-quickstart-tools/test/content-map-verify-viewer.test.mjs",
+      "packages/cms/tracy-joomla-quickstart/test/capture-contract.test.mjs"
+    ],
+    "tests": [
+      "a word-bounded piece of a whole-unit slot",
+      "R7: the pieces of one HTML field",
+      "slots of a demo-only entity",
+      "a block several slots make up together",
+      "rule 4 asks for a measurable box",
+      "a demo-only entity (a style-guide page)",
+      "C1: an image beside the words"
+    ]
+  }
+}

@@ -290,6 +290,29 @@ test('words two slots share measure both, and the tighter of two boxes is the li
     assert.deepEqual(out.slots.find((s) => s.key === key).fit.maxChars, { desktop: 20 })
 })
 
+test('a block several slots make up together measures each piece with the room the other pieces leave', () => {
+  // "Join over <span>100k</span> of creatives": one line of 40 characters holds 27 now. A piece may grow by what the
+  // line has spare, never take the room the other pieces' words still fill.
+  const map = {
+    slots: [
+      { key: 'module-6.0', type: 'text', sample: 'Join over' },
+      { key: 'module-6.1', type: 'text', sample: '100k' },
+      { key: 'module-6.2', type: 'text', sample: 'of creatives' }
+    ]
+  }
+  const block = {
+    ...text('Join over 100k of creatives', ['module-6.0', 'module-6.1', 'module-6.2'], {
+      desktop: vp(400, 40, textLook(400, 1, 10))
+    }),
+    matchBy: 'composite'
+  }
+  const out = measureSlotFit({ map, findings: { pages: [{ items: [block] }] } }).map
+  const max = (key) => out.slots.find((s) => s.key === key).fit.maxChars
+  assert.deepEqual(max('module-6.0'), { desktop: 22 }, '40 less the 18 characters of "100k of creatives"')
+  assert.deepEqual(max('module-6.1'), { desktop: 17 }, '40 less the 23 characters of the other two pieces')
+  assert.deepEqual(max('module-6.2'), { desktop: 25 })
+})
+
 /**
  * A `place-content-roles/3` map (ADR 0040 decision 3): the role alone decides keep or replace, so the measured kind
  * describes shape only and never sets `customize` or `fit.replace`. Every slot, file and business is invented.
