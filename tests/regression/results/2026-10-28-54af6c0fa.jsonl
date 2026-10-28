@@ -1,0 +1,1 @@
+{"id":"REG-PR-93-sync-optional-columns","verdict":"PASS","commit":"54af6c0fa24236aef5c1e15aabbea8f440245843","ran_at":"2026-10-28T18:06:17.291Z","evidence":"tests/regression/.runs/2026-10-28-54af6c0fa/REG-PR-93-sync-optional-columns.log"}

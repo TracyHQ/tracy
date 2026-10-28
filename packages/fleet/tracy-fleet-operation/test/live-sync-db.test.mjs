@@ -1441,3 +1441,42 @@ USE st; INSERT INTO jos_assets VALUES (155,'com_content.field.3');` +
   }
   assert.deepEqual(rows('SELECT name FROM sm.jos_assets WHERE id=155'), [['com_content.category.2']])
 })
+
+test('stock Joomla contacts and banners without asset_id do not break dependent-row SQL', opts, () => {
+  for (const missing of ['both', 'ours', 'theirs']) {
+    stageHeldContactFields(
+      "INSERT INTO jos_contact_details VALUES (2,'Tracy contact',0);",
+      "INSERT INTO jos_contact_details VALUES (2,'Live contact',102); INSERT INTO jos_assets VALUES (102,'com_contact.contact.2'); INSERT INTO jos_fields_values VALUES (1,'2','live value');"
+    )
+    sql(
+      ['sb', 'sm', 'st']
+        .map(
+          (schema) =>
+            `USE ${schema}; CREATE TABLE jos_banners (id INT PRIMARY KEY, name VARCHAR(100), asset_id INT); INSERT INTO jos_banners VALUES (1,'Ad',0); CREATE TABLE jos_content (id INT PRIMARY KEY,title VARCHAR(100)); INSERT INTO jos_content VALUES (1,'News');`
+        )
+        .join('\n') + " USE st; UPDATE jos_content SET title='News renamed';"
+    )
+    const schemas = missing === 'both' ? ['sb', 'sm', 'st'] : [missing === 'ours' ? 'sm' : 'st']
+    sql(
+      schemas
+        .map(
+          (schema) =>
+            `ALTER TABLE ${schema}.jos_contact_details DROP COLUMN asset_id; ALTER TABLE ${schema}.jos_banners DROP COLUMN asset_id;`
+        )
+        .join('\n')
+    )
+    const answer = merge(null, 'ours')
+    assert.equal(answer.ok, true, JSON.stringify(answer))
+    assert.deepEqual(rows('SELECT title FROM sm.jos_content'), [['News renamed']])
+    if (missing === 'both')
+      assert.ok(
+        answer.held.some((h) => h.table === 'jos_contact_details'),
+        JSON.stringify(answer)
+      )
+    else
+      assert.ok(
+        answer.kept.some((h) => h.table === 'jos_contact_details' && h.reason === 'schema-changed'),
+        JSON.stringify(answer)
+      )
+  }
+})
