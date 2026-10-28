@@ -1,17 +1,34 @@
-// Slot role vocabulary (`place-content-roles/2`) and validator for quickstart `slot-roles.json`
-// (`tracy-quickstart-slot-roles/v1`) sidecars.
+// Slot role vocabulary (`place-content-roles/2` and `place-content-roles/3`) and validator for quickstart
+// `slot-roles.json` (`tracy-quickstart-slot-roles/v1`) sidecars. Every role string any side may write lives in this
+// file: a role is added or changed here, in one reviewed place, never invented by a capture, a rule table or a brief.
 //
 // Version 2 (ADR 0038) adds the editorial roles (a slot that holds page copy, not a fact about the business) next to the
 // fact roles of version 1, a default rule per role for a slot no fact fills, the binding mode each role is written in,
 // and the group kinds a card may hold. Roles live on the slots of a content map from version 2 on
 // (`content-map-roles.mjs` documents the slot fields); the three sidecars bound against version 1 stay readable.
+//
+// Version 3 (ADR 0040) adds the roles the readiness research found missing, splits `editorial.decorative_image` into a
+// replaceable illustration and a kept design element, adds the sample article roles, and makes the role the only
+// decider of whether a slot keeps the demo's content (`KEEP_DECISION_BY_ROLE`). Version 2 stays the version capture
+// writes (`ROLE_VOCABULARY_VERSION`) until capture moves to version 3; both validate.
 
 import { createHash } from 'node:crypto'
 
 export const SLOT_ROLES_SCHEMA_VERSION = 'tracy-quickstart-slot-roles/v1'
 export const ROLE_VOCABULARY_VERSION = 'place-content-roles/2'
+/** The vocabulary in which the role alone decides keep or replace (ADR 0040). */
+export const ROLE_VOCABULARY_V3 = 'place-content-roles/3'
 /** Every vocabulary version a sidecar may name: version 1 sidecars stay valid until their template's next release. */
-export const ROLE_VOCABULARY_VERSIONS = Object.freeze(['place-content-roles/1', ROLE_VOCABULARY_VERSION])
+export const ROLE_VOCABULARY_VERSIONS = Object.freeze([
+  'place-content-roles/1',
+  ROLE_VOCABULARY_VERSION,
+  ROLE_VOCABULARY_V3
+])
+/** Every vocabulary version a content map may name (maps carry roles from version 2 on). */
+export const CONTENT_MAP_ROLE_VOCABULARY_VERSIONS = Object.freeze([
+  ROLE_VOCABULARY_VERSION,
+  ROLE_VOCABULARY_V3
+])
 
 export const BASE_FILES = Object.freeze(['manifest.json', 'content-map.json', 'presentation-lock.json'])
 
@@ -137,11 +154,81 @@ export const EDITORIAL_ROLES = Object.freeze([
   'editorial.decorative_image'
 ])
 
-/** The whole vocabulary: every role a slot may carry. */
+/** The whole vocabulary of version 2: every role a slot may carry in a `place-content-roles/2` map. */
 export const PLACE_CONTENT_ROLES = Object.freeze([...FACT_ROLES, ...EDITORIAL_ROLES])
 
-const ROLE_SET = new Set(PLACE_CONTENT_ROLES)
-const FACT_ROLE_SET = new Set(FACT_ROLES)
+// Version 3 additions (ADR 0040). Each is a fact about the business: filled from the place profile, never kept as demo.
+export const FACT_ROLES_ADDED_IN_V3 = Object.freeze([
+  'business.gallery_image', // a picture of a gallery: the business's own photos
+  'business.video', // a video of the business (its file or its link)
+  'business.copyright', // the copyright line: it names the business and a year
+  'contact.map', // a map of the business's address (an embed or its picture)
+  'offering.schedule', // when an offering runs: a class timetable entry, a session time
+  'stat.proof_image', // a face or picture that proves a number ("5k happy members" with a strip of faces)
+  'claim.heading' // a heading that states a claim ("No1 boxing club since 2008"): rewritten from facts or without it
+])
+
+/** The fact roles of version 3: version 2's plus the additions. */
+export const FACT_ROLES_V3 = Object.freeze([...FACT_ROLES, ...FACT_ROLES_ADDED_IN_V3])
+
+// Sample article roles (version 3): a demo blog post's own content. Not a fact about the business, but never kept: the
+// business's own posts replace the demo's, labelled once on the article template.
+export const ARTICLE_ROLES = Object.freeze(['article.title', 'article.lead', 'article.image', 'article.date'])
+
+// Editorial roles of version 3: version 2's, with `editorial.decorative_image` split in two, and three new ones.
+export const EDITORIAL_ROLES_V3 = Object.freeze([
+  'editorial.heading',
+  'editorial.paragraph',
+  'editorial.button_label',
+  'editorial.menu_label',
+  'editorial.illustration', // a picture that illustrates the copy: a build may put the business's own photo there
+  'editorial.design_element', // a shape, pattern, texture or ornament of the design: the template's stays
+  'editorial.item_icon', // the icon of a card or list item: the template's stays
+  'editorial.newsletter_label', // the words of a newsletter sign-up (heading, field hint, button)
+  'editorial.navigation_url' // a link to a page of the site itself (a menu entry, a "read more")
+])
+
+/** The whole vocabulary of version 3: every role a slot may carry in a `place-content-roles/3` map. */
+export const PLACE_CONTENT_ROLES_V3 = Object.freeze([
+  ...FACT_ROLES_V3,
+  ...ARTICLE_ROLES,
+  ...EDITORIAL_ROLES_V3
+])
+
+const ROLES_BY_VERSION = Object.freeze({
+  'place-content-roles/1': new Set(PLACE_CONTENT_ROLES),
+  [ROLE_VOCABULARY_VERSION]: new Set(PLACE_CONTENT_ROLES),
+  [ROLE_VOCABULARY_V3]: new Set(PLACE_CONTENT_ROLES_V3)
+})
+const FACT_ROLE_SET = new Set(FACT_ROLES_V3)
+const EDITORIAL_ROLE_SET = new Set([...EDITORIAL_ROLES, ...EDITORIAL_ROLES_V3])
+
+/**
+ * What happens to the demo's content in a slot of each role (ADR 0040), the only decider of keep or replace:
+ *   replace  the demo never stays: the business's fact (or its own post) fills it, else the role's neutral rule
+ *   rewrite  page copy or an illustration: a build may write the business's own words or photo over it
+ *   keep     the template's own stays: Customize never plans or writes it
+ * Slot fit (`fit.replace`) and `customize` follow from it in a version 3 map (`content-map-keep-decision.mjs`).
+ */
+export const KEEP_DECISIONS = Object.freeze(['replace', 'rewrite', 'keep'])
+export const KEEP_DECISION_BY_ROLE = Object.freeze({
+  ...Object.fromEntries(FACT_ROLES_V3.map((role) => [role, 'replace'])),
+  ...Object.fromEntries(ARTICLE_ROLES.map((role) => [role, 'replace'])),
+  'editorial.heading': 'rewrite',
+  'editorial.paragraph': 'rewrite',
+  'editorial.button_label': 'rewrite',
+  'editorial.menu_label': 'rewrite',
+  'editorial.newsletter_label': 'rewrite',
+  'editorial.illustration': 'rewrite',
+  'editorial.design_element': 'keep',
+  'editorial.item_icon': 'keep',
+  'editorial.navigation_url': 'keep',
+  // Version 2 only: read as its version 3 successor would be judged when kept (`design_element`).
+  'editorial.decorative_image': 'keep'
+})
+
+/** Roles whose picture only the business's own logo replaces (Slot fit `replace: "logo"`). */
+export const LOGO_ROLES = Object.freeze(['business.logo', 'claim.entity_logo'])
 const BINDING_MODES = new Set(['copy', 'format', 'asset', 'verbatim', 'compose'])
 const NEUTRAL_POLICIES_WITHOUT_KEY = new Set(['empty', 'index_padded', 'keep'])
 const ALLOWED_REQUIRES = new Set(['contact-target', 'phone'])
@@ -242,12 +329,30 @@ export const DEFAULT_NEUTRAL_BY_ROLE = Object.freeze({
   'event.description': freezeRule({ policy: 'empty' }),
   'event.image': freezeRule({ policy: 'empty' }),
   'post.author': freezeRule({ policy: 'empty' }),
+  // Version 3 fact and article roles: nothing is invented, the slot empties (a build's neutral substitute keeps the
+  // layout, ADR 0037).
+  'business.gallery_image': freezeRule({ policy: 'empty' }),
+  'business.video': freezeRule({ policy: 'empty' }),
+  'business.copyright': freezeRule({ policy: 'empty' }),
+  'contact.map': freezeRule({ policy: 'empty' }),
+  'offering.schedule': freezeRule({ policy: 'empty' }),
+  'stat.proof_image': freezeRule({ policy: 'empty' }),
+  'claim.heading': freezeRule({ policy: 'empty' }),
+  'article.title': freezeRule({ policy: 'empty' }),
+  'article.lead': freezeRule({ policy: 'empty' }),
+  'article.image': freezeRule({ policy: 'empty' }),
+  'article.date': freezeRule({ policy: 'empty' }),
   // `keep`: no fact fills the slot; the template's own words or picture stay unless page copy is written over them.
   'editorial.heading': freezeRule({ policy: 'keep' }),
   'editorial.paragraph': freezeRule({ policy: 'keep' }),
   'editorial.button_label': freezeRule({ policy: 'keep' }),
   'editorial.menu_label': freezeRule({ policy: 'keep' }),
-  'editorial.decorative_image': freezeRule({ policy: 'keep' })
+  'editorial.decorative_image': freezeRule({ policy: 'keep' }),
+  'editorial.illustration': freezeRule({ policy: 'keep' }),
+  'editorial.design_element': freezeRule({ policy: 'keep' }),
+  'editorial.item_icon': freezeRule({ policy: 'keep' }),
+  'editorial.newsletter_label': freezeRule({ policy: 'keep' }),
+  'editorial.navigation_url': freezeRule({ policy: 'keep' })
 })
 
 /**
@@ -257,7 +362,13 @@ export const DEFAULT_NEUTRAL_BY_ROLE = Object.freeze({
  */
 export function modeOfRole(role) {
   if (role.endsWith('.price') || role === 'step.index') return 'format'
-  if (role.endsWith('.image') || role.endsWith('.logo') || role.endsWith('_image') || role.endsWith('_logo'))
+  if (
+    role.endsWith('.image') ||
+    role.endsWith('.logo') ||
+    role.endsWith('_image') ||
+    role.endsWith('_logo') ||
+    role === 'business.video'
+  )
     return 'asset'
   if (
     role === 'business.name' ||
@@ -302,16 +413,48 @@ export const GROUP_KINDS = Object.freeze({
   post: Object.freeze({ allowedKinds: ['post'], requiredRoles: [] })
 })
 
-export function isRole(value) {
-  return typeof value === 'string' && ROLE_SET.has(value)
+/** The group kinds of version 3: version 2's plus `gallery`, one picture of a gallery (usually a repeatable list). */
+export const GROUP_KINDS_V3 = Object.freeze({
+  ...GROUP_KINDS,
+  gallery: Object.freeze({ allowedKinds: ['gallery'], requiredRoles: ['business.gallery_image'] })
+})
+
+/** Whether `kind` is a group kind of the vocabulary `version` (default: the version capture writes). */
+export function isGroupKind(kind, version = ROLE_VOCABULARY_VERSION) {
+  const kinds = version === ROLE_VOCABULARY_V3 ? GROUP_KINDS_V3 : GROUP_KINDS
+  return typeof kind === 'string' && Object.hasOwn(kinds, kind)
 }
 
+/**
+ * Whether `value` is a role of the vocabulary `version` (default: the version capture writes, version 2). A string no
+ * version lists is never a role: no side invents one.
+ * @param {unknown} value
+ * @param {string} [version]
+ */
+export function isRole(value, version = ROLE_VOCABULARY_VERSION) {
+  const roles = Object.hasOwn(ROLES_BY_VERSION, version) ? ROLES_BY_VERSION[version] : null
+  return typeof value === 'string' && Boolean(roles?.has(value))
+}
+
+/** Whether `value` is a fact role of any version (a role is a fact in every version that lists it). */
 export function isFactRole(value) {
   return typeof value === 'string' && FACT_ROLE_SET.has(value)
 }
 
-export function isEditorialRole(value) {
-  return isRole(value) && !FACT_ROLE_SET.has(value)
+/** Whether `value` is an editorial role of the vocabulary `version` (default: version 2). */
+export function isEditorialRole(value, version = ROLE_VOCABULARY_VERSION) {
+  return isRole(value, version) && EDITORIAL_ROLE_SET.has(value)
+}
+
+/**
+ * The keep decision of a role (`KEEP_DECISIONS`), or null for a string that is not a role of any version.
+ * @param {unknown} role
+ * @returns {'replace' | 'rewrite' | 'keep' | null}
+ */
+export function keepDecisionOfRole(role) {
+  return typeof role === 'string' && Object.hasOwn(KEEP_DECISION_BY_ROLE, role)
+    ? /** @type {any} */ (KEEP_DECISION_BY_ROLE[role])
+    : null
 }
 
 function isPlainObject(value) {
@@ -343,6 +486,10 @@ export function validateSlotRoles(doc, { slotKeys } = {}) {
     errors.push(`status must be "draft" or "checked", got ${JSON.stringify(doc.status)}`)
   }
 
+  // Roles are judged against the version the sidecar names (version 2 when it names none or an unknown one).
+  const sidecarVersion = ROLE_VOCABULARY_VERSIONS.includes(doc.roleVocabularyVersion)
+    ? doc.roleVocabularyVersion
+    : ROLE_VOCABULARY_VERSION
   const groupIds = new Set()
   if (!Array.isArray(doc.groups)) {
     errors.push('groups must be an array')
@@ -375,7 +522,7 @@ export function validateSlotRoles(doc, { slotKeys } = {}) {
           errors.push(`groups[${idx}] (${groupId}) requiredRoles must be an array`)
         } else {
           for (const role of group.requiredRoles) {
-            if (!isRole(role)) {
+            if (!isRole(role, sidecarVersion)) {
               errors.push(`groups[${idx}] (${groupId}) has unknown requiredRole "${String(role)}"`)
             }
           }
@@ -387,7 +534,7 @@ export function validateSlotRoles(doc, { slotKeys } = {}) {
           errors.push(`groups[${idx}] (${groupId}) neutral must be an object`)
         } else {
           for (const [role, rule] of Object.entries(group.neutral)) {
-            if (!isRole(role)) {
+            if (!isRole(role, sidecarVersion)) {
               errors.push(`groups[${idx}] (${groupId}) neutral has unknown role "${role}"`)
             }
             if (!isPlainObject(rule)) {
@@ -471,7 +618,7 @@ export function validateSlotRoles(doc, { slotKeys } = {}) {
         errors.push(`bindings[${idx}] (${String(slotKey)}) references unknown groupId "${groupId}"`)
       }
 
-      if (!isRole(role)) {
+      if (!isRole(role, sidecarVersion)) {
         errors.push(`bindings[${idx}] (${String(slotKey)}) has unknown role "${String(role)}"`)
       }
 
