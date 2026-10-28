@@ -194,6 +194,23 @@ const FIT_MISSING = {
   fitCount: 10,
   fitShown: ['module-183.9', 'module-191.2']
 }
+/** The label rules group (ADR 0040): R3 and R2 fail on a version 3 map. */
+const LABELS_FAILING = {
+  ...COVERAGE_BASE,
+  labelState: 'failing',
+  labelFailing: [
+    { rule: 'R2', title: 'fact-like sample without a contact or price role', count: 1, keys: ['home.intro'] },
+    {
+      rule: 'R3',
+      title: 'URL slot without a role',
+      count: 14,
+      keys: ['home.paragraph.2.link.1', 'home.button.1.url']
+    }
+  ],
+  labelFactShare: 7.5,
+  labelHolds: true,
+  labelWarns: false
+}
 const COVERAGE_HOLES = {
   ...COVERAGE_BASE,
   coverage: { text: 88.4, images: 61.5, links: 100 },
@@ -274,6 +291,12 @@ const EVERY_CODE = [
       fitReason: 'slot "a" (image) needs customize "keep"',
       fitShown: []
     }
+  ],
+  ['content-coverage', 'coverage-labels', LABELS_FAILING],
+  [
+    'content-coverage',
+    'coverage-live-labels',
+    { ...LABELS_FAILING, live: true, labelHolds: false, labelWarns: true }
   ],
   ['customize', 'customize-waiting', { passed: 0, total: 0, mustFix: [], worthFixing: [] }],
   ['customize', 'customize-not-checked', { passed: 0, total: 0, mustFix: [], worthFixing: [] }],
@@ -1529,4 +1552,75 @@ test('Slot fit group of Content coverage: guides, lists and ONE prompt that meas
     JOOMLA
   )
   assert.doesNotMatch(wp.title, /fit/i)
+})
+
+test('label rules group of Content coverage: names the failing rules and gives ONE prompt to relabel and re-run the audit', () => {
+  const held = mod.guideOf(
+    { step: 'content-coverage', state: 'todo', code: 'coverage-labels', params: LABELS_FAILING },
+    JOOMLA
+  )
+  assert.equal(held.title, 'Content coverage · 2 label rules failing')
+  assert.equal(held.detail, 'Relabel the listed slots in Claude Code, then run the audit again.')
+  assert.deepEqual(held.lists, [
+    {
+      heading: 'R2 fact-like sample without a contact or price role',
+      count: 1,
+      lines: ['home.intro']
+    },
+    {
+      heading: 'R3 URL slot without a role',
+      count: 14,
+      lines: ['home.paragraph.2.link.1', 'home.button.1.url']
+    }
+  ])
+  assert.equal(held.outside.label, 'Paste into Claude Code')
+  const prompt = held.outside.text
+  assert.match(
+    prompt,
+    /label rules of the release quickstart\/ja-restaurant\/j6 \(Joomla 1\.0\.2\) .* fail: R2 /
+  )
+  assert.match(
+    prompt,
+    /R3 URL slot without a role \(14: home\.paragraph\.2\.link\.1, home\.button\.1\.url, \.\.\.\)/
+  )
+  assert.match(prompt, /node scripts\/slot-roles\/check\.mjs/)
+  assert.match(prompt, /audit again with --write/)
+  assert.match(prompt, /wait for my go/)
+
+  const live = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'warn',
+      code: 'coverage-live-labels',
+      params: { ...LABELS_FAILING, live: true, labelHolds: false, labelWarns: true }
+    },
+    JOOMLA
+  )
+  assert.equal(live.detail, 'Live, so it stays published. Fix it in the next version.')
+
+  const one = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'todo',
+      code: 'coverage-labels',
+      params: { ...LABELS_FAILING, labelFailing: [LABELS_FAILING.labelFailing[1]] }
+    },
+    JOOMLA
+  )
+  assert.equal(one.title, 'Content coverage · 1 label rule failing')
+})
+
+test('Content coverage on WordPress: the prompt measures the WordPress contract folder and names the WordPress capture', () => {
+  const wordpress = { ...COVERAGE_HOLES, platform: 'wordpress', contract: 'ja-diner/wp7/1.0.1' }
+  const guide = mod.guideOf(
+    { step: 'content-coverage', state: 'todo', code: 'coverage-holes', params: wordpress },
+    { ...JOOMLA, platform: 'wordpress', tag: 'quickstart/ja-diner/wp7', version: '1.0.1' }
+  )
+  const prompt = guide.outside.text
+  assert.match(
+    prompt,
+    /--contract packages\/cms\/tracy-wordpress-quickstart\/contracts\/ja-diner\/wp7\/1\.0\.1 /
+  )
+  assert.match(prompt, /tracy-wordpress-quickstart\/scripts\/capture-contract\.mjs \(run it with --all-text/)
+  assert.doesNotMatch(prompt, /capture-contract\.py|tracy-joomla-quickstart/)
 })
