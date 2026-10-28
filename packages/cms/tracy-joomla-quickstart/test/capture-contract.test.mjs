@@ -1390,6 +1390,28 @@ test('C1: text inside an element with a title or alt of its own also keeps the u
   )
 })
 
+test(
+  'C1: an image beside the words keeps the unit apart, so writing it never drops the words',
+  needsPhp,
+  () => {
+    // The image carries no text of its own, so no text node sits inside it; still, one text node written over the unit
+    // would sit beside the kept image and lose the words around it. The pieces stay separate slots.
+    const run = bodyRun('<p><img src="/images/sample-glove.png"> Train <b>hard</b> daily</p>', [
+      '--whole-units'
+    ])
+    assertWritten(run)
+    assert.deepEqual(
+      bodySlots(run).map(([type, sample, xpath]) => [type, sample, xpath]),
+      [
+        ['image', '/images/sample-glove.png', '/html/body/div/p/img/@src'],
+        ['text', 'Train', '/html/body/div/p/text()[1]'],
+        ['text', 'hard', '/html/body/div/p/b/text()'],
+        ['text', 'daily', '/html/body/div/p/text()[2]']
+      ]
+    )
+  }
+)
+
 test('C1: a heading cut by a span and a br is still one slot', needsPhp, () => {
   const run = bodyRun('<h2>Strong <span>arms</span><br>calm minds</h2>', ['--whole-units'])
   assertWritten(run)

@@ -123,6 +123,8 @@
   "ds.note": "Cambia colores, fuentes y formas. Tus páginas y textos se quedan como están.",
   "ds.pick": "Elige una para ver su preview.",
   "ds.retry": "Reintentar",
+  "ds.setup.required": "Termina de crear tu site antes de elegir un sistema de diseño.",
+  "ds.setup.open": "Abrir la creación",
   "ds.search": "Buscar",
   "ds.tab.title": "Sistema de diseño",
   "ds.undo": "Deshacer",

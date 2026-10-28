@@ -94,7 +94,8 @@ export function DesignSystemTab({
   siteKey,
   t,
   onChanged,
-  onApplied
+  onApplied,
+  onBuild
 }: {
   siteKey: string | null
   t: Translate
@@ -102,6 +103,8 @@ export function DesignSystemTab({
   onChanged?: () => void
   /** Called once a try is on the site: the host brings the site's Browser panel in sight. */
   onApplied?: () => void
+  /** Open the existing site’s Build tab without claiming another site or starting a build. */
+  onBuild?: (platform: string) => void
 }): JSX.Element {
   const [read, setRead] = useState<Read | null>(null)
   const [readError, setReadError] = useState<string | null>(null)
@@ -193,6 +196,20 @@ export function DesignSystemTab({
       </div>
     )
   if (!read) return <div className="p-4 text-muted-foreground text-sm">{t('ds.loading')}</div>
+  if (read.reason === 'SITE_NOT_READY')
+    return (
+      <div
+        className="tracy-design-inspiration flex flex-col items-start gap-3 p-4 text-sm"
+        data-design-system-setup=""
+      >
+        <p>{t('ds.setup.required')}</p>
+        {onBuild && ['wordpress', 'joomla', 'emdash'].includes(read.platform ?? '') ? (
+          <Button size="sm" variant="outline" onClick={() => onBuild(read.platform as string)}>
+            {t('ds.setup.open')}
+          </Button>
+        ) : null}
+      </div>
+    )
   // An imported site can wear no system (Akemi, 15/10/2026): its one line instead of the library.
   if (closesLibrary(read))
     return (
