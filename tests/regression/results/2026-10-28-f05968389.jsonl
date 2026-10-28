@@ -1,0 +1,1 @@
+{"id":"REG-PR-58-hold-budget-timeout","verdict":"PASS","commit":"f05968389ea3bef4fad8544caa34595231c5df9c","ran_at":"2026-10-28T12:57:16.559Z","evidence":"tests/regression/.runs/2026-10-28-f05968389/REG-PR-58-hold-budget-timeout.log"}
