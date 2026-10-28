@@ -156,17 +156,14 @@ test('English policy reads trusted base code and scans fork Git data without run
  * here are all lower-case, so plain equality is enough.
  */
 function evaluate(expr, ctx) {
-  const js = expr.replace(
-    /'(?:[^']|'')*'|[A-Za-z_][\w-]*(?:\.[\w-]+)*|==|!=/g,
-    (tok) => {
-      if (tok.startsWith("'")) return JSON.stringify(tok.slice(1, -1).replaceAll("''", "'"))
-      if (tok === '==') return '==='
-      if (tok === '!=') return '!=='
-      if (tok === 'format') return 'format'
-      const [head, ...rest] = tok.split('.')
-      return `ctx[${JSON.stringify(head)}]` + rest.map((k) => `?.[${JSON.stringify(k)}]`).join('')
-    }
-  )
+  const js = expr.replace(/'(?:[^']|'')*'|[A-Za-z_][\w-]*(?:\.[\w-]+)*|==|!=/g, (tok) => {
+    if (tok.startsWith("'")) return JSON.stringify(tok.slice(1, -1).replaceAll("''", "'"))
+    if (tok === '==') return '==='
+    if (tok === '!=') return '!=='
+    if (tok === 'format') return 'format'
+    const [head, ...rest] = tok.split('.')
+    return `ctx[${JSON.stringify(head)}]` + rest.map((k) => `?.[${JSON.stringify(k)}]`).join('')
+  })
   const format = (f, ...args) => f.replace(/\{(\d+)\}/g, (_, n) => String(args[n]))
   return new Function('ctx', 'format', `return (${js})`)(ctx, format)
 }
@@ -182,7 +179,13 @@ test('the expression helper reads like Actions', () => {
 })
 
 /** The `github` context of one event, enough for `codeql.yml`'s conditions. */
-function event({ name = 'pull_request', action = 'synchronize', base = 'develop', fork = false, changes } = {}) {
+function event({
+  name = 'pull_request',
+  action = 'synchronize',
+  base = 'develop',
+  fork = false,
+  changes
+} = {}) {
   const repo = 'TracyHQ/tracy'
   const pr = name === 'pull_request'
   return {
@@ -195,7 +198,9 @@ function event({ name = 'pull_request', action = 'synchronize', base = 'develop'
       event: {
         action: pr ? action : undefined,
         changes,
-        pull_request: pr ? { number: 9, head: { repo: { full_name: fork ? 'someone/tracy' : repo } } } : undefined
+        pull_request: pr
+          ? { number: 9, head: { repo: { full_name: fork ? 'someone/tracy' : repo } } }
+          : undefined
       }
     }
   }
@@ -232,7 +237,10 @@ test('CodeQL: forks and pull requests into main scan everything, team pull reque
     [{ base: 'main', fork: true }, ['full', 'review']],
     // A retarget develop -> main starts the full scan; main -> develop the filtered one.
     [{ base: 'main', action: 'edited', changes: retarget }, ['full', 'review']],
-    [{ base: 'develop', action: 'edited', changes: { base: { ref: { from: 'main' } } } }, ['analyze', 'review']],
+    [
+      { base: 'develop', action: 'edited', changes: { base: { ref: { from: 'main' } } } },
+      ['analyze', 'review']
+    ],
     // A title or body edit runs nothing.
     [{ base: 'main', action: 'edited', changes: { body: { from: 'old' } } }, []],
     [{ base: 'develop', action: 'edited', changes: { title: { from: 'old' } } }, []],
