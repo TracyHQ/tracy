@@ -77,6 +77,16 @@
       "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.7/presentation-lock.json",
       "oid": "976fd27e671cb92c7ce0748adc98ca9af227990e",
       "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "bee4e091abc742c2967d7be83dc6aa6e51192c84",
+      "reason": "Exact generated translation bundle for PR #53. Rebuilt from its localized JSON dictionaries and checked for byte-for-byte reproducibility; authored executable source remains subject to English policy."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "84bcce538282172171709b1d3121a51679123278",
+      "reason": "Exact generated translation bundle for PR #53. Rebuilt from its localized JSON dictionaries and checked for byte-for-byte reproducibility; authored executable source remains subject to English policy."
     }
   ]
 }
