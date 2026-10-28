@@ -43,10 +43,10 @@ const NO_TASKS = holdsReleases(ROOT) ? false : 'tasks/ release dossiers are inte
 export function holdsReleases(root) {
   const tasks = path.join(root, 'tasks')
   if (!existsSync(tasks)) return false
-  return readdirSync(tasks, { withFileTypes: true }).some((entry) => {
-    if (!entry.isDirectory()) return false
+  // No dirent type filter: a task folder that is a link counts like a real one; `<file>/release` throws ENOTDIR.
+  return readdirSync(tasks).some((task) => {
     try {
-      lstatSync(path.join(tasks, entry.name, 'release'))
+      lstatSync(path.join(tasks, task, 'release'))
       return true
     } catch {
       return false
@@ -59,8 +59,8 @@ export function checkCards(root) {
   const problems = []
   let cards = 0
   const tasks = path.join(root, 'tasks')
+  // The same entries `holdsReleases` sees: a linked task folder is walked, a file has no `release` under it.
   for (const entry of readdirSync(tasks, { withFileTypes: true })) {
-    if (!entry.isDirectory()) continue
     const release = path.join(tasks, entry.name, 'release')
     let kind
     try {
@@ -220,6 +220,20 @@ test('no tasks/ at all holds no release', () => {
   const root = mkdtempSync(path.join(tmpdir(), 'release-cards-'))
   try {
     assert.equal(holdsReleases(root), false)
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('a task folder that is a link is walked like a real one: its release switches the checks on and is read', () => {
+  const root = scratch({ real: JSON.stringify(goodCard()) })
+  try {
+    mkdirSync(path.join(root, 'elsewhere', 'release'), { recursive: true })
+    writeFileSync(path.join(root, 'elsewhere', 'release', CARD), JSON.stringify(goodCard()))
+    rmSync(path.join(root, 'tasks', 'real'), { recursive: true })
+    symlinkSync(path.join(root, 'elsewhere'), path.join(root, 'tasks', 'linked'))
+    assert.equal(holdsReleases(root), true)
+    assert.deepEqual(checkCards(root), { problems: [], cards: 1 })
   } finally {
     rmSync(root, { recursive: true, force: true })
   }
