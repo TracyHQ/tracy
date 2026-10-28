@@ -1145,10 +1145,14 @@ test('template files: after a push the files it sent join pushed.json like phase
     return JSON.parse(readFileSync(join(dir, 'pushed.json'), 'utf8'))
   }
   const blob = byId(answer)['file:templates/ja_vega/css/custom.css'].blob
-  assert.deepEqual(record().files, [{ path: 'templates/ja_vega/css/custom.css', ours: blob, side: 'ours' }])
+  assert.deepEqual(record().files, [
+    { path: 'templates/ja_vega/css/custom.css', ours: blob, side: 'ours' },
+    { path: 'templates/ja_vega/css/old.css', ours: null, side: 'ours' }
+  ])
   writeFileSync(join(dir, 'written.json'), JSON.stringify({ restored: written.written }))
   assert.deepEqual(record('--undo').files, [
-    { path: 'templates/ja_vega/css/custom.css', ours: blob, side: 'theirs' }
+    { path: 'templates/ja_vega/css/custom.css', ours: blob, side: 'theirs' },
+    { path: 'templates/ja_vega/css/old.css', ours: null, side: 'theirs' }
   ])
 })
 

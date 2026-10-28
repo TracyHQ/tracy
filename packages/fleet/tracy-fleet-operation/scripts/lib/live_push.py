@@ -2454,7 +2454,7 @@ def record(changeset: dict, result: dict, id_map_path: Path, pushed_path: Path, 
             continue
         # A file the push sent (or a door file a setting wrote): the next merge takes the live site's
         # version of it while the copy still holds what was sent; after an Undo the copy's stays.
-        if item.get("path") and item.get("blob") and item.get("spec") in ("file", "templateSettings"):
+        if item.get("path") and "blob" in item and item.get("spec") in ("file", "templateSettings"):
             pushed["files"] = [f for f in pushed["files"] if f.get("path") != item["path"]]
             pushed["files"].append({"path": item["path"], "ours": item["blob"], "side": "theirs" if undo else "ours"})
         if item.get("spec") == "siteIdentity":
