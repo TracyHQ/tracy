@@ -486,11 +486,17 @@ path):
    `packages/cms/tracy-quickstart-tools/content-coverage/hygiene-rules.json`, thresholds in
    `apps/tracy-web/src/lib/content-coverage/policy.json` (changed only by a product owner decision).
    Exit 0 = pass. Exit 1 = holes or page problems remain → **section 7b**.
-   Run it with `TRACY_VISION_API_KEY` set so the **label judge** looks at every component (crop with numbered slots plus
-   its slot table) and writes `labelJudge` into `content-coverage.json`: per slot right or wrong with a suggested role.
-   Relabel every slot listed as a wrong fact/editorial group (it holds Publish for a new release), check each finer
-   mismatch, and run the audit again: only changed slots are judged again. Without a key the slots stay `not judged`
-   and Road to live warns.
+   **You are the label judge** (no model, no key). The audit writes `"$WORK/coverage/label-judge/request.json"` for the
+   slots without a cached verdict (`labelJudge.reason` is `AWAITING_AGENT`; no file means nothing to judge):
+   1. Read the request top to bottom: the question, the allowed verdicts and roles, the answer format, then per component
+      its `crop` (open the image; the slots are numbered on it) and its `slots` table. `alreadyJudged` is context only.
+   2. Judge each listed slot by key: `right`, or `wrong` with one `suggestedRole` and a short `why`. Write the answers to
+      `"$WORK/coverage/verdicts.json"` (`{"judgedBy": "agent", "slots": [...]}`).
+   3. `node packages/cms/tracy-quickstart-tools/content-coverage/record-judge.mjs --request "$WORK/coverage/label-judge/request.json" --verdicts "$WORK/coverage/verdicts.json"`.
+      It refuses the whole file on a missing, unknown or doubled key or a role outside version 3; fix and rerun.
+   4. Relabel every slot you marked wrong in `content-map.json` (a wrong fact/editorial group holds Publish for a new
+      release), run the audit again with `--write`, and answer the new request: only changed slots are asked again.
+   Slots never answered stay `not judged` and Road to live warns.
    Then **look at the map on the real pages** with the verify viewer (needs the `--fit` map written above; the contract is read
    from the tree for the version you are cutting):
 

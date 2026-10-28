@@ -30,8 +30,9 @@
  * CACHEABLE TASKS. --check --task-part runs exactly one suite under the tracer and audits its
  * reads before exiting successfully. No retries: a red test remains red and is never cached.
  * --check --structure-only checks configuration and ignored inputs, without running suites;
- * CI uses it only when the planner selected these audited Turbo tasks (cache hits included).
- * Release, nightly and fallback checks retain the full measurement.
+ * CI uses it on every pull request (since 28/10/2026, `check-all.ts`) and wherever the planner
+ * selected these audited Turbo tasks (cache hits included). Nightly and manual runs without Turbo
+ * data retain the full measurement.
  *
  * THE DATABASE SKIP IS PART OF THE HASH (16/10/2026). A routine pull request into `develop` runs the
  * workers tests without the files that need a database (`TRACY_TESTS_SKIP_DB=1`, `check-tests.ts`).
@@ -52,16 +53,17 @@
  *                    a path a suite read that its hash does not cover is red;
  *     3. ignored   — a file git ignores among a task's hashed files is red: the plan job hashes a
  *                    checkout that has no build output, so its hash would differ from the rows'.
- * `--check --changed-since <ref>` (what the gate runs on a pull request, `HEAD^1` = the base tip of
- * the merge commit) measures only the tasks whose inputs the diff touches; steps 1 and 3 still cover
+ * `--check --changed-since <ref>` (a local run against a base; the gate ran it on pull requests with
+ * `HEAD^1` until 28/10/2026 and now runs `--structure-only` there, tracing no suite — `check-all.ts`)
+ * measures only the tasks whose inputs the diff touches; steps 1 and 3 still cover
  * every task. WHY THAT IS ENOUGH: a suite starts reading a new path only when something it runs or
  * reads changes, and everything it runs or reads is among its inputs — that is what step 2 proved
- * when those inputs last changed, on the pull request that changed them. A task whose inputs this
- * diff leaves alone therefore reads what it read on the base, where it was covered. Any change to a
- * file at the repository root (package.json, lockfile, the root turbo.json) or to the measuring code
- * itself measures every task; so does a diff git cannot produce. The nightly and every run outside
- * a pull request measure every task, which also catches two pull requests that were each covered
- * alone and are not once both are merged.
+ * when those inputs last changed, on the last full run (a nightly or a manual run) that measured the
+ * base. A task whose inputs this diff leaves alone therefore reads what it read on the base, where
+ * it was covered. Any change to a file at the repository root (package.json, lockfile, the root
+ * turbo.json) or to the measuring code itself measures every task; so does a diff git cannot
+ * produce. The nightly and every run outside a pull request measure every task, which also catches
+ * two pull requests that were each covered alone and are not once both are merged.
  * `--accept-red <task id>` (generation only, repeatable): use the trace of a task whose suite is red
  * on THIS machine and say so. It exists because the dsh-passwords suite cannot be green on macOS
  * (it binds 127.0.0.2 and deletes under the system's temporary directory; 22 tests fail there with or without the
@@ -211,7 +213,7 @@ export const EXCLUDE = [
   '!$TURBO_ROOT$/**/__pycache__/**',
   '!$TURBO_ROOT$/**/.DS_Store',
   // The logs of the regression runner (`tests/regression/run.mjs`), ignored by git: found in the hash
-  // of the two tasks that take `tests/regression/**`, on the first tree where the runner had run.
+  // of the two tasks that took `tests/regression/**`, on the first tree where the runner had run.
   '!$TURBO_ROOT$/tests/regression/.runs/**',
   ...GENERATED.map(excludeGlob)
 ]

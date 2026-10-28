@@ -1,7 +1,0 @@
-{
-  "root": false,
-  "extends": "//",
-  "files": {
-    "includes": ["**", "!denominator.json", "!cases/families.json"]
-  }
-}

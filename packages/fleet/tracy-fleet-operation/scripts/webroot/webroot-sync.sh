@@ -197,7 +197,12 @@ drop_scratch() {
 load_schema() {
   tracy_db_exec mariadb -uroot -e "DROP DATABASE IF EXISTS \`$1\`; CREATE DATABASE \`$1\` CHARACTER SET $CHARSET COLLATE $COLLATION" || return 1
   # Two loads each (the base and the live read load side by side): four connections in all.
-  TRACY_LOAD_STREAMS="${TRACY_LOAD_STREAMS:-2}" tracy_db_load_dump "$1" "$2" "$DIR/load-$1" "${3:-}" || return 1
+  local error="$DIR/load-$1.error"
+  if ! TRACY_LOAD_STREAMS="${TRACY_LOAD_STREAMS:-2}" tracy_db_load_dump "$1" "$2" "$DIR/load-$1" "${3:-}" 2> "$error"; then
+    cat "$error" >&2
+    return 1
+  fi
+  cat "$error" >&2
   tracy_db_drop_triggers "$1" >&2 || return 1
 }
 
@@ -746,7 +751,22 @@ merge() {
       echo "loading the three databases failed" >&2
       drop_scratch
       trap - EXIT
-      answer_refusal MERGE_FAILED "$SCRATCH_REFUSED"
+      local load_why
+      load_why="$(python3 - "$DIR/load-$SCHEMA_BASE.error" "$DIR/load-$SCHEMA_LIVE.error" <<'PYERR'
+import pathlib, re, sys
+for file in sys.argv[1:]:
+    path = pathlib.Path(file)
+    if not path.exists(): continue
+    for line in reversed(path.read_text(errors='replace').splitlines()):
+        found = re.search(r'ERROR (\d+) \(([^)]+)\)', line)
+        if found:
+            # Do not echo SQL values from the dump to a customer. The code and schema identify
+            # the failed load; the host log retains the full server diagnostic.
+            print(f"the dump load failed with database error {found.group(1)} ({found.group(2)})")
+            sys.exit()
+PYERR
+)"
+      answer_refusal MERGE_FAILED "${load_why:-$SCRATCH_REFUSED}"
       return ;;
   esac
   if ! scratch_loaded "$SCHEMA_OURS"; then
@@ -1247,6 +1267,9 @@ a = json.load(open(sys.argv[1]))
 print(a["stage"], a["dir"], a["version"], a["oursCommit"], a["theirsCommit"], a.get("rebuild") or "-",
       a.get("mergedCommit") or "-", a["startedAt"])' "$APPLYING")
   db_names
+  if ! tracy_db_foreign_keys recover --plan "$STACK/.restore-foreign-keys.json" >&2; then
+    answer_refusal APPLY_RECOVERY_FAILED "the interrupted restore's foreign keys could not be recovered"; return 1
+  fi
   local how
   if [[ "$stage" == finishing ]]; then
     echo "==> [${SECONDS}s] the last sync was cut off once in place: finishing it from its run" >&2

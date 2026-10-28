@@ -1,7 +1,9 @@
 // Where each kind of item a brief holds goes on a site (#49, spec #38): one table, from the item kind to the place content
 // roles (version 3, `place-content-roles.mjs`) that carry it, or to the reason it is not shown. A brief item with neither is
 // a collected fact that disappears without trace; `routesOfBrief` lists those, and a test fails when a new kind has no row.
-// Withheld facts are not silent either: `ownerQuestionsOf` turns each into a question for the owner.
+// Withheld facts are not silent either: `ownerQuestionsOf` turns each into a question for the owner, when the owner can
+// answer it. A missing line the owner cannot answer (a source that failed, a field with no owner wording) is routed as
+// not shown with its own reason (`missing.<field>`), never asked with a raw id.
 import { PLACE_CONTENT_ROLES_V3 } from './place-content-roles.mjs'
 
 const roles = (...list) => Object.freeze({ roles: Object.freeze(list) })
@@ -134,10 +136,12 @@ export function routesOfBrief(brief, table = BRIEF_ITEM_ROUTES) {
     else if (route?.notShown) out.notShown.push({ kind, count, reason: route.notShown })
     else out.unrouted.push({ kind, count })
   }
+  for (const m of unaskedMissingOf(brief))
+    out.notShown.push({ kind: `missing.${m.field}`, count: 1, reason: m.why })
   return out
 }
 
-// What to ask the owner for each field a brief lists as missing or withholds. Anything else is asked generally.
+// What to ask the owner for each field a brief lists as missing or withholds. A field not listed here is not asked.
 const ASK = {
   prices:
     'What do your items or services cost? Prices were not published, so none will show until you tell us.',
@@ -153,6 +157,21 @@ const ASK = {
   name: 'Which business name should the site use? The sources disagree or it was held back.',
   team: 'Which team members should the site show? People named only in reviews are held back until you confirm them.',
   googleRating: 'Do you want your Google rating shown on the site? It was left off.'
+}
+
+/**
+ * Missing lines the owner is not asked about: a failed or blocked source (`source:<id>`, a research problem to retry or
+ * skip) and any field with no owner wording in `ASK`. Each: `{ field, why }`, one per field.
+ */
+export function unaskedMissingOf(brief) {
+  const seen = new Set()
+  const out = []
+  for (const m of list(brief?.missing)) {
+    if (Object.hasOwn(ASK, m.field) || seen.has(m.field)) continue
+    seen.add(m.field)
+    out.push({ field: m.field, why: m.why })
+  }
+  return out
 }
 
 /** Menu entries printed without a price (priced offerings the owner did not publish). */
@@ -171,13 +190,9 @@ export function ownerQuestionsOf(brief) {
   const questions = []
   const seen = new Set()
   for (const m of list(brief?.missing)) {
-    if (seen.has(m.field)) continue
+    if (seen.has(m.field) || !Object.hasOwn(ASK, m.field)) continue
     seen.add(m.field)
-    questions.push({
-      id: `owner.${m.field}`,
-      field: m.field,
-      question: ASK[m.field] ?? `Can you tell us about ${m.field}? ${m.why}`
-    })
+    questions.push({ id: `owner.${m.field}`, field: m.field, question: ASK[m.field] })
   }
   const unpriced = unpricedNames(brief)
   if (unpriced.length && !seen.has('prices')) {

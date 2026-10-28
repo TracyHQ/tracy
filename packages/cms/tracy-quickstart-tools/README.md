@@ -177,16 +177,20 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   role (faces that prove a number may carry `stat.proof_image`) · R6 no link or list item inside a fact slot · R7 siblings share a role · R8 adjacent short slots on one line
   are a cut heading · R9 a fact-like hole (an accepted reason does not lift it). Road to live holds a new release on any
   failing rule in a `place-content-roles/3` map and warns for a live one; a version 2 map is listed and never holds.
-- **Label judge (audit 1.3.0, spec #37).** With `TRACY_VISION_API_KEY` set (`TRACY_VISION_URL`, `TRACY_VISION_MODEL` as
-  for the server), a vision model looks once per component at its crop with numbered slots (the verify viewer's crops,
-  with a margin) and its slot table (key, sample, role, group, fit) plus the page title and URL, the module title and
-  position and the neighbouring components' titles, and says per slot right or wrong with a suggested version 3 role
-  (`content-coverage/lib/label-judge.mjs`). It targets what the rules cannot see: a fact labelled editorial, and a claim
-  (a number, an award) inside editorial text. The verdicts are written as `labelJudge` beside `labelRules` and are also
-  the cache: a slot whose content hash is unchanged is never sent again. Cost is bounded per run
-  (`--judge-max-calls`, default 150; `--judge-max-cents`, default 300); past the caps, without a key, or with
-  `--no-judge`, slots stay `not judged`, never right. Road to live holds a new release when a slot sits on the wrong
-  side of fact/editorial (`coverage-judge`) and warns on finer mismatches, unjudged slots and live releases
+- **Label judge (audit 1.4.0, spec #37).** The agent that runs the release is the judge; the audit calls no model and
+  needs no key. For every component with a slot whose verdict is not cached, it writes `<out>/label-judge/request.json`:
+  the question, the allowed verdicts and version 3 roles, the answer format, and per component its crop with numbered
+  slots (the verify viewer's crops, with a margin, in `<out>/label-judge/images/`), the page title and URL, the module
+  title and position, the neighbouring components' titles, and the slots to judge (number, key, kind, sample, role,
+  group, fit). The agent answers in a verdicts file (`{"judgedBy": "agent", "slots": [{"key", "verdict": "right" |
+  "wrong", "suggestedRole", "why"}]}`) and records it with `content-coverage/record-judge.mjs --request <file>
+  --verdicts <file>`, which refuses the whole file on a missing, unknown or doubled key, a verdict other than right or
+  wrong, or a suggested role outside `place-content-roles/3` (`content-coverage/lib/label-judge-record.mjs`), and
+  otherwise writes `labelJudge` (with `judgedBy`) into the coverage files the request names. It targets what the rules
+  cannot see: a fact labelled editorial, and a claim (a number, an award) inside editorial text. The verdicts are also
+  the cache: a slot whose content hash is unchanged is never asked again. Until answered, or with `--no-judge`, slots
+  stay `not judged`, never right. Road to live holds a new release when a slot sits on the wrong side of
+  fact/editorial (`coverage-judge`) and warns on finer mismatches, unjudged slots and live releases
   (`coverage-judge-warn`); a version 2 map is listed and never holds.
 - **Accepting a hole or a page problem.** Only when it is truly not demo content a customer sees: add
   `"accepted": "<reason>"` to that line (English, at least 12 characters). The next `--write` keeps it.

@@ -1,0 +1,48 @@
+{
+  "id": "REG-PR-70-imported-copy-doors",
+  "kind": "fix",
+  "title": "An imported site's copy is asked on both its Joomla doors, and only a copy still starting reads warming up",
+  "pr": 70,
+  "area": "sites/import-copy",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: verify a copy door that redirects, one with no container (ENOTFOUND), one answering a PHP fatal 500, one refusing the connection, a gateway 502, a slow one.",
+    "S2: verify a gated front door (HTML 200) and Joomla's guest JSON 403.",
+    "S3: list the copy doors of a Joomla import registered on its administrator door, on its front door, under a subfolder; of a WordPress import.",
+    "S4: the site agent reads COMPONENT_NOT_ON_FLEET_COPY with copyReason redirected, no_copy, copy_error."
+  ],
+  "expect": [
+    "S1: redirected, no_copy, copy_error (not transient); unreachable, unreachable, timeout (transient).",
+    "S2: not_json and not_engine, both reasons to ask the copy's other door.",
+    "S3: registered door first, then the other door, subfolder kept; WordPress one door.",
+    "S4: each is said as what it is, with Do not retry and do not write another way."
+  ],
+  "selectors": {
+    "file": "apps/tracy-web/src/sites/component-target.js",
+    "exports": "verifyCopy, copyDoorsFor, DOOR_WHYS"
+  },
+  "evidence": "Beta report 28/10/2026 1b (traumferien-azoren.de re-import, 25-26/10): every write refused as warming up for a day",
+  "fence": "Fleet copy verification and door choice",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=a copy that answers its plugin is verified|only a copy still starting is warming up|what waiting does not change says what it is|a door that answers without the plugin|the plugin itself refusing|a Joomla copy is asked on both its doors|a WordPress copy, another component|refusalNext",
+      "apps/tracy-web/test/copy-verify.test.mjs",
+      "packages/tools/tracy-site-tools/test/site.test.mjs"
+    ],
+    "tests": [
+      "a copy that answers its plugin is verified",
+      "🔒 only a copy still starting is warming up: a refused connection, a gateway, a cut call",
+      "🔒 what waiting does not change says what it is: a redirect, no container, a server error",
+      "a door that answers without the plugin is the door, never a wrong token",
+      "the plugin itself refusing is the token, the CMS or its answer",
+      "🔒 a Joomla copy is asked on both its doors, the registered one first; the path under the webroot is kept",
+      "a WordPress copy, another component or a non-URL has its one door, or none",
+      "refusalNext: each door code names the next step — the customer, the call, or a repair — and never a way round"
+    ]
+  }
+}

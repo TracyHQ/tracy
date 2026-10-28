@@ -7,7 +7,6 @@
   "scripts": {
     "build": "pnpm -r --filter \"./packages/**\" run build",
     "build:check": "tsx scripts/check-all.ts",
-    "qa": "node tests/qa/cli.mjs",
     "typecheck": "tsc --noEmit -p packages/ui/tracy-ui && tsc --noEmit -p packages/brand/tracy-brand && tsc --noEmit -p packages/ui/tracy-chat-input && tsc --noEmit -p packages/ui/tracy-settings && tsc --noEmit -p packages/ui/tracy-sidebar && tsc --noEmit -p packages/dev/tracy-design && tsc --noEmit -p packages/site/tracy-add-site && tsc --noEmit -p packages/site/tracy-my-sites && tsc --noEmit -p packages/site/tracy-inbox && tsc --noEmit -p packages/site/tracy-site-tabs && tsc --noEmit -p packages/ui/tracy-mode-picker && tsc --noEmit -p packages/core/tracy-core && tsc --noEmit -p packages/web/tracy-harness && tsc --noEmit -p tsconfig.scripts.json",
     "lint": "oxlint --fix --disable-nested-config && pnpm typecheck && pnpm format",
     "test:lint": "oxlint --deny-warnings --disable-nested-config && pnpm typecheck && pnpm format:check",

@@ -1,0 +1,1 @@
+{"id":"REG-PR-71-sync-foreign-keys","verdict":"PASS","commit":"7874245e7f91301741b2ff3c88f2f17448f5ccd3","ran_at":"2026-10-28T16:34:17.382Z","evidence":"tests/regression/.runs/2026-10-28-7874245e7/REG-PR-71-sync-foreign-keys.log"}

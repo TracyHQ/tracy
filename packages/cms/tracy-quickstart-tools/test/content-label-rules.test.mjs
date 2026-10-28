@@ -258,7 +258,7 @@ test('the committed coverage file carries the rule results', () => {
   }
   const contract = { manifest: { id: 'x/j6/1.0.0' }, sha256: { contentMap: 'a', presentationLock: 'b' }, map }
   const doc = buildCoverageFile({ result, contract })
-  assert.equal(doc.tool.version, '1.3.0')
+  assert.equal(doc.tool.version, '1.4.0')
   assert.equal(doc.labelRules.rules.R3.count, 1)
   assert.deepEqual(doc.labelRules.rules.R3.keys, ['foot.link'])
   assert.equal(doc.labelRules.applies, true)

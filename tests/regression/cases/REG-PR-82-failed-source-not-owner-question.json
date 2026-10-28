@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-82-failed-source-not-owner-question",
+  "kind": "fix",
+  "title": "A failed source or a field without owner wording is never an owner question; the brief routes it as not shown with its reason",
+  "pr": 82,
+  "area": "wo/brief-readiness",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test packages/wo/website-opportunities/test/brief-item-routes.test.mjs",
+    "S2: Read the exit code and the fail count."
+  ],
+  "expect": [
+    "The run exits 0 with 0 failures.",
+    "A brief whose missing list holds a failed source has no owner question for it and lists missing.source:<id> under notShown with the reason.",
+    "A missing field with no owner wording has no owner question and is listed under notShown; a field with wording keeps its question."
+  ],
+  "selectors": {
+    "module": "packages/wo/website-opportunities/domain/brief-item-routes.mjs (ownerQuestionsOf, routesOfBrief)"
+  },
+  "evidence": "28/10/2026: a brief revision on the develop surface asked the owner about source:google-maps failed: HTTP_429.",
+  "fence": "ownerQuestionsOf asks only fields in ASK; routesOfBrief routes the rest as not shown. Not exercised: the readiness report in a live revision.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/brief-item-routes.test.mjs"
+    ],
+    "tests": [
+      "a source that failed is a research problem: no owner question, routed as not shown with its reason",
+      "a missing field with no owner wording is never asked with its raw id, it is routed as not shown",
+      "a missing field with owner wording keeps its question"
+    ]
+  }
+}

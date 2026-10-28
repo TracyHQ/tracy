@@ -382,7 +382,8 @@ jobs:
       # the nightly warms the cache for the next morning's pull requests), each task audits its own
       # inputs as it runs, and `checks` no longer runs every suite a second time under the tracer
       # (~19 of a release's ~23-minute `checks`, run 38930622899). Any failure above still falls back
-      # to the two workers shards, which audit in `checks` as before.
+      # to the two workers shards; their suites are then traced in `checks` on the nightly and manual
+      # runs only — a pull request's `checks` traces none since 28/10/2026 (`check-all.ts`).
       - name: Start the Turbo remote cache
         uses: ./.github/actions/turbo-cache
         with:
@@ -927,6 +928,11 @@ jobs:
           # run, provisions no database for it, and says so. `0` everywhere else, the nightly and the
           # release pull requests included.
           TRACY_TESTS_SKIP_DB: ${{ needs.plan.outputs.skip_db == 'true' && '1' || '0' }}
+          # `turbo-config` on the `checks` row (`check-all.ts`, `TURBO_CONFIG_ARGS`): on every pull
+          # request `--structure-only` — structure and ignored inputs, NO suite traced (28/10/2026:
+          # the traced run cost this row 8.3 and 26.0 minutes on two pull requests). The nightly and
+          # manual runs trace: in each forced Turbo task when `plan` marks `taskAudits` (then the gate
+          # here is `--structure-only` too), or every suite in this gate when `plan` fell back.
           TRACY_TURBO_TASK_AUDITS: ${{ matrix.taskAudits && '1' || '' }}
           TRACY_TSC_CACHE_DIR: ${{ matrix.group == 'checks' && '.cache/tsc' || '' }}
           TRACY_TSC_CACHE_HIT: ${{ steps.tsc-cache.outputs.cache-hit }}

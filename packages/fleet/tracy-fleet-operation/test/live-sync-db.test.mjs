@@ -12,7 +12,7 @@
  */
 import assert from 'node:assert/strict'
 import { execFileSync, spawnSync } from 'node:child_process'
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { after, before, test } from 'node:test'
@@ -397,14 +397,14 @@ CREATE TABLE jos_content (id INT PRIMARY KEY, asset_id INT, title VARCHAR(255), 
 CREATE TABLE jos_assets (id INT PRIMARY KEY, parent_id INT, lft INT, rgt INT, level INT, name VARCHAR(50) NOT NULL, title VARCHAR(100), UNIQUE KEY idx_asset_name (name));
 CREATE TABLE jos_workflow_associations (item_id INT NOT NULL, stage_id INT NOT NULL, extension VARCHAR(50) NOT NULL, PRIMARY KEY (item_id, extension));
 CREATE TABLE jos_contentitem_tag_map (type_alias VARCHAR(255) NOT NULL DEFAULT '', core_content_id INT UNSIGNED NOT NULL, content_item_id INT NOT NULL, tag_id INT UNSIGNED NOT NULL, tag_date TIMESTAMP NOT NULL DEFAULT '2026-01-01 00:00:00', type_id MEDIUMINT NOT NULL, UNIQUE KEY uc_ItemnameTagid (type_id, content_item_id, tag_id));
-CREATE TABLE jos_fields (id INT PRIMARY KEY, context VARCHAR(255));
+CREATE TABLE jos_fields (id INT PRIMARY KEY, context VARCHAR(255), asset_id INT NOT NULL DEFAULT 0);
 CREATE TABLE jos_fields_values (field_id INT UNSIGNED NOT NULL, item_id VARCHAR(255) NOT NULL, value MEDIUMTEXT, KEY idx_field_id (field_id));
 CREATE TABLE jos_ucm_content (core_content_id INT PRIMARY KEY, core_type_alias VARCHAR(255), core_content_item_id INT, core_title VARCHAR(255));
 CREATE TABLE jos_menu (id INT PRIMARY KEY, menutype VARCHAR(24), title VARCHAR(255), parent_id INT, lft INT, rgt INT, level INT, path VARCHAR(400), client_id TINYINT NOT NULL DEFAULT 0);
 CREATE TABLE jos_banners (id INT PRIMARY KEY, name VARCHAR(255), impmade INT, clicks INT);
 CREATE TABLE jos_action_logs (id INT PRIMARY KEY, message TEXT);
 CREATE TABLE jos_loose (a INT, b INT);
-CREATE TABLE jos_contact_details (id INT PRIMARY KEY, name VARCHAR(255), checked_out INT UNSIGNED NOT NULL DEFAULT 0, checked_out_time DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00');
+CREATE TABLE jos_contact_details (id INT PRIMARY KEY, asset_id INT NOT NULL DEFAULT 0, name VARCHAR(255), checked_out INT UNSIGNED NOT NULL DEFAULT 0, checked_out_time DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00');
 INSERT INTO jos_contact_details (id, name) VALUES (1,'Shop');
 INSERT INTO jos_content VALUES (17,117,'Seventeen',0),(22,122,'Twenty-two',0),(23,123,'Twenty-three',0);
 ALTER TABLE jos_content ADD checked_out INT UNSIGNED NULL, ADD checked_out_time DATETIME NULL;
@@ -413,7 +413,7 @@ INSERT INTO jos_assets VALUES (1,0,0,7,0,'root.1','Root'),(117,1,1,2,1,'com_cont
 INSERT INTO jos_workflow_associations VALUES (17,1,'com_content.article'),(22,1,'com_content.article'),(23,1,'com_content.article');
 INSERT INTO jos_contentitem_tag_map (type_alias, core_content_id, content_item_id, tag_id, type_id) VALUES
   ('com_content.article',1,17,2,1),('com_content.article',2,22,2,1),('com_content.article',3,23,2,1),('com_content.article',3,23,5,1);
-INSERT INTO jos_fields VALUES (1,'com_content.article');
+INSERT INTO jos_fields (id, context) VALUES (1,'com_content.article');
 INSERT INTO jos_fields_values VALUES (1,'17','red'),(1,'22','blue'),(1,'23','green');
 INSERT INTO jos_ucm_content VALUES (1,'com_content.article',17,'Seventeen'),(2,'com_content.article',22,'Twenty-two'),(3,'com_content.article',23,'Twenty-three');
 INSERT INTO jos_menu VALUES (1,'','Menu_Item_Root',0,0,17,0,'',0),
@@ -1166,29 +1166,163 @@ test(
   }
 )
 
-// A live deletion kept as a copy edit brings no live record (#62).
-test('a live delete kept as a copy edit is not counted as taken', opts, () => {
-  stageRecords("UPDATE jos_content SET title='Tracy edit' WHERE id=1;", 'DELETE FROM jos_content WHERE id=1;')
+const FK_SCHEMA = `
+CREATE TABLE jos_parent (a INT, b INT, title VARCHAR(40), PRIMARY KEY (a,b), KEY reverse_key(b,a));
+CREATE TABLE jos_child (id INT PRIMARY KEY, a INT, b INT, title VARCHAR(40),
+CONSTRAINT child_parent FOREIGN KEY (b,a) REFERENCES jos_parent(b,a) ON DELETE CASCADE ON UPDATE CASCADE,
+CONSTRAINT child_second FOREIGN KEY (a,b) REFERENCES jos_parent(a,b) ON DELETE RESTRICT);
+INSERT INTO jos_parent VALUES (1,1,'parent');
+INSERT INTO jos_child VALUES (1,1,1,'child');`
+
+function stageForeignKeys(ours, theirs) {
+  sql(
+    'SET FOREIGN_KEY_CHECKS=0;' +
+      ['sb', 'sm', 'st']
+        .map((s) => `DROP DATABASE IF EXISTS ${s}; CREATE DATABASE ${s}; USE ${s}; ${FK_SCHEMA}`)
+        .join('\n') +
+      `\nSET FOREIGN_KEY_CHECKS=1; USE sm; ${ours} USE st; ${theirs}`
+  )
+}
+
+test('whole-table sync preserves foreign keys and can replace a referenced parent', opts, () => {
+  for (const theirs of [
+    "UPDATE jos_child SET title='live child';",
+    "UPDATE jos_parent SET title='live parent';",
+    "UPDATE jos_parent SET title='live parent'; UPDATE jos_child SET title='live child';"
+  ]) {
+    stageForeignKeys('', theirs)
+    const answer = merge(null, 'ours')
+    assert.equal(answer.ok, true)
+    const keys = rows(
+      "SELECT constraint_name,referenced_table_schema,column_name FROM information_schema.key_column_usage WHERE table_schema='sm' AND referenced_table_name IS NOT NULL ORDER BY constraint_name,ordinal_position"
+    )
+    assert.deepEqual(keys, [
+      ['child_parent', 'sm', 'b'],
+      ['child_parent', 'sm', 'a'],
+      ['child_second', 'sm', 'a'],
+      ['child_second', 'sm', 'b']
+    ])
+    assert.throws(() => sql("INSERT INTO sm.jos_child VALUES (9,999,999,'bad parent')"), /1452|foreign key/)
+  }
+})
+
+test('partial restore rebinds outgoing and untouched incoming foreign keys and rolls them back', opts, () => {
+  const helper = join(here, '..', 'scripts', 'lib', 'foreign_keys.py')
+  for (const moved of ['jos_child', 'jos_parent', 'jos_child\njos_parent']) {
+    stageForeignKeys('', '')
+    sql(
+      'DROP DATABASE IF EXISTS fk_trash; DROP DATABASE IF EXISTS fk_failed; CREATE DATABASE fk_trash; CREATE DATABASE fk_failed;'
+    )
+    const oldFile = join(root, 'fk-old.txt'),
+      newFile = join(root, 'fk-new.txt'),
+      plan = join(root, 'fk-plan.json')
+    writeFileSync(oldFile, moved)
+    writeFileSync(newFile, moved)
+    const run = (op, ...extra) =>
+      execFileSync('python3', [helper, op, '--plan', plan, ...extra], {
+        env: { ...process.env, TRACY_SYNC_SQL: JSON.stringify(CLIENT) },
+        encoding: 'utf8'
+      })
+    const tables = moved.split('\n')
+    // Restore loads only selected tables. Unselected staging tables must not participate.
+    sql(
+      'SET FOREIGN_KEY_CHECKS=0; ' +
+        ['jos_child', 'jos_parent']
+          .filter((t) => !tables.includes(t))
+          .map((t) => `DROP TABLE st.${t};`)
+          .join(' ')
+    )
+    run(
+      'prepare',
+      '--live',
+      'sm',
+      '--stage',
+      'st',
+      '--old-tables',
+      oldFile,
+      '--new-tables',
+      newFile,
+      '--trash',
+      'fk_trash'
+    )
+    const savedPlan = readFileSync(plan, 'utf8')
+    run('drop-before')
+    // A process can die here, before rename: a new process must restore the old graph.
+    run('recover')
+    writeFileSync(plan, savedPlan)
+    // Staged FKs already dropped by the interrupted run.
+    sql(
+      'SET FOREIGN_KEY_CHECKS=0; ' +
+        JSON.parse(savedPlan)
+          .old.map((k) => `ALTER TABLE sm.${k.table} DROP FOREIGN KEY ${k.name};`)
+          .join(' ')
+    )
+    const pairs = tables
+      .map((t) => `sm.${t} TO fk_trash.${t}`)
+      .concat(tables.map((t) => `st.${t} TO sm.${t}`))
+    sql('RENAME TABLE ' + pairs.join(', ') + ';')
+    run('apply')
+    const graph = () =>
+      rows(
+        "SELECT constraint_name,referenced_table_schema,column_name FROM information_schema.key_column_usage WHERE table_schema='sm' AND referenced_table_name IS NOT NULL ORDER BY constraint_name,ordinal_position"
+      )
+    const expected = [
+      ['child_parent', 'sm', 'b'],
+      ['child_parent', 'sm', 'a'],
+      ['child_second', 'sm', 'a'],
+      ['child_second', 'sm', 'b']
+    ]
+    assert.deepEqual(graph(), expected)
+    sql('DROP DATABASE st;')
+    sql("INSERT INTO sm.jos_child VALUES (2,1,1,'valid')")
+    assert.throws(() => sql("INSERT INTO sm.jos_child VALUES (3,999,999,'invalid')"), /1452|foreign key/)
+    run('drop-after')
+    sql(
+      'RENAME TABLE ' +
+        tables
+          .map((t) => `sm.${t} TO fk_failed.${t}`)
+          .concat(tables.map((t) => `fk_trash.${t} TO sm.${t}`))
+          .join(', ') +
+        ';'
+    )
+    run('rollback')
+    assert.deepEqual(graph(), expected)
+    assert.throws(() => sql("INSERT INTO sm.jos_child VALUES (3,999,999,'invalid')"), /1452|foreign key/)
+  }
+})
+
+test('generated columns recompute through whole-table and row merges', opts, () => {
+  for (const kind of ['STORED', 'VIRTUAL']) {
+    const base = `CREATE TABLE jos_computed (id INT PRIMARY KEY, amount INT, doubled INT AS (amount * 2) ${kind}, title VARCHAR(100)); INSERT INTO jos_computed (id,amount,title) VALUES (1,2,'base'),(2,4,'base two');`
+    for (const rowMerge of [false, true]) {
+      sql(
+        ['sb', 'sm', 'st']
+          .map((s) => `DROP DATABASE IF EXISTS ${s}; CREATE DATABASE ${s}; USE ${s}; ${base}`)
+          .join('\n') +
+          `USE sm; ${rowMerge ? "UPDATE jos_computed SET title='copy' WHERE id=1;" : ''} USE st; UPDATE jos_computed SET amount=8 WHERE id=1; INSERT INTO jos_computed (id,amount,title) VALUES (3,9,'new');`
+      )
+      const answer = merge(null, 'ours')
+      assert.equal(answer.ok, true)
+      assert.deepEqual(rows('SELECT amount,doubled,title FROM sm.jos_computed WHERE id=1'), [
+        ['8', '16', rowMerge ? 'copy' : 'base']
+      ])
+      assert.deepEqual(rows('SELECT amount,doubled FROM sm.jos_computed WHERE id=3'), [['9', '18']])
+    }
+  }
+})
+
+test('generated-only tables retain every row when taken whole', opts, () => {
+  sql(
+    ['sb', 'sm', 'st']
+      .map(
+        (s) =>
+          `DROP DATABASE IF EXISTS ${s}; CREATE DATABASE ${s}; USE ${s}; CREATE TABLE jos_constants (value INT AS (7) STORED); INSERT INTO jos_constants () VALUES ();`
+      )
+      .join('\n') + 'USE st; INSERT INTO jos_constants () VALUES (),();'
+  )
   const answer = merge(null, 'ours')
-  assert.equal(answer.counts.records, 0)
-  assert.deepEqual(rows('SELECT title FROM sm.jos_content WHERE id=1'), [['Tracy edit']])
-  assert.equal(answer.kept[0].reason, 'delete-modify')
-  stageRecords('', 'DELETE FROM jos_content WHERE id=1;')
-  const removed = merge(null, 'ours')
-  assert.equal(removed.counts.records, 1)
-  assert.deepEqual(rows('SELECT id FROM sm.jos_content WHERE id=1'), [])
-  stageRecords("UPDATE jos_content SET title='Tracy edit' WHERE id=1;", 'DELETE FROM jos_content WHERE id=1;')
-  const chosenDelete = merge({ 'db:jos_content:["1"]': 'theirs' }, 'ours')
-  assert.equal(chosenDelete.counts.records, 1)
-  assert.deepEqual(rows('SELECT id FROM sm.jos_content WHERE id=1'), [])
-  stageRecords('DELETE FROM jos_content WHERE id=1;', "UPDATE jos_content SET title='Live edit' WHERE id=1;")
-  const keptDelete = merge(null, 'ours')
-  assert.equal(keptDelete.counts.records, 0)
-  assert.deepEqual(rows('SELECT id FROM sm.jos_content WHERE id=1'), [])
-  stageRecords('DELETE FROM jos_content WHERE id=1;', "UPDATE jos_content SET title='Live edit' WHERE id=1;")
-  const chosenLive = merge({ 'db:jos_content:["1"]': 'theirs' }, 'ours')
-  assert.equal(chosenLive.counts.records, 1)
-  assert.deepEqual(rows('SELECT title FROM sm.jos_content WHERE id=1'), [['Live edit']])
+  assert.equal(answer.ok, true)
+  assert.deepEqual(rows('SELECT value FROM sm.jos_constants'), [['7'], ['7'], ['7']])
 })
 
 function stageHeldContactFields(ours, theirs) {
@@ -1244,4 +1378,66 @@ INSERT INTO jos_assets VALUES (102,'com_contact.contact.2'),(104,'com_content.fi
     assert.deepEqual(rows('SELECT * FROM sm.jos_ucm_base'), [])
     assert.deepEqual(rows('SELECT * FROM sm.jos_assets'), [])
   }
+})
+
+test('a live delete kept as a copy edit is not counted as taken', opts, () => {
+  stageRecords("UPDATE jos_content SET title='Tracy edit' WHERE id=1;", 'DELETE FROM jos_content WHERE id=1;')
+  const answer = merge(null, 'ours')
+  assert.equal(answer.counts.records, 0)
+  assert.deepEqual(rows('SELECT title FROM sm.jos_content WHERE id=1'), [['Tracy edit']])
+  assert.equal(answer.kept[0].reason, 'delete-modify')
+  stageRecords('', 'DELETE FROM jos_content WHERE id=1;')
+  const removed = merge(null, 'ours')
+  assert.equal(removed.counts.records, 1)
+  assert.deepEqual(rows('SELECT id FROM sm.jos_content WHERE id=1'), [])
+  stageRecords("UPDATE jos_content SET title='Tracy edit' WHERE id=1;", 'DELETE FROM jos_content WHERE id=1;')
+  const chosenDelete = merge({ 'db:jos_content:["1"]': 'theirs' }, 'ours')
+  assert.equal(chosenDelete.counts.records, 1)
+  assert.deepEqual(rows('SELECT id FROM sm.jos_content WHERE id=1'), [])
+  stageRecords('DELETE FROM jos_content WHERE id=1;', "UPDATE jos_content SET title='Live edit' WHERE id=1;")
+  const keptDelete = merge(null, 'ours')
+  assert.equal(keptDelete.counts.records, 0)
+  assert.deepEqual(rows('SELECT id FROM sm.jos_content WHERE id=1'), [])
+  stageRecords('DELETE FROM jos_content WHERE id=1;', "UPDATE jos_content SET title='Live edit' WHERE id=1;")
+  const chosenLive = merge({ 'db:jos_content:["1"]': 'theirs' }, 'ours')
+  assert.equal(chosenLive.counts.records, 1)
+  assert.deepEqual(rows('SELECT title FROM sm.jos_content WHERE id=1'), [['Live edit']])
+})
+
+test('renumbered assets update custom fields and every other core asset reference', opts, () => {
+  const tables = [
+    'fields',
+    'fields_groups',
+    'contact_details',
+    'banners',
+    'workflows',
+    'workflow_stages',
+    'workflow_transitions'
+  ]
+  const base =
+    `CREATE TABLE jos_assets (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100));
+INSERT INTO jos_assets VALUES (1,'root.1');` +
+    tables
+      .map((t) => `CREATE TABLE jos_${t} (id INT PRIMARY KEY, asset_id INT, title VARCHAR(100));`)
+      .join('\n')
+  sql(
+    ['sb', 'sm', 'st']
+      .map((s) => `DROP DATABASE IF EXISTS ${s}; CREATE DATABASE ${s}; USE ${s}; ${base}`)
+      .join('\n') +
+      `\nUSE sm; INSERT INTO jos_assets VALUES (155,'com_content.category.2');
+USE st; INSERT INTO jos_assets VALUES (155,'com_content.field.3');` +
+      tables.map((t) => `INSERT INTO jos_${t} VALUES (3,155,'live');`).join('\n')
+  )
+  const answer = merge(null, 'ours')
+  const moved = answer.renumbered.find((r) => r.table === 'assets')
+  assert.ok(moved, JSON.stringify(answer.renumbered))
+  for (const table of tables) {
+    assert.deepEqual(
+      rows(`SELECT a.name FROM sm.jos_${table} r JOIN sm.jos_assets a ON a.id=r.asset_id`),
+      [['com_content.field.3']],
+      table
+    )
+    assert.notEqual(rows(`SELECT asset_id FROM sm.jos_${table}`)[0][0], '155', table)
+  }
+  assert.deepEqual(rows('SELECT name FROM sm.jos_assets WHERE id=155'), [['com_content.category.2']])
 })
