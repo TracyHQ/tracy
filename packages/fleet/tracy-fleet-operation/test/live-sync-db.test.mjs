@@ -397,14 +397,14 @@ CREATE TABLE jos_content (id INT PRIMARY KEY, asset_id INT, title VARCHAR(255), 
 CREATE TABLE jos_assets (id INT PRIMARY KEY, parent_id INT, lft INT, rgt INT, level INT, name VARCHAR(50) NOT NULL, title VARCHAR(100), UNIQUE KEY idx_asset_name (name));
 CREATE TABLE jos_workflow_associations (item_id INT NOT NULL, stage_id INT NOT NULL, extension VARCHAR(50) NOT NULL, PRIMARY KEY (item_id, extension));
 CREATE TABLE jos_contentitem_tag_map (type_alias VARCHAR(255) NOT NULL DEFAULT '', core_content_id INT UNSIGNED NOT NULL, content_item_id INT NOT NULL, tag_id INT UNSIGNED NOT NULL, tag_date TIMESTAMP NOT NULL DEFAULT '2026-01-01 00:00:00', type_id MEDIUMINT NOT NULL, UNIQUE KEY uc_ItemnameTagid (type_id, content_item_id, tag_id));
-CREATE TABLE jos_fields (id INT PRIMARY KEY, context VARCHAR(255));
+CREATE TABLE jos_fields (id INT PRIMARY KEY, context VARCHAR(255), asset_id INT NOT NULL DEFAULT 0);
 CREATE TABLE jos_fields_values (field_id INT UNSIGNED NOT NULL, item_id VARCHAR(255) NOT NULL, value MEDIUMTEXT, KEY idx_field_id (field_id));
 CREATE TABLE jos_ucm_content (core_content_id INT PRIMARY KEY, core_type_alias VARCHAR(255), core_content_item_id INT, core_title VARCHAR(255));
 CREATE TABLE jos_menu (id INT PRIMARY KEY, menutype VARCHAR(24), title VARCHAR(255), parent_id INT, lft INT, rgt INT, level INT, path VARCHAR(400), client_id TINYINT NOT NULL DEFAULT 0);
 CREATE TABLE jos_banners (id INT PRIMARY KEY, name VARCHAR(255), impmade INT, clicks INT);
 CREATE TABLE jos_action_logs (id INT PRIMARY KEY, message TEXT);
 CREATE TABLE jos_loose (a INT, b INT);
-CREATE TABLE jos_contact_details (id INT PRIMARY KEY, name VARCHAR(255), checked_out INT UNSIGNED NOT NULL DEFAULT 0, checked_out_time DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00');
+CREATE TABLE jos_contact_details (id INT PRIMARY KEY, asset_id INT NOT NULL DEFAULT 0, name VARCHAR(255), checked_out INT UNSIGNED NOT NULL DEFAULT 0, checked_out_time DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00');
 INSERT INTO jos_contact_details (id, name) VALUES (1,'Shop');
 INSERT INTO jos_content VALUES (17,117,'Seventeen',0),(22,122,'Twenty-two',0),(23,123,'Twenty-three',0);
 ALTER TABLE jos_content ADD checked_out INT UNSIGNED NULL, ADD checked_out_time DATETIME NULL;
@@ -413,7 +413,7 @@ INSERT INTO jos_assets VALUES (1,0,0,7,0,'root.1','Root'),(117,1,1,2,1,'com_cont
 INSERT INTO jos_workflow_associations VALUES (17,1,'com_content.article'),(22,1,'com_content.article'),(23,1,'com_content.article');
 INSERT INTO jos_contentitem_tag_map (type_alias, core_content_id, content_item_id, tag_id, type_id) VALUES
   ('com_content.article',1,17,2,1),('com_content.article',2,22,2,1),('com_content.article',3,23,2,1),('com_content.article',3,23,5,1);
-INSERT INTO jos_fields VALUES (1,'com_content.article');
+INSERT INTO jos_fields (id, context) VALUES (1,'com_content.article');
 INSERT INTO jos_fields_values VALUES (1,'17','red'),(1,'22','blue'),(1,'23','green');
 INSERT INTO jos_ucm_content VALUES (1,'com_content.article',17,'Seventeen'),(2,'com_content.article',22,'Twenty-two'),(3,'com_content.article',23,'Twenty-three');
 INSERT INTO jos_menu VALUES (1,'','Menu_Item_Root',0,0,17,0,'',0),
@@ -1309,6 +1309,20 @@ test('generated columns recompute through whole-table and row merges', opts, () 
       assert.deepEqual(rows('SELECT amount,doubled FROM sm.jos_computed WHERE id=3'), [['9', '18']])
     }
   }
+})
+
+test('generated-only tables retain every row when taken whole', opts, () => {
+  sql(
+    ['sb', 'sm', 'st']
+      .map(
+        (s) =>
+          `DROP DATABASE IF EXISTS ${s}; CREATE DATABASE ${s}; USE ${s}; CREATE TABLE jos_constants (value INT AS (7) STORED); INSERT INTO jos_constants () VALUES ();`
+      )
+      .join('\n') + 'USE st; INSERT INTO jos_constants () VALUES (),();'
+  )
+  const answer = merge(null, 'ours')
+  assert.equal(answer.ok, true)
+  assert.deepEqual(rows('SELECT value FROM sm.jos_constants'), [['7'], ['7'], ['7']])
 })
 
 function stageHeldContactFields(ours, theirs) {

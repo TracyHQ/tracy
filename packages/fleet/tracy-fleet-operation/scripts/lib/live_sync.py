@@ -1907,7 +1907,14 @@ class DbMerge:
                                 f" AND table_name = {sql_str(table)} AND extra NOT LIKE '%VIRTUAL GENERATED%'"
                                 " AND extra NOT LIKE '%STORED GENERATED%' ORDER BY ordinal_position;")
         cols = ", ".join(q(row[0]) for row in writable)
-        self.sql.run(f"DROP TABLE IF EXISTS {m}; CREATE TABLE {m} LIKE {t}; INSERT INTO {m} ({cols}) SELECT {cols} FROM {t};"
+        if cols:
+            insert = f"INSERT INTO {m} ({cols}) SELECT {cols} FROM {t};"
+        else:
+            # A generated-only table has no writable projection; preserve its row count.
+            count = int(self.sql.run(f"SELECT COUNT(*) FROM {t};")[0][0])
+            insert = "\n".join(f"INSERT INTO {m} () VALUES " + ",".join("()" for _ in range(min(1000, count - start))) + ";"
+                               for start in range(0, count, 1000))
+        self.sql.run(f"DROP TABLE IF EXISTS {m}; CREATE TABLE {m} LIKE {t};" + insert
                      + "\n".join(foreign_key_sql(rebase_foreign_key(k, self.names["theirs"], self.names["ours"])) for k in keys))
         self.counts["tablesFromTheirs"] += 1
 
