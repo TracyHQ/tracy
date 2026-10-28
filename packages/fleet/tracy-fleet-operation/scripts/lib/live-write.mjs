@@ -464,12 +464,12 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         if (item.creates && item.op === 'create') made = { [item.creates]: liveId }
       } else if (mode === 'upload') {
         const attachment = Number(answer.attachment ?? 0)
-        if (item.creates && !(attachment > 0)) {
+        if (item.creates && item.kind === 'media' && platform === 'wordpress' && !(attachment > 0)) {
           journal({ id: item.id, state: 'failed', extra: { error: 'WRITE_OUTCOME_UNKNOWN' } })
           continue
         }
         if (attachment > 0) extra = { liveId: attachment }
-        if (item.creates) made = { [item.creates]: attachment }
+        if (item.creates && attachment > 0) made = { [item.creates]: attachment }
       } else if (mode === 'template') {
         const f = (answer.files ?? []).find((f) => f.path === item.path) ?? {}
         snap = { ...snap, undoId: answer.undo_id ?? null, before: f.before ?? null, after: f.after ?? null }

@@ -745,6 +745,7 @@ test('a picture: uploaded where the live site has none; the customer’s own fil
   try {
     const media = (path) => ({
       id: `media:${path}`,
+      creates: `file:${path}`,
       kind: 'media',
       spec: 'media',
       op: 'upload',
