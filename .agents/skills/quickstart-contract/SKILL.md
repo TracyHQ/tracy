@@ -375,6 +375,10 @@ path):
      `client-name`, `price`… per `apps/tracy-web/src/lib/fact-fields.json`) ask for evidence whatever the module is called —
      "Home - Stats" does not match `Statistics`, a hero has four counters. Without the flag the `contracts` gate is red for a new profile;
      for an already captured profile run `node scripts/regate-contract.mjs <profile folder>` BEFORE cutting the plugin (after that the bytes are pinned).
+   - `--whole-units` always for a new profile (spec #37 C1, C2): a heading, sentence or list item that the HTML helper cuts into
+     several text pieces becomes ONE slot on its element, and the rule tables group each link-list item (label and link) into one card.
+     Add `--role-vocabulary 3` only with the release that moves the template to `place-content-roles/3` (it writes `article.title`,
+     `editorial.navigation_url` and `editorial.illustration`, and derives `customize` from the role); the default stays 2.
    - `--file-roots`: `templates/$TPL` + the template's own framework code (`plugins/system/t4` or
      `plugins/system/t3`) + `modules/mod_ja_acm` + `media`, only folders that actually exist in the pack's webroot:
 

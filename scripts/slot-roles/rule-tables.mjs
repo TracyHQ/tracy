@@ -8,7 +8,7 @@
  *   - a capture step, to write roles on a new content map: `proposeContentMapRoles(contentMap, {cms})` from Node
  *     (WordPress `capture-contract.mjs`), or the command line from any language (Joomla `capture-contract.py`):
  *
- *       node scripts/slot-roles/rule-tables.mjs <joomla|wordpress> < content-map.json > proposal.json
+ *       node scripts/slot-roles/rule-tables.mjs <joomla|wordpress> [--vocabulary 2|3] < content-map.json > proposal.json
  *
  *     which prints `{contentMap, unplaced}`: the map with `role` and `group` on every slot the tables placed (slots that
  *     already had a role are kept as they are), and the keys of the text and image slots still without a role (after the fact tables, an editorial default from the slot's own signals, `editorial-defaults.mjs`);
@@ -19,12 +19,20 @@ import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import {
+  customizeOfRole,
   DEFAULT_NEUTRAL_BY_ROLE,
   GROUP_KINDS,
-  ROLE_VOCABULARY_VERSION,
-  modeOfRole
+  isRole,
+  modeOfRole,
+  pictureReplaceOfRole,
+  ROLE_VOCABULARY_V3,
+  ROLE_VOCABULARY_VERSION
 } from 'website-opportunities/domain'
 import { editorialRoleOf } from './editorial-defaults.mjs'
+import { FACT_FAMILY_ROLES, factFamilyPlacement } from './rule-tables-facts.mjs'
+import { proposeMarkupBindings } from './rule-tables-markup.mjs'
+
+export { FACT_FAMILY_ROLES }
 
 // The roles a sidecar draft lists as a group's `requiredRoles` when the group binds them. The content map check takes
 // what a kind needs from the vocabulary (`GROUP_KINDS`) instead.
@@ -107,7 +115,9 @@ const JOOMLA_ACM_REPEATED = Object.freeze({
 })
 
 const JOOMLA_ACM_SECTION = Object.freeze({
-  eyebrow: { entityKind: 'business', role: 'business.category_label' },
+  // An eyebrow is the template's short kicker above a heading ("Our harbour yard"), words and not the business's
+  // category: it is rewritten with the page, not filled from a fact.
+  eyebrow: { editorial: true, role: 'editorial.heading' },
   heading: { entityKind: 'business', role: 'business.tagline' },
   intro: { entityKind: 'business', role: 'business.summary' },
   statement: { entityKind: 'business', role: 'business.tagline' },
@@ -118,7 +128,8 @@ const JOOMLA_ACM_SECTION = Object.freeze({
   'link-url': { entityKind: 'offering', role: 'offering.cta_url' },
   'link-label': { entityKind: 'contact', role: 'contact.cta_label' },
   email: { entityKind: 'contact', role: 'contact.email' },
-  'email-label': { entityKind: 'contact', role: 'contact.hours' },
+  // The words printed beside an email address ("Write to us"). They were mapped to opening hours; they are copy.
+  'email-label': { editorial: true, role: 'editorial.heading' },
   handle: { entityKind: 'contact', role: 'contact.social_label' },
   notice: { entityKind: 'claim', role: 'claim.notice' }
 })
@@ -126,9 +137,15 @@ const JOOMLA_ACM_SECTION = Object.freeze({
 function buildGroupCollector() {
   const groupsById = new Map()
   const bindings = []
+  const roleOnly = []
   const unplaced = []
 
   const addBinding = ({ slotKey, groupId, entityKind, itemIndex = 0, role, mode }) => {
+    // A role with no card (an editorial slot no fact fills).
+    if (groupId === null || groupId === undefined) {
+      roleOnly.push({ slotKey, role })
+      return
+    }
     let g = groupsById.get(groupId)
     if (!g) {
       g = {
@@ -174,14 +191,26 @@ function buildGroupCollector() {
         neutral
       }
     })
-    return { groups, bindings, unplaced }
+    return { groups, bindings, roleOnly, unplaced }
   }
 
   return { addBinding, addUnplaced, finalize }
 }
 
-export function proposeJoomla(slots) {
+const NUMBERED_CTA_FIELD = /^(btn-text|btn-link|link-text|link-url|link-label)[-_]?(\d+)$/
+
+export function proposeJoomla(slots, { vocabulary3 = false } = {}) {
   const collector = buildGroupCollector()
+  const markup = proposeMarkupBindings(slots, { vocabulary3 })
+  // The fields of each module, for a field that is a fact only beside another (a bare "label" beside a "value").
+  const fieldsOfEntity = new Map()
+  for (const slot of slots) {
+    const parsed = slot.jsonPath ? parseJoomlaJsonPath(slot.jsonPath) : null
+    if (!parsed?.field) continue
+    const entity = String(slot.entity ?? String(slot.key).split('.')[0])
+    if (!fieldsOfEntity.has(entity)) fieldsOfEntity.set(entity, new Set())
+    fieldsOfEntity.get(entity).add(parsed.field)
+  }
 
   const stepEntities = new Set()
   for (const slot of slots) {
@@ -196,6 +225,27 @@ export function proposeJoomla(slots) {
     const entity = String(slot.entity ?? key.split('.')[0])
     const label = String(slot.label ?? '').toLowerCase()
     const xpath = String(slot.xpath ?? '')
+
+    // Links and list items of markup: their structure says more than the field the markup sits in.
+    const fromMarkup = markup.get(key)
+    if (fromMarkup) {
+      collector.addBinding({ slotKey: key, ...fromMarkup })
+      if (fromMarkup.groupId === null && slot.requiresEvidence)
+        collector.addUnplaced(key, 'editorial slot: words, not a fact')
+      continue
+    }
+
+    // A whole article's title: version 3 has a role for it; version 2 leaves it to the editorial default (a heading).
+    if (vocabulary3 && entity.startsWith('article-') && slot.column === 'title' && !slot.jsonPath && !xpath) {
+      collector.addBinding({
+        slotKey: key,
+        groupId: `${entity}.article.0`,
+        entityKind: 'post',
+        itemIndex: 0,
+        role: 'article.title'
+      })
+      continue
+    }
 
     if (slot.jsonPath) {
       const parsed = parseJoomlaJsonPath(slot.jsonPath)
@@ -224,7 +274,25 @@ export function proposeJoomla(slots) {
           })
           continue
         }
+        // A second button of a block: `btn-text-2` and `btn-link-2` are one card of their own.
+        const numbered = NUMBERED_CTA_FIELD.exec(parsed.field)
+        if (numbered && JOOMLA_ACM_SECTION[numbered[1]]?.entityKind) {
+          const sec = JOOMLA_ACM_SECTION[numbered[1]]
+          collector.addBinding({
+            slotKey: key,
+            groupId: `${entity}.cta.${numbered[2]}`,
+            entityKind: sec.entityKind === 'offering' ? 'service' : sec.entityKind,
+            itemIndex: parsed.index,
+            role: sec.role
+          })
+          continue
+        }
         const sec = JOOMLA_ACM_SECTION[parsed.field]
+        if (sec?.editorial) {
+          collector.addBinding({ slotKey: key, groupId: null, role: sec.role })
+          if (slot.requiresEvidence) collector.addUnplaced(key, 'editorial slot: words, not a fact')
+          continue
+        }
         if (sec) {
           const entityKind = sec.entityKind === 'offering' ? 'service' : sec.entityKind
           collector.addBinding({
@@ -233,6 +301,18 @@ export function proposeJoomla(slots) {
             entityKind,
             itemIndex: parsed.index,
             role: sec.role
+          })
+          continue
+        }
+        // Any other field the server's fact list calls a fact is placed by its family.
+        const fact = factFamilyPlacement(parsed.field, fieldsOfEntity.get(entity) ?? new Set())
+        if (fact) {
+          collector.addBinding({
+            slotKey: key,
+            groupId: `${entity}.${fact.family}.${parsed.index}`,
+            entityKind: fact.entityKind,
+            itemIndex: parsed.index,
+            role: fact.role
           })
           continue
         }
@@ -300,14 +380,10 @@ export function proposeJoomla(slots) {
 
     // Article / menuItem slots with requiresEvidence
     if (slot.requiresEvidence) {
+      // A title is words, whatever the page is called: an article's is `article.title` above (version 3) or a heading,
+      // a menu entry's a menu label, both by the editorial default. They were `business.category_label`.
       if (slot.column === 'title' && (entity.startsWith('article-') || entity.startsWith('menuItem-'))) {
-        collector.addBinding({
-          slotKey: key,
-          groupId: `${entity}.section.0`,
-          entityKind: 'business',
-          itemIndex: 0,
-          role: 'business.category_label'
-        })
+        collector.addUnplaced(key, 'editorial title: words, not a fact')
         continue
       }
       collector.addUnplaced(key, 'requiresEvidence slot could not be deterministically mapped')
@@ -686,36 +762,75 @@ const ROLE_TYPES = new Set(['text', 'image'])
 /**
  * The rule tables' proposal written on a content map: `role` and `group` on each slot they place (a slot that already
  * has a role keeps it, with its group), `roleVocabularyVersion` at the top. Pure: the input map is not changed.
+ *
+ * `vocabulary` is the version the map is written in (default: what capture writes today, version 2). In version 3 the
+ * roles of version 2 that no longer exist (`editorial.decorative_image`) are proposed again, and every slot's `customize`
+ * follows its role (the role alone decides keep or replace, ADR 0040).
  * @param {any} contentMap
- * @param {{cms: 'joomla' | 'wordpress'}} options
+ * @param {{cms: 'joomla' | 'wordpress', vocabulary?: string}} options
  * @returns {{contentMap: any, unplaced: string[]}} `unplaced`: text and image slots still without a role, for the agent
  */
-export function proposeContentMapRoles(contentMap, { cms }) {
+export function proposeContentMapRoles(contentMap, { cms, vocabulary = ROLE_VOCABULARY_VERSION }) {
   if (cms !== 'joomla' && cms !== 'wordpress') throw new Error(`cms must be joomla or wordpress, got ${cms}`)
+  if (vocabulary !== ROLE_VOCABULARY_VERSION && vocabulary !== ROLE_VOCABULARY_V3)
+    throw new Error(
+      `vocabulary must be ${ROLE_VOCABULARY_VERSION} or ${ROLE_VOCABULARY_V3}, got ${vocabulary}`
+    )
+  const vocabulary3 = vocabulary === ROLE_VOCABULARY_V3
   const out = structuredClone(contentMap ?? {})
   const slots = Array.isArray(out.slots) ? out.slots : []
+  if (vocabulary3)
+    for (const slot of slots) {
+      // A role of version 2 that version 3 dropped is proposed again; its group goes with it.
+      if (slot?.role !== undefined && !isRole(slot.role, ROLE_VOCABULARY_V3)) {
+        slot.role = undefined
+        slot.group = undefined
+      }
+    }
   const open = slots.filter((slot) => slot && slot.role === undefined)
-  const { groups, bindings } = cms === 'wordpress' ? proposeWordpress(open) : proposeJoomla(open)
+  const {
+    groups,
+    bindings,
+    roleOnly = []
+  } = cms === 'wordpress' ? proposeWordpress(open) : proposeJoomla(open, { vocabulary3 })
+  const roleOnlyBySlot = new Map(roleOnly.map((b) => [b.slotKey, b.role]))
   const groupOf = new Map(groups.map((g) => [g.groupId, g]))
   const bySlot = new Map(bindings.map((b) => [b.slotKey, b]))
   for (const slot of open) {
     const binding = bySlot.get(String(slot.key))
-    if (!binding) continue
-    const group = groupOf.get(binding.groupId)
+    if (!binding) {
+      if (roleOnlyBySlot.has(String(slot.key))) slot.role = roleOnlyBySlot.get(String(slot.key))
+      continue
+    }
     slot.role = binding.role
+    const group = groupOf.get(binding.groupId)
     slot.group = { id: binding.groupId, item: group.itemIndex, kind: group.entityKind }
   }
   // What no fact table placed: a text or image slot takes an editorial role from its own signals (never over a fact role).
   for (const slot of open) {
     if (slot.role !== undefined || !ROLE_TYPES.has(slot.type)) continue
-    const role = editorialRoleOf(slot)
+    const role = editorialRoleOf(slot, { vocabulary3 })
     if (role) slot.role = role
   }
-  out.roleVocabularyVersion = ROLE_VOCABULARY_VERSION
+  for (const slot of slots) {
+    if (slot?.role === undefined) delete slot.role
+    if (slot?.group === undefined) delete slot.group
+  }
+  if (vocabulary3) for (const slot of slots) deriveKeep(slot)
+  out.roleVocabularyVersion = vocabulary
   const unplaced = slots
     .filter((slot) => ROLE_TYPES.has(slot?.type) && slot.role === undefined)
     .map((slot) => String(slot.key))
   return { contentMap: out, unplaced }
+}
+
+/** In a version 3 map the role alone decides keep or replace: `customize` and a measured picture's `replace` follow it. */
+function deriveKeep(slot) {
+  if (!slot || slot.role === undefined) return
+  if (customizeOfRole(slot.role) === 'keep') slot.customize = 'keep'
+  else delete slot.customize
+  if (slot.type === 'image' && slot.fit && Object.hasOwn(slot.fit, 'replace'))
+    slot.fit.replace = pictureReplaceOfRole(slot.role)
 }
 
 const isMain =
@@ -723,15 +838,20 @@ const isMain =
 
 if (isMain) {
   const cms = process.argv[2]
-  if (cms !== 'joomla' && cms !== 'wordpress') {
+  const flag = process.argv.indexOf('--vocabulary')
+  const version = flag > 0 ? process.argv[flag + 1] : undefined
+  if ((cms !== 'joomla' && cms !== 'wordpress') || (version !== undefined && !['2', '3'].includes(version))) {
     process.stderr.write(
-      'Usage: node scripts/slot-roles/rule-tables.mjs <joomla|wordpress> < content-map.json\n'
+      'Usage: node scripts/slot-roles/rule-tables.mjs <joomla|wordpress> [--vocabulary 2|3] < content-map.json\n'
     )
     process.exit(2)
   }
   try {
     const contentMap = JSON.parse(readFileSync(0, 'utf8'))
-    process.stdout.write(`${JSON.stringify(proposeContentMapRoles(contentMap, { cms }), null, 2)}\n`)
+    const vocabulary = version === '3' ? ROLE_VOCABULARY_V3 : ROLE_VOCABULARY_VERSION
+    process.stdout.write(
+      `${JSON.stringify(proposeContentMapRoles(contentMap, { cms, vocabulary }), null, 2)}\n`
+    )
   } catch (error) {
     process.stderr.write(`rule-tables: ${error instanceof Error ? error.message : error}\n`)
     process.exit(1)
