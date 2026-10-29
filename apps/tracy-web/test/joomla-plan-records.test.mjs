@@ -44,7 +44,11 @@ const contentMap = {
       role: ['stat.context', 'stat.value', 'stat.label'][i],
       sample,
       jsonPath: ['top-desc'],
-      xpath: `/html/body/div/div/text()[${i + 1}]`,
+      xpath: [
+        '/html/body/div/div/div/text()[1]',
+        '/html/body/div/div/div/span/text()',
+        '/html/body/div/div/div/text()[2]'
+      ][i],
       group: { id: 'module-80.stat.0', item: 0, kind: 'stat_item' }
     })),
     {
@@ -55,7 +59,7 @@ const contentMap = {
       role: 'stat.proof_image',
       sample: 'images/demo/others/avatar-1.png',
       jsonPath: ['top-desc'],
-      xpath: '/html/body/div/img/@src',
+      xpath: '/html/body/div/div/img/@src',
       group: { id: 'module-80.stat.0', item: 0, kind: 'stat_item' }
     },
     ...[70, 71].flatMap((n) => [

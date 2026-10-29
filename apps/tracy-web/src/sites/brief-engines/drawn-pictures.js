@@ -29,6 +29,7 @@ import { substitutePicture } from '../../lib/substitute-picture.js'
 import { sizeOf } from './pictures.js'
 import { blurredBand } from '../../lib/photo-sharpness.js'
 import { pool } from './shared.js'
+import { drawingFailureReason, logDrawingFailure } from './drawing-failures.js'
 
 /** Pictures drawn at once: each is a paid model call of ~8 s. */
 const DRAW_AT_ONCE = 2
@@ -63,7 +64,7 @@ async function paddedAt(bytes, aspect) {
 /**
  * Draw one item: from the cache, else from the model, checked by the labeller and drawn once more when refused.
  * @returns {Promise<{bytes: Buffer, costUsd: number, calls: number, cached: boolean, checked: boolean} |
- *   {refused: string[], costUsd: number, calls: number}>}
+ *   {refused: string[], reasonClass: string, costUsd: number, calls: number}>}
  */
 async function drawChecked({ item, real, drawDoor, chat, signal, drawMs, verdictOf }) {
   const shaOf = new Map(real.pictures.map((p) => [p.id, p.sha256]))
@@ -76,10 +77,17 @@ async function drawChecked({ item, real, drawDoor, chat, signal, drawMs, verdict
   if (cached && !(await paddedAt(cached.bytes, item.aspect)))
     return { bytes: cached.bytes, costUsd: 0, calls: 0, cached: true, checked: true }
   // No labeller: nothing could be checked, so nothing is drawn (never an unchecked picture on the site).
-  if (!real.checkDrawing) return { refused: ['labeller-unavailable'], costUsd: 0, calls: 0 }
+  if (!real.checkDrawing) {
+    logDrawingFailure('refused by the labeller')
+    return { refused: ['labeller-unavailable'], reasonClass: 'refused by the labeller', costUsd: 0, calls: 0 }
+  }
   const references = (await Promise.all(item.referenceIds.map((id) => real.bytes(id)))).filter(Boolean)
-  if (references.length === 0) return { refused: ['no-reference-readable'], costUsd: 0, calls: 0 }
+  if (references.length === 0) {
+    logDrawingFailure('model failed')
+    return { refused: ['no-reference-readable'], reasonClass: 'model failed', costUsd: 0, calls: 0 }
+  }
   const refused = []
+  let reasonClass = 'model failed'
   let costUsd = 0
   let calls = 0
   for (let attempt = 0; attempt < TRIES; attempt += 1) {
@@ -89,7 +97,11 @@ async function drawChecked({ item, real, drawDoor, chat, signal, drawMs, verdict
       calls += 1
       got = await drawForPlace({ door: drawDoor, chat, item, references, signal: cutoff })
     } catch (error) {
-      refused.push(/too long/.test(String(error?.message)) ? 'timed-out' : 'model-failed')
+      reasonClass = drawingFailureReason(error)
+      refused.push(reasonClass.replaceAll(' ', '-'))
+      logDrawingFailure(reasonClass)
+      // Retrying cannot replenish a provider balance and must not replace the actionable credit reason.
+      if (reasonClass === 'out of credit') break
       continue
     }
     costUsd += Number(got.costUsd) || 0
@@ -99,20 +111,24 @@ async function drawChecked({ item, real, drawDoor, chat, signal, drawMs, verdict
     labels ??= await real.checkDrawing(got.bytes).catch(() => null)
     const verdict = verdictOf(labels)
     if (!verdict.ok) {
+      reasonClass = 'refused by the labeller'
       refused.push(verdict.reason)
+      logDrawingFailure(reasonClass)
       if (verdict.reason === 'labeller-unavailable') break
       continue
     }
     // A model asked for a wide frame sometimes fills its edge with a blurred, stretched copy of the scene: such a
     // drawing fails like an unsharp photo, and is drawn once more (sharpness gate, #189).
     if (await paddedAt(got.bytes, item.aspect)) {
+      reasonClass = 'picture quality'
       refused.push('blurred-region')
+      logDrawingFailure(reasonClass)
       continue
     }
     await (real.drawing?.put(key, got.bytes) ?? Promise.resolve()).catch(() => {})
     return { bytes: got.bytes, costUsd, calls, cached: false, checked: true }
   }
-  return { refused, costUsd, calls }
+  return { refused, reasonClass, costUsd, calls }
 }
 
 /**
@@ -129,7 +145,7 @@ async function drawChecked({ item, real, drawDoor, chat, signal, drawMs, verdict
  * @param {number} input.drawMs
  * @param {boolean} [input.outpaintOnly]
  * @returns {Promise<{drawn: Map<string, any>, stats: {drawings: number, calls: number, costUsd: number, ms: number,
- *   refused: Array<{drawing: string, reasons: string[]}>}}>}
+ *   refused: Array<{drawing: string, reasons: string[], reasonClass: string}>}}>}
  */
 export async function drawPlanned({
   plan,
@@ -181,10 +197,11 @@ export async function drawPlanned({
       stats.calls += got.calls
       stats.costUsd += got.costUsd
       if (!('bytes' in got)) {
-        stats.refused.push({ drawing: g.id, reasons: got.refused })
-        note(
-          `a picture drawn for ${groups[0].file} was refused (${got.refused.join(', ')}), so it takes a brand colour block`
-        )
+        stats.refused.push({ drawing: g.id, reasons: got.refused, reasonClass: got.reasonClass })
+        if (got.reasonClass !== 'out of credit')
+          note(
+            `a picture drawn for ${groups[0].file} was refused (${got.refused.join(', ')}), ${got.reasonClass}, so it takes a brand colour block`
+          )
         return
       }
       stats.drawings += 1
@@ -233,11 +250,22 @@ export async function drawPlanned({
     }),
     DRAW_AT_ONCE
   )
-  for (const answer of answers)
-    if (!answer.ok)
-      note(
-        `a picture could not be drawn: ${answer.error instanceof Error ? answer.error.message : answer.error}`
-      )
+  for (const [index, answer] of answers.entries()) {
+    if (answer.ok) continue
+    const reasonClass = drawingFailureReason(answer.error)
+    logDrawingFailure(reasonClass)
+    stats.refused.push({
+      drawing: drawings[index].id,
+      reasons: [reasonClass.replaceAll(' ', '-')],
+      reasonClass
+    })
+    if (reasonClass !== 'out of credit')
+      note(`a picture could not be drawn (${reasonClass}), so it takes a brand colour block`)
+  }
+  if (stats.refused.some((item) => item.reasonClass === 'out of credit'))
+    note(
+      'The picture provider is out of credit. Undrawn pictures use brand colour blocks. Add credit before drawing again.'
+    )
   stats.costUsd = Number(stats.costUsd.toFixed(4))
   stats.ms = Date.now() - started
   return { drawn, stats }

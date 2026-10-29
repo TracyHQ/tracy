@@ -12,34 +12,19 @@
  *                   its demo picture
  *
  * Framework-wide (Joomla modules and articles, JSON parameters), never per template. A site no brief build made has no plan
- * and writes nothing here; what the site cannot give is a note, never a failed build.
+ * and writes nothing here. A brief build stops when a mandatory fallback cannot reach its target.
  */
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
 import { paramsOf, readModules } from './joomla-tidy.js'
+import {
+  blankBoundField,
+  emptyRecordValue,
+  JSON_FIELDS,
+  RECORD_FIELDS,
+  recordFallbackError
+} from './joomla-record-fields.js'
 
-const escapeRe = (/** @type {string} */ s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-const htmlOf = (/** @type {string} */ s) =>
-  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-/** The template's `((tag))` markers as the stored HTML writes them. */
-const stored = (/** @type {string} */ s) => s.replace(/\(\(/g, '<').replace(/\)\)/g, '>')
 const idOf = (/** @type {string} */ entity) => Number(String(entity).split('-')[1])
-/** An article's columns that hold HTML: a slot in them is a piece of that HTML (`xpath`), emptied in place. */
-const HTML_COLUMNS = new Set(['introtext', 'fulltext'])
-/** The columns of a record that hold HTML, by kind: a custom module's `content` is one like an article's body. */
-const HTML_BY_KIND = { article: HTML_COLUMNS, module: new Set(['content']), contact: new Set(['misc']) }
-/** A contact's columns of plain words a fact line may sit in: emptied as a whole (`contactSteps` does the same). */
-const CONTACT_COLUMNS = new Set([
-  'address',
-  'suburb',
-  'state',
-  'postcode',
-  'country',
-  'telephone',
-  'mobile',
-  'fax',
-  'misc',
-  'con_position'
-])
 
 /**
  * The words the site plan decides, laid over what the writer wrote, and what a writer invented taken out
@@ -129,54 +114,15 @@ function at(root, path) {
   return node && typeof node === 'object' ? node : null
 }
 
-/**
- * The same markup with every run of words between its tags made a no-break space: each element and each text node stays, so
- * the paths the contract binds to still find exactly one node, and the visitor reads nothing.
- * @param {string} markup
- */
-const blanked = (markup) =>
-  markup.replace(/(^|>)([^<]*)(?=<|$)/g, (_, open, words) => open + (words.trim() === '' ? words : '&nbsp;'))
-
-/**
- * A field's HTML without the demo words and the demo picture of an emptied slot.
- *
- * 🔒 A RECORDS WRITE NEVER REMOVES OR RESHAPES A NODE A CONTRACT SLOT BINDS TO (spec TracyHQ/tracy#189, 29/10/2026). A
- * local brief build emptied a stat sentence ("Join over <span>100k</span> of inspiring creatives", three slots bound to
- * `div/text()[1]`, `div/span/text()` and `div/text()[2]`) by deleting its words: the text nodes went, the plugin's inspect
- * found no node for those paths ("HTML slot is missing or ambiguous"), and every contract write after it was refused.
- * So the words become a no-break space, node for node, and a picture is hidden by an attribute, never taken out.
- */
-function withoutSample(html, blank) {
-  const sample = String(blank.sample ?? '')
-  if (sample.trim() === '') return html
-  if (blank.type === 'image') {
-    const file = sample.split('#')[0]
-    return html.replace(new RegExp(`<img\\b[^>]*${escapeRe(file)}[^>]*>`, 'i'), (tag) =>
-      /\shidden(?=[\s>=/])/i.test(tag) ? tag : tag.replace(/^<img\b/i, '<img hidden')
-    )
-  }
-  // A sample the map read with its line breaks (`\r\n  words\r\n`) stands in the row by its words: trimmed last.
-  // Too short a piece of words could stand elsewhere in the row first: such a sample is matched only as the map read it.
-  const trimmed = sample.trim().length >= 8 ? sample.trim() : ''
-  for (const form of [
-    stored(sample),
-    htmlOf(stored(sample)),
-    sample,
-    stored(trimmed),
-    htmlOf(stored(trimmed))
-  ])
-    if (form && html.includes(form)) return html.replace(form, () => blanked(form))
-  return html
-}
-
-/** Empties one slot in a parsed parameter object. @returns {boolean} whether anything changed */
+/** Empties one slot in parsed parameters. Null means the target is unreachable; false means already empty. */
 function emptyIn(container, blank) {
   const path = blank.jsonPath ?? []
-  if (path.length === 0) return false
+  if (path.length === 0) return null
   const parent = at(container, path.slice(0, -1))
   const last = path.at(-1)
-  if (!parent || typeof parent[last] !== 'string') return false
-  const next = blank.xpath ? withoutSample(parent[last], blank) : ''
+  if (!parent || typeof parent[last] !== 'string') return null
+  const next = blank.xpath ? blankBoundField(parent[last], blank) : ''
+  if (next === null) return null
   if (next === parent[last]) return false
   parent[last] = next
   return true
@@ -219,26 +165,39 @@ function dropItems(container, parents, fields, indexes) {
  * @returns {{ steps: Array<{ kind: string, id: number, fields: Record<string, unknown> }>, hidden: number, trimmed: number,
  *   emptied: number, unresolved: number }}
  */
-export function recordSteps({ honesty, modules, articles = new Map(), contacts = new Map() }) {
+export function recordSteps({
+  honesty,
+  modules,
+  articles = new Map(),
+  contacts = new Map(),
+  records = new Map()
+}) {
   const steps = []
   let hidden = 0
   let trimmed = 0
   let emptied = 0
   let unresolved = 0
+  /** @type {string[]} targets the records door cannot safely neutralize */
+  const left = []
   const gone = new Set()
   for (const hide of honesty?.hide ?? []) {
     if (hide.how !== 'entity') continue
     const id = idOf(hide.entity)
     const kind = hide.kind ?? String(hide.entity).split('-')[0]
-    if (!Number.isFinite(id)) continue
-    gone.add(hide.entity)
+    if (!Number.isSafeInteger(id) || id <= 0) {
+      unresolved += 1
+      left.push(hide.group ?? hide.entity)
+      continue
+    }
     if (kind === 'module') steps.push({ kind, id, fields: { published: 0 } })
     else if (kind === 'article') steps.push({ kind, id, fields: { state: 0 } })
     else if (kind === 'menuItem') steps.push({ kind, id, fields: { published: 0 } })
     else {
       unresolved += 1
+      left.push(hide.group ?? hide.entity)
       continue
     }
+    gone.add(hide.entity)
     hidden += 1
   }
   unresolved += (honesty?.hide ?? []).filter((h) => h.how === 'none').length
@@ -250,34 +209,39 @@ export function recordSteps({ honesty, modules, articles = new Map(), contacts =
   const editOf = (entity, column, nestedJson) => {
     const id = idOf(entity)
     const kind = String(entity).split('-')[0]
-    const row = kind === 'module' ? modules.get(id) : kind === 'article' ? articles.get(id) : null
-    const field = kind === 'module' ? 'params' : column
-    if (!row || (kind === 'module' && column !== 'params') || (kind === 'article' && column !== 'attribs'))
-      return null
-    const key = `${entity}|${field}|${nestedJson ?? ''}`
+    const row = rowsFor(kind).get(id)
+    const field = column
+    if (!row || !RECORD_FIELDS[kind]?.has(field) || !JSON_FIELDS.has(field)) return null
+    const key = `${entity}|${field}`
     if (!edits.has(key)) {
       const params = paramsOf(row[field])
-      let container = params
-      if (params && nestedJson) container = paramsOf(params[nestedJson])
-      if (!container) return null
-      edits.set(key, { kind, id, field, params, container, nestedJson, changed: false })
+      if (!params) return null
+      edits.set(key, { kind, id, field, params, nested: new Map(), changed: false })
     }
-    return edits.get(key)
+    const edit = edits.get(key)
+    if (nestedJson && !edit.nested.has(nestedJson)) {
+      const container = paramsOf(edit.params[nestedJson])
+      if (!container) return null
+      edit.nested.set(nestedJson, container)
+    }
+    return { edit, container: nestedJson ? edit.nested.get(nestedJson) : edit.params }
   }
-  /** @type {string[]} the lines no records door reaches (a title, a language string): named in the note */
-  const left = []
+  const rowsFor = (kind) =>
+    kind === 'module'
+      ? modules
+      : kind === 'article'
+        ? articles
+        : kind === 'contact'
+          ? contacts
+          : (records.get(kind) ?? new Map())
   /** A record's HTML or words column (an article's body, a module's content, a contact line) losing a slot's demo words. */
   const html = new Map()
   // The fields go empty first: the items they name still stand where the plan read them.
   for (const blank of honesty?.blanks ?? []) {
     if (gone.has(blank.entity)) continue
     const kind = String(blank.entity).split('-')[0]
-    const rowsOf =
-      kind === 'article' ? articles : kind === 'module' ? modules : kind === 'contact' ? contacts : null
-    if (
-      rowsOf &&
-      (HTML_BY_KIND[kind]?.has(blank.column) || (kind === 'contact' && CONTACT_COLUMNS.has(blank.column)))
-    ) {
+    const rowsOf = rowsFor(kind)
+    if (RECORD_FIELDS[kind]?.has(blank.column) && !JSON_FIELDS.has(blank.column)) {
       const id = idOf(blank.entity)
       const row = rowsOf.get(id)
       const key = `${kind}|${id}|${blank.column}`
@@ -288,7 +252,12 @@ export function recordSteps({ honesty, modules, articles = new Map(), contacts =
         left.push(blank.key)
         continue
       }
-      const next = blank.xpath ? withoutSample(before, blank) : ''
+      const next = blank.xpath ? blankBoundField(before, blank) : emptyRecordValue(blank.column)
+      if (next === null) {
+        unresolved += 1
+        left.push(blank.key)
+        continue
+      }
       html.set(key, {
         kind,
         id,
@@ -300,10 +269,11 @@ export function recordSteps({ honesty, modules, articles = new Map(), contacts =
       continue
     }
     const edit = editOf(blank.entity, blank.column, blank.nestedJson)
-    if (edit && emptyIn(edit.container, blank)) {
-      edit.changed = true
+    const changed = edit ? emptyIn(edit.container, blank) : null
+    if (changed === true) {
+      edit.edit.changed = true
       emptied += 1
-    } else if (!edit) {
+    } else if (changed === null) {
       unresolved += 1
       left.push(blank.key)
     }
@@ -315,6 +285,7 @@ export function recordSteps({ honesty, modules, articles = new Map(), contacts =
     const edit = editOf(hide.entity, hide.column, hide.nestedJson)
     if (!edit) {
       unresolved += 1
+      left.push(hide.group ?? hide.entity)
       continue
     }
     const key = `${hide.entity}|${JSON.stringify(hide.parents)}`
@@ -324,17 +295,15 @@ export function recordSteps({ honesty, modules, articles = new Map(), contacts =
   }
   for (const { edit, parents, fields, indexes } of lists.values())
     if (dropItems(edit.container, parents, fields, indexes)) {
-      edit.changed = true
+      edit.edit.changed = true
       trimmed += indexes.length
     }
   for (const edit of html.values())
     if (edit.changed) steps.push({ kind: edit.kind, id: edit.id, fields: { [edit.column]: edit.text } })
   for (const edit of edits.values()) {
     if (!edit.changed) continue
-    const params = edit.nestedJson
-      ? { ...edit.params, [edit.nestedJson]: JSON.stringify(edit.container) }
-      : edit.container
-    steps.push({ kind: edit.kind, id: edit.id, fields: { [edit.field]: JSON.stringify(params) } })
+    for (const [key, container] of edit.nested) edit.params[key] = JSON.stringify(container)
+    steps.push({ kind: edit.kind, id: edit.id, fields: { [edit.field]: JSON.stringify(edit.params) } })
   }
   for (const hide of honesty?.hide ?? []) if (hide.how === 'none') left.push(hide.group)
   return { steps, hidden, trimmed, emptied, unresolved, left }
@@ -373,32 +342,36 @@ export async function planRecordSteps({ apply, siteKey, ctx, woContent, extraBla
   }
   try {
     const modules = new Map((await readModules(apply, siteKey)).map((row) => [Number(row.id), row]))
-    const articles = new Map()
-    for (const id of new Set(
-      (honesty.blanks ?? []).filter((b) => String(b.entity).startsWith('article-')).map((b) => idOf(b.entity))
-    )) {
-      const answer = await apply({ siteKey, action: 'content.get', params: { kind: 'article', id } })
-      if (answer?.ok !== false && answer?.item) articles.set(id, answer.item)
+    const records = new Map([['module', modules]])
+    for (const entity of new Set((honesty.blanks ?? []).map((b) => b.entity))) {
+      const kind = String(entity).split('-')[0]
+      if (kind === 'module' || !RECORD_FIELDS[kind]) continue
+      const id = idOf(entity)
+      if (!Number.isSafeInteger(id) || id <= 0) continue
+      const answer = await apply({ siteKey, action: 'content.get', params: { kind, id } })
+      if (answer?.ok !== false && answer?.item) {
+        if (!records.has(kind)) records.set(kind, new Map())
+        records.get(kind).set(id, answer.item)
+      }
     }
-    const contacts = new Map()
-    for (const id of new Set(
-      (honesty.blanks ?? []).filter((b) => String(b.entity).startsWith('contact-')).map((b) => idOf(b.entity))
-    )) {
-      const answer = await apply({ siteKey, action: 'content.get', params: { kind: 'contact', id } })
-      if (answer?.ok !== false && answer?.item) contacts.set(id, answer.item)
-    }
-    const made = recordSteps({ honesty, modules, articles, contacts })
+    const made = recordSteps({
+      honesty,
+      modules,
+      articles: records.get('article'),
+      contacts: records.get('contact'),
+      records
+    })
+    if (made.unresolved > 0) throw recordFallbackError(made.left)
     ctx.time?.('recordsHidden', made.hidden + made.trimmed)
     ctx.time?.('factFieldsEmptied', made.emptied)
     if (made.hidden + made.trimmed > 0)
       ctx.note(`${made.hidden + made.trimmed} card(s) beyond your offerings and people were taken off`)
-    if (made.unresolved > 0)
-      ctx.note(
-        `${made.unresolved} card(s) or fact line(s) of the template could not be taken off on this site${made.left.length ? ` (${made.left.slice(0, 8).join(', ')}${made.left.length > 8 ? ', …' : ''})` : ''}`
-      )
     return { steps: made.steps }
   } catch (error) {
-    ctx.note(`the template's cards could not be read: ${error instanceof Error ? error.message : error}`)
-    return { steps: [] }
+    if (error?.code === 'JOOMLA_RECORD_FALLBACK_UNRESOLVED') throw error
+    throw recordFallbackError(
+      (honesty.blanks ?? []).map((blank) => blank.key),
+      error
+    )
   }
 }

@@ -118,6 +118,7 @@ import { menuCategorySteps } from './joomla-menu-categories.js'
 import { categoryLanguageSteps } from './joomla-categories.js'
 import { templateOf, translateLanguageOverrides } from './joomla-site-strings.js'
 import { customizable, customizableSlots } from '../../lib/contract-customize.js'
+import { contractOccupancy, occupiedSample } from './joomla-contract-occupancy.js'
 
 /** The language every Tracy quickstart is written in, and the one on the front page. */
 const SOURCE = 'en-GB'
@@ -180,6 +181,18 @@ async function writeContractOnce({
   // words), the lines past the box's last one join it.
   for (const [key, value] of Object.entries(changes))
     if (key in lines) changes[key] = withinLines(value, lines[key])
+  // Occupancy is sealed by the sample, across text, URL and image slots. Route removals to
+  // records without provoking an all-or-nothing refusal. Empty samples stay neutral until an
+  // explicit records planner activates them (for example the hero's second button).
+  const slots = new Map((reading.slots ?? []).map((slot) => [slot.key, slot]))
+  const setAside = []
+  for (const [key, value] of Object.entries(changes)) {
+    if (!contractOccupancy(slots.get(key), value)) continue
+    delete changes[key]
+    delete evidence[key]
+    setAside.push(key)
+  }
+  if (Object.keys(changes).length === 0 && emptyLinks.length === 0) return setAside
   // The contract door reads the site once more before it writes; it is handed the reading just made.
   let served = false
   const door = async (/** @type {any} */ call) => {
@@ -189,8 +202,6 @@ async function writeContractOnce({
     }
     return apply(call)
   }
-  /** @type {string[]} */
-  const setAside = []
   for (let attempt = 0; ; attempt += 1) {
     try {
       await timed(() =>
@@ -231,7 +242,7 @@ async function writeContractOnce({
       }
       // Which lines the site refused and why, in the log: a refused line keeps the template's words until it is emptied
       // (`planRecordSteps` `extraBlanks`), and the reason is what tells a box limit from markup or an empty slot.
-      console.warn(`[brief-joomla] ${siteKey}: the site refused ${named.join(', ')}: ${words.slice(0, 300)}`)
+      console.warn(`[brief-joomla] ${siteKey}: the site refused ${named.join(', ')}: ${words}`)
       for (const key of named) {
         delete changes[key]
         delete evidence[key]
@@ -1397,8 +1408,6 @@ export function createJoomlaEngine({
         // (`translatedKeep`), never with other words.
         if (!slot || isDerived(slot) || (!customizable(slot) && !keepWritten.has(key))) continue
         if ((slot.current ?? slot.sample) === value) continue
-        // A slot the site holds empty is not activated by words: the contract refuses it, and a refusal costs the whole write.
-        if (slot.type === 'text' && String(slot.current ?? slot.sample ?? '').trim() === '') continue
         // 🔒 A LINE THAT SHIPS A BARE NUMBER ONLY EVER TAKES A NUMBER. It is a number the template reads (a JA module's
         // `id-article`, a pager's page), not words: measured 08/10/2026 on a JA Podcast site, `id-article` "46" written as
         // "Bánh mỗi sáng" was read as article 0 and the home page answered HTTP 500.
@@ -1462,8 +1471,10 @@ export function createJoomlaEngine({
         })
         for (const key of setAside) refusedByWrite.add(key)
         if (setAside.length > 0)
-          ctx.note(`${setAside.length} line(s) were refused by the site and keep the template’s words`)
-        kept += setAside.length
+          ctx.note(
+            `${setAside.length} line(s) were routed outside the contract write for safe removal or left empty`
+          )
+        ctx.time('contractLinesDeferred', setAside.length)
         wrote = Object.keys(changes).length
       }
       if (prepared.copyPins && woContent) {
@@ -1962,8 +1973,12 @@ export function createJoomlaEngine({
           })
           // The site plan's cards beyond the brief taken off and its fact fields emptied (`joomla-plan-records.js`, #192).
           // The demo lines the writer left (`leftDemoWords`), and a line of the copy writer's the site refused, are emptied with them.
-          const staticSlots = new Map(staticState(ctx.contract).slots.map((slot) => [slot.key, slot]))
-          const asked = new Set(prepared.demoAsked ?? [])
+          const staticSlots = new Map(
+            [...staticState(ctx.contract).slots, ...declaredSlots(ctx.contract)].map((slot) => [
+              slot.key,
+              slot
+            ])
+          )
           const records = await planRecordSteps({
             apply,
             siteKey,
@@ -1972,11 +1987,17 @@ export function createJoomlaEngine({
             extraBlanks: [
               ...(prepared.demoBlanks ?? []),
               ...[...refusedByWrite]
-                .filter((key) => asked.has(key) && staticSlots.get(key)?.type === 'text')
                 .map((key) => staticSlots.get(key))
+                .filter((slot) => slot && occupiedSample(slot))
             ],
             extraHides: prepared.demoHides ?? []
           })
+          const requiredRecords = new Set(records.steps.map((step) => `${step.kind}-${step.id}`))
+          const requiredRecord = (step) => requiredRecords.has(`${step.kind}-${step.id}`)
+          const cleanupFailure = (reason) =>
+            Object.assign(new Error(`The site's demo content could not be removed: ${reason}`), {
+              code: 'JOOMLA_RECORD_FALLBACK_UNRESOLVED'
+            })
           // 🔒 No records write takes away a node a contract slot binds to (`joomla-bound-nodes.js`, #189): the plugin's
           // inspect would refuse every contract write after it.
           // The styled units whose words the contract took, laid into the records steps (#189).
@@ -1996,13 +2017,22 @@ export function createJoomlaEngine({
             siteKey,
             steps: styling.steps,
             // Every slot the plugin resolves, the declared `keep` ones too.
-            slots: [...staticState(ctx.contract).slots, ...(staticState(ctx.contract).declared ?? [])]
+            slots: [...staticState(ctx.contract).slots, ...declaredSlots(ctx.contract)]
           }).catch((error) => {
+            if (requiredRecords.size > 0)
+              throw cleanupFailure(error instanceof Error ? error.message : String(error))
             ctx.note(
               `the template's bound lines could not be checked: ${error instanceof Error ? error.message : error}`
             )
             return { steps: [], dropped: [] }
           })
+          if (bound.dropped.some(requiredRecord))
+            throw cleanupFailure(
+              bound.dropped
+                .filter(requiredRecord)
+                .flatMap((step) => step.keys)
+                .join(', ')
+            )
           if (bound.dropped.length > 0) {
             ctx.time('recordWritesHeld', bound.dropped.length)
             console.warn(
@@ -2149,6 +2179,9 @@ export function createJoomlaEngine({
                 applyId: `tidy-records-${Date.now().toString(36)}`
               })
             )
+            const missed = [...wroteRecords.refused, ...wroteRecords.skipped].filter(requiredRecord)
+            if (missed.length > 0)
+              throw cleanupFailure(missed.map((step) => `${step.kind}-${step.id}`).join(', '))
             if (wroteRecords.refused.length > 0)
               ctx.note(
                 `${wroteRecords.refused.length} change(s) to the template's cards and fact lines were refused`
@@ -2169,6 +2202,7 @@ export function createJoomlaEngine({
             }
           }
         } catch (error) {
+          if (error?.code === 'JOOMLA_RECORD_FALLBACK_UNRESOLVED') throw error
           ctx.note(
             `the template's own menu entries could not be taken off: ${error instanceof Error ? error.message : error}`
           )

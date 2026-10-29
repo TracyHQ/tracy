@@ -563,6 +563,44 @@ async function withPictures() {
   }
 }
 
+/** Supply whole fallback records from the sealed release, without changing the double's ordinary listings. */
+function supplyBlankRows(site, contract, blanks) {
+  if (!blanks?.length) return
+  const lock = JSON.parse(readFileSync(path.join(contract.dir, 'presentation-lock.json'), 'utf8'))
+  const rows = new Map()
+  for (const slot of blanks) {
+    const row = rows.get(slot.entity) ?? structuredClone(lock.entities[slot.entity])
+    if (!row) continue
+    row.id = Number(slot.entity.split('-')[1])
+    // The SQL lock escapes nested JSON once more than a live Joomla row does.
+    if (slot.nestedJson && typeof row[slot.column] === 'string') {
+      const params = JSON.parse(row[slot.column])
+      if (typeof params[slot.nestedJson] === 'string') {
+        try {
+          JSON.parse(params[slot.nestedJson])
+        } catch {
+          params[slot.nestedJson] = JSON.stringify(JSON.parse(params[slot.nestedJson].replace(/\\"/g, '"')))
+        }
+      }
+      row[slot.column] = JSON.stringify(params)
+    }
+    rows.set(slot.entity, row)
+  }
+  const answer = site.answer
+  site.answer = (call) => {
+    const key = `${call.params?.kind}-${call.params?.id}`
+    if (call.action === 'content.get' && rows.has(key)) return { ok: true, item: rows.get(key) }
+    if (call.action === 'content.list' && call.params.kind === 'module' && !call.params.search) {
+      const modules = site.moduleRows.map((row) => ({ ...row, ...rows.get(`module-${row.id}`) }))
+      return {
+        ok: true,
+        items: modules.slice(call.params.offset ?? 0, (call.params.offset ?? 0) + call.params.limit)
+      }
+    }
+    return answer(call)
+  }
+}
+
 const run = async ({
   contract = business,
   release = 'tracy-business/j6',
@@ -582,6 +620,7 @@ const run = async ({
     ...(pictures ? { siteFile: pictures.siteFile, fetchImpl: pictures.fetchImpl } : {})
   })
   const prepared = await engine.prepare(ctx)
+  supplyBlankRows(site, contract, prepared.demoBlanks)
   const report = await engine.apply(ctx, prepared)
   return { prepared, report, site, model, times, notes, ctx }
 }
@@ -1324,12 +1363,39 @@ test('a line the plugin refuses is set aside by name and the write is made again
   )
   const [one, two] = [text[3].key, text[40].key]
   site.refuse = new Set([one, two])
-  const { site: used, notes, report } = await run({ site })
+  // The records fallback reads whole rows. Supply the scalar paths this summary-only
+  // double normally omits, with the same JSON structure as the sealed slots.
+  for (const slot of [text[3], text[40]]) {
+    const row = site.moduleRows.find((row) => `module-${row.id}` === slot.entity)
+    const root = {}
+    let parent = root
+    for (const [index, part] of slot.jsonPath.entries()) {
+      if (index === slot.jsonPath.length - 1) parent[part] = slot.sample
+      else parent = parent[part] = typeof slot.jsonPath[index + 1] === 'number' ? [] : {}
+    }
+    row.params = JSON.stringify({ [slot.nestedJson]: JSON.stringify(root) })
+  }
+  const answer = site.answer
+  site.answer = (call) =>
+    call.action === 'content.list' && call.params.kind === 'module' && !call.params.search
+      ? {
+          ok: true,
+          items: site.moduleRows.slice(call.params.offset ?? 0, (call.params.offset ?? 0) + call.params.limit)
+        }
+      : answer(call)
+  const { site: used, notes } = await run({ site })
   assert.ok(used.applied, 'the write was made in the end')
   assert.ok(!(one in used.applied.changes) && !(two in used.applied.changes), 'without what was refused')
   assert.ok(Object.keys(used.applied.changes).length > 200)
-  assert.ok(notes.some((n) => /2 line\(s\) were refused by the site/.test(n)))
-  assert.ok(report.kept >= 2)
+  assert.ok(notes.some((n) => /2 line\(s\) were routed outside the contract write/.test(n)))
+  const operations = used.batches.flatMap((batch) => batch.operations)
+  for (const slot of [text[3], text[40]]) {
+    const write = operations.find((step) => `module-${step.id}` === slot.entity && step.fields.params)
+    assert.ok(write, `${slot.key} is neutralized through records`)
+    let value = JSON.parse(JSON.parse(write.fields.params)[slot.nestedJson])
+    for (const part of slot.jsonPath) value = value[part]
+    assert.equal(value, '', `${slot.key} no longer keeps its demo`)
+  }
 })
 
 test('a line that ships a bare number (a JA module’s article id) only ever takes a number: words there broke the JA Podcast home page', async () => {
@@ -3838,7 +3904,8 @@ function woBlogSite() {
     }
   ]
   site.categoryRows = [{ id: 8, parent_id: 1, title: 'Blog', published: 1 }]
-  site.articleRows = [30, 31, 32].map((id, i) => ({
+  // Fictional blog rows must not reuse this release's bound Home Dark/Header article IDs.
+  site.articleRows = [900030, 900031, 900032].map((id, i) => ({
     id,
     catid: 8,
     title: `Demo ${id}`,
@@ -3885,12 +3952,12 @@ test("an opportunity's build writes the restaurant's posts into the blog's demo 
   const store = woStore()
   const { times } = await run({ contract: base, release: 'tracy-base/j6', site, woContent: store })
   const byId = (id) => site.articleRows.find((a) => a.id === id)
-  assert.equal(byId(32).title, 'Pho night')
-  assert.equal(byId(32).introtext, '<p>Every &lt;Tuesday&gt;.</p>')
-  assert.equal(byId(32).alias, 'demo-32')
-  assert.equal(byId(31).title, 'New chef')
-  assert.equal(byId(30).state, 0)
-  assert.equal(store.receipts['article:32'].state, 'written')
+  assert.equal(byId(900032).title, 'Pho night')
+  assert.equal(byId(900032).introtext, '<p>Every &lt;Tuesday&gt;.</p>')
+  assert.equal(byId(900032).alias, 'demo-900032')
+  assert.equal(byId(900031).title, 'New chef')
+  assert.equal(byId(900030).state, 0)
+  assert.equal(store.receipts['article:900032'].state, 'written')
   assert.equal(times.woContentWritten, 2)
 })
 

@@ -1173,6 +1173,13 @@ EmDash) never gets a record created for it.
   the demo backgrounds the served stylesheets paint with the owner's picture (or none), and hides demo play buttons, the demo
   pictures of the not-found and offline pages, and links to unpublished menu entries. The demo-leftover check reads the same
   block: a file, video id or address it names counts as hidden, not as a leftover.
+- **Joomla contract writes preserve sealed occupancy** (`joomla-contract-occupancy.js`): every scalar type is checked
+  against its sample before sending. Occupied removals and other refused occupied slots go through native record writes
+  after the contract, including menu titles and author profile HTML. Empty samples stay empty unless an explicit records
+  planner activates them. Missing records, unsupported columns, lost bindings and refused mandatory cleanup fail the brief
+  build instead of completing with demo content. The record writer preserves bound nodes and merges nested JSON edits.
+  Picture drawing receipts carry a short `reasonClass`; safe failure logs contain no provider response. An out-of-credit
+  provider produces one operator note per drawing stage (`drawn-pictures.js`, `drawing-failures.js`).
 - **A site written in the chosen language makes the CMS speak that language too** (D10). Single-language Joomla: after writing
   the text, Apply calls `content.contract siteLanguage.set` (`apply_id` `slang-brief-<ts>`, plugin ≥ 0.16.10) — the plugin installs
   the approved language pack and sets it as default for both site and admin, so `<html lang>` follows the text

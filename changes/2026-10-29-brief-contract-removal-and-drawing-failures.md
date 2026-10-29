@@ -1,0 +1,3 @@
+- **Brief builds route Joomla occupancy changes through native record writes, clear refused menu and author-profile slots, preserve bound nodes, stop on incomplete mandatory cleanup, log complete contract refusals and expose safe picture failure reasons with one out-of-credit note** — Akemi · #189 · `feat/brief-build-own-site` · 2026-10-29
+
+**Affects:** Joomla T4/T3 brief builds and shared Joomla/WordPress picture drawing. Empty scalar plan intents no longer reach the contract as illegal replacements; record cleanup covers supported visitor-facing fields and merges nested JSON edits. Drawing receipts carry `reasonClass` for provider credit, rate limits, missing models, network failures and labeller refusals. Plain demo builds without cleanup intents keep their content.
