@@ -7,12 +7,16 @@
 // list its name says (the name the text path writes on it); a photo the brief links to another offering, or to none
 // ("general", unsure), never fills it.
 // 🔒 A GENERAL SLOT TAKES ONLY A GENERAL OR UNSURE PHOTO: never one linked to an offering, never a portrait.
+// 🔒 THE OWNER'S PHOTOS FIRST, AND A MAP PHOTO BY SOMEONE ELSE NEVER REPRESENTS THE BUSINESS (#135): among qualifying
+// photos the business's own rank first; an identity slot (the hero, an about picture, a gallery's lead picture) refuses a
+// photo someone else posted on a map listing, because it can show another venue.
 // 🔒 THE ROLE DECIDES KEEP (ADR 0040), never a name: a keep slot and every slot of a `demoOnly` entity stay as shipped.
 // The slots that share one demo file are replaced together, so they form one unit: the strictest need among them wins.
 import { keepDecisionOf } from './content-map-keep-decision.mjs'
 import { LOGO_ROLES } from './place-content-roles.mjs'
 import { closedListOf, focusOfBox, GENERAL, namedIn } from './pictures/picture-links.mjs'
 import { avatarSubstitute } from './person-avatar.mjs'
+import { isMapPhotoByOthers, isOwnersPhoto, uploaderRoleOf } from './pictures/asset-origin.mjs'
 import { fitCrop, ROLES } from './pictures/placement.mjs'
 import { declaredSize, fileOf } from './pictures/slot-map.mjs'
 
@@ -47,6 +51,25 @@ const GENERAL_ROLES = new Set([
   'editorial.illustration',
   'article.image'
 ])
+
+/** Identity pictures: the ones that represent the business itself. A gallery's lead is decided per slot (`leadsOf`). */
+const IDENTITY_ROLES = new Set(['business.hero_image', 'editorial.illustration'])
+
+/** Who published a photo, as a rank: the business first, then not known, then someone else. */
+const ownerRank = (asset) => (isOwnersPhoto(asset) ? 0 : uploaderRoleOf(asset) === 'customer' ? 2 : 1)
+
+/** The keys of the gallery pictures that lead their gallery: item 0 of a gallery group, else an entity's first one. */
+function leadsOf(slots) {
+  const out = new Set()
+  const seen = new Set()
+  for (const slot of slots) {
+    if (slot.role !== 'business.gallery_image') continue
+    const lead = slot.group?.kind === 'gallery' ? slot.group.item === 0 : !seen.has(slot.entity)
+    seen.add(slot.entity)
+    if (lead) out.add(slot.key)
+  }
+  return out
+}
 
 const depictsOf = (asset) => asset?.depicts?.id ?? asset?.depicts ?? GENERAL
 const hasFaces = (asset) => (asset?.faceBoxes?.length ?? 0) > 0 || (asset?.peopleCount ?? 0) > 0
@@ -178,8 +201,11 @@ export function planFill({ contentMap, brief, demo = new Map(), cardNames = {} }
     .sort((a, b) => String(a.id).localeCompare(String(b.id)))
   const used = new Set()
   const hero = (u) => u.slots.some((s) => s.role === 'business.hero_image')
+  const leads = leadsOf(slots)
+  const identity = (u) => u.slots.some((s) => IDENTITY_ROLES.has(s.role) || leads.has(s.key))
   const order = [...units.values()].map((u) => ({ ...u, need: unitNeed(u.needs) }))
-  const rank = (u) => (u.need.offering ? 0 : hero(u) ? 1 : 2)
+  // Specific cards choose first, then the hero, then the other identity pictures, so they meet the owner's photos first.
+  const rank = (u) => (u.need.offering || u.need.person ? 0 : hero(u) ? 1 : identity(u) ? 2 : 3)
   order.sort((a, b) => rank(a) - rank(b))
 
   for (const unit of order) {
@@ -205,6 +231,7 @@ export function planFill({ contentMap, brief, demo = new Map(), cardNames = {} }
     for (const asset of assets) {
       const why =
         refusalOf(asset, unit.need) ??
+        (identity(unit) && isMapPhotoByOthers(asset) ? 'map-photo-by-others' : null) ??
         (used.has(asset.id) ? 'used' : null) ??
         (fitCrop(asset, unit.frame, { min }) ? null : 'shape')
       if (why) refused[why] = (refused[why] ?? 0) + 1
@@ -216,6 +243,7 @@ export function planFill({ contentMap, brief, demo = new Map(), cardNames = {} }
     }
     fitting.sort(
       (a, b) =>
+        ownerRank(a) - ownerRank(b) ||
         lossOf(a) - lossOf(b) ||
         b.width * b.height - a.width * a.height ||
         String(a.id).localeCompare(String(b.id))

@@ -71,6 +71,8 @@ const photo = (id, width, height, extra = {}) => ({
 })
 const portrait = (who) => ({ portraitOf: { id: who, evidence: { via: 'alt' } } })
 
+const fromMap = { source: 'google-places', uploaderRole: 'customer', isOwnPhoto: false }
+
 const READING = {
   team: [
     { id: 'person-wren', label: 'Wren Example' },
@@ -158,4 +160,53 @@ test('#134 initials fold an accented name to its base letters', () => {
     })
   )
   assert.equal(got.get('module-5.1').substitute.initials, 'EE')
+})
+
+test('#135 with an owner photo and a map photo both qualifying, the owner photo wins', () => {
+  // One general slot that is not an identity slot: a map photo may fill it, but the owner's ranks first even when the
+  // map photo fits the frame better.
+  const contentMap = {
+    roleVocabularyVersion: 'place-content-roles/3',
+    entities: [{ key: 'article-4', kind: 'article' }],
+    slots: [image('article-4.0', 'article-4', 'article.image', 'blog/post-1.jpg', null, [800, 600])]
+  }
+  const assets = [
+    photo('a-map-court', 1200, 900, fromMap),
+    photo('b-owner-court', 1200, 1000),
+    photo('c-own-by-look', 1200, 1000, { source: 'unknown', uploaderRole: 'unknown', isOwnPhoto: true })
+  ]
+  const got = at(planFill({ contentMap, brief: { reading: READING, assets } }))
+  assert.equal(got.get('article-4.0').mediaId, 'b-owner-court')
+  // Without the owner's upload, a photo the vision model read as the business's own still beats the map photo.
+  const second = at(planFill({ contentMap, brief: { reading: READING, assets: [assets[0], assets[2]] } }))
+  assert.equal(second.get('article-4.0').mediaId, 'c-own-by-look')
+})
+
+test('#135 a map photo posted by someone else is refused for the hero and about slots with its reason', () => {
+  const got = plan([
+    photo('map-wide', 2400, 1200, fromMap),
+    photo('map-room', 1200, 900, fromMap),
+    photo('owner-room', 1000, 750)
+  ])
+  const hero = got.get('module-1.0')
+  assert.deepEqual([hero.action, hero.reason], ['substitute', 'no-general-photo'])
+  assert.equal(hero.refused['map-photo-by-others'], 2)
+  const about = got.get('module-2.0')
+  assert.deepEqual([about.action, about.mediaId], ['photo', 'owner-room'])
+})
+
+test('#135 a brief with only map photos leaves every identity slot to the neutral rule, never the map photo', () => {
+  const got = plan([
+    photo('map-1', 2400, 1200, fromMap),
+    photo('map-2', 1200, 900, fromMap),
+    photo('map-3', 1200, 900, { source: 'tripadvisor', uploaderRole: 'unknown' })
+  ])
+  // Hero, about and the gallery's lead picture: the substitute, each saying it refused the map photos.
+  for (const key of ['module-1.0', 'module-2.0', 'module-3.0']) {
+    const d = got.get(key)
+    assert.deepEqual([d.action, d.reason, d.mediaId], ['substitute', 'no-general-photo', undefined], key)
+    assert.ok(d.refused['map-photo-by-others'] >= 2, key)
+  }
+  // A gallery picture after the lead is not an identity slot: a map photo may show the place there.
+  assert.equal(got.get('module-3.1').action, 'photo')
 })

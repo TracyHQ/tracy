@@ -68,3 +68,19 @@ export function assetOriginOf(m) {
     uploaderRole: uploaderRoleOf(m)
   }
 }
+
+/** Sources that are map or review listings: anyone may post a photo there, and it can show another venue. */
+const MAP_LISTINGS = new Set(['google-places', 'google-maps', 'google', 'tripadvisor', 'yelp', 'foursquare'])
+
+/** Whether the business itself published a picture: its own upload, or a picture read as its own photo. */
+export function isOwnersPhoto(m) {
+  return uploaderRoleOf(m) === 'owner' || m?.isOwnPhoto === true
+}
+
+/**
+ * Whether a picture was posted on a map listing by someone other than the business (TracyHQ/tracy#135): such a photo can
+ * show another venue (a court with another club's sign), so it never represents the business in an identity slot.
+ */
+export function isMapPhotoByOthers(m) {
+  return MAP_LISTINGS.has(m?.source) && !isOwnersPhoto(m)
+}
