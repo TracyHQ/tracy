@@ -1,0 +1,1 @@
+{"id":"REG-PR-113-sync-woocommerce-counts","verdict":"PASS","commit":"e3fce56fbe61c8468245afe14bfb83640cd5cd0e","ran_at":"2026-10-29T00:17:29.753Z","evidence":"tests/regression/.runs/2026-10-29-e3fce56fb/REG-PR-113-sync-woocommerce-counts.log"}
