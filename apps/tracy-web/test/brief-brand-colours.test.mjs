@@ -8,7 +8,7 @@ import assert from 'node:assert/strict'
 import sharp from 'sharp'
 import { writeOutsideMap } from '../src/sites/brief-engines/joomla-outside-map.js'
 import { brandColoursCss } from '../src/sites/brief-engines/joomla-brand-colours.js'
-import { headBlocks } from '../src/sites/brief-engines/joomla-head-blocks.js'
+import { COLOURS_NOTE, headBlocks } from '../src/sites/brief-engines/joomla-head-blocks.js'
 import { shapeDecor } from '../src/sites/brief-engines/drawn-pictures.js'
 import { drawKey, drawPrompt } from '../src/lib/picture-draw.js'
 import { hiddenByHeadBlock, planOutsideMap } from 'website-opportunities/domain/outside-map.mjs'
@@ -93,9 +93,23 @@ test('a T4 brief build with a logo: the head module repaints the brand colour ro
     note: () => {},
     applyId: 'outside-1'
   })
-  const made = site.writes.find((w) => w.kind === 'module' && w.id === undefined)
-  const head = String(made?.fields?.content ?? '')
+  // Every build now writes a leftovers block too (empty play controls, related lists), so the colours module is found by
+  // its own note, not by the order of the writes, and it must be a module apart from the leftovers.
+  const made = site.writes.filter((w) => w.kind === 'module' && w.id === undefined)
+  const coloursModule = made.find((w) => w.fields?.note === COLOURS_NOTE)
+  assert.ok(
+    coloursModule,
+    `a module noted ${COLOURS_NOTE} is created (made: ${made.map((w) => w.fields?.note)})`
+  )
+  const head = String(coloursModule.fields.content ?? '')
+  for (const other of made.filter((w) => w !== coloursModule))
+    assert.doesNotMatch(
+      String(other.fields?.content ?? ''),
+      /data-tracy-brand-colours/,
+      'colours only in their module'
+    )
   assert.match(head, /<style data-tracy-brand-colours>/)
+  assert.doesNotMatch(head, /data-tracy-leftovers/, 'the colours module carries no leftover rules')
   assert.match(head, /a\{color:var\(--tracy-brand-0-text\)\}/)
   assert.match(head, /\.btn\.btn-primary\{background-color:var\(--tracy-brand-0-fill\)\}/)
   assert.match(head, /\[fill="#E8402F" i\]\{fill:var\(--tracy-brand-0-line\)\}/)

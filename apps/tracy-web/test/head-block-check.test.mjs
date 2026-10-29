@@ -40,6 +40,18 @@ test('a page without its brand colours and leftovers blocks: two major findings 
   )
 })
 
+test('a page that serves the leftovers block but not the brand colours block is a major colours finding', () => {
+  const found = checkHeadBlocks({
+    pages: [{ path: '/', status: 200, html: head(LEFTOVERS) }],
+    sitePlan: plan('#1f5130'),
+    styles: [{ css: TEMPLATE_CSS }]
+  })
+  assert.deepEqual(
+    found.map((f) => [f.kind, f.found, f.severity]),
+    [['head-block', 'brand colours', 'major']]
+  )
+})
+
 test('a page that carries every block it is owed passes; a plan without logo colours owes no colours block', () => {
   assert.deepEqual(
     checkHeadBlocks({
