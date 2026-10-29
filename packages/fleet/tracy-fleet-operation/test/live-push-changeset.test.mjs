@@ -1576,3 +1576,63 @@ test('after an Undo, a Tracy post the live site holds in the trash is offered as
   })
   assert.equal(same.items.length, 0, JSON.stringify(same.items))
 })
+
+function previewOf(answer) {
+  const file = join(root, `preview-${++n}.json`)
+  writeFileSync(file, JSON.stringify(answer))
+  const r = spawnSync('python3', [PUSH, 'answer', '--changeset', file, '--preview-id', 'test-preview'], {
+    encoding: 'utf8'
+  })
+  assert.equal(r.status, 0, r.stderr + r.stdout)
+  return JSON.parse(r.stdout.trim().split('\n').at(-1))
+}
+
+test('WordPress preview retains page types and translated metadata labels', () => {
+  const answer = changeset('wordpress', {
+    entities: { posts: { base: [10], copy: [10] } },
+    kinds: {
+      post: kind([post(10)], [post(10, { post_title: 'About us' })], ['ID']),
+      postmeta: kind(
+        [],
+        [
+          { post_id: '10', meta_key: '_thumbnail_id', value: '0', post_title: 'About us' },
+          { post_id: '10', meta_key: '_wp_page_template', value: 'landing.php', post_title: 'About us' },
+          { post_id: '10', meta_key: '_wp_attachment_image_alt', value: 'Team', post_title: 'About us' }
+        ],
+        ['post_id', 'meta_key']
+      )
+    }
+  })
+  const items = byId(previewOf(answer))
+  assert.equal(items['post:10'].what, 'page')
+  assert.deepEqual(
+    [items['postmeta:10:_thumbnail_id'].label, items['postmeta:10:_thumbnail_id'].subject],
+    ['featuredImage', 'About us']
+  )
+  assert.deepEqual(
+    [items['postmeta:10:_wp_page_template'].label, items['postmeta:10:_wp_page_template'].subject],
+    ['pageTemplate', 'About us']
+  )
+  assert.deepEqual(
+    [
+      items['postmeta:10:_wp_attachment_image_alt'].label,
+      items['postmeta:10:_wp_attachment_image_alt'].subject
+    ],
+    ['altText', 'About us']
+  )
+  assert.ok(!items['postmeta:10:_thumbnail_id'].title.includes('_thumbnail_id'))
+})
+
+test('WordPress metadata uses the record title without exposing unknown internal keys', () => {
+  const answer = changeset('wordpress', {
+    entities: { posts: { base: [10], copy: [10] } },
+    kinds: {
+      postmeta: kind(
+        [],
+        [{ post_id: '10', meta_key: '_plugin_internal_key', value: 'yes', post_title: 'About us' }],
+        ['post_id', 'meta_key']
+      )
+    }
+  })
+  assert.equal(answer.items[0].title, 'About us')
+})
