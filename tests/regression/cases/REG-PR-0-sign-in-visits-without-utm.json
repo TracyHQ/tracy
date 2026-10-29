@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-0-sign-in-visits-without-utm",
+  "kind": "feat",
+  "title": "/login counts every signed-out visit: no source is a direct visit, and a linking site is kept as its host only",
+  "pr": 0,
+  "area": "usage/funnel",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: render the sign-in page with no source and with a source; read its visit script.",
+    "S2: POST /login/visit from the page's own origin with {ref:'x'}, {referrer:'www.google.com'}, {utm_source:'joomlart', referrer:'www.joomlart.com'} and {referrer:'www.google.com/search?q=secret'}; then with an array and a string body.",
+    "S3: visitReferrer with a host, a host with a path, a port, an at sign, a fragment and an empty string."
+  ],
+  "expect": [
+    "S1: both pages send POST /login/visit once per tab; the page with no source sends {} and adds referrer only when document.referrer is another host.",
+    "S2: four login.visited rows {}, {referrer:'www.google.com'}, {source:'joomlart', referrer:'www.joomlart.com'}, {}; the array and string bodies keep nothing.",
+    "S3: the host cleaned to lower case; null for every value carrying anything past a host."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/identity/pages.js (visitScript); apps/tracy-web/src/identity/route.js (POST /login/visit); apps/tracy-web/src/lib/sign-in-source.js (visitReferrer); apps/tracy-web/src/lib/ops-signal.js (FIELDS)"
+  },
+  "evidence": "From 26/10 only visits from a link with utm_* were recorded, so direct, search and desktop-app visits to /login were invisible next to first sign-ins",
+  "fence": "A visit row holds no account, address, cookie or path: the cleaned source values and a host at most, capped per client address",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=tells /login/visit once per tab|visitReferrer keeps a cleaned host|POST /login/visit keeps",
+      "apps/tracy-web/test/sign-in-source.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "the login page tells /login/visit once per tab",
+      "visitReferrer keeps a cleaned host and refuses anything past one",
+      "POST /login/visit keeps one cleaned source per visit"
+    ]
+  }
+}
