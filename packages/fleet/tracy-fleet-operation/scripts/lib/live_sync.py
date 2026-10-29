@@ -526,7 +526,8 @@ def stat_manifest(repo: str, rev: str, stat: dict) -> dict[str, dict]:
 #   appendTables    append-only logs: the live site's new rows come over; a new row on each side
 #                   under one id keeps the copy's and counts the other as skipped, never a conflict
 #   derivedColumns  columns the CMS rebuilds from others (nested sets): not compared; a table whose
-#                   rows took anything from the live site is listed in `rebuild`
+#                   rows changed is listed in `rebuild`
+#   rebuildDependencies tables whose derived data must be rebuilt when a source table changes
 #   volatileColumns columns that change on every visit or save: when both sides changed one, the
 #                   live site's value is taken and it is not a conflict
 #   counterColumns  counters: when both sides moved one, the larger is taken, not a conflict
@@ -1086,6 +1087,9 @@ class IdMap:
                 # A reference of 0 or below names no record; a record's own id counts whatever it is.
                 if kind == "id" or n > 0:
                     out[asks[i][:2]].add(n)
+        for schema, table, rule in asks:
+            if rule.get("typedRefs"):
+                out[(schema, table)].update(rule["typedRefs"].read(self, schema))
         return out
 
     def renumber(self, schema: str, table: str, rule: dict, pairs: list[tuple[int, int]]) -> None:
@@ -1177,6 +1181,8 @@ class IdMap:
                     script.append(f"DROP TEMPORARY TABLE {rows};")
         if script:
             self.sql.run("\n".join(script))
+        if rule.get("typedRefs"):
+            rule["typedRefs"].rewrite(self, schema, pairs)
 
     # How many links one regular expression of the rows' search names (`renumber`): each is compiled
     # on its own, and a compiled pattern has a size limit.
@@ -1265,6 +1271,8 @@ class IdMap:
                         out.add(int(r[0]))
                 except (TypeError, ValueError):
                     continue
+        if rule.get("typedRefs"):
+            out.update(rule["typedRefs"].read(self, schema))
         return out
 
     def fresh(self, table: str, also: set[int]) -> int:
@@ -1513,6 +1521,10 @@ class DbMerge:
             self.restore_session_columns(locks)
         finally:
             self.sql.run(f"DROP DATABASE IF EXISTS {q(self.work)};")
+        if self.rebuild:
+            existing = {row[0] for row in self.sql.run(
+                f"SELECT table_name FROM information_schema.tables WHERE table_schema = {sql_str(self.names['ours'])};")}
+            self.rebuild.intersection_update(existing)
         return {"ok": True, "tables": {k: v for k, v in self.tables.items() if v != "same"},
                 "conflicts": self.conflicts, "rebuild": sorted(self.rebuild), "counts": self.counts,
                 "renumbered": self.ids.added, "idMap": self.ids.as_json(), "held": self.ids.held,
@@ -1921,6 +1933,11 @@ class DbMerge:
                             f" WHERE rt.{first} IS NULL AND {visible_b});")
         return int(rows[0][0] or 0) if rows else 0
 
+    def mark_rebuild(self, table: str) -> None:
+        """Queue derived data affected by a successful mutation, using the adapter's table names."""
+        name = self.bare(table)
+        self.rebuild.update(self.prefix + target for target in self.policy.get("rebuildDependencies", {}).get(name, ()))
+
     def take_table(self, table: str) -> None:
         """The live site's whole table, structure included, in place of the copy's."""
         m, t = self.ref("ours", table), self.ref("theirs", table)
@@ -1939,6 +1956,7 @@ class DbMerge:
         self.sql.run(f"DROP TABLE IF EXISTS {m}; CREATE TABLE {m} LIKE {t};" + insert
                      + "\n".join(foreign_key_sql(rebase_foreign_key(k, self.names["theirs"], self.names["ours"])) for k in keys))
         self.counts["tablesFromTheirs"] += 1
+        self.mark_rebuild(table)
 
     def table_conflict(self, table: str, reason: str) -> str:
         cid = f"db:{table}"
@@ -1948,6 +1966,7 @@ class DbMerge:
                 self.take_table(table)
             else:
                 self.sql.run(f"DROP TABLE IF EXISTS {self.ref('ours', table)};")
+                self.mark_rebuild(table)
             return "theirs-by-decision"
         if pick == "ours":
             return "ours-by-decision"
@@ -1966,6 +1985,7 @@ class DbMerge:
                 return "same"
             if M.checksum[table] == B.checksum[table]:
                 self.sql.run(f"DROP TABLE {self.ref('ours', table)};")
+                self.mark_rebuild(table)
                 return "dropped"
             return self.table_conflict(table, "dropped-live-changed-copy")
         if not inM:
@@ -2505,7 +2525,15 @@ class DbMerge:
                          f" WHERE {self.key_where('rm', pk, keys)};")
         for c, keys, text in json_sets:
             apply.append(f"UPDATE {m} rm SET rm.{q(c)} = {sql_str(text)} WHERE {self.key_where('rm', pk, keys)};")
-        self.sql.run("\n".join(apply))
+        # ROW_COUNT is read immediately after each write, on the same connection. A kept
+        # column conflict can classify as X without changing the copy; it needs no recount.
+        tracks_rebuild = name in self.policy.get("rebuildDependencies", {})
+        if tracks_rebuild:
+            changed = self.sql.run("\n".join(statement + "\nSELECT ROW_COUNT();" for statement in apply))
+            if any(int(row[0] or 0) > 0 for row in changed):
+                self.mark_rebuild(table)
+        else:
+            self.sql.run("\n".join(apply))
         if count_after:
             visible = self.record_visible(name, "rm", M, table)
             got = self.sql.run(f"SELECT IFNULL(SUM(k.record_change AND (k.record_before OR"
@@ -2515,7 +2543,7 @@ class DbMerge:
         self.counts["rowsFromTheirs"] += took + len(take_rows)
         self.counts["rowsDeleted"] += deleted
         self.counts["rowsMerged"] += merged
-        if derived and (took or deleted or merged or take_rows):
+        if derived and not tracks_rebuild and (took or deleted or merged or take_rows):
             self.rebuild.add(table)
         return "conflict" if found else "merged"
 

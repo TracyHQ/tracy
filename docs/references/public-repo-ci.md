@@ -55,12 +55,33 @@ still caught: into `staging`/`main` every row is required (the forced Turbo rows
 
 ### Privileged workflows
 
+The two jobs that hold a write token run on **GitHub-hosted** `ubuntu-latest`, never on the team's
+runners: those are persistent and also run pull-request code, so anything a pull-request job leaves
+behind would run next to the token. `scripts/test/ci-public-repo.test.mjs` pins both.
+
 - `ci-label-rerun.yml` (`pull_request_target`) checks out the base commit with no credential, takes
   the label and PR number as data, and refuses forks and drafts in its `if`. It holds `actions: write`.
 - `auto-merge-develop.yml` (`workflow_run`, `schedule`) checks out the default branch, ignores runs
   whose head repository is not this one, and merges only same-repository pull requests into `develop`
   after `check-pr-merge.mjs` passes on the exact head. It reads no artifact or cache from the
-  triggering run. With the repository variable `REQUIRE_APPROVAL_FOR_AUTO_MERGE=true` it also needs
+  triggering run. It merges only a pull request **opened by a person of the team**: `user.type`
+  `User` (never a `Bot` — Dependabot, a GitHub App agent) with `author_association` `OWNER`,
+  `MEMBER` or `COLLABORATOR`; anything else is reported as `author-missing`, `author-not-human` or
+  `author-not-team`. It **never merges a pull request that touches a CI-sensitive path** (status
+  `sensitive-files`), old or new name of each file. The set is read from the trusted checkout at
+  run time: every path in `.github/CODEOWNERS`, and every path under `scripts/` a `run:` step of the five
+  gate workflows names, whatever command or argument it sits in, bare or quoted, behind `./`,
+  `$GITHUB_WORKSPACE/` or `${{ github.workspace }}/` (shell comment lines excepted), so a new gate
+  script is covered without editing a list; finding no script at all fails the run. A floor stays
+  whatever those files say: `.github/`, `scripts/ci/`, `scripts/lib/`, `scripts/check-*`,
+  `scripts/auto-merge-develop.mjs`, `scripts/check-pr-merge.mjs` and `turbo.json`. A `pull_request`
+  run executes the workflow files of the pull request's head, and those run the head's copy of each
+  gate script, so a pull request that rewrites either could otherwise turn its own gate green; a
+  person merges those. **Still trusted to the team authors the bot requires:** test files, app code
+  and the `package.json` scripts a gate reaches (`pnpm build:check`, `pnpm test`); a team member's
+  pull request that weakens a test or a package script is caught only by review. The file list is read before and after the gate, each time
+  between two reads of the same head; a listing that differs, that disagrees with `changed_files`, or
+  that reaches the files API's 3000-file limit refuses the merge (`files-incomplete`). With the repository variable `REQUIRE_APPROVAL_FOR_AUTO_MERGE=true` it also needs
   an `APPROVED` review from an `OWNER`/`MEMBER`/`COLLABORATOR` on the **current head** commit, with
   no reviewer's latest decision `CHANGES_REQUESTED`. **Off by default**: agents rely on auto-merge
   into `develop` today without an approval.

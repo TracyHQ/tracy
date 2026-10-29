@@ -6,7 +6,7 @@
  * (sync-joomla-after.php's counterpart).
  *
  *   rebuild   the counters the merge never compares (lib/live_sync_wordpress.py `derivedColumns`),
- *             recounted from the rows when the merge took rows into their table (TRACY_SYNC_REBUILD,
+ *             recounted when the merge changes their table or a declared dependency (TRACY_SYNC_REBUILD,
  *             comma-separated names without the prefix): `term_taxonomy` (each term's post count,
  *             through the taxonomy's own counter) and `posts` (each post's approved comments)
  *   cache     the object cache, the rewrite rules (the copy kept its own, and the live site may have

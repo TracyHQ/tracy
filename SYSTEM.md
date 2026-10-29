@@ -656,6 +656,7 @@ Only for `origin='migrated'` sites on Joomla (WordPress waits for its own adapte
   scratch schemas over several connections (`tracy_db_load_dump`, `dump_sections.py split`: 2 + 2 in the merge, 4 for the
   preview's base; 2026-10-27). The two reads load beside the copy's dump (`load_reads`, in the background), not after it. A machine runs
   `TRACY_HEAVY_SLOTS` heavy webroot jobs at once (default 2; `lib/heavy-slots.sh`, slot 0 the old lock file).
+- **WordPress counters after Sync:** the merge queues native recounts when posts, comments or term relationships change, including whole-table replacement and deletion. After restoring the complete merged DB, WordPress recalculates term counts using each taxonomy's own counter and approved-comment counts through its native API. Kept column conflicts that change no row queue no recount, and absent final target tables are omitted.
 - **Conflicts: Tracy's version wins** (20/10/2026). Where both sites edited the same thing differently, the copy's version is kept —
   files with `git merge-file --ours` (colliding hunks take Tracy's, the rest of the live file still comes over), DB with
   the copy's value/row — and listed in `kept` with the live-side value; the Export dialog shows that list once
@@ -663,7 +664,7 @@ Only for `origin='migrated'` sites on Joomla (WordPress waits for its own adapte
 - **Both sides created new records with the same id:** in core Joomla tables (articles, categories, menus, modules, users, tags, assets,
   `history` versions, the 404 log `redirect_links`) the customer's record gets a **new id** and everything pointing to it follows —
   including text columns such as `fields_values.item_id` (filtered by `fields.context`) and `history.item_id`
-  (`com_content.article.<id>`); renumbered tables are remembered in `sync/id-map.json` for later runs. In extension tables the merge cannot renumber, or when an extension table points to an id just changed: the sync run
+  (`com_content.article.<id>`); renumbered tables are remembered in `sync/id-map.json` for later runs. WordPress theme-mod references use typed serialized paths for logos, custom CSS posts, header media and menu locations. The same paths participate in fresh-ID allocation, remembered-map reads, batch rewrites and reverse Preview mapping; dimensions and unrelated values retain their bytes. Unreadable or aliased serialized theme values stop the merge safely rather than guessing at IDs. In extension tables the merge cannot renumber, or when an extension table points to an id just changed: the sync run
   **stops before applying** (`needs_resolution`, list `held`), and only after a person reviews and clicks "Sync anyway" (`allowHeld`) is
   Tracy's version kept there.
 - **WooCommerce record counts:** the five analytics/admin tables `wc_admin_notes`, `wc_admin_note_actions`,

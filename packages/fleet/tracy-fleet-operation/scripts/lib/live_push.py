@@ -367,10 +367,6 @@ WHAT = {"article": "article", "category": "category", "tag": "tag", "menuItem": 
         "customCss": "setting", "globalStyles": "setting", "siteIdentity": "setting", "templateSettings": "setting",
         "templatePart": "templatePart", "template": "template", "postmeta": "pageDetail", "attachment": "media",
         "file": "file"}
-# Theme mods whose value names a record: the custom logo and the Additional CSS post (attachments,
-# posts), the menu shown at each location (`nav_menu_locations`: location → menu term).
-W_MOD_POSTS = ("custom_logo", "custom_css_post_id")
-W_MOD_TERMS = ("nav_menu_locations",)
 # Post meta never offered: WordPress's and Tracy's own bookkeeping, the menu item's (its own kind).
 W_META_SKIP = ("_edit_lock", "_edit_last", "_encloseme", "_pingme", "_wp_old_slug", "_wp_old_date",
                "_wp_trash_meta_status", "_wp_trash_meta_time", "_wp_desired_post_slug", "_wp_attached_file", "_wp_attachment_metadata")
@@ -939,7 +935,7 @@ class Unserializable(ValueError):
 def php_unserialize(text: str):
     """PHP `unserialize` of `N;`, `b:`, `i:`, `d:`, `s:` and `a:`, as JSON-able values the way the engine's
     `json_encode` answers them: an array keyed 0..n-1 in order is a list, any other one an object. An
-    object (`O:`/`C:`), a reference (`r:`/`R:`) or anything left over raises `Unserializable`."""
+    `stdClass` becomes an object as JSON does; other objects, references or trailing bytes are refused."""
     data = text.encode("utf-8", "surrogateescape")
 
     def number(at: int, end: bytes) -> tuple[str, int]:
@@ -971,8 +967,15 @@ def php_unserialize(text: str):
             if data[end:end + 2] != b'";':
                 raise Unserializable("string length")
             return data[start:end].decode("utf-8", "surrogateescape"), end + 2
-        if tag == b"a:":
-            count, at = number(at + 2, b":")
+        if tag in (b"a:", b"O:"):
+            if tag == b"O:":
+                size, at = number(at + 2, b":")
+                end = at + 1 + int(size)
+                if data[at:at + 1] != b'"' or data[end:end + 2] != b'":' or data[at + 1:end] != b"stdClass":
+                    raise Unserializable("object")
+                count, at = number(end + 2, b":")
+            else:
+                count, at = number(at + 2, b":")
             if data[at:at + 1] != b"{":
                 raise Unserializable("array")
             at += 1
@@ -985,7 +988,7 @@ def php_unserialize(text: str):
                 pairs.append((key, item))
             if data[at:at + 1] != b"}":
                 raise Unserializable("array end")
-            if [k for k, _ in pairs] == list(range(len(pairs))):
+            if tag == b"a:" and [k for k, _ in pairs] == list(range(len(pairs))):
                 return [v for _, v in pairs], at + 1
             return {str(k): v for k, v in pairs}, at + 1
         raise Unserializable(f"tag {tag!r}")
@@ -1650,20 +1653,18 @@ class Changeset:
             got = self.live_id(entity, v)
             # The type the theme stored it in (`i:12;` or `s:2:"12";`), the record's live number.
             return got if isinstance(got, Placeholder) else (str(got) if isinstance(v, str) else int(got))
-        if key in W_MOD_POSTS:
-            return number("posts", value)
-        if key in W_MOD_TERMS and isinstance(value, dict):
-            return {k: number("terms", v) for k, v in value.items()}
-
-        def walk(v):
+        def walk(v, path):
+            entity = LS._WORDPRESS.theme_mod_entity(path)
+            if entity:
+                return number(entity, v)
             if isinstance(v, str):
                 return self.address(v)
             if isinstance(v, list):
-                return [walk(x) for x in v]
+                return [walk(x, path + (i,)) for i, x in enumerate(v)]
             if isinstance(v, dict):
-                return {k: walk(x) for k, x in v.items()}
+                return {k: walk(x, path + (k,)) for k, x in v.items()}
             return v
-        return walk(value)
+        return walk(value, (key,))
 
     @staticmethod
     def same_json(a, b) -> bool:

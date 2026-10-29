@@ -95,6 +95,8 @@ const searchPart = (network) => `${network}-search`
 
 /** `collector_version` of a snapshot source this code collected. */
 const COLLECTOR_VERSION = 'wo-place-1'
+/** Pictures a research run downloads at once (a video waits for its turn alone). */
+const MEDIA_AT_ONCE = 5
 
 export function createPlaceRunner(h) {
   const { pool, now, log } = h
@@ -215,13 +217,18 @@ export function createPlaceRunner(h) {
       // The logo's retry runs its own stages only; a one-source run runs them all so the profile follows what it found.
       const stages = job.only_source === 'logo' ? LOGO_ONLY_STAGES : h.stages
       let stage = stages.includes(job.stage) ? job.stage : stages[0]
+      // Where a research run's minutes go, one line per run (28/10/2026: nothing said it before).
+      const spent = []
       while (stage !== 'done') {
         if (await ctx.pausePoint(null)) return void (await finish(ctx.stopOutcome))
+        const stageStarted = now()
         const outcome = await STAGES[stage](ctx)
+        spent.push(`${stage} ${((now() - stageStarted) / 1000).toFixed(1)}s`)
         if (outcome?.state) return void (await finish(outcome))
         stage = stages[stages.indexOf(stage) + 1]
         if (!(await checkpoint(pool, lease, { stage }))) throw new StaleLeaseError(job.id)
       }
+      if (spent.length) log.info?.(`[opportunities] place job ${job.id}: ${spent.join(', ')}`)
       if (!(await finish({ state: 'completed' }))) throw new StaleLeaseError(job.id)
       // What this run read from Google itself is offered to the shared hub (only with `HUB_CONTRIBUTE=1`).
       if (h.hub && !prefetch)
@@ -921,22 +928,34 @@ export function createPlaceRunner(h) {
               .slice(0, 20),
             ...candidates.filter((m) => m.source === GOOGLE_MAPS_SOURCE && m.category !== 'menu').slice(0, 20)
           ]
-      for (let i = 0; i < todo.length; i += 1) {
+      // 🔒 DOWNLOADS AT ONCE, WRITES IN ORDER (28/10/2026): one picture after another, up to 300 of them, was minutes
+      // of a research run. `MEDIA_AT_ONCE` download together (a video alone, for memory); each is then kept in list
+      // order, so the row a picture's hash keeps (`keepMedia`, the first) and every pause point are the serial run's.
+      for (let i = 0; i < todo.length; i += MEDIA_AT_ONCE) {
         if (i % 10 === 0 && (await ctx.pausePoint({ media: { done: i, total: todo.length } })))
           return ctx.stopOutcome
-        const held = known.get(todo[i].url)
+        const chunk = todo.slice(i, i + MEDIA_AT_ONCE)
         // Already a media row of this place (another snapshot stored it): shown again, not downloaded again.
-        if (held) await fenced(pool, lease, (db) => show(db, snapshotId, held))
-        else {
-          const record = await h.mediaRecord(domain, owner, todo[i])
-          if ([TRIPADVISOR_SOURCE, GOOGLE_MAPS_SOURCE].includes(todo[i].source)) {
-            record.credit = todo[i].credit
-            record.provider = todo[i].provider
-            if (todo[i].category === 'menu') record.category = 'menu'
-            if (todo[i].source === GOOGLE_MAPS_SOURCE) record.palette = null
+        const early = chunk.map((m) =>
+          known.get(m.url) || m.kind === 'video' ? null : h.mediaRecord(domain, owner, m)
+        )
+        // A failed download throws at its own turn below, after the ones before it are kept, as it did serially.
+        for (const download of early) download?.catch(() => {})
+        for (const [k, m] of chunk.entries()) {
+          const held = known.get(m.url)
+          if (held) {
+            await fenced(pool, lease, (db) => show(db, snapshotId, held))
+            continue
+          }
+          const record = await (early[k] ?? h.mediaRecord(domain, owner, m))
+          if ([TRIPADVISOR_SOURCE, GOOGLE_MAPS_SOURCE].includes(m.source)) {
+            record.credit = m.credit
+            record.provider = m.provider
+            if (m.category === 'menu') record.category = 'menu'
+            if (m.source === GOOGLE_MAPS_SOURCE) record.palette = null
           }
           const mediaId = await fenced(pool, lease, (db) => keepMedia(db, snapshotId, record))
-          known.set(todo[i].url, mediaId)
+          known.set(m.url, mediaId)
         }
       }
       for (const optionalSource of [TRIPADVISOR_SOURCE, GOOGLE_MAPS_SOURCE]) {
@@ -1002,19 +1021,27 @@ export function createPlaceRunner(h) {
       const onePart = Boolean(ctx.job.only_source)
       if (onePart && base?.profile?.pageSpeed && base.profile.website === profile.website)
         profile.pageSpeed = base.profile.pageSpeed
-      if (
+      // 🔒 THREE READINGS AT ONCE, LANDING IN ORDER (28/10/2026). The PageSpeed audit, the menu (links, file, photos)
+      // and the business reading need nothing from one another: the reading takes the name, the bio and the review
+      // sources, all set before it starts and read before its first wait. Run one after another they were up to
+      // minutes of each research. They start together now; each lands in the profile where and when the serial run
+      // put it, and a failure throws in the serial order (the audit's, then the menu's, then the reading's).
+      const pageSpeedDue =
         !onePart &&
         !profile.pageSpeed &&
         settings.pageSpeedCheckEnabled &&
         keys.google &&
         typeof profile.website === 'string' &&
         profile.website
-      ) {
-        const pageSpeed = await charge(ctx, 'google', 'pagespeed', ceilingCents('google', 'pagespeed'), () =>
-          checkPageSpeed(profile.website, keys.google, { fetch: h.apiFetch, now })
-        )
-        if (pageSpeed) profile.pageSpeed = pageSpeed
-      }
+      const pageSpeedSlot = pageSpeedDue && !('pageSpeed' in profile)
+      // The audit's place among the profile's keys is kept, so the saved profile reads as it did.
+      if (pageSpeedSlot) profile.pageSpeed = undefined
+      const pageSpeedTask = pageSpeedDue
+        ? charge(ctx, 'google', 'pagespeed', ceilingCents('google', 'pagespeed'), () =>
+            checkPageSpeed(profile.website, keys.google, { fetch: h.apiFetch, now })
+          )
+        : null
+      pageSpeedTask?.catch(() => {})
       if (google) profile.googlePlace = google
       const tripadvisor = sources.find((s) => s.source === TRIPADVISOR_SOURCE && s.collected_at)?.collected
       const googleMaps = sources.find((s) => s.source === GOOGLE_MAPS_SOURCE && s.collected_at)?.collected
@@ -1023,22 +1050,43 @@ export function createPlaceRunner(h) {
           ...(tripadvisor ? { tripadvisor } : {}),
           ...(googleMaps ? { googleMaps } : {})
         }
-      if (onePart) {
-        if (base?.profile?.menus) profile.menus = base.profile.menus
-      } else if (!ctx.prefetch) await menuLinksFor(ctx, profile, google)
-      // The menu link Google Maps lists for the place (read from the Maps lookup already paid for); no extra call.
-      const mapsMenu = googleMaps?.menuLink
-      if (mapsMenu?.url && !(profile.menus ?? []).some((m) => m?.url === mapsMenu.url))
-        profile.menus = [...(profile.menus ?? []), { url: mapsMenu.url, source: GOOGLE_MAPS_SOURCE }]
-      // The Menu's two parts (`menu-file`, then `menu-photos`), merged into the profile's dishes (contract §5).
-      if (!ctx.prefetch) Object.assign(profile, await readMenu(ctx, profile, google, base?.profile ?? null))
       // What the business sells, who it is for, its team and story (`business-reading.js`): once per run, from the texts
       // collected; a one-part run keeps the reading it had.
+      const readingTask =
+        ctx.prefetch || onePart
+          ? null
+          : readBusinessOf(ctx, profile, google, sources, base?.profile?.businessReading ?? null)
+      readingTask?.catch(() => {})
+      const landPageSpeed = async () => {
+        if (!pageSpeedTask) return
+        const pageSpeed = await pageSpeedTask
+        if (pageSpeed) profile.pageSpeed = pageSpeed
+        else if (pageSpeedSlot) delete profile.pageSpeed
+      }
+      // The Menu: its links, then its two parts (`menu-file`, then `menu-photos`), merged into the profile's dishes
+      // (contract §5).
+      const menuOf = async () => {
+        if (onePart) {
+          if (base?.profile?.menus) profile.menus = base.profile.menus
+        } else if (!ctx.prefetch) await menuLinksFor(ctx, profile, google)
+        // The menu link Google Maps lists for the place (read from the Maps lookup already paid for); no extra call.
+        const mapsMenu = googleMaps?.menuLink
+        if (mapsMenu?.url && !(profile.menus ?? []).some((m) => m?.url === mapsMenu.url))
+          profile.menus = [...(profile.menus ?? []), { url: mapsMenu.url, source: GOOGLE_MAPS_SOURCE }]
+        if (!ctx.prefetch) Object.assign(profile, await readMenu(ctx, profile, google, base?.profile ?? null))
+      }
+      try {
+        await menuOf()
+      } catch (error) {
+        await landPageSpeed()
+        throw error
+      }
+      await landPageSpeed()
       const reading = ctx.prefetch
         ? null
         : onePart
           ? (base?.profile?.businessReading ?? null)
-          : await readBusinessOf(ctx, profile, google, sources, base?.profile?.businessReading ?? null)
+          : await readingTask
       if (reading) profile.businessReading = reading
       await fenced(pool, lease, (db) => saveSnapshotProfile(db, snapshotId, { profile }))
       // A one-source run of another source buys no listing photo.

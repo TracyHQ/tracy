@@ -9,6 +9,7 @@
  * secret and NEVER admits a cookie (this migration's global boundary rule) — there is
  * deliberately no `seatSecret` field here for a future task to reach for.
  */
+import { browserRunsOf, demoQaTabsOf, demoReadCacheBytesOf } from './browser-room.js'
 import { demoInstallMinFreeMbOf, demoInstallSlotsOf } from './install-slots.js'
 import { publicOriginOf } from './public-origin.js'
 
@@ -120,6 +121,10 @@ export function readConfig(env) {
     // How many demo installs run at once on this host (`install-slots.js`); customers' never wait.
     demoInstallSlots: demoInstallSlotsOf(env),
     // The free memory (MB) a demo install waits for before it starts (`install-slots.js`); 0 = off.
-    demoInstallMinFreeMb: demoInstallMinFreeMbOf(env)
+    demoInstallMinFreeMb: demoInstallMinFreeMbOf(env),
+    // Demo QA runs and vision capture streams at once, and the tabs a QA run reads in (`browser-room.js`).
+    browserRuns: browserRunsOf(env),
+    demoQaTabs: demoQaTabsOf(env),
+    demoReadCacheBytes: demoReadCacheBytesOf(env)
   }
 }

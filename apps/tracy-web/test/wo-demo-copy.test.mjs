@@ -314,3 +314,83 @@ test('a repeated line on one page is counted once when identifying shared header
   })
   assert.deepEqual(out.shared, [])
 })
+
+// Local measure 28/10/2026: Death & Co's home showed the same cocktails under Zero Proof, Cocktails and Desserts.
+test('a menu item is placed once a page: a block citing one already used becomes an issue', () => {
+  const page = [
+    { n: 0, text: 'Template drink one', kind: 'text' },
+    { n: 1, text: 'Template drink two', kind: 'text' },
+    { n: 2, text: 'Template dessert', kind: 'text' },
+    { n: 3, text: 'Our story in one line', kind: 'text' }
+  ]
+  const pack = packOf(
+    page,
+    {
+      blocks: [
+        { n: 0, text: 'Hinoki Woods, a gin cocktail', sourceIds: ['menu:3'] },
+        { n: 1, text: 'Loud Silence, a mezcal cocktail', sourceIds: ['menu:4'] },
+        { n: 2, text: 'Hinoki Woods again, as a dessert', sourceIds: ['menu:3'] },
+        { n: 3, text: 'A cocktail bar since 2006', sourceIds: ['profile', 'review:1'] }
+      ]
+    },
+    ''
+  )
+  assert.deepEqual(
+    pack.changes.map((c) => c.find),
+    ['Template drink one', 'Template drink two', 'Our story in one line']
+  )
+  assert.deepEqual(pack.issues, [
+    { find: 'Template dessert', why: 'this menu item is already shown on this page' }
+  ])
+  assert.match(PAGE_SYSTEM, /at most once on the page/)
+})
+
+test("a page's parts are written one after another, each told the menu items used before it", async () => {
+  const asked = []
+  let open = 0
+  let most = 0
+  const fetchImpl = async (_url, init) => {
+    const user = JSON.parse(JSON.parse(init.body).messages[1].content)
+    if (user.blocks) {
+      asked.push({ page: user.page, first: user.blocks[0].n, alreadyShown: user.alreadyShown ?? [] })
+      open++
+      most = Math.max(most, open)
+      await new Promise((r) => setTimeout(r, 10))
+      open--
+    }
+    // Every part answers with the same three menu items, then lines of no item.
+    const answer = user.blocks
+      ? {
+          blocks: user.blocks.map((b, i) => ({
+            n: b.n,
+            text: `House line ${b.n}`,
+            sourceIds: i < 3 ? [`menu:${i}`] : []
+          }))
+        }
+      : { voice: 'dark', keyMessages: [], pages: [] }
+    return new Response(
+      JSON.stringify({ choices: [{ message: { content: JSON.stringify(answer) } }], usage: {} })
+    )
+  }
+  const write = createDemoCopy({
+    doorFor: async () => ({ apiKey: 'k', baseUrl: 'https://model.test/v1', words: 'deepseek-chat' }),
+    fetchImpl
+  })
+  const long = {
+    '/': Array.from({ length: 85 }, (_, i) => ({ text: `Template line ${i} of the home`, kind: 'text' }))
+  }
+  const copy = await write({ pageBlocks: long, digest: {}, sourced: '' })
+  const parts = asked.filter((a) => a.page === '/')
+  assert.equal(most, 1, 'one page, one part at a time')
+  assert.deepEqual(
+    parts.map((p) => [p.first, p.alreadyShown]),
+    [
+      [0, []],
+      [40, ['menu:0', 'menu:1', 'menu:2']],
+      [80, ['menu:0', 'menu:1', 'menu:2']]
+    ]
+  )
+  // The later parts' repeats are issues, never placed twice.
+  assert.equal(copy.pages['/'].changes.length, 85 - 6)
+  assert.equal(copy.pages['/'].issues.filter((i) => /already shown/.test(i.why)).length, 6)
+})
