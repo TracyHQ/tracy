@@ -1,0 +1,26 @@
+{
+  "id": "REG-PR-156-tour-publish-copy",
+  "kind": "fix",
+  "title": "The Publish tour step says changes appear in Tracy right away and reach the live site on Publish, in every interface language",
+  "pr": 156,
+  "area": "onboarding tour",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the script check: the English tour.publish.body in packages/ui/tracy-onboard/src/client/strings.ts starts with 'Your changes appear in Tracy right away', and each of the 7 tracy-onboard.json translations has a non-empty tour.publish.body that differs from the English."
+  ],
+  "expect": ["S1: the script exits 0."],
+  "selectors": {
+    "files": "packages/ui/tracy-onboard/src/client/strings.ts, packages/locale/tracy-locales/*/tracy-onboard.json, packages/locale/tracy-locale-vi/vi/tracy-onboard.json"
+  },
+  "evidence": "Before this change the step said 'Visitors see your changes only after you press Publish', which new users read as nothing changing in Tracy until Publish.",
+  "fence": "tour.publish.body in strings.ts and the seven locale files",
+  "run": {
+    "cmd": [
+      "node",
+      "-e",
+      "const fs=require('fs');const s=fs.readFileSync('packages/ui/tracy-onboard/src/client/strings.ts','utf8');if(!s.includes('Your changes appear in Tracy right away'))process.exit(1);const files=['de','es','fr','it','nl','zh'].map(l=>'packages/locale/tracy-locales/'+l+'/tracy-onboard.json').concat(['packages/locale/tracy-locale-vi/vi/tracy-onboard.json']);for(const f of files){const j=JSON.parse(fs.readFileSync(f,'utf8'));const v=j['tour.publish.body']??j.tour?.publish?.body;if(!v||v.includes('Your changes appear'))process.exit(2)}"
+    ]
+  }
+}

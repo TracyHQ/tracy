@@ -126,7 +126,7 @@
   "tour.preview.body": "Una copia real y funcional de tu site. Cada cambio aparece aquí primero, para que lo veas antes que nadie.",
   "tour.preview.heading": "Este es tu sitio web",
   "tour.progress": "Progreso del recorrido",
-  "tour.publish.body": "Los visitantes solo ven tus cambios cuando pulsas Publicar. Hasta entonces, prueba lo que quieras.",
+  "tour.publish.body": "Tus cambios aparecen en Tracy al instante. Los visitantes de tu site publicado solo los ven cuando pulsas Publicar. Hasta entonces, prueba lo que quieras.",
   "tour.publish.heading": "Tú decides cuándo se publica",
   "tour.saveError": "Tracy no pudo guardar el progreso de tu recorrido. Inténtalo de nuevo.",
   "tour.sendError": "Tracy no pudo enviar tu solicitud. Inténtalo de nuevo.",

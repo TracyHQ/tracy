@@ -59,7 +59,8 @@ export const en = {
   'tour.changes.body':
     'See every change and who asked for it, and go back to an earlier version whenever you need.',
   'tour.publish.heading': 'You decide when it goes live',
-  'tour.publish.body': 'Visitors see your changes only after you press Publish. Until then, try anything.',
+  'tour.publish.body':
+    'Your changes appear in Tracy right away. Visitors to your live site see them only after you press Publish. Until then, try anything.',
   'tour.team.heading': 'Bring your team',
   'tour.team.body': 'Invite colleagues or clients, and choose what each person can do.',
   'tour.composer.heading': 'Ask for your next change',
