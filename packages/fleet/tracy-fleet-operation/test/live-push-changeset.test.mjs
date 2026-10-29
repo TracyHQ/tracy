@@ -1752,3 +1752,76 @@ test('WordPress: a post or category whose Polylang language or translation group
   assert.deepEqual(items['post:40'].write, { post_title: 'Bonjour a tous' })
   assert.ok(!('language' in items['post:new:32'].write) && !('translations' in items['post:new:32'].write))
 })
+
+test('a new menu item goes only into a menu the live site has or this push makes; never into a deleted one (#119)', () => {
+  // WordPress: the copy's item lost its menu (the customer deleted the menu on live).
+  const wp = changeset('wordpress', {
+    entities: { posts: { base: [10], copy: [10, 62] } },
+    kinds: {
+      menuItem: kind(
+        [],
+        [
+          {
+            ID: '62',
+            title: 'Shop',
+            position: '1',
+            type: 'custom',
+            object: 'custom',
+            object_id: '62',
+            url: 'https://shop.example/shop/',
+            parent: '0',
+            menu: null
+          }
+        ],
+        ['ID']
+      )
+    }
+  })
+  assert.ok(!wp.items.some((i) => i.kind === 'menuItem'), JSON.stringify(wp.items))
+  assert.deepEqual(
+    wp.unsupported.filter((u) => u.kind === 'menuItem').map((u) => [u.reason, u.on]),
+    [['depends-on-unsupported', ['menu']]]
+  )
+  // Joomla: one item in a menu the live site no longer has, one in a menu this push makes, one in a live menu.
+  const type = (id, menutype) => ({
+    id: String(id),
+    menutype,
+    title: menutype,
+    description: '',
+    client_id: '0'
+  })
+  const item = (id, menutype) => ({
+    id: String(id),
+    title: `Item ${id}`,
+    menutype,
+    parent_id: '1',
+    published: '1',
+    link: 'index.php?option=com_content&view=featured',
+    lft: '0',
+    rgt: '0',
+    level: '1',
+    path: `item-${id}`,
+    client_id: '0'
+  })
+  const jo = changeset('joomla', {
+    entities: { menu: { base: [1], copy: [1, 103, 104, 105] } },
+    kinds: {
+      menutype: kind(
+        [type(1, 'mainmenu')],
+        [type(1, 'mainmenu'), type(2, 'extra'), type(5, 'newmenu')],
+        ['menutype']
+      ),
+      menuItem: kind([], [item(103, 'gone'), item(104, 'newmenu'), item(105, 'mainmenu')], ['id'])
+    }
+  })
+  const items = byId(jo)
+  assert.equal(items['menuItem:new:103'], undefined, 'never in a menu nobody makes')
+  assert.deepEqual(
+    jo.unsupported.filter((u) => u.kind === 'menuItem').map((u) => [u.title, u.reason, u.on]),
+    [['Item 103', 'depends-on-unsupported', ['menu']]]
+  )
+  const made = jo.items.find((i) => i.kind === 'menutype' && i.op === 'create' && i.title === 'newmenu')
+  assert.ok(made, JSON.stringify(jo.items.map((i) => i.id)))
+  assert.ok(items['menuItem:new:104'].dependsOn.includes(made.id))
+  assert.ok(items['menuItem:new:105'], 'an item in a live menu goes as before')
+})
