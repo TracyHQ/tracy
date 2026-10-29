@@ -551,6 +551,11 @@ function main() {
           : ` (${String(plan.relatedRun.length)} after leaving out the database tests)`) +
         `, interop=${String(plan.related.interop)}`
     )
+    // Declared readers of the changed skill that no CI row runs: the author runs them by hand.
+    if (plan.related.outsideCi?.length)
+      console.log(
+        `::notice::skill readers no CI row runs (regression runner by hand, or at image build): ${plan.related.outsideCi.join(', ')}`
+      )
   }
   if (changed === null && event === 'pull_request') {
     console.log("::warning::could not list this pull request's changed files — running every row")

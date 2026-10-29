@@ -137,25 +137,27 @@ function ownSkill(
  * NOT derived from `NOT_RUN_HERE` in `scripts/check-tests.ts`: that list says the tree's own tests
  * do not run here, not that TCH tests do not depend on the tree. An entry needs an audit of every
  * tracked file that runs (code, shell, Python, workflows, regression cases, Dockerfiles, compose
- * files) outside the tree and names the gate in `checks` that guards the tie to TCH. `readers` are the exact test files that read the tree: a
- * worker test is selected; any other reader (a regression script or case under `tests/regression/`,
- * a Dockerfile no pull request builds) runs in no CI row, so the change runs the full suite instead
- * — fail closed. `modules` are the
- * non-test files that read or name the tree (gates, hand-run scripts, prompt text); no test loads
- * one unless it is a reader. Vendored trees audited 09/10/2026, everything re-audited over the whole
- * tree 28/10/2026. `scripts/test/related-tests.test.mjs` fails when any other file starts to read a
- * tree, and a reader that no longer exists runs the full suite. `vendor/emdash/` is skipped further
- * down by its own older exception.
+ * files) outside the tree and names the gate in `checks` that guards the tie to TCH.
+ * - `readers` are the exact worker test files that read the tree: the change selects them.
+ * - `outsideCi` are readers no CI row runs: regression scripts and cases under `tests/regression/`
+ *   (run by hand through the regression runner) and Dockerfiles no pull request builds (they read the
+ *   tree at image build). They are declared so the audit stays whole and the plan names them; they
+ *   never force the full suite, which does not run them either (decision 29/10/2026).
+ * - `modules` are the non-test files that read or name the tree (gates, hand-run scripts, prompt
+ *   text); no test loads one unless it is a reader.
+ * Vendored trees audited 09/10/2026, everything re-audited over the whole tree 28-29/10/2026.
+ * `scripts/test/related-tests.test.mjs` fails when any other file starts to read a tree, and a
+ * declared reader of either kind that no longer exists runs the full suite. `vendor/emdash/` is
+ * skipped further down by its own older exception.
  */
 export const REVIEWED_SKILLS = [
   {
     prefix: 'vendor/wordpress/tracy-wordpress-theme/',
     reason:
-      'its own tests run in the skill home repo; stand-restore.test.mjs reads the quickstart method (scripts/quickstart/restore.mjs and lib.mjs, directly and through tracy-wordpress-quickstart/scripts/stand.mjs, which restores published packs with it); problem-guides.test.mjs checks that the SKILL.md the WordPress template prompt names exists, and the other harness tests load those prompts (re-audit 28/10/2026); nothing else reads the tree (check-tests-environment only lists it as a tree that holds tests); fourteen regression cases run its scripts or tests (REG-PR-1559 runs scripts/test/road-precheck.test.mjs inside it, the sweep cases run scripts/visual/site-sweep.mjs), and no CI row runs a regression case, so a change here runs the full suite (29/10/2026)',
+      'its own tests run in the skill home repo; stand-restore.test.mjs reads the quickstart method (scripts/quickstart/restore.mjs and lib.mjs, directly and through tracy-wordpress-quickstart/scripts/stand.mjs, which restores published packs with it); problem-guides.test.mjs checks that the SKILL.md the WordPress template prompt names exists, and the other harness tests load those prompts (re-audit 28/10/2026); nothing else reads the tree (check-tests-environment only lists it as a tree that holds tests); fourteen regression cases run its scripts or tests (REG-PR-1559 runs scripts/test/road-precheck.test.mjs inside it, the sweep cases run scripts/visual/site-sweep.mjs); no CI row runs a regression case, they run by hand through the regression runner (29/10/2026)',
     gate: 'check-site-model (plus doc links and self-contained) in the checks row',
-    readers: [
-      'packages/cms/tracy-wordpress-quickstart/test/stand-restore.test.mjs',
-      ...PROMPT_READERS,
+    readers: ['packages/cms/tracy-wordpress-quickstart/test/stand-restore.test.mjs', ...PROMPT_READERS],
+    outsideCi: [
       'tests/regression/cases/REG-110-ja-nova-wp7-sweep-fixes.json',
       'tests/regression/cases/REG-111-ja-vega-wp7-sweep-fixes.json',
       'tests/regression/cases/REG-112-ja-essence-wp7-sweep-audit-fixes.json',
@@ -181,10 +183,10 @@ export const REVIEWED_SKILLS = [
   {
     prefix: 'vendor/joomla/joomlart-t4-skill/',
     reason:
-      'skill-catalog.test.mjs reads skills/joomlart-t4-template/SKILL.md for the catalog; nothing else in the test folders reads the tree; the quickstart scripts that import it are run by hand; the dsh image and the Joomla web image copy the tree and check its SKILL.md, and neither is built on a pull request (build-dsh-image.yml runs on push and by hand, joomla.Dockerfile by hand or on the host), so a change here runs the full suite (29/10/2026)',
+      'skill-catalog.test.mjs reads skills/joomlart-t4-template/SKILL.md for the catalog; nothing else in the test folders reads the tree; the quickstart scripts that import it are run by hand; the dsh image and the Joomla web image copy the tree and check its SKILL.md, and neither is built on a pull request: they read it at image build (build-dsh-image.yml on push and by hand, joomla.Dockerfile by hand or on the host) (29/10/2026)',
     gate: 'check-site-model in the checks row',
-    readers: [
-      'scripts/test/skill-catalog.test.mjs',
+    readers: ['scripts/test/skill-catalog.test.mjs'],
+    outsideCi: [
       'packages/fleet/tracy-fleet-operation/dsh/Dockerfile',
       'packages/fleet/tracy-fleet-operation/web/joomla.Dockerfile'
     ],
@@ -207,9 +209,10 @@ export const REVIEWED_SKILLS = [
   {
     prefix: 'vendor/emdash/tracy-emdash-skill/',
     reason:
-      'no worker test and none of the three EmDash suites read the tree; four regression scripts run tests of the skill (REG-PR-1156, 1159, 1161, 1177), and no CI row runs a regression script, so a change here runs the full suite',
+      'no worker test and none of the three EmDash suites read the tree; four regression scripts run tests of the skill (REG-PR-1156, 1159, 1161, 1177); no CI row runs a regression script, they run by hand through the regression runner',
     gate: 'check-site-model and check-emdash-kit-sync in the checks row',
-    readers: [
+    readers: [],
+    outsideCi: [
       'tests/regression/scripts/REG-PR-1156-g63-system-fixes-released.mjs',
       'tests/regression/scripts/REG-PR-1159-g64-blog-plan-released.mjs',
       'tests/regression/scripts/REG-PR-1161-tcqr-final-released.mjs',
@@ -426,26 +429,27 @@ function templateDataLane(changed, allFiles, readText) {
 }
 
 /**
- * The declared readers of every reviewed skill tree the diff touches, deduplicated. `missing` says
- * why one cannot be selected (gone from the inventory, or not a worker test): the caller then runs
- * the full suite.
+ * The declared readers of every reviewed skill tree the diff touches, deduplicated, and its declared
+ * readers no CI row runs (`outsideCi`: named in the plan, never selected). `missing` says why the
+ * declaration cannot be trusted (a reader of either kind gone from the inventory, or a `readers`
+ * entry that is not a worker test): the caller then runs the full suite.
  */
 function skillReaders(changed, present) {
   const readers = new Set()
+  const outsideCi = new Set()
   for (const skill of REVIEWED_SKILLS) {
     if (!changed.some((file) => file.startsWith(skill.prefix))) continue
     for (const test of skill.readers) readers.add(test)
+    for (const file of skill.outsideCi ?? []) outsideCi.add(file)
   }
-  const lost = [...readers].find((test) => !present.has(test))
-  // A reader no CI row runs (a regression script or case, a Dockerfile) cannot be selected: the change
-  // runs everything.
-  const unrun = [...readers].find((test) => present.has(test) && !WORKER.test(test))
+  const lost = [...readers, ...outsideCi].find((file) => !present.has(file))
+  const unrun = [...readers].find((test) => !WORKER.test(test))
   const missing = lost
     ? `skill reader ${lost} is missing`
     : unrun
-      ? `skill reader ${unrun} runs in no CI row`
+      ? `skill reader ${unrun} is not a worker test`
       : undefined
-  return { readers, missing }
+  return { readers, outsideCi: [...outsideCi], missing }
 }
 
 /**
@@ -459,7 +463,7 @@ function dataShortcut(changed, allFiles, allWorkers) {
   if (mapped.length === 0) return null
   if (changed.some((file) => GLOBAL.test(file))) return null
   if (!changed.every((file) => mapped.includes(file) || isReviewedSkill(file) || DOCS.test(file))) return null
-  const { readers, missing } = skillReaders(changed, present)
+  const { readers, outsideCi, missing } = skillReaders(changed, present)
   if (missing) return { full: true, workers: allWorkers, interop: true, why: missing }
   const tests = new Set(readers)
   for (const file of mapped) {
@@ -476,6 +480,7 @@ function dataShortcut(changed, allFiles, allWorkers) {
     owners: [],
     // The planner must not also select e2e or EmDash rows by the path of a file `workers` covers.
     covered: mapped,
+    outsideCi,
     why: `data file(s) ${mapped.join(', ')} map to ${String(tests.size)} test file(s)`
   }
 }
@@ -546,7 +551,7 @@ export function relatedTests({ changed, allFiles, dependencies = {}, readText })
   }
   const shortcut = dataShortcut(changed, allFiles, allWorkers)
   if (shortcut) return shortcut
-  const { readers, missing } = skillReaders(changed, new Set(allFiles))
+  const { readers, outsideCi, missing } = skillReaders(changed, new Set(allFiles))
   if (missing) return { full: true, workers: allWorkers, interop: true, why: missing }
   const direct = new Set()
   const sourceOwners = new Set()
@@ -605,6 +610,7 @@ export function relatedTests({ changed, allFiles, dependencies = {}, readText })
     workers,
     interop,
     owners: [...affected].sort(),
+    outsideCi,
     why: `${affected.size} affected workspace owner(s)`
   }
 }

@@ -9,7 +9,7 @@ import { DATA_FILE_TESTS, REVIEWED_SKILLS, relatedTests } from '../ci/related-te
 const root = join(dirname(fileURLToPath(import.meta.url)), '../..')
 const SKILL = REVIEWED_SKILLS[0].prefix
 // A reviewed tree no test reads: changing it alone selects nothing.
-const UNREAD = REVIEWED_SKILLS.find((skill) => !skill.readers.length).prefix
+const UNREAD = REVIEWED_SKILLS.find((skill) => !skill.readers.length && !skill.outsideCi?.length).prefix
 // Found by a fragment of the name: the guard below fails on a test that spells out a reviewed tree.
 const T4 = REVIEWED_SKILLS.find((skill) => skill.prefix.includes('joomlart-t4'))
 const EMDASH_SKILL = REVIEWED_SKILLS.find((skill) => skill.prefix.startsWith('vendor/emdash/')).prefix
@@ -177,29 +177,55 @@ test('a skill read only by worker tests selects exactly those readers, journal e
   assert.match(lost.why, /reader .* is missing/)
 })
 
-test('a skill a regression script reads runs the full suite: no CI row runs the script (fail closed)', () => {
-  for (const skill of [REVIEWED_SKILLS.find((one) => one.prefix === EMDASH_SKILL)]) {
-    const script = skill.readers.find(isRegressionScript)
-    assert.ok(script, `${skill.prefix} has a regression-script reader`)
-    const changed = [`${skill.prefix}SKILL.md`, 'changes/2026-10-28-x.md']
-    const result = relatedTests({ changed, allFiles: [...files, ...skill.readers], dependencies })
-    assert.equal(result.full, true, skill.prefix)
-    assert.match(result.why, /skill reader tests\/regression\/scripts\/.* runs in no CI row/)
-    assert.equal(result.workers.length, result.workers.filter((f) => !isRegressionScript(f)).length)
-    // Mixed with a narrow skill or with data, still everything.
+test('a skill with readers outside CI selects its CI readers only, names the others, and runs full when one is gone', () => {
+  const wordpress = REVIEWED_SKILLS.find((one) => one.prefix.includes('tracy-wordpress-theme'))
+  const emdash = REVIEWED_SKILLS.find((one) => one.prefix === EMDASH_SKILL)
+  for (const skill of [wordpress, T4, emdash]) {
+    assert.ok(skill.outsideCi.length > 0, `${skill.prefix} has readers no CI row runs`)
+    const inventory = [...files, ...skill.readers, ...skill.outsideCi]
+    const changed = [`${skill.prefix}SKILL.md`, 'changes/2026-10-29-x.md']
+    const result = relatedTests({ changed, allFiles: inventory, dependencies })
+    assert.equal(result.full, false, `${skill.prefix}: ${result.why}`)
+    assert.deepEqual([...result.workers].sort(), [...skill.readers].sort(), skill.prefix)
+    assert.deepEqual(result.outsideCi, skill.outsideCi, skill.prefix)
+    assert.equal(result.interop, false)
+    // Mixed with a narrow skill and data: the union of the CI readers, the outside ones still named.
     const mixed = relatedTests({
       changed: [...changed, `${PR_MERGE.prefix}SKILL.md`, DATA],
-      allFiles: [...files, ...skill.readers, ...PR_MERGE.readers, ...MAPPED, DATA],
+      allFiles: [...inventory, ...PR_MERGE.readers, ...MAPPED, DATA],
       dependencies
     })
-    assert.equal(mixed.full, true, skill.prefix)
+    assert.equal(mixed.full, false, skill.prefix)
+    assert.deepEqual(
+      [...mixed.workers].sort(),
+      [...new Set([...skill.readers, ...PR_MERGE.readers, ...MAPPED])].sort()
+    )
+    assert.deepEqual(mixed.outsideCi, skill.outsideCi)
+    // A declared outside reader that is gone: the audit no longer holds, run everything.
+    const gone = relatedTests({
+      changed,
+      allFiles: inventory.filter((f) => f !== skill.outsideCi[0]),
+      dependencies
+    })
+    assert.equal(gone.full, true, skill.prefix)
+    assert.match(gone.why, /skill reader .* is missing/)
   }
+  // EmDash has no CI reader: the checks row only.
+  assert.deepEqual(emdash.readers, [])
+  // A skill without outside readers names none.
+  const narrow = relatedTests({
+    changed: [`${PR_MERGE.prefix}SKILL.md`],
+    allFiles: [...files, ...PR_MERGE.readers],
+    dependencies
+  })
+  assert.deepEqual(narrow.outsideCi, [])
 })
 
 test('a quickstart-contract edit with its journal entry selects exactly its worker readers, never the full suite', () => {
   // REG-PR-1228 step S3 moved into check-pack-modes.test.mjs: no regression script reads the skill.
   assert.ok(CONTRACT.readers.includes('scripts/test/check-pack-modes.test.mjs'))
   assert.ok(!CONTRACT.readers.some(isRegressionScript))
+  assert.deepEqual(CONTRACT.outsideCi ?? [], [])
   const changed = [
     `${CONTRACT.prefix}SKILL.md`,
     `${CONTRACT.prefix}references/packing.md`,
@@ -481,15 +507,17 @@ function scanText(rel, text) {
 }
 
 /** Lines of one file that read `skill`'s tree and that no declaration or inventory line accounts for. */
-function undeclaredLines(rel, text, { prefix, readers, modules = [] }) {
-  if (rel.startsWith(prefix) || readers.includes(rel) || modules.includes(rel)) return []
+function undeclaredLines(rel, text, { prefix, readers, outsideCi = [], modules = [] }) {
+  if (rel.startsWith(prefix) || [...readers, ...outsideCi, ...modules].includes(rel)) return []
   const allowed = INVENTORY_LINE[rel] ?? []
   return treeReferences(scanText(rel, text), prefix).filter((line) => !allowed.some((re) => re.test(line)))
 }
 
-/** Where a declared reader may live: a worker test (selected), or a reader no CI row runs (runs everything). */
-const READER =
-  /^(?:(?:apps\/[^/]+|scripts|packages\/[^/]+\/[^/]+)\/test\/[^/]+\.test\.mjs|tests\/regression\/scripts\/[^/]+\.mjs|tests\/regression\/cases\/[^/]+\.json|.+\/(?:Dockerfile|[^/]+\.Dockerfile))$/
+/** Where a declared reader lives: `readers` are worker tests (selected) … */
+const READER = /^(?:apps\/[^/]+|scripts|packages\/[^/]+\/[^/]+)\/test\/[^/]+\.test\.mjs$/
+/** … and `outsideCi` are what no CI row runs: regression scripts and cases, and container builds. */
+const OUTSIDE_CI =
+  /^(?:tests\/regression\/scripts\/[^/]+\.mjs|tests\/regression\/cases\/[^/]+\.json|.+\/(?:Dockerfile|[^/]+\.Dockerfile|Containerfile)|(?:.+\/)?(?:docker-)?compose(?:\.[\w.-]+)?\.ya?ml)$/
 
 test('only declared readers and modules read a reviewed skill tree; inventory lines may name one', () => {
   const files = trackedExecutables()
@@ -506,18 +534,18 @@ test('only declared readers and modules read a reviewed skill tree; inventory li
   assert.ok(files.some((file) => file.includes('/tracy-emdash-theme-business/tests/')))
   const tests = scannedTests()
   for (const skill of REVIEWED_SKILLS) {
-    const { prefix, readers, modules = [] } = skill
+    const { prefix, readers, outsideCi = [], modules = [] } = skill
     const read = new Set()
     for (const rel of files) {
       if (rel.startsWith(prefix)) continue
       const text = textOf(join(root, rel))
-      if (readers.includes(rel) || modules.includes(rel)) {
+      if ([...readers, ...outsideCi, ...modules].includes(rel)) {
         if (treeReferences(scanText(rel, text), prefix).length > 0) read.add(rel)
         continue
       }
       for (const line of undeclaredLines(rel, text, skill))
         assert.fail(
-          `${rel} reads ${prefix} — declare it in REVIEWED_SKILLS readers (a test, case or Dockerfile) or modules (code no test loads), or remove the line: ${line.trim()}`
+          `${rel} reads ${prefix} — declare it in REVIEWED_SKILLS readers (a worker test), outsideCi (a regression script or case, a Dockerfile) or modules (code no test loads), or remove the line: ${line.trim()}`
         )
     }
     const indirect = indirectReaders(prefix, tests)
@@ -528,6 +556,11 @@ test('only declared readers and modules read a reviewed skill tree; inventory li
         read.has(reader) || indirect.has(join(root, reader)),
         `${reader} no longer reads ${prefix} — drop it from readers`
       )
+    }
+    for (const file of outsideCi) {
+      assert.ok(lstatSync(join(root, file)).isFile(), `${file} is a declared reader but is gone`)
+      assert.match(file, OUTSIDE_CI)
+      assert.ok(read.has(file), `${file} no longer reads ${prefix} — drop it from outsideCi`)
     }
     for (const module of modules) {
       assert.ok(!isTestPath(module), `${module} is a test: declare it in readers`)
@@ -723,14 +756,14 @@ test('the indirect guard sees the quickstart scripts that import the T4 skill, a
 
 test('the guard reaches regression scripts and flags one that reads a skill without being declared', () => {
   const emdash = REVIEWED_SKILLS.find((one) => one.prefix === EMDASH_SKILL)
-  const script = emdash.readers.find(isRegressionScript)
+  const script = emdash.outsideCi.find(isRegressionScript)
   assert.ok(trackedExecutables().includes(script))
   const text = withoutComments(readRegular(join(root, script)))
   const lines = treeReferences(text, EMDASH_SKILL)
   assert.ok(lines.length > 0, 'the scan sees what the script reads')
   // Not an inventory line: undeclared, the guard above would fail on it.
   assert.ok(!lines.some((line) => (INVENTORY_LINE[script] ?? []).some((re) => re.test(line))))
-  assert.match(script, READER)
+  assert.match(script, OUTSIDE_CI)
   // REG-PR-1228 no longer reads the quickstart-contract skill (its S3 is a worker test now).
   const moved = 'tests/regression/scripts/REG-PR-1228-wp-pack-modes.mjs'
   assert.deepEqual(treeReferences(withoutComments(readRegular(join(root, moved))), CONTRACT.prefix), [])
@@ -764,7 +797,7 @@ test('an undeclared regression case or Dockerfile that reads a skill fails the g
   // A case that does not parse is read whole.
   assert.equal(undeclaredLines(newCase, `{ "run": "${skillDir}"`, wordpress).length, 1)
   // Declared, the same case is accounted for.
-  const declared = wordpress.readers.find((file) => CASE.test(file))
+  const declared = wordpress.outsideCi.find((file) => CASE.test(file))
   assert.deepEqual(undeclaredLines(declared, kase({ run: { cmd: ['node'], cwd: skillDir } }), wordpress), [])
 
   const dockerfile = `COPY ${T4.prefix.slice(0, -1)} /opt/tracy/t4\nRUN test -s /opt/tracy/t4/SKILL.md\n`
@@ -779,8 +812,10 @@ test('an undeclared regression case or Dockerfile that reads a skill fails the g
   }
   assert.deepEqual(undeclaredLines('deploy/new.Dockerfile', `# COPY ${T4.prefix} x\nFROM scratch\n`, T4), [])
   assert.deepEqual(undeclaredLines('packages/fleet/tracy-fleet-operation/dsh/Dockerfile', dockerfile, T4), [])
-  for (const reader of [declared, 'packages/fleet/tracy-fleet-operation/dsh/Dockerfile'])
-    assert.match(reader, READER)
+  for (const reader of [declared, 'packages/fleet/tracy-fleet-operation/dsh/Dockerfile']) {
+    assert.match(reader, OUTSIDE_CI)
+    assert.doesNotMatch(reader, READER)
+  }
 })
 
 test('the guard flags a reader that is not declared and accepts one that is', () => {

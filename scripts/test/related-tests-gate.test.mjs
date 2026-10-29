@@ -27,7 +27,7 @@ const MAPPED = [
   'brief-emdash-brand'
 ].map((name) => `apps/tracy-web/test/${name}.test.mjs`)
 // A reviewed tree no test reads: its re-pin runs no test.
-const SKILL_FILE = `${REVIEWED_SKILLS.find((skill) => !skill.readers.length).prefix}IMPORT-NOTE.md`
+const SKILL_FILE = `${REVIEWED_SKILLS.find((skill) => !skill.readers.length && !skill.outsideCi?.length).prefix}IMPORT-NOTE.md`
 
 /** Scratch lives under the task's artifact directory when the runner provides one. */
 function scratchRoot() {

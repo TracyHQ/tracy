@@ -12,7 +12,7 @@ import {
   planMatrix,
   scopeNotes
 } from '../ci/plan-ci.mjs'
-import { DATA_FILE_TESTS, DATABASE_MARK, REVIEWED_SKILLS, relatedTests } from '../ci/related-tests.mjs'
+import { DATA_FILE_TESTS, DATABASE_MARK, REVIEWED_SKILLS } from '../ci/related-tests.mjs'
 
 const allFiles = [
   'packages/site/tracy-add-site/test/e2e/wizard.test.mjs',
@@ -208,7 +208,7 @@ test('the own-domain pilot is switched on for the e2e row, and only by that rowâ
 })
 
 // A reviewed tree no test reads: its re-pin runs the checks row only.
-const SKILL = REVIEWED_SKILLS.find((skill) => !skill.readers.length).prefix
+const SKILL = REVIEWED_SKILLS.find((skill) => !skill.readers.length && !skill.outsideCi?.length).prefix
 const [DATA, MAPPED] = [...DATA_FILE_TESTS.entries()][0]
 const T4 = REVIEWED_SKILLS.find((skill) => skill.prefix.includes('joomlart-t4'))
 // A skill whose every reader is a worker test: its change stays narrow. Found by name; spelling the
@@ -280,25 +280,22 @@ test('a journal entry under changes/ never forces the full suite', () => {
   assert.ok(groups(withCode).includes('tests related'))
 })
 
-test('a T4 or WordPress skill change runs every row: images and regression cases no PR row runs read them', () => {
+test('a vendored skill read outside CI runs checks plus its CI readers only; the others are named, not run', () => {
   const wordpress = REVIEWED_SKILLS.find((skill) => skill.prefix.includes('tracy-wordpress-theme'))
-  const cases = [
-    [
-      T4,
-      /packages\/fleet\/tracy-fleet-operation\/(?:dsh\/Dockerfile|web\/joomla\.Dockerfile) runs in no CI row/
-    ],
-    [wordpress, /tests\/regression\/cases\/.* runs in no CI row/]
-  ]
-  for (const [skill, why] of cases) {
+  const emdash = REVIEWED_SKILLS.find((skill) => skill.prefix === EMDASH_SKILL)
+  for (const [skill, rows] of [
+    [wordpress, RELATED],
+    [T4, RELATED],
+    [emdash, ['checks']]
+  ]) {
     const p = planOf([`${skill.prefix}SKILL.md`, 'changes/2026-10-29-x.md'], {
-      allFiles: [...dataFiles, ...skill.readers]
+      allFiles: [...new Set([...dataFiles, ...skill.readers, ...skill.outsideCi])]
     })
-    assert.equal(p.runsAll, true, skill.prefix)
-    assert.equal(groups(p).length, 7, skill.prefix)
-    assert.match(
-      relatedTests({ changed: [`${skill.prefix}SKILL.md`], allFiles: [...dataFiles, ...skill.readers] }).why,
-      why
-    )
+    assert.equal(p.runsAll, false, skill.prefix)
+    assert.deepEqual(groups(p), rows, skill.prefix)
+    assert.deepEqual([...p.related.workers].sort(), [...skill.readers].sort(), skill.prefix)
+    assert.deepEqual(p.related.outsideCi, skill.outsideCi, skill.prefix)
+    assert.equal(p.related.interop, false)
   }
   assert.deepEqual(groups(planOf([`${NARROW.prefix}SKILL.md`, `${SKILL}SKILL.md`])), RELATED)
 })
@@ -325,21 +322,6 @@ test('a Tracy skill edit runs checks plus its audited readers, not the full suit
   assert.equal(narrow.runsAll, false)
   assert.deepEqual([...narrow.related.workers].sort(), [...contract.readers].sort())
   assert.equal(narrow.related.interop, false)
-})
-
-test('a skill a regression script reads runs every row: no CI row runs regression scripts', () => {
-  for (const prefix of [EMDASH_SKILL]) {
-    const readers = REVIEWED_SKILLS.find((skill) => skill.prefix === prefix).readers
-    assert.ok(
-      readers.some((file) => file.startsWith('tests/regression/scripts/')),
-      prefix
-    )
-    const p = planOf([`${prefix}SKILL.md`, 'changes/2026-10-28-x.md'], {
-      allFiles: [...dataFiles, ...readers]
-    })
-    assert.equal(p.runsAll, true, prefix)
-    assert.equal(groups(p).length, 7, prefix)
-  }
 })
 
 test('the EmDash CMS and the Bravada theme still run the EmDash suites; a look-alike of the skill is not the skill', () => {
