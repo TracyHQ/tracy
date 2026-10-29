@@ -308,3 +308,90 @@ for (const limited of [true, false]) {
     }
   )
 }
+
+test(
+  'Joomla: the assets of articles a push created meet the copy’s own assets, never a false conflict or an id the copy lacks (#172)',
+  opts,
+  () => {
+    const tables = `
+    CREATE TABLE jos_assets (id INT UNSIGNED PRIMARY KEY, parent_id INT DEFAULT 0, lft INT DEFAULT 0, rgt INT DEFAULT 0,
+      level INT DEFAULT 0, name VARCHAR(50) NOT NULL UNIQUE, title VARCHAR(100), rules VARCHAR(5120) DEFAULT '{}');
+    CREATE TABLE jos_content (id INT UNSIGNED PRIMARY KEY, asset_id INT UNSIGNED DEFAULT 0, title VARCHAR(255), alias VARCHAR(400),
+      introtext MEDIUMTEXT, state TINYINT DEFAULT 1, catid INT UNSIGNED DEFAULT 2, modified DATETIME);
+    INSERT INTO jos_assets VALUES (1, 0, 0, 3, 0, 'root.1', 'Root', '{}'), (30, 1, 1, 2, 1, 'com_content.article.1', 'Live', '{}');
+    INSERT INTO jos_content VALUES (1, 30, 'Live', 'live', '', 1, 2, '2026-01-01');`
+    for (const side of ['base', 'ours', 'theirs']) {
+      sql(`DROP DATABASE IF EXISTS jp_${side}; CREATE DATABASE jp_${side}; USE jp_${side}; ${tables}`)
+    }
+    // The copy made two articles, with their assets in the order it made them …
+    sql(
+      `INSERT INTO jos_assets VALUES (50, 1, 3, 4, 1, 'com_content.article.10', 'A', '{}'), (51, 1, 5, 6, 1, 'com_content.article.11', 'B', '{}');
+     INSERT INTO jos_content VALUES (10, 50, 'A', 'a', '', 1, 2, '2026-01-02'), (11, 51, 'B', 'b', '', 1, 2, '2026-01-02');`,
+      'jp_ours'
+    )
+    // … the push made them on live as 20 and 21, and live numbered their assets the other way round.
+    sql(
+      `INSERT INTO jos_assets VALUES (60, 1, 3, 4, 1, 'com_content.article.21', 'B', '{}'), (61, 1, 5, 6, 1, 'com_content.article.20', 'A', '{}');
+     INSERT INTO jos_content VALUES (20, 61, 'A', 'a', '', 1, 2, '2026-01-02'), (21, 60, 'B', 'b', '', 1, 2, '2026-01-02');`,
+      'jp_theirs'
+    )
+    const map = join(root, 'jp-map.json')
+    writeFileSync(map, JSON.stringify({ content: { 20: 10, 21: 11 } }))
+    // As lib/live_push.py `seeds` writes an article it creates: its row, and its asset to align by name.
+    const seed = (id) => ({
+      table: 'content',
+      match: { id },
+      columns: ['title', 'alias', 'introtext', 'state', 'catid'],
+      create: true,
+      entity: 'content',
+      id,
+      align: { entity: 'assets', match: { name: `com_content.article.${id}` } }
+    })
+    const pushed = join(root, 'jp-pushed.json')
+    writeFileSync(pushed, JSON.stringify({ records: [seed(10), seed(11)] }))
+    const r = spawnSync(
+      'python3',
+      [
+        ENGINE,
+        'db',
+        '--base-schema',
+        'jp_base',
+        '--ours-schema',
+        'jp_ours',
+        '--theirs-schema',
+        'jp_theirs',
+        '--work-schema',
+        'jp_work',
+        '--platform',
+        'joomla',
+        '--prefix',
+        'jos_',
+        '--id-map',
+        map,
+        '--pushed',
+        pushed
+      ],
+      { encoding: 'utf8', env: { ...process.env, TRACY_SYNC_SQL: JSON.stringify(CLIENT) } }
+    )
+    assert.equal(r.status, 0, r.stderr + r.stdout)
+    const answer = JSON.parse(r.stdout.trim().split('\n').at(-1))
+    assert.deepEqual(answer.conflicts, [], JSON.stringify(answer.conflicts))
+    assert.deepEqual(
+      answer.idMap.assets,
+      { 60: 51, 61: 50 },
+      'each live asset is the copy’s asset of the same article'
+    )
+    const onCopy = rows('SELECT id FROM jos_assets', 'jp_ours').map(([id]) => Number(id))
+    assert.ok(
+      Object.values(answer.idMap.assets).every((id) => onCopy.includes(id)),
+      'no id the copy does not hold'
+    )
+    assert.deepEqual(
+      rows('SELECT id, asset_id FROM jos_content WHERE id IN (10, 11) ORDER BY id', 'jp_ours'),
+      [
+        ['10', '50'],
+        ['11', '51']
+      ]
+    )
+  }
+)
