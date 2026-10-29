@@ -160,16 +160,31 @@ test("the named coach's portrait in that coach's slot passes; in another person'
   assert.equal(other.pass, false)
 })
 
-test("faces in a general slot pass only on the owner's own photo", () => {
+test("players' faces in an offering card pass", () => {
+  const result = checkFacesNamed([page('/classes', [img('asset-players', { card: 'Padel' })])], {
+    ...asked({
+      [file('asset-players')]: {
+        photo: 'asset-players',
+        slot: 'classes.item.2.image',
+        role: 'offering.image'
+      }
+    }),
+    photoLinks: {
+      ...PHOTO_LINKS,
+      'asset-players': { depicts: 'svc-padel', portraitOf: null, faces: 4, ownPhoto: false }
+    }
+  })
+  assert.equal(result.pass, true, JSON.stringify(result.detail))
+})
+
+test('unnamed faces in a gallery or general slot pass, whoever posted the photo', () => {
   const gallery = (name) =>
     checkFacesNamed(
       [page('/', [img(name)])],
       asked({ [file(name)]: { slot: 'gallery.item.1.image', role: 'business.gallery_image' } })
     )
   assert.equal(gallery('asset-team-day').pass, true)
-  const stranger = gallery('asset-stranger')
-  assert.equal(stranger.pass, false)
-  assert.match(stranger.detail[0].problem, /not the owner/)
+  assert.equal(gallery('asset-stranger').pass, true)
 })
 
 test('pictures Tracy did not place and photos with no face are not judged for faces', () => {

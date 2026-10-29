@@ -10,8 +10,8 @@
  * (`photoLinks`: depicts, portraitOf, faces, ownPhoto).
  *
  * 🔒 GENERAL WHEN UNSURE, ON THE PAGE TOO. A photo linked to no offering, or with no label at all, never fills an
- * offering slot; a photo portraying nobody the brief names never fills a person slot. A visible face belongs to a person
- * the brief names, or is the owner's own photo in a general slot.
+ * offering slot; a photo portraying nobody the brief names never fills a person slot. A face in a person slot is the
+ * named person's; faces in offering, gallery and general slots (players, guests) are never judged.
  */
 
 const DETAIL_MAX = 20
@@ -215,30 +215,33 @@ export function checkPhotosMatchSlots(reads, asked = {}) {
 }
 
 /**
- * A visible face belongs to a person the brief names, or is the owner's own photo in a general slot.
+ * A face in a slot that presents a person (a coach, a member of the team: role `person.image`, group kind `person`) is
+ * that named person's. 🔒 FACES ELSEWHERE ARE NO STRANGER (coordinator, 29/10/2026): players in a class photo, guests in
+ * the gallery are people the brief never names, and that is fine; the risk is a face standing in for one it does name.
  * @param {any[]} reads @param {any} asked
  */
 export function checkFacesNamed(reads, asked = {}) {
+  const people = asked.briefItems?.people ?? []
   const findings = []
   let judged = 0
   for (const p of placedShown(reads, asked)) {
-    if (!p.link || p.link.faces === 0) continue
+    if (p.kind !== 'person' || !p.link || p.link.faces === 0) continue
     judged += 1
-    if (p.link.portraitOf) continue
-    if (p.kind === 'general' && p.link.ownPhoto === true) continue
+    const portrays = p.link.portraitOf
+    if (portrays && (!p.holds || portrays === p.holds)) continue
     findings.push({
       ...where(p),
       faces: p.link.faces,
-      problem:
-        p.kind === 'general'
-          ? 'a face of nobody the brief names, in a photo not the owner posted'
-          : `a face of nobody the brief names, in ${p.kind === 'person' ? 'a person' : 'an offering'} slot`
+      ...(p.holds ? { expected: labelOf(people, p.holds) } : {}),
+      problem: portrays
+        ? `the face of ${labelOf(people, portrays)} in the slot of ${labelOf(people, p.holds)}`
+        : 'a face of nobody the brief names, in a person slot'
     })
   }
   return verdict(
     'faces-named',
     findings,
-    `${judged} placed photos with faces judged, ${findings.length} show a face of nobody the brief names`,
-    "every face shown belongs to a person the brief names, or is in the owner's own photo in a general slot"
+    `${judged} placed photos with faces in person slots judged, ${findings.length} show a face of nobody the slot names`,
+    'every face in a person slot belongs to the person the brief names there'
   )
 }

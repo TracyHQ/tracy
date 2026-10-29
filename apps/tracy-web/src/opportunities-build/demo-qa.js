@@ -321,7 +321,7 @@ const REPAIR = {
   'photos-match-slots':
     "Each photo below stands in a card of one offering or one person and shows another, or shows nothing the brief links to it. Put in that frame a photo the brief links to the card's own offering, or the portrait of the card's own person (tracy_demo media.look names what each photo shows); with none, keep the template's picture there (retain) and move the photo to a general place (gallery, background). Never change the card's words to match the photo.",
   'faces-named':
-    "Each photo below shows a face of somebody the brief does not name, outside a general place, or not the owner's own photo. Replace it with the portrait of the person the card names, or with a photo without people; a photo the owner posted with people in it may go only in a general place (gallery, background). Never blur or hide a face to pass.",
+    "Each photo below shows, in a frame that presents a person (a coach, a member of the team), a face that is not the person the brief names there. Put that person's portrait in the frame; with none, keep the template's picture (retain) and move the photo to a general place. Never blur or hide a face to pass.",
   // Plan "10/10" P1 (26/10/2026): a selfie behind a section, one photo on two posts side by side.
   'photos-fit':
     'Move each photo named below to where its subject fits: a photo of people, an event, a poster, a menu board or a logo goes in a card, a person’s frame or the gallery, never a section’s background — put a calm photo of the place or of its food there (tracy_demo media.look names what each photo shows). A photo repeated on a page while others are unused gives one of its frames another photo the page does not show yet.',

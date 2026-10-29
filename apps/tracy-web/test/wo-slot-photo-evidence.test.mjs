@@ -156,7 +156,7 @@ test('a failed round tells the agent how to repair each, with the page, slot and
     ]
   })
   assert.match(text, /card's own offering/)
-  assert.match(text, /portrait of the person the card names/)
+  assert.match(text, /Put that person's portrait in the frame/)
   assert.match(text, /page: \/classes; slot: classes\.item\.1\.image; photo: asset-padel/)
   assert.match(text, /page: \/team; slot: team\.item\.1\.image; photo: asset-stranger/)
 })
