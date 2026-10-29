@@ -190,6 +190,36 @@ test('editionContentMap: the German view re-addresses the page to its copy, samp
   assert.equal(src.contentMap.slots.length, 4)
 })
 
+test("editionContentMap: a slot found by position samples the edition's own words at that position", async () => {
+  const contentMap = {
+    entities: [
+      { key: 'page-home', kind: 'page', identity: { postType: 'page', slug: 'home', language: 'en' } }
+    ],
+    slots: [
+      {
+        key: 'home.button.1',
+        entity: 'page-home',
+        target: { blockType: 'button', occurrence: 1, attr: 'content' },
+        sample: 'Contact',
+        maxCharacters: 20
+      },
+      {
+        key: 'home.heading.2',
+        entity: 'page-home',
+        target: { blockType: 'heading', occurrence: 2, attr: 'content' },
+        sample: 'Not in the copy',
+        maxCharacters: 20
+      }
+    ]
+  }
+  const view = await editionContentMap(contentMap, editions, 'de', async () => MARKUP)
+  assert.deepEqual(
+    view.contentMap.slots.map((s) => [s.key, s.sample]),
+    [['home.button.1', 'Kontakt']]
+  )
+  assert.deepEqual(view.missing, ['page-home:heading.2'])
+})
+
 test('contractValue: markup and control characters go, the budget holds, an empty value is null', () => {
   assert.equal(
     contractValue('Hello <b>world</b>\nnext\tline', { maxCharacters: 80 }),

@@ -91,6 +91,7 @@ import {
   PROTECTED,
   showcasePages,
   pathOfUrl,
+  partsInMap,
   slotBlocksByPage,
   sweepWordPress,
   writtenLines
@@ -346,8 +347,11 @@ export function createWordpressEngine({
   realPictures = null,
   woContent = null
 }) {
-  /** `bound`: a slot plan's card pictures (`copyPinsOf`), each card's own entity's. */
-  const pictures = async (ctx, real, bound = {}) => {
+  /**
+   * `bound`: a slot plan's card pictures (`copyPinsOf`), each card's own entity's. `copy`: the copy pins, whose card
+   * names decide which offering photo each card takes (`fill-plan.mjs`), as on Joomla.
+   */
+  const pictures = async (ctx, real, bound = {}, copy = null) => {
     if (!realPictures || !siteFile || !ctx.contract) return null
     real ??= await realPictures.forSite({
       siteKey: ctx.siteKey,
@@ -378,6 +382,7 @@ export function createWordpressEngine({
       inspect,
       contentMap,
       bound,
+      copy,
       write: async ({ state, changes }) => {
         const result = await door.applyWordPressThroughContract({
           apply,
@@ -789,7 +794,12 @@ export function createWordpressEngine({
       /** What each placed picture is (`pictureReport` receipts): the dish items no slot covers read it. */
       let pictureReceipts = null
       if (prepared.real && realPictures && siteFile) {
-        const staged = await pictures(ctx, prepared.real, prepared.copyPins?.pictures)
+        const staged = await pictures(
+          ctx,
+          prepared.real,
+          prepared.copyPins?.pictures,
+          prepared.copyPins ?? null
+        )
         stagedPictureValues = staged?.values ?? {}
         pictureReceipts = staged?.receipts ?? null
         prepared.real = null
@@ -937,9 +947,11 @@ export function createWordpressEngine({
           extraSlugs.some((x) => slug === x || slug.endsWith(`-${x}`))
         // The theme's parts (a sidebar's newsletter promise) carry words of their own, in the same kind of block, and
         // sometimes a menu written inside them (JA Kinetic WP's header).
+        // A part the content map covers is written through its slots, so none of its words is planned again here (#139).
+        const covered = partsInMap(contentMap)
         const partBodies = (
           await Promise.all(
-            PARTS.map(async (key) => {
+            PARTS.filter((key) => !covered.has(key)).map(async (key) => {
               try {
                 const answer = /** @type {any} */ (await read('content.get', { kind: 'templatePart', key }))
                 const content = answer?.item?.content
@@ -1668,7 +1680,8 @@ export function createWordpressEngine({
                 time: ctx.time,
                 drawDoor: prepared.drawDoor ?? null,
                 signal: ctx.signal,
-                bound: prepared.copyPins?.pictures ?? {}
+                bound: prepared.copyPins?.pictures ?? {},
+                copy: prepared.copyPins ?? null
               })
             ).catch((error) => {
               ctx.note(
@@ -1994,6 +2007,8 @@ export function createWordpressEngine({
             entitySlugs,
             // The blocks the contract's slots write into stay, whatever has no honest words (TCH #1013).
             slotBlocks: slotBlocksByPage(contentMap),
+            // A header or footer the map covers is the contract's: its slots are written above, never swept (#139).
+            mapParts: partsInMap(contentMap),
             slotCounts,
             // 🔒 ABOUT LEFT BLANK CUTS NOTHING (TCH #1013, ABOUT-3, 11/10/2026): no word was written, so every section of the
             // template is one "the words never reached"; the site keeps them all, as in the demo, the demo company renamed (D9).

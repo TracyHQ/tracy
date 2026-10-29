@@ -209,3 +209,109 @@ test('version 3 labels the page links and groups a button with its link', () => 
     'every URL slot has a role (rule R3)'
   )
 })
+
+// ── the header and the footer (TracyHQ/tracy#139) ──
+
+const HEADER = [
+  '<!-- wp:site-title /-->',
+  '<!-- wp:navigation-link {"label":"Menu","url":"/menu/","kind":"custom"} /-->',
+  named('paragraph', 'header.note', '<p>Fresh scones every morning</p>')
+].join('\n')
+const FOOTER = [
+  wp('heading', '<h3 class="wp-block-heading">Find us</h3>'),
+  wp('paragraph', '<p>2 Orchard Lane, Larkspur</p>')
+].join('\n')
+/** A dump whose theme stores its header and footer, plus a header of another theme that must not be read. */
+const withThemes =
+  table(
+    'options',
+    ['option_id', 'option_name', 'option_value'],
+    [
+      [1, 'stylesheet', 'wp-demo'],
+      [2, 'template', 'wp-demo'],
+      [3, 'blogname', 'Larkspur'],
+      [4, 'blogdescription', 'Tea']
+    ]
+  ) +
+  table(
+    'term_taxonomy',
+    ['term_taxonomy_id', 'term_id', 'taxonomy', 'description'],
+    [
+      [1, 1, 'category', ''],
+      [5, 5, 'wp_theme', ''],
+      [6, 6, 'wp_theme', '']
+    ]
+  ) +
+  table(
+    'terms',
+    ['term_id', 'name', 'slug'],
+    [
+      [5, 'wp-demo', 'wp-demo'],
+      [6, 'wp-other', 'wp-other']
+    ]
+  ) +
+  table(
+    'term_relationships',
+    ['object_id', 'term_taxonomy_id'],
+    [
+      [20, 5],
+      [21, 5],
+      [22, 6]
+    ]
+  ) +
+  table(
+    'posts',
+    ['ID', 'post_content', 'post_title', 'post_status', 'post_name', 'post_type', 'post_parent'],
+    [
+      [10, PAGE, 'Home', 'publish', 'home', 'page', 0],
+      [20, HEADER, 'Header', 'publish', 'header', 'wp_template_part', 0],
+      [21, FOOTER, 'Footer', 'publish', 'footer', 'wp_template_part', 0],
+      [22, wp('paragraph', '<p>Another theme</p>'), 'Header', 'publish', 'header', 'wp_template_part', 0]
+    ]
+  )
+
+test('with every text, the header and the footer of the theme are template part entities with their own slots', () => {
+  const { contentMap } = deriveProfile({
+    sql: withThemes,
+    release: RELEASE,
+    card: { slug: 'ja-demo', version: '1.0.0', tag: 'quickstart/ja-demo/wp7', repo: 'o/r', assets: {} },
+    coworkVersion: '0.17.1',
+    themeRoots: ['wp-content/themes/wp-demo'],
+    allText: true
+  })
+  const parts = contentMap.entities.filter((e) => e.kind === 'templatePart')
+  assert.deepEqual(parts, [
+    { key: 'part-header', kind: 'templatePart', identity: { slug: 'header' } },
+    { key: 'part-footer', kind: 'templatePart', identity: { slug: 'footer' } }
+  ])
+  const s = byKey(contentMap.slots)
+  assert.deepEqual(s['part-header.navigation-link.1'].target, {
+    blockType: 'navigation-link',
+    occurrence: 1,
+    attr: 'label'
+  })
+  assert.equal(s['part-header.navigation-link.1'].sample, 'Menu')
+  assert.deepEqual(s['part-header.header.note'].target, { block: 'header.note', attr: 'content' })
+  assert.equal(s['part-footer.paragraph.1'].sample, '2 Orchard Lane, Larkspur')
+  assert.equal(s['part-footer.heading.1'].entity, 'part-footer')
+  assert.ok(!contentMap.slots.some((x) => x.sample === 'Another theme'), "another theme's part is not read")
+  // Without every text, a released profile re-captures as it was: no part is added.
+  const plain = deriveProfile({
+    sql: withThemes,
+    release: RELEASE,
+    card: { slug: 'ja-demo', version: '1.0.0', tag: 'quickstart/ja-demo/wp7', repo: 'o/r', assets: {} },
+    coworkVersion: '0.17.1',
+    themeRoots: ['wp-content/themes/wp-demo']
+  })
+  assert.equal(plain.contentMap.entities.filter((e) => e.kind === 'templatePart').length, 0)
+})
+
+test('a list item found by position names its item, so the writer reaches that item', () => {
+  const s = byKey(all().slots)
+  assert.deepEqual(s['home.list.2.2'].target, {
+    blockType: 'list',
+    occurrence: 2,
+    attr: 'content',
+    field: '2'
+  })
+})
