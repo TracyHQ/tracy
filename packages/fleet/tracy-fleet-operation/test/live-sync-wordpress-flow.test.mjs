@@ -1271,3 +1271,79 @@ test(
     }
   }
 )
+
+test(
+  'WordPress: a live Polylang translation renumbered by Sync keeps its translation link on the copy, and the next Preview offers no false change (#105)',
+  opts,
+  () => {
+    // English and French, as Polylang files them: `language` terms for posts, `term_language`
+    // terms for terms (term 1, Uncategorized, is English: object 1 here is a term, not post 1).
+    const s = stack(`
+INSERT INTO wp_terms VALUES (10, 'English', 'en'), (11, 'Francais', 'fr'), (12, 'pll_en', 'pll_en'), (13, 'pll_fr', 'pll_fr');
+INSERT INTO wp_term_taxonomy VALUES (10, 10, 'language', 'a:0:{}', 0, 2), (11, 11, 'language', 'a:0:{}', 0, 0),
+  (12, 12, 'term_language', '', 0, 1), (13, 13, 'term_language', '', 0, 0);
+INSERT INTO wp_posts (ID, post_content, post_title, post_name, post_type) VALUES (5, 'News two', 'Second news', 'second-news', 'post');
+INSERT INTO wp_term_relationships VALUES (5, 1, 0), (5, 10, 0), (1, 12, 0);
+INSERT INTO wp_options VALUES (31, 'polylang', 'a:1:{s:12:"default_lang";s:2:"en";}', 'yes');`)
+    const group = (fr) => `a:2:{s:2:"en";i:5;s:2:"fr";i:${fr};}`
+    try {
+      // Tracy's two English posts on the copy; the customer's French translation of post 5 on the
+      // live site, under the copy's first number.
+      sql(
+        `INSERT INTO wp_posts (ID, post_content, post_title, post_name, post_type) VALUES
+           (27, 'A', 'Tracy post A', 'tracy-a', 'post'), (28, 'B', 'Tracy post B', 'tracy-b', 'post');
+         INSERT INTO wp_term_relationships VALUES (27, 1, 0), (27, 10, 0), (28, 1, 0), (28, 10, 0);`,
+        'wordpress'
+      )
+      sql(
+        `INSERT INTO wp_posts (ID, post_content, post_title, post_name, post_type) VALUES
+           (27, 'Nouvelles deux', 'Deuxieme nouvelle', 'deuxieme-nouvelle', 'post');
+         INSERT INTO wp_terms VALUES (14, 'pll_group', 'pll_group');
+         INSERT INTO wp_term_taxonomy VALUES (14, 14, 'post_translations', '${group(27)}', 0, 2);
+         INSERT INTO wp_term_relationships VALUES (27, 1, 0), (27, 11, 0), (27, 14, 0), (5, 14, 0);`,
+        'livesrc'
+      )
+      const answer = s.sync(s.read())
+      assert.equal(answer.state, 'applied', JSON.stringify(answer))
+      const id = JSON.parse(readFileSync(join(s.priv, 'sync', 'id-map.json'))).posts['27']
+      assert.ok(id > 28, String(id))
+      assert.equal(value(`SELECT HEX(post_title) FROM wp_posts WHERE ID=${id}`), 'Deuxieme nouvelle')
+      assert.equal(value('SELECT HEX(post_title) FROM wp_posts WHERE ID=27'), 'Tracy post A')
+      // The group names the French post under its copy number, not Tracy's post 27.
+      assert.equal(
+        value('SELECT HEX(description) FROM wp_term_taxonomy WHERE term_taxonomy_id=14'),
+        group(id)
+      )
+      const rels = rows('SELECT object_id, term_taxonomy_id FROM wp_term_relationships ORDER BY 1, 2').map(
+        (r) => r.join(':')
+      )
+      for (const want of ['1:12', '5:10', '5:14', '27:10', '28:10', `${id}:11`, `${id}:14`])
+        assert.ok(rels.includes(want), `${want} in ${rels}`)
+      assert.ok(!rels.includes('27:11') && !rels.includes('27:14'), rels.join(' '))
+      // The next Preview: the group is the live site's own; Tracy's English posts go as new posts.
+      const preview = s.pushChangeset()
+      assert.deepEqual(
+        preview.unsupported.filter((u) => u.reason === 'translation-group'),
+        [],
+        JSON.stringify(preview.unsupported)
+      )
+      assert.ok(!preview.items.some((i) => i.liveId === 5 || i.liveId === 27), JSON.stringify(preview.items))
+      assert.deepEqual(
+        preview.items
+          .filter((i) => i.op === 'create')
+          .map((i) => i.title)
+          .sort(),
+        ['Tracy post A', 'Tracy post B']
+      )
+      const again = s.sync(s.read())
+      assert.equal(again.state, 'applied', JSON.stringify(again))
+      assert.equal(again.database.records, 0)
+      assert.equal(
+        value('SELECT HEX(description) FROM wp_term_taxonomy WHERE term_taxonomy_id=14'),
+        group(id)
+      )
+    } finally {
+      s.dispose()
+    }
+  }
+)

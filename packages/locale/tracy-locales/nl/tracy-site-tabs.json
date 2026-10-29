@@ -1063,6 +1063,7 @@
   "push.reason.phpUnchecked": "Kon niet worden gecontroleerd voor de PHP-versie van je live site",
   "push.reason.extensionFile": "Hoort bij een extensie, dus gaat alleen mee met die extensie",
   "push.reason.noDoor": "Er is nog geen veilige manier om deze instelling te schrijven",
+  "push.reason.translationGroup": "Talen en welke pagina’s elkaars vertaling zijn worden nog niet verzonden. Breng deze wijziging aan in Polylang op je live site",
   "push.reason.phpDisabled": "PHP-files staan uit voor Claude Cowork op je live site. Zet “Allow PHP in template files” aan in de opties van Claude Cowork op je site om ze te sturen",
   "push.reason.phpDisabledWordpress": "PHP-files staan uit voor Claude Cowork op je live site. Zet “Allow PHP in theme files” aan onder Settings › Claude Cowork op je site om ze te sturen",
   "push.reason.templateFilesOff": "Template-files staan uit voor Claude Cowork op je live site. Zet “Template files” aan in de opties van Claude Cowork op je site om ze te sturen",

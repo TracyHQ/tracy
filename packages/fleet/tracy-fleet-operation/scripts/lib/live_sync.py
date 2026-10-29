@@ -1700,6 +1700,20 @@ class DbMerge:
         on = " AND ".join(f"b.{q(c)} <=> {cond_alias}.{q(c)}" for c in (pk or columns))
         return f"NOT EXISTS (SELECT 1 FROM {self.ref('base', table)} b WHERE {on})"
 
+    def _of_taxonomies(self, side: str, rec: dict) -> str:
+        """WordPress: the relationship rows of a seed limited to the taxonomies the push wrote
+        (`taxonomies`, a post's categories and tags), as `side` files its rows (`r`); "" for any other."""
+        taxonomies = rec.get("taxonomies")
+        tt = self.prefix + "term_taxonomy"
+        if (rec.get("table") != "term_relationships" or not isinstance(taxonomies, list)
+                or not all(isinstance(x, str) for x in taxonomies)):
+            return ""
+        if not taxonomies or not self._has(self.names[side], tt):
+            return " AND FALSE"
+        listed = ", ".join(sql_str(x) for x in taxonomies)
+        return (f" AND r.term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {self.ref(side, tt)} tt"
+                f" WHERE tt.taxonomy IN ({listed}))")
+
     def align_pushed(self, rec: dict) -> None:
         """A record the push made that the live site numbered in a second table the push could not see
         (WordPress gives a new term its `term_taxonomy` row): the live site's row takes the copy's
@@ -1771,9 +1785,10 @@ class DbMerge:
             if phase == "records":
                 rows = rec.get("rows")
                 if rows in ("ours", "theirs"):
-                    script.append(f"DELETE r FROM {self.ref('base', table)} r WHERE {self._match('r', match)};")
+                    script.append(f"DELETE r FROM {self.ref('base', table)} r WHERE {self._match('r', match)}"
+                                  f"{self._of_taxonomies('base', rec)};")
                     script.append(self.copy_rows_sql("base", rows, table) +
-                                  f" WHERE {self._match('r', match)};")
+                                  f" WHERE {self._match('r', match)}{self._of_taxonomies(rows, rec)};")
                     continue
                 pk = self._pk(t, table)
                 columns = [c for c in rec.get("columns", []) if isinstance(c, str)]

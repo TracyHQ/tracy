@@ -33,6 +33,7 @@ an `https://` home) is left as it is on all three sides alike.
 from __future__ import annotations
 
 import re
+from typing import Callable, NamedTuple
 
 # ── SQL helpers (live_sync.py's own: this module is loaded by it and cannot import it back) ────
 
@@ -71,18 +72,21 @@ def _quoted(data: bytes, at: int, length: int) -> tuple[bytes, int]:
     return data[at + 1:at + 1 + length], at + 2 + length
 
 
-def _walk(data: bytes, at: int, old: bytes, new: bytes, depth: int, visit=None, path=()) -> tuple[bytes, int]:
-    """One serialized value at `at`, rewritten: (its new bytes, the index past the old ones)."""
+def _walk(data: bytes, at: int, old: bytes, new: bytes, depth: int, visit=None, path=(),
+          layout=None) -> tuple[bytes, int]:
+    """One serialized value at `at`, rewritten: (its new bytes, the index past the old ones). With
+    `visit`, the record numbers `layout` places in the value (by path) are handed to it as well."""
     if depth > _MAX_DEPTH or at >= len(data):
         raise _Unreadable(at)
     kind = data[at:at + 2]
-    entity = theme_mod_entity(path) if visit else None
+    layout = layout or THEME_MODS
+    entity = layout.entity(path) if visit else None
     if visit and kind in (b"r:", b"R:"):
-        raise _Unreadable("aliased theme value")
+        raise _Unreadable("aliased serialized value")
     if entity and kind in (b"r:", b"R:", b"C:", b"O:"):
-        raise _Unreadable("aliased theme reference")
-    if visit and path in (("header_image_data",), ("nav_menu_locations",)) and kind == b"C:":
-        raise _Unreadable("opaque header reference")
+        raise _Unreadable("aliased serialized reference")
+    if visit and path in layout.containers and kind == b"C:":
+        raise _Unreadable("opaque reference container")
     if entity and kind == b"i:":
         number, end = _int_until(data, at + 2, b";")
         got = visit(entity, number) if number > 0 else number
@@ -121,14 +125,14 @@ def _walk(data: bytes, at: int, old: bytes, new: bytes, depth: int, visit=None, 
         return data[at:after + 1], after + 1
     if kind == b"a:":
         count, at2 = _int_until(data, at + 2, b":")
-        return _members(data, at, at2, count, old, new, depth, visit, path)
+        return _members(data, at, at2, count, old, new, depth, visit, path, layout)
     if kind == b"O:":
         length, at2 = _int_until(data, at + 2, b":")
         _, after = _quoted(data, at2, length)
         if data[after:after + 1] != b":":
             raise _Unreadable(after)
         count, at3 = _int_until(data, after + 1, b":")
-        return _members(data, at, at3, count, old, new, depth, visit, path)
+        return _members(data, at, at3, count, old, new, depth, visit, path, layout)
     if kind == b"C:":
         # A class serializing itself (`Serializable`): its payload is the class's own format, not
         # PHP's, and is carried as it is.
@@ -143,7 +147,8 @@ def _walk(data: bytes, at: int, old: bytes, new: bytes, depth: int, visit=None, 
     raise _Unreadable(at)
 
 
-def _members(data: bytes, start: int, at: int, count: int, old: bytes, new: bytes, depth: int, visit=None, path=()):
+def _members(data: bytes, start: int, at: int, count: int, old: bytes, new: bytes, depth: int, visit=None, path=(),
+             layout=None):
     """An array's or an object's `{key value …}` from `at`, its keys kept and its values rewritten;
     the head (`a:2:` / `O:8:"stdClass":2:`) from `start` kept as it is."""
     if data[at:at + 1] != b"{":
@@ -161,7 +166,7 @@ def _members(data: bytes, start: int, at: int, count: int, old: bytes, new: byte
             key = key.decode("utf-8", "surrogateescape")
         else:
             key, _ = _int_until(data, at + 2, b";")
-        value, at = _walk(data, key_end, old, new, depth + 1, visit, path + (key,))
+        value, at = _walk(data, key_end, old, new, depth + 1, visit, path + (key,), layout)
         out.append(value)
     if data[at:at + 1] != b"}":
         raise _Unreadable(at)
@@ -442,7 +447,12 @@ def yield_auto_drafts(sql, names: dict, prefix: str, log=lambda _m: None) -> lis
     if _has_table(sql, names["ours"], meta):
         script.append(f"DELETE FROM {o}.{q(meta)} WHERE post_id IN ({listed});")
     if _has_table(sql, names["ours"], terms):
-        script.append(f"DELETE FROM {o}.{q(terms)} WHERE object_id IN ({listed});")
+        # The posts' relationships only: under the same number, a link's categories and a term's
+        # Polylang language and group are another record's (`TT_OF_POST`).
+        taxonomies = prefix + "term_taxonomy"
+        own = (f" AND {TT_OF_POST.replace('{term_taxonomy}', f'{o}.{q(taxonomies)}')}"
+               if _has_table(sql, names["ours"], taxonomies) else "")
+        script.append(f"DELETE FROM {o}.{q(terms)} WHERE object_id IN ({listed}){own};")
     script.append(f"DELETE FROM {o}.{q(posts)} WHERE ID IN ({listed}) AND post_status = {sql_str(AUTO_DRAFT)};")
     sql.run("\n".join(script))
     log(f"the copy's auto-drafts under a number the live site's post has: {listed} given up")
@@ -589,8 +599,16 @@ TRACY_POSTMETA = "r.meta_key LIKE '\\_tracy\\_%'"
 # `_menu_item_object_id` names a post or a term, as the item's `_menu_item_type` says.
 MENU_OBJECT = ("meta_key = '_menu_item_object_id' AND post_id IN (SELECT m.post_id FROM {{postmeta}} m"
                " WHERE m.meta_key = '_menu_item_type' AND m.meta_value = '{kind}')")
-# `term_relationships.object_id` names a post, or a link under `link_category`.
-TT_OF = "term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {{term_taxonomy}} tt WHERE tt.taxonomy {cmp} 'link_category')"
+# `term_relationships.object_id` names a post, a link under `link_category`, or — under Polylang's
+# `term_language` and `term_translations` — a term: Polylang files a term's language and its
+# translation group as relationships of the term itself.
+TERM_OBJECT_TAXONOMIES = ("term_language", "term_translations")
+TT_OF = "term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {{term_taxonomy}} tt WHERE tt.taxonomy {cmp})"
+_TERM_OBJECTS = ", ".join(sql_str(t) for t in TERM_OBJECT_TAXONOMIES)
+TT_OF_POST = TT_OF.format(cmp=f"NOT IN ('link_category', {_TERM_OBJECTS})")
+TT_OF_LINK = TT_OF.format(cmp="= 'link_category'")
+TT_OF_TERM = TT_OF.format(cmp=f"IN ({_TERM_OBJECTS})")
+
 
 def theme_mod_entity(path: tuple) -> str | None:
     """Only WordPress's documented theme-mod reference paths name records."""
@@ -603,29 +621,96 @@ def theme_mod_entity(path: tuple) -> str | None:
     return None
 
 
-def visit_theme_mods(data: bytes, visit) -> bytes:
-    """Walk complete serialized theme mods, retaining all non-reference bytes and representations."""
+class Layout(NamedTuple):
+    """Where a serialized value names records: `entity(path)` says which kind of record the value at
+    a path (its keys from the top) names, or None; `containers` are paths whose value must be readable
+    PHP (a custom-serialized payload there could hide a reference)."""
+    entity: Callable[[tuple], str | None]
+    containers: frozenset = frozenset()
+
+
+THEME_MODS = Layout(theme_mod_entity, frozenset({("header_image_data",), ("nav_menu_locations",)}))
+
+
+def polylang_group(entity: str) -> Layout:
+    """A Polylang translation group (`post_translations` / `term_translations` description): language
+    slug → the post's or term's number. Polylang Pro's `sync` entry maps languages to languages."""
+    return Layout(lambda path: entity if len(path) == 1 and path[0] != "sync" else None)
+
+
+# Polylang's settings (`polylang` option): the menu shown at each theme location, per language.
+POLYLANG_SETTINGS = Layout(lambda path: "terms" if len(path) == 4 and path[0] == "nav_menus" else None,
+                           frozenset({("nav_menus",)}))
+
+
+def visit_serialized(data: bytes, visit, layout: Layout) -> bytes:
+    """Walk one complete serialized value, retaining all non-reference bytes and representations."""
     try:
-        result, end = _walk(data, 0, b"", b"", 0, visit)
+        result, end = _walk(data, 0, b"", b"", 0, visit, (), layout)
         if end != len(data):
             raise _Unreadable(end)
         return result
     except _Unreadable:
-        raise ValueError("WordPress theme references cannot be safely read or renumbered") from None
+        raise ValueError("WordPress serialized references cannot be safely read or renumbered") from None
 
 
-class ThemeModReferences:
-    """Typed serialized references, used for both allocating IDs and moving them."""
+def visit_theme_mods(data: bytes, visit) -> bytes:
+    """Walk complete serialized theme mods, retaining all non-reference bytes and representations."""
+    return visit_serialized(data, visit, THEME_MODS)
 
-    def __init__(self, entity: str):
+
+class Serialized(NamedTuple):
+    """Rows of one table whose column holds serialized PHP naming records (`layout`): `name` is the
+    column that names the row. `strict`: a value that cannot be read stops the merge; otherwise it
+    names nothing, as it names nothing to the plugin that reads it (`maybe_unserialize` gives up)."""
+    table: str
+    name: str
+    column: str
+    where: str
+    layout: Layout
+    strict: bool = True
+
+
+SERIALIZED_REFS = {
+    "posts": (
+        Serialized("options", "option_name", "option_value", "option_name LIKE 'theme\\_mods\\_%'", THEME_MODS),
+        Serialized("term_taxonomy", "term_taxonomy_id", "description", "taxonomy = 'post_translations'",
+                   polylang_group("posts"), strict=False),
+    ),
+    "terms": (
+        Serialized("options", "option_name", "option_value", "option_name LIKE 'theme\\_mods\\_%'", THEME_MODS),
+        Serialized("options", "option_name", "option_value", "option_name = 'polylang'", POLYLANG_SETTINGS),
+        Serialized("term_taxonomy", "term_taxonomy_id", "description", "taxonomy = 'term_translations'",
+                   polylang_group("terms"), strict=False),
+    ),
+}
+
+
+class SerializedReferences:
+    """Typed serialized references of one kind of record, used for both allocating IDs and moving
+    them (`IdMap` `typedRefs`): the theme mods' logo and menus, Polylang's translation groups and
+    its per-language menus."""
+
+    def __init__(self, entity: str, sources: tuple = ()):
         self.entity = entity
+        self.sources = sources or SERIALIZED_REFS[entity]
 
-    def rows(self, mapper, schema: str):
-        if not all(mapper.column_exists(schema, "options", c) for c in ("option_name", "option_value")):
+    @staticmethod
+    def rows(mapper, schema: str, source: Serialized):
+        if not all(mapper.column_exists(schema, source.table, c) for c in (source.name, source.column)):
             return []
         return [(bytes.fromhex(name), bytes.fromhex(value)) for name, value in mapper.sql.run(
-            f"SELECT HEX(option_name), HEX(option_value) FROM {q(schema)}.{q(mapper.table('options'))}"
-            " WHERE option_name LIKE 'theme\\_mods\\_%' AND option_value IS NOT NULL;")]
+            f"SELECT HEX(CAST({q(source.name)} AS BINARY)), HEX({q(source.column)}) FROM {q(schema)}.{q(mapper.table(source.table))}"
+            f" WHERE ({source.where}) AND {q(source.column)} IS NOT NULL;")]
+
+    def visit(self, data: bytes, source: Serialized, visit) -> bytes:
+        if not source.strict:
+            # Not serialized PHP at all, or not whole: no number Polylang would read.
+            try:
+                return visit_serialized(data, visit, source.layout)
+            except ValueError:
+                return data
+        return visit_serialized(data, visit, source.layout)
 
     def read(self, mapper, schema: str) -> set[int]:
         found = set()
@@ -635,19 +720,22 @@ class ThemeModReferences:
                 found.add(number)
             return number
 
-        for _, data in self.rows(mapper, schema):
-            visit_theme_mods(data, collect)
+        for source in self.sources:
+            for _, data in self.rows(mapper, schema, source):
+                self.visit(data, source, collect)
         return found
 
     def rewrite(self, mapper, schema: str, pairs: list[tuple[int, int]]) -> None:
         mapping = dict(pairs)
         updates = []
-        for name, data in self.rows(mapper, schema):
-            result = visit_theme_mods(data, lambda entity, number:
-                                      mapping.get(number, number) if entity == self.entity else number)
-            if result != data:
-                updates.append(f"UPDATE {q(schema)}.{q(mapper.table('options'))}"
-                               f" SET option_value = X'{result.hex()}' WHERE BINARY option_name = X'{name.hex()}';")
+        for source in self.sources:
+            for name, data in self.rows(mapper, schema, source):
+                result = self.visit(data, source, lambda entity, number:
+                                    mapping.get(number, number) if entity == self.entity else number)
+                if result != data:
+                    updates.append(f"UPDATE {q(schema)}.{q(mapper.table(source.table))}"
+                                   f" SET {q(source.column)} = X'{result.hex()}'"
+                                   f" WHERE CAST({q(source.name)} AS BINARY) = X'{name.hex()}' AND ({source.where});")
         if updates:
             mapper.sql.run("\n".join(updates))
 
@@ -707,10 +795,10 @@ POLICY = {
         ("users", {"key": "ID",
                    "refs": [("usermeta", "user_id", None), ("posts", "post_author", None),
                             ("comments", "user_id", None), ("links", "link_owner", None)]}),
-        ("posts", {"key": "ID", "typedRefs": ThemeModReferences("posts"),
+        ("posts", {"key": "ID", "typedRefs": SerializedReferences("posts"),
                    "refs": [("posts", "post_parent", None), ("postmeta", "post_id", None),
                             ("comments", "comment_post_ID", None),
-                            ("term_relationships", "object_id", TT_OF.format(cmp="<>")),
+                            ("term_relationships", "object_id", TT_OF_POST),
                             # A featured image, a menu item's parent item and what it opens.
                             ("postmeta", "meta_value", "meta_key IN ('_thumbnail_id', '_menu_item_menu_item_parent')"),
                             ("postmeta", "meta_value", MENU_OBJECT.format(kind="post_type")),
@@ -724,9 +812,11 @@ POLICY = {
                              ("posts", "post_content", "wp-image-{id}"),
                              ("posts", "post_content", '{{"id":{id}'),
                              ("posts", "post_content", '{{"ref":{id}')]}),
-        ("terms", {"key": "term_id", "typedRefs": ThemeModReferences("terms"),
+        ("terms", {"key": "term_id", "typedRefs": SerializedReferences("terms"),
                    "refs": [("term_taxonomy", "term_id", None), ("term_taxonomy", "parent", None),
                             ("termmeta", "term_id", None),
+                            # Polylang: a term's language and translation group.
+                            ("term_relationships", "object_id", TT_OF_TERM),
                             ("postmeta", "meta_value", MENU_OBJECT.format(kind="taxonomy")),
                             ("options", "option_value",
                              "option_name IN ('default_category', 'default_link_category', 'default_email_category')")]}),
@@ -735,7 +825,7 @@ POLICY = {
         ("comments", {"key": "comment_ID",
                       "refs": [("comments", "comment_parent", None), ("commentmeta", "comment_id", None)]}),
         ("links", {"key": "link_id",
-                   "refs": [("term_relationships", "object_id", TT_OF.format(cmp="="))]}),
+                   "refs": [("term_relationships", "object_id", TT_OF_LINK)]}),
         # Meta rows: nothing points at their numbers, but both sites add them under the same ones.
         ("postmeta", {"key": "meta_id"}),
         ("termmeta", {"key": "meta_id"}),

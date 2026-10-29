@@ -723,7 +723,7 @@ INSERT INTO wp_options (option_name, option_value) VALUES ('home', 'HOME'), ('si
   ('blogdescription', 'Per studenti'), ('stylesheet', 'astra'), ('template', 'astra'),
   ('theme_mods_astra', 'a:5:{i:0;b:0;s:18:"nav_menu_locations";a:2:{s:7:"primary";i:2;s:6:"footer";i:3;}s:18:"custom_css_post_id";i:3524;s:11:"custom_logo";i:3527;s:11:"header_html";S((<a href="HOME/it/">Home</a>));}'),
   ('theme_mods_twentytwentyfive', 'a:1:{s:18:"custom_css_post_id";i:-1;}'),
-  ('polylang', 'a:4:{s:7:"browser";i:0;s:7:"rewrite";i:1;s:12:"default_lang";s:2:"it";s:9:"post_types";a:0:{}}'),
+  ('polylang', 'a:4:{s:7:"browser";i:0;s:7:"rewrite";i:1;s:12:"default_lang";s:2:"it";s:10:"post_types";a:0:{}}'),
   ('sidebars_widgets', 'a:2:{s:19:"wp_inactive_widgets";a:0:{}s:13:"array_version";i:3;}'),
   ('widget_text', 'a:1:{s:12:"_multiwidget";i:1;}'), ('page_on_front', '3518'), ('show_on_front', 'page'), ('site_icon', '3527'),
   ('permalink_structure', '/%postname%/'), ('cron', 'a:0:{}'), ('claude_cowork_token', 'secret'),
