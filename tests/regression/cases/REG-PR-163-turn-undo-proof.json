@@ -1,8 +1,8 @@
 {
-  "id": "REG-PR-PR-turn-undo-proof",
+  "id": "REG-PR-163-turn-undo-proof",
   "kind": "fix",
   "title": "An undo press that proves nothing (the host answered 202) still tells the agent but no longer marks the Site changes row undone or drops its Undo; a later proven press marks it and a later unproven press keeps an earlier proof",
-  "pr": "PR",
+  "pr": 163,
   "area": "site-changes/turn-undo",
   "cms": ["wp", "jo"],
   "needs": ["postgres"],
