@@ -31,6 +31,7 @@ import { planPageIntros, planPlaceIntros } from './page-intros.mjs'
 import { placeSeoOf } from './place-seo.mjs'
 import { notFoundPageOf, pageSeoOf } from './page-seo.mjs'
 import { isRecordRole } from './record-roles.mjs'
+import { planRepeatedBlocks, REPEATED_BLOCK_REASONS } from './repeated-blocks.mjs'
 
 export const SITE_PLAN_VERSION = 'site-plan/1'
 
@@ -64,7 +65,8 @@ export const SITE_PLAN_REASONS = Object.freeze({
   'hero-contact': "the first screen's main button uses the owner's real way in (`hero-first-screen.mjs`)",
   ...IDENTITY_REASONS,
   ...COLOUR_REASONS,
-  ...HONESTY_REASONS
+  ...HONESTY_REASONS,
+  ...REPEATED_BLOCK_REASONS
 })
 
 /** Text slot roles a contact fact fills as it stands: the fact's kind by role. */
@@ -243,7 +245,12 @@ function slotsOf(
       return { key: slot.key, role: slot.role, decision: 'value', value: video.value, reason: video.reason }
     if (video) return { key: slot.key, role: slot.role, decision: 'keep', reason: video.reason }
     const record = records[slot.key]
-    if (slot.type === 'text' && isRecordRole(slot.role) && typeof record?.value === 'string' && record.value.trim())
+    if (
+      slot.type === 'text' &&
+      isRecordRole(slot.role) &&
+      typeof record?.value === 'string' &&
+      record.value.trim()
+    )
       return {
         key: slot.key,
         role: slot.role,
@@ -399,6 +406,8 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
     ...planIdentity(brief, contentMap),
     // What the content map does not reach: videos, backgrounds, showcase, addresses, credit line (ticket #196).
     outside: planOutsideMap({ brief, contentMap }),
+    // A showcase block repeated across kept pages stays on the one it fits best (`repeated-blocks.mjs`, COO 30/10/2026).
+    repeatedBlocks: planRepeatedBlocks({ pages: pageRows, contentMap }),
     // The brand colours: the logo's when the brief holds the logo, else the template's (ADR 0023 amended 29/10/2026).
     colours: planColours(brief),
     ...honesty,

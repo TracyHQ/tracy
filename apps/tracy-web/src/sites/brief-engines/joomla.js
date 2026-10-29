@@ -59,6 +59,7 @@ import { woContentOf } from './wo-content.js'
 import { offeringPostsOf } from './offering-posts.js'
 import { planContactSteps } from './joomla-plan-contacts.js'
 import { honestWords, leftDemoWords, planRecordSteps } from './joomla-plan-records.js'
+import { narrowRepeatedBlocks } from './joomla-repeated-blocks.js'
 import { withInlineStyles } from './inline-styles.js'
 import { inlineStylesLost, placeInlineStyles, styleChanges, takeStyleMarks } from './joomla-inline-styles.js'
 import { planIdentitySteps } from './joomla-plan-identity.js'
@@ -2706,6 +2707,16 @@ export function createJoomlaEngine({
         )
       // The main menu owns its labels after copy pins and every cleanup write.
       const menuPlan = await woContent?.sitePlanFor?.({ siteKey, email: ctx.email })
+      // 🔒 A showcase block repeated across kept pages stays on the one the plan keeps it on (`joomla-repeated-blocks.js`,
+      // COO decision 30/10/2026): its page assignment is narrowed, never unpublished.
+      await narrowRepeatedBlocks({
+        apply,
+        siteKey,
+        sitePlan: menuPlan,
+        applyId: `repeat-${Date.now().toString(36)}`,
+        note: ctx.note,
+        time: ctx.time
+      })
       if (menuPlan?.pages?.some((p) => p.decision === 'keep')) {
         const { text: menuModel } = await models()
         const menu = await writeJoomlaMainMenu({

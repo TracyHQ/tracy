@@ -30,6 +30,7 @@ import { checkHeadBlocks } from './head-block-check.js'
 import { checkPageSeo, unusedBriefContent } from './page-seo-check.js'
 import { checkRecordSlots } from './record-slot-check.js'
 import { checkRepeatedCopy } from './repeated-copy-check.js'
+import { checkRepeatedBlocks } from './repeated-block-check.js'
 import { seeder } from '../lib/seeder.js'
 
 /** The most pages one check reads: a brief build's site has a handful, a demo's showcase branch can have dozens. */
@@ -201,6 +202,9 @@ export async function runLeftoverCheck({
     .catch(() => undefined)
   const repeatedCopy = checkRepeatedCopy({ pages, near })
   report.findings.push(...repeatedCopy)
+  // A showcase block the plan keeps on one page is on one page; an undeclared repeat is named (COO decision 30/10/2026).
+  const repeatedBlocks = checkRepeatedBlocks({ pages, sitePlan })
+  report.findings.push(...repeatedBlocks)
   report.findings.push(...offeringSummaries.map((f) => ({ kind: 'C03', ...f })))
   report.counts.C03 = (report.counts.C03 ?? 0) + offeringSummaries.length
   const mainMenuFindings = (mainMenu?.findings ?? []).map((f) => ({
@@ -234,6 +238,7 @@ export async function runLeftoverCheck({
     reviewQuotes,
     recordSlots,
     repeatedCopy,
+    repeatedBlocks,
     contactForms,
     contactPage,
     pageSeo,
@@ -259,6 +264,7 @@ export async function runLeftoverCheck({
       !pageSeo.some((f) => f.severity === 'major') &&
       recordSlots.length === 0 &&
       repeatedCopy.length === 0 &&
+      !repeatedBlocks.some((f) => f.severity === 'major') &&
       ctaBands.length === 0 &&
       pageIntros.length === 0,
     findings: [
