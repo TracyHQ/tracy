@@ -5381,6 +5381,8 @@
   "tracy-site-tabs sync.error.liveBusy": "c2d71a75",
   "tracy-site-tabs sync.error.liveBusyParts": "30544730",
   "tracy-site-tabs sync.error.livePassword": "8bda1013",
+  "tracy-site-tabs sync.error.livePhpTooOld": "956b8df8",
+  "tracy-site-tabs sync.error.livePhpTooOldPlain": "f3f6ec10",
   "tracy-site-tabs sync.error.liveRateLimited": "beaddbcc",
   "tracy-site-tabs sync.error.liveToken": "e408752f",
   "tracy-site-tabs sync.error.liveUnreachable": "d9a8c53c",

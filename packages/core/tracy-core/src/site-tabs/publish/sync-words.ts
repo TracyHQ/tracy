@@ -66,8 +66,22 @@ export function agoText(iso: string | null | undefined, now = Date.now()): strin
   }
 }
 
+/** LIVE_PHP_TOO_OLD's versions: the PHP the live site runs and the one Claude Cowork needs. */
+export type PhpTooOld = { php: string | null; min: string | null }
+
+/**
+ * "Your live site runs PHP 7.3.33. Claude Cowork needs PHP 7.4.0 or newer…" — both versions when the
+ * answer named them, else the sentence without them (never a version made up).
+ */
+export function phpTooOldText(php: PhpTooOld | null | undefined, t: Translate): string {
+  return php?.php && php.min
+    ? t('sync.error.livePhpTooOld', { php: php.php, min: php.min })
+    : t('sync.error.livePhpTooOldPlain')
+}
+
 /** Why a sync did not finish, in a sentence a customer can act on; the code stays for support. */
-export function failureText(code: string, t: Translate): string {
+export function failureText(code: string, t: Translate, php?: PhpTooOld | null): string {
+  if (code === 'LIVE_PHP_TOO_OLD') return phpTooOldText(php, t)
   const liveErrors: Record<string, string> = {
     LIVE_BLOCKED: 'sync.error.liveBlocked',
     LIVE_PASSWORD_PROTECTED: 'sync.error.livePassword',

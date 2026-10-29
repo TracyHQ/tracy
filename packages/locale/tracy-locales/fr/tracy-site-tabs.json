@@ -1216,6 +1216,8 @@
   "sync.error.noSpace": "Le serveur de Tracy manquait de place pour cette synchronisation. Rien n’a été modifié sur cette copie. Contactez-nous.",
   "sync.error.liveBlocked": "Votre site en ligne a renvoyé une réponse bloquée ou qui ne provient pas du moteur. Vérifiez le pare-feu ou la protection contre les robots et autorisez les requêtes de Tracy.",
   "sync.error.livePassword": "Votre site en ligne exige un mot de passe HTTP. Autorisez Tracy à accéder au point de terminaison Claude Cowork sans ce mot de passe, puis réessayez.",
+  "sync.error.livePhpTooOld": "Votre site en ligne utilise PHP {php}. Claude Cowork nécessite PHP {min} ou plus récent. Demandez à votre hébergeur de mettre PHP à jour, puis réessayez.",
+  "sync.error.livePhpTooOldPlain": "Votre site en ligne utilise une version de PHP trop ancienne pour Claude Cowork. Demandez à votre hébergeur de mettre PHP à jour, puis réessayez.",
   "sync.error.liveRateLimited": "Votre site en ligne limite les requêtes. Patientez avant de réessayer ; Tracy respecte le délai Retry-After.",
   "sync.error.liveToken": "Votre site en ligne a refusé le token Claude Cowork. Reconnectez-le avec son token actuel, puis réessayez.",
   "push.label.featuredImage": "Image mise en avant",

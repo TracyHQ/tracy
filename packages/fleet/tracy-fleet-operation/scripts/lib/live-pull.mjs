@@ -158,6 +158,22 @@ class PullFailed extends Error {
 /** A failure worth asking again: the site's 429/5xx, or the network. */
 class Transient extends Error {}
 
+/** Failures no other door, call or retry can change: the run stops on them at once. */
+const STOP_NOW = ['TOKEN_REFUSED', 'LIVE_PASSWORD_PROTECTED', 'LIVE_RATE_LIMITED', 'LIVE_PHP_TOO_OLD']
+
+/**
+ * An engine refusing to run on the site's PHP (claude-cowork 0.24.73: `{ok: false, error:
+ * 'php_too_old', php, min}` on both doors, HTTP 200): LIVE_PHP_TOO_OLD with both versions, so the
+ * owner is told to have PHP upgraded rather than that the site could not be reached.
+ */
+function phpTooOld(reply) {
+  const version = (value) => (/^\d+(\.\d+){0,3}$/.test(String(value ?? '')) ? String(value) : null)
+  const error = new PullFailed('LIVE_PHP_TOO_OLD')
+  error.php = version(reply.php)
+  error.min = version(reply.min)
+  return error
+}
+
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
 /** The engine's reply out of a raw body, or null when something else answered (`doors.mjs`). */
@@ -290,6 +306,7 @@ async function call(endpoint, token, action, params = {}) {
     if (reply.error === 'unauthorized' || reply.error === 'forbidden' || reply.error === 'bad_token') {
       throw new PullFailed('TOKEN_REFUSED')
     }
+    if (reply.error === 'php_too_old') throw phpTooOld(reply)
     throw new PullFailed('ENGINE_REFUSED', `${action}: ${String(reply.error ?? '').slice(0, 80)}`)
   }
   return reply
@@ -326,7 +343,7 @@ async function door(endpoint, token) {
     } catch (error) {
       last = error
       if (error.code === 'LIVE_BLOCKED') blocked = error
-      if (['TOKEN_REFUSED', 'LIVE_PASSWORD_PROTECTED', 'LIVE_RATE_LIMITED'].includes(error.code)) throw error
+      if (STOP_NOW.includes(error.code)) throw error
     }
   }
   if (blocked) throw blocked
@@ -344,7 +361,7 @@ async function abilities(endpoint, token) {
   try {
     info = (await retried(() => call(endpoint, token, 'info'))).info ?? {}
   } catch (error) {
-    if (['TOKEN_REFUSED', 'LIVE_PASSWORD_PROTECTED', 'LIVE_RATE_LIMITED'].includes(error.code)) throw error
+    if (STOP_NOW.includes(error.code)) throw error
   }
   const many = info.db_dump_many
   const maxFiles = Number(info.site_fingerprint?.max_files)
@@ -889,7 +906,7 @@ async function readDatabase(
           : `database: ${table}: read whole (${got.whole})`
       )
     } catch (error) {
-      if (['TOKEN_REFUSED', 'LIVE_PASSWORD_PROTECTED', 'LIVE_RATE_LIMITED'].includes(error.code)) throw error
+      if (STOP_NOW.includes(error.code)) throw error
       note(`database: ${table}: ranges not answered (${error.code ?? 'error'}); read whole`)
     }
   }
@@ -933,7 +950,7 @@ async function readDatabase(
       const taken = await takeRanges(endpoint, token, { table, path: fileOf(table) }, ranges.skip, ability)
       if (taken) ranged.set(table, taken)
     } catch (error) {
-      if (['TOKEN_REFUSED', 'LIVE_PASSWORD_PROTECTED', 'LIVE_RATE_LIMITED'].includes(error.code)) throw error
+      if (STOP_NOW.includes(error.code)) throw error
     }
   }
   const kept = new Map([
@@ -2295,7 +2312,8 @@ main(process.argv[2] ?? '')
         ok: false,
         code: error.code ?? 'PULL_FAILED',
         ...(detail ? { detail } : {}),
-        ...(error.moved ? { moved: error.moved } : {})
+        ...(error.moved ? { moved: error.moved } : {}),
+        ...(error.code === 'LIVE_PHP_TOO_OLD' ? { php: error.php ?? null, min: error.min ?? null } : {})
       })
     )
   })

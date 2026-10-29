@@ -1216,6 +1216,8 @@
   "sync.error.noSpace": "Auf dem Server von Tracy war nicht genug Platz für diese Synchronisierung. An dieser Kopie wurde nichts geändert. Bitte kontaktiere uns.",
   "sync.error.liveBlocked": "Deine Live-Site hat eine blockierte Antwort oder keine Engine-Antwort zurückgegeben. Prüfe Firewall und Bot-Schutz und erlaube Anfragen von Tracy.",
   "sync.error.livePassword": "Deine Live-Site verlangt ein HTTP-Passwort. Erlaube Tracy den Zugriff auf den Claude-Cowork-Endpunkt ohne dieses Passwort und versuche es erneut.",
+  "sync.error.livePhpTooOld": "Deine Live-Site läuft mit PHP {php}. Claude Cowork braucht PHP {min} oder neuer. Bitte deinen Hoster, PHP zu aktualisieren, und versuche es dann erneut.",
+  "sync.error.livePhpTooOldPlain": "Deine Live-Site läuft mit einer PHP-Version, die für Claude Cowork zu alt ist. Bitte deinen Hoster, PHP zu aktualisieren, und versuche es dann erneut.",
   "sync.error.liveRateLimited": "Deine Live-Site begrenzt Anfragen. Warte vor einem neuen Versuch; Tracy beachtet die Retry-After-Wartezeit.",
   "sync.error.liveToken": "Deine Live-Site hat das Claude-Cowork-Token abgelehnt. Verbinde sie erneut mit ihrem aktuellen Token und versuche es erneut.",
   "push.label.featuredImage": "Beitragsbild",

@@ -13,6 +13,7 @@
  */
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { followSyncToEnd } from './live-sync-follow'
+import type { PhpTooOld } from './sync-words'
 
 const POLL_MS = 3000
 
@@ -55,6 +56,8 @@ export type SyncView = {
   timing?: { steps: Array<{ at: number; step: string; stage: string | null }> } | null
   /** LIVE_BUSY: which parts of the live site kept changing while it was read (`busy.parts`). */
   busy?: { parts: string[] } | null
+  /** LIVE_PHP_TOO_OLD: the live site's PHP and the one Claude Cowork needs (`sync-words` phpTooOldText). */
+  php?: PhpTooOld | null
   summary: {
     backup?: number | null
     files?: { fromTheirs?: number; merged?: number } | null

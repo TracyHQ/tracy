@@ -243,7 +243,7 @@ export function SyncStep({
       )}
       {phase === 'failed' && (
         <Notice severity="error" title={t('sync.status.failed')}>
-          <p>{failureText(failure, t)}</p>
+          <p>{failureText(failure, t, sync?.php)}</p>
           {busyParts && (
             <p className="tv-pub-small" data-live-sync-busy>
               {busyParts}

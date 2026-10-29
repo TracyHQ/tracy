@@ -481,9 +481,14 @@ export function timingOf(output) {
 function failedCode(said, fallback) {
   if (
     said?.code === 'LIVE_READ_FAILED' &&
-    ['LIVE_BUSY', 'LIVE_BLOCKED', 'LIVE_PASSWORD_PROTECTED', 'LIVE_RATE_LIMITED', 'TOKEN_REFUSED'].includes(
-      said.read?.code
-    )
+    [
+      'LIVE_BUSY',
+      'LIVE_BLOCKED',
+      'LIVE_PASSWORD_PROTECTED',
+      'LIVE_PHP_TOO_OLD',
+      'LIVE_RATE_LIMITED',
+      'TOKEN_REFUSED'
+    ].includes(said.read?.code)
   )
     return said.read.code
   return said?.code ?? fallback
@@ -656,6 +661,22 @@ export function busyOf(answer) {
   }
 }
 
+/**
+ * The versions a LIVE_PHP_TOO_OLD names (claude-cowork 0.24.73 refusing to run below its minimum,
+ * live-pull/live-write `phpTooOld`): the PHP the live site runs and the one the engine needs, each a
+ * bare version or null — from the answer itself, its read, or a push's inner sync. Null when no
+ * part of the answer is that refusal.
+ * @returns {{ php: string | null, min: string | null } | null}
+ */
+export function phpTooOldOf(answer) {
+  const said = [answer, answer?.read, answer?.sync, answer?.sync?.read].find(
+    (a) => a && typeof a === 'object' && a.code === 'LIVE_PHP_TOO_OLD' && ('php' in a || 'min' in a)
+  )
+  if (!said) return null
+  const version = (v) => (typeof v === 'string' && /^\d+(\.\d+){0,3}$/.test(v) ? v : null)
+  return { php: version(said.php), min: version(said.min) }
+}
+
 /** `notCarried` of a sync's answer, names only and bounded; null when there is none. */
 function notCarriedOf(answer) {
   const seen = answer?.notCarried
@@ -714,6 +735,8 @@ export function view(row) {
     // Where the time went: each step's second, and the live read's parts (a sync read back as slow).
     timing: answer.timing ?? null,
     // A read that found the live site still changing: which part of it kept changing.
-    busy: row.error === 'LIVE_BUSY' ? busyOf(answer) : null
+    busy: row.error === 'LIVE_BUSY' ? busyOf(answer) : null,
+    // The live site's PHP is below what Claude Cowork needs: both versions, for the owner's sentence.
+    php: row.error === 'LIVE_PHP_TOO_OLD' ? phpTooOldOf(answer) : null
   }
 }

@@ -1428,6 +1428,8 @@ test('failed live reads retain busy and access codes; unknown failures use LIVE_
       const read = { ok: false, code }
       assert.deepEqual(said(read), { ok: false, code, read })
     }
+    const php = { ok: false, code: 'LIVE_PHP_TOO_OLD', php: '7.3.33', min: '7.4.0' }
+    assert.deepEqual(said(php), { ok: false, code: 'LIVE_PHP_TOO_OLD', read: php })
     const unknown = { ok: false, code: 'UNKNOWN_READ_FAILURE' }
     assert.deepEqual(said(unknown), { ok: false, code: 'LIVE_READ_FAILED', read: unknown })
   } finally {
