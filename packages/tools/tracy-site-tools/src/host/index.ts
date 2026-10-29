@@ -6902,11 +6902,8 @@ export function apply(ctx: HostContext, config: Config = {}): void {
       remember(answer)
       const issuesNext = planIssuesNext(answer)
       if (issuesNext !== null) (answer as Record<string, unknown>).next = issuesNext
-      // A saved plan makes this conversation a planned build (`demoPlanAgreed`) from its next step on; any
-      // answer at all makes it a build, which the loop brakes give a whole site's room (`loopNotices` `build`).
-      const saved = answer as { ok?: unknown; planHash?: unknown; code?: unknown } | null
-      if (saved?.ok === true && typeof saved.planHash === 'string')
-        markPlanned(sessionId, Number.POSITIVE_INFINITY)
+      // A saved plan makes this turn a planned build (`demoPlanAgreed`) from its next step on, and any answer at
+      // all makes it a build: `remember` above already recorded both in `buildTurns` (`planned` follows `planHash`).
       const size = buildSizeOf(answer)
       if (size !== null && assignedTurn === buildTurn(exec.agent) && isBuild(sessionId, exec.agent)) {
         const held = buildSizes.get(sessionId)

@@ -50791,9 +50791,6 @@ ${text6}`);
       remember(answer);
       const issuesNext = planIssuesNext(answer);
       if (issuesNext !== null) answer.next = issuesNext;
-      const saved = answer;
-      if (saved?.ok === true && typeof saved.planHash === "string")
-        markPlanned(sessionId, Number.POSITIVE_INFINITY);
       const size2 = buildSizeOf(answer);
       if (size2 !== null && assignedTurn === buildTurn(exec.agent) && isBuild(sessionId, exec.agent)) {
         const held = buildSizes.get(sessionId);
