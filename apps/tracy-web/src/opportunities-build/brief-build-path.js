@@ -32,10 +32,39 @@ export function contentMapOfTemplate(template, contracts = defaultContracts()) {
       slots: map.slots ?? [],
       pages: map.pages ?? [],
       entities: map.entities ?? [],
-      roleVocabularyVersion: map.roleVocabularyVersion ?? null
+      roleVocabularyVersion: map.roleVocabularyVersion ?? null,
+      intros: pageIntrosOf(dir)
     }
   } catch {
     return null
+  }
+}
+
+/**
+ * The per-page mastheads of a release (`page-intros.mjs`): a module whose `menuitem_config` names, line by line, the menu
+ * items each of its titles and descriptions belongs to (`item_id`), read from the release's design baseline
+ * (`presentation-lock.json`). None when the release has no baseline or no such module.
+ * @param {string} dir
+ * @returns {Array<{entity: string, field: string, items: string[][]}>}
+ */
+export function pageIntrosOf(dir) {
+  try {
+    const lock = JSON.parse(readFileSync(path.join(dir, 'presentation-lock.json'), 'utf8'))
+    const out = []
+    for (const [entity, row] of Object.entries(lock?.entities ?? {})) {
+      if (!entity.startsWith('module-') || typeof row?.params !== 'string' || !row.params.includes('item_id'))
+        continue
+      const ids = JSON.parse(row.params)?.menuitem_config?.item_id
+      if (Array.isArray(ids))
+        out.push({
+          entity,
+          field: 'menuitem_config',
+          items: ids.map((x) => (Array.isArray(x) ? x : [x]).map(String))
+        })
+    }
+    return out
+  } catch {
+    return []
   }
 }
 

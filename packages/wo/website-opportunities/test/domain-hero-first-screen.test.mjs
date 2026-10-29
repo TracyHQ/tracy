@@ -392,3 +392,31 @@ test('a button that says "Call" but leads to a page, and a headline that alone s
   )
   assert.match(missing[1].why, /promises a call/)
 })
+
+test('the subline carries a short form without the place, for a headline that already names it', () => {
+  const plan = planHero(clinicBrief(), t4Map(), {})
+  const sub = plan.slots.find((s) => s.key === 'module-40.2')
+  assert.equal(sub.short, 'Check-ups, teeth whitening and dental implants.')
+  assert.equal(sub.place, 'Calderhill')
+  assert.equal(sub.heading, 'module-40.1')
+})
+
+test('no phone, WhatsApp or booking: a channel the business names itself comes before the Contact page', () => {
+  const brief = bakeryBrief()
+  delete brief.contact
+  brief.sitemap[0].sections[0].cta = {
+    kind: 'link',
+    label: 'Message on Instagram',
+    href: 'https://ig.me/m/copperleaf.example'
+  }
+  const plan = planHero(brief, t4Map(), {})
+  assert.equal(valueOf(plan, 'module-40.4'), 'Message on Instagram')
+  assert.equal(valueOf(plan, 'module-40.5'), 'https://ig.me/m/copperleaf.example')
+  const html = page(
+    '<h1>Copperleaf Bakery</h1><p>Sourdough bread and pastries.</p><a class="btn" href="https://ig.me/m/copperleaf.example">Message on Instagram</a>'
+  )
+  assert.deepEqual(
+    checkHeroAnswers({ pages: [{ path: '/', html }], brief }).map((m) => m.kind),
+    ['where']
+  )
+})

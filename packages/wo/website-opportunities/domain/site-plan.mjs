@@ -22,6 +22,7 @@ import { HONESTY_REASONS, planHonesty } from './site-plan-honesty.mjs'
 import { EMPTIED_PAGE_WHY, emptiedPages } from './site-plan-empty-pages.mjs'
 import { peopleFromReviewsNote, showablePeopleOf } from './brief-people.mjs'
 import { planHero } from './hero-first-screen.mjs'
+import { planPageIntros } from './page-intros.mjs'
 
 export const SITE_PLAN_VERSION = 'site-plan/1'
 
@@ -39,6 +40,7 @@ export const SITE_PLAN_REASONS = Object.freeze({
   'contact-fact': 'a contact fact the brief holds',
   'business-name': 'the business name the brief holds',
   'hero-what': 'the first screen names what the business offers and where (`hero-first-screen.mjs`)',
+  'intro-what': 'the intro of an offering page names its offerings and the place (`page-intros.mjs`)',
   'hero-contact': "the first screen's main button uses the owner's real way in (`hero-first-screen.mjs`)",
   ...IDENTITY_REASONS,
   ...COLOUR_REASONS,
@@ -219,6 +221,9 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
       .map((r) => r.assigned?.id)
   )
   const heroPlan = planHero(brief, contentMap, contact)
+  const pageRows = pagesOf(pagePlan)
+  // The intro of each kept offering page names its offerings and the place (`page-intros.mjs`).
+  const intros = planPageIntros({ brief, contentMap, pages: pageRows, cardNames: honesty.honesty.cardNames })
   const fromReviews = peopleFromReviewsNote(showablePeopleOf(brief).filter((p) => shown.has(p.id)))
   const notes = fromReviews ? [...pageNotes, fromReviews] : pageNotes
   return {
@@ -226,9 +231,12 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
     brand,
     contact,
     facts,
-    pages: pagesOf(pagePlan),
+    pages: pageRows,
     // A kept card's picture shows what its words name: the honesty plan's card labels (#192, #194).
-    slots: withHero(slotsOf(contentMap, brief, contact, name, honesty.honesty.cardNames), heroPlan.slots),
+    slots: withHero(slotsOf(contentMap, brief, contact, name, honesty.honesty.cardNames), [
+      ...heroPlan.slots,
+      ...intros
+    ]),
     // The first screen answers what, where and how to contact (COO rule 29/10/2026): `hero-first-screen.mjs`.
     hero: heroPlan.hero,
     // Logo, posts, social profiles and map (ticket #193): `site-plan-identity.mjs`.

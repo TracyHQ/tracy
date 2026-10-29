@@ -174,10 +174,11 @@ test('1. the name the business calls itself on its logo and Instagram reaches th
 test('2. the contact line names the channels on the site in the order of the call to action', () => {
   const brief = scratchBrief()
   const contact = pageSection(brief, 'contact', 'contact')
-  assert.equal(contact.cta.label, 'Message on Instagram')
+  // The owner's real way in, in one order (COO rule 29/10/2026): the phone, WhatsApp, then the channel it names itself.
+  assert.equal(contact.cta.label, 'Call')
   assert.ok(
     contact.copy.startsWith(
-      'By appointment. To book, message on Instagram (https://ig.me/m/harbour.sportclub), call +971 50 000 1234 or WhatsApp.'
+      'By appointment. To book, call +971 50 000 1234, WhatsApp or message on Instagram (https://ig.me/m/harbour.sportclub).'
     ),
     contact.copy
   )
@@ -415,7 +416,7 @@ test('B. the contact text names each channel once, in the order of the call to a
   assert.equal(count('+971 50 000 1234'), 1, contact.copy)
   assert.equal(count('WhatsApp'), 1, contact.copy)
   const at = (needle) => contact.copy.indexOf(needle)
-  assert.ok(at('Instagram') < at('+971 50 000 1234') && at('+971 50 000 1234') < at('WhatsApp'), contact.copy)
+  assert.ok(at('+971 50 000 1234') < at('WhatsApp') && at('WhatsApp') < at('Instagram'), contact.copy)
 })
 
 test('D. a fully title-cased quote lowercases only common words; a place name keeps its capital', () => {

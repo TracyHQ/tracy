@@ -157,7 +157,11 @@ test('sections only reference assets listed in the brief', () => {
 })
 
 test('booking CTA appears only with a verified booking source', () => {
-  const b = buildBrief(FULL)
+  // The owner's real way in, in one order (COO rule 29/10/2026): a phone call comes before the booking link.
+  const called = buildBrief(FULL)
+  assert.equal(called.sitemap[0].sections.find((s) => s.kind === 'hero').cta.kind, 'phone')
+  const { phone: _phone, provenance: _provenance, ...noPhone } = FULL.profile
+  const b = buildBrief({ ...FULL, profile: noPhone })
   const ctas = b.sitemap
     .flatMap((p) => p.sections)
     .map((s) => s.cta)

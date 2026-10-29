@@ -54,3 +54,53 @@ test('the leftover report names what the served first screen does not answer, an
   )
   assert.equal(report.pass, true)
 })
+
+test('the place is said once: the short subline when the headline as written names it', () => {
+  const sub = {
+    key: 'module-9.2',
+    decision: 'value',
+    reason: 'hero-what',
+    value: 'Check-ups and teeth whitening in Calderhill.',
+    short: 'Check-ups and teeth whitening.',
+    place: 'Calderhill',
+    heading: 'module-9.1'
+  }
+  const words = { 'module-9.1': '[[Gentle]] dentistry in Calderhill' }
+  assert.equal(
+    heroSlotValues({ slots: [sub] }, 'en', (k) => words[k])['module-9.2'],
+    'Check-ups and teeth whitening.'
+  )
+  const sample = { 'module-9.1': '((span))No1((/span)) studio since 1999' }
+  assert.equal(heroSlotValues({ slots: [sub] }, 'en', (k) => sample[k])['module-9.2'], sub.value)
+})
+
+test('an offering page intro is written only when the copy writer\u2019s line misses the offering or the place', () => {
+  const intro = {
+    key: 'module-9.11',
+    decision: 'value',
+    reason: 'intro-what',
+    when: 'missing',
+    value: 'Teeth whitening and dental implants in Calderhill.',
+    short: 'Teeth whitening and dental implants.',
+    offerings: ['teeth whitening', 'dental implants'],
+    place: 'Calderhill',
+    heading: 'module-9.1'
+  }
+  const run = (words) => heroSlotValues({ slots: [intro] }, 'en', (k) => words[k])['module-9.11']
+  assert.equal(
+    run({ 'module-9.11': 'Teeth whitening that suits you, here in Calderhill.', 'module-9.1': 'Treatments' }),
+    undefined
+  )
+  assert.equal(
+    run({ 'module-9.11': 'Teeth whitening that suits you.', 'module-9.1': 'Treatments in Calderhill' }),
+    undefined
+  )
+  assert.equal(
+    run({ 'module-9.11': 'Teeth whitening that suits you.', 'module-9.1': 'Treatments' }),
+    intro.value
+  )
+  assert.equal(
+    run({ 'module-9.11': 'Smile more every day.', 'module-9.1': 'Calderhill treatments' }),
+    intro.short
+  )
+})

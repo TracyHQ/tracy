@@ -2,7 +2,7 @@
 //   WHAT     the hero subline (the headline when there is no subline) names the offerings or the trade, from the brief
 //   WHERE    the city or the area served appears in the headline or the subline
 //   CONTACT  the hero's main button uses the owner's real way in, in order: a phone call, WhatsApp, a verified booking
-//            link, the Contact page; its label names the action ("Call ...", "WhatsApp us"), never a bare "Contact"
+//            link, a channel the business names itself ("DM us"), the Contact page; its label names the action ("Call ...", "WhatsApp us"), never a bare "Contact"
 // The headline is the owner's own words (a key message), left to the copy writer; the subline supplies what it lacks.
 //
 // 🔒 BY SLOT ROLE, NEVER BY TEMPLATE: the hero is the home page's module in a hero position (hero, slideshow, masthead,
@@ -91,14 +91,14 @@ function homeOf(contentMap) {
 }
 
 /** The hero module of the home page: the best hero position among its modules that carry words. */
-function heroEntityOf(contentMap) {
+function heroEntityOf(contentMap, page = homeOf(contentMap)) {
   const entities = new Map(list(contentMap?.entities).map((e) => [e.key, e]))
   const withWords = new Set(
     list(contentMap?.slots)
       .filter((s) => s.type === 'text' && kindOf(s))
       .map((s) => s.entity)
   )
-  const home = homeOf(contentMap)
+  const home = page
   const placed = home
     ? list(home.assignedModules)
         .filter((m) => m?.published !== '0')
@@ -123,8 +123,8 @@ const indexOf = (key) => Number(/\.(\d+)$/.exec(key)?.[1] ?? 0)
  * @param {{slots?: any[], pages?: any[], entities?: any[]} | null} contentMap
  * @returns {{entity: string, headline: any, subline: any, cta: {label: any, href: any} | null} | null}
  */
-export function heroSlotsOf(contentMap) {
-  const entity = heroEntityOf(contentMap)
+export function heroSlotsOf(contentMap, page = undefined) {
+  const entity = heroEntityOf(contentMap, page)
   if (!entity) return null
   const slots = list(contentMap?.slots)
     .filter((s) => s.entity === entity && itemOf(s) === 0)
@@ -146,7 +146,7 @@ export function heroSlotsOf(contentMap) {
 }
 
 /** How many characters a text slot holds: its measured box, else its contract maximum. */
-function limitOf(slot) {
+export function limitOf(slot) {
   const fit = slot?.fit
   if (Number.isInteger(fit?.maxCharacters) && fit.maxCharacters > 0) return fit.maxCharacters
   const boxes = Object.values(fit?.maxChars ?? {}).filter((n) => Number.isInteger(n) && n > 0)
@@ -190,7 +190,7 @@ export function heroWhereOf(brief) {
 }
 
 /** What the business offers, as names in a sentence: the services the site shows, most mentioned first. */
-function offeringNames(brief) {
+export function offeringNames(brief) {
   return heroServicesOf(brief?.reading, null)
     .concat(list(brief?.reading?.services).slice(3))
     .filter((s, i, all) => all.indexOf(s) === i && nonEmpty(s?.label))
@@ -210,8 +210,23 @@ function plannedHeroCopy(brief) {
  * @returns {{value: string, source: string, where: boolean} | null}
  */
 function sublineOf(brief, max) {
-  const where = heroWhereOf(brief)
-  const names = offeringNames(brief)
+  const line = offeringLine(offeringNames(brief), heroWhereOf(brief), max)
+  if (line) return { ...line, source: 'reading.services' }
+  const planned = plannedHeroCopy(brief)
+  if (planned && [...planned].length <= max && offeringNames(brief).length === 0)
+    return { value: planned, short: planned, source: 'sitemap.hero', where: false }
+  return null
+}
+
+/**
+ * Offerings in one sentence with the place, and the same sentence without it (`short`, for a heading that already names
+ * the place: decided at write time, `hero-lines.js`). Offerings drop from the end until both fit; null when none fits.
+ * @param {string[]} names - offering names in sentence case
+ * @param {{kind: 'city' | 'area', value: string} | null} where
+ * @param {number} max
+ * @returns {{value: string, short: string, where: boolean} | null}
+ */
+export function offeringLine(names, where, max) {
   const place = (text) =>
     where?.kind === 'city'
       ? `${text} in ${where.value}.`
@@ -219,12 +234,10 @@ function sublineOf(brief, max) {
         ? `${text}. ${capitalFirst(where.value)}.`
         : `${text}.`
   for (let n = names.length; n >= 1; n -= 1) {
-    const line = place(capitalFirst(listed(names.slice(0, n))))
-    if ([...line].length <= max) return { value: line, source: 'reading.services', where: Boolean(where) }
+    const text = capitalFirst(listed(names.slice(0, n)))
+    const line = place(text)
+    if ([...line].length <= max) return { value: line, short: `${text}.`, where: Boolean(where) }
   }
-  const planned = plannedHeroCopy(brief)
-  if (planned && [...planned].length <= max && names.length === 0)
-    return { value: planned, source: 'sitemap.hero', where: false }
   return null
 }
 
@@ -243,7 +256,7 @@ function contactPageLink(contentMap) {
 /**
  * The hero's main button: the owner's real way in, best first (COO rule 29/10/2026), from the site plan's contact facts
  * (`readContact` through the site plan) and the brief's verified booking link.
- * @returns {{kind: 'phone' | 'whatsapp' | 'booking' | 'form', label: string, href: string | null, source: string} | null}
+ * @returns {{kind: 'phone' | 'whatsapp' | 'booking' | 'message' | 'form', label: string, href: string | null, source: string} | null}
  */
 export function heroContactOf(brief, contact = {}, contentMap = null) {
   if (nonEmpty(contact?.phone?.value))
@@ -273,6 +286,11 @@ export function heroContactOf(brief, contact = {}, contentMap = null) {
       source: 'integrations.booking'
     }
   }
+  // A channel the business names itself ("DM us"), as the brief's own hero button holds it.
+  const home = list(brief?.sitemap).find((p) => p?.slug === 'home')
+  const dm = list(home?.sections).find((s) => s?.kind === 'hero')?.cta
+  if (dm?.kind === 'link' && nonEmpty(dm.label) && String(dm.href ?? '').startsWith('https://'))
+    return { kind: 'message', label: dm.label.trim(), href: dm.href, source: 'sitemap.hero.cta' }
   const page = contactPageLink(contentMap)
   return page ? { kind: 'form', label: 'Send us a message', href: page, source: 'contact-page' } : null
 }
@@ -297,7 +315,19 @@ export function planHero(brief, contentMap, contact = {}) {
   const where = heroWhereOf(brief)
   const lineSlot = hero?.subline ?? hero?.headline ?? null
   const what = lineSlot ? sublineOf(brief, limitOf(lineSlot)) : null
-  if (what && lineSlot) decide(lineSlot, what.value, 'hero-what', what.source)
+  // The place is said once: the short line is written when the headline, as written, already names it (`hero-lines.js`).
+  if (what && lineSlot)
+    slots.push({
+      key: lineSlot.key,
+      role: lineSlot.role ?? null,
+      decision: 'value',
+      value: what.value,
+      reason: 'hero-what',
+      source: what.source,
+      ...(where && what.short !== what.value && hero?.headline && hero.headline !== lineSlot
+        ? { short: what.short, place: where.value, heading: hero.headline.key }
+        : {})
+    })
   const way = heroContactOf(brief, contact, contentMap)
   if (way && hero?.cta?.label) {
     const label = way.label
@@ -451,6 +481,10 @@ export function checkHeroAnswers({ pages, brief }) {
     out.push({ kind: 'where', why: 'the first screen names neither the city nor the area served' })
   // CONTACT: a button that calls, opens WhatsApp or a booking, or leads to the Contact page under a label that acts.
   const button = mainButtonOf(region)
+  const heroCta = list(list(brief?.sitemap).find((p) => p?.slug === 'home')?.sections).find(
+    (s) => s?.kind === 'hero'
+  )?.cta
+  const dmHref = heroCta?.kind === 'link' ? heroCta.href : null
   const bookings = list(brief?.integrations)
     .filter((x) => x?.kind === 'booking' && x.verified === true)
     .map((x) => x.url)
@@ -459,6 +493,7 @@ export function checkHeroAnswers({ pages, brief }) {
     (/^tel:/i.test(button.href) ||
       /wa\.me|whatsapp/i.test(button.href) ||
       bookings.includes(button.href) ||
+      (nonEmpty(dmHref) && button.href === dmHref) ||
       (/contact/i.test(button.href) && !BARE_CONTACT.test(button.label) && !PROMISES_CALL.test(button.label)))
   if (!button) out.push({ kind: 'contact', why: 'the first screen has no button' })
   else if (!real)
@@ -468,7 +503,7 @@ export function checkHeroAnswers({ pages, brief }) {
         ? 'the main button is a bare "Contact" that names no action'
         : PROMISES_CALL.test(button.label)
           ? 'the main button promises a call or a chat but leads to a page'
-          : 'the main button leads to no call, WhatsApp, booking or Contact page',
+          : 'the main button leads to no call, WhatsApp, booking, message or Contact page',
       value: `${button.label} -> ${button.href}`
     })
   return out

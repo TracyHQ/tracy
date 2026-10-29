@@ -1109,8 +1109,11 @@ export function createJoomlaEngine({
       // The sourced words, as their sources say them: no guard of the model's words is theirs.
       Object.assign(kept, copyPins?.pins ?? {})
       // 🔒 THE FIRST SCREEN SAYS WHAT, WHERE AND HOW TO CONTACT (COO rule 29/10/2026, `hero-lines.js`): the site plan's hero
-      // lines win over the copy writer's, and the left-demo sweep never empties them.
-      const heroLines = heroSlotValues(sitePlan, written)
+      // and offering-page intro lines win over the copy writer's, judged against the headings as written, and the left-demo
+      // sweep never empties them.
+      const heroLines = heroSlotValues(sitePlan, written, (key) =>
+        key in kept ? kept[key] : slotByKey.get(key)?.sample
+      )
       Object.assign(kept, heroLines)
       demoBlanks = demoBlanks.filter((slot) => !(slot.key in heroLines))
 

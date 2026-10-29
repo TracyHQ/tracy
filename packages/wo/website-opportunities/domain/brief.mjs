@@ -510,17 +510,25 @@ export function buildBrief({
       url: f.value.url,
       quotes: f.evidence.map((e) => e.quote).filter(nonEmpty)
     }))
-  // The booking button speaks the trade's words: Book a table, Book a class, Book an appointment, or Book (#1780). With
-  // no booking link, the channel the business names itself comes before a phone it never asked to be called on.
-  const primaryCta = booking
-    ? { kind: 'booking', label: words.bookingCta, href: booking.url }
-    : channels.length
-      ? { kind: 'link', label: channels[0].label, href: channels[0].url }
-      : phoneSourced && phoneOn
-        ? { kind: 'phone', label: 'Call', href: `tel:${phoneOn.replace(/[^\d+]/g, '')}` }
-        : firstSocial
-          ? { kind: 'social', label: `Follow on ${NETWORK_LABEL[firstSocial]}`, href: socials[firstSocial] }
-          : null
+  // 🔒 THE OWNER'S REAL WAY IN, IN ONE ORDER (COO rule 29/10/2026, the same as the hero's `hero-first-screen.mjs`): a phone
+  // call, WhatsApp, a verified booking link (in the trade's words: Book a table, Book a class...), a channel the business
+  // names itself ("DM us"), and only then a profile to follow. The brief view and the built site agree on the button.
+  const primaryCta =
+    phoneSourced && phoneOn
+      ? { kind: 'phone', label: 'Call', href: `tel:${phoneOn.replace(/[^\d+]/g, '')}` }
+      : whatsapp
+        ? { kind: 'link', label: 'WhatsApp us', href: whatsapp.href }
+        : booking
+          ? { kind: 'booking', label: words.bookingCta, href: booking.url }
+          : channels.length
+            ? { kind: 'link', label: channels[0].label, href: channels[0].url }
+            : firstSocial
+              ? {
+                  kind: 'social',
+                  label: `Follow on ${NETWORK_LABEL[firstSocial]}`,
+                  href: socials[firstSocial]
+                }
+              : null
   const contactCta = primaryCta && primaryCta.kind !== 'social' ? primaryCta : null
   const withCta = (section, cta) => (cta ? { ...section, cta } : section)
 
@@ -721,17 +729,17 @@ export function buildBrief({
   }
 
   // Hours waiting for a check: no hours, and how such a business is reached instead when it can be called.
-  // 🔒 Each channel on the site is named once, in the call to action's order: a channel the business names itself ("DM
-  // us") first, then the phone, then WhatsApp.
+  // 🔒 Each channel on the site is named once, in the call to action's order: the phone, then WhatsApp, then a channel
+  // the business names itself ("DM us").
   const whatsappOn = Boolean(whatsapp) || Object.keys(cand.contacts ?? {}).some((k) => /whatsapp/i.test(k))
   const byAppointment =
     hoursDecision.state === 'check' && (channels.length > 0 || Boolean(phoneOn) || whatsappOn)
   const phoneLine = phoneOn ? `${phoneOn}${profile.phoneWhatsapp === true ? ' (WhatsApp)' : ''}` : null
   const bookingLine = byAppointment
     ? `${BY_APPOINTMENT} To book, ${listOr([
-        ...channels.map((c) => `${c.label.replace(/^Message\b/, 'message')} (${c.url})`),
         phoneLine ? `call ${phoneLine}` : null,
-        whatsappOn ? (phoneLine ? 'WhatsApp' : 'message on WhatsApp') : null
+        whatsappOn ? (phoneLine ? 'WhatsApp' : 'message on WhatsApp') : null,
+        ...channels.map((c) => `${c.label.replace(/^Message\b/, 'message')} (${c.url})`)
       ])}.`
     : null
   const contactLines = [

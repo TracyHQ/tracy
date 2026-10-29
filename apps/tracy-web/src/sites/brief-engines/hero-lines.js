@@ -1,35 +1,56 @@
 /**
- * The hero lines of a brief build's site plan (`website-opportunities/domain/hero-first-screen.mjs`, spec TracyHQ/tracy#189,
- * COO rule 29/10/2026): the subline that names what the business offers and where, and the main button's label and link.
- * They win over the copy writer's words for the same slots, and a line the left-demo sweep would empty is not emptied.
+ * The first-screen lines of a brief build's site plan (`website-opportunities/domain/hero-first-screen.mjs` and
+ * `page-intros.mjs`, spec TracyHQ/tracy#189, COO rule 29/10/2026): the home subline that names what the business offers and
+ * where, the main button's label and link, and the intro of each offering page. They win over the copy writer's words for
+ * the same slots, and a line the left-demo sweep would empty is not emptied.
+ *
+ * Decided at write time, against the words each heading will really hold (`current`), not its sample:
+ *   - the place is said once: a line with a `short` form drops the place when its heading already names it
+ *   - an intro (`when: 'missing'`) is written only when the copy writer's line fails: it names none of the page's
+ *     offerings, or the place is in neither it nor the heading
  *
  * 🔒 ONLY IN THE LANGUAGE THEY WERE MADE IN: the plan writes them from the brief in English; a site written in another
  * language leaves them to the copy writer, which writes in the site's language.
  */
 
-const HERO_REASONS = new Set(['hero-what', 'hero-contact'])
+const REASONS = new Set(['hero-what', 'hero-contact', 'intro-what'])
+
+/** The words of a line as a visitor reads them, lower case: style marks and tags taken off. */
+const wordsOf = (value) =>
+  String(value ?? '')
+    .replace(/\(\([^)]*\)\)|<[^>]*>|\[\[|\]\]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase()
 
 /**
  * @param {any} sitePlan - the build's site plan (`receipt.sitePlan`)
  * @param {string} [locale] - the language the site is written in
+ * @param {(key: string) => string | undefined} [current] - the words a slot will hold once written (the copy writer's, else
+ *   the template's)
  * @returns {Record<string, string>} slot key -> value
  */
-export function heroSlotValues(sitePlan, locale = 'en') {
+export function heroSlotValues(sitePlan, locale = 'en', current = () => undefined) {
   if (
     !String(locale ?? 'en')
       .toLowerCase()
       .startsWith('en')
   )
     return {}
-  return Object.fromEntries(
-    (sitePlan?.slots ?? [])
-      .filter(
-        (s) =>
-          s?.decision === 'value' &&
-          HERO_REASONS.has(s.reason) &&
-          typeof s.value === 'string' &&
-          s.value.trim() !== ''
-      )
-      .map((s) => [s.key, s.value])
-  )
+  /** @type {Record<string, string>} */
+  const out = {}
+  for (const s of sitePlan?.slots ?? []) {
+    if (s?.decision !== 'value' || !REASONS.has(s.reason)) continue
+    if (typeof s.value !== 'string' || s.value.trim() === '') continue
+    const place = typeof s.place === 'string' ? s.place.toLowerCase() : ''
+    const heading = s.heading ? wordsOf(current(s.heading)) : ''
+    const headingHasPlace = place !== '' && heading.includes(place)
+    if (s.when === 'missing') {
+      const now = wordsOf(current(s.key))
+      const named = (s.offerings ?? []).some((o) => now.includes(String(o).toLowerCase()))
+      if (named && (place === '' || now.includes(place) || headingHasPlace)) continue
+    }
+    out[s.key] = headingHasPlace && typeof s.short === 'string' && s.short !== '' ? s.short : s.value
+  }
+  return out
 }

@@ -224,20 +224,16 @@ test('a name held off the site appears in no hero, SEO line, about copy or accep
   assert.match(on.sitemap[0].seo.title, /^Harbour Sport Club/)
 })
 
-test('the contact section and call to action use the channel the business names itself ("DM us")', () => {
+test('the contact section lists the channel the business names itself ("DM us"); the button is the phone first', () => {
   const brief = hscBrief()
   assert.deepEqual(validateBrief(brief), { ok: true, errors: [] })
   const dm = brief.facts.find((f) => f.field === 'contactChannels' && f.value.kind === 'instagram-dm')
   const contact = brief.sitemap.find((p) => p.slug === 'contact').sections[0]
   assert.match(contact.copy, /Message on Instagram: https:\/\/ig\.me\/m\/harbour\.sportclub\./)
   assert.ok(contact.evidence.some((e) => /DM us today to book your spot!/.test(e.quote)))
-  for (const cta of [contact.cta, heroOf(brief).cta])
-    assert.deepEqual(cta, {
-      kind: 'link',
-      label: 'Message on Instagram',
-      href: 'https://ig.me/m/harbour.sportclub'
-    })
-  // Counter-case: a channel the owner keeps off the site is neither listed nor the button; the phone is.
+  // The owner's real way in, in one order (COO rule 29/10/2026): a phone call before a direct message.
+  for (const cta of [contact.cta, heroOf(brief).cta]) assert.equal(cta.kind, 'phone')
+  // Counter-case: a channel the owner keeps off the site is not listed; the phone is still the button.
   const off = hscBrief({ overrides: { [dm.id]: OFF } })
   const offContact = off.sitemap.find((p) => p.slug === 'contact').sections[0]
   assert.doesNotMatch(offContact.copy, /Instagram/)
