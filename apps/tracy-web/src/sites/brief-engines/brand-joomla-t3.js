@@ -49,7 +49,18 @@ function paramsOf(item) {
  * @param {(where: string) => void} input.wrote @param {(where: string, reason: string) => void} input.skip
  * @returns {Promise<Set<string>>} the variants a style took
  */
-export async function writeT3Styles({ folder, profile, name, logos, upload, read, write, wrote, skip }) {
+export async function writeT3Styles({
+  folder,
+  profile,
+  name,
+  logos,
+  textLogo = false,
+  upload,
+  read,
+  write,
+  wrote,
+  skip
+}) {
   const used = new Set()
   const anyLogo = Object.keys(logos).length > 0
   if (!anyLogo && !name) return used
@@ -92,6 +103,9 @@ export async function writeT3Styles({ folder, profile, name, logos, upload, read
       }
     } else if (anyLogo && variant === null && name) {
       Object.assign(next, { logotype: 'text', sitename: name })
+    } else if (textLogo && !anyLogo && name) {
+      Object.assign(next, { logotype: 'text', sitename: name })
+      if (Object.hasOwn(params, 'logoimage_dark')) next.logoimage_dark = ''
     } else if (!anyLogo && name && (params.logotype === 'text' || String(params.sitename ?? '') !== '')) {
       next.sitename = name
     }

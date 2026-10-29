@@ -22,6 +22,7 @@ const SMALL_KEYS = ['site_logo_small', 'site_logo_dark_small']
  * @param {object} input
  * @param {string} input.folder @param {any} input.profile @param {string} [input.name]
  * @param {{light?: Uint8Array, dark?: Uint8Array, single?: Uint8Array}} input.logos
+ * @param {boolean} [input.textLogo] - no logo of the business: every logo key the demo set is emptied, so T4 prints the name
  * @param {string | null} input.favicon - the uploaded favicon's path
  * @param {any} input.settings - the `template.siteSettings` read
  * @param {(role: string, where: string) => Promise<string | null>} input.upload
@@ -34,6 +35,7 @@ export async function writeT4Profiles({
   profile,
   name,
   logos,
+  textLogo = false,
   favicon,
   settings,
   upload,
@@ -67,6 +69,13 @@ export async function writeT4Profiles({
         }
       }
       for (const key of SMALL_KEYS) if (String(current[key] ?? '') !== '') values[key] = ''
+    }
+    if (textLogo && !anyLogo) {
+      for (const key of ['site_logo', 'site_logo_dark', 'site_logo_2', ...SMALL_KEYS])
+        if (String(current[key] ?? '') !== '') {
+          values[key] = ''
+          did.add('logo-text')
+        }
     }
     if (name && String(current.site_name ?? '') !== '' && current.site_name !== name) {
       values.site_name = name

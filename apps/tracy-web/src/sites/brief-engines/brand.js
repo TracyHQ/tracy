@@ -54,12 +54,14 @@ const BUSY_WAIT_MS = 750
  *   address): it is still written as the site name, but the template's page titles are left as they are
  * @property {{light?: Uint8Array, dark?: Uint8Array, single?: Uint8Array}} [logo]
  * @property {Uint8Array} [favicon]
+ * @property {boolean} [textLogo] - a brief build with no logo of the business: every logo spot of the design shows its name as
+ *   text instead of the template's own logo (site plan `logo.decision` `name-as-text`, #193)
  */
 
 /**
  * @typedef {object} BrandWriterInput what a writer is handed; it reports through `wrote` and `skip`
  * @property {string} siteKey - the site; a writer with no Apply door of its own (EmDash) reaches it by this
- * @property {Awaited<ReturnType<typeof prepareBrand>> & {share?: Buffer, nameGiven?: boolean}} prepared - the pack, logos
+ * @property {Awaited<ReturnType<typeof prepareBrand>> & {share?: Buffer, nameGiven?: boolean, textLogo?: boolean}} prepared - the pack, logos
  *   padded into the profile's frame, and the share card made from the logo as uploaded (`brand-share-card.js`)
  * @property {any} profile - `templateProfileOf`, or null for a release with no row
  * @property {string | null} tag - the release tag
@@ -117,6 +119,7 @@ export async function setSiteBrand({
   const profile = release?.tag && release.version ? templateProfileOf(release.tag, release.version) : null
   const prepared = /** @type {BrandWriterInput["prepared"]} */ (await prepareBrand(pack, profile))
   prepared.requireComplete = pack.requireComplete === true
+  prepared.textLogo = pack.textLogo === true && !Object.keys(pack.logo ?? {}).length
   if (
     prepared.requireComplete &&
     pack.logo &&
@@ -169,8 +172,9 @@ export async function setSiteBrand({
  * @param {(id: string) => Promise<{bytes: Uint8Array, role: string, siteKey: string | null} | null>} deps.readFile - an upload by id
  * @param {(siteKey: string) => Promise<string | null>} deps.versionOf - the quickstart version the site was built from
  * @param {(ms: number) => Promise<void>} [deps.sleep]
+ * @param {(ctx: any) => Promise<any>} [deps.sitePlanFor] - the brief build's site plan, when there is one
  */
-export function createSiteBrand({ applyFor, readFile, versionOf, sleep }) {
+export function createSiteBrand({ applyFor, readFile, versionOf, sleep, sitePlanFor }) {
   /**
    * @param {{siteKey: string, platform: string, quickstart: string | null, email: string, runId?: string, brief: any, normalized: any,
    *   applied?: (id: string, how?: {reused: boolean}) => void, note: (note: string) => void}} ctx
@@ -221,6 +225,13 @@ export function createSiteBrand({ applyFor, readFile, versionOf, sleep }) {
     // No logo given (or one that could not be read) is no answer: the site keeps the template's logo exactly as
     // released (LOGO-4 dropped, 09/10/2026). A brief written before that may still say `logoAsked`; it is not read.
     if (Object.keys(logo).length) pack.logo = logo
+    // A brief build with no logo shows the business name as text, never the demo's logo (site plan, #193).
+    if (
+      !pack.logo &&
+      pack.name &&
+      (await sitePlanFor?.(ctx).catch(() => null))?.logo?.decision === 'name-as-text'
+    )
+      pack.textLogo = true
     const favicon = await bytesOf(brand.favicon, 'favicon')
     if (favicon) pack.favicon = favicon
     const version = ctx.quickstart ? await versionOf(ctx.siteKey).catch(() => null) : null

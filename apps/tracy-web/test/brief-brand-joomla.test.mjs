@@ -890,3 +890,23 @@ for (const [tag, version, folder, slot, profiles] of [
     assert.ok(result.written.includes('footer-logo'))
     assert.ok(!result.skipped.some((s) => s.where === 'logo-dark'))
   })
+
+// ---- No logo of the business in a brief build (ticket #193): the name as text, never the demo's logo -----------------------
+
+test('T4 brief build with no logo: every demo logo key is emptied so the name shows as text', async () => {
+  const site = fakeJoomla({ profiles: NOVA })
+  await brand(
+    site,
+    { tag: 'quickstart/ja-nova/j6', version: '1.0.4' },
+    { name: 'Northgate Dental', textLogo: true }
+  )
+  const nova = site.state.profiles.default
+  assert.equal(nova.site_logo, '')
+  assert.equal(nova.site_logo_dark, '')
+})
+
+test('T4 without the brief build flag and no logo: the template logo stays as released', async () => {
+  const site = fakeJoomla({ profiles: NOVA })
+  await brand(site, { tag: 'quickstart/ja-nova/j6', version: '1.0.4' }, { name: 'Northgate Dental' })
+  assert.equal(site.state.profiles.default.site_logo, 'images/joomlart/logo/item-1.png')
+})

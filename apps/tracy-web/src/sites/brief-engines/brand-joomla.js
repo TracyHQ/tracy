@@ -81,13 +81,15 @@ async function writeSiteBrand({ prepared, profile, stamp, write, read, wrote: to
   }
   const logos = prepared.logo ?? {}
   const anyLogo = Object.keys(logos).length > 0
+  // A brief build with no logo shows the name as text on every logo spot (site plan, #193).
+  const textLogo = prepared.textLogo === true && !anyLogo
   const name = typeof prepared.name === 'string' ? prepared.name.trim() : ''
   const folder = templateFolderOf(profile?.release)
   if (!profile?.framework || !folder) {
     if (anyLogo) skip('logo', 'Tracy does not know where this design shows a logo yet')
     if (prepared.favicon) skip('favicon', 'Tracy does not know where this design shows a favicon yet')
   }
-  if (!name && !(profile?.framework && folder && (anyLogo || prepared.favicon))) return
+  if (!name && !(profile?.framework && folder && (anyLogo || textLogo || prepared.favicon))) return
 
   // The plugin's own version, read first: a plugin that answers nothing readable is tried, and its refusal decides.
   const info = await read('info', {}).catch(() => null)
@@ -124,11 +126,11 @@ async function writeSiteBrand({ prepared, profile, stamp, write, read, wrote: to
   let used = new Set()
   let header = false
   if (profile.framework === 't3') {
-    used = await writeT3Styles({ folder, profile, name, logos, upload, read, write, wrote, skip })
+    used = await writeT3Styles({ folder, profile, name, logos, textLogo, upload, read, write, wrote, skip })
     header = used.size > 0
     if (prepared.favicon && (await readSettings()))
       await writeT3Favicon({ folder, upload, write, wrote, skip })
-  } else if (anyLogo || prepared.favicon || name) {
+  } else if (anyLogo || textLogo || prepared.favicon || name) {
     const settings = await readSettings()
     if (settings) {
       const favicon = prepared.favicon ? await upload('favicon', 'favicon') : null
@@ -137,6 +139,7 @@ async function writeSiteBrand({ prepared, profile, stamp, write, read, wrote: to
         profile,
         name,
         logos,
+        textLogo,
         favicon,
         settings,
         upload,
