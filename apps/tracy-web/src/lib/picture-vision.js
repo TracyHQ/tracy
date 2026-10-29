@@ -9,6 +9,7 @@
  * labels again instead of reading an old answer.
  */
 import sharp from 'sharp'
+import { seeder } from './seeder.js'
 import { createVisionChallenge, IMAGE_CODE_INSTRUCTION, imageCodeMatches } from './vision-challenge.js'
 import {
   ASSET_CAPTION_MAX,
@@ -225,19 +226,22 @@ export async function labelWithVision({
     }
     const asked = new Set(group.map((p) => p.id))
     try {
-      const res = await fetchImpl(door.url, {
-        method: 'POST',
-        headers: { authorization: `Bearer ${door.key}`, 'content-type': 'application/json' },
-        body: JSON.stringify({
-          model: door.model,
-          temperature: 0,
-          response_format: { type: 'json_object' },
-          messages: [{ role: 'user', content }]
-        }),
-        signal: AbortSignal.any([AbortSignal.timeout(CALL_MS), ...(signal ? [signal] : [])])
+      const { observePictureCall } = await seeder('model')
+      const body = await observePictureCall('vision', async () => {
+        const res = await fetchImpl(door.url, {
+          method: 'POST',
+          headers: { authorization: `Bearer ${door.key}`, 'content-type': 'application/json' },
+          body: JSON.stringify({
+            model: door.model,
+            temperature: 0,
+            response_format: { type: 'json_object' },
+            messages: [{ role: 'user', content }]
+          }),
+          signal: AbortSignal.any([AbortSignal.timeout(CALL_MS), ...(signal ? [signal] : [])])
+        })
+        if (!res.ok) throw new CallFailed('http_error')
+        return res.json()
       })
-      if (!res.ok) throw new CallFailed('http_error')
-      const body = await res.json()
       usage.requests ??= []
       usage.requests.push({
         requestId: body.id ?? null,

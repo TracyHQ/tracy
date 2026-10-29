@@ -5,10 +5,18 @@
  * lists the door calls the site refused with the site's own reason.
  */
 
-/**
- * @param {{state?: string, error?: string | null, timings?: any} | null | undefined} row - the `site_brief` row
- * @returns {{state: string | null, notes: string[], refused: Array<Record<string, unknown>>} | null}
- */
+/** Preserve measured clocks; older rows without instrumentation remain distinguishable. */
+function pictureClockOf(source) {
+  if (!Number.isFinite(source?.drawingDuringApplyMs)) return {}
+  return {
+    drawingDuringApplyMs: source.drawingDuringApplyMs,
+    visionDuringApplyMs: source.visionDuringApplyMs ?? 0,
+    pictureCallsDuringApply: source.pictureCallsDuringApply ?? 0,
+    findings: Array.isArray(source.findings) ? source.findings : []
+  }
+}
+
+/** Read the persisted engine result, including error findings from its write clock. */
 export function engineReportOf(row) {
   if (!row) return null
   const timings = row.timings && typeof row.timings === 'object' ? row.timings : {}
@@ -18,7 +26,7 @@ export function engineReportOf(row) {
         .split(' · ')
         .filter(Boolean)
   const refused = Array.isArray(timings.refused) ? timings.refused : []
-  return { state: row.state ?? null, notes, refused }
+  return { state: row.state ?? null, notes, refused, ...pictureClockOf(timings) }
 }
 
 /** The engine report as the hand-off keeps it. */
@@ -26,7 +34,8 @@ export function handoffEngine(/** @type {any} */ engine) {
   return {
     state: engine?.state ?? null,
     notes: Array.isArray(engine?.notes) ? engine.notes : [],
-    refused: Array.isArray(engine?.refused) ? engine.refused : []
+    refused: Array.isArray(engine?.refused) ? engine.refused : [],
+    ...pictureClockOf(engine)
   }
 }
 

@@ -32,6 +32,7 @@
  * that answers the wizard's poll need not be the same one, and a deploy can interrupt either.
  */
 import { randomUUID } from 'node:crypto'
+import { createEnginePictureClock } from './engine-picture-clock.js'
 import { preparePicturesBeforeApply } from './picture-preparation.js'
 
 import {
@@ -453,6 +454,7 @@ export function createBriefBuilds({
     const beat = setInterval(() => void updateBrief(pool, siteKey, {}).catch(() => {}), 5_000)
     const phase = {}
     const notes = []
+    const pictureClock = createEnginePictureClock({ now, onViolation: (message) => notes.push(message) })
     /** @type {Array<{action: string, kind?: string, id?: unknown, code?: string, reason: string}>} */
     const refusals = []
     /**
@@ -496,6 +498,7 @@ export function createBriefBuilds({
     /** The timings a row is left with: the phases, and the apply ids once there are any. */
     const timingsNow = (/** @type {Record<string, unknown>} */ more = {}) => ({
       ...phase,
+      ...pictureClock.report(),
       ...more,
       ...idsNow(),
       ...(notes.length > 0 ? { notes: [...notes] } : {}),
@@ -543,7 +546,9 @@ export function createBriefBuilds({
       // The words are made while the site is waited for, side by side: the site may come up first, and then the words
       // get `prepareGraceMs` from that moment (`preparedInTime`). `prepare` itself honours `ctx.deadlineAt` too.
       const t2 = now()
-      preparing = engine.prepare({ ...ctx, signal: AbortSignal.any([controller.signal, prepareStop.signal]) })
+      preparing = pictureClock.run(() =>
+        engine.prepare({ ...ctx, signal: AbortSignal.any([controller.signal, prepareStop.signal]) })
+      )
       preparing.catch(() => {})
       /** When the site came up, if it did. */
       let siteUpAt = 0
@@ -570,7 +575,9 @@ export function createBriefBuilds({
       // The site: wait for it, if it is not up yet. Nothing here costs anything while the host installs.
       if (!(await siteUp)) return await notUp()
       const upAt = now()
-      await preparePicturesBeforeApply(engine, ctx, prepared, cap.picturesMs, cap.picturesStopMs)
+      await pictureClock.run(() =>
+        preparePicturesBeforeApply(engine, ctx, prepared, cap.picturesMs, cap.picturesStopMs)
+      )
       controller.signal.throwIfAborted()
 
       if (!(await advanceBrief(pool, siteKey, ['ready'], { state: 'applying', stage: STAGE.placing }))) return
@@ -581,15 +588,20 @@ export function createBriefBuilds({
       // 🔒 THE APPLY STOPS WHERE ITS ROW SAYS IT STOPPED (TCH #1367): the deadline fires its own signal, and the engines' door
       // (`recordedDoor`) refuses every write after it, so nothing lands on the site once the row says `failed`.
       const applyStop = new AbortController()
+      pictureClock.startApply()
       try {
         report = await withTimeout(
-          engine.apply({ ...ctx, signal: AbortSignal.any([controller.signal, applyStop.signal]) }, prepared),
+          pictureClock.run(() =>
+            engine.apply({ ...ctx, signal: AbortSignal.any([controller.signal, applyStop.signal]) }, prepared)
+          ),
           made?.workflow === 'quickstart-first/1' ? cap.runMs - 120_000 : cap.applyMs,
           'writing into the site took too long'
         )
       } catch (error) {
         applyError = error
         applyStop.abort(error)
+      } finally {
+        pictureClock.endApply()
       }
       time('applyMs', now() - t3)
       // Still `applying`: the brand is written before the row says the site is done (plan D2).
@@ -642,6 +654,7 @@ export function createBriefBuilds({
     } finally {
       // The run is over: what it started stops, and nothing it names from now on reaches the row.
       closed = true
+      pictureClock.close()
       controller.abort(new Error('the run is over'))
       prepareStop.abort()
       await saving

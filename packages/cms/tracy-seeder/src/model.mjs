@@ -5,6 +5,8 @@
  *
  * Pure apart from the fetch, which is handed in, so the tests never reach the network.
  */
+import { observeModelRequest } from './model-observation.mjs'
+export { observePictureCall } from './model-observation.mjs'
 
 /** Abort a model call that never responds — without this the seeder hangs silently until the
  * execFile timeout (RUN_TIMEOUT_MS) kills it with no output, which the seed stage reports as "The
@@ -145,24 +147,27 @@ export async function chat(door, req, doFetch = fetch, { retryDelayMs = 2000 } =
   for (let attempt = 1; ; attempt++) {
     let failure
     try {
-      const res = await doFetch(door.url, {
-        method: 'POST',
-        headers: {
-          authorization: `Bearer ${door.key}`,
-          'content-type': 'application/json',
-          'http-referer': 'https://tracy.ai',
-          'x-title': 'Tracy seeder'
-        },
-        body: JSON.stringify(body),
-        signal: AbortSignal.timeout(CHAT_TIMEOUT_MS)
+      const { res, parsed, unread } = await observeModelRequest(req, async () => {
+        const res = await doFetch(door.url, {
+          method: 'POST',
+          headers: {
+            authorization: `Bearer ${door.key}`,
+            'content-type': 'application/json',
+            'http-referer': 'https://tracy.ai',
+            'x-title': 'Tracy seeder'
+          },
+          body: JSON.stringify(body),
+          signal: AbortSignal.timeout(CHAT_TIMEOUT_MS)
+        })
+        let parsed = null
+        let unread = null
+        try {
+          parsed = await res.json()
+        } catch (e) {
+          unread = e
+        }
+        return { res, parsed, unread }
       })
-      let parsed = null
-      let unread = null
-      try {
-        parsed = await res.json()
-      } catch (e) {
-        unread = e
-      }
       if (res.ok && parsed && !parsed.error) {
         json = parsed
         break

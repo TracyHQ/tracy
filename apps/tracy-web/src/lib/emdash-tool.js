@@ -16,9 +16,11 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 import { emdashTemplateIdOf } from './local-releases.js'
+import { observeChildPictureCalls } from './picture-model-child.js'
 
 const IN_IMAGE = fileURLToPath(new URL('../emdash-tool/', import.meta.url))
 const IN_CHECKOUT = fileURLToPath(new URL('../../../../packages/cms/', import.meta.url))
+const PICTURE_PRELOAD = fileURLToPath(new URL('./picture-model-preload.mjs', import.meta.url))
 
 /** The packages of the templates that ship the tool, by the id their quickstart tag starts with. */
 const PACKAGE = Object.freeze({
@@ -68,7 +70,12 @@ export function runNode({ args, env, cwd, signal, timeoutMs }) {
   return new Promise((resolve) => {
     let child
     try {
-      child = spawn(process.execPath, args, { env, cwd, stdio: ['ignore', 'pipe', 'pipe'] })
+      child = spawn(process.execPath, ['--import', PICTURE_PRELOAD, ...args], {
+        env,
+        cwd,
+        stdio: ['ignore', 'pipe', 'pipe', 'pipe']
+      })
+      observeChildPictureCalls(child)
     } catch (error) {
       resolve({
         code: 1,

@@ -4,7 +4,7 @@
   "title": "Drawing stays outside the composed engine write clock; lettering falls back to owner photos, with empty gallery tiles removed",
   "pr": 1479,
   "area": "site-brief/pictures",
-  "cms": ["wp", "jo"],
+  "cms": ["wp", "jo", "em"],
   "needs": [],
   "flaky_model": false,
   "steps": [
@@ -13,7 +13,8 @@
     "S3: Run brief-joomla.test.mjs cases for fictional bakery and dental briefs with portrait owner photos and a stalled picture reader. Picture preparation expires before the real engine writes through the pinned Joomla PHP validator.",
     "S4: Run brief-drawing-failures.test.mjs and brief-picture-preparation.test.mjs for hanging dependencies, stop-grace completion and the production quickstart-first wrapper on fictional bakery and dental briefs.",
     "S5: Run brief-sharpness-display.test.mjs for portrait owner photos in a hero whose upload minimum is 2160 pixels and CSS display width is 1440 pixels.",
-    "S6: Run brief-drawing-fallbacks.test.mjs, empty-frames.test.mjs, brief-contract-picture-stage.test.mjs and joomla-outside-map.test.mjs on fictional sports/bakery/dental briefs."
+    "S6: Run brief-drawing-fallbacks.test.mjs, empty-frames.test.mjs, brief-contract-picture-stage.test.mjs and joomla-outside-map.test.mjs on fictional sports/bakery/dental briefs.",
+    "S7: Run production engine-capability wiring, runtime picture clocks, direct and quality-gateway vision observation and build-receipt preservation on fictional bakery and dental briefs."
   ],
   "expect": [
     "S1: shapeReal resolves in under 10 s, notes 'a picture could not be drawn: the picture took too long', and no shaped place has receipt.kind 'drawn'.",
@@ -21,7 +22,8 @@
     "S3: Preparation makes no CMS writes. After its deadline the engine still writes text, telephone, social link, map and owner-name logo, removes the blog menu and never retries the stalled picture reader.",
     "S4: Expired drawing work starts no queued provider call; provider timeouts do not retry. Drawn people and faces are accepted, lettering receives at most one redraw. Completed paid calls and known costs remain counted. Owner/neutral shapes returned during stop grace are retained; late completions cannot replace them after writes start. A simulated 121619 ms drawing contributes zero to the wrapped applyMs, which measures only 7 ms of writes.",
     "S5: Both trades keep the sharp owner photo, judge its actual CSS display size and upload at the density the real plugin requires.",
-    "S6: Refusal, provider failure, deadline, missing model and drawing cap try a fitting owner photo before neutral fill. Backgrounds may reuse an owner photo but prefer unused photos; wrong offering and known quality refusals remain refused. A gallery with no photo takes a clear marker, preserves its removal metadata through contract writes and loses its complete T3/T4 tile, including routes beyond the normal sample."
+    "S6: Refusal, provider failure, deadline, missing model and drawing cap try a fitting owner photo before neutral fill. Backgrounds may reuse an owner photo but prefer unused photos; wrong offering and known quality refusals remain refused. A gallery with no photo takes a clear marker, preserves its removal metadata through contract writes and loses its complete T3/T4 tile, including routes beyond the normal sample.",
+    "S7: Production composition preserves every capability for WordPress, Joomla and EmDash. Picture calls overlapping apply produce an error finding with measured drawing and vision wall time in the receipt and handoff. Preparation, concurrent builds, failures and write deadlines are distinguished."
   ],
   "selectors": {
     "test": "apps/tracy-web/test/brief-real-pictures.test.mjs, apps/tracy-web/test/picture-draw.test.mjs, apps/tracy-web/test/brief-joomla.test.mjs, apps/tracy-web/test/brief-drawing-failures.test.mjs, apps/tracy-web/test/brief-picture-preparation.test.mjs, apps/tracy-web/test/brief-sharpness-display.test.mjs",
@@ -43,7 +45,13 @@
       "apps/tracy-web/test/brief-drawing-fallbacks.test.mjs",
       "apps/tracy-web/test/empty-frames.test.mjs",
       "apps/tracy-web/test/brief-contract-picture-stage.test.mjs",
-      "apps/tracy-web/test/joomla-outside-map.test.mjs"
+      "apps/tracy-web/test/joomla-outside-map.test.mjs",
+      "apps/tracy-web/test/brief-engine-capabilities.test.mjs",
+      "apps/tracy-web/test/engine-picture-clock.test.mjs",
+      "apps/tracy-web/test/picture-vision-observation.test.mjs",
+      "apps/tracy-web/test/engine-picture-receipt.test.mjs",
+      "packages/cms/tracy-seeder/test/model-observation.test.mjs",
+      "apps/tracy-web/test/quality-model-picture-observation.test.mjs"
     ],
     "tests": [
       "a picture model that never answers costs the place its drawing, never the Apply its words",
@@ -62,7 +70,17 @@
       "sports: lettering falls back to a fitting owner photo before a neutral fill",
       "bakery: lettering falls back to a fitting owner photo before a neutral fill",
       "T4 bakery: a gallery missing its picture is removed even beyond the normal page sample",
-      "T3 dental clinic: a gallery missing its picture is removed even beyond the normal page sample"
+      "T3 dental clinic: a gallery missing its picture is removed even beyond the normal page sample",
+      "bakery: production composition preserves every CMS engine capability",
+      "dental clinic: production composition preserves every CMS engine capability",
+      "bakery: provider drawing and vision become error findings during apply",
+      "dental: provider drawing and vision become error findings during apply",
+      "bakery: drawing inside the write clock remains an error finding in the build receipt and handoff",
+      "dental clinic: drawing inside the write clock remains an error finding in the build receipt and handoff",
+      "bakery: the direct vision gateway observes fetch and body read during apply",
+      "dental: the direct vision gateway observes fetch and body read during apply",
+      "bakery: a quality vision request inside apply is an error finding with its body read timed",
+      "dental clinic: a quality vision request inside apply is an error finding with its body read timed"
     ]
   }
 }

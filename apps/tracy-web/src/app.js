@@ -228,7 +228,7 @@ import { logoFilesOfPage } from './sites/brief-engines/brand-logo-fit.js'
 import { createEmdashEngine } from './sites/brief-engines/emdash.js'
 import { createJoomlaEngine } from './sites/brief-engines/joomla.js'
 import { headerReader } from './sites/brief-engines/pictures.js'
-import { createQuickstartFirstEngine } from './sites/brief-engines/quickstart-first.js'
+import { composeBriefEngines } from './sites/brief-engines/compose.js'
 import { quickstartSlotPhotoEvidence } from './opportunities-build/slot-photo-evidence.js'
 import { quickstartReviews } from './lib/quickstart-reviews.js'
 import { createWordpressEngine } from './sites/brief-engines/wordpress.js'
@@ -1970,41 +1970,39 @@ export function buildApp(deps) {
           humanAccepted: false
         }
       })
-    const quickstartEngine = (legacy) =>
-      createQuickstartFirstEngine({
-        legacy,
-        woContent,
-        applyFor,
-        siteAccess,
-        siteReader,
-        realPictures,
-        // A new revision references its research; an older one embeds it, read as stored (#1791).
-        researchOf: (source) =>
-          researchOfRevision(source, { optional: true, checkEmbedded: false })?.research ?? null,
-        assertActive: async ({ ctx, source }) => {
-          const grant = await grantFor(deps.pool, source.account_id, ctx.siteKey)
-          if (!grant || !['owner', 'editor'].includes(grant.role))
-            throw new Error('QUICKSTART_WRITE_ACCESS_LOST')
-          const row = (
-            await deps.pool.query(
-              `select b.state from site_brief b join site s on s.site_key=b.site_key
+    const quickstartOptions = {
+      woContent,
+      applyFor,
+      siteAccess,
+      siteReader,
+      realPictures,
+      // A new revision references its research; an older one embeds it, read as stored (#1791).
+      researchOf: (source) =>
+        researchOfRevision(source, { optional: true, checkEmbedded: false })?.research ?? null,
+      assertActive: async ({ ctx, source }) => {
+        const grant = await grantFor(deps.pool, source.account_id, ctx.siteKey)
+        if (!grant || !['owner', 'editor'].includes(grant.role))
+          throw new Error('QUICKSTART_WRITE_ACCESS_LOST')
+        const row = (
+          await deps.pool.query(
+            `select b.state from site_brief b join site s on s.site_key=b.site_key
           where b.site_key=$1 and b.created_at>=s.created_at`,
-              [ctx.siteKey]
-            )
-          ).rows[0]
-          if (row?.state !== 'applying') throw new Error('QUICKSTART_BRIEF_CLOSED')
-          if (
-            !(await quickstartActionOpen(deps.pool, {
-              accountId: source.account_id,
-              requestId: source.request_id,
-              revisionId: source.revision_id
-            }))
+            [ctx.siteKey]
           )
-            throw new Error('QUICKSTART_ACTION_CLOSED')
-        },
-        generateFor: quickstartGenerateFor,
-        verifySite: quickstartVerifySite
-      })
+        ).rows[0]
+        if (row?.state !== 'applying') throw new Error('QUICKSTART_BRIEF_CLOSED')
+        if (
+          !(await quickstartActionOpen(deps.pool, {
+            accountId: source.account_id,
+            requestId: source.request_id,
+            revisionId: source.revision_id
+          }))
+        )
+          throw new Error('QUICKSTART_ACTION_CLOSED')
+      },
+      generateFor: quickstartGenerateFor,
+      verifySite: quickstartVerifySite
+    }
     // The overlap safety net of a brief build (`sites/brief-engines/picture-overlap-net.js`): the site's host reads the
     // build's pictures over the words in a browser. Read only; null with no host, and an answer that is not ok is none.
     const briefPictureOverlap = deps.host
@@ -2032,19 +2030,17 @@ export function buildApp(deps) {
       deps.briefs ??
       createBriefBuilds({
         pool: deps.pool,
-        engines: {
-          wordpress: quickstartEngine(
-            createWordpressEngine({
+        engines: composeBriefEngines(
+          {
+            wordpress: createWordpressEngine({
               models: seedModels,
               applyFor,
               siteFile,
               siteReader,
               realPictures,
               woContent
-            })
-          ),
-          joomla: quickstartEngine(
-            createJoomlaEngine({
+            }),
+            joomla: createJoomlaEngine({
               models: seedModels,
               applyFor,
               siteFile,
@@ -2052,10 +2048,8 @@ export function buildApp(deps) {
               realPictures,
               woContent,
               pictureOverlap: briefPictureOverlap
-            })
-          ),
-          emdash: quickstartEngine(
-            createEmdashEngine({
+            }),
+            emdash: createEmdashEngine({
               models: seedModels,
               siteAccess,
               displayLocale,
@@ -2063,8 +2057,9 @@ export function buildApp(deps) {
               realPictures,
               applyFor
             })
-          )
-        },
+          },
+          quickstartOptions
+        ),
         normalize: async (input) => {
           const normalized = await normalizeBrief({
             brief: input.brief,

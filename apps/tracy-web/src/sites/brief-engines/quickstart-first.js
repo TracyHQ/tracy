@@ -27,6 +27,7 @@ import {
 } from './quickstart-template-metadata.js'
 import { quickstartContactFacts } from './quickstart-facts.js'
 import { quickstartFillInput, quickstartTextPins } from './quickstart-fill-copy.js'
+import { delegateEngine } from './delegate.js'
 
 export const QUICKSTART_WORKFLOW = 'quickstart-first/1'
 /** A website page's words the editor reads: the model's input budget, not a cut of what is shown. */
@@ -209,7 +210,7 @@ export function createQuickstartFirstEngine({
   researchOf = embeddedResearch
 }) {
   const sourceFor = (ctx) => woContent?.quickstartFor?.({ siteKey: ctx.siteKey, email: ctx.email })
-  return {
+  return delegateEngine(legacy, {
     async normalize(ctx) {
       return (await sourceFor(ctx)) ? { workflow: QUICKSTART_WORKFLOW } : null
     },
@@ -834,7 +835,7 @@ export function createQuickstartFirstEngine({
       if (qa.state !== 'passed') throw fail('QUICKSTART_QA_INCOMPLETE')
     },
     dispose: (prepared) => (prepared?.legacy ? legacy.dispose?.(prepared.prepared) : undefined)
-  }
+  })
 }
 
 export function quickstartCopyHash(records) {

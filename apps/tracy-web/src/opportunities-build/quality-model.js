@@ -3,6 +3,7 @@
 import { createHash } from 'node:crypto'
 import { effortOptions } from '../lib/llm-effort.js'
 import { lookupDoor } from '../lib/llm-store.js'
+import { seeder } from '../lib/seeder.js'
 import { currentVisionProof, VISION_TEST_PROFILE, visionFingerprint } from '../lib/llm-vision-test.js'
 import { QUALITY_POLICY, qualityHash } from './quality-dossier.js'
 import { qualityPriceFor } from './quality-price.js'
@@ -149,27 +150,33 @@ export async function callQualityModel({
       { type: 'text', text: `Image ${image.id}; SHA256 ${image.sha256}` },
       { type: 'image_url', image_url: { url: image.dataUrl, detail: 'original' } }
     )
-  const response = await fetchImpl(`${model.credential.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
-    method: 'POST',
-    headers: { authorization: `Bearer ${model.credential.apiKey}`, 'content-type': 'application/json' },
-    body: JSON.stringify({
-      model: model.config.model,
-      max_tokens: budget.maxOutputTokens,
-      thinking: { type: 'enabled' },
-      reasoning_effort: model.config.reasoning.effort,
-      response_format: { type: 'json_object' },
-      messages: [
-        { role: 'system', content: system },
-        { role: 'user', content }
-      ]
-    }),
-    signal: AbortSignal.any([AbortSignal.timeout(providerTimeoutMs), ...(signal ? [signal] : [])])
-  })
-  if (!response.ok)
-    throw Object.assign(new Error(`QUALITY_PROVIDER_HTTP_${response.status}`), {
-      code: `QUALITY_PROVIDER_HTTP_${response.status}`
+  // A request carrying pictures is a vision call: the shared gateway times it through the body read, so one made while a
+  // brief build's write clock runs becomes an error finding in that build's receipt (item 24).
+  const { observePictureCall } = await seeder('model')
+  const send = async () => {
+    const response = await fetchImpl(`${model.credential.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
+      method: 'POST',
+      headers: { authorization: `Bearer ${model.credential.apiKey}`, 'content-type': 'application/json' },
+      body: JSON.stringify({
+        model: model.config.model,
+        max_tokens: budget.maxOutputTokens,
+        thinking: { type: 'enabled' },
+        reasoning_effort: model.config.reasoning.effort,
+        response_format: { type: 'json_object' },
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user', content }
+        ]
+      }),
+      signal: AbortSignal.any([AbortSignal.timeout(providerTimeoutMs), ...(signal ? [signal] : [])])
     })
-  const body = await response.json()
+    if (!response.ok)
+      throw Object.assign(new Error(`QUALITY_PROVIDER_HTTP_${response.status}`), {
+        code: `QUALITY_PROVIDER_HTTP_${response.status}`
+      })
+    return response.json()
+  }
+  const body = images.length ? await observePictureCall('vision', send) : await send()
   const receipt = {
     modelConfigHash: model.config.hash,
     model: body.model ?? null,
