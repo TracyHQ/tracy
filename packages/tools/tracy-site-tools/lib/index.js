@@ -24,9 +24,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 
-// ../../../node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/lib/encoder.js
+// ../../../../tch/node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/lib/encoder.js
 var require_encoder = __commonJS({
-  "../../../node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/lib/encoder.js"(exports, module) {
+  "../../../../tch/node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/lib/encoder.js"(exports, module) {
     var btoa = btoa || function(buf) {
       return Buffer.from(buf).toString("base64");
     };
@@ -1101,9 +1101,9 @@ var require_encoder = __commonJS({
   }
 });
 
-// ../../../node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/lib/decoder.js
+// ../../../../tch/node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/lib/decoder.js
 var require_decoder = __commonJS({
-  "../../../node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/lib/decoder.js"(exports, module) {
+  "../../../../tch/node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/lib/decoder.js"(exports, module) {
     var JpegImage = (function jpegImage() {
       "use strict";
       var dctZigZag = new Int32Array([
@@ -2163,9 +2163,9 @@ var require_decoder = __commonJS({
   }
 });
 
-// ../../../node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/index.js
+// ../../../../tch/node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/index.js
 var require_jpeg_js = __commonJS({
-  "../../../node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/index.js"(exports, module) {
+  "../../../../tch/node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/index.js"(exports, module) {
     var encode = require_encoder();
     var decode2 = require_decoder();
     module.exports = {
@@ -50791,9 +50791,6 @@ ${text6}`);
       remember(answer);
       const issuesNext = planIssuesNext(answer);
       if (issuesNext !== null) answer.next = issuesNext;
-      const saved = answer;
-      if (saved?.ok === true && typeof saved.planHash === "string")
-        markPlanned(sessionId, Number.POSITIVE_INFINITY);
       const size2 = buildSizeOf(answer);
       if (size2 !== null && assignedTurn === buildTurn(exec.agent) && isBuild(sessionId, exec.agent)) {
         const held = buildSizes.get(sessionId);

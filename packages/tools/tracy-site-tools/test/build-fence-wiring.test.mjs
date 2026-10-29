@@ -18,6 +18,8 @@ import { apply } from '../lib/index.js'
 function boot(build = true) {
   const listeners = new Map()
   const tools = new Map()
+  /** The body of every request that reached tracy-web. */
+  const requests = []
   const typed = {
     type: 'user/message',
     data: { source: { kind: 'user', prompter: { user: 'Ada', email: 'ada@example.com' } } }
@@ -39,8 +41,9 @@ function boot(build = true) {
       exec: async () => ({ code: 0, stdout: '', stderr: '', timedOut: false }),
       emdash: { cms: async () => '' },
       origin: 'http://tracy.test',
-      fetch: async () =>
-        new Response(
+      fetch: async (_url, init) => {
+        requests.push(String(init?.body ?? ''))
+        return new Response(
           JSON.stringify(
             typeof build === 'object'
               ? build
@@ -53,9 +56,11 @@ function boot(build = true) {
             headers: { 'content-type': 'application/json' }
           }
         )
+      }
     }
   )
   return {
+    requests,
     listeners,
     tools,
     answer: (value) => {
@@ -281,6 +286,39 @@ test('native local writes wait for provision and the frozen plan, before they ca
     ).kind,
     'allow'
   )
+})
+
+test('a saved plan marks its own turn planned: the plan is not asked of tracy-web again', async () => {
+  const host = boot({ ok: true, planHash: 'frozen' })
+  const a = agentIn(siteFolder(), 'plan-save-marks-turn')
+  const saved = await host.tools
+    .get('tracy_demo')
+    .execute({ operation: 'plan.save', plan: { rows: [] } }, { agent: a })
+  assert.equal(saved?.ok, true, 'a successful plan.save answers instead of throwing')
+  // The server would now refuse for want of a plan; the turn's own state must carry the yes instead.
+  host.answer({ ok: false, code: 'AGENT_DEMO_PLAN_REQUIRED' })
+  host.requests.length = 0
+  await host.tools
+    .get('tracy_site')
+    .execute(
+      { action: 'look.set', params: { target: { selector: 'h1' }, set: { color: 'red' } } },
+      { agent: a }
+    )
+  assert.equal(
+    host.requests.filter((body) => body.includes('"guard"')).length,
+    0,
+    host.requests.join('\n').slice(0, 400)
+  )
+  // Control: a conversation with no saved plan does ask tracy-web, so the zero above is the plan's doing.
+  const other = agentIn(a.session.header.cwd, 'plan-save-control')
+  host.requests.length = 0
+  await host.tools
+    .get('tracy_site')
+    .execute(
+      { action: 'look.set', params: { target: { selector: 'h1' }, set: { color: 'red' } } },
+      { agent: other }
+    )
+  assert.ok(host.requests.some((body) => body.includes('"guard"')))
 })
 
 test('closed refusal after not-granted still fences mutations and questions; closure while listeners wait is rechecked', async () => {
