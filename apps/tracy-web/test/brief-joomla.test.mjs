@@ -4469,3 +4469,40 @@ for (const [trade, name, label, description] of [
     assert.ok(!(prepared.demoBlanks ?? []).some((s) => String(s.key).startsWith('module-161.')))
     assert.ok(!(prepared.factModules ?? []).some((m) => m.id === 161), 'the band stays on the page')
   })
+
+// Spec TracyHQ/tracy#189 item 30 (COO decision 30/10/2026): a band that loses its working parts comes off whole. On a local
+// build of JA Boxing 1.0.8 the footer's sign-up box came off (no destination in the brief) and its band kept only the logo,
+// alone in an empty strip. The release declares the band (`layoutBands`): the logo module goes with the sign-up box.
+for (const [trade, name] of [
+  ['florist', 'Willow Lane Flowers'],
+  ['dental clinic', 'Brightside Dental']
+])
+  test(`${trade}: the footer logo of JA Boxing 1.0.8 comes off with the sign-up box beside it`, async () => {
+    const contract = contractFor(defaultContracts(), 'quickstart/ja-boxing/j6', '1.0.8')
+    const map = mapOf(contract)
+    const band = map.layoutBands.find((b) => b.parts.some((p) => p.part === 'decoration'))
+    const working = band.parts.find((p) => p.part === 'working').entity
+    const logo = band.parts.find((p) => p.part === 'decoration').entity
+    const { prepared, site, times } = await run({
+      contract,
+      release: 'quickstart/ja-boxing/j6',
+      woContent: {
+        sitePlanFor: async () => ({
+          slots: [],
+          brand: { name: { value: name } },
+          honesty: {
+            hide: [{ how: 'entity', entity: working, kind: 'module', reason: 'no-form-destination' }],
+            records: []
+          }
+        })
+      }
+    })
+    const id = (entity) => Number(entity.slice('module-'.length))
+    const off = (prepared.factModules ?? []).map((m) => m.id)
+    assert.ok(off.includes(id(working)), 'the sign-up box is taken off')
+    assert.ok(off.includes(id(logo)), 'the logo beside it goes with it')
+    assert.ok(site.hiddenModules.includes(id(logo)), 'and it is unpublished on the site')
+    assert.equal(times.bandDecorationRemoved, 1)
+    for (const s of map.slots.filter((x) => x.entity === logo))
+      assert.ok(!(s.key in prepared.changes), `${s.key} is not written`)
+  })

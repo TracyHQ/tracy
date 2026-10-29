@@ -65097,5 +65097,20 @@
       ],
       "ground": "module-161.2"
     }
+  ],
+  "layoutBands": [
+    {
+      "id": "footinfo",
+      "parts": [
+        {
+          "entity": "module-170",
+          "part": "decoration"
+        },
+        {
+          "entity": "module-169",
+          "part": "working"
+        }
+      ]
+    }
   ]
 }

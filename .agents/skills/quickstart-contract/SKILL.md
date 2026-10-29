@@ -561,6 +561,15 @@ path):
    other fact the brief lacks) and keeps it through cleanup; a band whose message cannot be written comes off whole.
    After a brief build, check each band shows its heading, line and button in light and dark mode (`cta-band-check.js`
    reports a lone button on the build's receipt).
+   **A layout band is one unit (every framework):** blocks set side by side in one strip of the layout (Joomla: modules in
+   the places `<stem>-1`, `<stem>-2` of one block, such as a footer logo beside a sign-up box) are declared in the content
+   map's top-level `layoutBands`: `{id, parts: [{entity, part: "working" | "decoration" | "standalone"}]}`. A working part
+   says or does something (a heading, a text, a form, a button); a decoration part only decorates (a logo, an icon, a
+   divider, a background). When a brief build takes every working part off, the decoration parts come off with it, so no
+   logo stands alone in an empty strip; mark a decoration `standalone` only when the template means it to show alone.
+   `scripts/slot-roles/check.mjs "$P/$VER"` refuses the contract while a decoration block shares a band with working parts
+   and no band declares it. After a brief build, check that no strip shows only a logo or an icon beside the empty place
+   of what was taken off (`empty-frame-check.js` reports each as `lone-decoration-band` on the build's receipt).
 9. **The first T3 template run through this skill:** look at and record in the report two points — (a) local Tracy
    creates a T3 site successfully (section 6 step 5); (b) the freshly bound site has no design-drift warnings (step 6 above).
 10. `git -C "$TCH_WT" status --short` · `git -C "$CW_WT" status --short` → record. No `git add`.

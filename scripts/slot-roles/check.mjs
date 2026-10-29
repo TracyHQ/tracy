@@ -38,6 +38,11 @@
  *   action. Named contract folders fail on an undeclared band or a band with no message slot role; the whole-tree gate
  *   only counts them.
  *
+ * - Every layout band whose blocks are a working part and a decoration part (a logo beside a sign-up box) is declared
+ *   (`layoutBandProblems`, WO domain `layout-bands.mjs`): when the working parts come off, the decoration comes off with
+ *   them unless it is declared standalone. Named contract folders fail on an undeclared band; the whole-tree gate only
+ *   counts them.
+ *
  *   node scripts/slot-roles/check.mjs                  every contract in the tree
  *   node scripts/slot-roles/check.mjs <contractDir>... only those (the packing check)
  */
@@ -49,6 +54,7 @@ import { checkContentMapFit, checkContentMapRoles } from 'website-opportunities/
 import { buttonActionProblems } from '../../packages/wo/website-opportunities/domain/button-actions.mjs'
 import { navigationGroupProblems } from '../../packages/wo/website-opportunities/domain/footer-navigation.mjs'
 import { ctaBandProblems } from '../../packages/wo/website-opportunities/domain/cta-bands.mjs'
+import { layoutBandProblems } from '../../packages/wo/website-opportunities/domain/layout-bands.mjs'
 import { lintContractDir, lintSummary } from '../../apps/tracy-web/src/lib/content-map-lint.js'
 import { lintItemIconGrounds } from '../../apps/tracy-web/src/lib/content-map-lint-icons.js'
 import { fieldMapRolesOf } from '../../apps/tracy-web/src/lib/emdash-field-map-roles.js'
@@ -154,6 +160,17 @@ export function ctaBandErrors(dir) {
   }
 }
 
+/** The undeclared or malformed layout bands (a decoration beside working parts) of a contract's content map. */
+export function layoutBandErrors(dir) {
+  const file = path.join(dir, CONTENT_MAP_FILE)
+  if (!existsSync(file)) return []
+  try {
+    return layoutBandProblems(JSON.parse(readFileSync(file, 'utf8')))
+  } catch {
+    return []
+  }
+}
+
 /** The undeclared or malformed footer link columns (navigation groups) of a contract's content map. */
 export function navigationGroupErrors(dir) {
   const file = path.join(dir, CONTENT_MAP_FILE)
@@ -240,6 +257,11 @@ export function checkAllSlotRoles(rootDir = DEFAULT_ROOT, explicitDirs = null) {
     .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, errors: ctaBandErrors(dir) }))
     .filter((b) => b.errors.length > 0)
   if (named) for (const b of bands) for (const error of b.errors) errors.push(`${b.dir}: ${error}`)
+  // The same for layout bands: a named contract refuses a decoration beside working parts that no band declares.
+  const layoutBands = candidates
+    .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, errors: layoutBandErrors(dir) }))
+    .filter((b) => b.errors.length > 0)
+  if (named) for (const b of layoutBands) for (const error of b.errors) errors.push(`${b.dir}: ${error}`)
   return {
     ok: errors.length === 0,
     checkedCount: dirs.length,
@@ -249,7 +271,8 @@ export function checkAllSlotRoles(rootDir = DEFAULT_ROOT, explicitDirs = null) {
     lint,
     buttons,
     navigation,
-    bands
+    bands,
+    layoutBands
   }
 }
 
@@ -317,6 +340,10 @@ if (isMain) {
   if (!named)
     process.stdout.write(
       `call-to-action bands: ${res.bands.length} released map(s) hold ${res.bands.reduce((n, b) => n + b.errors.length, 0)} undeclared or malformed band(s); the packing check refuses them.\n`
+    )
+  if (!named)
+    process.stdout.write(
+      `layout bands: ${res.layoutBands.length} released map(s) hold ${res.layoutBands.reduce((n, b) => n + b.errors.length, 0)} undeclared or malformed band(s); the packing check refuses them.\n`
     )
   const rules = lintSummary(res.lint.flatMap((l) => l.findings))
     .map((r) => `${r.rule} ${r.count}`)

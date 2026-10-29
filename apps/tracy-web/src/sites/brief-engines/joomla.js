@@ -73,6 +73,7 @@ import { heroSlotValues } from './hero-lines.js'
 import { buttonActionValues } from './button-action-values.js'
 import { offeringSummaryValues } from './offering-summaries.js'
 import { ctaBandValues } from './cta-band-messages.js'
+import { decorationLeftAlone } from 'website-opportunities/domain/layout-bands.mjs'
 import {
   addDerivedLanguages,
   setSiteLanguage,
@@ -1341,6 +1342,25 @@ export function createJoomlaEngine({
         const label = String(own[0]?.label ?? '').split(' / ')[0]
         factModules.push({ id, title: label.replace(/ \([A-Za-z]{2,3}(?:-[A-Za-z]+)?\)$/, '') })
       }
+      // 🔒 A BAND THAT LOST ITS WORKING PARTS COMES OFF WHOLE (COO decision, #189 item 30, `layout-bands.mjs`): a logo or an
+      // icon set beside a block taken off above (a sign-up box with no destination) would stand alone in an empty strip.
+      // Its decoration modules are unpublished with it, unless the content map declares them standalone.
+      const bandDecoration = decorationLeftAlone(
+        staticState(ctx.contract),
+        factModules.map((m) => `module-${m.id}`)
+      )
+      for (const { entity } of bandDecoration) {
+        if (!/^module-\d+$/.test(entity)) continue
+        const own = state.slots.filter((slot) => slot.entity === entity)
+        for (const slot of own) delete kept[slot.key]
+        demoBlanks = demoBlanks.filter((slot) => slot.entity !== entity)
+        const label = String(own[0]?.label ?? '').split(' / ')[0]
+        factModules.push({
+          id: Number(entity.slice('module-'.length)),
+          title: label.replace(/ \([A-Za-z]{2,3}(?:-[A-Za-z]+)?\)$/, '')
+        })
+      }
+      if (bandDecoration.length) ctx.time('bandDecorationRemoved', bandDecoration.length)
       if (ctaBands.bands.length) ctx.time('ctaBandsWritten', ctaBands.bands.filter((b) => b.written).length)
       if (ctaBands.removed.length) {
         ctx.time('ctaBandsRemoved', ctaBands.removed.length)

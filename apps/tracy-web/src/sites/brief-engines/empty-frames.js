@@ -19,12 +19,16 @@
  *   some are hidden and some are kept: the template's column count and card size stay, and the cards kept are centred
  *   in the row (`centredRows`), so a row that lost demo cards never shows an empty-looking half
  *
+ *   a LONE DECORATION band is a strip whose only content left is a logo or an icon beside the emptied column of a part
+ *   taken off (`lone-decoration-bands.js`, #189 item 30): the whole band is hidden (`bands`), so no logo stands alone
+ *
  * and each hidden frame comes back as a CSS selector built from the structure (tag, classes and child position, from the
  * nearest id), so the head block can hide it. Controls of a carousel, a slider or a pager are never taken for frames.
  * Pure: HTML in, selectors out. No template, class or trade is named.
  */
 import { parse } from 'parse5'
 import { processFrameSelectors } from './process-frames.js'
+import { loneDecorationBands } from './lone-decoration-bands.js'
 
 const SKIPPED = new Set(['script', 'style', 'noscript', 'template', 'head'])
 const MEDIA = new Set([
@@ -213,7 +217,8 @@ function loneFrame(kid, parent, scripts) {
  * The empty frames of one page: those to hide, the tiles of a photo grid to show as an owner photo, and the rows whose
  * kept cards are centred.
  * @param {string} html
- * @returns {{hide: string[], tiles: Array<{selector: string, target: string, grid: string[]}>, centre: string[]}}
+ * @returns {{hide: string[], tiles: Array<{selector: string, target: string, grid: string[]}>, centre: string[],
+ *   bands?: string[]}}
  */
 export function emptyFramesOf(html) {
   /** @type {string[]} */
@@ -287,7 +292,8 @@ export function emptyFramesOf(html) {
   }
   walk(body)
   hide.push(...processFrameSelectors(body, selectorOf).filter((selector) => !hide.includes(selector)))
-  return { hide, tiles, centre }
+  const bands = loneDecorationBands(body, selectorOf).filter((selector) => !hide.includes(selector))
+  return { hide, tiles, centre, bands }
 }
 
 /** The rows of several pages whose kept cards are centred, each once. @param {string[]} pages */
@@ -301,8 +307,8 @@ export function centredRows(pages) {
  * @returns {string[]}
  */
 export function emptyFrameSelectors(html) {
-  const { hide, tiles } = emptyFramesOf(html)
-  return [...hide, ...tiles.map((t) => t.selector)]
+  const { hide, tiles, bands = [] } = emptyFramesOf(html)
+  return [...hide, ...tiles.map((t) => t.selector), ...bands]
 }
 
 const OWNER_PHOTO = /["'(]\/?(images\/tracy-content\/[a-f0-9]{64}\.(?:jpe?g|webp))/gi
