@@ -192,6 +192,16 @@
       "path": "packages/locale/tracy-locales/lib/client.js",
       "oid": "34b978d484941c6a8b67b68dfc489f35f2a04724",
       "reason": "Reviewed PR #145 generated interface translations for a live site whose PHP is too old for Claude Cowork (sync.error.livePhpTooOld and livePhpTooOldPlain), rebuilt after merging develop; the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "74508765d682131c3b98738abf05cbe62d1d7f10",
+      "reason": "Reviewed PR #145 generated interface translations for a live site whose PHP is too old for Claude Cowork (sync.error.livePhpTooOld and livePhpTooOldPlain), rebuilt after merging develop again; the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "03f560608580ffec00c282f1d0c1068b025db945",
+      "reason": "Reviewed PR #145 generated interface translations for a live site whose PHP is too old for Claude Cowork (sync.error.livePhpTooOld and livePhpTooOldPlain), rebuilt after merging develop again; the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
     }
   ]
 }
