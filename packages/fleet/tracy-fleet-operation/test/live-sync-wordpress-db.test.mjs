@@ -176,3 +176,155 @@ whole.renumber("rb", "posts", rule, pairs)`)
     assert.doesNotMatch(fast, /74726163792d73796e632d686f6c64/i, 'no holding link left (tracy-sync-hold)')
   }
 )
+
+function orderRecordMerge({ type = 'shop_order_placehold', ours = '', theirs = '', decisions = {} }) {
+  sql(
+    ['wc_b', 'wc_m', 'wc_t', 'wc_w']
+      .map(
+        (schema) => `DROP DATABASE IF EXISTS ${schema};
+    CREATE DATABASE ${schema}; USE ${schema};
+    CREATE TABLE wp_posts (ID bigint NOT NULL PRIMARY KEY, post_type varchar(30), post_title varchar(100), post_content text);
+    INSERT INTO wp_posts VALUES (1, '${type}', 'Original', 'Body'), (2, 'page', 'Other', 'Other body');
+    ALTER TABLE wp_posts ADD post_status varchar(20) NOT NULL DEFAULT 'publish';`
+      )
+      .join('\n') + `\nUSE wc_m; ${ours}\nUSE wc_t; ${theirs}`
+  )
+  return JSON.parse(
+    py(`result = engine.DbMerge(sql, 'wc_b', 'wc_m', 'wc_t', 'wc_w', 'wordpress', 'wp_',
+    json.loads(${JSON.stringify(JSON.stringify(decisions))})).run()
+print(json.dumps(result))`)
+  )
+}
+
+for (const rowMerge of [false, true]) {
+  test(
+    `WooCommerce record counts preserve data across placeholder changes and type transitions (${rowMerge ? 'row merge' : 'whole table'})`,
+    opts,
+    () => {
+      const copyEdit = rowMerge ? "UPDATE wp_posts SET post_title='Copy edit' WHERE ID=2;" : ''
+      const cases = [
+        {
+          type: 'post',
+          change: "UPDATE wp_posts SET post_title='Live edit' WHERE ID=1;",
+          count: 1,
+          result: 'post'
+        },
+        { type: 'post', change: 'DELETE FROM wp_posts WHERE ID=1;', count: 1, result: '' },
+        {
+          type: 'post',
+          change:
+            "INSERT INTO wp_posts (ID, post_type, post_title, post_content) VALUES (3, 'shop_order', 'Legacy order', '');",
+          count: 1,
+          result: 'post'
+        },
+        {
+          type: 'shop_order_placehold',
+          change: "UPDATE wp_posts SET post_title='Live edit' WHERE ID=1;",
+          count: 0,
+          result: 'shop_order_placehold'
+        },
+        { type: 'shop_order_placehold', change: 'DELETE FROM wp_posts WHERE ID=1;', count: 0, result: '' },
+        {
+          type: 'shop_order_placehold',
+          change: "UPDATE wp_posts SET post_type='post' WHERE ID=1;",
+          count: 1,
+          result: 'post'
+        },
+        {
+          type: 'post',
+          change: "UPDATE wp_posts SET post_type='shop_order_placehold' WHERE ID=1;",
+          count: 1,
+          result: 'shop_order_placehold'
+        },
+        {
+          type: 'shop_order',
+          change: "UPDATE wp_posts SET post_title='Live edit' WHERE ID=1;",
+          count: 1,
+          result: 'shop_order'
+        },
+        {
+          type: 'post',
+          change:
+            "INSERT INTO wp_posts (ID, post_type, post_title, post_content) VALUES (3, 'shop_order_placehold', 'New placeholder', '');",
+          count: 0,
+          result: 'post'
+        }
+      ]
+      for (const entry of cases) {
+        const answer = orderRecordMerge({ type: entry.type, ours: copyEdit, theirs: entry.change })
+        assert.equal(answer.counts.records, entry.count, JSON.stringify({ entry, answer }))
+        assert.deepEqual(answer.conflicts, [])
+        assert.equal(sql('SELECT post_type FROM wc_m.wp_posts WHERE ID=1'), entry.result)
+        assert.equal(answer.tables.wp_posts, rowMerge ? 'merged' : 'from-theirs')
+        if (entry.change.includes("'New placeholder'"))
+          assert.equal(sql('SELECT post_type FROM wc_m.wp_posts WHERE ID=3'), 'shop_order_placehold')
+      }
+    }
+  )
+}
+
+test('WooCommerce record counts read the actual merged type when the copy alone changed it', opts, () => {
+  for (const [before, after, count] of [
+    ['post', 'shop_order_placehold', 0],
+    ['shop_order_placehold', 'post', 1]
+  ]) {
+    const answer = orderRecordMerge({
+      type: before,
+      ours: `UPDATE wp_posts SET post_type='${after}' WHERE ID=1;`,
+      theirs: "UPDATE wp_posts SET post_title='Live title' WHERE ID=1;"
+    })
+    assert.equal(answer.counts.records, count, JSON.stringify(answer))
+    assert.equal(sql('SELECT post_type FROM wc_m.wp_posts WHERE ID=1'), after)
+    assert.equal(sql('SELECT post_title FROM wc_m.wp_posts WHERE ID=1'), 'Live title')
+  }
+})
+
+test(
+  'WooCommerce placeholder delete-modify decisions count only visible records actually taken',
+  opts,
+  () => {
+    for (const type of ['post', 'shop_order_placehold']) {
+      for (const deleted of ['ours', 'theirs']) {
+        for (const choice of ['ours', 'theirs']) {
+          const editing = "UPDATE wp_posts SET post_title='Edited' WHERE ID=1;"
+          const removing = 'DELETE FROM wp_posts WHERE ID=1;'
+          const answer = orderRecordMerge({
+            type,
+            ours: deleted === 'ours' ? removing : editing,
+            theirs: deleted === 'theirs' ? removing : editing,
+            decisions: { 'db:wp_posts:["1"]': choice }
+          })
+          assert.equal(
+            answer.counts.records,
+            choice === 'theirs' && type === 'post' ? 1 : 0,
+            JSON.stringify({ type, deleted, choice, answer })
+          )
+          assert.deepEqual(answer.conflicts, [])
+          assert.equal(sql('SELECT COUNT(*) FROM wc_m.wp_posts WHERE ID=1'), choice === deleted ? '0' : '1')
+        }
+      }
+    }
+  }
+)
+
+test(
+  'WooCommerce counts use post-type column decisions after merging an independent live title',
+  opts,
+  () => {
+    for (const choice of ['ours', 'theirs']) {
+      const answer = orderRecordMerge({
+        type: 'post',
+        ours: "UPDATE wp_posts SET post_type='shop_order_placehold' WHERE ID=1;",
+        theirs: "UPDATE wp_posts SET post_type='page', post_title='Live title' WHERE ID=1;",
+        decisions: { 'db:wp_posts:["1"]:post_type': choice }
+      })
+      assert.equal(answer.counts.records, choice === 'theirs' ? 1 : 0, JSON.stringify(answer))
+      assert.deepEqual(answer.conflicts, [])
+      assert.equal(
+        sql('SELECT post_type FROM wc_m.wp_posts WHERE ID=1'),
+        choice === 'theirs' ? 'page' : 'shop_order_placehold'
+      )
+      assert.equal(sql('SELECT post_title FROM wc_m.wp_posts WHERE ID=1'), 'Live title')
+    }
+  }
+)

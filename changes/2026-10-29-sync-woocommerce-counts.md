@@ -1,0 +1,2 @@
+- **Keep WooCommerce background state out of Sync changes and count an HPOS order once.** — David · #99 · `fix/sync-wc-derived` · 2026-10-29
+  **Affects:** WordPress copies with WooCommerce: five derived/admin tables no longer create backup points; order children and HPOS placeholder rows still merge without inflating record counts. Placeholder transitions and delete/modify decisions count the actual result; legacy orders keep their count. Child-only changes still merge as uncounted children.

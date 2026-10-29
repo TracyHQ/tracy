@@ -567,12 +567,18 @@ POLICY = {
     # its settings it rewrites on every scan), Yoast's indexables (rebuilt from the posts), any
     # `…_log(s)`, `…_session(s)`, `…_cache`, `…_queue`, `…_hits`.
     "ignoreTables": TableNames(
+        names=("wc_admin_notes", "wc_admin_note_actions", "wc_order_stats",
+               "wc_order_product_lookup", "wc_customer_lookup"),
         patterns=(r"^actionscheduler_", r"^wf[a-z]", r"^yoast_indexable(_hierarchy)?$", r"^yoast_migrations$",
                   r"(^|_)(logs?|sessions?|cache|queue|hits)$")),
     "appendTables": set(),
     # Rows that belong to a record (its meta, its terms' links), merged as any other but not counted
     # as records the live site brought (`live_sync.py` `records`): a new post with its meta is one.
-    "uncountedTables": {"postmeta", "termmeta", "commentmeta", "usermeta", "term_relationships", "term_taxonomy"},
+    "uncountedTables": {"postmeta", "termmeta", "commentmeta", "usermeta", "term_relationships", "term_taxonomy",
+                        "wc_orders_meta", "wc_order_addresses", "wc_order_operational_data",
+                        "woocommerce_order_items", "woocommerce_order_itemmeta"},
+    # HPOS reserves the order number with a post row. Keep it, but count the order's own row once.
+    "uncountedRows": {"posts": {"post_type": {"shop_order_placehold"}}},
     # Counters WordPress recounts from the rows (sync-wordpress-after.php): not compared; a table that
     # took rows from the live site is recounted.
     "derivedColumns": {
