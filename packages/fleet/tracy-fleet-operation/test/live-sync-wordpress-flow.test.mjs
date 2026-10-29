@@ -608,8 +608,8 @@ test(
       assert.match(ht, /Tracy clone hardening/)
       assert.equal(ht.match(/Tracy clone hardening \(provisioned/g).length, 1)
 
-      // What WordPress must redo: the comment counts of the posts that came over.
-      assert.match(s.dockerLog(), /^web wordpress -e TRACY_SYNC_REBUILD=posts$/m)
+      // Posts affect both approved-comment counts and taxonomy post counts.
+      assert.match(s.dockerLog(), /^web wordpress -e TRACY_SYNC_REBUILD=posts,term_taxonomy$/m)
       assert.doesNotMatch(s.dockerLog(), /^web joomla/m)
       assert.deepEqual(first.apply.after, {
         largeFilesCopied: 0,
