@@ -111,7 +111,7 @@ builds green, but `/ops/cms` shows an empty Environment box and "This build ship
 measured 15/09 on this very stand. `check-local.sh` Check 5b catches it.
 
 ⚠ **The `/ops/cms/quickstarts` page is NOT in that snapshot** — it reads the releases on
-`JoomlArt-Products/ja-products` at run time (ADR 0017). A dev machine has no GitHub App key, so set
+`JoomlArt-Products/joomlart-products` at run time (ADR 0017). A dev machine has no GitHub App key, so set
 **`TRACY_RELEASES_GITHUB_TOKEN`** in `deploy/.env` (fine-grained, `Contents: read` on exactly that repo).
 Without it: the page still opens, the table is empty, and it states the reason plainly instead of pretending there are no quickstarts.
 
@@ -677,7 +677,7 @@ docker exec tracy-dsh sh -c 'curl -s https://api.deepseek.com/user/balance \
 
 ## 7.5 Trying an unreleased quickstart
 
-A pack without a release on `ja-products` can still go **the customer's exact path**: a card on Design
+A pack without a release on `joomlart-products` can still go **the customer's exact path**: a card on Design
 inspiration → *Create with <CMS>* → `POST /api/sites/claim` + `POST /api/sites` → `tracy-host`
 provision. The only difference is where files are downloaded from: read from this machine's disk instead of GitHub
 (`apps/tracy-web/src/lib/local-releases.js`).
@@ -702,7 +702,7 @@ Building a pack from an existing release (measured 26/09 with `tracy-business/j6
 
 ```bash
 D=~/tracy-data/local-releases/tracy-business/j6; mkdir -p "$D"
-gh release download tracy-business/j6 -R JoomlArt-Products/ja-products -D "$D" \
+gh release download tracy-business/j6 -R JoomlArt-Products/joomlart-products -D "$D" \
   -p tracy_setting.json -p 'tracy-business-j6-webroot-1.2.0.tar.gz' \
   -p 'tracy-business-j6-database-1.2.0.sql.gz' -p 'pkg_claudecowork-0.17.4.zip'
 cp packages/fleet/tracy-fleet-operation/scripts/provision/templates/tracy-business/*.png "$D"/

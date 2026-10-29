@@ -134,7 +134,7 @@ for (const dir of EMDASH_TEMPLATES) {
 // offers pack tags (`vi-vn`), while EmDash takes a plain code (`vi`).
 //
 // 🔒 DERIVED, BECAUSE THE ALTERNATIVE IS A SECOND COPY OF THE PRODUCT'S OWN QUESTIONS. Measured
-// 21/09/2026: of the six Tracy releases in `ja-products`, exactly ONE carries a questionnaire —
+// 21/09/2026: of the six Tracy releases in `joomlart-products`, exactly ONE carries a questionnaire —
 // `tracy-business/emdash-0.x`. The Joomla cut of the same product ships none, so Tracy serves its
 // generic five instead and the questions ja-business was built around never reach the customer.
 // The EmDash seed is where those questions are authored today; writing them out again by hand for

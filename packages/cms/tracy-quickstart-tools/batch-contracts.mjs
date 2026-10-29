@@ -52,7 +52,7 @@ import { validateDesignInspiration, validateSetting } from '../../../apps/tracy-
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 export const REPO_ROOT = path.resolve(HERE, '../../..')
-export const DEFAULT_REPO = 'JoomlArt-Products/ja-products'
+export const DEFAULT_REPO = 'JoomlArt-Products/joomlart-products'
 export const CARD_FILE = 'tracy_design_inspiration.json'
 export const HIDDEN_FILE = 'tracy_design_inspiration_hidden.json'
 export const SETTING_FILE = 'tracy_setting.json'

@@ -6,13 +6,13 @@
       "file": "tracy-apple-j6-webroot-1.3.1.tar.gz",
       "bytes": 64213177,
       "sha256": "fa35e19f63652e59e3e4bb0969beb17a2350f55f551867ec854c8f35bf10e83d",
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-webroot-1.3.1.tar.gz"
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-webroot-1.3.1.tar.gz"
     },
     "database": {
       "file": "tracy-apple-j6-database-1.3.1.sql.gz",
       "bytes": 192141,
       "sha256": "f5cc2959c6e934985e698f6e232bf3bbdb3d82739f4a7a8537bc859166dcbfd0",
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-database-1.3.1.sql.gz"
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-database-1.3.1.sql.gz"
     },
     "cowork": {
       "file": "pkg_claudecowork-0.24.66.zip",
@@ -46,15 +46,15 @@
       "file": "tracy-business-j6-webroot-1.2.6.tar.gz",
       "bytes": 88296322,
       "sha256": "40aced149273812ddaeec58b6134f3dcc037c1e35187323b1f920be6e9c4e274",
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Fj6/tracy-business-j6-webroot-1.2.6.tar.gz",
-      "githubAssetId": 657278269
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-business%2Fj6/tracy-business-j6-webroot-1.2.6.tar.gz",
+      "githubAssetId": 683856092
     },
     "database": {
       "file": "tracy-business-j6-database-1.2.6.sql.gz",
       "bytes": 1191923,
       "sha256": "c441667e7b570a895edfb50e8dcfbc3e95ab13fe1c4f4191f617e758b3afc4d2",
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Fj6/tracy-business-j6-database-1.2.6.sql.gz",
-      "githubAssetId": 657278268
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-business%2Fj6/tracy-business-j6-database-1.2.6.sql.gz",
+      "githubAssetId": 683844330
     },
     "cowork": {
       "file": "pkg_claudecowork-0.24.66.zip",
@@ -139,15 +139,15 @@
       "file": "tracy-base-j6-webroot-1.0.5.tar.gz",
       "bytes": 90111616,
       "sha256": "18c11f59d0f8dce84b0f9345b4d7a0c00e88db4bf7cfcd21f6a3a9f7c30c3612",
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-base%2Fj6/tracy-base-j6-webroot-1.0.5.tar.gz",
-      "githubAssetId": 645856852
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-base%2Fj6/tracy-base-j6-webroot-1.0.5.tar.gz",
+      "githubAssetId": 683861983
     },
     "database": {
       "file": "tracy-base-j6-database-1.0.5.sql.gz",
       "bytes": 206912,
       "sha256": "1dff29c3aa8b905c1035e817082517ab233e228e0c20b6a38f111a3082ff8f5d",
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-base%2Fj6/tracy-base-j6-database-1.0.5.sql.gz",
-      "githubAssetId": 645856855
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-base%2Fj6/tracy-base-j6-database-1.0.5.sql.gz",
+      "githubAssetId": 683858593
     },
     "cowork": {
       "file": "pkg_claudecowork-0.24.66.zip",
@@ -248,15 +248,15 @@
       "file": "tracy-business-emdash-quickstart-1.7.23.zip",
       "bytes": 6482343,
       "sha256": "01973cb90881c6f84918e7fd3d9ae36453fda3dd5d6b0cf961fa203199111f6a",
-      "githubAssetId": 656955179,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Femdash-0.x/tracy-business-emdash-quickstart-1.7.23.zip"
+      "githubAssetId": 683814916,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-business%2Femdash-0.x/tracy-business-emdash-quickstart-1.7.23.zip"
     },
     "state": {
       "file": "tracy-business-emdash-state-1.7.23.tar.gz",
       "bytes": 8485789,
       "sha256": "8d6eaff4dfc267822319d795054a27543a10e03400a9f6658f7d075b48c63e55",
-      "githubAssetId": 656955181,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Femdash-0.x/tracy-business-emdash-state-1.7.23.tar.gz"
+      "githubAssetId": 683821291,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-business%2Femdash-0.x/tracy-business-emdash-state-1.7.23.tar.gz"
     },
     "questions": {
       "schemaVersion": "tracy-questions/v1",
@@ -697,15 +697,15 @@
       "file": "tracy-base-emdash-quickstart-0.5.6.zip",
       "bytes": 7075290,
       "sha256": "fe2ed1d0f7195791e59494c3d7f860893b0fed2ec4c7ba0a9121141ee6c7e02b",
-      "githubAssetId": 645551553,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-base%2Femdash-0.x/tracy-base-emdash-quickstart-0.5.6.zip"
+      "githubAssetId": 683825451,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-base%2Femdash-0.x/tracy-base-emdash-quickstart-0.5.6.zip"
     },
     "state": {
       "file": "tracy-base-emdash-state-0.5.6.tar.gz",
       "bytes": 6168464,
       "sha256": "31ef8740a8e762d50dedd0cbdb6c4fb10bb51c12071fe0e0f993ce2b38330d52",
-      "githubAssetId": 645551554,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-base%2Femdash-0.x/tracy-base-emdash-state-0.5.6.tar.gz"
+      "githubAssetId": 683827337,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-base%2Femdash-0.x/tracy-base-emdash-state-0.5.6.tar.gz"
     },
     "questions": {
       "schemaVersion": "tracy-questions/v1",
@@ -1001,15 +1001,15 @@
       "file": "tracy-saas-emdash-quickstart-1.4.14.zip",
       "bytes": 7808844,
       "sha256": "1cacc1f52d7c504bb313a39b7f194e1fa6e6da7744da63674843f11b6b770071",
-      "githubAssetId": 639438922,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-saas%2Femdash-0.x/tracy-saas-emdash-quickstart-1.4.14.zip"
+      "githubAssetId": 683789032,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-saas%2Femdash-0.x/tracy-saas-emdash-quickstart-1.4.14.zip"
     },
     "state": {
       "file": "tracy-saas-emdash-state-1.4.14.tar.gz",
       "bytes": 7674704,
       "sha256": "6ce7750f76600d246ff01fae12b64ff81ed498b545247e9f4bc406bdebb80f5b",
-      "githubAssetId": 639438924,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-saas%2Femdash-0.x/tracy-saas-emdash-state-1.4.14.tar.gz"
+      "githubAssetId": 683793552,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-saas%2Femdash-0.x/tracy-saas-emdash-state-1.4.14.tar.gz"
     },
     "note": "EmDash pair like tracy-business/emdash: `source` is the packed template (built into an image on the host, no registry per ADR 0014), `state` the scrubbed SQLite + uploads restored ONCE. The package ships no Dockerfile; provision completes it from the fleet’s stock one (provision/emdash/quickstart.Dockerfile). Questions: the CMS default — this release carries no questionnaire of its own."
   },
@@ -1020,15 +1020,15 @@
       "file": "tracy-base-wp7-webroot-1.1.5.tar.gz",
       "bytes": 45470061,
       "sha256": "908103594c242b7451a680e443fbd87afd6b056472cb01505f4abde8bfe4e1e4",
-      "githubAssetId": 635159824,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-base/wp7/tracy-base-wp7-webroot-1.1.5.tar.gz"
+      "githubAssetId": 683775885,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-base/wp7/tracy-base-wp7-webroot-1.1.5.tar.gz"
     },
     "database": {
       "file": "tracy-base-wp7-database-1.1.5.sql.gz",
       "bytes": 59567,
       "sha256": "9b73c0d77bd92138d9b73ec9c36038819ca74b9a9fe1c0329cf59c70b1f04ecd",
-      "githubAssetId": 635159785,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-base/wp7/tracy-base-wp7-database-1.1.5.sql.gz"
+      "githubAssetId": 683772635,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-base/wp7/tracy-base-wp7-database-1.1.5.sql.gz"
     },
     "cowork": {
       "file": "claude-cowork-0.18.14.zip",
@@ -1092,15 +1092,15 @@
       "file": "tracy-business-wp7-webroot-1.1.0.tar.gz",
       "bytes": 67804392,
       "sha256": "f5f59dddfab4e5988f00864bc7d9036e69bf8b13104decc25dc5edb97e6a8a24",
-      "githubAssetId": 580628062,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Fwp7/tracy-business-wp7-webroot-1.1.0.tar.gz"
+      "githubAssetId": 683802219,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-business%2Fwp7/tracy-business-wp7-webroot-1.1.0.tar.gz"
     },
     "database": {
       "file": "tracy-business-wp7-database-1.1.0.sql.gz",
       "bytes": 1898060,
       "sha256": "7863f8a5f6cab97b7c97a1647ce4447a0c1ea298b3703e0c278c972424a83212",
-      "githubAssetId": 580628061,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Fwp7/tracy-business-wp7-database-1.1.0.sql.gz"
+      "githubAssetId": 683799201,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-business%2Fwp7/tracy-business-wp7-database-1.1.0.sql.gz"
     },
     "cowork": {
       "file": "claude-cowork-0.15.3.zip",
@@ -1163,15 +1163,15 @@
       "file": "ja-voyara-j6-webroot-1.0.10.tar.gz",
       "bytes": 196029350,
       "sha256": "3a14efae170be5d4f998dc92d8f6befaf888dc2a3095cf528e04fb34a96d5d8d",
-      "githubAssetId": 653104164,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-voyara%2Fj6/ja-voyara-j6-webroot-1.0.10.tar.gz"
+      "githubAssetId": 683875069,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-voyara%2Fj6/ja-voyara-j6-webroot-1.0.10.tar.gz"
     },
     "database": {
       "file": "ja-voyara-j6-database-1.0.10.sql.gz",
       "bytes": 356059,
       "sha256": "6482a528fd611110262708ab96825259545000096a2fc2e95d166bc3eb632351",
-      "githubAssetId": 653104159,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-voyara%2Fj6/ja-voyara-j6-database-1.0.10.sql.gz"
+      "githubAssetId": 683870055,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-voyara%2Fj6/ja-voyara-j6-database-1.0.10.sql.gz"
     },
     "cowork": {
       "file": "pkg_claudecowork-0.24.37.zip",
@@ -1243,15 +1243,15 @@
       "file": "ja-kinetic-j6-webroot-1.0.9.tar.gz",
       "bytes": 69441897,
       "sha256": "7bc7b8d33ac72777ba90399f73b474da6bbad68a9bd1c5e7f7065a00c8327f6a",
-      "githubAssetId": 657134109,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-kinetic%2Fj6/ja-kinetic-j6-webroot-1.0.9.tar.gz"
+      "githubAssetId": 683835106,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-kinetic%2Fj6/ja-kinetic-j6-webroot-1.0.9.tar.gz"
     },
     "database": {
       "file": "ja-kinetic-j6-database-1.0.9.sql.gz",
       "bytes": 1020266,
       "sha256": "b350db659eda371a17066518ced10d26649ffec15e23c0f8ff876643b6305128",
-      "githubAssetId": 657134108,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-kinetic%2Fj6/ja-kinetic-j6-database-1.0.9.sql.gz"
+      "githubAssetId": 683829471,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-kinetic%2Fj6/ja-kinetic-j6-database-1.0.9.sql.gz"
     },
     "cowork": {
       "file": "pkg_claudecowork-0.24.43.zip",
@@ -1311,15 +1311,15 @@
       "file": "ja-spa-j6-webroot-1.0.7.tar.gz",
       "bytes": 43334520,
       "sha256": "3ca58abe2bb3f7aa0b6f814ce99408c627b8a4189f4be31c21d07a27a9c567e0",
-      "githubAssetId": 653102304,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-spa%2Fj6/ja-spa-j6-webroot-1.0.7.tar.gz"
+      "githubAssetId": 683965895,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-spa%2Fj6/ja-spa-j6-webroot-1.0.7.tar.gz"
     },
     "database": {
       "file": "ja-spa-j6-database-1.0.7.sql.gz",
       "bytes": 80335,
       "sha256": "0c0ebd4dff0d3ba872887892d262a029ff4ed5eeeb30596beb6d9c4e4db430eb",
-      "githubAssetId": 653102305,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-spa%2Fj6/ja-spa-j6-database-1.0.7.sql.gz"
+      "githubAssetId": 683963050,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-spa%2Fj6/ja-spa-j6-database-1.0.7.sql.gz"
     },
     "cowork": {
       "file": "pkg_claudecowork-0.24.37.zip",
@@ -1376,15 +1376,15 @@
       "file": "ja-trip-j6-webroot-1.0.7.tar.gz",
       "bytes": 67831318,
       "sha256": "19e499beba7b13442cfb178e9a488a85de37bbf6b9b0cf9e81fde2079a7691ad",
-      "githubAssetId": 653102789,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-trip%2Fj6/ja-trip-j6-webroot-1.0.7.tar.gz"
+      "githubAssetId": 683936000,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-trip%2Fj6/ja-trip-j6-webroot-1.0.7.tar.gz"
     },
     "database": {
       "file": "ja-trip-j6-database-1.0.7.sql.gz",
       "bytes": 106629,
       "sha256": "52a7ef0c7a839f9ebf929d2d238b3d0f3ccf7f36124810382a5c37bf0b2b7841",
-      "githubAssetId": 653102790,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-trip%2Fj6/ja-trip-j6-database-1.0.7.sql.gz"
+      "githubAssetId": 683931517,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-trip%2Fj6/ja-trip-j6-database-1.0.7.sql.gz"
     },
     "cowork": {
       "file": "pkg_claudecowork-0.24.37.zip",
@@ -1436,15 +1436,15 @@
       "file": "ja-space-j6-webroot-1.0.3.tar.gz",
       "bytes": 36056099,
       "sha256": "027cc755e78088442dfe86e9a9fb00827b8250fa686b931e8e59a7066186b033",
-      "githubAssetId": 625534379,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-space%2Fj6/ja-space-j6-webroot-1.0.3.tar.gz"
+      "githubAssetId": 683960048,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-space%2Fj6/ja-space-j6-webroot-1.0.3.tar.gz"
     },
     "database": {
       "file": "ja-space-j6-database-1.0.3.sql.gz",
       "bytes": 78687,
       "sha256": "6513c06d1028140275e87c136e08bf0ad8eff3dc8f76699c846e3b9d4306c223",
-      "githubAssetId": 625534389,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-space%2Fj6/ja-space-j6-database-1.0.3.sql.gz"
+      "githubAssetId": 683958617,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-space%2Fj6/ja-space-j6-database-1.0.3.sql.gz"
     },
     "cowork": {
       "file": "pkg_claudecowork-0.24.37.zip",
@@ -1481,15 +1481,15 @@
       "file": "ja-essence-j6-webroot-1.0.9.tar.gz",
       "bytes": 58408957,
       "sha256": "53e29911c89eb845d90268e9ff0c1f07a7e2001f28b58d99e6bfa38ce3da4dc0",
-      "githubAssetId": 653099690,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-essence%2Fj6/ja-essence-j6-webroot-1.0.9.tar.gz"
+      "githubAssetId": 684098988,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-essence%2Fj6/ja-essence-j6-webroot-1.0.9.tar.gz"
     },
     "database": {
       "file": "ja-essence-j6-database-1.0.9.sql.gz",
       "bytes": 103527,
       "sha256": "890fc10c4ad8ce068e525c2c390f0f8efbf142e1e7ca6ed25e1cb27876448c26",
-      "githubAssetId": 653099691,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-essence%2Fj6/ja-essence-j6-database-1.0.9.sql.gz"
+      "githubAssetId": 684092867,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-essence%2Fj6/ja-essence-j6-database-1.0.9.sql.gz"
     },
     "cowork": {
       "file": "pkg_claudecowork-0.24.37.zip",
@@ -1536,15 +1536,15 @@
       "file": "ja-diner-wp7-webroot-1.0.1.tar.gz",
       "bytes": 59642060,
       "sha256": "2b4e826d69bc84d92c00d5707455caa813fbab2548b9b71c964a65b0d40d05cf",
-      "githubAssetId": 665414274,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-diner%2Fwp7/ja-diner-wp7-webroot-1.0.1.tar.gz"
+      "githubAssetId": 683703948,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-diner%2Fwp7/ja-diner-wp7-webroot-1.0.1.tar.gz"
     },
     "database": {
       "file": "ja-diner-wp7-database-1.0.1.sql.gz",
       "bytes": 63376,
       "sha256": "771e7fdac6777e7f664585a0c3eb2ccb042698d6ca24eeeec86a30efd2e450ef",
-      "githubAssetId": 665414272,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-diner%2Fwp7/ja-diner-wp7-database-1.0.1.sql.gz"
+      "githubAssetId": 683703258,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-diner%2Fwp7/ja-diner-wp7-database-1.0.1.sql.gz"
     },
     "cowork": {
       "file": "claude-cowork-0.18.29.zip",
@@ -1582,15 +1582,15 @@
       "file": "ja-fresco-wp7-webroot-1.0.1.tar.gz",
       "bytes": 51153577,
       "sha256": "fe6f597bd5ed71afa3cf9e664d25d2ed63d5884ddd0f84029eaa89b2463f768a",
-      "githubAssetId": 665394200,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-fresco%2Fwp7/ja-fresco-wp7-webroot-1.0.1.tar.gz"
+      "githubAssetId": 683694488,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-fresco%2Fwp7/ja-fresco-wp7-webroot-1.0.1.tar.gz"
     },
     "database": {
       "file": "ja-fresco-wp7-database-1.0.1.sql.gz",
       "bytes": 43916,
       "sha256": "b26c64a5e0c8c8f4af90b7fbbd492781299c62a3b358f34fe4345cdecf4f18cc",
-      "githubAssetId": 665394204,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-fresco%2Fwp7/ja-fresco-wp7-database-1.0.1.sql.gz"
+      "githubAssetId": 683693747,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-fresco%2Fwp7/ja-fresco-wp7-database-1.0.1.sql.gz"
     },
     "cowork": {
       "file": "claude-cowork-0.18.29.zip",
@@ -1628,15 +1628,15 @@
       "file": "ja-restaurant-wp7-webroot-1.0.1.tar.gz",
       "bytes": 55886818,
       "sha256": "171712e0a901b833aa9bcd1fe3a65cab345fa8da6f575e636565b0e9754fd201",
-      "githubAssetId": 664754944,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-restaurant%2Fwp7/ja-restaurant-wp7-webroot-1.0.1.tar.gz"
+      "githubAssetId": 683701355,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-restaurant%2Fwp7/ja-restaurant-wp7-webroot-1.0.1.tar.gz"
     },
     "database": {
       "file": "ja-restaurant-wp7-database-1.0.1.sql.gz",
       "bytes": 83753,
       "sha256": "61314673b80414fb1455f8cd82a4ecd6d7d1dda21e158497afe163ace1aca7dc",
-      "githubAssetId": 664754943,
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/quickstart%2Fja-restaurant%2Fwp7/ja-restaurant-wp7-database-1.0.1.sql.gz"
+      "githubAssetId": 683700615,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-restaurant%2Fwp7/ja-restaurant-wp7-database-1.0.1.sql.gz"
     },
     "cowork": {
       "file": "claude-cowork-0.18.29.zip",

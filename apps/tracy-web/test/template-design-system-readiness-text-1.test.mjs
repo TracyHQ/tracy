@@ -2,7 +2,7 @@
  * TEXT-1 of the Template Design System Readiness check: a text colour of the template's stylesheets
  * must read a text role of the slot, never a ground role (the accent fill, the page, a surface, the ink
  * band, a status fill). The case that asked for it: a code review of JA Restaurant (20/10/2026) found a
- * text `color` reading `var(--ds-c-accent)` in the ja-products sources, readable as a fill only.
+ * text `color` reading `var(--ds-c-accent)` in the joomlart-products sources, readable as a fill only.
  * Static, so it runs on Check again; worth-fixing.
  */
 import assert from 'node:assert/strict'

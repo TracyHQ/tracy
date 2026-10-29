@@ -31,7 +31,7 @@ import {
 import { directoryReleaseSource } from '../apps/tracy-web/src/lib/template-customization-question-readiness/release-source.js'
 
 const run = promisify(execFile)
-const REPO = 'JoomlArt-Products/ja-products'
+const REPO = 'JoomlArt-Products/joomlart-products'
 const MARKS = { pass: 'PASS', fail: 'FAIL', 'live-only': 'LIVE', 'not-applicable': 'N/A ' }
 
 /** @param {string[]} argv */

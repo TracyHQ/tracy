@@ -1,5 +1,5 @@
 /**
- * Reading ja-products: what the list looks like when most releases say nothing about themselves,
+ * Reading joomlart-products: what the list looks like when most releases say nothing about themselves,
  * what happens when GitHub does not answer, and how a changed questionnaire arrives.
  */
 import assert from 'node:assert/strict'
@@ -301,7 +301,7 @@ test('the token comes from the App when it is configured, and from a plain key w
     fetchImpl
   )
   assert.equal(app.token, 'ghs_minted')
-  assert.ok(calls.some((u) => u.includes('ja-products/installation')))
+  assert.ok(calls.some((u) => u.includes('joomlart-products/installation')))
 })
 
 test('a release event on the releases repo triggers a read; anything else is ignored', async () => {
@@ -309,7 +309,7 @@ test('a release event on the releases repo triggers a read; anything else is ign
   assert.equal(
     releaseEventWanted('release', {
       action: 'published',
-      repository: { full_name: 'JoomlArt-Products/ja-products' }
+      repository: { full_name: 'JoomlArt-Products/joomlart-products' }
     }),
     true
   )
@@ -317,7 +317,7 @@ test('a release event on the releases repo triggers a read; anything else is ign
   assert.equal(
     releaseEventWanted('release', {
       action: 'edited',
-      repository: { full_name: 'JoomlArt-Products/ja-products' }
+      repository: { full_name: 'JoomlArt-Products/joomlart-products' }
     }),
     true
   )
@@ -328,7 +328,7 @@ test('a release event on the releases repo triggers a read; anything else is ign
   )
   // A push is the OTHER webhook on this door; it must not start a read of GitHub.
   assert.equal(
-    releaseEventWanted('push', { repository: { full_name: 'JoomlArt-Products/ja-products' } }),
+    releaseEventWanted('push', { repository: { full_name: 'JoomlArt-Products/joomlart-products' } }),
     false
   )
 })

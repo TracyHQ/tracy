@@ -6,7 +6,7 @@
  *                               [--from-dir <a locally built release>]
  *   node scripts/stand.mjs down --name <stand>
  *
- * Downloads the pair the release's manifest names (webroot + database) from JoomlArt-Products/ja-products,
+ * Downloads the pair the release's manifest names (webroot + database) from JoomlArt-Products/joomlart-products,
  * checks each SHA-256 against the manifest, restores them the way the fleet provisioner does (Joomla:
  * configuration.php's database fields; WordPress: wp-config.php's {{DB_*}} placeholders and
  * `wp search-replace` from the dump's placeholder address to http://localhost:<port>), and serves the site on 127.0.0.1:<port> with
@@ -37,7 +37,7 @@ const IMAGES = {
   joomla: 'tracy/web-joomla:6-apache-20260923-r1',
   db: 'mariadb:11'
 }
-const REPO = 'JoomlArt-Products/ja-products'
+const REPO = 'JoomlArt-Products/joomlart-products'
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const args = process.argv.slice(2)
 const cmd = args.shift()

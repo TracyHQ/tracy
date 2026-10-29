@@ -1055,7 +1055,7 @@ It never overwrites a Build or a later system change, and never re-reads the sit
 the measurements stay unknown; the same for old jobs without a snapshot. A template that declares no system (the current Business
 EmDash) never gets a record created for it.
 
-- **Quickstarts** are read from releases of `JoomlArt-Products/ja-products` into the `quickstart_releases` table
+- **Quickstarts** are read from releases of `JoomlArt-Products/joomlart-products` into the `quickstart_releases` table
   ([ADR 0017](docs/adr/0017-github-release-is-quickstart-source-of-truth.md)). There is no catalogue
   file in the repo. (`apps/tracy-web/src/quickstarts.json` only pins the Claude
   Cowork plugin version.)
@@ -2342,12 +2342,12 @@ it waits for; a second, prefixed dsh on the same machine must set all five varia
 `HOST_DSH_ENV_FILE`, `HOST_DSH_GATEWAY`, `HOST_DSH_CONTAINER`, otherwise it keeps the first dsh's `dsh-passwords.env`.
 Details of each flag and the order for setting up a host: `packages/fleet/tracy-fleet-operation/dsh/HOST-DSH.md` §3.
 
-**Reading `ja-products` when the host's App is not installed there.** `releasesToken` in
+**Reading `joomlart-products` when the host's App is not installed there.** `releasesToken` in
 [`quickstart-releases.js`](apps/tracy-web/src/lib/quickstart-releases.js) still mints a token from the GitHub App when the App
-is installed on `ja-products` (production). Only when GitHub returns 404 for the installation query (`installationIdFor` returns
+is installed on `joomlart-products` (production). Only when GitHub returns 404 for the installation query (`installationIdFor` returns
 `null`: the App is configured but not installed on that repo, like a shard's own App) and
 `TRACY_RELEASES_GITHUB_TOKEN` is set, does it use that read-only token. GitHub 5xx, network errors, or an installed App whose token
-GitHub refuses to issue are still errors, and do not fall back to the token. Consequence worth knowing: if someone removes the App from `ja-products` on
+GitHub refuses to issue are still errors, and do not fall back to the token. Consequence worth knowing: if someone removes the App from `joomlart-products` on
 production while the token variable is set, tracy-web silently reads with the token. How to set up a shard's own App
 (permissions, org, the four GitHub variables, key rotation) is in the runbook
 [`shard-github-app.md`](docs/references/shard-github-app.md).

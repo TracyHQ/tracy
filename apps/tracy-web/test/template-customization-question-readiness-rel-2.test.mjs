@@ -3,7 +3,7 @@
  * the release's `tracy_site_pages.json` must equal the page list regenerated from its own demo
  * content, compared in both directions, with the demo's real front page as the one home.
  *
- * Fixtures are cut from the real release assets of `JoomlArt-Products/ja-products` (09/10/2026):
+ * Fixtures are cut from the real release assets of `JoomlArt-Products/joomlart-products` (09/10/2026):
  * only the menu rows, pages, header part, navigation and options the rule reads. The settings and
  * current page lists are the published files byte for byte; the old Essence list is reformatted.
  */
@@ -90,7 +90,7 @@ test('JA Essence Joomla 1.0.2: the old list of 2 pages (Home, Contact) fails, na
   )
   assert.match(
     result.fix,
-    /gh release upload 'quickstart\/ja-essence\/j6' tracy_site_pages\.json --clobber -R JoomlArt-Products\/ja-products/
+    /gh release upload 'quickstart\/ja-essence\/j6' tracy_site_pages\.json --clobber -R JoomlArt-Products\/joomlart-products/
   )
 })
 

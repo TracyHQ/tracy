@@ -204,7 +204,7 @@
         "kind": "joomla-extension",
         "bytes": 845130,
         "sha256": "63f349bed5758de02dcb4261936be2fc66967e91e5b113d51a673bd923a97d6c",
-        "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-airbnb%2Fj6/tpl_tracy_airbnb-j6-1.2.0.zip"
+        "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-airbnb%2Fj6/tpl_tracy_airbnb-j6-1.2.0.zip"
       },
       "requires": [
         {

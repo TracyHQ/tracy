@@ -445,7 +445,7 @@
       "reason": "the orange call-to-action box ('Since 1980 … Donate today') is drawn as the template's action colour around a white button the contract pairs with it; as a band it went dark under the white button turned the system page colour (14/10/2026)"
     }
   ],
-  "headerCtaNote": "17/10/2026 (Akemi, visual review): the header Donate now (.header-action .btn) is a flush, square, full-height cell of the bordered menu row; under Moxie it wore the system pill and floated off the row. It is left out of the button shape (selectors.button) and the template keeps it square (ja-products ds-b2-fin-impact); its fill and words still follow the system accent (selectors.buttonPrimary).",
+  "headerCtaNote": "17/10/2026 (Akemi, visual review): the header Donate now (.header-action .btn) is a flush, square, full-height cell of the bordered menu row; under Moxie it wore the system pill and floated off the row. It is left out of the button shape (selectors.button) and the template keeps it square (joomlart-products ds-b2-fin-impact); its fill and words still follow the system accent (selectors.buttonPrimary).",
   "literalsNote": "#ffffff is the template's own link colour on its own title photo (#t4-masthead, a picture band; the id doubled to outweigh the band’s own word paint)",
   "pictureRules": {
     ".mod-finder .js-finder-search-query:focus": {

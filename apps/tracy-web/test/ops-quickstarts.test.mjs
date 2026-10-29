@@ -6,11 +6,16 @@
  * what these assert is the SCREEN's contract and not the reader's (that one has its own file).
  */
 import assert from 'node:assert/strict'
+import { createHash } from 'node:crypto'
+import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import path from 'node:path'
 import { test, after, before, beforeEach } from 'node:test'
 
 import { buildApp } from '../src/app.js'
 import { readConfig } from '../src/config.js'
 import * as host from '../src/host/client.js'
+import { contractFor, defaultContracts } from '../src/lib/contracts.js'
 import { DESIGN_CATEGORIES } from '../src/lib/design-inspiration.js'
 import { loadStandardQuestions, resolveQuestions } from '../src/lib/build-questions.js'
 import { isTemplateId, readReleases, templateOfTag, templateRelease } from '../src/lib/quickstart-releases.js'
@@ -23,7 +28,10 @@ import { fileDb } from './_db.mjs'
 // One migrated schema for the whole file, emptied before each test (see _db.mjs).
 const db = fileDb()
 before(db.open)
-beforeEach(db.reset)
+beforeEach(async () => {
+  seedCoverage()
+  await db.reset()
+})
 after(db.close)
 
 const env = {
@@ -39,6 +47,42 @@ const env = {
 const opts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_URL' }
 const TAG = 'tracy-business/emdash-0.x'
 const DRAFT = 'tracy-base/wp7'
+
+// Publish fixtures borrow a released WordPress contract. Give this process a private copy with a
+// measured audit, keeping the released map and lock unchanged and exercising the real coverage reader.
+const contracts = defaultContracts()
+const wpContract = contractFor(contracts, DRAFT, '1.0.0')
+const releasedDir = wpContract.dir
+let fixtureDir
+const digest = (file) => createHash('sha256').update(readFileSync(file)).digest('hex')
+before(() => {
+  fixtureDir = mkdtempSync(path.join(tmpdir(), 'ops-quickstarts-'))
+  cpSync(releasedDir, fixtureDir, { recursive: true })
+  wpContract.dir = fixtureDir
+})
+after(() => {
+  wpContract.dir = releasedDir
+  rmSync(fixtureDir, { recursive: true, force: true })
+})
+function seedCoverage() {
+  writeFileSync(
+    path.join(fixtureDir, 'content-coverage.json'),
+    JSON.stringify({
+      schemaVersion: 'tracy-content-coverage/v1',
+      tool: { name: 'test', version: '1.1.0' },
+      contract: {
+        id: wpContract.id,
+        contentMapSha256: digest(path.join(fixtureDir, 'content-map.json')),
+        presentationLockSha256: digest(path.join(fixtureDir, 'presentation-lock.json'))
+      },
+      pages: { failed: 0, capReached: false },
+      counts: {},
+      coverage: { text: 100, images: 100, links: 100 },
+      holes: [],
+      hygiene: []
+    })
+  )
+}
 
 const questionnaire = (owner, label) => ({
   schemaVersion: 'tracy-questions/v1',
@@ -700,7 +744,7 @@ function fakeGithub({ assets = [], uploadStatus = 201 } = {}) {
     const url = typeof input === 'string' ? input : input.url
     const method = init.method ?? 'GET'
     calls.push(`${method} ${url}`)
-    if (url.startsWith('https://api.github.com/repos/JoomlArt-Products/ja-products/releases/tags/'))
+    if (url.startsWith('https://api.github.com/repos/JoomlArt-Products/joomlart-products/releases/tags/'))
       return new Response(JSON.stringify(release), { status: 200 })
     if (/^https:\/\/api\.github\.com\/.*\/releases\/assets\/\d+$/.test(url) && method === 'DELETE') {
       release.assets = release.assets.filter((a) => `${a.id}` !== url.split('/').pop())
@@ -1055,6 +1099,40 @@ test(
     assert.deepEqual([coverage.state, coverage.code], ['todo', 'coverage-roles'])
   }
 )
+
+for (const coverageState of ['missing', 'stale']) {
+  test(`Publish refuses ${coverageState} Content coverage without changing GitHub`, opts, async () => {
+    const { pool } = db
+    const github = fakeGithub()
+    const { send, get, cookieFor } = harness(pool, { opsFetch: github.fetchImpl, extraEnv: withToken })
+    await seedWordpressRelease(pool, DRAFT, '1.0.0')
+    await seedStaff(pool, 'owner@tracy.test')
+    const owner = await cookieFor('owner@tracy.test')
+    assert.equal((await send('PUT', doorOf(DRAFT), owner, typedCard())).status, 200)
+    await passCustomize(pool, DRAFT)
+    if (coverageState === 'missing') rmSync(path.join(fixtureDir, 'content-coverage.json'))
+    else {
+      const file = path.join(fixtureDir, 'content-coverage.json')
+      const doc = JSON.parse(readFileSync(file, 'utf8'))
+      doc.contract.contentMapSha256 = '0'.repeat(64)
+      writeFileSync(file, JSON.stringify(doc))
+    }
+    const before = names(github)
+    const answer = await send('POST', publishOf(DRAFT), owner)
+    assert.equal(answer.status, 400)
+    const body = await answer.json()
+    assert.equal(body.error, 'CONTENT_COVERAGE_NOT_READY')
+    assert.match(body.reason, coverageState === 'missing' ? /not measured/ : /changed after/)
+    assert.deepEqual(names(github), before)
+    const row = (await (await get('/api/ops/quickstarts', owner)).json()).releases.find(
+      (r) => r.tag === DRAFT
+    )
+    assert.equal(
+      row.road.find((s) => s.step === 'content-coverage').code,
+      coverageState === 'missing' ? 'coverage-not-measured' : 'coverage-stale'
+    )
+  })
+}
 
 test('Unpublish still works for a published card whose release has no contract', opts, async () => {
   const { pool } = db
