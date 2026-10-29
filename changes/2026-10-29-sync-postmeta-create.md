@@ -4,3 +4,5 @@
   Verification: both original create failures reproduced before the fix. The full HTTP writer suite passed 52/52 and held with a 400-day clock shift. An isolated WordPress/PHP8.3/MariaDB smoke test against claude-cowork main `0232b7a7fbeab4a4959f77dd54ea500d5804fda3` created metadata on new and existing posts, removed it through native Undo, trashed the new parent, and kept an equal-value metadata write protected by a newer native receipt. The test stack was removed; no custom image was built. The production fleet needs the next image release for this shared script change.
 
   Undo also holds a newly created parent post when its dependent metadata cannot be restored, preserving customer changes on that page. Three additional cases cover changed metadata, native conflict and an expired receipt.
+
+  Partial Apply protection: a metadata create whose response was lost also holds its new parent during Undo, using the dependency saved in the durable sending receipt. Retrying Apply sends no second metadata mutation.

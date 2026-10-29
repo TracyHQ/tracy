@@ -1486,6 +1486,16 @@ async function undo(pushDir) {
     return { paths: out }
   }
 
+  // A missing ACK can still mean the dependent metadata was created on the live site.
+  const uncertainMetaParents = new Set(
+    Object.values(readJson(join(pushDir, 'requests.json'), {}))
+      .filter((receipt) => receipt.state === 'sending')
+      .flatMap((receipt) =>
+        (receipt.recovery ?? []).flatMap(({ snapshot }) =>
+          snapshot?.kind === 'postmeta' && snapshot.op === 'create' ? (snapshot.dependsOn ?? []) : []
+        )
+      )
+  )
   const order = [...writtenAnswer.written].reverse()
   progress(t0, `taking back ${order.length} item(s) on the live site`)
   for (const out of order) {
@@ -1508,14 +1518,15 @@ async function undo(pushDir) {
     if (
       snap.kind === 'post' &&
       snap.op === 'create' &&
-      order.some((other) => {
-        const child = before.items[other.id]
-        return (
-          child?.kind === 'postmeta' &&
-          child.dependsOn?.includes(out.id) &&
-          !restored.some((r) => r.id === other.id)
-        )
-      })
+      (uncertainMetaParents.has(out.id) ||
+        order.some((other) => {
+          const child = before.items[other.id]
+          return (
+            child?.kind === 'postmeta' &&
+            child.dependsOn?.includes(out.id) &&
+            !restored.some((r) => r.id === other.id)
+          )
+        }))
     ) {
       kept.push({ ...out, reason: 'depends-on-failed' })
       continue
