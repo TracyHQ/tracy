@@ -100,7 +100,7 @@ Seven services, plus `minio-init`, which runs once locally:
 | `docker-proxy` | HAProxy in front of the docker socket; dsh may only `exec` into `*-web-1` containers, everything else is 403 |
 | `minio` (+ `minio-init`) | Local only, plays the role of R2 |
 | `dns` | Local only: resolves `*.tracy.test` to `tracy-web` |
-| `<label>-web-1`, `<label>-db-1` | One pair per site, built by `tracy-host`. Per-CMS web images in [`packages/fleet/tracy-fleet-operation/web`](packages/fleet/tracy-fleet-operation/web) |
+| `<label>-web-1`, `<label>-db-1` | One pair per site, built by `tracy-host`. Per-CMS web images in [`packages/fleet/tracy-fleet-operation/web`](packages/fleet/tracy-fleet-operation/web): a site runs the `IMAGE_TAGS` line for its exact upstream base (its PHP), which carries the agent's tools and the visual check's chromium + node. A provision builds a missing line on the spot ([`web-image.sh`](packages/fleet/tracy-fleet-operation/scripts/lib/web-image.sh)); only a failed build leaves a new site on the bare upstream image, said loudly in the provision log. A site already on one is moved by [`move-off-upstream-image.sh`](packages/fleet/tracy-fleet-operation/scripts/provision/move-off-upstream-image.sh) |
 
 Three places run this same shape:
 

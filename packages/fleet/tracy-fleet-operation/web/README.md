@@ -44,6 +44,7 @@ runs in this container instead of a separate one.
 ```
 bash /opt/tracy-fleet/web/build.sh          # every missing row
 FORCE=1 bash /opt/tracy-fleet/web/build.sh  # rebuild
+bash /opt/tracy-fleet/web/build.sh --line joomla:5-apache   # exactly one `<platform>:<tag>` row
 ```
 
 Build **on the host**, not on a personal machine: an image stays where it was built and goes nowhere (there is
@@ -59,10 +60,25 @@ exists to prevent ("which image is this site running" must have a single, tracea
 `build.sh` does not care about the shape of the string after `tracy/web-<platform>:`, so `-rN` needs no change
 there.
 
-🔒 **Build BEFORE shipping the scripts.** A site whose compose names an image that has not been built **does not break** — the
-resolver warns and keeps the upstream image — but that site's agent has no `rg`, and its grep tool
-dies with ENOENT rather than "not found". In other words: skip this step and the site still serves
-customers normally and only the agent is broken — exactly the kind of breakage nobody notices for a long time.
+🔒 **Build BEFORE shipping the scripts.** A site left on the upstream image **does not break** for its
+customers, but its agent has no `rg` (the grep tool dies with ENOENT rather than "not found") and its
+visual check has no browser (every capture answers `NO_BROWSER` and falls back to dsh's own browser
+with page scripts off) — exactly the kind of breakage nobody notices for a long time. So since
+29/10/2026 a NEW site whose row is not built here does not settle for it: its provision builds that one
+row on the spot (`build.sh --line <base>`, ~5 minutes once per host and tag; `scripts/lib/web-image.sh`)
+and keeps the upstream image only when that build fails, with a `!!` block in the provision log naming
+the two commands that fix it. Building ahead is still the rule: a provision should find its image, not
+make a customer wait for it. A base with no row stays on its upstream image, as before; a site that is
+already running is refused, never moved, by the strict callers (`render-compose.sh` by hand,
+`set-php.sh`, `enable-site-mail.sh`).
+
+**A site already on a bare upstream image** is moved to the row for the SAME base (same PHP) by
+`scripts/provision/move-off-upstream-image.sh`: `--list` names every such site on the host and its row
+(or "no line: stays, host-browser fallback"), `--label <label>` is a dry run, `--apply` builds the row
+when it is missing, proves chromium + node in it, changes only the web image line of the compose,
+recreates web only on a running site and checks it there (chromium + node as `www-data`, the home page
+still answering), and puts the old compose back when any check fails. A stopped site is written, not
+started.
 
 ⚠ **`web/` must be in `ALLOWED` of `deploy/fleet-receive.sh`** (that script lives in `tracy-infra`,
 not in this repo) — requested together with `provision/`. Without it `IMAGE_TAGS` does not reach the
@@ -97,8 +113,11 @@ no `-rN` to change. Test: `test/web-image-mail.test.mjs`.
 
 ⚠ **Joomla builds from the repo root.** `joomla.Dockerfile` copies `vendor/joomla/joomlart-t4-skill`, so
 `build.sh joomla` uses the repo root as context (from 13/09 to 23/09 it used `web/` and always died with
-`"/vendor/joomla/joomlart-t4-skill": not found`). Consequence: the Joomla image can only be built from a repo
-checkout, not from a bare `/opt/tracy-fleet/web` — `build.sh` says so plainly when it is missing.
+`"/vendor/joomla/joomlart-t4-skill": not found`). Two layouts carry that tree: a repo checkout, and since
+29/10/2026 the tracy-host image, which copies it to `/opt/tracy-fleet/vendor/joomla/joomlart-t4-skill`
+beside `web/` — `build.sh` then uses `/opt/tracy-fleet` as the context. Before that a Joomla image could be
+built only from a checkout, so a provision inside tracy-host could never build a missing Joomla row. A bare
+`web/` copy with neither still fails, and `build.sh` says so plainly. Test: `test/web-image-never-upstream.test.mjs`.
 
 ## Image size, after adding `node` + `python3` (06/09)
 
