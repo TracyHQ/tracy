@@ -3,6 +3,8 @@
 //   b = hard-coded in template files / template language / T4 settings (template hole)
 //   c = Joomla core, framework or language-pack string (acceptable, noted)
 //   d = not found anywhere we can see (investigate)
+//   e = a shop's catalogue (VirtueMart products, categories, manufacturers, prices, product media): the
+//       shop owner's inventory, managed in the shop component, never a content contract slot (listed, never blocking)
 import { searchDb } from './db-index.mjs'
 import { searchSources } from './sources.mjs'
 import { normText, compact } from './normalize.mjs'
@@ -37,6 +39,11 @@ function describeDbHit(h, contract) {
   return { where: `${h.table}#${h.id}.${field}${kind}`, exact: h.exact, note, entity: entity ?? null, locked }
 }
 
+/** A shop catalogue's tables and media: VirtueMart keeps every product, category, manufacturer and price there. */
+const CATALOGUE_TABLE = /^virtuemart_/
+const CATALOGUE_MEDIA = /^(images\/(stories\/)?virtuemart\/|components\/com_virtuemart\/)/
+const catalogue = (label, evidence = []) => ({ class: 'e', label: `shop catalogue: ${label}`, evidence })
+
 export function createClassifier(contract, dbIndex, sourceIndex) {
   const cache = new Map()
   const tpl = contract.template.toLowerCase()
@@ -57,6 +64,12 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
     const hits = searchDb(dbIndex, query)
     if (!hits.length) return null
     const d = hits.map((h) => describeDbHit(h, contract))
+    // Found only in the catalogue's own tables: a product, category or manufacturer row, not page copy.
+    if (hits.every((h) => CATALOGUE_TABLE.test(h.table)))
+      return catalogue(
+        'VirtueMart table',
+        d.map((x) => x.where)
+      )
     return {
       class: 'a',
       label: d[0].note,
@@ -149,6 +162,7 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
         evidence: [path, ...(src?.evidence ?? [])]
       }
     }
+    if (CATALOGUE_MEDIA.test(path)) return catalogue('VirtueMart product or shop media', [path])
     if (/^(media\/(system|vendor|plg_|mod_|com_|templates\/site\/cassiopeia)|plugins\/)/.test(path))
       return { class: 'c', label: 'core / extension media', evidence: [path] }
     const raw = path.replace(/^https?:\/\//, '')
@@ -178,10 +192,19 @@ export function createClassifier(contract, dbIndex, sourceIndex) {
   }
 
   return function classify(item, m) {
-    const key = `${item.kind}|${m.remainder ?? m.path ?? item.value}`
+    const key = `${item.kind}|${item.zone ?? ''}|${m.remainder ?? m.path ?? item.value}`
     if (cache.has(key)) return cache.get(key)
     let res
-    if (item.kind === 'image') res = classifyImage(m.path ?? '')
+    // Printed inside the shop component's own markup (a price, a size option, a product card, the cart).
+    if (item.zone === 'catalogue') res = catalogue('printed inside VirtueMart markup')
+    // An item of a remote feed: another site's words, fetched by Joomla's News Feeds when the page is viewed.
+    else if (item.zone === 'feed')
+      res = {
+        class: 'c',
+        label: 'remote news feed item fetched when the page is viewed (com_newsfeeds)',
+        evidence: []
+      }
+    else if (item.kind === 'image') res = classifyImage(m.path ?? '')
     else if (item.kind === 'link') res = classifyLink(item.value)
     else if (m.remainder) {
       // A block that holds slot text plus words around it ("Next article: <title>"): the words

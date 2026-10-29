@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "tracy-setting/v1",
+  "platform": "joomla",
+  "label": "JA Cagox",
+  "version": "1.0.1",
+  "cms": "6.2.0",
+  "install": {
+    "webroot": {
+      "file": "ja-cagox-j6-webroot-1.0.1.tar.gz",
+      "sha256": "020332c33624fa1baf10a75e6c0ee184a07a0297de387bb4f47778109d66d5e5"
+    },
+    "database": {
+      "file": "ja-cagox-j6-database-1.0.1.sql.gz",
+      "sha256": "427a49584c3fae0504ab5cae7f33cfe637a39004dca5afa3fc3d0fe62a04b89d"
+    }
+  },
+  "template": "ja_cagox"
+}

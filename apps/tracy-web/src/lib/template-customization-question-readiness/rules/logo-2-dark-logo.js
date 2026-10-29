@@ -7,7 +7,8 @@
  * - A dark spot for every logo spot that follows the mode. Joomla T4 with dark mode on: each site
  *   profile holding a logo also has the `site_logo_dark` key (its own, or the default profile's),
  *   and a footer image slot (`footerSlot`) is printed by a Custom module layout that pairs it with
- *   `site_logo_dark` (`html/mod_custom/*.php`). T3 `logos: pair`: a style carries `logoimage_dark`.
+ *   `site_logo_dark` (`html/mod_custom/*.php`). T3 `logos: pair`: a style carries `logoimage_dark`, or
+ *   the footer logo of its own params (`logofooterimage`, JA Cagox), where the brand writer puts the dark logo.
  *   WordPress with a dark mode (`data-tracy-theme-toggle`): each part with a light logo spot also
  *   has a dark one, and the row says `darkLogo: true`. EmDash with `data-theme`: the dark logo's
  *   field is declared (`seed/personalize.json` `brand.logoDark`).
@@ -80,9 +81,9 @@ async function missingDarkSpots(context, row) {
     if (
       places.framework === 't3' &&
       row.logos === 'pair' &&
-      !places.t3.some((s) => 'logoimage_dark' in s.params)
+      !places.t3.some((s) => 'logoimage_dark' in s.params || 'logofooterimage' in s.params)
     )
-      out.push('no template style carries logoimage_dark')
+      out.push('no template style carries logoimage_dark or a footer logo (logofooterimage)')
   } else if (platform === 'wordpress') {
     const { spots, darkMode } = await wordpressLogoPlaces(context)
     if (darkMode) {

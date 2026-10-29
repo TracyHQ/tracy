@@ -27,7 +27,9 @@ const isTwin = (h) => typeof h.twin === 'string' && h.twin.trim() !== ''
 /**
  * What in a role scan report VARS-1 would hold, one line each: `file:line (component, property value)`
  * for an open spot, `missing: --ds-…` for a required role variable never read.
- * @param {{ declared: string[], hardcoded: any[] }} report
+ * A required role the template declares not used, with its reason (`notUsed`), is not missing: VARS-1
+ * reads the same list.
+ * @param {{ declared: string[], hardcoded: any[], notUsed?: { name: string, reason?: string }[] }} report
  * @returns {string[]}
  */
 export function roleScanBlockers(report) {
@@ -35,7 +37,10 @@ export function roleScanBlockers(report) {
     (h) => !isTwin(h) && (h.handled !== true || !String(h.reason ?? '').trim())
   )
   return [
-    ...missingRoleVariables(report.declared).map((n) => `missing: ${n} (no shipped source reads it)`),
+    ...missingRoleVariables(
+      report.declared,
+      (report.notUsed ?? []).filter((n) => typeof n?.name === 'string' && String(n.reason ?? '').trim())
+    ).map((n) => `missing: ${n} (no shipped source reads it)`),
     ...open.map(
       (h) =>
         `${h.file}:${h.line} (${h.component}${h.property ? `, ${h.property}` : ''}${h.value ? ` ${h.value}` : h.class === 'missing' ? ' not set' : ''})${h.class ? ` [${h.class}]` : ''}`

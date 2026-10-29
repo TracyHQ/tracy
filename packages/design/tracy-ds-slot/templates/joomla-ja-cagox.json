@@ -1,0 +1,140 @@
+{
+  "schema": "tracy-ds-template/v1",
+  "extends": "joomla-t3-ja",
+  "template": "joomla/ja-cagox",
+  "minVersion": {
+    "quickstart/ja-cagox/j6": "1.0.1"
+  },
+  "maxVersion": {
+    "quickstart/ja-cagox/j6": "1.0.2"
+  },
+  "release": "quickstart/ja-cagox/j6@1.0.2",
+  "roles": {
+    "page": "body",
+    "display": "div.slideshow-content h2.block-title",
+    "heading": "div.features-content h3",
+    "body": "div.features-content p",
+    "card": "ul.vmproduct > li",
+    "section": "div.acm-features"
+  },
+  "discovered": {
+    "page": "body: the page is white; the video band is a photo, not the page ground",
+    "display": "largest heading near the top: the hero slide title, 55px",
+    "displayFace": "Playfair Display 900, tracking 0em",
+    "displayPhone": "34px",
+    "heading": "the home section titles (OUR STORY), Montserrat 700 16px capitals",
+    "body": "the running text of the home story sections",
+    "card": "the product cards of the home tabs",
+    "section": "the story sections under the video band"
+  },
+  "keepScopes": [".t3-header", ".t3-slideshow", ".dark-style", ".block-video", ".t3-footer"],
+  "baseSystem": "od:apple",
+  "alphaText": true,
+  "baseTokens": {
+    "--bg": "#ffffff",
+    "--fg": "#444444",
+    "--fg-2": "#222222",
+    "--accent": "#da4e35",
+    "--accent-hover": "#c33c24",
+    "--surface": "#f7f7f7",
+    "--meta": "#999999",
+    "--success": "#5cb85c",
+    "--warn": "#f0ad4e",
+    "--danger": "#d9534f",
+    "--border": "#eeeeee",
+    "--muted": "#666666",
+    "--font-display": "\"Playfair Display\", serif",
+    "--font-body": "\"Playfair Display\", serif",
+    "--accent-on": "#ffffff"
+  },
+  "darkTokens": {},
+  "extraPalettes": [
+    {
+      "fg": "#333333",
+      "fg-2": "#111111",
+      "muted": "#555555",
+      "meta": "#aaaaaa",
+      "accent-hover": "#a4321e",
+      "border": "#dddddd",
+      "border-soft": "#e5e5e5",
+      "surface": "#f2f2f2"
+    },
+    {
+      "fg-2": "#000000",
+      "border": "#cccccc",
+      "surface": "#f5f5f5"
+    }
+  ],
+  "baseNote": "T3 less/variables.less (colours) and the default home page (discover.mjs, 1440): page #fff, body text #444, headings #222, the accent #da4e35 and its readable shade #c33c24 (links, the active tab). The display line and the body are Playfair Display; labels, menus and buttons Montserrat (they read the body face role in the stylesheets)",
+  "selectors": {
+    "displaySize": "h2.block-title",
+    "heading": [".t3-wrapper h2", ".t3-wrapper h3"],
+    "button": [".btn:not(.off-canvas-toggle)"],
+    "buttonPrimary": [".btn-primary:not(.off-canvas-toggle)"],
+    "card": ["ul.vmproduct > li"],
+    "container": ["#t3-mainbody .container, .container"],
+    "bodyFace": ["body"]
+  },
+  "displayImportant": true,
+  "displayImportantNote": "js/script.js sets the slideshow title to 55px as an inline style on windows at least 768px wide and 768px tall; only !important beats it (Notion, Airbnb and nine more systems read 55px at 1440x900 without it)",
+  "contrast": {
+    "accent-text": ".t3-wrapper a:not([class*=btn]):not(:has(img))",
+    "muted": ".t3-wrapper p:not([class*=hero]):not([class*=banner]):not([class*=slide]):not(.block-intro)",
+    "body": ".t3-wrapper p, .t3-wrapper li",
+    "heading": ".t3-wrapper :is(h1, h2, h3, h4)",
+    "footer": ".t3-footer a, #t3-footer a"
+  },
+  "module": {
+    "title": "Tracy design system",
+    "position": "head-search",
+    "ordering": 0,
+    "style": "System-none",
+    "why": "head-search is in the header block every layout of the quickstart loads (tpls/blocks/header.php) and renders whenever a module sits in it; off-canvas renders earlier on the home page (byte 7340 against 24720 of 14 positions tried) but only while the style's off-canvas option is on"
+  },
+  "ready": true,
+  "readyNote": "measured with flow.mjs on a local 1.0.1 site under the 15 featured systems at 1440 and 390: 34/34 PASS; the empty slot is pixel-identical to the untokenized build on 7 pages at 1440 and 390 (the sidebar featured products show a random order on each load)",
+  "bands": {
+    ".t3-header": {
+      "ground": "#eaeaea",
+      "texts": ["#222222", "#444444"],
+      "important": true
+    },
+    ".t3-slideshow": {
+      "ground": "#eaeaea",
+      "texts": ["#000000", "#111111"],
+      "picture": true,
+      "important": true
+    },
+    ".dark-style": {
+      "ground": "#000000",
+      "texts": ["#ffffff", "#aaaaaa"],
+      "important": true
+    },
+    ".block-video": {
+      "ground": "#000000",
+      "texts": ["#ffffff"],
+      "picture": true,
+      "paint": {
+        ".block-content": {
+          "background-color": "ground"
+        }
+      },
+      "important": true
+    },
+    ".t3-footer": {
+      "ground": "#111111",
+      "texts": ["#aaaaaa", "#ffffff"],
+      "paint": {
+        ".module small a": {
+          "color": "accent"
+        },
+        ".copyright small a": {
+          "color": "accent"
+        }
+      },
+      "important": true
+    }
+  },
+  "bandsNote": "read off the default home page with scripts/bands.mjs (1440): the header is a light panel (#eaeaea on the home page, white on inner pages; the black logo picture needs a light ground, so under a dark system the panel stays light), .dark-style and the footer are ink bands, the hero slides and the video band stand on photographs",
+  "maxVersionNote": "1.0.1 built locally with release-joomla.mjs from the template source that reads the role variables; static checker: CSS-1, CSS-2, DEF-1, BAND-1, PLAT-1, VARS-1, PIC-1, TEXT-1 pass. 1.0.2 (never published before it, like 1.0.1) is 1.0.1 with its stylesheets unchanged (release-joomla.mjs tokenized 0 files): ten overrides print their words through language keys and the demo articles carry distinct dates"
+}

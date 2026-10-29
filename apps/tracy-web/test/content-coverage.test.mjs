@@ -716,3 +716,37 @@ test('label rules group: the released JA Boxing 1.0.8 contract (role vocabulary 
   const phone = map.slots.find((slot) => slot.key === 'module-177.14')
   assert.deepEqual([phone?.role, phone?.sample], ['contact.phone', '(239) 555-0108'])
 })
+
+test('label rules group: the JA Cagox 1.0.2 contract (the first shop template) holds nothing: every rule at 0, a complete Slot fit, the label judge only warns', () => {
+  const root = path.join(import.meta.dirname, '../../../packages/cms/tracy-joomla-quickstart/contracts')
+  const contracts = readContracts(root)
+  const at = (over) =>
+    release({
+      tag: 'quickstart/ja-cagox/j6',
+      name: 'JA Cagox',
+      setting: { ...release().setting, version: '1.0.2', template: 'ja-cagox' },
+      ...over
+    })
+  const step = stepOf(roadOf(at({}), { contracts }))
+  assert.deepEqual(
+    [step.params.labelState, step.params.labelHolds, step.params.labelFailing, step.params.holes],
+    ['ready', false, [], 0]
+  )
+  assert.deepEqual([step.params.fitState, step.params.fitHolds], ['ready', false])
+  assert.equal(step.params.judgeHolds, false)
+  const coverage = JSON.parse(
+    readFileSync(path.join(root, 'ja-cagox/j6/1.0.2/content-coverage.json'), 'utf8')
+  )
+  // the shop's own inventory is listed as catalogue, and every other hole carries its reason
+  assert.ok(coverage.holes.some((h) => h.class === 'catalogue'))
+  assert.deepEqual(
+    coverage.holes.filter((h) => ['capture', 'template', 'unknown'].includes(h.class) && !h.accepted),
+    []
+  )
+  const map = JSON.parse(readFileSync(path.join(root, 'ja-cagox/j6/1.0.2/content-map.json'), 'utf8'))
+  // the trust strip states the shop's own terms: shipping, returns, payments
+  const terms = ['module-134.1', 'module-134.2', 'module-134.3'].map(
+    (key) => map.slots.find((s) => s.key === key)?.role
+  )
+  assert.deepEqual(terms, ['offering.price_note', 'offering.price_note', 'offering.price_note'])
+})

@@ -7,6 +7,8 @@
  *                         `site.identity`, is then the alt text), the small-screen logo switched off
  *   a logo, none for this spot (a dark style, only the light logo given)  `logotype=text`, `sitename=<name>` (Q7)
  *   a dark-mode logo      a style carrying `logoimage_dark` (JA Morgan 1.0.2+) takes the dark-background logo, or ''
+ *   a footer logo         a style carrying `logofooterimage` (JA Cagox) takes the logo for the footer spot (dark when the
+ *                         profile's `darkSpots.footer` says so), or `logofootertype=text` so the footer shows the name (Q7)
  *   no logo at all        the logo is left as the template has it; a style that shows a name as text (or carries the
  *                         demo name) takes the customer's name (Q8: JA Morgan keeps its text logo)
  *
@@ -89,6 +91,15 @@ export async function writeT3Styles({ folder, profile, name, logos, upload, read
         const darkPath = darkVariant ? await upload(roleOf(darkVariant), 'logo-dark') : null
         next.logoimage_dark = darkPath ?? ''
         if (darkPath) used.add(darkVariant)
+      }
+      // A style that keeps a second logo for its footer (JA Cagox, `logofooterimage`) takes the logo for that spot,
+      // or the name as text, so the footer never keeps the demo logo (Q7).
+      if (Object.hasOwn(params, 'logofooterimage')) {
+        const footerVariant = variantFor(logos, dark.footer)
+        const footerPath = footerVariant ? await upload(roleOf(footerVariant), 'logo-footer') : null
+        if (footerPath) Object.assign(next, { logofootertype: 'image', logofooterimage: footerPath })
+        else next.logofootertype = 'text'
+        if (footerPath) used.add(footerVariant)
       }
     } else if (anyLogo && variant === null && name) {
       Object.assign(next, { logotype: 'text', sitename: name })

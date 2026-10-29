@@ -59,6 +59,10 @@ export async function runAudit({
         log('fail', first.status, job.url, first.error ?? '')
         continue
       }
+      if (plan.leftSite(job, first.finalUrl)) {
+        log('offsite', job.url, '->', first.finalUrl)
+        continue
+      }
       // Seeds open as `?Itemid=N`; the crawl finds the same page under its SEF URL. Joomla/T4 put
       // `item-N view-X` on <body>, so a crawled page with a seed's signature is that seed again.
       const sig = signature(first.data.bodyClass)
@@ -151,6 +155,7 @@ export async function runAudit({
     failures,
     duplicates,
     skipped: plan.skipped,
+    offsite: plan.offsite,
     capReached: plan.capReached,
     summary: summarize(pages)
   }
@@ -172,7 +177,7 @@ export function summarize(pages) {
     coverage: cov,
     itemsSummedOverPages: perPage,
     holeValuesByClass: Object.fromEntries(
-      ['a', 'b', 'c', 'd'].map((k) => [
+      ['a', 'b', 'c', 'd', 'e'].map((k) => [
         k,
         [...unique.values()].filter((i) => i.status === 'hole' && i.class === k).length
       ])

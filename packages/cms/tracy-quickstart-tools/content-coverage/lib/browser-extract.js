@@ -111,6 +111,21 @@ export function extractPage() {
     if (/\b(btn|button)\b/i.test(el.className || '') || el.tagName === 'BUTTON') return 'button'
     return 'content'
   }
+  // A shop component's catalogue markup (VirtueMart: product cards and details, prices, size options, the cart, the
+  // manufacturer, vendor and account views): what it prints is the shop's inventory and the details the owner states
+  // in the shop's settings, classed `catalogue`, never a slot.
+  const CATALOGUE_CLASS =
+    /^(vm|virtuemart)|^(productdetails|browse|manufacturer-details|vendor-details|cart)(-view)?$|^product-(price|fields?|field-display|container)$/i
+  // The items of a news feed Joomla fetches from another site when the page is viewed (com_newsfeeds): `feed`.
+  const FEED_CLASS = /^com-newsfeeds-newsfeed__items$/
+  const zoneOf = (el) => {
+    for (let n = el; n && n.nodeType === 1; n = n.parentElement)
+      for (const c of n.classList ?? []) {
+        if (CATALOGUE_CLASS.test(c)) return 'catalogue'
+        if (FEED_CLASS.test(c)) return 'feed'
+      }
+    return undefined
+  }
   // Slot fit (ADR 0039): how a picture is drawn in its box, and how many characters a text box holds.
   const canvas = document.createElement('canvas').getContext('2d')
   const px = (v) => parseFloat(v) || 0
@@ -159,6 +174,7 @@ export function extractPage() {
       rect: el ? rectOf(el) : null,
       visible: el ? visibleOf(el) : true,
       role: el ? roleOf(el) : 'head',
+      zone: el ? zoneOf(el) : undefined,
       look: el && (kind === 'image' || kind === 'text') ? lookOf(kind, el, extra) : undefined,
       ...extra
     })

@@ -121,6 +121,38 @@ test('the page plan opens each page entity by its slug, then the front page', ()
   assert.deepEqual(urls, [`${SITE}?pagename=home`, SITE])
 })
 
+test('a request that lands on another host left the site: it is recorded, never audited as a page of the site', () => {
+  const { contractDir } = fixture()
+  const plan = new PagePlan(SITE, loadContract(contractDir, SITE), 10)
+  // a banner click is a same-host link whose answer is a redirect to the advertiser
+  const job = { url: `${SITE}index.php/component/banners/click/2`, origin: 'crawl' }
+  assert.equal(plan.leftSite(job, 'https://advertiser.invalid/'), true)
+  assert.deepEqual(plan.offsite, [{ url: job.url, landedOn: 'https://advertiser.invalid/' }])
+  assert.equal(plan.leftSite({ url: SITE, origin: 'crawl' }, `${SITE}menu/`), false)
+  assert.equal(plan.offsite.length, 1)
+})
+
+test('a shop listing sorted another way is the same products in another order: the crawl does not queue it', () => {
+  const { contractDir } = fixture()
+  const plan = new PagePlan(SITE, loadContract(contractDir, SITE), 10)
+  plan.addLinks(
+    [
+      '/index.php/shop/shoes/by,product_name',
+      '/index.php/shop/shoes/by,ordering,product_name/dirDesc',
+      '/index.php/shop/shoes/manufacturer/atelier-nord/shoes/by,mf_name/dirAsc',
+      '/index.php/shop/shoes?orderby=product_name',
+      '/index.php/shop/shoes/manufacturer/atelier-nord',
+      '/index.php/shop/shoes/bio-leather-sandal-detail'
+    ],
+    SITE
+  )
+  assert.deepEqual(
+    plan.queue.slice(-2).map((job) => new URL(job.url).pathname),
+    ['/index.php/shop/shoes/manufacturer/atelier-nord', '/index.php/shop/shoes/bio-leather-sandal-detail']
+  )
+  assert.equal(plan.queue.filter((job) => /by,|dir(Asc|Desc)|orderby/.test(job.url)).length, 0)
+})
+
 test('the database index reads a WordPress dump, and an unmapped post is a capture hole of a row outside the contract', () => {
   const { contractDir, dump } = fixture()
   const contract = loadContract(contractDir, SITE)

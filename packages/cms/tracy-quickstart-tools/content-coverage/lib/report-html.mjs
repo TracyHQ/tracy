@@ -11,15 +11,16 @@ const CLASS_NAME = {
   a: 'a · capture hole (in DB, not in map)',
   b: 'b · template hole (hard-coded in template files)',
   c: 'c · core / language string (acceptable)',
-  d: 'd · source not found (investigate)'
+  d: 'd · source not found (investigate)',
+  e: 'e · shop catalogue (VirtueMart inventory, never a slot)'
 }
 
 function countsRow(label, c) {
-  return `<tr><td>${label}</td><td class=n>${c.total}</td><td class="n ok">${c.matched}</td><td class=n>${c.locked}</td>${['a', 'b', 'c', 'd'].map((k) => `<td class=n>${c[k]}${k === 'a' && c.a ? ` <span class=muted>(${c.aLocked} locked / ${c.aUndeclared} undeclared)</span>` : ''}</td>`).join('')}<td class=n><b>${coverage(c)}%</b></td><td class="n muted">${c.ignored}</td></tr>`
+  return `<tr><td>${label}</td><td class=n>${c.total}</td><td class="n ok">${c.matched}</td><td class=n>${c.locked}</td>${['a', 'b', 'c', 'd', 'e'].map((k) => `<td class=n>${c[k]}${k === 'a' && c.a ? ` <span class=muted>(${c.aLocked} locked / ${c.aUndeclared} undeclared)</span>` : ''}</td>`).join('')}<td class=n><b>${coverage(c)}%</b></td><td class="n muted">${c.ignored}</td></tr>`
 }
 const countsTable = (
   counts
-) => `<table><tr><th></th><th class=n>items</th><th class=n>matched</th><th class=n>locked</th><th class=n>a</th><th class=n>b</th><th class=n>c</th><th class=n>d</th><th class=n>coverage</th><th class=n>ignored</th></tr>
+) => `<table><tr><th></th><th class=n>items</th><th class=n>matched</th><th class=n>locked</th><th class=n>a</th><th class=n>b</th><th class=n>c</th><th class=n>d</th><th class=n>e</th><th class=n>coverage</th><th class=n>ignored</th></tr>
 ${countsRow('Text (blocks, attributes, meta)', counts.text)}${countsRow('Images', counts.images)}${countsRow('Links (external / buttons)', counts.links)}</table>`
 
 function overlay(page, vp, holeNo) {

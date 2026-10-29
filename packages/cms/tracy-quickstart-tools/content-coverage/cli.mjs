@@ -114,7 +114,18 @@ function writeSlotFit({ result, contractDir, outDir, write }) {
   const file = write ? mapFile : join(outDir, 'content-map.fit.json')
   writeFileSync(file, `${JSON.stringify(map, null, 2)}\n`)
   try {
-    execFileSync('pnpm', ['exec', 'biome', 'format', '--write', '--files-max-size=4000000', file], {
+    // biome.jsonc leaves every Joomla contract JSON out of formatting (byte-pinned data), and biome
+    // exits 1 when every path it was given is ignored: that is "nothing to format", not a failure.
+    const args = [
+      'exec',
+      'biome',
+      'format',
+      '--write',
+      '--no-errors-on-unmatched',
+      '--files-max-size=4000000',
+      file
+    ]
+    execFileSync('pnpm', args, {
       cwd: REPO_ROOT,
       stdio: 'ignore'
     })

@@ -225,7 +225,9 @@ CONTENT_TYPES={'text','textarea','editor','media','url','email'}
 # whatever its name (`img-icon`), and a video's id is the demo's video, so neither is held to it.
 # `class` only as a word of the name (`item_class`, `header-class`): JA Boxing's `classes-type` is the words of a
 # fitness class, not a CSS class.
-TECHNICAL=re.compile(r'color|(^|[-_])class(name)?($|[-_])|style|layout|icon|width|height|column|align|animation|sfx|format|^tag$|_tag$|^id$|[-_]id$|^id[-_]|cache|^count$|limit|ordering|target',re.I)
+# A count or a ratio typed as a text field (VirtueMart's product module: `max_items`, `products_per_row`; JA's clients
+# block: `img-opacity`) is an option too.
+TECHNICAL=re.compile(r'color|(^|[-_])class(name)?($|[-_])|style|layout|icon|width|height|column|align|animation|sfx|format|^tag$|_tag$|^id$|[-_]id$|^id[-_]|cache|^count$|limit|ordering|target|^(max|min)[-_]|per[-_]row|opacity',re.I)
 VISIBILITY_PARAMS={'moduleclass_sfx','module_tag','header_tag','header_class','style','bootstrap_size','cache','cache_time'}
 LINK_ROLE=re.compile(r'(link|url|href)[-_]?\d*$|^(link|url|href)[-_]')
 MARKUP=re.compile(r'<[a-zA-Z/!]')

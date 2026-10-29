@@ -183,6 +183,13 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   left out of R1 to R8 and the verify viewer never marks them suspicious (`content-coverage/lib/demo-only.mjs`). The
   mark changes nothing else: the page is still captured, audited for holes, counted by R9 and shipped as the template
   ships it. Mark only a page whose every word is a style sample; a page with any business fact is not demo-only.
+- **Shop catalogue (audit 1.5.0).** A value printed inside VirtueMart's own markup, found only in a `virtuemart_` table, or a
+  picture under VirtueMart's media folders is classed `catalogue`: the shop owner's inventory (products, categories,
+  manufacturers, prices), managed in the shop component and never a contract slot, so no build rewrites a product or a
+  price. It is listed in `content-coverage.json`, never holds Publish, and R9 does not read it (JA Cagox, the first shop template).
+  The vendor view (the shop's own name and address, stated in VirtueMart's Shop settings) is catalogue too.
+- **Remote news feeds.** The items of a feed Joomla's News Feeds fetches from another site when the page is viewed are
+  another site's words, not the template's: they are classed core (`c`), so R9 does not read them either.
 - **Label judge (audit 1.4.0, spec #37).** The agent that runs the release is the judge; the audit calls no model and
   needs no key. For every component with a slot whose verdict is not cached, it writes `<out>/label-judge/request.json`:
   the question, the allowed verdicts and version 3 roles, the answer format, and per component its crop with numbered

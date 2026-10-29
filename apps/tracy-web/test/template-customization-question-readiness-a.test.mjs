@@ -16,7 +16,7 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
-import { crc32, gzipSync } from 'node:zlib'
+import { crc32, gunzipSync, gzipSync } from 'node:zlib'
 
 import { TEMPLATE_PROFILES } from '../src/lib/template-profiles.js'
 import {
@@ -164,6 +164,7 @@ const row = (tag, version) => TEMPLATE_PROFILES.releases[tag][version]
 const ESSENCE_J6 = { folder: 'quickstart_ja-essence_j6', tag: 'quickstart/ja-essence/j6' }
 const RESORT = { folder: 'quickstart_ja-resort_j6', tag: 'quickstart/ja-resort/j6' }
 const MORGAN = { folder: 'quickstart_ja-morgan_j6', tag: 'quickstart/ja-morgan/j6' }
+const CAGOX = { folder: 'quickstart_ja-cagox_j6', tag: 'quickstart/ja-cagox/j6' }
 const KINETIC_J6 = { folder: 'quickstart_ja-kinetic_j6', tag: 'quickstart/ja-kinetic/j6' }
 const ESSENCE_WP = { folder: 'quickstart_ja-essence_wp7', tag: 'quickstart/ja-essence/wp7' }
 const ESSENCE_WP_108 = { folder: 'quickstart_ja-essence_wp7@1.0.8', tag: 'quickstart/ja-essence/wp7' }
@@ -196,6 +197,17 @@ test('REL-3: JA Essence Joomla 1.0.2 is a pair (site_logo_dark with dark mode on
     assert.equal(r.status, 'pass', `${release.tag}: ${r.message}`)
     assert.match(r.message, /asks for "pair"/)
   }
+})
+
+test('REL-3: JA Cagox T3 is a pair: a dark header logo (logoimage) and a light one for the dark footer (logofooterimage)', async () => {
+  const r = await run(rel3LogoLayout, CAGOX)
+  assert.equal(r.status, 'pass', r.message)
+  assert.match(r.message, /asks for "pair"/)
+  assert.ok(
+    r.details.some((d) =>
+      /logofooterimage shows images\/joomlart\/logo\/logo-footer\.png, a light picture/.test(d)
+    )
+  )
 })
 
 test('REL-3: an unverified row the files agree with is a warning (live-only), as JA Mood and JA Donate', async () => {
@@ -301,6 +313,22 @@ test('LOGO-2: Essence Joomla 1.0.2 (filter keyed to the demo file), Morgan, Esse
     const r = await run(logo2DarkLogo, release)
     assert.equal(r.status, 'pass', `${release.tag}: ${r.message}`)
   }
+})
+
+test('LOGO-2: a T3 pair whose dark spot is the footer logo of every style (JA Cagox) passes without logoimage_dark', async () => {
+  const r = await run(logo2DarkLogo, CAGOX)
+  assert.equal(r.status, 'pass', r.message)
+})
+
+test('LOGO-2: a T3 pair with neither logoimage_dark nor a footer logo still fails (Cagox footer params cut in memory)', async () => {
+  const database = 'ja-cagox-j6-database-1.0.1.sql.gz'
+  const ctx = await contextOf(CAGOX.folder, { tag: CAGOX.tag })
+  const sql = gunzipSync(await ctx.source.read(database)).toString('utf8')
+  const cut = sql.replaceAll(/,"logofootertype":"image","logofooterimage":"[^"]*"/g, '')
+  assert.notEqual(cut, sql)
+  const r = await run(logo2DarkLogo, { ...CAGOX, overrides: { [database]: gzipSync(cut) } })
+  assert.equal(r.status, 'fail')
+  assert.match(r.message, /no template style carries logoimage_dark or a footer logo/)
 })
 
 test('LOGO-2: JA Essence WP 1.0.8 fails: the footer has one logo and dark mode inverts it', async () => {

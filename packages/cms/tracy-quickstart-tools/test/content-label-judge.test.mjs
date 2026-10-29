@@ -290,7 +290,7 @@ test('the verdicts are written into the committed coverage file beside labelRule
   const doc = buildCoverageFile({ result, contract: CONTRACT, labelJudge })
   assert.ok(doc.labelRules)
   assert.equal(doc.labelJudge.state, 'judged')
-  assert.equal(doc.tool.version, '1.4.0')
+  assert.equal(doc.tool.version, '1.5.0')
   assert.equal(buildCoverageFile({ result, contract: CONTRACT }).labelJudge, undefined)
 })
 

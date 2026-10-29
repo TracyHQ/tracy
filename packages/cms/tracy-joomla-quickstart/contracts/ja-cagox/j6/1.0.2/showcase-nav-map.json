@@ -1,0 +1,725 @@
+{
+  "schemaVersion": "tracy-quickstart-showcase-nav/joomla/v2",
+  "profileVersion": "1.0.0",
+  "contract": "ja-cagox/j6/1.0.2",
+  "baseHash": "78aa4123aee5567d605dfcd2f78c18b67cb546409dd59536f5695975ae7ec0db",
+  "baseFiles": {
+    "manifest.json": "21a997237138495af86cb3cdc299cb3ab960d98b6816065271edea108e6bd82c",
+    "content-map.json": "406118b15ad17254b042550e3ca5c2f56866ba0d820d7e2eef76c55a0af158b1",
+    "presentation-lock.json": "0f2d1bb0978f0d33c78add40e99e3daaa7c72ae835b266f654b6935e9b4c6621"
+  },
+  "inputs": {},
+  "decisionsHash": "7b16f55ad2ade454e8fcf8ac4f5048d65e6dbf3b75814fffb44045a78d8c7fe9",
+  "status": "checked",
+  "operations": [
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-121",
+      "identity": {
+        "path": "joomla",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Joomla",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Joomla\" branch is the template's demo kit (Joomla's own pages, sample content views, sample user screens), not a page of a fashion shop: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-122",
+      "identity": {
+        "path": "joomla/j-pages",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "J! Pages",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Joomla\" branch is the template's demo kit (Joomla's own pages, sample content views, sample user screens), not a page of a fashion shop: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-123",
+      "identity": {
+        "path": "joomla/j-pages/login",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Login",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Login\" sits in the \"Joomla\" branch, which is the template's demo kit, not a page of a fashion shop (product decision, 25/10/2026); the shop keeps its own account screens in navigation (Shop: My Orders, Account Maintenance, Edit Address) and the Login Form module, and the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-124",
+      "identity": {
+        "path": "joomla/j-pages/registration",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Registration",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Registration\" sits in the \"Joomla\" branch, which is the template's demo kit, not a page of a fashion shop (product decision, 25/10/2026); the shop keeps its own account screens in navigation (Shop: My Orders, Account Maintenance, Edit Address) and the Login Form module, and the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-125",
+      "identity": {
+        "path": "joomla/j-pages/user-profile",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "User Profile",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"User Profile\" sits in the \"Joomla\" branch, which is the template's demo kit, not a page of a fashion shop (product decision, 25/10/2026); the shop keeps its own account screens in navigation (Shop: My Orders, Account Maintenance, Edit Address) and the Login Form module, and the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-126",
+      "identity": {
+        "path": "joomla/j-pages/news-feeds",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "News Feeds",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"News Feeds\" sits in the \"Joomla\" branch, which is the template's demo kit (product decision, 25/10/2026): it is the only route to the sample news feeds, which are live feeds of joomla.org and not content of a fashion shop; the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-128",
+      "identity": {
+        "path": "joomla/other-pages",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Other Pages",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Joomla\" branch is the template's demo kit (Joomla's own pages, sample content views, sample user screens), not a page of a fashion shop: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-130",
+      "identity": {
+        "path": "joomla/other-pages/smart-search",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Smart Search",
+      "path": "menu_show",
+      "from": "1",
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Smart Search\" sits in the \"Joomla\" branch, which is the template's demo kit, not a page of a fashion shop (product decision, 25/10/2026); shoppers search the catalogue with the Product search module, and the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-146",
+      "identity": {
+        "path": "joomla/content-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Content Page",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Joomla\" branch is the template's demo kit (Joomla's own pages, sample content views, sample user screens), not a page of a fashion shop: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-147",
+      "identity": {
+        "path": "joomla/content-page/all-categories",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "All Categories",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (the \"Joomla\" branch is the template's demo kit (Joomla's own pages, sample content views, sample user screens), not a page of a fashion shop: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-148",
+      "identity": {
+        "path": "joomla/content-page/all-categories/sample-category-1",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Sample Category 1",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Joomla\" branch is the template's demo kit (Joomla's own pages, sample content views, sample user screens), not a page of a fashion shop: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-149",
+      "identity": {
+        "path": "joomla/content-page/all-categories/sample-category-2",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Sample Category 2",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Joomla\" branch is the template's demo kit (Joomla's own pages, sample content views, sample user screens), not a page of a fashion shop: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-150",
+      "identity": {
+        "path": "joomla/content-page/all-categories/sample-category-3",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Sample Category 3",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Joomla\" branch is the template's demo kit (Joomla's own pages, sample content views, sample user screens), not a page of a fashion shop: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-151",
+      "identity": {
+        "path": "joomla/content-page/all-categories/sample-category-4",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Sample Category 4",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Joomla\" branch is the template's demo kit (Joomla's own pages, sample content views, sample user screens), not a page of a fashion shop: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-152",
+      "identity": {
+        "path": "joomla/content-page/all-categories/sample-category-5",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Sample Category 5",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Joomla\" branch is the template's demo kit (Joomla's own pages, sample content views, sample user screens), not a page of a fashion shop: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-153",
+      "identity": {
+        "path": "joomla/content-page/all-categories/sample-category-6",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Sample Category 6",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Joomla\" branch is the template's demo kit (Joomla's own pages, sample content views, sample user screens), not a page of a fashion shop: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-154",
+      "identity": {
+        "path": "joomla/content-page/category-blog",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Blog Layout",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Joomla\" branch is the template's demo kit (Joomla's own pages, sample content views, sample user screens), not a page of a fashion shop: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-155",
+      "identity": {
+        "path": "joomla/content-page/featured-articles",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Featured Articles",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (the \"Joomla\" branch is the template's demo kit (Joomla's own pages, sample content views, sample user screens), not a page of a fashion shop: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-156",
+      "identity": {
+        "path": "joomla/content-page/archive-articles",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Archive Articles",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Joomla\" branch is the template's demo kit (Joomla's own pages, sample content views, sample user screens), not a page of a fashion shop: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-157",
+      "identity": {
+        "path": "joomla/content-page/tagged-items",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Tagged Items",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.sample-listing",
+      "reason": "a sample listing inside a branch or menu decided hidden (the \"Joomla\" branch is the template's demo kit (Joomla's own pages, sample content views, sample user screens), not a page of a fashion shop: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working)"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-158",
+      "identity": {
+        "path": "joomla/other-pages/404-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "404 page",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Joomla\" branch is the template's demo kit (Joomla's own pages, sample content views, sample user screens), not a page of a fashion shop: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-159",
+      "identity": {
+        "path": "joomla/other-pages/offline-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Offline Page",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "the \"Joomla\" branch is the template's demo kit (Joomla's own pages, sample content views, sample user screens), not a page of a fashion shop: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-160",
+      "identity": {
+        "path": "joomla/other-pages/contact-us",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Contact Us",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Contact Us\" sits in the \"Joomla\" branch, which is the template's demo kit, not a page of a fashion shop (product decision, 25/10/2026); the top-level Contact item stays in navigation, and the page and its URL keep working"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-177",
+      "identity": {
+        "path": "homepage/simple-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Simple Page",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/homepage"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-178",
+      "identity": {
+        "path": "homepage/landing-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Landing Page",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/homepage"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-179",
+      "identity": {
+        "path": "homepage/horizontal-page",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Horizontal Page",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.home-branch-variant",
+      "reason": "another demo of the home page: under mainmenu/homepage"
+    },
+    {
+      "op": "menuItem.param",
+      "key": "menuItem-181",
+      "identity": {
+        "path": "joomla/j-pages/reminder",
+        "menutype": "mainmenu",
+        "language": "*"
+      },
+      "label": "Reminder",
+      "path": "menu_show",
+      "from": null,
+      "to": "0",
+      "rule": "hide.decision",
+      "reason": "\"Reminder\" sits in the \"Joomla\" branch, which is the template's demo kit, not a page of a fashion shop (product decision, 25/10/2026); the shop keeps its own account screens in navigation (Shop: My Orders, Account Maintenance, Edit Address) and the Login Form module, and the page and its URL keep working"
+    },
+    {
+      "op": "templateStyle.megaSubRemove",
+      "key": "templateStyle-9",
+      "identity": {
+        "title": "ja_cagox - Default",
+        "template": "ja_cagox",
+        "client_id": "0"
+      },
+      "label": "ja_cagox - Default · Home",
+      "style": {
+        "id": 9,
+        "template": "ja_cagox"
+      },
+      "menutype": "mainmenu",
+      "item": 101,
+      "path": "mm_config.mainmenu.item-101.sub",
+      "before": "942d88bb4e26b95d7e7396aea0b52d4df194f77b872af4456de9da663a0b9b91",
+      "after": "abf69e7418bb6dd18f2b1c0edcdbf3203e0e2008d42ae185fddd6b05cc06919d",
+      "rule": "hide.mega-sub-of-emptied-item",
+      "reason": "every child of \"Home\" in mainmenu leaves the navigation; T3 builds a dropdown from this sub whatever the children, so it would open empty"
+    },
+    {
+      "op": "templateStyle.megaSubRemove",
+      "key": "templateStyle-10",
+      "identity": {
+        "title": "ja_cagox - Home",
+        "template": "ja_cagox",
+        "client_id": "0"
+      },
+      "label": "ja_cagox - Home · Home",
+      "style": {
+        "id": 10,
+        "template": "ja_cagox"
+      },
+      "menutype": "mainmenu",
+      "item": 101,
+      "path": "mm_config.mainmenu.item-101.sub",
+      "before": "6fc90a9345824c8ab7dae3cb21ce194529801e4e0d3a338cd1868d39bab78d27",
+      "after": "5c75c83a9eb5630b65fc3d20ea3097705133e08becea4d31150f3981004f3c9b",
+      "rule": "hide.mega-sub-of-emptied-item",
+      "reason": "every child of \"Home\" in mainmenu leaves the navigation; T3 builds a dropdown from this sub whatever the children, so it would open empty"
+    },
+    {
+      "op": "templateStyle.megaSubRemove",
+      "key": "templateStyle-12",
+      "identity": {
+        "title": "ja_cagox - Blank",
+        "template": "ja_cagox",
+        "client_id": "0"
+      },
+      "label": "ja_cagox - Blank · Home",
+      "style": {
+        "id": 12,
+        "template": "ja_cagox"
+      },
+      "menutype": "mainmenu",
+      "item": 101,
+      "path": "mm_config.mainmenu.item-101.sub",
+      "before": "459a65b87bf6bd27fd362123101daab8b3cc591cd5f44d8112ff2785f0f4f85f",
+      "after": "6507464a3489b967ef2d77dc42c6a3fd233ab8998ae9fa351416b5aec2266b52",
+      "rule": "hide.mega-sub-of-emptied-item",
+      "reason": "every child of \"Home\" in mainmenu leaves the navigation; T3 builds a dropdown from this sub whatever the children, so it would open empty"
+    },
+    {
+      "op": "templateStyle.megaSubRemove",
+      "key": "templateStyle-13",
+      "identity": {
+        "title": "ja_cagox - Landing",
+        "template": "ja_cagox",
+        "client_id": "0"
+      },
+      "label": "ja_cagox - Landing · Home",
+      "style": {
+        "id": 13,
+        "template": "ja_cagox"
+      },
+      "menutype": "mainmenu",
+      "item": 101,
+      "path": "mm_config.mainmenu.item-101.sub",
+      "before": "53bf838165112f5685e232ef21236af00565255b0cb90b84b134edab47c831f5",
+      "after": "8dc229c972ece11339d0e3281ca1340da3b707dee0b5b6cf45ba858a04ce4629",
+      "rule": "hide.mega-sub-of-emptied-item",
+      "reason": "every child of \"Home\" in mainmenu leaves the navigation; T3 builds a dropdown from this sub whatever the children, so it would open empty"
+    },
+    {
+      "op": "templateStyle.megaSubRemove",
+      "key": "templateStyle-14",
+      "identity": {
+        "title": "ja_cagox - Horizontal",
+        "template": "ja_cagox",
+        "client_id": "0"
+      },
+      "label": "ja_cagox - Horizontal · Home",
+      "style": {
+        "id": 14,
+        "template": "ja_cagox"
+      },
+      "menutype": "mainmenu",
+      "item": 101,
+      "path": "mm_config.mainmenu.item-101.sub",
+      "before": "1c54b216927b1dd22734faf834d3bb16816390892692d1ecc49ec02e0aa0da9d",
+      "after": "19140dbf75a0f704388daa5f7ee869a0061a8c3491a04b04e7bbc9d438f462fd",
+      "rule": "hide.mega-sub-of-emptied-item",
+      "reason": "every child of \"Home\" in mainmenu leaves the navigation; T3 builds a dropdown from this sub whatever the children, so it would open empty"
+    },
+    {
+      "op": "templateStyle.megaSubRemove",
+      "key": "templateStyle-15",
+      "identity": {
+        "title": "ja_cagox - Simple",
+        "template": "ja_cagox",
+        "client_id": "0"
+      },
+      "label": "ja_cagox - Simple · Home",
+      "style": {
+        "id": 15,
+        "template": "ja_cagox"
+      },
+      "menutype": "mainmenu",
+      "item": 101,
+      "path": "mm_config.mainmenu.item-101.sub",
+      "before": "bb4df13a6b19073d413e6ad8648a502d9d34edb50d8369839fd69c0a78ed8980",
+      "after": "a11b89fa55a4398db6c2cb47cfebcbe8f3313cf4c2b2de77b5bee6a4f265f8ac",
+      "rule": "hide.mega-sub-of-emptied-item",
+      "reason": "every child of \"Home\" in mainmenu leaves the navigation; T3 builds a dropdown from this sub whatever the children, so it would open empty"
+    }
+  ],
+  "kept": [
+    {
+      "key": "menuItem-101",
+      "label": "Home",
+      "where": "mainmenu/homepage",
+      "rule": "keep.homepage",
+      "reason": "home page"
+    },
+    {
+      "key": "menuItem-102",
+      "label": "Your Profile",
+      "where": "usermenu/your-profile",
+      "rule": "keep.functional-default",
+      "reason": "opens com_users (view=profile): a working feature stays unless decided"
+    },
+    {
+      "key": "menuItem-103",
+      "label": "Site Administrator",
+      "where": "usermenu/2013-11-16-23-26-41",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-104",
+      "label": "Submit an Article",
+      "where": "usermenu/submit-an-article",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-106",
+      "label": "Template Settings",
+      "where": "usermenu/template-settings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-107",
+      "label": "Site Settings",
+      "where": "usermenu/site-settings",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-131",
+      "label": "Blog",
+      "where": "mainmenu/blog",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-161",
+      "label": "All Categories",
+      "where": "mainmenu/shop/all-categories",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-162",
+      "label": "Other Pages",
+      "where": "mainmenu/shop/2015-02-06-04-34-56",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-163",
+      "label": "Jeans & Pants",
+      "where": "mainmenu/shop/jeans-pants",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-164",
+      "label": "Hats",
+      "where": "mainmenu/shop/hats",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-165",
+      "label": "Shoes",
+      "where": "mainmenu/shop/shoes",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-166",
+      "label": "Clothing",
+      "where": "mainmenu/shop/clothing",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-167",
+      "label": "Handbags",
+      "where": "mainmenu/shop/handbags",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-168",
+      "label": "Accessories & Gifts",
+      "where": "mainmenu/shop/accessories-gifts",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-169",
+      "label": "My Orders",
+      "where": "mainmenu/shop/my-orders",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-170",
+      "label": "Edit Address",
+      "where": "mainmenu/shop/edit-address",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-171",
+      "label": "My shopping cart",
+      "where": "mainmenu/shop/my-shopping-cart",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-172",
+      "label": "Account Maintenance",
+      "where": "mainmenu/shop/account-maintenance",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-173",
+      "label": "Manufacturers",
+      "where": "mainmenu/shop/manufactures",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-174",
+      "label": "Shop",
+      "where": "mainmenu/shop",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-175",
+      "label": "About us",
+      "where": "mainmenu/about-us",
+      "rule": "keep.default",
+      "reason": "no rule hides it"
+    },
+    {
+      "key": "menuItem-599",
+      "label": "Contact",
+      "where": "mainmenu/contact",
+      "rule": "keep.functional-default",
+      "reason": "opens com_contact (view=contact): a working feature stays unless decided"
+    },
+    {
+      "key": "module-1",
+      "label": "Main Menu",
+      "where": "mod_menu@off-canvas",
+      "rule": "keep.default",
+      "reason": "renders mainmenu: 18 entries stay (class \"_menu\")"
+    }
+  ],
+  "unresolved": [],
+  "counts": {
+    "menuItems": 27,
+    "modules": 0,
+    "megaSubs": 6,
+    "kept": 24,
+    "unresolved": 0
+  }
+}
