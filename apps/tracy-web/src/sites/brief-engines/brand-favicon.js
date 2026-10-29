@@ -31,6 +31,7 @@ import {
   silhouetteOf,
   withOutline
 } from './favicon-silhouette.js'
+import { smallLabels, symbolsOf } from './favicon-small-sizes.js'
 
 /** Margin around the mark, as a share of the side, so it does not touch the tab's edge. */
 const MARGIN = 0.06
@@ -69,7 +70,15 @@ export async function faviconMark(bytes) {
   const masters = new Map()
   // The outline the drawing draws around the mark stays at least one pixel of each size wide, so a small icon keeps it.
   const outline = outlineOf(labels, alpha)
+  // A mark with an outline (a crest, a badge) is redrawn from parts at 48 px and under: the outline, and the main symbol
+  // whole and thickened, every other part dropped whole (`favicon-small-sizes.js`), never a fragment of the drawing.
+  const drawing = outline !== null ? symbolsOf(cleaned(labels, palette.length, 2, 64), alpha, outline) : null
   const masterFor = (/** @type {number} */ size) => {
+    if (drawing && outline !== null && size <= 48) {
+      if (!masters.has(-size))
+        masters.set(-size, rendered(smallLabels(alpha, outline, drawing, size).labels, palette, alpha))
+      return /** @type {Promise<Buffer>} */ (masters.get(-size))
+    }
     const key = radiusFor(size)
     if (!masters.has(key)) {
       const clean = cleaned(labels, palette.length, key, crumbFor(size))

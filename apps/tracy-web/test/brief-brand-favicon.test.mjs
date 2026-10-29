@@ -100,6 +100,40 @@ test('small sizes keep the outline the crest draws around itself, at least one p
   assert.ok(rim >= 2, `the gold outline shows on both sides at 16 px, got ${rim} pixels`)
 })
 
+/** A tennis club's crest: a gold outline, two rackets crossed in the middle (two rings, two handles), a hill at the bottom
+ * leaning on the outline, and two stray dots. */
+const racketCrest = () =>
+  svgPng(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600"><rect width="600" height="600" fill="#14213d"/><path d="M150 60 H450 V280 C450 400 300 520 300 520 C300 520 150 400 150 280 Z" fill="none" stroke="#e8c46a" stroke-width="14"/><circle cx="245" cy="170" r="50" fill="none" stroke="#e8c46a" stroke-width="8"/><circle cx="355" cy="170" r="50" fill="none" stroke="#e8c46a" stroke-width="8"/><line x1="270" y1="215" x2="340" y2="320" stroke="#e8c46a" stroke-width="8"/><line x1="330" y1="215" x2="260" y2="320" stroke="#e8c46a" stroke-width="8"/><path d="M160 400 C220 350 260 420 300 380 C340 340 380 420 440 380 L440 420 L300 520 L160 420 Z" fill="#e8c46a"/><circle cx="200" cy="330" r="4" fill="#e8c46a"/><circle cx="400" cy="330" r="4" fill="#e8c46a"/></svg>`
+  )
+
+/** The gold cells of a small icon inside the box [x0, y0, x1, y1] (inclusive). */
+async function goldIn(png, [x0, y0, x1, y1]) {
+  const { data, info } = await sharp(png).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+  let n = 0
+  for (let y = y0; y <= y1; y += 1)
+    for (let x = x0; x <= x1; x += 1) {
+      const i = (y * info.width + x) * 4
+      if (data[i + 3] >= 128 && data[i] > 120) n += 1
+    }
+  return n
+}
+
+test('small sizes keep the main symbol whole and drop every other part whole, never a fragment', async () => {
+  const icon = await faviconMark(await racketCrest())
+  const at32 = await icon.at(32)
+  // The crossed rackets stay, thickened: a ring of gold around an open head, and the handles below.
+  assert.ok((await goldIn(at32, [9, 8, 10, 8])) >= 1, 'the left racket head is drawn')
+  assert.equal(await goldIn(at32, [12, 8, 13, 8]), 0, 'its head stays open')
+  assert.ok((await goldIn(at32, [13, 13, 18, 16])) >= 4, 'the handles are drawn')
+  // The hill leaning on the outline and the stray dots leave whole: inside the outline below the symbol is all ground.
+  assert.equal(await goldIn(at32, [10, 19, 21, 23]), 0)
+  assert.equal(await goldIn(at32, [8, 15, 11, 18]), 0)
+  assert.ok((await goldIn(await icon.at(48), [16, 14, 31, 22])) >= 10, 'the rackets at 48 px')
+  // At 16 px the rackets would close up: the icon is the clean silhouette with its outline, nothing inside.
+  assert.equal(await goldIn(await icon.at(16), [5, 3, 10, 10]), 0)
+})
+
 test('a round badge and a line mark with no ground colour are punched too, never on a square', async () => {
   const badge = await faviconMark(await roundBadge())
   assert.equal((await pixel(badge.png, 3, 3)).a, 0)
