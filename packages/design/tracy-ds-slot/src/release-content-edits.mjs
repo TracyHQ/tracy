@@ -44,6 +44,13 @@
  * `"whole": true` (needs `field`) sets one column of the entity's row: `from` is the column's whole value as the
  * dump writes it (a quoted string, never NULL), `to` the new one, `count` 1 (JA Restaurant 1.0.6: articles of
  * one category given distinct `publish_up`, where the row's `modified` holds the same date).
+ *
+ * `"table": "<name>"` in place of `entity` edits a table that holds no contract entity, in the dump alone: the copies
+ * Joomla keeps of a row's text outside it (JA Cagox 1.0.2: an article's picture caption was edited, and its copies in
+ * the tag index `ucm_content` and the Smart Search index `finder_links` still printed the old words on the tag page).
+ * `from` is counted inside that table's rows only; the lock and the content map never hold those tables, so they are
+ * left as they are. A table that holds contract entities (`content`, `modules`…) is refused: edit those by `entity`.
+ * Smart Search keeps PHP-serialized strings, whose length is written beside them: there `to` must keep `from`'s length.
  */
 import { readFileSync } from 'node:fs'
 
@@ -79,7 +86,22 @@ export function loadContentEdits(file) {
   if (!Array.isArray(edits) || !edits.length) throw new Error(`${file}: no "edits"`)
   for (const [i, e] of edits.entries()) {
     const at = `${file} edit ${i + 1}`
-    if (!/^[a-zA-Z]+-\d+$/.test(String(e.entity))) throw new Error(`${at}: "entity" is not like module-229`)
+    if (e.table !== undefined) {
+      if (e.entity !== undefined) throw new Error(`${at}: an edit names either "entity" or "table"`)
+      if (!/^[a-z_]+$/.test(String(e.table)))
+        throw new Error(`${at}: "table" is not a table name without its prefix`)
+      if (Object.values(TABLES).includes(e.table))
+        throw new Error(`${at}: "${e.table}" holds contract entities: edit them by "entity"`)
+      if (
+        e.json !== undefined ||
+        e.row !== undefined ||
+        e.whole !== undefined ||
+        e.nested !== undefined ||
+        e.field !== undefined
+      )
+        throw new Error(`${at}: a "table" edit is a plain text edit (no field, json, row, whole or nested)`)
+    } else if (!/^[a-zA-Z]+-\d+$/.test(String(e.entity)))
+      throw new Error(`${at}: "entity" is not like module-229`)
     if (e.field !== undefined && !FIELD.test(String(e.field)))
       throw new Error(`${at}: "field" is not a column name`)
     if (e.json !== undefined && e.json !== true) throw new Error(`${at}: "json" is true or absent`)
@@ -182,6 +204,22 @@ const CORE_TABLES = [
   'users'
 ]
 const escapeRe = (x) => x.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+/**
+ * A column only that core table has. A longer candidate (`jd_virtuemart_` beside `jd_`) whose every table is named
+ * like a core one but whose CREATE TABLE lacks that column is an extension's own tables (VirtueMart's
+ * `jd_virtuemart_categories`, `jd_virtuemart_modules`, `jd_virtuemart_vendor_users`: JA Cagox 1.0.2), a fragment, not
+ * a copy of Joomla's schema under a second prefix. A table the texts carry no CREATE TABLE for is judged by name.
+ */
+const CORE_COLUMN = {
+  assets: 'rules',
+  categories: 'extension',
+  content: 'introtext',
+  extensions: 'element',
+  menu: 'menutype',
+  modules: 'position',
+  template_styles: 'template',
+  users: 'username'
+}
 
 /**
  * Joomla's own tables whose names end with a core table's name, read from the Joomla 6 installers of JA Fresco and
@@ -218,12 +256,17 @@ export function dumpPrefix(texts) {
         const prefix = name.slice(0, -core.length)
         tables.set(prefix, [...(tables.get(prefix) ?? []), name])
       }
+  /** The table's CREATE TABLE in the texts lacks the column its core name promises: an extension's own table. */
+  const notCore = (table, prefix) => {
+    const columns = createColumns(texts, table)
+    return columns !== null && !columns.includes(CORE_COLUMN[table.slice(prefix.length)])
+  }
   const fragment = (prefix, credited) =>
     [...tables.keys()].some(
       (shorter) =>
         shorter.length < prefix.length &&
         prefix.startsWith(shorter) &&
-        credited.every((t) => JOOMLA_TABLES_ENDING_IN_CORE.has(t.slice(shorter.length)))
+        credited.every((t) => JOOMLA_TABLES_ENDING_IN_CORE.has(t.slice(shorter.length)) || notCore(t, prefix))
     )
   const real = [...tables]
     .filter(([prefix, credited]) => !fragment(prefix, credited))
@@ -284,6 +327,44 @@ function rowOf(texts, entity) {
   return rows[0]
 }
 
+/** The spans of every row of `<prefix><table>` in the dump texts: `{ index, start, end }`. */
+function tableRows(texts, table) {
+  const prefix = dumpPrefix(texts)
+  if (prefix === null) throw new Error(`dump: no Joomla core table names the table prefix (${table})`)
+  const insert = new RegExp(`INSERT INTO \`${escapeRe(prefix)}${table}\`\\s*(?:\\([^)]*\\)\\s*)?VALUES`, 'g')
+  const rows = []
+  texts.forEach((text, index) => {
+    for (const m of text.matchAll(insert)) {
+      let j = m.index + m[0].length
+      for (;;) {
+        while (SPACE.test(text[j] ?? '')) j++
+        if (text[j] !== '(') break
+        const t = tupleAt(text, j)
+        rows.push({ index, start: t.start, end: t.end })
+        j = t.end
+        while (SPACE.test(text[j] ?? '')) j++
+        if (text[j] !== ',') break
+        j++
+      }
+    }
+  })
+  return { prefix, rows }
+}
+
+/** One table edit in the dump texts, in place: `from` counted and replaced inside that table's rows only. */
+function editTable(out, e) {
+  const { prefix, rows } = tableRows(out, e.table)
+  const n = rows.reduce((sum, r) => sum + occurrences(out[r.index].slice(r.start, r.end), e.from), 0)
+  if (n !== e.count)
+    throw new Error(`dump: "${e.from}" occurs ${n} times in ${prefix}${e.table}, the edit expects ${e.count}`)
+  // from the last row back, so the spans still to edit keep their offsets
+  for (const r of [...rows].reverse()) {
+    const text = out[r.index]
+    out[r.index] =
+      text.slice(0, r.start) + text.slice(r.start, r.end).split(e.from).join(e.to) + text.slice(r.end)
+  }
+}
+
 /** One row-kept edit (`row` or `whole`) in the dump texts, in place: only the value of the named column. */
 function editRow(out, e) {
   const r = rowOf(out, e.entity)
@@ -316,6 +397,10 @@ export function editDump(texts, edits) {
   const one = typeof texts === 'string'
   let out = one ? [texts] : [...texts]
   for (const e of edits) {
+    if (e.table !== undefined) {
+      editTable(out, e)
+      continue
+    }
     if (e.row === true || e.whole === true) {
       editRow(out, e)
       continue
@@ -341,6 +426,7 @@ export function editDump(texts, edits) {
 export function editLock(lockText, edits) {
   let out = lockText
   for (const e of edits) {
+    if (e.table !== undefined) continue // a table outside the contract: the lock never holds it
     if (e.row === true || e.whole === true) {
       out = editLockRow(out, e)
       continue
@@ -538,6 +624,7 @@ export function editContentMap(mapText, edits) {
   let out = mapText
   const edited = []
   for (const e of edits) {
+    if (e.table !== undefined) continue // no slot samples a table outside the contract
     // a whole text node (`>MT<`), or a value a slot samples whole (JA Donate 1.0.7: the slideshow
     // video id module-91.8 samples, `AjGyuHm5q4s` -> `gGFQybMEPeM`)
     if (e.nested === true) {

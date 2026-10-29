@@ -736,6 +736,36 @@ test('a nested edit reaches one ACM field of a module whose two buttons share th
   )
 })
 
+test("an extension's table named like a core one is not a prefix: its CREATE TABLE lacks the core table's columns", () => {
+  // JA Cagox 1.0.2 (VirtueMart): jd_virtuemart_categories, jd_virtuemart_modules and jd_virtuemart_vendor_users end
+  // with core names, and their CREATE TABLE shows they are the shop's own tables, not a second Joomla schema
+  const create = (table, columns) =>
+    `CREATE TABLE \`${table}\` (\n${columns.map((c) => `  \`${c}\` text`).join(',\n')}\n) ENGINE=InnoDB;\n`
+  const dump =
+    create('jd_content', ['id', 'catid', 'introtext', 'publish_up']) +
+    create('jd_modules', ['id', 'title', 'module', 'position']) +
+    create('jd_virtuemart_categories', ['virtuemart_category_id', 'category_layout']) +
+    create('jd_virtuemart_modules', ['module_id', 'module_name']) +
+    create('jd_virtuemart_vendor_users', ['virtuemart_vendor_id', 'virtuemart_user_id']) +
+    "INSERT INTO `jd_virtuemart_categories` VALUES (2,'default');\n" +
+    "INSERT INTO `jd_content` VALUES (2,8,'<p>x</p>','2021-09-27 00:00:00');\n"
+  assert.equal(dumpPrefix([dump]), 'jd_')
+  const e = [
+    {
+      entity: 'article-2',
+      field: 'publish_up',
+      whole: true,
+      from: '2021-09-27 00:00:00',
+      to: '2021-09-27 00:02:00',
+      count: 1
+    }
+  ]
+  assert.equal(editDump(dump, e), dump.replace("'2021-09-27 00:00:00'", "'2021-09-27 00:02:00'"))
+  // a CREATE TABLE that does carry the core columns under another prefix is still a second schema
+  const twice = dump + create('old_modules', ['id', 'title', 'module', 'position'])
+  assert.throws(() => dumpPrefix([twice]), /2 table prefixes name core tables \(jd_ 2, old_ 1\)/)
+})
+
 test('a dump with more than one real table prefix is refused, naming them; a Joomla fragment is never a prefix', () => {
   // review of #1521: one copy of a row was edited and the other silently left
   const ins = (t) => `INSERT INTO \`${t}\` (\`id\`, \`title\`) VALUES (2,'OLD');\n`
@@ -774,4 +804,49 @@ test('a row whose unquoted value calls a function, as CURRENT_TIMESTAMP(), is re
     { entity: 'category-10', field: 'title', whole: true, from: 'Old title', to: 'New title', count: 1 }
   ]
   assert.equal(editDump(dump, e), dump.replace("(10,'Old title'", "(10,'New title'"))
+})
+
+test('a table edit reaches a copy Joomla keeps outside the contract (the tag index, the search index), never a contract row', () => {
+  // JA Cagox 1.0.2: an article's picture caption was edited, and its copies in the tag index and the
+  // Smart Search index still printed the old words on the tag page
+  const dump = [
+    "INSERT INTO `jd_content` VALUES (2,'Old caption here');",
+    'INSERT INTO `jd_ucm_content` VALUES (1,\'{\\"image_intro_alt\\":\\"Old caption here\\"}\'),(2,\'other\');',
+    'INSERT INTO `jd_finder_links` VALUES (5,\'s:16:\\"Old caption here\\";\');',
+    'CREATE TABLE `jd_content` (\n  `id` int,\n  `introtext` text\n);'
+  ].join('\n')
+  const edits = loadContentEdits(
+    editsFile([
+      { table: 'ucm_content', from: 'Old caption here', to: 'New caption text', count: 1 },
+      { table: 'finder_links', from: 'Old caption here', to: 'New caption text', count: 1 }
+    ])
+  )
+  const out = editDump(dump, edits)
+  assert.equal((out.match(/New caption text/g) ?? []).length, 2)
+  // the contract's own row is the entity edit's business, not a table edit's
+  assert.match(out, /`jd_content` VALUES \(2,'Old caption here'\)/)
+  // the serialized string keeps its length, so PHP still reads it
+  assert.match(out, /s:16:\\"New caption text\\"/)
+  // the lock and the content map never hold these tables: a table edit leaves them as they are
+  assert.equal(editLock('{"entities":{}}', edits), '{"entities":{}}')
+  // counted inside the table only, and refused for a table that holds contract entities
+  assert.throws(
+    () =>
+      editDump(
+        dump,
+        loadContentEdits(editsFile([{ table: 'ucm_content', from: 'Old caption here', to: 'x', count: 2 }]))
+      ),
+    /occurs 1 times in jd_ucm_content, the edit expects 2/
+  )
+  assert.throws(
+    () => loadContentEdits(editsFile([{ table: 'content', from: 'Old caption here', to: 'x', count: 1 }])),
+    /holds contract entities/
+  )
+  assert.throws(
+    () =>
+      loadContentEdits(
+        editsFile([{ table: 'ucm_content', entity: 'article-2', from: 'a', to: 'b', count: 1 }])
+      ),
+    /either "entity" or "table"/
+  )
 })
