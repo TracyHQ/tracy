@@ -13,7 +13,10 @@ const UNREAD = REVIEWED_SKILLS.find((skill) => !skill.readers.length).prefix
 // Found by a fragment of the name: the guard below fails on a test that spells out a reviewed tree.
 const T4 = REVIEWED_SKILLS.find((skill) => skill.prefix.includes('joomlart-t4'))
 const EMDASH_SKILL = REVIEWED_SKILLS.find((skill) => skill.prefix.startsWith('vendor/emdash/')).prefix
-const T4_READERS = T4.readers
+// A skill whose every reader is a worker test: its change stays narrow (T4 is no longer one: two
+// Dockerfiles no pull request builds read it).
+const NARROW = REVIEWED_SKILLS.find((skill) => skill.prefix.endsWith('/pr-merge/'))
+const NARROW_READERS = NARROW.readers
 const [DATA, MAPPED] = [...DATA_FILE_TESTS.entries()][0]
 
 const files = [
@@ -91,52 +94,56 @@ test('a reviewed skill alone selects nothing; with docs and a duplicate data fil
 })
 
 test('a skill with declared readers selects exactly those readers and nothing else', () => {
-  const inventory = [...files, ...T4_READERS]
-  const only = relatedTests({ changed: [`${T4.prefix}IMPORT-NOTE.md`], allFiles: inventory, dependencies })
-  assert.deepEqual([only.full, only.workers, only.interop], [false, T4_READERS, false])
-  const docs = relatedTests({
-    changed: [`${T4.prefix}SKILL.md`, 'docs/references/x.md', `${UNREAD}SKILL.md`],
+  const inventory = [...files, ...NARROW_READERS]
+  const only = relatedTests({
+    changed: [`${NARROW.prefix}IMPORT-NOTE.md`],
     allFiles: inventory,
     dependencies
   })
-  assert.deepEqual([docs.full, docs.workers, docs.interop], [false, T4_READERS, false])
+  assert.deepEqual([only.full, only.workers, only.interop], [false, NARROW_READERS, false])
+  const docs = relatedTests({
+    changed: [`${NARROW.prefix}SKILL.md`, 'docs/references/x.md', `${UNREAD}SKILL.md`],
+    allFiles: inventory,
+    dependencies
+  })
+  assert.deepEqual([docs.full, docs.workers, docs.interop], [false, NARROW_READERS, false])
   const unread = relatedTests({ changed: [`${UNREAD}SKILL.md`], allFiles: inventory, dependencies })
   assert.deepEqual([unread.full, unread.workers, unread.interop], [false, [], false])
 })
 
 test('a skill reader is a union with data tests and with source, never duplicated', () => {
-  const inventory = [...files, ...MAPPED, ...T4_READERS, DATA]
+  const inventory = [...files, ...MAPPED, ...NARROW_READERS, DATA]
   const withData = relatedTests({
-    changed: [DATA, `${T4.prefix}SKILL.md`],
+    changed: [DATA, `${NARROW.prefix}SKILL.md`],
     allFiles: inventory,
     dependencies
   })
-  assert.deepEqual([...withData.workers].sort(), [...MAPPED, ...T4_READERS].sort())
+  assert.deepEqual([...withData.workers].sort(), [...MAPPED, ...NARROW_READERS].sort())
   assert.equal(new Set(withData.workers).size, withData.workers.length)
   assert.equal(withData.interop, false)
   const withSource = relatedTests({
-    changed: ['packages/core/tracy-core/src/a.mjs', `${T4.prefix}SKILL.md`],
+    changed: ['packages/core/tracy-core/src/a.mjs', `${NARROW.prefix}SKILL.md`],
     allFiles: inventory,
     dependencies
   })
-  for (const reader of T4_READERS) assert.ok(withSource.workers.includes(reader), reader)
+  for (const reader of NARROW_READERS) assert.ok(withSource.workers.includes(reader), reader)
   assert.ok(withSource.workers.includes('packages/core/tracy-core/test/seat.test.mjs'))
   assert.equal(withSource.interop, true)
 })
 
 test('a declared reader missing from the inventory, or a look-alike prefix, runs the full suite', () => {
-  const lost = relatedTests({ changed: [`${T4.prefix}SKILL.md`], allFiles: files, dependencies })
+  const lost = relatedTests({ changed: [`${NARROW.prefix}SKILL.md`], allFiles: files, dependencies })
   assert.equal(lost.full, true)
   assert.match(lost.why, /reader .* is missing/)
   const lostWithData = relatedTests({
-    changed: [DATA, `${T4.prefix}SKILL.md`],
+    changed: [DATA, `${NARROW.prefix}SKILL.md`],
     allFiles: [...files, ...MAPPED, DATA],
     dependencies
   })
   assert.equal(lostWithData.full, true)
   const lookAlike = relatedTests({
-    changed: [`${T4.prefix.slice(0, -1)}-x/SKILL.md`],
-    allFiles: [...files, ...T4_READERS],
+    changed: [`${NARROW.prefix.slice(0, -1)}-x/SKILL.md`],
+    allFiles: [...files, ...NARROW_READERS],
     dependencies
   })
   assert.equal(lookAlike.full, true)
@@ -416,11 +423,16 @@ function treeReferences(text, prefix) {
 }
 
 /**
- * Every tracked file that can execute — code, shell, Python, workflow and action YAML — wherever it
- * lives: apps, packages, scripts, `tests/` (regression scripts, e2e-dev, acceptance), `deploy/`,
- * `.github/`, root scripts and `vendor/` — tracked, or new and not ignored. Files a sparse checkout
- * left out are skipped.
+ * Every tracked file that runs — code, shell, Python, workflow and action YAML, regression cases,
+ * Dockerfiles, Containerfiles and compose files — wherever it lives: apps, packages, scripts,
+ * `tests/` (regression scripts and cases, e2e-dev, acceptance), `deploy/`, `.github/`, root scripts
+ * and `vendor/` — tracked, or new and not ignored. Files a sparse checkout left out are skipped.
  */
+const CASE = /^tests\/regression\/cases\/[^/]+\.json$/
+const BUILD =
+  /(?:^|\/)(?:Dockerfile(?:\.[\w.-]+)?|[^/]+\.Dockerfile|Containerfile(?:\.[\w.-]+)?|(?:docker-)?compose(?:\.[\w.-]+)?\.ya?ml)$/
+/** Whether the guard scans a path of this kind at all. */
+const isScanned = (rel) => EXECUTABLE.test(rel) || CASE.test(rel) || BUILD.test(rel)
 const EXECUTABLE = /\.(?:[cm]?[jt]sx?|sh|py)$|^\.github\/.*\.ya?ml$/
 let executables = null
 function trackedExecutables() {
@@ -430,16 +442,54 @@ function trackedExecutables() {
     maxBuffer: 1 << 28
   })
     .split('\0')
-    .filter((rel) => EXECUTABLE.test(rel) && isRegularFile(join(root, rel)))
+    .filter(
+      (rel) => (EXECUTABLE.test(rel) || CASE.test(rel) || BUILD.test(rel)) && isRegularFile(join(root, rel))
+    )
   return executables
 }
 
 /** A file in a test folder, or named as a test: its comments count too (a test's prose is its spec). */
 const isTestPath = (rel) => /(?:^|\/)tests?\/|\.(?:test|spec)\.[cm]?[jt]sx?$/.test(rel)
 
-/** Where a declared reader may live: a worker test (selected) or a regression script (runs everything). */
+/**
+ * What a regression case runs or tells its runner to read: `run.cmd`, `run.cwd`, the `selectors`
+ * (`tool`, `script`, `test`…) and the steps. Its evidence and fence are prose about the past. A case
+ * that does not parse is read whole: fail closed.
+ */
+function caseText(text) {
+  let entry
+  try {
+    entry = JSON.parse(text)
+  } catch {
+    return text
+  }
+  return [
+    ...(Array.isArray(entry.run?.cmd) ? [entry.run.cmd.join(' ')] : []),
+    ...(typeof entry.run?.cwd === 'string' ? [entry.run.cwd] : []),
+    ...Object.values(entry.selectors ?? {}).map(String),
+    ...(Array.isArray(entry.steps) ? entry.steps.map(String) : [])
+  ].join('\n')
+}
+
+/** The text of a scanned file the guard reads for references, by kind. */
+function scanText(rel, text) {
+  if (CASE.test(rel)) return caseText(text)
+  // A Tracy test's comments count (its prose is its spec); a vendored test runs in its home repo.
+  if (isTestPath(rel) && !rel.startsWith('vendor/')) return text
+  // `withoutComments` drops `#` lines: Dockerfile, compose and shell comments.
+  return withoutComments(text)
+}
+
+/** Lines of one file that read `skill`'s tree and that no declaration or inventory line accounts for. */
+function undeclaredLines(rel, text, { prefix, readers, modules = [] }) {
+  if (rel.startsWith(prefix) || readers.includes(rel) || modules.includes(rel)) return []
+  const allowed = INVENTORY_LINE[rel] ?? []
+  return treeReferences(scanText(rel, text), prefix).filter((line) => !allowed.some((re) => re.test(line)))
+}
+
+/** Where a declared reader may live: a worker test (selected), or a reader no CI row runs (runs everything). */
 const READER =
-  /^(?:(?:apps\/[^/]+|scripts|packages\/[^/]+\/[^/]+)\/test\/[^/]+\.test\.mjs|tests\/regression\/scripts\/[^/]+\.mjs)$/
+  /^(?:(?:apps\/[^/]+|scripts|packages\/[^/]+\/[^/]+)\/test\/[^/]+\.test\.mjs|tests\/regression\/scripts\/[^/]+\.mjs|tests\/regression\/cases\/[^/]+\.json|.+\/(?:Dockerfile|[^/]+\.Dockerfile))$/
 
 test('only declared readers and modules read a reviewed skill tree; inventory lines may name one', () => {
   const files = trackedExecutables()
@@ -447,30 +497,28 @@ test('only declared readers and modules read a reviewed skill tree; inventory li
   for (const probe of [
     'tests/regression/scripts/REG-PR-1228-wp-pack-modes.mjs',
     '.github/workflows/tracy-ci.yml',
-    'deploy/scripts/install-shard-steps.sh'
+    'deploy/scripts/install-shard-steps.sh',
+    'tests/regression/cases/REG-PR-1559-wp-skill-road-gates-early.json',
+    'packages/fleet/tracy-fleet-operation/dsh/Dockerfile',
+    'deploy/compose.yml'
   ])
     assert.ok(files.includes(probe), probe)
   assert.ok(files.some((file) => file.includes('/tracy-emdash-theme-business/tests/')))
   const tests = scannedTests()
-  for (const { prefix, readers, modules = [] } of REVIEWED_SKILLS) {
+  for (const skill of REVIEWED_SKILLS) {
+    const { prefix, readers, modules = [] } = skill
     const read = new Set()
     for (const rel of files) {
       if (rel.startsWith(prefix)) continue
       const text = textOf(join(root, rel))
-      // A Tracy test's comments count (its prose is its spec); a vendored test runs in its home repo.
-      const prose = isTestPath(rel) && !rel.startsWith('vendor/')
-      const lines = treeReferences(prose ? text : withoutComments(text), prefix)
       if (readers.includes(rel) || modules.includes(rel)) {
-        if (lines.length > 0) read.add(rel)
+        if (treeReferences(scanText(rel, text), prefix).length > 0) read.add(rel)
         continue
       }
-      const allowed = INVENTORY_LINE[rel] ?? []
-      for (const line of lines) {
-        assert.ok(
-          allowed.some((re) => re.test(line)),
-          `${rel} reads ${prefix} — declare it in REVIEWED_SKILLS readers (a test) or modules (code no test loads), or remove the line: ${line.trim()}`
+      for (const line of undeclaredLines(rel, text, skill))
+        assert.fail(
+          `${rel} reads ${prefix} — declare it in REVIEWED_SKILLS readers (a test, case or Dockerfile) or modules (code no test loads), or remove the line: ${line.trim()}`
         )
-      }
     }
     const indirect = indirectReaders(prefix, tests)
     for (const reader of readers) {
@@ -694,6 +742,45 @@ test('the guard reaches regression scripts and flags one that reads a skill with
   )
   const [v, cms, tree] = EMDASH_SKILL.split('/')
   assert.equal(treeReferences(`path.join(\n  '${v}',\n  '${cms}',\n  '${tree}'\n)`, EMDASH_SKILL).length, 1)
+})
+
+test('an undeclared regression case or Dockerfile that reads a skill fails the guard; prose and comments do not', () => {
+  const wordpress = REVIEWED_SKILLS.find((skill) => skill.prefix.includes('tracy-wordpress-theme'))
+  const skillDir = `${wordpress.prefix}skills/tracy-wordpress-theme`
+  const kase = (fields) => JSON.stringify({ id: 'REG-NEW', steps: [], ...fields })
+  const newCase = 'tests/regression/cases/REG-NEW-reads-skill.json'
+  for (const fields of [
+    { run: { cmd: ['node', '--test', 'scripts/test/x.test.mjs'], cwd: skillDir } },
+    { run: { cmd: ['node', `${skillDir}/scripts/visual/site-sweep.mjs`] } },
+    { selectors: { script: `${skillDir}/scripts/a.mjs` } },
+    { steps: [`S1: run node ${skillDir}/scripts/b.mjs`] }
+  ])
+    assert.equal(undeclaredLines(newCase, kase(fields), wordpress).length, 1, JSON.stringify(fields))
+  // A case that names the tree only in its evidence or fence reads nothing.
+  assert.deepEqual(
+    undeclaredLines(newCase, kase({ evidence: `seen in ${skillDir}`, fence: skillDir }), wordpress),
+    []
+  )
+  // A case that does not parse is read whole.
+  assert.equal(undeclaredLines(newCase, `{ "run": "${skillDir}"`, wordpress).length, 1)
+  // Declared, the same case is accounted for.
+  const declared = wordpress.readers.find((file) => CASE.test(file))
+  assert.deepEqual(undeclaredLines(declared, kase({ run: { cmd: ['node'], cwd: skillDir } }), wordpress), [])
+
+  const dockerfile = `COPY ${T4.prefix.slice(0, -1)} /opt/tracy/t4\nRUN test -s /opt/tracy/t4/SKILL.md\n`
+  for (const rel of [
+    'packages/fleet/tracy-fleet-operation/new/Dockerfile',
+    'deploy/new.Dockerfile',
+    'deploy/Containerfile',
+    'deploy/compose.new.yml'
+  ]) {
+    assert.ok(isScanned(rel), rel)
+    assert.ok(undeclaredLines(rel, dockerfile, T4).length > 0, rel)
+  }
+  assert.deepEqual(undeclaredLines('deploy/new.Dockerfile', `# COPY ${T4.prefix} x\nFROM scratch\n`, T4), [])
+  assert.deepEqual(undeclaredLines('packages/fleet/tracy-fleet-operation/dsh/Dockerfile', dockerfile, T4), [])
+  for (const reader of [declared, 'packages/fleet/tracy-fleet-operation/dsh/Dockerfile'])
+    assert.match(reader, READER)
 })
 
 test('the guard flags a reader that is not declared and accepts one that is', () => {

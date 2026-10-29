@@ -136,10 +136,11 @@ function ownSkill(
  * plus only the tests that read the tree.
  * NOT derived from `NOT_RUN_HERE` in `scripts/check-tests.ts`: that list says the tree's own tests
  * do not run here, not that TCH tests do not depend on the tree. An entry needs an audit of every
- * tracked executable file (code, shell, Python, workflows) outside the tree and names the gate in
- * `checks` that guards the tie to TCH. `readers` are the exact test files that read the tree: a
- * worker test is selected; any other reader (a regression script under `tests/regression/scripts/`)
- * runs in no CI row, so the change runs the full suite instead — fail closed. `modules` are the
+ * tracked file that runs (code, shell, Python, workflows, regression cases, Dockerfiles, compose
+ * files) outside the tree and names the gate in `checks` that guards the tie to TCH. `readers` are the exact test files that read the tree: a
+ * worker test is selected; any other reader (a regression script or case under `tests/regression/`,
+ * a Dockerfile no pull request builds) runs in no CI row, so the change runs the full suite instead
+ * — fail closed. `modules` are the
  * non-test files that read or name the tree (gates, hand-run scripts, prompt text); no test loads
  * one unless it is a reader. Vendored trees audited 09/10/2026, everything re-audited over the whole
  * tree 28/10/2026. `scripts/test/related-tests.test.mjs` fails when any other file starts to read a
@@ -150,9 +151,26 @@ export const REVIEWED_SKILLS = [
   {
     prefix: 'vendor/wordpress/tracy-wordpress-theme/',
     reason:
-      'its own tests run in the skill home repo; stand-restore.test.mjs reads the quickstart method (scripts/quickstart/restore.mjs and lib.mjs, directly and through tracy-wordpress-quickstart/scripts/stand.mjs, which restores published packs with it); problem-guides.test.mjs checks that the SKILL.md the WordPress template prompt names exists, and the other harness tests load those prompts (re-audit 28/10/2026); nothing else reads the tree (check-tests-environment only lists it as a tree that holds tests)',
+      'its own tests run in the skill home repo; stand-restore.test.mjs reads the quickstart method (scripts/quickstart/restore.mjs and lib.mjs, directly and through tracy-wordpress-quickstart/scripts/stand.mjs, which restores published packs with it); problem-guides.test.mjs checks that the SKILL.md the WordPress template prompt names exists, and the other harness tests load those prompts (re-audit 28/10/2026); nothing else reads the tree (check-tests-environment only lists it as a tree that holds tests); fourteen regression cases run its scripts or tests (REG-PR-1559 runs scripts/test/road-precheck.test.mjs inside it, the sweep cases run scripts/visual/site-sweep.mjs), and no CI row runs a regression case, so a change here runs the full suite (29/10/2026)',
     gate: 'check-site-model (plus doc links and self-contained) in the checks row',
-    readers: ['packages/cms/tracy-wordpress-quickstart/test/stand-restore.test.mjs', ...PROMPT_READERS],
+    readers: [
+      'packages/cms/tracy-wordpress-quickstart/test/stand-restore.test.mjs',
+      ...PROMPT_READERS,
+      'tests/regression/cases/REG-110-ja-nova-wp7-sweep-fixes.json',
+      'tests/regression/cases/REG-111-ja-vega-wp7-sweep-fixes.json',
+      'tests/regression/cases/REG-112-ja-essence-wp7-sweep-audit-fixes.json',
+      'tests/regression/cases/REG-113-ja-morgan-wp7-sweep-fixes.json',
+      'tests/regression/cases/REG-114-ja-vega-wp7-checkpoint-fixes.json',
+      'tests/regression/cases/REG-PR-1551-wp-skill-unmeasured-cells.json',
+      'tests/regression/cases/REG-PR-1558-wp-verification-portable.json',
+      'tests/regression/cases/REG-PR-1559-wp-skill-road-gates-early.json',
+      'tests/regression/cases/REG-PR-928-ja-essence-wp7-behaviour-fixes.json',
+      'tests/regression/cases/REG-PR-935-ja-nova-wp7-behaviour-layout-fixes.json',
+      'tests/regression/cases/REG-PR-938-ja-impact-wp7-behaviour-layout-fixes.json',
+      'tests/regression/cases/REG-PR-941-ja-morgan-wp7-behaviour-layout-fixes.json',
+      'tests/regression/cases/REG-PR-942-ja-kinetic-wp7-behaviour-layout-fixes.json',
+      'tests/regression/cases/REG-PR-943-ja-vega-wp7-behaviour-layout-fixes.json'
+    ],
     modules: [
       'packages/cms/tracy-wordpress-quickstart/scripts/pack-and-verify.mjs',
       'packages/cms/tracy-wordpress-quickstart/scripts/stand.mjs',
@@ -163,9 +181,13 @@ export const REVIEWED_SKILLS = [
   {
     prefix: 'vendor/joomla/joomlart-t4-skill/',
     reason:
-      'skill-catalog.test.mjs reads skills/joomlart-t4-template/SKILL.md for the catalog; nothing else in the test folders reads the tree; the quickstart scripts that import it are run by hand',
+      'skill-catalog.test.mjs reads skills/joomlart-t4-template/SKILL.md for the catalog; nothing else in the test folders reads the tree; the quickstart scripts that import it are run by hand; the dsh image and the Joomla web image copy the tree and check its SKILL.md, and neither is built on a pull request (build-dsh-image.yml runs on push and by hand, joomla.Dockerfile by hand or on the host), so a change here runs the full suite (29/10/2026)',
     gate: 'check-site-model in the checks row',
-    readers: ['scripts/test/skill-catalog.test.mjs'],
+    readers: [
+      'scripts/test/skill-catalog.test.mjs',
+      'packages/fleet/tracy-fleet-operation/dsh/Dockerfile',
+      'packages/fleet/tracy-fleet-operation/web/joomla.Dockerfile'
+    ],
     modules: [
       'deploy/scripts/install-shard-steps.sh',
       'packages/cms/tracy-joomla-quickstart/audit-content.mjs',
@@ -415,7 +437,8 @@ function skillReaders(changed, present) {
     for (const test of skill.readers) readers.add(test)
   }
   const lost = [...readers].find((test) => !present.has(test))
-  // A reader no CI row runs (a regression script) cannot be selected: the change runs everything.
+  // A reader no CI row runs (a regression script or case, a Dockerfile) cannot be selected: the change
+  // runs everything.
   const unrun = [...readers].find((test) => present.has(test) && !WORKER.test(test))
   const missing = lost
     ? `skill reader ${lost} is missing`

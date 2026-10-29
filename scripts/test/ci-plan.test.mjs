@@ -12,7 +12,7 @@ import {
   planMatrix,
   scopeNotes
 } from '../ci/plan-ci.mjs'
-import { DATA_FILE_TESTS, DATABASE_MARK, REVIEWED_SKILLS } from '../ci/related-tests.mjs'
+import { DATA_FILE_TESTS, DATABASE_MARK, REVIEWED_SKILLS, relatedTests } from '../ci/related-tests.mjs'
 
 const allFiles = [
   'packages/site/tracy-add-site/test/e2e/wizard.test.mjs',
@@ -211,8 +211,11 @@ test('the own-domain pilot is switched on for the e2e row, and only by that rowâ
 const SKILL = REVIEWED_SKILLS.find((skill) => !skill.readers.length).prefix
 const [DATA, MAPPED] = [...DATA_FILE_TESTS.entries()][0]
 const T4 = REVIEWED_SKILLS.find((skill) => skill.prefix.includes('joomlart-t4'))
+// A skill whose every reader is a worker test: its change stays narrow. Found by name; spelling the
+// path out would make this file a reader of the tree.
+const NARROW = REVIEWED_SKILLS.find((skill) => skill.prefix.endsWith('/pr-merge/'))
 const EMDASH_SKILL = REVIEWED_SKILLS.find((skill) => skill.prefix.startsWith('vendor/emdash/')).prefix
-const dataFiles = [...allFiles, ...MAPPED, ...T4.readers, DATA, `${SKILL}SKILL.md`]
+const dataFiles = [...allFiles, ...MAPPED, ...T4.readers, ...NARROW.readers, DATA, `${SKILL}SKILL.md`]
 const planOf = (changed, extra = {}) =>
   planMatrix({ event: 'pull_request', baseRef: 'develop', changed, allFiles: dataFiles, ...extra })
 
@@ -277,26 +280,43 @@ test('a journal entry under changes/ never forces the full suite', () => {
   assert.ok(groups(withCode).includes('tests related'))
 })
 
-test('a T4 skill re-pin runs checks plus its declared readers, no interop, e2e or EmDash row', () => {
-  const p = planOf([`${T4.prefix}SKILL.md`, `${T4.prefix}IMPORT-NOTE.md`, 'changes/2026-10-09-x.md'])
-  assert.deepEqual(groups(p), RELATED)
-  assert.equal(p.runsAll, false)
-  assert.deepEqual(p.related.workers, T4.readers)
-  assert.equal(p.related.interop, false)
-  assert.deepEqual(groups(planOf([`${T4.prefix}SKILL.md`, `${SKILL}SKILL.md`])), RELATED)
+test('a T4 or WordPress skill change runs every row: images and regression cases no PR row runs read them', () => {
+  const wordpress = REVIEWED_SKILLS.find((skill) => skill.prefix.includes('tracy-wordpress-theme'))
+  const cases = [
+    [
+      T4,
+      /packages\/fleet\/tracy-fleet-operation\/(?:dsh\/Dockerfile|web\/joomla\.Dockerfile) runs in no CI row/
+    ],
+    [wordpress, /tests\/regression\/cases\/.* runs in no CI row/]
+  ]
+  for (const [skill, why] of cases) {
+    const p = planOf([`${skill.prefix}SKILL.md`, 'changes/2026-10-29-x.md'], {
+      allFiles: [...dataFiles, ...skill.readers]
+    })
+    assert.equal(p.runsAll, true, skill.prefix)
+    assert.equal(groups(p).length, 7, skill.prefix)
+    assert.match(
+      relatedTests({ changed: [`${skill.prefix}SKILL.md`], allFiles: [...dataFiles, ...skill.readers] }).why,
+      why
+    )
+  }
+  assert.deepEqual(groups(planOf([`${NARROW.prefix}SKILL.md`, `${SKILL}SKILL.md`])), RELATED)
 })
 
 test('a Tracy skill edit runs checks plus its audited readers, not the full suite', () => {
   // Found by name: spelling the skill path out here would make this file a reader of the tree.
   const prMerge = REVIEWED_SKILLS.find((skill) => skill.prefix.endsWith('/pr-merge/'))
   const changed = [`${prMerge.prefix}SKILL.md`, 'changes/2026-10-28-x.md']
-  const p = planOf(changed, { allFiles: [...dataFiles, ...prMerge.readers] })
+  const p = planOf(changed)
   assert.deepEqual(groups(p), RELATED)
   assert.equal(p.runsAll, false)
   assert.deepEqual(p.related.workers, prMerge.readers)
   assert.equal(p.related.interop, false)
   // Its reader gone, the planner cannot vouch for the selection.
-  assert.equal(planOf(changed).runsAll, true)
+  assert.equal(
+    planOf(changed, { allFiles: dataFiles.filter((f) => !prMerge.readers.includes(f)) }).runsAll,
+    true
+  )
   // The skill that triggered the change: its REG-PR-1228 check is a worker test now, so it stays narrow.
   const contract = REVIEWED_SKILLS.find((skill) => skill.prefix.endsWith('/quickstart-contract/'))
   const edit = [`${contract.prefix}SKILL.md`, 'changes/2026-10-28-x.md']
@@ -499,18 +519,18 @@ test('a pull request that edits a database test keeps the database tests, label 
 })
 
 test('a related selection the skip empties is no row at all, as for a documentation-only change', () => {
-  // The T4 skill re-pin selects only its declared readers; when all of them need the database and
+  // A narrow skill edit selects only its declared readers; when all of them need the database and
   // none is asked for, there is nothing left for a `tests related` row to run.
-  const p = planOf([`${T4.prefix}SKILL.md`], {
+  const p = planOf([`${NARROW.prefix}SKILL.md`], {
     labels: [],
-    readText: (file) => (T4.readers.includes(file) ? DB_TEXT : UNIT_TEXT)
+    readText: (file) => (NARROW.readers.includes(file) ? DB_TEXT : UNIT_TEXT)
   })
   assert.deepEqual(groups(p), ['checks'])
   assert.deepEqual(p.relatedRun, [])
   assert.equal(p.scope.skipDb, true)
-  const labelled = planOf([`${T4.prefix}SKILL.md`], {
+  const labelled = planOf([`${NARROW.prefix}SKILL.md`], {
     labels: ['ci:integration'],
-    readText: (file) => (T4.readers.includes(file) ? DB_TEXT : UNIT_TEXT)
+    readText: (file) => (NARROW.readers.includes(file) ? DB_TEXT : UNIT_TEXT)
   })
   assert.deepEqual(groups(labelled), RELATED)
 })
