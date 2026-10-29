@@ -37,6 +37,11 @@ const image = (key, entity, role, file, size, group) => ({
   fit: fit(...size)
 })
 const card = (n) => ({ id: `module-2.item.${n}`, item: n, kind: 'service' })
+/** The copy pins the text path writes: the name of each class card, the one decider of which offering it shows. */
+const copyNaming = (first, second) => ({
+  pins: { 'module-2.0': first, 'module-2.3': second },
+  sources: { 'module-2.0': 'off-1', 'module-2.3': 'off-2' }
+})
 
 const CONTENT_MAP = {
   roleVocabularyVersion: 'place-content-roles/3',
@@ -47,7 +52,23 @@ const CONTENT_MAP = {
   ],
   slots: [
     // Named like a slideshow and a dish: a name guess would read roles the v3 map does not say.
+    {
+      key: 'module-2.0',
+      entity: 'module-2',
+      type: 'text',
+      sample: 'Demo Class One',
+      role: 'offering.name',
+      group: card(0)
+    },
     image('module-2.1', 'module-2', 'offering.image', 'classes/slide-1.jpg', [800, 600], card(0)),
+    {
+      key: 'module-2.3',
+      entity: 'module-2',
+      type: 'text',
+      sample: 'Demo Class Two',
+      role: 'offering.name',
+      group: card(1)
+    },
     image('module-2.4', 'module-2', 'offering.image', 'classes/slide-2.jpg', [800, 600], card(1)),
     image('module-3.0', 'module-3', 'business.gallery_image', 'gallery/food-1.jpg', [800, 600]),
     image('article-9.1', 'article-9', 'editorial.illustration', 'style/sample.jpg', [800, 600])
@@ -118,7 +139,8 @@ test('a Joomla v3 build: a card takes its own offering photo, the gallery a gene
     pages: keptPages(null),
     ...site,
     realPictures,
-    note: () => {}
+    note: () => {},
+    copy: copyNaming('Tennis Lessons', 'Padel Lessons')
   })
   const at = new Map(shaped.plan.placements.map((p) => [p.groupId, p.mediaId]))
   assert.equal(at.get('images/demo/classes/slide-1.jpg'), 'tennis-1')
@@ -128,6 +150,24 @@ test('a Joomla v3 build: a card takes its own offering photo, the gallery a gene
   assert.ok(!shaped.map.groups.some((g) => g.file === 'images/demo/style/sample.jpg'))
   assert.ok(!shaped.shaped.some((s) => s.group.sample === 'images/demo/style/sample.jpg'))
   assert.equal(shaped.plan.fill, 'fill-plan/1')
+})
+
+test("a card's name and its photo name the same offering when the brief lists them in another order", async () => {
+  const { real, realPictures, site } = await build()
+  const shaped = await shapeReal({
+    real,
+    contentMap: CONTENT_MAP,
+    cms: 'joomla',
+    pages: keptPages(null),
+    ...site,
+    realPictures,
+    note: () => {},
+    // The brief lists tennis first; the text path names the first card for padel.
+    copy: copyNaming('Padel Lessons', 'Tennis Lessons')
+  })
+  const at = new Map(shaped.plan.placements.map((p) => [p.groupId, p.mediaId]))
+  assert.equal(at.get('images/demo/classes/slide-1.jpg'), 'padel-1')
+  assert.equal(at.get('images/demo/classes/slide-2.jpg'), 'tennis-1')
 })
 
 test('the hand-off lists every picture decision of the build with its reason code', async () => {
@@ -140,7 +180,8 @@ test('the hand-off lists every picture decision of the build with its reason cod
     pages: keptPages(null),
     ...site,
     realPictures,
-    note: () => {}
+    note: () => {},
+    copy: copyNaming('Tennis Lessons', 'Padel Lessons')
   })
   const report = picturesOfBuild({ plan: shaped.plan, receipts: {}, report: {} })
   const byKey = new Map(report.decisions.map((d) => [d.key, d]))

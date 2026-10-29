@@ -3,14 +3,15 @@
 // skip it, or text (written by the copy path). Meaning first, then shape: the v3 slot role and group decide which
 // photos qualify, then the slot's frame chooses among them. Pure and deterministic: ties break on ids.
 //
-// 🔒 AN OFFERING CARD TAKES ONLY A PHOTO LINKED TO ITS OWN OFFERING. Each offering group is locked to one offering of
-// the brief's closed list; a photo the brief links to another offering, or to none ("general", unsure), never fills it.
+// 🔒 AN OFFERING CARD TAKES ONLY A PHOTO LINKED TO ITS OWN OFFERING. A card's offering is the one of the brief's closed
+// list its name says (the name the text path writes on it); a photo the brief links to another offering, or to none
+// ("general", unsure), never fills it.
 // 🔒 A GENERAL SLOT TAKES ONLY A GENERAL OR UNSURE PHOTO: never one linked to an offering, never a portrait.
 // 🔒 THE ROLE DECIDES KEEP (ADR 0040), never a name: a keep slot and every slot of a `demoOnly` entity stay as shipped.
 // The slots that share one demo file are replaced together, so they form one unit: the strictest need among them wins.
 import { keepDecisionOf } from './content-map-keep-decision.mjs'
 import { LOGO_ROLES } from './place-content-roles.mjs'
-import { closedListOf, focusOfBox, GENERAL } from './pictures/picture-links.mjs'
+import { closedListOf, focusOfBox, GENERAL, namedIn } from './pictures/picture-links.mjs'
 import { fitCrop, ROLES } from './pictures/placement.mjs'
 import { declaredSize, fileOf } from './pictures/slot-map.mjs'
 
@@ -86,31 +87,30 @@ function refusalOf(asset, need) {
  * @param {{assets?: any[], reading?: any}} input.brief - the revision's brief: its assets carry `depicts` and `portraitOf`
  *   (`picture-links.mjs`), its reading the closed list of offerings
  * @param {Map<string, {width: number, height: number}>} [input.demo] - demo files as the site serves them, by file
+ * @param {Record<string, string>} [input.cardNames] - the name the text path writes on each offering card, by group id
+ *   (`cardNamesOf`): the one decider of which offering a card shows, for its words and its photo alike
  * @returns {{version: string, offerings: Array<{groupId: string, offeringId: string, label: string}>,
  *   slots: Array<{key: string, entity: string, type: string, role: string | null, groupId: string | null,
  *   action: 'photo' | 'substitute' | 'keep' | 'skip' | 'text', reason: string, file?: string, mediaId?: string,
  *   crop?: object, refused?: Record<string, number>}>, unused: string[]}}
  */
-export function planFill({ contentMap, brief, demo = new Map() }) {
+export function planFill({ contentMap, brief, demo = new Map(), cardNames = {} }) {
   const slots = contentMap?.slots ?? []
   const demoOnly = new Set((contentMap?.entities ?? []).filter((e) => e?.demoOnly === true).map((e) => e.key))
   const live = (slot) => !demoOnly.has(slot.entity) && keepDecisionOf(slot, contentMap) !== 'keep'
 
-  // Each offering card (a group with `offering.*` slots; a membership tier's `package.*` is not one) is locked to one
-  // offering of the brief, the brief's order against the content map's, the cards that show an offering photo first.
-  const groupIds = []
-  const pictured = new Set()
+  // 🔒 A CARD'S NAME AND ITS PHOTO COME FROM ONE DECIDER: the text path names each offering card (`cardNames`), and the
+  // card takes the brief offering its name says. A card whose name is unknown or names no offering is never guessed.
+  const list = closedListOf(brief?.reading).offerings
+  const offerings = []
   for (const slot of slots) {
+    const groupId = slot.group?.id
     if (!live(slot) || !OFFERING_GROUP_KINDS.has(slot.group?.kind) || !slot.role?.startsWith('offering.'))
       continue
-    if (!groupIds.includes(slot.group.id)) groupIds.push(slot.group.id)
-    if (slot.role === 'offering.image') pictured.add(slot.group.id)
+    if (offerings.some((o) => o.groupId === groupId) || typeof cardNames[groupId] !== 'string') continue
+    const hit = namedIn(cardNames[groupId], list)
+    if (hit) offerings.push({ groupId, offeringId: hit.id, label: hit.label })
   }
-  groupIds.sort((a, b) => Number(pictured.has(b)) - Number(pictured.has(a)))
-  const list = closedListOf(brief?.reading).offerings
-  const offerings = groupIds
-    .slice(0, list.length)
-    .map((groupId, i) => ({ groupId, offeringId: list[i].id, label: list[i].label }))
   const lockOf = new Map(offerings.map((o) => [o.groupId, o]))
 
   /** @type {Map<string, any>} */
@@ -205,4 +205,22 @@ export function planFill({ contentMap, brief, demo = new Map() }) {
     slots: slots.map((s) => decisions.get(s.key)).filter(Boolean),
     unused: assets.filter((a) => !used.has(a.id)).map((a) => a.id)
   }
+}
+
+/**
+ * The name the text path writes on each offering card: the sourced `offering.name` pin of each group (copy pins,
+ * `slotFillPins`), by group id. A placeholder (a neutral name) names no offering, so its card takes no offering photo.
+ * @param {{slots?: any[]}} contentMap
+ * @param {{pins?: Record<string, string>, sources?: Record<string, string>} | null | undefined} copy
+ * @returns {Record<string, string>}
+ */
+export function cardNamesOf(contentMap, copy) {
+  const out = {}
+  for (const slot of contentMap?.slots ?? []) {
+    const name = copy?.pins?.[slot.key]
+    if (slot.role !== 'offering.name' || !slot.group?.id || typeof name !== 'string' || !name.trim()) continue
+    if (copy?.sources?.[slot.key] === 'placeholder') continue
+    out[slot.group.id] ??= name
+  }
+  return out
 }

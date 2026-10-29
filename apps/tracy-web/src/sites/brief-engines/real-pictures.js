@@ -107,6 +107,8 @@ export function contentMapOf(contract) {
  * @param {number} [input.drawMs] - one drawing's own limit (a test's stand-in for {@link DRAW_MS})
  * @param {Record<string, string | {space: true} | null>} [input.bound] - a slot plan's card pictures (`slotFillPins`): each
  *   card slot of an entity takes that entity's own picture, the place's space or the placeholder (`planPlacement`)
+ * @param {{pins?: Record<string, string>, sources?: Record<string, string>} | null} [input.copy] - the text path's copy
+ *   pins (`copyPinsOf`): the fill plan gives each offering card the photo of the offering its pinned name says
  */
 export async function shapeReal({
   real,
@@ -124,7 +126,8 @@ export async function shapeReal({
   maxDraws,
   signal,
   drawMs = DRAW_MS,
-  bound = {}
+  bound = {},
+  copy = null
 }) {
   const domain = await loadDomain()
   const policy = picturePolicy(real.picturePolicy)
@@ -170,7 +173,9 @@ export async function shapeReal({
     const assets = (real.brief.assets ?? [])
       .filter((a) => readable.has(a?.id))
       .map((a) => ({ ...a, width: readable.get(a.id).width, height: readable.get(a.id).height }))
-    const fill = domain.planFill({ contentMap, brief: { ...real.brief, assets }, demo })
+    // A card's offering is the one its name says, and the name is the text path's (`copy`): one decider for both.
+    const cardNames = domain.cardNamesOf(contentMap, copy)
+    const fill = domain.planFill({ contentMap, brief: { ...real.brief, assets }, demo, cardNames })
     const placed = domain.placementOfFill({ fill, groups: map.groups })
     map = { ...map, groups: placed.groups, never: [...map.never, ...placed.dropped] }
     made = placed.plan

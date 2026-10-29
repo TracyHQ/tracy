@@ -2,7 +2,7 @@
 // with a reason code. Fixtures are fictional: a racket club brief and a trimmed template map.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { FILL_REASONS, planFill } from '../domain/fill-plan.mjs'
+import { FILL_REASONS, cardNamesOf, planFill } from '../domain/fill-plan.mjs'
 
 const fit = (width, height, extra = {}) => ({
   measured: true,
@@ -96,11 +96,13 @@ const BRIEF = {
 }
 
 const decisionsOf = (plan) => new Map(plan.slots.map((d) => [d.key, d]))
+/** The names the text path writes on the two class cards: the photo of a card must show the offering its name says. */
+const CARDS = { 'module-2.item.0': 'Tennis Lessons', 'module-2.item.1': 'Padel Lessons' }
 
 test('padel photos only reach the padel group; unsure photos only reach general slots', () => {
-  const plan = planFill({ contentMap: CONTENT_MAP, brief: BRIEF })
+  const plan = planFill({ contentMap: CONTENT_MAP, brief: BRIEF, cardNames: CARDS })
   const at = decisionsOf(plan)
-  // The cards are locked to the brief's offerings in order: the first card is tennis, the second padel.
+  // Each card is locked to the offering its name says: the first card is tennis, the second padel.
   assert.deepEqual(
     plan.offerings.map((o) => [o.groupId, o.offeringId]),
     [
@@ -120,7 +122,7 @@ test('padel photos only reach the padel group; unsure photos only reach general 
 })
 
 test('a keep slot and every slot of a demo-only entity are never filled', () => {
-  const at = decisionsOf(planFill({ contentMap: CONTENT_MAP, brief: BRIEF }))
+  const at = decisionsOf(planFill({ contentMap: CONTENT_MAP, brief: BRIEF, cardNames: CARDS }))
   assert.deepEqual([at.get('module-2.2').action, at.get('module-2.2').reason], ['keep', 'role-keeps'])
   for (const key of ['article-9.0', 'article-9.1'])
     assert.deepEqual([at.get(key).action, at.get(key).reason], ['skip', 'demo-only-entity'], key)
@@ -128,7 +130,7 @@ test('a keep slot and every slot of a demo-only entity are never filled', () => 
 })
 
 test('every slot gets one decision, and every decision carries a reason code a report can name', () => {
-  const plan = planFill({ contentMap: CONTENT_MAP, brief: BRIEF })
+  const plan = planFill({ contentMap: CONTENT_MAP, brief: BRIEF, cardNames: CARDS })
   assert.deepEqual(
     plan.slots.map((d) => d.key),
     CONTENT_MAP.slots.map((s) => s.key)
@@ -141,7 +143,7 @@ test('every slot gets one decision, and every decision carries a reason code a r
 
 test('a padel card with no padel photo takes the substitute, never the tennis or an unsure photo, and says why', () => {
   const brief = { ...BRIEF, assets: BRIEF.assets.filter((a) => !a.id.startsWith('padel')) }
-  const padel = decisionsOf(planFill({ contentMap: CONTENT_MAP, brief })).get('module-2.4')
+  const padel = decisionsOf(planFill({ contentMap: CONTENT_MAP, brief, cardNames: CARDS })).get('module-2.4')
   assert.equal(padel.action, 'substitute')
   assert.equal(padel.reason, 'no-photo-of-offering')
   assert.equal(padel.mediaId, undefined)
@@ -150,31 +152,45 @@ test('a padel card with no padel photo takes the substitute, never the tennis or
   assert.equal(padel.refused.unsure, 4)
 })
 
-test('a card the brief has no offering for takes the substitute: offerings are never repeated across cards', () => {
-  const brief = { ...BRIEF, reading: { services: BRIEF.reading.services.slice(0, 1) } }
-  const at = decisionsOf(planFill({ contentMap: CONTENT_MAP, brief }))
-  assert.equal(at.get('module-2.1').mediaId, 'tennis-1')
+test("a card's name and its photo name the same offering, whatever order the brief lists them in", () => {
+  // The brief lists tennis first; the template's first card is named for padel by the text path.
+  const cardNames = { 'module-2.item.0': 'PADEL LESSONS', 'module-2.item.1': 'Tennis Lessons for all ages' }
+  const plan = planFill({ contentMap: CONTENT_MAP, brief: BRIEF, cardNames })
   assert.deepEqual(
-    [at.get('module-2.4').action, at.get('module-2.4').reason],
-    ['substitute', 'no-offering-for-group']
+    plan.offerings.map((o) => [o.groupId, o.offeringId]),
+    [
+      ['module-2.item.0', 'svc-padel'],
+      ['module-2.item.1', 'svc-tennis']
+    ]
   )
+  const at = decisionsOf(plan)
+  assert.equal(at.get('module-2.1').mediaId, 'padel-1')
+  assert.equal(at.get('module-2.4').mediaId, 'tennis-1')
 })
 
-test('offerings lock to the cards that show an offering photo first; a membership card takes no offering', () => {
-  const tier = { id: 'module-5.item.0', item: 0, kind: 'package' }
-  const priceOnly = { id: 'module-6.item.0', item: 0, kind: 'service' }
-  const contentMap = {
-    ...CONTENT_MAP,
-    slots: [
-      text('module-5.0', 'module-5', 'package.name', 'Demo Tier', tier),
-      text('module-6.0', 'module-6', 'offering.name', 'Demo Gift Card', priceOnly),
-      ...CONTENT_MAP.slots
-    ]
-  }
-  const plan = planFill({ contentMap, brief: BRIEF })
-  assert.deepEqual(
-    plan.offerings.map((o) => o.groupId),
-    ['module-2.item.0', 'module-2.item.1']
+test('a card whose name is unknown, or names no offering of the brief, takes the substitute', () => {
+  const named = decisionsOf(
+    planFill({
+      contentMap: CONTENT_MAP,
+      brief: BRIEF,
+      cardNames: { 'module-2.item.0': 'Tennis Lessons', 'module-2.item.1': 'Squash Clinic' }
+    })
   )
-  assert.equal(decisionsOf(plan).get('module-2.4').mediaId, 'padel-1')
+  assert.equal(named.get('module-2.1').mediaId, 'tennis-1')
+  assert.deepEqual(
+    [named.get('module-2.4').action, named.get('module-2.4').reason],
+    ['substitute', 'no-offering-for-group']
+  )
+  // No names from the text path at all: no card is guessed by position.
+  const blind = decisionsOf(planFill({ contentMap: CONTENT_MAP, brief: BRIEF }))
+  for (const key of ['module-2.1', 'module-2.4'])
+    assert.deepEqual([blind.get(key).action, blind.get(key).reason], ['substitute', 'no-offering-for-group'])
+})
+
+test("the card names are the text path's sourced offering names; a neutral placeholder names nothing", () => {
+  const names = cardNamesOf(CONTENT_MAP, {
+    pins: { 'module-2.0': 'Padel Lessons', 'module-2.3': 'Service' },
+    sources: { 'module-2.0': 'off-7', 'module-2.3': 'placeholder' }
+  })
+  assert.deepEqual(names, { 'module-2.item.0': 'Padel Lessons' })
 })

@@ -11,14 +11,17 @@ c.tapClean('S1 (fill plan seam)', domain)
 for (const name of [
   'padel photos only reach the padel group; unsure photos only reach general slots',
   'a keep slot and every slot of a demo-only entity are never filled',
-  'every slot gets one decision, and every decision carries a reason code a report can name'
+  'every slot gets one decision, and every decision carries a reason code a report can name',
+  "a card's name and its photo name the same offering, whatever order the brief lists them in",
+  'a card whose name is unknown, or names no offering of the brief, takes the substitute'
 ])
   c.passes('S1', domain, name, undefined, true)
 const web = nodeTest(['apps/tracy-web/test/brief-fill-plan-pictures.test.mjs'])
 c.tapClean('S2 (Joomla picture phase and hand-off)', web)
 for (const name of [
   'a Joomla v3 build: a card takes its own offering photo, the gallery a general one, the style page nothing',
-  'the hand-off lists every picture decision of the build with its reason code'
+  'the hand-off lists every picture decision of the build with its reason code',
+  "a card's name and its photo name the same offering when the brief lists them in another order"
 ])
   c.passes('S2', web, name, undefined, true)
 c.done()
