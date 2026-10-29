@@ -55,7 +55,10 @@ test('the EmDash entry is a pinned PAIR of its own two parts, and names the temp
     assert.ok(a, `the entry has no ${part}`)
     assert.match(a.sha256, /^[0-9a-f]{64}$/, `${part} is not pinned by sha256`)
     assert.ok(Number.isInteger(a.bytes) && a.bytes > 0, `${part} has no size`)
-    assert.ok(a.url.startsWith('https://github.com/JoomlArt-Products/joomlart-products/releases/'), `${part} url`)
+    assert.ok(
+      a.url.startsWith('https://github.com/JoomlArt-Products/joomlart-products/releases/'),
+      `${part} url`
+    )
   }
   assert.equal(entry.webroot, undefined, 'an EmDash quickstart restores no webroot tar')
   assert.equal(entry.database, undefined, 'nor a MariaDB dump')

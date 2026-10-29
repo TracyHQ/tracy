@@ -10,7 +10,10 @@ test('the private release credential only goes to the GitHub API; the installer 
   const url = await releaseUrl(artifact, {
     token: 'test-private-key',
     fetch: async (url, request) => {
-      assert.equal(url, 'https://api.github.com/repos/JoomlArt-Products/joomlart-products/releases/assets/123')
+      assert.equal(
+        url,
+        'https://api.github.com/repos/JoomlArt-Products/joomlart-products/releases/assets/123'
+      )
       assert.equal(request.redirect, 'manual')
       assert.equal(request.headers.Authorization, 'Bearer test-private-key')
       return new Response(null, {
