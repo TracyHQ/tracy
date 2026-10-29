@@ -42,11 +42,11 @@ the work and which path skips which step: `SKILL.md` section 2 (path table) + se
    - **Stop point — upload the files** (every file except `tracy_setting.json`):
 
      ```bash
-     cd "$PACK" && gh release upload "$REL" -R JoomlArt-Products/ja-products --clobber \
+     cd "$PACK" && gh release upload "$REL" -R JoomlArt-Products/joomlart-products --clobber \
        README.md SHA256SUMS VERIFICATION.json manifest.json "$PACK_DATABASE_FILE" "$PACK_WEBROOT_FILE"
      ```
 
-   - Download and check: `gh release download "$REL" -R JoomlArt-Products/ja-products -D "$WORK/release-$VER" -p "$PACK_WEBROOT_FILE" -p "$PACK_DATABASE_FILE" -p SHA256SUMS -p manifest.json -p README.md -p VERIFICATION.json`
+   - Download and check: `gh release download "$REL" -R JoomlArt-Products/joomlart-products -D "$WORK/release-$VER" -p "$PACK_WEBROOT_FILE" -p "$PACK_DATABASE_FILE" -p SHA256SUMS -p manifest.json -p README.md -p VERIFICATION.json`
      → `cd "$WORK/release-$VER" && shasum -a 256 -c --ignore-missing "$PACK_SHA"` → 6 lines OK.
 6. Tracy pins, in `"$TCH_WT"`: the two `quickstarts.json` (`apps/tracy-web/src/` and
    `packages/fleet/tracy-fleet-operation/scripts/provision/`, identical byte for byte) + the two
@@ -64,7 +64,7 @@ the work and which path skips which step: `SKILL.md` section 2 (path table) + se
      `W="$REL_WEBROOT" D="$REL_DATABASE"` (`SKILL.md` section 2):
 
      ```bash
-     gh api "repos/JoomlArt-Products/ja-products/releases/tags/$(node -p 'encodeURIComponent(process.argv[1])' "$REL")" \
+     gh api "repos/JoomlArt-Products/joomlart-products/releases/tags/$(node -p 'encodeURIComponent(process.argv[1])' "$REL")" \
        --jq '.assets[] | "\(.id) \(.size) \(.name)"' | awk -v w="$W" -v d="$D" '$3 == w || $3 == d'
      ```
 
@@ -83,14 +83,14 @@ are still tracked by git and `apps/tracy-web/src/lib/contracts.js` still reads t
 Steps 1–4 are full path only: the file upload was done in section 8 step 5; here you flip the switch and run the checks after
 it. The direct-capture path skips steps 1–4 and goes straight to step 5. Batch: this whole section follows the batch schedule.
 
-1. Note for the requester before flipping the switch: the `ja-products` release is shared by dev + production — flipping
+1. Note for the requester before flipping the switch: the `joomlart-products` release is shared by dev + production — flipping
    the switch changes the template card on both; if production has not pinned yet, sites created on production get no contract.
 2. **Stop point — flip the switch:**
-   `cd "$PACK" && gh release upload "$REL" -R JoomlArt-Products/ja-products --clobber tracy_setting.json`.
+   `cd "$PACK" && gh release upload "$REL" -R JoomlArt-Products/joomlart-products --clobber tracy_setting.json`.
 3. K2+K3 pass 2: `node "$QC/check-release-fields.mjs" --contract "$P/$VER" --release "$REL"`.
-4. `ja-products`: if the template's `product.yaml` still has `github_release_url` pointing at the installer
+4. `joomlart-products`: if the template's `product.yaml` still has `github_release_url` pointing at the installer
    (`…/quickstart/<slug>/j6/<…>-quickstart.zip`) → change exactly that line to `…/quickstart/<slug>/j6/tracy_setting.json`
-   in `"$JAP"`, `make check` → exit 0 → **stop point:** `ja-products` PR (do not merge it yourself).
+   in `"$JAP"`, `make check` → exit 0 → **stop point:** `joomlart-products` PR (do not merge it yourself).
    Before editing: create the template's own branch (the section 3a worktree is still detached):
    `git -C "$JAP" switch -c "chore/$SLUG-quickstart-$(echo "$VER" | tr . -)"`.
 5. **K6 pass 2 — stop point asking permission** (both paths, single template; never create a site on Tracy dev without

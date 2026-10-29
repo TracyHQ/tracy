@@ -1,5 +1,5 @@
 // A shard runs its own GitHub App, installed on the shard's own org and NOT on the releases
-// repository (one App per shard, since 15/10/2026). It reads JoomlArt-Products/ja-products with
+// repository (one App per shard, since 15/10/2026). It reads JoomlArt-Products/joomlart-products with
 // TRACY_RELEASES_GITHUB_TOKEN instead. Production's App IS installed there and must keep minting;
 // a GitHub outage must not be read as "not installed"; and a refused mint is an error, never a
 // silent switch to the token.
@@ -72,7 +72,7 @@ test('an App not installed and no token still says why', async () => {
     RELEASES_REPO
   )
   assert.equal(got.token, null)
-  assert.match(got.reason, /The GitHub App is not installed on JoomlArt-Products\/ja-products/)
+  assert.match(got.reason, /The GitHub App is not installed on JoomlArt-Products\/joomlart-products/)
 })
 
 test('GitHub down is not "not installed": the token is not used', async () => {
@@ -104,7 +104,7 @@ test('an App installed on the releases repo whose mint is refused surfaces the e
       RELEASES_REPO
     )
     assert.equal(got.token, null, `a ${mintStatus} on the mint must not fall back to the token`)
-    assert.match(got.reason, /GitHub refused an installation token for JoomlArt-Products\/ja-products/)
+    assert.match(got.reason, /GitHub refused an installation token for JoomlArt-Products\/joomlart-products/)
   }
 })
 

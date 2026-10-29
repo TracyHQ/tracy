@@ -1,0 +1,1 @@
+{"id":"REG-PR-159-live-lease-restart","verdict":"PASS","commit":"a50a1bd1d3111593944033f1bb6042739c2e2392","ran_at":"2026-10-29T06:49:12.743Z","evidence":"tests/regression/.runs/2026-10-29-a50a1bd1d/REG-PR-159-live-lease-restart.log"}

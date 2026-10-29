@@ -32,14 +32,14 @@ sources:
 
 > **Measured over the network, not files in the repo** (so they are not in `sources` — the
 > `doc-frontmatter` gate only accepts paths in the tree):
-> - `https://api.github.com/repos/JoomlArt-Products/ja-products/releases`
+> - `https://api.github.com/repos/JoomlArt-Products/joomlart-products/releases`
 > - `https://cowork.tracy.site/api/templates`
 > - `https://cowork.tracy.site/api/design-systems`
 
 # Why only Tracy Business can create a site
 
 Measured 25/09/2026 on branch `develop` (`756e3fbb4`), on the 88 real releases of
-`JoomlArt-Products/ja-products`, and on the dev deployment `cowork.tracy.site` itself.
+`JoomlArt-Products/joomlart-products`, and on the dev deployment `cowork.tracy.site` itself.
 
 ## 1. The short answer
 
@@ -131,7 +131,7 @@ called at `apps/tracy-web/src/sites/route.js:730-738`; failing it is `UNSUPPORTE
 
 **The real measurement.** I ran exactly those functions (`validateSetting`, `readContracts`, `contractFor`,
 `mayName`, `coworkPinFor` — imported directly from the source tree) on the 88 releases downloaded from
-`gh api repos/JoomlArt-Products/ja-products/releases`, with the real asset list and GitHub `digest`:
+`gh api repos/JoomlArt-Products/joomlart-products/releases`, with the real asset list and GitHub `digest`:
 
 | Tag | GitHub | platform / version | choosable | card | contract | `mayName` |
 |---|---|---|---|---|---|---|
@@ -238,7 +238,7 @@ can be installed**, even when the customer clicks no card.
 
 ## 3. What Tracy Business has that other templates don't
 
-### 3.1 On the release (ja-products)
+### 3.1 On the release (joomlart-products)
 
 | What the release must carry | `tracy-business/j6` | `tracy-business/wp7` | `tracy-business/emdash` | `ja-kinetic` | `ja-voyara` | `tracy-apple/j6` | 77 remaining JA |
 |---|---|---|---|---|---|---|---|
@@ -336,7 +336,7 @@ Tracy's code.
 This list comes directly from the gates in §2.3 and the failed runs in §2.6. A new template must have
 **all 9**, not "most of them".
 
-**On the `ja-products` release:**
+**On the `joomlart-products` release:**
 
 1. **`tracy_setting.json`** with the right `schemaVersion: tracy-setting/v1`, `platform`, `label`, `version`,
    `cms`, and `install` in **exactly one shape** (`webroot+database` · `bundle` · `installer` for Joomla;

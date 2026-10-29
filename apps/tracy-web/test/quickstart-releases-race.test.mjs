@@ -1,5 +1,5 @@
 /**
- * Two reads of ja-products at once write the same released questionnaire once, and neither throws.
+ * Two reads of joomlart-products at once write the same released questionnaire once, and neither throws.
  * Measured 21/10/2026 right after boot: the startup read in cron and a Refresh press in /ops both
  * missed the set in `known` and both inserted it; the second insert raised 23505 on
  * `question_set_released` (owner, sha256) and the door answered 500.
@@ -39,7 +39,7 @@ const setting = {
   }
 }
 
-/** ja-products with one release under `tag`, carrying a questionnaire. */
+/** joomlart-products with one release under `tag`, carrying a questionnaire. */
 function github(tag) {
   const files = new Map()
   const body = {

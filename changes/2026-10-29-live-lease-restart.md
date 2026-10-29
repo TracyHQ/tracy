@@ -1,0 +1,4 @@
+- **A Sync or push still running when tracy-web restarts keeps the site's write lease.** — David · issue #123 · `fix/live-lease-restart` · 2026-10-29
+  **Affects:** tracy-web's Sync from live and Sync to live. At boot, every sync or push left running is read back from its host job at once and watched again, as when it started: the read renews the site's write lease while the job runs, and releases it (settling the row) once the job ended or is lost. Before, nothing renewed the lease after a restart, and 90 s later a chat could write to the site while the host job still did. Only the process that serves the doors does it; the cron's instance does not.
+
+  Verification: a new Postgres case each for push and sync (job running across a simulated restart with a lease 100 s old: the chat is refused; job ended: the row settles and the lease is free). tracy-web push suite 21/21 and sync suite 21/21 with zero skipped.

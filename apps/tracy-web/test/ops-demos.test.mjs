@@ -336,14 +336,14 @@ test(
           sha256: 'a'.repeat(64),
           bytes: 41000000,
           githubAssetId: 559000001,
-          url: `https://github.com/JoomlArt-Products/ja-products/releases/download/${encodeURIComponent(J6)}/tracy-business-j6-webroot-1.0.0.tar.gz`
+          url: `https://github.com/JoomlArt-Products/joomlart-products/releases/download/${encodeURIComponent(J6)}/tracy-business-j6-webroot-1.0.0.tar.gz`
         },
         database: {
           file: 'tracy-business-j6-database-1.0.0.sql.gz',
           sha256: 'b'.repeat(64),
           bytes: 900000,
           githubAssetId: 559000002,
-          url: `https://github.com/JoomlArt-Products/ja-products/releases/download/${encodeURIComponent(J6)}/tracy-business-j6-database-1.0.0.sql.gz`
+          url: `https://github.com/JoomlArt-Products/joomlart-products/releases/download/${encodeURIComponent(J6)}/tracy-business-j6-database-1.0.0.sql.gz`
         },
         template: { id: 'tracy' }
       },

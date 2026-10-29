@@ -165,3 +165,29 @@ tracy_neutralize_https_redirect() {
   ' "$ht" > "$ht.tracy" && mv "$ht.tracy" "$ht"
   echo "==> neutralised any force-HTTPS redirect in the clone .htaccess"
 }
+
+# A firewall that loads itself before every PHP file (Wordfence's Extended Protection, its
+# `wordfence-waf.php`) is switched on by an `auto_prepend_file` line in the root .htaccess,
+# `.user.ini` or `php.ini`, naming the file by the LIVE server's absolute path. On a clone that path
+# does not exist, or names the live site's folders, and the firewall's own tables and logs stay the
+# live site's (#106). So the line is commented out on the clone, as the HTTPS redirect is: by
+# platform/wordpress.sh platform_configure on the clone, and by webroot-sync.sh on every read of the
+# live site, so a sync does not read the clone's commented line as the customer's change. These
+# server files are never sent back to the live site (lib/live_push.py SERVER_FILES).
+tracy_neutralize_auto_prepend() {
+  local root="$1" file
+  for file in "$root/.htaccess" "$root/.user.ini" "$root/php.ini"; do
+    [ -f "$file" ] || continue
+    awk '
+      { low = tolower($0) }
+      low ~ /^[[:space:]]*(php_value|php_admin_value)[[:space:]]+auto_prepend_file([[:space:]]|$)/ {
+        print "# tracy-clone (names the live server'"'"'s files): " $0; next
+      }
+      low ~ /^[[:space:]]*auto_prepend_file[[:space:]]*=/ {
+        print "; tracy-clone (names the live server'"'"'s files): " $0; next
+      }
+      { print }
+    ' "$file" > "$file.tracy" && mv "$file.tracy" "$file"
+  done
+  echo "==> neutralised any auto_prepend_file in the clone's server files"
+}

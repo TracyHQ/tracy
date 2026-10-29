@@ -1,6 +1,6 @@
 /**
  * The quickstart download door: a signed-in person gets the quickstart zip of a JoomlArt template
- * streamed off `JoomlArt-Products/ja-products`, a private repository, through this server.
+ * streamed off `JoomlArt-Products/joomlart-products`, a private repository, through this server.
  *
  * 🔒 THE GITHUB TOKEN NEVER LEAVES THIS PROCESS. The browser is never redirected to GitHub: the
  * bytes are fetched here with the releases token and piped to the response, and when GitHub

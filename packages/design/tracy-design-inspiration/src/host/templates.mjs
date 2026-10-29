@@ -8,7 +8,7 @@
  *
  * 🔒 ONE SOURCE FOR A CARD, AND ONLY ONE (Lee, 16/09). `GET /api/templates` on the surface this
  * lane belongs to, which answers from `tracy_design_inspiration.json` on the releases it has read
- * off `ja-products`. There is no second copy in the image, and the reason is Publish:
+ * off `joomlart-products`. There is no second copy in the image, and the reason is Publish:
  * an administrator publishes and unpublishes a card with ONE press on the operations screen, and a
  * copy travelling in the image would need a commit and an image build to follow every press — so
  * an Unpublish the image had not caught up with would keep drawing the card just taken down.

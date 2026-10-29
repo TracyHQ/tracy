@@ -869,3 +869,63 @@ test('the pure parts: phases from answers, the step each is drawn on, failure wo
     t('push.reason.templateFilesOff')
   )
 })
+
+test('a preview capped at the host answer counts what Apply can write over the whole changeset', async () => {
+  // 500 conflicts were listed first by an older host: no pushable item in the lists, one in the totals.
+  const capped = {
+    ...PREVIEW,
+    add: [],
+    change: [],
+    remove: [],
+    liveChanged: [item('l1', 'Contact')],
+    itemsTotal: 501,
+    pushable: { add: 0, change: 1, remove: 0, files: 0, settings: 0, php: 0 },
+    liveChangedTotal: 500
+  }
+  const answer = (push) => ({ available: true, push, lastPush: null })
+  const no = { unreadable: false, confirming: false }
+  assert.equal(lib.pushPhaseOf(answer(row({ preview: capped })), no), 'review')
+  // Without the totals (a host before them), the lists decide, as before.
+  const { pushable: _p, liveChangedTotal: _l, ...old } = capped
+  assert.equal(lib.pushPhaseOf(answer(row({ preview: old })), no), 'nothing')
+
+  await open(() => json(200, { available: true, push: row({ preview: capped }), lastPush: null }))
+  assert.equal(phase(), 'review')
+  assert.match(text(), /Changed on your live site since the last sync \(500\)/)
+  await press(go())
+  assert.equal(phase(), 'confirm')
+  assert.match(text(), /1 change goes to your live site|1 changes go to your live site/)
+})
+
+test('Preview translates metadata subjects and keeps page types in every interface language', async () => {
+  const dictionaries = { en }
+  for (const language of ['vi', 'de', 'it', 'fr', 'nl', 'zh', 'es']) {
+    const relative =
+      language === 'vi'
+        ? 'packages/locale/tracy-locale-vi/vi/tracy-site-tabs.json'
+        : `packages/locale/tracy-locales/${language}/tracy-site-tabs.json`
+    dictionaries[language] = JSON.parse(
+      await (await import('node:fs/promises')).readFile(path.join(repo, relative), 'utf8')
+    )
+  }
+  for (const [language, words] of Object.entries(dictionaries)) {
+    const tr = (key) => words[key] ?? `missing:${key}`
+    for (const label of ['featuredImage', 'pageTemplate', 'altText']) {
+      const item = {
+        id: 'meta',
+        kind: 'postmeta',
+        what: 'pageDetail',
+        title: '_thumbnail_id',
+        label,
+        subject: 'About us'
+      }
+      assert.equal(lib.itemName(item, tr), `${words[`push.label.${label}`]} · About us`, language)
+      assert.ok(!lib.itemName(item, tr).includes('_thumbnail_id'), language)
+    }
+    assert.equal(
+      lib.itemLine({ id: 'post', kind: 'post', what: 'page', fields: ['post_title'] }, tr, true),
+      `${words['push.what.page']} · ${words['push.field.title']}`,
+      language
+    )
+  }
+})

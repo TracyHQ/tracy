@@ -11,7 +11,7 @@ export async function releaseUrl(artifact, options = {}) {
       'The build host needs access to the private template release (TRACY_RELEASES_GITHUB_TOKEN).'
     )
   const response = await (options.fetch ?? globalThis.fetch)(
-    `https://api.github.com/repos/JoomlArt-Products/ja-products/releases/assets/${artifact.githubAssetId}`,
+    `https://api.github.com/repos/JoomlArt-Products/joomlart-products/releases/assets/${artifact.githubAssetId}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,

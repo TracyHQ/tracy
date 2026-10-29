@@ -3,7 +3,7 @@
  * PAGE-1, PAGE-2, PAGE-4, PAGE-5, PAGE-7, PAGE-8, LANG-1, LANG-2, LANG-3, LANG-5, called directly.
  *
  * Fixtures (`fixtures/template-customization-question-readiness/b/`) are cut from the real release
- * assets of `JoomlArt-Products/ja-products` (09/10/2026): settings and page lists byte for byte;
+ * assets of `JoomlArt-Products/joomlart-products` (09/10/2026): settings and page lists byte for byte;
  * demo databases cut to the rows the rules read (articles and modules keep no text, other editions
  * one row each); theme zips, webroots and the EmDash source zip cut to the files the rules read
  * (the EmDash seed keeps two default-locale entries per collection, values shortened). Contracts are

@@ -136,6 +136,7 @@
         "$TURBO_ROOT$/scripts/test-database.ts",
         "$TURBO_ROOT$/scripts/ci/related-tests.mjs",
         "$TURBO_ROOT$/.agents/skills/pr-merge/**",
+        "$TURBO_ROOT$/.agents/skills/quickstart-contract/**",
         "$TURBO_ROOT$/.dockerignore",
         "$TURBO_ROOT$/.github/actions/*",
         "$TURBO_ROOT$/.github/actions/deploy-host-dsh/**",

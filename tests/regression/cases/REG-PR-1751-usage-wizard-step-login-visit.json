@@ -18,8 +18,8 @@
     "S1: 401; 400 INVALID_WIZARD_ID; 400 INVALID_WIZARD_STEP for each bad step; three wizard.step rows {wizard_id, step} (the repeated page is one); no wizard.opened row.",
     "S2: every name is on WIZARD_STEPS.",
     "S3: POST /api/sites/wizard {wizardId, step}; nothing awaited, nothing thrown.",
-    "S4: the page with a source carries fetch('/login/visit') guarded by sessionStorage 'tracy-login-visit' and the cleaned utm fields; the page without a source does not mention /login/visit.",
-    "S5: 204 and one login.visited {source, medium, content} with account_id null; 403 twice; 204 and no row; 204 and a second row; the 31st answers 429."
+    "S4: the page with a source carries fetch('/login/visit') guarded by sessionStorage 'tracy-login-visit' and the cleaned utm fields; the page without a source also sends fetch('/login/visit'), with an empty body (since #147: a direct visit).",
+    "S5: 204 and one login.visited {source, medium, content} with account_id null; 403 twice; 204 and a row {} (since #147 a visit with no source is a direct visit, not dropped); 204 and another row; the 31st answers 429."
   ],
   "selectors": {
     "files": "apps/tracy-web/src/sites/route.js (WIZARD_STEPS, /api/sites/wizard); apps/tracy-web/src/identity/route.js (/login/visit), identity/pages.js (visitScript); packages/site/tracy-add-site/src/client/create.ts (wizardStep), wizard-usage.mjs, wizard.tsx, import-wizard.tsx"
@@ -42,7 +42,7 @@
       "POST /api/sites/wizard with step records one wizard.step per id and page",
       "every page the Add site form can name is on the WIZARD_STEPS list",
       "the wizard tells tracy-web which page an opening reached",
-      "the login page tells /login/visit its source once per tab",
+      "the login page tells /login/visit once per tab",
       "POST /login/visit keeps one cleaned source per visit",
       "POST /login/visit stops at the hourly cap"
     ]

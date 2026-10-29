@@ -24,7 +24,14 @@
  * the agent on the copy can read its database.
  */
 import { randomBytes, randomUUID } from 'node:crypto'
-import { audit, auditSiteWrite, handOverWriteLease, releaseWriteLease, takeWriteLease } from './store.js'
+import {
+  audit,
+  auditSiteWrite,
+  handOverWriteLease,
+  releaseWriteLease,
+  siteByKey,
+  takeWriteLease
+} from './store.js'
 
 /**
  * The platforms whose adapter passed the merge's cases (plan §4): Joomla, and WordPress with its address
@@ -51,7 +58,8 @@ export function liveSync({
   currentComponent,
   writeComponent,
   now = Date.now,
-  watchEveryMs = 30_000
+  watchEveryMs = 30_000,
+  resumeOnStart = false
 }) {
   /** The live door and token of an imported, paired site, or why there is none. */
   async function liveCredential(site) {
@@ -374,7 +382,40 @@ export function liveSync({
 
   // Sync to live (`live-push.js`) runs a Sync from live first, so it gives the copy its own token
   // the same way and reads the live door from the same place.
-  return { start, read, latest, forgetStale, connected, ensureCopyToken, liveCredential, stuckMs: STUCK_MS }
+  /**
+   * After a restart, every sync still running is read back from its host job at once, then watched
+   * again: the read renews the site's write lease while the job runs (stale after 90 s with nobody
+   * renewing it, the chat could write while the job still did, #123) and releases it, or settles the
+   * row, once the job has ended or is lost. Only the process that serves the doors does this
+   * (`resumeOnStart`); the cron's instance does not.
+   */
+  async function resume() {
+    const { rows } = await pool.query(`select id, site_key from site_sync where state = 'running'`)
+    for (const row of rows) {
+      const site = await siteByKey(pool, row.site_key)
+      if (!site) continue
+      try {
+        await read(site)
+      } catch {
+        // the host does not answer yet: the watch below asks again
+      }
+      watch(site, row.id)
+    }
+    return rows.length
+  }
+
+  if (resumeOnStart) setTimeout(() => void resume().catch(() => {}), 0).unref?.()
+  return {
+    start,
+    read,
+    latest,
+    forgetStale,
+    connected,
+    ensureCopyToken,
+    liveCredential,
+    resume,
+    stuckMs: STUCK_MS
+  }
 }
 
 /**

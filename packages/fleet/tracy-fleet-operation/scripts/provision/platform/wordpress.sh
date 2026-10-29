@@ -139,6 +139,14 @@ platform_configure() {
   # (lib/webroot-htaccess.sh, sourced by provision.sh: "Sync from live" does the same to every read
   # of the live site, so this change never reads as the customer's.)
   tracy_neutralize_https_redirect "$webroot/.htaccess"
+  tracy_neutralize_auto_prepend "$webroot"
+  # The object cache drop-in talks to the live server's cache (Redis, Memcached), which the clone
+  # does not have: kept, every request answers 500. Removed from the clone only; "Sync from live"
+  # keeps the clone's own (none) from then on (lib/live_sync.py ENVIRONMENT_FILES, #106).
+  if [ -f "$webroot/wp-content/object-cache.php" ]; then
+    rm -f "$webroot/wp-content/object-cache.php"
+    echo "==> removed the live server's object cache drop-in from the clone"
+  fi
 
   # Everything the address is baked into, which no config file reaches.
   #

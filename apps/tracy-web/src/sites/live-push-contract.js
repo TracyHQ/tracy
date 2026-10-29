@@ -242,7 +242,23 @@ export function previewOf(said) {
       said?.itemsTotal,
       add.length + change.length + remove.length + files.length + settings.length + php.length
     ),
-    unsupportedTotal: total(said?.unsupportedTotal, unsupported.length)
+    unsupportedTotal: total(said?.unsupportedTotal, unsupported.length),
+    // The live site's changes the push leaves alone, over the whole changeset (conflicts past the cap).
+    liveChangedTotal: total(
+      (Number.isSafeInteger(said?.conflictsTotal) ? said.conflictsTotal : 0) +
+        (Array.isArray(said?.liveChanged) ? said.liveChanged.length : 0),
+      all.filter((c) => c?.conflict).length + (Array.isArray(said?.liveChanged) ? said.liveChanged.length : 0)
+    ),
+    // What Apply can write, by group, over the whole changeset: the lists above stop at the host's
+    // answer cap (500), so a preview whose first 500 items are conflicts can still push the rest.
+    pushable: {
+      add: total(said?.pushable?.add, add.length),
+      change: total(said?.pushable?.change, change.length),
+      remove: total(said?.pushable?.remove, remove.length),
+      files: total(said?.pushable?.files, files.length),
+      settings: total(said?.pushable?.settings, settings.length),
+      php: total(said?.pushable?.php, php.length)
+    }
   }
 }
 

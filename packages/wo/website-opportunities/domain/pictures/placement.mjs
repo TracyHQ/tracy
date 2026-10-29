@@ -20,7 +20,7 @@ export const PLANNER_VERSION = 1
 /** The most a crop may be enlarged to reach its role's target (C9). */
 export const MAX_SCALE = 1.25
 /** The most of a picture a crop may cut away; past `CROP_WARN` the score pays for it. */
-const CROP_MAX_LOSS = 0.5
+export const CROP_MAX_LOSS = 0.5
 const CROP_WARN = 0.35
 /** The most an output's width / height may differ from the demo's, in absolute terms: a sealed site refuses past 0.02. */
 const ASPECT_TOLERANCE = 0.005

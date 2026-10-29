@@ -25,7 +25,7 @@
  * refuses a copy that moved since its preview.
  */
 import { randomUUID } from 'node:crypto'
-import { audit, auditSiteWrite, releaseWriteLease, takeWriteLease } from './store.js'
+import { audit, auditSiteWrite, releaseWriteLease, siteByKey, takeWriteLease } from './store.js'
 import { SYNC_PLATFORMS, lastJson } from './live-sync.js'
 import {
   PREVIEW_TTL_MS,
@@ -58,7 +58,8 @@ export function livePush({
   fetchImpl = fetch,
   sync,
   now = Date.now,
-  watchEveryMs = 30_000
+  watchEveryMs = 30_000,
+  resumeOnStart = false
 }) {
   async function latest(siteKey) {
     const { rows } = await pool.query(
@@ -222,15 +223,16 @@ export function livePush({
     if (newest.state !== 'previewed')
       return { refused: { code: 'PREVIEW_NOT_READY', state: newest.state }, status: 409 }
     if (expired(newest, now())) return { refused: { code: 'PREVIEW_EXPIRED' }, status: 409 }
-    const shown = previewOf(newest.preview)
-    // Over the host's limit is not refused: it writes the first ones and leaves the rest for the next push.
+    // Counted over the whole changeset (`pushable`), not the items the answer lists. Over the host's
+    // limit is not refused: it writes the first ones and leaves the rest for the next push.
+    const { pushable } = previewOf(newest.preview)
     const count =
-      shown.add.length +
-      shown.change.length +
-      shown.files.length +
-      shown.settings.length +
-      (deletes ? shown.remove.length : 0) +
-      (php ? shown.php.length : 0)
+      pushable.add +
+      pushable.change +
+      pushable.files +
+      pushable.settings +
+      (deletes ? pushable.remove : 0) +
+      (php ? pushable.php : 0)
     if (count === 0) return { refused: { code: 'PUSH_NOTHING' }, status: 409 }
     const busy = await lease(site, previewId, email)
     if (busy) return busy
@@ -567,7 +569,30 @@ export function livePush({
     }
   }
 
-  return { preview, apply, undo, read, latest, unavailable }
+  /**
+   * After a restart, every push still running is read back from its host job at once, then watched
+   * again: the read renews the site's write lease while the job runs (stale after 90 s with nobody
+   * renewing it, the chat could write while the job still did, #123) and releases it, or settles the
+   * row, once the job has ended or is lost. Only the process that serves the doors does this
+   * (`resumeOnStart`); the cron's instance does not.
+   */
+  async function resume() {
+    const { rows } = await pool.query(`select id, site_key from site_push where state = 'running'`)
+    for (const row of rows) {
+      const site = await siteByKey(pool, row.site_key)
+      if (!site) continue
+      try {
+        await read(site)
+      } catch {
+        // the host does not answer yet: the watch below asks again
+      }
+      watch(site, row.id)
+    }
+    return rows.length
+  }
+
+  if (resumeOnStart) setTimeout(() => void resume().catch(() => {}), 0).unref?.()
+  return { preview, apply, undo, read, latest, unavailable, resume }
 }
 
 /**
@@ -630,15 +655,11 @@ export function syncAnswerOf(s, pushId) {
 const json = (value) =>
   JSON.stringify(value ?? null, (_k, v) => (typeof v === 'string' ? v.replaceAll('\0', '�') : v))
 
+// Totals over the whole changeset, not the capped lists the answer carries.
 const counts = (p) => ({
-  add: p.add.length,
-  change: p.change.length,
-  remove: p.remove.length,
-  files: p.files.length,
-  settings: p.settings.length,
-  php: p.php.length,
-  unsupported: p.unsupported.length,
-  liveChanged: p.liveChanged.length
+  ...p.pushable,
+  unsupported: p.unsupportedTotal,
+  liveChanged: p.liveChangedTotal
 })
 
 /** A preview past its time. */

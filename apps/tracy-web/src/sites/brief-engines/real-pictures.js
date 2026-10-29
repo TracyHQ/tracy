@@ -16,7 +16,7 @@
  */
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
-import { cutForPlace, demoTransparency, placeholderPicture } from '../../lib/picture-cut.js'
+import { cutForPlace, demoTransparency, initialsAvatar, placeholderPicture } from '../../lib/picture-cut.js'
 import { drawForPlace, drawKey } from '../../lib/picture-draw.js'
 import { seeder } from '../../lib/seeder.js'
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
@@ -312,10 +312,11 @@ export async function shapeReal({
       .map((u) => async () => {
         if (drawn.has(u.groupId)) return drawn.get(u.groupId)
         const group = byGroup.get(u.groupId)
-        return group?.demo ? placeholderFor(group, real.colours) : null
+        return group?.demo ? placeholderFor(group, real.colours, u.avatar) : null
       })
   ]
-  async function placeholderFor(group, colours) {
+  // A person picture's substitute is an initials avatar (#134); every other place takes the plain placeholder.
+  async function placeholderFor(group, colours, avatar = null) {
     const aspect = group.demo.width / group.demo.height
     const out = domain.outputSize(
       { width: group.demo.width, height: group.demo.height },
@@ -323,14 +324,19 @@ export async function shapeReal({
       Math.min(group.demo.width, PLACEHOLDER_MAX_W)
     )
     if (!out) return null
-    const fill = await placeholderPicture({ ...out, colours })
-    return {
-      group: asGroup(group),
-      bytes: fill.bytes,
-      ext: fill.ext,
-      hash: fill.sha256,
-      receipt: { kind: 'placeholder', origin: 'placeholder', width: out.width, height: out.height }
-    }
+    const fill = avatar
+      ? await initialsAvatar({ ...out, initials: avatar.initials, colours })
+      : await placeholderPicture({ ...out, colours })
+    const receipt = avatar
+      ? {
+          kind: 'avatar',
+          origin: 'placeholder',
+          initials: avatar.initials,
+          width: out.width,
+          height: out.height
+        }
+      : { kind: 'placeholder', origin: 'placeholder', width: out.width, height: out.height }
+    return { group: asGroup(group), bytes: fill.bytes, ext: fill.ext, hash: fill.sha256, receipt }
   }
   const answers = await pool(jobs, CUT_AT_ONCE)
   const shaped = []
@@ -405,7 +411,9 @@ export function pictureReport({ shaped, values, refused, readback, homeHtml = nu
     report: {
       groups: shaped.map.groups.length,
       photos: shaped.plan.placements.length,
-      placeholders: Object.values(receipts).filter((r) => r.kind === 'placeholder').length,
+      // An initials avatar is a person picture's placeholder: it counts as one.
+      placeholders: Object.values(receipts).filter((r) => r.kind === 'placeholder' || r.kind === 'avatar')
+        .length,
       drawn: Object.values(receipts).filter((r) => r.kind === 'drawn').length,
       drawCostUsd: Number(
         Object.values(receipts)

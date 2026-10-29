@@ -20,7 +20,7 @@ import { wordpressMenu } from '../site-pages/wordpress-menu.js'
 /** @type {WeakMap<object, Promise<any>>} */
 const memo = new WeakMap()
 
-const RELEASES_REPO = 'JoomlArt-Products/ja-products'
+const RELEASES_REPO = 'JoomlArt-Products/joomlart-products'
 
 /**
  * How to write the pages file again, for REL-2 and every PAGE rule that cannot read it. The tool is

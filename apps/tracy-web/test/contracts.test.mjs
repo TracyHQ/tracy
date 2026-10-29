@@ -380,7 +380,7 @@ test('coworkPinFor: the Claude Cowork plugin a sealed release pins comes from th
   }
   // The real copy the image carries pins tracy-business/wp7 1.1.0 to a Claude Cowork plugin. A develop pin may
   // be a release candidate (`-rc.N`, a GitHub prerelease not announced to installed sites). Either road
-  // to the zip is a real pin: an asset on the private ja-products release, or the plugin's own public
+  // to the zip is a real pin: an asset on the private joomlart-products release, or the plugin's own public
   // release (since 0.14.5, 29/09/2026 — the road tracy-base/j6 and ja-kinetic already take).
   const real = coworkPinFor('tracy-business/wp7', '1.1.0')
   assert.ok(

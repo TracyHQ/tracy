@@ -231,7 +231,7 @@ if (existsSync(contractsRoot))
  *
  * Spanish joined the interface on 02/10/2026 (spec #730), and every questionnaire authored in this
  * repo got `es` text that day (#757). The copies of questionnaires already published as
- * `tracy_site_question.json` on JoomlArt-Products/ja-products releases (`tracy-base/emdash-0.x`,
+ * `tracy_site_question.json` on JoomlArt-Products/joomlart-products releases (`tracy-base/emdash-0.x`,
  * `tracy-business/emdash-0.x`, `tracy-saas/emdash-0.x`) cannot gain it until each template is
  * released again, so `es` is excused HERE ONLY, for catalogue entries that are not a packaged
  * template (a packaged one must equal its seed, which carries `es`). Every questionnaire under

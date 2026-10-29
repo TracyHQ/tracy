@@ -419,3 +419,30 @@ test('Undo receipts with a null file blob preserve a copy deletion while live ch
     assert.equal(read(deleted.tree, path), null)
   }
 })
+
+test('a WordPress object cache drop-in is the copy’s own: the live site’s never comes over (#106)', () => {
+  const drop = 'wp-content/object-cache.php'
+  const redis = '<?php // Redis Object Cache drop-in\n'
+  // The live site switched Redis on after the import: the copy, with no Redis, keeps none.
+  const base = commit({ 'index.php': 'a\n' })
+  const ours = commit({ 'index.php': 'a\n' })
+  const theirs = commit({ 'index.php': 'a\n', [drop]: redis, 'wp-content/plugins/x/x.php': '<?php\n' })
+  const got = merge(base, ours, theirs, { platform: 'wordpress' })
+  assert.equal(read(got.tree, drop), null)
+  assert.equal(
+    read(got.tree, 'wp-content/plugins/x/x.php'),
+    '<?php\n',
+    'the rest of the live files come over'
+  )
+  // Nor does a live change replace the one the copy has, or a live deletion take it away.
+  const base2 = commit({ [drop]: 'old\n' })
+  const ours2 = commit({ [drop]: 'old\n' })
+  assert.equal(
+    read(merge(base2, ours2, commit({ [drop]: redis }), { platform: 'wordpress' }).tree, drop),
+    'old\n'
+  )
+  assert.equal(
+    read(merge(base2, ours2, commit({ 'index.php': 'a\n' }), { platform: 'wordpress' }).tree, drop),
+    'old\n'
+  )
+})

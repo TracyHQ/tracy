@@ -3,7 +3,7 @@
   "product": "tracy-business",
   "version": "1.7.2",
   "release": "tracy-business/emdash-0.x",
-  "repository": "JoomlArt-Products/ja-products",
+  "repository": "JoomlArt-Products/joomlart-products",
   "cms": {
     "name": "emdash",
     "version": "1.1.0"

@@ -425,7 +425,8 @@ test(
   'references from tables outside the adapter are counted in one grouped call, with the same answer as one count per number',
   opts,
   () => {
-    // A WordPress site's plugin tables, numbers 1..700 spread over them; the base holds fewer of
+    // A WordPress site's plugin tables the adapter does not know (WooCommerce's lookups it does,
+    // #107), numbers 1..700 spread over them; the base holds fewer of
     // some, none of one table. Text columns hold numbers as text, padded, with a prefix, or not at all.
     let seed = 7
     const next = (n) => {
@@ -434,14 +435,14 @@ test(
     }
     const textOf = (n) => [String(n), ` ${n}`, `${n} `, `0${n}`, `${n}abc`, 'none'][next(6)]
     const tables = (rows) => `
-      CREATE TABLE wp_wc_product_meta_lookup (product_id BIGINT NOT NULL, sku VARCHAR(100));
+      CREATE TABLE wp_shop_stock (product_id BIGINT NOT NULL, sku VARCHAR(100));
       CREATE TABLE wp_yoast_indexable (id INT AUTO_INCREMENT PRIMARY KEY, object_id BIGINT, author_id BIGINT, post_parent BIGINT);
       CREATE TABLE wp_plugin_notes (note_id INT, post_id VARCHAR(20), attachment_id TEXT, note TEXT) COLLATE utf8mb4_unicode_520_ci;
       CREATE TABLE wp_comment_votes (comment_id INT, votes INT);
       ${rows}`
     const insert = (count) =>
       [
-        `INSERT INTO wp_wc_product_meta_lookup VALUES ${Array.from({ length: count }, () => `(${next(700) + 1}, 'sku')`).join(',')};`,
+        `INSERT INTO wp_shop_stock VALUES ${Array.from({ length: count }, () => `(${next(700) + 1}, 'sku')`).join(',')};`,
         `INSERT INTO wp_yoast_indexable (object_id, author_id, post_parent) VALUES ${Array.from({ length: count * 3 }, () => `(${next(700) + 1}, ${next(5) + 1}, ${next(700)})`).join(',')};`,
         `INSERT INTO wp_plugin_notes VALUES ${Array.from({ length: count }, (_, i) => `(${i}, '${textOf(next(700) + 1)}', ${next(4) ? `'${textOf(next(700) + 1)}'` : 'NULL'}, 'n')`).join(',')};`,
         `INSERT INTO wp_comment_votes VALUES ${Array.from({ length: count }, () => `(${next(700) + 1}, 1)`).join(',')};`
@@ -469,7 +470,7 @@ test(
         'wp_only_live.order_id',
         'wp_plugin_notes.post_id',
         'wp_plugin_notes.attachment_id',
-        'wp_wc_product_meta_lookup.product_id',
+        'wp_shop_stock.product_id',
         'wp_yoast_indexable.object_id',
         'wp_yoast_indexable.author_id'
       ]

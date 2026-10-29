@@ -70,6 +70,13 @@ JOOMLA_ENVIRONMENT_SETTINGS = frozenset(_RENDER.QUOTED | _RENDER.BARE | {"dbpref
 
 CONFIG_FILES = {"joomla": "configuration.php", "wordpress": "wp-config.php"}
 
+# Files that bind a site to the server it runs on, like the environment settings above: always the
+# copy's own, whatever the live site carries. WordPress's object cache drop-in talks to a cache
+# server (Redis, Memcached) that the copy does not have — taken from the live site, every request
+# of the copy answered 500 "Error establishing a Redis connection" while its `WP_REDIS_*` settings
+# stayed the copy's (#106).
+ENVIRONMENT_FILES = {"wordpress": frozenset({"wp-content/object-cache.php"})}
+
 # WordPress's own rules, its address rewrite and its wp-config.php merge (lib/live_sync_wordpress.py).
 _WORDPRESS = _load("live_sync_wordpress", HERE / "live_sync_wordpress.py")
 
@@ -401,6 +408,8 @@ def merge_files(repo: str, base: str, ours: str, theirs: str, platform: str, dec
             # Tracy's own doors: the copy's version, whatever the live site carries (a different
             # Claude Cowork release, or none).
             counts["tracyOwned"] += 1
+        elif path in ENVIRONMENT_FILES.get(platform, ()):
+            pass  # the copy's own, or none
         elif CONFIG_FILES.get(platform) == path:
             # 🔒 Setting by setting even when the copy left the file alone: taken whole, the live
             # site's configuration carries the live database's password and address into the copy.
@@ -1232,9 +1241,10 @@ class IdMap:
         return (f"UPDATE {q(schema)}.{q(self.table(ref_table))} SET {', '.join(sets)}"
                 f" WHERE {' OR '.join(finds)};")
 
-    def apply(self, schema: str) -> None:
+    def apply(self, schema: str, base: str | None = None) -> None:
         """The remembered numbers, on one read of the live site. A record of the read that already
-        holds one of those numbers on its own is numbered again too (and remembered)."""
+        holds one of those numbers on its own is numbered again too (and remembered); with `base`,
+        rows of tables the adapter does not know that name such a record are held, as in `clash`."""
         for table, rule in self.entities:
             mapping = self.map.get(table)
             if not mapping or not self.exists(schema, table):
@@ -1248,13 +1258,19 @@ class IdMap:
             taken = {new for _, new in pairs}
             # A record of this read sitting on a number another record is moving to.
             squatters = sorted((present - moving) & taken)
+            squatted = []
             for live in squatters:
                 fresh = self.fresh(table, present | taken)
                 taken.add(fresh)
                 self.seen.setdefault(table, set()).add(fresh)
                 mapping[live] = fresh
                 pairs.append((live, fresh))
+                squatted.append((live, fresh))
                 self.added.append({"table": table, "live": live, "copy": fresh, "why": "occupied"})
+            # A squatter moves like a clash: what the adapter cannot move would stay on its old
+            # number, now another record's (#107).
+            if base is not None:
+                self.held += self.unhandled_refs(base, schema, table, squatted)
             self.applied.setdefault(schema, {})[table] = {new: old for old, new in pairs}
             self.renumber(schema, table, rule, pairs)
 
@@ -1299,7 +1315,10 @@ class IdMap:
             # the base does not hold yet, or a base older than the map. Numbered again, it came to the
             # copy twice, and the map lost the copy's number of it (a later push made it again).
             remembered = self.applied.get(theirs, {}).get(table, {})
-            both = sorted((o & t) - b - set(remembered))
+            same: set[int] = set()
+            if rule.get("single"):
+                same, t = self.align_single(base, ours, theirs, table, rule, b, o, t)
+            both = sorted((o & t) - b - set(remembered) - same)
             differ = [i for i in both if digest(ours, table, i) != digest(theirs, table, i)]
             pairs = []
             taken = set(self.seen[table])
@@ -1318,6 +1337,47 @@ class IdMap:
                 self.added.append({"table": table, "live": raw, "copy": fresh, "why": "created-on-both"})
             self.held += self.unhandled_refs(base, theirs, table, pairs)
             self.renumber(theirs, table, rule, pairs)
+
+    def align_single(self, base: str, ours: str, theirs: str, table: str, rule: dict,
+                     b: set[int], o: set[int], t: set[int]) -> tuple[set[int], set[int]]:
+        """Rows that can be only one per record (`single`: their natural columns, and which rows): a
+        row both sites added for the same record is the same row, whatever number each gave it. The
+        live site's goes under the copy's number (and is remembered there), so the row merge meets
+        them as one row both added — the same value merges, two values are a conflict — and never as
+        two rows: two `_wp_page_template` rows for one page, one of them hidden from the preview (#118).
+        Answers the numbers that are such a row, and the live read's numbers after the move."""
+        natural, where = list(rule["single"]["natural"]), rule["single"]["where"]
+        cols = ", ".join(f"HEX(CAST({q(c)} AS BINARY))" for c in natural)
+        script = [f"SELECT {i}, {q(self.key(table))}, {cols} FROM {q(schema)}.{q(self.table(table))} WHERE ({where});"
+                  for i, schema in enumerate((ours, theirs))]
+        new: tuple[dict, dict] = ({}, {})
+        crowded: tuple[set, set] = (set(), set())
+        for r in self.sql.run("\n".join(script)):
+            side, number, nat = int(r[0]), int(r[1]), tuple(r[2:])
+            if number in b:
+                continue  # the base's row: what each side did to it is the row merge's
+            if nat in new[side]:
+                crowded[side].add(nat)  # two new rows for one record on one side: left as they are
+            new[side][nat] = number
+        same, pairs = set(), []
+        for nat, copy in new[0].items():
+            live = new[1].get(nat)
+            if live is None or nat in crowded[0] or nat in crowded[1]:
+                continue
+            if live == copy:
+                same.add(copy)
+            elif copy not in t and live not in o:
+                pairs.append((live, copy))
+                same.add(copy)
+        for live, copy in pairs:
+            raw = self.moved(theirs, table, live, copy)
+            self.map.setdefault(table, {})[raw] = copy
+            self.seen[table].add(copy)
+            self.added.append({"table": table, "live": raw, "copy": copy, "why": "same-record"})
+        if pairs:
+            self.renumber(theirs, table, rule, pairs)
+            t = (t - {live for live, _ in pairs}) | {copy for _, copy in pairs}
+        return same, t
 
     def moved(self, schema: str, table: str, number: int, to: int) -> int:
         """The record of `schema` under `number` now goes under `to`: answers its live site's own
@@ -1485,7 +1545,7 @@ class DbMerge:
         self.ids.survey(list(self.names.values()))
         phase("ids surveyed")
         self.ids.apply(self.names["base"])
-        self.ids.apply(self.names["theirs"])
+        self.ids.apply(self.names["theirs"], base=self.names["base"])
         phase("ids applied")
         # The records a push made on the live site are in the base before clashes are numbered (they
         # are the copy's own, not two records under one number); what came with them, after.
@@ -1977,9 +2037,18 @@ class DbMerge:
         name = self.bare(table)
         policy = self.policy
         tracy_tables = policy.get("tracyTables")
-        if (tracy_tables and tracy_tables.search(name)) or name in policy.get("ignoreTables", ()):
-            return "ours-kept"
         inB, inM, inT = table in B.columns, table in M.columns, table in T.columns
+        if tracy_tables and tracy_tables.search(name):
+            return "ours-kept"
+        if name in policy.get("ignoreTables", ()):
+            # A plugin's own state (its logs, its settings it rewrites itself): the copy's, never
+            # merged. A copy that has never had the table takes it whole once: the plugin came over
+            # with its files and its place in `active_plugins`, and without its tables it fails on
+            # every request (Wordfence installed on the live site after the import, #106).
+            if inT and not inM:
+                self.take_table(table)
+                return "added"
+            return "ours-kept"
         if not inT:
             if not inB or not inM:
                 return "same"

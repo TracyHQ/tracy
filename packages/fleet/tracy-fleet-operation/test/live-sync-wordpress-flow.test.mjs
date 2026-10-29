@@ -880,7 +880,7 @@ test(
         tracy.map((id) => `Tracy ${id}`).sort()
       )
       assert.ok(
-        records.every((i) => i.op !== 'create' || /^Tracy \d+( · _wp_page_template)?$/.test(i.title)),
+        records.every((i) => i.op !== 'create' || /^(Page template · )?Tracy \d+$/.test(i.title)),
         JSON.stringify(records.filter((i) => i.op === 'create').map((i) => i.title))
       )
       assert.deepEqual(
@@ -1134,6 +1134,88 @@ test('WooCommerce derived background rows do not create a backup or count as cus
     s.dispose()
   }
 })
+
+test(
+  'WooCommerce HPOS order placed on live under a number the copy holds moves with its placeholder; it never attaches to the copy post (#107)',
+  opts,
+  () => {
+    const s = stack(WC_TABLES)
+    try {
+      sql(
+        `INSERT INTO wp_posts (ID, post_content, post_title, post_status, post_type)
+      VALUES (46, 'Tracy content', 'Tracy post', 'publish', 'post');`,
+        'wordpress'
+      )
+      sql(
+        `INSERT INTO wp_posts (ID, post_content, post_title, post_status, post_type)
+      VALUES (46, '', 'Order placeholder', 'draft', 'shop_order_placehold');
+      INSERT INTO wp_wc_orders VALUES (46, 'wc-processing', 99.00);
+      ${WC_CHILDREN.map((name) => `INSERT INTO wp_${name} VALUES (1, 46, 'order child');`).join('\n')}`,
+        'livesrc'
+      )
+      const answer = s.sync(s.read())
+      assert.equal(answer.state, 'applied', JSON.stringify(answer))
+      // The copy's post keeps its number; the live order and its placeholder share a new one.
+      assert.equal(sql('SELECT post_title FROM wp_posts WHERE ID=46', 'wordpress'), 'Tracy post')
+      const moved = sql("SELECT ID FROM wp_posts WHERE post_type='shop_order_placehold'", 'wordpress')
+      assert.notEqual(moved, '46')
+      assert.equal(sql('SELECT COUNT(*) FROM wp_wc_orders WHERE id=46', 'wordpress'), '0')
+      assert.equal(sql(`SELECT total_amount FROM wp_wc_orders WHERE id=${moved}`, 'wordpress'), '99.00')
+      // Real item meta has no order_id (it names its line); the fixture's column is not an order's.
+      for (const name of WC_CHILDREN.filter((n) => n !== 'woocommerce_order_itemmeta')) {
+        assert.equal(sql(`SELECT COUNT(*) FROM wp_${name} WHERE order_id=46`, 'wordpress'), '0', name)
+        assert.equal(sql(`SELECT COUNT(*) FROM wp_${name} WHERE order_id=${moved}`, 'wordpress'), '1', name)
+      }
+      // A second sync with nothing new keeps it so.
+      const again = s.sync(s.read())
+      assert.equal(again.state, 'applied', JSON.stringify(again))
+      assert.equal(sql('SELECT COUNT(*) FROM wp_wc_orders WHERE id=46', 'wordpress'), '0')
+      assert.equal(sql(`SELECT status FROM wp_wc_orders WHERE id=${moved}`, 'wordpress'), 'wc-processing')
+    } finally {
+      s.dispose()
+    }
+  }
+)
+
+test(
+  'a live record squatting on a remembered number moves, and a plugin row naming it is held, not pointed at another record (#107)',
+  opts,
+  () => {
+    const s = stack(
+      'CREATE TABLE wp_myplugin_rows (id bigint NOT NULL PRIMARY KEY, post_id bigint, note varchar(50));'
+    )
+    try {
+      // First sync: both sides made post 46, the live one is remembered under a new number.
+      sql(
+        "INSERT INTO wp_posts (ID, post_content, post_title, post_status, post_type) VALUES (46, '', 'Tracy post', 'publish', 'post');",
+        'wordpress'
+      )
+      sql(
+        "INSERT INTO wp_posts (ID, post_content, post_title, post_status, post_type) VALUES (46, '', 'Live post', 'publish', 'post');",
+        'livesrc'
+      )
+      const first = s.sync(s.read())
+      assert.equal(first.state, 'applied', JSON.stringify(first))
+      const copyOfLive = Number(sql("SELECT ID FROM wp_posts WHERE post_title='Live post'", 'wordpress'))
+      assert.notEqual(copyOfLive, 46)
+      // Then the live site makes a post on that remembered number, and a plugin row names it.
+      sql(
+        `INSERT INTO wp_posts (ID, post_content, post_title, post_status, post_type) VALUES (${copyOfLive}, '', 'Live squatter', 'publish', 'post');
+        INSERT INTO wp_myplugin_rows VALUES (1, ${copyOfLive}, 'names the squatter');`,
+        'livesrc'
+      )
+      const second = s.sync(s.read())
+      assert.ok(
+        (second.held ?? []).some(
+          (h) => h.table === 'wp_myplugin_rows' && h.column === 'post_id' && h.live === copyOfLive
+        ),
+        JSON.stringify(second)
+      )
+    } finally {
+      s.dispose()
+    }
+  }
+)
 
 test(
   'WooCommerce HPOS order with a placeholder and child rows is one record with all business data retained',
