@@ -4,10 +4,7 @@
   "title": "A new site is not left on a bare upstream web image while its IMAGE_TAGS line exists; a site already on one moves to the line for the same base",
   "pr": 201,
   "area": "fleet/web-image",
-  "cms": [
-    "wp",
-    "jo"
-  ],
+  "cms": ["wp", "jo"],
   "needs": [],
   "flaky_model": false,
   "steps": [

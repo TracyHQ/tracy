@@ -1,0 +1,2 @@
+{"id":"REG-PR-201-visual-check-cold-before","verdict":"PASS","commit":"bb64915df2cf2643d8beb7c92a357191dba5e5bf","ran_at":"2026-10-29T11:29:28.464Z","evidence":"tests/regression/.runs/2026-10-29-bb64915df/REG-PR-201-visual-check-cold-before.log"}
+{"id":"REG-PR-201-web-image-never-upstream","verdict":"PASS","commit":"bb64915df2cf2643d8beb7c92a357191dba5e5bf","ran_at":"2026-10-29T11:29:36.711Z","evidence":"tests/regression/.runs/2026-10-29-bb64915df/REG-PR-201-web-image-never-upstream.log"}
