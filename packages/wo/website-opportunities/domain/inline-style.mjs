@@ -27,6 +27,10 @@ const BREAK = 'br'
  */
 
 const squash = (/** @type {string} */ s) => s.replace(/\s+/g, ' ')
+/** Words that open with punctuation closing a phrase: they follow the word before them with no space. */
+const CLOSING = /^[,.;:!?)\]]/
+/** A space a mark left before closing punctuation, taken out. */
+const tightPunctuation = (/** @type {string} */ s) => s.replace(/ +([,.;:!?)\]])/g, '$1')
 const wordsOf = (/** @type {string} */ s) => squash(s).trim().split(' ').filter(Boolean)
 const decode = (/** @type {string} */ s) =>
   s
@@ -113,11 +117,13 @@ export const hasStyleMarks = (/** @type {unknown} */ value) => /\[\[[\s\S]*?\]\]
  * @param {unknown} value
  */
 export function unmarked(value) {
-  return squash(
-    String(value ?? '')
-      .replace(MARK, (_, inner) => (inner.trim().toLowerCase() === BREAK ? ' ' : ` ${inner} `))
-      .replace(/<[^>]*>|\(\([^()]*\)\)/g, ' ')
-      .replace(/\[\[|\]\]/g, ' ')
+  return tightPunctuation(
+    squash(
+      String(value ?? '')
+        .replace(MARK, (_, inner) => (inner.trim().toLowerCase() === BREAK ? ' ' : ` ${inner} `))
+        .replace(/<[^>]*>|\(\([^()]*\)\)/g, ' ')
+        .replace(/\[\[|\]\]/g, ' ')
+    )
   ).trim()
 }
 
@@ -337,7 +343,8 @@ export function applyInlineStyle(pattern, written) {
       value += (part.lead ?? '') + tagOf(part.raw) + (part.gap ?? '')
       continue
     }
-    const gap = i > 0 && laid[i - 1].kind === 'text' ? ' ' : ''
+    // Punctuation that closes a phrase sits against the run before it ("[[whole street]], in" never reads "street ,").
+    const gap = i > 0 && laid[i - 1].kind === 'text' && !CLOSING.test(part.words) ? ' ' : ''
     value += gap + part.open.map(tagOf).join('') + textOf(part.words) + part.close.map(tagOf).join('')
   }
   return { value, plain: unmarked(text), by: marked ? 'marks' : 'position' }

@@ -93,7 +93,10 @@ export function planPageIntros({ brief, contentMap, pages = [], cardNames = {} }
   // Who the offerings serve: the people the business's USP names, else the owner's audience (`heroWhoOf`).
   const who = heroWhoOf(
     brief,
-    findUsp(brief, { places: [where?.value].filter(nonEmpty), offerings: offeringNames(brief) }).usp
+    findUsp(brief, {
+      places: [where?.city, where?.district, where?.value].filter(nonEmpty),
+      offerings: offeringNames(brief)
+    }).usp
   )
   const services = list(brief?.reading?.services)
   const quoteOf = (label) => services.find((s) => s?.label === label)?.quote ?? null
@@ -122,8 +125,57 @@ export function planPageIntros({ brief, contentMap, pages = [], cardNames = {} }
       source: labels.length ? 'honesty.cardNames' : 'reading.services',
       offerings: names.map((n) => n.toLowerCase()),
       ...(line.who ? { who: line.who.replace(/^for\s+/i, '') } : {}),
-      ...(where && heading ? { short: line.short, place: where.value, heading: heading.key } : {}),
-      ...(where && !heading ? { place: where.value } : {}),
+      ...(where && heading
+        ? { short: line.short, place: where.city ?? where.value, heading: heading.key }
+        : {}),
+      ...(where && !heading ? { place: where.city ?? where.value } : {}),
+      page: String(page.route)
+    })
+  }
+  return out
+}
+
+/** An About page or a Contact page: by its route or the component it opens. */
+const PLACE_PAGE = (page) =>
+  /(?:^|\/)(?:about|about-us|contact|contact-us|contacts)(?:$|\/)/i.test(String(page?.route ?? '')) ||
+  /option=com_contact/.test(String(page?.link ?? ''))
+
+/**
+ * Where a business that serves wider than its pin is based (COO rule 29/10/2026, tier `wide` of `heroWhereOf`): the hero
+ * names the city, and the intro of the About and Contact pages says the district and the area served, in the owner's own
+ * words ("Based in Tilal Al Ghaf. Locations across Dubai."). Facts only: the district is a part of the address, the area
+ * is the owner's. Written only when the copy writer's line does not name the district (`when: 'missing'`), after its
+ * line when both fit (`hero-lines.js`).
+ * @returns {Array<{key: string, role: string | null, decision: 'value', value: string, reason: 'intro-where',
+ *   when: 'missing', source: string, district: string, max: number, page: string}>}
+ */
+export function planPlaceIntros({ brief, contentMap, pages = [] }) {
+  const where = heroWhereOf(brief)
+  const area = list(brief?.business?.serviceAreas)
+    .map((a) => (typeof a === 'string' ? a : a?.text))
+    .find(nonEmpty)
+  if (where?.tier !== 'wide' || !where.district || !area) return []
+  const kept = new Set(
+    list(pages)
+      .filter((p) => p.decision === 'keep')
+      .map((p) => String(p.id))
+  )
+  const value = `Based in ${where.district}. ${area.trim().replace(/[.!]*$/, '.')}`
+  const out = []
+  for (const page of list(contentMap?.pages)) {
+    if (!PLACE_PAGE(page) || !kept.has(String(page?.route ?? ''))) continue
+    const slot = mastheadIntroOf(page, contentMap)?.line ?? heroSlotsOf(contentMap, page)?.subline ?? null
+    if (!slot || [...value].length > limitOf(slot)) continue
+    out.push({
+      key: slot.key,
+      role: slot.role ?? null,
+      decision: 'value',
+      value,
+      reason: 'intro-where',
+      when: 'missing',
+      source: 'business.address',
+      district: where.district,
+      max: limitOf(slot),
       page: String(page.route)
     })
   }

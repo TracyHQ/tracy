@@ -16,9 +16,24 @@
  * language leaves them to the copy writer, which writes in the site's language.
  */
 
-const REASONS = new Set(['hero-what', 'hero-why', 'hero-when', 'hero-contact', 'intro-what', 'cta-action'])
+const REASONS = new Set([
+  'hero-what',
+  'hero-why',
+  'hero-when',
+  'hero-contact',
+  'intro-what',
+  'intro-where',
+  'cta-action'
+])
 /** A button's words that name no action (`contact-buttons.mjs` decides the words that replace them). */
 const BARE_CONTACT = /^(?:contact|contact us|get in touch|reach us|enquire|inquire)$/i
+
+/** The words of a line as a visitor reads them: style marks and tags taken off. */
+const plainOf = (value) =>
+  String(value ?? '')
+    .replace(/\(\([^)]*\)\)|<[^>]*>|\[\[|\]\]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
 
 /** The words of a line as a visitor reads them, lower case: style marks and tags taken off. */
 const wordsOf = (value) =>
@@ -47,6 +62,15 @@ export function heroSlotValues(sitePlan, locale = 'en', current = () => undefine
   for (const s of sitePlan?.slots ?? []) {
     if (s?.decision !== 'value' || !REASONS.has(s.reason)) continue
     if (typeof s.value !== 'string' || s.value.trim() === '') continue
+    // Where the business is based (`intro-where`): kept when the copy writer's line names the district, else said after
+    // that line when both fit the box, else in its place.
+    if (s.reason === 'intro-where') {
+      const own = plainOf(current(s.key))
+      if (typeof s.district === 'string' && own.toLowerCase().includes(s.district.toLowerCase())) continue
+      const both = own ? `${own.replace(/[\s.!]*$/, '.')} ${s.value}` : s.value
+      out[s.key] = Number.isInteger(s.max) && [...both].length <= s.max ? both : s.value
+      continue
+    }
     const place = typeof s.place === 'string' ? s.place.toLowerCase() : ''
     const heading = s.heading ? wordsOf(current(s.heading)) : ''
     const headingHasPlace = place !== '' && heading.includes(place)
@@ -64,7 +88,9 @@ export function heroSlotValues(sitePlan, locale = 'en', current = () => undefine
       const serves = whoWords.length === 0 || whoWords.some((w) => now.includes(w))
       if (named && serves && (place === '' || now.includes(place) || headingHasPlace)) continue
     }
-    out[s.key] = headingHasPlace && typeof s.short === 'string' && s.short !== '' ? s.short : s.value
+    // A headline with its key words marked (`[[whole family]]`) gives the marked words: the write takes the marks apart.
+    const value = typeof s.marked === 'string' && s.marked !== '' ? s.marked : s.value
+    out[s.key] = headingHasPlace && typeof s.short === 'string' && s.short !== '' ? s.short : value
   }
   return out
 }

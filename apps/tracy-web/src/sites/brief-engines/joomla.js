@@ -1244,7 +1244,9 @@ export function createJoomlaEngine({
         demoBlanks,
         demoHides,
         demoAsked,
-        styleMarks
+        styleMarks,
+        // The site plan's search title, description and LocalBusiness record (`place-seo.mjs`).
+        seo: sitePlan?.seo ?? null
       }
     },
 
@@ -1714,8 +1716,10 @@ export function createJoomlaEngine({
               // 🔒 A Name left blank names no page (TCH #1013, 14/10/2026): the home keeps the title the template ships.
               owner: {
                 name: answeredName(ctx.normalized),
+                // A brief build's search title and description, of facts only (`place-seo.mjs`), when it has no `about`.
+                title: String(prepared.seo?.title ?? ''),
                 said: spokenOf(ctx.brief),
-                about: String(ctx.brief?.about ?? '')
+                about: String(ctx.brief?.about ?? '') || String(prepared.seo?.description ?? '')
               },
               // The language the owner's description is in: as read from it, else the one the site's words were written in.
               wroteIn: ctx.normalized.writtenIn ?? prepared.written,

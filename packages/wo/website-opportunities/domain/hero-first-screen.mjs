@@ -167,7 +167,7 @@ const stripEnd = (t) =>
  * Names in one list ("tennis, padel, swimming and fitness lessons"): a trailing run of names that end in the same word
  * shares it once.
  */
-function listed(names) {
+export function listed(names) {
   if (names.length <= 1) return names[0] ?? ''
   const lastWord = (n) => (n.includes(' ') ? n.split(' ').at(-1) : null)
   const shared = lastWord(names.at(-1))
@@ -182,15 +182,55 @@ function listed(names) {
   return `${names.slice(0, -1).join(', ')} and ${names.at(-1)}`
 }
 
-/** Where the business is, from the brief: its city, else the areas it serves as the owner says them. */
+/**
+ * The district of an address as Google writes it (pure): the part just before its city, when it holds no number and is
+ * no longer than four words ("Al Hebiah Fourth - Tilal Al Ghaf - Dubai - United Arab Emirates" gives "Tilal Al Ghaf").
+ * Null when the address names none. Never invented: only a part of the address itself.
+ */
+export function districtOf(address) {
+  const city = cityOf(address)
+  if (!city) return null
+  const parts = String(address)
+    .replace(/\s+/g, ' ')
+    .split(/ - |,/)
+    .map((p) => p.trim())
+    .filter(Boolean)
+  const at = parts.lastIndexOf(city)
+  const part = at > 0 ? parts[at - 1] : null
+  return part && !/\d/.test(part) && part.split(' ').length <= 4 && part !== city ? part : null
+}
+
+/**
+ * Where the business is, in three tiers (COO rule 29/10/2026, by facts of the brief only):
+ *   wide    it serves wider than its pin (the owner states an area served): the hero names the city; the district is said
+ *           on the About and Contact pages and in the search result (`page-intros.mjs`, `placeSeoOf`)
+ *   venue   a place customers visit, no wider area: the hero names "<district>, <city>" when it fits, else the city
+ *   city    no district in the address: the city (no country is added: nothing in the brief tells an ambiguous city apart)
+ * Without a city, the areas it serves as the owner says them.
+ * @returns {{kind: 'city' | 'area', value: string, city: string | null, district: string | null,
+ *   tier: 'wide' | 'venue' | 'city' | 'area', fallback?: {kind: 'city', value: string}, source: string} | null}
+ */
 export function heroWhereOf(brief) {
   const address = nonEmpty(brief?.business?.address) ? brief.business.address : null
   const city = address ? cityOf(address) : null
-  if (city) return { kind: 'city', value: city, source: 'business.address' }
   const areas = serviceAreasOf(brief)
-  if (areas.length) return { kind: 'area', value: stripEnd(areas[0]), source: 'business.serviceAreas' }
+  const district = address ? districtOf(address) : null
+  const source = 'business.address'
+  if (city && areas.length) return { kind: 'city', value: city, city, district, tier: 'wide', source }
+  if (city && district) {
+    const fallback = { kind: 'city', value: city }
+    return { kind: 'city', value: `${district}, ${city}`, city, district, tier: 'venue', fallback, source }
+  }
+  if (city) return { kind: 'city', value: city, city, district: null, tier: 'city', source }
+  if (areas.length) {
+    const value = stripEnd(areas[0])
+    return { kind: 'area', value, city: null, district: null, tier: 'area', source: 'business.serviceAreas' }
+  }
   return null
 }
+
+/** The forms of a place to try in a box, longest first: "<district>, <city>", then the city. */
+const placesOf = (where) => (where ? [where, ...(where.fallback ? [where.fallback] : [])] : [null])
 
 /** What the business offers, as names in a sentence: the services the site shows, most mentioned first. */
 export function offeringNames(brief) {
@@ -247,15 +287,25 @@ export function heroWhoOf(brief, usp = null) {
  * @returns {{value: string, where: boolean, source: string} | null}
  */
 function headlineOf(brief, usp, where, max) {
-  const city = where?.kind === 'city' ? where.value : null
+  const cities = placesOf(where)
+    .filter((w) => w?.kind === 'city')
+    .map((w) => w.value)
+  const city = cities[0] ?? null
   const fits = (t) => [...t].length <= max
+  // The USP's key words carry the template's accent (`[[...]]` marks, `joomla-inline-styles.js`).
+  const at = (value) => {
+    const i = usp?.accent ? value.toLowerCase().indexOf(usp.accent.toLowerCase()) : -1
+    if (i < 0) return {}
+    const end = i + usp.accent.length
+    return { marked: `${value.slice(0, i)}[[${value.slice(i, end)}]]${value.slice(end)}` }
+  }
   if (usp) {
     for (const h of usp.headlines) {
-      for (const value of city ? [`${h}, in ${city}`, `${h} in ${city}`] : [])
-        if (fits(value)) return { value, where: true, source: `usp:${usp.kind}`, usp }
+      for (const value of cities.flatMap((c) => [`${h}, in ${c}`, `${h} in ${c}`]))
+        if (fits(value)) return { value, ...at(value), where: true, source: `usp:${usp.kind}`, usp }
     }
     for (const h of usp.headlines)
-      if (fits(h)) return { value: h, where: false, source: `usp:${usp.kind}`, usp }
+      if (fits(h)) return { value: h, ...at(h), where: false, source: `usp:${usp.kind}`, usp }
     return null
   }
   const line = offeringLine(offeringNames(brief), city ? where : null, max + 1)
@@ -292,12 +342,8 @@ function whenLineOf(brief) {
  * @returns {{value: string, short: string, where: boolean, who: string | null, names: number} | null}
  */
 export function offeringLine(names, where, max, who = null) {
-  const place = (text) =>
-    where?.kind === 'city'
-      ? `${text} in ${where.value}.`
-      : where
-        ? `${text}. ${capitalFirst(where.value)}.`
-        : `${text}.`
+  const place = (text, at) =>
+    at?.kind === 'city' ? `${text} in ${at.value}.` : at ? `${text}. ${capitalFirst(at.value)}.` : `${text}.`
   const tails = [
     who?.core && who.detail ? { text: ` ${who.core}, ${who.detail}`, who: who.core } : null,
     who?.core ? { text: ` ${who.core}`, who: who.core } : null,
@@ -308,10 +354,13 @@ export function offeringLine(names, where, max, who = null) {
     for (const tail of tails) {
       // A place after a WHO detail reads as a list: "..., at every level, in Dubai".
       const text = `${what}${tail.text}`
-      const line =
-        tail.text.includes(',') && where?.kind === 'city' ? `${text}, in ${where.value}.` : place(text)
-      if ([...line].length <= max)
-        return { value: line, short: `${text}.`, where: Boolean(where), who: tail.who, names: n }
+      // The district goes first: "<district>, <city>" is tried, then the city alone, before any WHO is dropped.
+      for (const at of placesOf(where)) {
+        const line =
+          tail.text.includes(',') && at?.kind === 'city' ? `${text}, in ${at.value}.` : place(text, at)
+        if ([...line].length <= max)
+          return { value: line, short: `${text}.`, where: Boolean(at), who: tail.who, names: n }
+      }
     }
   }
   return null
@@ -399,7 +448,8 @@ function secondButtonOf(brief, contentMap, hero, way) {
     label: { key: label.key, value: channel.label },
     href: { key: href.key, value: channel.href },
     kind: channel.kind,
-    source: channel.source
+    source: channel.source,
+    ...(channel.inferred ? { inferred: true } : {})
   }
 }
 
@@ -420,7 +470,7 @@ export function planHero(brief, contentMap, contact = {}, { themes = [] } = {}) 
   const where = heroWhereOf(brief)
   const found = findUsp(brief, {
     themes,
-    places: [where?.value].filter(nonEmpty),
+    places: [where?.city, where?.district, where?.value].filter(nonEmpty),
     offerings: offeringNames(brief)
   })
   // Two lines: the headline says WHY and WHERE, the subline WHAT and WHO. One line only: it says WHAT and WHERE.
@@ -432,7 +482,10 @@ export function planHero(brief, contentMap, contact = {}, { themes = [] } = {}) 
   const usp = fitted?.usp ?? null
   const head = twoLines ? (fitted ?? headlineOf(brief, null, where, limitOf(hero.headline))) : null
   const who = heroWhoOf(brief, usp)
-  if (head) decide(hero.headline, head.value, head.usp ? 'hero-why' : 'hero-what', head.source)
+  if (head) {
+    decide(hero.headline, head.value, head.usp ? 'hero-why' : 'hero-what', head.source)
+    if (head.marked) slots.at(-1).marked = head.marked
+  }
   const lineSlot = hero?.subline ?? hero?.headline ?? null
   // The place is said once: not in the subline when the headline, as planned, holds it.
   // Without a USP the headline says what and where; the subline says nothing twice: the whole list when the headline had
@@ -457,7 +510,7 @@ export function planHero(brief, contentMap, contact = {}, { themes = [] } = {}) 
       reason: 'hero-what',
       source: what.source,
       ...(where && !head && what.short !== what.value && hero?.headline && hero.headline !== lineSlot
-        ? { short: what.short, place: where.value, heading: hero.headline.key }
+        ? { short: what.short, place: where.city ?? where.value, heading: hero.headline.key }
         : {})
     })
   const when = hero?.when ? whenLineOf(brief) : null
@@ -600,7 +653,10 @@ export function checkHeroAnswers({ pages, brief }) {
   // The subline answers WHAT: the first screen without its headline, unless the headline is all it holds.
   const lines = textOf(region.replace(/<h1\b[\s\S]*?<\/h1\s*>/i, ' '))
   const where = heroWhereOf(brief)
-  const found = findUsp(brief, { places: [where?.value].filter(nonEmpty), offerings: offeringNames(brief) })
+  const found = findUsp(brief, {
+    places: [where?.city, where?.district, where?.value].filter(nonEmpty),
+    offerings: offeringNames(brief)
+  })
   // Without a USP the headline itself says what the business offers (COO rule 29/10/2026): the whole first screen counts.
   const beside = lines.length > 0 && found.usp ? lines : text
   const out = []
@@ -661,7 +717,7 @@ export function checkHeroAnswers({ pages, brief }) {
     out.push({ kind: 'who', why: 'the first screen names nobody the business serves' })
   // WHERE: the city, or a place word of an area served.
   const places = [
-    where?.kind === 'city' ? where.value : null,
+    where?.city ?? null,
     ...serviceAreasOf(brief).flatMap(
       (a) => a.match(/\p{Lu}[\p{L}'\u2019-]+(?:\s+\p{Lu}[\p{L}'\u2019-]+)*/gu) ?? []
     )
@@ -704,7 +760,7 @@ const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 /** Whether a text says a USP: its theme words, else most of its own words. */
 function saysUsp(text, usp) {
   if (usp.words?.length) return usp.words.some((w) => new RegExp(`\\b${escape(w)}`).test(text))
-  const words = String(usp.label)
+  const words = String(usp.headlines?.[0] ?? usp.label)
     .toLowerCase()
     .split(/[^\p{L}\p{N}]+/u)
     .filter((w) => w.length >= 4)

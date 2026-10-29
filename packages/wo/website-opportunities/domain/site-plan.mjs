@@ -23,7 +23,8 @@ import { HONESTY_REASONS, planHonesty } from './site-plan-honesty.mjs'
 import { EMPTIED_PAGE_WHY, emptiedPages } from './site-plan-empty-pages.mjs'
 import { peopleFromReviewsNote, showablePeopleOf } from './brief-people.mjs'
 import { planHero } from './hero-first-screen.mjs'
-import { planPageIntros } from './page-intros.mjs'
+import { planPageIntros, planPlaceIntros } from './page-intros.mjs'
+import { placeSeoOf } from './place-seo.mjs'
 
 export const SITE_PLAN_VERSION = 'site-plan/1'
 
@@ -48,6 +49,8 @@ export const SITE_PLAN_REASONS = Object.freeze({
   'hero-why':
     'the headline says what sets the business apart, as the brief proves it, and where (`hero-usp.mjs`)',
   'hero-when': 'the hero line for opening hours says the hours the brief trusts (`hero-first-screen.mjs`)',
+  'intro-where':
+    'the About or Contact intro says where the business is based and the area it serves (`page-intros.mjs`)',
   'intro-what':
     'the intro of an offering page names its offerings, who they serve and the place (`page-intros.mjs`)',
   'hero-contact': "the first screen's main button uses the owner's real way in (`hero-first-screen.mjs`)",
@@ -151,7 +154,7 @@ function channelSlotsOf(slots, channels, contact) {
     )
     const order = [
       ...channels.filter((c) => c.kind === 'message'),
-      ...channels.filter((c) => c.kind === 'whatsapp'),
+      ...channels.filter((c) => c.kind === 'whatsapp' || c.kind === 'zalo'),
       ...phones
     ].filter((c) => !shown.has(c.href))
     mailSlots.forEach((slot, i) => {
@@ -287,7 +290,11 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
   const heroPlan = planHero(brief, contentMap, contact)
   const pageRows = pagesOf(pagePlan)
   // The intro of each kept offering page names its offerings and the place (`page-intros.mjs`).
-  const intros = planPageIntros({ brief, contentMap, pages: pageRows, cardNames: honesty.honesty.cardNames })
+  const intros = [
+    ...planPageIntros({ brief, contentMap, pages: pageRows, cardNames: honesty.honesty.cardNames }),
+    // A business that serves wider than its pin says where it is based on its About and Contact pages (`page-intros.mjs`).
+    ...planPlaceIntros({ brief, contentMap, pages: pageRows })
+  ]
   const fromReviews = peopleFromReviewsNote(showablePeopleOf(brief).filter((p) => shown.has(p.id)))
   const notes = fromReviews ? [...pageNotes, fromReviews] : pageNotes
   return {
@@ -306,6 +313,8 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
     ]),
     // The first screen answers what, where and how to contact (COO rule 29/10/2026): `hero-first-screen.mjs`.
     hero: heroPlan.hero,
+    // The home page's search result and LocalBusiness record, with the district and the area served (`place-seo.mjs`).
+    seo: placeSeoOf(brief, { name, phone: contact?.phone?.value ?? null }),
     // Logo, posts, social profiles and map (ticket #193): `site-plan-identity.mjs`.
     ...planIdentity(brief, contentMap),
     // What the content map does not reach: videos, backgrounds, showcase, addresses, credit line (ticket #196).

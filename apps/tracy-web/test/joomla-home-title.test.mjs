@@ -160,3 +160,30 @@ test('ja-essence/j6/1.0.4, About blank: the home description the release ships s
   const about = 'A family bakery in Dubai. Sourdough every morning.'
   assert.equal(run(about)?.['menu-meta_description'], about, 'About given: the owner’s own words, as before')
 })
+
+test('a brief build home title is its search title, and its description the plan one when no description was given', () => {
+  const { dir, rows } = releaseMenu('ja-voyara/j6/1.0.3')
+  const { steps } = pageMetaSteps({
+    rows,
+    visible: new Set(['en-GB']),
+    owner: {
+      name: 'Tamq Travel',
+      title: 'Desert tours in Port Marlow | Tamq Travel',
+      said: 'Tamq Travel',
+      about: 'Tamq Travel, based in Old Harbour, Port Marlow. Desert tours.'
+    },
+    wroteIn: 'en-GB',
+    shipped: shippedPageMeta(dir)
+  })
+  const home = written(steps, 101)
+  assert.equal(home.page_title, 'Desert tours in Port Marlow | Tamq Travel')
+  // No name given: the title is left as the template ships it, whatever the plan made.
+  const nameless = pageMetaSteps({
+    rows,
+    visible: new Set(['en-GB']),
+    owner: { name: '', title: 'Desert tours in Port Marlow', said: '', about: '' },
+    wroteIn: 'en-GB',
+    shipped: shippedPageMeta(dir)
+  })
+  assert.notEqual(written(nameless.steps, 101)?.page_title, 'Desert tours in Port Marlow')
+})

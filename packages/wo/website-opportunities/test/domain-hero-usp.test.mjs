@@ -160,6 +160,11 @@ test('a review theme two reviews state is the USP: the headline says it with the
   const plan = planHero(swimBrief(), heroMap(), phone)
   assert.equal(valueOf(plan, 'module-40.1'), 'One team for the whole family, in Port Marlow')
   assert.equal(plan.slots.find((s) => s.key === 'module-40.1').reason, 'hero-why')
+  // The USP's key words carry the template's accent.
+  assert.equal(
+    plan.slots.find((s) => s.key === 'module-40.1').marked,
+    'One team for the [[whole family]], in Port Marlow'
+  )
   // The box is short: the detail of who goes first, the place is in the headline, the offerings stay.
   assert.equal(
     valueOf(plan, 'module-40.2'),

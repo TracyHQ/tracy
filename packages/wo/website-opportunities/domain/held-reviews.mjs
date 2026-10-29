@@ -96,6 +96,11 @@ export function readingWithoutHeldReviews(reading, opts = {}) {
     out.keyMessages = reading.keyMessages
       .map((m) => (Array.isArray(m?.quotes) ? { ...m, quotes: quotes(m.quotes) } : m))
       .filter((m) => !Array.isArray(m?.quotes) || m.quotes.length > 0)
+  // A USP theme stands on two reviews: one that loses a quote to a held review below two goes (`hero-usp.mjs`).
+  if (Array.isArray(reading.uspThemes))
+    out.uspThemes = reading.uspThemes
+      .map((t) => ({ ...t, quotes: quotes(t?.quotes) ?? [] }))
+      .filter((t) => new Set(t.quotes.map((q) => q?.source?.ref)).size >= 2)
   if (Array.isArray(reading.team))
     out.team = reading.team.map((p) => {
       if (usable(p)) return Array.isArray(p?.mentions) ? { ...p, mentions: quotes(p.mentions) } : p

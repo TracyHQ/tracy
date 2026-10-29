@@ -152,3 +152,13 @@ test('C20: a styled slot whose stored value lost the style is reported; one that
   assert.deepEqual(c20, [{ kind: 'C20', page: '/home', place: 'module-7.0', found: 'FRESH LOAVES' }])
   assert.equal(report.counts.C20, 1)
 })
+
+test('a marked run before a comma or a full stop leaves no space before it', () => {
+  const pattern = inlineStylePattern('((span))FRESH((/span)) BREAD in Ashby')
+  const out = applyInlineStyle(pattern, 'One bakery for the [[whole street]], in Ashby')
+  assert.equal(out.value, 'One bakery for the ((span))whole street((/span)), in Ashby')
+  assert.equal(out.plain, 'One bakery for the whole street, in Ashby')
+  assert.equal(unmarked('Baked by [[hand]].'), 'Baked by hand.')
+  const html = applyInlineStyle(inlineStylePattern('OUR <em>BREADS</em>'), 'Our [[loaves]]; warm')
+  assert.equal(html.value, 'Our <em>loaves</em>; warm')
+})

@@ -954,7 +954,23 @@
         "audience": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
         "team": { "type": "array", "items": { "$ref": "#/$defs/teamItem" } },
         "story": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
-        "about": { "type": "string", "description": "The About line, made only of quoted words." }
+        "about": { "type": "string", "description": "The About line, made only of quoted words." },
+        "uspThemes": {
+          "description": "Optional (#189). What customers say sets the business apart, as the business reading's model grouped it: a theme with a headline line, kept only on verbatim quotes of at least two different reviews and a line that is a specific claim (`business-reading.mjs checkUspThemesOf`). The hero headline says it (`hero-usp.mjs`).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["label", "line", "quotes"],
+            "properties": {
+              "id": { "type": "string" },
+              "label": { "type": "string" },
+              "line": { "type": "string" },
+              "accent": { "type": "string" },
+              "who": { "type": "string" },
+              "quotes": { "type": "array", "minItems": 2 }
+            }
+          }
+        }
       }
     }
   }

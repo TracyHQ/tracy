@@ -1,0 +1,8 @@
+- **The hero accents the USP words, the business reading proposes USP themes, and WHERE follows three tiers** — brief-build agent · #189 · `feat/brief-build-own-site` · 2026-10-29
+
+**Affects:** brief builds (hero headline style, About and Contact intros, the home page title and description), every business reading (its version moves to `business-reading-5`, so readings run again once), and the inline style of every Joomla heading the writer marks.
+
+- The hero headline puts the template's accent on the USP's key words ("[[whole family]]"), not on its first word. A marked run before a comma or a full stop no longer leaves a space before it (`inline-style.mjs`).
+- The business reading's model now also proposes `uspThemes` (label, line, accent, who, quotes). Code keeps a theme only when its quotes are found word for word in at least two different reviews and its line is a specific claim. The hero checks it again against the brief's reviews. When no model theme stands, the hero falls back to the themes read in code.
+- WHERE has three tiers. A business that serves wider than its pin names its city in the hero, and says its district and the area it serves on the Contact (and About) intro. A venue names "<district>, <city>" when it fits, else the city. Without a district, the city. The district is always a part of the address.
+- The site plan carries the home page's search title ("<what> in <city> | <name>"), a description naming the district, and a LocalBusiness record (`place-seo.mjs`). The Joomla build writes the title and description into the home menu entry. No Joomla writer exists for the LocalBusiness record yet.

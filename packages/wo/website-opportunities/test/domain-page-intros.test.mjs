@@ -80,7 +80,7 @@ test('an offering page intro names its offerings and the place; the contact intr
   assert.equal(intro.key, 'module-9.11')
   assert.equal(intro.reason, 'intro-what')
   assert.equal(intro.when, 'missing')
-  assert.equal(intro.value, 'Teeth whitening and dental implants in Calderhill.')
+  assert.equal(intro.value, 'Teeth whitening and dental implants in Westford, Calderhill.')
   assert.equal(intro.short, 'Teeth whitening and dental implants.')
   assert.equal(intro.heading, 'module-9.1')
   assert.deepEqual(intro.offerings, ['teeth whitening', 'dental implants'])
@@ -106,6 +106,9 @@ test('an offering page intro names who the offerings serve, from the owner audie
   const brief = clinicBrief()
   brief.reading.audience = [{ label: 'nervous patients', quote: 'for nervous patients' }]
   const [intro] = planPageIntros({ brief, contentMap: contentMap(), pages: kept, cardNames })
-  assert.equal(intro.value, 'Teeth whitening and dental implants for nervous patients in Calderhill.')
+  assert.equal(
+    intro.value,
+    'Teeth whitening and dental implants for nervous patients in Westford, Calderhill.'
+  )
   assert.equal(intro.who, 'nervous patients')
 })

@@ -4,6 +4,8 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { heroSlotValues } from '../src/sites/brief-engines/hero-lines.js'
+import { styleChanges, takeStyleMarks } from '../src/sites/brief-engines/joomla-inline-styles.js'
+import { inlineStylePattern } from 'website-opportunities/domain/inline-style.mjs'
 import { runLeftoverCheck } from '../src/opportunities-build/demo-leftover-check.js'
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
 
@@ -127,4 +129,44 @@ test('the headline that says the USP and the intro that names who the offerings 
   // The copy writer's line names the offering and the place but nobody it serves: the planned line is written.
   assert.equal(run({ 'module-9.11': 'Swimming lessons in Port Marlow.' }), intro.value)
   assert.equal(run({ 'module-9.11': 'Swimming lessons for adults in Port Marlow.' }), undefined)
+})
+
+test('the USP headline puts the template accent on its key words, with no space before the comma', () => {
+  const why = {
+    key: 'module-9.1',
+    decision: 'value',
+    reason: 'hero-why',
+    value: 'One team for the whole family, in Port Marlow',
+    marked: 'One team for the [[whole family]], in Port Marlow'
+  }
+  const lines = heroSlotValues({ slots: [why] }, 'en')
+  // The write takes the marks apart, as joomla.js does, then styles the slot.
+  const marks = takeStyleMarks(lines)
+  assert.equal(lines['module-9.1'], 'One team for the whole family, in Port Marlow')
+  const slot = {
+    key: 'module-9.1',
+    inlineStyle: inlineStylePattern('((span))FIND((/span)) your flow'),
+    maxCharacters: 110
+  }
+  styleChanges({ changes: lines, slots: new Map([[slot.key, slot]]), marks })
+  assert.equal(lines['module-9.1'], 'One team for the ((span))whole family((/span)), in Port Marlow')
+})
+
+test('an About or Contact intro says where the business is based, after the copy writer line when both fit', () => {
+  const where = {
+    key: 'module-9.11',
+    decision: 'value',
+    reason: 'intro-where',
+    when: 'missing',
+    value: 'Based in Fernhill. Lessons at your home across Port Marlow.',
+    district: 'Fernhill',
+    max: 120
+  }
+  const run = (words) => heroSlotValues({ slots: [where] }, 'en', (k) => words[k])['module-9.11']
+  assert.equal(
+    run({ 'module-9.11': 'Say hello' }),
+    'Say hello. Based in Fernhill. Lessons at your home across Port Marlow.'
+  )
+  assert.equal(run({ 'module-9.11': 'Our tutors, based in Fernhill.' }), undefined)
+  assert.equal(run({ 'module-9.11': 'A'.repeat(90) }), where.value)
 })

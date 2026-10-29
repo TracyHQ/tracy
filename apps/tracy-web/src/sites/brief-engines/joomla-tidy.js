@@ -957,8 +957,9 @@ export function shippedPageMeta(dir) {
  * @param {object} input
  * @param {any[]} input.rows - the menu's whole rows (`readMenu`)
  * @param {Set<string>} input.visible - the language tags a visitor can reach
- * @param {{ name: string, said: string, about: string }} input.owner - the business name, everything the owner wrote (for
- *   telling their words), and their own description (the only words a description is cut from)
+ * @param {{ name: string, title?: string, said: string, about: string }} input.owner - the business name, the home's
+ *   search title when the site plan made one, everything the owner wrote (for telling their words), and their own
+ *   description (the only words a description is cut from)
  * @param {string} input.wroteIn - the language tag that description is written in
  * @param {Partial<ShippedMeta> | null} input.shipped - what the release ships
  * @param {string[]} [input.demoNames] - the template's `demoCompanyNames`: with no description given, a description the
@@ -967,6 +968,9 @@ export function shippedPageMeta(dir) {
  */
 export function pageMetaSteps({ rows, visible, owner, wroteIn, shipped, demoNames = [] }) {
   const name = flat(owner.name)
+  // The home's title: the site plan's search title ("<what> in <city> | <name>", `place-seo.mjs`) when there is a name to
+  // put in it, else the name.
+  const title = name !== '' && flat(owner.title) !== '' ? flat(owner.title) : name
   const said = flat(owner.said).toLowerCase()
   const asWord =
     name === '' ? null : new RegExp(`(?<![\\p{L}\\p{N}])${escaped(name)}(?![\\p{L}\\p{N}])`, 'iu')
@@ -984,7 +988,7 @@ export function pageMetaSteps({ rows, visible, owner, wroteIn, shipped, demoName
   /** The home entry's own words in `field`: the name everywhere, the description where it is in that language. */
   const ownFor = (/** @type {PageField} */ field, /** @type {string} */ language) =>
     TITLE_FIELDS.has(field)
-      ? name
+      ? title
       : language === '*' || primary(language) === primary(String(wroteIn ?? ''))
         ? description
         : ''
@@ -1025,7 +1029,7 @@ export function pageMetaSteps({ rows, visible, owner, wroteIn, shipped, demoName
       typeof params.page_title === 'string' &&
       flat(params.page_title) === ''
     )
-      next.page_title = name
+      next.page_title = title
     if (PAGE_FIELDS.some((field) => next[field] !== params[field]))
       steps.push({ kind: 'menuItem', id: Number(row.id), fields: { params: JSON.stringify(next) } })
   }

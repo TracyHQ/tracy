@@ -10,9 +10,9 @@
 // "What makes you different from other <trade> in <place>?".
 //
 // The candidates, best first: the owner's key messages, the brief's story and team facts, then review themes. A theme is
-// one of a closed list of meanings read in code (`REVIEW_THEMES`), or one a model clustered (`options.themes`), which
-// passes only when its quotes are found word for word in at least two reviews, or it names a fact of the brief
-// (`checkUspTheme`).
+// one a model clustered while reading the business (`brief.reading.uspThemes`, or `options.themes`), which passes only
+// when its quotes are found word for word in at least two reviews, or it names a fact of the brief (`checkUspTheme`);
+// without one that passes, one of a closed list of meanings read in code (`REVIEW_THEMES`).
 import { businessWords } from './trade-words.mjs'
 
 const list = (v) => (Array.isArray(v) ? v : [])
@@ -98,6 +98,7 @@ export const REVIEW_THEMES = Object.freeze([
     label: 'one team for the whole family, children and adults',
     who: 'kids and adults',
     words: ['family'],
+    accent: 'whole family',
     // A review where children and adults are taught by the same people: a child and an adult of the family, or a child
     // taught by "the same" people as the reviewer.
     quoteOf: (text) => {
@@ -111,6 +112,7 @@ export const REVIEW_THEMES = Object.freeze([
     label: 'comes to the customer',
     who: null,
     words: ['you', 'home'],
+    accent: 'comes to you',
     quoteOf: (text) =>
       sentencesOf(text).find((s) =>
         /\b(?:came|comes|come) (?:to|over to) (?:our|my|the) (?:home|house|place|flat|apartment|villa|office)\b/i.test(
@@ -124,24 +126,30 @@ export const REVIEW_THEMES = Object.freeze([
 const lastWordOf = (noun) => String(noun).split(' ').at(-1)
 
 /**
- * A model's review theme, checked in code: its quotes must be found word for word in the reviews they name, from two
- * reviews or more, or it must name a fact the brief shows; and its line must pass the specific test.
- * @param {{label: string, line?: string, who?: string, quotes?: Array<{review: number, text: string}>, factIds?: string[]}} theme
+ * A model's review theme, checked in code: its quotes must be found word for word in the brief's reviews (the ones the
+ * site may show), in two different reviews or more, or it must name a fact the brief shows; and its line must pass the
+ * specific test. A quote is `{text}` or `{quote}`, with the review's index when the caller knows it.
+ * @param {{label: string, line?: string, who?: string, quotes?: Array<{review?: number, text?: string, quote?: string}>,
+ *   factIds?: string[]}} theme
  * @param {any} brief
  * @returns {{pass: boolean, why: string, evidence: any[]}}
  */
 export function checkUspTheme(theme, brief, context = {}) {
-  const reviews = reviewsOf(brief)
-  const quotes = list(theme?.quotes).filter(
-    (q) =>
-      Number.isInteger(q?.review) &&
-      nonEmpty(q.text) &&
-      lower(reviews[q.review]).includes(lower(q.text.trim()))
-  )
+  const reviews = reviewsOf(brief).map(lower)
+  const quotes = list(theme?.quotes).flatMap((q) => {
+    const text = String(q?.text ?? q?.quote ?? '').trim()
+    if (!text) return []
+    const want = lower(text)
+    const at = Number.isInteger(q?.review) ? [q.review] : reviews.map((_, i) => i)
+    const review = at.find((i) => reviews[i]?.includes(want))
+    return review === undefined ? [] : [{ review, text }]
+  })
   const facts = list(theme?.factIds)
     .map((id) => list(brief?.facts).find((f) => f?.id === id && f.onSite === true))
     .filter(Boolean)
   const distinct = new Set(quotes.map((q) => q.review)).size
+  if (quotes.length < list(theme?.quotes).length)
+    return { pass: false, why: 'a quote is not found word for word in the reviews', evidence: [] }
   if (distinct < 2 && !facts.length)
     return {
       pass: false,
@@ -154,7 +162,7 @@ export function checkUspTheme(theme, brief, context = {}) {
     pass: true,
     why: facts.length ? 'a fact of the brief' : `${distinct} reviews`,
     evidence: [
-      ...quotes.map((q) => ({ kind: 'review', review: q.review, quote: q.text.trim() })),
+      ...quotes.map((q) => ({ kind: 'review', review: q.review, quote: q.text })),
       ...facts.map((f) => ({ kind: 'fact', id: f.id }))
     ]
   }
@@ -181,7 +189,7 @@ function concreteClauseOf(text) {
  * @param {any} brief
  * @param {{themes?: any[], places?: string[], offerings?: string[]}} [options]
  * @returns {{usp: {kind: 'key-message' | 'fact' | 'review-theme', id: string, label: string, who: string | null,
- *   words: string[], headlines: string[], evidence: any[]} | null, weighed: Array<{kind: string, label: string,
+ *   words: string[], headlines: string[], accent?: string | null, evidence: any[]} | null, weighed: Array<{kind: string, label: string,
  *   pass: boolean, why: string}>, passing: any[], question: string}} - `passing` holds every passing candidate, best
  *   first, for a headline box the first one does not fit
  */
@@ -233,9 +241,35 @@ export function findUsp(brief, { themes = [], places = [], offerings = [] } = {}
         evidence: [{ kind: 'fact', id: f.id }]
       })
   }
-  // Review themes: the closed list read in code, then a model's, each checked against the reviews.
+  // Review themes: the model's (`brief.reading.uspThemes`, `business-reading.mjs`), each checked against the reviews; the
+  // closed list read in code only when no model theme stands (no model, or none of its themes passed).
+  const modelThemes = list(themes).length ? list(themes) : list(brief?.reading?.uspThemes)
+  let modelPassed = false
+  for (const theme of modelThemes) {
+    const check = checkUspTheme(theme, brief, context)
+    weighed.push({
+      kind: 'review-theme',
+      label: String(theme?.label ?? ''),
+      pass: check.pass,
+      why: check.why
+    })
+    if (!check.pass) continue
+    modelPassed = true
+    passing.push({
+      kind: 'review-theme',
+      id: theme.id ?? `model:${theme.label}`,
+      label: theme.label,
+      who: nonEmpty(theme.who) ? theme.who : null,
+      words: lower(theme.accent)
+        .split(/[^\p{L}\p{N}]+/u)
+        .filter((w) => w.length >= 4),
+      headlines: [theme.line ?? theme.label].filter(nonEmpty),
+      accent: nonEmpty(theme.accent) ? theme.accent : null,
+      evidence: check.evidence
+    })
+  }
   const reviews = reviewsOf(brief)
-  for (const t of REVIEW_THEMES) {
+  for (const t of modelPassed ? [] : REVIEW_THEMES) {
     const quotes = reviews.flatMap((text, review) => {
       const quote = t.quoteOf(text)
       return quote ? [{ review, text: quote }] : []
@@ -251,26 +285,8 @@ export function findUsp(brief, { themes = [], places = [], offerings = [] } = {}
         who: t.who,
         words: t.words,
         headlines: t.headlines(words.noun),
+        accent: t.accent,
         evidence: quotes.map((q) => ({ kind: 'review', review: q.review, quote: q.text }))
-      })
-  }
-  for (const theme of list(themes)) {
-    const check = checkUspTheme(theme, brief, context)
-    weighed.push({
-      kind: 'review-theme',
-      label: String(theme?.label ?? ''),
-      pass: check.pass,
-      why: check.why
-    })
-    if (check.pass)
-      passing.push({
-        kind: 'review-theme',
-        id: `model:${theme.label}`,
-        label: theme.label,
-        who: nonEmpty(theme.who) ? theme.who : null,
-        words: [],
-        headlines: [theme.line ?? theme.label].filter(nonEmpty),
-        evidence: check.evidence
       })
   }
   return { usp: passing[0] ?? null, passing, weighed, question: uspQuestionOf(brief, places[0] ?? null) }
