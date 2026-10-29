@@ -11,17 +11,23 @@
 --   undo_proven_at   the last press that verifiably undid something of this turn: a moment undone, a
 --                    content write reverted, a look undone. Read by Site changes. A later press that
 --                    proves nothing leaves it as it was. null: nothing of the turn proven undone.
---   undo_complete    (067) all of the turn verifiably went; written only by a proving press, and once
---                    true a later press never sets it back to false.
+--   undo_complete    (067) unchanged: the LAST press undid all of the turn, written by every press
+--                    (a press that proves nothing undid nothing for sure: false). Read by the agent
+--                    notice only.
+--   undo_proven_complete  some proving press undid all of the turn; once true, a later press never
+--                    sets it back to false (a complete undo stays complete). Read by Site changes
+--                    with `undo_proven_at`. null: nothing of the turn proven undone.
 --
 -- Backfill: a row 067 stamped `undo_complete = true` was proven — `undoneMarks` calls a press complete
 -- only when every moment of the turn is in the verified set and every write and look verifiably went
--- back, and each press overwrote both columns, so that press is the one `undone_at` holds. A row
+-- back, and each press overwrote both columns, so that press is the one `undone_at` holds: both new
+-- columns take it (`undo_proven_complete = true`). A row
 -- stamped `undo_complete = false` cannot be told apart (part went, or nothing is known to have gone:
 -- the audit row does not say which moments of a turn were verified), so it stays null: it shows no
 -- "Undone" mark and keeps its Undo, as an unproven row should.
 --
 -- 🔒 No index: read with the row it belongs to.
 alter table site_turn add column if not exists undo_proven_at timestamptz;
-update site_turn set undo_proven_at = undone_at
+alter table site_turn add column if not exists undo_proven_complete boolean;
+update site_turn set undo_proven_at = undone_at, undo_proven_complete = true
  where undo_complete is true and undone_at is not null and undo_proven_at is null;

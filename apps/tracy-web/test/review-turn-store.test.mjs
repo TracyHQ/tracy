@@ -224,7 +224,11 @@ test(
       { turnId: 'sess-a:3', complete: true, proven: true },
       { turnId: 'sess-a:2', complete: false, proven: true }
     ])
-    await db.pool.query(`update site_turn set undone_at = $1 where undone_at is not null`, [minutes(35)])
+    // The press happened at 35 minutes: it proved what it undid, so both its stamps move.
+    await db.pool.query(
+      `update site_turn set undone_at = $1, undo_proven_at = $1 where undone_at is not null`,
+      [minutes(35)]
+    )
     assert.deepEqual(await undoneSince(db.pool, SITE, 'sess-a', 4), [
       { turn: 3, title: 'Request sess-a:3', undo_complete: true },
       { turn: 2, title: 'Request sess-a:2', undo_complete: false }
@@ -312,5 +316,36 @@ test(
       turnUndoneOf(before),
       'the earlier proof, and its completeness, stay'
     )
+    // The agent notice keeps the last press's word, as before migration 182: that press proved nothing.
+    assert.deepEqual(await undoneSince(db.pool, SITE, 'sess-a', 2), [
+      { turn: 1, title: 'Request sess-a:1', undo_complete: false }
+    ])
+  }
+)
+
+test(
+  'a proven partial press after a complete one: Site changes still reads complete, the notice reads that last press',
+  opts,
+  async () => {
+    await sites()
+    await open('sess-a:1')
+    await closeTurn(db.pool, { turnId: 'sess-a:1', siteKey: SITE, sha: SHA_A, files: 2 })
+    const steps = [{ turnId: 'sess-a:1', commits: [SHA_A], applyIds: ['apply-1'] }]
+    await markTurnsUndone(db.pool, SITE, undoneMarks(steps, await doneUndo(steps), new Set([SHA_A])))
+    assert.equal(turnUndoneOf(await turnOf(db.pool, 'sess-a:1')).complete, true)
+
+    // The files go back again, the content revert is refused: proven, but only part of the turn.
+    const partial = await runUndo(steps, {
+      undoCommit: async () => fileOutcome({ status: 200, body: { ok: true, status: 'succeeded' } }),
+      revertApply: async () => ({ outcome: 'failed', code: 'APPLY_CHANGED_SINCE' })
+    })
+    const marks = undoneMarks(steps, partial, new Set([SHA_A]))
+    assert.deepEqual(marks, [{ turnId: 'sess-a:1', complete: false, proven: true }], 'precondition')
+    await markTurnsUndone(db.pool, SITE, marks)
+    const row = await turnOf(db.pool, 'sess-a:1')
+    assert.equal(turnUndoneOf(row).complete, true, 'a complete undo stays complete on Site changes')
+    assert.deepEqual(await undoneSince(db.pool, SITE, 'sess-a', 2), [
+      { turn: 1, title: 'Request sess-a:1', undo_complete: false }
+    ])
   }
 )

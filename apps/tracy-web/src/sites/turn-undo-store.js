@@ -130,27 +130,35 @@ export async function turnUndoPress(pool, siteKey, idemKey) {
 }
 
 /**
- * Stamp the turns an undo press undid (`undoneMarks`, turn-undo.js). Every mark: `undone_at` now — the
- * conversation's next turn reads it ({@link undoneSince}) and tells the agent, which otherwise reads the
- * reverted site as changed by nobody (migration 067). A proven mark also: `undo_proven_at` now and
- * whether all of the turn went (`undo_complete`) — the Site changes row reads those (migration 182).
- * A press that proves nothing leaves an earlier proof as it was, and a complete undo is never set back
- * to partial.
+ * Stamp the turns an undo press undid (`undoneMarks`, turn-undo.js). Every mark: `undone_at` now and
+ * whether this press undid all of the turn (`undo_complete`) — the conversation's next turn reads them
+ * ({@link undoneSince}) and tells the agent, which otherwise reads the reverted site as changed by
+ * nobody (migration 067). A proven mark also: `undo_proven_at` now, and `undo_proven_complete` once
+ * a press undid all of it — the Site changes row reads those (migration 182). A press that proves
+ * nothing leaves an earlier proof as it was, and a complete proof stays complete. A complete mark is
+ * proven by definition (`undoneMarks` calls a turn complete only when all of it verifiably went), so a
+ * mark without `proven` still counts as proven when complete.
  * @param {import('pg').Pool} pool
  * @param {string} siteKey
- * @param {Array<{ turnId: string, complete: boolean, proven: boolean }>} marks
+ * @param {Array<{ turnId: string, complete: boolean, proven?: boolean }>} marks
  */
 export async function markTurnsUndone(pool, siteKey, marks) {
   if (marks.length === 0) return
   await pool.query(
     `update site_turn t
         set undone_at = now(),
+            undo_complete = m.complete,
             undo_proven_at = case when m.proven then now() else t.undo_proven_at end,
-            undo_complete = case when m.proven then (m.complete or t.undo_complete is true)
-                                 else t.undo_complete end
+            undo_proven_complete = case when m.proven then (m.complete or t.undo_proven_complete is true)
+                                        else t.undo_proven_complete end
        from unnest($2::text[], $3::boolean[], $4::boolean[]) as m(turn_id, complete, proven)
       where t.site_key = $1 and t.turn_id = m.turn_id`,
-    [siteKey, marks.map((m) => m.turnId), marks.map((m) => m.complete), marks.map((m) => m.proven)]
+    [
+      siteKey,
+      marks.map((m) => m.turnId),
+      marks.map((m) => m.complete),
+      marks.map((m) => m.proven === true || m.complete === true)
+    ]
   )
 }
 
@@ -161,7 +169,8 @@ export const UNDONE_LIST_MAX = 5
  * The turns of this conversation undone from the chat since the agent last spoke in it: stamped
  * after the previous turn of the session opened. Newest first, at most {@link UNDONE_LIST_MAX}. A
  * session's first turn has no previous one, so nothing. Read once, when the turn opens: the turn
- * after it opened later than the stamp, so the same undo is never named twice.
+ * after it opened later than the stamp, so the same undo is never named twice. `undo_complete` is the
+ * LAST press's (migration 067), never the sticky proof Site changes reads.
  * @param {import('pg').Pool} pool
  * @param {string} siteKey
  * @param {string} sessionId
