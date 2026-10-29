@@ -768,3 +768,65 @@ print(json.dumps(sorted(mapper.referenced("pl", dict(wp.POLICY["entities"])["pos
     assert.ok(!refs.includes(50), JSON.stringify(refs))
   }
 )
+
+/** A merge of three WordPress schemas built from one `setup` script, then `ours`/`theirs` run on their side. */
+function wpMerge({ setup, ours = '', theirs = '', decisions = {} }) {
+  sql(
+    ['dp_b', 'dp_m', 'dp_t', 'dp_w']
+      .map(
+        (schema) => `DROP DATABASE IF EXISTS ${schema}; CREATE DATABASE ${schema}; USE ${schema}; ${setup}`
+      )
+      .join('\n') + `\nUSE dp_m; ${ours}\nUSE dp_t; ${theirs}`
+  )
+  return JSON.parse(
+    py(`result = engine.DbMerge(sql, 'dp_b', 'dp_m', 'dp_t', 'dp_w', 'wordpress', 'wp_',
+    json.loads(${JSON.stringify(JSON.stringify(decisions))})).run()
+print(json.dumps(result))`)
+  )
+}
+
+const TERMS = `
+  CREATE TABLE wp_posts (ID bigint NOT NULL PRIMARY KEY, post_type varchar(30), post_title varchar(100), post_status varchar(20) NOT NULL DEFAULT 'publish');
+  CREATE TABLE wp_terms (term_id bigint NOT NULL PRIMARY KEY, name varchar(100), slug varchar(100));
+  CREATE TABLE wp_term_taxonomy (term_taxonomy_id bigint NOT NULL PRIMARY KEY, term_id bigint, taxonomy varchar(32), description longtext, parent bigint, count bigint);
+  CREATE TABLE wp_term_relationships (object_id bigint NOT NULL, term_taxonomy_id bigint NOT NULL, term_order int NOT NULL DEFAULT 0, PRIMARY KEY (object_id, term_taxonomy_id));
+  INSERT INTO wp_posts VALUES (10, 'post', 'Live post', 'publish'), (20, 'nav_menu_item', '', 'publish');
+  INSERT INTO wp_terms VALUES (1, 'Uncategorized', 'uncategorized'), (2, 'News', 'news'), (3, 'Main', 'main');
+  INSERT INTO wp_term_taxonomy VALUES (1, 1, 'category', '', 0, 0), (2, 2, 'category', '', 0, 1), (3, 3, 'nav_menu', '', 0, 1);
+  INSERT INTO wp_term_relationships VALUES (10, 2, 0), (20, 3, 0);`
+
+test(
+  'a category or menu the customer deleted on live stays while the copy’s new post or menu item uses it: a conflict, never an orphan (#119)',
+  opts,
+  () => {
+    const answer = wpMerge({
+      setup: TERMS,
+      // Tracy files a new post in News and adds an item to the Main menu.
+      ours: `INSERT INTO wp_posts VALUES (11, 'post', 'Tracy post', 'publish'), (21, 'nav_menu_item', '', 'publish');
+        INSERT INTO wp_term_relationships VALUES (11, 2, 0), (21, 3, 0);`,
+      // The customer deletes News and the Main menu (with their links).
+      theirs: `DELETE FROM wp_term_relationships WHERE term_taxonomy_id IN (2, 3);
+        DELETE FROM wp_term_taxonomy WHERE term_taxonomy_id IN (2, 3); DELETE FROM wp_terms WHERE term_id IN (2, 3);
+        DELETE FROM wp_posts WHERE ID = 20;`
+    })
+    // Kept on the copy, with what uses them, and named as a delete on live against a use on the copy.
+    assert.equal(sql('SELECT COUNT(*) FROM dp_m.wp_term_taxonomy WHERE term_taxonomy_id IN (2, 3)'), '2')
+    assert.equal(sql('SELECT COUNT(*) FROM dp_m.wp_terms WHERE term_id IN (2, 3)'), '2')
+    assert.equal(sql('SELECT COUNT(*) FROM dp_m.wp_term_relationships WHERE object_id IN (11, 21)'), '2')
+    const deleted = answer.conflicts.filter((c) => c.reason === 'delete-modify').map((c) => c.table)
+    assert.ok(
+      deleted.includes('wp_term_taxonomy') && deleted.includes('wp_terms'),
+      JSON.stringify(answer.conflicts)
+    )
+    // The live site's own deletions the copy does not use still come over.
+    assert.equal(sql('SELECT COUNT(*) FROM dp_m.wp_term_relationships WHERE object_id IN (10, 20)'), '0')
+    // A deletion of a category nothing of the copy's uses comes over as before.
+    const plain = wpMerge({
+      setup: TERMS,
+      theirs: `DELETE FROM wp_term_relationships WHERE term_taxonomy_id = 2; DELETE FROM wp_term_taxonomy WHERE term_taxonomy_id = 2;
+        DELETE FROM wp_terms WHERE term_id = 2;`
+    })
+    assert.equal(sql('SELECT COUNT(*) FROM dp_m.wp_terms WHERE term_id = 2'), '0')
+    assert.deepEqual(plain.conflicts, [])
+  }
+)

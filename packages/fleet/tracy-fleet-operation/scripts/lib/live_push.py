@@ -1446,6 +1446,7 @@ class Changeset:
             self.build_kind(spec, pairs, rows, kinds_data[spec.name])
         self.build_files()
         self.unsupported += self.data.get("tables", [])
+        self.menu_items_made()
         self.order()
         # The dialog's groups (contract §2): records by what happens to them; files and settings apart,
         # a PHP file in its own group that needs its own OK; every removal under "remove".
@@ -1844,6 +1845,37 @@ class Changeset:
             "dependsOn": sorted(set(deps)), "seed": self.seeds(spec, copy_key, columns, "update", copy_row),
         })
 
+    def menu_of(self, copy_row: dict):
+        """The menu a new menu item goes in, on the live site: True when the live site has it, the id of
+        this push's item that makes it, or None when neither (WordPress: no menu at all, its term gone)."""
+        if self.platform == "wordpress":
+            return True if copy_row.get("menu") else None
+        menutype = copy_row.get("menutype")
+        # Every menu the live read holds is in its keys (its rows are only the ones that differ).
+        live = self.data.get("kinds", {}).get("menutype", {}).get("keys", {}).get("base", [])
+        if any(list(k) == [menutype] or (k and str(k[0]) == str(menutype)) for k in live):
+            return True
+        kinds = self.data.get("kinds", {})
+        if "menutype" not in kinds:
+            return True  # no read of the live menus to go by (an older read): as before, nothing refused
+        # A menu the copy has and the live site does not: this push makes it first (`menu_items_made`
+        # names the item instead when that menu is not made after all).
+        if any(k and str(k[0]) == str(menutype) for k in kinds["menutype"].get("keys", {}).get("copy", [])):
+            spec = next(sp for sp in self.specs if sp.name == "menutype")
+            return self.item_id(spec, (menutype,))  # made under its name, as `menutype:<name>`
+        return None
+
+    def menu_items_made(self) -> None:
+        """A new menu item waiting for a menu this push was to make, which it does not make (refused
+        or held): named, never written into a menu the live site does not have (#119)."""
+        ids = {i["id"] for i in self.items}
+        for item in [i for i in self.items if i.get("spec") == "menuItem" and i["op"] == "create"]:
+            gone = [d for d in item.get("dependsOn", []) if d.startswith("menutype:") and d not in ids]
+            if gone:
+                self.items.remove(item)
+                self.unsupported.append({"what": "record", "kind": item["kind"], "title": item["title"],
+                                         "op": "create", "reason": "depends-on-unsupported", "on": ["menu"]})
+
     def restore_of(self, spec: Spec, columns, base_row: dict | None) -> dict:
         """What an Undo writes back where the live site's read of the record cannot be written as it is
         (a post's categories are read as ids and written as slugs)."""
@@ -1863,6 +1895,14 @@ class Changeset:
         # A tree node placed under its parent (Joomla), a term under its parent term: the parent first.
         refs = self.blocked_by(*write.values(), *(after.get(c) for c in columns))
         deps, missing = self.depends(refs)
+        if spec.name == "menuItem":
+            # Never a menu item in a menu the live site does not have and this push does not make (the
+            # customer deleted it, #119): the live engine refused it, or wrote one nobody could see.
+            menu = self.menu_of(copy_row)
+            if menu is None:
+                missing = [*missing, "menu"]
+            elif menu is not True:
+                deps = [*deps, menu]
         if missing:
             self.unsupported.append({"what": "record", "kind": spec.kind, "title": title, "op": "create",
                                      "reason": "depends-on-unsupported", "on": missing[:10]})
@@ -2285,7 +2325,10 @@ class Changeset:
         by_id = {i["id"]: i for i in self.items}
         creates = {i["creates"]: i["id"] for i in self.items if i.get("creates")}
         for item in self.items:
-            item["dependsOn"] = sorted({creates[d] for d in item["dependsOn"] if d in creates and creates[d] != item["id"]})
+            # Each dependency a record this push creates (`creates`), or an item of this push named by
+            # its id (a menu made under its name, `menu_of`).
+            item["dependsOn"] = sorted({creates.get(d, d) for d in item["dependsOn"]
+                                        if (creates.get(d) or (d if d in by_id else None)) not in (None, item["id"])})
         # Only replacement pairs change order: a confirmed trash must free the exact address
         # before the new record asks the CMS to allocate it. Other removals keep their old order.
         for item in self.items:

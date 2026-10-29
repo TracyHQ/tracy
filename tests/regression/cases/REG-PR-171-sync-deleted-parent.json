@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-171-sync-deleted-parent",
+  "kind": "fix",
+  "title": "A menu or category the customer deleted on live no longer orphans Tracy's new item or post",
+  "pr": 171,
+  "area": "sync/merge",
+  "cms": ["wp", "jo"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": ["Run the real MariaDB merge cases (WordPress, Joomla) and the push changeset case."],
+  "expect": [
+    "A deleted category or menu the copy's new rows use stays, as a delete-modify conflict.",
+    "A deletion nothing of the copy's uses still comes over.",
+    "No new menu item is written into a menu the live site does not have and the push does not make."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "--test-name-pattern=#119",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-db.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-push-changeset.test.mjs"
+    ],
+    "tests": [
+      "a category or menu the customer deleted on live stays while the copy’s new post or menu item uses it: a conflict, never an orphan (#119)",
+      "Joomla: a menu or category the customer deleted on live stays while the copy’s new item or article uses it: a conflict, never an orphan (#119)",
+      "a new menu item goes only into a menu the live site has or this push makes; never into a deleted one (#119)"
+    ]
+  }
+}

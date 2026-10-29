@@ -227,6 +227,7 @@ import { createEmdashEngine } from './sites/brief-engines/emdash.js'
 import { createJoomlaEngine } from './sites/brief-engines/joomla.js'
 import { headerReader } from './sites/brief-engines/pictures.js'
 import { createQuickstartFirstEngine } from './sites/brief-engines/quickstart-first.js'
+import { quickstartSlotPhotoEvidence } from './opportunities-build/slot-photo-evidence.js'
 import { quickstartReviews } from './lib/quickstart-reviews.js'
 import { createWordpressEngine } from './sites/brief-engines/wordpress.js'
 import { normalizeBrief } from './sites/brief-normalize.js'
@@ -1950,7 +1951,9 @@ export function buildApp(deps) {
               JSON.stringify(source.brief.business) + '\n' + String(source.profile_effective?.bio ?? ''),
             placed: (report?.photos?.receipts ?? [])
               .map((r) => r.uploaded.path ?? r.uploaded.url)
-              .filter(Boolean)
+              .filter(Boolean),
+            // `photos-match-slots`, `faces-named` and the pictures the fill plan keeps (#141).
+            ...quickstartSlotPhotoEvidence(source.brief, report?.photos)
           },
           { fetchImpl: deps.fetchImpl ?? fetch, timeoutMs: 300_000 }
         )
