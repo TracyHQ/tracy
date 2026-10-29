@@ -343,15 +343,30 @@ test('single and bulk demo build requests serialize the explicit selection; Retr
   assert.deepEqual(
     calls.map((c) => c.body),
     [
+      { requestId: 'request', workflow: 'brief-build/1', selection },
+      { ids: ['opp', 'opp2'], requestId: 'bulk-request', selection, workflow: 'brief-build/1' },
+      { requestId: 'retry-request', retryOf: 'failed-action' }
+    ]
+  )
+})
+
+test('the Build button builds from the brief by default; the agent demo stays a workflow a caller may name', async () => {
+  const { fetch, calls } = door(() => ({ status: 202, body: { actions: [] } }))
+  const api = createApi(fetch)
+  const selection = { cms: 'joomla', design: 'ja-essence', quickstart: 'quickstart/ja-essence/j6' }
+  await api.buildDemo('opp', 'request', undefined, selection, undefined, false, 'agent-demo/1')
+  await api.buildDemos(['opp'], 'bulk-request', selection, 'agent-demo/1')
+  assert.deepEqual(
+    calls.map((c) => c.body),
+    [
       { requestId: 'request', workflow: 'agent-demo/1', chatMode: 'client-send/1', selection },
       {
-        ids: ['opp', 'opp2'],
+        ids: ['opp'],
         requestId: 'bulk-request',
         selection,
         workflow: 'agent-demo/1',
         chatMode: 'client-send/1'
-      },
-      { requestId: 'retry-request', retryOf: 'failed-action' }
+      }
     ]
   )
 })
@@ -396,14 +411,13 @@ test('prepare and send reserve chat identity without calling a backend prompt do
   )
 })
 
-test('Find demo builds retain template selection and the browser-chat workflow while rechecking stored research', async () => {
+test('Find demo builds retain template selection and the brief build workflow while rechecking stored research', async () => {
   const { fetch, calls } = door(() => ({ status: 202, body: { actions: [] } }))
   const selection = { cms: 'joomla', design: 'ja-essence', quickstart: 'quickstart/ja-essence/j6' }
   await createApi(fetch).buildDemo('from-find', 'request-find', undefined, selection, undefined, true)
   assert.deepEqual(calls[0].body, {
     requestId: 'request-find',
-    workflow: 'agent-demo/1',
-    chatMode: 'client-send/1',
+    workflow: 'brief-build/1',
     selection,
     fromFind: true
   })

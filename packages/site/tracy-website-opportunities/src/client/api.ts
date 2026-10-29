@@ -94,6 +94,15 @@ export interface SearchResponse {
   candidates?: unknown[]
 }
 
+/** The workflows a build may name: the brief build through the Customize engine (the default), or the agent demo. */
+export type BuildWorkflow = 'brief-build/1' | 'agent-demo/1'
+const BRIEF_BUILD: BuildWorkflow = 'brief-build/1'
+
+/** A build's workflow as the build door reads it: the agent demo runs in the browser's chat (`client-send/1`). */
+function workflowBody(workflow: BuildWorkflow): { workflow: BuildWorkflow; chatMode?: 'client-send/1' } {
+  return workflow === 'agent-demo/1' ? { workflow, chatMode: 'client-send/1' } : { workflow }
+}
+
 export interface Api {
   demoAction(actionId: string): Promise<Answer<{ action: DemoAction }>>
   prepareDemoChat(actionId: string): Promise<Answer<DemoChatPreparation>>
@@ -102,18 +111,21 @@ export interface Api {
     input: { sessionId: string; briefHash: string; nativeRequestId: string }
   ): Promise<Answer<DemoChatPreparation & { submission: { nativeRequestId: string; state: string } }>>
   demoUsage(): Promise<Answer<{ usage: DemoUsage }>>
+  /** `workflow`: the brief build (default, #191) or the agent demo, named by a caller that wants it as a fallback. */
   buildDemo(
     opportunityId: string,
     requestId: string,
     retryOf?: string,
     selection?: TemplatePick,
     label?: string,
-    fromFind?: boolean
+    fromFind?: boolean,
+    workflow?: BuildWorkflow
   ): Promise<Answer<{ actions: DemoAction[]; usage: DemoUsage }>>
   buildDemos(
     ids: string[],
     requestId: string,
-    selection: TemplatePick
+    selection: TemplatePick,
+    workflow?: BuildWorkflow
   ): Promise<Answer<{ actions: DemoAction[]; usage: DemoUsage }>>
   /**
    * How the template picker groups its cards before a build of these opportunities (their one trade's templates
@@ -302,22 +314,16 @@ export function createApi(fetchImpl: FetchLike): Api {
     reserveDemoChatSend: (actionId, input) =>
       call(`${BASE}/demo/actions/${id(actionId)}/chat/send`, 'POST', input),
     demoUsage: () => call(`${BASE}/demo/usage`),
-    buildDemo: (opportunityId, requestId, retryOf, selection, label, fromFind) =>
+    buildDemo: (opportunityId, requestId, retryOf, selection, label, fromFind, workflow = BRIEF_BUILD) =>
       call(`${BASE}/${id(opportunityId)}/demo/build`, 'POST', {
         requestId,
-        ...(retryOf ? { retryOf } : { workflow: 'agent-demo/1', chatMode: 'client-send/1' }),
+        ...(retryOf ? { retryOf } : workflowBody(workflow)),
         ...(selection ? { selection } : {}),
         ...(label === undefined ? {} : { label }),
         ...(fromFind ? { fromFind: true } : {})
       }),
-    buildDemos: (ids, requestId, selection) =>
-      call(`${BASE}/demo/builds/bulk`, 'POST', {
-        ids,
-        requestId,
-        selection,
-        workflow: 'agent-demo/1',
-        chatMode: 'client-send/1'
-      }),
+    buildDemos: (ids, requestId, selection, workflow = BRIEF_BUILD) =>
+      call(`${BASE}/demo/builds/bulk`, 'POST', { ids, requestId, selection, ...workflowBody(workflow) }),
     templateRanking: (ids) => call(`${BASE}/demo/template-ranking?ids=${ids.map(id).join(',')}`),
     outreach: (opportunityId) => call(`${BASE}/${id(opportunityId)}/outreach`),
     settings: () => call(`${BASE}/settings`),
