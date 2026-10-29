@@ -669,6 +669,76 @@ test('Joomla: a contact link relabelled keeps the structure; its address removed
   )
 })
 
+// Local measure 28/10/2026: Death & Co's contact took the business's site in the `webpage` the template left as words.
+test("Joomla: a contact's webpage set to the business's site keeps the structure", () => {
+  const contact = (data) => ({
+    complete: true,
+    records: [
+      {
+        key: 'contact/1',
+        identity: { kind: 'contact', id: 1 },
+        publication: {},
+        routes: [],
+        relations: {},
+        editorialFields: [],
+        data
+      }
+    ]
+  })
+  for (const was of ['', 'Fresco', 'https://www.joomlart.com'])
+    assert.equal(
+      compareAgentInventory(
+        contact({ alias: 'fresco', webpage: was }),
+        contact({ alias: 'fresco', webpage: 'https://www.deathandcompany.com/' })
+      ).pass,
+      true,
+      was
+    )
+})
+
+// Local measure 28/10/2026: Death & Co's blog posts written from the research without the template's quote block.
+test('Joomla: a blog post rewritten in other markup keeps the structure; a page article does not', () => {
+  const site = (article1, article2) => ({
+    complete: true,
+    records: [
+      {
+        key: 'article/1',
+        identity: { kind: 'article', id: 1 },
+        publication: {},
+        routes: [],
+        relations: {},
+        editorialFields: ['title', 'introtext', 'fulltext'],
+        data: article1
+      },
+      {
+        key: 'article/2',
+        identity: { kind: 'article', id: 2 },
+        publication: {},
+        routes: [],
+        relations: {},
+        editorialFields: ['title', 'introtext', 'fulltext'],
+        data: article2
+      },
+      {
+        key: 'menuItem/101',
+        identity: { kind: 'menuItem', id: 101 },
+        publication: {},
+        routes: [],
+        relations: {},
+        editorialFields: ['title'],
+        data: { link: 'index.php?option=com_content&view=article&id=2' }
+      }
+    ]
+  })
+  const template = {
+    introtext: '<p>Intro words</p>',
+    fulltext: '<p>Body</p><figure class="area-blockquote"><blockquote><p>Quote</p></blockquote></figure>'
+  }
+  const rewritten = { introtext: 'A new intro', fulltext: 'A new body in one paragraph' }
+  assert.equal(compareAgentInventory(site(template, template), site(rewritten, template)).pass, true)
+  assert.equal(compareAgentInventory(site(template, template), site(template, rewritten)).pass, false)
+})
+
 // lrsweep rig, JA Spa j6 (24/10/2026): Claude Cowork's `content.list` gives a menu item no `url`, so the item that opens
 // /index.php/contact had no route, and the residue sweep said "the site has no Contact page" for 17 links. Its route
 // is read off its own row (`path`, `home`, `type`) in the address form the site's other rows show.
@@ -1223,6 +1293,42 @@ test('EmDash: a list the template left empty may be filled; a list that had rows
   const shot = (id) => ({ caption: 'x', image: { id, provider: 'emdash', mimeType: 'image/jpeg' } })
   assert.equal(compareAgentInventory(project([]), project([shot('a'), shot('b')])).pass, true)
   assert.equal(compareAgentInventory(project([shot('t')]), project([shot('a'), shot('b')])).pass, false)
+})
+
+// Local measure 29/10/2026 (Levain, EmDash): history written with 5 of its 6 items and new ids, seven checks in a row.
+test('EmDash: a list that lost items, or an item given a new id, says how to put it back', () => {
+  const about = (history) => ({
+    complete: true,
+    records: [
+      {
+        key: 'about/1@en',
+        identity: { collection: 'about', id: '1' },
+        publication: {},
+        routes: [],
+        relations: {},
+        editorialFields: ['history'],
+        data: { history }
+      }
+    ]
+  })
+  const item = (id, title) => ({ _rowId: id, title, text: 'words' })
+  const was = about(['r1', 'r2', 'r3', 'r4', 'r5', 'r6'].map((id) => item(id, id)))
+  const short = compareAgentInventory(was, about(['r1', 'r2', 'r3', 'r4', 'r5'].map((id) => item(id, 'new'))))
+  assert.equal(short.pass, false)
+  const lost = short.detail.find((d) => d.path === '.history')
+  assert.deepEqual([lost.was, lost.now], ['6 items', '5 items'])
+  assert.match(lost.fix, /keep all 6 items, in order, each with its _rowId/)
+  const renamed = compareAgentInventory(
+    was,
+    about(['h1', 'r2', 'r3', 'r4', 'r5', 'r6'].map((id) => item(id, 'new')))
+  )
+  const id = renamed.detail.find((d) => d.path === '.history[0]._rowId')
+  assert.match(id.fix, /never given a new id/)
+  const long = compareAgentInventory(
+    was,
+    about(['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7'].map((id) => item(id, 'new')))
+  )
+  assert.match(long.detail.find((d) => d.path === '.history').fix, /remove the 1 added item/)
 })
 
 // Local round 21, 25/10/2026 (Levain, WordPress): template news posts rewritten in fewer paragraphs.

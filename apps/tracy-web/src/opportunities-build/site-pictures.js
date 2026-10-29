@@ -348,6 +348,11 @@ export function createSitePictures({
           receipts: build.pictures?.receipts ?? {},
           vision: labelled,
           colours,
+          // The brief's links of each photo (the offering it shows, the person it portrays) and its closed list of
+          // offerings: what the fill plan qualifies a photo by (`fill-plan.mjs`).
+          brief: build.brief
+            ? { assets: build.brief.assets ?? [], reading: build.brief.reading ?? null }
+            : null,
           pictures: own.map((r) => ({
             id: r.id,
             postId: manifest.get(r.id)?.postId ?? null,
