@@ -1,0 +1,2 @@
+- **A guest review longer than its quote box shows its own leading sentences, never words cut mid-sentence, always with its real author and platform; the final check accepts such an excerpt and still rejects a cut quote** — brief build · #189 · `feat/brief-build-own-site` · 2026-10-30
+  **Affects:** brief builds on Joomla, WordPress and EmDash templates with a measured quote box (for example an About quote).

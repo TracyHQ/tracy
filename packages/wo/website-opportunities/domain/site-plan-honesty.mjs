@@ -271,7 +271,7 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
         kind: 'quote',
         decision: 'keep',
         reason: chosen ? 'brief-review' : 'no-fitting-review',
-        ...(chosen ? { assigned: chosen.review } : {})
+        ...(chosen ? { assigned: chosen.review, ...(chosen.excerpt ? { excerpt: true } : {}) } : {})
       })
       for (const slot of group.slots) {
         if (chosen && slot.key in chosen.values) setValue(slot, chosen.values[slot.key], 'brief-review')
