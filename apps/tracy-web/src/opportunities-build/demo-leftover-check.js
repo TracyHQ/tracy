@@ -41,6 +41,7 @@ function ownLinks(html) {
  * @param {object} input
  * @param {(path: string) => Promise<{status: number, html: string} | null>} input.readPage - one page as the site serves it
  * @param {(input: {pages: any[], contentMap: any, brief: any, missing: string[], styles: any[]}) => any} input.check - the domain's check
+ * @param {(input: {pages: any[], brief: any}) => any[]} [input.contactCheck] - the domain's contact-fact check
  * @param {any} input.contentMap
  * @param {any} input.brief
  * @param {string[]} [input.paths] - the pages the site plan keeps
@@ -48,7 +49,15 @@ function ownLinks(html) {
  * @returns {Promise<{version: string, pass: boolean, broken: Array<{path: string, status: number | null, why: string}>, findings: any[], counts: Record<string, number>, pages: string[],
  *   unread: string[], missing: string[], truncated: number, at: string}>}
  */
-export async function runLeftoverCheck({ readPage, check, contentMap, brief, paths = [], now = Date.now }) {
+export async function runLeftoverCheck({
+  readPage,
+  check,
+  contactCheck = null,
+  contentMap,
+  brief,
+  paths = [],
+  now = Date.now
+}) {
   const kept = [...new Set(['/', ...paths.map((p) => p.replace(/\/+$/, '') || '/')])]
   const queue = [...kept]
   const pages = []
@@ -101,8 +110,11 @@ export async function runLeftoverCheck({ readPage, check, contentMap, brief, pat
   if (!served.includes('/') && !broken.some((b) => b.path === '/'))
     broken.unshift({ path: '/', status: null, why: 'the home page was not served with 200' })
   const report = check({ pages, contentMap, brief, missing, styles, broken })
+  // A contact fact the brief holds that no page shows (address, email, phone, hours): reported beside the leftovers.
+  const contactMissing = typeof contactCheck === 'function' ? contactCheck({ pages, brief }) : []
   return {
     ...report,
+    contactMissing,
     broken,
     pass: report.pass === true && broken.length === 0,
     findings: report.findings.slice(0, FINDINGS_KEPT),
@@ -130,6 +142,7 @@ export async function checkBuildLeftovers(
   const report = await runLeftoverCheck({
     readPage: (path) => readSitePage(build.site_key, path),
     check: domain.checkDemoLeftovers,
+    contactCheck: domain.checkContactFacts,
     contentMap: contentMapOf(revision.template),
     brief: revision.brief,
     paths: kept,

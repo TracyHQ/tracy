@@ -1,5 +1,6 @@
 import { siteBusinessOf } from './held-name.mjs'
 import { dishWordsIn } from './content-pool.mjs'
+import { readContact } from './contact-reading.mjs'
 
 // The words a demo site can carry with a source behind each one, keyed by the slot role they fill
 // (`hero.title`, `about.story`, `cards`…). A role with no sourced value is absent: the template's own
@@ -236,21 +237,7 @@ export function hoursLine(line) {
  */
 export function contactOf(brief) {
   const b = brief?.business ?? {}
-  const contact = {}
-  if (nonEmpty(b.phone)) contact.phone = { value: b.phone.trim(), source: 'business.phone' }
-  if (nonEmpty(b.email)) contact.email = { value: b.email.trim(), source: 'business.email' }
-  if (nonEmpty(b.address)) contact.address = { value: b.address.trim(), source: 'business.address' }
+  // The one reader of the brief's contact facts (`contact-reading.mjs`); only the hours wait on the brief's own hours decision.
   const hours = Array.isArray(b.hours) ? b.hours.filter(nonEmpty).map((h) => hoursLine(h.trim())) : []
-  if (hours.length) contact.hours = { value: hours.join('; '), source: 'business.hours' }
-  // A WhatsApp number the brief names (said, or inferred from a UAE mobile, ADR 0037 26/10/2026): a button beside Call.
-  const whatsapp = brief?.contact?.whatsapp?.number
-  if (nonEmpty(whatsapp) && /^\+?\d{8,15}$/.test(whatsapp.replace(/[\s().-]/g, '')))
-    contact.whatsapp = { value: whatsapp.trim(), source: 'contact.whatsapp' }
-  // The areas the business serves, one line beside the address, never in its place.
-  const areas = (Array.isArray(b.serviceAreas) ? b.serviceAreas : [])
-    .map((a) => (typeof a?.text === 'string' ? a.text.trim() : ''))
-    .filter(Boolean)
-  if (areas.length)
-    contact.serviceArea = { value: [...new Set(areas)].join('; '), source: 'business.serviceAreas' }
-  return contact
+  return readContact(brief, { hours })
 }

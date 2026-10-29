@@ -324,7 +324,9 @@ const FACT_CHECKS = Object.freeze({
     why: 'not an email address'
   },
   address: {
-    ok: (/** @type {string} */ v) => v.length >= 4 && isStreetAddress(v),
+    // A listing writes its address with spaced dashes ("Pier Nine - Old Quay - Portville"): they separate parts like commas do.
+    ok: (/** @type {string} */ v) =>
+      v.length >= 4 && isStreetAddress(v.replace(/\s+[-\u2013\u2014]\s+/g, ', ')),
     why: 'not a street address'
   },
   hours: { ok: (/** @type {string} */ v) => v.length >= 3, why: 'too short to be opening hours' }

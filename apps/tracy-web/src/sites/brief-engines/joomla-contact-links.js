@@ -26,7 +26,7 @@ const escapeHtml = (/** @type {string} */ s) =>
 
 /**
  * @typedef {{ value: string, href?: string }} ContactFact
- * @typedef {{ phone?: ContactFact, email?: ContactFact, whatsapp?: ContactFact }} Contact
+ * @typedef {{ phone?: ContactFact, email?: ContactFact, whatsapp?: ContactFact, address?: ContactFact, serviceArea?: ContactFact }} Contact
  */
 
 /** What a link calls, mails or messages, read from its `href` and the words it shows. */
@@ -63,6 +63,44 @@ function showOwn(
   })
 }
 
+/** A link that opens a map: a maps address, or an empty link whose words say map, directions or where to find the business. */
+const MAP_WORDS = /\b(?:map|directions?|find us|get there|location)\b/i
+const MAP_HREF =
+  /^https?:\/\/(?:www\.)?(?:maps\.google\.|google\.[a-z.]+\/maps|maps\.app\.goo\.gl|goo\.gl\/maps|(?:www\.)?openstreetmap\.org)/i
+
+/** One link: a map link of the template pointed at the business's own pin; the link is left alone when the brief holds none. */
+function retargetMapLink(
+  /** @type {string} */ whole,
+  /** @type {string} */ attrs,
+  /** @type {string} */ inner,
+  /** @type {Contact} */ contact
+) {
+  const href = (HREF.exec(attrs)?.[3] ?? '').replace(/&amp;/g, '&').trim()
+  const shows = inner.replace(/<[^>]*>/g, ' ')
+  const isMap = MAP_HREF.test(href) || ((href === '' || href === '#') && MAP_WORDS.test(shows))
+  const pin = contact.address?.href
+  if (!isMap || !pin || href === pin) return null
+  const next = HREF.test(attrs)
+    ? attrs.replace(HREF, (_m, lead, quote) => `${lead}${quote}${escapeHtml(pin)}${quote}`)
+    : `${attrs} href="${escapeHtml(pin)}"`
+  return `<a${next}>${inner}</a>`
+}
+
+/** The areas served as one more line beside the address, in the address line's own tag and class: nothing new is drawn. */
+function addAreaLine(/** @type {string} */ html, /** @type {Contact} */ contact) {
+  const address = contact.address?.value
+  const area = contact.serviceArea?.value
+  if (!address || !area || html.includes(escapeHtml(area))) return { html, added: 0 }
+  const flat = (/** @type {string} */ t) => t.replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim()
+  let added = 0
+  const out = html.replace(/<(p|div|li|span)\b([^>]*)>([^<]*)<\/\1>/gi, (whole, tag, attrs, inner) => {
+    if (added || flat(inner) !== flat(address)) return whole
+    added = 1
+    return `${whole}<${tag}${attrs}>${escapeHtml(area)}</${tag}>`
+  })
+  return { html: out, added }
+}
+
 /**
  * One module's HTML with its contact links leading to the business.
  * @param {string} html
@@ -78,7 +116,11 @@ export function joomlaContactLinks(html, contact) {
   let out = String(html ?? '').replace(ANCHOR, (whole, attrs, inner) => {
     const href = HREF.exec(attrs)?.[3] ?? ''
     const kind = kindOf(href, inner)
-    if (!kind) return whole
+    if (!kind) {
+      const pinned = retargetMapLink(whole, attrs, inner, contact)
+      if (pinned) moved += 1
+      return pinned ?? whole
+    }
     const fact = contact[kind]
     if (kind === 'phone' && fact) phoneLinked = true
     if (kind === 'whatsapp' && fact) whatsappLinked = true
@@ -113,7 +155,8 @@ export function joomlaContactLinks(html, contact) {
     })
     if (done) added += 1
   }
-  return { html: out, moved, removed, added }
+  const areaLine = addAreaLine(out, contact)
+  return { html: areaLine.html, moved, removed, added: added + areaLine.added }
 }
 
 /**
