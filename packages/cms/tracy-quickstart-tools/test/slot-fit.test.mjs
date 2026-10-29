@@ -427,3 +427,48 @@ test('a version 2 map with the same roles still keeps faces, signatures and cut-
   assert.equal(slotOf(out, 'module-25.0').customize, undefined)
   assert.equal(slotOf(out, 'module-26.1').customize, 'keep')
 })
+
+test("an article's title is the demo's words, not a field name: a picture of a post titled about faces is a photo", () => {
+  const map = {
+    roleVocabularyVersion: 'place-content-roles/2',
+    slots: [
+      {
+        key: 'article-9.11',
+        entity: 'article-9',
+        type: 'image',
+        sample: 'images/demo/blog/sample-8.jpg',
+        label: 'Bangs or No Bangs? A Guide by Face Shape / image_intro',
+        column: 'images',
+        jsonPath: ['image_intro']
+      },
+      {
+        key: 'module-7.2',
+        entity: 'module-7',
+        type: 'image',
+        sample: 'images/demo/people/anna.jpg',
+        label: 'Testimonials / avatar',
+        column: 'params'
+      }
+    ]
+  }
+  const file = { width: 900, height: 533, alpha: false }
+  const findings = {
+    pages: [
+      {
+        items: [
+          image('images/demo/blog/sample-8.jpg', ['article-9.11'], { desktop: vp(608, 360) }, file),
+          image(
+            'images/demo/people/anna.jpg',
+            ['module-7.2'],
+            { desktop: vp(80, 80) },
+            { width: 160, height: 160, alpha: false }
+          )
+        ]
+      }
+    ]
+  }
+  const fitted = measureSlotFit({ map, findings }).map
+  assert.equal(slotOf(fitted, 'article-9.11').fit.kind, 'photo')
+  // a module's title names its layout, so a testimonials avatar stays a face
+  assert.equal(slotOf(fitted, 'module-7.2').fit.kind, 'avatar')
+})

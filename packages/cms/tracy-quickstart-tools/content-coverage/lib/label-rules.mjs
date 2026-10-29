@@ -195,7 +195,13 @@ function r8(slots, pages) {
 
 const r9 = (holes) =>
   holes
-    .filter((h) => h?.class !== 'core' && (h.kind === 'text' || String(h.kind).startsWith('attr')))
+    // A shop catalogue's price or address is the shop's inventory, not a fact the content map could declare.
+    .filter(
+      (h) =>
+        h?.class !== 'core' &&
+        h?.class !== 'catalogue' &&
+        (h.kind === 'text' || String(h.kind).startsWith('attr'))
+    )
     .filter((h) => factKindsOf(h.value).length > 0)
     .map((h) => String(h.value))
 

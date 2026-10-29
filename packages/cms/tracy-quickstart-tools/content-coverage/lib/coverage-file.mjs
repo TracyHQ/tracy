@@ -13,11 +13,17 @@ export const SCHEMA = 'tracy-content-coverage/v1'
 // 1.3.0 (28/10/2026): the LLM label judge's verdicts (`labelJudge`, `label-judge.mjs`); a 1.2.0 file has none.
 // 1.4.0 (28/10/2026): the label judge is the agent that runs the release (record-judge.mjs); the block names it in
 //   `judgedBy` and carries no model, calls or cents.
-export const TOOL_VERSION = '1.4.0'
+export const TOOL_VERSION = '1.5.0'
 export const COVERAGE_FILE = 'content-coverage.json'
 
 /** The prototype's letters, in the words the policy and /ops use. */
-export const CLASS_NAME = Object.freeze({ a: 'capture', b: 'template', c: 'core', d: 'unknown' })
+export const CLASS_NAME = Object.freeze({
+  a: 'capture',
+  b: 'template',
+  c: 'core',
+  d: 'unknown',
+  e: 'catalogue'
+})
 
 const cut = (s, n) => (String(s ?? '').length > n ? `${String(s).slice(0, n - 3)}...` : String(s ?? ''))
 const bucketOf = (kind) => (kind === 'image' ? 'images' : kind === 'link' ? 'links' : 'text')
@@ -87,6 +93,7 @@ const emptyBucket = () => ({
   template: 0,
   core: 0,
   unknown: 0,
+  catalogue: 0,
   ignored: 0
 })
 
@@ -148,7 +155,7 @@ export function buildCoverageFile({
     if (reason) hole.accepted = reason
     holes.push(hole)
   }
-  const order = { capture: 0, template: 1, unknown: 2 }
+  const order = { capture: 0, template: 1, unknown: 2, catalogue: 3 }
   holes.sort(
     (a, b) =>
       order[a.class] - order[b.class] || a.cause.localeCompare(b.cause) || a.value.localeCompare(b.value)

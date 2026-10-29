@@ -133,11 +133,24 @@ function replaceOf(slot, kind, byRole) {
   return (byRole && pictureReplaceOfRole(slot.role)) || pictureReplaceOf(kind)
 }
 
+/**
+ * The words of a slot's label that name its field. An article's label starts with the article's title, which is the
+ * demo's own words ("Bangs or No Bangs? A Guide by Face Shape / image_intro" made a blog photo a face, JA Cagox): only
+ * the part after the title counts. A module's title names its layout ("Testimonials / avatar") and stays.
+ */
+function labelWordsOf(slot) {
+  const label = String(slot.label ?? '')
+  if (!String(slot.entity ?? '').startsWith('article-') || !label.includes(' / ')) return label
+  return label.slice(label.lastIndexOf(' / ') + 3)
+}
+
 function pictureFit(slot, ev, byRole) {
   const file = fileOf(slot.sample)
-  const words = [slot.label, slot.column, ...(slot.jsonPath ?? []).filter((p) => typeof p === 'string')].join(
-    ' '
-  )
+  const words = [
+    labelWordsOf(slot),
+    slot.column,
+    ...(slot.jsonPath ?? []).filter((p) => typeof p === 'string')
+  ].join(' ')
   const boxes = ev?.boxes ?? {}
   const shown = Object.keys(boxes).length > 0
   const raw = ev?.file ?? null

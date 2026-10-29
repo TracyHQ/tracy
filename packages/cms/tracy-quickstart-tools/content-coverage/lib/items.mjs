@@ -23,6 +23,7 @@ export function mergeViewports(byViewport, siteUrl) {
           source: it.source,
           value: it.value,
           role: it.role,
+          ...(it.zone ? { zone: it.zone } : {}),
           tag: it.tag,
           selector: it.selector,
           href: it.href,
@@ -31,6 +32,8 @@ export function mergeViewports(byViewport, siteUrl) {
         }
         merged.set(k, m)
       }
+      // Printed inside a shop's catalogue markup on any viewport: the zone holds for the merged item.
+      if (it.zone && !m.zone) m.zone = it.zone
       const v = (m.viewports[vp] ??= { visible: false, count: 0, rect: null, selector: it.selector })
       v.count++
       // What the page measured of the picture's own file (Slot fit), the same on every viewport.
@@ -77,7 +80,19 @@ const bucketOf = (it) => (it.kind === 'image' ? 'images' : it.kind === 'link' ? 
 export function emptyCounts() {
   const c = {}
   for (const b of ['text', 'images', 'links'])
-    c[b] = { total: 0, matched: 0, locked: 0, a: 0, aLocked: 0, aUndeclared: 0, b: 0, c: 0, d: 0, ignored: 0 }
+    c[b] = {
+      total: 0,
+      matched: 0,
+      locked: 0,
+      a: 0,
+      aLocked: 0,
+      aUndeclared: 0,
+      b: 0,
+      c: 0,
+      d: 0,
+      e: 0,
+      ignored: 0
+    }
   return c
 }
 
@@ -99,7 +114,7 @@ export function count(items, into = emptyCounts()) {
   return into
 }
 
-/** Coverage = matched / (matched + holes that need a slot: a, b, d). Locked and core (c) are acceptable. */
+/** Coverage = matched / (matched + holes that need a slot: a, b, d). Locked, core (c) and a shop catalogue (e) are acceptable. */
 export function coverage(c) {
   const need = c.matched + c.a + c.b + c.d
   return need ? Math.round((c.matched / need) * 1000) / 10 : 100
