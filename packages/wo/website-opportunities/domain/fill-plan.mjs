@@ -103,10 +103,25 @@ const proofStrip = (unit) =>
   unit.slots.some((s) => s.role === 'stat.proof_image') && /\.(png|webp|svg)$/i.test(String(unit.file ?? ''))
 
 /**
- * Whether every slot of a unit is a gallery tile: the only place a photo with words added on it (an event poster, a
- * before/after label) may show, and only as the last photo left. A hero, a card, a background or an offering never does.
+ * Whether a photo carries words or graphic labels: the labeller saw words added on it, or called it a text graphic or a
+ * poster. Such a photo is never a card, a thumbnail, a hero, a background or an offering picture.
  */
-const galleryUnit = (unit) => unit.slots.every((s) => s.role === 'business.gallery_image')
+export const wordedPhoto = (asset) =>
+  asset?.hasTextOverlay === true || asset?.content === 'text-graphic' || asset?.subject === 'poster'
+
+/**
+ * Whether a unit is a real gallery: every slot is a gallery tile in a gallery group that does not sit in an article. A
+ * gallery group inside an article is a row of card thumbnails (a class, a related item), which is a card, not a gallery.
+ * The only place a photo with words added on it (an event poster, a before/after label) may show, and only as the last
+ * photo left.
+ */
+const galleryUnit = (unit, kindOf) =>
+  unit.slots.every(
+    (s) =>
+      s.role === 'business.gallery_image' &&
+      (s.group?.kind ?? 'gallery') === 'gallery' &&
+      kindOf.get(s.entity) !== 'article'
+  )
 
 /** Whether a brief picture is not a photograph: a logo, a graphic, or one the labeller found is not a photo. */
 const notAPhotograph = (asset) =>
@@ -335,6 +350,7 @@ export function planFill({
     }
   }
 
+  const entityKindOf = new Map((contentMap?.entities ?? []).map((e) => [e.key, e.kind]))
   const assets = [...(brief?.assets ?? [])]
     .filter((a) => a?.kind === 'image' && a.id && a.width && a.height)
     .sort((a, b) => String(a.id).localeCompare(String(b.id)))
@@ -399,7 +415,7 @@ export function planFill({
           refusalOf(asset, unit.need) ??
           (identity(unit) && isMapPhotoByOthers(asset) ? 'map-photo-by-others' : null) ??
           (pages.some((page) => shownOn.get(page)?.has(asset.id)) ? 'used' : null) ??
-          (asset.hasTextOverlay === true && !galleryUnit(unit) ? 'words-on-photo' : null) ??
+          (wordedPhoto(asset) && !galleryUnit(unit, entityKindOf) ? 'words-on-photo' : null) ??
           (unit.slots.some((slot) => unsharp.get(slot.key)?.has(asset.id)) ? 'unsharp' : null)
         if (!why) {
           const cut = subjectCrop(asset, unit.frame, { min, matches, wide })
@@ -422,7 +438,7 @@ export function planFill({
     const offeringPhoto = (a) => (unit.need.general && depictsOf(a) !== GENERAL ? 1 : 0)
     const lowQuality = (a) => (a.quality === 'low' ? 1 : 0)
     // A gallery takes a photo with words added on it only when no clean photo is left.
-    const worded = (a) => (a.hasTextOverlay === true ? 1 : 0)
+    const worded = (a) => (wordedPhoto(a) ? 1 : 0)
     fitting.sort(
       (a, b) =>
         worded(a) - worded(b) ||

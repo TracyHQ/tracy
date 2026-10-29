@@ -21,6 +21,7 @@ import { ceilingCents, visionCostCents } from 'website-opportunities/src/cost-pr
 import { modelTokensOf } from 'website-opportunities/src/wo-model-tokens.js'
 import { featuresOf } from 'website-opportunities/src/media-info.js'
 import { acceptedDishPhotos } from 'website-opportunities/domain/dish-photos.mjs'
+import { wordedPhoto } from 'website-opportunities/domain/fill-plan.mjs'
 import { siteBuildOf } from './site-build.js'
 import { claimAnalyses as claimShas, settleAnalysis as settleSha } from './media-analysis.js'
 import { picturePolicy } from '../lib/wo-picture-policy.js'
@@ -360,9 +361,7 @@ export function createSitePictures({
                 // A photo the labeller saw words added on (`hasTextOverlay`) says so: a hero, a card or a background
                 // never takes it, a gallery only as its last photo (`fill-plan.mjs`), a drawing never starts from it.
                 assets: (build.brief.assets ?? []).map((a) =>
-                  byId.has(a?.id) && seenBy(byId.get(a.id))?.hasTextOverlay === true
-                    ? { ...a, hasTextOverlay: true }
-                    : a
+                  byId.has(a?.id) && wordedPhoto(seenBy(byId.get(a.id))) ? { ...a, hasTextOverlay: true } : a
                 ),
                 reading: build.brief.reading ?? null,
                 // The business's name, trade and key messages: who a drawn picture's prompt says the business is (#194).

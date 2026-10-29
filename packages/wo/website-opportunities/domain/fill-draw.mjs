@@ -15,7 +15,7 @@
 // the brand colour block.
 // 🔒 ONLY WHAT THE SITE SHOWS: a slot on no page the site keeps (a demo post the tidy-up takes off) is never drawn and
 // never counts toward the cap, so the cap is spent on pictures a visitor sees.
-import { pagesOfMap, shownWidthOf } from './fill-plan.mjs'
+import { pagesOfMap, shownWidthOf, wordedPhoto } from './fill-plan.mjs'
 import { isMapPhotoByOthers, publisherRankOf } from './pictures/asset-origin.mjs'
 import { GENERAL } from './pictures/picture-links.mjs'
 import { declaredSize, fileOf } from './pictures/slot-map.mjs'
@@ -148,9 +148,7 @@ export function planDrawings({
     // The brief's own logo is a mark, never a scene to extend or to draw from, whatever its labels say.
     .filter((a) => a.id !== brief?.brand?.logo)
     // A photo with words added on it is never extended or copied: the words would come along.
-    .filter(
-      (a) => !notAPhotograph(a) && !portraitOf(a) && !isMapPhotoByOthers(a) && a.hasTextOverlay !== true
-    )
+    .filter((a) => !notAPhotograph(a) && !portraitOf(a) && !isMapPhotoByOthers(a) && !wordedPhoto(a))
     .sort(
       (a, b) =>
         publisherRankOf(a) - publisherRankOf(b) ||
