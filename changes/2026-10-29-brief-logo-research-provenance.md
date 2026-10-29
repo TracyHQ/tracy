@@ -1,0 +1,2 @@
+- **Briefs retain logo vision status and observed reading provenance, including why a selected social avatar was not read.** — Website research maintainers · `feat/brief-build-own-site` · 2026-10-29
+  **Affects:** Brief consumers can distinguish a page-named logo from a vision-read mark and inspect the existing reading version, timestamp, status and candidate words. This does not infer names from handles or perform a new vision call.

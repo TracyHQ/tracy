@@ -66,6 +66,10 @@ export function briefBrand(brand) {
     ...(base ?? { origin: 'social', official: false, colors: [], fonts: [], evidence: [] }),
     ...(research.chosen ? { logo: research.chosen.mediaId } : {}),
     logoResearch: {
+      ...(research.version ? { version: research.version } : {}),
+      ...(research.at ? { at: research.at } : {}),
+      // A page-named avatar can be chosen without OCR. Keep why it was not read instead of hiding that distinction.
+      ...(research.vision ? { vision: structuredClone(research.vision) } : {}),
       status: research.status,
       chosen: research.chosen ?? null,
       candidates: (research.candidates ?? []).slice(0, 6).map((c) => ({
@@ -74,7 +78,16 @@ export function briefBrand(brand) {
         source: c.source,
         width: c.width ?? null,
         height: c.height ?? null,
-        reading: c.reading ? { isLogo: c.reading.isLogo, kind: c.reading.kind } : null
+        reading: c.reading
+          ? {
+              isLogo: c.reading.isLogo,
+              kind: c.reading.kind,
+              ...(c.reading.showsName !== undefined ? { showsName: c.reading.showsName } : {}),
+              ...(c.reading.readsAs !== undefined ? { readsAs: c.reading.readsAs } : {}),
+              ...(c.reading.key ? { key: c.reading.key } : {}),
+              ...(c.reading.at ? { at: c.reading.at } : {})
+            }
+          : null
       }))
     }
   }
