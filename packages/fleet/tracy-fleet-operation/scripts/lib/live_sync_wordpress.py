@@ -674,6 +674,13 @@ WOOCOMMERCE_POST_REFS = (
 )
 
 
+# The taxonomy rows the copy's own relationships name that the base does not hold (a post filed or a
+# menu item placed by Tracy): the SELECT `DbMerge.in_use_rows` reads, `{ours.…}`/`{base.…}` its tables.
+NEW_RELATIONSHIPS = ("SELECT c.term_taxonomy_id FROM {ours.term_relationships} c WHERE NOT EXISTS"
+                     " (SELECT 1 FROM {base.term_relationships} x WHERE x.object_id = c.object_id"
+                     " AND x.term_taxonomy_id = c.term_taxonomy_id)")
+
+
 POLICY = {
     "tracyTables": re.compile(r"^claude_cowork_"),
     "tracyRows": {
@@ -697,6 +704,13 @@ POLICY = {
                "wc_order_product_lookup", "wc_customer_lookup"),
         patterns=(r"^actionscheduler_", r"^wf[a-z]", r"^yoast_indexable(_hierarchy)?$", r"^yoast_migrations$",
                   r"(^|_)(logs?|sessions?|cache|queue|hits)$")),
+    # A category, tag or menu the live site deleted stays while the copy's own new or moved rows use it
+    # (`DbMerge.in_use_rows`, #119): the taxonomy rows its new relationships name (a post filed in a
+    # category, a menu item in a menu), and those rows' terms.
+    "inUseParents": {
+        "term_taxonomy": ("term_taxonomy_id", NEW_RELATIONSHIPS),
+        "terms": ("term_id", f"SELECT tt.term_id FROM {{ours.term_taxonomy}} tt WHERE tt.term_taxonomy_id IN ({NEW_RELATIONSHIPS})"),
+    },
     "appendTables": set(),
     # Rows that belong to a record (its meta, its terms' links), merged as any other but not counted
     # as records the live site brought (`live_sync.py` `records`): a new post with its meta is one.

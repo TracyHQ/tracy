@@ -600,6 +600,15 @@ POLICIES = {
         # was the copy's: an article Tracy saved rewrote its tag rows, and every tag the customer
         # added on the live site was lost (#1647, 23/10/2026). `fields_values`: a field with several
         # values (checkboxes) has one row per value, so the value is part of the key.
+        # A menu or category the live site deleted stays while the copy's own new or moved rows use it
+        # (`DbMerge.in_use_rows`, #119): a menu item Tracy placed in that menu (site menus, client 0),
+        # an article Tracy filed in that category. Never an item the live site cannot show.
+        "inUseParents": {
+            "menu_types": ("menutype", "SELECT c.menutype FROM {ours.menu} c WHERE c.client_id = 0 AND NOT EXISTS"
+                                       " (SELECT 1 FROM {base.menu} x WHERE x.id = c.id AND x.menutype <=> c.menutype)"),
+            "categories": ("id", "SELECT c.catid FROM {ours.content} c WHERE NOT EXISTS"
+                                 " (SELECT 1 FROM {base.content} x WHERE x.id = c.id AND x.catid <=> c.catid)"),
+        },
         "naturalKeys": {
             "contentitem_tag_map": ["type_alias", "content_item_id", "tag_id"],
             "fields_values": ["field_id", "item_id", "value"],
@@ -2032,7 +2041,10 @@ class DbMerge:
         # A table with rows of Tracy's own is never taken whole, even when the copy left it alone:
         # the live site's version of those rows is not the copy's. Nor is one holding rows of a
         # record the merge kept and the live site deleted (`dependents`): taken whole, they go.
-        if cm == cb and name not in policy.get("tracyRows", {}) and not (key and self.holds_kept_rows(table, name)):
+        # Nor one the live site deleted rows of that the copy's own new rows still use (#119): a category
+        # the customer deleted while Tracy filed a new post in it, a menu Tracy added an item to.
+        if (cm == cb and name not in policy.get("tracyRows", {})
+                and not (key and (self.holds_kept_rows(table, name) or self.deletes_in_use(table, name, key)))):
             # Counted before the live table takes the copy's place: a title the live site changed in
             # a table the copy left alone came over, and the dialog read "Nothing had changed on your
             # original site" (dev, 26/10/2026: only rows merged one by one were counted).
@@ -2106,6 +2118,35 @@ class DbMerge:
                     cond += f" AND ({self.ids.cond(self.names['ours'], where)})"
                 parts.append(f"({cond})")
         return " OR ".join(parts) or None
+
+    def in_use_rows(self, name: str) -> str | None:
+        """A condition on a row `r` of table `name` (in the copy's schema): a row the copy's own new or
+        moved rows still name (`inUseParents`: the parent column, and the SELECT of the values the copy
+        uses, `{ours.<table>}`/`{base.<table>}` for its tables). None when no rule names the table, or
+        one of its tables is missing."""
+        rule = self.policy.get("inUseParents", {}).get(name)
+        if not rule:
+            return None
+        column, select = rule
+        missing = []
+
+        def ref(m):
+            full = self.prefix + m.group(2)
+            if not self._has(self.names[m.group(1)], full):
+                missing.append(full)
+            return self.ref(m.group(1), full)
+
+        sub = re.sub(r"\{(ours|base)\.(\w+)\}", ref, select)
+        return None if missing else f"r.{q(column)} IN ({sub})"
+
+    def deletes_in_use(self, table: str, name: str, key: list[str]) -> bool:
+        """Whether the live site deleted a row the copy's own rows still name (`in_use_rows`)."""
+        cond = self.in_use_rows(name)
+        if not cond:
+            return False
+        on = " AND ".join(f"t.{q(c)} <=> r.{q(c)}" for c in key)
+        return bool(self.sql.run(f"SELECT 1 FROM {self.ref('ours', table)} r WHERE {cond}"
+                                 f" AND NOT EXISTS (SELECT 1 FROM {self.ref('theirs', table)} t WHERE {on}) LIMIT 1;"))
 
     def holds_kept_rows(self, table: str, name: str) -> bool:
         cond = self.kept_record_rows(name)
@@ -2375,6 +2416,13 @@ class DbMerge:
             # merge kept that record (Tracy changed it): the row stays with it.
             script.append(f"UPDATE {k} SET cls = NULL WHERE cls = 'T' AND ht IS NULL AND ({pk_list}) IN"
                           f" (SELECT {', '.join('r.' + q(c) for c in pk)} FROM {m} r WHERE {kept_rows});")
+        in_use = self.in_use_rows(name)
+        if in_use:
+            # The live site deleted a row the copy left alone, but the copy's own new or moved rows use it:
+            # never an orphan of those — the deletion meets the use as a conflict (`delete-modify`), the
+            # copy's row staying until a decision (#119).
+            script.append(f"UPDATE {k} SET cls = 'X' WHERE cls = 'T' AND ht IS NULL AND ({pk_list}) IN"
+                          f" (SELECT {', '.join('r.' + q(c) for c in pk)} FROM {m} r WHERE {in_use});")
         script.append(f"DELETE FROM {k} WHERE cls IS NULL;")
         if hard:
             listed = ", ".join(
