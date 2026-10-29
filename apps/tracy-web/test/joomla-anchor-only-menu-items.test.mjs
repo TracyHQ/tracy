@@ -60,16 +60,42 @@ function boxing() {
 test('JA Boxing: About and Class are relinked, the rest of the dead footer entries are unpublished', () => {
   const answer = anchorOnlyMenuItems({ rows: boxing(), going: [], visible })
   assert.deepEqual(answer.relink, [
-    { id: 211, link: 'index.php?Itemid=102' },
-    { id: 212, link: 'index.php?Itemid=106' }
+    { id: 211, link: 'index.php?Itemid=102', title: 'About' },
+    { id: 212, link: 'index.php?Itemid=106', title: 'Classes' }
   ])
   assert.deepEqual([...answer.hide].sort(), [201, 202, 203, 204, 205, 213, 214])
 })
 
-test('anchorSteps writes the link of each relinked entry', () => {
+test('anchorSteps writes the link of each relinked entry and names it after its page', () => {
+  assert.deepEqual(anchorSteps([{ id: 212, link: 'index.php?Itemid=106', title: 'Classes' }]), [
+    { kind: 'menuItem', id: 212, fields: { link: 'index.php?Itemid=106', title: 'Classes' } }
+  ])
   assert.deepEqual(anchorSteps([{ id: 211, link: 'index.php?Itemid=102' }]), [
     { kind: 'menuItem', id: 211, fields: { link: 'index.php?Itemid=102' } }
   ])
+})
+
+test('a generic label ("Learn more", given to a demo label nobody named) names no page: the entry goes', () => {
+  // A dental clinic's footer, where the writer left two demo class links as "Learn more" and a page of the main menu is
+  // called "Learn more" too (measured 29/10/2026 on a local brief build: both footer links led to a page taken off).
+  const rows = boxing().filter((r) => r.menutype === 'mainmenu')
+  rows.push(row({ id: 120, menutype: 'mainmenu', title: 'Learn more', alias: 'featured-articles' }))
+  rows.push(
+    row({
+      id: 221,
+      menutype: 'classes',
+      title: 'Learn more',
+      alias: 'boxing-circuit',
+      type: 'url',
+      link: '#'
+    })
+  )
+  rows.push(
+    row({ id: 222, menutype: 'classes', title: 'Read more', alias: 'read-more', type: 'url', link: '' })
+  )
+  const answer = anchorOnlyMenuItems({ rows, going: [], visible })
+  assert.deepEqual(answer.relink, [])
+  assert.deepEqual(answer.hide.sort(), [221, 222])
 })
 
 test('an entry going is never a target', () => {
@@ -138,10 +164,10 @@ test('matching ignores case, stopwords and plurals, and uses alias or title of b
   ]
   const answer = anchorOnlyMenuItems({ rows, going: [], visible })
   assert.deepEqual(answer.relink, [
-    { id: 1010, link: 'index.php?Itemid=1001' },
-    { id: 1011, link: 'index.php?Itemid=1002' },
-    { id: 1012, link: 'index.php?Itemid=1003' },
-    { id: 1013, link: 'index.php?Itemid=1001' }
+    { id: 1010, link: 'index.php?Itemid=1001', title: 'Our Trainers' },
+    { id: 1011, link: 'index.php?Itemid=1002', title: 'Get in touch' },
+    { id: 1012, link: 'index.php?Itemid=1003', title: 'Courses' },
+    { id: 1013, link: 'index.php?Itemid=1001', title: 'Our Trainers' }
   ])
   assert.deepEqual(answer.hide, [])
 })
@@ -155,12 +181,12 @@ test('several matches: main menu first, then a page over an alias, then the shal
     row({ id: 510, menutype: 'foot', title: 'Shop', alias: 'shop', type: 'url', link: '#' })
   ]
   assert.deepEqual(anchorOnlyMenuItems({ rows, going: [], visible }).relink, [
-    { id: 510, link: 'index.php?Itemid=502' }
+    { id: 510, link: 'index.php?Itemid=502', title: 'Shop' }
   ])
   // The same without the nested page: the page in the main menu over its alias.
   const flat = rows.filter((r) => r.id !== 502)
   assert.deepEqual(anchorOnlyMenuItems({ rows: flat, going: [], visible }).relink, [
-    { id: 510, link: 'index.php?Itemid=504' }
+    { id: 510, link: 'index.php?Itemid=504', title: 'Shop' }
   ])
 })
 
@@ -189,8 +215,8 @@ test('multilingual: a copy matches only a page of its own language or *', () => 
   ]
   const both = anchorOnlyMenuItems({ rows, going: [], visible: new Set(['en-GB', 'vi-VN']) })
   assert.deepEqual(both.relink, [
-    { id: 610, link: 'index.php?Itemid=602' },
-    { id: 611, link: 'index.php?Itemid=601' }
+    { id: 610, link: 'index.php?Itemid=602', title: 'Classes' },
+    { id: 611, link: 'index.php?Itemid=601', title: 'Classes' }
   ])
   const onlyEnglish = anchorOnlyMenuItems({ rows, going: [], visible })
   assert.deepEqual(

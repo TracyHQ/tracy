@@ -39,6 +39,7 @@ export { answersFromBrief, contactFacts } from './site-answers.mjs'
 export { planSite, SITE_PLAN_REASONS, SITE_PLAN_VERSION } from './site-plan.mjs'
 export { honestWritten } from './honest-written.mjs'
 export { isDemoLeft, leftDemoText, pageRecords } from './demo-left-text.mjs'
+export { offeringCrossTalk, offeringWords, otherOfferingsIn } from './offering-cross-talk.mjs'
 export {
   demoBackgrounds,
   leftoverHeadBlock,

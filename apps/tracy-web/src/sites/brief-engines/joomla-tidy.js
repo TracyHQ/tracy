@@ -668,6 +668,30 @@ export async function pagesNotAnswering(reader, entryIds) {
 
 /** Words that do not tell one page from another when a footer entry is matched to a page. */
 const MATCH_STOPWORDS = new Set(['us', 'our', 'the', 'a', 'an', 'page', 'pages', 'my'])
+/**
+ * Words of a call to action that names no page: a label made only of them ("Learn more", the neutral label a demo label
+ * nobody named takes) is no page's name. Measured 29/10/2026 on a local brief build: two footer links renamed "Learn more"
+ * were relinked to a main menu page also called "Learn more", which was then taken off, and both led to a 404.
+ */
+const NAMELESS_WORDS = new Set([
+  'learn',
+  'more',
+  'read',
+  'view',
+  'see',
+  'detail',
+  'details',
+  'info',
+  'information',
+  'discover',
+  'explore',
+  'find',
+  'out',
+  'click',
+  'here',
+  'go',
+  'continue'
+])
 
 /** One word without its plural: `classes` and `class` are the same word, `plans` and `plan` too. @param {string} word */
 const singular = (word) => {
@@ -708,10 +732,10 @@ const wordsKey = (text) =>
  * @param {any[]} input.rows - the menu's rows (`readMenu`)
  * @param {number[]} input.going - the entries the tidy-up is about to unpublish
  * @param {Set<string>} input.visible - the language tags a visitor can reach
- * @returns {{ relink: Array<{ id: number, link: string }>, hide: number[] }}
+ * @returns {{ relink: Array<{ id: number, link: string, title?: string }>, hide: number[] }}
  */
 export function anchorOnlyMenuItems({ rows, going, visible }) {
-  /** @type {Array<{ id: number, link: string }>} */
+  /** @type {Array<{ id: number, link: string, title?: string }>} */
   const relink = []
   /** @type {number[]} */
   const hide = []
@@ -751,11 +775,18 @@ export function anchorOnlyMenuItems({ rows, going, visible }) {
       const language = String(row.language ?? '*')
       const keys = new Set([wordsKey(row.alias), wordsKey(row.title)])
       keys.delete('')
+      for (const key of keys) if (key.split(' ').every((w) => NAMELESS_WORDS.has(w))) keys.delete(key)
       const found = targets
         .filter((t) => [language, '*'].includes(String(t.language ?? '*')))
         .filter((t) => [wordsKey(t.alias), wordsKey(t.title)].some((k) => keys.has(k)))
         .sort(before)[0]
-      if (found) relink.push({ id: Number(row.id), link: `index.php?Itemid=${Number(found.id)}` })
+      // 🔒 A RELINKED ENTRY NAMES ITS PAGE (spec TracyHQ/tracy#189): the footer's "Class" leads to "Classes" and reads it.
+      if (found)
+        relink.push({
+          id: Number(row.id),
+          link: `index.php?Itemid=${Number(found.id)}`,
+          ...(String(found.title ?? '').trim() !== '' ? { title: String(found.title).trim() } : {})
+        })
       else hide.push(Number(row.id))
     }
   } catch {
@@ -764,9 +795,16 @@ export function anchorOnlyMenuItems({ rows, going, visible }) {
   return { relink, hide }
 }
 
-/** The writes that point the entries `relink` at their pages. @param {Array<{ id: number, link: string }>} relink */
+/**
+ * The writes that point the entries `relink` at their pages, each named as its page reads.
+ * @param {Array<{ id: number, link: string, title?: string }>} relink
+ */
 export const anchorSteps = (relink) =>
-  relink.map(({ id, link }) => ({ kind: 'menuItem', id, fields: { link } }))
+  relink.map(({ id, link, title }) => ({
+    kind: 'menuItem',
+    id,
+    fields: { link, ...(title ? { title } : {}) }
+  }))
 
 /** The longest meta description a search result shows whole. */
 const MAX_DESCRIPTION = 160

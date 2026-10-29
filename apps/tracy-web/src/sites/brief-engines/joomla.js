@@ -821,6 +821,13 @@ export function createJoomlaEngine({
       else if (!rewrites) ctx.note(ABOUT_BLANK_NOTE)
       else {
         const generate = firmGenerate(text, budgetSignal(ctx.signal, ctx.deadlineAt))
+        // 🔒 EACH OFFERING'S CARD AND PAGE IS WRITTEN FROM THAT OFFERING (spec TracyHQ/tracy#189): a brief build's site plan names
+        // the offering of every kept card (`honesty.cardNames`), and the writer is told it line by line.
+        const offerings = await Promise.resolve(
+          woContent?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
+        )
+          .then((plan) => plan?.honesty?.cardNames ?? null)
+          .catch(() => null)
         const answered = await planConcurrently(async (ask) => {
           const pages = await planJoomlaContract({
             state: planned,
@@ -830,7 +837,8 @@ export function createJoomlaEngine({
             surface: 'pages',
             trimmed: true,
             republished,
-            inventions: 'never'
+            inventions: 'never',
+            offerings
           })
           if (lineByLine.length === 0) return pages
           try {

@@ -83,7 +83,14 @@ function pageEntities(pages, { entities = [], slots = [] } = {}) {
     // left out, the About page kept the demo company's description under the customer's name.
     const opened = /[?&]view=article(?:&|$)/.test(page?.link ?? '') && /[?&]id=(\d+)/.exec(page.link)
     if (opened) out.add(`article-${opened[1]}`)
+    // A Contact page (`option=com_contact&view=contact&id=N`) shows its contact record: its words are the page's body.
+    // Measured 29/10/2026 on a local brief build: left out, the Contact page kept the demo's "One of our friendly staff".
+    const contact = /[?&]view=contact(?:&|$)/.test(page?.link ?? '') && /[?&]id=(\d+)/.exec(page.link)
+    if (contact) out.add(`contact-${contact[1]}`)
   }
+  // 🔒 A TEMPLATE LANGUAGE STRING IS ON EVERY PAGE THAT PRINTS IT (spec TracyHQ/tracy#189): it belongs to no menu entry, so
+  // no page names it, yet its words ("Book your trial class now") are the demo's as much as a module's.
+  for (const entity of entities) if (entity?.kind === 'languageString') out.add(entity.key)
   // 🔒 AN OFFERING ARTICLE A PAGE LISTS IS ON THAT PAGE (spec TracyHQ/tracy#189). A category page (`view=category&id=N`) shows
   // its articles' cards and opens each one; an article whose lines carry offering roles (ADR 0040) describes what the business
   // sells, so it is planned with the pages. Measured 29/10/2026 on the local stand (a Joomla T4 template's class articles, kept
@@ -715,6 +722,46 @@ export function itemNumbers(slots) {
 }
 
 /**
+ * The offering a slot writes about, from the site plan's card names (`honesty.cardNames`: a card's group id, or
+ * `<record>.offering` for an offering's own page), or null. 🔒 A CARD IS WRITTEN FROM ITS OWN OFFERING (spec TracyHQ/tracy#189):
+ * measured 29/10/2026 on a local brief build, told only the whole business, the writer put "Pick tennis, padel, swimming or
+ * fitness" on the swimming card and the pool on the tennis card.
+ * @param {Record<string, string> | null | undefined} offerings
+ * @returns {(slot: any) => string | null}
+ */
+export function offeringBinding(offerings) {
+  const names = offerings && typeof offerings === 'object' ? offerings : {}
+  const named = (key) => (typeof names[key] === 'string' && names[key].trim() !== '' ? names[key] : null)
+  return (slot) => named(String(slot?.group?.id ?? '')) ?? named(`${slot?.entity ?? ''}.offering`)
+}
+
+/** Group kinds that are no items a section shows: the section's own picture and its call to action. */
+const NO_SHOWN_KIND = new Set(['business', 'contact', 'cta'])
+
+/**
+ * What a section shows, for its heading and intro (a slot of the section in no group): the kinds of the repeated items of the
+ * same record (`gallery`, `person`, `service`), or null. 🔒 A HEADING DESCRIBES WHAT THE SECTION SHOWS (spec #189): measured
+ * 29/10/2026, a photo gallery got the heading "Our coaching team".
+ * @param {any[]} slots
+ * @returns {(slot: any) => string[] | null}
+ */
+export function sectionShows(slots) {
+  /** @type {Map<string, Set<string>>} */
+  const kinds = new Map()
+  for (const slot of slots) {
+    const kind = slot?.group?.kind
+    if (!kind || NO_SHOWN_KIND.has(kind) || !slot.entity) continue
+    if (!kinds.has(slot.entity)) kinds.set(slot.entity, new Set())
+    kinds.get(slot.entity).add(kind)
+  }
+  return (slot) => {
+    if (slot?.group || !['editorial.heading', 'editorial.paragraph'].includes(slot?.role)) return null
+    const shown = kinds.get(slot.entity)
+    return shown?.size ? [...shown].sort() : null
+  }
+}
+
+/**
  * The slots in model-sized batches that end at a section boundary whenever the section fits: half
  * of a section cannot be kept consistent with the other half. A section larger than a batch is
  * still split, at the batch size.
@@ -760,7 +807,8 @@ export async function planJoomlaContract({
   dataDir,
   trimmed,
   republished = new Set(),
-  inventions = 'allowed'
+  inventions = 'allowed',
+  offerings = null
 }) {
   if (!state?.contract || !Array.isArray(state.slots)) throw new Error('Invalid contract inventory')
   // 🔒 A slot the profile only DECLARES (`customize: "keep"`, written by `capture-contract.py --full-coverage`) is the site
@@ -947,7 +995,7 @@ export async function planJoomlaContract({
   // nothing afterwards: a missing fact is then a plain line that states none ("Baked daily" where the sample counts
   // projects), never an invention a visitor would take for true (CLAUDE.md §0.3).
   const SYSTEM =
-    'Replace Joomla quickstart demo content ONLY in the supplied scalar slots. Preserve their role, field type and maximum length. Keep each value about 0.75×–1.25× the length of its sample so the quickstart design keeps its shape, and never over the maximum length. Never change markup, module status/type/position, menus, ACL or styling. Write every value in the language the input names in "language" (a BCP 47 tag) — or, when the slots differ, the one each slot names — whatever language the brief is written in: translate the customer\'s facts, never the demo\'s. A slot with "item" {n, of} is the n-th of the "of" repeated cards, rows or steps of its section: every field with the same n describes ONE item (its title, its text, its figure), so keep them about the same thing, and a heading or intro that counts the items must say "of". A slot with "leadsTo" labels a button whose destination is known — that page: write its label for it and never put it in pending. A slot with "nav" is a navigation label. "generic": keep the same label, only translated into the slot\'s language; never rename it. "named": the demo\'s own product, programme or brand name: rename it to fit this business, short like a menu label; keep it only when it already fits. Never invent a link into this site: a url slot is either an address you were given or left pending. Output JSON {"values":{"slot.key":"replacement"},"pending":["slot.key"],"invented":["slot.key"]}. Account for EVERY supplied slot. Never keep the demo\'s facts. ' +
+    'Replace Joomla quickstart demo content ONLY in the supplied scalar slots. Preserve their role, field type and maximum length. Keep each value about 0.75×–1.25× the length of its sample so the quickstart design keeps its shape, and never over the maximum length. Never change markup, module status/type/position, menus, ACL or styling. Write every value in the language the input names in "language" (a BCP 47 tag) — or, when the slots differ, the one each slot names — whatever language the brief is written in: translate the customer\'s facts, never the demo\'s. A slot with "item" {n, of} is the n-th of the "of" repeated cards, rows or steps of its section: every field with the same n describes ONE item (its title, its text, its figure), so keep them about the same thing, and a heading or intro that counts the items must say "of". A slot with "leadsTo" labels a button whose destination is known — that page: write its label for it and never put it in pending. A slot with "nav" is a navigation label. "generic": keep the same label, only translated into the slot\'s language; never rename it. "named": the demo\'s own product, programme or brand name: rename it to fit this business, short like a menu label; keep it only when it already fits. Never invent a link into this site: a url slot is either an address you were given or left pending. A slot with "offering" belongs to the card or page of that one offering of this business: write it about that offering only, from what the brief says of it, and never name or describe the business\'s other offerings in it. A slot with "shows" is the heading or intro of a section that shows those items (gallery: photos; person: people; service or menu_item: offerings; step: steps; stat_item: figures; quote: reviews): say what the section shows, never another kind ("Our team" over a photo gallery). A title or label of a repeated card, tab or step (a slot with "item") names that item for this business: never keep the demo\'s title as it is unless the brief itself uses those words. Output JSON {"values":{"slot.key":"replacement"},"pending":["slot.key"],"invented":["slot.key"]}. Account for EVERY supplied slot. Never keep the demo\'s facts. ' +
     (inventions === 'never'
       ? 'When a fact a slot needs is missing from the brief — a phone number, email, address, opening hours, price, statistic, project, client, company name, or the people of a team section — NEVER write a made-up one: write a short line in the same role that states none of them, a plain label, a quality or a category taken from the brief ("Baked daily" where the sample counts projects, "Our bakers" where it names a person), and do not list its key in "invented". Put a key in pending only for a CTA destination you cannot know. An evidence-required slot takes a verbatim excerpt of the brief when the brief has one, and otherwise the same kind of plain line.'
       : 'When a fact a slot needs is missing from the brief — a phone number, email, address, opening hours, price, statistic, project, company name, or the people of a team section with their roles and short bios — write a believable one that fits this customer\'s business, country and language, and ALSO list its key in "invented": the customer will replace it with the real one. Put a key in pending only for a CTA destination you cannot know. An evidence-required slot takes a verbatim excerpt of the brief when the brief has one, and otherwise a believable invention listed in "invented" like any other.') +
@@ -990,6 +1038,8 @@ export async function planJoomlaContract({
     return wrong.size ? languageComplaint(wrong, languages) : null
   }
   const items = itemNumbers(state.slots)
+  const offeringOf = offeringBinding(offerings)
+  const shows = sectionShows(state.slots)
   /** The complaints of the batches no answer could be read for (`model-unreadable`). */
   const unreadable = []
   const batches = sectionBatches(planned, 35)
@@ -1030,7 +1080,9 @@ export async function planJoomlaContract({
         language: languageOf(s),
         ...(items.has(s.key) ? { item: items.get(s.key) } : {}),
         ...(leadsTo[s.key] ? { leadsTo: leadsTo[s.key] } : {}),
-        ...(navOf(s) ? { nav: navOf(s) } : {})
+        ...(navOf(s) ? { nav: navOf(s) } : {}),
+        ...(offeringOf(s) ? { offering: offeringOf(s) } : {}),
+        ...(shows(s) ? { shows: shows(s) } : {})
       }))
     }
     // 🔒 ONE BAD BATCH USED TO LOSE THE WHOLE BUILD. A 1113-slot contract is ~32 model calls, and a

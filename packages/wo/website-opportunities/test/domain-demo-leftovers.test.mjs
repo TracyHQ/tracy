@@ -312,3 +312,28 @@ test('a template of another shape (WordPress blocks, a dental clinic demo) is ju
     ]
   )
 })
+
+test('C02: a one-word line of a demo article ("Light", a typography sample) is no proof of the demo post', () => {
+  const map = {
+    ...contentMap,
+    slots: [
+      ...contentMap.slots,
+      {
+        key: 'article-21.7',
+        entity: 'article-21',
+        type: 'text',
+        role: 'editorial.paragraph',
+        sample: 'Light'
+      }
+    ]
+  }
+  const report = checkDemoLeftovers({
+    pages: [{ path: '/classes/yoga', status: 200, html: page('<li>Light stretching to finish</li>') }],
+    contentMap: map,
+    brief
+  })
+  assert.deepEqual(
+    report.findings.filter((f) => f.kind === 'C02'),
+    []
+  )
+})

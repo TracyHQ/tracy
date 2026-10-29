@@ -235,7 +235,14 @@ export const LEFTOVER_RULES = Object.freeze([
   {
     kind: 'C02',
     find: (ctx) => [
-      ...bySlot((s) => String(s.entity).startsWith('article-') && POST_ROLES.has(s.role))(ctx),
+      // A post's line of one word ("Light", a typography sample's badge) is a word of any text, not the demo post: measured
+      // 29/10/2026 on a local brief build, "Light core work" in a class page was reported as the demo's typography article.
+      ...bySlot(
+        (s, p) =>
+          String(s.entity).startsWith('article-') &&
+          POST_ROLES.has(s.role) &&
+          !(p.words && !p.words.includes(' '))
+      )(ctx),
       ...demoPostLeftovers(ctx)
     ]
   },

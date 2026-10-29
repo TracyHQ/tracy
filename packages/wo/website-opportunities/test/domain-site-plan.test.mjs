@@ -151,3 +151,91 @@ test('the same brief and content map give the same plan, and the inputs are left
   assert.deepEqual(a, b)
   assert.equal(JSON.stringify({ brief, served, contentMap }), before)
 })
+
+/** A pricing page of package cards and an intro: the bakery's brief holds no price. */
+const pricingMap = {
+  roleVocabularyVersion: 3,
+  entities: [
+    { key: 'menuItem-60', kind: 'menuItem', identity: { path: 'pricing' } },
+    { key: 'menuItem-61', kind: 'menuItem', identity: { path: 'menu' } },
+    { key: 'module-70', kind: 'module' },
+    { key: 'module-71', kind: 'module' },
+    { key: 'module-72', kind: 'module' }
+  ],
+  pages: [
+    {
+      entity: 'menuItem-60',
+      link: 'index.php?option=com_content&view=category&layout=blog&id=2',
+      assignedModules: [
+        { entity: 'module-70', assignmentMode: 'include' },
+        { entity: 'module-71', assignmentMode: 'include' },
+        { entity: 'module-1', assignmentMode: 'all' }
+      ]
+    },
+    {
+      entity: 'menuItem-61',
+      link: 'index.php?option=com_content&view=featured',
+      assignedModules: [{ entity: 'module-72', assignmentMode: 'include' }]
+    }
+  ],
+  slots: [0, 1]
+    .flatMap((i) => [
+      {
+        key: `module-70.${i * 2}`,
+        entity: 'module-70',
+        type: 'text',
+        role: 'package.name',
+        sample: `Ring pass ${i}`,
+        column: 'params',
+        jsonPath: ['packs', 'title', i],
+        group: { id: `module-70.item.${i}`, item: i, kind: 'package' }
+      },
+      {
+        key: `module-70.${i * 2 + 1}`,
+        entity: 'module-70',
+        type: 'text',
+        role: 'package.price',
+        sample: `$${49 + i}`,
+        column: 'params',
+        jsonPath: ['packs', 'price', i],
+        group: { id: `module-70.item.${i}`, item: i, kind: 'package' }
+      }
+    ])
+    .concat([
+      {
+        key: 'module-71.0',
+        entity: 'module-71',
+        type: 'text',
+        role: 'editorial.heading',
+        sample: 'Memberships'
+      },
+      {
+        key: 'module-71.1',
+        entity: 'module-71',
+        type: 'text',
+        role: 'editorial.paragraph',
+        sample: 'Pick a pack.'
+      },
+      {
+        key: 'module-72.0',
+        entity: 'module-72',
+        type: 'text',
+        role: 'editorial.heading',
+        sample: 'Our bakes'
+      }
+    ])
+}
+
+test('a kept page whose every section the plan took off (no price in the brief) goes, with its pages answer', () => {
+  const plan = planSite(clubBrief(), served, { now: '2026-10-29T00:00:00.000Z', contentMap: pricingMap })
+  assert.ok(
+    plan.honesty.hide.some((h) => h.entity === 'module-70'),
+    `the package cards are hidden: ${JSON.stringify(plan.honesty.hide)}`
+  )
+  const pricing = plan.pages.find((p) => p.id === 'pricing')
+  assert.deepEqual([pricing.decision, pricing.reason], ['drop', 'emptied-page'])
+  assert.ok(!plan.answers.pages.includes('pricing'))
+  assert.ok(!plan.pagePlan.keep.includes('pricing'))
+  // A page whose sections nobody hid stays, even with a heading alone.
+  assert.ok(plan.answers.pages.includes('menu'))
+})

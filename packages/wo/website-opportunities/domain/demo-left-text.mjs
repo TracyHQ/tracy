@@ -11,6 +11,7 @@
 // Rules by slot role and by the words of the demo's sample, never by template, trade or business. Pure and deterministic.
 import { neutralFor } from './neutral-copy.mjs'
 import { demoWordsOf, wordsOf } from './honest-written.mjs'
+import { offeringOfSlot, offeringWords, otherOfferingsIn } from './offering-cross-talk.mjs'
 
 /** Free paragraphs: a business's own description reads right in any of them. */
 const PARAGRAPH_ROLES = new Set(['editorial.paragraph', 'business.summary', 'business.long_description'])
@@ -19,6 +20,11 @@ const ECHO_TRUSTED_WORDS = 3
 /** A changed line that holds only the demo's words and the owner's is the demo's once it has this many of the demo's words. */
 const RENAMED_MIN_WORDS = 3
 const LOREM = /\blorem ipsum\b|\bdolor sit amet\b/i
+/**
+ * Titles of a repeated tab or step: an echo of the demo's ("Maintenance" as a coaching club's fourth tab) is never trusted as
+ * a fitting label, however short (measured 29/10/2026 on a local brief build).
+ */
+const ITEM_TITLE_ROLES = new Set(['step.title'])
 /** A site token the page fills in itself (`{site.name}`): such a line is never the demo's words. */
 const TOKEN = /\{[a-z][\w.-]*\}/i
 
@@ -48,6 +54,9 @@ export function pageRecords(pages, { entities = [], slots = [] } = {}) {
     const link = String(page?.link ?? '')
     const id = /[?&]view=article(?:&|$)/.test(link) ? /[?&]id=(\d+)/.exec(link)?.[1] : null
     if (id) out.add(`article-${id}`)
+    // A Contact page shows its contact record (`option=com_contact&view=contact&id=N`).
+    const contact = /[?&]view=contact(?:&|$)/.test(link) ? /[?&]id=(\d+)/.exec(link)?.[1] : null
+    if (contact) out.add(`contact-${contact}`)
     const category = /[?&]view=category(?:&|$)/.test(link) ? /[?&]id=(\d+)/.exec(link)?.[1] : null
     if (category) listed.add(`category-${category}`)
   }
@@ -61,6 +70,8 @@ export function pageRecords(pages, { entities = [], slots = [] } = {}) {
       listed.has(entity.identityReferences?.catid)
     )
       out.add(entity.key)
+  // A template language string belongs to no page and shows on every page that prints it ("Book your trial class now").
+  for (const entity of entities) if (entity?.kind === 'languageString') out.add(entity.key)
   return out
 }
 
@@ -84,6 +95,7 @@ export function isDemoLeft(slot, value, ownWords, held) {
     return fresh.length >= RENAMED_MIN_WORDS && fresh.every((w) => sampleWords.has(w))
   }
   if (LOREM.test(sample) || held.has(slot.key)) return true
+  if (ITEM_TITLE_ROLES.has(slot.role)) return true
   // Echoed by the writer: a short label it judged fitting stays, a sentence of the demo's does not.
   return demo.length > ECHO_TRUSTED_WORDS
 }
@@ -131,15 +143,29 @@ export function leftDemoText({
   const counts = { fallbacks: 0, neutral: 0, described: 0, blanked: 0 }
   const describedIn = new Set()
   const about = String(description ?? '').trim()
+  // 🔒 A CARD IS ABOUT ITS OWN OFFERING (spec #189, `offering-cross-talk.mjs`): a line of an offering's card or page that names
+  // another of the business's offerings is not kept, and nothing that names one stands in for it (the business's description
+  // names them all).
+  const cardNames = honesty?.cardNames ?? {}
+  const offerings = offeringWords(Object.values(cardNames))
+  const crosses = (slot, text) => {
+    const offering = offeringOfSlot(slot, cardNames)
+    return (
+      offerings.size > 1 &&
+      Boolean(offering) &&
+      typeof text === 'string' &&
+      otherOfferingsIn(text, offering, offerings).length > 0
+    )
+  }
   for (const slot of slots) {
     const key = slot.key
     if (!wanted.has(key) || slot.type !== 'text') continue
     if (shown && !shown.has(slot.entity)) continue
     // What the site plan decides is the plan's: a value, an emptied fact, a hidden card.
     if (honesty?.values?.[key] || blanked.has(key) || hiddenGroups.has(slot.group?.id)) continue
-    if (!isDemoLeft(slot, written[key], ownWords, unanswered)) continue
+    if (!crosses(slot, written[key]) && !isDemoLeft(slot, written[key], ownWords, unanswered)) continue
     const fallback = honesty?.fallbacks?.[key]?.value
-    if (fits(slot, fallback)) {
+    if (fits(slot, fallback) && !crosses(slot, fallback)) {
       values[key] = fallback
       counts.fallbacks += 1
       continue
@@ -151,12 +177,23 @@ export function leftDemoText({
       locale,
       business
     })
-    if (neutral.state === 'neutral' && fits(slot, neutral.text)) {
-      values[key] = neutral.text
+    // A step's neutral title says which step it is ("Step 3"), so a row of tabs never reads "Step, Step, Step".
+    const numbered =
+      neutral.state === 'neutral' && ITEM_TITLE_ROLES.has(slot.role) && Number.isInteger(slot.group?.item)
+        ? `${neutral.text} ${slot.group.item + 1}`
+        : neutral.text
+    if (neutral.state === 'neutral' && fits(slot, numbered)) {
+      values[key] = numbered
       counts.neutral += 1
       continue
     }
-    if (PARAGRAPH_ROLES.has(slot.role) && about && !describedIn.has(slot.entity) && fits(slot, about)) {
+    if (
+      PARAGRAPH_ROLES.has(slot.role) &&
+      about &&
+      !describedIn.has(slot.entity) &&
+      fits(slot, about) &&
+      !crosses(slot, about)
+    ) {
       values[key] = about
       describedIn.add(slot.entity)
       counts.described += 1

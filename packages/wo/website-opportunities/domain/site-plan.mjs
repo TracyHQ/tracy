@@ -17,6 +17,7 @@ import { answersFromBrief, contactFacts } from './site-answers.mjs'
 import { IDENTITY_REASONS, planIdentity } from './site-plan-identity.mjs'
 import { planOutsideMap } from './outside-map.mjs'
 import { HONESTY_REASONS, planHonesty } from './site-plan-honesty.mjs'
+import { EMPTIED_PAGE_WHY, emptiedPages } from './site-plan-empty-pages.mjs'
 
 export const SITE_PLAN_VERSION = 'site-plan/1'
 
@@ -30,6 +31,7 @@ export const SITE_PLAN_REASONS = Object.freeze({
   'template-page': 'a page of the template the business has content for',
   'showcase-page': 'a sample page the template ships to show its features',
   'no-data': 'the brief holds nothing for this page',
+  'emptied-page': 'every section of this page was taken off, so the page goes too',
   'contact-fact': 'a contact fact the brief holds',
   'business-name': 'the business name the brief holds',
   ...IDENTITY_REASONS,
@@ -83,7 +85,9 @@ function pagesOf(pagePlan) {
           : 'template-page'
       : row.role === 'sample'
         ? 'showcase-page'
-        : 'no-data',
+        : row.why === EMPTIED_PAGE_WHY
+          ? 'emptied-page'
+          : 'no-data',
     why: row.why
   }))
 }
@@ -121,6 +125,38 @@ function slotsOf(contentMap, brief, contact, name, cardNames = {}) {
 }
 
 /**
+ * The answers and the page plan with every kept page the honesty plan emptied taken off: the page row says why, the pages
+ * answer (the create door's `site.pages` question) no longer lists it, and a note says so. The inputs are not changed.
+ * @param {{answers: Record<string, any>, notes: string[], pagePlan: any}} answered - `answersFromBrief`'s
+ * @param {{questions?: any[]}} served
+ * @param {any} contentMap
+ * @param {any} honesty
+ */
+function withoutEmptiedPages(answered, served, contentMap, honesty) {
+  const plan = answered.pagePlan
+  if (!plan?.pages) return answered
+  const off = new Set(
+    emptiedPages({ pages: plan.pages, contentMap, honesty, keptForFacts: CONTACT_FACTS_WHY })
+  )
+  if (off.size === 0) return answered
+  const pages = plan.pages.map((row) => {
+    if (!off.has(row.id)) return row
+    const { fill: _fill, items: _items, ...rest } = row
+    return { ...rest, keep: false, why: EMPTIED_PAGE_WHY }
+  })
+  const keep = pages.filter((row) => row.keep).map((row) => row.id)
+  const question = (served?.questions ?? []).find(
+    (q) => q?.kind === 'multi' && (q.feeds ?? []).includes('site.pages')
+  )
+  const answers = question ? { ...answered.answers, [question.id]: keep } : answered.answers
+  const notes = [
+    ...answered.notes.filter((n) => n !== 'pages: every template page is kept'),
+    ...[...off].map((id) => `pages: ${id} off \u2014 ${EMPTIED_PAGE_WHY}`)
+  ]
+  return { ...answered, answers, notes, pagePlan: { ...plan, pages, keep } }
+}
+
+/**
  * @param {object} brief - a validated brief revision
  * @param {{questions: any[], set?: {contentHash?: string}}} served - the create door's Site questions for the template
  * @param {{now?: string, contentMap?: {slots: any[], pages?: any[], entities?: any[]} | null}} [options]
@@ -132,16 +168,21 @@ function slotsOf(contentMap, brief, contact, name, cardNames = {}) {
  *   answers: Record<string, string | string[]>, questionnaire: string | null, notes: string[], pagePlan: object | null}}
  */
 export function planSite(brief, served, { now, contentMap = null } = {}) {
-  const { answers, questionnaire, notes, pagePlan } = answersFromBrief(brief, served, { now })
+  const answered = answersFromBrief(brief, served, { now })
+  const { questionnaire } = answered
   const facts = contactFacts(brief)
   const contact = contactOfBrief(facts)
-  const name = typeof answers.name === 'string' ? answers.name : null
+  const name = typeof answered.answers.name === 'string' ? answered.answers.name : null
   const brand = {}
   if (name) brand.name = { value: name, reason: 'brief-name' }
-  if (typeof answers.about === 'string') brand.description = { value: answers.about, reason: 'brief-about' }
-  if (typeof answers.tone === 'string') brand.tone = { value: answers.tone, reason: 'brief-voice' }
+  if (typeof answered.answers.about === 'string')
+    brand.description = { value: answered.answers.about, reason: 'brief-about' }
+  if (typeof answered.answers.tone === 'string')
+    brand.tone = { value: answered.answers.tone, reason: 'brief-voice' }
   // Records kept or hidden, people, offerings and facts from the brief only (ticket #192): `site-plan-honesty.mjs`.
   const honesty = planHonesty(brief, contentMap, { name, contact })
+  // A kept page whose every section the plan took off goes with its menu entries (`site-plan-empty-pages.mjs`).
+  const { answers, notes, pagePlan } = withoutEmptiedPages(answered, served, contentMap, honesty.honesty)
   return {
     version: SITE_PLAN_VERSION,
     brand,
