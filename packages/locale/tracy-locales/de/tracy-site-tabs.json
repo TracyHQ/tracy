@@ -1063,6 +1063,7 @@
   "push.reason.phpUnchecked": "Konnte für die PHP-Version Ihrer Live-Site nicht geprüft werden",
   "push.reason.extensionFile": "Gehört zu einer Erweiterung und geht daher nur mit ihr",
   "push.reason.noDoor": "Für diese Einstellung gibt es noch keinen sicheren Weg zum Schreiben",
+  "push.reason.translationGroup": "Sprachen und welche Seiten Übersetzungen voneinander sind, werden noch nicht gesendet. Nehmen Sie diese Änderung in Polylang auf Ihrer Live-Site vor",
   "push.reason.phpDisabled": "PHP-files sind für Claude Cowork auf Ihrer Live-Site ausgeschaltet. Um sie zu senden, schalten Sie „Allow PHP in template files“ in den Optionen von Claude Cowork auf Ihrer site ein",
   "push.reason.phpDisabledWordpress": "PHP-files sind für Claude Cowork auf Ihrer Live-Site ausgeschaltet. Um sie zu senden, schalten Sie „Allow PHP in theme files“ unter Settings › Claude Cowork auf Ihrer site ein",
   "push.reason.templateFilesOff": "Template-files sind für Claude Cowork auf Ihrer Live-Site ausgeschaltet. Um sie zu senden, schalten Sie „Template files“ in den Optionen von Claude Cowork auf Ihrer site ein",
@@ -1215,5 +1216,8 @@
   "sync.error.livePhpTooOld": "Deine Live-Site läuft mit PHP {php}. Claude Cowork braucht PHP {min} oder neuer. Bitte deinen Hoster, PHP zu aktualisieren, und versuche es dann erneut.",
   "sync.error.livePhpTooOldPlain": "Deine Live-Site läuft mit einer PHP-Version, die für Claude Cowork zu alt ist. Bitte deinen Hoster, PHP zu aktualisieren, und versuche es dann erneut.",
   "sync.error.liveRateLimited": "Deine Live-Site begrenzt Anfragen. Warte vor einem neuen Versuch; Tracy beachtet die Retry-After-Wartezeit.",
-  "sync.error.liveToken": "Deine Live-Site hat das Claude-Cowork-Token abgelehnt. Verbinde sie erneut mit ihrem aktuellen Token und versuche es erneut."
+  "sync.error.liveToken": "Deine Live-Site hat das Claude-Cowork-Token abgelehnt. Verbinde sie erneut mit ihrem aktuellen Token und versuche es erneut.",
+  "push.label.featuredImage": "Beitragsbild",
+  "push.label.pageTemplate": "Seiten-Template",
+  "push.label.altText": "Alternativtext"
 }

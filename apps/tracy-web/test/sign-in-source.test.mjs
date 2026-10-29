@@ -20,6 +20,7 @@ import {
   sourceFromNext,
   sourceQuery,
   sourceText,
+  visitReferrer,
   withSource
 } from '../src/lib/sign-in-source.js'
 import { workspaceRoutes } from '../src/workspace/route.js'
@@ -544,12 +545,28 @@ test(
 
 // ── visits to /login from a link with a source (`POST /login/visit`) ──────────────────────────
 
-test('the login page tells /login/visit its source once per tab, and a page with no source sends nothing', () => {
+test('the login page tells /login/visit once per tab, with its source and the linking host when there are any', () => {
   const html = loginPage({ origin: ORIGIN, next: '/', source: MEMBERS_SOURCE })
   assert.match(html, /fetch\('\/login\/visit'/)
   assert.match(html, /sessionStorage\.getItem\('tracy-login-visit'\)/)
   assert.ok(html.includes(JSON.stringify(MEMBERS)), 'the cleaned utm fields, as the door reads them')
-  assert.doesNotMatch(loginPage({ origin: ORIGIN, next: '/' }), /\/login\/visit/)
+  // Another site's host only, never its path, and never this page's own host.
+  assert.match(html, /new URL\(document\.referrer\)\.hostname/)
+  assert.match(html, /from !== location\.hostname\) body\.referrer = from/)
+  // A page opened with no source still counts as a visit: the direct one.
+  const direct = loginPage({ origin: ORIGIN, next: '/' })
+  assert.match(direct, /fetch\('\/login\/visit'/)
+  assert.match(direct, /var body = \{\};/)
+})
+
+test('visitReferrer keeps a cleaned host and refuses anything past one', () => {
+  assert.equal(visitReferrer({ referrer: 'www.Google.com' }), 'www.google.com')
+  assert.equal(visitReferrer({ referrer: 'tracy.ai' }), 'tracy.ai')
+  for (const referrer of ['www.google.com/search?q=x', 'localhost:8080', 'a@b.com', 'x.com#y', ''])
+    assert.equal(visitReferrer({ referrer }), null, referrer)
+  assert.equal(visitReferrer({ referrer: ['x.com'] }), null)
+  assert.equal(visitReferrer({}), null)
+  assert.equal(visitReferrer(null), null)
 })
 
 const visits = async () =>
@@ -576,14 +593,24 @@ test(
     assert.deepEqual(await visits(), [
       { account_id: null, data: { source: 'joomlart', medium: 'forum', content: 'forum-123' } }
     ])
-    // Another origin, by either header, is refused; a body with no source is kept nowhere.
+    // Another origin, by either header, is refused; a body that is not an object is kept nowhere.
     assert.equal((await visit(MEMBERS, { origin: 'https://evil.example' })).status, 403)
     assert.equal((await visit(MEMBERS, { 'sec-fetch-site': 'cross-site', origin: ORIGIN })).status, 403)
-    assert.equal((await visit({ ref: 'x' })).status, 204)
+    assert.equal((await visit(['x'])).status, 204)
+    assert.equal((await visit('x')).status, 204)
     assert.equal((await visits()).length, 1)
     // A same-origin fetch from an alias host is still the page's own.
     assert.equal((await visit(MEMBERS, { 'sec-fetch-site': 'same-origin' })).status, 204)
     assert.equal((await visits()).length, 2)
+    // No source is the direct visit, kept empty; a linking host is kept as a host, with or without a source.
+    assert.equal((await visit({ ref: 'x' })).status, 204)
+    assert.equal((await visit({ referrer: 'www.google.com' })).status, 204)
+    assert.equal((await visit({ utm_source: 'joomlart', referrer: 'www.joomlart.com' })).status, 204)
+    assert.equal((await visit({ referrer: 'www.google.com/search?q=secret' })).status, 204)
+    assert.deepEqual(
+      (await visits()).slice(2).map((row) => row.data),
+      [{}, { referrer: 'www.google.com' }, { source: 'joomlart', referrer: 'www.joomlart.com' }, {}]
+    )
   }
 )
 

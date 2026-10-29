@@ -3902,6 +3902,7 @@ window.__ModuleLoader__.load({
               "push.reason.phpUnchecked": "Không kiểm tra được với phiên bản PHP của site thật",
               "push.reason.extensionFile": "Thuộc về một extension, nên chỉ đi cùng extension đó",
               "push.reason.noDoor": "Chưa có cách an toàn để ghi cài đặt này",
+              "push.reason.translationGroup": "Ngôn ngữ và việc trang nào là bản dịch của trang nào chưa được gửi đi. Hãy làm thay đổi này trong Polylang trên site thật của bạn",
               "push.reason.phpDisabled": "File PHP đang bị tắt cho Claude Cowork trên site thật của bạn. Để gửi chúng, hãy bật “Allow PHP in template files” trong phần tuỳ chọn của Claude Cowork trên site của bạn",
               "push.reason.phpDisabledWordpress": "File PHP đang bị tắt cho Claude Cowork trên site thật của bạn. Để gửi chúng, hãy bật “Allow PHP in theme files” trong Settings › Claude Cowork trên site của bạn",
               "push.reason.templateFilesOff": "File template đang bị tắt cho Claude Cowork trên site thật của bạn. Để gửi chúng, hãy bật “Template files” trong phần tuỳ chọn của Claude Cowork trên site của bạn",
@@ -4054,7 +4055,10 @@ window.__ModuleLoader__.load({
               "sync.error.livePhpTooOld": "Site live đang chạy PHP {php}. Claude Cowork cần PHP {min} trở lên. Nhờ nhà cung cấp hosting nâng cấp PHP, rồi thử lại.",
               "sync.error.livePhpTooOldPlain": "Site live đang chạy một phiên bản PHP quá cũ cho Claude Cowork. Nhờ nhà cung cấp hosting nâng cấp PHP, rồi thử lại.",
               "sync.error.liveRateLimited": "Site live đang giới hạn yêu cầu. Chờ trước khi thử lại; Tracy tuân theo thời gian Retry-After của site.",
-              "sync.error.liveToken": "Site live từ chối token Claude Cowork. Kết nối lại site live bằng token hiện tại rồi thử lại."
+              "sync.error.liveToken": "Site live từ chối token Claude Cowork. Kết nối lại site live bằng token hiện tại rồi thử lại.",
+              "push.label.featuredImage": "Ảnh đại diện",
+              "push.label.pageTemplate": "Template trang",
+              "push.label.altText": "Văn bản thay thế"
       },
       "tracy-tab-link": {
               "launcher.open": "Mở danh sách tab",

@@ -1,0 +1,1 @@
+{"id":"REG-PR-169-push-interrupted-resume","verdict":"PASS","commit":"ffe10525b2454362df88cf8d8e04a6e1cb08a539","ran_at":"2026-10-29T07:32:12.376Z","evidence":"tests/regression/.runs/2026-10-29-ffe10525b/REG-PR-169-push-interrupted-resume.log"}

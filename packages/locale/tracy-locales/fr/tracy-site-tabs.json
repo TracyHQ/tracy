@@ -1063,6 +1063,7 @@
   "push.reason.phpUnchecked": "N’a pas pu être vérifié pour la version de PHP de votre site en ligne",
   "push.reason.extensionFile": "Appartient à une extension, il ne part donc qu’avec elle",
   "push.reason.noDoor": "Il n’existe pas encore de moyen sûr d’écrire ce réglage",
+  "push.reason.translationGroup": "Les langues et les pages qui se traduisent les unes les autres ne sont pas encore envoyées. Faites cette modification dans Polylang sur votre site en ligne",
   "push.reason.phpDisabled": "Les file PHP sont désactivés pour Claude Cowork sur votre site en ligne. Pour les envoyer, activez « Allow PHP in template files » dans les options de Claude Cowork sur votre site",
   "push.reason.phpDisabledWordpress": "Les file PHP sont désactivés pour Claude Cowork sur votre site en ligne. Pour les envoyer, activez « Allow PHP in theme files » dans Settings › Claude Cowork sur votre site",
   "push.reason.templateFilesOff": "Les file du template sont désactivés pour Claude Cowork sur votre site en ligne. Pour les envoyer, activez « Template files » dans les options de Claude Cowork sur votre site",
@@ -1215,5 +1216,8 @@
   "sync.error.livePhpTooOld": "Votre site en ligne utilise PHP {php}. Claude Cowork nécessite PHP {min} ou plus récent. Demandez à votre hébergeur de mettre PHP à jour, puis réessayez.",
   "sync.error.livePhpTooOldPlain": "Votre site en ligne utilise une version de PHP trop ancienne pour Claude Cowork. Demandez à votre hébergeur de mettre PHP à jour, puis réessayez.",
   "sync.error.liveRateLimited": "Votre site en ligne limite les requêtes. Patientez avant de réessayer ; Tracy respecte le délai Retry-After.",
-  "sync.error.liveToken": "Votre site en ligne a refusé le token Claude Cowork. Reconnectez-le avec son token actuel, puis réessayez."
+  "sync.error.liveToken": "Votre site en ligne a refusé le token Claude Cowork. Reconnectez-le avec son token actuel, puis réessayez.",
+  "push.label.featuredImage": "Image mise en avant",
+  "push.label.pageTemplate": "Template de page",
+  "push.label.altText": "Texte alternatif"
 }

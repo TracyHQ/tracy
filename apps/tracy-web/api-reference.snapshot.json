@@ -52592,6 +52592,9 @@
               "application/json": {
                 "schema": {
                   "properties": {
+                    "referrer": {
+                      "type": "string"
+                    },
                     "utm_campaign": {
                       "type": "string"
                     },

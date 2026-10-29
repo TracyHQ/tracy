@@ -1063,6 +1063,7 @@
   "push.reason.phpUnchecked": "No se pudo comprobar para la versión de PHP de tu site publicado",
   "push.reason.extensionFile": "Pertenece a una extensión, así que solo va con esa extensión",
   "push.reason.noDoor": "Aún no hay una forma segura de escribir este ajuste",
+  "push.reason.translationGroup": "Los idiomas y qué páginas son traducción unas de otras aún no se envían. Haz este cambio en Polylang en tu site publicado",
   "push.reason.phpDisabled": "Los file PHP están desactivados para Claude Cowork en tu site publicado. Para enviarlos, activa “Allow PHP in template files” en las opciones de Claude Cowork en tu site",
   "push.reason.phpDisabledWordpress": "Los file PHP están desactivados para Claude Cowork en tu site publicado. Para enviarlos, activa “Allow PHP in theme files” en Settings › Claude Cowork en tu site",
   "push.reason.templateFilesOff": "Los file del template están desactivados para Claude Cowork en tu site publicado. Para enviarlos, activa “Template files” en las opciones de Claude Cowork en tu site",
@@ -1215,5 +1216,8 @@
   "sync.error.livePhpTooOld": "Tu site en línea usa PHP {php}. Claude Cowork necesita PHP {min} o posterior. Pide a tu proveedor de hosting que actualice PHP y vuelve a intentarlo.",
   "sync.error.livePhpTooOldPlain": "Tu site en línea usa una versión de PHP demasiado antigua para Claude Cowork. Pide a tu proveedor de hosting que actualice PHP y vuelve a intentarlo.",
   "sync.error.liveRateLimited": "Tu site en línea está limitando las solicitudes. Espera antes de volver a intentarlo; Tracy respeta el plazo Retry-After.",
-  "sync.error.liveToken": "Tu site en línea rechazó el token de Claude Cowork. Vuelve a conectarlo con su token actual e inténtalo de nuevo."
+  "sync.error.liveToken": "Tu site en línea rechazó el token de Claude Cowork. Vuelve a conectarlo con su token actual e inténtalo de nuevo.",
+  "push.label.featuredImage": "Imagen destacada",
+  "push.label.pageTemplate": "Template de página",
+  "push.label.altText": "Texto alternativo"
 }

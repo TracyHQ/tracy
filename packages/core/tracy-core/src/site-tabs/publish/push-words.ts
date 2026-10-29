@@ -96,6 +96,8 @@ export function unsupportedReasonText(
         : t('push.reason.tooLarge')
     case 'permalink':
       return t('push.reason.permalink')
+    case 'translation-group':
+      return t('push.reason.translationGroup')
     case 'php-lint-failed':
       return t('push.reason.phpLint')
     case 'php-lint-unavailable':

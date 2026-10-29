@@ -1063,6 +1063,7 @@
   "push.reason.phpUnchecked": "Kon niet worden gecontroleerd voor de PHP-versie van je live site",
   "push.reason.extensionFile": "Hoort bij een extensie, dus gaat alleen mee met die extensie",
   "push.reason.noDoor": "Er is nog geen veilige manier om deze instelling te schrijven",
+  "push.reason.translationGroup": "Talen en welke pagina’s elkaars vertaling zijn worden nog niet verzonden. Breng deze wijziging aan in Polylang op je live site",
   "push.reason.phpDisabled": "PHP-files staan uit voor Claude Cowork op je live site. Zet “Allow PHP in template files” aan in de opties van Claude Cowork op je site om ze te sturen",
   "push.reason.phpDisabledWordpress": "PHP-files staan uit voor Claude Cowork op je live site. Zet “Allow PHP in theme files” aan onder Settings › Claude Cowork op je site om ze te sturen",
   "push.reason.templateFilesOff": "Template-files staan uit voor Claude Cowork op je live site. Zet “Template files” aan in de opties van Claude Cowork op je site om ze te sturen",
@@ -1215,5 +1216,8 @@
   "sync.error.livePhpTooOld": "Je live-site draait PHP {php}. Claude Cowork heeft PHP {min} of nieuwer nodig. Vraag je hostingpartij PHP bij te werken en probeer het daarna opnieuw.",
   "sync.error.livePhpTooOldPlain": "Je live-site draait een PHP-versie die te oud is voor Claude Cowork. Vraag je hostingpartij PHP bij te werken en probeer het daarna opnieuw.",
   "sync.error.liveRateLimited": "Je live-site beperkt verzoeken. Wacht voordat je het opnieuw probeert; Tracy respecteert de Retry-After-wachttijd.",
-  "sync.error.liveToken": "Je live-site heeft het Claude Cowork-token geweigerd. Verbind de site opnieuw met het huidige token en probeer het opnieuw."
+  "sync.error.liveToken": "Je live-site heeft het Claude Cowork-token geweigerd. Verbind de site opnieuw met het huidige token en probeer het opnieuw.",
+  "push.label.featuredImage": "Uitgelichte afbeelding",
+  "push.label.pageTemplate": "Pagina-template",
+  "push.label.altText": "Alternatieve tekst"
 }

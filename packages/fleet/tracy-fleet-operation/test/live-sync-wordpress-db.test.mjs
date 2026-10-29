@@ -604,3 +604,167 @@ for broken in [b'a:2:{s:11:"custom_logo";i:64;s:5:"width";R:2;}', b'a:2:{s:6:"ho
         raise AssertionError("unsafe serialized reference was accepted")`)
   }
 )
+
+test(
+  'a plugin state table the copy has never had comes whole from the live site once, then stays the copy’s (#106)',
+  opts,
+  () => {
+    // Wordfence installed on the live site after the import: its tables are ignored by the merge
+    // (their rows move on every request), yet a copy without them breaks the active plugin.
+    const answer = orderRecordMerge({
+      type: 'post',
+      theirs: `CREATE TABLE wp_wfconfig (name varchar(100) PRIMARY KEY, val longblob);
+        INSERT INTO wp_wfconfig VALUES ('isPaid', '0');
+        CREATE TABLE wp_wfhits (id bigint PRIMARY KEY, ip varchar(40));
+        INSERT INTO wp_wfhits VALUES (1, '203.0.113.9');`
+    })
+    assert.equal(answer.tables.wp_wfconfig, 'added', JSON.stringify(answer.tables))
+    assert.equal(sql("SELECT val FROM wc_m.wp_wfconfig WHERE name='isPaid'"), '0')
+    assert.equal(sql('SELECT COUNT(*) FROM wc_m.wp_wfhits'), '1')
+    assert.equal(answer.counts.records, 0, 'a plugin state table is no record the customer made')
+    // Once the copy has it, the live site's moving rows no longer come over.
+    const later = orderRecordMerge({
+      type: 'post',
+      extraSql: `CREATE TABLE wp_wfconfig (name varchar(100) PRIMARY KEY, val longblob);
+        INSERT INTO wp_wfconfig VALUES ('isPaid', '0');`,
+      theirs: "UPDATE wp_wfconfig SET val='1' WHERE name='isPaid';"
+    })
+    assert.equal(later.tables.wp_wfconfig, 'ours-kept')
+    assert.equal(sql("SELECT val FROM wc_m.wp_wfconfig WHERE name='isPaid'"), '0')
+  }
+)
+
+const PAGE_META = `CREATE TABLE wp_postmeta (meta_id bigint NOT NULL PRIMARY KEY, post_id bigint, meta_key varchar(255), meta_value longtext);
+  INSERT INTO wp_postmeta VALUES (20, 1, '_edit_last', '1');`
+
+test(
+  'a page template both sites set on one page is one row, a conflict, never two rows — under one meta_id or two (#118)',
+  opts,
+  () => {
+    for (const [ourId, theirId] of [
+      [24, 24],
+      [24, 25]
+    ]) {
+      const answer = orderRecordMerge({
+        type: 'page',
+        extraSql: PAGE_META,
+        ours: `INSERT INTO wp_postmeta VALUES (${ourId}, 1, '_wp_page_template', 'page-no-title.php');`,
+        theirs: `INSERT INTO wp_postmeta VALUES (${theirId}, 1, '_wp_page_template', 'page-wide.php');`
+      })
+      const label = `copy ${ourId}, live ${theirId}`
+      assert.equal(
+        sql("SELECT COUNT(*) FROM wc_m.wp_postmeta WHERE post_id=1 AND meta_key='_wp_page_template'"),
+        '1',
+        label
+      )
+      assert.equal(
+        sql("SELECT meta_value FROM wc_m.wp_postmeta WHERE post_id=1 AND meta_key='_wp_page_template'"),
+        'page-no-title.php',
+        `${label}: the copy's stays until a decision`
+      )
+      assert.ok(
+        answer.conflicts.some((c) => c.table === 'wp_postmeta'),
+        `${label}: ${JSON.stringify(answer.conflicts)} ${JSON.stringify(answer.renumbered)}`
+      )
+      // Picking the live site's side takes its template, still in one row.
+      const id = answer.conflicts.find((c) => c.table === 'wp_postmeta').id
+      orderRecordMerge({
+        type: 'page',
+        extraSql: PAGE_META,
+        ours: `INSERT INTO wp_postmeta VALUES (${ourId}, 1, '_wp_page_template', 'page-no-title.php');`,
+        theirs: `INSERT INTO wp_postmeta VALUES (${theirId}, 1, '_wp_page_template', 'page-wide.php');`,
+        decisions: { [id]: 'theirs' }
+      })
+      assert.deepEqual(
+        sql("SELECT meta_value FROM wc_m.wp_postmeta WHERE post_id=1 AND meta_key='_wp_page_template'"),
+        'page-wide.php',
+        label
+      )
+    }
+    // The same template set on both sides: one row, no conflict.
+    const same = orderRecordMerge({
+      type: 'page',
+      extraSql: PAGE_META,
+      ours: "INSERT INTO wp_postmeta VALUES (24, 1, '_wp_page_template', 'page-wide.php');",
+      theirs: "INSERT INTO wp_postmeta VALUES (25, 1, '_wp_page_template', 'page-wide.php');"
+    })
+    assert.equal(
+      sql("SELECT COUNT(*) FROM wc_m.wp_postmeta WHERE post_id=1 AND meta_key='_wp_page_template'"),
+      '1'
+    )
+    assert.deepEqual(same.conflicts, [])
+    // A key that may hold several values keeps both rows (two old slugs are two redirects).
+    orderRecordMerge({
+      type: 'page',
+      extraSql: PAGE_META,
+      ours: "INSERT INTO wp_postmeta VALUES (24, 1, '_wp_old_slug', 'a');",
+      theirs: "INSERT INTO wp_postmeta VALUES (25, 1, '_wp_old_slug', 'b');"
+    })
+    assert.equal(
+      sql("SELECT COUNT(*) FROM wc_m.wp_postmeta WHERE post_id=1 AND meta_key='_wp_old_slug'"),
+      '2'
+    )
+  }
+)
+
+test(
+  'Polylang translation groups, term languages and per-language menus follow post and term renumbers (#105)',
+  opts,
+  () => {
+    const group = (members) =>
+      `a:${Object.keys(members).length}:{${Object.entries(members)
+        .map(([lang, v]) => `s:${lang.length}:"${lang}";${typeof v === 'string' ? v : `i:${v};`}`)
+        .join('')}}`
+    const posts = group({ en: 5, fr: 27, sync: 'a:1:{s:2:"fr";s:2:"en";}' })
+    const terms = group({ en: 1, fr: 30 })
+    const settings = (en, fr) =>
+      `a:2:{s:12:"default_lang";s:2:"en";s:9:"nav_menus";a:1:{s:4:"shop";a:1:{s:7:"primary";a:2:{s:2:"en";i:${en};s:2:"fr";i:${fr};}}}}`
+    sql(`DROP DATABASE IF EXISTS pl; CREATE DATABASE pl; USE pl;
+CREATE TABLE wp_posts (ID bigint PRIMARY KEY);
+CREATE TABLE wp_terms (term_id bigint PRIMARY KEY);
+CREATE TABLE wp_term_taxonomy (term_taxonomy_id bigint PRIMARY KEY, term_id bigint, taxonomy varchar(32), description longtext, parent bigint DEFAULT 0);
+CREATE TABLE wp_term_relationships (object_id bigint, term_taxonomy_id bigint, PRIMARY KEY (object_id, term_taxonomy_id));
+CREATE TABLE wp_options (option_id bigint PRIMARY KEY, option_name varchar(191), option_value longtext);
+INSERT INTO wp_posts VALUES (5), (27);
+INSERT INTO wp_terms VALUES (1), (2), (27), (30), (31), (40), (41);
+INSERT INTO wp_term_taxonomy VALUES (2, 2, 'language', 'a:0:{}', 0), (3, 27, 'term_language', '', 0),
+  (4, 30, 'category', '', 0), (5, 31, 'term_translations', '${terms}', 0),
+  (6, 40, 'post_translations', '${posts}', 0), (7, 41, 'post_translations', 'not serialized 27', 0);
+INSERT INTO wp_term_relationships VALUES (27, 2), (27, 6), (5, 6), (27, 3), (30, 3), (30, 5);
+INSERT INTO wp_options VALUES (1, 'polylang', '${settings(30, 31)}');`)
+    py(`
+mapper = engine.IdMap(sql, "wp_", wp.POLICY["entities"], {})
+rules = dict(wp.POLICY["entities"])
+mapper.renumber("pl", "posts", rules["posts"], [(27, 29)])
+mapper.renumber("pl", "terms", rules["terms"], [(30, 50)])`)
+    const description = (id) =>
+      Buffer.from(
+        sql(`SELECT HEX(description) FROM pl.wp_term_taxonomy WHERE term_taxonomy_id=${id}`),
+        'hex'
+      ).toString()
+    // The French post's group names its new number; Polylang Pro's `sync` languages stay.
+    assert.equal(description(6), group({ en: 5, fr: 29, sync: 'a:1:{s:2:"fr";s:2:"en";}' }))
+    // The French category's group and the French menu follow the term's number.
+    assert.equal(description(5), group({ en: 1, fr: 50 }))
+    assert.equal(sql('SELECT option_value FROM pl.wp_options WHERE option_id=1'), settings(50, 31))
+    // A group Polylang itself cannot read names nothing and is left as it is.
+    assert.equal(description(7), 'not serialized 27')
+    // The post's language and group moved with the post; term 27's language stayed with term 27,
+    // and term 30's language and group moved with the term, not with any post.
+    assert.equal(
+      sql(
+        "SELECT GROUP_CONCAT(CONCAT(object_id, ':', term_taxonomy_id) ORDER BY object_id, term_taxonomy_id) FROM pl.wp_term_relationships"
+      ),
+      '5:6,27:3,29:2,29:6,50:3,50:5'
+    )
+    // A number only a group names is taken: a fresh number goes above it.
+    sql(`UPDATE pl.wp_term_taxonomy SET description='${group({ en: 5, fr: 1000 })}' WHERE term_taxonomy_id=6`)
+    const refs = JSON.parse(
+      py(`
+mapper = engine.IdMap(sql, "wp_", wp.POLICY["entities"], {})
+print(json.dumps(sorted(mapper.referenced("pl", dict(wp.POLICY["entities"])["posts"]))))`)
+    )
+    assert.ok(refs.includes(1000), JSON.stringify(refs))
+    assert.ok(!refs.includes(50), JSON.stringify(refs))
+  }
+)

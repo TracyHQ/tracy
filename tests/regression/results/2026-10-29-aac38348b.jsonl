@@ -1,0 +1,1 @@
+{"id":"REG-PR-157-push-restore-after-undo","verdict":"PASS","commit":"aac38348bcdfb3efd6623fae3bffa563786cf9f6","ran_at":"2026-10-29T06:23:22.299Z","evidence":"tests/regression/.runs/2026-10-29-aac38348b/REG-PR-157-push-restore-after-undo.log"}

@@ -408,7 +408,9 @@ PYEOF
 # ── undo ─────────────────────────────────────────────────────────────────────────────────────
 undo() {
   [[ -n "$PUSH_ID" ]] || { echo "need --push-id" >&2; exit 2; }
-  [[ -f "$PUSH_DIR/written.json" && -f "$PUSH_DIR/before.json" ]] || { answer_refusal NOT_PUSHED; return 0; }
+  # An Apply whose job was lost before it answered leaves its journal: Undo takes back what it lists (#122).
+  [[ ( -f "$PUSH_DIR/written.json" || -f "$PUSH_DIR/journal.jsonl" ) && -f "$PUSH_DIR/before.json" ]] \
+    || { answer_refusal NOT_PUSHED; return 0; }
   if [[ -f "$PUSH_DIR/undone.json" ]]; then
     python3 -c 'import json,sys; a = json.load(open(sys.argv[1])); a["repeated"] = True; print(json.dumps(a, ensure_ascii=False))' "$PUSH_DIR/undone.json"
     return 0

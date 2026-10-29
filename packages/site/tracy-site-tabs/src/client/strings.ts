@@ -1410,6 +1410,8 @@ export const en = {
   'push.reason.phpUnchecked': 'Could not be checked for your live site’s PHP version',
   'push.reason.extensionFile': 'Belongs to an extension, so it goes only with that extension',
   'push.reason.noDoor': 'There is no safe way to write this setting yet',
+  'push.reason.translationGroup':
+    'Languages and which pages translate each other are not sent yet. Make this change in Polylang on your live site',
   'push.reason.phpDisabled':
     'PHP files are switched off for Claude Cowork on your live site. To send them, turn on “Allow PHP in template files” in the Claude Cowork options on your site',
   'push.reason.phpDisabledWordpress':
@@ -1489,6 +1491,9 @@ export const en = {
   'push.field.shareImage': 'Share image',
   'push.field.fonts': 'Fonts',
   'push.field.other': 'Other details',
+  'push.label.featuredImage': 'Featured image',
+  'push.label.pageTemplate': 'Page template',
+  'push.label.altText': 'Alt text',
   'push.label.blogname': 'Site title',
   'push.label.blogdescription': 'Tagline',
   'push.label.date_format': 'Date format',

@@ -925,3 +925,36 @@ test('a preview capped at the host answer counts what Apply can write over the w
   assert.equal(phase(), 'confirm')
   assert.match(text(), /1 change goes to your live site|1 changes go to your live site/)
 })
+
+test('Preview translates metadata subjects and keeps page types in every interface language', async () => {
+  const dictionaries = { en }
+  for (const language of ['vi', 'de', 'it', 'fr', 'nl', 'zh', 'es']) {
+    const relative =
+      language === 'vi'
+        ? 'packages/locale/tracy-locale-vi/vi/tracy-site-tabs.json'
+        : `packages/locale/tracy-locales/${language}/tracy-site-tabs.json`
+    dictionaries[language] = JSON.parse(
+      await (await import('node:fs/promises')).readFile(path.join(repo, relative), 'utf8')
+    )
+  }
+  for (const [language, words] of Object.entries(dictionaries)) {
+    const tr = (key) => words[key] ?? `missing:${key}`
+    for (const label of ['featuredImage', 'pageTemplate', 'altText']) {
+      const item = {
+        id: 'meta',
+        kind: 'postmeta',
+        what: 'pageDetail',
+        title: '_thumbnail_id',
+        label,
+        subject: 'About us'
+      }
+      assert.equal(lib.itemName(item, tr), `${words[`push.label.${label}`]} · About us`, language)
+      assert.ok(!lib.itemName(item, tr).includes('_thumbnail_id'), language)
+    }
+    assert.equal(
+      lib.itemLine({ id: 'post', kind: 'post', what: 'page', fields: ['post_title'] }, tr, true),
+      `${words['push.what.page']} · ${words['push.field.title']}`,
+      language
+    )
+  }
+})

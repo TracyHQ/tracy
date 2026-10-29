@@ -255,3 +255,56 @@ test(
     assert.deepEqual(rows('SELECT term_id FROM wp_terms ORDER BY term_id', 'pc_ours'), [['1'], ['7']])
   }
 )
+
+for (const limited of [true, false]) {
+  test(
+    `after a push of a post’s categories, the copy keeps its terms the push never sent — Polylang language, a plugin’s taxonomy (#105)${limited ? '' : ': the unlimited seed lost them'}`,
+    opts,
+    () => {
+      const name = limited ? 'pt' : 'pu'
+      for (const side of ['base', 'ours', 'theirs']) {
+        sql(`DROP DATABASE IF EXISTS \`${name}_${side}\`; CREATE DATABASE \`${name}_${side}\`;`)
+        sql(
+          `${TABLES}
+           INSERT INTO wp_terms VALUES (8, 'News', 'news', 0), (20, 'Spring', 'spring', 0), (21, 'Francais', 'fr', 0);
+           INSERT INTO wp_term_taxonomy VALUES (8, 8, 'category', '', 0, 0), (20, 20, 'series', '', 0, 0),
+             (21, 21, 'language', 'a:0:{}', 0, 1);
+           INSERT INTO wp_term_relationships VALUES (10, 21, 0);`,
+          `${name}_${side}`
+        )
+      }
+      sql(home(LIVE), `${name}_base`)
+      // Tracy moved the post to News and filed it in a series; the push sent the category only.
+      sql(
+        `${home(COPY)} DELETE FROM wp_term_relationships WHERE object_id = 10 AND term_taxonomy_id = 1;
+         INSERT INTO wp_term_relationships VALUES (10, 8, 0), (10, 20, 0);`,
+        `${name}_ours`
+      )
+      sql(
+        `${home(LIVE)} DELETE FROM wp_term_relationships WHERE object_id = 10 AND term_taxonomy_id = 1;
+         INSERT INTO wp_term_relationships VALUES (10, 8, 0);`,
+        `${name}_theirs`
+      )
+      const answer = merge(name, [
+        { table: 'posts', match: { ID: 10 }, columns: [], from: 'ours' },
+        {
+          table: 'term_relationships',
+          match: { object_id: 10 },
+          rows: 'ours',
+          ...(limited ? { taxonomies: ['category', 'post_tag'] } : {})
+        }
+      ])
+      assert.equal(answer.ok, true)
+      const kept = rows(
+        'SELECT term_taxonomy_id FROM wp_term_relationships WHERE object_id = 10 ORDER BY 1',
+        `${name}_ours`
+      ).map((r) => r[0])
+      if (limited) assert.deepEqual(kept, ['8', '20', '21'])
+      else
+        assert.ok(
+          !kept.includes('20'),
+          `the unlimited seed read the series as removed on the live site: ${kept}`
+        )
+    }
+  )
+}
