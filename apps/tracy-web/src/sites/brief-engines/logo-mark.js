@@ -238,3 +238,66 @@ export async function recoloured(bytes, colour) {
   }
   return pngOf(out, info.width, info.height)
 }
+
+/** WCAG relative luminance of 8-bit channels. */
+const lum = (/** @type {number} */ r, /** @type {number} */ g, /** @type {number} */ b) => {
+  const lin = (/** @type {number} */ v) => {
+    const s = v / 255
+    return s <= 0.04045 ? s / 12.92 : ((s + 0.055) / 1.055) ** 2.4
+  }
+  return 0.2126 * lin(r) + 0.7152 * lin(g) + 0.0722 * lin(b)
+}
+/** The most a toned drawing's inner tones move away from the target colour (toward the ground's side), as a mix share. */
+const TONE_SPAN = 0.45
+/** A toned drawing reads when this share of its pixels reaches this contrast with the ground (as `logosByContrast`). */
+const TONE_BAR = 3
+const TONE_SHARE = 0.9
+
+/**
+ * The drawing in one colour family that reads on `ground`, its inner lightness pattern kept: each pixel's lightness within the
+ * drawing (darkest 0, lightest 1) is mapped onto `colour`, the part of the drawing farthest from the ground taking `colour`
+ * itself and the rest moving toward white (on a light ground, from the darkest) or black (on a dark ground) by at most
+ * `TONE_SPAN`. The span shrinks until the drawing reads, so details stay as long as they can.
+ * @param {Uint8Array} bytes - the cut-free drawing
+ * @param {Rgb} colour - the target, already reaching 3:1 on the ground (`logoColours` `.mark`)
+ * @param {Rgb} ground
+ * @returns {Promise<Buffer>}
+ */
+export async function toned(bytes, colour, ground) {
+  const { data, info } = await sharp(Buffer.from(bytes))
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true })
+  let lo = 1
+  let hi = 0
+  for (let o = 0; o < data.length; o += 4) {
+    if (data[o + 3] < 128) continue
+    const l = lum(data[o], data[o + 1], data[o + 2])
+    if (l < lo) lo = l
+    if (l > hi) hi = l
+  }
+  const lightGround = lum(ground.r, ground.g, ground.b) > 0.18
+  const lg = lum(ground.r, ground.g, ground.b)
+  const toward = lightGround ? 255 : 0
+  const span = hi - lo || 1
+  let out = Buffer.from(data)
+  for (let k = TONE_SPAN; k >= 0; k -= 0.05) {
+    out = Buffer.from(data)
+    let opaque = 0
+    let readable = 0
+    for (let o = 0; o < out.length; o += 4) {
+      const t = (lum(data[o], data[o + 1], data[o + 2]) - lo) / span
+      // On a light ground the darkest part is the target and lighter parts lift toward white; on a dark ground the reverse.
+      const away = (lightGround ? t : 1 - t) * k
+      out[o] = Math.round(colour.r + (toward - colour.r) * away)
+      out[o + 1] = Math.round(colour.g + (toward - colour.g) * away)
+      out[o + 2] = Math.round(colour.b + (toward - colour.b) * away)
+      if (out[o + 3] < 128) continue
+      opaque += 1
+      const l = lum(out[o], out[o + 1], out[o + 2])
+      if ((Math.max(l, lg) + 0.05) / (Math.min(l, lg) + 0.05) >= TONE_BAR) readable += 1
+    }
+    if (!opaque || readable / opaque >= TONE_SHARE) break
+  }
+  return pngOf(out, info.width, info.height)
+}

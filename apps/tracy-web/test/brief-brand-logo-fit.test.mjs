@@ -613,3 +613,32 @@ test('a labeller that sees no words keeps the whole mark beside the name', async
   assert.equal(fit.made, 'lockup')
   assert.equal(fit.how, 'the mark beside the name')
 })
+
+test('a light mark on a light ground is toned to the logo colour that reads, cut free, its inner details kept', async () => {
+  // A pale sand emblem with a lighter inner ring (two tones, not flat) on a deep teal tile.
+  const emblem = await svgPng(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600"><rect width="600" height="600" fill="#0e4d4f"/><circle cx="300" cy="300" r="200" fill="#e8d7b0"/><circle cx="300" cy="300" r="120" fill="none" stroke="#fbf3df" stroke-width="30"/><circle cx="300" cy="300" r="50" fill="#d9c08a"/></svg>`
+  )
+  const fit = await fitBriefLogo({ logo: { single: emblem }, name: 'Saltmarsh Swim School', frame: FRAME })
+  assert.equal(fit.made, 'lockup')
+  const bytes = fit.logo.light
+  const { data, info } = await sharp(bytes).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+  const markBox = await inkBoxOf(bytes, 0, info.height)
+  // Cut free: the corners of the mark's box are transparent (no tile behind it).
+  assert.equal(data[(markBox.top * info.width + markBox.left) * 4 + 3], 0)
+  // Toned: the mark reads at 3:1 on the light ground, in the tile's teal family, and keeps more than one tone.
+  assert.ok((await shareReaching(bytes, LIGHT_GROUND, 3, 0)) > 0.85)
+  const tones = new Set()
+  let teal = 0
+  let seen = 0
+  for (let y = markBox.top; y <= markBox.bottom; y += 1)
+    for (let x = markBox.left; x <= markBox.right; x += 1) {
+      const o = (y * info.width + x) * 4
+      if (data[o + 3] < 250) continue
+      seen += 1
+      tones.add(`${data[o] >> 4},${data[o + 1] >> 4},${data[o + 2] >> 4}`)
+      if (data[o + 1] > data[o] && data[o + 2] > data[o]) teal += 1
+    }
+  assert.ok(teal / seen > 0.9, `teal share ${teal / seen}`)
+  assert.ok(tones.size >= 2, 'the inner ring still shows')
+})

@@ -4,16 +4,16 @@
  *
  *   wrong shape (square, tall) the owner's mark, cut free of its tile when it has one (`logo-mark.js`), on the left of the
  *                              business name set as type (`logo-lockup.js`): a light-ground and a dark-ground variant, the
- *                              colours read from the owner's logo
+ *                              colours read from the owner's logo; a mark that does not read on a ground is toned to the
+ *                              logo's colour that does (the tile's colour first), never set back on its tile
  *   ...whose mark has words    (the labeller sees text, else `logo-mark-text.js` finds lines of letters) the picture alone
  *                              when the words stand apart from it, beside the typeset name; words woven into the picture,
- *                              the owner's logo alone (no name added), filling the frame's height, on its tile where needed
+ *                              the owner's logo alone (no name added), filling the frame's height, toned where it does not read
  *   no logo, a symbol drawn    the same lockup around a symbol the picture model drew (no letters: `brand-logo-symbol.js`),
  *                              recoloured from the TEMPLATE's own logo colours when it is flat
  *   no logo, nothing drawn     a wordmark: the name alone, in the template's logo colours
- *   wide and fitting           kept; a variant that does not read on a ground is recoloured when the logo is flat (else
- *                              the plate rule of `brand-joomla-logo-contrast.js` takes it); a wide logo on a tile loses
- *                              the tile
+ *   wide and fitting           kept; a variant that does not read on a ground is recoloured when the logo is flat, else
+ *                              toned; a wide logo on a tile loses the tile
  *
  * 🔒 NEVER A MODEL'S LETTERS: the name is always type set here. 🔒 A LOGO TRACY MADE SAYS SO (`made`), and the seam tells
  * the owner it is temporary. 🔒 BY SHAPE AND FRAME, NEVER BY TEMPLATE: the frame is the profile row's measured `frame`
@@ -24,7 +24,7 @@
 import { DARK_GROUND, LIGHT_GROUND, logoContrast } from './brand-joomla-logo-contrast.js'
 import { logoColours, paletteOf } from './logo-colours.js'
 import { composeLockup, LOCKUP_SCALE, markSlotOf } from './logo-lockup.js'
-import { readMark, recoloured } from './logo-mark.js'
+import { readMark, recoloured, toned } from './logo-mark.js'
 import { splitMarkText } from './logo-mark-text.js'
 import sharp from 'sharp'
 
@@ -69,7 +69,8 @@ export function frameOfProfile(/** @type {any} */ profile) {
 }
 
 /**
- * The mark each ground takes: the cut mark where it reads; else, flat, recoloured; else the drawing on its own tile.
+ * The mark each ground takes, always cut free of its tile: as drawn where it reads; else, flat, recoloured; else toned
+ * (`toned`: its lightness pattern mapped onto the logo's colour that reads there, the tile's when that is the one).
  * @param {NonNullable<Awaited<ReturnType<typeof readMark>>>} m
  * @param {ReturnType<typeof logoColours>} colours
  */
@@ -77,9 +78,10 @@ async function marksByGround(m, colours) {
   /** @type {Record<'light' | 'dark', Uint8Array>} */
   const out = /** @type {any} */ ({})
   for (const side of /** @type {const} */ (['light', 'dark'])) {
+    // 🔒 NEVER THE OWNER'S TILE BEHIND THE MARK (COO 29/10/2026): always the cut-free shape, toned where it does not read.
     if (await reads(m.mark, GROUNDS[side])) out[side] = m.mark
     else if (m.flat) out[side] = await recoloured(m.mark, colours[side].mark)
-    else out[side] = m.tiled ?? m.mark
+    else out[side] = await toned(m.mark, colours[side].mark, GROUNDS[side])
   }
   return out
 }
@@ -245,27 +247,12 @@ export async function fitBriefLogo({
 }
 
 /**
- * The mark's picture without its words, read like a mark: its tiled copy is the picture on the tile's colour, with a
- * margin of a tenth of its longer side.
+ * The mark's picture without its words, read like a mark.
  * @param {NonNullable<Awaited<ReturnType<typeof readMark>>>} m @param {Buffer} pictorial
  */
 async function pictureOnly(m, pictorial) {
   const meta = await sharp(pictorial).metadata()
-  const margin = Math.round(Math.max(meta.width ?? 1, meta.height ?? 1) / 10)
-  const tiled = m.tile
-    ? await sharp(pictorial)
-        .extend({
-          top: margin,
-          bottom: margin,
-          left: margin,
-          right: margin,
-          background: { ...m.tile, alpha: 1 }
-        })
-        .flatten({ background: m.tile })
-        .png()
-        .toBuffer()
-    : null
-  return { ...m, mark: pictorial, tiled, aspect: (meta.width ?? 1) / (meta.height ?? 1) }
+  return { ...m, mark: pictorial, aspect: (meta.width ?? 1) / (meta.height ?? 1) }
 }
 
 /**
