@@ -292,6 +292,28 @@ test('one card per real offering: extra class articles are hidden, kept ones tak
   assert.equal(h.fallbacks['article-73.1'].value, 'Personal fitness lessons')
 })
 
+test('#189 a card falls back to the quote about its own offering, never one that speaks for several', () => {
+  // Racquet club: "Tennis & Padel" names two offerings, so the Tennis and Padel cards take their own labels.
+  const h = plan(clubBrief(), combatMap())
+  assert.equal(h.fallbacks['article-70.1'].value, 'Tennis')
+  assert.equal(h.fallbacks['article-71.1'].value, 'Padel')
+  assert.equal(h.fallbacks['article-73.1'].value, 'Personal fitness lessons')
+  // Dental clinic: the Cleaning card's quote also names Check-ups, so the card takes its own label.
+  const brief = clinicBrief()
+  brief.reading.services[1].quote = 'Check-ups and Cleaning for the whole family'
+  const map = dentalMap()
+  map.slots.push(
+    ...[0, 1, 2].map((i) =>
+      item('module-20', 'services', 'desc', i, 'offering.description', 'service', 'Demo treatment words')
+    )
+  )
+  const c = plan(brief, map)
+  assert.deepEqual(
+    Object.values(c.fallbacks).map((f) => f.value),
+    ['Cleaning']
+  )
+})
+
 test('a statistic and a signature line the brief does not hold are emptied', () => {
   const h = plan(clubBrief(), combatMap())
   for (const key of [
@@ -350,7 +372,7 @@ test('the last look with the plan: plan values win, hidden cards take nothing, d
   assert.equal(out.values['module-50.team.title.0'], 'Anouk')
   assert.equal(out.evidence['module-50.team.title.0'], 'Anouk')
   assert.ok(out.drop.includes('module-50.team.title.3'), 'a hidden card is not written')
-  assert.equal(out.values['article-71.1'], 'Tennis & Padel')
+  assert.equal(out.values['article-71.1'], 'Padel')
   assert.equal(
     out.values['module-95.0'],
     'Contact',

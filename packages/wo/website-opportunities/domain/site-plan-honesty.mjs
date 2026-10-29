@@ -77,6 +77,35 @@ export function offeringsOfBrief(brief) {
     .map((s) => ({ id: s.id, label: text(s.label), quote: text(s.quote) || null }))
 }
 
+const folded = (value) =>
+  ` ${String(value ?? '')
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .trim()} `
+
+/**
+ * The words a kept offering card falls back to (spec TracyHQ/tracy#189): the brief's quote about THAT offering, else its own
+ * label. A quote that also names another offering of the brief ("Tennis & Padel" for the Padel card) speaks for several, so
+ * the card takes its own label instead; null when the offering has neither.
+ * @param {{id: string, label: string, quote: string | null}} assigned
+ * @param {Array<{id: string, label: string}>} offerings
+ * @returns {{value: string, reason: string} | null}
+ */
+export function ownQuote(assigned, offerings) {
+  const quote = text(assigned.quote)
+  const label = text(assigned.label)
+  if (quote) {
+    const said = folded(quote)
+    const mine = folded(label)
+    const others = offerings.filter(
+      (o) => o.id !== assigned.id && folded(o.label).trim() && !mine.includes(folded(o.label))
+    )
+    if (!others.some((o) => said.includes(folded(o.label))))
+      return { value: quote, reason: 'brief-offering-quote' }
+  }
+  return label ? { value: label, reason: 'brief-offering-label' } : null
+}
+
 /** The role groups of a map, with their slots, in map order; a demo-only entity's are left out. */
 function groupsOf(contentMap) {
   const demoOnly = new Set((contentMap?.entities ?? []).filter((e) => e?.demoOnly === true).map((e) => e.key))
@@ -239,9 +268,10 @@ export function planHonesty(brief, contentMap, { name = null, contact = {} } = {
         else if (role === 'person.bio') blanks.push(blankOf(slot, 'no-brief-fact'))
         else if (role === 'offering.name') setValue(slot, assigned.label, 'brief-offering')
         else if (OFFERING_FACTS.has(role)) blanks.push(blankOf(slot, 'no-brief-fact'))
-        else if (role === 'offering.description' && assigned.quote && fits(slot, assigned.quote))
-          fallbacks[slot.key] = { value: assigned.quote, reason: 'brief-offering-quote' }
-        else if (CONTACT_KIND[role]) {
+        else if (role === 'offering.description') {
+          const own = ownQuote(assigned, offerings)
+          if (own && fits(slot, own.value)) fallbacks[slot.key] = own
+        } else if (CONTACT_KIND[role]) {
           const fact = contact?.[CONTACT_KIND[role]]?.value
           fact ? setValue(slot, fact, 'brief-offering') : blanks.push(blankOf(slot, 'no-brief-fact'))
         }

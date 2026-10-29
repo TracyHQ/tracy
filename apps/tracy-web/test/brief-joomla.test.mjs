@@ -3623,7 +3623,7 @@ const boxing = contractFor(defaultContracts(), 'quickstart/ja-boxing/j6', '1.0.3
 test('JA Boxing, About and a name given: no demo company name survives in any line a visitor reads (ABOUT-3)', async () => {
   assert.ok(boxing, 'the checkout ships the JA Boxing j6 1.0.3 profile')
   const about = 'Saigon Iron Boxing Gym is a boxing gym in District 3, Saigon, for beginners and fighters.'
-  const { site } = await run({
+  const { site, prepared } = await run({
     contract: boxing,
     release: 'quickstart/ja-boxing/j6',
     // A model that keeps the demo's own words: what a real one does with a sentence it has no fact to replace.
@@ -3639,9 +3639,16 @@ test('JA Boxing, About and a name given: no demo company name survives in any li
     }
   })
   const written = Object.assign({}, ...site.applies.map((a) => a.changes ?? {}))
+  // #189: "We opened Studio Getfit in 2008" states a founding year; renamed it would put that year under the owner's name,
+  // so it is never renamed but emptied after the write.
+  const emptied = new Set((prepared.demoBlanks ?? []).map((s) => s.key))
+  for (const key of ['article-2.3', 'article-14.3']) {
+    assert.ok(emptied.has(key), `${key} is emptied`)
+    assert.doesNotMatch(String(written[key] ?? ''), /2008/)
+  }
   const leaks = []
   for (const slot of mapOf(boxing).slots) {
-    if (slot.type !== 'text' || slot.requiresEvidence) continue
+    if (slot.type !== 'text' || slot.requiresEvidence || emptied.has(slot.key)) continue
     const shown = String(written[slot.key] ?? slot.sample ?? '')
       // An address or a mailbox is the template's (K1), never a name a visitor reads.
       .replace(/[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g, '')

@@ -5,7 +5,11 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { demoNameChanges, renameDemoCompany } from '../src/sites/brief-engines/joomla-demo-names.js'
+import {
+  demoNameChanges,
+  renameDemoCompany,
+  statesFact
+} from '../src/sites/brief-engines/joomla-demo-names.js'
 
 const NAMES = ['Northgate', 'Northgate Industrial', 'Нортгейт']
 
@@ -57,4 +61,54 @@ test('a renamed line past its length is left; one with no name is not written', 
     }),
     { b: 'By Golden Crust Bakery' }
   )
+})
+
+test('#189 a demo line stating a year, a founding or a count is never renamed onto the owner, it is handed back to empty', () => {
+  // A bakery brief on an engineering demo, and a dental clinic brief on the same demo: the rule reads the sentence, not the trade.
+  const slots = [
+    { key: 'about.story', type: 'text' },
+    { key: 'about.count', type: 'text' },
+    { key: 'hero.lead', type: 'text' },
+    { key: 'footer.credit', type: 'text' },
+    { key: 'card.other', type: 'text' }
+  ]
+  const values = {
+    'about.story': 'We opened Northgate in 2008. Our team builds with care.',
+    'about.count': 'Northgate Industrial has served over a thousand clients.',
+    'hero.lead': 'Welcome to Northgate, where every detail matters.',
+    'footer.credit': '© 2024 Northgate. All rights reserved.',
+    'card.other': 'Founded in 1999, a partner we trust.'
+  }
+  for (const owner of ['Golden Crust Bakery', 'Bright Smile Dental']) {
+    /** @type {string[]} */
+    const factLines = []
+    const changes = demoNameChanges({
+      slots,
+      valueOf: (s) => values[s.key],
+      names: NAMES,
+      replacement: owner,
+      factLines
+    })
+    assert.deepEqual(changes, {
+      'hero.lead': `Welcome to ${owner}, where every detail matters.`,
+      'footer.credit': `© 2024 ${owner}. All rights reserved.`
+    })
+    assert.deepEqual(factLines, ['about.story', 'about.count'])
+    for (const text of Object.values(changes)) assert.doesNotMatch(text, /opened|since|founded|clients/i)
+  }
+  // A fact sentence that does not name the demo company is no rename at all; a plain line naming it is no fact.
+  assert.equal(statesFact('Founded in 1999, a partner we trust.', NAMES), false)
+  assert.equal(statesFact('Ask Northgate about a quote.', NAMES), false)
+  assert.equal(statesFact('Northgate, established 1987.', NAMES), true)
+})
+
+test('#189 a figure that is part of a demo name is no fact', () => {
+  assert.equal(statesFact('Northgate wins the Harbour 2 tender', ['Northgate', 'Harbour 2']), false)
+  assert.equal(statesFact('Harbour 2 opened in 2011', ['Harbour 2']), true)
+})
+
+test('#189 a bare figure beside the name is a label; a year or a tally is a fact', () => {
+  assert.equal(statesFact('Northgate wins the Harbour 2 tender', ['Northgate']), false)
+  assert.equal(statesFact('Northgate: 500+ happy guests', ['Northgate']), true)
+  assert.equal(statesFact('Northgate since 1994', ['Northgate']), true)
 })

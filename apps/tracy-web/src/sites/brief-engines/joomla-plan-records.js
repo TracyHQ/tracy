@@ -291,7 +291,8 @@ export function recordSteps({ honesty, modules, articles = new Map() }) {
  */
 export async function planRecordSteps({ apply, siteKey, ctx, woContent, extraBlanks = [] }) {
   const plan = await woContent?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
-  const planned = plan?.honesty
+  // With no site plan, the demo lines handed in (a demo fact under the demo company's name, #189) are still emptied.
+  const planned = plan?.honesty ?? (extraBlanks.length > 0 ? {} : null)
   if (!planned) return { steps: [] }
   // The demo lines the writer left, emptied beside the plan's own fact fields (`leftDemoWords`).
   const seen = new Set((planned.blanks ?? []).map((b) => b.key))

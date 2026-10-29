@@ -935,6 +935,8 @@ export function createJoomlaEngine({
       const name = String(ctx.normalized.name ?? '').trim()
       /** @type {string[]} the `keep` slots whose words only change by the rename, written in Apply beside the plan */
       const renamedKeep = []
+      /** @type {string[]} the lines naming the demo company beside a fact (a year, a founding, a count): emptied, never renamed */
+      const factLines = []
       if (name && nameAnswered(ctx.normalized)) {
         const names = listOf(declaredCopy(ctx.contract.dir).demoCompanyNames)
         const declared = declaredSlots(ctx.contract)
@@ -945,9 +947,12 @@ export function createJoomlaEngine({
           ),
           valueOf: (slot) => (slot.key in kept ? kept[slot.key] : String(slot.sample ?? '')),
           names,
-          replacement: tokenized ? '{site.name}' : name
+          replacement: tokenized ? '{site.name}' : name,
+          factLines
         })
         Object.assign(kept, renamed)
+        // A fact line the writer echoed holds the demo's words too: it leaves the plan and is emptied below.
+        for (const key of factLines) delete kept[key]
         const keepKeys = new Set(declared.map((slot) => slot.key))
         renamedKeep.push(...Object.keys(renamed).filter((key) => keepKeys.has(key)))
       }
@@ -1025,6 +1030,13 @@ export function createJoomlaEngine({
           ctx.time('demoLinesEmptied', left.counts.blanked)
         }
       }
+      // A demo line stating a fact beside the demo company's name, given no other words, is emptied after the write (#189).
+      const blanked = new Set(demoBlanks.map((slot) => slot.key))
+      demoBlanks.push(
+        ...state.slots.filter(
+          (slot) => factLines.includes(slot.key) && !(slot.key in kept) && !blanked.has(slot.key)
+        )
+      )
       // The sourced words, as their sources say them: no guard of the model's words is theirs.
       Object.assign(kept, copyPins?.pins ?? {})
 

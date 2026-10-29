@@ -26,7 +26,7 @@ import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { FACT_RULES, factsOf, ungrounded } from './guard.js'
 import { jsonObjectIn, pool } from './shared.js'
-import { renameDemoCompany } from './joomla-demo-names.js'
+import { renameDemoCompany, statesFact } from './joomla-demo-names.js'
 
 /** A listing page; the door's own ceiling. */
 const PAGE = 100
@@ -917,7 +917,9 @@ export function pageMetaSteps({ rows, visible, owner, wroteIn, shipped, demoName
       // g58-ess-j-blank (JA Essence j6 1.0.4): the home's "Minimal Blogging Joomla Template - JA Essence" was emptied, so the
       // page carried no description at all, where the demo with the owner's name was the rule.
       if (!TITLE_FIELDS.has(field) && description === '') {
-        next[field] = name === '' ? held : renameDemoCompany(held, demoNames, name)
+        // A demo description stating a fact (a year, a founding, a count) is emptied, never renamed onto the owner (#189).
+        next[field] =
+          name === '' ? held : statesFact(held, demoNames) ? '' : renameDemoCompany(held, demoNames, name)
         continue
       }
       // A share preview the customer gave nothing for keeps the template's: a blank answer is no answer.

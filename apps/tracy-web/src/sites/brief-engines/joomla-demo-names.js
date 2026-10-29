@@ -54,6 +54,33 @@ export function renameDemoCompany(value, names, replacement) {
   return out + rename(value.slice(at))
 }
 
+/** Words that make a sentence a fact about a business: when it began, how long, how many. */
+const FACT_WORDS =
+  /\b(?:since|founded|established|opened|est\.?|years?|decades?|first|award(?:ed|s)?|members?|clients?|customers?|projects?)\b/i
+/** A year ("in 2008") or a tally ("500+", "100k", "98%"): a bare figure ("Phase 2") is a label, not a fact. */
+const YEAR = /\b(?:1[89]|20)\d{2}\b/
+const TALLY = /\d\s*(?:\+|k\b|%)/i
+/** A credit line states a right, not a fact about the business: its year is the template's, renamed like any word. */
+const CREDIT = /©|\bcopyright\b|all rights reserved/i
+
+/**
+ * Whether a sentence of `value` that names the demo company also states a fact: a figure or a word of founding, age or count.
+ * @param {string} value
+ * @param {string[]} names
+ */
+export function statesFact(value, names) {
+  const wanted = names.filter((n) => typeof n === 'string' && n.trim().length >= 3)
+  for (const sentence of value.split(/(?<=[.!?])\s+|\n+/)) {
+    if (!wanted.some((n) => sentence.includes(n)) || CREDIT.test(sentence)) continue
+    // A figure inside a name ("Harbour 2") is the name's, not a fact: the names are read out first, longest first.
+    const rest = [...wanted]
+      .sort((a, b) => b.length - a.length)
+      .reduce((s, n) => s.split(n).join(' '), sentence)
+    if (YEAR.test(rest) || TALLY.test(rest) || FACT_WORDS.test(rest)) return true
+  }
+  return false
+}
+
 /**
  * The contract writes that rename the demo company in the text slots `values` holds (a slot's key → the words it will hold).
  * A slot whose words would pass its length is left as it is.
@@ -62,9 +89,10 @@ export function renameDemoCompany(value, names, replacement) {
  * @param {(slot: any) => string | null} input.valueOf - the words a slot will hold, or null for a slot this does not touch
  * @param {string[]} input.names
  * @param {string} input.replacement
+ * @param {string[]} [input.factLines] - filled with the keys of the lines left unrenamed because they state a fact
  * @returns {Record<string, string>}
  */
-export function demoNameChanges({ slots, valueOf, names, replacement }) {
+export function demoNameChanges({ slots, valueOf, names, replacement, factLines = [] }) {
   /** @type {Record<string, string>} */
   const changes = {}
   if (names.length === 0 || !replacement) return changes
@@ -74,6 +102,12 @@ export function demoNameChanges({ slots, valueOf, names, replacement }) {
     if (typeof value !== 'string' || value === '') continue
     const renamed = renameDemoCompany(value, names, replacement)
     if (renamed === value) continue
+    // 🔒 A RENAME NEVER STATES A FACT UNDER THE OWNER'S NAME (spec TracyHQ/tracy#189): "We opened Studio X in 2008" renamed is a
+    // founding year nobody gave. Such a line keeps the demo's words here, and the caller empties it (`factLines`).
+    if (statesFact(value, names)) {
+      factLines.push(slot.key)
+      continue
+    }
     if (typeof slot.maxCharacters === 'number' && [...renamed].length > slot.maxCharacters) continue
     changes[slot.key] = renamed
   }

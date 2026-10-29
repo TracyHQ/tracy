@@ -25,11 +25,24 @@ export function offeringLeftovers(ctx, slotFindings) {
   return out
 }
 
-/** C09: the label findings whose demo sample holds a word of the demo's own (no interface word, no word of the brief). */
+/**
+ * C09: the label findings whose demo sample holds a word of the demo's own. Not the demo's: an interface word, a word of the
+ * brief, or a word of the address of a page the site serves ("Classes" on a site that keeps /classes names that page). A
+ * one-word label is the demo's only where the page shows it AS a label (a link or a button), never a word met in running text.
+ */
 export function labelLeftovers(ctx, slotFindings) {
   const own = new Set(wordsOf(ctx.demo.own))
+  // A page's address word in either number: /classes names "Class" and "Classes" alike.
+  for (const page of ctx.served)
+    for (const w of wordsOf(page.path)) for (const form of [w, w.replace(/e?s$/, ''), `${w}s`]) own.add(form)
   const sampleOf = new Map(ctx.demo.slots.map(({ slot }) => [slot.key, slot.sample]))
-  return slotFindings.filter((f) => demoWordsOf(sampleOf.get(f.place), own).length > 0)
+  const pageOf = new Map(ctx.served.map((p) => [p.path, p]))
+  return slotFindings.filter((f) => {
+    if (demoWordsOf(sampleOf.get(f.place), own).length === 0) return false
+    if (wordsOf(f.found).length > 1) return true
+    const page = pageOf.get(f.page)
+    return Boolean(page?.links?.some((l) => wordsOf(l.text).join(' ') === wordsOf(f.found).join(' ')))
+  })
 }
 
 /** C17: a printed price the brief does not hold, beside the fact findings already made. */

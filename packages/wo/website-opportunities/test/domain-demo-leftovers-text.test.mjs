@@ -69,3 +69,33 @@ test('a bakery template under a dental clinic: the same rule, other words', () =
   )
   assert.deepEqual(c09([page('/', '<h2>Dental care in Talheim</h2>')], bakery, clinic), [])
 })
+
+test('#189 a label naming a page the site serves, or a one-word sample met only in running text, is no C09', () => {
+  const studio = {
+    entities: [],
+    pages: [],
+    slots: [
+      slot('menuItem-7.0', 'editorial.menu_label', 'Class'),
+      slot('menuItem-8.0', 'editorial.menu_label', 'Plans'),
+      slot('module-3.0', 'editorial.button_label', 'Light'),
+      slot('module-3.1', 'editorial.button_label', 'Sparring')
+    ]
+  }
+  const pages = [
+    page(
+      '/classes',
+      '<a href="/classes">Class</a><a href="/plans">Plans</a><p>Light snacks after every lesson.</p>'
+    ),
+    page('/plans', '<a href="/contact">Sparring</a>')
+  ]
+  assert.deepEqual(c09(pages, studio, swim), ['module-3.1'])
+  // A bakery's "Light" rye on a page with no such link is not a demo button either; a demo button shown as one is.
+  const bakery = {
+    entities: [],
+    pages: [],
+    slots: [slot('module-4.0', 'editorial.button_label', 'Proofing')]
+  }
+  const loaves = { business: { name: 'Crumb and Crust' }, reading: { about: 'Rye loaves.' } }
+  assert.deepEqual(c09([page('/', '<p>Proofing takes a night.</p>')], bakery, loaves), [])
+  assert.deepEqual(c09([page('/', '<a href="/">Proofing</a>')], bakery, loaves), ['module-4.0'])
+})
