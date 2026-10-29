@@ -607,6 +607,12 @@ POLICY = {
         "posts": {"comment_count"},
         "term_taxonomy": {"count"},
     },
+    # The source tables of those counters can change while the counter's own row stays put.
+    "rebuildDependencies": {
+        "term_relationships": {"term_taxonomy"},
+        "posts": {"term_taxonomy"},
+        "comments": {"posts"},
+    },
     # Stamped by every save: when both sites saved one post, the live site's stamp, not a conflict.
     "volatileColumns": {"post_modified", "post_modified_gmt", "link_updated"},
     # A column of a table the adapter does not know, named as if it held a post's, a user's, a term's

@@ -408,3 +408,123 @@ test('WooCommerce compatibility refunds count once and a missing root table keep
   assert.equal(missing.counts.records, 1)
   assert.equal(sql('SELECT post_title FROM wc_m.wp_posts WHERE ID=1'), 'Kept fallback edit')
 })
+
+function counterMerge({ ours = '', theirs = '', decisions = {} }) {
+  sql(
+    ['cnt_b', 'cnt_m', 'cnt_t', 'cnt_w']
+      .map(
+        (schema) => `
+    DROP DATABASE IF EXISTS ${schema}; CREATE DATABASE ${schema}; USE ${schema};
+    CREATE TABLE wp_posts (ID bigint NOT NULL PRIMARY KEY, post_type varchar(30), post_status varchar(20), post_title varchar(100), comment_count bigint DEFAULT 0);
+    INSERT INTO wp_posts VALUES (1, 'post', 'publish', 'First', 0), (2, 'post', 'publish', 'Second', 0);
+    CREATE TABLE wp_term_taxonomy (term_taxonomy_id bigint NOT NULL PRIMARY KEY, term_id bigint, taxonomy varchar(30), count bigint);
+    INSERT INTO wp_term_taxonomy VALUES (1, 1, 'category', 0);
+    CREATE TABLE wp_term_relationships (object_id bigint NOT NULL, term_taxonomy_id bigint NOT NULL, term_order int DEFAULT 0, PRIMARY KEY (object_id, term_taxonomy_id));
+    INSERT INTO wp_term_relationships VALUES (1, 1, 0);
+    CREATE TABLE wp_comments (comment_ID bigint NOT NULL PRIMARY KEY, comment_post_ID bigint, comment_approved varchar(20), comment_content text);
+    INSERT INTO wp_comments VALUES (1, 1, '1', 'Original');
+  `
+      )
+      .join('\n') + `USE cnt_m; ${ours}\nUSE cnt_t; ${theirs}`
+  )
+  return JSON.parse(
+    py(`print(json.dumps(engine.DbMerge(sql, 'cnt_b', 'cnt_m', 'cnt_t', 'cnt_w', 'wordpress', 'wp_',
+    json.loads(${JSON.stringify(JSON.stringify(decisions))})).run()))`)
+  )
+}
+
+for (const rowMerge of [false, true]) {
+  test(
+    `WordPress counters follow dependency mutations (${rowMerge ? 'row merge' : 'whole table'})`,
+    opts,
+    () => {
+      const cases = [
+        {
+          table: 'term_relationships',
+          change: 'INSERT INTO wp_term_relationships VALUES (2, 1, 0);',
+          copy: 'UPDATE wp_term_relationships SET term_order=2 WHERE object_id=1;',
+          rebuild: ['wp_term_taxonomy'],
+          check: 'SELECT COUNT(*) FROM cnt_m.wp_term_relationships',
+          value: '2'
+        },
+        {
+          table: 'term_relationships',
+          change: 'DELETE FROM wp_term_relationships WHERE object_id=1;',
+          copy: 'INSERT INTO wp_term_relationships VALUES (2, 1, 0);',
+          rebuild: ['wp_term_taxonomy'],
+          check: 'SELECT GROUP_CONCAT(object_id) FROM cnt_m.wp_term_relationships',
+          value: rowMerge ? '2' : 'NULL'
+        },
+        {
+          table: 'posts',
+          change: "UPDATE wp_posts SET post_status='draft' WHERE ID=1;",
+          copy: "UPDATE wp_posts SET post_title='Copy' WHERE ID=2;",
+          rebuild: ['wp_posts', 'wp_term_taxonomy'],
+          check: 'SELECT post_status FROM cnt_m.wp_posts WHERE ID=1',
+          value: 'draft'
+        },
+        {
+          table: 'posts',
+          change: "UPDATE wp_posts SET post_type='page' WHERE ID=1;",
+          copy: "UPDATE wp_posts SET post_title='Copy' WHERE ID=2;",
+          rebuild: ['wp_posts', 'wp_term_taxonomy'],
+          check: 'SELECT post_type FROM cnt_m.wp_posts WHERE ID=1',
+          value: 'page'
+        },
+        {
+          table: 'comments',
+          change: "INSERT INTO wp_comments VALUES (2, 1, '1', 'Added');",
+          copy: "UPDATE wp_comments SET comment_content='Copy' WHERE comment_ID=1;",
+          rebuild: ['wp_posts'],
+          check: 'SELECT COUNT(*) FROM cnt_m.wp_comments',
+          value: '2'
+        },
+        {
+          table: 'comments',
+          change: 'DELETE FROM wp_comments WHERE comment_ID=1;',
+          copy: "INSERT INTO wp_comments VALUES (2, 1, '1', 'Copy');",
+          rebuild: ['wp_posts'],
+          check: 'SELECT GROUP_CONCAT(comment_ID) FROM cnt_m.wp_comments',
+          value: rowMerge ? '2' : 'NULL'
+        },
+        {
+          table: 'comments',
+          change: "UPDATE wp_comments SET comment_approved='0' WHERE comment_ID=1;",
+          copy: "INSERT INTO wp_comments VALUES (2, 2, '1', 'Copy');",
+          rebuild: ['wp_posts'],
+          check: 'SELECT comment_approved FROM cnt_m.wp_comments WHERE comment_ID=1',
+          value: '0'
+        }
+      ]
+      for (const c of cases) {
+        const result = counterMerge({ ours: rowMerge ? c.copy : '', theirs: c.change })
+        assert.equal(sql(c.check), c.value, c.change)
+        assert.deepEqual(result.rebuild, c.rebuild, `${c.table}: ${c.change}`)
+      }
+    }
+  )
+}
+
+test('WordPress counter dependencies keep decisions and missing target tables safe', opts, () => {
+  const conflict = {
+    ours: "UPDATE wp_comments SET comment_approved='spam' WHERE comment_ID=1;",
+    theirs: "UPDATE wp_comments SET comment_approved='0' WHERE comment_ID=1;"
+  }
+  const kept = counterMerge(conflict)
+  assert.equal(sql('SELECT comment_approved FROM cnt_m.wp_comments WHERE comment_ID=1'), 'spam')
+  assert.deepEqual(kept.rebuild, [])
+  const taken = counterMerge({
+    ...conflict,
+    decisions: { 'db:wp_comments:["1"]:comment_approved': 'theirs' }
+  })
+  assert.equal(sql('SELECT comment_approved FROM cnt_m.wp_comments WHERE comment_ID=1'), '0')
+  assert.deepEqual(taken.rebuild, ['wp_posts'])
+  const dropped = counterMerge({ theirs: 'DROP TABLE wp_term_taxonomy; DROP TABLE wp_term_relationships;' })
+  assert.equal(
+    sql(
+      "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='cnt_m' AND table_name='wp_term_taxonomy'"
+    ),
+    '0'
+  )
+  assert.deepEqual(dropped.rebuild, [])
+})
