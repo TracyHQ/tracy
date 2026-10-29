@@ -32,6 +32,7 @@ import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { ownStylesheets } from '../../lib/own-stylesheets.js'
 import { readMenu, readModules, SKIPPED_MENUS, writeSteps } from './joomla-tidy.js'
+import { emptyFrames } from './empty-frames.js'
 import { writeHeadModule } from './joomla-head-module.js'
 import { sweepDeadLinks } from './joomla-link-sweep.js'
 
@@ -250,6 +251,7 @@ export async function writeOutsideMap({
   // The head block: backgrounds read from what the site serves, videos and pictures from the plan, dead links from the menu.
   let backgrounds = /** @type {Array<{selector: string, file: string}>} */ ([])
   let picture = null
+  let frames = /** @type {string[]} */ ([])
   if (reader) {
     try {
       const paths = [
@@ -264,6 +266,7 @@ export async function writeOutsideMap({
         if (html) pages.push({ html })
       }
       picture = ownerPictureOf(pages[0]?.html ?? null)
+      frames = emptyFrames(pages.map((p) => p.html))
       const styles = []
       for (const href of ownStylesheets(pages)) {
         const css = await reader.text(href).catch(() => null)
@@ -287,7 +290,8 @@ export async function writeOutsideMap({
     picture,
     videos: (outside.videos ?? []).filter((v) => v.decision === 'still' && v.demo).map((v) => v.demo),
     files: (outside.errorPages ?? []).map((p) => p.file),
-    links
+    links,
+    frames
   })
   if (!block) return done
   try {
