@@ -178,3 +178,40 @@ test('the writer sends one batch with the fixed modules and entries', async () =
   assert.match(sent[0].fields.content, /tel:\+97140000000/)
   assert.deepEqual(notes, [])
 })
+
+test('an article body: an empty link is rewritten by role, an unresolved one keeps its node', () => {
+  const body = '<p><a href="#">Book your table</a> <a href="#">Sourdough</a></p>'
+  const { html, changed } = sweepHtml(ctx, body, { keepNodes: true })
+  assert.equal(changed, 1)
+  assert.match(html, /<a href="index\.php\?Itemid=103">Book your table<\/a>/)
+  assert.match(html, /<a href="#">Sourdough<\/a>/)
+})
+
+test('the writer rewrites a link in a published article body, not in a taken-off one', async () => {
+  const sent = []
+  const rows = {
+    menuItem: menu,
+    module: [],
+    article: [
+      { id: 7, title: 'Cakes', state: 1, introtext: '<a href="#">Call us</a>', fulltext: '' },
+      { id: 8, title: 'Gone', state: 0, introtext: '<a href="#">Call us</a>' }
+    ]
+  }
+  const apply = async ({ action, params }) => {
+    if (action === 'content.list') return { ok: true, items: params.offset ? [] : (rows[params.kind] ?? []) }
+    if (action === 'content.batch') sent.push(...params.operations)
+    return { ok: true }
+  }
+  await sweepDeadLinks({
+    apply,
+    siteKey: 's',
+    plan: { contact: { phone: { href: 'tel:+97140000000' } } },
+    applyId: 'a',
+    note: () => {}
+  })
+  assert.deepEqual(
+    sent.map((s) => s.id),
+    [7]
+  )
+  assert.match(sent[0].fields.introtext, /tel:\+97140000000/)
+})

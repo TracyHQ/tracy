@@ -10,6 +10,9 @@ import { pageRole } from './page-plan.mjs'
 
 /** A file a build uploaded for the business: never a demo file. */
 const OWNER_UPLOAD = /(^|\/)images\/tracy[-_/]/i
+/** Picture roles the picture rules of the check read (general, shared, icon). */
+const PICTURE_RULE_ROLES =
+  /^(?:business\.(?:hero|gallery)_image|editorial\.(?:illustration|item_icon)|offering\.image|person\.image|article\.image)$/
 const IMAGE_FILE = /images\/[^"'?#\s)]+\.(?:jpe?g|png|webp|svg|gif|avif)/i
 /** Address words that name a kind of page, never a demo's subject (`about-us`, `our-services`). */
 const GENERIC = new Set(
@@ -70,8 +73,18 @@ function backgroundRules(css) {
 
 /** C10: a background picture the page or its stylesheets paint that no slot holds, no build uploaded and no block repaints. */
 export function demoBackgroundLeftovers(ctx) {
+  // A slot's file is a leftover of its own kind where a picture rule (C01, C04, C06) reads it; any other slot picture (a
+  // masthead or section background a module parameter paints) is read here, as no other rule sees a background.
+  const readByPictureRules = new Set(
+    ctx.demo.slots
+      .filter(({ slot }) => PICTURE_RULE_ROLES.test(String(slot.role)))
+      .map(({ probe }) => probe.file)
+      .filter(Boolean)
+  )
   const demoFile = (file) =>
     file && !OWNER_UPLOAD.test(file) && !ctx.demo.files.has(file) && !ctx.demo.slotFiles.has(file)
+      ? true
+      : Boolean(file && !OWNER_UPLOAD.test(file) && !readByPictureRules.has(file))
   const out = []
   for (const page of ctx.served)
     for (const url of page.backgrounds) {
@@ -80,9 +93,10 @@ export function demoBackgroundLeftovers(ctx) {
         out.push({ page: page.path, place: 'background-image', found: file })
     }
   const first = ctx.served[0]
+  // A stylesheet that paints a picture the content map holds is still a demo background: no other kind reads a rule.
   for (const style of ctx.styles ?? [])
     for (const { selector, file } of backgroundRules(style.css))
-      if (demoFile(file) && !(first && hides(first, file)))
+      if (file && !OWNER_UPLOAD.test(file) && !(first && hides(first, file)))
         out.push({ page: style.href ?? 'stylesheet', place: selector, found: /** @type {string} */ (file) })
   return out
 }

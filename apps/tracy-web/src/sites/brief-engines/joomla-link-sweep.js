@@ -124,28 +124,33 @@ export function resolveLink(ctx, href, text) {
   return { keep: true }
 }
 
-/** A module's HTML with every unusable link rewritten or taken out. */
-export function sweepHtml(ctx, html) {
+/**
+ * A module's HTML with every unusable link rewritten or taken out. With `keepNodes` (an article's body, whose nodes the
+ * content contract binds by path) a link is only ever rewritten to a target, never removed or unwrapped.
+ */
+export function sweepHtml(ctx, html, { keepNodes = false } = {}) {
   let changed = 0
   const swap = (whole, attrs, inner) => {
     const href = HREF.exec(attrs)?.[3]
     if (href === undefined) return whole
     const to = resolveLink(ctx, href, textOf(inner))
-    if (to.keep) return whole
+    if (to.keep || (!to.href && keepNodes)) return whole
     changed += 1
     if (to.href)
       return `<a${attrs.replace(HREF, (_m, lead, quote) => `${lead}${quote}${to.href}${quote}`)}>${inner}</a>`
     return /\bbtn\b|button/i.test(attrs) || textOf(inner) === '' ? '' : inner
   }
-  let out = String(html ?? '').replace(
-    /<li\b[^>]*>\s*(<a\b([^>]*)>([\s\S]*?)<\/a\s*>)\s*<\/li>/gi,
-    (whole, anchor, attrs, inner) => {
-      const before = changed
-      const made = swap(anchor, attrs, inner)
-      if (changed === before) return whole
-      return /<a\b/i.test(made) ? whole.replace(anchor, () => made) : ''
-    }
-  )
+  let out = keepNodes
+    ? String(html ?? '')
+    : String(html ?? '').replace(
+        /<li\b[^>]*>\s*(<a\b([^>]*)>([\s\S]*?)<\/a\s*>)\s*<\/li>/gi,
+        (whole, anchor, attrs, inner) => {
+          const before = changed
+          const made = swap(anchor, attrs, inner)
+          if (changed === before) return whole
+          return /<a\b/i.test(made) ? whole.replace(anchor, () => made) : ''
+        }
+      )
   out = out.replace(ANCHOR, swap)
   return { html: out, changed }
 }
@@ -228,6 +233,16 @@ export async function sweepDeadLinks({ apply, siteKey, plan, applyId, note }) {
     for (const row of menu) {
       const step = sweepEntry(ctx, row)
       if (step) steps.push(step)
+    }
+    for (const a of articles) {
+      if (Number(a.state) !== 1) continue
+      const fields = {}
+      for (const column of ['introtext', 'fulltext'])
+        if (typeof a[column] === 'string' && a[column].includes('<a')) {
+          const made = sweepHtml(ctx, a[column], { keepNodes: true })
+          if (made.changed) fields[column] = made.html
+        }
+      if (Object.keys(fields).length) steps.push({ kind: 'article', id: Number(a.id), fields })
     }
     for (const m of modules) {
       if (Number(m.published) !== 1 || m.note === 'tracy-leftovers') continue

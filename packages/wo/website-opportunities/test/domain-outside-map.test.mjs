@@ -185,6 +185,8 @@ test('C10: a stylesheet or inline background naming a demo file outside the cont
   })
   assert.deepEqual(found, [
     { selector: '.t4-content', file: 'images/demo/others/bg-cta.jpg' },
+    // A page-title band is a demo background even when a content map slot holds the same file (the slot's door cannot reach a rule).
+    { selector: '.page-title', file: 'images/demo/hero/ring.jpg' },
     { selector: '[style*="images/demo/others/band.jpg"]', file: 'images/demo/others/band.jpg' }
   ])
   // Another shape: a clinic theme's header band.

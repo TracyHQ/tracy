@@ -222,16 +222,15 @@ function rulesOf(css) {
  * The demo's background pictures a served site paints outside the content map: each stylesheet rule and each inline style
  * that paints an `images/` file no slot of the content map holds and no build uploaded. A rule gives its own selector; an
  * inline style (a module's parameter) is reached by the file it names.
- * @param {{styles?: Array<{css: string}>, pages?: Array<{html: string}>, contentMap?: {slots?: any[]} | null}} input
+ * @param {{styles?: Array<{css: string}>, pages?: Array<{html: string}>}} input
  * @returns {Array<{selector: string, file: string}>}
  */
-export function demoBackgrounds({ styles = [], pages = [], contentMap = null }) {
-  const slotFiles = new Set(
-    (contentMap?.slots ?? []).map((s) => (s?.type === 'image' ? fileOf(s.sample) : null)).filter(Boolean)
-  )
+export function demoBackgrounds({ styles = [], pages = [] }) {
+  // A picture a served page still paints is a demo background even when a content map slot holds the same file: the slot is
+  // written where a door reaches it, and this one (a style, a module parameter) no door reaches.
   const demoFile = (url) => {
     const file = fileOf(url)
-    return file && !OWNER_UPLOAD.test(file) && !slotFiles.has(file) ? file : null
+    return file && !OWNER_UPLOAD.test(file) ? file : null
   }
   const seen = new Set()
   const out = []
@@ -262,6 +261,9 @@ export function demoBackgrounds({ styles = [], pages = [], contentMap = null }) 
 /** A selector that is the whole page: html, body, or a framework's content wrapper. */
 const PAGE_LEVEL = /^(?:html|body|\.t4-content|\.t4-wrapper|\.t3-wrapper|#t3-content|\.t3-content)$/i
 
+/** A background that is a mark, not a scene: a logo, a watermark, an overlay, a pattern or a mask, by file or selector. */
+const DECORATION = /logo|watermark|(?:^|[^a-z])wm[-_]|overlay|pattern|texture|(?:^|[^a-z])mask/i
+
 const cssString = (value) => String(value).replace(/["\\\n\r]/g, '')
 
 /**
@@ -286,20 +288,26 @@ export function leftoverHeadBlock({
   if (backgrounds.length) {
     const paint = picture ? `url("/${cssString(picture).replace(/^\/+/, '')}")` : 'none'
     rules.push(`/* demo backgrounds: ${[...new Set(backgrounds.map((b) => cssString(b.file)))].join(' ')} */`)
-    // The page itself (body or the framework's content wrapper) is never covered by one picture: it goes plain.
-    const wide = [
-      ...new Set(backgrounds.filter((b) => PAGE_LEVEL.test(b.selector.trim())).map((b) => b.selector))
-    ]
-    const parts = [
-      ...new Set(backgrounds.filter((b) => !PAGE_LEVEL.test(b.selector.trim())).map((b) => b.selector))
-    ]
+    // The page itself (body or the framework's content wrapper) is never covered by one picture: it goes plain. So does a
+    // logo, a watermark or an overlay: a photograph is not their replacement.
+    const plain = (b) => PAGE_LEVEL.test(b.selector.trim()) || DECORATION.test(`${b.file} ${b.selector}`)
+    const wide = [...new Set(backgrounds.filter(plain).map((b) => b.selector))]
+    const parts = [...new Set(backgrounds.filter((b) => !plain(b)).map((b) => b.selector))]
     if (parts.length) rules.push(`${parts.join(',\n')}{background-image:${paint} !important}`)
     if (wide.length) rules.push(`${wide.join(',\n')}{background-image:none !important}`)
   }
   if (videos.length) {
     const sel = [...new Set(videos)].flatMap((id) => {
       const v = cssString(id)
-      return [`[data-src*="${v}"]`, `[href*="${v}"]`, `[data-video*="${v}"]`, `iframe[src*="${v}"]`]
+      return [
+        `[data-src*="${v}"]`,
+        `[href*="${v}"]`,
+        `[data-video*="${v}"]`,
+        `[data-url*="${v}"]`,
+        `[videoid="${v}"]`,
+        `iframe[src*="${v}"]`,
+        `video source[src*="${v}"]`
+      ]
     })
     rules.push(`${sel.join(',\n')}{display:none !important}`)
   }
