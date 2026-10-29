@@ -1874,7 +1874,13 @@ test('parseEmdashIndex / parseEmdashWrite: each failure keeps its kind; a cut li
 
 test('browserArgv: the in-container backstop outlasts a deadline longer than its own default', () => {
   const at = (deadlineMs) => {
-    const argv = browserArgv({ container: 'demo9-web-1', mode: 'view', url: 'http://127.0.0.1/', origin: 'http://127.0.0.1', deadlineMs })
+    const argv = browserArgv({
+      container: 'demo9-web-1',
+      mode: 'view',
+      url: 'http://127.0.0.1/',
+      origin: 'http://127.0.0.1',
+      deadlineMs
+    })
     return Number(argv[argv.indexOf('timeout') + 3])
   }
   assert.equal(at(undefined), BROWSER_CONTAINER_TIMEOUT_S)

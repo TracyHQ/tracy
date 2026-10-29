@@ -948,7 +948,7 @@ test('captureView: where the site has no browser, the visual check’s picture i
   assert.equal(onHost.length, 1)
 })
 
-test('captureView: a picture nobody waits on has the cold deadline, on the site browser and on dsh\'s', async () => {
+test("captureView: a picture nobody waits on has the cold deadline, on the site browser and on dsh's", async () => {
   const r = runner({ stdout: line({ y: 0, loaded: true, jpeg: JPEG.toString('base64') }) })
   const drawn = await captureView({
     label: 'demo1',
@@ -968,7 +968,11 @@ test('captureView: a picture nobody waits on has the cold deadline, on the site 
   assert.equal(timeoutMs, VIEW_COLD_DEADLINE_MS + VIEW_EXEC_MS - VIEW_DEADLINE_MS)
   /** @type {any[]} */
   const onHost = []
-  const missing = runner({ code: 127, stdout: '', stderr: 'exec: "node": executable file not found in $PATH' })
+  const missing = runner({
+    code: 127,
+    stdout: '',
+    stderr: 'exec: "node": executable file not found in $PATH'
+  })
   await captureView({
     label: 'demo1',
     view: VIEW,
@@ -980,7 +984,12 @@ test('captureView: a picture nobody waits on has the cold deadline, on the site 
       chrome: '/usr/local/bin/tracy-chrome',
       run: async (/** @type {any} */ input) => {
         onHost.push(input)
-        return { code: 0, stderr: '', timedOut: false, stdout: line({ y: 0, loaded: true, jpeg: JPEG.toString('base64') }) }
+        return {
+          code: 0,
+          stderr: '',
+          timedOut: false,
+          stdout: line({ y: 0, loaded: true, jpeg: JPEG.toString('base64') })
+        }
       }
     }
   })
