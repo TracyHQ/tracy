@@ -1,0 +1,4 @@
+- **Push preview names records and fields in the Owner's words.** — David · PR #129 · issue #104 · `fix/sync-preview-labels` · 2026-10-29
+  **Affects:** Sync to live Preview, Apply and Undo lists for WordPress. A menu item without its own title takes its page's or category's title, a featured image, page template or image alt text shows as that field beside its page's title in every interface language, unknown internal meta keys no longer appear in titles, pages say "Page" instead of "Post", and `_wp_desired_post_slug` (WordPress's trash bookkeeping) is no longer offered. The translation bundles were approved in PR #128.
+
+  Verification: changeset and live-write suites 90/90, push dialog suite 20/20 (the three labels in all eight interface languages), real MariaDB push SQL suite 8/8 (menu item 66 titled "About", no `_wp_desired_post_slug` item), all with zero skipped. The fleet needs the next shared-script image release.

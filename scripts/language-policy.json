@@ -162,6 +162,16 @@
       "path": "packages/locale/tracy-locale-vi/lib/client.js",
       "oid": "d6d729644b77360b27f6acc776d9ac3f56bbd5fe",
       "reason": "Reviewed generated interface translation bundle for the issue #104 push preview labels after keeping the term template in Page template (eight languages); the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "fff0dc518a111cfe7835ca687ddaf4e6ff0798ea",
+      "reason": "Reviewed generated interface translation bundle for the issue #105 Polylang refusal reason (eight languages, built on PR #129's labels); the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "cd60bf4120958904546a7180467d4ab17a175d5d",
+      "reason": "Reviewed generated interface translation bundle for the issue #105 Polylang refusal reason (eight languages, built on PR #129's labels); the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
     }
   ]
 }

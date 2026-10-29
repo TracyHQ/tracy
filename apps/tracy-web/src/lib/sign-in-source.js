@@ -63,6 +63,17 @@ export function signInSource(params) {
   return Object.keys(source).length ? source : null
 }
 
+/**
+ * The host of the page that linked to `/login` (`params.referrer`, sent by the page's own script),
+ * cleaned like a source value, or `null`. A host only: the script never sends a path or query, and
+ * a value carrying either is refused rather than trimmed, so nothing past the host is ever kept.
+ */
+export function visitReferrer(params) {
+  if (!params || typeof params !== 'object' || typeof params.referrer !== 'string') return null
+  if (/[/?#@:]/.test(params.referrer)) return null
+  return cleanSourceValue(params.referrer)
+}
+
 /** The source inside a `next` value, read only once `safePath` has kept it on this origin. */
 export function sourceFromNext(next, origin) {
   if (typeof next !== 'string' || next === '') return null

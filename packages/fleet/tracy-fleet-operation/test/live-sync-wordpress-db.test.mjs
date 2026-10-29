@@ -633,3 +633,76 @@ test(
     assert.equal(sql("SELECT val FROM wc_m.wp_wfconfig WHERE name='isPaid'"), '0')
   }
 )
+
+const PAGE_META = `CREATE TABLE wp_postmeta (meta_id bigint NOT NULL PRIMARY KEY, post_id bigint, meta_key varchar(255), meta_value longtext);
+  INSERT INTO wp_postmeta VALUES (20, 1, '_edit_last', '1');`
+
+test(
+  'a page template both sites set on one page is one row, a conflict, never two rows — under one meta_id or two (#118)',
+  opts,
+  () => {
+    for (const [ourId, theirId] of [
+      [24, 24],
+      [24, 25]
+    ]) {
+      const answer = orderRecordMerge({
+        type: 'page',
+        extraSql: PAGE_META,
+        ours: `INSERT INTO wp_postmeta VALUES (${ourId}, 1, '_wp_page_template', 'page-no-title.php');`,
+        theirs: `INSERT INTO wp_postmeta VALUES (${theirId}, 1, '_wp_page_template', 'page-wide.php');`
+      })
+      const label = `copy ${ourId}, live ${theirId}`
+      assert.equal(
+        sql("SELECT COUNT(*) FROM wc_m.wp_postmeta WHERE post_id=1 AND meta_key='_wp_page_template'"),
+        '1',
+        label
+      )
+      assert.equal(
+        sql("SELECT meta_value FROM wc_m.wp_postmeta WHERE post_id=1 AND meta_key='_wp_page_template'"),
+        'page-no-title.php',
+        `${label}: the copy's stays until a decision`
+      )
+      assert.ok(
+        answer.conflicts.some((c) => c.table === 'wp_postmeta'),
+        `${label}: ${JSON.stringify(answer.conflicts)} ${JSON.stringify(answer.renumbered)}`
+      )
+      // Picking the live site's side takes its template, still in one row.
+      const id = answer.conflicts.find((c) => c.table === 'wp_postmeta').id
+      orderRecordMerge({
+        type: 'page',
+        extraSql: PAGE_META,
+        ours: `INSERT INTO wp_postmeta VALUES (${ourId}, 1, '_wp_page_template', 'page-no-title.php');`,
+        theirs: `INSERT INTO wp_postmeta VALUES (${theirId}, 1, '_wp_page_template', 'page-wide.php');`,
+        decisions: { [id]: 'theirs' }
+      })
+      assert.deepEqual(
+        sql("SELECT meta_value FROM wc_m.wp_postmeta WHERE post_id=1 AND meta_key='_wp_page_template'"),
+        'page-wide.php',
+        label
+      )
+    }
+    // The same template set on both sides: one row, no conflict.
+    const same = orderRecordMerge({
+      type: 'page',
+      extraSql: PAGE_META,
+      ours: "INSERT INTO wp_postmeta VALUES (24, 1, '_wp_page_template', 'page-wide.php');",
+      theirs: "INSERT INTO wp_postmeta VALUES (25, 1, '_wp_page_template', 'page-wide.php');"
+    })
+    assert.equal(
+      sql("SELECT COUNT(*) FROM wc_m.wp_postmeta WHERE post_id=1 AND meta_key='_wp_page_template'"),
+      '1'
+    )
+    assert.deepEqual(same.conflicts, [])
+    // A key that may hold several values keeps both rows (two old slugs are two redirects).
+    orderRecordMerge({
+      type: 'page',
+      extraSql: PAGE_META,
+      ours: "INSERT INTO wp_postmeta VALUES (24, 1, '_wp_old_slug', 'a');",
+      theirs: "INSERT INTO wp_postmeta VALUES (25, 1, '_wp_old_slug', 'b');"
+    })
+    assert.equal(
+      sql("SELECT COUNT(*) FROM wc_m.wp_postmeta WHERE post_id=1 AND meta_key='_wp_old_slug'"),
+      '2'
+    )
+  }
+)
