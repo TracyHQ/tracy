@@ -91,7 +91,9 @@ export async function start({ env = process.env, log = console, deps = {} } = {}
     mail,
     sites,
     seatDoor,
-    host
+    host,
+    // The serving process picks up the syncs and pushes a restart left running (#123).
+    resumeLiveJobs: true
   })
 
   const cron = pool
