@@ -8,6 +8,7 @@ import {
   DEMO_LOOK_SYSTEM,
   deferToMeasure,
   heldFaults,
+  LOOK_BATCH_PAGES,
   lookLayouts,
   neutralNote,
   LOOK_PROMPT_VERSION,
@@ -490,6 +491,7 @@ test('a look names the pages it saw whole: a page cut by the time budget is not 
   const whole = await createDemoLook({ ...fake, visionFor: door })({}, { pages: ['/', '/menu'] })
   assert.deepEqual(whole.seen, ['/', '/menu'])
   // The clock jumps past the budget after the first stream: the second stream's pages are not seen.
+  const first = ['/', ...Array.from({ length: LOOK_BATCH_PAGES - 1 }, (_, i) => `/page-${i + 1}`)]
   let streams = 0
   const capture = async (site, layouts, options) => {
     streams++
@@ -500,9 +502,9 @@ test('a look names the pages it saw whole: a page cut by the time budget is not 
     capture,
     visionFor: door,
     now: () => (streams > 1 ? 10_000 : 0)
-  })({}, { pages: ['/', '/menu', '/blog/a'], budgetMs: 5_000 })
+  })({}, { pages: [...first, '/blog/a'], budgetMs: 5_000 })
   assert.equal(cut.looked, 'partly')
-  assert.deepEqual(cut.seen, ['/', '/menu'])
+  assert.deepEqual(cut.seen, first)
 })
 
 test('a clean verdict without a readable image code cannot acknowledge any tiles', async () => {

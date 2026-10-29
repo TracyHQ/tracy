@@ -35,10 +35,15 @@ import { modelTokensOf } from 'website-opportunities/src/wo-model-tokens.js'
 // look/10 also requires an image-only input check before any tile is acknowledged. look/11 (29/10/2026) is told the
 // approved neutral words (`neutralNote`).
 export const LOOK_PROMPT_VERSION = 'look/11'
-/** Page plus route cap; capture stays serial in two-page streams for bounded RAM. */
+/** Page plus route cap; capture stays serial, one page and width a browser context at a time, for bounded RAM. */
 export const LOOK_MAX_PAGES = 165
-/** Routes per signed capture request; model batches have their own tile and encoded-byte ceilings. */
-export const LOOK_BATCH_PAGES = 2
+/**
+ * Routes per signed capture request; model batches have their own tile and encoded-byte ceilings. 🔒 FOUR, NOT TWO
+ * (29/10/2026): a stream's end waits for its last answers before the next stream starts, the browser idle, so a
+ * 29-page WordPress look stood still 15 times. The host opens one context per page and width whatever a stream
+ * holds, and four long pages take ~30 s of the stream's 240 s.
+ */
+export const LOOK_BATCH_PAGES = 4
 /**
  * Vision calls in flight while the capture goes on. One browser tab still shoots one tile at a time; only the
  * model waits overlap, each call holding at most `MAX_BATCH_BYTES`. Answers apply strictly in the order the
