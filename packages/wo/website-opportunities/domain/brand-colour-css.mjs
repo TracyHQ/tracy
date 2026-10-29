@@ -15,6 +15,7 @@
 import { contrastOf, hexOf, hslOf, hueGapOf, rgbOf, rgbOfHsl, toneOf } from './brand-colour-maths.mjs'
 import { colourRoles } from './brand-colours.mjs'
 import { cssRules } from './brand-colour-css-rules.mjs'
+import { onPicture, pictureGround, pictureScopesOf } from './brand-colour-pictures.mjs'
 import {
   coloursIn,
   itemsOf,
@@ -36,6 +37,14 @@ const TEXT_PROPS = new Set([
   'text-emphasis-color'
 ])
 const COLOUR = /#[0-9a-f]{3,8}\b|rgba?\([^()]*\)/gi
+/**
+ * Declarations never re-declared: an icon font's glyph (`content`, `font-*`), a picture or mask (`mask-*`, `list-style-*`,
+ * `border-image-*`, `cursor`). Re-declaring them in the head block would change what they draw or where their `url()`
+ * resolves; an icon drawn that way takes the brand colour through its `color` or `background-color`, never through them.
+ */
+const NEVER =
+  /^(?:content|quotes|src|cursor|font(?:-.*)?|(?:-webkit-)?mask(?:-.*)?|list-style(?:-.*)?|border-image(?:-.*)?)$/
+const URL = /url\(\s*(?:"[^"]*"|'[^']*'|[^)]*)\)/gi
 const TRIPLET = /^\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*$/
 
 /** A selector item without its states, so `a:hover` and `.nav .active>a` share the role of `a` and `.nav a`. */
@@ -63,15 +72,29 @@ export function brandColourCss({ styles, palette, pages = [] }) {
   if (found.secondary && palette.secondary)
     targets.push({ t: /** @type {any} */ (rgbOf(found.secondary)), p: palette.secondary })
   const base = /** @type {any} */ (sides.get('base'))
+  // Words in the brand colour on a picture (a hero photograph under an overlay) take the `picture` tone, the same on every
+  // side, judged against the picture rather than the page ground.
+  const { scopes, overlays } = pictureScopesOf(rules, pages)
+  const onPhoto = pictureGround(overlays)
   const memo = new Map()
   const rolesOf = (n, side) => {
     const key = `${n}:${side}`
     if (!memo.has(key)) {
-      const own = sides.get(side)?.grounds ?? base.grounds
+      const at = sides.get(side) ?? base
+      const own = [...at.grounds, ...at.panels]
       const others = [...new Set([...sides.values()].flatMap((x) => x.grounds))].filter(
         (g) => !own.includes(g)
       )
-      memo.set(key, colourRoles(targets[n].p, { grounds: own, on: found.on, others }))
+      memo.set(
+        key,
+        colourRoles(targets[n].p, {
+          grounds: own,
+          on: found.on,
+          alsoOn: found.ons.slice(1),
+          others,
+          picture: onPhoto
+        })
+      )
     }
     return memo.get(key)
   }
@@ -86,8 +109,9 @@ export function brandColourCss({ styles, palette, pages = [] }) {
     const { h, s, l } = hslOf(/** @type {any} */ (rgbOf(tone)))
     const step = hslOf(shade).l - hslOf(targets[n].t).l
     const at = l + step >= 0.1 && l + step <= 0.9 ? l + step : Math.min(0.9, Math.max(0.1, l - step))
-    const G = (sides.get(side)?.grounds ?? base.grounds).map(rgbOf)
-    const bar = kind === 'text' ? 4.5 : 3
+    const here = sides.get(side) ?? base
+    const G = kind === 'picture' ? [rgbOf(onPhoto)] : [...here.grounds, ...here.panels].map(rgbOf)
+    const bar = kind === 'picture' ? 7 : kind === 'text' ? 4.5 : 3
     return hexOf(
       toneOf(
         rgbOfHsl(h, s, at),
@@ -147,10 +171,12 @@ export function brandColourCss({ styles, palette, pages = [] }) {
   // Template variables holding the brand colour: set again on every side with that side's tone.
   const ownVars = new Map()
   let readsDs = false
+  const filledItems = new Set()
   for (const r of rules) {
     const side = sideOfRule(r)
     const v = sides.get(side)?.vars ?? base.vars
     const shaded = itemsOf(r.selector).every((s) => worn.has(roleKey(s)))
+    const pictured = itemsOf(r.selector).every((s) => onPicture(s, scopes))
     if (itemsOf(r.selector).every((s) => STATUS.test(s))) continue
     const decls = []
     let filled = false
@@ -167,8 +193,22 @@ export function brandColourCss({ styles, palette, pages = [] }) {
         decls.push({ ...d, n, value: triplet ? channels(tone) : tone })
         return
       }
+      if (NEVER.test(d.prop)) return
+      const kind = pictured && kindOf(d.prop) === 'text' ? 'picture' : kindOf(d.prop)
+      // A value holding a picture (`url()`) is never declared again: its address would resolve against the page instead of
+      // the stylesheet, and the colours inside a data URI are part of the picture. A `background` shorthand gives up only
+      // its colour, re-declared alone as `background-color`.
+      if (/url\(/i.test(resolved)) {
+        if (d.prop !== 'background') return
+        const bare = resolved.replace(URL, ' ').replace(/[\w-]*gradient\((?:[^()]|\([^()]*\))*\)/gi, ' ')
+        const c = coloursIn(bare)[0]
+        const name = c && varFor(c, 'fill', shaded)
+        if (!name) return
+        filled = true
+        decls.push({ ...d, n, prop: 'background-color', value: name })
+        return
+      }
       let hit = false
-      const kind = kindOf(d.prop)
       const value = resolved.replace(COLOUR, (m) => {
         const c = rgbOf(m)
         const name = c && varFor(c, kind, shaded)
@@ -190,10 +230,25 @@ export function brandColourCss({ styles, palette, pages = [] }) {
         decls.push({ ...r.decls[at], n: at, value: 'var(--tracy-brand-0-on)' })
       }
     }
+    if (filled) for (const s of itemsOf(r.selector)) filledItems.add(s)
     if (decls.length) {
       decls.sort((a, b) => a.n - b.n)
       out.push(wrap(r.at, `${r.selector}{${decls.map(declText).join(';')}}`))
     }
+  }
+  // The same words written by ANOTHER rule of a part now filled with the brand colour (`.btn.btn-primary{color:...}` beside
+  // its own background rule) take the fill's words too when they would not read on it.
+  for (const r of rules) {
+    const items = itemsOf(r.selector).filter((s) => filledItems.has(s))
+    const at = items.length ? r.decls.findLastIndex((d) => d.prop === 'color') : -1
+    if (at < 0) continue
+    const side = sideOfRule(r)
+    const c = coloursIn(resolveVars(r.decls[at].value, sides.get(side)?.vars ?? base.vars))[0]
+    if (!c || targets.some((x) => same(c, x.t)) || contrastOf(c, rolesOf(0, side).fill) >= 4.5) continue
+    vars.set('--tracy-brand-0-on', { n: 0, kind: 'on', shade: null })
+    out.push(
+      wrap(r.at, `${items.join(',')}{${declText({ ...r.decls[at], value: 'var(--tracy-brand-0-on)' })}}`)
+    )
   }
   // SVG drawn in the template's markup with the brand colour as a presentation attribute.
   const marks = new Map()

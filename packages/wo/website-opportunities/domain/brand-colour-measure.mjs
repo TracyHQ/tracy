@@ -12,7 +12,7 @@
 // variables (`:root{--color-primary:...}` read by `var()`), a T3 one through literal colours its LESS compiled; both resolve
 // to the same colour, so one measure covers both. Which side a page opens on is the template's: a dark template's light
 // mode is a side like any other.
-import { chromaOf, hexOf, hueGapOf, rgbOf } from './brand-colour-maths.mjs'
+import { chromaOf, hexOf, hueGapOf, luminanceOf, rgbOf } from './brand-colour-maths.mjs'
 import { cssRules } from './brand-colour-css-rules.mjs'
 
 const MODE =
@@ -91,20 +91,23 @@ export function resolveVars(value, vars, depth = 0) {
  * The template's sides: `base` first, then each mode marker, each with its variables (laid over the base's) and its page
  * grounds (`#rrggbb`, opaque).
  * @param {ReturnType<typeof cssRules>} rules
- * @returns {Map<string, {vars: Map<string, string>, grounds: string[]}>}
+ * @returns {Map<string, {vars: Map<string, string>, grounds: string[], panels: string[]}>}
  */
 export function sidesOf(rules) {
   const declared = new Map([['base', new Map()]])
   const grounds = []
+  const panels = []
   for (const r of rules)
     for (const item of itemsOf(r.selector)) {
       const { side, rest } = sideOfItem(item, r.at)
       if (!declared.has(side)) declared.set(side, new Map())
       if (ROOTISH.test(rest) && (side !== 'base' || r.at.length === 0))
         for (const d of r.decls) if (d.prop.startsWith('--')) declared.get(side)?.set(d.prop, d.value)
-      if (GROUND.test(rest))
-        for (const d of r.decls)
-          if (/^background(-color)?$/.test(d.prop)) grounds.push({ side, rest, value: d.value })
+      for (const d of r.decls) {
+        if (!/^background(-color)?$/.test(d.prop)) continue
+        if (GROUND.test(rest)) grounds.push({ side, rest, value: d.value })
+        else panels.push({ side, value: d.value })
+      }
     }
   const out = new Map()
   for (const [side, own] of declared) {
@@ -116,7 +119,19 @@ export function sidesOf(rules) {
       if (c) at.set(g.rest, hexOf(c))
     }
     const list = [...new Set(at.values())]
-    out.set(side, { vars, grounds: list.length ? list : ['#ffffff'] })
+    const ground = list.length ? list : ['#ffffff']
+    // The template's own neutral surfaces of the same kind as the page (a dark card or tab bar on a dark page, a pale band
+    // on a light one): words in the brand colour must read on them too.
+    const dark = luminanceOf(/** @type {any} */ (rgbOf(ground[0]))) < 0.18
+    const near = new Set()
+    for (const g of panels) {
+      if (g.side !== 'base' && g.side !== side) continue
+      const c = coloursIn(resolveVars(g.value, vars)).find((x) => (x.a ?? 1) >= 0.9)
+      if (!c || chromaOf(c) >= 0.04) continue
+      const l = luminanceOf(c)
+      if (dark ? l < 0.06 : l > 0.6) near.add(hexOf(c))
+    }
+    out.set(side, { vars, grounds: ground, panels: [...near].filter((x) => !ground.includes(x)) })
   }
   return out
 }
@@ -160,30 +175,45 @@ export function templateBrandColours(styles) {
   for (const hex of votes.secondary.keys())
     if (!primary || hueGapOf(/** @type {any} */ (rgbOf(hex)), /** @type {any} */ (rgbOf(primary))) < 20)
       votes.secondary.delete(hex)
+  const ons = primary ? wordsOn(rules, base.vars, /** @type {any} */ (rgbOf(primary))) : []
   return {
     primary,
     secondary: primary ? top(votes.secondary) : null,
     grounds: Object.fromEntries([...sides].map(([side, s]) => [side, s.grounds])),
-    on: primary ? wordsOn(rules, base.vars, /** @type {any} */ (rgbOf(primary))) : null,
+    on: ons[0] ?? null,
+    ons,
     status,
     rules,
     sides
   }
 }
 
-/** The words the template writes on its brand colour: the neutral colour most rules with that background declare. */
+/**
+ * The words the template writes on its brand colour: every neutral colour a rule with that background declares, or a rule
+ * of the same part declares beside it (`.btn.btn-primary{color:#000}` next to its background rule), most used first.
+ */
 function wordsOn(rules, vars, t) {
   const count = new Map()
+  const add = (value) => {
+    const c = coloursIn(resolveVars(value, vars))[0]
+    if (c && chromaOf(c) < 0.1) count.set(hexOf(c), (count.get(hexOf(c)) ?? 0) + 1)
+  }
+  const filledItems = new Set()
   for (const r of rules) {
     if (sideOfRule(r) !== 'base') continue
     const filled = r.decls.some(
       (d) => d.prop.startsWith('background') && coloursIn(resolveVars(d.value, vars)).some((c) => same(c, t))
     )
-    const color = filled && r.decls.find((d) => d.prop === 'color')
-    const c = color && coloursIn(resolveVars(color.value, vars))[0]
-    if (c && chromaOf(c) < 0.1) count.set(hexOf(c), (count.get(hexOf(c)) ?? 0) + 1)
+    if (!filled) continue
+    for (const s of itemsOf(r.selector)) filledItems.add(s)
+    const color = r.decls.find((d) => d.prop === 'color')
+    if (color) add(color.value)
   }
-  let best = null
-  for (const [hex, n] of count) if (!best || n > count.get(best)) best = hex
-  return best
+  for (const r of rules) {
+    if (sideOfRule(r) !== 'base' || !itemsOf(r.selector).some((s) => filledItems.has(s))) continue
+    if (r.decls.some((d) => d.prop.startsWith('background'))) continue
+    const color = r.decls.findLast((d) => d.prop === 'color')
+    if (color) add(color.value)
+  }
+  return [...count.entries()].sort((a, b) => b[1] - a[1]).map(([hex]) => hex)
 }

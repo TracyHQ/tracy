@@ -173,7 +173,13 @@ function computed(css, selector, prop, side = null) {
 
 test('the overrides repaint every brand colour role and nothing else (florist on a dark T4 page)', () => {
   const css = brandColourCss({ styles: [{ css: T4_CSS }], palette: brandPaletteOf(florist) })
-  const roles = colourRoles('#5b2a6e', { grounds: ['#141313'], on: '#ffffff' })
+  // The page ground and the template's dark card (`.card`): words in the brand colour read on both.
+  // White words on the pager, black on the shop button: the fill reads both.
+  const roles = colourRoles('#5b2a6e', {
+    grounds: ['#141313', '#1f1e1e'],
+    on: '#ffffff',
+    alsoOn: ['#000000']
+  })
   assert.doesNotMatch(css, /e8402f|232,\s*64,\s*47/i, 'no trace of the template red')
   assert.equal(computed(css, ':root', '--color-primary'), roles.fill)
   assert.equal(computed(css, ':root', '--body-link-color'), roles.text)
@@ -186,9 +192,10 @@ test('the overrides repaint every brand colour role and nothing else (florist on
     computed(css, '.hero .overlay', 'background'),
     `color-mix(in srgb,${roles.fill} 65%,transparent)`
   )
-  // A button the template wrote black words on takes the words that read on the new fill.
-  assert.equal(computed(css, '.shop .buy', 'color'), roles.on)
-  assert.equal(computed(css, '.pager li.active>a', 'color'), null, 'white words already read: left alone')
+  // The template writes black words on one part and white on another: both read on the new fill, both left alone.
+  assert.ok(contrastOf(roles.fill, '#000000') >= 4.5 && contrastOf(roles.fill, '#ffffff') >= 4.5, roles.fill)
+  assert.equal(computed(css, '.shop .buy', 'color'), null, 'black words read: left alone')
+  assert.equal(computed(css, '.pager li.active>a', 'color'), null, 'white words read: left alone')
   // Media queries are kept around their rules.
   assert.match(css, /@media \(min-width:992px\)\{\.nav \.active>a\{color:var\(--tracy-brand-0-text\)\}\}/)
   // The design-system accent roles the template reads take the palette too.
@@ -367,7 +374,11 @@ test('an inline SVG the template draws in its brand colour takes the line tone',
     { html: '<svg><path d="M0 0" fill="#E8402F"/><path stroke="#e8402f"/><path fill="#ffffff"/></svg>' }
   ]
   const css = brandColourCss({ styles: [{ css: T4_CSS }], palette: brandPaletteOf(lawOffice), pages })
-  const line = colourRoles('#1b2a4a', { grounds: ['#141313'], on: '#ffffff' }).line
+  const line = colourRoles('#1b2a4a', {
+    grounds: ['#141313', '#1f1e1e'],
+    on: '#ffffff',
+    alsoOn: ['#000000']
+  }).line
   assert.equal(computed(css, '[fill="#E8402F" i]', 'fill'), line)
   assert.equal(computed(css, '[stroke="#e8402f" i]', 'stroke'), line)
   assert.doesNotMatch(css, /ffffff" i/)
@@ -423,4 +434,122 @@ test('the site plan carries the colour decision', async () => {
     decision: 'template',
     reason: 'no-brief-logo'
   })
+})
+
+// Made up: a dark template whose buttons draw an arrow in the brand colour three ways (an icon font glyph, a mask, a data
+// URI picture), with a band painted by a picture and a hero photograph under a dark overlay that writes one word of its
+// title in the brand colour. Its light mode is a class on the body.
+const ICONS_CSS = `
+:root{--color-primary:#e8402f;--page-bg:#121111}
+body{background-color:var(--page-bg)}
+.light-active{--page-bg:#ffffff}
+a{color:var(--color-primary)}
+.btn.btn-primary{background-color:var(--color-primary);color:#fff}
+.btn.btn-secondary:after{content:"\\f061";font-family:'Icon Font';font-weight:900;color:var(--ds-c-accent-text,var(--color-primary))}
+.arrow-mask{-webkit-mask:url(../images/arrow.svg) no-repeat center;mask-image:url(../images/arrow.svg);background-color:#e8402f}
+.arrow-data{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='#e8402f'/%3E%3C/svg%3E")}
+.band{background:#e8402f url(../images/band.jpg) no-repeat center}
+.list li{list-style-image:url(../images/dot-e8402f.png);color:#e8402f}
+.hero-wrap{background-size:cover;background-position:center;color:#fff;position:relative}
+.hero-wrap:before{content:"";background:rgba(0,0,0,.8);position:absolute;top:0;left:0;height:100%;width:100%}
+.hero-wrap .hero-title span{color:var(--color-primary)}
+.promo-x h2 em{color:#e8402f}
+`
+
+test('an icon drawn by a glyph, a mask or a data URI keeps its drawing: only its colour is declared again', () => {
+  const out = brandColourCss({ styles: [{ css: ICONS_CSS }], palette: brandPaletteOf(lawOffice) })
+  // The icon font: colour only, never the glyph or its font.
+  const glyph = cssRules(out).filter((r) => r.selector.startsWith('.btn.btn-secondary:after'))
+  assert.equal(glyph.length, 1)
+  assert.deepEqual(
+    glyph[0].decls.map((d) => d.prop),
+    ['color']
+  )
+  // The mask: its colour is the background, the mask itself is not re-declared.
+  const mask = cssRules(out).find((r) => r.selector === '.arrow-mask')
+  assert.deepEqual(
+    mask?.decls.map((d) => `${d.prop}:${d.value}`),
+    ['background-color:var(--tracy-brand-0-fill)']
+  )
+  // The data URI: a picture, left as the template draws it.
+  assert.doesNotMatch(out, /arrow-data|data:image|url\(/)
+  // A shorthand with a picture gives up its colour alone; a list marker picture is never re-declared.
+  const band = cssRules(out).find((r) => r.selector === '.band')
+  assert.deepEqual(
+    band?.decls.map((d) => `${d.prop}:${d.value}`),
+    ['background-color:var(--tracy-brand-0-fill)']
+  )
+  const list = cssRules(out).find((r) => r.selector === '.list li')
+  assert.deepEqual(
+    list?.decls.map((d) => d.prop),
+    ['color']
+  )
+  assert.doesNotMatch(
+    out,
+    /[{;](?:content|font-family|font-weight|-webkit-mask|mask(?:-image)?|list-style(?:-image)?):/
+  )
+})
+
+test('words in the brand colour on a picture are judged against the picture, lighter than on the page, on every side', () => {
+  const pages = [
+    {
+      html: '<section class="promo-x style-2" style="background-image: url(\'/images/p.jpg\')"><h2><em>Fresh</em></h2></section>'
+    }
+  ]
+  for (const brief of [lawOffice, florist, logoOf([{ hex: '#06301c', role: 'primary' }])]) {
+    const palette = /** @type {any} */ (brandPaletteOf(brief))
+    const out = brandColourCss({ styles: [{ css: ICONS_CSS }], palette, pages })
+    for (const side of [null, '.light-active']) {
+      const hero = /** @type {string} */ (computed(out, '.hero-wrap .hero-title span', 'color', side))
+      const promo = /** @type {string} */ (computed(out, '.promo-x h2 em', 'color', side))
+      const link = /** @type {string} */ (computed(out, 'a', 'color', side))
+      // The overlay is 80% black on a photograph: about #1a1a1a under the word.
+      assert.ok(contrastOf(hero, '#1a1a1a') >= 7, `hero word ${hero} on the picture (${side ?? 'base'})`)
+      assert.equal(promo, hero, 'a part painted by an inline picture counts too')
+      assert.ok(hueGap(hero, palette.primary) <= 6, `${hero} keeps the hue`)
+      if (side)
+        assert.notEqual(hero, link, 'the light side link is darker, the word on the picture stays light')
+    }
+  }
+})
+
+test('a dark band without a picture is not a picture: its words keep the page tone', () => {
+  const css = `${ICONS_CSS}\n.cta{background:#222;position:relative}\n.cta:after{content:"";border-bottom:1px solid #000}\n.cta p strong{color:#e8402f}`
+  const out = brandColourCss({ styles: [{ css }], palette: brandPaletteOf(lawOffice) })
+  assert.equal(computed(out, '.cta p strong', 'color'), computed(out, 'a', 'color'))
+})
+
+test('words another rule writes on a part now filled with the brand colour read on the new fill', () => {
+  // Made up: the primary button's background and its black words come from two rules, as a compiled T4 sheet writes them.
+  const css = `${ICONS_CSS}\n.pager .active>a{background:#e8402f;color:#fff}\n.btn.btn-primary,.read-more a{color:#000}`
+  for (const brief of [
+    lawOffice,
+    logoOf([{ hex: '#06301c', role: 'primary' }]),
+    logoOf([{ hex: '#f2d36b', role: 'primary' }])
+  ]) {
+    const out = brandColourCss({ styles: [{ css }], palette: brandPaletteOf(brief) })
+    for (const side of [null, '.light-active']) {
+      const fill = /** @type {string} */ (computed(out, '.btn.btn-primary', 'background-color', side))
+      const words = computed(out, '.btn.btn-primary', 'color', side) ?? '#000000'
+      assert.ok(contrastOf(words, fill) >= 4.5, `${words} on ${fill} (${side ?? 'base'})`)
+    }
+    assert.doesNotMatch(out, /\.read-more a\{color/, 'a part not filled keeps its words')
+  }
+})
+
+test('words in the brand colour read on the template own surfaces of the page kind, not only on the page ground', () => {
+  // Made up: a dark page with a slightly lighter tab bar, and a light mode with a pale band.
+  const css = `${ICONS_CSS}\n.tabs .nav-link{background-color:#232222}\n.light-active .band-pale{background:#ececec}\n.tabs .nav-link.active{color:var(--color-primary)}`
+  for (const brief of [
+    lawOffice,
+    florist,
+    logoOf([{ hex: '#06301c', role: 'primary' }]),
+    logoOf([{ hex: '#f2d36b', role: 'primary' }])
+  ]) {
+    const out = brandColourCss({ styles: [{ css }], palette: brandPaletteOf(brief) })
+    const dark = /** @type {string} */ (computed(out, '.tabs .nav-link.active', 'color'))
+    const light = /** @type {string} */ (computed(out, '.tabs .nav-link.active', 'color', '.light-active'))
+    assert.ok(contrastOf(dark, '#232222') >= 4.5 && contrastOf(dark, '#121111') >= 4.5, `dark ${dark}`)
+    assert.ok(contrastOf(light, '#ececec') >= 4.5 && contrastOf(light, '#ffffff') >= 4.5, `light ${light}`)
+  }
 })

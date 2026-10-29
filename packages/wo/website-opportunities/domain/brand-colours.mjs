@@ -36,6 +36,8 @@ export const COLOUR_REASONS = Object.freeze({
 /** WCAG AA: normal text, and large text or a part of the interface (a button against the page). */
 const TEXT = 4.5
 const UI = 3
+/** Words on a photograph: AAA, since the picture under one word is never one colour. */
+const PICTURE = 7
 const WHITE = { r: 255, g: 255, b: 255 }
 const BLACK = { r: 0, g: 0, b: 0 }
 
@@ -107,22 +109,42 @@ export function planColours(brief) {
  * `others`: the grounds of the template's other sides (a dark template's light mode). Words in the brand colour often sit
  * on a band that keeps its look on every side (a photograph under a hero title), so the text tone also reaches 3:1 (large
  * text) on those grounds whenever a tone can; it always reaches 4.5:1 on its own side.
- * @param {{grounds?: string[], on?: string | null, others?: string[]}} [where]
+ * `picture`: the ground words on a picture are judged against (`brand-colour-pictures.mjs`). A photograph shows bright and
+ * dark patches under one word, so the `picture` tone reaches 7:1 on it (AAA) whenever a tone of the hue can.
+ * `alsoOn`: the other words the template writes on its brand colour; the fill reads all of them when one tone can.
+ * @param {{grounds?: string[], on?: string | null, alsoOn?: string[], others?: string[], picture?: string}} [where]
  */
-export function colourRoles(hex, { grounds = [], on = null, others = [] } = {}) {
+export function colourRoles(
+  hex,
+  { grounds = [], on = null, alsoOn = [], others = [], picture = '#1a1a1a' } = {}
+) {
   const c = /** @type {any} */ (rgbOf(hex))
   const G = (grounds.length ? grounds : ['#ffffff']).map((g) => /** @type {any} */ (rgbOf(g))).filter(Boolean)
   const wanted = on ? rgbOf(on) : null
   const reads = (t, bar) => Math.min(...G.map((g) => contrastOf(t, g))) >= bar
   const bestOn = (t) => (contrastOf(t, WHITE) >= contrastOf(t, BLACK) ? WHITE : BLACK)
   const score = (t) => Math.min(...G.map((g) => contrastOf(t, g))) / UI
-  let fill = wanted
-    ? toneOf(
-        c,
-        (t) => reads(t, UI) && contrastOf(t, wanted) >= TEXT,
-        () => -1
-      )
-    : null
+  // Words of both kinds on the template's brand colour (white on one part, black on another, or a dark arrow picture beside
+  // white words): the fill takes the middle tone both read on, so no part's words or pictures go dark on dark.
+  const all = [wanted, ...alsoOn.map((o) => rgbOf(o))].filter(Boolean)
+  const readsAll = (t) => all.every((o) => contrastOf(t, /** @type {any} */ (o)) >= TEXT)
+  let fill =
+    all.length > 1
+      ? toneOf(
+          c,
+          (t) => reads(t, UI) && readsAll(t),
+          () => -1
+        )
+      : null
+  if (fill && !(reads(fill, UI) && readsAll(fill))) fill = null
+  if (!fill)
+    fill = wanted
+      ? toneOf(
+          c,
+          (t) => reads(t, UI) && contrastOf(t, wanted) >= TEXT,
+          () => -1
+        )
+      : null
   if (!fill || !(reads(fill, UI) && contrastOf(fill, /** @type {any} */ (wanted)) >= TEXT))
     fill = toneOf(
       c,
@@ -146,6 +168,12 @@ export function colourRoles(hex, { grounds = [], on = null, others = [] } = {}) 
   const fromGround = luminanceOf(G[0]) < 0.18 ? WHITE : BLACK
   const lifted = mixOf(text, fromGround, 0.15)
   const line = toneOf(c, (t) => reads(t, UI), score)
+  const P = /** @type {any} */ (rgbOf(picture) ?? rgbOf('#1a1a1a'))
+  const onPicture = toneOf(
+    c,
+    (t) => contrastOf(t, P) >= PICTURE,
+    (t) => contrastOf(t, P)
+  )
   return {
     fill: hexOf(fill),
     on: hexOf(onText),
@@ -154,7 +182,8 @@ export function colourRoles(hex, { grounds = [], on = null, others = [] } = {}) 
     soft: hexOf(mixOf(fill, G[0], 0.88)),
     text: hexOf(text),
     textHover: hexOf(reads(lifted, TEXT) && (alsoReads(lifted) || !alsoReads(text)) ? lifted : text),
-    line: hexOf(line)
+    line: hexOf(line),
+    picture: hexOf(onPicture)
   }
 }
 
