@@ -72,7 +72,9 @@ export function showablePeopleOf(brief) {
     }
     const held = p.onSite === false || p.reviewsOnly === true || fact?.onSite === false
     if (!held) {
-      out.push({ id, label, role, fromReviews: false })
+      // A brief made since 29/10/2026 already shows such a person (`liftReviewPeople`): still named to the owner.
+      const lifted = fact?.onSite === true && (fact.reasons ?? []).includes(REVIEW_ONLY_PERSON)
+      out.push({ id, label, role, fromReviews: lifted })
       continue
     }
     const reasons = Array.isArray(fact?.reasons)
@@ -97,3 +99,49 @@ export function peopleFromReviewsNote(people) {
   const list = named.length === 1 ? named[0] : `${named.slice(0, -1).join(', ')} and ${named.at(-1)}`
   return `people: ${list} ${named.length === 1 ? 'is' : 'are'} shown on the team cards from what guest reviews say about them; check the ${named.length === 1 ? 'name and role' : 'names and roles'} with the owner`
 }
+
+/**
+ * A sourced role in the casing of the demo text it replaces: all capitals, a capital first letter, or all small, as the
+ * demo writes it. A demo with no letters (markup, icons) gives a capital first letter, as a label under a name reads.
+ * Only the casing changes, never a word.
+ * @param {string} role
+ * @param {unknown} demo
+ */
+export function roleInCasingOf(role, demo) {
+  const value = text(role)
+  if (!value) return ''
+  const letters = String(demo ?? '')
+    .replace(/\(\(.*?\)\)|<[^>]*>/gs, ' ')
+    .replace(/[^\p{L}]/gu, '')
+  if (letters && letters === letters.toUpperCase() && letters !== letters.toLowerCase())
+    return value.toUpperCase()
+  if (letters && letters === letters.toLowerCase()) return value.toLowerCase()
+  return value.charAt(0).toUpperCase() + value.slice(1)
+}
+
+/** Whether a person only reviews name passes the rule: a role, or this many different reviews naming them. */
+const passes = (brief, name, role) =>
+  Boolean(text(role)) || reviewMentionsOf(brief, name) >= REVIEW_MENTIONS_MIN
+
+/**
+ * The brief's facts with every team member held only as `review-only-person` and passing the rule above shown on the
+ * site, the reason kept so the brief reads "shown from reviews, owner to check" (`SHOWN_FROM_REVIEWS`). The owner's own
+ * choice and any other reason are left as they are. Pure: a new list, the facts not changed.
+ * @param {any[]} facts - brief facts (`briefFactsOf`)
+ * @param {{reviews?: any[], team?: Array<{label?: string, role?: string}>}} input - every review the brief read (with
+ *   its text), and the reading's team (a role the reading kept from a quote)
+ */
+export function liftReviewPeople(facts, { reviews = [], team = [] } = {}) {
+  const brief = { googlePlace: { reviews } }
+  return (Array.isArray(facts) ? facts : []).map((f) => {
+    if (f?.field !== 'team' || f.onSite !== false || f.decidedBy === 'owner') return f
+    const reasons = Array.isArray(f.reasons) ? f.reasons : []
+    if (!reasons.length || !reasons.every((r) => r === REVIEW_ONLY_PERSON)) return f
+    const name = text(f.value?.name)
+    const role = text(f.value?.role) || text(team.find((p) => text(p?.label) === name)?.role)
+    return name && passes(brief, name, role) ? { ...f, onSite: true } : f
+  })
+}
+
+/** How the brief names a person shown from reviews alone. */
+export const SHOWN_FROM_REVIEWS = 'shown from reviews, owner to check'

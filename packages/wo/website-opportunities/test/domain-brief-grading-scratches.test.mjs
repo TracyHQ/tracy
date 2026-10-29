@@ -124,7 +124,14 @@ function scratchBrief({ profile = {}, posts = HSC.posts } = {}) {
     media: HSC.media,
     posts
   }
-  return makeSiteBrief(domain, read, { opportunity: HSC.opportunity, madeAt: HSC.madeAt })
+  const make = (opportunity) => makeSiteBrief(domain, read, { opportunity, madeAt: HSC.madeAt })
+  // Alex, a coach two reviews name, is shown by rule since 29/10/2026 (`brief-people.mjs`): the owner's own choice holds
+  // him off here, so the held path is still what these tests read.
+  const first = make(HSC.opportunity)
+  const alex = first.facts.find((f) => f.field === 'team' && f.value?.name === 'Alex')
+  if (!alex) return first
+  const factOverrides = { [alex.id]: { onSite: false, at: '2026-10-27T09:00:00.000Z' } }
+  return make({ ...HSC.opportunity, candidate: { ...HSC.opportunity.candidate, factOverrides } })
 }
 const pageSection = (brief, slug, kind) =>
   brief.sitemap.find((p) => p.slug === slug)?.sections.find((s) => s.kind === kind)

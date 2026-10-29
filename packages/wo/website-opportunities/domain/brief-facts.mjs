@@ -513,7 +513,9 @@ export function renderBriefFacts(brief, line, q) {
   for (const f of facts) {
     const from = [...new Set(f.evidence.map((e) => e.source))].join(', ')
     const where = f.onSite
-      ? 'on the site'
+      ? f.reasons.includes('review-only-person')
+        ? 'shown from reviews, owner to check'
+        : 'on the site'
       : `off the site${f.reasons.length ? `: ${f.reasons.filter((r) => r !== 'owner-override').join(', ')}` : ''}`
     line(
       `- ${f.field}: ${valueLine(f.value, q)} · ${CONFIDENCE_WORDS[f.confidence] ?? f.confidence}${from ? ` (${from})` : ''} · ${where}${f.decidedBy === 'owner' ? ', by the owner' : ''}`

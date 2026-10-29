@@ -226,7 +226,8 @@ test('a brief with two people yields exactly those two names, and the trainer ca
 test('the clinic: one dentist kept by name, the other dentist articles hidden whole', () => {
   const h = plan(clinicBrief(), dentalMap())
   assert.equal(h.values['article-10.0'].value, 'Dr. Mara Holt')
-  assert.equal(h.values['article-10.1'].value, 'dentist')
+  // The sourced role, in the casing of the demo role it replaces ("Orthodontist").
+  assert.equal(h.values['article-10.1'].value, 'Dentist')
   assert.deepEqual(
     h.hide.filter((x) => x.how === 'entity').map((x) => x.entity),
     ['article-11', 'article-12']

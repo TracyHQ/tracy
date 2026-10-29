@@ -138,7 +138,11 @@ test('the trainer list keeps one card per real person, and the kept cards lose t
     'the names go in with the contract write; the cards beyond them are emptied in place'
   )
   assert.deepEqual(config.team['team[bio]'], ['', '', '', ''])
-  assert.deepEqual(config.team['team[columns]'], ['4'], 'a setting of the list is no item')
+  assert.deepEqual(
+    config.team['team[columns]'],
+    ['2'],
+    'a setting of the list is no item; the row follows the kept cards'
+  )
   assert.equal(trimmed, 2)
 })
 

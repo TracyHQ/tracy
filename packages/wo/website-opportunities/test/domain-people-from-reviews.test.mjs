@@ -37,7 +37,7 @@ function teamMap(entity = 'module-40', demo = ['Rowan Mercer', 'Ilse Varga', 'To
       'team-info',
       i,
       'editorial.paragraph',
-      '<div class="list-social"><a href="#">f</a></div>'
+      '<div class="list-social"><a href="#"><i class="fab fa-facebook"></i></a></div>'
     )
   ])
   return {
@@ -208,7 +208,12 @@ test('a kept card loses every demo word the sources do not back: its link to a d
     const blanked = new Set(p.honesty.blanks.map((b) => b.key))
     for (const i of [0, 1]) {
       assert.ok(blanked.has(`${entity}.link.${i}`), `${entity} card ${i} link`)
-      assert.ok(blanked.has(`${entity}.team-info.${i}`), `${entity} card ${i} social icons`)
+      // The social icons never stay: the line is emptied, or carries the role the sources give (the club's coaches).
+      assert.ok(
+        blanked.has(`${entity}.team-info.${i}`) ||
+          p.honesty.values[`${entity}.team-info.${i}`]?.value === 'Coach',
+        `${entity} card ${i} social icons`
+      )
       assert.ok(!blanked.has(`${entity}.title.${i}`), 'the real name stays')
     }
   }
@@ -274,4 +279,31 @@ test('a kept person’s own module loses the demo person’s social links, whate
     assert.ok(blanked.has('module-43.social.contact.social_label.0'))
     assert.ok(blanked.has('module-43.social.contact.social_url.0'))
   }
+})
+
+test('a card with no role field shows the sourced role on its free line under the name; with no role, the line is emptied', () => {
+  const club = planOf(clubBrief(), teamMap()).honesty
+  assert.equal(club.values['module-40.team-info.0'].value, 'Coach')
+  assert.equal(club.values['module-40.team-info.1'].value, 'Coach')
+  assert.ok(!club.blanks.some((b) => b.key === 'module-40.team-info.0'))
+  const clinic = planOf(clinicBrief(), teamMap('module-41')).honesty
+  assert.ok(
+    clinic.blanks.some((b) => b.key === 'module-41.team-info.0'),
+    'no role in the sources: nothing written'
+  )
+})
+
+test('a role field takes the sourced role in the casing of the template’s demo role', () => {
+  const map = teamMap('module-44', ['Rowan Mercer', 'Ilse Varga'])
+  map.slots.push(
+    cardSlot('module-44', 'position', 0, 'person.role', 'HEAD TRAINER'),
+    cardSlot('module-44', 'position', 1, 'person.role', 'Assistant coach')
+  )
+  const h = planOf(clubBrief(), map).honesty
+  assert.equal(h.values['module-44.position.0'].value, 'COACH')
+  assert.equal(h.values['module-44.position.1'].value, 'Coach')
+  assert.ok(
+    h.blanks.some((b) => b.key === 'module-44.team-info.0'),
+    'the role has its own field, the free line is emptied'
+  )
 })

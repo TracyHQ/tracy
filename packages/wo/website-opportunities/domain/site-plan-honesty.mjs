@@ -13,7 +13,7 @@ import { collectionOfGroupId } from './content-map-repeatable-lists.mjs'
 import { namedIn } from './pictures/picture-links.mjs'
 import { planStatBoxes } from './stat-box-plan.mjs'
 import { factRowFacts, planFactRows } from './fact-rows.mjs'
-import { showablePeopleOf } from './brief-people.mjs'
+import { roleInCasingOf, showablePeopleOf } from './brief-people.mjs'
 
 export const HONESTY_VERSION = 'site-plan-honesty/1'
 
@@ -312,6 +312,16 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
       cardNames[group.id] = assigned.label
       const rows = group.kind === 'person' ? null : planFactRows(group, assigned, rowFacts)
       const rowBlanks = new Set((rows?.blanks ?? []).map((s) => s.key))
+      // A person card with no role field shows the sourced role on its first free line of words (the line under the name).
+      const roleLine =
+        group.kind === 'person' && assigned.role && !group.slots.some((s) => s.role === 'person.role')
+          ? group.slots.find(
+              (s) =>
+                s.type === 'text' &&
+                s.role === 'editorial.paragraph' &&
+                fits(s, roleInCasingOf(assigned.role, s.sample))
+            )
+          : null
       for (const slot of group.slots) {
         const role = slot.role ?? ''
         if (rows && slot.key in rows.values) {
@@ -325,8 +335,9 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
         if (role === 'person.name') setValue(slot, assigned.label, 'brief-person')
         else if (role === 'person.role')
           assigned.role
-            ? setValue(slot, assigned.role, 'brief-person')
+            ? setValue(slot, roleInCasingOf(assigned.role, slot.sample), 'brief-person')
             : blanks.push(blankOf(slot, 'no-brief-fact'))
+        else if (slot === roleLine) setValue(slot, roleInCasingOf(assigned.role, slot.sample), 'brief-person')
         else if (role === 'person.bio' || role === 'person.social_url')
           blanks.push(blankOf(slot, 'no-brief-fact'))
         // 🔒 A KEPT PERSON CARD SHOWS ONLY THE NAME, THE ROLE AND THE PICTURE: any other words or link on it (a link to the

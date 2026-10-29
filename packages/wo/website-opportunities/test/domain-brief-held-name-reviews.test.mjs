@@ -85,17 +85,29 @@ const instagram = {
 }
 
 function heldBrief(profile = {}) {
-  return makeSiteBrief(
-    domain,
-    {
-      profile: { ...PROFILE, ...profile },
-      brand: { ...HSC.brand, logoResearch: { ...HSC.brand.logoResearch, chosen: LOGO } },
-      sources: [instagram],
-      media: HSC.media,
-      posts: HSC.posts
-    },
-    { opportunity: HSC.opportunity, madeAt: HSC.madeAt }
-  )
+  const make = (opportunity) =>
+    makeSiteBrief(
+      domain,
+      {
+        profile: { ...PROFILE, ...profile },
+        brand: { ...HSC.brand, logoResearch: { ...HSC.brand.logoResearch, chosen: LOGO } },
+        sources: [instagram],
+        media: HSC.media,
+        posts: HSC.posts
+      },
+      { opportunity, madeAt: HSC.madeAt }
+    )
+  // Alex, a coach two reviews name, is shown by rule since 29/10/2026 (`brief-people.mjs`): the owner's own choice holds
+  // him off here, so these tests still read the held path.
+  return make(ownerHoldsAlex(make(HSC.opportunity)))
+}
+
+/** The opportunity with the owner's choice to keep Alex off the site. */
+function ownerHoldsAlex(first) {
+  const alex = first.facts.find((f) => f.field === 'team' && f.value?.name === 'Alex')
+  if (!alex) return HSC.opportunity
+  const factOverrides = { [alex.id]: { onSite: false, at: '2026-10-27T09:00:00.000Z' } }
+  return { ...HSC.opportunity, candidate: { ...HSC.opportunity.candidate, factOverrides } }
 }
 
 // The sentences of the held reviews, each long enough to be a quote of its own.
