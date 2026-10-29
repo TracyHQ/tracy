@@ -96,40 +96,128 @@ export const roleOf = (/** @type {'light' | 'dark' | 'single'} */ variant) =>
  * `prepareBrand` padded to the row's `frame`, the slot sample's shape, so the plugin's aspect check (0.02) passes.
  * 🔒 ITS OWN APPLY ID: the contract door takes only a `contract-` id, new for every revision. The Apply door records it
  * beside the brand id (`recordedDoor`), so undoing the build takes it back too.
+ * 🔒 A CONTRACT THAT CANNOT BE READ IS NOT A REFUSAL OF THE LOGO. The contract reads every bound record before any apply,
+ * and one record an earlier step rewrote outside it (a slot node gone) refuses every apply on the site with "HTML slot is
+ * missing or ambiguous". Then, and whenever a refusal names no slot problem, the logo goes into the slot's own module HTML
+ * through the content door (`logoIntoModule`), still sized by the slot's fit (the row's `frame` when the contract gave
+ * none). A refusal that judges the picture (a `SLOT_` code) is final: the spot shows the name (`nameForDemoLogos`).
  * @param {{slot: string, path?: string | null, pathFor?: ((fit: any) => Promise<string | null>) | null, read: Function,
- *   write: Function, stamp: string, skip: (where: string, reason: string) => void}} input
+ *   write: Function, stamp: string, skip: (where: string, reason: string) => void, frame?: {width: number, height: number} | null,
+ *   demoFiles?: string[]}} input
  * @returns {Promise<boolean>}
  */
-export async function placeFooterLogo({ slot, path = null, pathFor = null, read, write, stamp, skip }) {
+export async function placeFooterLogo({
+  slot,
+  path = null,
+  pathFor = null,
+  read,
+  write,
+  stamp,
+  skip,
+  frame = null,
+  demoFiles = []
+}) {
+  /** @type {any} */
+  let state = null
+  /** @type {unknown} */
+  let refused = null
   try {
-    const state = await read('content.contract', { operation: 'inspect' })
-    if (state?.ok === false) throw new Error(String(state.message ?? state.error ?? 'no answer'))
-    const listed = state?.slots?.find((s) => s?.key === slot && s?.type === 'image')
-    if (!listed) {
-      skip('footer-logo', `the site's content contract has no picture slot ${slot}`)
-      return false
-    }
-    // `pathFor` sees the slot's Slot fit first (a logo too narrow for it is set on a wider canvas, or not placed at all).
-    if (pathFor) path = await pathFor(listed.fit ?? null)
-    if (!path) return false
+    state = await read('content.contract', { operation: 'inspect' })
+    if (state?.ok === false)
+      throw Object.assign(new Error(String(state.message ?? state.error ?? 'no answer')), { answer: state })
+  } catch (error) {
+    refused = error
+    state = null
+  }
+  const listed = state?.slots?.find((/** @type {any} */ s) => s?.key === slot && s?.type === 'image')
+  if (state && !listed) {
+    skip('footer-logo', `the site's content contract has no picture slot ${slot}`)
+    return false
+  }
+  // `pathFor` sees the slot's Slot fit first (a logo too narrow for it is set on a wider canvas, or not placed at all).
+  // A contract that could not be read gave no fit: the row's frame stands for it.
+  if (pathFor) path = await pathFor(state ? (listed.fit ?? null) : fitOfFrame(frame))
+  if (!path) return false
+  if (state) {
     const changes = { [slot]: path }
     const requestId = createHash('sha256')
       .update(JSON.stringify({ stamp, revision: state.revision, changes }))
       .digest('hex')
-    await write('content.contract', {
-      operation: 'apply',
-      apply_id: `contract-${stamp}`,
-      expected_revision: state.revision,
-      request_id: requestId,
-      changes,
-      evidence: {}
-    })
-    return true
-  } catch (error) {
-    skip(
-      'footer-logo',
-      `the site refused the footer logo (${error instanceof Error ? error.message : error})`
-    )
+    try {
+      await write('content.contract', {
+        operation: 'apply',
+        apply_id: `contract-${stamp}`,
+        expected_revision: state.revision,
+        request_id: requestId,
+        changes,
+        evidence: {}
+      })
+      return true
+    } catch (error) {
+      refused = error
+    }
+  }
+  const why = refused instanceof Error ? refused.message : String(refused)
+  if (judgesPicture(refused)) {
+    skip('footer-logo', `the site refused the footer logo (${why})`)
     return false
   }
+  const placed = await logoIntoModule({ slot, path, demoFiles, read, write }).catch((error) => {
+    skip(
+      'footer-logo',
+      `the site refused the footer logo (${why}; ${error instanceof Error ? error.message : error})`
+    )
+    return null
+  })
+  if (placed === false)
+    skip('footer-logo', `the site refused the footer logo (${why}) and its module shows no template logo`)
+  return placed === true
+}
+
+/** The Slot fit a row's `frame` stands for when the contract gives none: the frame is the slot sample's box. */
+export function fitOfFrame(/** @type {{width: number, height: number} | null | undefined} */ frame) {
+  const width = Number(frame?.width)
+  const height = Number(frame?.height)
+  if (!(width > 0 && height > 0)) return null
+  return {
+    kind: 'logo',
+    boxes: { desktop: { width, height } },
+    minWidth: Math.ceil(width * 1.5),
+    aspect: width / height
+  }
+}
+
+/** Whether a refusal judged the picture itself (a slot problem code), rather than the contract as a whole. */
+function judgesPicture(/** @type {any} */ error) {
+  const answer = error?.answer
+  const codes = [
+    answer?.code,
+    ...(Array.isArray(answer?.problems) ? answer.problems.map((/** @type {any} */ p) => p?.code) : [])
+  ]
+  return codes.some((code) => typeof code === 'string' && code.startsWith('SLOT_'))
+}
+
+/**
+ * The logo in the footer slot's own module HTML, through the content door: every picture there showing one of the
+ * template's logo files shows the logo instead. Only a module slot (`module-<id>.<n>`) has one HTML to change.
+ * @param {{slot: string, path: string, demoFiles: string[], read: Function, write: Function}} input
+ * @returns {Promise<boolean>} whether a picture was changed
+ */
+export async function logoIntoModule({ slot, path, demoFiles, read, write }) {
+  const id = Number(/^module-(\d+)\.\d+$/.exec(slot)?.[1])
+  if (!id || !demoFiles.length) return false
+  const answer = await read('content.get', { kind: 'module', id })
+  if (answer?.ok === false || !answer?.item)
+    throw new Error(String(answer?.message ?? answer?.error ?? 'module not found'))
+  let placed = 0
+  const html = String(answer.item.content ?? '').replace(/<img\b[^>]*>/gi, (tag) => {
+    const src = tag.match(/\ssrc\s*=\s*(["'])([\s\S]*?)\1/i)?.[2] ?? ''
+    if (!demoFiles.some((f) => src.includes(f))) return tag
+    placed += 1
+    // The template's other sizes of its own logo (`srcset`) would win over the new `src` on a sharp screen.
+    return tag.replace(/\ssrcset\s*=\s*(["'])[\s\S]*?\1/i, '').replace(src, path)
+  })
+  if (!placed) return false
+  await write('content.update', { kind: 'module', id, fields: { content: html } })
+  return true
 }

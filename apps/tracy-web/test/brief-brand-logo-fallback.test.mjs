@@ -44,7 +44,7 @@ test('a logo that would show below a legible height is not placed: the spot show
 })
 
 /** A T4 site with one profile, a footer logo slot with its Slot fit, and modules whose HTML may print a logo file. */
-function t4Site({ profileWrites = 'ok', minWidth = 240 } = {}) {
+function t4Site({ profileWrites = 'ok', minWidth = 240, contract = 'ok' } = {}) {
   const state = {
     profile: {
       site_logo: 'images/demo/logo/dark.png',
@@ -83,6 +83,9 @@ function t4Site({ profileWrites = 'ok', minWidth = 240 } = {}) {
       state.files.add(params.path)
       return { ok: true, path: params.path }
     }
+    // A record rewritten outside the contract earlier in the build: the contract can no longer read the site.
+    if (action === 'content.contract' && params.operation === 'inspect' && contract === 'unreadable')
+      return { ok: false, error: 'error', message: 'HTML slot is missing or ambiguous' }
     if (action === 'content.contract' && params.operation === 'inspect')
       return {
         ok: true,
@@ -91,6 +94,13 @@ function t4Site({ profileWrites = 'ok', minWidth = 240 } = {}) {
         slots: [
           { key: 'module-132.0', type: 'image', sample: state.slot, fit: { minWidth, aspect: 161 / 49 } }
         ]
+      }
+    if (action === 'content.contract' && params.operation === 'apply' && contract === 'judged')
+      return {
+        ok: false,
+        error: 'error',
+        code: 'SLOT_IMAGE_OPAQUE',
+        message: 'the picture has no transparent edge'
       }
     if (action === 'content.contract' && params.operation === 'apply') {
       state.slot = params.changes['module-132.0']
@@ -104,6 +114,10 @@ function t4Site({ profileWrites = 'ok', minWidth = 240 } = {}) {
           .slice(params.offset, params.offset + params.limit)
           .map(([id, content]) => ({ id, content }))
       }
+    if (action === 'content.get' && params.kind === 'module')
+      return state.modules.has(params.id)
+        ? { ok: true, item: { id: params.id, content: state.modules.get(params.id) } }
+        : { ok: false, error: 'not_found', message: 'no such module' }
     if (action === 'content.update' && params.kind === 'module') {
       state.modules.set(params.id, params.fields.content)
       return { ok: true }
@@ -155,6 +169,43 @@ test('a brief logo the site refuses, or too small to read, leaves the name every
   assert.match(site.state.modules.get(132), /Northgate Dental/)
   for (const html of site.state.modules.values()) assert.doesNotMatch(html, /images\/demo\/logo/)
   assert.ok(result.skipped.some((s) => s.where === 'footer-logo'))
+})
+
+test('a contract the site can no longer read still gets the footer logo, through the slot module HTML', async () => {
+  const site = t4Site({ contract: 'unreadable' })
+  const result = await brief(site, {
+    name: 'Harbour Lane Florist',
+    logo: { single: await framed(322, 98, 70) }
+  })
+  assert.match(site.state.modules.get(132), /<img src="images\/tracy-brand\/logo-[^"]+\.png" alt="">/)
+  for (const html of site.state.modules.values()) assert.doesNotMatch(html, /images\/demo\/logo/)
+  assert.ok(result.written.includes('footer-logo'))
+  assert.ok(!result.skipped.some((s) => s.where === 'footer-logo'))
+})
+
+test('with the contract unreadable, a logo too small for the frame the row names leaves the name in the footer', async () => {
+  const site = t4Site({ contract: 'unreadable' })
+  const result = await brief(site, {
+    name: 'Harbour Lane Florist',
+    logo: { single: await framed(80, 24, 10) }
+  })
+  assert.match(site.state.modules.get(132), /Harbour Lane Florist/)
+  for (const html of site.state.modules.values())
+    assert.doesNotMatch(html, /images\/(demo|tracy-brand)\/logo/)
+  assert.ok(result.skipped.some((s) => s.where === 'footer-logo'))
+})
+
+test('a refusal that judges the picture itself is final: the footer shows the name, never placed around the contract', async () => {
+  const site = t4Site({ contract: 'judged' })
+  const result = await brief(site, {
+    name: 'Harbour Lane Florist',
+    logo: { single: await framed(322, 98, 70) }
+  })
+  assert.equal(site.state.slot, 'images/demo/logo/light.png')
+  assert.match(site.state.modules.get(132), /<span class="tracy-brand-name">Harbour Lane Florist<\/span>/)
+  assert.ok(
+    result.skipped.some((s) => s.where === 'footer-logo' && /SLOT_IMAGE_OPAQUE|transparent/.test(s.reason))
+  )
 })
 
 test('without the brief build flag a refused logo leaves the template as it was', async () => {

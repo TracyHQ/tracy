@@ -200,7 +200,17 @@ async function writeSiteBrand({ prepared, profile, stamp, write, read, wrote: to
         ? uploader({ write, stamp, skip }, { 'logo-footer': fitted.bytes })('logo-footer', 'footer-logo')
         : upload(roleOf(variant), 'footer-logo')
     }
-    if (await placeFooterLogo({ slot: profile.footerSlot, pathFor, read, write, stamp, skip })) {
+    const placed = await placeFooterLogo({
+      slot: profile.footerSlot,
+      pathFor,
+      read,
+      write,
+      stamp,
+      skip,
+      frame: profile.frame ?? null,
+      demoFiles: prepared.demoLogoFiles ?? []
+    })
+    if (placed) {
       used.add(variant)
       wrote('footer-logo')
     }
