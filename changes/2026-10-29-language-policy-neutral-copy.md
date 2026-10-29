@@ -1,0 +1,2 @@
+- **Added the website opportunities neutral copy locale files to the language policy translation list** — Akemi (agent) · chore/language-policy-neutral-copy · 2026-10-29
+  **Affects:** anyone adding localized values to `packages/wo/website-opportunities/domain/neutral-copy/*.json`; the language-policy gate no longer flags them. The gate reads the policy from the PR base, so this must be on `develop` before such a PR.

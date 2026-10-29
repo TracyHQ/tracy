@@ -24,6 +24,10 @@
     {
       "path": "packages/locale/tracy-locale-vi/vi/*.json",
       "reason": "Vietnamese interface language pack; values are localized text shown to users."
+    },
+    {
+      "path": "packages/wo/website-opportunities/domain/neutral-copy/*.json",
+      "reason": "Per-locale neutral copy for website opportunities (including the forbidden-phrases list keyed by locale); values are localized text."
     }
   ],
   "lines": [],
