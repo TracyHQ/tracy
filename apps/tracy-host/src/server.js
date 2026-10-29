@@ -14,6 +14,7 @@ import { serve } from '@hono/node-server'
 import { buildApp } from './app.js'
 import { makeOutline, makeShoot } from './browser.js'
 import { makeDemoQa } from './demo-qa-browser.js'
+import { makePictureOverlap } from './picture-overlap-browser.js'
 import { readConfig } from './config.js'
 import { runScript } from './run.js'
 import { acceptJob, clearDraining, jobAccepted, orphanJobs, putJob, readJob } from './jobs.js'
@@ -66,7 +67,8 @@ export async function start({
   log.log(
     `[host] browser work at once: ${config.browserRuns} QA run(s) and capture(s), ${config.demoQaTabs} tab(s) a run`
   )
-  const app = buildApp({ config, jobs, run, shoot, outline, demoQa })
+  const pictureOverlap = await makePictureOverlap({ log })
+  const app = buildApp({ config, jobs, run, shoot, outline, demoQa, pictureOverlap })
 
   const server = await new Promise((resolve) => {
     const s = serve(

@@ -59,6 +59,7 @@ import { emdashMediaRoute } from './emdash-media.js'
 import { CMS_LOG_KIND, runCmsLogJob, validateCmsLogBody } from './cms-log.js'
 import { LOOK_CSS_KIND, runLookCssJob, validateLookCssBody } from './look-css.js'
 import { DS_SLOT_KIND, runDsSlotJob, validateDsSlotBody } from './ds-slot.js'
+import { overlapFolderOf } from './picture-overlap-browser.js'
 
 /** Same shape `uuid.uuid4().hex[:12]` produces on the Python side — short enough for a log line,
  * long enough that two jobs never collide. */
@@ -1049,6 +1050,37 @@ function demoQaRoute({ demoQa, proxyOrigin = null }) {
 }
 
 /**
+ * `POST /_host/picture-overlap` — the safety net after a brief build (spec TracyHQ/tracy#189): the build's pictures (under
+ * `folder`) that cover a heading, a paragraph, a button or the logo on the named pages at any visitor width
+ * (`picture-overlap-browser.js`). Same target rule as `/demo-qa`: a label, a port, a hostname; never a URL. It only reads.
+ */
+function pictureOverlapRoute({ pictureOverlap, proxyOrigin = null }) {
+  return async (c) => {
+    if (!pictureOverlap) return c.json({ code: 'NO_BROWSER' }, 503)
+    const { body, refused } = bodyObject(c)
+    if (refused) return refused
+    const asked = demoQaBody(body)
+    if (asked.error) return badRequest(c, asked.error)
+    const folder = overlapFolderOf(body.folder)
+    if (!folder) return badRequest(c, 'refused folder')
+    const deadline = qaDeadline({ budgetMs: 120_000 }, c.req.raw.signal)
+    try {
+      const address = await demoAddress(asked, { discover: true, signal: deadline.signal, proxyOrigin })
+      deadline.signal.throwIfAborted()
+      return c.json(
+        await pictureOverlap({ asked: { pages: asked.pages, folder }, ...address, signal: deadline.signal }),
+        200
+      )
+    } catch (error) {
+      const code = error?.code === 'DEMO_QA_DEADLINE' ? 'PICTURE_OVERLAP_DEADLINE' : 'PICTURE_OVERLAP_FAILED'
+      return c.json({ code, why: String(error?.message ?? error).slice(0, 400) }, 502)
+    } finally {
+      deadline.dispose()
+    }
+  }
+}
+
+/**
  * `GET /health` — the fleet's own probe. Deliberately UNSIGNED: it carries no secret and answers
  * with nothing a stranger could use, the same call Docker health-checks and load balancers make
  * without a credential. `docker: true` means `run` could reach the docker daemon Task 3's
@@ -1181,6 +1213,7 @@ export function buildApp({
   shoot = null,
   outline = null,
   demoQa = null,
+  pictureOverlap = null,
   captureTimeoutMs = CAPTURE_TIMEOUT_MS,
   deps: _deps = {}
 }) {
@@ -1253,6 +1286,10 @@ export function buildApp({
   )
   app.post('/_host/outline', outlineRoute({ outline }))
   app.post('/_host/demo-qa', demoQaRoute({ demoQa, proxyOrigin: config.siteProxyOrigin }))
+  app.post(
+    '/_host/picture-overlap',
+    pictureOverlapRoute({ pictureOverlap, proxyOrigin: config.siteProxyOrigin })
+  )
 
   return app
 }

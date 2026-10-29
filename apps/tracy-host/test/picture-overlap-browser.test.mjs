@@ -8,6 +8,7 @@ import { createServer } from 'node:http'
 import { after, before, test } from 'node:test'
 
 import { overlapFindings, readPictureOverlaps } from '../src/picture-overlap.js'
+import { makePictureOverlap } from '../src/picture-overlap-browser.js'
 
 let browser = null
 let server = null
@@ -110,6 +111,26 @@ test('a framed photo in its own column, a backdrop and a template caption are no
   await p.close()
   assert.deepEqual(overlapFindings(column), [])
   assert.deepEqual(overlapFindings(design), [])
+})
+
+test("the route's browser reads every named page of the site and answers the findings", async (t) => {
+  if (skip()) return t.skip(skip())
+  const playwright = await import('playwright')
+  const check = await makePictureOverlap({ playwright, log: {} })
+  const answer = await check({
+    asked: { pages: ['/over', '/column'], folder: 'tracy-content/' },
+    base: `${base}/`,
+    signal: new AbortController().signal
+  })
+  await check.close()
+  assert.deepEqual(
+    answer.pages.map((p) => p.ok),
+    [true, true]
+  )
+  assert.deepEqual(
+    answer.findings.map((f) => f.src),
+    ['images/tracy-content/ball.svg']
+  )
 })
 
 test('the findings merge the widths of one picture', () => {

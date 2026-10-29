@@ -59,6 +59,7 @@ import { planIdentitySteps } from './joomla-plan-identity.js'
 import { guardBoundNodes } from './joomla-bound-nodes.js'
 import { contentMapAt, plannedSlotValues, showcaseOff, writeOutsideMap } from './joomla-outside-map.js'
 import { takenOffPicturePaths } from './cutout-css.js'
+import { overlapSafetyNet } from './picture-overlap-net.js'
 import { lineLimits, withBoxLimits, withinLines } from './slot-box-limits.js'
 import { writeWoContent } from './joomla-wo-content.js'
 import {
@@ -544,6 +545,8 @@ async function chosenLanguages(asked, contract, note) {
  *   photographs for a site an opportunity built (`real-pictures.js`); with them, nothing is drawn
  * @param {{forSite: Function, recordBefore: Function, recordWrite: Function} | null} [deps.woContent] - the restaurant's own
  *   posts for a site an opportunity built (`wo-content.js`), written into the demo articles last
+ * @param {((siteKey: string, pages: string[]) => Promise<{findings?: any[]} | null>) | null} [deps.pictureOverlap] - the
+ *   site's host reading the build's pictures over the words at every width (`picture-overlap-net.js`); none: unchecked
  */
 export function createJoomlaEngine({
   models,
@@ -552,7 +555,8 @@ export function createJoomlaEngine({
   siteReader = null,
   fetchImpl,
   realPictures = null,
-  woContent = null
+  woContent = null,
+  pictureOverlap = null
 }) {
   /**
    * `bound`: a slot plan's card pictures (`copyPinsOf`), each card's own entity's. `copy`: the copy pins, whose card
@@ -2245,8 +2249,8 @@ export function createJoomlaEngine({
       }
       // What the content map does not reach (#196): credit line, page addresses, and the head block that repaints the demo
       // backgrounds and hides demo play buttons and links to pages taken off (`joomla-outside-map.js`). A brief build only.
-      if (outsidePlan?.outside)
-        await time('outsideMapMs', async () =>
+      if (outsidePlan?.outside) {
+        const outsideMap = async (pictures, headOnly = false) =>
           writeOutsideMap({
             apply,
             siteKey,
@@ -2257,10 +2261,26 @@ export function createJoomlaEngine({
             time: ctx.time,
             applyId: `outside-${Date.now().toString(36)}`,
             locale: prepared.written ?? SOURCE,
-            // Cut-out figures taken off (ladder step 2): hidden by the head block, so they leave no box.
-            pictures: takenOffPicturePaths(placedReal, art.values, refusedByWrite)
+            pictures,
+            headOnly
           })
-        )
+        // Cut-out figures taken off (ladder step 2): hidden by the head block, so they leave no box.
+        const hidden = takenOffPicturePaths(placedReal, art.values, refusedByWrite)
+        await time('outsideMapMs', () => outsideMap(hidden))
+        // The safety net: a placed picture that covers words at any width is taken off too (`picture-overlap-net.js`).
+        if (pictureOverlap && Object.keys(art?.values ?? {}).length > 0)
+          await time('pictureOverlapMs', () =>
+            overlapSafetyNet({
+              check: pictureOverlap,
+              siteKey,
+              plan: outsidePlan,
+              pictures: hidden,
+              rewrite: (pictures) => outsideMap(pictures, true),
+              note: ctx.note,
+              time: ctx.time
+            })
+          )
+      }
       // 🔒 The restaurant's own posts, last: after the tidy-up and the demo trim settled which articles show (`joomla-wo-content.js`).
       if (prepared.woPosts && woContent)
         await time('woContentMs', () =>

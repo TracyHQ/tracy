@@ -57,7 +57,7 @@ const OTHER_ORIGIN_TIMEOUT_MS = 5000
  * @param {{ serveFrom?: string | null, serveFromIsProxy?: boolean, proxySiteLabel?: string | null, siteHosts?: string[] }} [self] where the site's own names are served from
  *   when `pageUrl` is a name that does not resolve here (`self-named.js`)
  */
-async function boundOtherOrigins(
+export async function boundOtherOrigins(
   context,
   pageUrl,
   { serveFrom = null, serveFromIsProxy = false, proxySiteLabel = null, siteHosts = [] } = {}

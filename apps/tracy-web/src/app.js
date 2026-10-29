@@ -2016,6 +2016,28 @@ export function buildApp(deps) {
         generateFor: quickstartGenerateFor,
         verifySite: quickstartVerifySite
       })
+    // The overlap safety net of a brief build (`sites/brief-engines/picture-overlap-net.js`): the site's host reads the
+    // build's pictures over the words in a browser. Read only; null with no host, and an answer that is not ok is none.
+    const briefPictureOverlap = deps.host
+      ? async (/** @type {string} */ siteKey, /** @type {string[]} */ pages) => {
+          const site = await siteByKey(deps.pool, siteKey)
+          if (!site) return null
+          const answer = await deps.host.hostCall(
+            deps.config,
+            site.host ?? deps.config.defaultHost,
+            '/picture-overlap',
+            {
+              label: site.label,
+              platform: site.platform,
+              port: site.port ?? null,
+              ...demoSelfNames(deps.config, site),
+              pages
+            },
+            { fetchImpl: deps.fetchImpl ?? fetch, timeoutMs: 150_000 }
+          )
+          return answer?.ok ? answer.body : null
+        }
+      : null
     // `deps.briefs`: a test's own runner, so a route test never starts a real one.
     const briefs =
       deps.briefs ??
@@ -2039,7 +2061,8 @@ export function buildApp(deps) {
               siteFile,
               siteReader,
               realPictures,
-              woContent
+              woContent,
+              pictureOverlap: briefPictureOverlap
             })
           ),
           emdash: quickstartEngine(

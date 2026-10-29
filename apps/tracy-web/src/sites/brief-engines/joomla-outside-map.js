@@ -200,10 +200,12 @@ export function plannedSlotValues(plan) {
  * @param {string} input.applyId
  * @param {string} [input.locale] - the language the site is written in: the copyright line is said in it
  * @param {string[]} [input.pictures] - site paths of the clear pictures that take cut-out figures off (`cutout-css.js`)
+ * @param {boolean} [input.headOnly] - write the head block only (the overlap safety net)
  * @returns {Promise<{credit: number, aliases: number, head: number, links: number}>}
  */
 export async function writeOutsideMap({
   pictures = [],
+  headOnly = false,
   locale = 'en',
   apply,
   siteKey,
@@ -223,37 +225,41 @@ export async function writeOutsideMap({
   // The credit line and the addresses, in one batch.
   /** @type {Array<{kind: string, id: number, fields: Record<string, unknown>}>} */
   const steps = []
-  try {
-    const credit = creditSteps({
-      modules: await readModules(apply, siteKey),
-      name: plan?.brand?.name?.value ?? null,
-      locale
-    })
-    steps.push(...credit)
-    done.credit = credit.length
-  } catch (error) {
-    say("the template's credit line could not be read", error)
-  }
-  try {
-    const aliases = planAliases({ contentMap, articles: await readArticles(apply, siteKey) })
-    steps.push(...aliases.map((a) => ({ kind: 'article', id: a.id, fields: { alias: a.alias } })))
-    done.aliases = aliases.length
-  } catch (error) {
-    say('the page addresses could not be read', error)
-  }
-  if (steps.length > 0) {
-    const wrote = await writeSteps({ apply, siteKey, steps, applyId })
-    for (const line of wrote.notes.slice(0, 3)) note(line)
-    const refused = new Set(wrote.refused.map((s) => `${s.kind}:${s.id}`))
-    done.credit = steps.filter((s) => s.kind === 'module' && !refused.has(`module:${s.id}`)).length
-    done.aliases = steps.filter((s) => s.kind === 'article' && !refused.has(`article:${s.id}`)).length
-  }
-  if (done.credit) time('creditLinesTakenOff', done.credit)
-  if (done.aliases) time('aliasesWritten', done.aliases)
+  // `headOnly`: the head block written again (the overlap safety net, `picture-overlap-net.js`), the records left as the
+  // first write set them.
+  if (!headOnly) {
+    try {
+      const credit = creditSteps({
+        modules: await readModules(apply, siteKey),
+        name: plan?.brand?.name?.value ?? null,
+        locale
+      })
+      steps.push(...credit)
+      done.credit = credit.length
+    } catch (error) {
+      say("the template's credit line could not be read", error)
+    }
+    try {
+      const aliases = planAliases({ contentMap, articles: await readArticles(apply, siteKey) })
+      steps.push(...aliases.map((a) => ({ kind: 'article', id: a.id, fields: { alias: a.alias } })))
+      done.aliases = aliases.length
+    } catch (error) {
+      say('the page addresses could not be read', error)
+    }
+    if (steps.length > 0) {
+      const wrote = await writeSteps({ apply, siteKey, steps, applyId })
+      for (const line of wrote.notes.slice(0, 3)) note(line)
+      const refused = new Set(wrote.refused.map((s) => `${s.kind}:${s.id}`))
+      done.credit = steps.filter((s) => s.kind === 'module' && !refused.has(`module:${s.id}`)).length
+      done.aliases = steps.filter((s) => s.kind === 'article' && !refused.has(`article:${s.id}`)).length
+    }
+    if (done.credit) time('creditLinesTakenOff', done.credit)
+    if (done.aliases) time('aliasesWritten', done.aliases)
 
-  // Links to pages taken off, and links that lead nowhere (`#`): rewritten to the kept page or removed in their records.
-  done.links = await sweepDeadLinks({ apply, siteKey, plan, applyId, note })
-  if (done.links) time('linksSwept', done.links)
+    // Links to pages taken off, and links that lead nowhere (`#`): rewritten to the kept page or removed in their records.
+    done.links = await sweepDeadLinks({ apply, siteKey, plan, applyId, note })
+    if (done.links) time('linksSwept', done.links)
+  }
 
   // The head block: backgrounds read from what the site serves, videos and pictures from the plan, dead links from the menu.
   let backgrounds = /** @type {Array<{selector: string, file: string}>} */ ([])

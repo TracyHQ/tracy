@@ -27,6 +27,7 @@ import { picturePolicy } from '../../lib/wo-picture-policy.js'
 import { customizableSlots } from '../../lib/contract-customize.js'
 import { pool } from './shared.js'
 import { drawPlanned, shapeDecor } from './drawn-pictures.js'
+import { unmeasuredFigures } from './unmeasured-figures.js'
 
 /** Pictures cut at once: each holds a decoded photograph in memory (C15). */
 const CUT_AT_ONCE = 4
@@ -182,19 +183,11 @@ export async function shapeReal({
   let made
   let decorPlan = null
   if (cms === 'joomla' && real.brief && domain.roleDecidesKeep(contentMap)) {
-    const readable = new Map(real.pictures.map((p) => [p.id, p]))
     // A cut-out slot may take the owner's own clear-ground picture (ladder step 1): which pictures are, read from them.
-    const clearGround = contentMap.slots.some((s) => s?.fit?.kind === 'cutout')
-      ? await ownClearGrounds(real)
-      : new Set()
-    const assets = (real.brief.assets ?? [])
-      .filter((a) => readable.has(a?.id))
-      .map((a) => ({
-        ...a,
-        width: readable.get(a.id).width,
-        height: readable.get(a.id).height,
-        ...(clearGround.has(a.id) ? { hasAlpha: true } : {})
-      }))
+    const assets = await briefAssetsOf(
+      real,
+      contentMap.slots.some((s) => s?.fit?.kind === 'cutout')
+    )
     // A card's offering is the one its name says, and the name is the text path's (`copy`): one decider for both.
     // A brief build's site plan names each kept card (#192, `honesty.cardNames`) and decides it; hidden cards have none.
     const cardNames = plannedNames ?? domain.cardNamesOf(contentMap, copy)
@@ -219,6 +212,33 @@ export async function shapeReal({
   } else {
     const { clusterOf } = domain.nearCopies(labels)
     made = domain.planPlacement({ groups: map.groups, labels, clusterOf, bound })
+  }
+  // A demo figure the map never measured (a transparent PNG read now) that the labeller says shows a subject climbs the
+  // cut-out ladder too, steps 1 and 2 only (`unmeasured-figures.js`); a design piece stays.
+  let figures = []
+  if (cms === 'joomla' && real.brief) {
+    const found = await unmeasuredFigures({
+      domain,
+      slots: contentMap.slots,
+      never: map.never,
+      demo,
+      siteBytes,
+      checkDrawing: real.checkDrawing,
+      note
+    })
+    figures = found.slots
+    if (figures.length) {
+      const keys = new Set(figures.map((s) => s.key))
+      const brief = { ...real.brief, assets: await briefAssetsOf(real, true) }
+      const byKey = new Map(figures.map((s) => [s.key, s]))
+      const slots = contentMap.slots.map((s) => byKey.get(s.key) ?? s)
+      const figurePlan = domain.planDecor({ contentMap: { ...contentMap, slots }, brief, copy })
+      const more = figurePlan.slots.filter((d) => keys.has(d.key))
+      decorPlan = {
+        ...(decorPlan ?? { version: figurePlan.version }),
+        slots: [...(decorPlan?.slots ?? []), ...more]
+      }
+    }
   }
   const fresh = {
     ...made,
@@ -418,7 +438,7 @@ export async function shapeReal({
   // The icons and cut-outs (#195): uploaded and written like any other picture, each its own group.
   if (decorPlan?.slots.length) {
     started = Date.now()
-    const slotOf = new Map([...contentMap.slots, ...declared].map((s) => [s.key, s]))
+    const slotOf = new Map([...contentMap.slots, ...declared, ...figures].map((s) => [s.key, s]))
     const decor = await shapeDecor({
       decisions: decorPlan.slots,
       slotOf,
@@ -521,6 +541,25 @@ export function pictureReport({ shaped, values, refused, readback, homeHtml = nu
       unused: shaped.plan.unused.length
     }
   }
+}
+
+/**
+ * The brief's assets the build can read, each with its size, and marked `hasAlpha` when it is a clean clear-ground
+ * picture (all four corners transparent) and `withClear` asks for it.
+ * @param {any} real
+ * @param {boolean} withClear
+ */
+async function briefAssetsOf(real, withClear) {
+  const readable = new Map(real.pictures.map((p) => [p.id, p]))
+  const clearGround = withClear ? await ownClearGrounds(real) : new Set()
+  return (real.brief?.assets ?? [])
+    .filter((a) => readable.has(a?.id))
+    .map((a) => ({
+      ...a,
+      width: readable.get(a.id).width,
+      height: readable.get(a.id).height,
+      ...(clearGround.has(a.id) ? { hasAlpha: true } : {})
+    }))
 }
 
 /**

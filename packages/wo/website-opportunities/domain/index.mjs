@@ -326,6 +326,13 @@ export {
   planDecor
 } from './decor-plan.mjs'
 export { CUT_OUT_REASONS, CUT_OUT_STEPS, cutOutStepOf, cutOutZoneOf, ownCutOutOf } from './cutout-ladder.mjs'
+export {
+  FIGURE_SUBJECTS,
+  MAX_FIGURE_LABELS,
+  figureCandidatesOf,
+  figureShowsSubject,
+  unmeasuredFigureSlotsOf
+} from './unmeasured-figures.mjs'
 export { collectSocialProfile, PROFILE_TIERS } from './social-profile.mjs'
 export {
   fetchSocialStats,

@@ -146,15 +146,26 @@ function readInPage({ folder, coveredShare, backdropShare }) {
  * Read one page at every width: the pictures under `folder` that cover words.
  * @param {import('playwright').Page} page - a page already opened on the site
  * @param {string} url
- * @param {{folder?: string, widths?: readonly number[], height?: number, settleMs?: number}} [options]
+ * @param {{folder?: string, widths?: readonly number[], height?: number, settleMs?: number, gotoMs?: number,
+ *   loadGraceMs?: number}} [options]
  * @returns {Promise<Array<{width: number, src: string, clear: boolean, box: object, covers: any[]}>>}
  */
 export async function readPictureOverlaps(page, url, options = {}) {
-  const { folder = 'tracy-content/', widths = OVERLAP_WIDTHS, height = 900, settleMs = 300 } = options
+  const {
+    folder = 'tracy-content/',
+    widths = OVERLAP_WIDTHS,
+    height = 900,
+    settleMs = 300,
+    gotoMs = 30_000,
+    loadGraceMs = 8000
+  } = options
   const out = []
   for (const width of widths) {
     await page.setViewportSize({ width, height })
-    await page.goto(url, { waitUntil: 'load' })
+    // Parsed is the condition, loaded a bounded grace: one request that never ends must not hold the check (the same
+    // rule as the screenshotter's `open`, `browser.js`).
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: gotoMs })
+    await page.waitForLoadState('load', { timeout: loadGraceMs }).catch(() => {})
     await page.waitForTimeout(settleMs)
     const found = await page.evaluate(readInPage, {
       folder,

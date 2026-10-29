@@ -2604,6 +2604,12 @@ or when fewer than min(collected photos, 3) of the place's photos appear on the 
 `replace-image` row at save time; only when the template has nowhere for a testimonial does the plan write
 `unplaced:[{item:"reviews",reason}]`, and the reason goes into the check result for the reviewer.
 
+After a Joomla brief build writes its pictures and head block, the engine calls `POST /_host/picture-overlap {label,
+platform, port, pages}` once (`sites/brief-engines/picture-overlap-net.js`; host `picture-overlap-browser.js`). The host
+reads home and up to four kept pages at 1440, 1024, 768 and 390 and answers the build pictures (under `tracy-content/`)
+that cover a heading, a paragraph, a button or the logo. Each is hidden by rewriting the head block only; the build notes
+name it. The call only reads, and no answer, a failure or a timeout never fails the build or the QA gate.
+
 After demo QA, `opportunities-build/demo-look.js` captures every page QA read (up to 165) at 1440 and 390 via
 `POST /_host/capture`, cutting each image from top to bottom (footer included). Ordinary captures keep their JSON response;
 vision uses the opt-in `vision-tiles/1` NDJSON stream. At most two routes travel in a capture request, while rendering and model calls

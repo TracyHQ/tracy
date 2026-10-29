@@ -192,6 +192,38 @@ test('a T3 site of another trade gets the same block in its own head-code param,
   assert.deepEqual(site.writes.find((w) => w.kind === 'module' && w.id === 90).fields, { published: 0 })
 })
 
+test('#189 head only (the overlap safety net): the head block hides the pictures, no record is written again', async () => {
+  const t3 = { id: 9, client_id: 0, params: { t3_template: '1', snippet_close_head: '' } }
+  const site = fakeSite({ styles: [t3] })
+  const plan = {
+    brand: { name: { value: 'Copperleaf Bakery' } },
+    pages: [],
+    outside: planOutsideMap({ brief, contentMap })
+  }
+  const covering = `images/tracy-content/${'b'.repeat(64)}.png`
+  const done = await writeOutsideMap({
+    apply: site.apply,
+    siteKey: 's',
+    plan,
+    reader,
+    contentMap,
+    note: () => {},
+    applyId: 'outside-2',
+    pictures: [covering],
+    headOnly: true
+  })
+  assert.deepEqual(
+    { credit: done.credit, aliases: done.aliases, links: done.links },
+    { credit: 0, aliases: 0, links: 0 }
+  )
+  assert.deepEqual(
+    site.writes.map((w) => w.kind),
+    ['templateStyle']
+  )
+  const head = JSON.parse(String(site.writes[0].fields.params)).snippet_close_head
+  assert.match(head, new RegExp(`img\\[src\\*="${covering}"\\]\\{display:none !important\\}`))
+})
+
 test('a site with no site plan (not a brief build) is not touched', async () => {
   const site = fakeSite({ styles: [] })
   const done = await writeOutsideMap({
