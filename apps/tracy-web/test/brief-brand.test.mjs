@@ -615,3 +615,34 @@ test('D1 createSiteBrand: only a name the customer gave turns the site name on i
   assert.deepEqual(await run({ name: 'Golden Crust', nameFrom: 'label' }), {})
   assert.deepEqual(await run({ name: 'JA Essence', nameFrom: 'template' }), {})
 })
+
+test('#193 createSiteBrand: a brief build whose plan says brief-logo writes the brief picture as the logo', async () => {
+  // A fictional bakery: no Brand upload in the form, the logo is one of the owner's pictures.
+  const site = fakeSite()
+  const logo = await png(600, 600)
+  const asked = []
+  const brand = createSiteBrand({
+    applyFor: () => site.door,
+    readFile: async () => null,
+    versionOf: async () => '1.1.1',
+    sitePlanFor: async () => ({ logo: { decision: 'brief-logo', assetId: 'asset-logo-1' } }),
+    briefPicture: async (_ctx, id) => {
+      asked.push(id)
+      return logo
+    }
+  })
+  const result = await brand(
+    {
+      siteKey: 's.tracy.test',
+      platform: 'wordpress',
+      quickstart: 'tracy-base/wp7',
+      email: 'owner@example.test',
+      brief: { about: 'x' },
+      normalized: { name: 'Copperleaf Bakery' },
+      note: () => {}
+    },
+    { applyId: 'brand-21' }
+  )
+  assert.deepEqual(asked, ['asset-logo-1'])
+  assert.ok(result.written.includes('site_logo'), JSON.stringify(result))
+})

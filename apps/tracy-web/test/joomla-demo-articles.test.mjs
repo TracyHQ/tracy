@@ -323,3 +323,40 @@ test('The Typography page is a kit page (K3): never planned in the bakery’s wo
     'in the template’s own language the Typography page keeps its words'
   )
 })
+
+test('#189 an article whose lines carry offering roles is an offering page, planned with the pages, never a post', () => {
+  // A fictional bakery template: a "Breads" category of two offering articles no page opens, and one news post.
+  const line = (entity, n, role) => ({
+    key: `${entity}.${n}`,
+    entity,
+    type: 'text',
+    role,
+    sample: 'Lorem ipsum'
+  })
+  const slots = [
+    line('article-31', 0, 'offering.name'),
+    line('article-31', 1, 'offering.description'),
+    line('article-32', 0, 'offering.name'),
+    line('article-32', 1, 'editorial.paragraph'),
+    line('article-40', 0, 'article.title'),
+    line('article-40', 1, 'editorial.paragraph')
+  ]
+  const articles = new Map([
+    ['article-31', { catid: 'category-8', alias: 'sourdough' }],
+    ['article-32', { catid: 'category-8', alias: 'rye' }],
+    ['article-40', { catid: 'category-9', alias: 'oven-news' }]
+  ])
+  const taken = blogArticleSlots({
+    slots,
+    pages: [],
+    kit: new Set(),
+    shown: () => true,
+    isDerived: () => false,
+    articles
+  })
+  assert.deepEqual(taken.stories, ['article-40'])
+  assert.deepEqual(
+    taken.slots.map((s) => s.key),
+    ['article-40.0', 'article-40.1']
+  )
+})

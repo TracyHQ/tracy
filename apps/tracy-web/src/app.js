@@ -2095,7 +2095,16 @@ export function buildApp(deps) {
             ),
           versionOf: async (siteKey) => (await siteByKey(deps.pool, siteKey))?.quickstart_version ?? null,
           // The brief build's site plan: no logo of the business means its name as text (#193).
-          sitePlanFor: (ctx) => woContent.sitePlanFor({ siteKey: ctx.siteKey, email: ctx.email })
+          sitePlanFor: (ctx) => woContent.sitePlanFor({ siteKey: ctx.siteKey, email: ctx.email }),
+          // The brief's own logo, read with the build's pictures (no vision call: the bytes only).
+          briefPicture: async (ctx, assetId) => {
+            const real = await realPictures?.forSite({
+              siteKey: ctx.siteKey,
+              email: ctx.email,
+              visionOverride: null
+            })
+            return real ? real.bytes(assetId) : null
+          }
         })
       })
     // Resume only the failed fill on an existing demo, through the site's own brief runner.

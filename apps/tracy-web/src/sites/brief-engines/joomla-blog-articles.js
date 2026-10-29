@@ -71,11 +71,21 @@ export function blogArticleSlots({
   )
   const ofBlog = (/** @type {string} */ entity) =>
     !opened.has(entity) || blogCategories.has(articles.get(entity)?.catid ?? '')
+  // 🔒 AN ARTICLE WHOSE LINES CARRY OFFERING ROLES (ADR 0040) IS AN OFFERING PAGE, NOT A POST (spec TracyHQ/tracy#189): it
+  // describes what the business sells, so it is planned with the pages from the brief. Measured on the local stand
+  // (29/10/2026): a template's class articles, kept and renamed for the owner's services, sat in a blog category and so
+  // kept the demo's lorem ipsum, only "translated".
+  const offeringPages = new Set(
+    slots
+      .filter((slot) => typeof slot.role === 'string' && slot.role.startsWith('offering.'))
+      .map((slot) => String(slot.entity ?? ''))
+  )
   /** @type {Map<string, any[]>} */
   const byArticle = new Map()
   for (const slot of slots) {
     const entity = String(slot.entity ?? '')
-    if (!/^article-\d+$/.test(entity) || !ofBlog(entity) || kit.has(entity)) continue
+    if (!/^article-\d+$/.test(entity) || !ofBlog(entity) || kit.has(entity) || offeringPages.has(entity))
+      continue
     if (slot.type !== 'text' || isDerived(slot) || !shown(slot)) continue
     byArticle.set(entity, [...(byArticle.get(entity) ?? []), slot])
   }

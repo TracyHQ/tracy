@@ -173,8 +173,10 @@ export async function setSiteBrand({
  * @param {(siteKey: string) => Promise<string | null>} deps.versionOf - the quickstart version the site was built from
  * @param {(ms: number) => Promise<void>} [deps.sleep]
  * @param {(ctx: any) => Promise<any>} [deps.sitePlanFor] - the brief build's site plan, when there is one
+ * @param {(ctx: any, assetId: string) => Promise<Uint8Array | null>} [deps.briefPicture] - a picture of the brief build's own
+ *   brief (its logo), read from where the build keeps the owner's pictures
  */
-export function createSiteBrand({ applyFor, readFile, versionOf, sleep, sitePlanFor }) {
+export function createSiteBrand({ applyFor, readFile, versionOf, sleep, sitePlanFor, briefPicture }) {
   /**
    * @param {{siteKey: string, platform: string, quickstart: string | null, email: string, runId?: string, brief: any, normalized: any,
    *   applied?: (id: string, how?: {reused: boolean}) => void, note: (note: string) => void}} ctx
@@ -225,12 +227,17 @@ export function createSiteBrand({ applyFor, readFile, versionOf, sleep, sitePlan
     // No logo given (or one that could not be read) is no answer: the site keeps the template's logo exactly as
     // released (LOGO-4 dropped, 09/10/2026). A brief written before that may still say `logoAsked`; it is not read.
     if (Object.keys(logo).length) pack.logo = logo
+    const planned = pack.logo ? null : await sitePlanFor?.(ctx).catch(() => null)
+    // 🔒 A BRIEF BUILD WHOSE BRIEF HOLDS THE LOGO SHOWS IT (site plan `logo.decision` `brief-logo`, #193): the logo is one of
+    // the owner's pictures, not a Brand upload of the Add site form, so it is read from the build. Measured on the local
+    // stand (29/10/2026): the plan said `brief-logo`, nothing read it, and every page kept the template's logo.
+    if (!pack.logo && planned?.logo?.decision === 'brief-logo' && typeof planned.logo.assetId === 'string') {
+      const bytes = await briefPicture?.(ctx, planned.logo.assetId).catch(() => null)
+      if (bytes?.byteLength) pack.logo = { single: bytes }
+      else ctx.note('the logo in your information could not be read, so the site shows your name instead')
+    }
     // A brief build with no logo shows the business name as text, never the demo's logo (site plan, #193).
-    if (
-      !pack.logo &&
-      pack.name &&
-      (await sitePlanFor?.(ctx).catch(() => null))?.logo?.decision === 'name-as-text'
-    )
+    if (!pack.logo && pack.name && ['name-as-text', 'brief-logo'].includes(planned?.logo?.decision))
       pack.textLogo = true
     const favicon = await bytesOf(brand.favicon, 'favicon')
     if (favicon) pack.favicon = favicon

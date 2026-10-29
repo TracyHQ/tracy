@@ -1,0 +1,3 @@
+- **A brief build puts the owner's logo in the header and keeps class pages out of the blog rewrite** — Akemi (Claude) · #189 · `feat/brief-build-own-site` · 2026-10-29
+  **Affects:** brief builds on a Joomla contract. When the site plan picks one of the brief's own pictures as the logo (`logo.decision: 'brief-logo'`), the brand step now writes that picture as the site logo; before, nothing read the decision and the demo logo stayed. An article whose lines carry `offering.*` roles is planned as an offering page, not translated as a blog post, so its demo lorem ipsum is rewritten for the business.
+  **Why / Measured:** a local pilot build of a coaching business kept the template's boxing logo and lorem ipsum class cards on the home page.
