@@ -372,6 +372,24 @@ test('T3 favicon through template.siteSettings other_faviconFile', async () => {
   assert.ok(result.written.includes('favicon'))
 })
 
+test('a favicon Tracy made goes up as its ICO and other_faviconFile names the .ico (T3 and T4 print it as the tab icon)', async () => {
+  const { icoOf } = await import('../src/sites/brief-engines/brand-favicon.js')
+  const ico = await icoOf([await png(16, 16), await png(32, 32), await png(48, 48)])
+  const site = fakeJoomla({ styles: SMALLBIZ, template: 'ja_smallbiz', framework: 't3' })
+  await brand(
+    site,
+    { tag: 'quickstart/ja-smallbiz/j6', version: '1.0.0' },
+    { favicon: await png(512, 512), faviconIco: ico }
+  )
+  assert.match(site.state.favicon, /^images\/tracy-brand\/favicon-[0-9a-f]{16}-.+\.ico$/)
+  const [upload] = site.of('media.upload')
+  assert.deepEqual([...Buffer.from(upload.params.content_b64, 'base64').subarray(0, 4)], [0, 0, 1, 0])
+  // An uploaded PNG alone stays a .png.
+  const plain = fakeJoomla({ styles: SMALLBIZ, template: 'ja_smallbiz', framework: 't3' })
+  await brand(plain, { tag: 'quickstart/ja-smallbiz/j6', version: '1.0.0' }, { favicon: await png(512, 512) })
+  assert.match(plain.state.favicon, /\.png$/)
+})
+
 test('T3 on plugin 0.22.0: the logo is written, the favicon is skipped as plugin too old', async () => {
   const site = fakeJoomla({ component: '0.22.0', styles: SMALLBIZ, template: 'ja_smallbiz', framework: 't3' })
   const result = await brand(

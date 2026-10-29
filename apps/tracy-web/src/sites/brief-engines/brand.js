@@ -58,6 +58,8 @@ const BUSY_WAIT_MS = 750
  *   address): it is still written as the site name, but the template's page titles are left as they are
  * @property {{light?: Uint8Array, dark?: Uint8Array, single?: Uint8Array}} [logo]
  * @property {Uint8Array} [favicon]
+ * @property {Uint8Array} [faviconIco] - a favicon Tracy made: its 16, 32 and 48 px drawings in one ICO, the file a design that
+ *   takes an ICO prints in the tab (Joomla `other_faviconFile`), so the tab shows the cleaned small sizes
  * @property {boolean} [textLogo] - a brief build with no logo of the business: every logo spot of the design shows its name as
  *   text instead of the template's own logo (site plan `logo.decision` `name-as-text`, #193)
  * @property {boolean} [nameFallback] - a brief build: a logo spot the business's logo does not reach shows its name as text
@@ -332,6 +334,7 @@ export function createSiteBrand({
       briefBuild: pack.nameFallback === true
     }).catch(() => ({ favicon: null, how: 'the icon could not be made' }))
     if (favicon.favicon) pack.favicon = favicon.favicon
+    if (favicon.ico) pack.faviconIco = favicon.ico
     const version = ctx.quickstart ? await versionOf(ctx.siteKey).catch(() => null) : null
     const result = await setSiteBrand({
       platform: ctx.platform,

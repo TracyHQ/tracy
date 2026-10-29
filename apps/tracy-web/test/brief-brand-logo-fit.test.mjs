@@ -492,8 +492,12 @@ test('createSiteBrand, a dental clinic with no logo: a symbol is drawn in the te
   assert.equal(result.made, 'symbol')
   assert.ok(notes.some((n) => n.includes(TEMPORARY_LOGO_NOTE)))
   assert.match(site.state.profiles.default.site_logo, /^images\/tracy-brand\/logo-light-/)
-  // The tab shows the drawn symbol too, never the template's icon (#189, COO name rule 3).
-  assert.match(String(site.state.profiles.default.other_faviconFile ?? ''), /^images\/tracy-brand\/favicon-/)
+  // The tab shows the drawn symbol too, never the template's icon (#189, COO name rule 3), as the ICO of its cleaned small
+  // sizes: T4 prints other_faviconFile as the tab icon.
+  assert.match(
+    String(site.state.profiles.default.other_faviconFile ?? ''),
+    /^images\/tracy-brand\/favicon-.+\.ico$/
+  )
 })
 
 test('WordPress takes the brief logo as given: the fit is Joomla only for now', async () => {

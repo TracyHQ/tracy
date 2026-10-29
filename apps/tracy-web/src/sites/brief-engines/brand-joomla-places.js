@@ -56,6 +56,10 @@ export function templateFolderOf(release) {
   return slug.replace(/-/g, '_')
 }
 
+/** An ICO file (reserved 0, type 1): it is uploaded as `.ico`, every other picture as `.png`. */
+const isIco = (/** @type {Uint8Array} */ bytes) =>
+  bytes.length > 6 && bytes[0] === 0 && bytes[1] === 0 && bytes[2] === 1 && bytes[3] === 0
+
 /**
  * Uploads, each picture once: the first ask uploads it under a new name, every later ask answers the same path.
  * @param {{write: Function, stamp: string, skip: (where: string, reason: string) => void}} io
@@ -73,7 +77,7 @@ export function uploader({ write, stamp, skip }, pictures) {
           const bytes = pictures[role]
           if (!bytes) return null
           const sha256 = createHash('sha256').update(bytes).digest('hex')
-          const path = `${FOLDER}/${role}-${sha256.slice(0, 16)}-${stamp}.png`
+          const path = `${FOLDER}/${role}-${sha256.slice(0, 16)}-${stamp}.${isIco(bytes) ? 'ico' : 'png'}`
           try {
             await write('media.upload', { path, content_b64: Buffer.from(bytes).toString('base64') })
             return path

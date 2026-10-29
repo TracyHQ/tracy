@@ -133,9 +133,9 @@ function frameOf(profile) {
  * tall as the demo logo, at one pixel per CSS pixel. A template that caps the logo itself (the re-releases that print
  * "max-height" on img.logo-img) has no `logoHeight` and gets the full picture, sharp on a dense screen. Keys absent from `pack` are absent from the
  * result: no logo given, no logo; no favicon given, no favicon (never a made one).
- * @param {{ name?: string, logo?: { light?: Uint8Array, dark?: Uint8Array, single?: Uint8Array }, favicon?: Uint8Array }} pack
+ * @param {{ name?: string, logo?: { light?: Uint8Array, dark?: Uint8Array, single?: Uint8Array }, favicon?: Uint8Array, faviconIco?: Uint8Array }} pack
  * @param {{ frame?: { width: number, height: number }, logoHeight?: number } | null | undefined} profile
- * @returns {Promise<{ name?: string, logo?: { light?: Buffer, dark?: Buffer, single?: Buffer }, favicon?: Uint8Array }>}
+ * @returns {Promise<{ name?: string, logo?: { light?: Buffer, dark?: Buffer, single?: Buffer }, favicon?: Uint8Array, faviconIco?: Uint8Array }>}
  */
 export async function prepareBrand(pack, profile) {
   /** @type {any} */
@@ -155,5 +155,6 @@ export async function prepareBrand(pack, profile) {
     if (Object.keys(variants).length) out.logo = variants
   }
   if (pack?.favicon instanceof Uint8Array && pack.favicon.length > 0) out.favicon = pack.favicon
+  if (pack?.faviconIco instanceof Uint8Array && pack.faviconIco.length > 0) out.faviconIco = pack.faviconIco
   return out
 }

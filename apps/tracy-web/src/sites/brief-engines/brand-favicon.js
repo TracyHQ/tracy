@@ -167,7 +167,14 @@ export async function buildFavicon({ uploaded = null, logo = null, symbol = null
   ])) {
     if (!bytes?.byteLength) continue
     const icon = await faviconMark(bytes).catch(() => null)
-    if (icon) return { favicon: icon.png, how: `${icon.how}, from ${from}` }
+    // The ICO carries the cleaned 16, 32 and 48 px drawings: a tab given only the 512 PNG shrinks it itself, and the
+    // details the small sizes drop come back as dirt. A browser picks the size it needs inside the ICO.
+    if (icon)
+      return {
+        favicon: icon.png,
+        ico: await icoOf(await Promise.all(ICO_SIZES.map(icon.at))),
+        how: `${icon.how}, from ${from}`
+      }
   }
   return { favicon: null, how: 'no mark of the business makes an icon: the template keeps its own' }
 }

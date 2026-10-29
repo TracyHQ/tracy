@@ -170,6 +170,9 @@ test('a brief build: the logo first, a wordmark gives way to the drawn symbol, n
   const fromLogo = await buildFavicon({ logo: await crestAvatar(), briefBuild: true })
   assert.match(fromLogo.how, /from the logo/)
   assert.ok(fromLogo.favicon)
+  // The tab's file: an ICO of the cleaned 16, 32 and 48 px drawings, so the browser never shrinks the 512 itself.
+  assert.deepEqual([...fromLogo.ico.subarray(0, 4)], [0, 0, 1, 0])
+  assert.equal(fromLogo.ico.readUInt16LE(4), 3)
   const fromSymbol = await buildFavicon({
     logo: await wordmark(),
     symbol: await drawnSymbol(),
@@ -186,5 +189,6 @@ test('an uploaded favicon always wins, and a plain build never makes one', async
     (await buildFavicon({ uploaded, logo: await crestAvatar(), briefBuild: true })).favicon,
     uploaded
   )
+  assert.equal((await buildFavicon({ uploaded, briefBuild: true })).ico, undefined)
   assert.equal((await buildFavicon({ logo: await crestAvatar(), briefBuild: false })).favicon, null)
 })

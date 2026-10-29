@@ -114,7 +114,13 @@ async function writeSiteBrand({ prepared, profile, stamp, write, read, wrote: to
 
   const upload = uploader(
     { write, stamp, skip },
-    { 'logo-light': logos.light, 'logo-dark': logos.dark, logo: logos.single, favicon: prepared.favicon }
+    // A favicon Tracy made goes as its ICO (16, 32, 48 px): T4 and the T3 door both print an `.ico` path as the tab icon.
+    {
+      'logo-light': logos.light,
+      'logo-dark': logos.dark,
+      logo: logos.single,
+      favicon: prepared.faviconIco ?? prepared.favicon
+    }
   )
   const settingsKnown = atLeast(component, TEMPLATE_SETTINGS_SINCE) !== false
   /** The `template.siteSettings` read, or null after the skips it calls for. */
