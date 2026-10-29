@@ -6,6 +6,7 @@
 import { readFileSync } from 'node:fs'
 import { DEFAULT_NEUTRAL_BY_ROLE } from './place-content-roles.mjs'
 import { hoursLine, shownPrice } from './pinned-copy.mjs'
+import { numberIn } from './number-in-locale.mjs'
 import { assessProfile } from './fact-assessment.mjs'
 import { defaultOfferingKind, statedTradeOf } from './trades.mjs'
 
@@ -223,15 +224,6 @@ function priceOf(offering, locale) {
       return text(v.size) ? `${v.size.trim()} ${shown}` : shown
     })
     .join(' · ')
-}
-
-/** A figure as the site's language prints numbers: 12,400 in English, 12.400 in Vietnamese. */
-function numberIn(amount, locale) {
-  try {
-    return new Intl.NumberFormat(locale || 'en').format(amount)
-  } catch {
-    return new Intl.NumberFormat('en').format(amount)
-  }
 }
 
 const durationOf = (offering) => {

@@ -89,3 +89,35 @@ test('no demo number ever stays in the rewritten text', () => {
     assert.ok(!digits.test(got.text), `${text} -> ${got.text}`)
   }
 })
+
+test('a founding year only stands in for a year that says when the business began', () => {
+  const got = numberlessSentence({ text: 'In 2019 we opened a second gym', facts: [founded] })
+  assert.equal(got.text, 'We opened a second gym')
+  assert.deepEqual(got.factRefs, [])
+  assert.equal(numberlessSentence({ text: 'Est. 2001', facts: [founded] }).text, 'Est. 2015')
+})
+
+test('a brief number is stated as it is, without the demo hedge', () => {
+  const got = numberlessSentence({ text: 'Over 500 happy members', facts: [members] })
+  assert.equal(got.text, '240 happy members')
+  assert.equal(
+    numberlessSentence({ text: 'Join more than 5k followers', facts: [followers] }).text,
+    'Join 1,819 followers'
+  )
+})
+
+test('numbers written as words go too', () => {
+  assert.equal(numberlessSentence({ text: 'Twenty years of experience' }).text, 'Experience')
+  assert.equal(numberlessSentence({ text: 'Three rings and a dozen coaches' }).text, 'Rings and coaches')
+})
+
+test('a rewrite does not end on a word that led to the number', () => {
+  assert.equal(numberlessSentence({ text: 'Boxing classes for 25 years' }).text, 'Boxing classes')
+  assert.equal(numberlessSentence({ text: 'Classes of 12' }).text, 'Classes')
+})
+
+test('a text the brief number makes longer than its slot holds empties', () => {
+  const big = { id: 's', value: { amount: 1234567, label: 'members', scope: 'site' } }
+  const got = numberlessSentence({ text: '5k members', facts: [big], fit: { maxCharacters: 12 } })
+  assert.deepEqual(got, { state: 'empty', text: '', factRefs: [], dropped: [], reason: 'too-long' })
+})

@@ -12,14 +12,20 @@ export const SIGNATURE_FONT_FAMILY = "'Great Vibes', 'Allura', 'Brush Script MT'
 export const SCRIPT_LETTER_WIDTH = 0.55
 
 // Words of a person's relationship or role that make them the business's own signer.
-const OWNER_WORDS = ['owner', 'founder', 'proprietor']
+const OWNER_WORDS = new Set(['owner', 'co-owner', 'founder', 'co-founder', 'proprietor'])
+// Words that make an owner word speak of someone who no longer is one.
+const PAST_WORDS = new Set(['former', 'previous', 'ex', 'late'])
+/** The name is inked in a dark neutral unless the caller gives the template's own ink. */
+const DEFAULT_INK = '#222222'
 
 const text = (value) => (typeof value === 'string' && value.trim() ? value.trim() : '')
 const escapeXml = (value) =>
   value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 const isOwner = (person) => {
-  const words = `${text(person?.value?.relationship)} ${text(person?.value?.role)}`.toLowerCase()
-  return OWNER_WORDS.some((word) => words.includes(word))
+  const words = `${text(person?.value?.relationship)} ${text(person?.value?.role)}`
+    .toLowerCase()
+    .split(/[^a-z-]+/)
+  return words.some((w) => OWNER_WORDS.has(w)) && !words.some((w) => PAST_WORDS.has(w))
 }
 
 /** Who signs: the given name, else the slot's person, else the business's owner. */
@@ -33,11 +39,11 @@ function signerOf({ name, person, people }) {
 
 /** The size a slot's substitute is drawn at: the demo file's, else its desktop box, else its first box. */
 function sizeOf(fit) {
-  const whole = (b) =>
-    Number.isInteger(b?.width) && b.width > 0 && Number.isInteger(b?.height) && b.height > 0
-  if (whole(fit?.source)) return fit.source
+  // Measured boxes may hold fractional pixels: drawn at the nearest whole pixel.
+  const drawn = (b) => Math.round(b?.width) >= 1 && Math.round(b?.height) >= 1
   const boxes = fit?.boxes && typeof fit.boxes === 'object' ? fit.boxes : {}
-  return [boxes.desktop, ...Object.values(boxes)].find(whole) ?? null
+  const box = [fit?.source, boxes.desktop, ...Object.values(boxes)].find(drawn)
+  return box ? { width: Math.round(box.width), height: Math.round(box.height) } : null
 }
 
 /** The largest font size at which `chars` script letters fit `width` x `height`, with a margin. */
@@ -55,12 +61,13 @@ function fontSizeFor(chars, { width, height }) {
  * @param {Array<{id?: string, value?: {name?: string, relationship?: string, role?: string}}>} [input.people] - the
  *   profile's accepted people, read for the owner when no name or person is given
  * @param {object} input.fit - the slot's Slot fit (`fit` of a content map slot)
+ * @param {string} [input.ink] - the colour the name is written in (a CSS colour), else a dark neutral
  * @returns {{state: 'neutral', reason: 'no-brief-signature', text: string, factRefs: string[],
  *   font: {family: string, size: number}, width: number, height: number, svg?: string}
  *   | {state: 'empty', reason: 'no-signer-name' | 'no-slot-box' | 'name-too-long'}}
  *   `svg` only for a picture slot (a fit with `kind`); a text slot is styled with `font`.
  */
-export function scriptSignature({ name, person, people, fit } = {}) {
+export function scriptSignature({ name, person, people, fit, ink = DEFAULT_INK } = {}) {
   const signer = signerOf({ name, person, people })
   if (!signer) return { state: 'empty', reason: 'no-signer-name' }
   const size = sizeOf(fit)
@@ -80,6 +87,6 @@ export function scriptSignature({ name, person, people, fit } = {}) {
   const svg =
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">` +
     `<text x="50%" y="50%" text-anchor="middle" dominant-baseline="central" font-family="${escapeXml(font.family)}"` +
-    ` font-size="${font.size}" fill="currentColor">${escapeXml(signer.name)}</text></svg>`
+    ` font-size="${font.size}" fill="${escapeXml(String(ink))}">${escapeXml(signer.name)}</text></svg>`
   return { ...base, text: signer.name, font, width, height, svg }
 }

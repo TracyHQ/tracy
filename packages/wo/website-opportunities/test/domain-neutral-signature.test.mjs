@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
-import { scriptSignature } from '../domain/neutral-signature.mjs'
+import { SCRIPT_LETTER_WIDTH, scriptSignature } from '../domain/neutral-signature.mjs'
 
 // A signature slot as capture measures it: a wide, short picture under a founder's quote (fictional template).
 const signatureFit = {
@@ -27,14 +27,14 @@ test('a signature slot with no brief signature shows the name in a script font i
   assert.match(got.font.family, /cursive$/)
   // The written name fits inside the picture.
   assert.ok(got.font.size <= 120)
-  assert.ok(got.font.size * 0.55 * 'Wren Example'.length <= 360)
+  assert.ok(got.font.size * SCRIPT_LETTER_WIDTH * 'Wren Example'.length <= 360)
 })
 
 test('a long name is set smaller so it still fits the slot', () => {
   const short = scriptSignature({ name: 'Wren Example', fit: signatureFit })
   const long = scriptSignature({ name: 'Wilhelmina Ottoline Featherstonehaugh', fit: signatureFit })
   assert.ok(long.font.size < short.font.size)
-  assert.ok(long.font.size * 0.55 * long.text.length <= 360)
+  assert.ok(long.font.size * SCRIPT_LETTER_WIDTH * long.text.length <= 360)
 })
 
 test('a name is escaped inside the picture', () => {
@@ -77,4 +77,28 @@ test('a text signature slot gets the name as text within its characters', () => 
 test('a slot with no measured box is not drawn', () => {
   const got = scriptSignature({ name: 'Wren Example', fit: { measured: false } })
   assert.deepEqual(got, { state: 'empty', reason: 'no-slot-box' })
+})
+
+test('a former owner never signs', () => {
+  const people = [
+    { id: 'p1', value: { name: 'Quill Sample', relationship: 'former owner' } },
+    { id: 'p2', value: { name: 'Wren Example', relationship: 'ownership desk' } }
+  ]
+  assert.deepEqual(scriptSignature({ people, fit: signatureFit }), {
+    state: 'empty',
+    reason: 'no-signer-name'
+  })
+})
+
+test('a measured box with fractional pixels is still drawn, at whole pixels', () => {
+  const fit = { kind: 'signature', boxes: { phone: { width: 150.5, height: 49.6 } } }
+  const got = scriptSignature({ name: 'Wren Example', fit })
+  assert.equal(got.width, 151)
+  assert.equal(got.height, 50)
+})
+
+test('the name is inked in a real colour, so a rasterised file shows it', () => {
+  const got = scriptSignature({ name: 'Wren Example', fit: signatureFit, ink: '#336699' })
+  assert.match(got.svg, /fill="#336699"/)
+  assert.doesNotMatch(scriptSignature({ name: 'Wren Example', fit: signatureFit }).svg, /currentColor/)
 })
