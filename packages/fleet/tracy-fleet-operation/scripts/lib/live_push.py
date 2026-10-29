@@ -2236,6 +2236,7 @@ class Changeset:
         over the customer's change on the live site, so each such item is a conflict, shown and never
         written, until the two sides agree there (then the item is gone: nothing differs)."""
         places: dict[tuple, set] = {}
+        whole_tables: set[str] = set()
         # A file, or a setting of the configuration file, both sides changed (the file merge's `kept`).
         paths: set[str] = set()
         settings: dict[str, set] = {}
@@ -2261,21 +2262,26 @@ class Changeset:
                     names[(table, str(row[pk]))] = tuple(sorted((c, str(row[c])) for c in natural))
         for k in kept or []:
             table, key = k.get("table"), k.get("key")
-            if not isinstance(table, str) or not isinstance(key, dict):
+            if not isinstance(table, str):
                 continue
             bare = table[len(self.prefix):] if table.startswith(self.prefix) else table
+            if k.get("kind") == "table" and not isinstance(key, dict):
+                whole_tables.add(bare)
+                continue
+            if not isinstance(key, dict):
+                continue
             ident = (bare, tuple(sorted((str(a), str(b)) for a, b in key.items())))
             places.setdefault(ident, set()).add(k.get("column") or "*")
             pk = KEPT_NAMES.get(self.platform, {}).get(bare, (None,))[0]
             if pk and list(key) == [pk] and (bare, str(key[pk])) in names:
                 places.setdefault((bare, names[(bare, str(key[pk]))]), set()).add(k.get("column") or "*")
-        if not places:
+        if not places and not whole_tables:
             return
         for item in self.items:
             hits = []
             for seed in item.get("seed", []):
                 ident = (seed["table"], tuple(sorted((str(a), str(b)) for a, b in seed["match"].items())))
-                hit = places.get(ident)
+                hit = {"*"} if seed["table"] in whole_tables else places.get(ident)
                 if hit:
                     found = self.kept_fields(item, seed, hit)
                     if found is not None:

@@ -1383,3 +1383,31 @@ test('Joomla: a replacement alias held by trash conflicts both records before th
   for (const item of answer.items)
     assert.deepEqual(item.conflict, { reason: 'changed-on-live', fields: ['alias'] })
 })
+
+test('a whole table kept after a schema change holds every push into it, including create and delete', () => {
+  for (const platform of ['joomla', 'wordpress']) {
+    const data =
+      platform === 'joomla'
+        ? {
+            entities: { content: { base: [1, 2], copy: [1, 3] } },
+            kinds: {
+              article: kind([article(1), article(2)], [article(1, { title: 'Tracy title' }), article(3)]),
+              category: kind([category(2)], [category(2, { title: 'Unrelated' })])
+            }
+          }
+        : {
+            homes: HOMES,
+            entities: { posts: { base: [10, 11], copy: [10, 12] } },
+            kinds: {
+              post: kind([post(10), post(11)], [post(10, { post_title: 'Tracy title' }), post(12)], ['ID'])
+            }
+          }
+    const table = platform === 'joomla' ? 'jos_content' : 'wp_posts'
+    const answer = changeset(platform, data, [{ kind: 'table', table, reason: 'schema-changed' }])
+    const held = answer.items.filter((i) => i.kind === (platform === 'joomla' ? 'article' : 'post'))
+    assert.deepEqual(new Set(held.map((i) => i.op)), new Set(['create', 'update', 'delete']))
+    for (const item of held) assert.equal(item.conflict?.reason, 'changed-on-both', JSON.stringify(item))
+    if (platform === 'joomla')
+      assert.equal(answer.items.find((i) => i.kind === 'category').conflict, undefined)
+  }
+})
