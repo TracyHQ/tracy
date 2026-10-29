@@ -1285,6 +1285,9 @@ class Changeset:
             return 0, named["option_name"]
         if spec.name == "postmeta":
             return named["post_id"], named["meta_key"]
+        if spec.name == "menuItem" and self.platform == "wordpress":
+            ident = named["ID"]
+            return (ident if isinstance(ident, Placeholder) else int(ident)), (base_row or {}).get("menu")
         if spec.name in W_THEME_ROWS:
             return 0, named["post_name"]
         if spec.live_id:
