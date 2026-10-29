@@ -289,6 +289,60 @@
       ],
       "keep": []
     },
+    "ja-cagox/j6/1.0.2": {
+      "hide": [
+        {
+          "key": "menuItem-121",
+          "path": "joomla",
+          "menutype": "mainmenu",
+          "subtree": true,
+          "reason": "the \"Joomla\" branch is the template's demo kit (Joomla's own pages, sample content views, sample user screens), not a page of a fashion shop: Tracy customer sites never show it in navigation (product decision, 25/10/2026); the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-123",
+          "path": "joomla/j-pages/login",
+          "menutype": "mainmenu",
+          "reason": "\"Login\" sits in the \"Joomla\" branch, which is the template's demo kit, not a page of a fashion shop (product decision, 25/10/2026); the shop keeps its own account screens in navigation (Shop: My Orders, Account Maintenance, Edit Address) and the Login Form module, and the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-124",
+          "path": "joomla/j-pages/registration",
+          "menutype": "mainmenu",
+          "reason": "\"Registration\" sits in the \"Joomla\" branch, which is the template's demo kit, not a page of a fashion shop (product decision, 25/10/2026); the shop keeps its own account screens in navigation (Shop: My Orders, Account Maintenance, Edit Address) and the Login Form module, and the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-125",
+          "path": "joomla/j-pages/user-profile",
+          "menutype": "mainmenu",
+          "reason": "\"User Profile\" sits in the \"Joomla\" branch, which is the template's demo kit, not a page of a fashion shop (product decision, 25/10/2026); the shop keeps its own account screens in navigation (Shop: My Orders, Account Maintenance, Edit Address) and the Login Form module, and the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-181",
+          "path": "joomla/j-pages/reminder",
+          "menutype": "mainmenu",
+          "reason": "\"Reminder\" sits in the \"Joomla\" branch, which is the template's demo kit, not a page of a fashion shop (product decision, 25/10/2026); the shop keeps its own account screens in navigation (Shop: My Orders, Account Maintenance, Edit Address) and the Login Form module, and the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-130",
+          "path": "joomla/other-pages/smart-search",
+          "menutype": "mainmenu",
+          "reason": "\"Smart Search\" sits in the \"Joomla\" branch, which is the template's demo kit, not a page of a fashion shop (product decision, 25/10/2026); shoppers search the catalogue with the Product search module, and the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-160",
+          "path": "joomla/other-pages/contact-us",
+          "menutype": "mainmenu",
+          "reason": "\"Contact Us\" sits in the \"Joomla\" branch, which is the template's demo kit, not a page of a fashion shop (product decision, 25/10/2026); the top-level Contact item stays in navigation, and the page and its URL keep working"
+        },
+        {
+          "key": "menuItem-126",
+          "path": "joomla/j-pages/news-feeds",
+          "menutype": "mainmenu",
+          "reason": "\"News Feeds\" sits in the \"Joomla\" branch, which is the template's demo kit (product decision, 25/10/2026): it is the only route to the sample news feeds, which are live feeds of joomla.org and not content of a fashion shop; the page and its URL keep working"
+        }
+      ],
+      "keep": []
+    },
     "ja-conf/j6/1.0.3": {
       "hide": [
         {
