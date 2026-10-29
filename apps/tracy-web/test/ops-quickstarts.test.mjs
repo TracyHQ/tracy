@@ -104,6 +104,7 @@ const FIT_READY = () => ({ state: 'ready' })
  * The same for the committed measurement: since WordPress joined the audit (#54, ADR 0040) a WordPress contract
  * without content-coverage.json holds Publish as not measured, and the released contracts these fixtures borrow carry
  * none. The harness answers a clean measurement, in `realRoles` too, so the roles group is what that mode judges.
+ * `realCoverage` drops that answer, so the real reader judges the content-coverage.json in this file's fixture copy.
  */
 const COVERAGE_MEASURED = () => ({
   state: 'measured',
@@ -119,7 +120,7 @@ const COVERAGE_MEASURED = () => ({
   }
 })
 
-function harness(pool, { opsFetch, extraEnv, realRoles = false } = {}) {
+function harness(pool, { opsFetch, extraEnv, realRoles = false, realCoverage = false } = {}) {
   const config = readConfig({
     ...env,
     ...(opsFetch ? { MODEL_API_KEY: 'test-key', MODEL_BASE_URL: 'https://model.test/v1' } : {}),
@@ -132,7 +133,7 @@ function harness(pool, { opsFetch, extraEnv, realRoles = false } = {}) {
     mail: { send: async () => {} },
     sites: dbSitesResolver(pool, config),
     ...(realRoles ? {} : { rolesOf: ROLES_READY, fitOf: FIT_READY }),
-    coverageOf: COVERAGE_MEASURED,
+    ...(realCoverage ? {} : { coverageOf: COVERAGE_MEASURED }),
     ...(opsFetch ? { fetchImpl: opsFetch } : {})
   })
   const cookieFor = async (email) => `tracy_sess=${await mintSession(email, config.sessionSecret)}`
@@ -1104,7 +1105,12 @@ for (const coverageState of ['missing', 'stale']) {
   test(`Publish refuses ${coverageState} Content coverage without changing GitHub`, opts, async () => {
     const { pool } = db
     const github = fakeGithub()
-    const { send, get, cookieFor } = harness(pool, { opsFetch: github.fetchImpl, extraEnv: withToken })
+    // The real coverage reader, so removing or altering the fixture's content-coverage.json is what Publish sees.
+    const { send, get, cookieFor } = harness(pool, {
+      opsFetch: github.fetchImpl,
+      extraEnv: withToken,
+      realCoverage: true
+    })
     await seedWordpressRelease(pool, DRAFT, '1.0.0')
     await seedStaff(pool, 'owner@tracy.test')
     const owner = await cookieFor('owner@tracy.test')

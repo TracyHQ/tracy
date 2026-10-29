@@ -299,6 +299,26 @@ function norm(value) {
 }
 const same = (a, b) => norm(a) === norm(b)
 
+/**
+ * The `expected` of a WordPress `content.update`: of `values` (as `content.get` answered them), the
+ * fields the write sends — never one it does not write, so nothing else can refuse it. Null when none.
+ */
+function expectedOf(values, fields) {
+  if (!values || typeof values !== 'object') return null
+  const out = Object.fromEntries(
+    Object.keys(fields ?? {})
+      .filter((f) => !f.startsWith('$') && Object.hasOwn(values, f))
+      .map((f) => [f, values[f]])
+  )
+  return Object.keys(out).length ? out : null
+}
+
+/** The fields a `revision_stale` refusal names: the engine's list, else the body it held to. */
+const staleFields = (reply) =>
+  Array.isArray(reply?.fields) && reply.fields.length
+    ? reply.fields.map(String).slice(0, 50)
+    : ['post_content']
+
 const MARKER = /@@tracy-new:([a-z_]+):([0-9]+)@@/g
 
 /** Placeholders filled with the numbers the live site gave; `missing` collects what is not known yet. */
@@ -659,6 +679,13 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         const params = { apply_id: nativeApplyId ?? applyId, ...address, fields }
         if (item.op === 'create' && item.kind !== 'postmeta') params.id = 0
         if (item.bodyRevision && revision) params.expected_body_revision = revision
+        // Each field written held to the value just read, by the engine under its write lock: a
+        // customer edit made between this read and the write is a conflict, not overwritten (#121).
+        // An engine without `expected` ignores it, as before.
+        if (platform === 'wordpress' && item.op === 'update') {
+          const expected = expectedOf(item.expect, fields)
+          if (expected) params.expected = expected
+        }
         answer = await ask('content.update', params, recovery)
       }
       if (done.get(item.id)?.state !== 'written') return
@@ -695,7 +722,7 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
           return journal({
             id: item.id,
             state: 'conflict',
-            extra: { reason: 'changed-on-live', fields: ['post_content'] }
+            extra: { reason: 'changed-on-live', fields: staleFields(reply) }
           })
         return journal({
           id: item.id,
@@ -1357,13 +1384,36 @@ const TRASHABLE = {
   wordpress: new Set(['post', 'menuItem', 'templatePart', 'template'])
 }
 
+/**
+ * What an Apply wrote, from its journal, when it ended before `written.json` (a lost job): its items
+ * as `apply` answers them, in the order they were written; null when it wrote nothing.
+ */
+function journalWritten(pushDir) {
+  const journalPath = join(pushDir, 'journal.jsonl')
+  if (!existsSync(journalPath)) return null
+  const items = new Map(
+    (readJson(join(pushDir, 'changeset.json'), { items: [] }).items ?? []).map((i) => [i.id, i])
+  )
+  const last = new Map()
+  for (const line of readFileSync(journalPath, 'utf8').split('\n').filter(Boolean)) {
+    const entry = JSON.parse(line)
+    last.delete(entry.id)
+    last.set(entry.id, entry)
+  }
+  const written = [...last.values()]
+    .filter((entry) => entry.state === 'written' && items.has(entry.id))
+    .map((entry) => itemOut(items.get(entry.id), entry.extra ?? {}))
+  return written.length ? { written } : null
+}
+
 async function undo(pushDir) {
   const t0 = Date.now()
   const endpoint = process.env.TRACY_SYNC_ENDPOINT ?? ''
   const token = process.env.TRACY_SYNC_TOKEN ?? ''
   if (!/^https?:\/\//.test(endpoint) || !token) throw new WriteFailed('NO_LIVE_DOOR')
   const before = readJson(join(pushDir, 'before.json'), null)
-  const writtenAnswer = readJson(join(pushDir, 'written.json'), null)
+  // An Apply cut off before it answered (its job lost, #122): what it wrote is in its journal.
+  const writtenAnswer = readJson(join(pushDir, 'written.json'), null) ?? journalWritten(pushDir)
   if (!before || !writtenAnswer) throw new WriteFailed('NOT_PUSHED')
   const pushId = pushDir.split('/').filter(Boolean).at(-1)
   const applyId = `tracy-push-undo-${pushId}`
@@ -1738,11 +1788,22 @@ async function undo(pushDir) {
           else if (snap.kind === 'moduleAssignment') back[field] = snap.before?.[field] ?? '[]'
           else back[field] = snap.before?.[field] ?? null
         }
-        await ask('content.update', { apply_id: applyId, ...params, fields: back })
+        // Taken back only over what the push left: a field changed on the live site since is kept.
+        const expected = platform === 'wordpress' ? expectedOf(snap.after, back) : null
+        await ask('content.update', {
+          apply_id: applyId,
+          ...params,
+          fields: back,
+          ...(expected ? { expected } : {})
+        })
       }
       restored.push(out)
     } catch (error) {
       if (!(error instanceof Refused)) throw error
+      if (error.reply.error === 'revision_stale') {
+        kept.push({ ...out, reason: 'changed-on-live', fields: staleFields(error.reply) })
+        continue
+      }
       failed.push({
         ...out,
         error: String(error.reply.error ?? 'refused').slice(0, 60),

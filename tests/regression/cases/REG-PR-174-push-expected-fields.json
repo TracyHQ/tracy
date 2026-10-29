@@ -1,0 +1,31 @@
+{
+  "id": "REG-PR-174-push-expected-fields",
+  "kind": "fix",
+  "title": "Sync to live never writes over a field the customer changed during Apply or after it",
+  "pr": 174,
+  "area": "sync/push-apply",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the live-write cases of a title changed between the read and the write, in Apply and in Undo."
+  ],
+  "expect": [
+    "Apply sends the written fields as expected and turns a refusal into a conflict naming the field.",
+    "Undo keeps a field the customer changed after the push and takes back the others."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#121",
+      "packages/fleet/tracy-fleet-operation/test/live-write.test.mjs"
+    ],
+    "tests": [
+      "WordPress: a title the customer changes between the read and the write is a conflict, never overwritten (#121)",
+      "WordPress: Undo keeps a title the customer changed after the push, and takes back one they left (#121)"
+    ]
+  }
+}

@@ -1063,6 +1063,7 @@
   "push.reason.phpUnchecked": "Konnte für die PHP-Version Ihrer Live-Site nicht geprüft werden",
   "push.reason.extensionFile": "Gehört zu einer Erweiterung und geht daher nur mit ihr",
   "push.reason.noDoor": "Für diese Einstellung gibt es noch keinen sicheren Weg zum Schreiben",
+  "push.reason.translationGroup": "Sprachen und welche Seiten Übersetzungen voneinander sind, werden noch nicht gesendet. Nehmen Sie diese Änderung in Polylang auf Ihrer Live-Site vor",
   "push.reason.phpDisabled": "PHP-files sind für Claude Cowork auf Ihrer Live-Site ausgeschaltet. Um sie zu senden, schalten Sie „Allow PHP in template files“ in den Optionen von Claude Cowork auf Ihrer site ein",
   "push.reason.phpDisabledWordpress": "PHP-files sind für Claude Cowork auf Ihrer Live-Site ausgeschaltet. Um sie zu senden, schalten Sie „Allow PHP in theme files“ unter Settings › Claude Cowork auf Ihrer site ein",
   "push.reason.templateFilesOff": "Template-files sind für Claude Cowork auf Ihrer Live-Site ausgeschaltet. Um sie zu senden, schalten Sie „Template files“ in den Optionen von Claude Cowork auf Ihrer site ein",

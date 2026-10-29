@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-165-ops-coverage-tests",
+  "kind": "fix",
+  "title": "Publish refuses a release whose Content coverage is missing or stale, without changing GitHub, under the shared ops-quickstarts harness",
+  "pr": 165,
+  "area": "ops/quickstarts publish",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: With TEST_DATABASE_URL set, run node --test apps/tracy-web/test/ops-quickstarts.test.mjs apps/tracy-web/test/content-coverage.test.mjs."
+  ],
+  "expect": [
+    "S1: every test passes, including 'Publish refuses missing Content coverage without changing GitHub' and 'Publish refuses stale Content coverage without changing GitHub' (400 CONTENT_COVERAGE_NOT_READY, GitHub assets unchanged)."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/test/ops-quickstarts.test.mjs"
+  },
+  "evidence": "On develop 4115f6873 both tests answered 200 instead of 400 because the harness injected an always-measured coverage (#146) that hid the fixture #80's tests change.",
+  "fence": "the realCoverage option of the ops-quickstarts harness",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/ops-quickstarts.test.mjs",
+      "apps/tracy-web/test/content-coverage.test.mjs"
+    ]
+  }
+}

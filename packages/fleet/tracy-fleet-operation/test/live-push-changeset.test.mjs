@@ -1268,7 +1268,12 @@ test('WordPress: a post put in another category writes slugs and checks the live
   const item = answer.items[0]
   assert.deepEqual(item.write, { categories: ['news'] })
   assert.deepEqual(item.expect, { post_category: [1] })
-  assert.deepEqual(item.seed[1], { table: 'term_relationships', match: { object_id: 10 }, rows: 'ours' })
+  assert.deepEqual(item.seed[1], {
+    table: 'term_relationships',
+    match: { object_id: 10 },
+    rows: 'ours',
+    taxonomies: ['category', 'post_tag']
+  })
 })
 
 test('WordPress: a menu entry both sides changed since the last sync is a conflict, its address named by the meta’s number; a new option goes only where the live site has none', () => {
@@ -1635,4 +1640,188 @@ test('WordPress metadata uses the record title without exposing unknown internal
     }
   })
   assert.equal(answer.items[0].title, 'About us')
+})
+
+test('WordPress: a post or category whose Polylang language or translation group Tracy changed is named, not sent; one in an unchanged group goes (#105)', () => {
+  const group = (members) =>
+    `a:${Object.keys(members).length}:{${Object.entries(members)
+      .map(([lang, id]) => `s:${lang.length}:"${lang}";i:${id};`)
+      .join('')}}`
+  const news = (id, fields = {}) =>
+    post(id, {
+      post_type: 'post',
+      language: 'en',
+      translations: null,
+      categories: '1',
+      category_slugs: 'uncategorized',
+      ...fields
+    })
+  const term = (id, fields = {}) => ({
+    term_id: String(id),
+    taxonomy: 'category',
+    name: `Category ${id}`,
+    slug: `category-${id}`,
+    description: '',
+    parent: '0',
+    language: 'pll_en',
+    translations: null,
+    ...fields
+  })
+  const answer = changeset('wordpress', {
+    homes: HOMES,
+    languages: { default: 'en' },
+    // The customer's post 41 met one of the copy's numbers: the copy holds it as 43.
+    idMap: { posts: { 41: 43 } },
+    entities: {
+      posts: { base: [5, 40, 41, 50], copy: [5, 31, 32, 40, 43, 50] },
+      terms: { base: [1, 7], copy: [1, 7, 8, 9] }
+    },
+    kinds: {
+      post: kind(
+        [
+          news(5, { post_title: 'Spring fair' }),
+          news(40, { post_title: 'Bonjour', language: 'fr', translations: group({ en: 41, fr: 40 }) }),
+          news(41, { post_title: 'Hello', translations: group({ en: 41, fr: 40 }) }),
+          news(50, { post_title: 'About' })
+        ],
+        [
+          // Tracy linked a new French post to Spring fair.
+          news(5, { post_title: 'Spring fair', translations: group({ en: 5, fr: 31 }) }),
+          news(31, {
+            post_title: 'Foire de printemps',
+            language: 'fr',
+            translations: group({ en: 5, fr: 31 })
+          }),
+          // A new English post: Polylang gives it the default language on the live site.
+          news(32, { post_title: 'Summer fair' }),
+          // A French title renamed, its group the live site's (43 is the live site's 41).
+          news(40, { post_title: 'Bonjour a tous', language: 'fr', translations: group({ en: 43, fr: 40 }) }),
+          { ...news(41, { post_title: 'Hello', translations: group({ en: 43, fr: 40 }) }), ID: '43' },
+          // Moved to another language.
+          news(50, { post_title: 'A propos', language: 'fr' })
+        ],
+        ['ID']
+      ),
+      term: kind(
+        [term(1), term(7, { translations: group({ en: 7 }) })],
+        [
+          term(1),
+          term(7, { translations: group({ en: 7 }) }),
+          term(8, { name: 'Nouvelles', language: 'pll_fr', translations: group({ en: 1, fr: 8 }) }),
+          term(9, { name: 'Neuigkeiten', language: 'pll_de' })
+        ],
+        ['term_id', 'taxonomy']
+      ),
+      menuItem: kind(
+        [],
+        [
+          {
+            ID: '62',
+            title: '',
+            position: '3',
+            type: 'post_type',
+            object: 'post',
+            object_id: '31',
+            url: '',
+            parent: '0',
+            menu: 'main'
+          }
+        ],
+        ['ID']
+      )
+    }
+  })
+  const refused = answer.unsupported
+    .filter((u) => u.reason === 'translation-group')
+    .map((u) => `${u.op} ${u.kind} ${u.title}`)
+    .sort()
+  assert.deepEqual(refused, [
+    'create category Neuigkeiten',
+    'create category Nouvelles',
+    'create post Foire de printemps',
+    'update post A propos',
+    'update post Spring fair'
+  ])
+  // What links to the refused translation waits for it, named.
+  assert.ok(
+    answer.unsupported.some((u) => u.reason === 'depends-on-unsupported' && u.on?.includes('posts:31')),
+    JSON.stringify(answer.unsupported)
+  )
+  const items = byId(answer)
+  assert.deepEqual(Object.keys(items).sort(), ['post:40', 'post:new:32'])
+  assert.deepEqual(items['post:40'].write, { post_title: 'Bonjour a tous' })
+  assert.ok(!('language' in items['post:new:32'].write) && !('translations' in items['post:new:32'].write))
+})
+
+test('a new menu item goes only into a menu the live site has or this push makes; never into a deleted one (#119)', () => {
+  // WordPress: the copy's item lost its menu (the customer deleted the menu on live).
+  const wp = changeset('wordpress', {
+    entities: { posts: { base: [10], copy: [10, 62] } },
+    kinds: {
+      menuItem: kind(
+        [],
+        [
+          {
+            ID: '62',
+            title: 'Shop',
+            position: '1',
+            type: 'custom',
+            object: 'custom',
+            object_id: '62',
+            url: 'https://shop.example/shop/',
+            parent: '0',
+            menu: null
+          }
+        ],
+        ['ID']
+      )
+    }
+  })
+  assert.ok(!wp.items.some((i) => i.kind === 'menuItem'), JSON.stringify(wp.items))
+  assert.deepEqual(
+    wp.unsupported.filter((u) => u.kind === 'menuItem').map((u) => [u.reason, u.on]),
+    [['depends-on-unsupported', ['menu']]]
+  )
+  // Joomla: one item in a menu the live site no longer has, one in a menu this push makes, one in a live menu.
+  const type = (id, menutype) => ({
+    id: String(id),
+    menutype,
+    title: menutype,
+    description: '',
+    client_id: '0'
+  })
+  const item = (id, menutype) => ({
+    id: String(id),
+    title: `Item ${id}`,
+    menutype,
+    parent_id: '1',
+    published: '1',
+    link: 'index.php?option=com_content&view=featured',
+    lft: '0',
+    rgt: '0',
+    level: '1',
+    path: `item-${id}`,
+    client_id: '0'
+  })
+  const jo = changeset('joomla', {
+    entities: { menu: { base: [1], copy: [1, 103, 104, 105] } },
+    kinds: {
+      menutype: kind(
+        [type(1, 'mainmenu')],
+        [type(1, 'mainmenu'), type(2, 'extra'), type(5, 'newmenu')],
+        ['menutype']
+      ),
+      menuItem: kind([], [item(103, 'gone'), item(104, 'newmenu'), item(105, 'mainmenu')], ['id'])
+    }
+  })
+  const items = byId(jo)
+  assert.equal(items['menuItem:new:103'], undefined, 'never in a menu nobody makes')
+  assert.deepEqual(
+    jo.unsupported.filter((u) => u.kind === 'menuItem').map((u) => [u.title, u.reason, u.on]),
+    [['Item 103', 'depends-on-unsupported', ['menu']]]
+  )
+  const made = jo.items.find((i) => i.kind === 'menutype' && i.op === 'create' && i.title === 'newmenu')
+  assert.ok(made, JSON.stringify(jo.items.map((i) => i.id)))
+  assert.ok(items['menuItem:new:104'].dependsOn.includes(made.id))
+  assert.ok(items['menuItem:new:105'], 'an item in a live menu goes as before')
 })
