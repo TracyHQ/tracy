@@ -149,21 +149,36 @@ export async function shapeReal({
     }),
     READ_AT_ONCE
   )
-  const map = domain.slotMap(contentMap, { ...keep, demo })
+  let map = domain.slotMap(contentMap, { ...keep, demo })
   clock('pictureDemoMs', started)
 
   // The plan: the one a run before wrote, else made now and written before anything is uploaded.
   started = Date.now()
   const labels = real.pictures.map((p) => domain.labelPicture(p))
   const labelOf = new Map(labels.map((l) => [l.id, l]))
-  const { clusterOf } = domain.nearCopies(labels)
-  const made = domain.planPlacement({ groups: map.groups, labels, clusterOf, bound })
+  // A Joomla contract whose map says each slot's v3 role (ADR 0040) is filled by the fill plan from the brief's links:
+  // a card takes only its own offering's photo, a general slot only a general one; no role is guessed from a name.
+  let made
+  if (cms === 'joomla' && real.brief && domain.roleDecidesKeep(contentMap)) {
+    const readable = new Map(real.pictures.map((p) => [p.id, p]))
+    const assets = (real.brief.assets ?? [])
+      .filter((a) => readable.has(a?.id))
+      .map((a) => ({ ...a, width: readable.get(a.id).width, height: readable.get(a.id).height }))
+    const fill = domain.planFill({ contentMap, brief: { ...real.brief, assets }, demo })
+    const placed = domain.placementOfFill({ fill, groups: map.groups })
+    map = { ...map, groups: placed.groups, never: [...map.never, ...placed.dropped] }
+    made = placed.plan
+  } else {
+    const { clusterOf } = domain.nearCopies(labels)
+    made = domain.planPlacement({ groups: map.groups, labels, clusterOf, bound })
+  }
   const fresh = {
     ...made,
     versions: {
       slotMap: domain.SLOT_MAP_VERSION,
       labels: domain.LABELS_VERSION,
-      planner: domain.PLANNER_VERSION
+      planner: domain.PLANNER_VERSION,
+      ...(made.fill ? { fill: made.fill } : {})
     },
     media: labels.map((l) => l.id).sort()
   }
