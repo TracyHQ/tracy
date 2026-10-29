@@ -21,8 +21,8 @@ lives in the host's chain, not in this package, because it reads and adds trigge
 
 After 172, `verifyWoSchema()` reports no difference and `adoptWoSchema()` can write the adoption marker. Tracy's chain
 also carries later package files with the same SQL (`173-wo-place-snapshot-guard.sql` = `0004-place-snapshot-guard.sql`,
-`176-wo-site-check-read-tier.sql` = `0009-site-check-read-tier.sql`),
-so Tracy verifies and adopts with `{ carried: ['0004-place-snapshot-guard.sql', '0009-site-check-read-tier.sql'] }`; the package's migrator then applies
+`176-wo-site-check-read-tier.sql` = `0009-site-check-read-tier.sql`, `186-wo-monid-key.sql` = `0010-monid-key.sql`),
+so Tracy verifies and adopts with `{ carried: ['0004-place-snapshot-guard.sql', '0009-site-check-read-tier.sql', '0010-monid-key.sql'] }`; the package's migrator then applies
 only the files Tracy does not carry.
 
 ## Why two files, in this shape

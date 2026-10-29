@@ -275,6 +275,10 @@ export const en = {
   'wo.keys.scrapecreators.subtitle':
     'Primary for public Facebook, Instagram and TikTok profile/post data; X/Twitter and Reddit endpoints are also available but not connected to WO. Credits are metered per endpoint request; cached reads may be free.',
   'wo.keys.scrapecreators.placeholder': 'ScrapeCreators API key',
+  'wo.keys.monid.title': '10. Monid (Google reviews, optional)',
+  'wo.keys.monid.subtitle':
+    'Optional. Adds up to 100 Google reviews a place (with owner replies and food, service and atmosphere scores) after Google Places and SerpApi, once you add Monid to the Google reviews order. Nothing runs without a key. Uses MONID_API_KEY when unset. Test makes no call: Monid has no free key check.',
+  'wo.keys.monid.placeholder': 'Monid API key',
 
   'wo.discovery.mapChain': 'Map Discovery Chain',
   'wo.discovery.mapAuto': 'Auto (Google Places → Apify → OSM)',

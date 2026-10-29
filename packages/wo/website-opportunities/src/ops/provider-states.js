@@ -47,6 +47,8 @@ export const WIRED_CAPABILITY_GROUPS = Object.freeze([
   'website-content',
   'web-search',
   'tripadvisor',
+  // Read for Monid only (`google-maps-monid-research.js`); Places and SerpApi Maps reviews still always run.
+  'google-reviews',
   'menu-links',
   'menu-photos',
   'menu-items'

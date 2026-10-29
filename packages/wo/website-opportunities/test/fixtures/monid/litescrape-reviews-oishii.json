@@ -1,0 +1,164 @@
+{
+  "search_metadata": {
+    "id": "8f3095d0736235838a68d02c",
+    "status": "Success",
+    "created_at": "2026-10-29 09:58:42 UTC",
+    "processed_at": "2026-10-29 09:58:42 UTC",
+    "total_time_taken": 2.778,
+    "google_maps_reviews_url": "https://www.google.com/maps/place/data=!4m7!3m6!1s0x3e5f6fffadbdf8fd:0x330797768b8c6aec!5m2!4m1!1i2!9m1!1b1?hl=en"
+  },
+  "search_parameters": {
+    "place_id": "ChIJ_fi9rf9vXz4R7GqMi3aXBzM",
+    "num": "100",
+    "hl": "en"
+  },
+  "place_info": {
+    "title": "Oishii Sushi Bar",
+    "address": "Emirates Accommodation Sarab 1B, Al Barari - Dubai, United Arab Emirates",
+    "rating": 4.3,
+    "reviews": 9,
+    "type": "Restaurant"
+  },
+  "reviews": [
+    {
+      "date": "2 years ago",
+      "iso_date": "2024-01-07T12:52:44Z",
+      "iso_date_of_last_edit": "2024-01-07T12:52:44Z",
+      "snippet": "Synthetic guest review 0 of Oishii: the food was good and the staff were kind.",
+      "extracted_snippet": {
+        "original": "Synthetic guest review 0 of Oishii: the food was good and the staff were kind."
+      },
+      "position": 1,
+      "review_id": "Ci9DQUlRQUNvZENodHljRjlvTeeb2ede1dd94bcb30a452ad763fec7RAB",
+      "rating": 3,
+      "user": {
+        "name": "Guest Oish 0",
+        "link": "https://www.google.com/maps/contrib/100000032921139944376?hl=en",
+        "contributor_id": "100000032921139944376",
+        "thumbnail": "https://lh3.googleusercontent.com/a/test-avatar-038fead0fc=s120-c-rp-mo-br100",
+        "local_guide": true,
+        "reviews": 13,
+        "photos": 23
+      },
+      "source": "Google",
+      "likes": 2,
+      "details": {
+        "order_type": "Take out",
+        "meal_type": "Lunch",
+        "price_per_person": "AED 100–150",
+        "food": 3,
+        "service": 3,
+        "atmosphere": 3
+      },
+      "subratings": {
+        "food": 3,
+        "service": 3,
+        "atmosphere": 3
+      },
+      "images": [
+        "https://lh3.googleusercontent.com/grass-cs/test-a9b3462d-0=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-a9b3462d-1=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-a9b3462d-2=k-no"
+      ],
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvTeeb2ede1dd94bcb30a452ad763fec7RAB!2m1!1s0x0:0x330797768b8c6aec!3m1!1s2@1:CIHM0ogKEICAgID1_oT3nwE%7C%7C?hl=en"
+    },
+    {
+      "date": "a year ago",
+      "iso_date": "2025-03-22T01:16:18Z",
+      "iso_date_of_last_edit": "2025-03-22T01:16:18Z",
+      "position": 2,
+      "review_id": "Ci9DQUlRQUNvZENodHljRjlvT21efb6b705b65a32179f8f4444787dRAB",
+      "rating": 3,
+      "user": {
+        "name": "Guest Oish 1",
+        "link": "https://www.google.com/maps/contrib/100000081866307016589?hl=en",
+        "contributor_id": "100000081866307016589",
+        "thumbnail": "https://lh3.googleusercontent.com/a/test-avatar-dcd9185d19=s120-c-rp-mo-br100",
+        "reviews": 3,
+        "photos": 4
+      },
+      "source": "Google",
+      "likes": 0,
+      "details": {
+        "service": 2,
+        "atmosphere": 2
+      },
+      "subratings": {
+        "service": 2,
+        "atmosphere": 2
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT21efb6b705b65a32179f8f4444787dRAB!2m1!1s0x0:0x330797768b8c6aec!3m1!1s2@1:CIHM0ogKEICAgMCwj_bd4wE%7C%7C?hl=en",
+      "images": null
+    },
+    {
+      "date": "2 years ago",
+      "iso_date": "2024-01-03T11:52:17Z",
+      "iso_date_of_last_edit": "2024-01-03T11:52:17Z",
+      "snippet": "Synthetic guest review 2 of Oishii: the food was good and the staff were kind.",
+      "extracted_snippet": {
+        "original": "Synthetic guest review 2 of Oishii: the food was good and the staff were kind."
+      },
+      "position": 3,
+      "review_id": "Ci9DQUlRQUNvZENodHljRjlvTfc297483247736cfe686db5c4608f8RAB",
+      "rating": 5,
+      "user": {
+        "name": "Guest Oish 2",
+        "link": "https://www.google.com/maps/contrib/100000115671288349439?hl=en",
+        "contributor_id": "100000115671288349439",
+        "thumbnail": "https://lh3.googleusercontent.com/a/test-avatar-36ac1bc9c3=s120-c-rp-mo-br100",
+        "reviews": 2,
+        "photos": 21
+      },
+      "source": "Google",
+      "likes": 0,
+      "details": {
+        "food": 5,
+        "service": 5,
+        "atmosphere": 5
+      },
+      "subratings": {
+        "food": 5,
+        "service": 5,
+        "atmosphere": 5
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvTfc297483247736cfe686db5c4608f8RAB!2m1!1s0x0:0x330797768b8c6aec!3m1!1s2@1:CIHM0ogKEICAgIC1s-Wu9AE%7C%7C?hl=en",
+      "images": null
+    },
+    {
+      "date": "2 years ago",
+      "iso_date": "2024-01-28T13:09:35Z",
+      "iso_date_of_last_edit": "2024-01-28T13:09:35Z",
+      "snippet": "Synthetic guest review 3 of Oishii: the food was good and the staff were kind.",
+      "extracted_snippet": {
+        "original": "Synthetic guest review 3 of Oishii: the food was good and the staff were kind."
+      },
+      "position": 4,
+      "review_id": "Ci9DQUlRQUNvZENodHljRjlvT11d59443ea3db78f9917d00e3517d6RAB",
+      "rating": 3,
+      "user": {
+        "name": "Guest Oish 3",
+        "link": "https://www.google.com/maps/contrib/100000067766799844395?hl=en",
+        "contributor_id": "100000067766799844395",
+        "thumbnail": "https://lh3.googleusercontent.com/a/test-avatar-40ca9e6f24=s120-c-rp-mo-br100",
+        "reviews": 1,
+        "photos": 0
+      },
+      "source": "Google",
+      "likes": 1,
+      "details": {
+        "price_per_person": "AED 50–100",
+        "food": 5,
+        "service": 5,
+        "atmosphere": 1,
+        "kid_friendliness": "Synthetic detail text"
+      },
+      "subratings": {
+        "food": 5,
+        "service": 5,
+        "atmosphere": 1
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT11d59443ea3db78f9917d00e3517d6RAB!2m1!1s0x0:0x330797768b8c6aec!3m1!1s2@1:CIHM0ogKEICAgICtqLaIkAE%7C%7C?hl=en",
+      "images": null
+    }
+  ]
+}

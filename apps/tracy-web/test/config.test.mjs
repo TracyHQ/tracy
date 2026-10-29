@@ -133,6 +133,8 @@ test('empty means off: no mail key is the console transport, no session domain i
     readConfig({ ...base, LITESCRAPE_API_KEY: 'test-private-litescrape' }).litescrapeApiKey,
     'test-private-litescrape'
   )
+  assert.equal(c.monidApiKey, null, 'no Monid key: no Monid calls')
+  assert.equal(readConfig({ ...base, MONID_API_KEY: 'test-private-monid' }).monidApiKey, 'test-private-monid')
   assert.equal(c.localStand, true, 'plain http on localhost outside production is a stand on this machine')
   assert.deepEqual(Object.keys(c).sort(), [
     'actorSecret',
@@ -183,6 +185,7 @@ test('empty means off: no mail key is the console transport, no session domain i
     'mcpChallenge',
     'mcpOrigin',
     'model',
+    'monidApiKey',
     'oauth',
     'onboardingHome',
     'origin',

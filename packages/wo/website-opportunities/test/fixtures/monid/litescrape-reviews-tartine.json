@@ -1,0 +1,318 @@
+{
+  "search_metadata": {
+    "id": "494a959d7a917ff3206a8c69",
+    "status": "Success",
+    "created_at": "2026-10-29 09:58:31 UTC",
+    "processed_at": "2026-10-29 09:58:31 UTC",
+    "total_time_taken": 3.705,
+    "google_maps_reviews_url": "https://www.google.com/maps/place/data=!4m7!3m6!1s0x808f7e1807365605:0x601f7a97f0ce6c6b!5m2!4m1!1i2!9m1!1b1?hl=en"
+  },
+  "search_parameters": {
+    "place_id": "ChIJBVY2Bxh-j4ARa2zO8Jd6H2A",
+    "num": "100",
+    "hl": "en"
+  },
+  "place_info": {
+    "title": "Tartine Bakery",
+    "address": "600 Guerrero St, San Francisco, CA 94110",
+    "rating": 4.5,
+    "reviews": 5990,
+    "type": "Bakery"
+  },
+  "reviews": [
+    {
+      "date": "Edited 3 months ago",
+      "iso_date": "2026-07-02T17:20:51Z",
+      "iso_date_of_last_edit": "2026-07-04T23:09:25Z",
+      "snippet": "Synthetic guest review 0 of Tartine: the food was good and the staff were kind.",
+      "extracted_snippet": {
+        "original": "Synthetic guest review 0 of Tartine: the food was good and the staff were kind."
+      },
+      "position": 1,
+      "review_id": "Ci9DQUlRQUNvZENodHljRjlvTc9b9aa528cad85cb4eef93d300a7cbRAB",
+      "rating": 5,
+      "user": {
+        "name": "Guest Tart 0",
+        "link": "https://www.google.com/maps/contrib/100000249435755157280?hl=en",
+        "contributor_id": "100000249435755157280",
+        "thumbnail": "https://lh3.googleusercontent.com/a/test-avatar-a1d8149cdd=s120-c-rp-mo-br100",
+        "local_guide": true,
+        "reviews": 338,
+        "photos": 1239
+      },
+      "source": "Google",
+      "likes": 0,
+      "details": {
+        "order_type": "Take out",
+        "meal_type": "Lunch",
+        "price_per_person": "$20–30",
+        "food": 5,
+        "service": 5,
+        "atmosphere": 5
+      },
+      "subratings": {
+        "food": 5,
+        "service": 5,
+        "atmosphere": 5
+      },
+      "images": [
+        "https://lh3.googleusercontent.com/grass-cs/test-8c82c524-0=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-8c82c524-1=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-8c82c524-2=k-no"
+      ],
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvTc9b9aa528cad85cb4eef93d300a7cbRAB!2m1!1s0x0:0x601f7a97f0ce6c6b!3m1!1s2@1:CAIQACodChtycF9oOjhjXzFPSzRIWHdTenJEbWQ4NkdzLVE%7C%7C?hl=en",
+      "response": {
+        "date": "Edited 3 months ago",
+        "iso_date": "2026-07-02T20:30:45Z",
+        "iso_date_of_last_edit": "2026-07-11T18:11:35Z",
+        "snippet": "Thank you for visiting Tartine, guest 0. We hope to see you again.",
+        "extracted_snippet": {
+          "original": "Thank you for visiting Tartine, guest 0. We hope to see you again."
+        }
+      }
+    },
+    {
+      "date": "4 months ago",
+      "iso_date": "2026-06-04T04:53:02Z",
+      "iso_date_of_last_edit": "2026-06-04T04:53:02Z",
+      "snippet": "Synthetic guest review 1 of Tartine: the food was good and the staff were kind.",
+      "extracted_snippet": {
+        "original": "Synthetic guest review 1 of Tartine: the food was good and the staff were kind."
+      },
+      "position": 2,
+      "review_id": "Ci9DQUlRQUNvZENodHljRjlvT2ddb055df087ad323246be0e2b7134RAB",
+      "rating": 5,
+      "user": {
+        "name": "Guest Tart 1",
+        "link": "https://www.google.com/maps/contrib/100000114016354284743?hl=en",
+        "contributor_id": "100000114016354284743",
+        "thumbnail": "https://lh3.googleusercontent.com/a/test-avatar-4cbd264041=s120-c-rp-mo-br100",
+        "reviews": 3,
+        "photos": 1
+      },
+      "source": "Google",
+      "likes": 0,
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2ddb055df087ad323246be0e2b7134RAB!2m1!1s0x0:0x601f7a97f0ce6c6b!3m1!1s2@1:CAIQACodChtycF9oOi1ZcHJ0WHVJLUJJWnRodnZKRlJsWnc%7C%7C?hl=en",
+      "response": {
+        "date": "4 months ago",
+        "iso_date": "2026-06-04T12:30:58Z",
+        "iso_date_of_last_edit": "2026-06-04T12:30:58Z",
+        "snippet": "Thank you for visiting Tartine, guest 1. We hope to see you again.",
+        "extracted_snippet": {
+          "original": "Thank you for visiting Tartine, guest 1. We hope to see you again."
+        }
+      },
+      "images": null
+    },
+    {
+      "date": "Edited 3 months ago",
+      "iso_date": "2026-07-02T23:55:13Z",
+      "iso_date_of_last_edit": "2026-07-04T02:41:14Z",
+      "snippet": "Synthetic guest review 2 of Tartine: the food was good and the staff were kind.",
+      "extracted_snippet": {
+        "original": "Synthetic guest review 2 of Tartine: the food was good and the staff were kind."
+      },
+      "position": 3,
+      "review_id": "Ci9DQUlRQUNvZENodHljRjlvTf459749d83902368fd9c32a7415362RAB",
+      "rating": 2,
+      "user": {
+        "name": "Guest Tart 2",
+        "link": "https://www.google.com/maps/contrib/100000001589828483608?hl=en",
+        "contributor_id": "100000001589828483608",
+        "thumbnail": "https://lh3.googleusercontent.com/a/test-avatar-023a29b426=s120-c-rp-mo-br100",
+        "local_guide": true,
+        "reviews": 166,
+        "photos": 2862
+      },
+      "source": "Google",
+      "likes": 2,
+      "details": {
+        "order_type": "Take out",
+        "meal_type": "Breakfast",
+        "price_per_person": "$10–20",
+        "food": 2,
+        "service": 1,
+        "atmosphere": 3,
+        "parking_space": "Somewhat difficult to find parking",
+        "parking_options": "Free street parking, Paid street parking"
+      },
+      "subratings": {
+        "food": 2,
+        "service": 1,
+        "atmosphere": 3
+      },
+      "images": [
+        "https://lh3.googleusercontent.com/grass-cs/test-ea3e3248-0=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-ea3e3248-1=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-ea3e3248-2=k-no"
+      ],
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvTf459749d83902368fd9c32a7415362RAB!2m1!1s0x0:0x601f7a97f0ce6c6b!3m1!1s2@1:CAIQACodChtycF9oOlZVdWdibE81Q1kxZGRRZ2M5cEhVMnc%7C%7C?hl=en"
+    },
+    {
+      "date": "4 months ago",
+      "iso_date": "2026-06-09T09:15:01Z",
+      "iso_date_of_last_edit": "2026-06-09T09:15:01Z",
+      "snippet": "Synthetic guest review 3 of Tartine: the food was good and the staff were kind.",
+      "extracted_snippet": {
+        "original": "Synthetic guest review 3 of Tartine: the food was good and the staff were kind."
+      },
+      "position": 4,
+      "review_id": "Ci9DQUlRQUNvZENodHljRjlvTde2940bbb3565abdbed1afce0c397bRAB",
+      "rating": 5,
+      "user": {
+        "name": "Guest Tart 3",
+        "link": "https://www.google.com/maps/contrib/100000209083172003365?hl=en",
+        "contributor_id": "100000209083172003365",
+        "thumbnail": "https://lh3.googleusercontent.com/a/test-avatar-aab2ca5916=s120-c-rp-mo-br100",
+        "local_guide": true,
+        "reviews": 122,
+        "photos": 338
+      },
+      "source": "Google",
+      "likes": 0,
+      "images": [
+        "https://lh3.googleusercontent.com/grass-cs/test-26e25bf2-0=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-26e25bf2-1=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-26e25bf2-2=k-no"
+      ],
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvTde2940bbb3565abdbed1afce0c397bRAB!2m1!1s0x0:0x601f7a97f0ce6c6b!3m1!1s2@1:CAIQACodChtycF9oOlNiTEV2WWZxcm9Db2NUeF9HZG9QQ0E%7C%7C?hl=en",
+      "response": {
+        "date": "4 months ago",
+        "iso_date": "2026-06-09T16:30:31Z",
+        "iso_date_of_last_edit": "2026-06-09T16:30:31Z",
+        "snippet": "Thank you for visiting Tartine, guest 3. We hope to see you again.",
+        "extracted_snippet": {
+          "original": "Thank you for visiting Tartine, guest 3. We hope to see you again."
+        }
+      }
+    },
+    {
+      "date": "a week ago",
+      "iso_date": "2026-10-18T17:24:32Z",
+      "iso_date_of_last_edit": "2026-10-18T17:24:32Z",
+      "snippet": "Synthetic guest review 4 of Tartine: the food was good and the staff were kind.",
+      "extracted_snippet": {
+        "original": "Synthetic guest review 4 of Tartine: the food was good and the staff were kind."
+      },
+      "position": 5,
+      "review_id": "Ci9DQUlRQUNvZENodHljRjlvT08caf523e5ecaffdf23596aba20e12RAB",
+      "rating": 5,
+      "user": {
+        "name": "Guest Tart 4",
+        "link": "https://www.google.com/maps/contrib/100000094131162173735?hl=en",
+        "contributor_id": "100000094131162173735",
+        "thumbnail": "https://lh3.googleusercontent.com/a/test-avatar-6df50dc2b7=s120-c-rp-mo-br100",
+        "local_guide": true,
+        "reviews": 297,
+        "photos": 692
+      },
+      "source": "Google",
+      "likes": 0,
+      "details": {
+        "order_type": "Take out",
+        "meal_type": "Breakfast",
+        "price_per_person": "$40–50",
+        "food": 5,
+        "service": 5,
+        "atmosphere": 5,
+        "noise_level": "Quiet, easy to talk"
+      },
+      "subratings": {
+        "food": 5,
+        "service": 5,
+        "atmosphere": 5
+      },
+      "images": [
+        "https://lh3.googleusercontent.com/grass-cs/test-e715a3bf-0=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-e715a3bf-1=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-e715a3bf-2=k-no"
+      ],
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT08caf523e5ecaffdf23596aba20e12RAB!2m1!1s0x0:0x601f7a97f0ce6c6b!3m1!1s2@1:CAIQACodChtycF9oOmxvS2UtRHVwWmJ3N2ZPbUdDRVN4a0E%7C%7C?hl=en",
+      "response": {
+        "date": "a week ago",
+        "iso_date": "2026-10-18T20:30:59Z",
+        "iso_date_of_last_edit": "2026-10-18T21:42:20Z",
+        "snippet": "Thank you for visiting Tartine, guest 4. We hope to see you again.",
+        "extracted_snippet": {
+          "original": "Thank you for visiting Tartine, guest 4. We hope to see you again."
+        }
+      }
+    },
+    {
+      "date": "5 months ago",
+      "iso_date": "2026-05-11T22:00:54Z",
+      "iso_date_of_last_edit": "2026-05-11T22:00:54Z",
+      "snippet": "Synthetic guest review 5 of Tartine: the food was good and the staff were kind.",
+      "extracted_snippet": {
+        "original": "Synthetic guest review 5 of Tartine: the food was good and the staff were kind."
+      },
+      "position": 6,
+      "review_id": "Ci9DQUlRQUNvZENodHljRjlvTa60ab3b4037597fd74c531cc881711RAB",
+      "rating": 5,
+      "user": {
+        "name": "Guest Tart 5",
+        "link": "https://www.google.com/maps/contrib/100000165549243173647?hl=en",
+        "contributor_id": "100000165549243173647",
+        "thumbnail": "https://lh3.googleusercontent.com/a/test-avatar-26598ae04e=s120-c-rp-mo-br100",
+        "local_guide": true,
+        "reviews": 87,
+        "photos": 322
+      },
+      "source": "Google",
+      "likes": 0,
+      "details": {
+        "order_type": "Take out",
+        "meal_type": "Breakfast",
+        "price_per_person": "$10–20",
+        "food": 5,
+        "service": 5,
+        "atmosphere": 5,
+        "recommended_dishes": "Synthetic detail text"
+      },
+      "subratings": {
+        "food": 5,
+        "service": 5,
+        "atmosphere": 5
+      },
+      "images": [
+        "https://lh3.googleusercontent.com/grass-cs/test-dedc71b3-0=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-dedc71b3-1=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-dedc71b3-2=k-no"
+      ],
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvTa60ab3b4037597fd74c531cc881711RAB!2m1!1s0x0:0x601f7a97f0ce6c6b!3m1!1s2@1:CAIQACodChtycF9oOjQ2WFk2UVY4bjNqWWZpNExjeklxcUE%7C%7C?hl=en",
+      "response": {
+        "date": "5 months ago",
+        "iso_date": "2026-05-12T00:32:42Z",
+        "iso_date_of_last_edit": "2026-05-12T00:32:42Z",
+        "snippet": "Thank you for visiting Tartine, guest 5. We hope to see you again.",
+        "extracted_snippet": {
+          "original": "Thank you for visiting Tartine, guest 5. We hope to see you again."
+        }
+      }
+    }
+  ],
+  "topics": [
+    {
+      "keyword": "morning bun",
+      "mentions": 237,
+      "id": "GX67QngwLrE"
+    },
+    {
+      "keyword": "limited seating",
+      "mentions": 8,
+      "id": "ChXOgcvmiCg"
+    }
+  ],
+  "pagination": {
+    "next": {
+      "endpoint": "/google/reviews",
+      "queryParams": {
+        "place_id": "ChIJBVY2Bxh-j4ARa2zO8Jd6H2A",
+        "num": 20,
+        "hl": "en",
+        "next_page_token": "ls1.WyJDakVJQVJJcENnb0FQN19MQWFlel9fX19FaEM1d3lnUXp0SHZMSHdrUmRBQUFBQUFHZ245MlRBQ2YwSHhEYXNZQUNJQToxMDAiLCJJNERDUlY2SFBZQVB3MVVYLUdNUUwiXQ"
+      }
+    },
+    "next_page_token": "ls1.WyJDakVJQVJJcENnb0FQN19MQWFlel9fX19FaEM1d3lnUXp0SHZMSHdrUmRBQUFBQUFHZ245MlRBQ2YwSHhEYXNZQUNJQToxMDAiLCJJNERDUlY2SFBZQVB3MVVYLUdNUUwiXQ"
+  }
+}

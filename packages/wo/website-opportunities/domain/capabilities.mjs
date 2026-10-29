@@ -11,7 +11,8 @@ export const PROVIDER_CREDENTIALS = Object.freeze([
   'rapidapi',
   'serpapi',
   'litescrape',
-  'scrapecreators'
+  'scrapecreators',
+  'monid'
 ])
 
 const p = (id, credential, label) => Object.freeze({ id, credential, label })
@@ -75,10 +76,17 @@ export const CAPABILITY_GROUPS = Object.freeze([
     p('rapidapi-tripadvisor', 'rapidapi', 'RapidAPI · TripAdvisor (OneAPI)'),
     p('litescrape', 'litescrape', 'Litescrape')
   ]),
-  group('google-reviews', 'Google reviews', [
-    p('google-places', 'google', 'Google Places API'),
-    p('serpapi-google-maps', 'serpapi', 'SerpApi Google Maps')
-  ]),
+  group(
+    'google-reviews',
+    'Google reviews',
+    [
+      p('google-places', 'google', 'Google Places API'),
+      p('serpapi-google-maps', 'serpapi', 'SerpApi Google Maps'),
+      p('monid-google-reviews', 'monid', 'Monid · Google reviews (up to 100)')
+    ],
+    // Monid is a supplement after the others, off until an operator adds it here (product owner, 29/10/2026).
+    ['google-places', 'serpapi-google-maps']
+  ),
   group(
     'menu-links',
     'Menu links',
