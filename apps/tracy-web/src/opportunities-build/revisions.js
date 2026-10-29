@@ -146,6 +146,25 @@ export async function revisionForAction(
     }).catch((error) => (error?.code && error.code === failure ? { error: failure } : Promise.reject(error)))
     if (made.error) return made
     revision = made.revision
+  } else if (!built && !editorial && pictureLabels && labellingUnsettled(revision.brief)) {
+    // 🔒 The brief this action holds was made while its photos were still being looked at (a Refresh during the
+    // labelling): before any build, wait for the labelling as a new brief would, then take the brief of the labels
+    // there are now (`createBaseRevision` supersedes the held one and moves this action to it). A build never starts
+    // from readiness judged on labels that have since arrived.
+    const photos = await waitForPhotoLabels(db, { action, now, photoLabelling })
+    if (photos.pending) return photos
+    const made = await createRevision(db, {
+      accountId: action.account_id,
+      opportunityId: action.opportunity_id,
+      actionId: action.id,
+      domain,
+      now,
+      pictureLabels,
+      ...(photos.waited ? { photoWait: photos.waited } : {})
+    })
+    if (made.error) return made
+    if (made.revision.id !== revision.id) action.revision_id = made.revision.id
+    revision = made.revision
   }
   const choice = choiceFor(revision)
   if (!choice) return { error: failure }
@@ -351,6 +370,7 @@ async function createBaseRevision(pool, args) {
     const research = await researchOf(client, read, opp, view)
     // A quality-v1 brief holds an editorial plan made for one template: never shared (`choiceFor`).
     const hash = args.choiceFor ? null : researchKey(domain, research)
+    let superseded = false
     if (hash) {
       const same = (
         await client.query('select * from wo_revision where opportunity_id = $1 and research_hash = $2', [
@@ -358,7 +378,14 @@ async function createBaseRevision(pool, args) {
           hash
         ])
       ).rows[0]
-      if (same) {
+      // 🔒 A brief made before its photos were labelled is not the brief of this research once the labels moved on:
+      // the vision labels are kept out of the key (`researchKey`), so without this the same stale brief, and its
+      // readiness judged on missing labels, would be answered for ever. It leaves the key (its content stays as it was)
+      // and a new brief is made from the labels there are now.
+      if (same && labellingMovedOn(same.brief?.assetLabelling, args.pictureLabelling?.note)) {
+        await client.query('update wo_revision set research_hash = null where id = $1', [same.id])
+        superseded = true
+      } else if (same) {
         if (actionId) await adoptRevision(client, actionId, accountId, same.id)
         await client.query('commit')
         return { revision: same, reused: true }
@@ -444,6 +471,8 @@ async function createBaseRevision(pool, args) {
       return { frozen }
     }
     const inserted = await insertFrozenRevision(client, { ...frozen, research_hash: hash })
+    // The action that held the superseded brief builds from this one.
+    if (superseded && actionId && !revisionId) await adoptRevision(client, actionId, accountId, inserted.id)
     await client.query('commit')
     return { revision: inserted }
   } catch (error) {
@@ -452,6 +481,26 @@ async function createBaseRevision(pool, args) {
   } finally {
     client.release()
   }
+}
+
+/** Labelling states that may still change: photos were being looked at, or the build stopped waiting for them. */
+const UNSETTLED = new Set(['labelling', 'stalled'])
+
+/**
+ * Whether a brief was made before its photo labelling settled (`brief.assetLabelling.status` `labelling` or `stalled`):
+ * such a brief is not the last word on its research, since the labels it lacked may have arrived since.
+ */
+export function labellingUnsettled(brief) {
+  return UNSETTLED.has(brief?.assetLabelling?.status)
+}
+
+/**
+ * Whether the labelling read now is further on than the one a held brief was made with: the held one had not settled
+ * and the new one has, or labelled more photos. A labelling that did not move answers the held brief again.
+ */
+export function labellingMovedOn(held, fresh) {
+  if (!UNSETTLED.has(held?.status) || !fresh) return false
+  return !UNSETTLED.has(fresh.status) || (fresh.labelled ?? 0) > (held.labelled ?? 0)
 }
 
 /** The hash of the research a brief made now would read: equal to the latest brief's when nothing changed. */

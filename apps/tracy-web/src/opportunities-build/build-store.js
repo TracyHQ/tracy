@@ -15,7 +15,7 @@ export async function revisionOf(pool, accountId, revisionId) {
 
 export async function revisionsOf(pool, opportunityId) {
   const { rows } = await pool.query(
-    `select id, opportunity_id, n, research_hash, created_at
+    `select id, opportunity_id, n, research_hash, created_at, brief->'assetLabelling'->>'status' as labelling_status
      from wo_revision where opportunity_id = $1 order by n desc`,
     [opportunityId]
   )

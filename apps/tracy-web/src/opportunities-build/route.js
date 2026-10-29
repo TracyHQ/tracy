@@ -47,7 +47,7 @@ import { demoJourneySql } from './journey-sql.js'
 import { isOwnSiteAction, ownSiteOn, ownSiteRoutes } from './own-site.js'
 import { QUALITY_PROTOCOL, qualityModeOf } from './quality-protocol.js'
 import { qualityEvidenceRoutes } from './quality-route.js'
-import { createRevision, currentResearchKey, resolveRevisionCms } from './revisions.js'
+import { createRevision, currentResearchKey, labellingUnsettled, resolveRevisionCms } from './revisions.js'
 
 const BASE = '/api/website-opportunities'
 
@@ -253,7 +253,15 @@ export function createWebsiteBuilder(deps) {
     const same = key ? revisions.find((r) => r.research_hash === key) : null
     const shown = same ?? revisions[0]
     const known = Boolean(domain) && key !== undefined
-    return { id: shown.id, n: shown.n, createdAt: shown.created_at, current: known ? Boolean(same) : null }
+    // 🔒 A brief made while its photos were still being looked at is never "up to date": the labels it lacked may have
+    // arrived, and only a Refresh reads them (`labellingUnsettled`), so the page must offer one.
+    const settled = !labellingUnsettled({ assetLabelling: { status: same?.labelling_status } })
+    return {
+      id: shown.id,
+      n: shown.n,
+      createdAt: shown.created_at,
+      current: known ? Boolean(same) && settled : null
+    }
   }
 
   /** The demo half of `GET /:id`: its demo, progress, revisions, brief, action, usage and builds. */
