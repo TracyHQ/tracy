@@ -2,7 +2,7 @@
  * What the CMS engines of "Apply" have in common: the site block the seeder's planners read, how a plan is
  * cut into the batches a model can answer in seconds, and how a model's call is made firm about facts.
  */
-import { FACT_RULES } from './guard.js'
+import { FACT_RULES, VOICE_RULES } from './guard.js'
 
 /** Slots per model call. The seeder's own number (`plan-*-contract.mjs` `BATCH`), kept because its prompts are tuned to it. */
 export const BATCH = 35
@@ -228,7 +228,8 @@ export function recordTextUsage(ctx, model) {
 }
 
 /**
- * The planners' `generate`, over a seed model, with the fact rules added to every instruction and the
+ * The planners' `generate`, over a seed model, with the fact rules and the copy voice (`VOICE_RULES`) added to every
+ * instruction and the
  * run's abort signal on every call.
  * @param {{ chat: Function }} model
  * @param {AbortSignal} [signal]
@@ -238,7 +239,7 @@ export function firmGenerate(model, signal) {
   return ({ system, input }) =>
     model.chat({
       messages: [
-        { role: 'system', content: `${system}${FACT_RULES}` },
+        { role: 'system', content: `${system}${FACT_RULES}${VOICE_RULES}` },
         { role: 'user', content: JSON.stringify(input) }
       ],
       maxTokens: 4096,

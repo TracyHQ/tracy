@@ -70,7 +70,7 @@ for (const [name, entity, about, same, distinct] of [
       }
     })
     assert.equal(calls, 2)
-    assert.match(fixes[0], /repeats the same sentence/)
+    assert.match(fixes[0], /repeats a sentence already written/)
     assert.equal(result.changes[slots[0].key], same)
     assert.equal(result.changes[slots[1].key], distinct)
   })

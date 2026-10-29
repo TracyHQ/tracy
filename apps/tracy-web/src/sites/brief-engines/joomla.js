@@ -56,6 +56,7 @@ import { declaredPictureSlots } from './drawn-pictures.js'
 import { copyPinsOf, pinStates, recordPins } from './wo-copy-pins.js'
 import { sourcedPinEvidence } from './copy-pin-priority.js'
 import { woContentOf } from './wo-content.js'
+import { offeringPostsOf } from './offering-posts.js'
 import { planContactSteps } from './joomla-plan-contacts.js'
 import { honestWords, leftDemoWords, planRecordSteps } from './joomla-plan-records.js'
 import { withInlineStyles } from './inline-styles.js'
@@ -939,6 +940,12 @@ export function createJoomlaEngine({
         const hiddenCards = (planHonesty?.records ?? [])
           .filter((r) => r?.decision === 'hide')
           .map((r) => r.group)
+        // 🔒 COPY VOICE (#189 round 9, class F): each offering is written from the owner's own posts about it, and the lines
+        // the build pinned from the brief are what the writer must not say again elsewhere (`offering-posts.js`, `copy-voice.mjs`).
+        const offeringPosts = offeringPostsOf((await woReading)?.items, Object.values(offerings ?? {}))
+        const pinnedWords = state.slots
+          .filter((slot) => typeof copyPins?.pins?.[slot.key] === 'string')
+          .map((slot) => ({ ...slot, value: copyPins.pins[slot.key] }))
         const answered = await planConcurrently(async (ask) => {
           const pages = await planJoomlaContract({
             state: planned,
@@ -950,7 +957,9 @@ export function createJoomlaEngine({
             republished,
             inventions: 'never',
             offerings,
-            hidden: hiddenCards
+            hidden: hiddenCards,
+            written: pinnedWords,
+            offeringPosts
           })
           if (lineByLine.length === 0) return pages
           try {

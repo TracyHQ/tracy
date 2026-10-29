@@ -27,6 +27,8 @@ import { checkEmptyFrames } from './empty-frame-check.js'
 import { checkHeadBlocks } from './head-block-check.js'
 import { checkPageSeo, unusedBriefContent } from './page-seo-check.js'
 import { checkRecordSlots } from './record-slot-check.js'
+import { checkRepeatedCopy } from './repeated-copy-check.js'
+import { seeder } from '../lib/seeder.js'
 
 /** The most pages one check reads: a brief build's site has a handful, a demo's showcase branch can have dozens. */
 export const MAX_PAGES = 24
@@ -186,6 +188,12 @@ export async function runLeftoverCheck({
   // Every record the site plan assigned (a review and its author, a person's name) is on the site as given (#189 item 18).
   const recordSlots = sitePlan ? checkRecordSlots({ pages, sitePlan, contentMap }) : []
   report.findings.push(...recordSlots)
+  // No sentence said twice on a page, reworded or not, nor on two pages (#189 round 9, class F); near copies as the writers judge them.
+  const near = await seeder('distinct-copy')
+    .then((m) => m.containedCopy)
+    .catch(() => undefined)
+  const repeatedCopy = checkRepeatedCopy({ pages, near })
+  report.findings.push(...repeatedCopy)
   report.findings.push(...offeringSummaries.map((f) => ({ kind: 'C03', ...f })))
   report.counts.C03 = (report.counts.C03 ?? 0) + offeringSummaries.length
   const mainMenuFindings = (mainMenu?.findings ?? []).map((f) => ({
@@ -216,6 +224,7 @@ export async function runLeftoverCheck({
     offeringSummaries,
     reviewQuotes,
     recordSlots,
+    repeatedCopy,
     contactForms,
     contactPage,
     pageSeo,
@@ -238,6 +247,7 @@ export async function runLeftoverCheck({
       headBlocks.length === 0 &&
       !pageSeo.some((f) => f.severity === 'major') &&
       recordSlots.length === 0 &&
+      repeatedCopy.length === 0 &&
       ctaBands.length === 0 &&
       pageIntros.length === 0,
     findings: [

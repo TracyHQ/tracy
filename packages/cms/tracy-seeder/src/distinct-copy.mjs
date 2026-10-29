@@ -9,7 +9,9 @@
  *     job each, and the keys of the neighbours they must not repeat);
  *  2. an answer that repeats a sentence inside one section, or verbatim on one page, is refused and rewritten
  *     (`duplicateComplaint`), and what is still a duplicate afterwards is pended, never written (`duplicates`);
- *  3. the rendered pages are checked for the same thing (`repeatedSentences`, used by the demo-leftover check).
+ *  3. the rendered pages are checked for the same thing (`repeatedSentences`; across pages `repeated-copy-check.js`).
+ * Round 9 (class F) widened the ledger from one section to the site: a sentence of a value is compared on its own, near
+ * copies on one page and the same sentence on two pages are refused.
  */
 
 /** Shortest text that counts as a sentence worth comparing: a label or a figure may repeat. */
@@ -27,6 +29,40 @@ export const normalizedCopy = (value) =>
     .trim()
 
 const words = (text) => new Set(text.split(' ').filter((w) => w.length > 2))
+
+/**
+ * The sentences of a normalized text worth comparing. Sentence ends are gone after normalising, so the text is cut on
+ * the raw value's sentence marks before (`sentenceMarks`) and kept whole when it has none.
+ * @param {string} text
+ */
+const sentencesOf = (text) => text.split(' \u0001 ').filter((s) => s.length >= MIN_CHARS)
+
+/** A text normalized with its sentence ends kept as a separator `sentencesOf` cuts on. */
+const withSentenceMarks = (value) =>
+  String(value ?? '')
+    .split(/(?<=[.!?])\s+|\n+/)
+    .map(normalizedCopy)
+    .filter(Boolean)
+    .join(' \u0001 ')
+
+/**
+ * Is one sentence another one reworded: nearly every word of the shorter (at least eight words: a card's short line inside an introduction is not a copy of it) in the longer one. "At
+ * <name> we offer coaching in <city>: tennis and swimming" inside "<name> offers coaching in <city>: tennis, swimming
+ * and fitness, for all ages" is the same line; two sentences that only share a subject are not.
+ */
+export function containedCopy(a, b) {
+  if (a.length < MIN_CHARS || b.length < MIN_CHARS) return false
+  if (a === b) return true
+  const [x, y] = [words(a), words(b)]
+  if (Math.min(x.size, y.size) < 8) return false
+  let shared = 0
+  const [small, large] = x.size <= y.size ? [x, y] : [y, x]
+  for (const w of small) if (large.has(w) || [...large].some((l) => sameStem(l, w))) shared += 1
+  return shared / small.size >= NEAR
+}
+
+/** Two spellings of one word (personalised, personalized; offer, offers). */
+const sameStem = (a, b) => a.length >= 5 && b.length >= 5 && a.slice(0, 5) === b.slice(0, 5)
 
 /** Are two normalized texts one sentence, verbatim or nearly (word overlap of the shorter one)? */
 export function sameCopy(a, b) {
@@ -102,11 +138,16 @@ export function pagesOfEntities(pages) {
 export function copyLedger({ pageOf = () => [] } = {}) {
   /** @type {Map<string, Array<{ key: string, text: string }>>} scope -> written copy */
   const scopes = new Map()
-  const scopesOf = (slot) => [`entity:${slot.entity}`, ...pageOf(slot.entity).map((p) => `page:${p}`)]
+  const scopesOf = (slot) => {
+    const pages = pageOf(slot.entity)
+    // A slot on a page is also on the site: a sentence said on one page is not said again on another (round 9, class F).
+    return [`entity:${slot.entity}`, ...pages.map((p) => `page:${p}`), ...(pages.length ? ['site'] : [])]
+  }
   return {
     /** The first slot already written (or earlier in `batch`) whose copy this one repeats, or null. */
     repeats(slot, value, batch = []) {
       const text = normalizedCopy(value)
+      const marked = withSentenceMarks(value)
       if (text.length < MIN_CHARS) return null
       for (const scope of scopesOf(slot)) {
         const seen = [...(scopes.get(scope) ?? []), ...batch.filter((b) => scopesOf(b.slot).includes(scope))]
@@ -118,6 +159,14 @@ export function copyLedger({ pageOf = () => [] } = {}) {
             Boolean(slot.group?.id) && Boolean(other.group?.id) && slot.group.id !== other.group.id
           if (scope.startsWith('entity:') && !cards ? sameCopy(text, other.text) : text === other.text)
             return other.key
+          // 🔒 ONE SENTENCE, ONE PLACE (round 9, class F): a sentence of a longer value is compared too. On one page a
+          // near copy counts (the brief's line reworded in a second section); across pages only the same sentence does.
+          if (cards) continue
+          const near = scope.startsWith('page:')
+          if (scope === 'site' || near)
+            for (const mine of sentencesOf(marked))
+              for (const theirs of sentencesOf(other.marked ?? other.text))
+                if (near ? containedCopy(mine, theirs) : mine === theirs) return other.key
         }
       }
       return null
@@ -127,7 +176,10 @@ export function copyLedger({ pageOf = () => [] } = {}) {
       const text = normalizedCopy(value)
       if (text.length < MIN_CHARS) return
       for (const scope of scopesOf(slot))
-        scopes.set(scope, [...(scopes.get(scope) ?? []), { key: slot.key, text, group: slot.group }])
+        scopes.set(scope, [
+          ...(scopes.get(scope) ?? []),
+          { key: slot.key, text, marked: withSentenceMarks(value), group: slot.group }
+        ])
     }
   }
 }
@@ -147,19 +199,26 @@ export function duplicates(slots, values, ledger) {
     if (typeof value !== 'string') continue
     const of = ledger.repeats(slot, value, batch)
     if (of !== null) out.push({ key: slot.key, of })
-    else batch.push({ key: slot.key, slot, group: slot.group, text: normalizedCopy(value) })
+    else
+      batch.push({
+        key: slot.key,
+        slot,
+        group: slot.group,
+        text: normalizedCopy(value),
+        marked: withSentenceMarks(value)
+      })
   }
   return out
 }
 
 /** The sentence shown to the model when its answer repeats itself. */
 export const duplicateComplaint = (found) =>
-  `Your previous answer repeats the same sentence in two slots of one section: ${found
+  `Your previous answer repeats a sentence already written in its section, on its page or on another page of the site: ${found
     .slice(0, 6)
     .map((d) => `${d.key} says what ${d.of} says`)
     .join(
       '; '
-    )}. Give each slot its own job (lead, body, quote, detail) and write different words for each; never copy one slot's sentence into another.`
+    )}. Give each slot its own job (lead, body, quote, detail) and write different words for each; never copy one slot's sentence into another, and never say again on one page what another page already says.`
 
 /**
  * Repeated sentences in the text of one rendered section: the sentences (of at least `MIN_CHARS`) that occur twice.

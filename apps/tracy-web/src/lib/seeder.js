@@ -43,6 +43,7 @@ export const SEEDER_MODULES = Object.freeze([
   'apply-joomla-language',
   'apply-wordpress-contract',
   'chrome-slots',
+  'distinct-copy',
   'locales',
   'model',
   'nav-labels',

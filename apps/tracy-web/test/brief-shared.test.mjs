@@ -16,7 +16,7 @@ import {
   siteBlock,
   stopwatch
 } from '../src/sites/brief-engines/shared.js'
-import { FACT_RULES } from '../src/sites/brief-engines/guard.js'
+import { FACT_RULES, VOICE_RULES } from '../src/sites/brief-engines/guard.js'
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -140,9 +140,19 @@ test('the fact rules ride on every instruction, and the run’s signal on every 
   const model = { chat: async (request) => ((sent = request), 'x') }
   const signal = new AbortController().signal
   await firmGenerate(model, signal)({ system: 'Write slots.', input: { a: 1 } })
-  assert.equal(sent.messages[0].content, `Write slots.${FACT_RULES}`)
+  assert.equal(sent.messages[0].content, `Write slots.${FACT_RULES}${VOICE_RULES}`)
   assert.equal(sent.messages[1].content, '{"a":1}')
   assert.equal(sent.signal, signal)
+})
+
+test('the copy voice is formal and wins over the tone and the brief voice, for every writer', () => {
+  assert.match(VOICE_RULES, /wins over any tone named above, over the voice the brief observed/)
+  assert.match(VOICE_RULES, /no slang/)
+  assert.match(VOICE_RULES, /no emoji/)
+  assert.match(VOICE_RULES, /never repeat a sentence on one page or\s+across pages/)
+  assert.match(VOICE_RULES, /unless the brief states that number/)
+  assert.match(VOICE_RULES, /sentence\s+case/)
+  assert.doesNotMatch(VOICE_RULES, /[\u2013\u2014]/, 'no dash a model would copy into copy')
 })
 
 test('a deadline stops what is still waiting, and the run’s own signal stops it sooner', async () => {

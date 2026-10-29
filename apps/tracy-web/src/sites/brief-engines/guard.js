@@ -42,6 +42,28 @@ export const FACT_RULES =
   'STATISTIC TILES are an exception to neutral prose: keep one accepted numeric value with its matching label and source as a unit. ' +
   'Never write a place, category or sentence in a stat.value slot. If no complete sourced statistic fits, leave the whole stat group pending so it can be taken off.'
 
+/**
+ * Appended after `FACT_RULES` to every planner's instruction (`shared.js` `firmGenerate`), so every CMS writer that plans
+ * copy through it obeys it with no work of its own.
+ *
+ * 🔒 THE FORMAL REGISTER WINS OVER THE BRIEF'S VOICE (product owner, round 9 of spec TracyHQ/tracy#189, 30/10/2026).
+ * Measured on a local brief build of a coaching club whose brief read its voice as "informal tone, emoji": the site said
+ * "Comfy Sportswear", "Come on in, the water's lovely", "Your court or pool awaits" and "We're so glad you're here".
+ * A customer's site speaks like a reputable business: friendly is allowed, slang and ad-speak are not. The same build
+ * repeated two key phrases 26 and 19 times, headed its hero "One coach for the whole family" over a team of two, and
+ * wrote a body heading in Title Case. The writers also check these after the answer (`tracy-seeder` `copy-voice.mjs`).
+ */
+export const VOICE_RULES =
+  " COPY VOICE (binding: it wins over any tone named above, over the voice the brief observed and over the sample's " +
+  'register): write every value in a formal, professional register, the way a reputable business addresses its ' +
+  'customers. Friendly and clear is right; casual is not: no slang or colloquial words, no emoji, no exclamation marks, ' +
+  'no contractions (write "we are", not "we\'re"), no advertising hype or dramatic phrasing ("awaits", "unbeatable", ' +
+  '"like never before"), no gushing ("we are so glad", "so welcome") and no cute wordplay. Say each key message once, ' +
+  'where it matters most, and write every other slot about its own subject: never repeat a sentence on one page or ' +
+  'across pages, and never use the same phrase as filler in slot after slot. Never state how many people, places or ' +
+  'offerings there are ("one coach", "three studios") unless the brief states that number. Write headings in sentence ' +
+  'case (only the first word and proper names capitalised) in languages that write them so.'
+
 const PHONE = /\+?\d[\d\s().-]{5,}\d/g
 const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}/g
 const YEAR = /\b(?:19|20)\d{2}\b/g

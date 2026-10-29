@@ -8,6 +8,15 @@ import { toneRule } from './tone.mjs'
 import { buttonKindOf, contactLabel, hasWords, iconLinkKeys, translateLabels } from './template-buttons.mjs'
 import { PROCESS_WRITING_RULE, processWritingOf } from './process-writing.mjs'
 import { copyJobs, copyLedger, duplicateComplaint, duplicates, pagesOfEntities } from './distinct-copy.mjs'
+import {
+  countComplaint,
+  overusedPhrases,
+  phraseComplaint,
+  phraseLedger,
+  properNounsOf,
+  sentenceCase,
+  ungroundedCounts
+} from './copy-voice.mjs'
 
 /**
  * Every string in a customer brief, flattened — what an evidence-required value must be a verbatim
@@ -805,6 +814,20 @@ export function sectionBatches(slots, size) {
 /** Is this a link into the site itself (a path or `index.php…`), rather than an address elsewhere? */
 const siteLink = (value) => /^(?:\/(?!\/)|index\.php)/.test(value)
 
+/**
+ * Said to the writer when a batch carries `ownPosts`: the owner's own posts about an offering. Measured 30/10/2026: an
+ * offering page said "skills, strength and gentle conditioning" while the owner's post about that offering listed
+ * personalised plans, strength, weight loss and flexible scheduling.
+ */
+export const OWN_POSTS_RULE =
+  ' "ownPosts" holds the owner\'s own posts about an offering, by its name: every slot with that "offering" is written from ' +
+  "them (what the offering includes, who it is for, how it is booked), in your own words and in the site's register, " +
+  'never copied with their hashtags or emoji. State only the facts the posts state.'
+
+/** Is a slot a heading: its declared role, or the element its words sit in? */
+const isHeading = (slot) =>
+  slot?.role === 'editorial.heading' || /\/h[1-6](?:\[\d+\])?\/text\(\)$/i.test(String(slot?.xpath ?? ''))
+
 /** Generate scalar copy against a trusted slot inventory; uncertainty is explicit, never a layout change. */
 export async function planJoomlaContract({
   state,
@@ -818,7 +841,9 @@ export async function planJoomlaContract({
   republished = new Set(),
   inventions = 'allowed',
   offerings = null,
-  hidden = null
+  hidden = null,
+  written = [],
+  offeringPosts = null
 }) {
   if (!state?.contract || !Array.isArray(state.slots)) throw new Error('Invalid contract inventory')
   // 🔒 A slot the profile only DECLARES (`customize: "keep"`, written by `capture-contract.py --full-coverage`) is the site
@@ -1043,7 +1068,31 @@ export async function planJoomlaContract({
   /** The values of an answer written in another language than their slot's (`off-language.mjs`). */
   const wrongIn = (body, slots) => offLanguage(body.values, slots, { languageOf, alphabets, keep })
   /** What is wrong with an answer, as a sentence the model is shown — or null when it is usable. */
-  const ledger = copyLedger({ pageOf: pagesOfEntities(state.pages) })
+  const pageOf = pagesOfEntities(state.pages)
+  const ledger = copyLedger({ pageOf })
+  // 🔒 A KEY PHRASE IS SAID WHERE IT MATTERS, NOT ON EVERY SLOT (round 9, class F, `copy-voice.mjs`): the business's
+  // name and its offerings' names are its names, which a site repeats by design.
+  const phrases = phraseLedger({
+    pageOf,
+    pages: new Set((state.pages ?? []).map((p) => p?.entity).filter(Boolean)).size,
+    keep: [site?.name, ...Object.values(offerings ?? {})].filter((k) => typeof k === 'string')
+  })
+  // Words other steps of the build already put on the site (the brief's own lines pinned to a slot) are what later
+  // answers must not repeat: a pinned introduction was said a second and a third time in other sections (round 9).
+  for (const slot of Array.isArray(written) ? written : [])
+    if (slot?.key && typeof slot.value === 'string') {
+      ledger.record(slot, slot.value)
+      phrases.record(slot, slot.value)
+    }
+  const statistics = Array.isArray(site?.statistics) ? site.statistics : []
+  /** The counts an answer states that the brief does not ("one coach" over a team of two), by slot. */
+  const countsIn = (slots, values) =>
+    slots.flatMap((slot) =>
+      typeof values?.[slot.key] === 'string'
+        ? ungroundedCounts(values[slot.key], facts, statistics).map((c) => ({ key: slot.key, ...c }))
+        : []
+    )
+  const properNouns = properNounsOf(facts)
   const jobs = copyJobs(state.slots)
   const complaintAbout = (body, known, slots, languages) => {
     const shape = shapeComplaint(body)
@@ -1055,12 +1104,28 @@ export async function planJoomlaContract({
     if (wrong.size) return languageComplaint(wrong, languages)
     // 🔒 TWO SLOTS OF ONE SECTION NEVER CARRY THE SAME SENTENCE (spec #189, item 17): refused and rewritten, like a wrong language.
     const repeated = duplicates(slots, body.values, ledger)
-    return repeated.length ? duplicateComplaint(repeated) : null
+    if (repeated.length) return duplicateComplaint(repeated)
+    // 🔒 A COUNT IS A FACT (round 9, class F): "one coach" over a team of two is refused like an invented phone number.
+    const counts = countsIn(slots, body.values)
+    if (counts.length) return countComplaint(counts)
+    const overused = overusedPhrases(slots, body.values, phrases)
+    return overused.length ? phraseComplaint(overused) : null
   }
   const items = itemNumbers(state.slots)
   const journeys = processWritingOf(state.slots, offerings)
   const offeringOf = offeringBinding(offerings)
   const shows = sectionShows(state.slots, hidden)
+  /** The owner's posts about the offerings the slots of a batch write about, by offering name, or null. */
+  const postsFor = (slots) => {
+    if (!offeringPosts || typeof offeringPosts !== 'object') return null
+    const named = [...new Set(slots.map(offeringOf).filter(Boolean))]
+    const out = Object.fromEntries(
+      named
+        .map((name) => [name, offeringPosts[name]])
+        .filter(([, posts]) => Array.isArray(posts) && posts.length > 0)
+    )
+    return Object.keys(out).length ? out : null
+  }
   /** The complaints of the batches no answer could be read for (`model-unreadable`). */
   const unreadable = []
   const batches = sectionBatches(planned, 35)
@@ -1077,9 +1142,13 @@ export async function planJoomlaContract({
     // same 78-page list in every call and over half of each slot its storage (JSON path, XPath, `current` repeating an
     // identical `sample`). The list had no slot to fill: a url slot holding a link into this site never reaches the
     // model (`routes`), and every url slot it does see is empty or a file or outside address.
+    // 🔒 AN OFFERING'S PAGE IS WRITTEN FROM THE OWNER'S OWN POSTS ABOUT IT (round 9, class F): only the posts of the
+    // offerings this batch writes about travel with it, so a catalogue of hundreds never fills one call.
+    const ownPosts = postsFor(slots)
     const input = {
       language: languages.length === 1 ? languages[0] : undefined,
       brief: site,
+      ...(ownPosts ? { ownPosts } : {}),
       slots: slots.map((s) => ({
         key: s.key,
         entity: s.entity,
@@ -1121,7 +1190,7 @@ export async function planJoomlaContract({
     let raw = null
     for (let attempt = 0; attempt < ATTEMPTS; attempt += 1) {
       raw = await generate({
-        system: journeys.size ? SYSTEM + PROCESS_WRITING_RULE : SYSTEM,
+        system: (journeys.size ? SYSTEM + PROCESS_WRITING_RULE : SYSTEM) + (ownPosts ? OWN_POSTS_RULE : ''),
         input: complaint ? { ...input, fix: complaint } : input
       })
       const answer = parse(raw)
@@ -1175,6 +1244,8 @@ export async function planJoomlaContract({
     const wrong = wrongIn(body, slots)
     // What is still a repeat after the retries is not written: the later slot is pended, the first keeps its words.
     const repeats = new Set(duplicates(slots, body.values, ledger).map((d) => d.key))
+    // A count the brief does not state is still not written after the retries: an invented fact is worse than the slot's wait.
+    const uncounted = new Set(countsIn(slots, body.values).map((c) => c.key))
     /** @param {string} key */
     const isInvented = (key) => Array.isArray(body.invented) && body.invented.includes(key)
     for (const slot of slots) {
@@ -1192,18 +1263,20 @@ export async function planJoomlaContract({
             ? 'wrong-language'
             : repeats.has(slot.key)
               ? 'duplicate-copy'
-              : Boolean(slot.sample.trim()) !== Boolean(value.trim())
-                ? 'emptiness-mismatch'
-                : [...withoutStyleMarks(value)].length > slot.maxCharacters
-                  ? 'too-long'
-                  : slot.requiresEvidence &&
-                      !isInvented(slot.key) &&
-                      !facts.some((fact) => fact.includes(value))
-                    ? 'evidence-missing'
-                    : (coworkWouldRefuse(slot, value) ??
-                      (slot.type === 'url' && pagesOfSite && siteLink(value) && !pagesOfSite.idOf(value)
-                        ? 'invented-route'
-                        : null))
+              : uncounted.has(slot.key)
+                ? 'ungrounded-count'
+                : Boolean(slot.sample.trim()) !== Boolean(value.trim())
+                  ? 'emptiness-mismatch'
+                  : [...withoutStyleMarks(value)].length > slot.maxCharacters
+                    ? 'too-long'
+                    : slot.requiresEvidence &&
+                        !isInvented(slot.key) &&
+                        !facts.some((fact) => fact.includes(value))
+                      ? 'evidence-missing'
+                      : (coworkWouldRefuse(slot, value) ??
+                        (slot.type === 'url' && pagesOfSite && siteLink(value) && !pagesOfSite.idOf(value)
+                          ? 'invented-route'
+                          : null))
       if (why !== null) {
         // 🔒 PENDING MEANS "STILL DEMO CONTENT AND NOBODY SUPPLIED A REPLACEMENT". A slot whose
         // current value already differs from the archive's sample holds words a person put there
@@ -1225,9 +1298,15 @@ export async function planJoomlaContract({
         invented.push(slot.key)
         if (slot.requiresEvidence) evidence[slot.key] = INVENTED_EVIDENCE
       } else if (slot.requiresEvidence) evidence[slot.key] = value
+      const said = slot.requiresEvidence || !tokenized ? linked : retokenize(linked, site, slot.maxCharacters)
+      // 🔒 HEADINGS IN SENTENCE CASE (round 9, class F): a Title Case heading of an English slot is cased like a sentence,
+      // the brief's own capitalised words kept. A template that uppercases its headings in CSS shows the same either way.
       const written =
-        slot.requiresEvidence || !tokenized ? linked : retokenize(linked, site, slot.maxCharacters)
+        isHeading(slot) && !slot.requiresEvidence && /^en\b/i.test(String(languageOf(slot) ?? ''))
+          ? sentenceCase(said, properNouns)
+          : said
       ledger.record(slot, written)
+      phrases.record(slot, written)
       if (written !== (slot.current ?? slot.sample)) changes[slot.key] = written
     }
   }
