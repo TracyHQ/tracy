@@ -181,6 +181,7 @@ test('#194 the cap holds, home page first then largest first; a slot past it tak
   assert.equal(at.get('module-1.0').action, 'draw', 'the home hero, the largest slot, is drawn first')
   assert.equal(at.get('module-3.0').reason, 'drawing-cap')
   assert.ok(plan.capped >= 1)
+  // test-quality: contract ticket #194 fixes the cap at 20 drawings per build
   assert.equal(DRAW_CAP, 20)
   for (const d of plan.slots)
     if (d.action === 'draw' || d.reason in DRAW_REASONS) assert.ok(DRAW_REASONS[d.reason] ?? d.reason)

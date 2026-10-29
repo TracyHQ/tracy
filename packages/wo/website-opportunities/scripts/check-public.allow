@@ -68,3 +68,7 @@ test/domain-agent-prompt-dish-photos.test.mjs | vietnamese | * | real Vietnamese
 test/domain-brief-dish-photos.test.mjs | vietnamese | * | real Vietnamese dish names and posts as input
 test/domain-dish-photos.test.mjs | vietnamese | * | Vietnamese accents are the subject: two dishes that differ by one tone mark stay apart
 test/domain-pictures-dish.test.mjs | vietnamese | * | real Vietnamese dish names as input
+domain/outside-map.mjs | internal-name | joomlart | credit line of published templates that a brief build removes
+test/domain-demo-leftovers-identity.test.mjs | internal-name | joomlart | demo logo path of a published template
+test/domain-demo-leftovers-outside.test.mjs | internal-name | JoomlArt | credit line of published templates that a brief build removes
+test/domain-outside-map.test.mjs | internal-name | JoomlArt | credit line of published templates that a brief build removes
