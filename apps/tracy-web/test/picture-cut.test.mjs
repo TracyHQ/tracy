@@ -256,3 +256,20 @@ test('keepAlpha keeps a transparent logo transparent (PNG); without it the cut s
   assert.equal((await sharp(opaqueWithAlpha).metadata()).hasAlpha, true)
   assert.equal((await cutForPlace(opaqueWithAlpha, crop, { keepAlpha: true })).ext, 'jpg')
 })
+
+test('a subject crop is cut where the plan placed it, also from a smaller copy of the photo (#136)', async () => {
+  // Planned on a 1200 x 900 photo: a 900 x 900 box starting at 24 px (a face at the left edge), the free room being 300.
+  const crop = {
+    aspect: 1,
+    source: { width: 900, height: 900 },
+    output: { width: 600, height: 600 },
+    strategy: 'subject',
+    at: { x: 0.08, y: 0.5 }
+  }
+  const cut = await cutForPlace(await noise(1200, 900), crop)
+  assert.deepEqual(cut.rect, { left: 24, top: 0, width: 900, height: 900 })
+  // The same plan on a smaller copy of the photo: the box shrinks by one factor and keeps its place.
+  const smaller = await cutForPlace(await noise(1000, 750), crop)
+  assert.deepEqual(smaller.rect, { left: 20, top: 0, width: 750, height: 750 })
+  assert.deepEqual([smaller.width, smaller.height], [600, 600])
+})

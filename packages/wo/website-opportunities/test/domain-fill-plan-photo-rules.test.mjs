@@ -210,3 +210,152 @@ test('#135 a brief with only map photos leaves every identity slot to the neutra
   // A gallery picture after the lead is not an identity slot: a map photo may show the place there.
   assert.equal(got.get('module-3.1').action, 'photo')
 })
+
+/** Where a crop sits in the photo, in pixels: the box of its `source` size placed at its `at` share of the free room. */
+const rectOf = (crop, size) => {
+  assert.equal(crop.strategy, 'subject')
+  const free = { x: size.width - crop.source.width, y: size.height - crop.source.height }
+  return {
+    left: Math.round(free.x * crop.at.x),
+    top: Math.round(free.y * crop.at.y),
+    width: crop.source.width,
+    height: crop.source.height
+  }
+}
+const inside = (rect, [x, y, w, h], size) =>
+  rect.left <= x * size.width &&
+  rect.top <= y * size.height &&
+  rect.left + rect.width >= (x + w) * size.width &&
+  rect.top + rect.height >= (y + h) * size.height
+
+test('#136 a crop keeps every face box whole, and a photo whose faces no crop can keep whole is refused', () => {
+  const size = { width: 1200, height: 900 }
+  const face = [0.02, 0.1, 0.2, 0.3]
+  const got = plan([
+    photo('wren', 1200, 900, {
+      ...portrait('person-wren'),
+      faceBoxes: [face],
+      subjectBox: [0.3, 0.1, 0.4, 0.8]
+    })
+  ])
+  const wren = got.get('module-5.1')
+  assert.equal(wren.mediaId, 'wren')
+  assert.ok(inside(rectOf(wren.crop, size), face, size), JSON.stringify(wren.crop))
+  // Two faces at both edges of a wide photo: a square crop would cut one of them, so the photo is refused.
+  const wide = plan([
+    photo('pair', 1200, 900, {
+      ...portrait('person-wren'),
+      faceBoxes: [
+        [0.02, 0.1, 0.12, 0.2],
+        [0.85, 0.1, 0.12, 0.2]
+      ]
+    })
+  ]).get('module-5.1')
+  assert.deepEqual([wide.action, wide.refused['cuts-a-face']], ['substitute', 1])
+})
+
+test('#136 a crop centres on the subject box, as far as the photo allows', () => {
+  const size = { width: 1200, height: 900 }
+  const got = plan([
+    photo('wren', 1200, 900, { ...portrait('person-wren'), subjectBox: [0.35, 0.2, 0.2, 0.6] })
+  ])
+  // The subject's centre is at 540 px: a 900 px square centred on it would start at 90.
+  assert.equal(rectOf(got.get('module-5.1').crop, size).left, 90)
+  const right = plan([
+    photo('wren', 1200, 900, { ...portrait('person-wren'), subjectBox: [0.6, 0.2, 0.3, 0.6] })
+  ])
+  // Centred on 900 px it would leave the photo: it stops at the right edge.
+  assert.equal(rectOf(right.get('module-5.1').crop, size).left, 300)
+})
+
+/** A class card and a gallery picture of the same 4:3 frame. */
+const CARD_MAP = {
+  roleVocabularyVersion: 'place-content-roles/3',
+  entities: [{ key: 'module-6', kind: 'module' }],
+  slots: [
+    text('module-6.0', 'module-6', 'offering.name', 'Demo Class', {
+      id: 'module-6.item.0',
+      item: 0,
+      kind: 'service'
+    }),
+    image(
+      'module-6.1',
+      'module-6',
+      'offering.image',
+      'classes/c-1.jpg',
+      { id: 'module-6.item.0', item: 0, kind: 'service' },
+      [800, 600]
+    ),
+    image('module-6.2', 'module-6', 'business.gallery_image', 'gallery/g-9.jpg', null, [800, 600])
+  ]
+}
+const CLASSES = { services: [{ id: 'svc-padel', label: 'Padel Lessons' }] }
+const cardPlan = (assets) =>
+  at(
+    planFill({
+      contentMap: CARD_MAP,
+      brief: { reading: CLASSES, assets },
+      cardNames: { 'module-6.item.0': 'Padel Lessons' }
+    })
+  )
+
+test("#136 a matching photo that today's crop limit refuses is accepted; a photo that does not match is still refused", () => {
+  // 2000 x 600 cut to 4:3 keeps 800 x 600: it loses 60% of the photo, past today's limit of half.
+  const got = cardPlan([
+    photo('padel-wide', 2000, 600, { depicts: { id: 'svc-padel', evidence: { via: 'alt' } } }),
+    photo('room-wide', 2000, 600)
+  ])
+  assert.deepEqual([got.get('module-6.1').action, got.get('module-6.1').mediaId], ['photo', 'padel-wide'])
+  const gallery = got.get('module-6.2')
+  assert.deepEqual([gallery.action, gallery.refused['crop-loss']], ['substitute', 1])
+  // Even a match is refused when the crop would keep too little of it.
+  const panorama = cardPlan([
+    photo('padel-pano', 4000, 600, { depicts: { id: 'svc-padel', evidence: { via: 'alt' } } })
+  ])
+  assert.deepEqual(
+    [panorama.get('module-6.1').action, panorama.get('module-6.1').refused['crop-loss']],
+    ['substitute', 1]
+  )
+})
+
+test('#136 a photo below the slot minimum after its crop is refused with the reason too-small-after-crop', () => {
+  const minWidth = 534
+  const contentMap = {
+    ...CONTENT_MAP,
+    slots: CONTENT_MAP.slots.map((s) => (s.key === 'module-5.1' ? { ...s, fit: { ...s.fit, minWidth } } : s))
+  }
+  const brief = (side) => ({ reading: READING, assets: [photo('wren', side, side, portrait('person-wren'))] })
+  // 400 px enlarged to the slot's 534 px minimum is more than a quarter: refused. 440 px is enough.
+  const small = at(planFill({ contentMap, brief: brief(400), cardNames: NAMES })).get('module-5.1')
+  assert.deepEqual(
+    [small.action, small.reason, small.refused['too-small-after-crop']],
+    ['substitute', 'no-portrait', 1]
+  )
+  assert.equal(small.substitute.initials, 'WE')
+  const enough = at(planFill({ contentMap, brief: brief(440), cardNames: NAMES })).get('module-5.1')
+  assert.equal(enough.mediaId, 'wren')
+})
+
+test('#136 no frame changes shape: every photo is cut and written at the aspect of its slot', () => {
+  const frames = new Map(
+    [...CONTENT_MAP.slots, ...CARD_MAP.slots].filter((s) => s.fit).map((s) => [s.key, s.fit.source])
+  )
+  const decisions = [
+    ...plan([
+      photo('wide', 2400, 1300),
+      photo('room', 1300, 1000),
+      photo('tall', 900, 1400),
+      photo('wren', 1000, 1250, { ...portrait('person-wren'), faceBoxes: [[0.3, 0.05, 0.3, 0.25]] })
+    ]).values(),
+    ...cardPlan([
+      photo('padel', 1900, 700, { depicts: { id: 'svc-padel', evidence: { via: 'alt' } } })
+    ]).values()
+  ].filter((d) => d.action === 'photo')
+  assert.ok(decisions.length >= 4)
+  for (const d of decisions) {
+    const frame = frames.get(d.key)
+    const aspect = frame.width / frame.height
+    assert.ok(Math.abs(d.crop.output.width / d.crop.output.height - aspect) <= 0.005, d.key)
+    assert.ok(Math.abs(d.crop.source.width / d.crop.source.height - aspect) <= 0.01, d.key)
+  }
+})

@@ -14,11 +14,12 @@
 // The slots that share one demo file are replaced together, so they form one unit: the strictest need among them wins.
 import { keepDecisionOf } from './content-map-keep-decision.mjs'
 import { LOGO_ROLES } from './place-content-roles.mjs'
-import { closedListOf, focusOfBox, GENERAL, namedIn } from './pictures/picture-links.mjs'
+import { closedListOf, GENERAL, namedIn } from './pictures/picture-links.mjs'
 import { avatarSubstitute } from './person-avatar.mjs'
 import { isMapPhotoByOthers, isOwnersPhoto, uploaderRoleOf } from './pictures/asset-origin.mjs'
-import { fitCrop, ROLES } from './pictures/placement.mjs'
+import { ROLES } from './pictures/placement.mjs'
 import { declaredSize, fileOf } from './pictures/slot-map.mjs'
+import { subjectCrop } from './pictures/subject-crop.mjs'
 
 export const FILL_PLAN_VERSION = 'fill-plan/1'
 
@@ -225,20 +226,29 @@ export function planFill({ contentMap, brief, demo = new Map(), cardNames = {} }
       settle('substitute', 'demo-size-unknown')
       continue
     }
-    const min = hero(unit) ? ROLES.hero.min : ROLES.section.min
+    // The slot's minimum width: the largest its Slot fit declares among the unit's slots, else the role's target.
+    const declared = unit.slots.map((s) => Number(s.fit?.minWidth)).filter((n) => Number.isFinite(n) && n > 0)
+    const min = declared.length ? Math.max(...declared) : hero(unit) ? ROLES.hero.min : ROLES.section.min
+    // A card's own offering or person is a match: its photo may lose more of itself to the crop (#136).
+    const matches = Boolean(unit.need.offering || unit.need.person)
     const refused = {}
     const fitting = []
+    const crops = new Map()
     for (const asset of assets) {
-      const why =
+      let why =
         refusalOf(asset, unit.need) ??
         (identity(unit) && isMapPhotoByOthers(asset) ? 'map-photo-by-others' : null) ??
-        (used.has(asset.id) ? 'used' : null) ??
-        (fitCrop(asset, unit.frame, { min }) ? null : 'shape')
+        (used.has(asset.id) ? 'used' : null)
+      if (!why) {
+        const cut = subjectCrop(asset, unit.frame, { min, matches })
+        if (cut.refused) why = cut.refused
+        else crops.set(asset.id, cut.crop)
+      }
       if (why) refused[why] = (refused[why] ?? 0) + 1
       else fitting.push(asset)
     }
     const lossOf = (a) => {
-      const { source } = fitCrop(a, unit.frame, { min })
+      const { source } = crops.get(a.id)
       return 1 - (source.width * source.height) / (a.width * a.height)
     }
     fitting.sort(
@@ -259,8 +269,7 @@ export function planFill({ contentMap, brief, demo = new Map(), cardNames = {} }
       continue
     }
     used.add(best.id)
-    const focus = focusOfBox(best.subjectBox)
-    const crop = fitCrop(best, unit.frame, { min, label: focus ? { focus } : {} })
+    const crop = crops.get(best.id)
     const reason = unit.need.person
       ? 'person-portrait'
       : unit.need.offering
