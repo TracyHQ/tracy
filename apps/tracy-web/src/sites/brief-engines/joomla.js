@@ -55,6 +55,8 @@ import { copyPinsOf, pinStates, recordPins } from './wo-copy-pins.js'
 import { woContentOf } from './wo-content.js'
 import { planContactSteps } from './joomla-plan-contacts.js'
 import { honestWords, leftDemoWords, planRecordSteps } from './joomla-plan-records.js'
+import { withInlineStyles } from './inline-styles.js'
+import { inlineStylesLost, placeInlineStyles, styleChanges, takeStyleMarks } from './joomla-inline-styles.js'
 import { planIdentitySteps } from './joomla-plan-identity.js'
 import { guardBoundNodes } from './joomla-bound-nodes.js'
 import { contentMapAt, plannedSlotValues, showcaseOff, writeOutsideMap } from './joomla-outside-map.js'
@@ -442,7 +444,11 @@ function staticState(contract) {
     // A slot the profile only declares (`customize: "keep"`, `lib/contract-customize.js`) is never planned or written here.
     entry = {
       // Each line is planned within its measured box, the limit the site checks (`slot-box-limits.js`).
-      slots: withBoxLimits(withFieldEvidence(customizableSlots(map.slots ?? []))),
+      // A slot whose demo mixes styles carries its style pattern: the words are replaced, never the style (#189).
+      slots: withInlineStyles(
+        withBoxLimits(withFieldEvidence(customizableSlots(map.slots ?? []))),
+        contract.dir
+      ),
       pages: map.pages ?? [],
       // The vocabulary version and the entities (their `demoOnly` mark): the fill plan reads both (ADR 0040).
       roleVocabularyVersion: map.roleVocabularyVersion ?? null,
@@ -902,6 +908,8 @@ export function createJoomlaEngine({
 
       // Facts nobody gave never reach the site; and nothing the model itself says it made up.
       const madeUp = new Set(plan.invented)
+      // The writer's style marks are kept apart: every step below reads plain words, the write styles them (#189).
+      const styleMarks = takeStyleMarks(plan.changes)
       const candidate = Object.fromEntries(Object.entries(plan.changes).filter(([key]) => !madeUp.has(key)))
       const { kept, dropped } = guardChanges(candidate, slotByKey, facts)
       const left = dropped.length + [...madeUp].filter((key) => key in plan.changes).length
@@ -1224,7 +1232,8 @@ export function createJoomlaEngine({
         copyPins,
         demoBlanks,
         demoHides,
-        demoAsked
+        demoAsked,
+        styleMarks
       }
     },
 
@@ -1398,6 +1407,13 @@ export function createJoomlaEngine({
         kept += 1
       }
 
+      // 🔒 THE WORDS ARE REPLACED, NEVER THE STYLE (spec TracyHQ/tracy#189, `joomla-inline-styles.js`): a styled ACM field takes
+      // its markers through the contract; a styled HTML unit is written plain here and styled by the records step after it.
+      const styled = styleChanges({
+        changes,
+        slots: new Map(staticState(ctx.contract).slots.map((slot) => [slot.key, slot])),
+        marks: prepared.styleMarks ?? {}
+      })
       let wrote = 0
       /** The lines the site refused in the write of the words: nothing later asks for them again. */
       const refusedByWrite = new Set()
@@ -1922,10 +1938,22 @@ export function createJoomlaEngine({
           })
           // 🔒 No records write takes away a node a contract slot binds to (`joomla-bound-nodes.js`, #189): the plugin's
           // inspect would refuse every contract write after it.
+          // The styled units whose words the contract took, laid into the records steps (#189).
+          const styling = await placeInlineStyles({
+            apply,
+            siteKey,
+            styled: styled.filter(({ slot }) => !refusedByWrite.has(slot.key)),
+            steps: [...identity.steps, ...records.steps]
+          }).catch((error) => {
+            ctx.note(
+              `the template's heading styles could not be read: ${error instanceof Error ? error.message : error}`
+            )
+            return { steps: [...identity.steps, ...records.steps], placed: [], missed: [] }
+          })
           const bound = await guardBoundNodes({
             apply,
             siteKey,
-            steps: [...identity.steps, ...records.steps],
+            steps: styling.steps,
             // Every slot the plugin resolves, the declared `keep` ones too.
             slots: [...staticState(ctx.contract).slots, ...(staticState(ctx.contract).declared ?? [])]
           }).catch((error) => {
@@ -2084,6 +2112,20 @@ export function createJoomlaEngine({
               ctx.note(
                 `${wroteRecords.refused.length} change(s) to the template's cards and fact lines were refused`
               )
+          }
+          // 🔒 A HEADING THAT LOST THE DEMO'S STYLE IS SAID, NEVER SLIPS (#189): read back from the site after every write.
+          const takenStyles = styled.filter(({ slot }) => !refusedByWrite.has(slot.key))
+          if (takenStyles.length > 0) {
+            const lost = await inlineStylesLost({ apply, siteKey, styled: takenStyles }).catch(() =>
+              takenStyles.map(({ slot }) => slot.key)
+            )
+            ctx.time('inlineStylesKept', takenStyles.length - lost.length)
+            if (lost.length > 0) {
+              ctx.time('inlineStyleLost', lost.length)
+              ctx.note(
+                `${lost.length} heading(s) lost the template's inline style (accent words, line breaks): ${lost.slice(0, 8).join(', ')}`
+              )
+            }
           }
         } catch (error) {
           ctx.note(

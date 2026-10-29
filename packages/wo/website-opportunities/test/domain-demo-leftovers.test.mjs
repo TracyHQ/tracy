@@ -233,7 +233,7 @@ test('C17 reports the demo email even where the content map has no slot for it',
   assert.ok(report.findings.some((f) => f.kind === 'C17' && f.found === 'sale@getfit.example'))
 })
 
-test('clean pages of the business pass, and every one of the 19 kinds is counted', () => {
+test('clean pages of the business pass, and every one of the 20 kinds is counted', () => {
   const report = checkDemoLeftovers({
     pages: [
       { path: '/', status: 200, html: CLEAN },
@@ -245,7 +245,7 @@ test('clean pages of the business pass, and every one of the 19 kinds is counted
   assert.deepEqual(report.findings, [])
   assert.equal(report.pass, true)
   assert.deepEqual(Object.keys(report.counts), Object.keys(LEFTOVER_KINDS))
-  assert.equal(Object.keys(LEFTOVER_KINDS).length, 19)
+  assert.equal(Object.keys(LEFTOVER_KINDS).length, 20)
 })
 
 test('a demo word the brief also holds is the business’s own, not a leftover', () => {

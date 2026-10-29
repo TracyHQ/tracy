@@ -14,6 +14,7 @@ import { otherMapLeftovers } from './demo-leftovers-maps.mjs'
 import { demoLogoLeftovers, demoPostLeftovers, demoSocialLeftovers } from './demo-leftovers-identity.mjs'
 import { labelLeftovers, offeringLeftovers, priceLeftovers } from './demo-leftovers-honesty.mjs'
 import { textLeftovers } from './demo-leftovers-text.mjs'
+import { styleLeftovers } from './demo-leftovers-style.mjs'
 import {
   findCutOuts,
   findDemoIcons,
@@ -33,7 +34,8 @@ import {
 
 export const LEFTOVER_CHECK_VERSION = 'demo-leftovers/1'
 
-/** The 19 kinds of the leftover analysis, with how bad each is for the owner and how complete its rule is today. */
+/** The kinds of the leftover analysis (C01..C19) and the style kind (C20), with how bad each is for the owner and how
+ * complete its rule is today. */
 export const LEFTOVER_KINDS = Object.freeze({
   C01: { name: 'demo picture in a general slot', severity: 'blocker', coverage: 'full' },
   C02: { name: 'demo post', severity: 'blocker', coverage: 'full' },
@@ -53,7 +55,9 @@ export const LEFTOVER_KINDS = Object.freeze({
   C16: { name: 'demo on the not-found or offline page', severity: 'minor', coverage: 'full' },
   C17: { name: 'demo fact (contact, schedule, price, number)', severity: 'minor', coverage: 'full' },
   C18: { name: 'demo social link or map', severity: 'minor', coverage: 'basic' },
-  C19: { name: 'link that leads nowhere', severity: 'minor', coverage: 'full' }
+  C19: { name: 'link that leads nowhere', severity: 'minor', coverage: 'full' },
+  // Read from the stored values (`styleReadback`), not from the page: only the slots read back are judged.
+  C20: { name: 'heading lost the demo’s inline style', severity: 'major', coverage: 'basic' }
 })
 
 /** Text and picture roles of a demo post. */
@@ -348,12 +352,15 @@ export const LEFTOVER_RULES = Object.freeze([
   {
     kind: 'C19',
     find: (ctx) => deadLinkLeftovers(ctx, bySlot((s) => s.role === 'editorial.navigation_url')(ctx))
-  }
+  },
+  // C20: replace the words, never the style (`demo-leftovers-style.mjs`).
+  { kind: 'C20', find: styleLeftovers }
 ])
 
 /**
  * @param {{pages: Array<{path: string, status?: number, html: string}>, contentMap?: {slots?: any[], entities?: any[]} | null,
- *   brief?: object | null, missing?: string[], styles?: Array<{href?: string, css: string}>}} input
+ *   brief?: object | null, missing?: string[], styles?: Array<{href?: string, css: string}>, broken?: any[],
+ *   styleReadback?: Record<string, string>}} input - `styleReadback`: the stored values of the styled slots, by key (C20)
  * @returns {{version: string, pass: boolean, findings: Array<{kind: string, page: string, place: string, found: string}>,
  *   counts: Record<string, number>}}
  */
@@ -363,7 +370,8 @@ export function checkDemoLeftovers({
   brief = null,
   missing = [],
   styles = [],
-  broken = []
+  broken = [],
+  styleReadback = {}
 }) {
   const read = pages.map(readPage)
   const demo = demoOf(contentMap, brief)
@@ -384,7 +392,9 @@ export function checkDemoLeftovers({
       .map((k) => k.toLowerCase()),
     missing: new Set(missing.map((p) => p.replace(/\/+$/, '') || '/')),
     // The site's own stylesheets the pages load (`{href, css}`): a background the template settings paint lives there (C10).
-    styles
+    styles,
+    // The values the site stores for the styled slots, by key (C20).
+    styleReadback
   }
   const seen = new Set()
   const findings = []
