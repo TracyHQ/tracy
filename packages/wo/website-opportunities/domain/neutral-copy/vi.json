@@ -7,5 +7,7 @@
   "neutral.step.title": "Bước",
   "neutral.stat.dash": "Không có",
   "neutral.heading.team": "Đội ngũ",
-  "neutral.heading.overview": "Tổng quan"
+  "neutral.heading.overview": "Tổng quan",
+  "neutral.footer.copyright": "Bản quyền © {name}. Bảo lưu mọi quyền.",
+  "neutral.cta.learnMore": "Tìm hiểu thêm"
 }

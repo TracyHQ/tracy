@@ -7,5 +7,7 @@
   "neutral.step.title": "Stap",
   "neutral.stat.dash": "n.v.t.",
   "neutral.heading.team": "Team",
-  "neutral.heading.overview": "Overzicht"
+  "neutral.heading.overview": "Overzicht",
+  "neutral.footer.copyright": "Copyright © {name}. Alle rechten voorbehouden.",
+  "neutral.cta.learnMore": "Meer informatie"
 }

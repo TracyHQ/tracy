@@ -7,5 +7,7 @@
   "neutral.step.title": "Passaggio",
   "neutral.stat.dash": "n/d",
   "neutral.heading.team": "Team",
-  "neutral.heading.overview": "Panoramica"
+  "neutral.heading.overview": "Panoramica",
+  "neutral.footer.copyright": "Copyright © {name}. Tutti i diritti riservati.",
+  "neutral.cta.learnMore": "Scopri di più"
 }

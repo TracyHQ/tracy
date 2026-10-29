@@ -7,5 +7,7 @@
   "neutral.step.title": "خطوة",
   "neutral.stat.dash": "غير متاح",
   "neutral.heading.team": "الفريق",
-  "neutral.heading.overview": "نظرة عامة"
+  "neutral.heading.overview": "نظرة عامة",
+  "neutral.footer.copyright": "حقوق النشر © {name}. جميع الحقوق محفوظة.",
+  "neutral.cta.learnMore": "اعرف المزيد"
 }

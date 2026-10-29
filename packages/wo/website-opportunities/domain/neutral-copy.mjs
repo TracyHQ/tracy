@@ -22,6 +22,16 @@ function wordsFor(locale) {
 }
 
 /**
+ * One neutral line of a site language by its key, `{placeholder}`s filled from `vars` (en when the language has none).
+ * @param {string} key @param {string} [locale] @param {Record<string, string>} [vars]
+ * @returns {string | null}
+ */
+export function neutralText(key, locale, vars = {}) {
+  const line = own(wordsFor(locale), key) ?? own(wordsFor('en'), key)
+  return typeof line === 'string' ? line.replace(/\{(\w+)\}/g, (whole, name) => vars[name] ?? whole) : null
+}
+
+/**
  * The approved neutral words of a site language, or of every language when none is given: what the demo QA accepts in a
  * slot with no source.
  * @param {string} [locale]

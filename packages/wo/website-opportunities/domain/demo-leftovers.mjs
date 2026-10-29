@@ -11,6 +11,7 @@
 // replacing its rule's `find`, and says how complete it is (`coverage`: `full` reads every place the kind can sit on the
 // page; `basic` reads the common places and may miss some).
 import { demoLogoLeftovers, demoPostLeftovers, demoSocialLeftovers } from './demo-leftovers-identity.mjs'
+import { labelLeftovers, offeringLeftovers, priceLeftovers } from './demo-leftovers-honesty.mjs'
 import {
   findCutOuts,
   findDemoIcons,
@@ -217,7 +218,15 @@ export const LEFTOVER_RULES = Object.freeze([
     ]
   },
   // An offering's schedule and price are its facts (C17), not its card.
-  { kind: 'C03', find: bySlot((s) => String(s.role).startsWith('offering.') && !FACT_ROLES.has(s.role)) },
+  // C03, C09, C17 sharpened by ticket #192: `demo-leftovers-honesty.mjs`.
+  {
+    kind: 'C03',
+    find: (ctx) =>
+      offeringLeftovers(
+        ctx,
+        bySlot((s) => String(s.role).startsWith('offering.') && !FACT_ROLES.has(s.role))(ctx)
+      )
+  },
   { kind: 'C04', find: findDemoIcons },
   { kind: 'C05', find: findCutOuts },
   {
@@ -235,7 +244,7 @@ export const LEFTOVER_RULES = Object.freeze([
   },
   // C08..C19 outside the content map: `demo-leftovers-outside.mjs` (ticket #196).
   { kind: 'C08', find: (ctx) => demoVideoLeftovers(ctx, bySlot((s) => s.role === 'business.video')(ctx)) },
-  { kind: 'C09', find: bySlot((s) => LABEL_ROLES.has(s.role)) },
+  { kind: 'C09', find: (ctx) => labelLeftovers(ctx, bySlot((s) => LABEL_ROLES.has(s.role))(ctx)) },
   { kind: 'C10', find: demoBackgroundLeftovers },
   { kind: 'C11', find: showcaseLeftovers },
   { kind: 'C12', find: addressLeftovers },
@@ -268,7 +277,7 @@ export const LEFTOVER_RULES = Object.freeze([
             out.push({ page: page.path, place: `a[href="tel:${tel}"]`, found: tel })
         }
       }
-      return out
+      return priceLeftovers(ctx, out)
     }
   },
   {

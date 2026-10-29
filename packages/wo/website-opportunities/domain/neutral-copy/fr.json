@@ -7,5 +7,7 @@
   "neutral.step.title": "Étape",
   "neutral.stat.dash": "n/d",
   "neutral.heading.team": "Équipe",
-  "neutral.heading.overview": "Vue d’ensemble"
+  "neutral.heading.overview": "Vue d’ensemble",
+  "neutral.footer.copyright": "Copyright © {name}. Tous droits réservés.",
+  "neutral.cta.learnMore": "En savoir plus"
 }

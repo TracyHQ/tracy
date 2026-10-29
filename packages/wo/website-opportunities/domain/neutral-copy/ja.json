@@ -7,5 +7,7 @@
   "neutral.step.title": "ステップ",
   "neutral.stat.dash": "なし",
   "neutral.heading.team": "チーム",
-  "neutral.heading.overview": "概要"
+  "neutral.heading.overview": "概要",
+  "neutral.footer.copyright": "Copyright © {name}. 無断転載を禁じます。",
+  "neutral.cta.learnMore": "詳しく見る"
 }

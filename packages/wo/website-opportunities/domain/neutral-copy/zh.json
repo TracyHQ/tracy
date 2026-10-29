@@ -7,5 +7,7 @@
   "neutral.step.title": "步骤",
   "neutral.stat.dash": "无",
   "neutral.heading.team": "团队",
-  "neutral.heading.overview": "概览"
+  "neutral.heading.overview": "概览",
+  "neutral.footer.copyright": "版权所有 © {name}。保留所有权利。",
+  "neutral.cta.learnMore": "了解更多"
 }
