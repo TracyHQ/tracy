@@ -83,7 +83,9 @@ export async function copyPinsOf(woContent, ctx, { cms, contentMap, lang, pictur
       dishes: dishes ?? [],
       facts: facts ?? [],
       // The name of a template's item no slot covers and nothing true is known for (`wp-wo-fill.js`).
-      neutralItem: domain.neutralItemName({ kind, locale: site })
+      neutralItem: domain.neutralItemName({ kind, locale: site }),
+      // The place profile and its assessment: the accepted facts and people the fill plan's text substitutes read.
+      placeProfile: read.placeProfile ?? null
     }
     let filled = out
     if (sidecar && read.placeProfile)

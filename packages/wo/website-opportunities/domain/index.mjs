@@ -284,7 +284,8 @@ export {
   MAX_SCALE,
   DRAW_MAX
 } from './pictures/placement.mjs'
-export { FILL_PLAN_VERSION, FILL_REASONS, cardNamesOf, planFill } from './fill-plan.mjs'
+export { FILL_PLAN_VERSION, FILL_REASONS, cardNamesOf, planFill, shownWidthOf } from './fill-plan.mjs'
+export { textSubstitutesOf } from './fill-text.mjs'
 export { placementOfFill } from './fill-placement.mjs'
 export { collectSocialProfile, PROFILE_TIERS } from './social-profile.mjs'
 export {

@@ -3,7 +3,10 @@
 // plan rows. The club, its classes, its coach and every file are made up.
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { slotPhotoEvidence } from '../src/opportunities-build/slot-photo-evidence.js'
+import {
+  quickstartSlotPhotoEvidence,
+  slotPhotoEvidence
+} from '../src/opportunities-build/slot-photo-evidence.js'
 
 const revision = {
   brief: {
@@ -159,4 +162,34 @@ test('a failed round tells the agent how to repair each, with the page, slot and
   assert.match(text, /Put that person's portrait in the frame/)
   assert.match(text, /page: \/classes; slot: classes\.item\.1\.image; photo: asset-padel/)
   assert.match(text, /page: \/team; slot: team\.item\.1\.image; photo: asset-stranger/)
+})
+
+test('a quickstart-first build sends the slots and bindings its fill plan recorded, and the pictures it keeps', () => {
+  const photos = {
+    qaEvidence: {
+      placedSlots: {
+        'images/tracy-quickstart/aa.jpg': {
+          photo: 'asset-padel',
+          slot: 'classes.item.1.image',
+          role: 'offering.image',
+          group: 'service',
+          offering: 'svc-padel'
+        }
+      },
+      kept: [{ file: 'images/demo/icon.png', kind: 'editorial.item_icon', reason: 'kept' }]
+    }
+  }
+  const got = quickstartSlotPhotoEvidence(revision.brief, photos)
+  assert.equal(got.placedSlots['images/tracy-quickstart/aa.jpg'].offering, 'svc-padel')
+  assert.deepEqual(
+    got.kept.map((k) => k.file),
+    ['images/demo/icon.png']
+  )
+  assert.deepEqual(
+    got.briefItems.offerings.map((o) => o.id),
+    ['svc-tennis', 'svc-padel']
+  )
+  assert.equal(got.photoLinks['asset-padel'].depicts, 'svc-padel')
+  // A build that placed its pictures without the plan sends nothing new.
+  assert.deepEqual(quickstartSlotPhotoEvidence(revision.brief, { receipts: [] }), {})
 })

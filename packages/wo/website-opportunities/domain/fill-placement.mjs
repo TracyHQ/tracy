@@ -61,7 +61,9 @@ export function placementOfFill({ fill, groups }) {
         // A person picture's substitute is the person's initials, drawn instead of the plain placeholder (#134).
         ...(lead.substitute?.kind === 'initials-avatar'
           ? { avatar: { initials: lead.substitute.initials } }
-          : {})
+          : {}),
+        // The drawn substitute itself (an avatar, a script signature, a blank), for a writer that draws any of them.
+        ...(lead.substitute ? { substitute: lead.substitute } : {})
       })
   }
   const decisions = fill.slots

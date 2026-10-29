@@ -61,6 +61,13 @@
   `judgeFit`, codes `coverage-fit` and `coverage-live-fit`): judged on Joomla only (`fitPlatforms` in the coverage
   policy) until another platform's audit measures Slot fit. A release already shown with a contract captured before
   this ADR (JA Boxing 1.0.5) only warns; a release not shown yet is held until its next contract version carries Slot fit.
+- **29/10/2026, the fill plan's size minimum reads the displayed box (#141).** A photo is too small for a slot when,
+  after its crop, it would be enlarged more than the allowed 1.25 to cover the slot's width as shown at the desktop
+  viewport: the CSS box width of `fit.boxes.desktop` (times 1, no device pixel ratio). The demo file's natural width
+  (`fit.source`) is not the bar: a 1920 pixel hero file shown in a 1440 pixel box takes a 1200 pixel photo. A slot
+  without a desktop box falls back to its widest measured box, then to `fit.minWidth`, then to the role's target.
+  The rule lives in `shownWidthOf` (`packages/wo/website-opportunities/domain/fill-plan.mjs`) and holds on every build
+  path that places by the fill plan: the editorial engine, quickstart-first and agent demos.
 
 ## Alternatives rejected
 

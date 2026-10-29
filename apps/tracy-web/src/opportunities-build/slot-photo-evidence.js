@@ -32,6 +32,18 @@ function contractSlotOf(structure, key) {
   return found
 }
 
+/**
+ * The offering or person the build's fill plan bound a slot's card to (#141): the host then judges the photo against
+ * that item, not one guessed from the card's words. Nothing when the build has no fill plan or the card no binding.
+ */
+function boundOf(fill, key) {
+  const decision = (Array.isArray(fill?.slots) ? fill.slots : []).find((d) => d?.key === key)
+  if (!decision?.groupId) return {}
+  const offering = (fill.offerings ?? []).find((o) => o.groupId === decision.groupId)?.offeringId
+  const person = (fill.people ?? []).find((p) => p.groupId === decision.groupId)?.personId
+  return { ...(offering ? { offering } : {}), ...(person ? { person } : {}) }
+}
+
 /** Each placed file's photo and, when its plan row aimed at a contract slot, that slot's key, role and group kind. */
 function placedSlotsOf(revision, build) {
   const demo = build?.content?.agentDemo ?? {}
@@ -54,7 +66,8 @@ function placedSlotsOf(revision, build) {
         ? {
             slot: slot.key,
             ...(typeof slot.role === 'string' ? { role: slot.role } : {}),
-            ...(typeof slot.group?.kind === 'string' ? { group: slot.group.kind } : {})
+            ...(typeof slot.group?.kind === 'string' ? { group: slot.group.kind } : {}),
+            ...boundOf(demo.fill, slot.key)
           }
         : {})
     }
@@ -92,5 +105,23 @@ export function slotPhotoEvidence(revision, build) {
     placedSlots: placedSlotsOf(revision, build),
     photoLinks: photoLinksOf(revision?.brief),
     briefItems: closedListOf(revision?.brief?.reading)
+  }
+}
+
+/**
+ * The same evidence for a quickstart-first build (#141): its placed photos come from the picture report the native
+ * writer recorded (`quickstart-pictures.js` `qaEvidence`: each file's photo, slot and the binding the fill plan made), and
+ * the template pictures the fill plan keeps are named as kept. Empty when the build placed its pictures without the plan.
+ * @param {any} brief the build's brief (`assets`, `reading`)
+ * @param {any} photos the quickstart picture report (`fill.photos`)
+ */
+export function quickstartSlotPhotoEvidence(brief, photos) {
+  const evidence = photos?.qaEvidence
+  if (!evidence) return {}
+  return {
+    placedSlots: evidence.placedSlots ?? {},
+    photoLinks: photoLinksOf(brief),
+    briefItems: closedListOf(brief?.reading),
+    kept: Array.isArray(evidence.kept) ? evidence.kept : []
   }
 }

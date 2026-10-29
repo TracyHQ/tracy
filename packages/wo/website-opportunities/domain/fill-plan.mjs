@@ -6,7 +6,19 @@
 // 🔒 AN OFFERING CARD TAKES ONLY A PHOTO LINKED TO ITS OWN OFFERING. A card's offering is the one of the brief's closed
 // list its name says (the name the text path writes on it); a photo the brief links to another offering, or to none
 // ("general", unsure), never fills it.
-// 🔒 A GENERAL SLOT TAKES ONLY A GENERAL OR UNSURE PHOTO: never one linked to an offering, never a portrait.
+// 🔒 A GENERAL SLOT TAKES ANY OF THE BUSINESS'S OWN PHOTOGRAPHS, general or unsure ones first, then photos of its
+// offerings; never a portrait. The rule is one-directional: an unsure photo never fills an offering card (#141).
+// 🔒 A LOGO OR A DRAWING NEVER FILLS A PHOTO SLOT: a picture the brief marks as a logo, a graphic or not a photograph.
+// 🔒 ONE PHOTO, ONCE A PAGE: a photo may serve several pages, never two pictures of the same page (the map's `pages`;
+// an entity no page lists, an article, shares one page with the other entities of its kind).
+// 🔒 A DEMO PICTURE CARDS OF TWO OFFERINGS SHARE NEVER HOLDS ONE OFFERING'S PHOTO: it shows on both cards, so it takes
+// a general or unsure photo, else keeps the demo's. Cards of the same offering may share that offering's photo.
+// 🔒 A LOW-QUALITY PHOTO RANKS LAST among those that qualify, and still fills a slot nothing better fits.
+// 🔒 A WIDE GENERAL SLOT (a hero band) MAY CUT UP TO 70% OF A PHOTO, rather than keep the demo's, only around a labelled
+// subject the crop holds whole with every face (`general-photo-wide-crop`).
+// 🔒 ONLY A FACT PICTURE TAKES A SUBSTITUTE: a person, a quote's author, a proof or a signature with no fitting photo is
+// drawn neutral; every other picture with no fitting photo keeps the template's demo picture (no grey box in a hero, a
+// gallery or an article).
 // 🔒 THE OWNER'S PHOTOS FIRST, AND A MAP PHOTO BY SOMEONE ELSE NEVER REPRESENTS THE BUSINESS (#135): among qualifying
 // photos the business's own rank first; an identity slot (the hero, an about picture, a gallery's lead picture) refuses a
 // photo someone else posted on a map listing, because it can show another venue.
@@ -16,6 +28,7 @@ import { keepDecisionOf } from './content-map-keep-decision.mjs'
 import { LOGO_ROLES } from './place-content-roles.mjs'
 import { closedListOf, GENERAL, namedIn } from './pictures/picture-links.mjs'
 import { avatarSubstitute } from './person-avatar.mjs'
+import { scriptSignature } from './neutral-signature.mjs'
 import { isMapPhotoByOthers, publisherRankOf } from './pictures/asset-origin.mjs'
 import { ROLES } from './pictures/placement.mjs'
 import { declaredSize, fileOf } from './pictures/slot-map.mjs'
@@ -28,6 +41,8 @@ export const FILL_REASONS = Object.freeze({
   'offering-photo': "a photo the brief links to this card's offering",
   'person-portrait': 'the portrait of the person this card names',
   'general-photo': 'a general photo of the business',
+  'general-photo-wide-crop':
+    'a general photo of the business, cut wider than usual for a wide slot with its subject and faces whole',
   'role-keeps': "the slot's role keeps the template's content",
   'demo-only-entity': 'a style sample of the template (demo-only entity), never filled',
   'logo-own-door': "the business logo, written through the logo's own door",
@@ -38,7 +53,8 @@ export const FILL_REASONS = Object.freeze({
   'no-general-photo': 'no general photo of the business fits',
   'no-portrait': 'no portrait of a person the brief names',
   'role-takes-no-brief-photo': "the brief holds no photo this slot's role can take",
-  'conflicting-offerings': 'one demo picture is shared by cards of two offerings',
+  'conflicting-offerings':
+    'one demo picture is shared by cards of two offerings, and no general photo fits it',
   'conflicting-people': 'one demo picture is shared by cards of two people',
   'conflicting-needs': 'one demo picture is shared by a person card and an offering card',
   'demo-size-unknown': "the demo picture's size is not known"
@@ -65,6 +81,35 @@ const REASONS_BY_NEED = Object.freeze({
 })
 const needKind = (need) => (need.person ? 'person' : need.offering ? 'offering' : 'general')
 
+/** Picture roles that state a fact about a person or a claim: with no fitting photo they take a neutral substitute. */
+const FACT_PICTURE_ROLES = new Set(['person.image', 'quote.author_image', 'stat.proof_image'])
+const isFactSlot = (slot) => FACT_PICTURE_ROLES.has(slot.role) || slot.fit?.kind === 'signature'
+
+/** Whether a brief picture is not a photograph: a logo, a graphic, or one the labeller found is not a photo. */
+const notAPhotograph = (asset) =>
+  asset.isGraphic === true ||
+  asset.isLogo === true ||
+  asset.role === 'logo' ||
+  asset.content === 'logo' ||
+  asset.content === 'not_a_photograph' ||
+  asset.unlabelledReason === 'not_a_photograph'
+
+/**
+ * The pages each entity is shown on, from the map's `pages` (a page's own entity and its assigned modules). An entity no
+ * page lists shares one page with the other entities of its kind; a map with no pages is one page.
+ * @returns {(entity: string) => string[]}
+ */
+function pagesOfMap(contentMap) {
+  const pages = contentMap?.pages ?? []
+  if (!pages.length) return () => ['*']
+  const on = new Map()
+  for (const page of pages)
+    for (const entity of [page.entity, ...(page.assignedModules ?? []).map((m) => m?.entity)])
+      if (entity) on.set(entity, (on.get(entity) ?? new Set()).add(`page:${page.route ?? page.entity}`))
+  const kindOf = new Map((contentMap.entities ?? []).map((e) => [e.key, e.kind]))
+  return (entity) => (on.has(entity) ? [...on.get(entity)] : [`kind:${kindOf.get(entity) ?? entity}`])
+}
+
 /** The keys of the gallery pictures that lead their gallery: item 0 of a gallery group, else an entity's first one. */
 function leadsOf(slots) {
   const out = new Set()
@@ -78,9 +123,41 @@ function leadsOf(slots) {
   return out
 }
 
+/** The brief's people as the signature builder reads them: name, and the role or relationship that says an owner. */
+const signersOf = (reading) =>
+  (reading?.team ?? [])
+    .filter((p) => typeof p?.label === 'string' && p.reviewsOnly !== true)
+    .map((p) => ({ id: p.id, value: { name: p.label, role: p.role, relationship: p.relationship } }))
+
+/**
+ * The substitute of a signature picture (Slot fit kind `signature`, #137): the signer's name in a script font sized to
+ * the slot, or a blank picture when nobody can sign. Never the demo's hand, never a grey placeholder over a signature.
+ */
+function signatureSubstitute(slot, people) {
+  const signed = scriptSignature({ people, fit: slot.fit })
+  if (signed.state !== 'neutral') return { kind: 'blank', reason: signed.reason }
+  const { text, svg, width, height, factRefs } = signed
+  return { kind: 'script-signature', text, svg, width, height, factRefs }
+}
+
 const depictsOf = (asset) => asset?.depicts?.id ?? asset?.depicts ?? GENERAL
 const hasFaces = (asset) => (asset?.faceBoxes?.length ?? 0) > 0 || (asset?.peopleCount ?? 0) > 0
 const portraitOf = (asset) => asset?.portraitOf?.id ?? asset?.portraitOf ?? null
+
+/**
+ * The width a slot's picture is drawn at, the size it must stay sharp at (ADR 0039, consequence of 29/10/2026): the
+ * desktop box its Slot fit measured, else its widest measured box, else the `minWidth` an unmeasured fit declares. Never
+ * the demo file's own width: a 1920 px demo hero drawn 1440 px wide asks no brief photo for 1920 px.
+ * @param {{fit?: {boxes?: Record<string, {width: number}>, minWidth?: number}}} slot
+ */
+export function shownWidthOf(slot) {
+  const boxes = slot?.fit?.boxes && typeof slot.fit.boxes === 'object' ? slot.fit.boxes : {}
+  const desktop = Number(boxes.desktop?.width)
+  if (desktop > 0) return desktop
+  const widest = Math.max(0, ...Object.values(boxes).map((b) => Number(b?.width) || 0))
+  if (widest > 0) return widest
+  return Number(slot?.fit?.minWidth)
+}
 
 /** What one image slot needs, before any photo is looked at: a reason code alone means it takes no brief photo. */
 function needOf(slot, lockOf, peopleOf) {
@@ -97,22 +174,30 @@ function needOf(slot, lockOf, peopleOf) {
   return { reason: 'role-takes-no-brief-photo' }
 }
 
-/** The strictest need of a unit's slots: no photo > one person > one offering > general. */
+/**
+ * The strictest need of a unit's slots: no photo > one person > one offering > general. A demo picture that shows on cards
+ * of two offerings, or on a card of an offering and one the brief has no offering for, may only take a general photo:
+ * any offering's photo would be wrong on the other card (#141).
+ */
 function unitNeed(needs) {
+  const offerings = [...new Set(needs.filter((n) => n.offering).map((n) => n.offering))]
+  const unnamed = needs.some((n) => n.reason === 'no-offering-for-group')
+  if (offerings.length > 1 || (offerings.length && unnamed)) {
+    const other = needs.find((n) => n.reason && n.reason !== 'no-offering-for-group')
+    return other ?? { general: true, shared: true }
+  }
   const none = needs.find((n) => n.reason)
   if (none) return none
   const people = [...new Set(needs.filter((n) => n.person).map((n) => n.person))]
-  const offerings = [...new Set(needs.filter((n) => n.offering).map((n) => n.offering))]
   if (people.length && offerings.length) return { reason: 'conflicting-needs' }
   if (people.length > 1) return { reason: 'conflicting-people' }
   if (people.length) return { person: people[0] }
-  if (offerings.length > 1) return { reason: 'conflicting-offerings' }
   return offerings.length ? { offering: offerings[0] } : { general: true }
 }
 
 /** Why `asset` cannot take a unit of `need`, or null when it qualifies by meaning. */
 function refusalOf(asset, need) {
-  if (asset.isGraphic === true || asset.content === 'logo') return 'graphic'
+  if (notAPhotograph(asset)) return 'not-a-photograph'
   const depicts = depictsOf(asset)
   if (need.person) {
     const of = portraitOf(asset)
@@ -125,9 +210,12 @@ function refusalOf(asset, need) {
     if (depicts === need.offering) return null
     return depicts === GENERAL ? 'unsure' : 'wrong-offering'
   }
-  if (depicts !== GENERAL) return 'linked-to-offering'
+  if (need.shared && depicts !== GENERAL) return 'linked-to-offering'
   return portraitOf(asset) ? 'portrait' : null
 }
+
+/** The aspect at and past which a general slot is a wide band (a hero): it may take a wider crop (`WIDE_MAX_LOSS`). */
+const WIDE_ASPECT = 1.6
 
 /**
  * @param {object} input
@@ -138,6 +226,7 @@ function refusalOf(asset, need) {
  * @param {Record<string, string>} [input.cardNames] - the name the text path writes on each offering card, by group id
  *   (`cardNamesOf`): the one decider of which offering a card shows, for its words and its photo alike
  * @returns {{version: string, offerings: Array<{groupId: string, offeringId: string, label: string}>,
+ *   people: Array<{groupId: string, personId: string, label: string}>,
  *   slots: Array<{key: string, entity: string, type: string, role: string | null, groupId: string | null,
  *   action: 'photo' | 'substitute' | 'keep' | 'skip' | 'text', reason: string, file?: string, mediaId?: string,
  *   crop?: object, refused?: Record<string, number>}>, unused: string[]}}
@@ -207,7 +296,10 @@ export function planFill({ contentMap, brief, demo = new Map(), cardNames = {} }
   const assets = [...(brief?.assets ?? [])]
     .filter((a) => a?.kind === 'image' && a.id && a.width && a.height)
     .sort((a, b) => String(a.id).localeCompare(String(b.id)))
-  const used = new Set()
+  // Which photos each page already shows: a photo serves once a page (#141).
+  const pagesOf = pagesOfMap(contentMap)
+  const shownOn = new Map()
+  const usedAnywhere = new Set()
   const hero = (u) => u.slots.some((s) => s.role === 'business.hero_image')
   const leads = leadsOf(slots)
   const identity = (u) => u.slots.some((s) => IDENTITY_ROLES.has(s.role) || leads.has(s.key))
@@ -217,13 +309,22 @@ export function planFill({ contentMap, brief, demo = new Map(), cardNames = {} }
   order.sort((a, b) => rank(a) - rank(b))
 
   for (const unit of order) {
-    const settle = (action, reason, extra = {}) => {
+    const pages = [...new Set(unit.slots.flatMap((s) => pagesOf(s.entity)))]
+    const settle = (decided, reason, extra = {}) => {
+      // Only a fact picture takes a substitute; any other picture with no fitting photo keeps the demo's (#141).
+      const action = decided === 'substitute' && !unit.slots.some(isFactSlot) ? 'keep' : decided
       // A person picture with no portrait shows the person's initials (ticket #134), in the frame of the slot.
-      const avatar =
-        action === 'substitute' && unit.slots.some((s) => s.role === 'person.image')
-          ? { substitute: avatarSubstitute(personById.get(unit.need.person) ?? null, unit.frame) }
-          : {}
-      for (const slot of unit.slots) decide(slot, action, reason, { file: unit.file, ...extra, ...avatar })
+      const signature = unit.slots.find((s) => s.fit?.kind === 'signature')
+      const substitute =
+        action !== 'substitute'
+          ? {}
+          : signature
+            ? { substitute: signatureSubstitute(signature, signersOf(brief?.reading)) }
+            : unit.slots.some((s) => s.role === 'person.image')
+              ? { substitute: avatarSubstitute(personById.get(unit.need.person) ?? null, unit.frame) }
+              : {}
+      for (const slot of unit.slots)
+        decide(slot, action, reason, { file: unit.file, ...extra, ...substitute })
     }
     if (unit.need.reason) {
       settle('substitute', unit.need.reason)
@@ -233,53 +334,70 @@ export function planFill({ contentMap, brief, demo = new Map(), cardNames = {} }
       settle('substitute', 'demo-size-unknown')
       continue
     }
-    // The slot's minimum width: the largest its Slot fit declares among the unit's slots, else the role's target.
-    const declared = unit.slots.map((s) => Number(s.fit?.minWidth)).filter((n) => Number.isFinite(n) && n > 0)
+    // The slot's minimum width: the widest box it is drawn in (`shownWidthOf`) among the unit's slots, else the role's
+    // target. A photo may still be enlarged by `MAX_SCALE` to reach it (`subjectCrop`).
+    const declared = unit.slots.map(shownWidthOf).filter((n) => Number.isFinite(n) && n > 0)
     const min = declared.length ? Math.max(...declared) : hero(unit) ? ROLES.hero.min : ROLES.section.min
     // A card's own offering or person is a match: its photo may lose more of itself to the crop (#136).
     const matches = Boolean(unit.need.offering || unit.need.person)
-    const refused = {}
-    const fitting = []
-    const crops = new Map()
-    for (const asset of assets) {
-      let why =
-        refusalOf(asset, unit.need) ??
-        (identity(unit) && isMapPhotoByOthers(asset) ? 'map-photo-by-others' : null) ??
-        (used.has(asset.id) ? 'used' : null)
-      if (!why) {
-        const cut = subjectCrop(asset, unit.frame, { min, matches })
-        if (cut.refused) why = cut.refused
-        else crops.set(asset.id, cut.crop)
+    // Every photo that qualifies, with its crop; a wide general slot looks again with the wider crop when none does.
+    const candidates = (wide) => {
+      const refused = {}
+      const fitting = []
+      const crops = new Map()
+      for (const asset of assets) {
+        let why =
+          refusalOf(asset, unit.need) ??
+          (identity(unit) && isMapPhotoByOthers(asset) ? 'map-photo-by-others' : null) ??
+          (pages.some((page) => shownOn.get(page)?.has(asset.id)) ? 'used' : null)
+        if (!why) {
+          const cut = subjectCrop(asset, unit.frame, { min, matches, wide })
+          if (cut.refused) why = cut.refused
+          else crops.set(asset.id, cut.crop)
+        }
+        if (why) refused[why] = (refused[why] ?? 0) + 1
+        else fitting.push(asset)
       }
-      if (why) refused[why] = (refused[why] ?? 0) + 1
-      else fitting.push(asset)
+      return { refused, fitting, crops }
     }
+    let { refused, fitting, crops } = candidates(false)
+    const wideSlot = unit.need.general && unit.frame.width / unit.frame.height >= WIDE_ASPECT
+    if (!fitting.length && wideSlot) ({ refused, fitting, crops } = candidates(true))
     const lossOf = (a) => {
       const { source } = crops.get(a.id)
       return 1 - (source.width * source.height) / (a.width * a.height)
     }
+    // A general slot meets the general and unsure photos first, then the photos of the offerings.
+    const offeringPhoto = (a) => (unit.need.general && depictsOf(a) !== GENERAL ? 1 : 0)
+    const lowQuality = (a) => (a.quality === 'low' ? 1 : 0)
     fitting.sort(
       (a, b) =>
+        offeringPhoto(a) - offeringPhoto(b) ||
         publisherRankOf(a) - publisherRankOf(b) ||
+        lowQuality(a) - lowQuality(b) ||
         lossOf(a) - lossOf(b) ||
         b.width * b.height - a.width * a.height ||
         String(a.id).localeCompare(String(b.id))
     )
     const best = fitting[0]
     if (!best) {
-      settle('substitute', REASONS_BY_NEED[needKind(unit.need)].none, { refused })
+      const none = unit.need.shared ? 'conflicting-offerings' : REASONS_BY_NEED[needKind(unit.need)].none
+      settle('substitute', none, { refused })
       continue
     }
-    used.add(best.id)
+    usedAnywhere.add(best.id)
+    for (const page of pages) shownOn.set(page, (shownOn.get(page) ?? new Set()).add(best.id))
     const crop = crops.get(best.id)
-    settle('photo', REASONS_BY_NEED[needKind(unit.need)].photo, { mediaId: best.id, crop })
+    const reason = crop.loosened ? 'general-photo-wide-crop' : REASONS_BY_NEED[needKind(unit.need)].photo
+    settle('photo', reason, { mediaId: best.id, crop })
   }
 
   return {
     version: FILL_PLAN_VERSION,
     offerings,
+    people: [...peopleOf].map(([groupId, p]) => ({ groupId, personId: p.personId, label: p.label })),
     slots: slots.map((s) => decisions.get(s.key)).filter(Boolean),
-    unused: assets.filter((a) => !used.has(a.id)).map((a) => a.id)
+    unused: assets.filter((a) => !usedAnywhere.has(a.id)).map((a) => a.id)
   }
 }
 

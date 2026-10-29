@@ -141,10 +141,10 @@ test('every slot gets one decision, and every decision carries a reason code a r
   assert.deepEqual([coach.action, coach.reason], ['substitute', 'no-portrait'])
 })
 
-test('a padel card with no padel photo takes the substitute, never the tennis or an unsure photo, and says why', () => {
+test('a padel card with no padel photo keeps the demo picture, never the tennis or an unsure photo, and says why', () => {
   const brief = { ...BRIEF, assets: BRIEF.assets.filter((a) => !a.id.startsWith('padel')) }
   const padel = decisionsOf(planFill({ contentMap: CONTENT_MAP, brief, cardNames: CARDS })).get('module-2.4')
-  assert.equal(padel.action, 'substitute')
+  assert.equal(padel.action, 'keep')
   assert.equal(padel.reason, 'no-photo-of-offering')
   assert.equal(padel.mediaId, undefined)
   // Refused: the tennis photo (another offering) and the general ones (unsure); the portrait is general but unsure too.
@@ -168,7 +168,7 @@ test("a card's name and its photo name the same offering, whatever order the bri
   assert.equal(at.get('module-2.4').mediaId, 'tennis-1')
 })
 
-test('a card whose name is unknown, or names no offering of the brief, takes the substitute', () => {
+test('a card whose name is unknown, or names no offering of the brief, keeps the demo picture', () => {
   const named = decisionsOf(
     planFill({
       contentMap: CONTENT_MAP,
@@ -179,12 +179,12 @@ test('a card whose name is unknown, or names no offering of the brief, takes the
   assert.equal(named.get('module-2.1').mediaId, 'tennis-1')
   assert.deepEqual(
     [named.get('module-2.4').action, named.get('module-2.4').reason],
-    ['substitute', 'no-offering-for-group']
+    ['keep', 'no-offering-for-group']
   )
   // No names from the text path at all: no card is guessed by position.
   const blind = decisionsOf(planFill({ contentMap: CONTENT_MAP, brief: BRIEF }))
   for (const key of ['module-2.1', 'module-2.4'])
-    assert.deepEqual([blind.get(key).action, blind.get(key).reason], ['substitute', 'no-offering-for-group'])
+    assert.deepEqual([blind.get(key).action, blind.get(key).reason], ['keep', 'no-offering-for-group'])
 })
 
 test("the card names are the text path's sourced offering names; a neutral placeholder names nothing", () => {
