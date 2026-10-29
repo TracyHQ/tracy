@@ -11,7 +11,9 @@
  *   (pages, posts, template parts, navigations, patterns) leads to no published page, post,
  *   category, tag or redirect.
  * - Joomla: (1) a `type: url` slot of the contract leads to a menu item (`Itemid`) or path that is
- *   not published; (2) `error.php`, `index.php`, `html/**` or `acm/**` of the template links a page
+ *   not published (a path under a published component item is that component's own page: Joomla
+ *   hands the rest of the path to its router, as VirtueMart's vendor terms page under the shop item;
+ *   whether the component answers it is only known on a built site); (2) `error.php`, `index.php`, `html/**` or `acm/**` of the template links a page
  *   of the list by its path.
  * - EmDash: (1) a listed page is missing from `RECORDS` of `src/lib/link-gate.ts`; (2) a component
  *   or view writes `href="/<page>"` for a listed page without importing the link gate.
@@ -119,9 +121,12 @@ async function joomla(context, f, /** @type {string[]} */ ids) {
       .filter((r) => Number(r.client_id) === 0)
       .map((r) => [String(r.id), r])
   )
-  const livePaths = new Set(
-    [...items.values()].filter((r) => Number(r.published) === 1).map((r) => String(r.path))
-  )
+  const published = [...items.values()].filter((r) => Number(r.published) === 1)
+  const livePaths = new Set(published.map((r) => String(r.path)))
+  const componentPaths = published.filter((r) => r.type === 'component').map((r) => String(r.path))
+  /** A path an item serves: its own, or one under a published component item (that component routes the rest). */
+  const served = (/** @type {string} */ p) =>
+    livePaths.has(p) || componentPaths.some((item) => item !== '' && p.startsWith(`${item}/`))
   const articles = new Map(t.rows('content').map((r) => [String(r.id), r]))
   const broken = []
   for (const slot of contractSlots(releaseContract(context))) {
@@ -133,7 +138,7 @@ async function joomla(context, f, /** @type {string[]} */ ids) {
       broken.push(`${slot.key} → Itemid ${itemid} (${items.has(itemid) ? 'unpublished' : 'no such item'})`)
     else if (article && !itemid && Number(articles.get(article)?.state) !== 1)
       broken.push(`${slot.key} → article ${article} (not published)`)
-    else if (/^\/[^/]/.test(sample) && !livePaths.has(pathOf(sample)))
+    else if (/^\/[^/]/.test(sample) && !served(pathOf(sample)))
       broken.push(`${slot.key} → ${sample} (no published menu item)`)
   }
   if (broken.length) {
