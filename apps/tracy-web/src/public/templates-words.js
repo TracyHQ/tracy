@@ -4,7 +4,9 @@
  * The sentences live in Tracy's interface-language dictionaries (`lib/i18n/strings.js` and
  * `locales/*.json`, keys `tpl.*`, the same mechanism as the sign-in pages); `wordsFor(lang)` hands
  * the pages the same shape they always read. Template names, blurbs, categories and industry names
- * are NOT here: they are published data and stay as published (English).
+ * are NOT here: they are published data. Names, categories and industries stay as published
+ * (English). A blurb shows its stored translation in de, fr, es, it and nl when one exists
+ * (`card.blurbs`, `lib/template-blurb-translations.js`, read by `blurbOf`), else the English.
  *
  * Visible copy carries no em or en dash (Akemi's rule for anything a customer reads).
  */

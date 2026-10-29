@@ -48,6 +48,7 @@ sources:
   - .github/workflows/build-dsh-image.yml
   - apps/tracy-host/Dockerfile
   - apps/tracy-web/src/lib/quickstart-releases.js
+  - apps/tracy-web/src/lib/template-blurb-translations.js
   - deploy/scripts/check-fleet-files-in-image.sh
   - packages/fleet/tracy-fleet-operation/dsh/host-dsh-init.sh
   - scripts/ci/image-context.mjs
@@ -777,6 +778,7 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   `site_component`, `site_build`, `site_design`), changes and comments (§5, `site_comment*`),
   `quickstart_releases`, `template_readiness` (results of the Customize your site check for each release, §8),
   `template_ds_readiness` (results of the Design system check, same shape, §8),
+  `template_blurb_translation` + `template_blurb_translation_failure` (a card blurb's translations for the public Templates pages, keyed by the sha256 of the English, §8),
   `ui_setting`, `speech_setting` (the ElevenLabs key for voice input, sealed with `secret-box.js`), `notification*`, `audit`, `site_brand_upload` (logo/favicon customers upload before a site exists, §8).
   `account_seen_hint` keeps the seen marks for step 2 of the tour (`site-tour`) and the voice hint (`voice-tip`), primary
   key `(account_id, hint)`, first time `seen_at`, deleted automatically when the account is deleted; the closed list of names
@@ -1090,6 +1092,17 @@ EmDash) never gets a record created for it.
   installer/webroot, WordPress theme zip, EmDash source zip), no database, into `TRACY_READINESS_DIR/design-system`. The
   `design-system` step of Road to live (after `customize`, waits for the install file) and the Publish door (`DESIGN_SYSTEM_NOT_READY`, only for
   releases not yet live) read this table. Check again: `POST /api/ops/quickstart/design-system/check`.
+- **A card's blurb is translated for the public Templates pages in the background, on the master only** (29/10/2026,
+  [`template-blurb-translations.js`](apps/tracy-web/src/lib/template-blurb-translations.js)). The English blurb stays the release's own
+  (`tracy_design_inspiration.json`, rewritten into `quickstart_releases.inspiration` by every read), so translations live apart, in
+  `template_blurb_translation` keyed by `(sha256 of the English, lang)`, for de, fr, es, it and nl. After each read of the releases (the same
+  places that kick the Customize your site check) and after a card is saved or published, a single-flight sweep sends ONE call per English
+  blurb missing a language to the model of the `web` door, and stores each language only if it keeps every kept term the English holds
+  ([`kept-terms.js`](apps/tracy-web/src/lib/kept-terms.js), a tested copy of `packages/locale/tracy-locale-vi/terms.ts`), the template
+  name and the CMS names, has no em or en dash, is at most 300 characters and is not the English. A failed call or a refused language
+  backs that blurb off (`template_blurb_translation_failure`, 30 minutes doubling up to a day). `GET /api/templates` adds `card.blurbs`
+  (`{ lang: text }`, one query per request) and a shard reads it from the master's list; the page, gallery, JSON-LD and meta description
+  use `card.blurbs[lang]`, else the English. No model on the `web` door: nothing runs and the pages stay English.
 - **Content coverage does not run in the background; it only reads a file** (24/10/2026, decided): `content-coverage.json` sits next to
   the contract in the profile folder (enters the image through the same COPY as the contract), committed by whoever measures it after running
   [`content-coverage/cli.mjs`](packages/cms/tracy-quickstart-tools/README.md) on a site built from the package (skill

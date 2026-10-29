@@ -504,7 +504,9 @@ test('GET /api/templates answers what it answered before the shared function', o
     category,
     blurb: `${id} blurb`,
     image: null,
-    layouts: [{ key: 'home', label: 'Home', path: '/', shots: { desktop: null } }]
+    layouts: [{ key: 'home', label: 'Home', path: '/', shots: { desktop: null } }],
+    // The blurb's stored translations (`lib/template-blurb-translations.js`): none on this shelf.
+    blurbs: {}
   })
   const sorted = [...templates].sort((a, b) => a.id.localeCompare(b.id))
   assert.deepEqual(
