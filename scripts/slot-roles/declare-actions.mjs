@@ -9,6 +9,10 @@ import {
   isButtonSlot
 } from '../../packages/wo/website-opportunities/domain/button-actions.mjs'
 import { proposeButtonActions } from './button-actions.mjs'
+import {
+  ctaBandProblems,
+  proposeCtaBands
+} from '../../packages/wo/website-opportunities/domain/cta-bands.mjs'
 import { languageButtonUses, sourceButtonUses, templateButtonUses } from './button-markup.mjs'
 import { discoverSlotRoleContractDirs } from './check.mjs'
 import { withActionMetadata } from './content-map-action-text.mjs'
@@ -16,6 +20,14 @@ import { withActionMetadata } from './content-map-action-text.mjs'
 const sha = (bytes) => createHash('sha256').update(bytes).digest('hex')
 const json = (file) => (existsSync(file) ? JSON.parse(readFileSync(file, 'utf8')) : {})
 const templateUses = new Map()
+
+/** The map's text with its call-to-action bands added as a last top-level key; every other byte stays as released. */
+function withCtaBands(text, bands) {
+  if (!bands.length) return text
+  const end = text.lastIndexOf('}')
+  const body = JSON.stringify(bands, null, 2).replaceAll('\n', '\n  ')
+  return `${text.slice(0, end).trimEnd()},\n  "ctaBands": ${body}\n}\n`
+}
 
 /** Source files must match the contract's pin before their markup can supply declarations. */
 function pinnedTemplateUses(dir, webroot, map) {
@@ -58,18 +70,23 @@ export function declareContractActions(dir, { write = false, webroot, outputDir 
   const changed = map.slots
     .filter((slot) => JSON.stringify({ action: slot.action, button: slot.button }) !== initial.get(slot.key))
     .map((slot) => slot.key)
-  const after = withActionMetadata(before, map)
+  // The call-to-action bands, declared once the buttons carry their jobs (a band is a block with a conversion button).
+  const bands = map.ctaBands === undefined ? proposeCtaBands(map) : []
+  if (bands.length) map.ctaBands = bands
+  const after = withCtaBands(withActionMetadata(before, map), bands)
+  if (bands.length) changed.push(...bands.map((band) => band.id))
   if (write && changed.length) writeFileSync(file, after)
   if (outputDir && changed.length) {
     mkdirSync(outputDir, { recursive: true })
     writeFileSync(path.join(outputDir, 'content-map.json'), after)
   }
-  const errors = buttonActionProblems(map)
+  const errors = [...buttonActionProblems(map), ...ctaBandProblems(map)]
   return {
     contract: dir,
     buttons: map.slots.filter(isButtonSlot).length,
     assigned: map.slots.filter((slot) => changed.includes(slot.key) && slot.action).length,
     changed,
+    bands: bands.map((band) => band.id),
     unresolved: map.slots
       .filter((slot) => isButtonSlot(slot) && !slot.action)
       .map((slot) => ({ key: slot.key, role: slot.role ?? null, sample: slot.sample ?? null })),

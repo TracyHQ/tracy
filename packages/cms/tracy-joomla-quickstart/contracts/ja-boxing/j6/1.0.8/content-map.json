@@ -65077,5 +65077,25 @@
         "menuItem-187.0"
       ]
     }
+  ],
+  "ctaBands": [
+    {
+      "id": "module-161.cta-band",
+      "entity": "module-161",
+      "message": [
+        {
+          "key": "module-161.0",
+          "part": "heading"
+        },
+        {
+          "key": "module-161.1",
+          "part": "line"
+        }
+      ],
+      "buttons": [
+        "module-161.3"
+      ],
+      "ground": "module-161.2"
+    }
   ]
 }

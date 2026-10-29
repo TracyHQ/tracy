@@ -10,6 +10,7 @@
  */
 import { checkMainMenu } from './main-menu-check.js'
 import { checkFooterNavigation } from './footer-navigation-check.js'
+import { checkCtaBands } from './cta-band-check.js'
 import { checkSelfLinks } from './self-link-check.js'
 import { peopleCardFindings } from './people-card-check.js'
 import { statisticFindings } from './statistic-check.js'
@@ -20,6 +21,7 @@ import { ownStylesheets, MAX_STYLES } from '../lib/own-stylesheets.js'
 import { checkPageIntros } from './page-intro-check.js'
 import { checkOfferingSummaries } from './offering-summary-check.js'
 import { checkReviewQuotes } from './review-quotes-check.js'
+import { checkContactForms } from './contact-form-check.js'
 
 /** The most pages one check reads: a brief build's site has a handful, a demo's showcase branch can have dozens. */
 export const MAX_PAGES = 24
@@ -156,6 +158,12 @@ export async function runLeftoverCheck({
   const offeringSummaries = checkOfferingSummaries({ pages, brief })
   const reviewQuotes = checkReviewQuotes({ pages, brief })
   report.findings.push(...reviewQuotes)
+  // No visible message form without an email of the owner's, judged on the served pages (COO decision, #189 item 19).
+  const contactForms = checkContactForms({ pages, brief })
+  report.findings.push(...contactForms.findings)
+  // A kept call-to-action band shows a message with its button (COO decision, #189 item 7), where the map declares bands.
+  const ctaBands = checkCtaBands({ pages, contentMap, sitePlan })
+  report.findings.push(...ctaBands)
   report.findings.push(...offeringSummaries.map((f) => ({ kind: 'C03', ...f })))
   report.counts.C03 = (report.counts.C03 ?? 0) + offeringSummaries.length
   const mainMenuFindings = (mainMenu?.findings ?? []).map((f) => ({
@@ -185,6 +193,8 @@ export async function runLeftoverCheck({
     heroMissing,
     offeringSummaries,
     reviewQuotes,
+    contactForms,
+    ctaBands,
     pageIntros,
     broken,
     pass:
@@ -196,11 +206,16 @@ export async function runLeftoverCheck({
       unread.length === 0 &&
       offeringSummaries.length === 0 &&
       reviewQuotes.length === 0 &&
+      contactForms.findings.length === 0 &&
+      ctaBands.length === 0 &&
       pageIntros.length === 0,
-    findings: [...report.findings, ...mainMenuFindings, ...footerFindings, ...selfLinkFindings, ...pageIntros].slice(
-      0,
-      FINDINGS_KEPT
-    ),
+    findings: [
+      ...report.findings,
+      ...mainMenuFindings,
+      ...footerFindings,
+      ...selfLinkFindings,
+      ...pageIntros
+    ].slice(0, FINDINGS_KEPT),
     truncated: Math.max(
       0,
       report.findings.length +

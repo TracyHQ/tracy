@@ -551,6 +551,16 @@ path):
    footer `mod_menu` module is not declared. After a brief build, check that every kept page and each offering page is
    linked from the footer, the footer has at least as many links as the header, and no demo heading or link remains
    (`footer-navigation-check.js` reports each on the build's receipt).
+   **A call-to-action band is one unit (every framework):** a block (not the hero) whose words are at most a heading and
+   a short line above a conversion button (`primary-cta` or `contact`), usually over a ground picture, is declared in the
+   content map's top-level `ctaBands`: `{id, entity, message: [{key, part: "heading" | "line"}], buttons, ground}`.
+   `message` names its text slots (a band with no message slot role is refused), `buttons` its declared button slots and
+   `ground` its picture slot or null. `node scripts/slot-roles/declare-actions.mjs "$P/$VER" --write` proposes the bands
+   once the buttons carry their actions, and `scripts/slot-roles/check.mjs "$P/$VER"` refuses the contract while a band
+   is undeclared. A brief build writes the message from the brief for the button's action (no price, number, offer or
+   other fact the brief lacks) and keeps it through cleanup; a band whose message cannot be written comes off whole.
+   After a brief build, check each band shows its heading, line and button in light and dark mode (`cta-band-check.js`
+   reports a lone button on the build's receipt).
 9. **The first T3 template run through this skill:** look at and record in the report two points — (a) local Tracy
    creates a T3 site successfully (section 6 step 5); (b) the freshly bound site has no design-drift warnings (step 6 above).
 10. `git -C "$TCH_WT" status --short` · `git -C "$CW_WT" status --short` → record. No `git add`.

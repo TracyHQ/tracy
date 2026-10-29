@@ -1041,9 +1041,17 @@ const PLACEHOLDER = /\{[\w.-]+\}/
 /** A value the template set: something, and not a placeholder. */
 const setByTemplate = (/** @type {unknown} */ value) =>
   typeof value === 'string' && value.trim() !== '' && !PLACEHOLDER.test(value)
-/** What the Apply report says when the template's mailbox was taken off a form: no address, and what turns it back on. */
+/**
+ * What the Apply report says when no email was given: what was written, never that the form is gone. Whether a form still
+ * shows is said only by the check of the built pages (`contact-form-check.js`, spec TracyHQ/tracy#189 item 19).
+ */
 export const FORM_OFF_NOTE =
-  "No email was given, so the template's address was taken off the contact record and the contact form is off until you add your email."
+  "No email was given, so the template's address was taken off the contact record and its contact form was set to hide; the check of the built pages says whether any form still shows."
+/** The same, when a contact record's settings could not be read, so its form could not be set to hide. */
+export const FORM_UNREAD_NOTE =
+  "No email was given, so the template's address was taken off the contact record; its form settings could not be read, so the check of the built pages says whether a form still shows."
+/** The record's own setting that shows the form (Joomla 5: `show_email_form && (email_to || user_id)`). */
+const FORM_SWITCH = 'show_email_form'
 
 /** The record's address lines, in the order a contact page prints them. */
 const ADDRESS_FIELDS = ['address', 'suburb', 'state', 'postcode', 'country']
@@ -1088,9 +1096,18 @@ function placeLines({ address, area, row, cut }) {
  * @param {Set<string>} input.visible
  * @param {{ address?: { value: string }, serviceArea?: { value: string } } | null} [input.contact] - the site plan's contact facts
  * @param {Array<{ kind: string, value: string }> | null} [input.channels] - the site plan's channels: a second phone is the mobile
+ * @param {any[] | null} [input.menu] - the menu's whole rows as Apply read them; read here when not given
  * @returns {Promise<{ steps: Array<{ kind: string, id: number, fields: Record<string, string> }>, note: string | null }>}
  */
-export async function contactSteps({ apply, siteKey, given, visible, contact = null, channels = null }) {
+export async function contactSteps({
+  apply,
+  siteKey,
+  given,
+  visible,
+  contact = null,
+  channels = null,
+  menu = null
+}) {
   const email = String(given.email ?? '').trim()
   const phone = String(given.phone ?? '').trim()
   const address = String(given.address ?? '').trim()
@@ -1109,13 +1126,50 @@ export async function contactSteps({ apply, siteKey, given, visible, contact = n
     /** @type {Array<{ kind: string, id: number, fields: Record<string, string> }>} */
     const steps = []
     let silenced = 0
+    // 🔒 NO RECIPIENT OF THE OWNER'S, NO FORM (COO decision, spec TracyHQ/tracy#189 item 19). Emptying `email_to` alone left
+    // the form on: a record linked to a user account (`user_id`) still shows it and mails that account. So the form is
+    // switched off where Joomla decides it, the record's `show_email_form`, and on every menu entry of that record that
+    // sets its own value (an entry's non-empty value wins over the record on its own page; an empty one never does).
+    // The menu Apply already read whole is passed in (it is read once); a caller without it has it read here.
+    const entries =
+      email !== ''
+        ? []
+        : Array.isArray(menu)
+          ? menu
+          : await listAll(checkedCall(apply, siteKey), 'menuItem', true)
+    const unswitched = []
     for (const row of contacts) {
       /** @type {Record<string, string>} */
       const fields = {}
       if (email !== '' && row.email_to !== email) fields.email_to = email
-      else if (email === '' && setByTemplate(row.email_to)) {
-        fields.email_to = ''
-        silenced += 1
+      else if (email === '' && setByTemplate(row.email_to)) fields.email_to = ''
+      if (email === '') {
+        // A listing without the settings has the record read for them; a record that cannot be read is said, not guessed.
+        const held =
+          row.params !== undefined
+            ? row.params
+            : await checkedCall(apply, siteKey)('content.get', { kind: 'contact', id: Number(row.id) })
+                .then((/** @type {any} */ got) => got?.item?.params)
+                .catch(() => undefined)
+        const params = held === '' || held === null ? {} : paramsOf(held)
+        if (!params) unswitched.push(Number(row.id))
+        else {
+          if (String(params[FORM_SWITCH] ?? '') !== '0')
+            fields.params = JSON.stringify({ ...params, [FORM_SWITCH]: '0' })
+          for (const entry of entries) {
+            const own = new RegExp(`[?&]view=contact&(?:[^&]*&)*id=${Number(row.id)}(?:&|$)`)
+            if (!/option=com_contact/.test(String(entry.link ?? '')) || !own.test(String(entry.link ?? '')))
+              continue
+            const set = paramsOf(entry.params)
+            if (!set || String(set[FORM_SWITCH] ?? '') === '' || String(set[FORM_SWITCH]) === '0') continue
+            steps.push({
+              kind: 'menuItem',
+              id: Number(entry.id),
+              fields: { params: JSON.stringify({ ...set, [FORM_SWITCH]: '0' }) }
+            })
+          }
+        }
+        if (setByTemplate(row.email_to) || fields.params) silenced += 1
       }
       // A phone given is the telephone; the template's other numbers go, and with none given every one of them goes (#1367).
       if (phone !== '' && row.telephone !== phone) fields.telephone = phone
@@ -1152,7 +1206,9 @@ export async function contactSteps({ apply, siteKey, given, visible, contact = n
       if (name !== '' && setByTemplate(row.name) && row.name !== name) fields.name = name
       if (Object.keys(fields).length > 0) steps.push({ kind: 'contact', id: Number(row.id), fields })
     }
-    return { steps, note: silenced > 0 ? FORM_OFF_NOTE : null }
+    // A record whose settings could not be read is said as such: its form may still show, and the page check judges it.
+    const note = unswitched.length > 0 ? FORM_UNREAD_NOTE : silenced > 0 ? FORM_OFF_NOTE : null
+    return { steps, note }
   } catch (error) {
     return {
       steps: [],

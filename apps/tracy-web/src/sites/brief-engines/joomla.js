@@ -69,6 +69,7 @@ import { writeWoContent } from './joomla-wo-content.js'
 import { heroSlotValues } from './hero-lines.js'
 import { buttonActionValues } from './button-action-values.js'
 import { offeringSummaryValues } from './offering-summaries.js'
+import { ctaBandValues } from './cta-band-messages.js'
 import {
   addDerivedLanguages,
   setSiteLanguage,
@@ -471,6 +472,8 @@ function staticState(contract) {
       entities: map.entities ?? [],
       // The footer link columns the release declares (quickstart-contract skill, #189 item 12).
       navigationGroups: map.navigationGroups ?? [],
+      // The call-to-action bands the release declares: message, button and ground as one unit (#189 item 7).
+      ctaBands: map.ctaBands ?? [],
       declared: withFieldEvidence((map.slots ?? []).filter((slot) => !customizable(slot)))
     }
     maps.set(contract.id, entry)
@@ -482,7 +485,8 @@ function staticState(contract) {
     pages: entry.pages,
     roleVocabularyVersion: entry.roleVocabularyVersion,
     entities: entry.entities,
-    navigationGroups: entry.navigationGroups
+    navigationGroups: entry.navigationGroups,
+    ctaBands: entry.ctaBands
   }
 }
 
@@ -1243,6 +1247,55 @@ export function createJoomlaEngine({
         const label = String(own[0]?.label ?? '').split(' / ')[0]
         factModules.push({ id, title: label.replace(/ \([A-Za-z]{2,3}(?:-[A-Za-z]+)?\)$/, '') })
       }
+      // 🔒 A CALL-TO-ACTION BAND IS ONE UNIT (COO decision, #189 item 7, `cta-band-messages.js`): its heading and line are
+      // written for the action its button now carries, after every pin and sweep above, and kept through the cleanup; a
+      // band with no message that can be written comes off whole, never a lone button.
+      const ctaBands = await ctaBandValues({
+        contentMap: staticState(ctx.contract),
+        slots: [...state.slots, ...declaredSlots(ctx.contract)],
+        sitePlan,
+        written: kept,
+        locale: written,
+        briefText: [
+          facts.text,
+          String(sitePlan?.brand?.description?.value ?? ''),
+          ...Object.values(honesty?.values ?? {}).map((v) => String(v.value))
+        ].join(' '),
+        business: {
+          name: String(sitePlan?.brand?.name?.value ?? ctx.normalized.name ?? ''),
+          description: String(sitePlan?.brand?.description?.value ?? ''),
+          offerings: (honesty?.offerings ?? []).map((o) => o?.label)
+        },
+        model: text,
+        signal: ctx.signal,
+        note: ctx.note
+      })
+      Object.assign(kept, ctaBands.values)
+      demoBlanks = demoBlanks.filter((slot) => !(slot.key in ctaBands.values))
+      demoBlanks.push(...ctaBands.blanks.filter((slot) => !demoBlanks.some((b) => b.key === slot.key)))
+      // A band's message group is no demo card: the left-demo sweep never takes it off once the band has its message.
+      const bandGroups = new Set(
+        state.slots
+          .filter((slot) => slot.key in ctaBands.values && slot.group?.id)
+          .map((slot) => slot.group.id)
+      )
+      demoHides = demoHides.filter((hide) => !bandGroups.has(hide.group))
+      for (const band of ctaBands.removed) {
+        const own = state.slots.filter((slot) => slot.entity === band.entity)
+        for (const slot of own) delete kept[slot.key]
+        demoBlanks = demoBlanks.filter((slot) => slot.entity !== band.entity)
+        const id = Number(String(band.entity).slice('module-'.length))
+        if (!/^module-\d+$/.test(band.entity) || factModules.some((m) => m.id === id)) continue
+        const label = String(own[0]?.label ?? '').split(' / ')[0]
+        factModules.push({ id, title: label.replace(/ \([A-Za-z]{2,3}(?:-[A-Za-z]+)?\)$/, '') })
+      }
+      if (ctaBands.bands.length) ctx.time('ctaBandsWritten', ctaBands.bands.filter((b) => b.written).length)
+      if (ctaBands.removed.length) {
+        ctx.time('ctaBandsRemoved', ctaBands.removed.length)
+        ctx.note(
+          `${ctaBands.removed.length} call-to-action band(s) had no message that could be written and were taken off`
+        )
+      }
       // The languages the template does not ship are translated from the words as they will stand, while the site installs.
       const derive = []
       if (missing.length > 0 && !text)
@@ -1331,6 +1384,8 @@ export function createJoomlaEngine({
         demoAsked,
         styleMarks,
         offeringSummaries,
+        // The call-to-action bands' messages, kept through the cleanup, and the bands taken off (`cta-band-messages.js`).
+        ctaBands,
         // The site plan's search title, description and LocalBusiness record (`place-seo.mjs`).
         seo: sitePlan?.seo ?? null
       }
@@ -2009,6 +2064,8 @@ export function createJoomlaEngine({
             siteKey,
             contact: planned?.contact ?? null,
             channels: Array.isArray(planned?.channels) ? planned.channels : null,
+            // The menu read once above: an entry of a contact record may turn its form back on (#189 item 19).
+            menu: judged.menu ?? [],
             given: {
               email: ctx.normalized.email,
               phone: ctx.normalized.phone,
@@ -2050,7 +2107,10 @@ export function createJoomlaEngine({
             siteKey,
             ctx,
             woContent,
-            protectedKeys: new Set(Object.keys(prepared.offeringSummaries ?? {})),
+            protectedKeys: new Set([
+              ...Object.keys(prepared.offeringSummaries ?? {}),
+              ...Object.keys(prepared.ctaBands?.values ?? {})
+            ]),
             extraBlanks: [
               ...(prepared.demoBlanks ?? []),
               ...[...refusedByWrite]

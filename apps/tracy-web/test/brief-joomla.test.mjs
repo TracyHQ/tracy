@@ -1480,8 +1480,8 @@ const OWNER = { email: 'hello@goldencrust.vn', phone: '0912 345 678' }
 /** Every write the site took, as one string: what the tidy-up wrote anywhere, for what must appear nowhere. */
 const everyWrite = (site) =>
   JSON.stringify([site.recordWrites, site.batches, site.extensionWrites, site.applies, site.hiddenModules])
-/** What the Apply report says when the owner gave no mailbox: the form is off, and no address is in it. */
-const FORM_OFF = /the contact form is off until you add your email/
+/** What the Apply report says when the owner gave no mailbox: the form was set to hide (the page check says if it is gone). */
+const FORM_OFF = /address was taken off the contact record/
 
 // 🔒 A PAGE GOES ONLY WHEN THE CUSTOMER UNTICKED IT (product owner, 08/10/2026, TCH #1013): the model is asked about labels
 // only, and the entries it would once have taken off (careers, investors, the marketing kit) stay published.
@@ -4390,3 +4390,69 @@ for (const trade of ['bakery', 'dental clinic']) {
     assert.equal(site.applies.findLast((a) => key in a.changes)?.changes[key], value)
   })
 }
+
+for (const [trade, name, label, description] of [
+  [
+    'pottery studio',
+    'Clayhouse Studio',
+    'Book a class',
+    'A small pottery studio teaching wheel throwing to beginners.'
+  ],
+  [
+    'dental clinic',
+    'Brightside Dental',
+    'Book a check-up',
+    'A family dental clinic for check-ups and cleaning.'
+  ]
+])
+  test(`${trade}: the home call-to-action band of JA Boxing 1.0.8 is written with a message for its primary action`, async () => {
+    const { planSite } = await import('website-opportunities/domain/site-plan.mjs')
+    const contract = contractFor(defaultContracts(), 'quickstart/ja-boxing/j6', '1.0.8')
+    const plan = planSite(
+      {
+        business: { name, description },
+        primaryAction: { label, channel: 'contact', href: null, basis: 'sourced', evidence: [] }
+      },
+      { questions: [] },
+      { contentMap: mapOf(contract) }
+    )
+    const heading = `Ready to ${label.toLowerCase()}?`
+    const line = `${name} welcomes you.`
+    const { prepared, site } = await run({
+      contract,
+      ctx: { brief: { about: description, goal: 'contact', style: 'friendly' } },
+      release: 'quickstart/ja-boxing/j6',
+      // The copy writer keeps the band's demo claim; only the band step is asked for the action's message.
+      model: fakeModel({
+        say: (s) =>
+          s.band
+            ? s.part === 'heading'
+              ? heading
+              : line
+            : s.key === 'module-161.0'
+              ? 'Free 7-day trial'
+              : null
+      }),
+      // The plan's button decisions and brand; the fake site cannot take other demo records off.
+      woContent: {
+        sitePlanFor: async () => ({
+          slots: plan.slots.filter((s) => s.reason === 'button-action'),
+          brand: { name: { value: name }, description: { value: description } }
+        })
+      }
+    })
+    for (const [key, value] of Object.entries({
+      'module-161.0': heading,
+      'module-161.1': line,
+      'module-161.3': label
+    })) {
+      assert.equal(prepared.changes[key], value, key)
+      assert.equal(
+        site.applies.findLast((a) => key in a.changes)?.changes[key],
+        value,
+        `${key} reaches the write`
+      )
+    }
+    assert.ok(!(prepared.demoBlanks ?? []).some((s) => String(s.key).startsWith('module-161.')))
+    assert.ok(!(prepared.factModules ?? []).some((m) => m.id === 161), 'the band stays on the page')
+  })

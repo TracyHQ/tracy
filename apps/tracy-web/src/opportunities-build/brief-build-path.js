@@ -33,6 +33,7 @@ export function contentMapOfTemplate(template, contracts = defaultContracts()) {
       pages: map.pages ?? [],
       entities: map.entities ?? [],
       navigationGroups: map.navigationGroups ?? [],
+      ctaBands: map.ctaBands ?? [],
       roleVocabularyVersion: map.roleVocabularyVersion ?? null,
       intros: pageIntrosOf(dir)
     }

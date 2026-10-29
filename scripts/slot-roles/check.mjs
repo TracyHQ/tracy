@@ -33,6 +33,11 @@
  *   menu, and its link slots. The brief build lists every kept page in these columns. Named contract folders fail on an
  *   undeclared or malformed column; the whole-tree gate only counts them.
  *
+ * - Every call-to-action band is declared as one unit (`ctaBandProblems`, WO domain `cta-bands.mjs`): its message slots
+ *   (heading, line), its declared buttons and its ground picture. The brief build writes the message for the button's
+ *   action. Named contract folders fail on an undeclared band or a band with no message slot role; the whole-tree gate
+ *   only counts them.
+ *
  *   node scripts/slot-roles/check.mjs                  every contract in the tree
  *   node scripts/slot-roles/check.mjs <contractDir>... only those (the packing check)
  */
@@ -43,6 +48,7 @@ import { fileURLToPath } from 'node:url'
 import { checkContentMapFit, checkContentMapRoles } from 'website-opportunities/domain'
 import { buttonActionProblems } from '../../packages/wo/website-opportunities/domain/button-actions.mjs'
 import { navigationGroupProblems } from '../../packages/wo/website-opportunities/domain/footer-navigation.mjs'
+import { ctaBandProblems } from '../../packages/wo/website-opportunities/domain/cta-bands.mjs'
 import { lintContractDir, lintSummary } from '../../apps/tracy-web/src/lib/content-map-lint.js'
 import { lintItemIconGrounds } from '../../apps/tracy-web/src/lib/content-map-lint-icons.js'
 import { fieldMapRolesOf } from '../../apps/tracy-web/src/lib/emdash-field-map-roles.js'
@@ -137,6 +143,17 @@ export function footerColumnsOf(contentMap) {
     .map((e) => e.key)
 }
 
+/** The undeclared or malformed call-to-action bands of a contract's content map. */
+export function ctaBandErrors(dir) {
+  const file = path.join(dir, CONTENT_MAP_FILE)
+  if (!existsSync(file)) return []
+  try {
+    return ctaBandProblems(JSON.parse(readFileSync(file, 'utf8')))
+  } catch {
+    return []
+  }
+}
+
 /** The undeclared or malformed footer link columns (navigation groups) of a contract's content map. */
 export function navigationGroupErrors(dir) {
   const file = path.join(dir, CONTENT_MAP_FILE)
@@ -218,7 +235,22 @@ export function checkAllSlotRoles(rootDir = DEFAULT_ROOT, explicitDirs = null) {
     .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, errors: navigationGroupErrors(dir) }))
     .filter((n) => n.errors.length > 0)
   if (named) for (const n of navigation) for (const error of n.errors) errors.push(`${n.dir}: ${error}`)
-  return { ok: errors.length === 0, checkedCount: dirs.length, dirs, errors, fit, lint, buttons, navigation }
+  // The same for call-to-action bands: a named contract refuses one not declared, or declared with no message slot role.
+  const bands = candidates
+    .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, errors: ctaBandErrors(dir) }))
+    .filter((b) => b.errors.length > 0)
+  if (named) for (const b of bands) for (const error of b.errors) errors.push(`${b.dir}: ${error}`)
+  return {
+    ok: errors.length === 0,
+    checkedCount: dirs.length,
+    dirs,
+    errors,
+    fit,
+    lint,
+    buttons,
+    navigation,
+    bands
+  }
 }
 
 /** The value after a `--name` flag, and the arguments left once every flag and its value are taken out. */
@@ -281,6 +313,10 @@ if (isMain) {
   if (!named)
     process.stdout.write(
       `footer navigation: ${res.navigation.length} released map(s) hold ${res.navigation.reduce((n, b) => n + b.errors.length, 0)} undeclared or malformed footer link column(s); the packing check refuses them.\n`
+    )
+  if (!named)
+    process.stdout.write(
+      `call-to-action bands: ${res.bands.length} released map(s) hold ${res.bands.reduce((n, b) => n + b.errors.length, 0)} undeclared or malformed band(s); the packing check refuses them.\n`
     )
   const rules = lintSummary(res.lint.flatMap((l) => l.findings))
     .map((r) => `${r.rule} ${r.count}`)
