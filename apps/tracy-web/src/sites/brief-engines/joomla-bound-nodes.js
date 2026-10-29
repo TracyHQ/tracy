@@ -14,8 +14,8 @@ import { parse } from 'parse5'
 
 import { paramsOf, readModules } from './joomla-tidy.js'
 
-/** An article's columns that hold HTML. */
-const HTML_COLUMNS = ['introtext', 'fulltext']
+/** The columns of a record that hold HTML: an article's body, a custom module's content, a contact's note. */
+const HTML_COLUMNS = ['introtext', 'fulltext', 'content', 'misc']
 
 /**
  * How many nodes an absolute content-map path finds in a field's HTML, or null for a path outside the grammar the maps use
@@ -80,17 +80,25 @@ function htmlOf(slot, fields) {
  * @param {Map<number, any>} [input.articles] - the article rows as they stand, by id
  * @returns {{ steps: Array<{ kind: string, id: number, fields: Record<string, unknown> }>, dropped: Array<{ kind: string, id: number, keys: string[] }> }}
  */
-export function keepBoundNodes({ steps, slots, modules, articles = new Map() }) {
+export function keepBoundNodes({ steps, slots, modules, articles = new Map(), contacts = new Map() }) {
   /** @type {Map<string, any[]>} */
   const bound = new Map()
   for (const slot of slots) {
-    if (!slot?.xpath) continue
+    // A path into HTML, or a path into JSON parameters: both are what the plugin's inspect resolves.
+    if (!slot?.xpath && !(Array.isArray(slot?.jsonPath) && slot.jsonPath.length > 0)) continue
     bound.set(slot.entity, [...(bound.get(slot.entity) ?? []), slot])
   }
   const kept = []
   const dropped = []
   for (const step of steps) {
-    const rows = step.kind === 'module' ? modules : step.kind === 'article' ? articles : null
+    const rows =
+      step.kind === 'module'
+        ? modules
+        : step.kind === 'article'
+          ? articles
+          : step.kind === 'contact'
+            ? contacts
+            : null
     const row = rows?.get(Number(step.id))
     const mine = bound.get(`${step.kind}-${step.id}`) ?? []
     if (!row || mine.length === 0) {
@@ -101,8 +109,10 @@ export function keepBoundNodes({ steps, slots, modules, articles = new Map() }) 
     const lost = mine.filter((slot) => {
       if (!(slot.column in step.fields)) return false
       const before = htmlOf(slot, row)
-      if (before === null || nodesAt(before, slot.xpath) !== 1) return false
       const now = htmlOf(slot, after)
+      // A JSON path holds words before and after, or it is taken away ("Content slot is not text").
+      if (!slot.xpath) return before !== null && now === null
+      if (before === null || nodesAt(before, slot.xpath) !== 1) return false
       return now === null || nodesAt(now, slot.xpath) !== 1
     })
     if (lost.length === 0) kept.push(step)
@@ -121,18 +131,21 @@ export function keepBoundNodes({ steps, slots, modules, articles = new Map() }) 
  * @param {any[]} input.slots - the content map's slots
  */
 export async function guardBoundNodes({ apply, siteKey, steps, slots }) {
-  if (!steps.some((step) => step.kind === 'module' || step.kind === 'article')) return { steps, dropped: [] }
+  if (!steps.some((step) => ['module', 'article', 'contact'].includes(step.kind)))
+    return { steps, dropped: [] }
   const modules = new Map((await readModules(apply, siteKey)).map((row) => [Number(row.id), row]))
   const articles = new Map()
   for (const step of steps) {
-    if (
-      step.kind !== 'article' ||
-      !HTML_COLUMNS.some((c) => c in step.fields) ||
-      articles.has(Number(step.id))
-    )
-      continue
+    const writes = [...HTML_COLUMNS, 'attribs'].some((c) => c in step.fields)
+    if (step.kind !== 'article' || !writes || articles.has(Number(step.id))) continue
     const answer = await apply({ siteKey, action: 'content.get', params: { kind: 'article', id: step.id } })
     if (answer?.ok !== false && answer?.item) articles.set(Number(step.id), answer.item)
   }
-  return keepBoundNodes({ steps, slots, modules, articles })
+  const contacts = new Map()
+  for (const step of steps) {
+    if (step.kind !== 'contact' || !('misc' in step.fields) || contacts.has(Number(step.id))) continue
+    const answer = await apply({ siteKey, action: 'content.get', params: { kind: 'contact', id: step.id } })
+    if (answer?.ok !== false && answer?.item) contacts.set(Number(step.id), answer.item)
+  }
+  return keepBoundNodes({ steps, slots, modules, articles, contacts })
 }

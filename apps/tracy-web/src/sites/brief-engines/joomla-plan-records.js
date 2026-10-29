@@ -25,6 +25,21 @@ const stored = (/** @type {string} */ s) => s.replace(/\(\(/g, '<').replace(/\)\
 const idOf = (/** @type {string} */ entity) => Number(String(entity).split('-')[1])
 /** An article's columns that hold HTML: a slot in them is a piece of that HTML (`xpath`), emptied in place. */
 const HTML_COLUMNS = new Set(['introtext', 'fulltext'])
+/** The columns of a record that hold HTML, by kind: a custom module's `content` is one like an article's body. */
+const HTML_BY_KIND = { article: HTML_COLUMNS, module: new Set(['content']), contact: new Set(['misc']) }
+/** A contact's columns of plain words a fact line may sit in: emptied as a whole (`contactSteps` does the same). */
+const CONTACT_COLUMNS = new Set([
+  'address',
+  'suburb',
+  'state',
+  'postcode',
+  'country',
+  'telephone',
+  'mobile',
+  'fax',
+  'misc',
+  'con_position'
+])
 
 /**
  * The words the site plan decides, laid over what the writer wrote, and what a writer invented taken out
@@ -162,7 +177,15 @@ function emptyIn(container, blank) {
   return true
 }
 
-/** Takes items out of a JSON list: every array of the list's length loses them. @returns {boolean} */
+/**
+ * Empties items of a JSON list in place: every array of the list's length has its words at those places emptied.
+ *
+ * 🔒 A CARD TAKEN OFF A JSON LIST STAYS IN THE LIST, EMPTIED (spec TracyHQ/tracy#189). The contract binds each item field
+ * by its path (`team`, `team[title]`, 3): taking an item out shifts the ones after it and the last path finds nothing, and
+ * the plugin's inspect then refuses every contract write on the site ("Content slot is not text"). So the item's words and
+ * pictures are emptied where they stand, and the template's layout decides what an empty card shows.
+ * @returns {boolean}
+ */
 function dropItems(container, parents, fields, indexes) {
   let changed = false
   for (const path of parents) {
@@ -172,9 +195,9 @@ function dropItems(container, parents, fields, indexes) {
     if (length === 0) continue
     for (const value of Object.values(parent))
       if (Array.isArray(value) && value.length === length)
-        for (const index of [...indexes].sort((a, b) => b - a))
-          if (index < value.length) {
-            value.splice(index, 1)
+        for (const index of indexes)
+          if (index < value.length && typeof value[index] === 'string' && value[index] !== '') {
+            value[index] = ''
             changed = true
           }
   }
@@ -187,10 +210,11 @@ function dropItems(container, parents, fields, indexes) {
  * @param {any} input.honesty - the site plan's `honesty`
  * @param {Map<number, any>} input.modules - the site's module rows by id (`params` included)
  * @param {Map<number, any>} [input.articles] - the article rows the plan's fields need, by id (`attribs` included)
+ * @param {Map<number, any>} [input.contacts] - the contact rows the plan's fields need, by id
  * @returns {{ steps: Array<{ kind: string, id: number, fields: Record<string, unknown> }>, hidden: number, trimmed: number,
  *   emptied: number, unresolved: number }}
  */
-export function recordSteps({ honesty, modules, articles = new Map() }) {
+export function recordSteps({ honesty, modules, articles = new Map(), contacts = new Map() }) {
   const steps = []
   let hidden = 0
   let trimmed = 0
@@ -235,23 +259,33 @@ export function recordSteps({ honesty, modules, articles = new Map() }) {
     }
     return edits.get(key)
   }
-  /** An article's HTML column (`introtext`, `fulltext`) losing a slot's demo words: its row's text, edited once. */
+  /** @type {string[]} the lines no records door reaches (a title, a language string): named in the note */
+  const left = []
+  /** A record's HTML or words column (an article's body, a module's content, a contact line) losing a slot's demo words. */
   const html = new Map()
   // The fields go empty first: the items they name still stand where the plan read them.
   for (const blank of honesty?.blanks ?? []) {
     if (gone.has(blank.entity)) continue
-    if (String(blank.entity).startsWith('article-') && HTML_COLUMNS.has(blank.column)) {
+    const kind = String(blank.entity).split('-')[0]
+    const rowsOf =
+      kind === 'article' ? articles : kind === 'module' ? modules : kind === 'contact' ? contacts : null
+    if (
+      rowsOf &&
+      (HTML_BY_KIND[kind]?.has(blank.column) || (kind === 'contact' && CONTACT_COLUMNS.has(blank.column)))
+    ) {
       const id = idOf(blank.entity)
-      const row = articles.get(id)
-      const key = `${id}|${blank.column}`
+      const row = rowsOf.get(id)
+      const key = `${kind}|${id}|${blank.column}`
       const before =
         html.get(key)?.text ?? (typeof row?.[blank.column] === 'string' ? row[blank.column] : null)
       if (before === null) {
         unresolved += 1
+        left.push(blank.key)
         continue
       }
       const next = blank.xpath ? withoutSample(before, blank) : ''
       html.set(key, {
+        kind,
         id,
         column: blank.column,
         text: next,
@@ -264,7 +298,10 @@ export function recordSteps({ honesty, modules, articles = new Map() }) {
     if (edit && emptyIn(edit.container, blank)) {
       edit.changed = true
       emptied += 1
-    } else if (!edit) unresolved += 1
+    } else if (!edit) {
+      unresolved += 1
+      left.push(blank.key)
+    }
   }
   /** @type {Map<string, {edit: any, parents: any[], fields: string[], indexes: number[]}>} */
   const lists = new Map()
@@ -286,7 +323,7 @@ export function recordSteps({ honesty, modules, articles = new Map() }) {
       trimmed += indexes.length
     }
   for (const edit of html.values())
-    if (edit.changed) steps.push({ kind: 'article', id: edit.id, fields: { [edit.column]: edit.text } })
+    if (edit.changed) steps.push({ kind: edit.kind, id: edit.id, fields: { [edit.column]: edit.text } })
   for (const edit of edits.values()) {
     if (!edit.changed) continue
     const params = edit.nestedJson
@@ -294,7 +331,8 @@ export function recordSteps({ honesty, modules, articles = new Map() }) {
       : edit.container
     steps.push({ kind: edit.kind, id: edit.id, fields: { [edit.field]: JSON.stringify(params) } })
   }
-  return { steps, hidden, trimmed, emptied, unresolved }
+  for (const hide of honesty?.hide ?? []) if (hide.how === 'none') left.push(hide.group)
+  return { steps, hidden, trimmed, emptied, unresolved, left }
 }
 
 /**
@@ -327,14 +365,21 @@ export async function planRecordSteps({ apply, siteKey, ctx, woContent, extraBla
       const answer = await apply({ siteKey, action: 'content.get', params: { kind: 'article', id } })
       if (answer?.ok !== false && answer?.item) articles.set(id, answer.item)
     }
-    const made = recordSteps({ honesty, modules, articles })
+    const contacts = new Map()
+    for (const id of new Set(
+      (honesty.blanks ?? []).filter((b) => String(b.entity).startsWith('contact-')).map((b) => idOf(b.entity))
+    )) {
+      const answer = await apply({ siteKey, action: 'content.get', params: { kind: 'contact', id } })
+      if (answer?.ok !== false && answer?.item) contacts.set(id, answer.item)
+    }
+    const made = recordSteps({ honesty, modules, articles, contacts })
     ctx.time?.('recordsHidden', made.hidden + made.trimmed)
     ctx.time?.('factFieldsEmptied', made.emptied)
     if (made.hidden + made.trimmed > 0)
       ctx.note(`${made.hidden + made.trimmed} card(s) beyond your offerings and people were taken off`)
     if (made.unresolved > 0)
       ctx.note(
-        `${made.unresolved} card(s) or fact line(s) of the template could not be taken off on this site`
+        `${made.unresolved} card(s) or fact line(s) of the template could not be taken off on this site${made.left.length ? ` (${made.left.slice(0, 8).join(', ')}${made.left.length > 8 ? ', …' : ''})` : ''}`
       )
     return { steps: made.steps }
   } catch (error) {

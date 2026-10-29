@@ -127,15 +127,17 @@ const articles = () =>
 const honesty = () => planHonesty(brief, contentMap, { name: 'Harbourline Racquet Club' }).honesty
 const stepOf = (steps, kind, id) => steps.find((s) => s.kind === kind && s.id === id)
 
+// #189: a card taken off a JSON list is emptied where it stands, never spliced out: the contract binds each item's path,
+// and a path that finds nothing makes the plugin refuse every contract write on the site.
 test('the trainer list keeps one card per real person, and the kept cards lose their demo bio', () => {
   const { steps, trimmed } = recordSteps({ honesty: honesty(), modules: modules(), articles: articles() })
   const config = JSON.parse(JSON.parse(stepOf(steps, 'module', 50).fields.params)['jatools-config'])
   assert.deepEqual(
     config.team['team[title]'],
-    ['Rowan Mercer', 'Ilse Varga'],
-    'the names go in with the contract write'
+    ['Rowan Mercer', 'Ilse Varga', '', ''],
+    'the names go in with the contract write; the cards beyond them are emptied in place'
   )
-  assert.deepEqual(config.team['team[bio]'], ['', ''])
+  assert.deepEqual(config.team['team[bio]'], ['', '', '', ''])
   assert.deepEqual(config.team['team[columns]'], ['4'], 'a setting of the list is no item')
   assert.equal(trimmed, 2)
 })
@@ -189,8 +191,12 @@ test('the clinic: a priced services list keeps the card of a real service withou
   ])
   const { steps } = recordSteps({ honesty: planHonesty(clinic, map).honesty, modules: rows })
   const config = JSON.parse(JSON.parse(stepOf(steps, 'module', 20).fields.params)['jatools-config'])
-  assert.deepEqual(config.services['services[price]'], [''])
-  assert.deepEqual(config.services['services[title]'], ['Cleaning'])
+  assert.deepEqual(config.services['services[price]'], ['', '', ''])
+  assert.deepEqual(
+    config.services['services[title]'].length,
+    3,
+    'every bound item path still holds words or nothing'
+  )
 })
 
 test('a site the plan names reads its modules once and writes the steps; a site without a plan writes nothing', async () => {

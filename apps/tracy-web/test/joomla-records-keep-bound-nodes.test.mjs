@@ -146,3 +146,81 @@ test('#189 a records step that would take a bound node away is held, whatever pl
   assert.equal(nodesAt(html, '/html/body/div/div/a/@href'), 0)
   assert.equal(nodesAt(html, '//div'), null, 'a path outside the grammar is not judged')
 })
+
+test('#189 a fact line in a custom module, a contact line and a contact note are emptied through their own records', () => {
+  // A florist's custom module with an opening-hours line, and a dental clinic's demo contact address and note.
+  const hours = {
+    key: 'module-40.1',
+    entity: 'module-40',
+    column: 'content',
+    type: 'text',
+    role: 'business.hours',
+    sample: 'Open daily 8am to 6pm',
+    xpath: '/html/body/p/strong/text()'
+  }
+  const address = {
+    key: 'contact-3.1',
+    entity: 'contact-3',
+    column: 'address',
+    type: 'text',
+    sample: '12 Demo Road'
+  }
+  const note = {
+    key: 'contact-3.4',
+    entity: 'contact-3',
+    column: 'misc',
+    type: 'text',
+    sample: 'Our friendly staff will help.',
+    xpath: '/html/body/p/text()'
+  }
+  const moduleHtml = '<p>Hours: <strong>Open daily 8am to 6pm</strong></p>'
+  const made = recordSteps({
+    honesty: {
+      blanks: [
+        hours,
+        address,
+        note,
+        { key: 'article-9.0', entity: 'article-9', column: 'title', sample: 'Demo' }
+      ]
+    },
+    modules: new Map([[40, { id: 40, params: '{}', content: moduleHtml }]]),
+    contacts: new Map([[3, { id: 3, address: '12 Demo Road', misc: '<p>Our friendly staff will help.</p>' }]])
+  })
+  const content = made.steps.find((s) => s.kind === 'module').fields.content
+  assert.equal(content, '<p>Hours: <strong>&nbsp;</strong></p>')
+  assert.equal(nodesAtLocal(content, hours.xpath), 1)
+  const contact = made.steps.filter((s) => s.kind === 'contact').map((s) => s.fields)
+  assert.deepEqual(contact, [{ address: '' }, { misc: '<p>&nbsp;</p>' }])
+  // A title no records door empties is named, not counted silently.
+  assert.equal(made.unresolved, 1)
+  assert.deepEqual(made.left, ['article-9.0'])
+})
+
+test('#189 a step that takes an item out of a bound JSON list is held; emptying it in place passes', async () => {
+  const { keepBoundNodes } = await import('../src/sites/brief-engines/joomla-bound-nodes.js')
+  // A yoga studio's class list (ACM-style arrays), three classes, the contract bound to each title.
+  const config = { classes: { 'classes[title]': ['Flow', 'Yin', 'Power'] } }
+  const row = { id: 7, params: JSON.stringify({ 'jatools-config': JSON.stringify(config) }) }
+  const slots = [0, 1, 2].map((i) => ({
+    key: `module-7.${i}`,
+    entity: 'module-7',
+    column: 'params',
+    nestedJson: 'jatools-config',
+    jsonPath: ['classes', 'classes[title]', i]
+  }))
+  const write = (titles) => ({
+    kind: 'module',
+    id: 7,
+    fields: {
+      params: JSON.stringify({ 'jatools-config': JSON.stringify({ classes: { 'classes[title]': titles } }) })
+    }
+  })
+  const spliced = write(['Flow', 'Yin'])
+  const emptied = write(['Flow', 'Yin', ''])
+  const out = keepBoundNodes({ steps: [spliced, emptied], slots, modules: new Map([[7, row]]) })
+  assert.deepEqual(out.steps, [emptied])
+  assert.deepEqual(out.dropped, [{ kind: 'module', id: 7, keys: ['module-7.2'] }])
+})
+
+/** The resolver above, by its own name for the tests after it. */
+const nodesAtLocal = (html, xpath) => resolve(html, xpath).length
