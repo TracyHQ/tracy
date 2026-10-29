@@ -1153,6 +1153,19 @@ EmDash) never gets a record created for it.
   `settings.favicon` and the `logo_dark` field of the chrome entry; the tool's undo journal lives in the run's temporary
   folder, so it cannot yet be undone inside Tracy (pre-existing). Each release's profile (number of logo slots, `brandReady`,
   `faviconReady`, image frame) is in [`lib/template-profiles.json`](apps/tracy-web/src/lib/template-profiles.json).
+- **A Joomla brief build clears what the content map does not reach** (spec #189, ticket #196,
+  [`joomla-outside-map.js`](apps/tracy-web/src/sites/brief-engines/joomla-outside-map.js), decisions in the site plan's `outside`,
+  [`outside-map.mjs`](packages/wo/website-opportunities/domain/outside-map.mjs)), under one `apply_id` `outside-<ts>`, after the
+  tidy-up. The showcase entries go with the unpicked pages (a demo build keeps them); a `mod_footer` becomes a custom module that
+  says the business's copyright in the site language (`neutral.footer.copyright`), and a credit line in a custom module is taken
+  out; an article whose address is still the demo's takes one made from its written title (`content.update article alias`).
+  What no door writes (a T4 profile's `body_bg_img`, a video slot the contract will not empty, a button whose layout keeps a link
+  to a page taken off) is handled by **one marked head block**: `<!-- tracy-leftovers --><style data-tracy-leftovers>` kept in the
+  template style's own raw head-code param (T4 `system_advancedCodeAfterHead`, T3 `snippet_close_head`) through
+  `content.update templateStyle params`, replacing the block a previous build left and keeping the owner's own code. It repaints
+  the demo backgrounds the served stylesheets paint with the owner's picture (or none), and hides demo play buttons, the demo
+  pictures of the not-found and offline pages, and links to unpublished menu entries. The demo-leftover check reads the same
+  block: a file, video id or address it names counts as hidden, not as a leftover.
 - **A site written in the chosen language makes the CMS speak that language too** (D10). Single-language Joomla: after writing
   the text, Apply calls `content.contract siteLanguage.set` (`apply_id` `slang-brief-<ts>`, plugin ≥ 0.16.10) — the plugin installs
   the approved language pack and sets it as default for both site and admin, so `<html lang>` follows the text

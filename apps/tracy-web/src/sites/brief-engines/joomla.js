@@ -50,10 +50,13 @@ import { factsOf, guardChanges, guardWritten } from './guard.js'
 import { drawPictures, pictureBriefs, pictureGroups, shapePictures, uploadPictures } from './pictures.js'
 import { keptPages, pictureReport, realPicturesOf, shapeReal } from './real-pictures.js'
 import { writeContractPictures } from './contract-real-pictures.js'
+import { declaredPictureSlots } from './drawn-pictures.js'
 import { copyPinsOf, pinStates, recordPins } from './wo-copy-pins.js'
 import { woContentOf } from './wo-content.js'
 import { planContactSteps } from './joomla-plan-contacts.js'
+import { honestWords, planRecordSteps } from './joomla-plan-records.js'
 import { planIdentitySteps } from './joomla-plan-identity.js'
+import { contentMapAt, plannedSlotValues, showcaseOff, writeOutsideMap } from './joomla-outside-map.js'
 import { writeWoContent } from './joomla-wo-content.js'
 import {
   addDerivedLanguages,
@@ -511,7 +514,7 @@ export function createJoomlaEngine({
    * `bound`: a slot plan's card pictures (`copyPinsOf`), each card's own entity's. `copy`: the copy pins, whose card
    * names decide which offering photo each card takes (`fill-plan.mjs`).
    */
-  const pictures = async (ctx, real, bound = {}, copy = null) => {
+  const pictures = async (ctx, real, bound = {}, copy = null, drawDoor = null) => {
     if (!realPictures || !siteFile || !ctx.contract) return null
     real ??= await realPictures.forSite({
       siteKey: ctx.siteKey,
@@ -527,6 +530,8 @@ export function createJoomlaEngine({
     const { isDerived } = await seeder('plan-joomla-contract')
     const map = staticState(ctx.contract)
     await pinArticleOrder({ apply, siteKey: ctx.siteKey, note: ctx.note })
+    const plan = woContent?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
+    const sitePlan = await Promise.resolve(plan).catch(() => null)
     return writeContractPictures({
       ctx,
       real,
@@ -538,6 +543,11 @@ export function createJoomlaEngine({
       contentMap: { ...map, slots: map.slots.filter((slot) => !isDerived(slot)) },
       bound,
       copy,
+      // Drawn pictures, icons and cut-outs of a brief build (#194, #195): `drawn-pictures.js`.
+      drawDoor,
+      declared: declaredPictureSlots(ctx.contract),
+      // A brief build's kept cards show what the site plan names them (#192): one decider for words and pictures.
+      cardNames: sitePlan?.honesty?.cardNames ?? null,
       write: async ({ state, changes }) =>
         new Set(
           await writeContract({
@@ -939,6 +949,28 @@ export function createJoomlaEngine({
       for (const { key } of guardWritten(kept, guarded, facts).held) delete kept[key]
       /** @type {string[]} the `keep` slots written in the site's language, by Apply beside the plan */
       const translatedKeep = Object.keys(keepSaid).filter((key) => key in kept)
+      // 🔒 NO INVENTED PERSON, PRICE OR NUMBER, AND THE SITE PLAN'S RECORDS AND FACTS (#192, `joomla-plan-records.js`): a name or a
+      // figure the customer never gave is not written, whatever build; on a brief build the plan's people, offerings and emptied
+      // facts win over the writer, and a label left in the demo's words takes its neutral label.
+      const sitePlan = await Promise.resolve(
+        woContent?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
+      ).catch(() => null)
+      const honesty = sitePlan?.honesty ?? null
+      const honest = await honestWords({
+        kept,
+        slots: state.slots.filter(
+          (slot) => !kit.has(slot.entity) && !isDerived(slot) && shown(slot) && !pinned.has(slot.key)
+        ),
+        ownText: [facts.text, ...Object.values(honesty?.values ?? {}).map((v) => String(v.value))].join(' '),
+        honesty,
+        locale: written,
+        business: { phone: ctx.normalized.phone, email: ctx.normalized.email },
+        pages: state.pages ?? []
+      })
+      if (honest.counts.invented > 0)
+        ctx.note(
+          `${honest.counts.invented} line(s) named a person, a price or a number you did not give and were left out`
+        )
       // The sourced words, as their sources say them: no guard of the model's words is theirs.
       Object.assign(kept, copyPins?.pins ?? {})
 
@@ -1053,7 +1085,9 @@ export function createJoomlaEngine({
         changes: kept,
         renamedKeep,
         translatedKeep,
-        evidence: Object.fromEntries(Object.entries(plan.evidence ?? {}).filter(([key]) => key in kept)),
+        evidence: Object.fromEntries(
+          Object.entries({ ...plan.evidence, ...honest.evidence }).filter(([key]) => key in kept)
+        ),
         pending: plan.pending,
         factModules,
         // The page titles and descriptions the release ships in its menu, read while the site installs (`pageMetaSteps`).
@@ -1071,7 +1105,13 @@ export function createJoomlaEngine({
      */
     async apply(ctx, prepared) {
       if (prepared.real && realPictures && siteFile) {
-        await pictures(ctx, prepared.real, prepared.copyPins?.pictures, prepared.copyPins ?? null)
+        await pictures(
+          ctx,
+          prepared.real,
+          prepared.copyPins?.pictures,
+          prepared.copyPins ?? null,
+          prepared.drawDoor ?? null
+        )
         prepared.real = null
       }
       const [
@@ -1169,7 +1209,15 @@ export function createJoomlaEngine({
       const evidence = {}
       let kept = prepared.pending.length + prepared.left
       const keepWritten = new Set([...(prepared.renamedKeep ?? []), ...(prepared.translatedKeep ?? [])])
-      for (const [key, value] of Object.entries({ ...prepared.changes, ...art.values })) {
+      // A brief build's site plan writes what the copy path does not: the brief's own video in a video slot (#196).
+      const outsidePlan = await woContent
+        ?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
+        .catch(() => null)
+      for (const [key, value] of Object.entries({
+        ...prepared.changes,
+        ...art.values,
+        ...plannedSlotValues(outsidePlan)
+      })) {
         const slot = live.get(key)
         // A `keep` slot is written only with the demo company renamed in it (`renamedKeep`) or in the site's language
         // (`translatedKeep`), never with other words.
@@ -1278,8 +1326,10 @@ export function createJoomlaEngine({
       // languages below, which is the long step; the writes (one transaction) come right after it and before any language is made,
       // so an edition made from the source copies a tidy one.
       const visibleNow = new Set([SOURCE, ...prepared.keep])
-      // 🔒 THE SHOWCASE IS NEVER UNPUBLISHED (product owner): the entries the contract's showcase-navigation map put away at
-      // provisioning (`menu_show` 0) keep their pages reachable; only the customer's business pages go when unticked.
+      // 🔒 THE SHOWCASE IS NEVER UNPUBLISHED ON A DEMO BUILD (product owner): the entries the contract's showcase-navigation map
+      // put away at provisioning (`menu_show` 0) keep their pages reachable; only the customer's business pages go when unticked.
+      // A BRIEF BUILD TAKES THE SHOWCASE OFF (spec TracyHQ/tracy#189, ticket #196): its entries go with the unpicked pages in
+      // the tidy-up below (`showcaseOff`, `joomla-outside-map.js`), so their addresses answer 404.
       const showcase = navHiddenMenuIds(showcaseNavMap(ctx.contract?.dir))
       const readItem = async (/** @type {number} */ id) => {
         const answer = await apply({ siteKey, action: 'content.get', params: { kind: 'menuItem', id } })
@@ -1449,6 +1499,16 @@ export function createJoomlaEngine({
                 ? 'the menu could not be read, so the pages you did not pick could not be taken off'
                 : null
             }
+        // 🔒 A BRIEF BUILD TAKES THE SHOWCASE OFF (spec #189, ticket #196): its entries go with the unpicked pages, so their
+        // addresses answer 404, their articles go and the links into them are taken off. A demo build keeps the showcase.
+        if (menu && outsidePlan?.outside?.showcase?.decision === 'remove') {
+          const off = showcaseOff({ rows: menu, showcase, visible: visibleNow })
+          showcase.clear()
+          if (off.length > 0) {
+            unpicked.ids = [...new Set([...unpicked.ids, ...off])]
+            ctx.time('showcaseTakenOff', off.length)
+          }
+        }
         // What goes with them (dead-end links, aliases into pages that are off, pages under entries that are off): read beside
         // the long step too.
         const none = { ids: /** @type {number[]} */ ([]), note: /** @type {string | null} */ (null) }
@@ -1707,6 +1767,8 @@ export function createJoomlaEngine({
             visible: visibleNow,
             base: moduleContacts.steps
           })
+          // The site plan's cards beyond the brief taken off and its fact fields emptied (`joomla-plan-records.js`, #192).
+          const records = await planRecordSteps({ apply, siteKey, ctx, woContent })
           if (judged.categories.note) ctx.note(judged.categories.note)
           // An entry the tidy-up takes off is only taken off: a title written into it would show nowhere.
           const retitled = judged.pages.steps.filter((step) => !hiding.includes(step.id))
@@ -1732,6 +1794,7 @@ export function createJoomlaEngine({
                 ...retitled,
                 ...contacts.steps,
                 ...identity.steps,
+                ...records.steps,
                 ...judged.categories.steps,
                 ...intoCategories,
                 ...menuSteps(dependents),
@@ -1952,6 +2015,22 @@ export function createJoomlaEngine({
         )
         if (glyphs.faces > 0) ctx.time('glyphFaces', glyphs.faces)
       }
+      // What the content map does not reach (#196): credit line, page addresses, and the head block that repaints the demo
+      // backgrounds and hides demo play buttons and links to pages taken off (`joomla-outside-map.js`). A brief build only.
+      if (outsidePlan?.outside)
+        await time('outsideMapMs', async () =>
+          writeOutsideMap({
+            apply,
+            siteKey,
+            plan: outsidePlan,
+            reader: siteReader ? await siteReader(siteKey).catch(() => null) : null,
+            contentMap: contentMapAt(ctx.contract?.dir),
+            note: ctx.note,
+            time: ctx.time,
+            applyId: `outside-${Date.now().toString(36)}`,
+            locale: prepared.written ?? SOURCE
+          })
+        )
       // 🔒 The restaurant's own posts, last: after the tidy-up and the demo trim settled which articles show (`joomla-wo-content.js`).
       if (prepared.woPosts && woContent)
         await time('woContentMs', () =>
