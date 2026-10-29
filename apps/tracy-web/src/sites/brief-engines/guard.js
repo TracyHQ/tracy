@@ -38,7 +38,9 @@ export const FACT_RULES =
   'A slot whose sample states one of those is NOT filled with an invented one and NOT kept as it is: write a short line ' +
   'in the same role that states none of them — a plain label, a quality or a category taken from the brief ' +
   '(for example "Baked daily" where the sample counts projects, "Our bakers" where it names a person). ' +
-  'Only a slot for which no such honest line exists goes into "pending".'
+  'Only a slot for which no such honest line exists goes into "pending". ' +
+  'STATISTIC TILES are an exception to neutral prose: keep one accepted numeric value with its matching label and source as a unit. ' +
+  'Never write a place, category or sentence in a stat.value slot. If no complete sourced statistic fits, leave the whole stat group pending so it can be taken off.'
 
 const PHONE = /\+?\d[\d\s().-]{5,}\d/g
 const EMAIL = /[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}/g
