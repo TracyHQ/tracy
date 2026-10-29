@@ -1,8 +1,8 @@
 {
-  "id": "REG-PR-TBD-live-php-too-old",
+  "id": "REG-PR-145-live-php-too-old",
   "kind": "fix",
   "title": "A live site whose PHP is below Claude Cowork's minimum is named LIVE_PHP_TOO_OLD with both versions, never unreachable",
-  "pr": "#TBD",
+  "pr": 145,
   "area": "sync/live",
   "cms": ["jo"],
   "needs": [],
