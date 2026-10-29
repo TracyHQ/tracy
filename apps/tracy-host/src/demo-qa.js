@@ -29,6 +29,7 @@ import { captureTarget } from './capture.js'
 import { ownPublicOrigin } from './public-origin.js'
 import { SAFE_LABEL } from './provision.js'
 import { probeSiteProxy } from './site-proxy-probe.js'
+import { checkFacesNamed, checkPhotosMatchSlots, slotPhotosBody } from './demo-qa-slot-photos.js'
 
 /** A page's `load` must fire within this long (council §6, "load ceiling 12 s"). */
 export const DEMO_QA_LOAD_CAP_MS = 12_000
@@ -96,7 +97,9 @@ const CHECK_IDS = Object.freeze([
   'withheld-not-shown',
   'header-brand',
   'no-copied-reviews',
-  'picture-frames-kept'
+  'picture-frames-kept',
+  'photos-match-slots',
+  'faces-named'
 ])
 export { CHECK_IDS }
 
@@ -283,6 +286,8 @@ export function demoQaBody(body) {
       .slice(0, 20)
       .map((w) => ({ field: w.field, values: strings(w.values, 50, 500) })),
     collected: collectedOf(body.collected),
+    // Which brief offering or person each placed photo shows, and which slot it was placed in (`demo-qa-slot-photos.js`).
+    ...slotPhotosBody(body),
     demoHosts: [...new Set([...DEFAULT_DEMO_HOSTS, ...demoHosts])],
     // No page is started after this long: a caller with a deadline of its own gets an answer inside it.
     budgetMs:
@@ -3968,7 +3973,9 @@ function judgeWith(reads, asked, routeReads = []) {
     checkWithheldNotShown(reads, asked),
     checkHeaderBrand(reads, asked),
     checkNoCopiedReviews(reads, asked),
-    checkPictureFramesKept(reads, asked)
+    checkPictureFramesKept(reads, asked),
+    checkPhotosMatchSlots(reads, asked),
+    checkFacesNamed(reads, asked)
   ]
 }
 

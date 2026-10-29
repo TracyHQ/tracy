@@ -42,6 +42,7 @@ import { createHash, randomUUID } from 'node:crypto'
 import { canonicalJson } from '../lib/questions-schema.mjs'
 import { picturesOfBuild, promptHandoff, withHandoffLock } from './handoff.js'
 import { keptPictures } from './agent-demo-slot-fit.js'
+import { slotPhotoEvidence } from './slot-photo-evidence.js'
 
 /** The brief rows a query answered, each read with this build's choice (`build-choice.js`). */
 const seenBy = (build) => (result) => ({
@@ -316,6 +317,11 @@ const REPAIR = {
   // Plan "10/10" §5 (David 26/10/2026): a dead form becomes a real way to reach the business, never an empty band.
   'no-empty-boxes':
     'Each box below was made for a service (a booking or contact form, a feed, a map, a newsletter) and shows nothing. Put one button inside it, in the block that is empty, to the business’s real way to reach it: its booking or ordering link from the research, else its phone (tel:), else its Contact page — the words saying what it does ("Order online", "Call 917…", "Visit us"). Never a form of your own, never hidden, never left empty.',
+  // #140: a padel photo in the tennis card, a stranger's face in a coach's frame.
+  'photos-match-slots':
+    "Each photo below stands in a card of one offering or one person and shows another, or shows nothing the brief links to it. Put in that frame a photo the brief links to the card's own offering, or the portrait of the card's own person (tracy_demo media.look names what each photo shows); with none, keep the template's picture there (retain) and move the photo to a general place (gallery, background). Never change the card's words to match the photo.",
+  'faces-named':
+    "Each photo below shows a face of somebody the brief does not name, outside a general place, or not the owner's own photo. Replace it with the portrait of the person the card names, or with a photo without people; a photo the owner posted with people in it may go only in a general place (gallery, background). Never blur or hide a face to pass.",
   // Plan "10/10" P1 (26/10/2026): a selfie behind a section, one photo on two posts side by side.
   'photos-fit':
     'Move each photo named below to where its subject fits: a photo of people, an event, a poster, a menu board or a logo goes in a card, a person’s frame or the gallery, never a section’s background — put a calm photo of the place or of its food there (tracy_demo media.look names what each photo shows). A photo repeated on a page while others are unused gives one of its frames another photo the page does not show yet.',
@@ -895,7 +901,9 @@ async function runRound(pool, deps, { build, lease }) {
             structureHash: build.content?.agentDemo?.structureHash,
             editorialPlan: build.content?.agentDemo?.plan,
             // The template pictures no photo replaces (an icon, an avatar strip, a cut-out, a kept slot).
-            kept: keptPictures(build.content?.agentDemo?.structure, qa.baseline)
+            kept: keptPictures(build.content?.agentDemo?.structure, qa.baseline),
+            // `photos-match-slots`, `faces-named`: each placed photo's slot and what the brief says it shows (#140).
+            ...slotPhotoEvidence(revisions[0], build)
           }
         : {})
     })
