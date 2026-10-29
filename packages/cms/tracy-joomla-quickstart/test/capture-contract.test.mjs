@@ -957,6 +957,45 @@ test('--full-coverage declares the rest of what a visitor reads, each kept from 
 })
 
 test(
+  '--full-coverage leaves out a module option typed as text: how many items, how many per row, an opacity',
+  needsPhp,
+  () => {
+    // A shop module (VirtueMart's product module) types its counts as text fields; their demo values are numbers.
+    const shopXml = `<?xml version="1.0" encoding="utf-8"?>
+<extension type="module"><config><fields name="params"><fieldset name="basic">
+  <field name="headerText" type="text"/>
+  <field name="max_items" type="text"/>
+  <field name="products_per_row" type="text"/>
+  <field name="img-opacity" type="text"/>
+</fieldset></fields></config></extension>`
+    const inv = fullInventory()
+    inv.modules.push(
+      module('12', {
+        title: 'New Arrivals',
+        module: 'mod_shop_products',
+        params: JSON.stringify({
+          headerText: 'Fresh in this week',
+          max_items: '8',
+          products_per_row: '4',
+          'img-opacity': '100'
+        })
+      })
+    )
+    inv.modules_menu.push({ id: '12', moduleid: '12', menuid: '101' })
+    const run = capture(inv, {
+      args: ['--module-prefix', '', '--list-items', '--full-coverage'],
+      schemas: { features: ICONS_XML },
+      files: { ...FULL_FILES, 'modules/mod_shop_products/mod_shop_products.xml': shopXml }
+    })
+    assertWritten(run)
+    assert.deepEqual(
+      described(run).filter((s) => s.startsWith('module-12 ')),
+      ['module-12 params headerText text Fresh in this week keep']
+    )
+  }
+)
+
+test(
   '--full-coverage with --evidence-by-field leaves no fact field the contracts gate refuses',
   needsPhp,
   () => {
