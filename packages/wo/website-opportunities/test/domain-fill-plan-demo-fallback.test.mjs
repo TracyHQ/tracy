@@ -174,7 +174,7 @@ test('a non-fact picture with no fitting photo keeps the demo picture; a fact pi
   assert.equal(got.get('module-4.0').action, 'substitute')
 })
 
-test('a demo picture two cards of different offerings share is decided for the first card on the page', () => {
+test("a demo picture cards of two offerings share never holds one offering's photo: a general photo, else the demo", () => {
   const contentMap = {
     roleVocabularyVersion: 'place-content-roles/3',
     entities: entities('module-6'),
@@ -184,24 +184,103 @@ test('a demo picture two cards of different offerings share is decided for the f
       image('module-6.2', 'offering.image', 'own.jpg', card('module-6', 1))
     ]
   }
+  const plan = (assets) =>
+    at(
+      planFill({
+        contentMap,
+        brief: { reading: READING, assets },
+        cardNames: { 'module-6.item.0': 'Tennis Lessons', 'module-6.item.1': 'Padel Lessons' }
+      })
+    )
+  const offeringPhotos = [photo('tennis-1', shows('svc-tennis')), photo('padel-1', shows('svc-padel'))]
+  const withHall = plan([...offeringPhotos, photo('hall')])
+  assert.deepEqual(
+    ['module-6.0', 'module-6.1', 'module-6.2'].map((k) => [withHall.get(k).action, withHall.get(k).mediaId]),
+    [
+      ['photo', 'hall'],
+      ['photo', 'hall'],
+      ['photo', 'padel-1']
+    ]
+  )
+  const noGeneral = plan(offeringPhotos)
+  assert.deepEqual(
+    [
+      noGeneral.get('module-6.0').action,
+      noGeneral.get('module-6.0').reason,
+      noGeneral.get('module-6.0').mediaId
+    ],
+    ['keep', 'conflicting-offerings', undefined]
+  )
+  // Cards of the same offering may share that offering's photo.
+  const same = at(
+    planFill({
+      contentMap,
+      brief: { reading: READING, assets: offeringPhotos },
+      cardNames: { 'module-6.item.0': 'Tennis Lessons', 'module-6.item.1': 'Tennis Lessons' }
+    })
+  )
+  assert.equal(same.get('module-6.0').mediaId, 'tennis-1')
+})
+
+test('a low-quality photo ranks below the others, and still fills a slot when nothing better fits', () => {
+  const contentMap = {
+    roleVocabularyVersion: 'place-content-roles/3',
+    entities: entities('module-2', 'module-3'),
+    pages: [
+      { entity: 'menuItem-1', route: 'home', assignedModules: [{ entity: 'module-2' }] },
+      { entity: 'menuItem-2', route: 'about', assignedModules: [{ entity: 'module-3' }] }
+    ],
+    slots: [
+      image('module-2.0', 'business.gallery_image', 'g-1.jpg'),
+      image('module-3.0', 'editorial.illustration', 'story.jpg')
+    ]
+  }
+  const ranked = at(
+    planFill({
+      contentMap,
+      brief: {
+        reading: READING,
+        assets: [photo('a-blurry', { quality: 'low' }), photo('b-sharp', { quality: 'high' })]
+      }
+    })
+  )
+  assert.equal(ranked.get('module-2.0').mediaId, 'b-sharp')
+  const only = at(
+    planFill({ contentMap, brief: { reading: READING, assets: [photo('a-blurry', { quality: 'low' })] } })
+  )
+  assert.equal(only.get('module-3.0').mediaId, 'a-blurry')
+})
+
+test('a wide general slot may cut up to 70% of a photo when its subject and faces stay whole, and says so', () => {
+  const contentMap = {
+    roleVocabularyVersion: 'place-content-roles/3',
+    entities: entities('module-1', 'module-2'),
+    slots: [
+      image('module-1.0', 'business.hero_image', 'hero.jpg', null, [1200, 400]),
+      image('module-2.0', 'editorial.illustration', 'story.jpg', null, [1200, 400])
+    ]
+  }
+  // A square 1600 px photo cut to 3:1 keeps 1600 x 533: it loses 67%, past the usual half.
+  const square = (id, extra) => photo(id, { width: 1600, height: 1600, ...extra })
   const got = at(
     planFill({
       contentMap,
       brief: {
         reading: READING,
-        assets: [photo('tennis-1', shows('svc-tennis')), photo('padel-1', shows('svc-padel'))]
-      },
-      cardNames: { 'module-6.item.0': 'Tennis Lessons', 'module-6.item.1': 'Padel Lessons' }
+        assets: [
+          square('court', { subjectBox: [0.2, 0.4, 0.6, 0.2], faceBoxes: [[0.4, 0.45, 0.05, 0.05]] }),
+          square('crowd', { subjectBox: [0.1, 0.1, 0.8, 0.8] })
+        ]
+      }
     })
   )
-  assert.deepEqual(
-    ['module-6.0', 'module-6.1', 'module-6.2'].map((k) => [got.get(k).action, got.get(k).mediaId]),
-    [
-      ['photo', 'tennis-1'],
-      ['photo', 'tennis-1'],
-      ['photo', 'padel-1']
-    ]
-  )
+  const hero = got.get('module-1.0')
+  assert.deepEqual([hero.action, hero.reason, hero.mediaId], ['photo', 'general-photo-wide-crop', 'court'])
+  // The subject does not fit a 3:1 band: the other wide slot keeps the demo picture rather than cut it.
+  assert.deepEqual([got.get('module-2.0').action, got.get('module-2.0').refused['crop-loss']], ['keep', 1])
+  // A photo with no subject box is never cut past the usual half.
+  const blind = at(planFill({ contentMap, brief: { reading: READING, assets: [square('plain')] } }))
+  assert.equal(blind.get('module-1.0').action, 'keep')
 })
 
 test('more offering cards than brief offerings: the extra cards keep their demo picture and say why', () => {

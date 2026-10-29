@@ -89,7 +89,9 @@ export function fillPlacements({ contentMap, brief, pictures, groups, cardNames 
         group.demo,
         {
           min,
-          matches: MATCH_REASONS.has(lead.reason)
+          matches: MATCH_REASONS.has(lead.reason),
+          // A hero the plan filled with the wider crop is cut the same way here.
+          wide: lead.reason === 'general-photo-wide-crop'
         }
       )
       // A native frame of another shape than the plan's that the photo cannot fill takes the neutral substitute.

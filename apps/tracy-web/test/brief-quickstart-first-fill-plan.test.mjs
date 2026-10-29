@@ -265,3 +265,37 @@ test('a picture the fill plan only skips (no role, the logo, a demo-only entity)
     ['images/demo/hero.jpg', 'images/demo/icon.jpg']
   )
 })
+
+test('a hero the plan fills with a wide crop is cut the same way on the native frame, never dropped to a placeholder', async () => {
+  const { fillPlacements } = await import('../src/sites/brief-engines/quickstart-fill-pictures.js')
+  const contentMap = {
+    roleVocabularyVersion: 'place-content-roles/3',
+    entities: [{ key: 'module-1', kind: 'module' }],
+    slots: [image('module-1.0', 'business.hero_image', 'hero.jpg', [1200, 400])]
+  }
+  const brief = {
+    reading: BRIEF.reading,
+    assets: [
+      {
+        id: 'court',
+        kind: 'image',
+        depicts: { id: 'general', evidence: { via: 'vision' } },
+        subjectBox: [0.2, 0.4, 0.6, 0.2],
+        faceBoxes: [],
+        isOwnPhoto: true,
+        uploaderRole: 'owner'
+      }
+    ]
+  }
+  const got = fillPlacements({
+    contentMap,
+    brief,
+    pictures: [{ id: 'court', width: 1600, height: 1600 }],
+    groups: [{ id: 'g0', file: '/images/demo/hero.jpg', demo: { width: 1200, height: 400 } }]
+  })
+  assert.deepEqual(
+    got.placements.map((p) => [p.groupId, p.mediaId, p.code]),
+    [['g0', 'court', 'general-photo-wide-crop']]
+  )
+  assert.deepEqual(got.substitutes, [])
+})

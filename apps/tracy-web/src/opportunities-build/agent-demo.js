@@ -2810,7 +2810,8 @@ export function agentDemoCapabilities({
         ? subjectCrop({ ...asset, ...size }, frame, {
             // The slot's displayed desktop width, as the fill plan measured it (ADR 0039, 29/10/2026).
             min: decided.minWidth ?? frame.width,
-            matches: ['offering-photo', 'person-portrait'].includes(decided.reason)
+            matches: ['offering-photo', 'person-portrait'].includes(decided.reason),
+            wide: decided.reason === 'general-photo-wide-crop'
           })
         : null
     const crop = cut?.crop ?? decided.crop
