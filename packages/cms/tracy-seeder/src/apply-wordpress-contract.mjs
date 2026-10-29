@@ -13,7 +13,7 @@
  */
 import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
-import { byPosition, writeAt } from './wordpress-block-address.mjs'
+import { byPosition, escapeHtml, writeAt } from './wordpress-block-address.mjs'
 
 /**
  * @typedef {{ key: string, entity: string, target: { option?: string, themeMod?: string, block?: string, blockType?: string, occurrence?: number, attr?: string, field?: string, link?: number }, type: string, maxCharacters: number, input: string }} Slot
@@ -134,9 +134,6 @@ export function planContractWrites(contentMap, inputs) {
   return { writes, skipped }
 }
 
-const escapeHtml = (s) =>
-  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-
 /**
  * Set one attribute of the block named `name` inside block markup, and return the new markup.
  *
@@ -207,7 +204,7 @@ export function setBlockValue(markup, name, attr, value, imageId) {
  * Write one slot's value wherever its target names it: a block by its name (`setBlockValue`, unchanged) or by its position
  * (`blockType` + `occurrence`, `wordpress-block-address.mjs`), so a value written reads back equal.
  * @param {string} markup
- * @param {{ block?: string, blockType?: string, occurrence?: number, attr?: string, field?: string, link?: number }} target
+ * @param {import('./wordpress-block-address.mjs').SlotTarget} target
  * @param {string} value
  * @param {number} [imageId] the picture's attachment id, required for `src`
  */

@@ -208,8 +208,10 @@ export const CAPTURED_PARTS = ['header', 'footer']
 const rowsOf = (sql, name) => {
   try {
     return tableRows(sql, name)
-  } catch {
-    return []
+  } catch (error) {
+    // Only a table the dump does not have reads as none; any other failure of the reader is the dump's and is said.
+    if (error instanceof Error && error.message === `the dump has no table ${name}`) return []
+    throw error
   }
 }
 

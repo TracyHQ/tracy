@@ -834,6 +834,8 @@ export function createWordpressEngine({
       const { contentMap, editions } = loadContract(seederDataDir(ctx.contract), ctx.contract.id)
       // How many blocks of each name the slots of a page write into: a later block of a name is a line of the page (`wp-leaves.js`).
       const slotCounts = slotCountsByPage(contentMap)
+      // The header and footer the map covers: written through their slots, never planned again or swept (#139).
+      const mapParts = partsInMap(contentMap)
       const pageSlotted = (/** @type {string | null | undefined} */ slug) => slottedOn(slotCounts, slug)
       const extra = prepared.passes.editions.slice(1)
       const stop = new AbortController()
@@ -947,11 +949,9 @@ export function createWordpressEngine({
           extraSlugs.some((x) => slug === x || slug.endsWith(`-${x}`))
         // The theme's parts (a sidebar's newsletter promise) carry words of their own, in the same kind of block, and
         // sometimes a menu written inside them (JA Kinetic WP's header).
-        // A part the content map covers is written through its slots, so none of its words is planned again here (#139).
-        const covered = partsInMap(contentMap)
         const partBodies = (
           await Promise.all(
-            PARTS.filter((key) => !covered.has(key)).map(async (key) => {
+            PARTS.filter((key) => !mapParts.has(key)).map(async (key) => {
               try {
                 const answer = /** @type {any} */ (await read('content.get', { kind: 'templatePart', key }))
                 const content = answer?.item?.content
@@ -2007,8 +2007,7 @@ export function createWordpressEngine({
             entitySlugs,
             // The blocks the contract's slots write into stay, whatever has no honest words (TCH #1013).
             slotBlocks: slotBlocksByPage(contentMap),
-            // A header or footer the map covers is the contract's: its slots are written above, never swept (#139).
-            mapParts: partsInMap(contentMap),
+            mapParts,
             slotCounts,
             // 🔒 ABOUT LEFT BLANK CUTS NOTHING (TCH #1013, ABOUT-3, 11/10/2026): no word was written, so every section of the
             // template is one "the words never reached"; the site keeps them all, as in the demo, the demo company renamed (D9).

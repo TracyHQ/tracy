@@ -50,8 +50,14 @@ export const visibleText = (/** @type {string} */ html) =>
 export const sampleOf = (/** @type {string} */ raw) =>
   raw.includes('<') ? visibleText(raw) : decodeEntities(raw)
 
-const escapeHtml = (/** @type {string} */ s) =>
+export const escapeHtml = (/** @type {string} */ s) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
+
+/**
+ * Where a slot lives in an entity's markup: by name (`block`) or by position (`blockType` + `occurrence`), with the
+ * attribute it holds and, for a block of several texts, which one (`field`) and which link in it (`link`).
+ * @typedef {{ block?: string, blockType?: string, occurrence?: number, attr?: string, field?: string, link?: number }} SlotTarget
+ */
 
 /** Blocks that hold one text. */
 const SINGLE = new Set(['heading', 'paragraph', 'verse', 'preformatted', 'list-item'])
@@ -127,12 +133,38 @@ export function blockUnits(markup) {
   return units
 }
 
-/** The text of an element opened by a match of `pattern` (its first group), as offsets in `text`. */
-const groupsOf = (/** @type {string} */ text, /** @type {RegExp} */ pattern) =>
-  [...text.matchAll(pattern)].map((m) => {
-    const start = /** @type {number} */ (m.index) + m[0].indexOf('>') + 1
-    return { start, end: start + m[1].length }
-  })
+/**
+ * The texts of the elements named `names` in `text` (`<li>`, `<td>`/`<th>`…), as offsets: from the end of each opening tag
+ * to the first closing tag of any of those names. A scan with indexOf, not a lazy regex, so a long run of unclosed tags
+ * costs one pass (no polynomial backtracking on a theme's markup).
+ * @param {string} text
+ * @param {string[]} names
+ * @returns {Array<{ start: number, end: number }>}
+ */
+const elementTexts = (text, names) => {
+  const lower = text.toLowerCase()
+  const closes = names.map((n) => `</${n}>`)
+  const out = []
+  let at = 0
+  for (;;) {
+    let open = -1
+    for (const n of names) {
+      let i = lower.indexOf(`<${n}`, at)
+      // A tag name ends at a character no name holds (`<li>`, `<li class`), never inside a longer one (`<link`).
+      while (i !== -1 && /[a-z0-9]/.test(lower[i + n.length + 1] ?? '')) i = lower.indexOf(`<${n}`, i + 1)
+      if (i !== -1 && (open === -1 || i < open)) open = i
+    }
+    if (open === -1) return out
+    const gt = lower.indexOf('>', open)
+    if (gt === -1) return out
+    const start = gt + 1
+    const ends = closes.map((c) => lower.indexOf(c, start)).filter((i) => i !== -1)
+    if (ends.length === 0) return out
+    const end = Math.min(...ends)
+    out.push({ start, end })
+    at = end
+  }
+}
 
 /**
  * The texts of one block: each with its id (`''` for the block's only text), the attribute that holds it, and where its
@@ -158,7 +190,7 @@ export function blockFields(unit) {
     return [at({ start, end })]
   }
   if (type === 'button') {
-    const a = groupsOf(inner, /<a\b[^>]*>([\s\S]*?)<\/a>/g)[0]
+    const a = elementTexts(inner, ['a'])[0]
     const url = typeof attrs?.url === 'string' ? attrs.url : (hrefsIn(inner)[0] ?? null)
     return a ? [{ ...at(a), url }] : []
   }
@@ -167,16 +199,15 @@ export function blockFields(unit) {
       ? [{ id: '', attr: 'label', raw: attrs.label, url: attrs.url ?? null }]
       : []
   if (type === 'list' && !inner.includes('<!--'))
-    return groupsOf(inner, /<li\b[^>]*>([\s\S]*?)<\/li>/g).map((r, i) => at(r, String(i + 1)))
-  if (type === 'table')
-    return groupsOf(inner, /<t[dh]\b[^>]*>([\s\S]*?)<\/t[dh]>/g).map((r, i) => at(r, String(i + 1)))
+    return elementTexts(inner, ['li']).map((r, i) => at(r, String(i + 1)))
+  if (type === 'table') return elementTexts(inner, ['td', 'th']).map((r, i) => at(r, String(i + 1)))
   if (type === 'quote' || type === 'pullquote') {
     const out = []
     if (type === 'pullquote') {
-      const p = groupsOf(inner, /<p\b[^>]*>([\s\S]*?)<\/p>/g)[0]
+      const p = elementTexts(inner, ['p'])[0]
       if (p) out.push(at(p, 'text'))
     }
-    const cite = groupsOf(inner, /<cite\b[^>]*>([\s\S]*?)<\/cite>/g)[0]
+    const cite = elementTexts(inner, ['cite'])[0]
     if (cite) out.push(at(cite, 'cite'))
     return out
   }
@@ -185,12 +216,39 @@ export function blockFields(unit) {
 
 /** The links of some markup, as a visitor follows them. */
 export const hrefsIn = (/** @type {string} */ html) =>
-  [...html.matchAll(/<a\b[^>]*\bhref="([^"]*)"/g)].map((m) => decodeEntities(m[1]))
+  hrefSpans(html).map((r) => decodeEntities(html.slice(r.start, r.end)))
+
+/**
+ * Where the value of each link's `href` sits in some markup, in document order: an indexOf scan of the `<a …>` tags, not a
+ * regex, so a long run of unclosed tags costs one pass.
+ * @param {string} html
+ * @returns {Array<{ start: number, end: number }>}
+ */
+function hrefSpans(html) {
+  const out = []
+  let at = 0
+  for (;;) {
+    let open = html.indexOf('<a', at)
+    while (open !== -1 && /[A-Za-z0-9]/.test(html[open + 2] ?? '')) open = html.indexOf('<a', open + 1)
+    if (open === -1) return out
+    const gt = html.indexOf('>', open)
+    if (gt === -1) return out
+    const tag = html.slice(open, gt)
+    let attr = tag.indexOf('href="')
+    while (attr !== -1 && !/\s/.test(tag[attr - 1] ?? '')) attr = tag.indexOf('href="', attr + 1)
+    if (attr !== -1) {
+      const start = open + attr + 'href="'.length
+      const close = html.indexOf('"', start)
+      if (close !== -1 && close < gt) out.push({ start, end: close })
+    }
+    at = gt + 1
+  }
+}
 
 /**
  * The block and the text a target names, or a sentence saying why there is none.
  * @param {string} markup
- * @param {{ block?: string, blockType?: string, occurrence?: number, attr?: string, field?: string }} target
+ * @param {SlotTarget} target
  */
 function locate(markup, target) {
   const units = blockUnits(markup)
@@ -214,7 +272,7 @@ export const byPosition = (/** @type {any} */ target) =>
 /**
  * The value a slot holds: its text as a visitor reads it, or its link. Null when the target names nothing here.
  * @param {string} markup
- * @param {{ block?: string, blockType?: string, occurrence?: number, attr?: string, field?: string, link?: number }} target
+ * @param {SlotTarget} target
  * @returns {string | null}
  */
 export function readSlotValue(markup, target) {
@@ -233,7 +291,7 @@ export function readSlotValue(markup, target) {
  * The markup with one slot's value written. A target found by name with no `field` or `link` goes through the named writer
  * (`setBlockValue`), byte for byte what it always wrote; every other target is written here.
  * @param {string} markup
- * @param {{ block?: string, blockType?: string, occurrence?: number, attr?: string, field?: string, link?: number }} target
+ * @param {SlotTarget} target
  * @param {string} value
  * @param {(markup: string, name: string, attr: string, value: string, imageId?: number) => string} named - the named writer
  * @param {number} [imageId]
@@ -261,12 +319,9 @@ export function writeAt(markup, target, value, named, imageId) {
   if (attr === 'url') {
     const href = escapeHtml(value)
     const nthHref = (/** @type {string} */ html, /** @type {number} */ nth) => {
-      let seen = 0
-      const out = html.replace(/(<a\b[^>]*\bhref=")[^"]*(")/g, (whole, a, b) =>
-        ++seen === nth ? `${a}${href}${b}` : whole
-      )
-      if (seen < nth) throw new Error(`the text has no link ${nth} to write`)
-      return out
+      const span = hrefSpans(html)[nth - 1]
+      if (!span) throw new Error(`the text has no link ${nth} to write`)
+      return `${html.slice(0, span.start)}${href}${html.slice(span.end)}`
     }
     // The n-th link inside a text.
     if (Number.isInteger(target.link)) {
