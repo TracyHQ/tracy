@@ -1232,9 +1232,10 @@ class IdMap:
         return (f"UPDATE {q(schema)}.{q(self.table(ref_table))} SET {', '.join(sets)}"
                 f" WHERE {' OR '.join(finds)};")
 
-    def apply(self, schema: str) -> None:
+    def apply(self, schema: str, base: str | None = None) -> None:
         """The remembered numbers, on one read of the live site. A record of the read that already
-        holds one of those numbers on its own is numbered again too (and remembered)."""
+        holds one of those numbers on its own is numbered again too (and remembered); with `base`,
+        rows of tables the adapter does not know that name such a record are held, as in `clash`."""
         for table, rule in self.entities:
             mapping = self.map.get(table)
             if not mapping or not self.exists(schema, table):
@@ -1248,13 +1249,19 @@ class IdMap:
             taken = {new for _, new in pairs}
             # A record of this read sitting on a number another record is moving to.
             squatters = sorted((present - moving) & taken)
+            squatted = []
             for live in squatters:
                 fresh = self.fresh(table, present | taken)
                 taken.add(fresh)
                 self.seen.setdefault(table, set()).add(fresh)
                 mapping[live] = fresh
                 pairs.append((live, fresh))
+                squatted.append((live, fresh))
                 self.added.append({"table": table, "live": live, "copy": fresh, "why": "occupied"})
+            # A squatter moves like a clash: what the adapter cannot move would stay on its old
+            # number, now another record's (#107).
+            if base is not None:
+                self.held += self.unhandled_refs(base, schema, table, squatted)
             self.applied.setdefault(schema, {})[table] = {new: old for old, new in pairs}
             self.renumber(schema, table, rule, pairs)
 
@@ -1485,7 +1492,7 @@ class DbMerge:
         self.ids.survey(list(self.names.values()))
         phase("ids surveyed")
         self.ids.apply(self.names["base"])
-        self.ids.apply(self.names["theirs"])
+        self.ids.apply(self.names["theirs"], base=self.names["base"])
         phase("ids applied")
         # The records a push made on the live site are in the base before clashes are numbered (they
         # are the copy's own, not two records under one number); what came with them, after.
