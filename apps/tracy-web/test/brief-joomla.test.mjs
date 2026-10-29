@@ -4033,6 +4033,19 @@ test('a sourced slot a person already changed keeps their words, and its receipt
   assert.equal(store.receipts['slot:module-441.3'].state, 'written')
 })
 
+// Spec TracyHQ/tracy#189 item 18: a record the site plan pins (a reviewer's or a person's name) into a line that wants
+// evidence is written with its own record as evidence, never skipped back to the demo's name.
+test('#189 a pinned record in an evidence line is written, not left in the demo’s name', async () => {
+  const store = copyStore(SOURCED)
+  store.sitePlanFor = async () => ({
+    honesty: {
+      values: { 'module-183.3': { value: 'Ada Quill', reason: 'brief-person', evidence: 'Ada Quill' } }
+    }
+  })
+  const { site } = await run({ contract: base, release: 'tracy-base/j6', woContent: store })
+  assert.equal(site.applied.changes['module-183.3'], 'Ada Quill')
+})
+
 test('a site no opportunity built is planned as before: nothing pinned, no receipt', async () => {
   const store = copyStore(SOURCED)
   store.copyFor = async () => null

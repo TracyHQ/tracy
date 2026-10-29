@@ -24,6 +24,7 @@ import { checkReviewQuotes } from './review-quotes-check.js'
 import { checkContactForms } from './contact-form-check.js'
 import { checkEmptyFrames } from './empty-frame-check.js'
 import { checkHeadBlocks } from './head-block-check.js'
+import { checkRecordSlots } from './record-slot-check.js'
 
 /** The most pages one check reads: a brief build's site has a handful, a demo's showcase branch can have dozens. */
 export const MAX_PAGES = 24
@@ -172,6 +173,9 @@ export async function runLeftoverCheck({
   // Every head block the build owes a page is on it: the brand colours, the leftover rules, each centred card row (#189 item 28).
   const headBlocks = checkHeadBlocks({ pages, sitePlan, styles })
   report.findings.push(...headBlocks)
+  // Every record the site plan assigned (a review and its author, a person's name) is on the site as given (#189 item 18).
+  const recordSlots = sitePlan ? checkRecordSlots({ pages, sitePlan, contentMap }) : []
+  report.findings.push(...recordSlots)
   report.findings.push(...offeringSummaries.map((f) => ({ kind: 'C03', ...f })))
   report.counts.C03 = (report.counts.C03 ?? 0) + offeringSummaries.length
   const mainMenuFindings = (mainMenu?.findings ?? []).map((f) => ({
@@ -201,6 +205,7 @@ export async function runLeftoverCheck({
     heroMissing,
     offeringSummaries,
     reviewQuotes,
+    recordSlots,
     contactForms,
     ctaBands,
     pageIntros,
@@ -217,6 +222,7 @@ export async function runLeftoverCheck({
       contactForms.findings.length === 0 &&
       emptyFrames.length === 0 &&
       headBlocks.length === 0 &&
+      recordSlots.length === 0 &&
       ctaBands.length === 0 &&
       pageIntros.length === 0,
     findings: [

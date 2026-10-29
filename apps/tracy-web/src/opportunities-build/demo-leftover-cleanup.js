@@ -15,6 +15,7 @@ import { createHash } from 'node:crypto'
 import { siteRowOf } from './build-store.js'
 import { runLeftoverCheck } from './demo-leftover-check.js'
 import { contentMapOfTemplate } from './brief-build-path.js'
+import { isRecordRole, recordValuesOf } from 'website-opportunities/domain/record-roles.mjs'
 
 const POLL_MS = 3_000
 const sleepFor = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
@@ -111,7 +112,17 @@ export async function cleanBuildLeftovers(
       }
     })
     if (!resumed) {
-      const prompt = domain.renderLeftoverCleanupPrompt({ leftovers: before, brief: revision.brief, limits })
+      // A record place takes its own record or comes off, never the business name (#189 item 18, `record-roles.mjs`).
+      const recordPlaces = (contentMapOf(revision.template)?.slots ?? [])
+        .filter((slot) => isRecordRole(slot.role))
+        .map((slot) => slot.key)
+      const prompt = domain.renderLeftoverCleanupPrompt({
+        leftovers: before,
+        brief: revision.brief,
+        limits,
+        records: recordValuesOf(build.receipt?.sitePlan),
+        recordPlaces
+      })
       outcome = await turn({ prompt, requestId: `wo-cleanup:${build.id}`, limits })
     } else outcome = { state: 'error', code: 'CLEANUP_INTERRUPTED' }
   } catch (error) {
@@ -129,6 +140,9 @@ export async function cleanBuildLeftovers(
       check: domain.checkDemoLeftovers,
       contentMap: contentMapOf(revision.template),
       brief: revision.brief,
+      // The same plan as the check before the turn: a record the turn overwrote is still found.
+      sitePlan: build.receipt?.sitePlan ?? null,
+      siteOrigin: build.site_key,
       paths: kept,
       now
     })

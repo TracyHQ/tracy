@@ -88,3 +88,19 @@ export function withHonestyPins(copy, contentMap, honesty, planSlots = []) {
     ...(copy.slotFill ? { slotFill: { ...copy.slotFill, manifest } } : {})
   }
 }
+
+/**
+ * The evidence of the sourced pins still written as pinned (#189 item 18): a pin's source (a review, a person, a fact of
+ * the place profile) IS its evidence, so a slot that wants evidence (a reviewer's name) is written, not skipped back to
+ * the demo's words. A placeholder, an empty pin, and a pin another step replaced carry none.
+ * @param {{pins?: Record<string, string>, sources?: Record<string, string>} | null | undefined} copy
+ * @param {Record<string, string>} written - the lines about to be written, by slot key
+ * @returns {Record<string, string>}
+ */
+export function sourcedPinEvidence(copy, written) {
+  /** @type {Record<string, string>} */
+  const out = {}
+  for (const [key, value] of Object.entries(copy?.pins ?? {}))
+    if (nonempty(value) && copy?.sources?.[key] !== 'placeholder' && written[key] === value) out[key] = value
+  return out
+}

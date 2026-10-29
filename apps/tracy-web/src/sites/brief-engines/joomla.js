@@ -54,6 +54,7 @@ import { keptPages, pictureReport, realPicturesOf, shapeReal } from './real-pict
 import { prepareContractPictures, writeContractPictures } from './contract-real-pictures.js'
 import { declaredPictureSlots } from './drawn-pictures.js'
 import { copyPinsOf, pinStates, recordPins } from './wo-copy-pins.js'
+import { sourcedPinEvidence } from './copy-pin-priority.js'
 import { woContentOf } from './wo-content.js'
 import { planContactSteps } from './joomla-plan-contacts.js'
 import { honestWords, leftDemoWords, planRecordSteps } from './joomla-plan-records.js'
@@ -1407,8 +1408,14 @@ export function createJoomlaEngine({
         changes: kept,
         renamedKeep,
         translatedKeep,
+        // 🔒 A SOURCED PIN IS ITS OWN EVIDENCE (#189 item 18): a reviewer's name pinned from the brief passes the write gate
+        // of an evidence slot instead of leaving the demo's reviewer for a later step to overwrite.
         evidence: Object.fromEntries(
-          Object.entries({ ...plan.evidence, ...honest.evidence }).filter(([key]) => key in kept)
+          Object.entries({
+            ...plan.evidence,
+            ...honest.evidence,
+            ...sourcedPinEvidence(copyPins, kept)
+          }).filter(([key]) => key in kept)
         ),
         pending: plan.pending,
         factModules,

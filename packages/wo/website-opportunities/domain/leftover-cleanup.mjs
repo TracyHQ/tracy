@@ -57,11 +57,36 @@ function ownerLines(brief) {
 }
 
 /**
+ * What goes in a record place (#189 item 18, `record-roles.mjs`): its own record from the brief, written as it is, else
+ * the block comes off. Null for a place that is no record.
+ * @param {string} place
+ * @param {Record<string, string>} records
+ * @param {Set<string>} recordPlaces
+ */
+function recordInstead(place, records, recordPlaces) {
+  const record = records[place]
+  if (typeof record === 'string' && record.trim())
+    return `write exactly ${JSON.stringify(record.trim())} (its record from the brief), never the business name`
+  if (recordPlaces.has(place))
+    return 'hide the block: this place holds a record the brief does not have, never the business name or invented words'
+  return null
+}
+
+/**
  * The cleanup turn's one message: the findings and nothing else of the build task.
- * @param {{leftovers: {findings?: any[]}, brief?: any, limits?: {timeoutMs: number, toolCalls: number}}} input
+ * @param {{leftovers: {findings?: any[]}, brief?: any, limits?: {timeoutMs: number, toolCalls: number},
+ *   records?: Record<string, string>, recordPlaces?: Iterable<string>}} input - `records`: the record each record place
+ *   of the site plan carries (`recordValuesOf`); `recordPlaces`: every record-role place of the content map
  * @returns {string}
  */
-export function renderLeftoverCleanupPrompt({ leftovers, brief = null, limits = CLEANUP_LIMITS }) {
+export function renderLeftoverCleanupPrompt({
+  leftovers,
+  brief = null,
+  limits = CLEANUP_LIMITS,
+  records = {},
+  recordPlaces = []
+}) {
+  const places = new Set([...recordPlaces, ...Object.keys(records)])
   const findings = Array.isArray(leftovers?.findings) ? leftovers.findings : []
   const lines = []
   const line = (s = '') => lines.push(s)
@@ -79,6 +104,9 @@ export function renderLeftoverCleanupPrompt({ leftovers, brief = null, limits = 
   line(
     `3. This is a short job: at most ${limits.toolCalls} tool calls and about ${Math.round(limits.timeoutMs / 60_000)} minutes. Stop when the listed places are done.`
   )
+  line(
+    "4. A guest review's words, author and source, a person's name, a statistic, a contact line and a video link are records: write only the record a place is given below, never the business name; a record place given none is hidden."
+  )
   line()
   const broken = Array.isArray(leftovers?.broken) ? leftovers.broken : []
   if (broken.length) {
@@ -94,7 +122,7 @@ export function renderLeftoverCleanupPrompt({ leftovers, brief = null, limits = 
   for (const f of findings.slice(0, CLEANUP_FINDINGS_SHOWN)) {
     const name = LEFTOVER_KINDS[f.kind]?.name ?? f.kind
     line(
-      `- ${f.kind} ${name} | page ${f.page} | ${f.place} | found ${JSON.stringify(String(f.found ?? '').slice(0, 80))} | instead: ${INSTEAD[f.kind] ?? "the owner's own data, otherwise a neutral substitute, otherwise hide it"}`
+      `- ${f.kind} ${name} | page ${f.page} | ${f.place} | found ${JSON.stringify(String(f.found ?? '').slice(0, 80))} | instead: ${recordInstead(String(f.place ?? ''), records, places) ?? INSTEAD[f.kind] ?? "the owner's own data, otherwise a neutral substitute, otherwise hide it"}`
     )
   }
   if (findings.length > CLEANUP_FINDINGS_SHOWN)

@@ -28,6 +28,7 @@ import { peopleFromReviewsNote, showablePeopleOf } from './brief-people.mjs'
 import { limitOf, planHero } from './hero-first-screen.mjs'
 import { planPageIntros, planPlaceIntros } from './page-intros.mjs'
 import { placeSeoOf } from './place-seo.mjs'
+import { isRecordRole } from './record-roles.mjs'
 
 export const SITE_PLAN_VERSION = 'site-plan/1'
 
@@ -171,7 +172,16 @@ function channelSlotsOf(slots, channels, contact) {
 }
 
 /** The slot decisions: a contact fact or the name where the slot's role asks for one, else the fill plan's. */
-function slotsOf(contentMap, brief, contact, name, cardNames = {}, channels = [], unwritten = new Set()) {
+function slotsOf(
+  contentMap,
+  brief,
+  contact,
+  name,
+  cardNames = {},
+  channels = [],
+  unwritten = new Set(),
+  records = {}
+) {
   if (!contentMap?.slots?.length) return []
   // Pictures: per slot, drawn where no photo fits, icons and cut-outs by subject (#194, #195).
   const fill = pictureDecisionsOf(contentMap, brief, cardNames)
@@ -207,6 +217,17 @@ function slotsOf(contentMap, brief, contact, name, cardNames = {}, channels = []
       }
     if (slot.type === 'text' && slot.role === 'business.name' && name)
       return { key: slot.key, role: slot.role, decision: 'value', value: name, reason: 'business-name' }
+    // 🔒 A RECORD SLOT TAKES ITS RECORD, NEVER THE COPY WRITER'S WORDS (#189 item 18, `record-roles.mjs`): a review's words,
+    // author and source, a person's name, as the honesty plan assigned them from the brief.
+    const record = records[slot.key]
+    if (slot.type === 'text' && isRecordRole(slot.role) && typeof record?.value === 'string' && record.value.trim())
+      return {
+        key: slot.key,
+        role: slot.role,
+        decision: 'value',
+        value: record.value,
+        reason: record.reason ?? 'brief-record'
+      }
     const d = fill.get(slot.key)
     return {
       key: slot.key,
@@ -331,7 +352,8 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
         name,
         honesty.honesty.cardNames,
         channels,
-        new Set(honesty.honesty.unwritten)
+        new Set(honesty.honesty.unwritten),
+        honesty.honesty.values ?? {}
       ),
       [
         // A button that would say a bare "Contact" names its action (`contact-buttons.mjs`); the hero's own plan wins.
