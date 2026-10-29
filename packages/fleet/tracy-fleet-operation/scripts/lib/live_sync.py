@@ -1326,7 +1326,10 @@ class IdMap:
             # the base does not hold yet, or a base older than the map. Numbered again, it came to the
             # copy twice, and the map lost the copy's number of it (a later push made it again).
             remembered = self.applied.get(theirs, {}).get(table, {})
-            both = sorted((o & t) - b - set(remembered))
+            same: set[int] = set()
+            if rule.get("single"):
+                same, t = self.align_single(base, ours, theirs, table, rule, b, o, t)
+            both = sorted((o & t) - b - set(remembered) - same)
             differ = [i for i in both if digest(ours, table, i) != digest(theirs, table, i)]
             pairs = []
             taken = set(self.seen[table])
@@ -1345,6 +1348,47 @@ class IdMap:
                 self.added.append({"table": table, "live": raw, "copy": fresh, "why": "created-on-both"})
             self.held += self.unhandled_refs(base, theirs, table, pairs)
             self.renumber(theirs, table, rule, pairs)
+
+    def align_single(self, base: str, ours: str, theirs: str, table: str, rule: dict,
+                     b: set[int], o: set[int], t: set[int]) -> tuple[set[int], set[int]]:
+        """Rows that can be only one per record (`single`: their natural columns, and which rows): a
+        row both sites added for the same record is the same row, whatever number each gave it. The
+        live site's goes under the copy's number (and is remembered there), so the row merge meets
+        them as one row both added — the same value merges, two values are a conflict — and never as
+        two rows: two `_wp_page_template` rows for one page, one of them hidden from the preview (#118).
+        Answers the numbers that are such a row, and the live read's numbers after the move."""
+        natural, where = list(rule["single"]["natural"]), rule["single"]["where"]
+        cols = ", ".join(f"HEX(CAST({q(c)} AS BINARY))" for c in natural)
+        script = [f"SELECT {i}, {q(self.key(table))}, {cols} FROM {q(schema)}.{q(self.table(table))} WHERE ({where});"
+                  for i, schema in enumerate((ours, theirs))]
+        new: tuple[dict, dict] = ({}, {})
+        crowded: tuple[set, set] = (set(), set())
+        for r in self.sql.run("\n".join(script)):
+            side, number, nat = int(r[0]), int(r[1]), tuple(r[2:])
+            if number in b:
+                continue  # the base's row: what each side did to it is the row merge's
+            if nat in new[side]:
+                crowded[side].add(nat)  # two new rows for one record on one side: left as they are
+            new[side][nat] = number
+        same, pairs = set(), []
+        for nat, copy in new[0].items():
+            live = new[1].get(nat)
+            if live is None or nat in crowded[0] or nat in crowded[1]:
+                continue
+            if live == copy:
+                same.add(copy)
+            elif copy not in t and live not in o:
+                pairs.append((live, copy))
+                same.add(copy)
+        for live, copy in pairs:
+            raw = self.moved(theirs, table, live, copy)
+            self.map.setdefault(table, {})[raw] = copy
+            self.seen[table].add(copy)
+            self.added.append({"table": table, "live": raw, "copy": copy, "why": "same-record"})
+        if pairs:
+            self.renumber(theirs, table, rule, pairs)
+            t = (t - {live for live, _ in pairs}) | {copy for _, copy in pairs}
+        return same, t
 
     def moved(self, schema: str, table: str, number: int, to: int) -> int:
         """The record of `schema` under `number` now goes under `to`: answers its live site's own
@@ -1727,6 +1771,20 @@ class DbMerge:
         on = " AND ".join(f"b.{q(c)} <=> {cond_alias}.{q(c)}" for c in (pk or columns))
         return f"NOT EXISTS (SELECT 1 FROM {self.ref('base', table)} b WHERE {on})"
 
+    def _of_taxonomies(self, side: str, rec: dict) -> str:
+        """WordPress: the relationship rows of a seed limited to the taxonomies the push wrote
+        (`taxonomies`, a post's categories and tags), as `side` files its rows (`r`); "" for any other."""
+        taxonomies = rec.get("taxonomies")
+        tt = self.prefix + "term_taxonomy"
+        if (rec.get("table") != "term_relationships" or not isinstance(taxonomies, list)
+                or not all(isinstance(x, str) for x in taxonomies)):
+            return ""
+        if not taxonomies or not self._has(self.names[side], tt):
+            return " AND FALSE"
+        listed = ", ".join(sql_str(x) for x in taxonomies)
+        return (f" AND r.term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {self.ref(side, tt)} tt"
+                f" WHERE tt.taxonomy IN ({listed}))")
+
     def align_pushed(self, rec: dict) -> None:
         """A record the push made that the live site numbered in a second table the push could not see
         (WordPress gives a new term its `term_taxonomy` row): the live site's row takes the copy's
@@ -1798,9 +1856,10 @@ class DbMerge:
             if phase == "records":
                 rows = rec.get("rows")
                 if rows in ("ours", "theirs"):
-                    script.append(f"DELETE r FROM {self.ref('base', table)} r WHERE {self._match('r', match)};")
+                    script.append(f"DELETE r FROM {self.ref('base', table)} r WHERE {self._match('r', match)}"
+                                  f"{self._of_taxonomies('base', rec)};")
                     script.append(self.copy_rows_sql("base", rows, table) +
-                                  f" WHERE {self._match('r', match)};")
+                                  f" WHERE {self._match('r', match)}{self._of_taxonomies(rows, rec)};")
                     continue
                 pk = self._pk(t, table)
                 columns = [c for c in rec.get("columns", []) if isinstance(c, str)]

@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-169-push-interrupted-resume",
+  "kind": "fix",
+  "title": "A push whose host job was lost mid-write finishes, or can be undone",
+  "pr": 169,
+  "area": "sync/push-apply",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": ["Run the lost-job cases of tracy-web (TEST_DATABASE_URL) and of live-write."],
+  "expect": [
+    "A lost Apply is started again once with the same push and ends pushed.",
+    "An Apply lost twice ends interrupted and stays undoable.",
+    "Undo takes back what the journal lists when written.json is missing."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "--test-name-pattern=host job was lost|lost twice|lost before it answered",
+      "apps/tracy-web/test/live-push.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-write.test.mjs"
+    ],
+    "tests": [
+      "an Apply whose host job was lost is started again once with the same push id and ends pushed (#122)",
+      "an Apply lost twice ends interrupted, and Undo stays offered for what the journal may hold (#122)",
+      "Undo after an Apply lost before it answered takes back what its journal lists (#122)"
+    ]
+  }
+}

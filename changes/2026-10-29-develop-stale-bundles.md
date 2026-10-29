@@ -1,0 +1,3 @@
+- **Rebuilt six client bundles that develop left stale after #131 changed the shared tracy-core publish code** - Akemi | `fix/develop-stale-bundles` | 2026-10-29
+  **Affects:** `lib/client.js` of tracy-sidebar, tracy-settings, tracy-design-inspiration, tracy-my-sites, tracy-model-plan and tracy-onboard. Until this lands, every pull request based on develop fails the `bundles` gate on these six packages. A branch that already rebuilt one of them should take develop's copy and rebuild (`pnpm bundles:regen`).
+  **Why / Measured:** `check-all --only bundles` passes on 2de804b3b and fails on ed1d742dc (#131), which edited `packages/core/tracy-core/src/site-tabs/publish/*` and rebuilt only tracy-site-tabs; these six bundles embed the same code.

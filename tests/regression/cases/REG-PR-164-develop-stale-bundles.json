@@ -1,0 +1,24 @@
+{
+  "id": "REG-PR-164-develop-stale-bundles",
+  "kind": "fix",
+  "title": "Every client bundle matches its source after shared tracy-core publish code changed: the bundles gate passes",
+  "pr": 164,
+  "area": "build/bundles",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: After pnpm dsh:build and pnpm install, run pnpm exec tsx scripts/check-all.ts --only bundles."
+  ],
+  "expect": [
+    "S1: the gate prints that all packages match their source and exits 0; tracy-sidebar, tracy-settings, tracy-design-inspiration, tracy-my-sites, tracy-model-plan and tracy-onboard are not listed as stale."
+  ],
+  "selectors": {
+    "files": "packages/ui/*/lib/client.js, packages/core/tracy-core/src/site-tabs/publish/*"
+  },
+  "evidence": "After #131 (ed1d742dc) every PR based on develop failed the bundles gate on these six packages; on 2de804b3b it passed.",
+  "fence": "the six rebuilt lib/client.js bundles",
+  "run": {
+    "cmd": ["pnpm", "exec", "tsx", "scripts/check-all.ts", "--only", "bundles"]
+  }
+}
