@@ -65,7 +65,7 @@ function hrefOf(kind, value) {
 }
 
 /** Every contact fact of the brief, each with its source and, for a phone, an email or WhatsApp, its link. */
-function contactOfBrief(facts) {
+function contactOfBrief(facts, brief = null) {
   const out = {}
   for (const [kind, fact] of Object.entries(facts)) {
     // An address links to its exact pin on Google Maps (`mapsLinkOf`); the other links are the fact's own.
@@ -186,7 +186,7 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
   const answered = answersFromBrief(brief, served, { now })
   const { questionnaire } = answered
   const facts = contactFacts(brief)
-  const contact = contactOfBrief(facts)
+  const contact = contactOfBrief(facts, brief)
   const name = typeof answered.answers.name === 'string' ? answered.answers.name : null
   const brand = {}
   if (name) brand.name = { value: name, reason: 'brief-name' }
