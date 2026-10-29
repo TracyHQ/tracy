@@ -66,7 +66,7 @@ test('LANG-2 fonts: the green theme counts once a published menu item opens the 
   assert.ok(!files.has('css/rtl/off-canvas.css'))
 })
 
-// JA Sensei 2.2.2 (ja-products fix/published-joomla-templates-green, 423f86c18): css/language-fonts.css
+// JA Sensei 2.2.2 (joomlart-products fix/published-joomla-templates-green, 423f86c18): css/language-fonts.css
 // re-sets `body` as `html:lang(vi) body`, which the browser applies over `body` of css/offline.css.
 const SENSEI = path.join(
   HERE,

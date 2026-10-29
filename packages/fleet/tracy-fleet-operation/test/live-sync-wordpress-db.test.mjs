@@ -606,6 +606,35 @@ for broken in [b'a:2:{s:11:"custom_logo";i:64;s:5:"width";R:2;}', b'a:2:{s:6:"ho
 )
 
 test(
+  'a plugin state table the copy has never had comes whole from the live site once, then stays the copy’s (#106)',
+  opts,
+  () => {
+    // Wordfence installed on the live site after the import: its tables are ignored by the merge
+    // (their rows move on every request), yet a copy without them breaks the active plugin.
+    const answer = orderRecordMerge({
+      type: 'post',
+      theirs: `CREATE TABLE wp_wfconfig (name varchar(100) PRIMARY KEY, val longblob);
+        INSERT INTO wp_wfconfig VALUES ('isPaid', '0');
+        CREATE TABLE wp_wfhits (id bigint PRIMARY KEY, ip varchar(40));
+        INSERT INTO wp_wfhits VALUES (1, '203.0.113.9');`
+    })
+    assert.equal(answer.tables.wp_wfconfig, 'added', JSON.stringify(answer.tables))
+    assert.equal(sql("SELECT val FROM wc_m.wp_wfconfig WHERE name='isPaid'"), '0')
+    assert.equal(sql('SELECT COUNT(*) FROM wc_m.wp_wfhits'), '1')
+    assert.equal(answer.counts.records, 0, 'a plugin state table is no record the customer made')
+    // Once the copy has it, the live site's moving rows no longer come over.
+    const later = orderRecordMerge({
+      type: 'post',
+      extraSql: `CREATE TABLE wp_wfconfig (name varchar(100) PRIMARY KEY, val longblob);
+        INSERT INTO wp_wfconfig VALUES ('isPaid', '0');`,
+      theirs: "UPDATE wp_wfconfig SET val='1' WHERE name='isPaid';"
+    })
+    assert.equal(later.tables.wp_wfconfig, 'ours-kept')
+    assert.equal(sql("SELECT val FROM wc_m.wp_wfconfig WHERE name='isPaid'"), '0')
+  }
+)
+
+test(
   'Polylang translation groups, term languages and per-language menus follow post and term renumbers (#105)',
   opts,
   () => {

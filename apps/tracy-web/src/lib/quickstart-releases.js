@@ -1,5 +1,5 @@
 /**
- * The quickstarts Tracy can start a site from — read off `JoomlArt-Products/ja-products` itself.
+ * The quickstarts Tracy can start a site from — read off `JoomlArt-Products/joomlart-products` itself.
  *
  * ADR 0017: the release is the quickstart. A release says what it is in `tracy_setting.json`, and
  * optionally what it asks in `tracy_site_question.json`; nothing in this repository lists them any
@@ -49,7 +49,7 @@ const contracts = () => (contractIndex ??= readContracts())
 
 /** One attempt per process: a hook that could not be wired is a warning, not a retry loop. */
 let wired = false
-export const RELEASES_REPO = 'JoomlArt-Products/ja-products'
+export const RELEASES_REPO = 'JoomlArt-Products/joomlart-products'
 /**
  * The asset that carries a release's Design inspiration card (ADR: the card left `tracy_setting.json`
  * on 16/09). A release that has none has no card — which is a state, not a fault.
@@ -145,7 +145,7 @@ export function readingOf(
 /**
  * How this deployment is allowed to read the releases repository.
  *
- * The App that gives every site its own repo is already installed on `ja-products` in production, so
+ * The App that gives every site its own repo is already installed on `joomlart-products` in production, so
  * production mints a repo-scoped installation token and stores nothing. A shard runs its own App on
  * its own org, which is NOT installed there: it reads with `TRACY_RELEASES_GITHUB_TOKEN`, a
  * read-only token, rather than holding write access to the releases repository. A developer's stand
@@ -459,7 +459,7 @@ async function writeReadings(pool, readings) {
   const known = new Set(
     (await pool.query('select id, owner, sha256, source from question_set')).rows
       .filter((r) => r.source === 'released')
-      .map((r) => `${r.owner} ${r.sha256}`)
+      .map((r) => `${r.owner}\u0000${r.sha256}`)
   )
   // 🔒 A PASSING REFUSAL KEEPS THE CATALOGUE. GitHub's secondary rate limit answers 403 for every
   // asset of one read (95 of them, one restart of tracy-web); writing those readings down emptied
@@ -512,7 +512,7 @@ async function writeReadings(pool, readings) {
       ]
     )
     if (!questions) continue
-    const key = `${reading.tag} ${questions.sha256}`
+    const key = `${reading.tag}\u0000${questions.sha256}`
     if (known.has(key)) continue
     known.add(key)
     // 🔒 NO CONFLICT TARGET: A SET ANOTHER READ JUST WROTE IS A NO-OP ON EITHER UNIQUE INDEX. `known`

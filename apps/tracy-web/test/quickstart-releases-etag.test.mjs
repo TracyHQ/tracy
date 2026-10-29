@@ -1,5 +1,5 @@
 /**
- * The ten-minute read of ja-products spends (almost) no GitHub quota when nothing changed: the list
+ * The ten-minute read of joomlart-products spends (almost) no GitHub quota when nothing changed: the list
  * is asked with `If-None-Match` (a 304 is free), the asset files are read once per asset id, and a
  * token running low on quota waits for its reset instead of burning the rest (19/10/2026: four
  * stands on one token emptied 5,000 requests an hour and provisioning got 403 on the quickstart).

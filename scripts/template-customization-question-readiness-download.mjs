@@ -8,7 +8,7 @@
  *
  * The gallery is read from `GET <api>` (default https://cowork.tracy.site/api/templates, public);
  * each release's assets go into `releaseCacheDir(cacheDir, tag)` with `gh release download` from
- * `JoomlArt-Products/ja-products` (so `gh` must be signed in with read access). By default the
+ * `JoomlArt-Products/joomlart-products` (so `gh` must be signed in with read access). By default the
  * small assets (every JSON file, SHA256SUMS) plus what the readers open (`contentAssetsOf`: the demo
  * database or installer zip, the EmDash source zip, the WordPress theme zip); `--only-small` fetches
  * the small ones only; `--with-webroot` adds the webroot tar.gz. A file already in the cache with

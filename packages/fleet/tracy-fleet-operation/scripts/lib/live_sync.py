@@ -70,6 +70,13 @@ JOOMLA_ENVIRONMENT_SETTINGS = frozenset(_RENDER.QUOTED | _RENDER.BARE | {"dbpref
 
 CONFIG_FILES = {"joomla": "configuration.php", "wordpress": "wp-config.php"}
 
+# Files that bind a site to the server it runs on, like the environment settings above: always the
+# copy's own, whatever the live site carries. WordPress's object cache drop-in talks to a cache
+# server (Redis, Memcached) that the copy does not have — taken from the live site, every request
+# of the copy answered 500 "Error establishing a Redis connection" while its `WP_REDIS_*` settings
+# stayed the copy's (#106).
+ENVIRONMENT_FILES = {"wordpress": frozenset({"wp-content/object-cache.php"})}
+
 # WordPress's own rules, its address rewrite and its wp-config.php merge (lib/live_sync_wordpress.py).
 _WORDPRESS = _load("live_sync_wordpress", HERE / "live_sync_wordpress.py")
 
@@ -401,6 +408,8 @@ def merge_files(repo: str, base: str, ours: str, theirs: str, platform: str, dec
             # Tracy's own doors: the copy's version, whatever the live site carries (a different
             # Claude Cowork release, or none).
             counts["tracyOwned"] += 1
+        elif path in ENVIRONMENT_FILES.get(platform, ()):
+            pass  # the copy's own, or none
         elif CONFIG_FILES.get(platform) == path:
             # 🔒 Setting by setting even when the copy left the file alone: taken whole, the live
             # site's configuration carries the live database's password and address into the copy.
@@ -1232,9 +1241,10 @@ class IdMap:
         return (f"UPDATE {q(schema)}.{q(self.table(ref_table))} SET {', '.join(sets)}"
                 f" WHERE {' OR '.join(finds)};")
 
-    def apply(self, schema: str) -> None:
+    def apply(self, schema: str, base: str | None = None) -> None:
         """The remembered numbers, on one read of the live site. A record of the read that already
-        holds one of those numbers on its own is numbered again too (and remembered)."""
+        holds one of those numbers on its own is numbered again too (and remembered); with `base`,
+        rows of tables the adapter does not know that name such a record are held, as in `clash`."""
         for table, rule in self.entities:
             mapping = self.map.get(table)
             if not mapping or not self.exists(schema, table):
@@ -1248,13 +1258,19 @@ class IdMap:
             taken = {new for _, new in pairs}
             # A record of this read sitting on a number another record is moving to.
             squatters = sorted((present - moving) & taken)
+            squatted = []
             for live in squatters:
                 fresh = self.fresh(table, present | taken)
                 taken.add(fresh)
                 self.seen.setdefault(table, set()).add(fresh)
                 mapping[live] = fresh
                 pairs.append((live, fresh))
+                squatted.append((live, fresh))
                 self.added.append({"table": table, "live": live, "copy": fresh, "why": "occupied"})
+            # A squatter moves like a clash: what the adapter cannot move would stay on its old
+            # number, now another record's (#107).
+            if base is not None:
+                self.held += self.unhandled_refs(base, schema, table, squatted)
             self.applied.setdefault(schema, {})[table] = {new: old for old, new in pairs}
             self.renumber(schema, table, rule, pairs)
 
@@ -1485,7 +1501,7 @@ class DbMerge:
         self.ids.survey(list(self.names.values()))
         phase("ids surveyed")
         self.ids.apply(self.names["base"])
-        self.ids.apply(self.names["theirs"])
+        self.ids.apply(self.names["theirs"], base=self.names["base"])
         phase("ids applied")
         # The records a push made on the live site are in the base before clashes are numbered (they
         # are the copy's own, not two records under one number); what came with them, after.
@@ -1992,9 +2008,18 @@ class DbMerge:
         name = self.bare(table)
         policy = self.policy
         tracy_tables = policy.get("tracyTables")
-        if (tracy_tables and tracy_tables.search(name)) or name in policy.get("ignoreTables", ()):
-            return "ours-kept"
         inB, inM, inT = table in B.columns, table in M.columns, table in T.columns
+        if tracy_tables and tracy_tables.search(name):
+            return "ours-kept"
+        if name in policy.get("ignoreTables", ()):
+            # A plugin's own state (its logs, its settings it rewrites itself): the copy's, never
+            # merged. A copy that has never had the table takes it whole once: the plugin came over
+            # with its files and its place in `active_plugins`, and without its tables it fails on
+            # every request (Wordfence installed on the live site after the import, #106).
+            if inT and not inM:
+                self.take_table(table)
+                return "added"
+            return "ours-kept"
         if not inT:
             if not inB or not inM:
                 return "same"

@@ -1479,6 +1479,109 @@ for (const edit of [
   })
 }
 
+test('the preview answer counts pushable items over the whole changeset, not only the items it lists', () => {
+  const item = (i, extra = {}) => ({
+    id: `article:${i}`,
+    kind: 'article',
+    op: 'update',
+    title: `Article ${i}`,
+    liveId: i,
+    fields: { title: {} },
+    dependsOn: [],
+    ...extra
+  })
+  const conflicted = Array.from({ length: 500 }, (_, i) =>
+    item(i + 1, { conflict: { reason: 'changed-on-both', fields: ['title'] } })
+  )
+  const items = [
+    ...conflicted,
+    item(501),
+    item(502, { op: 'create', liveId: null }),
+    item(503, { op: 'delete' }),
+    item(504, { group: 'php' })
+  ]
+  const file = join(root, `cs-${++n}.json`)
+  writeFileSync(
+    file,
+    JSON.stringify({
+      ok: true,
+      platform: 'joomla',
+      items,
+      unsupported: [],
+      counts: {},
+      limit: 200,
+      overLimit: true,
+      hasDeletes: true
+    })
+  )
+  const r = spawnSync('python3', [PUSH, 'answer', '--changeset', file, '--preview-id', 'p1'], {
+    encoding: 'utf8'
+  })
+  assert.equal(r.status, 0, r.stderr + r.stdout)
+  const shown = JSON.parse(r.stdout.trim().split('\n').at(-1))
+  assert.equal(shown.items.length, 500)
+  assert.equal(shown.itemsTotal, 504)
+  // The four Apply can write are listed first, in order; 496 of the 500 conflicts after them.
+  assert.deepEqual(
+    shown.items.slice(0, 4).map((i) => i.id),
+    ['article:501', 'article:502', 'article:503', 'article:504']
+  )
+  assert.ok(shown.items.slice(4).every((i) => i.conflict))
+  assert.equal(shown.items[4].id, 'article:1')
+  assert.deepEqual(shown.pushable, { add: 1, change: 1, remove: 1, files: 0, settings: 0, php: 1 })
+  assert.equal(shown.conflictsTotal, 500)
+})
+
+test('after an Undo, a Tracy post the live site holds in the trash is offered as an addition that brings it back (#117)', () => {
+  // Apply made copy post 8 as live post 7; Undo trashed live 7 and kept the pair, the copy kept its post.
+  const answer = changeset('wordpress', {
+    entities: { posts: { base: [7], copy: [8] } },
+    idMap: { posts: { 7: 8 } },
+    kinds: {
+      post: kind(
+        [
+          post(7, {
+            post_type: 'post',
+            post_title: 'Tracy post A',
+            post_name: 'tracy-post-a__trashed',
+            post_status: 'trash'
+          })
+        ],
+        [post(8, { post_type: 'post', post_title: 'Tracy post A', post_name: 'tracy-post-a' })],
+        ['ID']
+      )
+    }
+  })
+  const item = answer.items.find((i) => i.kind === 'post')
+  assert.ok(item, JSON.stringify(answer))
+  // The same live post, out of the trash (no second post next to the trashed one) …
+  assert.equal(item.op, 'update')
+  assert.equal(item.liveId, 7)
+  assert.equal(item.write.post_status, 'publish')
+  // … shown under what the push adds, as it reads to the Owner: their post comes back.
+  assert.equal(item.group, 'add')
+  // A trashed live post the copy also has trashed is no change; an untouched published one neither.
+  const same = changeset('wordpress', {
+    entities: { posts: { base: [7], copy: [8] } },
+    idMap: { posts: { 7: 8 } },
+    kinds: {
+      post: kind(
+        [post(7, { post_status: 'trash' })],
+        [
+          post(8, {
+            post_status: 'trash',
+            post_title: 'Page 7',
+            post_name: 'page-7',
+            post_content: '<p>Page 7</p>'
+          })
+        ],
+        ['ID']
+      )
+    }
+  })
+  assert.equal(same.items.length, 0, JSON.stringify(same.items))
+})
+
 test('WordPress: a post or category whose Polylang language or translation group Tracy changed is named, not sent; one in an unchanged group goes (#105)', () => {
   const group = (members) =>
     `a:${Object.keys(members).length}:{${Object.entries(members)

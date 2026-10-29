@@ -1,0 +1,26 @@
+{
+  "id": "REG-PR-161-sync-ids-test-wc-ref",
+  "kind": "fix",
+  "title": "References from tables outside the adapter are counted in one grouped call, WooCommerce's lookups no longer among them",
+  "pr": 161,
+  "area": "sync/renumber",
+  "cms": ["wp"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": ["Run the grouped unknown-table reference count case on a real MariaDB."],
+  "expect": ["The grouped count answers as one count per number, over tables the adapter does not know."],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "--test-name-pattern=references from tables outside the adapter are counted in one grouped call",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-ids.test.mjs"
+    ],
+    "tests": [
+      "references from tables outside the adapter are counted in one grouped call, with the same answer as one count per number"
+    ]
+  }
+}

@@ -9,7 +9,7 @@ Download the release's pack files, check sha, and use that folder as `"$PACK"` f
 
 ```bash
 mkdir -p "$PACK"
-gh release download "$REL" -R JoomlArt-Products/ja-products -D "$PACK" \
+gh release download "$REL" -R JoomlArt-Products/joomlart-products -D "$PACK" \
   -p "$REL_WEBROOT" -p "$REL_DATABASE" -p manifest.json -p tracy_setting.json -p SHA256SUMS
 ls "$PACK"                                                                     # exactly 5 files
 cd "$PACK" && shasum -a 256 -c --ignore-missing SHA256SUMS

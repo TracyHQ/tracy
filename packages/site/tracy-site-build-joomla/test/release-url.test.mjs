@@ -3,14 +3,17 @@ import { test } from 'node:test'
 import { releaseUrl } from '../src/host/release-url.mjs'
 
 const artifact = {
-  url: 'https://github.com/JoomlArt-Products/ja-products/releases/download/test/template.zip',
+  url: 'https://github.com/JoomlArt-Products/joomlart-products/releases/download/test/template.zip',
   githubAssetId: 123
 }
 test('the private release credential only goes to the GitHub API; the installer gets a signed URL', async () => {
   const url = await releaseUrl(artifact, {
     token: 'test-private-key',
     fetch: async (url, request) => {
-      assert.equal(url, 'https://api.github.com/repos/JoomlArt-Products/ja-products/releases/assets/123')
+      assert.equal(
+        url,
+        'https://api.github.com/repos/JoomlArt-Products/joomlart-products/releases/assets/123'
+      )
       assert.equal(request.redirect, 'manual')
       assert.equal(request.headers.Authorization, 'Bearer test-private-key')
       return new Response(null, {

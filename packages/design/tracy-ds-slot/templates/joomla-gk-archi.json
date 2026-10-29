@@ -231,7 +231,7 @@
   },
   "alphaVars": ["fg-50"],
   "breakWords": ["h1.heading"],
-  "licence": "gk_archi 1.2.0 (GavickPro, templateDetails.xml: \"Copyright (C) 2007 - 2022 GavickPro. All rights reserved.\", <license> empty). GavickPro's template business belongs to JoomlArt since October 2017, JoomlArt publishes this quickstart itself (JoomlArt-Products/ja-products): re-releasing it with tokenized stylesheets is JoomlArt's call, taken by David (product owner, 11/10/2026), who runs the release",
+  "licence": "gk_archi 1.2.0 (GavickPro, templateDetails.xml: \"Copyright (C) 2007 - 2022 GavickPro. All rights reserved.\", <license> empty). GavickPro's template business belongs to JoomlArt since October 2017, JoomlArt publishes this quickstart itself (JoomlArt-Products/joomlart-products): re-releasing it with tokenized stylesheets is JoomlArt's call, taken by David (product owner, 11/10/2026), who runs the release",
   "bands": {
     "#gkMainbodyTop": {
       "ground": "#171717",

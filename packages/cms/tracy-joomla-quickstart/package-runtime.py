@@ -61,7 +61,7 @@ manifest = {'schemaVersion': 'tracy-runtime-quickstart/v1', 'release': 'tracy-ap
 for kind, file in [('webroot', archive), ('database', database)]:
     manifest['parts'][kind] = {'file': file.name, 'bytes': file.stat().st_size,
         'sha256': hashlib.sha256(file.read_bytes()).hexdigest(),
-        'url': f'https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-apple%2Fj6/{file.name}'}
+        'url': f'https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-apple%2Fj6/{file.name}'}
 (out / f'runtime-manifest-{version}.json').write_text(json.dumps(manifest, indent=2) + '\n')
 readme = f'''# Tracy Apple / Joomla 6 — runtime quickstart {version}
 

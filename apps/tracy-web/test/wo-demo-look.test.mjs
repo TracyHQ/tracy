@@ -8,7 +8,9 @@ import {
   DEMO_LOOK_SYSTEM,
   deferToMeasure,
   heldFaults,
+  LOOK_BATCH_PAGES,
   lookLayouts,
+  neutralNote,
   LOOK_PROMPT_VERSION,
   reusableLookPages
 } from '../src/opportunities-build/demo-look.js'
@@ -464,6 +466,47 @@ test('unchanged pages cannot reuse a cropped or unversioned vision verdict after
   )
 })
 
+// 28/10/2026: a ~50-page site never fits one look; what a cut-short look saw whole stays seen while unchanged.
+test('a look cut short keeps the pages it saw whole, never one it did not see', () => {
+  const pages = ['/', '/menu', '/blog/a']
+  const unchanged = new Set(['/', '/menu', '/blog/a'])
+  const partly = (seen) => ({ looked: 'partly', version: LOOK_PROMPT_VERSION, seen })
+  assert.deepEqual(reusableLookPages(partly(['/', '/menu']), pages, unchanged), ['/', '/menu'])
+  // A changed page is never kept, seen or not.
+  assert.deepEqual(reusableLookPages(partly(['/', '/menu']), pages, new Set(['/menu'])), ['/menu'])
+  // A partial look that names nothing keeps nothing; a page it never saw is never kept.
+  assert.deepEqual(
+    reusableLookPages({ looked: 'partly', version: LOOK_PROMPT_VERSION }, pages, unchanged),
+    []
+  )
+  assert.deepEqual(reusableLookPages(partly([]), pages, unchanged), [])
+  assert.deepEqual(
+    reusableLookPages({ looked: false, version: LOOK_PROMPT_VERSION, seen: pages }, pages, unchanged),
+    []
+  )
+})
+
+test('a look names the pages it saw whole: a page cut by the time budget is not among them', async () => {
+  const fake = await fakes({ faults: [] }, { height: 4000 })
+  const whole = await createDemoLook({ ...fake, visionFor: door })({}, { pages: ['/', '/menu'] })
+  assert.deepEqual(whole.seen, ['/', '/menu'])
+  // The clock jumps past the budget after the first stream: the second stream's pages are not seen.
+  const first = ['/', ...Array.from({ length: LOOK_BATCH_PAGES - 1 }, (_, i) => `/page-${i + 1}`)]
+  let streams = 0
+  const capture = async (site, layouts, options) => {
+    streams++
+    return fake.capture(site, layouts, options)
+  }
+  const cut = await createDemoLook({
+    ...fake,
+    capture,
+    visionFor: door,
+    now: () => (streams > 1 ? 10_000 : 0)
+  })({}, { pages: [...first, '/blog/a'], budgetMs: 5_000 })
+  assert.equal(cut.looked, 'partly')
+  assert.deepEqual(cut.seen, first)
+})
+
 test('a clean verdict without a readable image code cannot acknowledge any tiles', async () => {
   for (const imageCode of [undefined, null, 'WRONG123']) {
     const fake = await fakes({ faults: [], imageCode })
@@ -519,4 +562,207 @@ test('a retry gets a fresh input check and its real usage is charged', async () 
   assert.equal(result.pass, true)
   assert.notEqual(sent[0], sent[1])
   assert.equal(charged.length, requests)
+})
+
+/** A model that names one fault per tile it was shown, answering after `delayOf(call)` ms. */
+function tileJudge(fake, { delayOf = () => 0, failAt = null } = {}) {
+  let call = 0
+  let open = 0
+  const seen = { most: 0, sent: 0 }
+  const fetchImpl = async (_url, init) => {
+    const n = ++call
+    seen.sent++
+    open++
+    seen.most = Math.max(seen.most, open)
+    try {
+      await new Promise((resolve) => setTimeout(resolve, delayOf(n)))
+      if (failAt === n) return new Response('busy', { status: 503 })
+      const body = JSON.parse(init.body)
+      const faults = labels({ body }).map((label) => {
+        const [, page, viewport, tile] = label.match(/^Page (\S+), (desktop|phone), tile (\d+)/)
+        return { page, viewport, kind: 'layout', where: `tile ${tile}`, fix: 'repair it' }
+      })
+      return new Response(
+        JSON.stringify({
+          usage: { prompt_tokens: 100, completion_tokens: 10 },
+          choices: [{ message: { content: JSON.stringify({ imageCode: 'ABC12345', faults }) } }]
+        })
+      )
+    } finally {
+      open--
+    }
+  }
+  return { fetchImpl, seen, capture: fake.capture, challengeFor: fake.challengeFor }
+}
+const verdict = (r) => ({
+  pass: r.pass,
+  looked: r.looked,
+  measured: r.measured,
+  detail: r.detail,
+  unlooked: r.unlooked,
+  calls: r.usage?.calls
+})
+
+test('vision calls overlap the capture, at most the limit in flight, and give the serial verdict', async () => {
+  // Later calls answer first, and 48 tiles name more faults than the 30 kept: the kept ones are the serial run's.
+  // Long enough that calls overlap however slowly the tiles are prepared on a busy machine.
+  const delayOf = (n) => [300, 20, 150][n % 3]
+  const pages = ['/', '/menu']
+  const serialFake = await fakes({ faults: [] }, { height: 10604 })
+  const serial = tileJudge(serialFake, { delayOf })
+  const one = await createDemoLook({ ...serial, visionFor: door, callsAtOnce: 1 })({}, { pages })
+  const overlapFake = await fakes({ faults: [] }, { height: 10604 })
+  const overlap = tileJudge(overlapFake, { delayOf })
+  const three = await createDemoLook({ ...overlap, visionFor: door, callsAtOnce: 3 })({}, { pages })
+  assert.equal(serial.seen.most, 1)
+  assert.ok(overlap.seen.most > 1 && overlap.seen.most <= 3, `in flight at most: ${overlap.seen.most}`)
+  assert.equal(one.detail.length, 30)
+  assert.deepEqual(verdict(three), verdict(one))
+})
+
+test('a failed call while later calls are in flight keeps the serial verdict and stops the rest', async () => {
+  const pages = ['/', '/menu']
+  const results = []
+  for (const callsAtOnce of [1, 3]) {
+    const fake = await fakes({ faults: [] }, { height: 4000 })
+    // Call 3 fails and so does its retry (call 4 serially; the retry follows later sends when overlapped).
+    let failing = 0
+    const judge = tileJudge(fake, { delayOf: (n) => (n % 2 ? 5 : 1) })
+    const fetchImpl = async (url, init) => {
+      const body = JSON.parse(init.body)
+      const first = labels({ body })[0]
+      if (first.startsWith('Page /, phone, tile 1,')) {
+        failing++
+        return new Response('busy', { status: 503 })
+      }
+      return judge.fetchImpl(url, init)
+    }
+    const r = await createDemoLook({ ...fake, fetchImpl, visionFor: door, callsAtOnce })({}, { pages })
+    assert.equal(failing, 2, 'the failed batch is asked twice, as before')
+    results.push(verdict(r))
+  }
+  assert.equal(results[0].pass, false)
+  assert.ok(results[0].unlooked.some((u) => u.why === 'VISION_FAILED'))
+  assert.deepEqual(results[1], results[0])
+})
+
+test('a stream that breaks after sending calls applies them as the serial run did', async () => {
+  const pages = ['/', '/menu']
+  // No terminal manifest: the capture ends with calls still in flight when they overlap.
+  const change = (frames) => frames.filter((f) => f.type !== 'end')
+  const results = []
+  for (const callsAtOnce of [1, 3]) {
+    const fake = await fakes({ faults: [] }, { height: 4000, change })
+    const judge = tileJudge(fake, { delayOf: (n) => [9, 1, 4][n % 3] })
+    results.push(verdict(await createDemoLook({ ...judge, visionFor: door, callsAtOnce })({}, { pages })))
+  }
+  assert.equal(results[0].pass, false)
+  assert.ok(results[0].detail.length > 0)
+  assert.deepEqual(results[1], results[0])
+})
+
+// 28/10/2026: a sweep round is not looked at; it carries the last look, never a verdict on a page changed since.
+test('a sweep round carries the last look with every page read anew since then named unlooked', async () => {
+  const { lookCarried } = await import('../src/opportunities-build/client-demo.js')
+  const last = {
+    id: 'looks-finished',
+    pass: false,
+    looked: true,
+    version: LOOK_PROMPT_VERSION,
+    seen: ['/', '/menu'],
+    detail: [
+      { page: '/', viewport: 'phone', kind: 'text', where: 'hero', fix: 'tone the photo' },
+      { page: '/menu', viewport: 'desktop', kind: 'photo', where: 'dish', fix: 'crop' }
+    ],
+    unlooked: []
+  }
+  const pages = ['/', '/menu', '/blog/a']
+  const carried = lookCarried(last, pages, new Set(['/', '/blog/a']))
+  assert.equal(carried.pass, false)
+  assert.equal(carried.looked, 'partly')
+  assert.deepEqual(
+    carried.detail.map((f) => f.page),
+    ['/']
+  )
+  assert.deepEqual(
+    carried.unlooked.map((u) => u.page),
+    ['/menu']
+  )
+  // The next round keeps only what was seen after its last change: never '/menu' (changed), never '/blog/a' (not seen).
+  assert.deepEqual(carried.seen, ['/'])
+  assert.deepEqual(reusableLookPages(carried, pages, new Set(pages)), ['/'])
+  // No look before: plainly not looked at, and nothing to keep.
+  const none = lookCarried(null, pages, new Set())
+  assert.deepEqual([none.pass, none.looked], [false, false])
+  assert.deepEqual(reusableLookPages(none, pages, new Set(pages)), [])
+})
+
+// 28/10/2026: every page, then a few template posts (those the last look did not see first); the time follows the pages.
+test('a look takes every page and two template posts, unseen ones first, in a time that follows its pages', async () => {
+  const { lookSample, lookBudgetMs, LOOK_POSTS } = await import('../src/opportunities-build/client-demo.js')
+  const posts = new Set(['/blog/a', '/blog/b', '/blog/c', '/blog/d'])
+  const pages = ['/', '/blog/a', '/menu', '/blog/b', '/blog/c', '/about', '/blog/d']
+  assert.equal(LOOK_POSTS, 2)
+  assert.deepEqual(lookSample(pages, posts), {
+    pages: ['/', '/menu', '/about', '/blog/a', '/blog/b'],
+    postsLeft: 2
+  })
+  // The next check sees the posts this one did not.
+  assert.deepEqual(lookSample(pages, posts, ['/blog/a', '/blog/b']).pages, [
+    '/',
+    '/menu',
+    '/about',
+    '/blog/c',
+    '/blog/d'
+  ])
+  // No template post: every page, nothing left.
+  assert.deepEqual(lookSample(['/', '/menu'], new Set()), { pages: ['/', '/menu'], postsLeft: 0 })
+  assert.equal(lookBudgetMs(1), 150_000)
+  assert.equal(lookBudgetMs(9), 225_000)
+  assert.equal(lookBudgetMs(40), 300_000)
+})
+
+// Local measure 29/10/2026: with the vision provider hanging, calls in flight held a WordPress check past 15 minutes.
+test('vision calls that hang are cut at the look time: it answers in time, its tiles not looked at', async () => {
+  const fake = await fakes({ faults: [] }, { height: 4000 })
+  let sent = 0
+  const fetchImpl = (_url, init) =>
+    new Promise((_resolve, reject) => {
+      sent++
+      init.signal.addEventListener('abort', () => reject(init.signal.reason ?? new Error('aborted')), {
+        once: true
+      })
+    })
+  const started = Date.now()
+  const r = await createDemoLook({ ...fake, fetchImpl, visionFor: door, callsAtOnce: 3 })(
+    {},
+    { pages: ['/', '/menu'], budgetMs: 300 }
+  )
+  assert.ok(Date.now() - started < 3000, `answered after ${Date.now() - started} ms`)
+  assert.ok(sent >= 1)
+  assert.equal(r.pass, false)
+  assert.notEqual(r.looked, true)
+  assert.ok(r.unlooked.length > 0)
+  assert.ok(
+    r.unlooked.every((u) => u.why === 'TIME_EXCEEDED'),
+    JSON.stringify(r.unlooked)
+  )
+})
+
+test('the look is told the approved neutral words a card with no source keeps, and nothing when there are none', async () => {
+  assert.equal(neutralNote([]), '')
+  assert.equal(neutralNote(undefined), '')
+  const note = neutralNote(['Menu item', 'Menu item', ' Service ', ''])
+  assert.ok(note.includes('"Menu item", "Service"'), note)
+  assert.ok(!note.includes('"", '), note)
+  const fake = await fakes({ faults: [] }, { height: 900 })
+  await createDemoLook({ ...fake, visionFor: door })({}, { pages: ['/'], neutral: ['Menu item'] })
+  for (const call of fake.asked) {
+    const first = call.body.messages[0].content[0].text
+    assert.ok(first.startsWith(DEMO_LOOK_SYSTEM))
+    assert.ok(first.includes('"Menu item"'), first)
+  }
+  const plain = await fakes({ faults: [] }, { height: 900 })
+  await createDemoLook({ ...plain, visionFor: door })({}, { pages: ['/'] })
+  assert.ok(!plain.asked[0].body.messages[0].content[0].text.includes('neutral words'))
 })

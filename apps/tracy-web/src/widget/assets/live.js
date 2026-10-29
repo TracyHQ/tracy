@@ -426,7 +426,7 @@ function render() {
     (state.build ? 'View build status →' : 'Your website brief →') +
     '</button></div>' +
     buildLinks(state.buildStatus) +
-    '<div class="source-line">Live data from Tracy · Released templates on ja-products · Quality-checked Refero design systems. Voice uses Tracy’s configured speech service.</div>'
+    '<div class="source-line">Live data from Tracy · Released templates on joomlart-products · Quality-checked Refero design systems. Voice uses Tracy’s configured speech service.</div>'
   document.getElementById('tab-templates').onclick = () => switchTab('templates')
   document.getElementById('tab-systems').onclick = () => switchTab('systems')
   document.getElementById('search').oninput = (ev) => {

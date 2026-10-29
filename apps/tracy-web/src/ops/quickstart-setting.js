@@ -36,7 +36,7 @@ const SETTING_FILE = 'tracy_setting.json'
 /**
  * One release's asset bytes, fetched BY ID with this deployment's own token.
  *
- * By id rather than by browser address: `ja-products` is private, and the public
+ * By id rather than by browser address: `joomlart-products` is private, and the public
  * `/releases/download/…` address answers 404 to a token that is not a browser session. It is the
  * same road `quickstart.py` takes on a fleet host, for the same reason.
  */

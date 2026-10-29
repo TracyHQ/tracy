@@ -7,37 +7,37 @@
       "kind": "akeeba-quickstart",
       "version": "1.0.0",
       "release": "tracy-apple/j6",
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-quickstart-1.0.0.zip",
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-quickstart-1.0.0.zip",
       "sha256": "d082349a9c17b2984fb0c5d52b5319fab2bcbe58cbd69a67b2fe01392bfefa68",
       "bytes": 66104008,
-      "githubAssetId": 557340948
+      "githubAssetId": 683864763
     },
     "tracy-airbnb-j6-1.0.0": {
       "kind": "joomla-extension",
       "version": "1.0.0",
       "release": "tracy-airbnb/j6",
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-airbnb%2Fj6/tpl_tracy_airbnb-j6-1.0.0.zip",
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-airbnb%2Fj6/tpl_tracy_airbnb-j6-1.0.0.zip",
       "sha256": "10785c4754b1be4439971d2b7013a5ab9edec9d94e41cd651f10776bf5d50e22",
       "bytes": 841866,
-      "githubAssetId": 557827939
+      "githubAssetId": 683869317
     },
     "tracy-apple-j6-runtime-1.1.0": {
       "kind": "tracy-runtime-quickstart",
       "version": "1.1.0",
       "release": "tracy-apple/j6",
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-runtime-quickstart-1.1.0.zip",
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-runtime-quickstart-1.1.0.zip",
       "sha256": "b09ced26a2e96c4afb5feccca43a8bcec61dd56a6b91d41534d98d989ca5d2ed",
       "bytes": 58601214,
-      "githubAssetId": 557831008
+      "githubAssetId": 683865249
     },
     "tracy-business-j6-runtime-1.1.0": {
       "kind": "tracy-runtime-quickstart",
       "version": "1.1.0",
       "release": "tracy-business/j6",
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Fj6/tracy-business-j6-runtime-quickstart-1.1.0.zip",
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-business%2Fj6/tracy-business-j6-runtime-quickstart-1.1.0.zip",
       "sha256": "aaf6ccff459b5520931e5ae1da5f5ad08a64f0ba633f204f1291b347277ba1ff",
       "bytes": 86309219,
-      "githubAssetId": 579502177
+      "githubAssetId": 683847567
     }
   },
   "providers": {

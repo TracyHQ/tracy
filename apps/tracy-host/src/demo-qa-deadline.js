@@ -17,19 +17,3 @@ export function qaDeadlineError() {
     }
   )
 }
-
-/** Cancel a queued wait promptly, without starting browser work or changing its place in the queue. */
-export async function waitForQaSlot(before, signal) {
-  signal.throwIfAborted()
-  let abort
-  const cancelled = new Promise((_, reject) => {
-    abort = () => reject(signal.reason)
-    signal.addEventListener('abort', abort, { once: true })
-  })
-  try {
-    await Promise.race([before, cancelled])
-    signal.throwIfAborted()
-  } finally {
-    signal.removeEventListener('abort', abort)
-  }
-}

@@ -139,12 +139,39 @@ export type PushView = {
     limit: number
     itemsTotal: number
     unsupportedTotal: number
+    /** What Apply can write, by group, over the whole changeset (the lists above are capped). */
+    pushable?: PushGroupCounts
+    /** The live site's changes the push leaves alone, over the whole changeset. */
+    liveChangedTotal?: number
   } | null
   deletes: boolean
   result: { pushed: PushItem[]; conflicts: PushItem[]; failed: PushItem[]; skipped: PushItem[] } | null
   undo: { restored: PushItem[]; conflicts: PushItem[]; failed: PushItem[] } | null
   undoable: boolean
   maxItems: number
+}
+
+export type PushGroupCounts = {
+  add: number
+  change: number
+  remove: number
+  files: number
+  settings: number
+  php: number
+}
+
+/** A preview's counts by group: the whole changeset's when the answer has them, else its lists'. */
+export function pushableOf(v: NonNullable<PushView['preview']>): PushGroupCounts {
+  return (
+    v.pushable ?? {
+      add: v.add.length,
+      change: v.change.length,
+      remove: v.remove.length,
+      files: v.files?.length ?? 0,
+      settings: v.settings?.length ?? 0,
+      php: v.php?.length ?? 0
+    }
+  )
 }
 
 export type PushAnswer = {
@@ -195,13 +222,8 @@ export function pushPhaseOf(
   if (p.state === 'expired') return 'expired'
   if (p.state === 'previewed') {
     const v = p.preview
-    const total =
-      (v?.add.length ?? 0) +
-      (v?.change.length ?? 0) +
-      (v?.remove.length ?? 0) +
-      (v?.files?.length ?? 0) +
-      (v?.settings?.length ?? 0) +
-      (v?.php?.length ?? 0)
+    const n = v ? pushableOf(v) : null
+    const total = n ? n.add + n.change + n.remove + n.files + n.settings + n.php : 0
     if (!v || total === 0) return 'nothing'
     return confirming ? 'confirm' : 'review'
   }

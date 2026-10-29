@@ -26,7 +26,7 @@
 // methodPackManifest, canonicalWebroot).
 //
 // Usage: node restore-release.mjs --stand <dir outside the repo> --version <x.y.z>
-//        [--release tracy-business/wp7] [--repo JoomlArt-Products/ja-products]
+//        [--release tracy-business/wp7] [--repo JoomlArt-Products/joomlart-products]
 //        [--port 8291] [--project tracy-business-wp7-stand]
 // Needs: gh (signed in with read access to the release), docker.
 import { spawnSync } from 'node:child_process'
@@ -53,7 +53,7 @@ const { values: o } = parseArgs({
     stand: { type: 'string' },
     version: { type: 'string' },
     release: { type: 'string', default: 'tracy-business/wp7' },
-    repo: { type: 'string', default: 'JoomlArt-Products/ja-products' },
+    repo: { type: 'string', default: 'JoomlArt-Products/joomlart-products' },
     port: { type: 'string', default: '8291' },
     project: { type: 'string', default: 'tracy-business-wp7-stand' }
   }

@@ -48,7 +48,7 @@ it writes them **once** into `/etc/tracy/tracy-web.env`. Adding a line to that f
 
 When GitHub is off: `createRepoFor` returns `NOT_CONFIGURED` (the new site finishes but the job result has
 `repoError: NOT_CONFIGURED`, no repo), the `/github/*` doors and `/fleet/git-token` return 503
-`GITHUB_NOT_CONFIGURED`. `ja-products` releases can still be read with the PAT (see step 5), because `releasesToken`
+`GITHUB_NOT_CONFIGURED`. `joomlart-products` releases can still be read with the PAT (see step 5), because `releasesToken`
 uses the PAT when `config.github` is `null`.
 
 **The site repo's hook is not the App's webhook.** Right after `createSiteRepo`, `createRepoFor` calls
@@ -99,11 +99,11 @@ The last row is why step 6 checks permissions by machine before handing the key 
    a newly created repo must be in the installation right away; besides, `hostRepoMissing` only trusts a repo's 404 as
    "the repo is gone" when the org's installation is `all`.
 5. **Release-reading token.** A fine-grained PAT, resource owner `JoomlArt-Products`, Repository access
-   **only** `JoomlArt-Products/ja-products`, permission **Contents: Read-only**; issued by a JoomlArt-Products member.
+   **only** `JoomlArt-Products/joomlart-products`, permission **Contents: Read-only**; issued by a JoomlArt-Products member.
    One PAT per shard (revoked separately); store it in the team password manager. The org may require
    an owner to approve the PAT before it can be used (the JoomlArt-Products org's policy: UNVERIFIED). This is
    `TRACY_RELEASES_GITHUB_TOKEN`: it reads the release list, downloads assets by id, and is handed to the host when building
-   a site from a private template. Since the shard's App is not installed on `ja-products`, `releasesToken` switches to the PAT
+   a site from a private template. Since the shard's App is not installed on `joomlart-products`, `releasesToken` switches to the PAT
    exactly when GitHub answers 404 to the installation query (see "Two gaps", 1).
 6. **Check the installation** (on your machine, **before** handing the key to the installer; needs Node 18 or later). The
    App's installation list must be exactly one row: the shard's org, `all`, all five permissions. The command prints only the login,
@@ -150,11 +150,11 @@ The last row is why step 6 checks permissions by machine before handing the key 
    master's or another shard's `GITHUB_APP_*`/`GITHUB_ORG`/`GITHUB_WEBHOOK_SECRET` over.
 8. **Acceptance on the shard** (after the `install-shard.sh` run):
    1. `/ops/settings/integrations` (the shard's `tracy_admin` seat): the "Per-site GitHub repositories" block and the
-      "Quickstart releases (ja-products)" block both show **Ready**; if not, the screen names the missing variable (or "n of 4 keys").
-   2. The tracy-web container's log: within a few minutes there is a line `[releases] N read from JoomlArt-Products/ja-products`
+      "Quickstart releases (joomlart-products)" block both show **Ready**; if not, the screen names the missing variable (or "n of 4 keys").
+   2. The tracy-web container's log: within a few minutes there is a line `[releases] N read from JoomlArt-Products/joomlart-products`
       (N > 0). At the same time **there is a normal warning line**, every time the process starts:
-      `[releases] no webhook on JoomlArt-Products/ja-products: app_not_installed` (the shard's App is not installed
-      on `ja-products` so it cannot attach the release hook; see "Two gaps", 1).
+      `[releases] no webhook on JoomlArt-Products/joomlart-products: app_not_installed` (the shard's App is not installed
+      on `joomlart-products` so it cannot attach the release hook; see "Two gaps", 1).
    3. Create a test site: the job result has `repo: tracy-sites-s1/<label>`, **no** `repoError` and
       `repoWebhookReason`. In the repo: Settings → Webhooks has a hook pointing at `<the shard's TRACY_ORIGIN>/github/push` (e.g.
       `https://<shard-origin>/github/push`), event `push`; the first delivery (`ping`, if GitHub sends it) returns 200 (UNVERIFIED on a real shard).
@@ -171,7 +171,7 @@ The last row is why step 6 checks permissions by machine before handing the key 
 
 ## Two gaps of the beta — need a decision
 
-1. **The `ja-products` release repo.** The shard's App is not installed there; the shard reads with a read-only PAT (`releasesToken`,
+1. **The `joomlart-products` release repo.** The shard's App is not installed there; the shard reads with a read-only PAT (`releasesToken`,
    the fallback branch when GitHub answers 404 for the installation; when GitHub answers 5xx or the mint is refused it does **not** switch
    to the PAT). Consequences:
    - Every **write** to a release (`uploadReleaseAsset`, `deleteReleaseAsset`, the template buttons on
@@ -183,7 +183,7 @@ The last row is why step 6 checks permissions by machine before handing the key 
      hands over **the PAT itself** (living until it expires): every time a site is built from a private template, `quickstartToken` puts
      it into the provision command sent to `tracy-host`. That is why the PAT must be read-only, single-repo, time-limited, and one per
      shard (step 5).
-   - Production is unchanged: its App is already installed on `ja-products`, so it still mints tokens from the App.
+   - Production is unchanged: its App is already installed on `joomlart-products`, so it still mints tokens from the App.
 2. **The `TracyHQ/design-inspirations` repo.** The shard's `tracy-host` runs `sync-brands.sh` (a 10-minute clock in
    `apps/tracy-host/src/sync.js`, first run 5 minutes after startup); the script asks for a token for this repo via
    `/fleet/git-token` (closed list `fleetSharedRepos`, by `HOST_ORG`, default `TracyHQ`). The shard's App

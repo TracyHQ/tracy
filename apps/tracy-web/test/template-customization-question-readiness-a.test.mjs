@@ -4,7 +4,7 @@
  * called directly with a context built the way `checkRelease` builds it.
  *
  * Fixtures (`fixtures/template-customization-question-readiness/a/`) are cut from the real release
- * assets of `JoomlArt-Products/ja-products` (09/10/2026): the database rows, template files and
+ * assets of `JoomlArt-Products/joomlart-products` (09/10/2026): the database rows, template files and
  * theme files the rules read, CSS cut to its logo rules and PHP to its title functions. The
  * settings are the published files, except `quickstart_ja-essence_wp7@1.0.8`, the 1.0.9 setting
  * renamed to the 1.0.8 assets. The EmDash source is `packages/cms/tracy-emdash-theme-business` at

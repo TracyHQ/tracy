@@ -59,6 +59,6 @@ distribution; using the JoomlArt or Tracy name/logo for a modified copy; removin
 - [ ] Brian approves the English version (the words "repackaging" and "redistributing" are the main boundary — should it be
       stricter or looser?).
 - [ ] F1: a table of third-party asset licences per quickstart → generate `THIRD-PARTY.txt` in the
-      release (`ja-products`), not inserted into the existing zip.
+      release (`joomlart-products`), not inserted into the existing zip.
 - [ ] Once approved: the landing page adds a "Licence" link to `/docs/licence/joomlart-template` (a new
       server-rendered page) and door B7 additionally returns a separate `LICENSE.txt` (not inside the zip).

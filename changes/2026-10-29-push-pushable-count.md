@@ -1,0 +1,4 @@
+- **Sync to live counts what Apply can write over the whole preview, not its first 500 items.** — David · issue #124 · `fix/push-pushable-count` · 2026-10-29
+  **Affects:** the host's preview answer gains `pushable` (by group) and `conflictsTotal` over the whole changeset, and lists what Apply can write before the conflicts it leaves; tracy-web's Apply check, the preview's Site changes counts and the dialog's phase, group headings and confirm line use those totals. A host without them falls back to the listed items, as before.
+
+  Verification: four new cases fail before the fix and pass after it (host answer, tracy-web contract, tracy-web Apply on Postgres, dialog). Changeset suite 36/36, tracy-web push suite 20/20, push dialog suite 20/20, all with zero skipped. The fleet needs the next shared-script image release.

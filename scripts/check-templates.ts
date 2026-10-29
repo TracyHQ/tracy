@@ -48,7 +48,7 @@ const TEMPLATES = `${PROVISION}/templates`
 const OD_CATALOG = 'vendor/tracy/od-design-system/catalog.json'
 const CATEGORIES_AT = 'apps/tracy-web/src/lib/design-inspiration.js'
 /** The repo holding each entry's release: the entry key IS the tag, unless the entry declares another `release`. */
-const RELEASES_REPO = 'JoomlArt-Products/ja-products'
+const RELEASES_REPO = 'JoomlArt-Products/joomlart-products'
 const DESIGN_INSPIRATION_FILE = 'tracy_design_inspiration.json'
 
 /**
