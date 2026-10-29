@@ -1498,6 +1498,13 @@ class Changeset:
                 self.delete_item(spec, c, live_key, base_row, copy_row, title, ident, key)
                 continue
             self.update_item(spec, c, live_key, base_row, changed, title, ident, key)
+            # The live record is in the trash and the copy's is not: the push brings it back (an
+            # Undo trashed a post the push made, and the copy kept it). The same live record, out of
+            # the trash, never a second one beside it — shown as what it is to the Owner, an
+            # addition, not a change of "Status" and a `__trashed` slug (#117).
+            if (spec.trash and str(base_row.get(spec.trash[0])) == spec.trash[1] and self.items
+                    and self.items[-1].get("copyKey") == list(c) and self.items[-1]["spec"] == spec.name):
+                self.items[-1]["group"] = "add"
         for c in self.copy_order(spec, pairs["copy_only"], data):
             copy_row = rows["copy"].get(c)
             if copy_row is None:
