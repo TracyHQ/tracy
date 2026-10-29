@@ -6,3 +6,5 @@
   Undo also holds a newly created parent post when its dependent metadata cannot be restored, preserving customer changes on that page. Three additional cases cover changed metadata, native conflict and an expired receipt.
 
   Partial Apply protection: a metadata create whose response was lost also holds its new parent during Undo, using the dependency saved in the durable sending receipt. Retrying Apply sends no second metadata mutation.
+
+  An acknowledged metadata receipt ahead of stale Apply output also holds the parent until that child is confirmed restored; this covers interruption after durable ACK but before the item journal/output.

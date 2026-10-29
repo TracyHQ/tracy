@@ -1486,16 +1486,16 @@ async function undo(pushDir) {
     return { paths: out }
   }
 
-  // A missing ACK can still mean the dependent metadata was created on the live site.
-  const uncertainMetaParents = new Set(
-    Object.values(readJson(join(pushDir, 'requests.json'), {}))
-      .filter((receipt) => receipt.state === 'sending')
-      .flatMap((receipt) =>
-        (receipt.recovery ?? []).flatMap(({ snapshot }) =>
-          snapshot?.kind === 'postmeta' && snapshot.op === 'create' ? (snapshot.dependsOn ?? []) : []
-        )
+  // Durable metadata receipts can be ahead of written.json after an interrupted Apply.
+  const receiptMetaChildren = Object.values(readJson(join(pushDir, 'requests.json'), {}))
+    .filter((receipt) => ['sending', 'acknowledged'].includes(receipt.state))
+    .flatMap((receipt) =>
+      (receipt.recovery ?? []).flatMap(({ item, snapshot }) =>
+        snapshot?.kind === 'postmeta' && snapshot.op === 'create'
+          ? [{ id: item.id, parents: snapshot.dependsOn ?? [] }]
+          : []
       )
-  )
+    )
   const order = [...writtenAnswer.written].reverse()
   progress(t0, `taking back ${order.length} item(s) on the live site`)
   for (const out of order) {
@@ -1518,7 +1518,9 @@ async function undo(pushDir) {
     if (
       snap.kind === 'post' &&
       snap.op === 'create' &&
-      (uncertainMetaParents.has(out.id) ||
+      (receiptMetaChildren.some(
+        (child) => child.parents.includes(out.id) && !restored.some((r) => r.id === child.id)
+      ) ||
         order.some((other) => {
           const child = before.items[other.id]
           return (

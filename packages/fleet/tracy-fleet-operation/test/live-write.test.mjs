@@ -2367,3 +2367,41 @@ test('WordPress new parent stays published after its metadata create loses the A
     await live.close()
   }
 })
+
+test('WordPress new parent stays published when its metadata ACK is ahead of stale Apply output', async () => {
+  const live = await engine({ platform: 'wordpress', records: { post: {} } })
+  try {
+    const parent = {
+      id: 'post:new:50',
+      kind: 'post',
+      spec: 'post',
+      op: 'create',
+      ident: 0,
+      creates: 'posts:50',
+      key: null,
+      write: { post_title: 'New page', post_status: 'publish' },
+      expect: {},
+      dependsOn: [],
+      seed: []
+    }
+    const child = createPostMeta({ $new: 'posts:50' }, '_thumbnail_id', '200', [parent.id])
+    const dir = pushDir([parent, child], 'wordpress')
+    const applied = (await apply(live, dir)).answer
+    assert.equal(applied.written.length, 2)
+    const id = applied.created['posts:50']
+    // Model the durable cut after ACK: the earlier partial output only names the parent.
+    const written = JSON.parse(readFileSync(join(dir, 'written.json')))
+    written.written = written.written.filter((r) => r.id !== child.id)
+    writeFileSync(join(dir, 'written.json'), JSON.stringify(written))
+    const before = JSON.parse(readFileSync(join(dir, 'before.json')))
+    delete before.items[child.id]
+    writeFileSync(join(dir, 'before.json'), JSON.stringify(before))
+    const result = (await undo(live, dir)).answer
+    assert.equal(result.kept.find((r) => r.id === parent.id)?.reason, 'depends-on-failed')
+    assert.equal(live.records.post[id].post_status, 'publish')
+    assert.equal(live.records.postmeta[`${id}:_thumbnail_id`].value, '200')
+    assert.equal(live.calls.filter((c) => c.action === 'content.delete').length, 0)
+  } finally {
+    await live.close()
+  }
+})
