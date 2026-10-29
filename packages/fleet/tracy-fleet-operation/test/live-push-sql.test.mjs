@@ -954,3 +954,21 @@ test(
     })
   }
 )
+
+test('WordPress preview uses native menu object titles and skips trash bookkeeping', opts, () => {
+  schemas(
+    'wlabels',
+    WORDPRESS.replaceAll('HOME', 'https://shop.example'),
+    `INSERT INTO wp_posts (ID,post_title,post_name,post_type) VALUES (66,'','menu-item','nav_menu_item');
+      INSERT INTO wp_postmeta (post_id,meta_key,meta_value) VALUES (66,'_menu_item_type','post_type'),(66,'_menu_item_object','page'),(66,'_menu_item_object_id','10'),(66,'_menu_item_url',''),(66,'_menu_item_menu_item_parent','0');
+      INSERT INTO wp_term_relationships VALUES (66,2,0);`,
+    `INSERT INTO wp_posts (ID,post_title,post_name,post_type,menu_order) VALUES (66,'','menu-item','nav_menu_item',2);
+      INSERT INTO wp_postmeta (post_id,meta_key,meta_value) VALUES (66,'_menu_item_type','post_type'),(66,'_menu_item_object','page'),(66,'_menu_item_object_id','10'),(66,'_menu_item_url',''),(66,'_menu_item_menu_item_parent','0'),(10,'_wp_desired_post_slug','about-old');
+      INSERT INTO wp_term_relationships VALUES (66,2,0);`
+  )
+  const answer = changeset('wlabels', 'wordpress', 'wp_')
+  const item = answer.items.find((i) => i.kind === 'menuItem')
+  assert.equal(item.title, 'About')
+  assert.deepEqual(item.write, { position: '2' })
+  assert.ok(!answer.items.some((i) => i.key === '_wp_desired_post_slug'))
+})

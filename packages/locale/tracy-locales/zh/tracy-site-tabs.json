@@ -1214,5 +1214,8 @@
   "sync.error.liveBlocked": "线上 site返回了被拦截或并非来自引擎的响应。请检查防火墙或机器人防护，并允许 Tracy 的请求。",
   "sync.error.livePassword": "线上 site需要 HTTP 密码。请允许 Tracy 无需该密码即可访问 Claude Cowork 端点，然后重试。",
   "sync.error.liveRateLimited": "线上 site正在限制请求。请稍后重试；Tracy 会遵守 Retry-After 指定的等待时间。",
-  "sync.error.liveToken": "线上 site拒绝了 Claude Cowork token。请使用当前token重新连接线上 site，然后重试。"
+  "sync.error.liveToken": "线上 site拒绝了 Claude Cowork token。请使用当前token重新连接线上 site，然后重试。",
+  "push.label.featuredImage": "特色图片",
+  "push.label.pageTemplate": "页面 template",
+  "push.label.altText": "替代文本"
 }

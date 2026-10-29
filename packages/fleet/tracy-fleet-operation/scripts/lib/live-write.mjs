@@ -375,6 +375,11 @@ function itemOut(item, extra = {}) {
     op: item.op,
     title: item.title,
     liveId: item.liveId ?? null,
+    ...Object.fromEntries(
+      ['what', 'label', 'subject']
+        .filter((name) => item[name] !== undefined)
+        .map((name) => [name, item[name]])
+    ),
     ...extra
   }
 }

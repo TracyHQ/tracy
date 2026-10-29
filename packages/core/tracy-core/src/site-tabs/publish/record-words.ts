@@ -201,7 +201,10 @@ const LABEL = new Set([
   'customizer',
   'templateStyle',
   'styles',
-  'globalConfiguration'
+  'globalConfiguration',
+  'featuredImage',
+  'pageTemplate',
+  'altText'
 ])
 
 /** A title in words: its fixed words translated and its subject after them, else the host's title. */
