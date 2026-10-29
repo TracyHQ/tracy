@@ -42,7 +42,7 @@
       "POST /api/sites/wizard with step records one wizard.step per id and page",
       "every page the Add site form can name is on the WIZARD_STEPS list",
       "the wizard tells tracy-web which page an opening reached",
-      "the login page tells /login/visit its source once per tab",
+      "the login page tells /login/visit once per tab",
       "POST /login/visit keeps one cleaned source per visit",
       "POST /login/visit stops at the hourly cap"
     ]
