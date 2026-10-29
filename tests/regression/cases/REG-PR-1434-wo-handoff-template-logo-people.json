@@ -9,11 +9,13 @@
   "flaky_model": false,
   "steps": [
     "S1: render the hand-off prompt with a picture plan whose untouched places are a map, an icon, the template logo, a cut-out, an avatar and a person needing evidence, with the restaurant's logo uploaded.",
-    "S2: the same without a collected logo."
+    "S2: the same without a collected logo.",
+    "S3: Run the production pin reader and post-build readback tests for fictional dental and bakery briefs. An older profile supplies empty person pins, while the frozen brief accepts one named person and their role."
   ],
   "expect": [
     "S1: no 'kept on purpose (logos, faces' heading; the map and the icon under 'leave as they are'; the logo under 'replace it' with the uploaded logo's path; the cut-out, the avatar and the person under 'hide or remove them'.",
-    "S2: the logo is replaced by the restaurant's name as text."
+    "S2: the logo is replaced by the restaurant's name as text.",
+    "S3: Accepted names and roles survive profile pins beside matching initials avatars. Unaccepted people and names that cannot fit are removed with their cards. Joomla and WordPress fact pins retain stronger decisions. The readback rejects an avatar with no accepted visible name, including when the name appears elsewhere on the page."
   ],
   "selectors": {
     "files": "vendor/tracy/tracy-website-opportunities/domain/agent-prompt.mjs",
@@ -22,10 +24,18 @@
   "evidence": "pic-hill6 on stand wo, 18/10/2026: the template's chef cut-out and 'RES est 1982' logo stayed after hand-off because the prompt said 'do not replace', then the demo QA gate failed them",
   "fence": "renderAgentPrompt's grouping of the build's untouched pictures",
   "run": {
-    "cwd": "packages/wo/website-opportunities",
-    "cmd": ["node", "--test", "--test-reporter=tap", "test/domain-agent-prompt.test.mjs"],
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/wo/website-opportunities/test/domain-agent-prompt.test.mjs",
+      "apps/tracy-web/test/brief-people-card-pins.test.mjs",
+      "apps/tracy-web/test/brief-people-card-check.test.mjs"
+    ],
     "tests": [
-      "pictures the build left alone: maps and icons stay, the template logo becomes the restaurant's, people and cut-outs go"
+      "pictures the build left alone: maps and icons stay, the template logo becomes the restaurant's, people and cut-outs go",
+      "Brightwater Dental: accepted person's name and role survive empty profile pins beside their avatar",
+      "Crumb and Kettle: the post-build check rejects an avatar with an empty visible name"
     ]
   }
 }

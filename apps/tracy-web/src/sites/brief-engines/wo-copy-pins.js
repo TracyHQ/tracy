@@ -9,6 +9,7 @@
  */
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
 import { planFillOf, readSlotRoles } from '../../lib/contract-slot-roles.js'
+import { mergeCopyPins, withHonestyPins } from './copy-pin-priority.js'
 
 /**
  * @param {{copyFor?: Function} | null} woContent
@@ -99,7 +100,10 @@ export async function copyPinsOf(woContent, ctx, { cms, contentMap, lang, pictur
       ctx.note(
         `${filled.skipped.length} sourced line(s) did not fit this release and were left to the planner`
       )
-    return filled
+    const sitePlan = await Promise.resolve(
+      woContent.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
+    ).catch(() => null)
+    return withHonestyPins(filled, contentMap, sitePlan?.honesty, sitePlan?.slots)
   } catch (error) {
     ctx.note(`the sourced page words could not be read: ${error instanceof Error ? error.message : error}`)
     return null
@@ -126,13 +130,19 @@ function withSlotFill(domain, out, slotRoles, placeProfile, contentMap, locale, 
   const plan = planFillOf(domain, slotRoles, { placeProfile, locale })
   const fill = domain.slotFillPins({ plan, contentMap, profile: placeProfile.profile, pictures })
   const kept = Object.keys(out.pins).filter((key) => out.sources[key] !== 'placeholder')
+  const merged = mergeCopyPins(
+    {
+      pins: Object.fromEntries(kept.map((key) => [key, out.pins[key]])),
+      sources: Object.fromEntries(kept.map((key) => [key, out.sources[key]]))
+    },
+    fill
+  )
   return {
     ...out,
-    pins: { ...Object.fromEntries(kept.map((key) => [key, out.pins[key]])), ...fill.pins },
-    sources: { ...Object.fromEntries(kept.map((key) => [key, out.sources[key]])), ...fill.sources },
+    ...merged,
     roles: { ...out.roles, ...fill.roles },
     skipped: [...out.skipped, ...fill.skipped],
-    placeholders: fill.placeholders,
+    placeholders: fill.placeholders.filter((key) => merged.sources[key] === 'placeholder'),
     dishes: fill.dishes.length ? fill.dishes : out.dishes,
     // Each card's picture slot bound to its own entity's picture (`slotFillPins`): what the pictures' planner honours.
     pictures: fill.pictures ?? {},
@@ -141,7 +151,11 @@ function withSlotFill(domain, out, slotRoles, placeProfile, contentMap, locale, 
       locale,
       provisional: placeProfile.provisional === true,
       ...(placeProfile.note ? { profileNote: placeProfile.note } : {}),
-      manifest: fill.manifest
+      manifest: fill.manifest.map((row) => {
+        if (merged.sources[row.slotKey] === fill.sources[row.slotKey]) return row
+        const { neutralKey: _neutralKey, entityId: _entityId, ...rest } = row
+        return { ...rest, state: 'sourced', factRefs: [] }
+      })
     }
   }
 }
