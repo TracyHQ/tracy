@@ -29,6 +29,22 @@ export function mainMenuRole(page) {
   return page.role && page.role !== 'other' ? page.role : pageRole({ ...page, id: String(page.id ?? '') })
 }
 
+/**
+ * The pages a main menu must name (COO decision, spec TracyHQ/tracy#189 item 12): home, the offerings index, contact or
+ * booking, and about when kept. The header may be shorter than the list of kept pages and may group the rest under
+ * parents; the footer link columns list every kept page (`footer-navigation.mjs`).
+ */
+export const PRIMARY_MENU_ROLES = Object.freeze([
+  'home',
+  'services',
+  'menu',
+  'offerings',
+  'contact',
+  'booking',
+  'about'
+])
+export const isPrimaryMenuPage = (page) => PRIMARY_MENU_ROLES.includes(page?.role ?? mainMenuRole(page))
+
 /** Compare native routes and rendered routes, including Joomla's index.php front controller. */
 export function menuPath(value) {
   try {

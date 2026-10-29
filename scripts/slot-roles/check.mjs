@@ -28,6 +28,11 @@
  *   form). Named contract folders (the packing run) fail on an undeclared button; the whole-tree gate only counts the
  *   maps that would fail, because released contracts are never edited and the build reads their roles all the same.
  *
+ * - Every footer link column is declared as a navigation group (`navigationGroupProblems`, WO domain
+ *   `footer-navigation.mjs`): which pages it holds (offerings, company, pages), its heading slot, its native container and
+ *   menu, and its link slots. The brief build lists every kept page in these columns. Named contract folders fail on an
+ *   undeclared or malformed column; the whole-tree gate only counts them.
+ *
  *   node scripts/slot-roles/check.mjs                  every contract in the tree
  *   node scripts/slot-roles/check.mjs <contractDir>... only those (the packing check)
  */
@@ -37,6 +42,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { checkContentMapFit, checkContentMapRoles } from 'website-opportunities/domain'
 import { buttonActionProblems } from '../../packages/wo/website-opportunities/domain/button-actions.mjs'
+import { navigationGroupProblems } from '../../packages/wo/website-opportunities/domain/footer-navigation.mjs'
 import { lintContractDir, lintSummary } from '../../apps/tracy-web/src/lib/content-map-lint.js'
 import { lintItemIconGrounds } from '../../apps/tracy-web/src/lib/content-map-lint-icons.js'
 import { fieldMapRolesOf } from '../../apps/tracy-web/src/lib/emdash-field-map-roles.js'
@@ -119,6 +125,30 @@ export function buttonActionErrors(dir) {
   }
 }
 
+/** A Joomla content map's footer link columns: each menu module in a footer position. */
+export function footerColumnsOf(contentMap) {
+  return (contentMap?.entities ?? [])
+    .filter(
+      (e) =>
+        e?.kind === 'module' &&
+        e.identity?.module === 'mod_menu' &&
+        /foot/i.test(String(e.identity?.position ?? ''))
+    )
+    .map((e) => e.key)
+}
+
+/** The undeclared or malformed footer link columns (navigation groups) of a contract's content map. */
+export function navigationGroupErrors(dir) {
+  const file = path.join(dir, CONTENT_MAP_FILE)
+  if (!existsSync(file)) return []
+  try {
+    const map = JSON.parse(readFileSync(file, 'utf8'))
+    return navigationGroupProblems(map, footerColumnsOf(map))
+  } catch {
+    return []
+  }
+}
+
 /** The errors of the roles an EmDash theme declares in its field map, or null when the contract has none declared. */
 function fieldMapResult(dir) {
   const { cms, seedDir } = contractSlotInventory(dir)
@@ -183,7 +213,12 @@ export function checkAllSlotRoles(rootDir = DEFAULT_ROOT, explicitDirs = null) {
     .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, errors: buttonActionErrors(dir) }))
     .filter((b) => b.errors.length > 0)
   if (named) for (const b of buttons) for (const error of b.errors) errors.push(`${b.dir}: ${error}`)
-  return { ok: errors.length === 0, checkedCount: dirs.length, dirs, errors, fit, lint, buttons }
+  // The same for footer link columns: a named contract refuses one not declared as a navigation group.
+  const navigation = candidates
+    .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, errors: navigationGroupErrors(dir) }))
+    .filter((n) => n.errors.length > 0)
+  if (named) for (const n of navigation) for (const error of n.errors) errors.push(`${n.dir}: ${error}`)
+  return { ok: errors.length === 0, checkedCount: dirs.length, dirs, errors, fit, lint, buttons, navigation }
 }
 
 /** The value after a `--name` flag, and the arguments left once every flag and its value are taken out. */
@@ -242,6 +277,10 @@ if (isMain) {
   if (!named)
     process.stdout.write(
       `button actions: ${res.buttons.length} released map(s) hold ${res.buttons.reduce((n, b) => n + b.errors.length, 0)} undeclared or malformed button(s); the packing check refuses them.\n`
+    )
+  if (!named)
+    process.stdout.write(
+      `footer navigation: ${res.navigation.length} released map(s) hold ${res.navigation.reduce((n, b) => n + b.errors.length, 0)} undeclared or malformed footer link column(s); the packing check refuses them.\n`
     )
   const rules = lintSummary(res.lint.flatMap((l) => l.findings))
     .map((r) => `${r.rule} ${r.count}`)

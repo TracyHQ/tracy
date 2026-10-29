@@ -65046,5 +65046,36 @@
       "uniform": true,
       "whenFewer": "neutral"
     }
-  }
+  },
+  "navigationGroups": [
+    {
+      "id": "footer-offerings",
+      "placement": "footer",
+      "holds": "offerings",
+      "heading": "module-173.0",
+      "container": "module-173",
+      "menu": "classes",
+      "links": [
+        "menuItem-188.0",
+        "menuItem-189.0",
+        "menuItem-190.0",
+        "menuItem-191.0",
+        "menuItem-192.0"
+      ]
+    },
+    {
+      "id": "footer-company",
+      "placement": "footer",
+      "holds": "company",
+      "heading": "module-174.0",
+      "container": "module-174",
+      "menu": "site-map",
+      "links": [
+        "menuItem-184.0",
+        "menuItem-185.0",
+        "menuItem-186.0",
+        "menuItem-187.0"
+      ]
+    }
+  ]
 }

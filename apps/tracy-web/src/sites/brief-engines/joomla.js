@@ -27,6 +27,7 @@
  * language answers without the `/en/` prefix (`dropDefaultPrefix`, D8): the prefix's `sef` is never renamed, only left out.
  */
 import { writeJoomlaMainMenu } from './main-menu-joomla.js'
+import { writeJoomlaFooterNavigation } from './footer-navigation-joomla.js'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { seeder, seederDataDir, translationsDirOf } from '../../lib/seeder.js'
@@ -468,6 +469,8 @@ function staticState(contract) {
       // The vocabulary version and the entities (their `demoOnly` mark): the fill plan reads both (ADR 0040).
       roleVocabularyVersion: map.roleVocabularyVersion ?? null,
       entities: map.entities ?? [],
+      // The footer link columns the release declares (quickstart-contract skill, #189 item 12).
+      navigationGroups: map.navigationGroups ?? [],
       declared: withFieldEvidence((map.slots ?? []).filter((slot) => !customizable(slot)))
     }
     maps.set(contract.id, entry)
@@ -478,7 +481,8 @@ function staticState(contract) {
     slots: entry.slots.map((slot) => ({ ...slot, current: slot.sample })),
     pages: entry.pages,
     roleVocabularyVersion: entry.roleVocabularyVersion,
-    entities: entry.entities
+    entities: entry.entities,
+    navigationGroups: entry.navigationGroups
   }
 }
 
@@ -2500,6 +2504,18 @@ export function createJoomlaEngine({
           contentMap: staticState(ctx.contract)
         })
         ctx.time('mainMenuLabels', menu.items.length)
+        // The footer link columns list every kept page, each with the name the main menu gave it.
+        const footer = await writeJoomlaFooterNavigation({
+          apply,
+          siteKey,
+          sitePlan: menuPlan,
+          model: menuModel,
+          locale: prepared.written ?? SOURCE,
+          signal: ctx.signal,
+          contentMap: staticState(ctx.contract),
+          known: Object.fromEntries(menu.items.map((i) => [i.pageId, i.label]))
+        })
+        ctx.time('footerNavigationLinks', footer?.columns.reduce((n, c) => n + c.links.length, 0) ?? 0)
       }
       return { wrote, kept }
     }

@@ -541,6 +541,16 @@ path):
    does not prove (`#`, an empty link, a demo style-guide button) stays undeclared until you declare it by hand:
    `scripts/slot-roles/check.mjs "$P/$VER"` refuses the contract while any button has no action. The brief build gives
    every `primary-cta` the business's own action and channel, so a missing declaration ships the demo's words.
+   **Footer link columns are navigation groups (every framework):** the header main menu may be shorter and group pages,
+   but the footer always lists every kept page, so each footer column of links is declared in the content map's top-level
+   `navigationGroups`: `{id, placement: "footer", holds, heading, container, menu, links}`. `holds` is `offerings` (the
+   offerings index and each offering page), `company` (home, about, team, contact, booking and the rest) or `pages` (any
+   page no other column takes); `heading` is the column heading's text slot (its demo sample, such as "Site map", never
+   survives a brief build); `container` is the module entity that renders the column and `menu` the native menu it shows;
+   `links` are its `editorial.menu_label` slots. `scripts/slot-roles/check.mjs "$P/$VER"` refuses the contract while a
+   footer `mod_menu` module is not declared. After a brief build, check that every kept page and each offering page is
+   linked from the footer, the footer has at least as many links as the header, and no demo heading or link remains
+   (`footer-navigation-check.js` reports each on the build's receipt).
 9. **The first T3 template run through this skill:** look at and record in the report two points — (a) local Tracy
    creates a T3 site successfully (section 6 step 5); (b) the freshly bound site has no design-drift warnings (step 6 above).
 10. `git -C "$TCH_WT" status --short` · `git -C "$CW_WT" status --short` → record. No `git add`.

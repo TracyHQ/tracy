@@ -1,5 +1,10 @@
 import { parse } from 'parse5'
-import { invalidMenuLabel, mainMenuTargets, menuPath } from 'website-opportunities/domain/main-menu.mjs'
+import {
+  invalidMenuLabel,
+  isPrimaryMenuPage,
+  mainMenuTargets,
+  menuPath
+} from 'website-opportunities/domain/main-menu.mjs'
 
 const attr = (node, name) => node.attrs?.find((a) => a.name === name)?.value ?? ''
 const text = (node) => (node.nodeName === '#text' ? node.value : (node.childNodes ?? []).map(text).join(' '))
@@ -56,7 +61,7 @@ export function renderedMainMenus(html, origin = null) {
   return menus
 }
 
-/** Every kept page is reachable, with a useful name, in every rendered main menu on each served page. */
+/** Every primary kept page is reachable, and every kept page it names has a useful name, in each rendered main menu. */
 export function checkMainMenu({ pages, sitePlan, origin = null }) {
   const findings = []
   for (const page of pages.filter((p) => !p.status || p.status === 200)) {
@@ -70,7 +75,8 @@ export function checkMainMenu({ pages, sitePlan, origin = null }) {
       for (const target of targets) {
         const matches = target.path ? links.filter((l) => l.href === menuPath(target.path)) : []
         const reachable = target.path && menus.flat().some((l) => l.href === menuPath(target.path))
-        if (!reachable && menu === 0)
+        // The header may be shorter: only a primary page must be reachable from it (the footer lists every page).
+        if (!reachable && menu === 0 && isPrimaryMenuPage(target))
           findings.push({
             path: page.path,
             menu,

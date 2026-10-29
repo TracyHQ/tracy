@@ -181,3 +181,52 @@ test('translated neutral actions and links to another site cannot pass as main n
     true
   )
 })
+
+for (const [name, offering, team] of [
+  ['Copperleaf Bakery', 'workshops', 'bakers'],
+  ['Juniper Dental', 'treatments', 'dentists']
+]) {
+  test(`${name}: the header may leave out a team page but never home, offerings, contact or about`, async () => {
+    const pages = [
+      { id: 'home', path: '/', role: 'home', decision: 'keep' },
+      { id: offering, path: `/${offering}`, role: 'other', decision: 'keep' },
+      { id: 'about', path: '/about', role: 'about', decision: 'keep' },
+      { id: `about/${team}`, path: `/about/${team}`, role: 'team', decision: 'keep' },
+      { id: 'about/contact', path: '/about/contact', role: 'contact', decision: 'keep' }
+    ]
+    const primary = pages.filter((p) => p.role !== 'team')
+    const items = primary.map((p, i) => ({
+      key: String(i),
+      path: p.path,
+      label: '',
+      parent: '',
+      menu: 'primary'
+    }))
+    const labels = ['Home', 'Our offer', 'About', 'Contact']
+    let rows = structuredClone(items)
+    const written = await writeMainMenu({
+      sitePlan: { pages },
+      read: async () => structuredClone(rows),
+      write: async (values) => {
+        rows = rows.map((r) => ({ ...r, label: values.find((v) => v.key === r.key).label }))
+      },
+      model: {
+        chat: async () => JSON.stringify({ labels: Object.fromEntries(labels.map((l, i) => [i, l])) })
+      }
+    })
+    assert.equal(written.items.length, 4)
+    const html = `<header><nav>${rows.map((r) => `<a href="${r.path}">${r.label}</a>`).join('')}</nav></header>`
+    assert.equal(checkMainMenu({ pages: [{ path: '/', html }], sitePlan: { pages } }).pass, true)
+    const withoutAbout = rows.filter((r) => r.path !== '/about')
+    await assert.rejects(
+      writeMainMenu({ sitePlan: { pages }, read: async () => withoutAbout, model: null }),
+      /MAIN_MENU_MISSING_PAGE: about$/
+    )
+    const shorter = `<header><nav>${withoutAbout.map((r) => `<a href="${r.path}">${r.label}</a>`).join('')}</nav></header>`
+    const report = checkMainMenu({ pages: [{ path: '/', html: shorter }], sitePlan: { pages } })
+    assert.deepEqual(
+      report.findings.map((f) => [f.reason, f.href]),
+      [['unreachable-page', '/about']]
+    )
+  })
+}

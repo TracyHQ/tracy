@@ -9,6 +9,7 @@
  * leads nowhere (C19). A page that cannot be read is listed as unread, never as clean.
  */
 import { checkMainMenu } from './main-menu-check.js'
+import { checkFooterNavigation } from './footer-navigation-check.js'
 import { peopleCardFindings } from './people-card-check.js'
 import { statisticFindings } from './statistic-check.js'
 import { keptPageReader } from '../lib/kept-page-reader.js'
@@ -129,6 +130,8 @@ export async function runLeftoverCheck({
   if (!served.includes('/') && !broken.some((b) => b.path === '/'))
     broken.unshift({ path: '/', status: null, why: 'the home page was not served with 200' })
   const mainMenu = sitePlan ? checkMainMenu({ pages, sitePlan, origin: siteOrigin }) : null
+  // The footer link columns list every kept page (COO decision, #189 item 12), where the map declares them.
+  const footerNavigation = checkFooterNavigation({ pages, sitePlan, contentMap, origin: siteOrigin })
   const checked = check({ pages, contentMap, brief, missing, styles, broken })
   const people = peopleCardFindings({ pages, contentMap, brief })
   const statistics = statisticFindings({ pages, contentMap, brief })
@@ -158,9 +161,16 @@ export async function runLeftoverCheck({
     severity: 'major',
     why: `Main menu ${f.reason}: ${f.href ?? f.page ?? f.path ?? 'unread'}`
   }))
+  const footerFindings = (footerNavigation?.findings ?? []).map((f) => ({
+    ...f,
+    kind: 'footer-navigation',
+    severity: 'major',
+    why: `Footer ${f.reason}: ${f.href ?? f.label ?? f.path ?? 'unread'}`
+  }))
   return {
     ...report,
     mainMenu,
+    footerNavigation,
     contactMissing,
     heroMissing,
     offeringSummaries,
@@ -169,16 +179,24 @@ export async function runLeftoverCheck({
     broken,
     pass:
       (!mainMenu || mainMenu.pass) &&
+      (!footerNavigation || footerNavigation.pass) &&
       report.pass === true &&
       broken.length === 0 &&
       unread.length === 0 &&
       offeringSummaries.length === 0 &&
       reviewQuotes.length === 0 &&
       pageIntros.length === 0,
-    findings: [...report.findings, ...mainMenuFindings, ...pageIntros].slice(0, FINDINGS_KEPT),
+    findings: [...report.findings, ...mainMenuFindings, ...footerFindings, ...pageIntros].slice(
+      0,
+      FINDINGS_KEPT
+    ),
     truncated: Math.max(
       0,
-      report.findings.length + mainMenuFindings.length + pageIntros.length - FINDINGS_KEPT
+      report.findings.length +
+        mainMenuFindings.length +
+        footerFindings.length +
+        pageIntros.length -
+        FINDINGS_KEPT
     ),
     pages: pages.map((p) => p.path),
     unread,

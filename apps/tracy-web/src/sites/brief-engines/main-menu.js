@@ -1,5 +1,6 @@
 import {
   invalidMenuLabel,
+  isPrimaryMenuPage,
   mainMenuItems,
   mainMenuTargets,
   menuPath
@@ -27,7 +28,8 @@ export async function writeMainMenu({ sitePlan, read, write, model, locale = 'en
   const inventory = await read()
   const items = mainMenuItems(sitePlan, inventory)
   const targets = mainMenuTargets(sitePlan, inventory)
-  const missing = targets.filter((p) => !items.some((i) => i.pageId === p.id))
+  // The header may be shorter: only a primary page (home, offerings index, contact or booking, about) must have a place.
+  const missing = targets.filter((p) => isPrimaryMenuPage(p) && !items.some((i) => i.pageId === p.id))
   if (missing.length) throw fail('MAIN_MENU_MISSING_PAGE', missing.map((p) => p.id).join(', '))
   if (!items.length) return { items: [] }
   if (!model?.chat) throw fail('MAIN_MENU_MODEL_UNAVAILABLE', 'page-role labels require a text model')
