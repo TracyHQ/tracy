@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-114-sync-postmeta-create",
+  "kind": "fix",
+  "title": "WordPress metadata creates retain their live parent and safe native Undo",
+  "pr": 114,
+  "area": "sync/push",
+  "cms": [
+    "wp"
+  ],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the HTTP writer cases for WordPress metadata creates and Undo."
+  ],
+  "expect": [
+    "Missing image and template metadata use existing or resolved new parent IDs.",
+    "Undo uses only the dedicated native receipt and verifies deletion.",
+    "Changed values, newer native receipts, missing receipts and uncertain outcomes preserve customer data.",
+    "A new parent stays published if dependent metadata Undo is held.",
+    "Lost responses and ACK recovery never resend a mutation."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=WordPress.*meta",
+      "packages/fleet/tracy-fleet-operation/test/live-write.test.mjs"
+    ],
+    "tests": [
+      "WordPress missing featured-image and page-template meta retain the existing parent post address",
+      "WordPress new-post meta uses the resolved live parent ID and does not create another post",
+      "WordPress new metadata Undo: restart",
+      "WordPress new metadata Undo: lost-response",
+      "WordPress new parent stays published when its metadata Undo is held: changed"
+    ]
+  }
+}
