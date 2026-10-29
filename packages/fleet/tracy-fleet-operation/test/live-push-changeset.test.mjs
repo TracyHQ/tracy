@@ -1473,3 +1473,56 @@ for (const edit of [
     )
   })
 }
+
+test('the preview answer counts pushable items over the whole changeset, not only the items it lists', () => {
+  const item = (i, extra = {}) => ({
+    id: `article:${i}`,
+    kind: 'article',
+    op: 'update',
+    title: `Article ${i}`,
+    liveId: i,
+    fields: { title: {} },
+    dependsOn: [],
+    ...extra
+  })
+  const conflicted = Array.from({ length: 500 }, (_, i) =>
+    item(i + 1, { conflict: { reason: 'changed-on-both', fields: ['title'] } })
+  )
+  const items = [
+    ...conflicted,
+    item(501),
+    item(502, { op: 'create', liveId: null }),
+    item(503, { op: 'delete' }),
+    item(504, { group: 'php' })
+  ]
+  const file = join(root, `cs-${++n}.json`)
+  writeFileSync(
+    file,
+    JSON.stringify({
+      ok: true,
+      platform: 'joomla',
+      items,
+      unsupported: [],
+      counts: {},
+      limit: 200,
+      overLimit: true,
+      hasDeletes: true
+    })
+  )
+  const r = spawnSync('python3', [PUSH, 'answer', '--changeset', file, '--preview-id', 'p1'], {
+    encoding: 'utf8'
+  })
+  assert.equal(r.status, 0, r.stderr + r.stdout)
+  const shown = JSON.parse(r.stdout.trim().split('\n').at(-1))
+  assert.equal(shown.items.length, 500)
+  assert.equal(shown.itemsTotal, 504)
+  // The four Apply can write are listed first, in order; 496 of the 500 conflicts after them.
+  assert.deepEqual(
+    shown.items.slice(0, 4).map((i) => i.id),
+    ['article:501', 'article:502', 'article:503', 'article:504']
+  )
+  assert.ok(shown.items.slice(4).every((i) => i.conflict))
+  assert.equal(shown.items[4].id, 'article:1')
+  assert.deepEqual(shown.pushable, { add: 1, change: 1, remove: 1, files: 0, settings: 0, php: 1 })
+  assert.equal(shown.conflictsTotal, 500)
+})
