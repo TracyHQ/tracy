@@ -344,3 +344,31 @@ test('posts to replace but no blog page kept in the plan: the blog entries and m
   assert.ok((await run([{ id: 'home', role: 'home', decision: 'keep' }])).length > 0)
   assert.deepEqual(await run([{ id: 'journal', role: 'blog', decision: 'keep' }]), [])
 })
+
+test('the featured view and the home entry are never picked as blog surfaces, even when every featured article is a demo post', () => {
+  const going = blogSurfacesGoing({
+    menu: [
+      {
+        id: 101,
+        published: 1,
+        language: '*',
+        home: 1,
+        type: 'component',
+        link: 'index.php?option=com_content&view=featured'
+      },
+      {
+        id: 193,
+        published: 1,
+        language: '*',
+        home: 0,
+        type: 'component',
+        link: 'index.php?option=com_content&view=featured'
+      }
+    ],
+    modules: [],
+    articles: [{ id: 5, catid: 8, state: 1, featured: 1 }],
+    demoIds: new Set([5]),
+    visible: new Set()
+  })
+  assert.deepEqual(going.menuIds, [])
+})

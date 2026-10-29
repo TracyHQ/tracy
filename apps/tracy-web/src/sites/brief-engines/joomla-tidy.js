@@ -1018,7 +1018,7 @@ export const FORM_OFF_NOTE =
  *   owner's. With none, the template's numbers go too (15/10/2026, TCH #1367; it replaces D12 of 11/10/2026, which
  *   kept them as placeholders): a visitor who calls the demo company's number reaches nobody of the owner's.
  * - A street address given is the record's address, and the business name replaces a demo name the template set
- *   (WO builds send both from collected facts); with none, both are left as they are.
+ *   (WO builds send both from collected facts); with no address the template's address lines go, and with no name the name is left.
  * - A placeholder the site fills in itself (`{site.phone}`) is left; a record already as wanted gets no write.
  * @param {object} input
  * @param {(call: { siteKey: string, action: string, params: Record<string, unknown> }) => Promise<any>} input.apply
@@ -1053,6 +1053,11 @@ export async function contactSteps({ apply, siteKey, given, visible }) {
       for (const field of phone !== '' ? ['mobile', 'fax'] : ['telephone', 'mobile', 'fax'])
         if (setByTemplate(row[field]) && row[field] !== phone) fields[field] = ''
       if (address !== '' && row.address !== address) fields.address = address
+      // 🔒 With no street address given, the template's own place goes (a visitor must never read the demo company's street):
+      // the address lines are emptied like its numbers.
+      if (address === '')
+        for (const field of ['address', 'suburb', 'state', 'postcode', 'country'])
+          if (setByTemplate(row[field])) fields[field] = ''
       if (name !== '' && setByTemplate(row.name) && row.name !== name) fields.name = name
       if (Object.keys(fields).length > 0) steps.push({ kind: 'contact', id: Number(row.id), fields })
     }

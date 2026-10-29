@@ -76,18 +76,19 @@ export function blogSurfacesGoing({ menu, modules, articles, demoIds, visible })
       .filter((c) => live.some((a) => String(a.catid) === c && demoIds.has(Number(a.id))))
       .filter((c) => onlyDemo(live.filter((a) => String(a.catid) === c)))
   )
-  const featuredDemo = onlyDemo(live.filter((a) => Number(a.featured) === 1))
   const reach = (/** @type {any} */ row) => {
     const language = String(row.language ?? '*')
     return Number(row.published) === 1 && (language === '*' || visible.has(language))
   }
   const menuIds = menu
-    .filter((row) => reach(row) && Number(row.id) > 1)
+    .filter((row) => reach(row) && Number(row.id) > 1 && Number(row.home ?? 0) !== 1)
     .filter((row) => {
       const to = contentOf(row)
       if (to?.view === 'article') return demoIds.has(Number(to.id))
       if (to?.view === 'category') return demoCats.has(String(to.id))
-      return to?.view === 'featured' && featuredDemo
+      // 🔒 The featured view is the home page's own (and often a kept page's): it is never taken off here, whatever its
+      // articles are. Taking it off broke the whole site (every page answered 404).
+      return false
     })
     .map((row) => Number(row.id))
   const moduleIds = modules

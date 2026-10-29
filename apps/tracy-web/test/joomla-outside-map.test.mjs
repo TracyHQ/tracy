@@ -48,6 +48,7 @@ function fakeSite({ styles }) {
         id: 91,
         module: 'mod_custom',
         published: 1,
+        position: 'footer',
         content: '<p>Fresh bread daily</p><p>Designed by JoomlArt.com</p>'
       },
       { id: 92, module: 'mod_custom', published: 1, content: '<p>Fresh bread daily</p>' }
@@ -84,13 +85,15 @@ function fakeSite({ styles }) {
       }
     if (action === 'content.get' && params.kind === 'templateStyle')
       return { ok: true, item: (rows.templateStyle ?? []).find((r) => r.id === params.id) }
+    if (action === 'content.get' && params.kind === 'moduleAssignment')
+      return { ok: true, item: { menuids: params.id === 91 ? '[0]' : '[101]' } }
     if (action === 'content.batch') {
       writes.push(...params.operations)
       return { ok: true }
     }
     if (action === 'content.update') {
       writes.push({ kind: params.kind, id: params.id, fields: params.fields })
-      return { ok: true }
+      return { ok: true, ...(params.id === undefined ? { id: 900 } : {}) }
     }
     return { ok: false, error: 'unknown' }
   }
@@ -107,7 +110,7 @@ const reader = {
   }
 }
 
-test('a T4 site: credit line, addresses and the head block are written; the owner’s own head code is kept', async () => {
+test('a T4 site: credit line, addresses and the head block (as a custom module on every page) are written', async () => {
   const t4 = {
     id: 12,
     client_id: 0,
@@ -131,15 +134,21 @@ test('a T4 site: credit line, addresses and the head block are written; the owne
     note: () => {},
     applyId: 'outside-1'
   })
-  assert.deepEqual(done, { credit: 2, aliases: 1, head: 1 })
+  assert.deepEqual(done, { credit: 2, aliases: 1, head: 1, links: 0 })
   const byId = (kind, id) => site.writes.find((w) => w.kind === kind && w.id === id)?.fields
   assert.equal(byId('module', 90).module, 'mod_custom')
   assert.match(String(byId('module', 90).content), /Copyright © Copperleaf Bakery\./)
   assert.equal(byId('module', 91).content, '<p>Fresh bread daily</p>')
   assert.equal(byId('module', 92), undefined)
   assert.deepEqual(byId('article', 14), { alias: 'sourdough-workshop' })
-  const head = JSON.parse(String(byId('templateStyle', 12).params)).system_advancedCodeAfterHead
-  assert.match(head, /<meta name="owner">/)
+  // T4 drops the style's system_* params (it reads them from a template file), so nothing is written to the style row.
+  assert.equal(byId('templateStyle', 12), undefined)
+  const made = site.writes.find((w) => w.kind === 'module' && w.id === undefined)
+  assert.equal(made.fields.module, 'mod_custom')
+  assert.equal(made.fields.position, 'footer')
+  assert.equal(made.fields.note, 'tracy-leftovers')
+  const head = String(made.fields.content)
+  assert.deepEqual(site.writes.find((w) => w.kind === 'moduleAssignment').fields, { menuids: '[0]' })
   assert.match(
     head,
     /\[style\*="images\/demo\/others\/band\.jpg"\]\{background-image:url\("\/images\/tracy-content\/a+\.jpg"\) !important\}/
@@ -194,7 +203,7 @@ test('a site with no site plan (not a brief build) is not touched', async () => 
     note: () => {},
     applyId: 'o'
   })
-  assert.deepEqual(done, { credit: 0, aliases: 0, head: 0 })
+  assert.deepEqual(done, { credit: 0, aliases: 0, head: 0, links: 0 })
   assert.deepEqual(site.writes, [])
 })
 

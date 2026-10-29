@@ -32,6 +32,8 @@ import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { ownStylesheets } from '../../lib/own-stylesheets.js'
 import { readMenu, readModules, SKIPPED_MENUS, writeSteps } from './joomla-tidy.js'
+import { writeHeadModule } from './joomla-head-module.js'
+import { sweepDeadLinks } from './joomla-link-sweep.js'
 
 /** The head-code param each template framework prints raw into every page's head. */
 export const HEAD_PARAMS = Object.freeze({ t4: 'system_advancedCodeAfterHead', t3: 'snippet_close_head' })
@@ -191,7 +193,7 @@ export function plannedSlotValues(plan) {
  * @param {(key: string, n: number) => void} [input.time]
  * @param {string} input.applyId
  * @param {string} [input.locale] - the language the site is written in: the copyright line is said in it
- * @returns {Promise<{credit: number, aliases: number, head: number}>}
+ * @returns {Promise<{credit: number, aliases: number, head: number, links: number}>}
  */
 export async function writeOutsideMap({
   locale = 'en',
@@ -204,7 +206,7 @@ export async function writeOutsideMap({
   time = () => {},
   applyId
 }) {
-  const done = { credit: 0, aliases: 0, head: 0 }
+  const done = { credit: 0, aliases: 0, head: 0, links: 0 }
   const outside = plan?.outside
   if (!outside) return done
   const say = (/** @type {string} */ what, /** @type {unknown} */ error) =>
@@ -240,6 +242,10 @@ export async function writeOutsideMap({
   }
   if (done.credit) time('creditLinesTakenOff', done.credit)
   if (done.aliases) time('aliasesWritten', done.aliases)
+
+  // Links to pages taken off, and links that lead nowhere (`#`): rewritten to the kept page or removed in their records.
+  done.links = await sweepDeadLinks({ apply, siteKey, plan, applyId, note })
+  if (done.links) time('linksSwept', done.links)
 
   // The head block: backgrounds read from what the site serves, videos and pictures from the plan, dead links from the menu.
   let backgrounds = /** @type {Array<{selector: string, file: string}>} */ ([])
@@ -311,8 +317,15 @@ export async function writeOutsideMap({
     }
     if (styles.length === 0)
       note('the site template has no head-code setting, so the demo backgrounds and videos stay')
+    // T3 reads its head code from the style's own parameters; T4 reads `system_*` only from a template file and drops the
+    // style's, so a T4 site carries the block as one custom module on every page (`joomla-head-module.js`).
+    let viaModule = false
     for (const { row, params } of styles) {
-      const key = HEAD_PARAMS[/** @type {'t4' | 't3'} */ (frameworkOf(params))]
+      if (frameworkOf(params) === 't4') {
+        viaModule = true
+        continue
+      }
+      const key = HEAD_PARAMS.t3
       const value = withHeadBlock(String(params?.[key] ?? ''), block)
       if (value === String(params?.[key] ?? '')) continue
       const answer = await apply({
@@ -329,6 +342,7 @@ export async function writeOutsideMap({
         note(`template style ${row.id} refused its head code: ${answer.message ?? answer.error}`)
       else done.head += 1
     }
+    if (viaModule) done.head += await writeHeadModule({ apply, siteKey, block, applyId, note })
   } catch (error) {
     say('the template styles could not be written', error)
   }
