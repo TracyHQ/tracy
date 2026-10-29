@@ -1925,10 +1925,7 @@ export function validateAgentPlan(
         row.post !== undefined &&
         !bodyFrameKept(matches[0], target.path, row.post?.body, inventoryInvariant)
       )
-        issue(
-          `${at}.post.body`,
-          "This body changes the template post's block frame: keep every block of its body, in order, and change only the words inside them (content.get {kind, id, outline:true} lists the blocks). Never add, drop, merge or reorder a block; plain words without markup are put into the existing blocks."
-        )
+        issue(`${at}.post.body`, bodyFrameMessage(matches[0]))
     }
     if (issues.length >= 50) break
   }
@@ -2000,6 +1997,20 @@ export function picturePlace(row, structure) {
   const value = record ? nativeValue(record.data, target.path) : null
   const file = value?.found && typeof value.value === 'string' ? slotFile({ current: value.value }) : null
   return file ? { slot: null, file } : null
+}
+
+/**
+ * What a post body that changed its frame is told: the read that shows the body as the template installed it, on every
+ * CMS. 🔒 WHY (local measure 29/10/2026): it named `content.get {outline:true}` on every CMS, a WordPress read that
+ * Joomla's `content.get` refuses (UNKNOWN_PARAM), and a Joomla build sent its plan back eleven times, a post at a time.
+ */
+export function bodyFrameMessage(record) {
+  const read = `tracy_demo {operation:"structure.read", record:"${record?.key}"} shows it as the template installed it`
+  const blocks =
+    record?.identity?.kind === 'post'
+      ? '; content.get {kind:"post", id, outline:true} numbers its blocks'
+      : ''
+  return `This body changes the template post's block frame: keep every block of its body, in order, and change only the words inside them (${read}${blocks}). Never add, drop, merge or reorder a block; plain words without markup are put into the existing blocks.`
 }
 
 /**
