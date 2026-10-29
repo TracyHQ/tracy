@@ -259,8 +259,9 @@ test('a picture the fill plan only skips (no role, the logo, a demo-only entity)
     got.rest.map((g) => g.file),
     ['/images/demo/band.jpg']
   )
+  // The icon's role keeps it; the hero, with no photo to take, keeps the template's picture (#141).
   assert.deepEqual(
     got.kept.map((k) => k.file),
-    ['images/demo/icon.jpg']
+    ['images/demo/hero.jpg', 'images/demo/icon.jpg']
   )
 })

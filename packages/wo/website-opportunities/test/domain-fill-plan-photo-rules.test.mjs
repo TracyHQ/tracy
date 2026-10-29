@@ -189,7 +189,8 @@ test('#135 a map photo posted by someone else is refused for the hero and about 
     photo('owner-room', 1000, 750)
   ])
   const hero = got.get('module-1.0')
-  assert.deepEqual([hero.action, hero.reason], ['substitute', 'no-general-photo'])
+  // No photo of its own fits: the hero keeps the template's picture (a non-fact slot, #141).
+  assert.deepEqual([hero.action, hero.reason], ['keep', 'no-general-photo'])
   assert.equal(hero.refused['map-photo-by-others'], 2)
   const about = got.get('module-2.0')
   assert.deepEqual([about.action, about.mediaId], ['photo', 'owner-room'])
@@ -201,10 +202,10 @@ test('#135 a brief with only map photos leaves every identity slot to the neutra
     photo('map-2', 1200, 900, fromMap),
     photo('map-3', 1200, 900, { source: 'tripadvisor', uploaderRole: 'unknown' })
   ])
-  // Hero, about and the gallery's lead picture: the substitute, each saying it refused the map photos.
+  // Hero, about and the gallery's lead picture keep the template's, each saying it refused the map photos (#141).
   for (const key of ['module-1.0', 'module-2.0', 'module-3.0']) {
     const d = got.get(key)
-    assert.deepEqual([d.action, d.reason, d.mediaId], ['substitute', 'no-general-photo', undefined], key)
+    assert.deepEqual([d.action, d.reason, d.mediaId], ['keep', 'no-general-photo', undefined], key)
     assert.ok(d.refused['map-photo-by-others'] >= 2, key)
   }
   // A gallery picture after the lead is not an identity slot: a map photo may show the place there.
@@ -307,14 +308,14 @@ test("#136 a matching photo that today's crop limit refuses is accepted; a photo
   ])
   assert.deepEqual([got.get('module-6.1').action, got.get('module-6.1').mediaId], ['photo', 'padel-wide'])
   const gallery = got.get('module-6.2')
-  assert.deepEqual([gallery.action, gallery.refused['crop-loss']], ['substitute', 1])
+  assert.deepEqual([gallery.action, gallery.refused['crop-loss']], ['keep', 1])
   // Even a match is refused when the crop would keep too little of it.
   const panorama = cardPlan([
     photo('padel-pano', 4000, 600, { depicts: { id: 'svc-padel', evidence: { via: 'alt' } } })
   ])
   assert.deepEqual(
     [panorama.get('module-6.1').action, panorama.get('module-6.1').refused['crop-loss']],
-    ['substitute', 1]
+    ['keep', 1]
   )
 })
 
@@ -409,7 +410,7 @@ test('the size minimum is the box the slot is drawn in at the desktop viewport, 
   const wide = heroOf(1500)
   assert.deepEqual([wide.action, wide.mediaId], ['photo', 'club-hall'])
   const narrow = heroOf(1100)
-  assert.deepEqual([narrow.action, narrow.refused['too-small-after-crop']], ['substitute', 1])
+  assert.deepEqual([narrow.action, narrow.refused['too-small-after-crop']], ['keep', 1])
 })
 
 test('a signature picture with no brief signature takes the owner name in a script font; with no signer it is blank', () => {

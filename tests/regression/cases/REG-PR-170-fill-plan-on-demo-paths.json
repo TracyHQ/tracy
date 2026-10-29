@@ -8,7 +8,7 @@
   "needs": [],
   "flaky_model": false,
   "steps": [
-    "S1: From the checkout run: node --test packages/wo/website-opportunities/test/domain-fill-plan-photo-rules.test.mjs packages/wo/website-opportunities/test/domain-fill-text.test.mjs",
+    "S1: From the checkout run: node --test packages/wo/website-opportunities/test/domain-fill-plan-photo-rules.test.mjs packages/wo/website-opportunities/test/domain-fill-plan-demo-fallback.test.mjs packages/wo/website-opportunities/test/domain-fill-text.test.mjs",
     "S2: Run: node --test apps/tracy-web/test/brief-quickstart-first-fill-plan.test.mjs apps/tracy-web/test/wo-agent-demo-fill-plan.test.mjs apps/tracy-web/test/wo-slot-photo-evidence.test.mjs",
     "S3: Read the exit code and the fail count of each run."
   ],
@@ -17,7 +17,8 @@
     "Size: a 1500 pixel photo is refused for a hero whose desktop box is 1920 wide (more than 1.25 enlargement), and a hero whose file is 1920 wide but whose desktop box is 1440 takes a 1200 pixel photo.",
     "quickstart-first: a v3 map with a brief places each card's photo by the fill plan (the offering the copy pins name), keeps an icon, never puts a stranger's face in a person slot, draws an initials avatar where no portrait fits, and reports qaEvidence placedSlots carrying the offering.",
     "agent-demo: plan.save refuses a row whose photo differs from the fill plan's, and a photo in a substitute slot; media.import refuses another photo with AGENT_DEMO_FILL_PLAN_PHOTO and draws the initials avatar for media.import {rowIndex}; slotPhotoEvidence names the card's offering.",
-    "Text: a claim heading with a demo number and no brief fact becomes numberless ('Boxing studio'), with a founded fact it keeps that fact; a signature slot takes the signer's name, empty when nobody signs."
+    "Text: a claim heading with a demo number and no brief fact becomes numberless ('Boxing studio'), with a founded fact it keeps that fact; a signature slot takes the signer's name, empty when nobody signs.",
+    "Demo fallback: a general slot takes an offering photo when no general one fits (general photos first), an unsure photo never fills an offering card, a logo or non-photograph never fills a photo slot, a photo serves once a page, a non-fact picture with no fitting photo keeps the demo picture (only person, quote author, proof and signature pictures take a substitute), a demo file shared by two offering cards is decided for the first card, and extra offering cards keep their demo picture with no-offering-for-group."
   ],
   "selectors": {
     "fill_plan": "planFill, shownWidthOf in packages/wo/website-opportunities/domain/fill-plan.mjs",
@@ -32,6 +33,7 @@
       "node",
       "--test",
       "packages/wo/website-opportunities/test/domain-fill-plan-photo-rules.test.mjs",
+      "packages/wo/website-opportunities/test/domain-fill-plan-demo-fallback.test.mjs",
       "packages/wo/website-opportunities/test/domain-fill-text.test.mjs",
       "apps/tracy-web/test/brief-quickstart-first-fill-plan.test.mjs",
       "apps/tracy-web/test/wo-agent-demo-fill-plan.test.mjs",
