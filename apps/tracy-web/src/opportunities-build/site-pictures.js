@@ -372,8 +372,14 @@ export function createSitePictures({
                   subTrade: build.brief.business?.subTrade
                 },
                 keyMessages: build.brief.keyMessages ?? [],
-                // The brief's own logo: a mark, never a photo to place or to draw from (`fill-draw.mjs`).
-                brand: { logo: build.brief.brand?.logo ?? null }
+                // The brief's own logo: a mark, never a photo to place or to draw from (`fill-draw.mjs`). Its colours give the
+                // icons and drawings the brand's (`brand-colours.mjs` `brandPaletteOf`, ADR 0023 amended 29/10/2026).
+                brand: {
+                  logo: build.brief.brand?.logo ?? null,
+                  colorsFrom: build.brief.brand?.colorsFrom ?? null,
+                  colors: build.brief.brand?.colors ?? [],
+                  accent: build.brief.brand?.accent ?? null
+                }
               }
             : null,
           // The photo labeller read on a drawn picture (#194): what it sees decides whether the drawing may be shown

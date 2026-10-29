@@ -19,6 +19,7 @@ import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { declaredSize } from 'website-opportunities/domain/pictures/slot-map.mjs'
+import { brandInkOf, brandPaletteOf } from 'website-opportunities/domain/brand-colours.mjs'
 import { cutForPlace } from '../../lib/picture-cut.js'
 import { drawForPlace, drawKey, drawPrompt } from '../../lib/picture-draw.js'
 import { iconColourOf, iconPicture } from '../../lib/icon-glyphs.js'
@@ -129,7 +130,9 @@ export async function drawPlanned({
         aspect: g.aspect,
         referenceIds: g.referenceIds,
         subject: g.subject,
-        variant: g.variant
+        variant: g.variant,
+        // The logo's colours, so a drawing sits with the site's brand colours (ADR 0023 amended 29/10/2026).
+        ...paletteOf(real)
       }
       const got = await drawChecked({
         item,
@@ -273,7 +276,9 @@ export async function shapeDecor({ decisions, slotOf, siteBytes, real, note }) {
           glyph: d.glyph,
           width: demo.width,
           height: demo.height,
-          colour: demo.colour ?? real.colours?.[0] ?? '#222222'
+          // An icon the demo drew in the template's brand colour takes the logo's at the same luminance, so it reads on
+          // the same ground (`brandInkOf`); a grey one, or a site with no logo colours, keeps the demo's.
+          colour: brandInkOf(demo.colour, brandPaletteOf(real.brief)) ?? real.colours?.[0] ?? '#222222'
         })
         stats.icons += 1
         return {
@@ -371,4 +376,10 @@ export function declaredPictureSlots(contract) {
   } catch {
     return []
   }
+}
+
+/** The logo's palette as a drawing item's `palette` (`picture-draw.js` `drawPrompt`), or nothing without one. */
+function paletteOf(/** @type {any} */ real) {
+  const palette = brandPaletteOf(real?.brief)
+  return palette ? { palette: [palette.primary, ...(palette.secondary ? [palette.secondary] : [])] } : {}
 }

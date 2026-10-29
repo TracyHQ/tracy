@@ -11,6 +11,7 @@
  */
 import { createHash } from 'node:crypto'
 import sharp from 'sharp'
+import { colourWords } from 'website-opportunities/domain/brand-colours.mjs'
 
 export const DRAW_PROMPT_VERSION = 'd5'
 const REFERENCE_EDGE = 1024
@@ -63,6 +64,19 @@ const REFERENCES =
   'The attached photos are real photos of this business: keep what its place, equipment and colours look like, but make a new, professional photograph, not a copy of their framing, text or graphics.'
 
 /**
+ * The business's brand colours (its logo's, `item.palette`), said to a scene or object drawing so it sits with the site's
+ * colours: where the scene holds colour of its own (clothing, equipment, decor), never as painted blocks or words.
+ * Empty without a palette (ADR 0023 amended 29/10/2026).
+ * @param {{palette?: string[]}} item
+ */
+function brandColoursOf(item) {
+  const palette = Array.isArray(item.palette) ? item.palette.filter((c) => /^#[0-9a-f]{6}$/i.test(c)) : []
+  if (!palette.length) return ''
+  const said = palette.map((c) => `${colourWords(c)} (${c.toLowerCase()})`).join(' and ')
+  return `\nThe business's brand colours are ${said}, from its logo: let them show where the scene naturally holds colour (clothing, equipment, furniture, decor, light), without colour blocks, frames or graphics.`
+}
+
+/**
  * What the model is asked, by mode: `outpaint`, `scene`, or `object` (a cut-out figure's object on a plain ground).
  *
  * 🔒 A SCENE IS ASKED THE WAY CUSTOMIZE ASKS (d3, 29/10/2026). Measured on the local stand with the same model: d2 told
@@ -92,13 +106,13 @@ export function drawPrompt(item) {
   }
   if (item.mode === 'object') {
     const what = item.subject?.label ? `${item.subject.label}` : `the work of this business`
-    return `One single object used for ${what}, for the website of this business:${about}\nShown whole and large, filling most of the frame, on a plain pure white background with nothing else in the frame, framed ${shape}. Photorealistic, soft even light, no shadow on the ground, no people.\n${REFERENCES}\n${NEVER}`
+    return `One single object used for ${what}, for the website of this business:${about}\nShown whole and large, filling most of the frame, on a plain pure white background with nothing else in the frame, framed ${shape}. Photorealistic, soft even light, no shadow on the ground, no people.${brandColoursOf(item)}\n${REFERENCES}\n${NEVER}`
   }
   const page =
     item.subject?.kind === 'offering' && item.subject.label
       ? `for the page of one of its offerings, ${item.subject.label}`
       : 'for its website'
-  return `A photograph of this business, ${page}:${about}\nPhotorealistic, natural light, ${activityOf(item.subject)}, framed ${shape}.\n${PEOPLE}\n${REFERENCES}\n${NEVER}`
+  return `A photograph of this business, ${page}:${about}\nPhotorealistic, natural light, ${activityOf(item.subject)}, framed ${shape}.${brandColoursOf(item)}\n${PEOPLE}\n${REFERENCES}\n${NEVER}`
 }
 
 /** The cache key of a drawing: what it was made from, for what subject and shape, how, and by which model. */
@@ -121,7 +135,9 @@ export function drawKey(item, { model, shas }) {
         item.aspect.toFixed(3),
         shas,
         subject,
-        item.variant ?? 0
+        item.variant ?? 0,
+        // Only when given, so a drawing made without brand colours keeps its key.
+        ...(Array.isArray(item.palette) && item.palette.length ? [item.palette] : [])
       ])
     )
     .digest('hex')

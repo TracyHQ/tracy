@@ -1,4 +1,5 @@
 import { CMS } from './cms.mjs'
+import { brandPaletteOf } from './brand-colours.mjs'
 import { contentPool } from './content-pool.mjs'
 import { DISH_PHOTO_HOWS, DISH_PHOTO_STATUSES, DISH_PHOTOS_MATCHER, matchDishPhotos } from './dish-photos.mjs'
 import { decideHours, hoursPickOf } from './hours-check.mjs'
@@ -1159,14 +1160,21 @@ function briefReading(reading, about) {
 }
 
 /**
- * The one colour change a demo may carry (ADR 0023, amendment of 26/10/2026): the logo's accent, applied as these four
- * tokens and nothing else. Empty without an accent, so the plain "no colour change" wording stays as it was.
+ * The colour change a demo may carry (ADR 0023, amendments of 26/10/2026 and 29/10/2026). A brief build whose brief holds
+ * the logo (`brief-build/1`) repaints the template's brand colour ROLES with the logo's palette (`brand-colours.mjs`):
+ * buttons, links, accents, icons and overlays take it, the page grounds, neutral text, greys and fonts stay. The agent
+ * demo still takes the logo's one accent, applied as these four tokens and nothing else. Empty without either, so the
+ * plain "no colour change" wording stays as it was.
  */
 const ACCENT_TOKENS = '`--ds-c-accent`, `--ds-c-accent-hover`, `--ds-c-accent-active` and `--ds-c-accent-on`'
-const accentException = (brief) =>
-  brief.brand?.accent
+const accentException = (brief) => {
+  const palette = brief.quickstartWorkflow === 'brief-build/1' ? brandPaletteOf(brief) : null
+  if (palette)
+    return ` The exception is the brand colour roles, which take the colours of the business's logo (${[palette.primary, palette.secondary].filter(Boolean).join(' and ')}): wherever the template paints its own brand colour (buttons, links, accents, icons, overlays) it shows these colours, each in the tone that reads on its ground; the page grounds, neutral text, greys and fonts stay the template's.`
+  return brief.brand?.accent
     ? ` The single exception is the logo accent ${brief.brand.accent.hex}, set only through ${ACCENT_TOKENS}; nothing else changes.`
     : ''
+}
 
 /**
  * The brief as one build reads it: the build's CMS and template, and the acceptance lines that name them.

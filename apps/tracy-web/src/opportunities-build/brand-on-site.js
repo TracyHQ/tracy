@@ -3,7 +3,15 @@
  * 26/10/2026): ONE accent colour from its logo, a WhatsApp button beside Call, and one line naming the areas it serves.
  * PURE: brief in, the build's steps and the values the QA gate allows out.
  *
- * 🔒 ONE ACCENT, NOTHING ELSE OF THE LOOK (ADR 0023, amended 26/10/2026). The accent goes on the template's standard
+ * 🔒 THE BRIEF BUILD TAKES MORE (ADR 0023, amended 29/10/2026). A brief build (`brief-build/1`, the Customize engine) whose
+ * brief holds the logo repaints every brand colour ROLE of the template with the logo's palette (primary, and a secondary
+ * when the logo has one): buttons, links, accents, icons, overlays and drawings, each tone moved in lightness until it
+ * reads on its ground, while page grounds, neutral text, greys and fonts stay the template's
+ * (`website-opportunities/domain/brand-colours.mjs`, `brand-colour-css.mjs`; written by `brief-engines/joomla-brand-colours.js`).
+ * The agent demo below keeps the one accent: a site that keeps another brand's colour does not feel like the owner's,
+ * so the same widening is due here (`brandOnSiteSteps` and the QA gate's `accentTokens`) and on WordPress and EmDash.
+ *
+ * 🔒 ONE ACCENT ON THE AGENT DEMO, NOTHING ELSE OF THE LOOK (ADR 0023, amended 26/10/2026). The accent goes on the template's standard
  * accent role variables (`--ds-c-accent`, its hover, pressed and on-accent text; `@tracy/ds-slot` `role-variables.mjs`):
  * a template that reads them (`var(--ds-c-accent, <its own>)`) paints its buttons, rules and accent fills with it, and
  * one that does not stays exactly as it was. Every other colour, the fonts and the layout stay the template's. The text

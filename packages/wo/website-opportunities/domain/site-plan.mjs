@@ -16,6 +16,7 @@ import { CONTACT_FACTS_WHY } from './page-plan.mjs'
 import { answersFromBrief, contactFacts } from './site-answers.mjs'
 import { IDENTITY_REASONS, planIdentity } from './site-plan-identity.mjs'
 import { planOutsideMap } from './outside-map.mjs'
+import { COLOUR_REASONS, planColours } from './brand-colours.mjs'
 import { HONESTY_REASONS, planHonesty } from './site-plan-honesty.mjs'
 import { EMPTIED_PAGE_WHY, emptiedPages } from './site-plan-empty-pages.mjs'
 
@@ -35,6 +36,7 @@ export const SITE_PLAN_REASONS = Object.freeze({
   'contact-fact': 'a contact fact the brief holds',
   'business-name': 'the business name the brief holds',
   ...IDENTITY_REASONS,
+  ...COLOUR_REASONS,
   ...HONESTY_REASONS
 })
 
@@ -195,6 +197,8 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
     ...planIdentity(brief, contentMap),
     // What the content map does not reach: videos, backgrounds, showcase, addresses, credit line (ticket #196).
     outside: planOutsideMap({ brief, contentMap }),
+    // The brand colours: the logo's when the brief holds the logo, else the template's (ADR 0023 amended 29/10/2026).
+    colours: planColours(brief),
     ...honesty,
     answers,
     questionnaire,

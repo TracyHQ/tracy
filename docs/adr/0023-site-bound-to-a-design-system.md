@@ -382,3 +382,43 @@ with `/v1` (`tasks/todo-api-public.md` S8); `manifest_design`, `wrote_by` do not
 - **Unchanged.** The door for changing a colour for customers (`theme.palette`) stays outside `APPLY_RULES`; this section
   is only the Website Opportunities demo build step.
 
+
+## Amendment 29/10/2026: a brief build takes the brand colour ROLES from the logo, not one accent (settled by Akemi)
+
+- **Who decided, when.** Akemi (COO) approved the rule on 29/10/2026 for brief builds (spec TracyHQ/tracy#189), after a
+  local build of a sports club brief on a dark T4 template kept the template's red on every button, link, accent and
+  icon although the brief held the club's own logo (dark green and gold).
+- **Why the one accent was not enough.** The 26/10 rule set `--ds-c-accent*`, and only templates that read those roles
+  changed. The measured T4 template paints its brand through its own theme variables (`--color-primary`,
+  `--body-link-color`, `--mainnav-link-*`, compiled from `etc/theme/*.json`), a T3 template through literal colours its
+  LESS compiled; neither reads the role for its buttons, and the brief-build path never wrote the accent at all. A site that
+  keeps another brand's colour does not feel like the owner's.
+- **Decision.**
+  1. A brief whose `brand.logo` is set and whose colours were read from that logo (`colorsFrom: 'logo'`) gives a palette:
+     the primary, and a secondary when the logo clearly holds another colour. Near white, near black and greys are never
+     brand colours. No logo of the brief (Tracy draws one, or the name shows as text), colours from photographs, or a logo
+     of greys only: the site keeps every colour of the template (site plan `colours.decision: 'template'`).
+  2. Only the template's brand colour ROLES change: wherever it paints its own brand colour (buttons, links, accents,
+     menu states, icons, overlays on pictures, inline SVG drawings). Page grounds, neutral text, greys, status colours
+     (danger, warning, success, info), fonts and layout stay the template's.
+  3. Each role is moved in lightness, its hue kept, until it reads where it sits: text 4.5:1 on the page ground, fills and
+     lines 3:1, the words on a fill 4.5:1 (the template's own words when they still read, else white or black). Each side of
+     the template (the side the page opens on, and every mode it can switch to: a `.light-active` class, a
+     `[data-bs-theme]` attribute, the colour-scheme media) gets the tones that read on its own ground; words also reach 3:1
+     on the other sides' grounds when one tone can, since a hero title on a photograph keeps its look on every side.
+  4. The template's brand colour is MEASURED, never named: the colour the framework role rules resolve to (links, the
+     primary button, `.text-primary`, `.bg-primary`, the primary/link/accent theme variables), voted; a shade is the same hue
+     on a role that also wears the brand colour (a compiled hover). Code: `website-opportunities/domain/brand-colours.mjs`,
+     `brand-colour-measure.mjs`, `brand-colour-css.mjs`.
+  5. Icons the demo drew in its brand colour are drawn in the palette's primary at the same luminance (same contrast on any
+     ground); drawn pictures are told the palette in plain words (`picture-draw.js`).
+- **How it is written (Joomla).** One CSS block built from the stylesheets and pages the site serves travels inside the
+  marked head block the leftover rules use: T3 prints it from the style's head-code param, T4 from one custom module on
+  every page. Every rule is declared again under the same selector and media and reads a Tracy variable per role
+  (`--tracy-brand-<n>-text|fill|on|line`), set on `:root` and again under each side's marker; the template's own
+  variables that held the brand colour, and `--ds-c-accent*` where the template reads them, are set the same way.
+  T4's theme settings files are not written: no Apply door writes them, and they only reach the page once the admin
+  saves; the admin therefore still names the template's colours (risk accepted). Code:
+  `apps/tracy-web/src/sites/brief-engines/joomla-brand-colours.js`.
+- **Not changed.** The agent demo (`brand-on-site.js`) keeps the one accent and its `look-kept` exception; WordPress and
+  EmDash brief builds do not take the roles yet.

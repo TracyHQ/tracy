@@ -35,6 +35,7 @@ import { readMenu, readModules, SKIPPED_MENUS, writeSteps } from './joomla-tidy.
 import { emptyFrames } from './empty-frames.js'
 import { writeHeadModule } from './joomla-head-module.js'
 import { sweepDeadLinks } from './joomla-link-sweep.js'
+import { brandColoursCss, withColoursBlock } from './joomla-brand-colours.js'
 
 /** The head-code param each template framework prints raw into every page's head. */
 export const HEAD_PARAMS = Object.freeze({ t4: 'system_advancedCodeAfterHead', t3: 'snippet_close_head' })
@@ -258,6 +259,7 @@ export async function writeOutsideMap({
   let backgrounds = /** @type {Array<{selector: string, file: string}>} */ ([])
   let picture = null
   let frames = /** @type {string[]} */ ([])
+  let colours = ''
   if (reader) {
     try {
       const paths = [
@@ -279,6 +281,8 @@ export async function writeOutsideMap({
         if (css) styles.push({ css })
       }
       backgrounds = demoBackgrounds({ styles, pages, contentMap })
+      // The template's brand colours repainted with the logo's (site plan `colours`, ADR 0023 amended 29/10/2026).
+      colours = brandColoursCss({ plan, styles, pages, note })
     } catch (error) {
       say('the backgrounds the template paints could not be read', error)
     }
@@ -291,7 +295,7 @@ export async function writeOutsideMap({
   } catch (error) {
     say('the menu could not be read for links to pages taken off', error)
   }
-  const block = leftoverHeadBlock({
+  const leftovers = leftoverHeadBlock({
     backgrounds,
     picture,
     videos: (outside.videos ?? []).filter((v) => v.decision === 'still' && v.demo).map((v) => v.demo),
@@ -300,6 +304,7 @@ export async function writeOutsideMap({
     frames,
     pictures
   })
+  const block = withColoursBlock(leftovers, colours)
   if (!block) return done
   try {
     const list = await apply({
