@@ -19,6 +19,7 @@
  * 🔒 ONLY A BRIEF BUILD: a site no brief build made has no site plan and nothing here runs. What the site cannot give or
  * refuses is a note, never a failed build; every write carries one apply id, so the build's undo takes it back.
  */
+import { plannedStatisticValues } from 'website-opportunities/domain/statistic-tuples.mjs'
 import {
   copyrightLine,
   demoBackgrounds,
@@ -181,6 +182,7 @@ export function ownerPictureOf(/** @type {string | null} */ html, /** @type {str
  */
 export function plannedSlotValues(plan) {
   return {
+    ...plannedStatisticValues(plan),
     ...Object.fromEntries(
       (plan?.outside?.videos ?? [])
         .filter((v) => v.decision === 'video' && v.value)

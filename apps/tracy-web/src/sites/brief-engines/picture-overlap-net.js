@@ -10,6 +10,8 @@
  * folder) are ever taken off; a template picture is the template's design.
  */
 
+import { keptPageReader } from '../../lib/kept-page-reader.js'
+
 /** The pages read: the home page and the first kept pages. Each is read at four widths. */
 export const OVERLAP_PAGES = 5
 /** The folder a brief build uploads its pictures under (`content.media.write`: `…/tracy-content/<sha256>.<ext>`). */
@@ -50,6 +52,7 @@ const pathOf = (src) =>
  * Check once, and take off what covers words.
  * @param {object} input
  * @param {((siteKey: string, pages: string[]) => Promise<{findings?: any[]} | null>) | null} input.check - the host call
+ * @param {{text: (path: string) => Promise<string>} | null} [input.reader] - resolves kept paths before the browser reads them
  * @param {string} input.siteKey
  * @param {any} input.plan - the site plan (its kept pages)
  * @param {string[]} input.pictures - the pictures the head block already hides
@@ -58,11 +61,36 @@ const pathOf = (src) =>
  * @param {(phase: string, n: number) => void} [input.time]
  * @returns {Promise<{checked: boolean, takenOff: Array<{path: string, widths: number[], covers: any[]}>}>}
  */
-export async function overlapSafetyNet({ check, siteKey, plan, pictures, rewrite, note, time = () => {} }) {
+export async function overlapSafetyNet({
+  check,
+  reader = null,
+  siteKey,
+  plan,
+  pictures,
+  rewrite,
+  note,
+  time = () => {}
+}) {
   if (!check) return { checked: false, takenOff: [] }
   let answer = null
+  let complete = true
   try {
-    answer = await check(siteKey, overlapPagesOf(plan))
+    const paths = []
+    if (reader) {
+      const read = keptPageReader(async (path) => ({ status: 200, html: await reader.text(path) }))
+      for (const path of overlapPagesOf(plan)) {
+        const page = await read(path)
+        if (page.servedPath) paths.push(page.servedPath)
+        else {
+          complete = false
+          note(
+            `the kept page ${path} could not be read for the picture overlap scanner: ${JSON.stringify(page.attempts)}`
+          )
+        }
+      }
+    } else paths.push(...overlapPagesOf(plan))
+    if (!paths.length) return { checked: false, takenOff: [] }
+    answer = await check(siteKey, paths)
   } catch {
     answer = null
   }
@@ -82,19 +110,19 @@ export async function overlapSafetyNet({ check, siteKey, plan, pictures, rewrite
       covers: (f.covers ?? []).slice(0, 4)
     })
   }
-  if (takenOff.length === 0) return { checked: true, takenOff }
+  if (takenOff.length === 0) return { checked: complete, takenOff }
   try {
     await rewrite([...pictures, ...takenOff.map((t) => t.path)])
   } catch (error) {
     note(
       `a placed picture covers the words but could not be taken off: ${error instanceof Error ? error.message : error}`
     )
-    return { checked: true, takenOff: [] }
+    return { checked: complete, takenOff: [] }
   }
   for (const t of takenOff) {
     const words = t.covers.map((c) => (c.text ? `${c.kind} "${c.text}"` : c.kind)).join(', ')
     note(`a placed picture covered ${words} at ${t.widths.join(', ')}px wide, so it was taken off: ${t.path}`)
   }
   time('picturesOverlapTakenOff', takenOff.length)
-  return { checked: true, takenOff }
+  return { checked: complete, takenOff }
 }
