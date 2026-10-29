@@ -8,6 +8,9 @@ for (const offering of ['Sourdough', 'Dental cleaning']) {
   }
   const card = (summary) =>
     `<article><h3><a href="/services/one">${offering}</a></h3>${summary}<a href="/contact">Details</a></article>`
+  // Each address serves its own page: the offering's own page and the contact page do not repeat the list's cards, so
+  // they hold no button back to themselves (the self-link rule, #189 item 23).
+  const otherPage = '<main><h1>Another page</h1><p>Its own words.</p></main>'
   const run = (home, list) =>
     runLeftoverCheck({
       brief,
@@ -16,7 +19,7 @@ for (const offering of ['Sourdough', 'Dental cleaning']) {
       check: () => ({ pass: true, findings: [], counts: {} }),
       readPage: async (path) => ({
         status: path.includes('missing-page') ? 404 : 200,
-        html: path === '/' ? home : list
+        html: path === '/' ? home : path === '/services' ? list : otherPage
       })
     })
   test(`${offering}: the final build result fails for an empty summary on home and the list`, async () => {

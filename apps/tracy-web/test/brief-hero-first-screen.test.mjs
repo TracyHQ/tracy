@@ -44,7 +44,11 @@ test('the leftover report names what the served first screen does not answer, an
     '<div class="acm-hero"><h1>Gentle dentistry</h1><div class="lead">Smile more every day.</div>' +
     '<a class="btn" href="/contact">Contact</a></div><div id="t4-section-1"></div>'
   const report = await runLeftoverCheck({
-    readPage: async () => ({ status: 200, html }),
+    // The home page carries the hero; the contact page its button leads to is a page of its own, without that button.
+    readPage: async (path) => ({
+      status: 200,
+      html: path === '/' ? html : '<main><h1>Contact</h1><p>Write to us.</p></main>'
+    }),
     check: () => ({ pass: true, findings: [], counts: {} }),
     heroCheck: checkHeroAnswers,
     contentMap: {},
