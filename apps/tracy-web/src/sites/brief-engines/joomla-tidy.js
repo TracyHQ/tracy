@@ -22,6 +22,7 @@
  * - The contact record mails the address the owner gave, else nobody (the form is off, and said), and shows the phone they
  *   gave, else none of the template's (`contactSteps`).
  */
+import { createHash } from 'node:crypto'
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { FACT_RULES, factsOf, ungrounded } from './guard.js'
@@ -1237,6 +1238,21 @@ const BATCH_MAX = 100
  * @param {(refused: Array<{ kind: string, id: number }>) => Promise<(step: { kind: string, id: number }) => boolean>} [input.still]
  * @returns {Promise<{ written: number, notes: string[], refused: Array<{ kind: string, id: number }>, skipped: Array<{ kind: string, id: number }> }>}
  */
+/**
+ * The request id of one records transaction. The component answers a request id it has seen with its stored result, so
+ * the id names the operations themselves: several passes under one apply id (the tidy-up, the outside-map pass, the dead
+ * link sweep) each get their own, and the same transaction sent again after a lost answer keeps it. Within the
+ * component's limit (letters, digits, `._:-`, at most 100 characters) whatever the apply id's length.
+ * @param {string} applyId
+ * @param {unknown[]} operations
+ */
+export function batchRequestId(applyId, operations) {
+  const digest = createHash('sha256').update(JSON.stringify(operations)).digest('hex')
+  const id = `${applyId}-batch-${digest.slice(0, 16)}`
+  if (id.length <= 100 && /^[a-zA-Z0-9._:-]+$/.test(id)) return id
+  return `batch-${createHash('sha256').update(`${applyId}|${digest}`).digest('hex').slice(0, 40)}`
+}
+
 export async function writeSteps({ apply, siteKey, steps, applyId, still }) {
   /** @type {string[]} */
   const notes = []
@@ -1262,7 +1278,7 @@ export async function writeSteps({ apply, siteKey, steps, applyId, still }) {
         action: 'content.batch',
         params: {
           apply_id: applyId,
-          request_id: at === 0 ? `${applyId}-batch` : `${applyId}-batch-${at / BATCH_MAX}`,
+          request_id: batchRequestId(applyId, part),
           operations: part
         }
       })

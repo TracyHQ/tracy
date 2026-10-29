@@ -97,7 +97,7 @@ import { type NextAction, nextAction, nextStepText, relativeTime } from './oppor
 import { usePoll } from './poll.ts'
 import type { RequestIds } from './request-ids.ts'
 import { runAction } from './row-actions.ts'
-import { type SourceInput, buildView, reasonKey, shouldPoll } from './status.ts'
+import { type SourceInput, buildView, fixKey, reasonKey, shouldPoll } from './status.ts'
 import type { Translate } from './strings.ts'
 
 type Body = Record<string, unknown>
@@ -973,7 +973,7 @@ function Demos({
                 relativeTime(r.createdAt, Date.now(), locale),
                 r.briefN === null ? null : t('demos.fromBrief', { n: r.briefN })
               ].filter(Boolean)
-              const live = r.phase === 'done'
+              const live = r.phase === 'done' && !r.needsFixes
               return (
                 <li key={r.id} className="tracy-wo-brief-row">
                   <span className="tracy-wo-name">{t('demos.number', { n: r.n })}</span>
@@ -984,7 +984,7 @@ function Demos({
                     variant={live ? 'secondary' : 'outline'}
                     className={live ? 'tracy-wo-badge-live' : undefined}
                   >
-                    {t(`demos.state.${r.phase}`)}
+                    {t(r.needsFixes ? 'demos.state.needsFixes' : `demos.state.${r.phase}`)}
                   </Badge>
                   {r.siteKey !== null && r.phase !== 'deleted' ? (
                     <span className="tracy-wo-row tracy-wo-brief-acts">
@@ -1388,10 +1388,24 @@ function Build({
           <Spinner label={t('build.running')} /> {t('build.running')}
         </p>
       )}
-      {status?.phase === 'done' && (
+      {status?.phase === 'done' && status.fixes.length === 0 && (
         <p className="tracy-wo-ok" role="status">
           {t('build.done')}
         </p>
+      )}
+      {status?.phase === 'done' && status.fixes.length > 0 && (
+        <div role="alert">
+          <p className="tracy-wo-error">{t('build.needsFixes')}</p>
+          <ul className="tracy-wo-small">
+            {status.fixes.map((fix) => (
+              <li key={fix.rule}>
+                {fix.pages.length > 0
+                  ? t('build.fixPages', { what: t(fixKey(fix.rule)), pages: fix.pages.join(', ') })
+                  : t(fixKey(fix.rule))}
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
       {status?.phase === 'done' && buildId !== null && (
         <Button type="button" variant="outline" disabled={handing} onClick={() => void handOff()}>

@@ -585,6 +585,8 @@ export interface DemoRow {
   /** The template's label, else its design id; null when the build named none. */
   template: string | null
   phase: BuildView['phase']
+  /** Built, but the final check left blockers (`receipt.blockers`): shown as needing fixes, never as live. */
+  needsFixes: boolean
   siteKey: string | null
   createdAt: string | null
   /** The number of the brief it was built from; null when that brief is not listed. */
@@ -605,10 +607,11 @@ export function demoRows(builds: unknown, revisions: unknown): DemoRow[] {
     if (!isObject(b) || typeof b.id !== 'string' || b.id === '') return []
     const template = isObject(b.template) ? (text(b.template.label) ?? text(b.template.design)) : null
     const siteKey = text(b.siteKey)
-    const phase = buildView({
-      build: { state: text(b.state) },
+    const view = buildView({
+      build: { state: text(b.state), receipt: isObject(b.receipt) ? b.receipt : null },
       site: siteKey ? { key: siteKey } : null
-    }).phase
+    })
+    const phase = view.phase
     const revisionId = text(b.revisionId)
     return [
       {
@@ -616,6 +619,7 @@ export function demoRows(builds: unknown, revisions: unknown): DemoRow[] {
         cms: text(b.cms),
         template,
         phase,
+        needsFixes: phase === 'done' && view.fixes.length > 0,
         siteKey,
         createdAt: text(b.createdAt),
         briefN: revisionId ? (briefs.get(revisionId) ?? null) : null

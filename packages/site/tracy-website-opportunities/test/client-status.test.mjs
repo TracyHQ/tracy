@@ -6,7 +6,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { buildView, jobView, reasonKey, shouldPoll, siteLinks, sourceRow } from '../src/client/status.ts'
+import { buildView, fixKey, jobView, reasonKey, shouldPoll, siteLinks, sourceRow } from '../src/client/status.ts'
 
 test('each source status keeps its own label and tone', () => {
   assert.deepEqual(
@@ -174,4 +174,49 @@ test('a build is done only when its site job is done, and failed when refused or
 test('settings and build refusals the server names have their own words', () => {
   assert.equal(reasonKey('NO_TEMPLATE_FOR_CMS'), 'reason.no_template_for_cms')
   assert.equal(reasonKey('TEMPLATES_UNREADABLE'), 'reason.templates_unreadable')
+})
+
+test('a finished build whose final check left blockers says it needs fixes, with the list, never just done', () => {
+  const blocked = buildView({
+    build: {
+      state: 'completed',
+      receipt: {
+        blockers: {
+          state: 'needs-fixes',
+          items: [
+            { rule: 'form-without-recipient', pages: ['/contact'], count: 1 },
+            { rule: 'kept-page-missing', pages: ['/services'], count: 1 }
+          ],
+          total: 2
+        }
+      }
+    },
+    site: { key: 'florist' }
+  })
+  assert.equal(blocked.phase, 'done')
+  assert.deepEqual(blocked.fixes, [
+    { rule: 'form-without-recipient', pages: ['/contact'], count: 1 },
+    { rule: 'kept-page-missing', pages: ['/services'], count: 1 }
+  ])
+  // Clear, or a build no check judged: no list.
+  const clear = buildView({
+    build: { state: 'completed', receipt: { blockers: { state: 'clear', items: [], total: 0 } } },
+    site: { key: 'garage' }
+  })
+  assert.deepEqual(clear.fixes, [])
+  assert.deepEqual(buildView({ build: { state: 'completed' }, site: { key: 'garage' } }).fixes, [])
+  // A malformed item is dropped, not drawn.
+  const odd = buildView({
+    build: {
+      state: 'completed',
+      receipt: { blockers: { state: 'needs-fixes', items: [{ rule: 3 }, { rule: 'demo-content' }] } }
+    }
+  })
+  assert.deepEqual(odd.fixes, [{ rule: 'demo-content', pages: [], count: 0 }])
+})
+
+test('each blocker kind has its own words on screen, and an unknown one still shows', () => {
+  assert.equal(fixKey('form-without-recipient'), 'fix.formWithoutRecipient')
+  assert.equal(fixKey('kept-page-missing'), 'fix.keptPageMissing')
+  assert.equal(fixKey('a-kind-added-later'), 'fix.otherBlocker')
 })

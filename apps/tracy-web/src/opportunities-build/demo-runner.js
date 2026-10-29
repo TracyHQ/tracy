@@ -14,6 +14,7 @@ import { withHandoffLock } from './handoff.js'
 import { isBriefBuild } from './brief-build-path.js'
 import { checkBuildLeftovers } from './demo-leftover-check.js'
 import { cleanBuildLeftovers, cleanupTurnPort } from './demo-leftover-cleanup.js'
+import { gateBuildBlockers } from './build-blocker-gate.js'
 
 const POLL_MS = 10_000
 const LEASE_MS = 6 * 60_000
@@ -433,6 +434,8 @@ export function createDemoRunner(deps) {
             ...(deps.contentMapOf ? { contentMapOf: deps.contentMapOf } : {}),
             now
           })
+          // 🔒 What the turn left is judged once more: a blocker left makes the build "needs fixes", never built (#189).
+          build = await gateBuildBlockers(db, { build, domain })
         }
         // A baseline the site check could not read yet is the QA sweep's to read again (`takeDueBaselines`),
         // and it sends the prompt once one holds: the worker waits instead of spending the reads.

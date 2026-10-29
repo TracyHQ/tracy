@@ -169,7 +169,7 @@ export function siteLinks(
 export interface BuildAnswer {
   build?: {
     state?: string | null
-    receipt?: { body?: { code?: unknown } | null } | null
+    receipt?: { body?: { code?: unknown } | null; blockers?: unknown } | null
     lastError?: { code?: string } | null
     last_error?: { code?: string } | null
   }
@@ -183,6 +183,51 @@ export interface BuildView {
   phase: 'running' | 'done' | 'failed' | 'deleted'
   links: SiteLinks | null
   reasonKey: string | null
+  /** What the final check still holds after the cleanup turn (the build gate's blockers): a done build with any of
+   * them needs fixes and is never shown as ready. Empty when the check found none, or never judged the build. */
+  fixes: BuildFix[]
+}
+
+/** One blocker kind the build gate left, with the pages it is on (`domain/build-blockers.mjs`). */
+export interface BuildFix {
+  rule: string
+  pages: string[]
+  count: number
+}
+
+const FIX_KEYS: Readonly<Record<string, string>> = {
+  'demo-content': 'fix.demoContent',
+  'form-without-recipient': 'fix.formWithoutRecipient',
+  'record-not-from-brief': 'fix.recordNotFromBrief',
+  'missing-head-block': 'fix.missingHeadBlock',
+  'link-without-job': 'fix.linkWithoutJob',
+  'kept-page-missing': 'fix.keptPageMissing'
+}
+
+/** The string key that names one blocker kind on screen; a kind this screen does not know is still shown. */
+export function fixKey(rule: string): string {
+  return FIX_KEYS[rule] ?? 'fix.otherBlocker'
+}
+
+/** The blockers kept on a build's receipt, read defensively: anything malformed is dropped. */
+export function buildFixes(receipt: unknown): BuildFix[] {
+  const blockers =
+    typeof receipt === 'object' && receipt !== null ? (receipt as { blockers?: unknown }).blockers : null
+  if (typeof blockers !== 'object' || blockers === null) return []
+  const { state, items } = blockers as { state?: unknown; items?: unknown }
+  if (state !== 'needs-fixes' || !Array.isArray(items)) return []
+  return items.flatMap((item: unknown): BuildFix[] => {
+    if (typeof item !== 'object' || item === null) return []
+    const { rule, pages, count } = item as { rule?: unknown; pages?: unknown; count?: unknown }
+    if (typeof rule !== 'string' || rule === '') return []
+    return [
+      {
+        rule,
+        pages: Array.isArray(pages) ? pages.filter((p): p is string => typeof p === 'string') : [],
+        count: typeof count === 'number' ? count : 0
+      }
+    ]
+  })
 }
 
 const BUILD_DONE = new Set(['completed', 'done'])
@@ -191,13 +236,14 @@ const BUILD_FAILED = new Set(['failed', 'cancelled', 'blocked', 'refused'])
 export function buildView(answer: BuildAnswer): BuildView {
   const state = answer.build?.state ?? 'requesting'
   const siteState = answer.siteJob?.state ?? ''
-  if (state === 'deleted') return { phase: 'deleted', links: null, reasonKey: null }
+  if (state === 'deleted') return { phase: 'deleted', links: null, reasonKey: null, fixes: [] }
   const links = siteLinks(answer.site)
   const code =
     (answer.build?.lastError ?? answer.build?.last_error)?.code ?? answer.build?.receipt?.body?.code
-  if (BUILD_DONE.has(state) || siteState === 'done') return { phase: 'done', links, reasonKey: null }
+  if (BUILD_DONE.has(state) || siteState === 'done')
+    return { phase: 'done', links, reasonKey: null, fixes: buildFixes(answer.build?.receipt) }
   if (BUILD_FAILED.has(state) || BUILD_FAILED.has(siteState)) {
-    return { phase: 'failed', links, reasonKey: reasonKey(code) ?? 'reason.other' }
+    return { phase: 'failed', links, reasonKey: reasonKey(code) ?? 'reason.other', fixes: [] }
   }
-  return { phase: 'running', links, reasonKey: null }
+  return { phase: 'running', links, reasonKey: null, fixes: [] }
 }

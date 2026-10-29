@@ -411,6 +411,31 @@ test('demoRows: every demo newest first, numbered by age, with its CMS, template
   assert.deepEqual(demoRows(null, null), [])
 })
 
+test('demoRows: a finished demo whose final check left blockers is marked as needing fixes, not live', async () => {
+  const { demoRows } = await import('../src/client/detail-model.ts')
+  const blockers = { state: 'needs-fixes', items: [{ rule: 'demo-content', pages: ['/'], count: 2 }], total: 2 }
+  const rows = demoRows(
+    [
+      { id: 'b1', state: 'completed', siteKey: 'a.test', createdAt: '2026-10-20T08:00:00Z', receipt: { blockers } },
+      {
+        id: 'b2',
+        state: 'completed',
+        siteKey: 'b.test',
+        createdAt: '2026-10-21T08:00:00Z',
+        receipt: { blockers: { state: 'clear', items: [], total: 0 } }
+      }
+    ],
+    []
+  )
+  assert.deepEqual(
+    rows.map((r) => [r.id, r.phase, r.needsFixes]),
+    [
+      ['b2', 'done', false],
+      ['b1', 'done', true]
+    ]
+  )
+})
+
 test('briefStatus: the latest brief and whether the research still reads the same; nothing without a brief', async () => {
   const { briefStatus } = await import('../src/client/detail-model.ts')
   assert.deepEqual(briefStatus({ id: 'r2', n: 2, createdAt: '2026-10-24T08:00:00Z', current: false }), {

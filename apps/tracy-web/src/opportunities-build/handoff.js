@@ -336,6 +336,8 @@ export async function handOff({
     ...(build.receipt?.leftoverCleanup
       ? { leftoverCleanup: handoffCleanup(build.receipt.leftoverCleanup) }
       : {}),
+    // The blocker gate's verdict on what the turn left (`build-blocker-gate.js`): "needs-fixes" is never reported built.
+    ...(build.receipt?.blockers ? { blockers: build.receipt.blockers } : {}),
     ...(prompt ? { prompt } : {}),
     // The chat the prompt already went into (`route.js`): a later press does not send it twice.
     ...(build.handoff?.promptSent ? { promptSent: build.handoff.promptSent } : {}),

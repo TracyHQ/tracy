@@ -339,6 +339,9 @@ export function DemoSection({
             : t('inspector.noDemo')}
         </p>
       )}
+      {demo?.phase === 'done' && demo.fixes.length > 0 ? (
+        <p className="tracy-wo-error tracy-wo-small">{t('demos.state.needsFixes')}</p>
+      ) : null}
       {facts && (facts.frozenAt || facts.deletedAt || (demo?.phase === 'done' && facts.expiresAt)) ? (
         <DemoCell t={t} locale={locale} demo={facts} now={now} actions={actions} showSite={false} />
       ) : null}

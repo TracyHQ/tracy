@@ -841,6 +841,8 @@ export const en = {
   'demos.state.done': 'Live',
   'demos.state.failed': 'Stopped',
   'demos.state.deleted': 'Removed',
+  /** A demo the site check still finds problems on after its cleanup: never called live. */
+  'demos.state.needsFixes': 'Needs fixes',
 
   'build.label': 'Demo site name',
   'build.labelHint': 'Named after the place. Change it to use another address.',
@@ -849,6 +851,16 @@ export const en = {
   'build.template': 'Template',
   'build.running': 'Building the demo site…',
   'build.done': 'The demo site is ready.',
+  /** A finished build whose site check still holds blockers (the build gate): it is not ready, and the list follows. */
+  'build.needsFixes': 'The site check found problems to fix before this demo can be shown.',
+  'build.fixPages': '{what}: {pages}',
+  'fix.demoContent': 'Template demo words or pictures are still on the site',
+  'fix.formWithoutRecipient': 'A form shows with no email to send it to',
+  'fix.recordNotFromBrief': 'A review author, contact detail or figure is not from the brief',
+  'fix.missingHeadBlock': 'Page styles the build added are missing',
+  'fix.linkWithoutJob': 'A button or link leads nowhere',
+  'fix.keptPageMissing': 'A page the site keeps does not open',
+  'fix.otherBlocker': 'Another check found a problem',
   'build.failed': 'The build stopped: {reason}',
   'build.cmsNote': 'No template is offered right now.',
   'build.openSite': 'Open the site',

@@ -56,6 +56,7 @@ export {
   LEFTOVER_RULES,
   LEFTOVER_CHECK_VERSION
 } from './demo-leftovers.mjs'
+export { BLOCKER_RULES, BUILD_BLOCKERS_VERSION, buildBlockers } from './build-blockers.mjs'
 export {
   CLEANUP_FINDINGS_SHOWN,
   CLEANUP_LIMITS,
