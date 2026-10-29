@@ -328,7 +328,9 @@ export async function shapeDecor({ decisions, slotOf, siteBytes, real, note }) {
           height: demo.height,
           // An icon the demo drew in the template's brand colour takes the logo's at the same luminance, so it reads on
           // the same ground (`brandInkOf`); a grey one, or a site with no logo colours, keeps the demo's.
-          colour: brandInkOf(demo.colour, brandPaletteOf(real.brief)) ?? real.colours?.[0] ?? '#222222'
+          colour: brandInkOf(demo.colour, brandPaletteOf(real.brief)) ?? real.colours?.[0] ?? '#222222',
+          // A demo glyph on its own disc or tile: the new glyph sits on the same ground (#189).
+          ground: demo.style?.groundShape ?? null
         })
         stats.icons += 1
         return {
@@ -342,6 +344,7 @@ export async function shapeDecor({ decisions, slotOf, siteBytes, real, note }) {
             origin: 'icon-set',
             glyph: d.glyph,
             weight: unit.weight ?? 'regular',
+            ground: Boolean(demo.style?.groundShape),
             reason: d.reason,
             width: demo.width,
             height: demo.height

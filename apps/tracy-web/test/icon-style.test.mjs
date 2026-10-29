@@ -88,3 +88,92 @@ test('#189 an icon renders in the weight asked, in the colour asked, on a clear 
   const unknown = await iconPicture({ glyph: 'not-an-icon', width: 40, height: 40 })
   assert.equal(unknown.width, 40, 'a name outside the set draws the neutral mark, never fails')
 })
+
+/** A fictional demo icon on its own ground: a thin house line on a disc or a rounded tile, solid or half clear. */
+async function groundIcon({ shape, fill, opacity = 1, width = 120, height = 120 }) {
+  const ground =
+    shape === 'disc'
+      ? `<circle cx="60" cy="60" r="60" fill="${fill}" fill-opacity="${opacity}"/>`
+      : `<rect x="10" y="10" width="100" height="100" rx="20" fill="${fill}" fill-opacity="${opacity}"/>`
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 120 120">${ground}<path d="M38 58 L60 38 L82 58 L82 84 L38 84 Z" fill="none" stroke="#e8a33d" stroke-width="2.4"/></svg>`
+  return sharp(Buffer.from(svg)).png().toBuffer()
+}
+
+const near = (actual, expected, within, what) =>
+  assert.ok(
+    Math.abs(actual - expected) <= within,
+    `${what}: ${actual} is not within ${within} of ${expected}`
+  )
+
+/**
+ * A ground's colour as it shows: each channel times the opacity. A faint ground's stored colour moves by a few units
+ * when drawn (its pixels are kept premultiplied), while what it shows moves by about one.
+ */
+const sameShownColour = (a, b, what) => {
+  for (const at of [1, 3, 5]) {
+    const shown = (g) => Number.parseInt(g.colour.slice(at, at + 2), 16) * g.opacity
+    near(
+      shown(a),
+      shown(b),
+      1.5,
+      `${what} colour ${a.colour} at ${a.opacity} against ${b.colour} at ${b.opacity}`
+    )
+  }
+}
+
+test('#189 a demo ground is measured: disc or rounded tile, its colour, opacity, size and the glyph box on it', async () => {
+  const disc = (await iconStyleOf(await groundIcon({ shape: 'disc', fill: '#1b2a3c' })))?.groundShape
+  assert.equal(disc?.colour, '#1b2a3c')
+  near(disc.opacity, 1, 0.01, 'solid disc opacity')
+  near(disc.radius, 0.5, 0.02, 'disc radius')
+  near(disc.box.w, 1, 0.02, 'disc width')
+  near(disc.glyph.w, 46 / 120, 0.03, 'glyph width')
+  const half = (await iconStyleOf(await groundIcon({ shape: 'disc', fill: '#2f8f6a', opacity: 0.15 })))
+    ?.groundShape
+  near(half.opacity, 0.15, 0.01, 'half-clear disc opacity')
+  sameShownColour(half, { colour: '#2f8f6a', opacity: 0.15 }, 'half-clear disc')
+  near(half.radius, 0.5, 0.02, 'half-clear disc radius')
+  const tile = (await iconStyleOf(await groundIcon({ shape: 'tile', fill: '#5a3e8e' })))?.groundShape
+  near(tile.radius, 0.2, 0.04, 'tile corner radius')
+  near(tile.box.x, 10 / 120, 0.02, 'tile left')
+  near(tile.box.w, 100 / 120, 0.02, 'tile width')
+  // No ground: the icon is drawn on a clear box, as before.
+  assert.equal((await iconStyleOf(await demoIcon({ stroke: 2.2 })))?.groundShape, null)
+})
+
+test('#189 a new glyph is set on the demo ground: the drawn icon measures the same ground back', async () => {
+  for (const demo of [
+    { shape: 'disc', fill: '#1b2a3c' },
+    { shape: 'disc', fill: '#2f8f6a', opacity: 0.15 },
+    { shape: 'tile', fill: '#5a3e8e' },
+    // A wide box: the disc keeps its place in the middle.
+    { shape: 'disc', fill: '#1b2a3c', width: 160, height: 120 }
+  ]) {
+    const before = await iconStyleOf(await groundIcon(demo))
+    const made = await iconPicture({
+      glyph: 'tennis-ball',
+      weight: before.weight,
+      width: demo.width ?? 120,
+      height: demo.height ?? 120,
+      colour: '#e8a33d',
+      ground: before.groundShape
+    })
+    const after = (await iconStyleOf(made.bytes))?.groundShape
+    const what = `${demo.shape} ${demo.opacity ?? 1} ${demo.width ?? 120}`
+    sameShownColour(after, before.groundShape, what)
+    near(after.opacity, before.groundShape.opacity, 0.01, `${what} opacity`)
+    near(after.radius, before.groundShape.radius, 0.04, `${what} radius`)
+    for (const k of ['x', 'y', 'w', 'h'])
+      near(after.box[k], before.groundShape.box[k], 0.02, `${what} box ${k}`)
+    // The new glyph takes the demo glyph's place and size (its longer side).
+    near(
+      Math.max(after.glyph.w, after.glyph.h),
+      Math.max(before.groundShape.glyph.w, before.groundShape.glyph.h),
+      0.04,
+      what
+    )
+  }
+  const bare = await iconPicture({ glyph: 'tennis-ball', width: 60, height: 60, ground: null })
+  const { data } = await sharp(bare.bytes).raw().toBuffer({ resolveWithObject: true })
+  assert.equal(data[3], 0, 'without a ground the corner stays clear')
+})
