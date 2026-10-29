@@ -29,6 +29,7 @@ import { pool } from './shared.js'
 import { drawPlanned, shapeDecor } from './drawn-pictures.js'
 import { unmeasuredFigures } from './unmeasured-figures.js'
 import { iconMeanings } from './icon-meanings.js'
+import { phosphorCatalog } from '../../lib/phosphor-icons.js'
 
 /** Pictures cut at once: each holds a decoded photograph in memory (C15). */
 const CUT_AT_ONCE = 4
@@ -224,7 +225,8 @@ export async function shapeReal({
       copy,
       offerings: fill.offerings,
       fill: fill.slots,
-      iconChoices
+      iconChoices,
+      iconCatalog: phosphorCatalog()
     })
   } else {
     const { clusterOf } = domain.nearCopies(labels)

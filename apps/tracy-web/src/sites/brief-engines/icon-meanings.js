@@ -1,13 +1,15 @@
 /**
- * The meaning of each item icon, read by the text model (spec TracyHQ/tracy#189): the model reads every item's words and
- * the business's trade and ranks glyph NAMES of Tracy's icon set (`lib/icon-glyphs.js`); it never draws. The decor plan
- * then gives every item of a section its own glyph (`website-opportunities/domain/icon-choice.mjs`).
+ * The meaning of each item icon, read by the text model (spec TracyHQ/tracy#189): each item's words and the business's
+ * trade shortlist icon NAMES from the Phosphor catalog (`lib/phosphor-icons.js`, its tags and names, at most 60 an item),
+ * and the model ranks names from that shortlist; it never draws. The decor plan then gives every item of a section its
+ * own icon (`website-opportunities/domain/icon-choice.mjs`).
  *
  * 🔒 NEVER IN THE WAY OF A BUILD. No model, no item with words, a model that fails, times out or answers no usable name:
  * null, and the decor plan ranks by its keyword lexicon alone. An answer is validated against the set (unknown names
  * dropped) and kept by its question, so a retry of one build asks nothing again.
  */
 import { createHash } from 'node:crypto'
+import { phosphorCatalog } from '../../lib/phosphor-icons.js'
 import { jsonObjectIn } from './shared.js'
 
 /** How long one icon question may take before the keywords decide. */
@@ -29,7 +31,8 @@ export function tradeOf(brief) {
 /**
  * Ask the model which glyphs show each item.
  * @param {object} input
- * @param {any} input.domain - the Website Opportunities domain (`iconItemsOf`, `iconQuestion`, `iconAnswerOf`)
+ * @param {any} input.domain - the Website Opportunities domain (`iconItemsOf`, `iconShortlist`, `iconQuestion`,
+ *   `iconAnswerOf`, `usableCatalog`)
  * @param {{chat: Function} | null} input.model - the text model the build writes with
  * @param {{slots: any[]}} input.contentMap
  * @param {any} input.brief
@@ -37,6 +40,7 @@ export function tradeOf(brief) {
  * @param {(note: string) => void} [input.note]
  * @param {AbortSignal} [input.signal]
  * @param {number} [input.ms]
+ * @param {Array<{name: string, tags?: string[], categories?: string[]}>} [input.catalog] - the icon catalog
  * @returns {Promise<Record<string, string[]> | null>} rankings by item id
  */
 export async function iconMeanings({
@@ -47,14 +51,20 @@ export async function iconMeanings({
   copy,
   note = () => {},
   signal,
-  ms = ICON_QUESTION_MS
+  ms = ICON_QUESTION_MS,
+  catalog = phosphorCatalog()
 }) {
   if (!model?.chat || typeof domain?.iconItemsOf !== 'function') return null
-  const items = domain.iconItemsOf({ contentMap, copy })
+  const trade = tradeOf(brief)
+  const usable = domain.usableCatalog(catalog)
+  const items = domain
+    .iconItemsOf({ contentMap, copy })
+    .map((i) => ({ ...i, menu: domain.iconShortlist({ words: i.words, trade, catalog: usable }) }))
+    .filter((i) => i.menu.length)
   if (!items.length) return null
   const { system, input } = domain.iconQuestion({
     items,
-    trade: tradeOf(brief),
+    trade,
     business: typeof brief?.business?.name === 'string' ? brief.business.name : null
   })
   const key = createHash('sha256').update(JSON.stringify({ system, input })).digest('hex')
@@ -67,16 +77,13 @@ export async function iconMeanings({
         { role: 'system', content: system },
         { role: 'user', content: JSON.stringify(input) }
       ],
-      maxTokens: 1500,
+      maxTokens: 2000,
       temperature: 0,
       signal: cutoff
     })
-    const got = domain.iconAnswerOf(
-      jsonObjectIn(said),
-      items.map((i) => i.id)
-    )
+    const got = domain.iconAnswerOf(jsonObjectIn(said), items)
     if (!got) {
-      note('the model named no icon of the set, so the icons follow their keywords')
+      note("the model named no icon of the items' menus, so the icons follow their keywords")
       return null
     }
     answers.set(key, got)

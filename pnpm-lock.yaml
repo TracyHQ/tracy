@@ -127,6 +127,9 @@ importers:
       '@hono/node-server':
         specifier: 2.1.1
         version: 2.1.1(hono@4.13.11)
+      '@phosphor-icons/core':
+        specifier: 2.1.1
+        version: 2.1.1
       acorn:
         specifier: 8.18.0
         version: 8.18.0

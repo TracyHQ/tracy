@@ -23,6 +23,7 @@ import { brandInkOf, brandPaletteOf } from 'website-opportunities/domain/brand-c
 import { cutForPlace } from '../../lib/picture-cut.js'
 import { drawForPlace, drawKey, drawPrompt } from '../../lib/picture-draw.js'
 import { iconColourOf, iconPicture } from '../../lib/icon-glyphs.js'
+import { iconStyleOf, sectionWeightOf } from '../../lib/icon-style.js'
 import { footprintOf, framedPicture, ownCutOutPicture } from './cutout-pictures.js'
 import { substitutePicture } from '../../lib/substitute-picture.js'
 import { sizeOf } from './pictures.js'
@@ -223,22 +224,6 @@ export async function drawPlanned({
  */
 export async function shapeDecor({ decisions, slotOf, siteBytes, real, note }) {
   const stats = { icons: 0, cutOuts: 0, framed: 0, cleared: 0, calls: 0, costUsd: 0 }
-  const units = new Map()
-  for (const d of decisions) {
-    if (d.action !== 'icon' && d.action !== 'cut-out') continue
-    const id = d.action === 'icon' ? `${d.file}#icon:${d.glyph}` : `${d.file}#cut-out`
-    const unit = units.get(id) ?? { id, decision: d, occurrences: [] }
-    const slot = slotOf.get(d.key)
-    unit.occurrences.push({
-      key: d.key,
-      entity: slot?.entity,
-      label: slot?.label ?? '',
-      sample: slot?.sample,
-      // The words the site takes a kept picture with (`replace_kept`): see `decorAsked` in the decor plan.
-      ...(typeof d.asked === 'string' && d.asked ? { asked: d.asked } : {})
-    })
-    units.set(id, unit)
-  }
   const sizes = new Map()
   const demoOf = async (file, sample) => {
     if (!sizes.has(file)) {
@@ -249,10 +234,40 @@ export async function shapeDecor({ decisions, slotOf, siteBytes, real, note }) {
         width: size?.[0] ?? declared?.width ?? null,
         height: size?.[1] ?? declared?.height ?? null,
         colour: await iconColourOf(bytes),
-        footprint: await footprintOf(bytes).catch(() => null)
+        footprint: await footprintOf(bytes).catch(() => null),
+        // The demo icon's look (outline weight, solid, two-tone): the new icon takes the matching weight (#189).
+        style: await iconStyleOf(bytes)
       })
     }
     return sizes.get(file)
+  }
+  // One weight per section (the entity the icons sit in): the weight most of its demo icons measure (#189).
+  const sectionOf = (d) => slotOf.get(d.key)?.entity ?? d.key
+  const styles = new Map()
+  for (const d of decisions) {
+    if (d.action !== 'icon') continue
+    const demo = await demoOf(d.file, slotOf.get(d.key)?.sample)
+    const list = styles.get(sectionOf(d)) ?? []
+    list.push(demo.style)
+    styles.set(sectionOf(d), list)
+  }
+  const weightOf = new Map([...styles].map(([section, list]) => [section, sectionWeightOf(list)]))
+  const units = new Map()
+  for (const d of decisions) {
+    if (d.action !== 'icon' && d.action !== 'cut-out') continue
+    const weight = d.action === 'icon' ? weightOf.get(sectionOf(d)) : null
+    const id = d.action === 'icon' ? `${d.file}#icon:${d.glyph}:${weight}` : `${d.file}#cut-out`
+    const unit = units.get(id) ?? { id, decision: d, weight, occurrences: [] }
+    const slot = slotOf.get(d.key)
+    unit.occurrences.push({
+      key: d.key,
+      entity: slot?.entity,
+      label: slot?.label ?? '',
+      sample: slot?.sample,
+      // The words the site takes a kept picture with (`replace_kept`): see `decorAsked` in the decor plan.
+      ...(typeof d.asked === 'string' && d.asked ? { asked: d.asked } : {})
+    })
+    units.set(id, unit)
   }
   // A picture the ladder makes is made at the widest size its slots ask (`fit.minWidth`), in the demo frame's shape, so
   // the site's own fit step never enlarges it again.
@@ -274,6 +289,7 @@ export async function shapeDecor({ decisions, slotOf, siteBytes, real, note }) {
       if (d.action === 'icon') {
         const icon = await iconPicture({
           glyph: d.glyph,
+          weight: unit.weight ?? 'regular',
           width: demo.width,
           height: demo.height,
           // An icon the demo drew in the template's brand colour takes the logo's at the same luminance, so it reads on
@@ -291,6 +307,7 @@ export async function shapeDecor({ decisions, slotOf, siteBytes, real, note }) {
             kind: 'icon',
             origin: 'icon-set',
             glyph: d.glyph,
+            weight: unit.weight ?? 'regular',
             reason: d.reason,
             width: demo.width,
             height: demo.height

@@ -17,7 +17,15 @@
 // else taken off (the default), else, where taking it off leaves its own column empty beside the text, an owner photo the
 // fill plan chose for it, shown in a frame.
 import { CUT_OUT_REASONS, cutOutStepOf } from './cutout-ladder.mjs'
-import { assignGlyphs, ICON_SET, keywordRanking, NEUTRAL_GLYPHS, validRanking } from './icon-choice.mjs'
+import {
+  assignGlyphs,
+  catalogNameRanking,
+  ICON_SET,
+  keywordRanking,
+  NEUTRAL_GLYPHS,
+  usableCatalog,
+  validRanking
+} from './icon-choice.mjs'
 import { closedListOf, namedIn } from './pictures/picture-links.mjs'
 import { fileOf } from './pictures/slot-map.mjs'
 
@@ -55,10 +63,10 @@ export function decorAsked(action, quote) {
 /** The neutral mark an icon takes when nothing matches. */
 export const NEUTRAL_GLYPH = NEUTRAL_GLYPHS[0]
 
-/** Meaning → glyph: the words that call each glyph of the icon set (`icon-choice.mjs` `ICON_SET`), as pairs. */
-export const ICON_LEXICON = Object.freeze(ICON_SET.map((g) => Object.freeze([g.name, g.words])))
+/** Words → icons: the curated lexicon of the icon set (`icon-choice.mjs` `ICON_SET`), as [best icon, words] pairs. */
+export const ICON_LEXICON = Object.freeze(ICON_SET.map((g) => Object.freeze([g.icons[0], g.words])))
 
-/** The glyph whose words a text holds first (in the text's own order, a finer meaning first), or null. */
+/** The icon whose words a text holds first (in the text's own order), or null. */
 export function glyphOf(text) {
   return keywordRanking(text)[0] ?? null
 }
@@ -154,8 +162,13 @@ const SOURCE_REASON = Object.freeze({
  * `assignGlyphs` gives every item of a section its own glyph (`icon-choice.mjs`).
  * @returns {Map<string, {glyph: string, reason: string, quote: string | null}>}
  */
-function iconDecisions({ slots, copy, list, pageOffering, choices }) {
+function iconDecisions({ slots, copy, list, pageOffering, choices, catalog }) {
   const items = iconItems(slots, copy)
+  const usable = catalog ? usableCatalog(catalog) : null
+  const allowed = usable ? new Set(usable.map((c) => c.name)) : null
+  // A model's names were checked against each item's menu by the engine; with a catalog they are checked again here.
+  const chosen = (list) =>
+    validRanking(list, allowed ?? (Array.isArray(list) ? list.filter((n) => typeof n === 'string') : []))
   const asked = new Map()
   for (const i of items) {
     if (asked.has(i.id)) continue
@@ -165,12 +178,16 @@ function iconDecisions({ slots, copy, list, pageOffering, choices }) {
     const listed = n !== null && list.length ? list[n % list.length] : null
     const named = written ? namedIn(written, list)?.label : null
     const candidates = [
-      ...(written ? validRanking(choices?.[i.id]) : []).map((glyph) => ({
+      ...(written ? chosen(choices?.[i.id]) : []).map((glyph) => ({
         glyph,
         source: 'item',
         quote: written
       })),
-      ...[...keywordRanking(written), ...keywordRanking(named ?? '')].map((glyph) => ({
+      ...[
+        ...keywordRanking(written),
+        ...keywordRanking(named ?? ''),
+        ...(usable ? catalogNameRanking(written, usable) : [])
+      ].map((glyph) => ({
         glyph,
         source: 'item',
         quote: written
@@ -211,13 +228,23 @@ function iconDecisions({ slots, copy, list, pageOffering, choices }) {
  * @param {Array<{groupId: string, offeringId: string, label: string}>} [input.offerings] - the fill plan's card offerings
  * @param {Array<{key: string, action?: string, mediaId?: string, crop?: any}>} [input.fill] - the fill plan's slot
  *   decisions: the photo it chose for a cut-out slot is the one a frame may show (ladder step 3)
- * @param {Record<string, string[]> | null} [input.iconChoices] - a model's ranked glyph names by item id
+ * @param {Array<{name: string, tags?: string[], categories?: string[]}> | null} [input.iconCatalog] - the icon
+ *   catalog (Phosphor's name, tags, categories): its names an item's words say rank after the curated lexicon
+ * @param {Record<string, string[]> | null} [input.iconChoices] - a model's ranked icon names by item id
  *   ({@link iconItemsOf}); without them the keyword lexicon ranks alone
  * @returns {{version: string, slots: Array<{key: string, file: string, decor: string, action: 'icon' | 'cut-out' |
  *   'keep', reason: string, glyph?: string, mode?: 'own' | 'off' | 'framed', step?: number, mediaId?: string,
  *   crop?: any, subject?: any, asked?: string}>}}
  */
-export function planDecor({ contentMap, brief, copy = null, offerings = [], fill = [], iconChoices = null }) {
+export function planDecor({
+  contentMap,
+  brief,
+  copy = null,
+  offerings = [],
+  fill = [],
+  iconChoices = null,
+  iconCatalog = null
+}) {
   const slots = contentMap?.slots ?? []
   const list = closedListOf(brief?.reading).offerings
   const pageOffering = new Map()
@@ -237,7 +264,14 @@ export function planDecor({ contentMap, brief, copy = null, offerings = [], fill
   const photoOf = new Map(
     (fill ?? []).filter((d) => d?.action === 'photo' && d.mediaId).map((d) => [d.key, d])
   )
-  const iconOf = iconDecisions({ slots, copy, list, pageOffering, choices: iconChoices })
+  const iconOf = iconDecisions({
+    slots,
+    copy,
+    list,
+    pageOffering,
+    choices: iconChoices,
+    catalog: iconCatalog
+  })
   const out = []
   slots.forEach((slot) => {
     const decor = decorOf(slot)

@@ -18,7 +18,7 @@ import {
 } from '../src/sites/brief-engines/real-pictures.js'
 import { footprintOf, framedPicture, ownCutOutPicture } from '../src/sites/brief-engines/cutout-pictures.js'
 import { takenOffPicturePaths } from '../src/sites/brief-engines/cutout-css.js'
-import { GLYPHS } from '../src/lib/icon-glyphs.js'
+import { hasPhosphorIcon } from '../src/lib/phosphor-icons.js'
 import { ICON_LEXICON, NEUTRAL_GLYPH } from 'website-opportunities/domain/decor-plan.mjs'
 import { ICON_NAMES } from 'website-opportunities/domain/icon-choice.mjs'
 
@@ -354,17 +354,19 @@ test("#189 the text model reads an item icon's meaning; without it, or when it f
     chat: async ({ messages }) => {
       const input = JSON.parse(messages[1].content)
       asked.push(input)
-      return JSON.stringify({ items: { [input.items[0].id]: ['unicorn', 'pickleball', 'racquet'] } })
+      return JSON.stringify({ items: { [input.items[0].id]: ['unicorn', 'tennis-ball', 'racquet'] } })
     }
   }
   const glyphOf = (shaped) => shaped.shaped.find((s) => s.group.role === 'icon').receipt.glyph
   const read = await shape(t, { chat: stubModel().chat, declared: DECLARED, textModel })
-  assert.equal(glyphOf(read), 'pickleball', 'the model ranks first; its unknown name is dropped')
+  assert.equal(glyphOf(read), 'tennis-ball', 'the model ranks first; its unknown name is dropped')
   assert.equal(asked.length, 1)
+  const menu = asked[0].items[0].menu
   assert.ok(
-    asked[0].menu.some((m) => m.name === 'pickleball'),
-    'the model chooses from the set by name'
+    menu.includes('tennis-ball') && menu.length <= 60,
+    'the model chooses from a shortlist of the catalog'
   )
+  assert.ok(menu.every(hasPhosphorIcon))
   // The same question again is answered from memory.
   await shape(await build(), { chat: stubModel().chat, declared: DECLARED, textModel })
   assert.equal(asked.length, 1)
@@ -388,12 +390,11 @@ test("#189 the text model reads an item icon's meaning; without it, or when it f
   assert.equal(glyphOf(none), 'racquet')
 })
 
-test('#195 every glyph the lexicon can choose is drawn by the icon set', () => {
-  for (const [glyph] of ICON_LEXICON) assert.ok(GLYPHS[glyph], glyph)
-  assert.ok(GLYPHS[NEUTRAL_GLYPH])
-  // #189: every name a model or the assignment may return is drawn, and every drawing has a name the domain knows.
-  for (const name of ICON_NAMES) assert.ok(GLYPHS[name], name)
-  assert.deepEqual(Object.keys(GLYPHS).sort(), [...ICON_NAMES].sort())
+test('#195 every icon the lexicon or the neutral marks can choose is an icon of the set', () => {
+  for (const [glyph] of ICON_LEXICON) assert.ok(hasPhosphorIcon(glyph), glyph)
+  assert.ok(hasPhosphorIcon(NEUTRAL_GLYPH))
+  // #189: every name the lexicon or the assignment may return without a model is an icon of the set.
+  for (const name of ICON_NAMES) assert.ok(hasPhosphorIcon(name), name)
 })
 
 const visible = async (bytes) => {

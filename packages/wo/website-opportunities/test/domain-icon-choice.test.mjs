@@ -1,18 +1,36 @@
-// Item icons of one section never repeat a glyph, and a model's reading of each item ranks before the keyword lexicon
+// Item icons of one section never repeat an icon, and a model's reading of each item ranks before the curated lexicon
 // (spec TracyHQ/tracy#189). Every rule runs on four fictional trades: a racquet club, a bakery, a dental clinic and a
-// locksmith whose items the icon set has almost no meaning for.
+// locksmith, plus a trade the lexicon has no word for. The catalog slice below is fictional.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { DECOR_REASONS, iconItemsOf, planDecor } from '../domain/decor-plan.mjs'
 import {
   ICON_NAMES,
+  MENU_MAX,
   NEUTRAL_GLYPHS,
   assignGlyphs,
+  catalogNameRanking,
   iconAnswerOf,
   iconQuestion,
+  iconShortlist,
   keywordRanking,
+  usableCatalog,
   validRanking
 } from '../domain/icon-choice.mjs'
+
+/** A fictional slice of an icon catalog: names, tags, categories, as the engine hands it in. */
+const CATALOG = [
+  { name: 'lock', tags: ['security', 'private'], categories: ['objects'] },
+  { name: 'lock-key', tags: ['security'], categories: ['objects'] },
+  { name: 'key', tags: ['password', 'unlock'], categories: ['objects'] },
+  { name: 'door', tags: ['entrance', 'exit'], categories: ['objects'] },
+  { name: 'house', tags: ['home', 'building'], categories: ['maps & travel'] },
+  { name: 'wrench', tags: ['tools', 'repair'], categories: ['objects'] },
+  { name: 'copy', tags: ['duplicate', 'copies'], categories: ['editor'] },
+  { name: 'chimney-fake', tags: ['soot', 'flue'], categories: ['objects'] },
+  { name: 'acme-logo', tags: ['flue'], categories: ['brands'] },
+  { name: 'flue-brand', tags: ['flue'], categories: ['brands'] }
+]
 
 const group = (entity, n) => ({ id: `${entity}.item.${n}`, item: n, kind: 'business' })
 const text = (key, role, g = null) => ({
@@ -80,7 +98,7 @@ const TRADES = {
       ['Squash sessions', 'Fast squash games for every level.'],
       ['Badminton club', 'Indoor badminton nights for juniors and adults.']
     ],
-    expected: ['racquet', 'padel', 'squash', 'shuttlecock']
+    expected: ['racquet', 'ping-pong', 'tennis-ball', 'person-simple-throw']
   },
   bakery: {
     brief: { business: { trade: 'food' }, reading: { services: [{ id: 'b1', label: 'Celebration Cakes' }] } },
@@ -90,7 +108,7 @@ const TRADES = {
       ['Morning pastries', 'Butter croissants and pastries from the oven.'],
       ['Coffee bar', 'Espresso and filter coffee with your pastry.']
     ],
-    expected: ['cake', 'bread', 'croissant', 'cup']
+    expected: ['cake', 'bread', 'cookie', 'coffee']
   },
   dental: {
     brief: { business: { trade: 'health' }, reading: { services: [{ id: 'd1', label: 'Routine Checkup' }] } },
@@ -100,7 +118,7 @@ const TRADES = {
       ['Teeth whitening', 'A brighter smile in one visit.'],
       ['Dental implants', 'Implants and crowns that last.']
     ],
-    expected: ['stethoscope', 'braces', 'whitening', 'implant']
+    expected: ['stethoscope', 'tooth', 'sparkle', 'shield-plus']
   },
   locksmith: {
     brief: {
@@ -112,34 +130,36 @@ const TRADES = {
       ['Lock change', 'New locks fitted the same day.'],
       ['Spare copies', 'Copies made while you wait.'],
       ['Door survey', 'A survey of every door in your flat.']
-    ]
+    ],
+    expected: ['lock', 'lock-key', 'keyhole', 'door']
   }
 }
 
-test('#189 no two cards of one section show the same glyph, on four trades, without a model', () => {
+test('#189 no two cards of one section show the same icon, on four trades, without a model', () => {
   for (const [name, trade] of Object.entries(TRADES)) {
     const { contentMap, copy } = section('module-7', trade.cards)
     const glyphs = glyphsOf(planDecor({ contentMap, brief: trade.brief, copy }), 'module-7', 4)
     assert.ok(distinct(glyphs), `${name}: ${glyphs.join(', ')}`)
-    if (trade.expected) assert.deepEqual(glyphs, trade.expected, name)
+    assert.deepEqual(glyphs, trade.expected, name)
   }
 })
 
-test('#189 a section the set has no meaning for still shows distinct neutral marks, never the demo icon', () => {
+test('#189 a section the lexicon has no word for still shows distinct neutral marks, never the demo icon', () => {
   const { contentMap, copy } = section('module-9', [
     ['Flue survey', 'A look at the flue.'],
-    ['Cowl fitting', 'A cowl on top.'],
+    ['Cowl tops', 'A cowl on the stack.'],
     ['Soot removal', 'Soot taken out.'],
     ['Bird guards', 'Guards against nests.']
   ])
   const plan = planDecor({ contentMap, brief: { reading: {} }, copy })
-  const glyphs = glyphsOf(plan, 'module-9', 4)
-  assert.deepEqual(glyphs, NEUTRAL_GLYPHS.slice(0, 4))
+  assert.deepEqual(glyphsOf(plan, 'module-9', 4), NEUTRAL_GLYPHS.slice(0, 4))
   assert.ok(plan.slots.every((d) => d.reason === 'icon-neutral'))
-  assert.ok(plan.slots.every((d) => !/demo/i.test(d.glyph)))
+  // With a catalog, a tag the words say only reaches a model's menu; the fallback reads catalog names alone.
+  const withCatalog = planDecor({ contentMap, brief: { reading: {} }, copy, iconCatalog: CATALOG })
+  assert.deepEqual(glyphsOf(withCatalog, 'module-9', 4), NEUTRAL_GLYPHS.slice(0, 4))
 })
 
-test('#189 a page about one offering gives its glyph once; the other items take their own or a neutral mark', () => {
+test('#189 a page about one offering gives its icon once; the other items take their own or a neutral mark', () => {
   // An article about one offering, four features each a dark and a light icon followed by its words (no group).
   const slots = [text('article-2.0', 'article.title')]
   const pins = { 'article-2.0': 'Swimming Lessons' }
@@ -168,10 +188,8 @@ test('#189 a page about one offering gives its glyph once; the other items take 
   const glyphs = [1, 5, 9, 13].map((k) => at.get(`article-2.${k}`).glyph)
   for (const k of [1, 5, 9, 13])
     assert.equal(at.get(`article-2.${k + 1}`).glyph, at.get(`article-2.${k}`).glyph)
-  assert.ok(distinct(glyphs), glyphs.join(', '))
-  // Item 0's own words name groups and swimmers; item 1's pool; the page's offering stands behind every item.
-  assert.deepEqual(glyphs, ['people', 'waves', 'clock', 'graduation'])
-  // Without words of their own, the four features take the page offering's meanings once each, then neutral marks.
+  assert.deepEqual(glyphs, ['person-simple-swim', 'swimming-pool', 'clock', 'graduation-cap'])
+  // Without words of their own, the four features take the page offering's icons once each.
   const bare = planDecor({
     contentMap: { slots },
     brief,
@@ -180,12 +198,12 @@ test('#189 a page about one offering gives its glyph once; the other items take 
   const byKey = new Map(bare.slots.map((d) => [d.key, d]))
   assert.deepEqual(
     [1, 5, 9, 13].map((k) => byKey.get(`article-2.${k}`).glyph),
-    ['waves', 'book', 'check', 'spark']
+    ['person-simple-swim', 'swimming-pool', 'waves', 'chalkboard-teacher']
   )
   assert.equal(byKey.get('article-2.1').reason, 'icon-of-page-offering')
 })
 
-test('#189 a model ranking wins over the keywords; an unknown name is dropped and the keywords still stand', () => {
+test('#189 a model ranking wins over the lexicon; a name outside the catalog is dropped and the lexicon still stands', () => {
   const { contentMap, copy } = section('module-7', TRADES.locksmith.cards)
   const items = iconItemsOf({ contentMap, copy })
   assert.deepEqual(
@@ -199,41 +217,58 @@ test('#189 a model ranking wins over the keywords; an unknown name is dropped an
     'module-7.item.2': ['a-key-drawing', 'key'],
     'module-7.item.3': ['house', 'lock']
   }
-  const glyphs = glyphsOf(
-    planDecor({ contentMap, brief: TRADES.locksmith.brief, copy, iconChoices: choices }),
-    'module-7',
-    4
-  )
-  assert.deepEqual(glyphs, ['lock', 'wrench', 'key', 'house'])
-  // The model's second choice for item 1 is used because item 0 already shows a lock.
+  const plan = planDecor({
+    contentMap,
+    brief: TRADES.locksmith.brief,
+    copy,
+    iconChoices: choices,
+    iconCatalog: CATALOG
+  })
+  // Item 1 takes the model's second choice: item 0 already shows the lock.
+  assert.deepEqual(glyphsOf(plan, 'module-7', 4), ['lock', 'wrench', 'key', 'house'])
 })
 
-test('#189 the icon question names only the set; the answer keeps only asked ids and known names', () => {
-  const q = iconQuestion({ items: [{ id: 'a', section: 's', words: ['Padel coaching'] }], trade: 'sports' })
-  assert.match(q.system, /JSON/)
-  assert.equal(q.input.trade, 'sports')
-  assert.ok(q.input.menu.some((m) => m.name === 'padel'))
-  assert.ok(!/[\u2013\u2014]/.test(q.system))
-  assert.deepEqual(
-    iconAnswerOf({ items: { a: ['PADEL', 'padel', 'unicorn', 'racquet'], z: ['ball'] } }, ['a']),
-    {
-      a: ['padel', 'racquet']
-    }
+test('#189 each item gets a menu from the catalog; the answer keeps only asked ids and names of their own menus', () => {
+  const usable = usableCatalog(CATALOG)
+  assert.ok(
+    !usable.some((i) => i.categories.includes('brands') || i.name.endsWith('-logo')),
+    'brand logos never'
   )
-  assert.equal(iconAnswerOf({ items: { a: ['unicorn'] } }, ['a']), null)
-  assert.equal(iconAnswerOf(null, ['a']), null)
-  assert.deepEqual(validRanking('padel'), [])
+  const menu = iconShortlist({
+    words: ['Lock change', 'New locks and keys'],
+    trade: 'locksmith',
+    catalog: usable
+  })
+  assert.deepEqual(menu.slice(0, 3), ['lock', 'lock-key', 'key'])
+  assert.ok(menu.length <= MENU_MAX)
+  assert.deepEqual(
+    iconShortlist({ words: ['Soot removal'], catalog: usable }),
+    ['chimney-fake'],
+    'a tag says soot'
+  )
+  assert.deepEqual(catalogNameRanking('a copy of the door', usable), ['copy', 'door'])
+  const items = [{ id: 'a', section: 's', words: ['Lock change'], menu }]
+  const q = iconQuestion({ items, trade: 'locksmith' })
+  assert.match(q.system, /JSON/)
+  assert.equal(q.input.trade, 'locksmith')
+  assert.deepEqual(q.input.items[0].menu, menu)
+  assert.ok(!/[\u2013\u2014]/.test(q.system))
+  assert.deepEqual(iconAnswerOf({ items: { a: ['LOCK', 'lock', 'house', 'key'], z: ['door'] } }, items), {
+    a: ['lock', 'key']
+  })
+  assert.equal(iconAnswerOf({ items: { a: ['unicorn'] } }, items), null)
+  assert.equal(iconAnswerOf(null, items), null)
+  assert.deepEqual(validRanking('lock'), [])
   assert.equal(validRanking(ICON_NAMES).length, 5)
 })
 
-test('#189 the keyword lexicon ranks a finer meaning before the broader one it refines', () => {
-  assert.deepEqual(keywordRanking('Tennis and padel lessons').slice(0, 2), ['padel', 'racquet'])
-  assert.deepEqual(keywordRanking('Teeth whitening').slice(0, 2), ['whitening', 'tooth'])
-  assert.deepEqual(keywordRanking('Fresh croissants'), ['croissant'])
+test('#189 the curated lexicon ranks an item subject before broad words', () => {
+  assert.deepEqual(keywordRanking('Padel lessons for kids').slice(0, 1), ['ping-pong'])
+  assert.deepEqual(keywordRanking('Celebration cakes').slice(0, 1), ['cake'])
   assert.deepEqual(keywordRanking('Nothing to see'), [])
 })
 
-test('#189 assignment is deterministic and per section: two sections may share a glyph', () => {
+test('#189 assignment is deterministic and per section: two sections may share an icon', () => {
   const items = [
     { id: 'a0', section: 'a', candidates: [{ glyph: 'racquet', source: 'item' }] },
     { id: 'a1', section: 'a', candidates: [{ glyph: 'racquet', source: 'item' }] },
@@ -242,7 +277,7 @@ test('#189 assignment is deterministic and per section: two sections may share a
   const once = assignGlyphs(items)
   assert.deepEqual(
     [...once.values()].map((v) => v.glyph),
-    ['racquet', 'check', 'racquet']
+    ['racquet', NEUTRAL_GLYPHS[0], 'racquet']
   )
   assert.deepEqual(assignGlyphs(items), once)
 })

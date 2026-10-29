@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@hono/node-server": "2.1.1",
+    "@phosphor-icons/core": "2.1.1",
     "acorn": "8.18.0",
     "css-tree": "3.2.1",
     "fflate": "0.8.3",

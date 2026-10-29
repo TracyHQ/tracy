@@ -331,11 +331,15 @@ export {
 export {
   ICON_NAMES,
   ICON_SET,
+  MENU_MAX,
   NEUTRAL_GLYPHS,
   assignGlyphs,
+  catalogNameRanking,
   iconAnswerOf,
   iconQuestion,
+  iconShortlist,
   keywordRanking,
+  usableCatalog,
   validRanking
 } from './icon-choice.mjs'
 export { CUT_OUT_REASONS, CUT_OUT_STEPS, cutOutStepOf, cutOutZoneOf, ownCutOutOf } from './cutout-ladder.mjs'
