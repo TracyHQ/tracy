@@ -14,6 +14,7 @@ import { otherMapLeftovers } from './demo-leftovers-maps.mjs'
 import { demoLogoLeftovers, demoPostLeftovers, demoSocialLeftovers } from './demo-leftovers-identity.mjs'
 import { labelLeftovers, offeringLeftovers, priceLeftovers } from './demo-leftovers-honesty.mjs'
 import { textLeftovers } from './demo-leftovers-text.mjs'
+import { processPlaceholderLeftovers } from './demo-leftovers-process.mjs'
 import { styleLeftovers } from './demo-leftovers-style.mjs'
 import { formLeftovers } from './demo-leftovers-forms.mjs'
 import { formDestinationsOf } from './form-blocks.mjs'
@@ -286,7 +287,8 @@ export const LEFTOVER_RULES = Object.freeze([
     kind: 'C09',
     find: (ctx) => [
       ...labelLeftovers(ctx, bySlot((s) => LABEL_ROLES.has(s.role))(ctx)),
-      ...textLeftovers(ctx, readByOtherKind)
+      ...textLeftovers(ctx, readByOtherKind),
+      ...processPlaceholderLeftovers(ctx)
     ]
   },
   { kind: 'C10', find: demoBackgroundLeftovers },

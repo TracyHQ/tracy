@@ -13,6 +13,7 @@ import { neutralFor } from './neutral-copy.mjs'
 import { demoWordsOf, wordsOf } from './honest-written.mjs'
 import { offeringOfSlot, offeringWords, otherOfferingsIn } from './offering-cross-talk.mjs'
 import { hidePlaceOf } from './site-plan-honesty.mjs'
+import { isProcessPlaceholder } from './process-placeholders.mjs'
 
 /** Free paragraphs: a business's own description reads right in any of them. */
 const PARAGRAPH_ROLES = new Set(['editorial.paragraph', 'business.summary', 'business.long_description'])
@@ -188,10 +189,33 @@ export function leftDemoText({
       otherOfferingsIn(text, offering, offerings).length > 0
     )
   }
+  // Title and body form one editorial step. A missing, neutral or still-demo half removes the entire item.
+  const steps = new Map()
+  for (const slot of slots) {
+    if (!/^step\.(title|description)$/.test(slot.role ?? '') || !slot.group?.id) continue
+    if (!wanted.has(slot.key) || (shown && !shown.has(slot.entity))) continue
+    if (!steps.has(slot.group.id)) steps.set(slot.group.id, [])
+    steps.get(slot.group.id).push(slot)
+  }
+  for (const [id, fields] of steps) {
+    const useful = (role) =>
+      fields.some((slot) => {
+        if (slot.role !== role) return false
+        const value = written[slot.key] ?? honesty?.values?.[slot.key]?.value
+        return (
+          fits(slot, value) &&
+          !isProcessPlaceholder(value) &&
+          !isDemoLeft(slot, value, ownWords, unanswered, { cardNames })
+        )
+      })
+    if (useful('step.title') && useful('step.description')) continue
+    gone.set(id, hidePlaceOf(map, id))
+  }
   for (const slot of slots) {
     const key = slot.key
     if (!wanted.has(key) || slot.type !== 'text') continue
     if (shown && !shown.has(slot.entity)) continue
+    if (gone.has(slot.group?.id)) continue
     // What the site plan decides is the plan's: a value, an emptied fact, a hidden card.
     if (honesty?.values?.[key] || blanked.has(key) || hiddenGroups.has(slot.group?.id)) continue
     if (!crosses(slot, written[key]) && !isDemoLeft(slot, written[key], ownWords, unanswered, { cardNames }))
@@ -221,13 +245,8 @@ export function leftDemoText({
       locale,
       business
     })
-    // A step's neutral title says which step it is ("Step 3"), so a row of tabs never reads "Step, Step, Step".
-    const numbered =
-      neutral.state === 'neutral' && STEP_TITLE_ROLES.has(slot.role) && Number.isInteger(slot.group?.item)
-        ? `${neutral.text} ${slot.group.item + 1}`
-        : neutral.text
-    if (neutral.state === 'neutral' && fits(slot, numbered)) {
-      values[key] = numbered
+    if (!STEP_TITLE_ROLES.has(slot.role) && neutral.state === 'neutral' && fits(slot, neutral.text)) {
+      values[key] = neutral.text
       counts.neutral += 1
       continue
     }
@@ -250,8 +269,18 @@ export function leftDemoText({
   // A card taken off whole keeps none of the words chosen for its other lines.
   const off = new Set(slots.filter((s) => gone.has(s.group?.id)).map((s) => s.key))
   for (const key of off) delete values[key]
+  // Slots without a native item-removal door still lose both halves; the served-frame check hides their empty frame.
+  for (const slot of slots)
+    if (off.has(slot.key) && gone.get(slot.group.id)?.how === 'none') blanks.push(slot.key)
   counts.hidden = gone.size
-  return { values, blanks: blanks.filter((key) => !off.has(key)), hides, counts }
+  return {
+    values,
+    blanks: blanks.filter(
+      (key) => !off.has(key) || gone.get(slots.find((s) => s.key === key)?.group?.id)?.how === 'none'
+    ),
+    hides,
+    counts
+  }
 }
 
 /**
@@ -271,7 +300,18 @@ function hidesOfGone(gone, slots, entities) {
   const out = []
   const whole = new Set()
   for (const [group, place] of gone) {
-    const all = place.how === 'item' && [...(cardsOf.get(place.entity) ?? [])].every((id) => gone.has(id))
+    // A journey's business picture is decoration, not a useful step that keeps an otherwise empty section alive.
+    const entitySlots = slots.filter((s) => s.entity === place.entity && s.group?.id)
+    const onlyJourney =
+      entitySlots.some((s) => s.group.id === group && s.group.kind === 'step') &&
+      entitySlots.every((s) => ['step', 'business'].includes(s.group.kind))
+    const all =
+      place.how === 'item' &&
+      [...(cardsOf.get(place.entity) ?? [])].every(
+        (id) =>
+          gone.has(id) ||
+          (onlyJourney && entitySlots.some((s) => s.group.id === id && s.group.kind === 'business'))
+      )
     if (!all) {
       out.push({ ...place, group, reason: 'demo-title-left' })
       continue

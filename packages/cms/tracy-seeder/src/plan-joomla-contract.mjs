@@ -6,6 +6,7 @@ import { languageScope, languageWanted, SOURCE_LOCALE } from './locales.mjs'
 import { alphabetsOf, languageComplaint, offLanguage } from './off-language.mjs'
 import { toneRule } from './tone.mjs'
 import { buttonKindOf, contactLabel, hasWords, iconLinkKeys, translateLabels } from './template-buttons.mjs'
+import { PROCESS_WRITING_RULE, processWritingOf } from './process-writing.mjs'
 
 /**
  * Every string in a customer brief, flattened — what an evidence-required value must be a verbatim
@@ -1046,6 +1047,7 @@ export async function planJoomlaContract({
     return wrong.size ? languageComplaint(wrong, languages) : null
   }
   const items = itemNumbers(state.slots)
+  const journeys = processWritingOf(state.slots, offerings)
   const offeringOf = offeringBinding(offerings)
   const shows = sectionShows(state.slots, hidden)
   /** The complaints of the batches no answer could be read for (`model-unreadable`). */
@@ -1089,6 +1091,7 @@ export async function planJoomlaContract({
         ...(s.requiresEvidence ? { requiresEvidence: true } : {}),
         language: languageOf(s),
         ...(items.has(s.key) ? { item: items.get(s.key) } : {}),
+        ...(journeys.has(s.key) ? { journey: journeys.get(s.key) } : {}),
         ...(leadsTo[s.key] ? { leadsTo: leadsTo[s.key] } : {}),
         ...(navOf(s) ? { nav: navOf(s) } : {}),
         ...(offeringOf(s) ? { offering: offeringOf(s) } : {}),
@@ -1105,7 +1108,10 @@ export async function planJoomlaContract({
     let complaint = null
     let raw = null
     for (let attempt = 0; attempt < ATTEMPTS; attempt += 1) {
-      raw = await generate({ system: SYSTEM, input: complaint ? { ...input, fix: complaint } : input })
+      raw = await generate({
+        system: journeys.size ? SYSTEM + PROCESS_WRITING_RULE : SYSTEM,
+        input: complaint ? { ...input, fix: complaint } : input
+      })
       const answer = parse(raw)
       // A retry asked for a stray key or a wrong language must not cost an answer that could be
       // read: a later answer replaces an earlier one only when it has the right shape.

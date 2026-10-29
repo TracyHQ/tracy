@@ -22,6 +22,7 @@ import { alphabetsOf, languageComplaint, offLanguage } from './off-language.mjs'
 import { isNoValue, plainText } from './plain-text.mjs'
 import { toneRule } from './tone.mjs'
 import { buttonKindOf, contactLabel, hasWords, translateLabels } from './template-buttons.mjs'
+import { PROCESS_WRITING_RULE, processWritingOf } from './process-writing.mjs'
 
 /** The brief, as the model is given it — the same shape the Joomla planner sends. */
 function briefFacts(site) {
@@ -239,7 +240,8 @@ export async function planWordpressContract({
   const destinations = destinationsOf(contentMap)
   // 🔒 THE TONE IS DEFINED IN THE INSTRUCTION OF EVERY BATCH (`tone.mjs`), not left as one word in the brief: told only
   // `tone: "Bold"` beside a sample to keep the register of, the model wrote plain and bold sites alike (TCH #1013).
-  const system = `${SYSTEM}${toneRule(facts.tone)}`
+  const journeys = processWritingOf(contentMap.slots ?? [])
+  const system = `${SYSTEM}${toneRule(facts.tone)}${journeys.size ? PROCESS_WRITING_RULE : ''}`
 
   for (let offset = 0; offset < planned.length; offset += BATCH) {
     const batch = planned.slice(offset, offset + BATCH)
@@ -256,6 +258,7 @@ export async function planWordpressContract({
         // As a visitor reads it: a sample's "&amp;" taught the model to write one, and the contract escaped it again.
         sample: typeof s.sample === 'string' && s.type === 'text' ? plainText(s.sample) : s.sample,
         maxCharacters: s.maxCharacters,
+        ...(journeys.has(s.key) ? { journey: journeys.get(s.key) } : {}),
         language: languageOf(s)
       }))
     }

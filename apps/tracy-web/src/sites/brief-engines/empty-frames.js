@@ -22,6 +22,7 @@
  * Pure: HTML in, selectors out. No template, class or trade is named.
  */
 import { parse } from 'parse5'
+import { processFrameSelectors } from './process-frames.js'
 
 const SKIPPED = new Set(['script', 'style', 'noscript', 'template', 'head'])
 const MEDIA = new Set([
@@ -234,6 +235,7 @@ export function emptyFramesOf(html) {
     for (const kid of kids) if (!hidden.has(kid)) walk(kid)
   }
   walk(body)
+  hide.push(...processFrameSelectors(body, selectorOf).filter((selector) => !hide.includes(selector)))
   return { hide, tiles, centre }
 }
 

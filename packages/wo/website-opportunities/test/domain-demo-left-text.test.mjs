@@ -100,12 +100,13 @@ test('a swim school on a fitness template: every demo line the writer left takes
     'article-14.0': pool.description,
     'article-14.3': 'Swimming lessons',
     'article-14.4': 'Service',
-    'module-165.2': 'Step 1',
-    // echoed by the writer, never answered for this business: a step title is not trusted as a fitting label
-    'module-165.3': 'Step 2',
     'module-170.1': pool.description
   })
-  assert.deepEqual(out.blanks, ['module-165.6'], 'a step description has no neutral words: it empties')
+  assert.deepEqual(
+    new Set(out.blanks),
+    new Set(['module-165.6', 'module-165.2', 'module-165.3']),
+    'incomplete steps have no placeholder fallback'
+  )
   assert.ok(!('module-170.0' in out.values), 'what the writer wrote anew stays')
   assert.ok(!out.blanks.includes('module-172.0'), 'a record no page shows is not touched')
   assert.ok(!('module-171.0' in out.values) && !out.blanks.includes('module-171.0'), 'a token line stays')
@@ -212,7 +213,7 @@ test('an offering article a category page lists is read; one no page lists is no
   assert.deepEqual(out.blanks, ['article-21.0'])
 })
 
-test('a tab or step title the writer echoed from the demo takes a numbered neutral title, never the demo word', () => {
+test('a tab or step without a meaningful title and body is emptied, never given a numbered neutral title', () => {
   const steps = [
     slot('module-60.2', 'step.title', 'Sparring', {
       group: { id: 'module-60.step.0', item: 0, kind: 'step' }
@@ -236,7 +237,8 @@ test('a tab or step title the writer echoed from the demo takes a numbered neutr
       }
     ]
   })
-  assert.deepEqual(out.values, { 'module-60.5': 'Step 4' })
+  assert.deepEqual(out.values, {})
+  assert.deepEqual(out.blanks, ['module-60.2', 'module-60.5'])
 })
 
 test("a Contact page's record and a template language string are read like a page's own lines", () => {
