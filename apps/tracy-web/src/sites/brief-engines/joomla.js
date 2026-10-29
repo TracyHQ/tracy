@@ -56,6 +56,7 @@ import { woContentOf } from './wo-content.js'
 import { planContactSteps } from './joomla-plan-contacts.js'
 import { honestWords, leftDemoWords, planRecordSteps } from './joomla-plan-records.js'
 import { planIdentitySteps } from './joomla-plan-identity.js'
+import { guardBoundNodes } from './joomla-bound-nodes.js'
 import { contentMapAt, plannedSlotValues, showcaseOff, writeOutsideMap } from './joomla-outside-map.js'
 import { lineLimits, withBoxLimits, withinLines } from './slot-box-limits.js'
 import { writeWoContent } from './joomla-wo-content.js'
@@ -1878,6 +1879,26 @@ export function createJoomlaEngine({
                 .map((key) => staticSlots.get(key))
             ]
           })
+          // 🔒 No records write takes away a node a contract slot binds to (`joomla-bound-nodes.js`, #189): the plugin's
+          // inspect would refuse every contract write after it.
+          const bound = await guardBoundNodes({
+            apply,
+            siteKey,
+            steps: [...identity.steps, ...records.steps],
+            // Every slot the plugin resolves, the declared `keep` ones too.
+            slots: [...staticState(ctx.contract).slots, ...(staticState(ctx.contract).declared ?? [])]
+          }).catch((error) => {
+            ctx.note(
+              `the template's bound lines could not be checked: ${error instanceof Error ? error.message : error}`
+            )
+            return { steps: [], dropped: [] }
+          })
+          if (bound.dropped.length > 0) {
+            ctx.time('recordWritesHeld', bound.dropped.length)
+            console.warn(
+              `[brief-joomla] ${siteKey}: records writes held to keep bound slots: ${bound.dropped.map((d) => `${d.kind}-${d.id} (${d.keys.join(', ')})`).join('; ')}`
+            )
+          }
           if (judged.categories.note) ctx.note(judged.categories.note)
           // An entry the tidy-up takes off is only taken off: a title written into it would show nowhere.
           const retitled = judged.pages.steps.filter((step) => !hiding.includes(step.id))
@@ -1920,8 +1941,6 @@ export function createJoomlaEngine({
                 ...judged.relabels.filter((step) => !hiding.includes(step.id)),
                 ...retitled,
                 ...contacts.steps,
-                ...identity.steps,
-                ...records.steps,
                 ...judged.categories.steps,
                 ...intoCategories,
                 ...menuSteps(dependents),
@@ -2008,6 +2027,22 @@ export function createJoomlaEngine({
             })
             if (refused) ctx.note(refused)
             else ctx.time('consentNote', 1)
+          }
+          // 🔒 THE WRITES OUTSIDE THE CONTRACT INTO MODULE AND ARTICLE HTML GO LAST (#189): every contract write of the tidy-up
+          // (the links taken off above) is made first, so none reads a row these steps rewrite.
+          if (bound.steps.length > 0) {
+            const wroteRecords = await time('recordsMs', () =>
+              writeSteps({
+                apply,
+                siteKey,
+                steps: bound.steps,
+                applyId: `tidy-records-${Date.now().toString(36)}`
+              })
+            )
+            if (wroteRecords.refused.length > 0)
+              ctx.note(
+                `${wroteRecords.refused.length} change(s) to the template's cards and fact lines were refused`
+              )
           }
         } catch (error) {
           ctx.note(

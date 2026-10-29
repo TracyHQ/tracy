@@ -109,13 +109,31 @@ function at(root, path) {
   return node && typeof node === 'object' ? node : null
 }
 
-/** A field's HTML without the demo words and the demo picture of an emptied slot. */
+/**
+ * The same markup with every run of words between its tags made a no-break space: each element and each text node stays, so
+ * the paths the contract binds to still find exactly one node, and the visitor reads nothing.
+ * @param {string} markup
+ */
+const blanked = (markup) =>
+  markup.replace(/(^|>)([^<]*)(?=<|$)/g, (_, open, words) => open + (words.trim() === '' ? words : '&nbsp;'))
+
+/**
+ * A field's HTML without the demo words and the demo picture of an emptied slot.
+ *
+ * 🔒 A RECORDS WRITE NEVER REMOVES OR RESHAPES A NODE A CONTRACT SLOT BINDS TO (spec TracyHQ/tracy#189, 29/10/2026). A
+ * local brief build emptied a stat sentence ("Join over <span>100k</span> of inspiring creatives", three slots bound to
+ * `div/text()[1]`, `div/span/text()` and `div/text()[2]`) by deleting its words: the text nodes went, the plugin's inspect
+ * found no node for those paths ("HTML slot is missing or ambiguous"), and every contract write after it was refused.
+ * So the words become a no-break space, node for node, and a picture is hidden by an attribute, never taken out.
+ */
 function withoutSample(html, blank) {
   const sample = String(blank.sample ?? '')
   if (sample.trim() === '') return html
   if (blank.type === 'image') {
     const file = sample.split('#')[0]
-    return html.replace(new RegExp(`<img\\b[^>]*${escapeRe(file)}[^>]*>`, 'i'), '')
+    return html.replace(new RegExp(`<img\\b[^>]*${escapeRe(file)}[^>]*>`, 'i'), (tag) =>
+      /\shidden(?=[\s>=/])/i.test(tag) ? tag : tag.replace(/^<img\b/i, '<img hidden')
+    )
   }
   // A sample the map read with its line breaks (`\r\n  words\r\n`) stands in the row by its words: trimmed last.
   // Too short a piece of words could stand elsewhere in the row first: such a sample is matched only as the map read it.
@@ -127,7 +145,7 @@ function withoutSample(html, blank) {
     stored(trimmed),
     htmlOf(stored(trimmed))
   ])
-    if (form && html.includes(form)) return html.replace(form, '')
+    if (form && html.includes(form)) return html.replace(form, () => blanked(form))
   return html
 }
 

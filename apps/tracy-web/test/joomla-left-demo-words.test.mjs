@@ -92,7 +92,7 @@ test('emptying reaches a module’s JSON list and an article’s HTML column', (
   assert.equal(made.emptied, 2)
   assert.equal(made.unresolved, 0)
   const article = made.steps.find((s) => s.kind === 'article')
-  assert.deepEqual(article, { kind: 'article', id: 12, fields: { introtext: '<p>\n  \n</p>\n' } })
+  assert.deepEqual(article, { kind: 'article', id: 12, fields: { introtext: '<p>\n  &nbsp;\n</p>\n' } })
   const module = made.steps.find((s) => s.kind === 'module')
   const config = JSON.parse(JSON.parse(module.fields.params)['jatools-config'])
   assert.deepEqual(config.features['features[description]'], [''])
@@ -118,6 +118,6 @@ test('the records write takes the left demo lines beside the plan’s own blanks
     woContent: { sitePlanFor: async () => ({ honesty: { blanks: [], hide: [], records: [] } }) },
     extraBlanks: [intro]
   })
-  assert.deepEqual(made.steps, [{ kind: 'article', id: 12, fields: { introtext: '<p></p>' } }])
+  assert.deepEqual(made.steps, [{ kind: 'article', id: 12, fields: { introtext: '<p>&nbsp;</p>' } }])
   assert.ok(calls.some((c) => c.action === 'content.get' && c.params.id === 12))
 })

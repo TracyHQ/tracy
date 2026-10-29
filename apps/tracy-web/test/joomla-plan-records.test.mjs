@@ -150,7 +150,9 @@ test('a section with no card left, and a card that is an article of its own, are
 test('a statistic inside an HTML field loses the demo number, its words and its proof picture', () => {
   const { steps } = recordSteps({ honesty: honesty(), modules: modules(), articles: articles() })
   const html = JSON.parse(stepOf(steps, 'module', 80).fields.params)['top-desc']
-  assert.doesNotMatch(html, /100k|Join over|inspiring|avatar-1/)
+  assert.doesNotMatch(html, /100k|Join over|inspiring/)
+  // The proof picture stays in place, hidden: a slot binds to it (#189, see joomla-records-keep-bound-nodes.test.mjs).
+  assert.match(html, /<img hidden src="images\/demo\/others\/avatar-1\.png"/)
 })
 
 test('the clinic: a priced services list keeps the card of a real service without its price, and drops the rest', () => {
