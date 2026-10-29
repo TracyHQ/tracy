@@ -30,7 +30,7 @@ import {
 import { pageRole } from 'website-opportunities/domain/page-plan.mjs'
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
-import { ownStylesheets } from '../../opportunities-build/demo-leftover-check.js'
+import { ownStylesheets } from '../../lib/own-stylesheets.js'
 import { readMenu, readModules, SKIPPED_MENUS, writeSteps } from './joomla-tidy.js'
 
 /** The head-code param each template framework prints raw into every page's head. */

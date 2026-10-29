@@ -61,7 +61,9 @@ function backgroundRules(css) {
   for (const [, selector, body] of String(css ?? '')
     .replace(/\/\*[\s\S]*?\*\//g, '')
     .matchAll(/([^{}@;]+)\{([^{}]*)\}/g))
-    for (const [, url] of body.matchAll(/background(?:-image)?\s*:[^;]*?url\(\s*["']?([^"')]+)["']?\s*\)/gi))
+    for (const [, url] of body.matchAll(
+      /background(?:-image)?\s*:[^;]*?url\(\s*["']?([^"'()\s]+)["']?\s*\)/gi
+    ))
       out.push({ selector: selector.trim(), file: String(url).match(IMAGE_FILE)?.[0] ?? null })
   return out
 }

@@ -22,6 +22,7 @@ const escapeHtml = (/** @type {string} */ s) =>
 
 const ANCHOR = /<a\b([^>]*)>([\s\S]*?)<\/a\s*>/gi
 const HREF = /(\shref\s*=\s*)(["'])([\s\S]*?)\2/i
+const GOOGLE_MAP = /google\.[a-z.]+\/maps|maps\.google/i
 /** A link that shares the visited page, not a profile of the business. */
 const SHARE = /sharer|share\?|intent\/tweet|share\.php/i
 const NETWORKS = [
@@ -138,8 +139,10 @@ export function joomlaIdentityHtml(html, plan) {
   )
   out = out.replace(ANCHOR, swap)
   out = out.replace(
-    /<iframe\b[^>]*\ssrc\s*=\s*(["'])([^"']*(?:google\.[a-z.]+\/maps|maps\.google)[^"']*)\1[^>]*>\s*<\/iframe\s*>/gi,
+    // The src is read whole and tested apart: one unbounded run each side of the map host would backtrack on long input.
+    /<iframe\b[^>]*\ssrc\s*=\s*(["'])([^"']*)\1[^>]*>\s*<\/iframe\s*>/gi,
     (whole, quote, src) => {
+      if (!GOOGLE_MAP.test(src)) return whole
       if ((plan.map?.decision === 'address' || plan.map?.decision === 'place') && plan.map.embed) {
         if (src === plan.map.embed || src.replace(/&amp;/g, '&') === plan.map.embed) return whole
         maps += 1

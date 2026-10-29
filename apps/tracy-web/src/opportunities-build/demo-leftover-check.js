@@ -9,23 +9,11 @@
  * leads nowhere (C19). A page that cannot be read is listed as unread, never as clean.
  */
 import { contentMapOfTemplate } from './brief-build-path.js'
+import { ownStylesheets, MAX_STYLES } from '../lib/own-stylesheets.js'
 
 /** The most pages one check reads: a brief build's site has a handful, a demo's showcase branch can have dozens. */
 export const MAX_PAGES = 24
-/** The most stylesheets of the site read for the backgrounds its template settings paint (C10, #196). */
-export const MAX_STYLES = 8
-
-/** The site's own stylesheets the pages load (same site, no other host), in order, once each. */
-export function ownStylesheets(pages) {
-  const out = new Set()
-  for (const { html } of pages)
-    for (const [tag] of String(html).matchAll(/<link\b[^>]*>/gi)) {
-      if (!/rel\s*=\s*["']?stylesheet/i.test(tag)) continue
-      const href = /\shref\s*=\s*["']([^"']+)["']/i.exec(tag)?.[1]?.replace(/&amp;/g, '&')
-      if (href?.startsWith('/') && !href.startsWith('//')) out.add(href)
-    }
-  return [...out].slice(0, MAX_STYLES)
-}
+export { MAX_STYLES, ownStylesheets }
 /** An address no site serves, read to see the not-found page. */
 export const MISSING_PROBE = '/tracy-leftover-check-missing-page'
 /** Findings kept on the receipt; the rest are counted. */

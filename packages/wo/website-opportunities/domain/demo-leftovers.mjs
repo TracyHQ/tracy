@@ -130,7 +130,7 @@ function readPage({ path, status = 200, html = '' }) {
     (m) => m[2]
   )
   const backgrounds = [
-    ...html.matchAll(/background(?:-image)?\s*:[^;"'}]*url\(\s*["']?([^"')]+)["']?\s*\)/gi)
+    ...html.matchAll(/background(?:-image)?\s*:[^;"'}]*url\(\s*["']?([^"'()\s]+)["']?\s*\)/gi)
   ].map((m) => m[1])
   return { path, status, html, text: normalized(html), links, sources, backgrounds }
 }

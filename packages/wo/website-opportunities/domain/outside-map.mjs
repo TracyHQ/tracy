@@ -244,7 +244,7 @@ export function demoBackgrounds({ styles = [], pages = [], contentMap = null }) 
   for (const { css } of styles)
     for (const { selector, body } of rulesOf(css))
       for (const [, url] of body.matchAll(
-        /background(?:-image)?\s*:[^;]*?url\(\s*["']?([^"')]+)["']?\s*\)/gi
+        /background(?:-image)?\s*:[^;]*?url\(\s*["']?([^"'()\s]+)["']?\s*\)/gi
       )) {
         const file = demoFile(url)
         if (file && selector && !selector.startsWith('@')) add(selector, file)
