@@ -51,7 +51,8 @@ function planOf(brief, q, now) {
       prices,
       services,
       menuLinks,
-      socials: brief.business?.socials ?? {}
+      socials: brief.business?.socials ?? {},
+      contact: Object.keys(contactOf(brief)).length
     },
     now: now ?? brief.madeAt ?? new Date().toISOString(),
     cms: brief.cms ?? null

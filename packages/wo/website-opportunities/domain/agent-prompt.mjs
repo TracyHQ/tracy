@@ -75,6 +75,9 @@ export function withheldLines(brief) {
   ]
 }
 
+/** How many leftover findings the prompt lists; the rest are counted. */
+const LEFTOVERS_SHOWN = 60
+
 /**
  * `handoff.placed` = {assetId: sitePath}: pictures uploaded for the agent; `videos` = [{id, sourceUrl, source}] kept as links;
  * `pictures` = what the site's own build already did with the photographs (`wo_build.pictures`), when it did:
@@ -99,7 +102,8 @@ export function renderAgentPrompt({
   written = {},
   sections = null,
   locale = written?.['slot-fill']?.locale ?? 'en',
-  socialFigures = []
+  socialFigures = [],
+  leftovers = null
 }) {
   const brief = revision.brief ?? {}
   // The neutral words go on the site: in its language, the one the build wrote (`slot-fill`).
@@ -363,6 +367,16 @@ export function renderAgentPrompt({
     line()
     line('## Assets not uploaded')
     for (const s of skipped) line(`- ${s.id}: ${s.reason}`)
+  }
+  // The demo-leftover check's findings (#191): the places the site still shows the template's demo, by kind and page.
+  if (Array.isArray(leftovers?.findings) && leftovers.findings.length) {
+    line()
+    line('## Demo leftovers the check still finds')
+    line("Replace each with the business's own content, or hide it. Kind, page and place:")
+    for (const f of leftovers.findings.slice(0, LEFTOVERS_SHOWN))
+      line(`- ${f.kind} ${f.page} ${f.place}: ${JSON.stringify(String(f.found ?? '').slice(0, 80))}`)
+    if (leftovers.findings.length > LEFTOVERS_SHOWN)
+      line(`- and ${leftovers.findings.length - LEFTOVERS_SHOWN} more of the same kinds.`)
   }
   line()
   line('## Site brief')

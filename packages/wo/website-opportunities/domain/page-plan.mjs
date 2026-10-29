@@ -50,6 +50,9 @@ const ONE_OF = new Set([
   'history'
 ])
 
+/** Why a Contact page is kept: the business gave contact details. */
+export const CONTACT_FACTS_WHY = 'the business gave contact details'
+
 const BLOG_MAX = 3
 const BLOG_MIN = 2
 const MENU_MAX = 6
@@ -88,7 +91,7 @@ function worth(item, now) {
 
 /**
  * @param {{pages: Array<{id: string, label?: string, home?: boolean}>, locked?: string[], content?: object[],
- *   facts?: {images?: number, prices?: number, services?: number, menuLinks?: string[], socials?: object}, now: string, cms?: string|null}} args - `content`: `contentPool` items;
+ *   facts?: {images?: number, prices?: number, services?: number, contact?: number, menuLinks?: string[], socials?: object}, now: string, cms?: string|null}} args - `content`: `contentPool` items;
  *   `facts.menuLinks` no longer changes a page's fill: the menu page shows its dishes on the site
  * @returns {{pages: Array<{id: string, path?: string, role: string, keep: boolean, why: string, fill?: string, items?: string[],
  *   state?: string}>, keep: string[]}}
@@ -139,6 +142,17 @@ export function pagePlan({ pages = [], locked = [], content = [], facts = {}, no
         why: page.home ? 'the home page' : 'locked by the template'
       }
     if (role === 'sample') return off('a sample page the template ships to show its features')
+    // 🔒 A PAGE THE BUSINESS HAS DATA FOR IS NEVER DROPPED (spec #189): the Contact page stays when the brief holds contact
+    // details, even where the template files it under another page (JA Boxing's `about-us/contact`, pilot 29/10/2026).
+    if (
+      role === 'contact' &&
+      facts.contact > 0 &&
+      !seen.has('contact') &&
+      (!contactPage || page.id === contactPage)
+    ) {
+      seen.add(role)
+      return { id: page.id, ...at, role, keep: true, why: CONTACT_FACTS_WHY }
+    }
     if (parent && role !== 'history') return off(`a sub-page of ${parent} from the template's own demo trade`)
     // A page of a section (`resources/mag-world`) that names no kind a restaurant has is the demo's own trade.
     if (role === 'other' && page.id.includes('/'))

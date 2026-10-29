@@ -36,6 +36,32 @@ export {
 export { readMenus, menuItemsFromHtml, menuItemsFromPdfPages } from './menu-reader.mjs'
 export { renderAgentPrompt, HANDOFF_FOLDER, socialFiguresOf } from './agent-prompt.mjs'
 export { answersFromBrief, contactFacts } from './site-answers.mjs'
+export { planSite, SITE_PLAN_REASONS, SITE_PLAN_VERSION } from './site-plan.mjs'
+export { honestWritten } from './honest-written.mjs'
+export {
+  demoBackgrounds,
+  leftoverHeadBlock,
+  OUTSIDE_MAP_REASONS,
+  OUTSIDE_MAP_VERSION,
+  planAliases,
+  planOutsideMap,
+  withHeadBlock,
+  withoutCredit
+} from './outside-map.mjs'
+export {
+  checkDemoLeftovers,
+  LEFTOVER_KINDS,
+  LEFTOVER_RULES,
+  LEFTOVER_CHECK_VERSION
+} from './demo-leftovers.mjs'
+export {
+  CLEANUP_FINDINGS_SHOWN,
+  CLEANUP_LIMITS,
+  compareLeftovers,
+  LEFTOVER_CLEANUP_VERSION,
+  renderLeftoverCleanupPrompt,
+  summarizeLeftovers
+} from './leftover-cleanup.mjs'
 export { pageRole } from './page-plan.mjs'
 export { pinnedCopy } from './pinned-copy.mjs'
 export { neutralFor, neutralWords } from './neutral-copy.mjs'
@@ -287,6 +313,16 @@ export {
 export { FILL_PLAN_VERSION, FILL_REASONS, cardNamesOf, planFill, shownWidthOf } from './fill-plan.mjs'
 export { textSubstitutesOf } from './fill-text.mjs'
 export { placementOfFill } from './fill-placement.mjs'
+export { DRAW_CAP, DRAW_PLAN_VERSION, DRAW_REASONS, drawnPictureVerdict, planDrawings } from './fill-draw.mjs'
+export {
+  DECOR_PLAN_VERSION,
+  DECOR_REASONS,
+  ICON_LEXICON,
+  NEUTRAL_GLYPH,
+  decorOf,
+  glyphOf,
+  planDecor
+} from './decor-plan.mjs'
 export { collectSocialProfile, PROFILE_TIERS } from './social-profile.mjs'
 export {
   fetchSocialStats,
