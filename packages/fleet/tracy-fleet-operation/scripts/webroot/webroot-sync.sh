@@ -841,6 +841,9 @@ sys.exit(0 if not f["conflicts"] and not d["conflicts"] and d.get("held") else 1
 
   local recovered=""
   [[ ! -f "$DIR/recovered" ]] || recovered="$(cat "$DIR/recovered")"
+  # The copy's own triggers, by name: a live trigger the copy lacks is named as not brought (#120).
+  tracy_db_exec mariadb -uroot -N -B -e "SELECT TRIGGER_NAME FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA = '$DB'" \
+    > "$DIR/copy-triggers.txt" 2>/dev/null || : > "$DIR/copy-triggers.txt"
   TRACY_SYNC_REUSED="$REUSED" python3 - "$DIR" "$ours_commit" "$theirs_commit" "$base_kind" "$stamp" "$version" "$point" "$recovered" "$merged_commit" "$nothing" <<'PYEOF'
 import json, os, sys
 d, ours, theirs, base_kind, stamp, version, point, recovered, merged, nothing = sys.argv[1:11]
@@ -853,12 +856,25 @@ state = {"oursCommit": ours, "theirsCommit": theirs, "mergedCommit": merged or N
          "version": int(version) if version else None, "rebuild": db["rebuild"], "largeFiles": large}
 json.dump(state, open(os.path.join(d, "merge.json"), "w"))
 held = db.get("held", [])
+# What the live read saw that Sync from live does not bring (live-pull `notCarried`, #120): the
+# triggers the copy does not have (no dump carries one), and the tables left out only by the shape of
+# their name that the live site changed. Named for the Owner, never copied by guess.
+read_path = os.path.join(d, "live-read.json")
+seen = (json.load(open(read_path)).get("notCarried") or {}) if os.path.exists(read_path) else {}
+copy_triggers = set(open(os.path.join(d, "copy-triggers.txt")).read().split()) if os.path.exists(os.path.join(d, "copy-triggers.txt")) else set()
+not_carried = {}
+triggers = [t for t in seen.get("triggers") or [] if isinstance(t, dict) and t.get("name") not in copy_triggers]
+if triggers:
+    not_carried["triggers"] = [{k: str(t.get(k, ""))[:64] for k in ("name", "table", "event", "timing")} for t in triggers[:50]]
+if seen.get("tables"):
+    not_carried["tables"] = [str(t)[:64] for t in seen["tables"][:50]]
 print(json.dumps({"ok": True, "state": "nothing" if nothing else "ready" if version else ("needs_attention" if held else "needs_resolution"), **state,
                   "conflicts": conflicts, "held": held, "kept": files.get("kept", []) + db.get("kept", []),
                   "renumbered": db.get("renumbered", []),
                   # The live site's rows the merge left out without a clash (a log row both sites
                   # wrote under one number), named: `database.skipped` alone named nothing (#1648).
                   "skipped": db.get("skipped", []),
+                  **({"notCarried": not_carried} if not_carried else {}),
                   "files": files["counts"], "database": db["counts"],
                   "tables": db["tables"], "point": json.loads(point),
                   # A sync a restart cut off, settled before this one (`recover_apply`).
@@ -1578,10 +1594,23 @@ keep_fingerprint() {
 # stays the one of the last applied read: it is that read's tables the next read reuses, and a noise
 # table (a log) that moved since is read then.
 answer_unchanged() {
-  python3 - "$DIR/live-read.json" <<'PYEOF'
+  [[ -n "$DB" ]] || DB="$(tracy_backup_db_name)"
+  tracy_db_exec mariadb -uroot -N -B -e "SELECT TRIGGER_NAME FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA = '$DB'" \
+    > "$DIR/copy-triggers.txt" 2>/dev/null || : > "$DIR/copy-triggers.txt"
+  python3 - "$DIR/live-read.json" "$DIR/copy-triggers.txt" <<'PYEOF'
 import json, sys
 read = json.load(open(sys.argv[1]))
+# What the live site has that Sync from live does not bring, even with nothing new to merge (#120).
+seen = read.get("notCarried") or {}
+copy_triggers = set(open(sys.argv[2]).read().split())
+not_carried = {}
+triggers = [t for t in seen.get("triggers") or [] if isinstance(t, dict) and t.get("name") not in copy_triggers]
+if triggers:
+    not_carried["triggers"] = [{k: str(t.get(k, ""))[:64] for k in ("name", "table", "event", "timing")} for t in triggers[:50]]
+if seen.get("tables"):
+    not_carried["tables"] = [str(t)[:64] for t in seen["tables"][:50]]
 print(json.dumps({"ok": True, "state": "applied", "unchanged": read.get("unchanged"),
+                  **({"notCarried": not_carried} if not_carried else {}),
                   "liveReadAt": read.get("liveReadAt"), "read": read,
                   "conflicts": [], "held": [], "kept": [], "renumbered": [],
                   "files": {"fromTheirs": 0, "merged": 0, "tracyOwned": 0},
