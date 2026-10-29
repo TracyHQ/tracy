@@ -1,0 +1,43 @@
+{
+  "id": "REG-PR-201-visual-check-cold-before",
+  "kind": "fix",
+  "title": "The visual check's early before has a deadline a cold site container can meet",
+  "pr": 201,
+  "area": "site-tools/visual-check",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: draw a picture with the cold deadline through the site's own browser.",
+    "S2: draw it where the site has no browser, through dsh's host fallback.",
+    "S3: ask the view store for an early picture and for a held one.",
+    "S4: build the browser argv with no deadline, the 16 s view deadline and the 40 s cold deadline."
+  ],
+  "expect": [
+    "S1: the script gets 40 s; the in-container backstop and the docker client both outlast it.",
+    "S2: dsh's browser gets the same 40 s.",
+    "S3: only the early picture reaches the capture as patient; a held picture keeps the 16 s deadline.",
+    "S4: 25 s backstop for the first two; above 40 s for the cold one."
+  ],
+  "selectors": {
+    "file": "packages/tools/tracy-site-tools/src/host/view.mjs",
+    "exports": "captureView, createViewStore, VIEW_COLD_DEADLINE_MS"
+  },
+  "evidence": "Beta report 28/10/2026 2c; local stand 29/10/2026: the first turn on a just-started WordPress and Joomla site ended TRACY_BROWSER ERR timed out after 21.6 s",
+  "fence": "Visual check pictures",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=a picture nobody waits on has the cold deadline|draw passes `patient` to the capture only when asked|the in-container backstop outlasts a deadline",
+      "packages/tools/tracy-site-tools/test/view.test.mjs",
+      "packages/tools/tracy-site-tools/test/exec.test.mjs"
+    ],
+    "tests": [
+      "captureView: a picture nobody waits on has the cold deadline, on the site browser and on dsh's",
+      "createViewStore: draw passes `patient` to the capture only when asked, and only for the check",
+      "browserArgv: the in-container backstop outlasts a deadline longer than its own default"
+    ]
+  }
+}

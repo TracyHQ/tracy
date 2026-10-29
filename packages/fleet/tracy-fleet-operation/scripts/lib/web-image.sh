@@ -23,16 +23,35 @@
 #
 # TWO STANCES, chosen by the caller, because the cost of refusing is not the same on both sides:
 #
-#   lenient (default)  a NEW site being provisioned. An unlisted base or an image nobody built
-#                      leaves the site on its own upstream base — same PHP, no agent tools — and
-#                      says so with `!!`. Refusing here would stop every provision on a host whose
-#                      images are not built yet, which is a much larger failure than a degraded
-#                      agent, and the images are built by hand (web/build.sh).
+#   lenient (default)  a NEW site being provisioned. An unlisted base leaves the site on its own
+#                      upstream base — same PHP, no agent tools — and says so with `!!`. A LISTED
+#                      base whose image is not built here is built on the spot when the caller
+#                      asks for it (TRACY_WEB_IMAGE_BUILD=1, which only provision.sh sets — see
+#                      below); only when that build fails does the site stay on the upstream base,
+#                      and then the provision output says so in a block nobody can miss. Refusing
+#                      here would stop every provision on a host whose images are not built yet,
+#                      which is a much larger failure than a degraded agent.
 #   strict             a site that is already ALIVE: render-compose.sh run by hand, or set-php.sh.
 #                      A person is sitting there running it, fourteen times in a row, and one `!!`
 #                      in fourteen screens of output is a line nobody reads. Refuse, name the
 #                      IMAGE_TAGS line that is missing, and leave the compose file untouched.
-#                      TRACY_WEB_IMAGE_STRICT=1 asks for this.
+#                      TRACY_WEB_IMAGE_STRICT=1 asks for this. It never builds: the command it
+#                      names is one line, and the person running it decides when to spend the time.
+#
+# 🔒 WHY A NEW SITE NO LONGER SETTLES FOR THE UPSTREAM IMAGE WHEN ITS LINE EXISTS (29/10/2026).
+# The upstream image has no chromium and no node, and the visual check of a customer's edit draws
+# the page with a browser INSIDE the site's web container (tracy-site-tools `browserArgv`). On prod1
+# 7 customer turns answered NO_BROWSER, all on Joomla sites. The local stand reproduced the shape: an
+# imported Joomla site on `joomla:5-apache` because its IMAGE_TAGS line was not built on that host,
+# with one `!!` line in a provision log nobody reads as the only trace. A line in this file is a
+# promise the image exists; when it does not, the provision that needs it builds it (web/build.sh
+# --line <base>, ~5 minutes once per host and tag) instead of leaving the site behind. A site that
+# already landed on an upstream image is moved by provision/move-off-upstream-image.sh.
+#
+# TRACY_WEB_IMAGE_BUILD=1 is a plain (not exported) shell variable provision.sh sets around sourcing
+# its platform file. Not exported on purpose: go-live.sh, restore.sh and snapshot.sh source the same
+# platform files and never use the image they resolve, so a 5-minute build there would be pure delay
+# — and a provision's children must not inherit it either.
 
 # The tags file, wherever this copy of the scripts is standing. Empty when there is none.
 #
@@ -69,14 +88,107 @@ tracy_web_dir() {
   return 1
 }
 
+# tracy_web_image_line <key>
+#
+# The image IMAGE_TAGS names for exactly <key> (`joomla:5-apache`, or a bare `joomla` default line).
+# Returns 1 when the file has no such line, 2 when there is no file at all.
+#
+# Exact match only. `awk index()` on the key as a literal: a tag carries dots, and a dot that
+# matches any character is how `php8.2` would quietly answer for `php812`.
+tracy_web_image_line() {
+  local key="$1" tags want
+  tags="$(tracy_image_tags_file)" || return 2
+  want="$(awk -v k="$key=" 'index($0, k) == 1 { print substr($0, length(k) + 1); exit }' "$tags")"
+  [ -n "$want" ] || return 1
+  printf '%s\n' "$want"
+}
+
+# The `<platform>:<tag>` line that builds <image> — what web/build.sh --line takes. A default line
+# (`joomla=…`) builds nothing itself; it names the image of one base line, and build.sh checks so.
+_tracy_web_image_build_key() { # key image
+  local tags
+  case "$1" in *:*) printf '%s\n' "$1"; return 0 ;; esac
+  tags="$(tracy_image_tags_file)" || return 1
+  awk -F= -v img="$2" '/^[^#]/ && index($1, ":") && substr($0, length($1) + 2) == img { print $1; found = 1; exit } END { exit !found }' "$tags"
+}
+
+# Run web/build.sh --line <key>, every line of its output on stderr and indented.
+#
+# 🔒 NOTHING IT PRINTS MAY START WITH `==`. tracy-host runs provision.sh with stderr merged into
+# stdout and shows the rest of any line starting `==` to the customer as the Build step
+# (apps/tracy-host/src/provision.js `stepFromLine`), and build.sh says `==> <image>  (from <base>)`.
+# Unprefixed, the customer would read a Docker tag as the step their site is on. Stderr, because this
+# runs inside `WEB_IMAGE="$(…)"`: anything on stdout would become part of the image name.
+_tracy_web_image_run_build() { # web-dir key
+  local out
+  bash "$1/build.sh" --line "$2" 2>&1 | while IFS= read -r out; do printf '   [web image] %s\n' "$out"; done >&2
+  return "${PIPESTATUS[0]}"
+}
+
+# tracy_web_image_build <key> <image>
+#
+# Build the IMAGE_TAGS line that makes <image>, on this host, now, and succeed only when <image> is
+# there afterwards (asked of docker, not of build.sh's exit code). Serialised on one host lock when
+# `flock` is available: two provisions starting together on a host that lacks the image would
+# otherwise both build it, and the second one waits and then finds it built.
+tracy_web_image_build() {
+  local key="$1" want="$2" web build_key lock
+  if ! web="$(tracy_web_dir)" || [ ! -f "$web/build.sh" ]; then
+    echo "!! no web/build.sh beside these scripts, so $want cannot be built here" >&2
+    return 1
+  fi
+  if ! build_key="$(_tracy_web_image_build_key "$key" "$want")"; then
+    echo "!! no <platform>:<tag> line of web/IMAGE_TAGS builds $want, so it cannot be built here" >&2
+    return 1
+  fi
+  echo "   $want is not built on this host — building it now: bash $web/build.sh --line $build_key" >&2
+  lock="${TRACY_WEB_IMAGE_BUILD_LOCK:-/var/lock/tracy-web-image-build.lock}"
+  if command -v flock >/dev/null 2>&1 && { : >> "$lock"; } 2>/dev/null; then
+    (
+      flock 9
+      docker image inspect "$want" >/dev/null 2>&1 || _tracy_web_image_run_build "$web" "$build_key"
+    ) 9>> "$lock" || true
+  else
+    _tracy_web_image_run_build "$web" "$build_key" || true
+  fi
+  if docker image inspect "$want" >/dev/null 2>&1; then
+    echo "   $want built — this site gets it" >&2
+    return 0
+  fi
+  return 1
+}
+
+# The lenient answer when the on-the-spot build failed: the upstream base, said so that nobody can
+# miss it in a provision log, with the two commands that fix it.
+_tracy_web_image_loud_fallback() { # key image base
+  local key="$1" want="$2" base="$3" fleet="${TRACY_FLEET_DIR:-/opt/tracy-fleet}" build_key
+  build_key="$(_tracy_web_image_build_key "$key" "$want" 2>/dev/null)" || build_key="$key"
+  {
+    echo "!! ----------------------------------------------------------------------------------------"
+    echo "!! $want COULD NOT BE BUILT on this host (the lines above say why)."
+    echo "!! This NEW site runs the bare upstream image ${base:-<none>} instead: same PHP, but no"
+    echo "!! chromium, node, git, rg or jq. The visual check falls back to dsh's own browser (page"
+    echo "!! scripts off), and the agent's grep tool fails. Fix the build, then move the site:"
+    echo "!!   bash $fleet/web/build.sh --line $build_key"
+    echo "!!   bash $fleet/provision/move-off-upstream-image.sh --label ${LABEL:-<label>} --apply"
+    echo "!! ----------------------------------------------------------------------------------------"
+  } >&2
+  [ -n "$base" ] || return 1
+  printf '%s\n' "$base"
+}
+
 # Say it the same way in both stances, and let the stance decide whether it is fatal.
-# _tracy_web_image_giveup <message> <fallback image>
+# _tracy_web_image_giveup <message> <fallback image> [IMAGE_TAGS key whose image is missing]
 _tracy_web_image_giveup() {
-  local message="$1" fallback="$2"
+  local message="$1" fallback="$2" key="${3:-}"
   if [ "${TRACY_WEB_IMAGE_STRICT:-0}" = 1 ]; then
     echo "!! $message" >&2
     echo "   this site is already running — refusing rather than moving it. Add the line to" >&2
-    echo "   web/IMAGE_TAGS and build it: bash ${TRACY_FLEET_DIR:-/opt/tracy-fleet}/web/build.sh" >&2
+    if [ -n "$key" ]; then
+      echo "   web/IMAGE_TAGS if it is missing, and build it: bash ${TRACY_FLEET_DIR:-/opt/tracy-fleet}/web/build.sh --line $key" >&2
+    else
+      echo "   web/IMAGE_TAGS and build it: bash ${TRACY_FLEET_DIR:-/opt/tracy-fleet}/web/build.sh" >&2
+    fi
     return 1
   fi
   echo "!! $message" >&2
@@ -111,7 +223,7 @@ _tracy_web_image_require_supported_php() {
 # answer it is allowed to give. The second argument is the site's CURRENT (or default upstream)
 # image; pass it empty only for a site that has none yet.
 tracy_web_image() {
-  local platform="$1" base="${2:-}" tags key want
+  local platform="$1" base="${2:-}" key want rc
 
   _tracy_web_image_require_supported_php "$base" || return 1
   _tracy_web_image_require_supported_php "${TRACY_WEB_IMAGE:-}" || return 1
@@ -135,18 +247,12 @@ tracy_web_image() {
     esac
   fi
 
-  if ! tags="$(tracy_image_tags_file)"; then
-    _tracy_web_image_giveup "no web/IMAGE_TAGS found, so nothing maps $key" "$base"
-    return
-  fi
-
-  # Exact match only. `sed` on the key as a literal: a tag carries dots, and a dot that matches
-  # any character is how `php8.2` would quietly answer for `php812`.
-  want="$(awk -v k="$key=" 'index($0, k) == 1 { print substr($0, length(k) + 1); exit }' "$tags")"
-  if [ -z "$want" ]; then
-    _tracy_web_image_giveup "web/IMAGE_TAGS has no line for $key" "$base"
-    return
-  fi
+  want="$(tracy_web_image_line "$key")" && rc=0 || rc=$?
+  case "$rc" in
+    0) ;;
+    2) _tracy_web_image_giveup "no web/IMAGE_TAGS found, so nothing maps $key" "$base"; return ;;
+    *) _tracy_web_image_giveup "web/IMAGE_TAGS has no line for $key" "$base"; return ;;
+  esac
 
   _tracy_web_image_require_supported_php "$want" || return 1
 
@@ -155,7 +261,16 @@ tracy_web_image() {
   # wrong place entirely (the same trap platform/emdash.sh records).
   if [ "${TRACY_WEB_IMAGE_CHECK:-1}" = 1 ] && command -v docker >/dev/null 2>&1; then
     if ! docker image inspect "$want" >/dev/null 2>&1; then
-      _tracy_web_image_giveup "$want is not built on this host" "$base"
+      # A new site whose provision asked for it: build the one line now (see the 🔒 at the top).
+      if [ "${TRACY_WEB_IMAGE_STRICT:-0}" != 1 ] && [ "${TRACY_WEB_IMAGE_BUILD:-0}" = 1 ]; then
+        if tracy_web_image_build "$key" "$want"; then
+          printf '%s\n' "$want"
+          return 0
+        fi
+        _tracy_web_image_loud_fallback "$key" "$want" "$base"
+        return
+      fi
+      _tracy_web_image_giveup "$want is not built on this host" "$base" "$(_tracy_web_image_build_key "$key" "$want" 2>/dev/null)"
       return
     fi
   fi
