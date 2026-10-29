@@ -7,7 +7,9 @@
   "cms": ["wp", "jo"],
   "needs": [],
   "flaky_model": false,
-  "steps": ["Run the host answer case and the push dialog case for a preview of 500 conflicts and later writable items."],
+  "steps": [
+    "Run the host answer case and the push dialog case for a preview of 500 conflicts and later writable items."
+  ],
   "expect": [
     "The answer lists writable items before conflicts and carries pushable totals by group over the whole changeset.",
     "The dialog reviews, not 'nothing', and its headings and confirm line count the whole changeset."
