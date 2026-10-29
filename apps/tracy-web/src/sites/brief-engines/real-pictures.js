@@ -29,6 +29,7 @@ import { pool } from './shared.js'
 import { drawPlanned, shapeDecor } from './drawn-pictures.js'
 import { unmeasuredFigures } from './unmeasured-figures.js'
 import { iconMeanings } from './icon-meanings.js'
+import { correctedCut, sharpFill } from './sharpness-gate.js'
 import { phosphorCatalog } from '../../lib/phosphor-icons.js'
 
 /** Pictures cut at once: each holds a decoded photograph in memory (C15). */
@@ -199,13 +200,22 @@ export async function shapeReal({
     // Per slot (#194): cards that share one demo file each get their own decision and file; where no photo fits, a
     // picture is drawn from the owner's photos (`fill-draw.mjs`), else the slot takes a brand colour block.
     const brief = { ...real.brief, assets }
-    const fill = domain.planFill({ contentMap, brief, demo, cardNames, perSlot: true })
+    // Every owner photo placed is judged as it will be shown (`sharpness-gate.js`): an unsharp one loses the slot to the
+    // next photo, else to a drawing.
+    const { fill, unsharp, sharpness } = await sharpFill({
+      plan: (refused) =>
+        domain.planFill({ contentMap, brief, demo, cardNames, perSlot: true, unsharp: refused }),
+      contentMap,
+      real,
+      shownWidthOf: domain.shownWidthOf,
+      note
+    })
     // Only slots on a page the site keeps are drawn: a demo post the tidy-up takes off never spends the cap.
     const onSite = new Set(map.groups.flatMap((g) => (g.occurrences ?? []).map((o) => o.key)))
-    const drawnPlan = domain.planDrawings({ fill, contentMap, brief, demo, onSite })
+    const drawnPlan = domain.planDrawings({ fill, contentMap, brief, demo, onSite, unsharp })
     const placed = domain.placementOfFill({ fill: { ...fill, slots: drawnPlan.slots }, groups: map.groups })
     map = { ...map, groups: placed.groups, never: [...map.never, ...placed.dropped] }
-    made = { ...placed.plan, drawings: drawnPlan.drawings, drawCapped: drawnPlan.capped }
+    made = { ...placed.plan, drawings: drawnPlan.drawings, drawCapped: drawnPlan.capped, sharpness }
     // Icons and cut-outs that carry the demo's subject follow the business (#195, `decor-plan.mjs`).
     const decorMap = { ...contentMap, slots: [...contentMap.slots, ...declared] }
     // Each item icon's meaning is read by the text model from the item's words; the keywords decide without it (#189).
@@ -386,6 +396,10 @@ export async function shapeReal({
     decorKeys.size > 0 &&
     (group?.occurrences ?? []).length > 0 &&
     group.occurrences.every((o) => decorKeys.has(o.key))
+  // The sharpness gate's record of a group's slots (the first slot that has one): the plan keeps it, so a retry writes
+  // the same correction it judged.
+  const sharpnessOf = (group) =>
+    (group?.occurrences ?? []).map((o) => plan.sharpness?.slots?.[o.key]).find(Boolean) ?? null
   const jobs = [
     ...plan.placements.map((p) => async () => {
       const group = byGroup.get(p.groupId)
@@ -395,7 +409,8 @@ export async function shapeReal({
         note(`a collected picture could not be read, so ${group.file} takes a placeholder`)
         return placeholderFor(group, real.colours)
       }
-      const cut = await cutForPlace(bytes, p.crop)
+      const gate = sharpnessOf(group)
+      const cut = await correctedCut(await cutForPlace(bytes, p.crop), gate)
       return {
         group: asGroup(group),
         bytes: cut.bytes,
@@ -409,15 +424,21 @@ export async function shapeReal({
           ...(labelOf.get(p.mediaId)?.subject ? { subject: labelOf.get(p.mediaId).subject } : {}),
           rect: cut.rect,
           width: cut.width,
-          height: cut.height
+          height: cut.height,
+          ...(gate ? { sharpness: gate } : {})
         }
       }
     }),
     ...plan.unfilled
       .filter((u) => u.action === 'placeholder' || u.action === 'draw')
       .map((u) => async () => {
-        if (drawn.has(u.groupId)) return drawn.get(u.groupId)
         const group = byGroup.get(u.groupId)
+        const gate = sharpnessOf(group)
+        // A slot whose owner photos were all too soft says so on the picture that took its place.
+        if (drawn.has(u.groupId))
+          return gate
+            ? { ...drawn.get(u.groupId), receipt: { ...drawn.get(u.groupId).receipt, sharpness: gate } }
+            : drawn.get(u.groupId)
         return group?.demo ? placeholderFor(group, real.colours, u.substitute ?? null) : null
       })
   ]

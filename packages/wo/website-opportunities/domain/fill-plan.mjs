@@ -250,13 +250,22 @@ const WIDE_ASPECT = 1.6
  * @param {boolean} [input.perSlot] - slots that share one demo file are decided apart when their needs differ (spec #189,
  *   ticket #194): each need is its own unit, and each decision names its `unit`, so a writer that uploads one file per
  *   unit gives each slot its own picture. Off by default for the writers that still write one file per demo file.
+ * @param {Map<string, Set<string>>} [input.unsharp] - per slot key, the photos the sharpness gate measured too soft for
+ *   it once cut and shown (`photo-sharpness.js`): refused there as `unsharp`, so the next photo of the ranking is met
  * @returns {{version: string, offerings: Array<{groupId: string, offeringId: string, label: string}>,
  *   people: Array<{groupId: string, personId: string, label: string}>,
  *   slots: Array<{key: string, entity: string, type: string, role: string | null, groupId: string | null,
  *   action: 'photo' | 'substitute' | 'keep' | 'skip' | 'text', reason: string, file?: string, mediaId?: string,
  *   crop?: object, refused?: Record<string, number>}>, unused: string[]}}
  */
-export function planFill({ contentMap, brief, demo = new Map(), cardNames = {}, perSlot = false }) {
+export function planFill({
+  contentMap,
+  brief,
+  demo = new Map(),
+  cardNames = {},
+  perSlot = false,
+  unsharp = new Map()
+}) {
   const slots = contentMap?.slots ?? []
   const demoOnly = new Set((contentMap?.entities ?? []).filter((e) => e?.demoOnly === true).map((e) => e.key))
   const live = (slot) => !demoOnly.has(slot.entity) && keepDecisionOf(slot, contentMap) !== 'keep'
@@ -385,7 +394,8 @@ export function planFill({ contentMap, brief, demo = new Map(), cardNames = {}, 
           refusalOf(asset, unit.need) ??
           (identity(unit) && isMapPhotoByOthers(asset) ? 'map-photo-by-others' : null) ??
           (pages.some((page) => shownOn.get(page)?.has(asset.id)) ? 'used' : null) ??
-          (asset.hasTextOverlay === true && !galleryUnit(unit) ? 'words-on-photo' : null)
+          (asset.hasTextOverlay === true && !galleryUnit(unit) ? 'words-on-photo' : null) ??
+          (unit.slots.some((slot) => unsharp.get(slot.key)?.has(asset.id)) ? 'unsharp' : null)
         if (!why) {
           const cut = subjectCrop(asset, unit.frame, { min, matches, wide })
           if (cut.refused) why = cut.refused

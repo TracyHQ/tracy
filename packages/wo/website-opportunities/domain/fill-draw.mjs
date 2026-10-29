@@ -116,13 +116,23 @@ function drawable(decision, slot) {
  *   keyMessages?: Array<{label?: string}>, brand?: {logo?: string | null}}} input.brief
  * @param {Map<string, {width: number, height: number}>} [input.demo] - demo files as the site serves them
  * @param {number} [input.max]
+ * @param {Map<string, Set<string>>} [input.unsharp] - per slot key, the owner photos the sharpness gate refused for
+ *   it: never extended into that slot (an extension keeps the photo whole, softness and all); still a scene's reference
  * @param {Set<string>} [input.onSite] - the keys of the slots on a page the site keeps (the slot map's occurrences);
  *   when given, every other slot is left as the fill plan decided it
  * @returns {{version: string, slots: any[], drawings: Array<{id: string, mode: 'outpaint' | 'scene', sourceId?: string,
  *   referenceIds: string[], aspect: number, subject: {kind: 'offering' | 'venue', id?: string, label?: string,
  *   category: string | null, about?: string}, keys: string[]}>, capped: number}}
  */
-export function planDrawings({ fill, contentMap, brief, demo = new Map(), max = DRAW_CAP, onSite = null }) {
+export function planDrawings({
+  fill,
+  contentMap,
+  brief,
+  demo = new Map(),
+  max = DRAW_CAP,
+  onSite = null,
+  unsharp = new Map()
+}) {
   const slotOf = new Map((contentMap?.slots ?? []).map((s) => [s.key, s]))
   const offeringOf = new Map((fill.offerings ?? []).map((o) => [o.groupId, o]))
   const pagesOf = pagesOfMap(contentMap)
@@ -210,6 +220,7 @@ export function planDrawings({ fill, contentMap, brief, demo = new Map(), max = 
     )
     const source = owners
       .filter((a) => ofSubject(a) && !shownHere(a) && !extended.has(a.id))
+      .filter((a) => !unsharp.get(c.d.key)?.has(a.id))
       .filter((a) => a.width / a.height / c.aspect >= OUTPAINT_MIN_SHARE)
       .sort((a, b) => generalFirst(a) - generalFirst(b))[0]
     const offeringFirst = (a) => (c.subject.kind === 'offering' && depictsOf(a) === c.subject.id ? 0 : 1)

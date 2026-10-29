@@ -27,12 +27,38 @@ import { iconStyleOf, sectionWeightOf } from '../../lib/icon-style.js'
 import { footprintOf, framedPicture, ownCutOutPicture } from './cutout-pictures.js'
 import { substitutePicture } from '../../lib/substitute-picture.js'
 import { sizeOf } from './pictures.js'
+import { blurredBand } from '../../lib/photo-sharpness.js'
 import { pool } from './shared.js'
 
 /** Pictures drawn at once: each is a paid model call of ~8 s. */
 const DRAW_AT_ONCE = 2
 /** Tries of one drawing: the first, and one more when the labeller refuses it. */
 const TRIES = 2
+
+/**
+ * Whether a drawing, cut to the shape it is placed at (the centre, as the cut step takes it), has an edge band blurred
+ * and stretched (`blurredBand`). An unreadable drawing is not judged here.
+ * @param {Uint8Array} bytes
+ * @param {number} aspect
+ */
+async function paddedAt(bytes, aspect) {
+  try {
+    const size = await sizeOf(Buffer.from(bytes))
+    if (!size || !(aspect > 0)) return false
+    const wide = size[0] / size[1] > aspect
+    const width = wide ? Math.round(size[1] * aspect) : size[0]
+    const height = wide ? size[1] : Math.round(size[0] / aspect)
+    const cut = await cutForPlace(bytes, {
+      aspect,
+      source: { width, height },
+      output: { width, height },
+      strategy: 'centre'
+    })
+    return (await blurredBand(cut.bytes)) !== null
+  } catch {
+    return false
+  }
+}
 
 /**
  * Draw one item: from the cache, else from the model, checked by the labeller and drawn once more when refused.
@@ -46,7 +72,9 @@ async function drawChecked({ item, real, drawDoor, chat, signal, drawMs, verdict
     shas: item.referenceIds.map((id) => shaOf.get(id))
   })
   const cached = await (real.drawing?.get(key) ?? Promise.resolve(null)).catch(() => null)
-  if (cached) return { bytes: cached.bytes, costUsd: 0, calls: 0, cached: true, checked: true }
+  // A drawing kept before the band check is checked now: a padded one is drawn again, never reused.
+  if (cached && !(await paddedAt(cached.bytes, item.aspect)))
+    return { bytes: cached.bytes, costUsd: 0, calls: 0, cached: true, checked: true }
   // No labeller: nothing could be checked, so nothing is drawn (never an unchecked picture on the site).
   if (!real.checkDrawing) return { refused: ['labeller-unavailable'], costUsd: 0, calls: 0 }
   const references = (await Promise.all(item.referenceIds.map((id) => real.bytes(id)))).filter(Boolean)
@@ -73,6 +101,12 @@ async function drawChecked({ item, real, drawDoor, chat, signal, drawMs, verdict
     if (!verdict.ok) {
       refused.push(verdict.reason)
       if (verdict.reason === 'labeller-unavailable') break
+      continue
+    }
+    // A model asked for a wide frame sometimes fills its edge with a blurred, stretched copy of the scene: such a
+    // drawing fails like an unsharp photo, and is drawn once more (sharpness gate, #189).
+    if (await paddedAt(got.bytes, item.aspect)) {
+      refused.push('blurred-region')
       continue
     }
     await (real.drawing?.put(key, got.bytes) ?? Promise.resolve()).catch(() => {})
