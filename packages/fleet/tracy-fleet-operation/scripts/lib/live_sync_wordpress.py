@@ -679,6 +679,7 @@ WOOCOMMERCE_POST_REFS = (
 NEW_RELATIONSHIPS = ("SELECT c.term_taxonomy_id FROM {ours.term_relationships} c WHERE NOT EXISTS"
                      " (SELECT 1 FROM {base.term_relationships} x WHERE x.object_id = c.object_id"
                      " AND x.term_taxonomy_id = c.term_taxonomy_id)")
+RELATIONSHIP_COLUMNS = ("term_relationships.object_id", "term_relationships.term_taxonomy_id")
 
 
 POLICY = {
@@ -708,8 +709,9 @@ POLICY = {
     # (`DbMerge.in_use_rows`, #119): the taxonomy rows its new relationships name (a post filed in a
     # category, a menu item in a menu), and those rows' terms.
     "inUseParents": {
-        "term_taxonomy": ("term_taxonomy_id", NEW_RELATIONSHIPS),
-        "terms": ("term_id", f"SELECT tt.term_id FROM {{ours.term_taxonomy}} tt WHERE tt.term_taxonomy_id IN ({NEW_RELATIONSHIPS})"),
+        "term_taxonomy": ("term_taxonomy_id", NEW_RELATIONSHIPS, RELATIONSHIP_COLUMNS),
+        "terms": ("term_id", f"SELECT tt.term_id FROM {{ours.term_taxonomy}} tt WHERE tt.term_taxonomy_id IN ({NEW_RELATIONSHIPS})",
+                  RELATIONSHIP_COLUMNS + ("term_taxonomy.term_id", "term_taxonomy.term_taxonomy_id")),
     },
     "appendTables": set(),
     # Rows that belong to a record (its meta, its terms' links), merged as any other but not counted

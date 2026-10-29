@@ -605,9 +605,11 @@ POLICIES = {
         # an article Tracy filed in that category. Never an item the live site cannot show.
         "inUseParents": {
             "menu_types": ("menutype", "SELECT c.menutype FROM {ours.menu} c WHERE c.client_id = 0 AND NOT EXISTS"
-                                       " (SELECT 1 FROM {base.menu} x WHERE x.id = c.id AND x.menutype <=> c.menutype)"),
+                                       " (SELECT 1 FROM {base.menu} x WHERE x.id = c.id AND x.menutype <=> c.menutype)",
+                           ("menu.id", "menu.menutype", "menu.client_id")),
             "categories": ("id", "SELECT c.catid FROM {ours.content} c WHERE NOT EXISTS"
-                                 " (SELECT 1 FROM {base.content} x WHERE x.id = c.id AND x.catid <=> c.catid)"),
+                                 " (SELECT 1 FROM {base.content} x WHERE x.id = c.id AND x.catid <=> c.catid)",
+                           ("content.id", "content.catid")),
         },
         "naturalKeys": {
             "contentitem_tag_map": ["type_alias", "content_item_id", "tag_id"],
@@ -2127,17 +2129,15 @@ class DbMerge:
         rule = self.policy.get("inUseParents", {}).get(name)
         if not rule:
             return None
-        column, select = rule
-        missing = []
-
-        def ref(m):
-            full = self.prefix + m.group(2)
-            if not self._has(self.names[m.group(1)], full):
-                missing.append(full)
-            return self.ref(m.group(1), full)
-
-        sub = re.sub(r"\{(ours|base)\.(\w+)\}", ref, select)
-        return None if missing else f"r.{q(column)} IN ({sub})"
+        column, select, needs = rule
+        B, M, _ = self.schemas
+        # Every column the rule reads, on the copy and in the base (a site without one has no such use).
+        for table, col in [(name, column)] + [tuple(n.split(".", 1)) for n in needs]:
+            full = self.prefix + table
+            if not all(col in {c for c, _ in s.columns.get(full, [])} for s in (B, M)):
+                return None
+        sub = re.sub(r"\{(ours|base)\.(\w+)\}", lambda m: self.ref(m.group(1), self.prefix + m.group(2)), select)
+        return f"r.{q(column)} IN ({sub})"
 
     def deletes_in_use(self, table: str, name: str, key: list[str]) -> bool:
         """Whether the live site deleted a row the copy's own rows still name (`in_use_rows`)."""
