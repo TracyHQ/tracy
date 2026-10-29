@@ -50,8 +50,9 @@ export function isOnCopy(endpoint, site, config) {
  * `doors.mjs` `apiDoors`): an import keeps whichever answered the LIVE site, and a front end that was
  * gated there (offline, coming soon, a firewall extension) left the administrator door registered.
  * The copy may answer the other one, so it is asked too — the same component, the same token.
- * Import can place a CMS from a live subdirectory at the copy's webroot. Try the original pair
- * first, then its root pair: every candidate stays on the copy and must pass manifest verification.
+ * Import can place a CMS from a live subdirectory at the copy's webroot. Try the original door(s)
+ * first, then the root one(s), Joomla and WordPress alike: every candidate stays on the copy and
+ * must pass manifest verification.
  * @param {string} registered - the endpoint the import registered (the live site's).
  * @param {{label: string, host: string, platform?: string}} site
  * @param {{hostName?: string, siteDomain: string}} config
@@ -60,8 +61,15 @@ export function isOnCopy(endpoint, site, config) {
 export function copyDoorsFor(registered, site, config) {
   const first = copyEndpointFor(registered, site, config)
   if (first === null) return []
-  if (site.platform !== 'joomla') return [first]
   const url = new URL(first)
+  // A WordPress copy is pinned to its own root (WP_HOME / WP_SITEURL), so a live `/blog` install
+  // answers at the copy's root door.
+  if (site.platform === 'wordpress' && url.searchParams.get('action') === 'claude_cowork') {
+    const root = new URL(url.href)
+    root.pathname = '/wp-admin/admin-ajax.php'
+    return [...new Set([first, root.href])]
+  }
+  if (site.platform !== 'joomla') return [first]
   if (url.searchParams.get('option') !== 'com_claudecowork') return [first]
   const admin = /\/administrator\/index\.php$/.exec(url.pathname)
   const front = !admin && /\/index\.php$/.exec(url.pathname)
