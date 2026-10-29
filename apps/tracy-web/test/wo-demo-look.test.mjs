@@ -9,6 +9,7 @@ import {
   deferToMeasure,
   heldFaults,
   lookLayouts,
+  neutralNote,
   LOOK_PROMPT_VERSION,
   reusableLookPages
 } from '../src/opportunities-build/demo-look.js'
@@ -744,4 +745,22 @@ test('vision calls that hang are cut at the look time: it answers in time, its t
     r.unlooked.every((u) => u.why === 'TIME_EXCEEDED'),
     JSON.stringify(r.unlooked)
   )
+})
+
+test('the look is told the approved neutral words a card with no source keeps, and nothing when there are none', async () => {
+  assert.equal(neutralNote([]), '')
+  assert.equal(neutralNote(undefined), '')
+  const note = neutralNote(['Menu item', 'Menu item', ' Service ', ''])
+  assert.ok(note.includes('"Menu item", "Service"'), note)
+  assert.ok(!note.includes('"", '), note)
+  const fake = await fakes({ faults: [] }, { height: 900 })
+  await createDemoLook({ ...fake, visionFor: door })({}, { pages: ['/'], neutral: ['Menu item'] })
+  for (const call of fake.asked) {
+    const first = call.body.messages[0].content[0].text
+    assert.ok(first.startsWith(DEMO_LOOK_SYSTEM))
+    assert.ok(first.includes('"Menu item"'), first)
+  }
+  const plain = await fakes({ faults: [] }, { height: 900 })
+  await createDemoLook({ ...plain, visionFor: door })({}, { pages: ['/'] })
+  assert.ok(!plain.asked[0].body.messages[0].content[0].text.includes('neutral words'))
 })

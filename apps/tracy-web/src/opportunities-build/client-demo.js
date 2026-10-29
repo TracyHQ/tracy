@@ -33,6 +33,7 @@ import { currentPostRoutes, postMoves } from './post-routes.js'
 import { contactOf, pinnedCopy } from 'website-opportunities/domain/pinned-copy.mjs'
 import { tradeWords } from 'website-opportunities/domain/trade-words.mjs'
 import { isPlaceholderText } from 'website-opportunities/domain/editorial-guide.mjs'
+import { neutralWords } from 'website-opportunities/domain/neutral-copy.mjs'
 import { checkResearchSourced } from './demo-sourced.js'
 
 /** The research's phone, email, address and website as plain strings, for the sweep's contact swap. */
@@ -938,7 +939,9 @@ export function createClientDemoService(deps) {
             accountId: auth.accountId,
             opportunityId: state.action.opportunity_id,
             budgetMs: lookBudgetMs(fresh.length || 1),
-            buildId: state.build.id
+            buildId: state.build.id,
+            // The words a card with no source keeps (`neutralNote`), in English and in the site's language.
+            neutral: [...new Set([...neutralWords('en'), ...neutralWords(siteLocaleOf(state.build))])]
           })
         : null
       const look = lookNow && kept.length ? keptLook(lookNow, lastLook, kept) : lookNow
