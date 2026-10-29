@@ -358,7 +358,8 @@ OPTION_LABELS = {"blogname": "Site title", "blogdescription": "Tagline", "date_f
 # Fixed words of a title (`Changeset.worded`), by the name the dialog translates them under
 # (`push.label.<name>`): each option's label, and the words of a setting's title.
 LABELS = {**OPTION_LABELS, "additionalCss": "Additional CSS", "customizer": "Customizer",
-          "templateStyle": "Template style", "styles": "Styles", "globalConfiguration": "Global Configuration"}
+          "templateStyle": "Template style", "styles": "Styles", "globalConfiguration": "Global Configuration",
+          "featuredImage": "Featured image", "pageTemplate": "Page template", "altText": "Alt text"}
 # What each kind of change is, as the dialog names it (`push.what.<name>`): a record, a setting, a file.
 WHAT = {"article": "article", "category": "category", "tag": "tag", "menuItem": "menuItem", "menutype": "menu",
         "module": "module", "moduleAssignment": "module", "fieldValue": "customField", "redirect": "redirect",
@@ -368,7 +369,7 @@ WHAT = {"article": "article", "category": "category", "tag": "tag", "menuItem": 
         "file": "file"}
 # Post meta never offered: WordPress's and Tracy's own bookkeeping, the menu item's (its own kind).
 W_META_SKIP = ("_edit_lock", "_edit_last", "_encloseme", "_pingme", "_wp_old_slug", "_wp_old_date",
-               "_wp_trash_meta_status", "_wp_trash_meta_time", "_wp_attached_file", "_wp_attachment_metadata")
+               "_wp_trash_meta_status", "_wp_trash_meta_time", "_wp_desired_post_slug", "_wp_attached_file", "_wp_attachment_metadata")
 
 
 def _menu_object_entity(row: dict) -> str | None:
@@ -413,6 +414,14 @@ def wordpress_specs(prefix: str) -> list[Spec]:
     # same two-collation reason as the theme mods below.
     of_active_theme = (f"CAST({term_of('wp_theme')} AS BINARY) = (SELECT CAST(st.option_value AS BINARY)"
                        f" FROM {t('options')} st WHERE st.option_name = 'stylesheet' LIMIT 1)")
+    menu_object_title = (
+        f"CASE WHEN {meta('_menu_item_type')} = 'post_type' THEN"
+        f" (SELECT target.post_title FROM {t('posts')} target WHERE target.ID = CAST({meta('_menu_item_object_id')} AS UNSIGNED)"
+        f" AND target.post_type = {meta('_menu_item_object')} LIMIT 1)"
+        f" WHEN {meta('_menu_item_type')} = 'taxonomy' THEN"
+        f" (SELECT target.name FROM {t('terms')} target JOIN {t('term_taxonomy')} taxonomy ON taxonomy.term_id = target.term_id"
+        f" WHERE target.term_id = CAST({meta('_menu_item_object_id')} AS UNSIGNED)"
+        f" AND taxonomy.taxonomy = {meta('_menu_item_object')} LIMIT 1) END")
     skip = ", ".join(LS.sql_str(k) for k in W_META_SKIP + WP.VOLATILE_NAMES["postmeta"][1])
     options = ", ".join(LS.sql_str(o) for o in W_OPTIONS)
     tracy_option = WP.TRACY_OPTIONS
@@ -448,9 +457,9 @@ def wordpress_specs(prefix: str) -> list[Spec]:
              columns={"ID": "r.ID", "title": "r.post_title", "position": "r.menu_order",
                       "type": meta("_menu_item_type"), "object": meta("_menu_item_object"),
                       "object_id": meta("_menu_item_object_id"), "url": meta("_menu_item_url"),
-                      "parent": meta("_menu_item_menu_item_parent"), "menu": menu_slug},
-             title=("title", "url"), write=W_MENU, create=W_MENU,
-             refs={"object_id": _menu_object_entity, "parent": "posts"}, address=True),
+                      "parent": meta("_menu_item_menu_item_parent"), "menu": menu_slug, "object_title": menu_object_title},
+             title=("title", "object_title", "url"), write=W_MENU, create=W_MENU,
+             ignore=frozenset({"object_title"}), refs={"object_id": _menu_object_entity, "parent": "posts"}, address=True),
         Spec("option", "option", "options", None, key=("option_name",), key_refs={},
              where=f"r.option_name IN ({options})",
              columns={"option_name": "r.option_name", "value": "r.option_value"},
@@ -1247,6 +1256,11 @@ class Changeset:
         return text
 
     def title(self, spec: Spec, row: dict | None, key: tuple) -> str:
+        if spec.name == "postmeta":
+            label = {"_thumbnail_id": "featuredImage", "_wp_page_template": "pageTemplate",
+                     "_wp_attachment_image_alt": "altText"}.get((row or {}).get("meta_key"))
+            subject = str((row or {}).get("post_title") or "").strip()[:200]
+            return self.worded(label, subject or None) if label else subject
         if spec.kind == "option" and (row or {}).get("option_name") in OPTION_LABELS:
             return self.worded(row["option_name"])
         if spec.name == "customCss":
@@ -1263,12 +1277,10 @@ class Changeset:
             value = (row or {}).get(column)
             if isinstance(value, str) and value.strip():
                 text = value.strip()
-                if spec.name == "postmeta":
-                    return f"{text} · {(row or {}).get('meta_key') or key[1]}"
                 if spec.name == "moduleAssignment":
                     return text
                 return text[:200]
-        return f"{spec.kind} {' '.join(str(k) for k in key)}"
+        return "" if spec.name == "menuItem" else f"{spec.kind} {' '.join(str(k) for k in key)}"
 
     def item_id(self, spec: Spec, key: tuple, created: bool = False, suffix: str = "") -> str:
         name = spec.name if spec.name not in ("optionOther",) else "option"
@@ -1498,6 +1510,13 @@ class Changeset:
                 self.delete_item(spec, c, live_key, base_row, copy_row, title, ident, key)
                 continue
             self.update_item(spec, c, live_key, base_row, changed, title, ident, key)
+            # The live record is in the trash and the copy's is not: the push brings it back (an
+            # Undo trashed a post the push made, and the copy kept it). The same live record, out of
+            # the trash, never a second one beside it — shown as what it is to the Owner, an
+            # addition, not a change of "Status" and a `__trashed` slug (#117).
+            if (spec.trash and str(base_row.get(spec.trash[0])) == spec.trash[1] and self.items
+                    and self.items[-1].get("copyKey") == list(c) and self.items[-1]["spec"] == spec.name):
+                self.items[-1]["group"] = "add"
         for c in self.copy_order(spec, pairs["copy_only"], data):
             copy_row = rows["copy"].get(c)
             if copy_row is None:
@@ -2408,6 +2427,7 @@ def preview_answer(changeset: dict, preview_id: str, sync: dict | None, live_rea
         items.append({"id": item["id"], "kind": item["kind"], "op": item["op"], "group": group,
                       "title": item["title"], "liveId": item["liveId"], "fields": item["fields"],
                       "dependsOn": item["dependsOn"],
+                      **{name: item[name] for name in ("what", "label", "subject") if name in item},
                       # A file: its name and size, never its bytes; whether it is new on the live site.
                       **({"path": item["path"], "size": item.get("size", 0), "change": item.get("change")}
                          if item.get("spec") in ("file", "attachment") else {}),

@@ -1526,3 +1526,113 @@ test('the preview answer counts pushable items over the whole changeset, not onl
   assert.deepEqual(shown.pushable, { add: 1, change: 1, remove: 1, files: 0, settings: 0, php: 1 })
   assert.equal(shown.conflictsTotal, 500)
 })
+
+test('after an Undo, a Tracy post the live site holds in the trash is offered as an addition that brings it back (#117)', () => {
+  // Apply made copy post 8 as live post 7; Undo trashed live 7 and kept the pair, the copy kept its post.
+  const answer = changeset('wordpress', {
+    entities: { posts: { base: [7], copy: [8] } },
+    idMap: { posts: { 7: 8 } },
+    kinds: {
+      post: kind(
+        [
+          post(7, {
+            post_type: 'post',
+            post_title: 'Tracy post A',
+            post_name: 'tracy-post-a__trashed',
+            post_status: 'trash'
+          })
+        ],
+        [post(8, { post_type: 'post', post_title: 'Tracy post A', post_name: 'tracy-post-a' })],
+        ['ID']
+      )
+    }
+  })
+  const item = answer.items.find((i) => i.kind === 'post')
+  assert.ok(item, JSON.stringify(answer))
+  // The same live post, out of the trash (no second post next to the trashed one) …
+  assert.equal(item.op, 'update')
+  assert.equal(item.liveId, 7)
+  assert.equal(item.write.post_status, 'publish')
+  // … shown under what the push adds, as it reads to the Owner: their post comes back.
+  assert.equal(item.group, 'add')
+  // A trashed live post the copy also has trashed is no change; an untouched published one neither.
+  const same = changeset('wordpress', {
+    entities: { posts: { base: [7], copy: [8] } },
+    idMap: { posts: { 7: 8 } },
+    kinds: {
+      post: kind(
+        [post(7, { post_status: 'trash' })],
+        [
+          post(8, {
+            post_status: 'trash',
+            post_title: 'Page 7',
+            post_name: 'page-7',
+            post_content: '<p>Page 7</p>'
+          })
+        ],
+        ['ID']
+      )
+    }
+  })
+  assert.equal(same.items.length, 0, JSON.stringify(same.items))
+})
+
+function previewOf(answer) {
+  const file = join(root, `preview-${++n}.json`)
+  writeFileSync(file, JSON.stringify(answer))
+  const r = spawnSync('python3', [PUSH, 'answer', '--changeset', file, '--preview-id', 'test-preview'], {
+    encoding: 'utf8'
+  })
+  assert.equal(r.status, 0, r.stderr + r.stdout)
+  return JSON.parse(r.stdout.trim().split('\n').at(-1))
+}
+
+test('WordPress preview retains page types and translated metadata labels', () => {
+  const answer = changeset('wordpress', {
+    entities: { posts: { base: [10], copy: [10] } },
+    kinds: {
+      post: kind([post(10)], [post(10, { post_title: 'About us' })], ['ID']),
+      postmeta: kind(
+        [],
+        [
+          { post_id: '10', meta_key: '_thumbnail_id', value: '0', post_title: 'About us' },
+          { post_id: '10', meta_key: '_wp_page_template', value: 'landing.php', post_title: 'About us' },
+          { post_id: '10', meta_key: '_wp_attachment_image_alt', value: 'Team', post_title: 'About us' }
+        ],
+        ['post_id', 'meta_key']
+      )
+    }
+  })
+  const items = byId(previewOf(answer))
+  assert.equal(items['post:10'].what, 'page')
+  assert.deepEqual(
+    [items['postmeta:10:_thumbnail_id'].label, items['postmeta:10:_thumbnail_id'].subject],
+    ['featuredImage', 'About us']
+  )
+  assert.deepEqual(
+    [items['postmeta:10:_wp_page_template'].label, items['postmeta:10:_wp_page_template'].subject],
+    ['pageTemplate', 'About us']
+  )
+  assert.deepEqual(
+    [
+      items['postmeta:10:_wp_attachment_image_alt'].label,
+      items['postmeta:10:_wp_attachment_image_alt'].subject
+    ],
+    ['altText', 'About us']
+  )
+  assert.ok(!items['postmeta:10:_thumbnail_id'].title.includes('_thumbnail_id'))
+})
+
+test('WordPress metadata uses the record title without exposing unknown internal keys', () => {
+  const answer = changeset('wordpress', {
+    entities: { posts: { base: [10], copy: [10] } },
+    kinds: {
+      postmeta: kind(
+        [],
+        [{ post_id: '10', meta_key: '_plugin_internal_key', value: 'yes', post_title: 'About us' }],
+        ['post_id', 'meta_key']
+      )
+    }
+  })
+  assert.equal(answer.items[0].title, 'About us')
+})

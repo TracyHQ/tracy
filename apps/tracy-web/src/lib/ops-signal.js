@@ -62,9 +62,10 @@ const FIELDS = {
   'team.cancel_invite': ['role', 'target'],
   'team.decline_request': ['role', 'target'],
   'team.role_change': ['from', 'to', 'target'],
-  // A signed-out visit to `/login` whose link carried `utm_*` (`POST /login/visit`, sent by the page's own
-  // script so a mail scanner fetching the link is not counted). No account, no address: only the source.
-  'login.visited': ['source', 'medium', 'campaign', 'content'],
+  // A signed-out visit to `/login` (`POST /login/visit`, sent by the page's own script so a mail scanner
+  // fetching the link is not counted): the link's `utm_*` source and the host of the page that linked
+  // here, when there were any; neither is a direct visit. No account, no address.
+  'login.visited': ['source', 'medium', 'campaign', 'content', 'referrer'],
   // The two ways a signed-out person starts signing in (`identity/route.js` `recordSignInStart`): an email
   // code asked for, and a Google or GitHub sign-in begun. No account, no address: the source, and the provider.
   'login.code_requested': ['source', 'medium', 'campaign', 'content'],
