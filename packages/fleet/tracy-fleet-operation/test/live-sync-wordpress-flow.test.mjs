@@ -880,7 +880,7 @@ test(
         tracy.map((id) => `Tracy ${id}`).sort()
       )
       assert.ok(
-        records.every((i) => i.op !== 'create' || /^Tracy \d+( · _wp_page_template)?$/.test(i.title)),
+        records.every((i) => i.op !== 'create' || /^(Page template · )?Tracy \d+$/.test(i.title)),
         JSON.stringify(records.filter((i) => i.op === 'create').map((i) => i.title))
       )
       assert.deepEqual(
