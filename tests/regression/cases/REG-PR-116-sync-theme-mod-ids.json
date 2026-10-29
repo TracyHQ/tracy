@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-116-sync-theme-mod-ids",
+  "kind": "fix",
+  "title": "WordPress serialized theme references follow ID maps without false Preview changes",
+  "pr": 116,
+  "area": "sync/theme-references",
+  "cms": ["wp"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": ["Run real MariaDB typed-reference and shell Sync/Preview cases, plus the changeset controls."],
+  "expect": [
+    "Logos and headers follow collided live attachment IDs while dimensions remain unchanged.",
+    "Posts and terms use their own ID maps without cascading batch replacements.",
+    "Serialized-only references reserve fresh IDs and receive remembered mappings.",
+    "Preview and a second Sync report no false theme change.",
+    "Unsafe PHP aliases and unreadable reference containers are refused rather than corrupted."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=theme mod references|serialized-only theme|typed theme|logo and header follow|theme header references",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-db.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-push-changeset.test.mjs"
+    ],
+    "tests": [
+      "theme mod references renumber by entity and path without changing dimensions or cascading IDs",
+      "serialized-only theme references reserve fresh IDs and receive remembered mappings",
+      "typed theme references retain byte lengths, Unicode and opaque payloads while refusing unsafe aliases",
+      "WordPress logo and header follow attachment renumbering through Sync and the next Preview",
+      "WordPress theme header references after Sync produce no false preview (array)"
+    ]
+  }
+}
