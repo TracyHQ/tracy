@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-129-sync-preview-labels",
+  "kind": "fix",
+  "title": "Push preview names WordPress records and fields in the Owner's words",
+  "pr": 129,
+  "area": "sync/push-preview",
+  "cms": ["wp"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": ["Run the changeset, live-write and real MariaDB push cases for preview labels and page kinds."],
+  "expect": [
+    "A menu item without its own title takes its target page's title.",
+    "Featured image, page template and alt text carry a label and the page title, never the meta key.",
+    "Pages keep their page kind through Preview, Apply and Undo.",
+    "_wp_desired_post_slug is not offered."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=page types and translated metadata|record title without exposing|native menu object titles|retain localized record descriptions",
+      "packages/fleet/tracy-fleet-operation/test/live-push-changeset.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-push-sql.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-write.test.mjs"
+    ],
+    "tests": [
+      "WordPress preview retains page types and translated metadata labels",
+      "WordPress metadata uses the record title without exposing unknown internal keys",
+      "WordPress preview uses native menu object titles and skips trash bookkeeping",
+      "Apply and Undo retain localized record descriptions"
+    ]
+  }
+}
