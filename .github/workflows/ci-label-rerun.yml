@@ -20,8 +20,8 @@
 # PERMISSIONS: `actions: write` to cancel and re-run, `pull-requests: read` for the labels and the head
 # commit, `contents: read` for the checkout. Nothing else.
 #
-# 🔒 WHY `pull_request_target`, AND WHY THAT IS SAFE HERE. This job holds `actions: write` on a
-# self-hosted runner, so it must not run code the pull request brings. A `pull_request` run checks out
+# 🔒 WHY `pull_request_target`, AND WHY THAT IS SAFE HERE. This job holds `actions: write`, so it must
+# not run code the pull request brings. A `pull_request` run checks out
 # the merge commit (the author's `scripts/ci/label-rerun.mjs` and this very file would run with that
 # token). `pull_request_target` runs the workflow file of the BASE branch and, below, checks out the
 # base commit only, with no credential left in the checkout: nothing of the pull request is executed.
@@ -29,7 +29,9 @@
 # pull request number — passed through the environment, never into a command. The script then reads the
 # pull request and its head commit from the API itself, at that moment, and only calls REST on this
 # repository. The same convention as `auto-merge-develop.yml` (trusted default-branch code, no head).
-# A fork's pull request is refused by the `if`, and so is a draft. ⚠ Until this file is on `develop`
+# A fork's pull request is refused by the `if`, and so is a draft. It runs on a fresh GitHub-hosted
+# runner, never on the persistent self-hosted ones that also run pull-request code: a job there could
+# leave something behind that this token would then run next to. ⚠ Until this file is on `develop`
 # there is no base copy of the script: the first label after the merge is the first run.
 #
 # ⚠ NOT SHOWN BY ANY TEST: whether `GITHUB_TOKEN` may call `POST /actions/runs/{id}/rerun` on this
@@ -61,7 +63,7 @@ concurrency:
 jobs:
   rerun:
     name: re-run Tracy CI for ${{ github.event.label.name }}
-    runs-on: [self-hosted, linux, tracy-light, tracy-lane-dev]
+    runs-on: ubuntu-latest
     timeout-minutes: 15
     # Only the two labels, never a draft, never a fork (a fork's token is read-only and cannot re-run).
     if: >-
@@ -78,6 +80,11 @@ jobs:
           ref: ${{ github.event.pull_request.base.sha }}
           submodules: false
           persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
 
       # The label and the pull request number go in as data from the environment, never into the command.
       - name: Re-run the latest Tracy CI run of this pull request
