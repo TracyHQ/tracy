@@ -99,6 +99,8 @@ const refusalOf = (/** @type {any} */ answer) =>
  * @param {string} input.applyId
  * @param {(note: string) => void} input.note
  * @param {(ms: number) => Promise<void>} [input.sleep]
+ * @param {((bytes: Uint8Array) => Promise<boolean | null>) | null} [input.seesText] - the photo labeller's word for whether
+ *   a logo's mark holds words (`brand-logo-fit.js`); null leaves it to the image heuristic
  * @returns {Promise<{written: string[], skipped: Array<{where: string, reason: string}>,
  *   made?: 'lockup' | 'symbol' | 'wordmark'}>} `made`: the logo is one Tracy made (the owner was told it is temporary)
  */
@@ -110,7 +112,8 @@ export async function setSiteBrand({
   call,
   applyId,
   note,
-  sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+  sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
+  seesText = null
 }) {
   /** @type {string[]} */
   const written = []
@@ -147,7 +150,8 @@ export async function setSiteBrand({
       descriptor: pack.descriptor ?? null,
       frame: frameOfProfile(profile),
       symbol: pack.symbol ?? null,
-      templatePalette: pack.templatePalette ?? null
+      templatePalette: pack.templatePalette ?? null,
+      seesText
     }).catch((error) => {
       console.info(`[brand] logo fit: ${error instanceof Error ? error.message : error}`)
       return null
@@ -220,6 +224,8 @@ export async function setSiteBrand({
  *   `logo.demoFiles`) as the site serves them: their colours are the colours of a logo Tracy makes with no logo of the owner's
  * @param {(ctx: any, item: ReturnType<typeof symbolItem>) => Promise<Uint8Array | null>} [deps.drawSymbol] - a symbol drawn and
  *   checked for a business with no logo (`brand-logo-symbol.js` `drawLogoSymbol`), or null
+ * @param {(ctx: any, bytes: Uint8Array) => Promise<boolean | null>} [deps.markText] - whether the photo labeller sees words in
+ *   the owner's mark, or null when no labeller answers
  */
 export function createSiteBrand({
   applyFor,
@@ -229,7 +235,8 @@ export function createSiteBrand({
   sitePlanFor,
   briefPicture,
   templateLogos,
-  drawSymbol
+  drawSymbol,
+  markText
 }) {
   /**
    * @param {{siteKey: string, platform: string, quickstart: string | null, email: string, runId?: string, brief: any, normalized: any,
@@ -326,7 +333,8 @@ export function createSiteBrand({
       },
       applyId,
       note: ctx.note,
-      ...(sleep ? { sleep } : {})
+      ...(sleep ? { sleep } : {}),
+      seesText: markText ? (bytes) => markText(ctx, bytes) : null
     })
     return { ...result, skipped: [...unreadable, ...result.skipped] }
   }

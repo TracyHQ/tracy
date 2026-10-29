@@ -511,3 +511,105 @@ test('the template palette is read from the logo pictures its page shows when th
     '/images/demo/logo/brand-light.png'
   ])
 })
+
+/** Blocks standing for letters: `n` small rectangles in a row, as a line of a name looks to a reader of pixels. */
+const letterRow = (x, y, n, w, h, fill) =>
+  Array.from(
+    { length: n },
+    (_, i) => `<rect x="${x + i * (w + w / 2)}" y="${y}" width="${w}" height="${h}" fill="${fill}"/>`
+  ).join('')
+
+/** A bakery crest with its name and year in two lines under the shield, on a dark tile. */
+const crestWithWords = () =>
+  svgPng(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600"><rect width="600" height="600" fill="#1f3d2b"/><path d="M180 60 L420 60 L420 230 Q420 330 300 380 Q180 330 180 230 Z" fill="none" stroke="#d9b45a" stroke-width="22"/><circle cx="300" cy="200" r="60" fill="#d9b45a"/>${letterRow(150, 430, 8, 24, 40, '#d9b45a')}${letterRow(210, 500, 5, 20, 26, '#d9b45a')}</svg>`
+  )
+/** A round seal whose words run around its ring, on transparency: the words cannot be cut away from the picture. */
+const sealWithRingWords = () => {
+  const marks = Array.from({ length: 18 }, (_, i) => {
+    const a = (i / 18) * Math.PI * 2
+    const x = 250 + Math.cos(a) * 200
+    const y = 250 + Math.sin(a) * 200
+    return `<rect x="${x - 10}" y="${y - 14}" width="20" height="28" fill="#7a1f2b" transform="rotate(${(a * 180) / Math.PI + 90} ${x} ${y})"/>`
+  }).join('')
+  return svgPng(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="500" height="500"><circle cx="250" cy="250" r="235" fill="none" stroke="#7a1f2b" stroke-width="10"/><circle cx="250" cy="250" r="160" fill="none" stroke="#7a1f2b" stroke-width="10"/>${marks}<circle cx="250" cy="250" r="80" fill="#7a1f2b"/></svg>`
+  )
+}
+
+/** The box of opaque pixels of a picture, by columns and rows from `fromX`. */
+async function inkBoxOf(bytes, fromX = 0, toX = Number.POSITIVE_INFINITY) {
+  const { data, info } = await sharp(bytes).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+  let left = info.width
+  let right = -1
+  let top = info.height
+  let bottom = -1
+  for (let y = 0; y < info.height; y += 1)
+    for (let x = fromX; x < Math.min(info.width, toX); x += 1)
+      if (data[(y * info.width + x) * 4 + 3] > 128) {
+        left = Math.min(left, x)
+        right = Math.max(right, x)
+        top = Math.min(top, y)
+        bottom = Math.max(bottom, y)
+      }
+  return { left, right, top, bottom }
+}
+
+test('a crest with its words under the shield: the words are cut away, the shield goes beside the typeset name', async () => {
+  const fit = await fitBriefLogo({
+    logo: { single: await crestWithWords() },
+    name: 'Copperleaf Bakery',
+    frame: FRAME
+  })
+  assert.equal(fit.made, 'lockup')
+  assert.match(fit.how, /words left out/)
+  // The dark variant's mark (cut free) is the shield alone: about as wide as it is tall, not the taller crest.
+  const meta = await sharp(fit.logo.dark).metadata()
+  const mark = await inkBoxOf(fit.logo.dark, 0, Math.round(meta.height * 1.1))
+  const ratio = (mark.right - mark.left + 1) / (mark.bottom - mark.top + 1)
+  assert.ok(ratio > 0.65, `shield ${ratio}`)
+})
+
+test('the name stands close to the mark (about half its cap height) and centred on it', async () => {
+  const fit = await fitBriefLogo({ logo: { single: await bakeryBadge() }, name: 'Copperleaf', frame: FRAME })
+  const bytes = fit.logo.dark
+  const meta = await sharp(bytes).metadata()
+  const mark = await inkBoxOf(bytes, 0, meta.height)
+  const name = await inkBoxOf(bytes, mark.right + 2)
+  const cap = name.bottom - name.top + 1
+  const gap = name.left - mark.right - 1
+  assert.ok(gap >= cap * 0.25 && gap <= cap * 0.6, `gap ${gap} for cap ${cap}`)
+  const markMiddle = (mark.top + mark.bottom) / 2
+  const nameMiddle = (name.top + name.bottom) / 2
+  assert.ok(Math.abs(markMiddle - nameMiddle) <= cap * 0.25, `middles ${markMiddle} ${nameMiddle}`)
+})
+
+test('a seal with words around its ring: seen by the labeller, the owner logo goes alone, no name added', async () => {
+  const seal = await sealWithRingWords()
+  const fit = await fitBriefLogo({
+    logo: { single: seal },
+    name: 'Copperleaf Bakery',
+    frame: FRAME,
+    seesText: async () => true
+  })
+  assert.equal(fit.made, null)
+  for (const side of ['light', 'dark']) {
+    const meta = await sharp(fit.logo[side]).metadata()
+    assert.equal(meta.height, FRAME.height * 2, `${side} fills the frame height`)
+    assert.ok(meta.width <= meta.height * 1.05, `${side} is the seal alone, no name beside it`)
+  }
+  // No labeller: the words woven into the ring are not seen by the image reader, and the seal is set beside the name.
+  const blind = await fitBriefLogo({ logo: { single: seal }, name: 'Copperleaf Bakery', frame: FRAME })
+  assert.equal(blind.made, 'lockup')
+})
+
+test('a labeller that sees no words keeps the whole mark beside the name', async () => {
+  const fit = await fitBriefLogo({
+    logo: { single: await bakeryBadge() },
+    name: 'Copperleaf Bakery',
+    frame: FRAME,
+    seesText: async () => false
+  })
+  assert.equal(fit.made, 'lockup')
+  assert.equal(fit.how, 'the mark beside the name')
+})

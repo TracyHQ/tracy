@@ -18,13 +18,17 @@ import { hexOf } from './logo-colours.js'
 export const LOCKUP_SCALE = 2
 /** The least cap height, in CSS pixels on the page, the name may show at. */
 const LEGIBLE_CAP_PX = 7
-/** Space around the content and between mark and name, as shares of the picture's height. */
+/** Space around the content, as a share of the picture's height. */
 const PAD = 0.06
-const GAP = 0.16
+/** Space between mark and name, as a share of the name's cap height (measured on the proof sheets: 0.35 crowds a round
+ * mark, 0.5 lets a tall crest drift from its name). */
+export const GAP_OF_CAP = 0.45
 /** The name's largest size for one line and for two, as shares of the height; each shrinks in steps until it fits. */
 const ONE_LINE = 0.46
 const TWO_LINES = 0.34
 const STEP = 0.96
+/** Two lines are taken over one only when they set the name this much larger. */
+const TWO_LINES_GAIN = 1.25
 /** The descriptor's size against the name's, and its letter spacing. */
 const DESCRIPTOR = 0.42
 const DESCRIPTOR_TRACKING = 0.08
@@ -53,12 +57,17 @@ function splits(/** @type {string} */ name) {
   return out.sort((a, b) => Math.abs(a[0].length - a[1].length) - Math.abs(b[0].length - b[1].length))
 }
 
-/** The largest lines of `lines` (each typeset at one size) that fit `width`, from `start` down to `floor` (shares of h). */
-function fitLines(/** @type {string[]} */ lines, width, h, start, floor) {
+/**
+ * The largest lines of `lines` (each typeset at one size) that fit the room `roomOf` leaves at that size, from `start`
+ * down to `floor` (shares of h).
+ * @param {string[]} lines @param {(set: any[]) => number} roomOf
+ */
+function fitLines(lines, roomOf, h, start, floor) {
   for (let share = start; share >= floor; share *= STEP) {
     const set = lines.map((line) => typeset(line, h * share))
     if (set.some((s) => s === null)) return null
-    if (Math.max(...set.map((s) => /** @type {any} */ (s).width)) <= width) return { set, px: h * share }
+    if (Math.max(...set.map((s) => /** @type {any} */ (s).width)) <= roomOf(set))
+      return { set, px: h * share }
   }
   return null
 }
@@ -83,6 +92,8 @@ export async function composeLockup({ mark, name, descriptor = null, frame, text
   /** @type {{input: Buffer, left: number, top: number} | null} */
   let markLayer = null
   let x = pad
+  // The name is centred on the mark's own middle (the canvas middle for a wordmark).
+  let middle = h / 2
   if (mark) {
     const fitted = await sharp(Buffer.from(mark))
       .resize({ height: h - 2 * pad, width: Math.round((maxW - 2 * pad) / 2), fit: 'inside' })
@@ -94,19 +105,24 @@ export async function composeLockup({ mark, name, descriptor = null, frame, text
       left: pad + Math.round((slot - fitted.info.width) / 2),
       top: Math.round((h - fitted.info.height) / 2)
     }
-    x += slot + Math.round(h * GAP)
+    middle = markLayer.top + fitted.info.height / 2
+    x += slot
   }
-  const room = maxW - x - pad
+  const gapOf = (/** @type {any[]} */ set) => (mark ? Math.round(set[0].capHeight * GAP_OF_CAP) : 0)
+  const roomOf = (/** @type {any[]} */ set) => maxW - x - gapOf(set) - pad
   // The least font size, as a share of the height, whose capitals show `LEGIBLE_CAP_PX` high (cap height about 0.74 of it).
   const floor = (LEGIBLE_CAP_PX * LOCKUP_SCALE) / 0.74 / h
-  let fit = fitLines([clean], room, h, mark ? ONE_LINE : ONE_LINE * 1.15, floor)
-  if (!fit)
-    for (const pair of splits(clean)) {
-      fit = fitLines(pair, room, h, TWO_LINES, floor)
-      if (fit) break
-    }
+  // One line, or the most even split in two when that sets the name clearly larger (a long name beside a tall mark).
+  let fit = fitLines([clean], roomOf, h, mark ? ONE_LINE : ONE_LINE * 1.15, floor)
+  for (const pair of mark ? splits(clean) : fit ? [] : splits(clean)) {
+    const two = fitLines(pair, roomOf, h, TWO_LINES, floor)
+    if (two && (!fit || two.px > fit.px * TWO_LINES_GAIN)) fit = two
+    if (two) break
+  }
   if (!fit) return null
   const lines = fit.set.map((s) => /** @type {NonNullable<typeof s>} */ (s))
+  const room = roomOf(lines)
+  x += gapOf(lines)
   const sub =
     descriptor && lines.length === 1
       ? typeset(String(descriptor).trim(), fit.px * DESCRIPTOR, { tracking: DESCRIPTOR_TRACKING })
@@ -116,7 +132,7 @@ export async function composeLockup({ mark, name, descriptor = null, frame, text
   const lineBox = lines[0].capHeight
   const gap = fit.px * LINE_GAP * 2
   const blockH = lines.length * lineBox + (lines.length - 1) * gap + (useSub ? gap + useSub.capHeight : 0)
-  let baseline = (h - blockH) / 2 + lineBox
+  let baseline = Math.min(Math.max(middle - blockH / 2, pad), h - pad - blockH) + lineBox
   const fill = hexOf(text)
   const paths = []
   for (const line of lines) {

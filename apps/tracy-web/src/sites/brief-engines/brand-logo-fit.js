@@ -5,6 +5,9 @@
  *   wrong shape (square, tall) the owner's mark, cut free of its tile when it has one (`logo-mark.js`), on the left of the
  *                              business name set as type (`logo-lockup.js`): a light-ground and a dark-ground variant, the
  *                              colours read from the owner's logo
+ *   ...whose mark has words    (the labeller sees text, else `logo-mark-text.js` finds lines of letters) the picture alone
+ *                              when the words stand apart from it, beside the typeset name; words woven into the picture,
+ *                              the owner's logo alone (no name added), filling the frame's height, on its tile where needed
  *   no logo, a symbol drawn    the same lockup around a symbol the picture model drew (no letters: `brand-logo-symbol.js`),
  *                              recoloured from the TEMPLATE's own logo colours when it is flat
  *   no logo, nothing drawn     a wordmark: the name alone, in the template's logo colours
@@ -20,8 +23,10 @@
  */
 import { DARK_GROUND, LIGHT_GROUND, logoContrast } from './brand-joomla-logo-contrast.js'
 import { logoColours, paletteOf } from './logo-colours.js'
-import { composeLockup, markSlotOf } from './logo-lockup.js'
+import { composeLockup, LOCKUP_SCALE, markSlotOf } from './logo-lockup.js'
 import { readMark, recoloured } from './logo-mark.js'
+import { splitMarkText } from './logo-mark-text.js'
+import sharp from 'sharp'
 
 /** What the owner is told when Tracy made the logo. */
 export const TEMPORARY_LOGO_NOTE =
@@ -154,6 +159,8 @@ export function logoFilesOfPage(html) {
  * @param {{width: number, height: number} | null} input.frame
  * @param {Uint8Array | null} [input.symbol] - no logo given: the symbol drawn for the business, on a plain ground
  * @param {Palette | null} [input.templatePalette] - the template's own logo colours, for a logo made without the owner's
+ * @param {((bytes: Uint8Array) => Promise<boolean | null>) | null} [input.seesText] - whether the photo labeller sees words in
+ *   the owner's mark; null (or an answer of null) leaves the question to the image heuristic
  * @returns {Promise<{logo: Logos | undefined, made: 'lockup' | 'symbol' | 'wordmark' | null, how: string}>}
  */
 export async function fitBriefLogo({
@@ -162,7 +169,8 @@ export async function fitBriefLogo({
   descriptor = null,
   frame,
   symbol = null,
-  templatePalette = null
+  templatePalette = null,
+  seesText = null
 }) {
   const keep = (/** @type {string} */ how) => ({ logo, made: null, how })
   if (!frame) return keep('no measured logo frame')
@@ -207,8 +215,70 @@ export async function fitBriefLogo({
       return { logo: { single: marks.light }, made: null, how: 'tile taken off' }
     return { logo: marks, made: null, how: 'a variant made for the other ground' }
   }
-  const made = await lockups({ marks: await marksByGround(m, colours), name, descriptor, frame, colours })
+  // 🔒 A MARK THAT ALREADY NAMES THE BUSINESS IS NOT NAMED TWICE (COO 29/10/2026).
+  const seen = seesText ? await seesText(m.mark).catch(() => null) : null
+  const split = await splitMarkText(m.mark).catch(() => ({ letters: false, pictorial: null }))
+  const words = seen ?? split.letters
+  let picture = m
+  if (words && split.pictorial) picture = await pictureOnly(m, split.pictorial)
+  else if (words) {
+    const alone = await ownLogoAlone(await marksByGround(m, colours), frame)
+    return { logo: alone, made: null, how: "the owner's logo alone: its words already name the business" }
+  }
+  const made = await lockups({
+    marks: await marksByGround(picture, colours),
+    name,
+    descriptor,
+    frame,
+    colours
+  })
   return made
-    ? { logo: made, made: 'lockup', how: 'the mark beside the name' }
+    ? {
+        logo: made,
+        made: 'lockup',
+        how:
+          picture === m
+            ? 'the mark beside the name'
+            : "the mark's picture, its words left out, beside the name"
+      }
     : keep('the name cannot be set in the frame')
+}
+
+/**
+ * The mark's picture without its words, read like a mark: its tiled copy is the picture on the tile's colour, with a
+ * margin of a tenth of its longer side.
+ * @param {NonNullable<Awaited<ReturnType<typeof readMark>>>} m @param {Buffer} pictorial
+ */
+async function pictureOnly(m, pictorial) {
+  const meta = await sharp(pictorial).metadata()
+  const margin = Math.round(Math.max(meta.width ?? 1, meta.height ?? 1) / 10)
+  const tiled = m.tile
+    ? await sharp(pictorial)
+        .extend({
+          top: margin,
+          bottom: margin,
+          left: margin,
+          right: margin,
+          background: { ...m.tile, alpha: 1 }
+        })
+        .flatten({ background: m.tile })
+        .png()
+        .toBuffer()
+    : null
+  return { ...m, mark: pictorial, tiled, aspect: (meta.width ?? 1) / (meta.height ?? 1) }
+}
+
+/**
+ * The owner's logo alone in each variant, as tall as the frame (at the lockup's scale) and no wider: the brand step pads it
+ * into the frame's shape.
+ * @param {Record<'light' | 'dark', Uint8Array>} marks @param {{width: number, height: number}} frame
+ */
+async function ownLogoAlone(marks, frame) {
+  const box = { width: frame.width * LOCKUP_SCALE, height: frame.height * LOCKUP_SCALE }
+  const fit = (/** @type {Uint8Array} */ bytes) =>
+    sharp(Buffer.from(bytes))
+      .resize({ ...box, fit: 'inside' })
+      .png()
+      .toBuffer()
+  return { light: await fit(marks.light), dark: await fit(marks.dark) }
 }

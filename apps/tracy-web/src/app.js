@@ -2122,6 +2122,13 @@ export function buildApp(deps) {
             }
             return out
           },
+          // Whether the owner's mark already holds words, asked of the photo labeller (null with no labeller).
+          markText: async (ctx, bytes) => {
+            const real = await realPictures?.forSite({ siteKey: ctx.siteKey, email: ctx.email })
+            const labels = real?.checkDrawing ? await real.checkDrawing(bytes).catch(() => null) : null
+            if (!labels) return null
+            return labels.textPresence === 'present' || labels.hasTextOverlay === true
+          },
           // A symbol for a business with no logo, drawn through the Customize picture door and checked by the photo
           // labeller like any drawing (`brand-logo-symbol.js`); the name is set beside it by code.
           drawSymbol: async (ctx, item) => {
