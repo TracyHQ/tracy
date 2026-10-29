@@ -1411,3 +1411,23 @@ test('a whole table kept after a schema change holds every push into it, includi
       assert.equal(answer.items.find((i) => i.kind === 'category').conflict, undefined)
   }
 })
+
+for (const object of [false, true]) {
+  test(`WordPress theme header references after Sync produce no false preview (${object ? 'object' : 'array'})`, () => {
+    const mods = (id) =>
+      `a:3:{s:11:"custom_logo";i:${id};s:12:"header_video";s:2:"${id}";s:17:"header_image_data";${object ? 'O:8:"stdClass":3:' : 'a:3:'}{s:13:"attachment_id";i:${id};s:5:"width";i:64;s:6:"height";i:64;}}`
+    const result = changeset('wordpress', {
+      idMap: { posts: { 64: 67 } },
+      entities: { posts: { base: [64], copy: [67] } },
+      kinds: {
+        themeMods: kind(
+          [{ option_name: 'theme_mods_test', value: mods(64) }],
+          [{ option_name: 'theme_mods_test', value: mods(67) }],
+          ['option_name']
+        )
+      }
+    })
+    assert.deepEqual(result.items, [])
+    assert.deepEqual(result.unsupported, [])
+  })
+}

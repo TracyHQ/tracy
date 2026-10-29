@@ -1086,6 +1086,9 @@ class IdMap:
                 # A reference of 0 or below names no record; a record's own id counts whatever it is.
                 if kind == "id" or n > 0:
                     out[asks[i][:2]].add(n)
+        for schema, table, rule in asks:
+            if rule.get("typedRefs"):
+                out[(schema, table)].update(rule["typedRefs"].read(self, schema))
         return out
 
     def renumber(self, schema: str, table: str, rule: dict, pairs: list[tuple[int, int]]) -> None:
@@ -1177,6 +1180,8 @@ class IdMap:
                     script.append(f"DROP TEMPORARY TABLE {rows};")
         if script:
             self.sql.run("\n".join(script))
+        if rule.get("typedRefs"):
+            rule["typedRefs"].rewrite(self, schema, pairs)
 
     # How many links one regular expression of the rows' search names (`renumber`): each is compiled
     # on its own, and a compiled pattern has a size limit.
@@ -1265,6 +1270,8 @@ class IdMap:
                         out.add(int(r[0]))
                 except (TypeError, ValueError):
                     continue
+        if rule.get("typedRefs"):
+            out.update(rule["typedRefs"].read(self, schema))
         return out
 
     def fresh(self, table: str, also: set[int]) -> int:
