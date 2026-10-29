@@ -3,7 +3,8 @@
  *
  * A pull request from a branch of this repository runs on the self-hosted runners as before; one
  * from a fork runs only GitHub-hosted jobs with a read-only token and no secret; no pull-request job
- * asks for the production lane; every action from another repository is pinned to a commit.
+ * asks for the production lane; the jobs holding a write token run GitHub-hosted; every action from
+ * another repository is pinned to a commit.
  */
 import assert from 'node:assert/strict'
 import { execFileSync } from 'node:child_process'
@@ -97,6 +98,19 @@ test('every fork job is GitHub-hosted, read-only, keeps no credential and reads 
       assert.ok(text.includes(`name: ${job.name}`), `${file} › ${name}`)
     }
   assert.ok(forkJobs >= 6, `only ${forkJobs} fork jobs found`)
+})
+
+test('the jobs holding a write token run on GitHub-hosted runners, never beside pull-request code', () => {
+  // The self-hosted runners are persistent and run pull-request jobs; a token there could be read.
+  for (const [file, name] of [
+    ['auto-merge-develop.yml', 'merge'],
+    ['ci-label-rerun.yml', 'rerun']
+  ]) {
+    const job = workflows.find((w) => w.file === file).doc.jobs[name]
+    assert.deepEqual(labelsOf(job), ['ubuntu-latest'], `${file} › ${name}`)
+    for (const step of job.steps.filter((s) => String(s.uses ?? '').startsWith('actions/checkout@')))
+      assert.equal(step.with?.['persist-credentials'], false, `${file} › ${name}: checkout`)
+  }
 })
 
 test('every action from another repository is pinned to a full commit id', () => {
