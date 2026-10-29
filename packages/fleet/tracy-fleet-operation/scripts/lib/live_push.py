@@ -1407,8 +1407,12 @@ class Changeset:
         if op == "delete" and row is None:
             out.append({"table": spec.table, "match": {pk: ident}, "rows": "theirs"})
         else:
+            asset = self.asset_name(spec.entity, ident) if op == "create" else None
             out.append({"table": spec.table, "match": {pk: ident}, "columns": db_columns,
-                        **({"create": True, "entity": spec.entity, "id": ident} if op == "create" else {})})
+                        **({"create": True, "entity": spec.entity, "id": ident} if op == "create" else {}),
+                        # Joomla gives the new record its `assets` row on its own: the copy's number for
+                        # it, found by the asset's name on both sides, before clashes are numbered (#172).
+                        **({"align": {"entity": "assets", "match": {"name": asset}}} if asset else {})})
         if self.platform == "wordpress" and spec.name == "post" and ({"categories", "tags"} & set(columns)):
             # Only the categories and tags it writes: the post's other terms (Polylang's language and
             # translation group, a plugin's taxonomy) were never sent, and taken as base they would read
@@ -1844,6 +1848,15 @@ class Changeset:
             "restore": self.restore_of(spec, columns, base_row),
             "dependsOn": sorted(set(deps)), "seed": self.seeds(spec, copy_key, columns, "update", copy_row),
         })
+
+    def asset_name(self, entity: str | None, ident) -> str | None:
+        """The name of the Joomla `assets` row of record `ident` of `entity` (the merge's `names` rule,
+        `com_content.article.{id}`), or None when the record has none."""
+        if self.platform != "joomla" or not entity:
+            return None
+        rule = dict(LS.POLICIES["joomla"].get("entities", [])).get(entity, {})
+        template = next((t for table, _, t in rule.get("names", []) if table == "assets"), None)
+        return template.format(id=ident) if template else None
 
     def menu_of(self, copy_row: dict):
         """The menu a new menu item goes in, on the live site: True when the live site has it, the id of

@@ -16,6 +16,7 @@ import { fitOfRelease } from '../lib/content-coverage/fit.js'
 import { coverageOfRelease } from '../lib/content-coverage/road-step.js'
 import { rolesOfRelease } from '../lib/content-coverage/roles.js'
 import { checkAgain, kickReadiness, readinessForRoad, readinessRows } from '../lib/customize-readiness.js'
+import { kickBlurbTranslations } from '../lib/template-blurb-translations.js'
 import {
   dsCheckAgain,
   dsReadinessOf,
@@ -533,6 +534,8 @@ export function quickstartRoutes({
     if (result.ok) {
       kickReadiness(pool, config, { fetchImpl })
       kickDsReadiness(pool, config, { fetchImpl })
+      // A new or reworded blurb is translated for the public Templates pages (master only).
+      kickBlurbTranslations(pool, config, { fetchImpl })
     }
     return c.json(result, result.ok ? 200 : 503)
   })
@@ -825,6 +828,8 @@ export function quickstartRoutes({
       tag,
       JSON.stringify(card)
     ])
+    // A reworded blurb of a shown card is live at once; its translations follow in the background.
+    kickBlurbTranslations(pool, config, { fetchImpl })
     return c.json({ ok: true, replaced: written.replaced, inspiration: card, hidden: !shown })
   })
 
@@ -880,6 +885,8 @@ export function quickstartRoutes({
     )
     if (!unmarked.ok) return c.json({ error: 'GITHUB_REFUSED', reason: unmarked.reason }, 502)
     await pool.query('update quickstart_releases set inspiration_hidden = false where tag = $1', [tag])
+    // The card just reached customers: translate its blurb now rather than at the next read of the releases.
+    kickBlurbTranslations(pool, config, { fetchImpl })
     // A lower profile does not refuse: the card is published and the sheet says what is not proven.
     return c.json({ ok: true, warnings: contractWarnings(builds, contracts) })
   })

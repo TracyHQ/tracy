@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-158-templates-blurb-translations",
+  "kind": "feat",
+  "title": "Template card blurbs are translated into de, fr, es, it, nl by a background sweep and rendered per language, falling back to English",
+  "pr": 158,
+  "area": "public/templates",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test apps/tracy-web/test/template-blurb-translations.test.mjs apps/tracy-web/test/templates-blurb-language.test.mjs apps/tracy-web/test/kept-terms-copy.test.mjs."
+  ],
+  "expect": [
+    "S1: every test passes (database tests skip without TEST_DATABASE_URL): the sweep stores accepted languages only, refused languages stay English, a reworded blurb is translated again, and a German page shows the German blurb while es, vi and en fall back to English."
+  ],
+  "selectors": {
+    "doors": "GET /templates/, /templates/<id>/ with tracy_lang cookie; GET /api/templates card.blurbs",
+    "files": "apps/tracy-web/src/lib/template-blurb-translations.js, apps/tracy-web/src/public/templates-page-html.js"
+  },
+  "evidence": "Before this change every language showed the English published blurb on the Templates pages.",
+  "fence": "the blurb translation sweep, its validator, and blurbOf rendering",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-timeout=120000",
+      "apps/tracy-web/test/template-blurb-translations.test.mjs",
+      "apps/tracy-web/test/templates-blurb-language.test.mjs",
+      "apps/tracy-web/test/kept-terms-copy.test.mjs"
+    ]
+  }
+}

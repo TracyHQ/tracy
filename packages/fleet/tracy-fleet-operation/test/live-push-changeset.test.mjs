@@ -167,7 +167,9 @@ test('Joomla: a new article in a new category is two creates, the category first
       columns: art.seed[0].columns,
       create: true,
       entity: 'content',
-      id: 3
+      id: 3,
+      // Its asset, which Joomla numbers on its own, aligned by name on the next sync (#172).
+      align: { entity: 'assets', match: { name: 'com_content.article.3' } }
     }
   ])
   // The category goes where the copy has it: under the root (parent placed on create), and last of its
@@ -1824,6 +1826,17 @@ test('a new menu item goes only into a menu the live site has or this push makes
   assert.ok(made, JSON.stringify(jo.items.map((i) => i.id)))
   assert.ok(items['menuItem:new:104'].dependsOn.includes(made.id))
   assert.ok(items['menuItem:new:105'], 'an item in a live menu goes as before')
+})
+
+test('Joomla: an article the push creates seeds its asset to be aligned by name, so the next sync meets the copy’s own (#172)', () => {
+  const answer = changeset('joomla', {
+    entities: { content: { base: [1], copy: [1, 10] } },
+    kinds: { article: kind([article(1)], [article(1), article(10, { title: 'New', alias: 'new' })]) }
+  })
+  const created = byId(answer)['article:new:10']
+  assert.ok(created, JSON.stringify(answer.items.map((i) => i.id)))
+  assert.deepEqual(created.seed[0].align, { entity: 'assets', match: { name: 'com_content.article.10' } })
+  assert.equal(created.seed[0].create, true)
 })
 
 test('a push cut off before it recorded its writes is recorded from its journal before the next merge (#173)', () => {
