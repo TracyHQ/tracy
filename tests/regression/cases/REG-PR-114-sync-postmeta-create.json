@@ -4,14 +4,10 @@
   "title": "WordPress metadata creates retain their live parent and safe native Undo",
   "pr": 114,
   "area": "sync/push",
-  "cms": [
-    "wp"
-  ],
+  "cms": ["wp"],
   "needs": [],
   "flaky_model": false,
-  "steps": [
-    "Run the HTTP writer cases for WordPress metadata creates and Undo."
-  ],
+  "steps": ["Run the HTTP writer cases for WordPress metadata creates and Undo."],
   "expect": [
     "Missing image and template metadata use existing or resolved new parent IDs.",
     "Undo uses only the dedicated native receipt and verifies deletion.",
