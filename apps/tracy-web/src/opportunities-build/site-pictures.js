@@ -357,7 +357,13 @@ export function createSitePictures({
           // offerings: what the fill plan qualifies a photo by (`fill-plan.mjs`).
           brief: build.brief
             ? {
-                assets: build.brief.assets ?? [],
+                // A photo the labeller saw words added on (`hasTextOverlay`) says so: a hero, a card or a background
+                // never takes it, a gallery only as its last photo (`fill-plan.mjs`), a drawing never starts from it.
+                assets: (build.brief.assets ?? []).map((a) =>
+                  byId.has(a?.id) && seenBy(byId.get(a.id))?.hasTextOverlay === true
+                    ? { ...a, hasTextOverlay: true }
+                    : a
+                ),
                 reading: build.brief.reading ?? null,
                 // The business's name, trade and key messages: who a drawn picture's prompt says the business is (#194).
                 business: {

@@ -192,7 +192,9 @@ export async function shapeReal({
     // picture is drawn from the owner's photos (`fill-draw.mjs`), else the slot takes a brand colour block.
     const brief = { ...real.brief, assets }
     const fill = domain.planFill({ contentMap, brief, demo, cardNames, perSlot: true })
-    const drawnPlan = domain.planDrawings({ fill, contentMap, brief, demo })
+    // Only slots on a page the site keeps are drawn: a demo post the tidy-up takes off never spends the cap.
+    const onSite = new Set(map.groups.flatMap((g) => (g.occurrences ?? []).map((o) => o.key)))
+    const drawnPlan = domain.planDrawings({ fill, contentMap, brief, demo, onSite })
     const placed = domain.placementOfFill({ fill: { ...fill, slots: drawnPlan.slots }, groups: map.groups })
     map = { ...map, groups: placed.groups, never: [...map.never, ...placed.dropped] }
     made = { ...placed.plan, drawings: drawnPlan.drawings, drawCapped: drawnPlan.capped }

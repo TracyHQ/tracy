@@ -94,6 +94,19 @@ const needKeyOf = (need) =>
 const FACT_PICTURE_ROLES = new Set(['person.image', 'quote.author_image', 'stat.proof_image'])
 const isFactSlot = (slot) => FACT_PICTURE_ROLES.has(slot.role) || slot.fit?.kind === 'signature'
 
+/**
+ * Whether a unit is a claim picture (`stat.proof_image`, a strip of customer faces or badges beside a number) whose file
+ * can be clear. With no brief picture it takes a blank: a colour block where faces stood reads as a broken picture.
+ */
+const proofStrip = (unit) =>
+  unit.slots.some((s) => s.role === 'stat.proof_image') && /\.(png|webp|svg)$/i.test(String(unit.file ?? ''))
+
+/**
+ * Whether every slot of a unit is a gallery tile: the only place a photo with words added on it (an event poster, a
+ * before/after label) may show, and only as the last photo left. A hero, a card, a background or an offering never does.
+ */
+const galleryUnit = (unit) => unit.slots.every((s) => s.role === 'business.gallery_image')
+
 /** Whether a brief picture is not a photograph: a logo, a graphic, or one the labeller found is not a photo. */
 const notAPhotograph = (asset) =>
   asset.isGraphic === true ||
@@ -337,7 +350,9 @@ export function planFill({ contentMap, brief, demo = new Map(), cardNames = {}, 
             ? { substitute: signatureSubstitute(signature, signersOf(brief?.reading)) }
             : unit.slots.some((s) => s.role === 'person.image')
               ? { substitute: avatarSubstitute(personById.get(unit.need.person) ?? null, unit.frame) }
-              : {}
+              : proofStrip(unit)
+                ? { substitute: { kind: 'blank', reason: 'no-proof-picture' } }
+                : {}
       for (const slot of unit.slots)
         decide(slot, action, reason, {
           file: unit.file,
@@ -369,7 +384,8 @@ export function planFill({ contentMap, brief, demo = new Map(), cardNames = {}, 
         let why =
           refusalOf(asset, unit.need) ??
           (identity(unit) && isMapPhotoByOthers(asset) ? 'map-photo-by-others' : null) ??
-          (pages.some((page) => shownOn.get(page)?.has(asset.id)) ? 'used' : null)
+          (pages.some((page) => shownOn.get(page)?.has(asset.id)) ? 'used' : null) ??
+          (asset.hasTextOverlay === true && !galleryUnit(unit) ? 'words-on-photo' : null)
         if (!why) {
           const cut = subjectCrop(asset, unit.frame, { min, matches, wide })
           if (cut.refused) why = cut.refused
@@ -390,8 +406,11 @@ export function planFill({ contentMap, brief, demo = new Map(), cardNames = {}, 
     // A general slot meets the general and unsure photos first, then the photos of the offerings.
     const offeringPhoto = (a) => (unit.need.general && depictsOf(a) !== GENERAL ? 1 : 0)
     const lowQuality = (a) => (a.quality === 'low' ? 1 : 0)
+    // A gallery takes a photo with words added on it only when no clean photo is left.
+    const worded = (a) => (a.hasTextOverlay === true ? 1 : 0)
     fitting.sort(
       (a, b) =>
+        worded(a) - worded(b) ||
         offeringPhoto(a) - offeringPhoto(b) ||
         publisherRankOf(a) - publisherRankOf(b) ||
         lowQuality(a) - lowQuality(b) ||

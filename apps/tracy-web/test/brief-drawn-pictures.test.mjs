@@ -15,6 +15,7 @@ import {
   realPicturesOf,
   shapeReal
 } from '../src/sites/brief-engines/real-pictures.js'
+import { cutFree, footprintOf } from '../src/sites/brief-engines/drawn-pictures.js'
 import { GLYPHS } from '../src/lib/icon-glyphs.js'
 import { ICON_LEXICON, NEUTRAL_GLYPH } from 'website-opportunities/domain/decor-plan.mjs'
 
@@ -334,4 +335,61 @@ test('#195 an item icon follows the business; a cut-out figure is drawn as an ob
 test('#195 every glyph the lexicon can choose is drawn by the icon set', () => {
   for (const [glyph] of ICON_LEXICON) assert.ok(GLYPHS[glyph], glyph)
   assert.ok(GLYPHS[NEUTRAL_GLYPH])
+})
+
+test('#195 a drawn cut-out stands where the demo figure stood, as large as that place holds', async () => {
+  // A florist template's hero figure: a tall vase on the right half of a 400 x 300 frame, standing on its bottom edge.
+  const demo = await sharp({
+    create: { width: 400, height: 300, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } }
+  })
+    .composite([
+      {
+        input: await sharp({ create: { width: 160, height: 300, channels: 4, background: '#2a6f4e' } })
+          .png()
+          .toBuffer(),
+        left: 220,
+        top: 0
+      }
+    ])
+    .png()
+    .toBuffer()
+  const foot = await footprintOf(demo)
+  assert.deepEqual(Object.fromEntries(Object.entries(foot).map(([k, v]) => [k, Number(v.toFixed(2))])), {
+    left: 0.55,
+    top: 0,
+    width: 0.4,
+    height: 1
+  })
+  // The model drew a small flat bouquet in the middle of a white ground.
+  const drawn = await sharp({ create: { width: 600, height: 400, channels: 3, background: '#ffffff' } })
+    .composite([
+      {
+        input: await sharp({ create: { width: 200, height: 60, channels: 3, background: '#b0306a' } })
+          .png()
+          .toBuffer(),
+        left: 200,
+        top: 170
+      }
+    ])
+    .png()
+    .toBuffer()
+  const out = await cutFree(drawn, 400, 300, foot)
+  const { data, info } = await sharp(out).raw().toBuffer({ resolveWithObject: true })
+  assert.equal(info.width, 400)
+  let left = 400
+  let right = -1
+  let top = 300
+  let bottom = -1
+  for (let y = 0; y < 300; y += 1)
+    for (let x = 0; x < 400; x += 1)
+      if (data[(y * 400 + x) * 4 + 3] > 16) {
+        left = Math.min(left, x)
+        right = Math.max(right, x)
+        top = Math.min(top, y)
+        bottom = Math.max(bottom, y)
+      }
+  assert.ok(left >= 219 && right <= 381, `inside the figure's place, got ${left}..${right}`)
+  assert.equal(right - left + 1, 160, 'as wide as the place holds')
+  assert.equal(bottom, 299, 'standing on the bottom edge, never floating mid-frame')
+  assert.equal(data[3], 0, 'the ground stays clear')
 })

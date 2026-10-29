@@ -207,16 +207,87 @@ export async function drawPlanned({
   return { drawn, stats }
 }
 
-/** An object drawn on a plain light ground, cut free of it: the ground turned transparent, fitted to the frame. */
-async function cutFree(bytes, width, height) {
+/** The box of a picture's visible pixels (alpha above a trace), or null when it has none. */
+async function visibleBox(bytes) {
   const { data, info } = await sharp(Buffer.from(bytes), { failOn: 'none' })
-    .resize(width, height, { fit: 'contain', background: { r: 255, g: 255, b: 255, alpha: 1 } })
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true })
+  let left = info.width
+  let top = info.height
+  let right = -1
+  let bottom = -1
+  for (let y = 0; y < info.height; y += 1)
+    for (let x = 0; x < info.width; x += 1)
+      if (data[(y * info.width + x) * 4 + 3] > 16) {
+        if (x < left) left = x
+        if (x > right) right = x
+        if (y < top) top = y
+        if (y > bottom) bottom = y
+      }
+  return right < 0 ? null : { left, top, width: right - left + 1, height: bottom - top + 1 }
+}
+
+/**
+ * Where the demo's figure stands in its frame (`footprintOf`): the box of its visible pixels, as shares of the frame.
+ * A figure that fills the frame's height on its right is placed there, never floated in the middle of the hero.
+ * @param {Uint8Array | null} bytes - the demo file
+ * @returns {Promise<{left: number, top: number, width: number, height: number} | null>}
+ */
+export async function footprintOf(bytes) {
+  if (!bytes) return null
+  const meta = await sharp(Buffer.from(bytes), { failOn: 'none' })
+    .metadata()
+    .catch(() => null)
+  if (!meta?.width || !meta?.height || !meta.hasAlpha) return null
+  const box = await visibleBox(bytes).catch(() => null)
+  if (!box) return null
+  return {
+    left: box.left / meta.width,
+    top: box.top / meta.height,
+    width: box.width / meta.width,
+    height: box.height / meta.height
+  }
+}
+
+/**
+ * An object drawn on a plain light ground, cut free of it: the ground turned transparent, trimmed to the object, and
+ * set in the frame where the demo's figure stood (its footprint): as large as the footprint holds, centred across it and
+ * standing on its bottom edge. With no footprint the object fills the whole frame the same way.
+ */
+export async function cutFree(bytes, width, height, footprint = null) {
+  const { data, info } = await sharp(Buffer.from(bytes), { failOn: 'none' })
     .ensureAlpha()
     .raw()
     .toBuffer({ resolveWithObject: true })
   for (let i = 0; i < data.length; i += 4)
     if (data[i] >= GROUND && data[i + 1] >= GROUND && data[i + 2] >= GROUND) data[i + 3] = 0
-  return sharp(data, { raw: { width: info.width, height: info.height, channels: 4 } })
+  const cut = await sharp(data, { raw: { width: info.width, height: info.height, channels: 4 } })
+    .png()
+    .toBuffer()
+  const box = await visibleBox(cut)
+  const blank = () =>
+    sharp({ create: { width, height, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+  if (!box) return blank().png().toBuffer()
+  const foot = footprint ?? { left: 0, top: 0, width: 1, height: 1 }
+  const area = {
+    left: Math.round(foot.left * width),
+    top: Math.round(foot.top * height),
+    width: Math.max(1, Math.round(foot.width * width)),
+    height: Math.max(1, Math.round(foot.height * height))
+  }
+  const scale = Math.min(area.width / box.width, area.height / box.height)
+  const w = Math.max(1, Math.min(area.width, Math.round(box.width * scale)))
+  const h = Math.max(1, Math.min(area.height, Math.round(box.height * scale)))
+  const object = await sharp(cut).extract(box).resize(w, h, { fit: 'fill' }).png().toBuffer()
+  return blank()
+    .composite([
+      {
+        input: object,
+        left: Math.min(width - w, area.left + Math.round((area.width - w) / 2)),
+        top: Math.min(height - h, area.top + area.height - h)
+      }
+    ])
     .png()
     .toBuffer()
 }
@@ -276,7 +347,8 @@ export async function shapeDecor({
       sizes.set(file, {
         width: size?.[0] ?? declared?.width ?? null,
         height: size?.[1] ?? declared?.height ?? null,
-        colour: await iconColourOf(bytes)
+        colour: await iconColourOf(bytes),
+        footprint: await footprintOf(bytes).catch(() => null)
       })
     }
     return sizes.get(file)
@@ -318,7 +390,10 @@ export async function shapeDecor({
       if (d.mode === 'object' && drawDoor?.imageModel && chat) {
         const item = {
           mode: 'object',
-          aspect: demo.width / demo.height,
+          // The shape of the place the demo's figure stood in, so the object is drawn to fill it.
+          aspect: demo.footprint
+            ? (demo.footprint.width * demo.width) / (demo.footprint.height * demo.height)
+            : demo.width / demo.height,
           referenceIds: d.referenceIds,
           subject: d.subject
         }
@@ -334,7 +409,7 @@ export async function shapeDecor({
         stats.calls += got.calls
         stats.costUsd += got.costUsd
         if ('bytes' in got) {
-          const bytes = await cutFree(got.bytes, demo.width, demo.height)
+          const bytes = await cutFree(got.bytes, demo.width, demo.height, demo.footprint)
           stats.cutOuts += 1
           return {
             decor: true,

@@ -12,7 +12,7 @@
 import { createHash } from 'node:crypto'
 import sharp from 'sharp'
 
-export const DRAW_PROMPT_VERSION = 'd4'
+export const DRAW_PROMPT_VERSION = 'd5'
 const REFERENCE_EDGE = 1024
 const NEVER =
   'No text, no letters, no signs, no logos, no watermarks, no recognisable faces, no person facing the camera.'
@@ -74,6 +74,8 @@ const REFERENCES =
  * drew a coach and children front-on: invented people a visitor would take for its staff and customers. d4 asks for
  * the place and its equipment in use, with people only small, far off, from behind or out of focus; a drawing the
  * labeller still finds a face in is refused (`drawnPictureVerdict`), drawn once more, then a brand colour block.
+ * d5 (29/10/2026): an object for a cut-out is asked large, filling its frame; a small object in the middle of a white
+ * ground was set floating across a hero's words instead of standing where the demo's figure stood.
  */
 export function drawPrompt(item) {
   const shape = `${ratio(item.aspect)} (width ${item.aspect.toFixed(2)} times the height), ${orientation(item.aspect)}`
@@ -83,7 +85,7 @@ export function drawPrompt(item) {
   const about = facts ? `\n${facts}` : ''
   if (item.mode === 'object') {
     const what = item.subject?.label ? `${item.subject.label}` : `the work of this business`
-    return `One single object used for ${what}, for the website of this business:${about}\nShown whole in the centre on a plain pure white background with nothing else in the frame, framed ${shape}. Photorealistic, soft even light, no shadow on the ground, no people.\n${REFERENCES}\n${NEVER}`
+    return `One single object used for ${what}, for the website of this business:${about}\nShown whole and large, filling most of the frame, on a plain pure white background with nothing else in the frame, framed ${shape}. Photorealistic, soft even light, no shadow on the ground, no people.\n${REFERENCES}\n${NEVER}`
   }
   const page =
     item.subject?.kind === 'offering' && item.subject.label

@@ -13,6 +13,8 @@
 // 🔒 REUSE AND CAP: a drawing serves every slot of the same subject and a close shape on other pages, never two slots of
 // one page; at most `DRAW_CAP` drawings per build, the home page first, then the largest slot. A slot past the cap takes
 // the brand colour block.
+// 🔒 ONLY WHAT THE SITE SHOWS: a slot on no page the site keeps (a demo post the tidy-up takes off) is never drawn and
+// never counts toward the cap, so the cap is spent on pictures a visitor sees.
 import { pagesOfMap, shownWidthOf } from './fill-plan.mjs'
 import { isMapPhotoByOthers, publisherRankOf } from './pictures/asset-origin.mjs'
 import { GENERAL } from './pictures/picture-links.mjs'
@@ -114,11 +116,13 @@ function drawable(decision, slot) {
  *   keyMessages?: Array<{label?: string}>, brand?: {logo?: string | null}}} input.brief
  * @param {Map<string, {width: number, height: number}>} [input.demo] - demo files as the site serves them
  * @param {number} [input.max]
+ * @param {Set<string>} [input.onSite] - the keys of the slots on a page the site keeps (the slot map's occurrences);
+ *   when given, every other slot is left as the fill plan decided it
  * @returns {{version: string, slots: any[], drawings: Array<{id: string, mode: 'outpaint' | 'scene', sourceId?: string,
  *   referenceIds: string[], aspect: number, subject: {kind: 'offering' | 'venue', id?: string, label?: string,
  *   category: string | null, about?: string}, keys: string[]}>, capped: number}}
  */
-export function planDrawings({ fill, contentMap, brief, demo = new Map(), max = DRAW_CAP }) {
+export function planDrawings({ fill, contentMap, brief, demo = new Map(), max = DRAW_CAP, onSite = null }) {
   const slotOf = new Map((contentMap?.slots ?? []).map((s) => [s.key, s]))
   const offeringOf = new Map((fill.offerings ?? []).map((o) => [o.groupId, o]))
   const pagesOf = pagesOfMap(contentMap)
@@ -133,7 +137,10 @@ export function planDrawings({ fill, contentMap, brief, demo = new Map(), max = 
     .filter((a) => a?.kind === 'image' && a.id && a.width && a.height)
     // The brief's own logo is a mark, never a scene to extend or to draw from, whatever its labels say.
     .filter((a) => a.id !== brief?.brand?.logo)
-    .filter((a) => !notAPhotograph(a) && !portraitOf(a) && !isMapPhotoByOthers(a))
+    // A photo with words added on it is never extended or copied: the words would come along.
+    .filter(
+      (a) => !notAPhotograph(a) && !portraitOf(a) && !isMapPhotoByOthers(a) && a.hasTextOverlay !== true
+    )
     .sort(
       (a, b) =>
         publisherRankOf(a) - publisherRankOf(b) ||
@@ -151,6 +158,7 @@ export function planDrawings({ fill, contentMap, brief, demo = new Map(), max = 
   for (const d of fill.slots) {
     const slot = slotOf.get(d.key)
     if (!drawable(d, slot)) continue
+    if (onSite && !onSite.has(d.key)) continue
     const file = d.file ?? fileOf(slot?.sample)
     const frame = demo.get(file) ?? slot?.fit?.source ?? declaredSize(slot?.sample)
     if (!frame?.width || !frame?.height) continue

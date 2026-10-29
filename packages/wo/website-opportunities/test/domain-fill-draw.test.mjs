@@ -103,9 +103,15 @@ const CLUB_MAP = {
 const CLUB_NAMES = { 'module-2.item.0': 'Fitness Lessons', 'module-2.item.1': 'Swimming Lessons' }
 const byKey = (slots) => new Map(slots.map((d) => [d.key, d]))
 
-function draw(brief, assets, { contentMap = CLUB_MAP, cardNames = CLUB_NAMES, max } = {}) {
+function draw(brief, assets, { contentMap = CLUB_MAP, cardNames = CLUB_NAMES, max, onSite } = {}) {
   const fill = planFill({ contentMap, brief: { ...brief, assets }, cardNames, perSlot: true })
-  return planDrawings({ fill, contentMap, brief: { ...brief, assets }, ...(max ? { max } : {}) })
+  return planDrawings({
+    fill,
+    contentMap,
+    brief: { ...brief, assets },
+    ...(max ? { max } : {}),
+    ...(onSite ? { onSite } : {})
+  })
 }
 
 test('#194 a portrait-only brief gives the wide hero an outpaint drawing from an owner photo, at its shape', () => {
@@ -185,6 +191,61 @@ test('#194 the cap holds, home page first then largest first; a slot past it tak
   assert.equal(DRAW_CAP, 20)
   for (const d of plan.slots)
     if (d.action === 'draw' || d.reason in DRAW_REASONS) assert.ok(DRAW_REASONS[d.reason] ?? d.reason)
+})
+
+test('#194 a slot on no page the site keeps is never drawn and never spends the cap', () => {
+  // A bakery whose hero sits on a page the tidy-up takes off: the one drawing the cap allows goes to a shown tile.
+  const onSite = new Set(['module-3.0', 'module-3.1', 'module-4.0'])
+  const plan = draw(BAKERY, [photo('counter-1'), photo('counter-2')], { cardNames: {}, max: 1, onSite })
+  const at = byKey(plan.slots)
+  assert.equal(plan.drawings.length, 1)
+  assert.ok(
+    plan.drawings[0].keys.every((k) => onSite.has(k)),
+    'the drawing serves a shown slot'
+  )
+  assert.notEqual(at.get('module-1.0').action, 'draw', 'the hero off the site is not drawn')
+  assert.notEqual(at.get('module-1.0').reason, 'drawing-cap', 'and is not reported as capped')
+})
+
+test('#194 a claim strip of customer faces with no brief picture is cleared, never a colour block', () => {
+  // A bakery's "happy customers" strip is a png of faces; a jpg proof picture keeps the plain placeholder.
+  const contentMap = {
+    ...CLUB_MAP,
+    slots: [
+      ...CLUB_MAP.slots,
+      image('module-3.5', 'stat.proof_image', 'proof/faces.png', { size: [324, 84], kind: 'avatar-group' })
+    ]
+  }
+  const fill = planFill({
+    contentMap,
+    brief: { ...BAKERY, assets: [photo('counter-1')] },
+    cardNames: {},
+    perSlot: true
+  })
+  const at = byKey(fill.slots)
+  assert.equal(at.get('module-3.5').action, 'substitute')
+  assert.deepEqual(at.get('module-3.5').substitute, { kind: 'blank', reason: 'no-proof-picture' })
+  assert.equal(at.get('article-5.0').action, 'substitute')
+  assert.equal(at.get('article-5.0').substitute, undefined, 'a jpg proof picture keeps the plain placeholder')
+})
+
+test('#194 a photo with words added on it never fills a hero or a card, and a gallery takes it only last', () => {
+  // A bakery's photos: its best one carries an event poster's words, its other photos are clean.
+  const big = [2400, 1100]
+  const poster = photo('poster-day', 'general', big, { hasTextOverlay: true })
+  const one = draw(BAKERY, [poster, photo('counter-1', 'general', [1400, 1400])], { cardNames: {} })
+  const at = byKey(one.slots)
+  assert.notEqual(at.get('module-1.0').mediaId, 'poster-day', 'the hero never takes the worded photo')
+  assert.ok(!one.drawings.some((g) => g.sourceId === 'poster-day' || g.referenceIds.includes('poster-day')))
+  const tiles = ['module-3.0', 'module-3.1', 'module-4.0'].map((k) => at.get(k))
+  assert.equal(tiles.find((d) => d.action === 'photo')?.mediaId, 'counter-1', 'the clean photo goes first')
+  // With no clean photo left for it, a gallery tile may take the worded photo rather than stay empty.
+  const only = draw(BAKERY, [photo('poster-day', 'general', [1400, 1400], { hasTextOverlay: true })], {
+    cardNames: {}
+  })
+  const gallery = ['module-3.0', 'module-3.1', 'module-4.0'].map((k) => byKey(only.slots).get(k))
+  assert.ok(gallery.some((d) => d.mediaId === 'poster-day'))
+  assert.notEqual(byKey(only.slots).get('module-1.0').mediaId, 'poster-day')
 })
 
 test('#194 C06: slots that share one demo file get their own decisions, so each card gets its own picture', () => {
