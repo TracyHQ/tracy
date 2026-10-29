@@ -5,13 +5,14 @@
  *      template-profiles.json row,
  *   S2 the mode reader behind STAB-1 and scripts/check-pack-modes.mjs refuses a 0600/0700 webroot and accepts a
  *      0644/0755 one (an archive written here, ustar),
- *   S3 the quickstart-contract skill never wraps a restore or a pack in umask 077,
+ *   S3 moved to scripts/test/check-pack-modes.test.mjs (the quickstart-contract skill never wraps a restore or
+ *      a pack in umask 077), a worker test CI runs whenever the skill changes,
  *   S4 the template-data CI lane: a contract-only diff plans the narrow checks row, a contract plus code diff
  *      plans exactly what it planned without the lane, and an unreadable tree plans every row.
  * Exit 1 with the first broken step; prints one line per step.
  */
 import { execFileSync } from 'node:child_process'
-import { readFileSync, readdirSync } from 'node:fs'
+import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { gzipSync } from 'node:zlib'
@@ -95,18 +96,8 @@ step('S2 the mode reader refuses 0600/0700 and accepts 0644/0755', [
   ...(good.wrong.length === 0 ? [] : [`0644/0755 archive: ${good.wrong.length} wrong`])
 ])
 
-const s3 = []
-const skill = path.join(ROOT, '.agents/skills/quickstart-contract')
-for (const file of [
-  'SKILL.md',
-  ...readdirSync(path.join(skill, 'references')).map((f) => `references/${f}`)
-]) {
-  const text = readFileSync(path.join(skill, file), 'utf8')
-  if (/\(umask 077;[^)]*"\$TD" (?:restore|quickstart)/.test(text))
-    s3.push(`${file} wraps a restore in umask 077`)
-  if (/^\s*umask 077; mkdir/m.test(text)) s3.push(`${file} sets umask 077 for the rest of a block`)
-}
-step('S3 the skill keeps umask 077 off restores and packs', s3)
+// S3 (the quickstart-contract skill keeps umask 077 off restores and packs) now lives in the worker
+// test scripts/test/check-pack-modes.test.mjs, which CI runs whenever the skill changes.
 
 const allFiles = execFileSync('git', ['ls-files', '-z'], { cwd: ROOT, encoding: 'utf8', maxBuffer: 64 << 20 })
   .split('\0')

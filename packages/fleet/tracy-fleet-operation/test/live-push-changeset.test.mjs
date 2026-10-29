@@ -1411,3 +1411,118 @@ test('a whole table kept after a schema change holds every push into it, includi
       assert.equal(answer.items.find((i) => i.kind === 'category').conflict, undefined)
   }
 })
+
+for (const object of [false, true]) {
+  test(`WordPress theme header references after Sync produce no false preview (${object ? 'object' : 'array'})`, () => {
+    const mods = (id) =>
+      `a:3:{s:11:"custom_logo";i:${id};s:12:"header_video";s:2:"${id}";s:17:"header_image_data";${object ? 'O:8:"stdClass":3:' : 'a:3:'}{s:13:"attachment_id";i:${id};s:5:"width";i:64;s:6:"height";i:64;}}`
+    const result = changeset('wordpress', {
+      idMap: { posts: { 64: 67 } },
+      entities: { posts: { base: [64], copy: [67] } },
+      kinds: {
+        themeMods: kind(
+          [{ option_name: 'theme_mods_test', value: mods(64) }],
+          [{ option_name: 'theme_mods_test', value: mods(67) }],
+          ['option_name']
+        )
+      }
+    })
+    assert.deepEqual(result.items, [])
+    assert.deepEqual(result.unsupported, [])
+  })
+}
+
+for (const edit of [
+  { title: 'Contact us' },
+  { position: '4' },
+  { url: 'https://shop-com.tracy.ai/contact/' },
+  { parent: '8' }
+]) {
+  test(`WordPress existing menu address is retained for ${Object.keys(edit)[0]} updates`, () => {
+    const row = {
+      ID: '20',
+      title: 'Contact',
+      position: '2',
+      type: 'custom',
+      object: 'custom',
+      object_id: '0',
+      url: 'https://shop.example/',
+      parent: '0',
+      menu: 'primary'
+    }
+    const copy = { ...row, ID: '21', ...edit }
+    const result = changeset('wordpress', {
+      homes: HOMES,
+      entities: { posts: { base: [8, 20], copy: [8, 21] } },
+      idMap: { posts: { 20: 21 } },
+      kinds: { menuItem: kind([row], [copy], ['ID']) }
+    })
+    const item = result.items.find((i) => i.kind === 'menuItem')
+    assert.equal(item.op, 'update')
+    assert.equal(item.ident, 20)
+    assert.equal(item.key, 'primary')
+    assert.equal(item.seed[0].match.ID, 21)
+    assert.deepEqual(
+      item.write,
+      Object.fromEntries(
+        Object.entries(edit).map(([k, v]) => [
+          k,
+          k === 'url' ? v.replace('https://shop-com.tracy.ai', 'https://shop.example') : v
+        ])
+      )
+    )
+  })
+}
+
+test('the preview answer counts pushable items over the whole changeset, not only the items it lists', () => {
+  const item = (i, extra = {}) => ({
+    id: `article:${i}`,
+    kind: 'article',
+    op: 'update',
+    title: `Article ${i}`,
+    liveId: i,
+    fields: { title: {} },
+    dependsOn: [],
+    ...extra
+  })
+  const conflicted = Array.from({ length: 500 }, (_, i) =>
+    item(i + 1, { conflict: { reason: 'changed-on-both', fields: ['title'] } })
+  )
+  const items = [
+    ...conflicted,
+    item(501),
+    item(502, { op: 'create', liveId: null }),
+    item(503, { op: 'delete' }),
+    item(504, { group: 'php' })
+  ]
+  const file = join(root, `cs-${++n}.json`)
+  writeFileSync(
+    file,
+    JSON.stringify({
+      ok: true,
+      platform: 'joomla',
+      items,
+      unsupported: [],
+      counts: {},
+      limit: 200,
+      overLimit: true,
+      hasDeletes: true
+    })
+  )
+  const r = spawnSync('python3', [PUSH, 'answer', '--changeset', file, '--preview-id', 'p1'], {
+    encoding: 'utf8'
+  })
+  assert.equal(r.status, 0, r.stderr + r.stdout)
+  const shown = JSON.parse(r.stdout.trim().split('\n').at(-1))
+  assert.equal(shown.items.length, 500)
+  assert.equal(shown.itemsTotal, 504)
+  // The four Apply can write are listed first, in order; 496 of the 500 conflicts after them.
+  assert.deepEqual(
+    shown.items.slice(0, 4).map((i) => i.id),
+    ['article:501', 'article:502', 'article:503', 'article:504']
+  )
+  assert.ok(shown.items.slice(4).every((i) => i.conflict))
+  assert.equal(shown.items[4].id, 'article:1')
+  assert.deepEqual(shown.pushable, { add: 1, change: 1, remove: 1, files: 0, settings: 0, php: 1 })
+  assert.equal(shown.conflictsTotal, 500)
+})

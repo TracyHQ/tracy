@@ -27,7 +27,7 @@
  *     skill, a claude-cowork release, the Tracy pin, a PR, a CI deploy), so it starts at once;
  *   - the demo waits for this release's own contract while there is none (`no-contract`): the
  *     skill may cut a NEW version (an installer release always, a captured pack without the agent
- *     docs too, which only the ja-products source can tell), and a demo made before it would sit on
+ *     docs too, which only the joomlart-products source can tell), and a demo made before it would sit on
  *     the old one. A live demo is kept: if the contract brings a new version, `demo-version` says so;
  *   - the listing waits for a live demo: Create listing fills the form and takes the pictures from
  *     it. A saved listing stays done even if the demo later goes down;

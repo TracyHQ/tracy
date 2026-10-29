@@ -2,6 +2,7 @@ import { handOffToAgent } from '../src/opportunities-build/handoff-service.js'
 import { promptHandoff } from '../src/opportunities-build/handoff.js'
 import { createClientDemoService, LOGO_RESEARCH_PENDING } from '../src/opportunities-build/client-demo.js'
 import { LOGO_RESEARCH_WAIT_MS, logoResearchNote } from '../src/opportunities-build/logo-research.js'
+import { LOOK_PROMPT_VERSION } from '../src/opportunities-build/demo-look.js'
 import { compareAgentInventory } from '../src/sites/agent-demo-inventory.js'
 import { createHash } from 'node:crypto'
 import {
@@ -1804,6 +1805,8 @@ test(
     assert.equal(faulty.checks.at(-1).id, 'looks-finished')
     assert.deepEqual(looked[0].pages, ['/'])
     assert.equal(looked[0].accountId, w.account)
+    // 29/10/2026: the look is told the words a card with no source keeps, so it never asks them replaced.
+    assert.ok(looked[0].neutral.includes('Menu item'), JSON.stringify(looked[0].neutral))
     // 🔒 A started check answers at once and runs on; its status carries the counted result (dev 24/10/2026:
     // every long check call was cut at Cloudflare's ~100 s and its result dropped as unheard).
     let finishLook
@@ -2395,6 +2398,11 @@ test(
       looked.push(args)
       return qa(site, args)
     }
+    const visions = []
+    w.deps.demoLook = async (_site, args) => {
+      visions.push(args.pages)
+      return { id: 'looks-finished', pass: true, looked: true, version: LOOK_PROMPT_VERSION, detail: [] }
+    }
     const checked = await capability.call(auth, { operation: 'check' })
     assert.deepEqual(looked[0].templateTitles, ['Spring menu'])
     const day = new Date(build.created_at).toISOString().slice(0, 10)
@@ -2407,6 +2415,21 @@ test(
       ),
       JSON.stringify(checked.sweep ?? checked)
     )
+    // 28/10/2026: a round that sweeps is not counted and is not looked at; the check after the sweep looks.
+    assert.deepEqual(visions, [])
+    const notLooked = checked.checks.find((c) => c.id === 'looks-finished')
+    assert.deepEqual([notLooked?.pass, notLooked?.looked], [false, false])
+    // The read after a sweep round is incremental: only what the sweep wrote is read anew.
+    const again = await capability.call(auth, { operation: 'check' })
+    assert.equal(looked[1].incremental, true)
+    assert.equal(
+      again.sweep?.calls?.length ?? 0,
+      0,
+      'the same calls planned again stop the sweep: this check counts'
+    )
+    // Looked at once, pass or fail (29/10/2026): the incremental read leaves its look to the whole read after it.
+    assert.equal(visions.length, 1)
+    assert.equal(again.checks.find((c) => c.id === 'looks-finished')?.looked, true)
   }
 )
 

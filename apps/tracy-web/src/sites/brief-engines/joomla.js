@@ -394,6 +394,9 @@ function staticState(contract) {
     entry = {
       slots: withFieldEvidence(customizableSlots(map.slots ?? [])),
       pages: map.pages ?? [],
+      // The vocabulary version and the entities (their `demoOnly` mark): the fill plan reads both (ADR 0040).
+      roleVocabularyVersion: map.roleVocabularyVersion ?? null,
+      entities: map.entities ?? [],
       declared: withFieldEvidence((map.slots ?? []).filter((slot) => !customizable(slot)))
     }
     maps.set(contract.id, entry)
@@ -402,7 +405,9 @@ function staticState(contract) {
     contract: contract.id,
     revision: 'static',
     slots: entry.slots.map((slot) => ({ ...slot, current: slot.sample })),
-    pages: entry.pages
+    pages: entry.pages,
+    roleVocabularyVersion: entry.roleVocabularyVersion,
+    entities: entry.entities
   }
 }
 
@@ -500,8 +505,11 @@ export function createJoomlaEngine({
   realPictures = null,
   woContent = null
 }) {
-  /** `bound`: a slot plan's card pictures (`copyPinsOf`), each card's own entity's. */
-  const pictures = async (ctx, real, bound = {}) => {
+  /**
+   * `bound`: a slot plan's card pictures (`copyPinsOf`), each card's own entity's. `copy`: the copy pins, whose card
+   * names decide which offering photo each card takes (`fill-plan.mjs`).
+   */
+  const pictures = async (ctx, real, bound = {}, copy = null) => {
     if (!realPictures || !siteFile || !ctx.contract) return null
     real ??= await realPictures.forSite({
       siteKey: ctx.siteKey,
@@ -527,6 +535,7 @@ export function createJoomlaEngine({
       inspect,
       contentMap: { ...map, slots: map.slots.filter((slot) => !isDerived(slot)) },
       bound,
+      copy,
       write: async ({ state, changes }) =>
         new Set(
           await writeContract({
@@ -1060,7 +1069,7 @@ export function createJoomlaEngine({
      */
     async apply(ctx, prepared) {
       if (prepared.real && realPictures && siteFile) {
-        await pictures(ctx, prepared.real, prepared.copyPins?.pictures)
+        await pictures(ctx, prepared.real, prepared.copyPins?.pictures, prepared.copyPins ?? null)
         prepared.real = null
       }
       const [
@@ -1097,7 +1106,8 @@ export function createJoomlaEngine({
                 time: ctx.time,
                 drawDoor: prepared.drawDoor ?? null,
                 signal: ctx.signal,
-                bound: prepared.copyPins?.pictures ?? {}
+                bound: prepared.copyPins?.pictures ?? {},
+                copy: prepared.copyPins ?? null
               })
             ).catch((error) => {
               ctx.note(

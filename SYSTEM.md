@@ -656,6 +656,7 @@ Only for `origin='migrated'` sites on Joomla (WordPress waits for its own adapte
   scratch schemas over several connections (`tracy_db_load_dump`, `dump_sections.py split`: 2 + 2 in the merge, 4 for the
   preview's base; 2026-10-27). The two reads load beside the copy's dump (`load_reads`, in the background), not after it. A machine runs
   `TRACY_HEAVY_SLOTS` heavy webroot jobs at once (default 2; `lib/heavy-slots.sh`, slot 0 the old lock file).
+- **WordPress counters after Sync:** the merge queues native recounts when posts, comments or term relationships change, including whole-table replacement and deletion. After restoring the complete merged DB, WordPress recalculates term counts using each taxonomy's own counter and approved-comment counts through its native API. Kept column conflicts that change no row queue no recount, and absent final target tables are omitted.
 - **Conflicts: Tracy's version wins** (20/10/2026). Where both sites edited the same thing differently, the copy's version is kept —
   files with `git merge-file --ours` (colliding hunks take Tracy's, the rest of the live file still comes over), DB with
   the copy's value/row — and listed in `kept` with the live-side value; the Export dialog shows that list once
@@ -663,7 +664,7 @@ Only for `origin='migrated'` sites on Joomla (WordPress waits for its own adapte
 - **Both sides created new records with the same id:** in core Joomla tables (articles, categories, menus, modules, users, tags, assets,
   `history` versions, the 404 log `redirect_links`) the customer's record gets a **new id** and everything pointing to it follows —
   including text columns such as `fields_values.item_id` (filtered by `fields.context`) and `history.item_id`
-  (`com_content.article.<id>`); renumbered tables are remembered in `sync/id-map.json` for later runs. In extension tables the merge cannot renumber, or when an extension table points to an id just changed: the sync run
+  (`com_content.article.<id>`); renumbered tables are remembered in `sync/id-map.json` for later runs. WordPress theme-mod references use typed serialized paths for logos, custom CSS posts, header media and menu locations. The same paths participate in fresh-ID allocation, remembered-map reads, batch rewrites and reverse Preview mapping; dimensions and unrelated values retain their bytes. Unreadable or aliased serialized theme values stop the merge safely rather than guessing at IDs. In extension tables the merge cannot renumber, or when an extension table points to an id just changed: the sync run
   **stops before applying** (`needs_resolution`, list `held`), and only after a person reviews and clicks "Sync anyway" (`allowHeld`) is
   Tracy's version kept there.
 - **WooCommerce record counts:** the five analytics/admin tables `wc_admin_notes`, `wc_admin_note_actions`,
@@ -747,6 +748,7 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   `content.batch` with `expected`), otherwise `conflict`; at most 200 items; deletes only when the owner confirms. Places where a
   sync run kept Tracy's version even though the customer also edited (`sync/kept.json`, names only, no values) are
   `changed-on-both`, never overwritten. A whole table kept after a schema change holds every push item whose seeds write that table, including creates and deletes, while unrelated tables remain available.
+- **WordPress menu addresses:** existing menu-item updates and deletions retain the base menu slug as their CMS key alongside the mapped live item ID, so subsequent writes and Undo use the native menu writer address.
 - **Replacement addresses:** a WordPress delete that frees the same slug in the same post type/parent scope is a prerequisite of its replacement. Unconfirmed or conflicting deletes block that create. Undo removes the replacement first and restores the original slug; a customer-edited replacement holds both records. Joomla trash keeps aliases occupied, so both sides of a same-alias replacement are held before writing.
 - **After pushing:** live ids of newly created records go into the id map, and the places written go into `sync/pushed.json`; Sync from live runs again
   and the merge takes those places as base before comparing (`live_sync.py --pushed`, `DbMerge.seed_pushed`), so a record Tracy
@@ -1053,7 +1055,7 @@ It never overwrites a Build or a later system change, and never re-reads the sit
 the measurements stay unknown; the same for old jobs without a snapshot. A template that declares no system (the current Business
 EmDash) never gets a record created for it.
 
-- **Quickstarts** are read from releases of `JoomlArt-Products/ja-products` into the `quickstart_releases` table
+- **Quickstarts** are read from releases of `JoomlArt-Products/joomlart-products` into the `quickstart_releases` table
   ([ADR 0017](docs/adr/0017-github-release-is-quickstart-source-of-truth.md)). There is no catalogue
   file in the repo. (`apps/tracy-web/src/quickstarts.json` only pins the Claude
   Cowork plugin version.)
@@ -2340,12 +2342,12 @@ it waits for; a second, prefixed dsh on the same machine must set all five varia
 `HOST_DSH_ENV_FILE`, `HOST_DSH_GATEWAY`, `HOST_DSH_CONTAINER`, otherwise it keeps the first dsh's `dsh-passwords.env`.
 Details of each flag and the order for setting up a host: `packages/fleet/tracy-fleet-operation/dsh/HOST-DSH.md` §3.
 
-**Reading `ja-products` when the host's App is not installed there.** `releasesToken` in
+**Reading `joomlart-products` when the host's App is not installed there.** `releasesToken` in
 [`quickstart-releases.js`](apps/tracy-web/src/lib/quickstart-releases.js) still mints a token from the GitHub App when the App
-is installed on `ja-products` (production). Only when GitHub returns 404 for the installation query (`installationIdFor` returns
+is installed on `joomlart-products` (production). Only when GitHub returns 404 for the installation query (`installationIdFor` returns
 `null`: the App is configured but not installed on that repo, like a shard's own App) and
 `TRACY_RELEASES_GITHUB_TOKEN` is set, does it use that read-only token. GitHub 5xx, network errors, or an installed App whose token
-GitHub refuses to issue are still errors, and do not fall back to the token. Consequence worth knowing: if someone removes the App from `ja-products` on
+GitHub refuses to issue are still errors, and do not fall back to the token. Consequence worth knowing: if someone removes the App from `joomlart-products` on
 production while the token variable is set, tracy-web silently reads with the token. How to set up a shard's own App
 (permissions, org, the four GitHub variables, key rotation) is in the runbook
 [`shard-github-app.md`](docs/references/shard-github-app.md).

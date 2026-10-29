@@ -1,7 +1,7 @@
 /**
  * What `GET /api/templates` answers, as rows of the Design inspiration list.
  *
- * Tracy holds the finished sites on the releases it has read off `ja-products` and serves them at
+ * Tracy holds the finished sites on the releases it has read off `joomlart-products` and serves them at
  * one unadmitted door. TWO surfaces read that door and draw the same cards from it:
  *
  *   - the tab inside dsh, through `host/templates.mjs#templatesFromTracy`;

@@ -24,6 +24,7 @@ import { briefWithResearch } from './revision-research.js'
  */
 import { createHash } from 'node:crypto'
 import { acceptedDishPhotos } from 'website-opportunities/domain/dish-photos.mjs'
+import { FILL_REASONS } from 'website-opportunities/domain/fill-plan.mjs'
 import { socialFiguresOfRevision } from './place-profile-of-revision.js'
 import { buildPlaced, saveHandoff } from './build-store.js'
 import { picturePolicy } from '../lib/wo-picture-policy.js'
@@ -481,7 +482,19 @@ export function picturesOfBuild(held) {
     .map((u) => ({ file: u.groupId, routes: u.routes ?? [], reason: u.reason }))
   const seen = new Set()
   const demoLeft = (report.demoLeft ?? []).filter((d) => !seen.has(d.file) && seen.add(d.file))
-  return { placed, placeholders, demoLeft, demoOutside: report.demoOutside ?? [], kept: report.never ?? [] }
+  // A fill plan's build (`fill-plan.mjs`) says what it decided for every picture slot, each with its reason code.
+  const decisions = (held.plan.decisions ?? []).map((d) => ({
+    ...d,
+    why: FILL_REASONS[d.reason] ?? d.reason
+  }))
+  return {
+    placed,
+    placeholders,
+    demoLeft,
+    demoOutside: report.demoOutside ?? [],
+    kept: report.never ?? [],
+    ...(decisions.length ? { decisions } : {})
+  }
 }
 
 /**

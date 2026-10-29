@@ -4,7 +4,7 @@
  * zip), each module called directly on a rule context.
  *
  * Fixtures (`fixtures/template-customization-question-readiness/c/`) are cut from the real release
- * assets of `JoomlArt-Products/ja-products` (09/10/2026): settings byte for byte; dumps cut to the
+ * assets of `JoomlArt-Products/joomlart-products` (09/10/2026): settings byte for byte; dumps cut to the
  * rows a rule reads; the JA Podcast installer and the JA Kinetic webroot reduced to the release's
  * own template files named in each test; the Tracy Base 1.1.2 contract as it stood before commit
  * 27e543dd6 re-captured it (from git, byte for byte). The Tracy Business EmDash source zip is built here from
@@ -357,7 +357,7 @@ test('ABOUT-3: the golden three pass on their declared demoCompanyNames', async 
 })
 
 test('ABOUT-3: the fix goes where demoCompanyNames lives, the contract in tch on Joomla and WordPress, the template on EmDash', async () => {
-  // Tracy Business WordPress 1.3.4 on dev, 12/10/2026: the prompt sent the fix to ja-products, but
+  // Tracy Business WordPress 1.3.4 on dev, 12/10/2026: the prompt sent the fix to joomlart-products, but
   // the list is in packages/cms/tracy-wordpress-quickstart/contracts/tracy-business/wp7/1.3.4.copy.json.
   const wp = await run(about3DemoCompanyName, businessWp())
   assert.deepEqual([wp.status, wp.owner], ['fail', 'contract'])

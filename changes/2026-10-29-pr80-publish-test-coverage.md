@@ -1,0 +1,3 @@
+- **Publish tests carry measured Content coverage in a temporary copy of their released WordPress contract** — Codex · #80 · `chore/joomlart-products-repo` · 2026-10-29
+  **Affects:** the Quickstarts CI suite. Exact and lower contract Publish cases reach their intended checks; missing and stale measurements still refuse Publish through the real reader. Released contract files are unchanged.
+  **Why / Measured:** three tests failed after WordPress joined the coverage policy. All 47 Quickstarts tests pass with PostgreSQL, including the run with the clock moved 400 days forward; the 63 Content coverage tests also pass.

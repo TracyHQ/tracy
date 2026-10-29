@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-146-wordpress-publish-coverage-fixture",
+  "kind": "fix",
+  "title": "Publish tests of a WordPress card judge the group they name, not the coverage file the borrowed contract lacks",
+  "pr": 146,
+  "area": "ops/quickstarts/content-coverage",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the Publish cases of tracy-web's ops quickstarts suite against Postgres (TEST_DATABASE_URL)."
+  ],
+  "expect": [
+    "A card served by a lower contract publishes with exactly one LOWER_CONTRACT warning (200).",
+    "A card bound exactly to its contract publishes with no warning (200).",
+    "A release whose contract declares no slot roles is refused 400 CONTENT_COVERAGE_NOT_READY with a reason naming slot roles, and its road step is todo coverage-roles."
+  ],
+  "selectors": {
+    "door": "POST /api/ops/quickstart/inspiration/publish?tag=tracy-base%2Fwp7"
+  },
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=Publish of a (card served|card bound|release whose contract declares no slot)",
+      "apps/tracy-web/test/ops-quickstarts.test.mjs"
+    ],
+    "tests": [
+      "Publish of a card served by a lower contract still publishes, with a warning",
+      "Publish of a card bound exactly to a contract publishes without a warning",
+      "Publish of a release whose contract declares no slot roles is held by Content coverage (ADR 0038)"
+    ]
+  }
+}

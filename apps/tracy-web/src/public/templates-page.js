@@ -30,6 +30,7 @@ import {
 import { FILTER_SCRIPT_SOURCE, galleryPage } from './templates-gallery-html.js'
 import { notFoundPage, templatePage } from './templates-page-html.js'
 import { INLINE_SCRIPT_SOURCES } from './templates-chrome-html.js'
+import { carryLanguage, languageInAddress } from './templates-language-links.js'
 import { PREVIEW_SCRIPT_SOURCE, livePreview } from './templates-preview-html.js'
 import { RESERVED_SEGMENTS, wordsFor } from './templates-words.js'
 
@@ -127,7 +128,10 @@ export function publicTemplatesRoutes({ config, readTemplates, now = Date.now })
   // Only production is indexable: on dev and laptops every Templates address says noindex.
   app.use('/templates', noindexOffProduction(config))
   app.use('/templates/*', noindexOffProduction(config))
-  const page = (html) => (isIndexable(config) ? html : withNoindexMeta(html))
+  const page = (html, c) => {
+    const carried = carryLanguage(html, languageInAddress(c), config.origin)
+    return isIndexable(config) ? carried : withNoindexMeta(carried)
+  }
 
   /** A template id from the address, or null when the segment cannot name one. */
   const idOf = (c) => {
@@ -166,7 +170,8 @@ export function publicTemplatesRoutes({ config, readTemplates, now = Date.now })
           appOrigin: config.origin,
           year: year(),
           lang: requestLanguage(c)
-        })
+        }),
+        c
       ),
       200,
       pageHeaders(200, policyFor(null, true))
@@ -199,7 +204,11 @@ export function publicTemplatesRoutes({ config, readTemplates, now = Date.now })
     const template = all.find((t) => t?.id === id)
     if (!template)
       return c.body(
-        notFoundPage({ year: year(), appOrigin: config.origin, lang: requestLanguage(c) }),
+        carryLanguage(
+          notFoundPage({ year: year(), appOrigin: config.origin, lang: requestLanguage(c) }),
+          languageInAddress(c),
+          config.origin
+        ),
         404,
         pageHeaders(404)
       )
@@ -212,7 +221,7 @@ export function publicTemplatesRoutes({ config, readTemplates, now = Date.now })
       year: year(),
       lang: requestLanguage(c)
     })
-    return c.body(page(html), 200, pageHeaders(200, policyFor(livePreview(template))))
+    return c.body(page(html, c), 200, pageHeaders(200, policyFor(livePreview(template))))
   })
 
   app.route('/', templatesDiscoveryRoutes({ config, readTemplates }))

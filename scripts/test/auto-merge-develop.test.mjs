@@ -1,8 +1,17 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { pathToFileURL } from 'node:url'
 import {
+  authorRefusal,
   eligible,
+  FILES_LIMIT,
+  sensitiveFile,
+  sensitivePatterns,
+  gateScripts,
+  trustedSensitivePatterns,
   changesRequested,
   approvedOnHead,
   mergeCandidates,
@@ -23,15 +32,36 @@ const pr = () => ({
   mergeable: true,
   mergeable_state: 'clean',
   requested_reviewers: [],
-  requested_teams: []
+  requested_teams: [],
+  user: { login: 'dev', type: 'User' },
+  author_association: 'MEMBER',
+  changed_files: 1
 })
+const appFiles = () => [{ filename: 'apps/tracy-web/src/lib/x.js', status: 'modified' }]
+/** A fake GitHub read: reviews, the files listing, else the PR. */
+const reader =
+  ({ reviews = [], files = appFiles, pull = pr } = {}) =>
+  async (endpoint) =>
+    endpoint.includes('/reviews?') ? reviews : endpoint.includes('/files?') ? files() : pull()
 const review = (id, state, user = 1) => ({ id, state, user: { id: user } })
 
-function stand({ code = 0, change, reviews = [], dryRun = false, requireApproval = false } = {}) {
+function stand({
+  code = 0,
+  change,
+  reviews = [],
+  files = appFiles,
+  lateFiles,
+  dryRun = false,
+  requireApproval = false
+} = {}) {
   const calls = []
-  let reads = 0
-  const get = async (endpoint) =>
-    endpoint.includes('/reviews?') ? reviews : ++reads > 1 && change ? change : pr()
+  // `change` and `lateFiles` are what GitHub answers once the gate has started.
+  const listing = () => (calls.length > 0 && lateFiles ? lateFiles() : files())
+  const get = reader({
+    reviews,
+    files: listing,
+    pull: () => (calls.length > 0 && change ? change : { ...pr(), changed_files: listing().length })
+  })
   const run = async (bin, args, token) => {
     calls.push({ bin, args, token })
     if (bin === 'gh') return { code: 0, out: '' }
@@ -128,7 +158,7 @@ test('dry-run verifies gates but cannot mutate and an apply requires a separate 
     )
 })
 
-test('workflow uses default-branch code, a serialized dev light runner and scoped App permissions', () => {
+test('workflow uses default-branch code, a serialized GitHub-hosted runner and scoped App permissions', () => {
   const yml = readFileSync(new URL('../../.github/workflows/auto-merge-develop.yml', import.meta.url), 'utf8')
   for (const workflow of WORKFLOWS) assert.ok(yml.includes(workflow.name))
   assert.ok(yml.indexOf('Prepare GitHub CLI') < yml.indexOf('Create repository-scoped merge token'))
@@ -143,7 +173,9 @@ test('workflow uses default-branch code, a serialized dev light runner and scope
   )
   assert.doesNotMatch(yml, /if: github.event_name != 'workflow_dispatch' \|\| inputs.dry_run == false/)
   assert.match(yml, /cancel-in-progress: false/)
-  assert.match(yml, /tracy-light, tracy-lane-dev/)
+  // The merge token never sits on a machine that also runs pull-request code.
+  assert.match(yml, /^ {4}runs-on: ubuntu-latest$/m)
+  assert.deepEqual(yml.match(/runs-on:.*/g), ['runs-on: ubuntu-latest'])
   assert.match(yml, /permission-contents: write/)
   assert.match(yml, /permission-pull-requests: write/)
   assert.match(yml, /repositories: \$\{\{ github\.event\.repository\.name \}\}/)
@@ -156,7 +188,7 @@ test('a verdict expiring during the last review reads never reaches merge', asyn
   let merged = false
   const results = await mergeCandidates({
     numbers: [1052],
-    get: async (endpoint) => (endpoint.includes('/reviews?') ? [] : pr()),
+    get: reader(),
     run: async (bin, args) => {
       if (bin === 'gh') {
         merged = true
@@ -195,7 +227,7 @@ test('a newly running or failed CI attempt during review reads invalidates the e
   let merged = false
   const results = await mergeCandidates({
     numbers: [1052],
-    get: async (endpoint) => (endpoint.includes('/reviews?') ? [] : pr()),
+    get: reader(),
     run: async (bin, args) => {
       if (bin === 'gh') {
         merged = true
@@ -217,12 +249,9 @@ test('mergeability still being computed is read again before the PR is judged', 
   let reads = 0
   const waits = []
   const calls = []
-  const get = async (endpoint) =>
-    endpoint.includes('/reviews?')
-      ? []
-      : ++reads === 1
-        ? { ...pr(), mergeable: null, mergeable_state: 'unknown' }
-        : pr()
+  const get = reader({
+    pull: () => (++reads === 1 ? { ...pr(), mergeable: null, mergeable_state: 'unknown' } : pr())
+  })
   const run = async (bin, args) => {
     calls.push(bin)
     if (bin === 'gh') return { code: 0, out: '' }
@@ -305,4 +334,220 @@ test('with REQUIRE_APPROVAL_FOR_AUTO_MERGE on, a pull request without a current 
   assert.equal((await stand().go())[0].status, 'merged')
   const yml = readFileSync(new URL('../../.github/workflows/auto-merge-develop.yml', import.meta.url), 'utf8')
   assert.match(yml, /REQUIRE_APPROVAL_FOR_AUTO_MERGE: \$\{\{ vars\.REQUIRE_APPROVAL_FOR_AUTO_MERGE \}\}/)
+})
+
+test('only a human team member is merged automatically, checked before the gate and after it', async () => {
+  assert.equal(authorRefusal(pr()), null)
+  for (const association of ['OWNER', 'COLLABORATOR'])
+    assert.equal(authorRefusal({ ...pr(), author_association: association }), null)
+  assert.equal(
+    authorRefusal({ ...pr(), user: { login: 'dependabot[bot]', type: 'Bot' } }),
+    'author-not-human'
+  )
+  assert.equal(authorRefusal({ ...pr(), user: null }), 'author-missing')
+  assert.equal(authorRefusal({ ...pr(), author_association: undefined }), 'author-missing')
+  for (const association of ['NONE', 'CONTRIBUTOR', 'FIRST_TIME_CONTRIBUTOR'])
+    assert.equal(authorRefusal({ ...pr(), author_association: association }), 'author-not-team')
+  const bot = await mergeCandidates({
+    numbers: [1052],
+    get: reader({ pull: () => ({ ...pr(), user: { login: 'agent[bot]', type: 'Bot' } }) }),
+    run: async () => assert.fail('the gate must not run for a bot'),
+    dryRun: false,
+    readToken: 'read-only',
+    mergeToken: 'app-write'
+  })
+  assert.deepEqual(bot, [{ pr: 1052, status: 'author-not-human' }])
+  const late = stand({ change: { ...pr(), author_association: 'CONTRIBUTOR' } })
+  assert.equal((await late.go())[0].status, 'author-not-team')
+  assert.ok(!late.calls.some((call) => call.bin === 'gh'))
+})
+
+test('a pull request touching a CI-sensitive path, by new or old name, is never merged automatically', async () => {
+  const patterns = sensitivePatterns(
+    readFileSync(new URL('../../.github/CODEOWNERS', import.meta.url), 'utf8')
+  )
+  // Kept whatever CODEOWNERS says.
+  for (const path of [
+    '.github/workflows/x.yml',
+    'scripts/auto-merge-develop.mjs',
+    'scripts/check-pr-merge.mjs',
+    'scripts/check-tests.ts',
+    'scripts/lib/english-policy.mjs',
+    'turbo.json'
+  ])
+    assert.equal(sensitiveFile([{ filename: path }], sensitivePatterns('')), path)
+  assert.equal(
+    sensitiveFile([{ filename: 'scripts/language-policy.json' }], patterns),
+    'scripts/language-policy.json'
+  )
+  assert.equal(sensitiveFile(appFiles(), patterns), null)
+  assert.equal(sensitiveFile([{ filename: 'apps/x/.github/y' }], patterns), null)
+  const workflow = stand({ files: () => [...appFiles(), { filename: '.github/workflows/x.yml' }] })
+  assert.deepEqual(await workflow.go(), [
+    { pr: 1052, status: 'sensitive-files', file: '.github/workflows/x.yml' }
+  ])
+  assert.deepEqual(workflow.calls, [])
+  const renamed = stand({
+    files: () => [
+      { filename: 'scripts/plan.mjs', previous_filename: 'scripts/ci/plan-ci.mjs', status: 'renamed' }
+    ]
+  })
+  assert.equal((await renamed.go())[0].file, 'scripts/ci/plan-ci.mjs')
+  assert.deepEqual(renamed.calls, [])
+})
+
+test('a file list that changes after the gate is refused, and a pushed head during the listing too', async () => {
+  // Same count as the first listing, so only reading the files again can tell.
+  const lateSensitive = await stand({
+    lateFiles: () => [{ filename: '.github/workflows/x.yml' }]
+  }).go()
+  assert.deepEqual(lateSensitive, [{ pr: 1052, status: 'sensitive-files', file: '.github/workflows/x.yml' }])
+  const other = stand({ lateFiles: () => [{ filename: 'apps/tracy-web/src/lib/y.js' }] })
+  assert.equal((await other.go())[0].status, 'changed-after-check')
+  assert.ok(!other.calls.some((call) => call.bin === 'gh'))
+  // The PR read right after the listing names another head: the listing may belong to that one.
+  let pulls = 0
+  const pushed = await mergeCandidates({
+    numbers: [1052],
+    get: reader({
+      pull: () => (++pulls === 2 ? { ...pr(), head: { ...pr().head, sha: 'b'.repeat(40) } } : pr())
+    }),
+    run: async () => assert.fail('the gate must not run'),
+    readToken: 'read-only'
+  })
+  assert.deepEqual(pushed, [{ pr: 1052, status: 'changed-after-check' }])
+})
+
+test('a file listing that reaches the 3000-file API limit or disagrees with changed_files fails closed', async () => {
+  const many = () => Array.from({ length: FILES_LIMIT }, (_, i) => ({ filename: `apps/x/${i}.js` }))
+  const full = await mergeCandidates({
+    numbers: [1052],
+    get: reader({ files: many, pull: () => ({ ...pr(), changed_files: FILES_LIMIT }) }),
+    run: async () => assert.fail('the gate must not run'),
+    readToken: 'read-only'
+  })
+  assert.deepEqual(full, [{ pr: 1052, status: 'files-incomplete' }])
+  for (const pull of [() => ({ ...pr(), changed_files: 2 }), () => ({ ...pr(), changed_files: undefined })])
+    assert.deepEqual(
+      await mergeCandidates({
+        numbers: [1052],
+        get: reader({ pull }),
+        run: async () => assert.fail('the gate must not run'),
+        readToken: 'read-only'
+      }),
+      [{ pr: 1052, status: 'files-incomplete' }]
+    )
+  const broken = stand({ files: () => ({ message: 'Server Error' }) })
+  assert.equal((await broken.go())[0].status, 'files-incomplete')
+})
+
+test('a normal app-code pull request by a member still merges on the exact head', async () => {
+  const s = stand()
+  assert.deepEqual(await s.go(), [{ pr: 1052, status: 'merged', head }])
+  assert.equal(s.calls.at(-1).bin, 'gh')
+})
+
+test('the scripts the gate workflows run, read from the trusted checkout, are sensitive too', async () => {
+  // `stand` leaves `sensitive` at its default: the set read from this checkout's files.
+  const scripts = gateScripts(
+    WORKFLOWS.map(({ file }) =>
+      readFileSync(new URL(`../../.github/workflows/${file}`, import.meta.url), 'utf8')
+    )
+  )
+  for (const path of ['scripts/check-all.ts', 'scripts/check-regression.mjs', 'scripts/build-dsh.mjs'])
+    assert.ok(scripts.includes(path), path)
+  // A path named only in a comment or a `paths:` filter is not a call.
+  assert.ok(!scripts.some((path) => path.startsWith('scripts/test/')), scripts.join(' '))
+  for (const path of [
+    'scripts/check-all.ts',
+    'scripts/check-regression.mjs',
+    'turbo.json',
+    'scripts/build-dsh.mjs'
+  ]) {
+    const s = stand({ files: () => [{ filename: 'apps/tracy-web/src/x.js' }, { filename: path }] })
+    assert.deepEqual(await s.go(), [{ pr: 1052, status: 'sensitive-files', file: path }], path)
+    assert.deepEqual(s.calls, [], path)
+  }
+  // App code with its test is trusted to a team author.
+  const app = stand({
+    files: () => [{ filename: 'apps/tracy-web/src/x.js' }, { filename: 'apps/tracy-web/test/x.test.js' }]
+  })
+  assert.deepEqual(await app.go(), [{ pr: 1052, status: 'merged', head }])
+})
+
+test('gate workflows that name no script fail closed', () => {
+  assert.throws(() => gateScripts(['jobs:\n  a:\n    steps:\n      - run: echo hi\n']), /No gate script/)
+  assert.throws(() => gateScripts([]), /No gate script/)
+  assert.deepEqual(
+    gateScripts([
+      '      - run: |\n          set -e\n          pnpm exec tsx scripts/check-all.ts --skip tests\n'
+    ]),
+    ['scripts/check-all.ts']
+  )
+  const root = mkdtempSync(join(tmpdir(), 'auto-merge-'))
+  try {
+    mkdirSync(join(root, '.github/workflows'), { recursive: true })
+    for (const { file } of WORKFLOWS)
+      writeFileSync(
+        join(root, '.github/workflows', file),
+        'jobs:\n  a:\n    steps:\n      - run: pnpm test\n'
+      )
+    assert.throws(() => trustedSensitivePatterns(pathToFileURL(`${root}/`)), /No gate script/)
+  } finally {
+    rmSync(root, { recursive: true, force: true })
+  }
+})
+
+test('a script path counts whatever command, prefix or quoting runs it', async () => {
+  const workflow = [
+    'jobs:',
+    '  gate:',
+    '    steps:',
+    '      - run: node ./scripts/verify-gate.mjs',
+    '      - run: |',
+    '          # scripts/test/only-a-comment.test.mjs',
+    '          bash "$GITHUB_WORKSPACE/scripts/a.sh"',
+    '          ./scripts/b.sh',
+    "          python3 scripts/c.py --config '${{ github.workspace }}/scripts/d.json'",
+    '      - run: pnpm exec tsx scripts/e.ts --rules=scripts/f.json',
+    '    paths: [scripts/test/in-a-filter.mjs]',
+    ''
+  ].join('\n')
+  const scripts = gateScripts([workflow])
+  assert.deepEqual(scripts, [
+    'scripts/a.sh',
+    'scripts/b.sh',
+    'scripts/c.py',
+    'scripts/d.json',
+    'scripts/e.ts',
+    'scripts/f.json',
+    'scripts/verify-gate.mjs'
+  ])
+  const patterns = sensitivePatterns('', scripts)
+  for (const path of ['scripts/verify-gate.mjs', 'scripts/a.sh', 'scripts/b.sh', 'scripts/c.py']) {
+    const refused = await mergeCandidates({
+      numbers: [1052],
+      get: reader({ files: () => [{ filename: path }] }),
+      run: async () => assert.fail('the gate must not run'),
+      readToken: 'read-only',
+      sensitive: patterns
+    })
+    assert.deepEqual(refused, [{ pr: 1052, status: 'sensitive-files', file: path }], path)
+  }
+  const app = await mergeCandidates({
+    numbers: [1052],
+    get: reader({
+      files: () => [{ filename: 'apps/tracy-web/src/x.js' }, { filename: 'apps/tracy-web/test/x.test.js' }],
+      pull: () => ({ ...pr(), changed_files: 2 })
+    }),
+    run: async (bin, args) =>
+      bin === 'gh'
+        ? { code: 0, out: '' }
+        : { code: 0, out: args.includes('--expected-head') ? head : '{"verdict":"PASS"}' },
+    dryRun: false,
+    readToken: 'read-only',
+    mergeToken: 'app-write',
+    sensitive: patterns
+  })
+  assert.deepEqual(app, [{ pr: 1052, status: 'merged', head }])
 })

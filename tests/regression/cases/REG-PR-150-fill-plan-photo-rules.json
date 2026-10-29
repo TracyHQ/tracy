@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-150-fill-plan-photo-rules",
+  "kind": "feat",
+  "title": "The fill plan gives a person card its named person's portrait or an initials avatar, ranks the owner's photos first and keeps map photos by others out of identity slots, and crops around the subject without cutting a face",
+  "pr": 150,
+  "area": "website-opportunities/pictures",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test packages/wo/website-opportunities/test/domain-fill-plan-photo-rules.test.mjs (a fictional boxing studio brief on a trimmed version 3 template map).",
+    "S2: Run node --test apps/tracy-web/test/picture-avatar.test.mjs apps/tracy-web/test/picture-cut.test.mjs apps/tracy-web/test/brief-fill-plan-pictures.test.mjs (the initials avatar, the subject cut, and the Joomla picture phase shapeReal on a version 3 map)."
+  ],
+  "expect": [
+    "S1: exit 0, no failed or skipped test; a named portrait fills its coach card, a stranger's face is refused, a person with no portrait gets initials, the owner's photo beats a map photo, map photos by others never fill hero, about or gallery lead, every face box stays whole, a matching photo loosens the loss limit, too-small-after-crop is refused, every crop keeps the slot's aspect.",
+    "S2: exit 0, no failed or skipped test; the avatar keeps the frame and draws letters on the brand colour, a subject crop is cut where the plan placed it, a coach card with no portrait is written as an avatar receipt in its frame."
+  ],
+  "selectors": {
+    "files": "packages/wo/website-opportunities/domain/fill-plan.mjs, packages/wo/website-opportunities/domain/pictures/subject-crop.mjs, apps/tracy-web/src/lib/initials-avatar.js, apps/tracy-web/src/sites/brief-engines/real-pictures.js",
+    "tool": "tests/regression/scripts/REG-PR-150-fill-plan-photo-rules.mjs"
+  },
+  "evidence": "Before this change every person picture took a plain placeholder even with the person's portrait in the brief, a customer's map photo could become the hero, and crops ignored face boxes.",
+  "fence": "planFill locks person cards to the named person, refuses map photos by others in identity units and ranks by publisher, and cuts every photo with subjectCrop",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-150-fill-plan-photo-rules.mjs"]
+  }
+}

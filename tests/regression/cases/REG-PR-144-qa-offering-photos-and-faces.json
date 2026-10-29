@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-144-qa-offering-photos-and-faces",
+  "kind": "feat",
+  "title": "Post-build QA fails a wrong-offering photo in an offering card and an unnamed face in a person slot, naming page, slot and photo",
+  "pr": 144,
+  "area": "opportunities-build/demo-qa",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the host QA tests for the two slot photo checks: node --test apps/tracy-host/test/demo-qa-slot-photos.test.mjs",
+    "S2: Run the web evidence and live readiness tests: node --test apps/tracy-web/test/wo-slot-photo-evidence.test.mjs apps/tracy-web/test/wo-live-readiness.test.mjs"
+  ],
+  "expect": [
+    "S1: every test passes, among them 'a padel photo in the tennis card fails, naming the page, the slot and the photo' and 'an unnamed face in a coach slot fails both checks'.",
+    "S2: every test passes."
+  ],
+  "selectors": {
+    "checks": "photos-match-slots, faces-named",
+    "files": "apps/tracy-host/src/demo-qa-slot-photos.js, apps/tracy-web/src/opportunities-build/slot-photo-evidence.js"
+  },
+  "evidence": "Before this change a padel photo in the tennis card and a stranger's face in a coach frame passed every post-build check",
+  "fence": "The host judge over fixture page reads, and the evidence tracy-web sends from import receipts, plan rows and brief labels",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "apps/tracy-host/test/demo-qa-slot-photos.test.mjs",
+      "apps/tracy-web/test/wo-slot-photo-evidence.test.mjs",
+      "apps/tracy-web/test/wo-live-readiness.test.mjs"
+    ]
+  }
+}

@@ -222,15 +222,16 @@ export function livePush({
     if (newest.state !== 'previewed')
       return { refused: { code: 'PREVIEW_NOT_READY', state: newest.state }, status: 409 }
     if (expired(newest, now())) return { refused: { code: 'PREVIEW_EXPIRED' }, status: 409 }
-    const shown = previewOf(newest.preview)
-    // Over the host's limit is not refused: it writes the first ones and leaves the rest for the next push.
+    // Counted over the whole changeset (`pushable`), not the items the answer lists. Over the host's
+    // limit is not refused: it writes the first ones and leaves the rest for the next push.
+    const { pushable } = previewOf(newest.preview)
     const count =
-      shown.add.length +
-      shown.change.length +
-      shown.files.length +
-      shown.settings.length +
-      (deletes ? shown.remove.length : 0) +
-      (php ? shown.php.length : 0)
+      pushable.add +
+      pushable.change +
+      pushable.files +
+      pushable.settings +
+      (deletes ? pushable.remove : 0) +
+      (php ? pushable.php : 0)
     if (count === 0) return { refused: { code: 'PUSH_NOTHING' }, status: 409 }
     const busy = await lease(site, previewId, email)
     if (busy) return busy
@@ -630,15 +631,11 @@ export function syncAnswerOf(s, pushId) {
 const json = (value) =>
   JSON.stringify(value ?? null, (_k, v) => (typeof v === 'string' ? v.replaceAll('\0', '�') : v))
 
+// Totals over the whole changeset, not the capped lists the answer carries.
 const counts = (p) => ({
-  add: p.add.length,
-  change: p.change.length,
-  remove: p.remove.length,
-  files: p.files.length,
-  settings: p.settings.length,
-  php: p.php.length,
-  unsupported: p.unsupported.length,
-  liveChanged: p.liveChanged.length
+  ...p.pushable,
+  unsupported: p.unsupportedTotal,
+  liveChanged: p.liveChangedTotal
 })
 
 /** A preview past its time. */

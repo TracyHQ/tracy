@@ -408,3 +408,199 @@ test('WooCommerce compatibility refunds count once and a missing root table keep
   assert.equal(missing.counts.records, 1)
   assert.equal(sql('SELECT post_title FROM wc_m.wp_posts WHERE ID=1'), 'Kept fallback edit')
 })
+
+function counterMerge({ ours = '', theirs = '', decisions = {} }) {
+  sql(
+    ['cnt_b', 'cnt_m', 'cnt_t', 'cnt_w']
+      .map(
+        (schema) => `
+    DROP DATABASE IF EXISTS ${schema}; CREATE DATABASE ${schema}; USE ${schema};
+    CREATE TABLE wp_posts (ID bigint NOT NULL PRIMARY KEY, post_type varchar(30), post_status varchar(20), post_title varchar(100), comment_count bigint DEFAULT 0);
+    INSERT INTO wp_posts VALUES (1, 'post', 'publish', 'First', 0), (2, 'post', 'publish', 'Second', 0);
+    CREATE TABLE wp_term_taxonomy (term_taxonomy_id bigint NOT NULL PRIMARY KEY, term_id bigint, taxonomy varchar(30), count bigint);
+    INSERT INTO wp_term_taxonomy VALUES (1, 1, 'category', 0);
+    CREATE TABLE wp_term_relationships (object_id bigint NOT NULL, term_taxonomy_id bigint NOT NULL, term_order int DEFAULT 0, PRIMARY KEY (object_id, term_taxonomy_id));
+    INSERT INTO wp_term_relationships VALUES (1, 1, 0);
+    CREATE TABLE wp_comments (comment_ID bigint NOT NULL PRIMARY KEY, comment_post_ID bigint, comment_approved varchar(20), comment_content text);
+    INSERT INTO wp_comments VALUES (1, 1, '1', 'Original');
+  `
+      )
+      .join('\n') + `USE cnt_m; ${ours}\nUSE cnt_t; ${theirs}`
+  )
+  return JSON.parse(
+    py(`print(json.dumps(engine.DbMerge(sql, 'cnt_b', 'cnt_m', 'cnt_t', 'cnt_w', 'wordpress', 'wp_',
+    json.loads(${JSON.stringify(JSON.stringify(decisions))})).run()))`)
+  )
+}
+
+for (const rowMerge of [false, true]) {
+  test(
+    `WordPress counters follow dependency mutations (${rowMerge ? 'row merge' : 'whole table'})`,
+    opts,
+    () => {
+      const cases = [
+        {
+          table: 'term_relationships',
+          change: 'INSERT INTO wp_term_relationships VALUES (2, 1, 0);',
+          copy: 'UPDATE wp_term_relationships SET term_order=2 WHERE object_id=1;',
+          rebuild: ['wp_term_taxonomy'],
+          check: 'SELECT COUNT(*) FROM cnt_m.wp_term_relationships',
+          value: '2'
+        },
+        {
+          table: 'term_relationships',
+          change: 'DELETE FROM wp_term_relationships WHERE object_id=1;',
+          copy: 'INSERT INTO wp_term_relationships VALUES (2, 1, 0);',
+          rebuild: ['wp_term_taxonomy'],
+          check: 'SELECT GROUP_CONCAT(object_id) FROM cnt_m.wp_term_relationships',
+          value: rowMerge ? '2' : 'NULL'
+        },
+        {
+          table: 'posts',
+          change: "UPDATE wp_posts SET post_status='draft' WHERE ID=1;",
+          copy: "UPDATE wp_posts SET post_title='Copy' WHERE ID=2;",
+          rebuild: ['wp_posts', 'wp_term_taxonomy'],
+          check: 'SELECT post_status FROM cnt_m.wp_posts WHERE ID=1',
+          value: 'draft'
+        },
+        {
+          table: 'posts',
+          change: "UPDATE wp_posts SET post_type='page' WHERE ID=1;",
+          copy: "UPDATE wp_posts SET post_title='Copy' WHERE ID=2;",
+          rebuild: ['wp_posts', 'wp_term_taxonomy'],
+          check: 'SELECT post_type FROM cnt_m.wp_posts WHERE ID=1',
+          value: 'page'
+        },
+        {
+          table: 'comments',
+          change: "INSERT INTO wp_comments VALUES (2, 1, '1', 'Added');",
+          copy: "UPDATE wp_comments SET comment_content='Copy' WHERE comment_ID=1;",
+          rebuild: ['wp_posts'],
+          check: 'SELECT COUNT(*) FROM cnt_m.wp_comments',
+          value: '2'
+        },
+        {
+          table: 'comments',
+          change: 'DELETE FROM wp_comments WHERE comment_ID=1;',
+          copy: "INSERT INTO wp_comments VALUES (2, 1, '1', 'Copy');",
+          rebuild: ['wp_posts'],
+          check: 'SELECT GROUP_CONCAT(comment_ID) FROM cnt_m.wp_comments',
+          value: rowMerge ? '2' : 'NULL'
+        },
+        {
+          table: 'comments',
+          change: "UPDATE wp_comments SET comment_approved='0' WHERE comment_ID=1;",
+          copy: "INSERT INTO wp_comments VALUES (2, 2, '1', 'Copy');",
+          rebuild: ['wp_posts'],
+          check: 'SELECT comment_approved FROM cnt_m.wp_comments WHERE comment_ID=1',
+          value: '0'
+        }
+      ]
+      for (const c of cases) {
+        const result = counterMerge({ ours: rowMerge ? c.copy : '', theirs: c.change })
+        assert.equal(sql(c.check), c.value, c.change)
+        assert.deepEqual(result.rebuild, c.rebuild, `${c.table}: ${c.change}`)
+      }
+    }
+  )
+}
+
+test('WordPress counter dependencies keep decisions and missing target tables safe', opts, () => {
+  const conflict = {
+    ours: "UPDATE wp_comments SET comment_approved='spam' WHERE comment_ID=1;",
+    theirs: "UPDATE wp_comments SET comment_approved='0' WHERE comment_ID=1;"
+  }
+  const kept = counterMerge(conflict)
+  assert.equal(sql('SELECT comment_approved FROM cnt_m.wp_comments WHERE comment_ID=1'), 'spam')
+  assert.deepEqual(kept.rebuild, [])
+  const taken = counterMerge({
+    ...conflict,
+    decisions: { 'db:wp_comments:["1"]:comment_approved': 'theirs' }
+  })
+  assert.equal(sql('SELECT comment_approved FROM cnt_m.wp_comments WHERE comment_ID=1'), '0')
+  assert.deepEqual(taken.rebuild, ['wp_posts'])
+  const dropped = counterMerge({ theirs: 'DROP TABLE wp_term_taxonomy; DROP TABLE wp_term_relationships;' })
+  assert.equal(
+    sql(
+      "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='cnt_m' AND table_name='wp_term_taxonomy'"
+    ),
+    '0'
+  )
+  assert.deepEqual(dropped.rebuild, [])
+})
+
+test(
+  'theme mod references renumber by entity and path without changing dimensions or cascading IDs',
+  opts,
+  () => {
+    sql(`DROP DATABASE IF EXISTS tm; CREATE DATABASE tm; USE tm;
+CREATE TABLE wp_posts (ID bigint PRIMARY KEY);
+CREATE TABLE wp_terms (term_id bigint PRIMARY KEY);
+CREATE TABLE wp_options (option_id bigint PRIMARY KEY, option_name varchar(191), option_value longtext);
+INSERT INTO wp_posts VALUES (64), (67); INSERT INTO wp_terms VALUES (64);`)
+    const mods =
+      'a:5:{s:11:"custom_logo";i:64;s:18:"custom_css_post_id";s:2:"67";s:17:"header_image_data";O:8:"stdClass":3:{s:13:"attachment_id";i:67;s:5:"width";i:64;s:6:"height";i:67;}s:18:"nav_menu_locations";a:1:{s:7:"primary";i:64;}s:5:"width";i:64;}'
+    sql(`INSERT INTO tm.wp_options VALUES(1,'theme_mods_test',X'${Buffer.from(mods).toString('hex')}')`)
+    py(`
+mapper = engine.IdMap(sql, "wp_", wp.POLICY["entities"], {})
+rules = dict(wp.POLICY["entities"])
+mapper.renumber("tm", "posts", rules["posts"], [(64, 67), (67, 70)])
+mapper.renumber("tm", "terms", rules["terms"], [(64, 90)])`)
+    const expected = mods
+      .replace('s:11:"custom_logo";i:64;', 's:11:"custom_logo";i:67;')
+      .replace('s:18:"custom_css_post_id";s:2:"67";', 's:18:"custom_css_post_id";s:2:"70";')
+      .replace('s:13:"attachment_id";i:67;', 's:13:"attachment_id";i:70;')
+      .replace('s:7:"primary";i:64;', 's:7:"primary";i:90;')
+    assert.equal(
+      Buffer.from(sql('SELECT HEX(option_value) FROM tm.wp_options WHERE option_id=1'), 'hex').toString(),
+      expected
+    )
+    assert.equal(sql('SELECT GROUP_CONCAT(ID ORDER BY ID) FROM tm.wp_posts'), '67,70')
+  }
+)
+
+test('serialized-only theme references reserve fresh IDs and receive remembered mappings', opts, () => {
+  sql(`DROP DATABASE IF EXISTS td; CREATE DATABASE td; USE td;
+CREATE TABLE wp_posts (ID bigint PRIMARY KEY); INSERT INTO wp_posts VALUES (64);
+CREATE TABLE wp_options (option_id bigint PRIMARY KEY, option_name varchar(191), option_value longtext);`)
+  const mods = 'a:1:{s:11:"custom_logo";i:1000;}'
+  sql(`INSERT INTO td.wp_options VALUES(1,'theme_mods_test',X'${Buffer.from(mods).toString('hex')}')`)
+  const result = JSON.parse(
+    py(`
+mapper = engine.IdMap(sql, "wp_", wp.POLICY["entities"], {"posts": {"1000": 1001}})
+mapper.survey(["td"])
+fresh = mapper.fresh("posts", set())
+refs = sorted(mapper.referenced("td", dict(wp.POLICY["entities"])["posts"]))
+mapper.apply("td")
+print(json.dumps({"fresh": fresh, "refs": refs}))`)
+  )
+  assert.ok(result.fresh > 1000)
+  assert.deepEqual(result.refs, [1000])
+  assert.equal(
+    Buffer.from(sql('SELECT HEX(option_value) FROM td.wp_options'), 'hex').toString(),
+    mods.replace('i:1000;', 'i:1001;')
+  )
+  assert.equal(sql('SELECT ID FROM td.wp_posts'), '64')
+})
+
+test(
+  'typed theme references retain byte lengths, Unicode and opaque payloads while refusing unsafe aliases',
+  opts,
+  () => {
+    py(`
+data = 'a:4:{s:5:"label";s:4:"Caf\u00e9";s:11:"custom_logo";s:1:"9";s:17:"header_image_data";a:2:{s:13:"attachment_id";i:9;s:5:"width";i:9;}s:6:"opaque";C:4:"Demo":1:{9}}'.encode()
+# The multibyte label has five bytes.
+data = data.replace(b's:4:"Caf', b's:5:"Caf')
+changed = wp.visit_theme_mods(data, lambda entity, number: 100 if entity == "posts" and number == 9 else number)
+expected = data.replace(b's:11:"custom_logo";s:1:"9";', b's:11:"custom_logo";s:3:"100";').replace(b's:13:"attachment_id";i:9;', b's:13:"attachment_id";i:100;')
+assert changed == expected, (changed, expected)
+assert wp.visit_theme_mods(changed, lambda entity, number: number) == changed
+for broken in [b'a:2:{s:11:"custom_logo";i:64;s:5:"width";R:2;}', b'a:2:{s:6:"holder";a:1:{s:7:"primary";i:64;}s:18:"nav_menu_locations";R:2;}', b'a:1:{s:11:"custom_logo";R:2;}', b'a:1:{s:17:"header_image_data";C:4:"Demo":1:{9}}', b'a:1:{s:11:"custom_logo";s:99:"9";}']:
+    try:
+        wp.visit_theme_mods(broken, lambda entity, number: 100)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("unsafe serialized reference was accepted")`)
+  }
+)

@@ -308,7 +308,7 @@ const RELEASE_DOC = {
   label: 'docs/references/quickstart-release.md',
   href: `${DOCS}docs/references/quickstart-release.md`
 }
-const REPO = 'JoomlArt-Products/ja-products'
+const REPO = 'JoomlArt-Products/joomlart-products'
 /** How a prompt ends when /ops must read the releases again before the admin sees the result. */
 const SYNC = (after: string) =>
   `Then tell me to press Sync GitHub (the round arrow) on the /ops Templates Management list, or to wait 10 minutes: ${after}`
@@ -396,7 +396,7 @@ function contractOutside(p: Record<string, unknown>, c: ContractFor): OutsideFix
     label: claudeCode(),
     text: [
       `Use the quickstart-contract skill to make the content contract for the Joomla release ${c.tag} (currently ${c.version}).`,
-      'First check this machine has what the skill needs (DDEV, Docker, gh signed in on the machine that runs DDEV, tracy-dev 0.7.1, checkouts of claude-cowork and ja-products, and a local Tracy) and tell me what is missing before you start.',
+      'First check this machine has what the skill needs (DDEV, Docker, gh signed in on the machine that runs DDEV, tracy-dev 0.7.1, checkouts of claude-cowork and joomlart-products, and a local Tracy) and tell me what is missing before you start.',
       ...older,
       'If the skill does not cover this template (WordPress, Gavick, content in several languages), stop and tell me to ask the dev team.',
       newVersion,
@@ -919,10 +919,10 @@ const wordpressSlug = (ctx: GuideContext) => {
 
 /**
  * Where each owner's fix goes for this release (12/10/2026: every Published release on dev read).
- * A JA Joomla template is made from its source on ja-products; Tracy's own Joomla templates are
+ * A JA Joomla template is made from its source on joomlart-products; Tracy's own Joomla templates are
  * JoomlArt archives patched from `template-patches` in tch; every WordPress theme, JA ports
  * included, is generated in tch from its overlay; Tracy's EmDash templates have their own folder in
- * tch. Only the releases live on ja-products for all four.
+ * tch. Only the releases live on joomlart-products for all four.
  */
 function ownerPlace(owner: string, ctx: GuideContext): string {
   const family = familyOf(ctx)

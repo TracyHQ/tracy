@@ -1,0 +1,2 @@
+- **Approve the exact translation bundles that keep "template" in Page template.** — David · PR #129 follow-up · `chore/language-policy-page-template-term` · 2026-10-29
+  **Affects:** contribution policy data only. Two exact generated locale bundle objects from PR #129 are accepted after its Page template label was retranslated to keep the listed term "template"; other bytes still need review. No runtime change.

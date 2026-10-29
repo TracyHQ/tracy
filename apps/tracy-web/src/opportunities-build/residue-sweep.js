@@ -71,9 +71,11 @@ const CONFIRM_OVER = 5
 /**
  * How many changes one sweep round takes, the check after it finding what is left. It counts pairs, not calls: with
  * `batches` one call carries a page's pairs (`onePerPage`), so fewer calls go, while each lane's share of a round and
- * what `left` counts stay as they were.
+ * what `left` counts stay as they were. 🔒 240, NOT 120 (local measure 29/10/2026): every round ends in a read of the
+ * whole site, and JA Restaurant on WordPress (48 pages, four of them showcase copies of the home page) needed ~830 —
+ * six rounds of 120 reached `SWEEP_ROUNDS_MAX` with words left, and a counted check ran on them.
  */
-export const SWEEP_MAX_CALLS = 120
+export const SWEEP_MAX_CALLS = 240
 /** How many pairs one `content.replace` call carries (`REPLACE_MAX_CHANGES` in `tracy-site-tools` `replace.mjs`). */
 const CHANGES_MAX = 20
 /** How many characters of a text the page read keeps (`TEXT_MAX` in tracy-host `demo-residue-page.js`). */

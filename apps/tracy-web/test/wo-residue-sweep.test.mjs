@@ -22,6 +22,7 @@ import {
   planSweep,
   siteLocaleOf,
   slotOf,
+  SWEEP_MAX_CALLS,
   sweepOf
 } from '../src/opportunities-build/residue-sweep.js'
 import { composePost } from 'website-opportunities/domain/editorial-guide.mjs'
@@ -731,7 +732,7 @@ test("a post page's header date dates its own post; a card dated for a post the 
 test('a plan over the cap still dates posts and fixes links: each kind of call takes its share', () => {
   const page = '/'
   const items = [
-    ...Array.from({ length: 200 }, (_, i) => ({
+    ...Array.from({ length: SWEEP_MAX_CALLS + 80 }, (_, i) => ({
       page,
       field: 'text',
       text: `Template passage number ${i} of many`
@@ -745,7 +746,7 @@ test('a plan over the cap still dates posts and fixes links: each kind of call t
     { page, field: 'link', href: 'https://vendor.example', text: 'Join now', to: 'contact' }
   ]
   const { calls } = planSweep({ items }, options)
-  assert.equal(calls.length, 120)
+  assert.equal(calls.length, SWEEP_MAX_CALLS)
   assert.ok(
     calls.some((c) => c.action === 'content.update' && c.params.fields.post_date === '2026-10-24 00:00:00')
   )
@@ -1670,16 +1671,17 @@ test("dev 27/10/2026: the check after a sweep round keeps every page the sweep l
 })
 
 test("the plan says how many calls it holds before the cap, and every page's words a replace would clear", () => {
-  const many = Array.from({ length: 150 }, (_, i) => ({
+  const asked = SWEEP_MAX_CALLS + 30
+  const many = Array.from({ length: asked }, (_, i) => ({
     page: '/about-us/',
     text: `Template sentence number ${i} of the demo`,
     field: 'passage'
   }))
   const plan = planSweep({ items: many }, options)
-  assert.equal(plan.calls.length, 120)
-  assert.equal(plan.left, 150)
-  assert.equal(plan.shown.length, 150)
-  assert.ok(plan.shown.includes('/about-us/\u0000Template sentence number 149 of the demo'))
+  assert.equal(plan.calls.length, SWEEP_MAX_CALLS)
+  assert.equal(plan.left, asked)
+  assert.equal(plan.shown.length, asked)
+  assert.ok(plan.shown.includes(`/about-us/\u0000Template sentence number ${asked - 1} of the demo`))
 })
 
 /** A page with a banner (a heading and its lead), a card and a long passage under a section heading. */
@@ -3479,6 +3481,30 @@ test("a WordPress button's address in its block comment and its <a> is one link 
   assert.equal(links.length, 1)
   // The button's anchor, the image's anchor and the navigation link: three links shown, three counted.
   assert.equal(links[0].params.expect, 3)
+})
+
+// Local measure 28/10/2026: a Joomla T4 build kept the template's logo in all seven headers through every check.
+test("the sweep wears the business's own logo where a header shows none, once a build, never on WordPress", async () => {
+  const { businessLogoDue } = await import('../src/opportunities-build/client-demo.js')
+  const logo = { url: 'images/tracy-content/abc.jpg' }
+  const missing = [{ id: 'header-brand', pass: false, detail: [{ code: 'LOGO_NOT_IN_HEADER' }] }]
+  assert.equal(businessLogoDue(missing, { platform: 'joomla', logo }), true)
+  assert.equal(businessLogoDue(missing, { platform: 'emdash', logo }), true)
+  assert.equal(businessLogoDue(missing, { platform: 'wordpress', logo }), false)
+  assert.equal(businessLogoDue(missing, { platform: 'joomla', logo, worn: logo.url }), false)
+  assert.equal(businessLogoDue(missing, { platform: 'joomla', logo: null }), false)
+  // A header failing for another reason (the name only) is not a missing logo.
+  assert.equal(
+    businessLogoDue([{ id: 'header-brand', pass: false, detail: [{ code: 'NAME_NOT_IN_HEADER' }] }], {
+      platform: 'joomla',
+      logo
+    }),
+    false
+  )
+  assert.equal(
+    businessLogoDue([{ id: 'header-brand', pass: true, detail: [] }], { platform: 'joomla', logo }),
+    false
+  )
 })
 
 // ── One page's words, one call (dev ja-diner WordPress, 27/10/2026: 58 saves of each colour copy of Home) ──────────

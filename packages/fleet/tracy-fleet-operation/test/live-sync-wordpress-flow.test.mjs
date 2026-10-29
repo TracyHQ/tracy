@@ -608,8 +608,8 @@ test(
       assert.match(ht, /Tracy clone hardening/)
       assert.equal(ht.match(/Tracy clone hardening \(provisioned/g).length, 1)
 
-      // What WordPress must redo: the comment counts of the posts that came over.
-      assert.match(s.dockerLog(), /^web wordpress -e TRACY_SYNC_REBUILD=posts$/m)
+      // Posts affect both approved-comment counts and taxonomy post counts.
+      assert.match(s.dockerLog(), /^web wordpress -e TRACY_SYNC_REBUILD=posts,term_taxonomy$/m)
       assert.doesNotMatch(s.dockerLog(), /^web joomla/m)
       assert.deepEqual(first.apply.after, {
         largeFilesCopied: 0,
@@ -1136,6 +1136,88 @@ test('WooCommerce derived background rows do not create a backup or count as cus
 })
 
 test(
+  'WooCommerce HPOS order placed on live under a number the copy holds moves with its placeholder; it never attaches to the copy post (#107)',
+  opts,
+  () => {
+    const s = stack(WC_TABLES)
+    try {
+      sql(
+        `INSERT INTO wp_posts (ID, post_content, post_title, post_status, post_type)
+      VALUES (46, 'Tracy content', 'Tracy post', 'publish', 'post');`,
+        'wordpress'
+      )
+      sql(
+        `INSERT INTO wp_posts (ID, post_content, post_title, post_status, post_type)
+      VALUES (46, '', 'Order placeholder', 'draft', 'shop_order_placehold');
+      INSERT INTO wp_wc_orders VALUES (46, 'wc-processing', 99.00);
+      ${WC_CHILDREN.map((name) => `INSERT INTO wp_${name} VALUES (1, 46, 'order child');`).join('\n')}`,
+        'livesrc'
+      )
+      const answer = s.sync(s.read())
+      assert.equal(answer.state, 'applied', JSON.stringify(answer))
+      // The copy's post keeps its number; the live order and its placeholder share a new one.
+      assert.equal(sql('SELECT post_title FROM wp_posts WHERE ID=46', 'wordpress'), 'Tracy post')
+      const moved = sql("SELECT ID FROM wp_posts WHERE post_type='shop_order_placehold'", 'wordpress')
+      assert.notEqual(moved, '46')
+      assert.equal(sql('SELECT COUNT(*) FROM wp_wc_orders WHERE id=46', 'wordpress'), '0')
+      assert.equal(sql(`SELECT total_amount FROM wp_wc_orders WHERE id=${moved}`, 'wordpress'), '99.00')
+      // Real item meta has no order_id (it names its line); the fixture's column is not an order's.
+      for (const name of WC_CHILDREN.filter((n) => n !== 'woocommerce_order_itemmeta')) {
+        assert.equal(sql(`SELECT COUNT(*) FROM wp_${name} WHERE order_id=46`, 'wordpress'), '0', name)
+        assert.equal(sql(`SELECT COUNT(*) FROM wp_${name} WHERE order_id=${moved}`, 'wordpress'), '1', name)
+      }
+      // A second sync with nothing new keeps it so.
+      const again = s.sync(s.read())
+      assert.equal(again.state, 'applied', JSON.stringify(again))
+      assert.equal(sql('SELECT COUNT(*) FROM wp_wc_orders WHERE id=46', 'wordpress'), '0')
+      assert.equal(sql(`SELECT status FROM wp_wc_orders WHERE id=${moved}`, 'wordpress'), 'wc-processing')
+    } finally {
+      s.dispose()
+    }
+  }
+)
+
+test(
+  'a live record squatting on a remembered number moves, and a plugin row naming it is held, not pointed at another record (#107)',
+  opts,
+  () => {
+    const s = stack(
+      'CREATE TABLE wp_myplugin_rows (id bigint NOT NULL PRIMARY KEY, post_id bigint, note varchar(50));'
+    )
+    try {
+      // First sync: both sides made post 46, the live one is remembered under a new number.
+      sql(
+        "INSERT INTO wp_posts (ID, post_content, post_title, post_status, post_type) VALUES (46, '', 'Tracy post', 'publish', 'post');",
+        'wordpress'
+      )
+      sql(
+        "INSERT INTO wp_posts (ID, post_content, post_title, post_status, post_type) VALUES (46, '', 'Live post', 'publish', 'post');",
+        'livesrc'
+      )
+      const first = s.sync(s.read())
+      assert.equal(first.state, 'applied', JSON.stringify(first))
+      const copyOfLive = Number(sql("SELECT ID FROM wp_posts WHERE post_title='Live post'", 'wordpress'))
+      assert.notEqual(copyOfLive, 46)
+      // Then the live site makes a post on that remembered number, and a plugin row names it.
+      sql(
+        `INSERT INTO wp_posts (ID, post_content, post_title, post_status, post_type) VALUES (${copyOfLive}, '', 'Live squatter', 'publish', 'post');
+        INSERT INTO wp_myplugin_rows VALUES (1, ${copyOfLive}, 'names the squatter');`,
+        'livesrc'
+      )
+      const second = s.sync(s.read())
+      assert.ok(
+        (second.held ?? []).some(
+          (h) => h.table === 'wp_myplugin_rows' && h.column === 'post_id' && h.live === copyOfLive
+        ),
+        JSON.stringify(second)
+      )
+    } finally {
+      s.dispose()
+    }
+  }
+)
+
+test(
   'WooCommerce HPOS order with a placeholder and child rows is one record with all business data retained',
   opts,
   () => {
@@ -1217,6 +1299,57 @@ test(
       } finally {
         s.dispose()
       }
+    }
+  }
+)
+
+test(
+  'WordPress logo and header follow attachment renumbering through Sync and the next Preview',
+  opts,
+  () => {
+    const s = stack(
+      "INSERT INTO wp_options(option_id,option_name,option_value) VALUES (30,'stylesheet','shop');"
+    )
+    const mods = (id) =>
+      `a:3:{s:11:"custom_logo";i:${id};s:12:"header_video";i:${id};s:17:"header_image_data";O:8:"stdClass":3:{s:13:"attachment_id";i:${id};s:5:"width";i:64;s:6:"height";i:64;}}`
+    try {
+      sql(
+        "INSERT INTO wp_posts(ID,post_content,post_title,post_name,post_type) VALUES(64,'Tracy body','Tracy new post','tracy-new','post');",
+        'wordpress'
+      )
+      sql(
+        "INSERT INTO wp_posts(ID,post_content,post_title,post_name,post_type) VALUES(64,'','Live logo','live-logo','attachment');",
+        'livesrc'
+      )
+      sql(
+        `UPDATE wp_options SET option_value=${sqlText(mods(64))} WHERE option_name='theme_mods_shop';`,
+        'livesrc'
+      )
+      const answer = s.sync(s.read())
+      assert.equal(answer.state, 'applied', JSON.stringify(answer))
+      const id = JSON.parse(readFileSync(join(s.priv, 'sync', 'id-map.json'))).posts['64']
+      assert.ok(id > 64)
+      assert.equal(
+        value("SELECT HEX(option_value) FROM wp_options WHERE option_name='theme_mods_shop'"),
+        mods(id)
+      )
+      assert.equal(value('SELECT HEX(post_title) FROM wp_posts WHERE ID=64'), 'Tracy new post')
+      assert.equal(value(`SELECT HEX(post_title) FROM wp_posts WHERE ID=${id}`), 'Live logo')
+      const preview = s.pushChangeset()
+      assert.ok(!preview.items.some((i) => i.key === 'theme_mods_shop'), JSON.stringify(preview))
+      assert.ok(
+        !preview.unsupported.some((i) => String(i.name ?? '').includes('shop') && i.what === 'setting'),
+        JSON.stringify(preview.unsupported)
+      )
+      const again = s.sync(s.read())
+      assert.equal(again.state, 'applied', JSON.stringify(again))
+      assert.equal(again.database.records, 0)
+      assert.equal(
+        value("SELECT HEX(option_value) FROM wp_options WHERE option_name='theme_mods_shop'"),
+        mods(id)
+      )
+    } finally {
+      s.dispose()
     }
   }
 )

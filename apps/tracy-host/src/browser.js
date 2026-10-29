@@ -234,7 +234,7 @@ function ladder(height) {
  * @param {{ log?: Console }} [opts]
  * @returns {Promise<((args: { url: string, width: number, height: number, maxBytes?: number | null }) => Promise<Buffer>) | null>}
  */
-export async function makeShoot({ log = console, playwright = null } = {}) {
+export async function makeShoot({ log = console, playwright = null, visionStreams = 1 } = {}) {
   // `playwright` may be handed in — a test pins the context and screenshot options that way
   // without launching a browser; production lets the import decide whether this host has one.
   try {
@@ -441,7 +441,7 @@ export async function makeShoot({ log = console, playwright = null } = {}) {
       ...timing
     })
   }
-  shoot.vision = createVisionCapturer({ launched, prepare: boundOtherOrigins })
+  shoot.vision = createVisionCapturer({ launched, prepare: boundOtherOrigins, streams: visionStreams })
   return shoot
 }
 

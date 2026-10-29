@@ -10,20 +10,20 @@
   "steps": [
     "S1: Read manifest.json of contracts ja-essence/wp7/1.0.18, ja-impact/wp7/1.0.9, ja-kinetic/wp7/1.0.9, ja-morgan/wp7/1.1.14, ja-nova/wp7/1.1.12, ja-vega/wp7/1.1.14, tracy-base/wp7/1.1.4 and tracy-business/wp7/1.3.6, and apps/tracy-web/src/lib/template-profiles.json for the same tags and versions.",
     "S2: Write a ustar webroot with ./ at 0700 and ./wp-load.php at 0600, and one at 0755/0644, and read both with readers/webroot-modes.js (the reader behind STAB-1 and scripts/check-pack-modes.mjs).",
-    "S3: Read SKILL.md and every references/*.md of .agents/skills/quickstart-contract.",
+    "S3: Moved (28/10/2026) to the worker test scripts/test/check-pack-modes.test.mjs, which CI runs whenever the quickstart-contract skill changes; the script no longer reads the skill.",
     "S4: Plan Tracy CI (scripts/ci/plan-ci.mjs planMatrix) for a pull request into develop changing only one contract manifest, the same plus scripts/check-pack-modes.mjs (with and without a tree reader), and the contract with a tree reader that throws."
   ],
   "expect": [
     "S1: every manifest names its own id, version and webroot archive; every tag has a profile row for its new version.",
     "S2: the 0600/0700 archive has 2 wrong members; the 0644/0755 archive has none.",
-    "S3: no restore or quickstart command runs inside (umask 077; ...), and no block sets umask 077 for its following commands.",
+    "S3: nothing to check here; check-pack-modes.test.mjs asserts that no restore or quickstart command in the skill runs inside (umask 077; ...) and no block sets umask 077 for its following commands.",
     "S4: contract-only plans the template-data lane (checks row starting --only lint, no tests 1/2); the mixed diff plans the same matrix with and without the lane; the throwing reader plans every row."
   ],
   "selectors": {
     "tool": "tests/regression/scripts/REG-PR-1228-wp-pack-modes.mjs"
   },
   "evidence": "12/10/2026: every demo install from the batch-1 WordPress packs failed at provision (wp-cli could not read wp-load.php); unpacking as provision does in wordpress:cli-php8.3 and running wp-cli as www-data fails on all 8 old archives and prints 7.1.3 on all 8 new ones",
-  "fence": "The contract data and profile rows in the tree, the STAB-1 mode reader on archives written by the script, the skill text, and the CI planner's own function; the script exits non-zero when any step finds a problem",
+  "fence": "The contract data and profile rows in the tree, the STAB-1 mode reader on archives written by the script, and the CI planner's own function; the script exits non-zero when any step finds a problem",
   "run": {
     "cmd": ["node", "tests/regression/scripts/REG-PR-1228-wp-pack-modes.mjs"]
   }

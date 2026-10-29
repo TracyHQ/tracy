@@ -12,7 +12,7 @@ Road to live. This skill is **the repairer**: ask the checker which rule failed,
 it passes. The skill keeps no copy of the rules: they live in `apps/tracy-web/src/lib/template-design-system-readiness/` and
 the `rule-severity.json` next to it.
 
-**Every commit, push, PR, merge, template release, upload to `ja-products`, and theme/plugin release is a STOP POINT**: say
+**Every commit, push, PR, merge, template release, upload to `joomlart-products`, and theme/plugin release is a STOP POINT**: say
 which step you are at and what is needed, then wait for whoever assigned the work to give the order.
 
 **Design-system data is read-only:** don't edit `DESIGN.md`, `vendor/tracy/refero`, `vendor/tracy/od-design-system`. Apply a
@@ -235,7 +235,7 @@ step, measurement JSON) in a dated evidence folder for the template, e.g. `evide
 3. Slot contract: `minVersion`/`maxVersion` = the version just built; `maxVersionNote` records what was checked.
 4. **STOP POINT**: give whoever assigned the work one single command (the upload, the tch PR, the final switch), and wait for
    them to run it.
-5. Once the new version is on `ja-products` (or the contract PR is deployed): ask whoever assigned the work to press **Check
+5. Once the new version is on `joomlart-products` (or the contract PR is deployed): ask whoever assigned the work to press **Check
    again** on the Design system step of Road to live, or run §1 again until no must-fix remains.
 
 ## 5. When it is not the template's job
