@@ -319,6 +319,17 @@ export function createDemoLook({
     let calls = []
     let stopCalls = new AbortController()
     let visionFailed = false
+    // Where a look's seconds go, one line a look (29/10/2026): calls held at the limit, or the browser idle while a
+    // stream's last answers come back before the next stream starts.
+    const spent = { held: 0, drained: 0, calls: 0, callMs: 0, streams: 0 }
+    const timed = async (key, fn) => {
+      const from = now()
+      try {
+        return await fn()
+      } finally {
+        spent[key] += now() - from
+      }
+    }
     // 🔒 THE LOOK'S TIME HOLDS ITS CALLS TOO (local measure 29/10/2026): with the vision provider slow, calls in flight
     // waited up to two of `CALL_MS` each while the time was checked only as frames arrived; one WordPress check ran past
     // 15 minutes and was lost (DEMO_CHECK_LOST), twice, and the agent ended its turn. When the look's time is spent, the
@@ -335,6 +346,7 @@ export function createDemoLook({
     const timeSpent = () => outOfTime?.signal.aborted === true
     /** One batch's call (and its one retry); never rejects, so a call nobody awaits yet cannot go unhandled. */
     const ask = async (batch, callSignal) => {
+      const from = now()
       try {
         let challenge = await challengeFor()
         const requestBody = requestFor(batch, challenge)
@@ -353,6 +365,9 @@ export function createDemoLook({
         return { result }
       } catch (error) {
         return { error }
+      } finally {
+        spent.calls++
+        spent.callMs += now() - from
       }
     }
     const flush = async (streamSignal) => {
@@ -364,7 +379,9 @@ export function createDemoLook({
         // before a stream broke still answers, as it did serially.
         calls.push({ batch, streamSignal, answer: ask(batch, callSignalOf()) })
       }
-      while (calls.length >= inFlight) await applyNext()
+      await timed('held', async () => {
+        while (calls.length >= inFlight) await applyNext()
+      })
     }
     /** Applies the oldest call's answer: the serial run's step, in the serial run's order. */
     const applyNext = async () => {
@@ -418,7 +435,9 @@ export function createDemoLook({
       if (frame.type === 'end') {
         if (frame.version !== 'vision-tiles/1' || typeof frame.complete !== 'boolean') invalid()
         await flush(streamSignal)
-        while (calls.length) await applyNext()
+        await timed('drained', async () => {
+          while (calls.length) await applyNext()
+        })
         terminal = true
         terminalValid = true
         streamWhy ??= frame.reason ?? null
@@ -516,6 +535,7 @@ export function createDemoLook({
     for (let offset = 0; offset < layouts.length; offset += LOOK_BATCH_PAGES) {
       const batch = layouts.slice(offset, offset + LOOK_BATCH_PAGES)
       activePaths = new Set(batch.map((layout) => layout.path))
+      spent.streams++
       terminal = false
       terminalValid = false
       streamWhy = null
@@ -534,19 +554,21 @@ export function createDemoLook({
       if (visionFailed || signal?.aborted) stopCalls.abort()
       // The stream's own signal is aborted once it ended, whatever happened; these calls no longer depend on it.
       for (const call of calls) call.streamSignal = null
-      while (calls.length && !stopCalls.signal.aborted) {
-        const streamSaid = said
-        said = null
-        try {
-          await applyNext()
-          said = streamSaid
-        } catch (error) {
-          stopCalls.abort()
-          streamWhy = typeof error?.code === 'string' ? error.code : 'VISION_STREAM_FAILED'
-          said ??= String(error?.message ?? error).slice(0, 160)
+      await timed('drained', async () => {
+        while (calls.length && !stopCalls.signal.aborted) {
+          const streamSaid = said
+          said = null
+          try {
+            await applyNext()
+            said = streamSaid
+          } catch (error) {
+            stopCalls.abort()
+            streamWhy = typeof error?.code === 'string' ? error.code : 'VISION_STREAM_FAILED'
+            said ??= String(error?.message ?? error).slice(0, 160)
+          }
         }
-      }
-      await Promise.all(calls.map((call) => call.answer))
+        await Promise.all(calls.map((call) => call.answer))
+      })
       calls = []
       stopCalls = new AbortController()
       visionFailed = false
@@ -571,6 +593,10 @@ export function createDemoLook({
       }
     }
     if (lookTimer) clearTimeout(lookTimer)
+    const secs = (ms) => (ms / 1000).toFixed(1)
+    console.info(
+      `[demo-look] ${site?.site_key ?? site?.label ?? 'site'}: ${layouts.length} page(s) in ${spent.streams} stream(s), ${pictures} tiles, ${spent.calls} call(s)${spent.calls ? ` of ${secs(spent.callMs / spent.calls)}s on average` : ''} (${inFlight} at once); ${secs(now() - started)}s, ${secs(spent.held)}s held at the call limit, ${secs(spent.drained)}s waiting for answers at stream ends`
+    )
     const unlooked = layouts.flatMap((layout) => {
       const missing = ['desktop', 'phone'].filter((viewport) => {
         const state = states.get(`${layout.path}\n${viewport}`)
