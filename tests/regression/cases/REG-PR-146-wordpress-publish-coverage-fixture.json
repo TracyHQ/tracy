@@ -7,7 +7,9 @@
   "cms": ["wp"],
   "needs": [],
   "flaky_model": false,
-  "steps": ["Run the Publish cases of tracy-web's ops quickstarts suite against Postgres (TEST_DATABASE_URL)."],
+  "steps": [
+    "Run the Publish cases of tracy-web's ops quickstarts suite against Postgres (TEST_DATABASE_URL)."
+  ],
   "expect": [
     "A card served by a lower contract publishes with exactly one LOWER_CONTRACT warning (200).",
     "A card bound exactly to its contract publishes with no warning (200).",
