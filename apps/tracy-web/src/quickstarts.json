@@ -1529,6 +1529,39 @@
     "multilingual": false,
     "contract": "ja-essence/j6/1.0.9"
   },
+  "quickstart/ja-cagox/j6": {
+    "platform": "joomla",
+    "version": "1.0.2",
+    "webroot": {
+      "file": "ja-cagox-j6-webroot-1.0.2.tar.gz",
+      "bytes": 107553299,
+      "sha256": "109c45a5a4db1e857db5f40334bcc63f24fc8d257c143ebd51b27aa44f46a6b7",
+      "githubAssetId": 689235322,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-cagox%2Fj6/ja-cagox-j6-webroot-1.0.2.tar.gz"
+    },
+    "database": {
+      "file": "ja-cagox-j6-database-1.0.2.sql.gz",
+      "bytes": 249456,
+      "sha256": "b4900d134bf5e19f7e600a070e17c61159b222f8a7d07fd1b8f2af8094329cef",
+      "githubAssetId": 689235275,
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/quickstart%2Fja-cagox%2Fj6/ja-cagox-j6-database-1.0.2.sql.gz"
+    },
+    "cowork": {
+      "file": "pkg_claudecowork-0.24.75.zip",
+      "version": "0.24.75",
+      "bytes": 543938,
+      "sha256": "26d16a664fc946be76af92f6c7a6c004d0441d7f87adaf10c3baa205158d9764",
+      "url": "https://github.com/TracyHQ/claude-cowork/releases/download/joomla-v0.24.75/pkg_claudecowork-0.24.75.zip",
+      "contractFiles": {
+        "content-map.json": "406118b15ad17254b042550e3ca5c2f56866ba0d820d7e2eef76c55a0af158b1",
+        "manifest.json": "21a997237138495af86cb3cdc299cb3ab960d98b6816065271edea108e6bd82c",
+        "presentation-lock.json": "0f2d1bb0978f0d33c78add40e99e3daaa7c72ae835b266f654b6935e9b4c6621",
+        "showcase-nav-map.json": "30d413781804dc0e90149a16ad6cd237771826858c3c17a560905d518c4dc5b5"
+      }
+    },
+    "multilingual": false,
+    "contract": "ja-cagox/j6/1.0.2"
+  },
   "quickstart/ja-diner/wp7": {
     "platform": "wordpress",
     "version": "1.0.1",
