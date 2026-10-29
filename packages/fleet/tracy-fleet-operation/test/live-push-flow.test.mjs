@@ -219,6 +219,20 @@ function liveEngine(liveDir, { templateFiles = null } = {}) {
     req.on('end', () => {
       const { token, action, params = {} } = JSON.parse(body)
       state.calls.push(action)
+      // claude-cowork 0.24.73 on a PHP below its minimum: HTTP 200 and this answer.
+      if (state.phpTooOldBatch && action === 'content.batch') {
+        res.writeHead(200, { 'content-type': 'application/json' })
+        res.end(
+          JSON.stringify({
+            ok: false,
+            error: 'php_too_old',
+            code: 'php_too_old',
+            php: '7.3.33',
+            min: '7.4.0'
+          })
+        )
+        return
+      }
       if (state.blockBatch && action === 'content.batch') {
         res.writeHead(403, { 'content-type': 'text/html' })
         res.end('blocked')
@@ -811,6 +825,36 @@ test('the shell preserves partial writes and Undo after a firewall blocks a late
     const back = (await s.runPush(['--op', 'undo', '--push-id', pushId], engine)).answer
     assert.equal(back.restored.length, 1, JSON.stringify(back))
     assert.equal(readFileSync(join(s.live, path), 'utf8'), '.b {}\n')
+  } finally {
+    await engine.close()
+    s.dispose()
+  }
+})
+
+test('a PHP too old met mid-Apply reaches the push answer with both versions, the earlier writes kept', {
+  ...opts,
+  timeout: 900_000
+}, async () => {
+  const s = stack()
+  const engine = await liveEngine(s.live)
+  try {
+    sql("UPDATE jos_content SET title='After' WHERE id=1", 'joomla')
+    const path = 'media/templates/site/cassiopeia/css/user.css'
+    write(s.webroot, { [path]: '.b { color: green }\n' })
+    const previewId = id()
+    assert.equal((await s.runPush(['--op', 'preview', '--preview-id', previewId], engine)).answer.ok, true)
+    engine.phpTooOldBatch = true
+    const args = ['--op', 'apply', '--preview-id', previewId, '--push-id', id()]
+    const { answer } = await s.runPush(args, engine)
+    assert.equal(answer.ok, false)
+    assert.equal(answer.code, 'LIVE_PHP_TOO_OLD', JSON.stringify(answer))
+    assert.equal(answer.php, '7.3.33')
+    assert.equal(answer.min, '7.4.0')
+    assert.equal(answer.state, 'partial')
+    assert.deepEqual(
+      answer.written.map((w) => w.id),
+      [`file:${path}`]
+    )
   } finally {
     await engine.close()
     s.dispose()

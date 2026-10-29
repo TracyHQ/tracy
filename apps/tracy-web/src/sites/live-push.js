@@ -26,7 +26,7 @@
  */
 import { randomUUID } from 'node:crypto'
 import { audit, auditSiteWrite, releaseWriteLease, takeWriteLease } from './store.js'
-import { SYNC_PLATFORMS, lastJson } from './live-sync.js'
+import { SYNC_PLATFORMS, lastJson, phpTooOldOf } from './live-sync.js'
 import {
   PREVIEW_TTL_MS,
   PUSH_MAX_ITEMS,
@@ -665,8 +665,14 @@ export function view(row, { now = Date.now(), undoable = false } = {}) {
     errorDetail: row.error
       ? failureDetailOf(row.phase === 'preview' ? row.preview : row.phase === 'apply' ? row.result : null)
       : null,
+    // LIVE_PHP_TOO_OLD: the live site's PHP and the one Claude Cowork needs (`live-sync.js` phpTooOldOf).
+    php:
+      row.error === 'LIVE_PHP_TOO_OLD'
+        ? phpTooOldOf(row.phase === 'preview' ? row.preview : row.phase === 'apply' ? row.result : null)
+        : null,
     undoError: row.undo_error ?? null,
     undoErrorDetail: row.undo_error ? failureDetailOf(row.undo) : null,
+    undoPhp: row.undo_error === 'LIVE_PHP_TOO_OLD' ? phpTooOldOf(row.undo) : null,
     startedAt: new Date(row.created_at).toISOString(),
     updatedAt: new Date(row.updated_at).toISOString(),
     startedBy: row.created_by ?? null,

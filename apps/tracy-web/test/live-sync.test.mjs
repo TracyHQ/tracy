@@ -13,7 +13,7 @@ import { readConfig } from '../src/config.js'
 import { hostCall, hostJob } from '../src/host/client.js'
 import { mintSession } from '../src/lib/session.js'
 import { writeComponent, currentComponent, notePresence, takeWriteLease } from '../src/sites/store.js'
-import { openConflicts, partOfTable, view } from '../src/sites/live-sync.js'
+import { openConflicts, partOfTable, phpTooOldOf, view } from '../src/sites/live-sync.js'
 import { sweepLiveSyncReads } from '../src/cron.js'
 
 const db = fileDb()
@@ -844,6 +844,63 @@ test(
     }
   }
 )
+
+test(
+  'a live site whose PHP is too old for Claude Cowork is filed LIVE_PHP_TOO_OLD with both versions',
+  opts,
+  async () => {
+    const { pool } = db
+    // live-pull.mjs's answer to claude-cowork 0.24.73 refusing PHP 7.3.33, wrapped or not by the host.
+    const read = { ok: false, code: 'LIVE_PHP_TOO_OLD', php: '7.3.33', min: '7.4.0' }
+    for (const answer of [
+      { ok: false, code: 'LIVE_PHP_TOO_OLD', read },
+      { ok: false, code: 'LIVE_READ_FAILED', read }
+    ]) {
+      await db.reset()
+      const net = network({ answers: { 'webroot-sync': answer } })
+      const { send, cookieFor } = harness(pool, net.fetchImpl)
+      await importedSite(pool)
+      const owner = await cookieFor('owner@x.y')
+      await send('POST', '/api/sites/shop.example/sync', owner)
+      const { sync } = await (await send('GET', '/api/sites/shop.example/sync', owner)).json()
+      assert.equal(sync.error, 'LIVE_PHP_TOO_OLD', JSON.stringify(answer))
+      assert.deepEqual(sync.php, { php: '7.3.33', min: '7.4.0' })
+    }
+  }
+)
+
+test('pure pieces: LIVE_PHP_TOO_OLD names only versions, from the answer, its read or a push sync', () => {
+  assert.deepEqual(phpTooOldOf({ ok: false, code: 'LIVE_PHP_TOO_OLD', php: '7.3.33', min: '7.4.0' }), {
+    php: '7.3.33',
+    min: '7.4.0'
+  })
+  assert.deepEqual(
+    phpTooOldOf({
+      ok: false,
+      code: 'SYNC_FAILED',
+      sync: {
+        ok: false,
+        code: 'LIVE_READ_FAILED',
+        read: { code: 'LIVE_PHP_TOO_OLD', php: '7.2.1', min: '7.4.0' }
+      }
+    }),
+    { php: '7.2.1', min: '7.4.0' }
+  )
+  // Anything but a bare version is dropped, never shown to the owner.
+  assert.deepEqual(phpTooOldOf({ code: 'LIVE_PHP_TOO_OLD', php: '<b>7.3</b>', min: null }), {
+    php: null,
+    min: null
+  })
+  assert.equal(phpTooOldOf({ ok: false, code: 'LIVE_BLOCKED' }), null)
+  const row = { id: 'x', state: 'failed', created_at: new Date(), updated_at: new Date() }
+  const answer = {
+    ok: false,
+    code: 'LIVE_PHP_TOO_OLD',
+    read: { code: 'LIVE_PHP_TOO_OLD', php: '7.3.33', min: '7.4.0' }
+  }
+  assert.deepEqual(view({ ...row, error: 'LIVE_PHP_TOO_OLD', answer }).php, { php: '7.3.33', min: '7.4.0' })
+  assert.equal(view({ ...row, error: 'SYNC_FAILED', answer }).php, null)
+})
 
 test('pure pieces: a busy live read names the parts of the site that kept changing, cut short (#1664)', () => {
   const row = (answer) => ({

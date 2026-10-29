@@ -94,6 +94,21 @@ class WriteFailed extends Error {
 }
 /** A failure worth asking again: the site's 429/5xx, the network, or its write lock held a moment. */
 class Transient extends Error {}
+
+/** live-pull.mjs `STOP_NOW`: failures no other door, call or retry can change. */
+const STOP_NOW = ['TOKEN_REFUSED', 'LIVE_PASSWORD_PROTECTED', 'LIVE_RATE_LIMITED', 'LIVE_PHP_TOO_OLD']
+
+/** live-pull.mjs `phpTooOld`: the engine refusing to run on the site's PHP, with both versions. */
+function phpTooOld(reply) {
+  const version = (value) => (/^\d+(\.\d+){0,3}$/.test(String(value ?? '')) ? String(value) : null)
+  const error = new WriteFailed('LIVE_PHP_TOO_OLD')
+  error.php = version(reply.php)
+  error.min = version(reply.min)
+  // The engine answered and ran nothing: a write sent with it did not land (live-write-requests.mjs),
+  // so the stop is this code, not WRITE_OUTCOME_UNKNOWN.
+  error.definitelyRefused = true
+  return error
+}
 /** The engine said no to one action: `{error, message}` as it answered, for the item it was about. */
 class Refused extends Error {
   constructor(action, reply) {
@@ -239,6 +254,7 @@ async function call(endpoint, token, action, params = {}) {
   if (!reply.ok) {
     if (['unauthorized', 'forbidden', 'bad_token'].includes(reply.error))
       throw new WriteFailed('TOKEN_REFUSED')
+    if (reply.error === 'php_too_old') throw phpTooOld(reply)
     // Another write holds the site's write lock for a moment: asked again, like a busy server.
     if (reply.error === 'writer_busy') {
       const busy = new Transient(`${action}: writer_busy`)
@@ -280,7 +296,7 @@ async function door(endpoint, token) {
     } catch (error) {
       last = error
       if (error.code === 'LIVE_BLOCKED') blocked = error
-      if (['TOKEN_REFUSED', 'LIVE_PASSWORD_PROTECTED', 'LIVE_RATE_LIMITED'].includes(error.code)) throw error
+      if (STOP_NOW.includes(error.code)) throw error
     }
   }
   if (blocked) throw blocked
@@ -1326,6 +1342,9 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
   const result = {
     ok: !stopped,
     ...(stopped ? { code: stopped.code ?? 'WRITE_FAILED' } : {}),
+    // The engine refusing the site's PHP mid-Apply: its versions (`phpTooOld`, already bare) go along,
+    // so Send to live can name them — webroot-live-push.sh `finish` hands this file on as it is.
+    ...(stopped?.code === 'LIVE_PHP_TOO_OLD' ? { php: stopped.php ?? null, min: stopped.min ?? null } : {}),
     state,
     applyId,
     written,
@@ -1870,5 +1889,8 @@ main(process.argv.slice(2))
         : error instanceof WriteFailed
           ? error.detail
           : own()
-    console.log(JSON.stringify({ ok: false, code: code ?? 'WRITE_FAILED', ...(detail ? { detail } : {}) }))
+    const php = code === 'LIVE_PHP_TOO_OLD' ? { php: error.php ?? null, min: error.min ?? null } : {}
+    console.log(
+      JSON.stringify({ ok: false, code: code ?? 'WRITE_FAILED', ...(detail ? { detail } : {}), ...php })
+    )
   })

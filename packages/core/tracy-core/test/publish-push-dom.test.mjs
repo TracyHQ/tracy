@@ -548,6 +548,30 @@ test('a push the live site refused for its switch says where to turn it on; a fa
     /“Allow PHP in template files” in the Claude Cowork options/
   )
 
+  // An Apply stopped after some writes by a live PHP too old for Claude Cowork: the partial result
+  // says which PHP it runs and which it needs, the code beside it for support.
+  await open(() =>
+    json(200, {
+      available: true,
+      push: row({
+        id: 'p8',
+        state: 'failed',
+        phase: 'apply',
+        error: 'LIVE_PHP_TOO_OLD',
+        php: { php: '7.3.33', min: '7.4.0' },
+        pushedAt: ago(1),
+        preview,
+        result: { ...result, failed: [] }
+      }),
+      lastPush: null
+    })
+  )
+  assert.equal(phase(), 'pushed')
+  assert.ok(
+    document.body.textContent.includes(t('sync.error.livePhpTooOld', { php: '7.3.33', min: '7.4.0' })),
+    document.body.textContent
+  )
+
   // A preview that stopped: its code and why, one line for support, on the Review step.
   const detail = 'SqlError: ERROR 1267 (HY000) at line 125: Illegal mix of collations'
   await open(() =>
@@ -831,6 +855,11 @@ test('the pure parts: phases from answers, the step each is drawn on, failure wo
     TOKEN_REFUSED: 'sync.error.liveToken'
   }))
     assert.equal(lib.pushFailureText(code, t), t(key))
+  assert.equal(
+    lib.pushFailureText('LIVE_PHP_TOO_OLD', t, 200, { php: '7.3.33', min: '7.4.0' }),
+    t('sync.error.livePhpTooOld', { php: '7.3.33', min: '7.4.0' })
+  )
+  assert.equal(lib.pushFailureText('LIVE_PHP_TOO_OLD', t), t('sync.error.livePhpTooOldPlain'))
   assert.equal(lib.pushFailureText('NOT_PUSHED', t), t('push.error.notPushed'))
   assert.equal(lib.pushFailureText('WEIRD', t), t('push.failed', { error: 'WEIRD' }))
   assert.equal(lib.itemName({ id: 'x', kind: 'post', title: null }, t), 'Post')

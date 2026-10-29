@@ -1585,6 +1585,12 @@ export const en = {
     'Your live site returned a blocked or non-engine response. Check its firewall or bot protection and allow Tracy’s requests.',
   'sync.error.livePassword':
     'Your live site requires an HTTP password. Allow Tracy to access the Claude Cowork endpoint without that password, then try again.',
+  /** The live site's PHP is below what Claude Cowork needs (LIVE_PHP_TOO_OLD), both versions known. */
+  'sync.error.livePhpTooOld':
+    'Your live site runs PHP {php}. Claude Cowork needs PHP {min} or newer. Ask your host to upgrade PHP, then try again.',
+  /** LIVE_PHP_TOO_OLD from an answer that did not name the versions. */
+  'sync.error.livePhpTooOldPlain':
+    'Your live site runs a PHP version too old for Claude Cowork. Ask your host to upgrade PHP, then try again.',
   'sync.error.liveRateLimited':
     'Your live site is limiting requests. Wait before trying again; Tracy respects its Retry-After delay.',
   'sync.error.liveToken':

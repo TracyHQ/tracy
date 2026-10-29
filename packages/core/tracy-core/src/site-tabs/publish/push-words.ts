@@ -7,6 +7,7 @@
 import { interfaceLocale } from '../../interface-languages/index.mjs'
 import type { Translate } from '../../team/translate'
 import { fieldsText, labelText, whatText } from './record-words'
+import { type PhpTooOld, phpTooOldText } from './sync-words'
 
 /** One change as `view()` names it: titles and field names, never values. */
 export type PushItem = {
@@ -119,6 +120,9 @@ export type PushView = {
   errorDetail?: string | null
   undoError: string | null
   undoErrorDetail?: string | null
+  /** LIVE_PHP_TOO_OLD (`error` / `undoError`): the live site's PHP and the one Claude Cowork needs. */
+  php?: PhpTooOld | null
+  undoPhp?: PhpTooOld | null
   startedAt: string
   pushedAt: string | null
   undoneAt: string | null
@@ -211,7 +215,8 @@ export function pushPhaseOf(
 }
 
 /** Why a phase did not finish, in a sentence a customer can act on; the code stays for support. */
-export function pushFailureText(code: string, t: Translate, max = 200): string {
+export function pushFailureText(code: string, t: Translate, max = 200, php?: PhpTooOld | null): string {
+  if (code === 'LIVE_PHP_TOO_OLD') return phpTooOldText(php, t)
   const liveErrors: Record<string, string> = {
     LIVE_BLOCKED: 'sync.error.liveBlocked',
     LIVE_PASSWORD_PROTECTED: 'sync.error.livePassword',

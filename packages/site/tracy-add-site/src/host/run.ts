@@ -745,7 +745,12 @@ async function execute(run: RunState, input: StartInput, bannedBefore = false): 
     update(run, {
       state: 'error',
       error: door.refusal,
-      ...(door.refusal === 'php_too_old' ? needPhp() : {}),
+      // The engine's own versions when it named them, else the manifest's minimum.
+      ...(door.refusal === 'php_too_old'
+        ? door.minimumPhp
+          ? { errorDetail: { ...(door.php ? { php: door.php } : {}), minimumPhp: door.minimumPhp } }
+          : needPhp()
+        : {}),
       diagnostic: door.detail
     })
     return

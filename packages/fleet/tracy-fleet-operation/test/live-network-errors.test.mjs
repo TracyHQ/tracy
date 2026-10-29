@@ -71,6 +71,26 @@ for (const direction of ['pull', 'push']) {
       rmSync(dir, { recursive: true, force: true })
     }
   })
+  test(`${direction}: an engine refusing the site's PHP is LIVE_PHP_TOO_OLD with both versions`, async () => {
+    // claude-cowork 0.24.73 on PHP below 7.4: HTTP 200 and this answer, on both doors.
+    const live = await stand((_req, res) => {
+      res.writeHead(200, { 'content-type': 'application/json' })
+      res.end(
+        JSON.stringify({ ok: false, error: 'php_too_old', code: 'php_too_old', php: '7.3.33', min: '7.4.0' })
+      )
+    })
+    const dir = mkdtempSync(join(tmpdir(), 'live-network-php-'))
+    try {
+      const answer = await worker(direction, live.endpoint, dir).ended
+      assert.equal(answer.code, 'LIVE_PHP_TOO_OLD', JSON.stringify(answer))
+      assert.equal(answer.php, '7.3.33')
+      assert.equal(answer.min, '7.4.0')
+      assert.equal(live.calls.length, 1, 'no other door, no retry: the PHP will not change')
+    } finally {
+      await live.close()
+      rmSync(dir, { recursive: true, force: true })
+    }
+  })
   test(`${direction}: a 429 respects Retry-After and preserves rate-limit classification`, async () => {
     const live = await stand((_req, res) => {
       res.writeHead(429, { 'retry-after': '2' })

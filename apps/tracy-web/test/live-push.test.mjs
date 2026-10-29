@@ -16,7 +16,7 @@ import { hostCall, hostJob } from '../src/host/client.js'
 import { mintSession } from '../src/lib/session.js'
 import { takeWriteLease, writeComponent } from '../src/sites/store.js'
 import { pushStageOf, previewOf } from '../src/sites/live-push-contract.js'
-import { failureDetailOf, stoppedAnswer } from '../src/sites/live-push.js'
+import { failureDetailOf, stoppedAnswer, view } from '../src/sites/live-push.js'
 
 const db = fileDb()
 before(db.open)
@@ -655,6 +655,33 @@ test('why a phase stopped: the detail, the inner sync’s, or a stopped step —
     { ok: false, code: 'LIVE_UNREACHABLE', detail: 'UNREACHABLE' }
   )
   assert.equal(stoppedAnswer({ output: '==> [1s] stage: writing\n' }), null)
+})
+
+test('a push stopped by a live PHP too old for Claude Cowork names both versions, in each phase', () => {
+  const at = new Date()
+  const row = { id: 'p', state: 'failed', created_at: at, updated_at: at, error: 'LIVE_PHP_TOO_OLD' }
+  // live-write.mjs's answer (webroot-live-push.sh `engine_refusal`) and the preview's inner sync.
+  const written = { ok: false, code: 'LIVE_PHP_TOO_OLD', php: '7.3.33', min: '7.4.0' }
+  const preview = {
+    ok: false,
+    code: 'LIVE_PHP_TOO_OLD',
+    sync: { ok: false, code: 'LIVE_PHP_TOO_OLD', read: written }
+  }
+  assert.deepEqual(view({ ...row, phase: 'apply', result: written }).php, { php: '7.3.33', min: '7.4.0' })
+  assert.deepEqual(view({ ...row, phase: 'preview', preview }).php, { php: '7.3.33', min: '7.4.0' })
+  const undone = view({
+    ...row,
+    error: null,
+    state: 'pushed',
+    phase: 'undo',
+    undo_error: 'LIVE_PHP_TOO_OLD',
+    undo: written
+  })
+  assert.deepEqual(undone.undoPhp, { php: '7.3.33', min: '7.4.0' })
+  // An Apply stopped after some writes: webroot-live-push.sh `finish` hands written.json on whole.
+  const partial = { ...written, state: 'partial', written: [{ id: 'file:a.css' }], pushId: 'p', sync: {} }
+  assert.deepEqual(view({ ...row, phase: 'apply', result: partial }).php, { php: '7.3.33', min: '7.4.0' })
+  assert.equal(view({ ...row, error: 'LIVE_BLOCKED', phase: 'apply', result: written }).php, null)
 })
 
 test('the contract helpers: stages from host steps, and a preview answer grouped by op', () => {

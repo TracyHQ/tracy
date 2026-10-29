@@ -1182,8 +1182,14 @@ export type SiteInfo = {
   reached: boolean
   /** The HTTP status the door answered with; absent when no answer came back at all. */
   status?: number
-  /** The door answered 5xx with a PHP parse error: the engine is too new for this PHP. */
+  /**
+   * The engine cannot run on this PHP: the door answered 5xx with a PHP parse error, or (claude-cowork
+   * 0.24.73+) the engine said so itself, `{ok: false, error: 'php_too_old', php, min}` with HTTP 200.
+   */
   phpError?: boolean
+  /** On an engine's own `php_too_old`: the PHP the site runs and the one the engine needs, as it said. */
+  php?: string
+  minimumPhp?: string
   basicChallenge?: boolean
   /** A firewall answered instead of the engine (`firewallOf`, no `generic`). */
   firewall?: string
@@ -1236,6 +1242,8 @@ export async function readSiteInfo(
       component?: string
       version?: string
       error?: unknown
+      php?: unknown
+      min?: unknown
     }
     try {
       result = JSON.parse(text)
@@ -1249,6 +1257,17 @@ export async function readSiteInfo(
         ...(firewall ? { firewall } : {})
       }
     }
+    // The engine refusing to run on this PHP (claude-cowork 0.24.73+, both doors, HTTP 200): the same
+    // `php_too_old` as a parse error, with the two versions it named — never anything else it said.
+    if (result?.ok === false && result.error === 'php_too_old')
+      return {
+        ok: false,
+        reached: false,
+        status: response.status,
+        phpError: true,
+        ...(bareVersion(result.php) ? { php: bareVersion(result.php) } : {}),
+        ...(bareVersion(result.min) ? { minimumPhp: bareVersion(result.min) } : {})
+      }
     // The `info` level first, the outer level after: the engine returns `info.component`, and the other two branches only
     // catch an older engine that once returned it flat.
     const component = result?.info?.component ?? result?.info?.version ?? result?.component ?? result?.version
@@ -1337,6 +1356,25 @@ async function askDoors(
   return { misses }
 }
 
+/** A version as the engine said it (`7.3.33`), or `undefined` for anything else. */
+function bareVersion(value: unknown): string | undefined {
+  return typeof value === 'string' && /^\d+(\.\d+){0,3}$/.test(value) ? value : undefined
+}
+
+/**
+ * The versions a `php_too_old` names: the engine's own when a door said them, else `phpDetail` of
+ * what the run read itself (phpinfo, the manifest's minimum).
+ */
+export function phpOfMisses(
+  misses: DoorMiss[],
+  php: string | undefined,
+  minimum: string | undefined
+): { php?: string; minimumPhp?: string } {
+  const said = misses.find((miss) => miss.phpError && miss.minimumPhp)
+  if (said) return { ...(said.php ? { php: said.php } : {}), minimumPhp: said.minimumPhp }
+  return phpDetail(php, minimum)
+}
+
 /** A door that did not reach the engine, with the address it was asked on. */
 type DoorMiss = SiteInfo & { endpoint: string; webRootUrl: string }
 
@@ -1348,7 +1386,14 @@ function doorMiss(at: string, misses: DoorMiss[]): Diagnostic {
   const miss = [...misses].reverse().find((one) => one.phpError) ?? misses.at(-1)
   if (!miss) return { at, check: 'no_door' }
   const path = diagnosticPath(miss.endpoint, miss.webRootUrl)
-  const check = miss.phpError ? 'parse_error' : miss.status !== undefined ? 'no_engine' : 'network'
+  // The engine saying its PHP minimum itself is not a parse error: `below_minimum`, as phpinfo's.
+  const check = miss.phpError
+    ? miss.minimumPhp
+      ? 'below_minimum'
+      : 'parse_error'
+    : miss.status !== undefined
+      ? 'no_engine'
+      : 'network'
   return {
     at,
     check,
@@ -1375,7 +1420,13 @@ function firewallMiss(at: string, misses: DoorMiss[]): { firewall: string; detai
 
 export type ResolvedDoor =
   | { endpoint: string; inline: boolean; dbDumpMany?: SiteInfo['dbDumpMany'] }
-  | { refusal: 'php_too_old' | 'cowork_not_answering' | 'basic_auth_required'; detail: Diagnostic }
+  | {
+      refusal: 'php_too_old' | 'cowork_not_answering' | 'basic_auth_required'
+      detail: Diagnostic
+      /** On `php_too_old` the engine named: the site's PHP and the one it needs. */
+      php?: string
+      minimumPhp?: string
+    }
   | { refusal: 'blocked_by_firewall'; firewall: string; detail: Diagnostic }
 
 /**
@@ -1419,7 +1470,11 @@ export async function resolveDoor(
       }
     }
     if (misses.some((miss) => miss.phpError))
-      return { refusal: 'php_too_old', detail: doorMiss('api_door', misses) }
+      return {
+        refusal: 'php_too_old',
+        detail: doorMiss('api_door', misses),
+        ...phpOfMisses(misses, undefined, undefined)
+      }
     const blocked = firewallMiss('api_door', misses)
     if (blocked) return { refusal: 'blocked_by_firewall', ...blocked }
     return { refusal: 'cowork_not_answering', detail: doorMiss('api_door', misses) }
@@ -2148,7 +2203,7 @@ async function installSteps(
         return {
           ok: false,
           reason: 'php_too_old',
-          ...phpDetail(php, needPhp),
+          ...phpOfMisses(misses, php, needPhp),
           detail: withEvidence(doorMiss(lastRoad, misses))
         }
     }
@@ -2174,7 +2229,7 @@ async function installSteps(
       return {
         ok: false,
         reason: 'php_too_old',
-        ...phpDetail(php, needPhp),
+        ...phpOfMisses(misses, php, needPhp),
         detail: doorMiss('proof', misses)
       }
     return {

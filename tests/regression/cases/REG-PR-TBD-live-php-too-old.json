@@ -1,0 +1,46 @@
+{
+  "id": "REG-PR-TBD-live-php-too-old",
+  "kind": "fix",
+  "title": "A live site whose PHP is below Claude Cowork's minimum is named LIVE_PHP_TOO_OLD with both versions, never unreachable",
+  "pr": "#TBD",
+  "area": "sync/live",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {
+    "files": "packages/fleet/tracy-fleet-operation/scripts/lib/live-pull.mjs packages/fleet/tracy-fleet-operation/scripts/lib/live-write.mjs packages/site/tracy-add-site/src/host/joomla.ts apps/tracy-web/src/sites/live-sync.js"
+  },
+  "steps": [
+    "Stand a stand-in engine that answers every call with HTTP 200 and {ok:false,error:'php_too_old',code:'php_too_old',php:'7.3.33',min:'7.4.0'} (claude-cowork 0.24.73 on PHP 7.3).",
+    "Run live-pull.mjs and live-write.mjs info against it; run a live-write apply whose door check passes and whose content call answers that refusal.",
+    "Ask the Joomla import's door (resolveDoor) and install proof against the same answer, and read the tracy-web sync and push views of the stored answers."
+  ],
+  "expect": [
+    "live-pull and live-write answer code LIVE_PHP_TOO_OLD with php 7.3.33 and min 7.4.0 after exactly one request (no other door, no retry).",
+    "A mid-Apply refusal ends LIVE_PHP_TOO_OLD (not WRITE_OUTCOME_UNKNOWN) and written.json carries php and min; other stops keep their shape.",
+    "The import refuses php_too_old with php 7.3.33, minimumPhp 7.4.0 and check below_minimum; the views carry php {php:'7.3.33', min:'7.4.0'}."
+  ],
+  "evidence": "Claude Cowork for Joomla 0.24.73 answers both doors with HTTP 200 and php_too_old on PHP below 7.4; Tracy reported it as LIVE_READ_FAILED / LIVE_UNREACHABLE or 'check Claude Cowork is installed'.",
+  "fence": "The engine's php_too_old answer maps to LIVE_PHP_TOO_OLD (fleet) and php_too_old (import) carrying only bare version strings.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "packages/fleet/tracy-fleet-operation/test/live-network-errors.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-write.test.mjs",
+      "packages/site/tracy-add-site/test/import-gates.test.mjs",
+      "apps/tracy-web/test/live-push.test.mjs",
+      "apps/tracy-web/test/live-sync.test.mjs"
+    ],
+    "tests": [
+      "pull: an engine refusing the site's PHP is LIVE_PHP_TOO_OLD with both versions",
+      "push: an engine refusing the site's PHP is LIVE_PHP_TOO_OLD with both versions",
+      "PHP too old found mid-Apply: written.json carries the engine’s versions; other stops keep their shape",
+      "an engine that says its PHP is too old is php_too_old with its own versions, at install and at the door",
+      "a push stopped by a live PHP too old for Claude Cowork names both versions, in each phase",
+      "pure pieces: LIVE_PHP_TOO_OLD names only versions, from the answer, its read or a push sync"
+    ]
+  }
+}

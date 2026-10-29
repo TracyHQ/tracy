@@ -135,7 +135,7 @@ function UndoBlock({ live, t }: { live: LivePush; t: Translate }): JSX.Element |
           {t('push.lastPush', { when: agoText(target.pushedAt), count: target.result?.pushed.length ?? 0 })}
         </p>
       )}
-      {target.undoError && <p>{pushFailureText(target.undoError, t, live.max)}</p>}
+      {target.undoError && <p>{pushFailureText(target.undoError, t, live.max, target.undoPhp)}</p>}
       {target.undoError && target.undoErrorDetail && (
         <Code code={target.undoError} detail={target.undoErrorDetail} t={t} />
       )}
@@ -367,7 +367,7 @@ function ReviewPage({ live, onBack, t }: { live: LivePush; onBack?: () => void; 
   if (phase === 'failed')
     state = (
       <Notice severity="error" title={t('push.status.failed')}>
-        <p>{pushFailureText(failure, t, live.max)}</p>
+        <p>{pushFailureText(failure, t, live.max, live.error ? null : push?.php)}</p>
         {failure && <Code code={failure} detail={live.error ? null : push?.errorDetail} t={t} />}
       </Notice>
     )
@@ -452,6 +452,7 @@ function SendPage({ live, t }: { live: LivePush; t: Translate }): JSX.Element {
     state = partial ? (
       <Notice severity="error" title={t('push.status.partial')}>
         <p>{t('push.status.partialBody', { count: push?.result?.pushed.length ?? 0 })}</p>
+        {push?.error === 'LIVE_PHP_TOO_OLD' && <p>{pushFailureText(push.error, t, live.max, push.php)}</p>}
         {push?.error && <Code code={push.error} detail={push.errorDetail} t={t} />}
       </Notice>
     ) : sent === 0 ? (
@@ -481,7 +482,7 @@ function SendPage({ live, t }: { live: LivePush; t: Translate }): JSX.Element {
   if (phase === 'failed')
     state = (
       <Notice severity="error" title={t('push.status.failed')}>
-        <p>{pushFailureText(failure, t, live.max)}</p>
+        <p>{pushFailureText(failure, t, live.max, live.error ? null : push?.php)}</p>
         {failure && <Code code={failure} detail={live.error ? null : push?.errorDetail} t={t} />}
       </Notice>
     )

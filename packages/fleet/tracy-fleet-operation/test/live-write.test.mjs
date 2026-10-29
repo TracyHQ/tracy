@@ -738,6 +738,39 @@ test('a busy site is asked again; a refused token stops before anything is writt
   }
 })
 
+test('PHP too old found mid-Apply: written.json carries the engine’s versions; other stops keep their shape', async () => {
+  const live = await engine({ records: { article: { 1: article(1) } } })
+  try {
+    // The door check (`core.manifest`) passes; the content call meets claude-cowork 0.24.73's refusal.
+    live.refuse['content.batch'] = { error: 'php_too_old', code: 'php_too_old', php: '7.3.33', min: '7.4.0' }
+    const dir = pushDir([update(1, { title: 'One' }, { title: 'Article 1' })])
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.ok, false, JSON.stringify(answer))
+    assert.equal(answer.code, 'LIVE_PHP_TOO_OLD')
+    assert.equal(answer.php, '7.3.33')
+    assert.equal(answer.min, '7.4.0')
+    const written = JSON.parse(readFileSync(join(dir, 'written.json'), 'utf8'))
+    assert.deepEqual([written.code, written.php, written.min], ['LIVE_PHP_TOO_OLD', '7.3.33', '7.4.0'])
+    assert.equal(written.counts.written, 0)
+    assert.equal(live.records.article[1].title, 'Article 1')
+    // Anything but a bare version is not handed on.
+    live.refuse['content.batch'] = { error: 'php_too_old', php: '<b>7.3</b>', min: '7.4.0' }
+    const odd = await apply(live, pushDir([update(1, { title: 'One' }, { title: 'Article 1' })]))
+    assert.deepEqual([odd.answer.code, odd.answer.php, odd.answer.min], ['LIVE_PHP_TOO_OLD', null, '7.4.0'])
+    // Another stop mid-Apply keeps written.json as before: its own code (a lost answer stays
+    // WRITE_OUTCOME_UNKNOWN), no versions.
+    live.refuse['content.batch'] = 502
+    const other = pushDir([update(1, { title: 'One' }, { title: 'Article 1' })])
+    const stopped = await apply(live, other)
+    assert.equal(stopped.answer.code, 'WRITE_OUTCOME_UNKNOWN', JSON.stringify(stopped.answer))
+    const kept = JSON.parse(readFileSync(join(other, 'written.json'), 'utf8'))
+    assert.equal(kept.code, 'WRITE_OUTCOME_UNKNOWN')
+    assert.ok(!('php' in kept) && !('min' in kept), JSON.stringify(kept))
+  } finally {
+    await live.close()
+  }
+})
+
 test('an apply cut off is taken up again: what it wrote is not written twice', async () => {
   const live = await engine({ records: { article: { 1: article(1), 2: article(2) } } })
   try {

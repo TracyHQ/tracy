@@ -183,12 +183,14 @@ PYEOF
   step "Sync from live: $(json_get "$1.json" state)$(json_get "$1.json" code)"
 }
 
-# An engine's refusal (live-write.mjs) as this job's answer, its codes the contract's.
+# An engine's refusal (live-write.mjs) as this job's answer, its codes the contract's; on
+# LIVE_PHP_TOO_OLD the site's PHP and the engine's minimum go along.
 engine_refusal() { # answer
   python3 -c 'import json,sys
 a = json.loads(sys.argv[1] or "{}")
 code = a.get("code") or "WRITE_FAILED"
-print(json.dumps({"ok": False, "code": code, **({"detail": a["detail"]} if a.get("detail") else {})}))' "$1"
+print(json.dumps({"ok": False, "code": code, **({"detail": a["detail"]} if a.get("detail") else {}),
+                 **({"php": a.get("php"), "min": a.get("min")} if code == "LIVE_PHP_TOO_OLD" else {})}))' "$1"
 }
 
 # ── preview ──────────────────────────────────────────────────────────────────────────────────
@@ -214,7 +216,7 @@ preview() {
     return 0
   fi
   if [[ "$ok" != true || "$state" != applied ]]; then
-    python3 -c 'import json,sys; s=json.load(open(sys.argv[1])); print(json.dumps({"ok": False, "code": s.get("code") if s.get("code") in ("LIVE_BLOCKED", "LIVE_PASSWORD_PROTECTED", "LIVE_RATE_LIMITED", "TOKEN_REFUSED") else "SYNC_FAILED", "sync": s}, ensure_ascii=False))' "$PREVIEW_DIR/sync.json"
+    python3 -c 'import json,sys; s=json.load(open(sys.argv[1])); print(json.dumps({"ok": False, "code": s.get("code") if s.get("code") in ("LIVE_BLOCKED", "LIVE_PASSWORD_PROTECTED", "LIVE_PHP_TOO_OLD", "LIVE_RATE_LIMITED", "TOKEN_REFUSED") else "SYNC_FAILED", "sync": s}, ensure_ascii=False))' "$PREVIEW_DIR/sync.json"
     return 0
   fi
   rm -rf "$PREVIEW_DIR/sync"

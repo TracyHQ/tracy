@@ -1563,6 +1563,15 @@ async function readSiteInfo(endpoint, token, opts = {}) {
         ...firewall ? { firewall } : {}
       };
     }
+    if (result?.ok === false && result.error === "php_too_old")
+      return {
+        ok: false,
+        reached: false,
+        status: response.status,
+        phpError: true,
+        ...bareVersion(result.php) ? { php: bareVersion(result.php) } : {},
+        ...bareVersion(result.min) ? { minimumPhp: bareVersion(result.min) } : {}
+      };
     const component = result?.info?.component ?? result?.info?.version ?? result?.component ?? result?.version;
     return {
       ok: result?.ok === true,
@@ -1605,11 +1614,19 @@ async function askDoors(webRootUrl, token, opts) {
   }
   return { misses };
 }
+function bareVersion(value) {
+  return typeof value === "string" && /^\d+(\.\d+){0,3}$/.test(value) ? value : void 0;
+}
+function phpOfMisses(misses, php, minimum) {
+  const said = misses.find((miss) => miss.phpError && miss.minimumPhp);
+  if (said) return { ...said.php ? { php: said.php } : {}, minimumPhp: said.minimumPhp };
+  return phpDetail(php, minimum);
+}
 function doorMiss(at, misses) {
   const miss = [...misses].reverse().find((one) => one.phpError) ?? misses.at(-1);
   if (!miss) return { at, check: "no_door" };
   const path10 = diagnosticPath(miss.endpoint, miss.webRootUrl);
-  const check = miss.phpError ? "parse_error" : miss.status !== void 0 ? "no_engine" : "network";
+  const check = miss.phpError ? miss.minimumPhp ? "below_minimum" : "parse_error" : miss.status !== void 0 ? "no_engine" : "network";
   return {
     at,
     check,
@@ -1653,7 +1670,11 @@ async function resolveDoor(webRootUrl, token, opts = {}) {
       };
     }
     if (misses.some((miss) => miss.phpError))
-      return { refusal: "php_too_old", detail: doorMiss("api_door", misses) };
+      return {
+        refusal: "php_too_old",
+        detail: doorMiss("api_door", misses),
+        ...phpOfMisses(misses, void 0, void 0)
+      };
     const blocked = firewallMiss("api_door", misses);
     if (blocked) return { refusal: "blocked_by_firewall", ...blocked };
     return { refusal: "cowork_not_answering", detail: doorMiss("api_door", misses) };
@@ -2124,7 +2145,7 @@ async function installSteps(session, packageUrl, latestVersion, existingToken, o
         return {
           ok: false,
           reason: "php_too_old",
-          ...phpDetail(php, needPhp),
+          ...phpOfMisses(misses2, php, needPhp),
           detail: withEvidence(doorMiss(lastRoad, misses2))
         };
     }
@@ -2145,7 +2166,7 @@ async function installSteps(session, packageUrl, latestVersion, existingToken, o
       return {
         ok: false,
         reason: "php_too_old",
-        ...phpDetail(php, needPhp),
+        ...phpOfMisses(misses, php, needPhp),
         detail: doorMiss("proof", misses)
       };
     return {
@@ -4290,7 +4311,8 @@ async function execute(run, input, bannedBefore = false) {
     update(run, {
       state: "error",
       error: door.refusal,
-      ...door.refusal === "php_too_old" ? needPhp() : {},
+      // The engine's own versions when it named them, else the manifest's minimum.
+      ...door.refusal === "php_too_old" ? door.minimumPhp ? { errorDetail: { ...door.php ? { php: door.php } : {}, minimumPhp: door.minimumPhp } } : needPhp() : {},
       diagnostic: door.detail
     });
     return;
