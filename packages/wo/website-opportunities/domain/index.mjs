@@ -66,6 +66,8 @@ export {
 } from './leftover-cleanup.mjs'
 export { pageRole } from './page-plan.mjs'
 export { pinnedCopy } from './pinned-copy.mjs'
+export { addressLines, mapsLinkOf, readContact, serviceAreasOf } from './contact-reading.mjs'
+export { checkContactFacts } from './contact-fact-check.mjs'
 export { neutralFor, neutralWords } from './neutral-copy.mjs'
 export { scriptSignature, SIGNATURE_FONT_FAMILY } from './neutral-signature.mjs'
 export { numberlessSentence } from './numberless-sentence.mjs'

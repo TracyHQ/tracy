@@ -1362,6 +1362,8 @@ export function createJoomlaEngine({
         ...art.values,
         ...plannedSlotValues(outsidePlan)
       })) {
+        // A fact the site plan wrote (the address line of a contact block) is its own evidence: the brief is its source.
+        const planFact = key in plannedSlotValues(outsidePlan)
         const slot = live.get(key)
         // A `keep` slot is written only with the demo company renamed in it (`renamedKeep`) or in the site's language
         // (`translatedKeep`), never with other words.
@@ -1382,12 +1384,13 @@ export function createJoomlaEngine({
           kept += 1
           continue
         }
-        if ((slot.requiresEvidence || factKeys.has(key)) && !prepared.evidence[key]?.trim()) {
+        if ((slot.requiresEvidence || factKeys.has(key)) && !prepared.evidence[key]?.trim() && !planFact) {
           kept += 1
           continue
         }
         changes[key] = value
         if (prepared.evidence[key]) evidence[key] = prepared.evidence[key]
+        else if (planFact) evidence[key] = value
       }
 
       // A row the site holds part of in a person's words, or that lost a cell above, is still written whole or not at all.
@@ -1890,9 +1893,14 @@ export function createJoomlaEngine({
                 ? !(judged.articles.by.get(step.id) ?? []).some((id) => out.has(id))
                 : step.kind !== 'menuItem' || !after.has(step.id) || stand.has(step.id)
           }
+          // The site plan's contact facts (one reader, `contact-reading.mjs`): the record shows the address as the brief gives it.
+          const planned = await woContent
+            ?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
+            .catch(() => null)
           const contacts = await contactSteps({
             apply,
             siteKey,
+            contact: planned?.contact ?? null,
             given: {
               email: ctx.normalized.email,
               phone: ctx.normalized.phone,

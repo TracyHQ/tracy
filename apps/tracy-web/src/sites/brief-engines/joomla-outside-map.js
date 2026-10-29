@@ -180,6 +180,23 @@ export function ownerPictureOf(/** @type {string | null} */ html, /** @type {str
  * @returns {Record<string, string>}
  */
 export function plannedSlotValues(plan) {
+  return {
+    ...Object.fromEntries(
+      (plan?.outside?.videos ?? [])
+        .filter((v) => v.decision === 'video' && v.value)
+        .map((v) => [v.key, v.value])
+    ),
+    ...plannedAddressLines(plan)
+  }
+}
+
+/**
+ * The address line of every contact block the site plan fills with a fact (its address, else the areas served), by slot key.
+ * A contact RECORD's lines are written by `contactSteps`, which cuts the address to the record's own lines.
+ * @param {any} plan - the site plan
+ * @returns {Record<string, string>}
+ */
+export function plannedAddressLines(plan) {
   return Object.fromEntries(
     (plan?.outside?.videos ?? [])
       .filter((v) => v.decision === 'video' && v.value)

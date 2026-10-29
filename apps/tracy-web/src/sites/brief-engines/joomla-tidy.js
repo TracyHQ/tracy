@@ -25,6 +25,7 @@
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { FACT_RULES, factsOf, ungrounded } from './guard.js'
+import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
 import { jsonObjectIn, pool } from './shared.js'
 import { renameDemoCompany, statesFact } from './joomla-demo-names.js'
 
@@ -1040,6 +1041,24 @@ const setByTemplate = (/** @type {unknown} */ value) =>
 export const FORM_OFF_NOTE =
   "No email was given, so the template's address was taken off the contact record and the contact form is off until you add your email."
 
+/** The record's address lines, in the order a contact page prints them. */
+const ADDRESS_FIELDS = ['address', 'suburb', 'state', 'postcode', 'country']
+
+/**
+ * What goes on each address line of a contact record: the address cut into as many lines as the template's own record used
+ * (at least one), or the areas served on the first line when there is no address.
+ * @param {{ address: string, area: string, row: Record<string, unknown>, cut: (address: string, lines: number) => string[] }} input
+ * @returns {Map<string, string>}
+ */
+function placeLines({ address, area, row, cut }) {
+  const out = new Map()
+  const used = ADDRESS_FIELDS.filter((f) => setByTemplate(row[f]))
+  const fields = used.length > 0 ? used : ['address']
+  const lines = address !== '' ? cut(address, fields.length) : area !== '' ? [area] : []
+  lines.forEach((line, i) => out.set(fields[i], line))
+  return out
+}
+
 /**
  * The writes that make the contact records of the languages a visitor can reach stop reaching the template's company.
  *
@@ -1063,14 +1082,21 @@ export const FORM_OFF_NOTE =
  * @param {string} input.siteKey
  * @param {{ email?: string, phone?: string, address?: string, name?: string }} input.given
  * @param {Set<string>} input.visible
+ * @param {{ address?: { value: string }, serviceArea?: { value: string } } | null} [input.contact] - the site plan's contact facts
  * @returns {Promise<{ steps: Array<{ kind: string, id: number, fields: Record<string, string> }>, note: string | null }>}
  */
-export async function contactSteps({ apply, siteKey, given, visible }) {
+export async function contactSteps({ apply, siteKey, given, visible, contact = null }) {
   const email = String(given.email ?? '').trim()
   const phone = String(given.phone ?? '').trim()
   const address = String(given.address ?? '').trim()
   const name = String(given.name ?? '').trim()
+  // The plan's facts come from the one contact reader; `given` is what a build with no plan was told.
+  const placed = {
+    address: String(contact?.address?.value ?? '').trim(),
+    area: String(contact?.serviceArea?.value ?? '').trim()
+  }
   try {
+    const domain = await websiteOpportunitiesDomain()
     const contacts = (await listAll(checkedCall(apply, siteKey), 'contact', true)).filter((row) => {
       const language = String(row.language ?? '*')
       return Number(row.published) === 1 && (language === '*' || visible.has(language))
@@ -1090,12 +1116,25 @@ export async function contactSteps({ apply, siteKey, given, visible }) {
       if (phone !== '' && row.telephone !== phone) fields.telephone = phone
       for (const field of phone !== '' ? ['mobile', 'fax'] : ['telephone', 'mobile', 'fax'])
         if (setByTemplate(row[field]) && row[field] !== phone) fields[field] = ''
-      if (address !== '' && row.address !== address) fields.address = address
-      // 🔒 With no street address given, the template's own place goes (a visitor must never read the demo company's street):
-      // the address lines are emptied like its numbers.
-      if (address === '')
-        for (const field of ['address', 'suburb', 'state', 'postcode', 'country'])
-          if (setByTemplate(row[field])) fields[field] = ''
+      // 🔒 THE ADDRESS IS THE BRIEF'S, WORD FOR WORD, ON THE LINES THE TEMPLATE HAS (spec TracyHQ/tracy#189): cut only where the
+      // brief itself separates it, one part per line the demo used. With no address but areas served, the areas are the line
+      // (no street); with neither, the template's own place goes (a visitor must never read the demo company's street).
+      const shown = placeLines({
+        address: placed.address || address,
+        area: placed.area,
+        row,
+        cut: domain.addressLines
+      })
+      for (const field of ADDRESS_FIELDS) {
+        const next = shown.get(field) ?? ''
+        if (next !== '' && row[field] !== next) fields[field] = next
+        else if (next === '' && setByTemplate(row[field])) fields[field] = ''
+      }
+      // The areas beside a given address: one line in the record's extra information, where the template had text of its own.
+      if (placed.address && placed.area && setByTemplate(row.misc)) {
+        const line = `<p>${placed.area.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</p>`
+        if (row.misc !== line) fields.misc = line
+      }
       if (name !== '' && setByTemplate(row.name) && row.name !== name) fields.name = name
       if (Object.keys(fields).length > 0) steps.push({ kind: 'contact', id: Number(row.id), fields })
     }

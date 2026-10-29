@@ -14,6 +14,7 @@
 import { pictureDecisionsOf } from './site-plan-pictures.mjs'
 import { CONTACT_FACTS_WHY } from './page-plan.mjs'
 import { answersFromBrief, contactFacts } from './site-answers.mjs'
+import { mapsLinkOf } from './contact-reading.mjs'
 import { IDENTITY_REASONS, planIdentity } from './site-plan-identity.mjs'
 import { planOutsideMap } from './outside-map.mjs'
 import { COLOUR_REASONS, planColours } from './brand-colours.mjs'
@@ -66,7 +67,9 @@ function hrefOf(kind, value) {
 function contactOfBrief(facts) {
   const out = {}
   for (const [kind, fact] of Object.entries(facts)) {
-    const href = hrefOf(kind, fact.value)
+    // An address links to its exact pin on Google Maps (`mapsLinkOf`); the other links are the fact's own.
+    const href =
+      kind === 'address' ? (mapsLinkOf(brief, fact.value)?.value ?? null) : hrefOf(kind, fact.value)
     out[kind] = { value: fact.value, ...(href ? { href } : {}), source: fact.source }
   }
   return out
@@ -101,6 +104,15 @@ function slotsOf(contentMap, brief, contact, name, cardNames = {}) {
   const fill = pictureDecisionsOf(contentMap, brief, cardNames)
   return contentMap.slots.map((slot) => {
     const kind = slot.type === 'text' ? CONTACT_ROLES[slot.role] : null
+    // With only the areas served, the address slot shows them (no street line, none invented); with neither it is taken off.
+    if (kind === 'address' && !contact.address && contact.serviceArea)
+      return {
+        key: slot.key,
+        role: slot.role,
+        decision: 'value',
+        value: contact.serviceArea.value,
+        reason: 'contact-fact'
+      }
     if (kind && contact[kind])
       return {
         key: slot.key,
