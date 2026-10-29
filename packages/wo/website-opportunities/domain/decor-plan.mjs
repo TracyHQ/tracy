@@ -30,6 +30,25 @@ export const DECOR_REASONS = Object.freeze({
   'design-kept': 'a pure design piece of the template, kept as drawn'
 })
 
+/** The longest piece of the brief's words an `asked` sentence quotes. */
+const ASKED_QUOTE = 160
+
+/**
+ * The words a decor decision hands the site with its write (`replace_kept`, Claude Cowork for Joomla): a template marks
+ * its icons and figures as pictures it keeps (Slot fit `replace: "keep"`), and the site takes a new one only with the
+ * words that ask for it. A brief build asks for the business's own site, and these words say which part of the brief
+ * chose the new picture (`quote`), or that none did and the demo's picture is only taken off.
+ * @param {'icon' | 'cut-out'} action
+ * @param {string | null} quote - the brief's words that chose the picture
+ */
+export function decorAsked(action, quote) {
+  const thing = action === 'icon' ? 'icon' : 'figure'
+  const words = typeof quote === 'string' ? quote.replace(/\s+/g, ' ').trim().slice(0, ASKED_QUOTE) : ''
+  return words
+    ? `The owner's brief asks for a site of its own: this ${thing} shows "${words}" in place of the template demo's ${thing}.`
+    : `The owner's brief asks for a site of its own: the template demo's ${thing} shows another business, so it is replaced.`
+}
+
 /** The neutral mark an icon takes when nothing matches. */
 export const NEUTRAL_GLYPH = 'check'
 
@@ -123,7 +142,8 @@ function wordsOfItem(slot, slots, at) {
  * @param {Array<{groupId: string, offeringId: string, label: string}>} [input.offerings] - the fill plan's card offerings
  * @param {boolean} [input.canDraw] - whether the build can draw (a picture model is set)
  * @returns {{version: string, slots: Array<{key: string, file: string, decor: string, action: 'icon' | 'cut-out' |
- *   'keep', reason: string, glyph?: string, mode?: 'object' | 'clear', subject?: any, referenceIds?: string[]}>}}
+ *   'keep', reason: string, glyph?: string, mode?: 'object' | 'clear', subject?: any, referenceIds?: string[],
+ *   asked?: string}>}}
  */
 export function planDecor({ contentMap, brief, copy = null, offerings = [], canDraw = false }) {
   const slots = contentMap?.slots ?? []
@@ -169,6 +189,7 @@ export function planDecor({ contentMap, brief, copy = null, offerings = [], canD
       const ofList =
         !item && !ofPage && n !== null && list.length ? glyphOf(list[n % list.length].label) : null
       const glyph = item ?? ofPage ?? ofList ?? NEUTRAL_GLYPH
+      const quote = item ? written : ofPage ? page.label : ofList ? list[n % list.length].label : null
       const reason = item
         ? 'icon-of-item'
         : ofPage
@@ -176,7 +197,15 @@ export function planDecor({ contentMap, brief, copy = null, offerings = [], canD
           : ofList
             ? 'icon-of-offering'
             : 'icon-neutral'
-      out.push({ key: slot.key, file, decor, action: 'icon', reason, glyph })
+      out.push({
+        key: slot.key,
+        file,
+        decor,
+        action: 'icon',
+        reason,
+        glyph,
+        asked: decorAsked('icon', quote)
+      })
       return
     }
     const main = pageOffering.get(slot.entity) ?? list[0] ?? null
@@ -192,9 +221,19 @@ export function planDecor({ contentMap, brief, copy = null, offerings = [], canD
         reason: 'cut-out-drawn',
         mode: 'object',
         subject,
-        referenceIds: references.slice(0, 4)
+        referenceIds: references.slice(0, 4),
+        asked: decorAsked('cut-out', main?.label ?? null)
       })
-    else out.push({ key: slot.key, file, decor, action: 'cut-out', reason: 'cut-out-cleared', mode: 'clear' })
+    else
+      out.push({
+        key: slot.key,
+        file,
+        decor,
+        action: 'cut-out',
+        reason: 'cut-out-cleared',
+        mode: 'clear',
+        asked: decorAsked('cut-out', null)
+      })
   })
   return { version: DECOR_PLAN_VERSION, slots: out }
 }

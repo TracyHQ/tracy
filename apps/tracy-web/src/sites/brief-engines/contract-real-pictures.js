@@ -15,6 +15,28 @@ function inspectedSlots(state, contentMap) {
     .map((slot) => ({ ...slot, current: state.slots[slot.key] }))
 }
 
+/**
+ * The `replace_kept` words of a write: each changed slot whose Slot fit says the template keeps its picture, mapped to the
+ * words its decor decision carries. A slot no decision asks for is left out, and the site refuses it as before.
+ * @param {Array<{group: {slots: Array<{key: string, asked?: string}>}}>} shaped
+ * @param {Record<string, string>} changes
+ * @param {(key: string) => any} slotOf - the slot as the site lists it
+ * @param {{slots?: any[]}} contentMap
+ * @returns {Record<string, string>}
+ */
+export function keptAsks(shaped, changes, slotOf, contentMap) {
+  const mapped = new Map((contentMap?.slots ?? []).map((s) => [s.key, s]))
+  /** @type {Record<string, string>} */
+  const out = {}
+  for (const item of shaped)
+    for (const binding of item.group?.slots ?? []) {
+      if (typeof binding.asked !== 'string' || !binding.asked || !(binding.key in changes)) continue
+      const fit = slotOf(binding.key)?.fit ?? mapped.get(binding.key)?.fit
+      if (fit?.replace === 'keep') out[binding.key] = binding.asked
+    }
+  return out
+}
+
 export async function writeContractPictures({
   ctx,
   real,
@@ -112,7 +134,13 @@ export async function writeContractPictures({
   intended.report.verified = 0
   await realPictures.recordOutcome(real.buildId, intended)
   ctx.signal?.throwIfAborted()
-  const refused = Object.keys(changes).length ? await write({ state, changes, contentMap }) : new Set()
+  // A picture the template keeps (Slot fit `replace: "keep"`: its icons, its figures) is taken by the site only with the
+  // words that ask for it (`replace_kept`). Without them every icon of a brief build was refused (SLOT_PICTURE_KEPT) and
+  // stayed the demo's (local stand, 29/10/2026: 24 icons uploaded, none written).
+  const replaceKept = keptAsks(shaped.shaped, changes, (key) => live.get(key) ?? slots.get(key), contentMap)
+  const refused = Object.keys(changes).length
+    ? await write({ state, changes, contentMap, ...(Object.keys(replaceKept).length ? { replaceKept } : {}) })
+    : new Set()
   const after = await inspect()
   if (!after?.ok || after.contract !== initial.contract) throw fail('PICTURE_READBACK_FAILED')
   const readback = new Map(

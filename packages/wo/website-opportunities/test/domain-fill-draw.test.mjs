@@ -358,6 +358,36 @@ test('#195 a cut-out becomes an object drawn from owner photos, or is cleared; i
   assert.equal(glyphOf('Padel and tennis'), 'racquet')
 })
 
+test('#195 every icon and cut-out decision carries the brief words the site takes a kept picture with', () => {
+  const g = (n) => ({ id: `module-7.item.${n}`, item: n, kind: 'business' })
+  const contentMap = {
+    slots: [
+      text('module-7.0', 'editorial.heading', 'Demo item', g(0)),
+      icon('module-7.1', 'dark-1.png', g(0)),
+      text('module-7.2', 'editorial.heading', 'Demo item', g(1)),
+      icon('module-7.3', 'dark-2.png', g(1)),
+      image('module-8.0', 'business.hero_image', 'hero/figure.png', { kind: 'cutout', size: [1175, 960] }),
+      image('module-8.1', 'editorial.design_element', 'shapes/line.png', { kind: 'decoration' })
+    ]
+  }
+  // A bakery and a dental clinic: the words quote the brief's offering that chose the icon, never a demo word.
+  for (const [brief, first] of [
+    [BAKERY, 'Celebration Cakes'],
+    [{ reading: { services: [{ id: 'svc-white', label: 'Teeth Whitening' }] } }, 'Teeth Whitening']
+  ]) {
+    const at = byKey(planDecor({ contentMap, brief, copy: null }).slots)
+    assert.match(at.get('module-7.1').asked, new RegExp(`"${first}"`))
+    assert.doesNotMatch(at.get('module-7.1').asked, /Demo item/)
+    assert.ok(at.get('module-8.0').asked, 'a cleared figure says why it goes')
+    assert.equal(at.get('module-8.1').asked, undefined, 'a design piece stays, so nothing asks for it')
+    for (const d of at.values())
+      if (d.asked) assert.ok(d.asked.length <= 2000 && !/[\u2013\u2014]/.test(d.asked))
+  }
+  // No offering at all: a neutral mark still says the demo's icon goes.
+  const bare = byKey(planDecor({ contentMap, brief: { reading: {} }, copy: null }).slots)
+  assert.match(bare.get('module-7.1').asked, /replaced/)
+})
+
 test('#195 the decorative slots of a released contract map are labelled from their roles and Slot fit', async () => {
   const { readFileSync } = await import('node:fs')
   const map = JSON.parse(

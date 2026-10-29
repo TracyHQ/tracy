@@ -35,6 +35,10 @@ export function doorRefusal(result, { writing = false } = {}) {
  * `mapping.emptyLinks` names link slots to take off (`empty_links`, Claude Cowork for Joomla 0.24.4, TCH #1013): only a
  * slot inspect marks `emptyLink` (its layout was reviewed to draw no dead link without it) may be named, never one also
  * changed. It may stand alone; it joins the request id only when sent, so a mapping without it replays as it always did.
+ *
+ * `mapping.replaceKept` maps changed picture slots the template keeps (Slot fit `replace: "keep"`) to the words asking for
+ * each (`replace_kept`, Claude Cowork for Joomla): without them the site refuses a kept picture (`SLOT_PICTURE_KEPT`). It
+ * too joins the request id only when sent.
  */
 export async function applyJoomlaContract({ apply, siteKey, mapping, dry = false }) {
   const call = async (params) => {
@@ -62,6 +66,17 @@ export async function applyJoomlaContract({ apply, siteKey, mapping, dry = false
         `This link cannot be taken off: its layout is not known to draw nothing without it: ${key}`
       )
   }
+  const replaceKept = mapping.replaceKept ?? {}
+  if (
+    !replaceKept ||
+    typeof replaceKept !== 'object' ||
+    Array.isArray(replaceKept) ||
+    Object.entries(replaceKept).some(
+      ([key, words]) => typeof words !== 'string' || !words.trim() || !(key in mapping.changes)
+    )
+  )
+    throw new Error('Kept pictures to replace must map changed slot keys to the words asking for them')
+  const kept = Object.keys(replaceKept).length > 0
   if (mapping.pending !== undefined && !Array.isArray(mapping.pending))
     throw new Error('Pending customer inputs must be an array')
   if (Array.isArray(mapping.pending) && mapping.pending.length)
@@ -86,7 +101,8 @@ export async function applyJoomlaContract({ apply, siteKey, mapping, dry = false
         revision: mapping.revision,
         changes,
         evidence: mapping.evidence ?? {},
-        ...(emptyLinks.length ? { emptyLinks } : {})
+        ...(emptyLinks.length ? { emptyLinks } : {}),
+        ...(kept ? { replaceKept } : {})
       })
     )
     .digest('hex')
@@ -97,6 +113,7 @@ export async function applyJoomlaContract({ apply, siteKey, mapping, dry = false
     request_id: requestId,
     ...(changes.length ? { changes: mapping.changes } : {}),
     ...(emptyLinks.length ? { empty_links: emptyLinks } : {}),
+    ...(kept ? { replace_kept: replaceKept } : {}),
     evidence: mapping.evidence ?? {}
   }
   if (dry) return { contract: state.contract, params, pages: state.pages }

@@ -147,6 +147,7 @@ const BARE_NUMBER = /^\d+$/
  * @param {Record<string, string>} input.changes
  * @param {Record<string, string>} input.evidence
  * @param {string[]} [input.emptyLinks] - link slots to take off, each one inspect marked `emptyLink`
+ * @param {Record<string, string>} [input.replaceKept] - kept pictures the write replaces, each with the words asking for it
  * @param {(job: () => Promise<any>) => Promise<any>} input.timed
  * @returns {Promise<string[]>} the keys the site refused
  */
@@ -158,6 +159,7 @@ async function writeContractOnce({
   changes,
   evidence,
   emptyLinks = [],
+  replaceKept = {},
   timed
 }) {
   // The contract door reads the site once more before it writes; it is handed the reading just made.
@@ -183,6 +185,8 @@ async function writeContractOnce({
             changes,
             evidence,
             emptyLinks,
+            // Only the kept pictures this write still changes: a line set aside takes its words with it.
+            replaceKept: Object.fromEntries(Object.entries(replaceKept).filter(([key]) => key in changes)),
             pending: []
           }
         })
@@ -550,7 +554,7 @@ export function createJoomlaEngine({
       declared: declaredPictureSlots(ctx.contract),
       // A brief build's kept cards show what the site plan names them (#192): one decider for words and pictures.
       cardNames: sitePlan?.honesty?.cardNames ?? null,
-      write: async ({ state, changes }) =>
+      write: async ({ state, changes, replaceKept }) =>
         new Set(
           await writeContract({
             applyJoomlaContract,
@@ -559,6 +563,7 @@ export function createJoomlaEngine({
             reading: state,
             changes,
             evidence: {},
+            ...(replaceKept ? { replaceKept } : {}),
             timed: (job) => job()
           })
         )

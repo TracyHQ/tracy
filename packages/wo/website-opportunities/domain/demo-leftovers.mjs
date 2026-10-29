@@ -16,7 +16,8 @@ import {
   findCutOuts,
   findDemoIcons,
   findGeneralPictures,
-  findSharedPictures
+  findSharedPictures,
+  onePerFile
 } from './demo-leftovers-pictures.mjs'
 import {
   addressLeftovers,
@@ -253,7 +254,8 @@ export const LEFTOVER_RULES = Object.freeze([
   { kind: 'C12', find: addressLeftovers },
   {
     kind: 'C13',
-    find: (ctx) => [...bySlot((s) => s.role === 'business.logo')(ctx), ...demoLogoLeftovers(ctx)]
+    // One per page and logo file: the header, its dark twin and the footer often print the same demo file.
+    find: (ctx) => onePerFile([...bySlot((s) => s.role === 'business.logo')(ctx), ...demoLogoLeftovers(ctx)])
   },
   { kind: 'C14', find: creditLeftovers },
   {

@@ -98,3 +98,42 @@ test('C06 a demo picture two cards of one module share is reported, once per pag
     []
   )
 })
+
+test('C04 and C13 count a demo file once per page, however many slots of the map hold it', () => {
+  // One icon set reused by a module, its twin and each offering's page; one logo printed light, dark and in the footer.
+  for (const [trade, icon] of [
+    ['Juniper Racket Club', 'icons/mark-1.png'],
+    ['Crumb Street Bakery', 'icons/whisk.png']
+  ]) {
+    const contentMap = {
+      slots: [
+        img('module-2.0', 'editorial.item_icon', icon, { fit: { kind: 'icon' } }),
+        img('module-9.0', 'editorial.item_icon', icon, { fit: { kind: 'icon' } }),
+        img('article-4.7', 'editorial.item_icon', icon, { fit: { kind: 'icon' } }),
+        img('module-7.1', 'business.logo', 'logo/mark.png', { fit: { kind: 'logo' } }),
+        img('siteSetting-1.0', 'business.logo', 'logo/mark.png', { fit: { kind: 'logo' } })
+      ]
+    }
+    const report = checkDemoLeftovers({
+      pages: [
+        {
+          path: '/',
+          status: 200,
+          html: `<img src="/images/demo/${icon}"><img class="logo-img" src="/images/demo/logo/mark.png">`
+        }
+      ],
+      contentMap,
+      brief: { business: { name: trade } }
+    })
+    const icons = report.findings.filter((f) => f.kind === 'C04')
+    assert.equal(icons.length, 1, trade)
+    assert.deepEqual(icons[0].slots, ['module-2.0', 'module-9.0', 'article-4.7'])
+    const logos = report.findings.filter((f) => f.kind === 'C13')
+    assert.equal(
+      logos.length,
+      1,
+      `${trade}: the map's two logo slots and the logo img are one file on one page`
+    )
+    assert.deepEqual(logos[0].slots, ['module-7.1', 'siteSetting-1.0', 'img /images/demo/logo/mark.png'])
+  }
+})

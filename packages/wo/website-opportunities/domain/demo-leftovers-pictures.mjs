@@ -35,14 +35,52 @@ export const isCutOutSlot = (slot, file) =>
   (slot.fit?.kind === 'cutout' ||
     (!slot.fit?.kind && GENERAL_PICTURES.has(slot.role) && /\.png$/i.test(file ?? '')))
 
-/** Every picture slot of `which` whose demo file a served page still carries, by page and slot. */
+/**
+ * Every demo file of a picture slot of `which` a served page still carries: ONE finding per page and file, naming the
+ * first slot that holds the file (`place`) and every slot of the kind that does (`slots`).
+ *
+ * 🔒 A FILE IS COUNTED ONCE PER PAGE, NOT ONCE PER SLOT THAT HOLDS IT: an icon set is reused by many slots (a module, a
+ * twin module, each offering's page), and a page that shows the file is not telling which of them it shows. Counted per
+ * slot, a local brief build reported 336 demo icons for 8 files on 7 pages (29/10/2026).
+ */
 const pictureSlots = (which) => (ctx) => {
   const out = []
-  for (const page of ctx.served)
+  for (const page of ctx.served) {
+    const byFile = new Map()
     for (const { slot, probe } of ctx.demo.slots) {
       if (!probe.file || isDesign(slot) || !which(slot, probe.file)) continue
-      if (carriesPicture(page, probe.file)) out.push({ page: page.path, place: slot.key, found: probe.file })
+      const known = byFile.get(probe.file)
+      if (known) known.slots.push(slot.key)
+      else if (carriesPicture(page, probe.file)) {
+        const finding = { page: page.path, place: slot.key, found: probe.file, slots: [slot.key] }
+        byFile.set(probe.file, finding)
+        out.push(finding)
+      }
     }
+  }
+  return out
+}
+
+/**
+ * One finding per page and file among `findings` (a file named with or without its leading `/`), keeping the first
+ * finding's place and every place in `slots`.
+ * @param {Array<{page: string, place: string, found: string, slots?: string[]}>} findings
+ */
+export function onePerFile(findings) {
+  const out = []
+  const seen = new Map()
+  for (const f of findings) {
+    const file = String(f.found ?? '').replace(/^\/+/, '')
+    const key = `${f.page}\n${file}`
+    const known = seen.get(key)
+    if (known) {
+      for (const place of f.slots ?? [f.place]) if (!known.slots.includes(place)) known.slots.push(place)
+      continue
+    }
+    const kept = { ...f, slots: [...(f.slots ?? [f.place])] }
+    seen.set(key, kept)
+    out.push(kept)
+  }
   return out
 }
 

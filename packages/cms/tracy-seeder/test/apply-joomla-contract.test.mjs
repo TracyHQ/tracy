@@ -196,3 +196,55 @@ test('a link the site has not marked, or one also changed, is refused by name be
     assert.equal(calls.length, 1)
   }
 })
+
+// A picture the template keeps (Slot fit `replace: "keep"`: an item icon, a figure) is taken by the site only with the
+// words asking for it (`replace_kept`, Claude Cowork for Joomla); without them it refuses `SLOT_PICTURE_KEPT`. The words
+// join the request id only when sent, so a mapping without them replays under the id it always had.
+const iconState = {
+  ...state,
+  slots: [
+    { key: 'hero.title', entity: 'hero' },
+    { key: 'card.icon', entity: 'card', type: 'image', fit: { kind: 'icon', replace: 'keep' } }
+  ]
+}
+const iconDoor = (calls) => async (call) => {
+  calls.push(call)
+  return call.params.operation === 'inspect' ? iconState : { ok: true }
+}
+
+test('kept pictures a write replaces are sent as replace_kept with their words', async () => {
+  const calls = []
+  const replaceKept = { 'card.icon': 'The owner asks for an icon of "Sourdough Bread".' }
+  await applyJoomlaContract({
+    siteKey: 'customer.test',
+    mapping: { ...mapping, changes: { 'card.icon': 'images/tracy-content/a.png' }, replaceKept },
+    apply: iconDoor(calls)
+  })
+  assert.deepEqual(calls[1].params.replace_kept, replaceKept)
+  const plain = []
+  await applyJoomlaContract({
+    siteKey: 'customer.test',
+    mapping: { ...mapping, replaceKept: {} },
+    apply: iconDoor(plain)
+  })
+  const before = []
+  await applyJoomlaContract({ siteKey: 'customer.test', mapping, apply: iconDoor(before) })
+  assert.equal('replace_kept' in plain[1].params, false)
+  assert.equal(plain[1].params.request_id, before[1].params.request_id)
+})
+
+test('words for a picture the write does not change, or empty words, are refused before any write', async () => {
+  for (const replaceKept of [{ 'card.icon': 'An icon please' }, { 'hero.title': '  ' }]) {
+    const calls = []
+    await assert.rejects(
+      () =>
+        applyJoomlaContract({
+          siteKey: 'customer.test',
+          mapping: { ...mapping, replaceKept },
+          apply: iconDoor(calls)
+        }),
+      /Kept pictures to replace/
+    )
+    assert.equal(calls.length, 1)
+  }
+})
