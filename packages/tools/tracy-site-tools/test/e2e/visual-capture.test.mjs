@@ -1,6 +1,6 @@
 // Explicit acceptance: real Chrome renders a site container with curl and no browser.
 import assert from 'node:assert/strict'
-import { execFile } from 'node:child_process'
+import { execFile, spawnSync } from 'node:child_process'
 import { chmodSync, existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { createRequire } from 'node:module'
 import { tmpdir } from 'node:os'
@@ -27,8 +27,11 @@ const chrome =
     '/usr/bin/chromium',
     chromium.executablePath()
   ].find((file) => existsSync(file))
+const REAL_DOCKER = spawnSync('sh', ['-c', 'command -v docker'], { encoding: 'utf8' }).stdout.trim()
+const DOCKER_UP = REAL_DOCKER !== '' && spawnSync(REAL_DOCKER, ['info'], { stdio: 'ignore' }).status === 0
+const opts = { skip: DOCKER_UP ? false : 'no docker daemon here: the capture needs a real site container' }
 
-test('visual capture: before and after render in real Chrome through the isolated site container', async () => {
+test('visual capture: before and after render in real Chrome through the isolated site container', opts, async () => {
   assert.ok(chrome && existsSync(chrome), 'install Playwright Chromium or set TRACY_TEST_CHROME')
   const label = `beta-visual-${process.pid}`
   const container = `${label}-web-1`
