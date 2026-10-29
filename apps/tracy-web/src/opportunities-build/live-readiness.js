@@ -2,10 +2,11 @@
  * Brief readiness after the build (#50, spec #38): what the live site shows of the brief, read off one QA round of the
  * host (`apps/tracy-host/src/demo-qa.js`). Pure: the caller keeps it on the round.
  *
- * Two checks are the site's own: "no template sample text left" (the host's `no-demo-words`) and "collected items
- * shown" (`collected-used`). The brief's own checks (photos, labels, sources, hero, offerings, people, routes) are
- * carried with the verdict they had on the brief: measuring them again on the live site needs to know which collected
- * item fills which slot, which is the placement work's (spec #38, Out of Scope), so they say `on: 'brief'`.
+ * Four checks are the site's own: "no template sample text left" (the host's `no-demo-words`), "collected items
+ * shown" (`collected-used`), and, since #140, "offering photos right" (`photos-match-slots`: a photo in an offering or
+ * person slot shows that offering or person) and "faces of named people" (`faces-named`). The brief's own checks
+ * (photos, labels, sources, hero, offerings, people, routes) are carried with the verdict they had on the brief, so
+ * they say `on: 'brief'`.
  *
  * 🔒 UNKNOWN IS NEVER PASSED. A host check that did not run or could not judge is `unknown`, and a round with an
  * unknown site check is never `pass`.
@@ -14,7 +15,10 @@
 /** Each live check and the host check it is read from. */
 export const LIVE_CHECKS = Object.freeze({
   'no-template-sample-text': 'no-demo-words',
-  'collected-items-shown': 'collected-used'
+  'collected-items-shown': 'collected-used',
+  // #140: the brief's offering and person links, measured where the build placed each photo.
+  'offering-photos-right': 'photos-match-slots',
+  'faces-of-named-people': 'faces-named'
 })
 /** How many findings of a failed check a round keeps: enough to say what is left, never a page dump. */
 const DETAIL_MAX = 5

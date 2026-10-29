@@ -24,7 +24,8 @@ export async function writeContractPictures({
   inspect,
   write,
   contentMap = contentMapOf(ctx.contract),
-  bound = {}
+  bound = {},
+  copy = null
 }) {
   if (!real || !siteFile) return null
   ctx.signal?.throwIfAborted()
@@ -43,7 +44,8 @@ export async function writeContractPictures({
     signal: ctx.signal,
     // This phase only places collected photos and neutral placeholders. It never draws.
     drawDoor: null,
-    bound
+    bound,
+    copy
   })
   const slots = new Map(inspectedSlots(initial, contentMap).map((s) => [s.key, s]))
   for (const item of shaped.shaped)

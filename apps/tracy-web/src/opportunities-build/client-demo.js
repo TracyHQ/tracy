@@ -26,6 +26,7 @@ import { withBuildChoice } from './build-choice.js'
 import { buildPlaced, insertBuild, saveBuildLabel } from './build-store.js'
 import { deferToMeasure, reusableLookPages } from './demo-look.js'
 import { visionLabelOf } from './demo-photo-labels.js'
+import { slotPhotoEvidence } from './slot-photo-evidence.js'
 import { demoActionOf } from './demo-actions.js'
 import { handOff, pictureWorth, poorPicture, videoFrameIds } from './handoff.js'
 import { baselineForHost, baselineTrust, briefOf, summary } from './demo-qa.js'
@@ -835,7 +836,9 @@ export function createClientDemoService(deps) {
       // `collected-used`: everything the research collected is on the site, not only nothing false.
       ...agentDemoCollected(state.revision, state.build),
       // `photos-fit`: what each photo shows, from the labels `media.look` made (`demo-photo-labels.js`).
-      sourceSubjects
+      sourceSubjects,
+      // `photos-match-slots`, `faces-named`: each placed photo's slot and what the brief says it shows (#140).
+      ...slotPhotoEvidence(state.revision, state.build)
     })
     const readAt = now()
     if (!measured.ok || !Array.isArray(measured.body?.checks)) throw error('DEMO_QA_UNAVAILABLE')

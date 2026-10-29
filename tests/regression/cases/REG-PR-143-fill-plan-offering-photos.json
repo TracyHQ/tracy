@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-143-fill-plan-offering-photos",
+  "kind": "feat",
+  "title": "The fill plan places brief photos by v3 slot role and offering: a card takes only its own offering's photo, general slots only general photos, keep and demo-only slots are never filled",
+  "pr": 143,
+  "area": "website-opportunities/pictures",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test packages/wo/website-opportunities/test/domain-fill-plan.test.mjs (a fictional racket club brief with tennis, padel and unsure photos on a trimmed version 3 template map).",
+    "S2: Run node --test apps/tracy-web/test/brief-fill-plan-pictures.test.mjs (the Joomla picture phase shapeReal on a version 3 map, and the hand-off's picture summary)."
+  ],
+  "expect": [
+    "S1: exit 0, no failed or skipped test; padel photos reach only the padel card, unsure photos only general slots, the keep slot and the demo-only entity's slots are never filled, every decision has a reason code.",
+    "S2: exit 0, no failed or skipped test; each card's file takes its own offering photo, the demo-only picture is not written, the hand-off lists every picture decision with its reason code."
+  ],
+  "selectors": {
+    "files": "packages/wo/website-opportunities/domain/fill-plan.mjs, apps/tracy-web/src/sites/brief-engines/real-pictures.js",
+    "tool": "tests/regression/scripts/REG-PR-143-fill-plan-offering-photos.mjs"
+  },
+  "evidence": "Before this change the Joomla picture planner guessed each slot's role from its name and never read which offering a photo shows, so a padel photo could land in the tennis card.",
+  "fence": "planFill qualifies a photo by its depicts link against the card's locked offering before any shape check; shapeReal uses it for Joomla version 3 maps",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-143-fill-plan-offering-photos.mjs"]
+  }
+}
