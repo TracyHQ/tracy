@@ -1320,13 +1320,50 @@ test('the language never changes canonical, JSON-LD, template names or industrie
   }
 })
 
-test('the footer has a language switcher listing the eight languages, the current one selected', async () => {
+test('the footer has a language switcher listing the six marketing-site languages, the current one selected', async () => {
   const a = app([FRESCO])
   const html = await (await getAs(a, '/templates/', { cookie: 'tracy_lang=de' })).text()
   const select = html.match(/<select id="langpick"[^>]*>(.*?)<\/select>/s)[1]
-  assert.equal([...select.matchAll(/<option /g)].length, 8)
+  assert.deepEqual(
+    [...select.matchAll(/<option value="([a-z]+)"/g)].map((m) => m[1]),
+    ['en', 'de', 'fr', 'es', 'it', 'nl']
+  )
   assert.match(select, /<option value="de" selected>Deutsch<\/option>/)
   assert.match(select, /<option value="en">English<\/option>/)
+  assert.doesNotMatch(select, /value="(vi|zh)"/)
+})
+
+test('a language chosen with ?lang= and no cookie stays on every local link of the gallery and a template page', async () => {
+  const a = app([FRESCO, BOXING])
+  const localLinks = (html) => [...html.matchAll(/href="((?:\/templates\/|\/)[^"]*)"/g)].map((m) => m[1])
+  for (const [path, expected] of [
+    ['/templates/?lang=de', 'de'],
+    ['/templates/ja-fresco/?lang=fr', 'fr']
+  ]) {
+    const html = await (await getAs(a, path)).text()
+    assert.match(html, new RegExp(`<html lang="${expected}">`))
+    const links = localLinks(html)
+    assert.ok(
+      links.some((l) => l.startsWith('/templates/')),
+      'the page has local Templates links'
+    )
+    for (const link of links)
+      assert.ok(link.includes(`?lang=${expected}`), `${path}: ${link} keeps the language`)
+  }
+  const gallery = await (await getAs(a, '/templates/?lang=de')).text()
+  assert.ok(gallery.includes('href="/templates/ja-fresco/?lang=de"'), 'a card keeps it')
+  assert.ok(gallery.includes('href="/templates/?lang=de"'), 'Free Templates keeps it')
+  // The canonical address and the landing-site links are not rewritten.
+  assert.equal(canonicalOf(gallery), `${ORIGIN}/templates/`)
+  assert.ok(gallery.includes('href="https://tracy.ai/de/help/"'))
+})
+
+test('without ?lang= the links stay clean, and an unknown ?lang= adds nothing', async () => {
+  const a = app([FRESCO])
+  for (const path of ['/templates/', '/templates/?lang=xx', '/templates/ja-fresco/']) {
+    const html = await (await getAs(a, path, { cookie: 'tracy_lang=de' })).text()
+    assert.doesNotMatch(html, /href="\/templates\/[^"]*\?lang=/, path)
+  }
 })
 
 test('the not-found page and the unreadable-source answer speak the visitor language', async () => {

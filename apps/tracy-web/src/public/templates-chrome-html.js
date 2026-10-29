@@ -9,7 +9,6 @@
 import { createHash } from 'node:crypto'
 import { escapeHtml } from '../lib/html.js'
 import { DOWNLOAD_ICON } from './templates-button-icons.js'
-import { WEB_LANGUAGES } from '../lib/i18n/index.js'
 import { LINKS, WORDS, landingPage } from './templates-words.js'
 
 const LOGO = `<img src="${LINKS.logo}" alt="${escapeHtml(WORDS.siteName)}" width="85" height="26" decoding="async">`
@@ -69,9 +68,12 @@ const LANGUAGE_NAMES = Object.freeze({
   es: 'Espa\u00f1ol'
 })
 
+/** The languages the public pages offer: the six of the marketing site, in its order. Other interface languages still render when asked for, they are just not listed. */
+export const PICKER_LANGUAGES = Object.freeze(['en', 'de', 'fr', 'es', 'it', 'nl'])
+
 /** The language switcher: a select shown by the footer script (it writes the `tracy_lang` cookie and reloads). */
 const languagePicker = (w) =>
-  `<span class="langpick"><select id="langpick" hidden aria-label="${escapeHtml(w.footer.language)}">${WEB_LANGUAGES.map((id) => `<option value="${id}"${id === w.lang ? ' selected' : ''}>${LANGUAGE_NAMES[id]}</option>`).join('')}</select></span>`
+  `<span class="langpick"><select id="langpick" hidden aria-label="${escapeHtml(w.footer.language)}">${PICKER_LANGUAGES.map((id) => `<option value="${id}"${id === w.lang ? ' selected' : ''}>${LANGUAGE_NAMES[id]}</option>`).join('')}</select></span>`
 
 /**
  * Same footer as tracy.ai: logo and blurb, three link columns, then the copyright with the theme toggle and language picker.
