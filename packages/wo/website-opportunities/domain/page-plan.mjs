@@ -143,7 +143,7 @@ export function pagePlan({ pages = [], locked = [], content = [], facts = {}, no
       }
     if (role === 'sample') return off('a sample page the template ships to show its features')
     // 🔒 A PAGE THE BUSINESS HAS DATA FOR IS NEVER DROPPED (spec #189): the Contact page stays when the brief holds contact
-    // details, even where the template files it under another page (JA Boxing's `about-us/contact`, pilot 29/10/2026).
+    // details, even where the template files it under another page (a sub-page of About, measured on a Joomla T4 build).
     if (
       role === 'contact' &&
       facts.contact > 0 &&
