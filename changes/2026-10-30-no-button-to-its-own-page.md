@@ -1,0 +1,2 @@
+- **A button never sends the visitor to the page they are already on** — Akemi (Claude) · #189 · `feat/brief-build-own-site` · 2026-10-30
+  **Affects:** brief builds on every template and CMS with section buttons. A navigation button whose section is shown on its destination page now takes the business's main action (its words and its real channel) in the site plan. The link sweep reads where each module is shown and sends a leftover self-link to the main action, or removes it, and the final check flags any body link that leads to the page it sits on.

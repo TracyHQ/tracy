@@ -215,3 +215,56 @@ test('the writer rewrites a link in a published article body, not in a taken-off
   )
   assert.match(sent[0].fields.introtext, /tel:\+97140000000/)
 })
+
+const withAction = sweepContext({
+  menu,
+  articles,
+  contact: {},
+  primaryAction: { label: 'Order a cake', channel: 'contact' }
+})
+
+test('a link to the page its own module is shown on goes to the main action, or is removed without one', () => {
+  assert.deepEqual(resolveLink(withAction, 'index.php?Itemid=102', 'Meet the bakers', new Set([102])), {
+    keep: false,
+    href: 'index.php?Itemid=103',
+    self: true
+  })
+  assert.deepEqual(resolveLink(ctx, 'index.php?Itemid=102', 'Meet the bakers', new Set([102])).href, null)
+  // A module on another page, on every page, or of unknown reach keeps its link.
+  assert.deepEqual(resolveLink(withAction, 'index.php?Itemid=102', 'Cakes', new Set([101])), { keep: true })
+  assert.deepEqual(resolveLink(withAction, 'index.php?Itemid=102', 'Cakes', new Set([0])), { keep: true })
+  assert.deepEqual(resolveLink(withAction, 'index.php?Itemid=102', 'Cakes', null), { keep: true })
+})
+
+test('html: a self-link button now says the main action', () => {
+  const html = '<a class="btn" href="index.php?Itemid=102">Meet the bakers</a>'
+  const { html: out } = sweepHtml(withAction, html, { here: new Set([102]) })
+  assert.equal(out, '<a class="btn" href="index.php?Itemid=103">Order a cake</a>')
+})
+
+test('the writer reads where each module is shown and fixes its self-link', async () => {
+  const modules = [
+    { id: 60, published: 1, module: 'mod_custom', content: '<a href="index.php?Itemid=102">Team</a>' }
+  ]
+  const sent = []
+  const apply = async ({ action, params }) => {
+    if (action === 'content.list')
+      return {
+        ok: true,
+        items: params.offset
+          ? []
+          : ({ menuItem: menu, module: modules, article: articles }[params.kind] ?? [])
+      }
+    if (action === 'content.get') return { ok: true, item: { menuids: '[102]' } }
+    if (action === 'content.batch') sent.push(...params.operations)
+    return { ok: true }
+  }
+  await sweepDeadLinks({
+    apply,
+    siteKey: 's',
+    plan: { primaryAction: { label: 'Order a cake', channel: 'contact' } },
+    applyId: 'a',
+    note: () => {}
+  })
+  assert.match(sent[0].fields.content, /Itemid=103">Order a cake</)
+})

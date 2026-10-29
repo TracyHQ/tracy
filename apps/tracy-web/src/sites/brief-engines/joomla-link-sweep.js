@@ -4,6 +4,8 @@
  *
  *   dead target  a link to a menu entry or an article that is no longer published goes to the nearest published entry above
  *                it in the menu; with none, a contact-like link goes to the contact page, and any other link is removed
+ *   own page     a link to the page its own section is shown on (the module is assigned to specific pages, one of them the
+ *                target) goes to the main action of the business (its contact, phone or WhatsApp page), else is removed
  *   `#` link     an empty target goes by the role of its words: a call or message to the business's phone or WhatsApp, a
  *                booking or contact wish to the contact page, an offering's name to the page of that offering; else removed
  *
@@ -29,7 +31,7 @@ const textOf = (/** @type {string} */ html) =>
  * What the sweep needs to know about the site, built once.
  * @param {{ menu: any[], articles: any[], contact?: { phoneHref?: string, whatsappHref?: string } }} input
  */
-export function sweepContext({ menu, articles, contact = {} }) {
+export function sweepContext({ menu, articles, contact = {}, primaryAction = null }) {
   const live = menu.filter((r) => Number(r.published) === 1 && Number(r.id) > 1)
   const byId = new Map(menu.map((r) => [Number(r.id), r]))
   const liveIds = new Set(live.map((r) => Number(r.id)))
@@ -64,8 +66,25 @@ export function sweepContext({ menu, articles, contact = {} }) {
     contactHref: contactEntry ? `index.php?Itemid=${contactEntry.id}` : null,
     phoneHref: contact.phoneHref ?? null,
     whatsappHref: contact.whatsappHref ?? null,
+    primaryLabel: typeof primaryAction?.label === 'string' ? primaryAction.label : null,
+    primaryHref: primaryHrefOf(
+      {
+        contactHref: contactEntry ? `index.php?Itemid=${contactEntry.id}` : null,
+        phoneHref: contact.phoneHref ?? null,
+        whatsappHref: contact.whatsappHref ?? null
+      },
+      primaryAction
+    ),
     pages
   }
+}
+
+/** The real destination of the business's main action: its channel's page or link, never an invented one. */
+function primaryHrefOf(where, action) {
+  const channel = action?.channel
+  if (channel === 'phone') return where.phoneHref ?? where.contactHref
+  if (channel === 'whatsapp') return where.whatsappHref ?? where.contactHref
+  return action ? where.contactHref : null
 }
 
 /** The nearest published entry above a gone menu entry, or null. */
@@ -99,10 +118,14 @@ function byRole(ctx, text) {
 
 /**
  * Where a link should lead.
- * @returns {{ keep: true } | { keep: false, href: string | null }} `href` null: remove the link
+ * @param {Set<number> | null} [here] - the menu entries the link's own module is shown on (null: unknown or every page)
+ * @returns {{ keep: true } | { keep: false, href: string | null, self?: true }} `href` null: remove the link
  */
-export function resolveLink(ctx, href, text) {
+export function resolveLink(ctx, href, text, here = null) {
   const raw = String(href ?? '').trim()
+  const own = /[?&]Itemid=(\d+)/i.exec(raw)?.[1]
+  if (own && here && here.size > 0 && !here.has(0) && here.has(Number(own)) && ctx.liveIds.has(Number(own)))
+    return { keep: false, href: ctx.primaryHref, self: true }
   if (EMPTY.test(raw)) {
     const to = byRole(ctx, text)
     return to ? { keep: false, href: to } : { keep: false, href: null }
@@ -128,16 +151,19 @@ export function resolveLink(ctx, href, text) {
  * A module's HTML with every unusable link rewritten or taken out. With `keepNodes` (an article's body, whose nodes the
  * content contract binds by path) a link is only ever rewritten to a target, never removed or unwrapped.
  */
-export function sweepHtml(ctx, html, { keepNodes = false } = {}) {
+export function sweepHtml(ctx, html, { keepNodes = false, here = null } = {}) {
   let changed = 0
   const swap = (whole, attrs, inner) => {
     const href = HREF.exec(attrs)?.[3]
     if (href === undefined) return whole
-    const to = resolveLink(ctx, href, textOf(inner))
+    const to = resolveLink(ctx, href, textOf(inner), here)
     if (to.keep || (!to.href && keepNodes)) return whole
     changed += 1
-    if (to.href)
-      return `<a${attrs.replace(HREF, (_m, lead, quote) => `${lead}${quote}${to.href}${quote}`)}>${inner}</a>`
+    if (to.href) {
+      // A self-link sent to the main action says the main action's words when it only held plain words.
+      const words = to.self && ctx.primaryLabel && !/</.test(inner) ? ctx.primaryLabel : inner
+      return `<a${attrs.replace(HREF, (_m, lead, quote) => `${lead}${quote}${to.href}${quote}`)}>${words}</a>`
+    }
     return /\bbtn\b|button/i.test(attrs) || textOf(inner) === '' ? '' : inner
   }
   let out = keepNodes
@@ -156,7 +182,7 @@ export function sweepHtml(ctx, html, { keepNodes = false } = {}) {
 }
 
 /** The links of a style module's JSON list: a link array beside the other arrays of its group (the words of each item). */
-function sweepList(ctx, node, tally) {
+function sweepList(ctx, node, tally, here = null) {
   if (!node || typeof node !== 'object') return
   if (!Array.isArray(node)) {
     const groups = new Map()
@@ -172,17 +198,17 @@ function sweepList(ctx, node, tally) {
             .filter((k) => k !== linkKey && typeof node[k]?.[i] === 'string')
             .map((k) => textOf(node[k][i]))
             .join(' ')
-          const to = resolveLink(ctx, value, words)
+          const to = resolveLink(ctx, value, words, here)
           if (to.keep) return
           node[linkKey][i] = to.href ?? ''
           tally.changed += 1
         })
   }
-  for (const v of Array.isArray(node) ? node : Object.values(node)) sweepList(ctx, v, tally)
+  for (const v of Array.isArray(node) ? node : Object.values(node)) sweepList(ctx, v, tally, here)
 }
 
 /** A style module's parameters with its list links resolved, or null when nothing changed. */
-export function sweepParams(ctx, params) {
+export function sweepParams(ctx, params, here = null) {
   const raw = params?.['jatools-config']
   if (typeof raw !== 'string' || !/\[[^\]"]*(?:link|url|href)\]/i.test(raw)) return null
   let config
@@ -192,7 +218,7 @@ export function sweepParams(ctx, params) {
     return null
   }
   const tally = { changed: 0 }
-  sweepList(ctx, config, tally)
+  sweepList(ctx, config, tally, here)
   return tally.changed
     ? { params: { ...params, 'jatools-config': JSON.stringify(config) }, changed: tally.changed }
     : null
@@ -213,6 +239,21 @@ export function sweepEntry(ctx, row) {
   return { kind: 'menuItem', id: Number(row.id), fields: to.href ? { link: to.href } : { published: 0 } }
 }
 
+/** The menu entries a module is shown on (`#__modules_menu`); null when unreadable. 0 means every page. */
+async function pagesOf(apply, siteKey, id) {
+  try {
+    const got = await apply({
+      siteKey,
+      action: 'content.get',
+      params: { kind: 'moduleAssignment', id: Number(id) }
+    })
+    const ids = JSON.parse(String(got?.item?.menuids ?? 'null'))
+    return Array.isArray(ids) ? new Set(ids.map(Number)) : null
+  } catch {
+    return null
+  }
+}
+
 /**
  * Sweep the whole site and write the fixes under one apply id. Never throws: what cannot be read or written is said.
  * @returns {Promise<number>} how many records were written
@@ -227,7 +268,8 @@ export async function sweepDeadLinks({ apply, siteKey, plan, applyId, note }) {
     const ctx = sweepContext({
       menu,
       articles,
-      contact: { phoneHref: plan?.contact?.phone?.href, whatsappHref: plan?.contact?.whatsapp?.href }
+      contact: { phoneHref: plan?.contact?.phone?.href, whatsappHref: plan?.contact?.whatsapp?.href },
+      primaryAction: plan?.primaryAction
     })
     const steps = []
     for (const row of menu) {
@@ -247,12 +289,13 @@ export async function sweepDeadLinks({ apply, siteKey, plan, applyId, note }) {
     for (const m of modules) {
       if (Number(m.published) !== 1 || m.note === 'tracy-leftovers') continue
       const fields = {}
+      const here = await pagesOf(apply, siteKey, m.id)
       if (m.module === 'mod_custom' && typeof m.content === 'string') {
-        const made = sweepHtml(ctx, m.content)
+        const made = sweepHtml(ctx, m.content, { here })
         if (made.changed) fields.content = made.html
       }
       const params = paramsOf(m.params)
-      const listed = params ? sweepParams(ctx, params) : null
+      const listed = params ? sweepParams(ctx, params, here) : null
       if (listed) fields.params = JSON.stringify(listed.params)
       if (Object.keys(fields).length) steps.push({ kind: 'module', id: Number(m.id), fields })
     }

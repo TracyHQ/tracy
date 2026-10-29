@@ -51,6 +51,27 @@ function kindOf(slot) {
 }
 
 /**
+ * The page a navigation button leads to, when its own section is shown on that page: a button never sends the visitor
+ * to the page they are already on. Judged on pages that name the module as included (a module shown on every page is
+ * a menu, whose link to the page it sits on is the "you are here" entry).
+ */
+function leadsToItsOwnPage(slot, contentMap) {
+  const url = buttonUrlOf(slot, contentMap)?.sample
+  if (!url) return false
+  const id = /(?:[?&])Itemid=(\d+)/.exec(String(url))?.[1]
+  const page = list(contentMap?.pages).find((p) =>
+    id ? p.entity === `menuItem-${id}` : [p.route, p.path, p.slug].includes(url)
+  )
+  const pageId = Number(/^menuItem-(\d+)$/.exec(String(page?.entity))?.[1])
+  return list(page?.assignedModules).some(
+    (m) =>
+      m.entity === entityOf(slot) &&
+      m.assignmentMode === 'include' &&
+      (!list(m.menuIds).length || list(m.menuIds).map(Number).includes(pageId))
+  )
+}
+
+/**
  * A navigation button's words: its destination page's title. A string shared by different jobs takes neutral words
  * valid for every use. Otherwise null: the writer words it from the page it leads to, never a fixed fallback.
  */
@@ -101,7 +122,14 @@ export function declaredButtonSlots(brief, contentMap) {
     else if (kind === 'go-to-item') decide(slot, 'View details')
     else if (kind === 'contact') decide(slot, 'How to reach us')
     else if (kind === 'external-profile') decide(slot, 'View profile')
-    else if (kind === 'navigation') {
+    else if (kind === 'navigation' && leadsToItsOwnPage(slot, contentMap)) {
+      // Its section already sits on the destination: the next useful action is the main one, or nothing is written.
+      const url = buttonUrlOf(slot, contentMap)
+      if (primary && url) {
+        decide(slot, primary.label)
+        decide(url, primary.href)
+      }
+    } else if (kind === 'navigation') {
       const words = navigationWords(slot, contentMap)
       if (words) decide(slot, words)
     }

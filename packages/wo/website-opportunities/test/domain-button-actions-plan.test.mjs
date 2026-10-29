@@ -138,3 +138,65 @@ test('a navigation button to a page without a known title keeps the writer words
     false
   )
 })
+
+for (const [trade, label, channel, route] of [
+  ['bakery', 'Order a cake', 'contact', 'about/our-bakers'],
+  ['dental clinic', 'Book an appointment', 'contact', 'team']
+])
+  test(`${trade}: a navigation button never leads to the page its own section sits on`, () => {
+    const own = {
+      entities: [],
+      pages: [
+        { route: 'home', entity: 'menuItem-1' },
+        {
+          route,
+          entity: 'menuItem-50',
+          title: 'Our people',
+          assignedModules: [
+            { entity: 'module-9', assignmentMode: 'include', menuIds: [50], position: 'section-1' }
+          ]
+        },
+        { route: 'contact', entity: 'menuItem-40' },
+        { route: 'prices', entity: 'menuItem-60', title: 'Prices' }
+      ],
+      slots: [
+        slot('module-9.0', 'text', 'Meet the team', { kind: 'navigation', urlKey: 'module-9.1' }),
+        slot('module-9.1', 'url', 'index.php?Itemid=50'),
+        // Another section, shown on a different page, keeps its destination words.
+        slot('module-8.0', 'text', 'See more', { kind: 'navigation', urlKey: 'module-8.1' }),
+        slot('module-8.1', 'url', 'index.php?Itemid=60')
+      ]
+    }
+    const plan = planSite(
+      { primaryAction: { label, channel, href: null, basis: 'sourced', evidence: [] } },
+      { questions: [] },
+      { contentMap: own }
+    )
+    const values = Object.fromEntries(
+      plan.slots.filter((s) => s.decision === 'value').map((s) => [s.key, s.value])
+    )
+    assert.equal(values['module-9.0'], label)
+    assert.equal(values['module-9.1'], 'index.php?Itemid=40')
+    assert.equal(values['module-8.0'], 'Prices')
+    assert.equal(values['module-8.1'], undefined)
+  })
+
+test('a navigation button on its own destination page with no primary action gets no words', () => {
+  const own = {
+    entities: [],
+    pages: [
+      {
+        route: 'team',
+        entity: 'menuItem-50',
+        title: 'Our people',
+        assignedModules: [{ entity: 'module-9', assignmentMode: 'include', menuIds: [50] }]
+      }
+    ],
+    slots: [
+      slot('module-9.0', 'text', 'Meet the team', { kind: 'navigation', urlKey: 'module-9.1' }),
+      slot('module-9.1', 'url', 'index.php?Itemid=50')
+    ]
+  }
+  const plan = planSite({ business: { name: 'Fictional clinic' } }, { questions: [] }, { contentMap: own })
+  assert.equal(plan.slots.find((s) => s.key === 'module-9.0')?.decision === 'value', false)
+})

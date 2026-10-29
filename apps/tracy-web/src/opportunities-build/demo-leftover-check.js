@@ -10,6 +10,7 @@
  */
 import { checkMainMenu } from './main-menu-check.js'
 import { checkFooterNavigation } from './footer-navigation-check.js'
+import { checkSelfLinks } from './self-link-check.js'
 import { peopleCardFindings } from './people-card-check.js'
 import { statisticFindings } from './statistic-check.js'
 import { keptPageReader } from '../lib/kept-page-reader.js'
@@ -132,6 +133,8 @@ export async function runLeftoverCheck({
   const mainMenu = sitePlan ? checkMainMenu({ pages, sitePlan, origin: siteOrigin }) : null
   // The footer link columns list every kept page (COO decision, #189 item 12), where the map declares them.
   const footerNavigation = checkFooterNavigation({ pages, sitePlan, contentMap, origin: siteOrigin })
+  // A button never leads to the page it sits on (COO decision, #189 item 23).
+  const selfLinks = checkSelfLinks({ pages, origin: siteOrigin })
   const checked = check({ pages, contentMap, brief, missing, styles, broken })
   const people = peopleCardFindings({ pages, contentMap, brief })
   const statistics = statisticFindings({ pages, contentMap, brief })
@@ -167,10 +170,17 @@ export async function runLeftoverCheck({
     severity: 'major',
     why: `Footer ${f.reason}: ${f.href ?? f.label ?? f.path ?? 'unread'}`
   }))
+  const selfLinkFindings = selfLinks.findings.map((f) => ({
+    ...f,
+    kind: 'self-link',
+    severity: 'major',
+    why: `Link to its own page: ${f.path} "${f.label}"`
+  }))
   return {
     ...report,
     mainMenu,
     footerNavigation,
+    selfLinks,
     contactMissing,
     heroMissing,
     offeringSummaries,
@@ -180,13 +190,14 @@ export async function runLeftoverCheck({
     pass:
       (!mainMenu || mainMenu.pass) &&
       (!footerNavigation || footerNavigation.pass) &&
+      selfLinks.pass &&
       report.pass === true &&
       broken.length === 0 &&
       unread.length === 0 &&
       offeringSummaries.length === 0 &&
       reviewQuotes.length === 0 &&
       pageIntros.length === 0,
-    findings: [...report.findings, ...mainMenuFindings, ...footerFindings, ...pageIntros].slice(
+    findings: [...report.findings, ...mainMenuFindings, ...footerFindings, ...selfLinkFindings, ...pageIntros].slice(
       0,
       FINDINGS_KEPT
     ),
@@ -195,6 +206,7 @@ export async function runLeftoverCheck({
       report.findings.length +
         mainMenuFindings.length +
         footerFindings.length +
+        selfLinkFindings.length +
         pageIntros.length -
         FINDINGS_KEPT
     ),
