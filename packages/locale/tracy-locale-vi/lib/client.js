@@ -3902,6 +3902,7 @@ window.__ModuleLoader__.load({
               "push.reason.phpUnchecked": "Không kiểm tra được với phiên bản PHP của site thật",
               "push.reason.extensionFile": "Thuộc về một extension, nên chỉ đi cùng extension đó",
               "push.reason.noDoor": "Chưa có cách an toàn để ghi cài đặt này",
+              "push.reason.translationGroup": "Ngôn ngữ và việc trang nào là bản dịch của trang nào chưa được gửi đi. Hãy làm thay đổi này trong Polylang trên site thật của bạn",
               "push.reason.phpDisabled": "File PHP đang bị tắt cho Claude Cowork trên site thật của bạn. Để gửi chúng, hãy bật “Allow PHP in template files” trong phần tuỳ chọn của Claude Cowork trên site của bạn",
               "push.reason.phpDisabledWordpress": "File PHP đang bị tắt cho Claude Cowork trên site thật của bạn. Để gửi chúng, hãy bật “Allow PHP in theme files” trong Settings › Claude Cowork trên site của bạn",
               "push.reason.templateFilesOff": "File template đang bị tắt cho Claude Cowork trên site thật của bạn. Để gửi chúng, hãy bật “Template files” trong phần tuỳ chọn của Claude Cowork trên site của bạn",

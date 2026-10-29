@@ -1063,6 +1063,7 @@
   "push.reason.phpUnchecked": "无法针对你线上 site 的 PHP 版本进行检查",
   "push.reason.extensionFile": "属于某个扩展，因此只会随该扩展一起发送",
   "push.reason.noDoor": "目前还没有安全的方式写入此设置",
+  "push.reason.translationGroup": "语言以及哪些页面互为译文暂不发送。请在你线上 site 的 Polylang 中进行此更改",
   "push.reason.phpDisabled": "你线上 site 上的 Claude Cowork 已关闭 PHP file。要发送它们，请在你 site 上的 Claude Cowork 选项中打开 “Allow PHP in template files”",
   "push.reason.phpDisabledWordpress": "你线上 site 上的 Claude Cowork 已关闭 PHP file。要发送它们，请在你 site 上的 Settings › Claude Cowork 中打开 “Allow PHP in theme files”",
   "push.reason.templateFilesOff": "你线上 site 上的 Claude Cowork 已关闭 template file。要发送它们，请在你 site 上的 Claude Cowork 选项中打开 “Template files”",

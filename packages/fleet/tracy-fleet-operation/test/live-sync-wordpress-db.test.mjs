@@ -706,3 +706,65 @@ test(
     )
   }
 )
+
+test(
+  'Polylang translation groups, term languages and per-language menus follow post and term renumbers (#105)',
+  opts,
+  () => {
+    const group = (members) =>
+      `a:${Object.keys(members).length}:{${Object.entries(members)
+        .map(([lang, v]) => `s:${lang.length}:"${lang}";${typeof v === 'string' ? v : `i:${v};`}`)
+        .join('')}}`
+    const posts = group({ en: 5, fr: 27, sync: 'a:1:{s:2:"fr";s:2:"en";}' })
+    const terms = group({ en: 1, fr: 30 })
+    const settings = (en, fr) =>
+      `a:2:{s:12:"default_lang";s:2:"en";s:9:"nav_menus";a:1:{s:4:"shop";a:1:{s:7:"primary";a:2:{s:2:"en";i:${en};s:2:"fr";i:${fr};}}}}`
+    sql(`DROP DATABASE IF EXISTS pl; CREATE DATABASE pl; USE pl;
+CREATE TABLE wp_posts (ID bigint PRIMARY KEY);
+CREATE TABLE wp_terms (term_id bigint PRIMARY KEY);
+CREATE TABLE wp_term_taxonomy (term_taxonomy_id bigint PRIMARY KEY, term_id bigint, taxonomy varchar(32), description longtext, parent bigint DEFAULT 0);
+CREATE TABLE wp_term_relationships (object_id bigint, term_taxonomy_id bigint, PRIMARY KEY (object_id, term_taxonomy_id));
+CREATE TABLE wp_options (option_id bigint PRIMARY KEY, option_name varchar(191), option_value longtext);
+INSERT INTO wp_posts VALUES (5), (27);
+INSERT INTO wp_terms VALUES (1), (2), (27), (30), (31), (40), (41);
+INSERT INTO wp_term_taxonomy VALUES (2, 2, 'language', 'a:0:{}', 0), (3, 27, 'term_language', '', 0),
+  (4, 30, 'category', '', 0), (5, 31, 'term_translations', '${terms}', 0),
+  (6, 40, 'post_translations', '${posts}', 0), (7, 41, 'post_translations', 'not serialized 27', 0);
+INSERT INTO wp_term_relationships VALUES (27, 2), (27, 6), (5, 6), (27, 3), (30, 3), (30, 5);
+INSERT INTO wp_options VALUES (1, 'polylang', '${settings(30, 31)}');`)
+    py(`
+mapper = engine.IdMap(sql, "wp_", wp.POLICY["entities"], {})
+rules = dict(wp.POLICY["entities"])
+mapper.renumber("pl", "posts", rules["posts"], [(27, 29)])
+mapper.renumber("pl", "terms", rules["terms"], [(30, 50)])`)
+    const description = (id) =>
+      Buffer.from(
+        sql(`SELECT HEX(description) FROM pl.wp_term_taxonomy WHERE term_taxonomy_id=${id}`),
+        'hex'
+      ).toString()
+    // The French post's group names its new number; Polylang Pro's `sync` languages stay.
+    assert.equal(description(6), group({ en: 5, fr: 29, sync: 'a:1:{s:2:"fr";s:2:"en";}' }))
+    // The French category's group and the French menu follow the term's number.
+    assert.equal(description(5), group({ en: 1, fr: 50 }))
+    assert.equal(sql('SELECT option_value FROM pl.wp_options WHERE option_id=1'), settings(50, 31))
+    // A group Polylang itself cannot read names nothing and is left as it is.
+    assert.equal(description(7), 'not serialized 27')
+    // The post's language and group moved with the post; term 27's language stayed with term 27,
+    // and term 30's language and group moved with the term, not with any post.
+    assert.equal(
+      sql(
+        "SELECT GROUP_CONCAT(CONCAT(object_id, ':', term_taxonomy_id) ORDER BY object_id, term_taxonomy_id) FROM pl.wp_term_relationships"
+      ),
+      '5:6,27:3,29:2,29:6,50:3,50:5'
+    )
+    // A number only a group names is taken: a fresh number goes above it.
+    sql(`UPDATE pl.wp_term_taxonomy SET description='${group({ en: 5, fr: 1000 })}' WHERE term_taxonomy_id=6`)
+    const refs = JSON.parse(
+      py(`
+mapper = engine.IdMap(sql, "wp_", wp.POLICY["entities"], {})
+print(json.dumps(sorted(mapper.referenced("pl", dict(wp.POLICY["entities"])["posts"]))))`)
+    )
+    assert.ok(refs.includes(1000), JSON.stringify(refs))
+    assert.ok(!refs.includes(50), JSON.stringify(refs))
+  }
+)

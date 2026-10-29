@@ -1063,6 +1063,7 @@
   "push.reason.phpUnchecked": "Non è stato possibile controllarlo per la versione di PHP del tuo site online",
   "push.reason.extensionFile": "Appartiene a un’estensione, quindi va solo insieme a essa",
   "push.reason.noDoor": "Non c’è ancora un modo sicuro per scrivere questa impostazione",
+  "push.reason.translationGroup": "Le lingue e quali pagine sono traduzioni l’una dell’altra non vengono ancora inviate. Fai questa modifica in Polylang sul tuo site online",
   "push.reason.phpDisabled": "I file PHP sono disattivati per Claude Cowork sul tuo site online. Per inviarli, attiva “Allow PHP in template files” nelle opzioni di Claude Cowork sul tuo site",
   "push.reason.phpDisabledWordpress": "I file PHP sono disattivati per Claude Cowork sul tuo site online. Per inviarli, attiva “Allow PHP in theme files” in Settings › Claude Cowork sul tuo site",
   "push.reason.templateFilesOff": "I file del template sono disattivati per Claude Cowork sul tuo site online. Per inviarli, attiva “Template files” nelle opzioni di Claude Cowork sul tuo site",
