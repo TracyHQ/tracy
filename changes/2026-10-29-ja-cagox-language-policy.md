@@ -1,0 +1,2 @@
+- **Language policy approves the exact JA Cagox contract objects** — Akemi (agent) · chore/ja-cagox-language-policy · 2026-10-29
+  **Affects:** the JA Cagox contract PR (`feat/ja-cagox`): its content coverage file lists VirtueMart's country names, two of them spelled with accented letters as the demo prints them, and its readiness fixture carries a trimmed pack (two archives). Each is approved by its exact object id; different bytes need a new review. The gate reads the policy from the PR base, so this must be on `develop` before that PR.

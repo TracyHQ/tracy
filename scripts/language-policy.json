@@ -226,6 +226,21 @@
       "path": "packages/locale/tracy-locales/lib/client.js",
       "oid": "03f560608580ffec00c282f1d0c1068b025db945",
       "reason": "Reviewed PR #145 generated interface translations for a live site whose PHP is too old for Claude Cowork (sync.error.livePhpTooOld and livePhpTooOldPlain), rebuilt after merging develop again; the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-cagox/j6/1.0.2/content-coverage.json",
+      "oid": "c818c4b751aab1de3f9efbb1e31117e745e1dad4",
+      "reason": "Third-party template demo content captured verbatim (JA Cagox j6 1.0.2 coverage audit: VirtueMart country names in the shop address form); the contract must match the demo byte for byte."
+    },
+    {
+      "path": "apps/tracy-web/test/fixtures/template-customization-question-readiness/a/quickstart_ja-cagox_j6/ja-cagox-j6-database-1.0.1.sql.gz",
+      "oid": "deb59ade2c462cb79d1f6a9aa2169776f73ccb5e",
+      "reason": "Readiness test fixture for JA Cagox j6 1.0.1: a trimmed copy of the third-party template's pack (webroot and database), read only by the readiness tests."
+    },
+    {
+      "path": "apps/tracy-web/test/fixtures/template-customization-question-readiness/a/quickstart_ja-cagox_j6/ja-cagox-j6-webroot-1.0.1.tar.gz",
+      "oid": "fc095d87133701ffb459f8b286c28b0e10dc4566",
+      "reason": "Readiness test fixture for JA Cagox j6 1.0.1: a trimmed copy of the third-party template's pack (webroot and database), read only by the readiness tests."
     }
   ]
 }
