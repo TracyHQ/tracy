@@ -65,6 +65,7 @@ import { contentMapAt, plannedSlotValues, showcaseOff, writeOutsideMap } from '.
 import { takenOffPicturePaths } from './cutout-css.js'
 import { onceNote, overlapSafetyNet } from './picture-overlap-net.js'
 import { lineLimits, withBoxLimits, withinLines } from './slot-box-limits.js'
+import { characterRefusals, refusedCardHides, rewriteWithinBox } from './refused-box-rewrite.js'
 import { writeWoContent } from './joomla-wo-content.js'
 import { heroSlotValues } from './hero-lines.js'
 import { buttonActionValues } from './button-action-values.js'
@@ -165,6 +166,8 @@ const BARE_NUMBER = /^\d+$/
  * @param {Record<string, string>} [input.replaceKept] - kept pictures the write replaces, each with the words asking for it
  * @param {(job: () => Promise<any>) => Promise<any>} input.timed
  * @param {Record<string, number>} [input.lines] - the lines each slot's box holds, by key (`lineLimits`)
+ * @param {(asks: Array<{ key: string, value: string, limit: number }>) => Promise<Record<string, string>>} [input.shorten] -
+ *   a line refused as too long for its box, written shorter once (`refused-box-rewrite.js`, #189 item 30)
  * @returns {Promise<string[]>} the keys the site refused
  */
 async function writeContractOnce({
@@ -177,7 +180,8 @@ async function writeContractOnce({
   emptyLinks = [],
   replaceKept = {},
   timed,
-  lines = {}
+  lines = {},
+  shorten
 }) {
   // 🔒 A LINE IS WRITTEN WITHIN THE LINES ITS BOX HOLDS (spec TracyHQ/tracy#189, 29/10/2026). The plugin refuses words with
   // more line breaks than the box's measured lines (`SlotFit.php`, SLOT_TOO_LONG "more lines than its box holds"), and a
@@ -207,6 +211,8 @@ async function writeContractOnce({
     }
     return apply(call)
   }
+  /** The lines already written shorter once: refused again, they are set aside. */
+  const shortened = new Set()
   for (let attempt = 0; ; attempt += 1) {
     try {
       await timed(() =>
@@ -244,6 +250,36 @@ async function writeContractOnce({
       if (folded > 0) {
         served = false
         continue
+      }
+      // 🔒 A LINE TOO LONG FOR ITS BOX IS ASKED AGAIN ONCE, WITH THE LIMIT THE SITE NAMES (#189 item 30): a refused name kept the
+      // demo's on the card, its page and every menu mirroring it. The shorter words replace the long ones in every line of
+      // this write that held them, so the places agree; refused again, the line is set aside below.
+      const over = characterRefusals(words).filter(
+        ({ key }) => typeof changes[key] === 'string' && !shortened.has(key)
+      )
+      if (shorten && over.length > 0) {
+        for (const { key } of over) shortened.add(key)
+        const shorter = await shorten(
+          over.map(({ key, limit }) => ({ key, value: changes[key], limit }))
+        ).catch(() => ({}))
+        let rewritten = 0
+        for (const [key, value] of Object.entries(shorter)) {
+          const long = changes[key]
+          if (typeof long !== 'string' || typeof value !== 'string' || !value) continue
+          for (const [other, held] of Object.entries(changes))
+            if (held === long) {
+              changes[other] = value
+              if (other in evidence && evidence[other] === long) evidence[other] = value
+            }
+          rewritten += 1
+        }
+        if (rewritten > 0) {
+          console.warn(
+            `[brief-joomla] ${siteKey}: ${rewritten} line(s) refused as too long were written shorter`
+          )
+          served = false
+          continue
+        }
       }
       // Which lines the site refused and why, in the log: a refused line keeps the template's words until it is emptied
       // (`planRecordSteps` `extraBlanks`), and the reason is what tells a box limit from markup or an empty slot.
@@ -335,11 +371,13 @@ export async function writeContract(input) {
       reading = await apply({ siteKey, action: 'content.contract', params: { operation: 'inspect' } })
     /** @type {string[]} */
     let refused
+    // The part's own lines: what the write wrote shorter (`shorten`) is copied back, so the caller knows what was written.
+    const ofPart = Object.fromEntries(keysOfPart.map((key) => [key, changes[key]]))
     try {
       refused = await writeContractOnce({
         ...input,
         reading,
-        changes: Object.fromEntries(keysOfPart.map((key) => [key, changes[key]])),
+        changes: ofPart,
         evidence: Object.fromEntries(
           keysOfPart.filter((key) => key in evidence).map((key) => [key, evidence[key]])
         ),
@@ -364,6 +402,7 @@ export async function writeContract(input) {
       return
     }
     written++
+    for (const [key, value] of Object.entries(ofPart)) changes[key] = value
     for (const key of refused) {
       delete changes[key]
       delete evidence[key]
@@ -1578,6 +1617,8 @@ export function createJoomlaEngine({
       let wrote = 0
       /** The lines the site refused in the write of the words: nothing later asks for them again. */
       const refusedByWrite = new Set()
+      /** The words planned for each line before the write, kept to say which card the site refused (#189 item 30). */
+      const plannedWords = { ...changes }
       if (Object.keys(changes).length === 0) ctx.note('there was nothing to write into the template')
       else {
         const setAside = await writeContract({
@@ -1588,7 +1629,19 @@ export function createJoomlaEngine({
           changes,
           evidence,
           lines: lineLimits(staticState(ctx.contract).slots),
-          timed: (job) => time('writeMs', job)
+          timed: (job) => time('writeMs', job),
+          // A line refused as too long for its box is written shorter once (#189 item 30, `refused-box-rewrite.js`).
+          shorten: async (asks) => {
+            const roles = new Map(staticState(ctx.contract).slots.map((slot) => [slot.key, slot.role]))
+            const shorter = await rewriteWithinBox({
+              asks: asks.map((ask) => ({ ...ask, role: roles.get(ask.key) })),
+              model: (await models()).text ?? null,
+              locale: prepared.written ?? SOURCE,
+              signal: ctx.signal
+            })
+            ctx.time('linesShortenedAfterRefusal', Object.keys(shorter).length)
+            return shorter
+          }
         })
         for (const key of setAside) refusedByWrite.add(key)
         if (setAside.length > 0)
@@ -2102,6 +2155,21 @@ export function createJoomlaEngine({
               slot
             ])
           )
+          // 🔒 A CARD WHOSE NAME THE SITE STILL REFUSED GOES WHOLE (#189 item 30, `refusedCardHides`): never the demo's name
+          // on the card, its page or the menus that mirror it. The footer and main menu are written after this from the
+          // published records, so its links go with it; the note names the offering and why.
+          const nameRefused = refusedCardHides({
+            refused: refusedByWrite,
+            contentMap: staticState(ctx.contract)
+          })
+          const nameRefusedGroups = new Set(nameRefused.map((hide) => hide.group))
+          for (const hide of nameRefused) {
+            const key = [...refusedByWrite].find((k) => staticSlots.get(k)?.group?.id === hide.group)
+            const named = key ? String(plannedWords[key] ?? '').trim() : ''
+            ctx.note(
+              `${named ? `"${named}"` : 'a card'} could not be shown: its name is too long for the template's box even written shorter, so its card and page were taken off`
+            )
+          }
           const records = await planRecordSteps({
             apply,
             siteKey,
@@ -2115,9 +2183,9 @@ export function createJoomlaEngine({
               ...(prepared.demoBlanks ?? []),
               ...[...refusedByWrite]
                 .map((key) => staticSlots.get(key))
-                .filter((slot) => slot && occupiedSample(slot))
+                .filter((slot) => slot && occupiedSample(slot) && !nameRefusedGroups.has(slot.group?.id))
             ],
-            extraHides: prepared.demoHides ?? [],
+            extraHides: [...(prepared.demoHides ?? []), ...nameRefused],
             // A fact row emptied in one cell is emptied whole (`wholeFactRowsOf`, #189 items 14 and 15).
             slots: [...staticSlots.values()]
           })

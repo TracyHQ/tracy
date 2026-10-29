@@ -16,6 +16,7 @@ import { factRowFacts, planFactRows } from './fact-rows.mjs'
 import { roleInCasingOf, showablePeopleOf } from './brief-people.mjs'
 import { planFormBlocks } from './form-blocks.mjs'
 import { planReviewGroup, sourcedReviewsOf } from './review-quotes.mjs'
+import { shortOfferingName } from './offering-short-name.mjs'
 
 export const HONESTY_VERSION = 'site-plan-honesty/1'
 
@@ -30,6 +31,9 @@ export const HONESTY_REASONS = Object.freeze({
   'author-as-business': 'a post’s author shown as the business, never as a made-up person',
   'no-brief-person': 'the brief names no person for this card',
   'person-name-unavailable': 'the accepted name cannot be shown whole on this card',
+  'brief-offering-short': 'an offering the brief lists, in a shorter form of its own words that fits the box',
+  'offering-name-unavailable':
+    'the offering’s name is too long for this card and has no shorter form of its own words, so the card is taken off',
   'no-brief-offering': 'the brief lists no offering for this card',
   'no-brief-price': 'the brief holds no price for this plan',
   'no-brief-fact': 'the brief holds no such fact',
@@ -64,7 +68,20 @@ const CONTACT_KIND = Object.freeze({
 })
 
 const text = (v) => (typeof v === 'string' && v.trim() ? v.trim() : '')
-const fits = (slot, value) => !Number.isInteger(slot.maxCharacters) || [...value].length <= slot.maxCharacters
+/**
+ * The characters a text slot holds: the tighter of its contract limit and its measured box, as the site reads it
+ * (`SlotFit.php` `checkText`: `fit.maxCharacters`, else the smallest of `fit.maxChars`, only for a measured fit). A value
+ * over the box is refused by the site and the slot keeps the demo's words (#189 item 30), so the plan never places one.
+ */
+export function slotCharacterLimit(slot) {
+  const own = Number.isInteger(slot?.maxCharacters) && slot.maxCharacters > 0 ? slot.maxCharacters : Infinity
+  const fit = slot?.fit
+  if (!fit || fit.measured !== true) return own
+  if (Number.isInteger(fit.maxCharacters) && fit.maxCharacters > 0) return Math.min(own, fit.maxCharacters)
+  const boxes = Object.values(fit.maxChars ?? {}).filter((n) => Number.isInteger(n) && n > 0)
+  return boxes.length ? Math.min(own, ...boxes) : own
+}
+const fits = (slot, value) => [...value].length <= slotCharacterLimit(slot)
 const entityKindOf = (contentMap, entity) =>
   (contentMap?.entities ?? []).find((e) => e?.key === entity)?.kind ?? String(entity).split('-')[0]
 
@@ -329,6 +346,27 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
           return
         }
       }
+      // 🔒 AN OFFERING'S NAME FITS ITS BOX OR ITS CARD GOES (#189 item 30): a name over the measured box was refused by the
+      // site, and the card, its page and every menu mirroring it kept the demo's name. The name takes a shorter form of its
+      // own words (`shortOfferingName`) that fits every name field of the card; with none, the card is taken off whole.
+      /** The name every name field of the card shows, when the brief's label is too long for one of them. */
+      let shortName = null
+      if (assigned && group.kind !== 'person') {
+        const names = group.slots.filter((s) => s.role === 'offering.name' && s.type === 'text')
+        if (names.some((s) => !fits(s, assigned.label))) {
+          shortName = shortOfferingName(assigned.label, Math.min(...names.map(slotCharacterLimit)))
+          if (!shortName) {
+            records.push({
+              ...record,
+              decision: 'hide',
+              reason: 'offering-name-unavailable',
+              assigned: { id: assigned.id, label: assigned.label },
+              place: placeOf(contentMap, group)
+            })
+            return
+          }
+        }
+      }
       if (!assigned) {
         const reason =
           group.kind === 'package'
@@ -384,7 +422,10 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
           (slot.type === 'text' || slot.type === 'url')
         )
           blanks.push(blankOf(slot, 'no-brief-fact'))
-        else if (role === 'offering.name') setValue(slot, assigned.label, 'brief-offering')
+        else if (role === 'offering.name' && shortName) {
+          if (slot.type === 'text' && fits(slot, shortName))
+            values[slot.key] = { value: shortName, reason: 'brief-offering-short', evidence: assigned.label }
+        } else if (role === 'offering.name') setValue(slot, assigned.label, 'brief-offering')
         else if (OFFERING_FACTS.has(role)) blanks.push(blankOf(slot, 'no-brief-fact'))
         else if (role === 'offering.description' || role === 'offering.summary') {
           const own = ownQuote(assigned, offerings)
