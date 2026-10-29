@@ -96,16 +96,22 @@ export const roleOf = (/** @type {'light' | 'dark' | 'single'} */ variant) =>
  * `prepareBrand` padded to the row's `frame`, the slot sample's shape, so the plugin's aspect check (0.02) passes.
  * 🔒 ITS OWN APPLY ID: the contract door takes only a `contract-` id, new for every revision. The Apply door records it
  * beside the brand id (`recordedDoor`), so undoing the build takes it back too.
+ * @param {{slot: string, path?: string | null, pathFor?: ((fit: any) => Promise<string | null>) | null, read: Function,
+ *   write: Function, stamp: string, skip: (where: string, reason: string) => void}} input
  * @returns {Promise<boolean>}
  */
-export async function placeFooterLogo({ slot, path, read, write, stamp, skip }) {
+export async function placeFooterLogo({ slot, path = null, pathFor = null, read, write, stamp, skip }) {
   try {
     const state = await read('content.contract', { operation: 'inspect' })
     if (state?.ok === false) throw new Error(String(state.message ?? state.error ?? 'no answer'))
-    if (!state?.slots?.some((s) => s?.key === slot && s?.type === 'image')) {
+    const listed = state?.slots?.find((s) => s?.key === slot && s?.type === 'image')
+    if (!listed) {
       skip('footer-logo', `the site's content contract has no picture slot ${slot}`)
       return false
     }
+    // `pathFor` sees the slot's Slot fit first (a logo too narrow for it is set on a wider canvas, or not placed at all).
+    if (pathFor) path = await pathFor(listed.fit ?? null)
+    if (!path) return false
     const changes = { [slot]: path }
     const requestId = createHash('sha256')
       .update(JSON.stringify({ stamp, revision: state.revision, changes }))

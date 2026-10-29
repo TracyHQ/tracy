@@ -22,6 +22,8 @@ const SMALL_KEYS = ['site_logo_small', 'site_logo_dark_small']
  * @param {object} input
  * @param {string} input.folder @param {any} input.profile @param {string} [input.name]
  * @param {{light?: Uint8Array, dark?: Uint8Array, single?: Uint8Array}} input.logos
+ * @param {boolean} [input.nameFallback] - a brief build: a key whose logo could not be uploaded is emptied, so T4 prints
+ *   the name rather than the template's logo
  * @param {boolean} [input.textLogo] - no logo of the business: every logo key the demo set is emptied, so T4 prints the name
  * @param {string | null} input.favicon - the uploaded favicon's path
  * @param {any} input.settings - the `template.siteSettings` read
@@ -36,6 +38,7 @@ export async function writeT4Profiles({
   name,
   logos,
   textLogo = false,
+  nameFallback = false,
   favicon,
   settings,
   upload,
@@ -61,7 +64,8 @@ export async function writeT4Profiles({
         const path = variant
           ? await upload(roleOf(variant), key === 'site_logo' ? 'logo' : 'logo-dark')
           : null
-        if (variant && !path) continue
+        // An upload the site refused leaves the template's logo, unless the spot falls back to the name (a brief build).
+        if (variant && !path && !nameFallback) continue
         values[key] = path ?? ''
         if (path) {
           used.add(variant)

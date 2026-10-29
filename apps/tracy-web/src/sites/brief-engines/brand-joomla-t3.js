@@ -55,6 +55,7 @@ export async function writeT3Styles({
   name,
   logos,
   textLogo = false,
+  nameFallback = false,
   upload,
   read,
   write,
@@ -101,7 +102,8 @@ export async function writeT3Styles({
         next.logoimage_dark = darkPath ?? ''
         if (darkPath) used.add(darkVariant)
       }
-    } else if (anyLogo && variant === null && name) {
+    } else if (anyLogo && (variant === null || nameFallback) && name) {
+      // No logo for this style, or (a brief build) one the site would not take: the name, never the template's logo.
       Object.assign(next, { logotype: 'text', sitename: name })
     } else if (textLogo && !anyLogo && name) {
       Object.assign(next, { logotype: 'text', sitename: name })
@@ -126,6 +128,20 @@ export async function writeT3Styles({
         'logo',
         `the site refused template style ${style.id} (${error instanceof Error ? error.message : error})`
       )
+      // A brief build whose logo the style refused shows the name instead of the template's logo.
+      if (path && nameFallback && name) {
+        const text = { ...params, logotype: 'text', sitename: name }
+        if (Object.hasOwn(params, 'logoimage_dark')) text.logoimage_dark = ''
+        await write('content.update', {
+          kind: 'templateStyle',
+          id: style.id,
+          fields: { params: JSON.stringify(text) }
+        })
+          .then(() => {
+            wroteText = true
+          })
+          .catch(() => {})
+      }
     }
   }
   if (wroteLogo) wrote('logo')

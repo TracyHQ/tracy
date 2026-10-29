@@ -26,6 +26,7 @@ import {
   variantFor
 } from './brand-joomla-places.js'
 import { writeDemoAuthorName } from './brand-joomla-author.js'
+import { logoForSlot, nameForDemoLogos } from './brand-joomla-logo-fallback.js'
 import { writeT3Styles } from './brand-joomla-t3.js'
 import { writeT4Profiles } from './brand-joomla-t4.js'
 import { PAGE_TITLES_SINCE, writePageTitles } from './joomla-page-titles.js'
@@ -84,6 +85,8 @@ async function writeSiteBrand({ prepared, profile, stamp, write, read, wrote: to
   // A brief build with no logo shows the name as text on every logo spot (site plan, #193).
   const textLogo = prepared.textLogo === true && !anyLogo
   const name = typeof prepared.name === 'string' ? prepared.name.trim() : ''
+  // A brief build: a logo spot its logo does not reach shows the name as text, never the template's logo (#193).
+  const nameFallback = prepared.nameFallback === true && name !== ''
   const folder = templateFolderOf(profile?.release)
   if (!profile?.framework || !folder) {
     if (anyLogo) skip('logo', 'Tracy does not know where this design shows a logo yet')
@@ -126,7 +129,19 @@ async function writeSiteBrand({ prepared, profile, stamp, write, read, wrote: to
   let used = new Set()
   let header = false
   if (profile.framework === 't3') {
-    used = await writeT3Styles({ folder, profile, name, logos, textLogo, upload, read, write, wrote, skip })
+    used = await writeT3Styles({
+      folder,
+      profile,
+      name,
+      logos,
+      textLogo,
+      nameFallback,
+      upload,
+      read,
+      write,
+      wrote,
+      skip
+    })
     header = used.size > 0
     if (prepared.favicon && (await readSettings()))
       await writeT3Favicon({ folder, upload, write, wrote, skip })
@@ -134,12 +149,13 @@ async function writeSiteBrand({ prepared, profile, stamp, write, read, wrote: to
     const settings = await readSettings()
     if (settings) {
       const favicon = prepared.favicon ? await upload('favicon', 'favicon') : null
-      const result = await writeT4Profiles({
+      let result = await writeT4Profiles({
         folder,
         profile,
         name,
         logos,
         textLogo,
+        nameFallback,
         favicon,
         settings,
         upload,
@@ -147,6 +163,21 @@ async function writeSiteBrand({ prepared, profile, stamp, write, read, wrote: to
         wrote,
         skip
       })
+      // The site refused the logo: the header shows the name instead of the template's logo.
+      if (!result.ok && anyLogo && nameFallback)
+        result = await writeT4Profiles({
+          folder,
+          profile,
+          name,
+          logos: {},
+          textLogo: true,
+          favicon,
+          settings,
+          upload,
+          write,
+          wrote,
+          skip
+        })
       used = result.used
       header = used.size > 0
     }
@@ -154,12 +185,30 @@ async function writeSiteBrand({ prepared, profile, stamp, write, read, wrote: to
   if (anyLogo && profile.footerSlot) {
     const dark = darkSpotsOf(profile).footer
     const variant = variantFor(logos, dark) ?? (logos.dark ? 'dark' : logos.light ? 'light' : null)
-    const path = variant ? await upload(roleOf(variant), 'footer-logo') : null
-    if (path && (await placeFooterLogo({ slot: profile.footerSlot, path, read, write, stamp, skip }))) {
+    // A logo narrower than the slot's floor goes on a canvas that wide, or the footer shows the name (`logoForSlot`).
+    const pathFor = async (/** @type {any} */ fit) => {
+      if (!variant) return null
+      const fitted = await logoForSlot(logos[variant], fit).catch((error) => ({
+        text: /** @type {const} */ (true),
+        reason: String(error)
+      }))
+      if ('text' in fitted) {
+        skip('footer-logo', fitted.reason)
+        return null
+      }
+      return fitted.padded
+        ? uploader({ write, stamp, skip }, { 'logo-footer': fitted.bytes })('logo-footer', 'footer-logo')
+        : upload(roleOf(variant), 'footer-logo')
+    }
+    if (await placeFooterLogo({ slot: profile.footerSlot, pathFor, read, write, stamp, skip })) {
       used.add(variant)
       wrote('footer-logo')
     }
   }
+  // Every module still showing one of the template's logo files (the footer the logo did not reach, a logo the content
+  // map has no door for) shows the name as text.
+  if (nameFallback && profile.framework)
+    await nameForDemoLogos({ name, demoFiles: prepared.demoLogoFiles ?? [], read, write, wrote, skip })
   if (logos.dark && !logos.single && !used.has('dark'))
     skip('logo-dark', 'this design does not show a dark-background logo yet')
   if (header && profile.brandReady === false) skip('logo', NOT_SHOWN.logo)

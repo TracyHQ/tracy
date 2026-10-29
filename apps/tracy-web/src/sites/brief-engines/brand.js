@@ -56,12 +56,15 @@ const BUSY_WAIT_MS = 750
  * @property {Uint8Array} [favicon]
  * @property {boolean} [textLogo] - a brief build with no logo of the business: every logo spot of the design shows its name as
  *   text instead of the template's own logo (site plan `logo.decision` `name-as-text`, #193)
+ * @property {boolean} [nameFallback] - a brief build: a logo spot the business's logo does not reach shows its name as text
+ * @property {string[]} [demoLogoFiles] - the template's logo files (site plan `logo.demoFiles`), for that fallback
  */
 
 /**
  * @typedef {object} BrandWriterInput what a writer is handed; it reports through `wrote` and `skip`
  * @property {string} siteKey - the site; a writer with no Apply door of its own (EmDash) reaches it by this
- * @property {Awaited<ReturnType<typeof prepareBrand>> & {share?: Buffer, nameGiven?: boolean, textLogo?: boolean}} prepared - the pack, logos
+ * @property {Awaited<ReturnType<typeof prepareBrand>> & {share?: Buffer, nameGiven?: boolean, textLogo?: boolean,
+ *   nameFallback?: boolean, demoLogoFiles?: string[]}} prepared - the pack, logos
  *   padded into the profile's frame, and the share card made from the logo as uploaded (`brand-share-card.js`)
  * @property {any} profile - `templateProfileOf`, or null for a release with no row
  * @property {string | null} tag - the release tag
@@ -120,6 +123,8 @@ export async function setSiteBrand({
   const prepared = /** @type {BrandWriterInput["prepared"]} */ (await prepareBrand(pack, profile))
   prepared.requireComplete = pack.requireComplete === true
   prepared.textLogo = pack.textLogo === true && !Object.keys(pack.logo ?? {}).length
+  prepared.nameFallback = pack.nameFallback === true
+  prepared.demoLogoFiles = Array.isArray(pack.demoLogoFiles) ? pack.demoLogoFiles : []
   if (
     prepared.requireComplete &&
     pack.logo &&
@@ -239,6 +244,11 @@ export function createSiteBrand({ applyFor, readFile, versionOf, sleep, sitePlan
     // A brief build with no logo shows the business name as text, never the demo's logo (site plan, #193).
     if (!pack.logo && pack.name && ['name-as-text', 'brief-logo'].includes(planned?.logo?.decision))
       pack.textLogo = true
+    // A brief build never leaves the template's logo: a spot its logo does not reach shows the name (`brand-joomla-logo-fallback.js`).
+    if (pack.name && ['name-as-text', 'brief-logo'].includes(planned?.logo?.decision)) {
+      pack.nameFallback = true
+      pack.demoLogoFiles = Array.isArray(planned.logo.demoFiles) ? planned.logo.demoFiles : []
+    }
     const favicon = await bytesOf(brand.favicon, 'favicon')
     if (favicon) pack.favicon = favicon
     const version = ctx.quickstart ? await versionOf(ctx.siteKey).catch(() => null) : null
