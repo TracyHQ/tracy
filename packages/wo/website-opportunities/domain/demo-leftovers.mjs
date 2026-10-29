@@ -15,6 +15,8 @@ import { demoLogoLeftovers, demoPostLeftovers, demoSocialLeftovers } from './dem
 import { labelLeftovers, offeringLeftovers, priceLeftovers } from './demo-leftovers-honesty.mjs'
 import { textLeftovers } from './demo-leftovers-text.mjs'
 import { styleLeftovers } from './demo-leftovers-style.mjs'
+import { formLeftovers } from './demo-leftovers-forms.mjs'
+import { formDestinationsOf } from './form-blocks.mjs'
 import {
   findCutOuts,
   findDemoIcons,
@@ -57,7 +59,9 @@ export const LEFTOVER_KINDS = Object.freeze({
   C18: { name: 'demo social link or map', severity: 'minor', coverage: 'basic' },
   C19: { name: 'link that leads nowhere', severity: 'minor', coverage: 'full' },
   // Read from the stored values (`styleReadback`), not from the page: only the slots read back are judged.
-  C20: { name: 'heading lost the demo’s inline style', severity: 'major', coverage: 'basic' }
+  C20: { name: 'heading lost the demo’s inline style', severity: 'major', coverage: 'basic' },
+  // Read from the served HTML: a form that leads nowhere for this business (`demo-leftovers-forms.mjs`).
+  C21: { name: 'form that leads nowhere', severity: 'major', coverage: 'basic' }
 })
 
 /** Text and picture roles of a demo post. */
@@ -354,7 +358,9 @@ export const LEFTOVER_RULES = Object.freeze([
     find: (ctx) => deadLinkLeftovers(ctx, bySlot((s) => s.role === 'editorial.navigation_url')(ctx))
   },
   // C20: replace the words, never the style (`demo-leftovers-style.mjs`).
-  { kind: 'C20', find: styleLeftovers }
+  { kind: 'C20', find: styleLeftovers },
+  // C21: a sign-up, login or dead form with no destination (`demo-leftovers-forms.mjs`).
+  { kind: 'C21', find: formLeftovers }
 ])
 
 /**
@@ -394,7 +400,9 @@ export function checkDemoLeftovers({
     // The site's own stylesheets the pages load (`{href, css}`): a background the template settings paint lives there (C10).
     styles,
     // The values the site stores for the styled slots, by key (C20).
-    styleReadback
+    styleReadback,
+    // The destinations the brief really holds (an email-marketing account, a booking link): C21.
+    destinations: formDestinationsOf(brief)
   }
   const seen = new Set()
   const findings = []

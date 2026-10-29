@@ -1439,8 +1439,8 @@ export function validateBrief(brief, { legacy = false } = {}) {
   const integrations = Array.isArray(brief.integrations) ? brief.integrations : []
   if ('integrations' in brief && !Array.isArray(brief.integrations)) err('integrations', 'must be a list')
   integrations.forEach((x, i) => {
-    if (!isObj(x) || !['booking', 'map', 'social', 'chat'].includes(x.kind))
-      err(`integrations[${i}].kind`, 'must be booking, map, social or chat')
+    if (!isObj(x) || !['booking', 'map', 'social', 'chat', 'newsletter'].includes(x.kind))
+      err(`integrations[${i}].kind`, 'must be booking, map, social, chat or newsletter')
     if (!nonEmpty(x?.url)) err(`integrations[${i}].url`, 'must be a non-empty string')
     if (typeof x?.verified !== 'boolean') err(`integrations[${i}].verified`, 'must be a boolean')
   })

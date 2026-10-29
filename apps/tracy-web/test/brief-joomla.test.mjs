@@ -4011,6 +4011,35 @@ test('#189 lines the writer echoed in the demo’s words take the plan’s fallb
   )
 })
 
+// Spec TracyHQ/tracy#189 (COO rule 29/10/2026): a form block the site plan took off for want of a destination is unpublished
+// with the fact modules, in every design, and none of its words is written, whatever the copy writer said.
+test('#189 a sign-up block with no destination is unpublished and none of its lines is written', async () => {
+  const map = mapOf(business)
+  const slot = map.slots.find(
+    (s) => s.type === 'text' && !s.requiresEvidence && /^module-\d+$/.test(s.entity)
+  )
+  assert.ok(slot, 'the release has a module line')
+  const id = Number(slot.entity.slice('module-'.length))
+  const plan = {
+    slots: [{ key: slot.key, decision: 'text' }],
+    honesty: {
+      hide: [{ how: 'entity', entity: slot.entity, kind: 'module', reason: 'no-form-destination' }],
+      records: []
+    }
+  }
+  const { prepared, site } = await run({
+    model: fakeModel(),
+    woContent: { sitePlanFor: async () => plan }
+  })
+  assert.ok(
+    prepared.factModules.some((m) => m.id === id),
+    'the block is queued to be unpublished'
+  )
+  for (const s of map.slots.filter((x) => x.entity === slot.entity))
+    assert.ok(!(s.key in prepared.changes), `${s.key} is not written`)
+  assert.ok(site.hiddenModules.includes(id), 'and it is unpublished on the site')
+})
+
 // 🔒 A BROKEN SITE IS NEVER HANDED OVER (spec TracyHQ/tracy#189): after the menu tidy-up the home page and the kept pages are
 // read; one that does not answer 200 takes the tidy-up's menu take-offs back, and the reason is in the report.
 test('a site whose home page stops answering after the menu tidy-up gets its menu take-offs back, said in the report', async () => {

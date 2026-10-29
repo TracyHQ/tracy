@@ -81,7 +81,10 @@ export const BRIEF_ITEM_ROUTES = Object.freeze({
   'integration.booking': roles('contact.cta_url', 'contact.cta_label'),
   'integration.map': roles('contact.map'),
   'integration.social': roles('contact.social_url'),
-  'integration.chat': roles('contact.cta_url')
+  'integration.chat': roles('contact.cta_url'),
+  'integration.newsletter': notShown(
+    'It keeps the template sign-up block on the page; the list itself is not copy, and the block is wired by the owner.'
+  )
 })
 
 /** The routing table's own faults: a row with neither a role nor a reason, or with a role outside vocabulary 3. */

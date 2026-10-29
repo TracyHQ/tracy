@@ -653,7 +653,7 @@
         "type": "object",
         "required": ["kind", "url", "verified"],
         "properties": {
-          "kind": { "enum": ["booking", "map", "social", "chat"] },
+          "kind": { "enum": ["booking", "map", "social", "chat", "newsletter"] },
           "url": { "type": "string", "minLength": 1 },
           "verified": { "type": "boolean" }
         }

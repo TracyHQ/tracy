@@ -36,7 +36,8 @@ const INSTEAD = Object.freeze({
   C17: "the owner's own value from the owner data below if it is there, otherwise hide the line",
   C18: "the owner's own link or map if the owner data has it, otherwise hide the icon or the map",
   C19: 'point the link to a page that exists, or remove the link',
-  C20: "the owner's words inside the template's own inline tags (the accent span, the line break) at the same place"
+  C20: "the owner's words inside the template's own inline tags (the accent span, the line break) at the same place",
+  C21: 'hide the whole form block (heading, text, field and button): a form stays only with a real destination'
 })
 
 /** One owner fact line of the brief, only when the brief has it. */

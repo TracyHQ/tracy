@@ -166,12 +166,15 @@ function channelSlotsOf(slots, channels, contact) {
 }
 
 /** The slot decisions: a contact fact or the name where the slot's role asks for one, else the fill plan's. */
-function slotsOf(contentMap, brief, contact, name, cardNames = {}, channels = []) {
+function slotsOf(contentMap, brief, contact, name, cardNames = {}, channels = [], unwritten = new Set()) {
   if (!contentMap?.slots?.length) return []
   // Pictures: per slot, drawn where no photo fits, icons and cut-outs by subject (#194, #195).
   const fill = pictureDecisionsOf(contentMap, brief, cardNames)
   const reach = channelSlotsOf(contentMap.slots, channels, contact)
   return contentMap.slots.map((slot) => {
+    // A block taken off whole (a sign-up form with no destination) has no words to write.
+    if (unwritten.has(slot.key))
+      return { key: slot.key, role: slot.role ?? null, decision: 'skip', reason: 'no-form-destination' }
     const channel = reach.get(slot.key)
     if (channel) return { key: slot.key, role: slot.role, decision: 'value', ...channel }
     const kind = slot.type === 'text' ? CONTACT_ROLES[slot.role] : null
@@ -248,8 +251,9 @@ function withoutEmptiedPages(answered, served, contentMap, honesty) {
 
 /** The slot decisions with the hero's lines laid over them: a hero line is a value, never the copy writer's. */
 function withHero(slots, hero) {
+  // A slot of a block taken off whole keeps its skip: no button or intro line is written into it.
   const byKey = new Map(hero.map((d) => [d.key, d]))
-  return slots.map((s) => byKey.get(s.key) ?? s)
+  return slots.map((s) => (s.reason === 'no-form-destination' ? s : (byKey.get(s.key) ?? s)))
 }
 
 /**
@@ -310,12 +314,23 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
     facts,
     pages: pageRows,
     // A kept card's picture shows what its words name: the honesty plan's card labels (#192, #194).
-    slots: withHero(slotsOf(contentMap, brief, contact, name, honesty.honesty.cardNames, channels), [
-      // A button that would say a bare "Contact" names its action (`contact-buttons.mjs`); the hero's own plan wins.
-      ...contactButtonSlots(contentMap, { heroEntity: heroPlan.hero.entity }),
-      ...heroPlan.slots,
-      ...intros
-    ]),
+    slots: withHero(
+      slotsOf(
+        contentMap,
+        brief,
+        contact,
+        name,
+        honesty.honesty.cardNames,
+        channels,
+        new Set(honesty.honesty.unwritten)
+      ),
+      [
+        // A button that would say a bare "Contact" names its action (`contact-buttons.mjs`); the hero's own plan wins.
+        ...contactButtonSlots(contentMap, { heroEntity: heroPlan.hero.entity }),
+        ...heroPlan.slots,
+        ...intros
+      ]
+    ),
     // The first screen answers what, where and how to contact (COO rule 29/10/2026): `hero-first-screen.mjs`.
     hero: heroPlan.hero,
     // The home page's search result and LocalBusiness record, with the district and the area served (`place-seo.mjs`).

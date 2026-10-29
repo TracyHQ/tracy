@@ -14,6 +14,7 @@ import { namedIn } from './pictures/picture-links.mjs'
 import { planStatBoxes } from './stat-box-plan.mjs'
 import { factRowFacts, planFactRows } from './fact-rows.mjs'
 import { roleInCasingOf, showablePeopleOf } from './brief-people.mjs'
+import { planFormBlocks } from './form-blocks.mjs'
 
 export const HONESTY_VERSION = 'site-plan-honesty/1'
 
@@ -34,7 +35,9 @@ export const HONESTY_REASONS = Object.freeze({
   'brief-statistic': 'a number the brief holds from a source',
   'no-signer': 'the brief names no owner to sign',
   'whole-collection-hidden': 'every card of this section is hidden',
-  'no-place-to-hide': 'the record sits where the site cannot hide it'
+  'no-place-to-hide': 'the record sits where the site cannot hide it',
+  'no-form-destination':
+    'a sign-up, booking or login block with no destination for this business (no email-marketing account, booking link or member area), taken off whole'
 })
 
 /** Group kinds whose cards each show one offering of the business. Dishes (`menu_item`) are the copy pins'. */
@@ -368,6 +371,16 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
       .map((r) => groupsOf(contentMap).find((g) => g.id === r.group)?.slots[0]?.entity)
       .filter(Boolean)
   )
+  // 🔒 A FORM WITH NO DESTINATION GOES WHOLE (`form-blocks.mjs`): its module is taken off, its words are never written.
+  const forms = planFormBlocks(brief, contentMap)
+  for (const block of forms.off)
+    records.push({
+      group: `${block.entity}.form`,
+      kind: 'form_block',
+      decision: 'hide',
+      reason: 'no-form-destination',
+      place: { how: 'entity', entity: block.entity, kind: 'module' }
+    })
   const blanked = new Set(blanks.map((b) => b.key))
   for (const slot of contentMap?.slots ?? [])
     if (
@@ -384,7 +397,9 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
       values,
       blanks,
       fallbacks,
-      cardNames
+      cardNames,
+      // The keys of the blocks taken off whole: no step writes them.
+      unwritten: [...forms.unwritten]
     }
   }
 }

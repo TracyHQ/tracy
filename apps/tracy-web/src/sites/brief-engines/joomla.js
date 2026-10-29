@@ -1158,6 +1158,21 @@ export function createJoomlaEngine({
           factModules.push({ id: Number(entity.slice('module-'.length)), title })
         }
       }
+      // 🔒 A FORM WITH NO DESTINATION COMES OFF WHOLE (COO rule 29/10/2026, `form-blocks.mjs`): a newsletter box, a booking widget
+      // or a login box the brief gives no destination for (no email-marketing account, no verified booking link) promised the
+      // visitor something false and swallowed their email (measured on a local build: "Join our coaching newsletter" in the
+      // footer, its words rewritten by the copy writer). Any design, any framework: the module is unpublished in every language
+      // with the fact modules above, and none of its words is written.
+      for (const hide of honesty?.hide ?? []) {
+        if (hide.reason !== 'no-form-destination' || hide.how !== 'entity' || hide.kind !== 'module') continue
+        const own = state.slots.filter((slot) => slot.entity === hide.entity)
+        for (const slot of own) delete kept[slot.key]
+        demoBlanks = demoBlanks.filter((slot) => slot.entity !== hide.entity)
+        const id = Number(hide.entity.slice('module-'.length))
+        if (factModules.some((m) => m.id === id)) continue
+        const label = String(own[0]?.label ?? '').split(' / ')[0]
+        factModules.push({ id, title: label.replace(/ \([A-Za-z]{2,3}(?:-[A-Za-z]+)?\)$/, '') })
+      }
       // The languages the template does not ship are translated from the words as they will stand, while the site installs.
       const derive = []
       if (missing.length > 0 && !text)
