@@ -1,14 +1,7 @@
-// The intro of an offering page names what it offers, who it serves, and where (spec TracyHQ/tracy#189, COO rule 29/10/2026, the first
-// screen rule of `hero-first-screen.mjs` carried to the pages that list or show the business's offerings).
-//
-// An offering page is a page of the content map that shows offering records: a category page whose articles carry
-// offering roles (ADR 0040), or one such article's own page. Its intro is the page's line in a per-page masthead (a module
-// whose `menuitem_config` names the menu items each line belongs to, `contentMap.intros`), else the subline of a module
-// in a hero position assigned to that page. The value names the page's offerings (the site plan's card names, else the
-// brief's services) and the place, unless the page heading already names it.
-//
-// 🔒 A LINE THAT ALREADY DOES ITS JOB STAYS: the decision is `when: 'missing'`, and the write keeps the copy writer's line
-// when it names an offering and the place is said by it or by the heading (`hero-lines.js`). 🔒 NOTHING IS INVENTED.
+// A kept page's introduction follows its declared page role, never its parent route (spec TracyHQ/tracy#189).
+// Mastheads, hero sublines and native page leads share this rule. Offering intros name sourced offerings;
+// other roles keep suitable writer copy or receive a factual-claim-free editorial line. Location facts belong
+// on About, Contact and place pages. The writer validates the final words again in `hero-lines.js`.
 import {
   heroSlotsOf,
   heroWhereOf,
@@ -19,6 +12,8 @@ import {
 } from './hero-first-screen.mjs'
 import { findUsp } from './hero-usp.mjs'
 import { inSentence } from './plain-prose.mjs'
+import { pageRole } from './page-plan.mjs'
+import { placeIntroRole, roleIntro } from './page-intro-role.mjs'
 
 const list = (v) => (Array.isArray(v) ? v : [])
 const nonEmpty = (v) => typeof v === 'string' && v.trim() !== ''
@@ -72,14 +67,50 @@ function mastheadIntroOf(page, contentMap) {
   return null
 }
 
+/** A declared masthead, hero subline or native page lead, never an arbitrary body paragraph. */
+function pageIntroOf(page, contentMap) {
+  const masthead = mastheadIntroOf(page, contentMap)
+  if (masthead) return masthead
+  const hero = heroSlotsOf(contentMap, page)
+  if (hero?.subline) return { line: hero.subline, heading: hero.headline }
+  const slots = list(contentMap?.slots).filter((s) => s.entity === page.entity && s.type === 'text')
+  const line = slots.find((s) => s.role === 'article.lead')
+  return line ? { line, heading: slots.find((s) => s.role === 'editorial.heading') } : null
+}
+
+/** The declared role of a content-map page: the site plan's row, else the map's, else its own route words. */
+function declaredRoleOf(page, pages) {
+  return (
+    list(pages).find((p) => String(p.id) === String(page.route))?.role ??
+    page.role ??
+    pageRole({ id: String(page.route), label: page.label })
+  )
+}
+
 /**
- * The intro decisions of every kept offering page.
+ * The roles of the kept pages each intro slot introduces, by slot key. A masthead's default line shows on every page
+ * without a line of its own, so one slot can introduce pages of several roles: a role intro or a place line goes only
+ * to a slot whose pages share one role, else the slot keeps the business's own copy (`ownedBy`).
+ */
+function introOwners(contentMap, pages, kept) {
+  const owners = new Map()
+  for (const page of list(contentMap?.pages)) {
+    if (page?.route === 'home' || !kept.has(String(page?.route ?? ''))) continue
+    const key = pageIntroOf(page, contentMap)?.line?.key
+    if (key) owners.set(key, new Set([...(owners.get(key) ?? []), declaredRoleOf(page, pages)]))
+  }
+  return owners
+}
+const ownedBy = (owners, key, role) => [...(owners.get(key) ?? [role])].every((r) => r === role)
+
+/**
+ * The intro decisions of every kept page with a declared introduction.
  * @param {object} input
  * @param {any} input.brief
  * @param {any} input.contentMap - with `intros` when the release has per-page mastheads (`contentMapOfTemplate`)
  * @param {Array<{id: string, path?: string, decision: string}>} input.pages - the site plan's page decisions
  * @param {Record<string, string>} [input.cardNames] - the honesty plan's offering of each card (`article-14.offering`)
- * @returns {Array<{key: string, role: string | null, decision: 'value', value: string, reason: 'intro-what', when: 'missing',
+ * @returns {Array<{key: string, role: string | null, decision: 'value', value: string, reason: 'intro-what' | 'intro-role', when: 'missing' | 'role-mismatch',
  *   source: string, offerings: string[], who?: string, short?: string, place?: string, heading?: string, page: string}>}
  */
 export function planPageIntros({ brief, contentMap, pages = [], cardNames = {} }) {
@@ -100,19 +131,46 @@ export function planPageIntros({ brief, contentMap, pages = [], cardNames = {} }
   )
   const services = list(brief?.reading?.services)
   const quoteOf = (label) => services.find((s) => s?.label === label)?.quote ?? null
+  const owners = introOwners(contentMap, pages, kept)
+  const done = new Set()
   const out = []
   for (const page of list(contentMap?.pages)) {
     if (page?.route === 'home' || !kept.has(String(page?.route ?? ''))) continue
     const articles = offeringArticlesOf(page, contentMap, offering)
-    if (!articles) continue
+    const declared = declaredRoleOf(page, pages)
+    const own = pageIntroOf(page, contentMap)?.line
+    // One decision per slot, and none on a line other pages of another role show too.
+    if (!own || done.has(own.key) || !ownedBy(owners, own.key, declared)) continue
+    done.add(own.key)
+    if (!articles || !['services', 'offerings', 'menu', 'other'].includes(declared)) {
+      const slot = own
+      const names = offeringNames(brief)
+      const value =
+        ['services', 'offerings'].includes(declared) && names.length
+          ? offeringLine(names, null, limitOf(slot))?.value
+          : roleIntro(declared)
+      if (value && slot && [...value].length <= limitOf(slot))
+        out.push({
+          key: slot.key,
+          role: slot.role ?? null,
+          decision: 'value',
+          value,
+          reason: 'intro-role',
+          when: 'role-mismatch',
+          pageRole: declared,
+          offerings: offeringNames(brief),
+          source: 'page.role',
+          page: String(page.route)
+        })
+      continue
+    }
     const labels = articles.map((a) => cardNames[`${a}.offering`]).filter(nonEmpty)
     const names = labels.length ? labels.map((l) => inSentence(l, quoteOf(l))) : offeringNames(brief)
     if (!names.length) continue
-    const masthead = mastheadIntroOf(page, contentMap)
-    const hero = masthead ? null : heroSlotsOf(contentMap, page)
-    const slot = masthead?.line ?? hero?.subline ?? null
+    const intro = pageIntroOf(page, contentMap)
+    const slot = intro?.line ?? null
     if (!slot) continue
-    const heading = masthead?.heading ?? hero?.headline ?? null
+    const heading = intro?.heading ?? null
     const line = offeringLine(names, where, limitOf(slot), who)
     if (!line) continue
     out.push({
@@ -121,6 +179,7 @@ export function planPageIntros({ brief, contentMap, pages = [], cardNames = {} }
       decision: 'value',
       value: line.value,
       reason: 'intro-what',
+      pageRole: declared === 'other' ? 'services' : declared,
       when: 'missing',
       source: labels.length ? 'honesty.cardNames' : 'reading.services',
       offerings: names.map((n) => n.toLowerCase()),
@@ -134,11 +193,6 @@ export function planPageIntros({ brief, contentMap, pages = [], cardNames = {} }
   }
   return out
 }
-
-/** An About page or a Contact page: by its route or the component it opens. */
-const PLACE_PAGE = (page) =>
-  /(?:^|\/)(?:about|about-us|contact|contact-us|contacts)(?:$|\/)/i.test(String(page?.route ?? '')) ||
-  /option=com_contact/.test(String(page?.link ?? ''))
 
 /**
  * Where a business that serves wider than its pin is based (COO rule 29/10/2026, tier `wide` of `heroWhereOf`): the hero
@@ -161,17 +215,25 @@ export function planPlaceIntros({ brief, contentMap, pages = [] }) {
       .map((p) => String(p.id))
   )
   const value = `Based in ${where.district}. ${area.trim().replace(/[.!]*$/, '.')}`
+  const owners = introOwners(contentMap, pages, kept)
+  const done = new Set()
   const out = []
   for (const page of list(contentMap?.pages)) {
-    if (!PLACE_PAGE(page) || !kept.has(String(page?.route ?? ''))) continue
-    const slot = mastheadIntroOf(page, contentMap)?.line ?? heroSlotsOf(contentMap, page)?.subline ?? null
+    if (page?.route === 'home') continue
+    const declared = declaredRoleOf(page, pages)
+    if (!placeIntroRole(declared) || !kept.has(String(page?.route ?? ''))) continue
+    const slot = pageIntroOf(page, contentMap)?.line ?? null
     if (!slot || [...value].length > limitOf(slot)) continue
+    // A place line never reaches a team or offering page through a default line it shares with a place page.
+    if (done.has(slot.key) || !ownedBy(owners, slot.key, declared)) continue
+    done.add(slot.key)
     out.push({
       key: slot.key,
       role: slot.role ?? null,
       decision: 'value',
       value,
       reason: 'intro-where',
+      pageRole: declared,
       when: 'missing',
       source: 'business.address',
       district: where.district,

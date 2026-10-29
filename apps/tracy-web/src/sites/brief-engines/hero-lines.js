@@ -72,7 +72,8 @@ export function heroSlotValues(sitePlan, locale = 'en', current = () => undefine
     }
     if (s.reason === 'intro-where') {
       if (s.pageRole && !placeIntroRole(s.pageRole)) continue
-      const written = plainOf(current(s.key))
+      // The role line this plan just chose for the same slot counts as the line the place follows.
+      const written = plainOf(out[s.key] ?? current(s.key))
       const own = s.pageRole && introRoleProblem(written, s.pageRole) ? '' : written
       if (typeof s.district === 'string' && own.toLowerCase().includes(s.district.toLowerCase())) continue
       const both = own ? `${own.replace(/[\s.!]*$/, '.')} ${s.value}` : s.value

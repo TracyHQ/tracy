@@ -69,14 +69,15 @@ const kept = [
 ]
 const cardNames = { 'article-21.offering': 'Teeth Whitening', 'article-22.offering': 'Dental Implants' }
 
-test('an offering page intro names its offerings and the place; the contact intro is not touched', () => {
+test('an offering page intro names its offerings and the place; the contact intro follows its own role', () => {
   const [intro, ...rest] = planPageIntros({
     brief: clinicBrief(),
     contentMap: contentMap(),
     pages: kept,
     cardNames
   })
-  assert.equal(rest.length, 0)
+  assert.equal(rest.length, 1)
+  assert.equal(rest[0].pageRole, 'contact')
   assert.equal(intro.key, 'module-9.11')
   assert.equal(intro.reason, 'intro-what')
   assert.equal(intro.when, 'missing')
@@ -89,7 +90,9 @@ test('an offering page intro names its offerings and the place; the contact intr
 test('a page the plan drops gets no intro, and a brief with no place names only the offerings', () => {
   const dropped = kept.map((p) => (p.id === 'treatments' ? { ...p, decision: 'drop' } : p))
   assert.deepEqual(
-    planPageIntros({ brief: clinicBrief(), contentMap: contentMap(), pages: dropped, cardNames }),
+    planPageIntros({ brief: clinicBrief(), contentMap: contentMap(), pages: dropped, cardNames }).filter(
+      (s) => s.page === 'treatments'
+    ),
     []
   )
   const [intro] = planPageIntros({

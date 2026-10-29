@@ -52,10 +52,14 @@ export function checkPageIntros({ pages, sitePlan }) {
     if (!language.toLowerCase().startsWith('en')) continue
     const value = pageIntroduction(page.html)
     if (value === null) continue
-    const offerings =
-      (sitePlan.slots ?? []).find((s) => s.page === planned.id && s.offerings)?.offerings ?? []
+    const own = (sitePlan.slots ?? []).filter(
+      (s) => s.page === planned.id && ['intro-role', 'intro-what', 'intro-where'].includes(s.reason)
+    )
+    const offerings = own.find((s) => s.offerings)?.offerings ?? []
     const problem = introRoleProblem(value, planned.role, offerings)
-    if (problem)
+    // A page the plan gave no intro of its own shows a line shared with other pages (a masthead's default line, the
+    // business tagline): only a place or contact line there is wrong, the page topic is the plan's to write.
+    if (problem && (own.length || problem === 'place-contact-intro-on-wrong-role'))
       out.push({
         kind: 'page-intro-role',
         severity: 'major',
