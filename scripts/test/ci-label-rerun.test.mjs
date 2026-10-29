@@ -308,12 +308,9 @@ test('it runs the base commit’s code and never the pull request’s: no head c
   assert.ok(!last.run.includes('${{'))
 })
 
-test('it runs on the light pool of the dev lane, like the other light jobs, and takes its input as data', () => {
-  const labels = wf.jobs.rerun['runs-on']
-  assert.deepEqual(labels.slice(0, 3), ['self-hosted', 'linux', 'tracy-light'])
-  assert.ok(!labels.includes('x64'))
-  // Pull-request work only, so always the dev lane (docs/references/public-repo-ci.md).
-  assert.equal(labels[3], 'tracy-lane-dev')
+test('it runs on a GitHub-hosted runner, never beside pull-request code, and takes its input as data', () => {
+  // The persistent self-hosted runners also run pull-request code (docs/references/public-repo-ci.md).
+  assert.equal(wf.jobs.rerun['runs-on'], 'ubuntu-latest')
   const step = wf.jobs.rerun.steps.at(-1)
   assert.equal(step.env.LABEL, '${{ github.event.label.name }}')
   assert.equal(step.env.PR_NUMBER, '${{ github.event.pull_request.number }}')
