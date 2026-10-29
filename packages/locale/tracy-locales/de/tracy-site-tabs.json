@@ -1215,6 +1215,6 @@
   "sync.error.liveRateLimited": "Deine Live-Site begrenzt Anfragen. Warte vor einem neuen Versuch; Tracy beachtet die Retry-After-Wartezeit.",
   "sync.error.liveToken": "Deine Live-Site hat das Claude-Cowork-Token abgelehnt. Verbinde sie erneut mit ihrem aktuellen Token und versuche es erneut.",
   "push.label.featuredImage": "Beitragsbild",
-  "push.label.pageTemplate": "Seitenvorlage",
+  "push.label.pageTemplate": "Seiten-Template",
   "push.label.altText": "Alternativtext"
 }

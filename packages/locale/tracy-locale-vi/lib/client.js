@@ -4054,7 +4054,7 @@ window.__ModuleLoader__.load({
               "sync.error.liveRateLimited": "Site live đang giới hạn yêu cầu. Chờ trước khi thử lại; Tracy tuân theo thời gian Retry-After của site.",
               "sync.error.liveToken": "Site live từ chối token Claude Cowork. Kết nối lại site live bằng token hiện tại rồi thử lại.",
               "push.label.featuredImage": "Ảnh đại diện",
-              "push.label.pageTemplate": "Mẫu trang",
+              "push.label.pageTemplate": "Template trang",
               "push.label.altText": "Văn bản thay thế"
       },
       "tracy-tab-link": {

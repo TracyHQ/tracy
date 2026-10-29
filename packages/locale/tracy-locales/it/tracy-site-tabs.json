@@ -1215,6 +1215,6 @@
   "sync.error.liveRateLimited": "Il site online sta limitando le richieste. Attendi prima di riprovare; Tracy rispetta il ritardo Retry-After.",
   "sync.error.liveToken": "Il site online ha rifiutato il token Claude Cowork. Ricollegalo con il token attuale, poi riprova.",
   "push.label.featuredImage": "Immagine in evidenza",
-  "push.label.pageTemplate": "Modello di pagina",
+  "push.label.pageTemplate": "Template di pagina",
   "push.label.altText": "Testo alternativo"
 }

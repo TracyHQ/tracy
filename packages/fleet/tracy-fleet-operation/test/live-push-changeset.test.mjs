@@ -1511,7 +1511,10 @@ test('WordPress preview retains page types and translated metadata labels', () =
     ['pageTemplate', 'About us']
   )
   assert.deepEqual(
-    [items['postmeta:10:_wp_attachment_image_alt'].label, items['postmeta:10:_wp_attachment_image_alt'].subject],
+    [
+      items['postmeta:10:_wp_attachment_image_alt'].label,
+      items['postmeta:10:_wp_attachment_image_alt'].subject
+    ],
     ['altText', 'About us']
   )
   assert.ok(!items['postmeta:10:_thumbnail_id'].title.includes('_thumbnail_id'))

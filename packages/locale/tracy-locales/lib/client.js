@@ -4733,7 +4733,7 @@ window.__ModuleLoader__.load({
           "sync.error.liveRateLimited": "Deine Live-Site begrenzt Anfragen. Warte vor einem neuen Versuch; Tracy beachtet die Retry-After-Wartezeit.",
           "sync.error.liveToken": "Deine Live-Site hat das Claude-Cowork-Token abgelehnt. Verbinde sie erneut mit ihrem aktuellen Token und versuche es erneut.",
           "push.label.featuredImage": "Beitragsbild",
-          "push.label.pageTemplate": "Seitenvorlage",
+          "push.label.pageTemplate": "Seiten-Template",
           "push.label.altText": "Alternativtext"
         },
         "tracy-tab-link": {
@@ -11473,7 +11473,7 @@ window.__ModuleLoader__.load({
           "sync.error.liveRateLimited": "Tu site en línea está limitando las solicitudes. Espera antes de volver a intentarlo; Tracy respeta el plazo Retry-After.",
           "sync.error.liveToken": "Tu site en línea rechazó el token de Claude Cowork. Vuelve a conectarlo con su token actual e inténtalo de nuevo.",
           "push.label.featuredImage": "Imagen destacada",
-          "push.label.pageTemplate": "Plantilla de página",
+          "push.label.pageTemplate": "Template de página",
           "push.label.altText": "Texto alternativo"
         },
         "tracy-tab-link": {
@@ -17547,7 +17547,7 @@ window.__ModuleLoader__.load({
           "sync.error.liveRateLimited": "Votre site en ligne limite les requêtes. Patientez avant de réessayer ; Tracy respecte le délai Retry-After.",
           "sync.error.liveToken": "Votre site en ligne a refusé le token Claude Cowork. Reconnectez-le avec son token actuel, puis réessayez.",
           "push.label.featuredImage": "Image mise en avant",
-          "push.label.pageTemplate": "Modèle de page",
+          "push.label.pageTemplate": "Template de page",
           "push.label.altText": "Texte alternatif"
         },
         "tracy-tab-link": {
@@ -23292,7 +23292,7 @@ window.__ModuleLoader__.load({
           "sync.error.liveRateLimited": "Il site online sta limitando le richieste. Attendi prima di riprovare; Tracy rispetta il ritardo Retry-After.",
           "sync.error.liveToken": "Il site online ha rifiutato il token Claude Cowork. Ricollegalo con il token attuale, poi riprova.",
           "push.label.featuredImage": "Immagine in evidenza",
-          "push.label.pageTemplate": "Modello di pagina",
+          "push.label.pageTemplate": "Template di pagina",
           "push.label.altText": "Testo alternativo"
         },
         "tracy-tab-link": {
@@ -29037,7 +29037,7 @@ window.__ModuleLoader__.load({
           "sync.error.liveRateLimited": "Je live-site beperkt verzoeken. Wacht voordat je het opnieuw probeert; Tracy respecteert de Retry-After-wachttijd.",
           "sync.error.liveToken": "Je live-site heeft het Claude Cowork-token geweigerd. Verbind de site opnieuw met het huidige token en probeer het opnieuw.",
           "push.label.featuredImage": "Uitgelichte afbeelding",
-          "push.label.pageTemplate": "Paginatemplate",
+          "push.label.pageTemplate": "Pagina-template",
           "push.label.altText": "Alternatieve tekst"
         },
         "tracy-tab-link": {
@@ -34104,7 +34104,7 @@ window.__ModuleLoader__.load({
           "sync.error.liveRateLimited": "线上 site正在限制请求。请稍后重试；Tracy 会遵守 Retry-After 指定的等待时间。",
           "sync.error.liveToken": "线上 site拒绝了 Claude Cowork token。请使用当前token重新连接线上 site，然后重试。",
           "push.label.featuredImage": "特色图片",
-          "push.label.pageTemplate": "页面模板",
+          "push.label.pageTemplate": "页面 template",
           "push.label.altText": "替代文本"
         },
         "tracy-tab-link": {
