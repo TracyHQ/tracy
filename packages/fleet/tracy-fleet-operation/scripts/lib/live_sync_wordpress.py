@@ -610,7 +610,8 @@ POLICY = {
     # The source tables of those counters can change while the counter's own row stays put.
     "rebuildDependencies": {
         "term_relationships": {"term_taxonomy"},
-        "posts": {"term_taxonomy"},
+        "posts": {"posts", "term_taxonomy"},
+        "term_taxonomy": {"term_taxonomy"},
         "comments": {"posts"},
     },
     # Stamped by every save: when both sites saved one post, the live site's stamp, not a conflict.

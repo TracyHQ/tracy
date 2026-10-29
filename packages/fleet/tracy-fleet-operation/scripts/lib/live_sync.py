@@ -1929,8 +1929,6 @@ class DbMerge:
     def mark_rebuild(self, table: str) -> None:
         """Queue derived data affected by a successful mutation, using the adapter's table names."""
         name = self.bare(table)
-        if name in self.policy.get("derivedColumns", {}):
-            self.rebuild.add(table)
         self.rebuild.update(self.prefix + target for target in self.policy.get("rebuildDependencies", {}).get(name, ()))
 
     def take_table(self, table: str) -> None:
@@ -2522,7 +2520,7 @@ class DbMerge:
             apply.append(f"UPDATE {m} rm SET rm.{q(c)} = {sql_str(text)} WHERE {self.key_where('rm', pk, keys)};")
         # ROW_COUNT is read immediately after each write, on the same connection. A kept
         # column conflict can classify as X without changing the copy; it needs no recount.
-        tracks_rebuild = derived or name in self.policy.get("rebuildDependencies", {})
+        tracks_rebuild = name in self.policy.get("rebuildDependencies", {})
         if tracks_rebuild:
             changed = self.sql.run("\n".join(statement + "\nSELECT ROW_COUNT();" for statement in apply))
             if any(int(row[0] or 0) > 0 for row in changed):
@@ -2538,6 +2536,8 @@ class DbMerge:
         self.counts["rowsFromTheirs"] += took + len(take_rows)
         self.counts["rowsDeleted"] += deleted
         self.counts["rowsMerged"] += merged
+        if derived and not tracks_rebuild and (took or deleted or merged or take_rows):
+            self.rebuild.add(table)
         return "conflict" if found else "merged"
 
     @staticmethod
