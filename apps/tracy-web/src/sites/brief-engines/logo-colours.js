@@ -4,9 +4,11 @@
  *
  *   swatchesOf     the colours of a picture's opaque pixels, most used first (a 4-bit-per-channel histogram)
  *   paletteOf      swatches as a palette: its accent (the most used colourful swatch) and its colours in order of use
- *   logoColours    THE ONE CHOICE: from a palette, the name's colour on a light ground and on a dark one (4.5:1, WCAG text)
- *                  and the mark's (3:1, WCAG non-text); a candidate that does not reach the bar is darkened or lightened in
- *                  its own hue until it does, so a colour always comes back
+ *   logoColours    THE ONE CHOICE: from a palette, on a light ground and on a dark one, the name's colour (the ground's
+ *                  strong text colour: near-black, near-white), the descriptor's (the accent, 4.5:1, WCAG text), the
+ *                  mark's when it is recoloured (3:1, WCAG non-text), and the badge a drawn symbol sits in (the accent at
+ *                  3:1 on both grounds, so both variants share it, and the symbol's ink inside it); a candidate that does
+ *                  not reach the bar is darkened or lightened in its own hue until it does, so a colour always comes back
  *
  * 🔒 WHOSE PALETTE IS DECIDED BY THE CALLER, NOT HERE (COO, 29/10/2026): the owner's logo when the brief has one, the
  * template's own logo colours when it has none. A later colour system can hand its palette to `logoColours` unchanged.
@@ -130,25 +132,50 @@ export function inkFor(candidates, ground, bar) {
 export const hexOf = (/** @type {Rgb} */ { r, g, b }) =>
   `#${[r, g, b].map((v) => v.toString(16).padStart(2, '0')).join('')}`
 
+/** The name's colour on each ground: the ground's strong text colour (COO 29/10/2026). */
+export const NAME_ON_LIGHT = Object.freeze({ r: 20, g: 20, b: 20 })
+export const NAME_ON_DARK = Object.freeze({ r: 246, g: 246, b: 246 })
+const WHITE = { r: 255, g: 255, b: 255 }
+
 /**
- * The colours of a made logo on each ground: the name's (`text`) and the mark's when it is recoloured (`mark`).
- * Text prefers the palette's colours in order of use, then its accent; the mark prefers the accent.
+ * The shade of `colour` nearest to it that reaches `bar` on every ground, mixed toward black, else toward white, in steps;
+ * null when none does.
+ * @param {Rgb} colour @param {Rgb[]} grounds @param {number} bar @returns {Rgb | null}
+ */
+export function shadeForAll(colour, grounds, bar) {
+  for (let t = 0; t <= 1; t += 0.05)
+    for (const toward of [{ r: 0, g: 0, b: 0 }, WHITE]) {
+      const tried = mix(colour, toward, t)
+      if (grounds.every((g) => contrast(tried, g) >= bar)) return tried
+    }
+  return null
+}
+
+/**
+ * The colours of a made logo on each ground: the name's (`text`), the descriptor's (`accent`), the mark's when it is
+ * recoloured (`mark`), and the badge a drawn symbol sits in (`badge`: its fill and the symbol's ink).
+ * The descriptor and the badge prefer the accent; the mark prefers the accent then the palette's colours in order of use.
  * @param {Palette} palette
- * @returns {{light: {text: Rgb, mark: Rgb}, dark: {text: Rgb, mark: Rgb}}}
+ * @returns {{light: {text: Rgb, accent: Rgb, mark: Rgb, badge: {fill: Rgb, ink: Rgb}},
+ *   dark: {text: Rgb, accent: Rgb, mark: Rgb, badge: {fill: Rgb, ink: Rgb}}}}
  */
 export function logoColours(palette) {
   const colours = palette?.colours ?? []
   const accent = palette?.accent ?? null
-  const textFirst = accent ? [...colours, accent] : colours
   const markFirst = accent ? [accent, ...colours] : colours
-  return {
-    light: {
-      text: inkFor(textFirst, LIGHT_GROUND, TEXT_CONTRAST),
-      mark: inkFor(markFirst, LIGHT_GROUND, MARK_CONTRAST)
-    },
-    dark: {
-      text: inkFor(textFirst, DARK_GROUND, TEXT_CONTRAST),
-      mark: inkFor(markFirst, DARK_GROUND, MARK_CONTRAST)
-    }
+  const lead = markFirst[0] ?? null
+  // One badge for both variants when a shade of the accent reaches 3:1 on both grounds; else each ground its own.
+  const shared = lead ? shadeForAll(lead, [LIGHT_GROUND, DARK_GROUND], MARK_CONTRAST) : null
+  const badgeOn = (/** @type {Rgb} */ ground) => {
+    const fill = shared ?? inkFor(markFirst, ground, MARK_CONTRAST)
+    const ink = contrast(WHITE, fill) >= MARK_CONTRAST ? WHITE : NAME_ON_LIGHT
+    return { fill, ink }
   }
+  const on = (/** @type {Rgb} */ ground, /** @type {Rgb} */ text) => ({
+    text,
+    accent: inkFor(lead ? [lead] : [], ground, TEXT_CONTRAST),
+    mark: inkFor(markFirst, ground, MARK_CONTRAST),
+    badge: badgeOn(ground)
+  })
+  return { light: on(LIGHT_GROUND, NAME_ON_LIGHT), dark: on(DARK_GROUND, NAME_ON_DARK) }
 }

@@ -22,6 +22,7 @@ import { drawLogoSymbol, symbolItem, symbolVerdict } from '../src/sites/brief-en
 import { drawPrompt } from '../src/lib/picture-draw.js'
 import { createSiteBrand, setSiteBrand } from '../src/sites/brief-engines/brand.js'
 import { readMark } from '../src/sites/brief-engines/logo-mark.js'
+import { kindOf, tiersOf } from '../src/sites/brief-engines/logo-tiers.js'
 
 const FRAME = { width: 195, height: 56 }
 const svgPng = (svg) => sharp(Buffer.from(svg)).png().toBuffer()
@@ -173,7 +174,7 @@ test('rule 3: a wide flat wordmark is kept, and a variant recoloured for the gro
   assert.ok((await shareReaching(fit.logo.light, LIGHT_GROUND, 3, 0)) > 0.9)
 })
 
-test('rule 2: no logo, a drawn symbol beside the name in the template colours; nothing drawn, a wordmark', async () => {
+test('rule 2: no logo, a drawn symbol in a badge of the template accent beside the name; nothing drawn, a wordmark', async () => {
   const templatePalette = await paletteOfLogos([await templateDemoLogo()])
   assert.deepEqual(templatePalette?.accent, { r: 224, g: 53, b: 61 })
   const withSymbol = await fitBriefLogo({
@@ -184,13 +185,19 @@ test('rule 2: no logo, a drawn symbol beside the name in the template colours; n
     templatePalette
   })
   assert.equal(withSymbol.made, 'symbol')
-  // The flat symbol takes the template's accent (the left part of the light variant is red).
-  const { data, info } = await sharp(withSymbol.logo.light)
-    .ensureAlpha()
-    .raw()
-    .toBuffer({ resolveWithObject: true })
-  const o = (Math.floor(info.height / 2) * info.width + Math.floor(info.height / 2)) * 4
-  assert.deepEqual([data[o], data[o + 1], data[o + 2]], [224, 53, 61])
+  // The symbol sits in a solid circle of the template's accent (it reaches 3:1 on both grounds, so both variants share
+  // it), drawn in white: the badge's edge at mid height is red, its middle white.
+  for (const variant of [withSymbol.logo.light, withSymbol.logo.dark]) {
+    const { data, info } = await sharp(variant).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+    const at = (x) => {
+      const o = (Math.floor(info.height / 2) * info.width + x) * 4
+      return [data[o], data[o + 1], data[o + 2], data[o + 3]]
+    }
+    const pad = Math.round(info.height * 0.06)
+    const diameter = info.height - 2 * pad
+    assert.deepEqual(at(pad + Math.round(diameter * 0.1)), [224, 53, 61, 255])
+    assert.deepEqual(at(pad + Math.round(diameter / 2)), [255, 255, 255, 255])
+  }
   const words = await fitBriefLogo({
     logo: undefined,
     name: 'Northgate Dental Clinic',
@@ -641,4 +648,93 @@ test('a light mark on a light ground is toned to the logo colour that reads, cut
     }
   assert.ok(teal / seen > 0.9, `teal share ${teal / seen}`)
   assert.ok(tones.size >= 2, 'the inner ring still shows')
+})
+
+test('kindOf: the kind of business the brief states, in a few words; nothing reliable, none', () => {
+  assert.equal(kindOf({ trade: 'fitness', subTrade: { id: 'gym' } }), 'gym')
+  assert.equal(kindOf({ trade: 'fitness', subTrade: { id: 'coaching' } }), 'coaching team')
+  assert.equal(kindOf({ trade: 'beauty' }), 'salon')
+  assert.equal(kindOf({ cuisine: ['Lebanese'] }), 'Lebanese restaurant')
+  assert.equal(kindOf({ cuisine: ['Thai', 'Lao'] }), 'restaurant')
+  assert.equal(kindOf({ trade: 'home' }), null)
+  assert.equal(kindOf({ trade: 'unknown' }), null)
+  assert.equal(kindOf({}), null)
+  assert.equal(kindOf(null), null)
+})
+
+test('tiersOf: a name ending in its kind is split; a name holding it elsewhere gets no line; else the kind goes under', () => {
+  assert.deepEqual(tiersOf('Saigon Iron Boxing Gym', 'gym'), {
+    name: 'Saigon Iron',
+    descriptor: 'Boxing Gym'
+  })
+  assert.deepEqual(tiersOf('Copperleaf Gym', 'gym'), { name: 'Copperleaf', descriptor: 'Gym' })
+  assert.deepEqual(tiersOf('Gym Lantern Collective', 'gym'), {
+    name: 'Gym Lantern Collective',
+    descriptor: null
+  })
+  assert.deepEqual(tiersOf('Copperleaf', 'Lebanese restaurant'), {
+    name: 'Copperleaf',
+    descriptor: 'Lebanese restaurant'
+  })
+  assert.deepEqual(tiersOf('Copperleaf', null), { name: 'Copperleaf', descriptor: null })
+})
+
+/** The colours of a picture's opaque pixels between two columns, as `#rrggbb`, most used first. */
+async function inksBetween(bytes, fromX, toX) {
+  const { data, info } = await sharp(bytes).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+  const seen = new Map()
+  for (let y = 0; y < info.height; y += 1)
+    for (let x = fromX; x < Math.min(info.width, toX); x += 1) {
+      const o = (y * info.width + x) * 4
+      if (data[o + 3] < 255) continue
+      const hex = `#${[data[o], data[o + 1], data[o + 2]].map((v) => v.toString(16).padStart(2, '0')).join('')}`
+      seen.set(hex, (seen.get(hex) ?? 0) + 1)
+    }
+  return [...seen.entries()].sort((a, b) => b[1] - a[1]).map(([hex]) => hex)
+}
+
+test('one style for every made logo: the name in the ground strong text colour, the kind under it in the accent', async () => {
+  const templatePalette = await paletteOfLogos([await templateDemoLogo()])
+  const fit = await fitBriefLogo({
+    logo: undefined,
+    name: 'Saigon Iron Boxing Gym',
+    descriptor: 'gym',
+    frame: FRAME,
+    symbol: await drawnTooth(),
+    templatePalette
+  })
+  assert.equal(fit.made, 'symbol')
+  for (const [variant, name, ground] of [
+    [fit.logo.light, '#141414', LIGHT_GROUND],
+    [fit.logo.dark, '#f6f6f6', DARK_GROUND]
+  ]) {
+    const meta = await sharp(variant).metadata()
+    const text = await inkBoxOf(variant, meta.height)
+    // Two tiers: the upper rows hold the name's colour, the lower rows (the descriptor) an accent that reads at 4.5:1.
+    const { data, info } = await sharp(variant).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+    const rowInks = (y0, y1) => {
+      const seen = new Map()
+      for (let y = y0; y <= y1; y += 1)
+        for (let x = text.left; x <= text.right; x += 1) {
+          const o = (y * info.width + x) * 4
+          if (data[o + 3] < 255) continue
+          const key = `${data[o]},${data[o + 1]},${data[o + 2]}`
+          seen.set(key, (seen.get(key) ?? 0) + 1)
+        }
+      return [...seen.entries()].sort((a, b) => b[1] - a[1])[0]?.[0]
+    }
+    const height = text.bottom - text.top
+    const hexOfKey = (key) =>
+      `#${key
+        .split(',')
+        .map((v) => Number(v).toString(16).padStart(2, '0'))
+        .join('')}`
+    assert.equal(hexOfKey(rowInks(text.top, text.top + Math.round(height * 0.4))), name)
+    const sub = rowInks(text.bottom - Math.round(height * 0.12), text.bottom)
+    assert.ok(sub && hexOfKey(sub) !== name, 'the descriptor has its own colour')
+    const [r, g, b] = sub.split(',').map(Number)
+    assert.ok(contrast({ r, g, b }, ground) >= 4.5, `descriptor ${sub}`)
+    assert.ok(r > g && r > b, `descriptor ${sub} is the red accent`)
+  }
+  assert.equal((await inksBetween(fit.logo.light, 0, 5)).length, 0, 'transparent around the logo')
 })

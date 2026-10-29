@@ -1,5 +1,5 @@
 Be Vietnam Pro SemiBold (600), bundled as be-vietnam-pro-600.woff2 (a subset of the Google Fonts release, the same file the
-wp-ja-essence overlay ships). Tracy draws the business name of a logo it makes with it (logo-type.js).
+wp-ja-essence overlay ships). Tracy draws the descriptor line of a logo it makes with it (logo-type.js).
 
 Be Vietnam Pro: Copyright 2021 The Be Vietnam Pro Project Authors (https://github.com/bettergui/BeVietnamPro)
 (Copyright line as recorded in the name table of the font file.)

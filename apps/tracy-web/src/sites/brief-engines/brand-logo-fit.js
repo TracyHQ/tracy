@@ -10,10 +10,14 @@
  *                              when the words stand apart from it, beside the typeset name; words woven into the picture,
  *                              the owner's logo alone (no name added), filling the frame's height, toned where it does not read
  *   no logo, a symbol drawn    the same lockup around a symbol the picture model drew (no letters: `brand-logo-symbol.js`),
- *                              recoloured from the TEMPLATE's own logo colours when it is flat
+ *                              set in a solid badge of the TEMPLATE's own accent colour
  *   no logo, nothing drawn     a wordmark: the name alone, in the template's logo colours
  *   wide and fitting           kept; a variant that does not read on a ground is recoloured when the logo is flat, else
  *                              toned; a wide logo on a tile loses the tile
+ *
+ * Every made logo has one style (COO 29/10/2026, `logo-lockup.js`): the mark, then the name in bold condensed capitals in
+ * the ground's strong text colour, and under it the kind of business in small spaced capitals in the accent colour
+ * (`logo-tiers.js`: a name that ends in its kind is split instead; nothing reliable, no line).
  *
  * 🔒 NEVER A MODEL'S LETTERS: the name is always type set here. 🔒 A LOGO TRACY MADE SAYS SO (`made`), and the seam tells
  * the owner it is temporary. 🔒 BY SHAPE AND FRAME, NEVER BY TEMPLATE: the frame is the profile row's measured `frame`
@@ -22,10 +26,11 @@
  * given, so the existing rules (padding, plate, name as text) still hold.
  */
 import { DARK_GROUND, LIGHT_GROUND, logoContrast } from './brand-joomla-logo-contrast.js'
-import { logoColours, paletteOf } from './logo-colours.js'
-import { composeLockup, LOCKUP_SCALE, markSlotOf } from './logo-lockup.js'
+import { hexOf, logoColours, paletteOf } from './logo-colours.js'
+import { badged, composeLockup, LOCKUP_SCALE, markSlotOf } from './logo-lockup.js'
 import { readMark, recoloured, toned } from './logo-mark.js'
 import { splitMarkText } from './logo-mark-text.js'
+import { tiersOf } from './logo-tiers.js'
 import sharp from 'sharp'
 
 /** What the owner is told when Tracy made the logo. */
@@ -87,7 +92,8 @@ async function marksByGround(m, colours) {
 }
 
 /** A light and a dark lockup, or null when either cannot be set. */
-async function lockups({ marks, name, descriptor, frame, colours }) {
+async function lockups({ marks, tiers, frame, colours }) {
+  const { name, descriptor } = tiers
   const markSlot = marks
     ? Math.max(await markSlotOf(marks.light, frame), await markSlotOf(marks.dark, frame))
     : 0
@@ -97,6 +103,7 @@ async function lockups({ marks, name, descriptor, frame, colours }) {
     descriptor,
     frame,
     text: colours.light.text,
+    accent: colours.light.accent,
     markSlot
   })
   const dark = await composeLockup({
@@ -105,6 +112,7 @@ async function lockups({ marks, name, descriptor, frame, colours }) {
     descriptor,
     frame,
     text: colours.dark.text,
+    accent: colours.dark.accent,
     markSlot
   })
   return light && dark ? { light, dark } : null
@@ -157,7 +165,7 @@ export function logoFilesOfPage(html) {
  * @param {object} input
  * @param {Logos | undefined} input.logo - the logo as given (a brief's is one picture)
  * @param {string} input.name
- * @param {string | null} [input.descriptor]
+ * @param {string | null} [input.descriptor] - the kind of business the brief states (`logo-tiers.js` `kindOf`)
  * @param {{width: number, height: number} | null} input.frame
  * @param {Uint8Array | null} [input.symbol] - no logo given: the symbol drawn for the business, on a plain ground
  * @param {Palette | null} [input.templatePalette] - the template's own logo colours, for a logo made without the owner's
@@ -180,24 +188,20 @@ export async function fitBriefLogo({
   const variants = Object.values(given).filter((v) => v instanceof Uint8Array && v.length > 0)
   if (variants.length > 1) return keep('the owner gave both variants')
   const fallbackPalette = templatePalette ?? { accent: null, colours: [] }
+  const tiers = tiersOf(name, descriptor)
   if (variants.length === 0) {
     const m = symbol ? await readMark(symbol).catch(() => null) : null
     if (m) {
       const colours = logoColours(fallbackPalette.colours.length ? fallbackPalette : paletteOf(m.swatches))
-      /** @type {Record<'light' | 'dark', Uint8Array>} */
-      const marks = m.flat
-        ? {
-            light: await recoloured(m.mark, colours.light.mark),
-            dark: await recoloured(m.mark, colours.dark.mark)
-          }
-        : await marksByGround(m, colours)
-      const made = await lockups({ marks, name, descriptor, frame, colours })
+      const light = await badged(m.mark, colours.light.badge)
+      const same = hexOf(colours.light.badge.fill) === hexOf(colours.dark.badge.fill)
+      const marks = { light, dark: same ? light : await badged(m.mark, colours.dark.badge) }
+      const made = await lockups({ marks, tiers, frame, colours })
       if (made) return { logo: made, made: 'symbol', how: 'a drawn symbol beside the name' }
     }
     const words = await lockups({
       marks: null,
-      name,
-      descriptor,
+      tiers,
       frame,
       colours: logoColours(fallbackPalette)
     })
@@ -229,8 +233,7 @@ export async function fitBriefLogo({
   }
   const made = await lockups({
     marks: await marksByGround(picture, colours),
-    name,
-    descriptor,
+    tiers,
     frame,
     colours
   })

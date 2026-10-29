@@ -1,11 +1,14 @@
 /**
- * A horizontal logo LOCKUP composed by code (spec TracyHQ/tracy#189): the owner's mark on the left (or none, a wordmark),
- * the business name set as real type on the right, on a transparent picture twice the size of the template's logo frame.
+ * A horizontal logo LOCKUP composed by code (spec TracyHQ/tracy#189): the owner's mark on the left (or a drawn symbol in a
+ * badge, or none, a wordmark), then a two-tier type block, on a transparent picture twice the size of the template's logo
+ * frame. Styled as one approved reference (COO 29/10/2026): the business name bold, condensed, in capitals, tight, in the
+ * ground's strong text colour; under it a short descriptor line, small, in capitals, widely spaced, in the accent colour.
  *
- *   composeLockup   one variant: the mark as given (never redrawn), the name in one colour, an optional short descriptor
- *                   under a one-line name; null when the name cannot be set legibly in the frame (or the font lacks a letter)
+ *   composeLockup   one variant: the mark as given (never redrawn), the name, the descriptor when it fits; null when the name
+ *                   cannot be set legibly in the frame (or the face lacks a letter)
+ *   badged          a drawn symbol set inside a solid circle of one colour, in one ink
  *
- * 🔒 THE NAME IS TYPE, NEVER A MODEL'S DRAWING: glyph outlines from the shipped face (`lib/logo-type.js`), so it is sharp at
+ * 🔒 THE NAME IS TYPE, NEVER A MODEL'S DRAWING: glyph outlines from the shipped faces (`lib/logo-type.js`), so it is sharp at
  * any size and identical on every machine.
  * 🔒 THE FRAME DECIDES THE SIZE: the picture is `2 x frame.height` tall (sharp on a dense screen) and at most
  * `2 x frame.width` wide, so the brand step's padding into the frame (`prepareBrand`) never shrinks it.
@@ -13,26 +16,36 @@
 import sharp from 'sharp'
 import { canTypeset, typeset } from '../../lib/logo-type.js'
 import { hexOf } from './logo-colours.js'
+import { recoloured } from './logo-mark.js'
 
 /** The picture is drawn at this many pixels per CSS pixel of the frame. */
 export const LOCKUP_SCALE = 2
-/** The least cap height, in CSS pixels on the page, the name may show at. */
+/** The least cap height, in CSS pixels on the page, the name and the descriptor may show at. */
 const LEGIBLE_CAP_PX = 7
+const LEGIBLE_LINE_CAP_PX = 4.5
 /** Space around the content, as a share of the picture's height. */
 const PAD = 0.06
 /** Space between mark and name, as a share of the name's cap height (measured on the proof sheets: 0.35 crowds a round
  * mark, 0.5 lets a tall crest drift from its name). */
 export const GAP_OF_CAP = 0.45
-/** The name's largest size for one line and for two, as shares of the height; each shrinks in steps until it fits. */
-const ONE_LINE = 0.46
-const TWO_LINES = 0.34
+/** The name's largest size for one line and for two (a wordmark's one line larger), as shares of the height; each
+ * shrinks in steps until the block fits. */
+const ONE_LINE = 0.6
+const WORDMARK_LINE = 0.7
+const TWO_LINES = 0.4
 const STEP = 0.96
 /** Two lines are taken over one only when they set the name this much larger. */
 const TWO_LINES_GAIN = 1.25
-/** The descriptor's size against the name's, and its letter spacing. */
-const DESCRIPTOR = 0.42
-const DESCRIPTOR_TRACKING = 0.08
-const LINE_GAP = 0.12
+/** The name's letter spacing (tight), the descriptor's size against the name's and its spacing (wide), and the space
+ * between the tiers, as a share of the name's cap height. */
+const NAME_TRACKING = 0
+const DESCRIPTOR = 0.3
+const DESCRIPTOR_TRACKING = 0.22
+const TIER_GAP = 0.3
+const LINE_GAP = 0.14
+/** A badge's symbol fills this share of its circle. */
+const BADGE_FILL = 0.6
+const BADGE_PX = 512
 
 /** @typedef {{r: number, g: number, b: number}} Rgb */
 
@@ -49,6 +62,32 @@ export async function markSlotOf(mark, frame) {
   return Math.min(maxW, Math.round((meta.width * (h - 2 * pad)) / meta.height))
 }
 
+/**
+ * A drawn symbol (cut free, transparent) inside a solid circle of `fill`, the symbol in `ink`: a square transparent PNG.
+ * @param {Uint8Array} symbol @param {{fill: Rgb, ink: Rgb}} colours
+ */
+export async function badged(symbol, { fill, ink }) {
+  const inner = Math.round(BADGE_PX * BADGE_FILL)
+  const glyph = await sharp(await recoloured(symbol, ink))
+    .resize({ width: inner, height: inner, fit: 'inside' })
+    .png()
+    .toBuffer({ resolveWithObject: true })
+  const r = BADGE_PX / 2
+  const circle = Buffer.from(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${BADGE_PX}" height="${BADGE_PX}"><circle cx="${r}" cy="${r}" r="${r}" fill="${hexOf(fill)}"/></svg>`
+  )
+  return sharp(circle)
+    .composite([
+      {
+        input: glyph.data,
+        left: Math.round((BADGE_PX - glyph.info.width) / 2),
+        top: Math.round((BADGE_PX - glyph.info.height) / 2)
+      }
+    ])
+    .png()
+    .toBuffer()
+}
+
 /** The ways a name splits in two lines, at a space, most even first. */
 function splits(/** @type {string} */ name) {
   const words = name.trim().split(/\s+/)
@@ -57,42 +96,62 @@ function splits(/** @type {string} */ name) {
   return out.sort((a, b) => Math.abs(a[0].length - a[1].length) - Math.abs(b[0].length - b[1].length))
 }
 
+/** @typedef {NonNullable<ReturnType<typeof typeset>>} Set */
+
 /**
- * The largest lines of `lines` (each typeset at one size) that fit the room `roomOf` leaves at that size, from `start`
- * down to `floor` (shares of h).
- * @param {string[]} lines @param {(set: any[]) => number} roomOf
+ * The largest type block of `lines` (and `descriptor` under them, when given) that fits `room` wide and `tall` high, from
+ * `start` down to the least legible size (shares of h).
+ * @param {string[]} lines @param {string | null} descriptor
+ * @param {(set: Set[]) => number} roomOf @param {number} h @param {number} tall @param {number} start
+ * @returns {{set: Set[], sub: Set | null, px: number} | null}
  */
-function fitLines(lines, roomOf, h, start, floor) {
-  for (let share = start; share >= floor; share *= STEP) {
-    const set = lines.map((line) => typeset(line, h * share))
-    if (set.some((s) => s === null)) return null
-    if (Math.max(...set.map((s) => /** @type {any} */ (s).width)) <= roomOf(set))
-      return { set, px: h * share }
+function fitBlock(lines, descriptor, roomOf, h, tall, start) {
+  for (let px = h * start; ; px *= STEP) {
+    const set = lines.map((line) => typeset(line, px, { tracking: NAME_TRACKING }))
+    if (set.some((one) => one === null)) return null
+    const name = /** @type {Set[]} */ (set)
+    const cap = name[0].capHeight
+    if (cap < LEGIBLE_CAP_PX * LOCKUP_SCALE) return null
+    const sub = descriptor
+      ? typeset(descriptor, px * DESCRIPTOR, { tracking: DESCRIPTOR_TRACKING, face: 'line' })
+      : null
+    if (descriptor && (!sub || sub.capHeight < LEGIBLE_LINE_CAP_PX * LOCKUP_SCALE)) return null
+    const wide = Math.max(...name.map((s) => s.width), sub?.width ?? 0)
+    if (wide <= roomOf(name) && blockHeight(name, sub) <= tall) return { set: name, sub, px }
   }
-  return null
+}
+
+/** The height of a type block, cap to baseline. @param {Set[]} lines @param {Set | null} sub */
+function blockHeight(lines, sub) {
+  const cap = lines[0].capHeight
+  return lines.length * cap + (lines.length - 1) * cap * LINE_GAP + (sub ? cap * TIER_GAP + sub.capHeight : 0)
 }
 
 /**
  * @param {object} input
- * @param {Uint8Array | null} input.mark - the mark, trimmed (transparent or on its own tile); null for a wordmark
+ * @param {Uint8Array | null} input.mark - the mark, cut free (or a badge); null for a wordmark
  * @param {string} input.name
  * @param {string | null} [input.descriptor]
  * @param {{width: number, height: number}} input.frame - the template's logo frame, CSS pixels
  * @param {Rgb} input.text - the name's colour on the ground this variant goes to
+ * @param {Rgb} [input.accent] - the descriptor's colour there (the name's when none)
  * @param {number} [input.markSlot] - the width (picture pixels) kept for the mark, so a pair of variants whose marks differ
- *   in width (one cut free, one on its tile) sets the name the same way in both (`markSlotOf`)
+ *   in width sets the name the same way in both (`markSlotOf`)
  * @returns {Promise<Buffer | null>}
  */
-export async function composeLockup({ mark, name, descriptor = null, frame, text, markSlot = 0 }) {
-  const clean = String(name ?? '').trim()
+export async function composeLockup({ mark, name, descriptor = null, frame, text, accent, markSlot = 0 }) {
+  const clean = String(name ?? '')
+    .trim()
+    .toLocaleUpperCase()
   if (!clean || !canTypeset(clean)) return null
+  const line = descriptor ? String(descriptor).trim().toLocaleUpperCase() : ''
   const h = Math.round(frame.height * LOCKUP_SCALE)
   const maxW = Math.round(frame.width * LOCKUP_SCALE)
   const pad = Math.round(h * PAD)
   /** @type {{input: Buffer, left: number, top: number} | null} */
   let markLayer = null
   let x = pad
-  // The name is centred on the mark's own middle (the canvas middle for a wordmark).
+  // The type block is centred on the mark's own middle (the canvas middle for a wordmark).
   let middle = h / 2
   if (mark) {
     const fitted = await sharp(Buffer.from(mark))
@@ -108,46 +167,38 @@ export async function composeLockup({ mark, name, descriptor = null, frame, text
     middle = markLayer.top + fitted.info.height / 2
     x += slot
   }
-  const gapOf = (/** @type {any[]} */ set) => (mark ? Math.round(set[0].capHeight * GAP_OF_CAP) : 0)
-  const roomOf = (/** @type {any[]} */ set) => maxW - x - gapOf(set) - pad
-  // The least font size, as a share of the height, whose capitals show `LEGIBLE_CAP_PX` high (cap height about 0.74 of it).
-  const floor = (LEGIBLE_CAP_PX * LOCKUP_SCALE) / 0.74 / h
-  // One line, or the most even split in two when that sets the name clearly larger (a long name beside a tall mark).
-  let fit = fitLines([clean], roomOf, h, mark ? ONE_LINE : ONE_LINE * 1.15, floor)
-  for (const pair of mark ? splits(clean) : fit ? [] : splits(clean)) {
-    const two = fitLines(pair, roomOf, h, TWO_LINES, floor)
-    if (two && (!fit || two.px > fit.px * TWO_LINES_GAIN)) fit = two
-    if (two) break
+  const gapOf = (/** @type {Set[]} */ set) => (mark ? Math.round(set[0].capHeight * GAP_OF_CAP) : 0)
+  const roomOf = (/** @type {Set[]} */ set) => maxW - x - gapOf(set) - pad
+  const tall = h - 2 * pad
+  /** The best block for a descriptor (or none): one line, or the most even split in two when clearly larger. */
+  const best = (/** @type {string | null} */ sub) => {
+    let fit = fitBlock([clean], sub, roomOf, h, tall, mark ? ONE_LINE : WORDMARK_LINE)
+    for (const pair of splits(clean)) {
+      const two = fitBlock(pair, sub, roomOf, h, tall, TWO_LINES)
+      if (two && (!fit || two.px > fit.px * TWO_LINES_GAIN)) fit = two
+      if (two) break
+    }
+    return fit
   }
+  // The descriptor goes when the block cannot hold it legibly; the name never does.
+  const fit = (line && canTypeset(line, 'line') ? best(line) : null) ?? best(null)
   if (!fit) return null
-  const lines = fit.set.map((s) => /** @type {NonNullable<typeof s>} */ (s))
-  const room = roomOf(lines)
+  const lines = fit.set
   x += gapOf(lines)
-  const sub =
-    descriptor && lines.length === 1
-      ? typeset(String(descriptor).trim(), fit.px * DESCRIPTOR, { tracking: DESCRIPTOR_TRACKING })
-      : null
-  const useSub = sub && sub.width <= room ? sub : null
-  // Lines stacked cap to baseline: each line's box is its cap height, the descriptor's its own.
-  const lineBox = lines[0].capHeight
-  const gap = fit.px * LINE_GAP * 2
-  const blockH = lines.length * lineBox + (lines.length - 1) * gap + (useSub ? gap + useSub.capHeight : 0)
-  let baseline = Math.min(Math.max(middle - blockH / 2, pad), h - pad - blockH) + lineBox
-  const fill = hexOf(text)
+  const cap = lines[0].capHeight
+  const blockH = blockHeight(lines, fit.sub)
+  let top = Math.min(Math.max(middle - blockH / 2, pad), h - pad - blockH)
   const paths = []
-  for (const line of lines) {
+  const draw = (/** @type {Set} */ s, /** @type {number} */ baseline, /** @type {Rgb} */ colour) =>
     paths.push(
-      `<path transform="translate(${x.toFixed(2)} ${(baseline - line.ascent).toFixed(2)})" d="${line.d}" fill="${fill}"/>`
+      `<path transform="translate(${x.toFixed(2)} ${(baseline - s.ascent).toFixed(2)})" d="${s.d}" fill="${hexOf(colour)}"/>`
     )
-    baseline += gap + lineBox
+  for (const one of lines) {
+    draw(one, top + cap, text)
+    top += cap * (1 + LINE_GAP)
   }
-  if (useSub) {
-    baseline += useSub.capHeight - lineBox
-    paths.push(
-      `<path transform="translate(${x.toFixed(2)} ${(baseline - useSub.ascent).toFixed(2)})" d="${useSub.d}" fill="${fill}" fill-opacity="0.85"/>`
-    )
-  }
-  const textW = Math.max(...lines.map((l) => l.width), useSub?.width ?? 0)
+  if (fit.sub) draw(fit.sub, top - cap * LINE_GAP + cap * TIER_GAP + fit.sub.capHeight, accent ?? text)
+  const textW = Math.max(...lines.map((l) => l.width), fit.sub?.width ?? 0)
   const width = Math.min(maxW, Math.ceil(x + textW + pad))
   const svg = Buffer.from(
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${h}">${paths.join('')}</svg>`

@@ -25,6 +25,7 @@ import { writeJoomlaBrand } from './brand-joomla.js'
 import { writeWordpressBrand } from './brand-wordpress.js'
 import { fitBriefLogo, frameOfProfile, paletteOfLogos, TEMPORARY_LOGO_NOTE } from './brand-logo-fit.js'
 import { symbolItem } from './brand-logo-symbol.js'
+import { kindOf } from './logo-tiers.js'
 
 export { monogramOf } from './brand-wordpress.js'
 
@@ -62,7 +63,8 @@ const BUSY_WAIT_MS = 750
  * @property {string[]} [demoLogoFiles] - the template's logo files (site plan `logo.demoFiles`), for that fallback
  * @property {Uint8Array} [symbol] - a brief build with no logo: the symbol drawn for the business (`brand-logo-symbol.js`)
  * @property {import('./logo-colours.js').Palette | null} [templatePalette] - the colours of the template's own logos
- * @property {string | null} [descriptor] - a short line under the name of a logo Tracy makes, only when the brief gives one
+ * @property {string | null} [descriptor] - the kind of business the brief states (`logo-tiers.js` `kindOf`): the line under the
+ *   name of a logo Tracy makes
  */
 
 /** The platforms whose logo a brief build makes fit its frame (`brand-logo-fit.js`); the others take the logo as given. */
@@ -304,6 +306,7 @@ export function createSiteBrand({
     if (pack.name && ['name-as-text', 'brief-logo'].includes(planned?.logo?.decision)) {
       pack.nameFallback = true
       pack.demoLogoFiles = Array.isArray(planned.logo.demoFiles) ? planned.logo.demoFiles : []
+      pack.descriptor = kindOf(ctx.brief?.business)
     }
     // A brief build with no logo of the business: a symbol is drawn for it, in the template's own logo colours, and the
     // brand seam sets the name beside it (`brand-logo-fit.js`). Nothing drawn, the name alone in those colours.
