@@ -67,10 +67,15 @@ export function isDerived(slot) {
  *
  * @returns {Set<string> | null} null when the contract carries no page map, which means plan it all.
  */
-function pageEntities(pages) {
+function pageEntities(pages, { entities = [], slots = [] } = {}) {
   if (!Array.isArray(pages) || pages.length === 0) return null
   const out = new Set()
+  /** The categories a page lists (`view=category&id=N`). */
+  const listed = new Set()
   for (const page of pages) {
+    const link = String(page?.link ?? '')
+    const category = /[?&]view=category(?:&|$)/.test(link) && /[?&]id=(\d+)/.exec(link)
+    if (category) listed.add(`category-${category[1]}`)
     if (page?.entity) out.add(page.entity)
     for (const module of page?.assignedModules ?? []) if (module?.entity) out.add(module.entity)
     // A menu item that opens one article (`view=article&id=N`) shows that article as the page's
@@ -79,6 +84,21 @@ function pageEntities(pages) {
     const opened = /[?&]view=article(?:&|$)/.test(page?.link ?? '') && /[?&]id=(\d+)/.exec(page.link)
     if (opened) out.add(`article-${opened[1]}`)
   }
+  // 🔒 AN OFFERING ARTICLE A PAGE LISTS IS ON THAT PAGE (spec TracyHQ/tracy#189). A category page (`view=category&id=N`) shows
+  // its articles' cards and opens each one; an article whose lines carry offering roles (ADR 0040) describes what the business
+  // sells, so it is planned with the pages. Measured 29/10/2026 on the local stand (a Joomla T4 template's class articles, kept
+  // and renamed for the owner's services): left out, every card intro and class page kept the demo's words. A category's
+  // other articles (a blog's posts) stay out, as the demo blog always has.
+  const offerings = new Set(
+    slots.filter((slot) => String(slot?.role ?? '').startsWith('offering.')).map((slot) => slot.entity)
+  )
+  for (const entity of entities)
+    if (
+      entity?.kind === 'article' &&
+      offerings.has(entity.key) &&
+      listed.has(entity.identityReferences?.catid)
+    )
+      out.add(entity.key)
   return out.size ? out : null
 }
 
@@ -792,7 +812,10 @@ export async function planJoomlaContract({
   // `only` narrows the plan to the slots a caller still needs, so answering one follow-up question
   // does not re-roll the model's variance across the thousand slots that were already right.
   const wanted = only ? new Set(only) : null
-  const onPages = surface === 'pages' ? pageEntities(state.pages) : null
+  const onPages =
+    surface === 'pages'
+      ? pageEntities(state.pages, { entities: state.entities ?? [], slots: state.slots })
+      : null
   // 🔒 ONLY THE LANGUAGES THE CUSTOMER ASKED FOR. A quickstart may ship several editions of the
   // same site: `tracy-business/j6` carries 899 en-GB slots and 899 ru-RU ones, because the demo it
   // was cut from is a Russian contractor. A customer who asked for English used to have all 1800

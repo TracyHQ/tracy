@@ -13,6 +13,7 @@
 import { otherMapLeftovers } from './demo-leftovers-maps.mjs'
 import { demoLogoLeftovers, demoPostLeftovers, demoSocialLeftovers } from './demo-leftovers-identity.mjs'
 import { labelLeftovers, offeringLeftovers, priceLeftovers } from './demo-leftovers-honesty.mjs'
+import { textLeftovers } from './demo-leftovers-text.mjs'
 import {
   findCutOuts,
   findDemoIcons,
@@ -202,6 +203,22 @@ const bySlot = (which) => (ctx) => {
   return out
 }
 
+/** The text roles another kind reads by their first words: a label (C09's own), an offering (C03), a person (C07), a fact
+ * (C17), a post's lines (C02), a video (C08), a social line (C18). */
+const readByOtherKind = (s) => {
+  const role = String(s.role ?? '')
+  return (
+    LABEL_ROLES.has(role) ||
+    FACT_ROLES.has(role) ||
+    role.startsWith('offering.') ||
+    role.startsWith('person.') ||
+    role === 'quote.author_name' ||
+    role === 'business.video' ||
+    role.startsWith('contact.social') ||
+    (String(s.entity).startsWith('article-') && POST_ROLES.has(role))
+  )
+}
+
 /** Whether a map address names the brief's place or its address. */
 const showsBriefPlace = (ctx, src) =>
   ctx.placeKeys.some((k) => src.includes(k)) || Boolean(ctx.addressWord && src.includes(ctx.addressWord))
@@ -249,7 +266,14 @@ export const LEFTOVER_RULES = Object.freeze([
   },
   // C08..C19 outside the content map: `demo-leftovers-outside.mjs` (ticket #196).
   { kind: 'C08', find: (ctx) => demoVideoLeftovers(ctx, bySlot((s) => s.role === 'business.video')(ctx)) },
-  { kind: 'C09', find: (ctx) => labelLeftovers(ctx, bySlot((s) => LABEL_ROLES.has(s.role))(ctx)) },
+  // C09: a label in the demo's words, and the demo's words in any other text slot no other kind reads (`demo-leftovers-text.mjs`).
+  {
+    kind: 'C09',
+    find: (ctx) => [
+      ...labelLeftovers(ctx, bySlot((s) => LABEL_ROLES.has(s.role))(ctx)),
+      ...textLeftovers(ctx, readByOtherKind)
+    ]
+  },
   { kind: 'C10', find: demoBackgroundLeftovers },
   { kind: 'C11', find: showcaseLeftovers },
   { kind: 'C12', find: addressLeftovers },

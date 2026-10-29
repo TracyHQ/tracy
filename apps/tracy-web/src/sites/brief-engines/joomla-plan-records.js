@@ -23,6 +23,8 @@ const htmlOf = (/** @type {string} */ s) =>
 /** The template's `((tag))` markers as the stored HTML writes them. */
 const stored = (/** @type {string} */ s) => s.replace(/\(\(/g, '<').replace(/\)\)/g, '>')
 const idOf = (/** @type {string} */ entity) => Number(String(entity).split('-')[1])
+/** An article's columns that hold HTML: a slot in them is a piece of that HTML (`xpath`), emptied in place. */
+const HTML_COLUMNS = new Set(['introtext', 'fulltext'])
 
 /**
  * The words the site plan decides, laid over what the writer wrote, and what a writer invented taken out
@@ -45,6 +47,58 @@ export async function honestWords({ kept, slots, ownText, honesty, locale, busin
   return { evidence: out.evidence, counts: out.counts }
 }
 
+/**
+ * The lines the writer left in the demo's words, given the site plan's fallback, the role's neutral words or the business's
+ * own description, or emptied (`leftDemoText`, spec TracyHQ/tracy#189 C03/C09). The words go in `kept`, written with the
+ * contract; an emptied line leaves `kept` and is returned, for the records write after the contract (`planRecordSteps`
+ * `extraBlanks`), since the contract cannot empty an occupied slot.
+ * @param {object} input
+ * @param {Record<string, string>} input.kept - the words about to be written, by slot key: changed in place
+ * @param {any[]} input.slots - the slots a visitor reads
+ * @param {Iterable<string>} input.asked - the keys the site plan gives the copy writer
+ * @param {Iterable<string>} input.held - the keys the writer did not answer
+ * @param {string} input.ownText
+ * @param {any} input.honesty
+ * @param {string} input.locale
+ * @param {{ phone?: string, email?: string }} input.business
+ * @param {string} [input.description]
+ * @param {any[]} [input.pages]
+ * @param {any[]} [input.entities]
+ * @returns {Promise<{ blanks: any[], counts: Record<string, number> }>}
+ */
+export async function leftDemoWords({
+  kept,
+  slots,
+  asked,
+  held,
+  ownText,
+  honesty,
+  locale,
+  business,
+  description = '',
+  pages = [],
+  entities = []
+}) {
+  const { leftDemoText } = await websiteOpportunitiesDomain()
+  const out = leftDemoText({
+    slots,
+    written: kept,
+    asked,
+    held,
+    ownText,
+    honesty,
+    locale,
+    business,
+    description,
+    pages,
+    entities
+  })
+  Object.assign(kept, out.values)
+  for (const key of out.blanks) delete kept[key]
+  const byKey = new Map(slots.map((slot) => [slot.key, slot]))
+  return { blanks: out.blanks.map((key) => byKey.get(key)).filter(Boolean), counts: out.counts }
+}
+
 /** The object at `path` inside `root`, or null. */
 function at(root, path) {
   let node = root
@@ -63,8 +117,17 @@ function withoutSample(html, blank) {
     const file = sample.split('#')[0]
     return html.replace(new RegExp(`<img\\b[^>]*${escapeRe(file)}[^>]*>`, 'i'), '')
   }
-  for (const form of [stored(sample), htmlOf(stored(sample)), sample])
-    if (html.includes(form)) return html.replace(form, '')
+  // A sample the map read with its line breaks (`\r\n  words\r\n`) stands in the row by its words: trimmed last.
+  // Too short a piece of words could stand elsewhere in the row first: such a sample is matched only as the map read it.
+  const trimmed = sample.trim().length >= 8 ? sample.trim() : ''
+  for (const form of [
+    stored(sample),
+    htmlOf(stored(sample)),
+    sample,
+    stored(trimmed),
+    htmlOf(stored(trimmed))
+  ])
+    if (form && html.includes(form)) return html.replace(form, '')
   return html
 }
 
@@ -154,9 +217,31 @@ export function recordSteps({ honesty, modules, articles = new Map() }) {
     }
     return edits.get(key)
   }
+  /** An article's HTML column (`introtext`, `fulltext`) losing a slot's demo words: its row's text, edited once. */
+  const html = new Map()
   // The fields go empty first: the items they name still stand where the plan read them.
   for (const blank of honesty?.blanks ?? []) {
     if (gone.has(blank.entity)) continue
+    if (String(blank.entity).startsWith('article-') && HTML_COLUMNS.has(blank.column)) {
+      const id = idOf(blank.entity)
+      const row = articles.get(id)
+      const key = `${id}|${blank.column}`
+      const before =
+        html.get(key)?.text ?? (typeof row?.[blank.column] === 'string' ? row[blank.column] : null)
+      if (before === null) {
+        unresolved += 1
+        continue
+      }
+      const next = blank.xpath ? withoutSample(before, blank) : ''
+      html.set(key, {
+        id,
+        column: blank.column,
+        text: next,
+        changed: (html.get(key)?.changed ?? false) || next !== before
+      })
+      if (next !== before) emptied += 1
+      continue
+    }
     const edit = editOf(blank.entity, blank.column, blank.nestedJson)
     if (edit && emptyIn(edit.container, blank)) {
       edit.changed = true
@@ -182,6 +267,8 @@ export function recordSteps({ honesty, modules, articles = new Map() }) {
       edit.changed = true
       trimmed += indexes.length
     }
+  for (const edit of html.values())
+    if (edit.changed) steps.push({ kind: 'article', id: edit.id, fields: { [edit.column]: edit.text } })
   for (const edit of edits.values()) {
     if (!edit.changed) continue
     const params = edit.nestedJson
@@ -199,12 +286,19 @@ export function recordSteps({ honesty, modules, articles = new Map() }) {
  * @param {string} input.siteKey
  * @param {{ siteKey: string, email: string, note: (line: string) => void, time?: (key: string, n: number) => void }} input.ctx
  * @param {{ sitePlanFor?: Function } | null} input.woContent
+ * @param {any[]} [input.extraBlanks] - content map slots to empty beside the plan's (the demo lines the writer left)
  * @returns {Promise<{ steps: Array<{ kind: string, id: number, fields: Record<string, unknown> }> }>}
  */
-export async function planRecordSteps({ apply, siteKey, ctx, woContent }) {
+export async function planRecordSteps({ apply, siteKey, ctx, woContent, extraBlanks = [] }) {
   const plan = await woContent?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
-  const honesty = plan?.honesty
-  if (!honesty) return { steps: [] }
+  const planned = plan?.honesty
+  if (!planned) return { steps: [] }
+  // The demo lines the writer left, emptied beside the plan's own fact fields (`leftDemoWords`).
+  const seen = new Set((planned.blanks ?? []).map((b) => b.key))
+  const honesty = {
+    ...planned,
+    blanks: [...(planned.blanks ?? []), ...extraBlanks.filter((b) => !seen.has(b.key))]
+  }
   try {
     const modules = new Map((await readModules(apply, siteKey)).map((row) => [Number(row.id), row]))
     const articles = new Map()

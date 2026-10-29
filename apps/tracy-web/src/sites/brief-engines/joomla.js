@@ -54,7 +54,7 @@ import { declaredPictureSlots } from './drawn-pictures.js'
 import { copyPinsOf, pinStates, recordPins } from './wo-copy-pins.js'
 import { woContentOf } from './wo-content.js'
 import { planContactSteps } from './joomla-plan-contacts.js'
-import { honestWords, planRecordSteps } from './joomla-plan-records.js'
+import { honestWords, leftDemoWords, planRecordSteps } from './joomla-plan-records.js'
 import { planIdentitySteps } from './joomla-plan-identity.js'
 import { contentMapAt, plannedSlotValues, showcaseOff, writeOutsideMap } from './joomla-outside-map.js'
 import { withBoxLimits } from './slot-box-limits.js'
@@ -198,6 +198,9 @@ async function writeContractOnce({
         new RegExp(`(?<![\\w.-])${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\w.])`).test(words)
       )
       if (named.length === 0 || attempt >= REFUSAL_ROUNDS) throw error
+      // Which lines the site refused and why, in the log: a refused line keeps the template's words until it is emptied
+      // (`planRecordSteps` `extraBlanks`), and the reason is what tells a box limit from markup or an empty slot.
+      console.warn(`[brief-joomla] ${siteKey}: the site refused ${named.join(', ')}: ${words.slice(0, 300)}`)
       for (const key of named) {
         delete changes[key]
         delete evidence[key]
@@ -978,6 +981,50 @@ export function createJoomlaEngine({
         ctx.note(
           `${honest.counts.invented} line(s) named a person, a price or a number you did not give and were left out`
         )
+      // 🔒 NO LINE THE COPY WRITER WAS GIVEN KEEPS THE DEMO'S WORDS (spec TracyHQ/tracy#189, C03/C09; `leftDemoWords`). A line the
+      // writer pended, never answered or wrote only for a guard to drop, and a demo sentence that only took the owner's name,
+      // takes the plan's fallback, its role's neutral words or the business's own description, else it is emptied after the
+      // write. Measured 29/10/2026 (local stand, a coaching club brief on a Joomla T4 template): step descriptions and module
+      // paragraphs in the demo's sport stayed on the home page. Brief builds only (a site plan); the blog's posts are not lines
+      // of the copy writer.
+      /** @type {any[]} the left demo lines to empty after the write, beside the plan's own fact fields */
+      let demoBlanks = []
+      /** @type {string[]} the keys the copy writer was given: a line the site refuses later is emptied too */
+      let demoAsked = []
+      if (sitePlan?.slots && rewrites) {
+        demoAsked = sitePlan.slots
+          .filter(
+            (s) => s?.decision === 'text' && !blogKeys.has(s.key) && !stories.has(String(s.key).split('.')[0])
+          )
+          .map((s) => s.key)
+        const left = await leftDemoWords({
+          kept,
+          slots: state.slots.filter(
+            (slot) => !kit.has(slot.entity) && !isDerived(slot) && shown(slot) && !pinned.has(slot.key)
+          ),
+          asked: demoAsked,
+          held: [
+            ...(plan.pending ?? []),
+            ...Object.keys(plan.reasons ?? {}),
+            ...Object.keys(plan.changes ?? {}).filter((key) => !(key in kept))
+          ],
+          ownText: [facts.text, ...Object.values(honesty?.values ?? {}).map((v) => String(v.value))].join(
+            ' '
+          ),
+          honesty,
+          locale: written,
+          business: { phone: ctx.normalized.phone, email: ctx.normalized.email },
+          description: String(sitePlan?.brand?.description?.value ?? ''),
+          pages: state.pages ?? [],
+          entities: state.entities ?? []
+        })
+        demoBlanks = left.blanks
+        const replaced = left.counts.fallbacks + left.counts.neutral + left.counts.described
+        if (replaced + left.counts.blanked > 0) {
+          ctx.time('demoLinesReplaced', replaced)
+          ctx.time('demoLinesEmptied', left.counts.blanked)
+        }
+      }
       // The sourced words, as their sources say them: no guard of the model's words is theirs.
       Object.assign(kept, copyPins?.pins ?? {})
 
@@ -1102,7 +1149,9 @@ export function createJoomlaEngine({
         left,
         planned: calls,
         woPosts: await woReading,
-        copyPins
+        copyPins,
+        demoBlanks,
+        demoAsked
       }
     },
 
@@ -1775,7 +1824,21 @@ export function createJoomlaEngine({
             base: moduleContacts.steps
           })
           // The site plan's cards beyond the brief taken off and its fact fields emptied (`joomla-plan-records.js`, #192).
-          const records = await planRecordSteps({ apply, siteKey, ctx, woContent })
+          // The demo lines the writer left (`leftDemoWords`), and a line of the copy writer's the site refused, are emptied with them.
+          const staticSlots = new Map(staticState(ctx.contract).slots.map((slot) => [slot.key, slot]))
+          const asked = new Set(prepared.demoAsked ?? [])
+          const records = await planRecordSteps({
+            apply,
+            siteKey,
+            ctx,
+            woContent,
+            extraBlanks: [
+              ...(prepared.demoBlanks ?? []),
+              ...[...refusedByWrite]
+                .filter((key) => asked.has(key) && staticSlots.get(key)?.type === 'text')
+                .map((key) => staticSlots.get(key))
+            ]
+          })
           if (judged.categories.note) ctx.note(judged.categories.note)
           // An entry the tidy-up takes off is only taken off: a title written into it would show nowhere.
           const retitled = judged.pages.steps.filter((step) => !hiding.includes(step.id))

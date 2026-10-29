@@ -3962,3 +3962,42 @@ test('a site no opportunity built is planned as before: nothing pinned, no recei
   assert.match(site.applied.changes['module-441.1'], /^Golden /)
   assert.deepEqual(store.receipts, {})
 })
+
+// Spec TracyHQ/tracy#189 (C09): a brief build never leaves a line it gave the copy writer in the demo's words. The double echoes
+// two long lines and writes the rest as before: one takes the site plan's fallback through the contract, the other (no
+// neutral words for it) is not written and is emptied after the write.
+test('#189 lines the writer echoed in the demo’s words take the plan’s fallback or are emptied, never the demo', async () => {
+  const map = mapOf(business)
+  const pageEntities = new Set()
+  for (const page of map.pages ?? []) {
+    if (page?.entity) pageEntities.add(page.entity)
+    for (const m of page?.assignedModules ?? []) if (m?.entity) pageEntities.add(m.entity)
+  }
+  const [fallen, emptied] = map.slots.filter(
+    (s) =>
+      s.type === 'text' &&
+      !s.requiresEvidence &&
+      pageEntities.has(s.entity) &&
+      !/[{}<>]|\(\(/.test(s.sample) &&
+      String(s.sample).trim().split(/\s+/).length > 8 &&
+      Number(s.maxCharacters) >= 80
+  )
+  assert.ok(fallen && emptied, 'the release has long lines on its pages')
+  const fallback = 'Fresh bread from Golden Crust Bakery.'
+  const plan = {
+    slots: [fallen, emptied].map((s) => ({ key: s.key, decision: 'text' })),
+    honesty: { fallbacks: { [fallen.key]: { value: fallback, reason: 'brief-offering-quote' } } }
+  }
+  const echo = new Set([fallen.key, emptied.key])
+  const { prepared, site } = await run({
+    model: fakeModel({ say: (s) => (echo.has(s.key) ? s.sample : null) }),
+    woContent: { sitePlanFor: async () => plan }
+  })
+  assert.equal(prepared.changes[fallen.key], fallback)
+  assert.equal(site.applied.changes[fallen.key], fallback)
+  assert.ok(!(emptied.key in prepared.changes), 'the demo line is not written back')
+  assert.deepEqual(
+    prepared.demoBlanks.map((s) => s.key),
+    [emptied.key]
+  )
+})

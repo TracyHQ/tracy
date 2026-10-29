@@ -253,6 +253,45 @@ test('the page surface plans what the pages show and leaves the demo blog its ow
   assert.deepEqual(Object.keys(result.changes).sort(), ['hero.title', 'menu.title'])
   assert.deepEqual(result.pending, [])
 })
+test('#189 the page surface plans the offering articles a category page lists, never its other posts', async () => {
+  // A made-up dental template: a "Treatments" category page lists two treatment articles (offering roles) and a news post.
+  const asked = []
+  const line = (key, entity, role, sample) => ({ key, entity, role, sample, maxCharacters: 120 })
+  await planJoomlaContract({
+    state: {
+      contract: 'test/v1',
+      revision: 'before',
+      slots: [
+        line('article-31.0', 'article-31', 'offering.name', 'Whitening'),
+        line('article-31.1', 'article-31', 'editorial.paragraph', 'Lorem ipsum dolor sit amet.'),
+        line('article-32.0', 'article-32', 'offering.description', 'Nulla pretium viverra augue.'),
+        line('article-40.0', 'article-40', 'article.title', 'Clinic news'),
+        line('article-50.0', 'article-50', 'offering.name', 'Implants')
+      ],
+      pages: [
+        {
+          entity: 'menuItem-2',
+          route: 'treatments',
+          link: 'index.php?option=com_content&view=category&layout=blog&id=8'
+        }
+      ],
+      entities: [
+        { key: 'article-31', kind: 'article', identityReferences: { catid: 'category-8' } },
+        { key: 'article-32', kind: 'article', identityReferences: { catid: 'category-8' } },
+        { key: 'article-40', kind: 'article', identityReferences: { catid: 'category-8' } },
+        // An offering article no page lists is not on any page.
+        { key: 'article-50', kind: 'article', identityReferences: { catid: 'category-12' } }
+      ]
+    },
+    site: { name: 'Brightwater Dental' },
+    surface: 'pages',
+    generate: async ({ input }) => {
+      asked.push(...input.slots.map((s) => s.key))
+      return { values: Object.fromEntries(input.slots.map((s) => [s.key, 'Gentle care'])), pending: [] }
+    }
+  })
+  assert.deepEqual(asked.sort(), ['article-31.0', 'article-31.1', 'article-32.0'])
+})
 test('a value the Claude Cowork plugin would refuse never reaches the door', async () => {
   // The Claude Cowork plugin enforces its own rules on every value: no markup or control characters, no Joomla
   // plugin directives, and a closed shape for a CTA URL. The planner used to check only length,
