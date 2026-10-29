@@ -516,8 +516,11 @@ path):
    place. Now **review EVERY slot's role** in `"$P/$VER/content-map.json"` against its `sample` and position: correct each
    wrong proposal, and bind the unplaced slots from their sample and position (your judgement; use the roles and group
    kinds of the vocabulary, one `group.id` per card, `group.item` the card's index). Then run
-   `node scripts/slot-roles/check.mjs "$P/$VER"` until it exits 0. Re-capturing replaces the file, so make these edits
-   after the final capture (or pass the reviewed map as `--previous-map` next time).
+   `node scripts/slot-roles/check.mjs "$P/$VER" --webroot "$WORK/chup/webroot"` until it exits 0. It also runs the
+   declaration rules (packing check): an `error` fails the run, a `warning` is printed with its fix hint; how to fix
+   each rule: [`references/declaration-rules.md`](references/declaration-rules.md). Re-capturing replaces the file, so
+   make these edits after the final capture (or pass the reviewed map as `--previous-map` next time; top-level fields
+   such as `repeatableLists` are not carried and must be set again).
 9. **The first T3 template run through this skill:** look at and record in the report two points — (a) local Tracy
    creates a T3 site successfully (section 6 step 5); (b) the freshly bound site has no design-drift warnings (step 6 above).
 10. `git -C "$TCH_WT" status --short` · `git -C "$CW_WT" status --short` → record. No `git add`.

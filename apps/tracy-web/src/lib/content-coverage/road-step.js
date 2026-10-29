@@ -77,7 +77,9 @@ const rolesParamsOf = (roles, verdict) => ({
   rolesShown: roles.state === 'missing' ? roles.shown : [],
   rolesReason: 'reason' in roles ? roles.reason : null,
   rolesHolds: verdict.holds,
-  rolesWarns: verdict.warns
+  rolesWarns: verdict.warns,
+  // The packing check's declaration rules (`content-map-lint.js`): counts per rule, errors already in `rolesState`.
+  rolesLint: 'lint' in roles && roles.lint ? roles.lint : null
 })
 
 /**

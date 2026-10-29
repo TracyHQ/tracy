@@ -4,14 +4,16 @@
  * released with one). PURE reading, no verdict: `judge.js` (`judgeRoles`) decides what holds Publish.
  *
  *   ready     every text and image slot has a role and the declaration is valid (or the sidecar is current, no gaps);
+ *             `lint` counts the declaration rule warnings of the packing check, when there are any;
  *   missing   text or image slots have no role (`count`, and the first eight keys in `shown`);
- *   invalid   the declaration is broken (`reason` says how);
+ *   invalid   the declaration is broken (`reason` says how), or a declaration rule of severity error fails;
  *   stale     the sidecar was written for other contract files (`reason`);
  *   none      the contract declares no roles anywhere: every template released before ADR 0038.
  */
 import { readFileSync, statSync } from 'node:fs'
 import path from 'node:path'
 
+import { lintContractDir, lintSummary } from '../content-map-lint.js'
 import { readSlotRoles } from '../contract-slot-roles.js'
 import { contractFor } from '../contracts.js'
 import { slotRolesOfRelease } from '../slot-roles-of-release.js'
@@ -20,7 +22,8 @@ import { slotRolesOfRelease } from '../slot-roles-of-release.js'
 const SHOWN_KEYS = 8
 
 /**
- * @typedef {{ state: 'ready' | 'none' } | { state: 'missing', count: number, shown: string[], reason: string | null } | { state: 'invalid' | 'stale', reason: string }} Roles
+ * @typedef {{ errors: number, warnings: number, rules: Array<{ rule: string, severity: string, count: number }> }} Lint
+ * @typedef {{ state: 'ready' | 'none', lint?: Lint } | { state: 'missing', count: number, shown: string[], reason: string | null } | { state: 'invalid' | 'stale', reason: string, lint?: Lint }} Roles
  */
 
 /** @type {Map<string, { stamp: string, value: Roles }>} */
@@ -46,6 +49,13 @@ function slotsWithoutRole(dir) {
   }
 }
 
+/** The declaration rule counts the step carries: errors, warnings and one row per rule. */
+const lintCounts = (lint) => ({
+  errors: lint.errors,
+  warnings: lint.warnings,
+  rules: lintSummary(lint.findings)
+})
+
 const missing = (keys, reason = null) => ({
   state: 'missing',
   count: keys.length,
@@ -65,7 +75,17 @@ export function rolesOfRead(read, dir) {
     // "has no role" errors are the missing group above; anything else is a broken declaration
     const broken = (read.errors ?? []).filter((e) => !e.endsWith(' has no role'))
     if (read.state === 'invalid' && broken.length > 0) return { state: 'invalid', reason: broken[0] }
-    return { state: 'ready' }
+    // The packing check's declaration rules (`../content-map-lint.js`): an error is a declaration the brief engine would
+    // write wrong, so it is a broken declaration here too; warnings ride along for the panel and never hold.
+    const lint = dir ? lintContractDir(dir) : null
+    const first = lint?.findings.find((f) => f.severity === 'error')
+    if (first)
+      return {
+        state: 'invalid',
+        reason: `declaration rule ${first.rule} (${lint.errors} error${lint.errors === 1 ? '' : 's'}): ${first.key} ${first.note}. Fix: ${first.fix}`,
+        lint: lintCounts(lint)
+      }
+    return lint && lint.warnings > 0 ? { state: 'ready', lint: lintCounts(lint) } : { state: 'ready' }
   }
   if (read.source === 'sidecar') {
     if (read.state === 'stale')

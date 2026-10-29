@@ -16,14 +16,23 @@
  * - A committed `slot-roles.json` sidecar (ADR 0037; three remain until their template's next release) must validate,
  *   match its contract's `baseHash`, have `status: "checked"` and leave zero `requiresEvidence` slots without a fact role.
  *
+ * - The declaration rules (the packing check, `apps/tracy-web/src/lib/content-map-lint.js`): a wrong or missing slot
+ *   declaration the brief engine has to guess around (a hero subline outside the hero card, a gallery that is a card,
+ *   a styled unit, a fixed social list). Named contract folders (the packing run, quickstart-contract section 7
+ *   step 8) fail on a rule of severity `error` and print every finding with its fix hint; the whole-tree gate only
+ *   counts them, because released contracts are never edited. `--webroot <dir>` (one named folder) also measures the
+ *   item icons from the pack's pictures; `--lint-json <file>` writes every finding.
+ *
  *   node scripts/slot-roles/check.mjs                  every contract in the tree
- *   node scripts/slot-roles/check.mjs <contractDir>... only those
+ *   node scripts/slot-roles/check.mjs <contractDir>... only those (the packing check)
  */
 
-import { existsSync, readdirSync, readFileSync } from 'node:fs'
+import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { checkContentMapFit, checkContentMapRoles } from 'website-opportunities/domain'
+import { lintContractDir, lintSummary } from '../../apps/tracy-web/src/lib/content-map-lint.js'
+import { lintItemIconGrounds } from '../../apps/tracy-web/src/lib/content-map-lint-icons.js'
 import { fieldMapRolesOf } from '../../apps/tracy-web/src/lib/emdash-field-map-roles.js'
 import {
   SLOT_ROLES_FILE,
@@ -148,19 +157,56 @@ export function checkAllSlotRoles(rootDir = DEFAULT_ROOT, explicitDirs = null) {
   if (dirs.length === 0) {
     errors.push('no slot roles found: no content map declares roles and no slot-roles.json sidecar exists')
   }
-  return { ok: errors.length === 0, checkedCount: dirs.length, dirs, errors, fit }
+  const lint = candidates
+    .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, ...lintContractDir(dir) }))
+    .filter((l) => l.declared)
+  return { ok: errors.length === 0, checkedCount: dirs.length, dirs, errors, fit, lint }
+}
+
+/** The value after a `--name` flag, and the arguments left once every flag and its value are taken out. */
+function argsOf(argv) {
+  const valued = new Set(['--webroot', '--lint-json'])
+  const flags = {}
+  const rest = []
+  for (let i = 0; i < argv.length; i += 1) {
+    if (valued.has(argv[i])) flags[argv[i].slice(2)] = argv[(i += 1)]
+    else if (!argv[i].startsWith('--')) rest.push(argv[i])
+  }
+  return { flags, dirs: rest }
 }
 
 const isMain =
   process.argv[1] && path.resolve(process.argv[1]) === path.resolve(fileURLToPath(import.meta.url))
 
 if (isMain) {
-  const cliDirs = process.argv.slice(2).filter((a) => !a.startsWith('--'))
-  const res = checkAllSlotRoles(DEFAULT_ROOT, cliDirs.length > 0 ? cliDirs : null)
-  if (!res.ok) {
+  const { flags, dirs: cliDirs } = argsOf(process.argv.slice(2))
+  const named = cliDirs.length > 0
+  const res = checkAllSlotRoles(DEFAULT_ROOT, named ? cliDirs : null)
+  if (named && flags.webroot && res.lint.length === 1) {
+    const only = res.lint[0]
+    const map = JSON.parse(readFileSync(path.join(path.resolve(cliDirs[0]), CONTENT_MAP_FILE), 'utf8'))
+    const read = (file) => {
+      const full = path.join(path.resolve(flags.webroot), file)
+      return existsSync(full) ? readFileSync(full) : null
+    }
+    const icons = await lintItemIconGrounds(map, read)
+    only.findings.push(...icons)
+    only.warnings += icons.length
+  }
+  if (flags['lint-json']) writeFileSync(flags['lint-json'], `${JSON.stringify(res.lint, null, 2)}\n`)
+  const lintErrors = res.lint.reduce((n, l) => n + l.errors, 0)
+  const lintWarnings = res.lint.reduce((n, l) => n + l.warnings, 0)
+  if (named) {
+    for (const l of res.lint)
+      for (const f of l.findings)
+        process.stdout.write(`${f.severity} ${f.rule} ${l.dir} ${f.key}: ${f.note}\n  fix: ${f.fix}\n`)
+  }
+  if (!res.ok || (named && lintErrors > 0)) {
     for (const err of res.errors) {
       process.stderr.write(`slot-roles check failed: ${err}\n`)
     }
+    if (named && lintErrors > 0)
+      process.stderr.write(`slot-roles check failed: ${lintErrors} declaration rule error(s), listed above\n`)
     process.exit(1)
   }
   process.stdout.write(`slot-roles check passed (${res.checkedCount} contract(s) verified).\n`)
@@ -168,5 +214,11 @@ if (isMain) {
   const lacking = without.reduce((n, f) => n + f.missing.image + f.missing.text, 0)
   process.stdout.write(
     `slot fit: ${res.fit.length - without.length} content map(s) declare it; ${without.length} do not (${lacking} text and image slots without a fit).\n`
+  )
+  const rules = lintSummary(res.lint.flatMap((l) => l.findings))
+    .map((r) => `${r.rule} ${r.count}`)
+    .join(', ')
+  process.stdout.write(
+    `declaration rules: ${lintErrors} error(s), ${lintWarnings} warning(s) in ${res.lint.length} map(s)${rules ? ` (${rules})` : ''}.\n`
   )
 }

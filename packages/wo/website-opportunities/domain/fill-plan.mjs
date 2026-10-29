@@ -113,9 +113,9 @@ export const wordedPhoto = (asset) =>
  * Whether a unit is a real gallery: every slot is a gallery tile in a gallery group that does not sit in an article. A
  * gallery group inside an article is a row of card thumbnails (a class, a related item), which is a card, not a gallery.
  * The only place a photo with words added on it (an event poster, a before/after label) may show, and only as the last
- * photo left.
+ * photo left. The packing check (`content-map-lint.js`) reads a content map with this same rule.
  */
-const galleryUnit = (unit, kindOf) =>
+export const galleryUnit = (unit, kindOf) =>
   unit.slots.every(
     (s) =>
       s.role === 'business.gallery_image' &&
