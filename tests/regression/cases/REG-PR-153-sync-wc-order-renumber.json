@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-153-sync-wc-order-renumber",
+  "kind": "fix",
+  "title": "A WooCommerce order placed on live under a number the copy uses moves with its post",
+  "pr": 153,
+  "area": "sync/renumber",
+  "cms": ["wp"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": [
+    "Run the real MariaDB flow cases for a clashing HPOS order and a squatter named by a plugin row."
+  ],
+  "expect": [
+    "The copy's post keeps its number; the live order, its placeholder and its rows share a new one.",
+    "A second sync keeps them there.",
+    "A plugin row naming a record moved off a remembered number is held."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "--test-name-pattern=under a number the copy holds moves with its placeholder|squatting on a remembered number",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs"
+    ],
+    "tests": [
+      "WooCommerce HPOS order placed on live under a number the copy holds moves with its placeholder; it never attaches to the copy post (#107)",
+      "a live record squatting on a remembered number moves, and a plugin row naming it is held, not pointed at another record (#107)"
+    ]
+  }
+}

@@ -4052,7 +4052,10 @@ window.__ModuleLoader__.load({
               "sync.error.liveBlocked": "Site live trả về phản hồi bị chặn hoặc không phải từ engine. Kiểm tra tường lửa hoặc bảo vệ bot và cho phép các yêu cầu của Tracy.",
               "sync.error.livePassword": "Site live yêu cầu mật khẩu HTTP. Cho phép Tracy truy cập endpoint Claude Cowork mà không cần mật khẩu đó, rồi thử lại.",
               "sync.error.liveRateLimited": "Site live đang giới hạn yêu cầu. Chờ trước khi thử lại; Tracy tuân theo thời gian Retry-After của site.",
-              "sync.error.liveToken": "Site live từ chối token Claude Cowork. Kết nối lại site live bằng token hiện tại rồi thử lại."
+              "sync.error.liveToken": "Site live từ chối token Claude Cowork. Kết nối lại site live bằng token hiện tại rồi thử lại.",
+              "push.label.featuredImage": "Ảnh đại diện",
+              "push.label.pageTemplate": "Template trang",
+              "push.label.altText": "Văn bản thay thế"
       },
       "tracy-tab-link": {
               "launcher.open": "Mở danh sách tab",

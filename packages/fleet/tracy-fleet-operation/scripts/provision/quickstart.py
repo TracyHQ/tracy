@@ -220,7 +220,7 @@ def download(artifact, output, part):
         token = os.environ.get('TRACY_RELEASES_GITHUB_TOKEN')
         if not token:
             raise ValueError('private quickstart requires TRACY_RELEASES_GITHUB_TOKEN on the provision host')
-        url = f'https://api.github.com/repos/JoomlArt-Products/ja-products/releases/assets/{asset_id}'
+        url = f'https://api.github.com/repos/JoomlArt-Products/joomlart-products/releases/assets/{asset_id}'
         headers = {'Authorization': f'Bearer {token}', 'Accept': 'application/octet-stream', 'X-GitHub-Api-Version': '2022-11-28'}
     elif urllib.parse.urlsplit(url).scheme == 'file':
         local = local_file(url)

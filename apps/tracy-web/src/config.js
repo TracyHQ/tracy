@@ -1367,7 +1367,7 @@ export function readConfig(env, { docsBuilt = false } = {}) {
     actorSecret: opt(env, 'MCP_TRACY_ACTOR_SECRET'),
     seatPlanKek: opt(env, 'SEAT_PLAN_KEK'),
     github: readGithub(env),
-    // How this deployment reads JoomlArt-Products/ja-products when it has no App key of its own (a
+    // How this deployment reads JoomlArt-Products/joomlart-products when it has no App key of its own (a
     // developer's stand, ADR 0017) or its App is not installed there (a shard's own App).
     // Production mints a repo-scoped token from its App instead.
     releasesToken: opt(env, 'TRACY_RELEASES_GITHUB_TOKEN'),

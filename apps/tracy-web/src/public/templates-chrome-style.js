@@ -94,9 +94,10 @@ footer .wrap{padding-left:0;padding-right:0}
 .foot-col h3{font-family:inherit;font-size:14px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--foreground);margin:0 0 10px}
 .foot-col a{display:block;color:var(--muted-foreground);font-size:14px;padding:7px 0}
 .foot-col a:hover{color:var(--foreground)}
-.foot-bottom{display:flex;align-items:center;gap:16px;margin-top:40px;padding:20px 0 30px;border-top:1px solid var(--border)}
+.foot-bottom{position:relative;display:flex;align-items:center;gap:16px;margin-top:40px;padding:20px 0 30px}
+.foot-bottom::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:var(--border)}
 .muted{color:var(--muted-foreground);font-size:13px}
-@media (max-width:1151px){footer .wrap{padding-left:16px;padding-right:16px}}
+@media (max-width:1151px){footer .wrap{padding-left:16px;padding-right:16px}.foot-bottom::before{left:16px;right:16px}}
 @media (max-width:900px){.foot-top{grid-template-columns:1fr;gap:30px;padding-top:40px}}
 @media (max-width:640px){.foot-cols{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}.foot-bottom{flex-wrap:wrap}}
 `

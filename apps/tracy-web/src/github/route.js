@@ -321,7 +321,7 @@ export function githubRoutes({ pool, config, fetchImpl = fetch }) {
    *
    * The same signature and the same door discipline as `/github/push` below: answer 200 to every
    * signed call (GitHub retries anything else, and a re-delivered read helps nobody), ignore what
-   * this app has no business acting on. It exists so a quickstart published on ja-products shows up
+   * this app has no business acting on. It exists so a quickstart published on joomlart-products shows up
    * on /ops at once rather than within the ten-minute sweep (ADR 0017).
    */
   app.post('/github/release', async (c) => {

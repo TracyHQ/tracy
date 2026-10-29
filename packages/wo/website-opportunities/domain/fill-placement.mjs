@@ -57,7 +57,11 @@ export function placementOfFill({ fill, groups }) {
         routes: group.routes,
         reason: FILL_REASONS[lead.reason],
         code: lead.reason,
-        action: 'placeholder'
+        action: 'placeholder',
+        // A person picture's substitute is the person's initials, drawn instead of the plain placeholder (#134).
+        ...(lead.substitute?.kind === 'initials-avatar'
+          ? { avatar: { initials: lead.substitute.initials } }
+          : {})
       })
   }
   const decisions = fill.slots
@@ -69,6 +73,7 @@ export function placementOfFill({ fill, groups }) {
       reason: d.reason,
       ...(d.file ? { file: d.file } : {}),
       ...(d.mediaId ? { mediaId: d.mediaId } : {}),
+      ...(d.substitute ? { substitute: d.substitute } : {}),
       ...(d.refused && Object.keys(d.refused).length ? { refused: d.refused } : {})
     }))
   return {

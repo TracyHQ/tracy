@@ -397,15 +397,15 @@ ${google ? `<p class="separator-label">${t.html('login.orContinueWith')}</p><div
 }
 
 /**
- * Tell `POST /login/visit` that this page was opened from a link with a source (usage: visits per
- * source, beside the first sign-ins). Once per tab, so a reload or the code step's re-render is one
- * visit; never waited on, and nothing on the page depends on it. `''` when the link carried no source.
+ * Tell `POST /login/visit` that this page was opened (usage: visits per source, beside the first
+ * sign-ins), with the link's source when it carried one and the host of the page that linked here when
+ * that was another site. Once per tab, so a reload or the code step's re-render is one visit; never
+ * waited on, and nothing on the page depends on it. A visit with neither is still sent: it is the
+ * direct visit (typed address, bookmark, the desktop app) that a source-only count could not see.
  * The values were cleaned by `signInSource` (a-z, 0-9, `-`, `_`, `.`), and `<` is escaped regardless.
  */
 function visitScript(source) {
-  const params = sourceParams(source)
-  if (!params) return ''
-  const body = JSON.stringify(params).replace(/</g, '\\u003c')
+  const body = JSON.stringify(sourceParams(source) ?? {}).replace(/</g, '\\u003c')
   return `
 (function(){
   try {
@@ -413,7 +413,12 @@ function visitScript(source) {
     sessionStorage.setItem('tracy-login-visit', '1');
   } catch (e) {}
   try {
-    fetch('/login/visit', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(${body}), keepalive: true }).catch(function(){});
+    var body = ${body};
+    try {
+      var from = document.referrer ? new URL(document.referrer).hostname : '';
+      if (from && from !== location.hostname) body.referrer = from;
+    } catch (e) {}
+    fetch('/login/visit', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body), keepalive: true }).catch(function(){});
   } catch (e) {}
 })();`
 }

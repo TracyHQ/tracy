@@ -36,6 +36,6 @@ export function manifestFromSetting(tag, setting) {
     ...(setting.template && { template: setting.template }),
     parts,
     release: tag,
-    repository: 'JoomlArt-Products/ja-products'
+    repository: 'JoomlArt-Products/joomlart-products'
   }
 }

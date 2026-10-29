@@ -1,5 +1,5 @@
 /**
- * Quickstarts — every release on `ja-products` as this server last read it, and one release with
+ * Quickstarts — every release on `joomlart-products` as this server last read it, and one release with
  * the questionnaires it can be asked with (ADR 0017).
  *
  * WHY THIS SCREEN IS NOT PART OF THE SNAPSHOT. The other screens describe a TREE at a commit, and
@@ -308,7 +308,7 @@ export function Quickstarts({
         <p className="mt-0.5 max-w-3xl text-muted-foreground text-sm">
           <Trans
             i18nKey="cms-quickstarts.list.intro"
-            values={{ repo: 'JoomlArt-Products/ja-products', file: SETTING_FILE }}
+            values={{ repo: 'JoomlArt-Products/joomlart-products', file: SETTING_FILE }}
             components={{ code: <span className="font-mono" /> }}
           />
         </p>
@@ -576,7 +576,7 @@ function QuickstartDetail({ tag, writable, onBack }: { tag: string; writable: bo
   // The release's Design inspiration card, in whichever of its two shapes it arrived: its own file
   // (`tracy_design_inspiration.json`), or the `card` block a release cut before 16/09 still carries.
   const card = detail.inspiration ?? detail.setting?.card ?? null
-  const gh = `https://github.com/JoomlArt-Products/ja-products/releases/tag/${encodeURIComponent(tag)}`
+  const gh = `https://github.com/JoomlArt-Products/joomlart-products/releases/tag/${encodeURIComponent(tag)}`
   return (
     <div className="flex flex-col gap-5 px-6 py-6">
       <div>

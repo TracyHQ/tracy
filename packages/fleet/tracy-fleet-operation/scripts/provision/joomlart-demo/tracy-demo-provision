@@ -36,7 +36,7 @@
 #                     variable: `AcceptEnv` would mean editing their sshd for one string.
 #
 # 🔒 THE PACKAGE ARRIVES ON STDIN, AND THAT IS A SECURITY DECISION. Tracy holds the GitHub App key
-# that can read `ja-products`; this machine holds none and gains none. `install` takes a NAME and a
+# that can read `joomlart-products`; this machine holds none and gains none. `install` takes a NAME and a
 # byte stream — never a URL, never a token, never a command. A verb that fetched a URL would turn
 # this key into a way to make the machine dial anywhere.
 #

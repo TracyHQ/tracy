@@ -2107,6 +2107,7 @@ export function buildApp(deps) {
     }
     const sites = sitesRoutes({
       pool: deps.pool,
+      resumeLiveJobs: deps.resumeLiveJobs === true,
       doorProbeToken: doorHealth ? doorProbeToken : null,
       doorHealth,
       config: deps.config,
@@ -2463,6 +2464,8 @@ export function buildApp(deps) {
         ...(deps.rolesOf ? { rolesOf: deps.rolesOf } : {}),
         // The Slot fit of a release (Content coverage, ADR 0039); a test hands in its own answer.
         ...(deps.fitOf ? { fitOf: deps.fitOf } : {}),
+        // The committed content coverage of a release (Content coverage); a test hands in its own answer.
+        ...(deps.coverageOf ? { coverageOf: deps.coverageOf } : {}),
         workspaces: {
           app: workspacesRoutes({
             pool: deps.pool,

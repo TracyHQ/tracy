@@ -652,6 +652,38 @@ class ThemeModReferences:
             mapper.sql.run("\n".join(updates))
 
 
+# WooCommerce rows that name a post by its number: an order IS a post number (HPOS keeps the
+# placeholder post and `wc_orders.id` equal; the legacy store keeps the order as the post), and its
+# lines, addresses, meta and lookups name it as `order_id`; lines and lookups name products and
+# variations (posts too). Renumbered with the post, or a live order placed under a number the copy
+# already holds stays on that number and attaches to the copy's post (#107). A table or column a
+# site lacks is passed over (`column_exists`).
+WOOCOMMERCE_POST_REFS = (
+    ("wc_orders", "id", None), ("wc_orders", "parent_order_id", None),
+    ("wc_orders_meta", "order_id", None), ("wc_order_addresses", "order_id", None),
+    ("wc_order_operational_data", "order_id", None), ("woocommerce_order_items", "order_id", None),
+    ("woocommerce_order_itemmeta", "meta_value", "meta_key IN ('_product_id', '_variation_id')"),
+    ("woocommerce_downloadable_product_permissions", "order_id", None),
+    ("woocommerce_downloadable_product_permissions", "product_id", None),
+    ("wc_order_stats", "order_id", None), ("wc_order_stats", "parent_id", None),
+    ("wc_order_product_lookup", "order_id", None), ("wc_order_product_lookup", "product_id", None),
+    ("wc_order_product_lookup", "variation_id", None),
+    ("wc_order_tax_lookup", "order_id", None), ("wc_order_coupon_lookup", "order_id", None),
+    ("wc_order_coupon_lookup", "coupon_id", None),
+    ("wc_product_meta_lookup", "product_id", None),
+)
+
+
+# Post meta WordPress keeps one of per post (`get_post_meta($id, $key, true)` everywhere it reads
+# them): a row both sites added for one post is one row (`IdMap.align_single`, #118). Not a key that
+# may hold several values on purpose (`_wp_old_slug`: one row per former address).
+SINGLE_POSTMETA = ", ".join(sql_str(k) for k in (
+    "_wp_page_template", "_thumbnail_id", "_wp_attachment_image_alt", "_wp_attached_file",
+    "_wp_attachment_metadata", "_edit_last", "_wp_desired_post_slug", "_wp_trash_meta_status",
+    "_wp_trash_meta_time", "_menu_item_type", "_menu_item_menu_item_parent", "_menu_item_object_id",
+    "_menu_item_object", "_menu_item_target", "_menu_item_classes", "_menu_item_xfn", "_menu_item_url"))
+
+
 POLICY = {
     "tracyTables": re.compile(r"^claude_cowork_"),
     "tracyRows": {
@@ -716,7 +748,8 @@ POLICY = {
                             ("postmeta", "meta_value", MENU_OBJECT.format(kind="post_type")),
                             ("options", "option_value",
                              "option_name IN ('page_on_front', 'page_for_posts', 'wp_page_for_privacy_policy',"
-                             " 'site_logo', 'site_icon')")],
+                             " 'site_logo', 'site_icon')"),
+                            *WOOCOMMERCE_POST_REFS],
                    # The post's number written into text: its guid's `?p=`, an image's class and a
                    # block's attributes in the content of the live site's posts.
                    "texts": [("posts", "guid", "?p={id}"), ("posts", "guid", "?page_id={id}"),
@@ -737,7 +770,8 @@ POLICY = {
         ("links", {"key": "link_id",
                    "refs": [("term_relationships", "object_id", TT_OF.format(cmp="="))]}),
         # Meta rows: nothing points at their numbers, but both sites add them under the same ones.
-        ("postmeta", {"key": "meta_id"}),
+        ("postmeta", {"key": "meta_id", "single": {"natural": ("post_id", "meta_key"),
+                                                     "where": f"meta_key IN ({SINGLE_POSTMETA})"}}),
         ("termmeta", {"key": "meta_id"}),
         ("commentmeta", {"key": "meta_id"}),
         ("usermeta", {"key": "umeta_id"}),

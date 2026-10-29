@@ -7,7 +7,7 @@
  *        [--only slug,slug] [--systems od:bmw,od:stripe,od:spotify,od:vercel] [--no-bands] [--theme-tree]
  *        [--inner <n> [--inner-systems id,id]]
  *
- * The list is the releases on JoomlArt-Products/ja-products (`<x>/wp7`, `quickstart/<x>/wp7`,
+ * The list is the releases on JoomlArt-Products/joomlart-products (`<x>/wp7`, `quickstart/<x>/wp7`,
  * `<x>/j6`, `quickstart/<x>/j6`). Each goes through pass-wordpress.mjs / pass-joomla.mjs on its
  * NEWEST release with --no-tokenize (the stylesheets as released) and --bands (the kept bands
  * drafted into the contract when it has none), measured under OpenDesign systems — the library a
@@ -64,7 +64,7 @@ const tags = JSON.parse(
       'release',
       'list',
       '-R',
-      'JoomlArt-Products/ja-products',
+      'JoomlArt-Products/joomlart-products',
       '--limit',
       '1000',
       '--json',

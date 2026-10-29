@@ -3,7 +3,7 @@
  *
  * The prompt on /ops (`problem-guides.ts` `customizeOutside`) writes, for each failing rule, "fix in
  * <place>" (from the result's `owner`) and the rule's own fix text. ABOUT-3 sent Tracy Business
- * WordPress 1.3.4 to the template package on ja-products although `demoCompanyNames` lives in the
+ * WordPress 1.3.4 to the template package on joomlart-products although `demoCompanyNames` lives in the
  * contract version's `.copy.json` in tch. This test reads every fix the rules can write, per rule and
  * per platform (`readiness-fix-sites.mjs`), takes each file or folder it names, and holds it to
  * reality:
@@ -32,7 +32,7 @@ const CMS_NAME = { joomla: 'Joomla', wordpress: 'WordPress', emdash: 'EmDash' }
 
 /**
  * Where each file a fix may name lives. `tch`: in this repository, with a glob per platform where
- * it exists. `template`: in the template package (JA templates: ja-products; Tracy's EmDash
+ * it exists. `template`: in the template package (JA templates: joomlart-products; Tracy's EmDash
  * templates: `packages/cms/tracy-emdash-theme-*` here, globbed). `release`: an asset the quickstart
  * build writes into the release, the template's to fix.
  */
