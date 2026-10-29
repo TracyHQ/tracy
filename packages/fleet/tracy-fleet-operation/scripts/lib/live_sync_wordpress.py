@@ -200,6 +200,28 @@ def _has_table(sql, schema: str, table: str) -> bool:
                         f" AND table_name = {sql_str(table)};"))
 
 
+def counting_policy(sql, names: dict, prefix: str) -> dict:
+    """Count the authoritative WooCommerce store when all three reads agree on its mode.
+    A mode transition keeps per-table counts; an ID alone never proves a backup order."""
+    schemas = sorted(set(names.values()))
+    tables = [prefix + name for name in ("posts", "options", "wc_orders")]
+    have = {tuple(row) for row in sql.run(
+        "SELECT table_schema, table_name FROM information_schema.tables"
+        f" WHERE table_schema IN ({', '.join(sql_str(s) for s in schemas)})"
+        f" AND table_name IN ({', '.join(sql_str(t) for t in tables)});")}
+    if not all((schema, table) in have for schema in schemas for table in tables):
+        return {}
+    # WooCommerce's controller uses get_option(...) === 'yes'; a missing row means legacy.
+    modes = {option_value(sql, schema, prefix, "woocommerce_custom_orders_table_enabled") == "yes"
+             for schema in schemas}
+    if len(modes) != 1:
+        return {}
+    if modes == {True}:
+        return {"uncountedRows": {**POLICY["uncountedRows"], "posts": {
+            "post_type": {"shop_order_placehold", "shop_order", "shop_order_refund"}}}}
+    return {"uncountedTables": POLICY["uncountedTables"] | {"wc_orders"}}
+
+
 def rewrite_address(sql, schema: str, old: str, new: str) -> dict:
     """Every text value of `schema` holding `old`, rewritten to `new` (`replace_value`), `guid`
     columns left alone (a post's guid is an identifier feed readers key on; provision skipped it

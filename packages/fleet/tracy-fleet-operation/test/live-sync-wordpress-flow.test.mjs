@@ -1104,6 +1104,7 @@ const WC_CHILDREN = [
   'woocommerce_order_itemmeta'
 ]
 const WC_TABLES = [
+  "INSERT INTO wp_options VALUES (70, 'woocommerce_custom_orders_table_enabled', 'yes', 'yes');",
   ...WC_DERIVED.map(
     (name) => `CREATE TABLE wp_${name} (id bigint NOT NULL PRIMARY KEY, value varchar(100));
     INSERT INTO wp_${name} VALUES (1, 'baseline');`
@@ -1192,3 +1193,30 @@ test('WooCommerce child-only edits still sync without becoming independent recor
     s.dispose()
   }
 })
+
+test(
+  'WooCommerce compatibility copies count the authoritative order once in HPOS and legacy modes',
+  opts,
+  () => {
+    for (const enabled of ['yes', 'no']) {
+      const s = stack(
+        WC_TABLES +
+          `UPDATE wp_options SET option_value='${enabled}' WHERE option_name='woocommerce_custom_orders_table_enabled';`
+      )
+      try {
+        sql(
+          `INSERT INTO wp_posts (ID, post_content, post_title, post_type) VALUES (40, '', 'Order backup', 'shop_order');
+        INSERT INTO wp_wc_orders VALUES (40, 'wc-processing', 123.45);`,
+          'livesrc'
+        )
+        const answer = s.sync(s.read())
+        assert.equal(answer.state, 'applied', JSON.stringify(answer))
+        assert.equal(sql('SELECT post_type FROM wp_posts WHERE ID=40', 'wordpress'), 'shop_order')
+        assert.equal(sql('SELECT total_amount FROM wp_wc_orders WHERE id=40', 'wordpress'), '123.45')
+        assert.equal(answer.database.records, 1, JSON.stringify({ enabled, counts: answer.database }))
+      } finally {
+        s.dispose()
+      }
+    }
+  }
+)

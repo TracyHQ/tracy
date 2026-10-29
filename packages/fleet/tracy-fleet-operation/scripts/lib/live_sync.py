@@ -1472,6 +1472,8 @@ class DbMerge:
             PREPARE[self.platform](self.sql, self.names, self.prefix,
                                    lambda m: print(f"==> db merge: {m}", file=sys.stderr))
             phase("reads prepared")
+        if self.platform == "wordpress":
+            self.policy = {**self.policy, **_WORDPRESS.counting_policy(self.sql, self.names, self.prefix)}
         self.ids.survey(list(self.names.values()))
         phase("ids surveyed")
         self.ids.apply(self.names["base"])

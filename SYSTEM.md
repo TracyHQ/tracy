@@ -671,7 +671,10 @@ Only for `origin='migrated'` sites on Joomla (WordPress waits for its own adapte
   Order metadata, addresses, operational rows and order-item rows still merge but do not count as independent records.
   HPOS `shop_order_placehold` posts also remain in the copy without counting twice: whole-table and row merges count
   a taken change when its copy row before or after the actual merge represents a record. Legacy `shop_order` posts
-  still count normally. Child-only changes still merge under the existing uncounted-child rule.
+  still count normally. When all three snapshots agree on WooCommerce storage, HPOS counts `wc_orders`
+  and legacy counts order posts; synchronized backup orders and refunds remain merged without double counting.
+  Missing required tables or differing storage modes keep the existing per-table counts. Child-only changes
+  still merge under the existing uncounted-child rule.
 - **First run after import (22/10/2026):** at import, dsh takes the live `site.fingerprint` right before reading and
   sends it with provision; tracy-web keeps it at `site_component.config.importFingerprint` (next to the live token), and hands it to the first
   sync run (`baseFingerprint` → the host writes `base-fingerprint.json` next to the run); while no run has applied yet, comparison is

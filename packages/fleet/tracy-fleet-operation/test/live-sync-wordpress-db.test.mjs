@@ -177,7 +177,13 @@ whole.renumber("rb", "posts", rule, pairs)`)
   }
 )
 
-function orderRecordMerge({ type = 'shop_order_placehold', ours = '', theirs = '', decisions = {} }) {
+function orderRecordMerge({
+  type = 'shop_order_placehold',
+  ours = '',
+  theirs = '',
+  decisions = {},
+  extraSql = ''
+}) {
   sql(
     ['wc_b', 'wc_m', 'wc_t', 'wc_w']
       .map(
@@ -185,7 +191,8 @@ function orderRecordMerge({ type = 'shop_order_placehold', ours = '', theirs = '
     CREATE DATABASE ${schema}; USE ${schema};
     CREATE TABLE wp_posts (ID bigint NOT NULL PRIMARY KEY, post_type varchar(30), post_title varchar(100), post_content text);
     INSERT INTO wp_posts VALUES (1, '${type}', 'Original', 'Body'), (2, 'page', 'Other', 'Other body');
-    ALTER TABLE wp_posts ADD post_status varchar(20) NOT NULL DEFAULT 'publish';`
+    ALTER TABLE wp_posts ADD post_status varchar(20) NOT NULL DEFAULT 'publish';
+    ${extraSql}`
       )
       .join('\n') + `\nUSE wc_m; ${ours}\nUSE wc_t; ${theirs}`
   )
@@ -328,3 +335,76 @@ test(
     }
   }
 )
+
+const WC_COUNT_STORAGE = (enabled) => `
+  CREATE TABLE wp_options (option_id bigint PRIMARY KEY, option_name varchar(191), option_value longtext);
+  ${enabled === null ? '' : `INSERT INTO wp_options VALUES (1, 'woocommerce_custom_orders_table_enabled', '${enabled}');`}
+  CREATE TABLE wp_wc_orders (id bigint PRIMARY KEY, status varchar(30));
+  INSERT INTO wp_wc_orders VALUES (1, 'wc-processing');`
+
+test('WooCommerce only counts its configured root store while still merging backup changes', opts, () => {
+  for (const enabled of ['yes', 'no', null]) {
+    for (const changed of ['posts', 'orders']) {
+      const theirs =
+        changed === 'posts'
+          ? "UPDATE wp_posts SET post_title='Backup changed' WHERE ID=1;"
+          : "UPDATE wp_wc_orders SET status='wc-completed' WHERE id=1;"
+      const answer = orderRecordMerge({ type: 'shop_order', extraSql: WC_COUNT_STORAGE(enabled), theirs })
+      assert.equal(
+        answer.counts.records,
+        (enabled === 'yes') === (changed === 'orders') ? 1 : 0,
+        JSON.stringify({ enabled, changed, answer })
+      )
+      assert.equal(
+        sql('SELECT post_title FROM wc_m.wp_posts WHERE ID=1'),
+        changed === 'posts' ? 'Backup changed' : 'Original'
+      )
+      assert.equal(
+        sql('SELECT status FROM wc_m.wp_wc_orders WHERE id=1'),
+        changed === 'orders' ? 'wc-completed' : 'wc-processing'
+      )
+    }
+  }
+  // A normal post is still a record even if an order happens to use the same number.
+  const ordinary = orderRecordMerge({
+    type: 'post',
+    extraSql: WC_COUNT_STORAGE('yes'),
+    theirs: "UPDATE wp_posts SET post_title='Real post edit' WHERE ID=1;"
+  })
+  assert.equal(ordinary.counts.records, 1)
+  assert.equal(sql('SELECT post_title FROM wc_m.wp_posts WHERE ID=1'), 'Real post edit')
+})
+
+test('WooCommerce storage mode transitions keep per-table counting and preserve both stores', opts, () => {
+  const answer = orderRecordMerge({
+    type: 'shop_order',
+    extraSql: WC_COUNT_STORAGE('no'),
+    theirs: `UPDATE wp_options SET option_value='yes' WHERE option_name='woocommerce_custom_orders_table_enabled';
+      UPDATE wp_posts SET post_title='Post edit' WHERE ID=1;
+      UPDATE wp_wc_orders SET status='wc-completed' WHERE id=1;`
+  })
+  assert.equal(answer.counts.records, 3, JSON.stringify(answer))
+  assert.equal(sql('SELECT post_title FROM wc_m.wp_posts WHERE ID=1'), 'Post edit')
+  assert.equal(sql('SELECT status FROM wc_m.wp_wc_orders WHERE id=1'), 'wc-completed')
+})
+
+test('WooCommerce compatibility refunds count once and a missing root table keeps the fallback', opts, () => {
+  for (const enabled of ['yes', 'no']) {
+    const answer = orderRecordMerge({
+      type: 'shop_order_refund',
+      extraSql: WC_COUNT_STORAGE(enabled),
+      theirs:
+        "UPDATE wp_posts SET post_title='Refund edit' WHERE ID=1; UPDATE wp_wc_orders SET status='wc-refunded' WHERE id=1;"
+    })
+    assert.equal(answer.counts.records, 1, JSON.stringify(answer))
+    assert.equal(sql('SELECT post_type FROM wc_m.wp_posts WHERE ID=1'), 'shop_order_refund')
+    assert.equal(sql('SELECT status FROM wc_m.wp_wc_orders WHERE id=1'), 'wc-refunded')
+  }
+  const missing = orderRecordMerge({
+    type: 'shop_order',
+    extraSql: WC_COUNT_STORAGE('yes'),
+    theirs: "DROP TABLE wp_wc_orders; UPDATE wp_posts SET post_title='Kept fallback edit' WHERE ID=1;"
+  })
+  assert.equal(missing.counts.records, 1)
+  assert.equal(sql('SELECT post_title FROM wc_m.wp_posts WHERE ID=1'), 'Kept fallback edit')
+})
