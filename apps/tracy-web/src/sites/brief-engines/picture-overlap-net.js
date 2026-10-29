@@ -26,6 +26,21 @@ export function overlapPagesOf(plan) {
   return [...new Set(['/', ...kept])].slice(0, OVERLAP_PAGES)
 }
 
+/**
+ * A note that says each line once: the head block written again by the net reads the site again, and must not repeat
+ * what the first write already said (a brand colour, a background that could not be read).
+ * @param {(note: string) => void} note
+ * @returns {(note: string) => void}
+ */
+export function onceNote(note) {
+  const said = new Set()
+  return (line) => {
+    if (said.has(line)) return
+    said.add(line)
+    note(line)
+  }
+}
+
 const pathOf = (src) =>
   String(src ?? '')
     .split(/[?#]/)[0]

@@ -59,7 +59,7 @@ import { planIdentitySteps } from './joomla-plan-identity.js'
 import { guardBoundNodes } from './joomla-bound-nodes.js'
 import { contentMapAt, plannedSlotValues, showcaseOff, writeOutsideMap } from './joomla-outside-map.js'
 import { takenOffPicturePaths } from './cutout-css.js'
-import { overlapSafetyNet } from './picture-overlap-net.js'
+import { onceNote, overlapSafetyNet } from './picture-overlap-net.js'
 import { lineLimits, withBoxLimits, withinLines } from './slot-box-limits.js'
 import { writeWoContent } from './joomla-wo-content.js'
 import {
@@ -2250,6 +2250,8 @@ export function createJoomlaEngine({
       // What the content map does not reach (#196): credit line, page addresses, and the head block that repaints the demo
       // backgrounds and hides demo play buttons and links to pages taken off (`joomla-outside-map.js`). A brief build only.
       if (outsidePlan?.outside) {
+        // Both writes say each line once: the net's head-only rewrite never repeats the first write's notes.
+        const outsideNote = onceNote(ctx.note)
         const outsideMap = async (pictures, headOnly = false) =>
           writeOutsideMap({
             apply,
@@ -2257,7 +2259,7 @@ export function createJoomlaEngine({
             plan: outsidePlan,
             reader: siteReader ? await siteReader(siteKey).catch(() => null) : null,
             contentMap: contentMapAt(ctx.contract?.dir),
-            note: ctx.note,
+            note: outsideNote,
             time: ctx.time,
             applyId: `outside-${Date.now().toString(36)}`,
             locale: prepared.written ?? SOURCE,

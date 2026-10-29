@@ -30,6 +30,26 @@ const BACKDROP_SHARE = 0.9
  */
 function readInPage({ folder, coveredShare, backdropShare }) {
   const view = { width: window.innerWidth }
+  // Every box in page coordinates (the viewport's plus the scroll), so a picture far down the page is read like one on
+  // the first screen.
+  window.scrollTo({ left: 0, top: 0, behavior: 'instant' })
+  const pageRect = (el) => {
+    const r = el.getBoundingClientRect()
+    const left = r.left + window.scrollX
+    const top = r.top + window.scrollY
+    return { left, top, right: left + r.width, bottom: top + r.height, width: r.width, height: r.height }
+  }
+  // The browser's hit test answers only inside the viewport: a point below it is scrolled into view first.
+  const elementAt = (px, py) => {
+    const inView =
+      py >= window.scrollY &&
+      py < window.scrollY + window.innerHeight &&
+      px >= window.scrollX &&
+      px < window.scrollX + window.innerWidth
+    if (!inView)
+      window.scrollTo({ left: 0, top: Math.max(0, py - window.innerHeight / 2), behavior: 'instant' })
+    return document.elementFromPoint(px - window.scrollX, py - window.scrollY)
+  }
   const shown = (el) => {
     const s = getComputedStyle(el)
     const r = el.getBoundingClientRect()
@@ -58,7 +78,7 @@ function readInPage({ folder, coveredShare, backdropShare }) {
         : el.matches('button,a.btn,.btn,[role="button"],input[type="submit"]')
           ? 'button'
           : 'text'
-    targets.push({ el, kind, text: text.slice(0, 80), rect: el.getBoundingClientRect() })
+    targets.push({ el, kind, text: text.slice(0, 80), rect: pageRect(el) })
   }
   const canvas = document.createElement('canvas')
   const ctx = canvas.getContext('2d', { willReadFrequently: true })
@@ -66,7 +86,7 @@ function readInPage({ folder, coveredShare, backdropShare }) {
   for (const img of document.querySelectorAll('img')) {
     const src = img.currentSrc || img.src || ''
     if (!src.includes(folder) || !img.complete || !img.naturalWidth || !shown(img)) continue
-    const r = img.getBoundingClientRect()
+    const r = pageRect(img)
     let alpha = null
     try {
       canvas.width = img.naturalWidth
@@ -118,7 +138,7 @@ function readInPage({ folder, coveredShare, backdropShare }) {
           const [x, y] = toImage(px, py)
           if (!inside(x, y) || at(x, y) < 64) continue
           if (!clear) {
-            const above = document.elementFromPoint(px, py)
+            const above = elementAt(px, py)
             if (!(above === img || img.contains(above))) continue
           }
           hit += 1
@@ -140,6 +160,20 @@ function readInPage({ folder, coveredShare, backdropShare }) {
       })
   }
   return out
+}
+
+/**
+ * Runs in the page: scroll to the bottom a screen at a time, then back to the top, so lazily loaded pictures load.
+ * @param {{stepMs: number, maxSteps: number}} args
+ */
+async function revealLazy({ stepMs, maxSteps }) {
+  for (let i = 0; i < maxSteps; i += 1) {
+    const before = window.scrollY
+    window.scrollBy({ left: 0, top: window.innerHeight, behavior: 'instant' })
+    await new Promise((resolve) => setTimeout(resolve, stepMs))
+    if (window.scrollY === before) break
+  }
+  window.scrollTo({ left: 0, top: 0, behavior: 'instant' })
 }
 
 /**
@@ -166,6 +200,9 @@ export async function readPictureOverlaps(page, url, options = {}) {
     // rule as the screenshotter's `open`, `browser.js`).
     await page.goto(url, { waitUntil: 'domcontentloaded', timeout: gotoMs })
     await page.waitForLoadState('load', { timeout: loadGraceMs }).catch(() => {})
+    await page.waitForTimeout(settleMs)
+    // Pictures that load only when scrolled to (`loading="lazy"`) are brought in before the read.
+    await page.evaluate(revealLazy, { stepMs: 60, maxSteps: 60 }).catch(() => {})
     await page.waitForTimeout(settleMs)
     const found = await page.evaluate(readInPage, {
       folder,

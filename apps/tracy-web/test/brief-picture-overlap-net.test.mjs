@@ -6,7 +6,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { overlapPagesOf, overlapSafetyNet } from '../src/sites/brief-engines/picture-overlap-net.js'
+import { onceNote, overlapPagesOf, overlapSafetyNet } from '../src/sites/brief-engines/picture-overlap-net.js'
 
 const PLAN = {
   pages: [
@@ -103,4 +103,13 @@ test('#189 never a gate: no host, a failed check or a failed rewrite leave the b
   })
   assert.deepEqual(out.takenOff, [])
   assert.match(refused.notes[0], /could not be taken off/)
+})
+
+test('#189 the head-only rewrite never repeats a note the first write said', () => {
+  const notes = []
+  const say = onceNote((n) => notes.push(n))
+  say('the brand colours were taken from the logo')
+  say('a background could not be read')
+  say('the brand colours were taken from the logo')
+  assert.deepEqual(notes, ['the brand colours were taken from the logo', 'a background could not be read'])
 })

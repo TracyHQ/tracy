@@ -39,6 +39,12 @@ const PAGES = {
     '<section class="row"><div class="col"><h2>Gentle care for every smile</h2><p>Book a check-up with our team.</p></div>' +
       '<div class="col"><img src="/images/tracy-content/framed.svg"></div></section>'
   ),
+  // A long florist page: far below the first screen, an opaque photo (loaded lazily) painted over a paragraph.
+  '/far': page(
+    '<section style="height:3200px"><h2>Fresh flowers</h2></section>' +
+      '<section class="wrap"><p style="position:relative;z-index:1;padding:40px">Wedding bouquets made to order</p>' +
+      '<img loading="lazy" src="/images/tracy-content/photo-far.svg" style="position:absolute;left:0;top:0;width:300px;height:200px;z-index:2"></section>'
+  ),
   // A backdrop photo behind the words, and a caption a template sets over a gallery photo.
   '/design': page(
     '<section class="wrap"><img src="/images/tracy-content/bg.svg" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover">' +
@@ -66,6 +72,7 @@ before(async () => {
     clearWith(800, 800, { left: 40, top: 40, width: 720, height: 720 })
   )
   files.set('/images/tracy-content/bg.svg', opaque(1600, 900))
+  files.set('/images/tracy-content/photo-far.svg', opaque(600, 400))
   files.set('/images/tracy-content/tile.svg', opaque(640, 480))
   server = createServer((req, res) => {
     const path = new URL(req.url, 'http://x').pathname
@@ -101,6 +108,17 @@ test('a figure over the headline and the button is found at every width it cover
   assert.deepEqual(found[0].widths, [1440, 1024, 768, 390])
   assert.ok(found[0].covers.some((c) => c.kind === 'heading'))
   assert.ok(found[0].covers.some((c) => c.kind === 'button'))
+})
+
+test('an opaque photo far down a long page, painted over a paragraph, is found at every width', async (t) => {
+  if (skip()) return t.skip(skip())
+  const p = await browser.newPage()
+  const found = overlapFindings(await readPictureOverlaps(p, `${base}/far`))
+  await p.close()
+  assert.equal(found.length, 1)
+  assert.equal(found[0].src, 'images/tracy-content/photo-far.svg')
+  assert.deepEqual(found[0].widths, [1440, 1024, 768, 390])
+  assert.ok(found[0].covers.some((c) => c.kind === 'text' && /Wedding bouquets/.test(c.text)))
 })
 
 test('a framed photo in its own column, a backdrop and a template caption are no overlap', async (t) => {
