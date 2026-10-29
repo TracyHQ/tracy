@@ -43,7 +43,10 @@ test('a footer block shows the second number, WhatsApp and the DM, each clickabl
     /<a href="https:\/\/ig\.me\/m\/brightsmile\.studio" class="link-underline"[^>]*>Message us on Instagram<\/a>/
   )
   assert.match(out, /<a href="tel:\+447700900202" class="text-primary lead d-block">\+44 7700 900 202<\/a>/)
-  assert.match(out, /<a href="https:\/\/wa\.me\/447700900202" class="link-underline"[^>]*>WhatsApp us<\/a>/)
+  assert.match(
+    out,
+    /<a href="https:\/\/wa\.me\/447700900202" class="link-underline d-table"[^>]*>WhatsApp us<\/a>/
+  )
   for (const path of bound) assert.equal(boundNodes(out, path)?.length, 1, `${path} still finds one node`)
   assert.equal(boundNodes(out, '/html/body/div/a[2]/text()')[0].value, 'Message us on Instagram')
   // Written again, nothing changes.
@@ -307,4 +310,109 @@ test('a contact record shows the second number on its mobile line; with one numb
     ).steps[0].fields
   assert.equal((await run(clinic)).mobile, '+44 7700 900 202')
   assert.equal((await run(clinic.slice(0, 1))).mobile, '')
+})
+
+test('the block reads in the contact order: every number, then the chat app, the address and area, the DMs last; equal spacing', () => {
+  // A made-up yoga studio footer: the phone line carries the template's spacing (`d-block mb-3`), the DM line does not.
+  const studio = [
+    { kind: 'phone', value: '+971 50 000 0101', href: 'tel:+971500000101', label: 'Call +971 50 000 0101' },
+    { kind: 'phone', value: '+971 50 000 0202', href: 'tel:+971500000202', label: 'Call +971 50 000 0202' },
+    { kind: 'whatsapp', value: '+971 50 000 0101', href: 'https://wa.me/971500000101', label: 'WhatsApp us' },
+    { kind: 'zalo', value: '+84 90 000 0303', href: 'https://zalo.me/84900000303', label: 'Zalo us' },
+    { kind: 'message', value: 'facebook', href: 'https://m.me/lotus.loft', label: 'Message us on Facebook' }
+  ]
+  const contact = {
+    phone: { value: '+971 50 000 0101', href: 'tel:+971500000101' },
+    address: { value: '3 Example Walk, Sandtown' },
+    serviceArea: { value: 'Classes across Sandtown' }
+  }
+  const html =
+    '<a href="tel:+971500000101" class="text-primary lead mb-3 d-block">+971 50 000 0101</a>\n<p class="mb-3">3 Example Walk, Sandtown</p>'
+  const paths = ['/html/body/div/a[1]/text()', '/html/body/div/p/text()']
+  const out = joomlaContactLinks(html, contact, { channels: studio, bound: paths }).html
+  const order = [
+    '+971 50 000 0101',
+    '+971 50 000 0202',
+    'WhatsApp us',
+    'Zalo us',
+    '3 Example Walk, Sandtown',
+    'Classes across Sandtown',
+    'Message us on Facebook'
+  ].map((words) => out.indexOf(words))
+  assert.ok(
+    order.every((at, i) => at >= 0 && (i === 0 || at > order[i - 1])),
+    `contact order in ${out}`
+  )
+  // The chat app and DM lines take the spacing of the line they follow: the same gap between every line.
+  assert.match(out, /<a href="https:\/\/wa\.me\/971500000101" class="[^"]*\bmb-3\b[^"]*\bd-block\b[^"]*"/)
+  assert.match(out, /<a href="https:\/\/zalo\.me\/84900000303" class="[^"]*\bmb-3\b[^"]*"/)
+  assert.match(out, /<a href="https:\/\/m\.me\/lotus\.loft" class="[^"]*\bd-block\b[^"]*"/)
+  for (const path of paths) assert.equal(boundNodes(out, path)?.length, 1, `${path} still finds one node`)
+  assert.equal(joomlaContactLinks(out, contact, { channels: studio, bound: paths }).html, out)
+})
+
+test('an address cut short for its box still gets the area line beside it', () => {
+  const contact = {
+    phone: { value: '+971 50 000 0101', href: 'tel:+971500000101' },
+    address: { value: '3 Example Walk - Sandtown - United Arab Emirates' },
+    serviceArea: { value: 'Classes across Sandtown' }
+  }
+  const html =
+    '<a href="tel:+971500000101" class="d-block">+971 50 000 0101</a>\n<p class="mb-3">3 Example Walk - Sandtown</p>'
+  const out = joomlaContactLinks(html, contact, { bound: ['/html/body/div/p'] }).html
+  assert.match(
+    out,
+    /<p class="mb-3">3 Example Walk - Sandtown<\/p><div><p class="mb-3">Classes across Sandtown<\/p><\/div>/
+  )
+  // A line that only starts like the address (inside a word) is no address line.
+  const other = '<a href="tel:+971500000101">+971 50 000 0101</a><p>3 Example Wal</p>'
+  assert.doesNotMatch(joomlaContactLinks(other, contact).html, /Classes across/)
+})
+
+test('Zalo joins the icon row only where the template draws it; a Font Awesome row leaves it to the contact lines', async () => {
+  const { socialListParams } = await import('../src/sites/brief-engines/joomla-plan-social-lists.js')
+  // A made-up noodle bar with one number, Facebook and Zalo.
+  const socials = {
+    keep: { facebook: 'https://www.facebook.com/noodle.example/' },
+    zalo: 'https://zalo.me/84900001234'
+  }
+  const contacts = { phones: [{ href: 'tel:+84900001234', value: '+84 90 000 1234' }], email: null }
+  const fa = JSON.parse(socialListParams(row4(), socials, contacts).params['jatools-config']).social
+  assert.deepEqual(fa['social[font-icon]'].slice(0, 2), ['fa fa-phone', 'fa fa-facebook'])
+  assert.ok(
+    !fa['social[link]'].some((l) => /zalo/.test(l)),
+    'no Zalo item drawn with another network’s glyph'
+  )
+  // A template that ships its own Zalo item keeps its icon and links it.
+  const own = {
+    'jatools-config': iconRow(
+      ['icon-zalo', 'fa fa-facebook', 'fa fa-instagram'],
+      ['Zalo', 'Facebook', 'Instagram']
+    )
+  }
+  const out = JSON.parse(socialListParams(own, socials, contacts).params['jatools-config']).social
+  const at = out['social[link]'].indexOf('https://zalo.me/84900001234')
+  assert.ok(at >= 0)
+  assert.equal(out['social[font-icon]'][at], 'icon-zalo')
+  assert.equal(out['social[title]'][at], 'Zalo us')
+})
+
+test('a Zalo channel is a contact line beside the numbers, and a template Zalo link takes the business’s number', () => {
+  const channels = [
+    { kind: 'phone', value: '+84 90 000 1234', href: 'tel:+84900001234', label: 'Call +84 90 000 1234' },
+    {
+      kind: 'zalo',
+      value: '+84 90 000 1234',
+      href: 'https://zalo.me/84900001234',
+      label: 'Zalo us',
+      inferred: true
+    }
+  ]
+  const contact = { phone: { value: '+84 90 000 1234', href: 'tel:+84900001234' } }
+  const added = joomlaContactLinks('<a href="tel:0">+84 90 000 9999</a>', contact, { channels }).html
+  assert.match(added, /<a href="https:\/\/zalo\.me\/84900001234"[^>]*>Zalo us<\/a>/)
+  const demo = '<a href="tel:0">+84 90 000 9999</a> <a href="https://zalo.me/0123456789">Chat with us</a>'
+  const moved = joomlaContactLinks(demo, contact, { channels }).html
+  assert.match(moved, /<a href="https:\/\/zalo\.me\/84900001234">Chat with us<\/a>/)
+  assert.equal((moved.match(/zalo\.me/g) ?? []).length, 1)
 })

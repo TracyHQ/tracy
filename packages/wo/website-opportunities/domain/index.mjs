@@ -68,6 +68,8 @@ export { pageRole } from './page-plan.mjs'
 export { pinnedCopy } from './pinned-copy.mjs'
 export {
   addressLines,
+  addressThatFits,
+  cityOf,
   contactChannelsOf,
   mapsLinkOf,
   readContact,
@@ -75,6 +77,12 @@ export {
 } from './contact-reading.mjs'
 export { checkContactFacts } from './contact-fact-check.mjs'
 export { contactButtonSlots } from './contact-buttons.mjs'
+export {
+  MESSAGING_APP_BY_COUNTRY,
+  MESSAGING_HREF,
+  MESSAGING_LINKS,
+  inferredMessagingAppOf
+} from './messaging-apps.mjs'
 export { checkHeroAnswers, heroSlotsOf, planHero } from './hero-first-screen.mjs'
 export { checkUspTheme, findUsp, isSpecificClaim } from './hero-usp.mjs'
 export { neutralFor, neutralWords } from './neutral-copy.mjs'

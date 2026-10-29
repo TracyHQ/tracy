@@ -12,29 +12,9 @@
  *   3. the lines at the end of the block
  * With none, nothing is added. Framework-wide (Joomla custom module HTML), never per template. Pure.
  */
-import { parse } from 'parse5'
+import { boundNodes, sameBoundNode } from './joomla-bound-nodes.js'
 
-/** The nodes an absolute content-map path finds in a field's HTML, as the plugin resolves it (under its `<div>` root). */
-export function boundNodes(html, xpath) {
-  const path = String(xpath ?? '')
-  if (!path.startsWith('/') || path.includes('//')) return null
-  /** @type {any[]} */
-  let nodes = [parse(`<!doctype html><html><head></head><body><div>${html}</div></body></html>`)]
-  for (const step of path.split('/').filter(Boolean)) {
-    const parts = /^(@[\w:-]+|text\(\)|[a-z][\w-]*)(?:\[(\d+)\])?$/i.exec(step)
-    if (!parts) return null
-    const [, name, nth] = parts
-    nodes = nodes.flatMap((node) => {
-      const found = name.startsWith('@')
-        ? (node.attrs ?? []).filter((/** @type {any} */ a) => a.name === name.slice(1).toLowerCase())
-        : name === 'text()'
-          ? (node.childNodes ?? []).filter((/** @type {any} */ c) => c.nodeName === '#text')
-          : (node.childNodes ?? []).filter((/** @type {any} */ c) => c.tagName === name.toLowerCase())
-      return nth ? found.slice(Number(nth) - 1, Number(nth)) : found
-    })
-  }
-  return nodes
-}
+export { boundNodes }
 
 /** The words of a node (an attribute's value, a text, an element's text). */
 function wordsOf(/** @type {any} */ node) {
@@ -42,7 +22,7 @@ function wordsOf(/** @type {any} */ node) {
   return (node.childNodes ?? []).map(wordsOf).join('')
 }
 
-/** Whether every bound path that found one node before finds one node, with the same words, after. */
+/** Whether every bound path that found one node before finds the same node (`sameBoundNode`), with the same words, after. */
 export function keepsBound(
   /** @type {string} */ before,
   /** @type {string} */ after,
@@ -52,7 +32,8 @@ export function keepsBound(
     const was = boundNodes(before, xpath)
     if (!was || was.length !== 1) continue
     const now = boundNodes(after, xpath)
-    if (!now || now.length !== 1 || wordsOf(now[0]) !== wordsOf(was[0])) return false
+    if (!now || now.length !== 1 || !sameBoundNode(was[0], now[0]) || wordsOf(now[0]) !== wordsOf(was[0]))
+      return false
   }
   return true
 }

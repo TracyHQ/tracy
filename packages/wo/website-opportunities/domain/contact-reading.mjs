@@ -2,7 +2,11 @@
 // build (the contact record, the contact modules, the footer, the head) reads the facts through `readContact` (or through the
 // plan made from it), never from a brief field directly: a place the brief can hold a fact in is listed here, once.
 //
-// Facts only: a value that is not in the brief is not here. Nothing is invented, rephrased or completed.
+// Facts only: a value that is not in the brief is not here. Nothing is invented, rephrased or completed; a chat app on a
+// mobile is inferred only by the country table (`messaging-apps.mjs`) and says so.
+
+import { callingCodeOfCountry } from './business-phones.mjs'
+import { MESSAGING_LINKS, inferredMessagingAppOf } from './messaging-apps.mjs'
 
 const nonEmpty = (v) => typeof v === 'string' && v.trim() !== ''
 const isObj = (v) => v !== null && typeof v === 'object' && !Array.isArray(v)
@@ -141,18 +145,8 @@ export function readContact(brief, { hours = [] } = {}) {
 
 const SEPARATOR = /\s+[-–—]\s+|\s*,\s*|\s*\n+\s*/
 
-/**
- * An address split into the lines a template shows it on: the first part on the first line, the rest, in the brief's own
- * words and separators, on the last. The words are never changed, only cut where the brief itself separates them.
- * @param {string} address
- * @param {number} lines - how many lines the template has for it (at least 1)
- * @returns {string[]}
- */
-export function addressLines(address, lines) {
-  const value = String(address ?? '').trim()
-  const count = Math.max(1, Math.floor(lines) || 1)
-  if (value === '') return []
-  if (count === 1) return [value]
+/** An address cut where the brief itself separates it: each part with the separator written after it. */
+function addressParts(value) {
   /** @type {Array<{ text: string, tail: string }>} */
   const parts = []
   let rest = value
@@ -166,6 +160,59 @@ export function addressLines(address, lines) {
     rest = rest.slice(m.index + m[0].length)
     if (rest === '') break
   }
+  return parts
+}
+
+/** The city the brief names for the business (its own field, else its address components), or null. */
+export function cityOf(brief) {
+  const b = brief?.business ?? {}
+  const parts = isObj(b.addressComponents) ? b.addressComponents : {}
+  return firstText([b.city, parts.city, parts.locality]) || null
+}
+
+/**
+ * An address that fits a box of `max` characters, cut by whole parts from its most general end (COO rule 29/10/2026):
+ * the country first, then the state or emirate, while the street part and the city stay (at least two parts, and never
+ * the `city` when it is known). Never inside a word. Null when it cannot fit so: the caller keeps the whole address.
+ * The whole address stays the contact fact (the contact record, the schema); only a short box takes this.
+ * @param {string} address
+ * @param {number} max
+ * @param {{ city?: string | null }} [options]
+ * @returns {string | null}
+ */
+export function addressThatFits(address, max, { city = null } = {}) {
+  const value = String(address ?? '').trim()
+  if (value === '' || !(max > 0) || [...value].length <= max) return value === '' ? null : value
+  const parts = addressParts(value)
+  const same = (a, b) =>
+    String(a).trim().toLowerCase() ===
+    String(b ?? '')
+      .trim()
+      .toLowerCase()
+  for (let keep = parts.length - 1; keep >= Math.max(2, parts.length - 2); keep -= 1) {
+    if (city && same(parts[keep].text, city)) return null
+    const cut = parts
+      .slice(0, keep)
+      .map((p, i) => p.text + (i < keep - 1 ? p.tail : ''))
+      .join('')
+    if ([...cut].length <= max) return cut
+  }
+  return null
+}
+
+/**
+ * An address split into the lines a template shows it on: the first part on the first line, the rest, in the brief's own
+ * words and separators, on the last. The words are never changed, only cut where the brief itself separates them.
+ * @param {string} address
+ * @param {number} lines - how many lines the template has for it (at least 1)
+ * @returns {string[]}
+ */
+export function addressLines(address, lines) {
+  const value = String(address ?? '').trim()
+  const count = Math.max(1, Math.floor(lines) || 1)
+  if (value === '') return []
+  if (count === 1) return [value]
+  const parts = addressParts(value)
   if (parts.length <= 1) return [value]
   const out = parts.slice(0, count - 1).map((p) => p.text)
   const last = parts.slice(count - 1)
@@ -176,10 +223,10 @@ export function addressLines(address, lines) {
 
 // --- Every channel a visitor can reach the business on (COO rule 29/10/2026) -------------------------------------------
 //
-// 🔒 EVERY REAL CHANNEL THE BRIEF HOLDS IS SHOWN AND CLICKABLE: each phone (its own `tel:` line), WhatsApp only on a number
-// the brief ties it to (`contact.whatsapp`, or an other phone marked `whatsapp`), never guessed from a mobile prefix here,
-// and the official direct-message link of each social network the brief really has. The order is the contact order a
-// writer with too little room keeps: call, WhatsApp, a direct message.
+// 🔒 EVERY REAL CHANNEL THE BRIEF HOLDS IS SHOWN AND CLICKABLE: each phone (its own `tel:` line), WhatsApp or Zalo on a
+// number a source ties to the app, else only as the country table infers it (`messaging-apps.mjs`, marked `inferred`), and
+// the official direct-message link of each social network the brief really has. The order is the contact order a writer
+// with too little room keeps: call, a chat app, a direct message.
 
 const digitsOf = (v) => String(v ?? '').replace(/\D+/g, '')
 const telOf = (v) => (/^\s*\(?\+/.test(String(v)) ? `tel:+${digitsOf(v)}` : `tel:${digitsOf(v)}`)
@@ -209,11 +256,78 @@ function handleOf(network, url) {
   return null
 }
 
+/** The label of a chat app line: "WhatsApp us", "Zalo us"; with its number when the app has two. */
+const APP_NAMES = Object.freeze({ whatsapp: 'WhatsApp', zalo: 'Zalo' })
+
+/** Whether the brief's own WhatsApp number is an inference (`contact.whatsapp` schema 1 `verified: false`, or its fact). */
+function whatsappInferred(brief) {
+  const w = brief?.contact?.whatsapp
+  if (w?.verified === false) return true
+  const fact = Array.isArray(brief?.facts) ? brief.facts.find((f) => f?.id && f.id === w?.factId) : null
+  return fact?.confidence === 'inferred'
+}
+
 /**
- * The channels of a brief in the contact order: each phone, each WhatsApp number with evidence, each direct message.
+ * The chat app channels of a brief (WhatsApp, Zalo): each number a source ties to an app first; then, for an app with no
+ * sourced number, the first phone that is a mobile of a country `MESSAGING_APP_BY_COUNTRY` lists for it, marked
+ * `inferred` (a landline and a country not listed never are).
+ */
+function messagingChannelsOf(brief, phones) {
+  const b = brief?.business ?? {}
+  const c = brief?.contact ?? {}
+  const others = Array.isArray(b.otherPhones) ? b.otherPhones : []
+  const callingCode = callingCodeOfCountry(b.country)
+  /** @type {Array<{app: 'whatsapp' | 'zalo', value: string, digits: string, source: string, inferred: boolean,
+   *   country?: string}>} */
+  const found = []
+  const seen = new Set()
+  const add = (app, value, source, inferred, country, digits = digitsOf(value)) => {
+    const d = digits
+    if (!/^\d{8,15}$/.test(d) || seen.has(`${app}:${d}`)) return
+    seen.add(`${app}:${d}`)
+    found.push({ app, value: value.trim(), digits: d, source, inferred, ...(country ? { country } : {}) })
+  }
+  // Sourced: a number the brief ties to the app (an upstream inference of the brief itself keeps its mark).
+  if (nonEmpty(c?.whatsapp?.number))
+    add('whatsapp', c.whatsapp.number, 'contact.whatsapp', whatsappInferred(brief))
+  if (nonEmpty(c?.zalo?.number)) add('zalo', c.zalo.number, 'contact.zalo', false)
+  for (const p of others) {
+    if (p?.whatsapp === true && nonEmpty(p.phone)) add('whatsapp', p.phone, 'business.otherPhones', false)
+    if (p?.zalo === true && nonEmpty(p.phone)) add('zalo', p.phone, 'business.otherPhones', false)
+  }
+  // A sourced number of an app wins: the app's inferred ones go.
+  for (const app of Object.keys(APP_NAMES))
+    if (found.some((f) => f.app === app && !f.inferred))
+      for (let i = found.length - 1; i >= 0; i -= 1)
+        if (found[i].app === app && found[i].inferred) found.splice(i, 1)
+  // Inferred: the first mobile of a listed country, for an app the brief has no number for.
+  for (const phone of phones) {
+    const guess = inferredMessagingAppOf(phone.value, { callingCode })
+    if (!guess || found.some((f) => f.app === guess.app)) continue
+    add(guess.app, phone.value, phone.source, true, guess.country, guess.digits)
+  }
+  const order = Object.keys(APP_NAMES)
+  found.sort((x, y) => order.indexOf(x.app) - order.indexOf(y.app))
+  return found.map((f) => {
+    const twice = found.filter((g) => g.app === f.app).length > 1
+    return {
+      kind: f.app,
+      value: f.value,
+      href: MESSAGING_LINKS[f.app](f.digits),
+      label: twice ? `${APP_NAMES[f.app]} ${f.value}` : `${APP_NAMES[f.app]} us`,
+      source: f.source,
+      ...(f.inferred ? { inferred: true } : {}),
+      ...(f.country ? { country: f.country } : {})
+    }
+  })
+}
+
+/**
+ * The channels of a brief in the contact order: each phone, each chat app number (WhatsApp, Zalo: `messagingChannelsOf`),
+ * each direct message.
  * @param {any} brief
- * @returns {Array<{kind: 'phone' | 'whatsapp' | 'message', value: string, href: string, label: string, source: string,
- *   network?: string}>}
+ * @returns {Array<{kind: 'phone' | 'whatsapp' | 'zalo' | 'message', value: string, href: string, label: string, source: string,
+ *   network?: string, inferred?: true, country?: string}>}
  */
 export function contactChannelsOf(brief) {
   const b = brief?.business ?? {}
@@ -237,26 +351,7 @@ export function contactChannelsOf(brief) {
   const others = Array.isArray(b.otherPhones) ? b.otherPhones : []
   for (const p of others) if (nonEmpty(p?.phone)) addPhone(p.phone, 'business.otherPhones')
 
-  const whatsapp = []
-  const seenWa = new Set()
-  const addWhatsapp = (value, source) => {
-    const d = digitsOf(value)
-    if (!/^\d{8,15}$/.test(d) || seenWa.has(d)) return
-    seenWa.add(d)
-    whatsapp.push({
-      kind: 'whatsapp',
-      value: value.trim(),
-      href: `https://wa.me/${d}`,
-      label: 'WhatsApp us',
-      source
-    })
-  }
-  if (nonEmpty(c?.whatsapp?.number)) addWhatsapp(c.whatsapp.number, 'contact.whatsapp')
-  for (const p of others)
-    if (p?.whatsapp === true && nonEmpty(p.phone)) addWhatsapp(p.phone, 'business.otherPhones')
-  // Two WhatsApp numbers are told apart by their number.
-  if (whatsapp.length > 1) for (const w of whatsapp) w.label = `WhatsApp ${w.value}`
-
+  const chats = messagingChannelsOf(brief, phones)
   const socials = isObj(b.socials) ? b.socials : {}
   const messages = []
   const ig = handleOf('instagram', socials.instagram)
@@ -290,5 +385,5 @@ export function contactChannelsOf(brief) {
       label: 'Find us on TikTok',
       source: 'business.socials.tiktok'
     })
-  return [...phones, ...whatsapp, ...messages]
+  return [...phones, ...chats, ...messages]
 }

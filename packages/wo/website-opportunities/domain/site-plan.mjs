@@ -14,7 +14,7 @@
 import { pictureDecisionsOf } from './site-plan-pictures.mjs'
 import { CONTACT_FACTS_WHY } from './page-plan.mjs'
 import { answersFromBrief, contactFacts } from './site-answers.mjs'
-import { contactChannelsOf, mapsLinkOf } from './contact-reading.mjs'
+import { addressThatFits, cityOf, contactChannelsOf, mapsLinkOf } from './contact-reading.mjs'
 import { contactButtonSlots } from './contact-buttons.mjs'
 import { IDENTITY_REASONS, planIdentity } from './site-plan-identity.mjs'
 import { planOutsideMap } from './outside-map.mjs'
@@ -22,7 +22,7 @@ import { COLOUR_REASONS, planColours } from './brand-colours.mjs'
 import { HONESTY_REASONS, planHonesty } from './site-plan-honesty.mjs'
 import { EMPTIED_PAGE_WHY, emptiedPages } from './site-plan-empty-pages.mjs'
 import { peopleFromReviewsNote, showablePeopleOf } from './brief-people.mjs'
-import { planHero } from './hero-first-screen.mjs'
+import { limitOf, planHero } from './hero-first-screen.mjs'
 import { planPageIntros, planPlaceIntros } from './page-intros.mjs'
 import { placeSeoOf } from './place-seo.mjs'
 
@@ -189,7 +189,12 @@ function slotsOf(contentMap, brief, contact, name, cardNames = {}, channels = []
         key: slot.key,
         role: slot.role,
         decision: 'value',
-        value: contact[kind].value,
+        // An address longer than its box (the measured box first) loses whole parts from its general end; the fact stays whole.
+        value:
+          kind === 'address'
+            ? (addressThatFits(contact.address.value, limitOf(slot), { city: cityOf(brief) }) ??
+              contact.address.value)
+            : contact[kind].value,
         reason: 'contact-fact'
       }
     if (slot.type === 'text' && slot.role === 'business.name' && name)

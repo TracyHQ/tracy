@@ -5,7 +5,7 @@
  *
  * Rule, by structure and never by template (COO name rule 2 of 29/10/2026): a list whose items carry a link array and name
  * a network (in the icon class, the title or the link) shows only the networks the business really has, each with its
- * real address, then WhatsApp when the brief holds it as a contact channel; the template's own item of a network keeps its
+ * real address, then WhatsApp and Zalo when the brief holds them as contact channels; the template's own item of a network keeps its
  * icon class, and a network the template has no item for takes a sibling's icon class with only the network's word
  * changed (an icon font class such as `fa fa-facebook`; any other icon mechanism leaves that network out, never a new
  * style). No icon is left without its address.
@@ -17,11 +17,12 @@
  * held social items only and is left with none is unpublished: the whole block goes. Share links are not touched. Pure.
  */
 
-/** Which network a list item is for, from its icon class, title and link; WhatsApp is a network here too. */
+/** Which network a list item is for, from its icon class, title and link; WhatsApp and Zalo are networks here too. */
 const NETWORKS = [
   ['phone', /(?:^|\s)tel:|\bfa-phone\b/i],
   ['email', /(?:^|\s)mailto:|\bfa-envelope\b/i],
   ['whatsapp', /wa\.me\/|whatsapp/i],
+  ['zalo', /zalo/i],
   ['facebook', /facebook|fb\.com/i],
   ['instagram', /instagram/i],
   ['x', /twitter|x\.com|fa-x-twitter/i],
@@ -36,6 +37,7 @@ export const NETWORK_TITLES = Object.freeze({
   phone: 'Call us',
   email: 'Email us',
   whatsapp: 'WhatsApp',
+  zalo: 'Zalo',
   facebook: 'Facebook',
   instagram: 'Instagram',
   x: 'X',
@@ -74,21 +76,30 @@ export const networkOf = (/** @type {string} */ text) => {
 
 /**
  * The items a list shows, in order (COO rule 29/10/2026): a call per number when the list has room for every item, else
- * the first number; the mailbox; WhatsApp; then the business's profiles (the template's order first, then the others).
+ * the first number; the mailbox; WhatsApp; Zalo; then the business's profiles (the template's order first, then the others).
  * @param {Record<string, string>} keep @param {string | null} whatsapp @param {string[]} templateOrder
  * @param {ContactIcons | null} contacts @param {number} room - how many items the list holds
+ * @param {string | null} [zalo]
  * @returns {Array<{ net: string, href: string, title?: string }>}
  */
-function wantedOf(keep, whatsapp, templateOrder, contacts = null, room = Number.POSITIVE_INFINITY) {
+function wantedOf(
+  keep,
+  whatsapp,
+  templateOrder,
+  contacts = null,
+  room = Number.POSITIVE_INFINITY,
+  zalo = null
+) {
   const own = Object.keys(keep).filter((net) => typeof keep[net] === 'string' && keep[net] !== '')
   const ordered = [
     ...templateOrder.filter((n) => own.includes(n)),
     ...own.filter((n) => !templateOrder.includes(n))
   ]
-  const unique = [...new Set(ordered)].filter((n) => n !== 'whatsapp')
+  const unique = [...new Set(ordered)].filter((n) => n !== 'whatsapp' && n !== 'zalo')
   const rest = [
     ...(contacts?.email ? [{ net: 'email', href: contacts.email.href, title: 'Email us' }] : []),
     ...(whatsapp ? [{ net: 'whatsapp', href: whatsapp, title: 'WhatsApp us' }] : []),
+    ...(zalo ? [{ net: 'zalo', href: zalo, title: 'Zalo us' }] : []),
     ...unique.map((net) => ({ net, href: keep[net] }))
   ]
   const phones = (contacts?.phones ?? []).map((p) => ({
@@ -106,7 +117,7 @@ function wantedOf(keep, whatsapp, templateOrder, contacts = null, room = Number.
 
 /**
  * @param {any} node - a parsed JSON value, changed in place
- * @param {{ keep: Record<string, string>, whatsapp: string | null, contacts?: ContactIcons | null }} plan
+ * @param {{ keep: Record<string, string>, whatsapp: string | null, zalo?: string | null, contacts?: ContactIcons | null }} plan
  * @param {{ changed: number, left: number, social: number }} tally
  */
 function walk(node, plan, tally) {
@@ -142,8 +153,10 @@ function walk(node, plan, tally) {
         plan.whatsapp,
         items.map((it) => it.net),
         plan.contacts ?? null,
-        items.length
-      ).filter(({ net }) => items.some((it) => it.net === net) || (iconKey && sample))
+        items.length,
+        plan.zalo ?? null
+        // A network with no item of its own takes a sibling's icon only where the icon font draws it (Zalo has none).
+      ).filter(({ net }) => items.some((it) => it.net === net) || (iconKey && sample && ICON_WORDS[net]))
       const slots = items.map((it) => it.index)
       const shown = wanted.slice(0, slots.length)
       const before = JSON.stringify(same.map((k) => node[k]))
@@ -176,7 +189,8 @@ function walk(node, plan, tally) {
 /**
  * A module's parameters with the plan's social decisions applied to its JSON lists.
  * @param {Record<string, any>} params - the module's parsed parameters (not changed)
- * @param {{ keep?: Record<string, string>, whatsapp?: string | null } | undefined} socials - the site plan's `socials`
+ * @param {{ keep?: Record<string, string>, whatsapp?: string | null, zalo?: string | null } | undefined} socials - the site
+ *   plan's `socials`
  * @param {ContactIcons | null} [contacts] - the business's numbers and mailbox: the row calls and mails it first
  * @returns {{ params: Record<string, any>, changed: number, empty: boolean }} `empty`: the module held social items only
  *   and none is left
@@ -192,7 +206,11 @@ export function socialListParams(params, socials, contacts = null) {
     return out
   }
   const tally = { changed: 0, left: 0, social: 0 }
-  walk(config, { keep: socials.keep ?? {}, whatsapp: socials.whatsapp ?? null, contacts }, tally)
+  walk(
+    config,
+    { keep: socials.keep ?? {}, whatsapp: socials.whatsapp ?? null, zalo: socials.zalo ?? null, contacts },
+    tally
+  )
   if (tally.changed === 0) return out
   return {
     params: { ...params, 'jatools-config': JSON.stringify(config) },

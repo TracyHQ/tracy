@@ -18,31 +18,102 @@ import { paramsOf, readModules } from './joomla-tidy.js'
 const HTML_COLUMNS = ['introtext', 'fulltext', 'content', 'misc']
 
 /**
- * How many nodes an absolute content-map path finds in a field's HTML, or null for a path outside the grammar the maps use
- * (element steps `div`, `span[2]`, `text()`, `text()[n]`, `@attr`).
+ * The nodes an absolute content-map path finds in a field's HTML, exactly as the plugin resolves it, or null for a path
+ * outside the grammar the maps use (element steps `div`, `span[2]`, `text()`, `text()[n]`, `@attr`).
+ *
+ * The plugin parses a field as `<html><body><div id="contract-root">HTML</div></body></html>` and runs the path on that
+ * document (`ContentSlots::html`), so a module with no outer element of its own is read at `/html/body/div/a[2]`. Parsing
+ * without that root finds nothing for every real path, and a guard that finds nothing judges nothing. An attribute comes
+ * back with the element that holds it (`owner`).
  * @param {string} html
  * @param {string} xpath
- * @returns {number | null}
+ * @returns {any[] | null}
  */
-export function nodesAt(html, xpath) {
-  /** @type {any[]} */
-  const path = String(xpath)
+export function boundNodes(html, xpath) {
+  const path = String(xpath ?? '')
   if (!path.startsWith('/') || path.includes('//')) return null
-  let nodes = [parse(`<!doctype html><html><head></head><body>${html}</body></html>`)]
+  /** @type {any[]} */
+  let nodes = [parse(`<!doctype html><html><head></head><body><div>${html}</div></body></html>`)]
   for (const step of path.split('/').filter(Boolean)) {
     const parts = /^(@[\w:-]+|text\(\)|[a-z][\w-]*)(?:\[(\d+)\])?$/i.exec(step)
     if (!parts) return null
     const [, name, nth] = parts
     nodes = nodes.flatMap((node) => {
       const found = name.startsWith('@')
-        ? (node.attrs ?? []).filter((/** @type {any} */ a) => a.name === name.slice(1).toLowerCase())
+        ? (node.attrs ?? [])
+            .filter((/** @type {any} */ a) => a.name === name.slice(1).toLowerCase())
+            .map((/** @type {any} */ a) => ({ ...a, owner: node }))
         : name === 'text()'
           ? (node.childNodes ?? []).filter((/** @type {any} */ c) => c.nodeName === '#text')
           : (node.childNodes ?? []).filter((/** @type {any} */ c) => c.tagName === name.toLowerCase())
       return nth ? found.slice(Number(nth) - 1, Number(nth)) : found
     })
   }
-  return nodes.length
+  return nodes
+}
+
+/**
+ * How many nodes an absolute content-map path finds in a field's HTML (`boundNodes`), or null outside the grammar.
+ * @param {string} html
+ * @param {string} xpath
+ * @returns {number | null}
+ */
+export function nodesAt(html, xpath) {
+  return boundNodes(html, xpath)?.length ?? null
+}
+
+/** What a link leads to, by kind: an empty link (`#`) leads nowhere yet, so a write may give it any target. */
+function linkKind(/** @type {string | undefined} */ href) {
+  const h = String(href ?? '').trim()
+  if (h === '' || h === '#') return ''
+  const scheme = /^([a-z][\w+.-]*):/i.exec(h)?.[1]?.toLowerCase()
+  return /wa\.me\/|api\.whatsapp\.com/i.test(h) ? 'whatsapp' : (scheme ?? 'page')
+}
+
+/** An element's classes, sorted. */
+function classesOf(/** @type {any} */ el) {
+  const value = el.attrs?.find((/** @type {any} */ a) => a.name === 'class')?.value
+  return String(value ?? '')
+    .split(/\s+/)
+    .filter(Boolean)
+    .sort()
+    .join(' ')
+}
+
+/** The kinds of the links in an element and under it, in order (`linkKind`). */
+function linksIn(/** @type {any} */ el) {
+  /** @type {string[]} */
+  const out = []
+  const walk = (/** @type {any} */ node) => {
+    if (!node?.tagName) return
+    if (node.tagName === 'a')
+      out.push(linkKind(node.attrs?.find((/** @type {any} */ x) => x.name === 'href')?.value))
+    for (const child of node.childNodes ?? []) walk(child)
+  }
+  walk(el)
+  return out
+}
+
+/**
+ * Two elements of the same kind: same tag, same classes, and the same links in the same order, each of the same kind (an
+ * empty link matches any). Words and inline tags inside (a strong word, a break) aside: a write may restyle a unit.
+ */
+function sameShape(/** @type {any} */ a, /** @type {any} */ b) {
+  if (!a?.tagName || !b?.tagName) return a === b
+  if (a.tagName !== b.tagName || classesOf(a) !== classesOf(b)) return false
+  const la = linksIn(a)
+  const lb = linksIn(b)
+  return la.length === lb.length && la.every((k, i) => !k || !lb[i] || k === lb[i])
+}
+
+/**
+ * Whether the nodes a path found before and after a write are the same node of the block: an element of the same shape
+ * (`sameShape`; an attribute or a text is judged by the element that holds it). A write that changes the words or points a
+ * link at the business keeps it; a sibling put in front of it, which hands its path to another node, does not.
+ */
+export function sameBoundNode(/** @type {any} */ before, /** @type {any} */ after) {
+  const elementOf = (/** @type {any} */ n) => n?.owner ?? (n?.nodeName === '#text' ? n.parentNode : n)
+  return sameShape(elementOf(before), elementOf(after))
 }
 
 /** The value at `path` inside `root`, or undefined. */
@@ -112,8 +183,10 @@ export function keepBoundNodes({ steps, slots, modules, articles = new Map(), co
       const now = htmlOf(slot, after)
       // A JSON path holds words before and after, or it is taken away ("Content slot is not text").
       if (!slot.xpath) return before !== null && now === null
-      if (before === null || nodesAt(before, slot.xpath) !== 1) return false
-      return now === null || nodesAt(now, slot.xpath) !== 1
+      const was = before === null ? null : boundNodes(before, slot.xpath)
+      if (!was || was.length !== 1) return false
+      const is = now === null ? null : boundNodes(now, slot.xpath)
+      return !is || is.length !== 1 || !sameBoundNode(was[0], is[0])
     })
     if (lost.length === 0) kept.push(step)
     else dropped.push({ kind: step.kind, id: step.id, keys: lost.map((slot) => slot.key) })

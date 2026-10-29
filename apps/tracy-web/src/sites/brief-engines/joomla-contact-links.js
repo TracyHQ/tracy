@@ -21,6 +21,15 @@ const ANCHOR = /<a\b([^>]*)>([\s\S]*?)<\/a\s*>/gi
 const HREF = /(\shref\s*=\s*)(["'])([\s\S]*?)\2/i
 const NUMBER_DIGITS = 6
 
+/** The link of a chat app on a number (`messaging-apps.mjs` in the domain): WhatsApp, Zalo. */
+const APP_HREF = Object.freeze({
+  whatsapp: /wa\.me\/|api\.whatsapp\.com|whatsapp:/i,
+  zalo: /zalo\.me\//i
+})
+const isApp = (/** @type {string} */ kind) => kind in APP_HREF
+/** Bootstrap's spacing and display classes: the gap a template gives a contact line. */
+const SPACING = /^(?:[mp][tbsexy]?-(?:\d|auto)|d-(?:block|flex|inline-block|grid))$/
+
 const digits = (/** @type {string} */ s) => s.replace(/\D+/g, '')
 const escapeHtml = (/** @type {string} */ s) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -35,7 +44,7 @@ function kindOf(/** @type {string} */ href, /** @type {string} */ shows) {
   const h = href.replace(/&amp;/g, '&').trim()
   if (/^mailto:/i.test(h)) return 'email'
   if (/^tel:/i.test(h)) return 'phone'
-  if (/wa\.me\/|api\.whatsapp\.com|whatsapp:/i.test(h)) return 'whatsapp'
+  for (const [app, re] of Object.entries(APP_HREF)) if (re.test(h)) return app
   if (h !== '' && h !== '#') return null
   const text = shows.replace(/<[^>]*>/g, ' ')
   if (new RegExp(EMAIL.source).test(text)) return 'email'
@@ -51,7 +60,7 @@ function isOwn(/** @type {string} */ href, /** @type {ContactFact} */ fact) {
 /** The words a link shows with the demo's number or mailbox said as the business's. */
 function showOwn(
   /** @type {string} */ inner,
-  /** @type {'phone'|'email'|'whatsapp'} */ kind,
+  /** @type {'phone'|'email'|'whatsapp'|'zalo'} */ kind,
   /** @type {string} */ value
 ) {
   const shown = escapeHtml(value)
@@ -99,9 +108,13 @@ function addAreaLine(
   const flat = (/** @type {string} */ t) => t.replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim()
   const line = /<(p|div|li|span)\b([^>]*)>([^<]*)<\/\1>/gi
   for (const m of html.matchAll(line)) {
-    if (flat(m[3]) !== flat(address)) continue
-    const [whole, tag, attrs] = m
-    const at = /** @type {number} */ (m.index) + whole.length
+    // The address line, whole or cut short by whole parts for its box (`addressThatFits` in the domain).
+    const shown = flat(m[3])
+    const whole = flat(address)
+    const cut = whole.startsWith(shown) && /^\s*[-\u2013\u2014,]/.test(whole.slice(shown.length))
+    if (shown === '' || !(shown === whole || cut)) continue
+    const [found, tag, attrs] = m
+    const at = /** @type {number} */ (m.index) + found.length
     const placed = placeLines({
       html,
       line: { start: /** @type {number} */ (m.index), end: at, tag: null, open: '' },
@@ -110,14 +123,14 @@ function addAreaLine(
     })
     // The line is a sibling, not a link: no space between block lines.
     return placed
-      ? { html: placed.replace(`${whole} <${tag}`, `${whole}<${tag}`), added: 1 }
+      ? { html: placed.replace(`${found} <${tag}`, `${found}<${tag}`), added: 1 }
       : { html, added: 0 }
   }
   return { html, added: 0 }
 }
 
 /**
- * @typedef {{ kind: 'phone' | 'whatsapp' | 'message', value: string, href: string, label: string }} Channel
+ * @typedef {{ kind: 'phone' | 'whatsapp' | 'zalo' | 'message', value: string, href: string, label: string }} Channel
  */
 
 /** The channels of a plan that has none listed: its phone and its WhatsApp. */
@@ -174,7 +187,8 @@ export function joomlaContactLinks(html, contact, { channels = null, bound = [] 
   const facts = contact ?? {}
   const reach = channels ?? channelsOfContact(facts)
   const phones = reach.filter((c) => c.kind === 'phone')
-  const whatsapp = reach.find((c) => c.kind === 'whatsapp') ?? null
+  const appOf = (/** @type {string} */ kind) =>
+    reach.find((c) => c.kind === kind) ?? (kind === 'whatsapp' ? (facts.whatsapp ?? null) : null)
   /** @type {Map<string, Channel>} */
   const byLabel = new Map(reach.filter((c) => c.kind !== 'phone').map((c) => [c.label.toLowerCase(), c]))
   let moved = 0
@@ -216,10 +230,10 @@ export function joomlaContactLinks(html, contact, { channels = null, bound = [] 
       moved += 1
       return `<a${pointed(attrs, phone.href)}>${own ? inner : showOwn(inner, 'phone', phone.value)}</a>`
     }
-    const fact = kind === 'whatsapp' ? (whatsapp ?? facts.whatsapp) : facts.email
+    const fact = isApp(kind) ? appOf(kind) : facts.email
     if (fact && isOwn(href, fact)) return whole
     if (!fact) {
-      // The demo's mailbox or WhatsApp with nothing of the business's to stand in its place: taken off.
+      // The demo's mailbox or chat app with nothing of the business's to stand in its place: taken off.
       removed += 1
       return ''
     }
@@ -227,7 +241,7 @@ export function joomlaContactLinks(html, contact, { channels = null, bound = [] 
     const next = HREF.test(attrs)
       ? attrs.replace(HREF, (_m, lead, quote) => `${lead}${quote}${escapeHtml(fact.href ?? '')}${quote}`)
       : `${attrs} href="${escapeHtml(fact.href ?? '')}"`
-    return `<a${next}>${kind === 'whatsapp' ? inner : showOwn(inner, kind, fact.value)}</a>`
+    return `<a${next}>${isApp(kind) ? inner : showOwn(inner, kind, fact.value)}</a>`
   })
   // A mailbox the module shows as plain words: the business's, or none.
   out = out.replace(/(<[^>]*>)|([^<]+)/g, (_whole, tag, text) => {
@@ -239,31 +253,79 @@ export function joomlaContactLinks(html, contact, { channels = null, bound = [] 
       return facts.email ? escapeHtml(facts.email.value) : ''
     })
   })
+  // Every number, then the chat apps, right after the call line; the area beside the address; the DMs after the last line.
   const lines = missingLines(out, reach)
-  if (lines) {
-    const placed = placeLines({ html: out, line: lines.line, links: lines.links, bound })
+  for (const part of [lines?.reach, 'area', lines?.messages]) {
+    if (part === 'area') {
+      const areaLine = addAreaLine(out, facts, bound)
+      out = areaLine.html
+      added += areaLine.added
+      continue
+    }
+    const at = part ? lineAfter(out, part.after) : null
+    if (!part || !at) continue
+    const placed = placeLines({ html: out, line: at, links: part.links, bound })
     if (placed) {
       out = placed
-      added += lines.links.length
+      added += part.links.length
     }
   }
-  const areaLine = addAreaLine(out, facts, bound)
-  return { html: areaLine.html, moved, removed, added: added + areaLine.added }
+  return { html: out, moved, removed, added }
 }
 
-/**
- * The channels a contact block (one that calls or mails the business) does not show, each as a link cloned from the
- * block's own: a number from its phone link, WhatsApp and a direct message from its other link (else the phone link),
- * placed after its phone line (else its last contact line). Null when the block is no contact block or shows them all.
- */
-function missingLines(/** @type {string} */ html, /** @type {Channel[]} */ reach) {
-  const anchors = [...html.matchAll(ANCHOR)].map((m) => ({
+/** The anchors of a block, each with its span, attributes, target and words. */
+function anchorsOf(/** @type {string} */ html) {
+  return [...html.matchAll(ANCHOR)].map((m) => ({
     start: /** @type {number} */ (m.index),
     end: /** @type {number} */ (m.index) + m[0].length,
     attrs: m[1],
     href: (HREF.exec(m[1])?.[3] ?? '').replace(/&amp;/g, '&').trim(),
     text: textOf(m[2])
   }))
+}
+
+/** The line new lines follow, found again in the block as it is now: `'call'` its last call line, `'last'` its last link. */
+function lineAfter(/** @type {string} */ html, /** @type {'call' | 'last'} */ which) {
+  const anchors = anchorsOf(html).filter((a) => a.text !== '')
+  const calls = anchors.filter((a) => /^tel:/i.test(a.href))
+  const contact = anchors.filter((a) => /^(?:tel:|mailto:|https?:)/i.test(a.href))
+  const after = which === 'call' ? (calls.at(-1) ?? contact.at(-1)) : (contact.at(-1) ?? calls.at(-1))
+  if (!after) return null
+  // A bare last link with only lines of words after it (the address, the area): the DMs go after those lines.
+  if (
+    which === 'last' &&
+    lineOf(html, after.start, after.end).tag === null &&
+    !/<a\b/i.test(html.slice(after.end))
+  )
+    return { start: after.end, end: html.length, tag: null, open: '' }
+  return lineOf(html, after.start, after.end)
+}
+
+/** A clone's attributes with the spacing of the line it follows (`mb-3`, its own line), so every line keeps one gap. */
+function spacedLike(/** @type {string} */ attrs, /** @type {string} */ like) {
+  const classes = (/** @type {string} */ a) =>
+    (/\sclass\s*=\s*(["'])([^"']*)\1/i.exec(a)?.[2] ?? '').split(/\s+/).filter(Boolean)
+  const own = classes(attrs)
+  const shown = own.some((c) => c.startsWith('d-'))
+  // A line of its own (`d-block`) keeps its own width (`d-table`): an underlined link is not drawn across the column.
+  const add = classes(like)
+    .filter((c) => SPACING.test(c) && !own.includes(c) && !(shown && c.startsWith('d-')))
+    .map((c) => (c === 'd-block' ? 'd-table' : c))
+  if (add.length === 0) return attrs
+  const merged = [...own, ...add].join(' ')
+  return /\sclass\s*=/i.test(attrs)
+    ? attrs.replace(/(\sclass\s*=\s*)(["'])[^"']*\2/i, `$1$2${merged}$2`)
+    : `${attrs} class="${merged}"`
+}
+
+/**
+ * The channels a contact block (one that calls or mails the business) does not show, each as a link cloned from the
+ * block's own: a number from its phone link, a chat app and a direct message from its other link (else the phone link),
+ * with the phone line's spacing. The numbers and chat apps follow the call line (`reach`), every number first; the direct
+ * messages follow the block's last line (`messages`). Null when the block is no contact block or shows them all.
+ */
+function missingLines(/** @type {string} */ html, /** @type {Channel[]} */ reach) {
+  const anchors = anchorsOf(html)
   const calls = anchors.filter((a) => /^tel:/i.test(a.href) && a.text !== '')
   const mails = anchors.filter((a) => /^mailto:/i.test(a.href) && a.text !== '')
   if (calls.length === 0 && mails.length === 0) return null
@@ -271,30 +333,25 @@ function missingLines(/** @type {string} */ html, /** @type {Channel[]} */ reach
   const shown = (/** @type {Channel} */ c) => {
     if (c.kind === 'phone')
       return hrefs.includes(c.href.toLowerCase()) || digits(textOf(html)).includes(digits(c.value))
-    if (c.kind === 'whatsapp')
-      return hrefs.some(
-        (h) => /wa\.me\/|api\.whatsapp\.com|whatsapp:/.test(h) && digits(h).includes(digits(c.value))
-      )
+    const app = APP_HREF[/** @type {keyof typeof APP_HREF} */ (c.kind)]
+    if (app) return hrefs.some((h) => app.test(h) && digits(h).includes(digits(c.value)))
     return hrefs.includes(c.href.toLowerCase())
   }
-  // A WhatsApp line follows the number it belongs to; the direct messages come last.
-  const phoneAt = (/** @type {Channel} */ c) =>
-    reach.findIndex((p) => p.kind === 'phone' && digits(p.value) === digits(c.value))
-  const rank = (/** @type {Channel} */ c) =>
-    c.kind === 'whatsapp' && phoneAt(c) >= 0 ? phoneAt(c) + 0.5 : reach.indexOf(c)
-  const missing = reach.filter((c) => !shown(c)).sort((a, b) => rank(a) - rank(b))
+  const missing = reach.filter((c) => !shown(c))
   if (missing.length === 0) return null
   const phoneLink = calls[0] ?? mails[0]
   const other = [...anchors].reverse().find((a) => a.text !== '' && !/^tel:/i.test(a.href)) ?? phoneLink
-  const links = missing.map((c) => {
-    const attrs = ownAttrs(c.kind === 'phone' ? phoneLink.attrs : other.attrs)
+  const linkOf = (/** @type {Channel} */ c) => {
+    const attrs = ownAttrs(c.kind === 'phone' ? phoneLink.attrs : spacedLike(other.attrs, phoneLink.attrs))
     const words = c.kind === 'phone' ? c.value : c.label
     return `<a href="${escapeHtml(c.href)}"${attrs}${outside(c.href)}>${escapeHtml(words)}</a>`
-  })
-  const after =
-    calls.at(-1) ?? anchors.filter((a) => a.text !== '' && /^(?:mailto:|https?:)/i.test(a.href)).at(-1)
-  if (!after) return null
-  return { line: lineOf(html, after.start, after.end), links }
+  }
+  const ordered = [...missing.filter((c) => c.kind === 'phone'), ...missing.filter((c) => isApp(c.kind))]
+  const messages = missing.filter((c) => c.kind === 'message')
+  return {
+    reach: ordered.length ? { after: /** @type {'call'} */ ('call'), links: ordered.map(linkOf) } : null,
+    messages: messages.length ? { after: /** @type {'last'} */ ('last'), links: messages.map(linkOf) } : null
+  }
 }
 
 /**

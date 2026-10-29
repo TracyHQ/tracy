@@ -6,29 +6,12 @@
  */
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { parse } from 'parse5'
 
+import { boundNodes } from '../src/sites/brief-engines/joomla-bound-nodes.js'
 import { recordSteps } from '../src/sites/brief-engines/joomla-plan-records.js'
 
-/**
- * The nodes an absolute content-map path finds in a field's HTML: element steps (`div`, `span[2]`), `text()`, `text()[n]`
- * and `@attr`, the grammar the content maps use.
- * @param {string} html @param {string} xpath
- */
-function resolve(html, xpath) {
-  let nodes = [parse(`<!doctype html><html><head></head><body>${html}</body></html>`)]
-  for (const step of xpath.split('/').filter(Boolean)) {
-    const [, name, nth] = /^([^[]+)(?:\[(\d+)\])?$/.exec(step) ?? []
-    nodes = nodes.flatMap((node) => {
-      let found
-      if (name.startsWith('@')) found = (node.attrs ?? []).filter((a) => a.name === name.slice(1))
-      else if (name === 'text()') found = (node.childNodes ?? []).filter((c) => c.nodeName === '#text')
-      else found = (node.childNodes ?? []).filter((c) => c.tagName === name)
-      return nth ? found.slice(Number(nth) - 1, Number(nth)) : found
-    })
-  }
-  return nodes
-}
+/** The nodes a content-map path finds in a field's HTML, as the plugin finds them (under its own div root). */
+const resolve = (html, xpath) => boundNodes(html, xpath) ?? []
 
 const statSlots = (entity, words, path, column = 'params') =>
   words.map((sample, i) => ({
@@ -50,7 +33,11 @@ test('#189 after the records steps every bound slot of an emptied stat still fin
     ...statSlots(
       'module-31',
       ['Trusted by ', '500', ' local families'],
-      ['/html/body/div/div/text()[1]', '/html/body/div/div/span/text()', '/html/body/div/div/text()[2]']
+      [
+        '/html/body/div/div/div/text()[1]',
+        '/html/body/div/div/div/span/text()',
+        '/html/body/div/div/div/text()[2]'
+      ]
     ),
     {
       key: 'module-31.3',
@@ -59,7 +46,7 @@ test('#189 after the records steps every bound slot of an emptied stat still fin
       type: 'image',
       sample: 'images/demo/face-1.png',
       jsonPath: ['top-desc'],
-      xpath: '/html/body/div/img/@src'
+      xpath: '/html/body/div/div/img/@src'
     }
   ]
   // A law firm's article: "Over <strong>30</strong> cases won" in its intro text.
@@ -67,7 +54,7 @@ test('#189 after the records steps every bound slot of an emptied stat still fin
   const law = statSlots(
     'article-44',
     ['Over ', '30', ' cases won'],
-    ['/html/body/p/text()[1]', '/html/body/p/strong/text()', '/html/body/p/text()[2]'],
+    ['/html/body/div/p/text()[1]', '/html/body/div/p/strong/text()', '/html/body/div/p/text()[2]'],
     'introtext'
   )
   const slots = [...bakery, ...law]
@@ -98,7 +85,7 @@ test('#189 an emptied markup sample keeps every element it had', () => {
     sample:
       '((p))Our coaches ((em))train((/em)) you.((/p))((ul))((li))Warm up((/li))((li))Cool down((/li))((/ul))',
     jsonPath: ['top-desc'],
-    xpath: '/html/body/div'
+    xpath: '/html/body/div/div'
   }
   const { steps } = recordSteps({
     honesty: { blanks: [slot] },
@@ -106,7 +93,7 @@ test('#189 an emptied markup sample keeps every element it had', () => {
   })
   const after = JSON.parse(steps[0].fields.params)['top-desc']
   assert.equal(after, '<div><p>&nbsp;<em>&nbsp;</em>&nbsp;</p><ul><li>&nbsp;</li><li>&nbsp;</li></ul></div>')
-  for (const path of ['/html/body/div', '/html/body/div/p/em', '/html/body/div/ul/li[2]'])
+  for (const path of ['/html/body/div/div', '/html/body/div/div/p/em', '/html/body/div/div/ul/li[2]'])
     assert.equal(resolve(after, path).length, 1, path)
 })
 
@@ -120,9 +107,11 @@ test('#189 a records step that would take a bound node away is held, whatever pl
     column: 'params',
     jsonPath: ['top-desc'],
     sample,
-    xpath: ['/html/body/div/div/text()[1]', '/html/body/div/div/span/text()', '/html/body/div/div/text()[2]'][
-      i
-    ]
+    xpath: [
+      '/html/body/div/div/div/text()[1]',
+      '/html/body/div/div/div/span/text()',
+      '/html/body/div/div/div/text()[2]'
+    ][i]
   }))
   const row = { id: 12, params: JSON.stringify({ 'top-desc': html }) }
   const deletes = {
@@ -143,7 +132,7 @@ test('#189 a records step that would take a bound node away is held, whatever pl
   assert.deepEqual(out.dropped, [
     { kind: 'module', id: 12, keys: ['module-12.0', 'module-12.1', 'module-12.2'] }
   ])
-  assert.equal(nodesAt(html, '/html/body/div/div/a/@href'), 0)
+  assert.equal(nodesAt(html, '/html/body/div/div/div/a/@href'), 0)
   assert.equal(nodesAt(html, '//div'), null, 'a path outside the grammar is not judged')
 })
 
@@ -156,7 +145,7 @@ test('#189 a fact line in a custom module, a contact line and a contact note are
     type: 'text',
     role: 'business.hours',
     sample: 'Open daily 8am to 6pm',
-    xpath: '/html/body/p/strong/text()'
+    xpath: '/html/body/div/p/strong/text()'
   }
   const address = {
     key: 'contact-3.1',
@@ -171,7 +160,7 @@ test('#189 a fact line in a custom module, a contact line and a contact note are
     column: 'misc',
     type: 'text',
     sample: 'Our friendly staff will help.',
-    xpath: '/html/body/p/text()'
+    xpath: '/html/body/div/p/text()'
   }
   const moduleHtml = '<p>Hours: <strong>Open daily 8am to 6pm</strong></p>'
   const made = recordSteps({
@@ -224,3 +213,49 @@ test('#189 a step that takes an item out of a bound JSON list is held; emptying 
 
 /** The resolver above, by its own name for the tests after it. */
 const nodesAtLocal = (html, xpath) => resolve(html, xpath).length
+
+test('#189 the guard resolves a path as the plugin does, under its own div root, and holds a sibling that shifts it', async () => {
+  const { keepBoundNodes, nodesAt } = await import('../src/sites/brief-engines/joomla-bound-nodes.js')
+  // A made-up bike shop footer module with no outer element of its own: the plugin wraps it in one div root, so its
+  // paths read `/html/body/div/a[2]`.
+  const html =
+    '<a href="tel:+15550100">+1 555 0100</a><p>1 Example Lane</p><a href="mailto:hi@example.test">hi@example.test</a>'
+  const slots = [
+    ['/html/body/div/a[1]/text()', '+1 555 0100'],
+    ['/html/body/div/p/text()', '1 Example Lane'],
+    ['/html/body/div/a[2]/text()', 'hi@example.test']
+  ].map(([xpath, sample], i) => ({
+    key: `module-88.${i}`,
+    entity: 'module-88',
+    column: 'content',
+    sample,
+    xpath
+  }))
+  for (const slot of slots) assert.equal(nodesAt(html, slot.xpath), 1, `${slot.xpath} found`)
+  assert.equal(nodesAt(html, '/html/body/a[1]/text()'), 0, 'the path without the root finds nothing')
+  const row = { id: 88, content: html }
+  // A second number put after the first link makes `a[2]` that number: the mailbox slot would bind another node.
+  const shifts = {
+    kind: 'module',
+    id: 88,
+    fields: { content: html.replace('</a>', '</a> <a href="tel:+15550111">+1 555 0111</a>') }
+  }
+  // A second line beside the address makes `/div/p` find two nodes.
+  const doubles = {
+    kind: 'module',
+    id: 88,
+    fields: { content: html.replace('</p>', '</p><p>Across the valley</p>') }
+  }
+  // The same line nested in a div of its own moves no bound node.
+  const nested = {
+    kind: 'module',
+    id: 88,
+    fields: { content: `${html}<div><a href="tel:+15550111">+1 555 0111</a></div>` }
+  }
+  const out = keepBoundNodes({ steps: [shifts, doubles, nested], slots, modules: new Map([[88, row]]) })
+  assert.deepEqual(out.steps, [nested])
+  assert.deepEqual(
+    out.dropped.map((d) => d.keys),
+    [['module-88.2'], ['module-88.1']]
+  )
+})

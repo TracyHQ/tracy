@@ -1,7 +1,8 @@
-// A contact fact the brief holds (address, email, hours) or a channel (each phone, WhatsApp, each direct message) that no page of the built site shows is reported here
+// A contact fact the brief holds (address, email, hours) or a channel (each phone, each chat app, each direct message) that no page of the built site shows is reported here
 // (spec TracyHQ/tracy#189, COO rule 29/10/2026). It runs beside the demo-leftover check and lands on the same receipt.
 import { contactChannelsOf, readContact } from './contact-reading.mjs'
 import { hoursLine } from './pinned-copy.mjs'
+import { MESSAGING_HREF } from './messaging-apps.mjs'
 
 const ENTITIES = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'", '&nbsp;': ' ' }
 
@@ -48,14 +49,12 @@ function hrefsOf(html) {
   )
 }
 
-/** Whether a page links a channel: a phone by its digits anywhere, WhatsApp and a direct message only by their link. */
+/** Whether a page links a channel: a phone by its digits anywhere, a chat app and a direct message only by their link. */
 function linksChannel(channel, page) {
   const d = digits(channel.value)
   if (channel.kind === 'phone') return d.length >= 6 && digits(page.text).includes(d)
-  if (channel.kind === 'whatsapp')
-    return page.hrefs.some(
-      (h) => (/wa\.me\/|api\.whatsapp\.com|whatsapp:/.test(h) && digits(h).includes(d)) || false
-    )
+  const app = MESSAGING_HREF[channel.kind]
+  if (app) return page.hrefs.some((h) => app.test(h) && digits(h).includes(d))
   const want = channel.href.toLowerCase().replace(/\/+$/, '')
   return page.hrefs.some((h) => h === want)
 }
@@ -82,7 +81,7 @@ export function checkContactFacts({ pages, brief }) {
       source: fact.source,
       why: 'the brief holds this fact and no page of the built site shows it'
     }))
-  // Every channel the brief holds (each phone, WhatsApp, each direct message) is shown somewhere (COO rule 29/10/2026).
+  // Every channel the brief holds (each phone, each chat app, each direct message) is shown somewhere (COO rule 29/10/2026).
   const read = pages.map((p, i) => ({ text: texts[i], hrefs: hrefsOf(p.html) }))
   const channels = contactChannelsOf(brief)
     .filter((c) => !read.some((page) => linksChannel(c, page)))
@@ -90,6 +89,7 @@ export function checkContactFacts({ pages, brief }) {
       kind: c.kind,
       value: c.kind === 'message' ? c.href : c.value,
       source: c.source,
+      ...(c.inferred ? { inferred: true } : {}),
       why:
         c.kind === 'phone'
           ? 'the brief holds this number and no page of the built site shows it'

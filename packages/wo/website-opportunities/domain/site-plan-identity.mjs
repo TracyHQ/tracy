@@ -8,6 +8,7 @@
 //   socials  only the profiles the brief holds; the demo's other icons are taken off, none links to `#`.
 //   map      the brief's address, else the map is taken off.
 import { heldKindsOf } from './brief-readiness.mjs'
+import { contactChannelsOf } from './contact-reading.mjs'
 
 /** Reason codes of the identity decisions, with the sentence a report shows for each. */
 export const IDENTITY_REASONS = Object.freeze({
@@ -90,14 +91,20 @@ function socialsOf(brief) {
   const keep = {}
   for (const net of NETWORKS) if (isUrl(held[net])) keep[net === 'twitter' ? 'x' : net] = text(held[net])
   const any = Object.keys(keep).length > 0
-  // WhatsApp is a contact channel of the brief, not a profile: a social list of the template may carry it too (#189).
+  // WhatsApp and Zalo are contact channels of the brief, not profiles: a social list of the template may carry them too
+  // (#189): the brief's own WhatsApp link, else the chat app channels (`contactChannelsOf`, inferred ones included).
   const wa = text(brief?.contact?.whatsapp?.href)
-  const whatsapp = /^https:\/\/(?:wa\.me|api\.whatsapp\.com)\//i.test(wa) ? wa : null
+  const channels = contactChannelsOf(brief)
+  const whatsapp = /^https:\/\/(?:wa\.me|api\.whatsapp\.com)\//i.test(wa)
+    ? wa
+    : (channels.find((c) => c.kind === 'whatsapp')?.href ?? null)
+  const zalo = channels.find((c) => c.kind === 'zalo')?.href ?? null
   return {
     decision: any ? 'keep' : 'hide',
     reason: any ? 'brief-socials' : 'no-socials',
     keep,
-    whatsapp
+    whatsapp,
+    ...(zalo ? { zalo } : {})
   }
 }
 
