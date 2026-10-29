@@ -868,7 +868,7 @@ cycle `--to verify`, the one-tier smoke on the restore, cycle `--from contract-b
 
 ## Release (Lee settled where to release, 13/09)
 
-`https://github.com/JoomlArt-Products/ja-products/releases`, tag `<product>/wp7`, name **"Quickstart:
+`https://github.com/JoomlArt-Products/joomlart-products/releases`, tag `<product>/wp7`, name **"Quickstart:
 <Name> / WordPress 7"** (Tracy Base: `tracy-base/wp7`, draft 14/09; Tracy Business: `tracy-business/wp7`).
 Quickstart version = theme version = `1.0.0` (since 14/09, one number per product).
 

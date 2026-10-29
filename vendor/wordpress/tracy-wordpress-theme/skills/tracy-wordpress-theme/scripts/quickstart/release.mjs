@@ -54,7 +54,7 @@
 //
 // Usage: node release.mjs --pack <dir> --out <dir> --parity <parity.json> --restore-report <json>
 //        --run-root <dossier> --spec <spec-pack> --theme-zip <zip> --visual-ledger <rounds.jsonl>
-//        --checkpoint <run> [--restore-smoke <run>] --behaviour-sweep <site-sweep.json> --contract-bind <contract-bind.json> [--asset <file>]… [--repo JoomlArt-Products/ja-products] [--title "…"] [--force-notes]
+//        --checkpoint <run> [--restore-smoke <run>] --behaviour-sweep <site-sweep.json> --contract-bind <contract-bind.json> [--asset <file>]… [--repo JoomlArt-Products/joomlart-products] [--title "…"] [--force-notes]
 //        --patch --previous <VERIFICATION.json|release dir> --measure <file> [--no-baseline "<reason>"] [--changed-from <zip>]
 //               (with --pack --out --parity --restore-report --theme-zip --contract-bind --run-root; --spec only for the route declarations)
 import { spawnSync } from 'node:child_process'
@@ -95,7 +95,7 @@ const SPEC = {
     repeat: true,
     help: 'extra release asset (profile zip); repeatable'
   },
-  '--repo': { placeholder: 'owner/name', default: 'JoomlArt-Products/ja-products' },
+  '--repo': { placeholder: 'owner/name', default: 'JoomlArt-Products/joomlart-products' },
   '--title': { placeholder: 'text', help: 'release title (default from the manifest id)' },
   '--admin': { placeholder: 'login', default: 'tracyagent', help: 'the account the pack ships (prune-audit --admin), named in README.md' },
   '--force-notes': { value: false, help: 'overwrite an existing release-notes.md with the template' },

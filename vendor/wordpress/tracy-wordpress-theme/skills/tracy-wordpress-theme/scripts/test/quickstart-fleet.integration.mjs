@@ -218,7 +218,7 @@ function releaseInputs() {
     writeFileSync(path.join(evidence, 'rounds.jsonl'), JSON.stringify(line) + '\n')
     // an earlier run's release here lost its archives to cleanup(), so release would rightly refuse it as --out
     rmSync(path.join(SCRATCH, `release-${name}`), { recursive: true, force: true })
-    return { pack: packDir, out: path.join(SCRATCH, `release-${name}`), parity, restoreReport, runRoot, spec, themeZip, visualLedger: path.join(evidence, 'rounds.jsonl'), checkpoint: line.run, repo: 'JoomlArt-Products/ja-products', admin: 'tracyagent' }
+    return { pack: packDir, out: path.join(SCRATCH, `release-${name}`), parity, restoreReport, runRoot, spec, themeZip, visualLedger: path.join(evidence, 'rounds.jsonl'), checkpoint: line.run, repo: 'JoomlArt-Products/joomlart-products', admin: 'tracyagent' }
   }
 }
 /** The named refusal of acceptRelease, or null when it accepted. */

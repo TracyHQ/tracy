@@ -16,7 +16,7 @@ like" and what had to be done by hand. The rules are in `SKILL.md`; the decision
   on `:8227`, clean stand `:8228`.
 - **Products**: theme zip 229 KB (123 entries, with AGENTS.md + docs), quickstart
   `tracy-base/wp7` = webroot tar ~45 MB + database sql.gz ~70 KB + manifest + SHA256SUMS +
-  VERIFICATION.json, draft release on `JoomlArt-Products/ja-products` tag `tracy-base/wp7`
+  VERIFICATION.json, draft release on `JoomlArt-Products/joomlart-products` tag `tracy-base/wp7`
   "Quickstart: Tracy Base / WordPress 7".
 
 ## Measurements by phase
@@ -62,7 +62,7 @@ like" and what had to be done by hand. The rules are in `SKILL.md`; the decision
 - Choosing "Tracy Base" on Build's design-inspiration tab: no tile yet — `tracy-base` only enters Build
   when `meta.id` carries it. Separate UI work.
 - Fleet: the `tracy-base/wp7` entry has pinned the sha256/asset ids from the draft release; provider `ready`. The release is still
-  a **draft** (not published) and the `ja-products` repo is private → provisioning needs `TRACY_RELEASES_GITHUB_TOKEN`.
+  a **draft** (not published) and the `joomlart-products` repo is private → provisioning needs `TRACY_RELEASES_GITHUB_TOKEN`.
   Not yet pushed `develop` → dev machine, "Create with WordPress" not yet measured on `cowork.tracy.site`.
 
 ## Ways in

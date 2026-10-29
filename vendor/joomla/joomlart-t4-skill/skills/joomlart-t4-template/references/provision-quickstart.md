@@ -8,7 +8,7 @@ Choose the quickstart yourself from that evidence; the customer need not know a 
 Respect an explicit customer choice. Explain the selected product and why it fits, then continue.
 The full spec-pack is still produced in Phase 2.
 
-Start at [JoomlArt Products tags](https://github.com/JoomlArt-Products/ja-products/tags).
+Start at [JoomlArt Products tags](https://github.com/JoomlArt-Products/joomlart-products/tags).
 Discover the current catalog and product manifest paths from `catalog/catalog.json`; inspect the
 candidate manifests, template metadata and available demos. Prefer the T4 starter with the closest
 page structure and working extensions, then visual similarity. Verify Joomla/PHP compatibility.
@@ -28,10 +28,10 @@ manifest's `amember.quickstarts[].github_release_url` and the corresponding rele
 GitHub CLI access:
 
 ```bash
-gh api --paginate 'repos/JoomlArt-Products/ja-products/releases?per_page=100' \
+gh api --paginate 'repos/JoomlArt-Products/joomlart-products/releases?per_page=100' \
   --jq '.[] | {tag_name, assets: [.assets[] | {name, size, browser_download_url}]}'
-gh release view "$QUICKSTART_TAG" --repo JoomlArt-Products/ja-products --json tagName,assets
-gh release download "$QUICKSTART_TAG" --repo JoomlArt-Products/ja-products \
+gh release view "$QUICKSTART_TAG" --repo JoomlArt-Products/joomlart-products --json tagName,assets
+gh release download "$QUICKSTART_TAG" --repo JoomlArt-Products/joomlart-products \
   --pattern "$QUICKSTART_ASSET" --dir "$DOWNLOAD_DIR"
 ```
 

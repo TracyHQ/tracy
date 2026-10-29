@@ -1003,7 +1003,7 @@ test('release: title, VERIFICATION shape, README restore commands, notes templat
   assert.equal(v.parity.routes.both200, 1)
   assert.equal(v.restoration.steps.length, 1)
   assert.equal(v.restoration.placeholderUrl, PLACEHOLDER_URL)
-  const readme = readmeText(manifest, { repo: 'JoomlArt-Products/ja-products' })
+  const readme = readmeText(manifest, { repo: 'JoomlArt-Products/joomlart-products' })
   assert.match(readme, /wp search-replace 'https:\/\/quickstart\.invalid'/)
   assert.match(readme, /render_wp_config\.py/)
   assert.match(readme, /wp user update tracyagent --user_pass/)
@@ -1012,14 +1012,14 @@ test('release: title, VERIFICATION shape, README restore commands, notes templat
   assert.match(notes, /1\/1 routes answer their declared status on both stands \(1 of them 200\)/)
   const cmd = ghCommand({
     tag: 'tracy-base/wp7',
-    repo: 'JoomlArt-Products/ja-products',
+    repo: 'JoomlArt-Products/joomlart-products',
     title: 'Quickstart: Tracy Base / WordPress 7',
     notesFile: '/r/release-notes.md',
     assets: ['/r/a.tar.gz', "/r/it's.zip"]
   })
   assert.equal(
     cmd,
-    `gh release create 'tracy-base/wp7' -R JoomlArt-Products/ja-products --draft --title 'Quickstart: Tracy Base / WordPress 7' --notes-file '/r/release-notes.md' '/r/a.tar.gz' '/r/it'\\''s.zip'`
+    `gh release create 'tracy-base/wp7' -R JoomlArt-Products/joomlart-products --draft --title 'Quickstart: Tracy Base / WordPress 7' --notes-file '/r/release-notes.md' '/r/a.tar.gz' '/r/it'\\''s.zip'`
   )
 })
 

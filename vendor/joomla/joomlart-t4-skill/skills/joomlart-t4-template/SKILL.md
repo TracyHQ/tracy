@@ -122,7 +122,7 @@ Each silently no-ops a whole block of work when wrong — pin them before writin
 
 1. **Provision the selected T4 quickstart.** After receiving the customer's HTML folder or URL
    (or another supported input), inspect its purpose, page types and layout, then choose the
-   closest compatible starter from [JoomlArt Products tags](https://github.com/JoomlArt-Products/ja-products/tags).
+   closest compatible starter from [JoomlArt Products tags](https://github.com/JoomlArt-Products/joomlart-products/tags).
    Read `references/provision-quickstart.md` before selecting or downloading. The quickstart
    supplies Joomla, its template, T4 and demo data; verify the installed versions and enabled T4.
    The bundled blank is the standalone-template path, not the default for a customer website.

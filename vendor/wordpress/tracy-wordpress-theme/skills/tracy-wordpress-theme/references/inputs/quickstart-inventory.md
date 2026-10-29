@@ -12,7 +12,7 @@ node scripts/ingest/quickstart-inventory.mjs --input <dir> --out <dir> \
 
 # release tags: downloaded with `gh release download` (read-only), checked against the release digests
 node scripts/ingest/quickstart-inventory.mjs --release quickstart/ja-nova/j6 … --out <dir> \
-  [--repo JoomlArt-Products/ja-products] [--download-dir <dir>]
+  [--repo JoomlArt-Products/joomlart-products] [--download-dir <dir>]
 
 # strict re-measure of a frozen baseline (exit 1 on any gap)
 node scripts/ingest/quickstart-inventory.mjs --verify-baseline <dir>/baseline.json --input <dir>
@@ -291,7 +291,7 @@ ja-resort's manifest also names `plugins/system/t4` — inside an XML comment, w
 
 All seven are installer ZIPs; in each, the default site style's template is the product template
 and Cassiopeia / Cassiopeia Extended are `other`. `quickstart/ja-nova/j6` and
-`quickstart/ja-morgan/j6` on `JoomlArt-Products/ja-products` carry the SHA-256 of the local
+`quickstart/ja-morgan/j6` on `JoomlArt-Products/joomlart-products` carry the SHA-256 of the local
 `ja-nova.zip` / `ja-morgan.zip` (release asset `ja-<name>-j6-quickstart.zip`). The opt-in test
 `scripts/test/quickstart-inventory-real.test.mjs` (`P1_REAL_INPUT_DIR`, `P1_ARTIFACT_ROOT`) re-checks
 every figure with `unzip` and plain hashing.
