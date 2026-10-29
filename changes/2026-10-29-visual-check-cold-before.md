@@ -1,4 +1,4 @@
-- **The visual check's early "before" survives a cold site container** — David (Claude) · #<pr> · `fix/visual-check-2c` · 2026-10-29
+- **The visual check's early "before" survives a cold site container** — David (Claude) · #201 · `fix/visual-check-2c` · 2026-10-29
 
 **Affects:** every customer edit on a WordPress, Joomla or EmDash site whose container started recently (the first turn after a deploy, a restart or an idle stop). Needs a tracy-dsh image rebuild to reach the fleet.
 
