@@ -23,6 +23,7 @@ import { checkOfferingSummaries } from './offering-summary-check.js'
 import { checkReviewQuotes } from './review-quotes-check.js'
 import { checkContactForms } from './contact-form-check.js'
 import { checkEmptyFrames } from './empty-frame-check.js'
+import { checkHeadBlocks } from './head-block-check.js'
 
 /** The most pages one check reads: a brief build's site has a handful, a demo's showcase branch can have dozens. */
 export const MAX_PAGES = 24
@@ -168,6 +169,9 @@ export async function runLeftoverCheck({
   // No empty frame a visitor sees: a fact row group is shown complete or taken off on every page (#189 items 14, 15).
   const emptyFrames = checkEmptyFrames({ pages })
   report.findings.push(...emptyFrames)
+  // Every head block the build owes a page is on it: the brand colours, the leftover rules, each centred card row (#189 item 28).
+  const headBlocks = checkHeadBlocks({ pages, sitePlan, styles })
+  report.findings.push(...headBlocks)
   report.findings.push(...offeringSummaries.map((f) => ({ kind: 'C03', ...f })))
   report.counts.C03 = (report.counts.C03 ?? 0) + offeringSummaries.length
   const mainMenuFindings = (mainMenu?.findings ?? []).map((f) => ({
@@ -212,6 +216,7 @@ export async function runLeftoverCheck({
       reviewQuotes.length === 0 &&
       contactForms.findings.length === 0 &&
       emptyFrames.length === 0 &&
+      headBlocks.length === 0 &&
       ctaBands.length === 0 &&
       pageIntros.length === 0,
     findings: [

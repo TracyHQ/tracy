@@ -7,7 +7,8 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import sharp from 'sharp'
 import { writeOutsideMap } from '../src/sites/brief-engines/joomla-outside-map.js'
-import { brandColoursCss, withColoursBlock } from '../src/sites/brief-engines/joomla-brand-colours.js'
+import { brandColoursCss } from '../src/sites/brief-engines/joomla-brand-colours.js'
+import { headBlocks } from '../src/sites/brief-engines/joomla-head-blocks.js'
 import { shapeDecor } from '../src/sites/brief-engines/drawn-pictures.js'
 import { drawKey, drawPrompt } from '../src/lib/picture-draw.js'
 import { hiddenByHeadBlock, planOutsideMap } from 'website-opportunities/domain/outside-map.mjs'
@@ -146,19 +147,26 @@ test('no logo in the brief: no colour is written, the template keeps its own', a
   assert.ok(site.writes.every((w) => !String(w.fields?.content ?? '').includes('tracy-brand-colours')))
 })
 
-test('the colours join the leftover block inside its markers, or make one of their own', () => {
+test('the colours travel in a marked block of their own, apart from the leftover rules', () => {
   const css = 'a{color:var(--tracy-brand-0-text)}'
-  const alone = withColoursBlock('', css)
+  const alone = headBlocks({ colours: css })
+  assert.equal(alone.length, 1)
   assert.match(
-    alone,
+    alone[0].content,
     /^<!-- tracy-leftovers --><style data-tracy-brand-colours>[\s\S]*<\/style><!-- \/tracy-leftovers -->$/
   )
-  const both = withColoursBlock(
-    '<!-- tracy-leftovers --><style data-tracy-leftovers>x{}</style><!-- /tracy-leftovers -->',
-    css
+  const both = headBlocks({
+    leftovers:
+      '<!-- tracy-leftovers --><style data-tracy-leftovers>\nx{display:none}\n</style><!-- /tracy-leftovers -->',
+    colours: css
+  })
+  assert.deepEqual(
+    both.map((b) => b.note),
+    ['tracy-leftovers', 'tracy-brand-colours']
   )
-  assert.match(both, /data-tracy-leftovers>x\{\}<\/style><style data-tracy-brand-colours>/)
-  assert.equal(withColoursBlock('kept', ''), 'kept')
+  assert.doesNotMatch(both[0].content, /brand-colours/)
+  assert.doesNotMatch(both[1].content, /data-tracy-leftovers/)
+  assert.deepEqual(headBlocks({}), [])
 })
 
 test('an icon the demo drew in the template brand colour is drawn in the logo colour; without logo colours it keeps the demo colour', async () => {

@@ -4,8 +4,9 @@
  * template's brand colour roles are repainted with them by one CSS block, measured from the stylesheets and pages the
  * site serves (`brand-colour-css.mjs`).
  *
- * 🔒 THE SAME ROAD AS THE LEFTOVER BLOCK. The CSS travels inside the marked head block (`joomla-outside-map.js`): T3
- * prints it from the style's head-code param, T4 from one custom module on every page (`joomla-head-module.js`). Both
+ * 🔒 THE SAME ROAD AS THE LEFTOVER BLOCK, IN A BLOCK OF ITS OWN. The CSS travels in marked head blocks of its own
+ * (`joomla-head-blocks.js`, item 28 of #189): T3 prints them from the style's head-code param, T4 from a custom module of
+ * their own on every page (`joomla-head-module.js`), so a refused leftover block never takes the colours with it. Both
  * print after the template's stylesheets, so a rule declared again under the same selector wins; no template file,
  * template param or compiled stylesheet is written, and the build's undo takes the block back with the rest.
  * 🔒 T4's theme settings (`etc/theme/*.json`, compiled into `media/t4/css` when the admin saves) are a FILE no Apply door
@@ -14,7 +15,6 @@
  * 🔒 NO LOGO, NO CHANGE: a plan without the decision `logo-colours` writes nothing.
  */
 import { brandColourCss } from 'website-opportunities/domain/brand-colour-css.mjs'
-import { HEAD_BLOCK_END, HEAD_BLOCK_START } from 'website-opportunities/domain/outside-map.mjs'
 
 /**
  * The CSS for the site, or '' when the plan keeps the template's colours or the stylesheets show no brand colour.
@@ -34,18 +34,4 @@ export function brandColoursCss({ plan, styles, pages, note }) {
     )
     return ''
   }
-}
-
-/**
- * The marked head block with the brand colours in their own `<style>`, beside the leftover rules (whose reader,
- * `hiddenByHeadBlock`, reads only `data-tracy-leftovers`). A block with no leftover rule is made for the colours alone.
- * @param {string} block - `leftoverHeadBlock`'s answer, '' when it has nothing
- * @param {string} css
- */
-export function withColoursBlock(block, css) {
-  if (!css) return block
-  const style = `<style data-tracy-brand-colours>\n${css}\n</style>`
-  if (!block) return `${HEAD_BLOCK_START}${style}${HEAD_BLOCK_END}`
-  const end = block.lastIndexOf(HEAD_BLOCK_END)
-  return end < 0 ? `${block}${style}` : `${block.slice(0, end)}${style}${block.slice(end)}`
 }

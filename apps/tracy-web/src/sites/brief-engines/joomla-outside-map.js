@@ -25,7 +25,6 @@ import {
   demoBackgrounds,
   leftoverHeadBlock,
   planAliases,
-  withHeadBlock,
   withoutCredit
 } from 'website-opportunities/domain/outside-map.mjs'
 import { pageRole } from 'website-opportunities/domain/page-plan.mjs'
@@ -35,9 +34,10 @@ import { ownStylesheets } from '../../lib/own-stylesheets.js'
 import { keptPageReader } from '../../lib/kept-page-reader.js'
 import { readMenu, readModules, SKIPPED_MENUS, writeSteps } from './joomla-tidy.js'
 import { centredRows, emptyFrames, photoTiles, removedPictureFrames } from './empty-frames.js'
-import { writeHeadModule } from './joomla-head-module.js'
+import { writeHeadModules } from './joomla-head-module.js'
 import { sweepDeadLinks } from './joomla-link-sweep.js'
-import { brandColoursCss, withColoursBlock } from './joomla-brand-colours.js'
+import { brandColoursCss } from './joomla-brand-colours.js'
+import { blockBytes, HEAD_BLOCK_LIMIT, headBlocks, withoutTracyBlocks } from './joomla-head-blocks.js'
 
 /** The head-code param each template framework prints raw into every page's head. */
 export const HEAD_PARAMS = Object.freeze({ t4: 'system_advancedCodeAfterHead', t3: 'snippet_close_head' })
@@ -420,8 +420,10 @@ export async function writeOutsideMap({
     tiles,
     centre
   })
-  const block = withColoursBlock(leftovers, colours)
-  if (!block) return done
+  // The leftover rules and the brand colours travel in blocks of their own, each within what the site stores in one record
+  // (`joomla-head-blocks.js`): one refused never takes the other off the pages.
+  const blocks = headBlocks({ leftovers, colours })
+  if (!blocks.length) return done
   try {
     const list = await apply({
       siteKey,
@@ -450,32 +452,61 @@ export async function writeOutsideMap({
     if (styles.length === 0)
       note('the site template has no head-code setting, so the demo backgrounds and videos stay')
     // T3 reads its head code from the style's own parameters; T4 reads `system_*` only from a template file and drops the
-    // style's, so a T4 site carries the block as one custom module on every page (`joomla-head-module.js`).
+    // style's, so a T4 site carries each block as a custom module of its own on every page (`joomla-head-module.js`).
     let viaModule = false
     for (const { row, params } of styles) {
       if (frameworkOf(params) === 't4') {
         viaModule = true
         continue
       }
+      // T3 prints one head-code param: the colours go first, and when the site refuses the whole the colours are written
+      // alone, so a refused leftover block never takes them with it.
       const key = HEAD_PARAMS.t3
-      const value = withHeadBlock(String(params?.[key] ?? ''), block)
-      if (value === String(params?.[key] ?? '')) continue
-      const answer = await apply({
-        siteKey,
-        action: 'content.update',
-        params: {
-          kind: 'templateStyle',
-          id: Number(row.id),
-          apply_id: applyId,
-          fields: { params: JSON.stringify({ ...params, [key]: value }) }
+      const before = String(params?.[key] ?? '')
+      const kept = withoutTracyBlocks(before)
+      const valueOf = (/** @type {typeof blocks} */ list) =>
+        [kept, ...list.map((b) => b.content)].filter(Boolean).join('\n')
+      const ordered = [
+        ...blocks.filter((b) => b.part === 'colours'),
+        ...blocks.filter((b) => b.part !== 'colours')
+      ]
+      const write = (/** @type {string} */ value) =>
+        apply({
+          siteKey,
+          action: 'content.update',
+          params: {
+            kind: 'templateStyle',
+            id: Number(row.id),
+            apply_id: applyId,
+            fields: { params: JSON.stringify({ ...params, [key]: value }) }
+          }
+        })
+      const value = valueOf(ordered)
+      if (value === before) continue
+      const answer = await write(value)
+      if (answer?.ok !== false) {
+        done.head += 1
+        continue
+      }
+      const why = answer.message ?? answer.error
+      note(
+        `template style ${row.id} refused its head code (${blockBytes(value)} bytes, limit ${HEAD_BLOCK_LIMIT}): ${why}`
+      )
+      const colourOnly = ordered.filter((b) => b.part === 'colours')
+      if (colourOnly.length && colourOnly.length < ordered.length) {
+        const alone = await write(valueOf(colourOnly))
+        if (alone?.ok !== false) {
+          done.head += 1
+          note(
+            `template style ${row.id} took the brand colours alone; the demo-leftover styles stay off the pages`
+          )
         }
-      })
-      if (answer?.ok === false)
-        note(`template style ${row.id} refused its head code: ${answer.message ?? answer.error}`)
-      else done.head += 1
+      }
     }
     if (viaModule)
-      done.head += await writeHeadModule({ apply, siteKey, block, applyId, note, pages: pageHtml })
+      done.head += (
+        await writeHeadModules({ apply, siteKey, blocks, applyId, note, pages: pageHtml })
+      ).written
   } catch (error) {
     say('the template styles could not be written', error)
   }
