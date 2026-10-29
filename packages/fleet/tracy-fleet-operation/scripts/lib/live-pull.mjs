@@ -982,7 +982,10 @@ async function reusableTables(last, now, dir) {
   // A table whose definition moved (a charset, a collation, a column) holds the same rows and the same
   // checksum, yet is no longer the last read's: read again (#120). Unknown on either side: as before.
   const sameDefinition = (t) =>
-    !last.definitions || !last.definitionsNow || last.definitions[t] == null || last.definitionsNow[t] == null ||
+    !last.definitions ||
+    !last.definitionsNow ||
+    last.definitions[t] == null ||
+    last.definitionsNow[t] == null ||
     last.definitions[t] === last.definitionsNow[t]
   let same = new Set(
     Object.keys(now).filter(
@@ -2003,7 +2006,11 @@ const sameDefinitions = (a, b) =>
   !a?.definitions ||
   !b?.definitions ||
   Object.keys(b.definitions).every(
-    (t) => isNoise(t) || a.definitions[t] == null || b.definitions[t] == null || a.definitions[t] === b.definitions[t]
+    (t) =>
+      isNoise(t) ||
+      a.definitions[t] == null ||
+      b.definitions[t] == null ||
+      a.definitions[t] === b.definitions[t]
   )
 
 /**
