@@ -1,0 +1,39 @@
+# CodeQL config for the `analyze` job of `.github/workflows/codeql.yml`: team pull requests into
+# `develop`, pushes to `develop`/`main` and the weekly scan. Fork pull requests and pull requests
+# into `main` run `analyze-full`, which reads no config and scans everything.
+#
+# Only `paths-ignore` belongs here. Adding `queries`, `packs`, `query-filters` or
+# `disable-default-queries` turns off overlay (incremental) analysis for JavaScript, and the pull
+# requests are slow again (codeql-action src/config-utils.ts, checkOverlayAnalysisFeatureEnabled).
+#
+# Why these paths: the JavaScript extractor indexes JSON. Unfiltered, the tree gives a 9.3 GB
+# database, over the 7.5 GB cap codeql-action puts on a cached overlay-base database. About 850 MB
+# of the 894 MB of tracked JSON is data under the paths below, and none of them holds server or
+# input-handling code. Every pattern was checked against `git ls-files`.
+name: tracy-codeql
+
+paths-ignore:
+  # Template content contracts, translations and seed data (about 730 MB of JSON).
+  - packages/cms/*/contracts
+  - packages/cms/*/translations
+  - packages/cms/*/seed
+  # Design-system data (about 115 MB of JSON); refero's code stays scanned.
+  - vendor/tracy/refero/**/*.json
+  # Test and fixture trees of Tracy's own code. Vendored trees are left out of these patterns: some
+  # of their test or fixture folders hold a Worker entry point or a module their package exports
+  # (`vendor/emdash/emdash/e2e/fixture-cloudflare`, `packages/registry-verification/tests/workerd`,
+  # `packages/registry-moderation/src/fixtures`). `scripts/test/ci-public-repo.test.mjs` fails when
+  # a pattern here matches a file that a `wrangler*` config or a `package.json` names as an entry.
+  - tests
+  - apps/**/test
+  - apps/**/tests
+  - packages/**/test
+  - packages/**/tests
+  - packages/**/fixture
+  - packages/**/fixtures
+  - scripts/**/test
+  # EmDash: its end-to-end specs and its core package's tests. Its docs folder is a deployed Worker
+  # (`docs/wrangler.jsonc` -> `docs/src/worker.ts`, serving `/mcp`) and stays scanned, as does its
+  # source.
+  - vendor/emdash/emdash/e2e/tests
+  - vendor/emdash/emdash/packages/core/tests

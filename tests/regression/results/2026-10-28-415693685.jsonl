@@ -1,0 +1,1 @@
+{"id":"REG-PR-95-sync-held-tables","verdict":"PASS","commit":"4156936856ce650eed9a406918ce3bc3312fb971","ran_at":"2026-10-28T18:12:45.125Z","evidence":"tests/regression/.runs/2026-10-28-415693685/REG-PR-95-sync-held-tables.log"}

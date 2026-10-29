@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-96-sync-delete-undo",
+  "kind": "fix",
+  "title": "Undo preserves pushed file deletions on the copy",
+  "pr": 96,
+  "area": "sync/push",
+  "cms": ["jo", "wp"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": [
+    "Run the real MariaDB shell flow through Preview, confirmed Apply delete, Undo and Preview again."
+  ],
+  "expect": [
+    "Apply removes the live template file.",
+    "Undo restores the live file while the automatic sync keeps the copy deletion.",
+    "A later preview offers the same deletion again."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=a pushed template file deletion survives",
+      "packages/fleet/tracy-fleet-operation/test/live-push-flow.test.mjs"
+    ],
+    "tests": ["a pushed template file deletion survives Undo and Sync on the copy and is offered again"]
+  }
+}

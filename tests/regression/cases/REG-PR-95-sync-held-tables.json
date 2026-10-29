@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-95-sync-held-tables",
+  "kind": "fix",
+  "title": "Schema-held tables block all push operations",
+  "pr": 95,
+  "area": "sync/push",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the changeset suite with schema-changed whole-table holds."],
+  "expect": [
+    "Create, update and delete in held WordPress posts and Joomla content are all conflicts.",
+    "An unrelated Joomla category remains eligible for push."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/live-push-changeset.test.mjs"
+    ],
+    "tests": [
+      "a whole table kept after a schema change holds every push into it, including create and delete"
+    ]
+  }
+}

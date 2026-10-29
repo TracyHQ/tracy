@@ -84,14 +84,18 @@ export function visionStream(iterator, { signal, cancel, close = () => {} } = {}
   )
 }
 
-/** A finite FIFO. An expired waiter is removed, and cleanup precedes handing the next caller its slot. */
-export function visionSlot(maxWaiting = 8) {
-  let active = false
+/**
+ * A finite FIFO over `limit` slots. An expired waiter is removed, and cleanup precedes handing the next caller its
+ * slot.
+ */
+export function visionSlot(maxWaiting = 8, limit = 1) {
+  const slots = Number.isInteger(limit) && limit > 0 ? limit : 1
+  let active = 0
   const waiting = []
   const release = () => {
     const next = waiting.shift()
     if (!next) {
-      active = false
+      active--
       return
     }
     next.signal.removeEventListener('abort', next.abort)
@@ -107,8 +111,8 @@ export function visionSlot(maxWaiting = 8) {
   }
   return async (signal) => {
     signal.throwIfAborted()
-    if (!active) {
-      active = true
+    if (active < slots) {
+      active++
       return onceRelease()
     }
     if (waiting.length >= maxWaiting)

@@ -169,7 +169,9 @@ const volatile = new Set([
  * build's to make real, as `cta-real` asks — a `#` that becomes the business's page is no changed structure (dev
  * 24/10/2026, a dental site's only failing check).
  */
-const LINK_KEY = /(?:^|[^a-z])(?:link|url|href)(?:[^a-z]|$)/i
+// A Joomla contact's `webpage` is its link too (local measure 28/10/2026: Death & Co's contact took the business's site
+// where the template left it empty, and native-structure read a changed record for the rest of the build).
+const LINK_KEY = /(?:^|[^a-z])(?:link|url|href|webpage|website)(?:[^a-z]|$)/i
 /** A date a record shows (`date`, `eventDate`, `published_date`) is its words: a build dates the business's own news. */
 const DATE_KEY = /(?:^|_)date$|[a-z]Date$/
 /**
@@ -454,6 +456,16 @@ function withoutNulls(value) {
 }
 
 export function inventoryInvariant(records) {
+  // The articles a Joomla menu item opens on their own are pages; every other article is a post of a blog or a list.
+  const pageArticles = new Set(
+    records
+      .filter((r) => r.identity?.kind === 'menuItem')
+      .flatMap((r) =>
+        [...String(r.data?.link ?? '').matchAll(/[?&]view=article&id=(\d+)(?=[&:]|$)/g)].map((m) =>
+          Number(m[1])
+        )
+      )
+  )
   return records
     .map((record) => {
       const data = marksLists(pictureValues(withoutNulls(record.data)))
@@ -485,6 +497,13 @@ export function inventoryInvariant(records) {
         (record.editorialFields ?? []).includes('post_content')
       )
         data.post_content = '$copy'
+      // …and so is a Joomla blog post's: a template article no menu item opens on its own (local measure 28/10/2026:
+      // Death & Co's nine posts, written from the research without the template's quote block, failed native-structure
+      // on every check). An article a menu item opens is a page; its markup stays structure.
+      if (record.identity?.kind === 'article' && data && !pageArticles.has(Number(record.identity.id)))
+        for (const field of ['introtext', 'fulltext'])
+          if ((record.editorialFields ?? []).includes(field) && typeof data[field] === 'string')
+            data[field] = '$copy'
       // An EmDash menu written again gets new item ids: its items are known by position, their tree and targets kept.
       let relations = record.relations
       if (record.key?.startsWith('menu/') && Array.isArray(data?.items)) {
@@ -870,12 +889,29 @@ async function withPatternsRead(item, read) {
 /** At most this many differing records are named in a failed `native-structure`. */
 const DIFFERENCES_NAMED = 8
 
+/**
+ * 🔒 A DIFFERENCE SAYS HOW IT IS PUT BACK (local measure 29/10/2026): an EmDash build wrote its lists whole with the
+ * items its research held — history 6 → 5, governance 4 → 2 — and new `_rowId`s ("h1", "c1"), read "was 6 items, now 5"
+ * on seven checks in a row and wrote the same lists again each time. A list keeps every item the template has, each
+ * with its own id; an item the research has nothing for keeps its place with its words emptied or a neutral word.
+ */
+const LIST_SHORT = (n) =>
+  `keep all ${n} items, in order, each with its _rowId: write back the missing ones as structure.read shows them, their words emptied or one approved neutral word where the research has nothing`
+const LIST_LONG = (n, added) =>
+  `remove the ${added} added item(s): the template's ${n} stay, in order, each with its _rowId`
+const ROW_ID = "keep this item's _rowId as structure.read shows it: an item is never given a new id"
+
 /** The first path at which two invariant values differ, or null when they are equal. */
 function firstDifference(a, b, path = '') {
   if (a === b) return null
   if (a && b && typeof a === 'object' && typeof b === 'object' && Array.isArray(a) === Array.isArray(b)) {
     if (Array.isArray(a) && a.length !== b.length)
-      return { path: path || '.', was: `${a.length} items`, now: `${b.length} items` }
+      return {
+        path: path || '.',
+        was: `${a.length} items`,
+        now: `${b.length} items`,
+        fix: b.length < a.length ? LIST_SHORT(a.length) : LIST_LONG(a.length, b.length - a.length)
+      }
     for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {
       const found = firstDifference(a[key], b[key], Array.isArray(a) ? `${path}[${key}]` : `${path}.${key}`)
       if (found) return found
@@ -891,7 +927,12 @@ function firstDifference(a, b, path = '') {
     return { path: path || '.', at, was: JSON.stringify(around(a)), now: JSON.stringify(around(b)) }
   }
   const shown = (v) => (v === undefined ? 'missing' : JSON.stringify(v).slice(0, 120))
-  return { path: path || '.', was: shown(a), now: shown(b) }
+  return {
+    path: path || '.',
+    was: shown(a),
+    now: shown(b),
+    ...(path.endsWith('._rowId') ? { fix: ROW_ID } : {})
+  }
 }
 
 /** Each record whose invariant changed: added, missing, or the part and field that moved. */

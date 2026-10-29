@@ -106,6 +106,21 @@
           "proof": "the footer band is rgb(31,30,30) in both light and dark mode, and module 170 shows the white wordmark item-1.png there"
         },
         "note": "Same logos as 1.0.6: the 1.0.7 installer is the 1.0.6 installer byte for byte; only the content contract changed (Slot fit, ADR 0039)."
+      },
+      "1.0.8": {
+        "logos": "pair",
+        "brandReady": true,
+        "faviconReady": true,
+        "framework": "t4",
+        "profiles": ["default"],
+        "footerSlot": "module-170.1",
+        "frame": { "width": 195, "height": 56 },
+        "unverified": ["brandReady", "faviconReady"],
+        "darkSpots": {
+          "footer": true,
+          "proof": "the footer band is rgb(31,30,30) in both light and dark mode, and module 170 shows the white wordmark item-1.png there"
+        },
+        "note": "Same logos as 1.0.7; no logo file, logo layout or logo rule changed: one ACM layout (features-intro style-3) and one demo row give the Private Training email and phone their own fields (ja-products #57)."
       }
     },
     "quickstart/ja-diner/j6": {

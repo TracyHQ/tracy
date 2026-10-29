@@ -1145,10 +1145,14 @@ test('template files: after a push the files it sent join pushed.json like phase
     return JSON.parse(readFileSync(join(dir, 'pushed.json'), 'utf8'))
   }
   const blob = byId(answer)['file:templates/ja_vega/css/custom.css'].blob
-  assert.deepEqual(record().files, [{ path: 'templates/ja_vega/css/custom.css', ours: blob, side: 'ours' }])
+  assert.deepEqual(record().files, [
+    { path: 'templates/ja_vega/css/custom.css', ours: blob, side: 'ours' },
+    { path: 'templates/ja_vega/css/old.css', ours: null, side: 'ours' }
+  ])
   writeFileSync(join(dir, 'written.json'), JSON.stringify({ restored: written.written }))
   assert.deepEqual(record('--undo').files, [
-    { path: 'templates/ja_vega/css/custom.css', ours: blob, side: 'theirs' }
+    { path: 'templates/ja_vega/css/custom.css', ours: blob, side: 'theirs' },
+    { path: 'templates/ja_vega/css/old.css', ours: null, side: 'theirs' }
   ])
 })
 
@@ -1379,3 +1383,93 @@ test('Joomla: a replacement alias held by trash conflicts both records before th
   for (const item of answer.items)
     assert.deepEqual(item.conflict, { reason: 'changed-on-live', fields: ['alias'] })
 })
+
+test('a whole table kept after a schema change holds every push into it, including create and delete', () => {
+  for (const platform of ['joomla', 'wordpress']) {
+    const data =
+      platform === 'joomla'
+        ? {
+            entities: { content: { base: [1, 2], copy: [1, 3] } },
+            kinds: {
+              article: kind([article(1), article(2)], [article(1, { title: 'Tracy title' }), article(3)]),
+              category: kind([category(2)], [category(2, { title: 'Unrelated' })])
+            }
+          }
+        : {
+            homes: HOMES,
+            entities: { posts: { base: [10, 11], copy: [10, 12] } },
+            kinds: {
+              post: kind([post(10), post(11)], [post(10, { post_title: 'Tracy title' }), post(12)], ['ID'])
+            }
+          }
+    const table = platform === 'joomla' ? 'jos_content' : 'wp_posts'
+    const answer = changeset(platform, data, [{ kind: 'table', table, reason: 'schema-changed' }])
+    const held = answer.items.filter((i) => i.kind === (platform === 'joomla' ? 'article' : 'post'))
+    assert.deepEqual(new Set(held.map((i) => i.op)), new Set(['create', 'update', 'delete']))
+    for (const item of held) assert.equal(item.conflict?.reason, 'changed-on-both', JSON.stringify(item))
+    if (platform === 'joomla')
+      assert.equal(answer.items.find((i) => i.kind === 'category').conflict, undefined)
+  }
+})
+
+for (const object of [false, true]) {
+  test(`WordPress theme header references after Sync produce no false preview (${object ? 'object' : 'array'})`, () => {
+    const mods = (id) =>
+      `a:3:{s:11:"custom_logo";i:${id};s:12:"header_video";s:2:"${id}";s:17:"header_image_data";${object ? 'O:8:"stdClass":3:' : 'a:3:'}{s:13:"attachment_id";i:${id};s:5:"width";i:64;s:6:"height";i:64;}}`
+    const result = changeset('wordpress', {
+      idMap: { posts: { 64: 67 } },
+      entities: { posts: { base: [64], copy: [67] } },
+      kinds: {
+        themeMods: kind(
+          [{ option_name: 'theme_mods_test', value: mods(64) }],
+          [{ option_name: 'theme_mods_test', value: mods(67) }],
+          ['option_name']
+        )
+      }
+    })
+    assert.deepEqual(result.items, [])
+    assert.deepEqual(result.unsupported, [])
+  })
+}
+
+for (const edit of [
+  { title: 'Contact us' },
+  { position: '4' },
+  { url: 'https://shop-com.tracy.ai/contact/' },
+  { parent: '8' }
+]) {
+  test(`WordPress existing menu address is retained for ${Object.keys(edit)[0]} updates`, () => {
+    const row = {
+      ID: '20',
+      title: 'Contact',
+      position: '2',
+      type: 'custom',
+      object: 'custom',
+      object_id: '0',
+      url: 'https://shop.example/',
+      parent: '0',
+      menu: 'primary'
+    }
+    const copy = { ...row, ID: '21', ...edit }
+    const result = changeset('wordpress', {
+      homes: HOMES,
+      entities: { posts: { base: [8, 20], copy: [8, 21] } },
+      idMap: { posts: { 20: 21 } },
+      kinds: { menuItem: kind([row], [copy], ['ID']) }
+    })
+    const item = result.items.find((i) => i.kind === 'menuItem')
+    assert.equal(item.op, 'update')
+    assert.equal(item.ident, 20)
+    assert.equal(item.key, 'primary')
+    assert.equal(item.seed[0].match.ID, 21)
+    assert.deepEqual(
+      item.write,
+      Object.fromEntries(
+        Object.entries(edit).map(([k, v]) => [
+          k,
+          k === 'url' ? v.replace('https://shop-com.tracy.ai', 'https://shop.example') : v
+        ])
+      )
+    )
+  })
+}
