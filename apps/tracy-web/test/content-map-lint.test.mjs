@@ -106,7 +106,7 @@ test('every rule names what it checks, its severity and a fix hint', () => {
     assert.match(rule.id, /^[a-z]+(?:-[a-z]+)+$/)
     assert.ok(!ids.has(rule.id), `${rule.id} twice`)
     ids.add(rule.id)
-    assert.ok(['error', 'warning'].includes(rule.severity))
+    assert.ok(['error', 'warning', 'info'].includes(rule.severity))
     assert.ok(rule.checks.length > 20 && rule.fix.length > 40, `${rule.id} needs words`)
     assert.doesNotMatch(`${rule.checks} ${rule.fix}`, /[–—]/)
   }
@@ -165,7 +165,7 @@ for (const t of TRADES) {
     assert.deepEqual(rulesOf(mapOf(slots)), ['gallery-group-is-a-card module-20.0'])
   })
 
-  test(`${t.trade}: a styled HTML unit with a plain sample is a warning; a unit with a link inside is an error`, () => {
+  test(`${t.trade}: a styled HTML unit with a plain sample is shown as info; a unit with a link inside is an error`, () => {
     const unit = (key, sample, column) =>
       text(key, 'module-20', 'editorial.heading', sample, { column, xpath: '/html/body/div' })
     const slots = [
@@ -180,7 +180,7 @@ for (const t of TRADES) {
     assert.deepEqual(
       res.findings.map((f) => [f.rule, f.severity, f.key]),
       [
-        ['styled-unit-plain-sample', 'warning', 'module-20.5'],
+        ['styled-unit-plain-sample', 'info', 'module-20.5'],
         ['unit-markup-not-inline', 'error', 'module-20.6']
       ]
     )
@@ -298,9 +298,9 @@ test('a contract folder is read with the rows of its presentation lock, and /ops
   assert.match(roles.reason, /^declaration rule social-in-person-card \(1 error\): module-20\.1 .*Fix: /)
   assert.deepEqual(roles.lint, {
     errors: 1,
-    warnings: 1,
+    warnings: 0,
     rules: [
-      { rule: 'styled-unit-plain-sample', severity: 'warning', count: 1 },
+      { rule: 'styled-unit-plain-sample', severity: 'info', count: 1 },
       { rule: 'social-in-person-card', severity: 'error', count: 1 }
     ]
   })

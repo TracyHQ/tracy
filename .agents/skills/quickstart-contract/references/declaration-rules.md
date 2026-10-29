@@ -6,6 +6,7 @@ Each rule mirrors a guess the brief engine makes, so a map that passes is one th
 
 - **error**: the engine would write the site wrong with this declaration. The packing run exits 1; fix before the PR.
 - **warning**: the engine guesses right today; fix the declaration when you make the next contract version.
+- **info**: shown, never counted; nothing to edit in the map.
 - `--webroot <pack webroot>` also measures item icons from the demo pictures. `--lint-json <file>` writes every finding.
 - The whole-tree gate (no folder named) only counts findings: released contracts are never edited. On /ops,
   Road to live > Content coverage reads an error as an invalid slot roles declaration (holds Publish for a release
@@ -21,7 +22,7 @@ same defect would come back on every template (section 7b step 2). Never edit a 
 | `hero-button-unpaired` | warning | Put the hero button label and its url in one group. |
 | `gallery-in-article` | warning | A picture row inside an article is a card: `offering.image` / `event.image` in the card's group, or `editorial.illustration` with no group. Video cards: see below. |
 | `gallery-group-is-a-card` | warning | A gallery group holds pictures only (an empty alt or caption field is fine). A title or a video makes a card: give it the card's kind. Video cards: see below. |
-| `styled-unit-plain-sample` | warning | Nothing to edit in the map: the engine reads the style from `presentation-lock.json`. Keep the row in the lock. |
+| `styled-unit-plain-sample` | info | Nothing to edit in the map: the engine reads the style from `presentation-lock.json`. Keep the row in the lock. |
 | `unit-markup-not-inline` | error | The unit holds a link, picture or block: bind the text nodes (and the link as a `url` slot) instead of the whole unit, or give it a keep role. Fix the capture rule if it comes from `--whole-units`. |
 | `layout-setting-as-text` | warning | A layout setting (`gutter`, `columns`, `show-on`, ...) is presentation: leave it out of the content map (capture rule) or give it a keep role. |
 | `social-list-fixed-length` | warning | Declare the collection in `repeatableLists`: `{"<collection>": {"itemTemplate": "<first group id>", "min": 0, "max": <demo item count>}}`. |

@@ -11,7 +11,7 @@
  * The item icon ground rule needs the demo pictures and lives apart (`content-map-lint-icons.js`).
  *
  * Severity: `error` when the brief engine would write the site wrong with this declaration; `warning` when the engine
- * guesses right today but the declaration does not say so. Each finding carries the rule's fix hint; how to fix each
+ * guesses right today but the declaration does not say so; `info` when the map has nothing to fix (shown, never counted). Each finding carries the rule's fix hint; how to fix each
  * rule is in `.agents/skills/quickstart-contract/references/declaration-rules.md`.
  *
  * Only maps that declare slot roles (ADR 0038) are read: a map released before that has nothing to check.
@@ -50,7 +50,7 @@ const fieldOfLabel = (s) =>
  * @typedef {{ map: any, slots: any[], kindOf: Map<string, string>, rows: Record<string, any> | null,
  *   groups: Map<string, any[]> }} LintContext
  * @typedef {{ key: string, note: string }} Hit
- * @typedef {{ id: string, severity: 'error' | 'warning', checks: string, fix: string,
+ * @typedef {{ id: string, severity: 'error' | 'warning' | 'info', checks: string, fix: string,
  *   find: (ctx: LintContext) => Hit[] }} LintRule
  */
 
@@ -148,7 +148,7 @@ export const LINT_RULES = [
   },
   {
     id: 'styled-unit-plain-sample',
-    severity: 'warning',
+    severity: 'info',
     checks: "a whole-unit HTML slot whose demo mixes inline styles keeps that style in the release's rows",
     fix: 'Nothing to edit in the map: the engine reads the style from presentation-lock.json. Keep the module or article row in the lock; a capture that writes the marker form into the sample would make the map say it.',
     find: ({ slots, rows }) =>
@@ -270,8 +270,8 @@ export function lintContentMap(contentMap, { rows = null, all = false } = {}) {
     for (const hit of rule.find(ctx))
       findings.push({ rule: rule.id, severity: rule.severity, key: hit.key, note: hit.note, fix: rule.fix })
   }
-  const errors = findings.filter((f) => f.severity === 'error').length
-  return { declared: true, findings, errors, warnings: findings.length - errors }
+  const count = (severity) => findings.filter((f) => f.severity === severity).length
+  return { declared: true, findings, errors: count('error'), warnings: count('warning') }
 }
 
 /**

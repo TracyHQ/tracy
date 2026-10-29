@@ -196,6 +196,7 @@ if (isMain) {
   if (flags['lint-json']) writeFileSync(flags['lint-json'], `${JSON.stringify(res.lint, null, 2)}\n`)
   const lintErrors = res.lint.reduce((n, l) => n + l.errors, 0)
   const lintWarnings = res.lint.reduce((n, l) => n + l.warnings, 0)
+  const lintInfos = res.lint.reduce((n, l) => n + l.findings.filter((f) => f.severity === 'info').length, 0)
   if (named) {
     for (const l of res.lint)
       for (const f of l.findings)
@@ -219,6 +220,6 @@ if (isMain) {
     .map((r) => `${r.rule} ${r.count}`)
     .join(', ')
   process.stdout.write(
-    `declaration rules: ${lintErrors} error(s), ${lintWarnings} warning(s) in ${res.lint.length} map(s)${rules ? ` (${rules})` : ''}.\n`
+    `declaration rules: ${lintErrors} error(s), ${lintWarnings} warning(s), ${lintInfos} info in ${res.lint.length} map(s)${rules ? ` (${rules})` : ''}.\n`
   )
 }

@@ -76,7 +76,7 @@ export function rolesOfRead(read, dir) {
     const broken = (read.errors ?? []).filter((e) => !e.endsWith(' has no role'))
     if (read.state === 'invalid' && broken.length > 0) return { state: 'invalid', reason: broken[0] }
     // The packing check's declaration rules (`../content-map-lint.js`): an error is a declaration the brief engine would
-    // write wrong, so it is a broken declaration here too; warnings ride along for the panel and never hold.
+    // write wrong, so it is a broken declaration here too; warnings and info ride along for the panel and never hold.
     const lint = dir ? lintContractDir(dir) : null
     const first = lint?.findings.find((f) => f.severity === 'error')
     if (first)
@@ -85,7 +85,7 @@ export function rolesOfRead(read, dir) {
         reason: `declaration rule ${first.rule} (${lint.errors} error${lint.errors === 1 ? '' : 's'}): ${first.key} ${first.note}. Fix: ${first.fix}`,
         lint: lintCounts(lint)
       }
-    return lint && lint.warnings > 0 ? { state: 'ready', lint: lintCounts(lint) } : { state: 'ready' }
+    return lint && lint.findings.length > 0 ? { state: 'ready', lint: lintCounts(lint) } : { state: 'ready' }
   }
   if (read.source === 'sidecar') {
     if (read.state === 'stale')
