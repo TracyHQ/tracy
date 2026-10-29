@@ -92,7 +92,9 @@ test('visual capture: before and after render in real Chrome through the isolate
               ...input,
               chrome: launcher,
               mode: 'view',
-              timeoutMs: 28000
+              // Browser suites share CI CPUs; bound each capture below the suite's 120-second cap.
+              deadlineMs: 45000,
+              timeoutMs: 50000
             })
             hostResults.push(result)
             return result

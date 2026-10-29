@@ -17,3 +17,5 @@
 - **Portable visual acceptance:** use the installed Chrome or Playwright Chromium rather than a macOS-only executable path. A Linux-only test launcher preserves CDP pipe descriptors while adding the sandbox flag used by Playwright in CI containers; product browser settings are unchanged. Publish the fixture with `docker cp`, since a runner and its Docker daemon may not share filesystem paths. The real before/after capture passes locally with the clean dependencies.
 
 - **Final refresh:** merged develop at 7a85b0f4fc after the clean rebuild; its changes concern live push and onboarding copy, with no overlapping source edits. Both beta regression cases pass on 7103cbc299 with the locked dependencies.
+
+- **Loaded-run acceptance:** one post-merge regression attempt timed out during real browser startup while the complete lint gate shared the machine (67 PASS, 1 FAIL); the other case passed. The test now allows a bounded 45-second capture deadline under the 120-second suite cap, retaining the same JPEG, script, viewport and scroll assertions. Product deadlines are unchanged.
