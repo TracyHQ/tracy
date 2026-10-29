@@ -32,7 +32,7 @@ import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { ownStylesheets } from '../../lib/own-stylesheets.js'
 import { readMenu, readModules, SKIPPED_MENUS, writeSteps } from './joomla-tidy.js'
-import { emptyFrames, photoTiles } from './empty-frames.js'
+import { centredRows, emptyFrames, photoTiles } from './empty-frames.js'
 import { writeHeadModule } from './joomla-head-module.js'
 import { sweepDeadLinks } from './joomla-link-sweep.js'
 import { brandColoursCss, withColoursBlock } from './joomla-brand-colours.js'
@@ -282,6 +282,7 @@ export async function writeOutsideMap({
   let backgrounds = /** @type {Array<{selector: string, file: string}>} */ ([])
   let picture = null
   let frames = /** @type {string[]} */ ([])
+  let centre = /** @type {string[]} */ ([])
   let tiles = /** @type {Array<{selector: string, target: string, picture: string}>} */ ([])
   /** The served pages read for the head block: the leftovers module must show on each of them. */
   let pageHtml = /** @type {string[]} */ ([])
@@ -305,6 +306,8 @@ export async function writeOutsideMap({
       tiles = photoTiles(pageHtml, { skip: pictures })
       const painted = new Set(tiles.map((t) => t.selector))
       frames = emptyFrames(pageHtml).filter((s) => !painted.has(s))
+      // A card row that lost demo cards keeps its columns and centres the cards kept.
+      centre = centredRows(pageHtml)
       const styles = []
       for (const href of ownStylesheets(pages)) {
         const css = await reader.text(href).catch(() => null)
@@ -333,7 +336,8 @@ export async function writeOutsideMap({
     links,
     frames,
     pictures,
-    tiles
+    tiles,
+    centre
   })
   const block = withColoursBlock(leftovers, colours)
   if (!block) return done

@@ -270,7 +270,7 @@ const cssString = (value) => String(value).replace(/["\\\n\r]/g, '')
  * The marked head block that hides or repaints what no door writes. Empty when there is nothing to do.
  * @param {{backgrounds?: Array<{selector: string, file: string}>, picture?: string | null, videos?: string[],
  *   files?: string[], links?: string[], frames?: string[], pictures?: string[],
- *   tiles?: Array<{target: string, picture: string}>}} input
+ *   tiles?: Array<{target: string, picture: string}>, centre?: string[]}} input
  *   - `backgrounds`: demo backgrounds, repainted with `picture` (a site path of the owner's picture) or taken off
  *   - `videos`: demo video ids whose play controls are hidden (the still picture stays)
  *   - `files`: demo pictures hidden where they are shown as an `<img>` (the not-found and offline pages)
@@ -281,6 +281,8 @@ const cssString = (value) => String(value).replace(/["\\\n\r]/g, '')
  *   - `tiles`: emptied boxes among the photos of a grid (a stat box with no sourced number, `stat-box-plan.mjs`), each
  *     shown as one owner photo (`picture`, a site path) cover-cropped into its box (`target`), its words hidden, so the
  *     grid stays whole (`empty-frames.js` `photoTiles`)
+ *   - `centre`: selectors of card rows that lost demo cards (`empty-frames.js` `centredRows`): the row centres the cards
+ *     kept and keeps the template's column count and card size (no width is set)
  */
 export function leftoverHeadBlock({
   backgrounds = [],
@@ -290,7 +292,8 @@ export function leftoverHeadBlock({
   links = [],
   frames = [],
   pictures = [],
-  tiles = []
+  tiles = [],
+  centre = []
 }) {
   const rules = []
   if (backgrounds.length) {
@@ -333,6 +336,11 @@ export function leftoverHeadBlock({
   if (frames.length)
     rules.push(
       `/* frames the build left empty */\n${[...new Set(frames)].join(',\n')}{display:none !important}`
+    )
+  if (centre.length)
+    rules.push(
+      `/* card rows that lost demo cards, the kept ones centred */\n${[...new Set(centre)].join(',\n')}` +
+        '{display:flex !important;flex-wrap:wrap !important;justify-content:center !important}'
     )
   if (tiles.length)
     rules.push(

@@ -16,7 +16,6 @@
  */
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
 import { paramsOf, readModules } from './joomla-tidy.js'
-import { fitListColumns } from './list-columns.js'
 
 const escapeRe = (/** @type {string} */ s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 const htmlOf = (/** @type {string} */ s) =>
@@ -327,13 +326,6 @@ export function recordSteps({ honesty, modules, articles = new Map(), contacts =
     if (dropItems(edit.container, parents, fields, indexes)) {
       edit.changed = true
       trimmed += indexes.length
-      // The row follows the cards kept: the list's own column setting is lowered to them (`list-columns.js`).
-      for (const path of parents) {
-        const parent = at(edit.container, path)
-        const length = Math.max(0, ...fields.map((f) => (Array.isArray(parent?.[f]) ? parent[f].length : 0)))
-        const kept = length - new Set(indexes.filter((i) => i < length)).size
-        if (fitListColumns([parent, at(edit.container, path.slice(0, -1))], kept)) edit.changed = true
-      }
     }
   for (const edit of html.values())
     if (edit.changed) steps.push({ kind: edit.kind, id: edit.id, fields: { [edit.column]: edit.text } })

@@ -140,8 +140,8 @@ test('the trainer list keeps one card per real person, and the kept cards lose t
   assert.deepEqual(config.team['team[bio]'], ['', '', '', ''])
   assert.deepEqual(
     config.team['team[columns]'],
-    ['2'],
-    'a setting of the list is no item; the row follows the kept cards'
+    ['4'],
+    'a setting of the list is no item; the template keeps its columns (the head block centres the kept cards)'
   )
   assert.equal(trimmed, 2)
 })

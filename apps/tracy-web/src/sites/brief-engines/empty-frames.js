@@ -9,8 +9,13 @@
  *   a LONE frame (no sibling of its shape) is hidden too when it is empty, sits beside content its parent shows, holds
  *   nested boxes (or names itself a box: card, panel, tile, info, stat, bg-*), and holds no link, button, icon or anything
  *   a script fills (an id, a data-, aria- or role attribute): a fact block whose values were all emptied
- *   a TILE is an empty repeated frame whose same-shape siblings show pictures (a box among the photos of a grid): it is
- *   shown as one of the owner's photos instead of hidden (`photoTiles`), so the grid keeps its shape
+ *   a TILE is an empty repeated frame whose same-shape siblings show pictures and no words (a box among the photos of a
+ *   grid; siblings with words are cards, and an emptied card is a demo card taken off, hidden): it is shown as one of
+ *   the owner's photos instead of hidden (`photoTiles`), so the grid keeps its shape
+ *
+ *   a CENTRED row is the parent of repeated frames laid out by grid column classes (col-md-4, col-12, span4) of which
+ *   some are hidden and some are kept: the template's column count and card size stay, and the cards kept are centred
+ *   in the row (`centredRows`), so a row that lost demo cards never shows an empty-looking half
  *
  * and each hidden frame comes back as a CSS selector built from the structure (tag, classes and child position, from the
  * nearest id), so the head block can hide it. Controls of a carousel, a slider or a pager are never taken for frames.
@@ -36,6 +41,8 @@ const MEDIA = new Set([
 const CONTROL =
   /carousel|slider|slide|swiper|slick|owl|indicator|dots?\b|pagination|pager|rating|star|progress|bullet|toggle|spacer|divider/i
 const MAX_SELECTORS = 80
+/** A grid column class: Bootstrap 3 to 5 (col-md-4, col-12, col) and Bootstrap 2 (span4). */
+const COLUMN = /^(?:col(?:-[a-z]+)?(?:-\d+)?|span\d+)$/
 
 const attr = (node, name) => node.attrs?.find((a) => a.name === name)?.value ?? ''
 const classesOf = (node) => attr(node, 'class').split(/\s+/).filter(Boolean)
@@ -53,6 +60,14 @@ function hasContent(node) {
     } else if (child.tagName && hasContent(child)) return true
   }
   return false
+}
+
+/** True when the element holds words of its own (a text node with a letter or a digit, outside scripts and styles). */
+function hasWords(node) {
+  if (SKIPPED.has(node.tagName)) return false
+  return (node.childNodes ?? []).some((c) =>
+    c.nodeName === '#text' ? /[\p{L}\p{N}]/u.test(c.value ?? '') : c.tagName ? hasWords(c) : false
+  )
 }
 
 const isControl = (node) =>
@@ -144,25 +159,28 @@ function loneFrame(kid, parent, scripts) {
 }
 
 /**
- * The empty frames of one page: those to hide, and the tiles of a photo grid to show as an owner photo.
+ * The empty frames of one page: those to hide, the tiles of a photo grid to show as an owner photo, and the rows whose
+ * kept cards are centred.
  * @param {string} html
- * @returns {{hide: string[], tiles: Array<{selector: string, target: string, grid: string[]}>}}
+ * @returns {{hide: string[], tiles: Array<{selector: string, target: string, grid: string[]}>, centre: string[]}}
  */
 export function emptyFramesOf(html) {
   /** @type {string[]} */
   const hide = []
   /** @type {Array<{selector: string, target: string, grid: string[]}>} */
   const tiles = []
+  /** @type {string[]} */
+  const centre = []
   let root
   try {
     root = parse(String(html ?? ''))
   } catch {
-    return { hide, tiles }
+    return { hide, tiles, centre }
   }
   const body = elements(elements(root).find((n) => n.tagName === 'html') ?? root).find(
     (n) => n.tagName === 'body'
   )
-  if (!body) return { hide, tiles }
+  if (!body) return { hide, tiles, centre }
   const scripts = scriptsOf(root)
   const walk = (node) => {
     if (SKIPPED.has(node.tagName) || ['nav', 'header'].includes(node.tagName)) return
@@ -179,6 +197,7 @@ export function emptyFramesOf(html) {
         }
         continue
       }
+      const before = hide.length
       for (const kid of same) {
         // A frame holds some element inside (an icon, a box); a bare empty element is a spacer or a control, left alone.
         if (
@@ -190,9 +209,11 @@ export function emptyFramesOf(html) {
         )
           continue
         hidden.add(kid)
-        // Two or more of its siblings show a picture: the frame is a tile of a photo grid.
+        // Two or more of its siblings show a picture and no words: the frame is a tile of a photo grid. Siblings with
+        // words (a name, a title) are cards, and an emptied card is a demo card taken off: hidden, never a photo.
         const grid = same.filter((k) => k !== kid).flatMap(imagesIn)
-        if (same.filter((k) => k !== kid && imagesIn(k).length > 0).length >= 2) {
+        const photos = same.filter((k) => k !== kid && imagesIn(k).length > 0)
+        if (photos.length >= 2 && !photos.some(hasWords)) {
           const inner = elements(kid)
           tiles.push({
             selector: selectorOf(kid),
@@ -201,11 +222,24 @@ export function emptyFramesOf(html) {
           })
         } else hide.push(selectorOf(kid))
       }
+      // Cards laid out by grid columns lost some and kept some: the row centres the kept ones.
+      if (
+        hide.length > before &&
+        same.some((k) => !hidden.has(k)) &&
+        classesOf(same[0]).some((c) => COLUMN.test(c)) &&
+        !centre.includes(selectorOf(node))
+      )
+        centre.push(selectorOf(node))
     }
     for (const kid of kids) if (!hidden.has(kid)) walk(kid)
   }
   walk(body)
-  return { hide, tiles }
+  return { hide, tiles, centre }
+}
+
+/** The rows of several pages whose kept cards are centred, each once. @param {string[]} pages */
+export function centredRows(pages) {
+  return [...new Set(pages.flatMap((html) => emptyFramesOf(html).centre))].slice(0, MAX_SELECTORS)
 }
 
 /**
