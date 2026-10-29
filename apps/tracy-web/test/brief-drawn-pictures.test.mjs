@@ -3,7 +3,8 @@
  * `shapeReal` (the step `writeContractPictures` runs for a brief build) with a stub picture model and a stub labeller:
  * a slot no photo fits is drawn from the owner's photos and cut to its shape, a drawing with words or a face is drawn
  * once more and then falls back, a demo file two cards share becomes two files, icons follow the business and a cut-out
- * figure is cleared or drawn. Fixtures are fictional.
+ * figure climbs the cut-out ladder (the owner's own clear picture, taken off, or an owner photo in a frame), never drawn.
+ * Fixtures are fictional.
  */
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
@@ -15,7 +16,8 @@ import {
   realPicturesOf,
   shapeReal
 } from '../src/sites/brief-engines/real-pictures.js'
-import { cutFree, footprintOf } from '../src/sites/brief-engines/drawn-pictures.js'
+import { footprintOf, framedPicture, ownCutOutPicture } from '../src/sites/brief-engines/cutout-pictures.js'
+import { takenOffPicturePaths } from '../src/sites/brief-engines/cutout-css.js'
 import { GLYPHS } from '../src/lib/icon-glyphs.js'
 import { ICON_LEXICON, NEUTRAL_GLYPH } from 'website-opportunities/domain/decor-plan.mjs'
 
@@ -279,16 +281,15 @@ test('#194 a dental clinic with no photo at all still runs the plan: colour bloc
   assert.equal(await realPicturesOf(notBrief, { siteKey: 's', email: 'e', platform: 'joomla' }), null)
   const model = stubModel()
   const shaped = await shape(t, { chat: model.chat, declared: DECLARED })
-  assert.equal(
-    model.prompts.filter((p) => !/One single object used for/.test(p)).length,
-    0,
-    'no scene without a reference'
-  )
+  assert.equal(model.prompts.length, 0, 'no scene without a reference, and a cut-out is never drawn')
   for (const sample of ['images/demo/hero/band.jpg', 'images/demo/classes/own.jpg'])
     assert.equal(bySample(shaped).get(sample).receipt.kind, 'placeholder', sample)
   assert.ok(shaped.shaped.find((s) => s.group.role === 'icon').receipt.glyph)
   const cleared = await shape(t, { drawDoor: null, declared: DECLARED })
-  assert.equal(cleared.shaped.find((s) => s.group.role === 'cut-out').receipt.kind, 'blank')
+  const off = cleared.shaped.find((s) => s.group.role === 'cut-out')
+  assert.equal(off.receipt.kind, 'blank')
+  assert.equal(off.receipt.reason, 'cut-out-off')
+  assert.equal(off.hide, true, 'the head block hides the clear picture')
   assert.ok(shaped.shaped.every((s) => s.receipt.kind !== 'demo'))
 })
 
@@ -313,7 +314,7 @@ test('#194 no labeller answer (asked twice): the drawing is refused, never shown
   assert.equal(bySample(unchecked).get('images/demo/hero/band.jpg').receipt.kind, 'placeholder')
 })
 
-test('#195 an item icon follows the business; a cut-out figure is drawn as an object, or cleared without a model', async () => {
+test('#195 an item icon follows the business; a cut-out figure is taken off, never drawn, even with a model', async () => {
   const t = await build()
   const model = stubModel()
   const shaped = await shape(t, { chat: model.chat, declared: DECLARED })
@@ -326,10 +327,19 @@ test('#195 an item icon follows the business; a cut-out figure is drawn as an ob
   const meta = await sharp(iconItem.bytes).metadata()
   assert.deepEqual([meta.width, meta.height, meta.hasAlpha], [100, 100, true])
   const figure = shaped.shaped.find((s) => s.group.role === 'cut-out')
-  assert.equal(figure.receipt.kind, 'cut-out')
-  assert.ok(model.prompts.some((p) => /One single object used for/.test(p)))
-  const cleared = await shape(await build(), { drawDoor: null, declared: DECLARED })
-  assert.equal(cleared.shaped.find((s) => s.group.role === 'cut-out').receipt.kind, 'blank')
+  assert.equal(figure.receipt.kind, 'blank')
+  assert.equal(figure.receipt.step, 2)
+  assert.ok(
+    model.prompts.every((p) => !/One single object/.test(p)),
+    'no object is drawn for a cut-out'
+  )
+  // The clear picture's path goes to the head block, unless the site set its slot aside.
+  const values = {
+    'module-1.5': 'images/tracy-content/clear.png',
+    'module-1.0': 'images/tracy-content/hero.jpg'
+  }
+  assert.deepEqual(takenOffPicturePaths(shaped, values), ['images/tracy-content/clear.png'])
+  assert.deepEqual(takenOffPicturePaths(shaped, values, new Set(['module-1.5'])), [])
 })
 
 test('#195 every glyph the lexicon can choose is drawn by the icon set', () => {
@@ -337,59 +347,178 @@ test('#195 every glyph the lexicon can choose is drawn by the icon set', () => {
   assert.ok(GLYPHS[NEUTRAL_GLYPH])
 })
 
-test('#195 a drawn cut-out stands where the demo figure stood, as large as that place holds', async () => {
-  // A florist template's hero figure: a tall vase on the right half of a 400 x 300 frame, standing on its bottom edge.
-  const demo = await sharp({
-    create: { width: 400, height: 300, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } }
-  })
-    .composite([
-      {
-        input: await sharp({ create: { width: 160, height: 300, channels: 4, background: '#2a6f4e' } })
-          .png()
-          .toBuffer(),
-        left: 220,
-        top: 0
-      }
-    ])
-    .png()
-    .toBuffer()
-  const foot = await footprintOf(demo)
-  assert.deepEqual(Object.fromEntries(Object.entries(foot).map(([k, v]) => [k, Number(v.toFixed(2))])), {
-    left: 0.55,
-    top: 0,
-    width: 0.4,
-    height: 1
-  })
-  // The model drew a small flat bouquet in the middle of a white ground.
-  const drawn = await sharp({ create: { width: 600, height: 400, channels: 3, background: '#ffffff' } })
-    .composite([
-      {
-        input: await sharp({ create: { width: 200, height: 60, channels: 3, background: '#b0306a' } })
-          .png()
-          .toBuffer(),
-        left: 200,
-        top: 170
-      }
-    ])
-    .png()
-    .toBuffer()
-  const out = await cutFree(drawn, 400, 300, foot)
-  const { data, info } = await sharp(out).raw().toBuffer({ resolveWithObject: true })
-  assert.equal(info.width, 400)
-  let left = 400
+const visible = async (bytes) => {
+  const { data, info } = await sharp(bytes).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+  let left = info.width
   let right = -1
-  let top = 300
+  let top = info.height
   let bottom = -1
-  for (let y = 0; y < 300; y += 1)
-    for (let x = 0; x < 400; x += 1)
-      if (data[(y * 400 + x) * 4 + 3] > 16) {
+  let count = 0
+  for (let y = 0; y < info.height; y += 1)
+    for (let x = 0; x < info.width; x += 1)
+      if (data[(y * info.width + x) * 4 + 3] > 16) {
+        count += 1
         left = Math.min(left, x)
         right = Math.max(right, x)
         top = Math.min(top, y)
         bottom = Math.max(bottom, y)
       }
-  assert.ok(left >= 219 && right <= 381, `inside the figure's place, got ${left}..${right}`)
-  assert.equal(right - left + 1, 160, 'as wide as the place holds')
-  assert.equal(bottom, 299, 'standing on the bottom edge, never floating mid-frame')
-  assert.equal(data[3], 0, 'the ground stays clear')
+  const alpha = (x, y) => data[(y * info.width + x) * 4 + 3]
+  return { left, right, top, bottom, count, info, alpha }
+}
+const clearFrame = (width, height, parts) =>
+  sharp({ create: { width, height, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } } })
+    .composite(parts)
+    .png()
+    .toBuffer()
+const block = (width, height, background) =>
+  sharp({ create: { width, height, channels: 4, background } })
+    .png()
+    .toBuffer()
+
+test("#195 step 1: the owner's clear picture stands in the figure's place, never covering more than the figure did", async () => {
+  // A bakery template's hero: a slim chef figure on the right of a 400 x 300 frame, standing on its bottom edge.
+  const demo = await clearFrame(400, 300, [{ input: await block(100, 300, '#2a6f4e'), left: 260, top: 0 }])
+  const foot = await footprintOf(demo)
+  assert.deepEqual(Object.fromEntries(Object.entries(foot).map(([k, v]) => [k, Number(v.toFixed(2))])), {
+    left: 0.65,
+    top: 0,
+    width: 0.25,
+    height: 1,
+    fill: 0.25
+  })
+  // The owner's own cake shot on a clear ground: a wide, solid object.
+  const own = await clearFrame(900, 600, [{ input: await block(800, 500, '#c8834f'), left: 50, top: 50 }])
+  const out = await ownCutOutPicture(own, 400, 300, foot)
+  const v = await visible(out)
+  assert.equal(v.info.width, 400)
+  assert.ok(v.left >= 260 && v.right <= 359, `inside the figure's place, got ${v.left}..${v.right}`)
+  assert.ok(v.count <= 0.25 * 400 * 300 + 1, 'never more pixels than the figure had')
+  assert.equal(v.bottom, 299, 'standing on the bottom edge')
+  assert.equal(v.right, 359, 'on the side the figure stood')
+  assert.equal(v.alpha(0, 0), 0, 'the ground stays clear')
+  // A dental clinic's person figure centred in a wide frame: the owner's picture is centred too, and never larger.
+  const centred = await footprintOf(
+    await clearFrame(600, 400, [{ input: await block(200, 300, '#555555'), left: 200, top: 100 }])
+  )
+  const person = await clearFrame(300, 600, [{ input: await block(300, 600, '#4b6cb7'), left: 0, top: 0 }])
+  const p = await visible(await ownCutOutPicture(person, 600, 400, centred))
+  assert.ok(p.left >= 200 && p.right <= 399 && p.top >= 100 && p.bottom === 399, JSON.stringify(p))
+})
+
+test('#195 step 3: an owner photo in a frame keeps clear corners (the site refuses an opaque cut-out) and its shape', async () => {
+  const photo = await jpeg(900, 1200, '#336699')
+  const out = await framedPicture(photo, 1056, 1100)
+  const v = await visible(out)
+  assert.deepEqual([v.info.width, v.info.height], [1056, 1100])
+  assert.equal(v.alpha(0, 0), 0, 'a clear corner')
+  assert.equal(v.alpha(1055, 1099), 0, 'a clear corner')
+  assert.equal(v.alpha(528, 550), 255, 'the photo fills the middle')
+  // The frame sits inside the box with a margin on every side: never larger than the zone.
+  assert.ok(v.left > 0 && v.top > 0 && v.right < 1055 && v.bottom < 1099)
+})
+
+test('#195 step 3 through the engine: a figure in its own column beside the words shows the chosen photo, framed', async () => {
+  const t = await build()
+  // An about block of a fictional template: words on the right, a figure in its own column on the left, no backdrop.
+  const column = {
+    ...image('module-7.2', 'business.hero_image', 'about/figure.png', [704, 733], null, 'cutout'),
+    fit: { ...fit(704, 733, 'cutout'), source: { width: 768, height: 800, format: 'png' } }
+  }
+  const map = {
+    ...CONTENT_MAP,
+    entities: [...CONTENT_MAP.entities, { key: 'module-7', kind: 'module' }],
+    slots: [
+      ...CONTENT_MAP.slots,
+      text('module-7.0', 'editorial.heading', 'Demo heading'),
+      text('module-7.1', 'editorial.paragraph', 'Demo words'),
+      column
+    ],
+    pages: [
+      {
+        route: 'home',
+        assignedModules: [{ entity: 'module-1' }, { entity: 'module-2' }, { entity: 'module-7' }]
+      }
+    ]
+  }
+  const figureFile = await clearFrame(768, 800, [
+    { input: await block(500, 760, '#222222'), left: 120, top: 40 }
+  ])
+  const site = {
+    siteFile: async (f) => (f === 'images/demo/about/figure.png' ? figureFile : t.site.siteFile(f)),
+    siteBytes: async (f) => (f === 'images/demo/about/figure.png' ? figureFile : t.site.siteBytes(f))
+  }
+  const model = stubModel()
+  const shaped = await shapeReal({
+    real: t.real,
+    contentMap: map,
+    cms: 'joomla',
+    pages: keptPages(null),
+    ...site,
+    realPictures: t.realPictures,
+    note: () => {},
+    copy: COPY,
+    drawDoor: DOOR,
+    chat: model.chat
+  })
+  const written = shaped.shaped.filter((s) => s.group.slots.some((o) => o.key === 'module-7.2'))
+  assert.equal(written.length, 1, 'one write for the slot: the framed photo, never the bare photo beside it')
+  assert.equal(written[0].receipt.kind, 'framed')
+  assert.equal(written[0].receipt.step, 3)
+  assert.equal(written[0].ext, 'png')
+  const v = await visible(written[0].bytes)
+  assert.equal(v.alpha(0, 0), 0)
+  assert.ok(model.prompts.every((p) => !/One single object/.test(p)))
+})
+
+test("#195 step 1 through the engine: the owner's clear-ground picture is found by its corners and stands in the hero", async () => {
+  const t = await build()
+  // The owner uploaded one racket shot already cut free (clear corners) and one photo with rounded corners only.
+  const cutOut = await clearFrame(900, 700, [{ input: await block(600, 600, '#d1a03b'), left: 150, top: 50 }])
+  const rounded = await sharp(await jpeg(900, 700, '#3b7dd1'))
+    .ensureAlpha()
+    .composite([
+      {
+        input: Buffer.from('<svg width="900" height="700"><rect width="900" height="700" rx="40"/></svg>'),
+        blend: 'dest-in'
+      },
+      { input: await block(1, 1, { r: 0, g: 0, b: 0, alpha: 1 }), left: 899, top: 699 }
+    ])
+    .png()
+    .toBuffer()
+  const extra = [
+    { id: 'racket-cut', bytes: cutOut, depicts: 'svc-tennis' },
+    { id: 'rounded-1', bytes: rounded, depicts: 'svc-tennis' }
+  ]
+  const read = t.real.bytes
+  t.real.bytes = async (id) => extra.find((e) => e.id === id)?.bytes ?? read(id)
+  for (const e of extra) {
+    t.real.pictures.push({ id: e.id, width: 900, height: 700, sha256: `sha-${e.id}` })
+    t.real.brief.assets.push({
+      id: e.id,
+      kind: 'image',
+      width: 900,
+      height: 700,
+      depicts: { id: e.depicts, evidence: { via: 'vision' } },
+      portraitOf: null,
+      isGraphic: false,
+      uploaderRole: 'owner'
+    })
+  }
+  const map = { ...CONTENT_MAP, slots: [...CONTENT_MAP.slots, DECLARED[1]] }
+  const shaped = await shapeReal({
+    real: t.real,
+    contentMap: map,
+    cms: 'joomla',
+    pages: keptPages(null),
+    ...t.site,
+    realPictures: t.realPictures,
+    note: () => {},
+    copy: COPY,
+    drawDoor: null
+  })
+  const figure = shaped.shaped.find((s) => s.group.role === 'cut-out')
+  assert.equal(figure.receipt.kind, 'cut-out')
+  assert.equal(figure.receipt.mediaId, 'racket-cut', 'the rounded photo is not a clean cut-out')
+  assert.equal(figure.receipt.step, 1)
 })

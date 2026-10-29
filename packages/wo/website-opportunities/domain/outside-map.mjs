@@ -269,12 +269,14 @@ const cssString = (value) => String(value).replace(/["\\\n\r]/g, '')
 /**
  * The marked head block that hides or repaints what no door writes. Empty when there is nothing to do.
  * @param {{backgrounds?: Array<{selector: string, file: string}>, picture?: string | null, videos?: string[],
- *   files?: string[], links?: string[], frames?: string[]}} input
+ *   files?: string[], links?: string[], frames?: string[], pictures?: string[]}} input
  *   - `backgrounds`: demo backgrounds, repainted with `picture` (a site path of the owner's picture) or taken off
  *   - `videos`: demo video ids whose play controls are hidden (the still picture stays)
  *   - `files`: demo pictures hidden where they are shown as an `<img>` (the not-found and offline pages)
  *   - `links`: addresses of pages taken off, whose links are hidden where no door could empty them
  *   - `frames`: selectors of repeated frames whose every text was emptied (read from the served pages), hidden whole
+ *   - `pictures`: site paths of pictures the build wrote only to take a figure off (a cut-out, `cutout-ladder.mjs`),
+ *     hidden wherever they are shown so they leave no box
  */
 export function leftoverHeadBlock({
   backgrounds = [],
@@ -282,7 +284,8 @@ export function leftoverHeadBlock({
   videos = [],
   files = [],
   links = [],
-  frames = []
+  frames = [],
+  pictures = []
 }) {
   const rules = []
   if (backgrounds.length) {
@@ -325,6 +328,12 @@ export function leftoverHeadBlock({
   if (frames.length)
     rules.push(
       `/* frames the build left empty */\n${[...new Set(frames)].join(',\n')}{display:none !important}`
+    )
+  if (pictures.length)
+    rules.push(
+      `/* figures taken off */\n${[...new Set(pictures)]
+        .map((p) => `img[src*="${cssString(p).replace(/^\/+/, '')}"]`)
+        .join(',\n')}{display:none !important}`
     )
   if (!rules.length) return ''
   return `${HEAD_BLOCK_START}<style data-tracy-leftovers>\n${rules.join('\n')}\n</style>${HEAD_BLOCK_END}`

@@ -16,6 +16,7 @@
  */
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
+import sharp from 'sharp'
 import { cutForPlace, demoTransparency } from '../../lib/picture-cut.js'
 import { substitutePicture } from '../../lib/substitute-picture.js'
 import { drawForPlace, drawKey } from '../../lib/picture-draw.js'
@@ -182,9 +183,18 @@ export async function shapeReal({
   let decorPlan = null
   if (cms === 'joomla' && real.brief && domain.roleDecidesKeep(contentMap)) {
     const readable = new Map(real.pictures.map((p) => [p.id, p]))
+    // A cut-out slot may take the owner's own clear-ground picture (ladder step 1): which pictures are, read from them.
+    const clearGround = contentMap.slots.some((s) => s?.fit?.kind === 'cutout')
+      ? await ownClearGrounds(real)
+      : new Set()
     const assets = (real.brief.assets ?? [])
       .filter((a) => readable.has(a?.id))
-      .map((a) => ({ ...a, width: readable.get(a.id).width, height: readable.get(a.id).height }))
+      .map((a) => ({
+        ...a,
+        width: readable.get(a.id).width,
+        height: readable.get(a.id).height,
+        ...(clearGround.has(a.id) ? { hasAlpha: true } : {})
+      }))
     // A card's offering is the one its name says, and the name is the text path's (`copy`): one decider for both.
     // A brief build's site plan names each kept card (#192, `honesty.cardNames`) and decides it; hidden cards have none.
     const cardNames = plannedNames ?? domain.cardNamesOf(contentMap, copy)
@@ -204,7 +214,7 @@ export async function shapeReal({
       brief,
       copy,
       offerings: fill.offerings,
-      canDraw: Boolean(drawDoor?.imageModel) && policy.missingHeroMode !== 'real-only'
+      fill: fill.slots
     })
   } else {
     const { clusterOf } = domain.nearCopies(labels)
@@ -331,10 +341,16 @@ export async function shapeReal({
 
   // Cut, four at a time; a placeholder where nothing fits.
   started = Date.now()
+  // A cut-out slot is the decor step's alone (the ladder): no photo of the fill plan is written into it as it is.
+  const decorKeys = new Set((decorPlan?.slots ?? []).filter((d) => d.action === 'cut-out').map((d) => d.key))
+  const ownedByDecor = (group) =>
+    decorKeys.size > 0 &&
+    (group?.occurrences ?? []).length > 0 &&
+    group.occurrences.every((o) => decorKeys.has(o.key))
   const jobs = [
     ...plan.placements.map((p) => async () => {
       const group = byGroup.get(p.groupId)
-      if (!group) return null
+      if (!group || ownedByDecor(group)) return null
       const bytes = await real.bytes(p.mediaId)
       if (!bytes) {
         note(`a collected picture could not be read, so ${group.file} takes a placeholder`)
@@ -408,12 +424,7 @@ export async function shapeReal({
       slotOf,
       siteBytes,
       real,
-      domain,
-      drawDoor,
-      chat: drawDoor?.imageModel ? await talkOnce() : null,
-      note,
-      signal,
-      drawMs
+      note
     })
     shaped.push(...decor.shaped)
     drawing = { ...drawing, decor: decor.stats }
@@ -509,5 +520,39 @@ export function pictureReport({ shaped, values, refused, readback, homeHtml = nu
       demoOutside,
       unused: shaped.plan.unused.length
     }
+  }
+}
+
+/**
+ * The owner's pictures with a clean clear ground (every corner fully transparent: an object or a person already cut, not
+ * a photo with rounded corners): only these may stand in a cut-out slot as they are. One that cannot be read is not one.
+ * @param {{pictures: Array<{id: string}>, bytes: (id: string) => Promise<Uint8Array | null>}} real
+ * @returns {Promise<Set<string>>}
+ */
+export async function ownClearGrounds(real) {
+  const out = new Set()
+  await pool(
+    real.pictures.map((p) => async () => {
+      const bytes = await Promise.resolve(real.bytes(p.id)).catch(() => null)
+      if (bytes && (await clearCorners(bytes))) out.add(p.id)
+    }),
+    READ_AT_ONCE
+  )
+  return out
+}
+
+/** Whether all four corners of a picture are fully transparent. @param {Uint8Array} bytes */
+async function clearCorners(bytes) {
+  try {
+    const image = sharp(Buffer.from(bytes), { failOn: 'none', limitInputPixels: 100_000_000 })
+    const meta = await image.metadata()
+    if (!meta.hasAlpha || !meta.width || !meta.height) return false
+    const { data, info } = await image.ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+    const alpha = (x, y) => data[(y * info.width + x) * info.channels + info.channels - 1]
+    const w = info.width - 1
+    const h = info.height - 1
+    return [alpha(0, 0), alpha(w, 0), alpha(0, h), alpha(w, h)].every((a) => a < 16)
+  } catch {
+    return false
   }
 }

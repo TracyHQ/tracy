@@ -164,9 +164,13 @@ async function readArticles(/** @type {Function} */ apply, /** @type {string} */
 }
 
 /** The owner's picture a build already put on the home page (a contract slot's upload), as a site path, or null. */
-export function ownerPictureOf(/** @type {string | null} */ html) {
-  const m = String(html ?? '').match(/["'(]\/?(images\/tracy-content\/[a-f0-9]{64}\.(?:jpe?g|png|webp))/i)
-  return m ? m[1] : null
+export function ownerPictureOf(/** @type {string | null} */ html, /** @type {string[]} */ skip = []) {
+  const off = new Set(skip.map((p) => String(p).replace(/^\/+/, '')))
+  for (const m of String(html ?? '').matchAll(
+    /["'(]\/?(images\/tracy-content\/[a-f0-9]{64}\.(?:jpe?g|png|webp))/gi
+  ))
+    if (!off.has(m[1])) return m[1]
+  return null
 }
 
 /**
@@ -194,9 +198,11 @@ export function plannedSlotValues(plan) {
  * @param {(key: string, n: number) => void} [input.time]
  * @param {string} input.applyId
  * @param {string} [input.locale] - the language the site is written in: the copyright line is said in it
+ * @param {string[]} [input.pictures] - site paths of the clear pictures that take cut-out figures off (`cutout-css.js`)
  * @returns {Promise<{credit: number, aliases: number, head: number, links: number}>}
  */
 export async function writeOutsideMap({
+  pictures = [],
   locale = 'en',
   apply,
   siteKey,
@@ -265,7 +271,7 @@ export async function writeOutsideMap({
         const html = await reader.text(path).catch(() => null)
         if (html) pages.push({ html })
       }
-      picture = ownerPictureOf(pages[0]?.html ?? null)
+      picture = ownerPictureOf(pages[0]?.html ?? null, pictures)
       frames = emptyFrames(pages.map((p) => p.html))
       const styles = []
       for (const href of ownStylesheets(pages)) {
@@ -291,7 +297,8 @@ export async function writeOutsideMap({
     videos: (outside.videos ?? []).filter((v) => v.decision === 'still' && v.demo).map((v) => v.demo),
     files: (outside.errorPages ?? []).map((p) => p.file),
     links,
-    frames
+    frames,
+    pictures
   })
   if (!block) return done
   try {

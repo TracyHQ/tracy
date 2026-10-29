@@ -58,6 +58,7 @@ import { honestWords, leftDemoWords, planRecordSteps } from './joomla-plan-recor
 import { planIdentitySteps } from './joomla-plan-identity.js'
 import { guardBoundNodes } from './joomla-bound-nodes.js'
 import { contentMapAt, plannedSlotValues, showcaseOff, writeOutsideMap } from './joomla-outside-map.js'
+import { takenOffPicturePaths } from './cutout-css.js'
 import { lineLimits, withBoxLimits, withinLines } from './slot-box-limits.js'
 import { writeWoContent } from './joomla-wo-content.js'
 import {
@@ -2255,7 +2256,9 @@ export function createJoomlaEngine({
             note: ctx.note,
             time: ctx.time,
             applyId: `outside-${Date.now().toString(36)}`,
-            locale: prepared.written ?? SOURCE
+            locale: prepared.written ?? SOURCE,
+            // Cut-out figures taken off (ladder step 2): hidden by the head block, so they leave no box.
+            pictures: takenOffPicturePaths(placedReal, art.values, refusedByWrite)
           })
         )
       // 🔒 The restaurant's own posts, last: after the tidy-up and the demo trim settled which articles show (`joomla-wo-content.js`).

@@ -16,7 +16,7 @@ export function pictureDecisionsOf(contentMap, brief, cardNames = {}) {
   const fill = planFill({ contentMap, brief, cardNames, perSlot: true })
   const drawn = planDrawings({ fill, contentMap, brief })
   const out = new Map(drawn.slots.map((d) => [d.key, d]))
-  const decor = planDecor({ contentMap, brief, offerings: fill.offerings, canDraw: true })
+  const decor = planDecor({ contentMap, brief, offerings: fill.offerings, fill: fill.slots })
   for (const d of decor.slots) {
     // A decorative slot is decided by its subject alone: no photo or drawing of the fill plan stays on it.
     const { mediaId: _m, crop: _c, drawing: _d, substitute: _s, ...rest } = out.get(d.key) ?? {}

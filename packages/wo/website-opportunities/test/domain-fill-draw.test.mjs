@@ -400,7 +400,7 @@ test('#195 an icon on a page about one offering takes that offering; a demo word
   for (const d of bare.values()) assert.ok(DECOR_REASONS[d.reason], d.reason)
 })
 
-test('#195 a cut-out becomes an object drawn from owner photos, or is cleared; it is never a photo rectangle', () => {
+test('#195 a cut-out is never drawn: it is taken off, and a design piece stays', () => {
   const contentMap = {
     slots: [
       image('module-8.0', 'business.hero_image', 'hero/figure.png', { kind: 'cutout', size: [1175, 960] }),
@@ -408,14 +408,12 @@ test('#195 a cut-out becomes an object drawn from owner photos, or is cleared; i
     ]
   }
   const assets = [photo('court-1'), photo('logo-1', 'general', [400, 400], { isLogo: true })]
-  const drawn = byKey(planDecor({ contentMap, brief: { ...CLUB, assets }, canDraw: true }).slots)
-  assert.equal(drawn.get('module-8.0').action, 'cut-out')
-  assert.equal(drawn.get('module-8.0').mode, 'object')
-  assert.deepEqual(drawn.get('module-8.0').referenceIds, ['court-1'])
-  assert.equal(drawn.get('module-8.0').subject.label, 'Tennis Lessons')
-  assert.equal(drawn.get('module-8.1').action, 'keep', 'a line stays as designed')
-  const cleared = byKey(planDecor({ contentMap, brief: { ...CLUB, assets }, canDraw: false }).slots)
-  assert.equal(cleared.get('module-8.0').mode, 'clear')
+  const at = byKey(planDecor({ contentMap, brief: { ...CLUB, assets } }).slots)
+  assert.equal(at.get('module-8.0').action, 'cut-out')
+  assert.equal(at.get('module-8.0').mode, 'off')
+  assert.equal(at.get('module-8.0').referenceIds, undefined, 'nothing is drawn from the owner photos')
+  assert.equal(at.get('module-8.0').subject.label, 'Tennis Lessons')
+  assert.equal(at.get('module-8.1').action, 'keep', 'a line stays as designed')
   assert.equal(glyphOf('Padel and tennis'), 'racquet')
 })
 
@@ -484,7 +482,7 @@ test("#194 #195 the site plan carries each slot's drawing, icon and cut-out deci
   assert.equal(at.get('module-3.5').action, 'icon')
   assert.equal(at.get('module-3.5').glyph, 'racquet')
   assert.equal(at.get('module-1.4').action, 'cut-out')
-  assert.equal(at.get('module-1.4').mode, 'object')
+  assert.equal(at.get('module-1.4').mode, 'off')
 })
 
 test('#192 #194 a kept card shows what the site plan names it: its own photo, or a drawing of that offering', async () => {

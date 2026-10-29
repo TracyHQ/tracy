@@ -1,8 +1,8 @@
 // Icons and cut-outs follow the business's subject (spec TracyHQ/tracy#189, ticket #195). Template readiness labels each
 // decorative picture slot as pure design or as carrying the demo's subject (`decorOf`); the plan then gives every
-// subject-carrying icon an icon of the business's own offering, and every cut-out figure a cut-out drawn from the owner's
-// photos, or clears it. Pure design (lines, colour blocks, patterns) stays as the template drew it. Pure and
-// deterministic: no model, no site; the engine renders the icons and draws the cut-outs.
+// subject-carrying icon an icon of the business's own offering, and every cut-out figure a step of the cut-out ladder
+// (`cutout-ladder.mjs`). Pure design (lines, colour blocks, patterns) stays as the template drew it. Pure and
+// deterministic: no model, no site; the engine renders the icons and shapes the cut-outs.
 //
 // 🔒 THE LABEL COMES FROM THE SLOT, NEVER FROM A NAME OF ONE TEMPLATE: a declared `decor` on the slot ("subject" or
 // "design") wins; else an item icon (role `editorial.item_icon`) stands beside an item's words and so carries its
@@ -11,13 +11,14 @@
 // 🔒 AN ICON IS CHOSEN BY MEANING: the words the build writes for its item (the copy pins), else the offering of the page
 // it sits on, else the brief's offerings in item order. A word of the demo is never read, so the demo's subject cannot
 // choose the new icon. Nothing matches: a neutral mark (a check), never the demo's icon.
-// 🔒 A CUT-OUT NEVER SHOWS A DRAWN FACE: it is an object of the activity drawn from the owner's photos on a clear ground,
-// checked like every drawing; with no photo to draw from, or no picture model, the figure is cleared (a transparent
-// picture of its size), so the hero shows the design without the demo's figure.
+// 🔒 A CUT-OUT IS NEVER DRAWN: it climbs the cut-out ladder (`cutout-ladder.mjs`): the owner's own transparent picture,
+// else taken off (the default), else, where taking it off leaves its own column empty beside the text, an owner photo the
+// fill plan chose for it, shown in a frame.
+import { CUT_OUT_REASONS, cutOutStepOf } from './cutout-ladder.mjs'
 import { closedListOf, namedIn } from './pictures/picture-links.mjs'
 import { fileOf, foldWords } from './pictures/slot-map.mjs'
 
-export const DECOR_PLAN_VERSION = 'decor-plan/1'
+export const DECOR_PLAN_VERSION = 'decor-plan/2'
 
 /** Every reason code a decor decision carries, with the sentence a report shows for it. */
 export const DECOR_REASONS = Object.freeze({
@@ -25,8 +26,7 @@ export const DECOR_REASONS = Object.freeze({
   'icon-of-page-offering': 'an icon of the offering this page is about',
   'icon-of-offering': "an icon of one of the business's offerings",
   'icon-neutral': 'no icon matches the business, so a neutral mark stands in its place',
-  'cut-out-drawn': "an object of the business's activity, drawn from the owner's photos on a clear ground",
-  'cut-out-cleared': 'no photo to draw a cut-out from, so the figure is cleared and the design stays',
+  ...CUT_OUT_REASONS,
   'design-kept': 'a pure design piece of the template, kept as drawn'
 })
 
@@ -140,12 +140,13 @@ function wordsOfItem(slot, slots, at) {
  * @param {{pins?: Record<string, string>, sources?: Record<string, string>} | null} [input.copy] - the words the build
  *   writes, by slot key (`copyPinsOf`)
  * @param {Array<{groupId: string, offeringId: string, label: string}>} [input.offerings] - the fill plan's card offerings
- * @param {boolean} [input.canDraw] - whether the build can draw (a picture model is set)
+ * @param {Array<{key: string, action?: string, mediaId?: string, crop?: any}>} [input.fill] - the fill plan's slot
+ *   decisions: the photo it chose for a cut-out slot is the one a frame may show (ladder step 3)
  * @returns {{version: string, slots: Array<{key: string, file: string, decor: string, action: 'icon' | 'cut-out' |
- *   'keep', reason: string, glyph?: string, mode?: 'object' | 'clear', subject?: any, referenceIds?: string[],
- *   asked?: string}>}}
+ *   'keep', reason: string, glyph?: string, mode?: 'own' | 'off' | 'framed', step?: number, mediaId?: string,
+ *   crop?: any, subject?: any, asked?: string}>}}
  */
-export function planDecor({ contentMap, brief, copy = null, offerings = [], canDraw = false }) {
+export function planDecor({ contentMap, brief, copy = null, offerings = [], fill = [] }) {
   const slots = contentMap?.slots ?? []
   const list = closedListOf(brief?.reading).offerings
   const pageOffering = new Map()
@@ -162,11 +163,9 @@ export function planDecor({ contentMap, brief, copy = null, offerings = [], canD
     const hit = namedIn(words, list)
     if (hit) pageOffering.set(s.entity, { offeringId: hit.id, label: hit.label })
   }
-  const references = (brief?.assets ?? [])
-    .filter((a) => a?.kind === 'image' && a.id && a.isGraphic !== true && a.isLogo !== true)
-    .filter((a) => !(a.portraitOf?.id ?? a.portraitOf))
-    .map((a) => a.id)
-    .sort()
+  const photoOf = new Map(
+    (fill ?? []).filter((d) => d?.action === 'photo' && d.mediaId).map((d) => [d.key, d])
+  )
   const out = []
   slots.forEach((slot, at) => {
     const decor = decorOf(slot)
@@ -212,28 +211,26 @@ export function planDecor({ contentMap, brief, copy = null, offerings = [], canD
     const subject = main
       ? { kind: 'offering', id: main.offeringId ?? main.id, label: main.label }
       : { kind: 'venue' }
-    if (canDraw && references.length)
-      out.push({
-        key: slot.key,
-        file,
-        decor,
-        action: 'cut-out',
-        reason: 'cut-out-drawn',
-        mode: 'object',
-        subject,
-        referenceIds: references.slice(0, 4),
-        asked: decorAsked('cut-out', main?.label ?? null)
-      })
-    else
-      out.push({
-        key: slot.key,
-        file,
-        decor,
-        action: 'cut-out',
-        reason: 'cut-out-cleared',
-        mode: 'clear',
-        asked: decorAsked('cut-out', null)
-      })
+    const step = cutOutStepOf({
+      slot,
+      slots,
+      assets: brief?.assets ?? [],
+      subject,
+      photo: photoOf.get(slot.key)
+    })
+    out.push({
+      key: slot.key,
+      file,
+      decor,
+      action: 'cut-out',
+      reason: step.reason,
+      mode: step.mode,
+      step: step.step,
+      subject,
+      ...(step.mediaId ? { mediaId: step.mediaId } : {}),
+      ...(step.crop ? { crop: step.crop } : {}),
+      asked: decorAsked('cut-out', step.mode === 'off' ? null : (main?.label ?? null))
+    })
   })
   return { version: DECOR_PLAN_VERSION, slots: out }
 }
