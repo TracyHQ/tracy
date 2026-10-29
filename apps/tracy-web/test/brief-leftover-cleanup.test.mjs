@@ -3,7 +3,11 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
-import { cleanBuildLeftovers, cleanupTurnPort } from '../src/opportunities-build/demo-leftover-cleanup.js'
+import {
+  cleanBuildLeftovers,
+  cleanupSessionId,
+  cleanupTurnPort
+} from '../src/opportunities-build/demo-leftover-cleanup.js'
 import { handoffCleanup } from '../src/opportunities-build/handoff.js'
 
 const DEMO_PHONE = '(555) 010-4477'
@@ -195,4 +199,35 @@ test('the production port reports a timeout when the turn never closes, and an e
     (await none({ prompt: 'p', requestId: 'r', limits: { timeoutMs: 10 } })).code,
     'CLEANUP_SESSION_FAILED'
   )
+})
+
+test('the cleanup chat is asked in the shape the seat door allocates, apart from the hand-off chat, the same on a retry', async () => {
+  // The seat door allocates a server-held site chat only as wo-demo-<uuid> (dsh-passwords site-session.ts).
+  const DOOR = /^wo-demo-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+  const buildId = '3f2a9c10-5b7e-4d21-9a0c-6e8f1b2c3d4e'
+  const asked = []
+  const db = {
+    async query(sql) {
+      return {
+        rows: /site_turn/.test(sql) ? [{ state: 'closed', end_reason: 'done' }] : [{ site_key: 'site-1' }]
+      }
+    }
+  }
+  const deps = {
+    sessionAhead: async (_site, _email, id) => {
+      asked.push(id)
+      return id
+    },
+    prompt: async () => true
+  }
+  for (let i = 0; i < 2; i += 1)
+    await cleanupTurnPort(db, deps, { build: { id: buildId, site_key: 'site-1' }, email: 'o@test.example' })({
+      prompt: 'p',
+      requestId: 'r',
+      limits: { timeoutMs: 10 }
+    })
+  assert.match(asked[0], DOOR)
+  assert.notEqual(asked[0], `wo-demo-${buildId}`, 'never the hand-off chat')
+  assert.equal(asked[1], asked[0])
+  assert.equal(cleanupSessionId(buildId), asked[0])
 })

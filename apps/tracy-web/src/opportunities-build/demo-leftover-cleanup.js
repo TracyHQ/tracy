@@ -11,6 +11,7 @@
  * The receipt keeps `leftoverCleanup`: findings before, findings after, what the turn changed, and how the turn ended.
  * `receipt.leftovers` is replaced by the check that ran after the turn, so the hand-off lists what is left now.
  */
+import { createHash } from 'node:crypto'
 import { siteRowOf } from './build-store.js'
 import { runLeftoverCheck } from './demo-leftover-check.js'
 import { contentMapOfTemplate } from './brief-build-path.js'
@@ -18,6 +19,18 @@ import { contentMapOfTemplate } from './brief-build-path.js'
 const POLL_MS = 3_000
 const sleepFor = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
 const STOPPED = ['aborted', 'blocked', 'error', 'interrupted', 'max-tokens']
+
+/**
+ * The chat the cleanup turn runs in: its own, apart from the hand-off's `wo-demo-<build id>`, and in the only shape the
+ * seat door allocates a server-held site chat in (`wo-demo-<uuid>`, `dsh-passwords` `site-session.ts`). A
+ * `wo-cleanup-...` id was refused by the door on every build, so the turn never ran. Derived from the build id, so a
+ * worker that comes back after a lost lease adopts the same chat.
+ * @param {string} buildId
+ */
+export function cleanupSessionId(buildId) {
+  const hex = createHash('sha256').update(`leftover-cleanup:${buildId}`).digest('hex')
+  return `wo-demo-${hex.slice(0, 8)}-${hex.slice(8, 12)}-${hex.slice(12, 16)}-${hex.slice(16, 20)}-${hex.slice(20, 32)}`
+}
 
 /**
  * The production turn port: make a chat, queue the prompt, wait for the turn to close or the time to run out.
@@ -33,7 +46,7 @@ export function cleanupTurnPort(db, deps, { build, email }) {
     if (!deps.sessionAhead || !deps.prompt) return { state: 'error', code: 'CLEANUP_UNAVAILABLE' }
     const site = await siteRowOf(db, build.site_key)
     if (!site) return { state: 'error', code: 'CLEANUP_SITE_GONE' }
-    const sessionId = await deps.sessionAhead(site, email, `wo-cleanup-${build.id}`)
+    const sessionId = await deps.sessionAhead(site, email, cleanupSessionId(build.id))
     if (!sessionId) return { state: 'error', code: 'CLEANUP_SESSION_FAILED' }
     if ((await deps.prompt(site, email, sessionId, requestId, prompt)) !== true)
       return { state: 'error', code: 'CLEANUP_PROMPT_REFUSED' }
