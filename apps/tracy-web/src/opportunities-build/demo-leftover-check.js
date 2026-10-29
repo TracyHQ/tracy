@@ -45,14 +45,17 @@ function ownLinks(html) {
  * @param {any} input.brief
  * @param {string[]} [input.paths] - the pages the site plan keeps
  * @param {() => number} [input.now]
- * @returns {Promise<{version: string, pass: boolean, findings: any[], counts: Record<string, number>, pages: string[],
+ * @returns {Promise<{version: string, pass: boolean, broken: Array<{path: string, status: number | null, why: string}>, findings: any[], counts: Record<string, number>, pages: string[],
  *   unread: string[], missing: string[], truncated: number, at: string}>}
  */
 export async function runLeftoverCheck({ readPage, check, contentMap, brief, paths = [], now = Date.now }) {
-  const queue = [...new Set(['/', ...paths.map((p) => p.replace(/\/+$/, '') || '/')])]
+  const kept = [...new Set(['/', ...paths.map((p) => p.replace(/\/+$/, '') || '/')])]
+  const queue = [...kept]
   const pages = []
   const unread = []
   const missing = []
+  /** @type {Array<{path: string, status: number | null, why: string}>} */
+  const answers = []
   const seen = new Set()
   while (queue.length && seen.size < MAX_PAGES) {
     const path = /** @type {string} */ (queue.shift())
@@ -61,16 +64,21 @@ export async function runLeftoverCheck({ readPage, check, contentMap, brief, pat
     const page = await readPage(path).catch(() => null)
     if (!page) {
       unread.push(path)
+      answers.push({ path, status: null, why: 'the page did not answer' })
       continue
     }
     if (page.status === 404) {
       missing.push(path)
+      answers.push({ path, status: 404, why: 'the page answered 404' })
       continue
     }
     if (page.status >= 300) {
       unread.push(path)
+      answers.push({ path, status: page.status, why: `the page answered ${page.status}` })
       continue
     }
+    if (page.status !== 200)
+      answers.push({ path, status: page.status, why: `the page answered ${page.status}, not 200` })
     pages.push({ path, status: page.status, html: page.html })
     for (const link of ownLinks(page.html)) if (!seen.has(link)) queue.push(link)
   }
@@ -83,9 +91,20 @@ export async function runLeftoverCheck({ readPage, check, contentMap, brief, pat
     const sheet = await readPage(href).catch(() => null)
     if (sheet && sheet.status < 300) styles.push({ href, css: sheet.html })
   }
-  const report = check({ pages, contentMap, brief, missing, styles })
+  // 🔒 A SITE THAT DOES NOT ANSWER IS NEVER CLEAN. Pages that fail to answer carry no demo words, so a broken site used to
+  // report 0 in every kind. A page the plan keeps (home, and every kept page: its address or the same address under the
+  // site's index prefix) that is not served with 200 makes the whole report `broken`, and `pass` false.
+  const served = pages.filter((p) => p.status === 200).map((p) => p.path)
+  const reached = (/** @type {string} */ path) =>
+    served.some((s) => s === path || (path !== '/' && s.endsWith(path)))
+  const broken = answers.filter((a) => kept.includes(a.path) && !(a.status === 404 && reached(a.path)))
+  if (!served.includes('/') && !broken.some((b) => b.path === '/'))
+    broken.unshift({ path: '/', status: null, why: 'the home page was not served with 200' })
+  const report = check({ pages, contentMap, brief, missing, styles, broken })
   return {
     ...report,
+    broken,
+    pass: report.pass === true && broken.length === 0,
     findings: report.findings.slice(0, FINDINGS_KEPT),
     truncated: Math.max(0, report.findings.length - FINDINGS_KEPT),
     pages: pages.map((p) => p.path),

@@ -70,7 +70,9 @@ export async function cleanBuildLeftovers(
 ) {
   if (typeof domain.renderLeftoverCleanupPrompt !== 'function') return build
   const before = build.receipt?.leftovers
-  if (!before || !Array.isArray(before.findings) || before.findings.length === 0) return build
+  // A broken site has no findings to fix and still needs the turn: it is told the pages that do not answer.
+  const noneBroken = !Array.isArray(before?.broken) || before.broken.length === 0
+  if (!before || !Array.isArray(before.findings) || (before.findings.length === 0 && noneBroken)) return build
   // One turn per build: a worker that comes back after a lost lease finds the record and does not start another.
   if (build.receipt?.leftoverCleanup && build.receipt.leftoverCleanup.turn?.state !== 'running') return build
   const limits = domain.CLEANUP_LIMITS ?? { timeoutMs: 8 * 60_000, toolCalls: 40 }

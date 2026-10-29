@@ -368,6 +368,14 @@ export function renderAgentPrompt({
     line('## Assets not uploaded')
     for (const s of skipped) line(`- ${s.id}: ${s.reason}`)
   }
+  // Pages the plan keeps that the check could not read: a site that does not answer is not clean.
+  if (Array.isArray(leftovers?.broken) && leftovers.broken.length) {
+    line()
+    line('## Pages that are not served')
+    line('The check could not judge these kept pages, so the site is not clean until they answer 200:')
+    for (const b of leftovers.broken.slice(0, LEFTOVERS_SHOWN))
+      line(`- ${b.path}: ${b.why ?? 'not served with 200'}`)
+  }
   // The demo-leftover check's findings (#191): the places the site still shows the template's demo, by kind and page.
   if (Array.isArray(leftovers?.findings) && leftovers.findings.length) {
     line()

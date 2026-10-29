@@ -355,7 +355,8 @@ export function checkDemoLeftovers({
   contentMap = null,
   brief = null,
   missing = [],
-  styles = []
+  styles = [],
+  broken = []
 }) {
   const read = pages.map(readPage)
   const demo = demoOf(contentMap, brief)
@@ -394,5 +395,12 @@ export function checkDemoLeftovers({
     }
   const counts = Object.fromEntries(Object.keys(LEFTOVER_KINDS).map((kind) => [kind, 0]))
   for (const f of findings) counts[f.kind] += 1
-  return { version: LEFTOVER_CHECK_VERSION, pass: findings.length === 0, findings, counts }
+  // A page the plan keeps that was not served is no clean site: `broken` blocks the pass whatever the findings say.
+  return {
+    version: LEFTOVER_CHECK_VERSION,
+    pass: findings.length === 0 && broken.length === 0,
+    broken,
+    findings,
+    counts
+  }
 }

@@ -76,6 +76,16 @@ export function renderLeftoverCleanupPrompt({ leftovers, brief = null, limits = 
     `3. This is a short job: at most ${limits.toolCalls} tool calls and about ${Math.round(limits.timeoutMs / 60_000)} minutes. Stop when the listed places are done.`
   )
   line()
+  const broken = Array.isArray(leftovers?.broken) ? leftovers.broken : []
+  if (broken.length) {
+    line('## The site is not fully served (fix this before anything else)')
+    for (const b of broken.slice(0, CLEANUP_FINDINGS_SHOWN))
+      line(`- page ${b.path} | ${b.why ?? 'not served with 200'}`)
+    line(
+      'A page that does not answer shows no demo words, so the check could not judge it. Find why it fails and restore it. Do not report the site as done while one of these pages is not served.'
+    )
+    line()
+  }
   line('## Findings (kind, page, place, found, put instead)')
   for (const f of findings.slice(0, CLEANUP_FINDINGS_SHOWN)) {
     const name = LEFTOVER_KINDS[f.kind]?.name ?? f.kind
@@ -103,6 +113,7 @@ export function summarizeLeftovers(report) {
     total: findings.length,
     counts: report?.counts ?? {},
     findings: findings.map(({ kind, page, place, found }) => ({ kind, page, place, found })),
+    broken: Array.isArray(report?.broken) ? report.broken : [],
     pages: Array.isArray(report?.pages) ? report.pages : [],
     unread: Array.isArray(report?.unread) ? report.unread : []
   }

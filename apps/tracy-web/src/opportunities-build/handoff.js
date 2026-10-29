@@ -625,6 +625,8 @@ export function handoffLeftovers(leftovers) {
   return {
     version: leftovers.version,
     pass: leftovers.pass === true,
+    // Kept pages that were not served with 200: a site that does not answer is never reported clean.
+    broken: Array.isArray(leftovers.broken) ? leftovers.broken : [],
     counts: leftovers.counts ?? {},
     findings: Array.isArray(leftovers.findings) ? leftovers.findings : [],
     unread: Array.isArray(leftovers.unread) ? leftovers.unread : [],

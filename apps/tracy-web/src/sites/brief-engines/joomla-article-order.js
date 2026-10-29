@@ -163,18 +163,30 @@ export function neighboursOf(articles, id, rules = () => DEFAULT_RULE) {
   return [order[at - 1] ?? null, order[at + 1] ?? null]
 }
 
-/** com_content's own options, or null when the site does not say. */
+/**
+ * com_content's own options, or null when the site does not say. The door's `search` does not cover the `extensionParams`
+ * kind (it refuses it), so the extensions are paged without a search, the component is found by its element, and its
+ * parameters are read whole with `content.get`.
+ */
 export async function componentParams(/** @type {any} */ apply, /** @type {string} */ siteKey) {
   try {
-    const answer = await apply({
+    const listed = await apply({
       siteKey,
       action: 'content.list',
-      params: { kind: 'extensionParams', search: 'com_content', limit: 25, include_body: true }
+      params: { kind: 'extensionParams', limit: 500 }
     })
-    const row = (Array.isArray(answer?.items) ? answer.items : []).find(
+    if (listed?.ok === false) return null
+    const row = (Array.isArray(listed?.items) ? listed.items : []).find(
       (/** @type {any} */ r) => r?.element === 'com_content' && String(r?.type ?? 'component') === 'component'
     )
-    return row ? paramsOf(row) : null
+    if (!row) return null
+    if (row.params !== undefined) return paramsOf(row)
+    const got = await apply({
+      siteKey,
+      action: 'content.get',
+      params: { kind: 'extensionParams', id: Number(row.id ?? row.extension_id) }
+    })
+    return got?.ok === false ? null : paramsOf(got?.item)
   } catch {
     return null
   }
