@@ -45,7 +45,7 @@ function clubBrief() {
       hours: ['Tue-Sun 07:00-15:00'],
       serviceAreas: [{ text: 'Ashby Vale and Lower Ashby' }]
     },
-    contact: { whatsapp: { number: '+447700900123' } },
+    contact: { whatsapp: { number: '+447700901111' } },
     brand: { voice: 'English; informal tone (observed from bio)' },
     reading: { about: 'A family bakery for sourdough and pastries in Ashby Vale.' },
     sitemap: [{ slug: 'home', sections: [{ kind: 'hero', copy: 'Copperleaf Bakery.' }] }],
@@ -106,15 +106,15 @@ test('every contact fact of the brief is in the plan with the link it is written
     source: 'business.email'
   })
   assert.deepEqual(plan.contact.whatsapp, {
-    value: '+447700900123',
-    href: 'https://wa.me/447700900123',
+    value: '+447700901111',
+    href: 'https://wa.me/447700901111',
     source: 'contact.whatsapp'
   })
   assert.equal(plan.contact.address.value, '14 Mill Lane, Ashby Vale')
   assert.equal(plan.contact.hours.value, 'Tue-Sun 07:00-15:00')
   assert.equal(plan.contact.serviceArea.value, 'Ashby Vale and Lower Ashby')
   // The create door takes them beside the answers, WhatsApp and service area included.
-  assert.equal(plan.facts.whatsapp.value, '+447700900123')
+  assert.equal(plan.facts.whatsapp.value, '+447700901111')
   assert.equal(plan.facts.serviceArea.value, 'Ashby Vale and Lower Ashby')
 })
 

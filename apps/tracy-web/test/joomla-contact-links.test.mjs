@@ -7,7 +7,7 @@ import { moduleContactSteps } from '../src/sites/brief-engines/joomla-contact-li
 const contact = {
   phone: { value: '+44 20 7946 0321', href: 'tel:+442079460321' },
   email: { value: 'hello@copperleaf.example', href: 'mailto:hello@copperleaf.example' },
-  whatsapp: { value: '+447700900123', href: 'https://wa.me/447700900123' }
+  whatsapp: { value: '+447700901111', href: 'https://wa.me/447700901111' }
 }
 const visible = new Set(['en-GB'])
 const footer = {
@@ -24,7 +24,7 @@ test('a footer phone behind # and a demo mailbox lead to the business, with What
   const html = steps[0].fields.content
   assert.match(html, /<a href="tel:\+442079460321"><i class="fa fa-phone"><\/i> \+44 20 7946 0321<\/a>/)
   assert.match(html, /<a href="mailto:hello@copperleaf\.example">hello@copperleaf\.example<\/a>/)
-  assert.match(html, /<a href="https:\/\/wa\.me\/447700900123"[^>]*>WhatsApp<\/a>/)
+  assert.match(html, /<a href="https:\/\/wa\.me\/447700901111"[^>]*>WhatsApp<\/a>/)
   assert.doesNotMatch(html, /demo\.example|555/)
 })
 

@@ -142,7 +142,7 @@ const CLEAN = `<html><head><title>Copperleaf Bakery</title></head><body>
   <header><img src="/images/tracy-quickstart/0a1b.jpg" alt="Copperleaf Bakery"><nav><a href="/">Home</a> <a href="/about/contact">Contact</a></nav></header>
   <main><h1>Copperleaf Bakery</h1><p>Sourdough, pastries and coffee in Ashby Vale.</p>
   <a href="tel:+442079460321">+44 20 7946 0321</a> <a href="mailto:hello@copperleaf.example">hello@copperleaf.example</a>
-  <a href="https://wa.me/447700900123">WhatsApp</a> <a href="https://instagram.com/copperleafbakery" aria-label="Instagram">Instagram</a>
+  <a href="https://wa.me/447700901111">WhatsApp</a> <a href="https://instagram.com/copperleafbakery" aria-label="Instagram">Instagram</a>
   <button class="navbar-toggler" data-bs-toggle="collapse"><a href="#" class="menu-toggle" role="button">Menu</a></button></main>
   <footer>Copyright Copperleaf Bakery</footer></body></html>`
 

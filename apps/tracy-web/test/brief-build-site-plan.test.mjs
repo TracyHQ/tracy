@@ -37,7 +37,7 @@ const BAKERY = {
     email: 'hello@copperleaf.example',
     address: '14 Mill Lane, Ashby Vale'
   },
-  contact: { whatsapp: { number: '+447700900123' } }
+  contact: { whatsapp: { number: '+447700901111' } }
 }
 /** A trimmed content map of the made-up template: its footer's demo mailbox. */
 const CONTENT_MAP = {
@@ -197,7 +197,7 @@ test(
     }
     assert.equal(created.length, 1)
     assert.ok(created[0].brief.answers.pages.includes('about/contact-us'), 'the Contact page is kept')
-    assert.equal(created[0].brief.facts.whatsapp.value, '+447700900123')
+    assert.equal(created[0].brief.facts.whatsapp.value, '+447700901111')
 
     // 3. The engine reads the site plan through its own reader, and writes the contact lines from it.
     const woContent = createSiteContent({ pool })
