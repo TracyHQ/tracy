@@ -204,21 +204,17 @@ test('a fact list reads its rows by path shape: fields of a JSON list item, or a
   assert.equal(bakery[0].rows.length, 3)
 })
 
-test('swim school: rows show audience, area and booking under labels that name them, same order on every card', () => {
+test('swim school: every card of the list shows the same labels, as many rows as its shortest card holds', () => {
   const plan = planSite(swimBrief(), served, { contentMap: swimMap() })
-  assert.deepEqual(rowsOf(plan, 21, 3), [
-    ['LEVEL', 'All ages and levels'],
-    ['WHERE', 'Pools across Eastmoor'],
-    ['BOOK', 'WhatsApp or Instagram']
-  ])
-  // The adult card's own audience takes the place of the shared one, under the same label.
-  assert.deepEqual(rowsOf(plan, 22, 3), [
-    ["WHO IT'S FOR", 'Nervous adults'],
-    ['WHERE', 'Pools across Eastmoor'],
-    ['BOOK', 'WhatsApp or Instagram']
-  ])
-  // A one-row card keeps one row: the first of the list's order.
-  assert.deepEqual(rowsOf(plan, 23, 1), [['LEVEL', 'All ages and levels']])
+  // The one-row card sets the list's row count; the audience reads "Level" on two cards and "Who it's for" on the adult
+  // card, so no card shows it (one label set per list, #189 round 9); the area is the same kind on every card.
+  for (const n of [21, 22, 23]) assert.deepEqual(rowsOf(plan, n, 1), [['WHERE', 'Pools across Eastmoor']])
+  for (const n of [21, 22])
+    assert.deepEqual(rowsOf(plan, n, 3).slice(1), [
+      [null, null],
+      [null, null]
+    ])
+  assert.ok(blankKeys(plan).has('article-21.r1l') && blankKeys(plan).has('article-22.r2v'))
   // The lead line above the rows is no row: it holds no fact, so it is emptied as before.
   assert.ok(blankKeys(plan).has('article-21.1'))
   // Never a timetable, a duration, a price or a person kept off the site.
@@ -264,6 +260,8 @@ test('rows beyond the facts are emptied, and a brief with nothing that fits empt
   one.contact = {}
   one.facts = []
   one.business.phone = null
+  // One audience for every card: the shared one.
+  one.reading.audience = one.reading.audience.slice(0, 1)
   const partial = planSite(one, served, { contentMap: swimMap() })
   assert.deepEqual(rowsOf(partial, 21, 1), [['LEVEL', 'All ages and levels']])
   assert.ok(blankKeys(partial).has('article-21.r1l') && blankKeys(partial).has('article-21.r2v'))

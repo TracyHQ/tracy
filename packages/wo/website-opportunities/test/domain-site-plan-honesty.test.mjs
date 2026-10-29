@@ -294,12 +294,14 @@ test('one card per real offering: extra class articles are hidden, kept ones tak
 })
 
 test('#189 a card falls back to the quote about its own offering, never one that speaks for several', () => {
-  // Racquet club: "Tennis & Padel" names two offerings, so the Tennis and Padel cards take their own labels.
+  // Racquet club: "Tennis & Padel" names two offerings, and a line holding only a card's own name says nothing (COO rule,
+  // #189 round 9): the Tennis and Padel lines have no fallback and are taken off unless the writer gives them words.
   const h = plan(clubBrief(), combatMap())
-  assert.equal(h.fallbacks['article-70.1'].value, 'Tennis')
-  assert.equal(h.fallbacks['article-71.1'].value, 'Padel')
+  assert.equal('article-70.1' in h.fallbacks, false)
+  assert.equal('article-71.1' in h.fallbacks, false)
+  assert.ok(h.nameOnly.includes('article-70.1') && h.nameOnly.includes('article-71.1'))
   assert.equal(h.fallbacks['article-73.1'].value, 'Personal fitness lessons')
-  // Dental clinic: the Cleaning card's quote also names Check-ups, so the card takes its own label.
+  // Dental clinic: the Cleaning card's quote also names Check-ups, and its own label alone would only repeat the name.
   const brief = clinicBrief()
   brief.reading.services[1].quote = 'Check-ups and Cleaning for the whole family'
   const map = dentalMap()
@@ -311,7 +313,7 @@ test('#189 a card falls back to the quote about its own offering, never one that
   const c = plan(brief, map)
   assert.deepEqual(
     Object.values(c.fallbacks).map((f) => f.value),
-    ['Cleaning']
+    []
   )
 })
 
@@ -373,7 +375,9 @@ test('the last look with the plan: plan values win, hidden cards take nothing, d
   assert.equal(out.values['module-50.team.title.0'], 'Anouk')
   assert.equal(out.evidence['module-50.team.title.0'], 'Anouk')
   assert.ok(out.drop.includes('module-50.team.title.3'), 'a hidden card is not written')
-  assert.equal(out.values['article-71.1'], 'Padel')
+  // The filler gives way to nothing: the card's line has no words beyond its name, so the engine takes it off.
+  assert.equal('article-71.1' in out.values, false)
+  assert.ok(h.nameOnly.includes('article-71.1'))
   assert.equal(
     out.values['module-95.0'],
     'Contact',

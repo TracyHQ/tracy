@@ -20,6 +20,7 @@ import { contentMapOfTemplate } from './brief-build-path.js'
 import { ownStylesheets, MAX_STYLES } from '../lib/own-stylesheets.js'
 import { checkPageIntros } from './page-intro-check.js'
 import { checkOfferingSummaries } from './offering-summary-check.js'
+import { checkOfferingRows } from './offering-rows-check.js'
 import { checkReviewQuotes } from './review-quotes-check.js'
 import { checkContactForms } from './contact-form-check.js'
 import { checkContactPage } from './contact-page-check.js'
@@ -165,6 +166,9 @@ export async function runLeftoverCheck({
   const offeringSummaries = checkOfferingSummaries({ pages, brief })
   const reviewQuotes = checkReviewQuotes({ pages, brief })
   report.findings.push(...reviewQuotes)
+  // No line under an offering's name only repeats it, and one list's cards share one set of row labels (#189 round 9).
+  const offeringRows = checkOfferingRows({ pages, brief })
+  report.findings.push(...offeringRows)
   // No visible message form without an email of the owner's, judged on the served pages (COO decision, #189 item 19).
   const contactForms = checkContactForms({ pages, brief })
   report.findings.push(...contactForms.findings)
@@ -222,6 +226,7 @@ export async function runLeftoverCheck({
     contactMissing,
     heroMissing,
     offeringSummaries,
+    offeringRows,
     reviewQuotes,
     recordSlots,
     repeatedCopy,
@@ -240,6 +245,7 @@ export async function runLeftoverCheck({
       broken.length === 0 &&
       unread.length === 0 &&
       offeringSummaries.length === 0 &&
+      offeringRows.length === 0 &&
       reviewQuotes.length === 0 &&
       contactForms.findings.length === 0 &&
       contactPage.length === 0 &&

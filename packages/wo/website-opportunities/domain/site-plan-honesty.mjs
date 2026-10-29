@@ -12,7 +12,8 @@
 import { collectionOfGroupId } from './content-map-repeatable-lists.mjs'
 import { namedIn } from './pictures/picture-links.mjs'
 import { planStatBoxes } from './stat-box-plan.mjs'
-import { factRowFacts, planFactRows } from './fact-rows.mjs'
+import { factListsOf, factRowFacts, planCollectionFactRows } from './fact-rows.mjs'
+import { offeringDescriptionOf, ownPostLinesOf } from './offering-description.mjs'
 import { roleInCasingOf, showablePeopleOf } from './brief-people.mjs'
 import { planFormBlocks } from './form-blocks.mjs'
 import { planReviewGroup, sourcedReviewsOf } from './review-quotes.mjs'
@@ -25,6 +26,9 @@ export const HONESTY_REASONS = Object.freeze({
   'brief-person': 'a person the brief names',
   'brief-offering': 'an offering the brief lists',
   'brief-offering-quote': 'the business’s own words about this offering',
+  'brief-offering-mention': 'a line of the business’s own post or page about this offering',
+  'offering-name-only':
+    'the brief holds no words about this offering beyond its name: the copy writer writes one line about it, else it is taken off',
   'brief-owner': 'the owner the brief names',
   'brief-review': 'one whole sourced guest review with its real author and platform',
   'no-fitting-review': 'no whole attributed review fits this quote card',
@@ -103,9 +107,20 @@ export function peopleOfBrief(brief) {
 
 /** The brief's offerings the site may show, in the brief's order, each with its own words. */
 export function offeringsOfBrief(brief) {
-  return (brief?.reading?.services ?? [])
-    .filter((s) => text(s?.id) && text(s?.label) && onSite(brief, s))
-    .map((s) => ({ id: s.id, label: text(s.label), quote: text(s.quote) || null }))
+  const shown = (brief?.reading?.services ?? []).filter(
+    (s) => text(s?.id) && text(s?.label) && onSite(brief, s)
+  )
+  return shown.map((s) => ({
+    id: s.id,
+    label: text(s.label),
+    quote: text(s.quote) || null,
+    // The lines quoted under it, with the kind of their source: a description may lean on the business's own posts.
+    mentions: (Array.isArray(s.mentions) ? s.mentions : [])
+      .filter((m) => text(m?.quote))
+      .map((m) => ({ quote: text(m.quote), kind: m?.source?.kind ?? null }))
+      // Then the lines of the business's own posts about it: the post it was read from, or one naming only it.
+      .concat(ownPostLinesOf(brief, s, shown).map((quote) => ({ quote, kind: 'post' })))
+  }))
 }
 
 const folded = (value) =>
@@ -227,6 +242,11 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
   const values = {}
   const blanks = []
   const fallbacks = {}
+  /**
+   * The description and summary slots of kept offering cards the brief has no words for beyond the offering's name: the copy
+   * writer must write them (one line about that offering), and only what it leaves unusable is taken off.
+   */
+  const nameOnly = []
   /** The brief label each kept offering or person card shows, by group id: `planFill`'s `cardNames`. */
   const cardNames = {}
   // The rows of a card's fact list show the brief's sourced facts, one label set per list (`fact-rows.mjs`).
@@ -310,6 +330,8 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
     // hold names none, and is hidden; a priced card of an offering the brief lists stays, without the demo price.
     const priced = ordered.some((g) => g.slots.some((s) => PRICE_ROLES.has(s.role)))
     const taken = new Set()
+    /** The kept offering cards of this collection: their fact rows are planned together, one label set (`fact-rows.mjs`). */
+    const rowCards = []
     const pricedOffering = (group) => {
       const sample = group.slots.find((s) => s.role === 'offering.name')?.sample
       const hit = sample
@@ -384,8 +406,16 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
         assigned: { id: assigned.id, label: assigned.label }
       })
       cardNames[group.id] = assigned.label
-      const rows = group.kind === 'person' ? null : planFactRows(group, assigned, rowFacts)
-      const rowBlanks = new Set((rows?.blanks ?? []).map((s) => s.key))
+      // The card's fact rows are planned with the collection's other kept cards, after this loop.
+      const rowKeys = new Set()
+      /** The fallback lines this card already gives: no sentence twice on one card or its page. */
+      const described = new Set()
+      if (group.kind !== 'person') {
+        rowCards.push({ group, assigned })
+        for (const { rows } of factListsOf(group))
+          for (const row of rows)
+            for (const cell of [row.label, row.value, ...row.rest]) if (cell) rowKeys.add(cell.key)
+      }
       // A person card with no role field shows the sourced role on its first free line of words (the line under the name).
       const roleLine =
         group.kind === 'person' && assigned.role && !group.slots.some((s) => s.role === 'person.role')
@@ -398,14 +428,7 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
           : null
       for (const slot of group.slots) {
         const role = slot.role ?? ''
-        if (rows && slot.key in rows.values) {
-          setValue(slot, rows.values[slot.key], 'brief-fact-row')
-          continue
-        }
-        if (rowBlanks.has(slot.key)) {
-          blanks.push(blankOf(slot, 'no-brief-fact'))
-          continue
-        }
+        if (rowKeys.has(slot.key)) continue
         if (role === 'person.name') setValue(slot, assigned.label, 'brief-person')
         else if (role === 'person.role')
           assigned.role
@@ -427,16 +450,31 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
             values[slot.key] = { value: shortName, reason: 'brief-offering-short', evidence: assigned.label }
         } else if (role === 'offering.name') setValue(slot, assigned.label, 'brief-offering')
         else if (OFFERING_FACTS.has(role)) blanks.push(blankOf(slot, 'no-brief-fact'))
+        // 🔒 A DESCRIPTION SAYS MORE THAN THE NAME (COO rule, #189 round 9, `offering-description.mjs`): the fallback is the
+        // business's own words about this offering, never its name again; with none, the copy writer must write it
+        // (`nameOnly`), and only a line it leaves unusable is taken off.
         else if (role === 'offering.description' || role === 'offering.summary') {
-          const own = ownQuote(assigned, offerings)
-          if (own && fits(slot, own.value)) fallbacks[slot.key] = own
-          else if (role === 'offering.summary' && fits(slot, assigned.label))
-            fallbacks[slot.key] = { value: assigned.label, reason: 'brief-offering-label' }
+          const own = offeringDescriptionOf(assigned, offerings, {
+            fits: (value) => fits(slot, value),
+            names: shortName ? [shortName] : [],
+            taken: described
+          })
+          if (own) {
+            fallbacks[slot.key] = own
+            described.add(own.value)
+          } else if (slot.type === 'text') nameOnly.push(slot.key)
         } else if (CONTACT_KIND[role]) {
           const fact = contact?.[CONTACT_KIND[role]]?.value
           fact ? setValue(slot, fact, 'brief-offering') : blanks.push(blankOf(slot, 'no-brief-fact'))
         }
       }
+    })
+    const planned = planCollectionFactRows(rowCards, rowFacts)
+    rowCards.forEach(({ group }, c) => {
+      const byKey = new Map(group.slots.map((s) => [s.key, s]))
+      for (const [key, value] of Object.entries(planned[c].values))
+        setValue(byKey.get(key), value, 'brief-fact-row')
+      for (const slot of planned[c].blanks) blanks.push(blankOf(slot, 'no-brief-fact'))
     })
   }
   // 🔒 A KEPT PERSON'S OWN RECORD SHOWS NO DEMO SOCIAL LINK: the brief holds no social profile of a person, and a template
@@ -473,6 +511,7 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
       values,
       blanks,
       fallbacks,
+      nameOnly,
       cardNames,
       offerings,
       // The keys of the blocks taken off whole: no step writes them.

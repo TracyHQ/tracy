@@ -72,6 +72,8 @@ import { writeWoContent } from './joomla-wo-content.js'
 import { heroSlotValues } from './hero-lines.js'
 import { buttonActionValues } from './button-action-values.js'
 import { offeringSummaryValues } from './offering-summaries.js'
+import { nameOnlyOfferingLines } from './offering-name-only.js'
+import { writeOfferingDescriptions } from './offering-description-writer.js'
 import { ctaBandValues } from './cta-band-messages.js'
 import { decorationLeftAlone } from 'website-opportunities/domain/layout-bands.mjs'
 import {
@@ -1245,6 +1247,37 @@ export function createJoomlaEngine({
       })
       Object.assign(kept, offeringSummaries)
       demoBlanks = demoBlanks.filter((slot) => !(slot.key in offeringSummaries))
+      // 🔒 EVERY KEPT OFFERING CARD DESCRIBES ITS OFFERING (COO rule, #189 round 9, `offering-description-writer.js`): a line
+      // the brief has no words for beyond the name, left unwritten or only naming it, is written once more by the text
+      // model from the trade (editorial words only), and kept through the cleanup like a summary.
+      const describedLines = await writeOfferingDescriptions({
+        slots: state.slots.filter((slot) => !isDerived(slot) && shown(slot)),
+        honesty,
+        written: kept,
+        about: {
+          business: String(ctx.normalized.name ?? ''),
+          description: String(sitePlan?.brand?.description?.value ?? ''),
+          sourceText: [facts.text, ...Object.values(honesty?.values ?? {}).map((v) => String(v.value))].join(
+            ' '
+          )
+        },
+        model: text,
+        locale: written,
+        signal: ctx.signal
+      })
+      Object.assign(kept, describedLines)
+      Object.assign(offeringSummaries, describedLines)
+      demoBlanks = demoBlanks.filter((slot) => !(slot.key in describedLines))
+      // 🔒 A LINE UNDER AN OFFERING'S NAME SAYS MORE THAN THE NAME (COO rule, #189 round 9, `offering-name-only.js`): one that
+      // would only repeat it, or one the writer still left unwritten, is emptied after the write, whoever wrote it.
+      for (const slot of nameOnlyOfferingLines({
+        slots: state.slots.filter((slot) => !isDerived(slot) && shown(slot)),
+        honesty,
+        written: kept
+      })) {
+        delete kept[slot.key]
+        if (!demoBlanks.some((b) => b.key === slot.key)) demoBlanks.push(slot)
+      }
 
       // 🔒 A MODULE THAT STATES ONLY ANOTHER COMPANY'S FACTS COMES OFF THE PAGE. Seven modules of `tracy-business/j6` are nothing
       // but facts the contract asks evidence for — the team and their titles, the certificates, the clients, three strips of

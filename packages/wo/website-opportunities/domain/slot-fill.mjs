@@ -9,6 +9,7 @@ import { hoursLine, shownPrice } from './pinned-copy.mjs'
 import { numberIn } from './number-in-locale.mjs'
 import { assessProfile } from './fact-assessment.mjs'
 import { defaultOfferingKind, statedTradeOf } from './trades.mjs'
+import { onlyNamesOffering } from './offering-description.mjs'
 
 export const SLOT_FILL_VERSION = 'slot-fill/1'
 
@@ -327,8 +328,9 @@ export function planSlotFill({ slotRoles, profile, assessment, locale = 'en', ne
       case 'package': {
         if (!entity) return null
         if (field === 'name') return one(v.name)
-        if (role === 'offering.summary') return one(text(v.description) || v.name)
-        if (field === 'description' || field === 'summary') return one(v.description)
+        // A description or summary that would only repeat the offering's name is no value (`offering-description.mjs`).
+        if (field === 'description' || field === 'summary')
+          return onlyNamesOffering(v.description, [v.name]) ? null : one(v.description)
         if (field === 'category') return one(v.section)
         if (field === 'price') return one(priceOf(entity, locale))
         if (field === 'price_note')

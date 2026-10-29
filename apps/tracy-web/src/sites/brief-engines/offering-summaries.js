@@ -2,6 +2,7 @@
 import { isDemoLeft } from 'website-opportunities/domain/demo-left-text.mjs'
 import { wordsOf } from 'website-opportunities/domain/honest-written.mjs'
 import { offeringCrossTalk } from 'website-opportunities/domain/offering-cross-talk.mjs'
+import { onlyNamesOffering } from 'website-opportunities/domain/offering-description.mjs'
 import { translateKit } from './joomla-kit.js'
 import { parseFragment } from 'parse5'
 
@@ -45,15 +46,24 @@ export async function offeringSummaryValues({
       typeof v === 'string' &&
       visibleWords(v).length > 0 &&
       (!Number.isInteger(slot.maxCharacters) || [...v].length <= slot.maxCharacters)
+    // A line that only repeats the offering's name is no summary (COO rule, #189 round 9): it is replaced or taken off.
+    const nameOnly = onlyNamesOffering(textOf(parseFragment(String(current ?? ''))), [
+      honesty.cardNames[slot.group.id],
+      ...cardNameValues(slots, slot, written)
+    ])
     if (
       fits(current) &&
       !echoed &&
+      !nameOnly &&
       !crossed.has(slot.key) &&
       !isDemoLeft(slot, current, ownWords, new Set(), { cardNames: honesty.cardNames })
     ) {
       values[slot.key] = current
       continue
     }
+    // The plan found no words about this offering beyond its name: the summary is taken off after the write
+    // (`offering-name-only.js`), never filled with the name.
+    if (!fits(fallback) && (honesty.nameOnly ?? []).includes(slot.key)) continue
     if (!fits(fallback))
       throw Object.assign(new Error(`A kept offering has no sourced summary that fits: ${slot.key}`), {
         code: 'OFFERING_SUMMARY_REQUIRED'
@@ -81,4 +91,12 @@ export async function offeringSummaryValues({
     }
   }
   return values
+}
+
+/** The names the card of `slot` shows as written (a shorter form of the brief label), for the name-only test. */
+function cardNameValues(slots, slot, written) {
+  return slots
+    .filter((s) => s.role === 'offering.name' && s.group?.id === slot.group?.id)
+    .map((s) => written[s.key])
+    .filter((v) => typeof v === 'string')
 }

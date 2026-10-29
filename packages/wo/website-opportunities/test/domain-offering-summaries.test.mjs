@@ -61,7 +61,7 @@ test('an empty copy pin cannot overwrite an offering summary after the writer an
 })
 
 for (const trade of trades) {
-  test(`${trade.label}: every CMS summary pin uses its own offering description or sourced name`, () => {
+  test(`${trade.label}: every CMS summary pin uses its own offering description, never the name again`, () => {
     for (const description of [trade.quote, '']) {
       const plan = planSlotFill({
         slotRoles: {
@@ -86,7 +86,8 @@ for (const trade of trades) {
         assessment: [{ factId: 'offer-1', status: 'accepted' }],
         neutralFor
       })
-      assert.equal(plan.writes.find((w) => w.slotKey === 'summary').value, description || trade.label)
+      // A summary that would only repeat the name is no value (COO rule, #189 round 9).
+      assert.equal(plan.writes.find((w) => w.slotKey === 'summary').value, description)
     }
   })
   test(`${trade.label}: a kept card recovers an empty writer summary from its own sourced material`, () => {

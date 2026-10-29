@@ -277,38 +277,68 @@ export function factRowFacts(brief, offerings, contact = {}, { locale = 'en' } =
 
 /**
  * The words of one card's fact lists: each row takes the next fact of the list's order that fits its slots, under a label
- * that names it; the rows beyond the facts are emptied.
- * @param {{slots: any[]}} group - a kept card
+ * that names it; the rows beyond the facts are emptied. One card alone: `planCollectionFactRows` of that card.
+ * @param {{id?: string, slots: any[]}} group - a kept card
  * @param {{id: string}} assigned - the brief offering the card shows
  * @param {ReturnType<typeof factRowFacts>} facts
  * @returns {{values: Record<string, string>, blanks: any[]}}
  */
 export function planFactRows(group, assigned, facts) {
-  const values = {}
-  const blanks = []
-  const mine = facts.own?.[assigned?.id] ?? {}
-  const list = facts.order.map((kind) => mine[kind] ?? facts.shared[kind]).filter(Boolean)
-  for (const { rows } of factListsOf(group)) {
-    let next = 0
-    for (const row of rows) {
-      let placed = false
-      while (!placed && next < list.length) {
-        const fact = list[next++]
-        if (row.label) {
-          const label = cased(row.label, fact.label)
-          const value = cased(row.value, fact.value)
-          if (!fits(row.label, label) || !fits(row.value, value)) continue
-          values[row.label.key] = label
-          values[row.value.key] = value
-        } else {
-          const line = `${fact.label}: ${fact.value}`
-          if (!fits(row.value, line)) continue
-          values[row.value.key] = cased(row.value, line)
-        }
-        placed = true
-      }
-      for (const slot of placed ? row.rest : [row.label, row.value, ...row.rest]) if (slot) blanks.push(slot)
-    }
+  return planCollectionFactRows([{ group, assigned }], facts)[0]
+}
+
+/** The words a row shows for a fact, by slot key, or null when the fact does not fit the row. */
+function rowWords(row, fact) {
+  if (row.label) {
+    const label = cased(row.label, fact.label)
+    const value = cased(row.value, fact.value)
+    if (!fits(row.label, label) || !fits(row.value, value)) return null
+    return { [row.label.key]: label, [row.value.key]: value }
   }
-  return { values, blanks }
+  const line = `${fact.label}: ${fact.value}`
+  return fits(row.value, line) ? { [row.value.key]: cased(row.value, line) } : null
+}
+
+/**
+ * 🔒 THE CARDS OF ONE LIST SHARE ONE SET OF ROW LABELS (COO rule, #189 round 9): row n of every kept card of a collection
+ * shows the same kind under the same label, each card with its own value; a kind some card has no value for, no room for,
+ * or a different label for is shown on none of them, and a list keeps only as many rows as its shortest card holds. A
+ * visitor never compares a card that says "Level / Where" with one that says "Level" and one with no row at all.
+ * @param {Array<{group: {slots: any[]}, assigned: {id: string}}>} cards - the kept cards of one collection, in order
+ * @param {ReturnType<typeof factRowFacts>} facts
+ * @returns {Array<{values: Record<string, string>, blanks: any[]}>} per card, in the order given
+ */
+export function planCollectionFactRows(cards, facts) {
+  const lists = cards.map(({ group }) => factListsOf(group))
+  const factOf = (card, kind) => facts.own?.[card.assigned?.id]?.[kind] ?? facts.shared?.[kind] ?? null
+  const shared = cards.length ? Math.min(...lists.map((l) => l.length)) : 0
+  /** Per list position, the kinds its rows show, in row order. */
+  const kinds = []
+  for (let j = 0; j < shared; j += 1) {
+    const room = Math.min(...lists.map((l) => l[j].rows.length))
+    const chosen = []
+    let next = 0
+    while (chosen.length < room && next < facts.order.length) {
+      const kind = facts.order[next++]
+      const per = cards.map((card) => factOf(card, kind))
+      if (per.some((f) => !f) || new Set(per.map((f) => f.label)).size !== 1) continue
+      const i = chosen.length
+      if (per.every((fact, c) => rowWords(lists[c][j].rows[i], fact))) chosen.push(kind)
+    }
+    kinds.push(chosen)
+  }
+  return cards.map((card, c) => {
+    const values = {}
+    const blanks = []
+    lists[c].forEach(({ rows }, j) =>
+      rows.forEach((row, i) => {
+        const kind = kinds[j]?.[i]
+        const words = kind ? rowWords(row, factOf(card, kind)) : null
+        if (words) Object.assign(values, words)
+        const cells = words ? row.rest : [row.label, row.value, ...row.rest]
+        for (const slot of cells) if (slot) blanks.push(slot)
+      })
+    )
+    return { values, blanks }
+  })
 }
