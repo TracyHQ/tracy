@@ -71,11 +71,22 @@ def _quoted(data: bytes, at: int, length: int) -> tuple[bytes, int]:
     return data[at + 1:at + 1 + length], at + 2 + length
 
 
-def _walk(data: bytes, at: int, old: bytes, new: bytes, depth: int) -> tuple[bytes, int]:
+def _walk(data: bytes, at: int, old: bytes, new: bytes, depth: int, visit=None, path=()) -> tuple[bytes, int]:
     """One serialized value at `at`, rewritten: (its new bytes, the index past the old ones)."""
     if depth > _MAX_DEPTH or at >= len(data):
         raise _Unreadable(at)
     kind = data[at:at + 2]
+    entity = theme_mod_entity(path) if visit else None
+    if visit and kind in (b"r:", b"R:"):
+        raise _Unreadable("aliased theme value")
+    if entity and kind in (b"r:", b"R:", b"C:", b"O:"):
+        raise _Unreadable("aliased theme reference")
+    if visit and path in (("header_image_data",), ("nav_menu_locations",)) and kind == b"C:":
+        raise _Unreadable("opaque header reference")
+    if entity and kind == b"i:":
+        number, end = _int_until(data, at + 2, b";")
+        got = visit(entity, number) if number > 0 else number
+        return (data[at:end] if got == number else b"i:%d;" % got), end
     if data[at:at + 2] == b"N;":
         return b"N;", at + 2
     if kind in (b"b:", b"i:", b"r:", b"R:"):
@@ -94,8 +105,13 @@ def _walk(data: bytes, at: int, old: bytes, new: bytes, depth: int) -> tuple[byt
         inner, after = _quoted(data, at2, length)
         if data[after:after + 1] != b";":
             raise _Unreadable(after)
-        # A string inside may hold serialized PHP of its own (a plugin serializing twice).
-        rewritten = replace_value(inner, old, new, depth + 1)
+        if entity and _NUMBER.fullmatch(inner):
+            number = int(inner)
+            got = visit(entity, number) if number > 0 else number
+            rewritten = inner if got == number else str(got).encode("ascii")
+        else:
+            # A string inside may hold serialized PHP of its own (a plugin serializing twice).
+            rewritten = replace_value(inner, old, new, depth + 1)
         return b"s:%d:\"" % len(rewritten) + rewritten + b"\";", after + 1
     if kind == b"E:":
         length, at2 = _int_until(data, at + 2, b":")
@@ -105,14 +121,14 @@ def _walk(data: bytes, at: int, old: bytes, new: bytes, depth: int) -> tuple[byt
         return data[at:after + 1], after + 1
     if kind == b"a:":
         count, at2 = _int_until(data, at + 2, b":")
-        return _members(data, at, at2, count, old, new, depth)
+        return _members(data, at, at2, count, old, new, depth, visit, path)
     if kind == b"O:":
         length, at2 = _int_until(data, at + 2, b":")
         _, after = _quoted(data, at2, length)
         if data[after:after + 1] != b":":
             raise _Unreadable(after)
         count, at3 = _int_until(data, after + 1, b":")
-        return _members(data, at, at3, count, old, new, depth)
+        return _members(data, at, at3, count, old, new, depth, visit, path)
     if kind == b"C:":
         # A class serializing itself (`Serializable`): its payload is the class's own format, not
         # PHP's, and is carried as it is.
@@ -127,7 +143,7 @@ def _walk(data: bytes, at: int, old: bytes, new: bytes, depth: int) -> tuple[byt
     raise _Unreadable(at)
 
 
-def _members(data: bytes, start: int, at: int, count: int, old: bytes, new: bytes, depth: int):
+def _members(data: bytes, start: int, at: int, count: int, old: bytes, new: bytes, depth: int, visit=None, path=()):
     """An array's or an object's `{key value …}` from `at`, its keys kept and its values rewritten;
     the head (`a:2:` / `O:8:"stdClass":2:`) from `start` kept as it is."""
     if data[at:at + 1] != b"{":
@@ -139,7 +155,13 @@ def _members(data: bytes, start: int, at: int, count: int, old: bytes, new: byte
             raise _Unreadable(at)
         key_end = _walk_key(data, at)
         out.append(data[at:key_end])
-        value, at = _walk(data, key_end, old, new, depth + 1)
+        if data[at:at + 2] == b"s:":
+            length, key_at = _int_until(data, at + 2, b":")
+            key, _ = _quoted(data, key_at, length)
+            key = key.decode("utf-8", "surrogateescape")
+        else:
+            key, _ = _int_until(data, at + 2, b";")
+        value, at = _walk(data, key_end, old, new, depth + 1, visit, path + (key,))
         out.append(value)
     if data[at:at + 1] != b"}":
         raise _Unreadable(at)
@@ -570,6 +592,66 @@ MENU_OBJECT = ("meta_key = '_menu_item_object_id' AND post_id IN (SELECT m.post_
 # `term_relationships.object_id` names a post, or a link under `link_category`.
 TT_OF = "term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {{term_taxonomy}} tt WHERE tt.taxonomy {cmp} 'link_category')"
 
+def theme_mod_entity(path: tuple) -> str | None:
+    """Only WordPress's documented theme-mod reference paths name records."""
+    if len(path) == 1 and path[0] in ("custom_logo", "custom_css_post_id", "header_video"):
+        return "posts"
+    if len(path) == 2 and path[0] == "nav_menu_locations":
+        return "terms"
+    if path == ("header_image_data", "attachment_id"):
+        return "posts"
+    return None
+
+
+def visit_theme_mods(data: bytes, visit) -> bytes:
+    """Walk complete serialized theme mods, retaining all non-reference bytes and representations."""
+    try:
+        result, end = _walk(data, 0, b"", b"", 0, visit)
+        if end != len(data):
+            raise _Unreadable(end)
+        return result
+    except _Unreadable:
+        raise ValueError("WordPress theme references cannot be safely read or renumbered") from None
+
+
+class ThemeModReferences:
+    """Typed serialized references, used for both allocating IDs and moving them."""
+
+    def __init__(self, entity: str):
+        self.entity = entity
+
+    def rows(self, mapper, schema: str):
+        if not all(mapper.column_exists(schema, "options", c) for c in ("option_name", "option_value")):
+            return []
+        return [(bytes.fromhex(name), bytes.fromhex(value)) for name, value in mapper.sql.run(
+            f"SELECT HEX(option_name), HEX(option_value) FROM {q(schema)}.{q(mapper.table('options'))}"
+            " WHERE option_name LIKE 'theme\\_mods\\_%' AND option_value IS NOT NULL;")]
+
+    def read(self, mapper, schema: str) -> set[int]:
+        found = set()
+
+        def collect(entity, number):
+            if entity == self.entity:
+                found.add(number)
+            return number
+
+        for _, data in self.rows(mapper, schema):
+            visit_theme_mods(data, collect)
+        return found
+
+    def rewrite(self, mapper, schema: str, pairs: list[tuple[int, int]]) -> None:
+        mapping = dict(pairs)
+        updates = []
+        for name, data in self.rows(mapper, schema):
+            result = visit_theme_mods(data, lambda entity, number:
+                                      mapping.get(number, number) if entity == self.entity else number)
+            if result != data:
+                updates.append(f"UPDATE {q(schema)}.{q(mapper.table('options'))}"
+                               f" SET option_value = X'{result.hex()}' WHERE BINARY option_name = X'{name.hex()}';")
+        if updates:
+            mapper.sql.run("\n".join(updates))
+
+
 POLICY = {
     "tracyTables": re.compile(r"^claude_cowork_"),
     "tracyRows": {
@@ -618,7 +700,7 @@ POLICY = {
         ("users", {"key": "ID",
                    "refs": [("usermeta", "user_id", None), ("posts", "post_author", None),
                             ("comments", "user_id", None), ("links", "link_owner", None)]}),
-        ("posts", {"key": "ID",
+        ("posts", {"key": "ID", "typedRefs": ThemeModReferences("posts"),
                    "refs": [("posts", "post_parent", None), ("postmeta", "post_id", None),
                             ("comments", "comment_post_ID", None),
                             ("term_relationships", "object_id", TT_OF.format(cmp="<>")),
@@ -635,7 +717,7 @@ POLICY = {
                              ("posts", "post_content", "wp-image-{id}"),
                              ("posts", "post_content", '{{"id":{id}'),
                              ("posts", "post_content", '{{"ref":{id}')]}),
-        ("terms", {"key": "term_id",
+        ("terms", {"key": "term_id", "typedRefs": ThemeModReferences("terms"),
                    "refs": [("term_taxonomy", "term_id", None), ("term_taxonomy", "parent", None),
                             ("termmeta", "term_id", None),
                             ("postmeta", "meta_value", MENU_OBJECT.format(kind="taxonomy")),
