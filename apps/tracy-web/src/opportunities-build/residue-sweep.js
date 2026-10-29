@@ -68,8 +68,13 @@ const EXPECT_MAX = 40
  * `replace.mjs`).
  */
 const CONFIRM_OVER = 5
-/** How many calls one sweep sends: the check after it finds what is left. */
-export const SWEEP_MAX_CALLS = 120
+/**
+ * How many calls one sweep sends: the check after it finds what is left. 🔒 240, NOT 120 (local measure 29/10/2026):
+ * every round ends in a read of the whole site, and JA Restaurant on WordPress (48 pages, four of them showcase copies
+ * of the home page) needed ~830 calls — six rounds of 120 reached `SWEEP_ROUNDS_MAX` with words left, and a counted
+ * check ran on them.
+ */
+export const SWEEP_MAX_CALLS = 240
 /** How many characters of a text the page read keeps (`TEXT_MAX` in tracy-host `demo-residue-page.js`). */
 const READ_LIMIT = 2000
 /** The longest words one replace looks for (`REPLACE_FIND_MAX` in `tracy-site-tools` `replace.mjs`). */

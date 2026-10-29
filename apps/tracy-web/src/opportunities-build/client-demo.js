@@ -171,9 +171,9 @@ const checkedPlan = (agentDemo) => ({ ...agentDemo.plan, structure: agentDemo.st
  * texts: the cap, not a refusal, was what stopped it. So a round is followed by another as long as the check after it
  * plans fewer calls than the check before it (`planSweep` `left`): a round that clears nothing would plan the same
  * calls again, and stops. The bound keeps one check, which runs inside the agent's turn (each round is a whole-site
- * read, minutes), from running on without end when every round clears a little: 6 rounds of 120 calls clear more than
- * a template site shows (the rig planned ~260), so reaching it means the sweep is not converging, and it is reported
- * unresolved with what is left, never passed over.
+ * read, minutes), from running on without end when every round clears a little: 6 rounds of SWEEP_MAX_CALLS clear more
+ * than a template site shows (the rig planned ~260, JA Restaurant on WordPress ~830 on 29/10/2026), so reaching it
+ * means the sweep is not converging, and it is reported unresolved with what is left, never passed over.
  */
 export const SWEEP_ROUNDS_MAX = 6
 
