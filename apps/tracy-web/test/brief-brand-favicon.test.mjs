@@ -1,7 +1,8 @@
 /**
  * A brief build's browser-tab icon is made from the business's own mark (spec TracyHQ/tracy#189, COO name rule 3): the
- * picture of its logo with the words cut away, on the logo's own tile colour; else the symbol drawn for it; an upload
- * always wins, and a plain build keeps the template's icon. Every business here is fictional.
+ * PUNCHED mark (transparent only outside its outer outline, the inside filled with the logo's ground colour, the drawing
+ * flattened and cleaned), else the symbol drawn for it; an upload always wins, and a plain build keeps the template's
+ * icon. Every business here is fictional.
  */
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
@@ -16,10 +17,27 @@ const letters = (y) =>
     (_, i) => `<rect x="${120 + i * 52}" y="${y}" width="34" height="44" fill="#e8c46a"/>`
   ).join('')
 
-/** A dental clinic's crest exported as a social avatar: a gold shield on a navy tile, a line of letters below it. */
+/** The mesh of thin lines inside the crest's top half: AI-like fine detail no favicon can show. */
+const mesh = Array.from(
+  { length: 12 },
+  (_, i) =>
+    `<line x1="${230 + i * 12}" y1="90" x2="${230 + i * 12}" y2="200" stroke="#e8c46a" stroke-width="2"/>`
+).join('')
+/** A dental clinic's crest exported as a social avatar: a gold shield outline on a navy tile, a fine mesh and a solid
+ * tooth inside, a line of letters below it. */
 const crestAvatar = () =>
   svgPng(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600"><rect width="600" height="600" fill="#14213d"/><path d="M200 60 H400 V250 C400 330 300 380 300 380 C300 380 200 330 200 250 Z" fill="#e8c46a"/>${letters(440)}</svg>`
+    `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600"><rect width="600" height="600" fill="#14213d"/><path d="M200 60 H400 V250 C400 330 300 380 300 380 C300 380 200 330 200 250 Z" fill="none" stroke="#e8c46a" stroke-width="14"/>${mesh}<circle cx="300" cy="275" r="40" fill="#e8c46a"/>${letters(440)}</svg>`
+  )
+/** A bakery's round badge on transparency: a brown disc with a cream ring and a cream dot. */
+const roundBadge = () =>
+  svgPng(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600"><circle cx="300" cy="300" r="260" fill="#5a3418"/><circle cx="300" cy="300" r="190" fill="none" stroke="#f2d9a6" stroke-width="26"/><circle cx="300" cy="300" r="80" fill="#f2d9a6"/></svg>`
+  )
+/** A florist's line mark with no ground colour: one dark green ring on transparency, nothing inside. */
+const lineRing = () =>
+  svgPng(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512"><circle cx="256" cy="256" r="200" fill="none" stroke="#1f4d2b" stroke-width="30"/></svg>`
   )
 /** A bakery's wide wordmark: letters only, nothing to make an icon of. */
 const wordmark = () =>
@@ -38,35 +56,65 @@ const pixel = async (png, x, y) => {
   return { r: data[i], g: data[i + 1], b: data[i + 2], a: data[i + 3] }
 }
 
-/** A clinic's flat mark in a mid red that reads on both a light and a dark tab bar, on transparency. */
-const midMark = () =>
-  svgPng(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512"><circle cx="256" cy="256" r="200" fill="#e8463a"/></svg>`
-  )
+/** The opaque colours of an icon (alpha 255), and the width of its alpha edge along the middle row. */
+async function measure(png) {
+  const { data, info } = await sharp(png).ensureAlpha().raw().toBuffer({ resolveWithObject: true })
+  const colours = new Set()
+  for (let o = 0; o < data.length; o += 4)
+    if (data[o + 3] === 255) colours.add(`${data[o]},${data[o + 1]},${data[o + 2]}`)
+  const y = Math.floor(info.height / 2)
+  let soft = 0
+  for (let x = 0; x < info.width; x += 1) {
+    const a = data[(y * info.width + x) * 4 + 3]
+    if (a > 0 && a < 255) soft += 1
+  }
+  return { colours, softPerSide: soft / 2 }
+}
 
-test('a crest avatar gives its picture alone, cut out on transparency, in a variant that reads on the light tab bar', async () => {
+test('a crest: punched (transparent outside, filled inside on its tile colour), flat colours, crisp edge, mesh gone', async () => {
   const icon = await faviconMark(await crestAvatar())
   assert.ok(icon)
   const meta = await sharp(icon.png).metadata()
   assert.deepEqual([meta.width, meta.height], [512, 512])
-  assert.match(icon.how, /words left out/)
-  // 🔒 No tile: the corners are transparent.
+  assert.match(icon.how, /punched mark, its words left out, on the logo's own ground colour/)
+  // 🔒 Transparent outside the outline only: the corners are clear, the inside is the navy ground, never hollow.
   assert.equal((await pixel(icon.png, 2, 2)).a, 0)
-  assert.equal(icon.reads.light, true, icon.how)
-  // The letters are gone: the bottom band of the icon holds no ink.
+  const inside = await pixel(icon.png, 256, 240)
+  assert.ok(inside.a === 255 && inside.b > inside.r, JSON.stringify(inside))
+  const { colours, softPerSide } = await measure(icon.png)
+  assert.ok(colours.size <= 4, `flat palette, got ${colours.size} colours`)
+  assert.ok(softPerSide <= 1.5, `crisp edge, got ${softPerSide} px`)
+  // The fine mesh leaves: the mesh area is all ground.
+  for (const x of [240, 252, 264, 276])
+    assert.ok((await pixel(icon.png, x, 150)).b > (await pixel(icon.png, x, 150)).r, `mesh gone at ${x}`)
+  // The letters are gone: the bottom band of the icon is clear.
   assert.equal((await pixel(icon.png, 256, 505)).a, 0)
 })
 
-test('a mark that reads on both tab bars is used as cut; one that reads on one bar only takes the light-bar variant', async () => {
-  const both = await faviconMark(await midMark())
-  assert.equal(both.variant, 'mark', both.how)
-  assert.deepEqual(both.reads, { light: true, dark: true })
-  const dark = await faviconMark(await drawnSymbol())
-  assert.equal(dark.reads.light, true, dark.how)
-  assert.match(dark.how, /light tab bar only|both tab bars/)
+test('small sizes keep the outline the crest draws around itself, at least one pixel wide', async () => {
+  const icon = await faviconMark(await crestAvatar())
+  const at16 = await icon.at(16)
+  const gold = (p) => p.a > 128 && p.r > 150 && p.g > 120
+  let rim = 0
+  for (let x = 0; x < 16; x += 1) if (gold(await pixel(at16, x, 6))) rim += 1
+  assert.ok(rim >= 2, `the gold outline shows on both sides at 16 px, got ${rim} pixels`)
 })
 
-test('the icon files: transparent ICO of 16, 32 and 48 px and 192/512 PNGs; the 180 px apple icon alone is opaque', async () => {
+test('a round badge and a line mark with no ground colour are punched too, never on a square', async () => {
+  const badge = await faviconMark(await roundBadge())
+  assert.equal((await pixel(badge.png, 3, 3)).a, 0)
+  assert.equal((await pixel(badge.png, 256, 256)).a, 255)
+  assert.ok((await measure(badge.png)).colours.size <= 4)
+  const ring = await faviconMark(await lineRing())
+  assert.match(ring.how, /the colour that stands out most from it/)
+  // The ring's inside is filled (no hole), with the colour that stands out from the green ring.
+  const centre = await pixel(ring.png, 256, 256)
+  assert.equal(centre.a, 255)
+  assert.ok(centre.r > 200 && centre.g > 200, JSON.stringify(centre))
+  assert.equal((await pixel(ring.png, 3, 3)).a, 0)
+})
+
+test('the icon files: punched ICO of 16, 32 and 48 px and 192/512 PNGs; the 180 px apple icon alone is opaque', async () => {
   const icon = await faviconMark(await crestAvatar())
   const set = await faviconSet(icon)
   assert.equal(set.ico.readUInt16LE(2), 1)
@@ -79,7 +127,7 @@ test('the icon files: transparent ICO of 16, 32 and 48 px and 192/512 PNGs; the 
   assert.equal((await sharp(set.png512).metadata()).width, 512)
   const apple = await sharp(set.apple).metadata()
   assert.deepEqual([apple.width, apple.height], [180, 180])
-  // The apple icon's ground is the logo's own tile colour (navy), opaque.
+  // 🔒 Platform rule: the apple icon is opaque, on the same navy ground.
   const corner = await pixel(set.apple, 1, 1)
   assert.ok(corner.a === 255 && corner.b > corner.r, JSON.stringify(corner))
 })
