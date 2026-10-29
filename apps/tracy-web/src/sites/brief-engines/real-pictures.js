@@ -25,6 +25,7 @@ import { DRAW_MS, sizeOf } from './pictures.js'
 import { picturePolicy } from '../../lib/wo-picture-policy.js'
 import { customizableSlots } from '../../lib/contract-customize.js'
 import { pool } from './shared.js'
+import { drawPlanned, shapeDecor } from './drawn-pictures.js'
 
 /** Pictures cut at once: each holds a decoded photograph in memory (C15). */
 const CUT_AT_ONCE = 4
@@ -38,12 +39,15 @@ const DRAW_AT_ONCE = 2
 /**
  * The build's pictures, or null when the site is not one an opportunity built (or they cannot be read).
  * @param {{forSite: Function} | null} realPictures
- * @param {{siteKey: string, email: string, note: (n: string) => void, time?: (phase: string, n: number) => void}} ctx
+ * @param {{siteKey: string, email: string, platform?: string, note: (n: string) => void,
+ *   time?: (phase: string, n: number) => void}} ctx
  */
 export async function realPicturesOf(realPictures, ctx) {
   if (!realPictures) return null
   const real = await realPictures.forSite({ siteKey: ctx.siteKey, email: ctx.email }).catch(() => null)
-  if (!real || real.pictures.length === 0) return null
+  if (!real) return null
+  // No photo: only a Joomla brief build goes on, so its plan writes colour blocks, icons and cleared cut-outs (#194).
+  if (real.pictures.length === 0 && !(real.briefBuild && ctx.platform === 'joomla')) return null
   // What the vision model cost this run (nothing when every label was already kept): for the report.
   if (real.vision?.calls) {
     ctx.time?.('visionCalls', real.vision.calls)
@@ -110,6 +114,10 @@ export function contentMapOf(contract) {
  *   card slot of an entity takes that entity's own picture, the place's space or the placeholder (`planPlacement`)
  * @param {{pins?: Record<string, string>, sources?: Record<string, string>} | null} [input.copy] - the text path's copy
  *   pins (`copyPinsOf`): the fill plan gives each offering card the photo of the offering its pinned name says
+ * @param {any[]} [input.declared] - the picture slots a profile only declares (`customize: "keep"`): the icons and
+ *   cut-outs that carry the demo's subject are read from them (#195)
+ * @param {Record<string, string> | null} [input.cardNames] - the site plan's label of each kept card, by group id
+ *   (`honesty.cardNames`, #192); when given it decides the cards' subjects instead of the copy pins
  */
 export async function shapeReal({
   real,
@@ -128,7 +136,9 @@ export async function shapeReal({
   signal,
   drawMs = DRAW_MS,
   bound = {},
-  copy = null
+  copy = null,
+  declared = [],
+  cardNames: plannedNames = null
 }) {
   const domain = await loadDomain()
   const policy = picturePolicy(real.picturePolicy)
@@ -169,17 +179,31 @@ export async function shapeReal({
   // A Joomla contract whose map says each slot's v3 role (ADR 0040) is filled by the fill plan from the brief's links:
   // a card takes only its own offering's photo, a general slot only a general one; no role is guessed from a name.
   let made
+  let decorPlan = null
   if (cms === 'joomla' && real.brief && domain.roleDecidesKeep(contentMap)) {
     const readable = new Map(real.pictures.map((p) => [p.id, p]))
     const assets = (real.brief.assets ?? [])
       .filter((a) => readable.has(a?.id))
       .map((a) => ({ ...a, width: readable.get(a.id).width, height: readable.get(a.id).height }))
     // A card's offering is the one its name says, and the name is the text path's (`copy`): one decider for both.
-    const cardNames = domain.cardNamesOf(contentMap, copy)
-    const fill = domain.planFill({ contentMap, brief: { ...real.brief, assets }, demo, cardNames })
-    const placed = domain.placementOfFill({ fill, groups: map.groups })
+    // A brief build's site plan names each kept card (#192, `honesty.cardNames`) and decides it; hidden cards have none.
+    const cardNames = plannedNames ?? domain.cardNamesOf(contentMap, copy)
+    // Per slot (#194): cards that share one demo file each get their own decision and file; where no photo fits, a
+    // picture is drawn from the owner's photos (`fill-draw.mjs`), else the slot takes a brand colour block.
+    const brief = { ...real.brief, assets }
+    const fill = domain.planFill({ contentMap, brief, demo, cardNames, perSlot: true })
+    const drawnPlan = domain.planDrawings({ fill, contentMap, brief, demo })
+    const placed = domain.placementOfFill({ fill: { ...fill, slots: drawnPlan.slots }, groups: map.groups })
     map = { ...map, groups: placed.groups, never: [...map.never, ...placed.dropped] }
-    made = placed.plan
+    made = { ...placed.plan, drawings: drawnPlan.drawings, drawCapped: drawnPlan.capped }
+    // Icons and cut-outs that carry the demo's subject follow the business (#195, `decor-plan.mjs`).
+    decorPlan = domain.planDecor({
+      contentMap: { ...contentMap, slots: [...contentMap.slots, ...declared] },
+      brief,
+      copy,
+      offerings: fill.offerings,
+      canDraw: Boolean(drawDoor?.imageModel) && policy.missingHeroMode !== 'real-only'
+    })
   } else {
     const { clusterOf } = domain.nearCopies(labels)
     made = domain.planPlacement({ groups: map.groups, labels, clusterOf, bound })
@@ -198,12 +222,36 @@ export async function shapeReal({
   clock('picturePlanMs', started)
 
   const byGroup = new Map(map.groups.map((g) => [g.id, g]))
-  const asGroup = (g) => ({ sample: g.file, role: g.role, slots: g.occurrences })
+  // A group's id is its demo file, or the file and its unit when the fill plan split it (#194): one receipt each.
+  const asGroup = (g) => ({ sample: g.id, role: g.role, slots: g.occurrences })
 
   // An empty hero, banner or background: drawn from the restaurant's own photographs when a picture model is set (§8).
   /** @type {Map<string, any>} */
-  const drawn = new Map()
-  if (policy.missingHeroMode !== 'real-only' && drawDoor?.imageModel && plan.unfilled.length > 0) {
+  let drawn = new Map()
+  let drawing = null
+  const talkOnce = async () => chat ?? (await seeder('model')).chat
+  if (plan.drawings && policy.missingHeroMode !== 'real-only') {
+    // The fill plan's drawings (#194): every slot no photo fits, checked by the labeller, capped per build.
+    started = Date.now()
+    ;({ drawn, stats: drawing } = await drawPlanned({
+      plan,
+      byGroup,
+      real,
+      drawDoor,
+      chat: drawDoor?.imageModel ? await talkOnce() : null,
+      domain,
+      note,
+      signal,
+      drawMs,
+      outpaintOnly: policy.missingHeroMode === 'outpaint'
+    }))
+    clock('pictureDrawMs', started)
+  } else if (
+    !plan.drawings &&
+    policy.missingHeroMode !== 'real-only' &&
+    drawDoor?.imageModel &&
+    plan.unfilled.length > 0
+  ) {
     started = Date.now()
     const draws = domain
       .drawPlan({
@@ -309,7 +357,7 @@ export async function shapeReal({
       }
     }),
     ...plan.unfilled
-      .filter((u) => u.action === 'placeholder')
+      .filter((u) => u.action === 'placeholder' || u.action === 'draw')
       .map((u) => async () => {
         if (drawn.has(u.groupId)) return drawn.get(u.groupId)
         const group = byGroup.get(u.groupId)
@@ -349,7 +397,27 @@ export async function shapeReal({
       )
   }
   clock('pictureCutMs', started)
-  return { shaped, plan, map }
+  // The icons and cut-outs (#195): uploaded and written like any other picture, each its own group.
+  if (decorPlan?.slots.length) {
+    started = Date.now()
+    const slotOf = new Map([...contentMap.slots, ...declared].map((s) => [s.key, s]))
+    const decor = await shapeDecor({
+      decisions: decorPlan.slots,
+      slotOf,
+      siteBytes,
+      real,
+      domain,
+      drawDoor,
+      chat: drawDoor?.imageModel ? await talkOnce() : null,
+      note,
+      signal,
+      drawMs
+    })
+    shaped.push(...decor.shaped)
+    drawing = { ...drawing, decor: decor.stats }
+    clock('pictureDecorMs', started)
+  }
+  return { shaped, plan, map, ...(drawing ? { drawing } : {}) }
 }
 
 /**
@@ -419,9 +487,19 @@ export function pictureReport({ shaped, values, refused, readback, homeHtml = nu
       drawn: Object.values(receipts).filter((r) => r.kind === 'drawn').length,
       drawCostUsd: Number(
         Object.values(receipts)
-          .reduce((sum, r) => sum + (r.kind === 'drawn' ? Number(r.costUsd) || 0 : 0), 0)
+          .reduce((sum, r) => sum + (['drawn', 'cut-out'].includes(r.kind) ? Number(r.costUsd) || 0 : 0), 0)
           .toFixed(4)
       ),
+      // What drawing cost this build (#194): model calls, time, and every drawing the labeller refused, with why.
+      ...(shaped.drawing
+        ? {
+            drawCalls: (shaped.drawing.calls ?? 0) + (shaped.drawing.decor?.calls ?? 0),
+            drawMs: shaped.drawing.ms ?? 0,
+            drawRefused: shaped.drawing.refused ?? [],
+            ...(shaped.drawing.decor ? { decor: shaped.drawing.decor } : {})
+          }
+        : {}),
+      ...(shaped.plan.drawCapped ? { drawCapped: shaped.plan.drawCapped } : {}),
       verified: states.filter((s) => s === 'verified').length,
       unfilled: shaped.plan.unfilled,
       never: shaped.map.never.map((n) => ({ file: n.file, reason: n.reason })),

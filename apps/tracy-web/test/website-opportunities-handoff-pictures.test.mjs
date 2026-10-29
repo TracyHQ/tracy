@@ -47,7 +47,14 @@ test('placed photographs and drawn pictures are named with their origin; a place
   const p = picturesOfBuild(held)
   assert.deepEqual(p.placed, [
     { file: 'gallery/1.jpg', mediaId: 'm1', path: 'images/tracy-content/a.jpg', origin: 'real' },
-    { file: 'hero/1.jpg', mediaId: 'm3', path: 'images/tracy-content/h.jpg', origin: 'outpainted' }
+    {
+      file: 'hero/1.jpg',
+      mediaId: 'm3',
+      path: 'images/tracy-content/h.jpg',
+      origin: 'outpainted',
+      // A drawn picture tells the owner to replace it with a real photo (#194).
+      note: 'Drawn by AI, replace with a real photo.'
+    }
   ])
   assert.deepEqual(
     p.placeholders.map((u) => u.file),

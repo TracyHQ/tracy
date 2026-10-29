@@ -186,7 +186,8 @@ test('the hand-off lists every picture decision of the build with its reason cod
   const report = picturesOfBuild({ plan: shaped.plan, receipts: {}, report: {} })
   const byKey = new Map(report.decisions.map((d) => [d.key, d]))
   assert.deepEqual([...byKey.keys()].sort(), ['article-9.1', 'module-2.1', 'module-2.4', 'module-3.0'])
-  assert.equal(byKey.get('module-2.4').reason, 'no-photo-of-offering')
+  // No padel photo: the card is drawn from the owner's photos (#194), never left on the demo picture.
+  assert.equal(byKey.get('module-2.4').reason, 'drawn-scene')
   assert.equal(byKey.get('article-9.1').reason, 'demo-only-entity')
   assert.equal(byKey.get('module-2.1').reason, 'offering-photo')
   for (const d of report.decisions) assert.ok(d.why, `${d.key} has a sentence for its reason`)

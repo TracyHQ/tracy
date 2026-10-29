@@ -89,10 +89,10 @@ function pagesOf(pagePlan) {
 }
 
 /** The slot decisions: a contact fact or the name where the slot's role asks for one, else the fill plan's. */
-function slotsOf(contentMap, brief, contact, name) {
+function slotsOf(contentMap, brief, contact, name, cardNames = {}) {
   if (!contentMap?.slots?.length) return []
   // Pictures: per slot, drawn where no photo fits, icons and cut-outs by subject (#194, #195).
-  const fill = pictureDecisionsOf(contentMap, brief)
+  const fill = pictureDecisionsOf(contentMap, brief, cardNames)
   return contentMap.slots.map((slot) => {
     const kind = slot.type === 'text' ? CONTACT_ROLES[slot.role] : null
     if (kind && contact[kind])
@@ -140,19 +140,21 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
   if (name) brand.name = { value: name, reason: 'brief-name' }
   if (typeof answers.about === 'string') brand.description = { value: answers.about, reason: 'brief-about' }
   if (typeof answers.tone === 'string') brand.tone = { value: answers.tone, reason: 'brief-voice' }
+  // Records kept or hidden, people, offerings and facts from the brief only (ticket #192): `site-plan-honesty.mjs`.
+  const honesty = planHonesty(brief, contentMap, { name, contact })
   return {
     version: SITE_PLAN_VERSION,
     brand,
     contact,
     facts,
     pages: pagesOf(pagePlan),
-    slots: slotsOf(contentMap, brief, contact, name),
+    // A kept card's picture shows what its words name: the honesty plan's card labels (#192, #194).
+    slots: slotsOf(contentMap, brief, contact, name, honesty.honesty.cardNames),
     // Logo, posts, social profiles and map (ticket #193): `site-plan-identity.mjs`.
     ...planIdentity(brief, contentMap),
     // What the content map does not reach: videos, backgrounds, showcase, addresses, credit line (ticket #196).
     outside: planOutsideMap({ brief, contentMap }),
-    // Records kept or hidden, people, offerings and facts from the brief only (ticket #192): `site-plan-honesty.mjs`.
-    ...planHonesty(brief, contentMap, { name, contact }),
+    ...honesty,
     answers,
     questionnaire,
     notes,

@@ -25,6 +25,8 @@ import { briefWithResearch } from './revision-research.js'
 import { createHash } from 'node:crypto'
 import { acceptedDishPhotos } from 'website-opportunities/domain/dish-photos.mjs'
 import { FILL_REASONS } from 'website-opportunities/domain/fill-plan.mjs'
+import { DRAW_REASONS } from 'website-opportunities/domain/fill-draw.mjs'
+import { DECOR_REASONS } from 'website-opportunities/domain/decor-plan.mjs'
 import { socialFiguresOfRevision } from './place-profile-of-revision.js'
 import { buildPlaced, saveHandoff } from './build-store.js'
 import { picturePolicy } from '../lib/wo-picture-policy.js'
@@ -489,8 +491,15 @@ export function picturesOfBuild(held) {
     }))
   // A place the build drew a picture for (plan §8) is placed, said with its origin; the others hold a placeholder.
   for (const [file, r] of Object.entries(receipts))
-    if (r?.kind === 'drawn' && ['uploaded', 'applied', 'verified'].includes(r.state))
-      placed.push({ file, mediaId: (r.referenceIds ?? []).join('+'), path: r.path, origin: r.origin })
+    if (['drawn', 'cut-out'].includes(r?.kind) && ['uploaded', 'applied', 'verified'].includes(r.state))
+      placed.push({
+        file,
+        mediaId: (r.referenceIds ?? []).join('+'),
+        path: r.path,
+        origin: r.origin,
+        // The owner is told which pictures to replace with a real photo (#194); the site itself carries no label.
+        note: 'Drawn by AI, replace with a real photo.'
+      })
   const placeholders = (held.plan.unfilled ?? [])
     .filter((u) => receipts[u.groupId]?.kind !== 'drawn')
     .map((u) => ({ file: u.groupId, routes: u.routes ?? [], reason: u.reason }))
@@ -499,7 +508,7 @@ export function picturesOfBuild(held) {
   // A fill plan's build (`fill-plan.mjs`) says what it decided for every picture slot, each with its reason code.
   const decisions = (held.plan.decisions ?? []).map((d) => ({
     ...d,
-    why: FILL_REASONS[d.reason] ?? d.reason
+    why: FILL_REASONS[d.reason] ?? DRAW_REASONS[d.reason] ?? DECOR_REASONS[d.reason] ?? d.reason
   }))
   return {
     placed,

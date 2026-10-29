@@ -80,6 +80,15 @@ const REASONS_BY_NEED = Object.freeze({
   general: { photo: 'general-photo', none: 'no-general-photo' }
 })
 const needKind = (need) => (need.person ? 'person' : need.offering ? 'offering' : 'general')
+/** A need as a key: the slots of one demo file with the same key form one unit when the plan decides per slot. */
+const needKeyOf = (need) =>
+  need.person
+    ? `person:${need.person}`
+    : need.offering
+      ? `offering:${need.offering}`
+      : need.reason
+        ? `none:${need.reason}`
+        : 'general'
 
 /** Picture roles that state a fact about a person or a claim: with no fitting photo they take a neutral substitute. */
 const FACT_PICTURE_ROLES = new Set(['person.image', 'quote.author_image', 'stat.proof_image'])
@@ -99,7 +108,7 @@ const notAPhotograph = (asset) =>
  * page lists shares one page with the other entities of its kind; a map with no pages is one page.
  * @returns {(entity: string) => string[]}
  */
-function pagesOfMap(contentMap) {
+export function pagesOfMap(contentMap) {
   const pages = contentMap?.pages ?? []
   if (!pages.length) return () => ['*']
   const on = new Map()
@@ -225,13 +234,16 @@ const WIDE_ASPECT = 1.6
  * @param {Map<string, {width: number, height: number}>} [input.demo] - demo files as the site serves them, by file
  * @param {Record<string, string>} [input.cardNames] - the name the text path writes on each offering card, by group id
  *   (`cardNamesOf`): the one decider of which offering a card shows, for its words and its photo alike
+ * @param {boolean} [input.perSlot] - slots that share one demo file are decided apart when their needs differ (spec #189,
+ *   ticket #194): each need is its own unit, and each decision names its `unit`, so a writer that uploads one file per
+ *   unit gives each slot its own picture. Off by default for the writers that still write one file per demo file.
  * @returns {{version: string, offerings: Array<{groupId: string, offeringId: string, label: string}>,
  *   people: Array<{groupId: string, personId: string, label: string}>,
  *   slots: Array<{key: string, entity: string, type: string, role: string | null, groupId: string | null,
  *   action: 'photo' | 'substitute' | 'keep' | 'skip' | 'text', reason: string, file?: string, mediaId?: string,
  *   crop?: object, refused?: Record<string, number>}>, unused: string[]}}
  */
-export function planFill({ contentMap, brief, demo = new Map(), cardNames = {} }) {
+export function planFill({ contentMap, brief, demo = new Map(), cardNames = {}, perSlot = false }) {
   const slots = contentMap?.slots ?? []
   const demoOnly = new Set((contentMap?.entities ?? []).filter((e) => e?.demoOnly === true).map((e) => e.key))
   const live = (slot) => !demoOnly.has(slot.entity) && keepDecisionOf(slot, contentMap) !== 'keep'
@@ -285,11 +297,14 @@ export function planFill({ contentMap, brief, demo = new Map(), cardNames = {} }
     else if (LOGO_ROLES.includes(slot.role)) decide(slot, 'skip', 'logo-own-door')
     else {
       const file = fileOf(slot.sample)
-      const unit = units.get(file) ?? { file, slots: [], needs: [], frame: null }
+      const need = needOf(slot, lockOf, peopleOf)
+      // Per slot (#194): one unit per need of the file, so cards of two offerings no longer wait on each other.
+      const key = perSlot ? `${file}#${needKeyOf(need)}` : file
+      const unit = units.get(key) ?? { file, key, slots: [], needs: [], frame: null }
       unit.slots.push(slot)
-      unit.needs.push(needOf(slot, lockOf, peopleOf))
+      unit.needs.push(need)
       unit.frame ??= demo.get(file) ?? slot.fit?.source ?? declaredSize(slot.sample)
-      units.set(file, unit)
+      units.set(key, unit)
     }
   }
 
@@ -324,7 +339,12 @@ export function planFill({ contentMap, brief, demo = new Map(), cardNames = {} }
               ? { substitute: avatarSubstitute(personById.get(unit.need.person) ?? null, unit.frame) }
               : {}
       for (const slot of unit.slots)
-        decide(slot, action, reason, { file: unit.file, ...extra, ...substitute })
+        decide(slot, action, reason, {
+          file: unit.file,
+          ...(perSlot ? { unit: unit.key } : {}),
+          ...extra,
+          ...substitute
+        })
     }
     if (unit.need.reason) {
       settle('substitute', unit.need.reason)

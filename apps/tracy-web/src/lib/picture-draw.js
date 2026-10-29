@@ -1,8 +1,9 @@
 /**
- * A picture drawn for an empty place, always from the restaurant's own photographs (plan §8): `outpaint` extends one real
- * photo to the place's shape, its middle kept; `scene` draws the place in the style, colours and light of a few of its own
- * photos. Only for the wide pictures of a page (hero, banner, background) — the planner decides that
- * (`domain/pictures/placement.mjs` `drawPlan`) — and never a dish, a person, a logo or words.
+ * A picture drawn for an empty place, always from the business's own photographs (plan §8, spec #189 ticket #194):
+ * `outpaint` extends one real photo to the place's shape, its middle kept; `scene` draws the slot's subject (an offering,
+ * else the business's place) in the style, colours and light of a few of its own photos; `object` draws one object of the
+ * activity on a plain ground, for a cut-out figure (#195). The fill plan decides which slot is drawn and how
+ * (`domain/fill-draw.mjs`, `decor-plan.mjs`); never a person, a logo or words.
  *
  * The model is the picture door this deployment has (`models().image`: OpenRouter, `google/gemini-3.1-flash-lite-image` by
  * default, measured 18/10/2026: 16:9 kept, $0.034, 8 s); the call is the seeder's `chat`. What comes back is checked by the
@@ -11,9 +12,10 @@
 import { createHash } from 'node:crypto'
 import sharp from 'sharp'
 
-export const DRAW_PROMPT_VERSION = 'd1'
+export const DRAW_PROMPT_VERSION = 'd2'
 const REFERENCE_EDGE = 1024
-const NEVER = 'No text, no letters, no logos, no watermarks, no recognisable faces, no new dishes or drinks.'
+const NEVER =
+  'No text, no letters, no signs, no logos, no watermarks, no recognisable faces, no person facing the camera.'
 
 const ratio = (aspect) => {
   for (const [w, h] of [
@@ -30,19 +32,47 @@ const ratio = (aspect) => {
     if (Math.abs(w / h - aspect) / aspect < 0.03) return `${w}:${h}`
   return `${Math.round(aspect * 100)}:100`
 }
+const orientation = (aspect) => (aspect > 1.05 ? 'landscape' : aspect < 0.95 ? 'portrait' : 'square')
 
-/** What the model is asked, by mode. */
-export function drawPrompt(item) {
-  const shape = `${ratio(item.aspect)} (width ${item.aspect.toFixed(2)} times the height), landscape`
-  if (item.mode === 'outpaint')
-    return `Extend this photograph to a wider frame of ${shape}. Keep the original photograph unchanged in the middle and continue its scene naturally on both sides, with the same light, colours and perspective. Photorealistic. ${NEVER}`
-  return `A photograph of this restaurant's own place — its dining room, terrace or front — in the same style, colours and light as these reference photos of it, framed ${shape}, for the top of its website. Photorealistic, natural light. ${NEVER}`
+/**
+ * What the drawing shows, from the brief (spec #189, ticket #194): the offering a card is about, else the business's own
+ * place, with the business's category. Never one category's own words: any business gets its own subject.
+ */
+function subjectWords(subject) {
+  const of = subject?.category ? ` (a ${subject.category})` : ''
+  if (subject?.kind === 'offering' && subject.label) return `${subject.label} at this business${of}`
+  return `this business's own place${of}, as its customers see it`
 }
 
-/** The cache key of a drawing: what it was made from, for what shape, how, and by which model. */
+/** What the model is asked, by mode: `outpaint`, `scene`, or `object` (a cut-out figure's object on a plain ground). */
+export function drawPrompt(item) {
+  const shape = `${ratio(item.aspect)} (width ${item.aspect.toFixed(2)} times the height), ${orientation(item.aspect)}`
+  if (item.mode === 'outpaint')
+    return `Extend this photograph to a wider frame of ${shape}. Keep the original photograph unchanged in the middle and continue its scene naturally on every side, with the same light, colours and perspective. Photorealistic. ${NEVER}`
+  if (item.mode === 'object') {
+    const what = item.subject?.label ? `${item.subject.label}` : `the work of this business`
+    return `One single object used for ${what}, shown whole in the centre on a plain pure white background with nothing else in the frame, framed ${shape}, in the colours and light of these reference photos. Photorealistic, soft even light, no shadow on the ground, no people. ${NEVER}`
+  }
+  return `A photograph of ${subjectWords(item.subject)}, in the same style, colours and light as these reference photos of it, framed ${shape}, for its website. Photorealistic, natural light. ${NEVER}`
+}
+
+/** The cache key of a drawing: what it was made from, for what subject and shape, how, and by which model. */
 export function drawKey(item, { model, shas }) {
+  const subject = item.subject
+    ? [item.subject.kind, item.subject.id ?? null, item.subject.label ?? null, item.subject.category ?? null]
+    : null
   return createHash('sha256')
-    .update(JSON.stringify([DRAW_PROMPT_VERSION, model, item.mode, item.aspect.toFixed(3), shas]))
+    .update(
+      JSON.stringify([
+        DRAW_PROMPT_VERSION,
+        model,
+        item.mode,
+        item.aspect.toFixed(3),
+        shas,
+        subject,
+        item.variant ?? 0
+      ])
+    )
     .digest('hex')
 }
 

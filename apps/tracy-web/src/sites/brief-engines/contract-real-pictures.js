@@ -25,7 +25,10 @@ export async function writeContractPictures({
   write,
   contentMap = contentMapOf(ctx.contract),
   bound = {},
-  copy = null
+  copy = null,
+  drawDoor = null,
+  declared = [],
+  cardNames = null
 }) {
   if (!real || !siteFile) return null
   ctx.signal?.throwIfAborted()
@@ -42,12 +45,23 @@ export async function writeContractPictures({
     note: ctx.note,
     time: ctx.time,
     signal: ctx.signal,
-    // This phase only places collected photos and neutral placeholders. It never draws.
-    drawDoor: null,
+    // A slot no photo fits is drawn from the owner's photos when a picture model is set (#194); the icons and cut-outs
+    // that carry the demo's subject follow the business (#195), read from the slots the profile only declares.
+    drawDoor,
     bound,
-    copy
+    copy,
+    declared,
+    cardNames
   })
   const slots = new Map(inspectedSlots(initial, contentMap).map((s) => [s.key, s]))
+  // An icon or a cut-out the site's inspection does not list is left as shipped, never a reason to stop (#195).
+  shaped.shaped = shaped.shaped.filter((item) => {
+    if (!item.decor) return true
+    const missing = item.group.slots.filter((b) => !slots.has(b.key))
+    if (missing.length)
+      ctx.note(`the site does not list ${missing[0].key}, so its decorative picture stays as shipped`)
+    return missing.length === 0
+  })
   for (const item of shaped.shaped)
     for (const binding of item.group.slots) {
       const slot = slots.get(binding.key)

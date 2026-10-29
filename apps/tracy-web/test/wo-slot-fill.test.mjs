@@ -26,6 +26,13 @@ const DIRS = {
   emdash: path.join(CMS, 'tracy-emdash-theme-base/contracts/0.5.6')
 }
 const NO_SIDECAR = path.join(CMS, 'tracy-wordpress-quickstart/contracts/tracy-base/wp7/1.1.6')
+// The neutral figure of a stat with no source, as the site language says it (the locale file, never a literal here).
+const NEUTRAL_EN = JSON.parse(
+  readFileSync(
+    path.resolve(HERE, '../../../packages/wo/website-opportunities/domain/neutral-copy/en.json'),
+    'utf8'
+  )
+)
 const json = (file) => JSON.parse(readFileSync(file, 'utf8'))
 const AT = '2026-10-26T10:00:00.000Z'
 
@@ -188,7 +195,8 @@ test('Tracy Base on Joomla, a gym: no person, price or number is made up, every 
   const sourced = plan.writes.filter((w) => w.state === 'sourced')
   for (const w of plan.writes.filter((x) => x.role.startsWith('person.') || x.role === 'package.price'))
     assert.equal(w.state, 'empty', w.slotKey)
-  for (const w of plan.writes.filter((x) => x.role === 'stat.value')) assert.equal(w.value, '—')
+  for (const w of plan.writes.filter((x) => x.role === 'stat.value'))
+    assert.equal(w.value, NEUTRAL_EN['neutral.stat.dash'])
   for (const w of plan.writes.filter((x) => x.role === 'offering.name')) assert.equal(w.value, 'Service')
   // A call to action is real: it calls the gym's number.
   const ctas = sourced.filter((w) => w.role.endsWith('.cta_url'))

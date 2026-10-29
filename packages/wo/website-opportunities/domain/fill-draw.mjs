@@ -1,0 +1,238 @@
+// Drawn pictures in the fill plan (spec TracyHQ/tracy#189, ticket #194): a picture slot no brief photo fits gets a picture
+// drawn from the owner's own photos instead of the template's demo picture. Pure and deterministic: it plans the drawings
+// (which slot, which mode, from which photos, for which subject) and never calls a model; the engine draws them.
+//
+// 🔒 ONE RULE: every picture slot the fill plan leaves on the demo picture because no brief photo fits is drawn, except
+// the slots that are never drawn (a person, a logo, a fact picture, a keep slot, a slot of a demo-only entity). Those keep
+// the fill plan's own decision.
+// 🔒 OUTPAINT FIRST, SCENE SECOND, NEVER FROM WORDS ALONE: one owner photo of the slot's subject extended to the slot's
+// shape when it covers enough of the frame; else a scene drawn with up to four owner photos as references; with no photo
+// to start from, the slot takes a brand colour block in its frame (a neutral substitute), never the demo's subject.
+// 🔒 THE SUBJECT COMES FROM THE SLOT: an offering card is drawn as its offering (its own photos first), any other slot as
+// the business's place (its general photos first). A photo someone else posted on a map listing is never a reference.
+// 🔒 REUSE AND CAP: a drawing serves every slot of the same subject and a close shape on other pages, never two slots of
+// one page; at most `DRAW_CAP` drawings per build, the home page first, then the largest slot. A slot past the cap takes
+// the brand colour block.
+import { pagesOfMap, shownWidthOf } from './fill-plan.mjs'
+import { isMapPhotoByOthers, publisherRankOf } from './pictures/asset-origin.mjs'
+import { GENERAL } from './pictures/picture-links.mjs'
+import { declaredSize, fileOf } from './pictures/slot-map.mjs'
+
+export const DRAW_PLAN_VERSION = 'fill-draw/1'
+/** The most pictures one build draws (each is a paid model call, retried at most once). */
+export const DRAW_CAP = 20
+/** An extension keeps the real photo whole: it must cover at least this share of the new frame's width. */
+const OUTPAINT_MIN_SHARE = 0.3
+/** The most references a scene is drawn with. */
+const SCENE_REFERENCES = 4
+/** How far two slots' shapes may differ, relative, for one drawing to serve both (each is cut to its own shape). */
+const REUSE_ASPECT = 0.12
+const HOME_ROUTES = new Set(['home', 'homepage'])
+
+/** Every reason code a drawing decision carries, with the sentence a report shows for it. */
+export const DRAW_REASONS = Object.freeze({
+  'drawn-outpaint': "no brief photo fits this slot, so one of the owner's photos is extended to its shape",
+  'drawn-scene': "no brief photo fits this slot, so a picture is drawn in the style of the owner's photos",
+  'drawn-reused': 'a picture drawn for the same subject and shape on another page',
+  'no-reference-photo':
+    'no brief photo fits this slot and the owner has no photo to draw from, so a brand colour block fills its frame',
+  'drawing-cap': 'this build drew as many pictures as it may, so a brand colour block fills the frame'
+})
+
+/** Fill reasons that mean "no brief photo fits": the slot would keep the demo's picture. */
+const DRAWABLE_REASONS = new Set([
+  'no-photo-of-offering',
+  'no-general-photo',
+  'no-offering-for-group',
+  'conflicting-offerings',
+  'role-takes-no-brief-photo'
+])
+/** Picture roles never drawn: a person, a logo, a fact. */
+const NEVER_DRAWN_ROLES = new Set([
+  'person.image',
+  'quote.author_image',
+  'stat.proof_image',
+  'business.logo',
+  'business.logo_light',
+  'business.logo_dark'
+])
+
+const notAPhotograph = (a) =>
+  a.isGraphic === true ||
+  a.isLogo === true ||
+  a.role === 'logo' ||
+  a.content === 'logo' ||
+  a.content === 'text-graphic' ||
+  a.content === 'not_a_photograph'
+const depictsOf = (a) => a?.depicts?.id ?? a?.depicts ?? GENERAL
+const portraitOf = (a) => a?.portraitOf?.id ?? a?.portraitOf ?? null
+
+/** Whether a fill decision is one a drawing replaces. */
+function drawable(decision, slot) {
+  if (decision.type !== 'image' || decision.action !== 'keep') return false
+  if (!DRAWABLE_REASONS.has(decision.reason)) return false
+  if (NEVER_DRAWN_ROLES.has(decision.role) || slot?.fit?.kind === 'signature') return false
+  // A cut-out or an icon is decided by its own plan (`decor-plan.mjs`).
+  return !['cutout', 'icon', 'decoration', 'avatar', 'avatar-group', 'map', 'logo'].includes(slot?.fit?.kind)
+}
+
+/**
+ * @param {object} input
+ * @param {ReturnType<import('./fill-plan.mjs').planFill>} input.fill - the fill plan
+ * @param {{slots: any[], pages?: any[], entities?: any[]}} input.contentMap
+ * @param {{assets?: any[], business?: {trade?: string, subTrade?: string}}} input.brief
+ * @param {Map<string, {width: number, height: number}>} [input.demo] - demo files as the site serves them
+ * @param {number} [input.max]
+ * @returns {{version: string, slots: any[], drawings: Array<{id: string, mode: 'outpaint' | 'scene', sourceId?: string,
+ *   referenceIds: string[], aspect: number, subject: {kind: 'offering' | 'venue', id?: string, label?: string,
+ *   category: string | null}, keys: string[]}>, capped: number}}
+ */
+export function planDrawings({ fill, contentMap, brief, demo = new Map(), max = DRAW_CAP }) {
+  const slotOf = new Map((contentMap?.slots ?? []).map((s) => [s.key, s]))
+  const offeringOf = new Map((fill.offerings ?? []).map((o) => [o.groupId, o]))
+  const pagesOf = pagesOfMap(contentMap)
+  const home = new Set(
+    (contentMap?.pages ?? [])
+      .filter((p) => p.home === true || HOME_ROUTES.has(String(p.route ?? '')))
+      .map((p) => `page:${p.route ?? p.entity}`)
+  )
+  const category = brief?.business?.subTrade ?? brief?.business?.trade ?? null
+  const owners = [...(brief?.assets ?? [])]
+    .filter((a) => a?.kind === 'image' && a.id && a.width && a.height)
+    .filter((a) => !notAPhotograph(a) && !portraitOf(a) && !isMapPhotoByOthers(a))
+    .sort(
+      (a, b) =>
+        publisherRankOf(a) - publisherRankOf(b) ||
+        (a.quality === 'low') - (b.quality === 'low') ||
+        b.width * b.height - a.width * a.height ||
+        String(a.id).localeCompare(String(b.id))
+    )
+  // Which photos each page already shows: an extension of one of them would repeat it.
+  const shownOn = new Map()
+  for (const d of fill.slots)
+    if (d.action === 'photo' && d.mediaId)
+      for (const page of pagesOf(d.entity)) shownOn.set(page, (shownOn.get(page) ?? new Set()).add(d.mediaId))
+
+  const candidates = []
+  for (const d of fill.slots) {
+    const slot = slotOf.get(d.key)
+    if (!drawable(d, slot)) continue
+    const file = d.file ?? fileOf(slot?.sample)
+    const frame = demo.get(file) ?? slot?.fit?.source ?? declaredSize(slot?.sample)
+    if (!frame?.width || !frame?.height) continue
+    const aspect = frame.width / frame.height
+    const offering = d.groupId ? offeringOf.get(d.groupId) : null
+    const pages = pagesOf(d.entity)
+    const width = shownWidthOf(slot) || frame.width
+    candidates.push({
+      d,
+      aspect,
+      pages,
+      subject: offering
+        ? { kind: 'offering', id: offering.offeringId, label: offering.label, category }
+        : { kind: 'venue', category },
+      onHome: pages.some((p) => home.has(p)) ? 0 : 1,
+      // The widest shown first: a band across the page before a tile beside others.
+      width
+    })
+  }
+  candidates.sort(
+    (a, b) => a.onHome - b.onHome || b.width - a.width || String(a.d.key).localeCompare(String(b.d.key))
+  )
+
+  const drawings = []
+  const decided = new Map()
+  let capped = 0
+  const subjectKey = (s) => (s.kind === 'offering' ? `offering:${s.id}` : 'venue')
+  for (const c of candidates) {
+    const key = subjectKey(c.subject)
+    // Reuse: the same subject, a close shape, and none of its slots on this slot's pages.
+    const reuse = drawings.find(
+      (g) =>
+        subjectKey(g.subject) === key &&
+        Math.abs(g.aspect - c.aspect) / c.aspect <= REUSE_ASPECT &&
+        !g.pages.some((p) => c.pages.includes(p))
+    )
+    if (reuse) {
+      reuse.keys.push(c.d.key)
+      reuse.pages.push(...c.pages)
+      decided.set(c.d.key, { action: 'draw', reason: 'drawn-reused', drawing: reuse.id, aspect: c.aspect })
+      continue
+    }
+    const ofSubject = (a) => (c.subject.kind === 'offering' ? depictsOf(a) === c.subject.id : true)
+    // A place is drawn from its general photos first, an offering from its own photos only for an extension.
+    const generalFirst = (a) => (c.subject.kind === 'venue' && depictsOf(a) !== GENERAL ? 1 : 0)
+    const shownHere = (a) => c.pages.some((p) => shownOn.get(p)?.has(a.id))
+    const extended = new Set(
+      drawings.filter((g) => g.pages.some((p) => c.pages.includes(p))).map((g) => g.sourceId)
+    )
+    const source = owners
+      .filter((a) => ofSubject(a) && !shownHere(a) && !extended.has(a.id))
+      .filter((a) => a.width / a.height / c.aspect >= OUTPAINT_MIN_SHARE)
+      .sort((a, b) => generalFirst(a) - generalFirst(b))[0]
+    const offeringFirst = (a) => (c.subject.kind === 'offering' && depictsOf(a) === c.subject.id ? 0 : 1)
+    const references = source
+      ? [source.id]
+      : owners
+          .filter(
+            (a) => c.subject.kind === 'venue' || depictsOf(a) === c.subject.id || depictsOf(a) === GENERAL
+          )
+          .sort((a, b) => offeringFirst(a) - offeringFirst(b) || generalFirst(a) - generalFirst(b))
+          .slice(0, SCENE_REFERENCES)
+          .map((a) => a.id)
+    if (references.length === 0) {
+      decided.set(c.d.key, colourBlock('no-reference-photo'))
+      continue
+    }
+    if (drawings.length >= max) {
+      capped += 1
+      decided.set(c.d.key, colourBlock('drawing-cap'))
+      continue
+    }
+    const variant = drawings.filter((g) => subjectKey(g.subject) === key).length
+    const drawing = {
+      id: `draw-${drawings.length + 1}`,
+      mode: /** @type {'outpaint' | 'scene'} */ (source ? 'outpaint' : 'scene'),
+      ...(source ? { sourceId: source.id } : {}),
+      referenceIds: references,
+      aspect: Number(c.aspect.toFixed(4)),
+      subject: c.subject,
+      variant,
+      keys: [c.d.key],
+      pages: [...c.pages]
+    }
+    drawings.push(drawing)
+    decided.set(c.d.key, {
+      action: 'draw',
+      reason: source ? 'drawn-outpaint' : 'drawn-scene',
+      drawing: drawing.id,
+      aspect: c.aspect
+    })
+  }
+  return {
+    version: DRAW_PLAN_VERSION,
+    slots: fill.slots.map((d) => (decided.has(d.key) ? { ...d, ...decided.get(d.key) } : d)),
+    drawings: drawings.map(({ pages: _pages, ...g }) => g),
+    capped
+  }
+}
+
+/** A brand colour block in the slot's frame: the neutral substitute of a picture nothing can be drawn for. */
+const colourBlock = (reason) => ({ action: 'substitute', reason, substitute: { kind: 'brand-colour' } })
+
+/**
+ * Whether a drawn picture may be shown, read from the photo labeller's answer for it: no words, no logo, no face.
+ * @param {Record<string, any> | null | undefined} labels - the labeller's labels of the drawing, null when it gave none
+ *   (then the drawing is refused: `labeller-unavailable`)
+ * @returns {{ok: boolean, reason: string | null}}
+ */
+export function drawnPictureVerdict(labels) {
+  // A drawing nobody looked at is never shown: no labeller answer, no picture (#194).
+  if (!labels) return { ok: false, reason: 'labeller-unavailable' }
+  if (labels.textPresence === 'present' || labels.hasTextOverlay === true)
+    return { ok: false, reason: 'text-found' }
+  if (labels.subject === 'logo' || labels.content === 'logo' || labels.content === 'text-graphic')
+    return { ok: false, reason: 'logo-found' }
+  if ((labels.faceBoxes?.length ?? 0) > 0) return { ok: false, reason: 'face-found' }
+  return { ok: true, reason: null }
+}

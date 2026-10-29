@@ -18,13 +18,16 @@ const door = {
   imageModel: 'google/gemini-3.1-flash-lite-image'
 }
 
-test('the prompt keeps the real photograph in the middle, names the shape, and forbids words, faces and new dishes', () => {
+test('the prompt keeps the real photograph in the middle, names the shape, and forbids words, logos and faces, in no category own words', () => {
   const outpaint = drawPrompt({ mode: 'outpaint', aspect: 16 / 9 })
   assert.match(outpaint, /Keep the original photograph unchanged in the middle/)
   assert.match(outpaint, /16:9/)
   const scene = drawPrompt({ mode: 'scene', aspect: 1920 / 824 })
   assert.match(scene, /reference photos/)
-  for (const p of [outpaint, scene]) assert.match(p, /No text.*no recognisable faces, no new dishes/)
+  for (const p of [outpaint, scene]) {
+    assert.match(p, /No text.*no logos.*no recognisable faces/)
+    assert.doesNotMatch(p, /restaurant|dish|dining/i)
+  }
 })
 
 test('the cache key changes with what the drawing is made from and how, never with time', () => {
@@ -92,4 +95,29 @@ test('a model that never answers is given up at the signal, not waited on throug
     /the picture took too long/
   )
   assert.ok(Date.now() - started < 5000)
+})
+
+test('the prompt names the slot subject from the brief, and an object for a cut-out stands alone on a plain ground', () => {
+  const card = drawPrompt({
+    mode: 'scene',
+    aspect: 4 / 3,
+    subject: { kind: 'offering', id: 'svc-fit', label: 'Fitness Lessons', category: 'racket club' }
+  })
+  assert.match(card, /Fitness Lessons at this business \(a racket club\)/)
+  const bakery = drawPrompt({ mode: 'scene', aspect: 21 / 9, subject: { kind: 'venue', category: 'bakery' } })
+  assert.match(bakery, /own place \(a bakery\)/)
+  const object = drawPrompt({
+    mode: 'object',
+    aspect: 1,
+    subject: { kind: 'offering', label: 'Padel Lessons' }
+  })
+  assert.match(object, /One single object used for Padel Lessons/)
+  assert.match(object, /plain pure white background/)
+  assert.match(object, /no people/)
+  // Another subject or variant is another drawing.
+  const base = { mode: 'scene', aspect: 1.5, subject: { kind: 'venue', category: 'bakery' } }
+  assert.notEqual(
+    drawKey(base, { model: 'm', shas: ['s'] }),
+    drawKey({ ...base, variant: 1 }, { model: 'm', shas: ['s'] })
+  )
 })

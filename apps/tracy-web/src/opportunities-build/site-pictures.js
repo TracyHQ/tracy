@@ -24,6 +24,7 @@ import { acceptedDishPhotos } from 'website-opportunities/domain/dish-photos.mjs
 import { siteBuildOf } from './site-build.js'
 import { claimAnalyses as claimShas, settleAnalysis as settleSha } from './media-analysis.js'
 import { picturePolicy } from '../lib/wo-picture-policy.js'
+import { isBriefBuild } from './brief-build-path.js'
 
 /** How many pictures are read from the store at once to measure the ones collected before measuring existed. */
 const MEASURE_AT_ONCE = 6
@@ -297,7 +298,10 @@ export function createSitePictures({
         const manifest = new Map(
           (build.asset_manifest ?? []).filter((a) => a?.kind === 'image' && a.id).map((a) => [a.id, a])
         )
-        if (manifest.size === 0) return null
+        // A brief build with no photo still runs its picture plan (#194): colour blocks, icons and cleared cut-outs
+        // replace the demo's pictures. Any other build without photos reads nothing, as before.
+        const briefBuild = isBriefBuild({ brief: build.brief })
+        if (manifest.size === 0 && !briefBuild) return null
         const accountIds = [...manifest.values()].filter((a) => a.origin !== 'place').map((a) => a.id)
         const { rows } = accountIds.length
           ? await pool.query(
@@ -343,6 +347,7 @@ export function createSitePictures({
           .map((c) => c.hex)
         return {
           buildId: build.id,
+          briefBuild,
           picturePolicy: policy,
           plan: build.pictures?.plan ?? null,
           receipts: build.pictures?.receipts ?? {},
@@ -351,7 +356,42 @@ export function createSitePictures({
           // The brief's links of each photo (the offering it shows, the person it portrays) and its closed list of
           // offerings: what the fill plan qualifies a photo by (`fill-plan.mjs`).
           brief: build.brief
-            ? { assets: build.brief.assets ?? [], reading: build.brief.reading ?? null }
+            ? {
+                assets: build.brief.assets ?? [],
+                reading: build.brief.reading ?? null,
+                // The business's trade, the subject words of a drawn picture's prompt (#194).
+                business: { trade: build.brief.business?.trade, subTrade: build.brief.business?.subTrade }
+              }
+            : null,
+          // The photo labeller read on a drawn picture (#194): what it sees decides whether the drawing may be shown
+          // (`drawnPictureVerdict`). One picture a call, charged like the build's own labels; null with no labeller.
+          checkDrawing: vision
+            ? async (bytes) => {
+                const model = vision.door.model
+                const invoke = () =>
+                  vision.label({
+                    door: vision.door,
+                    pictures: [{ id: 'drawn', bytes }],
+                    trade: build.brief?.business?.trade ?? null,
+                    signal
+                  })
+                const answer = vision.metered
+                  ? await invoke()
+                  : await chargeable(
+                      {
+                        provider: 'vision',
+                        operation: model,
+                        maxCents: ceilingCents('vision', model),
+                        actualCents: (r) => visionCostCents(model, r.usage),
+                        // A label call like the build's own: the same purpose on /ops › Usage.
+                        purpose: 'picture-labels',
+                        payer: build.account_id ? { kind: 'account', accountId: build.account_id } : null,
+                        tokens: (r) => modelTokensOf((r.usage?.requests ?? []).map((q) => q.usage))
+                      },
+                      invoke
+                    )
+                return answer.labels.get('drawn') ?? null
+              }
             : null,
           pictures: own.map((r) => ({
             id: r.id,
