@@ -123,7 +123,8 @@
         "language": "*",
         "client_id": "0"
       },
-      "sourceId": 159
+      "sourceId": 159,
+      "lists": "service"
     },
     {
       "key": "module-160",
@@ -135,7 +136,8 @@
         "language": "*",
         "client_id": "0"
       },
-      "sourceId": 160
+      "sourceId": 160,
+      "lists": "service"
     },
     {
       "key": "module-161",
@@ -5802,7 +5804,10 @@
         "item": 0,
         "kind": "person"
       },
-      "customize": "keep"
+      "customize": "keep",
+      "action": {
+        "kind": "go-to-item"
+      }
     },
     {
       "key": "module-163.9",
@@ -5826,7 +5831,10 @@
         "item": 1,
         "kind": "person"
       },
-      "customize": "keep"
+      "customize": "keep",
+      "action": {
+        "kind": "go-to-item"
+      }
     },
     {
       "key": "module-163.10",
@@ -5850,7 +5858,10 @@
         "item": 2,
         "kind": "person"
       },
-      "customize": "keep"
+      "customize": "keep",
+      "action": {
+        "kind": "go-to-item"
+      }
     },
     {
       "key": "module-163.11",
@@ -5874,7 +5885,10 @@
         "item": 3,
         "kind": "person"
       },
-      "customize": "keep"
+      "customize": "keep",
+      "action": {
+        "kind": "go-to-item"
+      }
     },
     {
       "key": "module-163.12",
@@ -6224,7 +6238,8 @@
       "group": {
         "id": "module-165.step.0",
         "item": 0,
-        "kind": "step"
+        "kind": "step",
+        "presentation": "offering-tabs"
       },
       "fit": {
         "measured": true,
@@ -6243,10 +6258,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 14,
-          "phone": 14
+          "desktop": 104,
+          "phone": 42
         },
-        "maxCharacters": 14,
+        "maxCharacters": 42,
         "casing": "upper",
         "overflow": "rewrite"
       }
@@ -6270,7 +6285,8 @@
       "group": {
         "id": "module-165.step.1",
         "item": 1,
-        "kind": "step"
+        "kind": "step",
+        "presentation": "offering-tabs"
       },
       "fit": {
         "measured": true,
@@ -6289,10 +6305,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 5,
-          "phone": 5
+          "desktop": 79,
+          "phone": 33
         },
-        "maxCharacters": 5,
+        "maxCharacters": 33,
         "casing": "upper",
         "overflow": "rewrite"
       }
@@ -6316,7 +6332,8 @@
       "group": {
         "id": "module-165.step.2",
         "item": 2,
-        "kind": "step"
+        "kind": "step",
+        "presentation": "offering-tabs"
       },
       "fit": {
         "measured": true,
@@ -6335,10 +6352,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 8,
-          "phone": 8
+          "desktop": 79,
+          "phone": 33
         },
-        "maxCharacters": 8,
+        "maxCharacters": 33,
         "casing": "upper",
         "overflow": "rewrite"
       }
@@ -6362,7 +6379,8 @@
       "group": {
         "id": "module-165.step.3",
         "item": 3,
-        "kind": "step"
+        "kind": "step",
+        "presentation": "offering-tabs"
       },
       "fit": {
         "measured": true,
@@ -6381,10 +6399,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 11,
-          "phone": 11
+          "desktop": 77,
+          "phone": 31
         },
-        "maxCharacters": 11,
+        "maxCharacters": 31,
         "casing": "upper",
         "overflow": "rewrite"
       }
@@ -6408,7 +6426,8 @@
       "group": {
         "id": "module-165.step.0",
         "item": 0,
-        "kind": "step"
+        "kind": "step",
+        "presentation": "offering-tabs"
       },
       "fit": {
         "measured": true,
@@ -6454,7 +6473,8 @@
       "group": {
         "id": "module-165.step.1",
         "item": 1,
-        "kind": "step"
+        "kind": "step",
+        "presentation": "offering-tabs"
       },
       "fit": {
         "measured": true,
@@ -6500,7 +6520,8 @@
       "group": {
         "id": "module-165.step.2",
         "item": 2,
-        "kind": "step"
+        "kind": "step",
+        "presentation": "offering-tabs"
       },
       "fit": {
         "measured": true,
@@ -6546,7 +6567,8 @@
       "group": {
         "id": "module-165.step.3",
         "item": 3,
-        "kind": "step"
+        "kind": "step",
+        "presentation": "offering-tabs"
       },
       "fit": {
         "measured": true,
@@ -9843,7 +9865,10 @@
         "item": 0,
         "kind": "service"
       },
-      "customize": "keep"
+      "customize": "keep",
+      "action": {
+        "kind": "go-to-item"
+      }
     },
     {
       "key": "module-177.5",
@@ -9866,7 +9891,10 @@
         "item": 1,
         "kind": "service"
       },
-      "customize": "keep"
+      "customize": "keep",
+      "action": {
+        "kind": "go-to-item"
+      }
     },
     {
       "key": "module-177.6",
@@ -10004,7 +10032,8 @@
         "maxCharacters": 23,
         "casing": "none",
         "overflow": "rewrite"
-      }
+      },
+      "labelOf": "module-177.10"
     },
     {
       "key": "module-177.9",
@@ -10029,7 +10058,8 @@
       },
       "fit": {
         "measured": false
-      }
+      },
+      "labelOf": "module-177.11"
     },
     {
       "key": "module-177.10",
@@ -10146,7 +10176,8 @@
         "maxCharacters": 29,
         "casing": "none",
         "overflow": "rewrite"
-      }
+      },
+      "labelOf": "module-177.14"
     },
     {
       "key": "module-177.13",
@@ -10171,7 +10202,8 @@
       },
       "fit": {
         "measured": false
-      }
+      },
+      "labelOf": "module-177.15"
     },
     {
       "key": "module-177.14",
@@ -11118,7 +11150,10 @@
         "item": 0,
         "kind": "person"
       },
-      "customize": "keep"
+      "customize": "keep",
+      "action": {
+        "kind": "go-to-item"
+      }
     },
     {
       "key": "module-178.17",
@@ -11142,7 +11177,10 @@
         "item": 1,
         "kind": "person"
       },
-      "customize": "keep"
+      "customize": "keep",
+      "action": {
+        "kind": "go-to-item"
+      }
     },
     {
       "key": "module-178.18",
@@ -11166,7 +11204,10 @@
         "item": 2,
         "kind": "person"
       },
-      "customize": "keep"
+      "customize": "keep",
+      "action": {
+        "kind": "go-to-item"
+      }
     },
     {
       "key": "module-178.19",
@@ -11190,7 +11231,10 @@
         "item": 3,
         "kind": "person"
       },
-      "customize": "keep"
+      "customize": "keep",
+      "action": {
+        "kind": "go-to-item"
+      }
     },
     {
       "key": "module-178.20",
@@ -11214,7 +11258,10 @@
         "item": 4,
         "kind": "person"
       },
-      "customize": "keep"
+      "customize": "keep",
+      "action": {
+        "kind": "go-to-item"
+      }
     },
     {
       "key": "module-178.21",
@@ -11238,7 +11285,10 @@
         "item": 5,
         "kind": "person"
       },
-      "customize": "keep"
+      "customize": "keep",
+      "action": {
+        "kind": "go-to-item"
+      }
     },
     {
       "key": "module-178.22",
@@ -11262,7 +11312,10 @@
         "item": 6,
         "kind": "person"
       },
-      "customize": "keep"
+      "customize": "keep",
+      "action": {
+        "kind": "go-to-item"
+      }
     },
     {
       "key": "module-178.23",
@@ -11286,7 +11339,10 @@
         "item": 7,
         "kind": "person"
       },
-      "customize": "keep"
+      "customize": "keep",
+      "action": {
+        "kind": "go-to-item"
+      }
     },
     {
       "key": "module-178.24",
@@ -13744,7 +13800,10 @@
         "item": 0,
         "kind": "person"
       },
-      "customize": "keep"
+      "customize": "keep",
+      "action": {
+        "kind": "go-to-item"
+      }
     },
     {
       "key": "module-182.9",
@@ -13768,7 +13827,10 @@
         "item": 1,
         "kind": "person"
       },
-      "customize": "keep"
+      "customize": "keep",
+      "action": {
+        "kind": "go-to-item"
+      }
     },
     {
       "key": "module-182.10",
@@ -13792,7 +13854,10 @@
         "item": 2,
         "kind": "person"
       },
-      "customize": "keep"
+      "customize": "keep",
+      "action": {
+        "kind": "go-to-item"
+      }
     },
     {
       "key": "module-182.11",
@@ -13816,7 +13881,10 @@
         "item": 3,
         "kind": "person"
       },
-      "customize": "keep"
+      "customize": "keep",
+      "action": {
+        "kind": "go-to-item"
+      }
     },
     {
       "key": "module-182.12",
@@ -18295,10 +18363,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 12,
-          "phone": 12
+          "desktop": 46,
+          "phone": 34
         },
-        "maxCharacters": 12,
+        "maxCharacters": 34,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -18422,10 +18490,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 12,
-          "phone": 12
+          "desktop": 46,
+          "phone": 34
         },
-        "maxCharacters": 12,
+        "maxCharacters": 34,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -19533,7 +19601,7 @@
         "feature_title"
       ],
       "label": "Group Boxing / feature_title",
-      "role": "editorial.heading",
+      "role": "step.title",
       "fit": {
         "measured": true,
         "boxes": {
@@ -19557,6 +19625,12 @@
         "maxCharacters": 16,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -19574,7 +19648,7 @@
       ],
       "xpath": "/html/body/div/ul/li[1]/text()",
       "label": "Group Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -19598,6 +19672,12 @@
         "maxCharacters": 23,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -19615,7 +19695,7 @@
       ],
       "xpath": "/html/body/div/ul/li[2]/text()",
       "label": "Group Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -19639,6 +19719,12 @@
         "maxCharacters": 21,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -19656,7 +19742,7 @@
       ],
       "xpath": "/html/body/div/ul/li[3]/text()",
       "label": "Group Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -19680,6 +19766,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -19697,7 +19789,7 @@
       ],
       "xpath": "/html/body/div/ul/li[4]/text()",
       "label": "Group Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -19721,6 +19813,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -19807,7 +19905,7 @@
         "feature_title"
       ],
       "label": "Group Boxing / feature_title",
-      "role": "editorial.heading",
+      "role": "step.title",
       "fit": {
         "measured": true,
         "boxes": {
@@ -19831,6 +19929,12 @@
         "maxCharacters": 17,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.outline.1",
+        "item": 1,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -19848,7 +19952,7 @@
       ],
       "xpath": "/html/body/div/ul/li[1]/text()",
       "label": "Group Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -19872,6 +19976,12 @@
         "maxCharacters": 63,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.outline.1",
+        "item": 1,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -19889,7 +19999,7 @@
       ],
       "xpath": "/html/body/div/ul/li[2]/text()",
       "label": "Group Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -19913,6 +20023,12 @@
         "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.outline.1",
+        "item": 1,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -19930,7 +20046,7 @@
       ],
       "xpath": "/html/body/div/ul/li[3]/text()",
       "label": "Group Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -19954,6 +20070,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.outline.1",
+        "item": 1,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -20040,7 +20162,7 @@
         "feature_title"
       ],
       "label": "Group Boxing / feature_title",
-      "role": "editorial.heading",
+      "role": "step.title",
       "fit": {
         "measured": true,
         "boxes": {
@@ -20064,6 +20186,12 @@
         "maxCharacters": 38,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.outline.2",
+        "item": 2,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -20081,7 +20209,7 @@
       ],
       "xpath": "/html/body/div/ul/li[1]/text()",
       "label": "Group Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -20105,6 +20233,12 @@
         "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.outline.2",
+        "item": 2,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -20122,7 +20256,7 @@
       ],
       "xpath": "/html/body/div/ul/li[2]/text()",
       "label": "Group Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -20146,6 +20280,12 @@
         "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.outline.2",
+        "item": 2,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -20163,7 +20303,7 @@
       ],
       "xpath": "/html/body/div/ul/li[3]/text()",
       "label": "Group Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -20187,6 +20327,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.outline.2",
+        "item": 2,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -20273,7 +20419,7 @@
         "feature_title"
       ],
       "label": "Group Boxing / feature_title",
-      "role": "editorial.heading",
+      "role": "step.title",
       "fit": {
         "measured": true,
         "boxes": {
@@ -20297,6 +20443,12 @@
         "maxCharacters": 17,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -20314,7 +20466,7 @@
       ],
       "xpath": "/html/body/div/ul/li[1]/text()",
       "label": "Group Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -20338,6 +20490,12 @@
         "maxCharacters": 17,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -20355,7 +20513,7 @@
       ],
       "xpath": "/html/body/div/ul/li[2]/text()",
       "label": "Group Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -20379,6 +20537,12 @@
         "maxCharacters": 18,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -20396,7 +20560,7 @@
       ],
       "xpath": "/html/body/div/ul/li[3]/text()",
       "label": "Group Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -20420,6 +20584,12 @@
         "maxCharacters": 18,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -20437,7 +20607,7 @@
       ],
       "xpath": "/html/body/div/ul/li[4]/text()",
       "label": "Group Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -20461,6 +20631,12 @@
         "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -20478,7 +20654,7 @@
       ],
       "xpath": "/html/body/div/ul/li[5]/text()",
       "label": "Group Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -20502,6 +20678,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -27895,10 +28077,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 15,
-          "phone": 15
+          "desktop": 46,
+          "phone": 34
         },
-        "maxCharacters": 15,
+        "maxCharacters": 34,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -28022,10 +28204,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 15,
-          "phone": 15
+          "desktop": 46,
+          "phone": 34
         },
-        "maxCharacters": 15,
+        "maxCharacters": 34,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -29026,7 +29208,7 @@
         "feature_title"
       ],
       "label": "Beginner Boxing / feature_title",
-      "role": "editorial.heading",
+      "role": "step.title",
       "fit": {
         "measured": true,
         "boxes": {
@@ -29050,6 +29232,12 @@
         "maxCharacters": 16,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -29067,7 +29255,7 @@
       ],
       "xpath": "/html/body/div/ul/li[1]/text()",
       "label": "Beginner Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -29091,6 +29279,12 @@
         "maxCharacters": 23,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -29108,7 +29302,7 @@
       ],
       "xpath": "/html/body/div/ul/li[2]/text()",
       "label": "Beginner Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -29132,6 +29326,12 @@
         "maxCharacters": 21,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -29149,7 +29349,7 @@
       ],
       "xpath": "/html/body/div/ul/li[3]/text()",
       "label": "Beginner Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -29173,6 +29373,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -29190,7 +29396,7 @@
       ],
       "xpath": "/html/body/div/ul/li[4]/text()",
       "label": "Beginner Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -29214,6 +29420,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -29300,7 +29512,7 @@
         "feature_title"
       ],
       "label": "Beginner Boxing / feature_title",
-      "role": "editorial.heading",
+      "role": "step.title",
       "fit": {
         "measured": true,
         "boxes": {
@@ -29324,6 +29536,12 @@
         "maxCharacters": 17,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.outline.1",
+        "item": 1,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -29341,7 +29559,7 @@
       ],
       "xpath": "/html/body/div/ul/li[1]/text()",
       "label": "Beginner Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -29365,6 +29583,12 @@
         "maxCharacters": 63,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.outline.1",
+        "item": 1,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -29382,7 +29606,7 @@
       ],
       "xpath": "/html/body/div/ul/li[2]/text()",
       "label": "Beginner Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -29406,6 +29630,12 @@
         "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.outline.1",
+        "item": 1,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -29423,7 +29653,7 @@
       ],
       "xpath": "/html/body/div/ul/li[3]/text()",
       "label": "Beginner Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -29447,6 +29677,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.outline.1",
+        "item": 1,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -29533,7 +29769,7 @@
         "feature_title"
       ],
       "label": "Beginner Boxing / feature_title",
-      "role": "editorial.heading",
+      "role": "step.title",
       "fit": {
         "measured": true,
         "boxes": {
@@ -29557,6 +29793,12 @@
         "maxCharacters": 38,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.outline.2",
+        "item": 2,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -29574,7 +29816,7 @@
       ],
       "xpath": "/html/body/div/ul/li[1]/text()",
       "label": "Beginner Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -29598,6 +29840,12 @@
         "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.outline.2",
+        "item": 2,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -29615,7 +29863,7 @@
       ],
       "xpath": "/html/body/div/ul/li[2]/text()",
       "label": "Beginner Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -29639,6 +29887,12 @@
         "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.outline.2",
+        "item": 2,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -29656,7 +29910,7 @@
       ],
       "xpath": "/html/body/div/ul/li[3]/text()",
       "label": "Beginner Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -29680,6 +29934,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.outline.2",
+        "item": 2,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -29766,7 +30026,7 @@
         "feature_title"
       ],
       "label": "Beginner Boxing / feature_title",
-      "role": "editorial.heading",
+      "role": "step.title",
       "fit": {
         "measured": true,
         "boxes": {
@@ -29790,6 +30050,12 @@
         "maxCharacters": 17,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -29807,7 +30073,7 @@
       ],
       "xpath": "/html/body/div/ul/li[1]/text()",
       "label": "Beginner Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -29831,6 +30097,12 @@
         "maxCharacters": 17,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -29848,7 +30120,7 @@
       ],
       "xpath": "/html/body/div/ul/li[2]/text()",
       "label": "Beginner Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -29872,6 +30144,12 @@
         "maxCharacters": 18,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -29889,7 +30167,7 @@
       ],
       "xpath": "/html/body/div/ul/li[3]/text()",
       "label": "Beginner Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -29913,6 +30191,12 @@
         "maxCharacters": 18,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -29930,7 +30214,7 @@
       ],
       "xpath": "/html/body/div/ul/li[4]/text()",
       "label": "Beginner Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -29954,6 +30238,12 @@
         "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -29971,7 +30261,7 @@
       ],
       "xpath": "/html/body/div/ul/li[5]/text()",
       "label": "Beginner Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -29995,6 +30285,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -30183,10 +30479,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 16,
-          "phone": 16
+          "desktop": 46,
+          "phone": 34
         },
-        "maxCharacters": 16,
+        "maxCharacters": 34,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -30310,10 +30606,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 16,
-          "phone": 16
+          "desktop": 46,
+          "phone": 34
         },
-        "maxCharacters": 16,
+        "maxCharacters": 34,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -31224,7 +31520,7 @@
         "feature_title"
       ],
       "label": "Private Training / feature_title",
-      "role": "editorial.heading",
+      "role": "step.title",
       "fit": {
         "measured": true,
         "boxes": {
@@ -31248,6 +31544,12 @@
         "maxCharacters": 16,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -31265,7 +31567,7 @@
       ],
       "xpath": "/html/body/div/ul/li[1]/text()",
       "label": "Private Training / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -31289,6 +31591,12 @@
         "maxCharacters": 23,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -31306,7 +31614,7 @@
       ],
       "xpath": "/html/body/div/ul/li[2]/text()",
       "label": "Private Training / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -31330,6 +31638,12 @@
         "maxCharacters": 21,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -31347,7 +31661,7 @@
       ],
       "xpath": "/html/body/div/ul/li[3]/text()",
       "label": "Private Training / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -31371,6 +31685,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -31388,7 +31708,7 @@
       ],
       "xpath": "/html/body/div/ul/li[4]/text()",
       "label": "Private Training / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -31412,6 +31732,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -31498,7 +31824,7 @@
         "feature_title"
       ],
       "label": "Private Training / feature_title",
-      "role": "editorial.heading",
+      "role": "step.title",
       "fit": {
         "measured": true,
         "boxes": {
@@ -31522,6 +31848,12 @@
         "maxCharacters": 17,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.outline.1",
+        "item": 1,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -31539,7 +31871,7 @@
       ],
       "xpath": "/html/body/div/ul/li[1]/text()",
       "label": "Private Training / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -31563,6 +31895,12 @@
         "maxCharacters": 63,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.outline.1",
+        "item": 1,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -31580,7 +31918,7 @@
       ],
       "xpath": "/html/body/div/ul/li[2]/text()",
       "label": "Private Training / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -31604,6 +31942,12 @@
         "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.outline.1",
+        "item": 1,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -31621,7 +31965,7 @@
       ],
       "xpath": "/html/body/div/ul/li[3]/text()",
       "label": "Private Training / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -31645,6 +31989,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.outline.1",
+        "item": 1,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -31731,7 +32081,7 @@
         "feature_title"
       ],
       "label": "Private Training / feature_title",
-      "role": "editorial.heading",
+      "role": "step.title",
       "fit": {
         "measured": true,
         "boxes": {
@@ -31755,6 +32105,12 @@
         "maxCharacters": 38,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.outline.2",
+        "item": 2,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -31772,7 +32128,7 @@
       ],
       "xpath": "/html/body/div/ul/li[1]/text()",
       "label": "Private Training / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -31796,6 +32152,12 @@
         "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.outline.2",
+        "item": 2,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -31813,7 +32175,7 @@
       ],
       "xpath": "/html/body/div/ul/li[2]/text()",
       "label": "Private Training / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -31837,6 +32199,12 @@
         "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.outline.2",
+        "item": 2,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -31854,7 +32222,7 @@
       ],
       "xpath": "/html/body/div/ul/li[3]/text()",
       "label": "Private Training / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -31878,6 +32246,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.outline.2",
+        "item": 2,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -31964,7 +32338,7 @@
         "feature_title"
       ],
       "label": "Private Training / feature_title",
-      "role": "editorial.heading",
+      "role": "step.title",
       "fit": {
         "measured": true,
         "boxes": {
@@ -31988,6 +32362,12 @@
         "maxCharacters": 17,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -32005,7 +32385,7 @@
       ],
       "xpath": "/html/body/div/ul/li[1]/text()",
       "label": "Private Training / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -32029,6 +32409,12 @@
         "maxCharacters": 17,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -32046,7 +32432,7 @@
       ],
       "xpath": "/html/body/div/ul/li[2]/text()",
       "label": "Private Training / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -32070,6 +32456,12 @@
         "maxCharacters": 18,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -32087,7 +32479,7 @@
       ],
       "xpath": "/html/body/div/ul/li[3]/text()",
       "label": "Private Training / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -32111,6 +32503,12 @@
         "maxCharacters": 18,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -32128,7 +32526,7 @@
       ],
       "xpath": "/html/body/div/ul/li[4]/text()",
       "label": "Private Training / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -32152,6 +32550,12 @@
         "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -32169,7 +32573,7 @@
       ],
       "xpath": "/html/body/div/ul/li[5]/text()",
       "label": "Private Training / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -32193,6 +32597,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -32381,10 +32791,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 15,
-          "phone": 15
+          "desktop": 46,
+          "phone": 34
         },
-        "maxCharacters": 15,
+        "maxCharacters": 34,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -32508,10 +32918,10 @@
           "phone": 1
         },
         "maxChars": {
-          "desktop": 15,
-          "phone": 15
+          "desktop": 46,
+          "phone": 34
         },
-        "maxCharacters": 15,
+        "maxCharacters": 34,
         "casing": "none",
         "overflow": "rewrite"
       }
@@ -33512,7 +33922,7 @@
         "feature_title"
       ],
       "label": "Advanced Boxing / feature_title",
-      "role": "editorial.heading",
+      "role": "step.title",
       "fit": {
         "measured": true,
         "boxes": {
@@ -33536,6 +33946,12 @@
         "maxCharacters": 16,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -33553,7 +33969,7 @@
       ],
       "xpath": "/html/body/div/ul/li[1]/text()",
       "label": "Advanced Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -33577,6 +33993,12 @@
         "maxCharacters": 23,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -33594,7 +34016,7 @@
       ],
       "xpath": "/html/body/div/ul/li[2]/text()",
       "label": "Advanced Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -33618,6 +34040,12 @@
         "maxCharacters": 21,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -33635,7 +34063,7 @@
       ],
       "xpath": "/html/body/div/ul/li[3]/text()",
       "label": "Advanced Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -33659,6 +34087,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -33676,7 +34110,7 @@
       ],
       "xpath": "/html/body/div/ul/li[4]/text()",
       "label": "Advanced Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -33700,6 +34134,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.outline.0",
+        "item": 0,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -33786,7 +34226,7 @@
         "feature_title"
       ],
       "label": "Advanced Boxing / feature_title",
-      "role": "editorial.heading",
+      "role": "step.title",
       "fit": {
         "measured": true,
         "boxes": {
@@ -33810,6 +34250,12 @@
         "maxCharacters": 17,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.outline.1",
+        "item": 1,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -33827,7 +34273,7 @@
       ],
       "xpath": "/html/body/div/ul/li[1]/text()",
       "label": "Advanced Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -33851,6 +34297,12 @@
         "maxCharacters": 63,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.outline.1",
+        "item": 1,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -33868,7 +34320,7 @@
       ],
       "xpath": "/html/body/div/ul/li[2]/text()",
       "label": "Advanced Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -33892,6 +34344,12 @@
         "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.outline.1",
+        "item": 1,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -33909,7 +34367,7 @@
       ],
       "xpath": "/html/body/div/ul/li[3]/text()",
       "label": "Advanced Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -33933,6 +34391,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.outline.1",
+        "item": 1,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -34019,7 +34483,7 @@
         "feature_title"
       ],
       "label": "Advanced Boxing / feature_title",
-      "role": "editorial.heading",
+      "role": "step.title",
       "fit": {
         "measured": true,
         "boxes": {
@@ -34043,6 +34507,12 @@
         "maxCharacters": 38,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.outline.2",
+        "item": 2,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -34060,7 +34530,7 @@
       ],
       "xpath": "/html/body/div/ul/li[1]/text()",
       "label": "Advanced Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -34084,6 +34554,12 @@
         "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.outline.2",
+        "item": 2,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -34101,7 +34577,7 @@
       ],
       "xpath": "/html/body/div/ul/li[2]/text()",
       "label": "Advanced Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -34125,6 +34601,12 @@
         "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.outline.2",
+        "item": 2,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -34142,7 +34624,7 @@
       ],
       "xpath": "/html/body/div/ul/li[3]/text()",
       "label": "Advanced Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -34166,6 +34648,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.outline.2",
+        "item": 2,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -34252,7 +34740,7 @@
         "feature_title"
       ],
       "label": "Advanced Boxing / feature_title",
-      "role": "editorial.heading",
+      "role": "step.title",
       "fit": {
         "measured": true,
         "boxes": {
@@ -34276,6 +34764,12 @@
         "maxCharacters": 17,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -34293,7 +34787,7 @@
       ],
       "xpath": "/html/body/div/ul/li[1]/text()",
       "label": "Advanced Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -34317,6 +34811,12 @@
         "maxCharacters": 17,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -34334,7 +34834,7 @@
       ],
       "xpath": "/html/body/div/ul/li[2]/text()",
       "label": "Advanced Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -34358,6 +34858,12 @@
         "maxCharacters": 18,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -34375,7 +34881,7 @@
       ],
       "xpath": "/html/body/div/ul/li[3]/text()",
       "label": "Advanced Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -34399,6 +34905,12 @@
         "maxCharacters": 18,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -34416,7 +34928,7 @@
       ],
       "xpath": "/html/body/div/ul/li[4]/text()",
       "label": "Advanced Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -34440,6 +34952,12 @@
         "maxCharacters": 20,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -34457,7 +34975,7 @@
       ],
       "xpath": "/html/body/div/ul/li[5]/text()",
       "label": "Advanced Boxing / feature_desc",
-      "role": "editorial.paragraph",
+      "role": "step.description",
       "fit": {
         "measured": true,
         "boxes": {
@@ -34481,6 +34999,12 @@
         "maxCharacters": 19,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.outline.3",
+        "item": 3,
+        "kind": "step",
+        "presentation": "session-outline"
       }
     },
     {
@@ -65112,5 +65636,12 @@
         }
       ]
     }
-  ]
+  ],
+  "repeatableLists": {
+    "module-177.item": {
+      "itemTemplate": "module-177.item.0",
+      "min": 0,
+      "max": 2
+    }
+  }
 }

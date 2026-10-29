@@ -20,6 +20,8 @@ const ANCHOR = /<a\b([^>]*)>([\s\S]*?)<\/a\s*>/gi
 const HREF = /(\shref\s*=\s*)(["'])([\s\S]*?)\2/i
 const EMPTY = /^(?:#|javascript:\s*(?:void\(0\))?;?|)$/i
 const LINK_KEY = /\[[^\]]*(?:link|url|href)\]$/i
+/** The title field of a list item (`[title]`, `[info-title]`, `[name]`): the words its link wraps. */
+const LIST_TITLE = /\[(?:[\w-]*-)?(?:title|name|heading)\]$/i
 
 const textOf = (/** @type {string} */ html) =>
   html
@@ -194,10 +196,17 @@ function sweepList(ctx, node, tally, here = null) {
       for (const linkKey of keys.filter((k) => LINK_KEY.test(k)))
         node[linkKey].forEach((value, i) => {
           if (typeof value !== 'string') return
-          const words = keys
-            .filter((k) => k !== linkKey && typeof node[k]?.[i] === 'string')
-            .map((k) => textOf(node[k][i]))
-            .join(' ')
+          // 🔒 A LINK THAT WRAPS AN ITEM'S TITLE GOES BY THE TITLE (spec #189, round 9): measured 30/10/2026, an offering's
+          // title took the phone link because the line under it said "or give us a call".
+          const title = keys.find(
+            (k) => k !== linkKey && LIST_TITLE.test(k) && typeof node[k]?.[i] === 'string' && textOf(node[k][i])
+          )
+          const words = title
+            ? textOf(node[title][i])
+            : keys
+                .filter((k) => k !== linkKey && typeof node[k]?.[i] === 'string')
+                .map((k) => textOf(node[k][i]))
+                .join(' ')
           const to = resolveLink(ctx, value, words, here)
           if (to.keep) return
           node[linkKey][i] = to.href ?? ''

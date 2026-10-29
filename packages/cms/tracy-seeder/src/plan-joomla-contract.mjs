@@ -285,11 +285,33 @@ function mapEntities(file) {
       entities.map((e) => {
         if (e === null || typeof e !== 'object') return e
         const kept = {}
-        for (const field of ['key', 'kind', 'sourceId']) if (field in e) kept[field] = e[field]
+        for (const field of ['key', 'kind', 'sourceId', 'lists']) if (field in e) kept[field] = e[field]
         return Object.freeze(kept)
       })
     )
   })
+}
+
+/**
+ * What each section that lists records it does not hold declares it lists (`entity.lists`, a group kind): its body, by
+ * entity key: from the plan's own entities when it carries them, else from the contract on disk; empty with neither.
+ * @param {string | undefined} dataDir @param {string | undefined} contract @param {any[] | undefined} [known]
+ * @returns {Map<string, string>}
+ */
+export function sectionBodies(dataDir, contract, known = undefined) {
+  const file =
+    dataDir && contract ? path.join(dataDir, 'quickstart-contracts', contract, 'content-map.json') : null
+  if (!Array.isArray(known) && (!file || !existsSync(file))) return new Map()
+  try {
+    const entities = Array.isArray(known) ? known : mapEntities(String(file))
+    return new Map(
+      (Array.isArray(entities) ? entities : [])
+        .filter((e) => typeof e?.key === 'string' && typeof e.lists === 'string' && e.lists)
+        .map((e) => [e.key, e.lists])
+    )
+  } catch {
+    return new Map()
+  }
 }
 
 /**
@@ -758,11 +780,15 @@ const NO_SHOWN_KIND = new Set(['business', 'contact', 'cta'])
  * same record (`gallery`, `person`, `service`), or null. 🔒 A HEADING DESCRIBES WHAT THE SECTION SHOWS (spec #189): measured
  * 29/10/2026, a photo gallery got the heading "Our coaching team".
  * A card the site plan takes off (`hidden`, its group ids) is not shown, so its kind is not named.
+ * 🔒 A SECTION'S HEADING MATCHES ITS BODY (spec #189, round 9): a section that lists records it does not hold (an article
+ * list) declares what it lists (`bodies`, from `entity.lists`), and that body is what it shows, not the groups of its
+ * intro. Measured 30/10/2026: a list of classes with a follower figure in its intro got the heading "Our figures".
  * @param {any[]} slots
  * @param {Iterable<string> | null} [hidden] - the group ids of the cards the site plan hides
+ * @param {Map<string, string> | null} [bodies] - what each listing section lists, by entity key (`sectionBodies`)
  * @returns {(slot: any) => string[] | null}
  */
-export function sectionShows(slots, hidden = null) {
+export function sectionShows(slots, hidden = null, bodies = null) {
   const off = new Set(hidden ?? [])
   /** @type {Map<string, Set<string>>} */
   const kinds = new Map()
@@ -774,6 +800,8 @@ export function sectionShows(slots, hidden = null) {
   }
   return (slot) => {
     if (slot?.group || !['editorial.heading', 'editorial.paragraph'].includes(slot?.role)) return null
+    const body = bodies?.get(slot.entity)
+    if (body) return [body]
     const shown = kinds.get(slot.entity)
     return shown?.size ? [...shown].sort() : null
   }
@@ -1030,7 +1058,7 @@ export async function planJoomlaContract({
   // nothing afterwards: a missing fact is then a plain line that states none ("Baked daily" where the sample counts
   // projects), never an invention a visitor would take for true (CLAUDE.md §0.3).
   const SYSTEM =
-    'Replace Joomla quickstart demo content ONLY in the supplied scalar slots. Preserve their role, field type and maximum length. Keep each value about 0.75×–1.25× the length of its sample so the quickstart design keeps its shape, and never over the maximum length. Never change markup, module status/type/position, menus, ACL or styling. Write every value in the language the input names in "language" (a BCP 47 tag) — or, when the slots differ, the one each slot names — whatever language the brief is written in: translate the customer\'s facts, never the demo\'s. A slot with "item" {n, of} is the n-th of the "of" repeated cards, rows or steps of its section: every field with the same n describes ONE item (its title, its text, its figure), so keep them about the same thing, and a heading or intro that counts the items must say "of". A slot with "job" shares its section with the slots named in "distinctFrom", which the demo filled with the same sentence: write the job it names (lead, body, supporting line...) in words of its own, and never repeat a sentence of those slots or of any other slot of the section. A slot with "leadsTo" labels a button whose destination is known — that page: write its label for it and never put it in pending. A slot with "nav" is a navigation label. "generic": keep the same label, only translated into the slot\'s language; never rename it. "named": the demo\'s own product, programme or brand name: rename it to fit this business, short like a menu label; keep it only when it already fits. Never invent a link into this site: a url slot is either an address you were given or left pending. A slot with "offering" belongs to the card or page of that one offering of this business: write it about that offering only, from what the brief says of it, and never name or describe the business\'s other offerings in it. A slot with "shows" is the heading or intro of a section that shows those items (gallery: photos; person: people; service or menu_item: offerings; step: steps; stat_item: figures; quote: reviews): say what the section shows, never another kind ("Our team" over a photo gallery). A title or label of a repeated card, tab or step (a slot with "item") names that item for this business: never keep the demo\'s title as it is unless the brief itself uses those words. A slot with "style" mixes styles inside one line, as the demo shows it: [[words]] are drawn in the template\'s accent style and [[br]] is a line break. Write YOUR words in the same shape: put [[...]] around the key words of your own sentence that take the style (as many [[...]] as "style" has, at the same place: first, middle or last words) and [[br]] where it breaks; the marks do not count toward the length, and no other markup is ever written. Output JSON {"values":{"slot.key":"replacement"},"pending":["slot.key"],"invented":["slot.key"]}. Account for EVERY supplied slot. Never keep the demo\'s facts. ' +
+    'Replace Joomla quickstart demo content ONLY in the supplied scalar slots. Preserve their role, field type and maximum length. Keep each value about 0.75×–1.25× the length of its sample so the quickstart design keeps its shape, and never over the maximum length. Never change markup, module status/type/position, menus, ACL or styling. Write every value in the language the input names in "language" (a BCP 47 tag) — or, when the slots differ, the one each slot names — whatever language the brief is written in: translate the customer\'s facts, never the demo\'s. A slot with "item" {n, of} is the n-th of the "of" repeated cards, rows or steps of its section: every field with the same n describes ONE item (its title, its text, its figure), so keep them about the same thing, and a heading or intro that counts the items must say "of". A slot with "job" shares its section with the slots named in "distinctFrom", which the demo filled with the same sentence: write the job it names (lead, body, supporting line...) in words of its own, and never repeat a sentence of those slots or of any other slot of the section. A slot with "leadsTo" labels a button whose destination is known — that page: write its label for it and never put it in pending. A slot with "nav" is a navigation label. "generic": keep the same label, only translated into the slot\'s language; never rename it. "named": the demo\'s own product, programme or brand name: rename it to fit this business, short like a menu label; keep it only when it already fits. Never invent a link into this site: a url slot is either an address you were given or left pending. A slot with "offering" belongs to the card or page of that one offering of this business: write it about that offering only, from what the brief says of it, and never name or describe the business\'s other offerings in it. A slot with "shows" is the heading or intro of a section that shows those items (gallery: photos; person: people; service or menu_item: offerings; step: steps; stat_item: figures; quote: reviews): say what the section shows, never another kind ("Our team" over a photo gallery). A slot with "labels" is the short label in front of that contact detail ("Call:" before a phone): it stands alone, never leaning on a line before it ("or call"), because the line before it may be gone. A title or label of a repeated card, tab or step (a slot with "item") names that item for this business: never keep the demo\'s title as it is unless the brief itself uses those words. A slot with "style" mixes styles inside one line, as the demo shows it: [[words]] are drawn in the template\'s accent style and [[br]] is a line break. Write YOUR words in the same shape: put [[...]] around the key words of your own sentence that take the style (as many [[...]] as "style" has, at the same place: first, middle or last words) and [[br]] where it breaks; the marks do not count toward the length, and no other markup is ever written. Output JSON {"values":{"slot.key":"replacement"},"pending":["slot.key"],"invented":["slot.key"]}. Account for EVERY supplied slot. Never keep the demo\'s facts. ' +
     (inventions === 'never'
       ? 'When a fact a slot needs is missing from the brief — a phone number, email, address, opening hours, price, statistic, project, client, company name, or the people of a team section — NEVER write a made-up one: write a short line in the same role that states none of them, a plain label, a quality or a category taken from the brief ("Baked daily" where the sample counts projects, "Our bakers" where it names a person), and do not list its key in "invented". Put a key in pending only for a CTA destination you cannot know. An evidence-required slot takes a verbatim excerpt of the brief when the brief has one, and otherwise the same kind of plain line.'
       : 'When a fact a slot needs is missing from the brief — a phone number, email, address, opening hours, price, statistic, project, company name, or the people of a team section with their roles and short bios — write a believable one that fits this customer\'s business, country and language, and ALSO list its key in "invented": the customer will replace it with the real one. Put a key in pending only for a CTA destination you cannot know. An evidence-required slot takes a verbatim excerpt of the brief when the brief has one, and otherwise a believable invention listed in "invented" like any other.') +
@@ -1114,7 +1142,6 @@ export async function planJoomlaContract({
   const items = itemNumbers(state.slots)
   const journeys = processWritingOf(state.slots, offerings)
   const offeringOf = offeringBinding(offerings)
-  const shows = sectionShows(state.slots, hidden)
   /** The owner's posts about the offerings the slots of a batch write about, by offering name, or null. */
   const postsFor = (slots) => {
     if (!offeringPosts || typeof offeringPosts !== 'object') return null
@@ -1126,6 +1153,13 @@ export async function planJoomlaContract({
     )
     return Object.keys(out).length ? out : null
   }
+  const shows = sectionShows(state.slots, hidden, sectionBodies(dataDir, state.contract, state.entities))
+  // A label slot (`labelOf`) names the contact detail it stands in front of: the writer keeps it standing alone.
+  const roleByKey = new Map(state.slots.map((s) => [s.key, s.role]))
+  const labelled = (s) =>
+    typeof s?.labelOf === 'string'
+      ? String(roleByKey.get(s.labelOf) ?? '').replace(/^contact\./, '') || null
+      : null
   /** The complaints of the batches no answer could be read for (`model-unreadable`). */
   const unreadable = []
   const batches = sectionBatches(planned, 35)
@@ -1176,6 +1210,7 @@ export async function planJoomlaContract({
         ...(navOf(s) ? { nav: navOf(s) } : {}),
         ...(offeringOf(s) ? { offering: offeringOf(s) } : {}),
         ...(shows(s) ? { shows: shows(s) } : {}),
+        ...(labelled(s) ? { labels: labelled(s) } : {}),
         ...(jobs.has(s.key) ? jobs.get(s.key) : {})
       }))
     }

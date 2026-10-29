@@ -18,6 +18,7 @@ import { roleInCasingOf, showablePeopleOf } from './brief-people.mjs'
 import { planFormBlocks } from './form-blocks.mjs'
 import { planReviewGroup, sourcedReviewsOf } from './review-quotes.mjs'
 import { shortOfferingName } from './offering-short-name.mjs'
+import { labelsOfBlanks, planOfferingTabs } from './offering-tabs-plan.mjs'
 
 export const HONESTY_VERSION = 'site-plan-honesty/1'
 
@@ -503,6 +504,17 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
       !blanked.has(slot.key)
     )
       blanks.push(blankOf(slot, 'no-brief-fact'))
+  // 🔒 TABS BOUND TO OFFERINGS SHOW THE BRIEF'S OFFERINGS, ONE PER TAB, NAMED AS GIVEN; a label goes with the value it
+  // labels (`offering-tabs-plan.mjs`).
+  const tabs = planOfferingTabs(contentMap, offerings, { limitOf: slotCharacterLimit, placeOf })
+  records.push(...tabs.records)
+  Object.assign(values, tabs.values)
+  Object.assign(cardNames, tabs.cardNames)
+  for (const slot of labelsOfBlanks(
+    contentMap,
+    blanks.map((b) => b.key)
+  ))
+    blanks.push(blankOf(slot, 'no-brief-fact'))
   return {
     honesty: {
       version: HONESTY_VERSION,

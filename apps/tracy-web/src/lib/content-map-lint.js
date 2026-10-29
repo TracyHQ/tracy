@@ -27,6 +27,8 @@ import {
 import { galleryUnit } from 'website-opportunities/domain/fill-plan.mjs'
 import { inlineStylePattern } from 'website-opportunities/domain/inline-style.mjs'
 import { demoMarkupOf, isUnitPath } from '../sites/brief-engines/inline-styles.js'
+import { SECTION_RULES } from './content-map-lint-sections.js'
+import { LINK_RULES } from './content-map-lint-links.js'
 
 const list = (v) => (Array.isArray(v) ? v : [])
 const nonEmpty = (v) => typeof v === 'string' && v.trim() !== ''
@@ -237,7 +239,11 @@ export const LINT_RULES = [
         .filter((s) => s.type === 'image' && s.group?.id && keepDecisionOf(s, map) === 'keep')
         .filter((s) => list(groups.get(s.group.id)).some((m) => m.role === 'contact.social_url'))
         .map((s) => ({ key: String(s.key), note: `kept icon in social group "${s.group.id}"` }))
-  }
+  },
+  // Sections, card links, offering rows, outline items and text capacity (`content-map-lint-sections.js`).
+  ...SECTION_RULES,
+  // Link targets declared as links, and video slots that name their video (`content-map-lint-links.js`).
+  ...LINK_RULES
 ]
 
 /**

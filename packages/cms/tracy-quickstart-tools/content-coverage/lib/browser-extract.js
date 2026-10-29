@@ -132,10 +132,43 @@ export function extractPage() {
       const ns = cs(n)
       return n.clientWidth - px(ns.paddingLeft) - px(ns.paddingRight)
     }
-    // A label shrunk to its words (inline, or a flex or grid item) may grow to its parent's width.
-    const parent = el.parentElement
-    const shrunk = /^inline/.test(s.display) || (parent && /flex|grid/.test(cs(parent).display))
-    const width = Math.round(shrunk && parent ? inner(parent) : inner(el))
+    // 🔒 A BOX SHRUNK TO ITS WORDS HOLDS WHAT ITS ROOM HOLDS, NOT THE DEMO'S WORDS (spec #189, round 9). A label shrunk to
+    // its words (inline, floated, or an item of a flex or grid row) may grow into the free room of its line, and so may
+    // every shrunk box around it: a tab title is a block inside a list item that is itself a flex item. Measured
+    // 30/10/2026: offering names and tab titles came out at exactly the demo's lengths in boxes far wider.
+    const outerWidth = (n) => {
+      const ns = cs(n)
+      return n.getBoundingClientRect().width + px(ns.marginLeft) + px(ns.marginRight)
+    }
+    const onLineOf = (a, b) => {
+      const ra = a.getBoundingClientRect()
+      const rb = b.getBoundingClientRect()
+      return ra.top < rb.bottom && rb.top < ra.bottom
+    }
+    const shrunkIn = (n, p) => {
+      const ns = cs(n)
+      return /^inline/.test(ns.display) || ns.float !== 'none' || /flex|grid/.test(cs(p).display)
+    }
+    // An inline box has no client width of its own: its drawn width is its words.
+    let width =
+      s.display === 'inline'
+        ? el.getBoundingClientRect().width - px(s.paddingLeft) - px(s.paddingRight)
+        : inner(el)
+    // The widest free room any shrunk box around it leaves on its line (a wrapping flex row: the whole row), never summed
+    // over the levels, which would count one room twice.
+    let free = 0
+    for (let node = el, depth = 0; depth < 6 && node.parentElement; depth += 1, node = node.parentElement) {
+      const p = node.parentElement
+      if (/^(BODY|HTML)$/.test(p.tagName)) break
+      if (!shrunkIn(node, p)) continue
+      const ps = cs(p)
+      const wraps = /flex/.test(ps.display) && /wrap/.test(ps.flexWrap)
+      const used = wraps
+        ? outerWidth(node)
+        : [...p.children].filter((c) => onLineOf(c, node)).reduce((n, c) => n + outerWidth(c), 0)
+      free = Math.max(free, inner(p) - used)
+    }
+    width = Math.round(width + free)
     const height = el.clientHeight - px(s.paddingTop) - px(s.paddingBottom)
     return {
       width,

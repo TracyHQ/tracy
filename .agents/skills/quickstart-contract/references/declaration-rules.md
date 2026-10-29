@@ -28,6 +28,13 @@ same defect would come back on every template (section 7b step 2). Never edit a 
 | `social-list-fixed-length` | warning | Declare the collection in `repeatableLists`: `{"<collection>": {"itemTemplate": "<first group id>", "min": 0, "max": <demo item count>}}`. |
 | `social-in-person-card` | error | A person's links take `person.social_url` in the person's group, never `contact.social_url`. |
 | `social-icon-kept` | warning | A network icon must move with its link; prefer an icon font class field in the same list over a kept picture. |
+| `section-body-undeclared` | error | Declare on the listing entity what it lists: `"lists": "service"` (a group kind). A `lists` that is no group kind is refused too. |
+| `card-title-link-undeclared` | error | Give the card's title link an action: `{"kind": "go-to-item"}` (the item's own page) or `navigation`. |
+| `offering-rows-short` | error | Declare the collection in `repeatableLists` with its real capacity (`max`): the build shows the first offerings it has room for. |
+| `outline-item-unroled` | error | Group the card as `step` with `"presentation": "session-outline"`: its heading `step.title`, each list item `step.description`. |
+| `link-target-wrong-role` | error | A slot whose sample is a link target (`#`, a route, an address, `mailto:`, `tel:`) is a link: type `url`, a url role (`editorial.navigation_url`, `contact.cta_url`, ...) and its action, or `customize: "keep"` when the button has no job of its own (the build then takes a `#` button off). |
+| `video-slot-names-no-video` | error | Capture the video id or link the play control opens as the sample. The build hides a play control by that id when the business has no video for it. |
+| `text-box-at-demo-length` | warning | Measure again with content-coverage `--fit` (it reads the room a shrunk box can grow into), then copy the new `fit` in. The map keeps only the box, so the rule cannot tell how wide the room is: it flags a one-line capacity equal to the demo's words on every viewport. |
 | `item-icon-ground-undeclared` | warning | Needs `--webroot`. No map edit can say it yet (Slot fit has no ground field); the engine measures the demo icon at build time. |
 
 **Blocked on the vocabulary** (do not invent roles or kinds; ask the requester): a card that is a video (poster, title,

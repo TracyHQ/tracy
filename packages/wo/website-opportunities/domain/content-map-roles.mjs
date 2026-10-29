@@ -23,6 +23,7 @@
 // so roles appear only in contract versions released after ADR 0038.
 import { keepDerivationProblems } from './content-map-keep-decision.mjs'
 import { repeatableListProblems } from './content-map-repeatable-lists.mjs'
+import { sectionDeclarationProblems } from './content-map-section-declarations.mjs'
 import {
   CONTENT_MAP_ROLE_VOCABULARY_VERSIONS,
   DEFAULT_NEUTRAL_BY_ROLE,
@@ -129,6 +130,7 @@ export function checkContentMapRoles(contentMap) {
       errors.push(`group "${id}" (${group.kind}) lacks the role(s) its kind needs: ${missing.join(', ')}`)
   }
   errors.push(...repeatableListProblems(contentMap, groups))
+  errors.push(...sectionDeclarationProblems(contentMap))
   return { declared: true, ok: errors.length === 0, errors }
 }
 

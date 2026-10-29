@@ -117,6 +117,19 @@ test('a style module list: the link beside its words is resolved, or emptied', (
   assert.equal(sweepParams(ctx, { 'jatools-config': '{"a":1}' }), null)
 })
 
+test('a style module list: a link wrapping an item title goes by the title, not by a phone line beside it', () => {
+  for (const [title, desc, to] of [
+    ['Cakes', 'or give us a call', 'index.php?Itemid=102'],
+    ['Book a cake tasting', 'Our cakes are baked daily', 'index.php?Itemid=103']
+  ]) {
+    const config = {
+      rows: { 'rows[info-title]': [title], 'rows[info-desc]': [desc], 'rows[info-link]': ['#'] }
+    }
+    const made = sweepParams(ctx, { 'jatools-config': JSON.stringify(config) })
+    assert.deepEqual(JSON.parse(made.params['jatools-config']).rows['rows[info-link]'], [to])
+  }
+})
+
 test('a link entry to a taken-off page is turned off; a # heading with kept children stays', () => {
   const dead = {
     id: 200,

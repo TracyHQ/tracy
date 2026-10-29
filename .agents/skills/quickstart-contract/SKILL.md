@@ -570,6 +570,22 @@ path):
    `scripts/slot-roles/check.mjs "$P/$VER"` refuses the contract while a decoration block shares a band with working parts
    and no band declares it. After a brief build, check that no strip shows only a logo or an icon beside the empty place
    of what was taken off (`empty-frame-check.js` reports each as `lone-decoration-band` on the build's receipt).
+   **Sections, card links, offering rows and outlines say what they are (every framework):** a section that lists records
+   it does not hold (Joomla `mod_articles_*`, a query loop, a collection list) declares on its entity what it lists,
+   `"lists": "<group kind>"` (`service` for offerings), so its heading is written for its body and not for a figure in its
+   intro. A card's title link (a url slot in a card group beside the card's name) declares `action.kind` (`go-to-item` for
+   the item's own page); undeclared, the build guesses the target from every word of the card. A row group of offerings
+   holds as many rows as the template has offerings, or is declared in `repeatableLists` with its real `max`. Tabs that show
+   one offering each declare `"presentation": "offering-tabs"` on their step groups: the build titles each tab with an
+   offering's name as the brief gives it, one per offering up to the tabs there are, and takes off a tab with no offering.
+   A list of a session's parts whose items are worded as the demo trade's rhythm (rounds, rest, repeats) is a group of kind
+   `step` with `"presentation": "session-outline"` (`step.title` the part, `step.description` each item). A label in front
+   of a contact detail ("Email:", "or call:") declares `"labelOf": "<value slot key>"`, so it goes with its value.
+   Text capacity is measured at the room a shrunk box can grow into (content-coverage `--fit`); a capacity equal to the
+   demo's words on every viewport is a warning to measure again. Rules and fixes: `section-body-undeclared`,
+   `card-title-link-undeclared`, `offering-rows-short`, `outline-item-unroled`, `text-box-at-demo-length` in
+   [`references/declaration-rules.md`](references/declaration-rules.md). After a brief build, check each listing section's
+   heading names what it lists, each tab names one offering, and no outline keeps the demo's rhythm.
 9. **The first T3 template run through this skill:** look at and record in the report two points — (a) local Tracy
    creates a T3 site successfully (section 6 step 5); (b) the freshly bound site has no design-drift warnings (step 6 above).
 10. `git -C "$TCH_WT" status --short` · `git -C "$CW_WT" status --short` → record. No `git add`.
