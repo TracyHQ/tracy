@@ -164,5 +164,5 @@ test('the same call picks the sub-trade from the tradeâ€™s list, quoting Googleâ
     reading.subTrade.quotes.map((q) => q.source.ref),
     ['category:instagram', 'bio']
   )
-  assert.match(reading.version, /^business-reading-5-/)
+  assert.match(reading.version, /^business-reading-6-/)
 })

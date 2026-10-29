@@ -16,7 +16,8 @@ import {
   readBusinessByRules,
   readingFactsOf,
   readingSourcesOf,
-  withListedServiceParts
+  withListedServiceParts,
+  withPostOfferings
 } from '../domain/business-reading.mjs'
 import { BudgetExceededError } from './cost-ledger.js'
 import { visionCostCents } from './cost-prices.js'
@@ -136,7 +137,7 @@ export async function readBusiness({
       ...held,
       uspThemes: held.uspThemes?.length ? held.uspThemes : null,
       ...(!held.uspThemes?.length ? { uspThemesReason: held.uspThemesReason ?? 'not_recorded' } : {}),
-      services: withListedServiceParts(held.services, sources)
+      services: withPostOfferings(withListedServiceParts(held.services, sources), sources)
     }
   const at = new Date(now()).toISOString()
   const rules = (reason, extra = {}) => ({

@@ -13,7 +13,8 @@
     "S3: buildBrief for a candidate of trade health.",
     "S4: the page logic: a link told from a name, the business question read from the served set, the chat entry of a prepared build, the walk from research to chat, a failed research and Stop.",
     "S5: ownSiteInstructions and agentDemoPrompt with ownSite.",
-    "S6: fictional business links through resolver intake, saved candidate merge, research polling and shared editable/result renderers; an unavailable Google source, a private social profile and successful reads."
+    "S6: fictional business links through resolver intake, saved candidate merge, research polling and shared editable/result renderers; an unavailable Google source, a private social profile and successful reads.",
+    "S7: run business-reading-post-offerings.test.mjs: an own-post baking class and an optical product omitted by the model, a cached omission, and event, partner, slogan and hashtag counter-cases."
   ],
   "expect": [
     "S1: health, food, beauty, professional, other; the dentist and the restaurant kept with their trades, the town left out; without anyKind only the restaurant.",
@@ -21,7 +22,8 @@
     "S3: a valid brief with business.trade health, no menu page, a menu miss about services and prices, no word restaurant.",
     "S4: links and names told apart; the business question or null; /<site>/s/<session>?wo-demo-chat=<action> only for a same-site href; one prepare and one open after research; failed with the server code; STOPPED.",
     "S5: the customer's own business named, the steps present; no demo or pilot wording.",
-    "S6: every submitted link stays recorded with a read outcome, failure recovery or collected counts; zero readable links offer only Fix links; a failed primary makes Fix links primary and allows deliberate continuation with partial results; profiles and shared/private media never borrow another address's success."
+    "S6: every submitted link stays recorded with a read outcome, failure recovery or collected counts; zero readable links offer only Fix links; a failed primary makes Fix links primary and allows deliberate continuation with partial results; profiles and shared/private media never borrow another address's success.",
+    "S7: both trades retain sourced on-site offering facts; the baking class stays a service rather than a menu item; only explicit own offers are recovered, and a product and its making class remain distinct."
   ],
   "selectors": {
     "files": "vendor/tracy/tracy-website-opportunities/domain/trades.mjs apps/tracy-web/src/lib/wo-revision-choice.js apps/tracy-web/src/opportunities/own-site.js packages/site/tracy-add-site/src/client/from-business-flow.mjs",
@@ -41,7 +43,8 @@
       "packages/wo/website-opportunities/test/pasted-link-status.test.mjs",
       "apps/tracy-web/test/own-site-link-status.test.mjs",
       "packages/ui/tracy-wo-views/test/link-read-render.test.mjs",
-      "packages/wo/website-opportunities/test/ui-link-read.test.mjs"
+      "packages/wo/website-opportunities/test/ui-link-read.test.mjs",
+      "packages/wo/website-opportunities/test/business-reading-post-offerings.test.mjs"
     ],
     "tests": [
       "a business is placed in its trade by its primary type, then its other types; unknown types are other",
@@ -54,7 +57,9 @@
       "research polling keeps an unconfigured Google link and blocks automatic template advancement",
       "a private social profile is reported beside the exact link, even if an old profile was collected",
       "when every pasted source reads, research returns exact contribution counts and permits the template choice",
-      "editable links and research results both render every URL with read counts or recovery text"
+      "editable links and research results both render every URL with read counts or recovery text",
+      "food: an own-post offer omitted by the model becomes a sourced on-site offering",
+      "retail: an own-post offer omitted by the model becomes a sourced on-site offering"
     ]
   }
 }

@@ -24,7 +24,9 @@ const MAX_QUOTE = 300
 function fieldOf(path, fact, sourceKind, food) {
   const [group, key] = path
   if (group === 'business') return STATED_BUSINESS.has(key) ? key : null
-  if (group === 'offerings') return food ? 'menu' : 'services'
+  // Food businesses can sell classes or other services too: only menu-derived offerings are menu facts.
+  if (group === 'offerings')
+    return food && !String(fact.derivation?.reason ?? '').startsWith('service:') ? 'menu' : 'services'
   if (group === 'people') return 'team'
   if (group === 'quotes') {
     const reason = String(fact.derivation?.reason ?? '')
