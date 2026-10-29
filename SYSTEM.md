@@ -3,6 +3,9 @@ description: How the Tracy system runs today — services, entry paths, the four
 sources:
   - deploy/compose.yml
   - apps/tracy-web/src/app.js
+  - apps/tracy-web/src/sites/engine-picture-clock.js
+  - apps/tracy-web/src/opportunities-build/engine-report.js
+  - packages/cms/tracy-seeder/src/model-observation.mjs
   - apps/tracy-web/src/seen-hints/route.js
   - apps/tracy-web/src/db/migrations/156-account-seen-hint.sql
   - apps/tracy-web/src/seat-plan/broker.js
@@ -1160,12 +1163,27 @@ EmDash) never gets a record created for it.
   `settings.favicon` and the `logo_dark` field of the chrome entry; the tool's undo journal lives in the run's temporary
   folder, so it cannot yet be undone inside Tracy (pre-existing). Each release's profile (number of logo slots, `brandReady`,
   `faviconReady`, image frame) is in [`lib/template-profiles.json`](apps/tracy-web/src/lib/template-profiles.json).
+- **Brief engine composition and picture clocks**: `composeBriefEngines` is the production composition for all three CMSs;
+  `delegateEngine` forwards every inner engine capability except explicit adapter overrides, including later additions.
+  Picture preparation retains its independent `picturesMs` budget before `applyMs` starts. The shared seeder model
+  gateway and direct photo-vision gateway publish request start/end observations without request content. A per-build
+  async scope measures drawing and vision overlapping the apply clock, including in-flight preparation calls and
+  failed calls. The receipt and handoff retain `engine.drawingDuringApplyMs`, `engine.visionDuringApplyMs`,
+  `engine.pictureCallsDuringApply` and error `engine.findings` (`PICTURE_MODEL_DURING_APPLY`); the build note also
+  states the failure. Concurrent calls use union wall time per kind, clipped at the write deadline.
 - **Button actions in brief builds** (spec #189): each button slot declares `action.kind` independently of its editorial
   role; shared labels declare every rendered use. Business research derives one `brief.primaryAction` in its existing
   model call, resolving its receiving channel only from verified brief facts. The site plan resolves a Contact action
   to the new site's own Contact page, records inferred wording, and carries button text and URL decisions together.
   Declared actions override generic copy; missing primary actions or writable destinations fail explicitly. Contract
   capture proposes actions from button markup and destinations, and contract validation refuses undeclared buttons.
+- **Offering card summaries in brief builds** (spec #189): the content map labels every offering excerpt
+  `offering.summary`, grouped with its offering name. Copy pins read only that offering's description, falling back
+  to its sourced name; empty pins never erase a summary. Joomla and WordPress settle required summaries after other
+  copy, from the site plan's offering-specific source fallback; Joomla protects them from later record cleanup.
+  EmDash's later copy write also refuses empty summary pins. After all writes, the shared page reader checks each
+  shown offering card independently and records missing summaries as C03 findings in
+  `receipt.leftovers.offeringSummaries`, making the final build check fail.
 - **A Joomla brief build clears what the content map does not reach** (spec #189, ticket #196,
   [`joomla-outside-map.js`](apps/tracy-web/src/sites/brief-engines/joomla-outside-map.js), decisions in the site plan's `outside`,
   [`outside-map.mjs`](packages/wo/website-opportunities/domain/outside-map.mjs)), under one `apply_id` `outside-<ts>`, after the

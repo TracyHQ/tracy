@@ -8,9 +8,16 @@
  * address no page has, so the not-found page is read too (C16). A link to an address that answers 404 is a link that
  * leads nowhere (C19). A page that cannot be read is listed as unread, never as clean.
  */
+import { checkMainMenu } from './main-menu-check.js'
+import { peopleCardFindings } from './people-card-check.js'
+import { statisticFindings } from './statistic-check.js'
+import { keptPageReader } from '../lib/kept-page-reader.js'
 import { keepEngineReport } from './engine-report.js'
 import { contentMapOfTemplate } from './brief-build-path.js'
 import { ownStylesheets, MAX_STYLES } from '../lib/own-stylesheets.js'
+import { checkPageIntros } from './page-intro-check.js'
+import { checkOfferingSummaries } from './offering-summary-check.js'
+import { checkReviewQuotes } from './review-quotes-check.js'
 
 /** The most pages one check reads: a brief build's site has a handful, a demo's showcase branch can have dozens. */
 export const MAX_PAGES = 24
@@ -57,10 +64,13 @@ export async function runLeftoverCheck({
   heroCheck = null,
   contentMap,
   brief,
+  sitePlan = null,
+  siteOrigin = null,
   paths = [],
   now = Date.now
 }) {
   const kept = [...new Set(['/', ...paths.map((p) => p.replace(/\/+$/, '') || '/')])]
+  const readKept = keptPageReader(readPage)
   const queue = [...kept]
   const pages = []
   const unread = []
@@ -68,12 +78,13 @@ export async function runLeftoverCheck({
   /** @type {Array<{path: string, status: number | null, why: string}>} */
   const answers = []
   const seen = new Set()
-  while (queue.length && seen.size < MAX_PAGES) {
+  const servedRoutes = new Set()
+  while (queue.length && seen.size < Math.max(MAX_PAGES, kept.length)) {
     const path = /** @type {string} */ (queue.shift())
-    if (seen.has(path)) continue
+    if (seen.has(path) || servedRoutes.has(path)) continue
     seen.add(path)
-    const page = await readPage(path).catch(() => null)
-    if (!page) {
+    const page = kept.includes(path) ? await readKept(path) : await readPage(path).catch(() => null)
+    if (!page || page.status === null) {
       unread.push(path)
       answers.push({ path, status: null, why: 'the page did not answer' })
       continue
@@ -88,42 +99,87 @@ export async function runLeftoverCheck({
       answers.push({ path, status: page.status, why: `the page answered ${page.status}` })
       continue
     }
+    if (page.status === 200 && !String(page.html ?? '').trim()) {
+      unread.push(path)
+      answers.push({ path, status: 200, why: 'the page returned an empty body' })
+      continue
+    }
     if (page.status !== 200)
       answers.push({ path, status: page.status, why: `the page answered ${page.status}, not 200` })
-    pages.push({ path, status: page.status, html: page.html })
+    servedRoutes.add(page.servedPath ?? path)
+    pages.push({ path, servedPath: page.servedPath ?? path, status: page.status, html: page.html })
     for (const link of ownLinks(page.html)) if (!seen.has(link)) queue.push(link)
   }
   const probe = await readPage(MISSING_PROBE).catch(() => null)
+  if (!probe || probe.status >= 500) unread.push(MISSING_PROBE)
   if (probe && probe.status >= 400)
     pages.push({ path: MISSING_PROBE, status: probe.status, html: probe.html })
   // The stylesheets are read with the same reader: a background the template settings paint lives there, not in a page.
   const styles = []
   for (const href of ownStylesheets(pages)) {
     const sheet = await readPage(href).catch(() => null)
-    if (sheet && sheet.status < 300) styles.push({ href, css: sheet.html })
+    if (sheet && sheet.status === 200) styles.push({ href, css: sheet.html })
+    else unread.push(href)
   }
   // 🔒 A SITE THAT DOES NOT ANSWER IS NEVER CLEAN. Pages that fail to answer carry no demo words, so a broken site used to
   // report 0 in every kind. A page the plan keeps (home, and every kept page: its address or the same address under the
   // site's index prefix) that is not served with 200 makes the whole report `broken`, and `pass` false.
   const served = pages.filter((p) => p.status === 200).map((p) => p.path)
-  const reached = (/** @type {string} */ path) =>
-    served.some((s) => s === path || (path !== '/' && s.endsWith(path)))
-  const broken = answers.filter((a) => kept.includes(a.path) && !(a.status === 404 && reached(a.path)))
+  const broken = answers.filter((a) => kept.includes(a.path))
   if (!served.includes('/') && !broken.some((b) => b.path === '/'))
     broken.unshift({ path: '/', status: null, why: 'the home page was not served with 200' })
-  const report = check({ pages, contentMap, brief, missing, styles, broken })
+  const mainMenu = sitePlan ? checkMainMenu({ pages, sitePlan, origin: siteOrigin }) : null
+  const checked = check({ pages, contentMap, brief, missing, styles, broken })
+  const people = peopleCardFindings({ pages, contentMap, brief })
+  const statistics = statisticFindings({ pages, contentMap, brief })
+  const report = {
+    ...checked,
+    pass: checked.pass && people.length === 0 && statistics.length === 0,
+    findings: [...checked.findings, ...people, ...statistics],
+    counts: {
+      ...checked.counts,
+      C07: (checked.counts?.C07 ?? 0) + people.length,
+      C17: (checked.counts?.C17 ?? 0) + statistics.length
+    }
+  }
   // A contact fact the brief holds that no page shows (address, email, phone, hours): reported beside the leftovers.
   const contactMissing = typeof contactCheck === 'function' ? contactCheck({ pages, brief }) : []
   // Which of what, where and how to contact the home page's first screen does not answer (`hero-first-screen.mjs`).
   const heroMissing = typeof heroCheck === 'function' ? heroCheck({ pages, brief }) : []
+  const pageIntros = checkPageIntros({ pages, sitePlan })
+  const offeringSummaries = checkOfferingSummaries({ pages, brief })
+  const reviewQuotes = checkReviewQuotes({ pages, brief })
+  report.findings.push(...reviewQuotes)
+  report.findings.push(...offeringSummaries.map((f) => ({ kind: 'C03', ...f })))
+  report.counts.C03 = (report.counts.C03 ?? 0) + offeringSummaries.length
+  const mainMenuFindings = (mainMenu?.findings ?? []).map((f) => ({
+    ...f,
+    kind: 'main-menu',
+    severity: 'major',
+    why: `Main menu ${f.reason}: ${f.href ?? f.page ?? f.path ?? 'unread'}`
+  }))
   return {
     ...report,
+    mainMenu,
     contactMissing,
     heroMissing,
+    offeringSummaries,
+    reviewQuotes,
+    pageIntros,
     broken,
-    pass: report.pass === true && broken.length === 0,
-    findings: report.findings.slice(0, FINDINGS_KEPT),
-    truncated: Math.max(0, report.findings.length - FINDINGS_KEPT),
+    pass:
+      (!mainMenu || mainMenu.pass) &&
+      report.pass === true &&
+      broken.length === 0 &&
+      unread.length === 0 &&
+      offeringSummaries.length === 0 &&
+      reviewQuotes.length === 0 &&
+      pageIntros.length === 0,
+    findings: [...report.findings, ...mainMenuFindings, ...pageIntros].slice(0, FINDINGS_KEPT),
+    truncated: Math.max(
+      0,
+      report.findings.length + mainMenuFindings.length + pageIntros.length - FINDINGS_KEPT
+    ),
     pages: pages.map((p) => p.path),
     unread,
     missing,
@@ -151,6 +207,8 @@ export async function checkBuildLeftovers(
     heroCheck: domain.checkHeroAnswers,
     contentMap: contentMapOf(revision.template),
     brief: revision.brief,
+    sitePlan: build.receipt?.sitePlan ?? null,
+    siteOrigin: build.site_key,
     paths: kept,
     now
   })

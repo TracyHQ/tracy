@@ -321,6 +321,8 @@ export function slotFillPins({ plan, contentMap, profile, pictures: held = [] })
       skipped.push({ role: w.slotKey, reason: `${w.slotKey} is a ${slot.type} slot` })
       continue
     }
+    // An empty placeholder must never erase a kept offering card's required summary.
+    if (slot.role === 'offering.summary' && !value.trim()) continue
     const state = w.state === 'sourced' && !value ? 'empty' : w.state
     states.set(w.slotKey, state)
     pins[w.slotKey] = value

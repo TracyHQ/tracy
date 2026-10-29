@@ -327,6 +327,7 @@ export function planSlotFill({ slotRoles, profile, assessment, locale = 'en', ne
       case 'package': {
         if (!entity) return null
         if (field === 'name') return one(v.name)
+        if (role === 'offering.summary') return one(text(v.description) || v.name)
         if (field === 'description' || field === 'summary') return one(v.description)
         if (field === 'category') return one(v.section)
         if (field === 'price') return one(priceOf(entity, locale))
@@ -460,6 +461,22 @@ export function planSlotFill({ slotRoles, profile, assessment, locale = 'en', ne
     const { entity, kind, index } = picked.get(binding.groupId)
     const { role, mode = 'copy', slotKey } = binding
     const base = { slotKey, groupId: binding.groupId, role, mode, ...(entity ? { entityId: entity.id } : {}) }
+    // A journey is editorial copy from accepted facts, not a missing entity to pin as Step plus an empty body.
+    if (role === 'step.title' || role === 'step.description') {
+      const refs = unique([
+        name?.id,
+        ...found.offerings.map((o) => o.id),
+        ...found.stories.map((s) => s.id),
+        fact(profile?.brand?.tagline)?.id
+      ])
+      writes.push({
+        ...base,
+        value: refs.length ? null : '',
+        state: refs.length ? 'composed' : 'empty',
+        factRefs: refs
+      })
+      continue
+    }
     const neutral = () => {
       const policy = group.neutral?.[role] ?? DEFAULT_NEUTRAL_BY_ROLE[role] ?? { policy: 'empty' }
       const got = neutralFor({ role, policy, kind, index, locale, business: contact })

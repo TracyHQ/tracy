@@ -243,6 +243,8 @@ export function emdashSlotFillWrites({ plan, seed }) {
   const skipped = []
   for (const w of plan?.writes ?? []) {
     if (w.state === 'composed' || w.mode === 'asset' || typeof w.value !== 'string') continue
+    // The personalize tool's summary stays when a later copy pin has no sourced words for it.
+    if (w.role === 'offering.summary' && !w.value.trim()) continue
     const m = SLOT_KEY.exec(w.slotKey)
     if (!m) continue
     const [, collection, slug, field, index, sub] = m

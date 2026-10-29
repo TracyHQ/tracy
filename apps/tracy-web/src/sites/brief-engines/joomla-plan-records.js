@@ -319,9 +319,18 @@ export function recordSteps({
  * @param {any[]} [input.extraBlanks] - content map slots to empty beside the plan's (the demo lines the writer left)
  * @param {any[]} [input.extraHides] - cards to take off beside the plan's, as its `hide` entries (a card whose title the
  *   writer left in the demo's words, `leftDemoWords`)
+ * @param {Set<string>} [input.protectedKeys] - required offering summaries already decided after copy pins
  * @returns {Promise<{ steps: Array<{ kind: string, id: number, fields: Record<string, unknown> }> }>}
  */
-export async function planRecordSteps({ apply, siteKey, ctx, woContent, extraBlanks = [], extraHides = [] }) {
+export async function planRecordSteps({
+  apply,
+  siteKey,
+  ctx,
+  woContent,
+  extraBlanks = [],
+  extraHides = [],
+  protectedKeys = new Set()
+}) {
   const plan = await woContent?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
   // With no site plan, the demo lines handed in (a demo fact under the demo company's name, #189) are still emptied.
   const planned = plan?.honesty ?? (extraBlanks.length > 0 || extraHides.length > 0 ? {} : null)
@@ -330,7 +339,9 @@ export async function planRecordSteps({ apply, siteKey, ctx, woContent, extraBla
   const seen = new Set((planned.blanks ?? []).map((b) => b.key))
   const honesty = {
     ...planned,
-    blanks: [...(planned.blanks ?? []), ...extraBlanks.filter((b) => !seen.has(b.key))],
+    blanks: [...(planned.blanks ?? []), ...extraBlanks.filter((b) => !seen.has(b.key))].filter(
+      (b) => !protectedKeys.has(b.key)
+    ),
     // A card taken off whole joins the plan's hidden cards: an item hide is made only for a group the records hide.
     hide: [...(planned.hide ?? []), ...extraHides],
     records: [

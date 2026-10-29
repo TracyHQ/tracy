@@ -15,7 +15,9 @@
     "S5: Run the grading-scratch tests of packages/wo/website-opportunities (other name in the brief, contact line order, unknown video size, DM evidence, held names in reviews, duplicate conflicts and links, source counts, service casing, no dash in the markdown).",
     "S6: Run the second grading tests: packages/wo/website-opportunities grading scratches A to E, apps/tracy-web held reviews on the site, apps/tracy-host demo QA withheld values.",
     "S7: Run the held-name tests: packages/wo/website-opportunities grading scratch F (brief brand, place profile decision, slot fill) and apps/tracy-web held name on the site (agent demo research brand, collected name).",
-    "S8: Run the held-name site tests: packages/wo/website-opportunities grading scratch G and apps/tracy-web held name on the site (G tests)."
+    "S8: Run the held-name site tests: packages/wo/website-opportunities grading scratch G and apps/tracy-web held name on the site (G tests).",
+    "S9: Run fictional bakery and dental conversion research, declared button planning and CMS writer tests, plus content-map button validation and capture tests.",
+    "S10: Run offering summary capture, domain filling, final-value, EmDash and rendered-page checks with fictional bakery and dental briefs."
   ],
   "expect": [
     "S1: every test passes: 429/5xx retried within bounds and 402 never, every tried provider listed with its code, a name that disagrees with the logo or social display name held off the site and never printed, displayName reads Name (Branch), the hero is key message 1 plus up to three on-site services, the home SEO block is held by acceptance, generated prose has no em or en dash, assets carry size, orientation, quality, content and caption labels.",
@@ -25,7 +27,9 @@
     "S5: every test passes: the brief names the business's other name with its marks and prints neither name in copy; the contact line follows the call to action and By appointment carries its source; unknown video size is null; a DM channel quotes only invitation sentences and Google's website never corroborates it; no review naming a held person is offered for the site; one name conflict per other name and no duplicate other link; Google Places counts what it gave and complete never reads pending; services read in sentence case; no em or en dash outside quotes in the markdown.",
     "S6: every test passes: By appointment is inferred from implausible all-week hours with no hours excerpt as its quote; each contact channel is named once in the call to action's order; the quickstart fill and the agent demo's research offer no review naming a held person; Tennis Lessons In Dubai reads tennis lessons in Dubai; the other name is a withheld name value, flagged in a page's text, title or meta description and not when only the logo shows it.",
     "S7: every test passes: while the business name is held, brand.name is null with nameHeld pointing to the Missing name entry and the brand carries neither the held name nor a handle; the place profile's brand name is decided off with the business name and no hero name slot falls back to it; the agent demo's brand part names nobody but keeps the logo, and the collected name is null.",
-    "S8: every test passes: while the business name is held, the site name is the brief's name-free home page title; the build row's business, the quickstart name source, the site title pin and the WordPress blogname written and read back, the visit cards, the about line, the editorial dossier, the legacy hero title, the agent prompt and the collected name all carry that identity and never the held name or a handle; a name on the site still names the site."
+    "S8: every test passes: while the business name is held, the site name is the brief's name-free home page title; the build row's business, the quickstart name source, the site title pin and the WordPress blogname written and read back, the visit cards, the about line, the editorial dossier, the legacy hero title, the agent prompt and the collected name all carry that identity and never the held name or a handle; a name on the site still names the site.",
+    "S9: primary header and hero buttons share the brief conversion label and verified receiving channel; single-button records resolve their own URL; shared offering labels describe details, map modal labels describe directions, missing declarations fail validation, and incomplete actions fail explicitly.",
+    "S10: Each offering excerpt declares offering.summary in its own card group; empty copy pins and later cleanup cannot erase it; the final build result fails for a missing summary on home or a list, including title links styled as headings, without borrowing another card's paragraph."
   ],
   "selectors": {
     "test": "packages/wo/website-opportunities/test/provider-retry.test.mjs"
@@ -53,7 +57,17 @@
       "apps/tracy-web/test/held-reviews-on-site.test.mjs",
       "apps/tracy-host/test/demo-qa-withheld.test.mjs",
       "packages/wo/website-opportunities/test/domain-hours-check.test.mjs",
-      "apps/tracy-web/test/held-name-on-site.test.mjs"
+      "apps/tracy-web/test/held-name-on-site.test.mjs",
+      "packages/wo/website-opportunities/test/business-primary-action.test.mjs",
+      "packages/wo/website-opportunities/test/domain-button-actions-plan.test.mjs",
+      "apps/tracy-web/test/brief-button-action-values.test.mjs",
+      "apps/tracy-web/test/brief-emdash-button-actions.test.mjs",
+      "scripts/test/button-actions.test.mjs",
+      "packages/wo/website-opportunities/test/domain-offering-summaries.test.mjs",
+      "scripts/test/offering-summary-capture.test.mjs",
+      "apps/tracy-web/test/brief-offering-summary-check.test.mjs",
+      "apps/tracy-web/test/brief-offering-summary-values.test.mjs",
+      "apps/tracy-web/test/brief-emdash-offering-summaries.test.mjs"
     ]
   }
 }

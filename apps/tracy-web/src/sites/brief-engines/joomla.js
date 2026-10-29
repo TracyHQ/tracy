@@ -26,6 +26,7 @@
  * (`writeSourceLanguage`: `<html lang>`, Joomla's own words and the footer headings follow). A site a visitor reads in one
  * language answers without the `/en/` prefix (`dropDefaultPrefix`, D8): the prefix's `sef` is never renamed, only left out.
  */
+import { writeJoomlaMainMenu } from './main-menu-joomla.js'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { seeder, seederDataDir, translationsDirOf } from '../../lib/seeder.js'
@@ -65,6 +66,7 @@ import { onceNote, overlapSafetyNet } from './picture-overlap-net.js'
 import { lineLimits, withBoxLimits, withinLines } from './slot-box-limits.js'
 import { writeWoContent } from './joomla-wo-content.js'
 import { heroSlotValues } from './hero-lines.js'
+import { offeringSummaryValues } from './offering-summaries.js'
 import {
   addDerivedLanguages,
   setSiteLanguage,
@@ -735,8 +737,12 @@ export function createJoomlaEngine({
               .then(({ cache }) => cache)
               .catch(() => new Map())
           : Promise.resolve(new Map())
+      const statisticPlan = await Promise.resolve(
+        woContent?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
+      ).catch(() => null)
       const site = {
         ...siteBlock(ctx.normalized),
+        statistics: statisticPlan?.statistics ?? [],
         languages: editions ? languages : [written],
         ...(editions ? {} : { sourceLanguage: written })
       }
@@ -1141,7 +1147,9 @@ export function createJoomlaEngine({
         )
       )
       // The sourced words, as their sources say them: no guard of the model's words is theirs.
-      Object.assign(kept, copyPins?.pins ?? {})
+      Object.assign(kept, copyPins?.pins ?? {}, plannedSlotValues(sitePlan))
+      // A planned statistic is a complete sourced unit even when the profile copy reader returned no pins.
+      demoBlanks = demoBlanks.filter((slot) => !(slot.key in plannedSlotValues(sitePlan)))
       // 🔒 THE FIRST SCREEN SAYS WHAT, WHERE AND HOW TO CONTACT (COO rule 29/10/2026, `hero-lines.js`): the site plan's hero
       // and offering-page intro lines win over the copy writer's, judged against the headings as written, and the left-demo
       // sweep never empties them.
@@ -1152,6 +1160,18 @@ export function createJoomlaEngine({
       Object.assign(styleMarks, takeStyleMarks(heroLines))
       Object.assign(kept, heroLines)
       demoBlanks = demoBlanks.filter((slot) => !(slot.key in heroLines))
+      // Required card summaries are settled after copy pins and protected from later empty-field cleanup.
+      const offeringSummaries = await offeringSummaryValues({
+        slots: state.slots.filter((slot) => !isDerived(slot) && shown(slot)),
+        honesty,
+        written: kept,
+        locale: written,
+        model: text,
+        signal: ctx.signal,
+        note: ctx.note
+      })
+      Object.assign(kept, offeringSummaries)
+      demoBlanks = demoBlanks.filter((slot) => !(slot.key in offeringSummaries))
 
       // 🔒 A MODULE THAT STATES ONLY ANOTHER COMPANY'S FACTS COMES OFF THE PAGE. Seven modules of `tracy-business/j6` are nothing
       // but facts the contract asks evidence for — the team and their titles, the certificates, the clients, three strips of
@@ -1294,6 +1314,7 @@ export function createJoomlaEngine({
         demoHides,
         demoAsked,
         styleMarks,
+        offeringSummaries,
         // The site plan's search title, description and LocalBusiness record (`place-seo.mjs`).
         seo: sitePlan?.seo ?? null
       }
@@ -2010,6 +2031,7 @@ export function createJoomlaEngine({
             siteKey,
             ctx,
             woContent,
+            protectedKeys: new Set(Object.keys(prepared.offeringSummaries ?? {})),
             extraBlanks: [
               ...(prepared.demoBlanks ?? []),
               ...[...refusedByWrite]
@@ -2423,9 +2445,10 @@ export function createJoomlaEngine({
         await time('outsideMapMs', () => outsideMap(hidden))
         // The safety net: a placed picture that covers words at any width is taken off too (`picture-overlap-net.js`).
         if (pictureOverlap && Object.keys(art?.values ?? {}).length > 0)
-          await time('pictureOverlapMs', () =>
+          await time('pictureOverlapMs', async () =>
             overlapSafetyNet({
               check: pictureOverlap,
+              reader: siteReader ? await siteReader(siteKey).catch(() => null) : null,
               siteKey,
               plan: outsidePlan,
               pictures: hidden,
@@ -2448,6 +2471,21 @@ export function createJoomlaEngine({
             time: ctx.time
           })
         )
+      // The main menu owns its labels after copy pins and every cleanup write.
+      const menuPlan = await woContent?.sitePlanFor?.({ siteKey, email: ctx.email })
+      if (menuPlan?.pages?.some((p) => p.decision === 'keep')) {
+        const { text: menuModel } = await models()
+        const menu = await writeJoomlaMainMenu({
+          apply,
+          siteKey,
+          sitePlan: menuPlan,
+          model: menuModel,
+          locale: prepared.written ?? SOURCE,
+          signal: ctx.signal,
+          contentMap: staticState(ctx.contract)
+        })
+        ctx.time('mainMenuLabels', menu.items.length)
+      }
       return { wrote, kept }
     }
   }

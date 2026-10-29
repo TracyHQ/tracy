@@ -30,6 +30,8 @@
  * prefix, every other edition the archive ships is hidden, and WordPress is told to speak it (its core
  * translation installed, `WPLANG`). Several languages (an older brief) keep the source in English plus `/vi/`.
  */
+import { writeWordPressMainMenu } from './main-menu-wordpress.js'
+import { plannedStatisticValues } from 'website-opportunities/domain/statistic-tuples.mjs'
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { declaredCopy, listOf } from '../../lib/contract-copy.js'
@@ -67,6 +69,8 @@ import {
 } from './shared.js'
 import { woContentOf } from './wo-content.js'
 import { copyPinsOf, pinStates, recordPins, sampleAt, samplePagesOf, sweepDishesOf } from './wo-copy-pins.js'
+import { offeringSummaryValues } from './offering-summaries.js'
+import { heroSlotValues } from './hero-lines.js'
 
 import { translateBlockWords } from './wp-block-words.js'
 import { plain } from './wp-blocks.js'
@@ -479,7 +483,10 @@ export function createWordpressEngine({
           fetchImpl
         })
       )
-      const site = siteBlock(ctx.normalized)
+      const statisticPlan = await Promise.resolve(
+        woContent?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
+      ).catch(() => null)
+      const site = { ...siteBlock(ctx.normalized), statistics: statisticPlan?.statistics ?? [] }
       // One language that is not English: the source edition alone, written in it (D10).
       const writtenIn = soleOtherLanguage(site.languages)
       const passes = writtenIn
@@ -546,7 +553,7 @@ export function createWordpressEngine({
         lang: sourceSite.languages?.[0] ?? 'en',
         pictures: (await reading)?.pictures
       })
-      for (const [slot, value] of Object.entries(copyPins?.pins ?? {})) {
+      for (const [slot, value] of Object.entries({ ...copyPins?.pins, ...plannedStatisticValues(statisticPlan) })) {
         const at = inputWrites.findIndex((w) => w.slot === slot)
         if (at >= 0) inputWrites.splice(at, 1)
         inputWrites.push({ slot, value, sourceOnly: true })
@@ -696,6 +703,36 @@ export function createWordpressEngine({
             replacement: ownName
           })
         )
+      const summaryPlan = await Promise.resolve(
+        woContent?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
+      ).catch(() => null)
+      const introValues = heroSlotValues(
+        { slots: summaryPlan?.slots?.filter((s) => s.reason?.startsWith('intro-')) ?? [] },
+        sourceSite.languages?.[0] ?? 'en',
+        (key) => finalKept[key] ?? slotByKey.get(key)?.sample
+      )
+      Object.assign(finalKept, introValues)
+      for (const w of inputWrites) if (w.slot in introValues) w.value = introValues[w.slot]
+      for (const key of Object.keys(introValues)) {
+        nothing.delete(key)
+        if (copyPins?.pins && key in copyPins.pins) copyPins.pins[key] = introValues[key]
+      }
+      const offeringSummaries = await offeringSummaryValues({
+        slots: contentMap.slots,
+        honesty: summaryPlan?.honesty,
+        written: finalKept,
+        locale: sourceSite.languages?.[0] ?? 'en',
+        model: text,
+        signal: ctx.signal,
+        note: ctx.note
+      })
+      Object.assign(finalKept, offeringSummaries)
+      for (const w of inputWrites) if (w.slot in offeringSummaries) w.value = offeringSummaries[w.slot]
+      for (const key of Object.keys(offeringSummaries)) {
+        nothing.delete(key)
+        // The deferred block cleanup reads these pins again after the contract write.
+        if (copyPins?.pins && key in copyPins.pins) copyPins.pins[key] = offeringSummaries[key]
+      }
       /** The lines the contract door writes, and the ones only a block can take (a second block of a name). */
       /** @type {Record<string, string>} */
       const changes = {}
@@ -2260,6 +2297,19 @@ export function createWordpressEngine({
           })
         )
         if (glyphs.faces > 0) ctx.time('glyphFaces', glyphs.faces)
+      }
+      // Main navigation owns its labels after every copy and residue pass.
+      const menuPlan = await woContent?.sitePlanFor?.({ siteKey, email: ctx.email })
+      if (menuPlan?.pages?.some((p) => p.decision === 'keep')) {
+        const { text: menuModel } = await textModels()
+        const menu = await writeWordPressMainMenu({
+          call: door1,
+          sitePlan: menuPlan,
+          model: menuModel,
+          locale: prepared.writtenIn ?? 'en',
+          signal: ctx.signal
+        })
+        ctx.time('mainMenuLabels', menu.items.length)
       }
       return {
         wrote: through.written.length + pictured,

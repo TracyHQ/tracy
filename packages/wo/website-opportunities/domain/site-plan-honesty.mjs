@@ -15,6 +15,7 @@ import { planStatBoxes } from './stat-box-plan.mjs'
 import { factRowFacts, planFactRows } from './fact-rows.mjs'
 import { roleInCasingOf, showablePeopleOf } from './brief-people.mjs'
 import { planFormBlocks } from './form-blocks.mjs'
+import { planReviewGroup, sourcedReviewsOf } from './review-quotes.mjs'
 
 export const HONESTY_VERSION = 'site-plan-honesty/1'
 
@@ -24,8 +25,11 @@ export const HONESTY_REASONS = Object.freeze({
   'brief-offering': 'an offering the brief lists',
   'brief-offering-quote': 'the business’s own words about this offering',
   'brief-owner': 'the owner the brief names',
+  'brief-review': 'one whole sourced guest review with its real author and platform',
+  'no-fitting-review': 'no whole attributed review fits this quote card',
   'author-as-business': 'a post’s author shown as the business, never as a made-up person',
   'no-brief-person': 'the brief names no person for this card',
+  'person-name-unavailable': 'the accepted name cannot be shown whole on this card',
   'no-brief-offering': 'the brief lists no offering for this card',
   'no-brief-price': 'the brief holds no price for this plan',
   'no-brief-fact': 'the brief holds no such fact',
@@ -201,6 +205,7 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
   const people = peopleOfBrief(brief)
   const offerings = offeringsOfBrief(brief)
   const owner = people.find((p) => OWNER_WORDS.test(p.role ?? '')) ?? null
+  const reviews = sourcedReviewsOf(brief)
   const records = []
   const values = {}
   const blanks = []
@@ -258,7 +263,21 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
         if (slot.role?.startsWith('stat.') && (slot.type === 'text' || slot.xpath))
           blanks.push(blankOf(slot, 'no-brief-statistic'))
     }
-    if (group.kind === 'quote')
+    if (group.kind === 'quote' && group.slots.some((s) => s.role === 'quote.text')) {
+      const chosen = planReviewGroup(group.slots, reviews)
+      records.push({
+        group: group.id,
+        kind: 'quote',
+        decision: 'keep',
+        reason: chosen ? 'brief-review' : 'no-fitting-review',
+        ...(chosen ? { assigned: chosen.review } : {})
+      })
+      for (const slot of group.slots) {
+        if (chosen && slot.key in chosen.values) setValue(slot, chosen.values[slot.key], 'brief-review')
+        else if (slot.type === 'text' && slot.role?.startsWith('quote.'))
+          blanks.push(blankOf(slot, 'no-fitting-review'))
+      }
+    } else if (group.kind === 'quote')
       for (const slot of group.slots) {
         if (slot.role === 'quote.author_name' && owner) setValue(slot, owner.label, 'brief-owner')
         else if (slot.role === 'quote.author_context' && owner?.role)
@@ -296,6 +315,19 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
       }
       const list = group.kind === 'person' ? people : group.kind === 'package' ? [] : offerings
       const assigned = group.kind !== 'person' && priced ? pricedOffering(group) : (list[n] ?? null)
+      // No initials-only people card: a name too long for its fields (or no name field) takes off the whole card.
+      if (assigned && group.kind === 'person') {
+        const names = group.slots.filter((s) => s.role === 'person.name' && s.type === 'text')
+        if (names.length === 0 || names.some((s) => !fits(s, assigned.label))) {
+          records.push({
+            ...record,
+            decision: 'hide',
+            reason: 'person-name-unavailable',
+            place: placeOf(contentMap, group)
+          })
+          return
+        }
+      }
       if (!assigned) {
         const reason =
           group.kind === 'package'
@@ -353,9 +385,11 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
           blanks.push(blankOf(slot, 'no-brief-fact'))
         else if (role === 'offering.name') setValue(slot, assigned.label, 'brief-offering')
         else if (OFFERING_FACTS.has(role)) blanks.push(blankOf(slot, 'no-brief-fact'))
-        else if (role === 'offering.description') {
+        else if (role === 'offering.description' || role === 'offering.summary') {
           const own = ownQuote(assigned, offerings)
           if (own && fits(slot, own.value)) fallbacks[slot.key] = own
+          else if (role === 'offering.summary' && fits(slot, assigned.label))
+            fallbacks[slot.key] = { value: assigned.label, reason: 'brief-offering-label' }
         } else if (CONTACT_KIND[role]) {
           const fact = contact?.[CONTACT_KIND[role]]?.value
           fact ? setValue(slot, fact, 'brief-offering') : blanks.push(blankOf(slot, 'no-brief-fact'))
@@ -398,6 +432,7 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
       blanks,
       fallbacks,
       cardNames,
+      offerings,
       // The keys of the blocks taken off whole: no step writes them.
       unwritten: [...forms.unwritten]
     }

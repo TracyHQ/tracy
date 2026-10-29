@@ -521,6 +521,13 @@ path):
    each rule: [`references/declaration-rules.md`](references/declaration-rules.md). Re-capturing replaces the file, so
    make these edits after the final capture (or pass the reviewed map as `--previous-map` next time; top-level fields
    such as `repeatableLists` are not carried and must be set again).
+   **Offering cards and lists:** the short text a card or list reads is `offering.summary`, in the same group as
+   its `offering.name`. An offering article's `introtext` shown by a category/list view is its summary, even when
+   its full body has `offering.description` slots too. This applies to T3, T4 and other frameworks; WordPress
+   excerpts and EmDash offering repeater summaries follow the same rule. Never label these as free
+   `editorial.paragraph` slots. The rule tables bind known offering excerpts; review the rendered card to bind
+   other summary fields. After a brief build, check every kept offering card on home and every list page has
+   nonempty copy about its own offering. Report a missing summary as a build failure, including its page and card.
 9. **The first T3 template run through this skill:** look at and record in the report two points — (a) local Tracy
    creates a T3 site successfully (section 6 step 5); (b) the freshly bound site has no design-drift warnings (step 6 above).
 10. `git -C "$TCH_WT" status --short` · `git -C "$CW_WT" status --short` → record. No `git add`.

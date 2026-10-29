@@ -76,6 +76,7 @@ export const FACT_ROLES = Object.freeze([
   // offering.* — menu item, dish, service, room, course, product, process step
   'offering.name',
   'offering.description',
+  'offering.summary',
   'offering.price',
   'offering.price_note',
   'offering.category',
@@ -273,6 +274,7 @@ export const DEFAULT_NEUTRAL_BY_ROLE = Object.freeze({
     }
   }),
   'offering.description': freezeRule({ policy: 'empty' }),
+  'offering.summary': freezeRule({ policy: 'empty' }),
   'offering.price': freezeRule({ policy: 'empty' }),
   'offering.price_note': freezeRule({ policy: 'empty' }),
   'offering.category': freezeRule({ policy: 'empty' }),

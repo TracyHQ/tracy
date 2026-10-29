@@ -29,6 +29,7 @@ import {
   ROLE_VOCABULARY_VERSION
 } from 'website-opportunities/domain'
 import { editorialRoleOf } from './editorial-defaults.mjs'
+import { declareOfferingSummaries } from './offering-summaries.mjs'
 import { FACT_FAMILY_ROLES, factFamilyPlacement } from './rule-tables-facts.mjs'
 import { proposeMarkupBindings } from './rule-tables-markup.mjs'
 import { proposeWordpressLinks } from './rule-tables-wordpress-links.mjs'
@@ -619,7 +620,7 @@ const EMDASH_REPEATER_MAP = Object.freeze({
     entityKind: 'service',
     roles: {
       title: 'offering.name',
-      text: 'offering.description'
+      text: 'offering.summary'
     }
   }
 })
@@ -830,6 +831,7 @@ export function proposeContentMapRoles(contentMap, { cms, vocabulary = ROLE_VOCA
     if (slot?.role === undefined) delete slot.role
     if (slot?.group === undefined) delete slot.group
   }
+  declareOfferingSummaries(out)
   if (vocabulary3) for (const slot of slots) deriveKeep(slot)
   out.roleVocabularyVersion = vocabulary
   const unplaced = slots

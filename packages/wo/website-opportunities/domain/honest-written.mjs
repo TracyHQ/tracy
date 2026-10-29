@@ -197,7 +197,7 @@ export function honestWritten({
     if (!honesty) continue
     const echoed = typeof value !== 'string' || wordsOf(value).join(' ') === wordsOf(slot.sample).join(' ')
     const fallback = honesty.fallbacks?.[key]
-    if (fallback && (echoed || /lorem ipsum/i.test(value))) {
+    if (fallback && (echoed || wordsOf(value).length === 0 || /lorem ipsum/i.test(value))) {
       values[key] = fallback.value
       counts.fallbacks += 1
       continue
