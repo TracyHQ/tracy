@@ -373,56 +373,74 @@ export async function placeNativePictures({
     }))
   if (unresolved.length) throw fail('QUICKSTART_PICTURE_COVERAGE_INCOMPLETE')
   if (!groups.length) throw fail('QUICKSTART_PICTURE_COVERAGE_EMPTY')
-  const available = [],
-    unavailable = []
-  for (const picture of real.pictures) {
-    ctx.signal?.throwIfAborted()
-    const bytes = await real.bytes(picture.id)
-    if (!bytes) {
-      unavailable.push(picture.id)
-      continue
-    }
-    if (createHash('sha256').update(bytes).digest('hex') !== picture.sha256)
-      throw fail('QUICKSTART_PICTURE_SOURCE')
-    available.push(picture)
-  }
+  // Bytes are read only for the photos a plan places (item 27): reading all 300 stored photos before planning cost
+  // minutes of the write clock for photos no slot takes. A chosen photo whose bytes are gone is set aside and the plan is
+  // made again without it; a photo whose bytes do not match its hash still stops the build.
   const domain = await websiteOpportunitiesDomain(),
-    labels = available.map((p) => ({
+    unavailable = [],
+    sourceBytes = new Map()
+  let available = [...real.pictures]
+  const planWith = () => {
+    const labels = available.map((p) => ({
       ...domain.labelPicture(p),
       visionTextPresence: p.vision?.textPresence ?? null
     }))
-  const { clusterOf } = domain.nearCopies(labels)
-  // A v3 content map and a brief that links its photos: the fill plan decides each mapped slot (#141).
-  const byFill =
-    fill && fillsByPlan(fill.contentMap, fill.brief)
-      ? fillPlacements({
-          contentMap: fill.contentMap,
-          brief: fill.brief,
-          pictures: available,
-          groups,
-          cardNames: fill.cardNames ?? {}
-        })
-      : null
-  const rest = byFill ? byFill.rest : groups
-  const variants = rest.length
-    ? planQuickstartVariants(domain, { groups: rest, labels, clusterOf })
-    : { placements: [], unfilled: [] }
-  const plan = byFill
-    ? {
-        ...variants,
-        placements: [...byFill.placements, ...variants.placements],
-        unfilled: [
-          ...byFill.substitutes.map((s) => ({
-            groupId: s.groupId,
-            action: GAP_ACTION,
-            code: s.code,
-            ...(s.substitute ? { substitute: s.substitute } : {})
-          })),
-          ...(variants.unfilled ?? [])
-        ],
-        fill: fillReport(byFill)
+    const { clusterOf } = domain.nearCopies(labels)
+    // A v3 content map and a brief that links its photos: the fill plan decides each mapped slot (#141).
+    const byFill =
+      fill && fillsByPlan(fill.contentMap, fill.brief)
+        ? fillPlacements({
+            contentMap: fill.contentMap,
+            brief: fill.brief,
+            pictures: available,
+            groups,
+            cardNames: fill.cardNames ?? {}
+          })
+        : null
+    const rest = byFill ? byFill.rest : groups
+    const variants = rest.length
+      ? planQuickstartVariants(domain, { groups: rest, labels, clusterOf })
+      : { placements: [], unfilled: [] }
+    const plan = byFill
+      ? {
+          ...variants,
+          placements: [...byFill.placements, ...variants.placements],
+          unfilled: [
+            ...byFill.substitutes.map((s) => ({
+              groupId: s.groupId,
+              action: GAP_ACTION,
+              code: s.code,
+              ...(s.substitute ? { substitute: s.substitute } : {})
+            })),
+            ...(variants.unfilled ?? [])
+          ],
+          fill: fillReport(byFill)
+        }
+      : variants
+    return { plan, byFill }
+  }
+  let plan, byFill
+  for (;;) {
+    ;({ plan, byFill } = planWith())
+    let missing = false
+    for (const placement of plan.placements ?? []) {
+      if (placement.placeholder || !placement.mediaId || sourceBytes.has(placement.mediaId)) continue
+      ctx.signal?.throwIfAborted()
+      const picture = available.find((p) => p.id === placement.mediaId)
+      if (!picture) continue
+      const bytes = await real.bytes(picture.id)
+      if (!bytes) {
+        unavailable.push(picture.id)
+        available = available.filter((p) => p.id !== picture.id)
+        missing = true
+        continue
       }
-    : variants
+      if (createHash('sha256').update(bytes).digest('hex') !== picture.sha256)
+        throw fail('QUICKSTART_PICTURE_SOURCE')
+      sourceBytes.set(picture.id, bytes)
+    }
+    if (!missing) break
+  }
   await checkpoint('picture-plan', { state: 'planned', plan })
   // Replace, never remove: a slot no photo fits keeps its place and holds a neutral picture.
   const gaps = plan.unfilled ?? []
@@ -460,7 +478,7 @@ export async function placeNativePictures({
       })
       cut.recipe = { version: 'tracy-placeholder/1', kind: cut.kind, width: cut.width, height: cut.height }
     } else {
-      const raw = await real.bytes(source.id)
+      const raw = sourceBytes.get(source.id) ?? (await real.bytes(source.id))
       if (!raw || createHash('sha256').update(raw).digest('hex') !== source.sha256)
         throw fail('QUICKSTART_PICTURE_SOURCE')
       cut = placement.canvas

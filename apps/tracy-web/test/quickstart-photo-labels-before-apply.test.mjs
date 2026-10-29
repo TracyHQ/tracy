@@ -30,8 +30,8 @@ function photoStore(photos) {
   return {
     reads,
     kept,
-    async forSite({ visionOverride, label = true, signal }) {
-      reads.push({ label, vision: Boolean(visionOverride) })
+    async forSite({ visionOverride, label = true, signal, visionNeeds }) {
+      reads.push({ label, vision: Boolean(visionOverride), needs: visionNeeds ?? null })
       const vision = visionOverride ?? null
       const missing = vision ? photos.filter((id) => !kept.has(`${vision.key}:${id}`)) : []
       let stats = null
@@ -79,7 +79,7 @@ async function visionDoor({ slowMs = 0, advance = () => {} } = {}) {
   }
 }
 
-function buildFor(business, { store, vision, placed, assetLabelling = null }) {
+function buildFor(business, { store, vision, placed, assetLabelling = null, writes = {} }) {
   const source = {
     id: `build-${business.trade}`,
     revision_id: 'revision-1',
@@ -90,7 +90,7 @@ function buildFor(business, { store, vision, placed, assetLabelling = null }) {
       ...(assetLabelling ? { assetLabelling } : {})
     },
     profile_effective: {},
-    content: { writes: {} }
+    content: { writes: { ...writes } }
   }
   let siteName = 'Demo brand'
   const data = { title: 'Sample heading' }
@@ -265,7 +265,8 @@ test('a batch starts only while the picture budget holds it, and a started batch
   const answer = await labelWithinBudget(vision, {
     deadlineAt: 120_000,
     stop: stop.signal,
-    now: () => now
+    now: () => now,
+    inFlight: 1
   }).label({
     pictures,
     signal: run
@@ -291,6 +292,100 @@ test('a batch starts only while the picture budget holds it, and a started batch
   })
   assert.equal(stopped.deferred, 20, 'a stopped picture phase starts no batch')
   assert.equal(labelWithinBudget(null, { deadlineAt: 0 }), null)
+})
+
+test('preparation and apply read the photo shortlist by the same frame needs, so a labelled photo is never a miss (item 27)', async () => {
+  const business = trades[1]
+  const store = photoStore(business.photos)
+  const { door } = await visionDoor()
+  const frames = [{ width: 800, height: 400, path: 'images/demo/hero.jpg' }]
+  const engine = buildFor(business, {
+    store,
+    vision: door,
+    placed: [],
+    writes: { 'quickstart:baseline': { state: 'read', baseline: { imageFrames: frames } } }
+  })
+  await runPhases(engine, business.platform)
+  const prep = store.reads.find((r) => r.label === true)
+  const apply = store.reads.find((r) => r.label === false)
+  assert.deepEqual(prep.needs, [{ width: 800, height: 400 }])
+  assert.deepEqual(apply.needs, prep.needs)
+})
+
+test('a restaurant with 80 photos to label: four batches in flight, three rounds, ten paid calls (item 27)', async () => {
+  const { labelWithinBudget, picturePhaseMs } = await import(
+    '../src/sites/brief-engines/quickstart-photo-labels.js'
+  )
+  let now = 0
+  let inFlight = 0
+  let most = 0
+  const calls = []
+  // Recorded latencies of a fictional vision model: 40 to 55 seconds a batch.
+  const latencies = [41_000, 52_000, 47_000, 55_000, 44_000, 49_000, 53_000, 40_000, 46_000, 50_000]
+  const vision = {
+    key: 'fictional-vision|labels/1',
+    label: async ({ pictures }) => {
+      const took = latencies[calls.length]
+      calls.push(pictures.length)
+      inFlight += 1
+      most = Math.max(most, inFlight)
+      await new Promise((resolve) => setImmediate(resolve))
+      inFlight -= 1
+      now = Math.max(now, took + Math.floor(now / 60_000) * 60_000)
+      return {
+        labels: new Map(pictures.map((p) => [p.id, { subject: 'dish' }])),
+        usage: { calls: 1, promptTokens: 1, completionTokens: 1 },
+        failed: 0
+      }
+    }
+  }
+  const pictures = Array.from({ length: 80 }, (_, n) => ({ id: `dish-${n}`, bytes: Buffer.from([n]) }))
+  const budget = picturePhaseMs({ misses: 80 })
+  assert.equal(budget, 195_000, '15 s, then three rounds at the seeded 60 s')
+  const answer = await labelWithinBudget(vision, { deadlineAt: budget, now: () => now }).label({ pictures })
+  assert.equal(most, 4, 'four batches in flight at once')
+  assert.equal(calls.length, 10, 'ten paid attempts of the quickstart run')
+  assert.equal(answer.labels.size, 80)
+  assert.equal(answer.deferred, 0)
+  assert.equal(answer.batchMs.length, 10, 'each batch duration is recorded')
+})
+
+test('the picture clock is sized by the photos left to label, between one minute and eight', async () => {
+  const { picturePhaseMs, p95 } = await import('../src/sites/brief-engines/quickstart-photo-labels.js')
+  assert.equal(picturePhaseMs({ misses: 0 }), 60_000, 'nothing to label: the shortest clock')
+  assert.equal(picturePhaseMs({ misses: 40 }), 135_000, 'a clinic with 40 photos left: two rounds')
+  assert.equal(picturePhaseMs({ misses: 300 }), 480_000, 'a restaurant with 300 left: held at eight minutes')
+  assert.equal(picturePhaseMs({ misses: 80, p95BatchMs: 30_000 }), 105_000, 'a faster model, a shorter clock')
+  assert.equal(picturePhaseMs({ misses: 8, drawRounds: 2 }), 125_000, 'drawing rounds at the seeded 25 s')
+  assert.equal(
+    p95([10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200]),
+    190
+  )
+  assert.equal(p95([]), null)
+})
+
+test('the engine sizes its picture clock from the photos still unlabelled, asking no model', async () => {
+  const business = trades[0]
+  const store = photoStore(business.photos)
+  const { door, asked } = await visionDoor()
+  const engine = buildFor(business, { store, vision: door, placed: [] })
+  const ctx = {
+    siteKey: 'fictional.tracy.test',
+    email: 'owner@example.test',
+    platform: business.platform,
+    signal: new AbortController().signal,
+    normalized: { languages: ['en'] },
+    note: () => {},
+    time: () => {}
+  }
+  const prepared = await engine.prepare(ctx)
+  assert.equal(
+    await engine.picturesBudgetMs(ctx, prepared),
+    75_000,
+    'three photos: one round at the seeded 60 s'
+  )
+  assert.deepEqual(asked, [])
+  assert.deepEqual(store.reads.at(-1).label, false)
 })
 
 test('the demo look and the menu photo reading are outside every module a brief build loads', async () => {

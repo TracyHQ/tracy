@@ -575,8 +575,14 @@ export function createBriefBuilds({
       // The site: wait for it, if it is not up yet. Nothing here costs anything while the host installs.
       if (!(await siteUp)) return await notUp()
       const upAt = now()
+      // The picture clock is sized by the photos still to label (item 27); an engine that cannot say keeps the default.
+      const picturesMs =
+        (await Promise.resolve()
+          .then(() => engine.picturesBudgetMs?.(ctx, prepared))
+          .catch(() => null)) ?? cap.picturesMs
+      time('picturesBudgetMs', picturesMs)
       await pictureClock.run(() =>
-        preparePicturesBeforeApply(engine, ctx, prepared, cap.picturesMs, cap.picturesStopMs)
+        preparePicturesBeforeApply(engine, ctx, prepared, picturesMs, cap.picturesStopMs)
       )
       controller.signal.throwIfAborted()
 

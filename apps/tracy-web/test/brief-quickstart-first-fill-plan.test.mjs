@@ -77,7 +77,7 @@ const BRIEF = {
 }
 const CARD_NAMES = { 'module-2.service.0': 'Padel', 'module-3.person.0': 'Wren Example' }
 
-async function world() {
+async function world({ wrapBytes = (read) => read } = {}) {
   const jpeg = (width, height, background) =>
     sharp({ create: { width, height, channels: 3, background } })
       .jpeg()
@@ -129,7 +129,12 @@ async function world() {
       base: 'http://site.test/',
       bytes: async (path) => demos[path] ?? outputs.get(path.replace(/^\//, ''))
     },
-    real: { pictures, bytes: async (id) => sources[id] ?? null, colours: ['#123456'], brief: BRIEF },
+    real: {
+      pictures,
+      bytes: wrapBytes(async (id) => sources[id] ?? null),
+      colours: ['#123456'],
+      brief: BRIEF
+    },
     checkpoint: async (key, value) => checkpoints.push({ key, ...value }),
     fill: { contentMap: CONTENT_MAP, brief: BRIEF, cardNames: CARD_NAMES }
   })
@@ -153,6 +158,34 @@ test('a v3 map with a brief: each picture slot takes the photo the fill plan cho
   const photos = report.receipts.filter((r) => r.kind === 'photo').map((r) => r.sourceId)
   assert.deepEqual(photos.sort(), ['hall', 'padel'])
   assert.equal(photos.includes('stranger'), false)
+})
+
+test('only the photos a slot takes are read, each once: a photo no slot takes is never fetched (item 27)', async () => {
+  const reads = []
+  const { report } = await world({
+    wrapBytes: (read) => async (id) => {
+      reads.push(id)
+      return read(id)
+    }
+  })
+  assert.deepEqual([...reads].sort(), ['hall', 'padel'])
+  assert.equal(report.placed, 2)
+})
+
+test('a chosen photo whose bytes are gone is set aside and the plan is made again without it', async () => {
+  const { report } = await world({
+    wrapBytes: (read) => async (id) => (id === 'padel' ? null : read(id))
+  })
+  assert.deepEqual(report.unavailable, ['padel'])
+  assert.equal(
+    report.receipts.some((r) => r.sourceId === 'padel'),
+    false
+  )
+  // The hall photo is still placed: the second plan runs without the missing photo.
+  assert.equal(
+    report.receipts.some((r) => r.sourceId === 'hall'),
+    true
+  )
 })
 
 test("a coach with no portrait takes their initials, drawn in the slot's frame", async () => {

@@ -28,7 +28,11 @@ import {
 import { quickstartContactFacts } from './quickstart-facts.js'
 import { quickstartFillInput, quickstartTextPins } from './quickstart-fill-copy.js'
 import { delegateEngine } from './delegate.js'
-import { labelWithinBudget, photoLabelReceipt } from './quickstart-photo-labels.js'
+import { labelWithinBudget, photoLabelReceipt, picturePhaseMs } from './quickstart-photo-labels.js'
+
+/** The frame sizes a baseline's pictures need, as the vision shortlist reads them. */
+const visionNeedsOf = (baseline) =>
+  (baseline?.imageFrames ?? []).map(({ width, height }) => ({ width, height }))
 
 export const QUICKSTART_WORKFLOW = 'quickstart-first/1'
 /** A website page's words the editor reads: the model's input budget, not a cut of what is shown. */
@@ -259,17 +263,56 @@ export function createQuickstartFirstEngine({
       const checkAllowed = allowedFor(runCtx, prepared)
       await checkAllowed()
       const generate = await generateFor({ ctx: runCtx, source: prepared.source, checkAllowed })
+      // 🔒 ONE SHORTLIST FOR BOTH PHASES (item 27): apply counts its misses with the same frame needs this phase labelled
+      // by, so a photo labelled here is never counted as missed there. The frames are the held baseline's when a
+      // build read one before; apply reads `photoLabels.needs` back.
+      const needs = visionNeedsOf(held['quickstart:baseline']?.baseline)
+      const budgeted = labelWithinBudget(generate.vision, {
+        deadlineAt: ctx.picturesDeadlineAt ?? Number.POSITIVE_INFINITY,
+        stop: ctx.signal
+      })
+      const batchMs = []
       const real = await realPictures.forSite({
         siteKey: ctx.siteKey,
         email: ctx.email,
         strict: true,
         signal: runCtx.signal,
-        visionOverride: labelWithinBudget(generate.vision, {
-          deadlineAt: ctx.picturesDeadlineAt ?? Number.POSITIVE_INFINITY,
-          stop: ctx.signal
-        })
+        visionNeeds: needs,
+        visionOverride: budgeted && {
+          ...budgeted,
+          label: async (input) => {
+            const answer = await budgeted.label(input)
+            batchMs.push(...(answer.batchMs ?? []))
+            return answer
+          }
+        }
       })
-      return { photoLabels: real?.vision ?? null }
+      return { photoLabels: real?.vision ? { ...real.vision, needs, batchMs } : null }
+    },
+    /** The picture phase's clock, sized by the photos still to label (item 27); null keeps the runner's default. */
+    async picturesBudgetMs(ctx, prepared) {
+      if (prepared.legacy) return legacy.picturesBudgetMs?.(ctx, prepared.prepared) ?? null
+      const held = prepared.source.content?.writes ?? {}
+      if (!realPictures || held['quickstart:pictures']?.state === 'verified') return null
+      // The same door apply reads through, asked nothing: only the count of photos with no label yet.
+      const generate = await generateFor({
+        ctx,
+        source: prepared.source,
+        checkAllowed: allowedFor(ctx, prepared)
+      })
+      const real = await realPictures.forSite({
+        siteKey: ctx.siteKey,
+        email: ctx.email,
+        signal: ctx.signal,
+        visionNeeds: visionNeedsOf(held['quickstart:baseline']?.baseline),
+        visionOverride: generate.vision,
+        label: false
+      })
+      if (!real?.vision) return null
+      return picturePhaseMs({
+        misses: real.vision.unlabelled ?? 0,
+        p95BatchMs: ctx.pictureBatchP95Ms ?? null
+      })
     },
     async apply(ctx, prepared) {
       if (prepared.legacy) {
@@ -572,10 +615,8 @@ export function createQuickstartFirstEngine({
               visionOverride: generate.vision,
               // The labels picture preparation made: no vision call while the write clock runs (item 24).
               label: false,
-              visionNeeds: (baseline?.baseline?.imageFrames ?? []).map(({ width, height }) => ({
-                width,
-                height
-              }))
+              // The shortlist picture preparation labelled by, else this build's frames (item 27).
+              visionNeeds: prepared.realPictureShape?.photoLabels?.needs ?? visionNeedsOf(baseline?.baseline)
             })
       if (!resume && !photosOnlyRetry && !real?.pictures?.length)
         throw fail('QUICKSTART_PHOTOGRAPHS_REQUIRED')

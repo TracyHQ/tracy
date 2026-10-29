@@ -114,6 +114,30 @@ for (const trade of ['bakery', 'dental clinic']) {
   )
 }
 
+test(
+  'the picture clock is the one the engine sized by its work, else the default (item 27)',
+  dbOpts,
+  async () => {
+    const { pool } = db
+    const seen = []
+    const sized = {
+      ...engine(),
+      picturesBudgetMs: async () => 195_000,
+      preparePictures: async (ctx) => {
+        seen.push(ctx.picturesDeadlineAt - Date.now())
+        return null
+      }
+    }
+    const b = builds(pool, { wordpress: sized })
+    await b.start(input())
+    await b.gate('bakery.tracy.test')
+    await untilSettled(b, 'bakery.tracy.test')
+    const row = await briefOf(pool, 'bakery.tracy.test')
+    assert.equal(row.timings.picturesBudgetMs, 195_000)
+    assert.ok(seen[0] > 180_000 && seen[0] <= 195_000, 'the phase deadline follows the sized clock')
+  }
+)
+
 test('a site made with no brief has no row, and the gate never holds it', dbOpts, async () => {
   const { pool } = db
   const b = builds(pool, { wordpress: engine() })
