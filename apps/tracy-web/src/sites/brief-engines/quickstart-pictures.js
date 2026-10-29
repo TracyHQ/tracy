@@ -3,7 +3,9 @@ import { createHash } from 'node:crypto'
 import { parseFragment } from 'parse5'
 import { parseBlocks, namedBlocks, commentJson } from './wp-blocks.js'
 import { parse as parseCss, walk as walkCss, generate as cssText } from 'css-tree'
-import { cutForPlace, extendForPlace, placeholderPicture } from '../../lib/picture-cut.js'
+import { cutForPlace, extendForPlace } from '../../lib/picture-cut.js'
+import { substitutePicture } from '../../lib/substitute-picture.js'
+import { fillPlacements, fillsByPlan } from './quickstart-fill-pictures.js'
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
 import { planQuickstartVariants } from './quickstart-picture-plan.js'
 import { sizeOf } from './pictures.js'
@@ -12,6 +14,8 @@ const fail = (code) => Object.assign(new Error(code), { code })
 const digest = (v) => createHash('sha256').update(JSON.stringify(v)).digest('hex')
 const extension = /\.(?:jpe?g|png|webp|avif)(?:[?#]|$)/i
 const PLACEHOLDER_MAX_W = 1600
+/** What the picture planner calls a gap a neutral picture fills (`planQuickstartVariants`): a plan entry, not a site action. */
+const GAP_ACTION = 'placeholder'
 /** Review reason recorded when a slot no business photo fits holds a neutral placeholder. */
 export const QUICKSTART_PLACEHOLDER_POLICY = 'quickstart-picture-placeholders/1'
 
@@ -356,7 +360,8 @@ export async function placeNativePictures({
   checkpoint,
   frames = [],
   priorUploads = [],
-  inventory = null
+  inventory = null,
+  fill = null
 }) {
   const { groups, bindings, unresolved, excluded } =
     inventory ??
@@ -386,14 +391,49 @@ export async function placeNativePictures({
       ...domain.labelPicture(p),
       visionTextPresence: p.vision?.textPresence ?? null
     }))
-  const { clusterOf } = domain.nearCopies(labels),
-    plan = planQuickstartVariants(domain, { groups, labels, clusterOf })
+  const { clusterOf } = domain.nearCopies(labels)
+  // A v3 content map and a brief that links its photos: the fill plan decides each mapped slot (#141).
+  const byFill =
+    fill && fillsByPlan(fill.contentMap, fill.brief)
+      ? fillPlacements({
+          contentMap: fill.contentMap,
+          brief: fill.brief,
+          pictures: available,
+          groups,
+          cardNames: fill.cardNames ?? {}
+        })
+      : null
+  const rest = byFill ? byFill.rest : groups
+  const variants = rest.length
+    ? planQuickstartVariants(domain, { groups: rest, labels, clusterOf })
+    : { placements: [], unfilled: [] }
+  const plan = byFill
+    ? {
+        ...variants,
+        placements: [...byFill.placements, ...variants.placements],
+        unfilled: [
+          ...byFill.substitutes.map((s) => ({
+            groupId: s.groupId,
+            action: GAP_ACTION,
+            code: s.code,
+            ...(s.substitute ? { substitute: s.substitute } : {})
+          })),
+          ...(variants.unfilled ?? [])
+        ],
+        fill: fillReport(byFill)
+      }
+    : variants
   await checkpoint('picture-plan', { state: 'planned', plan })
   // Replace, never remove: a slot no photo fits keeps its place and holds a neutral picture.
   const gaps = plan.unfilled ?? []
   const work = [
     ...plan.placements,
-    ...gaps.map((missing) => ({ groupId: missing.groupId, mediaId: null, placeholder: true }))
+    ...gaps.map((missing) => ({
+      groupId: missing.groupId,
+      mediaId: null,
+      placeholder: true,
+      substitute: missing.substitute ?? null
+    }))
   ]
   const changed = new Map(),
     receipts = [],
@@ -411,12 +451,14 @@ export async function placeNativePictures({
     let cut
     if (placement.placeholder) {
       const scale = Math.min(1, PLACEHOLDER_MAX_W / group.demo.width)
-      cut = await placeholderPicture({
+      // A person's initials, a signer's name, a blank or the plain placeholder (`substitute-picture.js`).
+      cut = await substitutePicture({
+        substitute: placement.substitute,
         width: Math.max(1, Math.round(group.demo.width * scale)),
         height: Math.max(1, Math.round(group.demo.height * scale)),
         colours: real.colours ?? []
       })
-      cut.recipe = { version: 'tracy-placeholder/1', width: cut.width, height: cut.height }
+      cut.recipe = { version: 'tracy-placeholder/1', kind: cut.kind, width: cut.width, height: cut.height }
     } else {
       const raw = await real.bytes(source.id)
       if (!raw || createHash('sha256').update(raw).digest('hex') !== source.sha256)
@@ -425,7 +467,7 @@ export async function placeNativePictures({
         ? await extendForPlace(raw, placement.crop, placement.canvas)
         : await cutForPlace(raw, placement.crop)
     }
-    const kind = placement.placeholder ? 'placeholder' : 'photo'
+    const kind = placement.placeholder ? cut.kind : 'photo'
     const path = `${ctx.platform === 'joomla' ? 'images' : ctx.platform === 'wordpress' ? 'wp-content/uploads' : 'tracy-content'}/tracy-quickstart/${cut.sha256}.${cut.ext}`
     let uploaded = uploadedCuts.get(cut.sha256)
     if (!uploaded) {
@@ -532,15 +574,65 @@ export async function placeNativePictures({
     placeholderPolicy: gaps.length ? QUICKSTART_PLACEHOLDER_POLICY : null,
     vision: real.vision ?? null,
     placed: receipts.filter((receipt) => receipt.kind === 'photo').length,
-    placeholders: receipts.filter((receipt) => receipt.kind === 'placeholder').length,
+    // An initials avatar, a script signature and a blank stand where no photo went: each counts as a placeholder.
+    placeholders: receipts.filter((receipt) => receipt.kind !== 'photo').length,
     originalGroups: groups.length,
     sourceCount: new Set(receipts.filter((r) => r.kind === 'photo').map((r) => r.sourceId)).size,
     derivatives: uploadedCuts.size,
     reusedGroups: plan.placements.filter((placement) => placement.reused).length,
     maxSourceUses: Math.max(0, ...plan.placements.map((placement) => placement.totalUses ?? 1)),
     gaps,
-    receipts
+    receipts,
+    // The fill plan's decisions with their reason codes, for the hand-off, and what the QA judges each photo by.
+    ...(byFill ? { fill: plan.fill, qaEvidence: qaEvidenceOf(byFill, receipts) } : {})
   }
   await checkpoint('pictures', { state: 'verified', report })
   return report
+}
+
+/** The fill plan as the hand-off keeps it: every image decision with its reason code, and each card's binding. */
+function fillReport({ fill, kept }) {
+  return {
+    version: fill.version,
+    offerings: fill.offerings,
+    people: fill.people,
+    decisions: fill.slots
+      .filter((d) => d.type === 'image')
+      .map((d) => ({
+        key: d.key,
+        role: d.role,
+        groupId: d.groupId,
+        action: d.action,
+        reason: d.reason,
+        ...(d.mediaId ? { mediaId: d.mediaId } : {}),
+        ...(d.substitute ? { substitute: d.substitute.kind } : {}),
+        ...(d.refused && Object.keys(d.refused).length ? { refused: d.refused } : {})
+      })),
+    unused: fill.unused,
+    kept
+  }
+}
+
+/**
+ * What the post-build checks `photos-match-slots` and `faces-named` (#140) judge each placed photo by: its file, its
+ * brief photo, and the slot's role, group kind and the offering or person the fill plan bound it to. The template
+ * pictures the plan keeps are named so `no-demo-pictures` reads them as kept on purpose.
+ */
+function qaEvidenceOf({ slotOf, kept }, receipts) {
+  const placedSlots = {}
+  for (const receipt of receipts) {
+    const slot = slotOf.get(receipt.key)
+    if (receipt.kind !== 'photo' || !receipt.sourceId || !slot) continue
+    const path = String(receipt.readbackPath ?? '').replace(/^\/+/, '')
+    if (!path) continue
+    placedSlots[path] = {
+      photo: receipt.sourceId,
+      slot: slot.key,
+      ...(slot.role ? { role: slot.role } : {}),
+      ...(slot.group ? { group: slot.group } : {}),
+      ...(slot.offering ? { offering: slot.offering } : {}),
+      ...(slot.person ? { person: slot.person } : {})
+    }
+  }
+  return { placedSlots, kept }
 }

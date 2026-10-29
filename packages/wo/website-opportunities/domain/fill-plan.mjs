@@ -16,6 +16,7 @@ import { keepDecisionOf } from './content-map-keep-decision.mjs'
 import { LOGO_ROLES } from './place-content-roles.mjs'
 import { closedListOf, GENERAL, namedIn } from './pictures/picture-links.mjs'
 import { avatarSubstitute } from './person-avatar.mjs'
+import { scriptSignature } from './neutral-signature.mjs'
 import { isMapPhotoByOthers, publisherRankOf } from './pictures/asset-origin.mjs'
 import { ROLES } from './pictures/placement.mjs'
 import { declaredSize, fileOf } from './pictures/slot-map.mjs'
@@ -78,9 +79,41 @@ function leadsOf(slots) {
   return out
 }
 
+/** The brief's people as the signature builder reads them: name, and the role or relationship that says an owner. */
+const signersOf = (reading) =>
+  (reading?.team ?? [])
+    .filter((p) => typeof p?.label === 'string' && p.reviewsOnly !== true)
+    .map((p) => ({ id: p.id, value: { name: p.label, role: p.role, relationship: p.relationship } }))
+
+/**
+ * The substitute of a signature picture (Slot fit kind `signature`, #137): the signer's name in a script font sized to
+ * the slot, or a blank picture when nobody can sign. Never the demo's hand, never a grey placeholder over a signature.
+ */
+function signatureSubstitute(slot, people) {
+  const signed = scriptSignature({ people, fit: slot.fit })
+  if (signed.state !== 'neutral') return { kind: 'blank', reason: signed.reason }
+  const { text, svg, width, height, factRefs } = signed
+  return { kind: 'script-signature', text, svg, width, height, factRefs }
+}
+
 const depictsOf = (asset) => asset?.depicts?.id ?? asset?.depicts ?? GENERAL
 const hasFaces = (asset) => (asset?.faceBoxes?.length ?? 0) > 0 || (asset?.peopleCount ?? 0) > 0
 const portraitOf = (asset) => asset?.portraitOf?.id ?? asset?.portraitOf ?? null
+
+/**
+ * The width a slot's picture is drawn at, the size it must stay sharp at (ADR 0039, consequence of 29/10/2026): the
+ * desktop box its Slot fit measured, else its widest measured box, else the `minWidth` an unmeasured fit declares. Never
+ * the demo file's own width: a 1920 px demo hero drawn 1440 px wide asks no brief photo for 1920 px.
+ * @param {{fit?: {boxes?: Record<string, {width: number}>, minWidth?: number}}} slot
+ */
+export function shownWidthOf(slot) {
+  const boxes = slot?.fit?.boxes && typeof slot.fit.boxes === 'object' ? slot.fit.boxes : {}
+  const desktop = Number(boxes.desktop?.width)
+  if (desktop > 0) return desktop
+  const widest = Math.max(0, ...Object.values(boxes).map((b) => Number(b?.width) || 0))
+  if (widest > 0) return widest
+  return Number(slot?.fit?.minWidth)
+}
 
 /** What one image slot needs, before any photo is looked at: a reason code alone means it takes no brief photo. */
 function needOf(slot, lockOf, peopleOf) {
@@ -138,6 +171,7 @@ function refusalOf(asset, need) {
  * @param {Record<string, string>} [input.cardNames] - the name the text path writes on each offering card, by group id
  *   (`cardNamesOf`): the one decider of which offering a card shows, for its words and its photo alike
  * @returns {{version: string, offerings: Array<{groupId: string, offeringId: string, label: string}>,
+ *   people: Array<{groupId: string, personId: string, label: string}>,
  *   slots: Array<{key: string, entity: string, type: string, role: string | null, groupId: string | null,
  *   action: 'photo' | 'substitute' | 'keep' | 'skip' | 'text', reason: string, file?: string, mediaId?: string,
  *   crop?: object, refused?: Record<string, number>}>, unused: string[]}}
@@ -219,10 +253,15 @@ export function planFill({ contentMap, brief, demo = new Map(), cardNames = {} }
   for (const unit of order) {
     const settle = (action, reason, extra = {}) => {
       // A person picture with no portrait shows the person's initials (ticket #134), in the frame of the slot.
+      const signature = unit.slots.find((s) => s.fit?.kind === 'signature')
       const avatar =
-        action === 'substitute' && unit.slots.some((s) => s.role === 'person.image')
-          ? { substitute: avatarSubstitute(personById.get(unit.need.person) ?? null, unit.frame) }
-          : {}
+        action !== 'substitute'
+          ? {}
+          : signature
+            ? { substitute: signatureSubstitute(signature, signersOf(brief?.reading)) }
+            : unit.slots.some((s) => s.role === 'person.image')
+              ? { substitute: avatarSubstitute(personById.get(unit.need.person) ?? null, unit.frame) }
+              : {}
       for (const slot of unit.slots) decide(slot, action, reason, { file: unit.file, ...extra, ...avatar })
     }
     if (unit.need.reason) {
@@ -233,8 +272,9 @@ export function planFill({ contentMap, brief, demo = new Map(), cardNames = {} }
       settle('substitute', 'demo-size-unknown')
       continue
     }
-    // The slot's minimum width: the largest its Slot fit declares among the unit's slots, else the role's target.
-    const declared = unit.slots.map((s) => Number(s.fit?.minWidth)).filter((n) => Number.isFinite(n) && n > 0)
+    // The slot's minimum width: the widest box it is drawn in (`shownWidthOf`) among the unit's slots, else the role's
+    // target. A photo may still be enlarged by `MAX_SCALE` to reach it (`subjectCrop`).
+    const declared = unit.slots.map(shownWidthOf).filter((n) => Number.isFinite(n) && n > 0)
     const min = declared.length ? Math.max(...declared) : hero(unit) ? ROLES.hero.min : ROLES.section.min
     // A card's own offering or person is a match: its photo may lose more of itself to the crop (#136).
     const matches = Boolean(unit.need.offering || unit.need.person)
@@ -278,6 +318,7 @@ export function planFill({ contentMap, brief, demo = new Map(), cardNames = {} }
   return {
     version: FILL_PLAN_VERSION,
     offerings,
+    people: [...peopleOf].map(([groupId, p]) => ({ groupId, personId: p.personId, label: p.label })),
     slots: slots.map((s) => decisions.get(s.key)).filter(Boolean),
     unused: assets.filter((a) => !used.has(a.id)).map((a) => a.id)
   }

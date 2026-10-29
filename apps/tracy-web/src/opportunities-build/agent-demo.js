@@ -46,12 +46,22 @@ import { BUILD_CHANGES_BRIEF } from '../lib/agent-demo-changes.js'
 import { BACKGROUND_UNFIT } from './demo-photo-labels.js'
 import { placePictures } from './demo-picture-placer.js'
 import { agentSlotFillOf } from './agent-slot-fill.js'
+import { agentFillPlan, fillDecisionOf, fillPlanForAgent, fillRowIssues } from './agent-demo-fill-plan.js'
+import { substitutePicture } from '../lib/substitute-picture.js'
+import { subjectCrop } from 'website-opportunities/domain/pictures/subject-crop.mjs'
 import { routePath } from './residue-sweep.js'
 import { templateProfileOf } from '../lib/template-profiles.js'
 import { brandOnSiteSteps } from './brand-on-site.js'
 import { pageGroundsOfRevision } from './brand-on-site-grounds.js'
 import { researchOfRevision } from './revision-research.js'
 import { researchWithoutHeld } from './held-research.js'
+
+/** Where an imported picture is written on each CMS. */
+const CONTENT_FOLDER = {
+  wordpress: 'wp-content/uploads/tracy-content',
+  joomla: 'images/tracy-content',
+  emdash: 'tracy-content'
+}
 
 /** The approved neutral words and the banned fillers, in English, as the agent is told them (plan §7, 26/10/2026). */
 const NEUTRAL_EN = neutralWords('en')
@@ -1728,7 +1738,7 @@ export function amendsPlan(held, next) {
 export function validateAgentPlan(
   plan,
   bundle,
-  { leads = [], inventoryInvariant = null, baseline = null, sizes = null } = {}
+  { leads = [], inventoryInvariant = null, baseline = null, sizes = null, fill = null } = {}
 ) {
   const issues = []
   const issue = (path, message, expected) => {
@@ -1816,7 +1826,10 @@ export function validateAgentPlan(
       const unknown = row.assetIds.filter((id) => !assetIds.has(id))
       if (unknown.length)
         issue(`${at}.assetIds`, 'These IDs are outside the frozen media catalogue.', unknown)
-      if (row.operation === 'replace-image' && !row.assetIds.length)
+      // A slot the fill plan gives a neutral substitute takes no photo: its row names none (#141).
+      const substitute =
+        row.target?.kind === 'contract' && fillDecisionOf(fill, row.target.slot)?.action === 'substitute'
+      if (row.operation === 'replace-image' && !row.assetIds.length && !substitute)
         issue(`${at}.assetIds`, 'replace-image requires at least one frozen photo ID.')
     }
     if (!['rewrite', 'replace-image', 'retain'].includes(row.operation))
@@ -1940,6 +1953,10 @@ export function validateAgentPlan(
   const logoIds = new Set(bundle.media.filter((asset) => isLogo(bundle, asset)).map((asset) => asset.id))
   for (const [index, row] of plan.rows.entries()) {
     if (row?.operation !== 'replace-image' || !Array.isArray(row.assetIds) || issues.length >= 50) continue
+    // The fill plan decides a contract picture slot: which photo, or none (#141).
+    const decided = row.target?.kind === 'contract' ? fillDecisionOf(fill, row.target.slot) : null
+    for (const message of fillRowIssues(row, decided)) issue(`rows[${index}].assetIds`, message)
+    if (decided) continue
     const place = picturePlace(row, plan.structure)
     if (!place) continue
     const frame = pictureFrame({ ...place, page: row.page }, baseline)
@@ -2132,7 +2149,8 @@ export function agentDemoCapabilities({
   photoLabels = null,
   writeCopy = null,
   now = Date.now,
-  inventoryInvariant = null
+  inventoryInvariant = null,
+  fillPlanFor = agentFillPlan
 }) {
   /** Copy runs in flight, by build id: one at a time per build (`copy.start`). */
   const copyRuns = new Map()
@@ -2280,6 +2298,14 @@ export function agentDemoCapabilities({
         structure: structureSummary(build.content?.agentDemo?.structure),
         structureHash: build.content?.agentDemo?.structureHash ?? null,
         plan: build.content?.agentDemo?.plan ?? null,
+        // Which photo each contract picture slot takes, decided by the fill plan, not by the agent (#141).
+        fillPlan: fillPlanForAgent(
+          build.content?.agentDemo?.fill ??
+            (await fillPlanFor({
+              revision,
+              sizes: mediaSizes([...bundle.media, ...placed])
+            }).catch(() => null))
+        ),
         planGuide: agentPlanGuide(bundle, build.content?.agentDemo?.structure),
         editorialLeads: plannableLeads(
           editorialLeads(build.qa?.baseline),
@@ -2409,6 +2435,13 @@ export function agentDemoCapabilities({
       )
         throw fail('AGENT_DEMO_STRUCTURE_CHANGED')
       if (!build.content.agentDemo.structure.inventory?.complete) throw fail('AGENT_DEMO_INVENTORY_REQUIRED')
+      // The collected photos' sizes, the research's first and the stored rows' over them.
+      const sizes = mediaSizes([
+        ...bundle.media,
+        ...(await buildPlaced(pool, auth.accountId, revision).catch(() => []))
+      ])
+      // The fill plan, made once with the first saved plan and kept: every later save is held to the same one (#141).
+      const fill = build.content.agentDemo.fill ?? (await fillPlanFor({ revision, sizes }).catch(() => null))
       const checked = validateAgentPlan(
         { ...params.plan, structure: build.content.agentDemo.structure },
         bundle,
@@ -2416,11 +2449,8 @@ export function agentDemoCapabilities({
           leads: plannableLeads(editorialLeads(build.qa?.baseline), build.content.agentDemo.structure),
           inventoryInvariant,
           baseline: build.qa?.baseline ?? null,
-          // The collected photos' sizes, the research's first and the stored rows' over them.
-          sizes: mediaSizes([
-            ...bundle.media,
-            ...(await buildPlaced(pool, auth.accountId, revision).catch(() => []))
-          ])
+          sizes,
+          fill
         }
       )
       const { structure: _structure, hash: _oldHash, ...body } = checked
@@ -2432,7 +2462,12 @@ export function agentDemoCapabilities({
         where id=$1 and (content#>>'{agentDemo,plan,hash}' is null or content#>>'{agentDemo,plan,hash}'=any($3::text[])) returning id`,
         [
           build.id,
-          JSON.stringify({ ...build.content?.agentDemo, plan, savedAt: new Date(now()).toISOString() }),
+          JSON.stringify({
+            ...build.content?.agentDemo,
+            plan,
+            ...(fill ? { fill } : {}),
+            savedAt: new Date(now()).toISOString()
+          }),
           [plan.hash, ...(held ? [held.hash] : [])]
         ]
       )
@@ -2509,7 +2544,8 @@ export function agentDemoCapabilities({
         sizes: mediaSizes([
           ...bundle.media,
           ...(await buildPlaced(pool, auth.accountId, revision).catch(() => []))
-        ])
+        ]),
+        fill: build.content.agentDemo.fill ?? null
       })
       const { structure: _structure, hash: _oldHash, ...body } = checked
       const plan = { ...body, hash: researchHash(body) }
@@ -2534,6 +2570,9 @@ export function agentDemoCapabilities({
     }
     if (params.operation !== 'media.import') throw fail('AGENT_DEMO_BAD_OPERATION')
     if (!build.content?.agentDemo?.plan) throw fail('AGENT_DEMO_PLAN_REQUIRED')
+    // A slot the fill plan gives a neutral substitute: the row names no photo, and Tracy draws the picture (#141).
+    if (params.assetId === undefined && Number.isInteger(params.rowIndex))
+      return importSubstitute({ build, revision, auth, rowIndex: params.rowIndex, upload })
     const manifest = bundle.media.find((asset) => asset.id === params.assetId)
     // 🔒 THE BRIEF'S LOGO IS ALWAYS PLANNED (lrsweep rig, JA Diner wp7, 25/10/2026): every template has a header
     // logo, and the research's logo goes there whatever rows the agent wrote. The Living Room's frozen plan named no
@@ -2566,7 +2605,34 @@ export function agentDemoCapabilities({
     const row = rows[rowIndex]
     const place =
       row?.operation === 'replace-image' ? picturePlace(row, build.content.agentDemo.structure) : null
-    if (place) {
+    // 🔒 THE FILL PLAN CHOSE THE PHOTO (#141): a slot it decided takes that photo only, cut around its subject and never
+    // through a face, in the frame the template draws it in.
+    const decided =
+      row?.target?.kind === 'contract' ? fillDecisionOf(build.content.agentDemo.fill, row.target.slot) : null
+    if (decided) {
+      if (decided.action !== 'photo' || decided.mediaId !== manifest.id)
+        throw fail('AGENT_DEMO_FILL_PLAN_PHOTO', {
+          reason:
+            decided.action === 'photo'
+              ? `The fill plan puts photo ${decided.mediaId} in ${row.target.slot}, not this one.`
+              : `The fill plan puts no brief photo in ${row.target.slot}: import the row with media.import {rowIndex} and no assetId.`
+        })
+      if (!image)
+        image = await fillImage({
+          decided,
+          manifest,
+          media,
+          revision,
+          place,
+          row,
+          baseline: build.qa?.baseline
+        })
+      // A decided slot never takes its photo uncut: with no size and no planned crop, the import stops here.
+      if (!image)
+        throw fail('AGENT_DEMO_IMAGE_DOES_NOT_FIT', {
+          reason: `Photo ${manifest.id} has no readable size to cut for ${row.target.slot}; the fill plan's crop cannot be applied.`
+        })
+    } else if (place) {
       const frame = pictureFrame({ ...place, page: row.page }, build.qa?.baseline ?? null)
       const guard = protectedOf(place.slot, place.file, frame)
       if (guard && !(guard.kind === 'logo' && isLogo(bundle, manifest)))
@@ -2621,11 +2687,7 @@ export function agentDemoCapabilities({
       )
     )
       throw fail('AGENT_DEMO_ASSET_REVOKED')
-    const folder = {
-      wordpress: 'wp-content/uploads/tracy-content',
-      joomla: 'images/tracy-content',
-      emdash: 'tracy-content'
-    }[revision.cms]
+    const folder = CONTENT_FOLDER[revision.cms]
     const path = `${folder}/${outputSha}.${variant?.ext ?? ext}`
     const flight = {
       state: 'sending',
@@ -2723,6 +2785,100 @@ export function agentDemoCapabilities({
       source: manifest.source,
       sourceUrl: manifest.sourceUrl,
       credit: manifest.credit ?? null,
+      at: new Date(now()).toISOString()
+    }
+    await pool.query(
+      `update wo_build set handoff=jsonb_set(coalesce(handoff,'{}'::jsonb),'{placed}',
+      coalesce(handoff->'placed','{}'::jsonb)||jsonb_build_object($2::text,$3::text)),
+      content=jsonb_set(content,'{agentDemo,imports}',coalesce(content#>'{agentDemo,imports}','{}'::jsonb)||jsonb_build_object($2::text,$4::jsonb))
+      where id=$1`,
+      [build.id, importKey, receipt.path, JSON.stringify(receipt)]
+    )
+    return { ok: true, ...receipt }
+  }
+
+  /** The recipe a fill plan photo is cut by: around its subject in the frame the template draws (else the plan's). */
+  async function fillImage({ decided, manifest, media, revision, place, row, baseline }) {
+    const asset = (revision.brief?.assets ?? []).find((a) => a?.id === manifest.id) ?? {}
+    const size =
+      Number(media.width) > 0 && Number(media.height) > 0
+        ? { width: Number(media.width), height: Number(media.height) }
+        : await storedSize(objects, media)
+    const frame = place ? pictureFrame({ ...place, page: row.page }, baseline ?? null) : null
+    const cut =
+      size && frame
+        ? subjectCrop({ ...asset, ...size }, frame, {
+            // The slot's displayed desktop width, as the fill plan measured it (ADR 0039, 29/10/2026).
+            min: decided.minWidth ?? frame.width,
+            matches: ['offering-photo', 'person-portrait'].includes(decided.reason)
+          })
+        : null
+    const crop = cut?.crop ?? decided.crop
+    return crop ? { assetId: manifest.id, crop } : null
+  }
+
+  /** Draw and upload the neutral substitute the fill plan gives a row's slot; a receipt like any import's. */
+  async function importSubstitute({ build, revision, auth, rowIndex, upload }) {
+    const row = build.content.agentDemo.plan.rows[rowIndex]
+    const decided =
+      row?.target?.kind === 'contract' ? fillDecisionOf(build.content.agentDemo.fill, row.target.slot) : null
+    if (!decided || decided.action !== 'substitute') throw fail('AGENT_DEMO_ASSET_NOT_PLANNED')
+    const importKey = `substitute:${row.target.slot}`
+    const held = build.content?.agentDemo?.imports?.[importKey]
+    if (held?.state === 'written') return { ok: true, ...held }
+    if (held && ['sending', 'unknown'].includes(held.state)) throw fail('AGENT_DEMO_IMPORT_UNCERTAIN')
+    if (!objects || !upload) throw fail('AGENT_DEMO_MEDIA_UNAVAILABLE')
+    const place = picturePlace(row, build.content.agentDemo.structure)
+    const frame =
+      (place ? pictureFrame({ ...place, page: row.page }, build.qa?.baseline ?? null) : null) ??
+      decided.substitute?.frame ??
+      null
+    if (!frame?.width || !frame?.height) throw fail('AGENT_DEMO_FRAME_UNKNOWN')
+    const scale = Math.min(1, 1600 / frame.width)
+    const drawn = await substitutePicture({
+      substitute: decided.substitute ?? null,
+      width: Math.max(1, Math.round(frame.width * scale)),
+      height: Math.max(1, Math.round(frame.height * scale)),
+      colours: (revision.brief?.brand?.colors ?? []).map((c) => c?.hex).filter(Boolean)
+    })
+    await context(auth)
+    const folder = CONTENT_FOLDER[revision.cms]
+    const path = `${folder}/${drawn.sha256}.${drawn.ext}`
+    const claimed = await pool.query(
+      `update wo_build set content=jsonb_set(content,'{agentDemo,imports}',
+      coalesce(content#>'{agentDemo,imports}','{}'::jsonb)||jsonb_build_object($2::text,$3::jsonb))
+      where id=$1 and coalesce(content#>>array['agentDemo','imports',$2,'state'],'') not in ('sending','unknown','written') returning id`,
+      [build.id, importKey, JSON.stringify({ state: 'sending', path, at: new Date(now()).toISOString() })]
+    )
+    if (!claimed.rows.length) throw fail('AGENT_DEMO_IMPORT_UNCERTAIN')
+    const answer = await upload({
+      action: 'media.upload',
+      params: {
+        apply_id: `wo-agent-${drawn.sha256.slice(0, 24)}`,
+        path,
+        content_b64: drawn.bytes.toString('base64')
+      }
+    }).catch(() => null)
+    if (!answer || answer.status >= 300 || answer.body?.ok === false || answer.body?.code) {
+      await pool.query(
+        `update wo_build set content=jsonb_set(content,array['agentDemo','imports',$2,'state'],'"unknown"'::jsonb) where id=$1`,
+        [build.id, importKey]
+      )
+      throw fail('AGENT_DEMO_IMPORT_UNCERTAIN')
+    }
+    const receipt = {
+      state: 'written',
+      assetId: null,
+      substitute: drawn.kind,
+      reason: decided.reason,
+      sha256: drawn.sha256,
+      importKey,
+      planRow: rowIndex,
+      path: answer.body?.url ?? path,
+      mediaId: answer.body?.attachment ?? (typeof answer.body?.id === 'string' ? answer.body.id : null),
+      ...(Number.isInteger(answer.body?.attachment) && answer.body.attachment > 0
+        ? { attachmentId: answer.body.attachment }
+        : {}),
       at: new Date(now()).toISOString()
     }
     await pool.query(

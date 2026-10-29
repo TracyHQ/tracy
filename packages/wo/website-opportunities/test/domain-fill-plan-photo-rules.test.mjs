@@ -386,3 +386,69 @@ test('#134 a demo picture shared by a coach card and a class card takes neither 
   for (const key of ['module-7.1', 'module-7.3'])
     assert.deepEqual([got.get(key).action, got.get(key).reason], ['substitute', 'conflicting-needs'], key)
 })
+
+test('the size minimum is the box the slot is drawn in at the desktop viewport, not the demo file or its minWidth', () => {
+  // A hero drawn 1440 px wide on a desktop, measured with minWidth 2160 (1.5 x the box) and a 1920 px demo file: a
+  // 1500 px brief photo fills it (the 1920 px file would need 1.28x, the 1440 px box none), a 1100 px one would be enlarged past 1.25.
+  const heroFit = fit(1920, 960, {
+    minWidth: 2160,
+    boxes: { desktop: { width: 1440, height: 720 }, phone: { width: 390, height: 195 } }
+  })
+  const contentMap = {
+    ...CONTENT_MAP,
+    slots: CONTENT_MAP.slots.map((s) => (s.key === 'module-1.0' ? { ...s, fit: heroFit } : s))
+  }
+  const heroOf = (width) =>
+    at(
+      planFill({
+        contentMap,
+        brief: { reading: READING, assets: [photo('club-hall', width, Math.round(width / 1.5))] },
+        cardNames: NAMES
+      })
+    ).get('module-1.0')
+  const wide = heroOf(1500)
+  assert.deepEqual([wide.action, wide.mediaId], ['photo', 'club-hall'])
+  const narrow = heroOf(1100)
+  assert.deepEqual([narrow.action, narrow.refused['too-small-after-crop']], ['substitute', 1])
+})
+
+test('a signature picture with no brief signature takes the owner name in a script font; with no signer it is blank', () => {
+  const signatureFit = {
+    measured: true,
+    kind: 'signature',
+    replace: 'photo',
+    source: { width: 120, height: 90, format: 'png' },
+    boxes: { desktop: { width: 120, height: 90 } }
+  }
+  const contentMap = {
+    ...CONTENT_MAP,
+    entities: [...CONTENT_MAP.entities, { key: 'module-8', kind: 'module' }],
+    slots: [
+      ...CONTENT_MAP.slots,
+      {
+        ...image('module-8.0', 'module-8', 'quote.author_image', 'others/sign.png', null, [120, 90]),
+        fit: signatureFit
+      }
+    ]
+  }
+  const reading = { team: [...READING.team, { id: 'person-ivo', label: 'Ivo Founder', role: 'Founder' }] }
+  const signed = at(planFill({ contentMap, brief: { reading, assets: [] }, cardNames: NAMES })).get(
+    'module-8.0'
+  )
+  assert.equal(signed.action, 'substitute')
+  assert.equal(signed.substitute.kind, 'script-signature')
+  assert.equal(signed.substitute.text, 'Ivo Founder')
+  assert.match(signed.substitute.svg, /^<svg [^>]*width="120" height="90"/)
+  const blank = at(planFill({ contentMap, brief: { reading: READING, assets: [] }, cardNames: NAMES })).get(
+    'module-8.0'
+  )
+  assert.deepEqual(blank.substitute, { kind: 'blank', reason: 'no-signer-name' })
+})
+
+test('the plan names the person each person card holds, beside the offering of each offering card', () => {
+  const got = planFill({ contentMap: CONTENT_MAP, brief: { reading: READING, assets: [] }, cardNames: NAMES })
+  assert.deepEqual(got.people, [
+    { groupId: 'module-5.person.0', personId: 'person-wren', label: 'Wren Example' },
+    { groupId: 'module-5.person.1', personId: 'person-juno', label: 'Juno Sample' }
+  ])
+})
