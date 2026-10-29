@@ -38,6 +38,7 @@ import { writeHeadModules } from './joomla-head-module.js'
 import { sweepDeadLinks } from './joomla-link-sweep.js'
 import { brandColoursCss } from './joomla-brand-colours.js'
 import { blockBytes, HEAD_BLOCK_LIMIT, headBlocks, withoutTracyBlocks } from './joomla-head-blocks.js'
+import { CONTACT_LIST_HEADINGS } from './joomla-contact-page.js'
 
 /** The title link of an item in a Joomla articles module; the core marks the current article's `active`. */
 const JOOMLA_ARTICLE_TITLE = 'a.mod-articles-category-title'
@@ -425,7 +426,9 @@ export async function writeOutsideMap({
     // No play control opens an empty frame, and no related list shows the page it sits on (#189 round 9, C2 and C3): Joomla's
     // articles modules mark the current article's title link `active` (core helper and its layouts).
     emptyVideos: true,
-    currentItems: [JOOMLA_ARTICLE_TITLE]
+    currentItems: [JOOMLA_ARTICLE_TITLE],
+    // The contact component's heading over the channel list the build wrote (`joomla-contact-page.js`, #189 round 10).
+    replacedHeadings: CONTACT_LIST_HEADINGS
   })
   // The leftover rules and the brand colours travel in blocks of their own, each within what the site stores in one record
   // (`joomla-head-blocks.js`): one refused never takes the other off the pages.

@@ -300,6 +300,10 @@ function hidesOfGone(gone, slots, entities) {
   const out = []
   const whole = new Set()
   for (const [group, place] of gone) {
+    // 🔒 A CARD NO DOOR TAKES OFF IS EMPTIED, NEVER HANDED ON AS A HIDE (#189, round 10): its lines are blanked by the caller
+    // and the served-frame check hides the empty frame. Measured 30/10/2026: an outline part in an article's parameters
+    // (keyed by name, not a JSON list) went on as a `none` hide, the records write could not make it, and the build stopped.
+    if (place.how === 'none') continue
     // A journey's business picture is decoration, not a useful step that keeps an otherwise empty section alive.
     const entitySlots = slots.filter((s) => s.entity === place.entity && s.group?.id)
     const onlyJourney =

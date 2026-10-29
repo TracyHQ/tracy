@@ -86,50 +86,17 @@ export function channelListOf(plan) {
   return lines.some((line) => line.href || line.kind === 'booking') ? contactPageHtml(lines) : ''
 }
 
-/** The component's default heading above the extra information, and what it says on a brief build: the list's role. */
-export const MISC_HEADING_KEY = 'COM_CONTACT_OTHER_INFORMATION'
-export const MISC_HEADING_WORDS = 'How to reach us'
-
 /**
- * Replace the component's "Miscellaneous Information" heading by the channel list's role, in each English language of the
- * site, as a language override (`template.languageOverrides`). Never throws: what did not happen is the answer's note.
- * A language other than English keeps the site-strings translation of the default heading (said in the note).
- * @param {{ apply: (call: { siteKey: string, action: string, params: Record<string, unknown> }) => Promise<any>,
- *   siteKey: string, template: string | null, locales: string[] }} input
- * @returns {Promise<{ written: string[], note: string | null }>}
+ * 🔒 THE COMPONENT'S HEADING OVER THE CHANNEL LIST IS TAKEN OFF, NOT REWORDED (#189, round 10). com_contact prints
+ * `COM_CONTACT_OTHER_INFORMATION` ("Miscellaneous Information", in the site language) over the extra information; the
+ * channel list sits under the record's own "Contact" heading and needs no second one. The site refuses a language override
+ * in en-GB by design ("locale required: a Joomla language tag other than en-GB"), so the leftover head block hides the
+ * heading wherever the extra information holds the channel list (`contactPageHtml` `.contact-channels`): the sibling before
+ * the block in Joomla's core layout (`com-contact__miscinfo`), the block's own heading in a template override. Joomla-wide, never per template.
  */
-export async function writeMiscHeading({ apply, siteKey, template, locales }) {
-  const english = locales.filter((tag) => /^en-/i.test(tag))
-  const others = locales.filter((tag) => !/^en-/i.test(tag))
-  /** @type {string[]} */
-  const written = []
-  /** @type {string[]} */
-  const said = []
-  if (!template)
-    return { written, note: 'the contact list heading keeps its default: the site template is unknown' }
-  for (const locale of english) {
-    try {
-      const answer = await apply({
-        siteKey,
-        action: 'template.languageOverrides',
-        params: {
-          template,
-          locale,
-          operation: 'set',
-          strings: { [MISC_HEADING_KEY]: MISC_HEADING_WORDS },
-          apply_id: `contact-heading-${locale}-${Date.now().toString(36)}`
-        }
-      })
-      const refused = Array.isArray(answer?.refused) && answer.refused.length > 0
-      if (answer?.ok && !refused) written.push(locale)
-      else said.push(`${locale} refused (${answer?.code ?? answer?.refused?.[0]?.reason ?? 'no answer'})`)
-    } catch (error) {
-      said.push(`${locale}: ${error instanceof Error ? error.message : error}`)
-    }
-  }
-  if (others.length) said.push(`${others.join(', ')} keep the translated default heading`)
-  return {
-    written,
-    note: said.length ? `the contact list heading "${MISC_HEADING_WORDS}": ${said.join('; ')}` : null
-  }
-}
+export const CONTACT_LIST_HEADINGS = Object.freeze([
+  // Core: the sibling before a block that holds no heading of its own (an override's "Contact" before its block stays).
+  // (`:has` never nests inside `:has`: a browser drops the whole selector list for it.)
+  'h3:has(+ .com-contact__miscinfo .contact-channels):not(:has(+ .com-contact__miscinfo > h3))',
+  '.contact-miscinfo:has(.contact-channels) > h3'
+])

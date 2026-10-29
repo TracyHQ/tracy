@@ -112,7 +112,6 @@ import {
   withoutKeptTakeOff,
   writeSteps
 } from './joomla-tidy.js'
-import { channelListOf, writeMiscHeading } from './joomla-contact-page.js'
 import {
   keptById,
   leaveShowcase,
@@ -2203,16 +2202,8 @@ export function createJoomlaEngine({
             visible: visibleNow
           })
           if (contacts.note) ctx.note(contacts.note)
-          // The channel list's heading says its role, not the component's "Miscellaneous Information" (#189 item 19).
-          if (channelListOf(planned) !== '') {
-            const heading = await writeMiscHeading({
-              apply,
-              siteKey,
-              template: templateOf(ctx.contract.dir),
-              locales: [...visibleNow]
-            })
-            if (heading.note) ctx.note(heading.note)
-          }
+          // The component's "Miscellaneous Information" over the channel list is hidden by the leftover head block
+          // (`CONTACT_LIST_HEADINGS`): the site refuses the en-GB language override that would reword it (#189, round 10).
           // The site plan's contact facts in the custom modules' contact lines, linked (`joomla-contact-links.js`, #191).
           const moduleContacts = await planContactSteps({
             apply,
@@ -2276,10 +2267,15 @@ export function createJoomlaEngine({
           })
           const requiredRecords = new Set(records.steps.map((step) => `${step.kind}-${step.id}`))
           const requiredRecord = (step) => requiredRecords.has(`${step.kind}-${step.id}`)
-          const cleanupFailure = (reason) =>
-            Object.assign(new Error(`The site's demo content could not be removed: ${reason}`), {
-              code: 'JOOMLA_RECORD_FALLBACK_UNRESOLVED'
-            })
+          // 🔒 A RECORD WRITE THE SITE REFUSES IS SAID, NEVER THE END OF THE BUILD (#189, round 10): the demo words it was to take
+          // off are left on that one record, the rest of the tidy-up, the head blocks, the contact record and the cleanup turn
+          // still run, and the final check with the blocker gate decides whether the build needs fixes.
+          const cleanupLeft = (/** @type {string} */ reason, /** @type {number} */ count) => {
+            ctx.time('recordWritesLeft', count)
+            ctx.note(
+              `the template's demo content could not be removed from ${reason}, and is left for a person to fix`
+            )
+          }
           // 🔒 No records write takes away a node a contract slot binds to (`joomla-bound-nodes.js`, #189): the plugin's
           // inspect would refuse every contract write after it.
           // The styled units whose words the contract took, laid into the records steps (#189).
@@ -2301,20 +2297,16 @@ export function createJoomlaEngine({
             // Every slot the plugin resolves, the declared `keep` ones too.
             slots: [...staticState(ctx.contract).slots, ...declaredSlots(ctx.contract)]
           }).catch((error) => {
-            if (requiredRecords.size > 0)
-              throw cleanupFailure(error instanceof Error ? error.message : String(error))
+            // Unchecked record writes could take away a node the contract binds to: none is written, and that is said.
             ctx.note(
-              `the template's bound lines could not be checked: ${error instanceof Error ? error.message : error}`
+              `the template's bound lines could not be checked, so ${styling.steps.length} record change(s) were not made: ${error instanceof Error ? error.message : error}`
             )
+            if (requiredRecords.size > 0) ctx.time('recordWritesLeft', requiredRecords.size)
             return { steps: [], dropped: [] }
           })
-          if (bound.dropped.some(requiredRecord))
-            throw cleanupFailure(
-              bound.dropped
-                .filter(requiredRecord)
-                .flatMap((step) => step.keys)
-                .join(', ')
-            )
+          const heldRequired = bound.dropped.filter(requiredRecord)
+          if (heldRequired.length > 0)
+            cleanupLeft(heldRequired.flatMap((step) => step.keys).join(', '), heldRequired.length)
           if (bound.dropped.length > 0) {
             ctx.time('recordWritesHeld', bound.dropped.length)
             console.warn(
@@ -2463,7 +2455,7 @@ export function createJoomlaEngine({
             )
             const missed = [...wroteRecords.refused, ...wroteRecords.skipped].filter(requiredRecord)
             if (missed.length > 0)
-              throw cleanupFailure(missed.map((step) => `${step.kind}-${step.id}`).join(', '))
+              cleanupLeft(missed.map((step) => `${step.kind}-${step.id}`).join(', '), missed.length)
             if (wroteRecords.refused.length > 0)
               ctx.note(
                 `${wroteRecords.refused.length} change(s) to the template's cards and fact lines were refused`

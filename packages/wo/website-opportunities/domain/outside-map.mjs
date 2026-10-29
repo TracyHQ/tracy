@@ -286,6 +286,9 @@ const cssString = (value) => String(value).replace(/["\\\n\r]/g, '')
  *     left empty), so no button opens an empty frame (#189 round 9, C2)
  *   - `currentItems`: the title-link selectors of related-page lists that mark the current page's item `.active` (a CMS
  *     convention, Joomla's articles modules): the item of the page the visitor is on is hidden, the others stay (C3)
+ *   - `replacedHeadings`: selectors of a CMS component's own heading over content the build wrote that says its role
+ *     itself (a contact record's channel list under the component's "Miscellaneous Information"), each guarded by that
+ *     content, so a page without it keeps its heading (#189 round 10)
  */
 export function leftoverHeadBlock({
   backgrounds = [],
@@ -298,7 +301,8 @@ export function leftoverHeadBlock({
   tiles = [],
   centre = [],
   emptyVideos = false,
-  currentItems = []
+  currentItems = [],
+  replacedHeadings = []
 }) {
   const rules = []
   if (backgrounds.length) {
@@ -334,6 +338,10 @@ export function leftoverHeadBlock({
     )
     rules.push(`/* play controls that name no video */\n${sel.join(',\n')}{display:none !important}`)
   }
+  if (replacedHeadings.length)
+    rules.push(
+      `/* component headings over content the build wrote with its own role */\n${[...new Set(replacedHeadings)].join(',\n')}{display:none !important}`
+    )
   if (currentItems.length) {
     // The item of the current page: the child of an element that holds another item's title link, holding the current
     // title link and no other. A list of the current page alone hides nothing (the check names it).

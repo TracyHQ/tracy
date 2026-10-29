@@ -12,7 +12,8 @@
  *                   its demo picture
  *
  * Framework-wide (Joomla modules and articles, JSON parameters), never per template. A site no brief build made has no plan
- * and writes nothing here. A brief build stops when a mandatory fallback cannot reach its target.
+ * and writes nothing here. A fallback that cannot reach its target is said with its reason and the build goes on; only a
+ * records door that does not answer stops it.
  */
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
 import { wholeFactRowsOf } from 'website-opportunities/domain/fact-rows.mjs'
@@ -164,7 +165,9 @@ function dropItems(container, parents, fields, indexes) {
  * @param {Map<number, any>} [input.articles] - the article rows the plan's fields need, by id (`attribs` included)
  * @param {Map<number, any>} [input.contacts] - the contact rows the plan's fields need, by id
  * @returns {{ steps: Array<{ kind: string, id: number, fields: Record<string, unknown> }>, hidden: number, trimmed: number,
- *   emptied: number, unresolved: number }}
+ *   emptied: number, unresolved: number, left: string[], findings: Array<{ key: string, reason: string }> }} `findings`: each
+ *   target not reached and why (`no-record-door`, `no-take-off-door`, `record-not-read`, `field-not-found`,
+ *   `bound-node-not-found`)
  */
 export function recordSteps({
   honesty,
@@ -180,28 +183,32 @@ export function recordSteps({
   let unresolved = 0
   /** @type {string[]} targets the records door cannot safely neutralize */
   const left = []
+  /** @type {Array<{ key: string, reason: string }>} the same targets, each with why it was not reached */
+  const findings = []
+  const leave = (/** @type {string} */ key, /** @type {string} */ reason) => {
+    unresolved += 1
+    left.push(key)
+    findings.push({ key, reason })
+  }
   const gone = new Set()
   for (const hide of honesty?.hide ?? []) {
     if (hide.how !== 'entity') continue
     const id = idOf(hide.entity)
     const kind = hide.kind ?? String(hide.entity).split('-')[0]
     if (!Number.isSafeInteger(id) || id <= 0) {
-      unresolved += 1
-      left.push(hide.group ?? hide.entity)
+      leave(hide.group ?? hide.entity, 'no-take-off-door')
       continue
     }
     if (kind === 'module') steps.push({ kind, id, fields: { published: 0 } })
     else if (kind === 'article') steps.push({ kind, id, fields: { state: 0 } })
     else if (kind === 'menuItem') steps.push({ kind, id, fields: { published: 0 } })
     else {
-      unresolved += 1
-      left.push(hide.group ?? hide.entity)
+      leave(hide.group ?? hide.entity, 'no-take-off-door')
       continue
     }
     gone.add(hide.entity)
     hidden += 1
   }
-  unresolved += (honesty?.hide ?? []).filter((h) => h.how === 'none').length
   const hiddenGroups = new Set(
     (honesty?.records ?? []).filter((r) => r.decision === 'hide').map((r) => r.group)
   )
@@ -249,14 +256,12 @@ export function recordSteps({
       const before =
         html.get(key)?.text ?? (typeof row?.[blank.column] === 'string' ? row[blank.column] : null)
       if (before === null) {
-        unresolved += 1
-        left.push(blank.key)
+        leave(blank.key, 'record-not-read')
         continue
       }
       const next = blank.xpath ? blankBoundField(before, blank) : emptyRecordValue(blank.column)
       if (next === null) {
-        unresolved += 1
-        left.push(blank.key)
+        leave(blank.key, 'bound-node-not-found')
         continue
       }
       html.set(key, {
@@ -274,10 +279,15 @@ export function recordSteps({
     if (changed === true) {
       edit.edit.changed = true
       emptied += 1
-    } else if (changed === null) {
-      unresolved += 1
-      left.push(blank.key)
-    }
+    } else if (changed === null)
+      leave(
+        blank.key,
+        !RECORD_FIELDS[kind]?.has(blank.column)
+          ? 'no-record-door'
+          : !rowsOf.get(idOf(blank.entity))
+            ? 'record-not-read'
+            : 'field-not-found'
+      )
   }
   /** @type {Map<string, {edit: any, parents: any[], fields: string[], indexes: number[]}>} */
   const lists = new Map()
@@ -285,8 +295,7 @@ export function recordSteps({
     if (hide.how !== 'item' || gone.has(hide.entity) || !hiddenGroups.has(hide.group)) continue
     const edit = editOf(hide.entity, hide.column, hide.nestedJson)
     if (!edit) {
-      unresolved += 1
-      left.push(hide.group ?? hide.entity)
+      leave(hide.group ?? hide.entity, 'record-not-read')
       continue
     }
     const key = `${hide.entity}|${JSON.stringify(hide.parents)}`
@@ -306,8 +315,8 @@ export function recordSteps({
     for (const [key, container] of edit.nested) edit.params[key] = JSON.stringify(container)
     steps.push({ kind: edit.kind, id: edit.id, fields: { [edit.field]: JSON.stringify(edit.params) } })
   }
-  for (const hide of honesty?.hide ?? []) if (hide.how === 'none') left.push(hide.group)
-  return { steps, hidden, trimmed, emptied, unresolved, left }
+  for (const hide of honesty?.hide ?? []) if (hide.how === 'none') leave(hide.group, 'no-take-off-door')
+  return { steps, hidden, trimmed, emptied, unresolved, left, findings }
 }
 
 /**
@@ -322,7 +331,8 @@ export function recordSteps({
  *   writer left in the demo's words, `leftDemoWords`)
  * @param {Set<string>} [input.protectedKeys] - required offering summaries already decided after copy pins
  * @param {any[]} [input.slots] - the content map's slots: the other cells of a fact row one blank empties (`wholeFactRowsOf`)
- * @returns {Promise<{ steps: Array<{ kind: string, id: number, fields: Record<string, unknown> }> }>}
+ * @returns {Promise<{ steps: Array<{ kind: string, id: number, fields: Record<string, unknown> }>,
+ *   unresolved?: Array<{ key: string, reason: string }> }>} `unresolved`: the slots and cards no records write reaches
  */
 export async function planRecordSteps({
   apply,
@@ -383,14 +393,29 @@ export async function planRecordSteps({
       contacts: records.get('contact'),
       records
     })
-    if (made.unresolved > 0) throw recordFallbackError(made.left)
+    // 🔒 ONE SLOT NO DOOR REACHES IS A FINDING, NEVER THE END OF THE BUILD (#189, round 10). Measured 30/10/2026: a template
+    // language string and an outline part no records write could empty stopped the fill before tidy, head blocks, the
+    // contact record and the cleanup turn, and a half-demo site was served. The slot is said with its reason; the final
+    // check reads the served pages and the blocker gate decides whether the build needs fixes.
+    if (made.findings.length > 0) {
+      ctx.time?.('recordFallbacksUnresolved', made.findings.length)
+      ctx.note(
+        `${made.findings.length} line(s) of the template's demo could not be emptied and are left for a person to fix: ${made.findings
+          .slice(0, 12)
+          .map((f) => `${f.key} (${f.reason})`)
+          .join(', ')}`
+      )
+      console.warn(
+        `[brief-joomla] ${siteKey}: record fallbacks not reached: ${made.findings.map((f) => `${f.key} (${f.reason})`).join(', ')}`
+      )
+    }
     ctx.time?.('recordsHidden', made.hidden + made.trimmed)
     ctx.time?.('factFieldsEmptied', made.emptied)
     if (made.hidden + made.trimmed > 0)
       ctx.note(`${made.hidden + made.trimmed} card(s) beyond your offerings and people were taken off`)
-    return { steps: made.steps }
+    return { steps: made.steps, unresolved: made.findings }
   } catch (error) {
-    if (error?.code === 'JOOMLA_RECORD_FALLBACK_UNRESOLVED') throw error
+    // Only a records door that does not answer at all stops the build: then no record of the site can be read or written.
     throw recordFallbackError(
       (honesty.blanks ?? []).map((blank) => blank.key),
       error

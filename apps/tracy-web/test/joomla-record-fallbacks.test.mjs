@@ -125,37 +125,57 @@ for (const trade of ['bakery', 'clinic']) {
   })
 }
 
-for (const blank of [
-  slot('languageString-1', 'value', 'Demo language heading'),
-  slot('menuItem-2', 'params', 'Demo heading', { jsonPath: ['missing'] }),
-  slot('userProfile-7100', 'value', 'Not in the bio', { xpath: '/html/body/div/p[2]/text()' })
+// 🔒 An unreachable fallback is said with its reason and the build goes on (#189, round 10): never a silent success, never
+// the end of the build.
+for (const [blank, reason] of [
+  [slot('languageString-1', 'value', 'Demo language heading'), 'no-record-door'],
+  [slot('menuItem-2', 'params', 'Demo heading', { jsonPath: ['missing'] }), 'field-not-found'],
+  [
+    slot('userProfile-7100', 'value', 'Not in the bio', { xpath: '/html/body/div/p[2]/text()' }),
+    'bound-node-not-found'
+  ]
 ]) {
-  test(`an unreachable fallback ${blank.key} fails explicitly instead of completing with demo`, async () => {
-    await assert.rejects(
-      planRecordSteps({
-        siteKey: 'fictional-site',
-        ctx: { siteKey: 'fictional-site', email: 'owner@example.test', note() {} },
-        woContent: null,
-        extraBlanks: [blank],
-        apply: async ({ action }) =>
-          action === 'content.list'
-            ? { ok: true, items: [] }
-            : { ok: true, item: { params: '{"page_heading":"Demo heading"}', value: '<p>Demo bio</p>' } }
-      }),
-      (error) => error.code === 'JOOMLA_RECORD_FALLBACK_UNRESOLVED' && error.message.includes(blank.key)
-    )
+  test(`an unreachable fallback ${blank.key} is a finding with its reason, never a silent success`, async () => {
+    const notes = []
+    const made = await planRecordSteps({
+      siteKey: 'fictional-site',
+      ctx: { siteKey: 'fictional-site', email: 'owner@example.test', note: (line) => notes.push(line) },
+      woContent: null,
+      extraBlanks: [blank],
+      apply: async ({ action }) =>
+        action === 'content.list'
+          ? { ok: true, items: [] }
+          : { ok: true, item: { params: '{"page_heading":"Demo heading"}', value: '<p>Demo bio</p>' } }
+    })
+    assert.deepEqual(made.steps, [])
+    assert.deepEqual(made.unresolved, [{ key: blank.key, reason }])
+    assert.ok(notes.some((line) => line.includes(blank.key)))
   })
 }
 
-test('a refused fallback read cannot return successful empty steps', async () => {
+test('a refused fallback read is a finding, never successful empty steps', async () => {
+  const made = await planRecordSteps({
+    siteKey: 'fictional-site',
+    ctx: { siteKey: 'fictional-site', email: 'owner@example.test', note() {} },
+    woContent: null,
+    extraBlanks: [slot('userProfile-7100', 'value', 'Demo bio')],
+    apply: async ({ action }) =>
+      action === 'content.list' ? { ok: true, items: [] } : { ok: false, message: 'profile read refused' }
+  })
+  assert.deepEqual(made.steps, [])
+  assert.deepEqual(made.unresolved, [{ key: 'userProfile-7100.value', reason: 'record-not-read' }])
+})
+
+test('a records door that does not answer still stops the build', async () => {
   await assert.rejects(
     planRecordSteps({
       siteKey: 'fictional-site',
       ctx: { siteKey: 'fictional-site', email: 'owner@example.test', note() {} },
       woContent: null,
-      extraBlanks: [slot('userProfile-7100', 'value', 'Demo bio')],
-      apply: async ({ action }) =>
-        action === 'content.list' ? { ok: true, items: [] } : { ok: false, message: 'profile read refused' }
+      extraBlanks: [slot('module-7', 'title', 'Demo section')],
+      apply: async () => {
+        throw new Error('site unreachable')
+      }
     }),
     (error) => error.code === 'JOOMLA_RECORD_FALLBACK_UNRESOLVED'
   )
@@ -194,17 +214,16 @@ for (const trade of ['bakery', 'clinic']) {
       const value = `<p>Demo ${trade} biography</p><p>Demo ${trade} biography</p>`
       const row = { id: 7100, value }
       const blank = slot('userProfile-7100', 'value', `Demo ${trade} biography`, { xpath })
-      await assert.rejects(
-        planRecordSteps({
-          siteKey: 'fictional-site',
-          ctx: { siteKey: 'fictional-site', email: 'owner@example.test', note() {} },
-          woContent: null,
-          extraBlanks: [blank],
-          apply: async ({ action }) =>
-            action === 'content.list' ? { ok: true, items: [] } : { ok: true, item: row }
-        }),
-        (error) => error.code === 'JOOMLA_RECORD_FALLBACK_UNRESOLVED' && error.message.includes(blank.key)
-      )
+      const made = await planRecordSteps({
+        siteKey: 'fictional-site',
+        ctx: { siteKey: 'fictional-site', email: 'owner@example.test', note() {} },
+        woContent: null,
+        extraBlanks: [blank],
+        apply: async ({ action }) =>
+          action === 'content.list' ? { ok: true, items: [] } : { ok: true, item: row }
+      })
+      assert.deepEqual(made.steps, [], 'no write to a node the path does not name')
+      assert.deepEqual(made.unresolved, [{ key: blank.key, reason: 'bound-node-not-found' }])
       const direct = recordSteps({
         honesty: { blanks: [blank] },
         modules: new Map(),

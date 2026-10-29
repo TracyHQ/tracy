@@ -4,7 +4,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { contactSteps } from '../src/sites/brief-engines/joomla-tidy.js'
-import { writeMiscHeading, MISC_HEADING_KEY } from '../src/sites/brief-engines/joomla-contact-page.js'
 import { runLeftoverCheck } from '../src/opportunities-build/demo-leftover-check.js'
 
 const door =
@@ -97,24 +96,6 @@ test('a piano teacher with no channel in the plan keeps the number lines as the 
   })
   assert.ok(!steps.some((s) => s.fields.params), 'no setting is written')
   assert.ok(!steps.some((s) => s.fields.misc), 'the extra information is not rewritten')
-})
-
-test('the default "Miscellaneous Information" heading is replaced by the list role in English languages only', async () => {
-  const calls = []
-  const out = await writeMiscHeading({
-    apply: async (call) => {
-      calls.push(call)
-      return { ok: true, written: 1 }
-    },
-    siteKey: 's',
-    template: 'tpl_demo',
-    locales: ['en-GB', 'fr-FR']
-  })
-  assert.deepEqual(out.written, ['en-GB'])
-  assert.equal(calls.length, 1)
-  assert.equal(calls[0].params.locale, 'en-GB')
-  assert.equal(calls[0].params.strings[MISC_HEADING_KEY], 'How to reach us')
-  assert.match(out.note, /fr-FR keep the translated default heading/)
 })
 
 test('the leftover check fails a Contact page with plain numbers and walk-in copy for a business by appointment', async () => {

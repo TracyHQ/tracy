@@ -209,11 +209,28 @@ for (const [trade, name] of [
           // Neither profile nor menu metadata went through the copy writer: fallback still has to reach them.
           demoAsked: ['module-40.0']
         })
+        // 🔒 One slot no door can empty is a finding, never the end of the build (#189, round 10): the other records
+        // are still emptied and the note names the slot left.
+        await completion
         if (cleanupFailure !== 'none') {
-          await assert.rejects(completion, (error) => error.code === 'JOOMLA_RECORD_FALLBACK_UNRESOLVED')
+          const left = 'userProfile-4400'
+          assert.ok(
+            notes.some((line) => line.includes(left)),
+            `a note names ${left}: ${notes.join(' | ')}`
+          )
+          assert.equal(
+            JSON.parse(rows.module[0].params).description,
+            '',
+            'the reachable records are still emptied'
+          )
+          assert.equal(JSON.parse(rows.menuItem[0].params).page_heading, '')
+          assert.equal(
+            rows.userProfile[0].value,
+            'Demo champion',
+            'the slot no door reached is left, and said'
+          )
           return
         }
-        await completion
         assert.deepEqual(refusals, [], 'the plugin must never receive an illegal occupancy change')
         assert.ok(
           attempts.some((a) => a['module-40.1'] === 'Call us'),
