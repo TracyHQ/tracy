@@ -1480,3 +1480,36 @@ test('stock Joomla contacts and banners without asset_id do not break dependent-
       )
   }
 })
+
+test(
+  'Joomla: a menu or category the customer deleted on live stays while the copy’s new item or article uses it: a conflict, never an orphan (#119)',
+  opts,
+  () => {
+    const tables = `
+      CREATE TABLE jos_menu_types (id int NOT NULL PRIMARY KEY, menutype varchar(24), title varchar(48), client_id int NOT NULL DEFAULT 0);
+      CREATE TABLE jos_menu (id int NOT NULL PRIMARY KEY, menutype varchar(24), title varchar(255), client_id int NOT NULL DEFAULT 0, published int NOT NULL DEFAULT 1);
+      CREATE TABLE jos_categories (id int NOT NULL PRIMARY KEY, title varchar(255), extension varchar(50), published int NOT NULL DEFAULT 1);
+      CREATE TABLE jos_content (id int NOT NULL PRIMARY KEY, catid int, title varchar(255), state int NOT NULL DEFAULT 1);
+      INSERT INTO jos_menu_types VALUES (1, 'mainmenu', 'Main', 0), (2, 'extra', 'Extra', 0);
+      INSERT INTO jos_menu VALUES (101, 'mainmenu', 'Home', 0, 1), (102, 'extra', 'Old', 0, 1);
+      INSERT INTO jos_categories VALUES (2, 'Uncategorised', 'com_content', 1), (8, 'News', 'com_content', 1);
+      INSERT INTO jos_content VALUES (1, 8, 'Live article', 1);`
+    sql(
+      ['sb', 'sm', 'st']
+        .map((s) => `DROP DATABASE IF EXISTS ${s}; CREATE DATABASE ${s}; USE ${s}; ${tables}`)
+        .join('\n') +
+        `\nUSE sm; INSERT INTO jos_menu VALUES (103, 'extra', 'Tracy page', 0, 1); INSERT INTO jos_content VALUES (2, 8, 'Tracy article', 1);` +
+        `\nUSE st; DELETE FROM jos_menu WHERE id = 102; DELETE FROM jos_menu_types WHERE id = 2;
+          DELETE FROM jos_content WHERE id = 1; DELETE FROM jos_categories WHERE id = 8;`
+    )
+    const answer = merge()
+    assert.deepEqual(rows("SELECT menutype FROM sm.jos_menu_types WHERE menutype = 'extra'"), [['extra']])
+    assert.deepEqual(rows('SELECT title FROM sm.jos_categories WHERE id = 8'), [['News']])
+    assert.deepEqual(rows('SELECT id FROM sm.jos_menu WHERE id IN (102, 103) ORDER BY id'), [['103']])
+    const deleted = answer.conflicts.filter((c) => c.reason === 'delete-modify').map((c) => c.table)
+    assert.ok(
+      deleted.includes('jos_menu_types') && deleted.includes('jos_categories'),
+      JSON.stringify(answer.conflicts)
+    )
+  }
+)
