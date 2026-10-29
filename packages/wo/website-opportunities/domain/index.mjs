@@ -282,7 +282,7 @@ export {
   MAX_SCALE,
   DRAW_MAX
 } from './pictures/placement.mjs'
-export { FILL_PLAN_VERSION, FILL_REASONS, REFUSAL_REASONS, planFill } from './fill-plan.mjs'
+export { FILL_PLAN_VERSION, FILL_REASONS, planFill } from './fill-plan.mjs'
 export { placementOfFill } from './fill-placement.mjs'
 export { collectSocialProfile, PROFILE_TIERS } from './social-profile.mjs'
 export {

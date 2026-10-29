@@ -34,17 +34,6 @@ export const FILL_REASONS = Object.freeze({
   'demo-size-unknown': "the demo picture's size is not known"
 })
 
-/** Why a photo was refused for a unit nothing filled, counted per reason. */
-export const REFUSAL_REASONS = Object.freeze([
-  'graphic',
-  'wrong-offering',
-  'unsure',
-  'linked-to-offering',
-  'portrait',
-  'used',
-  'shape'
-])
-
 /** Group kinds whose cards each show one offering. */
 const OFFERING_GROUP_KINDS = new Set(['service', 'menu_item', 'package'])
 /** Picture roles a general or unsure photo of the business may fill. */

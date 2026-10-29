@@ -47,7 +47,7 @@ export function placementOfFill({ fill, groups }) {
         score: 0,
         crop: lead.crop,
         why: FILL_REASONS[lead.reason],
-        reason: lead.reason,
+        code: lead.reason,
         reused: false
       })
     else

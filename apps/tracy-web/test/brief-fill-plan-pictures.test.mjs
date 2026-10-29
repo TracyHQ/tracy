@@ -7,7 +7,8 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import sharp from 'sharp'
 
-import { keptPages, shapeReal } from '../src/sites/brief-engines/real-pictures.js'
+import { fileURLToPath } from 'node:url'
+import { contentMapOf, keptPages, shapeReal } from '../src/sites/brief-engines/real-pictures.js'
 import { picturesOfBuild } from '../src/opportunities-build/handoff.js'
 
 const jpeg = (width, height, background = '#557799') =>
@@ -148,4 +149,13 @@ test('the hand-off lists every picture decision of the build with its reason cod
   assert.equal(byKey.get('article-9.1').reason, 'demo-only-entity')
   assert.equal(byKey.get('module-2.1').reason, 'offering-photo')
   for (const d of report.decisions) assert.ok(d.why, `${d.key} has a sentence for its reason`)
+})
+
+test('the contract map a picture phase reads keeps its vocabulary version and its demo-only marks', () => {
+  const dir = fileURLToPath(
+    new URL('../../../packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.8/', import.meta.url)
+  )
+  const map = contentMapOf({ dir })
+  assert.equal(map.roleVocabularyVersion, 'place-content-roles/3')
+  assert.ok(map.entities.some((e) => e.demoOnly === true))
 })

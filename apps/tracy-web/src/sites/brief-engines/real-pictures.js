@@ -76,7 +76,13 @@ export function keptPages(pages) {
 export function contentMapOf(contract) {
   const map = JSON.parse(readFileSync(path.join(contract.dir, 'content-map.json'), 'utf8'))
   // A slot the profile only declares (`customize: "keep"`) keeps the demo's picture (`lib/contract-customize.js`).
-  return { slots: customizableSlots(map.slots ?? []), pages: map.pages ?? [] }
+  // The vocabulary version and the entities (their `demoOnly` mark) decide whether the fill plan places the pictures.
+  return {
+    slots: customizableSlots(map.slots ?? []),
+    pages: map.pages ?? [],
+    roleVocabularyVersion: map.roleVocabularyVersion ?? null,
+    entities: map.entities ?? []
+  }
 }
 
 /**
