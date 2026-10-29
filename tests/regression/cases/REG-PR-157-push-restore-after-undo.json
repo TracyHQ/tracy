@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-157-push-restore-after-undo",
+  "kind": "fix",
+  "title": "After an Undo, a post the copy still holds is offered as an addition that brings it back",
+  "pr": 157,
+  "area": "sync/push-preview",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the changeset case of a live post in the trash whose copy is published."],
+  "expect": [
+    "The item writes the same live post out of the trash.",
+    "The item is in the add group, not the change group."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=after an Undo, a Tracy post the live site holds in the trash",
+      "packages/fleet/tracy-fleet-operation/test/live-push-changeset.test.mjs"
+    ],
+    "tests": [
+      "after an Undo, a Tracy post the live site holds in the trash is offered as an addition that brings it back (#117)"
+    ]
+  }
+}

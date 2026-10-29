@@ -1,0 +1,2 @@
+- **The unknown-table reference test uses a table the adapter does not know.** — David · PR #153 follow-up · `fix/sync-ids-test-wc-ref` · 2026-10-29
+  **Affects:** tests only. Since #153 the WordPress adapter declares WooCommerce's product lookup as a reference to posts, so `live-sync-ids`' example of a plugin table outside the adapter now uses one it does not know. Develop's live sync integration job was red on that assertion. No runtime change.
