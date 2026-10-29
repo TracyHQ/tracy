@@ -18,7 +18,7 @@ const door = {
   imageModel: 'google/gemini-3.1-flash-lite-image'
 }
 
-test('the prompt keeps the real photograph in the middle, names the shape, and forbids words, logos and faces, in no category own words', () => {
+test('the prompt keeps the real photograph in the middle, names the shape, and forbids words and logos, in no category own words', () => {
   const outpaint = drawPrompt({ mode: 'outpaint', aspect: 16 / 9 })
   assert.match(outpaint, /Keep the original photograph unchanged in the middle/)
   assert.match(outpaint, /16:9/)
@@ -26,7 +26,8 @@ test('the prompt keeps the real photograph in the middle, names the shape, and f
   assert.match(scene, /real photos of this business/)
   assert.match(scene, /not a copy of their framing, text or graphics/)
   for (const p of [outpaint, scene]) {
-    assert.match(p, /No text.*no logos.*no recognisable faces/)
+    assert.match(p, /No text.*no lettering.*no logos/)
+    assert.doesNotMatch(p, /no (?:recognisable )?faces/)
     assert.doesNotMatch(p, /restaurant|dish|dining/i)
   }
 })
@@ -125,7 +126,7 @@ test('the prompt names the slot subject from the brief, and an object for a cut-
   })
   assert.match(card, /one of its offerings, Fitness Lessons/)
   assert.match(card, /Fitness Lessons at this business: its equipment and its place/)
-  assert.match(card, /no face turned to the camera, no face in focus, no child as the subject/)
+  assert.doesNotMatch(card, /no face|no child/)
   assert.match(card, /racket club/)
   const bakery = drawPrompt({ mode: 'scene', aspect: 21 / 9, subject: { kind: 'venue', category: 'bakery' } })
   assert.match(bakery, /the business's own place, ready or in use/)
@@ -138,7 +139,7 @@ test('the prompt names the slot subject from the brief, and an object for a cut-
   })
   assert.match(object, /One single object used for Padel Lessons/)
   assert.match(object, /plain pure white background/)
-  assert.match(object, /no people/)
+  assert.doesNotMatch(object, /no people/)
   // Another subject or variant is another drawing.
   const base = { mode: 'scene', aspect: 1.5, subject: { kind: 'venue', category: 'bakery' } }
   assert.notEqual(

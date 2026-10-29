@@ -31,18 +31,17 @@ import { pageRole } from 'website-opportunities/domain/page-plan.mjs'
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
 import { ownStylesheets } from '../../lib/own-stylesheets.js'
+import { keptPageReader } from '../../lib/kept-page-reader.js'
 import { readMenu, readModules, SKIPPED_MENUS, writeSteps } from './joomla-tidy.js'
-import { centredRows, emptyFrames, photoTiles } from './empty-frames.js'
+import { centredRows, emptyFrames, photoTiles, removedPictureFrames } from './empty-frames.js'
 import { writeHeadModule } from './joomla-head-module.js'
 import { sweepDeadLinks } from './joomla-link-sweep.js'
 import { brandColoursCss, withColoursBlock } from './joomla-brand-colours.js'
 
 /** The head-code param each template framework prints raw into every page's head. */
 export const HEAD_PARAMS = Object.freeze({ t4: 'system_advancedCodeAfterHead', t3: 'snippet_close_head' })
-/** The most inner pages read for the backgrounds their template settings paint. */
 /** Template folders of Joomla itself: never the site's design. */
 const CORE_TEMPLATES = new Set(['atum', 'cassiopeia', 'cassiopeia_extended', 'system'])
-const PAGES_READ = 4
 const ARTICLE_PAGE = 100
 
 const escapeHtml = (/** @type {string} */ s) =>
@@ -241,11 +240,13 @@ function contactBlockLines(/** @type {any} */ plan, /** @type {(slot: any) => bo
  * @param {string} input.applyId
  * @param {string} [input.locale] - the language the site is written in: the copyright line is said in it
  * @param {string[]} [input.pictures] - site paths of the clear pictures that take cut-out figures off (`cutout-css.js`)
+ * @param {Array<{path: string, routes: string[]}>} [input.removedGalleryPictures] - cleared gallery tiles and affected routes
  * @param {boolean} [input.headOnly] - write the head block only (the overlap safety net)
  * @returns {Promise<{credit: number, aliases: number, head: number, links: number}>}
  */
 export async function writeOutsideMap({
   pictures = [],
+  removedGalleryPictures = [],
   headOnly = false,
   locale = 'en',
   apply,
@@ -313,28 +314,51 @@ export async function writeOutsideMap({
   let colours = ''
   if (reader) {
     try {
-      const paths = [
+      const sampled = [
         '/',
         ...(plan.pages ?? [])
           .filter((p) => p.decision === 'keep' && typeof p.path === 'string' && p.path !== '/')
           .map((p) => (p.path.startsWith('/') ? p.path : `/${p.path}`))
-      ].slice(0, PAGES_READ + 1)
+      ]
+      const paths = [
+        ...new Set([
+          ...sampled,
+          ...removedGalleryPictures
+            .flatMap((g) => g.routes)
+            .filter((route) => typeof route === 'string' && !/^(?:https?:|\/\/)/i.test(route))
+            .map((route) =>
+              route === 'home' || route === 'homepage' ? '/' : `/${route.replace(/^\/+/, '')}`
+            )
+        ])
+      ]
       const pages = []
+      const read = keptPageReader(async (path) => ({ status: 200, html: await reader.text(path) }))
       for (const path of paths) {
-        const html = await reader.text(path).catch(() => null)
-        if (html) pages.push({ html })
+        const page = await read(path)
+        if (page.servedPath) pages.push({ path: page.servedPath, html: page.html })
+        else
+          note(
+            `the kept page ${path} could not be read for the head scanners: ${JSON.stringify(page.attempts)}`
+          )
       }
       picture = ownerPictureOf(pages[0]?.html ?? null, pictures)
       pageHtml = pages.map((p) => p.html)
       // An emptied box among the photos of a grid shows an owner photo; every other empty frame is hidden.
-      tiles = photoTiles(pageHtml, { skip: pictures })
+      const removed = removedGalleryPictures.map((g) => g.path)
+      const removedFrames = new Set(removedPictureFrames(pageHtml, removed))
+      tiles = photoTiles(pageHtml, { skip: [...pictures, ...removed] }).filter(
+        (t) => !removedFrames.has(t.selector)
+      )
       const painted = new Set(tiles.map((t) => t.selector))
-      frames = emptyFrames(pageHtml).filter((s) => !painted.has(s))
+      frames = [...new Set([...removedFrames, ...emptyFrames(pageHtml)])].filter((s) => !painted.has(s))
       // A card row that lost demo cards keeps its columns and centres the cards kept.
       centre = centredRows(pageHtml)
       const styles = []
       for (const href of ownStylesheets(pages)) {
-        const css = await reader.text(href).catch(() => null)
+        const css = await reader.text(href).catch((error) => {
+          say(`the stylesheet ${href} could not be read`, error)
+          return null
+        })
         if (css) styles.push({ css })
       }
       backgrounds = demoBackgrounds({ styles, pages, contentMap })

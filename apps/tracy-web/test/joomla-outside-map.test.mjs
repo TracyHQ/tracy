@@ -39,6 +39,50 @@ const contentMap = {
 const brief = { business: { name: 'Copperleaf Bakery' } }
 const OWNER = `images/tracy-content/${'a'.repeat(64)}.jpg`
 
+for (const [framework, trade, params] of [
+  ['T4', 'bakery', { 'typelist-site': 'default' }],
+  ['T3', 'dental clinic', { snippet_close_head: '' }]
+]) {
+  test(`${framework} ${trade}: a gallery missing its picture is removed even beyond the normal page sample`, async () => {
+    const site = fakeSite({ styles: [{ id: 12, client_id: 0, params: JSON.stringify(params) }] })
+    const read = []
+    await writeOutsideMap({
+      apply: site.apply,
+      siteKey: 's',
+      contentMap,
+      headOnly: true,
+      plan: {
+        pages: Array.from({ length: 7 }, (_, n) => ({ path: `/page-${n}`, decision: 'keep' })),
+        outside: planOutsideMap({ brief, contentMap })
+      },
+      removedGalleryPictures: [{ path: 'images/clear.png', routes: ['page-6'] }],
+      reader: {
+        text: async (url) => {
+          read.push(url)
+          return url === '/page-6'
+            ? '<body><div id="gallery"><div class="tile"><img src="/images/clear.png"></div><div class="tile"><img src="kept.jpg"></div></div></body>'
+            : '<body></body>'
+        }
+      },
+      note: () => {},
+      applyId: 'gallery-off'
+    })
+    assert.ok(read.includes('/page-6'), 'the affected route is read, not lost beyond the sampling cap')
+    const output = site.writes
+      .map((write) =>
+        write.kind === 'templateStyle'
+          ? JSON.parse(write.fields.params).snippet_close_head
+          : (write.fields.content ?? '')
+      )
+      .join('\n')
+    assert.match(
+      output,
+      /#gallery > div.tile:nth-child\(1\):has\(img\[src\*="images\/clear.png"\]\)\{display:none !important\}/
+    )
+    assert.doesNotMatch(output, /div.tile:nth-child\(2\)\{display:none/)
+  })
+}
+
 /** A Joomla site behind the Apply door: lists rows by kind and records every write. */
 function fakeSite({ styles }) {
   const rows = {

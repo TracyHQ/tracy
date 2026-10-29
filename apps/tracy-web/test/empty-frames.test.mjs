@@ -41,3 +41,29 @@ test('the head block hides the frames once, across pages', () => {
   assert.match(block, /display:none !important/)
   assert.equal(block.split('li.row:nth-child(2)').length, 2)
 })
+
+for (const trade of ['bakery', 'dental clinic']) {
+  test(`${trade}: the last gallery tile loses its caption and link with its picture`, () => {
+    const html =
+      '<body><div id="gallery"><figure class="tile"><a href="demo.jpg"><img src="images/clear.png"></a><figcaption>View photo</figcaption></figure></div></body>'
+    assert.deepEqual(emptyFrames([html], { removedPictures: ['images/clear.png'] }), [
+      '#gallery > figure.tile:nth-child(1):has(img[src*="images/clear.png"])'
+    ])
+  })
+  test(`${trade}: a removed gallery picture takes its whole repeated tile out of the layout`, () => {
+    const html = `<body><section id="gallery"><div class="grid">
+      <div class="col-md-4"><a href="photo.jpg"><picture><img src="/images/clear.png"></picture></a></div>
+      <div class="col-md-4"><a href="kept.jpg"><img src="/images/kept.jpg"></a></div>
+      </div></section></body>`
+    const frames = emptyFrames([html], { removedPictures: ['images/clear.png'] })
+    assert.deepEqual(frames, [
+      '#gallery > div.grid:nth-child(1) > div.col-md-4:nth-child(1):has(img[src*="images/clear.png"])'
+    ])
+    const block = leftoverHeadBlock({ frames })
+    assert.match(
+      block,
+      /div.col-md-4:nth-child\(1\):has\(img\[src\*="images\/clear.png"\]\)\{display:none !important\}/
+    )
+    assert.doesNotMatch(block, /col-md-4:nth-child\(2\)/)
+  })
+}

@@ -66,7 +66,10 @@ test('the pictures are of the customer’s own business: a wide hero first, then
   assert.match(briefs[0].prompt, /Golden Crust Bakery — A family bakery in Hanoi — family bakery/)
   assert.match(briefs[0].prompt, /Subject: a bakery storefront/)
   assert.match(briefs[2].prompt, /Subject: croissants in a basket/)
-  for (const { prompt } of briefs) assert.match(prompt, /No text, no letters, no logos/)
+  for (const { prompt } of briefs) {
+    assert.match(prompt, /No text, no letters, no lettering, no logos/)
+    assert.doesNotMatch(prompt, /no faces|no recognisable people|nobody recognisable/)
+  }
   // Without the model's descriptions the prompt still stands on the business's own words.
   assert.doesNotMatch(pictureBriefs({ name: 'N', about: 'A' })[0].prompt, /Subject:/)
 })

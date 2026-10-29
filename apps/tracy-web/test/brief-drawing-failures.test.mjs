@@ -5,6 +5,7 @@ import sharp from 'sharp'
 import { drawnPictureVerdict } from 'website-opportunities/domain/fill-draw.mjs'
 import { drawPlanned } from '../src/sites/brief-engines/drawn-pictures.js'
 import { drawPrompt } from '../src/lib/picture-draw.js'
+import { cropBox, outputSize, ROLES, MAX_SCALE } from 'website-opportunities/domain/pictures/placement.mjs'
 
 const TRADES = [
   { label: 'Cedar Racket Club', category: 'sports coaching' },
@@ -35,7 +36,18 @@ async function drawingBuild(
       drawings,
       unfilled: drawings.map((g) => ({ action: 'draw', drawing: g.id, groupId: g.id }))
     },
-    byGroup: new Map(drawings.map((g) => [g.id, { id: g.id, file: `images/${g.id}.jpg` }])),
+    byGroup: new Map(
+      drawings.map((g) => [
+        g.id,
+        {
+          id: g.id,
+          file: `images/${g.id}.jpg`,
+          role: 'section',
+          occurrences: [],
+          demo: { width: 32, height: 32 }
+        }
+      ])
+    ),
     real: {
       pictures: [{ id: 'owner-photo', sha256: 'fictional-photo-sha' }],
       bytes: async () => {
@@ -55,7 +67,7 @@ async function drawingBuild(
       if (failure) throw failure
       return { images: [{ bytes: photo }], usage: { cost: 0.01 } }
     },
-    domain: { drawnPictureVerdict },
+    domain: { drawnPictureVerdict, cropBox, outputSize, ROLES, MAX_SCALE },
     note: (note) => notes.push(note),
     drawMs,
     signal
@@ -109,18 +121,29 @@ for (const trade of TRADES) {
     })
   }
 
-  test(`${trade.category}: drawing prompts forbid every visible face and all lettering`, () => {
+  test(`${trade.category}: drawing prompts forbid lettering without forbidding people or faces`, () => {
     for (const mode of ['scene', 'outpaint', 'object']) {
       const prompt = drawPrompt({ mode, aspect: 2, subject: trade })
-      assert.match(prompt, /no faces of any kind/i)
+      assert.doesNotMatch(
+        prompt,
+        /no (?:recognisable )?faces|no person facing|face completely outside|no people/i
+      )
       assert.match(prompt, /no lettering/i)
+      assert.match(prompt, /no text/i)
+      assert.match(prompt, /no logos/i)
     }
   })
 
-  for (const [labels, reason] of [
-    [{ faceBoxes: [{}], textPresence: 'absent' }, 'face-found'],
-    [{ faceBoxes: [], textPresence: 'present' }, 'text-found']
-  ]) {
+  test(`${trade.category}: a labelled drawing with people and visible faces is accepted`, async (t) => {
+    const result = await drawingBuild(t, trade, {
+      labels: { subject: 'people', faceBoxes: [[0.1, 0.1, 0.2, 0.2]], textPresence: 'absent' }
+    })
+    assert.equal(result.drawn.size, 1)
+    assert.equal(result.chatCalls, 1)
+    assert.deepEqual(result.stats.refused, [])
+  })
+
+  for (const [labels, reason] of [[{ faceBoxes: [], textPresence: 'present' }, 'text-found']]) {
     test(`${trade.category}: ${reason} is logged per refusal and stops after one redraw`, async (t) => {
       const result = await drawingBuild(t, trade, { labels })
       assert.equal(result.chatCalls, 2)

@@ -32,6 +32,7 @@ import { unmeasuredFigures } from './unmeasured-figures.js'
 import { iconMeanings } from './icon-meanings.js'
 import { correctedCut, sharpFill } from './sharpness-gate.js'
 import { phosphorCatalog } from '../../lib/phosphor-icons.js'
+import { drawingFallbacks } from './drawing-fallbacks.js'
 
 /** Pictures cut at once: each holds a decoded photograph in memory (C15). */
 const CUT_AT_ONCE = 4
@@ -285,7 +286,7 @@ export async function shapeReal({
 
   const byGroup = new Map(map.groups.map((g) => [g.id, g]))
   // A group's id is its demo file, or the file and its unit when the fill plan split it (#194): one receipt each.
-  const asGroup = (g) => ({ sample: g.id, role: g.role, slots: g.occurrences })
+  const asGroup = (g) => ({ sample: g.id, role: g.role, slots: g.occurrences, routes: g.routes ?? [] })
 
   // An empty hero, banner or background: drawn from the restaurant's own photographs when a picture model is set (§8).
   /** @type {Map<string, any>} */
@@ -391,6 +392,17 @@ export async function shapeReal({
 
   // Cut, four at a time; a placeholder where nothing fits.
   started = Date.now()
+  const fallbacks = real.brief
+    ? await drawingFallbacks({
+        plan,
+        byGroup,
+        drawn,
+        real,
+        contentMap,
+        demo,
+        cardNames: plannedNames ?? domain.cardNamesOf(contentMap, copy)
+      })
+    : new Map()
   // A cut-out slot is the decor step's alone (the ladder): no photo of the fill plan is written into it as it is.
   const decorKeys = new Set((decorPlan?.slots ?? []).filter((d) => d.action === 'cut-out').map((d) => d.key))
   const ownedByDecor = (group) =>
@@ -440,6 +452,13 @@ export async function shapeReal({
           return gate
             ? { ...drawn.get(u.groupId), receipt: { ...drawn.get(u.groupId).receipt, sharpness: gate } }
             : drawn.get(u.groupId)
+        if (fallbacks.has(u.groupId)) return fallbacks.get(u.groupId)
+        if (group?.role === 'gallery') {
+          const blank = await placeholderFor(group, real.colours, { kind: 'blank' })
+          return blank
+            ? { ...blank, hide: true, receipt: { ...blank.receipt, reason: 'gallery-without-picture' } }
+            : null
+        }
         return group?.demo ? placeholderFor(group, real.colours, u.substitute ?? null) : null
       })
   ]
@@ -553,7 +572,7 @@ export function pictureReport({ shaped, values, refused, readback, homeHtml = nu
     receipts,
     report: {
       groups: shaped.map.groups.length,
-      photos: shaped.plan.placements.length,
+      photos: Object.values(receipts).filter((r) => r.kind === 'photo').length,
       // An initials avatar, a script signature and a blank are a placeholder each: they count as one.
       placeholders: Object.values(receipts).filter((r) =>
         ['placeholder', 'avatar', 'signature', 'blank'].includes(r.kind)

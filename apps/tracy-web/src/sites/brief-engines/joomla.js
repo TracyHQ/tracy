@@ -1304,9 +1304,10 @@ export function createJoomlaEngine({
      * @param {Awaited<ReturnType<ReturnType<typeof createJoomlaEngine>['prepare']>>} prepared
      */
     async apply(ctx, prepared) {
+      let preparedPictures = null
       if (prepared.real && realPictures && siteFile) {
         if (!prepared.realPicturesPrepared || prepared.realPictureShape)
-          await pictures(
+          preparedPictures = await pictures(
             ctx,
             prepared.real,
             prepared.copyPins?.pictures,
@@ -2409,10 +2410,16 @@ export function createJoomlaEngine({
             applyId: `outside-${Date.now().toString(36)}`,
             locale: prepared.written ?? SOURCE,
             pictures,
+            removedGalleryPictures: preparedPictures?.removedGalleryPictures ?? [],
             headOnly
           })
         // Cut-out figures taken off (ladder step 2): hidden by the head block, so they leave no box.
-        const hidden = takenOffPicturePaths(placedReal, art.values, refusedByWrite)
+        const hidden = [
+          ...new Set([
+            ...(preparedPictures?.hiddenPictures ?? []),
+            ...takenOffPicturePaths(placedReal, art.values, refusedByWrite)
+          ])
+        ]
         await time('outsideMapMs', () => outsideMap(hidden))
         // The safety net: a placed picture that covers words at any width is taken off too (`picture-overlap-net.js`).
         if (pictureOverlap && Object.keys(art?.values ?? {}).length > 0)

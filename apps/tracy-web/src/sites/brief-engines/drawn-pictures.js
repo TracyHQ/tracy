@@ -5,7 +5,7 @@
  *
  *   drawings   each planned drawing once, through the picture model door (`lib/picture-draw.js`), at most `DRAW_AT_ONCE`
  *              at a time and each within its own time limit; read back by the photo labeller and refused when it shows
- *              words, a logo or a face; refused once more, the slots it serves keep the brand colour block. A drawing
+ *              lettering; people and faces are accepted. Refused once more, its slots try owner photos then neutral fill. A drawing
  *              accepted is cached by references, shape, mode, subject, prompt version and model, so a rebuild pays nothing.
  *   icons      each subject-carrying item icon rendered from the icon set (`lib/icon-glyphs.js`) at the demo icon's size,
  *              in the demo icon's own colour
@@ -102,8 +102,16 @@ async function drawChecked({ item, real, drawDoor, chat, signal, drawMs, verdict
       const cutoff = AbortSignal.any([AbortSignal.timeout(drawMs), ...(signal ? [signal] : [])])
       let got
       try {
-        calls += 1
-        got = await drawForPlace({ door: drawDoor, chat, item, references, signal: cutoff })
+        got = await drawForPlace({
+          door: drawDoor,
+          chat: (...args) => {
+            calls += 1
+            return chat(...args)
+          },
+          item,
+          references,
+          signal: cutoff
+        })
       } catch (error) {
         reasonClass = drawingFailureReason(error)
         refused.push(reasonClass.replaceAll(' ', '-'))
@@ -182,7 +190,7 @@ export async function drawPlanned({
   const drawings = (plan.drawings ?? []).filter((g) => !outpaintOnly || g.mode === 'outpaint')
   if (drawings.length === 0) return { drawn, stats }
   if (!drawDoor?.imageModel) {
-    note(`no picture model is set, so ${drawings.length} picture(s) to draw take a brand colour block`)
+    note(`no picture model is set, so ${drawings.length} picture(s) try owner photos before a neutral fill`)
     return { drawn, stats }
   }
   const asGroup = (g) => ({ sample: g.id, role: g.role, slots: g.occurrences })
@@ -220,7 +228,7 @@ export async function drawPlanned({
         stats.refused.push({ drawing: g.id, reasons: got.refused, reasonClass: got.reasonClass })
         if (got.reasonClass !== 'out of credit')
           note(
-            `a picture drawn for ${groups[0].file} was refused (${got.refused.join(', ')}), ${got.reasonClass}, so it takes a brand colour block`
+            `a picture drawn for ${groups[0].file} was refused (${got.refused.join(', ')}), ${got.reasonClass}, so it tries owner photos before a neutral fill`
           )
         return
       }
@@ -236,7 +244,9 @@ export async function drawPlanned({
         // A drawing is a picture like any other: never enlarged past the role's limit (C9).
         const target = Math.min(group.demo.width, (domain.ROLES[group.role] ?? domain.ROLES.section).min)
         if (target / box.width > domain.MAX_SCALE) {
-          note(`a picture drawn for ${group.file} came back too small, so it takes a brand colour block`)
+          note(
+            `a picture drawn for ${group.file} came back too small, so it tries owner photos before a neutral fill`
+          )
           continue
         }
         const output = domain.outputSize(box, aspect, group.demo.width)
@@ -284,11 +294,11 @@ export async function drawPlanned({
       reasonClass
     })
     if (reasonClass !== 'out of credit')
-      note(`a picture could not be drawn (${reasonClass}), so it takes a brand colour block`)
+      note(`a picture could not be drawn (${reasonClass}), so it tries owner photos before a neutral fill`)
   }
   if (stats.refused.some((item) => item.reasonClass === 'out of credit'))
     note(
-      'The picture provider is out of credit. Undrawn pictures use brand colour blocks. Add credit before drawing again.'
+      'The picture provider is out of credit. Undrawn pictures try owner photos before a neutral fill. Add credit before drawing again.'
     )
   stats.costUsd = Number(stats.costUsd.toFixed(4))
   stats.ms = Date.now() - started

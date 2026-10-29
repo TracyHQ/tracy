@@ -14,6 +14,7 @@ import {
   STAGE
 } from '../src/sites/brief-build.js'
 import { recordedDoor } from '../src/sites/brief-engines/shared.js'
+import { createQuickstartFirstEngine } from '../src/sites/brief-engines/quickstart-first.js'
 import { briefOf } from '../src/sites/brief-store.js'
 import { createSite, deleteSite } from '../src/sites/store.js'
 import { fileDb } from './_db.mjs'
@@ -76,6 +77,41 @@ async function untilSettled(b, siteKey, tries = 200) {
     await new Promise((resolve) => setTimeout(resolve, 2))
   }
   throw new Error('still held')
+}
+
+for (const trade of ['bakery', 'dental clinic']) {
+  test(
+    `${trade}: the persisted applyMs excludes drawing through the production workflow wrapper`,
+    dbOpts,
+    async () => {
+      let now = Date.now()
+      const shaped = { shaped: [] }
+      const legacy = {
+        prepare: async () => ({}),
+        preparePictures: async (ctx) => {
+          now += 121_619
+          ctx.time('pictureDrawMs', 121_619)
+          return shaped
+        },
+        apply: async (_ctx, prepared) => {
+          if (!prepared.realPicturesPrepared)
+            prepared.realPictureShape = await legacy.preparePictures({ time() {} })
+          assert.equal(prepared.realPictureShape, shaped)
+          now += 7
+          return { wrote: 1, kept: 0 }
+        }
+      }
+      const wrapped = createQuickstartFirstEngine({ legacy, woContent: {} })
+      const b = builds(db.pool, { wordpress: wrapped }, { now: () => now })
+      await b.start(input({ brief: { about: `A fictional ${trade}.` } }))
+      await b.gate('bakery.tracy.test')
+      await untilSettled(b, 'bakery.tracy.test')
+      const row = await briefOf(db.pool, 'bakery.tracy.test')
+      assert.equal(row.state, 'applied')
+      assert.equal(row.timings.pictureDrawMs, 121_619)
+      assert.equal(row.timings.applyMs, 7)
+    }
+  )
 }
 
 test('a site made with no brief has no row, and the gate never holds it', dbOpts, async () => {

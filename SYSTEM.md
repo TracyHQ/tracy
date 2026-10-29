@@ -1160,6 +1160,12 @@ EmDash) never gets a record created for it.
   `settings.favicon` and the `logo_dark` field of the chrome entry; the tool's undo journal lives in the run's temporary
   folder, so it cannot yet be undone inside Tracy (pre-existing). Each release's profile (number of logo slots, `brandReady`,
   `faviconReady`, image frame) is in [`lib/template-profiles.json`](apps/tracy-web/src/lib/template-profiles.json).
+- **Button actions in brief builds** (spec #189): each button slot declares `action.kind` independently of its editorial
+  role; shared labels declare every rendered use. Business research derives one `brief.primaryAction` in its existing
+  model call, resolving its receiving channel only from verified brief facts. The site plan resolves a Contact action
+  to the new site's own Contact page, records inferred wording, and carries button text and URL decisions together.
+  Declared actions override generic copy; missing primary actions or writable destinations fail explicitly. Contract
+  capture proposes actions from button markup and destinations, and contract validation refuses undeclared buttons.
 - **A Joomla brief build clears what the content map does not reach** (spec #189, ticket #196,
   [`joomla-outside-map.js`](apps/tracy-web/src/sites/brief-engines/joomla-outside-map.js), decisions in the site plan's `outside`,
   [`outside-map.mjs`](packages/wo/website-opportunities/domain/outside-map.mjs)), under one `apply_id` `outside-<ts>`, after the
@@ -1173,6 +1179,13 @@ EmDash) never gets a record created for it.
   the demo backgrounds the served stylesheets paint with the owner's picture (or none), and hides demo play buttons, the demo
   pictures of the not-found and offline pages, and links to unpublished menu entries. The demo-leftover check reads the same
   block: a file, video id or address it names counts as hidden, not as a leftover.
+- **Brief-build main menus have one final writer** (`brief-engines/main-menu.js`): after copy pins, the CMS tool and
+  cleanup, the Joomla, WordPress and EmDash adapters read the template's native main-menu placements and label the kept
+  pages from their roles and the brief through the text model. They write labels through the existing CMS doors and read
+  them back; missing placements, invalid labels and refused writes fail explicitly. No new routes or store are created.
+  Footer menus, buttons and page introductions do not enter this stage. `opportunities-build/main-menu-check.js` then
+  reads the served main navigation on each checked page, checks labels and reachability of kept pages, and records its
+  findings as `receipt.leftovers.mainMenu`; a failed main-menu check makes `receipt.leftovers.pass` false.
 - **Joomla contract writes preserve sealed occupancy** (`joomla-contract-occupancy.js`): every scalar type is checked
   against its sample before sending. Occupied removals and other refused occupied slots go through native record writes
   after the contract, including menu titles and author profile HTML. Empty samples stay empty unless an explicit records
@@ -2084,6 +2097,13 @@ can still be read, running jobs stop at the next checkpoint with `paused` + `FEA
   does not retry it during `apply`. Completed shapes are uploaded through Apply only after a fresh contract/editor
   check, keeping the existing revision and readback guards. Text, contact, social, map, logo and menu writes retain
   their independent write clock. EmDash's real-picture adapter does not call a picture model.
+  The production `quickstart-first` wrapper forwards this hook for the contract workflow and transfers its completed or
+  timed-out result into the nested CMS engine, so composition cannot move drawing back inside `applyMs`.
+  Drawn pictures may show people and faces; `drawnPictureVerdict` refuses lettering independently of owner-photo rules.
+  A refused, failed or capped drawing tries the best-fitting owner photo before a neutral fill, preferring unused photos
+  and allowing background slots to reuse a same-page photo. Existing owner-photo subject, face-safe crop and measured
+  quality refusals still apply. Gallery slots without a picture take a clear marker; the Joomla head writer removes
+  their whole rendered tile on the affected routes, preserving the contract's bound nodes and list indexes.
   EmDash uses `emdash-real-pictures.js`: derives the inventory from media-map/seed/schema, keeps logo/icon/staff
   pictures and unsupported pictures; a source reader injected from `app.js` reads the real pictures instead of only checking that pictures exist.
   Upload goes through the existing Apply, native PUT/publish with revision, mutation receipt, schema/draft and readback

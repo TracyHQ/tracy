@@ -85,14 +85,14 @@ export function pictureBriefs(brief) {
   const facts = [brief.name, brief.about, brief.sector]
     .filter((v) => typeof v === 'string' && v.trim() !== '')
     .join(' — ')
-  const none = 'No text, no letters, no logos, no watermarks, no brand names, no recognisable people.'
+  const none = 'No text, no letters, no lettering, no logos, no watermarks, no brand names.'
   const subject = (i) => (brief.pictures?.[i] ? `\nSubject: ${brief.pictures[i]}` : '')
   /** What each section's photograph is of, so six pictures of one business are six different pictures. */
   const angles = [
     'its craft or product up close — not the same scene as a wide shop front',
     'what it offers, a different subject and angle than the first close-up',
-    'the place it works in, seen from inside, with nobody recognisable in it',
-    'hands at work on its craft, no faces',
+    'the place it works in, seen from inside',
+    'hands at work on its craft',
     'a tidy arrangement of what it offers, seen from above'
   ]
   return [

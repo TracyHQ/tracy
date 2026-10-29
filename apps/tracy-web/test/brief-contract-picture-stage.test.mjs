@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import sharp from 'sharp'
+import { createHash } from 'node:crypto'
 import { writeContractPictures } from '../src/sites/brief-engines/contract-real-pictures.js'
 
 for (const platform of ['joomla', 'wordpress']) {
@@ -92,6 +93,47 @@ for (const platform of ['joomla', 'wordpress']) {
     assert.equal(f.calls.length, 1)
     assert.equal(f.outcomes.length, 2)
     assert.equal(Object.values(f.outcomes[0].receipts)[0].state, 'uploaded')
+  })
+  test(`${platform}: a cleared gallery keeps its removal paths and routes across the image write boundary`, async () => {
+    const f = await fixture()
+    const bytes = await sharp({
+      create: { width: 1600, height: 900, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } }
+    })
+      .png()
+      .toBuffer()
+    const shaped = {
+      shaped: [
+        {
+          group: { sample: f.slot.sample, role: 'gallery', slots: [f.slot], routes: ['gallery'] },
+          bytes,
+          ext: 'png',
+          hash: createHash('sha256').update(bytes).digest('hex'),
+          hide: true,
+          receipt: { kind: 'blank', origin: 'placeholder' }
+        }
+      ],
+      map: { groups: [], never: [] },
+      plan: { placements: [], unfilled: [], unused: [] }
+    }
+    const result = await writeContractPictures({ ...f.input, shaped })
+    assert.equal(result.hiddenPictures.length, 1)
+    assert.match(result.hiddenPictures[0], /tracy-content\/[a-f0-9]{64}\.png$/)
+    assert.deepEqual(
+      result.removedGalleryPictures.map((g) => g.routes),
+      [['gallery']]
+    )
+    const other = await fixture()
+    const cutout = structuredClone(shaped)
+    cutout.shaped[0].bytes = bytes
+    cutout.shaped[0].hash = createHash('sha256').update(bytes).digest('hex')
+    cutout.shaped[0].group.role = 'cut-out'
+    const cleared = await writeContractPictures({ ...other.input, shaped: cutout })
+    assert.notEqual(
+      result.hiddenPictures[0],
+      cleared.hiddenPictures[0],
+      'a gallery marker never aliases a same-size clear cut-out and hides its surrounding section'
+    )
+    assert.equal(result.report.verified, 1)
   })
   test(`${platform}: an editor change refuses image replacement before upload`, async () => {
     const f = await fixture()

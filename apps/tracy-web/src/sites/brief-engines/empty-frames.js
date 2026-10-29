@@ -290,7 +290,62 @@ export function photoTiles(pages, { skip = [] } = {}) {
   return out.slice(0, MAX_SELECTORS)
 }
 
-/** The selectors of the empty frames of several pages, each once, the most of them kept. @param {string[]} pages */
-export function emptyFrames(pages) {
-  return [...new Set(pages.flatMap((html) => emptyFrameSelectors(html)))].slice(0, MAX_SELECTORS)
+/** A gallery marker removes its repeated tile, preserving the contract's bound nodes and list indexes. */
+function removedPictureFramesOf(html, paths) {
+  if (!paths.size) return []
+  const out = []
+  const walk = (node) => {
+    if (SKIPPED.has(node.tagName) || ['nav', 'header'].includes(node.tagName)) return
+    if (node.tagName === 'img' && paths.has(sitePath(attr(node, 'src')))) {
+      let tile = node
+      for (
+        let at = node.parentNode;
+        at?.tagName && !['body', 'html', 'section', 'main'].includes(at.tagName);
+        at = at.parentNode
+      ) {
+        if (elements(at.parentNode).filter((s) => signature(s) === signature(at)).length > 1) {
+          tile = at
+          break
+        }
+        // Never hide a whole gallery container when this was its last tile.
+        if (attr(at, 'id')) {
+          if (
+            ['figure', 'li'].includes(at.tagName) ||
+            classesOf(at).some((c) => COLUMN.test(c) || BOX.test(c))
+          )
+            tile = at
+          break
+        }
+        tile = at
+      }
+      const file = sitePath(attr(node, 'src')).replaceAll('\\', '\\\\').replaceAll('"', '\\"')
+      // This head block serves every page: an identical tile on another page must keep its real photo.
+      const picture = `img[src*="${file}"]`
+      out.push(tile === node ? `${selectorOf(tile)}[src*="${file}"]` : `${selectorOf(tile)}:has(${picture})`)
+      return
+    }
+    for (const child of elements(node)) walk(child)
+  }
+  walk(parse(String(html ?? '')))
+  return out
+}
+
+/** The complete gallery tiles explicitly cleared by their picture slot roles. */
+export function removedPictureFrames(pages, paths) {
+  const removed = new Set(paths.map(sitePath))
+  return [...new Set(pages.flatMap((html) => removedPictureFramesOf(html, removed)))].slice(0, MAX_SELECTORS)
+}
+
+/**
+ * The selectors of empty frames and explicit gallery removals, each once.
+ * @param {string[]} pages
+ * @param {{removedPictures?: string[]}} [options]
+ */
+export function emptyFrames(pages, { removedPictures = [] } = {}) {
+  const removed = new Set(removedPictures.map(sitePath))
+  return [
+    ...new Set(
+      pages.flatMap((html) => [...removedPictureFramesOf(html, removed), ...emptyFrameSelectors(html)])
+    )
+  ].slice(0, MAX_SELECTORS)
 }

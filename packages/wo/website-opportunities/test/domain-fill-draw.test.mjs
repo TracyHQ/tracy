@@ -300,15 +300,20 @@ test('#194 a bakery brief draws its hero from its own photo, with the bakery as 
   assert.ok(!JSON.stringify(plan).includes('restaurant'))
 })
 
-test('#194 a drawing with words, a logo or a face is refused by the labeller verdict', () => {
+test('#194 drawn pictures refuse lettering and accept people and faces independently of owner-photo rules', () => {
   assert.deepEqual(drawnPictureVerdict({ textPresence: 'present' }), { ok: false, reason: 'text-found' })
-  assert.deepEqual(drawnPictureVerdict({ textPresence: 'absent', content: 'logo' }), {
+  assert.deepEqual(drawnPictureVerdict({ hasTextOverlay: true, faceBoxes: [[0, 0, 0.1, 0.1]] }), {
     ok: false,
-    reason: 'logo-found'
+    reason: 'text-found'
+  })
+  assert.deepEqual(drawnPictureVerdict({ content: 'text-graphic' }), { ok: false, reason: 'text-found' })
+  assert.deepEqual(drawnPictureVerdict({ textPresence: 'absent', content: 'logo' }), {
+    ok: true,
+    reason: null
   })
   assert.deepEqual(drawnPictureVerdict({ textPresence: 'absent', faceBoxes: [[0, 0, 0.1, 0.1]] }), {
-    ok: false,
-    reason: 'face-found'
+    ok: true,
+    reason: null
   })
   assert.deepEqual(drawnPictureVerdict({ textPresence: 'absent', faceBoxes: [] }), { ok: true, reason: null })
   assert.deepEqual(drawnPictureVerdict(null), { ok: false, reason: 'labeller-unavailable' })

@@ -3,6 +3,8 @@
 import { uploadPictures } from './pictures.js'
 import { contentMapOf, keptPages, pictureReport, shapeReal } from './real-pictures.js'
 import { meetSlotFit } from './picture-slot-fit.js'
+import { takenOffPicturePaths } from './cutout-css.js'
+import { markGalleryRemovals } from './gallery-picture-removals.js'
 
 const fail = (code) => Object.assign(new Error(code), { code })
 
@@ -140,6 +142,7 @@ export async function writeContractPictures({
   ctx.signal?.throwIfAborted()
   // The plugin refuses a picture narrower than its slot's `fit.minWidth`: each is brought up to it first.
   shaped.shaped = await meetSlotFit(shaped.shaped, contentMap)
+  shaped.shaped = await markGalleryRemovals(shaped.shaped)
   const art = await uploadPictures({
     shaped: shaped.shaped,
     platform: ctx.platform,
@@ -198,5 +201,16 @@ export async function writeContractPictures({
     Object.values(outcome.receipts).some((r) => r.state !== 'verified')
   )
     ctx.note('picture replacement needs attention; see the build picture report')
-  return { ...outcome, values: art.values }
+  return {
+    ...outcome,
+    values: art.values,
+    hiddenPictures: takenOffPicturePaths(shaped, art.values, refused),
+    removedGalleryPictures: shaped.shaped
+      .filter((item) => item.hide && item.group.role === 'gallery')
+      .flatMap((item) =>
+        item.group.slots
+          .filter((slot) => art.values[slot.key] && !refused.has(slot.key))
+          .map((slot) => ({ path: art.values[slot.key], routes: item.group.routes ?? [] }))
+      )
+  }
 }

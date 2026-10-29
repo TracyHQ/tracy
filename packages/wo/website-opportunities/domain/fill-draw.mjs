@@ -272,7 +272,8 @@ export function planDrawings({
 const colourBlock = (reason) => ({ action: 'substitute', reason, substitute: { kind: 'brand-colour' } })
 
 /**
- * Whether a drawn picture may be shown, read from the photo labeller's answer for it: no words, no logo, no face.
+ * The drawn-picture content rule: refuse lettering, accept people and faces in every slot. Owner photos use planFill's
+ * separate eligibility and face-safe crop rules; this verdict never changes them.
  * @param {Record<string, any> | null | undefined} labels - the labeller's labels of the drawing, null when it gave none
  *   (then the drawing is refused: `labeller-unavailable`)
  * @returns {{ok: boolean, reason: string | null}}
@@ -280,10 +281,11 @@ const colourBlock = (reason) => ({ action: 'substitute', reason, substitute: { k
 export function drawnPictureVerdict(labels) {
   // A drawing nobody looked at is never shown: no labeller answer, no picture (#194).
   if (!labels) return { ok: false, reason: 'labeller-unavailable' }
-  if (labels.textPresence === 'present' || labels.hasTextOverlay === true)
+  if (
+    labels.textPresence === 'present' ||
+    labels.hasTextOverlay === true ||
+    labels.content === 'text-graphic'
+  )
     return { ok: false, reason: 'text-found' }
-  if (labels.subject === 'logo' || labels.content === 'logo' || labels.content === 'text-graphic')
-    return { ok: false, reason: 'logo-found' }
-  if ((labels.faceBoxes?.length ?? 0) > 0) return { ok: false, reason: 'face-found' }
   return { ok: true, reason: null }
 }

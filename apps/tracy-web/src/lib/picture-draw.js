@@ -3,7 +3,7 @@
  * `outpaint` extends one real photo to the place's shape, its middle kept; `scene` draws the slot's subject (an offering,
  * else the business's place) in the style, colours and light of a few of its own photos; `object` draws one object of the
  * activity on a plain ground, for a cut-out figure (#195). The fill plan decides which slot is drawn and how
- * (`domain/fill-draw.mjs`, `decor-plan.mjs`); never a person, a logo or words.
+ * (`domain/fill-draw.mjs`, `decor-plan.mjs`). People and faces are allowed; lettering and logos are not requested.
  *
  * The model is the picture door this deployment has (`models().image`: OpenRouter, `google/gemini-3.1-flash-lite-image` by
  * default, measured 18/10/2026: 16:9 kept, $0.034, 8 s); the call is the seeder's `chat`. What comes back is checked by the
@@ -13,10 +13,9 @@ import { createHash } from 'node:crypto'
 import sharp from 'sharp'
 import { colourWords } from 'website-opportunities/domain/brand-colours.mjs'
 
-export const DRAW_PROMPT_VERSION = 'd6'
+export const DRAW_PROMPT_VERSION = 'd7'
 const REFERENCE_EDGE = 1024
-const NEVER =
-  'No text, no letters, no lettering, no numbers, no signs, no logos, no watermarks, no recognisable faces, no faces of any kind, no person facing the camera.'
+const NEVER = 'No text, no letters, no lettering, no numbers, no signs, no logos, no watermarks.'
 
 const ratio = (aspect) => {
   for (const [w, h] of [
@@ -46,18 +45,14 @@ function factsOf(subject) {
 }
 
 /**
- * What a scene shows: the offering a card is about in use, else the business's own place in use. Never an invented
- * person who seems to work or train there (spec #189, #194): people only small, far off, from behind or out of focus.
+ * What a scene shows: the offering a card is about in use, else the business's own place in use.
+ * People and visible faces may appear; a drawing never supplies a specific staff member's portrait.
  */
 function activityOf(subject) {
   if (subject?.kind === 'offering' && subject.label)
     return `${subject.label} at this business: its equipment and its place close up, ready or in use`
   return `the business's own place, ready or in use, as its customers arrive at it`
 }
-
-/** Who may be in a drawing: nobody a visitor could take for a real member of staff, customer or child of this business. */
-const PEOPLE =
-  'If any people appear, show them only from behind, with every face completely outside the frame: no face turned to the camera, no face in focus, no child as the subject. Distance or blur does not make a visible face acceptable.'
 
 /** How the business's own photos are given: what it looks like, never a style or a frame to copy. */
 const REFERENCES =
@@ -84,13 +79,9 @@ function brandColoursOf(item) {
  * owner's social posts, and it drew empty courts and rooms in their phone-camera look; a subject that was a record printed
  * as "[object Object]". Told the business's facts and its activity the way `pictureBriefs` does, with the owner's photos
  * as what the place looks like rather than a style to copy, it drew the business at work in its own place.
- * 🔒 BUT NEVER AN INVENTED PERSON WHO SEEMS TO BE ITS OWN (d4, 29/10/2026). d3 asked for the business "at work", and
- * drew a coach and children front-on: invented people a visitor would take for its staff and customers. d4 asks for
- * the place and its equipment in use, with people only small, far off, from behind or out of focus; a drawing the
- * labeller still finds a face in is refused (`drawnPictureVerdict`), drawn once more, then a brand colour block.
  * d5 (29/10/2026): an object for a cut-out is asked large, filling its frame; a small object in the middle of a white
  * ground was set floating across a hero's words instead of standing where the demo's figure stood.
- * d6 (29/10/2026): every visible face and all lettering are forbidden, including distant or blurred faces.
+ * d7 (29/10/2026): the owner's approved rule allows people and faces. Lettering remains forbidden in every mode.
  */
 export function drawPrompt(item) {
   const shape = `${ratio(item.aspect)} (width ${item.aspect.toFixed(2)} times the height), ${orientation(item.aspect)}`
@@ -107,13 +98,13 @@ export function drawPrompt(item) {
   }
   if (item.mode === 'object') {
     const what = item.subject?.label ? `${item.subject.label}` : `the work of this business`
-    return `One single object used for ${what}, for the website of this business:${about}\nShown whole and large, filling most of the frame, on a plain pure white background with nothing else in the frame, framed ${shape}. Photorealistic, soft even light, no shadow on the ground, no people.${brandColoursOf(item)}\n${REFERENCES}\n${NEVER}`
+    return `One single object used for ${what}, for the website of this business:${about}\nShown whole and large, filling most of the frame, on a plain pure white background with nothing else in the frame, framed ${shape}. Photorealistic, soft even light, no shadow on the ground.${brandColoursOf(item)}\n${REFERENCES}\n${NEVER}`
   }
   const page =
     item.subject?.kind === 'offering' && item.subject.label
       ? `for the page of one of its offerings, ${item.subject.label}`
       : 'for its website'
-  return `A photograph of this business, ${page}:${about}\nPhotorealistic, natural light, ${activityOf(item.subject)}, framed ${shape}.${brandColoursOf(item)}\n${PEOPLE}\n${REFERENCES}\n${NEVER}`
+  return `A photograph of this business, ${page}:${about}\nPhotorealistic, natural light, ${activityOf(item.subject)}, framed ${shape}.${brandColoursOf(item)}\n${REFERENCES}\n${NEVER}`
 }
 
 /** The cache key of a drawing: what it was made from, for what subject and shape, how, and by which model. */

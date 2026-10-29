@@ -134,7 +134,7 @@ test('ja-restaurant: wide photographs take the slides, food takes the dishes, th
     assert.ok(Math.abs(meta.width / meta.height - demo) <= 0.01 * demo, s.group.sample)
     assert.match(s.hash, /^[0-9a-f]{64}$/)
   }
-  const placeholders = shaped.shaped.filter((s) => s.receipt.kind === 'placeholder')
+  const placeholders = shaped.shaped.filter((s) => ['placeholder', 'blank'].includes(s.receipt.kind))
   assert.ok(placeholders.length > 0)
   assert.equal(placeholders.length, shaped.plan.unfilled.length)
   assert.ok(shaped.shaped.filter((s) => s.receipt.kind === 'photo').every((s) => s.receipt.origin === 'real'))

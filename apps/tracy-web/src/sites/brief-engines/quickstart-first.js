@@ -223,8 +223,19 @@ export function createQuickstartFirstEngine({
         sources: quickstartSources(source, { researchOf })
       }
     },
+    async preparePictures(ctx, prepared) {
+      if (!prepared.legacy) return null
+      return legacy.preparePictures?.(ctx, prepared.prepared) ?? null
+    },
     async apply(ctx, prepared) {
-      if (prepared.legacy) return legacy.apply(ctx, prepared.prepared)
+      if (prepared.legacy) {
+        // Only the runner accepts preparation results: a late dependency cannot restart drawing during writes.
+        if (prepared.realPicturesPrepared) {
+          prepared.prepared.realPicturesPrepared = true
+          prepared.prepared.realPictureShape = prepared.realPictureShape
+        }
+        return legacy.apply(ctx, prepared.prepared)
+      }
       let assertRoot = null
       const checkAllowed = async () => {
         ctx.signal?.throwIfAborted()

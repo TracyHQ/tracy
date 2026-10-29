@@ -19,6 +19,7 @@ import { MAX_PICTURES } from '../src/sites/brief-engines/pictures.js'
 import { normalizeBrief } from '../src/sites/brief-normalize.js'
 import { throughDoor } from './_apply-door.mjs'
 import { preparePicturesBeforeApply } from '../src/sites/picture-preparation.js'
+import { createQuickstartFirstEngine } from '../src/sites/brief-engines/quickstart-first.js'
 
 const business = contractFor(defaultContracts(), 'tracy-business/j6', '1.2.0')
 const base = contractFor(defaultContracts(), 'tracy-base/j6', '1.0.1')
@@ -4226,9 +4227,10 @@ for (const trade of [
       realPictures,
       woContent: { sitePlanFor: async () => sitePlan }
     })
-    const prepared = await engine.prepare(ctx)
-    supplyBlankRows(site, boxing104, prepared.demoBlanks)
-    prepared.real = {
+    const wrapped = createQuickstartFirstEngine({ legacy: engine, woContent: {} })
+    const prepared = await wrapped.prepare(ctx)
+    supplyBlankRows(site, boxing104, prepared.prepared.demoBlanks)
+    prepared.prepared.real = {
       buildId: 'fictional-portrait-build',
       pictures: [
         {
@@ -4242,12 +4244,12 @@ for (const trade of [
       bytes: async () => null
     }
     const started = Date.now()
-    await preparePicturesBeforeApply(engine, ctx, prepared, 250, 10)
+    await preparePicturesBeforeApply(wrapped, ctx, prepared, 250, 10)
     assert.ok(Date.now() - started < 2000, 'a hung picture reader is bounded')
     assert.ok(reads > 0, `the real engine tried to measure its picture slots: ${notes.join('; ')}`)
     assert.equal(site.calls.length, 0, 'preparation must not even pin article order')
     const beforeApply = reads
-    const result = await engine.apply(ctx, prepared)
+    const result = await wrapped.apply(ctx, prepared)
     assert.ok(result.wrote > 0, 'the owner text still reaches the plugin-validated CMS')
     assert.equal(reads, beforeApply, 'apply never retries the unavailable pictures')
     assert.ok(notes.some((note) => /picture preparation/.test(note)))
