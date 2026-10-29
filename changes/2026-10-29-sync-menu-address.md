@@ -1,0 +1,4 @@
+- **Address existing WordPress menu items by their menu.** — David · issue #101 · `fix/sync-menu-address` · 2026-10-29
+  **Affects:** Sync to live menu-item updates carry the base menu slug alongside the mapped live post ID, matching the native writer contract. Related title, position, URL and parent cases preserve the same address.
+
+  Verification: four negative controls reproduced missing keys; all four passed after the fix, and the full changeset suite passed 33/33. An isolated WordPress/PHP8.3/MariaDB stack using claude-cowork main `0232b7a7fbeab4a4959f77dd54ea500d5804fda3` applied a generated rename from copy ID5 to live ID4 and then restored the old title with Undo. Test containers, volumes and network were removed; no image was built. The fleet requires the next shared-script image release.
