@@ -9,6 +9,8 @@
  *   a LONE frame (no sibling of its shape) is hidden too when it is empty, sits beside content its parent shows, holds
  *   nested boxes (or names itself a box: card, panel, tile, info, stat, bg-*), and holds no link, button, icon or anything
  *   a script fills (an id, a data-, aria- or role attribute): a fact block whose values were all emptied
+ *   a TAKEN-OFF part (a picture, link or list item the build hid with the `hidden` attribute) is no content: the lone
+ *   wrapper it leaves (its margins, the line of its emptied words) is hidden with it, so the neighbours close up
  *   a TILE is an empty repeated frame whose same-shape siblings show pictures and no words (a box among the photos of a
  *   grid; siblings with words are cards, and an emptied card is a demo card taken off, hidden): it is shown as one of
  *   the owner's photos instead of hidden (`photoTiles`), so the grid keeps its shape
@@ -50,9 +52,20 @@ const classesOf = (node) => attr(node, 'class').split(/\s+/).filter(Boolean)
 const elements = (node) => (node.childNodes ?? []).filter((c) => c.tagName)
 const signature = (node) => `${node.tagName}.${[...classesOf(node)].sort().join('.')}`
 
+/**
+ * True when the build took the element off (item 26): the records door hides a picture, a link or a list item it has no
+ * owner content for with the `hidden` attribute. One a script may reveal (an id, a data-, aria- or role attribute) is
+ * not taken off. A taken-off element is no content, so the wrapper it leaves goes with it instead of printing a hole.
+ */
+const TAKEN_OFF = new Set(['img', 'picture', 'a', 'li'])
+const takenOff = (node) =>
+  TAKEN_OFF.has(node.tagName) &&
+  (node.attrs ?? []).some((a) => a.name === 'hidden') &&
+  !(node.attrs ?? []).some((a) => a.name === 'id' || /^(?:data-|aria-|role$)/.test(a.name))
+
 /** True when the element holds something a visitor reads or sees. */
 function hasContent(node) {
-  if (SKIPPED.has(node.tagName)) return false
+  if (SKIPPED.has(node.tagName) || takenOff(node)) return false
   if (MEDIA.has(node.tagName)) return true
   if (/url\(/i.test(attr(node, 'style'))) return true
   for (const child of node.childNodes ?? []) {
@@ -65,7 +78,7 @@ function hasContent(node) {
 
 /** True when the element holds words of its own (a text node with a letter or a digit, outside scripts and styles). */
 function hasWords(node) {
-  if (SKIPPED.has(node.tagName)) return false
+  if (SKIPPED.has(node.tagName) || takenOff(node)) return false
   return (node.childNodes ?? []).some((c) =>
     c.nodeName === '#text' ? /[\p{L}\p{N}]/u.test(c.value ?? '') : c.tagName ? hasWords(c) : false
   )
@@ -96,6 +109,36 @@ function selectorOf(node) {
     steps.unshift(`${at.tagName}${classes}:nth-child(${position})`)
   }
   return `body > ${steps.join(' > ')}`
+}
+
+/** The first taken-off picture inside `node` with a file of its own, or null. */
+const takenOffPicture = (node) =>
+  node.tagName === 'img' && takenOff(node) && attr(node, 'src')
+    ? attr(node, 'src')
+    : (elements(node).map(takenOffPicture).find(Boolean) ?? null)
+
+/**
+ * The selector of a frame to hide. A frame around a taken-off picture is named by that picture, from the nearest id with
+ * a descendant step, never by its path: a template script often moves an intro block into another column after load
+ * (a sticky side column), and a child path read from the served HTML then matches nothing in the live page.
+ */
+function frameSelectorOf(node) {
+  const src = takenOffPicture(node)
+  if (!src) return selectorOf(node)
+  let anchor = 'body'
+  for (let at = node.parentNode; at?.tagName && at.tagName !== 'html'; at = at.parentNode) {
+    const id = attr(at, 'id')
+    if (id && /^[A-Za-z][\w-]*$/.test(id)) {
+      anchor = `#${id}`
+      break
+    }
+  }
+  const classes = classesOf(node)
+    .filter((c) => /^[\w-]+$/.test(c))
+    .map((c) => `.${esc(c)}`)
+    .join('')
+  const file = src.replaceAll('\\', '\\\\').replaceAll('"', '\\"')
+  return `${anchor} ${node.tagName}${classes}:has(img[hidden][src="${file}"])`
 }
 
 /** Classes of a lone element that paint a box of its own, and of decoration that is meant to be empty. */
@@ -135,15 +178,21 @@ const scriptsOf = (node) =>
     : (node.childNodes ?? []).map(scriptsOf).join('\n')
 /** A style or a script inside: the frame carries code (a head block in a module), never a leftover. */
 const holdsCode = (node) => ['script', 'style'].includes(node.tagName) || elements(node).some(holdsCode)
-const holdsLive = (node) => LIVE.has(node.tagName) || elements(node).some(holdsLive)
+const holdsLive = (node) => !takenOff(node) && (LIVE.has(node.tagName) || elements(node).some(holdsLive))
+const holdsTakenOff = (node) => takenOff(node) || elements(node).some(holdsTakenOff)
 const nested = (node) => elements(node).some((k) => elements(k).length > 0)
 const imagesIn = (node) =>
-  node.tagName === 'img' ? [attr(node, 'src')].filter(Boolean) : elements(node).flatMap(imagesIn)
+  takenOff(node)
+    ? []
+    : node.tagName === 'img'
+      ? [attr(node, 'src')].filter(Boolean)
+      : elements(node).flatMap(imagesIn)
 
 /** Whether a lone element is an emptied frame (see the head comment). */
 function loneFrame(kid, parent, scripts) {
   const classes = classesOf(kid).join(' ')
   if (
+    takenOff(kid) ||
     hasContent(kid) ||
     !hasContent(parent) ||
     isControl(kid) ||
@@ -154,6 +203,7 @@ function loneFrame(kid, parent, scripts) {
   if (holdsLive(kid) || scripted(kid, scripts)) return false
   return (
     nested(kid) ||
+    holdsTakenOff(kid) ||
     (elements(kid).length > 0 && BOX.test(classes)) ||
     (BOX.test(classes) && /bg-/.test(classes))
   )
@@ -193,7 +243,7 @@ export function emptyFramesOf(html) {
     for (const same of shapes.values()) {
       if (same.length < 2) {
         if (body !== node && loneFrame(same[0], node, scripts)) {
-          hide.push(selectorOf(same[0]))
+          hide.push(frameSelectorOf(same[0]))
           hidden.add(same[0])
         }
         continue
@@ -202,6 +252,7 @@ export function emptyFramesOf(html) {
       for (const kid of same) {
         // A frame holds some element inside (an icon, a box); a bare empty element is a spacer or a control, left alone.
         if (
+          takenOff(kid) ||
           hasContent(kid) ||
           elements(kid).length === 0 ||
           holdsCode(kid) ||
@@ -221,7 +272,7 @@ export function emptyFramesOf(html) {
             target: inner.length === 1 ? selectorOf(inner[0]) : selectorOf(kid),
             grid
           })
-        } else hide.push(selectorOf(kid))
+        } else hide.push(frameSelectorOf(kid))
       }
       // Cards laid out by grid columns lost some and kept some: the row centres the kept ones.
       if (
