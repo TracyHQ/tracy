@@ -26,6 +26,7 @@ import {
   variantFor
 } from './brand-joomla-places.js'
 import { writeDemoAuthorName } from './brand-joomla-author.js'
+import { logosByContrast } from './brand-joomla-logo-contrast.js'
 import { logoForSlot, nameForDemoLogos } from './brand-joomla-logo-fallback.js'
 import { writeT3Styles } from './brand-joomla-t3.js'
 import { writeT4Profiles } from './brand-joomla-t4.js'
@@ -80,13 +81,20 @@ async function writeSiteBrand({ prepared, profile, stamp, write, read, wrote: to
     written.add(where)
     told(where)
   }
-  const logos = prepared.logo ?? {}
-  const anyLogo = Object.keys(logos).length > 0
+  const given = prepared.logo ?? {}
+  const anyLogo = Object.keys(given).length > 0
   // A brief build with no logo shows the name as text on every logo spot (site plan, #193).
   const textLogo = prepared.textLogo === true && !anyLogo
   const name = typeof prepared.name === 'string' ? prepared.name.trim() : ''
   // A brief build: a logo spot its logo does not reach shows the name as text, never the template's logo (#193).
   const nameFallback = prepared.nameFallback === true && name !== ''
+  // A brief build's logo is set on a plate where its own colours would not stand out on the spot's ground (`logosByContrast`).
+  const logos =
+    nameFallback && anyLogo
+      ? await logosByContrast(given, (where, reason) => console.info(`[brand] ${where}: ${reason}`)).catch(
+          () => given
+        )
+      : given
   const folder = templateFolderOf(profile?.release)
   if (!profile?.framework || !folder) {
     if (anyLogo) skip('logo', 'Tracy does not know where this design shows a logo yet')
@@ -219,7 +227,7 @@ async function writeSiteBrand({ prepared, profile, stamp, write, read, wrote: to
   // map has no door for) shows the name as text.
   if (nameFallback && profile.framework)
     await nameForDemoLogos({ name, demoFiles: prepared.demoLogoFiles ?? [], read, write, wrote, skip })
-  if (logos.dark && !logos.single && !used.has('dark'))
+  if (given.dark && !given.single && !used.has('dark'))
     skip('logo-dark', 'this design does not show a dark-background logo yet')
   if (header && profile.brandReady === false) skip('logo', NOT_SHOWN.logo)
   if (written.has('favicon') && profile.faviconReady === false) skip('favicon', NOT_SHOWN.favicon)

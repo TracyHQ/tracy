@@ -214,8 +214,9 @@ export async function logoIntoModule({ slot, path, demoFiles, read, write }) {
     const src = tag.match(/\ssrc\s*=\s*(["'])([\s\S]*?)\1/i)?.[2] ?? ''
     if (!demoFiles.some((f) => src.includes(f))) return tag
     placed += 1
-    // The template's other sizes of its own logo (`srcset`) would win over the new `src` on a sharp screen.
-    return tag.replace(/\ssrcset\s*=\s*(["'])[\s\S]*?\1/i, '').replace(src, path)
+    // The template's other sizes of its own logo (`srcset`) would win over the new `src` on a sharp screen; Joomla's media
+    // field reads the file back from `data-path`; a fixed `width` would stretch a logo of another shape (the height stays).
+    return tag.replace(/\s(?:srcset|data-path|width)\s*=\s*(["'])[\s\S]*?\1/gi, '').replace(src, path)
   })
   if (!placed) return false
   await write('content.update', { kind: 'module', id, fields: { content: html } })

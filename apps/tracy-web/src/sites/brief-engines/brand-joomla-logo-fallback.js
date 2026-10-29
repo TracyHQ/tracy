@@ -12,6 +12,7 @@
  * fit and by the content map's logo files, never by one template.
  */
 import sharp from 'sharp'
+import { platedDrawingHeight } from './brand-joomla-logo-contrast.js'
 import { joomlaIdentityHtml } from './joomla-plan-identity.js'
 
 /** The plugin's floor is 1.5 times the slot's desktop box: a picture that wide shows at two thirds of its pixels. */
@@ -53,7 +54,8 @@ export async function logoForSlot(bytes, fit) {
   if (!minWidth || meta.width >= minWidth) return { bytes, padded: false }
   const box =
     Number(fit?.boxes?.desktop?.width) > 0 ? Number(fit.boxes.desktop.width) : minWidth / MIN_WIDTH_OVER_BOX
-  const shown = ((await drawnHeight(bytes)) * box) / minWidth
+  // A plated logo is judged by its drawing, not by the plate around it.
+  const shown = ((platedDrawingHeight(bytes) ?? (await drawnHeight(bytes))) * box) / minWidth
   if (shown < LEGIBLE_LOGO_PX)
     return {
       text: true,

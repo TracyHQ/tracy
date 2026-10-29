@@ -53,7 +53,10 @@ function t4Site({ profileWrites = 'ok', minWidth = 240, contract = 'ok' } = {}) 
     },
     slot: 'images/demo/logo/light.png',
     modules: new Map([
-      [132, '<a href="/"><img src="images/demo/logo/light.png" alt=""></a>'],
+      [
+        132,
+        '<a href="/"><img src="images/demo/logo/light.png" alt="" width="175" data-path="local-images:/demo/logo/light.png"></a>'
+      ],
       [140, '<div class="offcanvas"><img src="/images/demo/logo/dark.png" alt="Demo"></div>'],
       [150, '<p>Opening hours</p>']
     ]),
