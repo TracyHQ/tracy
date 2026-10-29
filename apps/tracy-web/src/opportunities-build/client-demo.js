@@ -236,11 +236,6 @@ export function businessLogoDue(checks, { platform, logo, worn = null }) {
   const brand = checks.find((c) => c?.id === 'header-brand')
   return Boolean(brand && !brand.pass && (brand.detail ?? []).some((d) => d?.code === 'LOGO_NOT_IN_HEADER'))
 }
-/** Sweep rounds already run inside the counted check now running (`qa.residueSweeps` of this attempt). */
-function sweepRoundsOf(state) {
-  const swept = state.build.qa?.residueSweeps
-  return swept?.attempt === (state.build.qa?.clientCheckAttempts ?? 0) ? (swept.n ?? 0) : 0
-}
 /**
  * Whether the next check may keep the last read of every page whose document did not change (`incremental`): after a
  * counted check, and after a sweep round of the current one. A ROUND'S CHECK READS ONLY WHAT THE SWEEP CHANGED

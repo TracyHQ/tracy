@@ -592,7 +592,7 @@ function tileJudge(fake, { delayOf = () => 0, failAt = null } = {}) {
       open--
     }
   }
-  return { fetchImpl, seen, ...{ capture: fake.capture, challengeFor: fake.challengeFor } }
+  return { fetchImpl, seen, capture: fake.capture, challengeFor: fake.challengeFor }
 }
 const verdict = (r) => ({
   pass: r.pass,

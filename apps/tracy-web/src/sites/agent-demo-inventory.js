@@ -931,7 +931,7 @@ function firstDifference(a, b, path = '') {
     path: path || '.',
     was: shown(a),
     now: shown(b),
-    ...(/\._rowId$/.test(path) ? { fix: ROW_ID } : {})
+    ...(path.endsWith('._rowId') ? { fix: ROW_ID } : {})
   }
 }
 
