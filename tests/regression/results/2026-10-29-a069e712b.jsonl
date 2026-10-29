@@ -1,0 +1,1 @@
+{"id":"REG-PR-147-sign-in-visits-without-utm","verdict":"PASS","commit":"a069e712b6e4277c1bf989a9f3a8e2bb70703389","ran_at":"2026-10-29T05:11:06.329Z","evidence":"tests/regression/.runs/2026-10-29-a069e712b/REG-PR-147-sign-in-visits-without-utm.log"}
