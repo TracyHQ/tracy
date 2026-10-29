@@ -144,6 +144,16 @@
       "reason": "Reviewed generated interface translation bundle for the issue #104 push preview labels (Featured image, Page template, Alt text in eight languages); the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
     },
     {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "33da0e19c4f6bdd3940b554a51537b98501aedf4",
+      "reason": "Reviewed PR #145 generated interface translations for a live site whose PHP is too old for Claude Cowork (sync.error.livePhpTooOld and livePhpTooOldPlain); the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "cddd79f6203247dc268f3e9349c1ae48c2eeae32",
+      "reason": "Reviewed PR #145 generated interface translations for a live site whose PHP is too old for Claude Cowork (sync.error.livePhpTooOld and livePhpTooOldPlain); the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
       "path": "packages/locale/tracy-locales/lib/client.js",
       "oid": "d483016f44c32b17342cbf14579be384be306c3b",
       "reason": "Reviewed generated interface translation bundle for the issue #104 push preview labels after keeping the term template in Page template (eight languages); the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
