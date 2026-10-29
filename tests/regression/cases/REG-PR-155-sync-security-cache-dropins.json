@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-155-sync-security-cache-dropins",
+  "kind": "fix",
+  "title": "A copy stays consistent when the live site runs Wordfence or an object cache",
+  "pr": 155,
+  "area": "sync/files",
+  "cms": ["wp"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": ["Run the ignored-table, drop-in and prepend-line cases."],
+  "expect": [
+    "A plugin state table only the live site has is added once, then kept as the copy's.",
+    "The live object cache drop-in never reaches the copy.",
+    "auto_prepend_file lines in the root server files are commented out, nothing else."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "--test-name-pattern=plugin state table the copy has never had|object cache drop-in is the copy|Wordfence loader lines|none of these files",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-db.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-files.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/webroot-auto-prepend.test.mjs"
+    ],
+    "tests": [
+      "a plugin state table the copy has never had comes whole from the live site once, then stays the copy’s (#106)",
+      "a WordPress object cache drop-in is the copy’s own: the live site’s never comes over (#106)",
+      "the Wordfence loader lines are commented out; every other rule stays as it was",
+      "a webroot with none of these files is left alone"
+    ]
+  }
+}

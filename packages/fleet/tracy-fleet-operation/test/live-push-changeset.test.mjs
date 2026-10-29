@@ -1526,3 +1526,53 @@ test('the preview answer counts pushable items over the whole changeset, not onl
   assert.deepEqual(shown.pushable, { add: 1, change: 1, remove: 1, files: 0, settings: 0, php: 1 })
   assert.equal(shown.conflictsTotal, 500)
 })
+
+test('after an Undo, a Tracy post the live site holds in the trash is offered as an addition that brings it back (#117)', () => {
+  // Apply made copy post 8 as live post 7; Undo trashed live 7 and kept the pair, the copy kept its post.
+  const answer = changeset('wordpress', {
+    entities: { posts: { base: [7], copy: [8] } },
+    idMap: { posts: { 7: 8 } },
+    kinds: {
+      post: kind(
+        [
+          post(7, {
+            post_type: 'post',
+            post_title: 'Tracy post A',
+            post_name: 'tracy-post-a__trashed',
+            post_status: 'trash'
+          })
+        ],
+        [post(8, { post_type: 'post', post_title: 'Tracy post A', post_name: 'tracy-post-a' })],
+        ['ID']
+      )
+    }
+  })
+  const item = answer.items.find((i) => i.kind === 'post')
+  assert.ok(item, JSON.stringify(answer))
+  // The same live post, out of the trash (no second post next to the trashed one) …
+  assert.equal(item.op, 'update')
+  assert.equal(item.liveId, 7)
+  assert.equal(item.write.post_status, 'publish')
+  // … shown under what the push adds, as it reads to the Owner: their post comes back.
+  assert.equal(item.group, 'add')
+  // A trashed live post the copy also has trashed is no change; an untouched published one neither.
+  const same = changeset('wordpress', {
+    entities: { posts: { base: [7], copy: [8] } },
+    idMap: { posts: { 7: 8 } },
+    kinds: {
+      post: kind(
+        [post(7, { post_status: 'trash' })],
+        [
+          post(8, {
+            post_status: 'trash',
+            post_title: 'Page 7',
+            post_name: 'page-7',
+            post_content: '<p>Page 7</p>'
+          })
+        ],
+        ['ID']
+      )
+    }
+  })
+  assert.equal(same.items.length, 0, JSON.stringify(same.items))
+})
