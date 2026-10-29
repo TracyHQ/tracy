@@ -2856,7 +2856,7 @@ def run_half(args: argparse.Namespace) -> int:
         if getattr(args, "pushed", None) and Path(args.pushed).exists():
             said = json.loads(Path(args.pushed).read_text())
             for f in said.get("files", []) or []:
-                if isinstance(f, dict) and isinstance(f.get("path"), str) and isinstance(f.get("ours"), str):
+                if isinstance(f, dict) and isinstance(f.get("path"), str) and "ours" in f and (f["ours"] is None or isinstance(f["ours"], str)):
                     pushed_files[f["path"]] = (f["ours"], "theirs" if f.get("side") == "theirs" else "ours")
             # A setting of the configuration file an Undo of "Sync to live" put back on the live site:
             # the copy keeps Tracy's value there (merge_joomla_config reads the decision `ours`).

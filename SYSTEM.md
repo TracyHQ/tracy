@@ -728,7 +728,7 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   (writing the whole option, CAS on the whole option), Additional CSS (post `custom_css`). Permalinks are never pushed. Places where sync kept
   Tracy's version for **files and configuration settings** also go into `sync/kept.json` (names only) and become `changed-on-both`.
   `sync/pushed.json` adds `files`/`settings`: the file merge takes the live version of a file just pushed (`ours`), and keeps the copy's version after Undo
-  (`theirs`) — `live_sync.py files --pushed`.
+  (`theirs`) — `live_sync.py files --pushed`. Deleted files are recorded with `ours: null`; Undo restores live while the copy keeps its deletion, so the next preview offers that deletion again.
 - **Jobs** `webroot-live-push-{preview,apply,undo}` run `webroot/webroot-live-push.sh`; the live endpoint + token travel only through
   environment variables, as in sync. **preview** runs Sync from live first (stopping with `SYNC_NEEDS_ATTENTION` when the sync is held), then
   under the site lock computes changeset = copy − base (`sync/live-base.sql.gz` loaded raw into a temporary schema + `refs/tracy/live`),

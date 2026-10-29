@@ -816,3 +816,50 @@ test('the shell preserves partial writes and Undo after a firewall blocks a late
     s.dispose()
   }
 })
+
+test('a pushed template file deletion survives Undo and Sync on the copy and is offered again', {
+  ...opts,
+  timeout: 900_000
+}, async () => {
+  const s = stack()
+  const path = 'templates/t4/css/custom.css'
+  const engine = await liveEngine(s.live, {
+    templateFiles: [{ path: 'templates/t4', kind: 'template', name: 't4', php: true }]
+  })
+  try {
+    rmSync(join(s.webroot, path))
+    const previewId = id()
+    const preview = (await s.runPush(['--op', 'preview', '--preview-id', previewId], engine)).answer
+    assert.equal(preview.ok, true, JSON.stringify(preview))
+    assert.deepEqual(
+      preview.items.map((i) => [i.id, i.op]),
+      [[`file:${path}`, 'delete']]
+    )
+    const pushId = id()
+    const applied = (
+      await s.runPush(
+        ['--op', 'apply', '--preview-id', previewId, '--push-id', pushId, '--confirm-deletes'],
+        engine
+      )
+    ).answer
+    assert.equal(applied.state, 'applied', JSON.stringify(applied))
+    assert.equal(applied.sync.state, 'applied', JSON.stringify(applied.sync))
+    assert.ok(!existsSync(join(s.live, path)))
+    assert.ok(!existsSync(join(s.webroot, path)))
+    const undone = (await s.runPush(['--op', 'undo', '--push-id', pushId], engine)).answer
+    assert.equal(undone.state, 'undone', JSON.stringify(undone))
+    assert.equal(undone.sync.state, 'applied', JSON.stringify(undone.sync))
+    assert.equal(readFileSync(join(s.live, path), 'utf8'), '.a {}\n')
+    assert.ok(!existsSync(join(s.webroot, path)), 'Undo keeps Tracy deletion on the copy')
+    const again = (await s.runPush(['--op', 'preview', '--preview-id', id()], engine)).answer
+    assert.equal(again.ok, true, JSON.stringify(again))
+    assert.deepEqual(
+      again.items.map((i) => [i.id, i.op]),
+      [[`file:${path}`, 'delete']]
+    )
+    assert.ok(!existsSync(join(s.webroot, path)), 'the preview sync also preserves the deletion')
+  } finally {
+    await engine.close()
+    s.dispose()
+  }
+})
