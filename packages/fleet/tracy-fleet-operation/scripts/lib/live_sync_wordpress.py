@@ -674,6 +674,16 @@ WOOCOMMERCE_POST_REFS = (
 )
 
 
+# Post meta WordPress keeps one of per post (`get_post_meta($id, $key, true)` everywhere it reads
+# them): a row both sites added for one post is one row (`IdMap.align_single`, #118). Not a key that
+# may hold several values on purpose (`_wp_old_slug`: one row per former address).
+SINGLE_POSTMETA = ", ".join(sql_str(k) for k in (
+    "_wp_page_template", "_thumbnail_id", "_wp_attachment_image_alt", "_wp_attached_file",
+    "_wp_attachment_metadata", "_edit_last", "_wp_desired_post_slug", "_wp_trash_meta_status",
+    "_wp_trash_meta_time", "_menu_item_type", "_menu_item_menu_item_parent", "_menu_item_object_id",
+    "_menu_item_object", "_menu_item_target", "_menu_item_classes", "_menu_item_xfn", "_menu_item_url"))
+
+
 POLICY = {
     "tracyTables": re.compile(r"^claude_cowork_"),
     "tracyRows": {
@@ -760,7 +770,8 @@ POLICY = {
         ("links", {"key": "link_id",
                    "refs": [("term_relationships", "object_id", TT_OF.format(cmp="="))]}),
         # Meta rows: nothing points at their numbers, but both sites add them under the same ones.
-        ("postmeta", {"key": "meta_id"}),
+        ("postmeta", {"key": "meta_id", "single": {"natural": ("post_id", "meta_key"),
+                                                     "where": f"meta_key IN ({SINGLE_POSTMETA})"}}),
         ("termmeta", {"key": "meta_id"}),
         ("commentmeta", {"key": "meta_id"}),
         ("usermeta", {"key": "umeta_id"}),
