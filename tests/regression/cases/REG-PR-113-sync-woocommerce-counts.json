@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-113-sync-woocommerce-counts",
+  "kind": "fix",
+  "title": "WooCommerce derived state and HPOS record counts",
+  "pr": 113,
+  "area": "sync/wordpress",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the real MariaDB WooCommerce database and shell flow cases."],
+  "expect": [
+    "Background-only analytics/admin changes create no backup point.",
+    "An HPOS order retains its placeholder and children and counts once.",
+    "Placeholder transitions and conflict decisions count the merged record type.",
+    "Stable HPOS and legacy compatibility modes count the authoritative order store once."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=WooCommerce",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-db.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs"
+    ],
+    "tests": [
+      "WooCommerce derived background rows do not create a backup or count as customer changes",
+      "WooCommerce HPOS order with a placeholder and child rows is one record with all business data retained",
+      "WooCommerce counts use post-type column decisions after merging an independent live title",
+      "WooCommerce compatibility copies count the authoritative order once in HPOS and legacy modes",
+      "WooCommerce only counts its configured root store while still merging backup changes"
+    ]
+  }
+}

@@ -1472,6 +1472,8 @@ class DbMerge:
             PREPARE[self.platform](self.sql, self.names, self.prefix,
                                    lambda m: print(f"==> db merge: {m}", file=sys.stderr))
             phase("reads prepared")
+        if self.platform == "wordpress":
+            self.policy = {**self.policy, **_WORDPRESS.counting_policy(self.sql, self.names, self.prefix)}
         self.ids.survey(list(self.names.values()))
         phase("ids surveyed")
         self.ids.apply(self.names["base"])
@@ -1884,6 +1886,15 @@ class DbMerge:
         or a row that belongs to a record (`uncountedTables`, `appendTables`)."""
         return name not in self.policy.get("uncountedTables", ()) and name not in self.policy.get("appendTables", ())
 
+    def record_visible(self, name: str, alias: str, schema: Schema, table: str) -> str:
+        """Whether an existing row represents a record, without excluding it from the merge.
+        Missing discriminator columns keep the existing table-level counting rule."""
+        columns = {c for c, _ in schema.columns[table]}
+        hidden = [f"IFNULL({alias}.{q(c)} IN ({', '.join(sql_str(v) for v in sorted(values))}), FALSE)"
+                  for c, values in self.policy.get("uncountedRows", {}).get(name, {}).items()
+                  if c in columns and values]
+        return "NOT (" + " OR ".join(hidden) + ")" if hidden else "TRUE"
+
     def edited_columns(self, table: str, name: str, key: list[str], M: Schema) -> list[str]:
         """The columns of `table` a person edits: not its key, nor a column the CMS rebuilds, stamps,
         counts or mirrors from another record."""
@@ -1901,9 +1912,13 @@ class DbMerge:
         changed = " OR ".join(f"NOT (CAST(rt.{q(c)} AS BINARY) <=> CAST(rb.{q(c)} AS BINARY))"
                               for c in self.edited_columns(table, name, key, M)) or "FALSE"
         first = q(key[0])
+        visible_b = self.record_visible(name, "rb", M, table)
+        visible_t = self.record_visible(name, "rt", M, table)
         rows = self.sql.run(f"SELECT (SELECT COUNT(*) FROM {t} rt LEFT JOIN {b} rb ON {on}"
-                            f" WHERE rb.{first} IS NULL OR {changed})"
-                            f" + (SELECT COUNT(*) FROM {b} rb LEFT JOIN {t} rt ON {on} WHERE rt.{first} IS NULL);")
+                            f" WHERE (rb.{first} IS NULL OR {changed})"
+                            f" AND ({visible_t} OR (rb.{first} IS NOT NULL AND {visible_b})))"
+                            f" + (SELECT COUNT(*) FROM {b} rb LEFT JOIN {t} rt ON {on}"
+                            f" WHERE rt.{first} IS NULL AND {visible_b});")
         return int(rows[0][0] or 0) if rows else 0
 
     def take_table(self, table: str) -> None:
@@ -2343,17 +2358,26 @@ class DbMerge:
         # The records this table brings, read before anything is written (`records`): a row the live
         # site added or deleted, or changed in a column a person edits (only the live site: T; both,
         # the live site's edit taken: X). A row whose only change is a stamp or a counter is none.
+        count_after = self.counted(name) and name in self.policy.get("uncountedRows", {})
         if self.counted(name):
             edited = self.edited_columns(table, name, pk, M)
             live_edit = " OR ".join(differs(c, "rt", "rb") for c in edited) or "FALSE"
             taken = " OR ".join(f"({differs(c, 'rt', 'rb')} AND NOT {differs(c, 'rm', 'rb')})" for c in edited) or "FALSE"
-            got = self.sql.run(
-                f"SELECT IFNULL(SUM(k.cls = 'T' AND (k.hb IS NULL OR k.ht IS NULL OR ({live_edit}))), 0)"
-                f" + IFNULL(SUM(k.cls = 'X' AND k.ht IS NOT NULL AND k.hm IS NOT NULL AND ({taken})), 0) FROM {k} k"
-                f" LEFT JOIN {b} rb ON {on('k', 'rb')} LEFT JOIN {m} rm ON {on('k', 'rm')}"
-                f" LEFT JOIN {t} rt ON {on('k', 'rt')};"
-            )
-            self.counts["records"] += int(got[0][0] or 0) if got else 0
+            eligible = (f"(k.cls = 'T' AND (k.hb IS NULL OR k.ht IS NULL OR ({live_edit})))"
+                        f" OR (k.cls = 'X' AND k.ht IS NOT NULL AND k.hm IS NOT NULL AND ({taken}))")
+            joins = (f" LEFT JOIN {b} rb ON {on('k', 'rb')} LEFT JOIN {m} rm ON {on('k', 'rm')}"
+                     f" LEFT JOIN {t} rt ON {on('k', 'rt')}")
+            if count_after:
+                # Snapshot the copy's visibility, then read the actual merged row after every
+                # column decision. Inferring its type from the live row loses copy-only type edits.
+                visible = self.record_visible(name, "rm", M, table)
+                self.sql.run(f"ALTER TABLE {k} ADD record_change BOOLEAN NOT NULL DEFAULT FALSE,"
+                             " ADD record_before BOOLEAN NOT NULL DEFAULT FALSE;"
+                             f" UPDATE {k} k {joins} SET record_change = IFNULL(({eligible}), FALSE),"
+                             f" record_before = rm.{first} IS NOT NULL AND ({visible});")
+            else:
+                got = self.sql.run(f"SELECT IFNULL(SUM({eligible}), 0) FROM {k} k {joins};")
+                self.counts["records"] += int(got[0][0] or 0) if got else 0
 
         append = name in self.policy.get("appendTables", ())
         rows = self.sql.run(
@@ -2391,7 +2415,10 @@ class DbMerge:
                     # Delete/modify rows were excluded from the automatic imported count above.
                     # An explicit live choice applies that deletion or restores the live row.
                     if (no_m or no_t) and self.counted(name):
-                        self.counts["records"] += 1
+                        if count_after:
+                            self.sql.run(f"UPDATE {k} r SET record_change = TRUE WHERE {self.key_where('r', pk, keys)};")
+                        else:
+                            self.counts["records"] += 1
                 elif pick != "ours":
                     conflict = {"id": rid, "kind": "row", "table": table, "reason": reason,
                                 "key": dict(zip(pk, key)), "_keys": keys, "_columns": None}
@@ -2479,6 +2506,12 @@ class DbMerge:
         for c, keys, text in json_sets:
             apply.append(f"UPDATE {m} rm SET rm.{q(c)} = {sql_str(text)} WHERE {self.key_where('rm', pk, keys)};")
         self.sql.run("\n".join(apply))
+        if count_after:
+            visible = self.record_visible(name, "rm", M, table)
+            got = self.sql.run(f"SELECT IFNULL(SUM(k.record_change AND (k.record_before OR"
+                               f" (rm.{first} IS NOT NULL AND ({visible})))), 0) FROM {k} k"
+                               f" LEFT JOIN {m} rm ON {on('k', 'rm')};")
+            self.counts["records"] += int(got[0][0] or 0) if got else 0
         self.counts["rowsFromTheirs"] += took + len(take_rows)
         self.counts["rowsDeleted"] += deleted
         self.counts["rowsMerged"] += merged
