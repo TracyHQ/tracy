@@ -90,7 +90,15 @@ function socialsOf(brief) {
   const keep = {}
   for (const net of NETWORKS) if (isUrl(held[net])) keep[net === 'twitter' ? 'x' : net] = text(held[net])
   const any = Object.keys(keep).length > 0
-  return { decision: any ? 'keep' : 'hide', reason: any ? 'brief-socials' : 'no-socials', keep }
+  // WhatsApp is a contact channel of the brief, not a profile: a social list of the template may carry it too (#189).
+  const wa = text(brief?.contact?.whatsapp?.href)
+  const whatsapp = /^https:\/\/(?:wa\.me|api\.whatsapp\.com)\//i.test(wa) ? wa : null
+  return {
+    decision: any ? 'keep' : 'hide',
+    reason: any ? 'brief-socials' : 'no-socials',
+    keep,
+    whatsapp
+  }
 }
 
 /** The map embed address of a place: Google's own keyless embed of a search. */

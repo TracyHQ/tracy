@@ -2,8 +2,11 @@
  * The brief's own identity written over the demo's in a Joomla site's custom modules and articles (spec TracyHQ/tracy#189,
  * ticket #193), from the site plan's `logo`, `posts`, `socials` and `map` decisions (`site-plan-identity.mjs`).
  *
- *   socials  a social link of the template is pointed at the brief's profile of that network, or taken off (with its list
- *            item); none is left on `#` or on the demo's account. WhatsApp links belong to the contact facts, not here.
+ *   socials  a social link of the template is pointed at the brief's profile of that network; the first link of a network
+ *            the business lacks carries its WhatsApp when the brief holds one and the link draws an icon font class; every
+ *            other one is hidden in place (`hidden`, its address and words emptied), none left on `#` or on the demo's
+ *            account. 🔒 Hidden, never cut out (#189): a contract slot bound inside the list keeps its node, so the
+ *            records guard does not hold the whole module write. A WhatsApp link outside a social list is a contact fact's.
  *   map      an embedded map shows the brief's address, or is taken off; a module left with nothing to show is unpublished.
  *   logo     with no logo of the brief (`name-as-text`), a picture of the template's own logo files becomes the business name
  *            as text.
@@ -36,6 +39,12 @@ const NETWORKS = [
   ['pinterest', /pinterest/i],
   ['telegram', /(^|[^a-z])t\.me\/|telegram/i]
 ]
+
+/** An icon font class naming a network (`fa-facebook`, `fa-x-twitter`, `fa-instagram-square`). */
+const ICON_NETWORK =
+  /\bfa-(?:x-twitter|facebook|instagram|twitter|tiktok|youtube|linkedin|pinterest|telegram)(?:-[a-z]+)?\b/i
+/** An anchor's inner HTML with its words taken out, its tags (the icon) kept. */
+const textless = (/** @type {string} */ inner) => inner.replace(/>([^<]+)</g, (m, t) => (t.trim() ? '><' : m))
 
 /** The network a link is for, from its address, its attributes and what it holds (an icon class, a word). */
 function networkOf(/** @type {string} */ href, /** @type {string} */ attrs, /** @type {string} */ inner) {
@@ -116,6 +125,17 @@ export function joomlaIdentityHtml(html, plan) {
   let maps = 0
   let logos = 0
   const keep = plan.socials?.keep ?? {}
+  let whatsapp = typeof plan.socials?.whatsapp === 'string' ? plan.socials.whatsapp : null
+  /** A social anchor of a network the business lacks: its WhatsApp, once, when it draws an icon font class; else hidden. */
+  const spare = (/** @type {string} */ inner) => {
+    if (whatsapp && ICON_NETWORK.test(inner)) {
+      const href = whatsapp
+      whatsapp = null
+      const icon = inner.replace(ICON_NETWORK, 'fa-whatsapp')
+      return `<a href="${escapeHtml(href)}" title="WhatsApp" target="_blank" rel="noopener">${textless(icon)}</a>`
+    }
+    return '<a href="" hidden></a>'
+  }
   const swap = (/** @type {string} */ whole, /** @type {string} */ attrs, /** @type {string} */ inner) => {
     const href = HREF.exec(attrs)?.[3] ?? ''
     if (SHARE.test(href)) return whole
@@ -124,7 +144,7 @@ export function joomlaIdentityHtml(html, plan) {
     const own = keep[net]
     if (!own) {
       socials += 1
-      return ''
+      return spare(inner)
     }
     if (href === own) return whole
     socials += 1
@@ -133,13 +153,19 @@ export function joomlaIdentityHtml(html, plan) {
       : `${attrs} href="${escapeHtml(own)}"`
     return `<a${next} target="_blank" rel="noopener">${inner}</a>`
   }
-  // A list item that held only a removed link goes with it.
+  // A list item that held only a hidden link is hidden with it, in place.
   let out = String(html ?? '').replace(
-    /<li\b[^>]*>\s*(<a\b([^>]*)>([\s\S]*?)<\/a\s*>)\s*<\/li>/gi,
-    (whole, anchor, attrs, inner) =>
-      swap(anchor, attrs, inner) === '' ? '' : whole.replace(anchor, swap(anchor, attrs, inner))
+    /<li\b([^>]*)>(\s*)(<a\b([^>]*)>([\s\S]*?)<\/a\s*>)(\s*)<\/li>/gi,
+    (whole, liAttrs, lead, anchor, attrs, inner, tail) => {
+      const made = swap(anchor, attrs, inner)
+      if (made === anchor) return whole
+      const hidden = made.includes(' hidden>') && !/\shidden\b/.test(liAttrs)
+      return `<li${liAttrs}${hidden ? ' hidden' : ''}>${lead}${made.replace(/^<a href="" hidden>/, '<a href="">')}${tail}</li>`
+    }
   )
-  out = out.replace(ANCHOR, swap)
+  out = out.replace(ANCHOR, (whole, attrs, inner) =>
+    /\shidden\b/.test(attrs) || /^\s*href=""\s*$/.test(attrs) ? whole : swap(whole, attrs, inner)
+  )
   out = out.replace(
     // The src is read whole and tested apart: one unbounded run each side of the map host would backtrack on long input.
     /<iframe\b[^>]*\ssrc\s*=\s*(["'])([^"']*)\1[^>]*>\s*<\/iframe\s*>/gi,
@@ -170,7 +196,15 @@ export function joomlaIdentityHtml(html, plan) {
       return `<span class="tracy-brand-name">${escapeHtml(plan.logo?.name ?? '')}</span>`
     })
   }
-  const emptied = maps > 0 && out.replace(/<[^>]*>/g, '').trim() === '' && !/<img\b|<iframe\b/i.test(out)
+  // What a visitor still sees once the hidden links are left out: nothing, and the module goes (a map taken off, or a
+  // social block with no network of the business left).
+  const seen = out
+    .replace(/<li\b[^>]*\shidden\b[^>]*>[\s\S]*?<\/li\s*>/gi, '')
+    .replace(/<a href=""(?: hidden)?><\/a>/g, '')
+  const emptied =
+    (maps > 0 || socials > 0) &&
+    seen.replace(/<[^>]*>/g, '').trim() === '' &&
+    !/<img\b|<iframe\b|<a\b[^>]*\shref="[^"]/i.test(seen)
   return { html: out, socials, maps, logos, emptied }
 }
 

@@ -27,11 +27,32 @@ const footer = `<ul>
 </ul><img src="/images/demo/logo/b.png" alt="logo">`
 const map = '<iframe src="https://www.google.com/maps/embed?pb=!1demo" width="600"></iframe>'
 
-test('socials: the brief profile replaces the demo account, other icons and their list items go', () => {
+test('socials: the brief profile replaces the demo account, other icons are hidden in place with their list items', () => {
   const r = joomlaIdentityHtml(footer, bakery)
   assert.match(r.html, /href="https:\/\/instagram\.com\/copperleaf\.example"/)
   assert.doesNotMatch(r.html, /facebook|twitter|demo-gym|href="#"/)
-  assert.equal(r.html.match(/<li/g).length, 1)
+  // 🔒 The nodes stay (a contract slot may bind inside the list, #189): two items hidden, one shown.
+  assert.equal(r.html.match(/<li/g).length, 3)
+  assert.equal(r.html.match(/<li hidden>/g).length, 2)
+  assert.equal(r.emptied, false)
+})
+
+test('socials: a WhatsApp channel takes the first spare link, in the template icon font class', () => {
+  const r = joomlaIdentityHtml(footer, {
+    ...bakery,
+    socials: { ...bakery.socials, whatsapp: 'https://wa.me/15550100222' }
+  })
+  assert.match(
+    r.html,
+    /<a href="https:\/\/wa\.me\/15550100222" title="WhatsApp"[^>]*><i class="fab fa-whatsapp"><\/i><\/a>/
+  )
+  assert.equal(r.html.match(/<li hidden>/g).length, 1)
+  assert.doesNotMatch(r.html, /href="#"|<a\b[^>]*href=""[^>]*><i/)
+})
+
+test('socials: a module that held only demo social links is emptied, so the whole block goes', () => {
+  const r = joomlaIdentityHtml(footer.replace(/<img[^>]*>/, ''), clinic)
+  assert.equal(r.emptied, true)
 })
 
 test('socials: a brief with no profile leaves no social icon, and a share button stays', () => {
@@ -263,33 +284,76 @@ const acmParams = (links) =>
   })
 const listOf = (/** @type {string} */ params) => JSON.parse(JSON.parse(params)['jatools-config']).social
 
-test('socials in a module list: the brief profile goes in, the other items leave every array of the list', async () => {
-  const modules = [
-    {
-      id: 31,
-      module: 'mod_ja_acm',
-      published: 1,
-      language: '*',
-      content: '',
-      params: acmParams(['#', '#', '#', '#'])
-    }
-  ]
+/** The steps of the identity writer for one ACM social module under a plan's socials. */
+const listSteps = async (/** @type {any} */ socials, /** @type {string} */ params) => {
+  const modules = [{ id: 31, module: 'mod_ja_acm', published: 1, language: '*', content: '', params }]
   const { steps } = await planIdentitySteps({
-    apply: async ({ action, params }) =>
-      action === 'content.list' && params.kind === 'module'
-        ? { ok: true, items: params.offset ? [] : modules }
+    apply: async ({ action, params: p }) =>
+      action === 'content.list' && p.kind === 'module'
+        ? { ok: true, items: p.offset ? [] : modules }
         : { ok: true, items: [] },
     siteKey: 's',
     ctx: { siteKey: 's', email: 'o@example.test', note() {} },
-    woContent: { sitePlanFor: async () => ({ socials: bakery.socials }) },
+    woContent: { sitePlanFor: async () => ({ socials }) },
     visible: new Set()
   })
-  const step = steps.find((s) => s.kind === 'module' && s.id === 31)
+  return steps.find((s) => s.kind === 'module' && s.id === 31)
+}
+
+test('socials in a module list: the business network moves to the front, the list keeps its length, the rest are emptied', async () => {
+  const step = await listSteps(bakery.socials, acmParams(['#', '#', '#', '#']))
   const list = listOf(step.fields.params)
-  assert.deepEqual(list['social-intro[title]'], ['Instagram'])
-  assert.deepEqual(list['social-intro[font-icon]'], ['fa fa-instagram'])
-  assert.deepEqual(list['social-intro[link]'], ['https://instagram.com/copperleaf.example'])
+  // 🔒 Same length: the contract binds every item by its index (#189), so no path loses its words.
+  assert.deepEqual(list['social-intro[title]'], ['Instagram', '', '', ''])
+  assert.deepEqual(list['social-intro[font-icon]'], ['fa fa-instagram', '', '', ''])
+  assert.deepEqual(list['social-intro[link]'], ['https://instagram.com/copperleaf.example', '', '', ''])
   assert.equal(step.fields.published, undefined)
+})
+
+test('socials in a module list: WhatsApp joins with the template icon font class, never a link left empty on an icon', async () => {
+  const step = await listSteps(
+    { ...bakery.socials, whatsapp: 'https://wa.me/15550100222' },
+    acmParams(['', '', '', ''])
+  )
+  const list = listOf(step.fields.params)
+  assert.deepEqual(list['social-intro[font-icon]'], ['fa fa-instagram', 'fa fa-whatsapp', '', ''])
+  assert.deepEqual(list['social-intro[title]'], ['Instagram', 'WhatsApp', '', ''])
+  assert.deepEqual(list['social-intro[link]'], [
+    'https://instagram.com/copperleaf.example',
+    'https://wa.me/15550100222',
+    '',
+    ''
+  ])
+  for (let i = 0; i < 4; i += 1)
+    assert.equal(list['social-intro[font-icon]'][i] === '', list['social-intro[link]'][i] === '', `item ${i}`)
+})
+
+test('socials in a module list: a dental clinic with Facebook only keeps the template own Facebook item', async () => {
+  const step = await listSteps(
+    { decision: 'keep', keep: { facebook: 'https://facebook.com/northgate.dental.example' } },
+    acmParams(['https://facebook.com/demo', '#', '#', '#'])
+  )
+  const list = listOf(step.fields.params)
+  assert.deepEqual(list['social-intro[font-icon]'], ['fa fa-facebook', '', '', ''])
+  assert.deepEqual(list['social-intro[link]'], ['https://facebook.com/northgate.dental.example', '', '', ''])
+})
+
+test('socials in a module list: an icon mechanism that is not an icon font class never gets a network drawn into it', async () => {
+  const params = JSON.stringify({
+    'jatools-config': JSON.stringify({
+      social: {
+        'social-intro[image]': ['images/demo/fb.png', 'images/demo/ig.png'],
+        'social-intro[title]': ['Facebook', 'Instagram'],
+        'social-intro[link]': ['#', '#']
+      }
+    })
+  })
+  const list = listOf(
+    (await listSteps({ decision: 'keep', keep: {}, whatsapp: 'https://wa.me/15550100222' }, params)).fields
+      .params
+  )
+  assert.deepEqual(list['social-intro[title]'], ['', ''])
+  assert.deepEqual(list['social-intro[link]'], ['', ''])
 })
 
 test('socials in a module list: a brief with no profile unpublishes the module that held only social items', async () => {
@@ -371,4 +435,23 @@ test('the featured view and the home entry are never picked as blog surfaces, ev
     visible: new Set()
   })
   assert.deepEqual(going.menuIds, [])
+})
+
+test('socials in a module list: the write passes the bound-node guard of a contract that binds every item', async () => {
+  const { keepBoundNodes } = await import('../src/sites/brief-engines/joomla-bound-nodes.js')
+  const params = acmParams(['#', '#', '#', '#'])
+  const step = await listSteps(bakery.socials, params)
+  const slots = ['social-intro[title]', 'social-intro[link]'].flatMap((key) =>
+    [0, 1, 2, 3].map((i) => ({
+      key: `module-31.${key}.${i}`,
+      entity: 'module-31',
+      column: 'params',
+      nestedJson: 'jatools-config',
+      jsonPath: ['social', key, i]
+    }))
+  )
+  const row = { id: 31, module: 'mod_ja_acm', published: 1, params }
+  const checked = keepBoundNodes({ steps: [step], slots, modules: new Map([[31, row]]) })
+  assert.deepEqual(checked.dropped, [])
+  assert.equal(checked.steps.length, 1)
 })

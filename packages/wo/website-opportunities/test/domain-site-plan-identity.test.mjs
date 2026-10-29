@@ -101,3 +101,13 @@ test('the map embeds the brief Google place first (by id, or by the cid of its m
   assert.match(byCid.map.embed, /cid=12345678901234567/)
   assert.equal(planSite(bakery(), served, { contentMap }).map.decision, 'address')
 })
+
+test('socials: a WhatsApp contact channel of the brief rides with the social plan; none without one', () => {
+  const withWa = planSite(
+    { ...bakery(), contact: { whatsapp: { href: 'https://wa.me/15550100222', number: '+1 555 0100 222' } } },
+    served,
+    { contentMap }
+  )
+  assert.equal(withWa.socials.whatsapp, 'https://wa.me/15550100222')
+  assert.equal(planSite(clinic(), served, { contentMap }).socials.whatsapp, null)
+})

@@ -11,6 +11,7 @@ import { researchWhatsappOf } from './business-phones.mjs'
 import { defaultOfferingKind, statedTradeOf, tradeOfPlace, tradeOfSchemaType } from './trades.mjs'
 import { emptyPlaceProfile, sourceRef, webAddress } from './place-profile.mjs'
 import { ownMarkNamesOf } from './own-marks.mjs'
+import { isTradeDescriptionName, placeWordsOf } from './trade-description-name.mjs'
 import { nameKey } from './business-name.mjs'
 import { directMessageUrlOf, ownChannelInvitesOf, socialNetworkOfUrl } from './own-channels.mjs'
 
@@ -244,7 +245,40 @@ export function placeProfileFromResearch({
   const backingHandles = new Set(
     ownNames.flatMap((n) => n.marks.filter((m) => m.via === 'handle').map((m) => nameKey(m.text)))
   )
-  if (ownNames.length) {
+  // 🔒 Own marks over a trade description (#189, name rule 1): a listing name that is only category words plus a place
+  // ("Padel & Squash Coach") is no name and causes no conflict, so when the own marks give ONE name, that name is the
+  // business name, cited by the marks. Two own names, or a listing name that is a proper name, keep the hold below.
+  const listingIsDescription =
+    ownNames.length === 1 &&
+    doc.business.name &&
+    isTradeDescriptionName(doc.business.name.value, {
+      places: placeWordsOf({
+        address: doc.business.address?.value ?? profile.address,
+        addressComponents: google.addressComponents
+      })
+    })
+  if (listingIsDescription) {
+    const [own] = ownNames
+    const refs = own.marks.map((m) =>
+      m.source === 'logo'
+        ? evidenceFor(
+            sourceOf('logo', webAddress(logoRead?.url)),
+            { kind: 'jsonPath', value: '$.brand.logoResearch.chosen.readsAs' },
+            m.text,
+            { method: 'logo-reading', version: logoRead?.recognised ?? 'unrecorded' }
+          )
+        : evidenceFor(
+            sourceFor(m.source),
+            { kind: 'jsonPath', value: `$.profile.nameClaims[${m.index}]` },
+            m.text
+          )
+    )
+    doc.business.name = {
+      id: id('fact', 'own-marks', ['$.ownMarks', own.name]),
+      value: own.name,
+      evidenceRefs: [...new Set(refs)]
+    }
+  } else if (ownNames.length) {
     const held = doc.business.name
     const markRef = (m) =>
       m.source === 'logo'

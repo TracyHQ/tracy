@@ -25,6 +25,7 @@ import { writeJoomlaBrand } from './brand-joomla.js'
 import { writeWordpressBrand } from './brand-wordpress.js'
 import { fitBriefLogo, frameOfProfile, paletteOfLogos, TEMPORARY_LOGO_NOTE } from './brand-logo-fit.js'
 import { symbolItem } from './brand-logo-symbol.js'
+import { buildFavicon } from './brand-favicon.js'
 import { kindOf } from './logo-tiers.js'
 
 export { monogramOf } from './brand-wordpress.js'
@@ -322,8 +323,15 @@ export function createSiteBrand({
       const symbol = await drawSymbol?.(ctx, item).catch(() => null)
       if (symbol?.byteLength) pack.symbol = symbol
     }
-    const favicon = await bytesOf(brand.favicon, 'favicon')
-    if (favicon) pack.favicon = favicon
+    // 🔒 A brief build shows the business's mark in the tab, never the template's icon (#189, COO rule 3): with no upload
+    // the icon is made from its logo, else from the symbol drawn for it (`brand-favicon.js`).
+    const favicon = await buildFavicon({
+      uploaded: await bytesOf(brand.favicon, 'favicon'),
+      logo: pack.logo?.single ?? pack.logo?.light ?? pack.logo?.dark ?? null,
+      symbol: pack.symbol ?? null,
+      briefBuild: pack.nameFallback === true
+    }).catch(() => ({ favicon: null, how: 'the icon could not be made' }))
+    if (favicon.favicon) pack.favicon = favicon.favicon
     const version = ctx.quickstart ? await versionOf(ctx.siteKey).catch(() => null) : null
     const result = await setSiteBrand({
       platform: ctx.platform,
