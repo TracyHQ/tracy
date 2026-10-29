@@ -2,8 +2,18 @@
 
 # Since Plan 3 the image is also the agent's shell: one dsh per host execs into this container,
 # so it has to carry git, ripgrep, less and jq. web/IMAGE_TAGS says which built image answers for
-# this base, and leaves the site on the upstream one — loudly — when nothing has been built.
-WEB_IMAGE="$(tracy_web_image joomla "joomla:5-apache")"
+# this base; a provision builds it when it is missing (lib/web-image.sh), and the site stays on the
+# upstream one — loudly — only when that build fails.
+#
+# Which base, decided BEFORE the one lookup. A clone runs what it was captured on (5); a fleet-born
+# site (FRESH) and a quickstart are born on the newest major (6) — a site born today has no reason
+# to be born on last year's major. One lookup and not a default overridden later: the lookup may
+# BUILD the image, and a quickstart provision must not spend five minutes building the clone's.
+if [ "${FRESH:-0}" = 1 ] || [ -n "${QUICKSTART:-}" ]; then
+  WEB_IMAGE="$(tracy_web_image joomla "joomla:6-apache")"
+else
+  WEB_IMAGE="$(tracy_web_image joomla "joomla:5-apache")"
+fi
 # The file whose presence means a Joomla site already lives in the webroot (provision.sh reads it
 # before a quickstart restore). Joomla is the default there; named here so the two platforms read alike.
 PLATFORM_CONFIG_FILE="configuration.php"
@@ -159,9 +169,7 @@ if [ "${FRESH:-0}" = 1 ]; then
   # or the owner/developer cannot edit the site just built for them.
   PLATFORM_HAS_WEBROOT=1
   # The newest Joomla, from the official image (docker-library builds it from the official
-  # release). The 5-apache at the top of this file is for CLONES, whose captured sites are
-  # what they are; a site born today has no reason to be born on last year's major.
-  WEB_IMAGE="$(tracy_web_image joomla "joomla:6-apache")"
+  # release): WEB_IMAGE at the top of this file is already the 6-apache line for a FRESH site.
 
   # The installer writes configuration.php itself, correctly, for THIS environment — there is
   # nothing to rewrite and no live domain to neutralize (no SEF param has ever been set).
@@ -696,8 +704,8 @@ joomla_fetch_contract() {
 
 
 # A Tracy quickstart uses the captured-site restore hooks above and adds a private first boot.
+# Its image (the 6-apache line) is resolved at the top of this file.
 if [ -n "${QUICKSTART:-}" ]; then
-  WEB_IMAGE="$(tracy_web_image joomla "joomla:6-apache")"
 
   # ── The `installer` shape (todo-design-inspiration-card-ops.md §80+ quickstart JA) ────────────
   #
