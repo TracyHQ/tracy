@@ -11,7 +11,8 @@
  *
  * Framework-wide (Joomla custom modules), never per template: it reads the HTML, not a module id or a template's files.
  */
-import { lineOf, placeLines } from './joomla-contact-lines.js'
+import { sameBoundNode } from './joomla-bound-nodes.js'
+import { boundNodes, lineOf, placeLines } from './joomla-contact-lines.js'
 
 /** A phone number as a page shows one. */
 const PHONE = /\(?\+?\d[\d\s().-]{4,}\d/g
@@ -174,75 +175,220 @@ function pointed(/** @type {string} */ attrs, /** @type {string} */ href) {
   return /\starget\s*=/i.test(set) ? set : `${set}${outside(href)}`
 }
 
+/** Words a page shows no visitor: the screen-reader label beside an icon. */
+const HIDDEN_WORDS =
+  /<(\w+)\b[^>]*\bclass\s*=\s*(["'])[^"']*\b(?:d-none|sr-only|visually-hidden|screen-reader-text)\b[^"']*\2[^>]*>[\s\S]*?<\/\1\s*>/gi
+/** A link that shows an icon and no words: one item of an icon row. */
+const isIconOnly = (/** @type {string} */ inner) =>
+  textOf(inner.replace(HIDDEN_WORDS, ' ')) === '' && /<(?:i|span|svg|img)\b/i.test(inner)
+/** The mark of a line taken off, until the lines it leaves empty go with it. */
+const GONE = '\u0001'
+const EMPTIED = new RegExp(
+  `<(div|p|li|span|ul|ol)\\b[^>]*>(?:\\s|<br\\s*/?>|${GONE})*${GONE}(?:\\s|<br\\s*/?>|${GONE})*</\\1\\s*>`,
+  'gi'
+)
+
+/** The block without the lines taken off: an element left with nothing but taken-off lines goes too, never a hole. */
+function withoutGone(/** @type {string} */ html) {
+  let out = html
+  for (let before = ''; before !== out; ) {
+    before = out
+    out = out.replace(EMPTIED, GONE)
+  }
+  return out.replace(new RegExp(`\\s*${GONE}`, 'g'), '')
+}
+
+/** Whether every bound path that found one node before still finds one node of the same shape (`sameBoundNode`). */
+function keepsPaths(
+  /** @type {string} */ before,
+  /** @type {string} */ after,
+  /** @type {string[]} */ bound
+) {
+  for (const xpath of bound) {
+    const was = boundNodes(before, xpath)
+    if (!was || was.length !== 1) continue
+    const now = boundNodes(after, xpath)
+    if (!now || now.length !== 1 || !sameBoundNode(was[0], now[0])) return false
+  }
+  return true
+}
+
 /**
- * One module's HTML with its contact links leading to the business, and every channel of the brief it does not show yet
- * added beside its phone line (COO rule 29/10/2026), without moving a bound node (`joomla-contact-lines.js`).
+ * @typedef {{ kind: string, href: string, value: string, words: string }} Chosen
+ */
+
+/**
+ * The one channel a summary block shows (COO decision 30/10/2026): the main phone, else WhatsApp, else the mailbox, else
+ * a direct message. Null when the brief holds none.
+ * @param {Channel[]} phones - the main number first
+ * @param {(kind: string) => any} appOf
+ * @param {Contact} facts
+ * @param {Channel[]} reach
+ * @returns {Chosen | null}
+ */
+function chosenOf(phones, appOf, facts, reach) {
+  if (phones[0])
+    return { kind: 'phone', href: phones[0].href, value: phones[0].value, words: phones[0].value }
+  const chat = appOf('whatsapp')
+  if (chat?.href)
+    return { kind: 'whatsapp', href: chat.href, value: chat.value, words: chat.label ?? 'WhatsApp us' }
+  if (facts.email?.href)
+    return { kind: 'email', href: facts.email.href, value: facts.email.value, words: facts.email.value }
+  const message = reach.find((c) => c.kind === 'message')
+  return message ? { kind: 'message', href: message.href, value: message.value, words: message.label } : null
+}
+
+/**
+ * One module's HTML with its contact links leading to the business (COO rule 29/10/2026), without moving a bound node
+ * (`joomla-contact-lines.js`).
+ *
+ * 🔒 ONE ICON PER CHANNEL KIND, ONE CHANNEL IN A SUMMARY BLOCK (COO decision 30/10/2026). Measured on a brief build of a
+ * Joomla T4 template: the footer's icon row showed two identical phone icons for the brief's two numbers, and the footer's
+ * "get in touch" block listed both numbers, WhatsApp and a direct message. So:
+ * - links that show an icon and no words (an icon row) keep one link per kind; a call icon calls the main number;
+ * - a summary block (`summary`: a block shown on every page, `summaryModuleIds`) shows one channel, the main phone, else
+ *   WhatsApp, else the mailbox, else a direct message, on its first contact line; every other contact line goes whole, and
+ *   so do the lines of the areas served beside the street address. A line a contract slot binds is hidden in place instead,
+ *   so its path keeps its node;
+ * - any other block (the contact page's own) shows every channel of the brief, each number its own line, added beside its
+ *   phone line.
  * @param {string} html
  * @param {Contact} contact - the site plan's contact facts
- * @param {{ channels?: Channel[] | null, bound?: string[] }} [options] - the plan's channels, and the content map's paths
- *   into this HTML
+ * @param {{ channels?: Channel[] | null, bound?: string[], summary?: boolean }} [options] - the plan's channels, the content
+ *   map's paths into this HTML, and whether the block is a summary block
  * @returns {{ html: string, moved: number, removed: number, added: number }}
  */
-export function joomlaContactLinks(html, contact, { channels = null, bound = [] } = {}) {
+export function joomlaContactLinks(html, contact, { channels = null, bound = [], summary = false } = {}) {
   const facts = contact ?? {}
   const reach = channels ?? channelsOfContact(facts)
   const phones = reach.filter((c) => c.kind === 'phone')
+  // The main number first: the plan's contact phone.
+  const main = String(facts.phone?.href ?? '').toLowerCase()
+  const at = main ? phones.findIndex((p) => p.href.toLowerCase() === main) : -1
+  if (at > 0) phones.unshift(...phones.splice(at, 1))
   const appOf = (/** @type {string} */ kind) =>
     reach.find((c) => c.kind === kind) ?? (kind === 'whatsapp' ? (facts.whatsapp ?? null) : null)
   /** @type {Map<string, Channel>} */
   const byLabel = new Map(reach.filter((c) => c.kind !== 'phone').map((c) => [c.label.toLowerCase(), c]))
-  let moved = 0
-  let removed = 0
-  let added = 0
+  const chosen = summary ? chosenOf(phones, appOf, facts, reach) : null
   const source = String(html ?? '')
   // The business's own numbers the block already shows: a demo number takes one it does not show yet.
-  const used = new Set()
   const ownOf = (/** @type {string} */ text) =>
     phones.find((p) => (text.match(PHONE) ?? []).some((n) => digits(n) === digits(p.value))) ?? null
-  for (const m of source.matchAll(ANCHOR)) {
-    const own = ownOf(textOf(m[2]))
-    if (own) used.add(own.href)
-  }
-  let out = source.replace(ANCHOR, (whole, attrs, inner) => {
-    const href = HREF.exec(attrs)?.[3] ?? ''
-    const kind = kindOf(href, inner)
-    if (!kind) {
-      // A line the plan wrote with a channel's words ("Message us on Instagram") leads to that channel.
-      const channel = byLabel.get(textOf(inner).toLowerCase())
-      if (channel) {
-        if (href.replace(/&amp;/g, '&').trim() === channel.href) return whole
-        moved += 1
-        return `<a${pointed(attrs, channel.href)}>${inner}</a>`
-      }
-      const pinned = retargetMapLink(whole, attrs, inner, facts)
-      if (pinned) moved += 1
-      return pinned ?? whole
+
+  /** The block's links rewritten; a line a summary block drops is taken off, or hidden in place when its ordinal is in `hide`. */
+  const rewrite = (/** @type {Set<number>} */ hide) => {
+    let moved = 0
+    let removed = 0
+    let dropped = 0
+    const used = new Set()
+    for (const m of source.matchAll(ANCHOR)) {
+      const own = ownOf(textOf(m[2]))
+      if (own) used.add(own.href)
     }
-    if (kind === 'phone') {
-      const own = ownOf(textOf(inner))
-      const phone = own ?? phones.find((p) => !used.has(p.href)) ?? phones[0]
-      if (!phone) {
+    const iconKinds = new Set()
+    let shownChosen = false
+    const drop = (/** @type {string} */ attrs, /** @type {string} */ words) => {
+      const ordinal = dropped
+      dropped += 1
+      removed += 1
+      return hide.has(ordinal)
+        ? `<a href="#"${ownAttrs(attrs)} hidden aria-hidden="true" style="display:none !important">${escapeHtml(words)}</a>`
+        : GONE
+    }
+    const html = source.replace(ANCHOR, (whole, attrs, inner) => {
+      const href = HREF.exec(attrs)?.[3] ?? ''
+      const kind = kindOf(href, inner)
+      const icon = isIconOnly(inner)
+      // An icon row: one link per kind; a second call, mail or chat icon goes.
+      if (icon && kind) {
+        if (iconKinds.has(kind)) {
+          removed += 1
+          return GONE
+        }
+        iconKinds.add(kind)
+      }
+      const target = href.replace(/&amp;/g, '&').trim().toLowerCase()
+      const channel = kind
+        ? null
+        : (byLabel.get(textOf(inner).toLowerCase()) ??
+          reach.find((c) => c.kind === 'message' && c.href.toLowerCase() === target) ??
+          null)
+      // A summary block: its first contact line shows the chosen channel, every other one goes.
+      if (chosen && !icon && (kind || channel)) {
+        if (shownChosen) {
+          const words =
+            kind === 'phone'
+              ? (ownOf(textOf(inner)) ?? phones[0])?.value
+              : kind === 'email'
+                ? facts.email?.value
+                : kind && isApp(kind)
+                  ? (appOf(kind)?.label ?? textOf(inner))
+                  : channel?.label
+          return drop(attrs, words ?? '')
+        }
+        shownChosen = true
+        if (kind === chosen.kind) {
+          if (isOwn(href, chosen) && (kind !== 'phone' || ownOf(textOf(inner)))) return whole
+          moved += 1
+          const shows = kind === 'phone' || kind === 'email' ? showOwn(inner, kind, chosen.value) : inner
+          return `<a${pointed(attrs, chosen.href)}>${shows}</a>`
+        }
+        moved += 1
+        return `<a${pointed(attrs, chosen.href)}>${escapeHtml(chosen.words)}</a>`
+      }
+      if (!kind) {
+        // A line the plan wrote with a channel's words ("Message us on Instagram") leads to that channel.
+        if (channel) {
+          if (href.replace(/&amp;/g, '&').trim() === channel.href) return whole
+          moved += 1
+          return `<a${pointed(attrs, channel.href)}>${inner}</a>`
+        }
+        const pinned = retargetMapLink(whole, attrs, inner, facts)
+        if (pinned) moved += 1
+        return pinned ?? whole
+      }
+      if (kind === 'phone') {
+        const own = icon ? null : ownOf(textOf(inner))
+        // A call icon calls the main number; a call line takes a number the block does not show yet.
+        const phone = icon ? phones[0] : (own ?? phones.find((p) => !used.has(p.href)) ?? phones[0])
+        if (!phone) {
+          removed += 1
+          return ''
+        }
+        used.add(phone.href)
+        if (isOwn(href, phone) && (own || icon)) return whole
+        moved += 1
+        return `<a${pointed(attrs, phone.href)}>${own ? inner : showOwn(inner, 'phone', phone.value)}</a>`
+      }
+      const fact = isApp(kind) ? appOf(kind) : facts.email
+      if (fact && isOwn(href, fact)) return whole
+      if (!fact) {
+        // The demo's mailbox or chat app with nothing of the business's to stand in its place: taken off.
         removed += 1
         return ''
       }
-      used.add(phone.href)
-      if (isOwn(href, phone) && own) return whole
       moved += 1
-      return `<a${pointed(attrs, phone.href)}>${own ? inner : showOwn(inner, 'phone', phone.value)}</a>`
-    }
-    const fact = isApp(kind) ? appOf(kind) : facts.email
-    if (fact && isOwn(href, fact)) return whole
-    if (!fact) {
-      // The demo's mailbox or chat app with nothing of the business's to stand in its place: taken off.
-      removed += 1
-      return ''
-    }
-    moved += 1
-    const next = HREF.test(attrs)
-      ? attrs.replace(HREF, (_m, lead, quote) => `${lead}${quote}${escapeHtml(fact.href ?? '')}${quote}`)
-      : `${attrs} href="${escapeHtml(fact.href ?? '')}"`
-    return `<a${next}>${isApp(kind) ? inner : showOwn(inner, kind, fact.value)}</a>`
-  })
+      const next = HREF.test(attrs)
+        ? attrs.replace(HREF, (_m, lead, quote) => `${lead}${quote}${escapeHtml(fact.href ?? '')}${quote}`)
+        : `${attrs} href="${escapeHtml(fact.href ?? '')}"`
+      return `<a${next}>${isApp(kind) ? inner : showOwn(inner, kind, fact.value)}</a>`
+    })
+    return { html, moved, removed, dropped }
+  }
+
+  // Each dropped line goes whole, unless taking it off leaves a bound path without its node: that one is hidden in place.
+  const keeps = (/** @type {Set<number>} */ hide) =>
+    keepsPaths(source, withoutGone(rewrite(hide).html), bound)
+  let made = rewrite(new Set())
+  if (made.dropped > 0 && !keeps(new Set())) {
+    const all = [...Array(made.dropped).keys()]
+    const hide = new Set(all.filter((i) => !keeps(new Set(all.filter((j) => j !== i)))))
+    made = rewrite(keeps(hide) ? hide : new Set(all))
+  }
+  let { moved, removed } = made
+  let added = 0
+  let out = withoutGone(made.html)
   // A mailbox the module shows as plain words: the business's, or none.
   out = out.replace(/(<[^>]*>)|([^<]+)/g, (_whole, tag, text) => {
     if (tag) return tag
@@ -253,6 +399,23 @@ export function joomlaContactLinks(html, contact, { channels = null, bound = [] 
       return facts.email ? escapeHtml(facts.email.value) : ''
     })
   })
+  if (summary) {
+    // One location line: the street address. A line of the areas served beside it goes whole (never when it is the only one).
+    const areas = String(facts.serviceArea?.value ?? '')
+      .split(/\s*;\s*/)
+      .filter(Boolean)
+    if (facts.address?.value && areas.length > 0) {
+      const flat = (/** @type {string} */ t) => t.replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim()
+      const lines = /<(p|div|li|span)\b[^>]*>([^<]*)<\/\1\s*>/gi
+      const marked = out.replace(lines, (whole, _tag, words) => (areas.includes(flat(words)) ? GONE : whole))
+      const next = withoutGone(marked)
+      if (next !== out && keepsPaths(out, next, bound)) {
+        removed += 1
+        out = next
+      }
+    }
+    return { html: out, moved, removed, added }
+  }
   // Every number, then the chat apps, right after the call line; the area beside the address; the DMs after the last line.
   const lines = missingLines(out, reach)
   for (const part of [lines?.reach, 'area', lines?.messages]) {
@@ -362,9 +525,17 @@ function missingLines(/** @type {string} */ html, /** @type {Channel[]} */ reach
  * @param {Set<string>} input.visible - the language tags a visitor can reach
  * @param {Channel[] | null} [input.channels] - the site plan's channels (each phone, WhatsApp, each direct message)
  * @param {any[]} [input.slots] - the content map's slots: no added line moves a node one of them binds to
+ * @param {Set<number>} [input.summaries] - the modules that are summary blocks (`summaryModuleIds`): one channel each
  * @returns {{ steps: Array<{ kind: 'module', id: number, fields: { content: string } }>, moved: number, removed: number, added: number }}
  */
-export function moduleContactSteps({ modules, contact, visible, channels = null, slots = [] }) {
+export function moduleContactSteps({
+  modules,
+  contact,
+  visible,
+  channels = null,
+  slots = [],
+  summaries = new Set()
+}) {
   const steps = []
   let moved = 0
   let removed = 0
@@ -379,7 +550,11 @@ export function moduleContactSteps({ modules, contact, visible, channels = null,
         (s) => s?.entity === `module-${row.id}` && s.column === 'content' && typeof s.xpath === 'string'
       )
       .map((s) => s.xpath)
-    const next = joomlaContactLinks(row.content, contact, { channels, bound })
+    const next = joomlaContactLinks(row.content, contact, {
+      channels,
+      bound,
+      summary: summaries.has(Number(row.id))
+    })
     if (next.html === row.content) continue
     steps.push({ kind: 'module', id: Number(row.id), fields: { content: next.html } })
     moved += next.moved

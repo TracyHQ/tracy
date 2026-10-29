@@ -22,7 +22,9 @@ const coaching = {
 
 test('every place a fact can sit in is read, and the sources are named', () => {
   const c = readContact(coaching)
-  assert.equal(c.address.value, 'Pier Nine - Old Quay - Portville - Exampleland')
+  // A spaced dash between address parts is shown as a comma (COO decision 30/10/2026); the brief keeps its value.
+  assert.equal(c.address.value, 'Pier Nine, Old Quay, Portville, Exampleland')
+  assert.equal(coaching.business.address, 'Pier Nine - Old Quay - Portville - Exampleland')
   assert.equal(c.address.source, 'business.address')
   assert.equal(c.serviceArea.value, 'Locations across Portville')
   const other = readContact({
@@ -88,8 +90,8 @@ const map = { slots: [{ key: 'module-1.0', type: 'text', role: 'contact.address'
 const served = { set: { contentHash: 'c'.repeat(64) }, questions: [] }
 const slotOf = (brief) => planSite(brief, served, { now: '2026-10-29T00:00:00Z', contentMap: map }).slots[0]
 
-test('plan: an address is shown as given and links to its pin', () => {
-  assert.equal(slotOf(coaching).value, 'Pier Nine - Old Quay - Portville - Exampleland')
+test('plan: an address is shown with commas between its parts and links to its pin', () => {
+  assert.equal(slotOf(coaching).value, 'Pier Nine, Old Quay, Portville, Exampleland')
   const plan = planSite(coaching, served, { now: '2026-10-29T00:00:00Z', contentMap: map })
   assert.equal(plan.contact.address.href, 'https://maps.google.com/?cid=123456789')
   assert.equal(plan.contact.serviceArea.value, 'Locations across Portville')

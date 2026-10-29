@@ -19,7 +19,8 @@
 
 /** Which network a list item is for, from its icon class, title and link; WhatsApp and Zalo are networks here too. */
 const NETWORKS = [
-  ['phone', /(?:^|\s)tel:|\bfa-phone\b/i],
+  // A phone and a mobile are one kind: one call icon (COO decision 30/10/2026).
+  ['phone', /(?:^|\s)tel:|\bfa-(?:phone|mobile)\b/i],
   ['email', /(?:^|\s)mailto:|\bfa-envelope\b/i],
   ['whatsapp', /wa\.me\/|whatsapp/i],
   ['zalo', /zalo/i],
@@ -63,7 +64,7 @@ const ICON_WORDS = Object.freeze({
 })
 /** An icon font class naming a network: `fa-facebook`, `fa-facebook-f`, `fa-x-twitter`, `fa-instagram-square`. */
 const ICON_NETWORK =
-  /\bfa-(?:x-twitter|facebook|instagram|twitter|tiktok|youtube|linkedin|pinterest|telegram|whatsapp|phone|envelope)(?:-[a-z]+)?\b/i
+  /\bfa-(?:x-twitter|facebook|instagram|twitter|tiktok|youtube|linkedin|pinterest|telegram|whatsapp|phone|mobile|envelope)(?:-[a-z]+)?\b/i
 const SHARE = /sharer|share\?|intent\/tweet|share\.php/i
 const LINK_KEY = /\[(?:link|url|href)\]$/i
 const ICON_KEY = /\[(?:[\w-]*icon[\w-]*|class)\]$/i
@@ -75,21 +76,15 @@ export const networkOf = (/** @type {string} */ text) => {
 }
 
 /**
- * The items a list shows, in order (COO rule 29/10/2026): a call per number when the list has room for every item, else
- * the first number; the mailbox; WhatsApp; Zalo; then the business's profiles (the template's order first, then the others).
+ * The items a list shows, in order: the main number (COO decision 30/10/2026: an icon row shows one icon per channel kind,
+ * the other numbers stay on the contact page's full text); the mailbox; WhatsApp; Zalo; then the business's profiles (the
+ * template's order first, then the others).
  * @param {Record<string, string>} keep @param {string | null} whatsapp @param {string[]} templateOrder
- * @param {ContactIcons | null} contacts @param {number} room - how many items the list holds
+ * @param {ContactIcons | null} contacts
  * @param {string | null} [zalo]
  * @returns {Array<{ net: string, href: string, title?: string }>}
  */
-function wantedOf(
-  keep,
-  whatsapp,
-  templateOrder,
-  contacts = null,
-  room = Number.POSITIVE_INFINITY,
-  zalo = null
-) {
+function wantedOf(keep, whatsapp, templateOrder, contacts = null, zalo = null) {
   const own = Object.keys(keep).filter((net) => typeof keep[net] === 'string' && keep[net] !== '')
   const ordered = [
     ...templateOrder.filter((n) => own.includes(n)),
@@ -102,12 +97,9 @@ function wantedOf(
     ...(zalo ? [{ net: 'zalo', href: zalo, title: 'Zalo us' }] : []),
     ...unique.map((net) => ({ net, href: keep[net] }))
   ]
-  const phones = (contacts?.phones ?? []).map((p) => ({
-    net: 'phone',
-    href: p.href,
-    title: `Call ${p.value}`
-  }))
-  const calls = phones.length + rest.length <= room ? phones : phones.slice(0, 1)
+  // One call icon: the main number, the first of the plan's numbers (`contactIconsOf` puts the main one first).
+  const main = contacts?.phones?.[0]
+  const calls = main ? [{ net: 'phone', href: main.href, title: `Call ${main.value}` }] : []
   return [...calls, ...rest]
 }
 
@@ -153,14 +145,13 @@ function walk(node, plan, tally) {
         plan.whatsapp,
         items.map((it) => it.net),
         plan.contacts ?? null,
-        items.length,
         plan.zalo ?? null
         // A network with no item of its own takes a sibling's icon only where the icon font draws it (Zalo has none).
       ).filter(({ net }) => items.some((it) => it.net === net) || (iconKey && sample && ICON_WORDS[net]))
       const slots = items.map((it) => it.index)
       const shown = wanted.slice(0, slots.length)
       const before = JSON.stringify(same.map((k) => node[k]))
-      // A call shows once per number: the template's own item of a network is used once.
+      // The template's own item of a network is used once: a second item of the same kind is emptied below.
       const usedOwn = new Set()
       shown.forEach(({ net, href, title }, j) => {
         const at = slots[j]

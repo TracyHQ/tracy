@@ -38,7 +38,8 @@ const INSTEAD = Object.freeze({
   C18: "the owner's own link or map if the owner data has it, otherwise hide the icon or the map",
   C19: 'point the link to a page that exists, or remove the link',
   C20: "the owner's words inside the template's own inline tags (the accent span, the line break) at the same place",
-  C21: 'hide the whole form block (heading, text, field and button): a form stays only with a real destination'
+  C21: 'hide the whole form block (heading, text, field and button): a form stays only with a real destination',
+  C22: 'keep one icon per channel kind and one channel (the main phone) in a block shown on every page; show the address with commas'
 })
 
 /** One owner fact line of the brief, only when the brief has it. */

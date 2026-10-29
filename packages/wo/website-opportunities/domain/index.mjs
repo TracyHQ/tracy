@@ -68,6 +68,7 @@ export { pageRole } from './page-plan.mjs'
 export { pinnedCopy } from './pinned-copy.mjs'
 export {
   addressLines,
+  addressShown,
   addressThatFits,
   cityOf,
   contactChannelsOf,

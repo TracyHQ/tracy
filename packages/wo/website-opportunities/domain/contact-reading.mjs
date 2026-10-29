@@ -133,7 +133,7 @@ export function readContact(brief, { hours = [] } = {}) {
   const email = firstText([b.email, c.email])
   if (email) out.email = { value: email, source: nonEmpty(b.email) ? 'business.email' : 'contact.email' }
   const address = addressOf(brief)
-  if (address) out.address = address
+  if (address) out.address = { ...address, value: addressShown(address.value) }
   if (hours.length) out.hours = { value: hours.join('; '), source: 'business.hours' }
   const whatsapp = c?.whatsapp?.number
   if (nonEmpty(whatsapp) && /^\+?\d{8,15}$/.test(whatsapp.replace(/[\s().-]/g, '')))
@@ -144,6 +144,22 @@ export function readContact(brief, { hours = [] } = {}) {
 }
 
 const SEPARATOR = /\s+[-–—]\s+|\s*,\s*|\s*\n+\s*/
+/** A hyphen or dash with a space on each side, as a listing separates address parts ("Pier Nine - Old Quay"). */
+const SPACED_DASH = /\s+[-\u2013\u2014]\s+/g
+
+/**
+ * An address as a visitor reads it (COO decision 30/10/2026): a spaced hyphen or dash between its parts is shown as a comma
+ * ("Pier Nine - Old Quay - Portville" → "Pier Nine, Old Quay, Portville"). The brief keeps the value as it was given; only
+ * what a page shows changes. A hyphen inside a word or a number ("12-14 Mill Lane") is not a separator and stays.
+ * @param {string} value
+ * @returns {string}
+ */
+export function addressShown(value) {
+  return String(value ?? '')
+    .trim()
+    .replace(SPACED_DASH, ', ')
+    .replace(/,\s*,/g, ',')
+}
 
 /** An address cut where the brief itself separates it: each part with the separator written after it. */
 function addressParts(value) {

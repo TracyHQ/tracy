@@ -253,7 +253,7 @@ test('the icon row calls and mails the business first, then WhatsApp, then its n
   ])
 })
 
-test('a bakery with a phone only: one call per number while the row has room, else the first; the rest emptied in place', async () => {
+test('a bakery with a phone only: one call icon, the main number (one icon per kind); the rest emptied in place', async () => {
   const { socialListParams } = await import('../src/sites/brief-engines/joomla-plan-social-lists.js')
   const phones = [
     { href: 'tel:+15550100100', value: '+1 555 010 0100' },
@@ -262,9 +262,9 @@ test('a bakery with a phone only: one call per number while the row has room, el
   const two = JSON.parse(
     socialListParams(row4(), { keep: {} }, { phones, email: null }).params['jatools-config']
   ).social
-  assert.deepEqual(two['social[link]'], ['tel:+15550100100', 'tel:+15550100101', '', ''])
-  assert.deepEqual(two['social[title]'], ['Call +1 555 010 0100', 'Call +1 555 010 0101', '', ''])
-  // Four items, two numbers, three networks: no room for the second number.
+  assert.deepEqual(two['social[link]'], ['tel:+15550100100', '', '', ''])
+  assert.deepEqual(two['social[title]'], ['Call +1 555 010 0100', '', '', ''])
+  // Four items, two numbers, three networks: still one call icon.
   const socials = {
     keep: {
       facebook: 'https://facebook.com/crumbandcrust',

@@ -245,7 +245,7 @@ test('clean pages of the business pass, and every one of the 20 kinds is counted
   assert.deepEqual(report.findings, [])
   assert.equal(report.pass, true)
   assert.deepEqual(Object.keys(report.counts), Object.keys(LEFTOVER_KINDS))
-  assert.equal(Object.keys(LEFTOVER_KINDS).length, 21)
+  assert.equal(Object.keys(LEFTOVER_KINDS).length, 22)
 })
 
 test('a demo word the brief also holds is the business’s own, not a leftover', () => {

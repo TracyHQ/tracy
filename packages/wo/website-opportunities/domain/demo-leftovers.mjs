@@ -17,6 +17,7 @@ import { textLeftovers } from './demo-leftovers-text.mjs'
 import { processPlaceholderLeftovers } from './demo-leftovers-process.mjs'
 import { styleLeftovers } from './demo-leftovers-style.mjs'
 import { formLeftovers } from './demo-leftovers-forms.mjs'
+import { channelLeftovers } from './demo-leftovers-channels.mjs'
 import { formDestinationsOf } from './form-blocks.mjs'
 import {
   findCutOuts,
@@ -62,7 +63,10 @@ export const LEFTOVER_KINDS = Object.freeze({
   // Read from the stored values (`styleReadback`), not from the page: only the slots read back are judged.
   C20: { name: 'heading lost the demo’s inline style', severity: 'major', coverage: 'basic' },
   // Read from the served HTML: a form that leads nowhere for this business (`demo-leftovers-forms.mjs`).
-  C21: { name: 'form that leads nowhere', severity: 'major', coverage: 'basic' }
+  C21: { name: 'form that leads nowhere', severity: 'major', coverage: 'basic' },
+  // Read from the served HTML: one icon per channel kind, one channel in a summary block, an address with commas
+  // (`demo-leftovers-channels.mjs`).
+  C22: { name: 'contact channel shown twice or address with dashes', severity: 'major', coverage: 'basic' }
 })
 
 /** Text and picture roles of a demo post. */
@@ -362,7 +366,9 @@ export const LEFTOVER_RULES = Object.freeze([
   // C20: replace the words, never the style (`demo-leftovers-style.mjs`).
   { kind: 'C20', find: styleLeftovers },
   // C21: a sign-up, login or dead form with no destination (`demo-leftovers-forms.mjs`).
-  { kind: 'C21', find: formLeftovers }
+  { kind: 'C21', find: formLeftovers },
+  // C22: an icon row with two links of one kind, a summary block with two channels (`demo-leftovers-channels.mjs`).
+  { kind: 'C22', find: channelLeftovers }
 ])
 
 /**
@@ -404,7 +410,9 @@ export function checkDemoLeftovers({
     // The values the site stores for the styled slots, by key (C20).
     styleReadback,
     // The destinations the brief really holds (an email-marketing account, a booking link): C21.
-    destinations: formDestinationsOf(brief)
+    destinations: formDestinationsOf(brief),
+    // The brief itself: its address and areas served (C22).
+    brief
   }
   const seen = new Set()
   const findings = []

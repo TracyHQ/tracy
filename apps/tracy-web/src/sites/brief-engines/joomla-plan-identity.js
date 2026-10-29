@@ -224,8 +224,11 @@ function contactIconsOf(/** @type {any} */ plan) {
   const phones = (Array.isArray(plan?.channels) ? plan.channels : [])
     .filter((c) => c?.kind === 'phone' && typeof c.href === 'string')
     .map((c) => ({ href: c.href, value: String(c.value) }))
-  if (phones.length === 0 && plan?.contact?.phone?.href)
-    phones.push({ href: plan.contact.phone.href, value: String(plan.contact.phone.value) })
+  // The main number first (the plan's contact phone): an icon row shows that one only.
+  const main = plan?.contact?.phone?.href ? String(plan.contact.phone.href) : null
+  const at = main ? phones.findIndex((p) => p.href === main) : -1
+  if (at > 0) phones.unshift(...phones.splice(at, 1))
+  if (phones.length === 0 && main) phones.push({ href: main, value: String(plan.contact.phone.value) })
   const email = plan?.contact?.email?.href ? { href: String(plan.contact.email.href) } : null
   return phones.length || email ? { phones, email } : null
 }

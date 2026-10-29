@@ -42,7 +42,9 @@ test('the plan writes the cut address in a short box and keeps the whole one as 
   }
   const plan = planSite(brief, { questions: [] }, { contentMap, now: '2026-10-29T00:00:00Z' })
   const value = (key) => plan.slots.find((s) => s.key === key)?.value
-  assert.equal(value('module-9.1'), 'Palm Court 4 - Garden Quarter - Dubai')
-  assert.equal(value('module-9.2'), address)
-  assert.equal(plan.contact.address.value, address)
+  // Shown with commas between its parts (COO decision 30/10/2026).
+  const shown = 'Palm Court 4, Garden Quarter, Dubai, United Arab Emirates'
+  assert.equal(value('module-9.1'), 'Palm Court 4, Garden Quarter, Dubai')
+  assert.equal(value('module-9.2'), shown)
+  assert.equal(plan.contact.address.value, shown)
 })
