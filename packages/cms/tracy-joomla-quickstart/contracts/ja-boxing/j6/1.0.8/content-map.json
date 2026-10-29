@@ -18502,7 +18502,7 @@
       "key": "article-2.8",
       "entity": "article-2",
       "column": "attribs",
-      "type": "text",
+      "type": "url",
       "sample": "#",
       "maxCharacters": 40,
       "requiresEvidence": false,
@@ -18510,7 +18510,8 @@
         "classes-signup"
       ],
       "label": "Group Boxing / classes-signup",
-      "role": "editorial.button_label",
+      "role": "editorial.navigation_url",
+      "customize": "keep",
       "fit": {
         "measured": false
       }

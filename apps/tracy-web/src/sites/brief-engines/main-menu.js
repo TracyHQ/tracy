@@ -56,9 +56,14 @@ export async function writeMainMenu({ sitePlan, read, write, model, locale = 'en
     }
   ]
   const result = jsonObjectIn(await model.chat({ messages, maxTokens: 2000, temperature: 0, signal }))
+  // 🔒 ONE PAGE, ONE NAME (#189 round 9, C6): every entry of one page carries the label of its first entry (a parent
+  // "About" and its child "About Us" both opened one page), so the header, the footer and the breadcrumbs agree.
+  /** @type {Map<string, string>} */
+  const firstOf = new Map()
+  for (const item of items) if (!firstOf.has(item.pageId)) firstOf.set(item.pageId, item.key)
   const siblings = new Set()
   const values = items.map((item) => {
-    const label = String(result?.labels?.[item.key] ?? '').trim()
+    const label = String(result?.labels?.[firstOf.get(item.pageId) ?? item.key] ?? '').trim()
     const invalid = invalidMenuLabel(label, item.role, item.maxCharacters ?? 60)
     const sibling = `${item.menu ?? ''}\u0000${item.parent ?? ''}\u0000${label.toLocaleLowerCase(locale)}`
     if (invalid || siblings.has(sibling))

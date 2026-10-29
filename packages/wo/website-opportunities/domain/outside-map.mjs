@@ -282,7 +282,10 @@ const cssString = (value) => String(value).replace(/["\\\n\r]/g, '')
  *     shown as one owner photo (`picture`, a site path) cover-cropped into its box (`target`), its words hidden, so the
  *     grid stays whole (`empty-frames.js` `photoTiles`)
  *   - `centre`: selectors of card rows that lost demo cards (`empty-frames.js` `centredRows`): the row centres the cards
- *     kept and keeps the template's column count and card size (no width is set)
+ *     kept and keeps the template's column count and card size (no width is set) *   - `emptyVideos`: hide every play control whose video address names no video (an embed or watch link with its id
+ *     left empty), so no button opens an empty frame (#189 round 9, C2)
+ *   - `currentItems`: the title-link selectors of related-page lists that mark the current page's item `.active` (a CMS
+ *     convention, Joomla's articles modules): the item of the page the visitor is on is hidden, the others stay (C3)
  */
 export function leftoverHeadBlock({
   backgrounds = [],
@@ -293,7 +296,9 @@ export function leftoverHeadBlock({
   frames = [],
   pictures = [],
   tiles = [],
-  centre = []
+  centre = [],
+  emptyVideos = false,
+  currentItems = []
 }) {
   const rules = []
   if (backgrounds.length) {
@@ -321,6 +326,22 @@ export function leftoverHeadBlock({
       ]
     })
     rules.push(`${sel.join(',\n')}{display:none !important}`)
+  }
+  if (emptyVideos) {
+    const empty = ['youtube.com/embed/', 'youtube-nocookie.com/embed/', 'player.vimeo.com/video/', 'watch?v=']
+    const sel = empty.flatMap((end) =>
+      ['data-src', 'href', 'data-video', 'data-url', 'src'].map((name) => `[${name}$="${end}"]`)
+    )
+    rules.push(`/* play controls that name no video */\n${sel.join(',\n')}{display:none !important}`)
+  }
+  if (currentItems.length) {
+    // The item of the current page: the child of an element that holds another item's title link, holding the current
+    // title link and no other. A list of the current page alone hides nothing (the check names it).
+    const sel = [...new Set(currentItems)].map((t) => {
+      const title = cssString(t)
+      return `:has(${title}:not(.active)) > :has(${title}.active):not(:has(${title}:not(.active)))`
+    })
+    rules.push(`/* related lists: the page the visitor is on */\n${sel.join(',\n')}{display:none !important}`)
   }
   if (files.length)
     rules.push(

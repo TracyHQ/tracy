@@ -39,6 +39,9 @@ import { sweepDeadLinks } from './joomla-link-sweep.js'
 import { brandColoursCss } from './joomla-brand-colours.js'
 import { blockBytes, HEAD_BLOCK_LIMIT, headBlocks, withoutTracyBlocks } from './joomla-head-blocks.js'
 
+/** The title link of an item in a Joomla articles module; the core marks the current article's `active`. */
+const JOOMLA_ARTICLE_TITLE = 'a.mod-articles-category-title'
+
 /** The head-code param each template framework prints raw into every page's head. */
 export const HEAD_PARAMS = Object.freeze({ t4: 'system_advancedCodeAfterHead', t3: 'snippet_close_head' })
 /** Template folders of Joomla itself: never the site's design. */
@@ -418,7 +421,11 @@ export async function writeOutsideMap({
     frames,
     pictures,
     tiles,
-    centre
+    centre,
+    // No play control opens an empty frame, and no related list shows the page it sits on (#189 round 9, C2 and C3): Joomla's
+    // articles modules mark the current article's title link `active` (core helper and its layouts).
+    emptyVideos: true,
+    currentItems: [JOOMLA_ARTICLE_TITLE]
   })
   // The leftover rules and the brand colours travel in blocks of their own, each within what the site stores in one record
   // (`joomla-head-blocks.js`): one refused never takes the other off the pages.

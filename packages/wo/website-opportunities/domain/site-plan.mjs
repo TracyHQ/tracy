@@ -21,7 +21,7 @@ import { BY_APPOINTMENT, byAppointmentOf } from './contact-page.mjs'
 import { contactButtonSlots } from './contact-buttons.mjs'
 import { declaredButtonSlots } from './declared-button-plan.mjs'
 import { IDENTITY_REASONS, planIdentity } from './site-plan-identity.mjs'
-import { planOutsideMap } from './outside-map.mjs'
+import { planOutsideMap, planVideos } from './outside-map.mjs'
 import { COLOUR_REASONS, planColours } from './brand-colours.mjs'
 import { HONESTY_REASONS, planHonesty } from './site-plan-honesty.mjs'
 import { EMPTIED_PAGE_WHY, emptiedPages } from './site-plan-empty-pages.mjs'
@@ -200,6 +200,10 @@ function slotsOf(
   if (!contentMap?.slots?.length) return []
   // Pictures: per slot, drawn where no photo fits, icons and cut-outs by subject (#194, #195).
   const fill = pictureDecisionsOf(contentMap, brief, cardNames)
+  // 🔒 A VIDEO SLOT IS NEVER THE COPY WRITER'S (#189 round 9, C2): it takes the brief's own playable video, or keeps the
+  // demo's id so the leftover block finds its play control and hides it. Emptied by the writer, the play button stayed and
+  // opened an empty frame, and the hide rule had no id to match.
+  const videos = new Map(planVideos({ contentMap, brief }).map((v) => [v.key, v]))
   const reach = channelSlotsOf(contentMap.slots, channels, contact)
   return contentMap.slots.map((slot) => {
     // A block taken off whole (a sign-up form with no destination) has no words to write.
@@ -234,6 +238,10 @@ function slotsOf(
       return { key: slot.key, role: slot.role, decision: 'value', value: name, reason: 'business-name' }
     // 🔒 A RECORD SLOT TAKES ITS RECORD, NEVER THE COPY WRITER'S WORDS (#189 item 18, `record-roles.mjs`): a review's words,
     // author and source, a person's name, as the honesty plan assigned them from the brief.
+    const video = slot.role === 'business.video' ? videos.get(slot.key) : null
+    if (video?.decision === 'video')
+      return { key: slot.key, role: slot.role, decision: 'value', value: video.value, reason: video.reason }
+    if (video) return { key: slot.key, role: slot.role, decision: 'keep', reason: video.reason }
     const record = records[slot.key]
     if (slot.type === 'text' && isRecordRole(slot.role) && typeof record?.value === 'string' && record.value.trim())
       return {

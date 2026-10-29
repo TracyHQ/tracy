@@ -12,6 +12,7 @@ import { checkMainMenu } from './main-menu-check.js'
 import { checkFooterNavigation } from './footer-navigation-check.js'
 import { checkCtaBands } from './cta-band-check.js'
 import { checkSelfLinks } from './self-link-check.js'
+import { checkButtonsVideos } from './buttons-videos-check.js'
 import { peopleCardFindings } from './people-card-check.js'
 import { statisticFindings } from './statistic-check.js'
 import { keptPageReader } from '../lib/kept-page-reader.js'
@@ -145,6 +146,8 @@ export async function runLeftoverCheck({
   const footerNavigation = checkFooterNavigation({ pages, sitePlan, contentMap, origin: siteOrigin })
   // A button never leads to the page it sits on (COO decision, #189 item 23).
   const selfLinks = checkSelfLinks({ pages, origin: siteOrigin })
+  // No play control opens an empty frame, a channel's line leads to that channel, one page has one name (#189 round 9, C).
+  const buttonsVideos = checkButtonsVideos({ pages, sitePlan, origin: siteOrigin })
   const checked = check({ pages, contentMap, brief, missing, styles, broken })
   const people = peopleCardFindings({ pages, contentMap, brief })
   const statistics = statisticFindings({ pages, contentMap, brief })
@@ -223,6 +226,7 @@ export async function runLeftoverCheck({
     mainMenu,
     footerNavigation,
     selfLinks,
+    buttonsVideos,
     contactMissing,
     heroMissing,
     offeringSummaries,
@@ -241,6 +245,7 @@ export async function runLeftoverCheck({
       (!mainMenu || mainMenu.pass) &&
       (!footerNavigation || footerNavigation.pass) &&
       selfLinks.pass &&
+      !buttonsVideos.some((f) => f.severity === 'major') &&
       report.pass === true &&
       broken.length === 0 &&
       unread.length === 0 &&
@@ -261,6 +266,7 @@ export async function runLeftoverCheck({
       ...mainMenuFindings,
       ...footerFindings,
       ...selfLinkFindings,
+      ...buttonsVideos,
       ...pageIntros
     ].slice(0, FINDINGS_KEPT),
     truncated: Math.max(

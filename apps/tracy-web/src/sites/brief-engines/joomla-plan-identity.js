@@ -29,6 +29,15 @@ const HREF = /(\shref\s*=\s*)(["'])([\s\S]*?)\2/i
 const GOOGLE_MAP = /google\.[a-z.]+\/maps|maps\.google/i
 /** A link that shares the visited page, not a profile of the business. */
 const SHARE = /sharer|share\?|intent\/tweet|share\.php/i
+/** A link that opens a direct conversation on a network (Instagram, Messenger), never a profile. */
+const DIRECT_MESSAGE = /^https?:\/\/(?:www\.)?(?:ig\.me|m\.me)\/|instagram\.com\/direct\//i
+/** An anchor's words, lower case, its tags taken out. */
+const textOfInner = (/** @type {string} */ inner) =>
+  inner
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase()
 const NETWORKS = [
   ['facebook', /facebook|fb\.com/i],
   ['instagram', /instagram/i],
@@ -117,7 +126,7 @@ export function blogSurfacesGoing({ menu, modules, articles, demoIds, visible })
  * One module's HTML with the plan's identity decisions applied.
  * @param {string} html
  * @param {{ socials?: { keep?: Record<string, string> }, map?: { decision?: string, embed?: string },
- *   logo?: { decision?: string, name?: string, demoFiles?: string[] } }} plan
+ *   logo?: { decision?: string, name?: string, demoFiles?: string[] }, channels?: Array<{ kind?: string, label?: string }> }} plan
  * @returns {{ html: string, socials: number, maps: number, logos: number, emptied: boolean }}
  */
 export function joomlaIdentityHtml(html, plan) {
@@ -125,6 +134,11 @@ export function joomlaIdentityHtml(html, plan) {
   let maps = 0
   let logos = 0
   const keep = plan.socials?.keep ?? {}
+  const messageLabels = new Set(
+    (Array.isArray(plan.channels) ? plan.channels : [])
+      .filter((c) => c?.kind === 'message' && typeof c.label === 'string')
+      .map((c) => c.label.trim().toLowerCase())
+  )
   let whatsapp = typeof plan.socials?.whatsapp === 'string' ? plan.socials.whatsapp : null
   /** A social anchor of a network the business lacks: its WhatsApp, once, when it draws an icon font class; else hidden. */
   const spare = (/** @type {string} */ inner) => {
@@ -139,6 +153,9 @@ export function joomlaIdentityHtml(html, plan) {
   const swap = (/** @type {string} */ whole, /** @type {string} */ attrs, /** @type {string} */ inner) => {
     const href = HREF.exec(attrs)?.[3] ?? ''
     if (SHARE.test(href)) return whole
+    // 🔒 A DIRECT MESSAGE IS A CONTACT CHANNEL, NOT A PROFILE (#189 round 9, C4): a link that opens a conversation, or a line
+    // in the words of a message channel the plan gives, is the contact step's, though its words name the network.
+    if (DIRECT_MESSAGE.test(href) || messageLabels.has(textOfInner(inner))) return whole
     const net = networkOf(href, attrs, inner)
     if (!net) return whole
     const own = keep[net]

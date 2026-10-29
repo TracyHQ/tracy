@@ -116,7 +116,13 @@ export function navigationGroupProblems(contentMap, footerColumns = []) {
 export function planFooterNavigation({ sitePlan, groups, items = [], offeringPages = [] }) {
   const targets = [
     ...mainMenuTargets(sitePlan, items).map((p) => ({ pageId: p.id, path: p.path, role: p.role })),
-    ...offeringPages.map((o) => ({ pageId: o.id, path: o.path, role: 'offering-detail', label: o.label }))
+    ...offeringPages.map((o) => ({
+      pageId: o.id,
+      path: o.path,
+      role: 'offering-detail',
+      label: o.label,
+      ...(o.planned ? { planned: true } : {})
+    }))
   ]
   const columns = groups.map((g) => ({ id: g.id, holds: g.holds, links: [] }))
   if (!columns.length) return { columns, off: [], targets }

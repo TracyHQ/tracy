@@ -23,6 +23,15 @@ const LINK_KEY = /\[[^\]]*(?:link|url|href)\]$/i
 /** The title field of a list item (`[title]`, `[info-title]`, `[name]`): the words its link wraps. */
 const LIST_TITLE = /\[(?:[\w-]*-)?(?:title|name|heading)\]$/i
 
+/** A JSON text read, or null. */
+const safeJson = (/** @type {string} */ text) => {
+  try {
+    return JSON.parse(text)
+  } catch {
+    return null
+  }
+}
+
 const textOf = (/** @type {string} */ html) =>
   html
     .replace(/<[^>]+>/g, ' ')
@@ -233,6 +242,31 @@ export function sweepParams(ctx, params, here = null) {
     : null
 }
 
+/**
+ * An article's extra fields (`attribs`) with every field left at an empty target (`#`, `javascript:void(0)`) emptied, at
+ * any depth; null when none is. Such a field is a button's target with no declared job, and its words are the template's
+ * language string, which no rule here can read: the layout prints the button only when the field holds a target, so the
+ * button goes (#189 round 9, C1). An empty field is left as it is.
+ * @param {Record<string, any>} attribs
+ * @returns {{ fields: Record<string, any>, changed: number } | null}
+ */
+export function sweepFields(attribs) {
+  let changed = 0
+  const walk = (/** @type {any} */ node) => {
+    if (Array.isArray(node)) return node.map(walk)
+    if (!node || typeof node !== 'object') {
+      if (typeof node === 'string' && node.trim() !== '' && EMPTY.test(node.trim())) {
+        changed += 1
+        return ''
+      }
+      return node
+    }
+    return Object.fromEntries(Object.entries(node).map(([k, v]) => [k, walk(v)]))
+  }
+  const fields = walk(attribs)
+  return changed ? { fields, changed } : null
+}
+
 /** A link entry of the menu: the step that fixes or takes it off, or null. */
 export function sweepEntry(ctx, row) {
   if (Number(row.published) !== 1 || row.type !== 'url') return null
@@ -293,6 +327,9 @@ export async function sweepDeadLinks({ apply, siteKey, plan, applyId, note }) {
           const made = sweepHtml(ctx, a[column], { keepNodes: true })
           if (made.changed) fields[column] = made.html
         }
+      const extra = typeof a.attribs === 'string' ? safeJson(a.attribs) : a.attribs
+      const emptied = extra && typeof extra === 'object' ? sweepFields(extra) : null
+      if (emptied) fields.attribs = JSON.stringify(emptied.fields)
       if (Object.keys(fields).length) steps.push({ kind: 'article', id: Number(a.id), fields })
     }
     for (const m of modules) {

@@ -51,6 +51,25 @@ function entryOf(rows, path) {
 }
 
 /**
+ * The name an offering article's footer link shows: the site plan's name of that offering (`honesty.cardNames` of the
+ * article's content-map entity), else the article's title. A title the build did not rename is the demo's (#189 round 9,
+ * C6: an offering page listed under the demo class's name).
+ * @param {{ id: number | string, title?: string }} article
+ * @param {{ contentMap?: any, cardNames?: Record<string, string> }} plan
+ * @returns {{ label: string, planned: boolean }}
+ */
+export function offeringNameOf(article, { contentMap = null, cardNames = {} } = {}) {
+  const entity =
+    (contentMap?.entities ?? []).find(
+      (e) => e?.kind === 'article' && String(e.sourceId) === String(article.id)
+    )?.key ?? `article-${article.id}`
+  const named = cardNames?.[`${entity}.offering`]
+  return typeof named === 'string' && named.trim()
+    ? { label: named.trim(), planned: true }
+    : { label: String(article.title ?? '').trim(), planned: false }
+}
+
+/**
  * Joomla T3 and T4 footer link columns: each declared navigation group is one `mod_menu` module (`container`) showing one
  * menu (`menu`). Its entries become link items (`type: url`) that point at the kept pages by their Itemid, and at each
  * offering article under the offerings index's own entry, so Joomla routes them to the pages' own addresses.
@@ -85,7 +104,7 @@ export async function writeJoomlaFooterNavigation({
         pages.push({
           id: `article-${a.id}`,
           path: `${menuPath(page.path)}/${a.alias}`,
-          label: String(a.title ?? '').trim(),
+          ...offeringNameOf(a, { contentMap, cardNames: sitePlan?.honesty?.cardNames }),
           link: `index.php?option=com_content&view=article&id=${a.id}&catid=${catid}&Itemid=${entry.id}`,
           articleId: Number(a.id)
         })

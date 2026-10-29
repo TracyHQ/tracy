@@ -61,7 +61,9 @@ export async function writeFooterNavigation({
       ...l,
       column: c.id,
       key: `${c.id}.${i}`,
-      name: known[l.pageId] ?? l.label ?? ''
+      name: known[l.pageId] ?? l.label ?? '',
+      // The page's own name, used as it is: the main menu's label, or the plan's name of an offering (#189 round 9, C6).
+      fixed: known[l.pageId] ?? (l.planned ? l.label : null) ?? null
     }))
   )
   const messages = [
@@ -103,8 +105,11 @@ export async function writeFooterNavigation({
       links: links
         .filter((l) => l.column === c.id)
         .map((l) => {
-          const label = String(result?.labels?.[l.key] ?? '').trim()
-          const invalid = invalidMenuLabel(label, l.role, byId.get(c.id)?.linkMax ?? 40)
+          const max = byId.get(c.id)?.linkMax ?? 40
+          const own = typeof l.fixed === 'string' ? l.fixed.trim() : ''
+          const label =
+            own && !invalidMenuLabel(own, l.role, max) ? own : String(result?.labels?.[l.key] ?? '').trim()
+          const invalid = invalidMenuLabel(label, l.role, max)
           const folded = label.toLocaleLowerCase(locale)
           if (invalid || seen.has(folded))
             throw fail('FOOTER_INVALID', `${l.key}: ${invalid ?? 'duplicate-label'}`)
