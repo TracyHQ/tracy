@@ -130,20 +130,27 @@ export async function turnUndoPress(pool, siteKey, idemKey) {
 }
 
 /**
- * Stamp the turns an undo press undid (`undoneMarks`, turn-undo.js): `undone_at` now, and whether all
- * of the turn went (`undo_complete`). The conversation's next turn reads them ({@link undoneSince}) and
- * tells the agent, which otherwise reads the reverted site as changed by nobody (migration 067).
+ * Stamp the turns an undo press undid (`undoneMarks`, turn-undo.js). Every mark: `undone_at` now — the
+ * conversation's next turn reads it ({@link undoneSince}) and tells the agent, which otherwise reads the
+ * reverted site as changed by nobody (migration 067). A proven mark also: `undo_proven_at` now and
+ * whether all of the turn went (`undo_complete`) — the Site changes row reads those (migration 182).
+ * A press that proves nothing leaves an earlier proof as it was, and a complete undo is never set back
+ * to partial.
  * @param {import('pg').Pool} pool
  * @param {string} siteKey
- * @param {Array<{ turnId: string, complete: boolean }>} marks
+ * @param {Array<{ turnId: string, complete: boolean, proven: boolean }>} marks
  */
 export async function markTurnsUndone(pool, siteKey, marks) {
   if (marks.length === 0) return
   await pool.query(
-    `update site_turn t set undone_at = now(), undo_complete = m.complete
-       from unnest($2::text[], $3::boolean[]) as m(turn_id, complete)
+    `update site_turn t
+        set undone_at = now(),
+            undo_proven_at = case when m.proven then now() else t.undo_proven_at end,
+            undo_complete = case when m.proven then (m.complete or t.undo_complete is true)
+                                 else t.undo_complete end
+       from unnest($2::text[], $3::boolean[], $4::boolean[]) as m(turn_id, complete, proven)
       where t.site_key = $1 and t.turn_id = m.turn_id`,
-    [siteKey, marks.map((m) => m.turnId), marks.map((m) => m.complete)]
+    [siteKey, marks.map((m) => m.turnId), marks.map((m) => m.complete), marks.map((m) => m.proven)]
   )
 }
 

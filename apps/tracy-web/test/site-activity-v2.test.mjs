@@ -252,28 +252,37 @@ describe('conversation (Open conversation)', () => {
   })
 })
 
-describe('undone (the undo engine’s mark on a turn, migration 067)', () => {
-  test('a stamped turn reads {at, complete}; only true is complete', () => {
+describe('undone (the undo engine’s proven mark on a turn, migrations 067 and 182)', () => {
+  test('a proven turn reads {at, complete}; only true is complete', () => {
     const at = new Date('2026-10-06T08:00:00Z')
-    assert.deepEqual(turnUndoneOf({ undone_at: at, undo_complete: true }), {
+    assert.deepEqual(turnUndoneOf({ undone_at: at, undo_proven_at: at, undo_complete: true }), {
       at: '2026-10-06T08:00:00.000Z',
       complete: true
     })
-    assert.deepEqual(turnUndoneOf({ undone_at: at.toISOString(), undo_complete: false }), {
+    assert.deepEqual(turnUndoneOf({ undo_proven_at: at.toISOString(), undo_complete: false }), {
       at: '2026-10-06T08:00:00.000Z',
       complete: false
     })
     assert.equal(
-      turnUndoneOf({ undone_at: at, undo_complete: null }).complete,
+      turnUndoneOf({ undo_proven_at: at, undo_complete: null }).complete,
       false,
       'unknown is not complete'
     )
   })
 
-  test('a turn never undone, or a row without the columns, reads null; never a guessed time', () => {
-    assert.equal(turnUndoneOf({ undone_at: null, undo_complete: null }), null)
+  test('a turn never undone, only pressed, or a row without the columns, reads null; never a guessed time', () => {
+    assert.equal(turnUndoneOf({ undone_at: null, undo_proven_at: null, undo_complete: null }), null)
+    assert.equal(
+      turnUndoneOf({
+        undone_at: new Date('2026-10-06T08:00:00Z'),
+        undo_proven_at: null,
+        undo_complete: false
+      }),
+      null,
+      'a press that proved nothing (the host answered 202) is no proof'
+    )
     assert.equal(turnUndoneOf({}), null)
-    assert.equal(turnUndoneOf({ undone_at: 'not a date', undo_complete: true }), null)
+    assert.equal(turnUndoneOf({ undo_proven_at: 'not a date', undo_complete: true }), null)
   })
 })
 
@@ -564,7 +573,8 @@ describe('site activity V2', { skip }, () => {
     await turn(pool, 's1:1', { opened_at: iso(10), head_sha: sha('b'), files: 1 })
     await turn(pool, 's1:2', { opened_at: iso(12), closed_at: iso(13) })
     await pool.query(
-      `update site_turn set undone_at = $2, undo_complete = false where site_key = $1 and turn_id = 's1:1'`,
+      `update site_turn set undone_at = $2, undo_proven_at = $2, undo_complete = false
+        where site_key = $1 and turn_id = 's1:1'`,
       [SITE.site_key, iso(30)]
     )
     const host = fakeHost([commit('b', 11, { turn: 's1:1' })])
@@ -574,6 +584,21 @@ describe('site activity V2', { skip }, () => {
     assert.equal(t.capabilities.canUndoFiles, false, 'no Undo file changes beside an engine undo')
     assert.ok(t.capabilities.reasons.includes('undone'))
     for (const other of page.items.filter((i) => i.id !== 's1:1')) assert.equal(other.undone, null)
+  })
+
+  test('a turn only pressed (nothing proven gone) is not undone and keeps its undo', async () => {
+    const { pool } = db
+    await seed(pool)
+    await turn(pool, 's1:1', { opened_at: iso(10), head_sha: sha('b'), files: 1 })
+    await pool.query(
+      `update site_turn set undone_at = $2, undo_complete = false where site_key = $1 and turn_id = 's1:1'`,
+      [SITE.site_key, iso(30)]
+    )
+    const host = fakeHost([commit('b', 11, { turn: 's1:1' })])
+    const page = await v2(pool, host)
+    const t = page.items.find((i) => i.id === 's1:1')
+    assert.equal(t.undone, null, 'undone only by proof')
+    assert.ok(!t.capabilities.reasons.includes('undone'))
   })
 
   test('D2: a chat title that reads like an undo marks nothing undone and is no Site changes event', async () => {

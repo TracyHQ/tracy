@@ -603,8 +603,8 @@ test('undoneMarks: a turn fully undone is complete; one cut midway is stamped pa
     ]
   }
   assert.deepEqual(undoneMarks(steps, result, new Set(['c3a', 'c3b', 'c2a'])), [
-    { turnId: `${S}:3`, complete: true },
-    { turnId: `${S}:2`, complete: false }
+    { turnId: `${S}:3`, complete: true, proven: true },
+    { turnId: `${S}:2`, complete: false, proven: true }
   ])
   // Refused on its first moment: nothing of the turn changed, nothing stamped.
   const refused = {
@@ -614,14 +614,17 @@ test('undoneMarks: a turn fully undone is complete; one cut midway is stamped pa
     ]
   }
   assert.deepEqual(undoneMarks([steps[2]], refused, new Set()), [])
-  // A moment that may have run, or a revert left unsure: stamped, partial.
+  // A moment that may have run, or a revert left unsure: stamped (the agent hears of it), partial, and
+  // not proven — the Site changes row is undone only by proof.
   const unsure = {
     complete: false,
     turns: [
       { turnId: `${S}:1`, files: { status: 'unsure', code: 'HTTP_502', operationIds: [] }, content: none }
     ]
   }
-  assert.deepEqual(undoneMarks([steps[2]], unsure, new Set()), [{ turnId: `${S}:1`, complete: false }])
+  assert.deepEqual(undoneMarks([steps[2]], unsure, new Set()), [
+    { turnId: `${S}:1`, complete: false, proven: false }
+  ])
   // Content only, one revert failed after another went.
   const contentStep = [{ turnId: `${S}:4`, commits: [], applyIds: ['a', 'b'] }]
   const half = {
@@ -634,7 +637,9 @@ test('undoneMarks: a turn fully undone is complete; one cut midway is stamped pa
       }
     ]
   }
-  assert.deepEqual(undoneMarks(contentStep, half, new Set()), [{ turnId: `${S}:4`, complete: false }])
+  assert.deepEqual(undoneMarks(contentStep, half, new Set()), [
+    { turnId: `${S}:4`, complete: false, proven: true }
+  ])
 })
 
 // ── WordPress looks: the site's Additional CSS (`look-css`), put back by the host, not by Git ─────
@@ -774,8 +779,8 @@ test('runUndo: files, then content, then looks, newest first; a look refused sto
   assert.equal(ok.complete, true)
   assert.deepEqual(ok.turns[0].look, { undone: ['bbbbbb', 'aaaaaa'], failed: [], unsure: [] })
   assert.deepEqual(undoneMarks(steps, ok, new Set(['c2'])), [
-    { turnId: 't2', complete: true },
-    { turnId: 't1', complete: true }
+    { turnId: 't2', complete: true, proven: true },
+    { turnId: 't1', complete: true, proven: true }
   ])
   const refused = await runUndo(steps, {
     ...deps,
@@ -789,7 +794,9 @@ test('runUndo: files, then content, then looks, newest first; a look refused sto
     failed: [{ undo: 'aaaaaa', code: 'LOOK_UNDO_CHANGED_SINCE' }],
     unsure: []
   })
-  assert.deepEqual(undoneMarks(steps, refused, new Set(['c2'])), [{ turnId: 't2', complete: false }])
+  assert.deepEqual(undoneMarks(steps, refused, new Set(['c2'])), [
+    { turnId: 't2', complete: false, proven: true }
+  ])
   // A look-only turn whose one look was refused: nothing of it changed, nothing stamped.
   const only = [{ turnId: 't1', commits: [], applyIds: [], looks: ['cccccc'] }]
   const none = await runUndo(only, {
