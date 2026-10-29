@@ -156,7 +156,9 @@ export async function drawPlanned({
       if (!size) return
       let first = true
       for (const group of groups) {
-        const aspect = group.demo.width / group.demo.height
+        // The shape the drawing was planned at: the slot's own box when the site measures one (fitAspectOf), so a
+        // drawing is never cut to the demo file's shape and then again to the box's.
+        const aspect = g.aspect || group.demo.width / group.demo.height
         const box = domain.cropBox(size[0], size[1], aspect)
         // A drawing is a picture like any other: never enlarged past the role's limit (C9).
         const target = Math.min(group.demo.width, (domain.ROLES[group.role] ?? domain.ROLES.section).min)
@@ -259,7 +261,9 @@ export async function shapeDecor({
       key: d.key,
       entity: slot?.entity,
       label: slot?.label ?? '',
-      sample: slot?.sample
+      sample: slot?.sample,
+      // The words the site takes a kept picture with (`replace_kept`): see `decorAsked` in the decor plan.
+      ...(typeof d.asked === 'string' && d.asked ? { asked: d.asked } : {})
     })
     units.set(id, unit)
   }

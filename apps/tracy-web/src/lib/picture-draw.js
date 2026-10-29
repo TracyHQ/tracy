@@ -12,7 +12,7 @@
 import { createHash } from 'node:crypto'
 import sharp from 'sharp'
 
-export const DRAW_PROMPT_VERSION = 'd2'
+export const DRAW_PROMPT_VERSION = 'd3'
 const REFERENCE_EDGE = 1024
 const NEVER =
   'No text, no letters, no signs, no logos, no watermarks, no recognisable faces, no person facing the camera.'
@@ -35,31 +35,62 @@ const ratio = (aspect) => {
 const orientation = (aspect) => (aspect > 1.05 ? 'landscape' : aspect < 0.95 ? 'portrait' : 'square')
 
 /**
- * What the drawing shows, from the brief (spec #189, ticket #194): the offering a card is about, else the business's own
- * place, with the business's category. Never one category's own words: any business gets its own subject.
+ * Who the business is, as the Customize drawings tell it (`pictureBriefs` in `sites/brief-engines/pictures.js`): its
+ * name and key messages, then its kind. Never one category's own words: any business gets its own facts.
  */
-function subjectWords(subject) {
-  const of = subject?.category ? ` (a ${subject.category})` : ''
-  if (subject?.kind === 'offering' && subject.label) return `${subject.label} at this business${of}`
-  return `this business's own place${of}, as its customers see it`
+function factsOf(subject) {
+  return [subject?.about, subject?.category]
+    .filter((v) => typeof v === 'string' && v.trim() !== '')
+    .join(' \u2014 ')
 }
 
-/** What the model is asked, by mode: `outpaint`, `scene`, or `object` (a cut-out figure's object on a plain ground). */
+/** What a scene shows: the offering a card is about in use, else the business at work in its own place. */
+function activityOf(subject) {
+  if (subject?.kind === 'offering' && subject.label)
+    return `${subject.label} in use at this business, as its customers see it`
+  return `the business at work in its own place, as its customers see it`
+}
+
+/** How the business's own photos are given: what it looks like, never a style or a frame to copy. */
+const REFERENCES =
+  'The attached photos are real photos of this business: keep what its place, equipment and colours look like, but make a new, professional photograph, not a copy of their framing, text or graphics.'
+
+/**
+ * What the model is asked, by mode: `outpaint`, `scene`, or `object` (a cut-out figure's object on a plain ground).
+ *
+ * 🔒 A SCENE IS ASKED THE WAY CUSTOMIZE ASKS (d3, 29/10/2026). Measured on the local stand with the same model: d2 told
+ * the model only "this business's own place (a <category>)" and to copy "the same style, colours and light" as the
+ * owner's social posts, and it drew empty courts and rooms in their phone-camera look; a subject that was a record printed
+ * as "[object Object]". Told the business's facts and its activity the way `pictureBriefs` does, with the owner's photos
+ * as what the place looks like rather than a style to copy, it drew the business at work in its own place.
+ */
 export function drawPrompt(item) {
   const shape = `${ratio(item.aspect)} (width ${item.aspect.toFixed(2)} times the height), ${orientation(item.aspect)}`
   if (item.mode === 'outpaint')
     return `Extend this photograph to a wider frame of ${shape}. Keep the original photograph unchanged in the middle and continue its scene naturally on every side, with the same light, colours and perspective. Photorealistic. ${NEVER}`
+  const facts = factsOf(item.subject)
+  const about = facts ? `\n${facts}` : ''
   if (item.mode === 'object') {
     const what = item.subject?.label ? `${item.subject.label}` : `the work of this business`
-    return `One single object used for ${what}, shown whole in the centre on a plain pure white background with nothing else in the frame, framed ${shape}, in the colours and light of these reference photos. Photorealistic, soft even light, no shadow on the ground, no people. ${NEVER}`
+    return `One single object used for ${what}, for the website of this business:${about}\nShown whole in the centre on a plain pure white background with nothing else in the frame, framed ${shape}. Photorealistic, soft even light, no shadow on the ground, no people.\n${REFERENCES}\n${NEVER}`
   }
-  return `A photograph of ${subjectWords(item.subject)}, in the same style, colours and light as these reference photos of it, framed ${shape}, for its website. Photorealistic, natural light. ${NEVER}`
+  const page =
+    item.subject?.kind === 'offering' && item.subject.label
+      ? `for the page of one of its offerings, ${item.subject.label}`
+      : 'for its website'
+  return `A photograph of this business, ${page}:${about}\nPhotorealistic, natural light, ${activityOf(item.subject)}, framed ${shape}.\n${REFERENCES}\n${NEVER}`
 }
 
 /** The cache key of a drawing: what it was made from, for what subject and shape, how, and by which model. */
 export function drawKey(item, { model, shas }) {
   const subject = item.subject
-    ? [item.subject.kind, item.subject.id ?? null, item.subject.label ?? null, item.subject.category ?? null]
+    ? [
+        item.subject.kind,
+        item.subject.id ?? null,
+        item.subject.label ?? null,
+        item.subject.category ?? null,
+        item.subject.about ?? null
+      ]
     : null
   return createHash('sha256')
     .update(

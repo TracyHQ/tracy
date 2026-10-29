@@ -23,7 +23,8 @@ test('the prompt keeps the real photograph in the middle, names the shape, and f
   assert.match(outpaint, /Keep the original photograph unchanged in the middle/)
   assert.match(outpaint, /16:9/)
   const scene = drawPrompt({ mode: 'scene', aspect: 1920 / 824 })
-  assert.match(scene, /reference photos/)
+  assert.match(scene, /real photos of this business/)
+  assert.match(scene, /not a copy of their framing, text or graphics/)
   for (const p of [outpaint, scene]) {
     assert.match(p, /No text.*no logos.*no recognisable faces/)
     assert.doesNotMatch(p, /restaurant|dish|dining/i)
@@ -103,9 +104,12 @@ test('the prompt names the slot subject from the brief, and an object for a cut-
     aspect: 4 / 3,
     subject: { kind: 'offering', id: 'svc-fit', label: 'Fitness Lessons', category: 'racket club' }
   })
-  assert.match(card, /Fitness Lessons at this business \(a racket club\)/)
+  assert.match(card, /one of its offerings, Fitness Lessons/)
+  assert.match(card, /Fitness Lessons in use at this business/)
+  assert.match(card, /racket club/)
   const bakery = drawPrompt({ mode: 'scene', aspect: 21 / 9, subject: { kind: 'venue', category: 'bakery' } })
-  assert.match(bakery, /own place \(a bakery\)/)
+  assert.match(bakery, /the business at work in its own place/)
+  assert.match(bakery, /bakery/)
   const object = drawPrompt({
     mode: 'object',
     aspect: 1,
@@ -119,5 +123,17 @@ test('the prompt names the slot subject from the brief, and an object for a cut-
   assert.notEqual(
     drawKey(base, { model: 'm', shas: ['s'] }),
     drawKey({ ...base, variant: 1 }, { model: 'm', shas: ['s'] })
+  )
+})
+
+test('d3: a scene is told who the business is, the way Customize tells it, and new facts make a new drawing', () => {
+  const subject = { kind: 'venue', category: 'bakery', about: 'Copperleaf Bakery; Baked before sunrise' }
+  const scene = drawPrompt({ mode: 'scene', aspect: 1.5, subject })
+  assert.match(scene, /Copperleaf Bakery; Baked before sunrise \u2014 bakery/)
+  assert.doesNotMatch(scene, /object Object/)
+  const item = { mode: 'scene', aspect: 1.5, subject }
+  assert.notEqual(
+    drawKey(item, { model: 'm', shas: ['s'] }),
+    drawKey({ ...item, subject: { ...subject, about: 'Copperleaf Bakery' } }, { model: 'm', shas: ['s'] })
   )
 })

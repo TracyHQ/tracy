@@ -435,3 +435,33 @@ test('#194 the brief logo, or a picture its labeller called no photograph, is ne
     assert.ok(plan.drawings.length > 0, 'the owner photo is still drawn from')
   }
 })
+
+test('#194 a drawing is planned at the shape the site holds the slot to, and told who the business is', () => {
+  // The hero file is 2:1 but the slot is measured in a 1440 x 960 box: the site refuses anything off 1.5.
+  const map = {
+    roleVocabularyVersion: 'place-content-roles/3',
+    entities: [{ key: 'module-1', kind: 'module' }],
+    slots: [
+      image('module-1.0', 'business.hero_image', 'hero.jpg', {
+        size: [1920, 960],
+        fit: {
+          ...fit(1920, 960),
+          aspect: 1.5,
+          crop: 'cover',
+          boxes: { desktop: { width: 1440, height: 960 } }
+        }
+      })
+    ],
+    pages: [{ route: 'home', assignedModules: [{ entity: 'module-1' }] }]
+  }
+  const brief = {
+    ...BAKERY,
+    business: { name: 'Copperleaf Bakery', trade: 'food', subTrade: { id: 'bakery', method: 'model' } },
+    keyMessages: [{ label: 'Baked before sunrise' }, { label: 'Rye and spelt loaves' }]
+  }
+  const plan = draw(brief, [photo('shop-1', 'general', [300, 1200])], { contentMap: map, cardNames: {} })
+  const drawing = plan.drawings[0]
+  assert.equal(drawing.aspect, 1.5)
+  assert.equal(drawing.subject.category, 'bakery', 'a sub-trade record gives its id, never an object')
+  assert.equal(drawing.subject.about, 'Copperleaf Bakery; Baked before sunrise; Rye and spelt loaves')
+})

@@ -68,6 +68,35 @@ const notAPhotograph = (a) =>
 const depictsOf = (a) => a?.depicts?.id ?? a?.depicts ?? GENERAL
 const portraitOf = (a) => a?.portraitOf?.id ?? a?.portraitOf ?? null
 
+/**
+ * The shape a site holds a slot to, as the Claude Cowork plugin reads it (`SlotFit::referenceAspect`): a measured slot
+ * that crops (`cover`) is held to its desktop box (`fit.aspect`), which is often not the demo file's shape (a 1920 x 960
+ * hero file in a 1440 x 960 box). Null when the slot names none, and the demo file's shape decides.
+ */
+export function fitAspectOf(slot) {
+  const fit = slot?.fit
+  if (fit?.measured !== true || fit.crop === 'contain' || fit.crop === 'none') return null
+  return typeof fit.aspect === 'number' && fit.aspect > 0 ? fit.aspect : null
+}
+
+/**
+ * What a drawing is told about the business, from the brief alone: its name, its kind (the sub-trade's id, else the
+ * trade) and up to three of its key messages. A model drawing for a business it knows only as "a fitness" draws a stock
+ * gym; told who it serves and how, it draws that business at work.
+ */
+export function drawingFactsOf(brief) {
+  const sub = brief?.business?.subTrade
+  const category =
+    (typeof sub === 'string' ? sub : typeof sub?.id === 'string' ? sub.id : null) ??
+    (typeof brief?.business?.trade === 'string' ? brief.business.trade : null)
+  const messages = (brief?.keyMessages ?? [])
+    .map((m) => (typeof m?.label === 'string' ? m.label.trim() : ''))
+    .filter(Boolean)
+    .slice(0, 3)
+  const name = typeof brief?.business?.name === 'string' ? brief.business.name.trim() : ''
+  return { category, about: [name, ...messages].filter(Boolean).join('; ') || null }
+}
+
 /** Whether a fill decision is one a drawing replaces. */
 function drawable(decision, slot) {
   if (decision.type !== 'image' || decision.action !== 'keep') return false
@@ -81,12 +110,13 @@ function drawable(decision, slot) {
  * @param {object} input
  * @param {ReturnType<import('./fill-plan.mjs').planFill>} input.fill - the fill plan
  * @param {{slots: any[], pages?: any[], entities?: any[]}} input.contentMap
- * @param {{assets?: any[], business?: {trade?: string, subTrade?: string}, brand?: {logo?: string | null}}} input.brief
+ * @param {{assets?: any[], business?: {name?: string, trade?: string, subTrade?: string | {id?: string}},
+ *   keyMessages?: Array<{label?: string}>, brand?: {logo?: string | null}}} input.brief
  * @param {Map<string, {width: number, height: number}>} [input.demo] - demo files as the site serves them
  * @param {number} [input.max]
  * @returns {{version: string, slots: any[], drawings: Array<{id: string, mode: 'outpaint' | 'scene', sourceId?: string,
  *   referenceIds: string[], aspect: number, subject: {kind: 'offering' | 'venue', id?: string, label?: string,
- *   category: string | null}, keys: string[]}>, capped: number}}
+ *   category: string | null, about?: string}, keys: string[]}>, capped: number}}
  */
 export function planDrawings({ fill, contentMap, brief, demo = new Map(), max = DRAW_CAP }) {
   const slotOf = new Map((contentMap?.slots ?? []).map((s) => [s.key, s]))
@@ -97,7 +127,8 @@ export function planDrawings({ fill, contentMap, brief, demo = new Map(), max = 
       .filter((p) => p.home === true || HOME_ROUTES.has(String(p.route ?? '')))
       .map((p) => `page:${p.route ?? p.entity}`)
   )
-  const category = brief?.business?.subTrade ?? brief?.business?.trade ?? null
+  const { category, about } = drawingFactsOf(brief)
+  const told = about ? { about } : {}
   const owners = [...(brief?.assets ?? [])]
     .filter((a) => a?.kind === 'image' && a.id && a.width && a.height)
     // The brief's own logo is a mark, never a scene to extend or to draw from, whatever its labels say.
@@ -123,7 +154,7 @@ export function planDrawings({ fill, contentMap, brief, demo = new Map(), max = 
     const file = d.file ?? fileOf(slot?.sample)
     const frame = demo.get(file) ?? slot?.fit?.source ?? declaredSize(slot?.sample)
     if (!frame?.width || !frame?.height) continue
-    const aspect = frame.width / frame.height
+    const aspect = fitAspectOf(slot) ?? frame.width / frame.height
     const offering = d.groupId ? offeringOf.get(d.groupId) : null
     const pages = pagesOf(d.entity)
     const width = shownWidthOf(slot) || frame.width
@@ -132,8 +163,8 @@ export function planDrawings({ fill, contentMap, brief, demo = new Map(), max = 
       aspect,
       pages,
       subject: offering
-        ? { kind: 'offering', id: offering.offeringId, label: offering.label, category }
-        : { kind: 'venue', category },
+        ? { kind: 'offering', id: offering.offeringId, label: offering.label, category, ...told }
+        : { kind: 'venue', category, ...told },
       onHome: pages.some((p) => home.has(p)) ? 0 : 1,
       // The widest shown first: a band across the page before a tile beside others.
       width

@@ -191,7 +191,10 @@ test('#194 a portrait-only brief: the wide hero is drawn by extending an owner p
   // The fitness card has no fitness photo: drawn as a scene that names fitness.
   const fitness = bySample(shaped).get('images/demo/classes/own.jpg')
   assert.equal(fitness.receipt.kind, 'drawn')
-  assert.match(fitness.receipt.prompt, /Fitness Lessons at this business \(a racket club\)/)
+  assert.match(
+    fitness.receipt.prompt,
+    /Fitness Lessons in use at this business[^]*racket club|racket club[^]*Fitness Lessons in use at this business/
+  )
   assert.ok(model.prompts.every((p) => !/restaurant|dish/i.test(p)))
   // Cost, calls and time reach the build report.
   const { report } = pictureReport({ shaped, values: {}, refused: new Set(), readback: null })
