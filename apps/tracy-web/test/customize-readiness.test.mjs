@@ -298,7 +298,9 @@ test(
     }
     const config = { releasesToken: 'ghs_test', readinessDir: cacheDir }
     assert.equal(await sweepReadiness(pool, config, { fetchImpl, log: silent, runCheck }), 1)
-    assert.deepEqual(seen, ['https://api.github.com/repos/JoomlArt-Products/ja-products/releases/assets/7'])
+    assert.deepEqual(seen, [
+      'https://api.github.com/repos/JoomlArt-Products/joomlart-products/releases/assets/7'
+    ])
     const [stored] = [...(await readinessRows(pool)).values()]
     assert.equal(stored.state, 'done')
     assert.equal(summarizeReadiness(stored.report).passed, 1)

@@ -2,7 +2,7 @@
 // K2+K3: the version and release name a contract was captured for must match the quickstart it
 // claims to describe. Two modes, exactly one per run:
 //   --pack <dir>     the local pack the contract was captured from (before publishing)
-//   --release <tag>  the published release on JoomlArt-Products/ja-products (after publishing)
+//   --release <tag>  the published release on JoomlArt-Products/joomlart-products (after publishing)
 // A source that cannot be reached is a failure, never a skip: a skipped check reads as a pass.
 //
 // Usage: node check-release-fields.mjs --contract <dir with manifest.json> (--pack <dir> | --release <tag>)
@@ -14,7 +14,7 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { parseArgs } from 'node:util'
 
-const RELEASE_REPO = 'JoomlArt-Products/ja-products'
+const RELEASE_REPO = 'JoomlArt-Products/joomlart-products'
 
 function finish(result) {
   process.stdout.write(`${JSON.stringify(result)}\n`)

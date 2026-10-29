@@ -443,7 +443,7 @@
           "height": 40
         },
         "logoHeight": 40,
-        "note": "Same logos and content as 1.0.8; only the template's stylesheets changed: they read the standard design-system role variables (colours, corners, faces) at the source with the template's own values as fallback (JoomlArt-Products/ja-products ds-b2-fin-essence, role scan 0 unresolved), so with no design system worn it looks exactly as 1.0.8 (release-batch.mjs verify: 0 computed differences)."
+        "note": "Same logos and content as 1.0.8; only the template's stylesheets changed: they read the standard design-system role variables (colours, corners, faces) at the source with the template's own values as fallback (JoomlArt-Products/joomlart-products ds-b2-fin-essence, role scan 0 unresolved), so with no design system worn it looks exactly as 1.0.8 (release-batch.mjs verify: 0 computed differences)."
       },
       "1.0.10": {
         "logos": "pair",
@@ -736,7 +736,7 @@
           "footer": true,
           "proof": "images/joomlart/logo/logo.png is a light logo drawn on the navy header top band and footer, which css/darkmode.css keeps navy (--color-primary, palette blue) in dark mode"
         },
-        "note": "Same logos and content as 1.0.3; only the template's stylesheets and one module layout changed: they read the standard design-system role variables (colours, corners, faces) at the source with the template's own values as fallback (JoomlArt-Products/ja-products ds-b2-fin-impact, role scan 0 unresolved), so with no design system worn it looks exactly as 1.0.3 (release-batch.mjs verify: 0 computed differences)."
+        "note": "Same logos and content as 1.0.3; only the template's stylesheets and one module layout changed: they read the standard design-system role variables (colours, corners, faces) at the source with the template's own values as fallback (JoomlArt-Products/joomlart-products ds-b2-fin-impact, role scan 0 unresolved), so with no design system worn it looks exactly as 1.0.3 (release-batch.mjs verify: 0 computed differences)."
       },
       "1.0.5": {
         "logos": "pair",
@@ -912,7 +912,7 @@
         "faviconReady": true,
         "framework": "t4",
         "profiles": ["default", "blueprint", "signal", "Blog", "home-magz"],
-        "note": "Same logos and content as 1.0.6; measured on the 1.0.8 pack (scripts/template-customization-question-readiness.mjs, 0 must-fix): the template's stylesheets read the standard role variables at the source (JoomlArt-Products/ja-products feat/ds-role-variables, laid over the 1.0.6 pair and tokenized by tracy-ds-slot release-joomla.mjs), so with no design system worn it looks exactly as 1.0.6; 1.0.7 (#1375, cut but not uploaded) is skipped (16/10/2026, feat/ds-role-variables). Claude Cowork for Joomla 0.24.33 carries the 1.0.8 profile."
+        "note": "Same logos and content as 1.0.6; measured on the 1.0.8 pack (scripts/template-customization-question-readiness.mjs, 0 must-fix): the template's stylesheets read the standard role variables at the source (JoomlArt-Products/joomlart-products feat/ds-role-variables, laid over the 1.0.6 pair and tokenized by tracy-ds-slot release-joomla.mjs), so with no design system worn it looks exactly as 1.0.6; 1.0.7 (#1375, cut but not uploaded) is skipped (16/10/2026, feat/ds-role-variables). Claude Cowork for Joomla 0.24.33 carries the 1.0.8 profile."
       },
       "1.0.9": {
         "logos": "pair",
@@ -920,7 +920,7 @@
         "faviconReady": true,
         "framework": "t4",
         "profiles": ["default", "blueprint", "signal", "Blog", "home-magz"],
-        "note": "Same logos and content as 1.0.8; one stylesheet changed at the source: the Integrations call bar (page-219.css) reads the page ground role instead of the ink role (JoomlArt-Products/ja-products feat/ds-dot3-a2, design system dot 3, 19/10/2026), so the slot contract no longer patches it (joomla-ja-kinetic-source); with no design system worn it looks exactly as 1.0.8 (release VERIFICATION.json: 0 computed differences)."
+        "note": "Same logos and content as 1.0.8; one stylesheet changed at the source: the Integrations call bar (page-219.css) reads the page ground role instead of the ink role (JoomlArt-Products/joomlart-products feat/ds-dot3-a2, design system dot 3, 19/10/2026), so the slot contract no longer patches it (joomla-ja-kinetic-source); with no design system worn it looks exactly as 1.0.8 (release VERIFICATION.json: 0 computed differences)."
       },
       "1.0.10": {
         "logos": "pair",
@@ -1537,7 +1537,7 @@
           "width": 193,
           "height": 48
         },
-        "note": "Same logos and content as 1.0.5; only the template's stylesheets changed: they read the standard design-system role variables (colours, corners, faces) at the source with the template's own values as fallback (JoomlArt-Products/ja-products ds-b2-fin-podcast, role scan 0 unresolved), so with no design system worn it looks exactly as 1.0.5 (release-batch.mjs verify: 0 computed differences)."
+        "note": "Same logos and content as 1.0.5; only the template's stylesheets changed: they read the standard design-system role variables (colours, corners, faces) at the source with the template's own values as fallback (JoomlArt-Products/joomlart-products ds-b2-fin-podcast, role scan 0 unresolved), so with no design system worn it looks exactly as 1.0.5 (release-batch.mjs verify: 0 computed differences)."
       },
       "1.0.7": {
         "logos": "pair",
@@ -2458,7 +2458,7 @@
           "width": 188,
           "height": 56
         },
-        "note": "Same logos and content as 1.0.3; the template's stylesheets read the standard role variables at the source (JoomlArt-Products/ja-products ds-b2-fin-tour, laid over the 1.0.3 pair and tokenized by tracy-ds-slot release-joomla.mjs), so with no design system worn it looks exactly as 1.0.3 (VERIFICATION.json: 0 computed differences, desktop and phone)."
+        "note": "Same logos and content as 1.0.3; the template's stylesheets read the standard role variables at the source (JoomlArt-Products/joomlart-products ds-b2-fin-tour, laid over the 1.0.3 pair and tokenized by tracy-ds-slot release-joomla.mjs), so with no design system worn it looks exactly as 1.0.3 (VERIFICATION.json: 0 computed differences, desktop and phone)."
       },
       "1.0.5": {
         "logos": "dark",
@@ -2541,7 +2541,7 @@
           "width": 156,
           "height": 48
         },
-        "note": "Same logos and content as 1.0.6; only the template's stylesheets changed: they read the standard design-system role variables (colours, corners, faces) at the source with the template's own values as fallback (JoomlArt-Products/ja-products ds-b2-fin-trip, role scan 0 unresolved), so with no design system worn it looks exactly as 1.0.6 (release-batch.mjs verify: 0 computed differences); the JA Google Map blocks on the tour pages and Contact are a street map picture linked to Google Maps instead of Google's error box (the demo's API key belongs to JoomlArt's demo domain)."
+        "note": "Same logos and content as 1.0.6; only the template's stylesheets changed: they read the standard design-system role variables (colours, corners, faces) at the source with the template's own values as fallback (JoomlArt-Products/joomlart-products ds-b2-fin-trip, role scan 0 unresolved), so with no design system worn it looks exactly as 1.0.6 (release-batch.mjs verify: 0 computed differences); the JA Google Map blocks on the tour pages and Contact are a street map picture linked to Google Maps instead of Google's error box (the demo's API key belongs to JoomlArt's demo domain)."
       },
       "1.0.8": {
         "logos": "pair",
@@ -2629,7 +2629,7 @@
           "profiles": ["default"],
           "proof": "default site_logo item-1.png lum 196"
         },
-        "note": "Same logos and content as 1.0.6; only the template's stylesheets changed (the database and the logo code are 1.0.6's): they read the standard design-system role variables (colours, corners, faces) with the template's own values as fallback (JoomlArt-Products/ja-products ds-b2-fin-vega, tokenized by tracy-ds-slot release-batch build), so with no design system worn the page is the same as 1.0.6 (release-batch.mjs verify: 0 computed differences, 16/10/2026, batch 2)."
+        "note": "Same logos and content as 1.0.6; only the template's stylesheets changed (the database and the logo code are 1.0.6's): they read the standard design-system role variables (colours, corners, faces) with the template's own values as fallback (JoomlArt-Products/joomlart-products ds-b2-fin-vega, tokenized by tracy-ds-slot release-batch build), so with no design system worn the page is the same as 1.0.6 (release-batch.mjs verify: 0 computed differences, 16/10/2026, batch 2)."
       },
       "1.0.8": {
         "logos": "pair",
@@ -2820,7 +2820,7 @@
           "width": 160,
           "height": 47
         },
-        "note": "Same logos and content as 1.0.5; the template's stylesheets read the standard role variables at the source (JoomlArt-Products/ja-products ds-batch2-lane-B, laid over the 1.0.5 pair and tokenized by tracy-ds-slot release-joomla.mjs), so with no design system worn it looks exactly as 1.0.5 (VERIFICATION.json: 0 computed differences, desktop and phone)."
+        "note": "Same logos and content as 1.0.5; the template's stylesheets read the standard role variables at the source (JoomlArt-Products/joomlart-products ds-batch2-lane-B, laid over the 1.0.5 pair and tokenized by tracy-ds-slot release-joomla.mjs), so with no design system worn it looks exactly as 1.0.5 (VERIFICATION.json: 0 computed differences, desktop and phone)."
       },
       "1.0.7": {
         "logos": "pair",

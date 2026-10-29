@@ -310,14 +310,14 @@ export const BASES: readonly Base[] = [
         kind: 'webroot',
         bytes: 58407213,
         sha256: '90e91e51af5c3dde6f731997e35f0d48ed381c6bfef82fe7f726a92f27f3e4eb',
-        source: 'JoomlArt-Products/ja-products · release tracy-apple/j6'
+        source: 'JoomlArt-Products/joomlart-products · release tracy-apple/j6'
       },
       {
         name: 'tracy-apple-j6-database-1.1.0.sql.gz',
         kind: 'database',
         bytes: 191683,
         sha256: '20e3987b05ce77b9ca37ab8add76492cd7d5efcf3fc6a3f6832ae99c6b9537ba',
-        source: 'JoomlArt-Products/ja-products · release tracy-apple/j6'
+        source: 'JoomlArt-Products/joomlart-products · release tracy-apple/j6'
       },
       {
         name: 'pkg_claudecowork.zip',

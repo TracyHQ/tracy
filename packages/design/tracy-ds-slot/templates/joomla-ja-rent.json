@@ -1049,7 +1049,7 @@
   "maxVersion": {
     "quickstart/ja-rent/j6": "1.0.5"
   },
-  "maxVersionNote": "1.0.5 19/10/2026: role-variable build of ja-products ja_rent (role scan clean: every colour, corner and font that plays a role reads its --ds-* variable with its own value as the fallback, the colour themes and the RTL build included); release-batch verify against 1.0.4: 0 computed differences, same pixels. Before: 1.0.4 16/10/2026 (#1375): re-cut of 1.0.3 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "maxVersionNote": "1.0.5 19/10/2026: role-variable build of joomlart-products ja_rent (role scan clean: every colour, corner and font that plays a role reads its --ds-* variable with its own value as the fallback, the colour themes and the RTL build included); release-batch verify against 1.0.4: 0 computed differences, same pixels. Before: 1.0.4 16/10/2026 (#1375): re-cut of 1.0.3 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
   "bands": {
     ".t3-topbar": {
       "ground": "#ffffff",

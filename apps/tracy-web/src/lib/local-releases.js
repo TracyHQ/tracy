@@ -5,7 +5,7 @@
  * `TRACY_LOCAL_RELEASES_DIR=<dir>` holds one folder per pack, spelled as the release tag it is a
  * candidate for: `<dir>/<slug>/<cms>/` for a Tracy release (`tracy-business/j6`) and
  * `<dir>/quickstart/<slug>/<cms>/` for a JoomlArt one (`quickstart/ja-essence/j6`), carrying the
- * files a release on `ja-products` would carry: `tracy_setting.json`, optionally
+ * files a release on `joomlart-products` would carry: `tracy_setting.json`, optionally
  * `tracy_design_inspiration.json`, `tracy_site_question.json` and `tracy_site_pages.json`, the card's pictures, and every file
  * the setting's `install` names. Each pack becomes one row of `quickstart_releases` under the tag
  * `local/` + that release tag, held to the SAME validators a release is (ADR 0017), so a pack that reads

@@ -11,7 +11,7 @@
  *
  * `status` is `pass`, `fail`, `unmeasured` (a built-site rule with no measurement file for this
  * version: "Not measured yet", never a pass) or `not-applicable`. `owner`
- * says who fixes a failure: `template` (a new release of the template, repo `ja-products` or the
+ * says who fixes a failure: `template` (a new release of the template, repo `joomlart-products` or the
  * theme's home) or `contract` (the slot contract in `packages/design/tracy-ds-slot/templates/`, a
  * tch PR).
  *

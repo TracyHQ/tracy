@@ -62,7 +62,7 @@ export function closedListDigest(list) {
 }
 
 /** The one item of `items` the text names in full, the longest name winning over a name inside it; null for none or two. */
-function namedIn(text, items) {
+export function namedIn(text, items) {
   const folded = fold(text)
   const hits = items.filter((i) => {
     const name = fold(i.label)
