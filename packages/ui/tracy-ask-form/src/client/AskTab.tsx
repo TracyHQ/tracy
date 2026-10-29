@@ -3,7 +3,7 @@
  * ask form of `@tracy/site-build-core`, answered through `pending.answer()`.
  */
 import { MessageCircleQuestion } from 'lucide-react'
-import { type JSX, useMemo, useRef, useState, useSyncExternalStore } from 'react'
+import { type JSX, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 
 import { entryAnswered } from '../../../../site/tracy-site-build-core/src/client/ask-form/AskCards'
 import { AskForm } from '../../../../site/tracy-site-build-core/src/client/ask-form/AskForm'
@@ -56,7 +56,7 @@ export function AskTab({
   }
   // Keyed by the request: a replacing request starts with its own draft, and no press of the old one
   // stays busy on the new one.
-  return <PendingForm key={takeKey(pending)} pending={pending} drafts={drafts} t={t} />
+  return <PendingForm key={pending.key} pending={pending} drafts={drafts} t={t} />
 }
 
 function PendingForm({
@@ -79,6 +79,24 @@ function PendingForm({
   const [error, setError] = useState<string | undefined>(undefined)
   // A ref, not the state: two presses in one frame both read `busy` as false.
   const sending = useRef(false)
+
+  // Settling the browser channel precedes delivery of its reply to the host. If that delivery is
+  // lost, dsh forwards the same request again on a new channel while keeping the same carrier.
+  // Observe that channel's arrival even when sessionStatus never changes, so the local send lock
+  // cannot strand an unanswered host call. A settled channel stays locked until another arrives.
+  useEffect(() => {
+    if (!pending.subscribe || !pending.getSnapshot) return
+    let channel = pending.getSnapshot().channel
+    return pending.subscribe(() => {
+      const next = pending.getSnapshot?.().channel
+      if (channel === 'none' && next === 'waterfall') {
+        sending.current = false
+        setBusy(false)
+        setError(undefined)
+      }
+      channel = next ?? 'none'
+    })
+  }, [pending])
 
   const press = (mode: DshAnswerMode) => {
     if (sending.current) return

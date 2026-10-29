@@ -118,6 +118,8 @@ route: same-origin documents, stylesheets, images and fonts are fetched through 
 `docker exec curl`; page scripts stay disabled and other requests fail. This fallback is used only
 for visual-check captures. It cannot evaluate changes that require page scripts or external assets.
 
+Host-mode capture scrolls synchronously and waits for rendering in the Node process: page timers do not run while page scripts are disabled. The script and network restrictions remain in force.
+
 ## 3. Where the browser lands
 
 Every request reaches `tracy-web` first. [`app.js`](apps/tracy-web/src/app.js) mounts, in order:
@@ -460,8 +462,8 @@ reads the tables above for one session — the turn's commits (trailer `Tracy-Tu
 `apply_id`, and the reason something cannot be undone; `POST /api/sites/:key/turns/undo` pre-checks a multi-moment turn (read-only host
 op `undo-check`), holds the site's write lease, then reverts files through the same `/restore` path in mode `undo` (one
 `site_operation` row per moment) and content through `apply.revert` (branch 4c), newest → oldest, stopping at the first failure. A turn that was undone (fully or partly) is stamped
-`site_turn.undone_at` (migration 067; also when it only may have gone, e.g. the host answered 202) — the press, read by the agent notice and ops usage —
-and, only when something of it verifiably went, `undo_proven_at` + `undo_complete` (migration 182) — the proof, the only stamp the Site changes row reads
+`site_turn.undone_at` + `undo_complete` (migration 067, the last press; also when it only may have gone, e.g. the host answered 202) — the press, read by the agent notice and ops usage —
+and, only when something of it verifiably went, `undo_proven_at` (migration 182) + `undo_proven_complete` (migration 185; a complete proof stays complete) — the proof, the only stamp the Site changes row reads
 (an unproven press never clears an earlier proof); when the session's next turn opens with `POST /turn`, the answer
 (and `POST /turn/undone`, read early since 16/10) carries `undone`, and `tracy-site-tabs` inserts a notice for the agent right after the user's message (the undo runs within that same
 session, so the "site changed" notice stays silent).
@@ -643,6 +645,11 @@ Only for `origin='migrated'` sites on Joomla (WordPress waits for its own adapte
   it into the copy's DB right after loading the DB (step 4b), and when attaching the door `site_component` keeps `liveEndpoint` + `liveToken` separate
   from the copy's `token`. The real site's token only travels to the host in the job body, then into the script through an environment variable.
   Copies imported earlier (still holding the real token) get their token changed before their first Sync (`webroot-sync.sh --op copy-token`).
+- **Joomla copy address:** verification tries the registered front/administrator pair on the copy first, then the same
+  pair at the webroot. Imports from a live subdirectory may be installed at the copy's root. Only a response that did
+  not reach the plugin (`not_json`, `not_engine`, `redirected`) permits the next candidate; requests refuse redirects.
+  A successful authenticated `core.manifest` for Joomla selects the copy endpoint. The original live endpoint and token
+  remain separate for Sync; verification never calls the live origin.
 - **Host:** the `webroot-sync` job runs `webroot/webroot-sync.sh`: reads the real site with `lib/live-pull.mjs` (the
   Import protocol, inline tar part, straight to the host disk, **outside** the heavy lock; the tables the merge never takes —
   `live_sync.py never-taken`, Tracy's own and the ignored ones — keep the last read's part and are not read again; the dump is
