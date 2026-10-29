@@ -200,3 +200,48 @@ test('the contract map a picture phase reads keeps its vocabulary version and it
   assert.equal(map.roleVocabularyVersion, 'place-content-roles/3')
   assert.ok(map.entities.some((e) => e.demoOnly === true))
 })
+
+test('a coach card with no portrait of the coach it names is drawn as her initials, in the frame of the slot', async () => {
+  const { real, realPictures, site } = await build()
+  real.brief.reading.team = [{ id: 'person-wren', label: 'Wren Example' }]
+  const coach = { id: 'module-4.person.0', item: 0, kind: 'person' }
+  const contentMap = {
+    ...CONTENT_MAP,
+    entities: [...CONTENT_MAP.entities, { key: 'module-4', kind: 'module' }],
+    slots: [
+      ...CONTENT_MAP.slots,
+      {
+        key: 'module-4.0',
+        entity: 'module-4',
+        type: 'text',
+        sample: 'Demo Coach',
+        role: 'person.name',
+        group: coach
+      },
+      image('module-4.1', 'module-4', 'person.image', 'team/coach-1.jpg', [800, 600], coach)
+    ],
+    pages: [
+      { route: 'home', assignedModules: ['module-2', 'module-3', 'module-4'].map((entity) => ({ entity })) }
+    ]
+  }
+  const copy = copyNaming('Tennis Lessons', 'Padel Lessons')
+  copy.pins['module-4.0'] = 'Wren Example'
+  copy.sources['module-4.0'] = 'team-1'
+  const shaped = await shapeReal({
+    real,
+    contentMap,
+    cms: 'joomla',
+    pages: keptPages(null),
+    ...site,
+    realPictures,
+    note: () => {},
+    copy
+  })
+  const avatar = shaped.shaped.find((s) => s.group.sample === 'images/demo/team/coach-1.jpg')
+  assert.deepEqual(
+    [avatar.receipt.kind, avatar.receipt.initials, avatar.receipt.width, avatar.receipt.height],
+    ['avatar', 'WE', 800, 600]
+  )
+  const meta = await sharp(avatar.bytes).metadata()
+  assert.deepEqual([meta.width, meta.height], [800, 600])
+})

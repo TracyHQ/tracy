@@ -241,3 +241,5 @@ export async function placeholderPicture({ width, height, colours = [] }) {
   const out = await sharp(Buffer.from(svg)).resize(width, height, { fit: 'fill' }).jpeg(JPEG).toBuffer()
   return { bytes: out, ext: 'jpg', width, height, sha256: createHash('sha256').update(out).digest('hex') }
 }
+
+export { initialsAvatar } from './initials-avatar.js'
