@@ -1281,8 +1281,33 @@ async function readInPage({ sentinels, discover, wordmark, spot = false }) {
     text: brandText
   }
 
+  // The words of each picture's own card (#140): the largest box around it, at most six levels up, that holds no other
+  // picture; its headings, captions and titles when it has some, else all its words. `photos-match-slots` reads which
+  // offering or person of the brief the card names.
+  const CARD_HEADS = 'h1, h2, h3, h4, h5, h6, figcaption, [class*="title"], [class*="name"]'
+  // How far up a card may reach, and the most pictures a page reads cards for (past that, no card words: the slot
+  // checks then read every unrecorded slot as general).
+  const CARD_LEVELS = 6
+  const CARDS_MAX = 400
+  const cardOf = (el) => {
+    let box = el
+    for (let up = 0; up < CARD_LEVELS; up += 1) {
+      const parent = box.parentElement
+      if (!parent || parent === document.body) break
+      if (imageEls.some((other) => other !== el && parent.contains(other))) break
+      box = parent
+    }
+    const heads = [...box.querySelectorAll(CARD_HEADS)]
+      .filter(visible)
+      .map((h) => (h.innerText ?? '').trim())
+      .filter(Boolean)
+    const words = (heads.length ? heads.join(' ') : (box.innerText ?? '')).replace(/\s+/g, ' ').trim()
+    return words ? words.slice(0, 200) : null
+  }
   imageEls.forEach((el, i) => {
     if (underWords.has(el)) images[i].underWords = true
+    const card = images.length <= CARDS_MAX ? cardOf(el) : null
+    if (card) images[i].card = card
   })
   return {
     reach,

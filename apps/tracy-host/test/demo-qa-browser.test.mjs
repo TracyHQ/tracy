@@ -105,6 +105,17 @@ function site() {
           '<div class="pair"><img src="/c.png" width="200" height="120" alt="">' +
           '<a href="/post-c/">C</a><a href="/post-d/">D</a></div></main>'
       )
+    if (path === '/classes')
+      // Class cards and a coach card (#140): each picture's card is the box around it that holds no other picture.
+      return send(
+        'text/html; charset=utf-8',
+        '<!doctype html><title>Classes</title><main><section><h2>Our classes</h2>' +
+          '<div class="card"><div class="pic"><img src="/t.png" width="200" height="120" alt=""></div>' +
+          '<h3>Tennis</h3><p>Courts for every level.</p></div>' +
+          '<div class="card"><img src="/p.png" width="200" height="120" alt=""><p>Padel nights</p></div>' +
+          '</section><div class="coach"><img src="/w.png" width="200" height="200" alt="">' +
+          '<span class="coach-name">Wren Example</span></div></main>'
+      )
     if (path === '/logo')
       // A theme's logo spot and its heading type: the wordmark takes the heading's font, the logo link's colour.
       return send(
@@ -929,6 +940,28 @@ test("a card's picture names the page it leads to: its anchor, or its box's only
         ['a.png', `${at}/post-a/`],
         ['b.png', `${at}/post-b/`],
         ['c.png', null]
+      ]
+    )
+    await page.close()
+  } finally {
+    server.close()
+  }
+})
+
+test("each picture carries its own card's words, never a neighbouring card's", opts, async () => {
+  const { chromium } = await import('playwright')
+  const server = await site()
+  try {
+    const browser = await chromium.connectOverCDP(cdp)
+    const page = await browser.contexts()[0].newPage()
+    const at = `http://127.0.0.1:${server.address().port}`
+    const read = await readDemoPage(page, `${at}/classes`, '/classes', {})
+    assert.deepEqual(
+      read.images.filter((i) => i.kind === 'img').map((i) => [i.src.split('/').at(-1), i.card ?? null]),
+      [
+        ['t.png', 'Tennis'],
+        ['p.png', 'Padel nights'],
+        ['w.png', 'Wren Example']
       ]
     )
     await page.close()
