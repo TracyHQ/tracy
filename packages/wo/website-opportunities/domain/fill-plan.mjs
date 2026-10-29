@@ -16,7 +16,7 @@ import { keepDecisionOf } from './content-map-keep-decision.mjs'
 import { LOGO_ROLES } from './place-content-roles.mjs'
 import { closedListOf, GENERAL, namedIn } from './pictures/picture-links.mjs'
 import { avatarSubstitute } from './person-avatar.mjs'
-import { isMapPhotoByOthers, isOwnersPhoto, uploaderRoleOf } from './pictures/asset-origin.mjs'
+import { isMapPhotoByOthers, publisherRankOf } from './pictures/asset-origin.mjs'
 import { ROLES } from './pictures/placement.mjs'
 import { declaredSize, fileOf } from './pictures/slot-map.mjs'
 import { subjectCrop } from './pictures/subject-crop.mjs'
@@ -40,6 +40,7 @@ export const FILL_REASONS = Object.freeze({
   'role-takes-no-brief-photo': "the brief holds no photo this slot's role can take",
   'conflicting-offerings': 'one demo picture is shared by cards of two offerings',
   'conflicting-people': 'one demo picture is shared by cards of two people',
+  'conflicting-needs': 'one demo picture is shared by a person card and an offering card',
   'demo-size-unknown': "the demo picture's size is not known"
 })
 
@@ -56,8 +57,13 @@ const GENERAL_ROLES = new Set([
 /** Identity pictures: the ones that represent the business itself. A gallery's lead is decided per slot (`leadsOf`). */
 const IDENTITY_ROLES = new Set(['business.hero_image', 'editorial.illustration'])
 
-/** Who published a photo, as a rank: the business first, then not known, then someone else. */
-const ownerRank = (asset) => (isOwnersPhoto(asset) ? 0 : uploaderRoleOf(asset) === 'customer' ? 2 : 1)
+/** The reason a unit's decision carries, by the kind of its need: with a photo, and without one. */
+const REASONS_BY_NEED = Object.freeze({
+  person: { photo: 'person-portrait', none: 'no-portrait' },
+  offering: { photo: 'offering-photo', none: 'no-photo-of-offering' },
+  general: { photo: 'general-photo', none: 'no-general-photo' }
+})
+const needKind = (need) => (need.person ? 'person' : need.offering ? 'offering' : 'general')
 
 /** The keys of the gallery pictures that lead their gallery: item 0 of a gallery group, else an entity's first one. */
 function leadsOf(slots) {
@@ -96,9 +102,10 @@ function unitNeed(needs) {
   const none = needs.find((n) => n.reason)
   if (none) return none
   const people = [...new Set(needs.filter((n) => n.person).map((n) => n.person))]
+  const offerings = [...new Set(needs.filter((n) => n.offering).map((n) => n.offering))]
+  if (people.length && offerings.length) return { reason: 'conflicting-needs' }
   if (people.length > 1) return { reason: 'conflicting-people' }
   if (people.length) return { person: people[0] }
-  const offerings = [...new Set(needs.filter((n) => n.offering).map((n) => n.offering))]
   if (offerings.length > 1) return { reason: 'conflicting-offerings' }
   return offerings.length ? { offering: offerings[0] } : { general: true }
 }
@@ -253,29 +260,19 @@ export function planFill({ contentMap, brief, demo = new Map(), cardNames = {} }
     }
     fitting.sort(
       (a, b) =>
-        ownerRank(a) - ownerRank(b) ||
+        publisherRankOf(a) - publisherRankOf(b) ||
         lossOf(a) - lossOf(b) ||
         b.width * b.height - a.width * a.height ||
         String(a.id).localeCompare(String(b.id))
     )
     const best = fitting[0]
     if (!best) {
-      const none = unit.need.person
-        ? 'no-portrait'
-        : unit.need.offering
-          ? 'no-photo-of-offering'
-          : 'no-general-photo'
-      settle('substitute', none, { refused })
+      settle('substitute', REASONS_BY_NEED[needKind(unit.need)].none, { refused })
       continue
     }
     used.add(best.id)
     const crop = crops.get(best.id)
-    const reason = unit.need.person
-      ? 'person-portrait'
-      : unit.need.offering
-        ? 'offering-photo'
-        : 'general-photo'
-    settle('photo', reason, { mediaId: best.id, crop })
+    settle('photo', REASONS_BY_NEED[needKind(unit.need)].photo, { mediaId: best.id, crop })
   }
 
   return {
@@ -290,8 +287,9 @@ export function planFill({ contentMap, brief, demo = new Map(), cardNames = {} }
 const NAME_ROLES = new Set(['offering.name', 'person.name'])
 
 /**
- * The name the text path writes on each offering or person card: the sourced `offering.name` or `person.name` pin of each group (copy pins,
- * `slotFillPins`), by group id. A placeholder (a neutral name) names no offering, so its card takes no offering photo.
+ * The name the text path writes on each offering or person card: the sourced `offering.name` or `person.name` pin of
+ * each group (copy pins, `slotFillPins`), by group id. A placeholder (a neutral name) names nothing, so its card takes no
+ * offering photo and no portrait.
  * @param {{slots?: any[]}} contentMap
  * @param {{pins?: Record<string, string>, sources?: Record<string, string>} | null | undefined} copy
  * @returns {Record<string, string>}

@@ -77,6 +77,12 @@ export function isOwnersPhoto(m) {
   return uploaderRoleOf(m) === 'owner' || m?.isOwnPhoto === true
 }
 
+/** Who published a picture, as a rank to sort by (#135): the business first (0), then not known (1), then a customer (2). */
+export function publisherRankOf(m) {
+  if (isOwnersPhoto(m)) return 0
+  return uploaderRoleOf(m) === 'customer' ? 2 : 1
+}
+
 /**
  * Whether a picture was posted on a map listing by someone other than the business (TracyHQ/tracy#135): such a photo can
  * show another venue (a court with another club's sign), so it never represents the business in an identity slot.

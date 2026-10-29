@@ -359,3 +359,30 @@ test('#136 no frame changes shape: every photo is cut and written at the aspect 
     assert.ok(Math.abs(d.crop.source.width / d.crop.source.height - aspect) <= 0.01, d.key)
   }
 })
+
+test('#134 a demo picture shared by a coach card and a class card takes neither the portrait nor the class photo', () => {
+  const coach = { id: 'module-7.person.0', item: 0, kind: 'person' }
+  const card = { id: 'module-7.item.0', item: 0, kind: 'service' }
+  const contentMap = {
+    roleVocabularyVersion: 'place-content-roles/3',
+    entities: [{ key: 'module-7', kind: 'module' }],
+    slots: [
+      text('module-7.0', 'module-7', 'person.name', 'Demo Coach', coach),
+      image('module-7.1', 'module-7', 'person.image', 'shared/one.jpg', coach, [600, 600]),
+      text('module-7.2', 'module-7', 'offering.name', 'Demo Class', card),
+      image('module-7.3', 'module-7', 'offering.image', 'shared/one.jpg', card, [600, 600])
+    ]
+  }
+  const got = at(
+    planFill({
+      contentMap,
+      brief: {
+        reading: { ...READING, services: [{ id: 'svc-padel', label: 'Padel Lessons' }] },
+        assets: [photo('wren', 900, 900, portrait('person-wren'))]
+      },
+      cardNames: { 'module-7.person.0': 'Wren Example', 'module-7.item.0': 'Padel Lessons' }
+    })
+  )
+  for (const key of ['module-7.1', 'module-7.3'])
+    assert.deepEqual([got.get(key).action, got.get(key).reason], ['substitute', 'conflicting-needs'], key)
+})
