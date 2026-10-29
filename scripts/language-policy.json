@@ -125,6 +125,16 @@
     },
     {
       "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "87ee85eedff99beb43c461aac3c494d803183d18",
+      "reason": "Exact generated translation bundle for PR #186 after merging develop (Sync step: what a sync does not bring). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "cce9d9fea222ad33d3376f438f8027d3fc4b667e",
+      "reason": "Exact generated translation bundle for PR #186 after merging develop (Sync step: what a sync does not bring). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
       "oid": "8366f9fcda5de2b431afcc1eaa191250282b2f63",
       "reason": "Exact regenerated language bundle for the PR #53 CI follow-up. Italian, Spanish and Chinese setup translations retain the required site term. The bundle reproduces from the localized JSON; future bytes still need review."
     },
