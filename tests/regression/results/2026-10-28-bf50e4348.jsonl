@@ -1,0 +1,1 @@
+{"id":"REG-PR-92-sync-access-refusals","verdict":"PASS","commit":"bf50e4348bb305c436c9e04baa677fb424592bb1","ran_at":"2026-10-28T18:02:49.336Z","evidence":"tests/regression/.runs/2026-10-28-bf50e4348/REG-PR-92-sync-access-refusals.log"}

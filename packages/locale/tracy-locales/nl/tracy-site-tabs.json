@@ -1209,5 +1209,9 @@
   "sync.error.interruptedKept": "Een eerdere synchronisatie werd gestopt door een Tracy-update terwijl ze wijzigingen op deze kopie zette, en deze kopie is sindsdien veranderd. Tracy heeft hem gelaten zoals hij is. Om die synchronisatie ongedaan te maken, zet je het back-uppunt “Before restore” in Backups terug en synchroniseer je opnieuw.",
   "sync.error.liveUnreachable": "Tracy kon je oorspronkelijke site niet lezen. Aan deze kopie is niets gewijzigd. Controleer of de site online is en Claude Cowork er nog op staat.",
   "sync.error.copyChanged": "Deze kopie veranderde tijdens het synchroniseren, dus er is niets toegepast. Probeer het opnieuw.",
-  "sync.error.noSpace": "De server van Tracy had geen ruimte voor deze synchronisatie. Aan deze kopie is niets veranderd. Neem contact met ons op."
+  "sync.error.noSpace": "De server van Tracy had geen ruimte voor deze synchronisatie. Aan deze kopie is niets veranderd. Neem contact met ons op.",
+  "sync.error.liveBlocked": "Je live-site gaf een geblokkeerd antwoord of een antwoord dat niet van de engine komt. Controleer de firewall of botbeveiliging en sta verzoeken van Tracy toe.",
+  "sync.error.livePassword": "Je live-site vereist een HTTP-wachtwoord. Geef Tracy toegang tot het Claude Cowork-eindpunt zonder dat wachtwoord en probeer het opnieuw.",
+  "sync.error.liveRateLimited": "Je live-site beperkt verzoeken. Wacht voordat je het opnieuw probeert; Tracy respecteert de Retry-After-wachttijd.",
+  "sync.error.liveToken": "Je live-site heeft het Claude Cowork-token geweigerd. Verbind de site opnieuw met het huidige token en probeer het opnieuw."
 }

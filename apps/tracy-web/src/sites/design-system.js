@@ -224,6 +224,22 @@ export function mountDesignSystem(app, deps) {
     const f = await front(c)
     if (f.error) return f.error
     const { siteKey, auth, site } = f
+    // A claim reserves a name before provision creates a container. The attachment and address
+    // belong to this site row, so a deleted site's old jobs cannot make a reused name ready.
+    if (site.origin === 'fleet_born' && site.attached === false && !site.address) {
+      return json(c, {
+        platform: site.platform ?? null,
+        canApply: false,
+        refused: [],
+        worn: null,
+        template: null,
+        templateImage: null,
+        modes: false,
+        supported: false,
+        reason: 'SITE_NOT_READY',
+        last: null
+      })
+    }
     const lib = await offered()
     // An imported site wears no new system (`lib/design-system-imported-site.js`): said without reading its container.
     if (isImportedSite(site)) {

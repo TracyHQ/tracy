@@ -56,6 +56,24 @@ const questionnaire = (owner, label) => ({
 const ROLES_READY = () => ({ state: 'ready' })
 /** The same for Slot fit (ADR 0039): the released contracts these fixtures borrow predate it. */
 const FIT_READY = () => ({ state: 'ready' })
+/**
+ * The same for the committed measurement: since WordPress joined the audit (#54, ADR 0040) a WordPress contract
+ * without content-coverage.json holds Publish as not measured, and the released contracts these fixtures borrow carry
+ * none. The harness answers a clean measurement, in `realRoles` too, so the roles group is what that mode judges.
+ */
+const COVERAGE_MEASURED = () => ({
+  state: 'measured',
+  doc: {
+    schemaVersion: 'tracy-content-coverage/v1',
+    tool: { name: 'test', version: '1.1.0' },
+    measuredAt: '2026-10-24T00:00:00.000Z',
+    pages: { audited: 3, inMap: 3, notInMap: 0, failed: 0, capReached: false },
+    counts: {},
+    coverage: { text: 100, images: 100, links: 100 },
+    holes: [],
+    hygiene: []
+  }
+})
 
 function harness(pool, { opsFetch, extraEnv, realRoles = false } = {}) {
   const config = readConfig({
@@ -70,6 +88,7 @@ function harness(pool, { opsFetch, extraEnv, realRoles = false } = {}) {
     mail: { send: async () => {} },
     sites: dbSitesResolver(pool, config),
     ...(realRoles ? {} : { rolesOf: ROLES_READY, fitOf: FIT_READY }),
+    coverageOf: COVERAGE_MEASURED,
     ...(opsFetch ? { fetchImpl: opsFetch } : {})
   })
   const cookieFor = async (email) => `tracy_sess=${await mintSession(email, config.sessionSecret)}`

@@ -65,6 +65,11 @@
   version 3. A coverage file without `labelRules` (audit 1.1.0) is not judged. R9 ignores accepted reasons: a fact the
   map misses stays the demo's on the customer's site.
 - JA Boxing 1.0.8 is the first contract expected in version 3; every template adopts it with its next release.
+- **Demo-only entities (added 28/10/2026, owner's decision, TracyHQ/tracy#46).** A style-guide page (JA Boxing's
+  "Typography" article) holds style samples, not content a build replaces. The content map marks that entity
+  `"demoOnly": true`; the label rules R1 to R8 and the verify viewer's suspicion rules skip its slots, and R9 still
+  reads every hole. It is a mark on the entity, not a role: the vocabulary is unchanged and every role check still
+  applies to the slots. It hides nothing on a built site.
 
 ## Alternatives rejected
 

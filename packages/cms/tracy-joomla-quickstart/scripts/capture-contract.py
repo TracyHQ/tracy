@@ -187,6 +187,9 @@ def whole_units(hs):
   if units[id(h)]:members[units[id(h)]].append(h)
  slotted=slotted_elements(hs)
  apart={u for u,ms in members.items() if any(inside_slotted(m['xpath'],u,slotted) for m in ms)}
+ # A unit that holds an element carrying an attribute slot anywhere inside it (an <img src> beside the words) also
+ # keeps its pieces: one text node written over the unit would drop the words around that element.
+ apart|={u for u in members if any(e.startswith(u+'/') for e in slotted)}
  out=[];done=set()
  for h in hs:
   unit=units.get(id(h))

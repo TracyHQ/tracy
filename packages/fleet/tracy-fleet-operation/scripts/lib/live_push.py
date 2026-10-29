@@ -366,10 +366,6 @@ WHAT = {"article": "article", "category": "category", "tag": "tag", "menuItem": 
         "customCss": "setting", "globalStyles": "setting", "siteIdentity": "setting", "templateSettings": "setting",
         "templatePart": "templatePart", "template": "template", "postmeta": "pageDetail", "attachment": "media",
         "file": "file"}
-# Theme mods whose value names a record: the custom logo and the Additional CSS post (attachments,
-# posts), the menu shown at each location (`nav_menu_locations`: location → menu term).
-W_MOD_POSTS = ("custom_logo", "custom_css_post_id")
-W_MOD_TERMS = ("nav_menu_locations",)
 # Post meta never offered: WordPress's and Tracy's own bookkeeping, the menu item's (its own kind).
 W_META_SKIP = ("_edit_lock", "_edit_last", "_encloseme", "_pingme", "_wp_old_slug", "_wp_old_date",
                "_wp_trash_meta_status", "_wp_trash_meta_time", "_wp_attached_file", "_wp_attachment_metadata")
@@ -930,7 +926,7 @@ class Unserializable(ValueError):
 def php_unserialize(text: str):
     """PHP `unserialize` of `N;`, `b:`, `i:`, `d:`, `s:` and `a:`, as JSON-able values the way the engine's
     `json_encode` answers them: an array keyed 0..n-1 in order is a list, any other one an object. An
-    object (`O:`/`C:`), a reference (`r:`/`R:`) or anything left over raises `Unserializable`."""
+    `stdClass` becomes an object as JSON does; other objects, references or trailing bytes are refused."""
     data = text.encode("utf-8", "surrogateescape")
 
     def number(at: int, end: bytes) -> tuple[str, int]:
@@ -962,8 +958,15 @@ def php_unserialize(text: str):
             if data[end:end + 2] != b'";':
                 raise Unserializable("string length")
             return data[start:end].decode("utf-8", "surrogateescape"), end + 2
-        if tag == b"a:":
-            count, at = number(at + 2, b":")
+        if tag in (b"a:", b"O:"):
+            if tag == b"O:":
+                size, at = number(at + 2, b":")
+                end = at + 1 + int(size)
+                if data[at:at + 1] != b'"' or data[end:end + 2] != b'":' or data[at + 1:end] != b"stdClass":
+                    raise Unserializable("object")
+                count, at = number(end + 2, b":")
+            else:
+                count, at = number(at + 2, b":")
             if data[at:at + 1] != b"{":
                 raise Unserializable("array")
             at += 1
@@ -976,7 +979,7 @@ def php_unserialize(text: str):
                 pairs.append((key, item))
             if data[at:at + 1] != b"}":
                 raise Unserializable("array end")
-            if [k for k, _ in pairs] == list(range(len(pairs))):
+            if tag == b"a:" and [k for k, _ in pairs] == list(range(len(pairs))):
                 return [v for _, v in pairs], at + 1
             return {str(k): v for k, v in pairs}, at + 1
         raise Unserializable(f"tag {tag!r}")
@@ -1285,6 +1288,9 @@ class Changeset:
             return 0, named["option_name"]
         if spec.name == "postmeta":
             return named["post_id"], named["meta_key"]
+        if spec.name == "menuItem" and self.platform == "wordpress":
+            ident = named["ID"]
+            return (ident if isinstance(ident, Placeholder) else int(ident)), (base_row or {}).get("menu")
         if spec.name in W_THEME_ROWS:
             return 0, named["post_name"]
         if spec.live_id:
@@ -1635,20 +1641,18 @@ class Changeset:
             got = self.live_id(entity, v)
             # The type the theme stored it in (`i:12;` or `s:2:"12";`), the record's live number.
             return got if isinstance(got, Placeholder) else (str(got) if isinstance(v, str) else int(got))
-        if key in W_MOD_POSTS:
-            return number("posts", value)
-        if key in W_MOD_TERMS and isinstance(value, dict):
-            return {k: number("terms", v) for k, v in value.items()}
-
-        def walk(v):
+        def walk(v, path):
+            entity = LS._WORDPRESS.theme_mod_entity(path)
+            if entity:
+                return number(entity, v)
             if isinstance(v, str):
                 return self.address(v)
             if isinstance(v, list):
-                return [walk(x) for x in v]
+                return [walk(x, path + (i,)) for i, x in enumerate(v)]
             if isinstance(v, dict):
-                return {k: walk(x) for k, x in v.items()}
+                return {k: walk(x, path + (k,)) for k, x in v.items()}
             return v
-        return walk(value)
+        return walk(value, (key,))
 
     @staticmethod
     def same_json(a, b) -> bool:
@@ -2236,6 +2240,7 @@ class Changeset:
         over the customer's change on the live site, so each such item is a conflict, shown and never
         written, until the two sides agree there (then the item is gone: nothing differs)."""
         places: dict[tuple, set] = {}
+        whole_tables: set[str] = set()
         # A file, or a setting of the configuration file, both sides changed (the file merge's `kept`).
         paths: set[str] = set()
         settings: dict[str, set] = {}
@@ -2261,21 +2266,26 @@ class Changeset:
                     names[(table, str(row[pk]))] = tuple(sorted((c, str(row[c])) for c in natural))
         for k in kept or []:
             table, key = k.get("table"), k.get("key")
-            if not isinstance(table, str) or not isinstance(key, dict):
+            if not isinstance(table, str):
                 continue
             bare = table[len(self.prefix):] if table.startswith(self.prefix) else table
+            if k.get("kind") == "table" and not isinstance(key, dict):
+                whole_tables.add(bare)
+                continue
+            if not isinstance(key, dict):
+                continue
             ident = (bare, tuple(sorted((str(a), str(b)) for a, b in key.items())))
             places.setdefault(ident, set()).add(k.get("column") or "*")
             pk = KEPT_NAMES.get(self.platform, {}).get(bare, (None,))[0]
             if pk and list(key) == [pk] and (bare, str(key[pk])) in names:
                 places.setdefault((bare, names[(bare, str(key[pk]))]), set()).add(k.get("column") or "*")
-        if not places:
+        if not places and not whole_tables:
             return
         for item in self.items:
             hits = []
             for seed in item.get("seed", []):
                 ident = (seed["table"], tuple(sorted((str(a), str(b)) for a, b in seed["match"].items())))
-                hit = places.get(ident)
+                hit = {"*"} if seed["table"] in whole_tables else places.get(ident)
                 if hit:
                     found = self.kept_fields(item, seed, hit)
                     if found is not None:
@@ -2454,7 +2464,7 @@ def record(changeset: dict, result: dict, id_map_path: Path, pushed_path: Path, 
             continue
         # A file the push sent (or a door file a setting wrote): the next merge takes the live site's
         # version of it while the copy still holds what was sent; after an Undo the copy's stays.
-        if item.get("path") and item.get("blob") and item.get("spec") in ("file", "templateSettings"):
+        if item.get("path") and "blob" in item and item.get("spec") in ("file", "templateSettings"):
             pushed["files"] = [f for f in pushed["files"] if f.get("path") != item["path"]]
             pushed["files"].append({"path": item["path"], "ours": item["blob"], "side": "theirs" if undo else "ours"})
         if item.get("spec") == "siteIdentity":

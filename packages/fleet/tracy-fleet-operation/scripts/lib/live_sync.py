@@ -526,7 +526,8 @@ def stat_manifest(repo: str, rev: str, stat: dict) -> dict[str, dict]:
 #   appendTables    append-only logs: the live site's new rows come over; a new row on each side
 #                   under one id keeps the copy's and counts the other as skipped, never a conflict
 #   derivedColumns  columns the CMS rebuilds from others (nested sets): not compared; a table whose
-#                   rows took anything from the live site is listed in `rebuild`
+#                   rows changed is listed in `rebuild`
+#   rebuildDependencies tables whose derived data must be rebuilt when a source table changes
 #   volatileColumns columns that change on every visit or save: when both sides changed one, the
 #                   live site's value is taken and it is not a conflict
 #   counterColumns  counters: when both sides moved one, the larger is taken, not a conflict
@@ -1086,6 +1087,9 @@ class IdMap:
                 # A reference of 0 or below names no record; a record's own id counts whatever it is.
                 if kind == "id" or n > 0:
                     out[asks[i][:2]].add(n)
+        for schema, table, rule in asks:
+            if rule.get("typedRefs"):
+                out[(schema, table)].update(rule["typedRefs"].read(self, schema))
         return out
 
     def renumber(self, schema: str, table: str, rule: dict, pairs: list[tuple[int, int]]) -> None:
@@ -1177,6 +1181,8 @@ class IdMap:
                     script.append(f"DROP TEMPORARY TABLE {rows};")
         if script:
             self.sql.run("\n".join(script))
+        if rule.get("typedRefs"):
+            rule["typedRefs"].rewrite(self, schema, pairs)
 
     # How many links one regular expression of the rows' search names (`renumber`): each is compiled
     # on its own, and a compiled pattern has a size limit.
@@ -1265,6 +1271,8 @@ class IdMap:
                         out.add(int(r[0]))
                 except (TypeError, ValueError):
                     continue
+        if rule.get("typedRefs"):
+            out.update(rule["typedRefs"].read(self, schema))
         return out
 
     def fresh(self, table: str, also: set[int]) -> int:
@@ -1472,6 +1480,8 @@ class DbMerge:
             PREPARE[self.platform](self.sql, self.names, self.prefix,
                                    lambda m: print(f"==> db merge: {m}", file=sys.stderr))
             phase("reads prepared")
+        if self.platform == "wordpress":
+            self.policy = {**self.policy, **_WORDPRESS.counting_policy(self.sql, self.names, self.prefix)}
         self.ids.survey(list(self.names.values()))
         phase("ids surveyed")
         self.ids.apply(self.names["base"])
@@ -1511,6 +1521,10 @@ class DbMerge:
             self.restore_session_columns(locks)
         finally:
             self.sql.run(f"DROP DATABASE IF EXISTS {q(self.work)};")
+        if self.rebuild:
+            existing = {row[0] for row in self.sql.run(
+                f"SELECT table_name FROM information_schema.tables WHERE table_schema = {sql_str(self.names['ours'])};")}
+            self.rebuild.intersection_update(existing)
         return {"ok": True, "tables": {k: v for k, v in self.tables.items() if v != "same"},
                 "conflicts": self.conflicts, "rebuild": sorted(self.rebuild), "counts": self.counts,
                 "renumbered": self.ids.added, "idMap": self.ids.as_json(), "held": self.ids.held,
@@ -1884,6 +1898,15 @@ class DbMerge:
         or a row that belongs to a record (`uncountedTables`, `appendTables`)."""
         return name not in self.policy.get("uncountedTables", ()) and name not in self.policy.get("appendTables", ())
 
+    def record_visible(self, name: str, alias: str, schema: Schema, table: str) -> str:
+        """Whether an existing row represents a record, without excluding it from the merge.
+        Missing discriminator columns keep the existing table-level counting rule."""
+        columns = {c for c, _ in schema.columns[table]}
+        hidden = [f"IFNULL({alias}.{q(c)} IN ({', '.join(sql_str(v) for v in sorted(values))}), FALSE)"
+                  for c, values in self.policy.get("uncountedRows", {}).get(name, {}).items()
+                  if c in columns and values]
+        return "NOT (" + " OR ".join(hidden) + ")" if hidden else "TRUE"
+
     def edited_columns(self, table: str, name: str, key: list[str], M: Schema) -> list[str]:
         """The columns of `table` a person edits: not its key, nor a column the CMS rebuilds, stamps,
         counts or mirrors from another record."""
@@ -1901,10 +1924,19 @@ class DbMerge:
         changed = " OR ".join(f"NOT (CAST(rt.{q(c)} AS BINARY) <=> CAST(rb.{q(c)} AS BINARY))"
                               for c in self.edited_columns(table, name, key, M)) or "FALSE"
         first = q(key[0])
+        visible_b = self.record_visible(name, "rb", M, table)
+        visible_t = self.record_visible(name, "rt", M, table)
         rows = self.sql.run(f"SELECT (SELECT COUNT(*) FROM {t} rt LEFT JOIN {b} rb ON {on}"
-                            f" WHERE rb.{first} IS NULL OR {changed})"
-                            f" + (SELECT COUNT(*) FROM {b} rb LEFT JOIN {t} rt ON {on} WHERE rt.{first} IS NULL);")
+                            f" WHERE (rb.{first} IS NULL OR {changed})"
+                            f" AND ({visible_t} OR (rb.{first} IS NOT NULL AND {visible_b})))"
+                            f" + (SELECT COUNT(*) FROM {b} rb LEFT JOIN {t} rt ON {on}"
+                            f" WHERE rt.{first} IS NULL AND {visible_b});")
         return int(rows[0][0] or 0) if rows else 0
+
+    def mark_rebuild(self, table: str) -> None:
+        """Queue derived data affected by a successful mutation, using the adapter's table names."""
+        name = self.bare(table)
+        self.rebuild.update(self.prefix + target for target in self.policy.get("rebuildDependencies", {}).get(name, ()))
 
     def take_table(self, table: str) -> None:
         """The live site's whole table, structure included, in place of the copy's."""
@@ -1924,6 +1956,7 @@ class DbMerge:
         self.sql.run(f"DROP TABLE IF EXISTS {m}; CREATE TABLE {m} LIKE {t};" + insert
                      + "\n".join(foreign_key_sql(rebase_foreign_key(k, self.names["theirs"], self.names["ours"])) for k in keys))
         self.counts["tablesFromTheirs"] += 1
+        self.mark_rebuild(table)
 
     def table_conflict(self, table: str, reason: str) -> str:
         cid = f"db:{table}"
@@ -1933,6 +1966,7 @@ class DbMerge:
                 self.take_table(table)
             else:
                 self.sql.run(f"DROP TABLE IF EXISTS {self.ref('ours', table)};")
+                self.mark_rebuild(table)
             return "theirs-by-decision"
         if pick == "ours":
             return "ours-by-decision"
@@ -1951,6 +1985,7 @@ class DbMerge:
                 return "same"
             if M.checksum[table] == B.checksum[table]:
                 self.sql.run(f"DROP TABLE {self.ref('ours', table)};")
+                self.mark_rebuild(table)
                 return "dropped"
             return self.table_conflict(table, "dropped-live-changed-copy")
         if not inM:
@@ -2016,6 +2051,16 @@ class DbMerge:
             return list(known)
         return None
 
+    def dependent_columns_exist(self, parent: str, table: str, column: str, holds: str | None) -> bool:
+        """Optional CMS columns must exist on both sides before a dependent rule emits SQL."""
+        key = self.ids.key(parent)
+        for schema in self.schemas[1:]:
+            parent_columns = {c for c, _ in schema.columns.get(self.prefix + parent, [])}
+            child_columns = {c for c, _ in schema.columns.get(self.prefix + table, [])}
+            if not {key, holds or key} <= parent_columns or column not in child_columns:
+                return False
+        return True
+
     def kept_record_rows(self, name: str) -> str | None:
         """A condition on a row `r` of table `name` (in the copy's schema): it belongs to a record
         the merged copy holds and the live site does not (`dependents`). None when no rule names
@@ -2028,7 +2073,7 @@ class DbMerge:
                 continue
             key = q(self.ids.key(parent))
             for table, column, where, holds in rules:
-                if table != name:
+                if table != name or not self.dependent_columns_exist(parent, table, column, holds):
                     continue
                 cond = (f"r.{q(column)} IN (SELECT p.{q(holds or self.ids.key(parent))} FROM {self.ref('ours', full)} p"
                         f" WHERE NOT EXISTS (SELECT 1 FROM {self.ref('theirs', full)} x WHERE x.{key} = p.{key}))")
@@ -2049,7 +2094,7 @@ class DbMerge:
             if not self.held_records.get(parent):
                 continue
             for table, column, where, holds in rules:
-                if table == name:
+                if table == name and self.dependent_columns_exist(parent, table, column, holds):
                     out.append((parent, column, where, holds or self.ids.key(parent)))
         return out
 
@@ -2333,17 +2378,26 @@ class DbMerge:
         # The records this table brings, read before anything is written (`records`): a row the live
         # site added or deleted, or changed in a column a person edits (only the live site: T; both,
         # the live site's edit taken: X). A row whose only change is a stamp or a counter is none.
+        count_after = self.counted(name) and name in self.policy.get("uncountedRows", {})
         if self.counted(name):
             edited = self.edited_columns(table, name, pk, M)
             live_edit = " OR ".join(differs(c, "rt", "rb") for c in edited) or "FALSE"
             taken = " OR ".join(f"({differs(c, 'rt', 'rb')} AND NOT {differs(c, 'rm', 'rb')})" for c in edited) or "FALSE"
-            got = self.sql.run(
-                f"SELECT IFNULL(SUM(k.cls = 'T' AND (k.hb IS NULL OR k.ht IS NULL OR ({live_edit}))), 0)"
-                f" + IFNULL(SUM(k.cls = 'X' AND k.ht IS NOT NULL AND k.hm IS NOT NULL AND ({taken})), 0) FROM {k} k"
-                f" LEFT JOIN {b} rb ON {on('k', 'rb')} LEFT JOIN {m} rm ON {on('k', 'rm')}"
-                f" LEFT JOIN {t} rt ON {on('k', 'rt')};"
-            )
-            self.counts["records"] += int(got[0][0] or 0) if got else 0
+            eligible = (f"(k.cls = 'T' AND (k.hb IS NULL OR k.ht IS NULL OR ({live_edit})))"
+                        f" OR (k.cls = 'X' AND k.ht IS NOT NULL AND k.hm IS NOT NULL AND ({taken}))")
+            joins = (f" LEFT JOIN {b} rb ON {on('k', 'rb')} LEFT JOIN {m} rm ON {on('k', 'rm')}"
+                     f" LEFT JOIN {t} rt ON {on('k', 'rt')}")
+            if count_after:
+                # Snapshot the copy's visibility, then read the actual merged row after every
+                # column decision. Inferring its type from the live row loses copy-only type edits.
+                visible = self.record_visible(name, "rm", M, table)
+                self.sql.run(f"ALTER TABLE {k} ADD record_change BOOLEAN NOT NULL DEFAULT FALSE,"
+                             " ADD record_before BOOLEAN NOT NULL DEFAULT FALSE;"
+                             f" UPDATE {k} k {joins} SET record_change = IFNULL(({eligible}), FALSE),"
+                             f" record_before = rm.{first} IS NOT NULL AND ({visible});")
+            else:
+                got = self.sql.run(f"SELECT IFNULL(SUM({eligible}), 0) FROM {k} k {joins};")
+                self.counts["records"] += int(got[0][0] or 0) if got else 0
 
         append = name in self.policy.get("appendTables", ())
         rows = self.sql.run(
@@ -2381,7 +2435,10 @@ class DbMerge:
                     # Delete/modify rows were excluded from the automatic imported count above.
                     # An explicit live choice applies that deletion or restores the live row.
                     if (no_m or no_t) and self.counted(name):
-                        self.counts["records"] += 1
+                        if count_after:
+                            self.sql.run(f"UPDATE {k} r SET record_change = TRUE WHERE {self.key_where('r', pk, keys)};")
+                        else:
+                            self.counts["records"] += 1
                 elif pick != "ours":
                     conflict = {"id": rid, "kind": "row", "table": table, "reason": reason,
                                 "key": dict(zip(pk, key)), "_keys": keys, "_columns": None}
@@ -2468,11 +2525,25 @@ class DbMerge:
                          f" WHERE {self.key_where('rm', pk, keys)};")
         for c, keys, text in json_sets:
             apply.append(f"UPDATE {m} rm SET rm.{q(c)} = {sql_str(text)} WHERE {self.key_where('rm', pk, keys)};")
-        self.sql.run("\n".join(apply))
+        # ROW_COUNT is read immediately after each write, on the same connection. A kept
+        # column conflict can classify as X without changing the copy; it needs no recount.
+        tracks_rebuild = name in self.policy.get("rebuildDependencies", {})
+        if tracks_rebuild:
+            changed = self.sql.run("\n".join(statement + "\nSELECT ROW_COUNT();" for statement in apply))
+            if any(int(row[0] or 0) > 0 for row in changed):
+                self.mark_rebuild(table)
+        else:
+            self.sql.run("\n".join(apply))
+        if count_after:
+            visible = self.record_visible(name, "rm", M, table)
+            got = self.sql.run(f"SELECT IFNULL(SUM(k.record_change AND (k.record_before OR"
+                               f" (rm.{first} IS NOT NULL AND ({visible})))), 0) FROM {k} k"
+                               f" LEFT JOIN {m} rm ON {on('k', 'rm')};")
+            self.counts["records"] += int(got[0][0] or 0) if got else 0
         self.counts["rowsFromTheirs"] += took + len(take_rows)
         self.counts["rowsDeleted"] += deleted
         self.counts["rowsMerged"] += merged
-        if derived and (took or deleted or merged or take_rows):
+        if derived and not tracks_rebuild and (took or deleted or merged or take_rows):
             self.rebuild.add(table)
         return "conflict" if found else "merged"
 
@@ -2846,7 +2917,7 @@ def run_half(args: argparse.Namespace) -> int:
         if getattr(args, "pushed", None) and Path(args.pushed).exists():
             said = json.loads(Path(args.pushed).read_text())
             for f in said.get("files", []) or []:
-                if isinstance(f, dict) and isinstance(f.get("path"), str) and isinstance(f.get("ours"), str):
+                if isinstance(f, dict) and isinstance(f.get("path"), str) and "ours" in f and (f["ours"] is None or isinstance(f["ours"], str)):
                     pushed_files[f["path"]] = (f["ours"], "theirs" if f.get("side") == "theirs" else "ours")
             # A setting of the configuration file an Undo of "Sync to live" put back on the live site:
             # the copy keeps Tracy's value there (merge_joomla_config reads the decision `ours`).

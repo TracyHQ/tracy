@@ -2187,6 +2187,8 @@ window.__ModuleLoader__.load({
           "ds.note": "Ändert Farben, Schriften und Formen. Ihre Seiten und Texte bleiben, wie sie sind.",
           "ds.pick": "Wählen Sie eine für die Preview.",
           "ds.retry": "Erneut versuchen",
+          "ds.setup.required": "Stelle deine Site fertig, bevor du ein Designsystem auswählst.",
+          "ds.setup.open": "Erstellung öffnen",
           "ds.search": "Suchen",
           "ds.tab.title": "Designsystem",
           "ds.undo": "Rückgängig",
@@ -4725,7 +4727,11 @@ window.__ModuleLoader__.load({
           "sync.error.interruptedKept": "Eine frühere Synchronisierung wurde durch ein Tracy-Update gestoppt, während sie Änderungen auf diese Kopie übertrug, und diese Kopie hat sich seitdem geändert. Tracy hat sie so gelassen. Um diese frühere Synchronisierung rückgängig zu machen, stelle den Sicherungspunkt „Before restore“ unter Backups wieder her und synchronisiere dann erneut.",
           "sync.error.liveUnreachable": "Tracy konnte Ihre ursprüngliche Site nicht lesen. An dieser Kopie wurde nichts geändert. Prüfen Sie, ob die Site online ist und Claude Cowork noch darauf installiert ist.",
           "sync.error.copyChanged": "Diese Kopie hat sich während der Synchronisierung geändert, daher wurde nichts übernommen. Versuche es erneut.",
-          "sync.error.noSpace": "Auf dem Server von Tracy war nicht genug Platz für diese Synchronisierung. An dieser Kopie wurde nichts geändert. Bitte kontaktiere uns."
+          "sync.error.noSpace": "Auf dem Server von Tracy war nicht genug Platz für diese Synchronisierung. An dieser Kopie wurde nichts geändert. Bitte kontaktiere uns.",
+          "sync.error.liveBlocked": "Deine Live-Site hat eine blockierte Antwort oder keine Engine-Antwort zurückgegeben. Prüfe Firewall und Bot-Schutz und erlaube Anfragen von Tracy.",
+          "sync.error.livePassword": "Deine Live-Site verlangt ein HTTP-Passwort. Erlaube Tracy den Zugriff auf den Claude-Cowork-Endpunkt ohne dieses Passwort und versuche es erneut.",
+          "sync.error.liveRateLimited": "Deine Live-Site begrenzt Anfragen. Warte vor einem neuen Versuch; Tracy beachtet die Retry-After-Wartezeit.",
+          "sync.error.liveToken": "Deine Live-Site hat das Claude-Cowork-Token abgelehnt. Verbinde sie erneut mit ihrem aktuellen Token und versuche es erneut."
         },
         "tracy-tab-link": {
           "launcher.empty": "Klicken Sie auf +, um zu starten",
@@ -8918,6 +8924,8 @@ window.__ModuleLoader__.load({
           "ds.note": "Cambia colores, fuentes y formas. Tus páginas y textos se quedan como están.",
           "ds.pick": "Elige una para ver su preview.",
           "ds.retry": "Reintentar",
+          "ds.setup.required": "Termina de crear tu site antes de elegir un sistema de diseño.",
+          "ds.setup.open": "Abrir la creación",
           "ds.search": "Buscar",
           "ds.tab.title": "Sistema de diseño",
           "ds.undo": "Deshacer",
@@ -11456,7 +11464,11 @@ window.__ModuleLoader__.load({
           "sync.error.interruptedKept": "Una sincronización anterior se detuvo por una actualización de Tracy mientras aplicaba cambios a esta copia, y esta copia ha cambiado desde entonces. Tracy la dejó tal cual. Para deshacer esa sincronización, restaura el punto de copia de seguridad “Before restore” en Backups y vuelve a sincronizar.",
           "sync.error.liveUnreachable": "Tracy no pudo leer tu site original. No se cambió nada en esta copia. Comprueba que el site está en línea y que Claude Cowork sigue instalado en él.",
           "sync.error.copyChanged": "Esta copia cambió durante la sincronización, así que no se aplicó nada. Inténtalo de nuevo.",
-          "sync.error.noSpace": "El servidor de Tracy no tenía espacio para esta sincronización. No se cambió nada en esta copia. Contáctanos."
+          "sync.error.noSpace": "El servidor de Tracy no tenía espacio para esta sincronización. No se cambió nada en esta copia. Contáctanos.",
+          "sync.error.liveBlocked": "Tu site en línea devolvió una respuesta bloqueada o que no procede del motor. Revisa el cortafuegos o la protección contra bots y permite las solicitudes de Tracy.",
+          "sync.error.livePassword": "Tu site en línea requiere una contraseña HTTP. Permite que Tracy acceda al punto de conexión de Claude Cowork sin esa contraseña y vuelve a intentarlo.",
+          "sync.error.liveRateLimited": "Tu site en línea está limitando las solicitudes. Espera antes de volver a intentarlo; Tracy respeta el plazo Retry-After.",
+          "sync.error.liveToken": "Tu site en línea rechazó el token de Claude Cowork. Vuelve a conectarlo con su token actual e inténtalo de nuevo."
         },
         "tracy-tab-link": {
           "launcher.empty": "Haga clic en + para empezar",
@@ -14983,6 +14995,8 @@ window.__ModuleLoader__.load({
           "ds.note": "Change les couleurs, les polices et les formes. Vos pages et vos textes restent tels quels.",
           "ds.pick": "Choisissez-en une pour la voir en preview.",
           "ds.retry": "Réessayer",
+          "ds.setup.required": "Terminez la création de votre site avant de choisir un système de design.",
+          "ds.setup.open": "Ouvrir la création",
           "ds.search": "Rechercher",
           "ds.tab.title": "Système de design",
           "ds.undo": "Annuler",
@@ -17521,7 +17535,11 @@ window.__ModuleLoader__.load({
           "sync.error.interruptedKept": "Une synchronisation précédente a été arrêtée par une mise à jour de Tracy pendant qu’elle appliquait des changements à cette copie, et cette copie a changé depuis. Tracy l’a laissée telle quelle. Pour annuler cette synchronisation, restaurez le point de sauvegarde « Before restore » dans Backups, puis synchronisez à nouveau.",
           "sync.error.liveUnreachable": "Tracy n’a pas pu lire votre site d’origine. Rien n’a été changé sur cette copie. Vérifiez que le site est en ligne et que Claude Cowork y est toujours installé.",
           "sync.error.copyChanged": "Cette copie a changé pendant la synchronisation, donc rien n’a été mis en place. Réessayez.",
-          "sync.error.noSpace": "Le serveur de Tracy manquait de place pour cette synchronisation. Rien n’a été modifié sur cette copie. Contactez-nous."
+          "sync.error.noSpace": "Le serveur de Tracy manquait de place pour cette synchronisation. Rien n’a été modifié sur cette copie. Contactez-nous.",
+          "sync.error.liveBlocked": "Votre site en ligne a renvoyé une réponse bloquée ou qui ne provient pas du moteur. Vérifiez le pare-feu ou la protection contre les robots et autorisez les requêtes de Tracy.",
+          "sync.error.livePassword": "Votre site en ligne exige un mot de passe HTTP. Autorisez Tracy à accéder au point de terminaison Claude Cowork sans ce mot de passe, puis réessayez.",
+          "sync.error.liveRateLimited": "Votre site en ligne limite les requêtes. Patientez avant de réessayer ; Tracy respecte le délai Retry-After.",
+          "sync.error.liveToken": "Votre site en ligne a refusé le token Claude Cowork. Reconnectez-le avec son token actuel, puis réessayez."
         },
         "tracy-tab-link": {
           "launcher.empty": "Cliquez sur + pour commencer",
@@ -20719,6 +20737,8 @@ window.__ModuleLoader__.load({
           "ds.note": "Cambia colori, caratteri e forme. Le tue pagine e i tuoi testi restano come sono.",
           "ds.pick": "Scegline una per la preview.",
           "ds.retry": "Riprova",
+          "ds.setup.required": "Completa la creazione del site prima di scegliere un sistema di design.",
+          "ds.setup.open": "Apri la creazione",
           "ds.search": "Cerca",
           "ds.tab.title": "Design system",
           "ds.undo": "Annulla",
@@ -23257,7 +23277,11 @@ window.__ModuleLoader__.load({
           "sync.error.interruptedKept": "Una sincronizzazione precedente è stata interrotta da un aggiornamento di Tracy mentre applicava modifiche a questa copia, e da allora la copia è cambiata. Tracy l’ha lasciata così com’è. Per annullare quella sincronizzazione, ripristina il punto di backup “Before restore” in Backups, poi sincronizza di nuovo.",
           "sync.error.liveUnreachable": "Tracy non è riuscito a leggere il tuo site originale. In questa copia non è cambiato nulla. Controlla che il site sia online e che Claude Cowork sia ancora installato.",
           "sync.error.copyChanged": "Questa copia è cambiata durante la sincronizzazione, quindi non è stato applicato nulla. Riprova.",
-          "sync.error.noSpace": "Sul server di Tracy non c’era spazio per questa sincronizzazione. Su questa copia non è cambiato nulla. Contattaci."
+          "sync.error.noSpace": "Sul server di Tracy non c’era spazio per questa sincronizzazione. Su questa copia non è cambiato nulla. Contattaci.",
+          "sync.error.liveBlocked": "Il site online ha restituito una risposta bloccata o non proveniente dal motore. Controlla il firewall o la protezione dai bot e consenti le richieste di Tracy.",
+          "sync.error.livePassword": "Il site online richiede una password HTTP. Consenti a Tracy di accedere all’endpoint Claude Cowork senza questa password, poi riprova.",
+          "sync.error.liveRateLimited": "Il site online sta limitando le richieste. Attendi prima di riprovare; Tracy rispetta il ritardo Retry-After.",
+          "sync.error.liveToken": "Il site online ha rifiutato il token Claude Cowork. Ricollegalo con il token attuale, poi riprova."
         },
         "tracy-tab-link": {
           "launcher.empty": "Faccia clic su + per iniziare",
@@ -26455,6 +26479,8 @@ window.__ModuleLoader__.load({
           "ds.note": "Verandert kleuren, lettertypen en vormen. Uw pagina’s en teksten blijven zoals ze zijn.",
           "ds.pick": "Kies er een om een preview te zien.",
           "ds.retry": "Opnieuw proberen",
+          "ds.setup.required": "Voltooi je site voordat je een designsysteem kiest.",
+          "ds.setup.open": "Bouwen openen",
           "ds.search": "Zoeken",
           "ds.tab.title": "Designsysteem",
           "ds.undo": "Ongedaan maken",
@@ -28993,7 +29019,11 @@ window.__ModuleLoader__.load({
           "sync.error.interruptedKept": "Een eerdere synchronisatie werd gestopt door een Tracy-update terwijl ze wijzigingen op deze kopie zette, en deze kopie is sindsdien veranderd. Tracy heeft hem gelaten zoals hij is. Om die synchronisatie ongedaan te maken, zet je het back-uppunt “Before restore” in Backups terug en synchroniseer je opnieuw.",
           "sync.error.liveUnreachable": "Tracy kon je oorspronkelijke site niet lezen. Aan deze kopie is niets gewijzigd. Controleer of de site online is en Claude Cowork er nog op staat.",
           "sync.error.copyChanged": "Deze kopie veranderde tijdens het synchroniseren, dus er is niets toegepast. Probeer het opnieuw.",
-          "sync.error.noSpace": "De server van Tracy had geen ruimte voor deze synchronisatie. Aan deze kopie is niets veranderd. Neem contact met ons op."
+          "sync.error.noSpace": "De server van Tracy had geen ruimte voor deze synchronisatie. Aan deze kopie is niets veranderd. Neem contact met ons op.",
+          "sync.error.liveBlocked": "Je live-site gaf een geblokkeerd antwoord of een antwoord dat niet van de engine komt. Controleer de firewall of botbeveiliging en sta verzoeken van Tracy toe.",
+          "sync.error.livePassword": "Je live-site vereist een HTTP-wachtwoord. Geef Tracy toegang tot het Claude Cowork-eindpunt zonder dat wachtwoord en probeer het opnieuw.",
+          "sync.error.liveRateLimited": "Je live-site beperkt verzoeken. Wacht voordat je het opnieuw probeert; Tracy respecteert de Retry-After-wachttijd.",
+          "sync.error.liveToken": "Je live-site heeft het Claude Cowork-token geweigerd. Verbind de site opnieuw met het huidige token en probeer het opnieuw."
         },
         "tracy-tab-link": {
           "launcher.empty": "Klik op + om te beginnen",
@@ -31513,6 +31543,8 @@ window.__ModuleLoader__.load({
           "ds.note": "更改颜色、字体和形状。你的页面和文字保持不变。",
           "ds.pick": "选择一个进行 preview。",
           "ds.retry": "重试",
+          "ds.setup.required": "完成 site 构建后再选择设计系统。",
+          "ds.setup.open": "打开构建",
           "ds.search": "搜索",
           "ds.tab.title": "设计系统",
           "ds.undo": "撤销",
@@ -34051,7 +34083,11 @@ window.__ModuleLoader__.load({
           "sync.error.interruptedKept": "之前的一次同步在向此副本写入更改时因 Tracy 更新而停止，此后此副本又有了改动。Tracy 保持原样未动。若要撤销那次同步，请在 Backups 中恢复备份点“Before restore”，然后再次同步。",
           "sync.error.liveUnreachable": "Tracy 无法读取你的原始 site。此副本没有任何更改。请检查 site 是否在线，以及 Claude Cowork 是否仍安装在上面。",
           "sync.error.copyChanged": "同步期间此副本发生了变化，因此没有放入任何内容。请重试。",
-          "sync.error.noSpace": "Tracy 的服务器没有足够空间完成此次同步。此副本没有任何改动。请联系我们。"
+          "sync.error.noSpace": "Tracy 的服务器没有足够空间完成此次同步。此副本没有任何改动。请联系我们。",
+          "sync.error.liveBlocked": "线上 site返回了被拦截或并非来自引擎的响应。请检查防火墙或机器人防护，并允许 Tracy 的请求。",
+          "sync.error.livePassword": "线上 site需要 HTTP 密码。请允许 Tracy 无需该密码即可访问 Claude Cowork 端点，然后重试。",
+          "sync.error.liveRateLimited": "线上 site正在限制请求。请稍后重试；Tracy 会遵守 Retry-After 指定的等待时间。",
+          "sync.error.liveToken": "线上 site拒绝了 Claude Cowork token。请使用当前token重新连接线上 site，然后重试。"
         },
         "tracy-tab-link": {
           "launcher.empty": "点击 + 开始",

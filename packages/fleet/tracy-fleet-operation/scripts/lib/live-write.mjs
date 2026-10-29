@@ -178,7 +178,13 @@ function viaPost(target, body, headers) {
       (res) => {
         const chunks = []
         res.on('data', (c) => chunks.push(c))
-        res.on('end', () => resolve({ status: res.statusCode, text: Buffer.concat(chunks).toString('utf8') }))
+        res.on('end', () =>
+          resolve({
+            status: res.statusCode,
+            text: Buffer.concat(chunks).toString('utf8'),
+            retryAfter: res.headers['retry-after']
+          })
+        )
       }
     )
     req.on('timeout', () => req.destroy(new Error('timeout')))
@@ -191,11 +197,12 @@ function viaPost(target, body, headers) {
 async function call(endpoint, token, action, params = {}) {
   let status
   let text
+  let retryAfter
   const target = route(endpoint)
   const body = JSON.stringify({ token, action, params })
   const headers = { 'content-type': 'application/json', 'user-agent': USER_AGENT }
   try {
-    if (target) ({ status, text } = await viaPost(target, body, headers))
+    if (target) ({ status, text, retryAfter } = await viaPost(target, body, headers))
     else {
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -205,15 +212,29 @@ async function call(endpoint, token, action, params = {}) {
         redirect: 'error'
       })
       status = response.status
+      retryAfter = response.headers.get('retry-after')
       text = await response.text()
     }
   } catch (error) {
     throw new Transient(`${action}: ${error.cause?.code ?? error.code ?? error.message ?? error.name}`)
   }
   const reply = engineReply(text)
+  if (reply && !reply.ok && ['unauthorized', 'forbidden', 'bad_token'].includes(reply.error))
+    throw new WriteFailed('TOKEN_REFUSED')
+  if (status === 401) throw new WriteFailed('LIVE_PASSWORD_PROTECTED')
+  if (status === 403) throw new WriteFailed('LIVE_BLOCKED')
+  if (status === 429) {
+    const error = new Transient(`${action} answered 429`)
+    error.code = 'LIVE_RATE_LIMITED'
+    const seconds = /^\s*\d+\s*$/.test(String(retryAfter ?? '')) ? Number(retryAfter) : null
+    const date = seconds === null ? Date.parse(String(retryAfter ?? '')) : NaN
+    error.retryAfterMs =
+      seconds !== null ? seconds * 1000 : Number.isFinite(date) ? Math.max(0, date - Date.now()) : 0
+    throw error
+  }
   if (reply === null) {
-    if (status === 429 || status >= 500) throw new Transient(`${action} answered ${status}`)
-    throw new WriteFailed('NOT_THE_ENGINE', `${action} answered ${status}`)
+    if (status >= 500) throw new Transient(`${action} answered ${status}`)
+    throw new WriteFailed(status === 200 ? 'LIVE_BLOCKED' : 'NOT_THE_ENGINE', `${action} answered ${status}`)
   }
   if (!reply.ok) {
     if (['unauthorized', 'forbidden', 'bad_token'].includes(reply.error))
@@ -236,8 +257,10 @@ async function retried(fn, tries = TRIES, onTransient = () => {}) {
     } catch (error) {
       if (!(error instanceof Transient)) throw error
       onTransient()
-      if (attempt >= tries) throw new WriteFailed('SITE_RESOURCE_LIMIT', error.message)
-      await sleep(500 * 2 ** attempt)
+      if (attempt >= tries) throw new WriteFailed(error.code ?? 'SITE_RESOURCE_LIMIT', error.message)
+      // A long Retry-After is a refusal, never permission to retry sooner. Avoid timer overflow.
+      if (error.retryAfterMs > 2_147_483_647) throw new WriteFailed('LIVE_RATE_LIMITED')
+      await sleep(Math.max(500 * 2 ** attempt, error.retryAfterMs ?? 0))
     }
   }
 }
@@ -249,15 +272,18 @@ async function door(endpoint, token) {
   const front = endpoint.replace(/\/administrator\/index\.php\?/, '/index.php?')
   for (const other of [admin, front]) if (!doors.includes(other)) doors.push(other)
   let last
+  let blocked
   for (const candidate of doors) {
     try {
       await retried(() => call(candidate, token, 'core.manifest'))
       return candidate
     } catch (error) {
       last = error
-      if (error.code === 'TOKEN_REFUSED') throw error
+      if (error.code === 'LIVE_BLOCKED') blocked = error
+      if (['TOKEN_REFUSED', 'LIVE_PASSWORD_PROTECTED', 'LIVE_RATE_LIMITED'].includes(error.code)) throw error
     }
   }
+  if (blocked) throw blocked
   throw last instanceof WriteFailed ? last : new WriteFailed('UNREACHABLE')
 }
 
@@ -601,6 +627,10 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
             live: Object.fromEntries(off.map((f) => [f, shown(current?.[f])]))
           }
         })
+      const nativeApplyId =
+        platform === 'wordpress' && item.kind === 'postmeta' && item.op === 'create'
+          ? `${applyId}-meta-${createHash('sha256').update(item.id).digest('hex').slice(0, 16)}`
+          : null
       const snapshot = {
         kind: item.kind,
         op: item.op,
@@ -612,13 +642,17 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         restore: item.restore ?? {},
         trash: item.trash ?? null
       }
+      if (nativeApplyId) {
+        snapshot.nativeApplyId = nativeApplyId
+        snapshot.dependsOn = item.dependsOn ?? []
+      }
       const recovery = [{ item, snapshot, mode: 'content' }]
       let answer
       if (item.op === 'delete')
         answer = await ask('content.delete', { apply_id: applyId, ...address }, recovery)
       else {
-        const params = { apply_id: applyId, ...address, fields }
-        if (item.op === 'create') params.id = 0
+        const params = { apply_id: nativeApplyId ?? applyId, ...address, fields }
+        if (item.op === 'create' && item.kind !== 'postmeta') params.id = 0
         if (item.bodyRevision && revision) params.expected_body_revision = revision
         answer = await ask('content.update', params, recovery)
       }
@@ -630,18 +664,7 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
       } catch {
         return
       }
-      keep(item, {
-        kind: item.kind,
-        op: item.op,
-        liveId,
-        key: item.key ?? null,
-        before: current,
-        replaces: item.replaces ?? [],
-        written: fields,
-        after,
-        restore: item.restore ?? {},
-        trash: item.trash ?? null
-      })
+      keep(item, { ...snapshot, liveId, after })
       return
     } catch (error) {
       if (error.code === 'WRITE_OUTCOME_UNKNOWN')
@@ -1463,6 +1486,16 @@ async function undo(pushDir) {
     return { paths: out }
   }
 
+  // Durable metadata receipts can be ahead of written.json after an interrupted Apply.
+  const receiptMetaChildren = Object.values(readJson(join(pushDir, 'requests.json'), {}))
+    .filter((receipt) => ['sending', 'acknowledged'].includes(receipt.state))
+    .flatMap((receipt) =>
+      (receipt.recovery ?? []).flatMap(({ item, snapshot }) =>
+        snapshot?.kind === 'postmeta' && snapshot.op === 'create'
+          ? [{ id: item.id, parents: snapshot.dependsOn ?? [] }]
+          : []
+      )
+    )
   const order = [...writtenAnswer.written].reverse()
   progress(t0, `taking back ${order.length} item(s) on the live site`)
   for (const out of order) {
@@ -1479,6 +1512,25 @@ async function undo(pushDir) {
     }
     if (!snap) {
       kept.push({ ...out, reason: 'nothing-kept' })
+      continue
+    }
+    // Keep a new parent if metadata depending on it could not be safely taken back.
+    if (
+      snap.kind === 'post' &&
+      snap.op === 'create' &&
+      (receiptMetaChildren.some(
+        (child) => child.parents.includes(out.id) && !restored.some((r) => r.id === child.id)
+      ) ||
+        order.some((other) => {
+          const child = before.items[other.id]
+          return (
+            child?.kind === 'postmeta' &&
+            child.dependsOn?.includes(out.id) &&
+            !restored.some((r) => r.id === other.id)
+          )
+        }))
+    ) {
+      kept.push({ ...out, reason: 'depends-on-failed' })
       continue
     }
     if (snap.kind === 'file' && snap.door === 'template') {
@@ -1521,6 +1573,13 @@ async function undo(pushDir) {
     }
     const params = { kind: snap.kind, id: snap.liveId }
     if (snap.key !== null && snap.key !== undefined) params.key = snap.key
+    const nativeMetaCreate =
+      platform === 'wordpress' &&
+      snap.kind === 'postmeta' &&
+      snap.op === 'create' &&
+      typeof snap.nativeApplyId === 'string' &&
+      snap.nativeApplyId ===
+        `tracy-push-${pushId}-meta-${createHash('sha256').update(out.id).digest('hex').slice(0, 16)}`
     let now = null
     let stored = true
     try {
@@ -1529,6 +1588,10 @@ async function undo(pushDir) {
       stored = got.stored !== false
     } catch (error) {
       if (!(error instanceof Refused)) throw error
+      if (nativeMetaCreate && error.reply.error === 'not_found') {
+        restored.push(out)
+        continue
+      }
       if (!(snap.op === 'delete' && snap.kind === 'menuItem')) {
         kept.push({ ...out, reason: 'gone-on-live', fields: [] })
         continue
@@ -1601,6 +1664,37 @@ async function undo(pushDir) {
     }
     if (moved.length) {
       kept.push({ ...out, reason: 'changed-on-live', fields: moved })
+      continue
+    }
+    if (nativeMetaCreate) {
+      let revertError = null
+      try {
+        await ask('apply.revert', { apply_id: snap.nativeApplyId })
+      } catch (error) {
+        revertError = error
+      }
+      if (revertError instanceof Refused && revertError.reply.error === 'conflict') {
+        kept.push({ ...out, reason: 'changed-on-live', fields: ['value'] })
+        continue
+      }
+      // Empty or expired native receipts can report success without removing the metadata.
+      // Read back even after a lost response; the durable request must never be sent twice.
+      let absent = false
+      try {
+        await ask('content.get', params)
+      } catch (error) {
+        absent = error instanceof Refused && error.reply.error === 'not_found'
+      }
+      if (absent) restored.push(out)
+      else if (revertError instanceof Refused) {
+        failed.push({
+          ...out,
+          error: String(revertError.reply.error ?? 'refused').slice(0, 60),
+          message: String(revertError.reply.message ?? '').slice(0, 300)
+        })
+      } else {
+        failed.push({ ...out, error: 'WRITE_OUTCOME_UNKNOWN' })
+      }
       continue
     }
     try {

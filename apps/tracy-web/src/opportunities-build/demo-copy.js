@@ -32,7 +32,7 @@ import { buildChangesOf } from '../lib/agent-demo-changes.js'
 /** This shape's name, kept with the packs. */
 export const COPY_VERSION = 'demo-copy/1'
 /** Page calls run at once after the brief. */
-export const PAGES_AT_ONCE = 2
+export const PAGES_AT_ONCE = 4
 /**
  * The most blocks one call writes: a longer page goes in parts, each with the same brief and purpose (local round 35,
  * 26/10/2026: a Joomla bar's menu page of 80-odd cocktails, prices and notes came back as JSON cut off mid-string,
@@ -207,6 +207,7 @@ For each block:
 - a navigation or interface word a site always has (Home, Menu, Contact, Read more, Submit, Subscribe) may stay exactly as it is;
 - otherwise write this business's words for that place: the same kind of text, about the same length, in the page's language; a heading stays a heading, a button a short action that says where it goes ("to": a page of the site, "phone", "email" or "another site") — words of booking, reserving or ordering only on a button to the contact page, a phone or an email;
 - use only facts the digest holds — names, dishes, prices, hours, addresses, phones, people, awards — and list the ids you used in sourceIds; never another business's name, place, dish or person; never "sample", "lorem" or a placeholder;
+- each menu item (a menu:* id) at most once on the page: never one already in another block of this page or in alreadyShown; a menu section (a heading and the items under it) takes only items whose research section or kind fits that heading (desserts under a desserts heading, drinks under a drinks heading); a section the research has no such items for: report its item blocks in issues, never another section's items;
 - a block whose subject the research holds nothing for: write a true, general line about this business for that place, or report it in issues instead of inventing.
 Answer JSON only: {"blocks":[{"n":0,"text":"...","sourceIds":["..."]}],"issues":[{"n":3,"why":"..."}]}.`
 
@@ -282,7 +283,7 @@ export async function askJson({
  * @param {any} answer
  * @param {string} sourced
  */
-export function packOf(blocks, answer, sourced) {
+export function packOf(blocks, answer, sourced, used = new Set()) {
   const byN = new Map((Array.isArray(answer?.blocks) ? answer.blocks : []).map((b) => [Number(b?.n), b]))
   const changes = []
   const issues = []
@@ -298,9 +299,19 @@ export function packOf(blocks, answer, sourced) {
       continue
     }
     const checked = checkBlock(block, got, sourced)
+    // 🔒 A MENU ITEM ONCE A PAGE (local measure 28/10/2026): Death & Co's home showed the same cocktails under Zero
+    // Proof, Cocktails and Desserts, written by parts of the page that did not know each other's items.
+    const menuIds = (Array.isArray(got?.sourceIds) ? got.sourceIds : []).filter(
+      (id) => typeof id === 'string' && id.startsWith('menu:')
+    )
     if (!checked.ok) issues.push({ find: block.text, why: checked.why })
     else if (checked.kept) kept++
-    else changes.push({ find: block.text, replace: checked.text })
+    else if (menuIds.some((id) => used.has(id)))
+      issues.push({ find: block.text, why: 'this menu item is already shown on this page' })
+    else {
+      changes.push({ find: block.text, replace: checked.text })
+      for (const id of menuIds) used.add(id)
+    }
   }
   return { changes, issues, kept }
 }
@@ -385,7 +396,9 @@ export function createDemoCopy({ doorFor, chargeable = (_s, fn) => fn(), fetchIm
         : []),
       ...pages
     ]
-    const tasks = whole.flatMap((page) => {
+    // A page's parts are written one after another, each told the menu items the parts before it used; pages go
+    // `PAGES_AT_ONCE` at a time.
+    const jobs = whole.map((page) => {
       const parts = Math.ceil(page.blocks.length / BLOCKS_PER_CALL)
       return Array.from({ length: parts }, (_, part) => ({
         path: page.path,
@@ -406,37 +419,42 @@ export function createDemoCopy({ doorFor, chargeable = (_s, fn) => fn(), fetchIm
     }
     let next = 0
     const worker = async () => {
-      while (next < tasks.length) {
-        const task = tasks[next++]
-        try {
-          const got = await ask(
-            PAGE_SYSTEM,
-            {
-              brief: brief ? { voice: brief.voice, keyMessages: brief.keyMessages } : null,
-              page: task.path === '*shared*' ? 'the words every page shows (header and footer)' : task.path,
-              purpose: task.path === '*shared*' ? null : (purposeOf(task.path)?.purpose ?? null),
-              digest,
-              blocks: task.blocks
-            },
-            task.path
-          )
-          count(got.usage)
-          join(task.path, packOf(task.blocks, got.value, sourced))
-        } catch (error) {
-          join(task.path, {
-            changes: [],
-            issues: [
-              {
-                find: task.parts > 1 ? task.blocks[0].text : '*',
-                why: `${task.parts > 1 ? `these ${task.blocks.length} blocks of the page, from this one, were` : 'this page was'} not written: ${String(error?.code ?? error?.message ?? error).slice(0, 80)}`
-              }
-            ],
-            kept: 0
-          })
-        }
+      while (next < jobs.length) {
+        const job = jobs[next++]
+        const used = new Set()
+        for (const task of job) await writePart(task, used)
       }
     }
-    await Promise.all(Array.from({ length: Math.min(PAGES_AT_ONCE, tasks.length) }, worker))
+    const writePart = async (task, used) => {
+      try {
+        const got = await ask(
+          PAGE_SYSTEM,
+          {
+            brief: brief ? { voice: brief.voice, keyMessages: brief.keyMessages } : null,
+            page: task.path === '*shared*' ? 'the words every page shows (header and footer)' : task.path,
+            purpose: task.path === '*shared*' ? null : (purposeOf(task.path)?.purpose ?? null),
+            digest,
+            ...(used.size ? { alreadyShown: [...used] } : {}),
+            blocks: task.blocks
+          },
+          task.path
+        )
+        count(got.usage)
+        join(task.path, packOf(task.blocks, got.value, sourced, used))
+      } catch (error) {
+        join(task.path, {
+          changes: [],
+          issues: [
+            {
+              find: task.parts > 1 ? task.blocks[0].text : '*',
+              why: `${task.parts > 1 ? `these ${task.blocks.length} blocks of the page, from this one, were` : 'this page was'} not written: ${String(error?.code ?? error?.message ?? error).slice(0, 80)}`
+            }
+          ],
+          kept: 0
+        })
+      }
+    }
+    await Promise.all(Array.from({ length: Math.min(PAGES_AT_ONCE, jobs.length) }, worker))
     return { version: COPY_VERSION, ok: true, brief, pages: out, usage, ms: now() - started }
   }
 }
