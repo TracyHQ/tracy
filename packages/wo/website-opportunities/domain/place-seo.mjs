@@ -1,7 +1,7 @@
 // What a search result says of a brief build's home page, and where the business is (spec TracyHQ/tracy#189, COO rule
 // 29/10/2026, the WHERE tiers of `hero-first-screen.mjs heroWhereOf`). Pure and CMS neutral; facts of the brief only.
 //
-//   title        "<what> in <city> | <name>": what the business offers, then the trade's noun when no offering fits
+//   title        "<what> in <city> | <name>": the name kept first, offerings dropped from the end, then the trade's noun
 //   description  the name, where it is based ("based in <district>, <city>"), its offerings, and the area it serves as
 //                the owner says it
 //   schema       a LocalBusiness record: name, phone, its address (district and city as parts of the address), and the
@@ -43,7 +43,11 @@ export function placeSeoOf(brief, { name = null, phone = null } = {}) {
   const place = city ? ` in ${city}` : ''
   // The title: as many offerings as fit, else the trade's noun; the name after a bar when it fits.
   const whats = [...names.map((_, i) => capitalFirst(listed(names.slice(0, names.length - i)))), noun]
-  const titles = whats.flatMap((w) => [own ? `${w}${place} | ${own}` : null, `${w}${place}`]).filter(Boolean)
+  // The name stays first (a branded search): offerings drop from the end, then the trade's noun, before the name goes.
+  const titles = [
+    ...(own ? whats.map((w) => `${w}${place} | ${own}`) : []),
+    ...whats.map((w) => `${w}${place}`)
+  ]
   const title = titles.find((t) => fits(t, SEO_TITLE_MAX)) ?? (own && fits(own, SEO_TITLE_MAX) ? own : noun)
   // The description: who and where, what, and the area served in the owner's words.
   const based = district && city ? `based in ${district}, ${city}` : city ? `based in ${city}` : null

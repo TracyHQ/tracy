@@ -138,3 +138,13 @@ test('tier city: no district, the city alone, and no country added', () => {
   assert.equal(seo.title, 'Coffee in Port Marlow | Saltwind Cafe')
   assert.equal(seo.description, 'Saltwind Cafe, based in Port Marlow. Coffee.')
 })
+
+test('the search title keeps the name and drops offerings from the end, never a word cut', () => {
+  const brief = tutorBrief()
+  brief.reading.services.push(
+    { label: 'English Tutoring', quote: 'english tutoring' },
+    { label: 'Science Tutoring', quote: 'science tutoring' }
+  )
+  const seo = placeSeoOf(brief, { name: 'Brightpath Tutors' })
+  assert.equal(seo.title, 'Maths tutoring in Port Marlow | Brightpath Tutors')
+})
