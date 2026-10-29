@@ -1929,7 +1929,9 @@ export function createJoomlaEngine({
                 // A brief build's search title and description, of facts only (`place-seo.mjs`), when it has no `about`.
                 title: String(prepared.seo?.title ?? ''),
                 said: spokenOf(ctx.brief),
-                about: String(ctx.brief?.about ?? '') || String(prepared.seo?.description ?? '')
+                about: String(ctx.brief?.about ?? '') || String(prepared.seo?.description ?? ''),
+                // Every kept page's planned search title and description (`page-seo.mjs`, #189 round 9, class G): they win.
+                pages: Array.isArray(prepared.seo?.pages) ? prepared.seo.pages : []
               },
               // The language the owner's description is in: as read from it, else the one the site's words were written in.
               wroteIn: ctx.normalized.writtenIn ?? prepared.written,

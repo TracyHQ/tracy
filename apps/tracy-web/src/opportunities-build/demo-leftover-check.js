@@ -25,6 +25,7 @@ import { checkContactForms } from './contact-form-check.js'
 import { checkContactPage } from './contact-page-check.js'
 import { checkEmptyFrames } from './empty-frame-check.js'
 import { checkHeadBlocks } from './head-block-check.js'
+import { checkPageSeo, unusedBriefContent } from './page-seo-check.js'
 import { checkRecordSlots } from './record-slot-check.js'
 
 /** The most pages one check reads: a brief build's site has a handful, a demo's showcase branch can have dozens. */
@@ -177,6 +178,11 @@ export async function runLeftoverCheck({
   // Every head block the build owes a page is on it: the brand colours, the leftover rules, each centred card row (#189 item 28).
   const headBlocks = checkHeadBlocks({ pages, sitePlan, styles })
   report.findings.push(...headBlocks)
+  // Every kept page says its planned title and description, and the not-found page speaks for the business (#189 round 9).
+  const pageSeo = checkPageSeo({ pages, sitePlan, missingPath: MISSING_PROBE })
+  report.findings.push(...pageSeo)
+  // The brief's content no page shows, each with why: a report, never a finding (#189 round 9, item I3).
+  const unused = sitePlan ? unusedBriefContent({ pages, brief, sitePlan }) : []
   // Every record the site plan assigned (a review and its author, a person's name) is on the site as given (#189 item 18).
   const recordSlots = sitePlan ? checkRecordSlots({ pages, sitePlan, contentMap }) : []
   report.findings.push(...recordSlots)
@@ -212,6 +218,8 @@ export async function runLeftoverCheck({
     recordSlots,
     contactForms,
     contactPage,
+    pageSeo,
+    unused,
     ctaBands,
     pageIntros,
     broken,
@@ -228,6 +236,7 @@ export async function runLeftoverCheck({
       contactPage.length === 0 &&
       emptyFrames.length === 0 &&
       headBlocks.length === 0 &&
+      !pageSeo.some((f) => f.severity === 'major') &&
       recordSlots.length === 0 &&
       ctaBands.length === 0 &&
       pageIntros.length === 0,

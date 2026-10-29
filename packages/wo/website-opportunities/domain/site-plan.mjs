@@ -29,6 +29,7 @@ import { peopleFromReviewsNote, showablePeopleOf } from './brief-people.mjs'
 import { limitOf, planHero } from './hero-first-screen.mjs'
 import { planPageIntros, planPlaceIntros } from './page-intros.mjs'
 import { placeSeoOf } from './place-seo.mjs'
+import { notFoundPageOf, pageSeoOf } from './page-seo.mjs'
 import { isRecordRole } from './record-roles.mjs'
 
 export const SITE_PLAN_VERSION = 'site-plan/1'
@@ -101,6 +102,16 @@ function contactOfBrief(facts, brief = null) {
   // (`contact-page.mjs`). It is Tracy's inference from the brief, so its source says so.
   if (brief && byAppointmentOf(brief)) out.booking = { value: BY_APPOINTMENT, source: 'brief.inferred' }
   return out
+}
+
+/** The home's search result with every kept page's own and the not-found page's words; null when there is no home result. */
+function withPageSeo(brief, seo, { name, pages, contact }) {
+  if (!seo) return null
+  return {
+    ...seo,
+    pages: pageSeoOf(brief, { seo, name, pages, contact }),
+    notFound: notFoundPageOf(brief, { name, pages })
+  }
 }
 
 /** The page decisions, read from the page plan the answers were made from. */
@@ -370,7 +381,12 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
     // The first screen answers what, where and how to contact (COO rule 29/10/2026): `hero-first-screen.mjs`.
     hero: heroPlan.hero,
     // The home page's search result and LocalBusiness record, with the district and the area served (`place-seo.mjs`).
-    seo: placeSeoOf(brief, { name, phone: contact?.phone?.value ?? null }),
+    // Every kept page's own search result and the not-found page's words (`page-seo.mjs`, #189 round 9 class G and I).
+    seo: withPageSeo(brief, placeSeoOf(brief, { name, phone: contact?.phone?.value ?? null }), {
+      name,
+      pages: pageRows,
+      contact
+    }),
     // Logo, posts, social profiles and map (ticket #193): `site-plan-identity.mjs`.
     ...planIdentity(brief, contentMap),
     // What the content map does not reach: videos, backgrounds, showcase, addresses, credit line (ticket #196).

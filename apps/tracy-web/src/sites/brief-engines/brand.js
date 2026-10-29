@@ -56,6 +56,8 @@ const BUSY_WAIT_MS = 750
  * @property {string} [name]
  * @property {boolean} [nameGiven] - false when the name is not the customer's own but stands in for one (made from the site
  *   address): it is still written as the site name, but the template's page titles are left as they are
+ * @property {boolean} [ownTitles] - a brief build whose site plan gives every kept page its own search title, the name in it
+ *   (`page-seo.mjs`): the CMS adds no site name to a page title (#189 round 9, class G)
  * @property {{light?: Uint8Array, dark?: Uint8Array, single?: Uint8Array}} [logo]
  * @property {Uint8Array} [favicon]
  * @property {Uint8Array} [faviconIco] - a favicon Tracy made: its 16, 32 and 48 px drawings in one ICO, the file a design that
@@ -179,6 +181,7 @@ export async function setSiteBrand({
   )
     skip('logo', 'the main logo has no source asset')
   if (typeof pack.nameGiven === 'boolean') prepared.nameGiven = pack.nameGiven
+  if (pack.ownTitles === true) prepared.ownTitles = true
   // The share card is made from the logo as uploaded, not as fitted to a header spot (D5).
   const share = await shareCardOf(given)
   if (share) prepared.share = share
@@ -294,6 +297,10 @@ export function createSiteBrand({
     // released (LOGO-4 dropped, 09/10/2026). A brief written before that may still say `logoAsked`; it is not read.
     if (Object.keys(logo).length) pack.logo = logo
     const planned = pack.logo ? null : await sitePlanFor?.(ctx).catch(() => null)
+    // 🔒 A SITE PLAN THAT TITLES EVERY KEPT PAGE ITSELF ("Contact | Name", `page-seo.mjs`) TURNS THE CMS'S OWN SUFFIX OFF (#189
+    // round 9, class G): with it on, Joomla printed "Contact - Name" and its home tab showed the bare name, never the plan's.
+    const titled = pack.name ? (planned ?? (await sitePlanFor?.(ctx).catch(() => null))) : null
+    if (Array.isArray(titled?.seo?.pages) && titled.seo.pages.length) pack.ownTitles = true
     // 🔒 A BRIEF BUILD WHOSE BRIEF HOLDS THE LOGO SHOWS IT (site plan `logo.decision` `brief-logo`, #193): the logo is one of
     // the owner's pictures, not a Brand upload of the Add site form, so it is read from the build. Measured on the local
     // stand (29/10/2026): the plan said `brief-logo`, nothing read it, and every page kept the template's logo.

@@ -109,7 +109,7 @@ async function writeSiteBrand({ prepared, profile, stamp, write, read, wrote: to
   // A name the site address stands in for (`nameGiven: false`) is no answer: the template's page titles stay. So do they on a
   // plugin older than the key, without a word to the customer: it is the template's own setting, nothing they can act on.
   if (named && prepared.nameGiven !== false && atLeast(component, PAGE_TITLES_SINCE) === true)
-    await writePageTitles({ name, write, read, wrote, skip })
+    await writePageTitles({ name, write, read, wrote, skip, own: prepared.ownTitles === true })
   if (!profile?.framework || !folder || (!anyLogo && !prepared.favicon && !name)) return
 
   const upload = uploader(

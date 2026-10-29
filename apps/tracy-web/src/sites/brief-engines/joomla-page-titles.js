@@ -22,6 +22,13 @@ import { readMenu } from './joomla-tidy.js'
 export const PAGE_TITLES_SINCE = '0.24.5'
 /** "Page - Site": the site name after the page's own title. */
 export const NAME_AFTER = 2
+/**
+ * No site name added: each page's own title is printed as written. 🔒 A BRIEF BUILD WHOSE SITE PLAN TITLES EVERY KEPT PAGE ITSELF
+ * (`page-seo.mjs`, "Contact | Name", the home's search title) TAKES THIS (#189 round 9, class G): with "after" on, Joomla printed
+ * "Contact - Name" (a dash a visitor reads) and the plugin's home rule (`lib/HomeTitle.php`) turned the home's planned title
+ * "<what> in <city> | Name - Name" into the bare name. The tidy-up writes each kept entry's planned title (`pageMetaSteps`).
+ */
+export const NAME_OFF = 0
 
 /** Text as one line, compared without case. */
 const same = (/** @type {unknown} */ a, /** @type {string} */ b) =>
@@ -49,11 +56,15 @@ function paramsOf(/** @type {unknown} */ params) {
  * @param {(action: string, params: Record<string, unknown>) => Promise<any>} input.read
  * @param {(where: string) => void} input.wrote
  * @param {(where: string, reason: string) => void} input.skip
- * @returns {Promise<boolean>} whether the switch is on now
+ * @param {boolean} [input.own] - the site plan titles every kept page itself: the switch is set off, and the home's title stays
+ * @returns {Promise<boolean>} whether the switch is set now
  */
-export async function writePageTitles({ name, write, read, wrote, skip }) {
+export async function writePageTitles({ name, write, read, wrote, skip, own = false }) {
   try {
-    await write('site.identity', { operation: 'set', fields: { sitename_pagetitles: NAME_AFTER } })
+    await write('site.identity', {
+      operation: 'set',
+      fields: { sitename_pagetitles: own ? NAME_OFF : NAME_AFTER }
+    })
   } catch (error) {
     const answer = /** @type {any} */ (error)?.answer
     const old =
@@ -69,6 +80,8 @@ export async function writePageTitles({ name, write, read, wrote, skip }) {
     return false
   }
   wrote('page-titles')
+  // The home's title is the plan's own search title: nothing to take off it.
+  if (own) return true
   let menu
   try {
     menu = await readMenu(({ action, params }) => read(action, params), '')
