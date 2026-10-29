@@ -10,12 +10,14 @@
   "steps": [
     "S1: Run the business name domain tests with the claims of dev opportunity 5a1e2b3c: Google and magicpin say Padel & Tennis Coach, the Instagram profile name and handle are harbour.sportclub, the logo reads HARBOUR SPORT CLUB.",
     "S2: Run the same claims with no logo text.",
-    "S3: Run nameClaimsOf on an Instagram row whose profile name equals its handle."
+    "S3: Run nameClaimsOf on an Instagram row whose profile name equals its handle.",
+    "S4: Read fictional sports-club and bakery logos through the environment vision fallback, then synthesize the brief with an Instagram name equal to its handle. Check the operator source reason when no vision model exists and check stale or missing model price budgets."
   ],
   "expect": [
     "S1: the suggested name is Harbour Sport Club, never harbour.sportclub.",
     "S2: today's name (Padel & Tennis Coach) stays; a handle is never suggested.",
-    "S3: the profile name is recorded as the handle only, and the read with the logo suggests Harbour Sport Club."
+    "S3: the profile name is recorded as the handle only, and the read with the logo suggests Harbour Sport Club.",
+    "S4: each logo is read once, the brief uses its printed business name, the handle agrees with the logo, unavailable logo reading has a visible operator source reason, and missing or stale prices allow a conservative reservation while actual spend remains unknown."
   ],
   "selectors": {
     "files": "packages/wo/website-opportunities/test/{domain-business-name,business-name-research}.test.mjs"
@@ -27,13 +29,20 @@
       "--test",
       "--test-reporter=tap",
       "packages/wo/website-opportunities/test/domain-business-name.test.mjs",
-      "packages/wo/website-opportunities/test/business-name-research.test.mjs"
+      "packages/wo/website-opportunities/test/business-name-research.test.mjs",
+      "apps/tracy-web/test/wo-logo-vision-resolution.test.mjs",
+      "apps/tracy-web/test/wo-quality-price-fallback.test.mjs"
     ],
     "tests": [
       "Harbour Sport Club: a profile name equal to its handle is never shown; the logo text in title case is",
       "sources agreeing through a handle with no logo text",
       "a real display name beats the logo text; isSameHandle and logoNameSpelling",
-      "nameClaimsOf: an Instagram name equal to its handle is the handle, not a display name"
+      "nameClaimsOf: an Instagram name equal to its handle is the handle, not a display name",
+      "environment vision reads the logo and the brief uses its name: Harbour Sports Club",
+      "environment vision reads the logo and the brief uses its name: Maple Crust Bakehouse",
+      "the operator place inspector receives the recorded logo reason on its existing source table",
+      "a stale or missing price permits a capped call and marks unknown spend: deepseek-flash",
+      "a stale or missing price permits a capped call and marks unknown spend: unlisted-vision-model"
     ]
   }
 }

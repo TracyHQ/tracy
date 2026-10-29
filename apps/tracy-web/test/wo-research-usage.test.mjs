@@ -352,16 +352,22 @@ test(
 
 // ── no OpenRouter in research ───────────────────────────────────────────────────────────────────
 
-test('research model calls resolve their model only through the vision door, never OpenRouter', () => {
+test('research model calls share the vision resolver without naming a provider or reading environment keys', () => {
   const dir = new URL('../../../packages/wo/website-opportunities/src/', import.meta.url)
-  const research = ['menu-photo-reading.js', 'place-logo.js', 'place-executor.js', 'place-jobs.js']
+  const research = [
+    'research-vision.js',
+    'menu-photo-reading.js',
+    'place-logo.js',
+    'place-executor.js',
+    'place-jobs.js'
+  ]
   for (const name of research) {
     const text = readFileSync(new URL(name, dir), 'utf8')
     assert.doesNotMatch(text, /openrouter/i, name)
     assert.doesNotMatch(text, /TRACY_VISION_|process\.env/, name)
   }
   assert.match(
-    readFileSync(new URL('menu-photo-reading.js', dir), 'utf8'),
+    readFileSync(new URL('research-vision.js', dir), 'utf8'),
     /lookupDoor\(pool, 'vision', secret\)/
   )
   assert.ok(readdirSync(dir).includes('place-logo.js'))

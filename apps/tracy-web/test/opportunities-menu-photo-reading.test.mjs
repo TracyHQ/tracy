@@ -15,7 +15,6 @@ import {
   printedPrice,
   readMenuPhotos
 } from 'website-opportunities/src/menu-photo-reading.js'
-import { visionFingerprint } from '../src/lib/llm-vision-test.js'
 import { mergeMenuItems } from 'website-opportunities/src/menu-items.js'
 import { createTracyWoHost } from '../src/wo-host.js'
 
@@ -79,7 +78,7 @@ test('an assigned model that cannot read pictures, or whose provider is off, is 
     menuVisionDoorOf({ state: 'ok', credential, snapshot: snapshot({ vision: false }) }, woHost),
     {
       state: 'unavailable',
-      reason: 'model_does_not_read_pictures'
+      reason: 'The assigned model does not read pictures.'
     }
   )
   assert.equal(menuVisionDoorOf({ state: 'disabled' }, woHost).state, 'unavailable')
@@ -501,44 +500,16 @@ const found = (extra = {}) => ({
   }
 })
 
-test('the paid pixel test gates the step: no passed test is "not_tested", a passed one opens it', async () => {
-  const asked = []
-  const proof = (answer) => async (args) => {
-    asked.push(args.fingerprint)
-    return answer
-  }
-  const lookup = async () => found()
-  const none = await menuVisionDoorFor({}, 's', {
+test('research reads a ready vision assignment without an expiring quality proof', async () => {
+  const ready = await menuVisionDoorFor({}, 's', {
     ...woHost,
-    lookupDoor: lookup,
-    currentVisionProof: proof(null)
+    lookupDoor: async () => found(),
+    currentVisionProof: async () => {
+      throw new Error('Research must not ask for a quality proof')
+    }
   })
-  assert.deepEqual(none, { state: 'not_tested' })
-  const ok = await menuVisionDoorFor({}, 's', {
-    ...woHost,
-    lookupDoor: lookup,
-    currentVisionProof: proof({ id: 't1' })
-  })
-  assert.equal(ok.state, 'ready')
-  // The same fingerprint the quality roles ask for, so one paid test serves both.
-  const f = found()
-  assert.equal(
-    asked[0],
-    visionFingerprint({ snapshot: f.snapshot, baseUrl: f.credential.baseUrl, model: 'deepseek-flash' })
-  )
-  // Nothing assigned: the test is not even looked up.
-  asked.length = 0
-  assert.equal(
-    (
-      await menuVisionDoorFor({}, 's', {
-        ...woHost,
-        lookupDoor: async () => ({ state: 'unassigned' }),
-        currentVisionProof: proof(null)
-      })
-    ).state,
-    'not_configured'
-  )
-  assert.equal(asked.length, 0)
+  assert.equal(ready.state, 'ready')
+  assert.equal(ready.door.model, 'deepseek-flash')
 })
 
 test('a model that is not tested is skipped by the reader: no call, no charge, status not_tested', async () => {

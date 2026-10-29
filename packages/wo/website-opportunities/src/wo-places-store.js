@@ -15,7 +15,8 @@ import {
   splitPlace as splitShared
 } from './place-merge.js'
 import { joinPlace } from './place-jobs.js'
-import { addLink, currentSnapshotOf } from './places.js'
+import { addLink, currentSnapshotOf, snapshotProfileOf } from './places.js'
+import { logoResearchSourceOf } from './logo-research-source.js'
 import { againShape, placeAgainPlan } from './research-again.js'
 import { MENU_FILE_PART } from './menu-items.js'
 import { MENU_PHOTOS_PART } from './menu-photo-reading.js'
@@ -349,6 +350,11 @@ export async function placeDetail(db, placeId, nowMs, { emailOf, displayNameOf }
   summary.sources = summary.sources.map((s) =>
     pagesOf.has(s.source) ? { ...s, pages: pagesOf.get(s.source) } : s
   )
+  if (fact.current_snapshot_id) {
+    const profile = await snapshotProfileOf(db, fact.current_snapshot_id)
+    const logo = logoResearchSourceOf(profile?.brand?.logoResearch)
+    if (logo) summary.sources.push(logo)
+  }
   const menu = await placeMenuOf(db, placeId, {
     menuPhotos: media.rows.filter((m) => m.in_current && m.category === 'menu' && !m.revoked_at).length
   })

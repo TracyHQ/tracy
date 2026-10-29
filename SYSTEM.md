@@ -1806,11 +1806,16 @@ fingerprint, input hash, reservation, result/receipt; no credential or reasoning
 The owner/admin door `POST /api/ops/llm/doors/vision/test` takes only a requestKey, uses the stored assignment,
 sends pixels through the same bounded adapter/effort/JSON profile as WO and checks the answer in code. The test
 spends from the existing cost ledger; a crash/timeout is not retried automatically. The proof expires when config/endpoint/key/
-metadata/profile changes or after 7 days. The quality reader refuses a missing capability, proof, effort or
-verified price. DeepSeek effort uses the canonical levels that `/models` declares; for other providers without a verified adapter,
+metadata/profile changes or after 7 days. The quality reader refuses a missing capability, proof or effort.
+Unknown or stale model prices use the conservative research rate in `cost-prices.js`, reserve before dispatch,
+and retain unknown actual spend. The price review date warns in Model & AI rather than disabling calls.
+DeepSeek effort uses the canonical levels that `/models` declares; for other providers without a verified adapter,
 no fake effort is sent. The UI keeps unavailable/untested/passed states and
-never treats a provider's text test as proof that it reads images. The legacy pictures caller still keeps its earlier
-env path; only observations/review consume this assignment/proof once wired into normal WO.
+never treats a provider's text test as proof that it reads images. Research logos, menu photos and picture labels
+share `research-vision.js`: an available vision assignment, otherwise the host's environment vision model.
+Missing catalog metadata and an expired quality proof do not disable research. Research readings remain
+provisional source observations; only quality observations/review require the paid proof before claiming a review.
+An unavailable research model records a plain reason in the logo research, also shown in the Places source table.
 
 Ops and My Opportunities share the step SQL Research → Demo → Outreach, Cancelled and Attention
 in `opportunities/wo-journey.js`. A customer reads only their own account; Ops states explicitly its all-accounts scope at a

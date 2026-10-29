@@ -1,13 +1,12 @@
 /** Job roles use the operator's existing assignments. Credentials never enter an input or receipt. */
 
 import { createHash } from 'node:crypto'
-import { readFileSync } from 'node:fs'
 import { effortOptions } from '../lib/llm-effort.js'
 import { lookupDoor } from '../lib/llm-store.js'
 import { currentVisionProof, VISION_TEST_PROFILE, visionFingerprint } from '../lib/llm-vision-test.js'
 import { QUALITY_POLICY, qualityHash } from './quality-dossier.js'
+import { qualityPriceFor } from './quality-price.js'
 
-const prices = JSON.parse(readFileSync(new URL('./quality-prices.json', import.meta.url)))
 const fail = (code) => Object.assign(new Error(code), { code })
 const DOORS = Object.freeze({
   facts: 'woEditorial',
@@ -27,8 +26,6 @@ export async function qualityModelFor({ pool, secret, role, now = Date.now }) {
   if (!metadata || metadata.reasoning !== true || (readsImages && metadata.vision !== true))
     throw fail('QUALITY_MODEL_CAPABILITY_UNKNOWN')
   const host = new URL(baseUrl).hostname
-  const rate = prices.endpointHost === host ? prices.models[model] : null
-  if (!rate || now() >= Date.parse(prices.validUntil)) throw fail('QUALITY_PRICE_UNKNOWN')
   const options = effortOptions({ presetId: door.snapshot.presetId, baseUrl, metadata })
   const effort = readsImages ? 'high' : door.snapshot.effort
   if (!effort || !options.choices.includes(effort)) throw fail('QUALITY_EFFORT_UNSUPPORTED')
@@ -43,14 +40,7 @@ export async function qualityModelFor({ pool, secret, role, now = Date.now }) {
     capabilities: { reasoning: true, vision: metadata.vision === true },
     registry: { ...door.snapshot, metadata: undefined, capabilitiesHash: qualityHash(metadata) },
     requestProfile: readsImages ? VISION_TEST_PROFILE : 'wo-editorial-thinking-json/1',
-    price: {
-      ...rate,
-      source: prices.source,
-      verifiedAt: prices.verifiedAt,
-      validUntil: prices.validUntil,
-      maxImageTokens: prices.maxImageTokens,
-      costBasis: 'verified-peak-upper-bound'
-    },
+    price: qualityPriceFor(host, model, { now }),
     promptVersion: QUALITY_POLICY
   }
   if (readsImages) {
@@ -192,7 +182,11 @@ export async function callQualityModel({
     reasoningEffort: model.config.reasoning.effort,
     requestProfile: model.config.reasoning.profile,
     budget,
-    costBasis: 'usage-at-verified-peak-upper-bound',
+    costBasis:
+      model.config.price.costBasis === 'unverified-conservative-upper-bound'
+        ? 'unverified-conservative-upper-bound'
+        : 'usage-at-verified-peak-upper-bound',
+    ...(model.config.price.warning ? { priceWarning: model.config.price.warning } : {}),
     imageHashes: images.map(({ id, sha256 }) => ({ id, sha256 })),
     calls: 1
   }
@@ -210,6 +204,7 @@ export async function callQualityModel({
 }
 
 export function qualityUsageCost(answer, config) {
+  if (config.price.costBasis === 'unverified-conservative-upper-bound') return null
   const u = answer.receipt?.usage
   if (answer.receipt?.model !== config.model) return null
   if (
@@ -222,7 +217,8 @@ export function qualityUsageCost(answer, config) {
   const hit = u.prompt_cache_hit_tokens ?? 0
   if (!Number.isInteger(hit) || hit < 0 || hit > u.prompt_tokens) return null
   const at = new Date(answer.receipt.startedAt)
-  if (!Number.isFinite(at.getTime()) || at.getTime() >= Date.parse(config.price.validUntil)) return null
+  const reviewAfter = config.price.reviewAfter ?? config.price.validUntil
+  if (!Number.isFinite(at.getTime()) || at.getTime() >= Date.parse(reviewAfter)) return null
   // A client timestamp does not establish the provider's billing window at a price boundary.
   // Keep the verified peak upper bound until a provider billing receipt proves a lower charge.
   return (

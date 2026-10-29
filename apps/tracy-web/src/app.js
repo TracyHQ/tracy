@@ -63,7 +63,7 @@ import { MCP_PATHS, onMcpHost, ownsMcpRequest } from './lib/mcp-host.js'
 import { createOpsSignal } from './lib/ops-signal.js'
 import { markOwnReads } from './lib/own-read.js'
 import { pictureFeatures } from './lib/picture-cut.js'
-import { labelWithVision, visionDoor, visionKey } from './lib/picture-vision.js'
+import { labelWithVision, visionKey } from './lib/picture-vision.js'
 import { newDoorProbeToken, previewDoorHealth } from './lib/preview-door-health.js'
 import { pickAllowed } from './lib/preview-ticket.js'
 import { readReleases, templateOfTag } from './lib/quickstart-releases.js'
@@ -312,19 +312,8 @@ const onApiHostAllowlist = (pathname) =>
 
 /** The vision door Website Opportunities looks at pictures with: the `vision` model assignment, else the env's. */
 async function visionDoorFor(deps) {
-  const fallback = visionDoor(process.env)
-  const model = await modelForChain(deps.pool, ['vision'], deps.config, {
-    env: fallback
-      ? {
-          apiKey: fallback.key,
-          baseUrl: fallback.url.replace(/\/chat\/completions\/?$/, ''),
-          words: fallback.model
-        }
-      : null
-  })
-  return model
-    ? { url: `${model.baseUrl.replace(/\/+$/, '')}/chat/completions`, key: model.apiKey, model: model.words }
-    : null
+  const resolved = await menuVisionDoorFor(deps.pool, deps.config.sessionSecret, createTracyWoHost(deps))
+  return resolved.state === 'ready' ? resolved.door : null
 }
 
 export function buildApp(deps) {

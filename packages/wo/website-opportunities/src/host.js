@@ -20,6 +20,7 @@
  * @property {(a: {snapshot: any, baseUrl: string, model: string}) => string} visionFingerprint  What a vision test proves.
  * @property {(a: {pool: any, fingerprint: string}) => Promise<any>} currentVisionProof  The passed pixel test for that
  *   fingerprint, or null.
+ * @property {() => {url: string, key: string, model: string} | null} [visionFallback] Environment vision model for research.
  * @property {(bytes: Buffer) => Promise<{dhash: string, top2Share: number, edgeDensity: number, centreLuminance: number}>} pictureFeatures
  *   Measured numbers of a picture (perceptual hash, colour share, edges, centre light).
  * @property {(cipher: string, secret: string) => Promise<string | null>} openSecret  Opens a provider key the host
@@ -71,6 +72,7 @@ export const HOST_MEMBERS = Object.freeze([
 
 /** Members a host MAY have; a door that needs one is mounted only when it is there. */
 export const OPTIONAL_HOST_MEMBERS = Object.freeze([
+  'visionFallback',
   'emailOf',
   'hubAccountOf',
   'requireOperator',

@@ -99,6 +99,7 @@ export interface LlmPayload {
     state: 'passed' | 'untested' | 'unavailable'
     model?: string
     error?: string
+    warning?: string
     active?: { id: string; requestKey: string; state: string } | null
     proof?: { id: string; fingerprint: string; digest: string; completedAt: string } | null
   }

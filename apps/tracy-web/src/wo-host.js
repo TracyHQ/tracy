@@ -5,6 +5,7 @@ import { lookupDoor } from './lib/llm-store.js'
 import { currentVisionProof, visionFingerprint } from './lib/llm-vision-test.js'
 import { clientIp } from './lib/login-mail-rate.js'
 import { pictureFeatures } from './lib/picture-cut.js'
+import { visionDoor } from './lib/picture-vision.js'
 import { overLimitOrClosed, rateCountsOf, refundOne } from './lib/rate.js'
 import { sameSecret } from './lib/same-secret.js'
 import { openSecret, sealSecret } from './lib/secret-box.js'
@@ -47,6 +48,7 @@ export function createTracyWoHost({ pool = null, config = null } = {}) {
     effortOptions,
     visionFingerprint,
     currentVisionProof,
+    visionFallback: () => visionDoor(process.env),
     pictureFeatures,
     openSecret,
     principalOf,

@@ -3,6 +3,7 @@ import { createHash } from 'node:crypto'
 import { pictureFeatures } from '../lib/picture-cut.js'
 import { imageInfoWith } from 'website-opportunities/src/media-info.js'
 import { qualityHash } from './quality-dossier.js'
+import { boundedQualityPrice } from './quality-price.js'
 
 const imageInfo = imageInfoWith({ pictureFeatures })
 
@@ -19,7 +20,7 @@ export async function legacyRequestBudget(body, config, { measure = imageInfo, n
     body.max_tokens > 384000
   )
     throw fail('LEGACY_MODEL_OR_OUTPUT_UNSUPPORTED')
-  if (now() >= Date.parse(config.price.validUntil)) throw fail('QUALITY_PRICE_UNKNOWN')
+  config = { ...config, price: boundedQualityPrice(config.price, { now }) }
   const bodyHash = qualityHash(body),
     requestBytes = Buffer.byteLength(JSON.stringify(body))
   if (requestBytes > 48 * 1024 * 1024) throw fail('QUALITY_REQUEST_BYTES_LIMIT')
@@ -97,6 +98,9 @@ export async function legacyRequestBudget(body, config, { measure = imageInfo, n
   if (maxInputTokens + body.max_tokens > 1000000) throw fail('QUALITY_INPUT_LIMIT')
   return {
     bodyHash,
+    ...(config.price.warning
+      ? { priceWarning: config.price.warning, costBasis: config.price.costBasis }
+      : {}),
     requestBytes,
     maxInputTokens,
     maxOutputTokens: body.max_tokens,

@@ -1057,6 +1057,7 @@ function DoorRow({
                 ? t('settings.model.vision.passed', { model: data.visionTest.model ?? '' })
                 : (data.visionTest?.error ?? t('settings.model.vision.required'))}
             </p>
+            {data.visionTest?.warning ? <p role="status">{data.visionTest.warning}</p> : null}
             {current?.model && draftProvider === null ? (
               <div className="space-y-1">
                 <label className="flex items-center justify-end gap-2">

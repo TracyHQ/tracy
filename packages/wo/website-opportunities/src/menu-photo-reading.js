@@ -2,8 +2,8 @@
  * Dishes and prices read off MENU PHOTOS by the vision model of /ops › Models & AI (door `vision`), for a place whose menu
  * is only a picture. One call a photo both classifies (`isMenu`) and reads, so the candidates may be wider than Google's
  * menu photos (`menuPhotoCandidates`). Opt-in three times: the provider `photo-vision` must be in the `menu-items` order (/ops/wo › Provider
- * order), a vision model must be assigned, AND it must have passed the paid pixel test; otherwise the step is skipped
- * ("not_configured" / "not_tested"), never an error.
+ * order), a vision model must be available (assignment, else environment); otherwise the step is skipped
+ * with a plain reason, never an error. The paid pixel proof remains a quality-review control, not a research prerequisite.
  *
  * 🔒 WHAT A PHOTO SAYS IS UNVERIFIED. Every item is `verified: false`, its source is the photo (`kind: 'photo'`) and it
  * carries `provenance: 'read from photo'`. A price that is not clearly printed stays null; a currency is the printed one,
@@ -19,7 +19,7 @@ import { BudgetExceededError } from './cost-ledger.js'
 import { visionCostCents } from './cost-prices.js'
 import { currencyMinorDigits, plainPrice } from './menu-items.js'
 import { controlError } from './google-maps-research.js'
-import { requireHost } from './host.js'
+export { menuVisionDoorFor, menuVisionDoorOf } from './research-vision.js'
 import { SOURCE_RETRY_MS, snapshotMediaOf } from './places.js'
 
 export const MENU_PHOTO_PROVIDER = 'photo-vision'
@@ -46,7 +46,6 @@ const QUALITY = 82
 const CALL_MS = 120_000
 const ITEMS_PER_PHOTO = 150
 const FAILURES_BEFORE_STOP = 3
-const EFFORT = 'low'
 /** The assignment's choice to read menus with reasoning disabled (`llm_assignment.reasoning_effort`). */
 export const EFFORT_OFF = 'off'
 
@@ -123,65 +122,6 @@ export function countryOf(profile) {
   const country = Array.isArray(parts) ? parts.find((p) => p?.types?.includes('country')) : null
   const code = String(country?.shortText ?? '').toUpperCase()
   return /^[A-Z]{2}$/.test(code) ? code : null
-}
-
-/**
- * What the `vision` door gives this step, from `lookupDoor`'s answer (pure, so it is testable): `ready` with the call's
- * credential, or why not. `not_configured` = nobody assigned a vision model. `effort` is `low` (the default), or `off` when
- * the assignment turned reasoning off for this step; null when the provider has no reasoning control.
- * `host` (`host.js`) is read only for a model that reads pictures: its `effortOptions`.
- * @returns {{state: 'ready', door: {url: string, key: string, model: string, effort: string | null}}
- *   | {state: 'not_configured' | 'unavailable', reason?: string}}
- */
-export function menuVisionDoorOf(found, host) {
-  if (!found || found.state === 'unassigned') return { state: 'not_configured' }
-  if (found.state !== 'ok') return { state: 'unavailable', reason: `provider_${found.state}` }
-  const { apiKey, baseUrl, model } = found.credential
-  const metadata = found.snapshot?.metadata
-  if (metadata?.vision !== true) return { state: 'unavailable', reason: 'model_does_not_read_pictures' }
-  const { effortOptions } = requireHost(host, ['effortOptions'])
-  const options = effortOptions({ presetId: found.snapshot.presetId, baseUrl, metadata })
-  return {
-    state: 'ready',
-    door: {
-      url: `${baseUrl.replace(/\/+$/, '')}/chat/completions`,
-      key: apiKey,
-      model,
-      effort:
-        options.parameter !== 'reasoning_effort'
-          ? null
-          : found.snapshot.effort === EFFORT_OFF
-            ? EFFORT_OFF
-            : options.choices.includes(EFFORT)
-              ? EFFORT
-              : null
-    }
-  }
-}
-
-/**
- * The door, and only when the assigned model passed the paid pixel test (`llm_model_test`), the same proof the quality
- * roles ask for (`quality-model.js`): without it the step is skipped as `not_tested`. A change of assignment (model,
- * effort) is a new fingerprint, so it needs a new test.
- */
-export async function menuVisionDoorFor(pool, secret, host) {
-  const { lookupDoor, visionFingerprint, currentVisionProof } = requireHost(host, [
-    'lookupDoor',
-    'effortOptions',
-    'visionFingerprint',
-    'currentVisionProof'
-  ])
-  const found = await lookupDoor(pool, 'vision', secret)
-  const door = menuVisionDoorOf(found, host)
-  if (door.state !== 'ready') return door
-  const fingerprint = visionFingerprint({
-    snapshot: found.snapshot,
-    baseUrl: found.credential.baseUrl,
-    model: found.credential.model
-  })
-  return (await currentVisionProof({ pool, fingerprint }))
-    ? { ...door, door: { ...door.door, fingerprint } }
-    : { state: 'not_tested' }
 }
 
 /**

@@ -1,7 +1,7 @@
 {
   "schemaVersion": "tracy-wo-model-prices/v1",
   "verifiedAt": "2026-10-20T12:00:00Z",
-  "validUntil": "2026-10-27T00:00:00Z",
+  "reviewAfter": "2026-10-27T00:00:00Z",
   "source": "https://api-docs.deepseek.com/quick_start/pricing/",
   "visionSource": "https://api-docs.deepseek.com/guides/vision/",
   "endpointHost": "api.deepseek.com",

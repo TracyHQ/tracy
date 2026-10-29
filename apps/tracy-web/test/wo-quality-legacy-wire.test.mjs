@@ -78,10 +78,10 @@ test('remote file IDs, unsupported providers/tools/images and unknown price cann
     { tools: [{ type: 'web_search_20250305', max_uses: 6 }] }
   ])
     await assert.rejects(legacyRequestBudget({ ...body(), ...change }, config, { now }))
-  await assert.rejects(
-    legacyRequestBudget(body(), config, { now: () => Date.parse('2026-10-28T00:00:00Z') }),
-    /PRICE_UNKNOWN/
-  )
+  const stale = await legacyRequestBudget(body(), config, { now: () => Date.parse('2026-10-28T00:00:00Z') })
+  assert.match(stale.priceWarning, /price/i)
+  assert.equal(stale.costBasis, 'unverified-conservative-upper-bound')
+  assert.ok(stale.maxCents > (await legacyRequestBudget(body(), config, { now })).maxCents)
   const search = {
     ...body(),
     max_tokens: 4096,
@@ -187,7 +187,10 @@ test('SSE usage accepts arbitrary byte boundaries and CRLF without persisting th
         usage: { input_tokens: 100, cache_read_input_tokens: 200 }
       }
     },
-    { type: 'content_block_delta', delta: { type: 'thinking_delta', thinking: 'Private reasoning — chữ.' } },
+    {
+      type: 'content_block_delta',
+      delta: { type: 'thinking_delta', thinking: 'Private reasoning \u2014 ch\u1eef.' }
+    },
     {
       type: 'content_block_delta',
       delta: { type: 'input_json_delta', partial_json: '{"privateToolInput":true}' }

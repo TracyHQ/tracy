@@ -328,7 +328,9 @@ export async function classifyLogos({
     candidates: out,
     vision: {
       status,
-      ...(door.reason ? { reason: door.reason } : {}),
+      ...(!model || door.reason
+        ? { reason: door.reason ?? 'No vision model is available to read the logo.' }
+        : {}),
       ...(model ? { model: model.model, effort: model.effort, key } : {}),
       ...usage
     }
@@ -413,7 +415,15 @@ const keptCandidate = ({ objectKey: _objectKey, sha256, ...c }) => ({ ...c, sha2
  */
 export function sameLogoFindings(a, b) {
   // Key-sorted: the held side comes back from jsonb with its keys reordered.
-  const findings = (r) => canonicalJson([r.version, r.status, r.chosen ?? null, r.candidates ?? []])
+  const findings = (r) =>
+    canonicalJson([
+      r.version,
+      r.status,
+      r.chosen ?? null,
+      r.candidates ?? [],
+      r.vision?.status ?? null,
+      r.vision?.reason ?? null
+    ])
   return Boolean(a && b) && findings(a) === findings(b)
 }
 

@@ -8,6 +8,7 @@ import {
 import { readWoOpsSettings } from 'website-opportunities/src/wo-settings.js'
 import { createCostLedger } from 'website-opportunities/src/cost-ledger.js'
 import { callQualityModel, qualityCallBudget, qualityModelFor, qualityUsageCost } from './quality-model.js'
+import { qualityPriceFor } from './quality-price.js'
 
 export function createQualityVisionTests({ pool, secret, fetchImpl = fetch, now = Date.now }) {
   const load = () => qualityModelFor({ pool, secret, role: 'vision-test', now })
@@ -34,9 +35,15 @@ export function createQualityVisionTests({ pool, secret, fetchImpl = fetch, now 
             )
           ).rows[0] ?? null)
         : null
-      return { state: proof ? 'passed' : 'untested', model: model.config.model, proof, active }
+      return {
+        state: proof ? 'passed' : 'untested',
+        model: model.config.model,
+        proof,
+        active,
+        ...(model.config.price.warning ? { warning: model.config.price.warning } : {})
+      }
     } catch (e) {
-      return { state: 'unavailable', error: e.message }
+      return { state: 'unavailable', error: e.message, warning: qualityPriceFor('', '', { now }).warning }
     }
   }
   async function run({ actor, requestKey, checkAllowed }) {
