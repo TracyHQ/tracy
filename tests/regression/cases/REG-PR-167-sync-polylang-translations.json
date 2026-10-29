@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-167-sync-polylang-translations",
+  "kind": "fix",
+  "title": "Polylang translation links follow renumbered posts; Tracy's language changes are named, not sent half-way",
+  "pr": 167,
+  "area": "sync/polylang",
+  "cms": ["wp"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": [
+    "Run the real MariaDB Polylang cases for Sync from live, Sync to live and the sync after a push."
+  ],
+  "expect": [
+    "Translation groups, term languages and per-language menus follow post and term renumbers.",
+    "A post or term whose language or group Tracy changed is named, not sent; one in an unchanged group goes.",
+    "After a push, the copy keeps the term rows the push never sent."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "--test-name-pattern=#105",
+      "packages/fleet/tracy-fleet-operation/test/live-push-changeset.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-pushed.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-db.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-flow.test.mjs"
+    ],
+    "tests": [
+      "WordPress: a post or category whose Polylang language or translation group Tracy changed is named, not sent; one in an unchanged group goes (#105)",
+      "Polylang translation groups, term languages and per-language menus follow post and term renumbers (#105)",
+      "WordPress: a live Polylang translation renumbered by Sync keeps its translation link on the copy, and the next Preview offers no false change (#105)"
+    ]
+  }
+}

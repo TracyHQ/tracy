@@ -1268,7 +1268,12 @@ test('WordPress: a post put in another category writes slugs and checks the live
   const item = answer.items[0]
   assert.deepEqual(item.write, { categories: ['news'] })
   assert.deepEqual(item.expect, { post_category: [1] })
-  assert.deepEqual(item.seed[1], { table: 'term_relationships', match: { object_id: 10 }, rows: 'ours' })
+  assert.deepEqual(item.seed[1], {
+    table: 'term_relationships',
+    match: { object_id: 10 },
+    rows: 'ours',
+    taxonomies: ['category', 'post_tag']
+  })
 })
 
 test('WordPress: a menu entry both sides changed since the last sync is a conflict, its address named by the meta’s number; a new option goes only where the live site has none', () => {
@@ -1575,4 +1580,175 @@ test('after an Undo, a Tracy post the live site holds in the trash is offered as
     }
   })
   assert.equal(same.items.length, 0, JSON.stringify(same.items))
+})
+
+function previewOf(answer) {
+  const file = join(root, `preview-${++n}.json`)
+  writeFileSync(file, JSON.stringify(answer))
+  const r = spawnSync('python3', [PUSH, 'answer', '--changeset', file, '--preview-id', 'test-preview'], {
+    encoding: 'utf8'
+  })
+  assert.equal(r.status, 0, r.stderr + r.stdout)
+  return JSON.parse(r.stdout.trim().split('\n').at(-1))
+}
+
+test('WordPress preview retains page types and translated metadata labels', () => {
+  const answer = changeset('wordpress', {
+    entities: { posts: { base: [10], copy: [10] } },
+    kinds: {
+      post: kind([post(10)], [post(10, { post_title: 'About us' })], ['ID']),
+      postmeta: kind(
+        [],
+        [
+          { post_id: '10', meta_key: '_thumbnail_id', value: '0', post_title: 'About us' },
+          { post_id: '10', meta_key: '_wp_page_template', value: 'landing.php', post_title: 'About us' },
+          { post_id: '10', meta_key: '_wp_attachment_image_alt', value: 'Team', post_title: 'About us' }
+        ],
+        ['post_id', 'meta_key']
+      )
+    }
+  })
+  const items = byId(previewOf(answer))
+  assert.equal(items['post:10'].what, 'page')
+  assert.deepEqual(
+    [items['postmeta:10:_thumbnail_id'].label, items['postmeta:10:_thumbnail_id'].subject],
+    ['featuredImage', 'About us']
+  )
+  assert.deepEqual(
+    [items['postmeta:10:_wp_page_template'].label, items['postmeta:10:_wp_page_template'].subject],
+    ['pageTemplate', 'About us']
+  )
+  assert.deepEqual(
+    [
+      items['postmeta:10:_wp_attachment_image_alt'].label,
+      items['postmeta:10:_wp_attachment_image_alt'].subject
+    ],
+    ['altText', 'About us']
+  )
+  assert.ok(!items['postmeta:10:_thumbnail_id'].title.includes('_thumbnail_id'))
+})
+
+test('WordPress metadata uses the record title without exposing unknown internal keys', () => {
+  const answer = changeset('wordpress', {
+    entities: { posts: { base: [10], copy: [10] } },
+    kinds: {
+      postmeta: kind(
+        [],
+        [{ post_id: '10', meta_key: '_plugin_internal_key', value: 'yes', post_title: 'About us' }],
+        ['post_id', 'meta_key']
+      )
+    }
+  })
+  assert.equal(answer.items[0].title, 'About us')
+})
+
+test('WordPress: a post or category whose Polylang language or translation group Tracy changed is named, not sent; one in an unchanged group goes (#105)', () => {
+  const group = (members) =>
+    `a:${Object.keys(members).length}:{${Object.entries(members)
+      .map(([lang, id]) => `s:${lang.length}:"${lang}";i:${id};`)
+      .join('')}}`
+  const news = (id, fields = {}) =>
+    post(id, {
+      post_type: 'post',
+      language: 'en',
+      translations: null,
+      categories: '1',
+      category_slugs: 'uncategorized',
+      ...fields
+    })
+  const term = (id, fields = {}) => ({
+    term_id: String(id),
+    taxonomy: 'category',
+    name: `Category ${id}`,
+    slug: `category-${id}`,
+    description: '',
+    parent: '0',
+    language: 'pll_en',
+    translations: null,
+    ...fields
+  })
+  const answer = changeset('wordpress', {
+    homes: HOMES,
+    languages: { default: 'en' },
+    // The customer's post 41 met one of the copy's numbers: the copy holds it as 43.
+    idMap: { posts: { 41: 43 } },
+    entities: {
+      posts: { base: [5, 40, 41, 50], copy: [5, 31, 32, 40, 43, 50] },
+      terms: { base: [1, 7], copy: [1, 7, 8, 9] }
+    },
+    kinds: {
+      post: kind(
+        [
+          news(5, { post_title: 'Spring fair' }),
+          news(40, { post_title: 'Bonjour', language: 'fr', translations: group({ en: 41, fr: 40 }) }),
+          news(41, { post_title: 'Hello', translations: group({ en: 41, fr: 40 }) }),
+          news(50, { post_title: 'About' })
+        ],
+        [
+          // Tracy linked a new French post to Spring fair.
+          news(5, { post_title: 'Spring fair', translations: group({ en: 5, fr: 31 }) }),
+          news(31, {
+            post_title: 'Foire de printemps',
+            language: 'fr',
+            translations: group({ en: 5, fr: 31 })
+          }),
+          // A new English post: Polylang gives it the default language on the live site.
+          news(32, { post_title: 'Summer fair' }),
+          // A French title renamed, its group the live site's (43 is the live site's 41).
+          news(40, { post_title: 'Bonjour a tous', language: 'fr', translations: group({ en: 43, fr: 40 }) }),
+          { ...news(41, { post_title: 'Hello', translations: group({ en: 43, fr: 40 }) }), ID: '43' },
+          // Moved to another language.
+          news(50, { post_title: 'A propos', language: 'fr' })
+        ],
+        ['ID']
+      ),
+      term: kind(
+        [term(1), term(7, { translations: group({ en: 7 }) })],
+        [
+          term(1),
+          term(7, { translations: group({ en: 7 }) }),
+          term(8, { name: 'Nouvelles', language: 'pll_fr', translations: group({ en: 1, fr: 8 }) }),
+          term(9, { name: 'Neuigkeiten', language: 'pll_de' })
+        ],
+        ['term_id', 'taxonomy']
+      ),
+      menuItem: kind(
+        [],
+        [
+          {
+            ID: '62',
+            title: '',
+            position: '3',
+            type: 'post_type',
+            object: 'post',
+            object_id: '31',
+            url: '',
+            parent: '0',
+            menu: 'main'
+          }
+        ],
+        ['ID']
+      )
+    }
+  })
+  const refused = answer.unsupported
+    .filter((u) => u.reason === 'translation-group')
+    .map((u) => `${u.op} ${u.kind} ${u.title}`)
+    .sort()
+  assert.deepEqual(refused, [
+    'create category Neuigkeiten',
+    'create category Nouvelles',
+    'create post Foire de printemps',
+    'update post A propos',
+    'update post Spring fair'
+  ])
+  // What links to the refused translation waits for it, named.
+  assert.ok(
+    answer.unsupported.some((u) => u.reason === 'depends-on-unsupported' && u.on?.includes('posts:31')),
+    JSON.stringify(answer.unsupported)
+  )
+  const items = byId(answer)
+  assert.deepEqual(Object.keys(items).sort(), ['post:40', 'post:new:32'])
+  assert.deepEqual(items['post:40'].write, { post_title: 'Bonjour a tous' })
+  assert.ok(!('language' in items['post:new:32'].write) && !('translations' in items['post:new:32'].write))
 })

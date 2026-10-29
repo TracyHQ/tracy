@@ -2110,6 +2110,7 @@ export function buildApp(deps) {
     }
     const sites = sitesRoutes({
       pool: deps.pool,
+      resumeLiveJobs: deps.resumeLiveJobs === true,
       doorProbeToken: doorHealth ? doorProbeToken : null,
       doorHealth,
       config: deps.config,

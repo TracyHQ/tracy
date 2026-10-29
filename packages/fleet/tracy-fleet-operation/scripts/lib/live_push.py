@@ -358,7 +358,8 @@ OPTION_LABELS = {"blogname": "Site title", "blogdescription": "Tagline", "date_f
 # Fixed words of a title (`Changeset.worded`), by the name the dialog translates them under
 # (`push.label.<name>`): each option's label, and the words of a setting's title.
 LABELS = {**OPTION_LABELS, "additionalCss": "Additional CSS", "customizer": "Customizer",
-          "templateStyle": "Template style", "styles": "Styles", "globalConfiguration": "Global Configuration"}
+          "templateStyle": "Template style", "styles": "Styles", "globalConfiguration": "Global Configuration",
+          "featuredImage": "Featured image", "pageTemplate": "Page template", "altText": "Alt text"}
 # What each kind of change is, as the dialog names it (`push.what.<name>`): a record, a setting, a file.
 WHAT = {"article": "article", "category": "category", "tag": "tag", "menuItem": "menuItem", "menutype": "menu",
         "module": "module", "moduleAssignment": "module", "fieldValue": "customField", "redirect": "redirect",
@@ -366,9 +367,13 @@ WHAT = {"article": "article", "category": "category", "tag": "tag", "menuItem": 
         "customCss": "setting", "globalStyles": "setting", "siteIdentity": "setting", "templateSettings": "setting",
         "templatePart": "templatePart", "template": "template", "postmeta": "pageDetail", "attachment": "media",
         "file": "file"}
+# Polylang's language and translation group of a post or a term (`Changeset.translation_refused`):
+# compared on their own, never written — the live engine's write door has no read of them to check
+# against and no undo (`content.language`), so a change of them is named, not sent.
+W_POLYLANG = frozenset({"language", "translations"})
 # Post meta never offered: WordPress's and Tracy's own bookkeeping, the menu item's (its own kind).
 W_META_SKIP = ("_edit_lock", "_edit_last", "_encloseme", "_pingme", "_wp_old_slug", "_wp_old_date",
-               "_wp_trash_meta_status", "_wp_trash_meta_time", "_wp_attached_file", "_wp_attachment_metadata")
+               "_wp_trash_meta_status", "_wp_trash_meta_time", "_wp_desired_post_slug", "_wp_attached_file", "_wp_attachment_metadata")
 
 
 def _menu_object_entity(row: dict) -> str | None:
@@ -396,6 +401,13 @@ def wordpress_specs(prefix: str) -> list[Spec]:
     def meta(key: str) -> str:
         return f"(SELECT m.meta_value FROM {t('postmeta')} m WHERE m.post_id = r.ID AND m.meta_key = '{key}' LIMIT 1)"
 
+    def filed(record: str, taxonomy: str, value: str) -> str:
+        """One term of `taxonomy` the record (`r.ID`, `r.term_id`) is filed under: Polylang's language
+        (`x.slug`) or translation group (`tt.description`)."""
+        return (f"(SELECT {value} FROM {t('term_relationships')} tr JOIN {t('term_taxonomy')} tt"
+                f" ON tt.term_taxonomy_id = tr.term_taxonomy_id JOIN {t('terms')} x ON x.term_id = tt.term_id"
+                f" WHERE tr.object_id = {record} AND tt.taxonomy = '{taxonomy}' ORDER BY tt.term_taxonomy_id LIMIT 1)")
+
     menu_slug = (f"(SELECT x.slug FROM {t('term_relationships')} tr JOIN {t('term_taxonomy')} tt"
                  f" ON tt.term_taxonomy_id = tr.term_taxonomy_id JOIN {t('terms')} x ON x.term_id = tt.term_id"
                  f" WHERE tr.object_id = r.ID AND tt.taxonomy = 'nav_menu' LIMIT 1)")
@@ -413,6 +425,14 @@ def wordpress_specs(prefix: str) -> list[Spec]:
     # same two-collation reason as the theme mods below.
     of_active_theme = (f"CAST({term_of('wp_theme')} AS BINARY) = (SELECT CAST(st.option_value AS BINARY)"
                        f" FROM {t('options')} st WHERE st.option_name = 'stylesheet' LIMIT 1)")
+    menu_object_title = (
+        f"CASE WHEN {meta('_menu_item_type')} = 'post_type' THEN"
+        f" (SELECT target.post_title FROM {t('posts')} target WHERE target.ID = CAST({meta('_menu_item_object_id')} AS UNSIGNED)"
+        f" AND target.post_type = {meta('_menu_item_object')} LIMIT 1)"
+        f" WHEN {meta('_menu_item_type')} = 'taxonomy' THEN"
+        f" (SELECT target.name FROM {t('terms')} target JOIN {t('term_taxonomy')} taxonomy ON taxonomy.term_id = target.term_id"
+        f" WHERE target.term_id = CAST({meta('_menu_item_object_id')} AS UNSIGNED)"
+        f" AND taxonomy.taxonomy = {meta('_menu_item_object')} LIMIT 1) END")
     skip = ", ".join(LS.sql_str(k) for k in W_META_SKIP + WP.VOLATILE_NAMES["postmeta"][1])
     options = ", ".join(LS.sql_str(o) for o in W_OPTIONS)
     tracy_option = WP.TRACY_OPTIONS
@@ -429,8 +449,11 @@ def wordpress_specs(prefix: str) -> list[Spec]:
              where="tt.taxonomy IN ('category', 'post_tag', 'nav_menu')",
              columns={"term_id": "r.term_id", "taxonomy": "tt.taxonomy", "name": "r.name", "slug": "r.slug",
                       "description": "tt.description", "parent": "tt.parent"},
+             extra={"language": filed("r.term_id", "term_language", "x.slug"),
+                    "translations": filed("r.term_id", "term_translations", "tt.description")},
              title=("name", "slug"), write=("name", "slug", "description", "parent"),
-             create=("name", "slug", "description", "parent"), refs={"parent": "terms"}, address=True),
+             create=("name", "slug", "description", "parent"), ignore=W_POLYLANG, refs={"parent": "terms"},
+             address=True),
         Spec("attachment", "media", "posts", "posts", key=("ID",), where="r.post_type = 'attachment'",
              columns={"ID": "r.ID", "post_title": "r.post_title", "file": meta("_wp_attached_file")},
              title=("post_title", "file"), write=(), ignore=frozenset({"post_title"}), delete_absent=False,
@@ -439,18 +462,20 @@ def wordpress_specs(prefix: str) -> list[Spec]:
              where=f"r.post_type IN ({types}) AND r.post_status NOT IN ('auto-draft', 'inherit')",
              extra={"categories": terms_of("category", "term_id"), "tags": terms_of("post_tag", "term_id"),
                     "category_slugs": terms_of("category", "slug"), "tag_slugs": terms_of("post_tag", "slug"),
-                    "tag_names": terms_of("post_tag", "name")},
+                    "tag_names": terms_of("post_tag", "name"),
+                    "language": filed("r.ID", "language", "x.slug"),
+                    "translations": filed("r.ID", "post_translations", "tt.description")},
              title=("post_title", "post_name"), write=W_POST + ("categories", "tags"),
              create=("post_type",) + W_POST + ("categories", "tags"), trash=("post_status", "trash"),
-             ignore=W_STAMPS, refs={"post_parent": "posts"}, lists={"categories": "terms", "tags": "terms"},
+             ignore=W_STAMPS | W_POLYLANG, refs={"post_parent": "posts"}, lists={"categories": "terms", "tags": "terms"},
              texts=("post_content",), address=True),
         Spec("menuItem", "menuItem", "posts", "posts", key=("ID",), where="r.post_type = 'nav_menu_item'",
              columns={"ID": "r.ID", "title": "r.post_title", "position": "r.menu_order",
                       "type": meta("_menu_item_type"), "object": meta("_menu_item_object"),
                       "object_id": meta("_menu_item_object_id"), "url": meta("_menu_item_url"),
-                      "parent": meta("_menu_item_menu_item_parent"), "menu": menu_slug},
-             title=("title", "url"), write=W_MENU, create=W_MENU,
-             refs={"object_id": _menu_object_entity, "parent": "posts"}, address=True),
+                      "parent": meta("_menu_item_menu_item_parent"), "menu": menu_slug, "object_title": menu_object_title},
+             title=("title", "object_title", "url"), write=W_MENU, create=W_MENU,
+             ignore=frozenset({"object_title"}), refs={"object_id": _menu_object_entity, "parent": "posts"}, address=True),
         Spec("option", "option", "options", None, key=("option_name",), key_refs={},
              where=f"r.option_name IN ({options})",
              columns={"option_name": "r.option_name", "value": "r.option_value"},
@@ -785,7 +810,23 @@ class SqlSource:
                 **({"tree": {w: self.tree(spec, w) for w in ("base", "copy")}} if spec.tree is not None else {}),
             }
         out["tables"] = self.other_tables(specs)
+        if self.platform == "wordpress":
+            out["languages"] = self.languages()
         return out
+
+    def languages(self) -> dict:
+        """The live site's Polylang default language (`polylang` option, `default_lang`), as the base
+        holds it: the language Polylang gives a post or term the engine creates. `{}` with no Polylang."""
+        if not self.has("base", "options"):
+            return {}
+        rows = self.sql.run(f"SELECT HEX(option_value) FROM {LS.q(self.base)}.{LS.q(self.prefix + 'options')}"
+                            f" WHERE option_name = 'polylang' LIMIT 1;")
+        try:
+            settings = php_unserialize(decode(rows[0][0]) or "") if rows and rows[0][0] else None
+        except (Unserializable, TypeError):
+            settings = None
+        default = settings.get("default_lang") if isinstance(settings, dict) else None
+        return {"default": default} if isinstance(default, str) and default else {}
 
     def other_tables(self, specs: list[Spec]) -> list[dict]:
         """Tables no kind covers and no rule leaves out, whose rows differ between the two sides:
@@ -1247,6 +1288,11 @@ class Changeset:
         return text
 
     def title(self, spec: Spec, row: dict | None, key: tuple) -> str:
+        if spec.name == "postmeta":
+            label = {"_thumbnail_id": "featuredImage", "_wp_page_template": "pageTemplate",
+                     "_wp_attachment_image_alt": "altText"}.get((row or {}).get("meta_key"))
+            subject = str((row or {}).get("post_title") or "").strip()[:200]
+            return self.worded(label, subject or None) if label else subject
         if spec.kind == "option" and (row or {}).get("option_name") in OPTION_LABELS:
             return self.worded(row["option_name"])
         if spec.name == "customCss":
@@ -1263,12 +1309,10 @@ class Changeset:
             value = (row or {}).get(column)
             if isinstance(value, str) and value.strip():
                 text = value.strip()
-                if spec.name == "postmeta":
-                    return f"{text} · {(row or {}).get('meta_key') or key[1]}"
                 if spec.name == "moduleAssignment":
                     return text
                 return text[:200]
-        return f"{spec.kind} {' '.join(str(k) for k in key)}"
+        return "" if spec.name == "menuItem" else f"{spec.kind} {' '.join(str(k) for k in key)}"
 
     def item_id(self, spec: Spec, key: tuple, created: bool = False, suffix: str = "") -> str:
         name = spec.name if spec.name not in ("optionOther",) else "option"
@@ -1366,7 +1410,11 @@ class Changeset:
             out.append({"table": spec.table, "match": {pk: ident}, "columns": db_columns,
                         **({"create": True, "entity": spec.entity, "id": ident} if op == "create" else {})})
         if self.platform == "wordpress" and spec.name == "post" and ({"categories", "tags"} & set(columns)):
-            out.append({"table": "term_relationships", "match": {"object_id": ident}, "rows": "ours"})
+            # Only the categories and tags it writes: the post's other terms (Polylang's language and
+            # translation group, a plugin's taxonomy) were never sent, and taken as base they would read
+            # as removed on the live site and leave the copy (#105).
+            out.append({"table": "term_relationships", "match": {"object_id": ident}, "rows": "ours",
+                        "taxonomies": ["category", "post_tag"]})
         return out
 
     # — building —
@@ -1382,7 +1430,7 @@ class Changeset:
             prepared[spec.name] = (spec, pairs, rows)
             if spec.create is not None and spec.entity and spec.name not in ("moduleAssignment",):
                 for c in pairs["copy_only"]:
-                    if self.known_live(spec, c) is None:
+                    if self.known_live(spec, c) is None and not self.translation_refused(spec, None, rows["copy"].get(c)):
                         self.creatable.add(f"{spec.entity}:{int(c[0])}")
             if spec.name == "attachment":
                 for c in pairs["copy_only"]:
@@ -1391,7 +1439,8 @@ class Changeset:
                         self.creatable.add(f"posts:{int(c[0])}")
             if spec.name == "term":
                 for c in pairs["copy_only"]:
-                    self.creatable.add(f"terms:{int(c[0])}")
+                    if not self.translation_refused(spec, None, rows["copy"].get(c)):
+                        self.creatable.add(f"terms:{int(c[0])}")
         for spec in self.specs:
             spec_, pairs, rows = prepared[spec.name]
             self.build_kind(spec, pairs, rows, kinds_data[spec.name])
@@ -1468,6 +1517,9 @@ class Changeset:
             base_row, copy_row = rows["base"].get(b), rows["copy"].get(c)
             if base_row is None or copy_row is None:
                 continue  # same digest, same number: nothing changed
+            if self.translation_refused(spec, base_row, copy_row):
+                self.refuse_translation(spec, copy_row, c, "update")
+                continue
             after = self.to_live(spec, copy_row)
             changed, unsupported = {}, []
             for column in compared(copy_row):
@@ -1541,6 +1593,9 @@ class Changeset:
                 continue
             if spec.trash and str(copy_row.get(spec.trash[0])) == spec.trash[1]:
                 continue  # made and trashed on the copy: nothing to add
+            if self.translation_refused(spec, None, copy_row):
+                self.refuse_translation(spec, copy_row, c, "create")
+                continue
             self.create_item(spec, c, copy_row, title)
         for b in pairs["base_only"]:
             base_row = rows["base"].get(b)
@@ -1569,6 +1624,55 @@ class Changeset:
             self.delete_item(spec, to_copy_key(spec, b, self.id_map), tuple(b), base_row, None, title, ident, key)
         if spec.tree is not None:
             self.tree_moves(spec, data, pairs, rows)
+
+    # — Polylang's languages and translation groups —
+    #
+    # Polylang files a post's language and its translation group (`post_translations`: language →
+    # post) as terms, and a term's the same way (`term_language`, `term_translations`). The live
+    # engine's `content.update` writes neither, and its `content.language` door is no safe write for a
+    # push: `content.get` reads no language or group back, so the base's cannot be checked before the
+    # write (`pll_save_post_translations` sets the whole group, unlinking a translation the customer
+    # linked since), nor taken back on Undo, and a language the live site lacks is made there. Sent
+    # anyway, a translation reached the live site in the default language and unlinked, and the sync
+    # after the push dropped the copy's own language and group rows (#105). So a post or term whose
+    # language or group Tracy changed — a new translation, a new link, another language — is named
+    # and not sent; one in a group Tracy left alone (a French title renamed) goes as before.
+    TRANSLATED = {"post": "posts", "term": "terms"}
+
+    def translation_state(self, spec: Spec, row: dict, live: bool) -> tuple[str | None, dict]:
+        """A row's language and translation group (language → number, the copy's in live numbers, a
+        record this push creates by its marker); a group of one member is no group."""
+        entity = self.TRANSLATED[spec.name]
+        language = row.get("language")
+        language = language.removeprefix("pll_") if isinstance(language, str) and language else None
+        group = {}
+        raw = row.get("translations")
+        try:
+            parsed = php_unserialize(raw) if isinstance(raw, str) and raw else None
+        except Unserializable:
+            parsed = None  # unreadable to Polylang too: no group
+        for lang, member in (parsed.items() if isinstance(parsed, dict) else ()):
+            if lang == "sync" or not INT.match(str(member)) or int(member) <= 0:
+                continue
+            got = self.live_id(entity, member) if live else int(member)
+            group[lang] = got.marker() if isinstance(got, Placeholder) else int(got)
+        return language, (group if len(group) > 1 else {})
+
+    def translation_refused(self, spec: Spec, base_row: dict | None, copy_row: dict | None) -> bool:
+        """Whether Tracy changed the record's Polylang language or translation group. A record made on
+        the copy: in a group, or in a language other than the one Polylang gives it on the live site."""
+        if self.platform != "wordpress" or spec.name not in self.TRANSLATED or copy_row is None:
+            return False
+        language, group = self.translation_state(spec, copy_row, live=True)
+        if base_row is None:
+            return bool(group) or (language is not None and language != self.data.get("languages", {}).get("default"))
+        return (language, group) != self.translation_state(spec, base_row, live=False)
+
+    def refuse_translation(self, spec: Spec, row: dict, key: tuple, op: str) -> None:
+        kind = (str(row.get("post_type") or "post") if spec.name == "post"
+                else {"post_tag": "tag"}.get(str(row.get("taxonomy")), "category"))
+        self.unsupported.append({"what": "record", "kind": kind, "title": self.title(spec, row, key), "op": op,
+                                 "reason": "translation-group"})
 
     @staticmethod
     def copy_order(spec: Spec, keys: list, data: dict) -> list:
@@ -2415,6 +2519,7 @@ def preview_answer(changeset: dict, preview_id: str, sync: dict | None, live_rea
         items.append({"id": item["id"], "kind": item["kind"], "op": item["op"], "group": group,
                       "title": item["title"], "liveId": item["liveId"], "fields": item["fields"],
                       "dependsOn": item["dependsOn"],
+                      **{name: item[name] for name in ("what", "label", "subject") if name in item},
                       # A file: its name and size, never its bytes; whether it is new on the live site.
                       **({"path": item["path"], "size": item.get("size", 0), "change": item.get("change")}
                          if item.get("spec") in ("file", "attachment") else {}),
