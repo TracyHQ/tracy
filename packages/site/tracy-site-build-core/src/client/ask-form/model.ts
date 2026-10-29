@@ -105,7 +105,8 @@ export const LONGTEXT_MAX = 300
 export const TEXT_MAX = 200
 
 /** The "(Recommended)" suffix dsh's own composer reads (`parseRecommendedLabel`), English and Chinese. */
-const RECOMMENDED_SUFFIX = /\s*(?:\((?:recommended|推荐)\)|（(?:recommended|推荐)）)\s*$/i
+const RECOMMENDED_SUFFIX =
+  /\s*(?:\((?:recommended|\u63a8\u8350)\)|\uff08(?:recommended|\u63a8\u8350)\uff09)\s*$/i
 
 /**
  * Which option label the asker recommends: the explicit `recommended` when it names an option,

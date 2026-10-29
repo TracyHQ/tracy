@@ -120,6 +120,13 @@ COPY vendor/php/scssphp/LICENSE.md /opt/tracy-fleet/vendor/scssphp/LICENSE.md
 # both point an operator at `/opt/tracy-fleet/web/build.sh` by that exact path, and the three
 # platform Dockerfiles beside it are what that script builds. The pinned EmDash receiver artifact travels with them.
 COPY packages/fleet/tracy-fleet-operation/web /opt/tracy-fleet/web
+# The Joomla T4 skill tree, because `web/joomla.Dockerfile` COPYs it into every Joomla web image and
+# `web/build.sh` (`context_for`) finds it here, beside `web/`, when there is no repo checkout. Without
+# it a Joomla line could only be built from a checkout, so the missing image a provision builds on
+# the spot (lib/web-image.sh, 29/10/2026) failed for every Joomla site and left it on the bare
+# upstream image, with no browser for the visual check. node_modules stays out (.dockerignore): the
+# Joomla Dockerfile runs its own `npm ci`.
+COPY vendor/joomla/joomlart-t4-skill /opt/tracy-fleet/vendor/joomla/joomlart-t4-skill
 # The personalize tool travels with the image, not with the provision scripts, and it travels from
 # its ONE home. `emdash_complete_source` completes a packed template that ships no personalize tool
 # of its own (every template cut from a kit older than 20/09/2026), and a fourth checked-in copy of

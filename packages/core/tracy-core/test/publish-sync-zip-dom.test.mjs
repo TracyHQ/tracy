@@ -1237,3 +1237,23 @@ test('Sync: firewall, HTTP password, rate limit and token each have actionable w
   }
   assert.equal(new Set(Object.keys(keys).map((code) => lib.failureText(code, t))).size, 4)
 })
+
+test('Sync, applied: what the original site has that a sync does not bring is named (#120)', async () => {
+  const panel = await openApplied({
+    notCarried: {
+      triggers: [{ name: 'shop_after_insert', table: 'wp_shop' }],
+      tables: ['wp_shop_log']
+    }
+  })
+  const notice = panel.querySelector('[data-live-sync-not-carried]')
+  assert.ok(notice, 'the notice is there')
+  const text = notice.textContent
+  assert.ok(text.includes(t('sync.notCarried')), text)
+  assert.ok(text.includes(t('sync.notCarriedTriggers', { names: 'shop_after_insert' })), text)
+  assert.ok(text.includes(t('sync.notCarriedTables', { names: 'wp_shop_log' })), text)
+})
+
+test('Sync, applied with nothing left behind: no not-brought notice (#120)', async () => {
+  const panel = await openApplied({ notCarried: null })
+  assert.equal(panel.querySelector('[data-live-sync-not-carried]'), null)
+})

@@ -24,6 +24,10 @@
     {
       "path": "packages/locale/tracy-locale-vi/vi/*.json",
       "reason": "Vietnamese interface language pack; values are localized text shown to users."
+    },
+    {
+      "path": "packages/wo/website-opportunities/domain/neutral-copy/*.json",
+      "reason": "Per-locale neutral copy for website opportunities (including the forbidden-phrases list keyed by locale); values are localized text."
     }
   ],
   "lines": [],
@@ -102,6 +106,36 @@
       "path": "packages/locale/tracy-locales/lib/client.js",
       "oid": "84bcce538282172171709b1d3121a51679123278",
       "reason": "Exact generated translation bundle for PR #53. Rebuilt from its localized JSON dictionaries and checked for byte-for-byte reproducibility; authored executable source remains subject to English policy."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "0243be2967998881460121b21d9102a5d2dd0a60",
+      "reason": "Exact generated translation bundle for PR #156 (Publish tour step wording). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "709365c193343077ee31d509852f6d6a3eede355",
+      "reason": "Exact generated translation bundle for PR #156 (Publish tour step wording). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "2f90d0646f3bf3f2d0a3e91cfab249cea2178fa8",
+      "reason": "Exact generated translation bundle for PR #186 (Sync step: what a sync does not bring). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "2c38e5e55224a975b0fdabe9d3c4c5e3bcb5fa7f",
+      "reason": "Exact generated translation bundle for PR #186 (Sync step: what a sync does not bring). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "87ee85eedff99beb43c461aac3c494d803183d18",
+      "reason": "Exact generated translation bundle for PR #186 after merging develop (Sync step: what a sync does not bring). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "cce9d9fea222ad33d3376f438f8027d3fc4b667e",
+      "reason": "Exact generated translation bundle for PR #186 after merging develop (Sync step: what a sync does not bring). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source."
     },
     {
       "path": "packages/locale/tracy-locales/lib/client.js",

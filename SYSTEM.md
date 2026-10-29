@@ -48,6 +48,7 @@ sources:
   - .github/workflows/build-dsh-image.yml
   - apps/tracy-host/Dockerfile
   - apps/tracy-web/src/lib/quickstart-releases.js
+  - apps/tracy-web/src/lib/template-blurb-translations.js
   - deploy/scripts/check-fleet-files-in-image.sh
   - packages/fleet/tracy-fleet-operation/dsh/host-dsh-init.sh
   - scripts/ci/image-context.mjs
@@ -99,7 +100,7 @@ Seven services, plus `minio-init`, which runs once locally:
 | `docker-proxy` | HAProxy in front of the docker socket; dsh may only `exec` into `*-web-1` containers, everything else is 403 |
 | `minio` (+ `minio-init`) | Local only, plays the role of R2 |
 | `dns` | Local only: resolves `*.tracy.test` to `tracy-web` |
-| `<label>-web-1`, `<label>-db-1` | One pair per site, built by `tracy-host`. Per-CMS web images in [`packages/fleet/tracy-fleet-operation/web`](packages/fleet/tracy-fleet-operation/web) |
+| `<label>-web-1`, `<label>-db-1` | One pair per site, built by `tracy-host`. Per-CMS web images in [`packages/fleet/tracy-fleet-operation/web`](packages/fleet/tracy-fleet-operation/web): a site runs the `IMAGE_TAGS` line for its exact upstream base (its PHP), which carries the agent's tools and the visual check's chromium + node. A provision builds a missing line on the spot ([`web-image.sh`](packages/fleet/tracy-fleet-operation/scripts/lib/web-image.sh)); only a failed build leaves a new site on the bare upstream image, said loudly in the provision log. A site already on one is moved by [`move-off-upstream-image.sh`](packages/fleet/tracy-fleet-operation/scripts/provision/move-off-upstream-image.sh) |
 
 Three places run this same shape:
 
@@ -116,6 +117,8 @@ container has none (`tracy-site-tools` `captureView`, host mode `view`). Chromiu
 route: same-origin documents, stylesheets, images and fonts are fetched through that site's
 `docker exec curl`; page scripts stay disabled and other requests fail. This fallback is used only
 for visual-check captures. It cannot evaluate changes that require page scripts or external assets.
+
+Host-mode capture scrolls synchronously and waits for rendering in the Node process: page timers do not run while page scripts are disabled. The script and network restrictions remain in force.
 
 ## 3. Where the browser lands
 
@@ -459,7 +462,9 @@ reads the tables above for one session — the turn's commits (trailer `Tracy-Tu
 `apply_id`, and the reason something cannot be undone; `POST /api/sites/:key/turns/undo` pre-checks a multi-moment turn (read-only host
 op `undo-check`), holds the site's write lease, then reverts files through the same `/restore` path in mode `undo` (one
 `site_operation` row per moment) and content through `apply.revert` (branch 4c), newest → oldest, stopping at the first failure. A turn that was undone (fully or partly) is stamped
-`site_turn.undone_at` + `undo_complete` (migration 067); when the session's next turn opens with `POST /turn`, the answer
+`site_turn.undone_at` + `undo_complete` (migration 067, the last press; also when it only may have gone, e.g. the host answered 202) — the press, read by the agent notice and ops usage —
+and, only when something of it verifiably went, `undo_proven_at` (migration 182) + `undo_proven_complete` (migration 185; a complete proof stays complete) — the proof, the only stamp the Site changes row reads
+(an unproven press never clears an earlier proof); when the session's next turn opens with `POST /turn`, the answer
 (and `POST /turn/undone`, read early since 16/10) carries `undone`, and `tracy-site-tabs` inserts a notice for the agent right after the user's message (the undo runs within that same
 session, so the "site changed" notice stays silent).
 The deciding logic is in [`turn-undo.js`](apps/tracy-web/src/sites/turn-undo.js). No undo on EmDash (the server
@@ -640,6 +645,11 @@ Only for `origin='migrated'` sites on Joomla (WordPress waits for its own adapte
   it into the copy's DB right after loading the DB (step 4b), and when attaching the door `site_component` keeps `liveEndpoint` + `liveToken` separate
   from the copy's `token`. The real site's token only travels to the host in the job body, then into the script through an environment variable.
   Copies imported earlier (still holding the real token) get their token changed before their first Sync (`webroot-sync.sh --op copy-token`).
+- **Joomla copy address:** verification tries the registered front/administrator pair on the copy first, then the same
+  pair at the webroot. Imports from a live subdirectory may be installed at the copy's root. Only a response that did
+  not reach the plugin (`not_json`, `not_engine`, `redirected`) permits the next candidate; requests refuse redirects.
+  A successful authenticated `core.manifest` for Joomla selects the copy endpoint. The original live endpoint and token
+  remain separate for Sync; verification never calls the live origin.
 - **Host:** the `webroot-sync` job runs `webroot/webroot-sync.sh`: reads the real site with `lib/live-pull.mjs` (the
   Import protocol, inline tar part, straight to the host disk, **outside** the heavy lock; the tables the merge never takes —
   `live_sync.py never-taken`, Tracy's own and the ignored ones — keep the last read's part and are not read again; the dump is
@@ -777,6 +787,7 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   `site_component`, `site_build`, `site_design`), changes and comments (§5, `site_comment*`),
   `quickstart_releases`, `template_readiness` (results of the Customize your site check for each release, §8),
   `template_ds_readiness` (results of the Design system check, same shape, §8),
+  `template_blurb_translation` + `template_blurb_translation_failure` (a card blurb's translations for the public Templates pages, keyed by the sha256 of the English, §8),
   `ui_setting`, `speech_setting` (the ElevenLabs key for voice input, sealed with `secret-box.js`), `notification*`, `audit`, `site_brand_upload` (logo/favicon customers upload before a site exists, §8).
   `account_seen_hint` keeps the seen marks for step 2 of the tour (`site-tour`) and the voice hint (`voice-tip`), primary
   key `(account_id, hint)`, first time `seen_at`, deleted automatically when the account is deleted; the closed list of names
@@ -1090,6 +1101,17 @@ EmDash) never gets a record created for it.
   installer/webroot, WordPress theme zip, EmDash source zip), no database, into `TRACY_READINESS_DIR/design-system`. The
   `design-system` step of Road to live (after `customize`, waits for the install file) and the Publish door (`DESIGN_SYSTEM_NOT_READY`, only for
   releases not yet live) read this table. Check again: `POST /api/ops/quickstart/design-system/check`.
+- **A card's blurb is translated for the public Templates pages in the background, on the master only** (29/10/2026,
+  [`template-blurb-translations.js`](apps/tracy-web/src/lib/template-blurb-translations.js)). The English blurb stays the release's own
+  (`tracy_design_inspiration.json`, rewritten into `quickstart_releases.inspiration` by every read), so translations live apart, in
+  `template_blurb_translation` keyed by `(sha256 of the English, lang)`, for de, fr, es, it and nl. After each read of the releases (the same
+  places that kick the Customize your site check) and after a card is saved or published, a single-flight sweep sends ONE call per English
+  blurb missing a language to the model of the `web` door, and stores each language only if it keeps every kept term the English holds
+  ([`kept-terms.js`](apps/tracy-web/src/lib/kept-terms.js), a tested copy of `packages/locale/tracy-locale-vi/terms.ts`), the template
+  name and the CMS names, has no em or en dash, is at most 300 characters and is not the English. A failed call or a refused language
+  backs that blurb off (`template_blurb_translation_failure`, 30 minutes doubling up to a day). `GET /api/templates` adds `card.blurbs`
+  (`{ lang: text }`, one query per request) and a shard reads it from the master's list; the page, gallery, JSON-LD and meta description
+  use `card.blurbs[lang]`, else the English. No model on the `web` door: nothing runs and the pages stay English.
 - **Content coverage does not run in the background; it only reads a file** (24/10/2026, decided): `content-coverage.json` sits next to
   the contract in the profile folder (enters the image through the same COPY as the contract), committed by whoever measures it after running
   [`content-coverage/cli.mjs`](packages/cms/tracy-quickstart-tools/README.md) on a site built from the package (skill

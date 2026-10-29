@@ -183,10 +183,14 @@ export const REVIEWED_SKILLS = [
   {
     prefix: 'vendor/joomla/joomlart-t4-skill/',
     reason:
-      'skill-catalog.test.mjs reads skills/joomlart-t4-template/SKILL.md for the catalog; nothing else in the test folders reads the tree; the quickstart scripts that import it are run by hand; the dsh image and the Joomla web image copy the tree and check its SKILL.md, and neither is built on a pull request: they read it at image build (build-dsh-image.yml on push and by hand, joomla.Dockerfile by hand or on the host) (29/10/2026)',
+      'skill-catalog.test.mjs reads skills/joomlart-t4-template/SKILL.md for the catalog; web-image-never-upstream.test.mjs holds where the tree sits on a fleet host (build.sh finds it beside web/, tracy-host copies it there); nothing else in the test folders reads the tree; the quickstart scripts that import it are run by hand; the dsh image and the Joomla web image copy the tree and check its SKILL.md, and the tracy-host image copies it so provision can build a missing Joomla web image on the host; none is built on a pull request: they read it at image build (build-dsh-image.yml and build-app-images.yml on push and by hand, joomla.Dockerfile by hand or on the host) (29/10/2026)',
     gate: 'check-site-model in the checks row',
-    readers: ['scripts/test/skill-catalog.test.mjs'],
+    readers: [
+      'packages/fleet/tracy-fleet-operation/test/web-image-never-upstream.test.mjs',
+      'scripts/test/skill-catalog.test.mjs'
+    ],
     outsideCi: [
+      'apps/tracy-host/Dockerfile',
       'packages/fleet/tracy-fleet-operation/dsh/Dockerfile',
       'packages/fleet/tracy-fleet-operation/web/joomla.Dockerfile'
     ],

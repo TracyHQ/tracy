@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-163-turn-undo-proof",
+  "kind": "fix",
+  "title": "An undo press that proves nothing (the host answered 202) still tells the agent but no longer marks the Site changes row undone or drops its Undo; a later proven press marks it and a later unproven press keeps an earlier proof; a complete undo stays complete on Site changes after a later proven partial press, while the agent notice reports that last press",
+  "pr": 163,
+  "area": "site-changes/turn-undo",
+  "cms": ["wp", "jo"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test apps/tracy-web/test/review-turn-store.test.mjs against TEST_DATABASE_URL (markTurnsUndone with marks from undoneMarks over runUndo answered 202 FLEET_JOB_PENDING, then 200 succeeded, then 202 again).",
+    "S2: Same file: an unproven press after a proven one, read back through turnUndoneOf.",
+    "S3: Same file: a complete press, then a proven partial press (files undone, the content revert refused), read through turnUndoneOf and undoneSince; and migration 185 run over rows as 182's code left them."
+  ],
+  "expect": [
+    "S1: the 202-only press stamps undone_at (the agent notice) and leaves undo_proven_at null, so turnUndoneOf reads null; the proven press after it reads {at, complete: true}.",
+    "S2: the later 202 press moves undone_at forward and turnUndoneOf reads the same {at, complete} as before it.",
+    "S3: turnUndoneOf still reads complete: true and undoneSince reads undo_complete: false for that last press; after 185 a proven complete row reads undo_proven_complete true, a proven partial row false, an unproven row null."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/turn-undo.js, apps/tracy-web/src/sites/turn-undo-store.js, apps/tracy-web/src/sites/activity-v2.js, apps/tracy-web/src/db/migrations/182-turn-undo-proven.sql, apps/tracy-web/src/db/migrations/185-turn-undo-proven-complete.sql",
+    "tool": "apps/tracy-web/test/review-turn-store.test.mjs"
+  },
+  "evidence": "Before this change one stamp, site_turn.undone_at, served the agent notice (any press, even unsure) and the Site changes row (undone only by proof): a 202 press showed the row as Partly undone and removed its Undo with nothing proven gone (review 09/10/2026, kept as a todo FINDING test).",
+  "fence": "undoneMarks marks each turn proven only when a moment is in undoneShas, a write reverted or a look undone; markTurnsUndone writes undo_complete (last press, for the agent notice) on every mark and undo_proven_at plus the sticky undo_proven_complete only for proven marks; turnUndoneOf reads undo_proven_at and undo_proven_complete",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/review-turn-store.test.mjs"],
+    "needs": ["postgres"],
+    "tests": [
+      "a press that undid nothing verifiably (host answered 202) tells the agent but does not mark the Site changes row undone",
+      "a proven press after an unproven one marks the row; an unproven press after a proven one keeps it",
+      "a proven partial press after a complete one: Site changes still reads complete, the notice reads that last press",
+      "migration 185 backfills the sticky proof from the rows 182 wrote; an unproven row stays unproven"
+    ]
+  }
+}

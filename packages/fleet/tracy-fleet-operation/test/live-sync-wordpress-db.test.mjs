@@ -830,3 +830,34 @@ test(
     assert.deepEqual(plain.conflicts, [])
   }
 )
+
+test('a collation the live site changed reaches the copy though every row is the same (#120)', opts, () => {
+  const setup = `
+    CREATE TABLE wp_posts (ID bigint NOT NULL PRIMARY KEY, post_type varchar(30), post_title varchar(100), post_status varchar(20) NOT NULL DEFAULT 'publish');
+    CREATE TABLE wp_shop (id int NOT NULL PRIMARY KEY, name varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci) DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    INSERT INTO wp_shop VALUES (1, 'Cafe'), (2, 'Tea');`
+  const answer = wpMerge({
+    setup,
+    theirs: 'ALTER TABLE wp_shop MODIFY name varchar(40) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;'
+  })
+  assert.equal(answer.tables.wp_shop, 'from-theirs', JSON.stringify(answer.tables))
+  assert.equal(
+    sql(
+      "SELECT collation_name FROM information_schema.columns WHERE table_schema = 'dp_m' AND table_name = 'wp_shop' AND column_name = 'name'"
+    ),
+    'utf8mb4_bin'
+  )
+  assert.deepEqual(answer.conflicts, [])
+  // The substance checksum the apply compares tells the two apart too, rows alike.
+  const sums = JSON.parse(
+    py(
+      `print(json.dumps({s: dict(engine.substance_checksums(sql, s, 'wordpress', 'wp_')).get('wp_shop') for s in ('dp_b', 'dp_t')}))`
+    )
+  )
+  assert.notEqual(sums.dp_b, sums.dp_t)
+  assert.equal(
+    sums.dp_b.split(':').slice(0, 2).join(':'),
+    sums.dp_t.split(':').slice(0, 2).join(':'),
+    'the rows are the same'
+  )
+})

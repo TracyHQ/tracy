@@ -4,15 +4,18 @@
 //
 // Coverage for behaviours of `turns.js` / `turn-undo-store.js` that no other test holds (openTurn's
 // merge, a turn id on another site, closeTurn's late-close ordering of ledger L31, flagConcurrent
-// within one conversation, undoneSince), plus ONE finding, kept as a TODO (a decision, not a code slip):
+// within one conversation, undoneSince), plus the review's ONE finding, since fixed (migrations 182, 185):
 //
 //   An undo press whose only outcome was `unsure` (nothing verifiably undone: the host answered 202,
-//   a 502, an operation left `pending`) is stamped `undone_at` (`undoneMarks` counts "may have gone"),
-//   and activity-v2 turns that stamp into `undone: {complete:false}` ("Partly undone") and removes
-//   the row's undo (`undoable: !headUndone && undone === null`). activity-v2's own rule is
-//   "UNDONE ONLY BY PROOF" (activity-v2.js:22, SYSTEM.md §5 "mark 'undone' only with
-//   evidence"); an unsure outcome is not proof.
+//   a 502, an operation left `pending`) is stamped `undone_at` (`undoneMarks` counts "may have gone",
+//   so the agent's notice fires), and activity-v2 used to read that same stamp as proof: "Partly
+//   undone" and no Undo on the row. activity-v2's rule is "UNDONE ONLY BY PROOF" (activity-v2.js,
+//   SYSTEM.md §5). The stamp is now split: `undone_at` (pressed) for the agent notice and ops usage,
+//   `undo_proven_at` (proven) for Site changes; an unproven press never clears an earlier proof.
+//   Completeness is split the same way (185): `undo_complete` is the last press's, for the notice;
+//   `undo_proven_complete` stays true once a complete undo was proven, for Site changes.
 import assert from 'node:assert/strict'
+import { readFileSync } from 'node:fs'
 import { after, before, beforeEach, test } from 'node:test'
 
 import { turnUndoneOf } from '../src/sites/activity-v2.js'
@@ -221,10 +224,14 @@ test(
       ])
     // "Go back to here" from turn 2: turns 3 and 2 went back after turn 3 opened.
     await markTurnsUndone(db.pool, SITE, [
-      { turnId: 'sess-a:3', complete: true },
-      { turnId: 'sess-a:2', complete: false }
+      { turnId: 'sess-a:3', complete: true, proven: true },
+      { turnId: 'sess-a:2', complete: false, proven: true }
     ])
-    await db.pool.query(`update site_turn set undone_at = $1 where undone_at is not null`, [minutes(35)])
+    // The press happened at 35 minutes: it proved what it undid, so both its stamps move.
+    await db.pool.query(
+      `update site_turn set undone_at = $1, undo_proven_at = $1 where undone_at is not null`,
+      [minutes(35)]
+    )
     assert.deepEqual(await undoneSince(db.pool, SITE, 'sess-a', 4), [
       { turn: 3, title: 'Request sess-a:3', undo_complete: true },
       { turn: 2, title: 'Request sess-a:2', undo_complete: false }
@@ -246,7 +253,7 @@ test('undoneSince names at most five turns', opts, async () => {
   await markTurnsUndone(
     db.pool,
     SITE,
-    [2, 3, 4, 5, 6, 7, 8].map((n) => ({ turnId: `sess-a:${n}`, complete: true }))
+    [2, 3, 4, 5, 6, 7, 8].map((n) => ({ turnId: `sess-a:${n}`, complete: true, proven: true }))
   )
   const named = await undoneSince(db.pool, SITE, 'sess-a', 9)
   assert.deepEqual(
@@ -255,28 +262,120 @@ test('undoneSince names at most five turns', opts, async () => {
   )
 })
 
-// TODO, not a pass: `undoneMarks` stamps `undone_at` on an `unsure` outcome on purpose (turn-undo.test.mjs
-// pins it, so the agent's "earlier request undone" notice fires), and activity-v2 reads the same stamp as
-// proof. Splitting "proven" from "pressed" is a decision of its own (review 09/10/2026).
-test('FINDING: a press that undid nothing verifiably (host answered 202) must not mark the Site changes row undone', {
-  ...opts,
-  todo: 'undone_at serves both the agent notice and the Site changes proof; split pending a decision'
-}, async () => {
-  await sites()
-  await open('sess-a:1')
-  await closeTurn(db.pool, { turnId: 'sess-a:1', siteKey: SITE, sha: SHA_A, files: 2 })
-  const steps = [{ turnId: 'sess-a:1', commits: [SHA_A], applyIds: [] }]
-  // The restore door answered 202 FLEET_JOB_PENDING: the host has not said whether it ran.
-  const result = await runUndo(steps, {
+const pendingUndo = (steps) =>
+  runUndo(steps, {
+    // The restore door answered 202 FLEET_JOB_PENDING: the host has not said whether it ran.
     undoCommit: async () => fileOutcome({ status: 202, body: { code: 'FLEET_JOB_PENDING' } }),
     revertApply: async () => ({ outcome: 'reverted' })
   })
-  assert.equal(result.turns[0].files.status, 'unsure', 'precondition: nothing is known to have gone back')
-  await markTurnsUndone(db.pool, SITE, undoneMarks(steps, result, new Set()))
-  const row = await turnOf(db.pool, 'sess-a:1')
-  assert.equal(
-    turnUndoneOf(row),
-    null,
-    'activity-v2 shows "Partly undone" and drops the row’s Undo on no proof (activity-v2.js "UNDONE ONLY BY PROOF")'
-  )
-})
+const doneUndo = (steps) =>
+  runUndo(steps, {
+    undoCommit: async () => fileOutcome({ status: 200, body: { ok: true, status: 'succeeded' } }),
+    revertApply: async () => ({ outcome: 'reverted' })
+  })
+
+test(
+  'a press that undid nothing verifiably (host answered 202) tells the agent but does not mark the Site changes row undone',
+  opts,
+  async () => {
+    await sites()
+    await open('sess-a:1')
+    await closeTurn(db.pool, { turnId: 'sess-a:1', siteKey: SITE, sha: SHA_A, files: 2 })
+    const steps = [{ turnId: 'sess-a:1', commits: [SHA_A], applyIds: [] }]
+    const result = await pendingUndo(steps)
+    assert.equal(result.turns[0].files.status, 'unsure', 'precondition: nothing is known to have gone back')
+    await markTurnsUndone(db.pool, SITE, undoneMarks(steps, result, new Set()))
+    const row = await turnOf(db.pool, 'sess-a:1')
+    assert.ok(row.undone_at instanceof Date, 'pressed: the agent notice still hears of it')
+    assert.equal(row.undo_proven_at, null)
+    assert.equal(turnUndoneOf(row), null, 'Site changes: undone only by proof, so the row keeps its Undo')
+  }
+)
+
+test(
+  'a proven press after an unproven one marks the row; an unproven press after a proven one keeps it',
+  opts,
+  async () => {
+    await sites()
+    await open('sess-a:1')
+    await closeTurn(db.pool, { turnId: 'sess-a:1', siteKey: SITE, sha: SHA_A, files: 2 })
+    const steps = [{ turnId: 'sess-a:1', commits: [SHA_A], applyIds: [] }]
+    await markTurnsUndone(db.pool, SITE, undoneMarks(steps, await pendingUndo(steps), new Set()))
+    assert.equal(turnUndoneOf(await turnOf(db.pool, 'sess-a:1')), null)
+
+    await markTurnsUndone(db.pool, SITE, undoneMarks(steps, await doneUndo(steps), new Set([SHA_A])))
+    const proven = await turnOf(db.pool, 'sess-a:1')
+    assert.ok(proven.undo_proven_at instanceof Date)
+    assert.deepEqual(turnUndoneOf(proven), { at: proven.undo_proven_at.toISOString(), complete: true })
+
+    await db.pool.query(`update site_turn set undone_at = undone_at - interval '1 hour',
+                              undo_proven_at = undo_proven_at - interval '1 hour' where turn_id = 'sess-a:1'`)
+    const before = await turnOf(db.pool, 'sess-a:1')
+    await markTurnsUndone(db.pool, SITE, undoneMarks(steps, await pendingUndo(steps), new Set()))
+    const after = await turnOf(db.pool, 'sess-a:1')
+    assert.ok(after.undone_at > before.undone_at, 'the later press is still stamped for the agent')
+    assert.deepEqual(
+      turnUndoneOf(after),
+      turnUndoneOf(before),
+      'the earlier proof, and its completeness, stay'
+    )
+    // The agent notice keeps the last press's word, as before migration 182: that press proved nothing.
+    assert.deepEqual(await undoneSince(db.pool, SITE, 'sess-a', 2), [
+      { turn: 1, title: 'Request sess-a:1', undo_complete: false }
+    ])
+  }
+)
+
+test(
+  'a proven partial press after a complete one: Site changes still reads complete, the notice reads that last press',
+  opts,
+  async () => {
+    await sites()
+    await open('sess-a:1')
+    await closeTurn(db.pool, { turnId: 'sess-a:1', siteKey: SITE, sha: SHA_A, files: 2 })
+    const steps = [{ turnId: 'sess-a:1', commits: [SHA_A], applyIds: ['apply-1'] }]
+    await markTurnsUndone(db.pool, SITE, undoneMarks(steps, await doneUndo(steps), new Set([SHA_A])))
+    assert.equal(turnUndoneOf(await turnOf(db.pool, 'sess-a:1')).complete, true)
+
+    // The files go back again, the content revert is refused: proven, but only part of the turn.
+    const partial = await runUndo(steps, {
+      undoCommit: async () => fileOutcome({ status: 200, body: { ok: true, status: 'succeeded' } }),
+      revertApply: async () => ({ outcome: 'failed', code: 'APPLY_CHANGED_SINCE' })
+    })
+    const marks = undoneMarks(steps, partial, new Set([SHA_A]))
+    assert.deepEqual(marks, [{ turnId: 'sess-a:1', complete: false, proven: true }], 'precondition')
+    await markTurnsUndone(db.pool, SITE, marks)
+    const row = await turnOf(db.pool, 'sess-a:1')
+    assert.equal(turnUndoneOf(row).complete, true, 'a complete undo stays complete on Site changes')
+    assert.deepEqual(await undoneSince(db.pool, SITE, 'sess-a', 2), [
+      { turn: 1, title: 'Request sess-a:1', undo_complete: false }
+    ])
+  }
+)
+
+test(
+  'migration 185 backfills the sticky proof from the rows 182 wrote; an unproven row stays unproven',
+  opts,
+  async () => {
+    await sites()
+    for (const n of [1, 2, 3]) await open(`sess-a:${n}`)
+    // As 182's code left them: `undo_complete` written only by proven presses, true once true.
+    await db.pool.query(
+      `update site_turn set undone_at = now(), undo_proven_complete = null,
+            undo_proven_at = case when turn_id = 'sess-a:3' then null else now() end,
+            undo_complete = case turn_id when 'sess-a:1' then true when 'sess-a:2' then false end`
+    )
+    const sql = readFileSync(
+      new URL('../src/db/migrations/185-turn-undo-proven-complete.sql', import.meta.url),
+      'utf8'
+    )
+    await db.pool.query(sql)
+    const read = async (n) => {
+      const row = await turnOf(db.pool, `sess-a:${n}`)
+      return [row.undo_proven_complete, turnUndoneOf(row)?.complete ?? null]
+    }
+    assert.deepEqual(await read(1), [true, true], 'a proven complete undo stays complete')
+    assert.deepEqual(await read(2), [false, false], 'a proven partial undo reads partly undone')
+    assert.deepEqual(await read(3), [null, null], 'nothing proven: not undone')
+  }
+)

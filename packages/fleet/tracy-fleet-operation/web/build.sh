@@ -6,12 +6,19 @@
 #   FORCE=1 bash web/build.sh      # build again even when the tag is already there
 #   bash web/build.sh joomla       # one platform
 #   DEFAULTS_ONLY=1 bash web/build.sh   # only the images a NEW site gets (the `<platform>=` lines)
+#   bash web/build.sh --line joomla:5-apache   # exactly ONE `<platform>:<tag>` line, nothing else
+#
+# `--line` is what a provision runs when the image its new site needs is missing on this host
+# (scripts/lib/web-image.sh `tracy_web_image_build`), and what move-off-upstream-image.sh runs before
+# it moves a running site: one line is one image, ~5 minutes, where the whole file is twelve. It
+# skips the default-line check and the EmDash loop, and exits 2 when IMAGE_TAGS has no such line.
 #
 # ON THE HOST, not on a laptop, and not in CI for now: the images are pulled from Docker Hub bases
-# and layered on, so they exist where they are built and nowhere else. A site whose compose names
-# an image this host has not built either stays on the upstream base (a new site, warned) or is
-# refused outright (a site already running — scripts/lib/web-image.sh). So this runs before the
-# scripts that read IMAGE_TAGS reach a host, not after.
+# and layered on, so they exist where they are built and nowhere else. A NEW site whose line is not
+# built here gets it built on the spot by its provision (`--line`), and stays on the upstream base
+# only when that build fails, loudly; a site already running is refused outright
+# (scripts/lib/web-image.sh). So this still runs before the scripts that read IMAGE_TAGS reach a
+# host, not after: a provision should find its image, not spend five minutes building it.
 #
 # ONE FAILURE DOES NOT STOP THE REST. An upstream tag Docker Hub has dropped fails its own build
 # and nothing else; the list of failures is printed at the end and the exit code carries it. A tag
@@ -29,7 +36,17 @@ set -uo pipefail
 
 HERE="$(cd "$(dirname "$0")" && pwd)"
 TAGS="$HERE/IMAGE_TAGS"
-ONLY="${1:-}"
+ONLY=""; LINE=""
+case "${1:-}" in
+  --line)
+    LINE="${2:-}"
+    case "$LINE" in
+      *:*) ;;
+      *) echo "--line takes one <platform>:<upstream tag> key of IMAGE_TAGS (joomla:5-apache), got: ${LINE:-nothing}" >&2; exit 2 ;;
+    esac
+    ;;
+  *) ONLY="${1:-}" ;;
+esac
 [ -f "$TAGS" ] || { echo "no IMAGE_TAGS beside this script" >&2; exit 1; }
 
 FAILED=""
@@ -43,17 +60,23 @@ WEB_FILES="tracy-sendmail tracy-sendmail.ini"
 # repo root — the reason `bash web/build.sh joomla` died on `"/vendor/joomla/joomlart-t4-skill":
 # not found` from 13/09 (tasks/nhat-ky-main.md). The other two copy nothing from the main context,
 # and keep this directory: a repo-root context ships far more to the daemon for nothing.
+#
+# Two layouts carry that tree, tried in this order: a repo checkout (`web/` four levels below the
+# root) and a fleet host's tracy-host image, which copies it to `$TRACY_FLEET_DIR/vendor/joomla/`
+# beside `web/` (apps/tracy-host/Dockerfile). Before the second one, every Joomla line failed here
+# on a host, so a provision that needed a missing Joomla image could never build it.
 context_for() { # platform
   local repo
   case "$1" in
     joomla)
-      repo="$(cd "$HERE/../../../.." 2>/dev/null && pwd)"
-      if [ -n "$repo" ] && [ -d "$repo/vendor/joomla/joomlart-t4-skill" ]; then
-        printf '%s\n' "$repo"
-      else
-        echo "!! joomla needs a checkout of the repo (vendor/joomla/joomlart-t4-skill beside packages/) — run this from one" >&2
-        return 1
-      fi
+      for repo in "$HERE/../../../.." "$HERE/.."; do
+        if [ -d "$repo/vendor/joomla/joomlart-t4-skill" ]; then
+          (cd "$repo" && pwd)
+          return 0
+        fi
+      done
+      echo "!! joomla needs a checkout of the repo (vendor/joomla/joomlart-t4-skill beside packages/), or a tracy-host image that carries that tree beside web/ — run this from one" >&2
+      return 1
       ;;
     *) printf '%s\n' "$HERE" ;;
   esac
@@ -107,7 +130,16 @@ build_one() { # dockerfile base image [rebuild-when-stale]
     FAILED="$FAILED $image"
     return 1
   fi
-  if ! docker build -f "$dockerfile" --build-arg BASE="$base" \
+  # 🔒 A DOCKER HUB BASE IS PULLED, NEVER TAKEN FROM THE HOST'S CACHE. A tag line exists to carry one
+  # upstream release (20261027-r1 = the 21 October PHP security releases), and a host that already
+  # has the base cached — every host whose sites run `joomla:5-apache` bare, which are exactly the
+  # hosts a provision or move-off-upstream-image.sh builds a missing line on — would otherwise layer
+  # the new tag on the OLD base. Measured 29/10/2026 on the local stand: a cached `joomla:5-apache`
+  # from 29/09 gave `tracy/web-joomla:5-apache-20261027-r1` PHP 8.3.35, not the patched 8.3.36.
+  # EmDash's base is `tracy/emdash:<version>`, built on this host and in no registry: never pulled.
+  local pull=--pull
+  [ "$platform" != emdash ] || pull=""
+  if ! docker build ${pull:+"$pull"} -f "$dockerfile" --build-arg BASE="$base" \
          --build-context tracy-web-files="$HERE" \
          --label tracy.web.inputs="$want" \
          -t "$image" "$context"; then
@@ -132,11 +164,14 @@ named_by_default_lines() {
   awk -F= '/^[^#]/ && !index($1, ":") { print $2 }' "$TAGS"
 }
 
+FOUND=""
 while IFS= read -r line; do
   case "$line" in ''|'#'*) continue ;; esac
   key="${line%%=*}"; image="${line#*=}"
   platform="${key%%:*}"
   [ -z "$ONLY" ] || [ "$ONLY" = "$platform" ] || continue
+  [ -z "$LINE" ] || [ "$LINE" = "$key" ] || continue
+  FOUND=1
 
   case "$key" in
     *:*) ;;
@@ -150,14 +185,19 @@ while IFS= read -r line; do
       ;;
   esac
 
-  if [ -n "${DEFAULTS_ONLY:-}" ] && ! named_by_default_lines | grep -xF "$image" >/dev/null; then
+  if [ -z "$LINE" ] && [ -n "${DEFAULTS_ONLY:-}" ] && ! named_by_default_lines | grep -xF "$image" >/dev/null; then
     continue
   fi
   [ -f "$HERE/$platform.Dockerfile" ] || { echo "!! no $platform.Dockerfile for $key" >&2; exit 1; }
   build_one "$HERE/$platform.Dockerfile" "$key" "$image"
 done < "$TAGS"
 
-if [ -z "$ONLY" ] || [ "$ONLY" = emdash ]; then
+if [ -n "$LINE" ] && [ -z "$FOUND" ]; then
+  echo "!! IMAGE_TAGS has no line for $LINE — nothing to build (a base with no line stays on its upstream image)" >&2
+  exit 2
+fi
+
+if [ -z "$LINE" ] && { [ -z "$ONLY" ] || [ "$ONLY" = emdash ]; }; then
   # `|| true` because a host with no tracy/emdash image at all makes `grep` exit 1, and with
   # `pipefail` that is the substitution's status. Harmless while `-e` is off — and a trap the day
   # somebody restores it, which is exactly when nobody is looking at the emdash loop.

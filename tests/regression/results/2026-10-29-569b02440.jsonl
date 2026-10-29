@@ -1,0 +1,2 @@
+{"id":"REG-PR-70-imported-copy-doors","verdict":"FAIL","commit":"569b02440da215e7b569dd84a454f910bd58241c","ran_at":"2026-10-29T08:35:16.901Z","evidence":"tests/regression/.runs/2026-10-29-569b02440/REG-PR-70-imported-copy-doors.log"}
+{"id":"REG-PR-70-imported-copy-doors","verdict":"PASS","commit":"569b02440da215e7b569dd84a454f910bd58241c","ran_at":"2026-10-29T08:36:23.983Z","evidence":"tests/regression/.runs/2026-10-29-569b02440/REG-PR-70-imported-copy-doors.log"}

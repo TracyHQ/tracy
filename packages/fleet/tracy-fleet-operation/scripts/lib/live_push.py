@@ -1407,8 +1407,12 @@ class Changeset:
         if op == "delete" and row is None:
             out.append({"table": spec.table, "match": {pk: ident}, "rows": "theirs"})
         else:
+            asset = self.asset_name(spec.entity, ident) if op == "create" else None
             out.append({"table": spec.table, "match": {pk: ident}, "columns": db_columns,
-                        **({"create": True, "entity": spec.entity, "id": ident} if op == "create" else {})})
+                        **({"create": True, "entity": spec.entity, "id": ident} if op == "create" else {}),
+                        # Joomla gives the new record its `assets` row on its own: the copy's number for
+                        # it, found by the asset's name on both sides, before clashes are numbered (#172).
+                        **({"align": {"entity": "assets", "match": {"name": asset}}} if asset else {})})
         if self.platform == "wordpress" and spec.name == "post" and ({"categories", "tags"} & set(columns)):
             # Only the categories and tags it writes: the post's other terms (Polylang's language and
             # translation group, a plugin's taxonomy) were never sent, and taken as base they would read
@@ -1844,6 +1848,15 @@ class Changeset:
             "restore": self.restore_of(spec, columns, base_row),
             "dependsOn": sorted(set(deps)), "seed": self.seeds(spec, copy_key, columns, "update", copy_row),
         })
+
+    def asset_name(self, entity: str | None, ident) -> str | None:
+        """The name of the Joomla `assets` row of record `ident` of `entity` (the merge's `names` rule,
+        `com_content.article.{id}`), or None when the record has none."""
+        if self.platform != "joomla" or not entity:
+            return None
+        rule = dict(LS.POLICIES["joomla"].get("entities", [])).get(entity, {})
+        template = next((t for table, _, t in rule.get("names", []) if table == "assets"), None)
+        return template.format(id=ident) if template else None
 
     def menu_of(self, copy_row: dict):
         """The menu a new menu item goes in, on the live site: True when the live site has it, the id of
@@ -2769,6 +2782,43 @@ def run_changeset(args) -> dict:
     return answer
 
 
+def record_cut(push_root: Path, id_map_path: Path, pushed_path: Path) -> dict:
+    """The pushes cut off before they recorded what they wrote (no `written.json`: the host job was
+    lost after some writes, and a new push or a Sync from live came next, #173): what each one's
+    journal says was written joins the id map and `pushed.json` (`record`), so the merge knows those
+    records as the copy's own, never as the live site's new ones. `recorded-journal` keeps how many
+    written items were recorded; a push run again that wrote more is recorded again (`record` adds the
+    same pairs and seeds once more, which changes nothing)."""
+    done = []
+    if not push_root.is_dir():
+        return {"ok": True, "recorded": done}
+    for d in sorted(p for p in push_root.iterdir() if p.is_dir() and p.name != "previews"):
+        journal, changeset_file, marker = d / "journal.jsonl", d / "changeset.json", d / "recorded-journal"
+        if not journal.exists() or not changeset_file.exists() or (d / "written.json").exists() or (d / "recorded").exists():
+            continue
+        last, created = {}, {}
+        for line in journal.read_text().splitlines():
+            try:
+                entry = json.loads(line)
+            except ValueError:
+                continue  # a line cut by the kill itself
+            if isinstance(entry, dict) and entry.get("id"):
+                last[entry["id"]] = entry
+                created.update(entry.get("created") or {})
+        written = [{"id": i} for i, e in last.items() if e.get("state") == "written"]
+        try:
+            before = int(json.loads(marker.read_text()).get("written", 0)) if marker.exists() else 0
+        except (ValueError, AttributeError):
+            before = 0
+        if len(written) <= before:
+            continue
+        record(json.loads(changeset_file.read_text()), {"written": written, "created": created},
+               id_map_path, pushed_path, False)
+        write_private(marker, {"written": len(written)})
+        done.append(d.name)
+    return {"ok": True, "recorded": done}
+
+
 def parse(argv):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="op", required=True)
@@ -2793,6 +2843,9 @@ def parse(argv):
     for flag in ("--changeset", "--result", "--id-map", "--pushed"):
         rec.add_argument(flag, required=True)
     rec.add_argument("--undo", action="store_true")
+    cut = sub.add_parser("record-cut")
+    for flag in ("--push-root", "--id-map", "--pushed"):
+        cut.add_argument(flag, required=True)
     li = sub.add_parser("lint")
     li.add_argument("--changeset", required=True)
     li.add_argument("--repo", required=True)
@@ -2816,6 +2869,8 @@ def main(argv) -> int:
             sync = json.loads(Path(args.sync).read_text()) if args.sync and Path(args.sync).exists() else None
             engine = json.loads(Path(args.engine).read_text()) if args.engine and Path(args.engine).exists() else None
             answer = preview_answer(changeset, args.preview_id, sync, (sync or {}).get("liveReadAt"), engine)
+        elif args.op == "record-cut":
+            answer = record_cut(Path(args.push_root), Path(args.id_map), Path(args.pushed))
         else:
             answer = record(json.loads(Path(args.changeset).read_text()), json.loads(Path(args.result).read_text()),
                             Path(args.id_map), Path(args.pushed), args.undo)

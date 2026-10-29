@@ -43,6 +43,18 @@ export function platformsOf(template) {
 
 export const templatePath = (id) => `/templates/${encodeURIComponent(id)}/`
 
+/**
+ * A card's blurb in the page's language: its stored translation (`card.blurbs`, filled by
+ * `lib/template-blurb-translations.js`), else the published English. The industry guess and
+ * `/llms.txt` keep reading the English `card.blurb`.
+ */
+export function blurbOf(template, lang = 'en') {
+  const card = template?.card ?? {}
+  const translated = card.blurbs && typeof card.blurbs === 'object' ? card.blurbs[lang] : undefined
+  const text = typeof translated === 'string' && translated.trim() ? translated : card.blurb
+  return typeof text === 'string' ? text.trim() : ''
+}
+
 /** The existing build road (`packages/web/tracy-design-page/src/templates.mjs` `buildUrl`), utm carried. */
 export function buildLink(id, platform, search = '') {
   const params = new URLSearchParams()
@@ -205,7 +217,7 @@ export function templatePage({ template, all, origin, appOrigin = origin, search
   const card = template.card ?? {}
   const platforms = platformsOf(template)
   const cms = platforms.map(platformName)
-  const blurb = typeof card.blurb === 'string' ? card.blurb.trim() : ''
+  const blurb = blurbOf(template, w.lang)
   const canonical = `${origin}${templatePath(id)}`
   const image = heroImage(template)
   const layouts = layoutsOf(template)
@@ -340,7 +352,7 @@ ${
 /** A card of the "More templates" row and of the gallery. */
 export function relatedCard(t, { lazy = true, w = WORDS } = {}) {
   const name = typeof t.label === 'string' && t.label ? t.label : t.id
-  const blurb = typeof t.card?.blurb === 'string' ? t.card.blurb : ''
+  const blurb = blurbOf(t, w.lang)
   return `<a class="tcard" href="${escapeHtml(templatePath(t.id))}" data-platforms="${escapeHtml(platformsOf(t).join('|'))}" data-industry="${escapeHtml(industryOf(t))}"><div class="tshot">${shot(heroImage(t), w.cardAlt(name), { lazy, thumb: CARD_THUMB, w })}</div>
 <div class="tbody"><h3>${escapeHtml(name)}</h3>${blurb ? `<p>${escapeHtml(blurb)}</p>` : ''}<div class="tmeta">${badges(platformsOf(t))}<span class="tind">${escapeHtml(industryOf(t))}</span></div></div></a>`
 }

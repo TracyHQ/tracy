@@ -1,6 +1,8 @@
 # Import into TCH
 
-**Pin: `main` @ `ae1c4e1` — 27/10/2026, [JoomlArt-Products/tracy-wordpress-theme#173](https://github.com/JoomlArt-Products/tracy-wordpress-theme/pull/173) + one escape fix.** The home repo now carries every in-place patch listed below (merged with home `main` through #171) and the skill is in English; Vietnamese is kept only as marked test data (`language-allow`). This tree is byte-identical to that commit except this file. The paragraphs below are history.
+**Pin: `main` @ `513f65e` — 29/10/2026** (merge of [JoomlArt-Products/tracy-wordpress-theme#175](https://github.com/JoomlArt-Products/tracy-wordpress-theme/pull/175): the release repository is `JoomlArt-Products/joomlart-products`). It is the only commit on `main` after `ae1c4e1`, so it was applied here as that one diff (`git diff ae1c4e1 513f65e` with `git apply --directory=vendor/wordpress/tracy-wordpress-theme`) instead of an rsync, which keeps the in-place patches listed below.
+
+**Previous pin: `main` @ `ae1c4e1` — 27/10/2026, [JoomlArt-Products/tracy-wordpress-theme#173](https://github.com/JoomlArt-Products/tracy-wordpress-theme/pull/173) + one escape fix.** The home repo now carries every in-place patch listed below (merged with home `main` through #171) and the skill is in English; Vietnamese is kept only as marked test data (`language-allow`). This tree is byte-identical to that commit except this file. The paragraphs below are history.
 
 **Placeholder machine path in a test fixture — 26/10/2026, edited in TCH on branch `os/w3-vendor-clean`, same change open at home: [JoomlArt-Products/tracy-wordpress-theme#172](https://github.com/JoomlArt-Products/tracy-wordpress-theme/pull/172).** `scripts/test/fixtures/verify-plan/page-map.json` `source.path` (a personal home path) became `/Users/you/…` for the public export; no test reads it.
 

@@ -1036,3 +1036,25 @@ test(
     )
   }
 )
+
+test('a sync row names what the live site has that a sync does not bring, names only (#120)', () => {
+  const row = {
+    id: 's1',
+    state: 'applied',
+    created_at: '2026-10-29T10:00:00Z',
+    updated_at: '2026-10-29T10:01:00Z',
+    answer: {
+      notCarried: {
+        triggers: [
+          { name: 'shop_after_insert', table: 'wp_shop', event: 'INSERT', timing: 'AFTER', body: 'SECRET' }
+        ],
+        tables: ['wp_shop_log', 42]
+      }
+    }
+  }
+  assert.deepEqual(view(row).notCarried, {
+    triggers: [{ name: 'shop_after_insert', table: 'wp_shop' }],
+    tables: ['wp_shop_log']
+  })
+  assert.equal(view({ ...row, answer: {} }).notCarried, null)
+})

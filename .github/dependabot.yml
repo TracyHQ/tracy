@@ -1,0 +1,27 @@
+# Version updates for the GitHub Actions the workflows pin by full commit id (the `# vX.Y.Z` comment
+# beside each pin is what Dependabot rewrites with it). Only `github-actions`: npm versions are moved by
+# hand; Dependabot security updates stay on in the repository settings.
+#
+# One grouped pull request a week into `develop`, where work lands. It is NOT auto-merged
+# (`scripts/auto-merge-develop.mjs` takes only pull requests opened by a person): fill in the
+# description template, read the release notes, then merge it like any other pull request.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    # `/` reads `.github/workflows/`; the composite actions in `.github/actions/` pin actions too.
+    directories:
+      - /
+      - /.github/actions/*
+    target-branch: develop
+    schedule:
+      interval: weekly
+      day: monday
+      time: '05:00'
+      timezone: Etc/UTC
+    groups:
+      github-actions:
+        patterns: ['*']
+    open-pull-requests-limit: 2
+    # `type(scope): description` (docs/references/naming-conventions.md §6); Dependabot adds the `: `.
+    commit-message:
+      prefix: ci(actions)

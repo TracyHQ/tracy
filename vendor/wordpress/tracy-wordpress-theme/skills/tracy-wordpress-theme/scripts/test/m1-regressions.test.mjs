@@ -332,7 +332,7 @@ test('release: the probe tells an existing release, a missing one and an unanswe
     return answer
   }
   const tag = 'tracy-base/wp7'
-  const repo = 'JoomlArt-Products/ja-products'
+  const repo = 'JoomlArt-Products/joomlart-products'
   const exists = releaseState({ tag, repo, run: fake({ status: 0, stdout: '{"tagName":"tracy-base/wp7","isDraft":false}', stderr: '' }) })
   const missing = releaseState({ tag, repo, run: fake({ status: 1, stdout: '', stderr: 'release not found' }) })
   const unknown = releaseState({ tag, repo, run: fake({ status: 1, stdout: '', stderr: 'HTTP 401: Bad credentials (https://api.github.com/graphql)' }) })

@@ -12,6 +12,7 @@ import { defaultContracts } from './contracts.js'
 import { liveDemosByTag } from './demo-sites.js'
 import { localReviewCards } from './local-review.js'
 import { readReleases, shownDesign, templateCards } from './quickstart-releases.js'
+import { blurbHash, blurbTranslations } from './template-blurb-translations.js'
 import { shotFilesFor, withPictureUrls } from './template-shots.js'
 
 /**
@@ -39,10 +40,21 @@ export async function customerTemplateCards(pool, config, releases) {
     pool,
     templates.map((t) => t.id)
   )
+  // The blurb's stored translations (`lib/template-blurb-translations.js`), one query for the whole list:
+  // `card.blurbs` is `{ lang: text }`, only the languages translated so far; a page shows English otherwise.
+  const translated = await blurbTranslations(
+    pool,
+    templates.map((t) => t.card?.blurb)
+  )
+  const withBlurbs = (card) =>
+    card && typeof card.blurb === 'string' && card.blurb.trim()
+      ? { ...card, blurbs: translated.get(blurbHash(card.blurb)) ?? {} }
+      : card
   return templates.map((t) =>
     withPictureUrls(
       {
         ...t,
+        card: withBlurbs(t.card),
         design: shownDesign(t.design),
         // Whether the Add site popup's Apply can write this build (`lib/brief-support.js`); the wizard offers the popup only then.
         platforms: t.platforms.map((p) => ({ ...p, apply: briefSupported(p, contracts) }))
