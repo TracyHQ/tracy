@@ -105,10 +105,12 @@ test('the prompt names the slot subject from the brief, and an object for a cut-
     subject: { kind: 'offering', id: 'svc-fit', label: 'Fitness Lessons', category: 'racket club' }
   })
   assert.match(card, /one of its offerings, Fitness Lessons/)
-  assert.match(card, /Fitness Lessons in use at this business/)
+  assert.match(card, /Fitness Lessons at this business: its equipment and its place/)
+  assert.match(card, /no face turned to the camera, no face in focus, no child as the subject/)
   assert.match(card, /racket club/)
   const bakery = drawPrompt({ mode: 'scene', aspect: 21 / 9, subject: { kind: 'venue', category: 'bakery' } })
-  assert.match(bakery, /the business at work in its own place/)
+  assert.match(bakery, /the business's own place, ready or in use/)
+  assert.doesNotMatch(bakery, /at work/)
   assert.match(bakery, /bakery/)
   const object = drawPrompt({
     mode: 'object',

@@ -359,8 +359,13 @@ export function createSitePictures({
             ? {
                 assets: build.brief.assets ?? [],
                 reading: build.brief.reading ?? null,
-                // The business's trade, the subject words of a drawn picture's prompt (#194).
-                business: { trade: build.brief.business?.trade, subTrade: build.brief.business?.subTrade },
+                // The business's name, trade and key messages: who a drawn picture's prompt says the business is (#194).
+                business: {
+                  name: build.brief.business?.name,
+                  trade: build.brief.business?.trade,
+                  subTrade: build.brief.business?.subTrade
+                },
+                keyMessages: build.brief.keyMessages ?? [],
                 // The brief's own logo: a mark, never a photo to place or to draw from (`fill-draw.mjs`).
                 brand: { logo: build.brief.brand?.logo ?? null }
               }

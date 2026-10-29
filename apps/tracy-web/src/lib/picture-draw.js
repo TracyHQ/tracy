@@ -12,7 +12,7 @@
 import { createHash } from 'node:crypto'
 import sharp from 'sharp'
 
-export const DRAW_PROMPT_VERSION = 'd3'
+export const DRAW_PROMPT_VERSION = 'd4'
 const REFERENCE_EDGE = 1024
 const NEVER =
   'No text, no letters, no signs, no logos, no watermarks, no recognisable faces, no person facing the camera.'
@@ -44,12 +44,19 @@ function factsOf(subject) {
     .join(' \u2014 ')
 }
 
-/** What a scene shows: the offering a card is about in use, else the business at work in its own place. */
+/**
+ * What a scene shows: the offering a card is about in use, else the business's own place in use. Never an invented
+ * person who seems to work or train there (spec #189, #194): people only small, far off, from behind or out of focus.
+ */
 function activityOf(subject) {
   if (subject?.kind === 'offering' && subject.label)
-    return `${subject.label} in use at this business, as its customers see it`
-  return `the business at work in its own place, as its customers see it`
+    return `${subject.label} at this business: its equipment and its place close up, ready or in use`
+  return `the business's own place, ready or in use, as its customers arrive at it`
 }
+
+/** Who may be in a drawing: nobody a visitor could take for a real member of staff, customer or child of this business. */
+const PEOPLE =
+  'If any people appear, they are small and far off, seen from behind or out of focus: no face turned to the camera, no face in focus, no child as the subject.'
 
 /** How the business's own photos are given: what it looks like, never a style or a frame to copy. */
 const REFERENCES =
@@ -63,6 +70,10 @@ const REFERENCES =
  * owner's social posts, and it drew empty courts and rooms in their phone-camera look; a subject that was a record printed
  * as "[object Object]". Told the business's facts and its activity the way `pictureBriefs` does, with the owner's photos
  * as what the place looks like rather than a style to copy, it drew the business at work in its own place.
+ * 🔒 BUT NEVER AN INVENTED PERSON WHO SEEMS TO BE ITS OWN (d4, 29/10/2026). d3 asked for the business "at work", and
+ * drew a coach and children front-on: invented people a visitor would take for its staff and customers. d4 asks for
+ * the place and its equipment in use, with people only small, far off, from behind or out of focus; a drawing the
+ * labeller still finds a face in is refused (`drawnPictureVerdict`), drawn once more, then a brand colour block.
  */
 export function drawPrompt(item) {
   const shape = `${ratio(item.aspect)} (width ${item.aspect.toFixed(2)} times the height), ${orientation(item.aspect)}`
@@ -78,7 +89,7 @@ export function drawPrompt(item) {
     item.subject?.kind === 'offering' && item.subject.label
       ? `for the page of one of its offerings, ${item.subject.label}`
       : 'for its website'
-  return `A photograph of this business, ${page}:${about}\nPhotorealistic, natural light, ${activityOf(item.subject)}, framed ${shape}.\n${REFERENCES}\n${NEVER}`
+  return `A photograph of this business, ${page}:${about}\nPhotorealistic, natural light, ${activityOf(item.subject)}, framed ${shape}.\n${PEOPLE}\n${REFERENCES}\n${NEVER}`
 }
 
 /** The cache key of a drawing: what it was made from, for what subject and shape, how, and by which model. */
