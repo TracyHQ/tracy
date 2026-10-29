@@ -52,5 +52,5 @@ with WordPress facts measured on the Tracy Base wp7 run.
 | Contact Form 7 (Q10, plugin in the quickstart — planned) | GPL-2.0-or-later | not bundled in the skill |
 
 The `tracy-base` theme and the `tracy-base/wp7` quickstart are **public** surfaces (released on
-`JoomlArt-Products/ja-products`): all text in them is English (root `CLAUDE.md`, "Public surfaces are
+`JoomlArt-Products/joomlart-products`): all text in them is English (root `CLAUDE.md`, "Public surfaces are
 English"); this skill lives in a private repo.
