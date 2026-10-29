@@ -107,6 +107,7 @@ import {
   withoutKeptTakeOff,
   writeSteps
 } from './joomla-tidy.js'
+import { channelListOf, writeMiscHeading } from './joomla-contact-page.js'
 import {
   keptById,
   leaveShowcase,
@@ -792,6 +793,8 @@ export function createJoomlaEngine({
       const site = {
         ...siteBlock(ctx.normalized),
         statistics: statisticPlan?.statistics ?? [],
+        // The copy writer never invites a walk-in to a business that works by appointment (#189 item 19).
+        byAppointment: Boolean(statisticPlan?.contact?.booking),
         languages: editions ? languages : [written],
         ...(editions ? {} : { sourceLanguage: written })
       }
@@ -2135,6 +2138,16 @@ export function createJoomlaEngine({
             visible: visibleNow
           })
           if (contacts.note) ctx.note(contacts.note)
+          // The channel list's heading says its role, not the component's "Miscellaneous Information" (#189 item 19).
+          if (channelListOf(planned) !== '') {
+            const heading = await writeMiscHeading({
+              apply,
+              siteKey,
+              template: templateOf(ctx.contract.dir),
+              locales: [...visibleNow]
+            })
+            if (heading.note) ctx.note(heading.note)
+          }
           // The site plan's contact facts in the custom modules' contact lines, linked (`joomla-contact-links.js`, #191).
           const moduleContacts = await planContactSteps({
             apply,

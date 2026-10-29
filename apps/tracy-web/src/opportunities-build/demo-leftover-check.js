@@ -22,6 +22,7 @@ import { checkPageIntros } from './page-intro-check.js'
 import { checkOfferingSummaries } from './offering-summary-check.js'
 import { checkReviewQuotes } from './review-quotes-check.js'
 import { checkContactForms } from './contact-form-check.js'
+import { checkContactPage } from './contact-page-check.js'
 import { checkEmptyFrames } from './empty-frame-check.js'
 import { checkHeadBlocks } from './head-block-check.js'
 import { checkRecordSlots } from './record-slot-check.js'
@@ -164,6 +165,9 @@ export async function runLeftoverCheck({
   // No visible message form without an email of the owner's, judged on the served pages (COO decision, #189 item 19).
   const contactForms = checkContactForms({ pages, brief })
   report.findings.push(...contactForms.findings)
+  // Every channel linked on the Contact page, numbers tappable, and no walk-in copy for a business by appointment (#189 item 19).
+  const contactPage = checkContactPage({ pages, sitePlan })
+  report.findings.push(...contactPage)
   // A kept call-to-action band shows a message with its button (COO decision, #189 item 7), where the map declares bands.
   const ctaBands = checkCtaBands({ pages, contentMap, sitePlan })
   report.findings.push(...ctaBands)
@@ -207,6 +211,7 @@ export async function runLeftoverCheck({
     reviewQuotes,
     recordSlots,
     contactForms,
+    contactPage,
     ctaBands,
     pageIntros,
     broken,
@@ -220,6 +225,7 @@ export async function runLeftoverCheck({
       offeringSummaries.length === 0 &&
       reviewQuotes.length === 0 &&
       contactForms.findings.length === 0 &&
+      contactPage.length === 0 &&
       emptyFrames.length === 0 &&
       headBlocks.length === 0 &&
       recordSlots.length === 0 &&

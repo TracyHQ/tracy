@@ -29,6 +29,7 @@ import { FACT_RULES, factsOf, ungrounded } from './guard.js'
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
 import { jsonObjectIn, pool } from './shared.js'
 import { renameDemoCompany, statesFact } from './joomla-demo-names.js'
+import { channelListOf, settingWrites, wantedSettings } from './joomla-contact-page.js'
 
 /** A listing page; the door's own ceiling. */
 const PAGE = 100
@@ -958,9 +959,10 @@ export function shippedPageMeta(dir) {
  * @param {object} input
  * @param {any[]} input.rows - the menu's whole rows (`readMenu`)
  * @param {Set<string>} input.visible - the language tags a visitor can reach
- * @param {{ name: string, title?: string, said: string, about: string }} input.owner - the business name, the home's
- *   search title when the site plan made one, everything the owner wrote (for telling their words), and their own
- *   description (the only words a description is cut from)
+ * @param {{ name: string, title?: string, said: string, about: string,
+ *   pages?: Array<{ path: string | null, role: string, title: string, description: string }> }} input.owner - the business
+ *   name, the home's search title when the site plan made one, everything the owner wrote (for telling their words), their
+ *   own description (the only words a description is cut from), and the site plan's search result of every kept page
  * @param {string} input.wroteIn - the language tag that description is written in
  * @param {Partial<ShippedMeta> | null} input.shipped - what the release ships
  * @param {string[]} [input.demoNames] - the template's `demoCompanyNames`: with no description given, a description the
@@ -986,6 +988,16 @@ export function pageMetaSteps({ rows, visible, owner, wroteIn, shipped, demoName
   }
   const description = ownExcerpt(owner.about)
   const primary = (/** @type {string} */ tag) => tag.toLowerCase().split('-')[0]
+  /** The site plan's search result of the page an entry opens: the home's for the home entry, else by the entry's path. */
+  const plans = primary(String(wroteIn || 'en')) === 'en' && Array.isArray(owner.pages) ? owner.pages : []
+  const planned = (/** @type {any} */ row) =>
+    plans.find((p) =>
+      Number(row.home) === 1
+        ? p.role === 'home'
+        : p.role !== 'home' &&
+          typeof p.path === 'string' &&
+          p.path.replace(/^\/+|\/+$/g, '') === String(row.path ?? '').replace(/^\/+|\/+$/g, '')
+    ) ?? null
   /** The home entry's own words in `field`: the name everywhere, the description where it is in that language. */
   const ownFor = (/** @type {PageField} */ field, /** @type {string} */ language) =>
     TITLE_FIELDS.has(field)
@@ -1021,10 +1033,19 @@ export function pageMetaSteps({ rows, visible, owner, wroteIn, shipped, demoName
       if (TITLE_FIELDS.has(field) && name === '' && Number(row.home) === 1) continue
       next[field] = Number(row.home) === 1 ? ownFor(field, language) : ''
     }
+    // 🔒 A KEPT PAGE SAYS ITS PLANNED TITLE AND DESCRIPTION, WHATEVER THE ENTRY HELD (#189 round 9, class G). Measured on a
+    // brief build 30/10/2026: every inner page had no description, and the home one was the copy writer's line, not the plan's.
+    // The plan is written in English, so only an entry of every language or of an English site takes it.
+    const plan = planned(row)
+    if (plan && (language === '*' || primary(language) === 'en')) {
+      next.page_title = plan.title
+      if (flat(plan.description) !== '') next['menu-meta_description'] = plan.description
+    }
     // A home title the release ships EMPTY (JA Voyara, JA Tour, JA Social II): Joomla shows the entry's own title
     // ("Home") on the tab, so it takes the owner's name. An absent key is left: a site that names its titles itself
     // (Tracy Business, `sitename_pagetitles` on) would read "Name - Name".
     if (
+      !plan &&
       Number(row.home) === 1 &&
       name !== '' &&
       typeof params.page_title === 'string' &&
@@ -1051,8 +1072,6 @@ export const FORM_OFF_NOTE =
 /** The same, when a contact record's settings could not be read, so its form could not be set to hide. */
 export const FORM_UNREAD_NOTE =
   "No email was given, so the template's address was taken off the contact record; its form settings could not be read, so the check of the built pages says whether a form still shows."
-/** The record's own setting that shows the form (Joomla 5: `show_email_form && (email_to || user_id)`). */
-const FORM_SWITCH = 'show_email_form'
 
 /** The record's address lines, in the order a contact page prints them. */
 const ADDRESS_FIELDS = ['address', 'suburb', 'state', 'postcode', 'country']
@@ -1129,11 +1148,15 @@ export async function contactSteps({
     let silenced = 0
     // 🔒 NO RECIPIENT OF THE OWNER'S, NO FORM (COO decision, spec TracyHQ/tracy#189 item 19). Emptying `email_to` alone left
     // the form on: a record linked to a user account (`user_id`) still shows it and mails that account. So the form is
-    // switched off where Joomla decides it, the record's `show_email_form`, and on every menu entry of that record that
-    // sets its own value (an entry's non-empty value wins over the record on its own page; an empty one never does).
+    // switched off where Joomla decides it, the record's `show_email_form`, and on every menu entry of that record (on the
+    // entry's own page the entry, or the component's global option when the entry is empty, wins over the record).
     // The menu Apply already read whole is passed in (it is read once); a caller without it has it read here.
+    // The Contact page's channel list (#189 item 19, round 9): every channel of the plan as a link, in the record's extra
+    // information, with the plain-text number lines switched off (`joomla-contact-page.js`).
+    const list = channelListOf({ contact, channels })
+    const wanted = wantedSettings({ email, listed: list !== '' })
     const entries =
-      email !== ''
+      Object.keys(wanted).length === 0
         ? []
         : Array.isArray(menu)
           ? menu
@@ -1144,7 +1167,7 @@ export async function contactSteps({
       const fields = {}
       if (email !== '' && row.email_to !== email) fields.email_to = email
       else if (email === '' && setByTemplate(row.email_to)) fields.email_to = ''
-      if (email === '') {
+      if (Object.keys(wanted).length > 0) {
         // A listing without the settings has the record read for them; a record that cannot be read is said, not guessed.
         const held =
           row.params !== undefined
@@ -1155,23 +1178,13 @@ export async function contactSteps({
         const params = held === '' || held === null ? {} : paramsOf(held)
         if (!params) unswitched.push(Number(row.id))
         else {
-          if (String(params[FORM_SWITCH] ?? '') !== '0')
-            fields.params = JSON.stringify({ ...params, [FORM_SWITCH]: '0' })
-          for (const entry of entries) {
-            const own = new RegExp(`[?&]view=contact&(?:[^&]*&)*id=${Number(row.id)}(?:&|$)`)
-            if (!/option=com_contact/.test(String(entry.link ?? '')) || !own.test(String(entry.link ?? '')))
-              continue
-            const set = paramsOf(entry.params)
-            if (!set || String(set[FORM_SWITCH] ?? '') === '' || String(set[FORM_SWITCH]) === '0') continue
-            steps.push({
-              kind: 'menuItem',
-              id: Number(entry.id),
-              fields: { params: JSON.stringify({ ...set, [FORM_SWITCH]: '0' }) }
-            })
-          }
+          const writes = settingWrites({ id: Number(row.id), params, entries, wanted })
+          if (writes.record) fields.params = writes.record
+          steps.push(...writes.menu)
         }
-        if (setByTemplate(row.email_to) || fields.params) silenced += 1
+        if (email === '' && (setByTemplate(row.email_to) || fields.params)) silenced += 1
       }
+      if (list !== '' && row.misc !== list) fields.misc = list
       // A phone given is the telephone; the template's other numbers go, and with none given every one of them goes (#1367).
       if (phone !== '' && row.telephone !== phone) fields.telephone = phone
       // The brief's second number is the record's mobile line (COO rule 29/10/2026: every number shown).
@@ -1200,7 +1213,7 @@ export async function contactSteps({
         else if (next === '' && setByTemplate(row[field])) fields[field] = ''
       }
       // The areas beside a given address: one line in the record's extra information, where the template had text of its own.
-      if (placed.address && placed.area && setByTemplate(row.misc)) {
+      if (list === '' && placed.address && placed.area && setByTemplate(row.misc)) {
         const line = `<p>${placed.area.replace(/&/g, '&amp;').replace(/</g, '&lt;')}</p>`
         if (row.misc !== line) fields.misc = line
       }

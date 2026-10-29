@@ -17,6 +17,7 @@ import { CONTACT_FACTS_WHY } from './page-plan.mjs'
 import { answersFromBrief, contactFacts } from './site-answers.mjs'
 import { statFactsOf } from './stat-box-plan.mjs'
 import { addressThatFits, cityOf, contactChannelsOf, mapsLinkOf } from './contact-reading.mjs'
+import { BY_APPOINTMENT, byAppointmentOf } from './contact-page.mjs'
 import { contactButtonSlots } from './contact-buttons.mjs'
 import { declaredButtonSlots } from './declared-button-plan.mjs'
 import { IDENTITY_REASONS, planIdentity } from './site-plan-identity.mjs'
@@ -96,6 +97,9 @@ function contactOfBrief(facts, brief = null) {
       kind === 'address' ? (mapsLinkOf(brief, fact.value)?.value ?? null) : hrefOf(kind, fact.value)
     out[kind] = { value: fact.value, ...(href ? { href } : {}), source: fact.source }
   }
+  // 🔒 "By appointment" travels with the contact facts (#189 item 19): the Contact page says it, and no page invites a walk-in
+  // (`contact-page.mjs`). It is Tracy's inference from the brief, so its source says so.
+  if (brief && byAppointmentOf(brief)) out.booking = { value: BY_APPOINTMENT, source: 'brief.inferred' }
   return out
 }
 

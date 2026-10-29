@@ -78,6 +78,13 @@ export {
   serviceAreasOf
 } from './contact-reading.mjs'
 export { checkContactFacts } from './contact-fact-check.mjs'
+export {
+  byAppointmentOf,
+  contactPageFindings,
+  contactPageHtml,
+  contactPageLines,
+  WALK_IN_WORDS
+} from './contact-page.mjs'
 export { contactButtonSlots } from './contact-buttons.mjs'
 export {
   MESSAGING_APP_BY_COUNTRY,

@@ -136,3 +136,21 @@ test('the leftover check fails a build whose kept page still shows a form withou
   assert.ok(report.findings.some((f) => f.kind === 'contact-form' && f.path === '/contact'))
   assert.equal(report.pass, false)
 })
+
+test("a florist with no email: the record's own menu entry that leaves the form setting empty is switched off too, since the component's global option fills an empty entry and beats the record on that page", async () => {
+  const { steps } = await contactSteps({
+    apply: door({
+      contacts: [linked()],
+      menu: [entry(150, 4, { show_email_form: '', show_name: '0' }), entry(151, 4, { show_name: '0' })]
+    }),
+    siteKey: 's',
+    given: { name: 'Petal Lane Florist' },
+    visible: new Set()
+  })
+  for (const id of [150, 151]) {
+    const own = steps.find((s) => s.kind === 'menuItem' && s.id === id)
+    assert.ok(own, `the entry ${id} of this record is written`)
+    assert.equal(JSON.parse(own.fields.params).show_email_form, '0')
+    assert.equal(JSON.parse(own.fields.params).show_name, '0', "the entry's other settings are kept")
+  }
+})
