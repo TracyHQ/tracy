@@ -83,6 +83,13 @@ export function drawPrompt(item) {
     return `Extend this photograph to a wider frame of ${shape}. Keep the original photograph unchanged in the middle and continue its scene naturally on every side, with the same light, colours and perspective. Photorealistic. ${NEVER}`
   const facts = factsOf(item.subject)
   const about = facts ? `\n${facts}` : ''
+  // A logo's symbol (`brief-engines/brand-logo-symbol.js`): the name is set beside it as type by code, never drawn here.
+  if (item.mode === 'symbol') {
+    const named = item.subject?.label ? ` named "${item.subject.label}"` : ''
+    const colours =
+      Array.isArray(item.colours) && item.colours.length ? ` in ${item.colours.join(' and ')}` : ''
+    return `A simple logo symbol for a business${named}:${about}\nOne bold flat emblem that suggests what the business does, drawn${colours} on a plain pure white background, centred and filling most of a ${shape} frame. Vector style, solid flat colour, no gradient, no shadow, no photograph. The symbol contains no letters, no initials, no numbers and no words in any language: the business name is set beside it separately.\n${NEVER}`
+  }
   if (item.mode === 'object') {
     const what = item.subject?.label ? `${item.subject.label}` : `the work of this business`
     return `One single object used for ${what}, for the website of this business:${about}\nShown whole and large, filling most of the frame, on a plain pure white background with nothing else in the frame, framed ${shape}. Photorealistic, soft even light, no shadow on the ground, no people.\n${REFERENCES}\n${NEVER}`

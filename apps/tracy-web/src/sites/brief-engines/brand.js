@@ -23,6 +23,8 @@ import { nameAnswered, recordedDoor } from './shared.js'
 import { writeEmdashBrand } from './brand-emdash.js'
 import { writeJoomlaBrand } from './brand-joomla.js'
 import { writeWordpressBrand } from './brand-wordpress.js'
+import { fitBriefLogo, frameOfProfile, paletteOfLogos, TEMPORARY_LOGO_NOTE } from './brand-logo-fit.js'
+import { symbolItem } from './brand-logo-symbol.js'
 
 export { monogramOf } from './brand-wordpress.js'
 
@@ -58,7 +60,13 @@ const BUSY_WAIT_MS = 750
  *   text instead of the template's own logo (site plan `logo.decision` `name-as-text`, #193)
  * @property {boolean} [nameFallback] - a brief build: a logo spot the business's logo does not reach shows its name as text
  * @property {string[]} [demoLogoFiles] - the template's logo files (site plan `logo.demoFiles`), for that fallback
+ * @property {Uint8Array} [symbol] - a brief build with no logo: the symbol drawn for the business (`brand-logo-symbol.js`)
+ * @property {import('./logo-colours.js').Palette | null} [templatePalette] - the colours of the template's own logos
+ * @property {string | null} [descriptor] - a short line under the name of a logo Tracy makes, only when the brief gives one
  */
+
+/** The platforms whose logo a brief build makes fit its frame (`brand-logo-fit.js`); the others take the logo as given. */
+const FITTED_PLATFORMS = new Set(['joomla'])
 
 /**
  * @typedef {object} BrandWriterInput what a writer is handed; it reports through `wrote` and `skip`
@@ -91,7 +99,8 @@ const refusalOf = (/** @type {any} */ answer) =>
  * @param {string} input.applyId
  * @param {(note: string) => void} input.note
  * @param {(ms: number) => Promise<void>} [input.sleep]
- * @returns {Promise<{written: string[], skipped: Array<{where: string, reason: string}>}>}
+ * @returns {Promise<{written: string[], skipped: Array<{where: string, reason: string}>,
+ *   made?: 'lockup' | 'symbol' | 'wordmark'}>} `made`: the logo is one Tracy made (the owner was told it is temporary)
  */
 export async function setSiteBrand({
   platform,
@@ -120,6 +129,33 @@ export async function setSiteBrand({
     return { written, skipped }
   }
   const profile = release?.tag && release.version ? templateProfileOf(release.tag, release.version) : null
+  const given = pack.logo
+  // 🔒 A BRIEF BUILD'S LOGO FITS THE FRAME (#189, COO 29/10/2026): a square or tall logo becomes the owner's mark beside the
+  // name set as type; no logo, a drawn symbol (or the name alone) beside it. A logo Tracy made is said to be temporary.
+  /** @type {'lockup' | 'symbol' | 'wordmark' | null} */
+  let made = null
+  if (
+    FITTED_PLATFORMS.has(platform) &&
+    pack.nameFallback === true &&
+    typeof pack.name === 'string' &&
+    pack.name.trim() !== '' &&
+    (Object.keys(pack.logo ?? {}).length > 0 || pack.textLogo === true)
+  ) {
+    const fit = await fitBriefLogo({
+      logo: pack.logo,
+      name: pack.name.trim(),
+      descriptor: pack.descriptor ?? null,
+      frame: frameOfProfile(profile),
+      symbol: pack.symbol ?? null,
+      templatePalette: pack.templatePalette ?? null
+    }).catch((error) => {
+      console.info(`[brand] logo fit: ${error instanceof Error ? error.message : error}`)
+      return null
+    })
+    if (fit?.logo && fit.logo !== pack.logo) pack = { ...pack, logo: fit.logo }
+    made = fit?.made ?? null
+    if (made) note(TEMPORARY_LOGO_NOTE)
+  }
   const prepared = /** @type {BrandWriterInput["prepared"]} */ (await prepareBrand(pack, profile))
   prepared.requireComplete = pack.requireComplete === true
   prepared.textLogo = pack.textLogo === true && !Object.keys(pack.logo ?? {}).length
@@ -135,7 +171,7 @@ export async function setSiteBrand({
     skip('logo', 'the main logo has no source asset')
   if (typeof pack.nameGiven === 'boolean') prepared.nameGiven = pack.nameGiven
   // The share card is made from the logo as uploaded, not as fitted to a header spot (D5).
-  const share = await shareCardOf(pack.logo)
+  const share = await shareCardOf(given)
   if (share) prepared.share = share
   const read = (/** @type {string} */ action, /** @type {Record<string, unknown>} */ params) =>
     call({ siteKey, action, params })
@@ -167,7 +203,7 @@ export async function setSiteBrand({
   }
   await writer(input)
   await SHARE_WRITERS[platform]?.(input)
-  return { written, skipped }
+  return { written, skipped, ...(made ? { made } : {}) }
 }
 
 /**
@@ -180,8 +216,21 @@ export async function setSiteBrand({
  * @param {(ctx: any) => Promise<any>} [deps.sitePlanFor] - the brief build's site plan, when there is one
  * @param {(ctx: any, assetId: string) => Promise<Uint8Array | null>} [deps.briefPicture] - a picture of the brief build's own
  *   brief (its logo), read from where the build keeps the owner's pictures
+ * @param {(ctx: any, files: string[]) => Promise<Uint8Array[]>} [deps.templateLogos] - the template's own logo files (site plan
+ *   `logo.demoFiles`) as the site serves them: their colours are the colours of a logo Tracy makes with no logo of the owner's
+ * @param {(ctx: any, item: ReturnType<typeof symbolItem>) => Promise<Uint8Array | null>} [deps.drawSymbol] - a symbol drawn and
+ *   checked for a business with no logo (`brand-logo-symbol.js` `drawLogoSymbol`), or null
  */
-export function createSiteBrand({ applyFor, readFile, versionOf, sleep, sitePlanFor, briefPicture }) {
+export function createSiteBrand({
+  applyFor,
+  readFile,
+  versionOf,
+  sleep,
+  sitePlanFor,
+  briefPicture,
+  templateLogos,
+  drawSymbol
+}) {
   /**
    * @param {{siteKey: string, platform: string, quickstart: string | null, email: string, runId?: string, brief: any, normalized: any,
    *   applied?: (id: string, how?: {reused: boolean}) => void, note: (note: string) => void}} ctx
@@ -248,6 +297,20 @@ export function createSiteBrand({ applyFor, readFile, versionOf, sleep, sitePlan
     if (pack.name && ['name-as-text', 'brief-logo'].includes(planned?.logo?.decision)) {
       pack.nameFallback = true
       pack.demoLogoFiles = Array.isArray(planned.logo.demoFiles) ? planned.logo.demoFiles : []
+    }
+    // A brief build with no logo of the business: a symbol is drawn for it, in the template's own logo colours, and the
+    // brand seam sets the name beside it (`brand-logo-fit.js`). Nothing drawn, the name alone in those colours.
+    if (pack.textLogo && pack.name && ctx.platform === 'joomla') {
+      const logos = await templateLogos?.(ctx, pack.demoLogoFiles ?? []).catch(() => [])
+      pack.templatePalette = logos?.length ? await paletteOfLogos(logos).catch(() => null) : null
+      const item = symbolItem({
+        name: pack.name,
+        trade: ctx.brief?.business?.trade ?? null,
+        about: typeof ctx.normalized?.about === 'string' ? ctx.normalized.about.slice(0, 400) : null,
+        palette: pack.templatePalette
+      })
+      const symbol = await drawSymbol?.(ctx, item).catch(() => null)
+      if (symbol?.byteLength) pack.symbol = symbol
     }
     const favicon = await bytesOf(brand.favicon, 'favicon')
     if (favicon) pack.favicon = favicon

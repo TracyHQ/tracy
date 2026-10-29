@@ -223,6 +223,8 @@ import { presign, signedCall } from './sites/artifacts.js'
 import { readBrandFile } from './sites/brand-files.js'
 import { createBriefBuilds } from './sites/brief-build.js'
 import { createSiteBrand, setSiteBrand } from './sites/brief-engines/brand.js'
+import { drawLogoSymbol } from './sites/brief-engines/brand-logo-symbol.js'
+import { logoFilesOfPage } from './sites/brief-engines/brand-logo-fit.js'
 import { createEmdashEngine } from './sites/brief-engines/emdash.js'
 import { createJoomlaEngine } from './sites/brief-engines/joomla.js'
 import { headerReader } from './sites/brief-engines/pictures.js'
@@ -2104,6 +2106,44 @@ export function buildApp(deps) {
               visionOverride: null
             })
             return real ? real.bytes(assetId) : null
+          },
+          // The template's own logo files as the site serves them: their colours colour a logo Tracy makes (#189).
+          templateLogos: async (ctx, files) => {
+            const reader = await siteReader(ctx.siteKey)
+            if (!reader) return []
+            // No logo slot in the content map: the logo pictures the home page shows (`logoFilesOfPage`).
+            const named = files.length
+              ? files
+              : logoFilesOfPage((await reader.page('/').catch(() => null))?.html ?? '')
+            const out = []
+            for (const file of named.slice(0, 4)) {
+              const bytes = await reader.bytes(new URL(file, reader.base).href).catch(() => null)
+              if (bytes?.byteLength) out.push(bytes)
+            }
+            return out
+          },
+          // A symbol for a business with no logo, drawn through the Customize picture door and checked by the photo
+          // labeller like any drawing (`brand-logo-symbol.js`); the name is set beside it by code.
+          drawSymbol: async (ctx, item) => {
+            const { image } = await seedModels()
+            if (!image?.imageModel) return null
+            const real = await realPictures?.forSite({ siteKey: ctx.siteKey, email: ctx.email })
+            if (!real?.checkDrawing) return null
+            const got = await drawLogoSymbol({
+              door: image,
+              chat: (await seeder('model')).chat,
+              item,
+              checkDrawing: real.checkDrawing,
+              cache: real.drawing ?? null,
+              signal: ctx.signal
+            })
+            if ('refused' in got) {
+              ctx.note(
+                `a symbol for the logo could not be drawn (${got.refused.join(', ')}), so the logo is the name alone`
+              )
+              return null
+            }
+            return got.bytes
           }
         })
       })
