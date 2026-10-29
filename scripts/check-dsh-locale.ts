@@ -97,6 +97,8 @@ const KEPT_VERBATIM = new Set<string>([
   // A Chat row's title is the person's own request between quotation marks, and Vietnamese uses
   // the same curly marks as English, so there is nothing left to translate.
   'tracy-site-tabs.event.requestTitle',
+  // A page list `{what}: {pages}`: two placeholders and a colon, nothing left to translate.
+  'tracy-website-opportunities.build.fixPages',
   // A changed record named by its title alone (`@tracy/core/turn-undo` `targetText`, council D1,
   // 20/10/2026): the title between the same curly marks, with no kind word left to translate.
   'tracy-chat-input.undo.named.any',
