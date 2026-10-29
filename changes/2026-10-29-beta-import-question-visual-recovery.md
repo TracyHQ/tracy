@@ -19,3 +19,5 @@
 - **Final refresh:** merged develop at 7a85b0f4fc after the clean rebuild; its changes concern live push and onboarding copy, with no overlapping source edits. Both beta regression cases pass on 7103cbc299 with the locked dependencies.
 
 - **Loaded-run acceptance:** one post-merge regression attempt timed out during real browser startup while the complete lint gate shared the machine (67 PASS, 1 FAIL); the other case passed. The test now allows a bounded 45-second capture deadline under the 120-second suite cap, retaining the same JPEG, script, viewport and scroll assertions. Product deadlines are unchanged.
+
+- **Final local result:** after the develop merge, all 64 non-suite gates pass in pull-request mode (`check-all.ts --skip tests`), including lint, documentation, language, all bundles and both boot graphs. Both beta regression cases pass on f3e76d85e1. The Linux-style CDP launcher was also exercised locally with real Chrome and passed. Full CI suite results remain separate from these local checks.
