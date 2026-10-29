@@ -21,6 +21,7 @@ import { COLOUR_REASONS, planColours } from './brand-colours.mjs'
 import { HONESTY_REASONS, planHonesty } from './site-plan-honesty.mjs'
 import { EMPTIED_PAGE_WHY, emptiedPages } from './site-plan-empty-pages.mjs'
 import { peopleFromReviewsNote, showablePeopleOf } from './brief-people.mjs'
+import { planHero } from './hero-first-screen.mjs'
 
 export const SITE_PLAN_VERSION = 'site-plan/1'
 
@@ -37,6 +38,8 @@ export const SITE_PLAN_REASONS = Object.freeze({
   'emptied-page': 'every section of this page was taken off, so the page goes too',
   'contact-fact': 'a contact fact the brief holds',
   'business-name': 'the business name the brief holds',
+  'hero-what': 'the first screen names what the business offers and where (`hero-first-screen.mjs`)',
+  'hero-contact': "the first screen's main button uses the owner's real way in (`hero-first-screen.mjs`)",
   ...IDENTITY_REASONS,
   ...COLOUR_REASONS,
   ...HONESTY_REASONS
@@ -171,6 +174,12 @@ function withoutEmptiedPages(answered, served, contentMap, honesty) {
   return { ...answered, answers, notes, pagePlan: { ...plan, pages, keep } }
 }
 
+/** The slot decisions with the hero's lines laid over them: a hero line is a value, never the copy writer's. */
+function withHero(slots, hero) {
+  const byKey = new Map(hero.map((d) => [d.key, d]))
+  return slots.map((s) => byKey.get(s.key) ?? s)
+}
+
 /**
  * @param {object} brief - a validated brief revision
  * @param {{questions: any[], set?: {contentHash?: string}}} served - the create door's Site questions for the template
@@ -209,6 +218,7 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
       .filter((r) => r.kind === 'person' && r.decision === 'keep')
       .map((r) => r.assigned?.id)
   )
+  const heroPlan = planHero(brief, contentMap, contact)
   const fromReviews = peopleFromReviewsNote(showablePeopleOf(brief).filter((p) => shown.has(p.id)))
   const notes = fromReviews ? [...pageNotes, fromReviews] : pageNotes
   return {
@@ -218,7 +228,9 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
     facts,
     pages: pagesOf(pagePlan),
     // A kept card's picture shows what its words name: the honesty plan's card labels (#192, #194).
-    slots: slotsOf(contentMap, brief, contact, name, honesty.honesty.cardNames),
+    slots: withHero(slotsOf(contentMap, brief, contact, name, honesty.honesty.cardNames), heroPlan.slots),
+    // The first screen answers what, where and how to contact (COO rule 29/10/2026): `hero-first-screen.mjs`.
+    hero: heroPlan.hero,
     // Logo, posts, social profiles and map (ticket #193): `site-plan-identity.mjs`.
     ...planIdentity(brief, contentMap),
     // What the content map does not reach: videos, backgrounds, showcase, addresses, credit line (ticket #196).

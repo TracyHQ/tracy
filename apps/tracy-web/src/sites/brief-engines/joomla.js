@@ -64,6 +64,7 @@ import { takenOffPicturePaths } from './cutout-css.js'
 import { onceNote, overlapSafetyNet } from './picture-overlap-net.js'
 import { lineLimits, withBoxLimits, withinLines } from './slot-box-limits.js'
 import { writeWoContent } from './joomla-wo-content.js'
+import { heroSlotValues } from './hero-lines.js'
 import {
   addDerivedLanguages,
   setSiteLanguage,
@@ -1107,6 +1108,11 @@ export function createJoomlaEngine({
       )
       // The sourced words, as their sources say them: no guard of the model's words is theirs.
       Object.assign(kept, copyPins?.pins ?? {})
+      // 🔒 THE FIRST SCREEN SAYS WHAT, WHERE AND HOW TO CONTACT (COO rule 29/10/2026, `hero-lines.js`): the site plan's hero
+      // lines win over the copy writer's, and the left-demo sweep never empties them.
+      const heroLines = heroSlotValues(sitePlan, written)
+      Object.assign(kept, heroLines)
+      demoBlanks = demoBlanks.filter((slot) => !(slot.key in heroLines))
 
       // 🔒 A MODULE THAT STATES ONLY ANOTHER COMPANY'S FACTS COMES OFF THE PAGE. Seven modules of `tracy-business/j6` are nothing
       // but facts the contract asks evidence for — the team and their titles, the certificates, the clients, three strips of

@@ -42,6 +42,7 @@ function ownLinks(html) {
  * @param {(path: string) => Promise<{status: number, html: string} | null>} input.readPage - one page as the site serves it
  * @param {(input: {pages: any[], contentMap: any, brief: any, missing: string[], styles: any[]}) => any} input.check - the domain's check
  * @param {(input: {pages: any[], brief: any}) => any[]} [input.contactCheck] - the domain's contact-fact check
+ * @param {(input: {pages: any[], brief: any}) => any[]} [input.heroCheck] - the domain's first-screen check
  * @param {any} input.contentMap
  * @param {any} input.brief
  * @param {string[]} [input.paths] - the pages the site plan keeps
@@ -53,6 +54,7 @@ export async function runLeftoverCheck({
   readPage,
   check,
   contactCheck = null,
+  heroCheck = null,
   contentMap,
   brief,
   paths = [],
@@ -112,9 +114,12 @@ export async function runLeftoverCheck({
   const report = check({ pages, contentMap, brief, missing, styles, broken })
   // A contact fact the brief holds that no page shows (address, email, phone, hours): reported beside the leftovers.
   const contactMissing = typeof contactCheck === 'function' ? contactCheck({ pages, brief }) : []
+  // Which of what, where and how to contact the home page's first screen does not answer (`hero-first-screen.mjs`).
+  const heroMissing = typeof heroCheck === 'function' ? heroCheck({ pages, brief }) : []
   return {
     ...report,
     contactMissing,
+    heroMissing,
     broken,
     pass: report.pass === true && broken.length === 0,
     findings: report.findings.slice(0, FINDINGS_KEPT),
@@ -143,6 +148,7 @@ export async function checkBuildLeftovers(
     readPage: (path) => readSitePage(build.site_key, path),
     check: domain.checkDemoLeftovers,
     contactCheck: domain.checkContactFacts,
+    heroCheck: domain.checkHeroAnswers,
     contentMap: contentMapOf(revision.template),
     brief: revision.brief,
     paths: kept,
