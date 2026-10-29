@@ -1361,8 +1361,18 @@ export function sitesRoutes({
   // A backup point downloaded by its Owner (`backup-export.js`): the two export doors and the
   // site's delete reach it here, the cron's sweep through its own instance.
   const backupExports = createBackupExports({ pool, config, host, fetchImpl, now })
-  const sync = liveSync({ pool, config, host, fetchImpl, currentComponent, writeComponent, now })
-  const push = livePush({ pool, config, host, fetchImpl, sync, now })
+  // Built once, at boot: each picks up the syncs and pushes a restart left running (#123).
+  const sync = liveSync({
+    pool,
+    config,
+    host,
+    fetchImpl,
+    currentComponent,
+    writeComponent,
+    now,
+    resumeOnStart: true
+  })
+  const push = livePush({ pool, config, host, fetchImpl, sync, now, resumeOnStart: true })
 
   /**
    * The principal behind a request — `{kind, email, account, grant}` with a live grant on `siteKey`,
