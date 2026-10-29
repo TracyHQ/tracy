@@ -2430,3 +2430,32 @@ test('Apply and Undo retain localized record descriptions', async () => {
     await live.close()
   }
 })
+
+test('Undo after an Apply lost before it answered takes back what its journal lists (#122)', async () => {
+  const live = await engine({ records: { article: { 1: article(1), 2: article(2) } } })
+  try {
+    const dir = pushDir([
+      update(1, { title: 'One by Tracy' }, { title: 'Article 1' }),
+      update(2, { title: 'Two by Tracy' }, { title: 'Article 2' })
+    ])
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.written.length, 2)
+    // The job was lost after its writes and before its answer: no written.json, the journal stays.
+    rmSync(join(dir, 'written.json'))
+    const result = await undo(live, dir)
+    assert.equal(result.answer.ok, true, JSON.stringify(result.answer))
+    assert.deepEqual(result.answer.restored.map((r) => r.id).sort(), answer.written.map((w) => w.id).sort())
+    assert.ok(
+      result.answer.restored.every((r) => r.title),
+      'named as the Apply named them'
+    )
+    // Without a journal either, nothing was pushed.
+    for (const name of ['journal.jsonl', 'undone.json', 'undo-requests.json'])
+      rmSync(join(dir, name), { force: true })
+    const none = await undo(live, dir)
+    assert.equal(none.answer.ok, false)
+    assert.equal(none.answer.code, 'NOT_PUSHED')
+  } finally {
+    await live.close()
+  }
+})

@@ -1357,13 +1357,36 @@ const TRASHABLE = {
   wordpress: new Set(['post', 'menuItem', 'templatePart', 'template'])
 }
 
+/**
+ * What an Apply wrote, from its journal, when it ended before `written.json` (a lost job): its items
+ * as `apply` answers them, in the order they were written; null when it wrote nothing.
+ */
+function journalWritten(pushDir) {
+  const journalPath = join(pushDir, 'journal.jsonl')
+  if (!existsSync(journalPath)) return null
+  const items = new Map(
+    (readJson(join(pushDir, 'changeset.json'), { items: [] }).items ?? []).map((i) => [i.id, i])
+  )
+  const last = new Map()
+  for (const line of readFileSync(journalPath, 'utf8').split('\n').filter(Boolean)) {
+    const entry = JSON.parse(line)
+    last.delete(entry.id)
+    last.set(entry.id, entry)
+  }
+  const written = [...last.values()]
+    .filter((entry) => entry.state === 'written' && items.has(entry.id))
+    .map((entry) => itemOut(items.get(entry.id), entry.extra ?? {}))
+  return written.length ? { written } : null
+}
+
 async function undo(pushDir) {
   const t0 = Date.now()
   const endpoint = process.env.TRACY_SYNC_ENDPOINT ?? ''
   const token = process.env.TRACY_SYNC_TOKEN ?? ''
   if (!/^https?:\/\//.test(endpoint) || !token) throw new WriteFailed('NO_LIVE_DOOR')
   const before = readJson(join(pushDir, 'before.json'), null)
-  const writtenAnswer = readJson(join(pushDir, 'written.json'), null)
+  // An Apply cut off before it answered (its job lost, #122): what it wrote is in its journal.
+  const writtenAnswer = readJson(join(pushDir, 'written.json'), null) ?? journalWritten(pushDir)
   if (!before || !writtenAnswer) throw new WriteFailed('NOT_PUSHED')
   const pushId = pushDir.split('/').filter(Boolean).at(-1)
   const applyId = `tracy-push-undo-${pushId}`
