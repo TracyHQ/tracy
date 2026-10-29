@@ -130,3 +130,41 @@ test('the demo file the site serves beats the size the contract declares (ja-imp
   })
   assert.deepEqual(byFile(map).get('images/joomlart/hero/item-2.jpg').demo, { width: 1920, height: 824 })
 })
+
+test('#189 an offering article a category page lists has its pictures on that page; a blog post of the category stays off', () => {
+  // A fictional bakery template: its "Our breads" page lists category 4, whose articles are two breads and one demo post.
+  const photo = (key, file, role) => ({
+    key,
+    entity: key.split('.')[0],
+    type: 'image',
+    role,
+    label: key,
+    sample: `images/demo/${file}#joomlaImage://local-images/demo/${file}?width=1200&height=800`
+  })
+  const map = slotMap({
+    pages: [
+      { route: 'home', entity: 'menuItem-1', link: 'index.php?option=com_content&view=featured' },
+      {
+        route: 'breads',
+        entity: 'menuItem-2',
+        link: 'index.php?option=com_content&view=category&layout=blog&id=4'
+      }
+    ],
+    entities: [
+      { key: 'article-10', kind: 'article', identityReferences: { catid: 'category-4' } },
+      { key: 'article-11', kind: 'article', identityReferences: { catid: 'category-4' } },
+      { key: 'article-12', kind: 'article', identityReferences: { catid: 'category-4' } }
+    ],
+    slots: [
+      photo('article-10.1', 'breads/rye.jpg', 'offering.image'),
+      { key: 'article-10.0', entity: 'article-10', type: 'text', role: 'offering.name', sample: 'Demo Rye' },
+      photo('article-11.1', 'breads/spelt.jpg', 'offering.image'),
+      photo('article-12.1', 'blog/post.jpg', 'editorial.illustration')
+    ]
+  })
+  const files = byFile(map)
+  assert.deepEqual(files.get('images/demo/breads/rye.jpg')?.routes, ['breads'])
+  assert.deepEqual(files.get('images/demo/breads/spelt.jpg')?.routes, ['breads'])
+  assert.equal(files.get('images/demo/blog/post.jpg'), undefined)
+  assert.ok(map.skipped.some((s) => s.file === 'images/demo/blog/post.jpg'))
+})

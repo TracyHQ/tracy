@@ -181,8 +181,17 @@ function declaredSource(slots) {
   return null
 }
 
-/** The pages (routes) that show each entity, in page order, and where on each page. */
-function pagesIndex(pages) {
+/**
+ * The pages (routes) that show each entity, in page order, and where on each page.
+ *
+ * 🔒 AN OFFERING ARTICLE A CATEGORY PAGE LISTS IS ON THAT PAGE (spec TracyHQ/tracy#189). A category page
+ * (view=category&id=N) shows its articles' cards and opens each one; an article whose slots carry offering roles (ADR 0040)
+ * describes what the business sells, so its pictures are the page's. Measured 29/10/2026 on the local stand: left out, a
+ * Joomla T4 template's class cards and class pages kept every demo photo while their words were the owner's. A category's
+ * other articles (a blog's posts) stay off every page, as the demo blog always has. The seeder plans their words the same
+ * way (pageEntities, plan-joomla-contract.mjs).
+ */
+function pagesIndex(pages, { entities = [], slots = [] } = {}) {
   /** @type {Map<string, Array<{route: string, page: number, at: number}>>} */
   const index = new Map()
   const add = (entity, hit) => {
@@ -201,6 +210,22 @@ function pagesIndex(pages) {
       add(m.entity, { route, page: p, at: at + 1 })
     })
   })
+  const offerings = new Set(
+    slots.filter((slot) => String(slot?.role ?? '').startsWith('offering.')).map((slot) => slot.entity)
+  )
+  pages.forEach((page, p) => {
+    const route = String(page.route ?? '')
+    const link = String(page.link ?? '')
+    const category = /[?&]view=category(?:&|$)/.test(link) && /[?&]id=(\d+)/.exec(link)
+    if (!route || !category) return
+    for (const entity of entities)
+      if (
+        entity?.kind === 'article' &&
+        offerings.has(entity.key) &&
+        entity.identityReferences?.catid === `category-${category[1]}`
+      )
+        add(entity.key, { route, page: p, at: 0 })
+  })
   return index
 }
 
@@ -211,7 +236,7 @@ function wpRoute(entity) {
 }
 
 /**
- * @param {{slots: any[], pages?: any[]}} contentMap
+ * @param {{slots: any[], pages?: any[], entities?: any[]}} contentMap
  * @param {{cms?: string, keepRoute?: (route: string) => boolean, demo?: Map<string, {width: number, height: number, alpha?: boolean}>, homeRoute?: string}} [opts]
  * @returns {{groups: Array<{id: string, file: string, role: string, home: boolean, routes: string[], occurrences: Array<{key: string, entity: string, label: string, sample: string}>, topic: string[], demo: {width: number, height: number} | null}>, never: Array<{file: string, reason: string, keys: string[]}>, skipped: Array<{file: string, reason: string}>}}
  */
@@ -220,7 +245,7 @@ export function slotMap(
   { cms = 'joomla', keepRoute = () => true, demo = new Map(), homeRoute } = {}
 ) {
   const pages = contentMap.pages ?? []
-  const index = pagesIndex(pages)
+  const index = pagesIndex(pages, { entities: contentMap.entities ?? [], slots: contentMap.slots ?? [] })
   const homes = new Set(HOME_ROUTES)
   if (homeRoute) homes.add(homeRoute)
   /** @type {Map<string, any>} */

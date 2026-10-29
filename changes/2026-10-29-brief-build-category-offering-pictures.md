@@ -1,0 +1,3 @@
+- **An offering article that a category page lists gets its pictures placed on that page** — Akemi (Claude) · #189 · `feat/brief-build-own-site` · 2026-10-29
+  **Affects:** every brief build and Customize build on a Joomla template whose offerings are articles listed by a category menu entry. The picture map now routes such an article's slots to the page of the category that lists it, so its intro and detail pictures get the brief's pictures instead of keeping the demo ones. Blog posts of the same category stay off that page.
+  **Why / Measured:** a local brief build left every class article's intro, thumb and video pictures as demo images because those articles had no menu entry of their own.
