@@ -594,7 +594,7 @@ for prefix in [*file_roots,'images']:
   if a.exclude_generated and generated.match(name):continue
   files[name]=hashlib.sha256(f.read_bytes()).hexdigest()
 manifest={'schemaVersion':'tracy-quickstart-contract/v1','id':a.id,'platform':'joomla','template':template,'quickstart':release,'coworkContractVersion':a.cowork_version,'mode':'content-recommendation'}
-content_map={'entities':[{k:v for k,v in e.items() if k!='initial'} for e in entities],'slots':slots,'pages':pages}
+content_map={'entities':entities,'slots':slots,'pages':pages}
 repo_root=pathlib.Path(__file__).resolve().parents[4]
 if a.previous_map:
  previous={s['key']:s for s in json.load(open(a.previous_map)).get('slots',[])}
@@ -603,11 +603,13 @@ if a.previous_map:
   if before and 'role' in before and before.get('sample')==sl.get('sample'):
    sl['role']=before['role']
    if 'group' in before:sl['group']=before['group']
+   if 'action' in before:sl['action']=before['action']
 # The rule tables fill in every slot still without a role; slots that kept one are left as they are.
-proposed=subprocess.run(['node',str(repo_root/'scripts/slot-roles/rule-tables.mjs'),'joomla','--vocabulary',a.role_vocabulary],input=json.dumps(content_map).encode(),capture_output=True,cwd=repo_root)
+proposed=subprocess.run(['node',str(repo_root/'scripts/slot-roles/rule-tables.mjs'),'joomla','--vocabulary',a.role_vocabulary,'--webroot',str(root),'--template',template],input=json.dumps(content_map).encode(),capture_output=True,cwd=repo_root)
 if proposed.returncode:sys.exit('Contract not written:\n- slot role rule tables failed: '+proposed.stderr.decode().strip())
 proposal=json.loads(proposed.stdout)
 content_map=proposal['contentMap'];unplaced=proposal['unplaced']
+content_map['entities']=[{k:v for k,v in e.items() if k!='initial'} for e in content_map['entities']]
 if a.unplaced_report:pathlib.Path(a.unplaced_report).write_text(json.dumps({'unplaced':unplaced},indent=2)+'\n')
 out.mkdir(parents=True,exist_ok=True)
 for name,data in [('manifest',manifest),('content-map',content_map),('presentation-lock',{'entities':{e['key']:e['initial'] for e in entities},'assignments':inv['modules_menu'],'inventoryCounts':counts,'access':access,'visibility':{'moduleFields':['published','publish_up','publish_down','module','position','ordering','showtitle','access','language','client_id'],'moduleParams':['moduleclass_sfx','module_tag','header_tag','header_class','style','bootstrap_size','cache','cache_time'],'assignmentModes':['all','none','include','exclude'],'menuFields':['published','access','language','parent_id','type','link','template_style_id','home','params']},'fileRoots':file_roots,'files':files})]:

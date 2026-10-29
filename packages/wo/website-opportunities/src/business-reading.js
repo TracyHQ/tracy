@@ -131,8 +131,14 @@ export async function readBusiness({
   const version = businessReadingVersion(ready)
   const facts = readingFactsOf({ googleTypes, categories })
   const inputHash = inputHashOf(sources, name, trade, facts)
+  // Only a complete selection is reusable: an explicit research request can recover a missing/rejected primary action.
   // A held reading made before joined service lines kept every part gets them now, paying nothing (F10).
-  if (held?.method === 'model' && held.version === version && held.inputHash === inputHash)
+  if (
+    held?.method === 'model' &&
+    held.primaryAction &&
+    held.version === version &&
+    held.inputHash === inputHash
+  )
     return {
       ...held,
       uspThemes: held.uspThemes?.length ? held.uspThemes : null,

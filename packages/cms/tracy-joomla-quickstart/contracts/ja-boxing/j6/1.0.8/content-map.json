@@ -2313,10 +2313,6 @@
       },
       "fit": {
         "measured": false
-      },
-      "action": {
-        "kind": "contact",
-        "urlKey": "module-156.8"
       }
     },
     {
@@ -2338,9 +2334,6 @@
       "group": {
         "id": "module-156.cta.2",
         "item": 0,
-        "kind": "contact"
-      },
-      "action": {
         "kind": "contact"
       }
     },
@@ -3668,6 +3661,10 @@
         "maxCharacters": 40,
         "casing": "upper",
         "overflow": "rewrite"
+      },
+      "action": {
+        "kind": "navigation",
+        "urlKey": "module-160.7"
       }
     },
     {
@@ -3683,7 +3680,10 @@
       ],
       "label": "Our Classes / link-btn",
       "customize": "keep",
-      "role": "editorial.navigation_url"
+      "role": "editorial.navigation_url",
+      "action": {
+        "kind": "navigation"
+      }
     },
     {
       "key": "module-161.0",
@@ -7937,9 +7937,6 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -7986,9 +7983,6 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -8035,9 +8029,6 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -8084,9 +8075,6 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -8112,9 +8100,6 @@
       },
       "fit": {
         "measured": false
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -8140,9 +8125,6 @@
       },
       "fit": {
         "measured": false
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -8168,9 +8150,6 @@
       },
       "fit": {
         "measured": false
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -8196,9 +8175,6 @@
       },
       "fit": {
         "measured": false
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -9159,9 +9135,6 @@
         "maxCharacters": 29,
         "casing": "upper",
         "overflow": "rewrite"
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -9208,9 +9181,6 @@
         "maxCharacters": 29,
         "casing": "upper",
         "overflow": "rewrite"
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -9236,9 +9206,6 @@
       },
       "fit": {
         "measured": false
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -9264,9 +9231,6 @@
       },
       "fit": {
         "measured": false
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -15097,9 +15061,6 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -15146,9 +15107,6 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -15195,9 +15153,6 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -15244,9 +15199,6 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -15272,9 +15224,6 @@
       },
       "fit": {
         "measured": false
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -15300,9 +15249,6 @@
       },
       "fit": {
         "measured": false
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -15328,9 +15274,6 @@
       },
       "fit": {
         "measured": false
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -15356,9 +15299,6 @@
       },
       "fit": {
         "measured": false
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -16092,9 +16032,6 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -16141,9 +16078,6 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -16190,9 +16124,6 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -16239,9 +16170,6 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -16267,9 +16195,6 @@
       },
       "fit": {
         "measured": false
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -16295,9 +16220,6 @@
       },
       "fit": {
         "measured": false
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -16323,9 +16245,6 @@
       },
       "fit": {
         "measured": false
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -16351,9 +16270,6 @@
       },
       "fit": {
         "measured": false
-      },
-      "action": {
-        "kind": "contact"
       }
     },
     {
@@ -36712,7 +36628,8 @@
         "maxCharacters": 57,
         "casing": "none",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.77",
@@ -36748,7 +36665,8 @@
         "maxCharacters": 51,
         "casing": "none",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.78",
@@ -36784,7 +36702,8 @@
         "maxCharacters": 51,
         "casing": "none",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.79",
@@ -36820,7 +36739,8 @@
         "maxCharacters": 51,
         "casing": "none",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.80",
@@ -36856,7 +36776,8 @@
         "maxCharacters": 53,
         "casing": "none",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.81",
@@ -36892,7 +36813,8 @@
         "maxCharacters": 63,
         "casing": "none",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.82",
@@ -36928,7 +36850,8 @@
         "maxCharacters": 59,
         "casing": "none",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.83",
@@ -36964,7 +36887,8 @@
         "maxCharacters": 55,
         "casing": "none",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.84",
@@ -37000,7 +36924,8 @@
         "maxCharacters": 43,
         "casing": "upper",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.85",
@@ -37036,7 +36961,8 @@
         "maxCharacters": 57,
         "casing": "none",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.86",
@@ -37072,7 +36998,8 @@
         "maxCharacters": 51,
         "casing": "none",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.87",
@@ -37108,7 +37035,8 @@
         "maxCharacters": 51,
         "casing": "none",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.88",
@@ -37144,7 +37072,8 @@
         "maxCharacters": 51,
         "casing": "none",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.89",
@@ -37180,7 +37109,8 @@
         "maxCharacters": 53,
         "casing": "none",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.90",
@@ -37216,7 +37146,8 @@
         "maxCharacters": 63,
         "casing": "none",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.91",
@@ -37252,7 +37183,8 @@
         "maxCharacters": 59,
         "casing": "none",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.92",
@@ -37288,7 +37220,8 @@
         "maxCharacters": 55,
         "casing": "none",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.93",
@@ -37324,7 +37257,8 @@
         "maxCharacters": 42,
         "casing": "upper",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.94",
@@ -37360,7 +37294,8 @@
         "maxCharacters": 37,
         "casing": "upper",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.95",
@@ -37396,7 +37331,8 @@
         "maxCharacters": 30,
         "casing": "upper",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.96",
@@ -37589,7 +37525,8 @@
       "xpath": "/html/body/div/div[5]/div/div[2]/div/div[1]/div/div/a/@href",
       "label": "Typography",
       "role": "editorial.navigation_url",
-      "customize": "keep"
+      "customize": "keep",
+      "button": true
     },
     {
       "key": "article-17.102",
@@ -37625,7 +37562,8 @@
         "maxCharacters": 31,
         "casing": "upper",
         "overflow": "rewrite"
-      }
+      },
+      "button": true
     },
     {
       "key": "article-17.103",
@@ -57303,10 +57241,10 @@
         "overflow": "rewrite"
       },
       "action": {
-        "kind": "contact",
+        "kind": "submit-form",
         "uses": [
           {
-            "kind": "contact",
+            "kind": "submit-form",
             "selector": "templates/ja_boxing/html/com_contact/contact/default_form.php:button.btn.btn-primary.validate"
           }
         ]

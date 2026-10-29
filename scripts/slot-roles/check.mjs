@@ -23,6 +23,11 @@
  *   counts them, because released contracts are never edited. `--webroot <dir>` (one named folder) also measures the
  *   item icons from the pack's pictures; `--lint-json <file>` writes every finding.
  *
+ * - Every button slot declares its action (`buttonActionProblems`, WO domain `button-actions.mjs`): what a visitor does
+ *   with it (primary call to action, go to an item, open a map, contact, an external profile, navigation, submit a
+ *   form). Named contract folders (the packing run) fail on an undeclared button; the whole-tree gate only counts the
+ *   maps that would fail, because released contracts are never edited and the build reads their roles all the same.
+ *
  *   node scripts/slot-roles/check.mjs                  every contract in the tree
  *   node scripts/slot-roles/check.mjs <contractDir>... only those (the packing check)
  */
@@ -31,6 +36,7 @@ import { existsSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { checkContentMapFit, checkContentMapRoles } from 'website-opportunities/domain'
+import { buttonActionProblems } from '../../packages/wo/website-opportunities/domain/button-actions.mjs'
 import { lintContractDir, lintSummary } from '../../apps/tracy-web/src/lib/content-map-lint.js'
 import { lintItemIconGrounds } from '../../apps/tracy-web/src/lib/content-map-lint-icons.js'
 import { fieldMapRolesOf } from '../../apps/tracy-web/src/lib/emdash-field-map-roles.js'
@@ -100,6 +106,19 @@ function fitOf(dir) {
   }
 }
 
+/** The undeclared or malformed button actions of a contract's content map, or its EmDash field map's slots. */
+export function buttonActionErrors(dir) {
+  const fieldMap = fieldMapResult(dir)
+  if (fieldMap) return buttonActionProblems(fieldMap.contentMap)
+  const file = path.join(dir, CONTENT_MAP_FILE)
+  if (!existsSync(file)) return []
+  try {
+    return buttonActionProblems(JSON.parse(readFileSync(file, 'utf8')))
+  } catch {
+    return []
+  }
+}
+
 /** The errors of the roles an EmDash theme declares in its field map, or null when the contract has none declared. */
 function fieldMapResult(dir) {
   const { cms, seedDir } = contractSlotInventory(dir)
@@ -132,12 +151,11 @@ function sidecarErrors(dir) {
  *   fit: Array<{dir: string, declared: boolean, missing: {image: number, text: number}}>}}
  *   `dirs`: the contracts that declare roles (in a content map or a sidecar), each checked
  *   `fit`: the Slot fit of every contract with a content map
+ *   `buttons`: the contracts holding an undeclared or malformed button action (errors only for named folders)
  */
 export function checkAllSlotRoles(rootDir = DEFAULT_ROOT, explicitDirs = null) {
-  const candidates =
-    Array.isArray(explicitDirs) && explicitDirs.length > 0
-      ? explicitDirs.map((d) => path.resolve(d))
-      : discoverSlotRoleContractDirs(rootDir)
+  const named = Array.isArray(explicitDirs) && explicitDirs.length > 0
+  const candidates = named ? explicitDirs.map((d) => path.resolve(d)) : discoverSlotRoleContractDirs(rootDir)
 
   const errors = []
   const dirs = []
@@ -160,7 +178,12 @@ export function checkAllSlotRoles(rootDir = DEFAULT_ROOT, explicitDirs = null) {
   const lint = candidates
     .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, ...lintContractDir(dir) }))
     .filter((l) => l.declared)
-  return { ok: errors.length === 0, checkedCount: dirs.length, dirs, errors, fit, lint }
+  // A named (packing) contract refuses an undeclared button; the whole tree only counts the released maps that would.
+  const buttons = candidates
+    .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, errors: buttonActionErrors(dir) }))
+    .filter((b) => b.errors.length > 0)
+  if (named) for (const b of buttons) for (const error of b.errors) errors.push(`${b.dir}: ${error}`)
+  return { ok: errors.length === 0, checkedCount: dirs.length, dirs, errors, fit, lint, buttons }
 }
 
 /** The value after a `--name` flag, and the arguments left once every flag and its value are taken out. */
@@ -216,6 +239,10 @@ if (isMain) {
   process.stdout.write(
     `slot fit: ${res.fit.length - without.length} content map(s) declare it; ${without.length} do not (${lacking} text and image slots without a fit).\n`
   )
+  if (!named)
+    process.stdout.write(
+      `button actions: ${res.buttons.length} released map(s) hold ${res.buttons.reduce((n, b) => n + b.errors.length, 0)} undeclared or malformed button(s); the packing check refuses them.\n`
+    )
   const rules = lintSummary(res.lint.flatMap((l) => l.findings))
     .map((r) => `${r.rule} ${r.count}`)
     .join(', ')

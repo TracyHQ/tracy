@@ -10,7 +10,11 @@
       "sample": "Juniper Crumb Bakery",
       "maxCharacters": 80,
       "role": "business.name",
-      "group": { "id": "site.identity.0", "item": 0, "kind": "business" }
+      "group": {
+        "id": "site.identity.0",
+        "item": 0,
+        "kind": "business"
+      }
     },
     {
       "key": "module-501.0",
@@ -31,7 +35,11 @@
       "type": "text",
       "sample": "See the bakes",
       "maxCharacters": 40,
-      "role": "editorial.button_label"
+      "role": "editorial.button_label",
+      "action": {
+        "kind": "navigation",
+        "urlKey": "module-501.3"
+      }
     },
     {
       "key": "module-501.3",
@@ -60,7 +68,11 @@
       "maxCharacters": 60,
       "requiresEvidence": true,
       "role": "offering.name",
-      "group": { "id": "module-503.item.0", "item": 0, "kind": "menu_item" }
+      "group": {
+        "id": "module-503.item.0",
+        "item": 0,
+        "kind": "menu_item"
+      }
     },
     {
       "key": "module-503.1",
@@ -69,7 +81,11 @@
       "maxCharacters": 20,
       "requiresEvidence": true,
       "role": "offering.price",
-      "group": { "id": "module-503.item.0", "item": 0, "kind": "menu_item" }
+      "group": {
+        "id": "module-503.item.0",
+        "item": 0,
+        "kind": "menu_item"
+      }
     },
     {
       "key": "module-503.2",
@@ -77,7 +93,11 @@
       "sample": "images/demo/rye.jpg",
       "maxCharacters": 2048,
       "role": "offering.image",
-      "group": { "id": "module-503.item.0", "item": 0, "kind": "menu_item" }
+      "group": {
+        "id": "module-503.item.0",
+        "item": 0,
+        "kind": "menu_item"
+      }
     },
     {
       "key": "module-503.3",
@@ -86,7 +106,11 @@
       "maxCharacters": 60,
       "requiresEvidence": true,
       "role": "offering.name",
-      "group": { "id": "module-503.item.1", "item": 1, "kind": "menu_item" }
+      "group": {
+        "id": "module-503.item.1",
+        "item": 1,
+        "kind": "menu_item"
+      }
     },
     {
       "key": "module-503.4",
@@ -95,7 +119,11 @@
       "maxCharacters": 20,
       "requiresEvidence": true,
       "role": "offering.price",
-      "group": { "id": "module-503.item.1", "item": 1, "kind": "menu_item" }
+      "group": {
+        "id": "module-503.item.1",
+        "item": 1,
+        "kind": "menu_item"
+      }
     },
     {
       "key": "module-503.5",
@@ -103,7 +131,14 @@
       "sample": "Order this loaf",
       "maxCharacters": 40,
       "role": "editorial.button_label",
-      "group": { "id": "module-503.item.1", "item": 1, "kind": "menu_item" }
+      "group": {
+        "id": "module-503.item.1",
+        "item": 1,
+        "kind": "menu_item"
+      },
+      "action": {
+        "kind": "contact"
+      }
     },
     {
       "key": "module-504.0",
@@ -112,7 +147,11 @@
       "maxCharacters": 300,
       "requiresEvidence": true,
       "role": "quote.text",
-      "group": { "id": "module-504.quote.0", "item": 0, "kind": "quote" }
+      "group": {
+        "id": "module-504.quote.0",
+        "item": 0,
+        "kind": "quote"
+      }
     },
     {
       "key": "module-504.1",
@@ -121,7 +160,11 @@
       "maxCharacters": 60,
       "requiresEvidence": true,
       "role": "quote.author_name",
-      "group": { "id": "module-504.quote.0", "item": 0, "kind": "quote" }
+      "group": {
+        "id": "module-504.quote.0",
+        "item": 0,
+        "kind": "quote"
+      }
     }
   ]
 }

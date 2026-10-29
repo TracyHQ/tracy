@@ -11,11 +11,14 @@
 // reports what is still there).
 //
 // Later slices add records (keep, hide), showcase removal, aliases, logo and colours here, each with its reason code.
+import { mainMenuRole } from './main-menu.mjs'
 import { pictureDecisionsOf } from './site-plan-pictures.mjs'
 import { CONTACT_FACTS_WHY } from './page-plan.mjs'
 import { answersFromBrief, contactFacts } from './site-answers.mjs'
+import { statFactsOf } from './stat-box-plan.mjs'
 import { addressThatFits, cityOf, contactChannelsOf, mapsLinkOf } from './contact-reading.mjs'
 import { contactButtonSlots } from './contact-buttons.mjs'
+import { declaredButtonSlots } from './declared-button-plan.mjs'
 import { IDENTITY_REASONS, planIdentity } from './site-plan-identity.mjs'
 import { planOutsideMap } from './outside-map.mjs'
 import { COLOUR_REASONS, planColours } from './brand-colours.mjs'
@@ -42,6 +45,7 @@ export const SITE_PLAN_REASONS = Object.freeze({
   'contact-fact': 'a contact fact the brief holds',
   'contact-channel':
     'a channel the brief holds that this contact block does not show yet (each phone, WhatsApp, a direct message)',
+  'button-action': 'the content map declares the button job; its label and destination follow the brief',
   'cta-action': 'a button that said a bare "Contact" names the action it leads to',
   'business-name': 'the business name the brief holds',
   'hero-what':
@@ -49,6 +53,7 @@ export const SITE_PLAN_REASONS = Object.freeze({
   'hero-why':
     'the headline says what sets the business apart, as the brief proves it, and where (`hero-usp.mjs`)',
   'hero-when': 'the hero line for opening hours says the hours the brief trusts (`hero-first-screen.mjs`)',
+  'intro-role': 'the introduction fits the declared page role, without unrelated contact copy',
   'intro-where':
     'the About or Contact intro says where the business is based and the area it serves (`page-intros.mjs`)',
   'intro-what':
@@ -98,7 +103,7 @@ function pagesOf(pagePlan) {
   return (pagePlan?.pages ?? []).map((row) => ({
     id: row.id,
     ...(row.path ? { path: row.path } : {}),
-    role: row.role,
+    role: mainMenuRole(row),
     decision: row.keep ? 'keep' : 'drop',
     reason: row.keep
       ? row.why === CONTACT_FACTS_WHY
@@ -305,12 +310,16 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
     ...planPlaceIntros({ brief, contentMap, pages: pageRows })
   ]
   const fromReviews = peopleFromReviewsNote(showablePeopleOf(brief).filter((p) => shown.has(p.id)))
-  const notes = fromReviews ? [...pageNotes, fromReviews] : pageNotes
+  const notes = fromReviews ? [...pageNotes, fromReviews] : [...pageNotes]
+  if (brief?.primaryAction?.basis === 'inferred')
+    notes.push(`primary action inferred from the business brief: ${brief.primaryAction.label}`)
   return {
     version: SITE_PLAN_VERSION,
     brand,
     contact,
     channels,
+    primaryAction: brief?.primaryAction ?? null,
+    statistics: statFactsOf(brief, { now: year }),
     facts,
     pages: pageRows,
     // A kept card's picture shows what its words name: the honesty plan's card labels (#192, #194).
@@ -328,7 +337,8 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
         // A button that would say a bare "Contact" names its action (`contact-buttons.mjs`); the hero's own plan wins.
         ...contactButtonSlots(contentMap, { heroEntity: heroPlan.hero.entity }),
         ...heroPlan.slots,
-        ...intros
+        ...intros,
+        ...declaredButtonSlots(brief, contentMap)
       ]
     ),
     // The first screen answers what, where and how to contact (COO rule 29/10/2026): `hero-first-screen.mjs`.

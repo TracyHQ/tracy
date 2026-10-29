@@ -1,3 +1,4 @@
+import { primaryActionOf, primaryActionErrors } from './primary-action.mjs'
 import { CMS } from './cms.mjs'
 import { brandPaletteOf } from './brand-colours.mjs'
 import { contentPool } from './content-pool.mjs'
@@ -7,6 +8,7 @@ import { decideGoogleRating, ratingPickOf } from './google-rating.mjs'
 import { pagePlan } from './page-plan.mjs'
 import { placeProfileFromResearch } from './place-profile-from-research.mjs'
 import { renderSocialFigures, socialFiguresOf } from './agent-prompt.mjs'
+import { statisticWriterLines } from './statistic-tuples.mjs'
 import { aboutLineOf, evidenceCountOf, labelQuoted, withReadingPicks } from './business-reading.mjs'
 import { inSentence, withoutDashes } from './plain-prose.mjs'
 import {
@@ -510,11 +512,27 @@ export function buildBrief({
       url: f.value.url,
       quotes: f.evidence.map((e) => e.quote).filter(nonEmpty)
     }))
-  // 🔒 THE OWNER'S REAL WAY IN, IN ONE ORDER (COO rule 29/10/2026, the same as the hero's `hero-first-screen.mjs`): a phone
-  // call, WhatsApp, a verified booking link (in the trade's words: Book a table, Book a class...), a channel the business
-  // names itself ("DM us"), and only then a profile to follow. The brief view and the built site agree on the button.
-  const primaryCta =
-    phoneSourced && phoneOn
+  // The model's one purchase action takes its endpoint from facts still on the site. Legacy readings without that
+  // selection keep their former phone/WhatsApp/booking contact hierarchy until research reads them again.
+  const primaryAction = primaryActionOf(reading, {
+    phone: phoneSourced ? phoneOn : null,
+    whatsapp: whatsappFact && whatsappFact.confidence !== 'inferred' ? whatsapp : null,
+    booking
+  })
+  const primaryCta = primaryAction
+    ? primaryAction.href
+      ? {
+          kind:
+            primaryAction.channel === 'phone'
+              ? 'phone'
+              : primaryAction.channel === 'booking'
+                ? 'booking'
+                : 'link',
+          label: primaryAction.label,
+          href: primaryAction.href
+        }
+      : null
+    : phoneSourced && phoneOn
       ? { kind: 'phone', label: 'Call', href: `tel:${phoneOn.replace(/[^\d+]/g, '')}` }
       : whatsapp
         ? { kind: 'link', label: 'WhatsApp us', href: whatsapp.href }
@@ -802,6 +820,15 @@ export function buildBrief({
   // Missing.
   const missing = []
   const miss = (field, why) => missing.push({ field, why })
+  const primaryActionReason = primaryAction
+    ? null
+    : (reading?.primaryActionReason ??
+      (reading?.method === 'rules' ? `rules_${reading.reason ?? 'only'}` : 'not_recorded'))
+  if (reading && !primaryAction)
+    miss(
+      'primaryAction',
+      'Research has no validated purchase action. Read the business again before filling a declared primary button; never substitute a generic label.'
+    )
   // 🔒 Nothing here invites sample content: what was not collected stays empty or neutral (#1780).
   if (!food) {
     if (!services.length)
@@ -900,6 +927,7 @@ export function buildBrief({
     schemaVersion: BRIEF_SCHEMA_VERSION,
     ...(opportunity.id ? { opportunityId: opportunity.id } : {}),
     business,
+    ...(primaryAction ? { primaryAction } : { primaryActionReason }),
     ...(whatsapp ? { contact: { whatsapp } } : {}),
     // Every fact the brief states, one envelope each (`brief-facts.mjs`), and the points the site leads with.
     facts: stated,
@@ -1333,6 +1361,7 @@ export function validateBrief(brief, { legacy = false } = {}) {
     err('cmsSource', 'must be account or default')
   if ('resolvedAt' in brief && !isIsoDate(brief.resolvedAt)) err('resolvedAt', 'must be an ISO date-time')
 
+  for (const message of primaryActionErrors(brief)) err('primaryAction', message)
   const b = brief.business
   if ('business' in brief) {
     if (!isObj(b)) err('business', 'must be an object')
@@ -2112,6 +2141,12 @@ export function renderBriefMarkdown(
   if (b.cuisine) line(`- Cuisine: ${b.cuisine.map(q).join(', ')}`)
   if (b.trade) line(`- Trade: ${q(b.trade)}`)
   if (b.subTrade?.id) line(`- Kind of business: ${q(b.subTrade.id)} (${subTradeHow(b.subTrade)})`)
+  if (brief.primaryAction) {
+    const a = brief.primaryAction
+    line(
+      `- Primary conversion action: ${q(a.label)} -> ${a.channel} ${a.href ? q(a.href) : '(this site contact page)'} (${a.basis})`
+    )
+  }
   if (b.website) line(`- Website: ${q(b.website)}`)
   for (const net of Object.keys(b.socials ?? {}).sort()) line(`- ${net}: ${q(b.socials[net])}`)
   line()
@@ -2126,6 +2161,8 @@ export function renderBriefMarkdown(
       words
     )
   renderSocialFigures(briefSocialFigures(brief, research), line)
+  line('## Accepted statistic units')
+  for (const row of statisticWriterLines(brief)) line(row)
   if (brief.currentSite) {
     const c = brief.currentSite
     const of100 = (v) => (v === null ? 'unknown' : `${v}/100`)

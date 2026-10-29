@@ -21,6 +21,7 @@ const theme = {
     { ref: 'review:2', quote: reviews[1].text }
   ]
 }
+const primaryAction = { label: 'Request a lesson', channel: 'contact', basis: 'inferred', quotes: [] }
 const freeze = (reading, trade) =>
   buildBrief({
     opportunity: { id: 'fictional-opportunity', name: 'Meadow Learning', candidate: { trade } },
@@ -89,7 +90,12 @@ test('the reading input hash cannot reuse a reading made by an older prompt vers
     fetchImpl: async () => {
       calls += 1
       return Response.json({
-        choices: [{ finish_reason: 'stop', message: { content: JSON.stringify({ uspThemes: [theme] }) } }]
+        choices: [
+          {
+            finish_reason: 'stop',
+            message: { content: JSON.stringify({ uspThemes: [theme], primaryAction }) }
+          }
+        ]
       })
     }
   }
@@ -110,7 +116,8 @@ test('a cached model reading predating theme diagnostics explicitly marks the mi
       door: { url: 'https://model.test/chat/completions', key: 'fictional-key', model: 'fictional-model' }
     },
     charge: (_spec, call) => call(),
-    fetchImpl: async () => Response.json({ choices: [{ message: { content: '{}' } }] })
+    fetchImpl: async () =>
+      Response.json({ choices: [{ message: { content: JSON.stringify({ primaryAction }) } }] })
   }
   const first = await readBusiness(input)
   const { uspThemes: _themes, uspThemesReason: _reason, ...legacy } = first

@@ -66,6 +66,7 @@ import { onceNote, overlapSafetyNet } from './picture-overlap-net.js'
 import { lineLimits, withBoxLimits, withinLines } from './slot-box-limits.js'
 import { writeWoContent } from './joomla-wo-content.js'
 import { heroSlotValues } from './hero-lines.js'
+import { buttonActionValues } from './button-action-values.js'
 import { offeringSummaryValues } from './offering-summaries.js'
 import {
   addDerivedLanguages,
@@ -1156,6 +1157,17 @@ export function createJoomlaEngine({
       const heroLines = heroSlotValues(sitePlan, written, (key) =>
         key in kept ? kept[key] : slotByKey.get(key)?.sample
       )
+      Object.assign(
+        heroLines,
+        await buttonActionValues({
+          sitePlan,
+          locale: written,
+          slots: [...state.slots, ...declaredSlots(ctx.contract)],
+          model: text,
+          signal: ctx.signal,
+          note: ctx.note
+        })
+      )
       // A hero line's own marks (the USP's key words) style it; the copy writer's marks for that slot no longer count.
       Object.assign(styleMarks, takeStyleMarks(heroLines))
       Object.assign(kept, heroLines)
@@ -1443,6 +1455,9 @@ export function createJoomlaEngine({
       const outsidePlan = await woContent
         ?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
         .catch(() => null)
+      // A declared action is an explicit customization of a shared template string, including a kept language string.
+      for (const s of outsidePlan?.slots ?? [])
+        if (s.reason === 'button-action' && s.key in prepared.changes) keepWritten.add(s.key)
       for (const [key, value] of Object.entries({
         ...prepared.changes,
         ...art.values,

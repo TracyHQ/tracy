@@ -92,7 +92,8 @@ test('applying it again changes nothing, and the rules reading (one joined item)
 
 test('a reading held from before gets the lost part back without a second model call', async () => {
   const answer = {
-    services: [{ name: 'Padel sessions', quote: 'Join our padel sessions in Dubai!', ref: POST_PADEL }]
+    services: [{ name: 'Padel sessions', quote: 'Join our padel sessions in Dubai!', ref: POST_PADEL }],
+    primaryAction: { label: 'Request a lesson', channel: 'contact', basis: 'inferred', quotes: [] }
   }
   let calls = 0
   const fetchImpl = async () => {

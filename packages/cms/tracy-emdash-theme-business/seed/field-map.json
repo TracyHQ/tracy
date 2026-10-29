@@ -30,7 +30,11 @@
 				{
 					"slug": "quote_label",
 					"type": "string",
-					"required": false
+					"required": false,
+					"action": {
+						"kind": "primary-cta",
+						"urlKey": "quote_url"
+					}
 				},
 				{
 					"slug": "quote_url",
@@ -295,7 +299,11 @@
 				{
 					"slug": "hero_cta1_label",
 					"type": "string",
-					"required": false
+					"required": false,
+					"action": {
+						"kind": "primary-cta",
+						"urlKey": "hero_cta1_url"
+					}
 				},
 				{
 					"slug": "hero_cta1_url",
@@ -305,7 +313,11 @@
 				{
 					"slug": "hero_cta2_label",
 					"type": "string",
-					"required": false
+					"required": false,
+					"action": {
+						"kind": "navigation",
+						"urlKey": "hero_cta2_url"
+					}
 				},
 				{
 					"slug": "hero_cta2_url",
@@ -413,7 +425,11 @@
 				{
 					"slug": "band_button",
 					"type": "string",
-					"required": false
+					"required": false,
+					"action": {
+						"kind": "primary-cta",
+						"urlKey": "band_url"
+					}
 				},
 				{
 					"slug": "band_url",
@@ -602,7 +618,11 @@
 				{
 					"slug": "cta_button",
 					"type": "string",
-					"required": false
+					"required": false,
+					"action": {
+						"kind": "primary-cta",
+						"urlKey": "cta_url"
+					}
 				},
 				{
 					"slug": "cta_url",
@@ -612,7 +632,11 @@
 				{
 					"slug": "cta_alt_label",
 					"type": "string",
-					"required": false
+					"required": false,
+					"action": {
+						"kind": "navigation",
+						"urlKey": "cta_alt_url"
+					}
 				},
 				{
 					"slug": "cta_alt_url",
@@ -709,7 +733,11 @@
 				{
 					"slug": "cta_button",
 					"type": "string",
-					"required": false
+					"required": false,
+					"action": {
+						"kind": "primary-cta",
+						"urlKey": "cta_url"
+					}
 				},
 				{
 					"slug": "cta_url",
@@ -719,7 +747,11 @@
 				{
 					"slug": "cta_alt_label",
 					"type": "string",
-					"required": false
+					"required": false,
+					"action": {
+						"kind": "navigation",
+						"urlKey": "cta_alt_url"
+					}
 				},
 				{
 					"slug": "cta_alt_url",
@@ -883,7 +915,11 @@
 				{
 					"slug": "cta_button",
 					"type": "string",
-					"required": false
+					"required": false,
+					"action": {
+						"kind": "primary-cta",
+						"urlKey": "cta_url"
+					}
 				},
 				{
 					"slug": "cta_url",
@@ -893,7 +929,11 @@
 				{
 					"slug": "cta_alt_label",
 					"type": "string",
-					"required": false
+					"required": false,
+					"action": {
+						"kind": "navigation",
+						"urlKey": "cta_alt_url"
+					}
 				},
 				{
 					"slug": "cta_alt_url",
@@ -1150,7 +1190,11 @@
 				{
 					"slug": "aside_button",
 					"type": "string",
-					"required": false
+					"required": false,
+					"action": {
+						"kind": "primary-cta",
+						"urlKey": "aside_url"
+					}
 				},
 				{
 					"slug": "aside_url",
@@ -1366,7 +1410,11 @@
 				{
 					"slug": "cta_button",
 					"type": "string",
-					"required": false
+					"required": false,
+					"action": {
+						"kind": "primary-cta",
+						"urlKey": "cta_url"
+					}
 				},
 				{
 					"slug": "cta_url",

@@ -28,6 +28,7 @@
  * 🔒 NO SECRET OF THIS PROCESS REACHES THE TOOL. It runs with an environment of its own: the model's door, the picture
  * door, and the files it is told about.
  */
+import { writeEmdashMainMenu } from './main-menu-emdash.js'
 import { mkdirSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
@@ -46,6 +47,7 @@ import {
 } from './emdash-wo-copy.js'
 import { emdashReadySidecar } from '../../lib/slot-roles-for.js'
 import { woContentOf } from './wo-content.js'
+import { writeEmdashButtonActions } from './emdash-button-actions.js'
 import { realPicturesOf } from './real-pictures.js'
 import {
   emdashPictureInventory,
@@ -855,6 +857,23 @@ export function createEmdashEngine({
             throw new Error("The restaurant's sourced words could not be written")
         }
       }
+      // Declared button actions run after every generic and sourced copy writer.
+      const actionPlan = await woContent?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
+      if (actionPlan) {
+        const actions = await writeEmdashButtonActions({
+          api: siteApi(origin, token, ctx.signal, fetchImpl),
+          fieldMap: seedFile(prepared.tool.seedDir, 'field-map.json'),
+          seed: seedFile(prepared.tool.seedDir, 'seed.json'),
+          sitePlan: actionPlan,
+          locale: ctx.normalized.languages?.[0] ?? 'en',
+          model: (await models()).text ?? null,
+          signal: ctx.signal,
+          note: ctx.note,
+          woContent,
+          buildId: prepared.woCopy?.copy?.buildId ?? prepared.woRead?.buildId
+        })
+        if (actions.written) ctx.time('buttonActionsWritten', actions.written)
+      }
       // 🔒 THE RESTAURANT'S POSTS RIGHT AFTER THE TOOL, which rewrites the demo posts with its model and runs once per Apply:
       // nothing of this run writes the posts after them (`emdash-wo-content.js`). A failure is said, never the build's.
       if (prepared.woRead && woContent) {
@@ -908,6 +927,20 @@ export function createEmdashEngine({
           ctx.note(
             `${checked.hidden.length} picture binding(s) belong to content hidden after text setup; render verification is still required`
           )
+      }
+      // Final menu labels follow kept page roles after the personalize tool and sourced copy.
+      const menuPlan = await woContent?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
+      if (menuPlan?.pages?.some((p) => p.decision === 'keep')) {
+        const { text: menuModel } = await models()
+        const menu = await writeEmdashMainMenu({
+          api: siteApi(origin, token, ctx.signal, fetchImpl),
+          seed: JSON.parse(readFileSync(path.join(prepared.tool.seedDir, 'seed.json'), 'utf8')),
+          sitePlan: menuPlan,
+          model: menuModel,
+          locale: ctx.normalized.languages?.[0] ?? 'en',
+          signal: ctx.signal
+        })
+        ctx.time('mainMenuLabels', menu.items.length)
       }
       // The rest of the languages nobody chose, once the site is handed over: not awaited here, awaited by `dispose`.
       const hidden = Array.isArray(report.language?.hidden) ? report.language.hidden.map(String) : []

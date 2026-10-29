@@ -1,3 +1,4 @@
+import { buttonUrlOf } from './declared-button-plan.mjs'
 // A button of a contact block or an offering card that would say a bare "Contact" names the action it leads to (spec
 // TracyHQ/tracy#189, COO rule 29/10/2026). Measured 29/10/2026 on a brief build of a Joomla T4 template: every class card
 // carried a "Contact" button that opened the class's own page, not a way to reach the business.
@@ -43,7 +44,9 @@ export function contactButtonSlots(contentMap, { heroEntity = null } = {}) {
     if (slot.type !== 'text' || !LABEL_ROLES.has(slot.role)) continue
     const entity = String(slot.entity ?? slot.key.split('.')[0])
     if (!entity.startsWith('module-') || entity === heroEntity) continue
-    const urls = urlsOf(slot.group?.id)
+    if (slot.action) continue
+    const paired = buttonUrlOf(slot, contentMap)
+    const urls = paired ? [paired] : urlsOf(slot.group?.id)
     let value = null
     if (urls.length === 0) value = 'Learn more'
     else if (

@@ -150,6 +150,33 @@
       "description": "2 from #1791: facts in one envelope, missing a view over the withheld ones, keyMessages."
     },
     "opportunityId": { "type": "string" },
+    "primaryActionReason": {
+      "type": "string",
+      "description": "Present only without primaryAction: missing, rejected, rule-only or legacy research must be read again before a declared primary button can be filled."
+    },
+    "primaryAction": {
+      "description": "The business conversion action, selected once by the research model. Words come from owner evidence or a neutral kind-based inference. URLs come only from brief facts. A contact channel has no URL until planning resolves this site's contact page. Inferred actions are recorded in build notes.",
+      "type": "object",
+      "required": ["label", "channel", "href", "basis", "evidence"],
+      "properties": {
+        "label": { "type": "string", "minLength": 1, "maxLength": 60 },
+        "channel": { "enum": ["contact", "booking", "whatsapp", "phone"] },
+        "href": { "type": ["string", "null"] },
+        "basis": { "enum": ["sourced", "inferred"] },
+        "evidence": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "object",
+            "required": ["quote", "source"],
+            "properties": {
+              "quote": { "type": "string", "minLength": 1 },
+              "source": { "$ref": "#/$defs/readingItemFields/properties/source" }
+            }
+          }
+        }
+      }
+    },
     "business": {
       "type": "object",
       "required": ["name", "branch", "address", "phone", "socials"],

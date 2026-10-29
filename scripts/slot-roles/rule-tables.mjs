@@ -29,6 +29,8 @@ import {
   ROLE_VOCABULARY_VERSION
 } from 'website-opportunities/domain'
 import { editorialRoleOf } from './editorial-defaults.mjs'
+import { proposeButtonActions } from './button-actions.mjs'
+import { languageButtonUses, sourceButtonUses, templateButtonUses } from './button-markup.mjs'
 import { declareOfferingSummaries } from './offering-summaries.mjs'
 import { FACT_FAMILY_ROLES, factFamilyPlacement } from './rule-tables-facts.mjs'
 import { proposeMarkupBindings } from './rule-tables-markup.mjs'
@@ -772,7 +774,7 @@ const ROLE_TYPES = new Set(['text', 'image'])
  * @param {{cms: 'joomla' | 'wordpress', vocabulary?: string}} options
  * @returns {{contentMap: any, unplaced: string[]}} `unplaced`: text and image slots still without a role, for the agent
  */
-export function proposeContentMapRoles(contentMap, { cms, vocabulary = ROLE_VOCABULARY_VERSION }) {
+export function proposeContentMapRoles(contentMap, { cms, vocabulary = ROLE_VOCABULARY_VERSION, webroot, template }) {
   if (cms !== 'joomla' && cms !== 'wordpress') throw new Error(`cms must be joomla or wordpress, got ${cms}`)
   if (vocabulary !== ROLE_VOCABULARY_VERSION && vocabulary !== ROLE_VOCABULARY_V3)
     throw new Error(
@@ -832,12 +834,17 @@ export function proposeContentMapRoles(contentMap, { cms, vocabulary = ROLE_VOCA
     if (slot?.group === undefined) delete slot.group
   }
   declareOfferingSummaries(out)
+  const uses = sourceButtonUses(out)
+  if (webroot && template)
+    for (const [key, found] of languageButtonUses(out, templateButtonUses(webroot, template)))
+      uses.set(key, found)
+  const unplacedActions = proposeButtonActions(out, { usesBySlot: uses })
   if (vocabulary3) for (const slot of slots) deriveKeep(slot)
   out.roleVocabularyVersion = vocabulary
   const unplaced = slots
     .filter((slot) => ROLE_TYPES.has(slot?.type) && slot.role === undefined)
     .map((slot) => String(slot.key))
-  return { contentMap: out, unplaced }
+  return { contentMap: out, unplaced, unplacedActions }
 }
 
 /** In a version 3 map the role alone decides keep or replace: `customize` and a measured picture's `replace` follow it. */
@@ -856,6 +863,7 @@ if (isMain) {
   const cms = process.argv[2]
   const flag = process.argv.indexOf('--vocabulary')
   const version = flag > 0 ? process.argv[flag + 1] : undefined
+  const value = (name) => { const at = process.argv.indexOf(name); return at > 0 ? process.argv[at + 1] : undefined }
   if ((cms !== 'joomla' && cms !== 'wordpress') || (version !== undefined && !['2', '3'].includes(version))) {
     process.stderr.write(
       'Usage: node scripts/slot-roles/rule-tables.mjs <joomla|wordpress> [--vocabulary 2|3] < content-map.json\n'
@@ -866,7 +874,7 @@ if (isMain) {
     const contentMap = JSON.parse(readFileSync(0, 'utf8'))
     const vocabulary = version === '3' ? ROLE_VOCABULARY_V3 : ROLE_VOCABULARY_VERSION
     process.stdout.write(
-      `${JSON.stringify(proposeContentMapRoles(contentMap, { cms, vocabulary }), null, 2)}\n`
+      `${JSON.stringify(proposeContentMapRoles(contentMap, { cms, vocabulary, webroot: value('--webroot'), template: value('--template') }), null, 2)}\n`
     )
   } catch (error) {
     process.stderr.write(`rule-tables: ${error instanceof Error ? error.message : error}\n`)

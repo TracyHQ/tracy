@@ -68,6 +68,7 @@ import {
   withTemplateName
 } from './shared.js'
 import { woContentOf } from './wo-content.js'
+import { buttonActionValues } from './button-action-values.js'
 import { copyPinsOf, pinStates, recordPins, sampleAt, samplePagesOf, sweepDishesOf } from './wo-copy-pins.js'
 import { offeringSummaryValues } from './offering-summaries.js'
 import { heroSlotValues } from './hero-lines.js'
@@ -733,6 +734,21 @@ export function createWordpressEngine({
         // The deferred block cleanup reads these pins again after the contract write.
         if (copyPins?.pins && key in copyPins.pins) copyPins.pins[key] = offeringSummaries[key]
       }
+      // Declared actions win after both copy passes and preserve their paired destinations.
+      const buttonValues = await buttonActionValues({
+        sitePlan: summaryPlan,
+        locale: sourceSite.languages?.[0] ?? 'en',
+        slots: contentMap.slots,
+        model: text,
+        signal: ctx.signal,
+        note: ctx.note
+      })
+      Object.assign(finalKept, buttonValues)
+      for (const w of inputWrites) if (w.slot in buttonValues) w.value = buttonValues[w.slot]
+      for (const key of Object.keys(buttonValues)) {
+        nothing.delete(key)
+        if (copyPins?.pins && key in copyPins.pins) copyPins.pins[key] = buttonValues[key]
+      }
       /** The lines the contract door writes, and the ones only a block can take (a second block of a name). */
       /** @type {Record<string, string>} */
       const changes = {}
@@ -778,6 +794,7 @@ export function createWordpressEngine({
       }
       return {
         contractId: manifest.id,
+        buttonValues,
         rewrites,
         described,
         passes,
@@ -2310,6 +2327,23 @@ export function createWordpressEngine({
           signal: ctx.signal
         })
         ctx.time('mainMenuLabels', menu.items.length)
+      }
+      // Later residue writers can replace a whole block; declared actions own the final write.
+      if (Object.keys(prepared.buttonValues ?? {}).length) {
+        const fresh = await door.inspectWordPressContract(apply, siteKey)
+        const actions = await door.applyWordPressThroughContract({
+          apply,
+          siteKey,
+          state: fresh.state,
+          writes: Object.entries(prepared.buttonValues).map(([slot, value]) => ({ slot, value })),
+          source: prepared.source.slug,
+          slots: new Map(contentMap.slots.map((s) => [s.key, s]))
+        })
+        if (actions.skipped.length)
+          throw Object.assign(new Error('The WordPress site refused a declared button action'), {
+            code: 'BUTTON_ACTION_WRITE_FAILED'
+          })
+        ctx.time('buttonActionsWritten', actions.written.length)
       }
       return {
         wrote: through.written.length + pictured,

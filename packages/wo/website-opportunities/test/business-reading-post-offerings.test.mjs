@@ -156,7 +156,18 @@ test('a cached model omission is repaired without paying for another model call'
     charge: (_spec, call) => call(),
     fetchImpl: async () => {
       calls++
-      return Response.json({ choices: [{ message: { content: '{"services":[]}' } }] })
+      return Response.json({
+        choices: [
+          {
+            message: {
+              content: JSON.stringify({
+                services: [],
+                primaryAction: { label: 'Request a class', channel: 'contact', basis: 'inferred', quotes: [] }
+              })
+            }
+          }
+        ]
+      })
     }
   }
   const first = await readBusiness(input)

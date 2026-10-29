@@ -16,6 +16,8 @@
  * language leaves them to the copy writer, which writes in the site's language.
  */
 
+import { introRoleProblem, placeIntroRole } from 'website-opportunities/domain/page-intro-role.mjs'
+
 const REASONS = new Set([
   'hero-what',
   'hero-why',
@@ -23,7 +25,9 @@ const REASONS = new Set([
   'hero-contact',
   'intro-what',
   'intro-where',
-  'cta-action'
+  'intro-role',
+  'cta-action',
+  'button-action'
 ])
 /** A button's words that name no action (`contact-buttons.mjs` decides the words that replace them). */
 const BARE_CONTACT = /^(?:contact|contact us|get in touch|reach us|enquire|inquire)$/i
@@ -51,21 +55,25 @@ const wordsOf = (value) =>
  * @returns {Record<string, string>} slot key -> value
  */
 export function heroSlotValues(sitePlan, locale = 'en', current = () => undefined) {
-  if (
-    !String(locale ?? 'en')
-      .toLowerCase()
-      .startsWith('en')
-  )
-    return {}
+  const english = String(locale ?? 'en')
+    .toLowerCase()
+    .startsWith('en')
   /** @type {Record<string, string>} */
   const out = {}
   for (const s of sitePlan?.slots ?? []) {
+    if (!english && !(s.reason === 'button-action' && s.valueType === 'url')) continue
     if (s?.decision !== 'value' || !REASONS.has(s.reason)) continue
     if (typeof s.value !== 'string' || s.value.trim() === '') continue
     // Where the business is based (`intro-where`): kept when the copy writer's line names the district, else said after
     // that line when both fit the box, else in its place.
+    if (s.reason === 'intro-role') {
+      if (introRoleProblem(plainOf(current(s.key)), s.pageRole, s.offerings)) out[s.key] = s.value
+      continue
+    }
     if (s.reason === 'intro-where') {
-      const own = plainOf(current(s.key))
+      if (s.pageRole && !placeIntroRole(s.pageRole)) continue
+      const written = plainOf(current(s.key))
+      const own = s.pageRole && introRoleProblem(written, s.pageRole) ? '' : written
       if (typeof s.district === 'string' && own.toLowerCase().includes(s.district.toLowerCase())) continue
       const both = own ? `${own.replace(/[\s.!]*$/, '.')} ${s.value}` : s.value
       out[s.key] = Number.isInteger(s.max) && [...both].length <= s.max ? both : s.value
@@ -86,7 +94,13 @@ export function heroSlotValues(sitePlan, locale = 'en', current = () => undefine
         .split(/\s+/)
         .filter((w) => w.length >= 4)
       const serves = whoWords.length === 0 || whoWords.some((w) => now.includes(w))
-      if (named && serves && (place === '' || now.includes(place) || headingHasPlace)) continue
+      if (
+        named &&
+        serves &&
+        (place === '' || now.includes(place) || headingHasPlace) &&
+        (!s.pageRole || !introRoleProblem(now, s.pageRole, s.offerings))
+      )
+        continue
     }
     // A headline with its key words marked (`[[whole family]]`) gives the marked words: the write takes the marks apart.
     const value = typeof s.marked === 'string' && s.marked !== '' ? s.marked : s.value

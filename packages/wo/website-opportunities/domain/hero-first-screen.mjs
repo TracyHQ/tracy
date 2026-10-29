@@ -13,6 +13,7 @@
 // Measured 29/10/2026 (local stand, a coaching club brief on a Joomla T4 template): every hero slot went to the copy
 // writer, which saw "Hero / desc" with a mood sample and no role, and wrote "Find your stride and enjoy every session, at
 // any age." under a button labelled "Contact", although the brief planned "...: tennis, padel, swimming lessons."
+import { primaryActionOf } from './declared-button-plan.mjs'
 import { cityOf, heroServicesOf } from './brief.mjs'
 import { contactChannelsOf, serviceAreasOf } from './contact-reading.mjs'
 import { findUsp } from './hero-usp.mjs'
@@ -384,6 +385,11 @@ function contactPageLink(contentMap) {
  * @returns {{kind: 'phone' | 'whatsapp' | 'booking' | 'message' | 'form', label: string, href: string | null, source: string} | null}
  */
 export function heroContactOf(brief, contact = {}, contentMap = null) {
+  const primary = primaryActionOf(brief, contentMap)
+  if (primary)
+    return { kind: primary.channel, label: primary.label, href: primary.href, source: 'brief.primaryAction' }
+  // A declared main action needs the brief's decision; the legacy phone-first choice is only for older maps.
+  if (list(contentMap?.slots).some((s) => s.action?.kind === 'primary-cta')) return null
   if (nonEmpty(contact?.phone?.value))
     return {
       kind: 'phone',

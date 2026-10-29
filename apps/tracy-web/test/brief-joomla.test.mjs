@@ -4299,3 +4299,94 @@ test('completed picture preparation is consumed once, with fresh plugin validati
     )
   )
 })
+
+for (const [trade, label, channel, href] of [
+  ['bakery', 'Order a cake', 'whatsapp', 'https://wa.me/441234567890'],
+  ['dental clinic', 'Book an appointment', 'contact', 'index.php?Itemid=168']
+])
+  test(`${trade}: declared header and shared button actions survive the Joomla writer`, async () => {
+    const { planSite } = await import('website-opportunities/domain/site-plan.mjs')
+    const map = mapOf(boxing104)
+    const actions = {
+      'module-176.1': { kind: 'primary-cta', urlKey: 'module-176.0' },
+      'languageString-256948293.0': { kind: 'go-to-item' },
+      'languageString-30910664.0': {
+        kind: 'open-map',
+        uses: [{ kind: 'open-map', destination: '#modalMap' }]
+      }
+    }
+    for (const slot of map.slots)
+      if (actions[slot.key]) {
+        slot.role = 'editorial.button_label'
+        slot.action = actions[slot.key]
+      }
+    const plan = planSite(
+      {
+        business: { name: 'Fictional business' },
+        primaryAction: {
+          label,
+          channel,
+          href: channel === 'contact' ? null : href,
+          basis: 'sourced',
+          evidence: []
+        }
+      },
+      { questions: [] },
+      { contentMap: map }
+    )
+    const { prepared, site } = await run({
+      contract: boxing104,
+      release: 'quickstart/ja-boxing/j6',
+      model: fakeModel({ say: () => 'Contact' }),
+      woContent: { sitePlanFor: async () => plan }
+    })
+    for (const [key, value] of Object.entries({
+      'module-176.1': label,
+      'module-176.0': href,
+      'languageString-256948293.0': 'View details',
+      'languageString-30910664.0': 'Get directions'
+    })) {
+      assert.equal(prepared.changes[key], value, key)
+      assert.equal(
+        site.applies.findLast((a) => key in a.changes)?.changes[key] ??
+          map.slots.find((s) => s.key === key)?.sample,
+        value,
+        `${key} reaches the actual write`
+      )
+    }
+    assert.ok(
+      !site.applies.some((a) => Object.values(a.changes).includes('#modalMap')),
+      'the modal trigger was never rewritten'
+    )
+  })
+
+for (const trade of ['bakery', 'dental clinic']) {
+  test(`${trade}: a role-mismatched team masthead is repaired in the actual Joomla contract write`, async () => {
+    const key = 'module-162.29'
+    const value = 'Meet the people behind our work.'
+    const { prepared, site } = await run({
+      contract: contractFor(defaultContracts(), 'quickstart/ja-boxing/j6', '1.0.8'),
+      ctx: {
+        brief: { about: `Example business provides ${trade} services.`, goal: 'contact', style: 'friendly' }
+      },
+      release: 'quickstart/ja-boxing/j6',
+      model: fakeModel({ say: () => 'Come on in, we are glad you are here.' }),
+      woContent: {
+        sitePlanFor: async () => ({
+          slots: [
+            {
+              key,
+              decision: 'value',
+              reason: 'intro-role',
+              pageRole: 'team',
+              value,
+              page: 'about-us/our-trainers'
+            }
+          ]
+        })
+      }
+    })
+    assert.equal(prepared.changes[key], value)
+    assert.equal(site.applies.findLast((a) => key in a.changes)?.changes[key], value)
+  })
+}

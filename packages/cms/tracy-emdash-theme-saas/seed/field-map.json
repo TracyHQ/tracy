@@ -104,7 +104,11 @@
 		"hero.cta1_label": {
 			"source": "text",
 			"target": "string",
-			"label": "Cta1 label"
+			"label": "Cta1 label",
+			"action": {
+				"kind": "primary-cta",
+				"urlKey": "hero.cta1_link"
+			}
 		},
 		"hero.cta1_link": {
 			"source": "url",
@@ -344,7 +348,11 @@
 		"cta.btn1_label": {
 			"source": "text",
 			"target": "string",
-			"label": "Btn1 label"
+			"label": "Btn1 label",
+			"action": {
+				"kind": "primary-cta",
+				"urlKey": "cta.btn1_link"
+			}
 		},
 		"cta.btn1_link": {
 			"source": "url",
@@ -634,7 +642,11 @@
 		"header_cta.cta_label": {
 			"source": "text",
 			"target": "string",
-			"label": "Cta label"
+			"label": "Cta label",
+			"action": {
+				"kind": "primary-cta",
+				"urlKey": "header_cta.cta_link"
+			}
 		},
 		"header_cta.cta_link": {
 			"source": "url",

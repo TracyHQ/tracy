@@ -71,6 +71,8 @@ function groupProblem(group, version) {
  * @returns {{declared: boolean, ok: boolean, errors: string[]}}
  */
 export function checkContentMapRoles(contentMap) {
+  // Button actions are judged by the contract gate (`buttonActionProblems`, `scripts/slot-roles/check.mjs`), not here: this
+  // check also decides at build time whether a released map's roles are used, and a released map is never edited.
   if (!contentMapDeclaresRoles(contentMap)) return { declared: false, ok: true, errors: [] }
   const errors = []
   const version = contentMap.roleVocabularyVersion

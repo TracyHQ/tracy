@@ -4048,3 +4048,20 @@ test('an apply that asks its own model, prepare having none, records what that m
   assert.equal(times.textCalls, 3)
   assert.equal(times.textIn, 900)
 })
+
+for (const [trade, label] of [
+  ['bakery', 'Order a cake'],
+  ['dental clinic', 'Book an appointment']
+])
+  test(`${trade}: a declared action label wins after both WordPress writer passes`, async () => {
+    const key = 'home.hero.cta.1'
+    const plan = {
+      slots: [{ key, decision: 'value', value: label, valueType: 'text', reason: 'button-action' }]
+    }
+    const { prepared, site } = await run({
+      model: fakeModel({ say: () => 'Contact' }),
+      woContent: { sitePlanFor: async () => plan }
+    })
+    assert.equal(prepared.changes[key], label)
+    assert.equal(site.applied.changes[key], label)
+  })

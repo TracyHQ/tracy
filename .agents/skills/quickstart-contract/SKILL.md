@@ -528,6 +528,19 @@ path):
    `editorial.paragraph` slots. The rule tables bind known offering excerpts; review the rendered card to bind
    other summary fields. After a brief build, check every kept offering card on home and every list page has
    nonempty copy about its own offering. Report a missing summary as a build failure, including its page and card.
+   **Button actions (every framework and CMS):** every button slot (an anchor or `<button>` with a button class, a
+   `data-bs-toggle` modal trigger, a header button, a `*.cta_label`/`*.cta_url` or `editorial.button_label` slot) carries
+   `action.kind`, separate from its `role`: `primary-cta` (the business's main conversion: header button, hero main
+   button, closing CTA band), `go-to-item` (opens the page of the item its card shows), `open-map`, `contact`,
+   `external-profile`, `navigation`, or `submit-form` (a form's own send button). Bind a label to its URL slot with
+   `action.urlKey`. A shared language string used as button text lists every rendered use in `action.uses`
+   (`kind` plus `selector`, `route` or `destination`); uses that disagree take `kind: "navigation"`, and the writer
+   picks words valid for all. The capture's rule tables propose actions from the destination and placement (pass
+   `--webroot <webroot> --template <name>` so template overrides are read); `node scripts/slot-roles/declare-actions.mjs
+   "$P/$VER" --webroot "$WORK/chup/webroot"` proposes them for a map already written. A button whose job its markup
+   does not prove (`#`, an empty link, a demo style-guide button) stays undeclared until you declare it by hand:
+   `scripts/slot-roles/check.mjs "$P/$VER"` refuses the contract while any button has no action. The brief build gives
+   every `primary-cta` the business's own action and channel, so a missing declaration ships the demo's words.
 9. **The first T3 template run through this skill:** look at and record in the report two points — (a) local Tracy
    creates a T3 site successfully (section 6 step 5); (b) the freshly bound site has no design-drift warnings (step 6 above).
 10. `git -C "$TCH_WT" status --short` · `git -C "$CW_WT" status --short` → record. No `git add`.
