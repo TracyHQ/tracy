@@ -283,7 +283,7 @@ test('a refresh replaces the Monid set whole and keeps the SerpApi review', opts
   const first = (await h.maps()).reviews
   // Same place, the next fetch answers other reviews.
   output = { ...TARTINE, search_parameters: { ...TARTINE.search_parameters, place_id: PLACE_ID } }
-  h.advance(31)
+  h.advance(91)
   await h.research('again')
   const second = (await h.maps()).reviews
   assert.equal(second[0].provider, 'serpapi')
