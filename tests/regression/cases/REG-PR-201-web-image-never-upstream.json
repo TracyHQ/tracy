@@ -1,0 +1,53 @@
+{
+  "id": "REG-PR-201-web-image-never-upstream",
+  "kind": "fix",
+  "title": "A new site is not left on a bare upstream web image while its IMAGE_TAGS line exists; a site already on one moves to the line for the same base",
+  "pr": 201,
+  "area": "fleet/web-image",
+  "cms": [
+    "wp",
+    "jo"
+  ],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Resolve joomla:5-apache with lib/web-image.sh as a provision does (TRACY_WEB_IMAGE_BUILD=1), on a host where the line's image is not built (docker stubbed).",
+    "S2: Same, with the build failing.",
+    "S3: Same without the switch, and in the strict stance.",
+    "S4: Source platform/joomla.sh and platform/wordpress.sh on the clone, fresh and quickstart roads and record which bases they resolve.",
+    "S5: Run move-off-upstream-image.sh --list over a sites root holding upstream sites with and without a line, then --apply one running site, then --apply with a moved container that fails its checks."
+  ],
+  "expect": [
+    "S1: web/build.sh --line joomla:5-apache runs once; stdout is exactly the Tracy image; no output line starts with ==.",
+    "S2: stdout is joomla:5-apache; stderr carries the !! block naming build.sh --line and move-off-upstream-image.sh --label <label> --apply.",
+    "S3: no build; lenient keeps the upstream base, strict refuses naming build.sh --line.",
+    "S4: exactly one base per road: joomla 5-apache / 6-apache / 6-apache, wordpress php8.3-apache / apache.",
+    "S5: --list names each upstream site with its target or 'no line: stays, host-browser fallback'; --apply changes only the web image line and recreates web only; a failed check puts the previous compose back."
+  ],
+  "selectors": {
+    "files": "packages/fleet/tracy-fleet-operation/{scripts/lib/web-image.sh,scripts/provision/move-off-upstream-image.sh,web/build.sh}",
+    "test": "packages/fleet/tracy-fleet-operation/test/web-image-never-upstream.test.mjs"
+  },
+  "evidence": "7 customer turns on prod1 answered NO_BROWSER, all Joomla; on the local stand an imported Joomla site ran joomla:5-apache because tracy/web-joomla:5-apache-20261027-r1 was never built there",
+  "fence": "The resolver's build-on-the-spot path and the mover, driven against a docker stub: the image a new site's compose gets, and the compose lines a move changes",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/web-image-never-upstream.test.mjs"
+    ],
+    "tests": [
+      "a provision builds the one missing line and answers the Tracy image",
+      "a failed build leaves the NEW site on its upstream base, loudly",
+      "without the switch (go-live, restore, snapshot source the platform too) nothing is built",
+      "the strict stance never builds",
+      "each platform file resolves exactly one base per road",
+      "build.sh --line builds exactly that line",
+      "build.sh finds the Joomla skill tree beside web/ on a fleet host",
+      "--list names each site on a bare upstream image",
+      "--apply on a running site: builds the line, changes only the image line",
+      "a moved container that does not prove itself is put back"
+    ]
+  }
+}
