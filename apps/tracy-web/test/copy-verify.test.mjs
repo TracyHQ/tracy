@@ -19,6 +19,8 @@ before(async () => {
       const json = (status, value) =>
         res.writeHead(status, { 'content-type': 'application/json' }).end(JSON.stringify(value))
       const path = req.url ?? ''
+      if (path.startsWith('/2026-joomla6/'))
+        return res.writeHead(404, { 'content-type': 'text/html' }).end('<html>Not Found</html>')
       if (path.startsWith('/redirect'))
         return res.writeHead(301, { location: 'https://copy.example/x' }).end()
       if (path.startsWith('/fatal'))
@@ -108,4 +110,43 @@ test('a WordPress copy, another component or a non-URL has its one door, or none
   )
   assert.equal(copyDoorsFor('https://example.de/index.php?option=com_other', SITE, CONFIG).length, 1)
   assert.deepEqual(copyDoorsFor('not a url', SITE, CONFIG), [])
+})
+
+test('an imported Joomla in a live subdirectory can verify its copy at the webroot', async () => {
+  const doors = copyDoorsFor(`https://live.example/2026-joomla6/index.php${Q}`, SITE, CONFIG)
+  assert.deepEqual(
+    doors.map((door) => new URL(door).pathname),
+    [
+      '/2026-joomla6/index.php',
+      '/2026-joomla6/administrator/index.php',
+      '/index.php',
+      '/administrator/index.php'
+    ]
+  )
+  const tried = []
+  let why
+  for (const door of doors) {
+    const url = new URL(door)
+    assert.equal(url.origin, 'http://traumferien-azoren-de-web-1')
+    assert.equal(url.search, Q)
+    tried.push(url.pathname)
+    why = await ask(`${base}${url.pathname}${url.search}`)
+    if (!DOOR_WHYS.has(why)) break
+  }
+  assert.equal(why, 'verified')
+  assert.deepEqual(tried, ['/2026-joomla6/index.php', '/2026-joomla6/administrator/index.php', '/index.php'])
+})
+
+test('root fallback keeps the registered administrator door first and deduplicates root doors', () => {
+  const paths = (endpoint) => copyDoorsFor(endpoint, SITE, CONFIG).map((door) => new URL(door).pathname)
+  assert.deepEqual(paths(`https://live.example/office/administrator/index.php${Q}`), [
+    '/office/administrator/index.php',
+    '/office/index.php',
+    '/administrator/index.php',
+    '/index.php'
+  ])
+  assert.deepEqual(paths(`https://live.example/administrator/index.php${Q}`), [
+    '/administrator/index.php',
+    '/index.php'
+  ])
 })

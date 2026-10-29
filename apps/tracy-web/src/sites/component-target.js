@@ -50,6 +50,8 @@ export function isOnCopy(endpoint, site, config) {
  * `doors.mjs` `apiDoors`): an import keeps whichever answered the LIVE site, and a front end that was
  * gated there (offline, coming soon, a firewall extension) left the administrator door registered.
  * The copy may answer the other one, so it is asked too — the same component, the same token.
+ * Import can place a CMS from a live subdirectory at the copy's webroot. Try the original pair
+ * first, then its root pair: every candidate stays on the copy and must pass manifest verification.
  * @param {string} registered - the endpoint the import registered (the live site's).
  * @param {{label: string, host: string, platform?: string}} site
  * @param {{hostName?: string, siteDomain: string}} config
@@ -68,7 +70,11 @@ export function copyDoorsFor(registered, site, config) {
   other.pathname = admin
     ? url.pathname.replace(/administrator\/index\.php$/, 'index.php')
     : url.pathname.replace(/index\.php$/, 'administrator/index.php')
-  return [first, other.href]
+  const root = new URL(url.href)
+  root.pathname = admin ? '/administrator/index.php' : '/index.php'
+  const rootOther = new URL(other.href)
+  rootOther.pathname = admin ? '/index.php' : '/administrator/index.php'
+  return [...new Set([first, other.href, root.href, rootOther.href])]
 }
 
 /**

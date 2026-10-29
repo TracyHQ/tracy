@@ -153,7 +153,11 @@ const LABEL_MAX = 32
 /** Vietnamese and other Latin diacritics fold to ASCII — `Cô Ba` is `coba`, not `c-ba`. */
 /** @param {string} text */
 function fold(text) {
-  return text.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D')
+  return text
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\u0111/g, 'd')
+    .replace(/\u0110/g, 'D')
 }
 
 /**

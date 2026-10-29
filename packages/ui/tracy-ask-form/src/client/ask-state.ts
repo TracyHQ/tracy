@@ -32,6 +32,9 @@ export interface PendingAsk {
   readonly sessionId: string
   readonly questions: readonly DshQuestionItem[]
   answer(answer: DshAnswer): Promise<void>
+  /** A forwarded request may acquire a new answer channel after reconnecting. */
+  getSnapshot?(): { readonly channel: 'waterfall' | 'rpc' | 'none' }
+  subscribe?(listener: () => void): () => void
 }
 
 /** `uiSession.sessionStatus` (`ui-session/src/client/index.ts`), as far as this plugin reads it. */
@@ -369,6 +372,8 @@ export function createAskController({
 }): AskController {
   const listeners = new Set<() => void>()
   const opened = new Set<string>()
+  // Drafts survive a reload by question text; live calls still have separate dsh identities.
+  const requests = new Map<string, string>()
   /** Per opened request: its session, and the tab that was active before the Questions tab opened. */
   const origins = new Map<string, { sessionId: string; returnTo: string | undefined }>()
   let snapshot: AskSnapshot = OFF
@@ -391,6 +396,20 @@ export function createAskController({
     }
     const liveIds = new Set(live.keys())
     const settled: { sessionId: string; returnTo: string | undefined }[] = []
+    for (const [id, request] of requests) {
+      const pending = live.get(id)
+      if (pending?.key === request) continue
+      requests.delete(id)
+      if (pending === undefined) continue
+      // An immediate replacement with the same questions must not keep the old busy form,
+      // selected consent or open-once entry, even when no empty status was observed between calls.
+      opened.delete(id)
+      drafts.clear(id)
+      const origin = origins.get(id)
+      origins.delete(id)
+      if (origin !== undefined) settled.push(origin)
+    }
+    for (const [id, pending] of live) requests.set(id, pending.key)
     for (const id of opened) {
       if (liveIds.has(id)) continue
       opened.delete(id)

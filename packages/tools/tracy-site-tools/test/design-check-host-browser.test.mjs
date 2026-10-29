@@ -268,7 +268,8 @@ const onMsg=(m)=>{if(LOG)fs.appendFileSync(LOG,JSON.stringify(m)+'\\n');const re
   case 'Page.getFrameTree':return reply({frameTree:{frame:{id:'MF'}}});
   case 'Page.navigate':{reply({frameId:'MF'});PAUSE.forEach((p,i)=>{open++;send({method:'Fetch.requestPaused',sessionId:'S',params:Object.assign({requestId:'r'+i,frameId:'MF',request:{method:'GET',headers:{Accept:'*/*'}}},p)})});return}
   case 'Fetch.fulfillRequest':case 'Fetch.failRequest':case 'Fetch.continueRequest':open--;reply({});if(open===0&&probe){probe();probe=null}return;
-  case 'Runtime.evaluate':{const answer=()=>reply({result:{value:{href:FINAL,seen:1,samples:[],open}}});if(open>0){probe=answer;return}return answer()}
+  case 'Runtime.evaluate':{const e=m.params.expression;const answer=()=>reply({result:{value:e==='document.location.href'?FINAL:e.includes('scrollTo')?0:{href:FINAL,seen:1,samples:[],open}}});if(open>0){probe=answer;return}return answer()}
+  case 'Page.captureScreenshot':return reply({data:Buffer.from('JPEG').toString('base64')});
   default:return reply({});
 }};
 let buf=Buffer.alloc(0);const rs=fs.createReadStream(null,{fd:3});rs.on('error',()=>{});
@@ -406,6 +407,12 @@ test('🔒 host mode, a view (the visual check): the site’s own pictures and f
   assert.equal(r.cdp.filter((m) => m.method === 'Fetch.failRequest').length, 3)
   const i = r.cdp.findIndex((m) => m.method === 'Emulation.setScriptExecutionDisabled')
   assert.ok(i !== -1 && r.cdp[i].params.value === true, 'no page script in a view either')
+  const scroll = r.cdp.find(
+    (m) => m.method === 'Runtime.evaluate' && m.params.expression.includes('scrollTo')
+  )
+  assert.ok(scroll, 'the view still scrolls before capture')
+  assert.equal(scroll.params.awaitPromise, false, 'disabled page timers cannot complete a scroll promise')
+  assert.match(scroll.params.expression, /\)\(0,null\)$/, 'the host owns the settle wait')
 })
 
 test('🔒 host mode: a main-frame document off the site still ends OFFSITE', async () => {

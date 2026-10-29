@@ -118,6 +118,8 @@ route: same-origin documents, stylesheets, images and fonts are fetched through 
 `docker exec curl`; page scripts stay disabled and other requests fail. This fallback is used only
 for visual-check captures. It cannot evaluate changes that require page scripts or external assets.
 
+Host-mode capture scrolls synchronously and waits for rendering in the Node process: page timers do not run while page scripts are disabled. The script and network restrictions remain in force.
+
 ## 3. Where the browser lands
 
 Every request reaches `tracy-web` first. [`app.js`](apps/tracy-web/src/app.js) mounts, in order:
@@ -643,6 +645,11 @@ Only for `origin='migrated'` sites on Joomla (WordPress waits for its own adapte
   it into the copy's DB right after loading the DB (step 4b), and when attaching the door `site_component` keeps `liveEndpoint` + `liveToken` separate
   from the copy's `token`. The real site's token only travels to the host in the job body, then into the script through an environment variable.
   Copies imported earlier (still holding the real token) get their token changed before their first Sync (`webroot-sync.sh --op copy-token`).
+- **Joomla copy address:** verification tries the registered front/administrator pair on the copy first, then the same
+  pair at the webroot. Imports from a live subdirectory may be installed at the copy's root. Only a response that did
+  not reach the plugin (`not_json`, `not_engine`, `redirected`) permits the next candidate; requests refuse redirects.
+  A successful authenticated `core.manifest` for Joomla selects the copy endpoint. The original live endpoint and token
+  remain separate for Sync; verification never calls the live origin.
 - **Host:** the `webroot-sync` job runs `webroot/webroot-sync.sh`: reads the real site with `lib/live-pull.mjs` (the
   Import protocol, inline tar part, straight to the host disk, **outside** the heavy lock; the tables the merge never takes —
   `live_sync.py never-taken`, Tracy's own and the ignored ones — keep the last read's part and are not read again; the dump is
