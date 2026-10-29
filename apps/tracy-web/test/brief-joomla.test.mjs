@@ -570,13 +570,15 @@ const run = async ({
   site = fakeSite(contract),
   ctx: overrides,
   pictures = null,
-  woContent = null
+  woContent = null,
+  siteReader = null
 } = {}) => {
   const { ctx, times, notes } = context(contract, release, overrides)
   const engine = createJoomlaEngine({
     models: pictures ? async () => ({ ...(await model.models()), image: pictures.door }) : model.models,
     applyFor: () => throughDoor(site.apply),
     woContent,
+    siteReader,
     ...(pictures ? { siteFile: pictures.siteFile, fetchImpl: pictures.fetchImpl } : {})
   })
   const prepared = await engine.prepare(ctx)
@@ -4007,4 +4009,39 @@ test('#189 lines the writer echoed in the demo’s words take the plan’s fallb
     prepared.demoBlanks.map((s) => s.key),
     [emptied.key]
   )
+})
+
+// 🔒 A BROKEN SITE IS NEVER HANDED OVER (spec TracyHQ/tracy#189): after the menu tidy-up the home page and the kept pages are
+// read; one that does not answer 200 takes the tidy-up's menu take-offs back, and the reason is in the report.
+test('a site whose home page stops answering after the menu tidy-up gets its menu take-offs back, said in the report', async () => {
+  const site = fakeSite(business)
+  site.menuRows = studioMenu()
+  const read = []
+  const siteReader = async () => ({
+    page: async (url) => {
+      read.push(url)
+      // The home page answers again once the unticked Careers entry is back.
+      return { status: site.menuRows.find((r) => r.id === 618)?.published === 1 ? 200 : 404, html: '' }
+    }
+  })
+  const { notes, times } = await run({ site, model: fakeModel(), ctx: studioUnticked(), siteReader })
+  assert.ok(read.includes('/'), 'the home page is read after the tidy-up')
+  assert.equal(site.menuRows.find((r) => r.id === 618).published, 1, 'the entry taken off is back')
+  assert.ok(times.tidyMenuReverted > 0)
+  assert.ok(
+    notes.some((n) =>
+      /after the menu tidy-up \/ answered 404, so its \d+ menu change\(s\) were taken back$/.test(n)
+    ),
+    notes.join(' | ')
+  )
+})
+
+test('a site that answers after the menu tidy-up keeps its take-offs', async () => {
+  const site = fakeSite(business)
+  site.menuRows = studioMenu()
+  const siteReader = async () => ({ page: async () => ({ status: 200, html: '' }) })
+  const { notes, times } = await run({ site, model: fakeModel(), ctx: studioUnticked(), siteReader })
+  assert.equal(site.menuRows.find((r) => r.id === 618).published, 0)
+  assert.equal(times.tidyMenuReverted, undefined)
+  assert.ok(!notes.some((n) => /taken back/.test(n)))
 })

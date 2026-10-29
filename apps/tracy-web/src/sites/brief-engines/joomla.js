@@ -89,10 +89,13 @@ import {
   readMenu,
   setConsentNote,
   shippedPageMeta,
+  pagesNotAnswering,
   strandedMenuItems,
+  withoutKeptTakeOff,
   writeSteps
 } from './joomla-tidy.js'
 import {
+  keptById,
   leaveShowcase,
   pickedPages,
   showcaseHolders,
@@ -1861,11 +1864,29 @@ export function createJoomlaEngine({
             renamed: judged.categories.renamed ?? new Map(),
             source: SOURCE
           }).filter((step) => !hiding.includes(step.id))
+          // 🔒 Whatever step names it, the home entry and a kept page's entry are never taken off (withoutKeptTakeOff).
+          const keptPaths = keptById(ctx.brief?.pages)
+          const guardedIds = (judged.menu ?? [])
+            .filter(
+              (row) =>
+                Number(row?.published) === 1 &&
+                (Number(row?.home ?? 0) === 1 || keptPaths.includes(String(row?.path ?? '')))
+            )
+            .map((row) => Number(row.id))
+          const homeSafe = (
+            /** @type {Array<{ kind: string, id: number, fields: Record<string, unknown> }>} */ list
+          ) => {
+            const { steps, kept } = withoutKeptTakeOff(list, judged.menu ?? [], keptPaths)
+            if (kept.length > 0) ctx.time('keptEntriesHeld', kept.length)
+            return steps
+          }
+          /** @type {Array<{ kind: string, id: number, fields: Record<string, unknown> }>} */
+          let tidySteps = []
           const done = await time('tidyMs', () =>
             writeSteps({
               apply,
               siteKey,
-              steps: [
+              steps: (tidySteps = homeSafe([
                 // A ticked page the demo trim took off comes back first, so nothing below reads it as gone.
                 ...judged.ticked.off.map((id) => ({ kind: 'menuItem', id, fields: { published: 1 } })),
                 ...menuSteps(causes),
@@ -1881,7 +1902,7 @@ export function createJoomlaEngine({
                 ...intoCategories,
                 ...menuSteps(dependents),
                 ...anchorSteps(judged.anchors.relink.filter((a) => !hiding.includes(a.id)))
-              ],
+              ])),
               applyId: `tidy-${Date.now().toString(36)}`,
               still
             })
@@ -1894,6 +1915,38 @@ export function createJoomlaEngine({
           ctx.time('menuDeadLinks', judged.dead.ids.length)
           ctx.time('menuOrphaned', judged.orphaned.ids.length)
           ctx.time('menuAnchorRelinked', judged.anchors.relink.length)
+          // 🔒 A BROKEN SITE IS NEVER HANDED OVER: after the tidy-up the home page and every kept page are read; one that does not
+          // answer 200 takes the menu entries this tidy-up took off back, and the reason is recorded.
+          const reader = siteReader ? await siteReader(siteKey).catch(() => null) : null
+          const broken = await pagesNotAnswering(reader, guardedIds)
+          if (broken.length > 0) {
+            const back = [
+              ...new Set(
+                done.written > 0
+                  ? tidySteps.filter(
+                      (step) =>
+                        step.kind === 'menuItem' &&
+                        Number(step.fields?.published ?? 1) !== 1 &&
+                        !done.refused.some((r) => r.kind === step.kind && r.id === step.id) &&
+                        !done.skipped.some((r) => r.kind === step.kind && r.id === step.id)
+                    )
+                  : []
+              )
+            ]
+            const restored = back.length
+              ? await writeSteps({
+                  apply,
+                  siteKey,
+                  steps: back.map((step) => ({ kind: 'menuItem', id: step.id, fields: { published: 1 } })),
+                  applyId: `tidy-revert-${Date.now().toString(36)}`
+                })
+              : null
+            const stillBroken = await pagesNotAnswering(reader, guardedIds)
+            ctx.time('tidyMenuReverted', restored?.written ?? 0)
+            ctx.note(
+              `after the menu tidy-up ${broken.map((b) => `${b.url} answered ${b.status ?? 'nothing'}`).join(', ')}, so its ${back.length} menu change(s) were taken back${stillBroken.length ? `; still not answering: ${stillBroken.map((b) => `${b.url} ${b.status ?? 'nothing'}`).join(', ')}` : ''}`
+            )
+          }
           ctx.time('menuAnchorHidden', judged.anchors.hide.length)
           ctx.time('menuRelabelled', judged.relabels.length)
           ctx.time('pagesRetitled', retitled.length)

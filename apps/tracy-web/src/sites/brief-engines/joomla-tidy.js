@@ -618,6 +618,54 @@ export async function orphanedMenuItems({ rows, going, visible, read }) {
 /** The writes that take the menu entries `ids` off the site. @param {number[]} ids */
 export const menuSteps = (ids) => ids.map((id) => ({ kind: 'menuItem', id, fields: { published: 0 } }))
 
+/**
+ * The steps without any that would take off a menu entry the site must keep: the home entry (the menu reads it as home: 1),
+ * and the entry of every page the site plan keeps (its path, as the release's page list names it).
+ *
+ * 🔒 THE HOME ENTRY AND A KEPT PAGE'S ENTRY ARE NEVER TAKEN OFF, whichever step names them. Measured 29/10/2026 on the local
+ * stand: a brief build whose demo posts went also took off "the blog's menu entries", the home entry and the kept About page
+ * among them because both open the featured view the demo posts filled, and every page of the site answered 404 "Component
+ * not found". Each judge has its own reasons to name an entry; this is the one rule none of them may break.
+ * @param {Array<{ kind: string, id: number, fields: Record<string, unknown> }>} steps
+ * @param {any[]} rows - the menu, each entry's whole row (readMenu)
+ * @param {Iterable<string>} [keptPaths] - the menu paths of the pages the site plan keeps
+ * @returns {{ steps: typeof steps, kept: number[] }}
+ */
+export function withoutKeptTakeOff(steps, rows, keptPaths = []) {
+  const paths = new Set([...keptPaths].map((p) => String(p).replace(/^\/+|\/+$/g, '')).filter(Boolean))
+  const guarded = new Set(
+    (rows ?? [])
+      .filter((row) => Number(row?.home ?? 0) === 1 || paths.has(String(row?.path ?? '')))
+      .map((row) => Number(row.id))
+  )
+  const kept = []
+  const out = steps.filter((step) => {
+    const off =
+      step.kind === 'menuItem' && guarded.has(Number(step.id)) && Number(step.fields?.published ?? 1) !== 1
+    if (off) kept.push(Number(step.id))
+    return !off
+  })
+  return { steps: out, kept: [...new Set(kept)] }
+}
+
+/**
+ * Whether the pages a visitor must reach still answer after a write: the home page and each guarded menu entry's page
+ * (by its Itemid, so it reads the same with or without search-engine-friendly addresses). The pages that do not answer 200.
+ * @param {{ page: (url: string) => Promise<{ status: number }> } | null} reader
+ * @param {number[]} entryIds
+ * @returns {Promise<Array<{ url: string, status: number | null }>>}
+ */
+export async function pagesNotAnswering(reader, entryIds) {
+  if (!reader?.page) return []
+  const urls = ['/', ...entryIds.map((id) => `/index.php?Itemid=${id}`)]
+  const failed = []
+  for (const url of urls) {
+    const got = await reader.page(url).catch(() => null)
+    if (!got || got.status !== 200) failed.push({ url, status: got?.status ?? null })
+  }
+  return failed
+}
+
 /** Words that do not tell one page from another when a footer entry is matched to a page. */
 const MATCH_STOPWORDS = new Set(['us', 'our', 'the', 'a', 'an', 'page', 'pages', 'my'])
 
