@@ -1,0 +1,3 @@
+- **A brief build asks the site to hide demo rows only when the contract ships a demo-trim profile** - Akemi (Claude) · #189 · `feat/brief-build-own-site` · 2026-10-29
+  **Affects:** Joomla brief builds on a template whose contract has no `demo-trim-map.json`. The build no longer sends `demoTrim.apply`, which the receiver answers "unsupported" and the report listed as a refused write; the demo rows the brief does not keep still go in the tidy-up through the content door.
+  **Why / Measured:** on a local brief build on a Joomla T4 template the report carried "This quickstart contract carries no demo-trim profile" as an engine refusal although nothing had failed.

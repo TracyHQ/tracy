@@ -385,6 +385,14 @@ function republishedByApply(contract, visible, sitePages) {
   }
 }
 
+/**
+ * Whether the release's contract ships a demo-trim profile the receiver can hide demo rows by; an unknown contract is asked.
+ * @param {{ dir: string } | null | undefined} contract
+ */
+export function hasDemoTrim(contract) {
+  return !contract?.dir || existsSync(path.join(contract.dir, 'demo-trim-map.json'))
+}
+
 /** @type {Map<string, any[] | null>} a release's menu after its trim, read once: a release never changes (as `maps`). */
 const trimmedMenus = new Map()
 
@@ -1274,7 +1282,12 @@ export function createJoomlaEngine({
       const ordered = await time('orderMs', () => pinArticleOrder({ apply, siteKey, note: ctx.note }))
       if (ordered > 0) ctx.time('articlesOrdered', ordered)
       // The demo rows go first: hiding them moves the revision a write must name, so the site is read after.
-      const trim = await time('trimMs', () => trimJoomlaDemo({ apply, siteKey }))
+      // 🔒 ONLY A CONTRACT THAT SHIPS A REVIEWED DEMO-TRIM PROFILE IS ASKED TO TRIM. The receiver hides demo rows by that
+      // profile alone and answers every other contract "unsupported", which the report read as a refused write. Without one,
+      // the demo rows the brief does not keep go in the tidy-up below, through the content door (unpicked pages, demo posts).
+      const trim = hasDemoTrim(ctx.contract)
+        ? await time('trimMs', () => trimJoomlaDemo({ apply, siteKey }))
+        : /** @type {const} */ ({ status: 'none' })
       if (trim.status === 'skipped') ctx.note(trim.reason)
       // Then the pictures, one at a time: the site is read after every write, so the revision it names is the last.
       const art = await time('picturesMs', async () =>
