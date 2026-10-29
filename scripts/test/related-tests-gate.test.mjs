@@ -27,7 +27,7 @@ const MAPPED = [
   'brief-emdash-brand'
 ].map((name) => `apps/tracy-web/test/${name}.test.mjs`)
 // A reviewed tree no test reads: its re-pin runs no test.
-const SKILL_FILE = `${REVIEWED_SKILLS.find((skill) => !skill.readers.length).prefix}IMPORT-NOTE.md`
+const SKILL_FILE = `${REVIEWED_SKILLS.find((skill) => !skill.readers.length && !skill.outsideCi?.length).prefix}IMPORT-NOTE.md`
 
 /** Scratch lives under the task's artifact directory when the runner provides one. */
 function scratchRoot() {
@@ -99,9 +99,10 @@ test('the related gate runs no test at all for a reviewed skill re-pin', () => {
 })
 
 test('the related gate runs exactly the declared reader for a skill with one', () => {
-  const t4 = REVIEWED_SKILLS.find((skill) => skill.prefix.includes('joomlart-t4'))
-  const [reader] = t4.readers
-  const file = `${t4.prefix}IMPORT-NOTE.md`
+  // A skill whose only reader is a worker test (T4 runs everything: Dockerfiles read it).
+  const skill = REVIEWED_SKILLS.find((one) => one.prefix.endsWith('/pr-merge/'))
+  const [reader] = skill.readers
+  const file = `${skill.prefix}README.md`
   const run = gateRun({
     base: {
       ...dataBase(),

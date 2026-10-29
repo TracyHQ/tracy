@@ -208,11 +208,14 @@ test('the own-domain pilot is switched on for the e2e row, and only by that rowâ
 })
 
 // A reviewed tree no test reads: its re-pin runs the checks row only.
-const SKILL = REVIEWED_SKILLS.find((skill) => !skill.readers.length).prefix
+const SKILL = REVIEWED_SKILLS.find((skill) => !skill.readers.length && !skill.outsideCi?.length).prefix
 const [DATA, MAPPED] = [...DATA_FILE_TESTS.entries()][0]
 const T4 = REVIEWED_SKILLS.find((skill) => skill.prefix.includes('joomlart-t4'))
+// A skill whose every reader is a worker test: its change stays narrow. Found by name; spelling the
+// path out would make this file a reader of the tree.
+const NARROW = REVIEWED_SKILLS.find((skill) => skill.prefix.endsWith('/pr-merge/'))
 const EMDASH_SKILL = REVIEWED_SKILLS.find((skill) => skill.prefix.startsWith('vendor/emdash/')).prefix
-const dataFiles = [...allFiles, ...MAPPED, ...T4.readers, DATA, `${SKILL}SKILL.md`]
+const dataFiles = [...allFiles, ...MAPPED, ...T4.readers, ...NARROW.readers, DATA, `${SKILL}SKILL.md`]
 const planOf = (changed, extra = {}) =>
   planMatrix({ event: 'pull_request', baseRef: 'develop', changed, allFiles: dataFiles, ...extra })
 
@@ -277,22 +280,51 @@ test('a journal entry under changes/ never forces the full suite', () => {
   assert.ok(groups(withCode).includes('tests related'))
 })
 
-test('a T4 skill re-pin runs checks plus its declared readers, no interop, e2e or EmDash row', () => {
-  const p = planOf([`${T4.prefix}SKILL.md`, `${T4.prefix}IMPORT-NOTE.md`, 'changes/2026-10-09-x.md'])
-  assert.deepEqual(groups(p), RELATED)
-  assert.equal(p.runsAll, false)
-  assert.deepEqual(p.related.workers, T4.readers)
-  assert.equal(p.related.interop, false)
-  assert.deepEqual(
-    groups(planOf([`${T4.prefix}SKILL.md`, `${SKILL}SKILL.md`, `${EMDASH_SKILL}SKILL.md`])),
-    RELATED
-  )
+test('a vendored skill read outside CI runs checks plus its CI readers only; the others are named, not run', () => {
+  const wordpress = REVIEWED_SKILLS.find((skill) => skill.prefix.includes('tracy-wordpress-theme'))
+  const emdash = REVIEWED_SKILLS.find((skill) => skill.prefix === EMDASH_SKILL)
+  for (const [skill, rows] of [
+    [wordpress, RELATED],
+    [T4, RELATED],
+    [emdash, ['checks']]
+  ]) {
+    const p = planOf([`${skill.prefix}SKILL.md`, 'changes/2026-10-29-x.md'], {
+      allFiles: [...new Set([...dataFiles, ...skill.readers, ...skill.outsideCi])]
+    })
+    assert.equal(p.runsAll, false, skill.prefix)
+    assert.deepEqual(groups(p), rows, skill.prefix)
+    assert.deepEqual([...p.related.workers].sort(), [...skill.readers].sort(), skill.prefix)
+    assert.deepEqual(p.related.outsideCi, skill.outsideCi, skill.prefix)
+    assert.equal(p.related.interop, false)
+  }
+  assert.deepEqual(groups(planOf([`${NARROW.prefix}SKILL.md`, `${SKILL}SKILL.md`])), RELATED)
 })
 
-test('an EmDash skill re-pin runs checks only; the CMS and the Bravada theme still run the EmDash suites', () => {
-  const p = planOf([`${EMDASH_SKILL}SKILL.md`, `${EMDASH_SKILL}IMPORT-NOTE.md`])
-  assert.deepEqual(groups(p), ['checks'])
-  assert.equal(p.related.workers.length, 0)
+test('a Tracy skill edit runs checks plus its audited readers, not the full suite', () => {
+  // Found by name: spelling the skill path out here would make this file a reader of the tree.
+  const prMerge = REVIEWED_SKILLS.find((skill) => skill.prefix.endsWith('/pr-merge/'))
+  const changed = [`${prMerge.prefix}SKILL.md`, 'changes/2026-10-28-x.md']
+  const p = planOf(changed)
+  assert.deepEqual(groups(p), RELATED)
+  assert.equal(p.runsAll, false)
+  assert.deepEqual(p.related.workers, prMerge.readers)
+  assert.equal(p.related.interop, false)
+  // Its reader gone, the planner cannot vouch for the selection.
+  assert.equal(
+    planOf(changed, { allFiles: dataFiles.filter((f) => !prMerge.readers.includes(f)) }).runsAll,
+    true
+  )
+  // The skill that triggered the change: its REG-PR-1228 check is a worker test now, so it stays narrow.
+  const contract = REVIEWED_SKILLS.find((skill) => skill.prefix.endsWith('/quickstart-contract/'))
+  const edit = [`${contract.prefix}SKILL.md`, 'changes/2026-10-28-x.md']
+  const narrow = planOf(edit, { allFiles: [...dataFiles, ...contract.readers] })
+  assert.deepEqual(groups(narrow), RELATED)
+  assert.equal(narrow.runsAll, false)
+  assert.deepEqual([...narrow.related.workers].sort(), [...contract.readers].sort())
+  assert.equal(narrow.related.interop, false)
+})
+
+test('the EmDash CMS and the Bravada theme still run the EmDash suites; a look-alike of the skill is not the skill', () => {
   for (const other of [
     'vendor/emdash/emdash/IMPORT-NOTE.md',
     'vendor/emdash/emdash-theme-bravada/IMPORT-NOTE.md'
@@ -304,13 +336,7 @@ test('an EmDash skill re-pin runs checks only; the CMS and the Bravada theme sti
       'checks'
     ])
   }
-  // A look-alike sibling of the skill folder is not the skill.
   assert.ok(groups(planOf([`${EMDASH_SKILL.slice(0, -1)}-x/a.md`])).length > 1)
-  // Mixed with theme code, the theme row still runs.
-  assert.deepEqual(
-    groups(planOf([`${EMDASH_SKILL}SKILL.md`, 'packages/cms/tracy-emdash-theme-base/x.astro'])),
-    ['tests emdash-base', 'checks']
-  )
 })
 
 test('a lost declared reader, a deleted skill reader and release events run every row', () => {
@@ -475,18 +501,18 @@ test('a pull request that edits a database test keeps the database tests, label 
 })
 
 test('a related selection the skip empties is no row at all, as for a documentation-only change', () => {
-  // The T4 skill re-pin selects only its declared readers; when all of them need the database and
+  // A narrow skill edit selects only its declared readers; when all of them need the database and
   // none is asked for, there is nothing left for a `tests related` row to run.
-  const p = planOf([`${T4.prefix}SKILL.md`], {
+  const p = planOf([`${NARROW.prefix}SKILL.md`], {
     labels: [],
-    readText: (file) => (T4.readers.includes(file) ? DB_TEXT : UNIT_TEXT)
+    readText: (file) => (NARROW.readers.includes(file) ? DB_TEXT : UNIT_TEXT)
   })
   assert.deepEqual(groups(p), ['checks'])
   assert.deepEqual(p.relatedRun, [])
   assert.equal(p.scope.skipDb, true)
-  const labelled = planOf([`${T4.prefix}SKILL.md`], {
+  const labelled = planOf([`${NARROW.prefix}SKILL.md`], {
     labels: ['ci:integration'],
-    readText: (file) => (T4.readers.includes(file) ? DB_TEXT : UNIT_TEXT)
+    readText: (file) => (NARROW.readers.includes(file) ? DB_TEXT : UNIT_TEXT)
   })
   assert.deepEqual(groups(labelled), RELATED)
 })
