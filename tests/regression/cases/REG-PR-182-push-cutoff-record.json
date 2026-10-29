@@ -1,0 +1,28 @@
+{
+  "id": "REG-PR-182-push-cutoff-record",
+  "kind": "fix",
+  "title": "What a cut-off Sync to live already created is recorded before the next merge, so nothing is duplicated",
+  "pr": 182,
+  "area": "sync/push-apply",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["Run the record-cut case on a push root holding a cut, a finished and a recorded push."],
+  "expect": [
+    "The cut push's created records join the id map and its seeds join pushed.json.",
+    "Finished and recorded pushes are left alone; a second run records nothing; more journal lines are recorded again."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#173",
+      "packages/fleet/tracy-fleet-operation/test/live-push-changeset.test.mjs"
+    ],
+    "tests": [
+      "a push cut off before it recorded its writes is recorded from its journal before the next merge (#173)"
+    ]
+  }
+}
