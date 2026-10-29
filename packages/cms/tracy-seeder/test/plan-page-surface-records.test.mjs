@@ -1,6 +1,6 @@
 import { strict as assert } from 'node:assert'
 import test from 'node:test'
-import { planJoomlaContract } from '../src/plan-joomla-contract.mjs'
+import { planJoomlaContract, sectionShows } from '../src/plan-joomla-contract.mjs'
 
 // The records a visitor reads that the pages surface used to leave out, and what the writer is told about each line
 // (spec TracyHQ/tracy#189, measured 29/10/2026 on a local brief build of a Joomla T4 template): the Contact page's own
@@ -157,4 +157,21 @@ test("a section's heading and intro are told what the section shows; the rule is
   assert.match(system, /"shows"/)
   // A step or card title of the demo is never kept as it is.
   assert.match(system, /never keep the demo's (title|label)/i)
+})
+
+test('a card the site plan takes off is not named in the heading of the section that held it', () => {
+  const card = (key, id, kind) => ({
+    key,
+    entity: 'module-60',
+    role: 'editorial.paragraph',
+    group: { id, item: 0, kind }
+  })
+  const slots = [
+    { key: 'module-60.0', entity: 'module-60', role: 'editorial.heading', sample: 'Meet the team' },
+    card('module-60.1', 'module-60.person.0', 'person'),
+    card('module-60.2', 'module-60.gallery.0', 'gallery')
+  ]
+  assert.deepEqual(sectionShows(slots)(slots[0]), ['gallery', 'person'])
+  assert.deepEqual(sectionShows(slots, ['module-60.person.0'])(slots[0]), ['gallery'])
+  assert.equal(sectionShows(slots, ['module-60.person.0', 'module-60.gallery.0'])(slots[0]), null)
 })

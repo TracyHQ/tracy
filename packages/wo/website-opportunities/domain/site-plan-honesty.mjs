@@ -125,6 +125,17 @@ function collectionOf(contentMap, group) {
   return collectionOfGroupId(group.id) ?? `${entityKindOf(contentMap, group.slots[0].entity)}:${group.kind}`
 }
 
+/**
+ * Where the card `groupId` of `slots` can be taken off (`placeOf`): `{how: 'item' | 'entity' | 'none', ...}`.
+ * @param {{slots?: any[], entities?: any[]}} contentMap
+ * @param {string} groupId
+ */
+export function hidePlaceOf(contentMap, groupId) {
+  const slots = (contentMap?.slots ?? []).filter((s) => s?.group?.id === groupId)
+  if (slots.length === 0) return { how: 'none' }
+  return placeOf(contentMap, { id: groupId, kind: slots[0].group.kind, slots })
+}
+
 /** Where a hidden card is taken off: an item of a JSON list, an entity of its own, or nowhere the site can. */
 function placeOf(contentMap, group) {
   const entities = new Set(group.slots.map((s) => s.entity))

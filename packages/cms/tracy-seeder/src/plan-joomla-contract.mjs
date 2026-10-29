@@ -742,15 +742,18 @@ const NO_SHOWN_KIND = new Set(['business', 'contact', 'cta'])
  * What a section shows, for its heading and intro (a slot of the section in no group): the kinds of the repeated items of the
  * same record (`gallery`, `person`, `service`), or null. 🔒 A HEADING DESCRIBES WHAT THE SECTION SHOWS (spec #189): measured
  * 29/10/2026, a photo gallery got the heading "Our coaching team".
+ * A card the site plan takes off (`hidden`, its group ids) is not shown, so its kind is not named.
  * @param {any[]} slots
+ * @param {Iterable<string> | null} [hidden] - the group ids of the cards the site plan hides
  * @returns {(slot: any) => string[] | null}
  */
-export function sectionShows(slots) {
+export function sectionShows(slots, hidden = null) {
+  const off = new Set(hidden ?? [])
   /** @type {Map<string, Set<string>>} */
   const kinds = new Map()
   for (const slot of slots) {
     const kind = slot?.group?.kind
-    if (!kind || NO_SHOWN_KIND.has(kind) || !slot.entity) continue
+    if (!kind || NO_SHOWN_KIND.has(kind) || !slot.entity || off.has(slot.group.id)) continue
     if (!kinds.has(slot.entity)) kinds.set(slot.entity, new Set())
     kinds.get(slot.entity).add(kind)
   }
@@ -808,7 +811,8 @@ export async function planJoomlaContract({
   trimmed,
   republished = new Set(),
   inventions = 'allowed',
-  offerings = null
+  offerings = null,
+  hidden = null
 }) {
   if (!state?.contract || !Array.isArray(state.slots)) throw new Error('Invalid contract inventory')
   // 🔒 A slot the profile only DECLARES (`customize: "keep"`, written by `capture-contract.py --full-coverage`) is the site
@@ -1039,7 +1043,7 @@ export async function planJoomlaContract({
   }
   const items = itemNumbers(state.slots)
   const offeringOf = offeringBinding(offerings)
-  const shows = sectionShows(state.slots)
+  const shows = sectionShows(state.slots, hidden)
   /** The complaints of the batches no answer could be read for (`model-unreadable`). */
   const unreadable = []
   const batches = sectionBatches(planned, 35)

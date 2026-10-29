@@ -12,6 +12,7 @@
 import { neutralFor } from './neutral-copy.mjs'
 import { demoWordsOf, wordsOf } from './honest-written.mjs'
 import { offeringOfSlot, offeringWords, otherOfferingsIn } from './offering-cross-talk.mjs'
+import { hidePlaceOf } from './site-plan-honesty.mjs'
 
 /** Free paragraphs: a business's own description reads right in any of them. */
 const PARAGRAPH_ROLES = new Set(['editorial.paragraph', 'business.summary', 'business.long_description'])
@@ -21,10 +22,35 @@ const ECHO_TRUSTED_WORDS = 3
 const RENAMED_MIN_WORDS = 3
 const LOREM = /\blorem ipsum\b|\bdolor sit amet\b/i
 /**
- * Titles of a repeated tab or step: an echo of the demo's ("Maintenance" as a coaching club's fourth tab) is never trusted as
- * a fitting label, however short (measured 29/10/2026 on a local brief build).
+ * Titles of a repeated card, tab or step: an echo of the demo's ("Maintenance" as a coaching club's fourth tab) is never
+ * trusted as a fitting label, however short (measured 29/10/2026 on a local brief build). A step title is one wherever it
+ * sits; the others only inside a repeated card (a slot with a group), never a free heading of a section.
  */
-const ITEM_TITLE_ROLES = new Set(['step.title'])
+const STEP_TITLE_ROLES = new Set(['step.title'])
+const CARD_TITLE_ROLES = new Set([
+  'step.title',
+  'faq.question',
+  'event.title',
+  'offering.name',
+  'package.name',
+  'claim.heading',
+  'editorial.heading'
+])
+/** Cards that carry the business's own facts or its call to action: their titles are the plan's, not the demo's. */
+const OWN_CARD_KINDS = new Set(['business', 'contact', 'cta'])
+/**
+ * Whether a slot is the title of a repeated card whose echo of the demo's words is never trusted (`CARD_TITLE_ROLES`). An
+ * offering's name the site plan gives (`honesty.cardNames`) is the plan's, not the writer's.
+ * @param {{role?: string, entity?: string, group?: {id?: string, kind?: string}}} slot
+ * @param {Record<string, string>} [cardNames]
+ */
+export function isCardTitle(slot, cardNames = {}) {
+  if (STEP_TITLE_ROLES.has(slot?.role)) return true
+  if (!CARD_TITLE_ROLES.has(slot?.role) || !slot.group?.id || OWN_CARD_KINDS.has(slot.group.kind))
+    return false
+  return !(slot.role === 'offering.name' && offeringOfSlot(slot, cardNames))
+}
+
 /** A site token the page fills in itself (`{site.name}`): such a line is never the demo's words. */
 const TOKEN = /\{[a-z][\w.-]*\}/i
 
@@ -81,8 +107,9 @@ export function pageRecords(pages, { entities = [], slots = [] } = {}) {
  * @param {string | undefined} value
  * @param {Set<string>} ownWords - every word the owner gave
  * @param {Set<string>} held - the keys the writer did not answer (pended, refused, unreadable, dropped by a guard)
+ * @param {{cardNames?: Record<string, string>}} [options] - the site plan's offering names (`isCardTitle`)
  */
-export function isDemoLeft(slot, value, ownWords, held) {
+export function isDemoLeft(slot, value, ownWords, held, { cardNames = {} } = {}) {
   const sample = String(slot.sample ?? '')
   if (TOKEN.test(sample)) return false
   const demo = demoWordsOf(sample, ownWords)
@@ -95,7 +122,7 @@ export function isDemoLeft(slot, value, ownWords, held) {
     return fresh.length >= RENAMED_MIN_WORDS && fresh.every((w) => sampleWords.has(w))
   }
   if (LOREM.test(sample) || held.has(slot.key)) return true
-  if (ITEM_TITLE_ROLES.has(slot.role)) return true
+  if (isCardTitle(slot, cardNames)) return true
   // Echoed by the writer: a short label it judged fitting stays, a sentence of the demo's does not.
   return demo.length > ECHO_TRUSTED_WORDS
 }
@@ -114,8 +141,9 @@ export function isDemoLeft(slot, value, ownWords, held) {
  * @param {string} [input.description] - the business's own description (the site plan's brand), or empty
  * @param {any[]} [input.pages] - the map's pages: only the records they show are judged
  * @param {any[]} [input.entities] - the map's entities: the offering articles a category page lists
- * @returns {{values: Record<string, string>, blanks: string[], counts: {fallbacks: number, neutral: number,
- *   described: number, blanked: number}}}
+ * @returns {{values: Record<string, string>, blanks: string[], hides: any[], counts: {fallbacks: number, neutral: number,
+ *   described: number, blanked: number, hidden: number}}}
+ *   `hides`: the cards taken off whole because their title is the demo's (`{group, ...place}` as the site plan's `hide`)
  */
 export function leftDemoText({
   slots,
@@ -140,7 +168,10 @@ export function leftDemoText({
   )
   const values = {}
   const blanks = []
-  const counts = { fallbacks: 0, neutral: 0, described: 0, blanked: 0 }
+  const counts = { fallbacks: 0, neutral: 0, described: 0, blanked: 0, hidden: 0 }
+  /** @type {Map<string, any>} the cards whose title is the demo's, taken off whole: by group id, where it goes */
+  const gone = new Map()
+  const map = { slots, entities }
   const describedIn = new Set()
   const about = String(description ?? '').trim()
   // 🔒 A CARD IS ABOUT ITS OWN OFFERING (spec #189, `offering-cross-talk.mjs`): a line of an offering's card or page that names
@@ -163,12 +194,25 @@ export function leftDemoText({
     if (shown && !shown.has(slot.entity)) continue
     // What the site plan decides is the plan's: a value, an emptied fact, a hidden card.
     if (honesty?.values?.[key] || blanked.has(key) || hiddenGroups.has(slot.group?.id)) continue
-    if (!crosses(slot, written[key]) && !isDemoLeft(slot, written[key], ownWords, unanswered)) continue
+    if (!crosses(slot, written[key]) && !isDemoLeft(slot, written[key], ownWords, unanswered, { cardNames }))
+      continue
     const fallback = honesty?.fallbacks?.[key]?.value
     if (fits(slot, fallback) && !crosses(slot, fallback)) {
       values[key] = fallback
       counts.fallbacks += 1
       continue
+    }
+    // 🔒 A CARD WHOSE TITLE IS THE DEMO'S IS TAKEN OFF WHOLE when it is a card of a section (an item of a module's JSON list,
+    // a module of its own): a coaching club's fourth tab never reads "Maintenance", nor a numbered "Step 4" over the demo's
+    // text. A card that is a page of its own (an article, a menu entry) keeps its neutral title: taking it off would break
+    // the links that open it, and a module is taken off only when the card is all it holds.
+    if (isCardTitle(slot, cardNames) && slot.group?.id) {
+      const place = gone.get(slot.group.id) ?? hidePlaceOf(map, slot.group.id)
+      const onlyCard = slots.every((s) => s.entity !== place.entity || s.group?.id === slot.group.id)
+      if (place.how === 'item' || (place.how === 'entity' && place.kind === 'module' && onlyCard)) {
+        gone.set(slot.group.id, place)
+        continue
+      }
     }
     const neutral = neutralFor({
       role: slot.role,
@@ -179,7 +223,7 @@ export function leftDemoText({
     })
     // A step's neutral title says which step it is ("Step 3"), so a row of tabs never reads "Step, Step, Step".
     const numbered =
-      neutral.state === 'neutral' && ITEM_TITLE_ROLES.has(slot.role) && Number.isInteger(slot.group?.item)
+      neutral.state === 'neutral' && STEP_TITLE_ROLES.has(slot.role) && Number.isInteger(slot.group?.item)
         ? `${neutral.text} ${slot.group.item + 1}`
         : neutral.text
     if (neutral.state === 'neutral' && fits(slot, numbered)) {
@@ -202,5 +246,40 @@ export function leftDemoText({
     blanks.push(key)
     counts.blanked += 1
   }
-  return { values, blanks, counts }
+  const hides = hidesOfGone(gone, slots, entities)
+  // A card taken off whole keeps none of the words chosen for its other lines.
+  const off = new Set(slots.filter((s) => gone.has(s.group?.id)).map((s) => s.key))
+  for (const key of off) delete values[key]
+  counts.hidden = gone.size
+  return { values, blanks: blanks.filter((key) => !off.has(key)), hides, counts }
+}
+
+/**
+ * The site plan's `hide` entries for the cards taken off whole: an item of a list, or the list's whole entity once every card
+ * of it goes (as `hidesOf` of the site plan: a section none of whose cards stays is unpublished).
+ * @param {Map<string, any>} gone - by group id, where the card goes (`hidePlaceOf`)
+ * @param {any[]} slots
+ * @param {any[]} entities
+ */
+function hidesOfGone(gone, slots, entities) {
+  const cardsOf = new Map()
+  for (const s of slots) {
+    if (!s.group?.id) continue
+    if (!cardsOf.has(s.entity)) cardsOf.set(s.entity, new Set())
+    cardsOf.get(s.entity).add(s.group.id)
+  }
+  const out = []
+  const whole = new Set()
+  for (const [group, place] of gone) {
+    const all = place.how === 'item' && [...(cardsOf.get(place.entity) ?? [])].every((id) => gone.has(id))
+    if (!all) {
+      out.push({ ...place, group, reason: 'demo-title-left' })
+      continue
+    }
+    if (whole.has(place.entity)) continue
+    whole.add(place.entity)
+    const kind = entities.find((e) => e?.key === place.entity)?.kind ?? String(place.entity).split('-')[0]
+    out.push({ how: 'entity', entity: place.entity, kind, group, reason: 'demo-title-left' })
+  }
+  return out
 }

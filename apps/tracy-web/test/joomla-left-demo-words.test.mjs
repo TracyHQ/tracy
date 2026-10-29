@@ -121,3 +121,55 @@ test('the records write takes the left demo lines beside the plan’s own blanks
   assert.deepEqual(made.steps, [{ kind: 'article', id: 12, fields: { introtext: '<p>&nbsp;</p>' } }])
   assert.ok(calls.some((c) => c.action === 'content.get' && c.params.id === 12))
 })
+
+test('a card whose title the writer left in the demo is taken off by the records write, even with no site plan', async () => {
+  const config = {
+    steps: { 'steps[title]': ['Arrive', 'Rinse', 'Maintenance'], 'steps[text]': ['One', 'Two', 'Three'] }
+  }
+  const apply = async (call) => {
+    if (call.action === 'content.list')
+      return call.params.offset > 0
+        ? { ok: true, items: [] }
+        : {
+            ok: true,
+            items: [{ id: 50, params: JSON.stringify({ 'jatools-config': JSON.stringify(config) }) }]
+          }
+    return { ok: true }
+  }
+  const ctx = { siteKey: 's', email: 'e', note: () => {}, time: () => {} }
+  const made = await planRecordSteps({
+    apply,
+    siteKey: 's',
+    ctx,
+    woContent: { sitePlanFor: async () => null },
+    extraHides: [
+      {
+        how: 'item',
+        entity: 'module-50',
+        column: 'params',
+        nestedJson: 'jatools-config',
+        parents: [['steps']],
+        fields: ['steps[title]', 'steps[text]'],
+        index: 2,
+        group: 'module-50.step.2',
+        reason: 'demo-title-left'
+      },
+      {
+        how: 'entity',
+        entity: 'module-51',
+        kind: 'module',
+        group: 'module-51.faq.0',
+        reason: 'demo-title-left'
+      }
+    ]
+  })
+  assert.deepEqual(
+    made.steps.find((s) => s.id === 51),
+    { kind: 'module', id: 51, fields: { published: 0 } }
+  )
+  const module = made.steps.find((s) => s.id === 50)
+  const kept = JSON.parse(JSON.parse(module.fields.params)['jatools-config'])
+  // Emptied where it stands (`dropItems`): the contract's paths of the items after it stay true.
+  assert.deepEqual(kept.steps['steps[title]'], ['Arrive', 'Rinse', ''])
+  assert.deepEqual(kept.steps['steps[text]'], ['One', 'Two', ''])
+})

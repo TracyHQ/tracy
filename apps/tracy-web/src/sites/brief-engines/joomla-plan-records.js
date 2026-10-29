@@ -79,7 +79,8 @@ export async function honestWords({ kept, slots, ownText, honesty, locale, busin
  * @param {string} [input.description]
  * @param {any[]} [input.pages]
  * @param {any[]} [input.entities]
- * @returns {Promise<{ blanks: any[], counts: Record<string, number> }>}
+ * @returns {Promise<{ blanks: any[], hides: any[], counts: Record<string, number> }>} `hides`: the cards whose title is
+ *   the demo's, taken off whole by the records write (`planRecordSteps` `extraHides`)
  */
 export async function leftDemoWords({
   kept,
@@ -111,7 +112,11 @@ export async function leftDemoWords({
   Object.assign(kept, out.values)
   for (const key of out.blanks) delete kept[key]
   const byKey = new Map(slots.map((slot) => [slot.key, slot]))
-  return { blanks: out.blanks.map((key) => byKey.get(key)).filter(Boolean), counts: out.counts }
+  return {
+    blanks: out.blanks.map((key) => byKey.get(key)).filter(Boolean),
+    hides: out.hides ?? [],
+    counts: out.counts
+  }
 }
 
 /** The object at `path` inside `root`, or null. */
@@ -343,18 +348,28 @@ export function recordSteps({ honesty, modules, articles = new Map(), contacts =
  * @param {{ siteKey: string, email: string, note: (line: string) => void, time?: (key: string, n: number) => void }} input.ctx
  * @param {{ sitePlanFor?: Function } | null} input.woContent
  * @param {any[]} [input.extraBlanks] - content map slots to empty beside the plan's (the demo lines the writer left)
+ * @param {any[]} [input.extraHides] - cards to take off beside the plan's, as its `hide` entries (a card whose title the
+ *   writer left in the demo's words, `leftDemoWords`)
  * @returns {Promise<{ steps: Array<{ kind: string, id: number, fields: Record<string, unknown> }> }>}
  */
-export async function planRecordSteps({ apply, siteKey, ctx, woContent, extraBlanks = [] }) {
+export async function planRecordSteps({ apply, siteKey, ctx, woContent, extraBlanks = [], extraHides = [] }) {
   const plan = await woContent?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
   // With no site plan, the demo lines handed in (a demo fact under the demo company's name, #189) are still emptied.
-  const planned = plan?.honesty ?? (extraBlanks.length > 0 ? {} : null)
+  const planned = plan?.honesty ?? (extraBlanks.length > 0 || extraHides.length > 0 ? {} : null)
   if (!planned) return { steps: [] }
   // The demo lines the writer left, emptied beside the plan's own fact fields (`leftDemoWords`).
   const seen = new Set((planned.blanks ?? []).map((b) => b.key))
   const honesty = {
     ...planned,
-    blanks: [...(planned.blanks ?? []), ...extraBlanks.filter((b) => !seen.has(b.key))]
+    blanks: [...(planned.blanks ?? []), ...extraBlanks.filter((b) => !seen.has(b.key))],
+    // A card taken off whole joins the plan's hidden cards: an item hide is made only for a group the records hide.
+    hide: [...(planned.hide ?? []), ...extraHides],
+    records: [
+      ...(planned.records ?? []),
+      ...extraHides
+        .filter((h) => h.group)
+        .map((h) => ({ group: h.group, decision: 'hide', reason: h.reason }))
+    ]
   }
   try {
     const modules = new Map((await readModules(apply, siteKey)).map((row) => [Number(row.id), row]))

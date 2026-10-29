@@ -823,11 +823,16 @@ export function createJoomlaEngine({
         const generate = firmGenerate(text, budgetSignal(ctx.signal, ctx.deadlineAt))
         // 🔒 EACH OFFERING'S CARD AND PAGE IS WRITTEN FROM THAT OFFERING (spec TracyHQ/tracy#189): a brief build's site plan names
         // the offering of every kept card (`honesty.cardNames`), and the writer is told it line by line.
-        const offerings = await Promise.resolve(
+        // The cards the plan takes off are not named in the heading of the section that held them (`sectionShows`).
+        const planHonesty = await Promise.resolve(
           woContent?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
         )
-          .then((plan) => plan?.honesty?.cardNames ?? null)
+          .then((plan) => plan?.honesty ?? null)
           .catch(() => null)
+        const offerings = planHonesty?.cardNames ?? null
+        const hiddenCards = (planHonesty?.records ?? [])
+          .filter((r) => r?.decision === 'hide')
+          .map((r) => r.group)
         const answered = await planConcurrently(async (ask) => {
           const pages = await planJoomlaContract({
             state: planned,
@@ -838,7 +843,8 @@ export function createJoomlaEngine({
             trimmed: true,
             republished,
             inventions: 'never',
-            offerings
+            offerings,
+            hidden: hiddenCards
           })
           if (lineByLine.length === 0) return pages
           try {
@@ -1037,6 +1043,8 @@ export function createJoomlaEngine({
       // of the copy writer.
       /** @type {any[]} the left demo lines to empty after the write, beside the plan's own fact fields */
       let demoBlanks = []
+      /** @type {any[]} the cards whose title the writer left in the demo's words, taken off whole after the write */
+      let demoHides = []
       /** @type {string[]} the keys the copy writer was given: a line the site refuses later is emptied too */
       let demoAsked = []
       if (sitePlan?.slots && rewrites) {
@@ -1067,6 +1075,8 @@ export function createJoomlaEngine({
           entities: state.entities ?? []
         })
         demoBlanks = left.blanks
+        demoHides = left.hides
+        if (left.counts.hidden > 0) ctx.time('demoCardsHidden', left.counts.hidden)
         const replaced = left.counts.fallbacks + left.counts.neutral + left.counts.described
         if (replaced + left.counts.blanked > 0) {
           ctx.time('demoLinesReplaced', replaced)
@@ -1206,6 +1216,7 @@ export function createJoomlaEngine({
         woPosts: await woReading,
         copyPins,
         demoBlanks,
+        demoHides,
         demoAsked
       }
     },
@@ -1898,7 +1909,8 @@ export function createJoomlaEngine({
               ...[...refusedByWrite]
                 .filter((key) => asked.has(key) && staticSlots.get(key)?.type === 'text')
                 .map((key) => staticSlots.get(key))
-            ]
+            ],
+            extraHides: prepared.demoHides ?? []
           })
           // 🔒 No records write takes away a node a contract slot binds to (`joomla-bound-nodes.js`, #189): the plugin's
           // inspect would refuse every contract write after it.

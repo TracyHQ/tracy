@@ -98,11 +98,41 @@ function neutralLabel(slot, locale, business) {
   return fitsSlot(slot, text) ? text : null
 }
 
-/** The article a menu entry opens, read from the map's page of that entry (`...&view=article&id=15` → `article-15`). */
-function openedEntity(slot, pages) {
-  const link = String(pages.find((p) => p?.entity === slot.entity)?.link ?? '')
-  const id = /[?&]view=article\b/.test(link) ? /[?&]id=(\d+)/.exec(link)?.[1] : null
-  return id ? `article-${id}` : null
+/**
+ * The slot that holds the title of the page a menu entry opens, read from the map's page of that entry: an article's title
+ * (`view=article&id=15`), a category's (`view=category&id=8`, a blog or list of it), the home page's own page title
+ * (`view=featured`), or, for an alias entry (`index.php?Itemid=N`), whatever the entry it points to opens, else that entry's
+ * own label. Null when the map does not say (a component view, an alias whose target lives in its parameters).
+ * @param {string} entity - the menu entry
+ * @param {Array<{entity?: string, link?: string}>} pages
+ * @param {any[]} slots
+ * @param {Set<string>} [seen] - the entries already followed (an alias loop ends)
+ */
+export function openedTitleSlot(entity, pages, slots, seen = new Set()) {
+  if (seen.has(entity)) return null
+  seen.add(entity)
+  const link = String(pages.find((p) => p?.entity === entity)?.link ?? '')
+  const idOf = (view) =>
+    new RegExp(`[?&]view=${view}(?:&|$)`).test(link) ? (/[?&]id=(\d+)/.exec(link)?.[1] ?? null) : null
+  const titleOf = (owner) =>
+    slots.find((s) => s.entity === owner && (s.column === 'title' || s.role === 'offering.name')) ?? null
+  const article = idOf('article')
+  if (article) return titleOf(`article-${article}`)
+  const category = idOf('category')
+  if (category) return titleOf(`category-${category}`)
+  if (/[?&]view=featured(?:&|$)/.test(link))
+    return (
+      slots.find(
+        (s) => s.entity === entity && Array.isArray(s.jsonPath) && s.jsonPath.join('.') === 'page_title'
+      ) ?? null
+    )
+  const alias = /^index\.php\?Itemid=(\d+)/.exec(link)?.[1]
+  if (alias) {
+    const target = `menuItem-${alias}`
+    if (seen.has(target)) return null
+    return openedTitleSlot(target, pages, slots, seen) ?? titleOf(target)
+  }
+  return null
 }
 
 /**
@@ -188,10 +218,7 @@ export function honestWritten({
   }
   // A menu label in the demo's words takes the title of the page it opens, as that page's title will read; else "Learn more".
   for (const slot of menus) {
-    const opened = openedEntity(slot, pages)
-    const title = opened
-      ? slots.find((s) => s.entity === opened && (s.column === 'title' || s.role === 'offering.name'))
-      : null
+    const title = openedTitleSlot(slot.entity, pages, slots)
     const titled = title ? (values[title.key] ?? (drop.has(title.key) ? null : written[title.key])) : null
     const own =
       typeof titled === 'string' &&

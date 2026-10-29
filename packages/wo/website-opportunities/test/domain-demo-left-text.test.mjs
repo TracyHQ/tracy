@@ -4,7 +4,7 @@
 // are made up; the same rules judge two trades.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { isDemoLeft, leftDemoText } from '../domain/demo-left-text.mjs'
+import { isCardTitle, isDemoLeft, leftDemoText } from '../domain/demo-left-text.mjs'
 
 const slot = (key, role, sample, extra = {}) => ({
   key,
@@ -177,7 +177,8 @@ test('a slot the plan does not give the copy writer is never judged', () => {
   assert.deepEqual(out, {
     values: {},
     blanks: [],
-    counts: { fallbacks: 0, neutral: 0, described: 0, blanked: 0 }
+    hides: [],
+    counts: { fallbacks: 0, neutral: 0, described: 0, blanked: 0, hidden: 0 }
   })
 })
 
@@ -301,4 +302,110 @@ test("an offering's card that names the business's other offerings is not kept, 
   })
   assert.deepEqual(out.values, {})
   assert.deepEqual(out.blanks.sort(), ['article-31.1', 'article-31.2'])
+})
+
+/** A section of four steps, each an item of the module's JSON list (a JA ACM list). */
+const stepList = (entity, titles) =>
+  titles.flatMap((title, i) => [
+    slot(`${entity}.${i * 2}`, 'step.title', title, {
+      column: 'params',
+      jsonPath: ['steps', 'title', i],
+      group: { id: `${entity}.step.${i}`, item: i, kind: 'step' }
+    }),
+    slot(`${entity}.${i * 2 + 1}`, 'step.description', `Demo text of the ${title.toLowerCase()} stage.`, {
+      column: 'params',
+      jsonPath: ['steps', 'text', i],
+      group: { id: `${entity}.step.${i}`, item: i, kind: 'step' }
+    })
+  ])
+const onHome = (entity) => [
+  {
+    entity: 'menuItem-1',
+    link: 'index.php?option=com_content&view=featured',
+    assignedModules: [{ entity }]
+  }
+]
+
+test('a step of a list whose title the writer echoed from the demo is taken off whole, with its other lines', () => {
+  const slots = stepList('module-60', ['Sparring', 'Conditioning', 'Maintenance'])
+  const out = leftDemoText({
+    slots,
+    written: {
+      'module-60.0': 'Your first visit',
+      'module-60.1': 'We look at your teeth and talk through what you want.',
+      'module-60.2': 'Cleaning',
+      'module-60.3': 'A gentle clean and polish.',
+      'module-60.4': 'Maintenance'
+    },
+    asked: slots.map((s) => s.key),
+    held: [],
+    ownText: 'Brightsmile Dental, family dentistry in Calder Bay.',
+    business: {},
+    pages: onHome('module-60'),
+    entities: [{ key: 'module-60', kind: 'module' }]
+  })
+  assert.equal(out.hides.length, 1)
+  assert.equal(out.hides[0].how, 'item')
+  assert.equal(out.hides[0].group, 'module-60.step.2')
+  assert.equal(out.hides[0].entity, 'module-60')
+  assert.equal(out.hides[0].index, 2)
+  assert.deepEqual(out.hides[0].parents, [['steps']])
+  assert.ok(!('module-60.4' in out.values) && !('module-60.5' in out.values), 'no words for a card taken off')
+  assert.ok(!out.blanks.includes('module-60.5'))
+  assert.equal(out.counts.hidden, 1)
+})
+
+test('a list none of whose cards keeps a title of its own is unpublished as a whole section', () => {
+  const slots = stepList('module-61', ['Proofing', 'Shaping'])
+  const out = leftDemoText({
+    slots,
+    written: {},
+    asked: slots.map((s) => s.key),
+    held: slots.map((s) => s.key),
+    ownText: 'Northgate Tutoring, maths lessons in Elmford.',
+    business: {},
+    pages: onHome('module-61'),
+    entities: [{ key: 'module-61', kind: 'module' }]
+  })
+  assert.deepEqual(
+    out.hides.map((h) => [h.how, h.entity, h.kind]),
+    [['entity', 'module-61', 'module']]
+  )
+  assert.deepEqual(out.values, {})
+  assert.deepEqual(out.blanks, [])
+})
+
+test('isCardTitle: titles of repeated cards, never a free heading, a fact card or an offering the plan names', () => {
+  const card = (role, kind = 'feature') =>
+    slot('module-7.0', role, 'Demo', { group: { id: 'module-7.card.0', item: 0, kind } })
+  for (const role of [
+    'faq.question',
+    'event.title',
+    'package.name',
+    'claim.heading',
+    'editorial.heading',
+    'offering.name'
+  ])
+    assert.equal(isCardTitle(card(role)), true, role)
+  assert.equal(isCardTitle(slot('module-7.1', 'editorial.heading', 'Our story')), false, 'a free heading')
+  assert.equal(isCardTitle(card('editorial.heading', 'contact')), false, 'a fact card')
+  assert.equal(isCardTitle(card('editorial.button_label')), false, 'not a title')
+  assert.equal(
+    isCardTitle(card('offering.name'), { 'module-7.card.0': 'Children’s lessons' }),
+    false,
+    'the site plan names this offering'
+  )
+  assert.equal(isCardTitle(slot('module-7.2', 'step.title', 'Basic')), true, 'a step title, wherever it sits')
+})
+
+test('an FAQ question the writer echoed is never trusted as a fitting label, however short', () => {
+  const own = new Set(['brightsmile', 'dental'])
+  const faq = slot('module-8.0', 'faq.question', 'Do you spar?', {
+    group: { id: 'module-8.faq.0', item: 0, kind: 'faq' }
+  })
+  assert.equal(isDemoLeft(faq, undefined, own, new Set()), true)
+  assert.equal(
+    isDemoLeft(slot('module-8.1', 'editorial.heading', 'Do you spar?'), undefined, own, new Set()),
+    false
+  )
 })
