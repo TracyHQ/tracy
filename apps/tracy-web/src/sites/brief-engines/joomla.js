@@ -596,6 +596,8 @@ export function createJoomlaEngine({
       declared: declaredPictureSlots(ctx.contract),
       // A brief build's kept cards show what the site plan names them (#192): one decider for words and pictures.
       cardNames: sitePlan?.honesty?.cardNames ?? null,
+      // The writer's text model reads which glyph shows each item icon (#189).
+      textModel: async () => (await models()).text ?? null,
       write: async ({ state, changes, replaceKept }) =>
         new Set(
           await writeContract({
@@ -1276,7 +1278,8 @@ export function createJoomlaEngine({
                 drawDoor: prepared.drawDoor ?? null,
                 signal: ctx.signal,
                 bound: prepared.copyPins?.pictures ?? {},
-                copy: prepared.copyPins ?? null
+                copy: prepared.copyPins ?? null,
+                textModel: async () => (await models()).text ?? null
               })
             ).catch((error) => {
               ctx.note(

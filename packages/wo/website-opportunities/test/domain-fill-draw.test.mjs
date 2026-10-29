@@ -371,8 +371,8 @@ test('#195 a sports brief gets racquet, ball and swimming icons in place of the 
   )
   assert.equal(at.get('module-7.1').reason, 'icon-of-item')
   assert.equal(at.get('module-7.4').reason, 'icon-of-offering')
-  // Four items, three offerings: the fourth wraps to the first.
-  assert.equal(at.get('module-7.8').glyph, 'racquet')
+  // Four items, three offerings: the fourth wraps to the first, whose racquet the section already shows (#189).
+  assert.equal(at.get('module-7.8').glyph, 'book')
 })
 
 test('#195 an icon on a page about one offering takes that offering; a demo word never chooses the icon', () => {
@@ -390,9 +390,10 @@ test('#195 an icon on a page about one offering takes that offering; a demo word
     sources: { 'article-3.0': 'brief', 'article-3.4': 'brief' }
   }
   const at = byKey(planDecor({ contentMap, brief: { ...BAKERY }, copy }).slots)
-  assert.equal(at.get('article-3.1').glyph, 'cake', 'the page is about bread: a bakery glyph')
+  assert.equal(at.get('article-3.1').glyph, 'bread', 'the page is about bread: a bakery glyph')
   assert.equal(at.get('article-3.1').reason, 'icon-of-page-offering')
-  assert.equal(at.get('article-3.3').glyph, 'cake')
+  // The second item's words ("An apron") mean nothing the set draws, and the page's bread is shown once (#189).
+  assert.equal(at.get('article-3.3').glyph, NEUTRAL_GLYPH)
   // Without any written word, offering or page: a neutral mark, never the demo icon.
   const bare = byKey(planDecor({ contentMap, brief: { reading: {} }, copy: null }).slots)
   assert.equal(bare.get('article-3.1').glyph, NEUTRAL_GLYPH)
@@ -414,7 +415,7 @@ test('#195 a cut-out is never drawn: it is taken off, and a design piece stays',
   assert.equal(at.get('module-8.0').referenceIds, undefined, 'nothing is drawn from the owner photos')
   assert.equal(at.get('module-8.0').subject.label, 'Tennis Lessons')
   assert.equal(at.get('module-8.1').action, 'keep', 'a line stays as designed')
-  assert.equal(glyphOf('Padel and tennis'), 'racquet')
+  assert.equal(glyphOf('Padel and tennis'), 'padel')
 })
 
 test('#195 every icon and cut-out decision carries the brief words the site takes a kept picture with', () => {

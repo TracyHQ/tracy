@@ -323,8 +323,19 @@ export {
   NEUTRAL_GLYPH,
   decorOf,
   glyphOf,
+  iconItemsOf,
   planDecor
 } from './decor-plan.mjs'
+export {
+  ICON_NAMES,
+  ICON_SET,
+  NEUTRAL_GLYPHS,
+  assignGlyphs,
+  iconAnswerOf,
+  iconQuestion,
+  keywordRanking,
+  validRanking
+} from './icon-choice.mjs'
 export { CUT_OUT_REASONS, CUT_OUT_STEPS, cutOutStepOf, cutOutZoneOf, ownCutOutOf } from './cutout-ladder.mjs'
 export {
   FIGURE_SUBJECTS,

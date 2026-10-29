@@ -20,6 +20,7 @@ import { footprintOf, framedPicture, ownCutOutPicture } from '../src/sites/brief
 import { takenOffPicturePaths } from '../src/sites/brief-engines/cutout-css.js'
 import { GLYPHS } from '../src/lib/icon-glyphs.js'
 import { ICON_LEXICON, NEUTRAL_GLYPH } from 'website-opportunities/domain/decor-plan.mjs'
+import { ICON_NAMES } from 'website-opportunities/domain/icon-choice.mjs'
 
 const jpeg = (width, height, background = '#557799') =>
   sharp({ create: { width, height, channels: 3, background } })
@@ -164,7 +165,10 @@ function stubModel() {
 }
 const DOOR = { url: 'https://images.example/v1', key: 'test-key', imageModel: 'stub-image' }
 
-async function shape(t, { drawDoor = DOOR, chat, declared = [], note = () => {}, cardNames } = {}) {
+async function shape(
+  t,
+  { drawDoor = DOOR, chat, declared = [], note = () => {}, cardNames, textModel } = {}
+) {
   return shapeReal({
     real: t.real,
     contentMap: CONTENT_MAP,
@@ -177,7 +181,8 @@ async function shape(t, { drawDoor = DOOR, chat, declared = [], note = () => {},
     drawDoor,
     chat,
     declared,
-    cardNames
+    cardNames,
+    textModel
   })
 }
 const bySample = (shaped) => new Map(shaped.shaped.map((s) => [s.group.sample, s]))
@@ -342,9 +347,53 @@ test('#195 an item icon follows the business; a cut-out figure is taken off, nev
   assert.deepEqual(takenOffPicturePaths(shaped, values, new Set(['module-1.5'])), [])
 })
 
+test("#189 the text model reads an item icon's meaning; without it, or when it fails, the keywords decide", async () => {
+  const t = await build()
+  const asked = []
+  const textModel = {
+    chat: async ({ messages }) => {
+      const input = JSON.parse(messages[1].content)
+      asked.push(input)
+      return JSON.stringify({ items: { [input.items[0].id]: ['unicorn', 'pickleball', 'racquet'] } })
+    }
+  }
+  const glyphOf = (shaped) => shaped.shaped.find((s) => s.group.role === 'icon').receipt.glyph
+  const read = await shape(t, { chat: stubModel().chat, declared: DECLARED, textModel })
+  assert.equal(glyphOf(read), 'pickleball', 'the model ranks first; its unknown name is dropped')
+  assert.equal(asked.length, 1)
+  assert.ok(
+    asked[0].menu.some((m) => m.name === 'pickleball'),
+    'the model chooses from the set by name'
+  )
+  // The same question again is answered from memory.
+  await shape(await build(), { chat: stubModel().chat, declared: DECLARED, textModel })
+  assert.equal(asked.length, 1)
+  // A model that fails leaves the keywords to decide, with a note; no model at all does the same.
+  const notes = []
+  const other = await build()
+  // Another business name makes another question, so nothing is answered from memory.
+  other.real.brief = {
+    ...other.real.brief,
+    business: { ...other.real.brief?.business, name: 'Fictional Courts Two' }
+  }
+  const fallback = await shape(other, {
+    chat: stubModel().chat,
+    declared: DECLARED,
+    textModel: { chat: async () => Promise.reject(new Error('model offline')) },
+    note: (n) => notes.push(n)
+  })
+  assert.equal(glyphOf(fallback), 'racquet')
+  assert.ok(notes.some((n) => /keywords/.test(n)))
+  const none = await shape(await build(), { chat: stubModel().chat, declared: DECLARED, textModel: null })
+  assert.equal(glyphOf(none), 'racquet')
+})
+
 test('#195 every glyph the lexicon can choose is drawn by the icon set', () => {
   for (const [glyph] of ICON_LEXICON) assert.ok(GLYPHS[glyph], glyph)
   assert.ok(GLYPHS[NEUTRAL_GLYPH])
+  // #189: every name a model or the assignment may return is drawn, and every drawing has a name the domain knows.
+  for (const name of ICON_NAMES) assert.ok(GLYPHS[name], name)
+  assert.deepEqual(Object.keys(GLYPHS).sort(), [...ICON_NAMES].sort())
 })
 
 const visible = async (bytes) => {

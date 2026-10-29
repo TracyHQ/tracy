@@ -28,6 +28,7 @@ import { customizableSlots } from '../../lib/contract-customize.js'
 import { pool } from './shared.js'
 import { drawPlanned, shapeDecor } from './drawn-pictures.js'
 import { unmeasuredFigures } from './unmeasured-figures.js'
+import { iconMeanings } from './icon-meanings.js'
 
 /** Pictures cut at once: each holds a decoded photograph in memory (C15). */
 const CUT_AT_ONCE = 4
@@ -120,6 +121,8 @@ export function contentMapOf(contract) {
  *   cut-outs that carry the demo's subject are read from them (#195)
  * @param {Record<string, string> | null} [input.cardNames] - the site plan's label of each kept card, by group id
  *   (`honesty.cardNames`, #192); when given it decides the cards' subjects instead of the copy pins
+ * @param {{chat: Function} | null | (() => Promise<{chat: Function} | null>)} [input.textModel] - the text model the
+ *   build writes with (or a getter of it): it reads which glyph of the icon set shows each item icon (#189)
  */
 export async function shapeReal({
   real,
@@ -140,7 +143,8 @@ export async function shapeReal({
   bound = {},
   copy = null,
   declared = [],
-  cardNames: plannedNames = null
+  cardNames: plannedNames = null,
+  textModel = null
 }) {
   const domain = await loadDomain()
   const policy = picturePolicy(real.picturePolicy)
@@ -202,12 +206,25 @@ export async function shapeReal({
     map = { ...map, groups: placed.groups, never: [...map.never, ...placed.dropped] }
     made = { ...placed.plan, drawings: drawnPlan.drawings, drawCapped: drawnPlan.capped }
     // Icons and cut-outs that carry the demo's subject follow the business (#195, `decor-plan.mjs`).
+    const decorMap = { ...contentMap, slots: [...contentMap.slots, ...declared] }
+    // Each item icon's meaning is read by the text model from the item's words; the keywords decide without it (#189).
+    const writer = typeof textModel === 'function' ? textModel() : textModel
+    const iconChoices = await iconMeanings({
+      domain,
+      model: await Promise.resolve(writer).catch(() => null),
+      contentMap: decorMap,
+      brief,
+      copy,
+      note,
+      signal
+    })
     decorPlan = domain.planDecor({
-      contentMap: { ...contentMap, slots: [...contentMap.slots, ...declared] },
+      contentMap: decorMap,
       brief,
       copy,
       offerings: fill.offerings,
-      fill: fill.slots
+      fill: fill.slots,
+      iconChoices
     })
   } else {
     const { clusterOf } = domain.nearCopies(labels)

@@ -51,7 +51,8 @@ export async function writeContractPictures({
   copy = null,
   drawDoor = null,
   declared = [],
-  cardNames = null
+  cardNames = null,
+  textModel = null
 }) {
   if (!real || !siteFile) return null
   ctx.signal?.throwIfAborted()
@@ -74,7 +75,9 @@ export async function writeContractPictures({
     bound,
     copy,
     declared,
-    cardNames
+    cardNames,
+    // The text model reads each item icon's meaning (#189); without it the icons follow their keywords.
+    textModel
   })
   const slots = new Map(inspectedSlots(initial, contentMap).map((s) => [s.key, s]))
   // An icon or a cut-out the site's inspection does not list is left as shipped, never a reason to stop (#195).
