@@ -12,6 +12,7 @@
 import { collectionOfGroupId } from './content-map-repeatable-lists.mjs'
 import { namedIn } from './pictures/picture-links.mjs'
 import { planStatBoxes } from './stat-box-plan.mjs'
+import { factRowFacts, planFactRows } from './fact-rows.mjs'
 
 export const HONESTY_VERSION = 'site-plan-honesty/1'
 
@@ -26,6 +27,7 @@ export const HONESTY_REASONS = Object.freeze({
   'no-brief-offering': 'the brief lists no offering for this card',
   'no-brief-price': 'the brief holds no price for this plan',
   'no-brief-fact': 'the brief holds no such fact',
+  'brief-fact-row': 'a sourced fact of the brief in a card’s fact row, under a label that names it',
   'no-brief-statistic': 'the brief holds no such number',
   'no-brief-statistic-photo': 'the brief holds no number for this box, so it shows one of the owner’s photos',
   'brief-statistic': 'a number the brief holds from a source',
@@ -200,6 +202,8 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
   const fallbacks = {}
   /** The brief label each kept offering or person card shows, by group id: `planFill`'s `cardNames`. */
   const cardNames = {}
+  // The rows of a card's fact list show the brief's sourced facts, one label set per list (`fact-rows.mjs`).
+  const rowFacts = factRowFacts(brief, offerings, contact)
   const setValue = (slot, value, reason) => {
     if (!text(value) || slot.type !== 'text' || !fits(slot, value)) return
     values[slot.key] = { value, reason, evidence: value }
@@ -304,8 +308,18 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
         assigned: { id: assigned.id, label: assigned.label }
       })
       cardNames[group.id] = assigned.label
+      const rows = group.kind === 'person' ? null : planFactRows(group, assigned, rowFacts)
+      const rowBlanks = new Set((rows?.blanks ?? []).map((s) => s.key))
       for (const slot of group.slots) {
         const role = slot.role ?? ''
+        if (rows && slot.key in rows.values) {
+          setValue(slot, rows.values[slot.key], 'brief-fact-row')
+          continue
+        }
+        if (rowBlanks.has(slot.key)) {
+          blanks.push(blankOf(slot, 'no-brief-fact'))
+          continue
+        }
         if (role === 'person.name') setValue(slot, assigned.label, 'brief-person')
         else if (role === 'person.role')
           assigned.role

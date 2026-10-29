@@ -9,5 +9,17 @@
   "neutral.heading.team": "Team",
   "neutral.heading.overview": "Overview",
   "neutral.footer.copyright": "Copyright © {name}. All Rights Reserved.",
-  "neutral.cta.learnMore": "Learn more"
+  "neutral.cta.learnMore": "Learn more",
+  "neutral.factRow.level": "Level",
+  "neutral.factRow.audience": "Who it's for",
+  "neutral.factRow.area": "Where",
+  "neutral.factRow.hours": "Hours",
+  "neutral.factRow.booking": "Book",
+  "neutral.factRow.promise": "Why us",
+  "neutral.factRow.rating": "Rating",
+  "neutral.factRow.price": "Price",
+  "neutral.factRow.duration": "Duration",
+  "neutral.factRow.online": "Online",
+  "neutral.factRow.or": "or",
+  "neutral.factRow.onGoogle": "on Google"
 }
