@@ -627,6 +627,10 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
             live: Object.fromEntries(off.map((f) => [f, shown(current?.[f])]))
           }
         })
+      const nativeApplyId =
+        platform === 'wordpress' && item.kind === 'postmeta' && item.op === 'create'
+          ? `${applyId}-meta-${createHash('sha256').update(item.id).digest('hex').slice(0, 16)}`
+          : null
       const snapshot = {
         kind: item.kind,
         op: item.op,
@@ -638,13 +642,17 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         restore: item.restore ?? {},
         trash: item.trash ?? null
       }
+      if (nativeApplyId) {
+        snapshot.nativeApplyId = nativeApplyId
+        snapshot.dependsOn = item.dependsOn ?? []
+      }
       const recovery = [{ item, snapshot, mode: 'content' }]
       let answer
       if (item.op === 'delete')
         answer = await ask('content.delete', { apply_id: applyId, ...address }, recovery)
       else {
-        const params = { apply_id: applyId, ...address, fields }
-        if (item.op === 'create') params.id = 0
+        const params = { apply_id: nativeApplyId ?? applyId, ...address, fields }
+        if (item.op === 'create' && item.kind !== 'postmeta') params.id = 0
         if (item.bodyRevision && revision) params.expected_body_revision = revision
         answer = await ask('content.update', params, recovery)
       }
@@ -656,18 +664,7 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
       } catch {
         return
       }
-      keep(item, {
-        kind: item.kind,
-        op: item.op,
-        liveId,
-        key: item.key ?? null,
-        before: current,
-        replaces: item.replaces ?? [],
-        written: fields,
-        after,
-        restore: item.restore ?? {},
-        trash: item.trash ?? null
-      })
+      keep(item, { ...snapshot, liveId, after })
       return
     } catch (error) {
       if (error.code === 'WRITE_OUTCOME_UNKNOWN')
@@ -1489,6 +1486,16 @@ async function undo(pushDir) {
     return { paths: out }
   }
 
+  // Durable metadata receipts can be ahead of written.json after an interrupted Apply.
+  const receiptMetaChildren = Object.values(readJson(join(pushDir, 'requests.json'), {}))
+    .filter((receipt) => ['sending', 'acknowledged'].includes(receipt.state))
+    .flatMap((receipt) =>
+      (receipt.recovery ?? []).flatMap(({ item, snapshot }) =>
+        snapshot?.kind === 'postmeta' && snapshot.op === 'create'
+          ? [{ id: item.id, parents: snapshot.dependsOn ?? [] }]
+          : []
+      )
+    )
   const order = [...writtenAnswer.written].reverse()
   progress(t0, `taking back ${order.length} item(s) on the live site`)
   for (const out of order) {
@@ -1505,6 +1512,25 @@ async function undo(pushDir) {
     }
     if (!snap) {
       kept.push({ ...out, reason: 'nothing-kept' })
+      continue
+    }
+    // Keep a new parent if metadata depending on it could not be safely taken back.
+    if (
+      snap.kind === 'post' &&
+      snap.op === 'create' &&
+      (receiptMetaChildren.some(
+        (child) => child.parents.includes(out.id) && !restored.some((r) => r.id === child.id)
+      ) ||
+        order.some((other) => {
+          const child = before.items[other.id]
+          return (
+            child?.kind === 'postmeta' &&
+            child.dependsOn?.includes(out.id) &&
+            !restored.some((r) => r.id === other.id)
+          )
+        }))
+    ) {
+      kept.push({ ...out, reason: 'depends-on-failed' })
       continue
     }
     if (snap.kind === 'file' && snap.door === 'template') {
@@ -1547,6 +1573,13 @@ async function undo(pushDir) {
     }
     const params = { kind: snap.kind, id: snap.liveId }
     if (snap.key !== null && snap.key !== undefined) params.key = snap.key
+    const nativeMetaCreate =
+      platform === 'wordpress' &&
+      snap.kind === 'postmeta' &&
+      snap.op === 'create' &&
+      typeof snap.nativeApplyId === 'string' &&
+      snap.nativeApplyId ===
+        `tracy-push-${pushId}-meta-${createHash('sha256').update(out.id).digest('hex').slice(0, 16)}`
     let now = null
     let stored = true
     try {
@@ -1555,6 +1588,10 @@ async function undo(pushDir) {
       stored = got.stored !== false
     } catch (error) {
       if (!(error instanceof Refused)) throw error
+      if (nativeMetaCreate && error.reply.error === 'not_found') {
+        restored.push(out)
+        continue
+      }
       if (!(snap.op === 'delete' && snap.kind === 'menuItem')) {
         kept.push({ ...out, reason: 'gone-on-live', fields: [] })
         continue
@@ -1627,6 +1664,37 @@ async function undo(pushDir) {
     }
     if (moved.length) {
       kept.push({ ...out, reason: 'changed-on-live', fields: moved })
+      continue
+    }
+    if (nativeMetaCreate) {
+      let revertError = null
+      try {
+        await ask('apply.revert', { apply_id: snap.nativeApplyId })
+      } catch (error) {
+        revertError = error
+      }
+      if (revertError instanceof Refused && revertError.reply.error === 'conflict') {
+        kept.push({ ...out, reason: 'changed-on-live', fields: ['value'] })
+        continue
+      }
+      // Empty or expired native receipts can report success without removing the metadata.
+      // Read back even after a lost response; the durable request must never be sent twice.
+      let absent = false
+      try {
+        await ask('content.get', params)
+      } catch (error) {
+        absent = error instanceof Refused && error.reply.error === 'not_found'
+      }
+      if (absent) restored.push(out)
+      else if (revertError instanceof Refused) {
+        failed.push({
+          ...out,
+          error: String(revertError.reply.error ?? 'refused').slice(0, 60),
+          message: String(revertError.reply.message ?? '').slice(0, 300)
+        })
+      } else {
+        failed.push({ ...out, error: 'WRITE_OUTCOME_UNKNOWN' })
+      }
       continue
     }
     try {
