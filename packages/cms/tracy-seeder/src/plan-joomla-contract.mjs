@@ -7,6 +7,7 @@ import { alphabetsOf, languageComplaint, offLanguage } from './off-language.mjs'
 import { toneRule } from './tone.mjs'
 import { buttonKindOf, contactLabel, hasWords, iconLinkKeys, translateLabels } from './template-buttons.mjs'
 import { PROCESS_WRITING_RULE, processWritingOf } from './process-writing.mjs'
+import { copyJobs, copyLedger, duplicateComplaint, duplicates, pagesOfEntities } from './distinct-copy.mjs'
 
 /**
  * Every string in a customer brief, flattened — what an evidence-required value must be a verbatim
@@ -1004,7 +1005,7 @@ export async function planJoomlaContract({
   // nothing afterwards: a missing fact is then a plain line that states none ("Baked daily" where the sample counts
   // projects), never an invention a visitor would take for true (CLAUDE.md §0.3).
   const SYSTEM =
-    'Replace Joomla quickstart demo content ONLY in the supplied scalar slots. Preserve their role, field type and maximum length. Keep each value about 0.75×–1.25× the length of its sample so the quickstart design keeps its shape, and never over the maximum length. Never change markup, module status/type/position, menus, ACL or styling. Write every value in the language the input names in "language" (a BCP 47 tag) — or, when the slots differ, the one each slot names — whatever language the brief is written in: translate the customer\'s facts, never the demo\'s. A slot with "item" {n, of} is the n-th of the "of" repeated cards, rows or steps of its section: every field with the same n describes ONE item (its title, its text, its figure), so keep them about the same thing, and a heading or intro that counts the items must say "of". A slot with "leadsTo" labels a button whose destination is known — that page: write its label for it and never put it in pending. A slot with "nav" is a navigation label. "generic": keep the same label, only translated into the slot\'s language; never rename it. "named": the demo\'s own product, programme or brand name: rename it to fit this business, short like a menu label; keep it only when it already fits. Never invent a link into this site: a url slot is either an address you were given or left pending. A slot with "offering" belongs to the card or page of that one offering of this business: write it about that offering only, from what the brief says of it, and never name or describe the business\'s other offerings in it. A slot with "shows" is the heading or intro of a section that shows those items (gallery: photos; person: people; service or menu_item: offerings; step: steps; stat_item: figures; quote: reviews): say what the section shows, never another kind ("Our team" over a photo gallery). A title or label of a repeated card, tab or step (a slot with "item") names that item for this business: never keep the demo\'s title as it is unless the brief itself uses those words. A slot with "style" mixes styles inside one line, as the demo shows it: [[words]] are drawn in the template\'s accent style and [[br]] is a line break. Write YOUR words in the same shape: put [[...]] around the key words of your own sentence that take the style (as many [[...]] as "style" has, at the same place: first, middle or last words) and [[br]] where it breaks; the marks do not count toward the length, and no other markup is ever written. Output JSON {"values":{"slot.key":"replacement"},"pending":["slot.key"],"invented":["slot.key"]}. Account for EVERY supplied slot. Never keep the demo\'s facts. ' +
+    'Replace Joomla quickstart demo content ONLY in the supplied scalar slots. Preserve their role, field type and maximum length. Keep each value about 0.75×–1.25× the length of its sample so the quickstart design keeps its shape, and never over the maximum length. Never change markup, module status/type/position, menus, ACL or styling. Write every value in the language the input names in "language" (a BCP 47 tag) — or, when the slots differ, the one each slot names — whatever language the brief is written in: translate the customer\'s facts, never the demo\'s. A slot with "item" {n, of} is the n-th of the "of" repeated cards, rows or steps of its section: every field with the same n describes ONE item (its title, its text, its figure), so keep them about the same thing, and a heading or intro that counts the items must say "of". A slot with "job" shares its section with the slots named in "distinctFrom", which the demo filled with the same sentence: write the job it names (lead, body, supporting line...) in words of its own, and never repeat a sentence of those slots or of any other slot of the section. A slot with "leadsTo" labels a button whose destination is known — that page: write its label for it and never put it in pending. A slot with "nav" is a navigation label. "generic": keep the same label, only translated into the slot\'s language; never rename it. "named": the demo\'s own product, programme or brand name: rename it to fit this business, short like a menu label; keep it only when it already fits. Never invent a link into this site: a url slot is either an address you were given or left pending. A slot with "offering" belongs to the card or page of that one offering of this business: write it about that offering only, from what the brief says of it, and never name or describe the business\'s other offerings in it. A slot with "shows" is the heading or intro of a section that shows those items (gallery: photos; person: people; service or menu_item: offerings; step: steps; stat_item: figures; quote: reviews): say what the section shows, never another kind ("Our team" over a photo gallery). A title or label of a repeated card, tab or step (a slot with "item") names that item for this business: never keep the demo\'s title as it is unless the brief itself uses those words. A slot with "style" mixes styles inside one line, as the demo shows it: [[words]] are drawn in the template\'s accent style and [[br]] is a line break. Write YOUR words in the same shape: put [[...]] around the key words of your own sentence that take the style (as many [[...]] as "style" has, at the same place: first, middle or last words) and [[br]] where it breaks; the marks do not count toward the length, and no other markup is ever written. Output JSON {"values":{"slot.key":"replacement"},"pending":["slot.key"],"invented":["slot.key"]}. Account for EVERY supplied slot. Never keep the demo\'s facts. ' +
     (inventions === 'never'
       ? 'When a fact a slot needs is missing from the brief — a phone number, email, address, opening hours, price, statistic, project, client, company name, or the people of a team section — NEVER write a made-up one: write a short line in the same role that states none of them, a plain label, a quality or a category taken from the brief ("Baked daily" where the sample counts projects, "Our bakers" where it names a person), and do not list its key in "invented". Put a key in pending only for a CTA destination you cannot know. An evidence-required slot takes a verbatim excerpt of the brief when the brief has one, and otherwise the same kind of plain line.'
       : 'When a fact a slot needs is missing from the brief — a phone number, email, address, opening hours, price, statistic, project, company name, or the people of a team section with their roles and short bios — write a believable one that fits this customer\'s business, country and language, and ALSO list its key in "invented": the customer will replace it with the real one. Put a key in pending only for a CTA destination you cannot know. An evidence-required slot takes a verbatim excerpt of the brief when the brief has one, and otherwise a believable invention listed in "invented" like any other.') +
@@ -1037,6 +1038,8 @@ export async function planJoomlaContract({
   /** The values of an answer written in another language than their slot's (`off-language.mjs`). */
   const wrongIn = (body, slots) => offLanguage(body.values, slots, { languageOf, alphabets, keep })
   /** What is wrong with an answer, as a sentence the model is shown — or null when it is usable. */
+  const ledger = copyLedger({ pageOf: pagesOfEntities(state.pages) })
+  const jobs = copyJobs(state.slots)
   const complaintAbout = (body, known, slots, languages) => {
     const shape = shapeComplaint(body)
     if (shape !== null) return shape
@@ -1044,7 +1047,10 @@ export async function planJoomlaContract({
     if (strays.length)
       return `Your previous answer named ${strays.length} slot key(s) outside this batch: ${strays.slice(0, 8).join(', ')}. Answer ONLY the keys supplied, every one of them, and nothing else.`
     const wrong = wrongIn(body, slots)
-    return wrong.size ? languageComplaint(wrong, languages) : null
+    if (wrong.size) return languageComplaint(wrong, languages)
+    // 🔒 TWO SLOTS OF ONE SECTION NEVER CARRY THE SAME SENTENCE (spec #189, item 17): refused and rewritten, like a wrong language.
+    const repeated = duplicates(slots, body.values, ledger)
+    return repeated.length ? duplicateComplaint(repeated) : null
   }
   const items = itemNumbers(state.slots)
   const journeys = processWritingOf(state.slots, offerings)
@@ -1095,7 +1101,8 @@ export async function planJoomlaContract({
         ...(leadsTo[s.key] ? { leadsTo: leadsTo[s.key] } : {}),
         ...(navOf(s) ? { nav: navOf(s) } : {}),
         ...(offeringOf(s) ? { offering: offeringOf(s) } : {}),
-        ...(shows(s) ? { shows: shows(s) } : {})
+        ...(shows(s) ? { shows: shows(s) } : {}),
+        ...(jobs.has(s.key) ? jobs.get(s.key) : {})
       }))
     }
     // 🔒 ONE BAD BATCH USED TO LOSE THE WHOLE BUILD. A 1113-slot contract is ~32 model calls, and a
@@ -1161,6 +1168,8 @@ export async function planJoomlaContract({
     }
     // A value still in the wrong language after the retries keeps the demo words and says why.
     const wrong = wrongIn(body, slots)
+    // What is still a repeat after the retries is not written: the later slot is pended, the first keeps its words.
+    const repeats = new Set(duplicates(slots, body.values, ledger).map((d) => d.key))
     /** @param {string} key */
     const isInvented = (key) => Array.isArray(body.invented) && body.invented.includes(key)
     for (const slot of slots) {
@@ -1176,18 +1185,20 @@ export async function planJoomlaContract({
           ? 'no-answer'
           : wrong.has(slot.key)
             ? 'wrong-language'
-            : Boolean(slot.sample.trim()) !== Boolean(value.trim())
-              ? 'emptiness-mismatch'
-              : [...withoutStyleMarks(value)].length > slot.maxCharacters
-                ? 'too-long'
-                : slot.requiresEvidence &&
-                    !isInvented(slot.key) &&
-                    !facts.some((fact) => fact.includes(value))
-                  ? 'evidence-missing'
-                  : (coworkWouldRefuse(slot, value) ??
-                    (slot.type === 'url' && pagesOfSite && siteLink(value) && !pagesOfSite.idOf(value)
-                      ? 'invented-route'
-                      : null))
+            : repeats.has(slot.key)
+              ? 'duplicate-copy'
+              : Boolean(slot.sample.trim()) !== Boolean(value.trim())
+                ? 'emptiness-mismatch'
+                : [...withoutStyleMarks(value)].length > slot.maxCharacters
+                  ? 'too-long'
+                  : slot.requiresEvidence &&
+                      !isInvented(slot.key) &&
+                      !facts.some((fact) => fact.includes(value))
+                    ? 'evidence-missing'
+                    : (coworkWouldRefuse(slot, value) ??
+                      (slot.type === 'url' && pagesOfSite && siteLink(value) && !pagesOfSite.idOf(value)
+                        ? 'invented-route'
+                        : null))
       if (why !== null) {
         // 🔒 PENDING MEANS "STILL DEMO CONTENT AND NOBODY SUPPLIED A REPLACEMENT". A slot whose
         // current value already differs from the archive's sample holds words a person put there
@@ -1211,6 +1222,7 @@ export async function planJoomlaContract({
       } else if (slot.requiresEvidence) evidence[slot.key] = value
       const written =
         slot.requiresEvidence || !tokenized ? linked : retokenize(linked, site, slot.maxCharacters)
+      ledger.record(slot, written)
       if (written !== (slot.current ?? slot.sample)) changes[slot.key] = written
     }
   }
