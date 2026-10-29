@@ -105,6 +105,16 @@
     },
     {
       "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "0243be2967998881460121b21d9102a5d2dd0a60",
+      "reason": "Exact generated translation bundle for PR #156 (Publish tour step wording). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "709365c193343077ee31d509852f6d6a3eede355",
+      "reason": "Exact generated translation bundle for PR #156 (Publish tour step wording). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
       "oid": "8366f9fcda5de2b431afcc1eaa191250282b2f63",
       "reason": "Exact regenerated language bundle for the PR #53 CI follow-up. Italian, Spanish and Chinese setup translations retain the required site term. The bundle reproduces from the localized JSON; future bytes still need review."
     },
