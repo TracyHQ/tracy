@@ -64,8 +64,26 @@ function fakeSite({ styles }) {
   }
   const writes = []
   const apply = async ({ action, params }) => {
+    // Like the real site: a style listing names the style only; its params come with `content.get`.
     if (action === 'content.list')
-      return { ok: true, items: (params.offset ?? 0) === 0 ? (rows[params.kind] ?? []) : [] }
+      return {
+        ok: true,
+        items:
+          (params.offset ?? 0) === 0
+            ? (rows[params.kind] ?? []).map((r) =>
+                params.kind === 'templateStyle'
+                  ? {
+                      id: r.id,
+                      title: `style ${r.id}`,
+                      template: r.client_id === 1 ? 'atum' : 'site_template',
+                      home: '0'
+                    }
+                  : r
+              )
+            : []
+      }
+    if (action === 'content.get' && params.kind === 'templateStyle')
+      return { ok: true, item: (rows.templateStyle ?? []).find((r) => r.id === params.id) }
     if (action === 'content.batch') {
       writes.push(...params.operations)
       return { ok: true }
@@ -124,8 +142,10 @@ test('a T4 site: credit line, addresses and the head block are written; the owne
   assert.match(head, /<meta name="owner">/)
   assert.match(
     head,
-    /\.t4-content,\n\[style\*="images\/demo\/others\/band\.jpg"\]\{background-image:url\("\/images\/tracy-content\/a+\.jpg"\) !important\}/
+    /\[style\*="images\/demo\/others\/band\.jpg"\]\{background-image:url\("\/images\/tracy-content\/a+\.jpg"\) !important\}/
   )
+  // The page-wide background goes plain, never one picture over the whole page.
+  assert.match(head, /\.t4-content\{background-image:none !important\}/)
   assert.match(head, /\[data-src\*="AbCdEfGhIjK"\]/)
   assert.match(head, /a\[href\$="Itemid=168"\]/)
   assert.equal(byId('templateStyle', 1), undefined)

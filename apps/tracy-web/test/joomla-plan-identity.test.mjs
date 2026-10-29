@@ -246,3 +246,101 @@ test('a module unpublish goes through the Apply door as content.batch, and one b
     ['module', 30, { published: 0 }]
   )
 })
+
+// ---- A JSON list of social links in module parameters, and a map drawn by a shortcode (follow-up of C18) -----------------
+
+const acmParams = (links) =>
+  JSON.stringify({
+    'jatools-config': JSON.stringify({
+      ':type': 'x:social',
+      social: {
+        'social-intro[font-icon]': ['fa fa-facebook', 'fa fa-instagram', 'fa fa-twitter', 'fa fa-telegram'],
+        'social-intro[title]': ['Facebook', 'Instagram', 'Twitter', 'Telegram'],
+        'social-intro[link]': links
+      }
+    }),
+    style: '0'
+  })
+const listOf = (/** @type {string} */ params) => JSON.parse(JSON.parse(params)['jatools-config']).social
+
+test('socials in a module list: the brief profile goes in, the other items leave every array of the list', async () => {
+  const modules = [
+    {
+      id: 31,
+      module: 'mod_ja_acm',
+      published: 1,
+      language: '*',
+      content: '',
+      params: acmParams(['#', '#', '#', '#'])
+    }
+  ]
+  const { steps } = await planIdentitySteps({
+    apply: async ({ action, params }) =>
+      action === 'content.list' && params.kind === 'module'
+        ? { ok: true, items: params.offset ? [] : modules }
+        : { ok: true, items: [] },
+    siteKey: 's',
+    ctx: { siteKey: 's', email: 'o@example.test', note() {} },
+    woContent: { sitePlanFor: async () => ({ socials: bakery.socials }) },
+    visible: new Set()
+  })
+  const step = steps.find((s) => s.kind === 'module' && s.id === 31)
+  const list = listOf(step.fields.params)
+  assert.deepEqual(list['social-intro[title]'], ['Instagram'])
+  assert.deepEqual(list['social-intro[font-icon]'], ['fa fa-instagram'])
+  assert.deepEqual(list['social-intro[link]'], ['https://instagram.com/copperleaf.example'])
+  assert.equal(step.fields.published, undefined)
+})
+
+test('socials in a module list: a brief with no profile unpublishes the module that held only social items', async () => {
+  const modules = [
+    {
+      id: 31,
+      module: 'mod_ja_acm',
+      published: 1,
+      language: '*',
+      content: '',
+      params: acmParams(['#', '#', '#', '#'])
+    }
+  ]
+  const { steps } = await planIdentitySteps({
+    apply: async ({ action, params }) =>
+      action === 'content.list' && params.kind === 'module'
+        ? { ok: true, items: params.offset ? [] : modules }
+        : { ok: true, items: [] },
+    siteKey: 's',
+    ctx: { siteKey: 's', email: 'o@example.test', note() {} },
+    woContent: { sitePlanFor: async () => ({ socials: clinic.socials }) },
+    visible: new Set()
+  })
+  assert.equal(steps.find((s) => s.kind === 'module' && s.id === 31).fields.published, 0)
+})
+
+test('map shortcode: the brief place replaces it, no address takes it off and the empty module goes', () => {
+  const shortcode = `{jamap mode='normal' locations='{"location":{"0":"Demo St"},"latitude":{"0":"1"}}' zoom='10' }{/jamap}`
+  const kept = joomlaIdentityHtml(shortcode, bakery)
+  assert.match(
+    kept.html,
+    /<iframe src="https:\/\/www\.google\.com\/maps\?q=14%20Mill%20Lane&amp;output=embed"/
+  )
+  assert.doesNotMatch(kept.html, /jamap|Demo St/)
+  const gone = joomlaIdentityHtml(shortcode, clinic)
+  assert.equal(gone.html, '')
+  assert.equal(gone.emptied, true)
+})
+
+test('posts to replace but no blog page kept in the plan: the blog entries and modules go with the demo posts', async () => {
+  const posts = { decision: 'replace', demoArticles: [{ id: 5 }, { id: 6 }] }
+  const run = async (pages) =>
+    (
+      await planIdentitySteps({
+        apply: siteDoor(),
+        siteKey: 's',
+        ctx,
+        woContent: { sitePlanFor: async () => ({ posts, pages }) },
+        visible: new Set()
+      })
+    ).steps.filter((s) => s.kind !== 'article')
+  assert.ok((await run([{ id: 'home', role: 'home', decision: 'keep' }])).length > 0)
+  assert.deepEqual(await run([{ id: 'journal', role: 'blog', decision: 'keep' }]), [])
+})

@@ -206,6 +206,9 @@ const showsBriefPlace = (ctx, src) =>
 
 const isOwnFact = (ctx, value) => holds(ctx.demo.own, normalized(value))
 
+/** The kinds counted once per demo piece and page (see `checkDemoLeftovers`). */
+const PIECE_KINDS = new Set(['C02', 'C08', 'C18'])
+
 /** Every rule of the check, one per kind. A new or sharper rule replaces its kind's entry. */
 export const LEFTOVER_RULES = Object.freeze([
   // C01, C04, C05, C06: every place a page carries a demo picture, by the slot's label (`demo-leftovers-pictures.mjs`).
@@ -350,7 +353,12 @@ export function checkDemoLeftovers({
   const findings = []
   for (const rule of LEFTOVER_RULES)
     for (const finding of rule.find(ctx)) {
-      const key = `${rule.kind}|${finding.page}|${finding.place}`
+      // One demo piece on one page is ONE leftover, however many slots of the map hold the same sample (four class articles
+      // that share one body text, a video id in every copy of a template layout): counting each copy inflated the kinds
+      // below by the number of copies. Kinds that read a place (an icon, a picture) still count each place.
+      const key = PIECE_KINDS.has(rule.kind)
+        ? `${rule.kind}|${finding.page}|${finding.found}`
+        : `${rule.kind}|${finding.page}|${finding.place}`
       if (seen.has(key)) continue
       seen.add(key)
       findings.push({ kind: rule.kind, ...finding })

@@ -16,6 +16,7 @@
 import { articleSteps, listWhole } from './joomla-articles.js'
 import { contentOf } from './joomla-article-routes.js'
 import { menuSteps, readMenu, readModules } from './joomla-tidy.js'
+import { socialListParams } from './joomla-plan-social-lists.js'
 
 const escapeHtml = (/** @type {string} */ s) =>
   s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -152,6 +153,13 @@ export function joomlaIdentityHtml(html, plan) {
       return ''
     }
   )
+  // A map drawn by the template's map plugin shortcode (`{jamap ...}{/jamap}`, the demo's coordinates in its attributes).
+  out = out.replace(/\{jamap\b[\s\S]*?\{\/jamap\}/gi, () => {
+    maps += 1
+    return (plan.map?.decision === 'address' || plan.map?.decision === 'place') && plan.map.embed
+      ? `<iframe src="${escapeHtml(plan.map.embed)}" width="100%" height="450" style="border:0" loading="lazy" allowfullscreen></iframe>`
+      : ''
+  })
   if (plan.logo?.decision === 'name-as-text' && plan.logo.name) {
     const files = plan.logo.demoFiles ?? []
     out = out.replace(/<img\b[^>]*>/gi, (tag) => {
@@ -163,6 +171,17 @@ export function joomlaIdentityHtml(html, plan) {
   }
   const emptied = maps > 0 && out.replace(/<[^>]*>/g, '').trim() === '' && !/<img\b|<iframe\b/i.test(out)
   return { html: out, socials, maps, logos, emptied }
+}
+
+/**
+ * Whether the site plan keeps a blog page for the brief's posts to go into. A plan that names its pages and keeps none of the
+ * blog role leaves the posts no place, so the blog's entries and article-listing modules go with the demo posts (an empty
+ * list is a demo leftover of its own). A plan that names no pages decides nothing here.
+ * @param {any} plan
+ */
+export function keepsABlogPage(plan) {
+  const pages = Array.isArray(plan?.pages) ? plan.pages : []
+  return pages.length === 0 || pages.some((p) => p?.decision === 'keep' && p?.role === 'blog')
 }
 
 /**
@@ -190,6 +209,21 @@ export async function planIdentitySteps({ apply, siteKey, ctx, woContent, visibl
       const language = String(row.language ?? '*')
       if (Number(row.published) !== 1 || (language !== '*' && !visible.has(language))) continue
       const before = planned.get(Number(row.id))
+      // A JSON list of social links kept in the module's parameters (a JA ACM style module).
+      const listed = socialListParams(paramsOf(row), plan.socials)
+      if (listed.changed > 0) {
+        counts.socials += listed.changed
+        const fields = {
+          ...planned.get(Number(row.id))?.fields,
+          params: JSON.stringify(listed.params),
+          ...(listed.empty ? { published: 0 } : {})
+        }
+        const mine =
+          planned.get(Number(row.id)) ?? steps.find((s) => s.kind === 'module' && s.id === Number(row.id))
+        if (mine) mine.fields = fields
+        else steps.push({ kind: 'module', id: Number(row.id), fields })
+        if (listed.empty) continue
+      }
       const html = before ? String(before.fields.content) : typeof row.content === 'string' ? row.content : ''
       if (html === '') continue
       const made = joomlaIdentityHtml(html, plan)
@@ -221,7 +255,7 @@ export async function planIdentitySteps({ apply, siteKey, ctx, woContent, visibl
     ctx.time?.('demoPostsUnpublished', ids.length)
     // No post of the business to show: the blog's menu entries and article-listing modules go too (an empty list is a demo
     // leftover of its own). With posts of the brief, the blog stays and `joomla-wo-content.js` fills it.
-    if (plan.posts?.decision === 'hide') {
+    if (plan.posts?.decision === 'hide' || !keepsABlogPage(plan)) {
       try {
         const [menu, modules, articles] = await Promise.all([
           readMenu(apply, siteKey),

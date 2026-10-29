@@ -259,6 +259,9 @@ export function demoBackgrounds({ styles = [], pages = [], contentMap = null }) 
   return out
 }
 
+/** A selector that is the whole page: html, body, or a framework's content wrapper. */
+const PAGE_LEVEL = /^(?:html|body|\.t4-content|\.t4-wrapper|\.t3-wrapper|#t3-content|\.t3-content)$/i
+
 const cssString = (value) => String(value).replace(/["\\\n\r]/g, '')
 
 /**
@@ -275,9 +278,15 @@ export function leftoverHeadBlock({ backgrounds = [], picture = null, videos = [
   if (backgrounds.length) {
     const paint = picture ? `url("/${cssString(picture).replace(/^\/+/, '')}")` : 'none'
     rules.push(`/* demo backgrounds: ${[...new Set(backgrounds.map((b) => cssString(b.file)))].join(' ')} */`)
-    rules.push(
-      `${[...new Set(backgrounds.map((b) => b.selector))].join(',\n')}{background-image:${paint} !important}`
-    )
+    // The page itself (body or the framework's content wrapper) is never covered by one picture: it goes plain.
+    const wide = [
+      ...new Set(backgrounds.filter((b) => PAGE_LEVEL.test(b.selector.trim())).map((b) => b.selector))
+    ]
+    const parts = [
+      ...new Set(backgrounds.filter((b) => !PAGE_LEVEL.test(b.selector.trim())).map((b) => b.selector))
+    ]
+    if (parts.length) rules.push(`${parts.join(',\n')}{background-image:${paint} !important}`)
+    if (wide.length) rules.push(`${wide.join(',\n')}{background-image:none !important}`)
   }
   if (videos.length) {
     const sel = [...new Set(videos)].flatMap((id) => {

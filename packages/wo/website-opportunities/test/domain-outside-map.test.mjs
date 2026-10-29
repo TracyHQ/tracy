@@ -210,16 +210,18 @@ test('C16: the pictures of the not-found and offline pages are found by their en
 
 test('the head block repaints backgrounds with the owner’s picture or none, hides demo play buttons, pictures and dead links', () => {
   const block = leftoverHeadBlock({
-    backgrounds: [{ selector: '.t4-content', file: 'images/demo/others/bg-cta.jpg' }],
+    backgrounds: [
+      { selector: '.band', file: 'images/demo/others/bg-cta.jpg' },
+      { selector: '.t4-content', file: 'images/demo/others/bg-cta.jpg' }
+    ],
     picture: 'images/tracy-content/ab12.jpg',
     videos: ['AbCdEfGhIjK'],
     files: ['images/demo/others/404.jpg'],
     links: ['Itemid=168', '/about/team']
   })
-  assert.match(
-    block,
-    /\.t4-content\{background-image:url\("\/images\/tracy-content\/ab12\.jpg"\) !important\}/
-  )
+  assert.match(block, /\.band\{background-image:url\("\/images\/tracy-content\/ab12\.jpg"\) !important\}/)
+  // The page-wide background goes plain, never one picture over the whole page.
+  assert.match(block, /\.t4-content\{background-image:none !important\}/)
   assert.match(block, /\[data-src\*="AbCdEfGhIjK"\]/)
   assert.match(block, /a\[href\$="Itemid=168"\]/)
   assert.match(

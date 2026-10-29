@@ -36,6 +36,8 @@ import { readMenu, readModules, SKIPPED_MENUS, writeSteps } from './joomla-tidy.
 /** The head-code param each template framework prints raw into every page's head. */
 export const HEAD_PARAMS = Object.freeze({ t4: 'system_advancedCodeAfterHead', t3: 'snippet_close_head' })
 /** The most inner pages read for the backgrounds their template settings paint. */
+/** Template folders of Joomla itself: never the site's design. */
+const CORE_TEMPLATES = new Set(['atum', 'cassiopeia', 'cassiopeia_extended', 'system'])
 const PAGES_READ = 4
 const ARTICLE_PAGE = 100
 
@@ -289,9 +291,24 @@ export async function writeOutsideMap({
       params: { kind: 'templateStyle', limit: 200 }
     })
     if (list?.ok === false) throw new Error(String(list.message ?? list.error))
-    const styles = (Array.isArray(list?.items) ? list.items : [])
-      .map((row) => ({ row, params: paramsOf(row) }))
-      .filter(({ row, params }) => String(row.client_id ?? '0') === '0' && frameworkOf(params))
+    // The list names a style (id, title, template, home) and carries NO params, so each site-template style is read whole
+    // (`content.get`) before its head code is judged. Joomla's own templates are never touched.
+    const styles = []
+    for (const row of (Array.isArray(list?.items) ? list.items : []).filter(
+      (r) =>
+        String(r?.client_id ?? '0') === '0' && !CORE_TEMPLATES.has(String(r?.template ?? '').toLowerCase())
+    )) {
+      let params = paramsOf(row)
+      if (!params) {
+        const got = await apply({
+          siteKey,
+          action: 'content.get',
+          params: { kind: 'templateStyle', id: Number(row.id) }
+        })
+        params = got?.ok === false ? null : paramsOf(got?.item)
+      }
+      if (params && frameworkOf(params)) styles.push({ row, params })
+    }
     if (styles.length === 0)
       note('the site template has no head-code setting, so the demo backgrounds and videos stay')
     for (const { row, params } of styles) {
