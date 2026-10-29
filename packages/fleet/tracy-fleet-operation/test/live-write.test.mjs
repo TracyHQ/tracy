@@ -209,6 +209,19 @@ function engine({
         return answer(200, { ok: true, kind: params.kind, id: params.id, item, ...revision })
       }
       if (action === 'content.update') {
+        // A person's edit on the live site between the push's read and its write (`editBeforeUpdate`).
+        if (state.editBeforeUpdate) {
+          state.editBeforeUpdate(state.records)
+          delete state.editBeforeUpdate
+        }
+        // The real engine's `expected`: each field must still hold the value given, else revision_stale.
+        if (params.expected) {
+          const now = get(params.kind, params.id, params.key) ?? {}
+          const text = (v) =>
+            v === null || v === undefined ? null : typeof v === 'object' ? JSON.stringify(v) : String(v)
+          const moved = Object.keys(params.expected).filter((f) => text(now[f]) !== text(params.expected[f]))
+          if (moved.length) return answer(200, { ok: false, error: 'revision_stale', fields: moved })
+        }
         if (params.expected_body_revision) {
           const now = THEME_KINDS.has(params.kind)
             ? (get(params.kind, 0, params.key) ?? state.themeFiles[params.kind]?.[params.key])
@@ -2455,6 +2468,91 @@ test('Undo after an Apply lost before it answered takes back what its journal li
     const none = await undo(live, dir)
     assert.equal(none.answer.ok, false)
     assert.equal(none.answer.code, 'NOT_PUSHED')
+  } finally {
+    await live.close()
+  }
+})
+
+test('WordPress: a title the customer changes between the read and the write is a conflict, never overwritten (#121)', async () => {
+  const live = await engine({
+    platform: 'wordpress',
+    records: {
+      post: { 10: { ID: 10, post_title: 'Hello', post_content: '<p>Body</p>', post_status: 'publish' } }
+    }
+  })
+  try {
+    const item = {
+      ...update(10, { post_title: 'Hello from Tracy' }, { post_title: 'Hello' }),
+      id: 'post:10',
+      kind: 'post',
+      spec: 'post'
+    }
+    live.editBeforeUpdate = (records) => {
+      records.post[10].post_title = 'Customer title in the gap'
+    }
+    const { answer } = await apply(live, pushDir([item], 'wordpress'))
+    const write = live.calls.find((c) => c.action === 'content.update')
+    assert.deepEqual(
+      write.params.expected,
+      { post_title: 'Hello' },
+      'each written field held to the value read'
+    )
+    assert.deepEqual(
+      answer.conflicts.map((c) => [c.id, c.reason, c.fields]),
+      [['post:10', 'changed-on-live', ['post_title']]]
+    )
+    assert.equal(answer.written.length, 0)
+    assert.equal(live.records.post[10].post_title, 'Customer title in the gap')
+  } finally {
+    await live.close()
+  }
+})
+
+test('WordPress: Undo keeps a title the customer changed after the push, and takes back one they left (#121)', async () => {
+  const live = await engine({
+    platform: 'wordpress',
+    records: {
+      post: {
+        10: { ID: 10, post_title: 'Hello', post_content: '<p>Body</p>', post_status: 'publish' },
+        11: { ID: 11, post_title: 'Other', post_content: '<p>Body</p>', post_status: 'publish' }
+      }
+    }
+  })
+  try {
+    const dir = pushDir(
+      [
+        {
+          ...update(10, { post_title: 'Hello from Tracy' }, { post_title: 'Hello' }),
+          id: 'post:10',
+          kind: 'post',
+          spec: 'post'
+        },
+        {
+          ...update(11, { post_title: 'Other from Tracy' }, { post_title: 'Other' }),
+          id: 'post:11',
+          kind: 'post',
+          spec: 'post'
+        }
+      ],
+      'wordpress'
+    )
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.written.length, 2)
+    // Undo reads post 10 as the push left it, then the customer renames it before the write back.
+    live.editBeforeUpdate = (records) => {
+      records.post[10].post_title = 'Customer title after the push'
+    }
+    const result = await undo(live, dir)
+    assert.deepEqual(
+      result.answer.kept.map((k) => [k.id, k.reason, k.fields]),
+      [['post:10', 'changed-on-live', ['post_title']]]
+    )
+    assert.deepEqual(
+      result.answer.restored.map((r) => r.id),
+      ['post:11']
+    )
+    assert.equal(live.records.post[10].post_title, 'Customer title after the push')
+    assert.equal(live.records.post[11].post_title, 'Other')
   } finally {
     await live.close()
   }
