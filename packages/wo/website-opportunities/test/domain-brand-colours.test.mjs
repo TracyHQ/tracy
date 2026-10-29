@@ -471,8 +471,20 @@ test('an icon drawn by a glyph, a mask or a data URI keeps its drawing: only its
     mask?.decls.map((d) => `${d.prop}:${d.value}`),
     ['background-color:var(--tracy-brand-0-fill)']
   )
-  // The data URI: a picture, left as the template draws it.
-  assert.doesNotMatch(out, /arrow-data|data:image|url\(/)
+  // The data URI: the same picture again with its brand paint swapped for the line tone of each side.
+  const line = (side) => /** @type {string} */ (computed(out, ':root', '--tracy-brand-0-line', side))
+  const arrow = cssRules(out).filter((r) => r.selector.endsWith('.arrow-data'))
+  assert.equal(arrow.length, 2, 'the page as it opens and its light side')
+  assert.equal(arrow[0].selector, '.arrow-data')
+  assert.equal(arrow[1].selector, '.light-active .arrow-data')
+  const darkLine = colourRoles('#1b2a4a', { grounds: ['#121111'], on: '#ffffff' }).line
+  const lightLine = colourRoles('#1b2a4a', { grounds: ['#ffffff'], on: '#ffffff', others: ['#121111'] }).line
+  assert.match(arrow[0].decls[0].value, new RegExp(`fill='${darkLine}'`))
+  assert.match(arrow[1].decls[0].value, new RegExp(`fill='${lightLine}'`))
+  assert.ok(line(null) !== undefined)
+  assert.doesNotMatch(out, /e8402f/i)
+  // A value naming an external file is never declared again.
+  assert.doesNotMatch(out, /images\//)
   // A shorthand with a picture gives up its colour alone; a list marker picture is never re-declared.
   const band = cssRules(out).find((r) => r.selector === '.band')
   assert.deepEqual(
@@ -552,4 +564,48 @@ test('words in the brand colour read on the template own surfaces of the page ki
     assert.ok(contrastOf(dark, '#232222') >= 4.5 && contrastOf(dark, '#121111') >= 4.5, `dark ${dark}`)
     assert.ok(contrastOf(light, '#ececec') >= 4.5 && contrastOf(light, '#ffffff') >= 4.5, `light ${light}`)
   }
+})
+
+test('an SVG data URI icon swaps only its brand paints, in every form a stylesheet writes them', async () => {
+  const { recolourDataUris } = await import('../domain/brand-colour-data-uri.mjs')
+  const toneOf = (hex) => (rgbOf(hex)?.r === 232 && rgbOf(hex)?.g === 64 ? '#123456' : null)
+  // URL-encoded attribute, plain attribute, stroke and stop-color, upper case: each brand paint swapped, nothing else.
+  assert.equal(
+    recolourDataUris(
+      `url("data:image/svg+xml,%3Cpath fill='%23E8402F' stroke='%23e8402f'/%3E%3Cstop stop-color='%23e8402f'/%3E%3Cpath fill='%23ffffff'/%3E")`,
+      toneOf
+    ),
+    `url("data:image/svg+xml,%3Cpath fill='%23123456' stroke='%23123456'/%3E%3Cstop stop-color='%23123456'/%3E%3Cpath fill='%23ffffff'/%3E")`
+  )
+  assert.equal(
+    recolourDataUris(`url('data:image/svg+xml;utf8,<svg><path fill="#e8402f"/></svg>')`, toneOf),
+    `url('data:image/svg+xml;utf8,<svg><path fill="#123456"/></svg>')`
+  )
+  // A base64 payload is read, swapped and written back.
+  const b64 = Buffer.from('<svg><path fill="#e8402f"/></svg>').toString('base64')
+  const got = /** @type {string} */ (recolourDataUris(`url(data:image/svg+xml;base64,${b64})`, toneOf))
+  assert.equal(
+    Buffer.from(/** @type {string} */ (/base64,([^)]*)/.exec(got))[1], 'base64').toString(),
+    '<svg><path fill="#123456"/></svg>'
+  )
+  // Nothing in the brand colour, an external file beside it, or a picture that is not SVG: no new value.
+  assert.equal(recolourDataUris(`url("data:image/svg+xml,%3Cpath fill='%23000000'/%3E")`, toneOf), null)
+  assert.equal(
+    recolourDataUris(`url("data:image/svg+xml,%3Cpath fill='%23e8402f'/%3E"),url(../img/a.png)`, toneOf),
+    null
+  )
+  assert.equal(recolourDataUris(`url(data:image/png;base64,iVBORw0KGgo=)`, toneOf), null)
+  assert.equal(recolourDataUris(`url(../images/arrow.svg)`, toneOf), null)
+})
+
+test('a shorthand holding a data URI icon is declared again whole, its colour outside the picture as a variable', () => {
+  const css = `${ICONS_CSS}\n.chip{background:#e8402f url("data:image/svg+xml,%3Cpath stroke='%23e8402f'/%3E") no-repeat}`
+  const out = brandColourCss({ styles: [{ css }], palette: brandPaletteOf(florist) })
+  const chip = cssRules(out).filter((r) => r.selector === '.chip' && r.decls[0].prop === 'background')
+  assert.equal(chip.length, 1)
+  assert.match(
+    chip[0].decls[0].value,
+    /^var\(--tracy-brand-0-fill\) url\("data:image\/svg\+xml,%3Cpath stroke='%23[0-9a-f]{6}'\/%3E"\) no-repeat$/
+  )
+  assert.doesNotMatch(out, /e8402f/i)
 })

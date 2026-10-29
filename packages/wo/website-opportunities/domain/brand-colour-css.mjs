@@ -15,6 +15,7 @@
 import { contrastOf, hexOf, hslOf, hueGapOf, rgbOf, rgbOfHsl, toneOf } from './brand-colour-maths.mjs'
 import { colourRoles } from './brand-colours.mjs'
 import { cssRules } from './brand-colour-css-rules.mjs'
+import { outsideUrls, recolourDataUris } from './brand-colour-data-uri.mjs'
 import { onPicture, pictureGround, pictureScopesOf } from './brand-colour-pictures.mjs'
 import {
   coloursIn,
@@ -44,6 +45,8 @@ const COLOUR = /#[0-9a-f]{3,8}\b|rgba?\([^()]*\)/gi
  */
 const NEVER =
   /^(?:content|quotes|src|cursor|font(?:-.*)?|(?:-webkit-)?mask(?:-.*)?|list-style(?:-.*)?|border-image(?:-.*)?)$/
+/** Properties whose SVG data URI icon is recoloured (`brand-colour-data-uri.mjs`): never a mask, whose colour is its fill. */
+const INK_PROPS = new Set(['background', 'background-image', 'list-style-image'])
 const URL = /url\(\s*(?:"[^"]*"|'[^']*'|[^)]*)\)/gi
 const TRIPLET = /^\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*$/
 
@@ -172,6 +175,8 @@ export function brandColourCss({ styles, palette, pages = [] }) {
   const ownVars = new Map()
   let readsDs = false
   const filledItems = new Set()
+  /** @type {Array<{r: any, d: any, per: Array<{side: string, value: string | null}>}>} */
+  const inks = []
   for (const r of rules) {
     const side = sideOfRule(r)
     const v = sides.get(side)?.vars ?? base.vars
@@ -193,12 +198,29 @@ export function brandColourCss({ styles, palette, pages = [] }) {
         decls.push({ ...d, n, value: triplet ? channels(tone) : tone })
         return
       }
-      if (NEVER.test(d.prop)) return
+      if (NEVER.test(d.prop) && !INK_PROPS.has(d.prop)) return
       const kind = pictured && kindOf(d.prop) === 'text' ? 'picture' : kindOf(d.prop)
       // A value holding a picture (`url()`) is never declared again: its address would resolve against the page instead of
       // the stylesheet, and the colours inside a data URI are part of the picture. A `background` shorthand gives up only
       // its colour, re-declared alone as `background-color`.
       if (/url\(/i.test(resolved)) {
+        // An SVG data URI drawn in the brand colour: the whole value again, with the brand paints swapped for each side's
+        // tone (a literal: a picture cannot read a CSS variable) and the brand colours outside the picture as variables.
+        if (INK_PROPS.has(d.prop)) {
+          const per = (side === 'base' ? [...sides.keys()] : [side]).map((s) => {
+            const ink = recolourDataUris(resolved, (hex) => {
+              const n = targets.findIndex((x) => same(rgbOf(hex), x.t))
+              return n < 0 ? null : rolesOf(n, s)[pictured ? 'picture' : 'line']
+            })
+            const swap = (part) =>
+              part.replace(COLOUR, (m) => {
+                const c = rgbOf(m)
+                return (c && varFor(c, 'fill', shaded)) || m
+              })
+            return { side: s, value: ink && outsideUrls(ink, swap) }
+          })
+          if (per.every((x) => x.value)) inks.push({ r, d, per })
+        }
         if (d.prop !== 'background') return
         const bare = resolved.replace(URL, ' ').replace(/[\w-]*gradient\((?:[^()]|\([^()]*\))*\)/gi, ' ')
         const c = coloursIn(bare)[0]
@@ -250,6 +272,22 @@ export function brandColourCss({ styles, palette, pages = [] }) {
       wrap(r.at, `${items.join(',')}{${declText({ ...r.decls[at], value: 'var(--tracy-brand-0-on)' })}}`)
     )
   }
+  // Data URI icons, after the rules they recolour: the page as it opens, then each side under its own marker.
+  for (const { r, d, per } of inks)
+    for (const { side, value } of per) {
+      const decl = declText({ ...d, value })
+      const own = sideOfRule(r)
+      if (side === own) out.push(wrap(r.at, `${r.selector}{${decl}}`))
+      else if (side.startsWith('@media')) out.push(`${side}{${wrap(r.at, `${r.selector}{${decl}}`)}}`)
+      else {
+        const selector = itemsOf(r.selector)
+          .map((s) =>
+            /^(?::root|html)\b/.test(s) ? `${side}${s.replace(/^(?::root|html)/, '')}` : `${side} ${s}`
+          )
+          .join(',')
+        out.push(wrap(r.at, `${selector}{${decl}}`))
+      }
+    }
   // SVG drawn in the template's markup with the brand colour as a presentation attribute.
   const marks = new Map()
   for (const page of pages ?? [])

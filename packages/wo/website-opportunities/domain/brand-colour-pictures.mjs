@@ -13,6 +13,8 @@
 import { hexOf, mixOf } from './brand-colour-maths.mjs'
 import { coloursIn, itemsOf } from './brand-colour-measure.mjs'
 
+/** A background picture from a file: a photograph. A data URI is an icon drawn in the stylesheet, never a photograph. */
+const PHOTO = /url\(\s*(?!["']?data:)/i
 const MID_PHOTO = { r: 128, g: 128, b: 128 }
 const NO_OVERLAY = '#1a1a1a'
 /** Layout and utility classes that say nothing about a part (`style-1`, `container`, `col-lg-8`, `d-flex`). */
@@ -42,7 +44,7 @@ export function pictureScopesOf(rules, pages = []) {
       const pseudo = /::?(?:before|after)\s*$/.test(item)
       const pictured = r.decls.some(
         (d) =>
-          (/^background(?:-image)?$/.test(d.prop) && /url\(/i.test(d.value) && !pseudo) ||
+          (/^background(?:-image)?$/.test(d.prop) && PHOTO.test(d.value) && !pseudo) ||
           (d.prop === 'background-size' && /cover/.test(d.value) && !pseudo)
       )
       // A pseudo element laid over the whole of its part and painted a translucent or opaque dark colour: an overlay.
@@ -69,7 +71,7 @@ export function pictureScopesOf(rules, pages = []) {
     }
   for (const page of pages ?? [])
     for (const m of String(page?.html ?? '').matchAll(
-      /<[a-z][\w-]*\s([^>]*style\s*=\s*["'][^"']*background(?:-image)?\s*:[^"']*url\([^>]*)>/gi
+      /<[a-z][\w-]*\s([^>]*style\s*=\s*["'][^"']*background(?:-image)?\s*:[^"']*url\((?!\s*["']?data:)[^>]*)>/gi
     )) {
       const attrs = m[1]
       const tokens = new Set()
