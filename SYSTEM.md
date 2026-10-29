@@ -460,7 +460,9 @@ reads the tables above for one session — the turn's commits (trailer `Tracy-Tu
 `apply_id`, and the reason something cannot be undone; `POST /api/sites/:key/turns/undo` pre-checks a multi-moment turn (read-only host
 op `undo-check`), holds the site's write lease, then reverts files through the same `/restore` path in mode `undo` (one
 `site_operation` row per moment) and content through `apply.revert` (branch 4c), newest → oldest, stopping at the first failure. A turn that was undone (fully or partly) is stamped
-`site_turn.undone_at` + `undo_complete` (migration 067); when the session's next turn opens with `POST /turn`, the answer
+`site_turn.undone_at` (migration 067; also when it only may have gone, e.g. the host answered 202) — the press, read by the agent notice and ops usage —
+and, only when something of it verifiably went, `undo_proven_at` + `undo_complete` (migration 182) — the proof, the only stamp the Site changes row reads
+(an unproven press never clears an earlier proof); when the session's next turn opens with `POST /turn`, the answer
 (and `POST /turn/undone`, read early since 16/10) carries `undone`, and `tracy-site-tabs` inserts a notice for the agent right after the user's message (the undo runs within that same
 session, so the "site changed" notice stays silent).
 The deciding logic is in [`turn-undo.js`](apps/tracy-web/src/sites/turn-undo.js). No undo on EmDash (the server
