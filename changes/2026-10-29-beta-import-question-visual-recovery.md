@@ -15,3 +15,5 @@
 
 - **Clean CI build repair:** replaced the borrowed checkout dependencies with a clean bootstrap using Node 24.11.1, the vendored dsh build, and `pnpm install --frozen-lockfile`. Regenerated the five client bundles. The full unchanged bundle gate now passes: 23 packages, 32 builds, all matching source. The previous local bundle-gate gaps are resolved.
 - **Portable visual acceptance:** use the installed Chrome or Playwright Chromium rather than a macOS-only executable path. A Linux-only test launcher preserves CDP pipe descriptors while adding the sandbox flag used by Playwright in CI containers; product browser settings are unchanged. Publish the fixture with `docker cp`, since a runner and its Docker daemon may not share filesystem paths. The real before/after capture passes locally with the clean dependencies.
+
+- **Final refresh:** merged develop at 7a85b0f4fc after the clean rebuild; its changes concern live push and onboarding copy, with no overlapping source edits. Both beta regression cases pass on 7103cbc299 with the locked dependencies.
