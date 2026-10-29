@@ -50,7 +50,8 @@ const MAX_BATCH_BYTES = 4 * 1024 * 1024
 const MAX_BATCH_TILES = 3
 const KINDS = new Set(['text', 'photo', 'repeat', 'leftover', 'layout', 'language'])
 const FAULTS_MAX = 30
-const CALL_MS = 180_000
+/** One vision call's time; an answer takes a few seconds, and a provider that hangs must not hold the look. */
+const CALL_MS = 90_000
 
 export const DEMO_LOOK_SYSTEM = `You check screenshots of a demo website Tracy built for a real local business by filling a ready-made template with that business's own facts, photos and reviews. Each picture is a viewport tile of a page at desktop width (scaled) or phone width (390 px), labelled with its page path, viewport and vertical range. Tiles overlap and follow top to bottom. Content cut at a tile edge continues in its neighbour: that capture boundary is never a page clipping fault. Sticky headers may recur between tiles.
 
@@ -301,6 +302,20 @@ export function createDemoLook({
     let calls = []
     let stopCalls = new AbortController()
     let visionFailed = false
+    // 🔒 THE LOOK'S TIME HOLDS ITS CALLS TOO (local measure 29/10/2026): with the vision provider slow, calls in flight
+    // waited up to two of `CALL_MS` each while the time was checked only as frames arrived; one WordPress check ran past
+    // 15 minutes and was lost (DEMO_CHECK_LOST), twice, and the agent ended its turn. When the look's time is spent, the
+    // calls still waiting are cut and their tiles are not looked at (`TIME_EXCEEDED`).
+    const outOfTime = Number.isFinite(budgetMs) ? new AbortController() : null
+    const lookTimer = outOfTime
+      ? setTimeout(
+          () => outOfTime.abort(new Error('Vision look time budget exhausted')),
+          Math.max(1, budgetMs - (now() - started))
+        )
+      : null
+    const callSignalOf = () =>
+      outOfTime ? AbortSignal.any([stopCalls.signal, outOfTime.signal]) : stopCalls.signal
+    const timeSpent = () => outOfTime?.signal.aborted === true
     /** One batch's call (and its one retry); never rejects, so a call nobody awaits yet cannot go unhandled. */
     const ask = async (batch, callSignal) => {
       try {
@@ -330,7 +345,7 @@ export function createDemoLook({
         pendingBytes = emptyRequestBytes
         // Not tied to the stream's signal: the host client aborts that one whenever a stream ends, and a call sent
         // before a stream broke still answers, as it did serially.
-        calls.push({ batch, streamSignal, answer: ask(batch, stopCalls.signal) })
+        calls.push({ batch, streamSignal, answer: ask(batch, callSignalOf()) })
       }
       while (calls.length >= inFlight) await applyNext()
     }
@@ -338,6 +353,10 @@ export function createDemoLook({
     const applyNext = async () => {
       const { batch, streamSignal, answer } = calls.shift()
       const { result, error } = await answer
+      if (timeSpent()) {
+        visionFailed = true
+        throw Object.assign(new Error('Vision look time budget exhausted'), { code: 'TIME_EXCEEDED' })
+      }
       if (error) {
         visionFailed = true
         throw error
@@ -534,6 +553,7 @@ export function createDemoLook({
         break
       }
     }
+    if (lookTimer) clearTimeout(lookTimer)
     const unlooked = layouts.flatMap((layout) => {
       const missing = ['desktop', 'phone'].filter((viewport) => {
         const state = states.get(`${layout.path}\n${viewport}`)

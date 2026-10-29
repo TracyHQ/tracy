@@ -718,3 +718,30 @@ test('a look takes every page and two template posts, unseen ones first, in a ti
   assert.equal(lookBudgetMs(9), 225_000)
   assert.equal(lookBudgetMs(40), 300_000)
 })
+
+// Local measure 29/10/2026: with the vision provider hanging, calls in flight held a WordPress check past 15 minutes.
+test('vision calls that hang are cut at the look time: it answers in time, its tiles not looked at', async () => {
+  const fake = await fakes({ faults: [] }, { height: 4000 })
+  let sent = 0
+  const fetchImpl = (_url, init) =>
+    new Promise((_resolve, reject) => {
+      sent++
+      init.signal.addEventListener('abort', () => reject(init.signal.reason ?? new Error('aborted')), {
+        once: true
+      })
+    })
+  const started = Date.now()
+  const r = await createDemoLook({ ...fake, fetchImpl, visionFor: door, callsAtOnce: 3 })(
+    {},
+    { pages: ['/', '/menu'], budgetMs: 300 }
+  )
+  assert.ok(Date.now() - started < 3000, `answered after ${Date.now() - started} ms`)
+  assert.ok(sent >= 1)
+  assert.equal(r.pass, false)
+  assert.notEqual(r.looked, true)
+  assert.ok(r.unlooked.length > 0)
+  assert.ok(
+    r.unlooked.every((u) => u.why === 'TIME_EXCEEDED'),
+    JSON.stringify(r.unlooked)
+  )
+})
