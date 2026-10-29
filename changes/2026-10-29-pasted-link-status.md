@@ -1,0 +1,3 @@
+- **Keep every pasted business link and show its research outcome before continuing from incomplete primary research** — Akemi0x · #189 · `feat/brief-build-own-site` · 2026-10-29
+  **Affects:** business link intake, research receipts, Build from my business and Website Opportunities results. Rebuild the web image and committed client bundles together; callers can read per-link status, reason and collected counts.
+  Zero readable links offer only Fix links. An unread primary makes Fix links the filled action; only secondary failures keep Continue filled. Contribution counts use localized singular and plural forms across all three result surfaces.

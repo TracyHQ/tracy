@@ -27,6 +27,8 @@ import {
   useTabLoading
 } from '@tracy/ui'
 import { interfaceLocale } from '@tracy/core/interface-languages'
+import { LinkReadResults } from '@tracy/wo-views/link-rows'
+import type { ServerLink } from '@tracy/wo-views/link-rows-model'
 
 import { type Api, type BuildChoices, MENU_PARTS, handOffBuild, pressDemo, startResearch } from './api.ts'
 import { buildChoice } from './build-choice.ts'
@@ -531,6 +533,13 @@ export function DetailView({
             again={researchAgain}
           >
             <>
+              {asArray<ServerLink>(body.links).length ? (
+                <LinkReadResults
+                  locale={locale}
+                  links={asArray<ServerLink>(body.links)}
+                  copy={(key, params) => t(`links.${key}`, params)}
+                />
+              ) : null}
               <Sources t={t} sources={sources} retry={retrySource} />
               {cancellable !== null ? (
                 <Button

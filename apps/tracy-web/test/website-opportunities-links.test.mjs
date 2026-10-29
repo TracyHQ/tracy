@@ -259,7 +259,15 @@ test(
     assert.equal(opp.providerId, MAGICPIN)
     assert.equal(opp.name, 'Padel and Tennis Coach')
     assert.equal(opp.candidate.website, undefined)
-    assert.deepEqual(res.body.links[0], { url: MAGICPIN, kind: 'listing', source: 'magicpin', used: true })
+    assert.deepEqual(res.body.links[0], {
+      url: MAGICPIN,
+      kind: 'listing',
+      source: 'magicpin',
+      used: true,
+      readStatus: 'could-not-read',
+      readReason: 'blocked',
+      primary: true
+    })
     const row = await listingRow(w.pool, opp.id)
     assert.equal(row.status, 'failed')
     assert.equal(row.collected.listings[0].nameHint, 'Padel and Tennis Coach')

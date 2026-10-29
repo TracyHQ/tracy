@@ -119,6 +119,7 @@ export function FindLinks({
         }}
       >
         <LinkRows
+          locale={interfaceLocale()}
           copy={copy}
           rows={rows}
           onRows={edit}

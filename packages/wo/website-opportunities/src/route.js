@@ -54,6 +54,7 @@ import { urlKeyOf } from './site-checks.js'
 import { SOCIAL_STAT_NETWORKS } from './social-stats.js'
 import { SHOWN_SOURCES, SOCIAL_SOURCES, normalizeUrl, refsOfUrls, sourceOfUrl } from './sources.js'
 import { createLinkFields, linkRequestOf, mergeListings, saveListingSource } from './link-fields.js'
+import { pastedLinkResults, requiresLinkReview } from '../domain/pasted-link-status.mjs'
 import {
   activeJobOf,
   claimBulkRequest,
@@ -1386,8 +1387,15 @@ export function websiteOpportunitiesRoutes(deps) {
       // No builder: the demo fields are left out of the answer.
       builder ? builder.detailOf(opp, who.accountId) : {}
     ])
+    const links = pastedLinkResults(opp, {
+      sources: view ? [...view.snapshot.sources.map((s) => ({ ...s, shared: true })), ...sources] : sources,
+      media,
+      finished: jobs[0]?.state === 'completed'
+    })
+    const linkResult = { links, requiresLinkReview: requiresLinkReview(links) }
     return json(c, {
       opportunity: opportunityShape(opp),
+      ...linkResult,
       demo: demo.demo,
       place: view
         ? { id: opp.place_id, snapshotId: view.snapshot.id, publishedAt: view.snapshot.published_at }
@@ -1438,7 +1446,7 @@ export function websiteOpportunitiesRoutes(deps) {
           : {}),
         ...(m.origin ? { origin: m.origin } : {})
       })),
-      jobs: jobs.map(jobShape),
+      jobs: jobs.map((job) => ({ ...jobShape(job), result: linkResult })),
       progress: demo.progress,
       revisions: demo.revisions,
       brief: demo.brief,

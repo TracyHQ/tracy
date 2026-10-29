@@ -27,7 +27,16 @@ export type LinkReason =
   | 'blocked'
 
 /** One link as the server reports it in `links` (2xx, 409 and 422 answers). */
-export interface ServerLink {
+export type LinkReadStatus = 'pending' | 'read' | 'could-not-read'
+export type LinkReadReason = 'not-configured' | 'unresolved' | 'fetch-failed' | 'blocked'
+export interface LinkReadOutcome {
+  readStatus?: LinkReadStatus
+  readReason?: LinkReadReason
+  counts?: { photos: number; reviews: number; contacts: number }
+  primary?: boolean
+}
+
+export interface ServerLink extends LinkReadOutcome {
   url?: string
   kind?: string
   source?: string
@@ -36,7 +45,7 @@ export interface ServerLink {
 }
 
 /** What one row shows. Null for an empty row. */
-export interface RowView {
+export interface RowView extends LinkReadOutcome {
   kind: string | null
   group: LinkGroup | null
   source?: string
@@ -129,6 +138,12 @@ export function judgeRows(
     if (theirs?.reason && REASONS.has(theirs.reason) && theirs.reason !== mine.reason) {
       view.reason = theirs.reason as LinkReason
       view.used = false
+    }
+    if (theirs?.readStatus) {
+      view.readStatus = theirs.readStatus
+      view.readReason = theirs.readReason
+      view.counts = theirs.counts
+      view.primary = theirs.primary
     }
     return view
   })

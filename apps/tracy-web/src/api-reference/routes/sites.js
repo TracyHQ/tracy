@@ -59,7 +59,7 @@ export const SITES_ROUTES = [
     path: '/api/sites/from-business',
     summary: 'Start Build from my business',
     description:
-      "Saves the customer's own business (a candidate the find answered, or up to 5 pasted links of it: its Google Maps or share link, website, social pages, listing pages) as a private opportunity marked ownSite and starts its shared research. The links are read exactly as `POST /api/website-opportunities` reads them: the same `links` report in the answer, 409 GOOGLE_LINK_AMBIGUOUS with `candidates` (send the same body again with the picked one as `place`), 422 NO_USABLE_LINKS. Idempotent per requestId. Not listed among Website Opportunities, never gets a demo retention clock.",
+      "Saves the customer's own business (a candidate the find answered, or up to 5 pasted links of it: its Google Maps or share link, website, social pages, listing pages) as a private opportunity marked ownSite and starts its shared research. The links are read exactly as `POST /api/website-opportunities` reads them: every link persists with its per-link read status, failure reason and photo, review and contact counts; the same `links` report in the answer, 409 GOOGLE_LINK_AMBIGUOUS with `candidates` (send the same body again with the picked one as `place`), 422 NO_USABLE_LINKS. Idempotent per requestId. Not listed among Website Opportunities, never gets a demo retention clock.",
     audience: ['customer'],
     auth: 'session',
     internal: true,
@@ -92,13 +92,13 @@ export const SITES_ROUTES = [
     path: '/api/sites/from-business/:id',
     summary: 'Where a Build from my business stands',
     description:
-      'research while it runs; once it completed, choose with `recommended` (the template autoTemplate suggests for the trade) and `ranking` (how the template picker groups its cards for that trade: `recommended` and `generic` card ids, null when the trade is unknown); build once the person chose. Nothing is built until POST …/:id/build.',
+      'research while it runs; once it completed, choose with `recommended` (the template autoTemplate suggests for the trade) and `ranking` (how the template picker groups its cards for that trade: `recommended` and `generic` card ids, null when the trade is unknown); build once the person chose. `links` reports every pasted link with `readStatus`, `readReason`, `counts` and `primary`. `requiresLinkReview` asks the customer to fix the links or explicitly continue before viewing a suggestion when no link was read or the primary source failed. Nothing is built until POST …/:id/build.',
     audience: ['customer'],
     auth: 'session',
     internal: true,
     params: { path: { id: 'The business id from the start door' } },
     answers:
-      '`{business:{phase: research|choose|build|failed, job?, recommended?, ranking?, action?, code?}}`'
+      '`{business:{phase: research|choose|build|failed, links?, requiresLinkReview?, job?, recommended?, ranking?, action?, code?}}`'
   },
   // src/opportunities-build/own-site.js
   {

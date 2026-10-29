@@ -33,6 +33,7 @@ import { demoActionOf, recommendTemplate } from './demo-actions.js'
 import { freezeDemoResearchInput } from './revisions.js'
 import { bestKnownName } from 'website-opportunities/src/business-name.js'
 import { resumeJob, sourcesOf } from 'website-opportunities/src/store.js'
+import { pastedLinkRead } from 'website-opportunities/src/pasted-link-read.js'
 
 /**
  * How many times a business's research that paused (a source's time or page budget ran out, its cursor kept) is
@@ -309,12 +310,16 @@ export function ownSiteRoutes(app, h) {
    */
   async function stateOf(accountId, opp, { advance = false, domain = null } = {}) {
     const own = opp.candidate.ownSite
+    const job = (await h.jobsOfOpportunity(pool, opp.id))[0] ?? null
+    const read = await pastedLinkRead(pool, opp, { finished: job?.state === 'completed' })
+    const shapedJob = job ? { ...h.jobShape(job), result: read } : null
     // The best name known so far, never a pasted link's host while a source already shows the business's name.
     const view = {
       id: opp.id,
       name: bestKnownName(opp, await sourcesOf(pool, opp.id)),
       trade: opp.candidate.trade ?? 'other',
-      requestId: own.requestId
+      requestId: own.requestId,
+      ...read
     }
     // This press's build, or one still open from an earlier press: a business has one build at a time, and pressing
     // again opens it rather than offering a choice the build door then refuses (DEMO_BUILD_ACTIVE, 24/10/2026).
@@ -327,7 +332,6 @@ export function ownSiteRoutes(app, h) {
       )
     ).rows[0]
     if (action) return { ...view, phase: 'build', action: await demoActionOf(pool, accountId, action.id) }
-    const job = (await h.jobsOfOpportunity(pool, opp.id))[0] ?? null
     if (job?.state === 'paused') {
       const resumes = Number(own.resumes ?? 0)
       if (resumes >= OWN_SITE_RESUMES)
@@ -335,7 +339,7 @@ export function ownSiteRoutes(app, h) {
           ...view,
           phase: 'failed',
           code: job.last_error?.code ?? 'SOURCE_PAUSED',
-          job: h.jobShape(job)
+          job: shapedJob
         }
       if (advance) {
         await pool.query(
@@ -348,13 +352,13 @@ export function ownSiteRoutes(app, h) {
       }
     }
     if (!job || RESEARCH_RUNNING.has(job.state) || job.state === 'paused')
-      return { ...view, phase: 'research', job: job ? h.jobShape(job) : null }
+      return { ...view, phase: 'research', job: shapedJob }
     if (job.state !== 'completed')
       return {
         ...view,
         phase: 'failed',
         code: job.last_error?.code ?? 'RESEARCH_FAILED',
-        job: h.jobShape(job)
+        job: shapedJob
       }
     if (advance && view.trade === 'other' && domain)
       view.trade = await researchedTrade(accountId, opp, domain)
@@ -367,6 +371,7 @@ export function ownSiteRoutes(app, h) {
     return {
       ...view,
       phase: 'choose',
+      job: shapedJob,
       recommended: template.status ? null : suggestionOf(template),
       ranking
     }

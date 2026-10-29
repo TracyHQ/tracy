@@ -67,6 +67,7 @@ type Stage =
       at: 'choose'
       id: string
       name: string
+      review?: boolean
       recommended: TemplateSuggestion | null
       /** How the picker groups its cards for this business's trade; null when the trade is unknown. */
       ranking: TemplateRanking | null
@@ -145,7 +146,10 @@ export function FromBusiness({
   const [server, setServer] = useState<ServerLink[] | undefined>(undefined)
   const stop = useRef<AbortController | null>(null)
   const copy: LinkRowsCopy = (key, params) => t(linksKey(key), params)
-  const usable = summaryOf(judgeRows(rows, server)).used
+  const usable = summaryOf(judgeRows(rows)).used
+  const hasReadLinks = server?.some((link) => link.readStatus === 'read') === true
+  const fixLinksFirst =
+    !hasReadLinks || server?.some((link) => link.primary && link.readStatus !== 'read') === true
 
   useEffect(() => {
     let live = true
@@ -239,7 +243,11 @@ export function FromBusiness({
       return setStage({ at: 'failed', key: 'failed' in outcome ? outcome.failed : 'own_failed' })
     const { id } = outcome.started
     // The rows stay on screen through the research: they say which link the server left out, and why.
-    if ('links' in input) setServer(outcome.links)
+    if ('links' in input) {
+      setServer(outcome.links)
+      setMode('links')
+      setRows(rowsOf(input.links))
+    }
     // The best name known: the words typed with the links, else the server's (never a host while a source names it).
     const shown = typed || outcome.started.name || before
     setStage({ at: 'research', name: shown, sources })
@@ -269,6 +277,11 @@ export function FromBusiness({
       id,
       signal: controller.signal,
       onState: (business) => {
+        if (Array.isArray(business.links) && business.links.length) {
+          setServer(business.links)
+          setMode('links')
+          setRows(rowsOf(business.links.map((link: ServerLink) => link.url ?? '')))
+        }
         if (business.phase === 'build') setStage((now) => (now.at === 'opening' ? now : { at: 'opening' }))
         // What the research has reached, under the sentence: the source, the photos, the minutes.
         // A better name than the host once a source shows one (`bestKnownName` on the server).
@@ -293,7 +306,14 @@ export function FromBusiness({
     if ('choose' in done) {
       const recommended = done.choose.recommended ?? null
       const ranking = done.choose.ranking ?? null
-      setStage({ at: 'choose', id, name: done.choose.name, recommended, ranking })
+      setStage({
+        at: 'choose',
+        id,
+        name: done.choose.name,
+        recommended,
+        ranking,
+        review: done.choose.requiresLinkReview === true
+      })
       // The suggestion's picture, sentence and demo, once the catalogue answers; the choice works without them.
       if (recommended)
         void api.templates().then((answer) => {
@@ -361,6 +381,7 @@ export function FromBusiness({
           }}
         >
           <LinkRows
+            locale={lang}
             copy={copy}
             rows={rows}
             server={server}
@@ -372,16 +393,14 @@ export function FromBusiness({
               if (stage.at === 'found' || stage.at === 'failed') setStage({ at: 'idle' })
             }}
           />
-          <div>
-            <Button type="submit" variant="outline" disabled={busy || usable === 0}>
-              {stage.at === 'starting' ? (
-                <Loader2 className="animate-spin" aria-hidden="true" />
-              ) : (
+          {!busy ? (
+            <div>
+              <Button type="submit" variant="outline" disabled={usable === 0}>
                 <Hammer aria-hidden="true" />
-              )}
-              {usable > 1 ? t('own_links_many') : t('own_link')}
-            </Button>
-          </div>
+                {usable > 1 ? t('own_links_many') : t('own_link')}
+              </Button>
+            </div>
+          ) : null}
         </form>
       ) : (
         <div className="grid gap-1.5">
@@ -496,7 +515,36 @@ export function FromBusiness({
           ) : null}
         </p>
       ) : null}
-      {stage.at === 'choose' ? (
+      {stage.at === 'choose' && stage.review ? (
+        <div className="grid gap-2 rounded-lg border p-3" data-own-link-review="" role="status">
+          <p className="text-sm">{t(hasReadLinks ? 'own_links_review' : 'own_links_none_read')}</p>
+          <div className="flex flex-wrap gap-2">
+            {hasReadLinks ? (
+              <Button
+                type="button"
+                variant={fixLinksFirst ? 'outline' : 'default'}
+                onClick={() => setStage({ ...stage, review: false })}
+              >
+                {t('own_links_continue')}
+              </Button>
+            ) : null}
+            <Button
+              type="button"
+              variant={fixLinksFirst ? 'default' : 'outline'}
+              className={fixLinksFirst ? 'order-first' : undefined}
+              onClick={() => {
+                stop.current?.abort()
+                keepBusiness(storage, null)
+                setMode('links')
+                setStage({ at: 'idle' })
+              }}
+            >
+              {t('own_links_fix')}
+            </Button>
+          </div>
+        </div>
+      ) : null}
+      {stage.at === 'choose' && !stage.review ? (
         <div className="grid gap-2 rounded-lg border p-3" data-own-choose={stage.recommended?.design ?? ''}>
           {stage.recommended ? (
             <>

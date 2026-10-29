@@ -4,9 +4,9 @@
  * Opportunities create door (`route.js`) and Build from my business (the builder's own-site door).
  *
  * Which links are usable is `judgeLinks` (`domain/link-kinds.mjs`, the browser runs the same), then the server's
- * own checks: the public-URL guard on every link, a Google link turned into exactly one place or left out
+ * own checks: the public-URL guard on every link, a Google link turned into exactly one place or kept unread
  * (`unresolvable`), a listing page read once (`domain/listing-page.mjs`). Partial success is the rule: unusable links
- * are reported in `links` and the rest are used.
+ * stay in `candidate.pastedLinks` with their read outcome; usable ones become research sources.
  *
  * The opportunity's identity, in this order: the Google place, else the website, else the first social page, else
  * the first listing page. Every other link stays PRIVATE to the opportunity (`places.js privateRefs`): the website
@@ -14,6 +14,7 @@
  * `listing` (`saveListingSource`), merged into the profile at the lowest priority (`executor.js mergeProfile`).
  */
 import { dropTracking, judgeLinks } from '../domain/link-kinds.mjs'
+import { linkReadCounts, linkReadReason, markPrimaryLink } from '../domain/pasted-link-status.mjs'
 import { isPlaceId } from './place-suggest.js'
 import { LISTING_SOURCE, SOCIAL_SOURCES, normalizeUrl, sourceOfUrl } from './sources.js'
 
@@ -106,10 +107,12 @@ export function createLinkFields({ domainDeps, runtime, candidateFields }) {
       kind: j.kind,
       ...(j.source ? { source: j.source } : {}),
       used: j.used,
-      ...(j.reason ? { reason: j.reason } : {})
+      ...(j.reason ? { reason: j.reason } : {}),
+      readStatus: j.used ? 'pending' : 'could-not-read',
+      ...(!j.used ? { readReason: linkReadReason(j.reason) } : {})
     }))
-    const drop = (i, reason) => {
-      report[i] = { ...report[i], used: false, reason }
+    const drop = (i, reason, readReason = linkReadReason(reason)) => {
+      report[i] = { ...report[i], used: false, reason, readStatus: 'could-not-read', readReason }
     }
     let guardCode = null
     // The public-URL guard on every link but Google's (its resolver guards each of its own hops).
@@ -120,7 +123,7 @@ export function createLinkFields({ domainDeps, runtime, candidateFields }) {
           await domain.assertPublicUrl(j.url, deps)
         } catch (error) {
           guardCode = error?.code === 'URL_BLOCKED' ? 'URL_BLOCKED' : 'URL_UNRESOLVABLE'
-          drop(i, 'blocked')
+          drop(i, 'blocked', error?.code === 'URL_BLOCKED' ? 'blocked' : 'unresolved')
         }
       })
     )
@@ -130,7 +133,17 @@ export function createLinkFields({ domainDeps, runtime, candidateFields }) {
     // Listing pages: one limited read of each page, never a crawl; a page that blocks keeps its link and a name hint.
     const listings = await Promise.all(
       usedOf((k) => k === 'listing').map(async (j) => {
-        const read = await domain.readListingPage(j.url, { fetch: deps.fetch, resolve: deps.resolve })
+        let read
+        try {
+          read = await domain.readListingPage(j.url, { fetch: deps.fetch, resolve: deps.resolve })
+        } catch (error) {
+          read = { ok: false, reason: error?.code ?? 'fetch-failed' }
+        }
+        report[j.i] = {
+          ...report[j.i],
+          readStatus: read.ok ? 'read' : 'could-not-read',
+          ...(read.ok ? { counts: linkReadCounts(read.facts) } : { readReason: linkReadReason(read.reason) })
+        }
         return {
           url: refOf(j),
           source: j.source ?? hostOf(j.url),
@@ -167,8 +180,11 @@ export function createLinkFields({ domainDeps, runtime, candidateFields }) {
           }
         }
       if (found.match) google = found.match
-      else drop(googleLink.i, 'unresolvable')
+      else drop(googleLink.i, 'unresolvable', found.readReason ?? 'unresolved')
     }
+
+    if (googleLink && google)
+      report[googleLink.i] = { ...report[googleLink.i], readStatus: 'read', counts: linkReadCounts(google) }
 
     const website = usedOf((k) => k === 'website')[0] ?? null
     const socials = {}
@@ -181,7 +197,8 @@ export function createLinkFields({ domainDeps, runtime, candidateFields }) {
     }
     const websiteUrl = website ? refOf(website) : null
 
-    if (!google && !websiteUrl && !firstSocial && listings.length === 0) {
+    const unreadInput = judged.find((j, i) => j.used && report[i].readReason !== 'blocked')?.url ?? null
+    if (!google && !websiteUrl && !firstSocial && listings.length === 0 && !unreadInput) {
       if (legacy) return legacyRefusal(report, guardCode)
       return refusal(
         422,
@@ -211,7 +228,7 @@ export function createLinkFields({ domainDeps, runtime, candidateFields }) {
         }
       }
     } else {
-      const primary = websiteUrl ?? firstSocial ?? listed[0].url
+      const primary = websiteUrl ?? firstSocial ?? listed[0]?.url ?? unreadInput
       const placeholder =
         primary === listed[0]?.url && !websiteUrl && !firstSocial
           ? (listings[0].nameHint ?? hostOf(primary))
@@ -235,7 +252,9 @@ export function createLinkFields({ domainDeps, runtime, candidateFields }) {
         }
       }
     }
-    return { fields, links: report, listings }
+    const links = markPrimaryLink(report)
+    fields.candidate.pastedLinks = links
+    return { fields, links, listings }
   }
 
   /** The place a person picked from the 409 candidates, read again from Google by its id (the client's copy is a hint). */
@@ -257,12 +276,12 @@ export function createLinkFields({ domainDeps, runtime, candidateFields }) {
   }
 
   /**
-   * The one place a Google link means: `{match}`, `{ambiguous: candidates}` or `{}` when it cannot be turned into a
-   * place (no Google key, a short link that does not resolve, no words to search, no result).
+   * The one place a Google link means: `{match}`, `{ambiguous: candidates}`, `{readReason}` for an unavailable or
+   * failed source, or `{}` when the link has no resolvable place identity.
    */
   async function googlePlaceOf(domain, url, { typedName, hints, names }, deps) {
     const { keys } = await runtime()
-    if (!keys.google) return {}
+    if (!keys.google) return { readReason: 'not-configured' }
     let parsed = domain.parseGoogleLink(url)
     if (!parsed) return {}
     try {
@@ -281,8 +300,8 @@ export function createLinkFields({ domainDeps, runtime, candidateFields }) {
       )
       const answer = domain.matchGooglePlace({ candidates: found.candidates, parsed, typedName, hints })
       return answer.none ? {} : answer
-    } catch {
-      return {}
+    } catch (error) {
+      return { readReason: linkReadReason(error?.code ?? error?.status) }
     }
   }
 }

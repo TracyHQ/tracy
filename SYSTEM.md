@@ -2651,6 +2651,14 @@ opens with a "Tracy's pick" frame from `requestTemplatePick(…, {recommended})`
 the destination page sends the brief as with a demo. On an http stand (no `crypto.subtle`) the plugin does not re-hash the brief itself; the
 `chat/send` door still matches `briefHash`.
 
+Pasted business links are kept privately on `candidate.pastedLinks`, including links the resolver could not read.
+The create response, opportunity detail and research result expose per-link `readStatus` (`pending`, `read`,
+`could-not-read`), a normalized `readReason` for failures and `counts` of photos, reviews and contact items for reads.
+Research updates these from the current source results, matched to the submitted address. The primary input follows
+the existing identity order: Google Maps, website, first social profile, then first listing. If none was read or the
+primary input could not be read, `requiresLinkReview` makes Add site show the links before the template suggestion;
+the customer can fix the links or explicitly continue with the facts found. This does not add a photo upload path.
+
 The customer's site is not a demo: no retention clock (`startDemoClock` skips `ownSite` actions), not shown
 in the WO list (`stagedSql`), no outreach. The message shown in chat is a single sentence; the steps are in
 `instructions` of the `tracy_demo read` catalogue (`ownSiteInstructions`). `autoTemplate` chooses by trade: a card for the exact

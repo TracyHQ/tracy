@@ -15,6 +15,23 @@ export const NS = 'tracy-website-opportunities'
 export type Translate = (key: string, params?: Record<string, unknown>) => string
 
 export const en = {
+  'links.read.pending': 'Waiting to read',
+  'links.read.read': 'Read: {photos}, {reviews}, {contacts}',
+  'links.read.photos.one': '{count} photo',
+  'links.read.photos.other': '{count} photos',
+  'links.read.reviews.one': '{count} review',
+  'links.read.reviews.other': '{count} reviews',
+  'links.read.contacts.one': '{count} contact item',
+  'links.read.contacts.other': '{count} contact items',
+  'links.read.not-configured':
+    'Could not read: this source is not available here. Paste another link for the same business.',
+  'links.read.unresolved':
+    'Could not read: this link did not lead to a business page. Paste another link for the same business.',
+  'links.read.fetch-failed':
+    'Could not read: the page did not respond. Try again later or paste another link.',
+  'links.read.blocked':
+    'Could not read: this page is private or blocked. Paste a public link for the same business.',
+
   ...viewsEn,
   'find.action.view': 'View demo',
   'v3.writes': 'Text updates: {count}',

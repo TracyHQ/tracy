@@ -90,6 +90,15 @@ before(async () => {
           const storage = { getItem: () => null, setItem: (k, v) => store.set(k, v), removeItem: () => {} }
           root.render(<div style={{ width: '390px' }}><FromBusiness t={t} lang="en" onBack={() => {}} api={api} storage={storage} /></div>)
         }
+        window.showOutcome = (links, requiresLinkReview) => {
+          const storage = { getItem: () => JSON.stringify({ id: 'review', name: 'Juniper Bakery', links: links.map(l => l.url), at: Date.now() }), setItem: () => {}, removeItem: () => {} }
+          const api = {
+            question: async () => ({ ok: true, body: {} }),
+            state: async () => ({ ok: true, body: { business: { id: 'review', name: 'Juniper Bakery', phase: 'choose', links, requiresLinkReview, recommended: { cms: 'joomla', design: 'fictional-bakery', quickstart: 'fictional', label: 'Bakery' } } } }),
+            templates: async () => ({ ok: true, body: { templates: [] } })
+          }
+          root.render(<div style={{ width: '430px' }}><FromBusiness t={t} lang="en" onBack={() => {}} api={api} storage={storage} /></div>)
+        }
         window.showKept = (kept, serverName) => {
           const store = new Map([['tracy:from-business:v1', JSON.stringify({ ...kept, at: Date.now() })]])
           const storage = { getItem: (k) => store.get(k) ?? null, setItem: (k, v) => store.set(k, v), removeItem: (k) => store.delete(k) }
@@ -250,5 +259,153 @@ test('a corrected business draft drops old search results and preserves a manual
     await page.evaluate(() => window.showDraftQuery('Bakery C'))
     await page.waitForTimeout(200)
     assert.equal(await input.inputValue(), '')
+  })
+})
+
+test('every researched link shows its outcome; unread primary holds template suggestion until Continue', async () => {
+  await withPage(async (page) => {
+    await page.evaluate(() =>
+      window.showOutcome(
+        [
+          {
+            url: 'https://share.google/fictional',
+            kind: 'google',
+            used: false,
+            primary: true,
+            readStatus: 'could-not-read',
+            readReason: 'not-configured'
+          },
+          {
+            url: 'https://instagram.com/juniper-fictional',
+            kind: 'instagram',
+            used: true,
+            readStatus: 'could-not-read',
+            readReason: 'blocked'
+          },
+          {
+            url: 'https://juniper.example',
+            kind: 'website',
+            used: true,
+            readStatus: 'read',
+            counts: { photos: 2, reviews: 0, contacts: 3 }
+          }
+        ],
+        true
+      )
+    )
+    await page
+      .getByText(
+        'Could not read: this source is not available here. Paste another link for the same business.',
+        { exact: true }
+      )
+      .waitFor()
+    await page
+      .getByText(
+        'Could not read: this page is private or blocked. Paste a public link for the same business.',
+        { exact: true }
+      )
+      .waitFor()
+    await page.getByText('Read: 2 photos, 0 reviews, 3 contact items', { exact: true }).waitFor()
+    assert.equal(await page.locator('[data-own-choose]').count(), 0)
+    assert.match(
+      await page.getByRole('button', { name: 'Fix links', exact: true }).getAttribute('class'),
+      /\bbg-primary\b/
+    )
+    assert.doesNotMatch(
+      await page
+        .getByRole('button', { name: 'Continue with what Tracy found', exact: true })
+        .getAttribute('class'),
+      /\bbg-primary\b/
+    )
+    await page.getByRole('button', { name: 'Continue with what Tracy found', exact: true }).click()
+    await page.locator('[data-own-choose]').waitFor()
+  })
+})
+
+test('none read stays in review and Fix links keeps the submitted links editable', async () => {
+  await withPage(async (page) => {
+    await page.evaluate(() =>
+      window.showOutcome(
+        [
+          {
+            url: 'https://juniper.example',
+            kind: 'website',
+            used: false,
+            primary: true,
+            readStatus: 'could-not-read',
+            readReason: 'fetch-failed'
+          }
+        ],
+        true
+      )
+    )
+    await page.locator('[data-own-link-review]').waitFor()
+    assert.equal(
+      await page.getByRole('button', { name: 'Continue with what Tracy found', exact: true }).count(),
+      0
+    )
+    await page.getByText('Tracy could not read any of the links.', { exact: true }).waitFor()
+    await page.getByRole('button', { name: 'Fix links', exact: true }).click()
+    assert.equal(await page.locator('[data-own-choose]').count(), 0)
+    const input = page.locator('[data-link-row] input').first()
+    assert.equal(await input.inputValue(), 'https://juniper.example')
+    assert.equal(await input.isEnabled(), true)
+    assert.equal(await page.locator('form button[type=submit]').isEnabled(), true)
+  })
+})
+
+test('all read shows statuses and proceeds to template suggestion', async () => {
+  await withPage(async (page) => {
+    await page.evaluate(() =>
+      window.showOutcome(
+        [
+          {
+            url: 'https://juniper.example',
+            kind: 'website',
+            used: true,
+            primary: true,
+            readStatus: 'read',
+            counts: { photos: 5, reviews: 2, contacts: 1 }
+          }
+        ],
+        false
+      )
+    )
+    await page.locator('[data-own-choose]').waitFor()
+    await page.getByText('Read: 5 photos, 2 reviews, 1 contact item', { exact: true }).waitFor()
+    assert.equal(
+      await page.getByRole('button', { name: 'Continue with what Tracy found', exact: true }).count(),
+      0
+    )
+  })
+})
+
+test('only non-primary failures keep Continue filled', async () => {
+  await withPage(async (page) => {
+    await page.evaluate(() =>
+      window.showOutcome(
+        [
+          { url: 'https://juniper.example', primary: true, used: true, readStatus: 'read' },
+          {
+            url: 'https://instagram.com/juniper-fictional',
+            used: true,
+            readStatus: 'could-not-read',
+            readReason: 'blocked'
+          }
+        ],
+        true
+      )
+    )
+    await page.locator('[data-own-link-review]').waitFor()
+    assert.match(
+      await page
+        .getByRole('button', { name: 'Continue with what Tracy found', exact: true })
+        .getAttribute('class'),
+      /\bbg-primary\b/
+    )
+    assert.doesNotMatch(
+      await page.getByRole('button', { name: 'Fix links', exact: true }).getAttribute('class'),
+      /\bbg-primary\b/
+    )
   })
 })

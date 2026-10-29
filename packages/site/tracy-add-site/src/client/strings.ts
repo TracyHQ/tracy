@@ -30,6 +30,27 @@ export type Translate = (key: string, params?: Record<string, string | number>) 
  * four would leave a person guessing."* Folding them makes people guess where they went wrong.
  */
 export const en: Record<string, string> = {
+  own_links_read_pending: 'Waiting to read',
+  own_links_read_read: 'Read: {photos}, {reviews}, {contacts}',
+  own_links_read_photos_one: '{count} photo',
+  own_links_read_photos_other: '{count} photos',
+  own_links_read_reviews_one: '{count} review',
+  own_links_read_reviews_other: '{count} reviews',
+  own_links_read_contacts_one: '{count} contact item',
+  own_links_read_contacts_other: '{count} contact items',
+  own_links_read_not_configured:
+    'Could not read: this source is not available here. Paste another link for the same business.',
+  own_links_read_unresolved:
+    'Could not read: this link did not lead to a business page. Paste another link for the same business.',
+  own_links_read_fetch_failed:
+    'Could not read: the page did not respond. Try again later or paste another link.',
+  own_links_read_blocked:
+    'Could not read: this page is private or blocked. Paste a public link for the same business.',
+  own_links_none_read: 'Tracy could not read any of the links.',
+  own_links_review: 'Some links could not be read. Review their status before choosing a template.',
+  own_links_continue: 'Continue with what Tracy found',
+  own_links_fix: 'Fix links',
+
   // Create site: approved step checklist and guidance for retained client distinctions.
   create_details_complete: 'Site details complete',
   create_title_running: 'Creating your site',

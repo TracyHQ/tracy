@@ -4,6 +4,7 @@ import { ApiError, api, mediaObjectUrl, newRequestId, readToken, writeToken } fr
 import { h } from './dom.js'
 import { operatorView, operatorAllowed } from './operator.js'
 import { t, tCount } from './strings.js'
+import { linkReadRow } from './link-read-rows.js'
 import {
   againView,
   briefText,
@@ -598,7 +599,7 @@ async function placeView(id, token) {
     ),
     scoreSection(row?.score ?? c.score),
     researchSection(id, latestJob, job, token),
-    sourcesSection(detail.sources ?? []),
+    sourcesSection(detail.sources ?? [], detail.links ?? c.pastedLinks ?? []),
     photosSection(detail.media ?? [], opp.name ?? c.name ?? ''),
     socialSection(profile?.socialStats ?? row?.social ?? null),
     outreachSection(opp, row, profile),
@@ -764,14 +765,23 @@ async function againDialog(id, token) {
   dialog.showModal()
 }
 
-function sourcesSection(sources) {
-  if (sources.length === 0)
+function sourcesSection(sources, links = []) {
+  if (sources.length === 0 && links.length === 0)
     return section(t('place.sources'), h('p', { class: 'muted' }, t('place.sources.empty')))
   return section(
     t('place.sources'),
     h(
       'ul',
       { class: 'source-list' },
+      links.map((link) => {
+        const view = linkReadRow(link)
+        return h(
+          'li',
+          {},
+          h('span', { class: 'source-name' }, link.url ?? ''),
+          h('span', { class: `tone-${view.tone}` }, view.text)
+        )
+      }),
       sources.map((s) => {
         const view = sourceRow(s)
         return h(

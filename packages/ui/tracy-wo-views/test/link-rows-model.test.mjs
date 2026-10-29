@@ -96,3 +96,18 @@ test('leftOutOf: the links a successful add did not use, with their reason; twic
     { url: 'https://a.example', reason: 'invalid' }
   ])
 })
+
+test('research outcomes stay on every submitted row, including unconfigured Google and a private social page', () => {
+  const views = judgeRows(
+    [GOOGLE, INSTAGRAM, 'https://juniper.example'],
+    [
+      { used: false, readStatus: 'could-not-read', readReason: 'not-configured', primary: true },
+      { used: true, readStatus: 'could-not-read', readReason: 'blocked' },
+      { used: true, readStatus: 'read', counts: { photos: 3, reviews: 0, contacts: 2 } }
+    ]
+  )
+  assert.equal(views[0].readStatus, 'could-not-read')
+  assert.equal(views[0].readReason, 'not-configured')
+  assert.equal(views[1].readReason, 'blocked')
+  assert.deepEqual(views[2].counts, { photos: 3, reviews: 0, contacts: 2 })
+})

@@ -37,6 +37,13 @@ import {
 
 /** Every sentence the rows say; the consumer maps each to a key of its own namespace. */
 export type LinkRowsKey =
+  | 'read.pending'
+  | 'read.read'
+  | `read.${'photos' | 'reviews' | 'contacts'}.${'one' | 'other'}`
+  | 'read.not-configured'
+  | 'read.unresolved'
+  | 'read.fetch-failed'
+  | 'read.blocked'
   | 'label'
   | 'placeholder.google'
   | 'placeholder.social'
@@ -139,7 +146,33 @@ function KindIcon({ view, index }: { view: RowView | null; index: number }): JSX
 const PLACEHOLDERS = ['placeholder.google', 'placeholder.social', 'placeholder.website'] as const
 
 /** The status or the reason under a filled row. */
-function rowLine(copy: LinkRowsCopy, view: RowView): { text: string; tone: 'ok' | 'out' | 'bad' } {
+export function rowLine(
+  copy: LinkRowsCopy,
+  view: RowView,
+  locale = 'en'
+): { text: string; tone: 'ok' | 'out' | 'bad' } {
+  if (view.readStatus === 'read') {
+    const counts = view.counts ?? { photos: 0, reviews: 0, contacts: 0 }
+    const unit = (key: 'photos' | 'reviews' | 'contacts') =>
+      copy(`read.${key}.${new Intl.PluralRules(locale).select(counts[key]) === 'one' ? 'one' : 'other'}`, {
+        count: counts[key]
+      })
+    return {
+      text: copy('read.read', {
+        photos: unit('photos'),
+        reviews: unit('reviews'),
+        contacts: unit('contacts')
+      }),
+      tone: 'ok'
+    }
+  }
+  if (view.readStatus === 'could-not-read') {
+    const reason = ['not-configured', 'unresolved', 'fetch-failed', 'blocked'].includes(view.readReason ?? '')
+      ? view.readReason!
+      : 'fetch-failed'
+    return { text: copy(`read.${reason}`), tone: 'bad' }
+  }
+  if (view.readStatus === 'pending') return { text: copy('read.pending'), tone: 'out' }
   if (view.reason) {
     const bad = view.reason === 'invalid' || view.reason === 'not-public' || view.reason === 'blocked'
     return { text: copy(`reason.${view.reason}`), tone: bad ? 'bad' : 'out' }
@@ -179,18 +212,23 @@ export function LinkRows({
   onRows,
   onName,
   server,
+  locale,
   disabled
 }: {
   copy: LinkRowsCopy
   rows: readonly string[]
   onRows(rows: string[]): void
   onName?(name: string): void
+  locale?: string
   server?: readonly ServerLink[]
   disabled?: boolean
 }): JSX.Element {
   const baseId = useId()
   const views = judgeRows(rows, server)
   const hint = summaryLine(copy, summaryOf(views))
+  const researched = views.some(
+    (view) => view?.readStatus === 'read' || view?.readStatus === 'could-not-read'
+  )
 
   const paste = (index: number) => (event: ClipboardEvent<HTMLInputElement>) => {
     const spread = spreadPaste(rows, index, event.clipboardData.getData('text'))
@@ -208,7 +246,7 @@ export function LinkRows({
       <div className="grid gap-2">
         {rows.map((value, index) => {
           const view = views[index]
-          const line = view ? rowLine(copy, view) : null
+          const line = view ? rowLine(copy, view, locale) : null
           return (
             <div
               // Rows have no identity of their own: the index is what the person sees and edits.
@@ -217,6 +255,7 @@ export function LinkRows({
               className="grid gap-1"
               data-link-row={index}
               data-link-kind={view?.kind ?? ''}
+              data-link-read-status={view?.readStatus ?? ''}
               data-link-reason={view?.reason ?? ''}
             >
               <InputGroup>
@@ -226,7 +265,7 @@ export function LinkRows({
                 <InputGroupInput
                   id={`${baseId}-${index}`}
                   value={value}
-                  disabled={disabled}
+                  readOnly={disabled}
                   autoComplete="off"
                   spellCheck={false}
                   inputMode="url"
@@ -265,7 +304,7 @@ export function LinkRows({
           )
         })}
       </div>
-      {rows.length < MAX_LINKS ? (
+      {rows.length < MAX_LINKS && !disabled ? (
         <div>
           <Button
             type="button"
@@ -279,13 +318,47 @@ export function LinkRows({
           </Button>
         </div>
       ) : null}
-      <p
-        className={hint.error ? 'text-destructive text-xs' : 'text-muted-foreground text-xs'}
-        role={hint.error ? 'alert' : 'status'}
-        data-link-summary={hint.error ? 'none' : 'ok'}
-      >
-        {hint.text}
-      </p>
+      {!researched ? (
+        <p
+          className={hint.error ? 'text-destructive text-xs' : 'text-muted-foreground text-xs'}
+          role={hint.error ? 'alert' : 'status'}
+          data-link-summary={hint.error ? 'none' : 'ok'}
+        >
+          {hint.text}
+        </p>
+      ) : null}
     </div>
+  )
+}
+
+/** The same per-link outcome after research, when the editable form is elsewhere. */
+export function LinkReadResults({
+  links,
+  copy,
+  locale
+}: {
+  links: readonly ServerLink[]
+  locale?: string
+  copy: LinkRowsCopy
+}): JSX.Element {
+  return (
+    <ul className="grid gap-2" data-link-results="">
+      {links.map((link, index) => {
+        const view = judgeRows([link.url ?? ''], [link])[0]
+        const line = view ? rowLine(copy, view, locale) : { text: copy('read.pending'), tone: 'out' }
+        return (
+          <li
+            key={`${index}:${link.url}`}
+            className="grid min-w-0 gap-1 text-xs"
+            data-link-read-status={link.readStatus ?? ''}
+          >
+            <span className="break-all">{link.url}</span>
+            <span className={line.tone === 'bad' ? 'text-destructive' : 'text-muted-foreground'}>
+              {line.text}
+            </span>
+          </li>
+        )
+      })}
+    </ul>
   )
 }

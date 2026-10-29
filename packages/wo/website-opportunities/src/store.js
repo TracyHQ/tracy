@@ -11,6 +11,7 @@ import { resolvePlace } from './places.js'
 import { nextReadingPicks } from '../domain/business-reading.mjs'
 import { mergeKeyMessagePicks, nextFactOverrides } from './owner-fact-picks.js'
 import { journeySql } from './wo-journey.js'
+import { markPrimaryLink } from '../domain/pasted-link-status.mjs'
 
 /** The leased table of a lease: a research request (`wo_job`, the default) or a place job (`wo_place_job`). */
 const leaseTable = (lease) => (lease.table === 'wo_place_job' ? 'wo_place_job' : 'wo_job')
@@ -87,9 +88,26 @@ export function candidateWithNewRefs(held, sent, now = new Date()) {
       changed = true
     }
   if (listings.length) out.listings = listings
+  if (Array.isArray(sent?.pastedLinks)) {
+    const links = Array.isArray(base.pastedLinks) ? [...base.pastedLinks] : []
+    for (const link of sent.pastedLinks) {
+      const at = links.findIndex((held) => held.url === link.url)
+      if (at < 0) {
+        links.push(link)
+        changed = true
+      } else if (JSON.stringify(links[at]) !== JSON.stringify(link)) {
+        links[at] = link
+        changed = true
+      }
+    }
+    if (changed) out.pastedLinks = markPrimaryLink(links)
+  }
   if (changed) out.linksAddedAt = now.toISOString()
   return changed ? out : null
 }
+
+const unreadIdentity = (provider, providerId, candidate) =>
+  provider === 'url' && candidate?.pastedLinks?.some((link) => link.url === providerId && !link.used)
 
 /**
  * Insert once per (account, provider, providerId), with the place it names (`places.js`; null when the
@@ -98,7 +116,10 @@ export function candidateWithNewRefs(held, sent, now = new Date()) {
  * @returns {Promise<{row: object, created: boolean}>}
  */
 export async function insertOpportunity(pool, accountId, { name, branch, provider, providerId, candidate }) {
-  const placeId = await resolvePlace(pool, { provider, providerId, name })
+  // A rejected input is metadata, never a shared identity that seeds a website crawl.
+  const placeId = unreadIdentity(provider, providerId, candidate)
+    ? null
+    : await resolvePlace(pool, { provider, providerId, name })
   const { rows } = await pool.query(
     `insert into wo_opportunity (account_id, name, branch, provider, provider_id, candidate, place_id)
      values ($1, $2, $3, $4, $5, $6, $7)
@@ -124,6 +145,7 @@ export async function insertOpportunity(pool, accountId, { name, branch, provide
 
 /** The opportunity's place, resolved now when it has none yet (saved before places existed). */
 export async function ensurePlaceOf(pool, opportunity) {
+  if (unreadIdentity(opportunity.provider, opportunity.provider_id, opportunity.candidate)) return null
   if (opportunity.place_id) return opportunity.place_id
   const placeId = await resolvePlace(pool, {
     provider: opportunity.provider,

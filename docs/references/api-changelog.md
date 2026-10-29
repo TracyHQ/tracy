@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-10-29: Per-link business research outcomes
+
+Changed (internal): business-link intake keeps every pasted address on `candidate.pastedLinks`. Opportunity detail, research results and Build from my business return `links` with `readStatus`, `readReason`, `primary` and collected `counts: {photos, reviews, contacts}`. `requiresLinkReview` is true when no link was read or the primary input failed; Add site waits for the customer to fix the links or explicitly continue before showing the template suggestion. A valid public link with an unavailable source remains recorded even when it is the only input.
+
 ## 2026-10-28: The name the site goes by while the business name is held
 
 Changed (internal, not in the public reference): `GET /api/website-opportunities/:id/place-profile` also answers `siteName` while the latest brief holds the business name off the site and the owner has not shown it since: the neutral identity the site goes by instead (the brief's home page title made without the name). Absent otherwise.
