@@ -314,7 +314,7 @@ export const OPS_A_ROUTES = [
     path: '/api/templates',
     summary: 'List Design templates cards',
     description:
-      'Public, no seat needed: read by the design-inspiration plugin and the public page. Cards come from the stored releases and live demos; a picture this server holds is an absolute URL, one it lacks is null.',
+      'Public, no seat needed: read by the design-inspiration plugin and the public page. Cards come from the stored releases and live demos; a picture this server holds is an absolute URL, one it lacks is null. A card with a blurb also carries `card.blurbs`, `{ lang: text }` for the languages (de, fr, es, it, nl) its English blurb has been translated into so far.',
     audience: ['dsh', 'public'],
     auth: 'none',
     internal: true,

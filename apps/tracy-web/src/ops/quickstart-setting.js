@@ -23,6 +23,7 @@ import { Hono } from 'hono'
 
 import { uploadReleaseAsset } from '../lib/release-assets.js'
 import { kickReadiness } from '../lib/customize-readiness.js'
+import { kickBlurbTranslations } from '../lib/template-blurb-translations.js'
 import { kickDsReadiness } from '../lib/design-system-readiness.js'
 import { readReleases, refreshReleases, RELEASES_REPO, releasesToken } from '../lib/quickstart-releases.js'
 import { packageOf, proposalFrom, readPackage } from '../lib/setting-proposal.js'
@@ -179,6 +180,8 @@ export function quickstartSettingRoutes({ pool, config, fetchImpl = fetch }) {
     if (read.ok) {
       kickReadiness(pool, config, { fetchImpl })
       kickDsReadiness(pool, config, { fetchImpl })
+      // A new or reworded blurb is translated for the public Templates pages (master only).
+      kickBlurbTranslations(pool, config, { fetchImpl })
     }
     const [after] = (await readReleases(pool)).filter((r) => r.tag === t.release.tag)
     return c.json({

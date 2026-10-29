@@ -30,6 +30,7 @@
 import { Hono } from 'hono'
 
 import { kickReadiness } from '../lib/customize-readiness.js'
+import { kickBlurbTranslations } from '../lib/template-blurb-translations.js'
 import { kickDsReadiness } from '../lib/design-system-readiness.js'
 import { refreshReleases, releaseEventWanted } from '../lib/quickstart-releases.js'
 import { json, normalizeSiteKey } from '../lib/http.js'
@@ -345,6 +346,8 @@ export function githubRoutes({ pool, config, fetchImpl = fetch }) {
     if (result.ok) {
       kickReadiness(pool, config, { fetchImpl })
       kickDsReadiness(pool, config, { fetchImpl })
+      // A new or reworded blurb is translated for the public Templates pages (master only).
+      kickBlurbTranslations(pool, config, { fetchImpl })
     }
     // 200 either way: a read that could not happen is this app's problem to report on its own
     // screen, not a delivery for GitHub to retry.
