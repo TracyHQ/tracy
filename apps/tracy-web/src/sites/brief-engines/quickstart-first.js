@@ -28,6 +28,7 @@ import {
 import { quickstartContactFacts } from './quickstart-facts.js'
 import { quickstartFillInput, quickstartTextPins } from './quickstart-fill-copy.js'
 import { delegateEngine } from './delegate.js'
+import { labelWithinBudget, photoLabelReceipt } from './quickstart-photo-labels.js'
 
 export const QUICKSTART_WORKFLOW = 'quickstart-first/1'
 /** A website page's words the editor reads: the model's input budget, not a cut of what is shown. */
@@ -210,6 +211,24 @@ export function createQuickstartFirstEngine({
   researchOf = embeddedResearch
 }) {
   const sourceFor = (ctx) => woContent?.quickstartFor?.({ siteKey: ctx.siteKey, email: ctx.email })
+  /** The write may go on: the run is live, its access holds, and the frozen source and generation are unchanged. */
+  const allowedFor =
+    (ctx, prepared, root = () => null) =>
+    async () => {
+      ctx.signal?.throwIfAborted()
+      await assertActive?.({ ctx, source: prepared.source })
+      await root()?.()
+      const current = await sourceFor(ctx)
+      // Progress receipts are mutable; the frozen source and generation are not.
+      if (
+        !current ||
+        current.id !== prepared.source.id ||
+        current.revision_id !== prepared.source.revision_id ||
+        hash({ brief: current.brief, profile: current.profile_effective }) !==
+          hash({ brief: prepared.source.brief, profile: prepared.source.profile_effective })
+      )
+        throw fail('QUICKSTART_SOURCE_CHANGED')
+    }
   return delegateEngine(legacy, {
     async normalize(ctx) {
       return (await sourceFor(ctx)) ? { workflow: QUICKSTART_WORKFLOW } : null
@@ -225,8 +244,32 @@ export function createQuickstartFirstEngine({
       }
     },
     async preparePictures(ctx, prepared) {
-      if (!prepared.legacy) return null
-      return legacy.preparePictures?.(ctx, prepared.prepared) ?? null
+      if (prepared.legacy) return legacy.preparePictures?.(ctx, prepared.prepared) ?? null
+      // The brief's photos are labelled here, under the drawing budget, so apply asks no vision model (item 24).
+      const held = prepared.source.content?.writes ?? {}
+      if (
+        !realPictures ||
+        held['quickstart:fill']?.state === 'filled' ||
+        held['quickstart:editorial-baseline'] ||
+        held['quickstart:pictures']?.state === 'verified'
+      )
+        return null
+      // A started vision batch stops only with the build: cut at this phase's deadline, its paid attempt turns uncertain.
+      const runCtx = { ...ctx, signal: ctx.runSignal ?? ctx.signal }
+      const checkAllowed = allowedFor(runCtx, prepared)
+      await checkAllowed()
+      const generate = await generateFor({ ctx: runCtx, source: prepared.source, checkAllowed })
+      const real = await realPictures.forSite({
+        siteKey: ctx.siteKey,
+        email: ctx.email,
+        strict: true,
+        signal: runCtx.signal,
+        visionOverride: labelWithinBudget(generate.vision, {
+          deadlineAt: ctx.picturesDeadlineAt ?? Number.POSITIVE_INFINITY,
+          stop: ctx.signal
+        })
+      })
+      return { photoLabels: real?.vision ?? null }
     },
     async apply(ctx, prepared) {
       if (prepared.legacy) {
@@ -238,21 +281,7 @@ export function createQuickstartFirstEngine({
         return legacy.apply(ctx, prepared.prepared)
       }
       let assertRoot = null
-      const checkAllowed = async () => {
-        ctx.signal?.throwIfAborted()
-        await assertActive?.({ ctx, source: prepared.source })
-        await assertRoot?.()
-        const current = await sourceFor(ctx)
-        // Progress receipts are mutable; the frozen source and generation are not.
-        if (
-          !current ||
-          current.id !== prepared.source.id ||
-          current.revision_id !== prepared.source.revision_id ||
-          hash({ brief: current.brief, profile: current.profile_effective }) !==
-            hash({ brief: prepared.source.brief, profile: prepared.source.profile_effective })
-        )
-          throw fail('QUICKSTART_SOURCE_CHANGED')
-      }
+      const checkAllowed = allowedFor(ctx, prepared, () => assertRoot)
       prepared.checkAllowed = checkAllowed
       await checkAllowed()
       const checkpoint = async (key, value) => {
@@ -541,6 +570,8 @@ export function createQuickstartFirstEngine({
               strict: true,
               signal: ctx.signal,
               visionOverride: generate.vision,
+              // The labels picture preparation made: no vision call while the write clock runs (item 24).
+              label: false,
               visionNeeds: (baseline?.baseline?.imageFrames ?? []).map(({ width, height }) => ({
                 width,
                 height
@@ -548,6 +579,11 @@ export function createQuickstartFirstEngine({
             })
       if (!resume && !photosOnlyRetry && !real?.pictures?.length)
         throw fail('QUICKSTART_PHOTOGRAPHS_REQUIRED')
+      const photoLabels = real ? photoLabelReceipt(prepared.realPictureShape?.photoLabels, real) : null
+      if (photoLabels?.unlabelled)
+        ctx.note?.(
+          `${photoLabels.unlabelled} photo(s) were placed without vision labels: the picture budget ended before they were labelled`
+        )
       // A v3 content map and a brief that links its photos: the fill plan decides the pictures and pins its words (#141).
       const fill = resume || photosOnlyRetry ? null : await quickstartFillInput({ ctx, woContent, real })
       const photos =
@@ -699,6 +735,7 @@ export function createQuickstartFirstEngine({
         copyHash: quickstartCopyHash(adapter.records),
         structureHash: hash(beforeProse),
         photos,
+        ...(photoLabels ? { photoLabels } : {}),
         initialStructure: beforeProse,
         sourceHash: hash(prepared.sources),
         identity,

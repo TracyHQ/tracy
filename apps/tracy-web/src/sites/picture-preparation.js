@@ -11,7 +11,14 @@ export async function preparePicturesBeforeApply(engine, ctx, prepared, ms, grac
     timer = setTimeout(() => stop.abort(new Error('picture preparation took too long')), Math.max(1, ms))
   })
   const started = Date.now()
-  const work = Promise.resolve().then(() => engine.preparePictures({ ...ctx, signal }, prepared))
+  // `picturesDeadlineAt`: when this phase ends, for work that must not start what it cannot finish. `runSignal`: the
+  // build's own signal, for a paid call that an abort at this phase's deadline would leave uncertain.
+  const work = Promise.resolve().then(() =>
+    engine.preparePictures(
+      { ...ctx, signal, picturesDeadlineAt: started + Math.max(1, ms), runSignal: ctx.signal },
+      prepared
+    )
+  )
   try {
     // Only this caller stores the result. A dependency ignoring abort cannot replace it after the deadline.
     prepared.realPictureShape = await Promise.race([work, ended])

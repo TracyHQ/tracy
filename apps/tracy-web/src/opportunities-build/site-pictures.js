@@ -239,6 +239,7 @@ export function createSitePictures({
       promptTokens: usage.promptTokens,
       completionTokens: usage.completionTokens,
       failed,
+      deferred: answer.deferred ?? 0,
       ms: Date.now() - started
     }
   }
@@ -279,11 +280,21 @@ export function createSitePictures({
   return {
     /**
      * @param {{siteKey: string, email: string, strict?: boolean, signal?: AbortSignal,
-     *   visionNeeds?: Array<{width: number, height: number}>, visionOverride?: any}} who
+     *   visionNeeds?: Array<{width: number, height: number}>, visionOverride?: any, label?: boolean}} who - `label: false`:
+     *   read the labels of the current key and ask no model, for a caller whose write clock runs (item 24); the photos still
+     *   unlabelled are counted (`vision.unlabelled`), and no drawing check is handed back
      * @returns {Promise<null | {buildId: string, plan: any | null, colours: string[], pictures: any[],
      *   bytes: (id: string) => Promise<Buffer | null>}>}
      */
-    async forSite({ siteKey, email, strict = false, signal, visionNeeds = [], visionOverride = undefined }) {
+    async forSite({
+      siteKey,
+      email,
+      strict = false,
+      signal,
+      visionNeeds = [],
+      visionOverride = undefined,
+      label = true
+    }) {
       signal?.throwIfAborted()
       try {
         const build = await buildOf(siteKey, email)
@@ -319,21 +330,39 @@ export function createSitePictures({
         // In manifest order, as the brief listed them.
         const own = [...manifest.keys()].map((id) => byManifest.get(id)).filter(Boolean)
         await backfillFeatures(own)
-        const labelled = await labelMissing(
-          own,
-          signal,
-          visionNeeds,
-          vision,
-          build.brief?.picturePolicy
-            ? policy.maxVisionPictures
-            : (vision?.maxPictures ?? policy.maxVisionPictures),
-          build.account_id ? { kind: 'account', accountId: build.account_id } : null,
-          build.brief?.business?.trade ?? 'food'
-        ).catch((error) => {
-          if (strict || signal?.aborted) throw error
-          log.warn?.(`[pictures] ${siteKey}: the vision model could not label (${error?.message ?? error})`)
-          return null
-        })
+        const maxVision = build.brief?.picturePolicy
+          ? policy.maxVisionPictures
+          : (vision?.maxPictures ?? policy.maxVisionPictures)
+        const labelled = !label
+          ? vision
+            ? {
+                labelled: 0,
+                calls: 0,
+                tokens: 0,
+                failed: 0,
+                ms: 0,
+                unlabelled: visionPictureCandidates(own, {
+                  key: vision.key,
+                  maxPictures: maxVision,
+                  needs: visionNeeds
+                }).length
+              }
+            : null
+          : await labelMissing(
+              own,
+              signal,
+              visionNeeds,
+              vision,
+              maxVision,
+              build.account_id ? { kind: 'account', accountId: build.account_id } : null,
+              build.brief?.business?.trade ?? 'food'
+            ).catch((error) => {
+              if (strict || signal?.aborted) throw error
+              log.warn?.(
+                `[pictures] ${siteKey}: the vision model could not label (${error?.message ?? error})`
+              )
+              return null
+            })
         signal?.throwIfAborted()
         const byId = new Map(own.map((r) => [r.id, r]))
         // Only a label of the current key: an old model's or prompt's answer is not read.
@@ -383,34 +412,35 @@ export function createSitePictures({
             : null,
           // The photo labeller read on a drawn picture (#194): what it sees decides whether the drawing may be shown
           // (`drawnPictureVerdict`). One picture a call, charged like the build's own labels; null with no labeller.
-          checkDrawing: vision
-            ? async (bytes) => {
-                const model = vision.door.model
-                const invoke = () =>
-                  vision.label({
-                    door: vision.door,
-                    pictures: [{ id: 'drawn', bytes }],
-                    trade: build.brief?.business?.trade ?? null,
-                    signal
-                  })
-                const answer = vision.metered
-                  ? await invoke()
-                  : await chargeable(
-                      {
-                        provider: 'vision',
-                        operation: model,
-                        maxCents: ceilingCents('vision', model),
-                        actualCents: (r) => visionCostCents(model, r.usage),
-                        // A label call like the build's own: the same purpose on /ops › Usage.
-                        purpose: 'picture-labels',
-                        payer: build.account_id ? { kind: 'account', accountId: build.account_id } : null,
-                        tokens: (r) => modelTokensOf((r.usage?.requests ?? []).map((q) => q.usage))
-                      },
-                      invoke
-                    )
-                return answer.labels.get('drawn') ?? null
-              }
-            : null,
+          checkDrawing:
+            vision && label
+              ? async (bytes) => {
+                  const model = vision.door.model
+                  const invoke = () =>
+                    vision.label({
+                      door: vision.door,
+                      pictures: [{ id: 'drawn', bytes }],
+                      trade: build.brief?.business?.trade ?? null,
+                      signal
+                    })
+                  const answer = vision.metered
+                    ? await invoke()
+                    : await chargeable(
+                        {
+                          provider: 'vision',
+                          operation: model,
+                          maxCents: ceilingCents('vision', model),
+                          actualCents: (r) => visionCostCents(model, r.usage),
+                          // A label call like the build's own: the same purpose on /ops › Usage.
+                          purpose: 'picture-labels',
+                          payer: build.account_id ? { kind: 'account', accountId: build.account_id } : null,
+                          tokens: (r) => modelTokensOf((r.usage?.requests ?? []).map((q) => q.usage))
+                        },
+                        invoke
+                      )
+                  return answer.labels.get('drawn') ?? null
+                }
+              : null,
           pictures: own.map((r) => ({
             id: r.id,
             postId: manifest.get(r.id)?.postId ?? null,

@@ -320,6 +320,48 @@ test(
 )
 
 test(
+  'label: false reads the labels picture preparation kept and asks no model, counting the photos still unlabelled',
+  opts,
+  async () => {
+    const objects = store()
+    const { media } = await seed(db.pool, objects)
+    const asked = []
+    const vision = {
+      door: { url: 'https://v.test', key: 'k', model: 'fictional-vision' },
+      key: 'fictional-vision|p1',
+      label: async ({ pictures }) => {
+        asked.push(pictures.map((p) => p.id))
+        return {
+          labels: new Map(pictures.map((p) => [p.id, { subject: 'interior', textPresence: 'absent' }])),
+          usage: { calls: 1, promptTokens: 3, completionTokens: 2 },
+          failed: 0
+        }
+      }
+    }
+    const pictures = createSitePictures({
+      pool: db.pool,
+      objects,
+      measure: pictureFeatures,
+      log: { warn() {} }
+    })
+    const who = { siteKey: 'pic-tamarel.tracy.test', email: 'owner@tracy.test', visionOverride: vision }
+    // While the write clock runs: no model call, the photo is unlabelled, and no drawing check is handed out.
+    const during = await pictures.forSite({ ...who, label: false })
+    assert.deepEqual(asked, [])
+    assert.equal(during.pictures[0].vision, null)
+    assert.equal(during.vision.unlabelled, 1)
+    assert.equal(during.checkDrawing, null)
+    // Picture preparation labels it and keeps the label; the read that follows asks nothing and finds it.
+    await pictures.forSite(who)
+    assert.deepEqual(asked, [[media[0].id]])
+    const after = await pictures.forSite({ ...who, label: false })
+    assert.equal(asked.length, 1)
+    assert.equal(after.pictures[0].vision.subject, 'interior')
+    assert.equal(after.vision.unlabelled, 0)
+  }
+)
+
+test(
   'a dish photo the brief left a candidate is accepted when this build’s vision calls it a dish, and only then',
   opts,
   async () => {
