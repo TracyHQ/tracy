@@ -1,0 +1,3 @@
+- **Prepare brief pictures before starting the site write clock, bound drawing dependencies and log labeller refusal classes.** — Codex · #189 · `feat/brief-build-own-site` · 2026-10-29
+  **Affects:** Brief builds on Joomla and WordPress. Rebuild tracy-web to use the separate picture preparation deadline; site writes retain their existing full time limit. Drawing prompts forbid all visible faces and lettering and use a new cache version.
+  **Why / Measured:** Drawing could exhaust the site-write deadline and prevent later contact, social and menu writes. Fictional fixtures exercise the actual Joomla plugin validator after picture preparation times out. Sharpness uses rendered CSS size rather than counting upload density twice; existing blur thresholds stay unchanged.

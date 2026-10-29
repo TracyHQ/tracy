@@ -18,6 +18,7 @@ import { ownExcerpt, writeSteps } from '../src/sites/brief-engines/joomla-tidy.j
 import { MAX_PICTURES } from '../src/sites/brief-engines/pictures.js'
 import { normalizeBrief } from '../src/sites/brief-normalize.js'
 import { throughDoor } from './_apply-door.mjs'
+import { preparePicturesBeforeApply } from '../src/sites/picture-preparation.js'
 
 const business = contractFor(defaultContracts(), 'tracy-business/j6', '1.2.0')
 const base = contractFor(defaultContracts(), 'tracy-base/j6', '1.0.1')
@@ -4140,4 +4141,159 @@ test('a site that answers after the menu tidy-up keeps its take-offs', async () 
   assert.equal(site.menuRows.find((r) => r.id === 618).published, 0)
   assert.equal(times.tidyMenuReverted, undefined)
   assert.ok(!notes.some((n) => /taken back/.test(n)))
+})
+
+// Picture reads/drawing must finish on their own clock before the first CMS write (#189, round 8).
+for (const trade of [
+  { name: 'Copperleaf Bakery', about: 'A bakery making bread each morning.' },
+  { name: 'Northgate Dental', about: 'A dental clinic providing routine dental care.' }
+]) {
+  test(`${trade.name}: stalled picture preparation leaves the full text write phase available`, async () => {
+    const site = fakeSite(boxing104)
+    const model = fakeModel()
+    const identity = {
+      id: 900080,
+      title: 'Owner contact block',
+      module: 'mod_custom',
+      published: 1,
+      language: '*',
+      params: '{}',
+      content:
+        '<p><a href="tel:5550109000">5550109000</a></p>' +
+        '<ul><li><a href="https://instagram.com/demo"><i class="fab fa-instagram"></i></a></li></ul>' +
+        '<iframe src="https://www.google.com/maps/embed?pb=demo"></iframe>' +
+        '<img src="images/demo/company-logo.png" alt="logo">'
+    }
+    site.moduleRows.push(identity)
+    site.articleRows.push({
+      id: 900081,
+      catid: 900082,
+      title: 'Template post',
+      introtext: '<p>Demo</p>',
+      state: 1,
+      language: '*'
+    })
+    site.menuRows.push({
+      id: 900083,
+      type: 'component',
+      title: 'Blog',
+      alias: 'blog',
+      path: 'blog',
+      menutype: 'footer',
+      link: 'index.php?option=com_content&view=article&id=900081',
+      published: 1,
+      home: 0,
+      parent_id: 1,
+      level: 1,
+      language: '*',
+      params: '{}'
+    })
+    const sitePlan = {
+      contact: { phone: { value: '+1 555 010 0111', href: 'tel:+15550100111' } },
+      socials: { decision: 'keep', keep: { instagram: 'https://instagram.com/fictional-owner' } },
+      map: { decision: 'address', embed: 'https://www.google.com/maps?q=14%20Fictional%20Lane&output=embed' },
+      logo: { decision: 'name-as-text', name: trade.name, demoFiles: ['images/demo/company-logo.png'] },
+      posts: { decision: 'hide', demoArticles: [{ id: 900081 }] }
+    }
+    const originalAnswer = site.answer
+    site.answer = async (call) => {
+      const { action, params } = call
+      if (action === 'content.list' && params.kind === 'module' && !params.search) {
+        const rows = site.moduleRows
+        return { ok: true, items: rows.slice(params.offset ?? 0, (params.offset ?? 0) + params.limit) }
+      }
+      if (action === 'content.get' && params.kind === 'module' && params.id === identity.id)
+        return { ok: true, item: { ...identity } }
+      const steps =
+        action === 'content.batch' ? params.operations : action === 'content.update' ? [params] : []
+      for (const step of steps)
+        if (step.kind === 'module' && step.id === identity.id) Object.assign(identity, step.fields)
+      return originalAnswer(call)
+    }
+    const { ctx, notes } = context(boxing104, 'quickstart/ja-boxing/j6', {
+      brief: { about: trade.about, goal: 'contact', style: 'plain' },
+      normalized: { name: trade.name, nameFrom: 'answer', about: trade.about, languages: ['en'], contact: '' }
+    })
+    let reads = 0
+    const realPictures = { forSite: async () => null, recordPlan: async (_id, plan) => plan }
+    const engine = createJoomlaEngine({
+      models: model.models,
+      applyFor: () => throughDoor(site.apply),
+      siteFile: () => () => {
+        reads++
+        return new Promise(() => {})
+      },
+      realPictures,
+      woContent: { sitePlanFor: async () => sitePlan }
+    })
+    const prepared = await engine.prepare(ctx)
+    supplyBlankRows(site, boxing104, prepared.demoBlanks)
+    prepared.real = {
+      buildId: 'fictional-portrait-build',
+      pictures: [
+        {
+          id: 'owner-phone',
+          width: 1152,
+          height: 2048,
+          source: 'google',
+          vision: { subject: 'interior', textPresence: 'absent', quality: 'high' }
+        }
+      ],
+      bytes: async () => null
+    }
+    const started = Date.now()
+    await preparePicturesBeforeApply(engine, ctx, prepared, 250, 10)
+    assert.ok(Date.now() - started < 2000, 'a hung picture reader is bounded')
+    assert.ok(reads > 0, `the real engine tried to measure its picture slots: ${notes.join('; ')}`)
+    assert.equal(site.calls.length, 0, 'preparation must not even pin article order')
+    const beforeApply = reads
+    const result = await engine.apply(ctx, prepared)
+    assert.ok(result.wrote > 0, 'the owner text still reaches the plugin-validated CMS')
+    assert.equal(reads, beforeApply, 'apply never retries the unavailable pictures')
+    assert.ok(notes.some((note) => /picture preparation/.test(note)))
+    assert.ok(site.applies.length > 0, 'contract writes still run through the real plugin validator')
+    assert.match(identity.content, /tel:\+15550100111/)
+    assert.match(identity.content, /instagram.com\/fictional-owner/)
+    assert.match(identity.content, /14%20Fictional%20Lane/)
+    assert.ok(identity.content.includes(trade.name), 'the logo falls back to the owner name')
+    assert.doesNotMatch(identity.content, /company-logo\.png|instagram.com\/demo/)
+    assert.equal(site.menuRows.find((row) => row.id === 900083).published, 0, 'the demo blog menu is removed')
+  })
+}
+
+test('completed picture preparation is consumed once, with fresh plugin validation before writing', async () => {
+  const site = fakeSite(boxing104)
+  const { ctx } = context(boxing104, 'quickstart/ja-boxing/j6')
+  const model = fakeModel()
+  const { siteFile } = await withPictures()
+  let reads = 0
+  const realPictures = {
+    forSite: async () => null,
+    recordPlan: async (_id, plan) => plan,
+    recordOutcome: async () => {}
+  }
+  const engine = createJoomlaEngine({
+    models: model.models,
+    applyFor: () => throughDoor(site.apply),
+    siteFile: (key) => async (file) => {
+      reads++
+      return siteFile(key)(file)
+    },
+    realPictures
+  })
+  const prepared = await engine.prepare(ctx)
+  supplyBlankRows(site, boxing104, prepared.demoBlanks)
+  prepared.real = { buildId: 'fictional-empty-photo-build', pictures: [], bytes: async () => null }
+  await preparePicturesBeforeApply(engine, ctx, prepared, 10_000)
+  assert.ok(prepared.realPictureShape?.shaped.length > 0)
+  assert.equal(site.calls.length, 0, 'no CMS write before the write phase')
+  const beforeApply = reads
+  await engine.apply(ctx, prepared)
+  assert.equal(reads, beforeApply, 'the completed shapes are not prepared again')
+  assert.ok(site.uploads.length > 0, 'the prepared shapes reach the existing Apply media door')
+  assert.ok(
+    site.applies.some((call) =>
+      Object.values(call.changes ?? {}).some((v) => String(v).includes('tracy-content/'))
+    )
+  )
 })

@@ -37,15 +37,13 @@ export function keptAsks(shaped, changes, slotOf, contentMap) {
   return out
 }
 
-export async function writeContractPictures({
+/** Read/plan/draw only. The caller bounds this work before the CMS write clock begins. */
+export async function prepareContractPictures({
   ctx,
   real,
   realPictures,
-  apply,
   siteFile,
   siteReader,
-  inspect,
-  write,
   contentMap = contentMapOf(ctx.contract),
   bound = {},
   copy = null,
@@ -56,9 +54,7 @@ export async function writeContractPictures({
 }) {
   if (!real || !siteFile) return null
   ctx.signal?.throwIfAborted()
-  const initial = await inspect()
-  if (!initial?.ok || initial.contract !== ctx.contract.id) throw fail('PICTURE_CONTRACT_CHANGED')
-  const shaped = await shapeReal({
+  return shapeReal({
     real,
     contentMap,
     cms: ctx.platform,
@@ -79,6 +75,46 @@ export async function writeContractPictures({
     // The text model reads each item icon's meaning (#189); without it the icons follow their keywords.
     textModel
   })
+}
+
+export async function writeContractPictures({
+  ctx,
+  real,
+  realPictures,
+  apply,
+  siteFile,
+  siteReader,
+  inspect,
+  write,
+  contentMap = contentMapOf(ctx.contract),
+  bound = {},
+  copy = null,
+  drawDoor = null,
+  declared = [],
+  cardNames = null,
+  textModel = null,
+  shaped: suppliedShape
+}) {
+  if (!real || !siteFile) return null
+  ctx.signal?.throwIfAborted()
+  const initial = await inspect()
+  if (!initial?.ok || initial.contract !== ctx.contract.id) throw fail('PICTURE_CONTRACT_CHANGED')
+  const shaped =
+    suppliedShape ??
+    (await prepareContractPictures({
+      ctx,
+      real,
+      realPictures,
+      siteFile,
+      siteReader,
+      contentMap,
+      bound,
+      copy,
+      drawDoor,
+      declared,
+      cardNames,
+      textModel
+    }))
   const slots = new Map(inspectedSlots(initial, contentMap).map((s) => [s.key, s]))
   // An icon or a cut-out the site's inspection does not list is left as shipped, never a reason to stop (#195).
   shaped.shaped = shaped.shaped.filter((item) => {

@@ -9,29 +9,46 @@
   "flaky_model": false,
   "steps": [
     "S1: Run the real shapeReal (apps/tracy-web/src/sites/brief-engines/real-pictures.js) for a Joomla demo with one exterior photo, a picture door set, a chat stand-in that never resolves, drawMs 60 s and an Apply signal aborted after 100 ms.",
-    "S2: Run the real drawForPlace (apps/tracy-web/src/lib/picture-draw.js) with a chat that never resolves and a signal aborted after 50 ms."
+    "S2: Run the real drawForPlace (apps/tracy-web/src/lib/picture-draw.js) with a chat that never resolves and a signal aborted after 50 ms.",
+    "S3: Run brief-joomla.test.mjs cases for fictional bakery and dental briefs with portrait owner photos and a stalled picture reader. Picture preparation expires before the real engine writes through the pinned Joomla PHP validator.",
+    "S4: Run brief-drawing-failures.test.mjs and brief-picture-preparation.test.mjs for hanging cache/reference/labeller/model dependencies and stop-grace completion.",
+    "S5: Run brief-sharpness-display.test.mjs for portrait owner photos in a hero whose upload minimum is 2160 pixels and CSS display width is 1440 pixels."
   ],
   "expect": [
     "S1: shapeReal resolves in under 10 s, notes 'a picture could not be drawn: the picture took too long', and no shaped place has receipt.kind 'drawn'.",
-    "S2: drawForPlace rejects with 'the picture took too long' in under 5 s."
+    "S2: drawForPlace rejects with 'the picture took too long' in under 5 s.",
+    "S3: Preparation makes no CMS writes. After its deadline the engine still writes text, telephone, social link, map and owner-name logo, removes the blog menu and never retries the stalled picture reader.",
+    "S4: Expired drawing work starts no queued provider call; provider timeouts do not retry; refused faces or lettering receive at most one redraw and safe class logs; completed paid calls and known costs remain counted. Owner/neutral shapes returned during stop grace are retained; late completions cannot replace them after writes start.",
+    "S5: Both trades keep the sharp owner photo, judge its actual CSS display size and upload at the density the real plugin requires."
   ],
   "selectors": {
-    "test": "apps/tracy-web/test/brief-real-pictures.test.mjs, apps/tracy-web/test/picture-draw.test.mjs",
-    "code": "drawForPlace signal race, shapeReal signal/drawMs, wordpress.js and joomla.js shapeReal signal: ctx.signal"
+    "test": "apps/tracy-web/test/brief-real-pictures.test.mjs, apps/tracy-web/test/picture-draw.test.mjs, apps/tracy-web/test/brief-joomla.test.mjs, apps/tracy-web/test/brief-drawing-failures.test.mjs, apps/tracy-web/test/brief-picture-preparation.test.mjs, apps/tracy-web/test/brief-sharpness-display.test.mjs",
+    "code": "preparePicturesBeforeApply, engine.preparePictures, pictureDeadline, drawForPlace signal race, slotClassOf CSS display size"
   },
   "evidence": "Review 19/10/2026: drawForPlace called the seeder's chat (240 s x 3 tries) with no race while the Apply's words wait for its pictures under a 180 s deadline (#1367 symptom on opportunity demos)",
-  "fence": "Every drawing for a real-pictures demo is bounded by DRAW_MS and by the Apply's own signal",
+  "fence": "Joomla/WordPress prepare real pictures under a separate bounded clock before applyMs; the write phase consumes a completed shape once or skips it. Drawing dependencies, retries and post-processing respect cancellation; plugin checks remain enforced.",
   "run": {
     "cmd": [
       "node",
       "--test",
       "--test-reporter=tap",
       "apps/tracy-web/test/brief-real-pictures.test.mjs",
-      "apps/tracy-web/test/picture-draw.test.mjs"
+      "apps/tracy-web/test/picture-draw.test.mjs",
+      "apps/tracy-web/test/brief-joomla.test.mjs",
+      "apps/tracy-web/test/brief-drawing-failures.test.mjs",
+      "apps/tracy-web/test/brief-picture-preparation.test.mjs",
+      "apps/tracy-web/test/brief-sharpness-display.test.mjs"
     ],
     "tests": [
       "a picture model that never answers costs the place its drawing, never the Apply its words",
-      "a model that never answers is given up at the signal, not waited on through its own retries"
+      "a model that never answers is given up at the signal, not waited on through its own retries",
+      "Copperleaf Bakery: stalled picture preparation leaves the full text write phase available",
+      "Northgate Dental: stalled picture preparation leaves the full text write phase available",
+      "completed picture preparation is consumed once, with fresh plugin validation before writing",
+      "stopping drawing keeps the owner photos and neutral fills returned during the stop grace",
+      "sports coaching: a timed-out provider is not called again while its first request may still run",
+      "#189 bakery: portrait owner photos use the hero display size, then satisfy the real plugin density check",
+      "#189 dental: portrait owner photos use the hero display size, then satisfy the real plugin density check"
     ]
   }
 }

@@ -22,6 +22,8 @@ export function drawingFailureReason(error) {
 }
 
 /** Never include a provider URL, response, key, prompt or user data in the failure log. */
-export function logDrawingFailure(reasonClass) {
-  console.warn(`[brief-drawing] picture failed: ${reasonClass}`)
+export function logDrawingFailure(reasonClass, refusal = null) {
+  const known = new Set(['face-found', 'text-found', 'logo-found', 'labeller-unavailable', 'blurred-region'])
+  const detail = known.has(refusal) ? ` (${refusal})` : ''
+  console.warn(`[brief-drawing] picture failed: ${reasonClass}${detail}`)
 }

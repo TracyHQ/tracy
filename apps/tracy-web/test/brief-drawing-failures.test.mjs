@@ -4,13 +4,18 @@ import { test } from 'node:test'
 import sharp from 'sharp'
 import { drawnPictureVerdict } from 'website-opportunities/domain/fill-draw.mjs'
 import { drawPlanned } from '../src/sites/brief-engines/drawn-pictures.js'
+import { drawPrompt } from '../src/lib/picture-draw.js'
 
 const TRADES = [
   { label: 'Cedar Racket Club', category: 'sports coaching' },
   { label: 'Willow Bread Studio', category: 'bakery' }
 ]
 
-async function drawingBuild(t, subject, { error, errors, count = 1, labels, bytesError } = {}) {
+async function drawingBuild(
+  t,
+  subject,
+  { error, errors, count = 1, labels, bytesError, signal, pending, drawMs = 1000 } = {}
+) {
   const photo = await sharp({ create: { width: 32, height: 32, channels: 3, background: '#557799' } })
     .jpeg()
     .toBuffer()
@@ -34,26 +39,93 @@ async function drawingBuild(t, subject, { error, errors, count = 1, labels, byte
     real: {
       pictures: [{ id: 'owner-photo', sha256: 'fictional-photo-sha' }],
       bytes: async () => {
+        if (pending === 'references') return new Promise(() => {})
         if (bytesError) throw bytesError
         return photo
       },
-      checkDrawing: async () => labels ?? { textPresence: 'absent', faceBoxes: [] }
+      drawing: pending === 'cache' ? { get: () => new Promise(() => {}) } : null,
+      checkDrawing: async () =>
+        pending === 'labeller' ? new Promise(() => {}) : (labels ?? { textPresence: 'absent', faceBoxes: [] })
     },
     drawDoor: { url: 'https://pictures.example/api', key: 'fixture-secret', imageModel: 'test-image' },
     chat: async () => {
       const failure = errors?.[chatCalls] ?? error
       chatCalls += 1
+      if (pending === 'model') return new Promise(() => {})
       if (failure) throw failure
       return { images: [{ bytes: photo }], usage: { cost: 0.01 } }
     },
     domain: { drawnPictureVerdict },
     note: (note) => notes.push(note),
-    drawMs: 1000
+    drawMs,
+    signal
   })
   return { stats, drawn, notes, warnings, chatCalls }
 }
 
 for (const trade of TRADES) {
+  test(`${trade.category}: a timed-out provider is not called again while its first request may still run`, async (t) => {
+    const stop = new AbortController()
+    const guard = setTimeout(() => stop.abort(), 100)
+    try {
+      const result = await drawingBuild(t, trade, { pending: 'model', drawMs: 20, signal: stop.signal })
+      assert.equal(result.chatCalls, 1)
+      assert.equal(result.stats.calls, 1)
+    } finally {
+      clearTimeout(guard)
+    }
+  })
+
+  for (const pending of ['cache', 'references', 'labeller']) {
+    test(`${trade.category}: the picture deadline bounds an unresponsive ${pending} and all queued drawings`, async (t) => {
+      const stop = new AbortController()
+      const timer = setTimeout(() => stop.abort(), 20)
+      let guard
+      try {
+        const result = await Promise.race([
+          drawingBuild(t, trade, { pending, signal: stop.signal, count: 4 }),
+          new Promise((resolve) => {
+            guard = setTimeout(() => resolve(null), 300)
+          })
+        ])
+        assert.ok(
+          result,
+          'picture work must return after its deadline even if a dependency ignores the signal'
+        )
+        assert.equal(result.drawn.size, 0)
+        assert.ok(
+          result.chatCalls <= (pending === 'labeller' ? 2 : 0),
+          'queued work never starts another model call'
+        )
+        assert.equal(result.stats.calls, result.chatCalls, 'paid attempts remain counted after cancellation')
+        assert.equal(result.stats.costUsd, result.chatCalls * 0.01, 'known provider costs remain counted')
+      } finally {
+        clearTimeout(timer)
+        clearTimeout(guard)
+      }
+    })
+  }
+
+  test(`${trade.category}: drawing prompts forbid every visible face and all lettering`, () => {
+    for (const mode of ['scene', 'outpaint', 'object']) {
+      const prompt = drawPrompt({ mode, aspect: 2, subject: trade })
+      assert.match(prompt, /no faces of any kind/i)
+      assert.match(prompt, /no lettering/i)
+    }
+  })
+
+  for (const [labels, reason] of [
+    [{ faceBoxes: [{}], textPresence: 'absent' }, 'face-found'],
+    [{ faceBoxes: [], textPresence: 'present' }, 'text-found']
+  ]) {
+    test(`${trade.category}: ${reason} is logged per refusal and stops after one redraw`, async (t) => {
+      const result = await drawingBuild(t, trade, { labels })
+      assert.equal(result.chatCalls, 2)
+      assert.deepEqual(result.stats.refused[0].reasons, [reason, reason])
+      assert.ok(result.warnings.every((line) => line.includes(reason)))
+    })
+  }
+
   test(`${trade.category}: eleven credit failures give receipt reasons and one operator note`, async (t) => {
     const error = new Error('model call failed: This request requires at least $1.00 in balance')
     const result = await drawingBuild(t, trade, { error, count: 11 })

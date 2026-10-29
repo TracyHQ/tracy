@@ -13,10 +13,10 @@ import { createHash } from 'node:crypto'
 import sharp from 'sharp'
 import { colourWords } from 'website-opportunities/domain/brand-colours.mjs'
 
-export const DRAW_PROMPT_VERSION = 'd5'
+export const DRAW_PROMPT_VERSION = 'd6'
 const REFERENCE_EDGE = 1024
 const NEVER =
-  'No text, no letters, no signs, no logos, no watermarks, no recognisable faces, no person facing the camera.'
+  'No text, no letters, no lettering, no numbers, no signs, no logos, no watermarks, no recognisable faces, no faces of any kind, no person facing the camera.'
 
 const ratio = (aspect) => {
   for (const [w, h] of [
@@ -57,7 +57,7 @@ function activityOf(subject) {
 
 /** Who may be in a drawing: nobody a visitor could take for a real member of staff, customer or child of this business. */
 const PEOPLE =
-  'If any people appear, they are small and far off, seen from behind or out of focus: no face turned to the camera, no face in focus, no child as the subject.'
+  'If any people appear, show them only from behind, with every face completely outside the frame: no face turned to the camera, no face in focus, no child as the subject. Distance or blur does not make a visible face acceptable.'
 
 /** How the business's own photos are given: what it looks like, never a style or a frame to copy. */
 const REFERENCES =
@@ -90,6 +90,7 @@ function brandColoursOf(item) {
  * labeller still finds a face in is refused (`drawnPictureVerdict`), drawn once more, then a brand colour block.
  * d5 (29/10/2026): an object for a cut-out is asked large, filling its frame; a small object in the middle of a white
  * ground was set floating across a hero's words instead of standing where the demo's figure stood.
+ * d6 (29/10/2026): every visible face and all lettering are forbidden, including distant or blurred faces.
  */
 export function drawPrompt(item) {
   const shape = `${ratio(item.aspect)} (width ${item.aspect.toFixed(2)} times the height), ${orientation(item.aspect)}`
@@ -149,9 +150,11 @@ export function drawKey(item, { model, shas }) {
  * @returns {Promise<{bytes: Buffer, width: number, height: number, costUsd: number | null, model: string}>}
  */
 export async function drawForPlace({ door, chat, item, references, fetchImpl, signal }) {
+  signal?.throwIfAborted()
   // One original decoded at a time: all at once is the peak that got tracy-web OOM-killed in `picture-vision`.
   const images = []
-  for (const bytes of references)
+  for (const bytes of references) {
+    signal?.throwIfAborted()
     images.push(
       (
         await sharp(Buffer.from(bytes), { failOn: 'none' })
@@ -161,6 +164,8 @@ export async function drawForPlace({ door, chat, item, references, fetchImpl, si
           .toBuffer()
       ).toString('base64')
     )
+  }
+  signal?.throwIfAborted()
   // `chat` has no signal of its own and retries a timeout: the race is what stops a run waiting on a model that never
   // answers, as `drawPictures` does.
   const stopped = new Promise((_, reject) => {

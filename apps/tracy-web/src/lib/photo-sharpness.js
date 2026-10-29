@@ -32,16 +32,19 @@
  * Small slots tolerate more than large ones. A full-width hero background carries the page's words under a dark
  * overlay (the overlay dims its contrast, the eye reads the words, not the picture's detail), so it tolerates the most:
  * the small slot's bars. The Slot fit names no overlay yet, so a hero picture whose desktop box is at least
- * `BACKGROUND_MIN_WIDTH` wide is taken for a background.
+ * `BACKGROUND_MIN_WIDTH` CSS pixels wide is taken for a background; an older fit's upload minimum first loses
+ * its 1.5x density factor. This changes the measured display size, never the blur or blockiness limits.
  */
 import sharp from 'sharp'
 
-export const SHARPNESS_VERSION = 'photo-sharpness/1'
+export const SHARPNESS_VERSION = 'photo-sharpness/2'
 
 const MAX_PIXELS = 100_000_000
 const JPEG = { quality: 84, mozjpeg: false }
 /** A desktop box at least this wide on a hero picture is a full-width background band. */
 export const BACKGROUND_MIN_WIDTH = 1200
+/** Slot fit's upload minimum is 1.5 times the widest CSS box (content-map-fit.mjs), not a display measurement. */
+const UPLOAD_DENSITY = 1.5
 /**
  * What a slot class asks of a cut photo: the most it may be enlarged at 1x and at 2x (a retina screen), and the least
  * fine-detail share at 1x and at 2x.
@@ -79,19 +82,28 @@ const open = (/** @type {Uint8Array} */ bytes) =>
   sharp(Buffer.from(bytes), { limitInputPixels: MAX_PIXELS, failOn: 'none' })
 
 /**
- * The class of the slots a photo is cut for, and the width it is shown at: the widest shown width decides.
+ * The class of the slots a photo is cut for: the widest measured CSS box decides, across responsive layouts.
+ * Older fits with only an upload minimum recover the CSS width from its declared 1.5x density. The uploaded
+ * asset still meets that minimum later; judging at its pixel width here would count density twice.
  * @param {Array<{role?: string | null, fit?: any}>} slots
  * @param {(slot: any) => number} shownWidthOf - the fill plan's shown width of a slot (`fill-plan.mjs`)
  * @returns {{kind: 'small' | 'medium' | 'large' | 'background', width: number} | null}
  */
 export function slotClassOf(slots, shownWidthOf) {
-  const width = Math.max(0, ...slots.map((s) => Number(shownWidthOf(s)) || 0))
+  const displayWidth = (slot) => {
+    const measured = Object.values(slot?.fit?.boxes ?? {})
+      .map((box) => Number(box?.width))
+      .filter((width) => Number.isFinite(width) && width > 0)
+    if (measured.length) return Math.max(...measured)
+    const minimum = Number(slot?.fit?.minWidth)
+    if (Number.isFinite(minimum) && minimum > 0) return minimum / UPLOAD_DENSITY
+    return Number(shownWidthOf(slot)) || 0
+  }
+  const width = Math.max(0, ...slots.map(displayWidth))
   if (!(width > 0)) return null
   const background = slots.some(
     (s) =>
-      s.role === 'business.hero_image' &&
-      s.fit?.kind !== 'cutout' &&
-      Number(s.fit?.boxes?.desktop?.width) >= BACKGROUND_MIN_WIDTH
+      s.role === 'business.hero_image' && s.fit?.kind !== 'cutout' && displayWidth(s) >= BACKGROUND_MIN_WIDTH
   )
   if (background) return { kind: 'background', width }
   const kind = width <= BARS.small.max ? 'small' : width <= BARS.medium.max ? 'medium' : 'large'

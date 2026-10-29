@@ -49,7 +49,7 @@ import {
 import { factsOf, guardChanges, guardWritten } from './guard.js'
 import { drawPictures, pictureBriefs, pictureGroups, shapePictures, uploadPictures } from './pictures.js'
 import { keptPages, pictureReport, realPicturesOf, shapeReal } from './real-pictures.js'
-import { writeContractPictures } from './contract-real-pictures.js'
+import { prepareContractPictures, writeContractPictures } from './contract-real-pictures.js'
 import { declaredPictureSlots } from './drawn-pictures.js'
 import { copyPinsOf, pinStates, recordPins } from './wo-copy-pins.js'
 import { woContentOf } from './wo-content.js'
@@ -580,7 +580,7 @@ export function createJoomlaEngine({
    * `bound`: a slot plan's card pictures (`copyPinsOf`), each card's own entity's. `copy`: the copy pins, whose card
    * names decide which offering photo each card takes (`fill-plan.mjs`).
    */
-  const pictures = async (ctx, real, bound = {}, copy = null, drawDoor = null) => {
+  const pictures = async (ctx, real, bound = {}, copy = null, drawDoor = null, shaped = undefined) => {
     if (!realPictures || !siteFile || !ctx.contract) return null
     real ??= await realPictures.forSite({
       siteKey: ctx.siteKey,
@@ -602,6 +602,7 @@ export function createJoomlaEngine({
       ctx,
       real,
       realPictures,
+      shaped,
       apply,
       siteFile,
       siteReader,
@@ -634,6 +635,28 @@ export function createJoomlaEngine({
   }
   return {
     pictures,
+    async preparePictures(ctx, prepared) {
+      if (!prepared.real || !realPictures || !siteFile || !ctx.contract) return null
+      const { isDerived } = await seeder('plan-joomla-contract')
+      const map = staticState(ctx.contract)
+      const sitePlan = await Promise.resolve(
+        woContent?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
+      ).catch(() => null)
+      return prepareContractPictures({
+        ctx,
+        real: prepared.real,
+        realPictures,
+        siteFile,
+        siteReader,
+        contentMap: { ...map, slots: map.slots.filter((slot) => !isDerived(slot)) },
+        bound: prepared.copyPins?.pictures ?? {},
+        copy: prepared.copyPins ?? null,
+        drawDoor: prepared.drawDoor ?? null,
+        declared: declaredPictureSlots(ctx.contract),
+        cardNames: sitePlan?.honesty?.cardNames ?? null,
+        textModel: async () => (await models()).text ?? null
+      })
+    },
     /** @param {import('../brief-build.js').BriefContext} ctx */
     async prepare(ctx) {
       if (!ctx.contract)
@@ -1282,13 +1305,15 @@ export function createJoomlaEngine({
      */
     async apply(ctx, prepared) {
       if (prepared.real && realPictures && siteFile) {
-        await pictures(
-          ctx,
-          prepared.real,
-          prepared.copyPins?.pictures,
-          prepared.copyPins ?? null,
-          prepared.drawDoor ?? null
-        )
+        if (!prepared.realPicturesPrepared || prepared.realPictureShape)
+          await pictures(
+            ctx,
+            prepared.real,
+            prepared.copyPins?.pictures,
+            prepared.copyPins ?? null,
+            prepared.drawDoor ?? null,
+            prepared.realPictureShape
+          )
         prepared.real = null
       }
       const [

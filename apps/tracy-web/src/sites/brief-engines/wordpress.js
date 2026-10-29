@@ -37,7 +37,7 @@ import { seeder, seederDataDir } from '../../lib/seeder.js'
 import { showcaseNavMap, showcasePageIds } from '../../lib/showcase-nav-map.js'
 import { translateAuthorWords } from './author-words.js'
 import { translateBlog } from './blog-translate.js'
-import { writeContractPictures } from './contract-real-pictures.js'
+import { prepareContractPictures, writeContractPictures } from './contract-real-pictures.js'
 import { giveGlyphs } from './glyph-fallback.js'
 import { factsOf, guardChanges } from './guard.js'
 import { demoNameChanges } from './joomla-demo-names.js'
@@ -347,7 +347,7 @@ export function createWordpressEngine({
   woContent = null
 }) {
   /** `bound`: a slot plan's card pictures (`copyPinsOf`), each card's own entity's. */
-  const pictures = async (ctx, real, bound = {}) => {
+  const pictures = async (ctx, real, bound = {}, shaped = undefined) => {
     if (!realPictures || !siteFile || !ctx.contract) return null
     real ??= await realPictures.forSite({
       siteKey: ctx.siteKey,
@@ -372,6 +372,7 @@ export function createWordpressEngine({
       ctx,
       real,
       realPictures,
+      shaped,
       apply,
       siteFile,
       siteReader,
@@ -393,6 +394,20 @@ export function createWordpressEngine({
   }
   return {
     pictures,
+    async preparePictures(ctx, prepared) {
+      if (!prepared.real || !realPictures || !siteFile || !ctx.contract) return null
+      const { loadContract } = await seeder('apply-wordpress-contract')
+      const { contentMap } = loadContract(seederDataDir(ctx.contract), ctx.contract.id)
+      return prepareContractPictures({
+        ctx,
+        real: prepared.real,
+        realPictures,
+        siteFile,
+        siteReader,
+        contentMap,
+        bound: prepared.copyPins?.pictures ?? {}
+      })
+    },
     /**
      * 🔒 WHAT THE WORDS COST IS RECORDED HOWEVER THE BUILD ENDS (Sol review, 22/10/2026): a prepare that throws after its planner
      * ran, or a site that never came up, still says what was spent. `apply` records again on the same model, so its totals
@@ -789,7 +804,10 @@ export function createWordpressEngine({
       /** What each placed picture is (`pictureReport` receipts): the dish items no slot covers read it. */
       let pictureReceipts = null
       if (prepared.real && realPictures && siteFile) {
-        const staged = await pictures(ctx, prepared.real, prepared.copyPins?.pictures)
+        const staged =
+          !prepared.realPicturesPrepared || prepared.realPictureShape
+            ? await pictures(ctx, prepared.real, prepared.copyPins?.pictures, prepared.realPictureShape)
+            : null
         stagedPictureValues = staged?.values ?? {}
         pictureReceipts = staged?.receipts ?? null
         prepared.real = null

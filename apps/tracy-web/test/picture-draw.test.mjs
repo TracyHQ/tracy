@@ -98,6 +98,25 @@ test('a model that never answers is given up at the signal, not waited on throug
   assert.ok(Date.now() - started < 5000)
 })
 
+test('an expired picture phase never starts another paid model call', async () => {
+  let calls = 0
+  const stop = new AbortController()
+  stop.abort(new Error('picture phase ended'))
+  await assert.rejects(
+    drawForPlace({
+      door,
+      chat: async () => {
+        calls += 1
+        return { images: [] }
+      },
+      item: { mode: 'scene', aspect: 2 },
+      references: [await jpeg(40, 30)],
+      signal: stop.signal
+    })
+  )
+  assert.equal(calls, 0)
+})
+
 test('the prompt names the slot subject from the brief, and an object for a cut-out stands alone on a plain ground', () => {
   const card = drawPrompt({
     mode: 'scene',

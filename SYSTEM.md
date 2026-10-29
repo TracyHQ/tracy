@@ -2072,6 +2072,13 @@ can still be read, running jobs stop at the next checkpoint with `paused` + `FEA
   `contract-real-pictures.js`: read the contract → the `real-pictures.js` picker/cropper → upload through Apply →
   the CMS's own contract writer → inspect/readback. When applying a brief that already has real pictures, this step runs
   before the text writes; Joomla keeps the step that pins article order before the writes. No menu/layout changes in the picture step.
+  For Joomla/WordPress brief builds, the runner invokes the read-only `preparePictures` hook once the site is up,
+  before starting `applyMs`. Slot measurement, owner-photo selection, drawing and labelling have their own
+  `picturesMs` deadline (180 seconds), followed by at most `picturesStopMs` (10 seconds) to finish owner crops and
+  neutral fills after drawing is stopped. A hung dependency leaves a note and skips the picture phase; the engine
+  does not retry it during `apply`. Completed shapes are uploaded through Apply only after a fresh contract/editor
+  check, keeping the existing revision and readback guards. Text, contact, social, map, logo and menu writes retain
+  their independent write clock. EmDash's real-picture adapter does not call a picture model.
   EmDash uses `emdash-real-pictures.js`: derives the inventory from media-map/seed/schema, keeps logo/icon/staff
   pictures and unsupported pictures; a source reader injected from `app.js` reads the real pictures instead of only checking that pictures exist.
   Upload goes through the existing Apply, native PUT/publish with revision, mutation receipt, schema/draft and readback

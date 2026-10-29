@@ -30,6 +30,7 @@ import { sizeOf } from './pictures.js'
 import { blurredBand } from '../../lib/photo-sharpness.js'
 import { pool } from './shared.js'
 import { drawingFailureReason, logDrawingFailure } from './drawing-failures.js'
+import { pictureDeadline } from './picture-deadline.js'
 
 /** Pictures drawn at once: each is a paid model call of ~8 s. */
 const DRAW_AT_ONCE = 2
@@ -72,16 +73,21 @@ async function drawChecked({ item, real, drawDoor, chat, signal, drawMs, verdict
     model: drawDoor.imageModel,
     shas: item.referenceIds.map((id) => shaOf.get(id))
   })
-  const cached = await (real.drawing?.get(key) ?? Promise.resolve(null)).catch(() => null)
+  const cached = await pictureDeadline(() => real.drawing?.get(key) ?? null, signal).catch(() => {
+    signal?.throwIfAborted()
+    return null
+  })
   // A drawing kept before the band check is checked now: a padded one is drawn again, never reused.
-  if (cached && !(await paddedAt(cached.bytes, item.aspect)))
+  if (cached && !(await pictureDeadline(() => paddedAt(cached.bytes, item.aspect), signal)))
     return { bytes: cached.bytes, costUsd: 0, calls: 0, cached: true, checked: true }
   // No labeller: nothing could be checked, so nothing is drawn (never an unchecked picture on the site).
   if (!real.checkDrawing) {
     logDrawingFailure('refused by the labeller')
     return { refused: ['labeller-unavailable'], reasonClass: 'refused by the labeller', costUsd: 0, calls: 0 }
   }
-  const references = (await Promise.all(item.referenceIds.map((id) => real.bytes(id)))).filter(Boolean)
+  const references = (
+    await pictureDeadline(() => Promise.all(item.referenceIds.map((id) => real.bytes(id))), signal)
+  ).filter(Boolean)
   if (references.length === 0) {
     logDrawingFailure('model failed')
     return { refused: ['no-reference-readable'], reasonClass: 'model failed', costUsd: 0, calls: 0 }
@@ -90,43 +96,54 @@ async function drawChecked({ item, real, drawDoor, chat, signal, drawMs, verdict
   let reasonClass = 'model failed'
   let costUsd = 0
   let calls = 0
-  for (let attempt = 0; attempt < TRIES; attempt += 1) {
-    const cutoff = AbortSignal.any([AbortSignal.timeout(drawMs), ...(signal ? [signal] : [])])
-    let got
-    try {
-      calls += 1
-      got = await drawForPlace({ door: drawDoor, chat, item, references, signal: cutoff })
-    } catch (error) {
-      reasonClass = drawingFailureReason(error)
-      refused.push(reasonClass.replaceAll(' ', '-'))
-      logDrawingFailure(reasonClass)
-      // Retrying cannot replenish a provider balance and must not replace the actionable credit reason.
-      if (reasonClass === 'out of credit') break
-      continue
+  try {
+    for (let attempt = 0; attempt < TRIES; attempt += 1) {
+      signal?.throwIfAborted()
+      const cutoff = AbortSignal.any([AbortSignal.timeout(drawMs), ...(signal ? [signal] : [])])
+      let got
+      try {
+        calls += 1
+        got = await drawForPlace({ door: drawDoor, chat, item, references, signal: cutoff })
+      } catch (error) {
+        reasonClass = drawingFailureReason(error)
+        refused.push(reasonClass.replaceAll(' ', '-'))
+        logDrawingFailure(reasonClass)
+        // Retrying cannot replenish a provider balance and must not replace the actionable credit reason.
+        if (reasonClass === 'out of credit' || cutoff.aborted) break
+        continue
+      }
+      costUsd += Number(got.costUsd) || 0
+      // The labeller is asked twice at most; still no answer, the drawing is refused (it is not the drawing's fault, so
+      // it is not drawn again).
+      const readLabels = () => pictureDeadline(() => real.checkDrawing(got.bytes), cutoff).catch(() => null)
+      let labels = await readLabels()
+      labels ??= await readLabels()
+      signal?.throwIfAborted()
+      const verdict = verdictOf(labels)
+      if (!verdict.ok) {
+        reasonClass = 'refused by the labeller'
+        refused.push(verdict.reason)
+        logDrawingFailure(reasonClass, verdict.reason)
+        if (verdict.reason === 'labeller-unavailable') break
+        continue
+      }
+      // A model asked for a wide frame sometimes fills its edge with a blurred, stretched copy of the scene: such a
+      // drawing fails like an unsharp photo, and is drawn once more (sharpness gate, #189).
+      if (await pictureDeadline(() => paddedAt(got.bytes, item.aspect), cutoff)) {
+        reasonClass = 'picture quality'
+        refused.push('blurred-region')
+        logDrawingFailure(reasonClass, 'blurred-region')
+        continue
+      }
+      signal?.throwIfAborted()
+      await pictureDeadline(() => real.drawing?.put(key, got.bytes) ?? null, signal).catch(() => {})
+      signal?.throwIfAborted()
+      return { bytes: got.bytes, costUsd, calls, cached: false, checked: true }
     }
-    costUsd += Number(got.costUsd) || 0
-    // The labeller is asked twice at most; still no answer, the drawing is refused (it is not the drawing's fault, so
-    // it is not drawn again).
-    let labels = await real.checkDrawing(got.bytes).catch(() => null)
-    labels ??= await real.checkDrawing(got.bytes).catch(() => null)
-    const verdict = verdictOf(labels)
-    if (!verdict.ok) {
-      reasonClass = 'refused by the labeller'
-      refused.push(verdict.reason)
-      logDrawingFailure(reasonClass)
-      if (verdict.reason === 'labeller-unavailable') break
-      continue
-    }
-    // A model asked for a wide frame sometimes fills its edge with a blurred, stretched copy of the scene: such a
-    // drawing fails like an unsharp photo, and is drawn once more (sharpness gate, #189).
-    if (await paddedAt(got.bytes, item.aspect)) {
-      reasonClass = 'picture quality'
-      refused.push('blurred-region')
-      logDrawingFailure(reasonClass)
-      continue
-    }
-    await (real.drawing?.put(key, got.bytes) ?? Promise.resolve()).catch(() => {})
-    return { bytes: got.bytes, costUsd, calls, cached: false, checked: true }
+  } catch (error) {
+    reasonClass = drawingFailureReason(error)
+    refused.push(reasonClass.replaceAll(' ', '-'))
+    logDrawingFailure(reasonClass)
   }
   return { refused, reasonClass, costUsd, calls }
 }
@@ -171,6 +188,7 @@ export async function drawPlanned({
   const asGroup = (g) => ({ sample: g.id, role: g.role, slots: g.occurrences })
   const answers = await pool(
     drawings.map((g) => async () => {
+      signal?.throwIfAborted()
       const groups = plan.unfilled
         .filter((u) => u.action === 'draw' && u.drawing === g.id)
         .map((u) => byGroup.get(u.groupId))
@@ -185,12 +203,14 @@ export async function drawPlanned({
         // The logo's colours, so a drawing sits with the site's brand colours (ADR 0023 amended 29/10/2026).
         ...paletteOf(real)
       }
+      // The job deadline also covers cache reads, references and labelling, not just the provider call.
+      const jobSignal = AbortSignal.any([AbortSignal.timeout(drawMs * TRIES), ...(signal ? [signal] : [])])
       const got = await drawChecked({
         item,
         real,
         drawDoor,
         chat,
-        signal,
+        signal: jobSignal,
         drawMs,
         verdictOf: domain.drawnPictureVerdict
       })
@@ -205,7 +225,7 @@ export async function drawPlanned({
         return
       }
       stats.drawings += 1
-      const size = await sizeOf(Buffer.from(got.bytes))
+      const size = await pictureDeadline(() => sizeOf(Buffer.from(got.bytes)), jobSignal)
       if (!size) return
       let first = true
       for (const group of groups) {
@@ -221,7 +241,11 @@ export async function drawPlanned({
         }
         const output = domain.outputSize(box, aspect, group.demo.width)
         if (!output) continue
-        const cut = await cutForPlace(got.bytes, { aspect, source: box, output, strategy: 'centre' })
+        const cut = await pictureDeadline(
+          () => cutForPlace(got.bytes, { aspect, source: box, output, strategy: 'centre' }),
+          jobSignal
+        )
+        jobSignal.throwIfAborted()
         drawn.set(group.id, {
           group: asGroup(group),
           bytes: cut.bytes,

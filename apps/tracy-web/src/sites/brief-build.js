@@ -32,6 +32,7 @@
  * that answers the wizard's poll need not be the same one, and a deploy can interrupt either.
  */
 import { randomUUID } from 'node:crypto'
+import { preparePicturesBeforeApply } from './picture-preparation.js'
 
 import {
   advanceBrief,
@@ -70,7 +71,11 @@ export const DEFAULT_LIMITS = Object.freeze({
   prepareGraceMs: 90_000,
   /** Told to hand back what is ready, how long `prepare` has to do it before the site is handed over with the template's words. */
   prepareStopMs: 10_000,
-  /** `apply`, counted from the moment the site is up. */
+  /** Read/shape/draw real pictures after provision, before the independent site-write clock starts. */
+  picturesMs: 3 * 60_000,
+  /** After drawing stops: finish owner photos and neutral fills, or give up a hung reader. */
+  picturesStopMs: 10_000,
+  /** `apply`, counted after picture preparation. */
   applyMs: 3 * 60_000,
   /** The brand step (name, logo, favicon) after `apply`, on its own clock: a slow upload never holds the words. */
   brandMs: 90_000,
@@ -201,6 +206,7 @@ export function refusalOf(/** @type {any} */ call, /** @type {any} */ answer) {
 /**
  * @typedef {object} BriefEngine
  * @property {(ctx: BriefContext) => Promise<unknown>} prepare - no live site is needed or available
+ * @property {(ctx: BriefContext, prepared: unknown) => Promise<unknown>} [preparePictures] - site reads and shaping only; no CMS writes
  * @property {(ctx: BriefContext, prepared: unknown) => Promise<{wrote?: number, kept?: number}>} apply
  * @property {(prepared: unknown) => Promise<void>} [dispose] - whatever `prepare` left behind (files), whatever became of the run
  */
@@ -564,6 +570,8 @@ export function createBriefBuilds({
       // The site: wait for it, if it is not up yet. Nothing here costs anything while the host installs.
       if (!(await siteUp)) return await notUp()
       const upAt = now()
+      await preparePicturesBeforeApply(engine, ctx, prepared, cap.picturesMs, cap.picturesStopMs)
+      controller.signal.throwIfAborted()
 
       if (!(await advanceBrief(pool, siteKey, ['ready'], { state: 'applying', stage: STAGE.placing }))) return
       const held = await holdWebroot('open', ctx)
