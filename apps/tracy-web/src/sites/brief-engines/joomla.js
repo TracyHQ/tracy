@@ -57,7 +57,7 @@ import { planContactSteps } from './joomla-plan-contacts.js'
 import { honestWords, leftDemoWords, planRecordSteps } from './joomla-plan-records.js'
 import { planIdentitySteps } from './joomla-plan-identity.js'
 import { contentMapAt, plannedSlotValues, showcaseOff, writeOutsideMap } from './joomla-outside-map.js'
-import { withBoxLimits } from './slot-box-limits.js'
+import { lineLimits, withBoxLimits, withinLines } from './slot-box-limits.js'
 import { writeWoContent } from './joomla-wo-content.js'
 import {
   addDerivedLanguages,
@@ -152,6 +152,7 @@ const BARE_NUMBER = /^\d+$/
  * @param {string[]} [input.emptyLinks] - link slots to take off, each one inspect marked `emptyLink`
  * @param {Record<string, string>} [input.replaceKept] - kept pictures the write replaces, each with the words asking for it
  * @param {(job: () => Promise<any>) => Promise<any>} input.timed
+ * @param {Record<string, number>} [input.lines] - the lines each slot's box holds, by key (`lineLimits`)
  * @returns {Promise<string[]>} the keys the site refused
  */
 async function writeContractOnce({
@@ -163,8 +164,16 @@ async function writeContractOnce({
   evidence,
   emptyLinks = [],
   replaceKept = {},
-  timed
+  timed,
+  lines = {}
 }) {
+  // 🔒 A LINE IS WRITTEN WITHIN THE LINES ITS BOX HOLDS (spec TracyHQ/tracy#189, 29/10/2026). The plugin refuses words with
+  // more line breaks than the box's measured lines (`SlotFit.php`, SLOT_TOO_LONG "more lines than its box holds"), and a
+  // refused line kept the template's words: on a local brief build three step descriptions of a T4 home page, each a box of
+  // one line, were refused for the writer's two-line answer. Whatever wrote the words (the writer, a fallback, neutral
+  // words), the lines past the box's last one join it.
+  for (const [key, value] of Object.entries(changes))
+    if (key in lines) changes[key] = withinLines(value, lines[key])
   // The contract door reads the site once more before it writes; it is handed the reading just made.
   let served = false
   const door = async (/** @type {any} */ call) => {
@@ -201,6 +210,19 @@ async function writeContractOnce({
         new RegExp(`(?<![\\w.-])${key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![\\w.])`).test(words)
       )
       if (named.length === 0 || attempt >= REFUSAL_ROUNDS) throw error
+      // A line refused for its line count, with a box the map did not measure: written again within the lines the site names.
+      let folded = 0
+      for (const [, limit, key] of words.matchAll(/at most (\d+) line\(s\): ([\w.-]+)/g)) {
+        const value = changes[key]
+        const within = typeof value === 'string' ? withinLines(value, Number(limit)) : value
+        if (within === value) continue
+        changes[key] = within
+        folded += 1
+      }
+      if (folded > 0) {
+        served = false
+        continue
+      }
       // Which lines the site refused and why, in the log: a refused line keeps the template's words until it is emptied
       // (`planRecordSteps` `extraBlanks`), and the reason is what tells a box limit from markup or an empty slot.
       console.warn(`[brief-joomla] ${siteKey}: the site refused ${named.join(', ')}: ${words.slice(0, 300)}`)
@@ -569,6 +591,7 @@ export function createJoomlaEngine({
             reading: state,
             changes,
             evidence: {},
+            lines: lineLimits(staticState(ctx.contract).slots),
             ...(replaceKept ? { replaceKept } : {}),
             timed: (job) => job()
           })
@@ -1346,6 +1369,7 @@ export function createJoomlaEngine({
           reading: state,
           changes,
           evidence,
+          lines: lineLimits(staticState(ctx.contract).slots),
           timed: (job) => time('writeMs', job)
         })
         for (const key of setAside) refusedByWrite.add(key)

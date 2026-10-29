@@ -1024,6 +1024,8 @@ export async function planJoomlaContract({
         // Words a person already put here through the contract door; on a site still as released this is the sample.
         ...(s.current !== undefined && s.current !== s.sample ? { current: s.current } : {}),
         maxCharacters: s.maxCharacters,
+        // The lines the slot's measured box holds (ADR 0039 `fit.lines`): the site refuses words with more line breaks.
+        ...(Number.isInteger(s.maxLines) && s.maxLines > 0 ? { maxLines: s.maxLines } : {}),
         ...(s.requiresEvidence ? { requiresEvidence: true } : {}),
         language: languageOf(s),
         ...(items.has(s.key) ? { item: items.get(s.key) } : {}),
