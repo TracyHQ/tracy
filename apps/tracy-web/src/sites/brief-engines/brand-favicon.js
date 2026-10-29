@@ -3,67 +3,104 @@
  * 29/10/2026). The template's favicon is a demo leftover like its logo: a brief build that has a logo of the business,
  * or a symbol drawn for one that gave none (`brand-logo-symbol.js`), shows that mark in the tab.
  *
- *   faviconMark  the square picture the icon is drawn from: the mark read out of the logo (`logo-mark.js readMark`), its
- *                lines of letters cut away when they lie apart from the picture (`logo-mark-text.js`), set on the logo's
- *                own tile colour when the logo was a tile (a social avatar), else on a transparent ground
- *   faviconSet   the files a site serves for it: `favicon.ico` (16, 32 and 48 px PNG entries), a 180 px apple touch icon
- *                (always opaque: iOS paints transparency black), and 192 and 512 px PNGs
+ *   faviconMark  the cut-out mark on transparency, trimmed and centred with a small margin: the SAME cut the logo work makes
+ *                (`brand-logo-fit.js markVariants`: tile cut away, words left out when they stand apart from the picture).
+ *                It must read on both tab bars (light `TAB_LIGHT`, dark `TAB_DARK`): the mark as cut when it does, else the
+ *                logo work's own variant that reads on both, else the one that reads on the light bar
+ *   faviconSet   the files: `favicon.ico` (16, 32 and 48 px PNG entries) and 192 and 512 px PNGs, all transparent; a
+ *                180 px apple touch icon on the logo's own ground colour
  *
- * 🔒 THE OWNER'S DRAWING, NEVER REDRAWN. Only image processing: trimmed, cropped, padded, scaled. A mark that is a wide
- * wordmark with no picture apart from its letters makes no icon (letters shrunk to 16 px read as a smudge); the caller then
- * uses the drawn symbol, and with neither the template's icon stays and the build says so.
+ * 🔒 THE ICON IS A PNG OF THE MARK ONLY, ITS BACKGROUND AND TILE CUT AWAY (COO 29/10/2026, the rule of the logo icon). A
+ * mark that does not read on a tab bar takes the logo's recoloured variant, never a tile behind it. Only the apple touch
+ * icon has a ground, because iOS paints transparency black (a platform rule).
+ * 🔒 THE OWNER'S DRAWING, NEVER REDRAWN: only cut, recoloured as the logo is, padded and scaled. A wide wordmark makes no
+ * icon (letters shrunk to 16 px read as a smudge); the caller then uses the drawn symbol, and with neither the template's
+ * icon stays and the build says so.
  */
 import sharp from 'sharp'
 
-import { readMark } from './logo-mark.js'
-import { splitMarkText } from './logo-mark-text.js'
+import { logoContrast } from './brand-joomla-logo-contrast.js'
+import { markVariants } from './brand-logo-fit.js'
 
 /** The icon's side at its largest. */
 const EDGE = 512
 /** Margin around the mark, as a share of the side, so it does not touch the tab's edge. */
-const MARGIN = 0.08
+const MARGIN = 0.06
 /** A mark at most this far from square fills an icon; a wider one is a wordmark. */
 const SQUARE_ENOUGH = 1.6
+/** The tab bars an icon must read on: a browser's light and dark tab strip. */
+export const TAB_LIGHT = Object.freeze({ r: 241, g: 243, b: 244 })
+export const TAB_DARK = Object.freeze({ r: 32, g: 33, b: 36 })
+/** A mark reads on a bar when this share of its pixels reaches 3:1 there (the logo work's own measure). */
+const READABLE_SHARE = 0.5
 /** The sizes `favicon.ico` carries. */
 export const ICO_SIZES = Object.freeze([16, 32, 48])
+const WHITE = Object.freeze({ r: 255, g: 255, b: 255 })
 
-/**
- * @typedef {{r: number, g: number, b: number}} Rgb
- * @param {Uint8Array} bytes - the logo as the owner gave it, or the symbol drawn for the business
- * @returns {Promise<{png: Buffer, ground: Rgb | null, how: string} | null>} a 512 px square, or null when the mark makes
- *   no icon
- */
-export async function faviconMark(bytes) {
-  const m = await readMark(bytes).catch(() => null)
-  if (!m) return null
-  let picture = m.mark
-  const split = await splitMarkText(m.mark).catch(() => ({ letters: false, pictorial: null }))
-  let how = 'the whole mark'
-  if (split.letters && split.pictorial) {
-    picture = split.pictorial
-    how = 'the picture of the mark, its words cut away'
-  }
-  const meta = await sharp(picture).metadata()
-  const aspect = (meta.width ?? 1) / (meta.height ?? 1)
-  if (aspect > SQUARE_ENOUGH || aspect < 1 / SQUARE_ENOUGH) return null
-  const ground = m.tile ?? null
-  const inner = Math.round(EDGE * (1 - 2 * MARGIN))
-  const fitted = await sharp(picture)
+/** @typedef {{r: number, g: number, b: number}} Rgb */
+/** @typedef {'mark' | 'light' | 'dark'} Variant */
+
+/** The cut-out picture on a transparent square of `edge`, trimmed and centred with the margin. */
+async function squared(/** @type {Uint8Array} */ bytes, edge = EDGE) {
+  const trimmed = await sharp(Buffer.from(bytes))
+    .ensureAlpha()
+    .trim({ threshold: 1 })
+    .png()
+    .toBuffer()
+    .catch(() => Buffer.from(bytes))
+  const inner = Math.round(edge * (1 - 2 * MARGIN))
+  const fitted = await sharp(trimmed)
     .resize(inner, inner, { fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
     .png()
     .toBuffer()
-  const png = await sharp({
-    create: {
-      width: EDGE,
-      height: EDGE,
-      channels: 4,
-      background: ground ? { ...ground, alpha: 1 } : { r: 0, g: 0, b: 0, alpha: 0 }
-    }
+  return sharp({
+    create: { width: edge, height: edge, channels: 4, background: { r: 0, g: 0, b: 0, alpha: 0 } }
   })
     .composite([{ input: fitted, gravity: 'centre' }])
     .png()
     .toBuffer()
-  return { png, ground, how: ground ? `${how}, on the logo's own tile colour` : how }
+}
+
+/**
+ * @param {Uint8Array} bytes - the logo as the owner gave it, or the symbol drawn for the business
+ * @returns {Promise<{png: Buffer, variant: Variant, reads: {light: boolean, dark: boolean}, ground: Rgb,
+ *   appleMark: Uint8Array, how: string} | null>} a transparent 512 px square, or null when the mark makes no icon
+ */
+export async function faviconMark(bytes) {
+  const v = await markVariants(bytes).catch(() => null)
+  if (!v) return null
+  const meta = await sharp(Buffer.from(v.mark)).metadata()
+  const aspect = (meta.width ?? 1) / (meta.height ?? 1)
+  if (aspect > SQUARE_ENOUGH || aspect < 1 / SQUARE_ENOUGH) return null
+  /** @type {Array<[Variant, Uint8Array]>} */
+  const candidates = [
+    ['mark', v.mark],
+    ['light', v.light],
+    ['dark', v.dark]
+  ]
+  const measured = []
+  for (const [variant, picture] of candidates) {
+    const light = (await logoContrast(picture, TAB_LIGHT)) >= READABLE_SHARE
+    const dark = (await logoContrast(picture, TAB_DARK)) >= READABLE_SHARE
+    measured.push({ variant, picture, reads: { light, dark } })
+  }
+  // ICO cannot switch with the tab's theme: the variant that reads on both bars, else the one that reads on the light one.
+  const both = measured.find((c) => c.reads.light && c.reads.dark)
+  const chosen = both ?? measured.find((c) => c.reads.light) ?? measured[0]
+  const ground = v.tile ?? WHITE
+  const words = v.words ? ', its words left out' : ''
+  const how = both
+    ? `the ${chosen.variant === 'mark' ? 'mark as cut' : `${chosen.variant}-ground variant`}${words}, read on both tab bars`
+    : `the ${chosen.variant === 'mark' ? 'mark as cut' : `${chosen.variant}-ground variant`}${words}, read on the light tab bar only`
+  return {
+    png: await squared(chosen.picture),
+    variant: chosen.variant,
+    reads: chosen.reads,
+    ground,
+    // The mark on its own tile reads there by definition; on white, the light-ground variant does.
+    appleMark: v.tile ? v.mark : v.light,
+    how
+  }
 }
 
 /**
@@ -83,8 +120,6 @@ export async function icoOf(pngs) {
     const entry = Buffer.alloc(16)
     entry.writeUInt8(width >= 256 ? 0 : width, 0)
     entry.writeUInt8(height >= 256 ? 0 : height, 1)
-    entry.writeUInt8(0, 2)
-    entry.writeUInt8(0, 3)
     entry.writeUInt16LE(1, 4)
     entry.writeUInt16LE(32, 6)
     entry.writeUInt32LE(png.length, 8)
@@ -96,17 +131,17 @@ export async function icoOf(pngs) {
 }
 
 /**
- * The files of the icon, from the 512 px square `faviconMark` made.
- * @param {{png: Buffer, ground: Rgb | null}} icon
+ * The files of the icon, from what `faviconMark` made.
+ * @param {{png: Buffer, ground: Rgb, appleMark: Uint8Array}} icon
  * @returns {Promise<{ico: Buffer, apple: Buffer, png192: Buffer, png512: Buffer}>}
  */
 export async function faviconSet(icon) {
   const at = (/** @type {number} */ size) => sharp(icon.png).resize(size, size).png().toBuffer()
   const small = await Promise.all(ICO_SIZES.map(at))
-  // An apple touch icon is shown on an opaque square: a transparent ground becomes white, never black.
-  const apple = await sharp(icon.png)
-    .resize(180, 180)
-    .flatten({ background: icon.ground ?? { r: 255, g: 255, b: 255 } })
+  // 🔒 PLATFORM RULE: iOS paints a transparent apple touch icon black, so this one file alone keeps an opaque ground, the
+  // logo's own ground colour (its tile, else white), with the mark centred on it.
+  const apple = await sharp(await squared(icon.appleMark, 180))
+    .flatten({ background: icon.ground })
     .png()
     .toBuffer()
   return { ico: await icoOf(small), apple, png192: await at(192), png512: icon.png }

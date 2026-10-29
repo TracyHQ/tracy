@@ -38,33 +38,50 @@ const pixel = async (png, x, y) => {
   return { r: data[i], g: data[i + 1], b: data[i + 2], a: data[i + 3] }
 }
 
-test('a crest avatar gives its picture alone, on the tile colour, as a 512 px square', async () => {
+/** A clinic's flat mark in a mid red that reads on both a light and a dark tab bar, on transparency. */
+const midMark = () =>
+  svgPng(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512"><circle cx="256" cy="256" r="200" fill="#e8463a"/></svg>`
+  )
+
+test('a crest avatar gives its picture alone, cut out on transparency, in a variant that reads on the light tab bar', async () => {
   const icon = await faviconMark(await crestAvatar())
   assert.ok(icon)
   const meta = await sharp(icon.png).metadata()
   assert.deepEqual([meta.width, meta.height], [512, 512])
-  assert.match(icon.how, /words cut away/)
-  assert.ok(icon.ground, 'the tile colour is kept as the ground')
-  const corner = await pixel(icon.png, 2, 2)
-  assert.ok(corner.a === 255 && corner.b > corner.r, `navy ground, got ${JSON.stringify(corner)}`)
-  // The letters are gone: the bottom band of the icon holds no gold.
-  const low = await pixel(icon.png, 256, 500)
-  assert.ok(!(low.r > 180 && low.g > 150), `no letter at the bottom, got ${JSON.stringify(low)}`)
+  assert.match(icon.how, /words left out/)
+  // 🔒 No tile: the corners are transparent.
+  assert.equal((await pixel(icon.png, 2, 2)).a, 0)
+  assert.equal(icon.reads.light, true, icon.how)
+  // The letters are gone: the bottom band of the icon holds no ink.
+  assert.equal((await pixel(icon.png, 256, 505)).a, 0)
 })
 
-test('the icon files: an ICO of 16, 32 and 48 px, an opaque 180 px apple icon, and 192 and 512 px PNGs', async () => {
-  const set = await faviconSet(await faviconMark(await drawnSymbol()))
+test('a mark that reads on both tab bars is used as cut; one that reads on one bar only takes the light-bar variant', async () => {
+  const both = await faviconMark(await midMark())
+  assert.equal(both.variant, 'mark', both.how)
+  assert.deepEqual(both.reads, { light: true, dark: true })
+  const dark = await faviconMark(await drawnSymbol())
+  assert.equal(dark.reads.light, true, dark.how)
+  assert.match(dark.how, /light tab bar only|both tab bars/)
+})
+
+test('the icon files: transparent ICO of 16, 32 and 48 px and 192/512 PNGs; the 180 px apple icon alone is opaque', async () => {
+  const icon = await faviconMark(await crestAvatar())
+  const set = await faviconSet(icon)
   assert.equal(set.ico.readUInt16LE(2), 1)
   assert.equal(set.ico.readUInt16LE(4), ICO_SIZES.length)
   assert.deepEqual(
     ICO_SIZES.map((_, i) => set.ico.readUInt8(6 + i * 16)),
     [16, 32, 48]
   )
+  assert.equal((await pixel(set.png192, 1, 1)).a, 0)
+  assert.equal((await sharp(set.png512).metadata()).width, 512)
   const apple = await sharp(set.apple).metadata()
   assert.deepEqual([apple.width, apple.height], [180, 180])
-  assert.equal((await pixel(set.apple, 1, 1)).a, 255)
-  assert.equal((await sharp(set.png192).metadata()).width, 192)
-  assert.equal((await sharp(set.png512).metadata()).width, 512)
+  // The apple icon's ground is the logo's own tile colour (navy), opaque.
+  const corner = await pixel(set.apple, 1, 1)
+  assert.ok(corner.a === 255 && corner.b > corner.r, JSON.stringify(corner))
 })
 
 test('a brief build: the logo first, a wordmark gives way to the drawn symbol, nothing leaves the template icon', async () => {

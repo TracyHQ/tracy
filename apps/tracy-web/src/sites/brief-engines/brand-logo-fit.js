@@ -91,6 +91,23 @@ async function marksByGround(m, colours) {
   return out
 }
 
+/**
+ * The owner's mark as the logo work cuts it, for every other use of the mark (the favicon, `brand-favicon.js`): cut free of
+ * its tile (`readMark`), its words left out when they stand apart from the picture (`splitMarkText`), and its light-ground
+ * and dark-ground variants exactly as a made logo gets them. Null for a picture with nothing drawn.
+ * @param {Uint8Array} bytes
+ * @returns {Promise<{mark: Uint8Array, light: Uint8Array, dark: Uint8Array, tile: {r: number, g: number, b: number} | null,
+ *   words: boolean} | null>}
+ */
+export async function markVariants(bytes) {
+  const m = await readMark(bytes).catch(() => null)
+  if (!m) return null
+  const split = await splitMarkText(m.mark).catch(() => ({ letters: false, pictorial: null }))
+  const picture = split.letters && split.pictorial ? await pictureOnly(m, split.pictorial) : m
+  const marks = await marksByGround(picture, logoColours(markPalette(m)))
+  return { mark: picture.mark, light: marks.light, dark: marks.dark, tile: m.tile, words: picture !== m }
+}
+
 /** A light and a dark lockup, or null when either cannot be set. */
 async function lockups({ marks, tiers, frame, colours }) {
   const { name, descriptor } = tiers
