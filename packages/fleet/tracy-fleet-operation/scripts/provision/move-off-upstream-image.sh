@@ -127,6 +127,7 @@ CURRENT="$(web_image_of "$COMPOSE")"
 [ -n "$CURRENT" ] || { echo "no web image in $COMPOSE" >&2; exit 1; }
 case "$CURRENT" in
   joomla:*|wordpress:*) ;;
+  tracy/*) echo "==> $LABEL already runs a Tracy image ($CURRENT) — nothing to move"; exit 0 ;;
   *) echo "==> $LABEL runs $CURRENT, not a bare joomla/wordpress image — nothing to move"; exit 0 ;;
 esac
 if ! TARGET="$(target_for "$CURRENT")"; then
