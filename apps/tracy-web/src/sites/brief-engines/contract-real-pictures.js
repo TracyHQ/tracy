@@ -2,6 +2,7 @@
 
 import { uploadPictures } from './pictures.js'
 import { contentMapOf, keptPages, pictureReport, shapeReal } from './real-pictures.js'
+import { meetSlotMinWidth } from './picture-min-width.js'
 
 const fail = (code) => Object.assign(new Error(code), { code })
 
@@ -76,6 +77,8 @@ export async function writeContractPictures({
         throw fail('PICTURE_EDITOR_CHANGED')
     }
   ctx.signal?.throwIfAborted()
+  // The plugin refuses a picture narrower than its slot's `fit.minWidth`: each is brought up to it first.
+  shaped.shaped = await meetSlotMinWidth(shaped.shaped, contentMap)
   const art = await uploadPictures({
     shaped: shaped.shaped,
     platform: ctx.platform,

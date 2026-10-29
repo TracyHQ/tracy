@@ -411,3 +411,27 @@ test('#192 #194 a kept card shows what the site plan names it: its own photo, or
   assert.equal(at.get('module-2.3').action, 'draw')
   assert.equal(at.get('module-2.3').reason, 'drawn-scene')
 })
+
+test('#194 the brief logo, or a picture its labeller called no photograph, is never a drawing reference', () => {
+  // A square logo from a social profile, unlabelled as a photograph: the largest picture of the brief, so it would
+  // otherwise be the first one extended. Fictional ids, on both a club and a bakery brief.
+  const logo = photo('brand-mark', 'general', [1080, 1080], {
+    content: 'unlabelled',
+    unlabelledReason: 'not_a_photograph'
+  })
+  const named = photo('named-mark', 'general', [1080, 1080])
+  for (const brief of [CLUB, BAKERY]) {
+    const plan = draw({ ...brief, brand: { logo: 'named-mark' } }, [
+      logo,
+      named,
+      photo('court-1', 'general', [600, 800])
+    ])
+    for (const g of plan.drawings) {
+      assert.ok(!g.referenceIds.includes('brand-mark'), `${g.id} uses a picture that is no photograph`)
+      assert.ok(!g.referenceIds.includes('named-mark'), `${g.id} uses the brief logo`)
+      assert.notEqual(g.sourceId, 'brand-mark')
+      assert.notEqual(g.sourceId, 'named-mark')
+    }
+    assert.ok(plan.drawings.length > 0, 'the owner photo is still drawn from')
+  }
+})

@@ -63,7 +63,8 @@ const notAPhotograph = (a) =>
   a.role === 'logo' ||
   a.content === 'logo' ||
   a.content === 'text-graphic' ||
-  a.content === 'not_a_photograph'
+  a.content === 'not_a_photograph' ||
+  a.unlabelledReason === 'not_a_photograph'
 const depictsOf = (a) => a?.depicts?.id ?? a?.depicts ?? GENERAL
 const portraitOf = (a) => a?.portraitOf?.id ?? a?.portraitOf ?? null
 
@@ -80,7 +81,7 @@ function drawable(decision, slot) {
  * @param {object} input
  * @param {ReturnType<import('./fill-plan.mjs').planFill>} input.fill - the fill plan
  * @param {{slots: any[], pages?: any[], entities?: any[]}} input.contentMap
- * @param {{assets?: any[], business?: {trade?: string, subTrade?: string}}} input.brief
+ * @param {{assets?: any[], business?: {trade?: string, subTrade?: string}, brand?: {logo?: string | null}}} input.brief
  * @param {Map<string, {width: number, height: number}>} [input.demo] - demo files as the site serves them
  * @param {number} [input.max]
  * @returns {{version: string, slots: any[], drawings: Array<{id: string, mode: 'outpaint' | 'scene', sourceId?: string,
@@ -99,6 +100,8 @@ export function planDrawings({ fill, contentMap, brief, demo = new Map(), max = 
   const category = brief?.business?.subTrade ?? brief?.business?.trade ?? null
   const owners = [...(brief?.assets ?? [])]
     .filter((a) => a?.kind === 'image' && a.id && a.width && a.height)
+    // The brief's own logo is a mark, never a scene to extend or to draw from, whatever its labels say.
+    .filter((a) => a.id !== brief?.brand?.logo)
     .filter((a) => !notAPhotograph(a) && !portraitOf(a) && !isMapPhotoByOthers(a))
     .sort(
       (a, b) =>

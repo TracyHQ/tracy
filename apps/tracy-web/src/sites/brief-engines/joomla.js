@@ -57,6 +57,7 @@ import { planContactSteps } from './joomla-plan-contacts.js'
 import { honestWords, planRecordSteps } from './joomla-plan-records.js'
 import { planIdentitySteps } from './joomla-plan-identity.js'
 import { contentMapAt, plannedSlotValues, showcaseOff, writeOutsideMap } from './joomla-outside-map.js'
+import { withBoxLimits } from './slot-box-limits.js'
 import { writeWoContent } from './joomla-wo-content.js'
 import {
   addDerivedLanguages,
@@ -397,7 +398,8 @@ function staticState(contract) {
     const map = JSON.parse(readFileSync(path.join(contract.dir, 'content-map.json'), 'utf8'))
     // A slot the profile only declares (`customize: "keep"`, `lib/contract-customize.js`) is never planned or written here.
     entry = {
-      slots: withFieldEvidence(customizableSlots(map.slots ?? [])),
+      // Each line is planned within its measured box, the limit the site checks (`slot-box-limits.js`).
+      slots: withBoxLimits(withFieldEvidence(customizableSlots(map.slots ?? []))),
       pages: map.pages ?? [],
       // The vocabulary version and the entities (their `demoOnly` mark): the fill plan reads both (ADR 0040).
       roleVocabularyVersion: map.roleVocabularyVersion ?? null,

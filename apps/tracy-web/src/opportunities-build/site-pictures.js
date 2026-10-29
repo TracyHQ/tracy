@@ -360,7 +360,9 @@ export function createSitePictures({
                 assets: build.brief.assets ?? [],
                 reading: build.brief.reading ?? null,
                 // The business's trade, the subject words of a drawn picture's prompt (#194).
-                business: { trade: build.brief.business?.trade, subTrade: build.brief.business?.subTrade }
+                business: { trade: build.brief.business?.trade, subTrade: build.brief.business?.subTrade },
+                // The brief's own logo: a mark, never a photo to place or to draw from (`fill-draw.mjs`).
+                brand: { logo: build.brief.brand?.logo ?? null }
               }
             : null,
           // The photo labeller read on a drawn picture (#194): what it sees decides whether the drawing may be shown
