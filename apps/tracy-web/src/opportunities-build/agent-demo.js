@@ -978,6 +978,28 @@ function leadTarget(row, structure) {
 }
 
 /**
+ * 🔒 A LEAD NO RECORD OR SLOT HOLDS IS NOT THE PLAN'S (local stand 28/10/2026). JA Fresco's contact page prints "Write a
+ * Message" from a template language string: the inventory read all 162 records and no record field and no contract
+ * slot holds those words, so no lead row could ever target them (`leadTarget` `misses`) and the gate asked for one
+ * anyway — nine refusals, and the agent ended its turn with no plan, no picture and no check. When the inventory is
+ * complete, a lead whose words nothing frozen holds is left to the sweep, which reads the page after the turn and
+ * writes the line it still finds there, as an unreadable target already is.
+ * @param {Array<{page: string, at?: string | null, text: string}>} leads `editorialLeads`
+ * @param {Record<string, any> | undefined} structure the build's frozen structure
+ */
+export function plannableLeads(leads = [], structure) {
+  if (!structure?.inventory?.complete) return leads
+  const held = readText({ records: structure.inventory.records ?? [], contract: structure.contract ?? null })
+  return leads.filter((lead) => {
+    // A line the theme cut short ("…") is held by its whole field: its words up to the cut.
+    const words = readText(lead.text)
+      .replace(/(?:\.\.\.|…)$/, '')
+      .trim()
+    return !words || held.includes(words)
+  })
+}
+
+/**
  * Which of the template's page leads a plan writes: `written` where a rewrite row's target holds the line,
  * `deferred` where its target cannot be read (left to the sweep), `missing` where no row covers it.
  * @param {Record<string, any>} plan
@@ -1024,12 +1046,16 @@ function coverageGaps(plan, bundle, guide, leads = []) {
   // writes one per topic the research holds, and the narrower topics a split gives are the residue sweep's to write
   // (`postDraftsOf`, product owner 25/10/2026). Review 26/10/2026: counted against the split topics, a plan the sweep
   // would complete (one story of three facts for three posts, the story written) was sent back.
+  // 🔒 …UP TO `PLAN_POSTS_MAX` OF THEM IN THE PLAN (local measure 28/10/2026): an EmDash template of 126 posts and a
+  // research of as many topics asked the agent for 126 written posts in one plan; it reached 36, ran out of its
+  // context and ended the turn with no plan. The plan writes the first posts in the guide's order; the build writes the
+  // posts left from the topics left (`postDraftsOf`), so every template post is still written while a topic holds.
   const posts = postCoverage(plan, bundle)
-  const asked = Math.min(posts.templatePosts, posts.researchTopics)
+  const asked = postsAsked(posts)
   if (posts.written < asked)
     gaps.push({
       path: 'coverage.posts',
-      message: `The template has ${posts.templatePosts} posts and the research ${posts.researchTopics} topics; ${posts.written} are written. Write one post per topic on the template's own post records, in the guide's order; the build writes the posts left from the facts no written post uses.${bodylessPosts(plan)}`,
+      message: `The template has ${posts.templatePosts} posts and the research ${posts.researchTopics} topics; ${posts.written} are written. Write ${asked === posts.templatePosts ? 'one post per topic' : `the first ${asked} posts, one per topic,`} on the template's own post records, in the guide's order; the build writes the posts left from the facts no written post uses.${bodylessPosts(plan)}`,
       expected: asked
     })
   if (
@@ -1228,6 +1254,12 @@ export function templatePostTitles(plan) {
  * the topics once split while there are fewer than posts (`topics`); `thin` when posts are left that no research
  * fact is left for (`editorial-guide.mjs` `thinResearch`).
  */
+/** The most template posts a plan must write itself; the build writes the rest from the topics left (`postDraftsOf`). */
+export const PLAN_POSTS_MAX = 12
+/** The template posts a plan must write: one per research topic, as many as the template has, at most `PLAN_POSTS_MAX`. */
+export const postsAsked = ({ templatePosts, researchTopics }) =>
+  Math.min(templatePosts, researchTopics, PLAN_POSTS_MAX)
+
 export function postCoverage(plan, bundle) {
   const records = plan?.structure?.inventory?.records ?? []
   const own = records.filter((record) => isTemplatePost(record, records))
@@ -1893,10 +1925,7 @@ export function validateAgentPlan(
         row.post !== undefined &&
         !bodyFrameKept(matches[0], target.path, row.post?.body, inventoryInvariant)
       )
-        issue(
-          `${at}.post.body`,
-          "This body changes the template post's block frame: keep every block of its body, in order, and change only the words inside them (content.get {kind, id, outline:true} lists the blocks). Never add, drop, merge or reorder a block; plain words without markup are put into the existing blocks."
-        )
+        issue(`${at}.post.body`, bodyFrameMessage(matches[0]))
     }
     if (issues.length >= 50) break
   }
@@ -1968,6 +1997,20 @@ export function picturePlace(row, structure) {
   const value = record ? nativeValue(record.data, target.path) : null
   const file = value?.found && typeof value.value === 'string' ? slotFile({ current: value.value }) : null
   return file ? { slot: null, file } : null
+}
+
+/**
+ * What a post body that changed its frame is told: the read that shows the body as the template installed it, on every
+ * CMS. 🔒 WHY (local measure 29/10/2026): it named `content.get {outline:true}` on every CMS, a WordPress read that
+ * Joomla's `content.get` refuses (UNKNOWN_PARAM), and a Joomla build sent its plan back eleven times, a post at a time.
+ */
+export function bodyFrameMessage(record) {
+  const read = `tracy_demo {operation:"structure.read", record:"${record?.key}"} shows it as the template installed it`
+  const blocks =
+    record?.identity?.kind === 'post'
+      ? '; content.get {kind:"post", id, outline:true} numbers its blocks'
+      : ''
+  return `This body changes the template post's block frame: keep every block of its body, in order, and change only the words inside them (${read}${blocks}). Never add, drop, merge or reorder a block; plain words without markup are put into the existing blocks.`
 }
 
 /**
@@ -2238,7 +2281,10 @@ export function agentDemoCapabilities({
         structureHash: build.content?.agentDemo?.structureHash ?? null,
         plan: build.content?.agentDemo?.plan ?? null,
         planGuide: agentPlanGuide(bundle, build.content?.agentDemo?.structure),
-        editorialLeads: editorialLeads(build.qa?.baseline)
+        editorialLeads: plannableLeads(
+          editorialLeads(build.qa?.baseline),
+          build.content?.agentDemo?.structure
+        )
       }
     }
     if (params.operation === 'structure.read') {
@@ -2367,7 +2413,7 @@ export function agentDemoCapabilities({
         { ...params.plan, structure: build.content.agentDemo.structure },
         bundle,
         {
-          leads: editorialLeads(build.qa?.baseline),
+          leads: plannableLeads(editorialLeads(build.qa?.baseline), build.content.agentDemo.structure),
           inventoryInvariant,
           baseline: build.qa?.baseline ?? null,
           // The collected photos' sizes, the research's first and the stored rows' over them.

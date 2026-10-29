@@ -14,10 +14,11 @@
 import { createHash } from 'node:crypto'
 import { LAUNCH_ARGS } from './browser.js'
 import { DemoReadCache, pagesWithFindings } from './demo-read-cache.js'
-import { qaDeadline, waitForQaSlot } from './demo-qa-deadline.js'
-import { DEMO_QA_LOAD_CAP_MS, FILLER_SOURCE, hostIn, navPathsOf, runDemoQa } from './demo-qa.js'
+import { qaDeadline } from './demo-qa-deadline.js'
+import { DEMO_QA_LOAD_CAP_MS, FILLER_SOURCE, hostIn, navPathsOf, READ_AT_ONCE, runDemoQa } from './demo-qa.js'
 import { readResidueInPage } from './demo-residue-page.js'
 import { selfNamedServer } from './self-named.js'
+import { visionSlot } from './vision-stream.js'
 import {
   classOfFamily,
   fitWordmark,
@@ -42,6 +43,20 @@ const HASH_MAX_BYTES = 16 * 1024 * 1024
  * @param {{demoHosts?: string[], siteHosts?: string[], serveFrom?: string | null, serveFromIsProxy?: boolean, proxySiteLabel?: string | null, sentinels?: Record<string, string | null>, discover?: boolean, loadCapMs?: number, gotoMs?: number}} [options]
  * @returns {Promise<import('./demo-qa.js').PageRead>}
  */
+/**
+ * A served document with what changes on every request taken out: Joomla's form token (the `csrf.token` script option
+ * and the hidden input named by it), WordPress nonces, and CSP nonces. Nothing a visitor sees.
+ * @param {string} html
+ */
+export function stableHtml(html) {
+  return html
+    .replace(/("csrf\.token"\s*:\s*")[0-9a-f]{32}(")/g, '$1$2')
+    .replace(/(<input\b[^>]*\btype="hidden"[^>]*\bname=")[0-9a-f]{32}("[^>]*\bvalue="1")/g, '$1$2')
+    .replace(/(<input\b[^>]*\bname="_wpnonce"[^>]*\bvalue=")[0-9a-f]{10}(")/g, '$1$2')
+    .replace(/("(?:_wpnonce|nonce|_ajax_nonce)"\s*:\s*")[0-9a-f]{10}(")/g, '$1$2')
+    .replace(/(\snonce=")[A-Za-z0-9+/=_-]{8,}(")/g, '$1$2')
+}
+
 export async function readDemoPage(
   page,
   url,
@@ -161,6 +176,8 @@ export async function readDemoPage(
     }
     read.status = response?.status() ?? null
     read.finalUrl = landed.get(page.url()) ?? page.url()
+    // The document as the server sent it, before any script ran: what the fingerprint below is made of.
+    const served = typeof response?.text === 'function' ? await response.text().catch(() => null) : null
     const left = Math.max(1, loadCapMs - (Date.now() - started))
     const loaded = await page
       .waitForLoadState('load', { timeout: left })
@@ -178,8 +195,18 @@ export async function readDemoPage(
     // words over pictures shot, the phone width) is skipped. A shared header, footer or menu changed changes every
     // page's document, so every page is read again; a page whose scripts write a different document each load is
     // simply read again. A check that passes this way is confirmed by a full one (`client-demo.js`).
+    // 🔒 THE DOCUMENT AS SERVED, ITS PER-REQUEST TOKENS OUT (local measure 28/10/2026): fingerprinted after scripts ran,
+    // a real CMS page differed on every load (a slider's classes, Joomla's form token), and every incremental read of
+    // a 29- to 48-page site answered "0 unchanged". The served document with its per-request tokens taken out
+    // (`stableHtml`) changes when the page's content does; a page the server answers differently each time is simply
+    // read again.
     if (loaded) {
-      const html = typeof page.content === 'function' ? await page.content().catch(() => null) : null
+      const html =
+        typeof served === 'string'
+          ? stableHtml(served)
+          : typeof page.content === 'function'
+            ? await page.content().catch(() => null)
+            : null
       if (typeof html === 'string') {
         read.fingerprint = createHash('sha256')
           .update(`${read.status}\n${read.finalUrl}\n${html}`)
@@ -1575,7 +1602,13 @@ function drawWordmarkInPage({ fit, font, colour, box, scale }) {
  * context per run. Null when Playwright is absent, so the route answers 503 NO_BROWSER.
  */
 
-export async function makeDemoQa({ log = console, playwright = null } = {}) {
+export async function makeDemoQa({
+  log = console,
+  playwright = null,
+  runsAtOnce = 1,
+  tabsAtOnce = READ_AT_ONCE,
+  readCacheBytes = undefined
+} = {}) {
   try {
     playwright ??= await import('playwright')
   } catch {
@@ -1590,7 +1623,7 @@ export async function makeDemoQa({ log = console, playwright = null } = {}) {
     return browser
   }
   /** The last read of each page, per site, for an incremental check (`readDemoPage` `previous`). */
-  const lastReads = new DemoReadCache()
+  const lastReads = new DemoReadCache(readCacheBytes ? { maxBytes: readCacheBytes } : {})
   const run = async ({
     asked,
     base,
@@ -1610,14 +1643,17 @@ export async function makeDemoQa({ log = console, playwright = null } = {}) {
     }
     signal.addEventListener('abort', abort, { once: true })
     const siteKey = `${asked.label ?? ''}|${base}`
+    // What an incremental read found, said once a run (28/10/2026: every incremental read answered "0 unchanged").
+    const seen = { read: 0, last: 0, unchanged: 0, unprinted: 0 }
     /** The reads this run kept: a run that ends without its checks never vouched for them, so none stays. */
     const keptNow = new Set()
     try {
       signal.throwIfAborted()
-      // Each page has its own tab; `runDemoQa` reads one at a time to bound decoded images.
+      // Each page has its own tab; `runDemoQa` reads `tabsAtOnce` at a time to bound decoded images.
       const result = await runDemoQa({
         asked,
         base,
+        readAtOnce: tabsAtOnce,
         read: async (url, path, options) => {
           signal.throwIfAborted()
           const page = await context.newPage()
@@ -1640,6 +1676,10 @@ export async function makeDemoQa({ log = console, playwright = null } = {}) {
               previous: last?.asks === asks ? last : null
             })
             signal.throwIfAborted()
+            seen.read++
+            if (last?.asks === asks) seen.last++
+            if (r.reused) seen.unchanged++
+            if (!r.fingerprint) seen.unprinted++
             if (r.fingerprint && !r.error && !r.reused) {
               lastReads.set(key, { fingerprint: r.fingerprint, read: r, asks })
               keptNow.add(key)
@@ -1651,6 +1691,10 @@ export async function makeDemoQa({ log = console, playwright = null } = {}) {
         }
       })
       signal.throwIfAborted()
+      if (asked.incremental)
+        log.log?.(
+          `[host] demo-qa ${asked.label ?? ''}: ${seen.read} read, ${seen.last} with a last read, ${seen.unchanged} unchanged, ${seen.unprinted} with no fingerprint`
+        )
       // A page a finding names is read in full next time, never kept (`pagesWithFindings`).
       for (const path of pagesWithFindings(result)) lastReads.drop(JSON.stringify([siteKey, path]))
       return result
@@ -1662,25 +1706,21 @@ export async function makeDemoQa({ log = console, playwright = null } = {}) {
       await close()
     }
   }
-  // A browser context and its decoded images are the expensive part. A host owns only one QA run at a time,
-  // including requests for different sites; the queue holds request metadata, never page payloads.
-  let queue = Promise.resolve()
+  // A browser context and its decoded images are the expensive part. A host owns `runsAtOnce` QA runs at a time
+  // (`browserRunsOf`: one on a small host), including requests for different sites; the queue holds request
+  // metadata, never page payloads. An expired waiter leaves the queue; a run gives its slot back only once its
+  // context has closed, so no run starts beside one still closing.
+  const slot = visionSlot(Infinity, runsAtOnce)
   return async (input) => {
     const deadline = qaDeadline(input.asked, input.signal)
-    const before = queue
-    let release
-    const done = new Promise((resolve) => {
-      release = resolve
-    })
-    // An expired waiter may release its own placeholder immediately, but later requests still wait
-    // for its predecessor. They must never pass a run whose context is still closing.
-    queue = before.then(() => done)
+    let release = null
     try {
-      await waitForQaSlot(before, deadline.signal)
+      release = await slot(deadline.signal)
+      deadline.signal.throwIfAborted()
       return await run({ ...input, signal: deadline.signal })
     } finally {
       deadline.dispose()
-      release()
+      release?.()
     }
   }
 }

@@ -229,6 +229,9 @@ export function demoQaBody(body) {
     // The business name a wordmark is drawn from where the template's logo shows (`readInPage` `drawWordmark`).
     wordmark:
       typeof body.wordmark === 'string' && body.wordmark.trim() ? body.wordmark.trim().slice(0, 80) : null,
+    // The sweep's brand writer wore the business's own logo (`client-demo.js` `businessLogoDue`): the header logo it
+    // uploaded (`tracy-brand/logo-…`, a folder only that writer fills) is the business's.
+    logoWorn: body.logoWorn === true,
     // The business's own logo as the build imported it, laid in the template logo's box (`fitLogoInPage`).
     logoPicture:
       typeof body.logoPicture === 'string' &&
@@ -3680,14 +3683,22 @@ export function checkCollectedUsed(
  * @param {PageRead[]} reads
  */
 /**
- * Where a Joomla template keeps its logo, said once with the first finding: T4 uses the native
- * `template.siteSettings` door; T3 keeps the logo in the template style (local round 35, 26/10/2026: a Death & Co build
- * tried the template style eight ways and then wrote over the template's own `logo.png`).
+ * Where a Joomla template keeps its logo, said once with the first finding: a T4 template keeps it in its site
+ * settings, which the agent's tool does not reach, so Tracy's sweep has the brand writer put the business's logo there
+ * (`client-demo.js` `businessLogoDue`, local measure 28/10/2026: the door this named answered NOT_ON_THIS_PLATFORM and the
+ * agent guessed template-style params for six checks); T3 keeps the logo in the template style (local round 35,
+ * 26/10/2026: a Death & Co build tried the template style eight ways and then wrote over the template's own `logo.png`).
  */
 const JOOMLA_LOGO_PLACE =
-  ' — on Joomla T4 use tracy_site template.siteSettings {operation:"read", template:"<template>"}, then {operation:"set", template:"<template>", profiles:{"<profile>":{site_logo:"<imported picture path>"}}} for the returned profiles; this native door records Undo and preserves the other settings. Do not edit template files. On T3 use the template style’s logo setting (content.update {kind:"templateStyle"})'
+  ' — on Joomla T4 Tracy puts the business’s logo in the header itself after this check (the template’s site settings): never edit template files or template-style params for it; if a later check still names it, leave it for the reviewer. On T3 use the template style’s logo setting (content.update {kind:"templateStyle"})'
 
-export function checkHeaderBrand(reads, { collected = null, placedSources = {}, platform = null } = {}) {
+/** A logo Tracy's brand writer uploaded (`brand-joomla-places.js`, `brand-wordpress.js`): `<role>-<sha 16>-<stamp>.png`. */
+const BRAND_WRITER_LOGO = /(?:^|\/)tracy-brand\/logo(?:-light|-dark)?-[0-9a-f]{16}-[\w-]+\.png$/
+
+export function checkHeaderBrand(
+  reads,
+  { collected = null, placedSources = {}, platform = null, logoWorn = false } = {}
+) {
   const expected =
     'the header shows the collected logo, or the business name when no logo was collected; it keeps its brand block'
   const judged = reads.filter((r) => r.brand && typeof r.brand === 'object')
@@ -3722,8 +3733,11 @@ export function checkHeaderBrand(reads, { collected = null, placedSources = {}, 
       // The sweep sets a copy of the logo fitted to the template's logo box; it counts when this page's read
       // matched it to the logo by its pixels.
       const fitted = r.fittedLogo?.matches === true && r.fittedLogo.logo ? [fileOf(r.fittedLogo.logo)] : []
+      // The logo the sweep's brand writer wore, fitted to the template's frame under its own name, is the business's
+      // (local measure 28/10/2026: worn on a Joomla T4 header, the check still named the template's logo).
+      const worn = logoWorn && images.some((img) => BRAND_WRITER_LOGO.test(fileOf(img.src)))
       // WordPress's site-logo block shows its own size cut of the file (`<name>-150x150.png`): the same logo.
-      if (!images.some((img) => matchesFile(uncut(fileOf(img.src)), [...logoFiles, ...fitted])))
+      if (!worn && !images.some((img) => matchesFile(uncut(fileOf(img.src)), [...logoFiles, ...fitted])))
         findings.push({
           page: r.path,
           code: 'LOGO_NOT_IN_HEADER',
@@ -3962,10 +3976,13 @@ function judgeWith(reads, asked, routeReads = []) {
  * Read every page (home first; with `discover`, then the pages home's nav links to) and judge them.
  * @param {{asked: any, base: string, read: (url: string, path: string, options: object) => Promise<PageRead>}} input
  */
-/** Pages a check reads at once after home, each in its own tab (`runDemoQa`). */
+/**
+ * Pages a check reads at once after home, each in its own tab (`runDemoQa`), on a small host. A host with more
+ * memory reads more at once (`demoQaTabsOf`).
+ */
 export const READ_AT_ONCE = 1
 
-export async function runDemoQa({ asked, base, read, now = Date.now }) {
+export async function runDemoQa({ asked, base, read, now = Date.now, readAtOnce = READ_AT_ONCE }) {
   const started = now()
   const origin = new URL(base).origin
   const sentinels = Object.fromEntries(
@@ -4044,12 +4061,12 @@ export async function runDemoQa({ asked, base, read, now = Date.now }) {
   }
   // 🔒 HOME ALONE, THEN THE REST A FEW AT ONCE (plan "10/10" §7 S3, 26/10/2026): one check read up to ~15 pages one
   // after another at 2.6–6 s each. Home is read first by itself (it finds the nav's pages); the others are read
-  // `READ_AT_ONCE` at a time, each in its own tab (`makeDemoQa`), never more than the pages left under the cap, and
+  // `readAtOnce` at a time, each in its own tab (`makeDemoQa`), never more than the pages left under the cap, and
   // handled in page order — so the reads, and every verdict judged from them, are the same as one at a time.
   let i = 0
   while (i < pages.length && reads.length < maxPages) {
     if (now() - started > (asked.budgetMs ?? Infinity)) throw qaDeadlineError()
-    const wave = i === 0 ? 1 : Math.min(READ_AT_ONCE, maxPages - reads.length)
+    const wave = i === 0 ? 1 : Math.min(Math.max(1, readAtOnce), maxPages - reads.length)
     const batch = []
     while (batch.length < wave && i < pages.length) {
       const index = i++
@@ -4096,25 +4113,42 @@ export async function runDemoQa({ asked, base, read, now = Date.now }) {
   const routeReads = []
   const routesUnread = []
   const routeStarted = now()
+  // 🔒 ROUTES A FEW AT ONCE TOO (28/10/2026): a WordPress template's ~40 post routes were read one after another,
+  // 150–180 s of every read of the site, while its pages already went `readAtOnce` at a time. They go in waves the
+  // same way, each wave started only inside `routeBudgetMs`, and are handled in route order, so what is read and every
+  // verdict from it are the one-at-a-time run's.
+  const routesDue = []
   for (const path of asked.routes ?? []) {
     if (seen.has(routeKey(path)) || reads.some((r) => routeKey(r.path) === routeKey(path))) continue
     seen.add(routeKey(path))
+    routesDue.push(path)
+  }
+  for (let i = 0; i < routesDue.length; ) {
     if (now() - routeStarted > (asked.routeBudgetMs ?? 0)) {
-      routesUnread.push(path)
-      continue
+      routesUnread.push(...routesDue.slice(i))
+      break
     }
-    const url = new URL(path, base)
-    if (url.origin !== origin) continue
-    const r = await read(url.href, path, { ...options, discover: false })
-    const skipped = notAPage(r, path, 'route')
-    visited.push({
-      path,
-      status: r.status ?? null,
-      finalPath: finalPathOf(r) ?? path,
-      from: 'route',
-      ...(skipped ? { skipped } : {})
-    })
-    if (!skipped) routeReads.push(r)
+    const wave = routesDue.slice(i, i + Math.max(1, readAtOnce))
+    i += wave.length
+    const results = await Promise.all(
+      wave.map((path) => {
+        const url = new URL(path, base)
+        return url.origin === origin ? read(url.href, path, { ...options, discover: false }) : null
+      })
+    )
+    for (const [k, path] of wave.entries()) {
+      const r = results[k]
+      if (!r) continue
+      const skipped = notAPage(r, path, 'route')
+      visited.push({
+        path,
+        status: r.status ?? null,
+        finalPath: finalPathOf(r) ?? path,
+        from: 'route',
+        ...(skipped ? { skipped } : {})
+      })
+      if (!skipped) routeReads.push(r)
+    }
   }
   const everyRead = [...reads, ...routeReads]
   const residue = residueOf(everyRead, asked)
