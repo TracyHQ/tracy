@@ -13,6 +13,7 @@ import { collectionOfGroupId } from './content-map-repeatable-lists.mjs'
 import { namedIn } from './pictures/picture-links.mjs'
 import { planStatBoxes } from './stat-box-plan.mjs'
 import { factRowFacts, planFactRows } from './fact-rows.mjs'
+import { showablePeopleOf } from './brief-people.mjs'
 
 export const HONESTY_VERSION = 'site-plan-honesty/1'
 
@@ -68,11 +69,12 @@ function onSite(brief, item) {
   return fact?.onSite !== false
 }
 
-/** The brief's people the site may show, in the brief's order. */
+/**
+ * The brief's people the site may show, in the brief's order: a person only reviews name included when the reviews give a
+ * role or two reviews name them (`brief-people.mjs`, product owner 29/10/2026), flagged `fromReviews`.
+ */
 export function peopleOfBrief(brief) {
-  return (brief?.reading?.team ?? [])
-    .filter((p) => text(p?.id) && text(p?.label) && onSite(brief, p))
-    .map((p) => ({ id: p.id, label: text(p.label), role: text(p.role) || null }))
+  return showablePeopleOf(brief)
 }
 
 /** The brief's offerings the site may show, in the brief's order, each with its own words. */
@@ -325,7 +327,16 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
           assigned.role
             ? setValue(slot, assigned.role, 'brief-person')
             : blanks.push(blankOf(slot, 'no-brief-fact'))
-        else if (role === 'person.bio') blanks.push(blankOf(slot, 'no-brief-fact'))
+        else if (role === 'person.bio' || role === 'person.social_url')
+          blanks.push(blankOf(slot, 'no-brief-fact'))
+        // 🔒 A KEPT PERSON CARD SHOWS ONLY THE NAME, THE ROLE AND THE PICTURE: any other words or link on it (a link to the
+        // demo person's own page, social icons, a demo line) is the demo's, emptied per element, never the whole card.
+        else if (
+          group.kind === 'person' &&
+          !role.startsWith('person.') &&
+          (slot.type === 'text' || slot.type === 'url')
+        )
+          blanks.push(blankOf(slot, 'no-brief-fact'))
         else if (role === 'offering.name') setValue(slot, assigned.label, 'brief-offering')
         else if (OFFERING_FACTS.has(role)) blanks.push(blankOf(slot, 'no-brief-fact'))
         else if (role === 'offering.description') {
@@ -338,6 +349,22 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
       }
     })
   }
+  // 🔒 A KEPT PERSON'S OWN RECORD SHOWS NO DEMO SOCIAL LINK: the brief holds no social profile of a person, and a template
+  // may file a profile's icons in a group of their own (`contact`), so every social slot of that record is emptied.
+  const personEntities = new Set(
+    records
+      .filter((r) => r.kind === 'person' && r.decision === 'keep' && r.reason === 'brief-person')
+      .map((r) => groupsOf(contentMap).find((g) => g.id === r.group)?.slots[0]?.entity)
+      .filter(Boolean)
+  )
+  const blanked = new Set(blanks.map((b) => b.key))
+  for (const slot of contentMap?.slots ?? [])
+    if (
+      personEntities.has(slot.entity) &&
+      /^(contact|person)\.social_/.test(slot.role ?? '') &&
+      !blanked.has(slot.key)
+    )
+      blanks.push(blankOf(slot, 'no-brief-fact'))
   return {
     honesty: {
       version: HONESTY_VERSION,

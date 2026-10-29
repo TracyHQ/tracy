@@ -28,6 +28,7 @@ import { keepDecisionOf } from './content-map-keep-decision.mjs'
 import { LOGO_ROLES } from './place-content-roles.mjs'
 import { closedListOf, GENERAL, namedIn } from './pictures/picture-links.mjs'
 import { avatarSubstitute } from './person-avatar.mjs'
+import { showablePeopleOf } from './brief-people.mjs'
 import { scriptSignature } from './neutral-signature.mjs'
 import { isMapPhotoByOthers, publisherRankOf } from './pictures/asset-origin.mjs'
 import { ROLES } from './pictures/placement.mjs'
@@ -284,7 +285,11 @@ export function planFill({
   }
   const lockOf = new Map(offerings.map((o) => [o.groupId, o]))
   // A person card takes the brief person its name says, by the same decider as an offering card.
-  const team = closedListOf(brief?.reading).people
+  // The people the site may show, a person only reviews name with a role included (`brief-people.mjs`).
+  const shownIds = new Set(showablePeopleOf(brief).map((p) => p.id))
+  const team = (brief?.reading?.team ?? [])
+    .filter((p) => shownIds.has(p?.id))
+    .map((p) => ({ id: p.id, label: p.label }))
   const peopleOf = new Map()
   for (const slot of slots) {
     const groupId = slot.group?.id

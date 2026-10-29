@@ -20,6 +20,7 @@ import { planOutsideMap } from './outside-map.mjs'
 import { COLOUR_REASONS, planColours } from './brand-colours.mjs'
 import { HONESTY_REASONS, planHonesty } from './site-plan-honesty.mjs'
 import { EMPTIED_PAGE_WHY, emptiedPages } from './site-plan-empty-pages.mjs'
+import { peopleFromReviewsNote, showablePeopleOf } from './brief-people.mjs'
 
 export const SITE_PLAN_VERSION = 'site-plan/1'
 
@@ -197,7 +198,19 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
   const year = now && Number.isFinite(Date.parse(now)) ? new Date(now).getUTCFullYear() : undefined
   const honesty = planHonesty(brief, contentMap, { name, contact, now: year })
   // A kept page whose every section the plan took off goes with its menu entries (`site-plan-empty-pages.mjs`).
-  const { answers, notes, pagePlan } = withoutEmptiedPages(answered, served, contentMap, honesty.honesty)
+  const {
+    answers,
+    notes: pageNotes,
+    pagePlan
+  } = withoutEmptiedPages(answered, served, contentMap, honesty.honesty)
+  // The people a kept card shows from guest reviews alone are named to the owner to check (`brief-people.mjs`).
+  const shown = new Set(
+    honesty.honesty.records
+      .filter((r) => r.kind === 'person' && r.decision === 'keep')
+      .map((r) => r.assigned?.id)
+  )
+  const fromReviews = peopleFromReviewsNote(showablePeopleOf(brief).filter((p) => shown.has(p.id)))
+  const notes = fromReviews ? [...pageNotes, fromReviews] : pageNotes
   return {
     version: SITE_PLAN_VERSION,
     brand,

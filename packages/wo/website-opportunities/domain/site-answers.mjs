@@ -1,5 +1,6 @@
 import { contactOf } from './pinned-copy.mjs'
 import { pagePlan } from './page-plan.mjs'
+import { showablePeopleOf } from './brief-people.mjs'
 
 // Answers to the deployment's own Site questions (served by GET /api/sites/questions), filled from a
 // brief. Only what the brief supports is answered; anything else stays unanswered so the create door
@@ -52,7 +53,9 @@ function planOf(brief, q, now) {
       services,
       menuLinks,
       socials: brief.business?.socials ?? {},
-      contact: Object.keys(contactOf(brief)).length
+      contact: Object.keys(contactOf(brief)).length,
+      // The people a team page can show (`brief-people.mjs`): with none, the team page has nothing true to show.
+      people: showablePeopleOf(brief).length
     },
     now: now ?? brief.madeAt ?? new Date().toISOString(),
     cms: brief.cms ?? null

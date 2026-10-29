@@ -28,7 +28,10 @@ const ROLES = [
   ['services', /\b(services?|amenities)\b/],
   ['about', /\b(about|company|who[- ]we[- ]are)\b/],
   ['pricing', /\b(pricing|prices|plans)\b/],
-  ['team', /\b(team|chefs?|staff|people)\b/],
+  [
+    'team',
+    /\b(team|chefs?|staff|people|trainers?|coach(es)?|instructors?|teachers?|tutors?|doctors?|dentists?|therapists?|stylists?|barbers?|experts?)\b/
+  ],
   ['donations', /\b(donations?|donate|causes?)\b/],
   ['careers', /\b(careers?|jobs?|vacanc(y|ies)|hiring)\b/],
   ['faq', /\b(faqs?|help[- ]cent(re|er)|questions)\b/]
@@ -52,6 +55,8 @@ const ONE_OF = new Set([
 
 /** Why a Contact page is kept: the business gave contact details. */
 export const CONTACT_FACTS_WHY = 'the business gave contact details'
+/** Why a team page is kept: the brief names people a site may show (`brief-people.mjs`). */
+export const TEAM_PEOPLE_WHY = 'the brief names people to show on it'
 
 const BLOG_MAX = 3
 const BLOG_MIN = 2
@@ -91,7 +96,7 @@ function worth(item, now) {
 
 /**
  * @param {{pages: Array<{id: string, label?: string, home?: boolean}>, locked?: string[], content?: object[],
- *   facts?: {images?: number, prices?: number, services?: number, contact?: number, menuLinks?: string[], socials?: object}, now: string, cms?: string|null}} args - `content`: `contentPool` items;
+ *   facts?: {images?: number, prices?: number, services?: number, contact?: number, people?: number, menuLinks?: string[], socials?: object}, now: string, cms?: string|null}} args - `content`: `contentPool` items;
  *   `facts.menuLinks` no longer changes a page's fill: the menu page shows its dishes on the site
  * @returns {{pages: Array<{id: string, path?: string, role: string, keep: boolean, why: string, fill?: string, items?: string[],
  *   state?: string}>, keep: string[]}}
@@ -152,6 +157,11 @@ export function pagePlan({ pages = [], locked = [], content = [], facts = {}, no
     ) {
       seen.add(role)
       return { id: page.id, ...at, role, keep: true, why: CONTACT_FACTS_WHY }
+    }
+    // The team page stays, even under another page, when the brief names people to show: their cards fill it (spec #189).
+    if (role === 'team' && facts.people > 0 && !seen.has('team')) {
+      seen.add(role)
+      return { id: page.id, ...at, role, keep: true, why: TEAM_PEOPLE_WHY }
     }
     if (parent && role !== 'history') return off(`a sub-page of ${parent} from the template's own demo trade`)
     // A page of a section (`resources/mag-world`) that names no kind a restaurant has is the demo's own trade.
