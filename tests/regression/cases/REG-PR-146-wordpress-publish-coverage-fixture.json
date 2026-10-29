@@ -2,7 +2,7 @@
   "id": "REG-PR-146-wordpress-publish-coverage-fixture",
   "kind": "fix",
   "title": "Publish tests of a WordPress card judge the group they name, not the coverage file the borrowed contract lacks",
-  "pr": "146",
+  "pr": 146,
   "area": "ops/quickstarts/content-coverage",
   "cms": ["wp"],
   "needs": [],
