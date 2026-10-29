@@ -1,0 +1,42 @@
+name: CodeQL Freshness
+
+# Goes red when CodeQL scanning has stopped: the develop head commit, committed more than 24 h ago,
+# has no analysis of its own in a category (a quiet develop whose head was analyzed is never stale),
+# or a category's newest `main` analysis (the weekly scan) is more than 8 days old, or a category has
+# none.
+# Its own file on purpose: a `codeql.yml` that no longer parses or never starts cannot hide this one.
+# Logic and tests: `scripts/ci/codeql-freshness.mjs`, `scripts/test/codeql-freshness.test.mjs`.
+
+on:
+  schedule:
+    - cron: '41 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: read
+
+concurrency:
+  group: codeql-freshness
+  cancel-in-progress: false
+
+jobs:
+  freshness:
+    name: CodeQL freshness (develop)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+
+      - name: Check the latest CodeQL analysis of develop
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/ci/codeql-freshness.mjs
