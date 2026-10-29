@@ -666,6 +666,15 @@ Only for `origin='migrated'` sites on Joomla (WordPress waits for its own adapte
   (`com_content.article.<id>`); renumbered tables are remembered in `sync/id-map.json` for later runs. In extension tables the merge cannot renumber, or when an extension table points to an id just changed: the sync run
   **stops before applying** (`needs_resolution`, list `held`), and only after a person reviews and clicks "Sync anyway" (`allowHeld`) is
   Tracy's version kept there.
+- **WooCommerce record counts:** the five analytics/admin tables `wc_admin_notes`, `wc_admin_note_actions`,
+  `wc_order_stats`, `wc_order_product_lookup` and `wc_customer_lookup` are ignored as background state.
+  Order metadata, addresses, operational rows and order-item rows still merge but do not count as independent records.
+  HPOS `shop_order_placehold` posts also remain in the copy without counting twice: whole-table and row merges count
+  a taken change when its copy row before or after the actual merge represents a record. Legacy `shop_order` posts
+  still count normally. When all three snapshots agree on WooCommerce storage, HPOS counts `wc_orders`
+  and legacy counts order posts; synchronized backup orders and refunds remain merged without double counting.
+  Missing required tables or differing storage modes keep the existing per-table counts. Child-only changes
+  still merge under the existing uncounted-child rule.
 - **First run after import (22/10/2026):** at import, dsh takes the live `site.fingerprint` right before reading and
   sends it with provision; tracy-web keeps it at `site_component.config.importFingerprint` (next to the live token), and hands it to the first
   sync run (`baseFingerprint` → the host writes `base-fingerprint.json` next to the run); while no run has applied yet, comparison is
@@ -755,6 +764,7 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   A stopped apply drains in-flight writes before saving its complete partial result in `written.json`. The shell still records
   acknowledged live IDs and reports the written/conflict/failed/skipped lists with the error, so the failed push remains undoable.
   **undo** is a reverse CAS: it restores "before" only where live still holds exactly the value the push left; the copy keeps Tracy's changes.
+  WordPress postmeta creates retain the resolved parent post ID and use a stable per-item native apply ID, stored in the durable preimage and Undo snapshot. Undo reverts only that native receipt after comparing the written value, verifies the metadata is absent, and never replays an uncertain mutation. Older snapshots without a dedicated receipt remain held; newer native writes retain their conflict guard. A new parent post stays in place when dependent metadata Undo is kept or failed, or a durable metadata receipt is ahead of the saved Apply output.
 - The web door, lease `push:<id>`, owner-only, switch `site-sync-to-live`, audit: on the tracy-web side.
 - Screen (25/10/2026): one flow of the Publish tab (`@tracy/core` `site-tabs/publish/PushStep.tsx`, Review › Send), opened from the Sync to live row of the ••• menu or by choosing "Send changes to your live site" in the tab; the old My Sites dialog was removed.
 
