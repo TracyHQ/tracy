@@ -14,10 +14,8 @@ export function drawingFailureReason(error) {
     )
   )
     return 'model not found'
-  if (
-    /network|fetch failed|timed?\s*out|too long|abort|socket|ECONN|ENOTFOUND|EAI_AGAIN|ETIMEDOUT/i.test(words)
-  )
-    return 'network'
+  if (/timed?\s*out|too long|abort|ETIMEDOUT/i.test(words)) return 'timeout'
+  if (/network|fetch failed|socket|ECONN|ENOTFOUND|EAI_AGAIN/i.test(words)) return 'network'
   return 'model failed'
 }
 

@@ -27,6 +27,7 @@ import { picturePolicy } from '../../lib/wo-picture-policy.js'
 import { customizableSlots } from '../../lib/contract-customize.js'
 import { pool } from './shared.js'
 import { drawPlanned, shapeDecor } from './drawn-pictures.js'
+import { drawingFailureReason } from './drawing-failures.js'
 import { unmeasuredFigures } from './unmeasured-figures.js'
 import { iconMeanings } from './icon-meanings.js'
 import { correctedCut, sharpFill } from './sharpness-gate.js'
@@ -381,10 +382,10 @@ export async function shapeReal({
       DRAW_AT_ONCE
     )
     for (const answer of drawing)
-      if (!answer.ok)
-        note(
-          `a picture could not be drawn: ${answer.error instanceof Error ? answer.error.message : answer.error}`
-        )
+      if (!answer.ok) {
+        const reason = drawingFailureReason(answer.error)
+        note(`a picture could not be drawn: ${reason === 'timeout' ? 'the picture took too long' : reason}`)
+      }
     clock('pictureDrawMs', started)
   }
 

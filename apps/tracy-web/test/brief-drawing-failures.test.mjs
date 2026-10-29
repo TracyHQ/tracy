@@ -93,6 +93,9 @@ for (const trade of TRADES) {
           'picture work must return after its deadline even if a dependency ignores the signal'
         )
         assert.equal(result.drawn.size, 0)
+        assert.ok(result.stats.refused.every((item) => item.reasonClass === 'timeout'))
+        assert.ok(result.notes.every((note) => note.includes('timeout')))
+        assert.doesNotMatch(result.notes.join('\n'), /This operation was aborted/)
         assert.ok(
           result.chatCalls <= (pending === 'labeller' ? 2 : 0),
           'queued work never starts another model call'
@@ -156,7 +159,9 @@ for (const trade of TRADES) {
     ['model call failed: Rate limit exceeded (after 3 tries)', 'rate limit'],
     ['model call failed: No endpoints found for image-model', 'model not found'],
     ['model call failed: fetch failed (after 3 tries)', 'network'],
-    ['the picture took too long', 'network']
+    ['the picture took too long', 'timeout'],
+    ['This operation was aborted', 'timeout'],
+    ['The operation was aborted due to timeout', 'timeout']
   ]) {
     test(`${trade.category}: ${reason} remains visible in the receipt, note and safe log`, async (t) => {
       const error = new Error(
