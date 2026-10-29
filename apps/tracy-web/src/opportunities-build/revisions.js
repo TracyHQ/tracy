@@ -60,7 +60,18 @@ export function templateRefusal(template) {
  */
 export async function revisionForAction(
   db,
-  { action, domain, templates, ops, now = Date.now, editorial, historical, logoResearch, pictureLabels }
+  {
+    action,
+    domain,
+    templates,
+    ops,
+    now = Date.now,
+    editorial,
+    historical,
+    logoResearch,
+    pictureLabels,
+    photoLabelling
+  }
 ) {
   const built = (
     await db.query('select choice from wo_build where account_id = $1 and request_id = $2', [
@@ -116,6 +127,9 @@ export async function revisionForAction(
     // (logo-research.js).
     const read = await withLogoResearch(db, { action, now, ...logoResearch })
     if (read.pending) return { pending: true, retryAt: read.retryAt }
+    // 🔒 The brief is made once its photos are looked at (item 27): pending while the labelling moves, never slept on.
+    const photos = await waitForPhotoLabels(db, { action, now, photoLabelling })
+    if (photos.pending) return photos
     const made = await createRevision(db, {
       accountId: action.account_id,
       opportunityId: action.opportunity_id,
@@ -127,6 +141,7 @@ export async function revisionForAction(
       now,
       // What the brief's photographs show, asked before the brief is made (`brief-picture-labels.js`, F08).
       ...(pictureLabels ? { pictureLabels } : {}),
+      ...(photos.waited ? { photoWait: photos.waited } : {}),
       ...(editorial ? { editorial, choiceFor: (frozen) => choiceFor(frozen) ?? fail(failure) } : {})
     }).catch((error) => (error?.code && error.code === failure ? { error: failure } : Promise.reject(error)))
     if (made.error) return made
@@ -139,6 +154,39 @@ export async function revisionForAction(
 
 const fail = (code) => {
   throw Object.assign(new Error(code), { code })
+}
+
+/**
+ * The build's wait for the photo labelling (`photo-labelling.js gate`), kept on the action so the person sees it
+ * ("Looking at photos 180/300", `selection.photoLabelling`) and so the wait survives a restart (`waitingSince`):
+ * `{pending: true, retryAt, photoLabelling}` while it moves, else `{waited}` (how it ended, null without a labeller).
+ */
+export async function waitForPhotoLabels(db, { action, now, photoLabelling }) {
+  if (!photoLabelling) return { waited: null }
+  const held = action.selection?.photoLabelling ?? null
+  const since = Date.parse(held?.waitingSince ?? '')
+  const answer = await photoLabelling.gate({
+    accountId: action.account_id,
+    opportunityId: action.opportunity_id,
+    waitingSince: Number.isFinite(since) ? since : null
+  })
+  const p = answer.progress ?? {}
+  const state = {
+    state: answer.pending ? 'running' : p.state,
+    total: p.total ?? 0,
+    looked: p.looked ?? 0,
+    failed: p.failed ?? 0,
+    linked: p.linked ?? 0,
+    waitingSince: Number.isFinite(since) ? new Date(since).toISOString() : new Date(now()).toISOString(),
+    at: new Date(now()).toISOString()
+  }
+  await db.query(
+    `update wo_demo_action set selection = coalesce(selection, '{}'::jsonb) || $2::jsonb, updated_at = $3 where id = $1`,
+    [action.id, JSON.stringify({ photoLabelling: state }), new Date(now())]
+  )
+  action.selection = { ...action.selection, photoLabelling: state }
+  if (answer.pending) return { pending: true, retryAt: answer.retryAt, photoLabelling: state }
+  return { waited: state }
 }
 
 /** The action's selection (template already resolved at acceptance) as a build choice, checked against the offer. */
@@ -440,14 +488,8 @@ async function withPictureLabelling(pool, args) {
       }
     }
     const answer = await args.pictureLabels({
-      media: read.media ?? [],
-      brand: briefBrand(read.brand),
-      accountId: args.accountId,
-      trade: read.opportunity?.candidate?.trade ?? opp?.candidate?.trade ?? null,
-      // The brief's offerings and people the model may link a photo to, and the name that marks the business's own
-      // Google photos (#48).
-      closedList: closedListOf(read.profile?.businessReading),
-      businessName: read.profile?.name ?? read.opportunity?.name ?? opp?.name ?? null
+      ...photoSubjectOf(read, opp, args.accountId, args.opportunityId),
+      waited: args.photoWait ?? null
     })
     return { ...args, pictureLabelling: answer }
   } catch {
@@ -458,6 +500,46 @@ async function withPictureLabelling(pool, args) {
         note: { status: 'failed', asked: 0, labelled: 0, cached: 0, reason: 'vision_failed' }
       }
     }
+  }
+}
+
+/**
+ * What the photo labelling of a research read works on (item 27): its media, brand, trade, the brief's closed list of
+ * offerings and people a photo may be linked to, and the name that marks the business's own Google photos (#48).
+ */
+function photoSubjectOf(read, opp, accountId, opportunityId) {
+  return {
+    media: read.media ?? [],
+    brand: briefBrand(read.brand),
+    accountId,
+    opportunityId,
+    trade: read.opportunity?.candidate?.trade ?? opp?.candidate?.trade ?? null,
+    closedList: closedListOf(read.profile?.businessReading),
+    businessName: read.profile?.name ?? read.opportunity?.name ?? opp?.name ?? null
+  }
+}
+
+/**
+ * The photos of an opportunity's current research, as the brief would read them now (`photoSubjectOf`), for the photo
+ * labelling that runs beside the research (`photo-labelling.js`); null when the opportunity is not the account's.
+ * @param {import('pg').Pool} pool
+ * @param {string} accountId
+ * @param {string} opportunityId
+ */
+export async function researchPhotosOf(pool, accountId, opportunityId) {
+  const client = await pool.connect()
+  try {
+    const opp = (
+      await client.query('select * from wo_opportunity where id = $1 and account_id = $2', [
+        opportunityId,
+        accountId
+      ])
+    ).rows[0]
+    if (!opp) return null
+    const read = await liveRead(client, opp, opp.place_id ? await placeViewOf(client, opp) : null)
+    return photoSubjectOf(read, opp, accountId, opportunityId)
+  } finally {
+    client.release()
   }
 }
 

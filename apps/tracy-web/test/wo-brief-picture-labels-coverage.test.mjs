@@ -1,7 +1,8 @@
 /**
- * Vision labelling v2 coverage (#48): every photo the business published is labelled and customer photos fill up to 60 in
- * total, own photos first; the brief's closed list goes to the model; a second run with the same list asks nothing, and a
- * label made against another list is asked again. Fixtures are fictional (the Lantern Hill Racquet Club).
+ * Vision labelling coverage (#48, item 27): the business's own photos first, then customers', up to the ceiling; what a
+ * photo shows is asked without the brief's closed list (one prompt per cache key), and the links to the list are a text
+ * step; a second run with the same list asks nothing, and another list re-runs only the links. Fixtures are fictional
+ * (the Lantern Hill Racquet Club).
  */
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
@@ -9,7 +10,7 @@ import { after, before, beforeEach, test } from 'node:test'
 import sharp from 'sharp'
 
 import { visionKey } from '../src/lib/picture-vision.js'
-import { createBriefPictureLabels } from '../src/opportunities-build/brief-picture-labels.js'
+import { labelThenRead as createBriefPictureLabels } from './_photo-labels.mjs'
 import { closedListDigest } from 'website-opportunities/domain/pictures/picture-links.mjs'
 import { fileDb } from './_db.mjs'
 
@@ -123,7 +124,7 @@ const guests = (n) =>
   }))
 
 test(
-  "up to 60 photos are labelled, the business's own first, customers only in what is left",
+  "up to the ceiling of 60 photos are labelled, the business's own first, customers only in what is left",
   opts,
   async () => {
     const objects = store()
@@ -133,7 +134,8 @@ test(
       pool: db.pool,
       objects,
       visionFor: async () => VISION,
-      label
+      label,
+      maxPictures: 60
     })({
       media,
       brand: null,
@@ -148,17 +150,24 @@ test(
     assert.equal(out.note.max, 60)
     assert.equal(Object.values(out.note.unlabelled ?? {}).filter((r) => r === 'over_cap').length, 10)
     assert.ok(
-      lists.every((l) => l === LIST),
-      'the closed list goes to the model'
+      lists.every((l) => !l),
+      'what a photo shows is asked without the closed list: the links are a text step'
     )
+    assert.ok([...out.labels.values()].every((e) => e.labels.closedList === closedListDigest(LIST)))
   }
 )
 
-test('every own photo is labelled even past 60; no customer photo then', opts, async () => {
+test('own photos fill the ceiling first; no customer photo then', opts, async () => {
   const objects = store()
   const media = await seed(objects, [...guests(3), ...own(62)])
   const { sent, label } = fakeLabel()
-  await createBriefPictureLabels({ pool: db.pool, objects, visionFor: async () => VISION, label })({
+  await createBriefPictureLabels({
+    pool: db.pool,
+    objects,
+    visionFor: async () => VISION,
+    label,
+    maxPictures: 62
+  })({
     media,
     brand: null,
     accountId: null,
@@ -201,7 +210,7 @@ test(
 )
 
 test(
-  'a second run on the same photos and list makes no model call; another list asks again',
+  'a second run on the same photos and list makes no model call; another list re-runs only the links',
   opts,
   async () => {
     const objects = store()
@@ -222,13 +231,14 @@ test(
     const second = fakeLabel()
     const again = await make(second.label)(input)
     assert.equal(second.sent.length, 0)
-    assert.equal(again.note.status, 'cached')
+    assert.equal(again.note.status, 'labelled')
     assert.equal(again.labels.size, 5)
-    // The brief gained an offering: the links were made against another list, so the photos are asked again.
+    // The brief gained an offering: the links were made against another list, so only they are made again.
     const third = fakeLabel()
     const grown = { ...LIST, offerings: [...LIST.offerings, { id: 'se_camp', label: 'Junior tennis camp' }] }
-    await make(third.label)({ ...input, closedList: grown })
-    assert.equal(third.sent.length, 5)
+    const relinked = await make(third.label)({ ...input, closedList: grown })
+    assert.equal(third.sent.length, 0, 'what a photo shows is never asked again')
+    assert.ok([...relinked.labels.values()].every((e) => e.labels.closedList === closedListDigest(grown)))
     const fourth = fakeLabel()
     await make(fourth.label)({ ...input, closedList: grown })
     assert.equal(fourth.sent.length, 0)

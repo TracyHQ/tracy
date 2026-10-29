@@ -23,8 +23,16 @@ import {
 } from 'website-opportunities/domain/pictures/picture-links.mjs'
 
 // p3: the image-only code; p4: the content kind and caption the site brief shows for each asset (F08); p5: the brief's
-// offerings and team as a closed list, links with evidence, a v3 role, boxes instead of a focus word (#48).
-export const VISION_PROMPT_VERSION = 'p5'
+// offerings and team as a closed list, links with evidence, a v3 role, boxes instead of a focus word (#48); p6: the label
+// a reader takes, made of two cached halves (item 27): the content label (`visionContentKey`, prompt c1) and the links to
+// the brief's closed list asked of a text model from that content (`picture-link-text.js`, prompt l1).
+export const VISION_PROMPT_VERSION = 'p6'
+/**
+ * The content label's prompt: `pictureLabelSystem()` with no trade and no closed list, so what a photo shows is asked once
+ * per photo and kept for good, whatever business or brief reads it (item 27). One prompt per key: every door that asks
+ * this prompt writes under `visionContentKey`, and only this prompt is written there.
+ */
+export const CONTENT_PROMPT_VERSION = 'c1'
 /** The answer's schema: s2 adds the links, role, boxes, people count, graphic and own-photo flags (#48). */
 const SCHEMA_VERSION = 's2'
 /** What a photo shows for any trade: the brief's asset vocabulary (`asset-labels.mjs`). */
@@ -57,7 +65,7 @@ const BOOLS = ['heroWorthy', 'isCollage', 'hasTextOverlay']
 const CALL_MS = 60_000
 
 /** The closed list as the prompt shows it: one line per item, its id first. */
-function listLines(closedList) {
+export function listLines(closedList) {
   const offerings = closedList?.offerings ?? []
   const people = closedList?.people ?? []
   if (!offerings.length && !people.length)
@@ -115,10 +123,18 @@ export function visionDoor(env = process.env) {
   }
 }
 
-/** The cache key of a label: what made it. */
+/** The cache key of the label a reader takes (content and links, p6): what made it. */
 export function visionKey({ model }) {
   return `${model}|${VISION_PROMPT_VERSION}|${SCHEMA_VERSION}|${THUMB.edge}q${THUMB.quality}`
 }
+
+/** The cache key of a content label (`PICTURE_LABEL_SYSTEM`, no trade and no closed list): what made it. */
+export function visionContentKey({ model }) {
+  return `${model}|${CONTENT_PROMPT_VERSION}|${SCHEMA_VERSION}|${THUMB.edge}q${THUMB.quality}`
+}
+
+/** Whether a cache key names a content label (`visionContentKey`) rather than the label a reader takes. */
+export const isContentKey = (key) => typeof key === 'string' && key.split('|')[1] === CONTENT_PROMPT_VERSION
 
 async function thumbnail(bytes) {
   return sharp(Buffer.from(bytes), { failOn: 'none', limitInputPixels: 100_000_000 })

@@ -130,6 +130,7 @@ const BRAND_ENGINE = Object.freeze({
  *   owner?: string, leaseMs?: number, heartbeatMs?: number, concurrency?: number, collectLimit?: number,
  *   shared?: boolean, chargeable?: ReturnType<typeof createChargeable>,
  *   afterPublish?: (placeId: string) => Promise<unknown>,
+ *   afterResearch?: (who: {accountId: string, opportunityId: string}) => unknown,
  *   hub?: ReturnType<typeof import('./hub/local-cache.js').createHubLink> | null
  * }} deps
  *   `shared` (`WO_SHARED_RESEARCH`): place jobs (`place-jobs.js`) are claimed too, before per-account jobs.
@@ -140,6 +141,8 @@ const BRAND_ENGINE = Object.freeze({
  *   `businessReadingDoor` (`business-reading.js businessReadingDoorFor`): the model a place's services, audience, team
  *   and story are read with; the default has none, and the rules read alone.
  *   `afterPublish` (`place-maintenance.js`): called once a place run published, never throws.
+ *   `afterResearch` (tracy-web `photo-labelling.js`): called once an opportunity's run stored its photos and again when
+ *   it completed, so the photos are labelled beside the research (item 27); never awaited, never throws.
  *   `hub` (`hub/local-cache.js`): a shared hub read before Place Details is paid for; null reads none.
  *   `providerRetry` (`domain/provider-retry.mjs`): how Place Details, Google Maps and TripAdvisor calls retry a 429 or
  *   transient 5xx (`{retries, baseDelayMs, maxWaitMs, sleep}`); the default waits a few seconds at most per call.
@@ -170,6 +173,7 @@ export function createExecutor({
   chargeable = createChargeable(null),
   researchLedger = null,
   afterPublish = null,
+  afterResearch = null,
   hub = null,
   providerRetry = undefined,
   menuVisionDoor = async () => ({ state: 'not_configured' }),
@@ -234,6 +238,16 @@ export function createExecutor({
     }
   }
 
+  /** `afterResearch` for an opportunity's run: never awaited, never throws. */
+  function researched(opp) {
+    if (!afterResearch || !opp?.account_id) return
+    try {
+      afterResearch({ accountId: opp.account_id, opportunityId: opp.id })
+    } catch (error) {
+      log.warn?.(`[opportunities] after-research hook failed: ${error?.message ?? error}`)
+    }
+  }
+
   async function run(job) {
     const lease = { jobId: job.id, token: String(job.lease_token) }
     let lost = false
@@ -276,10 +290,15 @@ export function createExecutor({
         if (await ctx.pausePoint(null)) return void (await finish(FEATURE_OFF))
         const outcome = await STAGE_RUNNERS[stage](ctx)
         if (outcome?.state) return void (await finish(outcome))
+        const ran = stage
         stage = STAGES[STAGES.indexOf(stage) + 1]
         if (!(await checkpoint(pool, lease, { stage }))) throw new StaleLeaseError(job.id)
+        // The photos are stored: their labelling starts now, beside the rest of the research (item 27).
+        if (ran === 'media') researched(opp)
       }
       await finish({ state: 'completed', outcome: 'completed' })
+      // Again once the business reading is made: the photos are linked to its offerings.
+      researched(opp)
     } catch (error) {
       if (error instanceof StaleLeaseError || error?.code === 'STALE_LEASE') {
         log.warn(`[opportunities] job ${job.id}: lease lost, stopping without writing`)

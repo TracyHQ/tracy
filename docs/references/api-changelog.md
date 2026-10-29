@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-10-30: How far the photo labelling is while a Build waits for it
+
+Changed (internal, not in the public reference): `GET /api/website-opportunities/demo/actions/:actionId` and the `demoAction` of the opportunity list and revision answers carry `photos: {looked, total}` while a queued action's build waits for its photos to be labelled; absent otherwise.
+
 ## 2026-10-29: Per-link business research outcomes
 
 Changed (internal): business-link intake keeps every pasted address on `candidate.pastedLinks`. Opportunity detail, research results and Build from my business return `links` with `readStatus`, `readReason`, `primary` and collected `counts: {photos, reviews, contacts}`. `requiresLinkReview` is true when no link was read or the primary input failed; Add site waits for the customer to fix the links or explicitly continue before showing the template suggestion. A valid public link with an unavailable source remains recorded even when it is the only input.

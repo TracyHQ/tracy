@@ -29,6 +29,13 @@ export function buildProgress(row: OpportunityListRow) {
       ['baseline', 'pending', 'retry'].includes(row.latestBuild?.qa ?? row.demo?.qa ?? '')
   }
 }
+/** "Looking at photos 180/300" while the build waits for its photos to be labelled, else null. */
+export function photosWaitLine(t: Translate, row: OpportunityListRow): string | null {
+  const photos = row.demoAction?.state === 'queued' ? row.demoAction.photos : undefined
+  return photos && photos.total > 0
+    ? t('demo.photosPending', { looked: photos.looked, total: photos.total })
+    : null
+}
 export function ProgressCell({
   t,
   row,
@@ -64,7 +71,9 @@ export function ProgressCell({
         ) : p.running ? (
           <Spinner label={t('v3.building')} />
         ) : null}
-        <span className="tracy-wo-small">{t(`v3.step.${BUILD_STEPS[p.step - 1]}`)}</span>
+        <span className="tracy-wo-small">
+          {photosWaitLine(t, row) ?? t(`v3.step.${BUILD_STEPS[p.step - 1]}`)}
+        </span>
       </span>
       <StepsBar t={t} step={p.done ? 5 : p.step} steps={4} />
       <span className="tracy-wo-muted tracy-wo-small">{t('research.step', { step: p.step, steps: 4 })}</span>
@@ -154,6 +163,9 @@ export function Steps({
               </span>
               <div className="tracy-wo-flow-content">
                 <b>{`${i + 2} · ${t(`v3.step.${key}`)}`}</b>
+                {key === 'brief' && running && photosWaitLine(t, row) ? (
+                  <span className="tracy-wo-muted tracy-wo-small">{photosWaitLine(t, row)}</span>
+                ) : null}
                 {key === 'brief' && row.latestRevision ? (
                   <span className="tracy-wo-muted tracy-wo-small">
                     {[

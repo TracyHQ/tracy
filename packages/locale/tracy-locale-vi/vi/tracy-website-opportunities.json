@@ -359,6 +359,7 @@
   "cuisine.yakiniku": "Thịt nướng Nhật (yakiniku)",
   "cuisine.yakitori": "Xiên gà nướng (yakitori)",
   "demo.logoPending": "Đang tìm logo của bạn…",
+  "demo.photosPending": "Đang xem ảnh {looked}/{total}",
   "demos.fromBrief": "từ Brief {n}",
   "demos.none": "Chưa có demo.",
   "demos.number": "Bản demo {n}",

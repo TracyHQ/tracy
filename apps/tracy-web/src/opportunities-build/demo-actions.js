@@ -491,6 +491,16 @@ export function demoActionShape(a) {
       ? { workflow: AGENT_DEMO, chat, ...(a.selection?.chatMode ? { chatMode: a.selection.chatMode } : {}) }
       : {}),
     step: a.step,
+    // While the build waits for the photo labelling (item 27): how many photos were looked at so far, for
+    // "Looking at photos 180/300".
+    ...(a.status === 'queued' && a.selection?.photoLabelling?.state === 'running'
+      ? {
+          photos: {
+            looked: a.selection.photoLabelling.looked ?? 0,
+            total: a.selection.photoLabelling.total ?? 0
+          }
+        }
+      : {}),
     error: a.error ?? null,
     acceptedAt: a.accepted_at,
     updatedAt: a.updated_at

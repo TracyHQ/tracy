@@ -13,6 +13,8 @@ export interface DemoAction {
   id: string
   state: string
   step: string
+  /** While the build waits for its photos to be labelled: how many were looked at so far. */
+  photos?: { looked: number; total: number }
   error?: string | null
   acceptedAt?: string
   updatedAt?: string

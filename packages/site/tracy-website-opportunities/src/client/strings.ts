@@ -99,6 +99,8 @@ export const en = {
   'loading.label': 'Loading',
   // While a demo's brief waits for the research of the business's logo (`prepareWhenReady`).
   'demo.logoPending': 'Looking for your logo…',
+  // While a build waits for its photos to be labelled (tracy-web `photo-labelling.js`): photos looked at so far.
+  'demo.photosPending': 'Looking at photos {looked}/{total}',
   'action.back': 'Back',
   'action.retry': 'Try again',
   'action.failed': 'That did not go through. Try again.',

@@ -359,6 +359,7 @@
   "cuisine.yakiniku": "Yakiniku",
   "cuisine.yakitori": "Yakitori",
   "demo.logoPending": "Ricerca del tuo logo…",
+  "demo.photosPending": "Analisi delle foto {looked}/{total}",
   "demos.fromBrief": "dal Brief {n}",
   "demos.none": "Ancora nessuna demo.",
   "demos.number": "Demo {n}",

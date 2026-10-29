@@ -79,14 +79,15 @@ async function visionDoor({ slowMs = 0, advance = () => {} } = {}) {
   }
 }
 
-function buildFor(business, { store, vision, placed }) {
+function buildFor(business, { store, vision, placed, assetLabelling = null }) {
   const source = {
     id: `build-${business.trade}`,
     revision_id: 'revision-1',
     brief: {
       quickstartWorkflow: 'quickstart-first/1',
       reviewMode: 'manual',
-      business: { name: business.name, trade: business.trade }
+      business: { name: business.name, trade: business.trade },
+      ...(assetLabelling ? { assetLabelling } : {})
     },
     profile_effective: {},
     content: { writes: {} }
@@ -221,6 +222,25 @@ for (const business of trades) {
     assert.ok(notes.some((note) => /without vision labels/.test(note)))
   })
 }
+
+test('a build that stopped waiting for a stalled photo labelling says so in its notes (item 27)', async () => {
+  const business = trades[1]
+  const store = photoStore(business.photos)
+  const { door } = await visionDoor()
+  const engine = buildFor(business, {
+    store,
+    vision: door,
+    placed: [],
+    assetLabelling: { status: 'stalled', asked: 60, labelled: 24, cached: 24 }
+  })
+  const { notes } = await runPhases(engine, business.platform)
+  assert.ok(
+    notes.some(
+      (note) => /made no progress for 15 minutes/.test(note) && /24 of 60 photos labelled/.test(note)
+    ),
+    notes.join(' | ')
+  )
+})
 
 test('a batch starts only while the picture budget holds it, and a started batch is never cut', async () => {
   const { labelWithinBudget } = await import('../src/sites/brief-engines/quickstart-photo-labels.js')

@@ -359,6 +359,7 @@
   "cuisine.yakiniku": "日式烤肉",
   "cuisine.yakitori": "日式烤鸡串",
   "demo.logoPending": "正在查找您的 Logo…",
+  "demo.photosPending": "正在查看照片 {looked}/{total}",
   "demos.fromBrief": "来自简报 {n}",
   "demos.none": "还没有演示。",
   "demos.number": "演示 {n}",

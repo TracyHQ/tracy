@@ -116,3 +116,19 @@ test('validation refuses a reason outside the vocabulary', () => {
   brief.assets[0].unlabelledReason = 'because'
   assert.match(JSON.stringify(domain.validateBrief(brief).errors), /unlabelledReason/)
 })
+
+test('a build that stopped waiting for a stalled photo labelling: the brief says so, and each photo why', () => {
+  const brief = briefOf([row('a', 1, { labels: seen({ content: 'people-in-action' }) }), row('b', 2)], {
+    status: 'stalled',
+    asked: 2,
+    labelled: 1,
+    cached: 1,
+    max: 300,
+    waiting: 1,
+    unlabelled: { b: 'labelling_stalled' }
+  })
+  const by = Object.fromEntries(brief.assets.map((a) => [a.id, a]))
+  assert.equal(by.b.unlabelledReason, 'labelling_stalled')
+  assert.deepEqual(domain.validateBrief(brief).errors ?? [], [])
+  assert.match(domain.renderBriefMarkdown(brief), /made no progress for 15 minutes, so the build went on/)
+})

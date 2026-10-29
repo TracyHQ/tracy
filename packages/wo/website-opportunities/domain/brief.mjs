@@ -1838,6 +1838,10 @@ function assetLabellingLine(n) {
   if (n.status === 'partial')
     return `labelled in part by a vision model (${counts}); each unlabelled asset says why`
   if (n.status === 'cached') return `labels a vision model gave before (${counts})`
+  if (n.status === 'labelling')
+    return `still being looked at by a vision model (${counts}); ${n.waiting ?? 0} placed by their words for now`
+  if (n.status === 'stalled')
+    return `the photo labelling made no progress for 15 minutes, so the build went on (${counts}); the unlabelled photos are placed by their words`
   if (n.status === 'off') return 'no vision model is assigned; pictures are unlabelled'
   if (n.status === 'failed')
     return `the vision model failed (${n.reason ?? 'unknown'}); pictures are unlabelled${n.cached ? `, except ${n.cached} labelled before` : ''}`

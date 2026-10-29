@@ -63,7 +63,7 @@ import { MCP_PATHS, onMcpHost, ownsMcpRequest } from './lib/mcp-host.js'
 import { createOpsSignal } from './lib/ops-signal.js'
 import { markOwnReads } from './lib/own-read.js'
 import { pictureFeatures } from './lib/picture-cut.js'
-import { labelWithVision, visionKey } from './lib/picture-vision.js'
+import { labelWithVision, visionContentKey } from './lib/picture-vision.js'
 import { newDoorProbeToken, previewDoorHealth } from './lib/preview-door-health.js'
 import { pickAllowed } from './lib/preview-ticket.js'
 import { readReleases, templateOfTag } from './lib/quickstart-releases.js'
@@ -143,6 +143,8 @@ import { createSiteChecks } from 'website-opportunities/src/site-checks.js'
 import { createSiteContent, quickstartActionOpen } from './opportunities-build/site-content.js'
 import { createSitePictures } from './opportunities-build/site-pictures.js'
 import { createBriefPictureLabels } from './opportunities-build/brief-picture-labels.js'
+import { createPhotoLabelling } from './opportunities-build/photo-labelling.js'
+import { researchPhotosOf } from './opportunities-build/revisions.js'
 import {
   createSocialClient,
   replicaSocialDomain,
@@ -1194,6 +1196,24 @@ export function buildApp(deps) {
               }
             )
         : null)
+    // Photos are labelled beside the research, in the background (item 27): what each shows, cached for good, then its
+    // link to the brief's offerings, billed to the research caps. Started by the research (`afterResearch`) and by a
+    // build that waits for it. `deps.photoLabelling`: a test's own.
+    const photoLabelling =
+      deps.photoLabelling ??
+      createPhotoLabelling({
+        pool: deps.pool,
+        objects,
+        visionFor: () => visionDoorFor(deps),
+        readPhotos: researchPhotosOf,
+        chargeable: createChargeable(
+          createCostLedger({
+            pool: deps.pool,
+            caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config))
+          })
+        ),
+        log: deps.log ?? console
+      })
     const woVisionDoor = () => visionDoorFor(deps)
     // A finished demo looked at by a vision model at desktop and phone width (`opportunities-build/demo-look.js`).
     const woDemoLook =
@@ -1416,28 +1436,18 @@ export function buildApp(deps) {
       },
       siteChecks,
       socialStats,
-      // What the brief's photographs show, labelled when the brief is made (F08): the build's vision door, key and cache,
-      // every own photo plus others up to TRACY_BRIEF_VISION_MAX_PICTURES (60) in total, billed to the research caps. `deps.…PictureLabels`: a test's own.
+      // What the brief's photographs show (F08), READ from the labels made beside the research (item 27,
+      // `photo-labelling.js`): no model call while the brief is made. `deps.…PictureLabels`: a test's own.
       pictureLabels:
         deps.websiteOpportunitiesPictureLabels ??
         createBriefPictureLabels({
           pool: deps.pool,
-          objects,
-          chargeable: createChargeable(
-            createCostLedger({
-              pool: deps.pool,
-              caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config))
-            })
-          ),
-          visionFor: async () => {
-            const door = await visionDoorFor(deps)
-            return door ? { door, key: visionKey(door) } : null
-          },
-          ...(Number(process.env.TRACY_BRIEF_VISION_MAX_PICTURES) > 0
-            ? { maxPictures: Number(process.env.TRACY_BRIEF_VISION_MAX_PICTURES) }
-            : {}),
+          visionFor: () => visionDoorFor(deps),
+          labelling: photoLabelling,
           log: deps.log ?? console
         }),
+      // The build waits for those labels before its brief is made (`revisions.js waitForPhotoLabels`).
+      photoLabelling,
       quality: deps.websiteOpportunitiesQuality ?? null,
       resolve,
       fetchImpl: crawlFetch,
@@ -1568,6 +1578,9 @@ export function buildApp(deps) {
       chargeable: researchCharge,
       researchLedger,
       afterPublish: placeMaintenance?.afterPublish ?? null,
+      // A research run that stored photos starts their labelling at once (item 27); a new run asks failed ones again.
+      afterResearch: ({ accountId, opportunityId }) =>
+        void photoLabelling.start({ accountId, opportunityId, retryFailed: true }),
       menuVisionDoor: () => menuVisionDoorFor(deps.pool, deps.config.sessionSecret, woHost),
       businessReadingDoor: () => businessReadingDoorFor(deps.pool, deps.config.sessionSecret, woHost),
       ...(deps.log ? { log: deps.log } : {})
@@ -1902,7 +1915,8 @@ export function buildApp(deps) {
           const most = Number(process.env.TRACY_VISION_MAX_PICTURES)
           return {
             door,
-            key: visionKey(door),
+            // The content prompt (no trade, no closed list): its own key (item 27).
+            key: visionContentKey(door),
             label: labelWithVision,
             ...(most > 0 ? { maxPictures: most } : {})
           }

@@ -32,8 +32,11 @@ export async function claimAnalyses(pool, shas, vision) {
   return new Set(rows.map((r) => r.media_sha256))
 }
 
-/** The model's answer for a claimed picture (`failed` when it gave none: asked again later). */
-export async function settleAnalysis(pool, sha256, result, vision) {
+/**
+ * The model's answer for a claimed picture (`failed` when it gave none: asked again later). `reason`: why it gave none,
+ * kept on the failed row (`{reason}`) so a later reader can say why (item 27).
+ */
+export async function settleAnalysis(pool, sha256, result, vision, reason = null) {
   await pool.query(
     `update wo_media_analysis set state = $4, result = $5::jsonb, lease_until = null, updated_at = now()
      where media_sha256 = $1 and model = $2 and version = $3 and state = 'pending'`,
@@ -42,7 +45,11 @@ export async function settleAnalysis(pool, sha256, result, vision) {
       vision.door.model,
       vision.key,
       result ? 'done' : 'failed',
-      result ? JSON.stringify(result) : null
+      result
+        ? JSON.stringify(result)
+        : reason
+          ? JSON.stringify({ reason: String(reason).slice(0, 60) })
+          : null
     ]
   )
 }
@@ -70,5 +77,40 @@ export async function reopenAnalyses(pool, shas, vision) {
     `update wo_media_analysis set state = 'failed', updated_at = now()
      where media_sha256 = any($1::text[]) and model = $2 and version = $3 and state = 'done'`,
     [unique, vision.door.model, vision.key]
+  )
+}
+
+/**
+ * Where each sha's label of this key stands: `{state, attempts, at, result}` (`at`: its last change), for the photo
+ * labelling's progress and its stall check (item 27). A sha never claimed is absent.
+ * @returns {Promise<Map<string, {state: string, attempts: number, at: number, result: any}>>}
+ */
+export async function analysisStates(pool, shas, vision) {
+  const unique = [...new Set(shas)]
+  if (unique.length === 0) return new Map()
+  const { rows } = await pool.query(
+    `select media_sha256, state, attempts, updated_at, result from wo_media_analysis
+     where media_sha256 = any($1::text[]) and model = $2 and version = $3`,
+    [unique, vision.door.model, vision.key]
+  )
+  return new Map(
+    rows.map((r) => [
+      r.media_sha256,
+      { state: r.state, attempts: r.attempts, at: new Date(r.updated_at).getTime(), result: r.result }
+    ])
+  )
+}
+
+/**
+ * A label derived without a model call of its own (the merged label of a content label and its links, item 27): written
+ * done under this key, replacing what was there.
+ */
+export async function storeAnalysis(pool, sha256, result, vision) {
+  await pool.query(
+    `insert into wo_media_analysis (media_sha256, model, version, state, result, attempts)
+     values ($1, $2, $3, 'done', $4::jsonb, 1)
+     on conflict (media_sha256, model, version) do update
+       set state = 'done', result = excluded.result, lease_until = null, updated_at = now()`,
+    [sha256, vision.door.model, vision.key, JSON.stringify(result)]
   )
 }

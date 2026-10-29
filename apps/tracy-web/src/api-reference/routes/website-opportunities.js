@@ -193,7 +193,7 @@ export const WEBSITE_OPPORTUNITIES_ROUTES = [
     method: 'GET',
     path: '/api/website-opportunities/demo/actions/:actionId',
     summary: 'Read a durable demo action',
-    description: `The accepted intent, fixed revision id, state (queued,completed,failed), step (brief,build,fill,check), error and timestamps. Agent demo actions include workflow:"agent-demo/1" and chat:null until the site session has been created, then chat:{siteKey,sessionId,href}. Poll this exact action to open its conversation. Retry retains the same site and session. Deleted demos have no chat destination. ${OWN}`,
+    description: `The accepted intent, fixed revision id, state (queued,completed,failed), step (brief,build,fill,check), error and timestamps. While a queued action's build waits for its photos to be labelled, photos:{looked,total} says how far that labelling is. Agent demo actions include workflow:"agent-demo/1" and chat:null until the site session has been created, then chat:{siteKey,sessionId,href}. Poll this exact action to open its conversation. Retry retains the same site and session. Deleted demos have no chat destination. ${OWN}`,
     audience: ['customer', 'desktop'],
     auth: 'session',
     internal: true,

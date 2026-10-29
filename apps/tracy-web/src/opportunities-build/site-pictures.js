@@ -23,7 +23,8 @@ import { featuresOf } from 'website-opportunities/src/media-info.js'
 import { acceptedDishPhotos } from 'website-opportunities/domain/dish-photos.mjs'
 import { wordedPhoto } from 'website-opportunities/domain/fill-plan.mjs'
 import { siteBuildOf } from './site-build.js'
-import { claimAnalyses as claimShas, settleAnalysis as settleSha } from './media-analysis.js'
+import { claimAnalyses as claimShas, doneAnalyses, settleAnalysis as settleSha } from './media-analysis.js'
+import { visionContentKey, visionKey } from '../lib/picture-vision.js'
 import { picturePolicy } from '../lib/wo-picture-policy.js'
 import { isBriefBuild } from './brief-build-path.js'
 
@@ -93,7 +94,22 @@ export function visionPictureCandidates(rows, { key, maxPictures = 80, needs = [
       ids.add(next.id)
     }
   }
-  return selected.filter((r) => r.labels?.vision?.key !== key)
+  // A photo with the label a reader takes, or with a content label of its own (item 27), is not asked again.
+  return selected.filter((r) => r.labels?.vision?.key !== key && !r.contentVision)
+}
+
+/**
+ * The two keys a build reads a photo's label under (item 27): the label a reader takes (`visionKey`, content and links to
+ * the brief's closed list, written beside the research) and the content label of the build's own door (its `key`; the
+ * deployment's doors use `visionContentKey`), which is the only key a build writes: its vision calls carry no closed
+ * list, so they never write the reader's key on a photo's row.
+ */
+function keysOf(vision) {
+  const door = vision.door
+  return {
+    read: { door, key: visionKey(door) },
+    content: { door, key: vision.key ?? visionContentKey(door) }
+  }
 }
 
 export function createSitePictures({
@@ -162,23 +178,24 @@ export function createSitePictures({
    * Label with the vision model the pictures that have no label of the current key: the ones large enough for a place,
    * one of each near-copy (the largest), the largest first, at most `maxPictures`. Kept on the row, so a rebuild asks nothing.
    */
-  async function labelMissing(rows, signal, needs, vision, maxPictures, payer = null, trade = null) {
+  async function labelMissing(rows, signal, needs, vision, maxPictures, payer = null) {
     signal?.throwIfAborted()
     if (!vision) return null
     const started = Date.now()
+    const keys = keysOf(vision)
     const shortlist = visionPictureCandidates(rows, {
-      key: vision.key,
+      key: keys.read.key,
       maxPictures,
       needs
     })
     if (shortlist.length === 0) return { labelled: 0, calls: 0, tokens: 0, failed: 0, ms: 0 }
-    // A place's picture is sent only when this build holds its claim; another build labelling it answers later.
+    // A picture is sent only when this build holds its claim on the content key; another labeller answers later.
     const claimed = await claimShas(
       pool,
-      shortlist.filter((r) => r.origin === 'place').map((r) => r.sha256),
-      vision
+      shortlist.map((r) => r.sha256),
+      keys.content
     )
-    const sent = shortlist.filter((r) => r.origin !== 'place' || claimed.has(r.sha256))
+    const sent = shortlist.filter((r) => claimed.has(r.sha256))
     if (sent.length === 0) return { labelled: 0, calls: 0, tokens: 0, failed: 0, ms: 0 }
     const pictures = []
     for (const r of sent) {
@@ -190,9 +207,10 @@ export function createSitePictures({
     let answer
     try {
       // `labelWithVision` sends 8 pictures a call.
+      // The content prompt: no trade and no closed list, the one prompt of `visionContentKey`.
       const invoke = () => {
         signal?.throwIfAborted()
-        return vision.label({ door: vision.door, pictures, trade, signal })
+        return vision.label({ door: vision.door, pictures, signal })
       }
       answer = vision.metered
         ? await invoke()
@@ -212,7 +230,7 @@ export function createSitePictures({
       signal?.throwIfAborted()
     } catch (error) {
       // Over the cap, or the model failed: the claims go back, a later build asks again.
-      for (const sha of claimed) await settleSha(pool, sha, null, vision)
+      for (const sha of claimed) await settleSha(pool, sha, null, keys.content)
       throw error
     }
     const { labels, usage, failed } = answer
@@ -220,15 +238,10 @@ export function createSitePictures({
     for (const r of sent) {
       signal?.throwIfAborted()
       const own = labels.get(r.id)
-      if (r.origin === 'place') await settleSha(pool, r.sha256, own ?? null, vision)
+      // Kept in the shared cache under the content key only: the reader's key on the row is the labeller's (item 27).
+      await settleSha(pool, r.sha256, own ?? null, keys.content)
       if (!own) continue
-      const entry = { key: vision.key, model: vision.door.model, at, labels: own }
-      r.labels = { ...r.labels, vision: entry }
-      if (r.origin !== 'place')
-        await pool.query(
-          `update wo_media set labels = coalesce(labels, '{}'::jsonb) || jsonb_build_object('vision', $2::jsonb) where id = $1`,
-          [r.id, JSON.stringify(entry)]
-        )
+      r.contentVision = { key: keys.content.key, model: vision.door.model, at, labels: own }
     }
     return {
       labelled: labels.size,
@@ -262,7 +275,7 @@ export function createSitePictures({
       const { rows: done } = await pool.query(
         `select media_sha256, model, version, result, updated_at from wo_media_analysis
          where media_sha256 = any($1::text[]) and model = $2 and version = $3 and state = 'done'`,
-        [own.map((r) => r.sha256), vision.door.model, vision.key]
+        [own.map((r) => r.sha256), vision.door.model, visionKey(vision.door)]
       )
       for (const d of done)
         labels.set(d.media_sha256, { key: d.version, model: d.model, at: d.updated_at, labels: d.result })
@@ -330,6 +343,18 @@ export function createSitePictures({
         // In manifest order, as the brief listed them.
         const own = [...manifest.keys()].map((id) => byManifest.get(id)).filter(Boolean)
         await backfillFeatures(own)
+        // The content labels already made (item 27): a photo the labeller saw but did not link reads as general.
+        if (vision && own.length) {
+          const content = keysOf(vision).content
+          const held = await doneAnalyses(
+            pool,
+            own.map((r) => r.sha256),
+            content
+          )
+          for (const r of own)
+            if (held.has(r.sha256))
+              r.contentVision = { key: content.key, model: vision.door.model, labels: held.get(r.sha256) }
+        }
         const maxVision = build.brief?.picturePolicy
           ? policy.maxVisionPictures
           : (vision?.maxPictures ?? policy.maxVisionPictures)
@@ -342,7 +367,7 @@ export function createSitePictures({
                 failed: 0,
                 ms: 0,
                 unlabelled: visionPictureCandidates(own, {
-                  key: vision.key,
+                  key: visionKey(vision.door),
                   maxPictures: maxVision,
                   needs: visionNeeds
                 }).length
@@ -354,8 +379,7 @@ export function createSitePictures({
               visionNeeds,
               vision,
               maxVision,
-              build.account_id ? { kind: 'account', accountId: build.account_id } : null,
-              build.brief?.business?.trade ?? 'food'
+              build.account_id ? { kind: 'account', accountId: build.account_id } : null
             ).catch((error) => {
               if (strict || signal?.aborted) throw error
               log.warn?.(
@@ -366,7 +390,11 @@ export function createSitePictures({
         signal?.throwIfAborted()
         const byId = new Map(own.map((r) => [r.id, r]))
         // Only a label of the current key: an old model's or prompt's answer is not read.
-        const seenBy = (r) => (vision && r.labels?.vision?.key === vision.key ? r.labels.vision.labels : null)
+        // The label a reader takes first, else the content label alone; never an old key's answer.
+        const seenBy = (r) =>
+          vision && r.labels?.vision?.key === visionKey(vision.door)
+            ? r.labels.vision.labels
+            : (r.contentVision?.labels ?? null)
         // The brief's dish photos, a candidate accepted now when this build's vision calls it a dish (`dish-photos.mjs`).
         const dishes = acceptedDishPhotos(
           build.brief,

@@ -1,6 +1,6 @@
 /**
- * The brief's photographs are labelled when the brief is made (F08), with the build's batched vision call and its shared
- * cache: at most a fixed number of pictures, the logo never sent, a later run (or build) paying nothing again, and a
+ * The brief's photographs are labelled beside the research and read when the brief is made (F08, item 27), with the
+ * build's batched vision call and its shared cache: at most a fixed number of pictures, the logo never sent, a later run (or build) paying nothing again, and a
  * failure that leaves the pictures unlabelled and says so instead of failing the brief.
  */
 import assert from 'node:assert/strict'
@@ -9,7 +9,8 @@ import { after, before, beforeEach, test } from 'node:test'
 import sharp from 'sharp'
 
 import { visionKey } from '../src/lib/picture-vision.js'
-import { createBriefPictureLabels } from '../src/opportunities-build/brief-picture-labels.js'
+// The labeller beside the research, then the brief's read of it (item 27).
+import { labelThenRead as createBriefPictureLabels } from './_photo-labels.mjs'
 import { fileDb } from './_db.mjs'
 
 const opts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_URL' }
@@ -110,16 +111,14 @@ test(
     const first = await labelPictures({ media, brand, accountId: null, trade: 'fitness' })
     assert.equal(sent.length, 24)
     assert.ok(!sent.includes(media[0].id), 'the logo is never sent')
-    assert.equal(charged.length, 1)
-    assert.equal(charged[0].purpose, 'picture-labels')
+    // One charge per batch of 8.
+    assert.equal(charged.filter((c) => c.purpose === 'picture-labels').length, 3)
     assert.equal(first.labels.size, 24)
-    assert.deepEqual(first.labels.get(sent[0]), {
-      key: VISION.key,
-      model: 'model-x',
-      labels: { subject: 'exterior', content: 'venue-exterior', caption: `Photo ${sent[0]}` }
-    })
+    const entry = first.labels.get(sent[0])
+    assert.deepEqual([entry.key, entry.model], [VISION.key, 'model-x'])
+    assert.deepEqual([entry.labels.content, entry.labels.caption], ['venue-exterior', `Photo ${sent[0]}`])
     const { unlabelled, ...counts } = first.note
-    assert.deepEqual(counts, { status: 'labelled', asked: 24, labelled: 24, cached: 0, max: 24 })
+    assert.deepEqual(counts, { status: 'labelled', asked: 24, labelled: 24, cached: 24, max: 24 })
     // The pictures never shown say why: the logo, and the five past the cap.
     assert.equal(unlabelled[media[0].id], 'not_a_photograph')
     assert.equal(Object.values(unlabelled).filter((r) => r === 'over_cap').length, 5)
@@ -141,7 +140,7 @@ test(
     assert.equal(second.labels.size, 24)
     assert.deepEqual(
       { ...second.note, unlabelled: undefined },
-      { status: 'cached', asked: 0, labelled: 0, cached: 24, max: 24, unlabelled: undefined }
+      { status: 'labelled', asked: 24, labelled: 24, cached: 24, max: 24, unlabelled: undefined }
     )
   }
 )
@@ -207,8 +206,9 @@ test('a vision failure labels nothing, frees its claims for a later build, and s
     asked: 3,
     labelled: 0,
     cached: 0,
-    max: 60,
-    reason: 'LLM_HTTP_503',
+    max: 300,
+    failed: 3,
+    reason: 'vision_failed',
     unlabelled: Object.fromEntries(media.map((m) => [m.id, 'vision_failed']))
   })
   assert.equal(warned.length, 1)
@@ -236,7 +236,7 @@ test('without a vision model nothing is asked and the brief says so', opts, asyn
     asked: 0,
     labelled: 0,
     cached: 0,
-    max: 60,
+    max: 300,
     reason: 'no_vision_model',
     unlabelled: { a: 'no_vision_model' }
   })

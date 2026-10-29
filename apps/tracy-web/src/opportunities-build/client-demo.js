@@ -349,7 +349,8 @@ export function createClientDemoService(deps) {
           now,
           // 🔒 Asked as the demo's account, through the same door an operator presses (logo-research.js).
           logoResearch: { research: logoResearchDoor({ request, origin, cookie: state.cookie }) },
-          pictureLabels: deps.pictureLabels ?? null
+          pictureLabels: deps.pictureLabels ?? null,
+          photoLabelling: deps.photoLabelling ?? null
         })
         // 🔒 Never waited for here: this runs inside HTTP requests (`/v1/demos`). The caller asks again, and the
         // runner's `reconcile` prepares it once the research is done or its minute is over.

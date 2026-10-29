@@ -584,6 +584,12 @@ export function createQuickstartFirstEngine({
         ctx.note?.(
           `${photoLabels.unlabelled} photo(s) were placed without vision labels: the picture budget ended before they were labelled`
         )
+      // The build went on without waiting for the photo labelling (item 27): say so, with how far it had come.
+      const labelling = prepared.source.brief?.assetLabelling
+      if (!resume && !photosOnlyRetry && labelling?.status === 'stalled')
+        ctx.note?.(
+          `the photo labelling made no progress for 15 minutes, so this build started with ${labelling.labelled ?? 0} of ${labelling.asked ?? 0} photos labelled; the others are placed by their words`
+        )
       // A v3 content map and a brief that links its photos: the fill plan decides the pictures and pins its words (#141).
       const fill = resume || photosOnlyRetry ? null : await quickstartFillInput({ ctx, woContent, real })
       const photos =

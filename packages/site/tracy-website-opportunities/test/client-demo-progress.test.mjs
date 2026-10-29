@@ -86,3 +86,22 @@ test('a Retry still running over an older passed check draws its progress, not D
   assert.match(cell, /\[v3\.step\.build\]/)
   assert.match(cell, /\[v3\.building\]/)
 })
+
+test('a build waiting for its photos to be labelled says how far it is, in the list cell and the steps', () => {
+  const tp = (key, params) => (params ? `[${key} ${params.looked}/${params.total}]` : `[${key}]`)
+  const waiting = {
+    id: 'o2',
+    demoAction: { id: 'a3', state: 'queued', step: 'brief', error: null, photos: { looked: 180, total: 300 } }
+  }
+  for (const Component of [lib.ProgressCell, lib.Steps]) {
+    const html = lib.renderToStaticMarkup(
+      lib.createElement(Component, { t: tp, row: waiting, locale: 'en', now: 0 })
+    )
+    assert.match(html, /\[demo\.photosPending 180\/300\]/, Component.name)
+  }
+  const done = { ...waiting, demoAction: { ...waiting.demoAction, photos: undefined } }
+  const cell = lib.renderToStaticMarkup(
+    lib.createElement(lib.ProgressCell, { t: tp, row: done, locale: 'en', now: 0 })
+  )
+  assert.doesNotMatch(cell, /photosPending/)
+})

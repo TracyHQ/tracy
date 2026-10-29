@@ -8,8 +8,8 @@ import { createHash } from 'node:crypto'
 import { after, before, beforeEach, test } from 'node:test'
 import sharp from 'sharp'
 
-import { labelWithVision, visionKey } from '../src/lib/picture-vision.js'
-import { createBriefPictureLabels } from '../src/opportunities-build/brief-picture-labels.js'
+import { labelWithVision, visionContentKey, visionKey } from '../src/lib/picture-vision.js'
+import { labelThenRead as createBriefPictureLabels } from './_photo-labels.mjs'
 import { fileDb } from './_db.mjs'
 
 const opts = { skip: process.env.TEST_DATABASE_URL ? false : 'set TEST_DATABASE_URL' }
@@ -120,8 +120,10 @@ test(
     assert.equal(calls.length, 4)
     assert.equal(out.note.status, 'labelled')
     assert.equal(out.note.labelled, 19)
-    // The budget names both rounds: three first calls and as many again.
-    assert.equal(charged[0].maxCents % 6, 0)
+    // Each batch's budget names both rounds: its call and its retry.
+    const batches = charged.filter((c) => c.purpose === 'picture-labels')
+    assert.equal(batches.length, 3)
+    assert.ok(batches.every((c) => c.maxCents === batches[0].maxCents && c.maxCents % 2 === 0))
     // Only what was never shown says why: the logo and the videos.
     assert.equal(out.note.unlabelled[seeded.logo], 'not_a_photograph')
     assert.equal(out.note.unlabelled['video-0'], 'video')
@@ -146,7 +148,8 @@ test(
     for (const id of seeded.large) assert.equal(out.note.unlabelled[id], 'http_error')
     // Their claims go back: a later build asks again.
     const { rows } = await db.pool.query(
-      `select state, count(*)::int as n from wo_media_analysis group by state order by state`
+      `select state, count(*)::int as n from wo_media_analysis where version = $1 group by state order by state`,
+      [visionContentKey(DOOR)]
     )
     assert.deepEqual(
       rows.map((r) => [r.state, r.n]),

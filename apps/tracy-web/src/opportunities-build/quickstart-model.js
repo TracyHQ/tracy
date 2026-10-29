@@ -3,7 +3,7 @@ import { withBuildChoice } from './build-choice.js'
 import sharp from 'sharp'
 import { quickstartRetryWindow } from './quickstart-retry-window.js'
 import { createHash } from 'node:crypto'
-import { held, PICTURE_LABEL_SYSTEM, visionKey } from '../lib/picture-vision.js'
+import { held, PICTURE_LABEL_SYSTEM, visionContentKey } from '../lib/picture-vision.js'
 import {
   validateQualityExecutionProfile,
   qualityExecutionModel,
@@ -274,7 +274,9 @@ export function createQuickstartModel({
       url: visionModel.credential.baseUrl + '/chat/completions'
     }
     generate.vision = {
-      key: visionKey(door),
+      // 🔒 One prompt per key (item 27): this door asks the content prompt (`PICTURE_LABEL_SYSTEM`, no trade, no closed
+      // list), so it writes under the content key, never under the key of the brief's linked labels.
+      key: visionContentKey(door),
       door,
       maxPictures: 80,
       metered: true,

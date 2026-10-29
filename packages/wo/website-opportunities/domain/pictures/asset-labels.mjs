@@ -43,7 +43,11 @@ export const ASSET_UNLABELLED_REASONS = Object.freeze([
   'answer_unparseable',
   'image_code_mismatch',
   'not_in_answer',
-  'vision_failed'
+  'vision_failed',
+  // The photo labelling that runs beside the research (item 27) had not reached it when the brief was made, or the build
+  // stopped waiting for it after a stall: the photo is placed by its words.
+  'labelling',
+  'labelling_stalled'
 ])
 /** Why an asset's size is unknown: nothing measured it when it was collected (a video before sizes were read). */
 export const ASSET_SIZE_UNKNOWN_REASONS = Object.freeze(['not_measured'])

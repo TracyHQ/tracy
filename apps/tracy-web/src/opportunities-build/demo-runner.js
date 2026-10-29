@@ -158,8 +158,16 @@ export function createDemoRunner(deps) {
             return data.templates
           },
           ops: (await runtime()).settings,
-          now
+          now,
+          // The brief reads the photo labels made beside the research, and waits while they are still being made
+          // (`photo-labelling.js`, item 27): the action stays queued and shows "Looking at photos n/m" meanwhile.
+          pictureLabels: deps.pictureLabels ?? null,
+          photoLabelling: deps.photoLabelling ?? null
         })
+        if (made.pending) {
+          await mark('brief')
+          return wait()
+        }
         if (made.error) return finish('failed', made.error)
         const revision = made.revision
         if (action.selection?.workflow && action.selection.workflow !== revision.brief?.quickstartWorkflow)

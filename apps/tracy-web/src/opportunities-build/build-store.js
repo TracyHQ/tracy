@@ -249,7 +249,8 @@ export async function buildPlaced(pool, accountId, revision) {
            || coalesce((select jsonb_build_object('vision', jsonb_build_object('key', a.version, 'model', a.model,
                  'at', a.updated_at, 'labels', a.result))
                from wo_media_analysis a where a.media_sha256 = m.sha256 and a.state = 'done'
-               order by a.updated_at desc limit 1), '{}'::jsonb) as labels
+               -- The label a reader takes before a content label alone (item 27: '|c1|' keys).
+               order by (split_part(a.version, '|', 2) = 'c1'), a.updated_at desc limit 1), '{}'::jsonb) as labels
        from wo_place_media m where m.id = any($1::uuid[]) and m.status = 'stored' and m.revoked_at is null`,
       [[...sha.keys()]]
     )
