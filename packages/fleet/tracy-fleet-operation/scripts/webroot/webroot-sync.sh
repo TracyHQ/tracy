@@ -486,6 +486,7 @@ tree_of_archive() {
 # the hardening block every clone gets.
 normalise_htaccess() {
   if [[ "$(tracy_backup_platform)" == wordpress ]]; then tracy_neutralize_https_redirect "$1/.htaccess" >&2; fi
+  tracy_neutralize_auto_prepend "$1" >&2
   tracy_ensure_webroot_htaccess "$1" >&2
 }
 
@@ -501,6 +502,8 @@ tree_of_changes() { # [the read the changes are laid over: the last read by defa
   rm -rf "$changes/installation"
   # The root .htaccess is hardened as provision hardens the copy's — only when this read brought one.
   if [[ -f "$changes/.htaccess" ]]; then normalise_htaccess "$changes"; fi
+  # A firewall's prepend line in the other server files too, only when this read brought them.
+  if [[ -f "$changes/.user.ini" || -f "$changes/php.ini" ]]; then tracy_neutralize_auto_prepend "$changes" >&2; fi
   keep_large_files "$changes"
   tracy_write_webroot_exclude "$REPO" "$changes"
   (
