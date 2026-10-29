@@ -70,24 +70,22 @@ test('logoTextOf: only a logo a model saw the name on', () => {
   assert.equal(logoTextOf(null), null)
 })
 
-test('mergeProfile without the logo: Instagram alone does not outvote Google, and the name is to be checked', () => {
+test('mergeProfile without the logo: Google only names the trade, so the Instagram page’s name is the name', () => {
   const p = mergeProfile(GOOGLE_OPP, ROWS)
-  assert.equal(p.name, 'Padel & Tennis Coach')
-  assert.equal(p.nameCheck.state, 'check')
+  assert.equal(p.name, 'Harbour Sport Club')
+  assert.equal(p.nameCheck.state, 'agreed')
   assert.equal(p.nameClaims.length, 4)
 })
 
 test('Harbour Sport Club: the logo’s text and Instagram agree, so the read suggests their name', () => {
   const p = withNameDecision(mergeProfile(GOOGLE_OPP, ROWS), { opportunity: GOOGLE_OPP, brand: LOGO_BRAND })
   assert.equal(p.name, 'Harbour Sport Club')
-  assert.equal(p.nameCheck.state, 'check')
-  assert.equal(p.nameCheck.current, 'Padel & Tennis Coach')
+  // Google and magicpin only name the trade (#189): no claim, so the own marks' name is agreed, not checked.
+  assert.equal(p.nameCheck.state, 'agreed')
+  assert.equal(p.nameCheck.current, 'Harbour Sport Club')
   assert.deepEqual(
     p.nameCheck.options.map((o) => [o.name, o.sources.map((s) => s.label ?? s.source)]),
-    [
-      ['Harbour Sport Club', ['instagram', 'logo']],
-      ['Padel & Tennis Coach', ['google', 'magicpin']]
-    ]
+    [['Harbour Sport Club', ['logo', 'instagram']]]
   )
 })
 

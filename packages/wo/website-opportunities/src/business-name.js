@@ -11,6 +11,7 @@ import {
   isSameHandle
 } from '../domain/business-name.mjs'
 import { linkKind } from '../domain/link-kinds.mjs'
+import { placeWordsOf } from '../domain/trade-description-name.mjs'
 import { LISTING_SOURCE, SOCIAL_SOURCES, SOURCES } from './sources.js'
 
 const GOOGLE_PROVIDERS = new Set(['google-places', 'google-maps'])
@@ -79,7 +80,12 @@ export function withNameDecision(profile, { opportunity = null, brand = null } =
   const nameCheck = decideBusinessName({
     claims,
     fallback: profile.nameCheck?.current ?? profile.name ?? opportunity?.name ?? null,
-    chosen: chosenNameOf(opportunity, isPlaceholderName)
+    chosen: chosenNameOf(opportunity, isPlaceholderName),
+    // The address words a trade description may name (#189): "Padel Coach Riverton" is still no name.
+    places: placeWordsOf({
+      address: profile.address ?? null,
+      addressComponents: profile.googlePlace?.addressComponents ?? null
+    })
   })
   return { ...profile, name: nameCheck.name || profile.name, nameCheck }
 }
