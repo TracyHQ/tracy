@@ -12236,7 +12236,8 @@ function browserArgv({
     "timeout",
     "-k",
     "3",
-    String(BROWSER_CONTAINER_TIMEOUT_S),
+    // The backstop outlasts the script's own deadline, also a longer one given for a cold start.
+    String(Math.max(BROWSER_CONTAINER_TIMEOUT_S, Math.ceil((deadlineMs ?? 0) / 1e3) + 3)),
     "node",
     "-e",
     BROWSER_SCRIPT,
@@ -46033,6 +46034,7 @@ var VIEW_WRITES_KEEP = 1024;
 var VIEW_SITE_QUEUE = 2;
 var VIEW_DEADLINE_MS = 16e3;
 var VIEW_EXEC_MS = 28e3;
+var VIEW_COLD_DEADLINE_MS = 4e4;
 var VIEW_MAX_BYTES = 15e5;
 var VIEW_MAX_BUFFER = 4 * 1024 * 1024;
 var NOT_THE_PAGE = /^(?:tracy_preview|tracy-preview|tracy_reload|token|access_token|id_token|auth|key|api_?key|secret|password|pass|pwd|sig|signature|code|state|nonce|ticket|session|sid|jwt)$/i;
@@ -46142,7 +46144,7 @@ function createViewStore({
   const written = /* @__PURE__ */ new Map();
   const lastWriteOf = (label) => written.get(label) ?? -Infinity;
   const sites = /* @__PURE__ */ new Map();
-  function drawInTurn(label, view2, check = false) {
+  function drawInTurn(label, view2, check = false, patient = false) {
     let queue = sites.get(label);
     if (queue === void 0) {
       queue = { tail: Promise.resolve(), count: 0 };
@@ -46154,7 +46156,8 @@ function createViewStore({
     mine.count += 1;
     const start = () => {
       const at = now();
-      return capture(check ? { label, view: view2, check } : { label, view: view2 }).then((drawn) => ({ drawn, at }));
+      const input = check ? { label, view: view2, check, ...patient ? { patient } : {} } : { label, view: view2 };
+      return capture(input).then((drawn) => ({ drawn, at }));
     };
     let job;
     try {
@@ -46318,12 +46321,13 @@ function createViewStore({
      * Draw one page of a site now, for no conversation's tab: the "before" a turn's write is held for
      * (`check-pages.mjs`). It waits its turn behind the site's other pictures and is refused `BUSY`
      * like them ({@link VIEW_SITE_QUEUE}), so the site's container never draws two at once. Nothing is
-     * kept here: the caller decides whether the picture came in time.
-     * @param {string} label @param {View} view
+     * kept here: the caller decides whether the picture came in time. `patient`: a picture nobody waits
+     * on (the turn's early "before"), given a cold container's first browser start.
+     * @param {string} label @param {View} view @param {{ patient?: boolean }} [options]
      * @returns {Promise<Capture>}
      */
-    draw(label, view2) {
-      return drawInTurn(label, view2, true).then(
+    draw(label, view2, { patient = false } = {}) {
+      return drawInTurn(label, view2, true, patient).then(
         ({ drawn }) => drawn,
         () => (
           /** @type {Capture} */
@@ -46361,7 +46365,8 @@ async function captureView({
   run,
   door,
   gate = pageLookGate,
-  host = null
+  host = null,
+  deadlineMs = VIEW_DEADLINE_MS
 }) {
   const target = lookTarget(label, view2.path, internalPort);
   if (!target.ok) return { ok: false, code: "BAD_PATH" };
@@ -46381,9 +46386,9 @@ async function captureView({
         file: frame,
         resolverRule: t.resolverRule,
         via: t.via,
-        deadlineMs: VIEW_DEADLINE_MS
+        deadlineMs
       }),
-      timeoutMs: VIEW_EXEC_MS,
+      timeoutMs: deadlineMs + VIEW_EXEC_MS - VIEW_DEADLINE_MS,
       maxBuffer: VIEW_MAX_BUFFER
     })
   });
@@ -46398,7 +46403,7 @@ async function captureView({
         const pinned = hostBrowserTarget(t);
         if (pinned === null)
           return { code: 0, stdout: "TRACY_BROWSER NOCHROME no route to pin", stderr: "", timedOut: false };
-        return onHost.run({ target: pinned, file: frame, deadlineMs: VIEW_DEADLINE_MS });
+        return onHost.run({ target: pinned, file: frame, deadlineMs });
       }
     }));
     out = parseBrowser(res.stdout);
@@ -47961,7 +47966,8 @@ function apply(ctx, config = {}) {
   const dryRuns = createDryRunMemory();
   const slotOf2 = (label, opts = {}) => siteSlot(config, resolveSitesRoot(void 0), label, opts);
   const viewsOn = config.viewContext !== false;
-  const drawView = async (label, view2, { check = false } = {}) => {
+  const drawView = async (label, view2, { check = false, patient = false } = {}) => {
+    const deadlineMs = patient ? VIEW_COLD_DEADLINE_MS : VIEW_DEADLINE_MS;
     const sitesRoot = resolveSitesRoot(void 0);
     const chrome = check ? config.hostChrome !== void 0 ? config.hostChrome : hostChromeOf(process.env, existsSync4) : null;
     return captureView({
@@ -47971,15 +47977,16 @@ function apply(ctx, config = {}) {
       publicOrigin: hostPublicOrigin(config, label),
       run: (input) => runExec(config, input),
       door: contentDoor(NO_SITE_FACTS),
+      deadlineMs,
       host: chrome ? {
         chrome,
-        run: ({ target, file, deadlineMs }) => hostBrowserExec({
+        run: ({ target, file, deadlineMs: deadlineMs2 }) => hostBrowserExec({
           chrome,
           target,
           mode: "view",
           file,
-          deadlineMs,
-          timeoutMs: VIEW_EXEC_MS,
+          deadlineMs: deadlineMs2,
+          timeoutMs: deadlineMs2 + VIEW_EXEC_MS - VIEW_DEADLINE_MS,
           maxBuffer: VIEW_MAX_BUFFER
         })
       } : null
@@ -47990,9 +47997,9 @@ function apply(ctx, config = {}) {
     // A conversation whose turn is running is not drawn for while they write ahead (`chats` is made
     // further down; the store only asks when a report comes in, after the plugin is applied).
     busy: (sessionId) => chats.running().includes(sessionId),
-    capture: async ({ label, view: view2, check }) => {
+    capture: async ({ label, view: view2, check, patient }) => {
       try {
-        return await drawView(label, view2, { check: check === true });
+        return await drawView(label, view2, { check: check === true, patient: patient === true });
       } catch (error) {
         warn(
           `[site-tools] the page open on ${label} could not be pictured: ${error instanceof Error ? error.message : String(error)}`
@@ -48567,7 +48574,9 @@ ${text6}`);
                 open: views2.viewOf(sessionId, label),
                 lastRead: pageReads.of(sessionId)[0]?.path ?? null
               }),
-              draw: (view2) => views2.draw(label, view2),
+              // Drawn while the agent reads, waited on by nobody: a cold container's first browser
+              // start fits (`VIEW_COLD_DEADLINE_MS`).
+              draw: (view2) => views2.draw(label, view2, { patient: true }),
               lastWrite: () => views2.lastWrite(label),
               wroteAt: () => ask.wroteAt
             });

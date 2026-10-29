@@ -7,7 +7,9 @@ import {
   PAGE_FENCE
 } from '../../../ui/tracy-chat-input/src/client/comment-turn.mjs'
 import {
+  VIEW_COLD_DEADLINE_MS,
   VIEW_DEADLINE_MS,
+  VIEW_EXEC_MS,
   VIEW_LIMITS,
   VIEW_MAX_BYTES,
   VIEW_PICTURE_NAME,
@@ -944,4 +946,56 @@ test('captureView: where the site has no browser, the visual check’s picture i
   })
   assert.equal(used.ok, true)
   assert.equal(onHost.length, 1)
+})
+
+test('captureView: a picture nobody waits on has the cold deadline, on the site browser and on dsh\'s', async () => {
+  const r = runner({ stdout: line({ y: 0, loaded: true, jpeg: JPEG.toString('base64') }) })
+  const drawn = await captureView({
+    label: 'demo1',
+    view: VIEW,
+    internalPort: 80,
+    run: r.run,
+    gate: GATE_OK,
+    deadlineMs: VIEW_COLD_DEADLINE_MS
+  })
+  assert.equal(drawn.ok, true)
+  const { argv, timeoutMs } = r.seen[0]
+  const at = argv.indexOf('view')
+  assert.equal(argv[at + 5], String(VIEW_COLD_DEADLINE_MS))
+  // The container's own backstop and the docker client both outlast the longer deadline.
+  const t = argv.indexOf('timeout')
+  assert.ok(Number(argv[t + 3]) * 1000 > VIEW_COLD_DEADLINE_MS)
+  assert.equal(timeoutMs, VIEW_COLD_DEADLINE_MS + VIEW_EXEC_MS - VIEW_DEADLINE_MS)
+  /** @type {any[]} */
+  const onHost = []
+  const missing = runner({ code: 127, stdout: '', stderr: 'exec: "node": executable file not found in $PATH' })
+  await captureView({
+    label: 'demo1',
+    view: VIEW,
+    internalPort: 80,
+    run: missing.run,
+    gate: GATE_OK,
+    deadlineMs: VIEW_COLD_DEADLINE_MS,
+    host: {
+      chrome: '/usr/local/bin/tracy-chrome',
+      run: async (/** @type {any} */ input) => {
+        onHost.push(input)
+        return { code: 0, stderr: '', timedOut: false, stdout: line({ y: 0, loaded: true, jpeg: JPEG.toString('base64') }) }
+      }
+    }
+  })
+  assert.equal(onHost[0].deadlineMs, VIEW_COLD_DEADLINE_MS)
+})
+
+test('createViewStore: draw passes `patient` to the capture only when asked, and only for the check', async () => {
+  const d = drawing()
+  const store = createViewStore({ capture: d.capture })
+  const first = store.draw('demo1', VIEW, { patient: true })
+  d.finish({ ok: true, jpeg: JPEG, y: 0, loaded: true })
+  await first
+  const second = store.draw('demo1', VIEW)
+  d.finish({ ok: true, jpeg: JPEG, y: 0, loaded: true })
+  await second
+  assert.deepEqual(d.calls[0], { label: 'demo1', view: VIEW, check: true, patient: true })
+  assert.deepEqual(d.calls[1], { label: 'demo1', view: VIEW, check: true })
 })

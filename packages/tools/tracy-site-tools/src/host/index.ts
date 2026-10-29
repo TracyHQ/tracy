@@ -395,6 +395,8 @@ import { isTurnStopped, stoppableSleep, stoppedAnswer } from './turn-stop.mjs'
 import { asksAttachment, filesTabPictures, mediaUpload, readChatPicture } from './upload.mjs'
 import type { AttachmentReader } from './upload.mjs'
 import {
+  VIEW_COLD_DEADLINE_MS,
+  VIEW_DEADLINE_MS,
   VIEW_EXEC_MS,
   VIEW_MAX_BUFFER,
   VIEW_PLUGIN,
@@ -2941,8 +2943,9 @@ export function apply(ctx: HostContext, config: Config = {}): void {
   const drawView = async (
     label: string,
     view: Parameters<typeof captureView>[0]['view'],
-    { check = false }: { check?: boolean } = {}
+    { check = false, patient = false }: { check?: boolean; patient?: boolean } = {}
   ) => {
+    const deadlineMs = patient ? VIEW_COLD_DEADLINE_MS : VIEW_DEADLINE_MS
     const sitesRoot = resolveSitesRoot(undefined)
     const chrome = check
       ? config.hostChrome !== undefined
@@ -2956,6 +2959,7 @@ export function apply(ctx: HostContext, config: Config = {}): void {
       publicOrigin: hostPublicOrigin(config, label),
       run: (input) => runExec(config, input),
       door: contentDoor(NO_SITE_FACTS),
+      deadlineMs,
       host: chrome
         ? {
             chrome,
@@ -2966,7 +2970,7 @@ export function apply(ctx: HostContext, config: Config = {}): void {
                 mode: 'view',
                 file,
                 deadlineMs,
-                timeoutMs: VIEW_EXEC_MS,
+                timeoutMs: deadlineMs + VIEW_EXEC_MS - VIEW_DEADLINE_MS,
                 maxBuffer: VIEW_MAX_BUFFER
               })
           }
@@ -2980,9 +2984,9 @@ export function apply(ctx: HostContext, config: Config = {}): void {
     // A conversation whose turn is running is not drawn for while they write ahead (`chats` is made
     // further down; the store only asks when a report comes in, after the plugin is applied).
     busy: (sessionId) => chats.running().includes(sessionId),
-    capture: async ({ label, view, check }) => {
+    capture: async ({ label, view, check, patient }) => {
       try {
-        return await drawView(label, view, { check: check === true })
+        return await drawView(label, view, { check: check === true, patient: patient === true })
       } catch (error) {
         warn(
           `[site-tools] the page open on ${label} could not be pictured: ${error instanceof Error ? error.message : String(error)}`
@@ -3911,7 +3915,9 @@ export function apply(ctx: HostContext, config: Config = {}): void {
                   open: views.viewOf(sessionId, label),
                   lastRead: pageReads.of(sessionId)[0]?.path ?? null
                 }),
-                draw: (view) => views.draw(label, view),
+                // Drawn while the agent reads, waited on by nobody: a cold container's first browser
+                // start fits (`VIEW_COLD_DEADLINE_MS`).
+                draw: (view) => views.draw(label, view, { patient: true }),
                 lastWrite: () => views.lastWrite(label),
                 wroteAt: () => ask.wroteAt
               })

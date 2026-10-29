@@ -996,7 +996,8 @@ export function browserArgv({
     'timeout',
     '-k',
     '3',
-    String(BROWSER_CONTAINER_TIMEOUT_S),
+    // The backstop outlasts the script's own deadline, also a longer one given for a cold start.
+    String(Math.max(BROWSER_CONTAINER_TIMEOUT_S, Math.ceil((deadlineMs ?? 0) / 1000) + 3)),
     'node',
     '-e',
     BROWSER_SCRIPT,
