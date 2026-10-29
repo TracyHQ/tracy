@@ -664,7 +664,7 @@ Only for `origin='migrated'` sites on Joomla (WordPress waits for its own adapte
 - **Both sides created new records with the same id:** in core Joomla tables (articles, categories, menus, modules, users, tags, assets,
   `history` versions, the 404 log `redirect_links`) the customer's record gets a **new id** and everything pointing to it follows —
   including text columns such as `fields_values.item_id` (filtered by `fields.context`) and `history.item_id`
-  (`com_content.article.<id>`); renumbered tables are remembered in `sync/id-map.json` for later runs. In extension tables the merge cannot renumber, or when an extension table points to an id just changed: the sync run
+  (`com_content.article.<id>`); renumbered tables are remembered in `sync/id-map.json` for later runs. WordPress theme-mod references use typed serialized paths for logos, custom CSS posts, header media and menu locations. The same paths participate in fresh-ID allocation, remembered-map reads, batch rewrites and reverse Preview mapping; dimensions and unrelated values retain their bytes. Unreadable or aliased serialized theme values stop the merge safely rather than guessing at IDs. In extension tables the merge cannot renumber, or when an extension table points to an id just changed: the sync run
   **stops before applying** (`needs_resolution`, list `held`), and only after a person reviews and clicks "Sync anyway" (`allowHeld`) is
   Tracy's version kept there.
 - **WooCommerce record counts:** the five analytics/admin tables `wc_admin_notes`, `wc_admin_note_actions`,
@@ -748,6 +748,7 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   `content.batch` with `expected`), otherwise `conflict`; at most 200 items; deletes only when the owner confirms. Places where a
   sync run kept Tracy's version even though the customer also edited (`sync/kept.json`, names only, no values) are
   `changed-on-both`, never overwritten. A whole table kept after a schema change holds every push item whose seeds write that table, including creates and deletes, while unrelated tables remain available.
+- **WordPress menu addresses:** existing menu-item updates and deletions retain the base menu slug as their CMS key alongside the mapped live item ID, so subsequent writes and Undo use the native menu writer address.
 - **Replacement addresses:** a WordPress delete that frees the same slug in the same post type/parent scope is a prerequisite of its replacement. Unconfirmed or conflicting deletes block that create. Undo removes the replacement first and restores the original slug; a customer-edited replacement holds both records. Joomla trash keeps aliases occupied, so both sides of a same-alias replacement are held before writing.
 - **After pushing:** live ids of newly created records go into the id map, and the places written go into `sync/pushed.json`; Sync from live runs again
   and the merge takes those places as base before comparing (`live_sync.py --pushed`, `DbMerge.seed_pushed`), so a record Tracy

@@ -1220,3 +1220,54 @@ test(
     }
   }
 )
+
+test(
+  'WordPress logo and header follow attachment renumbering through Sync and the next Preview',
+  opts,
+  () => {
+    const s = stack(
+      "INSERT INTO wp_options(option_id,option_name,option_value) VALUES (30,'stylesheet','shop');"
+    )
+    const mods = (id) =>
+      `a:3:{s:11:"custom_logo";i:${id};s:12:"header_video";i:${id};s:17:"header_image_data";O:8:"stdClass":3:{s:13:"attachment_id";i:${id};s:5:"width";i:64;s:6:"height";i:64;}}`
+    try {
+      sql(
+        "INSERT INTO wp_posts(ID,post_content,post_title,post_name,post_type) VALUES(64,'Tracy body','Tracy new post','tracy-new','post');",
+        'wordpress'
+      )
+      sql(
+        "INSERT INTO wp_posts(ID,post_content,post_title,post_name,post_type) VALUES(64,'','Live logo','live-logo','attachment');",
+        'livesrc'
+      )
+      sql(
+        `UPDATE wp_options SET option_value=${sqlText(mods(64))} WHERE option_name='theme_mods_shop';`,
+        'livesrc'
+      )
+      const answer = s.sync(s.read())
+      assert.equal(answer.state, 'applied', JSON.stringify(answer))
+      const id = JSON.parse(readFileSync(join(s.priv, 'sync', 'id-map.json'))).posts['64']
+      assert.ok(id > 64)
+      assert.equal(
+        value("SELECT HEX(option_value) FROM wp_options WHERE option_name='theme_mods_shop'"),
+        mods(id)
+      )
+      assert.equal(value('SELECT HEX(post_title) FROM wp_posts WHERE ID=64'), 'Tracy new post')
+      assert.equal(value(`SELECT HEX(post_title) FROM wp_posts WHERE ID=${id}`), 'Live logo')
+      const preview = s.pushChangeset()
+      assert.ok(!preview.items.some((i) => i.key === 'theme_mods_shop'), JSON.stringify(preview))
+      assert.ok(
+        !preview.unsupported.some((i) => String(i.name ?? '').includes('shop') && i.what === 'setting'),
+        JSON.stringify(preview.unsupported)
+      )
+      const again = s.sync(s.read())
+      assert.equal(again.state, 'applied', JSON.stringify(again))
+      assert.equal(again.database.records, 0)
+      assert.equal(
+        value("SELECT HEX(option_value) FROM wp_options WHERE option_name='theme_mods_shop'"),
+        mods(id)
+      )
+    } finally {
+      s.dispose()
+    }
+  }
+)

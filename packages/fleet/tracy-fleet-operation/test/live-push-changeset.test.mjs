@@ -1411,3 +1411,65 @@ test('a whole table kept after a schema change holds every push into it, includi
       assert.equal(answer.items.find((i) => i.kind === 'category').conflict, undefined)
   }
 })
+
+for (const object of [false, true]) {
+  test(`WordPress theme header references after Sync produce no false preview (${object ? 'object' : 'array'})`, () => {
+    const mods = (id) =>
+      `a:3:{s:11:"custom_logo";i:${id};s:12:"header_video";s:2:"${id}";s:17:"header_image_data";${object ? 'O:8:"stdClass":3:' : 'a:3:'}{s:13:"attachment_id";i:${id};s:5:"width";i:64;s:6:"height";i:64;}}`
+    const result = changeset('wordpress', {
+      idMap: { posts: { 64: 67 } },
+      entities: { posts: { base: [64], copy: [67] } },
+      kinds: {
+        themeMods: kind(
+          [{ option_name: 'theme_mods_test', value: mods(64) }],
+          [{ option_name: 'theme_mods_test', value: mods(67) }],
+          ['option_name']
+        )
+      }
+    })
+    assert.deepEqual(result.items, [])
+    assert.deepEqual(result.unsupported, [])
+  })
+}
+
+for (const edit of [
+  { title: 'Contact us' },
+  { position: '4' },
+  { url: 'https://shop-com.tracy.ai/contact/' },
+  { parent: '8' }
+]) {
+  test(`WordPress existing menu address is retained for ${Object.keys(edit)[0]} updates`, () => {
+    const row = {
+      ID: '20',
+      title: 'Contact',
+      position: '2',
+      type: 'custom',
+      object: 'custom',
+      object_id: '0',
+      url: 'https://shop.example/',
+      parent: '0',
+      menu: 'primary'
+    }
+    const copy = { ...row, ID: '21', ...edit }
+    const result = changeset('wordpress', {
+      homes: HOMES,
+      entities: { posts: { base: [8, 20], copy: [8, 21] } },
+      idMap: { posts: { 20: 21 } },
+      kinds: { menuItem: kind([row], [copy], ['ID']) }
+    })
+    const item = result.items.find((i) => i.kind === 'menuItem')
+    assert.equal(item.op, 'update')
+    assert.equal(item.ident, 20)
+    assert.equal(item.key, 'primary')
+    assert.equal(item.seed[0].match.ID, 21)
+    assert.deepEqual(
+      item.write,
+      Object.fromEntries(
+        Object.entries(edit).map(([k, v]) => [
+          k,
+          k === 'url' ? v.replace('https://shop-com.tracy.ai', 'https://shop.example') : v
+        ])
+      )
+    )
+  })
+}
