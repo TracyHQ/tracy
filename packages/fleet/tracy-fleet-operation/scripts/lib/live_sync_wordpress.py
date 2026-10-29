@@ -778,6 +778,10 @@ SINGLE_POSTMETA = ", ".join(sql_str(k) for k in (
     "_menu_item_object", "_menu_item_target", "_menu_item_classes", "_menu_item_xfn", "_menu_item_url"))
 
 
+# Any `…_log(s)`, `…_session(s)`, `…_cache`, `…_queue`, `…_hits` table: ignored by the shape of its name.
+GUESSED_TABLES = r"(^|_)(logs?|sessions?|cache|queue|hits)$"
+
+
 POLICY = {
     "tracyTables": re.compile(r"^claude_cowork_"),
     "tracyRows": {
@@ -800,7 +804,10 @@ POLICY = {
         names=("wc_admin_notes", "wc_admin_note_actions", "wc_order_stats",
                "wc_order_product_lookup", "wc_customer_lookup"),
         patterns=(r"^actionscheduler_", r"^wf[a-z]", r"^yoast_indexable(_hierarchy)?$", r"^yoast_migrations$",
-                  r"(^|_)(logs?|sessions?|cache|queue|hits)$")),
+                  GUESSED_TABLES)),
+    # Of those, the ones left out only by the shape of their name: a shop's own `…_log` table is one,
+    # and when the live site changes it the Owner is told it did not come over (#120).
+    "guessedTables": (GUESSED_TABLES,),
     # A category, tag or menu the live site deleted stays while the copy's own new or moved rows use it
     # (`DbMerge.in_use_rows`, #119): the taxonomy rows its new relationships name (a post filed in a
     # category, a menu item in a menu), and those rows' terms.

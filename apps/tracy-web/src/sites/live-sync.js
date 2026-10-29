@@ -656,6 +656,19 @@ export function busyOf(answer) {
   }
 }
 
+/** `notCarried` of a sync's answer, names only and bounded; null when there is none. */
+function notCarriedOf(answer) {
+  const seen = answer?.notCarried
+  if (!seen || typeof seen !== 'object') return null
+  const name = (v) => (typeof v === 'string' && v ? v.slice(0, 64) : null)
+  const triggers = (Array.isArray(seen.triggers) ? seen.triggers : [])
+    .map((t) => ({ name: name(t?.name), table: name(t?.table) }))
+    .filter((t) => t.name)
+    .slice(0, 50)
+  const tables = (Array.isArray(seen.tables) ? seen.tables : []).map(name).filter(Boolean).slice(0, 50)
+  return triggers.length || tables.length ? { triggers, tables } : null
+}
+
 /** A sync row as a client sees it. */
 export function view(row) {
   const answer = row.answer ?? {}
@@ -684,6 +697,9 @@ export function view(row) {
     dropped: droppedRecords(row),
     // Log rows both sites wrote under one number: the copy's stayed. Named for support, not shown.
     skipped: (answer.skipped ?? []).map(brief),
+    // What the live site has that a sync does not bring, named (#120): its triggers the copy lacks,
+    // and the tables left out by the shape of their name (`…_log`) that it changed.
+    notCarried: notCarriedOf(answer),
     summary:
       answer.files || answer.database || answer.apply || row.state === 'applied'
         ? {

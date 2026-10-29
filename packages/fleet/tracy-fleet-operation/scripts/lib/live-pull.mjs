@@ -979,9 +979,20 @@ async function readDatabase(
 async function reusableTables(last, now, dir) {
   // A table the merge never takes from the live site (`isIgnored`: Tracy's own, sessions, logs) is
   // the last read's whatever its checksum says: read again, it changes nothing the copy holds.
+  // A table whose definition moved (a charset, a collation, a column) holds the same rows and the same
+  // checksum, yet is no longer the last read's: read again (#120). Unknown on either side: as before.
+  const sameDefinition = (t) =>
+    !last.definitions ||
+    !last.definitionsNow ||
+    last.definitions[t] == null ||
+    last.definitionsNow[t] == null ||
+    last.definitions[t] === last.definitionsNow[t]
   let same = new Set(
     Object.keys(now).filter(
-      (t) => now[t] != null && last.tables?.[t] != null && (now[t] === last.tables[t] || isIgnored(t))
+      (t) =>
+        now[t] != null &&
+        last.tables?.[t] != null &&
+        ((now[t] === last.tables[t] && sameDefinition(t)) || isIgnored(t))
     )
   )
   const out = new Map()
@@ -1062,12 +1073,18 @@ const ignored = (() => {
     return {
       prefix: rule.prefix,
       names: new Set(rule.names ?? []),
-      patterns: (rule.patterns ?? []).map((p) => new RegExp(p))
+      patterns: (rule.patterns ?? []).map((p) => new RegExp(p)),
+      guessed: (rule.guessed ?? []).map((p) => new RegExp(p))
     }
   } catch {
     return null
   }
 })()
+/** A table left out only by the shape of its name (`…_log`): a site's own table may look like that. */
+const isGuessed = (table) =>
+  Boolean(ignored?.guessed?.length) &&
+  table.startsWith(ignored.prefix) &&
+  ignored.guessed.some((p) => p.test(table.slice(ignored.prefix.length)))
 const isIgnored = (table) => {
   if (!ignored || !table.startsWith(ignored.prefix)) return false
   const bare = table.slice(ignored.prefix.length)
@@ -1919,6 +1936,8 @@ async function fingerprintNow(endpoint, token, maxFiles, skip = [], { tables: wi
   let count = 0
   let bytes = 0
   let tables = null
+  let definitions = null
+  let triggers = null
   let after = ''
   for (let page = 0; ; page++) {
     const { fingerprint } = await retried(() =>
@@ -1926,10 +1945,16 @@ async function fingerprintNow(endpoint, token, maxFiles, skip = [], { tables: wi
         after,
         limit: maxFiles,
         checksums: withTables && page === 0,
+        // Each table's definition and the triggers (an engine without them answers neither, #120).
+        ...(withTables && page === 0 ? { definitions: true } : {}),
         ...(page === 0 && skip.length ? { skip_columns: skip } : {})
       })
     )
-    if (page === 0) tables = fingerprint?.tables ?? null
+    if (page === 0) {
+      tables = fingerprint?.tables ?? null
+      definitions = fingerprint?.definitions ?? null
+      triggers = Array.isArray(fingerprint?.triggers) ? fingerprint.triggers : null
+    }
     const files = fingerprint?.files
     if (!files) break
     pages.push(files.digest)
@@ -1938,7 +1963,15 @@ async function fingerprintNow(endpoint, token, maxFiles, skip = [], { tables: wi
     if (!files.next_after) break
     after = files.next_after
   }
-  return { version: 1, pageSize: maxFiles, skip, files: { count, bytes, pages }, tables }
+  return {
+    version: 1,
+    pageSize: maxFiles,
+    skip,
+    files: { count, bytes, pages },
+    tables,
+    ...(definitions ? { definitions } : {}),
+    ...(triggers ? { triggers } : {})
+  }
 }
 
 /** The files of two fingerprints taken with one page size: the same pages, so nothing moved between them. */
@@ -1965,7 +1998,34 @@ function sameFingerprint(a, b) {
   if (a.files?.count !== b.files?.count || a.files?.bytes !== b.files?.bytes) return false
   if (JSON.stringify(a.files?.pages) !== JSON.stringify(b.files?.pages)) return false
   const moved = movedTables(a.tables, b.tables, isNoise)
-  return moved !== null && moved.length === 0
+  return moved !== null && moved.length === 0 && sameDefinitions(a, b)
+}
+
+/** No table's definition moved (a charset, collation or column change moves no row, #120); unknown on either side: the same. */
+const sameDefinitions = (a, b) =>
+  !a?.definitions ||
+  !b?.definitions ||
+  Object.keys(b.definitions).every(
+    (t) =>
+      isNoise(t) ||
+      a.definitions[t] == null ||
+      b.definitions[t] == null ||
+      a.definitions[t] === b.definitions[t]
+  )
+
+/**
+ * What a read saw that a sync does not bring (#120): the live site's triggers (no dump carries one;
+ * webroot-sync names those the copy lacks), and the tables left out only by the shape of their name
+ * (`…_log`) that the live site changed since the last read. `{}` when nothing.
+ */
+function notCarriedOf(stored, fingerprint) {
+  const tables = Object.keys(fingerprint?.tables ?? {})
+    .filter((t) => isGuessed(t) && stored?.tables?.[t] != null && fingerprint.tables[t] !== stored.tables[t])
+    .sort()
+  return {
+    ...(fingerprint?.triggers ? { triggers: fingerprint.triggers.slice(0, 200) } : {}),
+    ...(tables.length ? { tables: tables.slice(0, 200) } : {})
+  }
 }
 
 /**
@@ -2082,15 +2142,18 @@ async function main(dir) {
     timing.fingerprint = since(at)
     stored = readJson(process.env.TRACY_SYNC_FINGERPRINT_IN)
     note(`fingerprint ${timing.fingerprint}s${sameFingerprint(stored, fingerprint) ? ': nothing moved' : ''}`)
-    if (sameFingerprint(stored, fingerprint))
+    if (sameFingerprint(stored, fingerprint)) {
+      const notCarried = notCarriedOf(stored, fingerprint)
       return {
         ok: true,
         unchanged: 'fingerprint',
         liveReadAt,
         abilities: reads,
         timing,
-        seconds: since(started)
+        seconds: since(started),
+        ...(Object.keys(notCarried).length ? { notCarried } : {})
       }
+    }
   }
   // Only the question (TRACY_SYNC_CHECK_ONLY, a Sync anyway taking a held sync's read): the live site
   // moved since that read's fingerprint, or cannot say (no fingerprint here) — nothing is read.
@@ -2137,7 +2200,12 @@ async function main(dir) {
     comparable(stored, fingerprint) &&
       process.env.TRACY_SYNC_DB_BASE &&
       existsSync(process.env.TRACY_SYNC_DB_BASE)
-      ? { tables: stored.tables, dump: process.env.TRACY_SYNC_DB_BASE }
+      ? {
+          tables: stored.tables,
+          definitions: stored.definitions ?? null,
+          definitionsNow: fingerprint?.definitions ?? null,
+          dump: process.env.TRACY_SYNC_DB_BASE
+        }
       : null,
     compared?.parts ?? null
   )
@@ -2204,6 +2272,7 @@ async function main(dir) {
       was.size === now.size && [...now].every(([table, d]) => isVolatile(table) || was.get(table) === d)
     if (same) unchanged = 'compare'
   }
+  const notCarried = notCarriedOf(stored, fingerprint)
   return {
     ok: true,
     ...(unchanged ? { unchanged } : {}),
@@ -2212,7 +2281,8 @@ async function main(dir) {
     timing,
     seconds: since(started),
     ...db,
-    ...files
+    ...files,
+    ...(Object.keys(notCarried).length ? { notCarried } : {})
   }
 }
 

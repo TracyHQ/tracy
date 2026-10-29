@@ -2095,7 +2095,9 @@ class DbMerge:
                 return "same"
             return self.table_conflict(table, "added-both")
         cb, cm, ct = B.checksum[table], M.checksum[table], T.checksum[table]
-        if ct == cb or (cm == ct and M.columns[table] == T.columns[table]):
+        # Rows alone are not the table: a charset or collation the live site changed moves no row
+        # (`columns` holds each column's collation), and taken as "same" it never reached the copy (#120).
+        if (ct == cb and T.columns[table] == B.columns[table]) or (cm == ct and M.columns[table] == T.columns[table]):
             return "same"
         same_columns = B.columns[table] == M.columns[table] == T.columns[table]
         key = self.row_key(table, name, B, M, T) if same_columns else None
@@ -2913,7 +2915,19 @@ def substance_checksums(sql: "Sql", schema: str, platform: str, prefix: str) -> 
     with concurrent.futures.ThreadPoolExecutor(len(shares)) as pool:
         for done in [pool.submit(run, i, tables) for i, tables in enumerate(shares)]:
             done.result()
-    return [(table, got[table]) for table in parts]
+    # The definition too: a charset or collation change moves no row, and a table compared by its
+    # rows alone was never loaded onto the copy (#120). Its columns' types and collations and the
+    # table's own collation, one digest per table.
+    defs: dict[str, list[str]] = {}
+    for table, column, ctype, coll in sql.run(
+            f"SELECT c.table_name, c.column_name, c.column_type, IFNULL(c.collation_name, '-') FROM information_schema.columns c"
+            f" WHERE c.table_schema = {sql_str(schema)} ORDER BY c.table_name, c.ordinal_position;"):
+        defs.setdefault(table, []).append(f"{column} {ctype} {coll}")
+    for table, coll in sql.run(f"SELECT table_name, IFNULL(table_collation, '-') FROM information_schema.tables"
+                               f" WHERE table_schema = {sql_str(schema)};"):
+        defs.setdefault(table, []).append(f"@ {coll}")
+    shape = lambda t: hashlib.md5("\n".join(defs.get(t, [])).encode()).hexdigest()[:16]
+    return [(table, f"{got[table]}:{shape(table)}") for table in parts]
 
 
 # How long the line saying why the engine stopped may be, in characters.
@@ -3028,7 +3042,9 @@ def never_taken(platform: str, prefix: str) -> dict:
     patterns = [p.pattern for p in getattr(ignore, "patterns", [])]
     if policy.get("tracyTables") is not None:
         patterns.append(policy["tracyTables"].pattern)
-    return {"prefix": prefix, "names": names, "patterns": patterns}
+    # The patterns that only guess by a name's shape (`guessedTables`): live-pull names the tables
+    # they matched that the live site changed, as not brought (#120).
+    return {"prefix": prefix, "names": names, "patterns": patterns, "guessed": list(policy.get("guessedTables", ()))}
 
 
 def run_half(args: argparse.Namespace) -> int:

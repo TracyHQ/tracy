@@ -92,6 +92,9 @@ async function engine(options = {}) {
     packs: []
   }
   const hits = {}
+  // A table's definition, as `definitions` answers it (only when `options.definitions`), and the triggers.
+  const defs = {}
+  const triggers = []
   if (options.noise) db.jos_action_logs = [[1, 'login']]
   let manyCalls = 0
   let failures = options.fail503 ?? 0
@@ -237,6 +240,12 @@ async function engine(options = {}) {
                         )
                       ])
                     ),
+              ...(options.definitions && p.definitions === true && p.checksums !== false
+                ? {
+                    definitions: Object.fromEntries(Object.keys(db).map((t) => [t, defs[t] ?? 'd0'])),
+                    triggers
+                  }
+                : {}),
               seconds: 0
             }
           })
@@ -374,6 +383,8 @@ async function engine(options = {}) {
         seen,
         db,
         hits,
+        defs,
+        triggers,
         write,
         webroot,
         url: `http://127.0.0.1:${server.address().port}/index.php?option=com_claudecowork&task=api.exec&format=json`
@@ -1857,5 +1868,42 @@ test('a file the site deletes between listing it and reading it is gone, not a b
     assert.deepEqual(answer.moved, { files: ['templates/t4/css/custom.css'] })
   } finally {
     busy.server.close()
+  }
+})
+
+test('a table whose definition moved is read again though its rows did not; triggers and guessed log tables that moved are named (#120)', async () => {
+  const site = await engine({ modern: true, fpVersion: 2, noise: true, definitions: true })
+  const rule = {
+    prefix: 'jos_',
+    names: ['session'],
+    patterns: ['(^|_)(logs?|sessions?|cache|queue|hits)$'],
+    guessed: ['(^|_)(logs?|sessions?|cache|queue|hits)$']
+  }
+  const env = (first) => ({
+    TRACY_SYNC_FINGERPRINT_IN: join(first, 'live', 'fingerprint.json'),
+    TRACY_SYNC_MANIFEST_IN: join(first, 'live', 'manifest.json'),
+    TRACY_SYNC_DB_BASE: join(first, 'live', 'db.sql.gz'),
+    TRACY_SYNC_IGNORED_TABLES: JSON.stringify(rule)
+  })
+  try {
+    const first = join(root, 'defs-1')
+    assert.equal(
+      (await pull(first, site.url, { TRACY_SYNC_IGNORED_TABLES: JSON.stringify(rule) })).answer.ok,
+      true
+    )
+    // The collation of jos_content changes on live; no row moves. A trigger is added, a log moves.
+    site.defs.jos_content = 'd1'
+    site.triggers.push({ name: 'shop_after_insert', table: 'jos_content', event: 'INSERT', timing: 'AFTER' })
+    site.db.jos_action_logs.push([2, 'logout'])
+    site.seen.many.length = 0
+    const { answer } = await pull(join(root, 'defs-2'), site.url, env(first))
+    assert.equal(answer.ok, true, JSON.stringify(answer))
+    assert.ok(site.seen.many.flat().includes('jos_content'), JSON.stringify(site.seen.many))
+    assert.deepEqual(answer.notCarried, {
+      triggers: [{ name: 'shop_after_insert', table: 'jos_content', event: 'INSERT', timing: 'AFTER' }],
+      tables: ['jos_action_logs']
+    })
+  } finally {
+    site.server.close()
   }
 })
