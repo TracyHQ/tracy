@@ -396,6 +396,27 @@ export function sweepUnresolvedOf(qa) {
   return { unresolved: shown, ...(more > 0 ? { unresolvedMore: more } : {}) }
 }
 
+/**
+ * The demo-leftover check's findings (`receipt.leftovers`, #191) as the ops step lists them: kind, page and place, capped
+ * at {@link SWEEP_UNRESOLVED_SHOWN} with the rest counted. Nothing found → no keys at all.
+ * @param {any} leftovers
+ * @returns {{ unresolved?: { field: string, page: string | null, why: string }[], unresolvedMore?: number }}
+ */
+export function leftoverLinesOf(leftovers) {
+  const findings = Array.isArray(leftovers?.findings) ? leftovers.findings : []
+  if (findings.length === 0) return {}
+  const shown = findings.slice(0, SWEEP_UNRESOLVED_SHOWN).map((f) => {
+    const why = `${f.place}: ${String(f.found ?? '')}`
+    return {
+      field: String(f.kind),
+      page: typeof f.page === 'string' ? f.page : null,
+      why: why.length > SWEEP_WHY_MAX ? `${why.slice(0, SWEEP_WHY_MAX - 1)}…` : why
+    }
+  })
+  const more = findings.length - shown.length + Number(leftovers.truncated ?? 0)
+  return { unresolved: shown, ...(more > 0 ? { unresolvedMore: more } : {}) }
+}
+
 export function buildCollectorItems(opp, sources, mediaStats, latestRevision, latestBuild) {
   const candidate = opp.candidate && typeof opp.candidate === 'object' ? opp.candidate : {}
   const items = [
@@ -512,6 +533,22 @@ export function buildCollectorItems(opp, sources, mediaStats, latestRevision, la
         durationSec: rounds > 0 ? rounds * 12 : 4,
         detail: `${qaState} · ${rounds} round${rounds === 1 ? '' : 's'}, ${repairs} repair${repairs === 1 ? '' : 's'}${latestBuild.qa.reason ? ` (${latestBuild.qa.reason})` : ''}`,
         ...sweepUnresolvedOf(latestBuild.qa)
+      })
+    }
+    const leftovers = latestBuild.receipt?.leftovers
+    if (leftovers && typeof leftovers === 'object') {
+      const findings = Array.isArray(leftovers.findings) ? leftovers.findings : []
+      const total = findings.length + Number(leftovers.truncated ?? 0)
+      items.push({
+        name: '9. Demo-Leftover Check',
+        provider: 'tracy-wo-domain · checkDemoLeftovers',
+        status: leftovers.pass === true ? 'success' : 'failure',
+        durationSec: 0,
+        detail:
+          leftovers.pass === true
+            ? 'No demo leftover found'
+            : `${total} leftover${total === 1 ? '' : 's'} found`,
+        ...leftoverLinesOf(leftovers)
       })
     }
   }

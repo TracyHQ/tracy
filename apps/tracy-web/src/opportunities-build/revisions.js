@@ -19,6 +19,7 @@
  */
 import { randomUUID } from 'node:crypto'
 import { AGENT_DEMO, evidenceData, researchHash } from './agent-demo.js'
+import { BRIEF_BUILD } from './brief-build-path.js'
 import { briefWithResearch, frozenResearchOf, researchReference } from './revision-research.js'
 import { quickstartReleaseMatches } from '../lib/quickstart-selection.js'
 import { renderBriefWithReviews } from 'website-opportunities/src/review-sources.js'
@@ -69,8 +70,8 @@ export async function revisionForAction(
   ).rows[0]
   const workflow = historical
     ? 'none'
-    : action.selection?.workflow === AGENT_DEMO
-      ? AGENT_DEMO
+    : action.selection?.workflow === AGENT_DEMO || action.selection?.workflow === BRIEF_BUILD
+      ? action.selection.workflow
       : editorial
         ? 'none'
         : undefined

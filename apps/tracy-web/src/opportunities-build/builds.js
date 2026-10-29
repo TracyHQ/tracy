@@ -33,6 +33,7 @@ import {
 import { templateRefusal } from './revisions.js'
 import { choiceKey } from './build-choice.js'
 import { QUALITY_PROTOCOL } from './quality-protocol.js'
+import { contentMapOfTemplate, isBriefBuild, storedSitePlan } from './brief-build-path.js'
 
 const ABOUT_MAX = 300
 
@@ -127,7 +128,8 @@ export async function startBuild({
   config,
   domain,
   demoActionId = null,
-  qualityLease = null
+  qualityLease = null,
+  contentMapOf = contentMapOfTemplate
 }) {
   const refusal = templateRefusal(revision.template)
   if (refusal)
@@ -213,10 +215,13 @@ export async function startBuild({
   const quality = revision.brief?.editorial?.protocol === QUALITY_PROTOCOL
   if (quality && (!demoActionId || !qualityLease?.token))
     throw Object.assign(new Error('QUALITY_ACTION_FENCE'), { code: 'QUALITY_ACTION_FENCE' })
-  const { brief, pagePlan } =
+  // A brief build sends the site plan's answers and facts, and keeps the whole plan on its receipt (#191).
+  const { brief, pagePlan, sitePlan } =
     quality || agentDemo
-      ? { brief: null, pagePlan: null }
-      : await siteBrief({ request, origin, cookie, revision, domain })
+      ? { brief: null, pagePlan: null, sitePlan: null }
+      : isBriefBuild(revision)
+        ? await sitePlanBrief({ request, origin, cookie, revision, domain, contentMapOf })
+        : { ...(await siteBrief({ request, origin, cookie, revision, domain })), sitePlan: null }
   const answer = await readJson(request, '/api/sites', {
     method: 'POST',
     headers: {
@@ -248,6 +253,7 @@ export async function startBuild({
     at: new Date().toISOString(),
     ...(demoActionId ? { demoActionId } : {}),
     ...(pagePlan ? { pagePlan } : {}),
+    ...(sitePlan ? { sitePlan } : {}),
     // A warned brief builds, and what it lacks goes with the build as questions for the owner (#50).
     ...(readiness?.verdict === 'warn' ? { readiness: readinessNote(readiness) } : {})
   }
@@ -402,6 +408,34 @@ async function siteBrief({ request, origin, cookie, revision, domain }) {
   // The restaurant's phone, email, address and hours, each with its source: the create door's identity writers read them.
   const facts = typeof domain?.contactFacts === 'function' ? domain.contactFacts(revision.brief ?? {}) : {}
   return { brief: Object.keys(facts).length ? { ...brief, facts } : brief, pagePlan }
+}
+
+/**
+ * A brief build's create-door brief, from one site plan (`domain.planSite`): the plan's answers to the template's Site
+ * questions and every contact fact it holds; the one-line `about` with the facts when the questions cannot be read, so a
+ * build never waits on them. The plan itself goes with the receipt, where the engine and the reports read it.
+ */
+async function sitePlanBrief({ request, origin, cookie, revision, domain, contentMapOf }) {
+  if (typeof domain?.planSite !== 'function')
+    return { ...(await siteBrief({ request, origin, cookie, revision, domain })), sitePlan: null }
+  const query = new URLSearchParams({
+    platform: revision.cms,
+    design: revision.template.design,
+    quickstart: revision.template.quickstart,
+    lang: 'en'
+  })
+  const served = await readJson(request, `/api/sites/questions?${query}`, { headers: { cookie, origin } })
+  const questions = served.ok && Array.isArray(served.body?.questions) ? served.body : { questions: [] }
+  const plan = domain.planSite(revision.brief ?? {}, questions, {
+    now: new Date().toISOString(),
+    contentMap: contentMapOf(revision.template)
+  })
+  const facts = Object.keys(plan.facts).length ? { facts: plan.facts } : {}
+  const brief =
+    plan.questionnaire && Object.keys(plan.answers).length
+      ? { answers: plan.answers, questionnaire: plan.questionnaire, ...facts }
+      : { about: aboutOf(revision), ...facts }
+  return { brief, pagePlan: plan.pagePlan ?? null, sitePlan: storedSitePlan(plan) }
 }
 
 /** `siteBrief` without the contact facts. */

@@ -21,6 +21,21 @@ export function createSiteContent({ pool, log = console }) {
       if (build?.brief?.quickstartWorkflow !== 'quickstart-first/1') return null
       return { ...build, socialFigures: socialFiguresOfRevision(await websiteOpportunitiesDomain(), build) }
     },
+    /**
+     * The site plan a brief build was made with (`receipt.sitePlan`, #191): what the engine writes the brand and every
+     * contact fact from. A site no brief build made, or a build made before the site plan, answers null.
+     * @param {{siteKey: string, email: string}} who
+     */
+    async sitePlanFor({ siteKey, email }) {
+      try {
+        return (await siteBuildOf(pool, siteKey, email))?.receipt?.sitePlan ?? null
+      } catch (error) {
+        log.warn?.(
+          `[content] ${siteKey}: the build's site plan could not be read (${error?.message ?? error})`
+        )
+        return null
+      }
+    },
     /** Identity does not depend on posts, the page plan or the create response receipt. Read errors must reject. */
     async isOpportunity({ siteKey, email }) {
       return Boolean(await siteBuildOf(pool, siteKey, email))

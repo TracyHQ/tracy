@@ -1,5 +1,6 @@
 import { freezeDemoResearchInput } from './revisions.js'
 import { AGENT_DEMO } from './agent-demo.js'
+import { BRIEF_BUILD } from './brief-build-path.js'
 /**
  * Accept build actions and reserve their daily budget in one transaction. The action's request id
  * deduplicates a press; build_request_id is the separate, stable identity the create door retries.
@@ -114,7 +115,8 @@ export async function acceptDemoActions(
           'Choose a supported chat mode; Retry keeps its original mode.'
         )
       }
-      if (e.workflow !== undefined && e.workflow !== AGENT_DEMO) {
+      // A brief build (the Build button's default, #191) or the agent demo; none is the quickstart-first workflow.
+      if (e.workflow !== undefined && e.workflow !== AGENT_DEMO && e.workflow !== BRIEF_BUILD) {
         await client.query('rollback')
         return refusal(400, 'DEMO_WORKFLOW_INVALID', 'Choose a supported demo workflow.')
       }

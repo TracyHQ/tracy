@@ -1506,6 +1506,9 @@ export function buildApp(deps) {
     app.route('/', publicDemos)
     const demoRunner = createDemoRunner({
       ...opportunityDeps,
+      // The demo-leftover check's page reader (#191): the site reader is made with the host, below.
+      readSitePage: (/** @type {string} */ siteKey, /** @type {string} */ path) =>
+        /** @type {any} */ (app).readSitePage?.(siteKey, path) ?? null,
       runtime: woRuntimeOf,
       switchOn: woWorkOn,
       log: deps.log ?? console
@@ -1861,9 +1864,20 @@ export function buildApp(deps) {
         bytes: async (/** @type {string} */ url) => {
           const response = await get(url)
           return response.ok ? new Uint8Array(await response.arrayBuffer()) : null
+        },
+        /** A page as the site serves it, its status kept: a not-found page is read too (the leftover check). */
+        page: async (/** @type {string} */ url) => {
+          const response = await get(url)
+          const redirected = response.status >= 300 && response.status < 400
+          return { status: response.status, html: redirected ? '' : await response.text() }
         }
       }
     }
+    // The demo-leftover check's page reader (#191), read by the demo runner above through `app`.
+    Object.assign(app, {
+      readSitePage: async (/** @type {string} */ siteKey, /** @type {string} */ path) =>
+        (await siteReader(siteKey))?.page(path) ?? null
+    })
     readAgentNativeInventory = createAgentDemoInventory({
       siteAccess,
       siteReader,
@@ -2079,7 +2093,9 @@ export function buildApp(deps) {
               },
               id
             ),
-          versionOf: async (siteKey) => (await siteByKey(deps.pool, siteKey))?.quickstart_version ?? null
+          versionOf: async (siteKey) => (await siteByKey(deps.pool, siteKey))?.quickstart_version ?? null,
+          // The brief build's site plan: no logo of the business means its name as text (#193).
+          sitePlanFor: (ctx) => woContent.sitePlanFor({ siteKey: ctx.siteKey, email: ctx.email })
         })
       })
     // Resume only the failed fill on an existing demo, through the site's own brief runner.

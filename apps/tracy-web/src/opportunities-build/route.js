@@ -19,6 +19,7 @@ import {
   savePreference
 } from 'website-opportunities/src/store.js'
 import { AGENT_DEMO } from './agent-demo.js'
+import { BRIEF_BUILD } from './brief-build-path.js'
 import { withBuildChoice } from './build-choice.js'
 import {
   buildOf,
@@ -76,7 +77,7 @@ export function createWebsiteBuilder(deps) {
   const demoSettings = async () => (await runtime()).settings
   const qualityMode = (accountId) => qualityModeOf(pool, accountId, { available: deps.quality?.available })
   async function acceptActions(args) {
-    if (args.entries.some((entry) => entry.workflow === AGENT_DEMO))
+    if (args.entries.some((entry) => entry.workflow === AGENT_DEMO || entry.workflow === BRIEF_BUILD))
       return acceptDemoActions(pool, { ...args, protocol: 'legacy' })
     let mode
     try {
@@ -566,7 +567,7 @@ export function createWebsiteBuilder(deps) {
       // 🔒 A BUILD FROM THE RESEARCH NEEDS THE RESEARCH (local stand 24/10/2026): an agent build was accepted while its
       // research stood paused on a website timeout, froze 0 sources and 0 photos, and the agent built a site of
       // template words. A paused or failed research is resumed or run again first; a Retry continues its own build.
-      if (b.workflow === 'agent-demo/1' && !b.retryOf) {
+      if ((b.workflow === AGENT_DEMO || b.workflow === BRIEF_BUILD) && !b.retryOf) {
         const latest = (await jobsOfOpportunity(pool, opp.id)).find((j) => j.kind === 'research')
         if (latest?.state !== 'completed')
           return refuse(
@@ -810,7 +811,9 @@ function demoOf(b) {
 function selectionOfChoice(choice) {
   const t = choice?.template ?? {}
   return {
-    ...(choice?.quickstartWorkflow === AGENT_DEMO ? { workflow: AGENT_DEMO } : {}),
+    ...(choice?.quickstartWorkflow === AGENT_DEMO || choice?.quickstartWorkflow === BRIEF_BUILD
+      ? { workflow: choice.quickstartWorkflow }
+      : {}),
     cms: choice?.cms,
     design: t.design,
     quickstart: t.quickstart,

@@ -7,6 +7,7 @@ import { HANDOFF_JUDGED, handOff, promptHandoff } from './handoff.js'
 import { qaShape, startDemoQa } from './demo-qa.js'
 import { saveHandoff, siteRowOf } from './build-store.js'
 import { QUALITY_PROTOCOL } from './quality-protocol.js'
+import { isBriefBuild } from './brief-build-path.js'
 
 export async function handOffToAgent({
   pool,
@@ -82,6 +83,9 @@ export async function handOffToAgent({
     if (judged) result.body.next = `/${encodeURIComponent(build.site_key)}/s/${encodeURIComponent(judged)}`
     return result
   }
+  // 🔒 A brief build's hand-off is its report alone (#191, #197): no chat, no site check round, no prompt. Its only agent
+  // turn is the bounded cleanup turn the runner gives the leftover check's findings.
+  if (isBriefBuild(revision)) return result
   const site = await siteRowOf(pool, result.body.site.key)
   const held = build.qa?.sessionId ?? build.handoff?.sessionId ?? requestedSession ?? `wo-demo-${build.id}`
   // Reconcile even a receipted ID: after a native restart an unused chat must be loaded back

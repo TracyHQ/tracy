@@ -11,6 +11,9 @@ import { handOffToAgent } from './handoff-service.js'
 import { revisionForAction } from './revisions.js'
 import { briefOf } from '../lib/site-brief-row.js'
 import { withHandoffLock } from './handoff.js'
+import { isBriefBuild } from './brief-build-path.js'
+import { checkBuildLeftovers } from './demo-leftover-check.js'
+import { cleanBuildLeftovers, cleanupTurnPort } from './demo-leftover-cleanup.js'
 
 const POLL_MS = 10_000
 const LEASE_MS = 6 * 60_000
@@ -187,7 +190,8 @@ export function createDemoRunner(deps) {
             revision,
             requestId: action.build_request_id,
             label: action.label,
-            demoActionId: action.id
+            demoActionId: action.id,
+            ...(deps.contentMapOf ? { contentMapOf: deps.contentMapOf } : {})
           })
           if (answer.status >= 500 && action.attempts < 3)
             return lease.finish({
@@ -395,6 +399,33 @@ export function createDemoRunner(deps) {
           ])
           return finish('completed')
         }
+        // 🔒 A brief build is judged by the demo-leftover check once its fill is applied, before the hand-off (#191): the
+        // findings go into the hand-off report and the ops view. Without a page reader (a test's world) it is not run.
+        if (isBriefBuild(revision) && !build.receipt?.leftovers && deps.readSitePage) {
+          await mark('check')
+          build = await checkBuildLeftovers(db, {
+            build,
+            revision,
+            domain,
+            readSitePage: deps.readSitePage,
+            ...(deps.contentMapOf ? { contentMapOf: deps.contentMapOf } : {}),
+            now
+          })
+        }
+        // 🔒 Findings left: ONE bounded cleanup turn gets only those (#197). It never fails the build; no findings, no turn.
+        // Apart from the check so a worker that comes back after a lost lease still reaches it (it starts no second turn).
+        if (isBriefBuild(revision) && build.receipt?.leftovers && deps.readSitePage) {
+          await mark('check')
+          build = await cleanBuildLeftovers(db, {
+            build,
+            revision,
+            domain,
+            readSitePage: deps.readSitePage,
+            turn: deps.cleanupTurn ?? cleanupTurnPort(db, { ...deps, now }, { build, email: account.email }),
+            ...(deps.contentMapOf ? { contentMapOf: deps.contentMapOf } : {}),
+            now
+          })
+        }
         // A baseline the site check could not read yet is the QA sweep's to read again (`takeDueBaselines`),
         // and it sends the prompt once one holds: the worker waits instead of spending the reads.
         if (!build.handoff?.promptSent && build.qa?.state !== 'baseline') {
@@ -430,6 +461,8 @@ export function createDemoRunner(deps) {
               updated_at: new Date(now())
             })
           }
+          // A brief build's hand-off is its report: nothing is sent, so nothing is waited on (#191).
+          if (isBriefBuild(revision)) return finish('completed')
         }
         await mark('check')
         return wait()

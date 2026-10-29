@@ -9,12 +9,13 @@
  * renders (acceptance lines, markdown) are rendered once in `makeBuildChoice`, so the overlay needs no domain.
  */
 import { AGENT_DEMO } from './agent-demo.js'
+import { BRIEF_BUILD } from './brief-build-path.js'
 import { qualityExecutionProfile } from './quality-execution-profile.js'
 import { renderBriefWithReviews } from 'website-opportunities/src/review-sources.js'
 import { briefWithResearch } from './revision-research.js'
 import { picturePolicy } from '../lib/wo-picture-policy.js'
 
-/** `workflow`: `AGENT_DEMO`, `'none'` (quality-v1 keeps its own), else the quickstart-first workflow. */
+/** `workflow`: `AGENT_DEMO`, `BRIEF_BUILD` (the site plan path, #191), `'none'` (quality-v1 keeps its own), else the quickstart-first workflow. */
 export function makeBuildChoice({
   domain,
   revision,
@@ -32,8 +33,8 @@ export function makeBuildChoice({
     resolvedAt,
     picturePolicy: picturePolicy(ops),
     ...(reviewMode === 'manual' ? { reviewMode: 'manual' } : {}),
-    ...(workflow === AGENT_DEMO
-      ? { quickstartWorkflow: AGENT_DEMO }
+    ...(workflow === AGENT_DEMO || workflow === BRIEF_BUILD
+      ? { quickstartWorkflow: workflow }
       : workflow === 'none'
         ? {}
         : {

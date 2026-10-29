@@ -52,6 +52,8 @@ import { keptPages, pictureReport, realPicturesOf, shapeReal } from './real-pict
 import { writeContractPictures } from './contract-real-pictures.js'
 import { copyPinsOf, pinStates, recordPins } from './wo-copy-pins.js'
 import { woContentOf } from './wo-content.js'
+import { planContactSteps } from './joomla-plan-contacts.js'
+import { planIdentitySteps } from './joomla-plan-identity.js'
 import { writeWoContent } from './joomla-wo-content.js'
 import {
   addDerivedLanguages,
@@ -1688,6 +1690,23 @@ export function createJoomlaEngine({
             visible: visibleNow
           })
           if (contacts.note) ctx.note(contacts.note)
+          // The site plan's contact facts in the custom modules' contact lines, linked (`joomla-contact-links.js`, #191).
+          const moduleContacts = await planContactSteps({
+            apply,
+            siteKey,
+            ctx,
+            woContent,
+            visible: visibleNow
+          })
+          // The site plan's social links, map, demo logo picture and demo posts (`joomla-plan-identity.js`, #193), merged over the module writes above.
+          const identity = await planIdentitySteps({
+            apply,
+            siteKey,
+            ctx,
+            woContent,
+            visible: visibleNow,
+            base: moduleContacts.steps
+          })
           if (judged.categories.note) ctx.note(judged.categories.note)
           // An entry the tidy-up takes off is only taken off: a title written into it would show nowhere.
           const retitled = judged.pages.steps.filter((step) => !hiding.includes(step.id))
@@ -1712,6 +1731,7 @@ export function createJoomlaEngine({
                 ...judged.relabels.filter((step) => !hiding.includes(step.id)),
                 ...retitled,
                 ...contacts.steps,
+                ...identity.steps,
                 ...judged.categories.steps,
                 ...intoCategories,
                 ...menuSteps(dependents),

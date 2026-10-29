@@ -103,6 +103,8 @@ async function listAll(call, kind, whole = false) {
  * @returns {Promise<any[]>}
  */
 export const readMenu = (apply, siteKey) => listAll(checkedCall(apply, siteKey), 'menuItem', true)
+/** Every module with its body (`content`), for writes that rewrite a module's HTML. */
+export const readModules = (apply, siteKey) => listAll(checkedCall(apply, siteKey), 'module', true)
 
 /** The menu a row sits in, without its language suffix (`tb-kit-en` → `tb-kit`). */
 const menuOf = (/** @type {string} */ menutype) => menutype.replace(/-[a-z]{2}(?:-[a-z]{2})?$/i, '')

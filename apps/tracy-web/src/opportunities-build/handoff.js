@@ -29,6 +29,7 @@ import { socialFiguresOfRevision } from './place-profile-of-revision.js'
 import { buildPlaced, saveHandoff } from './build-store.js'
 import { picturePolicy } from '../lib/wo-picture-policy.js'
 import { sidecarForTemplate } from '../lib/slot-roles-for.js'
+import { isBriefBuild } from './brief-build-path.js'
 
 /** The states of a site's brief in which its words and pictures are still being written (`sites/brief-store.js`). */
 const BRIEF_OPEN = ['queued', 'preparing', 'ready', 'applying']
@@ -280,44 +281,57 @@ export async function handOff({
   const credits = Object.fromEntries(
     media.filter((m) => pictureCredit(m)).map((m) => [m.id, pictureCredit(m)])
   )
-  const prompt = domain.renderAgentPrompt({
-    // Render from JSON so old revisions also hand collected reviews to the agent.
-    revision: {
-      ...revision,
-      briefMarkdown:
-        revision.brief?.schemaVersion && domain.renderBriefMarkdown
-          ? renderBriefWithReviews(domain, briefWithResearch(revision))
-          : revision.brief_md
-    },
-    placed,
-    described,
-    videos,
-    skipped,
-    pictures: plan,
-    credits,
-    // The follower and like counts collected for the place's own social profiles: shown as they are (`socialFiguresOf`).
-    socialFigures: socialFiguresOfRevision(domain, revision),
-    pagePlan: build.receipt?.pagePlan ?? null,
-    // What the site's build already wrote from the restaurant's posts (`sites/brief-engines/wo-content.js`): left as it is.
-    written: build.content?.writes ?? {},
-    // The sections the site's build left on each page (`wp-wo-fill.js`), with what the template's map asks of each: the
-    // agent edits inside them and never takes one off. None recorded (an older build, another CMS): the prompt is as before.
-    sections: build.receipt?.sections
-      ? {
-          pages: build.receipt.sections,
-          actions:
-            // Through the shared reader: a template whose contract has content-map roles has no hand-written map left.
-            sidecarForTemplate({ cms: revision.cms, ...revision.template }).handMap?.sections ?? {}
-        }
-      : null
-  })
+  // 🔒 A BRIEF BUILD SENDS NO BUILD HAND-OFF PROMPT (#191, #197): the engine wrote the site from the site plan, and the
+  // only agent turn it gets is the bounded cleanup turn over the check's findings (`demo-leftover-cleanup.js`). Its
+  // hand-off is the report alone (pictures, findings), with no prompt for any chat to send.
+  const prompt = isBriefBuild(revision)
+    ? null
+    : domain.renderAgentPrompt({
+        // Render from JSON so old revisions also hand collected reviews to the agent.
+        revision: {
+          ...revision,
+          briefMarkdown:
+            revision.brief?.schemaVersion && domain.renderBriefMarkdown
+              ? renderBriefWithReviews(domain, briefWithResearch(revision))
+              : revision.brief_md
+        },
+        placed,
+        described,
+        videos,
+        skipped,
+        pictures: plan,
+        credits,
+        // The follower and like counts collected for the place's own social profiles: shown as they are (`socialFiguresOf`).
+        socialFigures: socialFiguresOfRevision(domain, revision),
+        pagePlan: build.receipt?.pagePlan ?? null,
+        // What the demo-leftover check still finds on the served pages (#191): the agent cleans these places only.
+        leftovers: build.receipt?.leftovers ?? null,
+        // What the site's build already wrote from the restaurant's posts (`sites/brief-engines/wo-content.js`): left as it is.
+        written: build.content?.writes ?? {},
+        // The sections the site's build left on each page (`wp-wo-fill.js`), with what the template's map asks of each: the
+        // agent edits inside them and never takes one off. None recorded (an older build, another CMS): the prompt is as before.
+        sections: build.receipt?.sections
+          ? {
+              pages: build.receipt.sections,
+              actions:
+                // Through the shared reader: a template whose contract has content-map roles has no hand-written map left.
+                sidecarForTemplate({ cms: revision.cms, ...revision.template }).handMap?.sections ?? {}
+            }
+          : null
+      })
   const handoff = {
     state: 'ready',
     placed,
     skipped,
     videos,
     ...(plan ? { placedByBuild: plan.placed.length } : {}),
-    prompt,
+    // The hand-off report lists the check's findings by kind, page and place (#191).
+    ...(build.receipt?.leftovers ? { leftovers: handoffLeftovers(build.receipt.leftovers) } : {}),
+    // The cleanup turn's account: findings before, after, and what the turn changed (#197).
+    ...(build.receipt?.leftoverCleanup
+      ? { leftoverCleanup: handoffCleanup(build.receipt.leftoverCleanup) }
+      : {}),
+    ...(prompt ? { prompt } : {}),
     // The chat the prompt already went into (`route.js`): a later press does not send it twice.
     ...(build.handoff?.promptSent ? { promptSent: build.handoff.promptSent } : {}),
     ...(build.handoff?.sessionId ? { sessionId: build.handoff.sessionId } : {}),
@@ -591,5 +605,32 @@ async function readJson(request, path, init) {
     return { ok: res.ok, status: res.status, body }
   } catch {
     return { ok: false, status: 503, body: null }
+  }
+}
+
+/** The demo-leftover check as the hand-off report keeps it: whether it passed, counts by kind, and the findings. */
+export function handoffLeftovers(leftovers) {
+  return {
+    version: leftovers.version,
+    pass: leftovers.pass === true,
+    counts: leftovers.counts ?? {},
+    findings: Array.isArray(leftovers.findings) ? leftovers.findings : [],
+    unread: Array.isArray(leftovers.unread) ? leftovers.unread : [],
+    at: leftovers.at ?? null
+  }
+}
+
+/** The cleanup turn as the hand-off report keeps it: leftovers before, leftovers after, what the turn changed, how it ended. */
+export function handoffCleanup(cleanup) {
+  const list = (v) => (Array.isArray(v) ? v : [])
+  return {
+    version: cleanup.version,
+    turn: cleanup.turn ?? null,
+    before: { total: cleanup.before?.total ?? 0, counts: cleanup.before?.counts ?? {} },
+    after: { total: cleanup.after?.total ?? cleanup.before?.total ?? 0, counts: cleanup.after?.counts ?? {} },
+    fixed: list(cleanup.fixed),
+    introduced: list(cleanup.introduced),
+    left: list(cleanup.after?.findings),
+    pagesLost: list(cleanup.pagesLost)
   }
 }
