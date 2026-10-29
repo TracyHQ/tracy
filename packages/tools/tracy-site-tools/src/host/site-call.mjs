@@ -965,6 +965,7 @@ export function withReadBudget(params) {
   return { ...p, maxBytes: p.id !== undefined ? READ_BUDGET_ONE : READ_BUDGET_LIST }
 }
 
+/** @param {any} answer @param {any} params */
 export function cutContentList(answer, params) {
   if (isRecord(answer) && answer.schemaVersion === CONTENT_PAGES) return cutPagesList(answer, params)
   if (!isRecord(answer) || answer.schemaVersion !== CONTENT_ENVELOPE) return answer
@@ -2096,7 +2097,9 @@ export async function runSiteCall(input) {
     // F1.1: an OBJECT on a JSON column is a few keys, and writing it replaces the column. Refused
     // before anything is sent, because Tracy cannot know the keys it was not given. F3 (30/09): not on a
     // create — there is no other key to lose, so the object is the column (`createsRecord`).
-    const patch = jsonFieldPatch(n.params.fields, { create: createsRecord(n.params) })
+    const patch = jsonFieldPatch(/** @type {Record<string, unknown>} */ (n.params.fields), {
+      create: createsRecord(n.params)
+    })
     if (patch !== null) {
       const kind = str(n.params.kind) || 'record'
       return done({
@@ -2114,7 +2117,7 @@ export async function runSiteCall(input) {
           : `fields.${patch.field} is stored as one JSON text, so the ${patch.keys.length} key(s) sent would replace every other ${patch.field} of this ${kind}; nothing was written`
       })
     }
-    const asText = jsonFieldsAsText(n.params.fields)
+    const asText = jsonFieldsAsText(/** @type {Record<string, unknown>} */ (n.params.fields))
     if (asText.notes.length > 0) {
       n = { ...n, params: { ...n.params, fields: asText.fields } }
       runNotes.push(...asText.notes)
@@ -4050,7 +4053,7 @@ export function judgeWholeBody({
   if (
     blockDrop !== null &&
     (blockDrop.sample ?? 0) > 0 &&
-    length + blockDrop.sample >= SHRINK_RATIO * baseline
+    length + (blockDrop.sample ?? 0) >= SHRINK_RATIO * baseline
   )
     return {
       note: `${field} is shorter by the template's lorem it replaced; apply.revert puts it back`,

@@ -433,7 +433,7 @@ async function handOver(ctx, shot) {
  * @param {{ get?: (name: string) => unknown }} ctx
  * @param {import('./types.js').ToolRun | undefined} exec
  * @param {{ lookModel?: string }} config
- * @param {{ file: string, url: string }} shot
+ * @param {{ file: string, url: string, mediaType?: string }} shot
  * @returns {Promise<{ picture?: PictureRef, description?: string, describedBy?: string, next: string }>}
  */
 export async function pageSeen(ctx, exec, config, shot) {

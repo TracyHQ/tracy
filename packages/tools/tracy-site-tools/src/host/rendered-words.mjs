@@ -719,7 +719,9 @@ export async function replaceRendered(input) {
     left
   })
   if (built.ok !== true)
-    return built.older === true ? older() : /** @type {Record<string, unknown>} */ (built)
+    return /** @type {any} */ (built).older === true
+      ? older()
+      : /** @type {Record<string, unknown>} */ (built)
   const targets = /** @type {Target[]} */ (built.targets)
   for (let attempt = 0; attempt < 2; attempt += 1) {
     let inspected = await read(RENDERED_WORDS_ACTION, {
@@ -747,7 +749,9 @@ export async function replaceRendered(input) {
     const away = []
     for (const t of targets) {
       const row = rowOf(inspected, t)
-      const candidates = Array.isArray(row?.candidates) ? row.candidates.filter(isRecord) : []
+      const candidates = /** @type {Record<string, any>[]} */ (
+        Array.isArray(row?.candidates) ? row.candidates.filter(isRecord) : []
+      )
       const usable = candidates.filter(
         (c) => typeof c.anchor === 'string' && Number.isInteger(c.count) && c.count > 0
       )

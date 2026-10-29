@@ -808,7 +808,10 @@ function cardLinks(units) {
   return out
 }
 
-/** An address's path, without its origin, query or trailing slash: `/` stays `/`. */
+/**
+ * An address's path, without its origin, query or trailing slash: `/` stays `/`.
+ * @param {unknown} address
+ */
 function pathOnly(address) {
   let path = String(address)
   try {
@@ -855,7 +858,9 @@ function hooksOf({ table, addr, page, route, twins, patterns = null }) {
   // The same reading as the inventory's routes (`agent-demo-inventory.js`).
   const urlOf = (/** @type {Address} */ a) => {
     const pattern = a.kind === 'content' ? patterns?.[a.collection] : null
-    return typeof pattern === 'string' ? pathOnly(pattern.replace('{slug}', a.slug)) : null
+    return typeof pattern === 'string'
+      ? pathOnly(pattern.replace('{slug}', /** @type {any} */ (a).slug))
+      : null
   }
   const here = pathOnly(route)
   const routed = new Set()

@@ -3875,7 +3875,9 @@ ${prefix}`;
         if (missing.length > 0)
           return `ask_user_question was not shown: question ${JSON.stringify(id)} must name ${missing.map((f) => JSON.stringify(f)).join(", ")} as written, as the refusal's ask does; word the rest in the customer's language.`;
       }
-      const foreign = questions.map((q) => q?.id).filter((id) => typeof id === "string" && id.startsWith(CONFIRM_QUESTION_PREFIX) && !waiting.has(id));
+      const foreign = questions.map((q) => q?.id).filter(
+        (id) => typeof id === "string" && id.startsWith(CONFIRM_QUESTION_PREFIX) && !waiting.has(id)
+      );
       if (foreign.length === 0) return null;
       const ids2 = foreign.map((id) => JSON.stringify(id)).join(", ");
       const head = `ask_user_question was not shown: question id ${ids2} is not one Tracy wrote, so the customer's answer to it would open nothing.`;
@@ -3940,7 +3942,7 @@ function untranslatedConfirmCard(args, language) {
     /** @type {any} */
     args?.questions
   ) ? (
-    /** @type {any[]} */
+    /** @type {any} */
     args.questions
   ) : [];
   for (const q of questions) {
@@ -5543,11 +5545,11 @@ function contentRead(p, notes) {
 }
 function splitHost(n) {
   const key = allowKey(n.action, n.params) ?? n.action;
-  const own = [
-    .../** @type {Record<string, readonly string[]>} */
-    HOST_PARAMS[key] ?? [],
-    ...UNIVERSAL_HOST_PARAMS
-  ];
+  const hostParams = (
+    /** @type {Record<string, readonly string[]>} */
+    HOST_PARAMS
+  );
+  const own = [...hostParams[key] ?? [], ...UNIVERSAL_HOST_PARAMS];
   const host = { ...n.host };
   const params = { ...n.params };
   for (const k of own)
@@ -18628,7 +18630,13 @@ async function runSiteCall(input) {
       runNotes.push(merged.note);
     }
     if (fields !== n.params.fields) n = { ...n, params: { ...n.params, fields } };
-    const patch = jsonFieldPatch(n.params.fields, { create: createsRecord(n.params) });
+    const patch = jsonFieldPatch(
+      /** @type {Record<string, unknown>} */
+      n.params.fields,
+      {
+        create: createsRecord(n.params)
+      }
+    );
     if (patch !== null) {
       const kind = str4(n.params.kind) || "record";
       return done({
@@ -18644,7 +18652,10 @@ async function runSiteCall(input) {
         error: patch.create ? `fields.${patch.field} holds "patch" ${patch.keys.length > 1 ? "beside other keys" : "that is not an object"}: send {patch:{"<key>":<value>}} alone, or the column's own keys; nothing was written` : `fields.${patch.field} is stored as one JSON text, so the ${patch.keys.length} key(s) sent would replace every other ${patch.field} of this ${kind}; nothing was written`
       });
     }
-    const asText = jsonFieldsAsText(n.params.fields);
+    const asText = jsonFieldsAsText(
+      /** @type {Record<string, unknown>} */
+      n.params.fields
+    );
     if (asText.notes.length > 0) {
       n = { ...n, params: { ...n.params, fields: asText.fields } };
       runNotes.push(...asText.notes);
@@ -19808,7 +19819,7 @@ function judgeWholeBody({
       note: `${field} is shorter by the ${blockDrop.count === 1 ? "block" : "blocks"} dropped by position; apply.revert puts ${blockDrop.count === 1 ? "it" : "them"} back`,
       reset: true
     };
-  if (blockDrop !== null && (blockDrop.sample ?? 0) > 0 && length + blockDrop.sample >= SHRINK_RATIO * baseline)
+  if (blockDrop !== null && (blockDrop.sample ?? 0) > 0 && length + (blockDrop.sample ?? 0) >= SHRINK_RATIO * baseline)
     return {
       note: `${field} is shorter by the template's lorem it replaced; apply.revert puts it back`,
       reset: true
@@ -23653,7 +23664,11 @@ function splitShell(src) {
       continue;
     }
     if (c === ">" || c === "<" || c === "&" && src[i + 1] === ">") {
-      if (word !== null && !word.quoted && /^\d+$/.test(word.text)) word = null;
+      const held = (
+        /** @type {Word | null} */
+        word
+      );
+      if (held !== null && !held.quoted && /^\d+$/.test(held.text)) word = null;
       else endWord();
       const op = /^(?:&>>|&>|>>|>\||>&|<<<|<<-|<<|<&|<>|>|<)/.exec(src.slice(i))?.[0] ?? c;
       i += op.length;
@@ -30332,7 +30347,11 @@ async function drawFor(job, hold) {
   try {
     let reach = job.reach;
     if (reach.shared === "some" && reach.usedOn === void 0 && job.usage !== void 0 && left() > 0) {
-      const usage = await inBudget(job.usage(reach), false);
+      const usage = await inBudget(
+        job.usage(reach),
+        /** @type {any} */
+        false
+      );
       if (usage === false || usage === null) reach = job.reach;
       else if (usage.all === true) reach = { ...reach, shared: "site" };
       else reach = { ...reach, usedOn: usage.pages };
@@ -34567,7 +34586,11 @@ function hooksOf({ table, addr, page, route, twins, patterns = null }) {
   }
   const urlOf = (a) => {
     const pattern = a.kind === "content" ? patterns?.[a.collection] : null;
-    return typeof pattern === "string" ? pathOnly(pattern.replace("{slug}", a.slug)) : null;
+    return typeof pattern === "string" ? pathOnly(pattern.replace(
+      "{slug}",
+      /** @type {any} */
+      a.slug
+    )) : null;
   };
   const here = pathOnly(route);
   const routed = /* @__PURE__ */ new Set();
@@ -38548,9 +38571,12 @@ async function replaceRendered(input) {
     left
   });
   if (built.ok !== true)
-    return built.older === true ? older() : (
-      /** @type {Record<string, unknown>} */
-      built
+    return (
+      /** @type {any} */
+      built.older === true ? older() : (
+        /** @type {Record<string, unknown>} */
+        built
+      )
     );
   const targets = (
     /** @type {Target[]} */
@@ -38575,7 +38601,10 @@ async function replaceRendered(input) {
     const away = [];
     for (const t of targets) {
       const row = rowOf(inspected, t);
-      const candidates = Array.isArray(row?.candidates) ? row.candidates.filter(isRecord16) : [];
+      const candidates = (
+        /** @type {Record<string, any>[]} */
+        Array.isArray(row?.candidates) ? row.candidates.filter(isRecord16) : []
+      );
       const usable = candidates.filter(
         (c) => typeof c.anchor === "string" && Number.isInteger(c.count) && c.count > 0
       );
@@ -40859,7 +40888,10 @@ function rewriteRecords(results, storeById, ctx = {}) {
       });
     writes.push({ store: store2, before: store2.raw, after, edits: unique, expect });
   }
-  const expanded = expandPatterns(writes, storeById);
+  const expanded = (
+    /** @type {any} */
+    expandPatterns(writes, storeById)
+  );
   if (!expanded.ok) return expanded;
   for (const x of expanded.writes)
     if ((x.store.kind === "templatePart" || x.store.kind === "template") && x.store.stored === false)
@@ -46564,6 +46596,7 @@ function closedBuildRead(name2, args) {
   if (name2 === "tracy_emdash") return emdashRunsInParallel(a);
   if (name2 === "tracy_demo")
     return ["read", "structure.read", "plan.read", "media.look", "provision.status"].includes(
+      /** @type {string} */
       fields.operation
     );
   if (name2 === "tracy_design_system") return fields.action === "read";

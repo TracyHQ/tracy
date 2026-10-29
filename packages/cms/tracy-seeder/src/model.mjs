@@ -104,7 +104,10 @@ export function imagesOf(message) {
  */
 let usageSink = null
 
-/** A thrown fetch or body read, in words: a timeout says so instead of looking like an answer. */
+/**
+ * A thrown fetch or body read, in words: a timeout says so instead of looking like an answer.
+ * @param {any} e
+ */
 function describe(e) {
   if (e?.name === 'TimeoutError' || e?.name === 'AbortError')
     return `timed out after ${CHAT_TIMEOUT_MS / 1000} s`

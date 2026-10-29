@@ -3148,7 +3148,7 @@ export function rewriteRecords(results, storeById, ctx = {}) {
       })
     writes.push({ store, before: store.raw, after, edits: unique, expect })
   }
-  const expanded = expandPatterns(writes, storeById)
+  const expanded = /** @type {any} */ (expandPatterns(writes, storeById))
   if (!expanded.ok) return expanded
   for (const x of expanded.writes)
     if ((x.store.kind === 'templatePart' || x.store.kind === 'template') && x.store.stored === false)

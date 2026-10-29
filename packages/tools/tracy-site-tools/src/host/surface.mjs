@@ -919,12 +919,12 @@ const emdashLeadOf = (/** @type {readonly string[]} */ actions) =>
  * hold every block to the template; `siteToolDescription` joins them.
  * @param {Surface} surface
  * @param {SurfaceOptions} [options]
- * @returns {{ kind: 'lead' | 'action' | 'tail', text: string }[]}
+ * @returns {{ kind: 'lead' | 'action' | 'tiers' | 'tail', text: string }[]}
  */
 export function siteToolBlocks(surface, options = {}) {
   const actions = Object.hasOwn(SURFACE_ACTIONS, surface) ? SURFACE_ACTIONS[surface] : undefined
   if (actions === undefined) throw new Error(`no tracy_site surface "${String(surface)}"`)
-  const block = (/** @type {'lead' | 'action' | 'tail'} */ kind, /** @type {string} */ text) => ({
+  const block = (/** @type {'lead' | 'action' | 'tiers' | 'tail'} */ kind, /** @type {string} */ text) => ({
     kind,
     text
   })

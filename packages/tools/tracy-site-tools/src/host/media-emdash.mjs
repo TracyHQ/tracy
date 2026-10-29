@@ -111,7 +111,7 @@ export async function emdashMediaScan({ params, label, call, copy, seen, now = D
     const items = Array.isArray(listed.result?.items) ? listed.result.items : []
     // The storage key stays here (an `undefined` property is not lossless JSON): the agent gets the
     // id, and the id is what copies a file.
-    const media = items.map((item) => {
+    const media = items.map((/** @type {any} */ item) => {
       const { id, filename, mimeType, alt, width, height, url } = pictureRow(item)
       return { id, filename, mimeType, alt, width, height, url }
     })

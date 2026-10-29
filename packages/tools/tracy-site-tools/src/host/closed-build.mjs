@@ -32,7 +32,7 @@ export function closedBuildRead(name, args) {
   if (name === 'tracy_emdash') return emdashRunsInParallel(a)
   if (name === 'tracy_demo')
     return ['read', 'structure.read', 'plan.read', 'media.look', 'provision.status'].includes(
-      fields.operation
+      /** @type {string} */ (fields.operation)
     )
   if (name === 'tracy_design_system') return fields.action === 'read'
   if (name === 'tracy_guide') return fields.recheck !== true

@@ -957,10 +957,8 @@ function contentRead(p, notes) {
  */
 function splitHost(n) {
   const key = allowKey(n.action, n.params) ?? n.action
-  const own = [
-    .../** @type {Record<string, readonly string[]>} */ (HOST_PARAMS[key] ?? []),
-    ...UNIVERSAL_HOST_PARAMS
-  ]
+  const hostParams = /** @type {Record<string, readonly string[]>} */ (HOST_PARAMS)
+  const own = [...(hostParams[key] ?? []), ...UNIVERSAL_HOST_PARAMS]
   /** @type {Record<string, unknown>} */
   const host = { ...n.host }
   const params = { ...n.params }

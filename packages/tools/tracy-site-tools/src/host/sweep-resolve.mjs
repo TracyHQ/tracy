@@ -244,7 +244,7 @@ const BODY_FIELDS = {
  * 🔒 Reading only `item` refused every EmDash link and picture as "has no data" (lrsweep EmDash rig, 25/10/2026:
  * 32 links on Tracy Base 0.5.6).
  * @param {any} got
- * @returns {{data?: any, status?: string} | null}
+ * @returns {{data?: any, status?: string, slug?: any} | null}
  */
 function entryOf(got) {
   return got?.result?.item ?? got?.item ?? (got?.data ? got : null)
@@ -255,7 +255,7 @@ function entryOf(got) {
  * a draft (`live:false`), the page keeps the template's words and the next replace there is refused PENDING_DRAFT.
  * @param {Record<string, any>} record
  * @param {{status?: string} | null} entry
- * @param {Record<string, unknown>} data
+ * @param {Record<string, unknown>} data @param {string | null} [slug]
  */
 const entryUpdate = (record, entry, data, slug = null) => ({
   collection: record.collection,
@@ -855,10 +855,10 @@ function sweepInner(markup, template, take) {
 }
 
 /** The blocks of a frozen template body: its top-level ones, and every block at every depth, each as its markup. */
-function templateBlocks(template) {
+function templateBlocks(/** @type {string} */ template) {
   const top = (topBlocks(template) ?? []).map((s) => template.slice(s.start, s.end))
   const all = new Set()
-  const walk = (markup) => {
+  const walk = (/** @type {string} */ markup) => {
     all.add(markup)
     const split = childrenOf(markup)
     if (split) for (const kid of split.kids) if (kid.name) walk(split.inner.slice(kid.start, kid.end))

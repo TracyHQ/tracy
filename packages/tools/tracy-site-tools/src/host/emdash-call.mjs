@@ -414,7 +414,7 @@ export function createEmdashState({ now = Date.now } = {}) {
   /**
    * label\0session → this turn's groups: `collection\0rowId` → its group (null: none, or one row),
    * and the confirm keys of groups the customer agreed to remove.
-   * @type {Map<string, { turn: unknown, byRow: Map<string, TranslationGroup | null>, agreed: Set<string> }>}
+   * @type {Map<string, { turn: unknown, byRow: Map<string, TranslationGroup | null>, agreed: Set<string>, asked: Set<string> }>}
    */
   const groups = new Map()
   /** @type {Map<string, Set<string>>} session → staged `label:id` keys, oldest first */
@@ -1051,7 +1051,7 @@ function noteLibrary(state, label, sessionId, tool, answer) {
  * @param {boolean} [input.modelCall] - the agent's own call, made as the model sent it (`index.ts`): an
  *   update of the `site` entry every page shows asks first (`consequence.mjs` `shared`). Left out — a
  *   test, a door's own step — it runs as it always did.
- * @param {() => Promise<boolean>} [input.planAgreed] - a demo or own-site build whose saved plan agreed to its
+ * @param {(() => Promise<boolean>) | null} [input.planAgreed] - a demo or own-site build whose saved plan agreed to its
  *   consequence writes (`index.ts` `demoPlanAgreed`), as `runSiteCall` reads it: such a write is not asked about
  *   again; a delete still is.
  * @returns {Promise<unknown>}

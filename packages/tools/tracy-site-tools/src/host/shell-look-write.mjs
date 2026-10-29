@@ -169,7 +169,8 @@ export function splitShell(src) {
     }
     if (c === '>' || c === '<' || (c === '&' && src[i + 1] === '>')) {
       // A word of digits right before is the descriptor, not an argument (`2>&1`).
-      if (word !== null && !word.quoted && /^\d+$/.test(word.text)) word = null
+      const held = /** @type {Word | null} */ (word)
+      if (held !== null && !held.quoted && /^\d+$/.test(held.text)) word = null
       else endWord()
       const op = /^(?:&>>|&>|>>|>\||>&|<<<|<<-|<<|<&|<>|>|<)/.exec(src.slice(i))?.[0] ?? c
       i += op.length

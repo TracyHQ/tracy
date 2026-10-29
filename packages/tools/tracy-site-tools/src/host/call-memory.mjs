@@ -1690,9 +1690,12 @@ export function createCallMemory(opts = {}) {
       }
       const foreign = questions
         .map((/** @type {any} */ q) => q?.id)
-        .filter((id) => typeof id === 'string' && id.startsWith(CONFIRM_QUESTION_PREFIX) && !waiting.has(id))
+        .filter(
+          (/** @type {any} */ id) =>
+            typeof id === 'string' && id.startsWith(CONFIRM_QUESTION_PREFIX) && !waiting.has(id)
+        )
       if (foreign.length === 0) return null
-      const ids = foreign.map((id) => JSON.stringify(id)).join(', ')
+      const ids = foreign.map((/** @type {any} */ id) => JSON.stringify(id)).join(', ')
       const head = `ask_user_question was not shown: question id ${ids} is not one Tracy wrote, so the customer's answer to it would open nothing.`
       if (waiting.size === 0)
         return `${head} Give your own question an id that does not start with "${CONFIRM_QUESTION_PREFIX}".`
@@ -1795,7 +1798,7 @@ const CONFIRM_ENGLISH = Object.freeze({
 export function untranslatedConfirmCard(args, language) {
   if (language === '' || language === 'English') return null
   const questions = Array.isArray(/** @type {any} */ (args)?.questions)
-    ? /** @type {any[]} */ (args).questions
+    ? /** @type {any} */ (args).questions
     : []
   for (const q of questions) {
     const id = typeof q?.id === 'string' ? q.id : ''

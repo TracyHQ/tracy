@@ -46,6 +46,7 @@ const SYSTEM = [
 ].join('\n')
 
 /** The CJK scripts a model may drift into; a title may use one only if the person's words do. */
+/** @type {[string, RegExp][]} */
 const CJK_SCRIPTS = [
   ['Chinese characters', /\p{Script=Han}/u],
   ['Japanese kana', /[\p{Script=Hiragana}\p{Script=Katakana}]/u],
@@ -66,7 +67,10 @@ export function foreignScripts(title, words) {
   ).map(([name]) => name)
 }
 
-/** Cut `text` to at most `max` UTF-8 bytes without splitting a character. */
+/**
+ * Cut `text` to at most `max` UTF-8 bytes without splitting a character.
+ * @param {string} text @param {number} max
+ */
 function capBytes(text, max) {
   if (Buffer.byteLength(text, 'utf8') <= max) return text
   let out = ''

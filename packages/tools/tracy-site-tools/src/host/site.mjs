@@ -1226,7 +1226,7 @@ function cmsNumberOf(asked) {
  * the answer already carries its own.
  * @param {unknown} answer
  * @param {Parameters<typeof refusalNext>[1]} [facts] - passed on to {@link refusalNext}.
- * @returns {unknown}
+ * @returns {any}
  */
 export function withNext(answer, facts = {}) {
   const next = refusalNext(answer, facts)

@@ -548,7 +548,7 @@ async function drawFor(job, hold) {
     let reach = job.reach
     // Where an element only some pages show is, asked once, inside the budget.
     if (reach.shared === 'some' && reach.usedOn === undefined && job.usage !== undefined && left() > 0) {
-      const usage = await inBudget(job.usage(reach), false)
+      const usage = await inBudget(job.usage(reach), /** @type {any} */ (false))
       if (usage === false || usage === null) reach = job.reach
       else if (usage.all === true) reach = { ...reach, shared: 'site' }
       else reach = { ...reach, usedOn: usage.pages }
