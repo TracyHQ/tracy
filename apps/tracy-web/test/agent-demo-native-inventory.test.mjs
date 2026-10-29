@@ -1295,6 +1295,42 @@ test('EmDash: a list the template left empty may be filled; a list that had rows
   assert.equal(compareAgentInventory(project([shot('t')]), project([shot('a'), shot('b')])).pass, false)
 })
 
+// Local measure 29/10/2026 (Levain, EmDash): history written with 5 of its 6 items and new ids, seven checks in a row.
+test('EmDash: a list that lost items, or an item given a new id, says how to put it back', () => {
+  const about = (history) => ({
+    complete: true,
+    records: [
+      {
+        key: 'about/1@en',
+        identity: { collection: 'about', id: '1' },
+        publication: {},
+        routes: [],
+        relations: {},
+        editorialFields: ['history'],
+        data: { history }
+      }
+    ]
+  })
+  const item = (id, title) => ({ _rowId: id, title, text: 'words' })
+  const was = about(['r1', 'r2', 'r3', 'r4', 'r5', 'r6'].map((id) => item(id, id)))
+  const short = compareAgentInventory(was, about(['r1', 'r2', 'r3', 'r4', 'r5'].map((id) => item(id, 'new'))))
+  assert.equal(short.pass, false)
+  const lost = short.detail.find((d) => d.path === '.history')
+  assert.deepEqual([lost.was, lost.now], ['6 items', '5 items'])
+  assert.match(lost.fix, /keep all 6 items, in order, each with its _rowId/)
+  const renamed = compareAgentInventory(
+    was,
+    about(['h1', 'r2', 'r3', 'r4', 'r5', 'r6'].map((id) => item(id, 'new')))
+  )
+  const id = renamed.detail.find((d) => d.path === '.history[0]._rowId')
+  assert.match(id.fix, /never given a new id/)
+  const long = compareAgentInventory(
+    was,
+    about(['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7'].map((id) => item(id, 'new')))
+  )
+  assert.match(long.detail.find((d) => d.path === '.history').fix, /remove the 1 added item/)
+})
+
 // Local round 21, 25/10/2026 (Levain, WordPress): template news posts rewritten in fewer paragraphs.
 test('WordPress: an article rewritten in other paragraphs keeps the structure; a page’s layout does not', () => {
   const record = (post_type, post_content) => ({

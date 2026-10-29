@@ -889,12 +889,29 @@ async function withPatternsRead(item, read) {
 /** At most this many differing records are named in a failed `native-structure`. */
 const DIFFERENCES_NAMED = 8
 
+/**
+ * 🔒 A DIFFERENCE SAYS HOW IT IS PUT BACK (local measure 29/10/2026): an EmDash build wrote its lists whole with the
+ * items its research held — history 6 → 5, governance 4 → 2 — and new `_rowId`s ("h1", "c1"), read "was 6 items, now 5"
+ * on seven checks in a row and wrote the same lists again each time. A list keeps every item the template has, each
+ * with its own id; an item the research has nothing for keeps its place with its words emptied or a neutral word.
+ */
+const LIST_SHORT = (n) =>
+  `keep all ${n} items, in order, each with its _rowId: write back the missing ones as structure.read shows them, their words emptied or one approved neutral word where the research has nothing`
+const LIST_LONG = (n, added) =>
+  `remove the ${added} added item(s): the template's ${n} stay, in order, each with its _rowId`
+const ROW_ID = "keep this item's _rowId as structure.read shows it: an item is never given a new id"
+
 /** The first path at which two invariant values differ, or null when they are equal. */
 function firstDifference(a, b, path = '') {
   if (a === b) return null
   if (a && b && typeof a === 'object' && typeof b === 'object' && Array.isArray(a) === Array.isArray(b)) {
     if (Array.isArray(a) && a.length !== b.length)
-      return { path: path || '.', was: `${a.length} items`, now: `${b.length} items` }
+      return {
+        path: path || '.',
+        was: `${a.length} items`,
+        now: `${b.length} items`,
+        fix: b.length < a.length ? LIST_SHORT(a.length) : LIST_LONG(a.length, b.length - a.length)
+      }
     for (const key of new Set([...Object.keys(a), ...Object.keys(b)])) {
       const found = firstDifference(a[key], b[key], Array.isArray(a) ? `${path}[${key}]` : `${path}.${key}`)
       if (found) return found
@@ -910,7 +927,12 @@ function firstDifference(a, b, path = '') {
     return { path: path || '.', at, was: JSON.stringify(around(a)), now: JSON.stringify(around(b)) }
   }
   const shown = (v) => (v === undefined ? 'missing' : JSON.stringify(v).slice(0, 120))
-  return { path: path || '.', was: shown(a), now: shown(b) }
+  return {
+    path: path || '.',
+    was: shown(a),
+    now: shown(b),
+    ...(/\._rowId$/.test(path) ? { fix: ROW_ID } : {})
+  }
 }
 
 /** Each record whose invariant changed: added, missing, or the part and field that moved. */
