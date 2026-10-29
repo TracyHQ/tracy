@@ -27,22 +27,16 @@
  * the write left (a reverse compare-and-set); an item the customer changed since is kept and named.
  *
  * The answer is the last stdout line. The client is live-pull.mjs's (the same envelope, the same
- * doors, the same retries on 429/5xx and the network only), kept in step by hand.
+ * doors), kept in step by hand. Reads retry transient failures; writes retry only an explicit
+ * writer_busy refusal. An unanswered mutation remains uncertain and is never sent again.
  * 🔒 The token arrives in the environment and goes only into request bodies: never on a command line,
  * into a file, a log line or an answer.
  */
 import { createHash } from 'node:crypto'
-import {
-  appendFileSync,
-  chmodSync,
-  existsSync,
-  mkdirSync,
-  readFileSync,
-  renameSync,
-  writeFileSync
-} from 'node:fs'
+import { closeSync, existsSync, fsyncSync, mkdirSync, openSync, readFileSync, writeFileSync } from 'node:fs'
 import { request } from 'node:http'
 import { join } from 'node:path'
+import { durablePrivate, lockWriter, mutation, writeRequests } from './live-write-requests.mjs'
 
 const USER_AGENT = 'Mozilla/5.0 (compatible; TracyBot/1.0; +https://tracy.ai)'
 const REQUEST_TIMEOUT_MS = 120_000
@@ -105,21 +99,61 @@ class Refused extends Error {
   constructor(action, reply) {
     super(`${action}: ${reply.error}`)
     this.reply = reply
+    this.definitelyRefused =
+      [
+        'conflict',
+        'locked',
+        'revision_stale',
+        'not_found',
+        'refused',
+        'php_lint_failed',
+        'too_large',
+        'php_disabled',
+        'invalid_params',
+        'invalid_kind',
+        'unsupported',
+        'disabled',
+        'unsafe_path'
+      ].includes(reply.error) ||
+      (reply.error === 'batch_failed' && /every write.*taken back/.test(String(reply.message ?? '')))
   }
 }
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
 function engineReply(text) {
-  try {
-    const value = JSON.parse(text)
-    return value && typeof value === 'object' && !Array.isArray(value) && typeof value.ok === 'boolean'
-      ? value
-      : null
-  } catch {
-    return null
+  const read = (body) => {
+    try {
+      const value = JSON.parse(body)
+      return value && typeof value === 'object' && !Array.isArray(value) && typeof value.ok === 'boolean'
+        ? value
+        : null
+    } catch {
+      return null
+    }
   }
+  const whole = read(text)
+  if (whole !== null) return whole
+  // PHP's notices printed ahead of the engine's JSON by a host that shows its errors (PHP 8.5
+  // deprecates the engine uploader's `curl_close()`): whole notice lines are taken off, and what
+  // remains must be an engine answer — the same rule as tracy-add-site `doors.mjs` `afterPhpNotices`.
+  const lines = String(text).split(/\r?\n/)
+  let k = 0
+  let notices = 0
+  while (k < lines.length) {
+    const line = lines[k].trim()
+    if (line === '' || /^<br\s*\/?>$/i.test(line)) k += 1
+    else if (PHP_NOTICE_LINE.test(line)) {
+      notices += 1
+      k += 1
+    } else break
+  }
+  return notices > 0 && k < lines.length ? read(lines.slice(k).join('\n')) : null
 }
+
+/** One line of PHP's report of a problem it survived, as `display_errors` prints it (`doors.mjs`). */
+const PHP_NOTICE_LINE =
+  /^(?:<br\s*\/?>)?\s*(?:PHP\s+)?(?:<b>)?(?:Deprecated|Notice|Warning|Strict Standards|User Deprecated|User Notice|User Warning)(?:<\/b>)?:\s.*\bon line\b/i
 
 /** live-pull.mjs `route`: a `.tracy.test` stand name reached through tracy-web, its name in Host. */
 function route(endpoint) {
@@ -144,7 +178,13 @@ function viaPost(target, body, headers) {
       (res) => {
         const chunks = []
         res.on('data', (c) => chunks.push(c))
-        res.on('end', () => resolve({ status: res.statusCode, text: Buffer.concat(chunks).toString('utf8') }))
+        res.on('end', () =>
+          resolve({
+            status: res.statusCode,
+            text: Buffer.concat(chunks).toString('utf8'),
+            retryAfter: res.headers['retry-after']
+          })
+        )
       }
     )
     req.on('timeout', () => req.destroy(new Error('timeout')))
@@ -157,11 +197,12 @@ function viaPost(target, body, headers) {
 async function call(endpoint, token, action, params = {}) {
   let status
   let text
+  let retryAfter
   const target = route(endpoint)
   const body = JSON.stringify({ token, action, params })
   const headers = { 'content-type': 'application/json', 'user-agent': USER_AGENT }
   try {
-    if (target) ({ status, text } = await viaPost(target, body, headers))
+    if (target) ({ status, text, retryAfter } = await viaPost(target, body, headers))
     else {
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -171,21 +212,39 @@ async function call(endpoint, token, action, params = {}) {
         redirect: 'error'
       })
       status = response.status
+      retryAfter = response.headers.get('retry-after')
       text = await response.text()
     }
   } catch (error) {
     throw new Transient(`${action}: ${error.cause?.code ?? error.code ?? error.message ?? error.name}`)
   }
   const reply = engineReply(text)
+  if (reply && !reply.ok && ['unauthorized', 'forbidden', 'bad_token'].includes(reply.error))
+    throw new WriteFailed('TOKEN_REFUSED')
+  if (status === 401) throw new WriteFailed('LIVE_PASSWORD_PROTECTED')
+  if (status === 403) throw new WriteFailed('LIVE_BLOCKED')
+  if (status === 429) {
+    const error = new Transient(`${action} answered 429`)
+    error.code = 'LIVE_RATE_LIMITED'
+    const seconds = /^\s*\d+\s*$/.test(String(retryAfter ?? '')) ? Number(retryAfter) : null
+    const date = seconds === null ? Date.parse(String(retryAfter ?? '')) : NaN
+    error.retryAfterMs =
+      seconds !== null ? seconds * 1000 : Number.isFinite(date) ? Math.max(0, date - Date.now()) : 0
+    throw error
+  }
   if (reply === null) {
-    if (status === 429 || status >= 500) throw new Transient(`${action} answered ${status}`)
-    throw new WriteFailed('NOT_THE_ENGINE', `${action} answered ${status}`)
+    if (status >= 500) throw new Transient(`${action} answered ${status}`)
+    throw new WriteFailed(status === 200 ? 'LIVE_BLOCKED' : 'NOT_THE_ENGINE', `${action} answered ${status}`)
   }
   if (!reply.ok) {
     if (['unauthorized', 'forbidden', 'bad_token'].includes(reply.error))
       throw new WriteFailed('TOKEN_REFUSED')
     // Another write holds the site's write lock for a moment: asked again, like a busy server.
-    if (reply.error === 'writer_busy') throw new Transient(`${action}: writer_busy`)
+    if (reply.error === 'writer_busy') {
+      const busy = new Transient(`${action}: writer_busy`)
+      busy.definitelyRefused = true
+      throw busy
+    }
     throw new Refused(action, reply)
   }
   return reply
@@ -198,8 +257,10 @@ async function retried(fn, tries = TRIES, onTransient = () => {}) {
     } catch (error) {
       if (!(error instanceof Transient)) throw error
       onTransient()
-      if (attempt >= tries) throw new WriteFailed('SITE_RESOURCE_LIMIT', error.message)
-      await sleep(500 * 2 ** attempt)
+      if (attempt >= tries) throw new WriteFailed(error.code ?? 'SITE_RESOURCE_LIMIT', error.message)
+      // A long Retry-After is a refusal, never permission to retry sooner. Avoid timer overflow.
+      if (error.retryAfterMs > 2_147_483_647) throw new WriteFailed('LIVE_RATE_LIMITED')
+      await sleep(Math.max(500 * 2 ** attempt, error.retryAfterMs ?? 0))
     }
   }
 }
@@ -211,15 +272,18 @@ async function door(endpoint, token) {
   const front = endpoint.replace(/\/administrator\/index\.php\?/, '/index.php?')
   for (const other of [admin, front]) if (!doors.includes(other)) doors.push(other)
   let last
+  let blocked
   for (const candidate of doors) {
     try {
       await retried(() => call(candidate, token, 'core.manifest'))
       return candidate
     } catch (error) {
       last = error
-      if (error.code === 'TOKEN_REFUSED') throw error
+      if (error.code === 'LIVE_BLOCKED') blocked = error
+      if (['TOKEN_REFUSED', 'LIVE_PASSWORD_PROTECTED', 'LIVE_RATE_LIMITED'].includes(error.code)) throw error
     }
   }
+  if (blocked) throw blocked
   throw last instanceof WriteFailed ? last : new WriteFailed('UNREACHABLE')
 }
 
@@ -264,12 +328,7 @@ const blobOf = (bytes) =>
     .update(Buffer.concat([Buffer.from(`blob ${bytes.length}\0`), bytes]))
     .digest('hex')
 
-function writePrivate(path, value) {
-  const tmp = `${path}.tmp`
-  writeFileSync(tmp, JSON.stringify(value), { mode: 0o600 })
-  chmodSync(tmp, 0o600)
-  renameSync(tmp, path)
-}
+const writePrivate = durablePrivate
 
 const readJson = (path, fallback) => (existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : fallback)
 
@@ -279,7 +338,21 @@ function keepBytes(pushDir, bytes) {
   mkdirSync(dir, { recursive: true, mode: 0o700 })
   const name = blobOf(bytes)
   const path = join(dir, name)
-  if (!existsSync(path)) writeFileSync(path, bytes, { mode: 0o600 })
+  if (!existsSync(path)) {
+    const fd = openSync(path, 'w', 0o600)
+    try {
+      writeFileSync(fd, bytes)
+      fsyncSync(fd)
+    } finally {
+      closeSync(fd)
+    }
+    const directory = openSync(dir, 'r')
+    try {
+      fsyncSync(directory)
+    } finally {
+      closeSync(directory)
+    }
+  }
   return name
 }
 
@@ -355,9 +428,13 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
   // A live site that answered busy or slow even once (a 429, a 5xx, a timeout) is written one item
   // at a time from then on: a small shared host is the customer's, and its visitors come first.
   let strained = false
-  const ask = (action, params) =>
+  const requests = writeRequests(pushDir, live)
+  const ask = (action, params, recovery = []) =>
     retried(
-      () => call(live, token, action, params),
+      () =>
+        mutation(action, params)
+          ? requests.send(action, params, () => call(live, token, action, params), recovery, recover)
+          : call(live, token, action, params),
       TRIES,
       () => {
         strained = true
@@ -379,11 +456,64 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
   const journal = (entry) => {
     done.set(entry.id, entry)
     if (entry.created) Object.assign(created, entry.created)
-    appendFileSync(journalPath, `${JSON.stringify(entry)}\n`, { mode: 0o600 })
+    const fd = openSync(journalPath, 'a', 0o600)
+    try {
+      writeFileSync(fd, `${JSON.stringify(entry)}\n`)
+      fsyncSync(fd)
+    } finally {
+      closeSync(fd)
+    }
   }
   const keep = (item, snapshot) => {
     before.items[item.id] = snapshot
     writePrivate(beforePath, before)
+  }
+
+  // Receipts contain the preimage before sending and the ACK before any read-back. Replaying a
+  // receipt never sends HTTP: a killed worker can finish the journal without another mutation.
+  function recover(receipt) {
+    for (const { item, snapshot, mode } of receipt.recovery ?? []) {
+      if (done.get(item.id)?.state === 'written') continue
+      const answer = receipt.reply
+      if (receipt.state !== 'acknowledged') continue
+      let snap = { ...snapshot }
+      let extra = {}
+      let made
+      if (mode === 'content') {
+        const liveId = item.op === 'create' ? answer.id : snap.liveId
+        if (item.op === 'create' && !(Number(liveId) > 0)) {
+          journal({ id: item.id, state: 'failed', extra: { error: 'WRITE_OUTCOME_UNKNOWN' } })
+          continue
+        }
+        snap.liveId = liveId
+        extra = { liveId }
+        if (item.creates && item.op === 'create') made = { [item.creates]: liveId }
+      } else if (mode === 'upload') {
+        const attachment = Number(answer.attachment ?? 0)
+        if (item.creates && item.kind === 'media' && platform === 'wordpress' && !(attachment > 0)) {
+          journal({ id: item.id, state: 'failed', extra: { error: 'WRITE_OUTCOME_UNKNOWN' } })
+          continue
+        }
+        if (attachment > 0) extra = { liveId: attachment }
+        if (item.creates && attachment > 0) made = { [item.creates]: attachment }
+      } else if (mode === 'template') {
+        const f = (answer.files ?? []).find((f) => f.path === item.path) ?? {}
+        snap = { ...snap, undoId: answer.undo_id ?? null, before: f.before ?? null, after: f.after ?? null }
+        if (answer.undo_id) {
+          before.templateUndo = [...new Set([...(before.templateUndo ?? []), answer.undo_id])]
+          extra = { undoId: answer.undo_id }
+        }
+      }
+      keep(item, snap)
+      journal({ id: item.id, state: 'written', ...(made ? { created: made } : {}), extra })
+    }
+  }
+  for (const receipt of Object.values(requests.entries)) {
+    recover(receipt)
+    if (receipt.state === 'sending')
+      for (const { item } of receipt.recovery ?? [])
+        if (done.get(item.id)?.state !== 'written')
+          journal({ id: item.id, state: 'failed', extra: { error: 'WRITE_OUTCOME_UNKNOWN' } })
   }
 
   const written = []
@@ -402,8 +532,9 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
   const queue = []
   for (const item of changeset.items) {
     const had = done.get(item.id)
-    if (had?.state === 'written') {
+    if (had?.state === 'written' || had?.extra?.error === 'WRITE_OUTCOME_UNKNOWN') {
       ended(had, item)
+      if (had.state !== 'written') blocked.add(item.id)
       continue
     }
     // Changed on both sides since the last sync (the sync kept Tracy's on the copy): the push would
@@ -496,34 +627,48 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
             live: Object.fromEntries(off.map((f) => [f, shown(current?.[f])]))
           }
         })
-      let answer
-      if (item.op === 'delete') answer = await ask('content.delete', { apply_id: applyId, ...address })
-      else {
-        const params = { apply_id: applyId, ...address, fields }
-        if (item.op === 'create') params.id = 0
-        if (item.bodyRevision && revision) params.expected_body_revision = revision
-        answer = await ask('content.update', params)
-      }
-      const liveId = item.op === 'create' ? answer.id : address.id
-      const after = await readBack(item, liveId)
-      keep(item, {
+      const nativeApplyId =
+        platform === 'wordpress' && item.kind === 'postmeta' && item.op === 'create'
+          ? `${applyId}-meta-${createHash('sha256').update(item.id).digest('hex').slice(0, 16)}`
+          : null
+      const snapshot = {
         kind: item.kind,
         op: item.op,
-        liveId,
+        liveId: address.id,
         key: item.key ?? null,
         before: current,
+        replaces: item.replaces ?? [],
         written: fields,
-        after,
         restore: item.restore ?? {},
         trash: item.trash ?? null
-      })
-      return journal({
-        id: item.id,
-        state: 'written',
-        ...(item.creates && item.op === 'create' ? { created: { [item.creates]: liveId } } : {}),
-        extra: { liveId }
-      })
+      }
+      if (nativeApplyId) {
+        snapshot.nativeApplyId = nativeApplyId
+        snapshot.dependsOn = item.dependsOn ?? []
+      }
+      const recovery = [{ item, snapshot, mode: 'content' }]
+      let answer
+      if (item.op === 'delete')
+        answer = await ask('content.delete', { apply_id: applyId, ...address }, recovery)
+      else {
+        const params = { apply_id: nativeApplyId ?? applyId, ...address, fields }
+        if (item.op === 'create' && item.kind !== 'postmeta') params.id = 0
+        if (item.bodyRevision && revision) params.expected_body_revision = revision
+        answer = await ask('content.update', params, recovery)
+      }
+      if (done.get(item.id)?.state !== 'written') return
+      const liveId = item.op === 'create' ? answer.id : address.id
+      let after
+      try {
+        after = await readBack(item, liveId)
+      } catch {
+        return
+      }
+      keep(item, { ...snapshot, liveId, after })
+      return
     } catch (error) {
+      if (error.code === 'WRITE_OUTCOME_UNKNOWN')
+        return journal({ id: item.id, state: 'failed', extra: { error: error.code } })
       if (error instanceof Refused) {
         const reply = error.reply
         if (reply.error === 'locked') {
@@ -611,12 +756,25 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
     // the path already has, which is the number the rest of the push needs.
     if (liveBlob === item.blob && platform !== 'wordpress')
       return journal({ id: item.id, state: 'written', extra: { already: true } })
-    const answer = await ask('media.upload', {
-      apply_id: applyId,
+    const snapshot = {
+      kind: item.kind === 'file' ? 'file' : 'media',
+      op: 'upload',
       path: item.path,
-      content_b64: bytes.toString('base64'),
-      ...(platform === 'wordpress' ? { sha256: createHash('sha256').update(bytes).digest('hex') } : {})
-    })
+      before: liveBlob
+        ? { blob: liveBlob, ...(item.kind === 'file' ? { stored: keepBytes(pushDir, liveBytes) } : {}) }
+        : null,
+      written: { blob: item.blob }
+    }
+    const answer = await ask(
+      'media.upload',
+      {
+        apply_id: applyId,
+        path: item.path,
+        content_b64: bytes.toString('base64'),
+        ...(platform === 'wordpress' ? { sha256: createHash('sha256').update(bytes).digest('hex') } : {})
+      },
+      [{ item, snapshot, mode: 'upload' }]
+    )
     keep(item, {
       kind: item.kind === 'file' ? 'file' : 'media',
       op: 'upload',
@@ -626,6 +784,7 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         : null,
       written: { blob: item.blob }
     })
+    if (done.get(item.id)?.state !== 'written') return
     const attachment = Number(answer.attachment ?? 0)
     return journal({
       id: item.id,
@@ -652,7 +811,12 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         extra: { reason: 'changed-on-live', fields: ['file'] }
       })
     const stored = keepBytes(pushDir, bytes)
-    await ask('media.delete', { apply_id: applyId, path: item.path })
+    await ask('media.delete', { apply_id: applyId, path: item.path }, [
+      {
+        item,
+        snapshot: { kind: 'file', op: 'delete', path: item.path, before: { blob: item.baseBlob, stored } }
+      }
+    ])
     keep(item, { kind: 'file', op: 'delete', path: item.path, before: { blob: item.baseBlob, stored } })
     return journal({ id: item.id, state: 'written' })
   }
@@ -663,7 +827,17 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
     const off = Object.keys(item.expect ?? {}).filter((k) => !same(now[k], item.expect[k]))
     if (off.length)
       return journal({ id: item.id, state: 'conflict', extra: { reason: 'changed-on-live', fields: off } })
-    const answer = await ask('site.identity', { operation: 'set', apply_id: applyId, fields })
+    const answer = await ask('site.identity', { operation: 'set', apply_id: applyId, fields }, [
+      {
+        item,
+        snapshot: {
+          kind: 'siteIdentity',
+          op: 'update',
+          before: Object.fromEntries(Object.keys(fields).map((k) => [k, now[k] ?? null])),
+          written: fields
+        }
+      }
+    ])
     const keys = Object.keys(fields)
     keep(item, {
       kind: 'siteIdentity',
@@ -692,12 +866,28 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
     const off = keys.filter((k) => !same(now[k], item.expect?.[k] ?? ''))
     if (off.length)
       return journal({ id: item.id, state: 'conflict', extra: { reason: 'changed-on-live', fields: off } })
-    const answer = await ask('template.siteSettings', {
-      operation: 'set',
-      apply_id: applyId,
-      template,
-      ...(profiles ? { profiles: { [profile]: values } } : { fields: values })
-    })
+    const answer = await ask(
+      'template.siteSettings',
+      {
+        operation: 'set',
+        apply_id: applyId,
+        template,
+        ...(profiles ? { profiles: { [profile]: values } } : { fields: values })
+      },
+      [
+        {
+          item,
+          snapshot: {
+            kind: 'templateSettings',
+            op: 'update',
+            key: template,
+            profile,
+            before: now,
+            written: values
+          }
+        }
+      ]
+    )
     keep(item, {
       kind: 'templateSettings',
       op: 'update',
@@ -764,7 +954,24 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
       .digest('hex')
       .slice(0, 16)}`
     try {
-      await ask('content.batch', { apply_id: applyId, request_id: requestId, operations })
+      await ask(
+        'content.batch',
+        { apply_id: applyId, request_id: requestId, operations },
+        ready.map(({ item, address, fields, current }) => ({
+          item,
+          mode: 'content',
+          snapshot: {
+            kind: item.kind,
+            op: item.op,
+            liveId: address.id,
+            key: item.key ?? null,
+            before: current,
+            written: fields,
+            restore: item.restore ?? {},
+            trash: item.trash ?? null
+          }
+        }))
+      )
     } catch (error) {
       if (!(error instanceof Refused)) throw error
       // Refused whole (a row open in the editor, a value moved since the read, a write the engine took
@@ -783,13 +990,19 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
       return
     }
     for (const { item, address, fields, current } of ready) {
-      const after = await readBack(item, address.id)
+      let after
+      try {
+        after = await readBack(item, address.id)
+      } catch {
+        continue
+      }
       keep(item, {
         kind: item.kind,
         op: item.op,
         liveId: address.id,
         key: item.key ?? null,
         before: current,
+        replaces: item.replaces ?? [],
         written: fields,
         after,
         restore: item.restore ?? {},
@@ -869,7 +1082,21 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
     while (pending.length) {
       let answer
       try {
-        answer = await ask('template.files.write', { apply_id: applyId, files: pending.map((f) => f.file) })
+        answer = await ask(
+          'template.files.write',
+          { apply_id: applyId, files: pending.map((f) => f.file) },
+          pending.map(({ item }) => ({
+            item,
+            mode: 'template',
+            snapshot: {
+              kind: 'file',
+              door: 'template',
+              op: item.op,
+              path: item.path,
+              written: { blob: item.op === 'delete' ? null : item.blob }
+            }
+          }))
+        )
       } catch (error) {
         if (!(error instanceof Refused)) throw error
         const reply = error.reply
@@ -935,7 +1162,7 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
       }
       const undoId = typeof answer.undo_id === 'string' ? answer.undo_id : null
       if (undoId) {
-        before.templateUndo = [...(before.templateUndo ?? []), undoId]
+        before.templateUndo = [...new Set([...(before.templateUndo ?? []), undoId])]
         writePrivate(beforePath, before)
       }
       const said = new Map((answer.files ?? []).map((f) => [f.path, f]))
@@ -984,14 +1211,15 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
     // Ended AND counted: a dependant waits for this, not for the journal line alone, so it never
     // starts between its dependency's failure and that failure blocking it.
     const finished = new Set()
+    let stopped = null
     const finish = (item) => {
       const entry = done.get(item.id)
       if (entry && entry.state !== 'written') blocked.add(item.id)
       finished.add(item.id)
     }
-    while (pending.length || running.size) {
+    while ((pending.length && !stopped) || running.size) {
       const held = new Set()
-      for (let i = 0; i < pending.length && running.size < (strained ? 1 : CONCURRENCY); ) {
+      for (let i = 0; !stopped && i < pending.length && running.size < (strained ? 1 : CONCURRENCY); ) {
         const item = pending[i]
         const lane = laneOf(item, platform)
         const ready = item.dependsOn.every((d) => !ids.has(d) || finished.has(d))
@@ -1004,11 +1232,17 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         lanes.add(lane)
         running.set(
           item.id,
-          single(item).finally(() => {
-            lanes.delete(lane)
-            running.delete(item.id)
-            finish(item)
-          })
+          single(item)
+            .catch((error) => {
+              stopped ??= error
+              if (!done.has(item.id))
+                journal({ id: item.id, state: 'failed', extra: { error: error.code ?? 'WRITE_FAILED' } })
+            })
+            .finally(() => {
+              lanes.delete(lane)
+              running.delete(item.id)
+              finish(item)
+            })
         )
       }
       if (running.size) await Promise.race(running.values())
@@ -1019,43 +1253,60 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         finish(item)
       }
     }
+    if (stopped) throw stopped
   }
 
+  let stopped = null
   let at = 0
-  while (at < queue.length) {
-    const item = queue[at]
-    if (isTemplateFile(item)) {
-      const group = []
-      while (at < queue.length && isTemplateFile(queue[at])) group.push(queue[at++])
-      await templateFiles(group)
-    } else if (
-      platform === 'joomla' &&
-      item.op === 'update' &&
-      !OWN_DOOR.has(item.kind) &&
-      !item.dependsOn.some((d) => !done.has(d))
-    ) {
-      const group = []
-      let bytes = 0
-      while (at < queue.length && group.length < BATCH_ITEMS) {
-        const next = queue[at]
-        if (next.op !== 'update' || OWN_DOOR.has(next.kind)) break
-        const size = JSON.stringify(next.write).length
-        if (group.length && bytes + size > BATCH_BYTES) break
-        group.push(next)
-        bytes += size
-        at++
+  try {
+    while (at < queue.length) {
+      const item = queue[at]
+      if (isTemplateFile(item)) {
+        const group = []
+        while (at < queue.length && isTemplateFile(queue[at])) group.push(queue[at++])
+        await templateFiles(group)
+      } else if (
+        platform === 'joomla' &&
+        item.op === 'update' &&
+        !OWN_DOOR.has(item.kind) &&
+        !item.dependsOn.some((d) => !done.has(d))
+      ) {
+        const group = []
+        let bytes = 0
+        while (at < queue.length && group.length < BATCH_ITEMS) {
+          const next = queue[at]
+          if (next.op !== 'update' || OWN_DOOR.has(next.kind)) break
+          const size = JSON.stringify(next.write).length
+          if (group.length && bytes + size > BATCH_BYTES) break
+          group.push(next)
+          bytes += size
+          at++
+        }
+        await lot(group)
+      } else {
+        // Every item up to the next template file or Joomla lot is written alone: side by side, by lane.
+        const run = []
+        while (at < queue.length && !isTemplateFile(queue[at]) && !lotStarts(queue[at])) run.push(queue[at++])
+        if (!run.length) run.push(queue[at++])
+        await sideBySide(run)
       }
-      await lot(group)
-    } else {
-      // Every item up to the next template file or Joomla lot is written alone: side by side, by lane.
-      const run = []
-      while (at < queue.length && !isTemplateFile(queue[at]) && !lotStarts(queue[at])) run.push(queue[at++])
-      if (!run.length) run.push(queue[at++])
-      await sideBySide(run)
+      for (const g of queue.slice(0, at)) {
+        const entry = done.get(g.id)
+        if (entry && entry.state !== 'written') blocked.add(g.id)
+      }
     }
-    for (const g of queue.slice(0, at)) {
-      const entry = done.get(g.id)
-      if (entry && entry.state !== 'written') blocked.add(g.id)
+  } catch (error) {
+    stopped = error
+    for (const item of queue) {
+      if (done.has(item.id)) continue
+      const receipt = Object.values(requests.entries).find(
+        (r) => r.state === 'sending' && r.recovery?.some((r) => r.item.id === item.id)
+      )
+      journal({
+        id: item.id,
+        state: receipt ? 'failed' : 'skipped',
+        extra: receipt ? { error: 'WRITE_OUTCOME_UNKNOWN' } : { reason: 'apply-stopped' }
+      })
     }
   }
   for (const item of queue) {
@@ -1073,7 +1324,8 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         ? 'partial'
         : 'applied'
   const result = {
-    ok: true,
+    ok: !stopped,
+    ...(stopped ? { code: stopped.code ?? 'WRITE_FAILED' } : {}),
     state,
     applyId,
     written,
@@ -1112,7 +1364,16 @@ async function undo(pushDir) {
   const applyId = `tracy-push-undo-${pushId}`
   const live = await door(endpoint, token)
   const platform = readJson(join(pushDir, 'push.json'), {}).platform ?? 'joomla'
-  const ask = (action, params) => retried(() => call(live, token, action, params))
+  const requests = writeRequests(pushDir, live, 'undo-requests.json')
+  let undoItemId = 'template-files'
+  const ask = (action, params) =>
+    retried(() =>
+      mutation(action, params)
+        ? requests.send(action, params, () => call(live, token, action, params), [
+            { item: { id: undoItemId } }
+          ])
+        : call(live, token, action, params)
+    )
   const restored = []
   const kept = []
   const failed = []
@@ -1225,12 +1486,51 @@ async function undo(pushDir) {
     return { paths: out }
   }
 
+  // Durable metadata receipts can be ahead of written.json after an interrupted Apply.
+  const receiptMetaChildren = Object.values(readJson(join(pushDir, 'requests.json'), {}))
+    .filter((receipt) => ['sending', 'acknowledged'].includes(receipt.state))
+    .flatMap((receipt) =>
+      (receipt.recovery ?? []).flatMap(({ item, snapshot }) =>
+        snapshot?.kind === 'postmeta' && snapshot.op === 'create'
+          ? [{ id: item.id, parents: snapshot.dependsOn ?? [] }]
+          : []
+      )
+    )
   const order = [...writtenAnswer.written].reverse()
   progress(t0, `taking back ${order.length} item(s) on the live site`)
   for (const out of order) {
+    undoItemId = out.id
     const snap = before.items[out.id]
+    if (
+      order.some(
+        (other) =>
+          before.items[other.id]?.replaces?.includes(out.id) && !restored.some((r) => r.id === other.id)
+      )
+    ) {
+      kept.push({ ...out, reason: 'depends-on-failed' })
+      continue
+    }
     if (!snap) {
       kept.push({ ...out, reason: 'nothing-kept' })
+      continue
+    }
+    // Keep a new parent if metadata depending on it could not be safely taken back.
+    if (
+      snap.kind === 'post' &&
+      snap.op === 'create' &&
+      (receiptMetaChildren.some(
+        (child) => child.parents.includes(out.id) && !restored.some((r) => r.id === child.id)
+      ) ||
+        order.some((other) => {
+          const child = before.items[other.id]
+          return (
+            child?.kind === 'postmeta' &&
+            child.dependsOn?.includes(out.id) &&
+            !restored.some((r) => r.id === other.id)
+          )
+        }))
+    ) {
+      kept.push({ ...out, reason: 'depends-on-failed' })
       continue
     }
     if (snap.kind === 'file' && snap.door === 'template') {
@@ -1273,6 +1573,13 @@ async function undo(pushDir) {
     }
     const params = { kind: snap.kind, id: snap.liveId }
     if (snap.key !== null && snap.key !== undefined) params.key = snap.key
+    const nativeMetaCreate =
+      platform === 'wordpress' &&
+      snap.kind === 'postmeta' &&
+      snap.op === 'create' &&
+      typeof snap.nativeApplyId === 'string' &&
+      snap.nativeApplyId ===
+        `tracy-push-${pushId}-meta-${createHash('sha256').update(out.id).digest('hex').slice(0, 16)}`
     let now = null
     let stored = true
     try {
@@ -1281,6 +1588,10 @@ async function undo(pushDir) {
       stored = got.stored !== false
     } catch (error) {
       if (!(error instanceof Refused)) throw error
+      if (nativeMetaCreate && error.reply.error === 'not_found') {
+        restored.push(out)
+        continue
+      }
       if (!(snap.op === 'delete' && snap.kind === 'menuItem')) {
         kept.push({ ...out, reason: 'gone-on-live', fields: [] })
         continue
@@ -1324,13 +1635,21 @@ async function undo(pushDir) {
     const fields =
       snap.op === 'delete'
         ? snap.trash
-          ? [snap.trash[0]]
+          ? [
+              snap.trash[0],
+              ...(platform === 'wordpress' && snap.kind === 'post' && snap.before?.post_name
+                ? ['post_name']
+                : [])
+            ]
           : []
         : Object.keys(snap.written ?? {}).filter((f) => !(snap.op === 'create' && f === 'parent_id'))
     const moved = []
     for (const field of fields) {
       if (field === 'move_after') continue
-      const want = snap.op === 'delete' ? snap.trash?.[1] : (left?.[field] ?? snap.written?.[field])
+      const want =
+        snap.op === 'delete' && field === snap.trash?.[0]
+          ? snap.trash[1]
+          : (left?.[field] ?? snap.written?.[field])
       const have = now?.[field]
       if (field === 'categories' || field === 'tags') {
         const read = field === 'categories' ? 'post_category' : 'tags_input'
@@ -1345,6 +1664,37 @@ async function undo(pushDir) {
     }
     if (moved.length) {
       kept.push({ ...out, reason: 'changed-on-live', fields: moved })
+      continue
+    }
+    if (nativeMetaCreate) {
+      let revertError = null
+      try {
+        await ask('apply.revert', { apply_id: snap.nativeApplyId })
+      } catch (error) {
+        revertError = error
+      }
+      if (revertError instanceof Refused && revertError.reply.error === 'conflict') {
+        kept.push({ ...out, reason: 'changed-on-live', fields: ['value'] })
+        continue
+      }
+      // Empty or expired native receipts can report success without removing the metadata.
+      // Read back even after a lost response; the durable request must never be sent twice.
+      let absent = false
+      try {
+        await ask('content.get', params)
+      } catch (error) {
+        absent = error instanceof Refused && error.reply.error === 'not_found'
+      }
+      if (absent) restored.push(out)
+      else if (revertError instanceof Refused) {
+        failed.push({
+          ...out,
+          error: String(revertError.reply.error ?? 'refused').slice(0, 60),
+          message: String(revertError.reply.message ?? '').slice(0, 300)
+        })
+      } else {
+        failed.push({ ...out, error: 'WRITE_OUTCOME_UNKNOWN' })
+      }
       continue
     }
     try {
@@ -1363,7 +1713,12 @@ async function undo(pushDir) {
         await ask('content.update', {
           apply_id: applyId,
           ...params,
-          fields: { [column]: snap.before?.[column] }
+          fields: {
+            [column]: snap.before?.[column],
+            ...(platform === 'wordpress' && snap.kind === 'post' && snap.before?.post_name
+              ? { post_name: snap.before.post_name }
+              : {})
+          }
         })
       } else if (snap.op === 'move') {
         if (!snap.restore?.parent_id) {
@@ -1458,14 +1813,26 @@ async function main(argv) {
   const [op, ...rest] = argv
   if (op === 'apply') {
     const [previewDir, pushDir] = rest
-    return apply(previewDir, pushDir, {
-      confirmDeletes: rest.includes('--confirm-deletes'),
-      confirmPhp: rest.includes('--confirm-php'),
-      limit: Number(flag(rest, '--limit', DEFAULT_LIMIT)) || DEFAULT_LIMIT,
-      webroot: flag(rest, '--webroot')
-    })
+    const release = await lockWriter(pushDir)
+    try {
+      return await apply(previewDir, pushDir, {
+        confirmDeletes: rest.includes('--confirm-deletes'),
+        confirmPhp: rest.includes('--confirm-php'),
+        limit: Number(flag(rest, '--limit', DEFAULT_LIMIT)) || DEFAULT_LIMIT,
+        webroot: flag(rest, '--webroot')
+      })
+    } finally {
+      await release()
+    }
   }
-  if (op === 'undo') return undo(rest[0])
+  if (op === 'undo') {
+    const release = await lockWriter(rest[0])
+    try {
+      return await undo(rest[0])
+    } finally {
+      await release()
+    }
+  }
   if (op === 'info') {
     const endpoint = process.env.TRACY_SYNC_ENDPOINT ?? ''
     const token = process.env.TRACY_SYNC_TOKEN ?? ''

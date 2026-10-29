@@ -1,0 +1,25 @@
+{
+  "id": "REG-PR-69-sync-field-asset-ids",
+  "kind": "fix",
+  "title": "All Joomla core asset references follow a renumbered live asset",
+  "pr": 69,
+  "area": "sync/live",
+  "cms": ["jo"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": ["Run the real MariaDB asset collision regression."],
+  "expect": [
+    "The copy asset at 155 stays unchanged; fields, groups, contacts, banners and workflow records reference the new live asset number."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=renumbered assets update custom fields",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs"
+    ],
+    "tests": ["renumbered assets update custom fields and every other core asset reference"]
+  }
+}

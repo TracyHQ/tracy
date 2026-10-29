@@ -112,7 +112,8 @@ async function engine(options = {}) {
         res.writeHead(status, {
           'content-type': typeof value === 'string' ? 'text/html' : 'application/json'
         })
-        res.end(typeof value === 'string' ? value : JSON.stringify(value))
+        // `phpNotice`: a host that prints PHP's notices ahead of every answer (PHP 8.5, display_errors on)
+        res.end(typeof value === 'string' ? value : (options.phpNotice ?? '') + JSON.stringify(value))
       }
       seen.hosts.push(req.headers.host)
       if (options.gatedFront && !req.url.includes('/administrator/'))
@@ -422,6 +423,21 @@ test('a first read: the database twice in agreement, the whole tree checked file
     assert.equal(manifest['index.php'], sha1(readFileSync(join(site.webroot, 'index.php'))))
     assert.equal(existsSync(join(dir, 'live', 'webroot.tar')), false, 'the tar is unpacked and gone')
     assert.ok(!(out + err).includes(TOKEN))
+  } finally {
+    site.server.close()
+  }
+})
+
+test('a host that prints PHP notices ahead of each answer is read all the same (PHP 8.5 curl_close)', async () => {
+  const site = await engine({
+    phpNotice:
+      '<br />\n<b>Deprecated</b>:  Function curl_close() is deprecated since 8.5, as it has no effect since PHP 8.0 in <b>/home/u1/public_html/plugins/Uploader.php</b> on line <b>53</b><br />\n'
+  })
+  try {
+    const dir = join(root, 'notice')
+    const { answer } = await pull(dir, site.url)
+    assert.equal(answer.ok, true, JSON.stringify(answer))
+    assert.equal((dump(dir).match(/INSERT INTO jos_content/g) ?? []).length, 5)
   } finally {
     site.server.close()
   }

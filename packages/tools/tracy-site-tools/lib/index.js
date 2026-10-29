@@ -2206,6 +2206,28 @@ function createBuildTurns(most = 500) {
   };
 }
 
+// src/host/refused-before-write.mjs
+var BEFORE_WRITE = /* @__PURE__ */ new Set([
+  "BAD_PARAMS",
+  "NOT_FOUND",
+  "NOT_EDITABLE",
+  "AMBIGUOUS",
+  "COUNT_MISMATCH",
+  "TOO_MANY",
+  "VALUE_NOT_ALLOWED",
+  "CONFIRM_FIRST",
+  "SITE_IDENTITY",
+  "SITE_BUSY"
+]);
+function refusedBeforeWrite(answer) {
+  if (answer === null || typeof answer !== "object" || Array.isArray(answer)) return false;
+  const a = (
+    /** @type {Record<string, unknown>} */
+    answer
+  );
+  return a.ok === false && typeof a.code === "string" && BEFORE_WRITE.has(a.code) && !(Number(a.written) > 0) && a.reverted === void 0 && a.partial === void 0 && a.undo === void 0 && a.apply_id === void 0 && a.applyId === void 0;
+}
+
 // src/host/turn-stop.mjs
 var TURN_STOPPED = "TURN_STOPPED";
 function stoppedAnswer(extra = {}) {
@@ -2241,6 +2263,7 @@ function stoppableSleep(sleep, signal) {
 }
 
 // src/host/demo-lifecycle.mjs
+var NOT_SENT = Object.freeze({ ok: false, code: "SWEEP_NOT_SENT" });
 async function runDemoLifecycle(params, send, { signal = null, sleep = pause, now = Date.now, sweep = null } = {}) {
   if (signal?.aborted) return stoppedAnswer();
   if (params.operation === "check") return sweptCheck(send, { signal, sleep, now, sweep });
@@ -2265,8 +2288,8 @@ var CHECK_WAIT_MS = 6e5;
 var CHECK_POLL_MS = 5e3;
 var CHECK_POLL_MISSES = 6;
 async function runCheck(send, { signal, sleep, now }) {
-  let answer = await send({ operation: "check.start" });
-  if (answer?.code === "AGENT_DEMO_BAD_OPERATION") return send({ operation: "check" });
+  let answer = await send({ operation: "check.start", sweepBatches: true });
+  if (answer?.code === "AGENT_DEMO_BAD_OPERATION") return send({ operation: "check", sweepBatches: true });
   const until = now() + CHECK_WAIT_MS;
   let misses = 0;
   while (answer?.running === true) {
@@ -2299,22 +2322,30 @@ async function sweptCheck(send, { signal, sleep, now, sweep }) {
     if (calls.length === 0 || sweep === null || round >= SWEEPS_MAX || signal?.aborted)
       return heard(answer, sweeps);
     const refused3 = [];
+    let sent = 0;
     const sendOne = sweepRound(sweep);
     for (const call of calls) {
       if (signal?.aborted) return stoppedAnswer({ lastReceipt: heard(answer, []) });
-      const done = await sendOne(call);
-      if (done?.ok === true && typeof done.cleared === "string")
-        unseen.push({ path: call.params?.path ?? null, find: call.params?.find ?? null, by: done.cleared });
-      if (done?.ok !== true)
-        refused3.push({
-          action: call.action,
-          find: call.params?.find ?? null,
-          code: done?.code ?? "SWEEP_CALL_FAILED",
-          // 🔒 A FAILURE WITH NO CODE KEEPS ITS WORDS (lrsweep rig, JA Diner wp7, 25/10/2026): 80 featured-picture
-          // writes of one build failed with no code of the site's, and with the error dropped nothing said why.
-          ...(done?.code ?? "SWEEP_CALL_FAILED") === "SWEEP_CALL_FAILED" && done?.error ? { error: String(done.error).slice(0, 160) } : {},
-          ...done?.unresolved === true ? { waits: true } : {}
-        });
+      const answered = await sendOne(call);
+      const rows = Array.isArray(answered?.pairs) ? answered.pairs : [{ find: call.params?.find ?? null, done: answered }];
+      for (const { find, done } of rows) {
+        sent++;
+        if (done?.ok === true && typeof done.cleared === "string")
+          unseen.push({ path: call.params?.path ?? null, find, by: done.cleared });
+        if (done?.ok !== true)
+          refused3.push({
+            action: call.action,
+            find,
+            code: done?.code ?? "SWEEP_CALL_FAILED",
+            // 🔒 A FAILURE WITH NO CODE KEEPS ITS WORDS (lrsweep rig, JA Diner wp7, 25/10/2026): 80 featured-picture
+            // writes of one build failed with no code of the site's, and with the error dropped nothing said why.
+            ...(done?.code ?? "SWEEP_CALL_FAILED") === "SWEEP_CALL_FAILED" && done?.error ? { error: String(done.error).slice(0, 160) } : {},
+            ...done?.unresolved === true ? { waits: true } : {},
+            // A replace whose answer proves nothing (lost, thrown, unknown) may have written its words: never a pair to
+            // send again unread; the check after this round reads the page.
+            ...call.action === "content.replace" && done?.code !== NOT_SENT.code && !refusedBeforeWrite(done) ? { unknown: true } : {}
+          });
+      }
     }
     sweeps.push({
       calls: calls.length,
@@ -2322,8 +2353,7 @@ async function sweptCheck(send, { signal, sleep, now, sweep }) {
       cleared: unseen.length,
       unresolved: Array.isArray(answer.sweep.unresolved) ? answer.sweep.unresolved.length : 0
     });
-    if (refused3.length === calls.length && refused3.every((r) => r.waits === true))
-      return heard(answer, sweeps);
+    if (refused3.length === sent && refused3.every((r) => r.waits === true)) return heard(answer, sweeps);
   }
 }
 function confirmCleared(entry, rows, answer) {
@@ -2359,14 +2389,18 @@ function heard(answer, sweeps) {
 var wordsKey = (text6) => String(text6 ?? "").toLowerCase().replace(/\s+/g, " ").trim();
 function sweepRound(sweep) {
   const written = [];
-  return async (call) => {
-    const done = await sweep(call).catch((failure) => ({
-      ok: false,
-      code: "SWEEP_CALL_FAILED",
-      error: String(failure?.message ?? failure)
-    }));
+  const sent = (call) => sweep(call).catch((failure) => ({
+    ok: false,
+    code: "SWEEP_CALL_FAILED",
+    error: String(failure?.message ?? failure)
+  }));
+  const one = async (call) => {
+    const done = await sent(call);
     if (call.action !== "content.replace") return done;
-    const find = wordsKey(call.params?.find);
+    return heldBy(call.params?.find, done);
+  };
+  const heldBy = (words, done) => {
+    const find = wordsKey(words);
     if (done?.ok === true) written.push(find);
     else if (done?.code === "NOT_FOUND" && find !== "") {
       const by = written.find((w) => w.includes(find));
@@ -2374,6 +2408,42 @@ function sweepRound(sweep) {
     }
     return done;
   };
+  return async (call) => {
+    const changes = call.action === "content.replace" ? call.params?.changes : void 0;
+    if (!Array.isArray(changes)) return one(call);
+    return { ok: true, pairs: await batch(call, changes) };
+  };
+  async function batch(call, changes) {
+    const { changes: _changes, ...base3 } = call.params;
+    const alone = (pair) => ({ action: call.action, params: { ...base3, ...pair } });
+    const rows = [];
+    const after = [];
+    let queue = [...changes];
+    while (queue.length > 0) {
+      const done = await sent(
+        queue.length === 1 ? alone(queue[0]) : { action: call.action, params: { ...base3, changes: queue } }
+      );
+      if (done?.ok === true) {
+        for (const pair of queue) rows.push({ find: pair.find, done: heldBy(pair.find, done) });
+        break;
+      }
+      if (!refusedBeforeWrite(done)) {
+        for (const pair of queue) rows.push({ find: pair.find, done });
+        break;
+      }
+      const at = queue.length === 1 ? 0 : Number.isInteger(done?.change) && done.change >= 0 && done.change < queue.length ? done.change : null;
+      if (at === null) {
+        for (const pair of queue) rows.push({ find: pair.find, done: await one(alone(pair)) });
+        break;
+      }
+      if (queue.length > 1 && done?.code === "BAD_PARAMS") after.push(queue[at]);
+      else rows.push({ find: queue[at].find, done: heldBy(queue[at].find, done) });
+      queue = queue.filter((_pair, i) => i !== at);
+    }
+    const known = rows.every((r) => r.done?.ok === true || refusedBeforeWrite(r.done));
+    for (const pair of after) rows.push({ find: pair.find, done: known ? await one(alone(pair)) : NOT_SENT });
+    return rows;
+  }
 }
 function onTheWay(answer) {
   return ["COWORK_WEB_UNREACHABLE", "COWORK_WEB_BAD_RESPONSE"].includes(answer?.code) || typeof answer?.httpStatus === "number" && answer.httpStatus >= 500;
@@ -12140,7 +12210,7 @@ function probeArgv({ container, url, timeoutMs = 2e3, via = "" }) {
     ...via ? [via] : []
   ];
 }
-var BROWSER_SCRIPT = `const {spawn}=require('child_process');const fs=require('fs');const os=require('os');const path=require('path');const mode=process.argv[1],url=process.argv[2],origin=process.argv[3],file=process.argv[4]||"";const req=mode==='style'?(()=>{try{const r=JSON.parse(file);return r&&typeof r==='object'&&Array.isArray(r.props)?r:null}catch{return null}})():null;const vreq=mode==='view'?(()=>{try{const r=JSON.parse(file);return r&&typeof r==='object'&&Number.isInteger(r.w)&&Number.isInteger(r.h)&&Number.isInteger(r.y)&&r.w>0&&r.h>0&&r.y>=0?r:null}catch{return null}})():null;const FIND=${JSON.stringify(String(findTarget))},DESCRIBE=${JSON.stringify(String(describeTarget))},VPS=${JSON.stringify(STYLE_VIEWPORTS)};const SCROLL=${JSON.stringify(String(scrollForView))},VIEWW=${JSON.stringify(VIEW_WAITS)};const RESOLVE=(${String(resolveStyles)});const PSEL=(${String(paintSelectors)}),PAINTS=${JSON.stringify(String(countPaints))};const sheets={};let onLoad=null;const loaded=new Promise((r)=>{onLoad=r});const PROBE=` + JSON.stringify(STYLE_PROBE) + ";const SETTLE_MS=Number(process.argv[5])||" + BROWSER_SETTLE_MS + ",DEADLINE_MS=Number(process.argv[6])||" + BROWSER_DEADLINE_MS + ",FLUSH_MS=Number(process.argv[7])||" + BROWSER_FLUSH_MS + ";const via=(process.env&&process.env.TRACY_PUBLIC_VIA)||'';const viaM=/^127\\.0\\.0\\.1:([0-9]{1,5})$/.exec(via);const CHROME=(process.env&&process.env.TRACY_CHROME)||'chromium';const serveIn=(process.env&&process.env.TRACY_SERVE_CONTAINER)||'';let profile='';try{profile=fs.mkdtempSync(path.join(os.tmpdir(),'tracy-look-'))}catch{}let child=null,hard=null,finished=false,sid=null,topFrame=null,offsite=null,navStarted=false,errorText=null;const clean=()=>{try{if(profile)fs.rmSync(profile,{recursive:true,force:true})}catch{}};if(process.on)process.on('exit',clean);const stop=()=>{try{process.kill(-child.pid,'SIGKILL')}catch{}try{child.kill('SIGKILL')}catch{}};const done=(line)=>{if(finished)return;finished=true;if(hard)clearTimeout(hard);if(child)stop();clean();const bail=setTimeout(()=>process.exit(1),FLUSH_MS);try{process.stdout.write(line,()=>{clearTimeout(bail);process.exit(0)})}catch{clearTimeout(bail);process.exit(1)}};if(process.on)process.on('SIGTERM',()=>done('TRACY_BROWSER ERR stopped'));const flags=['--headless=new','--disable-features=MacAppCodeSignClone','--disable-gpu','--no-crash-upload','--disable-breakpad','--no-first-run','--no-default-browser-check','--remote-debugging-pipe'];if(mode==='shot'||mode==='styles')flags.push('--hide-scrollbars','--window-size=1280,800');if(mode==='style'||mode==='view')flags.push('--hide-scrollbars');if(!serveIn&&process.env&&process.env.TRACY_RESOLVER_RULE)flags.push(process.env.TRACY_RESOLVER_RULE);if(serveIn)flags.push('--host-resolver-rules=MAP * ~NOTFOUND','--proxy-server=http://127.0.0.1:9','--proxy-bypass-list=<-loopback>');if(!profile){done('TRACY_BROWSER ERR could not create a private browser profile')}else if(via&&(!viaM||Number(viaM[1])<1||Number(viaM[1])>65535)){done('TRACY_BROWSER ERR the public route is not a loopback port')}else if(serveIn&&(!/^[a-z0-9][a-z0-9_.-]{0,127}$/.test(serveIn)||!viaM||mode!=='styles')){done('TRACY_BROWSER ERR the host route needs a container name, its loopback port and the styles mode')}else if(mode==='style'&&!req){done('TRACY_BROWSER ERR the style request is not a JSON object with props')}else if(mode==='view'&&!vreq){done('TRACY_BROWSER ERR the view request is not a JSON object with w, h and y')}else{flags.push('--user-data-dir='+profile);child=spawn(CHROME,[...flags,'about:blank'],{stdio:['ignore','ignore','ignore','pipe','pipe'],detached:true});child.on('error',(e)=>done('TRACY_BROWSER NOCHROME '+((e&&e.message)||String(e))));const pending=new Map();child.on('exit',(code,sig)=>{if(finished)return;const why='chromium exited'+(code!=null?' ('+code+')':sig?' ('+sig+')':'');for(const f of pending.values())f({error:{message:why}});pending.clear();done('TRACY_BROWSER NOCHROME '+why)});hard=setTimeout(()=>done('TRACY_BROWSER ERR timed out'),DEADLINE_MS);const wr=child.stdio[3],rd=child.stdio[4];let buf=Buffer.alloc(0),id=0;wr.on('error',()=>{});rd.on('error',()=>{});const send=(method,params,session)=>new Promise((res,rej)=>{const n=++id;pending.set(n,(m)=>{if(m&&m.error)rej(new Error(method+': '+((m.error&&m.error.message)||JSON.stringify(m.error))));else res(m)});const o={id:n,method,params:params||{}};if(session)o.sessionId=session;try{wr.write(JSON.stringify(o)+'\\0')}catch(e){pending.delete(n);rej(e instanceof Error?e:new Error(String(e)))}});const parseHttp=(b)=>{let off=0;for(let g=0;g<5;g++){const e=b.indexOf('\\r\\n\\r\\n',off);if(e===-1)return null;const head=b.slice(off,e).toString('latin1').split('\\r\\n');const sm=/^HTTP\\/[0-9.]+ ([0-9]{3})/.exec(head[0]||'');if(!sm)return null;const code=Number(sm[1]);off=e+4;if(code<200)continue;const hs=[];for(const line of head.slice(1)){const i=line.indexOf(':');if(i<1)continue;const name=line.slice(0,i).trim(),l=name.toLowerCase();if(l==='content-encoding'||l==='transfer-encoding'||l==='content-length'||l==='connection'||l==='keep-alive')continue;hs.push({name,value:line.slice(i+1).trim()})}return{responseCode:code,responseHeaders:hs,body:b.slice(off).toString('base64')}}return null};let running=0;const waiting=[];const next=()=>{while(running<4&&waiting.length>0){running++;waiting.shift()(()=>{running--;next()})}};const serveExec=(p)=>{const rid=p.requestId;let settled=false;const fin=(o)=>{if(settled||finished)return;settled=true;if(o)send('Fetch.fulfillRequest',Object.assign({requestId:rid},o),sid).catch(()=>{});else send('Fetch.failRequest',{requestId:rid,errorReason:'ConnectionFailed'},sid).catch(()=>{})};let t;try{t=new URL(p.request.url)}catch{return fin(null)}const args=['exec','-u','www-data',serveIn,'curl','-sS','-i','--http1.1','--max-time','" + Math.ceil(BROWSER_SERVE_MS / 1e3) + "','--max-filesize','" + BROWSER_SERVE_MAX + "','-H','Host: '+t.host,'-H','X-Forwarded-Proto: '+t.protocol.slice(0,-1),'-H','Accept-Encoding: identity'];const rh=(p.request&&p.request.headers)||{};for(const k of Object.keys(rh)){const l=k.toLowerCase();if(l==='host'||l==='connection'||l==='accept-encoding'||l==='content-length')continue;const v=String(rh[k]);if(/[\\r\\n]/.test(k+v))continue;args.push('-H',k+': '+v)}args.push('http://127.0.0.1:'+viaM[1]+t.pathname+t.search);waiting.push((release)=>{if(finished||settled)return release();require('child_process').execFile('docker',args,{encoding:'buffer',maxBuffer:" + BROWSER_SERVE_MAX + "+65536,timeout:" + BROWSER_SERVE_MS + "+2000},(err,out)=>{release();fin(err||!out?null:parseHttp(out))})});next()};const serve=(p)=>{const rid=p.requestId;let settled=false;const fin=(o)=>{if(settled||finished)return;settled=true;if(o)send('Fetch.fulfillRequest',Object.assign({requestId:rid},o),sid).catch(()=>{});else send('Fetch.failRequest',{requestId:rid,errorReason:'ConnectionFailed'},sid).catch(()=>{})};let t;try{t=new URL(p.request.url)}catch{return fin(null)}const rh=(p.request&&p.request.headers)||{},h={};for(const k of Object.keys(rh)){const l=k.toLowerCase();if(l==='host'||l==='connection'||l==='accept-encoding'||l==='content-length')continue;h[k]=rh[k]}h.host=t.host;h['x-forwarded-proto']=t.protocol.slice(0,-1);h['accept-encoding']='identity';const body=typeof p.request.postData==='string'?Buffer.from(p.request.postData):null;if(body)h['content-length']=String(body.length);let q;try{q=require('http').request({host:'127.0.0.1',port:Number(viaM[1]),method:p.request.method||'GET',path:t.pathname+t.search,headers:h},(r)=>{const cs=[];let n=0;r.on('data',(d)=>{n+=d.length;if(n>" + BROWSER_SERVE_MAX + "){r.destroy();return fin(null)}cs.push(d)});r.on('error',()=>fin(null));r.on('end',()=>{const hs=[],raw=r.rawHeaders||[];for(let i=0;i+1<raw.length;i+=2){const l=String(raw[i]).toLowerCase();if(l==='content-encoding'||l==='transfer-encoding'||l==='content-length'||l==='connection'||l==='keep-alive')continue;hs.push({name:String(raw[i]),value:String(raw[i+1])})}fin({responseCode:r.statusCode,responseHeaders:hs,body:Buffer.concat(cs).toString('base64')})})})}catch{return fin(null)}q.on('error',()=>fin(null));q.setTimeout(" + BROWSER_SERVE_MS + `,()=>q.destroy(new Error('timed out')));if(body)q.write(body);q.end()};const onEvent=(m)=>{if(m.method==='Page.loadEventFired'){if(onLoad)onLoad();return}if(m.method==='CSS.styleSheetAdded'){const h=m.params&&m.params.header;if(h&&h.styleSheetId)sheets[h.styleSheetId]=h;return}if(m.method==='Page.frameNavigated'){const fr=(m.params&&m.params.frame)||{};if(navStarted&&fr.id===topFrame&&!fr.parentId){let good=false;try{good=new URL(fr.url).origin===origin}catch{}if(!good){if(fr.url&&fr.url.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(fr.url||offsite||'unknown'))}}return}if(m.method!=='Fetch.requestPaused')return;const p=m.params||{};const rid=p.requestId,ru=(p.request&&p.request.url)||"";let allow=true;if(p.resourceType==='Document'&&p.frameId===topFrame){try{allow=new URL(ru).origin===origin}catch{allow=false}}if(allow&&serveIn){let own=false;try{own=new URL(ru).origin===origin}catch{}if(own&&(p.resourceType==='Document'||p.resourceType==='Stylesheet')&&(p.request&&p.request.method)==='GET')return serveExec(p);send('Fetch.failRequest',{requestId:rid,errorReason:'BlockedByClient'},sid).catch(()=>{});return}if(allow&&via){let own=false;try{own=new URL(ru).origin===origin}catch{}if(own)return serve(p)}if(allow){send('Fetch.continueRequest',{requestId:rid},sid).catch(()=>{})}else{offsite=ru;send('Fetch.failRequest',{requestId:rid,errorReason:'Aborted'},sid).catch(()=>{});done('TRACY_BROWSER OFFSITE '+ru)}};rd.on('data',(d)=>{if(finished)return;buf=Buffer.concat([buf,d]);let i;while((i=buf.indexOf(0))!==-1){let m=null;try{m=JSON.parse(buf.slice(0,i))}catch{}buf=buf.slice(i+1);if(!m)continue;if(m.id&&pending.has(m.id)){const f=pending.get(m.id);pending.delete(m.id);f(m)}else if(m.method)onEvent(m)}});(async()=>{const t=await send('Target.createTarget',{url:'about:blank'});const a=await send('Target.attachToTarget',{targetId:t.result&&t.result.targetId,flatten:true});sid=a.result&&a.result.sessionId;await send('Page.enable',{},sid);const ft=await send('Page.getFrameTree',{},sid);topFrame=ft.result&&ft.result.frameTree&&ft.result.frameTree.frame&&ft.result.frameTree.frame.id;await send('Fetch.enable',{patterns:via?[{urlPattern:'*',requestStage:'Request'}]:[{urlPattern:'*',resourceType:'Document',requestStage:'Request'}]},sid);if(mode==='style'){const vp=Object.prototype.hasOwnProperty.call(VPS,req.viewport)?VPS[req.viewport]:VPS.desktop;await send('Emulation.setDeviceMetricsOverride',{width:vp.width,height:vp.height,deviceScaleFactor:1,mobile:vp.mobile},sid);if(vp.mobile)await send('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1},sid);await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:'light'},{name:'prefers-reduced-motion',value:'reduce'}]},sid)}if(mode==='view'){await send('Emulation.setDeviceMetricsOverride',{width:vreq.w,height:vreq.h,deviceScaleFactor:1,mobile:false},sid);await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:vreq.dark===true?'dark':'light'},{name:'prefers-reduced-motion',value:'reduce'}]},sid)}if(serveIn)await send('Emulation.setScriptExecutionDisabled',{value:true},sid);navStarted=true;const nav=await send('Page.navigate',{url},sid);errorText=nav.result&&nav.result.errorText;let loadedInTime=true;if(mode==='style'){loadedInTime=await Promise.race([loaded.then(()=>true),new Promise((r)=>setTimeout(()=>r(false),Math.max(SETTLE_MS,DEADLINE_MS-7000)))]);await new Promise((r)=>setTimeout(r,Math.min(300,SETTLE_MS)))}else if(mode==='view'){loadedInTime=await Promise.race([loaded.then(()=>true),new Promise((r)=>setTimeout(()=>r(false),Math.max(Math.min(SETTLE_MS,300),Math.min(` + VIEW_LOAD_MS + ",DEADLINE_MS-9000))))]);await new Promise((r)=>setTimeout(r,Math.min(300,SETTLE_MS)))}else await new Promise((r)=>setTimeout(r,SETTLE_MS));if(finished)return;if(mode==='shot'){const h1=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u1=h1.result&&h1.result.result&&h1.result.result.value;let ok1=false;try{ok1=new URL(u1).origin===origin}catch{}if(!ok1){if(u1&&u1.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(u1||offsite||'unknown'))}const shot=await send('Page.captureScreenshot',{format:'png'},sid);const b64=shot.result&&shot.result.data;if(!b64)return done('TRACY_BROWSER ERR no screenshot data');if(finished)return;const h2=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u2=h2.result&&h2.result.result&&h2.result.result.value;let ok2=false;try{ok2=new URL(u2).origin===origin}catch{}if(!ok2)return done('TRACY_BROWSER OFFSITE '+(u2||offsite||'unknown'));try{fs.writeFileSync(file,Buffer.from(b64,'base64'))}catch(e){return done('TRACY_BROWSER ERR '+((e&&e.message)||String(e)))}return done('TRACY_BROWSER OK '+u2)}if(mode==='view'){const h1=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u1=h1.result&&h1.result.result&&h1.result.result.value;let ok1=false;try{ok1=new URL(u1).origin===origin}catch{}if(!ok1){if(u1&&u1.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(u1||offsite||'unknown'))}const sc=await send('Runtime.evaluate',{expression:'('+SCROLL+')('+JSON.stringify(vreq.y)+','+JSON.stringify(VIEWW)+')',awaitPromise:true,returnByValue:true},sid);const at=sc.result&&sc.result.result&&sc.result.result.value;if(finished)return;const shot=await send('Page.captureScreenshot',{format:'jpeg',quality:" + VIEW_QUALITY + `},sid);const b64=shot.result&&shot.result.data;if(!b64)return done('TRACY_BROWSER ERR no screenshot data');if(finished)return;const h2=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u2=h2.result&&h2.result.result&&h2.result.result.value;let ok2=false;try{ok2=new URL(u2).origin===origin}catch{}if(!ok2)return done('TRACY_BROWSER OFFSITE '+(u2||offsite||'unknown'));return done('TRACY_BROWSER OK '+u2+'\\n'+JSON.stringify({y:typeof at==='number'?at:null,loaded:loadedInTime,jpeg:b64}))}if(mode==='style'){const h1=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u1=h1.result&&h1.result.result&&h1.result.result.value;let ok1=false;try{ok1=new URL(u1).origin===origin}catch{}if(!ok1){if(u1&&u1.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(u1||offsite||'unknown'))}const f=await send('Runtime.evaluate',{expression:'('+FIND+')('+JSON.stringify(req)+')',returnByValue:false},sid);const ro=f.result&&f.result.result;if(!ro||ro.subtype!=='node'||!ro.objectId)return done('TRACY_BROWSER OK '+u1+'\\n'+JSON.stringify({error:String((ro&&ro.value)||'the page returned no element'),loaded:loadedInTime}));const dv=await send('Runtime.callFunctionOn',{objectId:ro.objectId,functionDeclaration:DESCRIBE,arguments:[{value:req.props},{value:req.set===true}],returnByValue:true},sid);const info=(dv.result&&dv.result.result&&dv.result.result.value)||{};await send('DOM.enable',{},sid);await send('CSS.enable',{},sid);await send('DOM.getDocument',{depth:0},sid);const matchedOf=async(oid)=>{const n=await send('DOM.requestNode',{objectId:oid},sid);const r=await send('CSS.getMatchedStylesForNode',{nodeId:n.result&&n.result.nodeId},sid);return r.result||{}};const mt=await matchedOf(ro.objectId);let painter=null;if(info.paint>0){const a=await send('Runtime.callFunctionOn',{objectId:ro.objectId,functionDeclaration:'function(k){let e=this;while(k-->0&&e.parentElement)e=e.parentElement;return e}',arguments:[{value:info.paint}]},sid);const ao=a.result&&a.result.result;if(ao&&ao.objectId)painter=await matchedOf(ao.objectId)}const got=RESOLVE({props:req.props,info,matched:mt,painter});if(req.set===true){try{const ps=PSEL(got.props||{});if(ps.some(Boolean)){const pc=await send('Runtime.evaluate',{expression:'('+PAINTS+')('+JSON.stringify(ps)+')',returnByValue:true},sid);const ns=pc.result&&pc.result.result&&pc.result.result.value;if(Array.isArray(ns))Object.values(got.props).forEach((r,i)=>{if(r&&typeof ns[i]==='number'&&ns[i]>=0)r.paints=ns[i]})}}catch{}}const copies=[];if(req.set===true&&Array.isArray(info.copies)){for(const c of info.copies.slice(0,3)){try{const q=await send('Runtime.evaluate',{expression:'document.querySelector('+JSON.stringify(String(c.unique))+')',returnByValue:false},sid);const co=q.result&&q.result.result;if(!co||co.subtype!=='node'||!co.objectId)continue;const cd=await send('Runtime.callFunctionOn',{objectId:co.objectId,functionDeclaration:DESCRIBE,arguments:[{value:req.props},{value:false}],returnByValue:true},sid);const ci=(cd.result&&cd.result.result&&cd.result.result.value)||{};const cg=RESOLVE({props:req.props,info:ci,matched:await matchedOf(co.objectId),painter:null});for(const id of cg.sheets||[])if(!got.sheets.includes(id))got.sheets.push(id);copies.push({unique:String(c.unique),el:String(c.el||ci.el||''),props:cg.props||{}})}catch{}}}const names={};for(const id of got.sheets){const h=sheets[id];if(!h){names[id]='a stylesheet';continue}if(h.isInline&&!h.hasSourceURL){let label='a <style> in the page';try{const d=await send('DOM.describeNode',{backendNodeId:h.ownerNode},sid);const at=(d.result&&d.result.node&&d.result.node.attributes)||[];for(let i=0;i+1<at.length;i+=2)if(at[i]==='id'){label='<style id="'+String(at[i+1]).slice(0,60)+'">';break}}catch{}names[id]=label;continue}let s=String(h.sourceURL||''),isUrl=false;try{const su=new URL(s);isUrl=true;s=su.origin===new URL(u1).origin?su.pathname:su.origin+su.pathname}catch{}names[id]=s.slice(0,120)+(h.isInline&&isUrl?' (inlined in the page)':'')}const fix=(o)=>{if(!o||!o.sheet)return;const h=sheets[o.sheet];if(h&&h.isInline)delete o.line;o.sheet=names[o.sheet]||'a stylesheet'};for(const row of [...Object.values(got.props),...copies.flatMap((c)=>Object.values(c.props))]){fix(row);for(const t of row.tokens||[])fix(t);for(const pt of row.parts||[])fix(pt)}return done('TRACY_BROWSER OK '+u1+'\\n'+JSON.stringify({info:{el:info.el,text:info.text,matches:info.matches,how:info.how,hidden:info.hidden,unique:info.unique,body:info.body,chrome:info.chrome,sheets:info.sheets,template:info.template,framework:info.framework,...(copies.length>0?{copies}:{})},props:got.props,loaded:loadedInTime}))}if(mode==='styles'){const S=await send('Runtime.evaluate',{expression:PROBE,returnByValue:true},sid);const v=S.result&&S.result.result&&S.result.result.value;if(!v||typeof v!=='object'||!Array.isArray(v.samples))return done('TRACY_BROWSER ERR the style probe returned nothing');const u3=v.href;let ok3=false;try{ok3=new URL(u3).origin===origin}catch{}if(!ok3){if(u3&&u3.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(u3||offsite||'unknown'))}return done('TRACY_BROWSER OK '+u3+'\\n'+JSON.stringify(v))}const R=await send('Runtime.evaluate',{expression:'JSON.stringify({href:document.location.href,html:document.documentElement.outerHTML})',returnByValue:true},sid);const raw=R.result&&R.result.result&&R.result.result.value;let data=null;try{data=JSON.parse(raw)}catch{}const finalUrl=data&&data.href;let same=false;try{same=new URL(finalUrl).origin===origin}catch{}if(!same){if(finalUrl&&finalUrl.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(finalUrl||offsite||'unknown'))}return done('TRACY_BROWSER OK '+finalUrl+'\\n'+((data&&data.html)||''))})().catch((e)=>done('TRACY_BROWSER ERR '+((e&&e.message)||String(e))));}`;
+var BROWSER_SCRIPT = `const {spawn}=require('child_process');const fs=require('fs');const os=require('os');const path=require('path');const mode=process.argv[1],url=process.argv[2],origin=process.argv[3],file=process.argv[4]||"";const req=mode==='style'?(()=>{try{const r=JSON.parse(file);return r&&typeof r==='object'&&Array.isArray(r.props)?r:null}catch{return null}})():null;const vreq=mode==='view'?(()=>{try{const r=JSON.parse(file);return r&&typeof r==='object'&&Number.isInteger(r.w)&&Number.isInteger(r.h)&&Number.isInteger(r.y)&&r.w>0&&r.h>0&&r.y>=0?r:null}catch{return null}})():null;const FIND=${JSON.stringify(String(findTarget))},DESCRIBE=${JSON.stringify(String(describeTarget))},VPS=${JSON.stringify(STYLE_VIEWPORTS)};const SCROLL=${JSON.stringify(String(scrollForView))},VIEWW=${JSON.stringify(VIEW_WAITS)};const RESOLVE=(${String(resolveStyles)});const PSEL=(${String(paintSelectors)}),PAINTS=${JSON.stringify(String(countPaints))};const sheets={};let onLoad=null;const loaded=new Promise((r)=>{onLoad=r});const PROBE=` + JSON.stringify(STYLE_PROBE) + ";const SETTLE_MS=Number(process.argv[5])||" + BROWSER_SETTLE_MS + ",DEADLINE_MS=Number(process.argv[6])||" + BROWSER_DEADLINE_MS + ",FLUSH_MS=Number(process.argv[7])||" + BROWSER_FLUSH_MS + ";const via=(process.env&&process.env.TRACY_PUBLIC_VIA)||'';const viaM=/^127\\.0\\.0\\.1:([0-9]{1,5})$/.exec(via);const CHROME=(process.env&&process.env.TRACY_CHROME)||'chromium';const serveIn=(process.env&&process.env.TRACY_SERVE_CONTAINER)||'';let profile='';try{profile=fs.mkdtempSync(path.join(os.tmpdir(),'tracy-look-'))}catch{}let child=null,hard=null,finished=false,sid=null,topFrame=null,offsite=null,navStarted=false,errorText=null;const clean=()=>{try{if(profile)fs.rmSync(profile,{recursive:true,force:true})}catch{}};if(process.on)process.on('exit',clean);const stop=()=>{try{process.kill(-child.pid,'SIGKILL')}catch{}try{child.kill('SIGKILL')}catch{}};const done=(line)=>{if(finished)return;finished=true;if(hard)clearTimeout(hard);if(child)stop();clean();const bail=setTimeout(()=>process.exit(1),FLUSH_MS);try{process.stdout.write(line,()=>{clearTimeout(bail);process.exit(0)})}catch{clearTimeout(bail);process.exit(1)}};if(process.on)process.on('SIGTERM',()=>done('TRACY_BROWSER ERR stopped'));const flags=['--headless=new','--disable-features=MacAppCodeSignClone','--disable-gpu','--no-crash-upload','--disable-breakpad','--no-first-run','--no-default-browser-check','--remote-debugging-pipe'];if(mode==='shot'||mode==='styles')flags.push('--hide-scrollbars','--window-size=1280,800');if(mode==='style'||mode==='view')flags.push('--hide-scrollbars');if(!serveIn&&process.env&&process.env.TRACY_RESOLVER_RULE)flags.push(process.env.TRACY_RESOLVER_RULE);if(serveIn)flags.push('--host-resolver-rules=MAP * ~NOTFOUND','--proxy-server=http://127.0.0.1:9','--proxy-bypass-list=<-loopback>');if(!profile){done('TRACY_BROWSER ERR could not create a private browser profile')}else if(via&&(!viaM||Number(viaM[1])<1||Number(viaM[1])>65535)){done('TRACY_BROWSER ERR the public route is not a loopback port')}else if(serveIn&&(!/^[a-z0-9][a-z0-9_.-]{0,127}$/.test(serveIn)||!viaM||(mode!=='styles'&&mode!=='view'))){done('TRACY_BROWSER ERR the host route needs a container name, its loopback port and the styles or view mode')}else if(mode==='style'&&!req){done('TRACY_BROWSER ERR the style request is not a JSON object with props')}else if(mode==='view'&&!vreq){done('TRACY_BROWSER ERR the view request is not a JSON object with w, h and y')}else{flags.push('--user-data-dir='+profile);child=spawn(CHROME,[...flags,'about:blank'],{stdio:['ignore','ignore','ignore','pipe','pipe'],detached:true});child.on('error',(e)=>done('TRACY_BROWSER NOCHROME '+((e&&e.message)||String(e))));const pending=new Map();child.on('exit',(code,sig)=>{if(finished)return;const why='chromium exited'+(code!=null?' ('+code+')':sig?' ('+sig+')':'');for(const f of pending.values())f({error:{message:why}});pending.clear();done('TRACY_BROWSER NOCHROME '+why)});hard=setTimeout(()=>done('TRACY_BROWSER ERR timed out'),DEADLINE_MS);const wr=child.stdio[3],rd=child.stdio[4];let buf=Buffer.alloc(0),id=0;wr.on('error',()=>{});rd.on('error',()=>{});const send=(method,params,session)=>new Promise((res,rej)=>{const n=++id;pending.set(n,(m)=>{if(m&&m.error)rej(new Error(method+': '+((m.error&&m.error.message)||JSON.stringify(m.error))));else res(m)});const o={id:n,method,params:params||{}};if(session)o.sessionId=session;try{wr.write(JSON.stringify(o)+'\\0')}catch(e){pending.delete(n);rej(e instanceof Error?e:new Error(String(e)))}});const parseHttp=(b)=>{let off=0;for(let g=0;g<5;g++){const e=b.indexOf('\\r\\n\\r\\n',off);if(e===-1)return null;const head=b.slice(off,e).toString('latin1').split('\\r\\n');const sm=/^HTTP\\/[0-9.]+ ([0-9]{3})/.exec(head[0]||'');if(!sm)return null;const code=Number(sm[1]);off=e+4;if(code<200)continue;const hs=[];for(const line of head.slice(1)){const i=line.indexOf(':');if(i<1)continue;const name=line.slice(0,i).trim(),l=name.toLowerCase();if(l==='content-encoding'||l==='transfer-encoding'||l==='content-length'||l==='connection'||l==='keep-alive')continue;hs.push({name,value:line.slice(i+1).trim()})}return{responseCode:code,responseHeaders:hs,body:b.slice(off).toString('base64')}}return null};let running=0;const waiting=[];const next=()=>{while(running<4&&waiting.length>0){running++;waiting.shift()(()=>{running--;next()})}};const serveExec=(p)=>{const rid=p.requestId;let settled=false;const fin=(o)=>{if(settled||finished)return;settled=true;if(o)send('Fetch.fulfillRequest',Object.assign({requestId:rid},o),sid).catch(()=>{});else send('Fetch.failRequest',{requestId:rid,errorReason:'ConnectionFailed'},sid).catch(()=>{})};let t;try{t=new URL(p.request.url)}catch{return fin(null)}const args=['exec','-u','www-data',serveIn,'curl','-sS','-i','--http1.1','--max-time','" + Math.ceil(BROWSER_SERVE_MS / 1e3) + "','--max-filesize','" + BROWSER_SERVE_MAX + "','-H','Host: '+t.host,'-H','X-Forwarded-Proto: '+t.protocol.slice(0,-1),'-H','Accept-Encoding: identity'];const rh=(p.request&&p.request.headers)||{};for(const k of Object.keys(rh)){const l=k.toLowerCase();if(l==='host'||l==='connection'||l==='accept-encoding'||l==='content-length')continue;const v=String(rh[k]);if(/[\\r\\n]/.test(k+v))continue;args.push('-H',k+': '+v)}args.push('http://127.0.0.1:'+viaM[1]+t.pathname+t.search);waiting.push((release)=>{if(finished||settled)return release();require('child_process').execFile('docker',args,{encoding:'buffer',maxBuffer:" + BROWSER_SERVE_MAX + "+65536,timeout:" + BROWSER_SERVE_MS + "+2000},(err,out)=>{release();fin(err||!out?null:parseHttp(out))})});next()};const serve=(p)=>{const rid=p.requestId;let settled=false;const fin=(o)=>{if(settled||finished)return;settled=true;if(o)send('Fetch.fulfillRequest',Object.assign({requestId:rid},o),sid).catch(()=>{});else send('Fetch.failRequest',{requestId:rid,errorReason:'ConnectionFailed'},sid).catch(()=>{})};let t;try{t=new URL(p.request.url)}catch{return fin(null)}const rh=(p.request&&p.request.headers)||{},h={};for(const k of Object.keys(rh)){const l=k.toLowerCase();if(l==='host'||l==='connection'||l==='accept-encoding'||l==='content-length')continue;h[k]=rh[k]}h.host=t.host;h['x-forwarded-proto']=t.protocol.slice(0,-1);h['accept-encoding']='identity';const body=typeof p.request.postData==='string'?Buffer.from(p.request.postData):null;if(body)h['content-length']=String(body.length);let q;try{q=require('http').request({host:'127.0.0.1',port:Number(viaM[1]),method:p.request.method||'GET',path:t.pathname+t.search,headers:h},(r)=>{const cs=[];let n=0;r.on('data',(d)=>{n+=d.length;if(n>" + BROWSER_SERVE_MAX + "){r.destroy();return fin(null)}cs.push(d)});r.on('error',()=>fin(null));r.on('end',()=>{const hs=[],raw=r.rawHeaders||[];for(let i=0;i+1<raw.length;i+=2){const l=String(raw[i]).toLowerCase();if(l==='content-encoding'||l==='transfer-encoding'||l==='content-length'||l==='connection'||l==='keep-alive')continue;hs.push({name:String(raw[i]),value:String(raw[i+1])})}fin({responseCode:r.statusCode,responseHeaders:hs,body:Buffer.concat(cs).toString('base64')})})})}catch{return fin(null)}q.on('error',()=>fin(null));q.setTimeout(" + BROWSER_SERVE_MS + `,()=>q.destroy(new Error('timed out')));if(body)q.write(body);q.end()};const onEvent=(m)=>{if(m.method==='Page.loadEventFired'){if(onLoad)onLoad();return}if(m.method==='CSS.styleSheetAdded'){const h=m.params&&m.params.header;if(h&&h.styleSheetId)sheets[h.styleSheetId]=h;return}if(m.method==='Page.frameNavigated'){const fr=(m.params&&m.params.frame)||{};if(navStarted&&fr.id===topFrame&&!fr.parentId){let good=false;try{good=new URL(fr.url).origin===origin}catch{}if(!good){if(fr.url&&fr.url.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(fr.url||offsite||'unknown'))}}return}if(m.method!=='Fetch.requestPaused')return;const p=m.params||{};const rid=p.requestId,ru=(p.request&&p.request.url)||"";let allow=true;if(p.resourceType==='Document'&&p.frameId===topFrame){try{allow=new URL(ru).origin===origin}catch{allow=false}}if(allow&&serveIn){let own=false;try{own=new URL(ru).origin===origin}catch{}const kind=p.resourceType;const served=kind==='Document'||kind==='Stylesheet'||(mode==='view'&&(kind==='Image'||kind==='Font'));if(own&&served&&(p.request&&p.request.method)==='GET')return serveExec(p);send('Fetch.failRequest',{requestId:rid,errorReason:'BlockedByClient'},sid).catch(()=>{});return}if(allow&&via){let own=false;try{own=new URL(ru).origin===origin}catch{}if(own)return serve(p)}if(allow){send('Fetch.continueRequest',{requestId:rid},sid).catch(()=>{})}else{offsite=ru;send('Fetch.failRequest',{requestId:rid,errorReason:'Aborted'},sid).catch(()=>{});done('TRACY_BROWSER OFFSITE '+ru)}};rd.on('data',(d)=>{if(finished)return;buf=Buffer.concat([buf,d]);let i;while((i=buf.indexOf(0))!==-1){let m=null;try{m=JSON.parse(buf.slice(0,i))}catch{}buf=buf.slice(i+1);if(!m)continue;if(m.id&&pending.has(m.id)){const f=pending.get(m.id);pending.delete(m.id);f(m)}else if(m.method)onEvent(m)}});(async()=>{const t=await send('Target.createTarget',{url:'about:blank'});const a=await send('Target.attachToTarget',{targetId:t.result&&t.result.targetId,flatten:true});sid=a.result&&a.result.sessionId;await send('Page.enable',{},sid);const ft=await send('Page.getFrameTree',{},sid);topFrame=ft.result&&ft.result.frameTree&&ft.result.frameTree.frame&&ft.result.frameTree.frame.id;await send('Fetch.enable',{patterns:via?[{urlPattern:'*',requestStage:'Request'}]:[{urlPattern:'*',resourceType:'Document',requestStage:'Request'}]},sid);if(mode==='style'){const vp=Object.prototype.hasOwnProperty.call(VPS,req.viewport)?VPS[req.viewport]:VPS.desktop;await send('Emulation.setDeviceMetricsOverride',{width:vp.width,height:vp.height,deviceScaleFactor:1,mobile:vp.mobile},sid);if(vp.mobile)await send('Emulation.setTouchEmulationEnabled',{enabled:true,maxTouchPoints:1},sid);await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:'light'},{name:'prefers-reduced-motion',value:'reduce'}]},sid)}if(mode==='view'){await send('Emulation.setDeviceMetricsOverride',{width:vreq.w,height:vreq.h,deviceScaleFactor:1,mobile:false},sid);await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-color-scheme',value:vreq.dark===true?'dark':'light'},{name:'prefers-reduced-motion',value:'reduce'}]},sid)}if(serveIn)await send('Emulation.setScriptExecutionDisabled',{value:true},sid);navStarted=true;const nav=await send('Page.navigate',{url},sid);errorText=nav.result&&nav.result.errorText;let loadedInTime=true;if(mode==='style'){loadedInTime=await Promise.race([loaded.then(()=>true),new Promise((r)=>setTimeout(()=>r(false),Math.max(SETTLE_MS,DEADLINE_MS-7000)))]);await new Promise((r)=>setTimeout(r,Math.min(300,SETTLE_MS)))}else if(mode==='view'){loadedInTime=await Promise.race([loaded.then(()=>true),new Promise((r)=>setTimeout(()=>r(false),Math.max(Math.min(SETTLE_MS,300),Math.min(` + VIEW_LOAD_MS + ",DEADLINE_MS-9000))))]);await new Promise((r)=>setTimeout(r,Math.min(300,SETTLE_MS)))}else await new Promise((r)=>setTimeout(r,SETTLE_MS));if(finished)return;if(mode==='shot'){const h1=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u1=h1.result&&h1.result.result&&h1.result.result.value;let ok1=false;try{ok1=new URL(u1).origin===origin}catch{}if(!ok1){if(u1&&u1.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(u1||offsite||'unknown'))}const shot=await send('Page.captureScreenshot',{format:'png'},sid);const b64=shot.result&&shot.result.data;if(!b64)return done('TRACY_BROWSER ERR no screenshot data');if(finished)return;const h2=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u2=h2.result&&h2.result.result&&h2.result.result.value;let ok2=false;try{ok2=new URL(u2).origin===origin}catch{}if(!ok2)return done('TRACY_BROWSER OFFSITE '+(u2||offsite||'unknown'));try{fs.writeFileSync(file,Buffer.from(b64,'base64'))}catch(e){return done('TRACY_BROWSER ERR '+((e&&e.message)||String(e)))}return done('TRACY_BROWSER OK '+u2)}if(mode==='view'){const h1=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u1=h1.result&&h1.result.result&&h1.result.result.value;let ok1=false;try{ok1=new URL(u1).origin===origin}catch{}if(!ok1){if(u1&&u1.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(u1||offsite||'unknown'))}const sc=await send('Runtime.evaluate',{expression:'('+SCROLL+')('+JSON.stringify(vreq.y)+','+JSON.stringify(VIEWW)+')',awaitPromise:true,returnByValue:true},sid);const at=sc.result&&sc.result.result&&sc.result.result.value;if(finished)return;const shot=await send('Page.captureScreenshot',{format:'jpeg',quality:" + VIEW_QUALITY + `},sid);const b64=shot.result&&shot.result.data;if(!b64)return done('TRACY_BROWSER ERR no screenshot data');if(finished)return;const h2=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u2=h2.result&&h2.result.result&&h2.result.result.value;let ok2=false;try{ok2=new URL(u2).origin===origin}catch{}if(!ok2)return done('TRACY_BROWSER OFFSITE '+(u2||offsite||'unknown'));return done('TRACY_BROWSER OK '+u2+'\\n'+JSON.stringify({y:typeof at==='number'?at:null,loaded:loadedInTime,jpeg:b64}))}if(mode==='style'){const h1=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);const u1=h1.result&&h1.result.result&&h1.result.result.value;let ok1=false;try{ok1=new URL(u1).origin===origin}catch{}if(!ok1){if(u1&&u1.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(u1||offsite||'unknown'))}const f=await send('Runtime.evaluate',{expression:'('+FIND+')('+JSON.stringify(req)+')',returnByValue:false},sid);const ro=f.result&&f.result.result;if(!ro||ro.subtype!=='node'||!ro.objectId)return done('TRACY_BROWSER OK '+u1+'\\n'+JSON.stringify({error:String((ro&&ro.value)||'the page returned no element'),loaded:loadedInTime}));const dv=await send('Runtime.callFunctionOn',{objectId:ro.objectId,functionDeclaration:DESCRIBE,arguments:[{value:req.props},{value:req.set===true}],returnByValue:true},sid);const info=(dv.result&&dv.result.result&&dv.result.result.value)||{};await send('DOM.enable',{},sid);await send('CSS.enable',{},sid);await send('DOM.getDocument',{depth:0},sid);const matchedOf=async(oid)=>{const n=await send('DOM.requestNode',{objectId:oid},sid);const r=await send('CSS.getMatchedStylesForNode',{nodeId:n.result&&n.result.nodeId},sid);return r.result||{}};const mt=await matchedOf(ro.objectId);let painter=null;if(info.paint>0){const a=await send('Runtime.callFunctionOn',{objectId:ro.objectId,functionDeclaration:'function(k){let e=this;while(k-->0&&e.parentElement)e=e.parentElement;return e}',arguments:[{value:info.paint}]},sid);const ao=a.result&&a.result.result;if(ao&&ao.objectId)painter=await matchedOf(ao.objectId)}const got=RESOLVE({props:req.props,info,matched:mt,painter});if(req.set===true){try{const ps=PSEL(got.props||{});if(ps.some(Boolean)){const pc=await send('Runtime.evaluate',{expression:'('+PAINTS+')('+JSON.stringify(ps)+')',returnByValue:true},sid);const ns=pc.result&&pc.result.result&&pc.result.result.value;if(Array.isArray(ns))Object.values(got.props).forEach((r,i)=>{if(r&&typeof ns[i]==='number'&&ns[i]>=0)r.paints=ns[i]})}}catch{}}const copies=[];if(req.set===true&&Array.isArray(info.copies)){for(const c of info.copies.slice(0,3)){try{const q=await send('Runtime.evaluate',{expression:'document.querySelector('+JSON.stringify(String(c.unique))+')',returnByValue:false},sid);const co=q.result&&q.result.result;if(!co||co.subtype!=='node'||!co.objectId)continue;const cd=await send('Runtime.callFunctionOn',{objectId:co.objectId,functionDeclaration:DESCRIBE,arguments:[{value:req.props},{value:false}],returnByValue:true},sid);const ci=(cd.result&&cd.result.result&&cd.result.result.value)||{};const cg=RESOLVE({props:req.props,info:ci,matched:await matchedOf(co.objectId),painter:null});for(const id of cg.sheets||[])if(!got.sheets.includes(id))got.sheets.push(id);copies.push({unique:String(c.unique),el:String(c.el||ci.el||''),props:cg.props||{}})}catch{}}}const names={};for(const id of got.sheets){const h=sheets[id];if(!h){names[id]='a stylesheet';continue}if(h.isInline&&!h.hasSourceURL){let label='a <style> in the page';try{const d=await send('DOM.describeNode',{backendNodeId:h.ownerNode},sid);const at=(d.result&&d.result.node&&d.result.node.attributes)||[];for(let i=0;i+1<at.length;i+=2)if(at[i]==='id'){label='<style id="'+String(at[i+1]).slice(0,60)+'">';break}}catch{}names[id]=label;continue}let s=String(h.sourceURL||''),isUrl=false;try{const su=new URL(s);isUrl=true;s=su.origin===new URL(u1).origin?su.pathname:su.origin+su.pathname}catch{}names[id]=s.slice(0,120)+(h.isInline&&isUrl?' (inlined in the page)':'')}const fix=(o)=>{if(!o||!o.sheet)return;const h=sheets[o.sheet];if(h&&h.isInline)delete o.line;o.sheet=names[o.sheet]||'a stylesheet'};for(const row of [...Object.values(got.props),...copies.flatMap((c)=>Object.values(c.props))]){fix(row);for(const t of row.tokens||[])fix(t);for(const pt of row.parts||[])fix(pt)}return done('TRACY_BROWSER OK '+u1+'\\n'+JSON.stringify({info:{el:info.el,text:info.text,matches:info.matches,how:info.how,hidden:info.hidden,unique:info.unique,body:info.body,chrome:info.chrome,sheets:info.sheets,template:info.template,framework:info.framework,...(copies.length>0?{copies}:{})},props:got.props,loaded:loadedInTime}))}if(mode==='styles'){const S=await send('Runtime.evaluate',{expression:PROBE,returnByValue:true},sid);const v=S.result&&S.result.result&&S.result.result.value;if(!v||typeof v!=='object'||!Array.isArray(v.samples))return done('TRACY_BROWSER ERR the style probe returned nothing');const u3=v.href;let ok3=false;try{ok3=new URL(u3).origin===origin}catch{}if(!ok3){if(u3&&u3.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(u3||offsite||'unknown'))}return done('TRACY_BROWSER OK '+u3+'\\n'+JSON.stringify(v))}const R=await send('Runtime.evaluate',{expression:'JSON.stringify({href:document.location.href,html:document.documentElement.outerHTML})',returnByValue:true},sid);const raw=R.result&&R.result.result&&R.result.result.value;let data=null;try{data=JSON.parse(raw)}catch{}const finalUrl=data&&data.href;let same=false;try{same=new URL(finalUrl).origin===origin}catch{}if(!same){if(finalUrl&&finalUrl.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(finalUrl||offsite||'unknown'))}return done('TRACY_BROWSER OK '+finalUrl+'\\n'+((data&&data.html)||''))})().catch((e)=>done('TRACY_BROWSER ERR '+((e&&e.message)||String(e))));}`;
 function browserArgv({
   container,
   mode,
@@ -12208,10 +12278,26 @@ function hostBrowserTarget(target) {
   if (!(n >= 1 && n <= 65535)) return null;
   return { url: target.url, origin: target.origin, container: target.container, via: `127.0.0.1:${n}` };
 }
-function hostBrowserCommand({ chrome, target, dockerHost }) {
+function hostBrowserCommand({
+  chrome,
+  target,
+  dockerHost,
+  mode = "styles",
+  file = "",
+  settleMs = BROWSER_SETTLE_MS,
+  deadlineMs
+}) {
   return {
     file: process.execPath,
-    args: ["-e", BROWSER_SCRIPT, "styles", target.url, target.origin, ""],
+    args: [
+      "-e",
+      BROWSER_SCRIPT,
+      mode,
+      target.url,
+      target.origin,
+      file,
+      ...deadlineMs === void 0 ? [] : [String(settleMs), String(deadlineMs)]
+    ],
     env: {
       TRACY_CHROME: chrome,
       TRACY_SERVE_CONTAINER: target.container,
@@ -12225,9 +12311,19 @@ function hostBrowserExec({
   chrome,
   target,
   timeoutMs = HOST_BROWSER_TIMEOUT_MS,
-  maxBuffer = 8 * 1024 * 1024
+  maxBuffer = 8 * 1024 * 1024,
+  mode = "styles",
+  file = "",
+  deadlineMs
 }) {
-  const c = hostBrowserCommand({ chrome, target, dockerHost: resolveDockerHost(void 0, process.env) });
+  const c = hostBrowserCommand({
+    chrome,
+    target,
+    dockerHost: resolveDockerHost(void 0, process.env),
+    mode,
+    file,
+    ...deadlineMs === void 0 ? {} : { deadlineMs }
+  });
   return new Promise((resolve) => {
     execFile(
       c.file,
@@ -12929,7 +13025,7 @@ function refusalNext(answer, given = {}) {
       return `This conversation is ${here}, and ${there} is its own workspace \u2014 nothing here can reach it, and there is no other way in. If the customer wants ${there} changed, tell them to open its workspace and ask there; then carry on with ${here} only.`;
     }
     case "COMPONENT_NOT_ON_FLEET_COPY":
-      return fleetCopyNext(a.copyReason);
+      return fleetCopyNext(a.copyReason, a.transient);
     case "COWORK_WEB_UNREACHABLE":
       return "Tracy could not be reached; retry once, then tell the customer.";
     // ── The door is there, it was handed a signature, and it could not read it ───────────────────
@@ -13141,6 +13237,8 @@ function refusalNext(answer, given = {}) {
     case "CONFIRM_FIRST":
       if (a.typed === true)
         return "The customer typed words instead of choosing, which opens nothing: ask_user_question with this ask once more (id as given), asking them to pick an option; still none: tell them nothing changed.";
+      if (a.confirmationMissing === true)
+        return "No recorded yes for this exact call; confirm:true is not consent. Use ask_user_question with this ask (id unchanged, options in order); wait for the customer, then retry with confirm:true.";
       if (typeof a.languages === "number" && a.languages > 1)
         return "ask_user_question with this answer's ask (id as given, options in order, customer's words); one answer covers every language: on the first, the same call with confirm:true removes them all";
       if (typeof a.otherLanguages === "number" && a.otherLanguages > 0)
@@ -13679,16 +13777,27 @@ function emdashSiteNext(action) {
     return 'tracy_emdash content_get {collection, id:"<slug>"}, then content_update {collection, id, _rev, data, status:"published"}.';
   return 'This site runs EmDash: tracy_emdash {tool, arguments} reaches it; content_get {collection, id:"<slug>"} reads a page ("site" holds the site-wide words).';
 }
-function fleetCopyNext(why) {
+function fleetCopyNext(why, transient2) {
   const untouched = "nothing was written and the live site was not touched";
   switch (why) {
     case "timeout":
     case "unreachable":
+      if (transient2 === false)
+        return `The hosted copy of this imported site has not answered for a long while; ${untouched}. Do not retry: tell the customer the copy is not answering and needs checking by Tracy's team; do not write another way.`;
       return `The hosted copy of this imported site is still warming up; ${untouched}. Retry the same call in a moment; if it is refused again, tell the customer the copy is not answering yet.`;
     case "unauthorized":
       return `The hosted copy of this imported site does not accept the token Tracy holds for it; ${untouched}. Tell the customer its Claude Cowork plugin needs pairing again; do not write another way.`;
     case "platform_mismatch":
       return `The hosted copy answers as a different CMS than this site was imported as; ${untouched}. Tell the customer the import needs checking; do not write another way.`;
+    // 28/10/2026 (`verifyCopy`): failures that waiting does not change, each said as what it is.
+    case "redirected":
+    case "not_engine":
+    case "not_json":
+      return `The hosted copy's Claude Cowork door answers with something other than the plugin (a redirect or a page); ${untouched}. Do not retry: tell the customer the hosted copy needs checking by Tracy's team; do not write another way.`;
+    case "no_copy":
+      return `No hosted copy of this imported site answers under its name; ${untouched}. Do not retry: tell the customer the import needs checking by Tracy's team; do not write another way.`;
+    case "copy_error":
+      return `The hosted copy of this imported site answers with a server error; ${untouched}. Do not retry: tell the customer the hosted copy needs checking by Tracy's team; do not write another way.`;
     case "no_registered_component":
     case "no_copy_address":
       return `This imported site has no usable Claude Cowork plugin registration; ${untouched}. Tell the customer the site must be connected again first; do not write another way.`;
@@ -18451,6 +18560,7 @@ async function runSiteCall(input) {
       return done({
         ok: false,
         code: "CONFIRM_FIRST",
+        ...n0.kind === "relay" && n0.host?.confirm === true ? { confirmationMissing: true } : {},
         action: plan.action,
         tier,
         ...consequence !== null ? { consequence: consequence.reason } : {},
@@ -21083,7 +21193,7 @@ var REPLACE_KEYS = Object.freeze([
   "expect",
   "href"
 ]);
-var REPLACE_CHANGE_KEYS = Object.freeze(["find", "replace", "href"]);
+var REPLACE_CHANGE_KEYS = Object.freeze(["find", "replace", "href", "expect"]);
 var REPLACE_HREF_MAX = 2048;
 var REPLACE_RESTORE_KEYS = Object.freeze(["at", "value", "was", "now"]);
 var REPLACE_MAX_RESTORE = 2e3;
@@ -21446,6 +21556,20 @@ function planReplace(params) {
           return unknownKey(`changes[${i}].${key2}`, key2, REPLACE_CHANGE_KEYS);
       const change = checkChange(c, `changes[${i}].`);
       if ("ok" in change) return change;
+      if (c.expect !== void 0 && c.expect !== null) {
+        const own = (
+          /** @type {number} */
+          c.expect
+        );
+        if (!Number.isInteger(own) || own < 1 || own > REPLACE_MAX_TARGETS)
+          return badType(
+            `changes[${i}].expect`,
+            `a whole number 1 to ${REPLACE_MAX_TARGETS}`,
+            c.expect,
+            '{changes:[{find, replace, expect:2}], all:"page"}'
+          );
+        change.expect = own;
+      }
       const key = foldForMatch(change.find);
       if (seen.has(key))
         return refuse2(
@@ -22117,6 +22241,21 @@ function countRefusal(results, { all, expect, confirmed, dryRun }) {
       replaceText("tooManyNext"),
       { would: would.slice(0, REPLACE_MAX_TARGETS), count: places }
     );
+  for (let i = 0; i < results.length; i += 1) {
+    const r = results[i];
+    const own = r.change.expect;
+    if (own === void 0 || r.places === own) continue;
+    return refuse2(
+      "COUNT_MISMATCH",
+      replaceText("countMismatchError", { expect: own, n: r.places, find: r.change.find }),
+      replaceText("countMismatchNext", { n: r.places }),
+      {
+        would: r.targets.map((t) => wouldOf(t, r.change)),
+        count: r.places,
+        ...results.length > 1 ? { change: i } : {}
+      }
+    );
+  }
   if (expect !== null && places !== expect)
     return refuse2(
       "COUNT_MISMATCH",
@@ -22124,13 +22263,15 @@ function countRefusal(results, { all, expect, confirmed, dryRun }) {
       replaceText("countMismatchNext", { n: places }),
       { would, count: places }
     );
-  const exact = results.every((r) => r.targets.every((t) => t.exact));
-  if (all && expect === null && !confirmed && !dryRun && (places > REPLACE_CONFIRM_OVER || !exact))
+  const loose2 = results.filter((r) => r.change.expect === void 0);
+  const unconfirmed = loose2.reduce((n, r) => n + r.places, 0);
+  const exact = loose2.every((r) => r.targets.every((t) => t.exact));
+  if (all && expect === null && loose2.length > 0 && !confirmed && !dryRun && (unconfirmed > REPLACE_CONFIRM_OVER || !exact))
     return refuse2(
       "VALUE_NOT_ALLOWED",
-      replaceText("confirmCountError", { n: places, how: exact ? "" : REPLACE_NEXT.confirmCountHow }),
-      replaceText(exact ? "confirmCountNext" : "confirmCountInexactNext", { n: places }),
-      { rule: "confirm-count", would, count: places }
+      replaceText("confirmCountError", { n: unconfirmed, how: exact ? "" : REPLACE_NEXT.confirmCountHow }),
+      replaceText(exact ? "confirmCountNext" : "confirmCountInexactNext", { n: unconfirmed }),
+      { rule: "confirm-count", would, count: unconfirmed }
     );
   return null;
 }
@@ -22488,6 +22629,9 @@ function followHref(href, find, replace) {
 }
 
 // src/host/copy-apply.mjs
+var UNKNOWN_NEXT = "The words under unknown may already be on the site (their answer was lost): in about 30 s read their page with tracy_site page.text {path}, and write only the words it still shows as they were; never send them again unread.";
+var LIST_MAX = 30;
+var CUT_NEXT = "A page whose answer has notListed lists only the first of them: read that page with tracy_site page.text {path} and write only the template words it still shows; nothing is known to be on the site beyond what is listed as placed.";
 var pathOf3 = (pack) => pack.path === "*shared*" ? "/" : pack.path;
 async function applyCopy({ read, replace, page, signal = null }) {
   const got = await read(page);
@@ -22496,13 +22640,18 @@ async function applyCopy({ read, replace, page, signal = null }) {
   if (!packs.length)
     return { ok: false, code: "COPY_NOTHING_TO_APPLY", next: 'tracy_demo {operation:"copy.write"} first.' };
   const pages = [];
+  let left = 0;
+  let unsure = false;
+  let cut4 = false;
   for (const pack of packs) {
     if (signal?.aborted) break;
     const path22 = pathOf3(pack);
     const notPlaced = [];
+    const unknown = [];
     const again = [];
     const setAside = (one, answer) => {
-      if (answer?.code === "AMBIGUOUS") again.push([one, "page"]);
+      if (!refusedBeforeWrite(answer)) unknown.push({ find: one.find, code: answer?.code ?? null });
+      else if (answer?.code === "AMBIGUOUS") again.push([one, "page"]);
       else notPlaced.push({ find: one.find, code: answer?.code ?? null });
     };
     let placed = 0;
@@ -22513,6 +22662,11 @@ async function applyCopy({ read, replace, page, signal = null }) {
         const answer = await replace(path22, chunk);
         if (answer?.ok !== false) {
           placed += chunk.length;
+          break;
+        }
+        if (!refusedBeforeWrite(answer)) {
+          for (const one of chunk) unknown.push({ find: one.find, code: answer?.code ?? null });
+          chunk = [];
           break;
         }
         const at = Number.isInteger(answer.change) ? answer.change : chunk.length === 1 ? 0 : null;
@@ -22532,24 +22686,40 @@ async function applyCopy({ read, replace, page, signal = null }) {
     for (const [one, all] of again) {
       if (signal?.aborted) break;
       let answer = await replace(path22, [one], { all });
-      if (answer?.ok === false && Number.isInteger(answer.count) && answer.rule === "confirm-count")
+      if (refusedBeforeWrite(answer) && Number.isInteger(answer.count) && answer.rule === "confirm-count")
         answer = await replace(path22, [one], { all, expect: answer.count });
-      if (answer?.ok === false) notPlaced.push({ find: one.find, code: answer.code ?? null });
+      if (answer?.ok === false)
+        (refusedBeforeWrite(answer) ? notPlaced : unknown).push({ find: one.find, code: answer.code ?? null });
       else placed += 1;
     }
+    const lists = { notPlaced, unknown, issues: pack.issues ?? [] };
+    const notListed = Object.fromEntries(
+      Object.entries(lists).filter(([, list]) => list.length > LIST_MAX).map(([key, list]) => [key, list.length - LIST_MAX])
+    );
     pages.push({
       page: pack.path === "*shared*" ? "shared (header and footer)" : path22,
       placed,
-      ...notPlaced.length ? { notPlaced: notPlaced.slice(0, 30) } : {},
-      ...(pack.issues ?? []).length ? { issues: pack.issues.slice(0, 30) } : {}
+      ...Object.fromEntries(
+        Object.entries(lists).filter(([, list]) => list.length > 0).map(([key, list]) => [key, list.slice(0, LIST_MAX)])
+      ),
+      ...Object.keys(notListed).length ? { notListed } : {}
     });
+    left += notPlaced.length + lists.issues.length;
+    unsure ||= unknown.length > 0;
+    cut4 ||= Object.keys(notListed).length > 0;
   }
-  const left = pages.reduce((n, p) => n + (p.notPlaced?.length ?? 0) + (p.issues?.length ?? 0), 0);
-  return {
-    ok: true,
-    pages,
-    next: left ? "Write only what is listed under notPlaced and issues, on its page, with content.replace or the record it lives in; everything else is on the site." : "Every page\u2019s words are on the site; go on with the pictures and the checks."
-  };
+  const next = [];
+  if (left)
+    next.push(
+      cut4 ? "Write what is listed under notPlaced and issues, on its page, with content.replace or the record it lives in." : "Write only what is listed under notPlaced and issues, on its page, with content.replace or the record it lives in; everything else is on the site."
+    );
+  else if (!cut4)
+    next.push(
+      unsure ? "Every other page\u2019s words are on the site." : "Every page\u2019s words are on the site; go on with the pictures and the checks."
+    );
+  if (unsure) next.push(UNKNOWN_NEXT);
+  if (cut4) next.push(CUT_NEXT);
+  return { ok: true, pages, next: next.join(" ") };
 }
 
 // src/host/build-fence.mjs
@@ -29507,7 +29677,8 @@ async function runVisualCheck(job) {
     if (ask === void 0 || ask.turn !== job.turn) return skip("no-ask");
     if (!siteChangedInTurn(job.events)) return skip("no-write");
     const before = ask.before ?? ask.fallback ?? null;
-    if (before === null) return skip(ask.missing ? `no-before: ${ask.missing}` : "no-before");
+    if (before === null)
+      return skip(`no-before: ${ask.missing ?? (ask.hold === void 0 ? "not-held" : "none")}`);
     if (!before.loaded) return skip("before-not-loaded");
     const view2 = { ...before.view, y: before.y ?? before.view.y };
     if (ask.comment) {
@@ -30150,14 +30321,21 @@ async function drawFor(job, hold) {
   if (!needMain && !needShared) return [];
   const budget2 = (job.budgetMs ?? BEFORE_HOLD_MS) - hold.spentMs;
   const started = now();
-  const left = () => budget2 - (now() - started);
+  let spent = false;
+  const left = () => spent ? 0 : budget2 - (now() - started);
+  const inBudget = async (promise, failed) => {
+    const got = await within(promise, left(), failed);
+    if (got === null) spent = true;
+    return got;
+  };
   const drew = [];
   try {
     let reach = job.reach;
     if (reach.shared === "some" && reach.usedOn === void 0 && job.usage !== void 0 && left() > 0) {
-      const usage = await within(job.usage(reach), left(), null);
-      if (usage?.all === true) reach = { ...reach, shared: "site" };
-      else if (usage !== null) reach = { ...reach, usedOn: usage.pages };
+      const usage = await inBudget(job.usage(reach), false);
+      if (usage === false || usage === null) reach = job.reach;
+      else if (usage.all === true) reach = { ...reach, shared: "site" };
+      else reach = { ...reach, usedOn: usage.pages };
     }
     let main = null;
     let fromEarly = false;
@@ -30172,9 +30350,8 @@ async function drawFor(job, hold) {
         const fits = main === null || reach.shared === "site" || pageOf2(main) === pageOf2(early.path);
         const wanted = main === null ? ask.fallback === void 0 : fits;
         if (wanted) {
-          const got = await within(
+          const got = await inBudget(
             early.picture,
-            left(),
             /** @type {Drawn | string} */
             "capture-ERROR"
           );
@@ -30217,9 +30394,8 @@ async function drawFor(job, hold) {
         break;
       }
       const at = now();
-      const got = await within(
+      const got = await inBudget(
         job.draw(view2),
-        left(),
         /** @type {Capture} */
         { ok: false, code: "ERROR" }
       );
@@ -31203,6 +31379,41 @@ function browserTargetForRoute(label, route, pathAndQuery, internalPort) {
   const url = loopbackUrl(route.connectPort, pathAndQuery);
   return { url, origin: new URL(url).origin, container: route.container, resolverRule: "", via: "" };
 }
+function publicRetarget(target, leftFor, publicOrigin) {
+  if (typeof publicOrigin !== "string" || publicOrigin === "") return null;
+  let to;
+  let pub;
+  try {
+    to = new URL(String(leftFor));
+    pub = new URL(publicOrigin);
+  } catch {
+    return null;
+  }
+  if (to.origin !== pub.origin || target.origin === pub.origin) return null;
+  const pinned = hostBrowserTarget(target);
+  if (pinned === null) return null;
+  const connectPort = Number(pinned.via.slice("127.0.0.1:".length));
+  return browserTargetForRoute(
+    "",
+    {
+      kind: "public",
+      origin: pub.origin,
+      host: pub.host,
+      proto: pub.protocol === "https:" ? "https" : "http",
+      connectPort,
+      container: target.container
+    },
+    to.pathname + to.search,
+    connectPort
+  );
+}
+async function browseAsSite({ target, publicOrigin = null, launch }) {
+  const res = await launch(target);
+  const b = parseBrowser(res.stdout);
+  if (b.ok || b.kind !== "offsite") return { res, target };
+  const again = publicRetarget(target, b.error, publicOrigin);
+  return again === null ? { res, target } : { res: await launch(again), target: again };
+}
 function isThinPage(html, page) {
   return String(page?.text ?? "").length < THIN_TEXT_CHARS && /<script\b/i.test(String(html ?? ""));
 }
@@ -31469,20 +31680,24 @@ async function fetchPageHtml(input) {
   const answer = pageRefusal(read, String(input.path ?? "/"), input.door ?? contentDoor());
   return { ...read, ...answer };
 }
-async function browserDom({ run, label, internalPort, route, pathAndQuery }) {
+async function browserDom({ run, label, internalPort, route, pathAndQuery, publicOrigin = null }) {
   const t = browserTargetForRoute(label, route, pathAndQuery, internalPort);
   if (t === null) return { ok: false, kind: "port", error: "a port this site does not expose here" };
-  const res = await run({
-    argv: browserArgv({
-      container: t.container,
-      mode: "dom",
-      url: t.url,
-      origin: t.origin,
-      resolverRule: t.resolverRule,
-      via: t.via
-    }),
-    timeoutMs: BROWSER_EXEC_MS,
-    maxBuffer: 16 * 1024 * 1024
+  const { res } = await browseAsSite({
+    target: t,
+    publicOrigin,
+    launch: (at) => run({
+      argv: browserArgv({
+        container: at.container,
+        mode: "dom",
+        url: at.url,
+        origin: at.origin,
+        resolverRule: at.resolverRule,
+        via: at.via
+      }),
+      timeoutMs: BROWSER_EXEC_MS,
+      maxBuffer: 16 * 1024 * 1024
+    })
   });
   const b = parseBrowser(res.stdout);
   if (looksLikeMissingBinary(res) || !b.ok && b.kind === "no-browser")
@@ -32070,7 +32285,13 @@ async function pageText(input) {
       door
     })
   );
-  const dom = input.browserDom ?? ((at) => browserDom({ run: input.run, label: input.label, internalPort: input.internalPort, ...at }));
+  const dom = input.browserDom ?? ((at) => browserDom({
+    run: input.run,
+    label: input.label,
+    internalPort: input.internalPort,
+    publicOrigin: input.publicOrigin ?? null,
+    ...at
+  }));
   const answers = [];
   for (const [i, read] of reads.entries()) {
     const path22 = asked.targets[i].path;
@@ -32202,24 +32423,28 @@ var STYLE_NO_BROWSER = Object.freeze({
   error: "this site's container has no browser, so computed styles cannot be read here",
   next: "No computed style without a browser: find the rule in the theme's stylesheet files instead, or tell the customer."
 });
-async function styleLook({ run, target, req, url, path: path22, cap }) {
-  const read = await styleRead({ run, target, req, path: path22 });
+async function styleLook({ run, target, req, url, path: path22, cap, publicOrigin = null }) {
+  const read = await styleRead({ run, target, req, path: path22, publicOrigin });
   if (read.ok !== true) return read;
   return styleAnswer(read.payload, { url, path: path22, viewport: req.viewport, cap });
 }
-async function styleRead({ run, target, req, path: path22 }) {
-  const res = await run({
-    argv: browserArgv({
-      container: target.container,
-      mode: "style",
-      url: target.url,
-      origin: target.origin,
-      file: JSON.stringify(req),
-      resolverRule: target.resolverRule,
-      via: target.via
-    }),
-    timeoutMs: BROWSER_EXEC_MS,
-    maxBuffer: 4 * 1024 * 1024
+async function styleRead({ run, target, req, path: path22, publicOrigin = null }) {
+  const { res } = await browseAsSite({
+    target,
+    publicOrigin,
+    launch: (at) => run({
+      argv: browserArgv({
+        container: at.container,
+        mode: "style",
+        url: at.url,
+        origin: at.origin,
+        file: JSON.stringify(req),
+        resolverRule: at.resolverRule,
+        via: at.via
+      }),
+      timeoutMs: BROWSER_EXEC_MS,
+      maxBuffer: 4 * 1024 * 1024
+    })
   });
   const b = parseBrowser(res.stdout);
   if (looksLikeMissingBinary(res) || !b.ok && b.kind === "no-browser") return { ...STYLE_NO_BROWSER };
@@ -33216,6 +33441,10 @@ var PRESETS = Object.freeze({
   shadow: [["settings", "shadow", "presets"], "shadow"]
 });
 var dig = (obj, at) => at.reduce((o, k) => o !== null && typeof o === "object" ? o[k] : void 0, obj);
+function themeJsonCssSets(json, token) {
+  const css = dig(json, ["styles", "css"]);
+  return typeof css === "string" && cssDeclarations(css).some((d) => d.name === token);
+}
 function themeJsonPath(json, token) {
   const preset = /^--wp--preset--(color|gradient|font-size|font-family|spacing|shadow)--(.+)$/.exec(token);
   if (preset !== null) {
@@ -33377,7 +33606,7 @@ async function lookSet({
   const onPage = req.scope === "element" && chrome ? null : pageClass;
   const unique = typeof info.unique === "string" && info.unique !== "" ? info.unique : null;
   const appends = [];
-  const append = (selector, decl, after, note, within3 = media, beat = [0, 0, 0], layer = null) => {
+  const append = (selector, decl, after, note, within3 = media, beat = [0, 0, 0], layer = null, late = false) => {
     const same = appends.find(
       (a) => a.selector === selector && a.note === note && a.media === within3 && a.layer === layer
     );
@@ -33385,7 +33614,8 @@ async function lookSet({
       same.decls.push(decl);
       same.after = Math.max(same.after, after);
       if (compareSpec(beat, same.beat) > 0) same.beat = beat;
-    } else appends.push({ selector, media: within3, decls: [decl], after, note, beat, layer });
+      same.late = same.late || late;
+    } else appends.push({ selector, media: within3, decls: [decl], after, note, beat, layer, late });
   };
   const tokens = [];
   const reach = [];
@@ -33563,7 +33793,9 @@ async function lookSet({
     return true;
   };
   const wpTokenRule = async (t) => {
-    if (t.sheet !== null && /global-styles-inline-css/.test(t.sheet))
+    let late = false;
+    if (t.sheet !== null && /global-styles-inline-css/.test(t.sheet)) {
+      let variable = false;
       for (const theme of wpThemes(info)) {
         const bytes3 = await io.read(`${webroot}/wp-content/themes/${theme}/theme.json`);
         if (bytes3 === null) continue;
@@ -33573,12 +33805,16 @@ async function lookSet({
         } catch {
           continue;
         }
+        if (themeJsonCssSets(json, t.token)) late = true;
+        if (variable) continue;
         const at = themeJsonPath(json, t.token);
         if (at === null) continue;
+        variable = true;
         for (const name2 of themeJsonSameValue(json, at.old, t.token))
           if (!sameValue.includes(name2)) sameValue.push(name2);
-        break;
       }
+      if (!variable) late = true;
+    }
     const fileSheet = editableSheet(platform, t.sheet);
     const bytes2 = fileSheet === null ? null : await io.read(`${webroot}${fileSheet}`);
     if (bytes2 !== null) {
@@ -33590,12 +33826,13 @@ async function lookSet({
         return {
           selectors: picked.decl.theme ? ":root" : picked.decl.selectors.join(", "),
           media: inMedia[0] ?? null,
-          important: picked.decl.important
+          important: picked.decl.important,
+          late
         };
       }
     }
     const where = parseBy(t.by);
-    return where === null || where.cut ? null : { selectors: where.selectors, media: where.media, important: false };
+    return where === null || where.cut ? null : { selectors: where.selectors, media: where.media, important: false, late };
   };
   const slotOwned = tokens.find((t) => t.sheet === DS_SLOT_SHEET);
   if (slotOwned !== void 0)
@@ -33622,7 +33859,9 @@ async function lookSet({
         posOf(t.sheet),
         `${t.token}, every page`,
         placed.media,
-        specificity(placed.selectors)
+        specificity(placed.selectors),
+        null,
+        placed.late
       );
       continue;
     }
@@ -33664,7 +33903,7 @@ async function lookSet({
     if (notPrinted !== null) return { ...refuse9(notPrinted.why), ...notPrinted.answer };
     const own = printed >= 0 ? printed : merged ? sheets.findIndex((sheet) => /global-styles-inline-css/.test(sheet)) : sheets.length;
     for (const a of appends)
-      if (a.after > own || merged && own >= 0 && a.after === own && compareSpec(a.beat, [0, 1, 0]) > 0)
+      if (a.after > own || merged && own >= 0 && a.after === own && (compareSpec(a.beat, [0, 1, 0]) > 0 || a.late))
         a.selector = beyond(a.selector, a.beat);
     const tail = appends.map((a) => ruleText(a)).join("\n");
     custom = {
@@ -38409,7 +38648,7 @@ async function replaceRendered(input) {
     }));
     if (plan.all === false && plan.expect === null) {
       for (const [i, c] of changes.entries())
-        if (placesOf2(i) > 1)
+        if (c.expect === void 0 && placesOf2(i) > 1)
           return refuse5(
             "AMBIGUOUS",
             renderedText("ambiguousError", { find: c.find, n: placesOf2(i), path: path22 }),
@@ -38417,6 +38656,15 @@ async function replaceRendered(input) {
             { find: c.find, candidates: shown3.slice(0, 4) }
           );
     }
+    for (const [i, c] of changes.entries())
+      if (c.expect !== void 0 && placesOf2(i) !== c.expect)
+        return refuse5(
+          "COUNT_MISMATCH",
+          replaceText("countMismatchError", { expect: c.expect, n: placesOf2(i), find: c.find }),
+          replaceText("countMismatchNext", { n: placesOf2(i) }),
+          { would: shown3, count: placesOf2(i), ...changes.length > 1 ? { change: i } : {} }
+        );
+    const unconfirmed = changes.reduce((n, c, i) => n + (c.expect === void 0 ? placesOf2(i) : 0), 0);
     if (plan.expect !== null && places !== plan.expect)
       return refuse5(
         "COUNT_MISMATCH",
@@ -38428,12 +38676,12 @@ async function replaceRendered(input) {
         replaceText("countMismatchNext", { n: places }),
         { would: shown3, count: places }
       );
-    if (plan.all && plan.expect === null && input.confirmed !== true && !plan.dryRun && places > REPLACE_CONFIRM_OVER)
+    if (plan.all && plan.expect === null && input.confirmed !== true && !plan.dryRun && unconfirmed > REPLACE_CONFIRM_OVER)
       return refuse5(
         "VALUE_NOT_ALLOWED",
-        replaceText("confirmCountError", { n: places, how: "" }),
-        replaceText("confirmCountNext", { n: places }),
-        { rule: "confirm-count", would: shown3, count: places }
+        replaceText("confirmCountError", { n: unconfirmed, how: "" }),
+        replaceText("confirmCountNext", { n: unconfirmed }),
+        { rule: "confirm-count", would: shown3, count: unconfirmed }
       );
     if (rebase) {
       const identity2 = (r) => [r.kind, r.name ?? "", r.anchor, r.old].join("\0");
@@ -45893,7 +46141,7 @@ function createViewStore({
   const written = /* @__PURE__ */ new Map();
   const lastWriteOf = (label) => written.get(label) ?? -Infinity;
   const sites = /* @__PURE__ */ new Map();
-  function drawInTurn(label, view2) {
+  function drawInTurn(label, view2, check = false) {
     let queue = sites.get(label);
     if (queue === void 0) {
       queue = { tail: Promise.resolve(), count: 0 };
@@ -45905,7 +46153,7 @@ function createViewStore({
     mine.count += 1;
     const start = () => {
       const at = now();
-      return capture({ label, view: view2 }).then((drawn) => ({ drawn, at }));
+      return capture(check ? { label, view: view2, check } : { label, view: view2 }).then((drawn) => ({ drawn, at }));
     };
     let job;
     try {
@@ -46074,7 +46322,7 @@ function createViewStore({
      * @returns {Promise<Capture>}
      */
     draw(label, view2) {
-      return drawInTurn(label, view2).then(
+      return drawInTurn(label, view2, true).then(
         ({ drawn }) => drawn,
         () => (
           /** @type {Capture} */
@@ -46111,31 +46359,50 @@ async function captureView({
   publicOrigin = null,
   run,
   door,
-  gate = pageLookGate
+  gate = pageLookGate,
+  host = null
 }) {
   const target = lookTarget(label, view2.path, internalPort);
   if (!target.ok) return { ok: false, code: "BAD_PATH" };
   const checked = await gate({ run, label, internalPort, publicOrigin, path: target.path, door });
   if ("legacy" in checked) return { ok: false, code: "NO_CURL" };
   if (!checked.ok) return { ok: false, code: String(checked.answer.code ?? "REFUSED") };
-  const t = checked.target;
-  const res = await run({
-    argv: browserArgv({
-      container: t.container,
-      mode: "view",
-      url: t.url,
-      origin: t.origin,
-      file: JSON.stringify({ w: view2.w, h: view2.h, y: view2.y, dark: view2.dark }),
-      resolverRule: t.resolverRule,
-      via: t.via,
-      deadlineMs: VIEW_DEADLINE_MS
-    }),
-    timeoutMs: VIEW_EXEC_MS,
-    maxBuffer: VIEW_MAX_BUFFER
+  const frame = JSON.stringify({ w: view2.w, h: view2.h, y: view2.y, dark: view2.dark });
+  let { res } = await browseAsSite({
+    target: checked.target,
+    publicOrigin,
+    launch: (t) => run({
+      argv: browserArgv({
+        container: t.container,
+        mode: "view",
+        url: t.url,
+        origin: t.origin,
+        file: frame,
+        resolverRule: t.resolverRule,
+        via: t.via,
+        deadlineMs: VIEW_DEADLINE_MS
+      }),
+      timeoutMs: VIEW_EXEC_MS,
+      maxBuffer: VIEW_MAX_BUFFER
+    })
   });
-  const out = parseBrowser(res.stdout);
-  if (looksLikeMissingBinary(res) || !out.ok && out.kind === "no-browser")
-    return { ok: false, code: "NO_BROWSER" };
+  let out = parseBrowser(res.stdout);
+  const noBrowser = () => looksLikeMissingBinary(res) || !out.ok && out.kind === "no-browser";
+  if (noBrowser() && host !== null) {
+    const onHost = host;
+    ({ res } = await browseAsSite({
+      target: checked.target,
+      publicOrigin,
+      launch: async (t) => {
+        const pinned = hostBrowserTarget(t);
+        if (pinned === null)
+          return { code: 0, stdout: "TRACY_BROWSER NOCHROME no route to pin", stderr: "", timedOut: false };
+        return onHost.run({ target: pinned, file: frame, deadlineMs: VIEW_DEADLINE_MS });
+      }
+    }));
+    out = parseBrowser(res.stdout);
+  }
+  if (noBrowser()) return { ok: false, code: "NO_BROWSER" };
   if (!out.ok) return { ok: false, code: out.kind === "offsite" ? "REDIRECTED_OFF_SITE" : "LOOK_FAILED" };
   if (!(res.code === 0 && !res.spawnError && !res.timedOut)) return { ok: false, code: "LOOK_FAILED" };
   let payload = null;
@@ -47164,14 +47431,8 @@ async function pageText3(config, sitesRoot, label, params, facts = {}) {
 async function renderedPageText(config, label, internalPort, path22, params, cap, door) {
   const target = lookTarget(label, path22, internalPort);
   if (!target.ok) return { ok: false, code: "BAD_PATH", error: target.error };
-  const probe = await inContainerProbe(
-    config,
-    label,
-    internalPort,
-    target,
-    hostPublicOrigin(config, label),
-    door
-  );
+  const publicOrigin = hostPublicOrigin(config, label);
+  const probe = await inContainerProbe(config, label, internalPort, target, publicOrigin, door);
   if (!probe.ok) return probe.result;
   const btarget = browserTargetFor(label, probe, internalPort, target);
   if (btarget === null)
@@ -47181,17 +47442,21 @@ async function renderedPageText(config, label, internalPort, path22, params, cap
       error: `${target.path} asks to be served on a port this site does not expose here.`,
       next: `Read a path this site serves itself; the words behind that page: ${door}.`
     };
-  const run = await runExec(config, {
-    argv: browserArgv({
-      container: btarget.container,
-      mode: "dom",
-      url: btarget.url,
-      origin: btarget.origin,
-      resolverRule: btarget.resolverRule,
-      via: btarget.via
-    }),
-    timeoutMs: LOOK_TIMEOUT_MS,
-    maxBuffer: 16 * 1024 * 1024
+  const { res: run } = await browseAsSite({
+    target: btarget,
+    publicOrigin,
+    launch: (t) => runExec(config, {
+      argv: browserArgv({
+        container: t.container,
+        mode: "dom",
+        url: t.url,
+        origin: t.origin,
+        resolverRule: t.resolverRule,
+        via: t.via
+      }),
+      timeoutMs: LOOK_TIMEOUT_MS,
+      maxBuffer: 16 * 1024 * 1024
+    })
   });
   const browser = parseBrowser(run.stdout);
   if (looksLikeMissingBinary(run) || !browser.ok && browser.kind === "no-browser")
@@ -47361,7 +47626,8 @@ async function pageLook(ctx, exec, config, sitesRoot, label, params, facts = {})
       req: styled.req,
       url: shownUrl,
       path: target.path,
-      cap: clampChars(params.maxChars, 2e3)
+      cap: clampChars(params.maxChars, 2e3),
+      publicOrigin
     });
     const ruler = await slotWork;
     if (ruler?.slot) return slotPinNotes(answer, ruler.slot);
@@ -47379,19 +47645,25 @@ async function pageLook(ctx, exec, config, sitesRoot, label, params, facts = {})
       next: LOOK_FAILED_NEXT
     };
   }
-  const run = await runExec(config, {
-    argv: browserArgv({
-      container: btarget.container,
-      mode: "shot",
-      url: btarget.url,
-      origin: btarget.origin,
-      file: containerLookFile(label, ts),
-      resolverRule: btarget.resolverRule,
-      via: btarget.via
-    }),
-    timeoutMs: LOOK_TIMEOUT_MS,
-    maxBuffer: 8 * 1024 * 1024
+  const shot = await browseAsSite({
+    target: btarget,
+    publicOrigin,
+    launch: (t) => runExec(config, {
+      argv: browserArgv({
+        container: t.container,
+        mode: "shot",
+        url: t.url,
+        origin: t.origin,
+        file: containerLookFile(label, ts),
+        resolverRule: t.resolverRule,
+        via: t.via
+      }),
+      timeoutMs: LOOK_TIMEOUT_MS,
+      maxBuffer: 8 * 1024 * 1024
+    })
   });
+  const run = shot.res;
+  if (shot.target !== btarget) shownUrl = shot.target.url;
   const browser = parseBrowser(run.stdout);
   if (looksLikeMissingBinary(run) || !browser.ok && browser.kind === "no-browser")
     return lookNoBrowserAnswer(curlRan, door);
@@ -47449,16 +47721,22 @@ function lookSetMeasure(config, sitesRoot, label, facts = {}) {
           code: "REDIRECTED_OFF_SITE",
           error: `${target.path} asks to be served on a port this site does not expose here.`
         };
-      return { ok: true, target: b, url: target.url, path: target.path };
+      return { ok: true, target: b, url: target.url, path: target.path, publicOrigin };
     }
     if (!gate.ok) return gate.answer;
-    return { ok: true, target: gate.target, url: gate.url, path: target.path };
+    return { ok: true, target: gate.target, url: gate.url, path: target.path, publicOrigin };
   };
   return async (req, asked) => {
     if (!opened.has(asked)) opened.set(asked, open(asked));
     const at = await opened.get(asked);
     if (at.ok !== true) return at;
-    const read = await styleRead({ run, target: at.target, req, path: at.path });
+    const read = await styleRead({
+      run,
+      target: at.target,
+      req,
+      path: at.path,
+      publicOrigin: at.publicOrigin
+    });
     return read.ok === true ? { ok: true, payload: read.payload, url: at.url } : read;
   };
 }
@@ -47682,15 +47960,28 @@ function apply(ctx, config = {}) {
   const dryRuns = createDryRunMemory();
   const slotOf2 = (label, opts = {}) => siteSlot(config, resolveSitesRoot(void 0), label, opts);
   const viewsOn = config.viewContext !== false;
-  const drawView = async (label, view2) => {
+  const drawView = async (label, view2, { check = false } = {}) => {
     const sitesRoot = resolveSitesRoot(void 0);
+    const chrome = check ? config.hostChrome !== void 0 ? config.hostChrome : hostChromeOf(process.env, existsSync4) : null;
     return captureView({
       label,
       view: view2,
       internalPort: await sitePortFor(config, sitesRoot, label),
       publicOrigin: hostPublicOrigin(config, label),
       run: (input) => runExec(config, input),
-      door: contentDoor(NO_SITE_FACTS)
+      door: contentDoor(NO_SITE_FACTS),
+      host: chrome ? {
+        chrome,
+        run: ({ target, file, deadlineMs }) => hostBrowserExec({
+          chrome,
+          target,
+          mode: "view",
+          file,
+          deadlineMs,
+          timeoutMs: VIEW_EXEC_MS,
+          maxBuffer: VIEW_MAX_BUFFER
+        })
+      } : null
     });
   };
   const voiceWords = spokenWords();
@@ -47698,9 +47989,9 @@ function apply(ctx, config = {}) {
     // A conversation whose turn is running is not drawn for while they write ahead (`chats` is made
     // further down; the store only asks when a report comes in, after the plugin is applied).
     busy: (sessionId) => chats.running().includes(sessionId),
-    capture: async ({ label, view: view2 }) => {
+    capture: async ({ label, view: view2, check }) => {
       try {
-        return await drawView(label, view2);
+        return await drawView(label, view2, { check: check === true });
       } catch (error) {
         warn(
           `[site-tools] the page open on ${label} could not be pictured: ${error instanceof Error ? error.message : String(error)}`
@@ -48607,7 +48898,7 @@ ${text6}`);
           turn,
           events,
           eyes: () => pickEyes(llm, route2, config.lookModel),
-          capture: (view2) => drawView(label, view2),
+          capture: (view2) => drawView(label, view2, { check: true }),
           store: (jpeg3) => storePicture(ctx, { jpeg: jpeg3 }),
           llm,
           ...signal ? { signal } : {}
@@ -48828,7 +49119,10 @@ ${text6}`);
         const ask = turnAsks.get(root);
         if (ask === void 0 || ask.checked || turn !== null && ask.turn !== turn) return decision;
         const label = sessionSite(exec?.agent);
-        if (label === null) return decision;
+        if (label === null) {
+          ask.missing ??= "no-site";
+          return decision;
+        }
         const postTypeOf = (id) => memory.readOf(sessionId, { kind: "post", id })?.postType ?? null;
         if (asksFirst(call, { postTypeOf })) return decision;
         const reach = writeReach(call, {
@@ -49312,6 +49606,7 @@ ${text6}`);
         return withNext({
           ok: false,
           code: "CONFIRM_FIRST",
+          ...confirm === true ? { confirmationMissing: true } : {},
           action: plan.action,
           tier: "mutating",
           consequence: consequence.reason,
@@ -50044,19 +50339,30 @@ ${text6}`);
       return { ok: false, why: `${at} is served on a port this site does not expose here` };
     const measured = await measurePage({
       target: btarget,
-      runInContainer: (t) => runExec(config, {
-        argv: browserArgv({
-          container: t.container,
-          mode: "styles",
-          url: t.url,
-          origin: t.origin,
-          resolverRule: t.resolverRule,
-          via: t.via
-        }),
-        timeoutMs: LOOK_TIMEOUT_MS,
-        maxBuffer: 8 * 1024 * 1024
-      }),
-      runOnHost: (t, chrome) => (config.hostBrowser ?? hostBrowserExec)({ chrome, target: t }),
+      runInContainer: async (t) => (await browseAsSite({
+        target: t,
+        publicOrigin,
+        launch: (at2) => runExec(config, {
+          argv: browserArgv({
+            container: at2.container,
+            mode: "styles",
+            url: at2.url,
+            origin: at2.origin,
+            resolverRule: at2.resolverRule,
+            via: at2.via
+          }),
+          timeoutMs: LOOK_TIMEOUT_MS,
+          maxBuffer: 8 * 1024 * 1024
+        })
+      })).res,
+      runOnHost: async (t, chrome) => (await browseAsSite({
+        target: { ...t, resolverRule: "" },
+        publicOrigin,
+        launch: (at2) => (config.hostBrowser ?? hostBrowserExec)({
+          chrome,
+          target: hostBrowserTarget(at2) ?? t
+        })
+      })).res,
       hostChrome: config.hostChrome !== void 0 ? config.hostChrome : hostChromeOf(process.env, existsSync4)
     });
     if (!measured.ok) return { ok: false, why: measured.why };

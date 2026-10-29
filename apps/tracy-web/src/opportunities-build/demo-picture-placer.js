@@ -60,6 +60,8 @@ export function placePictures({ frames, media }) {
         continue
       if (behind && (BACKGROUND_UNFIT.includes(label.subject) || photo.cutout === true)) continue
       if (frame.kind !== 'logo' && label.subject === 'logo') continue
+      // A picture the vision model calls a graphic (a flyer, a banner) fills no photo frame (#48).
+      if (frame.kind !== 'logo' && label.isGraphic === true) continue
       if (frame.kind === 'logo' && label.subject !== 'logo') continue
       if (frame.subject && frame.subject !== label.subject) continue
       const width = Math.floor(Math.min(photo.width, photo.height * aspect))

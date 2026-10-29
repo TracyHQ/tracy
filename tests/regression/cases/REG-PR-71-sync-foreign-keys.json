@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-71-sync-foreign-keys",
+  "kind": "fix",
+  "title": "Foreign keys survive whole-table sync and partial restore with interruption recovery",
+  "pr": 71,
+  "area": "sync/live",
+  "cms": ["jo", "wp"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": ["Run the real MariaDB merge and cutover cases."],
+  "expect": [
+    "Whole-table child and parent changes preserve two ordered foreign keys and reject invalid child writes.",
+    "Child-only, parent-only and combined restore rebind foreign keys to the live schema; pre-swap interruption and rollback restore the old graph.",
+    "Stored and virtual generated columns recompute correctly in whole-table and row merges.",
+    "Generated-only tables retain their row count without assigning computed values."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=generated columns recompute|generated-only|foreign keys|referenced parent",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs"
+    ],
+    "tests": [
+      "whole-table sync preserves foreign keys and can replace a referenced parent",
+      "partial restore rebinds outgoing and untouched incoming foreign keys and rolls them back",
+      "generated columns recompute through whole-table and row merges",
+      "generated-only tables retain every row when taken whole"
+    ]
+  }
+}

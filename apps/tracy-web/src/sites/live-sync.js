@@ -413,11 +413,13 @@ export function timingOf(output) {
   }
   let read = null
   for (const line of lines) {
-    if (!line.startsWith('{"ok":true,') || !line.includes('"liveReadAt"')) continue
+    // Parsed, never matched by its first bytes: the script prints Python's `json.dumps` form
+    // (`{"ok": true, …}`), and a prefix match kept every row's `read` null.
+    if (!line.startsWith('{') || !line.includes('"liveReadAt"')) continue
     try {
       const r = JSON.parse(line)
       // The read's own line (live-pull): its timing, and no sync state of its own.
-      if (!r.timing || typeof r.timing !== 'object' || r.state !== undefined) continue
+      if (r?.ok !== true || !r.timing || typeof r.timing !== 'object' || r.state !== undefined) continue
       read = {
         mode: typeof r.mode === 'string' ? r.mode : r.unchanged ? 'unchanged' : null,
         seconds: typeof r.seconds === 'number' ? r.seconds : null,
@@ -436,7 +438,13 @@ export function timingOf(output) {
  * (#1564): the owner is told to try again when the site is quiet, not that it could not be read.
  */
 function failedCode(said, fallback) {
-  if (said?.code === 'LIVE_READ_FAILED' && said.read?.code === 'LIVE_BUSY') return 'LIVE_BUSY'
+  if (
+    said?.code === 'LIVE_READ_FAILED' &&
+    ['LIVE_BUSY', 'LIVE_BLOCKED', 'LIVE_PASSWORD_PROTECTED', 'LIVE_RATE_LIMITED', 'TOKEN_REFUSED'].includes(
+      said.read?.code
+    )
+  )
+    return said.read.code
   return said?.code ?? fallback
 }
 
@@ -493,6 +501,17 @@ function brief(c) {
     for (const side of ['base', 'ours', 'theirs'])
       out[side] = Array.isArray(c[side]) ? c[side].slice(0, 30).map(String) : null
   if (c.values) out.values = c.values
+  // A held live record's own rows the merge left out with it (its category, images…), named by
+  // table and key (`live_sync.py` `name_held_rows`): what the dialog says went with it.
+  if (Array.isArray(c.belonging)) {
+    out.belonging = c.belonging.slice(0, 50).map((b) => ({
+      table: String(b?.table ?? ''),
+      key: b?.key ?? null,
+      // A row the copy had that the live site pointed at the held record: the copy's version stayed.
+      ...(b?.changed === true ? { changed: true } : {})
+    }))
+    out.belongingCount = typeof c.belongingCount === 'number' ? c.belongingCount : out.belonging.length
+  }
   return out
 }
 

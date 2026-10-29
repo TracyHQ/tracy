@@ -111,6 +111,12 @@ Three places run this same shape:
 
 Env and pitfalls of the dev machine: [`may-dev.md`](docs/references/may-dev.md).
 
+The site agent's visual check can draw its before/after pictures with dsh's browser when the site's
+container has none (`tracy-site-tools` `captureView`, host mode `view`). Chromium has no network
+route: same-origin documents, stylesheets, images and fonts are fetched through that site's
+`docker exec curl`; page scripts stay disabled and other requests fail. This fallback is used only
+for visual-check captures. It cannot evaluate changes that require page scripts or external assets.
+
 ## 3. Where the browser lands
 
 Every request reaches `tracy-web` first. [`app.js`](apps/tracy-web/src/app.js) mounts, in order:
@@ -511,6 +517,10 @@ a system → 409 `DS_PREVIEW_UNAVAILABLE` (`NO_SLOT`), and the popup says it can
 `DS_PREVIEW_FAILED`, the popup offers Try again. The main button is still **Try on <site>** (a real apply, Keep/Undo). The popup calls the site by
 the name the site gives itself on its home page (`name` of the words door); `/api/sites` only has the address (`displayName` is the domain).
 
+A newly claimed fleet site with neither an attachment nor an address returns `supported: false`,
+`canApply: false`, `reason: SITE_NOT_READY` without reading a container or the library. The tab explains
+that the site must finish building and opens the existing site’s Build tab; this press starts no build.
+
 **Design system library — Refero only** (12/10/2026). The Design system tab and the **Pick a design system** card of the
 Add site form read the same list: the door **`GET /api/design-system/library`** (signed-in seat,
 [`design-system-library-doors.js`](apps/tracy-web/src/sites/design-system-library-doors.js)) returns every Refero system in
@@ -656,6 +666,15 @@ Only for `origin='migrated'` sites on Joomla (WordPress waits for its own adapte
   (`com_content.article.<id>`); renumbered tables are remembered in `sync/id-map.json` for later runs. In extension tables the merge cannot renumber, or when an extension table points to an id just changed: the sync run
   **stops before applying** (`needs_resolution`, list `held`), and only after a person reviews and clicks "Sync anyway" (`allowHeld`) is
   Tracy's version kept there.
+- **WooCommerce record counts:** the five analytics/admin tables `wc_admin_notes`, `wc_admin_note_actions`,
+  `wc_order_stats`, `wc_order_product_lookup` and `wc_customer_lookup` are ignored as background state.
+  Order metadata, addresses, operational rows and order-item rows still merge but do not count as independent records.
+  HPOS `shop_order_placehold` posts also remain in the copy without counting twice: whole-table and row merges count
+  a taken change when its copy row before or after the actual merge represents a record. Legacy `shop_order` posts
+  still count normally. When all three snapshots agree on WooCommerce storage, HPOS counts `wc_orders`
+  and legacy counts order posts; synchronized backup orders and refunds remain merged without double counting.
+  Missing required tables or differing storage modes keep the existing per-table counts. Child-only changes
+  still merge under the existing uncounted-child rule.
 - **First run after import (22/10/2026):** at import, dsh takes the live `site.fingerprint` right before reading and
   sends it with provision; tracy-web keeps it at `site_component.config.importFingerprint` (next to the live token), and hands it to the first
   sync run (`baseFingerprint` → the host writes `base-fingerprint.json` next to the run); while no run has applied yet, comparison is
@@ -718,7 +737,7 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   (writing the whole option, CAS on the whole option), Additional CSS (post `custom_css`). Permalinks are never pushed. Places where sync kept
   Tracy's version for **files and configuration settings** also go into `sync/kept.json` (names only) and become `changed-on-both`.
   `sync/pushed.json` adds `files`/`settings`: the file merge takes the live version of a file just pushed (`ours`), and keeps the copy's version after Undo
-  (`theirs`) — `live_sync.py files --pushed`.
+  (`theirs`) — `live_sync.py files --pushed`. Deleted files are recorded with `ours: null`; Undo restores live while the copy keeps its deletion, so the next preview offers that deletion again.
 - **Jobs** `webroot-live-push-{preview,apply,undo}` run `webroot/webroot-live-push.sh`; the live endpoint + token travel only through
   environment variables, as in sync. **preview** runs Sync from live first (stopping with `SYNC_NEEDS_ATTENTION` when the sync is held), then
   under the site lock computes changeset = copy − base (`sync/live-base.sql.gz` loaded raw into a temporary schema + `refs/tracy/live`),
@@ -727,13 +746,25 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   writes item by item: `content.get` first, writing only when every field still holds the base value (CAS; Joomla in batches via
   `content.batch` with `expected`), otherwise `conflict`; at most 200 items; deletes only when the owner confirms. Places where a
   sync run kept Tracy's version even though the customer also edited (`sync/kept.json`, names only, no values) are
-  `changed-on-both`, never overwritten.
+  `changed-on-both`, never overwritten. A whole table kept after a schema change holds every push item whose seeds write that table, including creates and deletes, while unrelated tables remain available.
+- **WordPress menu addresses:** existing menu-item updates and deletions retain the base menu slug as their CMS key alongside the mapped live item ID, so subsequent writes and Undo use the native menu writer address.
+- **Replacement addresses:** a WordPress delete that frees the same slug in the same post type/parent scope is a prerequisite of its replacement. Unconfirmed or conflicting deletes block that create. Undo removes the replacement first and restores the original slug; a customer-edited replacement holds both records. Joomla trash keeps aliases occupied, so both sides of a same-alias replacement are held before writing.
 - **After pushing:** live ids of newly created records go into the id map, and the places written go into `sync/pushed.json`; Sync from live runs again
   and the merge takes those places as base before comparing (`live_sync.py --pushed`, `DbMerge.seed_pushed`), so a record Tracy
   just created is not copied back to the copy twice. `pushed.json` is dropped when a sync run puts its read in place (`remember_read`).
+- **Optional CMS schema:** dependent-row rules are used only when their parent key, parent reference and dependent column exist in both schemas. Stock Joomla contacts and banners do not need an asset_id column. The Live Sync Integration workflow runs the real MariaDB sync/push suites on an isolated GitHub-hosted Docker VM; skipped cases fail that job.
+- **Live access refusals:** both sync directions distinguish HTTP password protection (401), firewall/non-engine responses (403 or non-engine HTTP 200), rate limits (429), and an engine-refused token. Read retries respect numeric or HTTP-date Retry-After; rate limits never trigger an alternate-door request. Mutations retain the durable receipt rule and do not resend an uncertain response.
 - **Retention:** `<private>/<label>/push/previews/<id>/` (changeset; swept after 24 hours), `<private>/<label>/push/<id>/`
   (`before.json` 0600 = the live values at write time + a re-read after writing, `journal.jsonl` to resume when cut off; 30 days).
+  Before each mutation, `requests.json` durably stores its item identity and preimage, then stores the engine ACK before
+  read-back. Resume recovers acknowledged writes and their Undo evidence without sending them again. A lost answer,
+  interrupted write or incomplete rollback is `WRITE_OUTCOME_UNKNOWN`: no automatic resend and dependent items stay held.
+  Only an explicit `writer_busy` refusal retries a mutation; transient reads still retry. Apply and Undo share an OS lock
+  per push directory; Undo keeps separate receipts in `undo-requests.json`. Receipts and snapshots are private (0600).
+  A stopped apply drains in-flight writes before saving its complete partial result in `written.json`. The shell still records
+  acknowledged live IDs and reports the written/conflict/failed/skipped lists with the error, so the failed push remains undoable.
   **undo** is a reverse CAS: it restores "before" only where live still holds exactly the value the push left; the copy keeps Tracy's changes.
+  WordPress postmeta creates retain the resolved parent post ID and use a stable per-item native apply ID, stored in the durable preimage and Undo snapshot. Undo reverts only that native receipt after comparing the written value, verifies the metadata is absent, and never replays an uncertain mutation. Older snapshots without a dedicated receipt remain held; newer native writes retain their conflict guard. A new parent post stays in place when dependent metadata Undo is kept or failed, or a durable metadata receipt is ahead of the saved Apply output.
 - The web door, lease `push:<id>`, owner-only, switch `site-sync-to-live`, audit: on the tracy-web side.
 - Screen (25/10/2026): one flow of the Publish tab (`@tracy/core` `site-tabs/publish/PushStep.tsx`, Review › Send), opened from the Sync to live row of the ••• menu or by choosing "Send changes to your live site" in the tab; the old My Sites dialog was removed.
 
@@ -1959,7 +1990,9 @@ can still be read, running jobs stop at the next checkpoint with `paused` + `FEA
   the build still goes through `POST /api/sites` itself, keeping that door's permission/quota/template/site_design checks.
   The build receipt keeps `demoActionId`: an accepted failure of the current action does not re-provision on its own because of
   app/DB clock drift. Fill Retry keeps `timings.woRetryActionId` in the same `failed → queued` transaction; the same action does not
-  restart a fill that just failed, and does not create a brief for a site that has been replaced. A lost provision receipt may
+  restart a fill that just failed, and does not create a brief for a site that has been replaced. A recovery that interrupted
+  `applying` records `timings.lostFrom`; Create and Retry leave that row stopped even when no apply ID was saved,
+  because a write may have reached the site before its receipt was recorded. A lost provision receipt may
   replay the same `buildId` within the attempt limit; it is the same site, with no promise of exactly one POST. Dying after
   the fill is queued still follows the brief runner's lost-worker detection and needs a new Retry once failed.
   EmDash recognises WO through the link `site_creation.build_id` → `wo_build` before picking a model (callback
@@ -2616,3 +2649,15 @@ re-run, and content, mail and publish state are unchanged. Custom policies and `
 loosened. A sync error returns a pre-translated, embeddable notice page before reading the CMS; the next turn
 retries. Regular visitors and hosts outside the system cause no configuration writes.
 
+
+
+### Foreign keys during Sync from live and database restore
+
+The merge disables foreign-key checks only in its scratch SQL session and copies foreign-key
+metadata when taking a whole table. Restore captures outgoing constraints of replaced tables and
+incoming constraints from retained tables before the atomic rename. It temporarily drops that
+subset and recreates it in the site database with checks enabled. Cross-schema outgoing references
+keep their original target; inbound references from other databases are outside the site contract.
+The private site folder holds `.restore-foreign-keys.json` before any live FK DDL; interrupted-sync
+recovery and the next restore repair that graph before interpreting row checksums. A failed graph
+validation invokes the existing database/files rollback, and an incomplete rollback keeps its plan.

@@ -43,24 +43,45 @@ export { forbiddenFillers, forbiddenFillerText, validateSlotFillManifest } from 
 export { contractCopyPins, handMapApplies, slotFillPins, slotRolesFor } from './contract-copy-pins.mjs'
 export { planSlotFill, provisionalAssessment, SLOT_FILL_VERSION } from './slot-fill.mjs'
 export {
+  ARTICLE_ROLES,
   BASE_FILES,
+  CONTENT_MAP_ROLE_VOCABULARY_VERSIONS,
   DEFAULT_NEUTRAL_BY_ROLE,
   EDITORIAL_ROLES,
+  EDITORIAL_ROLES_V3,
   EMDASH_BASE_FILES,
   FACT_ROLES,
+  FACT_ROLES_ADDED_IN_V3,
+  FACT_ROLES_V3,
   GROUP_KINDS,
+  GROUP_KINDS_V3,
+  KEEP_DECISION_BY_ROLE,
+  KEEP_DECISIONS,
+  LOGO_ROLES,
   PLACE_CONTENT_ROLES,
+  PLACE_CONTENT_ROLES_V3,
+  ROLE_VOCABULARY_V3,
   ROLE_VOCABULARY_VERSION,
   ROLE_VOCABULARY_VERSIONS,
   SLOT_ROLES_SCHEMA_VERSION,
   baseHashOf,
   isEditorialRole,
   isFactRole,
+  isGroupKind,
   isRole,
+  keepDecisionOfRole,
   modeOfRole,
   sha256,
   validateSlotRoles
 } from './place-content-roles.mjs'
+export {
+  customizeOfRole,
+  keepDecisionOf,
+  keepDerivationProblems,
+  pictureReplaceOfRole,
+  roleDecidesKeep
+} from './content-map-keep-decision.mjs'
+export { collectionOfGroupId, repeatableListProblems } from './content-map-repeatable-lists.mjs'
 export {
   checkContentMapRoles,
   contentMapDeclaresRoles,
@@ -226,6 +247,29 @@ export {
   orientationOf,
   resolutionGradeOf
 } from './pictures/asset-labels.mjs'
+export { UPLOADER_ROLES, assetOriginOf, creditRequiredOf } from './pictures/asset-origin.mjs'
+export {
+  GENERAL,
+  PHOTO_ROLES,
+  assetRelationsOf,
+  closedListDigest,
+  closedListOf,
+  heldVisionLinks,
+  ownershipOf
+} from './pictures/picture-links.mjs'
+export {
+  BRIEF_ITEM_ROUTES,
+  itemKindsOfBrief,
+  ownerQuestionsOf,
+  routeTableErrors,
+  routesOfBrief
+} from './brief-item-routes.mjs'
+export {
+  BRIEF_READINESS_VERSION,
+  READINESS_THRESHOLDS,
+  briefReadinessOf,
+  heldKindsOf
+} from './brief-readiness.mjs'
 export {
   planPlacement,
   drawPlan,

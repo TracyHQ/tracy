@@ -6,7 +6,7 @@
  */
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, utimesSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
@@ -149,6 +149,25 @@ test('the threshold is data: the same file passes under a looser policy', () => 
     loose
   )
   assert.equal(verdict.holds, false)
+})
+
+test('the reader re-reads a map written in the same clock tick as its last read', () => {
+  const { contracts } = profile(doc())
+  const contract = [...contracts.values()][0]
+  const mapFile = path.join(contract.dir, 'content-map.json')
+  // A write just now, in whole milliseconds, so restoring the time below gives back exactly the same stamp.
+  const tick = new Date(Math.floor(Date.now()))
+  utimesSync(mapFile, tick, tick)
+  assert.equal(coverageOfContract(contract).state, 'measured')
+  // Same size, same modification time: only the bytes differ, as when two writes share a tick.
+  const original = readFileSync(mapFile, 'utf8')
+  const cut = original.indexOf('\n')
+  const sameLength =
+    cut >= 0 ? `${original.slice(0, cut)} ${original.slice(cut + 1)}` : `${original.slice(0, -1)} `
+  assert.equal(sameLength.length, original.length)
+  writeFileSync(mapFile, sameLength)
+  utimesSync(mapFile, tick, tick)
+  assert.equal(coverageOfContract(contract).state, 'stale')
 })
 
 test('a failed page or a cut crawl is an incomplete measurement and holds', () => {
@@ -307,19 +326,22 @@ test('a platform with no content map or field map at all does not need the step'
   assert.equal(stepOf(roadOf(shop, { contracts })).code, 'coverage-not-needed')
 })
 
-test('WordPress: holes and page hygiene are not measured, but the slot roles group is judged like on Joomla', () => {
+test("WordPress: the audit result is read like Joomla's, and the slot roles group is judged beside it", () => {
   const { contracts, wp } = wordpressProfile(MAP)
+  const measured = { state: 'measured', doc: doc() }
   const missing = { state: 'missing', count: 3, shown: ['a', 'b', 'c'], reason: null }
-  const ready = stepOf(roadOf(wp, { contracts, roles: { state: 'ready' } }))
-  assert.deepEqual([ready.state, ready.code], ['done', 'coverage-not-needed'])
-  const held = stepOf(roadOf(wp, { contracts, roles: missing }))
+  const ready = stepOf(roadOf(wp, { contracts, coverage: measured, roles: { state: 'ready' } }))
+  assert.deepEqual([ready.state, ready.code], ['done', 'coverage-ready'])
+  const held = stepOf(roadOf(wp, { contracts, coverage: measured, roles: missing }))
   assert.deepEqual(roleFields(held), ['todo', 'coverage-roles', 'missing', 3])
-  assert.equal(held.params.holes, undefined)
-  const none = stepOf(roadOf(wp, { contracts, roles: { state: 'none' } }))
+  assert.equal(held.params.holes, 0)
+  const none = stepOf(roadOf(wp, { contracts, coverage: measured, roles: { state: 'none' } }))
   assert.deepEqual([none.state, none.code], ['todo', 'coverage-roles'])
   const shown = { ...wp, inspiration: { template: 'ja-boxing' }, inspirationHidden: false }
-  const warned = stepOf(roadOf(shown, { contracts, roles: missing }))
+  const warned = stepOf(roadOf(shown, { contracts, coverage: measured, roles: missing }))
   assert.deepEqual([warned.state, warned.code], ['warn', 'coverage-live-roles'])
+  const holes = stepOf(roadOf(wp, { contracts, coverage: { state: 'measured', doc: doc([hole()]) } }))
+  assert.deepEqual([holes.state, holes.code, holes.params.holes], ['todo', 'coverage-holes', 1])
   const blocked = {
     step: 'published',
     state: 'blocked',
@@ -330,16 +352,24 @@ test('WordPress: holes and page hygiene are not measured, but the slot roles gro
   assert.match(publishRefusalOf([held, blocked], wp).reason, /3 text or image slots have no role/)
 })
 
+test('WordPress: a contract with no measurement waits for the audit, a live one only warns', () => {
+  const { contracts, wp } = wordpressProfile(MAP)
+  const none = stepOf(roadOf(wp, { contracts }))
+  assert.deepEqual([none.state, none.code], ['todo', 'coverage-not-measured'])
+  const shown = { ...wp, inspiration: { template: 'ja-boxing' }, inspirationHidden: false }
+  const warned = stepOf(roadOf(shown, { contracts }))
+  assert.deepEqual([warned.state, warned.code], ['warn', 'coverage-not-measured'])
+})
+
 test('WordPress: the roles are read from the content map of its own contract', () => {
+  const measured = { state: 'measured', doc: doc() }
   const missing = wordpressProfile(MAP_MISSING_ROLES)
-  assert.deepEqual(roleFields(stepOf(roadOf(missing.wp, { contracts: missing.contracts }))), [
-    'todo',
-    'coverage-roles',
-    'missing',
-    10
-  ])
+  assert.deepEqual(
+    roleFields(stepOf(roadOf(missing.wp, { contracts: missing.contracts, coverage: measured }))),
+    ['todo', 'coverage-roles', 'missing', 10]
+  )
   const full = wordpressProfile(MAP)
-  assert.equal(stepOf(roadOf(full.wp, { contracts: full.contracts })).state, 'done')
+  assert.equal(stepOf(roadOf(full.wp, { contracts: full.contracts, coverage: measured })).state, 'done')
 })
 
 test('EmDash: the roles group is judged too, whatever the contract state', () => {
@@ -622,10 +652,10 @@ test('fit group: holes keep their verdict, and Slot fit rides along in the refus
 
 test('fit group: WordPress and EmDash are not judged until their audit measures Slot fit', () => {
   const { contracts, wp } = wordpressProfile(MAP_WITHOUT_FIT)
-  const step = stepOf(roadOf(wp, { contracts }))
+  const step = stepOf(roadOf(wp, { contracts, coverage: { state: 'measured', doc: doc() } }))
   assert.deepEqual(
     [step.state, step.code, step.params.fitState, step.params.fitHolds],
-    ['done', 'coverage-not-needed', 'not-applicable', false]
+    ['done', 'coverage-ready', 'not-applicable', false]
   )
 })
 
@@ -665,4 +695,24 @@ test('fit group: the released JA Boxing 1.0.7 contract carries a complete Slot f
   assert.ok(hero, 'the hero boxer slot is in the map')
   assert.equal(hero.fit.kind, 'cutout')
   assert.equal(hero.fit.transparent, true)
+})
+
+test('label rules group: the released JA Boxing 1.0.8 contract (role vocabulary 3) holds nothing: every rule at 0, every located slot judged right, its style-guide page demo-only', () => {
+  const root = path.join(import.meta.dirname, '../../../packages/cms/tracy-joomla-quickstart/contracts')
+  const contracts = readContracts(root)
+  const at = (over) => release({ setting: { ...release().setting, version: '1.0.8' }, ...over })
+  const step = stepOf(roadOf(at({}), { contracts }))
+  assert.deepEqual(
+    [step.params.labelHolds, step.params.labelFailing, step.params.judgeState, step.params.judgeHolds],
+    [false, [], 'ready', false]
+  )
+  assert.deepEqual([step.params.judgeWrongGroupCount, step.params.judgeMismatchCount], [0, 0])
+  assert.deepEqual([step.params.fitState, step.params.fitHolds], ['ready', false])
+  const map = JSON.parse(readFileSync(path.join(root, 'ja-boxing/j6/1.0.8/content-map.json'), 'utf8'))
+  assert.equal(map.roleVocabularyVersion, 'place-content-roles/3')
+  const typography = map.entities.find((entity) => entity.key === 'article-17')
+  assert.equal(typography?.demoOnly, true)
+  // the Private Training phone has a slot of its own (ja-products #57), not a line inside the description
+  const phone = map.slots.find((slot) => slot.key === 'module-177.14')
+  assert.deepEqual([phone?.role, phone?.sample], ['contact.phone', '(239) 555-0108'])
 })

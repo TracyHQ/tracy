@@ -1,6 +1,6 @@
 # ADR 0039 — Slot fit lives in the content map, measured at capture; a picture's keep flag follows its measured kind
 
-- **Status:** (binding)
+- **Status:** (binding) — decision 3 is replaced by [ADR 0040](0040-place-content-roles-v3-role-is-the-single-keep-decider.md) for content maps bound against `place-content-roles/3` (the role, not the measured kind, decides keep or replace); it still holds for `place-content-roles/2` maps.
 - **Date:** 27/10/2026
 - **Decided by:** Akemi (COO), 27/10/2026, after a site built from a business brief broke the JA Boxing layout.
 

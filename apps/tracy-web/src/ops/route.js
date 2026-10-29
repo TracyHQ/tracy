@@ -61,6 +61,7 @@ import { viewAsRoutes } from './view-as.js'
 import { widgetRoutes } from './widget.js'
 import { woOpsRoutes } from './wo.js'
 import { woPlacesOpsRoutes } from './wo-places.js'
+import { woBriefLabelsRoutes } from './wo-brief-labels.js'
 
 /**
  * `/opt/tracy-web/static/ops` in the image (`apps/tracy-web/Dockerfile` COPYs
@@ -272,6 +273,8 @@ export function opsRoutes(deps) {
   app.route('/', woOpsRoutes({ pool, config, fetchImpl, prefetch: deps.prefetch ?? null }))
   // /ops/wo › Places: the shared place store across accounts (`wo-places.js`).
   app.route('/', woPlacesOpsRoutes({ pool, config, ...(deps.now ? { now: deps.now } : {}) }))
+  // /ops/wo › Briefs: the photos, labels, links and readiness of a brief revision (`wo-brief-labels.js`).
+  app.route('/', woBriefLabelsRoutes({ pool, config, objects: deps.objects ?? null }))
   app.route('/', desktopRoutes({ pool, config }))
   app.route(
     '/',

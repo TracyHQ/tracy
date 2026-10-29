@@ -726,6 +726,24 @@ test('🔒 a module write: its assignment asked within the budget; home and one 
   assert.deepEqual(d3.drawn, [], 'the usage read took the whole budget: nothing drawn, the write goes')
 })
 
+test('🔒 a read that timed out spends the budget even when the clock still reads time left', async () => {
+  // The timer fires on its own clock while Date.now counts whole ms, so a read can time out and the
+  // clock still read 1 ms left. A frozen injected clock makes that case exact: it never moves.
+  const ask = bare()
+  const d = drawer()
+  const held = await holdForBefore({
+    ask,
+    reach: writeReach(site('content.update', { kind: 'module', id: 93, fields: {}, confirm: true })),
+    reads: [],
+    draw: d.draw,
+    budgetMs: 1,
+    now: () => 1000,
+    usage: () => new Promise(() => {})
+  })
+  assert.deepEqual(d.drawn, [], 'the usage read timed out: the budget is spent, nothing is drawn')
+  assert.deepEqual(held.drew, [])
+})
+
 test('🔒 asksFirst: a call the door refuses CONFIRM_FIRST is not held; the same call after the yes is', () => {
   for (const call of [
     site('content.delete', { kind: 'post', id: 12 }),

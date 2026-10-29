@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-39-sign-in-first-screen",
+  "kind": "feat",
+  "title": "/login opens with what Tracy is beside the sign-in card, Google first, links to tracy.ai, Discord and X, and a hint for a mistyped big-mailbox domain",
+  "pr": 39,
+  "area": "identity/sign-in",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: loginPage for every interface language with Google configured.",
+    "S2: loginPage with Google only, with Google and GitHub, and with no provider.",
+    "S3: loginPage at the code step.",
+    "S4: The page script in jsdom: blur the address field with 'person@gmail.con', 'person@gmial.com', 'person@hotmial.com', then press the hint; then with 'person@hotmail.fr', 'person@gmx.at', 'person@lrv.de'."
+  ],
+  "expect": [
+    "S1: .signin-title is login.pitchTitle, .signin-eyebrow is login.heroTitle, the card title is login.getStarted, the submit button is login.emailMeCode, in each language.",
+    "S2: the Google form precedes #email-form; a GitHub form only when GitHub is configured; no .providers and no separator without a provider.",
+    "S3: #email-step hidden, #code-step shown, .signin-pitch and .signin-links present.",
+    "S4: #email-suggest shown with the fixed address in <strong>; pressing it fills the field and hides the hint; no hint for the last three."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/identity/pages.js (loginPage, signInPitch, signInLinks, loginScript likelyAddress); apps/tracy-web/src/lib/public-links.js (LINKS)"
+  },
+  "evidence": "Issue #33: most signed-out visits from campaign links left the first screen without starting to sign in; a gmail.con typo lost a sign-up",
+  "fence": "The hint never changes the address unasked and never fires for a provider's own country domain or a company domain",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-web/test/sign-in-first-screen.test.mjs"],
+    "needs": [],
+    "tests": [
+      "every interface language draws the pitch and the sign-in card in its own words",
+      "Google comes before the address form",
+      "the code step still hides the first card",
+      "a mistyped big-mailbox domain is offered back fixed",
+      "a real address, a provider’s own country domain and a company domain get no hint"
+    ]
+  }
+}

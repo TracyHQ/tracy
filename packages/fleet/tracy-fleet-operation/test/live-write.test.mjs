@@ -77,6 +77,8 @@ function engine({
     const { kind, key } = p
     let id = Number(p.id ?? 0)
     const fields = { ...p.fields }
+    // The WordPress engine addresses postmeta by its existing parent post, even on a create.
+    if (kind === 'postmeta' && (id <= 0 || !get('post', id))) return null
     if (fields.move_after !== undefined) delete fields.move_after
     if (THEME_KINDS.has(kind)) {
       // claude-cowork write_theme_row: by slug; a write without a title names the row by its slug.
@@ -127,9 +129,19 @@ function engine({
       const { token, action, params = {} } = JSON.parse(body)
       state.calls.push({ action, params })
       const answer = (status, value) => {
+        if (state.holdAnswer === action) {
+          state.held = true
+          state.heldResponse = res
+          return
+        }
         res.writeHead(status, { 'content-type': 'application/json' })
-        res.end(JSON.stringify(value))
+        // `phpNotice`: a host that prints PHP's notices ahead of every answer (PHP 8.5, display_errors on)
+        res.end((state.phpNotice ?? '') + JSON.stringify(value))
       }
+      if (state.failGetId === Number(params.id) && action === 'content.get')
+        return answer(403, { blocked: true })
+      if (state.blockWriteKind === params.kind && action === 'content.update')
+        return answer(403, { blocked: true })
       const refusal = state.refuse[action]
       if (refusal) {
         delete state.refuse[action]
@@ -207,9 +219,35 @@ function engine({
           if (sha !== params.expected_body_revision)
             return answer(200, { ok: false, error: 'revision_stale' })
         }
+        const previous = structuredClone(get(params.kind, params.id, params.key))
         const done = update(params)
+        if (done && params.kind === 'postmeta') {
+          ;(state.metaReceipts ??= {})[params.apply_id] = { ...params, before: previous }
+        }
+        if (state.dropAfterUpdate || state.dropUpdateKind === params.kind) {
+          delete state.dropUpdateKind
+          state.dropAfterUpdate = false
+          req.socket.destroy()
+          return
+        }
+        if (state.failReadback) state.refuse['content.get'] = 503
         if (!done) return answer(200, { ok: false, error: 'write_failed', message: 'target does not exist' })
         return answer(200, { ok: true, ...done })
+      }
+      if (action === 'apply.revert') {
+        const receipt = state.metaReceipts?.[params.apply_id]
+        if (receipt && !state.emptyMetaReceipt) {
+          const address = `${receipt.id}:${receipt.key}`
+          if (receipt.before === null) delete state.records.postmeta[address]
+          else state.records.postmeta[address] = receipt.before
+          delete state.metaReceipts[params.apply_id]
+        }
+        if (state.dropAfterRevert) {
+          state.dropAfterRevert = false
+          req.socket.destroy()
+          return
+        }
+        return answer(200, { ok: true, reverted: receipt ? 1 : 0 })
       }
       if (action === 'content.batch') {
         for (const [i, op] of params.operations.entries()) {
@@ -236,6 +274,8 @@ function engine({
         else {
           const [column, value] = trash(params.kind)
           row[column] = String(value)
+          if (platform === 'wordpress' && params.kind === 'post' && row.post_name)
+            row.post_name += '__trashed'
         }
         return answer(200, { ok: true, kind: params.kind, id: params.id, trashed: true })
       }
@@ -512,6 +552,21 @@ test('an update is written where the live site still holds the base value; what 
   }
 })
 
+test('a host that prints PHP notices ahead of each answer is written all the same (PHP 8.5 curl_close)', async () => {
+  const live = await engine({ records: { article: { 1: article(1) } } })
+  live.phpNotice =
+    '<br />\n<b>Deprecated</b>:  Function curl_close() is deprecated since 8.5, as it has no effect since PHP 8.0 in <b>/home/u1/public_html/plugins/Uploader.php</b> on line <b>53</b><br />\n'
+  try {
+    const dir = pushDir([update(1, { title: 'New one' }, { title: 'Article 1' })])
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.ok, true, JSON.stringify(answer))
+    assert.equal(answer.state, 'applied')
+    assert.equal(live.records.article[1].title, 'New one')
+  } finally {
+    await live.close()
+  }
+})
+
 test('a field the customer changed on the live site since the sync is a conflict: nothing of it is written', async () => {
   const live = await engine({
     records: { article: { 1: article(1, { title: 'Customer title' }), 2: article(2) } }
@@ -671,7 +726,7 @@ test('deletes wait for the owner’s word; over the limit waits for the next pus
 test('a busy site is asked again; a refused token stops before anything is written', async () => {
   const live = await engine({ records: { article: { 1: article(1) } } })
   try {
-    live.refuse['content.batch'] = 503
+    live.refuse['content.batch'] = { error: 'writer_busy' }
     const { answer } = await apply(live, pushDir([update(1, { title: 'One' }, { title: 'Article 1' })]))
     assert.equal(answer.state, 'applied')
     const dir = pushDir([update(1, { title: 'x' }, { title: 'One' })])
@@ -718,6 +773,7 @@ test('a picture: uploaded where the live site has none; the customer’s own fil
   try {
     const media = (path) => ({
       id: `media:${path}`,
+      creates: `file:${path}`,
       kind: 'media',
       spec: 'media',
       op: 'upload',
@@ -1593,7 +1649,8 @@ test('WordPress: independent posts go to the live site side by side, at most fou
       platform: 'wordpress',
       records: { post: Object.fromEntries(ids.map((i) => [i, wpPost(i)])) }
     })
-    live.slow = 150
+    // Keep network latency above durable receipt fsync overhead on the test disk.
+    live.slow = 350
     return live
   }
   const one = await make()
@@ -1719,6 +1776,631 @@ test('a live site that answers busy even once is written one item at a time from
     for (const [i, u] of live.updates.entries())
       if (u.start > firstEnd)
         assert.ok(live.overlaps[i].length <= 1, `after the strain, ${live.overlaps[i].length + 1} in flight`)
+  } finally {
+    await live.close()
+  }
+})
+
+test('lost create response is uncertain and Apply never creates it again or starts its dependents', async () => {
+  const live = await engine({ platform: 'wordpress' })
+  try {
+    live.dropAfterUpdate = true
+    const made = update(1, { post_title: 'Once' }, {}, { kind: 'post', op: 'create', creates: 'post:1' })
+    const dir = pushDir(
+      [
+        made,
+        update(
+          2,
+          { post_title: 'Dependent' },
+          {},
+          {
+            kind: 'post',
+            op: 'create',
+            dependsOn: [made.id]
+          }
+        )
+      ],
+      'wordpress'
+    )
+    for (let n = 0; n < 2; n++) {
+      const { answer } = await apply(live, dir)
+      assert.equal(answer.failed[0].error, 'WRITE_OUTCOME_UNKNOWN')
+      assert.equal(answer.skipped[0].reason, 'depends-on-failed')
+    }
+    assert.equal(Object.keys(live.records.post).length, 1)
+    assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 1)
+  } finally {
+    await live.close()
+  }
+})
+
+test('a failed read-back preserves the create ACK and Undo evidence without another create', async () => {
+  const live = await engine({ platform: 'wordpress' })
+  try {
+    live.failReadback = true
+    const dir = pushDir(
+      [
+        update(
+          1,
+          { post_title: 'Once', post_status: 'publish' },
+          {},
+          {
+            kind: 'post',
+            op: 'create',
+            creates: 'post:1'
+          }
+        )
+      ],
+      'wordpress'
+    )
+    assert.equal((await apply(live, dir)).answer.written.length, 1)
+    assert.equal((await apply(live, dir)).answer.written.length, 1)
+    assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 1)
+    delete live.refuse['content.get']
+    live.failReadback = false
+    assert.equal((await undo(live, dir)).answer.restored.length, 1)
+  } finally {
+    await live.close()
+  }
+})
+
+test('an ACK recovers its original preimage after a cut before the item journal', async () => {
+  const live = await engine({
+    platform: 'wordpress',
+    records: { post: { 1: { id: '1', post_title: 'Before' } } }
+  })
+  try {
+    const dir = pushDir(
+      [update(1, { post_title: 'After' }, { post_title: 'Before' }, { kind: 'post' })],
+      'wordpress'
+    )
+    assert.equal((await apply(live, dir)).answer.written.length, 1)
+    for (const name of ['journal.jsonl', 'before.json', 'written.json']) rmSync(join(dir, name))
+    assert.equal((await apply(live, dir)).answer.written.length, 1)
+    assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 1)
+    assert.equal((await undo(live, dir)).answer.restored.length, 1)
+    assert.equal(live.records.post[1].post_title, 'Before')
+  } finally {
+    await live.close()
+  }
+})
+
+test('two Apply processes cannot mutate the same push concurrently', async () => {
+  const live = await engine({ platform: 'wordpress' })
+  try {
+    live.slow = 400
+    const dir = pushDir([update(1, { post_title: 'Once' }, {}, { kind: 'post', op: 'create' })], 'wordpress')
+    const answers = await Promise.all([apply(live, dir), apply(live, dir)])
+    assert.equal(answers.filter((r) => r.answer.code === 'PUSH_BUSY').length, 1)
+    assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 1)
+  } finally {
+    await live.close()
+  }
+})
+
+test('two distinct creates with identical fields retain distinct live IDs', async () => {
+  const live = await engine({ platform: 'wordpress' })
+  try {
+    const dir = pushDir(
+      [1, 2].map((id) =>
+        update(
+          id,
+          { post_title: 'Same' },
+          {},
+          {
+            kind: 'post',
+            op: 'create',
+            creates: `post:${id}`
+          }
+        )
+      ),
+      'wordpress'
+    )
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.written.length, 2)
+    assert.notEqual(answer.created['post:1'], answer.created['post:2'])
+    assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 2)
+  } finally {
+    await live.close()
+  }
+})
+
+test('a batch with incomplete rollback is never sent again after Apply restarts', async () => {
+  const live = await engine({ records: { article: { 1: article(1) } } })
+  try {
+    live.refuse['content.batch'] = {
+      error: 'batch_failed',
+      message: 'some writes stay on the site; could not be taken back'
+    }
+    const dir = pushDir([update(1, { title: 'After' }, { title: 'Article 1' })])
+    await apply(live, dir)
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.failed[0].error, 'WRITE_OUTCOME_UNKNOWN')
+    assert.equal(live.calls.filter((c) => c.action === 'content.batch').length, 1)
+    assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 0)
+  } finally {
+    await live.close()
+  }
+})
+
+test('a worker killed after create cannot resend that create when Apply restarts', async () => {
+  const live = await engine({ platform: 'wordpress' })
+  let child
+  try {
+    live.holdAnswer = 'content.update'
+    const dir = pushDir([update(1, { post_title: 'Once' }, {}, { kind: 'post', op: 'create' })], 'wordpress')
+    child = spawn('node', [WRITE, 'apply', dir, dir], {
+      env: { ...process.env, TRACY_SYNC_ENDPOINT: live.endpoint, TRACY_SYNC_TOKEN: TOKEN },
+      stdio: 'ignore'
+    })
+    for (let i = 0; i < 500 && !live.held; i++) await new Promise((resolve) => setTimeout(resolve, 10))
+    assert.equal(live.held, true)
+    const closed = new Promise((resolve) => child.once('close', resolve))
+    child.kill('SIGKILL')
+    await closed
+    live.heldResponse.destroy()
+    live.holdAnswer = null
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.failed[0].error, 'WRITE_OUTCOME_UNKNOWN')
+    assert.equal(Object.keys(live.records.post).length, 1)
+    assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 1)
+  } finally {
+    child?.kill('SIGKILL')
+    live.heldResponse?.destroy()
+    await live.close()
+  }
+})
+
+test('a replacement waits for the confirmed delete, and Undo restores the exact original slug', async () => {
+  for (const mode of ['confirmed', 'unconfirmed', 'conflict', 'edited-replacement', 'create-failed']) {
+    const original = {
+      id: '10',
+      post_title: 'Old about',
+      post_name: 'about',
+      post_status: 'publish',
+      post_type: 'page'
+    }
+    const live = await engine({ platform: 'wordpress', records: { post: { 10: { ...original } } } })
+    const removed = update(10, {}, original, {
+      id: 'post:10',
+      kind: 'post',
+      spec: 'post',
+      op: 'delete',
+      trash: ['post_status', 'trash']
+    })
+    const created = update(
+      20,
+      { post_title: 'New about', post_name: 'about', post_status: 'publish', post_type: 'page' },
+      {},
+      {
+        id: 'post:new:20',
+        kind: 'post',
+        spec: 'post',
+        op: 'create',
+        liveId: null,
+        creates: 'posts:20',
+        dependsOn: [removed.id],
+        replaces: [removed.id]
+      }
+    )
+    const dir = pushDir([removed, created], 'wordpress')
+    try {
+      if (mode === 'conflict') live.records.post[10].post_title = 'Customer title'
+      if (mode === 'create-failed') live.refuse['content.update'] = { error: 'invalid_params' }
+      const { answer } = await apply(live, dir, mode === 'unconfirmed' ? [] : ['--confirm-deletes'])
+      if (mode === 'unconfirmed' || mode === 'conflict') {
+        assert.equal(answer.written.length, 0, JSON.stringify(answer))
+        assert.equal(
+          live.calls.filter((c) => ['content.update', 'content.delete'].includes(c.action)).length,
+          0
+        )
+        continue
+      }
+      if (mode === 'create-failed') {
+        assert.equal(answer.written.length, 1, JSON.stringify(answer))
+        const back = (await undo(live, dir)).answer
+        assert.equal(back.restored.length, 1, JSON.stringify(back))
+        assert.equal(live.records.post[10].post_name, 'about')
+        continue
+      }
+      assert.equal(answer.written.length, 2, JSON.stringify(answer))
+      assert.deepEqual(
+        live.calls
+          .filter((c) => ['content.update', 'content.delete'].includes(c.action))
+          .map((c) => c.action),
+        ['content.delete', 'content.update']
+      )
+      const newId = answer.created['posts:20']
+      // WordPress appends __trashed when trashing a post; Undo must restore its original address.
+      live.records.post[10].post_name = 'about__trashed'
+      if (mode === 'edited-replacement') live.records.post[newId].post_title = 'Customer replacement'
+      if (mode === 'edited-original-slug') live.records.post[10].post_name = 'customer-parked'
+      const back = (await undo(live, dir)).answer
+      if (mode === 'edited-original-slug') {
+        assert.equal(live.records.post[10].post_name, 'customer-parked')
+        assert.equal(live.records.post[10].post_status, 'trash')
+        assert.ok(back.kept.some((i) => i.id === removed.id && i.fields.includes('post_name')))
+      } else if (mode === 'edited-replacement') {
+        assert.equal(live.records.post[10].post_status, 'trash')
+        assert.ok(
+          back.kept.some((i) => i.id === removed.id && i.reason === 'depends-on-failed'),
+          JSON.stringify(back)
+        )
+      } else {
+        assert.equal(back.restored.length, 2, JSON.stringify(back))
+        assert.equal(live.records.post[10].post_status, 'publish')
+        assert.equal(live.records.post[10].post_name, 'about')
+        assert.equal(live.records.post[newId].post_status, 'trash')
+      }
+    } finally {
+      await live.close()
+    }
+  }
+})
+
+test('a Joomla alias replacement held in preview never trashes the original or writes its dependents', async () => {
+  const live = await engine({ records: { article: { 1: article(1, { alias: 'about' }) } } })
+  try {
+    const conflict = { reason: 'changed-on-live', fields: ['alias'] }
+    const removed = update(1, {}, {}, { op: 'delete', trash: ['state', -2], conflict })
+    const created = update(
+      2,
+      { alias: 'about' },
+      {},
+      { op: 'create', creates: 'content:2', dependsOn: [removed.id], conflict }
+    )
+    const dependent = update(3, { introtext: 'new' }, {}, { op: 'create', dependsOn: [created.id] })
+    const { answer } = await apply(live, pushDir([removed, created, dependent]), ['--confirm-deletes'])
+    assert.equal(answer.written.length, 0)
+    assert.equal(live.records.article[1].state, '1')
+    assert.equal(
+      live.calls.filter((c) => ['content.batch', 'content.update', 'content.delete'].includes(c.action))
+        .length,
+      0
+    )
+  } finally {
+    await live.close()
+  }
+})
+
+test('a stopped parallel Apply drains acknowledged siblings and preserves a complete undoable partial result', async () => {
+  const live = await engine({
+    platform: 'wordpress',
+    records: {
+      post: {
+        1: wpPost(1),
+        2: wpPost(2),
+        3: wpPost(3),
+        4: wpPost(4),
+        5: wpPost(5)
+      }
+    }
+  })
+  try {
+    live.slow = 150
+    live.failGetId = 2
+    const dir = pushDir(
+      [1, 2, 3, 4, 5].map((id) => postItem(id)),
+      'wordpress'
+    )
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.ok, false)
+    assert.equal(answer.state, 'partial')
+    assert.deepEqual(
+      answer.written.map((w) => w.id),
+      ['post:1', 'post:3', 'post:4']
+    )
+    assert.equal(answer.written.length + answer.skipped.length + answer.failed.length, 5)
+    assert.deepEqual(JSON.parse(readFileSync(join(dir, 'written.json'), 'utf8')), answer)
+    assert.equal(live.records.post[5].post_title, 'Old 5', 'no pending writes start after failure')
+    live.failGetId = null
+    const back = await undo(live, dir)
+    assert.equal(back.answer.restored.length, 3)
+    for (const id of [1, 3, 4]) assert.equal(live.records.post[id].post_title, `Old ${id}`)
+  } finally {
+    await live.close()
+  }
+})
+
+test('a blocked batch retains earlier writes in the failed Apply answer and Undo', async () => {
+  const live = await engine({ records: { article: { 1: article(1), 2: article(2) } } })
+  try {
+    live.refuse['content.batch'] = 403
+    const dir = pushDir([
+      update(9, { title: 'Made', state: 1 }, {}, { op: 'create', creates: 'article:9' }),
+      update(1, { title: 'After' }, { title: 'Article 1' }),
+      update(2, { title: 'After 2' }, { title: 'Article 2' })
+    ])
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.ok, false)
+    assert.equal(answer.state, 'partial')
+    assert.equal(answer.written.length, 1)
+    assert.equal(answer.failed.length, 2)
+    assert.equal((await undo(live, dir)).answer.restored.length, 1)
+  } finally {
+    await live.close()
+  }
+})
+
+const createPostMeta = (postId, key, value, dependsOn = []) => ({
+  id: `postmeta:new:${typeof postId === 'object' ? 'new-post' : postId}:${key}`,
+  kind: 'postmeta',
+  spec: 'postmeta',
+  op: 'create',
+  title: key,
+  liveId: null,
+  ident: postId,
+  key,
+  creates: null,
+  write: { value },
+  expect: { $absent: true },
+  dependsOn,
+  seed: []
+})
+
+test('WordPress missing featured-image and page-template meta retain the existing parent post address', async () => {
+  const live = await engine({ platform: 'wordpress', records: { post: { 30: wpPost(30) } } })
+  try {
+    const dir = pushDir(
+      [createPostMeta(30, '_thumbnail_id', '200'), createPostMeta(30, '_wp_page_template', 'landing.php')],
+      'wordpress'
+    )
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.state, 'applied', JSON.stringify(answer))
+    assert.equal(live.records.postmeta['30:_thumbnail_id'].value, '200')
+    assert.equal(live.records.postmeta['30:_wp_page_template'].value, 'landing.php')
+    assert.equal(live.records.postmeta['0:_thumbnail_id'], undefined)
+    assert.equal(live.records.post[30].post_title, wpPost(30).post_title)
+  } finally {
+    await live.close()
+  }
+})
+
+test('WordPress new-post meta uses the resolved live parent ID and does not create another post', async () => {
+  const live = await engine({ platform: 'wordpress', records: { post: {} } })
+  try {
+    const parent = {
+      id: 'post:new:50',
+      kind: 'post',
+      spec: 'post',
+      op: 'create',
+      title: 'New page',
+      liveId: null,
+      ident: 0,
+      key: null,
+      creates: 'posts:50',
+      write: { post_title: 'New page', post_content: 'Body', post_type: 'page', post_status: 'publish' },
+      expect: {},
+      dependsOn: [],
+      seed: []
+    }
+    const dir = pushDir(
+      [
+        parent,
+        createPostMeta({ $new: 'posts:50' }, '_thumbnail_id', '200', [parent.id]),
+        createPostMeta({ $new: 'posts:50' }, '_wp_page_template', 'landing.php', [parent.id])
+      ],
+      'wordpress'
+    )
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.state, 'applied', JSON.stringify(answer))
+    const liveId = answer.created['posts:50']
+    assert.ok(liveId > 0)
+    assert.equal(Object.keys(live.records.post).length, 1)
+    assert.equal(live.records.postmeta[`${liveId}:_thumbnail_id`].value, '200')
+    assert.equal(live.records.postmeta[`${liveId}:_wp_page_template`].value, 'landing.php')
+    assert.equal((await undo(live, dir)).answer.restored.length, 3)
+    assert.equal(live.records.postmeta[`${liveId}:_thumbnail_id`], undefined)
+    assert.equal(live.records.postmeta[`${liveId}:_wp_page_template`], undefined)
+    assert.equal(live.records.post[liveId].post_status, 'trash')
+  } finally {
+    await live.close()
+  }
+})
+
+test('WordPress meta a customer created after preview is kept without a write', async () => {
+  const live = await engine({
+    platform: 'wordpress',
+    records: {
+      post: { 30: wpPost(30) },
+      postmeta: { '30:_thumbnail_id': { value: '300' } }
+    }
+  })
+  try {
+    const { answer } = await apply(live, pushDir([createPostMeta(30, '_thumbnail_id', '200')], 'wordpress'))
+    assert.equal(answer.written.length, 0)
+    assert.equal(live.records.postmeta['30:_thumbnail_id'].value, '300')
+    assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 0)
+  } finally {
+    await live.close()
+  }
+})
+
+for (const scenario of [
+  'normal',
+  'changed',
+  'native-conflict',
+  'empty-receipt',
+  'lost-response',
+  'legacy',
+  'restart'
+]) {
+  test(`WordPress new metadata Undo: ${scenario}`, async () => {
+    const live = await engine({ platform: 'wordpress', records: { post: { 30: wpPost(30) } } })
+    try {
+      const meta = createPostMeta(30, '_thumbnail_id', '200')
+      const dir = pushDir(
+        [
+          meta,
+          update(30, { post_title: 'Updated title' }, { post_title: wpPost(30).post_title }, { kind: 'post' })
+        ],
+        'wordpress'
+      )
+      assert.equal((await apply(live, dir)).answer.written.length, 2)
+      const snapshot = JSON.parse(readFileSync(join(dir, 'before.json')))
+      const nativeId = snapshot.items[meta.id].nativeApplyId
+      assert.ok(nativeId.includes('-meta-'))
+      const metaCall = live.calls.find((c) => c.action === 'content.update' && c.params.kind === 'postmeta')
+      const postCall = live.calls.find((c) => c.action === 'content.update' && c.params.kind === 'post')
+      assert.equal(metaCall.params.apply_id, nativeId)
+      assert.notEqual(nativeId, postCall.params.apply_id)
+      if (scenario === 'changed') live.records.postmeta['30:_thumbnail_id'].value = '300'
+      if (scenario === 'native-conflict') live.refuse['apply.revert'] = { error: 'conflict' }
+      if (scenario === 'empty-receipt') live.emptyMetaReceipt = true
+      if (scenario === 'lost-response') live.dropAfterRevert = true
+      if (scenario === 'legacy') {
+        delete snapshot.items[meta.id].nativeApplyId
+        writeFileSync(join(dir, 'before.json'), JSON.stringify(snapshot))
+      }
+      if (scenario === 'restart') {
+        for (const name of ['journal.jsonl', 'before.json', 'written.json']) rmSync(join(dir, name))
+        assert.equal((await apply(live, dir)).answer.written.length, 2)
+        assert.equal(
+          JSON.parse(readFileSync(join(dir, 'before.json'))).items[meta.id].nativeApplyId,
+          nativeId
+        )
+        assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 2)
+      }
+      const result = (await undo(live, dir)).answer
+      assert.equal(live.records.post[30].post_title, wpPost(30).post_title)
+      if (['normal', 'lost-response', 'restart'].includes(scenario)) {
+        assert.equal(live.records.postmeta['30:_thumbnail_id'], undefined)
+        assert.ok(
+          result.restored.some((r) => r.id === meta.id),
+          JSON.stringify(result)
+        )
+        await undo(live, dir)
+        assert.equal(live.calls.filter((c) => c.action === 'apply.revert').length, 1)
+      } else if (scenario === 'empty-receipt') {
+        assert.equal(result.failed.find((r) => r.id === meta.id)?.error, 'WRITE_OUTCOME_UNKNOWN')
+        await undo(live, dir)
+        assert.equal(live.calls.filter((c) => c.action === 'apply.revert').length, 1)
+      } else {
+        assert.equal(
+          result.kept.find((r) => r.id === meta.id)?.reason,
+          scenario === 'legacy' ? 'cannot-remove' : 'changed-on-live'
+        )
+        assert.equal(
+          live.calls.filter((c) => c.action === 'apply.revert').length,
+          scenario === 'native-conflict' ? 1 : 0
+        )
+      }
+      assert.ok(
+        live.calls.filter((c) => c.action === 'apply.revert').every((c) => c.params.apply_id === nativeId)
+      )
+    } finally {
+      await live.close()
+    }
+  })
+}
+
+for (const scenario of ['changed', 'empty-receipt', 'native-conflict']) {
+  test(`WordPress new parent stays published when its metadata Undo is held: ${scenario}`, async () => {
+    const live = await engine({ platform: 'wordpress', records: { post: {} } })
+    try {
+      const parent = {
+        id: 'post:new:50',
+        kind: 'post',
+        spec: 'post',
+        op: 'create',
+        ident: 0,
+        creates: 'posts:50',
+        key: null,
+        write: { post_title: 'New page', post_status: 'publish' },
+        expect: {},
+        dependsOn: [],
+        seed: []
+      }
+      const child = createPostMeta({ $new: 'posts:50' }, '_thumbnail_id', '200', [parent.id])
+      const dir = pushDir([parent, child], 'wordpress')
+      const applied = (await apply(live, dir)).answer
+      assert.equal(applied.written.length, 2)
+      const id = applied.created['posts:50']
+      if (scenario === 'changed') live.records.postmeta[`${id}:_thumbnail_id`].value = '300'
+      if (scenario === 'empty-receipt') live.emptyMetaReceipt = true
+      if (scenario === 'native-conflict') live.refuse['apply.revert'] = { error: 'conflict' }
+      const result = (await undo(live, dir)).answer
+      assert.equal(result.kept.find((r) => r.id === parent.id)?.reason, 'depends-on-failed')
+      assert.equal(live.records.post[id].post_status, 'publish')
+      assert.equal(live.records.postmeta[`${id}:_thumbnail_id`].value, scenario === 'changed' ? '300' : '200')
+      assert.equal(live.calls.filter((c) => c.action === 'content.delete').length, 0)
+    } finally {
+      await live.close()
+    }
+  })
+}
+
+test('WordPress new parent stays published after its metadata create loses the ACK', async () => {
+  const live = await engine({ platform: 'wordpress', records: { post: {} } })
+  try {
+    const parent = {
+      id: 'post:new:50',
+      kind: 'post',
+      spec: 'post',
+      op: 'create',
+      ident: 0,
+      creates: 'posts:50',
+      key: null,
+      write: { post_title: 'New page', post_status: 'publish' },
+      expect: {},
+      dependsOn: [],
+      seed: []
+    }
+    const child = createPostMeta({ $new: 'posts:50' }, '_thumbnail_id', '200', [parent.id])
+    const dir = pushDir([parent, child], 'wordpress')
+    live.dropUpdateKind = 'postmeta'
+    const applied = (await apply(live, dir)).answer
+    assert.equal(applied.written.length, 1)
+    assert.equal(applied.failed.find((r) => r.id === child.id)?.error, 'WRITE_OUTCOME_UNKNOWN')
+    const id = applied.created['posts:50']
+    const result = (await undo(live, dir)).answer
+    assert.equal(result.kept.find((r) => r.id === parent.id)?.reason, 'depends-on-failed')
+    assert.equal(live.records.post[id].post_status, 'publish')
+    assert.equal(live.records.postmeta[`${id}:_thumbnail_id`].value, '200')
+    assert.equal(live.calls.filter((c) => c.action === 'content.delete').length, 0)
+    await apply(live, dir)
+    assert.equal(
+      live.calls.filter((c) => c.action === 'content.update' && c.params.kind === 'postmeta').length,
+      1
+    )
+  } finally {
+    await live.close()
+  }
+})
+
+test('WordPress new parent stays published when its metadata ACK is ahead of stale Apply output', async () => {
+  const live = await engine({ platform: 'wordpress', records: { post: {} } })
+  try {
+    const parent = {
+      id: 'post:new:50',
+      kind: 'post',
+      spec: 'post',
+      op: 'create',
+      ident: 0,
+      creates: 'posts:50',
+      key: null,
+      write: { post_title: 'New page', post_status: 'publish' },
+      expect: {},
+      dependsOn: [],
+      seed: []
+    }
+    const child = createPostMeta({ $new: 'posts:50' }, '_thumbnail_id', '200', [parent.id])
+    const dir = pushDir([parent, child], 'wordpress')
+    const applied = (await apply(live, dir)).answer
+    assert.equal(applied.written.length, 2)
+    const id = applied.created['posts:50']
+    // Model the durable cut after ACK: the earlier partial output only names the parent.
+    const written = JSON.parse(readFileSync(join(dir, 'written.json')))
+    written.written = written.written.filter((r) => r.id !== child.id)
+    writeFileSync(join(dir, 'written.json'), JSON.stringify(written))
+    const before = JSON.parse(readFileSync(join(dir, 'before.json')))
+    delete before.items[child.id]
+    writeFileSync(join(dir, 'before.json'), JSON.stringify(before))
+    const result = (await undo(live, dir)).answer
+    assert.equal(result.kept.find((r) => r.id === parent.id)?.reason, 'depends-on-failed')
+    assert.equal(live.records.post[id].post_status, 'publish')
+    assert.equal(live.records.postmeta[`${id}:_thumbnail_id`].value, '200')
+    assert.equal(live.calls.filter((c) => c.action === 'content.delete').length, 0)
   } finally {
     await live.close()
   }

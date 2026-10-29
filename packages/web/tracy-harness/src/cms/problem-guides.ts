@@ -509,6 +509,7 @@ function coverageOutside(ctx: GuideContext, p: Record<string, unknown>, problem:
     (h) => `${String(h.kind ?? '')} "${String(h.value ?? '')}" (${String(h.class ?? '')})`
   )
   const problems = problemsOf(p)
+  const wordpress = ctx.platform === 'wordpress'
   return {
     label: claudeCode(),
     text: [
@@ -517,9 +518,11 @@ function coverageOutside(ctx: GuideContext, p: Record<string, unknown>, problem:
       ...(shown.length > 0 ? [`First holes: ${shown.join('; ')}.`] : []),
       ...(problems.length > 0 ? [`Page problems: ${problems.join('; ')}.`] : []),
       'Work in a tch checkout with the quickstart-contract skill (.agents/skills/quickstart-contract/SKILL.md: K8 is section 7 step 7, its fix loop section 7b). Fix everything in ONE round, before the PR, so every fix lands in one PR:',
-      `1. Measure. Build a local site from this release (tracy-dev restore), unpack its webroot, keep its database file, then run: node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs --site <local site url> --contract packages/cms/tracy-joomla-quickstart/contracts/${contract} --db-dump <database file of the release> --webroot <unpacked webroot> --out <empty folder outside the repo> --write${fitLeft(p) ? ' --fit' : ''}`,
+      `1. Measure. Build a local site from this release (tracy-dev restore), unpack its webroot, keep its database file, then run: node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs --site <local site url> --contract ${wordpress ? slotRolesContractDir(ctx, p) : `packages/cms/tracy-joomla-quickstart/contracts/${contract}`} --db-dump <database file of the release> --webroot <unpacked webroot> --out <empty folder outside the repo> --write${fitLeft(p) ? ' --fit' : ''}`,
       '2. Read report.html in that folder: holes by class, then Page hygiene.',
-      '3. capture (the value is in the site database): the capture rules miss it, in packages/cms/tracy-joomla-quickstart/scripts/capture-contract.py and the contract door of the Claude Cowork plugin. Fix the rule for every template, test first; never edit one contract by hand. Demo content the presentation lock pins is a hole too: carve it out of the lock. Then capture the contract again.',
+      wordpress
+        ? '3. capture (the value is in the site database): the capture rules miss it, in packages/cms/tracy-wordpress-quickstart/scripts/capture-contract.mjs (run it with --all-text so every visible text of a page gets a slot, and --role-vocabulary 3 for a template on version 3 roles). Fix the rule for every template, test first; never edit one contract by hand. Demo content the presentation lock pins is a hole too: carve it out of the lock. Then capture the contract again.'
+        : '3. capture (the value is in the site database): the capture rules miss it, in packages/cms/tracy-joomla-quickstart/scripts/capture-contract.py and the contract door of the Claude Cowork plugin. Fix the rule for every template, test first; never edit one contract by hand. Demo content the presentation lock pins is a hole too: carve it out of the lock. Then capture the contract again.',
       `4. template (written in the template files), and every page problem (a raw language constant, PHP error text, an unfilled placeholder): fix the template source in ${REPO}, build the next quickstart version in the same package format as this release, and capture again on it. ${LANGUAGE_STRINGS}`,
       '5. core: nothing to do.',
       ...(rolesLeft(p) ? [`The contract also ${rolesProblem(p)}`, ...rolesSteps(ctx, p, ['5a', '5b'])] : []),
@@ -701,6 +704,137 @@ function fitLists(p: Record<string, unknown>) {
         }
       ]
     : []
+}
+
+/** The failing label rules a step carries (ADR 0040), as sent; anything not shaped like one is dropped. */
+const labelRulesOf = (p: Record<string, unknown>) =>
+  (Array.isArray(p.labelFailing) ? p.labelFailing : [])
+    .filter((x): x is Record<string, unknown> => !!x && typeof x === 'object' && typeof x.rule === 'string')
+    .map((x) => ({
+      rule: String(x.rule),
+      title: str(x.title) ?? String(x.rule),
+      count: Number(x.count ?? 0),
+      keys: list(x.keys)
+    }))
+
+/** The label rules group's headline in the step title: how many rules fail. */
+const labelCounted = (p: Record<string, unknown>): string =>
+  tr('cms-readiness.coverage.labels', { count: labelRulesOf(p).length })
+
+/** One list per failing label rule: its title and the first slots (or holes) that fail it. */
+const labelLists = (p: Record<string, unknown>) =>
+  labelRulesOf(p)
+    .filter((f) => f.keys.length > 0)
+    .map((f) => ({ heading: `${f.rule} ${f.title}`, count: f.count, lines: f.keys }))
+
+/**
+ * The paste-ready prompt for the label rules group of Content coverage (ADR 0040): which rules fail, on which slots,
+ * and how to relabel and measure again. English: its reader is the model.
+ */
+function labelRulesOutside(ctx: GuideContext, p: Record<string, unknown>): OutsideFix {
+  const contractDir = slotRolesContractDir(ctx, p)
+  const rules = labelRulesOf(p).map(
+    (f) =>
+      `${f.rule} ${f.title} (${f.count}${f.keys.length > 0 ? `: ${f.keys.join(', ')}${f.count > f.keys.length ? ', ...' : ''}` : ''})`
+  )
+  return {
+    label: claudeCode(),
+    text: [
+      `The label rules of the release ${ctx.tag} (${ctx.cms}${ctx.version ? ` ${ctx.version}` : ''}) on ${REPO} fail: ${rules.join('; ')}.`,
+      'Work in a tch checkout with the quickstart-contract skill (.agents/skills/quickstart-contract/SKILL.md). Fix it in ONE round, before the PR:',
+      `1. Relabel. For each listed slot, read its sample and its place in ${contractDir}/content-map.json and correct its "role" and "group" (a fact such as a phone, price, hours, name or number needs a contact or price role, never an editorial one; every URL slot needs a role; a repeated block is one group per item; a call to action shares a group with its label; a face needs a person, quote or business role, or stat.proof_image when the faces prove a number). A hole listed under R9 is a fact the content map misses: capture it, do not accept it.`,
+      '2. Run node scripts/slot-roles/check.mjs on that contract folder until it exits 0.',
+      '3. Run the content coverage audit again with --write (section 7 step 7 of the skill) and read labelRules in content-coverage.json: every blocking rule must show a count of 0. Commit content-map.json and content-coverage.json in the same PR.',
+      'Stop before every commit, push, PR and merge, and wait for my go.',
+      'Once the PR is merged and CI has deployed this server, Content coverage on the Road to live reads the new file.'
+    ].join('\n'),
+    doc: COVERAGE_SKILL_DOC
+  }
+}
+
+/** The judged slots of one list a step carries (spec #37), as sent; anything not shaped like one is dropped. */
+const judgedOf = (v: unknown) =>
+  (Array.isArray(v) ? v : [])
+    .filter((x): x is Record<string, unknown> => !!x && typeof x === 'object' && typeof x.key === 'string')
+    .map((x) => ({
+      key: String(x.key),
+      role: str(x.role) ?? 'no role',
+      suggested: str(x.suggested) ?? '',
+      why: str(x.why) ?? ''
+    }))
+
+/** The label judge's headline in the step title: wrong groups first, then finer mismatches, then what it never judged. */
+function judgeCounted(p: Record<string, unknown>): string {
+  if (p.judgeState === 'wrong-group')
+    return tr('cms-readiness.coverage.judge.wrongGroup', { count: Number(p.judgeWrongGroupCount ?? 0) })
+  if (p.judgeState === 'mismatch')
+    return tr('cms-readiness.coverage.judge.mismatch', { count: Number(p.judgeMismatchCount ?? 0) })
+  return tr('cms-readiness.coverage.judge.notJudged', { count: Number(p.judgeNotJudged ?? 0) })
+}
+
+/** The label judge's lists: slots on the wrong side of fact/editorial, then finer mismatches, each with its suggestion. */
+function judgeLists(p: Record<string, unknown>) {
+  const line = (x: { key: string; role: string; suggested: string }) =>
+    `${x.key}: ${x.role} -> ${x.suggested}`
+  const wrong = judgedOf(p.judgeWrongGroup)
+  const finer = judgedOf(p.judgeMismatch)
+  return [
+    ...(wrong.length > 0
+      ? [
+          {
+            heading: tr('cms-readiness.coverage.list.judgeWrongGroup'),
+            count: Number(p.judgeWrongGroupCount ?? wrong.length),
+            lines: wrong.map(line)
+          }
+        ]
+      : []),
+    ...(finer.length > 0
+      ? [
+          {
+            heading: tr('cms-readiness.coverage.list.judgeMismatch'),
+            count: Number(p.judgeMismatchCount ?? finer.length),
+            lines: finer.map(line)
+          }
+        ]
+      : [])
+  ]
+}
+
+/**
+ * The paste-ready prompt for the label judge of Content coverage (spec #37): which slots the judge (the agent that ran
+ * the release) says are labelled wrong and what it suggests, or how to get them judged at all. English: its reader is the model.
+ */
+function labelJudgeOutside(ctx: GuideContext, p: Record<string, unknown>): OutsideFix {
+  const contractDir = slotRolesContractDir(ctx, p)
+  const said = (xs: ReturnType<typeof judgedOf>, total: number) =>
+    `${xs.map((x) => `${x.key} is labelled ${x.role}, the judge suggests ${x.suggested}${x.why ? ` (${x.why})` : ''}`).join('; ')}${total > xs.length ? ', ...' : ''}`
+  const wrong = judgedOf(p.judgeWrongGroup)
+  const finer = judgedOf(p.judgeMismatch)
+  const notJudged = Number(p.judgeNotJudged ?? 0)
+  return {
+    label: claudeCode(),
+    text: [
+      `The label judge of the release ${ctx.tag} (${ctx.cms}${ctx.version ? ` ${ctx.version}` : ''}) on ${REPO} looked at each component with its numbered slots.`,
+      ...(wrong.length > 0
+        ? [`Wrong fact/editorial group: ${said(wrong, Number(p.judgeWrongGroupCount ?? wrong.length))}.`]
+        : []),
+      ...(finer.length > 0
+        ? [`Another role suggested: ${said(finer, Number(p.judgeMismatchCount ?? finer.length))}.`]
+        : []),
+      ...(notJudged > 0
+        ? [
+            `${notJudged} located slot${notJudged === 1 ? ' was' : 's were'} not judged (${str(p.judgeReason) ?? 'no reason given'}).`
+          ]
+        : []),
+      'Work in a tch checkout with the quickstart-contract skill (.agents/skills/quickstart-contract/SKILL.md). Fix it in ONE round, before the PR:',
+      `1. Relabel. For each listed slot, look at it on the page and in ${contractDir}/content-map.json; when the judge is right, set the suggested "role" (a fact needs a fact role; a heading that carries a number, an award or a year is claim.heading). When the judge is wrong, keep the role and say why in the PR.`,
+      '2. Run node scripts/slot-roles/check.mjs on that contract folder until it exits 0.',
+      '3. Run the content coverage audit again with --write (section 7 step 7 of the skill). It asks only about changed slots, in label-judge/request.json under --out: look at each crop yourself, write your verdicts and record them with content-coverage/record-judge.mjs. Read labelJudge in content-coverage.json: no slot may stay in the wrong group. Commit content-map.json and content-coverage.json in the same PR.',
+      'Stop before every commit, push, PR and merge, and wait for my go.',
+      'Once the PR is merged and CI has deployed this server, Content coverage on the Road to live reads the new file.'
+    ].join('\n'),
+    doc: COVERAGE_SKILL_DOC
+  }
 }
 
 const DS_DOC = {
@@ -1254,6 +1388,46 @@ export function guideOf(s: RoadStep, ctx: GuideContext): StepGuide {
           detail,
           ...(fitLists(p).length > 0 ? { lists: fitLists(p) } : {}),
           outside: slotFitOutside(ctx, p)
+        }
+      )
+    }
+    // 3e. Label rules, the fifth group of Content coverage (ADR 0040): rules R2 to R9 committed by the audit
+    case 'coverage-labels':
+    case 'coverage-live-labels':
+      return g(
+        tr('cms-readiness.coverage.counted', {
+          step: STEP_TITLE['content-coverage'],
+          counted: labelCounted(p)
+        }),
+        {
+          detail:
+            s.code === 'coverage-live-labels'
+              ? tr('cms-readiness.common.liveFixNext')
+              : tr('cms-readiness.coverage.labels.detail'),
+          ...(labelLists(p).length > 0 ? { lists: labelLists(p) } : {}),
+          outside: labelRulesOutside(ctx, p)
+        }
+      )
+    // 3f. The LLM label judge (spec #37), in the label rules group: verdicts committed by the audit
+    case 'coverage-judge':
+    case 'coverage-judge-warn': {
+      const lists = judgeLists(p)
+      return g(
+        tr('cms-readiness.coverage.counted', {
+          step: STEP_TITLE['content-coverage'],
+          counted: judgeCounted(p)
+        }),
+        {
+          detail:
+            s.code === 'coverage-judge'
+              ? tr('cms-readiness.coverage.judge.detail')
+              : p.live === true
+                ? tr('cms-readiness.common.liveFixNext')
+                : p.judgeState === 'mismatch'
+                  ? tr('cms-readiness.coverage.judge.mismatch.detail')
+                  : tr('cms-readiness.coverage.judge.notJudged.detail'),
+          ...(lists.length > 0 ? { lists } : {}),
+          outside: labelJudgeOutside(ctx, p)
         }
       )
     }

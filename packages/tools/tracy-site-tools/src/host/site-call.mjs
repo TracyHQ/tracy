@@ -1966,6 +1966,7 @@ export async function runSiteCall(input) {
       return done({
         ok: false,
         code: 'CONFIRM_FIRST',
+        ...(n0.kind === 'relay' && n0.host?.confirm === true ? { confirmationMissing: true } : {}),
         action: plan.action,
         tier,
         ...(consequence !== null ? { consequence: consequence.reason } : {}),

@@ -5,8 +5,8 @@
  */
 import { interfaceLocale } from '../../interface-languages/index.mjs'
 import type { Translate } from '../../team/translate'
-import type { SyncConflict, SyncView } from './use-live-sync'
 import { fieldText, whatText } from './record-words'
+import type { SyncConflict, SyncView } from './use-live-sync'
 
 /** The three steps the host reports, in order (`apps/tracy-host/src/webroot.js` `onLine`). */
 export const STAGES = ['reading', 'merging', 'applying'] as const
@@ -68,6 +68,13 @@ export function agoText(iso: string | null | undefined, now = Date.now()): strin
 
 /** Why a sync did not finish, in a sentence a customer can act on; the code stays for support. */
 export function failureText(code: string, t: Translate): string {
+  const liveErrors: Record<string, string> = {
+    LIVE_BLOCKED: 'sync.error.liveBlocked',
+    LIVE_PASSWORD_PROTECTED: 'sync.error.livePassword',
+    LIVE_RATE_LIMITED: 'sync.error.liveRateLimited',
+    TOKEN_REFUSED: 'sync.error.liveToken'
+  }
+  if (liveErrors[code]) return t(liveErrors[code])
   if (code === 'SYNC_SITE_BUSY') return t('sync.busy')
   if (code === 'SYNC_AFTER_FAILED') return t('sync.afterFailed')
   if (code === 'LIVE_BUSY') return t('sync.error.liveBusy')

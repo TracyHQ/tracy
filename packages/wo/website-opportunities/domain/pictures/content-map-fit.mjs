@@ -9,7 +9,8 @@
 //                     "boxes": {"desktop": {"width": 704, "height": 302}, "phone": {"width": 358, "height": 154}},
 //                     "aspect": 2.3311, "tolerance": 0.02, "minWidth": 1056, "crop": "cover", "focus": "top" }
 //            kind         one of `PICTURE_KINDS`
-//            replace      what a build may put there: "photo", "logo" (the business's own), "keep" (the template's stays)
+//            replace      what a build may put there: "photo", "logo" (the business's own), "keep" (the template's stays);
+//                         follows the kind in a version 2 map, the slot's role in a place-content-roles/3 map (ADR 0040)
 //            transparent  the demo file has a transparent ground (measured on the file), null when it was not read
 //            boxes        the box the demo draws it in, per viewport (only the viewports that show it)
 //            aspect       width / height of the desktop box (else the phone box); a photo is cut to it within `tolerance`
@@ -54,6 +55,10 @@ export const PICTURE_KINDS = Object.freeze({
   map: { replace: 'keep', what: 'a map: a picture of a place would invent one' }
 })
 const CROPS = new Set(['cover', 'contain', 'none'])
+const REPLACES = new Set(['photo', 'logo', 'keep'])
+/** The role vocabulary in which the role, not the kind, decides a picture's replace (ADR 0040). Spelled out here: this
+ * folder imports only from itself. */
+const ROLE_DECIDES_VOCABULARY = 'place-content-roles/3'
 const CASINGS = new Set(['none', 'upper', 'lower', 'capitalize'])
 const FIT_TYPES = new Set(['text', 'image'])
 
@@ -122,17 +127,34 @@ function boxesProblems(boxes) {
   return out
 }
 
-function pictureProblems(fit, slot) {
+/**
+ * A picture's `replace` and `customize`. `byKind` (a version 2 map): both follow the measured kind, as ADR 0039 decided.
+ * Otherwise (a version 3 map, or a slot read without its map): the role decides them (ADR 0040, checked by the role
+ * check), so here they need only be a known value and in step with each other.
+ */
+function replaceProblems(fit, slot, byKind) {
   const out = []
-  if (has(fit, 'kind') || fit.measured) {
-    if (!Object.hasOwn(PICTURE_KINDS, fit.kind)) return [`unknown kind ${JSON.stringify(fit.kind)}`]
+  const kept = slot?.customize === 'keep'
+  if (byKind) {
     if (fit.replace !== pictureReplaceOf(fit.kind))
       out.push(`replace must be "${pictureReplaceOf(fit.kind)}" for kind ${fit.kind}`)
-    const kept = slot?.customize === 'keep'
     if (fit.replace === 'keep' && !kept)
       out.push(`is kind ${fit.kind}, which no build replaces, so it needs customize "keep"`)
     if (fit.replace === 'photo' && kept)
       out.push(`is kind ${fit.kind}, which a build replaces, so it must not carry customize "keep"`)
+    return out
+  }
+  if (!REPLACES.has(fit.replace)) return [`replace must be one of ${[...REPLACES].join(', ')}`]
+  if (fit.replace === 'keep' && !kept) out.push('replace "keep" needs customize "keep"')
+  if (fit.replace === 'photo' && kept) out.push('replace "photo" must not carry customize "keep"')
+  return out
+}
+
+function pictureProblems(fit, slot, byKind) {
+  const out = []
+  if (has(fit, 'kind') || fit.measured) {
+    if (!Object.hasOwn(PICTURE_KINDS, fit.kind)) return [`unknown kind ${JSON.stringify(fit.kind)}`]
+    out.push(...replaceProblems(fit, slot, byKind))
   }
   if (has(fit, 'transparent') && fit.transparent !== null && typeof fit.transparent !== 'boolean')
     out.push('transparent must be true, false or null')
@@ -163,15 +185,15 @@ function textProblems(fit) {
   return out
 }
 
-/** What is wrong with a slot's fit (empty: nothing, or the slot has none). */
-function fitProblems(slot) {
+/** What is wrong with a slot's fit (empty: nothing, or the slot has none). `byKind`: see `replaceProblems`. */
+function fitProblems(slot, byKind = false) {
   const fit = slot?.fit
   if (!isObject(fit)) return ['fit must be an object']
   if (typeof fit.measured !== 'boolean') return ['fit needs measured true or false']
-  return slot.type === 'image' ? pictureProblems(fit, slot) : textProblems(fit)
+  return slot.type === 'image' ? pictureProblems(fit, slot, byKind) : textProblems(fit)
 }
 
-/** A slot's fit when it is well formed, else null. */
+/** A slot's fit when it is well formed, else null. Read without its map: the map's check judged who decides replace. */
 export function slotFitOf(slot) {
   if (!has(slot, 'fit') || !FIT_TYPES.has(slot?.type)) return null
   return fitProblems(slot).length === 0 ? slot.fit : null
@@ -187,7 +209,8 @@ export function contentMapDeclaresFit(contentMap) {
  * The contract check of a content map's Slot fit. A map that declares none is not checked (`declared: false`), but the
  * count of text and image slots without a fit is always given (the Road to live counts them). A map that declares
  * Slot fit must name the current version, carry a well-formed fit on every text and image slot, and keep each
- * picture's `customize: "keep"` in step with its kind.
+ * picture's `customize: "keep"` in step with its kind; in a `place-content-roles/3` map the role decides `replace` and
+ * `customize` instead (ADR 0040, judged by the role check), and the kind describes shape only.
  * @param {any} contentMap
  * @returns {{declared: boolean, ok: boolean, errors: string[], missing: {image: number, text: number},
  *   slots: {image: number, text: number}, missingKeys: string[]}}
@@ -199,6 +222,7 @@ export function checkContentMapFit(contentMap) {
   const missingKeys = []
   const errors = []
   const declared = contentMapDeclaresFit(contentMap)
+  const byKind = contentMap?.roleVocabularyVersion !== ROLE_DECIDES_VOCABULARY
   for (const slot of slots) {
     if (!FIT_TYPES.has(slot?.type)) continue
     const key = String(slot?.key ?? '')
@@ -209,7 +233,7 @@ export function checkContentMapFit(contentMap) {
       if (declared) errors.push(`slot "${key}" (${slot.type}) has no fit`)
       continue
     }
-    for (const problem of fitProblems(slot)) errors.push(`slot "${key}" (${slot.type}) ${problem}`)
+    for (const problem of fitProblems(slot, byKind)) errors.push(`slot "${key}" (${slot.type}) ${problem}`)
   }
   if (declared && contentMap.slotFitVersion !== SLOT_FIT_VERSION)
     errors.push(

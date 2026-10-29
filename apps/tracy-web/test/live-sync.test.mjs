@@ -332,7 +332,12 @@ test('pure pieces: an applied sync names what it left out of the live site, and 
     table: 'ng_phocacart_products',
     reason: 'added-both',
     key: { id: '6' },
-    values: { base: null, ours: { title: { text: 'Tracy mug' } }, theirs: { title: { text: 'Live mug' } } }
+    values: { base: null, ours: { title: { text: 'Tracy mug' } }, theirs: { title: { text: 'Live mug' } } },
+    belonging: [
+      { table: 'ng_phocacart_product_categories', key: { product_id: '6', category_id: '2' } },
+      { table: 'ng_phocacart_product_images', key: { id: '1' }, changed: true }
+    ],
+    belongingCount: 2
   }
   const skipped = {
     id: 'db:ng_action_logs:["37"]',
@@ -394,6 +399,9 @@ test('pure pieces: an applied sync names what it left out of the live site, and 
     'the skipped log rows stay in the record'
   )
   assert.equal(applied.dropped[0].values.theirs.title.text, 'Live mug')
+  // The held product's own rows left out with it: named with it, so its category is not lost silently.
+  assert.deepEqual(applied.dropped[0].belonging, held.belonging)
+  assert.equal(applied.dropped[0].belongingCount, 2)
   assert.deepEqual(applied.kept[0], {
     id: 'file:configuration.php#sitename',
     kind: 'setting',
@@ -411,6 +419,7 @@ test('pure pieces: an applied sync names what it left out of the live site, and 
   const waiting = view({ ...at, state: 'needs_resolution' })
   assert.deepEqual(waiting.dropped, [])
   assert.equal(waiting.held.length, 1)
+  assert.deepEqual(waiting.held[0].belonging, held.belonging)
 })
 
 test(
@@ -812,19 +821,27 @@ test(
         detail: 'the database kept changing (ng_content (2 rows); ng_weblinks (1 row))'
       })
     }
-    const net = network({
-      answers: {
-        'webroot-sync': { ok: false, code: 'LIVE_READ_FAILED', read: { ok: false, code: 'TOKEN_REFUSED' } }
-      }
-    })
-    await db.reset()
-    const { send, cookieFor } = harness(pool, net.fetchImpl)
-    await importedSite(pool)
-    const owner = await cookieFor('owner@x.y')
-    await send('POST', '/api/sites/shop.example/sync', owner)
-    const { sync } = await (await send('GET', '/api/sites/shop.example/sync', owner)).json()
-    assert.equal(sync.error, 'LIVE_READ_FAILED', 'any other failed read stays what it was')
-    assert.equal(sync.busy, null)
+    for (const code of [
+      'TOKEN_REFUSED',
+      'LIVE_PASSWORD_PROTECTED',
+      'LIVE_BLOCKED',
+      'LIVE_RATE_LIMITED',
+      'UNKNOWN_READ_FAILURE'
+    ]) {
+      const net = network({
+        answers: {
+          'webroot-sync': { ok: false, code: 'LIVE_READ_FAILED', read: { ok: false, code } }
+        }
+      })
+      await db.reset()
+      const { send, cookieFor } = harness(pool, net.fetchImpl)
+      await importedSite(pool)
+      const owner = await cookieFor('owner@x.y')
+      await send('POST', '/api/sites/shop.example/sync', owner)
+      const { sync } = await (await send('GET', '/api/sites/shop.example/sync', owner)).json()
+      assert.equal(sync.error, code === 'UNKNOWN_READ_FAILURE' ? 'LIVE_READ_FAILED' : code)
+      assert.equal(sync.busy, null)
+    }
   }
 )
 

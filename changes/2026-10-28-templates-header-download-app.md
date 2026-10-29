@@ -1,0 +1,2 @@
+- **The public Templates header shows the Download app button again, next to Get Started** — Akemi (with Claude Code) · `fix/templates-header-download-app` · 2026-10-28
+  **Affects:** `apps/tracy-web` public Templates pages (`/templates/`, `/templates/<slug>/`). The tracy.ai menu now keeps Download app beside Get Started, so the Templates header follows it again on desktop and in the phone menu. Restores `tpl.nav.downloadApp` (removed in #2) with the translations it had before. The footer from #2 is unchanged.

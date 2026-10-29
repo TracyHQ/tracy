@@ -1,4 +1,4 @@
-import { CURRENT_BRIEF as CURRENT, briefOf } from '../lib/site-brief-row.js'
+import { briefOf, CURRENT_BRIEF as CURRENT } from '../lib/site-brief-row.js'
 
 /**
  * The rows behind "Apply" in the Add site popup (`db/migrations/052-site-brief.sql`).
@@ -8,6 +8,10 @@ import { CURRENT_BRIEF as CURRENT, briefOf } from '../lib/site-brief-row.js'
  * or a deploy in the middle). Everything here is one statement, and the transitions that must happen
  * at most once (`claimWork`, `markProvisioned`) are decided by the database, not by a variable.
  */
+
+/** The sentence a failed row carries when its worker died just as writing began, before any write was kept on the row. */
+export const LOST_PLACING =
+  'Tracy restarted just as your text and pictures were being placed, so the site may still have the template’s own words.'
 
 /** @typedef {'queued'|'preparing'|'ready'|'applying'|'applied'|'failed'} BriefState */
 
@@ -59,11 +63,13 @@ export async function restartBrief(pool, siteKey, brief, retryActionId = null) {
                       else jsonb_build_object('woRetryActionId', $3::text) end,
        brief = $2::jsonb, updated_at = now()
      where site_key = $1 and state = 'failed'
+       and coalesce(timings->>'lostFrom', '') <> 'applying'
+       and error is distinct from $4::text
        and ($3::text is null or (
          timings->>'woRetryActionId' is distinct from $3::text
          and not exists (select 1 from site s where s.site_key=b.site_key and s.created_at>b.created_at)
        ))`,
-    [siteKey, JSON.stringify(brief), retryActionId]
+    [siteKey, JSON.stringify(brief), retryActionId, LOST_PLACING]
   )
   return rowCount === 1
 }

@@ -535,7 +535,8 @@ export async function pickEyes(llm, route, lookModel) {
  * none, `extras` are other pages of a shared element drawn before the first shared write, `agreed` the
  * scope the customer said yes to.
  * @typedef {{ turn: number, text: string, comment: boolean, at: number, before: Before | null, checked: boolean,
- *   missing?: string, extras?: readonly Before[], agreed?: readonly string[], fallback?: Before }} TurnAsk
+ *   missing?: string, extras?: readonly Before[], agreed?: readonly string[], fallback?: Before, hold?: object }} TurnAsk
+ *   `hold`: set once a write of the turn was held for its picture (`check-pages.mjs` `holdForBefore`).
  */
 
 /**
@@ -637,7 +638,10 @@ export async function runVisualCheck(job) {
     if (!siteChangedInTurn(job.events)) return skip('no-write')
     // The page drawn as the turn began, kept by a write that named no page, when nothing better came.
     const before = ask.before ?? ask.fallback ?? null
-    if (before === null) return skip(ask.missing ? `no-before: ${ask.missing}` : 'no-before')
+    // 🔒 A MISSING "BEFORE" ALWAYS SAYS WHY (beta report, 28/10/2026: 10 customer turns on production
+    // were a bare `no-before`). No reason from the hold means no write of this turn was held at all.
+    if (before === null)
+      return skip(`no-before: ${ask.missing ?? (ask.hold === undefined ? 'not-held' : 'none')}`)
     if (!before.loaded) return skip('before-not-loaded')
     const view = { ...before.view, y: before.y ?? before.view.y }
     if (ask.comment) {

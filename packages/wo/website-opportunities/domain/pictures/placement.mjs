@@ -277,6 +277,8 @@ export function fitOf(label, group) {
   const { aspect, box, output, scale } = shape
   const targetW = Math.min(group.demo.width, role.min)
   if (label.collage) return null
+  // A picture the vision model calls a graphic (a flyer, a banner, a logo) takes no photo place of any role (#48).
+  if (label.isGraphic) return null
   if (role.noText && (label.graphic || label.textPresence === 'present')) return null
   if (['logo', 'menu-board', 'poster'].includes(label.subject)) return null
   // Without a look at it, a picture whose words cannot be ruled out is a hero only when wide enough to be a photograph (C10).

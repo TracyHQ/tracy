@@ -1,0 +1,25 @@
+{
+  "id": "REG-PR-68-sync-held-contact-fields",
+  "kind": "fix",
+  "title": "Held Joomla contact and field rows remain with their own record",
+  "pr": 68,
+  "area": "sync/live",
+  "cms": ["jo"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": ["Run the real MariaDB regression for contacts and fields."],
+  "expect": [
+    "Both whole-table and row merges hold contact tag maps, UCM rows, field values, assets and field category links; unrelated article tags are taken."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=held contacts and custom fields",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs"
+    ],
+    "tests": ["held contacts and custom fields keep live dependent rows off the copy"]
+  }
+}

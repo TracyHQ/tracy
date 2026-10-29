@@ -35,7 +35,7 @@ export class PagePlan {
         })
         continue
       }
-      const url = new URL(`index.php?Itemid=${p.sourceId}`, this.site).href
+      const url = new URL(p.openAs ?? `index.php?Itemid=${p.sourceId}`, this.site).href
       this.seen.add(normHref(url, siteUrl))
       this.queue.push({ url, origin: 'map', mapPage: p })
     }

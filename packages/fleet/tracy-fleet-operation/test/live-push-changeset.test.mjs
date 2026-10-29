@@ -1145,10 +1145,14 @@ test('template files: after a push the files it sent join pushed.json like phase
     return JSON.parse(readFileSync(join(dir, 'pushed.json'), 'utf8'))
   }
   const blob = byId(answer)['file:templates/ja_vega/css/custom.css'].blob
-  assert.deepEqual(record().files, [{ path: 'templates/ja_vega/css/custom.css', ours: blob, side: 'ours' }])
+  assert.deepEqual(record().files, [
+    { path: 'templates/ja_vega/css/custom.css', ours: blob, side: 'ours' },
+    { path: 'templates/ja_vega/css/old.css', ours: null, side: 'ours' }
+  ])
   writeFileSync(join(dir, 'written.json'), JSON.stringify({ restored: written.written }))
   assert.deepEqual(record('--undo').files, [
-    { path: 'templates/ja_vega/css/custom.css', ours: blob, side: 'theirs' }
+    { path: 'templates/ja_vega/css/custom.css', ours: blob, side: 'theirs' },
+    { path: 'templates/ja_vega/css/old.css', ours: null, side: 'theirs' }
   ])
 })
 
@@ -1340,3 +1344,112 @@ test('WordPress: a menu entry both sides changed since the last sync is a confli
   assert.deepEqual(items['option:timezone_string'].expect, { $absent: true })
   assert.equal(items['option:timezone_string'].op, 'create')
 })
+
+test('WordPress: only a delete freeing the same page slug and parent precedes its replacement', () => {
+  for (const [oldFields, nextFields, replaces] of [
+    [{}, {}, true],
+    [{}, { post_parent: '99' }, false],
+    [{ post_type: 'post' }, {}, false],
+    [{}, { post_name: 'another' }, false]
+  ]) {
+    const answer = changeset('wordpress', {
+      homes: HOMES,
+      entities: { posts: { base: [10], copy: [20] } },
+      kinds: {
+        post: kind(
+          [post(10, { post_name: 'about', ...oldFields })],
+          [post(20, { post_name: 'about', ...nextFields })],
+          ['ID']
+        )
+      }
+    })
+    const removed = answer.items.find((i) => i.op === 'delete')
+    const created = answer.items.find((i) => i.op === 'create')
+    assert.ok(removed && created, JSON.stringify(answer))
+    assert.equal(created.dependsOn.includes(removed.id), replaces)
+    if (replaces) {
+      assert.deepEqual(created.replaces, [removed.id])
+      assert.ok(answer.items.indexOf(removed) < answer.items.indexOf(created))
+    }
+  }
+})
+
+test('Joomla: a replacement alias held by trash conflicts both records before the original is removed', () => {
+  const answer = changeset('joomla', {
+    entities: { content: { base: [1], copy: [2] } },
+    kinds: { article: kind([article(1, { alias: 'about' })], [article(2, { alias: 'about' })]) }
+  })
+  assert.equal(answer.items.length, 2)
+  for (const item of answer.items)
+    assert.deepEqual(item.conflict, { reason: 'changed-on-live', fields: ['alias'] })
+})
+
+test('a whole table kept after a schema change holds every push into it, including create and delete', () => {
+  for (const platform of ['joomla', 'wordpress']) {
+    const data =
+      platform === 'joomla'
+        ? {
+            entities: { content: { base: [1, 2], copy: [1, 3] } },
+            kinds: {
+              article: kind([article(1), article(2)], [article(1, { title: 'Tracy title' }), article(3)]),
+              category: kind([category(2)], [category(2, { title: 'Unrelated' })])
+            }
+          }
+        : {
+            homes: HOMES,
+            entities: { posts: { base: [10, 11], copy: [10, 12] } },
+            kinds: {
+              post: kind([post(10), post(11)], [post(10, { post_title: 'Tracy title' }), post(12)], ['ID'])
+            }
+          }
+    const table = platform === 'joomla' ? 'jos_content' : 'wp_posts'
+    const answer = changeset(platform, data, [{ kind: 'table', table, reason: 'schema-changed' }])
+    const held = answer.items.filter((i) => i.kind === (platform === 'joomla' ? 'article' : 'post'))
+    assert.deepEqual(new Set(held.map((i) => i.op)), new Set(['create', 'update', 'delete']))
+    for (const item of held) assert.equal(item.conflict?.reason, 'changed-on-both', JSON.stringify(item))
+    if (platform === 'joomla')
+      assert.equal(answer.items.find((i) => i.kind === 'category').conflict, undefined)
+  }
+})
+
+for (const edit of [
+  { title: 'Contact us' },
+  { position: '4' },
+  { url: 'https://shop-com.tracy.ai/contact/' },
+  { parent: '8' }
+]) {
+  test(`WordPress existing menu address is retained for ${Object.keys(edit)[0]} updates`, () => {
+    const row = {
+      ID: '20',
+      title: 'Contact',
+      position: '2',
+      type: 'custom',
+      object: 'custom',
+      object_id: '0',
+      url: 'https://shop.example/',
+      parent: '0',
+      menu: 'primary'
+    }
+    const copy = { ...row, ID: '21', ...edit }
+    const result = changeset('wordpress', {
+      homes: HOMES,
+      entities: { posts: { base: [8, 20], copy: [8, 21] } },
+      idMap: { posts: { 20: 21 } },
+      kinds: { menuItem: kind([row], [copy], ['ID']) }
+    })
+    const item = result.items.find((i) => i.kind === 'menuItem')
+    assert.equal(item.op, 'update')
+    assert.equal(item.ident, 20)
+    assert.equal(item.key, 'primary')
+    assert.equal(item.seed[0].match.ID, 21)
+    assert.deepEqual(
+      item.write,
+      Object.fromEntries(
+        Object.entries(edit).map(([k, v]) => [
+          k,
+          k === 'url' ? v.replace('https://shop-com.tracy.ai', 'https://shop.example') : v
+        ])
+      )
+    )
+  })
+}

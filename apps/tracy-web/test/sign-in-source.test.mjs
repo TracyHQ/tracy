@@ -601,3 +601,53 @@ test('POST /login/visit stops at the hourly cap of one client address', pgOnly, 
   assert.equal((await visit()).status, 429)
   assert.equal((await visits()).length, LOGIN_VISITS_PER_IP_PER_HOUR)
 })
+
+// ── starting to sign in (`login.code_requested`, `login.oauth_started`) ────────────────────────
+
+const starts = async (kind) =>
+  (await db.pool.query('select account_id, data from ops_signal where kind = $1 order by id', [kind])).rows
+
+test(
+  'POST /login records one login.code_requested per accepted request, with the source and never the address',
+  pgOnly,
+  async () => {
+    const h = harness()
+    assert.equal((await h.postJson('/login', { email: 'person@example.com', ...MEMBERS })).status, 200)
+    assert.equal((await h.postJson('/login', { email: 'other@example.com' })).status, 200)
+    // A refused address is not a start.
+    assert.equal((await h.postJson('/login', { email: 'not-an-address' })).status, 400)
+    const rows = await starts('login.code_requested')
+    assert.deepEqual(rows, [
+      { account_id: null, data: MEMBERS_SOURCE },
+      { account_id: null, data: {} }
+    ])
+    assert.doesNotMatch(JSON.stringify(rows), /example\.com/)
+  }
+)
+
+test(
+  'GET /signin/google records one login.oauth_started with the provider and the source',
+  pgOnly,
+  async () => {
+    const h = harness({ GOOGLE_OAUTH_CLIENT_ID: 'test-id', GOOGLE_OAUTH_CLIENT_SECRET: 'test-secret' })
+    assert.equal((await h.get(`/signin/google?${qs(MEMBERS)}`)).status, 302)
+    assert.equal((await h.get('/signin/google')).status, 302)
+    // A provider this deployment did not light up starts nothing.
+    assert.equal((await h.get('/signin/github')).status, 404)
+    assert.deepEqual(await starts('login.oauth_started'), [
+      { account_id: null, data: { provider: 'google', ...MEMBERS_SOURCE } },
+      { account_id: null, data: { provider: 'google' } }
+    ])
+  }
+)
+
+test(
+  'sign-in starts stop being recorded at the hourly cap of one client address, and sign-in goes on',
+  pgOnly,
+  async () => {
+    const h = harness({ GOOGLE_OAUTH_CLIENT_ID: 'test-id', GOOGLE_OAUTH_CLIENT_SECRET: 'test-secret' })
+    for (let i = 0; i <= LOGIN_VISITS_PER_IP_PER_HOUR; i++)
+      assert.equal((await h.get('/signin/google')).status, 302)
+    assert.equal((await starts('login.oauth_started')).length, LOGIN_VISITS_PER_IP_PER_HOUR)
+  }
+)

@@ -18,7 +18,8 @@ import {
   templatePostTitles,
   templatePostsLeft
 } from './agent-demo.js'
-import { deterministicBuildId, suggestedLabel, startBuild, settleBuild } from './builds.js'
+import { liveReadinessOf } from './live-readiness.js'
+import { deterministicBuildId, readinessOfBuild, suggestedLabel, startBuild, settleBuild } from './builds.js'
 import { revisionForAction } from './revisions.js'
 import { logoResearchDoor, logoResearchNote } from './logo-research.js'
 import { withBuildChoice } from './build-choice.js'
@@ -240,6 +241,33 @@ function sweepRoundsOf(state) {
   const swept = state.build.qa?.residueSweeps
   return swept?.attempt === (state.build.qa?.clientCheckAttempts ?? 0) ? (swept.n ?? 0) : 0
 }
+/**
+ * Whether the next check may keep the last read of every page whose document did not change (`incremental`): after a
+ * counted check, and after a sweep round of the current one. A ROUND'S CHECK READS ONLY WHAT THE SWEEP CHANGED
+ * (dev 27/10/2026): ja-diner's first check read and looked at the whole site after each of its 6 rounds, ~60 min in
+ * one tool call, though each round wrote some pages only. The host fingerprints each page as served and reads again
+ * only those whose document changed, so a page the sweep wrote, or one showing a shared part it wrote (a footer, a
+ * menu, a post list), is read and looked at anew and every other keeps its last read (`demo-qa-browser.js`). A pass
+ * found that way is still confirmed by a full read before it counts (`measure`), so a passing check means what it did.
+ * @param {{clientCheckAttempts?: number, residueSweeps?: {attempt?: number, n?: number}} | null | undefined} qa
+ */
+export function checkIsIncremental(qa) {
+  const attempts = qa?.clientCheckAttempts ?? 0
+  const swept = qa?.residueSweeps
+  return attempts > 0 || (swept?.attempt === attempts && (swept.n ?? 0) > 0)
+}
+/**
+ * The template category names the sweep rounds of the current counted check sent a rename for (`planSweep`
+ * `renamedBefore`); a new counted check starts with none.
+ * @param {{clientCheckAttempts?: number, residueSweeps?: {attempt?: number, renamed?: string[]}} | null | undefined} qa
+ * @returns {string[]}
+ */
+export function renamedBeforeOf(qa) {
+  const swept = qa?.residueSweeps
+  return swept?.attempt === (qa?.clientCheckAttempts ?? 0) && Array.isArray(swept.renamed)
+    ? swept.renamed
+    : []
+}
 /** A turn record closed this recently may still be reopened by a turn-stopping steer (see `endedUnchecked`). */
 const STEER_GRACE_MS = 120_000
 const QA_FAILURES = new Set(['DEMO_BASELINE_UNAVAILABLE', 'AGENT_DEMO_ENDED_UNCHECKED'])
@@ -334,6 +362,9 @@ export function createClientDemoService(deps) {
         if (made.error) throw error(made.error)
         state.revision = made.revision
       }
+      // A blocked brief claims no site and no chat (#50): the same verdict `startBuild` honours.
+      if (!state.build && readinessOfBuild(state.revision, domain)?.verdict === 'block')
+        throw error('BRIEF_NOT_READY')
       if (!state.build)
         state.build = (
           await insertBuild(pool, {
@@ -711,10 +742,12 @@ export function createClientDemoService(deps) {
       state.build = await settleBuild({ pool, request, origin, cookie: state.cookie, build: state.build })
       if (params.operation === 'provision.status')
         return { ok: true, ...(await ready(state)), jobId: state.build.site_job_id }
-      if (params.operation === 'check.start') return checkStart(auth, state)
+      // `sweepBatches`: the dsh sends a page's sweep words as one call and sets a refused pair aside (`planSweep`).
+      const sweep = { batches: params.sweepBatches === true }
+      if (params.operation === 'check.start') return checkStart(auth, state, sweep)
       if (params.operation !== 'check') throw error('AGENT_DEMO_BAD_OPERATION')
       checkAllowed(state)
-      const outcome = await measure(auth, state)
+      const outcome = await measure(auth, state, sweep)
       await throwIfStopped(state)
       // 🔒 A CHECK NOBODY HEARD IS NOT COUNTED (pilot 24/10/2026): the agent's call gave up waiting at its
       // timeout while this check ran on, so it was counted, the agent called again, and three counted checks
@@ -744,19 +777,27 @@ export function createClientDemoService(deps) {
   }
   /** Reads, shoots and looks at the site: minutes on a whole site. Saves nothing. */
   /**
-   * One check of the site: incremental after the first (pages whose document did not change keep their last read,
-   * plan "10/10" §7 S6), and a pass found that way is confirmed by a full read before it counts — the last check
-   * that passes a build has read every page anew (council 26/10/2026).
+   * One check of the site: incremental after the first and after a sweep round (pages whose document did not change
+   * keep their last read, plan "10/10" §7 S6; `checkIsIncremental`), and a pass found that way is confirmed by a full
+   * read before it counts — the last check that passes a build has read every page anew (council 26/10/2026).
+   * 🔒 A KEPT READ IS NEVER THE EVIDENCE FOR A COUNTED FAILURE (review 27/10/2026): a page's fingerprint is its
+   * document as loaded, before lazy content scrolls in, and the look keeps the last look's faults on kept pages
+   * (`keptLook`), so an incremental check can fail on what a write already changed. A failing incremental check that
+   * would be counted (no sweep round follows it, `sweepDecision`) is read again in full, and that read is the answer;
+   * one a sweep round follows costs no attempt and is measured again after the round.
    */
-  async function measure(auth, state) {
-    // A sweep round's read is incremental too (28/10/2026): the round before it read every page minutes ago and only
-    // what the sweep wrote changed. Every round re-read the whole site, up to six times inside one check.
-    const incremental = (state.build.qa?.clientCheckAttempts ?? 0) > 0 || sweepRoundsOf(state) > 0
-    const first = await measureOnce(auth, state, incremental)
-    if (!incremental || !first.pass) return first
-    return measureOnce(auth, state, false)
+  async function measure(auth, state, sweep = {}) {
+    const incremental = checkIsIncremental(state.build.qa)
+    // 🔒 AN INCREMENTAL READ LEAVES THE LOOK TO THE FULL ONE (29/10/2026): its look is never the answer — a pass is
+    // confirmed by a full read, a counted failure is read again in full, and a round that sweeps is not looked at — so
+    // a WordPress check looked twice, ~190 s each. The verdicts are the same; the full read looks.
+    const first = await measureOnce(auth, state, incremental, { ...sweep, look: !incremental })
+    if (!incremental) return first
+    const attempts = state.build.qa?.clientCheckAttempts ?? 0
+    if (!first.pass && sweepDecision(state.build.qa?.residueSweeps, attempts, first.sweep).go) return first
+    return measureOnce(auth, state, false, sweep)
   }
-  async function measureOnce(auth, state, incremental) {
+  async function measureOnce(auth, state, incremental, { batches = false, look = true } = {}) {
     const started = now()
     const site = (await pool.query('select * from site where site_key=$1', [state.build.site_key])).rows[0]
     // 🔒 The live records first: the QA reads each template post where it answers now (`currentQaRoutes`), and a
@@ -853,6 +894,8 @@ export function createClientDemoService(deps) {
       design: checks.find((check) => check.id === 'no-demo-pictures')?.unresolved ?? [],
       // A template category the page still names takes a name from the written posts' research topics.
       categories: templateCategoriesOf(checks),
+      // …and one an earlier round of this counted check sent a rename for, still shown, is reported, not sent again.
+      renamedBefore: renamedBeforeOf(state.build.qa),
       topicNames: postTopicNames(checkedPlan(state.build.content.agentDemo), checkedResearch(state.revision)),
       // The logo is the logo's, never a photo laid in a picture's place.
       media: importedMedia(state.build, checkedResearch(state.revision)).filter((m) => m.url !== logo?.url),
@@ -878,7 +921,8 @@ export function createClientDemoService(deps) {
       // A lead or a description is the agent's to write while counted checks remain after this one.
       checksLeft: Math.max(0, DEMO_CHECKS - (state.build.qa?.clientCheckAttempts ?? 0) - 1),
       // The term descriptions are read and cleared once a build (`planSweep`).
-      sweepTerms: state.build.qa?.residueSweeps?.terms !== true
+      sweepTerms: state.build.qa?.residueSweeps?.terms !== true,
+      batches
     })
     const thin = leadsThin(Math.max(plan.thinLeads ?? 0, state.build.qa?.residueSweeps?.thinLeads ?? 0))
     if (thin) checks.push(thin)
@@ -924,7 +968,7 @@ export function createClientDemoService(deps) {
     let kept = []
     let fresh = []
     let judged = null
-    if (sweeping) judged = lookCarried(lastLook, readPages, reused)
+    if (sweeping || !look) judged = lookCarried(lastLook, readPages, reused)
     else {
       kept = reusableLookPages(lastLook, readPages, reused)
       const sample = lookSample(
@@ -956,7 +1000,7 @@ export function createClientDemoService(deps) {
     // Where a check's minutes go, one line per check (28/10/2026: nothing said it before).
     const secs = (ms) => (ms / 1000).toFixed(1)
     console.info(
-      `[demo-check] ${site.site_key} ${incremental ? 'incremental' : 'full'}${sweeping ? ' sweep round' : ''}: inventory ${secs(inventoryAt - started)}s, page reads ${secs(readAt - inventoryAt)}s (${readPages.length} page(s), ${reused.size} unchanged), ${sweeping ? 'look skipped' : `look ${secs(now() - lookStarted)}s (${fresh.length} page(s) looked at, ${kept.length} kept)`}`
+      `[demo-check] ${site.site_key} ${incremental ? 'incremental' : 'full'}${sweeping ? ' sweep round' : ''}: inventory ${secs(inventoryAt - started)}s, page reads ${secs(readAt - inventoryAt)}s (${readPages.length} page(s), ${reused.size} unchanged), ${sweeping ? 'look skipped' : !look ? 'look left to the full read' : `look ${secs(now() - lookStarted)}s (${fresh.length} page(s) looked at, ${kept.length} kept)`}`
     )
     return {
       checks: checksForAgent(checks),
@@ -1039,7 +1083,8 @@ export function createClientDemoService(deps) {
           left: outcome.sweep.left ?? 0,
           // Kept past the round that wrote the placeholder, so the check that passes still says so.
           thinLeads: Math.max(swept?.thinLeads ?? 0, outcome.sweep.thinLeads ?? 0),
-          terms: swept?.terms === true || outcome.sweep.calls.some((call) => call.action === 'terms')
+          terms: swept?.terms === true || outcome.sweep.calls.some((call) => call.action === 'terms'),
+          renamed: [...new Set([...renamedBeforeOf(state.build.qa), ...(outcome.sweep.renamed ?? [])])]
         },
         ...(job ? { clientCheck: doneCheck(job, result) } : {})
       })
@@ -1053,6 +1098,7 @@ export function createClientDemoService(deps) {
     // Counted as the server QA counts its rounds, so every reader of `qa.rounds`/`qa.repairs` sees the checks.
     const rounds = state.build.qa?.rounds ?? []
     const repaired = attempts > 0 && state.build.qa?.machinePassed === false
+    const live = liveReadinessOf(state.revision?.brief?.readiness, checks)
     await pool.query(`update wo_build set qa=qa||$2::jsonb where id=$1`, [
       state.build.id,
       checkJson({
@@ -1065,7 +1111,9 @@ export function createClientDemoService(deps) {
             at: new Date(now()).toISOString(),
             checks: summary(checks),
             failed: checks.filter((c) => !c.pass && !c.skipped),
-            ...(sweep?.stopped ? { sweepStopped: sweep.stopped } : {})
+            ...(sweep?.stopped ? { sweepStopped: sweep.stopped } : {}),
+            // What the live site shows of the brief (#50, `live-readiness.js`).
+            ...(live ? { readiness: live } : {})
           }
         ],
         repairs: (state.build.qa?.repairs ?? 0) + (repaired ? 1 : 0),
@@ -1086,7 +1134,7 @@ export function createClientDemoService(deps) {
    * (any replica reads it); one whose process restarted reads as lost, uncounted, and the next start runs
    * a new one. A result is counted once, when it is saved, heard or not.
    */
-  async function checkStart(auth, state) {
+  async function checkStart(auth, state, sweep = {}) {
     const job = state.build.qa?.clientCheck
     if (job?.state === 'running' && !checkLost(job)) return { ok: true, running: true, checkId: job.id }
     checkAllowed(state)
@@ -1100,11 +1148,11 @@ export function createClientDemoService(deps) {
       state.build.id,
       JSON.stringify({ clientCheck: started })
     ])
-    const run = runCheck(auth, state, started).finally(() => runningChecks.delete(started.id))
+    const run = runCheck(auth, state, started, sweep).finally(() => runningChecks.delete(started.id))
     runningChecks.set(started.id, run)
     return { ok: true, running: true, checkId: started.id }
   }
-  async function runCheck(auth, state, job) {
+  async function runCheck(auth, state, job, sweep = {}) {
     const beat = setInterval(() => {
       pool
         .query(
@@ -1116,7 +1164,7 @@ export function createClientDemoService(deps) {
     beat.unref?.()
     let outcome
     try {
-      outcome = await measure(auth, state)
+      outcome = await measure(auth, state, sweep)
     } catch (failure) {
       outcome = { code: failure.code ?? 'DEMO_QA_UNAVAILABLE' }
     } finally {
@@ -1162,7 +1210,7 @@ export function createClientDemoService(deps) {
 }
 
 /**
- * A counted check's sweep that ended with calls still planned: no calls to run, why it stopped, and what is left,
+ * A counted check's sweep that ended with changes still planned: no calls to run, why it stopped, and what is left,
  * reported unresolved; `shown` stays so dsh can check the last round's `cleared` rows against it.
  * @param {{calls: any[], unresolved?: any[], left?: number, shown?: string[]}} sweep
  * @param {'bound' | 'no-progress'} why
@@ -1179,8 +1227,8 @@ export function sweepStopped(sweep, why, rounds) {
         field: 'sweep',
         why:
           why === 'bound'
-            ? `the sweep reached its bound of ${SWEEP_ROUNDS_MAX} rounds with ${left} calls still planned`
-            : `the sweep's round ${rounds} cleared nothing: ${left} calls still planned`
+            ? `the sweep reached its bound of ${SWEEP_ROUNDS_MAX} rounds with ${left} changes still planned`
+            : `the sweep's round ${rounds} cleared nothing: ${left} changes still planned`
       }
     ],
     shown: sweep.shown ?? []

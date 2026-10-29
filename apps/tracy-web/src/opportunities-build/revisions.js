@@ -31,6 +31,7 @@ import {
   opportunityOf
 } from 'website-opportunities/src/brief-research.js'
 import { placeViewOf } from 'website-opportunities/src/place-view.js'
+import { closedListOf } from 'website-opportunities/domain/pictures/picture-links.mjs'
 import { withSocialStats } from 'website-opportunities/src/place-social-stats.js'
 import { qualityHash } from './quality-dossier.js'
 import { makeBuildChoice, withBuildChoice } from './build-choice.js'
@@ -324,6 +325,9 @@ async function createBaseRevision(pool, args) {
       await client.query('rollback')
       return { error: 'BRIEF_INVALID', errors: checked?.errors ?? [] }
     }
+    // Whether the brief is ready to build from, measured once beside its validation and kept with it (#50): the build
+    // honours the verdict (`readinessRefusal`, `builds.js`).
+    brief.readiness = domain.briefReadinessOf(brief)
     const id = revisionId ?? randomUUID()
     // Every brief freezes its evidence once, beside its place profile, and names both by hash (#1791 V2): any build
     // of it, an agent demo included, reads the same through `researchOfRevision`.
@@ -438,7 +442,11 @@ async function withPictureLabelling(pool, args) {
       media: read.media ?? [],
       brand: briefBrand(read.brand),
       accountId: args.accountId,
-      trade: read.opportunity?.candidate?.trade ?? opp?.candidate?.trade ?? null
+      trade: read.opportunity?.candidate?.trade ?? opp?.candidate?.trade ?? null,
+      // The brief's offerings and people the model may link a photo to, and the name that marks the business's own
+      // Google photos (#48).
+      closedList: closedListOf(read.profile?.businessReading),
+      businessName: read.profile?.name ?? read.opportunity?.name ?? opp?.name ?? null
     })
     return { ...args, pictureLabelling: answer }
   } catch {

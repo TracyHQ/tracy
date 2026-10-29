@@ -1285,6 +1285,9 @@ class Changeset:
             return 0, named["option_name"]
         if spec.name == "postmeta":
             return named["post_id"], named["meta_key"]
+        if spec.name == "menuItem" and self.platform == "wordpress":
+            ident = named["ID"]
+            return (ident if isinstance(ident, Placeholder) else int(ident)), (base_row or {}).get("menu")
         if spec.name in W_THEME_ROWS:
             return 0, named["post_name"]
         if spec.live_id:
@@ -2171,6 +2174,39 @@ class Changeset:
         creates = {i["creates"]: i["id"] for i in self.items if i.get("creates")}
         for item in self.items:
             item["dependsOn"] = sorted({creates[d] for d in item["dependsOn"] if d in creates and creates[d] != item["id"]})
+        # Only replacement pairs change order: a confirmed trash must free the exact address
+        # before the new record asks the CMS to allocate it. Other removals keep their old order.
+        for item in self.items:
+            if item["op"] != "create":
+                continue
+            values = item.get("write", {})
+            slug = values.get("post_name") if self.platform == "wordpress" else values.get("alias")
+            if not slug:
+                continue
+            for old in self.items:
+                if old["op"] != "delete" or old["kind"] != item["kind"]:
+                    continue
+                expected = old.get("expect", {})
+                if self.platform == "wordpress":
+                    post_type = values.get("post_type")
+                    # Hierarchical/custom post types have CMS-specific scopes. Conservative extra
+                    # dependencies within one type are harmless; never couple unrelated types.
+                    same_scope = post_type == self.post_type_of(old["spec"], old)
+                    if post_type == "page":
+                        same_scope = same_scope and values.get("post_parent", "0") == expected.get("post_parent", "0")
+                    match = same_scope and slug == expected.get("post_name")
+                else:
+                    scope = {"article": ("catid",), "contact": ("catid",),
+                             "category": ("parent_id", "extension"), "menuItem": ("parent_id", "menutype", "language")}.get(item["kind"], ())
+                    match = slug == expected.get("alias") and all(values.get(k) == expected.get(k) for k in scope)
+                if match:
+                    item["dependsOn"] = sorted(set(item["dependsOn"]) | {old["id"]})
+                    item.setdefault("replaces", []).append(old["id"])
+                    # Joomla keeps aliases occupied in trash. Name the conflict before writing
+                    # instead of silently allocating another URL or permanently deleting content.
+                    if self.platform == "joomla":
+                        item["conflict"] = {"reason": "changed-on-live", "fields": ["alias"]}
+                        old["conflict"] = {"reason": "changed-on-live", "fields": ["alias"]}
         done: list[dict] = []
         placed: set[str] = set()
         seq = {i["id"]: at for at, i in enumerate(self.items)}
@@ -2203,6 +2239,7 @@ class Changeset:
         over the customer's change on the live site, so each such item is a conflict, shown and never
         written, until the two sides agree there (then the item is gone: nothing differs)."""
         places: dict[tuple, set] = {}
+        whole_tables: set[str] = set()
         # A file, or a setting of the configuration file, both sides changed (the file merge's `kept`).
         paths: set[str] = set()
         settings: dict[str, set] = {}
@@ -2228,21 +2265,26 @@ class Changeset:
                     names[(table, str(row[pk]))] = tuple(sorted((c, str(row[c])) for c in natural))
         for k in kept or []:
             table, key = k.get("table"), k.get("key")
-            if not isinstance(table, str) or not isinstance(key, dict):
+            if not isinstance(table, str):
                 continue
             bare = table[len(self.prefix):] if table.startswith(self.prefix) else table
+            if k.get("kind") == "table" and not isinstance(key, dict):
+                whole_tables.add(bare)
+                continue
+            if not isinstance(key, dict):
+                continue
             ident = (bare, tuple(sorted((str(a), str(b)) for a, b in key.items())))
             places.setdefault(ident, set()).add(k.get("column") or "*")
             pk = KEPT_NAMES.get(self.platform, {}).get(bare, (None,))[0]
             if pk and list(key) == [pk] and (bare, str(key[pk])) in names:
                 places.setdefault((bare, names[(bare, str(key[pk]))]), set()).add(k.get("column") or "*")
-        if not places:
+        if not places and not whole_tables:
             return
         for item in self.items:
             hits = []
             for seed in item.get("seed", []):
                 ident = (seed["table"], tuple(sorted((str(a), str(b)) for a, b in seed["match"].items())))
-                hit = places.get(ident)
+                hit = {"*"} if seed["table"] in whole_tables else places.get(ident)
                 if hit:
                     found = self.kept_fields(item, seed, hit)
                     if found is not None:
@@ -2421,7 +2463,7 @@ def record(changeset: dict, result: dict, id_map_path: Path, pushed_path: Path, 
             continue
         # A file the push sent (or a door file a setting wrote): the next merge takes the live site's
         # version of it while the copy still holds what was sent; after an Undo the copy's stays.
-        if item.get("path") and item.get("blob") and item.get("spec") in ("file", "templateSettings"):
+        if item.get("path") and "blob" in item and item.get("spec") in ("file", "templateSettings"):
             pushed["files"] = [f for f in pushed["files"] if f.get("path") != item["path"]]
             pushed["files"].append({"path": item["path"], "ours": item["blob"], "side": "theirs" if undo else "ours"})
         if item.get("spec") == "siteIdentity":

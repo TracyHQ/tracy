@@ -1,0 +1,39 @@
+{
+  "id": "REG-PR-110-ja-boxing-1-0-8-contract",
+  "kind": "feat",
+  "title": "The JA Boxing 1.0.8 contract on place-content-roles/3 holds nothing on Road to live: every label rule at 0, every located slot judged right, the Typography page demo-only, and the Private Training phone in its own slot",
+  "pr": 110,
+  "area": "road-to-live/content-coverage",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test apps/tracy-web/test/content-coverage.test.mjs packages/cms/tracy-quickstart-tools/test/content-coverage.test.mjs",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "Release 1.0.8 of ja-boxing judged against the shipped contracts has labelHolds false, no failing label rule, judgeHolds false, no wrong-group or mismatch verdict, and fitState ready.",
+    "The 1.0.8 content map is place-content-roles/3, entity article-17 carries demoOnly true, and slot module-177.14 is contact.phone.",
+    "A text block printed from a label slot and a phone slot with no letter matches both slots by composite instead of leaving the number as a hole."
+  ],
+  "selectors": {
+    "function": "apps/tracy-web/src/lib/content-coverage/judge.js judgeLabelRules, judgeLabelJudge; packages/cms/tracy-quickstart-tools/content-coverage/lib/contract.mjs loadContract",
+    "test": "apps/tracy-web/test/content-coverage.test.mjs; packages/cms/tracy-quickstart-tools/test/content-coverage.test.mjs"
+  },
+  "evidence": "On a clean install of the 1.0.8 installer the audit left the Private Training phone line as an unknown-source hole (R9 = 1) because a phone-only slot never took part in composite matching.",
+  "fence": "The 1.0.8 contract under packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.8 commits label rules all at 0 and a judged label judge; loadContract puts a figure-only text slot of 7 or more digits into the composite list.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/content-coverage.test.mjs",
+      "packages/cms/tracy-quickstart-tools/test/content-coverage.test.mjs"
+    ],
+    "tests": [
+      "label rules group: the released JA Boxing 1.0.8 contract (role vocabulary 3) holds nothing: every rule at 0, every located slot judged right, its style-guide page demo-only",
+      "a block made of a label slot and a phone slot is that pair: a figure slot with no letter still counts"
+    ]
+  }
+}

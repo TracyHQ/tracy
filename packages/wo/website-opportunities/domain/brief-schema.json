@@ -18,9 +18,39 @@
     "sources"
   ],
   "$defs": {
-    "readingItem": {
+    "assetBox": {
+      "type": "array",
+      "items": { "type": "number", "minimum": 0, "maximum": 1 },
+      "minItems": 4,
+      "maxItems": 4,
+      "description": "[x, y, width, height] as fractions of the picture."
+    },
+    "assetLink": {
       "type": "object",
-      "required": ["id", "label", "quote", "source"],
+      "required": ["id", "evidence"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "evidence": {
+          "type": "object",
+          "required": ["via"],
+          "properties": {
+            "via": { "enum": ["alt", "post", "vision", "none"] },
+            "quote": { "type": "string" }
+          }
+        }
+      }
+    },
+    "readingItem": {
+      "allOf": [{ "$ref": "#/$defs/readingItemFields" }],
+      "required": ["id", "label", "quote", "source"]
+    },
+    "teamItem": {
+      "allOf": [{ "$ref": "#/$defs/readingItemFields" }],
+      "required": ["id", "label", "source"],
+      "description": "A team entry: quoted like any reading item, except a person held off the site, who is named with where they were read and no quote, since the reviews naming them are never quoted."
+    },
+    "readingItemFields": {
+      "type": "object",
       "properties": {
         "id": { "type": "string", "minLength": 1 },
         "label": { "type": "string", "minLength": 1, "description": "The item in words of its quote." },
@@ -426,7 +456,7 @@
               "id": { "type": "string", "minLength": 1 },
               "kinds": {
                 "type": "array",
-                "items": { "enum": ["dish", "story", "product", "event", "offer", "news"] }
+                "items": { "enum": ["dish", "story", "product", "service", "event", "offer", "news"] }
               },
               "title": { "type": "string", "minLength": 1 },
               "body": { "type": "string", "minLength": 1 },
@@ -738,6 +768,19 @@
             "description": "Broad category: a source menu photo stays menu; else what a vision model saw (people, space, food); else the caption keywords read at collection."
           },
           "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Where the picture was collected (website, instagram, google-places…). Required on every new write; a brief stored before it has none."
+          },
+          "credit": {
+            "type": "string",
+            "description": "The attribution its source requires shown, authors with their link; empty only when the source names no one. Required on every new write."
+          },
+          "uploaderRole": {
+            "enum": ["owner", "customer", "unknown"],
+            "description": "Who uploaded it: the business, a customer, or not known. Required on every new write."
+          },
           "width": {
             "type": ["integer", "null"],
             "minimum": 1,
@@ -796,6 +839,50 @@
           "sizeUnknownReason": {
             "enum": ["not_measured"],
             "description": "Why width and height are null (orientation and quality unknown): nothing measured the file when it was collected."
+          },
+          "depicts": {
+            "$ref": "#/$defs/assetLink",
+            "description": "The offering of this brief the picture shows (an offering id), or id general when unsure. Words the business wrote with it (alt text, post text) link first; a vision model may only name an id of the brief's list."
+          },
+          "portraitOf": {
+            "oneOf": [{ "$ref": "#/$defs/assetLink" }, { "type": "null" }],
+            "description": "The person of this brief's team the picture portrays (a person id), only when sure; null otherwise."
+          },
+          "role": {
+            "enum": [
+              "business.hero_image",
+              "business.gallery_image",
+              "offering.image",
+              "person.image",
+              "event.image",
+              "quote.author_image",
+              "editorial.illustration",
+              "business.logo",
+              null
+            ],
+            "description": "The place content role (version 3) the picture can fill; null for a graphic or when nothing looked at it. Offering and person roles need their link."
+          },
+          "subjectBox": {
+            "$ref": "#/$defs/assetBox",
+            "description": "Where the main subject is; absent when no model looked."
+          },
+          "faceBoxes": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/assetBox" },
+            "description": "Each face seen, so a crop or a round frame keeps it."
+          },
+          "peopleCount": {
+            "type": ["integer", "null"],
+            "minimum": 0,
+            "description": "People seen; null when no model looked."
+          },
+          "isGraphic": {
+            "type": ["boolean", "null"],
+            "description": "A logo, flyer, banner, menu or other designed graphic rather than a photograph: kept out of photo slots. Null when no model looked."
+          },
+          "isOwnPhoto": {
+            "type": ["boolean", "null"],
+            "description": "The business's own photo: from its uploader when known, else a Google author named as the business, else the vision model's reading; null when not known."
           }
         }
       }
@@ -865,7 +952,7 @@
         },
         "services": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
         "audience": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
-        "team": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
+        "team": { "type": "array", "items": { "$ref": "#/$defs/teamItem" } },
         "story": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
         "about": { "type": "string", "description": "The About line, made only of quoted words." }
       }

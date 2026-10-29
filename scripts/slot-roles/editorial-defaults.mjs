@@ -104,9 +104,15 @@ function fieldOf(slot) {
   return parts.pop() ?? ''
 }
 
-/** The element a text slot sits in, from the end of its xpath: `/div/h2/text()` is `h2`. */
+/**
+ * The element a text slot sits in, from the end of its xpath: `/div/h2/text()` is `h2`, and a whole-unit slot
+ * (`/div/h2`, the element itself) is `h2` too.
+ */
 function tagOf(xpath) {
-  const m = String(xpath ?? '').match(/\/([a-z][a-z0-9]*)(?:\[\d+\])?\/text\(\)(?:\[\d+\])?$/i)
+  const text = String(xpath ?? '')
+  const m =
+    text.match(/\/([a-z][a-z0-9]*)(?:\[\d+\])?\/text\(\)(?:\[\d+\])?$/i) ??
+    text.match(/\/([a-z][a-z0-9]*)(?:\[\d+\])?$/i)
   return m ? m[1].toLowerCase() : ''
 }
 
@@ -149,11 +155,14 @@ function editorialTextRole(slot) {
 /**
  * The editorial role a text or image slot defaults to, or `null` when the slot carries no usable signal.
  * @param {any} slot a content map slot
+ * @param {{vocabulary3?: boolean}} [options]
  * @returns {string | null}
  */
-export function editorialRoleOf(slot) {
+export function editorialRoleOf(slot, { vocabulary3 = false } = {}) {
   if (!slot || typeof slot !== 'object') return null
-  if (slot.type === 'image') return 'editorial.decorative_image'
+  // Version 3 split the decorative image: a picture no signal marks as a design element may be replaced (the Slot fit
+  // audit marks the icons, shapes and textures).
+  if (slot.type === 'image') return vocabulary3 ? 'editorial.illustration' : 'editorial.decorative_image'
   if (slot.type === 'text') return editorialTextRole(slot)
   return null
 }

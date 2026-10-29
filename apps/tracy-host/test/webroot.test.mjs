@@ -29,7 +29,8 @@ import {
   runGoLiveJob,
   writeCoreManifest,
   classifyTokenMount,
-  siteShape
+  siteShape,
+  syncProgressLine
 } from '../src/webroot.js'
 import {
   CUSTODY_CASES,
@@ -2635,4 +2636,38 @@ test('demo contact installation accepts only its selected site, never a file or 
       validateWebrootBody({ kind: 'site-demo-contact', label: 'bistro', [key]: 'x' }),
       `refused ${key}`
     )
+})
+
+// ---------------------------------------------------------------------------------------------
+// The live read's timing line, as webroot-sync.sh itself prints it
+// ---------------------------------------------------------------------------------------------
+
+const SYNC_SCRIPT = new URL(
+  '../../../packages/fleet/tracy-fleet-operation/scripts/webroot/webroot-sync.sh',
+  import.meta.url
+).pathname
+
+test('syncProgressLine keeps the read line the real script prints, and the spaced form of older scripts', async () => {
+  const script = await readFile(SYNC_SCRIPT, 'utf8')
+  const m =
+    /python3 -c '(import json,sys\nr = json\.loads\(sys\.argv\[1\]\)\nprint\(json\.dumps\(\{"ok": True, "liveReadAt"[^']*)' "\$pulled" >&2/.exec(
+      script
+    )
+  assert.ok(m, 'webroot-sync.sh prints the read timing line with the snippet this test runs')
+  const answer = {
+    ok: true,
+    liveReadAt: '2026-10-23T09:00:00Z',
+    mode: 'incremental',
+    seconds: 9.8,
+    timing: { database: 7.6 }
+  }
+  const line = execFileSync('python3', ['-c', m[1], JSON.stringify(answer)], { encoding: 'utf8' }).trim()
+  assert.equal(syncProgressLine(line), line)
+  const spaced =
+    '{"ok": true, "liveReadAt": "x", "mode": "incremental", "seconds": 2, "timing": {"database": 1.5}}'
+  assert.equal(syncProgressLine(spaced), spaced)
+  // Not the read's line: a sync answer with a state, a failed read, and what is not JSON.
+  assert.equal(syncProgressLine('{"ok": true, "liveReadAt": "x", "state": "ready"}'), null)
+  assert.equal(syncProgressLine('{"ok": false, "liveReadAt": "x", "code": "LIVE_BUSY"}'), null)
+  assert.equal(syncProgressLine('{"ok":true,"liveReadAt": oops'), null)
 })

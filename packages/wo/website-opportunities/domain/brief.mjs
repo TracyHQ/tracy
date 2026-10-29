@@ -9,6 +9,7 @@ import { renderSocialFigures, socialFiguresOf } from './agent-prompt.mjs'
 import { aboutLineOf, evidenceCountOf, labelQuoted, withReadingPicks } from './business-reading.mjs'
 import { inSentence, withoutDashes } from './plain-prose.mjs'
 import {
+  factsWithoutHeldQuotes,
   heldPeopleOf,
   heldReviewsSplit,
   readingWithoutHeldReviews,
@@ -34,6 +35,8 @@ import {
   assetCategoryOf,
   assetLabelsOf
 } from './pictures/asset-labels.mjs'
+import { UPLOADER_ROLES, assetOriginOf } from './pictures/asset-origin.mjs'
+import { PHOTO_ROLES, assetRelationsOf, closedListOf } from './pictures/picture-links.mjs'
 import { researchWhatsappOf } from './business-phones.mjs'
 import {
   briefFactErrors,
@@ -319,22 +322,23 @@ export function buildBrief({
     })
   // A dish states a fact only when the brief keeps it (`menuItemsOf`: never one without a source).
   const dishes0 = new Set(read.map((i) => String(i.name).toLowerCase()))
-  const stated = briefFactsOf(held, {
+  const statedAsRead = briefFactsOf(held, {
     food,
     decisions:
       placeProfile && Array.isArray(factAssessment)
         ? decisionsOfAssessment(factAssessment)
         : decisionsOf(held, { overrides: factOverrides ?? cand.factOverrides ?? null })
   }).filter((f) => f.field !== 'menu' || dishes0.has(String(f.value?.name ?? '').toLowerCase()))
-  const isOn = (field, match) => shown(factOf(stated, field, match))
   // 🔒 A review that names someone the brief holds off the site is quoted nowhere (`held-reviews.mjs`): not as a
-  // testimonial, and not as the evidence of the kind of business, a key message or any other reading item. The reading
-  // keeps owner text and usable reviews only, before anything picks a quote from it.
-  const heldPeople = heldPeopleOf(withheldMissing(stated))
+  // testimonial, and not as the evidence of a fact, the kind of business, a key message or any other reading item. The
+  // facts and the reading keep owner text and usable reviews only, before anything picks a quote from them.
+  const heldPeople = heldPeopleOf(withheldMissing(statedAsRead))
   const heldReviews = reviewsNamingHeld(
     [...(googlePlace?.reviews ?? []), ...reviewSitesReviewsOf(profile)],
     heldPeople
   )
+  const stated = factsWithoutHeldQuotes(statedAsRead, { names: heldPeople, held: heldReviews })
+  const isOn = (field, match) => shown(factOf(stated, field, match))
   const usableReading = readingWithoutHeldReviews(profile.businessReading, {
     names: heldPeople,
     held: heldReviews
@@ -441,6 +445,9 @@ export function buildBrief({
 
   // Assets and which of them are usable as current content; each with its size, orientation, resolution grade and, when
   // a vision model looked at it, what it shows and a caption (`asset-labels.mjs`, F08).
+  // Each also links to the offering it shows and the person it portrays, from this brief's own items only, with the role
+  // it can fill, its boxes, people count, graphic flag and whether it is the business's own (`picture-links.mjs`, #48).
+  const linkContext = { list: closedListOf(reading), posts, businessName: name }
   const assets = media
     .filter((m) => nonEmpty(m?.id))
     .map((m) => ({
@@ -449,7 +456,10 @@ export function buildBrief({
       // What a vision model saw, when one looked; else the source's word (`assetCategoryOf`).
       category: assetCategoryOf(m),
       sha256: m.sha256,
-      ...assetLabelsOf(m)
+      // Where it came from, who must be credited and who uploaded it (`asset-origin.mjs`).
+      ...assetOriginOf(m),
+      ...assetLabelsOf(m),
+      ...assetRelationsOf(m, linkContext)
     }))
   const stale = []
   const staleIds = new Set()
@@ -1122,10 +1132,11 @@ export function seoOf({ name = null, noun, city = null, services = [] }) {
 
 /** The reading as a brief carries it: each item's words, quote and source, the team's place on the site, the About line. */
 function briefReading(reading, about) {
+  // A held person's team entry has no quote (`readingWithoutHeldReviews`): it is named, never quoted.
   const item = (i) => ({
     id: i.id,
     label: i.label,
-    quote: i.quote,
+    ...(nonEmpty(i.quote) ? { quote: i.quote } : {}),
     source: i.source,
     ...(i.basis ? { basis: i.basis } : {}),
     ...(i.mentions?.length ? { mentions: i.mentions } : {})
@@ -1233,8 +1244,47 @@ function currentSiteSection(c) {
 
 // ---------- validation (hand-written mirror of brief-schema.json plus cross-field rules) ----------
 
-export function validateBrief(brief) {
+/** A box `[x, y, width, height]` in fractions of the picture. */
+const isBox = (b) =>
+  Array.isArray(b) &&
+  b.length === 4 &&
+  b.every((n) => typeof n === 'number' && n >= 0 && n <= 1) &&
+  b[2] > 0 &&
+  b[3] > 0 &&
+  b[0] + b[2] <= 1.001 &&
+  b[1] + b[3] <= 1.001
+const isLink = (l) => isObj(l) && nonEmpty(l.id) && isObj(l.evidence) && nonEmpty(l.evidence.via)
+
+/** The shape errors of an asset's relations and placing labels (`picture-links.mjs`), each `{field, msg}`. */
+function assetRelationErrors(a) {
+  const out = []
+  if ('depicts' in a && !isLink(a.depicts))
+    out.push({ field: 'depicts', msg: 'must be {id, evidence: {via}}' })
+  if ('portraitOf' in a && a.portraitOf !== null && !isLink(a.portraitOf))
+    out.push({ field: 'portraitOf', msg: 'must be {id, evidence: {via}} or null' })
+  if ('role' in a && a.role !== null && !PHOTO_ROLES.includes(a.role))
+    out.push({ field: 'role', msg: `must be null or one of ${PHOTO_ROLES.join(', ')}` })
+  if ('subjectBox' in a && !isBox(a.subjectBox))
+    out.push({ field: 'subjectBox', msg: 'must be [x, y, width, height] in fractions' })
+  if ('faceBoxes' in a && !(Array.isArray(a.faceBoxes) && a.faceBoxes.every(isBox)))
+    out.push({ field: 'faceBoxes', msg: 'must be a list of [x, y, width, height] in fractions' })
+  if (
+    'peopleCount' in a &&
+    a.peopleCount !== null &&
+    !(Number.isInteger(a.peopleCount) && a.peopleCount >= 0)
+  )
+    out.push({ field: 'peopleCount', msg: 'must be a whole number, or null when no model looked' })
+  for (const field of ['isGraphic', 'isOwnPhoto'])
+    if (field in a && a[field] !== null && typeof a[field] !== 'boolean')
+      out.push({ field, msg: 'must be a boolean, or null when not known' })
+  return out
+}
+
+export function validateBrief(brief, { legacy = false } = {}) {
   const errors = []
+  // Assets must say where they came from. A brief stored before that (schema 1, or read with `legacy`) has none: readers
+  // tolerate it, every new write requires it.
+  const originRequired = !legacy && brief?.schemaVersion !== 1
   const err = (path, msg) => errors.push(`${path}: ${msg}`)
   if (!isObj(brief)) return { ok: false, errors: ['brief: must be an object'] }
   for (const k of BRIEF_REQUIRED) if (!(k in brief)) err(k, 'is required')
@@ -1331,6 +1381,18 @@ export function validateBrief(brief) {
           err(`assets[${i}].category`, `must be one of ${CATEGORIES.join(', ')}`)
         if (!/^[0-9a-f]{64}$/.test(a.sha256 ?? ''))
           err(`assets[${i}].sha256`, 'must be 64 lowercase hex characters')
+        if (originRequired) {
+          if (!nonEmpty(a.source)) err(`assets[${i}].source`, 'must be a non-empty string')
+          if (typeof a.credit !== 'string')
+            err(`assets[${i}].credit`, 'must be a string, empty when the source names no one')
+          if (!UPLOADER_ROLES.includes(a.uploaderRole))
+            err(`assets[${i}].uploaderRole`, `must be one of ${UPLOADER_ROLES.join(', ')}`)
+        } else {
+          if ('source' in a && !nonEmpty(a.source)) err(`assets[${i}].source`, 'must be a non-empty string')
+          if ('credit' in a && typeof a.credit !== 'string') err(`assets[${i}].credit`, 'must be a string')
+          if ('uploaderRole' in a && !UPLOADER_ROLES.includes(a.uploaderRole))
+            err(`assets[${i}].uploaderRole`, `must be one of ${UPLOADER_ROLES.join(', ')}`)
+        }
         // The labels (F08) are optional: a brief made before them has none.
         for (const [field, allowed] of [
           ['orientation', ASSET_ORIENTATIONS],
@@ -1346,6 +1408,8 @@ export function validateBrief(brief) {
             err(`assets[${i}].${side}`, 'must be a positive integer, or null when unknown')
         if ('caption' in a && !(nonEmpty(a.caption) && a.caption.length < 125))
           err(`assets[${i}].caption`, 'must be a non-empty string under 125 characters')
+        // The relations (#48) are optional: a brief made before them has none.
+        for (const error of assetRelationErrors(a)) err(`assets[${i}].${error.field}`, error.msg)
       })
   }
 

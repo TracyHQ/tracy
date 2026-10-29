@@ -418,5 +418,35 @@ $bad = ti_done_html(['address' => ['old' => '', 'new' => 'https://www.example.co
 [$head] = explode('<details>', $bad, 2);
 check('done: files left, unreadable and skipped values are outside Details, files first', strpos($head, '<div class="danger">') === 0 && strpos($head, '<code>installer.php</code>') !== false && strpos($head, '2 serialized database values could not be read') !== false && strpos($head, '3 serialized values in tables without a primary key') !== false, true);
 
+// ── collations the target server does not know (beta report 25/10/2026) ──
+$table = "CREATE TABLE `jd_claudecowork_apply_log` (\n  `id` int(11) NOT NULL,\n  `note` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_uca1400_as_cs DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci";
+check('collations: a table names its own and its columns\'', ti_collations_in($table), ['utf8mb4_uca1400_as_cs', 'utf8mb4_uca1400_ai_ci']);
+check('collations: mysqldump\'s line around a routine', ti_collations_in('/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */'), ['utf8mb4_0900_ai_ci']);
+check('collations: rows are not read for them', in_array('insert', TI_COLLATION_KINDS, true), false);
+check('candidates: an insensitive one takes the charset\'s Unicode collation, newer UCA first', ti_collation_candidates('utf8mb4_uca1400_ai_ci'), ['utf8mb4_unicode_520_ci', 'utf8mb4_unicode_ci']);
+check('candidates: a sensitive one keeps distinct values distinct', ti_collation_candidates('utf8mb4_0900_as_cs'), ['utf8mb4_bin']);
+check('candidates: utf8mb3 is utf8 on an older server', ti_collation_candidates('utf8mb3_uca1400_ai_ci'), ['utf8mb3_unicode_520_ci', 'utf8mb3_unicode_ci', 'utf8_uca1400_ai_ci', 'utf8_unicode_520_ci', 'utf8_unicode_ci']);
+// MariaDB 10.4: no uca1400, no 0900; unicode_520 and the defaults are there
+$knows = ['utf8mb4_unicode_520_ci', 'utf8mb4_unicode_ci', 'utf8mb4_general_ci', 'utf8mb4_bin', 'latin1_swedish_ci'];
+$known = fn ($c) => in_array($c, $knows, true);
+$defaults = ['utf8mb4' => 'utf8mb4_general_ci', 'latin1' => 'latin1_swedish_ci'];
+$fallback = fn ($cs) => $defaults[$cs] ?? null;
+[$plan, $missing] = ti_collation_plan(['utf8mb4_uca1400_ai_ci', 'utf8mb4_uca1400_as_cs', 'utf8mb4_unicode_ci', 'latin1_german3_ci', 'koi9_odd_ci'], $known, $fallback);
+check('plan: only what the server lacks, each to the nearest it has', $plan, ['utf8mb4_uca1400_ai_ci' => 'utf8mb4_unicode_520_ci', 'utf8mb4_uca1400_as_cs' => 'utf8mb4_bin', 'latin1_german3_ci' => 'latin1_swedish_ci']);
+check('plan: a collation of a charset the server has never heard of is missing', $missing, ['koi9_odd_ci']);
+[$plan, $missing] = ti_collation_plan(['utf8mb4_uca1400_ai_ci'], fn ($c) => true, $fallback);
+check('plan: a server that knows every collation changes nothing', [$plan, $missing], [[], []]);
+check('apply: the definition takes the plan, a name that only starts the same stays',
+    ti_apply_collations($table . ' COMMENT=\'utf8mb4_uca1400_ai_ci_x\'', ['utf8mb4_uca1400_ai_ci' => 'utf8mb4_unicode_520_ci', 'utf8mb4_uca1400_as_cs' => 'utf8mb4_bin']),
+    str_replace(['utf8mb4_uca1400_as_cs', 'COLLATE=utf8mb4_uca1400_ai_ci'], ['utf8mb4_bin', 'COLLATE=utf8mb4_unicode_520_ci'], $table) . ' COMMENT=\'utf8mb4_uca1400_ai_ci_x\'');
+check('apply: no plan, the bytes as they were', ti_apply_collations($table, []), $table);
+
+// A definition may carry customer data too: defaults, comments and routine bodies are not names.
+$literal = "CREATE TABLE t (`utf8mb4_uca1400_ai_ci` text DEFAULT 'COLLATE utf8mb4_uca1400_ai_ci') COLLATE=utf8mb4_uca1400_ai_ci COMMENT='utf8mb4_uca1400_ai_ci'";
+$literalPlan = ['utf8mb4_uca1400_ai_ci' => 'utf8mb4_unicode_520_ci'];
+check('collations: defaults, comments and identifiers are preserved', ti_apply_collations($literal, $literalPlan), str_replace(') COLLATE=utf8mb4_uca1400_ai_ci', ') COLLATE=utf8mb4_unicode_520_ci', $literal));
+check('collations: text in defaults and comments names no collation', ti_collations_in("CREATE TABLE t (v text DEFAULT 'COLLATE utf8mb4_uca1400_ai_ci') COMMENT='COLLATE utf8mb4_0900_ai_ci'"), []);
+check('collations: quoted session setting in executable comment', ti_apply_collations("/*!50003 SET collation_connection = 'utf8mb4_uca1400_ai_ci' */", $literalPlan), "/*!50003 SET collation_connection = 'utf8mb4_unicode_520_ci' */");
+
 echo $failures === 0 ? "all passed\n" : "$failures failed\n";
 exit($failures === 0 ? 0 : 1);

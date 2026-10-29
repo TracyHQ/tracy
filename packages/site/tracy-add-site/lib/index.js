@@ -115,6 +115,30 @@ function failureCode(error, accept) {
 }
 
 // src/host/diagnostic.mjs
+var DIAGNOSTIC_ACTIONS = /* @__PURE__ */ new Set([
+  "info",
+  "site.fingerprint",
+  "db.tables",
+  "db.dump",
+  "db.dump_many",
+  "files.pack"
+]);
+var DIAGNOSTIC_ENGINE_ERRORS = /* @__PURE__ */ new Set([
+  "bad_action",
+  "bad_params",
+  "dump_failed",
+  "fatal",
+  "list_failed",
+  "pack_failed",
+  "read_failed",
+  "too_large",
+  "unauthorized",
+  "unavailable",
+  "unsupported",
+  "upload_failed",
+  "walk_failed",
+  "other"
+]);
 function usernameIsEmail(username) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((username ?? "").trim());
 }
@@ -650,16 +674,52 @@ function isEngineAnswer(value) {
   value.ok === "boolean";
 }
 function engineReply(text2) {
-  let parsed;
-  try {
-    parsed = JSON.parse(text2);
-  } catch {
-    return null;
-  }
-  return isEngineAnswer(parsed) ? (
+  const parsed = parseJson(text2);
+  if (isEngineAnswer(parsed)) return (
     /** @type {Record<string, unknown>} */
     parsed
+  );
+  const rest = afterPhpNotices(text2);
+  if (rest === null) return null;
+  const again2 = parseJson(rest);
+  return isEngineAnswer(again2) ? (
+    /** @type {Record<string, unknown>} */
+    again2
   ) : null;
+}
+function parseJson(text2) {
+  try {
+    return JSON.parse(text2);
+  } catch {
+    return void 0;
+  }
+}
+var PHP_NOTICE_LINE = /^(?:<br\s*\/?>)?\s*(?:PHP\s+)?(?:<b>)?(?:Deprecated|Notice|Warning|Strict Standards|User Deprecated|User Notice|User Warning)(?:<\/b>)?:\s.*\bon line\b/i;
+function afterPhpNotices(text2) {
+  const lines = String(text2).split(/\r?\n/);
+  let k = 0;
+  let notices = 0;
+  while (k < lines.length) {
+    const line = lines[k].trim();
+    if (line === "" || /^<br\s*\/?>$/i.test(line)) k += 1;
+    else if (PHP_NOTICE_LINE.test(line)) {
+      notices += 1;
+      k += 1;
+    } else break;
+  }
+  return notices > 0 && k < lines.length ? lines.slice(k).join("\n") : null;
+}
+function answerKind(text2) {
+  const t = String(text2 ?? "").trim();
+  if (t === "") return "empty";
+  if (/\b(?:Fatal error|Parse error|Uncaught\s+\w+)\b/.test(t)) return "php_fatal";
+  if (PHP_NOTICE_LINE.test(
+    t.split(/\r?\n/).find((line) => line.trim() !== "" && !/^<br\s*\/?>$/i.test(line.trim())) ?? ""
+  ))
+    return "php_notice";
+  if (t.startsWith("<")) return "html";
+  if (parseJson(t) !== void 0) return "json";
+  return "text";
 }
 function isPhpParseFailure(status, text2) {
   return status >= 500 && /\b(?:Parse error|syntax error, unexpected)\b/i.test(text2);
@@ -2396,10 +2456,11 @@ var ExportFailed = class extends Error {
    * @param detail What the operator log needs beyond the reason — the firewall's name, or on
    *   `blocked_by_host` the connection error (`ECONNREFUSED`…).
    */
-  constructor(reason, detail) {
+  constructor(reason, detail, diagnostic) {
     super(detail ? `The export stopped: ${reason} (${detail})` : `The export stopped: ${reason}`);
     this.reason = reason;
     this.detail = detail;
+    this.diagnostic = diagnostic;
     this.name = "ExportFailed";
   }
 };
@@ -2468,7 +2529,13 @@ async function callPlugin(endpoint, token, action, params, site, timeoutMs = REQ
       else siteOverloads.add(error);
       throw error;
     }
-    throw new ExportFailed("call_failed");
+    throw new ExportFailed("call_failed", detail, {
+      at: "export",
+      check: "no_engine_reply",
+      status: response.status,
+      ...DIAGNOSTIC_ACTIONS.has(action) ? { action } : {},
+      answer: answerKind(text2)
+    });
   }
   if (!result.ok) {
     const detail = `${action} failed: ${JSON.stringify(result).slice(0, 200)}`;
@@ -2481,7 +2548,14 @@ async function callPlugin(endpoint, token, action, params, site, timeoutMs = REQ
         throw error;
       }
     }
-    throw new ExportFailed("call_failed");
+    const code = typeof result.error === "string" && DIAGNOSTIC_ENGINE_ERRORS.has(result.error) ? result.error : "other";
+    throw new ExportFailed("call_failed", detail, {
+      at: "export",
+      check: "engine_refused",
+      status: response.status,
+      ...DIAGNOSTIC_ACTIONS.has(action) ? { action } : {},
+      engine_error: code
+    });
   }
   return result;
 }
@@ -4006,12 +4080,18 @@ function startRun(input) {
 ${detail}`
       );
     }
+    if (reason === "call_failed" && error instanceof ExportFailed && error.detail)
+      console.warn(
+        `[tracy-add-site] run ${run.id} (${run.siteKey}) call_failed at ${run.step}: ${error.detail}`
+      );
     const firewall = error instanceof ExportFailed && reason === "blocked_by_firewall" ? error.detail : void 0;
     if (reason === "blocked_by_firewall") logFirewall(run, firewall);
+    const diagnostic = error instanceof ExportFailed ? error.diagnostic : void 0;
     update(run, {
       state: "error",
       error: reason,
-      ...firewall ? { errorDetail: { firewall } } : {}
+      ...firewall ? { errorDetail: { firewall } } : {},
+      ...diagnostic ? { diagnostic } : {}
     });
   }).finally(async () => {
     if (run.handover?.state === "pending") await settleFleetHandovers();

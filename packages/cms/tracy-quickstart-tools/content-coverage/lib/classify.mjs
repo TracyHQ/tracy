@@ -16,10 +16,10 @@ const DATE = new RegExp(
 )
 // Strings Joomla core or the framework generate whatever the site is (when no language file is given).
 const CORE_TEXT =
-  /^(read more( \.\.\.)?|read more:.*|search|search \.\.\.|prev|previous|next|start|end|home|you are here:?|page \d+ of \d+|written by|published:?|hits:?|category:?|details|back to top|toggle navigation|close|menu|skip to main content|share|tags:?|more articles|\d+ (min|mins|minutes) read)$/
+  /^(read more( \.\.\.)?|read more:.*|search|search \.\.\.|prev|previous|next|start|end|home|you are here:?|page \d+ of \d+|written by|published:?|hits:?|category:?|details|back to top|toggle navigation|close|menu|skip to main content|share|tags:?|more articles|\d+ (min|mins|minutes) read|skip to content|leave a comment|search for:?|comments?|reply|log in|proudly powered by wordpress|powered by wordpress)$/
 
 function describeDbHit(h, contract) {
-  const entity = contract.entityByRow.get(`${h.table}:${h.id}`)
+  const entity = contract.entityOfRow(h.table, h.id, h.row)
   const field = h.path.length ? `${h.column} -> ${h.path.join('.')}` : h.column
   let note
   const lockedRow = entity ? contract.lock.entities?.[entity] : null

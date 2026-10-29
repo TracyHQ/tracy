@@ -44,27 +44,27 @@
  * 🔒 The token arrives in the environment and goes only into request bodies: never on a command line,
  * into a file, a log line or an answer.
  */
-import { createHash } from 'node:crypto'
+
 import { spawnSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
+import { once } from 'node:events'
 import {
   closeSync,
-  openSync,
-  readSync,
   createReadStream,
   createWriteStream,
   existsSync,
   mkdirSync,
-  readFileSync,
+  openSync,
   readdirSync,
+  readFileSync,
+  readSync,
   rmSync,
   statSync,
   writeFileSync
 } from 'node:fs'
-import { dirname } from 'node:path'
 import { request } from 'node:http'
-import { join } from 'node:path'
+import { dirname, join } from 'node:path'
 import { createGunzip, createGzip, gunzipSync } from 'node:zlib'
-import { once } from 'node:events'
 
 const USER_AGENT = 'Mozilla/5.0 (compatible; TracyBot/1.0; +https://tracy.ai)'
 const REQUEST_TIMEOUT_MS = 120_000
@@ -162,15 +162,38 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
 /** The engine's reply out of a raw body, or null when something else answered (`doors.mjs`). */
 function engineReply(text) {
-  try {
-    const value = JSON.parse(text)
-    return value && typeof value === 'object' && !Array.isArray(value) && typeof value.ok === 'boolean'
-      ? value
-      : null
-  } catch {
-    return null
+  const read = (body) => {
+    try {
+      const value = JSON.parse(body)
+      return value && typeof value === 'object' && !Array.isArray(value) && typeof value.ok === 'boolean'
+        ? value
+        : null
+    } catch {
+      return null
+    }
   }
+  const whole = read(text)
+  if (whole !== null) return whole
+  // PHP's notices printed ahead of the engine's JSON by a host that shows its errors (PHP 8.5
+  // deprecates the engine uploader's `curl_close()`): whole notice lines are taken off, and what
+  // remains must be an engine answer — the same rule as tracy-add-site `doors.mjs` `afterPhpNotices`.
+  const lines = String(text).split(/\r?\n/)
+  let k = 0
+  let notices = 0
+  while (k < lines.length) {
+    const line = lines[k].trim()
+    if (line === '' || /^<br\s*\/?>$/i.test(line)) k += 1
+    else if (PHP_NOTICE_LINE.test(line)) {
+      notices += 1
+      k += 1
+    } else break
+  }
+  return notices > 0 && k < lines.length ? read(lines.slice(k).join('\n')) : null
 }
+
+/** One line of PHP's report of a problem it survived, as `display_errors` prints it (`doors.mjs`). */
+const PHP_NOTICE_LINE =
+  /^(?:<br\s*\/?>)?\s*(?:PHP\s+)?(?:<b>)?(?:Deprecated|Notice|Warning|Strict Standards|User Deprecated|User Notice|User Warning)(?:<\/b>)?:\s.*\bon line\b/i
 
 /**
  * Where to connect for `endpoint`. On a stand on one machine (deploy/compose.macos.yml) a test
@@ -202,7 +225,13 @@ function viaPost(target, body, headers) {
       (res) => {
         const chunks = []
         res.on('data', (c) => chunks.push(c))
-        res.on('end', () => resolve({ status: res.statusCode, text: Buffer.concat(chunks).toString('utf8') }))
+        res.on('end', () =>
+          resolve({
+            status: res.statusCode,
+            text: Buffer.concat(chunks).toString('utf8'),
+            retryAfter: res.headers['retry-after']
+          })
+        )
       }
     )
     req.on('timeout', () => req.destroy(new Error('timeout')))
@@ -214,12 +243,13 @@ function viaPost(target, body, headers) {
 async function call(endpoint, token, action, params = {}) {
   let response
   let text
+  let retryAfter
   const target = route(endpoint)
   const body = JSON.stringify({ token, action, params })
   const headers = { 'content-type': 'application/json', 'user-agent': USER_AGENT }
   try {
     if (target) {
-      ;({ status: response, text } = await viaPost(target, body, headers))
+      ;({ status: response, text, retryAfter } = await viaPost(target, body, headers))
       response = { status: response }
     } else {
       response = await fetch(endpoint, {
@@ -229,16 +259,32 @@ async function call(endpoint, token, action, params = {}) {
         signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
         redirect: 'error'
       })
+      retryAfter = response.headers.get('retry-after')
       text = await response.text()
     }
   } catch (error) {
     throw new Transient(`${action}: ${error.cause?.code ?? error.code ?? error.message ?? error.name}`)
   }
   const reply = engineReply(text)
+  if (reply && !reply.ok && ['unauthorized', 'forbidden', 'bad_token'].includes(reply.error))
+    throw new PullFailed('TOKEN_REFUSED')
+  if (response.status === 401) throw new PullFailed('LIVE_PASSWORD_PROTECTED')
+  if (response.status === 403) throw new PullFailed('LIVE_BLOCKED')
+  if (response.status === 429) {
+    const error = new Transient(`${action} answered 429`)
+    error.code = 'LIVE_RATE_LIMITED'
+    const seconds = /^\s*\d+\s*$/.test(String(retryAfter ?? '')) ? Number(retryAfter) : null
+    const date = seconds === null ? Date.parse(String(retryAfter ?? '')) : NaN
+    error.retryAfterMs =
+      seconds !== null ? seconds * 1000 : Number.isFinite(date) ? Math.max(0, date - Date.now()) : 0
+    throw error
+  }
   if (reply === null) {
-    if (response.status === 429 || response.status >= 500)
-      throw new Transient(`${action} answered ${response.status}`)
-    throw new PullFailed('NOT_THE_ENGINE', `${action} answered ${response.status}`)
+    if (response.status >= 500) throw new Transient(`${action} answered ${response.status}`)
+    throw new PullFailed(
+      response.status === 200 ? 'LIVE_BLOCKED' : 'NOT_THE_ENGINE',
+      `${action} answered ${response.status}`
+    )
   }
   if (!reply.ok) {
     if (reply.error === 'unauthorized' || reply.error === 'forbidden' || reply.error === 'bad_token') {
@@ -256,9 +302,11 @@ async function retried(fn, onTransient = () => {}, tries = TRIES) {
       return await fn()
     } catch (error) {
       if (!(error instanceof Transient)) throw error
-      if (attempt >= tries) throw new PullFailed('SITE_RESOURCE_LIMIT', error.message)
+      if (attempt >= tries) throw new PullFailed(error.code ?? 'SITE_RESOURCE_LIMIT', error.message)
       onTransient()
-      await sleep(500 * 2 ** attempt)
+      // A long Retry-After is a refusal, never permission to retry sooner. Avoid timer overflow.
+      if (error.retryAfterMs > 2_147_483_647) throw new PullFailed('LIVE_RATE_LIMITED')
+      await sleep(Math.max(500 * 2 ** attempt, error.retryAfterMs ?? 0))
     }
   }
 }
@@ -270,15 +318,18 @@ async function door(endpoint, token) {
   const front = endpoint.replace(/\/administrator\/index\.php\?/, '/index.php?')
   for (const other of [admin, front]) if (!doors.includes(other)) doors.push(other)
   let last
+  let blocked
   for (const candidate of doors) {
     try {
       await retried(() => call(candidate, token, 'core.manifest'))
       return candidate
     } catch (error) {
       last = error
-      if (error.code === 'TOKEN_REFUSED') throw error
+      if (error.code === 'LIVE_BLOCKED') blocked = error
+      if (['TOKEN_REFUSED', 'LIVE_PASSWORD_PROTECTED', 'LIVE_RATE_LIMITED'].includes(error.code)) throw error
     }
   }
+  if (blocked) throw blocked
   throw last instanceof PullFailed ? last : new PullFailed('UNREACHABLE')
 }
 
@@ -293,7 +344,7 @@ async function abilities(endpoint, token) {
   try {
     info = (await retried(() => call(endpoint, token, 'info'))).info ?? {}
   } catch (error) {
-    if (error.code === 'TOKEN_REFUSED') throw error
+    if (['TOKEN_REFUSED', 'LIVE_PASSWORD_PROTECTED', 'LIVE_RATE_LIMITED'].includes(error.code)) throw error
   }
   const many = info.db_dump_many
   const maxFiles = Number(info.site_fingerprint?.max_files)
@@ -838,7 +889,7 @@ async function readDatabase(
           : `database: ${table}: read whole (${got.whole})`
       )
     } catch (error) {
-      if (error.code === 'TOKEN_REFUSED') throw error
+      if (['TOKEN_REFUSED', 'LIVE_PASSWORD_PROTECTED', 'LIVE_RATE_LIMITED'].includes(error.code)) throw error
       note(`database: ${table}: ranges not answered (${error.code ?? 'error'}); read whole`)
     }
   }
@@ -882,7 +933,7 @@ async function readDatabase(
       const taken = await takeRanges(endpoint, token, { table, path: fileOf(table) }, ranges.skip, ability)
       if (taken) ranged.set(table, taken)
     } catch (error) {
-      if (error.code === 'TOKEN_REFUSED') throw error
+      if (['TOKEN_REFUSED', 'LIVE_PASSWORD_PROTECTED', 'LIVE_RATE_LIMITED'].includes(error.code)) throw error
     }
   }
   const kept = new Map([

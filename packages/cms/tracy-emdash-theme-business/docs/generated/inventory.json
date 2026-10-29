@@ -4808,7 +4808,7 @@
     "src/lib/display-locale.ts": "sha256:a2366fb935787f8d54f7df36e22e5bd3969d4bf50c96155ef02ff8ef516124a6",
     "src/lib/ds-slot.ts": "sha256:abb05ee8286be80098b7a48902eb18c979de6c2689afa5784460847916ef35f7",
     "src/lib/font-subsets.mjs": "sha256:736e34fffe763d32ed64fbaf3892ef0a973f49c66d7534d3e3850d948552d37a",
-    "src/lib/form-embed-words.ts": "sha256:3e4125c2c21dda7ce8dabf9cced439e70112c498014904da07a6266708d372c5",
+    "src/lib/form-embed-words.ts": "sha256:0f341c8e6aea0a904c3a60eb1f5644dc51edf5dbbdc79512a8249fbc82ec3a66",
     "src/lib/hreflang-plugin.ts": "sha256:379ded7b2e192b534db20031ac74a8e9d412c3c8bb99c2546cce214faf2faec0",
     "src/lib/hreflang.ts": "sha256:0c81835d74f69b2c46a4c6783a0d832366c86d3bbc20389b57aad37962402902",
     "src/lib/i18n.ts": "sha256:8a88a681ed0c1a3468698d5938ddfc46b47fc09b35f1221a98362793d375791d",

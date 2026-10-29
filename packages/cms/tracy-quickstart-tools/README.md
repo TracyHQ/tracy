@@ -136,6 +136,12 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   --out <empty folder outside the repo> --write
 ```
 
+- **WordPress.** The same command audits a WordPress contract (`.../tracy-wordpress-quickstart/contracts/<slug>/wp7/<version>`).
+  A WordPress map declares no routes, so each page entity opens as `?pagename=<slug>` and the front page is crawled; the
+  database dump is read by the `<prefix>posts` / `<prefix>options` tables (a hit on a page is matched to its contract
+  entity by slug); `--webroot` reads only `wp-content/themes/<theme>`, never WordPress itself. Capture the contract with
+  `capture-contract.mjs --all-text` (every visible text, not only named blocks; `--role-vocabulary 3` for version 3 roles)
+  so there are slots to match. Not measured on WordPress yet: Slot fit (`--fit`).
 - **What it reads.** Every page the content map declares (`index.php?Itemid=N`), plus a same-host
   crawl (list pagination `?start=N` and author pages included), at 1440 px and 390 px, read-only
   (every request that is not GET/HEAD/OPTIONS is aborted). Per page: visible text by block, `alt` /
@@ -163,6 +169,35 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   JA `((span))` leftovers, `%token%`, a field word such as `TITLE` left in upper case inside sentence
   case copy; real all-caps headings and lorem ipsum are left alone). The patterns are data:
   `content-coverage/hygiene-rules.json`. Each problem holds Publish like a hole.
+- **Label rules (audit 1.2.0, ADR 0040).** The file also carries `labelRules`: the mechanical rules R2 to R9 over
+  the content map, the page snapshots and the holes (`content-coverage/lib/label-rules.mjs`), each with a count and its
+  first failing keys, and R1 (the fact-role share) as a number only. R2 a phone, email, address, price or hours sample
+  needs a contact or price role · R3 every URL slot has a role · R4 indexed repeats are grouped and a CTA URL shares a
+  group with its label · R5 no keep on a fact role, and faces, signatures and cut-outs need a person, quote or business
+  role (faces that prove a number may carry `stat.proof_image`) · R6 no link or list item inside a fact slot · R7 siblings share a role · R8 adjacent short slots on one line
+  are a cut heading · R9 a fact-like hole (an accepted reason does not lift it). Road to live holds a new release on any
+  failing rule in a `place-content-roles/3` map and warns for a live one; a version 2 map is listed and never holds.
+- **Demo-only entities (a style-guide page).** A template may ship a page that only shows its own styles (JA Boxing's
+  "Typography" article: sample headings cut in pieces, progress bars, buttons). The content map marks that entity
+  `"demoOnly": true` (on the entity in `entities`, beside `key`, `kind` and `sourceId`; never a role). Its slots are
+  left out of R1 to R8 and the verify viewer never marks them suspicious (`content-coverage/lib/demo-only.mjs`). The
+  mark changes nothing else: the page is still captured, audited for holes, counted by R9 and shipped as the template
+  ships it. Mark only a page whose every word is a style sample; a page with any business fact is not demo-only.
+- **Label judge (audit 1.4.0, spec #37).** The agent that runs the release is the judge; the audit calls no model and
+  needs no key. For every component with a slot whose verdict is not cached, it writes `<out>/label-judge/request.json`:
+  the question, the allowed verdicts and version 3 roles, the answer format, and per component its crop with numbered
+  slots (the verify viewer's crops, with a margin, in `<out>/label-judge/images/`), the page title and URL, the module
+  title and position, the neighbouring components' titles, and the slots to judge (number, key, kind, sample, role,
+  group, fit). The agent answers in a verdicts file (`{"judgedBy": "agent", "slots": [{"key", "verdict": "right" |
+  "wrong", "suggestedRole", "why"}]}`) and records it with `content-coverage/record-judge.mjs --request <file>
+  --verdicts <file>`, which refuses the whole file on a missing, unknown or doubled key, a verdict other than right or
+  wrong, or a suggested role outside `place-content-roles/3` (`content-coverage/lib/label-judge-record.mjs`), and
+  otherwise writes `labelJudge` (with `judgedBy`) into the coverage files the request names. It targets what the rules
+  cannot see: a fact labelled editorial, and a claim (a number, an award) inside editorial text. The verdicts are also
+  the cache: a slot whose content hash is unchanged is never asked again. Until answered, or with `--no-judge`, slots
+  stay `not judged`, never right. Road to live holds a new release when a slot sits on the wrong side of
+  fact/editorial (`coverage-judge`) and warns on finer mismatches, unjudged slots and live releases
+  (`coverage-judge-warn`); a version 2 map is listed and never holds.
 - **Accepting a hole or a page problem.** Only when it is truly not demo content a customer sees: add
   `"accepted": "<reason>"` to that line (English, at least 12 characters). The next `--write` keeps it.
 - **Exit.** `0` the policy passes · `1` holes, page problems (or an incomplete run) hold Publish ·
@@ -176,3 +211,35 @@ data: blocking classes, whether locked content counts, how many unexplained hole
 are allowed, the audit version a file needs: 1.1.0 measures page hygiene, so a 1.0.0 file is measured again). A
 file measured on another map or lock is stale and counts as not measured. A release already
 published only warns.
+
+### `content-coverage/verify-viewer.mjs` — look at the content map on the real pages
+
+A page for a person to check a content map with their eyes, run after `--fit` has written the map. One block
+per component (a Joomla module, an article, a contact): on the left a screenshot of the template site with every
+slot of that component outlined and numbered (desktop 1440 and phone 390), on the right a table with the same
+numbers and each slot's key, sample, role (Fact or Editorial), group, `fit` and measured box.
+
+```
+node packages/cms/tracy-quickstart-tools/content-coverage/verify-viewer.mjs \
+  --site <url of a site built from the quickstart> --template ja-boxing/j6 --version <x.y.z> \
+  --out <empty folder outside the repo> [--max-pages 80] [--reuse]
+```
+
+`--template` + `--version` read the contract from `packages/cms/tracy-joomla-quickstart/contracts/`; `--contract <dir>`
+takes any contract folder instead (`--version` is then only the label on the page). `--reuse` keeps the audit findings
+and module boxes already in `<out>/.audit`. Open `<out>/index.html`; nothing it writes is committed.
+
+- **Not located.** A slot with no visible element matched to it is listed apart with the reason (matched only a
+  hidden element, nothing on the audited pages, the same sample as another component's slot, a match outside the
+  component's area). A position is never guessed.
+- **Not shown.** A slot with no visible match whose `fit` says `measured: false` (no audited page shows it) is
+  listed in its own section.
+- **Suspicious.** Four mechanical rules mark a slot red or amber: a face or signature picture whose role is not
+  `person.*`/`quote.*`; text that looks like a real figure but has an `editorial.*` role; a Fact role whose `fit`
+  says keep; `fit` not measured although the slot is shown as text or a picture (a slot shown only through a link or
+  an attribute, such as an email inside its mailto, has no box to measure). A demo-only entity is shown with a
+  "demo only, not judged" badge and never marked. Everything else is for the person to judge.
+
+It reuses the audit (`runAudit`, so the same lazy-content wake and the same smooth-scroll handling as `--fit`),
+is read-only on the site, and covers the Joomla module wrappers (`Mod<N>`) of the T4 template.
+`packages/cms/tracy-quickstart-tools/test/content-map-verify-viewer.test.mjs` covers the locating and the page.

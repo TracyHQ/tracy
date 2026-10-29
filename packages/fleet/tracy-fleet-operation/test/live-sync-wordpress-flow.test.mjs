@@ -272,7 +272,7 @@ function write(root, files) {
   }
 }
 
-function stack() {
+function stack(extraSql = '') {
   const srv = mkdtempSync(join(tmpdir(), 'tracy-live-sync-wp-'))
   const priv = join(srv, LABEL)
   const webroot = join(priv, '.webroot')
@@ -309,6 +309,7 @@ function stack() {
   // plugin, the force-HTTPS pair commented out and the hardening block added; then the baseline and v1.
   sql('CREATE DATABASE wordpress CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci')
   sql(TABLES(COPY_URL, 'copy-token'), 'wordpress')
+  if (extraSql) sql(extraSql, 'wordpress')
   sql("INSERT INTO wp_options VALUES (9, 'tracy_access_aud', 'aud-of-the-copy', 'yes')", 'wordpress')
   write(webroot, {
     ...SITE_FILES,
@@ -333,6 +334,7 @@ function stack() {
   write(live, { ...SITE_FILES, 'wp-config.php': wpConfig(LIVE_DB) })
   sql('CREATE DATABASE livesrc CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci')
   sql(TABLES(LIVE_URL, 'live-token'), 'livesrc')
+  if (extraSql) sql(extraSql, 'livesrc')
 
   let reads = 0
   return {
@@ -1086,3 +1088,135 @@ test('WordPress: copy-token writes the copy’s own Claude Cowork token into its
     s.dispose()
   }
 })
+
+const WC_DERIVED = [
+  'wc_admin_notes',
+  'wc_admin_note_actions',
+  'wc_order_stats',
+  'wc_order_product_lookup',
+  'wc_customer_lookup'
+]
+const WC_CHILDREN = [
+  'wc_orders_meta',
+  'wc_order_addresses',
+  'wc_order_operational_data',
+  'woocommerce_order_items',
+  'woocommerce_order_itemmeta'
+]
+const WC_TABLES = [
+  "INSERT INTO wp_options VALUES (70, 'woocommerce_custom_orders_table_enabled', 'yes', 'yes');",
+  ...WC_DERIVED.map(
+    (name) => `CREATE TABLE wp_${name} (id bigint NOT NULL PRIMARY KEY, value varchar(100));
+    INSERT INTO wp_${name} VALUES (1, 'baseline');`
+  ),
+  'CREATE TABLE wp_wc_orders (id bigint NOT NULL PRIMARY KEY, status varchar(30), total_amount decimal(12,2));',
+  ...WC_CHILDREN.map(
+    (name) => `CREATE TABLE wp_${name} (id bigint NOT NULL PRIMARY KEY, order_id bigint, value varchar(100));`
+  )
+].join('\n')
+
+test('WooCommerce derived background rows do not create a backup or count as customer changes', opts, () => {
+  const s = stack(WC_TABLES)
+  try {
+    const before = s.run(BACKUP, ['--op', 'list']).backups
+    sql(
+      WC_DERIVED.map((name) => `UPDATE wp_${name} SET value='background job' WHERE id=1;`).join('\n'),
+      'livesrc'
+    )
+    const answer = s.sync(s.read())
+    assert.equal(answer.state, 'applied', JSON.stringify(answer))
+    assert.equal(answer.unchanged, 'merge', JSON.stringify(answer))
+    assert.equal(answer.database.records, 0)
+    assert.deepEqual(s.run(BACKUP, ['--op', 'list']).backups, before)
+    for (const name of WC_DERIVED)
+      assert.equal(sql(`SELECT value FROM wp_${name} WHERE id=1`, 'wordpress'), 'baseline')
+  } finally {
+    s.dispose()
+  }
+})
+
+test(
+  'WooCommerce HPOS order with a placeholder and child rows is one record with all business data retained',
+  opts,
+  () => {
+    const s = stack(WC_TABLES)
+    try {
+      sql(
+        `INSERT INTO wp_posts (ID, post_content, post_title, post_status, post_type)
+      VALUES (40, '', 'Order placeholder', 'draft', 'shop_order_placehold');
+      INSERT INTO wp_wc_orders VALUES (40, 'wc-processing', 123.45);
+      ${WC_CHILDREN.map((name) => `INSERT INTO wp_${name} VALUES (1, 40, 'order child'), (2, 40, 'another child');`).join('\n')}`,
+        'livesrc'
+      )
+      const answer = s.sync(s.read())
+      assert.equal(answer.state, 'applied', JSON.stringify(answer))
+      assert.deepEqual(answer.kept, [])
+      assert.equal(sql('SELECT post_type FROM wp_posts WHERE ID=40', 'wordpress'), 'shop_order_placehold')
+      assert.equal(sql('SELECT total_amount FROM wp_wc_orders WHERE id=40', 'wordpress'), '123.45')
+      for (const name of WC_CHILDREN)
+        assert.equal(sql(`SELECT COUNT(*) FROM wp_${name} WHERE order_id=40`, 'wordpress'), '2')
+      assert.equal(answer.database.records, 1, JSON.stringify(answer.database))
+    } finally {
+      s.dispose()
+    }
+  }
+)
+
+test('WooCommerce child-only edits still sync without becoming independent records', opts, () => {
+  const initial =
+    WC_TABLES +
+    `
+    INSERT INTO wp_wc_orders VALUES (40, 'wc-processing', 123.45);
+    ${WC_CHILDREN.map((name) => `INSERT INTO wp_${name} VALUES (1, 40, 'baseline child');`).join('\n')}`
+  const s = stack(initial)
+  try {
+    sql(
+      WC_CHILDREN.map((name) => `UPDATE wp_${name} SET value='customer edit' WHERE id=1;`).join('\n'),
+      'livesrc'
+    )
+    const answer = s.sync(s.read())
+    assert.equal(answer.state, 'applied', JSON.stringify(answer))
+    assert.equal(answer.database.records, 0, JSON.stringify(answer.database))
+    for (const name of WC_CHILDREN)
+      assert.equal(sql(`SELECT value FROM wp_${name} WHERE id=1`, 'wordpress'), 'customer edit')
+    sql(
+      `UPDATE wp_wc_orders SET status='wc-completed' WHERE id=40;
+      UPDATE wp_wc_order_addresses SET value='another edit' WHERE id=1;`,
+      'livesrc'
+    )
+    const updated = s.sync(s.read())
+    assert.equal(updated.state, 'applied', JSON.stringify(updated))
+    assert.equal(updated.database.records, 1)
+    assert.equal(sql('SELECT status FROM wp_wc_orders WHERE id=40', 'wordpress'), 'wc-completed')
+    assert.equal(sql('SELECT value FROM wp_wc_order_addresses WHERE id=1', 'wordpress'), 'another edit')
+  } finally {
+    s.dispose()
+  }
+})
+
+test(
+  'WooCommerce compatibility copies count the authoritative order once in HPOS and legacy modes',
+  opts,
+  () => {
+    for (const enabled of ['yes', 'no']) {
+      const s = stack(
+        WC_TABLES +
+          `UPDATE wp_options SET option_value='${enabled}' WHERE option_name='woocommerce_custom_orders_table_enabled';`
+      )
+      try {
+        sql(
+          `INSERT INTO wp_posts (ID, post_content, post_title, post_type) VALUES (40, '', 'Order backup', 'shop_order');
+        INSERT INTO wp_wc_orders VALUES (40, 'wc-processing', 123.45);`,
+          'livesrc'
+        )
+        const answer = s.sync(s.read())
+        assert.equal(answer.state, 'applied', JSON.stringify(answer))
+        assert.equal(sql('SELECT post_type FROM wp_posts WHERE ID=40', 'wordpress'), 'shop_order')
+        assert.equal(sql('SELECT total_amount FROM wp_wc_orders WHERE id=40', 'wordpress'), '123.45')
+        assert.equal(answer.database.records, 1, JSON.stringify({ enabled, counts: answer.database }))
+      } finally {
+        s.dispose()
+      }
+    }
+  }
+)

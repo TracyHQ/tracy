@@ -1,0 +1,52 @@
+{
+  "id": "REG-PR-32-sync-held-record-rows",
+  "kind": "fix",
+  "title": "Sync from live: the live read's timing line reaches the sync row, and a held live record's rows (a Phoca Cart product's category, images) stay out of the copy and are named with it",
+  "pr": 32,
+  "area": "sync/live",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs (needs a docker daemon for mariadb:11)",
+    "S2: node --test --test-reporter=tap apps/tracy-web/test/live-sync-timing.test.mjs apps/tracy-web/test/live-sync.test.mjs",
+    "S3: node --test --test-reporter=tap --test-name-pattern=\"syncProgressLine keeps\" apps/tracy-host/test/webroot.test.mjs"
+  ],
+  "expect": [
+    "S1: 'a product both sites added under one number is held with the rows the live site made for it; …' passes: held db:jos_phocacart_products:[\"6\"] names jos_phocacart_product_categories (6,2) and jos_phocacart_product_images id 2 under `belonging`; after Sync anyway product 6 is 'Tracy hat' in category 1 only, with no image; tracy-host's syncProgressLine keeps the read line the real script printed and tracy-web's timingOf reads mode incremental, seconds 3.2 and its parts.",
+    "S1: 'a held live product keeps its rows out of the copy and names them; …', 'a held live product taken by a person (“theirs”) brings its rows; …' and 'a product the live site deleted and Tracy changed keeps its rows …', 'a held product’s customer groups stay out of a table taken whole; …' (item_groups from-theirs: (5,1,3), (6,4,2), (7,2,3); logs taken whole) and 'a held product’s customer groups stay out when the copy changed the table too …' (merged) pass.",
+    "S2: 'the read line the real script prints is read for its mode, seconds and parts' and 'an older host that prints the read line with spaces is read the same' pass; the dropped/held view carries `belonging`.",
+    "S3: 'syncProgressLine keeps the read line the real script prints, and the spaced form of older scripts' passes."
+  ],
+  "selectors": {
+    "sync_door": "GET /api/sites/:key/sync"
+  },
+  "fence": "webroot-sync.sh read timing line (compact JSON); tracy-host webroot.js syncProgressLine and tracy-web live-sync.js timingOf parse it; live_sync.py held_records/held_record_rows/name_held_rows and PHOCACART_PRODUCT_ROWS in `dependents`",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-flow.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs",
+      "apps/tracy-web/test/live-sync-timing.test.mjs",
+      "apps/tracy-web/test/live-sync.test.mjs",
+      "apps/tracy-host/test/webroot.test.mjs"
+    ],
+    "tests": [
+      "a product both sites added under one number is held with the rows the live site made for it",
+      "a held live product keeps its rows out of the copy and names them",
+      "a held live product taken by a person",
+      "a product the live site deleted and Tracy changed keeps its rows",
+      "the read line the real script prints is read for its mode, seconds and parts",
+      "an older host that prints the read line with spaces is read the same",
+      "pure pieces: an applied sync names what it left out of the live site",
+      "syncProgressLine keeps the read line the real script prints",
+      "a held product’s customer groups stay out of a table taken whole",
+      "a held product’s customer groups stay out when the copy changed the table too",
+      "a base row the live site pointed at a held product stays the copy’s, in a table taken whole",
+      "a base row the live site pointed at a held product stays the copy’s, merged row by row",
+      "a keyless row the live site moved to a held product"
+    ]
+  }
+}

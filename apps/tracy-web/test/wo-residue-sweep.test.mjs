@@ -15,6 +15,7 @@ import {
 } from '../../tracy-host/src/demo-qa.js'
 import { readResidueInPage } from '../../tracy-host/src/demo-residue-page.js'
 import { LR_BRIEF, ORIGIN, lrRead } from '../../tracy-host/test/fixtures/residue/lr.mjs'
+import { visionKey } from '../src/lib/picture-vision.js'
 import { editorialLeads, postDraftsOf, templatePostsLeft } from '../src/opportunities-build/agent-demo.js'
 import {
   LINKED_TITLE_WHY,
@@ -490,7 +491,7 @@ test('nothing is removed: no call deletes, hides or unpublishes', () => {
 })
 
 test('a site already swept plans nothing', () => {
-  const none = { calls: [], unresolved: [], thinLeads: 0, left: 0, shown: [] }
+  const none = { calls: [], unresolved: [], renamed: [], thinLeads: 0, left: 0, shown: [] }
   assert.deepEqual(planSweep({ items: [] }, options), none)
   assert.deepEqual(planSweep(null, options), none)
 })
@@ -822,7 +823,9 @@ test("a template picture becomes an imported photo of the frame's shape, a diffe
 
 test('a frame takes the best photo first: food, a room or the building before a video frame, a blurry one or a face; none is dropped', async () => {
   const { importedMedia } = await import('../src/opportunities-build/client-demo.js')
-  const vision = (subject, quality = 'good') => ({ vision: { labels: { subject, quality } } })
+  const vision = (subject, quality = 'good') => ({
+    vision: { model: 'v', key: visionKey({ model: 'v' }), labels: { subject, quality } }
+  })
   const post = 'https://www.instagram.com/p/abc/'
   const bundle = {
     media: [
@@ -1419,18 +1422,67 @@ test("a template category takes a name from the written posts' topics, once per 
     { items: [] },
     { ...options, categories, topicNames: ['News', 'Food', 'Food', 'Drinks'] }
   )
-  // "Drinks" is already a topic's name; "Breakfast" twice is one rename; "Dinner" has no topic left.
+  // "Drinks" is already a topic's name; "Breakfast" twice is one rename; "Dinner" has no topic left. Each rename is
+  // written on the category's own archive, where the replace job reads the term (`replace-wordpress.mjs` `archiveOf`).
   assert.deepEqual(
     calls.map((c) => [c.action, c.params.find, c.params.replace, c.params.path]),
     [
-      ['content.replace', 'Breakfast', 'News', '/our-blog/'],
-      ['content.replace', 'Lunch', 'Food', '/our-blog/']
+      ['content.replace', 'Breakfast', 'News', '/category/breakfast/'],
+      ['content.replace', 'Lunch', 'Food', '/category/lunch/']
     ]
   )
   assert.deepEqual(
     unresolved.map((u) => [u.field, u.name]),
     [['category', 'Dinner']]
   )
+})
+
+test('dev 27/10/2026: a template category shown on posts is renamed once, on its own archive, never per post page', () => {
+  // ja-diner: "Restaurant Marketing" planned on each post page that showed it, six rounds, and still shown.
+  const categories = ['/would-you-throw-a-glass-at-your-boss/', '/vi-soger-nye-bartendere-baristaer/'].map(
+    (page) => ({
+      page,
+      words: 'restaurant marketing',
+      name: 'Restaurant Marketing',
+      category: '/category/restaurant-marketing/'
+    })
+  )
+  const plan = planSweep({ items: [] }, { ...options, categories, topicNames: ['Seasonal menus'] })
+  assert.deepEqual(
+    plan.calls.map((c) => [c.params.find, c.params.replace, c.params.path]),
+    [['Restaurant Marketing', 'Seasonal menus', '/category/restaurant-marketing/']]
+  )
+  assert.deepEqual(plan.renamed, ['Restaurant Marketing'])
+  assert.equal(plan.left, 1)
+})
+
+test('a template category no text replace can rename is reported on the first check that sees it, never planned, never in `left`', () => {
+  const category = {
+    page: '/blog/a-post/',
+    words: 'restaurant news',
+    name: 'Restaurant News',
+    category: '/category/restaurant-news/'
+  }
+  const left = (o) => planSweep({ items: [] }, { ...options, topicNames: ['Seasonal menus'], ...o })
+  // Joomla keeps a category title in no content slot, EmDash's taxonomy labels are not a replace's to write.
+  for (const platform of ['joomla', 'emdash']) {
+    const plan = left({ platform, categories: [category] })
+    assert.deepEqual(plan.calls, [], platform)
+    assert.equal(plan.left, 0, platform)
+    assert.deepEqual(
+      plan.unresolved.map((u) => [u.field, u.name]),
+      [['category', 'Restaurant News']]
+    )
+    assert.match(plan.unresolved[0].why, /not words a text replace can write/)
+  }
+  // A link to no page of the site: no archive to rename it on.
+  const offSite = left({ categories: [{ ...category, category: 'https://elsewhere.example/c/news' }] })
+  assert.deepEqual([offSite.calls.length, offSite.left, offSite.unresolved.length], [0, 0, 1])
+  // On WordPress, a rename an earlier round of this counted check sent whose name still shows did not take: reported
+  // at once, never planned a second time, and out of `left`, so it keeps no round going.
+  const again = left({ categories: [category], renamedBefore: ['Restaurant News'] })
+  assert.deepEqual([again.calls.length, again.left, again.renamed], [0, 0, []])
+  assert.match(again.unresolved[0].why, /earlier round/)
 })
 
 test("the template's logo becomes the business's: its imported logo, else its drawn wordmark, once per site", () => {
@@ -1592,9 +1644,30 @@ test('a sweep goes on while each round plans fewer calls, and stops on no progre
   assert.deepEqual(stopped.calls, [])
   assert.deepEqual(stopped.stopped, { why: 'bound', rounds: 6, left: 3 })
   assert.equal(stopped.unresolved.length, 2)
-  assert.match(stopped.unresolved[1].why, /bound of 6 rounds with 3 calls/)
+  assert.match(stopped.unresolved[1].why, /bound of 6 rounds with 3 changes/)
   assert.deepEqual(stopped.shown, ['/a/\u0000x'])
   assert.match(sweepStopped(sweep, 'no-progress', 2).unresolved[1].why, /round 2 cleared nothing/)
+})
+
+test("dev 27/10/2026: the check after a sweep round keeps every page the sweep left unchanged; a new build's first check reads all", async () => {
+  const { checkIsIncremental, renamedBeforeOf } = await import('../src/opportunities-build/client-demo.js')
+  // The agent's first check reads every page: nothing was read before it.
+  assert.equal(checkIsIncremental(null), false)
+  assert.equal(checkIsIncremental({ clientCheckAttempts: 0 }), false)
+  // Its sweep rounds' checks read again only the pages whose document changed (`demo-qa-browser.js` `previous`).
+  assert.equal(checkIsIncremental({ clientCheckAttempts: 0, residueSweeps: { attempt: 0, n: 1 } }), true)
+  // A sweep of an earlier counted check says nothing; a counted check before does.
+  assert.equal(checkIsIncremental({ clientCheckAttempts: 1, residueSweeps: { attempt: 0, n: 6 } }), true)
+  assert.equal(checkIsIncremental({ clientCheckAttempts: 0, residueSweeps: { attempt: 0, n: 0 } }), false)
+  // The renames sent stay with the counted check whose rounds sent them.
+  assert.deepEqual(
+    renamedBeforeOf({ clientCheckAttempts: 0, residueSweeps: { attempt: 0, renamed: ['Restaurant News'] } }),
+    ['Restaurant News']
+  )
+  assert.deepEqual(
+    renamedBeforeOf({ clientCheckAttempts: 1, residueSweeps: { attempt: 0, renamed: ['Restaurant News'] } }),
+    []
+  )
 })
 
 test("the plan says how many calls it holds before the cap, and every page's words a replace would clear", () => {
@@ -2234,7 +2307,7 @@ test('/ops QA row lists what the sweep left unresolved: field, page and reason, 
   assert.ok(row.unresolved[1].why.endsWith('…'))
   assert.equal(row.unresolved[2].field, 'sweep')
   assert.equal(row.unresolved[2].page, null)
-  assert.match(row.unresolved[2].why, /bound of \d+ rounds with 3 calls still planned/)
+  assert.match(row.unresolved[2].why, /bound of \d+ rounds with 3 changes still planned/)
   assert.equal(row.unresolvedMore, undefined)
 
   const many = Array.from({ length: SWEEP_UNRESOLVED_SHOWN + 3 }, (_, i) => ({
@@ -3431,5 +3504,137 @@ test("the sweep wears the business's own logo where a header shows none, once a 
   assert.equal(
     businessLogoDue([{ id: 'header-brand', pass: true, detail: [] }], { platform: 'joomla', logo }),
     false
+  )
+})
+
+// ── One page's words, one call (dev ja-diner WordPress, 27/10/2026: 58 saves of each colour copy of Home) ──────────
+
+const COLOUR_PAGES = ['/', '/home-red/', '/home-pink/', '/home-green/', '/home-blue/']
+const onePage = { buildDate: '2026-10-28', platform: 'wordpress', inventory: [], contactPath: '/contact/' }
+/** A call's pairs, whatever its shape: `changes`, or the one pair it always carried. */
+const pairsOf = (c) =>
+  Array.isArray(c.params.changes)
+    ? c.params.changes
+    : [
+        {
+          find: c.params.find,
+          replace: c.params.replace,
+          ...('expect' in c.params ? { expect: c.params.expect } : {})
+        }
+      ]
+
+test('the same three words on five pages are five calls, one per page, each pair counted on its own', () => {
+  const items = COLOUR_PAGES.flatMap((page) => [
+    { field: 'dish-name', page, text: 'Grilled Salmon Fillet' },
+    { field: 'dish-price', page, text: '$24.00' },
+    { field: 'dish-desc', page, text: 'Slow cooked with juniper' },
+    { field: 'dish-desc', page, text: 'Slow cooked with juniper' }
+  ])
+  const pairwise = planSweep({ items }, onePage)
+  const batched = planSweep({ items }, { ...onePage, batches: true })
+  assert.equal(pairwise.calls.length, 15)
+  assert.deepEqual(
+    batched.calls.map((c) => c.params.path),
+    COLOUR_PAGES
+  )
+  for (const c of batched.calls) {
+    assert.equal(c.action, 'content.replace')
+    assert.equal(c.params.all, 'page')
+    assert.equal(c.params.find, undefined)
+    assert.deepEqual(
+      c.params.changes.map((p) => [p.find, p.expect]),
+      [
+        ['Slow cooked with juniper', 2],
+        ['Grilled Salmon Fillet', 1],
+        ['$24.00', 1]
+      ]
+    )
+  }
+  // Every pair the pairwise plan sent is in the batched plan, on its page, with the same new words and count.
+  const key = (path, p) => JSON.stringify([path, p.find, p.replace, p.expect ?? null])
+  assert.deepEqual(
+    batched.calls.flatMap((c) => pairsOf(c).map((p) => key(c.params.path, p))).sort(),
+    pairwise.calls.flatMap((c) => pairsOf(c).map((p) => key(c.params.path, p))).sort()
+  )
+  // `left` and `shown` count pairs, however few calls carry them: a round is measured as before.
+  assert.equal(batched.left, pairwise.left)
+  assert.deepEqual(batched.shown, pairwise.shown)
+  // An older dsh is given one pair per call: the planner batches only when asked.
+  assert.ok(pairwise.calls.every((c) => c.params.changes === undefined))
+})
+
+test('a longer phrase is replaced before a shorter one it holds: the shorter waits for a later call of its page', () => {
+  const items = ['/', '/home-red/'].flatMap((page) => [
+    { field: 'dish-name', page, text: 'Smoked Venison' },
+    { field: 'dish-name', page, text: 'Smoked Venison Burger' },
+    { field: 'dish-price', page, text: '$18.00' }
+  ])
+  const { calls } = planSweep({ items }, { ...onePage, batches: true })
+  assert.deepEqual(
+    calls.map((c) => [c.params.path, pairsOf(c).map((p) => p.find)]),
+    [
+      ['/', ['Smoked Venison Burger', '$18.00']],
+      ['/home-red/', ['Smoked Venison Burger', '$18.00']],
+      ['/', ['Smoked Venison']],
+      ['/home-red/', ['Smoked Venison']]
+    ]
+  )
+  // A long text's next part waits for the part before it: it looks for words the part before wrote.
+  const text = Array.from({ length: 160 }, (_, i) => `word${i}`).join(' ')
+  const long = planSweep(
+    {
+      items: [
+        { field: 'dish-desc', page: '/', text },
+        { field: 'dish-price', page: '/', text: '$9.00' }
+      ]
+    },
+    { ...onePage, batches: true }
+  ).calls
+  assert.ok(long.length >= 2)
+  assert.deepEqual(long.flatMap((c) => pairsOf(c).map((p) => p.find.split(' ')[0])).slice(0, 2), [
+    'word0',
+    '$9.00'
+  ])
+  for (const c of long.slice(1)) assert.equal(pairsOf(c).length, 1)
+})
+
+test('a page past what one call writes takes more calls: 20 pairs, 40 counted places, 5 places no expect counts', () => {
+  const many = Array.from({ length: 25 }, (_, i) => ({
+    field: 'dish-name',
+    page: '/',
+    text: `Dish ${String.fromCharCode(65 + i)} of the house`
+  }))
+  const split = planSweep({ items: many }, { ...onePage, batches: true }).calls
+  // "Dish A of the house" holds no other dish's words, so no pair waits for another: only the cap splits them.
+  assert.deepEqual(
+    split.map((c) => pairsOf(c).length),
+    [20, 5]
+  )
+  // Places: a price shown 30 times and another 15 times are 45 places, over the job's 40 for one call.
+  const shown = (text, n) => Array.from({ length: n }, () => ({ field: 'dish-price', page: '/', text }))
+  const places = planSweep(
+    { items: [...shown('$30.00', 30), ...shown('$15.00', 15)] },
+    { ...onePage, batches: true }
+  )
+  assert.deepEqual(
+    places.calls.map((c) => pairsOf(c).map((p) => [p.find, p.expect])),
+    [[['$30.00', 30]], [['$15.00', 15]]]
+  )
+  // Whole passages go without `expect`, under the job's confirm-count: their places at most five a call.
+  const passage = (n) => ({
+    field: 'text',
+    page: '/',
+    whole: true,
+    filler: true,
+    text: `Lorem ipsum passage ${n}`,
+    passage: `Lorem ipsum dolor sit amet passage number ${n}`
+  })
+  const loose = planSweep(
+    { items: [passage(1), passage(1), passage(2), passage(2), passage(3), passage(3)] },
+    { ...onePage, batches: true }
+  ).calls
+  assert.deepEqual(
+    loose.map((c) => pairsOf(c).map((p) => p.expect ?? null)),
+    [[null, null], [null]]
   )
 })

@@ -218,7 +218,7 @@ export const ERROR_DOCS = [
     family: 'door',
     status: 409,
     meaning:
-      'This site was imported, and Tracy could not verify its hosted copy, so it refuses rather than write to your live site; `copyReason` says why (`timeout`, `unreachable`, `unauthorized`, `not_json`, `refused`, `platform_mismatch`, `no_registered_component`, `no_copy_address`) and `transient` whether waiting can change it.',
+      'This site was imported, and Tracy could not verify its hosted copy, so it refuses rather than write to your live site; `copyReason` says why (`timeout`, `unreachable`, `unauthorized`, `not_json`, `not_engine`, `refused`, `redirected`, `no_copy`, `copy_error`, `platform_mismatch`, `no_registered_component`, `no_copy_address`) and `transient` whether waiting can change it.',
     next: 'When `transient` is true the copy is still warming up: send the same call again in a moment. Otherwise contact support to have the hosted copy verified.'
   },
   {

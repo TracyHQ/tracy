@@ -214,7 +214,7 @@ preview() {
     return 0
   fi
   if [[ "$ok" != true || "$state" != applied ]]; then
-    python3 -c 'import json,sys; print(json.dumps({"ok": False, "code": "SYNC_FAILED", "sync": json.load(open(sys.argv[1]))}, ensure_ascii=False))' "$PREVIEW_DIR/sync.json"
+    python3 -c 'import json,sys; s=json.load(open(sys.argv[1])); print(json.dumps({"ok": False, "code": s.get("code") if s.get("code") in ("LIVE_BLOCKED", "LIVE_PASSWORD_PROTECTED", "LIVE_RATE_LIMITED", "TOKEN_REFUSED") else "SYNC_FAILED", "sync": s}, ensure_ascii=False))' "$PREVIEW_DIR/sync.json"
     return 0
   fi
   rm -rf "$PREVIEW_DIR/sync"
@@ -342,7 +342,7 @@ PYEOF
               $([[ "$CONFIRM_DELETES" == 1 ]] && echo --confirm-deletes) \
               $([[ "$CONFIRM_PHP" == 1 ]] && echo --confirm-php) | tail -1)"
     if [[ "$(python3 -c 'import json,sys; print(json.loads(sys.argv[1] or "{}").get("ok"))' "$said")" != True ]]; then
-      engine_refusal "$said"; return 0
+      if [[ ! -f "$PUSH_DIR/written.json" ]]; then engine_refusal "$said"; return 0; fi
     fi
   fi
   local written

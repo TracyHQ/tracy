@@ -110,6 +110,7 @@ Numbering rules and the inheritance register: [adr/README.md](adr/README.md).
 | [ADR 0037 — The place profile is sourced facts, independent of templates; a slot lacking facts keeps the full layout](adr/0037-place-profile-is-template-independent.md) | ADR 0037 — The place profile is sourced facts, independent of templates; a slot lacking facts keeps the full layout |
 | [ADR 0038 — Slot roles live in the content map; the Road to live checks them under Content coverage](adr/0038-slot-roles-live-in-content-map.md) | ADR 0038 — Slot roles live in the content map; the Road to live checks them under Content coverage |
 | [ADR 0039 — Slot fit lives in the content map, measured at capture; a picture's keep flag follows its measured kind](adr/0039-slot-fit-lives-in-content-map.md) | ADR 0039 — Slot fit lives in the content map, measured at capture; a picture's keep flag follows its measured kind |
+| [ADR 0040 — Place content roles v3: the slot role is the only decider of keep or replace](adr/0040-place-content-roles-v3-role-is-the-single-keep-decider.md) | ADR 0040 — Place content roles v3: the slot role is the only decider of keep or replace |
 
 ## READMEs next to the code
 
