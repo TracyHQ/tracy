@@ -5,7 +5,14 @@
  * stored and never printed. A `<style>` in a custom module's body applies to the whole document, so the block travels
  * as one custom module shown on every page (the same road the design-system slot takes), found again by its note and
  * updated in place, so a second build never adds a second one. No template file is touched.
+ *
+ * 🔒 A POSITION THE PAGES PRINT. A module assigned to every page shows only where the layout prints its position: measured
+ * on a real T4 build, the block sat in the position of a map module that the layout prints only inside the contact page's
+ * map dialog, so not one rule of it reached the home page. When the served pages are known, the block goes to the position
+ * whose custom module shows on the most of them (all, when one does), read from what each page serves; a block already
+ * written that a page lacks is moved there.
  */
+import { HEAD_BLOCK_START } from 'website-opportunities/domain/outside-map.mjs'
 import { readModules } from './joomla-tidy.js'
 
 /** The note that marks the module as Tracy's leftover block. */
@@ -24,14 +31,62 @@ async function onEveryPage(apply, siteKey, id) {
 }
 
 /**
- * Where the block goes: the position of a published custom module that already shows on every page (the template
- * prints it on every page), else the position of any published custom module.
+ * The marks a module leaves on a page it is shown on: its wrapper id (T4 `Mod<id>`, Joomla `mod-custom<id>`,
+ * `module-<id>`), a run of its own words, and the pictures it shows.
+ * @param {any} module
+ * @returns {string[]}
+ */
+export function marksOf(module) {
+  const id = Number(module?.id)
+  const content = String(module?.content ?? '')
+  const words = content
+    .replace(/<[^>]*>/g, '\n')
+    .split('\n')
+    .map((w) => w.trim())
+    .filter((w) => w.length >= 12 && !/[&<>"]/.test(w))
+    .slice(0, 2)
+  const pictures = [...content.matchAll(/\bsrc=["']([^"'#?]{8,})/gi)]
+    .map((m) => m[1].replace(/^\/+/, ''))
+    .slice(0, 2)
+  const own = content.includes(HEAD_BLOCK_START) ? [HEAD_BLOCK_START] : []
+  return [
+    ...(Number.isInteger(id) && id > 0 ? [`id="Mod${id}"`, `id="mod-custom${id}"`, `id="module-${id}"`] : []),
+    ...own,
+    ...(own.length ? [] : [...words, ...pictures])
+  ]
+}
+
+/** On how many of `pages` a module shows. */
+const shownOn = (module, pages) => {
+  const marks = marksOf(module)
+  return pages.filter((html) => marks.some((m) => String(html ?? '').includes(m))).length
+}
+
+/**
+ * Where the block goes: the position whose published custom module the served pages show the most (when they are known),
+ * else the position of a published custom module that shows on every page, else of any published custom module.
+ * @param {(call: any) => Promise<any>} apply
+ * @param {string} siteKey
+ * @param {any[]} modules
+ * @param {string[]} [pages] - the served pages read for the head block
  * @returns {Promise<string | null>}
  */
-async function positionFor(apply, siteKey, modules) {
+async function positionFor(apply, siteKey, modules, pages = []) {
   const custom = modules.filter(
     (m) => m.module === 'mod_custom' && Number(m.published) === 1 && m.position && m.note !== HEAD_MODULE_NOTE
   )
+  if (pages.length) {
+    let best = null
+    let most = 0
+    for (const m of custom) {
+      const n = shownOn(m, pages)
+      if (n > most) {
+        most = n
+        best = String(m.position)
+      }
+    }
+    if (best) return best
+  }
   for (const m of custom) if (await onEveryPage(apply, siteKey, Number(m.id))) return String(m.position)
   return custom[0] ? String(custom[0].position) : null
 }
@@ -44,15 +99,20 @@ async function positionFor(apply, siteKey, modules) {
  * @param {string} input.block - the marked `<style>` block
  * @param {string} input.applyId
  * @param {(line: string) => void} input.note
+ * @param {string[]} [input.pages] - the served pages read for the head block: the block must show on each
  * @returns {Promise<number>} 1 when the module was written
  */
-export async function writeHeadModule({ apply, siteKey, block, applyId, note }) {
+export async function writeHeadModule({ apply, siteKey, block, applyId, note, pages = [] }) {
   try {
     const modules = await readModules(apply, siteKey)
     const own = modules.find((m) => m.note === HEAD_MODULE_NOTE && m.module === 'mod_custom')
     const fail = (/** @type {any} */ a) => a?.ok === false
     if (own) {
-      if (String(own.content ?? '') === block && Number(own.published) === 1) return 0
+      // A block some served page lacks sits in a position that page does not print: it moves to one the pages print.
+      const lacking = pages.some((html) => !String(html ?? '').includes(HEAD_BLOCK_START))
+      const moved = lacking ? await positionFor(apply, siteKey, modules, pages) : null
+      const move = moved && moved !== String(own.position ?? '') ? { position: moved } : {}
+      if (String(own.content ?? '') === block && Number(own.published) === 1 && !move.position) return 0
       const answer = await apply({
         siteKey,
         action: 'content.update',
@@ -60,13 +120,13 @@ export async function writeHeadModule({ apply, siteKey, block, applyId, note }) 
           kind: 'module',
           id: Number(own.id),
           apply_id: applyId,
-          fields: { content: block, published: 1 }
+          fields: { content: block, published: 1, ...move }
         }
       })
       if (fail(answer)) throw new Error(String(answer.message ?? answer.error ?? 'refused'))
       return 1
     }
-    const position = await positionFor(apply, siteKey, modules)
+    const position = await positionFor(apply, siteKey, modules, pages)
     if (!position) {
       note(
         'the site has no custom module to show the demo-leftover styles with, so the demo backgrounds and videos stay'

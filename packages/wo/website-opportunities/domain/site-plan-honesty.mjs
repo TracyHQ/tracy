@@ -11,6 +11,7 @@
 // of a JSON list, or an entity of its own).
 import { collectionOfGroupId } from './content-map-repeatable-lists.mjs'
 import { namedIn } from './pictures/picture-links.mjs'
+import { planStatBoxes } from './stat-box-plan.mjs'
 
 export const HONESTY_VERSION = 'site-plan-honesty/1'
 
@@ -26,6 +27,8 @@ export const HONESTY_REASONS = Object.freeze({
   'no-brief-price': 'the brief holds no price for this plan',
   'no-brief-fact': 'the brief holds no such fact',
   'no-brief-statistic': 'the brief holds no such number',
+  'no-brief-statistic-photo': 'the brief holds no number for this box, so it shows one of the owner’s photos',
+  'brief-statistic': 'a number the brief holds from a source',
   'no-signer': 'the brief names no owner to sign',
   'whole-collection-hidden': 'every card of this section is hidden',
   'no-place-to-hide': 'the record sits where the site cannot hide it'
@@ -182,11 +185,12 @@ const blankOf = (slot, reason) => ({
 /**
  * @param {object} brief - a validated brief revision
  * @param {{slots?: any[], entities?: any[]} | null} contentMap
- * @param {{name?: string | null, contact?: Record<string, {value: string}>}} [options]
+ * @param {{name?: string | null, contact?: Record<string, {value: string}>, now?: number}} [options] - `now`: the year a
+ *   founding year is counted from (tests pin it)
  * @returns {{honesty: {version: string, records: any[], hide: any[], values: Record<string, {value: string, reason: string, evidence?: string}>,
  *   blanks: any[], fallbacks: Record<string, {value: string, reason: string}>}}}
  */
-export function planHonesty(brief, contentMap, { name = null, contact = {} } = {}) {
+export function planHonesty(brief, contentMap, { name = null, contact = {}, now = undefined } = {}) {
   const people = peopleOfBrief(brief)
   const offerings = offeringsOfBrief(brief)
   const owner = people.find((p) => OWNER_WORDS.test(p.role ?? '')) ?? null
@@ -201,6 +205,9 @@ export function planHonesty(brief, contentMap, { name = null, contact = {} } = {
     values[slot.key] = { value, reason, evidence: value }
   }
   const byCollection = new Map()
+  const statBoxes = new Map(
+    planStatBoxes(brief, groupsOf(contentMap), contentMap, { now }).map((b) => [b.group, b])
+  )
   for (const group of groupsOf(contentMap)) {
     const isPerson = group.kind === 'person'
     const isOffering =
@@ -210,10 +217,38 @@ export function planHonesty(brief, contentMap, { name = null, contact = {} } = {
       byCollection.set(at, [...(byCollection.get(at) ?? []), group])
       continue
     }
-    if (group.kind === 'stat_item')
+    if (group.kind === 'stat_item') {
+      // A box shows a sourced fact, else an owner photo (in a photo grid), else it goes (a band): `stat-box-plan.mjs`.
+      const box = statBoxes.get(group.id)
+      if (box?.decision === 'fact') {
+        records.push({
+          group: group.id,
+          kind: group.kind,
+          decision: 'keep',
+          reason: box.reason,
+          fact: box.fact
+        })
+        for (const slot of group.slots)
+          if (box.values?.[slot.key]) setValue(slot, box.values[slot.key], box.reason)
+          else if (slot.role?.startsWith('stat.') && (slot.type === 'text' || slot.xpath))
+            blanks.push(blankOf(slot, 'no-brief-statistic'))
+        continue
+      }
+      if (box?.decision === 'hide')
+        records.push({
+          group: group.id,
+          collection: collectionOf(contentMap, group),
+          kind: group.kind,
+          decision: 'hide',
+          reason: box.reason,
+          place: placeOf(contentMap, group)
+        })
+      else if (box?.decision === 'photo')
+        records.push({ group: group.id, kind: group.kind, decision: 'photo', reason: box.reason })
       for (const slot of group.slots)
         if (slot.role?.startsWith('stat.') && (slot.type === 'text' || slot.xpath))
           blanks.push(blankOf(slot, 'no-brief-statistic'))
+    }
     if (group.kind === 'quote')
       for (const slot of group.slots) {
         if (slot.role === 'quote.author_name' && owner) setValue(slot, owner.label, 'brief-owner')
@@ -308,7 +343,8 @@ export function planHonesty(brief, contentMap, { name = null, contact = {} } = {
  */
 function hidesOf(records) {
   const keptIn = new Set()
-  for (const r of records) if (r.decision === 'keep') keptIn.add(r.group.split('.')[0])
+  // A box shown as a photo stays in its section as surely as a kept card.
+  for (const r of records) if (r.decision !== 'hide') keptIn.add(r.group.split('.')[0])
   const out = []
   const whole = new Set()
   for (const r of records) {

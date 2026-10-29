@@ -269,7 +269,8 @@ const cssString = (value) => String(value).replace(/["\\\n\r]/g, '')
 /**
  * The marked head block that hides or repaints what no door writes. Empty when there is nothing to do.
  * @param {{backgrounds?: Array<{selector: string, file: string}>, picture?: string | null, videos?: string[],
- *   files?: string[], links?: string[], frames?: string[], pictures?: string[]}} input
+ *   files?: string[], links?: string[], frames?: string[], pictures?: string[],
+ *   tiles?: Array<{target: string, picture: string}>}} input
  *   - `backgrounds`: demo backgrounds, repainted with `picture` (a site path of the owner's picture) or taken off
  *   - `videos`: demo video ids whose play controls are hidden (the still picture stays)
  *   - `files`: demo pictures hidden where they are shown as an `<img>` (the not-found and offline pages)
@@ -277,6 +278,9 @@ const cssString = (value) => String(value).replace(/["\\\n\r]/g, '')
  *   - `frames`: selectors of repeated frames whose every text was emptied (read from the served pages), hidden whole
  *   - `pictures`: site paths of pictures the build wrote only to take a figure off (a cut-out, `cutout-ladder.mjs`),
  *     hidden wherever they are shown so they leave no box
+ *   - `tiles`: emptied boxes among the photos of a grid (a stat box with no sourced number, `stat-box-plan.mjs`), each
+ *     shown as one owner photo (`picture`, a site path) cover-cropped into its box (`target`), its words hidden, so the
+ *     grid stays whole (`empty-frames.js` `photoTiles`)
  */
 export function leftoverHeadBlock({
   backgrounds = [],
@@ -285,7 +289,8 @@ export function leftoverHeadBlock({
   files = [],
   links = [],
   frames = [],
-  pictures = []
+  pictures = [],
+  tiles = []
 }) {
   const rules = []
   if (backgrounds.length) {
@@ -328,6 +333,17 @@ export function leftoverHeadBlock({
   if (frames.length)
     rules.push(
       `/* frames the build left empty */\n${[...new Set(frames)].join(',\n')}{display:none !important}`
+    )
+  if (tiles.length)
+    rules.push(
+      `/* boxes shown as owner photos */\n${tiles
+        .map(
+          (t) =>
+            `${t.target}{background:url("/${cssString(t.picture).replace(/^\/+/, '')}") center / cover no-repeat !important;` +
+            'aspect-ratio:4 / 3;height:auto !important;min-height:0 !important;padding:0 !important;border:0 !important}\n' +
+            `${t.target} > *{display:none !important}`
+        )
+        .join('\n')}`
     )
   if (pictures.length)
     rules.push(

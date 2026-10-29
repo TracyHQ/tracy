@@ -182,7 +182,8 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
   if (typeof answered.answers.tone === 'string')
     brand.tone = { value: answered.answers.tone, reason: 'brief-voice' }
   // Records kept or hidden, people, offerings and facts from the brief only (ticket #192): `site-plan-honesty.mjs`.
-  const honesty = planHonesty(brief, contentMap, { name, contact })
+  const year = now && Number.isFinite(Date.parse(now)) ? new Date(now).getUTCFullYear() : undefined
+  const honesty = planHonesty(brief, contentMap, { name, contact, now: year })
   // A kept page whose every section the plan took off goes with its menu entries (`site-plan-empty-pages.mjs`).
   const { answers, notes, pagePlan } = withoutEmptiedPages(answered, served, contentMap, honesty.honesty)
   return {
