@@ -1,0 +1,1 @@
+{"id":"REG-PR-145-live-php-too-old","verdict":"PASS","commit":"d8855310e98a4bf7507c89d94a9993a2f180fc18","ran_at":"2026-10-29T15:14:36.704Z","evidence":"tests/regression/.runs/2026-10-29-d8855310e/REG-PR-145-live-php-too-old.log"}
