@@ -150,7 +150,7 @@ export function renderAgentPrompt({
     )
   line(
     sectioned
-      ? `3. Never invent prices, ${w.items}, opening hours, numbers, people's names, reviews or a booking system. A field with no source is left empty, or holds the neutral word of its place, in the site's language: "${itemName}" as the name of a ${w.item} item with no ${w.item} of the ${w.noun}, "—" for a figure, "Team" or "Overview" as a block's heading, "Contact" on a button to this site's Contact page. A price, a description, a badge, a person's name or role, a review and a figure's label with no source are left empty. ${NO_FILLER} Replace an empty or neutral field only with a true value from the brief, never a guess. Anything under "Stale" is not presented as current.`
+      ? `3. Never invent prices, ${w.items}, opening hours, numbers, people's names, reviews or a booking system. A field with no source is left empty, or holds the neutral word of its place, in the site's language: "${itemName}" as the name of a ${w.item} item with no ${w.item} of the ${w.noun}, "N/A" for a figure, "Team" or "Overview" as a block's heading, "Contact" on a button to this site's Contact page. A price, a description, a badge, a person's name or role, a review and a figure's label with no source are left empty. ${NO_FILLER} Replace an empty or neutral field only with a true value from the brief, never a guess. Anything under "Stale" is not presented as current.`
       : `3. Never invent prices, ${w.items}, opening hours, reviews or a booking system. Anything listed under "Missing" stays out of the site; anything under "Stale" is not presented as current. ${NO_FILLER}`
   )
   // Pilot 24/10/2026: Google said 09:00–17:00, another source "until 12"; the demo printed one as fact.

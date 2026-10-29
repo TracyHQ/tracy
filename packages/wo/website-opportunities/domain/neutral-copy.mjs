@@ -65,7 +65,7 @@ function keyFitsRole(role, key, kind) {
  * Resolve a sidecar policy (or the role default) using the site's language.
  * index is zero-based. business contains accepted phone/email/contactPage values,
  * either strings or Fact objects; the caller supplies any built contact-page path.
- * Block headings use editorial.heading. Literal policies accept { value: '—' }.
+ * Block headings use editorial.heading. Literal policies accept { value: 'N/A' }.
  */
 export function neutralFor({ role, policy, kind, index, locale, business } = {}) {
   const rule = policy === undefined ? own(DEFAULT_NEUTRAL_BY_ROLE, role) : policy
@@ -81,7 +81,7 @@ export function neutralFor({ role, policy, kind, index, locale, business } = {})
       : empty()
   }
   if (rule.policy === 'literal') {
-    return role === 'stat.value' && rule.value === '—' ? { state: 'neutral', text: '—' } : empty()
+    return role === 'stat.value' && rule.value === 'N/A' ? { state: 'neutral', text: 'N/A' } : empty()
   }
   const key =
     rule.policy === 'neutral_key'

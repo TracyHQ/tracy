@@ -154,7 +154,7 @@ test('step indices are zero-based and padded without truncating larger numbers',
   }
 })
 
-test('empty policies and unknown rules cannot invent content; the only stat literal is a dash', () => {
+test('empty policies and unknown rules cannot invent content; the only stat literal is N/A', () => {
   for (const role of [
     'person.name',
     'person.role',
@@ -176,12 +176,12 @@ test('empty policies and unknown rules cannot invent content; the only stat lite
   }
   assert.deepEqual(neutralFor({ role: 'stat.value' }), {
     state: 'neutral',
-    text: '—',
+    text: 'N/A',
     neutralKey: 'neutral.stat.dash'
   })
-  assert.deepEqual(neutralFor({ role: 'stat.value', policy: { policy: 'literal', value: '—' } }), {
+  assert.deepEqual(neutralFor({ role: 'stat.value', policy: { policy: 'literal', value: 'N/A' } }), {
     state: 'neutral',
-    text: '—'
+    text: 'N/A'
   })
   assert.deepEqual(neutralFor({ role: 'stat.value', policy: { policy: 'empty' } }), empty)
   for (const value of [

@@ -1357,7 +1357,7 @@ export const DEMO_NEUTRAL_WORDS = Object.freeze([
   'Contact',
   'Call',
   'Step',
-  '—',
+  'N/A',
   'Team',
   'Overview'
 ])

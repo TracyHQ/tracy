@@ -57,7 +57,7 @@ export const SECTION_ACTIONS = Object.freeze({
   invite:
     "the newsletter form becomes an invitation to book or get in touch, with a button to this site's Contact page",
   facts:
-    'real numbers only (Google rating, review count, year opened when the brief holds them); a number with no source becomes another true fact of the brief or "—", its label left empty',
+    'real numbers only (Google rating, review count, year opened when the brief holds them); a number with no source becomes another true fact of the brief or "N/A", its label left empty',
   team: "the restaurant's own kitchen or interior pictures (never the demo's people), the heading kept, names and roles left empty",
   offers:
     "real offers of the brief, each one once on a page; with none, the restaurant's pictures and its text left empty",

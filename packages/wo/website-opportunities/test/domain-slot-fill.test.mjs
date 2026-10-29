@@ -301,7 +301,7 @@ test('a team, a testimonial and steps the research never found stay empty or neu
   assert.equal(w['quote.text'].state, 'empty')
   assert.equal(w['step.index'].value, '02')
   assert.equal(w['step.title'].state, 'neutral')
-  assert.equal(w['stat.value'].value, '—')
+  assert.equal(w['stat.value'].value, neutralFor({ role: 'stat.value', locale: 'vi' }).text)
   assert.equal(w['stat.label'].state, 'empty')
   assert.equal(validateSlotFillManifest(plan.manifest).ok, true)
 })

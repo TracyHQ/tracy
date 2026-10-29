@@ -145,7 +145,7 @@ test('forbidden filler matching covers all site languages and ignores case and t
     'Menu item',
     'Service',
     'Team',
-    '—',
+    'N/A',
     'Contact',
     'Market price changes daily',
     'Our chef selects dishes'
