@@ -15,6 +15,7 @@
 // any age." under a button labelled "Contact", although the brief planned "...: tennis, padel, swimming lessons."
 import { cityOf, heroServicesOf } from './brief.mjs'
 import { serviceAreasOf } from './contact-reading.mjs'
+import { findUsp } from './hero-usp.mjs'
 import { inSentence } from './plain-prose.mjs'
 
 const nonEmpty = (v) => typeof v === 'string' && v.trim() !== ''
@@ -70,6 +71,8 @@ function kindOf(slot) {
   if (LABEL_ROLES.has(slot.role)) return 'label'
   if (!slot.role && (/button|btn|cta/.test(field) || el?.tag === 'a' || el?.tag === 'button')) return 'label'
   if (/button|btn|cta|link/.test(field)) return null
+  // A line of its own for the opening hours: WHEN is said only there, never forced into another line.
+  if (/^(?:hours?|opening(?:[-_ ]hours)?|open|times?|schedule)$/.test(field)) return 'when'
   if (HEADLINE_ROLES.has(slot.role) && (/title|heading|head/.test(field) || /^h[1-3]$/.test(el?.tag ?? '')))
     return 'headline'
   if (SUBLINE_ROLES.has(slot.role)) return 'subline'
@@ -121,7 +124,7 @@ const indexOf = (key) => Number(/\.(\d+)$/.exec(key)?.[1] ?? 0)
  * The hero slots of a content map: its headline, its subline and its main button (label and link), the first of each
  * on the first slide. Null when the home page has no hero module.
  * @param {{slots?: any[], pages?: any[], entities?: any[]} | null} contentMap
- * @returns {{entity: string, headline: any, subline: any, cta: {label: any, href: any} | null} | null}
+ * @returns {{entity: string, headline: any, subline: any, when: any, cta: {label: any, href: any} | null} | null}
  */
 export function heroSlotsOf(contentMap, page = undefined) {
   const entity = heroEntityOf(contentMap, page)
@@ -142,7 +145,7 @@ export function heroSlotsOf(contentMap, page = undefined) {
       first('href', indexOf(label.key)) ??
       first('href'))
     : null
-  return { entity, headline, subline, cta: label ? { label, href } : null }
+  return { entity, headline, subline, when: first('when'), cta: label ? { label, href } : null }
 }
 
 /** How many characters a text slot holds: its measured box, else its contract maximum. */
@@ -205,38 +208,111 @@ function plannedHeroCopy(brief) {
 }
 
 /**
- * The subline: the offerings and where, fitted to the slot by dropping offerings from the end (never a cut word); without
- * offerings, the brief's own planned hero sentence. Null when the brief names nothing the business offers.
- * @returns {{value: string, source: string, where: boolean} | null}
+ * The subline: the offerings, who they serve and where, fitted to the slot (`offeringLine`); without offerings, the
+ * brief's own planned hero sentence. Null when the brief names nothing the business offers.
+ * @returns {{value: string, short: string, source: string, where: boolean, who: string | null} | null}
  */
-function sublineOf(brief, max) {
-  const line = offeringLine(offeringNames(brief), heroWhereOf(brief), max)
+function sublineOf(brief, max, where = heroWhereOf(brief), who = null) {
+  const line = offeringLine(offeringNames(brief), where, max, who)
   if (line) return { ...line, source: 'reading.services' }
   const planned = plannedHeroCopy(brief)
   if (planned && [...planned].length <= max && offeringNames(brief).length === 0)
-    return { value: planned, short: planned, source: 'sitemap.hero', where: false }
+    return { value: planned, short: planned, source: 'sitemap.hero', where: false, who: null }
   return null
 }
 
 /**
- * Offerings in one sentence with the place, and the same sentence without it (`short`, for a heading that already names
- * the place: decided at write time, `hero-lines.js`). Offerings drop from the end until both fit; null when none fits.
+ * Who the business serves, for the subline: the USP's people ("for kids and adults") with the owner's levels as detail,
+ * else the owner's first audience ("for all ages and levels"). Null when the brief names nobody.
+ * @returns {{core: string, detail: string | null, source: string} | null}
+ */
+export function heroWhoOf(brief, usp = null) {
+  const audience = list(brief?.reading?.audience)
+    .map((a) => (nonEmpty(a?.label) ? stripEnd(a.label) : null))
+    .filter(Boolean)
+  if (nonEmpty(usp?.who))
+    return {
+      core: `for ${usp.who}`,
+      detail: audience.some((a) => /\blevels?\b/i.test(a)) ? 'at every level' : null,
+      source: 'usp'
+    }
+  if (audience.length)
+    return { core: `for ${audience[0].replace(/^for\s+/i, '')}`, detail: null, source: 'reading.audience' }
+  return null
+}
+
+/**
+ * The headline: the USP and the place (the place after a comma, else without one, else left to the subline), the first
+ * of the USP's headlines that fits. Without a USP: what the business offers in its city. Null when nothing fits.
+ * @returns {{value: string, where: boolean, source: string} | null}
+ */
+function headlineOf(brief, usp, where, max) {
+  const city = where?.kind === 'city' ? where.value : null
+  const fits = (t) => [...t].length <= max
+  if (usp) {
+    for (const h of usp.headlines) {
+      for (const value of city ? [`${h}, in ${city}`, `${h} in ${city}`] : [])
+        if (fits(value)) return { value, where: true, source: `usp:${usp.kind}`, usp }
+    }
+    for (const h of usp.headlines)
+      if (fits(h)) return { value: h, where: false, source: `usp:${usp.kind}`, usp }
+    return null
+  }
+  const line = offeringLine(offeringNames(brief), city ? where : null, max + 1)
+  return line
+    ? {
+        value: line.value.replace(/\.$/, ''),
+        where: line.where,
+        names: line.names,
+        source: 'reading.services'
+      }
+    : null
+}
+
+/** The opening hours in one short line, only when the brief trusts them and every day reads the same. */
+function whenLineOf(brief) {
+  const fact = list(brief?.facts).find((f) => f?.field === 'hours' && f.onSite === true)
+  const days = list(fact?.value).filter(nonEmpty)
+  if (days.length !== 7) return null
+  const times = new Set(days.map((d) => d.replace(/^[^:]+:\s*/, '').trim()))
+  if (times.size !== 1) return null
+  const [time] = times
+  return /closed/i.test(time) ? null : { value: `Open daily, ${time}`, source: fact.id }
+}
+
+/**
+ * Offerings in one sentence with who they serve and the place, and the same sentence without the place (`short`, for a
+ * heading that already names the place: decided at write time, `hero-lines.js`). When the box is short (COO rule
+ * 29/10/2026) the detail of WHO goes first, then WHO itself, the place stays (the caller passes no place when the
+ * headline holds it), and the offerings drop from the end last. Null when none fits.
  * @param {string[]} names - offering names in sentence case
  * @param {{kind: 'city' | 'area', value: string} | null} where
  * @param {number} max
- * @returns {{value: string, short: string, where: boolean} | null}
+ * @param {{core: string, detail?: string | null} | null} [who] - "for kids and adults", "at every level"
+ * @returns {{value: string, short: string, where: boolean, who: string | null, names: number} | null}
  */
-export function offeringLine(names, where, max) {
+export function offeringLine(names, where, max, who = null) {
   const place = (text) =>
     where?.kind === 'city'
       ? `${text} in ${where.value}.`
       : where
         ? `${text}. ${capitalFirst(where.value)}.`
         : `${text}.`
+  const tails = [
+    who?.core && who.detail ? { text: ` ${who.core}, ${who.detail}`, who: who.core } : null,
+    who?.core ? { text: ` ${who.core}`, who: who.core } : null,
+    { text: '', who: null }
+  ].filter(Boolean)
   for (let n = names.length; n >= 1; n -= 1) {
-    const text = capitalFirst(listed(names.slice(0, n)))
-    const line = place(text)
-    if ([...line].length <= max) return { value: line, short: `${text}.`, where: Boolean(where) }
+    const what = capitalFirst(listed(names.slice(0, n)))
+    for (const tail of tails) {
+      // A place after a WHO detail reads as a list: "..., at every level, in Dubai".
+      const text = `${what}${tail.text}`
+      const line =
+        tail.text.includes(',') && where?.kind === 'city' ? `${text}, in ${where.value}.` : place(text)
+      if ([...line].length <= max)
+        return { value: line, short: `${text}.`, where: Boolean(where), who: tail.who, names: n }
+    }
   }
   return null
 }
@@ -307,15 +383,42 @@ const samePage = (a, b) => String(a ?? '').replace(/^\//, '') === String(b ?? ''
  *   source: string}>, hero: {entity: string | null, keys: Record<string, string | null>, what: any, where: any,
  *   contact: any, missing: Array<{kind: 'what' | 'where' | 'contact', why: string}>}}}
  */
-export function planHero(brief, contentMap, contact = {}) {
+export function planHero(brief, contentMap, contact = {}, { themes = [] } = {}) {
   const hero = heroSlotsOf(contentMap)
   const slots = []
   const decide = (slot, value, reason, source) =>
     slots.push({ key: slot.key, role: slot.role ?? null, decision: 'value', value, reason, source })
   const where = heroWhereOf(brief)
+  const found = findUsp(brief, {
+    themes,
+    places: [where?.value].filter(nonEmpty),
+    offerings: offeringNames(brief)
+  })
+  // Two lines: the headline says WHY and WHERE, the subline WHAT and WHO. One line only: it says WHAT and WHERE.
+  const twoLines = Boolean(hero?.headline && hero?.subline)
+  // The best USP whose headline fits the box; none fits, or none passed: what and where.
+  const fitted = twoLines
+    ? found.passing.map((u) => headlineOf(brief, u, where, limitOf(hero.headline))).find(Boolean)
+    : null
+  const usp = fitted?.usp ?? null
+  const head = twoLines ? (fitted ?? headlineOf(brief, null, where, limitOf(hero.headline))) : null
+  const who = heroWhoOf(brief, usp)
+  if (head) decide(hero.headline, head.value, head.usp ? 'hero-why' : 'hero-what', head.source)
   const lineSlot = hero?.subline ?? hero?.headline ?? null
-  const what = lineSlot ? sublineOf(brief, limitOf(lineSlot)) : null
-  // The place is said once: the short line is written when the headline, as written, already names it (`hero-lines.js`).
+  // The place is said once: not in the subline when the headline, as planned, holds it.
+  // Without a USP the headline says what and where; the subline says nothing twice: the whole list when the headline had
+  // to drop offerings, else who the business serves, else it is left alone.
+  const headHasAll = head && !head.usp && head.names === offeringNames(brief).length
+  const whoOnly =
+    headHasAll && who && [`${capitalFirst(who.core)}.`].find((t) => [...t].length <= limitOf(lineSlot))
+  const what = whoOnly
+    ? { value: whoOnly, short: whoOnly, source: who.source, where: false, who: who.core }
+    : headHasAll
+      ? null
+      : lineSlot
+        ? sublineOf(brief, limitOf(lineSlot), head?.where ? null : where, twoLines ? who : null)
+        : null
+  // A headline left to the copy writer may still name the place: the short line is chosen at write time (`hero-lines.js`).
   if (what && lineSlot)
     slots.push({
       key: lineSlot.key,
@@ -324,10 +427,13 @@ export function planHero(brief, contentMap, contact = {}) {
       value: what.value,
       reason: 'hero-what',
       source: what.source,
-      ...(where && what.short !== what.value && hero?.headline && hero.headline !== lineSlot
+      ...(where && !head && what.short !== what.value && hero?.headline && hero.headline !== lineSlot
         ? { short: what.short, place: where.value, heading: hero.headline.key }
         : {})
     })
+  const when = hero?.when ? whenLineOf(brief) : null
+  if (when && [...when.value].length <= limitOf(hero.when))
+    decide(hero.when, when.value, 'hero-when', when.source)
   const way = heroContactOf(brief, contact, contentMap)
   if (way && hero?.cta?.label) {
     const label = way.label
@@ -341,8 +447,23 @@ export function planHero(brief, contentMap, contact = {}) {
   const missing = []
   if (!offeringNames(brief).length && !plannedHeroCopy(brief))
     missing.push({ kind: 'what', why: 'the brief names nothing the business offers' })
-  else if (!what)
+  else if (!what && !headHasAll)
     missing.push({ kind: 'what', why: 'the template has no hero line for what the business offers' })
+  if (!found.usp)
+    missing.push({
+      kind: 'why',
+      why: 'nothing in the brief is a specific, provable difference: the headline says what and where',
+      question: found.question
+    })
+  else if (!usp)
+    missing.push({
+      kind: 'why',
+      why: 'the template has no hero headline the difference fits',
+      value: found.usp.label
+    })
+  if (!who) missing.push({ kind: 'who', why: 'the brief names nobody the business serves' })
+  else if (twoLines && !what?.who && !/\bfamily\b/i.test(head?.value ?? ''))
+    missing.push({ kind: 'who', why: 'the subline box has no room for who the business serves' })
   if (!where) missing.push({ kind: 'where', why: 'the brief holds no city or area served' })
   if (!way)
     missing.push({
@@ -358,10 +479,15 @@ export function planHero(brief, contentMap, contact = {}) {
       keys: {
         headline: hero?.headline?.key ?? null,
         subline: hero?.subline?.key ?? null,
+        when: hero?.when?.key ?? null,
         ctaLabel: hero?.cta?.label?.key ?? null,
         ctaHref: hero?.cta?.href?.key ?? null
       },
+      usp: usp ?? found.usp,
+      weighed: found.weighed,
+      headline: head,
       what,
+      who,
       where,
       contact: way,
       missing
@@ -431,7 +557,7 @@ const BARE_CONTACT = /^(?:contact|contact us|get in touch|reach us|enquire|inqui
  * Which of the three questions the served home page's first screen does not answer (beside the leftover check; it never
  * changes `pass`).
  * @param {{pages: Array<{path: string, html: string}>, brief: any}} input
- * @returns {Array<{kind: 'what' | 'where' | 'contact', why: string, value?: string}>}
+ * @returns {Array<{kind: 'what' | 'why' | 'who' | 'where' | 'contact', why: string, value?: string, question?: string}>}
  */
 export function checkHeroAnswers({ pages, brief }) {
   const home = list(pages).find((p) => p?.path === '/') ?? list(pages)[0]
@@ -439,9 +565,12 @@ export function checkHeroAnswers({ pages, brief }) {
   const region = firstScreenOf(home.html)
   if (!region) return [{ kind: 'what', why: 'the home page has no first screen to read' }]
   const text = textOf(region)
-  // The subline answers WHAT: the first screen without its headline, unless the headline is all it holds (COO rule 1).
+  // The subline answers WHAT: the first screen without its headline, unless the headline is all it holds.
   const lines = textOf(region.replace(/<h1\b[\s\S]*?<\/h1\s*>/i, ' '))
-  const beside = lines.length > 0 ? lines : text
+  const where = heroWhereOf(brief)
+  const found = findUsp(brief, { places: [where?.value].filter(nonEmpty), offerings: offeringNames(brief) })
+  // Without a USP the headline itself says what the business offers (COO rule 29/10/2026): the whole first screen counts.
+  const beside = lines.length > 0 && found.usp ? lines : text
   const out = []
   // WHAT: an offering the brief names (its name, or a word of it that is not a generic one), or the trade it states.
   const services = list(brief?.reading?.services)
@@ -468,8 +597,37 @@ export function checkHeroAnswers({ pages, brief }) {
       why: 'the subline names nothing the business offers',
       value: beside.slice(0, 160)
     })
+  // WHY: what sets the business apart, when the brief proves something (`hero-usp.mjs`); else the owner is asked.
+  if (!found.usp)
+    out.push({
+      kind: 'why',
+      why: 'nothing in the brief is a specific, provable difference',
+      question: found.question
+    })
+  else if (!found.passing.some((u) => saysUsp(text, u)))
+    out.push({
+      kind: 'why',
+      why: 'the first screen does not say what sets the business apart',
+      value: found.usp.label
+    })
+  // WHO: the people the business serves, as the USP or the owner's audience names them.
+  const who = heroWhoOf(brief, found.usp)
+  const whoWords = [
+    ...(found.usp?.words ?? []),
+    ...String(found.usp?.who ?? '')
+      .split(/\s+/)
+      .filter((w) => w.length >= 4),
+    ...list(brief?.reading?.audience).flatMap((a) =>
+      String(a?.label ?? '')
+        .toLowerCase()
+        .split(/[^\p{L}]+/u)
+        .filter((w) => w.length >= 4 && !['every', 'with', 'from'].includes(w))
+    )
+  ]
+  if (!who) out.push({ kind: 'who', why: 'the brief names nobody the business serves' })
+  else if (!whoWords.some((w) => new RegExp(`\\b${escape(w.toLowerCase())}`).test(text)))
+    out.push({ kind: 'who', why: 'the first screen names nobody the business serves' })
   // WHERE: the city, or a place word of an area served.
-  const where = heroWhereOf(brief)
   const places = [
     where?.kind === 'city' ? where.value : null,
     ...serviceAreasOf(brief).flatMap(
@@ -510,3 +668,13 @@ export function checkHeroAnswers({ pages, brief }) {
 }
 
 const escape = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+/** Whether a text says a USP: its theme words, else most of its own words. */
+function saysUsp(text, usp) {
+  if (usp.words?.length) return usp.words.some((w) => new RegExp(`\\b${escape(w)}`).test(text))
+  const words = String(usp.label)
+    .toLowerCase()
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter((w) => w.length >= 4)
+  return words.length > 0 && words.filter((w) => text.includes(w)).length * 2 >= words.length
+}

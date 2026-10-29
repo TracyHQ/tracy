@@ -101,3 +101,11 @@ test('a page the plan drops gets no intro, and a brief with no place names only 
   assert.equal(intro.value, 'Teeth whitening and dental implants.')
   assert.equal(intro.place, undefined)
 })
+
+test('an offering page intro names who the offerings serve, from the owner audience, before the place', () => {
+  const brief = clinicBrief()
+  brief.reading.audience = [{ label: 'nervous patients', quote: 'for nervous patients' }]
+  const [intro] = planPageIntros({ brief, contentMap: contentMap(), pages: kept, cardNames })
+  assert.equal(intro.value, 'Teeth whitening and dental implants for nervous patients in Calderhill.')
+  assert.equal(intro.who, 'nervous patients')
+})

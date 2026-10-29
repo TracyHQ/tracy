@@ -7,13 +7,15 @@
  * Decided at write time, against the words each heading will really hold (`current`), not its sample:
  *   - the place is said once: a line with a `short` form drops the place when its heading already names it
  *   - an intro (`when: 'missing'`) is written only when the copy writer's line fails: it names none of the page's
- *     offerings, or the place is in neither it nor the heading
+ *     offerings, none of the people they serve (`who`), or the place is in neither it nor the heading
+ *   - the headline (`hero-why`, else `hero-what`) says what sets the business apart and where, from the brief's USP
+ *     (`hero-usp.mjs`); the template's style is put back by position (`joomla-inline-styles.js`)
  *
  * 🔒 ONLY IN THE LANGUAGE THEY WERE MADE IN: the plan writes them from the brief in English; a site written in another
  * language leaves them to the copy writer, which writes in the site's language.
  */
 
-const REASONS = new Set(['hero-what', 'hero-contact', 'intro-what'])
+const REASONS = new Set(['hero-what', 'hero-why', 'hero-when', 'hero-contact', 'intro-what'])
 
 /** The words of a line as a visitor reads them, lower case: style marks and tags taken off. */
 const wordsOf = (value) =>
@@ -48,7 +50,13 @@ export function heroSlotValues(sitePlan, locale = 'en', current = () => undefine
     if (s.when === 'missing') {
       const now = wordsOf(current(s.key))
       const named = (s.offerings ?? []).some((o) => now.includes(String(o).toLowerCase()))
-      if (named && (place === '' || now.includes(place) || headingHasPlace)) continue
+      // Who the offerings serve ("kids and adults"): one of its words in the line is enough.
+      const whoWords = String(s.who ?? '')
+        .toLowerCase()
+        .split(/\s+/)
+        .filter((w) => w.length >= 4)
+      const serves = whoWords.length === 0 || whoWords.some((w) => now.includes(w))
+      if (named && serves && (place === '' || now.includes(place) || headingHasPlace)) continue
     }
     out[s.key] = headingHasPlace && typeof s.short === 'string' && s.short !== '' ? s.short : s.value
   }

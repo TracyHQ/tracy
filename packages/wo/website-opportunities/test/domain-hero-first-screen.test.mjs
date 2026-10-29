@@ -176,6 +176,7 @@ function clinicBrief() {
     madeAt: '2026-10-20T08:00:00.000Z',
     business: {
       name: 'Brightmoor Dental',
+      trade: 'health',
       phone: '+44 20 7946 0555',
       address: '22 Elm Row - Westford - Calderhill - Exampleland'
     },
@@ -246,30 +247,37 @@ test('a T3 slideshow with no roles: the hero slots are read from the markup they
   assert.equal(hero.cta.href.key, 'module-70.3')
 })
 
-test('a clinic: the subline names the services and the city, the button calls the phone', () => {
+test('a clinic with no USP: the headline says what and where, the subline the whole list, the button calls the phone', () => {
   const plan = planHero(clinicBrief(), t4Map(), {
     phone: { value: '+44 20 7946 0555', href: 'tel:+442079460555', source: 'business.phone' }
   })
-  assert.equal(valueOf(plan, 'module-40.2'), 'Check-ups, teeth whitening and dental implants in Calderhill.')
+  // "Gentle dentistry for families" is the owner's line, but generic: it is no USP (COO rule 29/10/2026).
+  assert.equal(valueOf(plan, 'module-40.1'), 'Check-ups and teeth whitening in Calderhill')
+  assert.equal(valueOf(plan, 'module-40.2'), 'Check-ups, teeth whitening and dental implants.')
   assert.equal(valueOf(plan, 'module-40.4'), 'Call +44 20 7946 0555')
   assert.equal(valueOf(plan, 'module-40.5'), 'tel:+442079460555')
-  // The headline is the owner's own words, left to the copy writer; the line under the button too.
-  assert.equal(valueOf(plan, 'module-40.1'), undefined)
+  // The line under the button is left alone.
   assert.equal(valueOf(plan, 'module-40.3'), undefined)
-  assert.deepEqual(plan.hero.missing, [])
+  assert.deepEqual(
+    plan.hero.missing.map((m) => m.kind),
+    ['why', 'who']
+  )
+  assert.equal(plan.hero.missing[0].question, 'What makes you different from other clinics in Calderhill?')
   assert.equal(plan.hero.contact.kind, 'phone')
 })
 
-test('a bakery with no phone falls to WhatsApp; with no area the subline names only what it sells, and WHERE is reported', () => {
+test('a bakery with no phone falls to WhatsApp; with no area the headline names only what it sells, and WHERE is reported', () => {
   const plan = planHero(bakeryBrief(), t4Map(), {
     whatsapp: { value: '+447700900222', href: 'https://wa.me/447700900222', source: 'contact.whatsapp' }
   })
-  assert.equal(valueOf(plan, 'module-40.2'), 'Sourdough bread and pastries.')
+  assert.equal(valueOf(plan, 'module-40.1'), 'Sourdough bread and pastries')
+  // The headline holds every offering and the brief names nobody it serves: the subline says nothing twice.
+  assert.equal(valueOf(plan, 'module-40.2'), undefined)
   assert.equal(valueOf(plan, 'module-40.4'), 'WhatsApp us')
   assert.equal(valueOf(plan, 'module-40.5'), 'https://wa.me/447700900222')
   assert.deepEqual(
     plan.hero.missing.map((m) => m.kind),
-    ['where']
+    ['why', 'who', 'where']
   )
 })
 
@@ -299,23 +307,23 @@ test('a service area stands for the city when the brief has no address; nothing 
     ...bakeryBrief(),
     business: { name: 'Copperleaf Bakery', serviceAreas: [{ text: 'Deliveries across Ashby Vale' }] }
   }
+  // A T3 slideshow: its heading and its line are both the first screen.
   const plan = planHero(brief, t3Map(), {})
-  assert.equal(valueOf(plan, 'module-70.1'), 'Sourdough bread and pastries. Deliveries across Ashby Vale.')
-  assert.deepEqual(
-    plan.hero.missing.map((m) => m.kind),
-    []
-  )
+  assert.equal(valueOf(plan, 'module-70.0'), 'Sourdough bread and pastries')
+  assert.equal(valueOf(plan, 'module-70.1'), undefined)
+  assert.equal(plan.hero.where.value, 'Deliveries across Ashby Vale')
 
   const bare = { business: { name: 'Copperleaf Bakery' }, sitemap: [], content: { items: [] } }
   const none = planHero(bare, t3Map(), {})
+  assert.equal(valueOf(none, 'module-70.0'), undefined)
   assert.equal(valueOf(none, 'module-70.1'), undefined)
   assert.deepEqual(
     none.hero.missing.map((m) => m.kind),
-    ['what', 'where']
+    ['what', 'why', 'who', 'where']
   )
 })
 
-test('a subline too long for its box drops services from the end, never cuts a word', () => {
+test('a line too long for its box drops services from the end, never cuts a word', () => {
   const brief = clinicBrief()
   brief.reading.services.push(
     { label: 'Orthodontics', quote: 'orthodontics' },
@@ -326,24 +334,31 @@ test('a subline too long for its box drops services from the end, never cuts a w
   const plan = planHero(brief, map, {})
   const line = valueOf(plan, 'module-40.2')
   assert.ok(line.length <= 60, line)
-  assert.match(line, /in Calderhill\.$/)
+  assert.equal(line, 'Check-ups, teeth whitening and dental implants.')
+  assert.ok(valueOf(plan, 'module-40.1').length <= 45)
 })
 
-test('the site plan carries the hero lines as slot values and the three answers', () => {
+test('the site plan carries the hero lines as slot values and the answers', () => {
   const plan = planSite(
     clinicBrief(),
     { questions: [] },
     { now: '2026-10-29T00:00:00.000Z', contentMap: t4Map() }
   )
+  const head = plan.slots.find((s) => s.key === 'module-40.1')
+  assert.equal(head.decision, 'value')
+  assert.equal(head.value, 'Check-ups and teeth whitening in Calderhill')
   const sub = plan.slots.find((s) => s.key === 'module-40.2')
   assert.equal(sub.decision, 'value')
   assert.equal(sub.reason, 'hero-what')
-  assert.equal(sub.value, 'Check-ups, teeth whitening and dental implants in Calderhill.')
+  assert.equal(sub.value, 'Check-ups, teeth whitening and dental implants.')
   const cta = plan.slots.find((s) => s.key === 'module-40.4')
   assert.equal(cta.reason, 'hero-contact')
   assert.equal(cta.value, 'Call +44 20 7946 0555')
   assert.equal(plan.slots.find((s) => s.key === 'module-40.5').value, 'tel:+442079460555')
-  assert.deepEqual(plan.hero.missing, [])
+  assert.deepEqual(
+    plan.hero.missing.map((m) => m.kind),
+    ['why', 'who']
+  )
 })
 
 const page = (inner) =>
@@ -356,7 +371,13 @@ test('the check reads the served first screen and names the questions it does no
     '<h1>Gentle dentistry for families</h1><div class="lead">Check-ups, teeth whitening and dental implants in Calderhill.</div>' +
       '<a class="btn" href="tel:+442079460555">Call +44 20 7946 0555</a>'
   )
-  assert.deepEqual(checkHeroAnswers({ pages: [{ path: '/', html: good }], brief }), [])
+  // The clinic's brief proves no difference and names nobody it serves: the check says so, and asks the owner.
+  const answers = checkHeroAnswers({ pages: [{ path: '/', html: good }], brief })
+  assert.deepEqual(
+    answers.map((m) => m.kind),
+    ['why', 'who']
+  )
+  assert.equal(answers[0].question, 'What makes you different from other clinics in Calderhill?')
 
   const mood = page(
     '<h1>Gentle dentistry for families</h1><div class="lead">Smile a little more every day.</div>' +
@@ -364,7 +385,7 @@ test('the check reads the served first screen and names the questions it does no
   )
   assert.deepEqual(
     checkHeroAnswers({ pages: [{ path: '/', html: mood }], brief }).map((m) => m.kind),
-    ['what', 'where', 'contact']
+    ['what', 'why', 'who', 'where', 'contact']
   )
 })
 
@@ -375,9 +396,9 @@ test('the check passes a bakery hero that sends to WhatsApp, and names WHERE the
   const missing = checkHeroAnswers({ pages: [{ path: '/', html }], brief: bakeryBrief() })
   assert.deepEqual(
     missing.map((m) => m.kind),
-    ['where']
+    ['why', 'who', 'where']
   )
-  assert.match(missing[0].why, /brief/)
+  assert.match(missing[2].why, /brief/)
 })
 
 test('a button that says "Call" but leads to a page, and a headline that alone says the trade, are reported', () => {
@@ -388,17 +409,18 @@ test('a button that says "Call" but leads to a page, and a headline that alone s
   const missing = checkHeroAnswers({ pages: [{ path: '/', html }], brief: clinicBrief() })
   assert.deepEqual(
     missing.map((m) => m.kind),
-    ['what', 'contact']
+    ['what', 'why', 'who', 'contact']
   )
-  assert.match(missing[1].why, /promises a call/)
+  assert.match(missing[3].why, /promises a call/)
 })
 
-test('the subline carries a short form without the place, for a headline that already names it', () => {
-  const plan = planHero(clinicBrief(), t4Map(), {})
+test('a hero with one line only: it says what and where, and keeps a short form for a heading that names the place', () => {
+  const map = t4Map()
+  map.slots = map.slots.filter((s) => s.key !== 'module-40.1')
+  const plan = planHero(clinicBrief(), map, {})
   const sub = plan.slots.find((s) => s.key === 'module-40.2')
-  assert.equal(sub.short, 'Check-ups, teeth whitening and dental implants.')
-  assert.equal(sub.place, 'Calderhill')
-  assert.equal(sub.heading, 'module-40.1')
+  assert.equal(sub.value, 'Check-ups, teeth whitening and dental implants in Calderhill.')
+  assert.equal(sub.short, undefined)
 })
 
 test('no phone, WhatsApp or booking: a channel the business names itself comes before the Contact page', () => {
@@ -417,6 +439,6 @@ test('no phone, WhatsApp or booking: a channel the business names itself comes b
   )
   assert.deepEqual(
     checkHeroAnswers({ pages: [{ path: '/', html }], brief }).map((m) => m.kind),
-    ['where']
+    ['why', 'who', 'where']
   )
 })

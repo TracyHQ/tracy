@@ -1,5 +1,5 @@
 // The first screen of a brief build (spec TracyHQ/tracy#189, COO rule 29/10/2026): the site plan's hero lines reach the
-// Joomla write, and the leftover report names which of what, where and how to contact the served hero misses. The
+// Joomla write, and the leftover report names which of what, why, who, where and how to contact the served hero misses. The
 // business below is made up.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
@@ -50,7 +50,7 @@ test('the leftover report names what the served first screen does not answer, an
   })
   assert.deepEqual(
     report.heroMissing.map((m) => m.kind),
-    ['what', 'where', 'contact']
+    ['what', 'why', 'who', 'where', 'contact']
   )
   assert.equal(report.pass, true)
 })
@@ -103,4 +103,28 @@ test('an offering page intro is written only when the copy writer\u2019s line mi
     run({ 'module-9.11': 'Smile more every day.', 'module-9.1': 'Calderhill treatments' }),
     intro.short
   )
+})
+
+test('the headline that says the USP and the intro that names who the offerings serve reach the write', () => {
+  const why = {
+    key: 'module-9.1',
+    decision: 'value',
+    reason: 'hero-why',
+    value: 'One team for the whole family'
+  }
+  assert.deepEqual(heroSlotValues({ slots: [why] }, 'en'), { 'module-9.1': 'One team for the whole family' })
+  const intro = {
+    key: 'module-9.11',
+    decision: 'value',
+    reason: 'intro-what',
+    when: 'missing',
+    value: 'Swimming lessons for kids and adults in Port Marlow.',
+    offerings: ['swimming lessons'],
+    who: 'kids and adults',
+    place: 'Port Marlow'
+  }
+  const run = (words) => heroSlotValues({ slots: [intro] }, 'en', (k) => words[k])['module-9.11']
+  // The copy writer's line names the offering and the place but nobody it serves: the planned line is written.
+  assert.equal(run({ 'module-9.11': 'Swimming lessons in Port Marlow.' }), intro.value)
+  assert.equal(run({ 'module-9.11': 'Swimming lessons for adults in Port Marlow.' }), undefined)
 })

@@ -1,4 +1,4 @@
-// The intro of an offering page names what it offers, and where (spec TracyHQ/tracy#189, COO rule 29/10/2026, the first
+// The intro of an offering page names what it offers, who it serves, and where (spec TracyHQ/tracy#189, COO rule 29/10/2026, the first
 // screen rule of `hero-first-screen.mjs` carried to the pages that list or show the business's offerings).
 //
 // An offering page is a page of the content map that shows offering records: a category page whose articles carry
@@ -9,7 +9,15 @@
 //
 // 🔒 A LINE THAT ALREADY DOES ITS JOB STAYS: the decision is `when: 'missing'`, and the write keeps the copy writer's line
 // when it names an offering and the place is said by it or by the heading (`hero-lines.js`). 🔒 NOTHING IS INVENTED.
-import { heroSlotsOf, heroWhereOf, limitOf, offeringLine, offeringNames } from './hero-first-screen.mjs'
+import {
+  heroSlotsOf,
+  heroWhereOf,
+  heroWhoOf,
+  limitOf,
+  offeringLine,
+  offeringNames
+} from './hero-first-screen.mjs'
+import { findUsp } from './hero-usp.mjs'
 import { inSentence } from './plain-prose.mjs'
 
 const list = (v) => (Array.isArray(v) ? v : [])
@@ -72,7 +80,7 @@ function mastheadIntroOf(page, contentMap) {
  * @param {Array<{id: string, path?: string, decision: string}>} input.pages - the site plan's page decisions
  * @param {Record<string, string>} [input.cardNames] - the honesty plan's offering of each card (`article-14.offering`)
  * @returns {Array<{key: string, role: string | null, decision: 'value', value: string, reason: 'intro-what', when: 'missing',
- *   source: string, offerings: string[], short?: string, place?: string, heading?: string, page: string}>}
+ *   source: string, offerings: string[], who?: string, short?: string, place?: string, heading?: string, page: string}>}
  */
 export function planPageIntros({ brief, contentMap, pages = [], cardNames = {} }) {
   const kept = new Set(
@@ -82,6 +90,11 @@ export function planPageIntros({ brief, contentMap, pages = [], cardNames = {} }
   )
   const offering = offeringEntities(contentMap)
   const where = heroWhereOf(brief)
+  // Who the offerings serve: the people the business's USP names, else the owner's audience (`heroWhoOf`).
+  const who = heroWhoOf(
+    brief,
+    findUsp(brief, { places: [where?.value].filter(nonEmpty), offerings: offeringNames(brief) }).usp
+  )
   const services = list(brief?.reading?.services)
   const quoteOf = (label) => services.find((s) => s?.label === label)?.quote ?? null
   const out = []
@@ -97,7 +110,7 @@ export function planPageIntros({ brief, contentMap, pages = [], cardNames = {} }
     const slot = masthead?.line ?? hero?.subline ?? null
     if (!slot) continue
     const heading = masthead?.heading ?? hero?.headline ?? null
-    const line = offeringLine(names, where, limitOf(slot))
+    const line = offeringLine(names, where, limitOf(slot), who)
     if (!line) continue
     out.push({
       key: slot.key,
@@ -108,6 +121,7 @@ export function planPageIntros({ brief, contentMap, pages = [], cardNames = {} }
       when: 'missing',
       source: labels.length ? 'honesty.cardNames' : 'reading.services',
       offerings: names.map((n) => n.toLowerCase()),
+      ...(line.who ? { who: line.who.replace(/^for\s+/i, '') } : {}),
       ...(where && heading ? { short: line.short, place: where.value, heading: heading.key } : {}),
       ...(where && !heading ? { place: where.value } : {}),
       page: String(page.route)

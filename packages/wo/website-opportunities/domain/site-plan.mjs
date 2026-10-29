@@ -39,8 +39,13 @@ export const SITE_PLAN_REASONS = Object.freeze({
   'emptied-page': 'every section of this page was taken off, so the page goes too',
   'contact-fact': 'a contact fact the brief holds',
   'business-name': 'the business name the brief holds',
-  'hero-what': 'the first screen names what the business offers and where (`hero-first-screen.mjs`)',
-  'intro-what': 'the intro of an offering page names its offerings and the place (`page-intros.mjs`)',
+  'hero-what':
+    'the first screen names what the business offers, who it serves and where (`hero-first-screen.mjs`)',
+  'hero-why':
+    'the headline says what sets the business apart, as the brief proves it, and where (`hero-usp.mjs`)',
+  'hero-when': 'the hero line for opening hours says the hours the brief trusts (`hero-first-screen.mjs`)',
+  'intro-what':
+    'the intro of an offering page names its offerings, who they serve and the place (`page-intros.mjs`)',
   'hero-contact': "the first screen's main button uses the owner's real way in (`hero-first-screen.mjs`)",
   ...IDENTITY_REASONS,
   ...COLOUR_REASONS,
