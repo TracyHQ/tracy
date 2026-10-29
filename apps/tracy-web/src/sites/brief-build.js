@@ -162,6 +162,21 @@ function withTimeout(promise, ms, message) {
  * @property {{about: string, goal: string | null, style: string | null}} brief
  */
 
+/** The most refused door calls a row keeps. */
+const MAX_REFUSALS = 60
+
+/** A refused door call as the report keeps it: what was asked and the site's own reason. */
+export function refusalOf(/** @type {any} */ call, /** @type {any} */ answer) {
+  const p = call?.params ?? {}
+  return {
+    action: String(call?.action ?? ''),
+    ...(p.kind ? { kind: String(p.kind) } : {}),
+    ...(p.id !== undefined ? { id: p.id } : {}),
+    ...(answer?.code ? { code: String(answer.code) } : {}),
+    reason: String(answer?.message ?? answer?.error ?? 'refused').slice(0, 300)
+  }
+}
+
 /**
  * @typedef {object} BriefContext what an engine is told; everything it needs and nothing it should not hold.
  * @property {string} siteKey
@@ -178,6 +193,8 @@ function withTimeout(promise, ms, message) {
  * @property {(note: string) => void} note - say something the report should carry
  * @property {(applyId: string, how?: {reused: boolean}) => void} applied - an apply id a write named (`recordedDoor`): kept on
  *   the row so the whole Apply can be undone; a `reused` one (not minted by this Apply) is kept apart
+ * @property {(call: any, answer: any) => void} [refused] - a door call the site refused or that threw (`recordedDoor`): kept
+ *   on the row with its reason
  * @property {number} deadlineAt - epoch ms by which `prepare` should hand back what it has
  */
 
@@ -430,6 +447,8 @@ export function createBriefBuilds({
     const beat = setInterval(() => void updateBrief(pool, siteKey, {}).catch(() => {}), 5_000)
     const phase = {}
     const notes = []
+    /** @type {Array<{action: string, kind?: string, id?: unknown, code?: string, reason: string}>} */
+    const refusals = []
     /**
      * 🔒 EVERY APPLY ID AN APPLY WRITES UNDER IS KEPT ON THE ROW (`timings.applyIds`, first named first; ledger L08). One Apply
      * writes under several — the contract's, the demo trim's, the cleanup's or tidy-up's, the languages', each picture's — and
@@ -472,7 +491,9 @@ export function createBriefBuilds({
     const timingsNow = (/** @type {Record<string, unknown>} */ more = {}) => ({
       ...phase,
       ...more,
-      ...idsNow()
+      ...idsNow(),
+      ...(notes.length > 0 ? { notes: [...notes] } : {}),
+      ...(refusals.length > 0 ? { refused: [...refusals] } : {})
     })
     const time = (name, ms) => {
       phase[name] = Math.round(ms)
@@ -505,7 +526,11 @@ export function createBriefBuilds({
         normalized,
         signal: controller.signal,
         time,
-        note: (n) => notes.push(String(n).slice(0, 200)),
+        note: (n) => notes.push(String(n).slice(0, 400)),
+        refused: (call, answer) => {
+          if (refusals.length >= MAX_REFUSALS || closed) return
+          refusals.push(refusalOf(call, answer))
+        },
         applied,
         deadlineAt: startedAt + cap.prepareMs
       }

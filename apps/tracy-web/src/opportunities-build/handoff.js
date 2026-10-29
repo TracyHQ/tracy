@@ -1,4 +1,5 @@
 import { visionLabelOf } from './demo-photo-labels.js'
+import { handoffEngine } from './engine-report.js'
 import { isAgentDemo, checkedResearch, agentDemoPrompt, researchHash } from './agent-demo.js'
 import { renderBriefWithReviews } from 'website-opportunities/src/review-sources.js'
 import { briefWithResearch } from './revision-research.js'
@@ -329,6 +330,8 @@ export async function handOff({
     ...(plan ? { placedByBuild: plan.placed.length } : {}),
     // The hand-off report lists the check's findings by kind, page and place (#191).
     ...(build.receipt?.leftovers ? { leftovers: handoffLeftovers(build.receipt.leftovers) } : {}),
+    // What the site build said and what the site refused, with its reasons (`engine-report.js`).
+    ...(build.receipt?.engine ? { engine: handoffEngine(build.receipt.engine) } : {}),
     // The cleanup turn's account: findings before, after, and what the turn changed (#197).
     ...(build.receipt?.leftoverCleanup
       ? { leftoverCleanup: handoffCleanup(build.receipt.leftoverCleanup) }

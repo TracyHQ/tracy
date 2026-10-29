@@ -1163,3 +1163,33 @@ test('a legacy uncertain-placement row without phase metadata cannot be replayed
   )
   assert.equal((await briefOf(pool, 'legacy-unknown.tracy.test')).error, LOST_PLACING)
 })
+
+test('the whole notes and every refused door call, with its reason, ride on the row', dbOpts, async () => {
+  const { pool } = db
+  const long = `${'x'.repeat(300)} tail`
+  const b = builds(pool, {
+    wordpress: engine({
+      apply: async (ctx) => {
+        ctx.note(long)
+        ctx.refused(
+          { action: 'content.update', params: { kind: 'templateStyle', id: 12 } },
+          { ok: false, code: 'DENIED', message: 'no seat for code writes' }
+        )
+        return { wrote: 2, kept: 1 }
+      }
+    })
+  })
+  await b.start(input())
+  await untilSettled(b, 'bakery.tracy.test')
+  const row = await briefOf(pool, 'bakery.tracy.test')
+  assert.ok(row.timings.notes.some((n) => n.endsWith('tail')))
+  assert.deepEqual(row.timings.refused, [
+    {
+      action: 'content.update',
+      kind: 'templateStyle',
+      id: 12,
+      code: 'DENIED',
+      reason: 'no seat for code writes'
+    }
+  ])
+})

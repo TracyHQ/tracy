@@ -150,15 +150,16 @@ export const SHARED_APPLY_IDS = Object.freeze(new Set(['dtrim-seed']))
  * and wrote the language overrides, the authors' words and the address prefix 19–23 s later, after the brand step and after
  * the webroot hold had closed.
  * @template {(call: any) => Promise<any>} D
- * @param {{applied?: (applyId: string, how?: {reused: boolean}) => void, signal?: AbortSignal}} ctx
+ * @param {{applied?: (applyId: string, how?: {reused: boolean}) => void, refused?: (call: any, answer: any) => void, signal?: AbortSignal}} ctx
  * @param {D} apply
  * @param {(applyId: string) => boolean} [reused]
  * @returns {D}
  */
 export function recordedDoor(ctx, apply, reused = () => false) {
   const applied = ctx?.applied
+  const refused = ctx?.refused
   const signal = ctx?.signal
-  if (typeof applied !== 'function' && !signal) return apply
+  if (typeof applied !== 'function' && typeof refused !== 'function' && !signal) return apply
   return /** @type {D} */ (
     (/** @type {any} */ call) => {
       if (signal?.aborted)
@@ -166,7 +167,18 @@ export function recordedDoor(ctx, apply, reused = () => false) {
       const id = call?.params?.apply_id
       if (typeof applied === 'function' && typeof id === 'string' && id !== '')
         applied(id, { reused: SHARED_APPLY_IDS.has(id) || reused(id) })
-      return apply(call)
+      if (typeof refused !== 'function') return apply(call)
+      // A write the site refused (or that threw) is told to the run, with the reason, so a silent failure shows on the report.
+      return Promise.resolve(apply(call)).then(
+        (answer) => {
+          if (answer?.ok === false) refused(call, answer)
+          return answer
+        },
+        (error) => {
+          refused(call, { ok: false, message: error instanceof Error ? error.message : String(error) })
+          throw error
+        }
+      )
     }
   )
 }

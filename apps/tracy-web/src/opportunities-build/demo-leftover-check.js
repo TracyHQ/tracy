@@ -8,6 +8,7 @@
  * address no page has, so the not-found page is read too (C16). A link to an address that answers 404 is a link that
  * leads nowhere (C19). A page that cannot be read is listed as unread, never as clean.
  */
+import { keepEngineReport } from './engine-report.js'
 import { contentMapOfTemplate } from './brief-build-path.js'
 import { ownStylesheets, MAX_STYLES } from '../lib/own-stylesheets.js'
 
@@ -120,5 +121,6 @@ export async function checkBuildLeftovers(
        updated_at = now() where id = $1 returning *`,
     [build.id, JSON.stringify(report)]
   )
-  return rows[0] ?? { ...build, receipt: { ...build.receipt, leftovers: report } }
+  // The engine's own words and refusals travel with the check, so the report says why a part did not happen.
+  return keepEngineReport(db, rows[0] ?? { ...build, receipt: { ...build.receipt, leftovers: report } })
 }

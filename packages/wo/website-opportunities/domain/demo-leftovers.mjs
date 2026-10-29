@@ -10,6 +10,7 @@
 // 🔒 ONE RULE PER KIND, ADDED BY ADDING A RULE: `LEFTOVER_RULES` is the whole check. A later ticket sharpens a kind by
 // replacing its rule's `find`, and says how complete it is (`coverage`: `full` reads every place the kind can sit on the
 // page; `basic` reads the common places and may miss some).
+import { otherMapLeftovers } from './demo-leftovers-maps.mjs'
 import { demoLogoLeftovers, demoPostLeftovers, demoSocialLeftovers } from './demo-leftovers-identity.mjs'
 import { labelLeftovers, offeringLeftovers, priceLeftovers } from './demo-leftovers-honesty.mjs'
 import {
@@ -308,6 +309,8 @@ export const LEFTOVER_RULES = Object.freeze([
         ))
           if (!showsBriefPlace(ctx, decodeURIComponent(src).toLowerCase()))
             out.push({ page: page.path, place: 'map', found: src.slice(0, LONGEST_PROBE) })
+      // A map that is not Google's: a shortcode, another provider's embed, a container filled from coordinates.
+      out.push(...otherMapLeftovers(ctx, showsBriefPlace))
       return out
     }
   },
