@@ -1,0 +1,2 @@
+{"id":"REG-PR-36-beta-report-1028","verdict":"PASS","commit":"7103cbc299bdf09ca55e1c3d8a941a8df4fa2ffe","ran_at":"2026-10-29T09:51:51.466Z","evidence":"tests/regression/.runs/2026-10-29-7103cbc29/REG-PR-36-beta-report-1028.log"}
+{"id":"REG-PR-70-imported-copy-doors","verdict":"PASS","commit":"7103cbc299bdf09ca55e1c3d8a941a8df4fa2ffe","ran_at":"2026-10-29T09:52:07.431Z","evidence":"tests/regression/.runs/2026-10-29-7103cbc29/REG-PR-70-imported-copy-doors.log"}

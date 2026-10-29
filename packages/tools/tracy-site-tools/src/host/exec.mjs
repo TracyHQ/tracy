@@ -553,14 +553,15 @@ export const VIEW_QUALITY = 70
  * for), and up to `images` ms more for the pictures now in view to finish loading — a lazy image the
  * customer saw would otherwise be a blank box in ours.
  * @param {number} y - the customer's scroll position, in CSS pixels.
- * @param {{ settle: number, images: number }} waits
- * @returns {Promise<number>} the scroll position the page ended at (shorter pages stop early).
+ * @param {{ settle: number, images: number } | null} waits - null when page scripts are disabled; the host owns the wait.
+ * @returns {Promise<number> | number} the scroll position the page ended at (shorter pages stop early).
  */
 export function scrollForView(y, waits) {
   const root = document.documentElement
   root.style.setProperty('scroll-behavior', 'auto', 'important')
   if (document.body) document.body.style.setProperty('scroll-behavior', 'auto', 'important')
   window.scrollTo({ top: y, left: 0, behavior: 'instant' })
+  if (waits === null) return Math.round(window.scrollY)
   const later = (/** @type {number} */ ms) => new Promise((resolve) => setTimeout(resolve, ms))
   return later(waits.settle)
     .then(() => {
@@ -880,8 +881,11 @@ export const BROWSER_SCRIPT =
   "const h1=await send('Runtime.evaluate',{expression:'document.location.href',returnByValue:true},sid);" +
   'const u1=h1.result&&h1.result.result&&h1.result.result.value;let ok1=false;try{ok1=new URL(u1).origin===origin}catch{}' +
   "if(!ok1){if(u1&&u1.indexOf('chrome-error://')===0)return done('TRACY_BROWSER NAV '+(errorText||'the page did not load'));return done('TRACY_BROWSER OFFSITE '+(u1||offsite||'unknown'))}" +
-  "const sc=await send('Runtime.evaluate',{expression:'('+SCROLL+')('+JSON.stringify(vreq.y)+','+JSON.stringify(VIEWW)+')',awaitPromise:true,returnByValue:true},sid);" +
-  'const at=sc.result&&sc.result.result&&sc.result.result.value;if(finished)return;' +
+  // Host mode disables page scripts, including callbacks scheduled by our evaluated scroll helper.
+  // Scroll synchronously there and wait in this Node process; page timers would never settle.
+  "const sc=await send('Runtime.evaluate',{expression:'('+SCROLL+')('+JSON.stringify(vreq.y)+','+(serveIn?'null':JSON.stringify(VIEWW))+')',awaitPromise:!serveIn,returnByValue:true},sid);" +
+  'const at=sc.result&&sc.result.result&&sc.result.result.value;' +
+  'if(serveIn)await new Promise((r)=>setTimeout(r,VIEWW.settle+VIEWW.images));if(finished)return;' +
   "const shot=await send('Page.captureScreenshot',{format:'jpeg',quality:" +
   VIEW_QUALITY +
   '},sid);const b64=shot.result&&shot.result.data;' +

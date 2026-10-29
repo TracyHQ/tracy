@@ -1,7 +1,7 @@
 {
   "id": "REG-PR-70-imported-copy-doors",
   "kind": "fix",
-  "title": "An imported site's copy is asked on both its Joomla doors, and only a copy still starting reads warming up",
+  "title": "Imported Joomla copy doors include the webroot; a repeated question call gets a fresh answer form",
   "pr": 70,
   "area": "sites/import-copy",
   "cms": ["jo", "wp"],
@@ -11,13 +11,17 @@
     "S1: verify a copy door that redirects, one with no container (ENOTFOUND), one answering a PHP fatal 500, one refusing the connection, a gateway 502, a slow one.",
     "S2: verify a gated front door (HTML 200) and Joomla's guest JSON 403.",
     "S3: list the copy doors of a Joomla import registered on its administrator door, on its front door, under a subfolder; of a WordPress import.",
-    "S4: the site agent reads COMPONENT_NOT_ON_FLEET_COPY with copyReason redirected, no_copy, copy_error."
+    "S4: the site agent reads COMPONENT_NOT_ON_FLEET_COPY with copyReason redirected, no_copy, copy_error.",
+    "S5: verify a Joomla copy installed at the root after importing a live subdirectory, preserving its query and copy origin.",
+    "S6: in Chrome render and answer two different questions, then a new call with the same second question; no empty pending state is delivered between calls."
   ],
   "expect": [
     "S1: redirected, no_copy, copy_error (not transient); unreachable, unreachable, timeout (transient).",
     "S2: not_json and not_engine, both reasons to ask the copy's other door.",
     "S3: registered door first, then the other door, subfolder kept; WordPress one door.",
-    "S4: each is said as what it is, with Do not retry and do not write another way."
+    "S4: each is said as what it is, with Do not retry and do not write another way.",
+    "S5: original pair first, then root pair; core.manifest verifies the root door. Root doors are deduplicated.",
+    "S6: each call opens a fresh form, starts without a selected answer, and delivers its own answer through dsh; a settled form never keeps the next call busy. This does not establish the cause of Bruce’s historical unanswered card."
   ],
   "selectors": {
     "file": "apps/tracy-web/src/sites/component-target.js",
@@ -30,9 +34,11 @@
       "node",
       "--test",
       "--test-reporter=tap",
-      "--test-name-pattern=a copy that answers its plugin is verified|only a copy still starting is warming up|what waiting does not change says what it is|a door that answers without the plugin|the plugin itself refusing|a Joomla copy is asked on both its doors|a WordPress copy, another component|refusalNext",
+      "--test-name-pattern=a copy that answers its plugin is verified|only a copy still starting is warming up|what waiting does not change says what it is|a door that answers without the plugin|the plugin itself refusing|a Joomla copy is asked on both its doors|a WordPress copy, another component|refusalNext|an imported Joomla in a live subdirectory|root fallback keeps|controller: a second call with identical|sequential questions:",
       "apps/tracy-web/test/copy-verify.test.mjs",
-      "packages/tools/tracy-site-tools/test/site.test.mjs"
+      "packages/tools/tracy-site-tools/test/site.test.mjs",
+      "packages/ui/tracy-ask-form/test/ask-state.test.mjs",
+      "packages/ui/tracy-ask-form/test/e2e/sequential-questions.test.mjs"
     ],
     "tests": [
       "a copy that answers its plugin is verified",
@@ -42,7 +48,11 @@
       "the plugin itself refusing is the token, the CMS or its answer",
       "🔒 a Joomla copy is asked on both its doors, the registered one first; the path under the webroot is kept",
       "a WordPress copy, another component or a non-URL has its one door, or none",
-      "refusalNext: each door code names the next step — the customer, the call, or a repair — and never a way round"
+      "refusalNext: each door code names the next step — the customer, the call, or a repair — and never a way round",
+      "an imported Joomla in a live subdirectory can verify its copy at the webroot",
+      "root fallback keeps the registered administrator door first and deduplicates root doors",
+      "controller: a second call with identical questions reopens the form and clears the old answer",
+      "sequential questions: a different question and an identical new call each render and deliver a fresh answer"
     ]
   }
 }
