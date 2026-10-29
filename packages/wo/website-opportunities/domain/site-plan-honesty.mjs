@@ -255,7 +255,8 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
           kind: group.kind,
           decision: 'hide',
           reason: box.reason,
-          place: placeOf(contentMap, group)
+          place: placeOf(contentMap, group),
+          ...(box.sectionStays ? { sectionStays: true } : {})
         })
       else if (box?.decision === 'photo')
         records.push({ group: group.id, kind: group.kind, decision: 'photo', reason: box.reason })
@@ -446,7 +447,7 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
 function hidesOf(records) {
   const keptIn = new Set()
   // A box shown as a photo stays in its section as surely as a kept card.
-  for (const r of records) if (r.decision !== 'hide') keptIn.add(r.group.split('.')[0])
+  for (const r of records) if (r.decision !== 'hide' || r.sectionStays) keptIn.add(r.group.split('.')[0])
   const out = []
   const whole = new Set()
   for (const r of records) {

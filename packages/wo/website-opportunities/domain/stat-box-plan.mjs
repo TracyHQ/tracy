@@ -14,6 +14,8 @@
 // before, and `numberless-sentence.mjs` owns it.
 // 🔒 RULES BY ROLE AND GROUP KIND, never by template, business or trade.
 
+import { acceptedStatisticTuples } from './statistic-tuples.mjs'
+
 /** The roles of a box's words. */
 const VALUE = 'stat.value'
 const LABEL = 'stat.label'
@@ -123,6 +125,19 @@ export function statFactsOf(brief, { now = new Date().getUTCFullYear() } = {}) {
   const people = (brief?.reading?.team ?? []).filter((p) => text(p?.label) && shownItem(brief, p))
   if (people.length >= 2)
     out.push({ kind: 'people', value: String(people.length), label: 'Team members', line: null })
+  // Social and non-Google metrics are typed facts too, even when the old copy profile omitted them.
+  out.push(
+    ...acceptedStatisticTuples(brief).filter(
+      (f) =>
+        !(
+          f.platform === 'Google' &&
+          out.some(
+            (known) =>
+              known.kind === (f.metric === 'rating' ? 'rating' : f.metric === 'reviewCount' ? 'reviews' : '')
+          )
+        )
+    )
+  )
   return out
 }
 
@@ -184,13 +199,15 @@ export function planStatBoxes(brief, groups, contentMap, options = {}) {
       (s) =>
         s?.entity === section && s.type === 'image' && !statKeys.has(s.key) && !s.role?.startsWith('stat.')
     ).length
-    const realBoxes = list.filter(isBox)
-    const band = realBoxes.length >= 2 && photos < 2
     const used = new Set()
     const take = (group) => {
       const label = String(group.slots.find((s) => s.role === LABEL)?.sample ?? '')
       const subject = ORDER.filter((k) => SUBJECT[k].test(label))
-      const ranked = [...subject, ...ORDER.filter((k) => !subject.includes(k))]
+      const ranked = [
+        ...subject,
+        ...ORDER.filter((k) => !subject.includes(k)),
+        ...facts.filter((f) => f.kind.startsWith('typed:')).map((f) => f.kind)
+      ]
       for (const kind of ranked) {
         const fact = facts.find((f) => f.kind === kind)
         // Rating and review count are one Google fact: a section shows it once.
@@ -224,8 +241,10 @@ export function planStatBoxes(brief, groups, contentMap, options = {}) {
       out.push({
         group: group.id,
         section,
-        decision: photos >= 2 ? 'photo' : band ? 'hide' : 'blank',
-        reason: photos >= 2 ? 'no-brief-statistic-photo' : 'no-brief-statistic'
+        // 🔒 A TILE WITHOUT A REAL NUMBER IS TAKEN OFF (COO, item 10): beside photos only the tile goes, never its section.
+        decision: 'hide',
+        reason: 'no-brief-statistic',
+        ...(photos >= 2 ? { sectionStays: true } : {})
       })
     }
   }

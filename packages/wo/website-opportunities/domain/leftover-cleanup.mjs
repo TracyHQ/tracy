@@ -3,6 +3,7 @@
 // those findings. This module is pure: the prompt text, the limits, and the before/after comparison the hand-off
 // report shows. The runner (`apps/tracy-web/src/opportunities-build/demo-leftover-cleanup.js`) wires it to the agent.
 import { LEFTOVER_KINDS } from './demo-leftovers.mjs'
+import { statisticWriterLines } from './statistic-tuples.mjs'
 
 export const LEFTOVER_CLEANUP_VERSION = 'leftover-cleanup/1'
 
@@ -103,6 +104,9 @@ export function renderLeftoverCleanupPrompt({ leftovers, brief = null, limits = 
     line('## Owner data')
     for (const o of owner) line(o)
   }
+  line()
+  line('## Accepted statistics (number, label, source)')
+  for (const row of statisticWriterLines(brief)) line(row)
   return lines.join('\n')
 }
 

@@ -7,6 +7,7 @@ import { forbiddenFillers } from './slot-fill-manifest.mjs'
 import { TRADE_WORDS, businessWords, otherKindWords } from './trade-words.mjs'
 import { untrackedUrl } from './social-links.mjs'
 import { siteNameOf } from './held-name.mjs'
+import { statisticWriterLines } from './statistic-tuples.mjs'
 
 // 🔒 No filler stands in for a fact (plan §7, 26/10/2026): these words show only as a sourced value.
 const NO_FILLER = `Never write ${forbiddenFillers('en')
@@ -265,6 +266,12 @@ export function renderAgentPrompt({
   if (sectioned) renderSections(sections, line, w)
   renderWrittenCopy(written, line, w)
   renderSlotWrites(written, line)
+  // Only a brief with an accepted typed statistic adds the section, so a prompt without one stays word for word.
+  const statisticLines = statisticWriterLines(brief)
+  if (statisticLines.length > 1) {
+    line('## Statistic units')
+    for (const row of statisticLines) line(row)
+  }
   // A brief rendered since 26/10/2026 lists them itself (`renderBriefMarkdown`): never twice.
   if (!String(revision.briefMarkdown ?? revision.brief_md ?? '').includes(SOCIAL_FIGURES_HEADING))
     renderSocialFigures(socialFigures, line)

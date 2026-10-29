@@ -180,19 +180,16 @@ test('a box among the photos of a grid shows a sourced fact when the brief holds
   )
 })
 
-test('a box among the photos of a grid with no fact is emptied and kept for an owner photo, never hidden (clinic)', () => {
+test('a box among the photos of a grid with no fact is taken off alone; the gallery and its photos stay (clinic)', () => {
   const h = plan(clinicBrief(), galleryMap())
   assert.deepEqual(statValues(h), {})
   assert.deepEqual(
-    h.blanks.filter((b) => b.key.startsWith('module-30.gallery.')).map((b) => b.key),
-    ['module-30.gallery.number.0', 'module-30.gallery.title.0', 'module-30.gallery.desc.0']
-  )
-  assert.deepEqual(
     h.records.filter((r) => r.group === 'module-30.stat.0').map((r) => [r.decision, r.reason]),
-    [['photo', 'no-brief-statistic-photo']]
+    [['hide', 'no-brief-statistic']]
   )
-  // The gallery stays: no record of it is taken off.
-  assert.deepEqual(h.hide, [])
+  // Only the tile goes: the module that holds the owner's photos is never taken off whole.
+  assert.ok(h.hide.length > 0)
+  assert.ok(h.hide.every((x) => x.how !== 'entity'))
 })
 
 test('a band of boxes takes one fact per box, matched to the label, and drops the box no fact is left for (bakery)', () => {
