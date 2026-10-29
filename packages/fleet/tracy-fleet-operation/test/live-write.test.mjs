@@ -77,6 +77,8 @@ function engine({
     const { kind, key } = p
     let id = Number(p.id ?? 0)
     const fields = { ...p.fields }
+    // The WordPress engine addresses postmeta by its existing parent post, even on a create.
+    if (kind === 'postmeta' && (id <= 0 || !get('post', id))) return null
     if (fields.move_after !== undefined) delete fields.move_after
     if (THEME_KINDS.has(kind)) {
       // claude-cowork write_theme_row: by slug; a write without a title names the row by its slug.
@@ -217,7 +219,11 @@ function engine({
           if (sha !== params.expected_body_revision)
             return answer(200, { ok: false, error: 'revision_stale' })
         }
+        const previous = structuredClone(get(params.kind, params.id, params.key))
         const done = update(params)
+        if (done && params.kind === 'postmeta') {
+          ;(state.metaReceipts ??= {})[params.apply_id] = { ...params, before: previous }
+        }
         if (state.dropAfterUpdate) {
           state.dropAfterUpdate = false
           req.socket.destroy()
@@ -226,6 +232,21 @@ function engine({
         if (state.failReadback) state.refuse['content.get'] = 503
         if (!done) return answer(200, { ok: false, error: 'write_failed', message: 'target does not exist' })
         return answer(200, { ok: true, ...done })
+      }
+      if (action === 'apply.revert') {
+        const receipt = state.metaReceipts?.[params.apply_id]
+        if (receipt && !state.emptyMetaReceipt) {
+          const address = `${receipt.id}:${receipt.key}`
+          if (receipt.before === null) delete state.records.postmeta[address]
+          else state.records.postmeta[address] = receipt.before
+          delete state.metaReceipts[params.apply_id]
+        }
+        if (state.dropAfterRevert) {
+          state.dropAfterRevert = false
+          req.socket.destroy()
+          return
+        }
+        return answer(200, { ok: true, reverted: receipt ? 1 : 0 })
       }
       if (action === 'content.batch') {
         for (const [i, op] of params.operations.entries()) {
@@ -2099,3 +2120,211 @@ test('a blocked batch retains earlier writes in the failed Apply answer and Undo
     await live.close()
   }
 })
+
+const createPostMeta = (postId, key, value, dependsOn = []) => ({
+  id: `postmeta:new:${typeof postId === 'object' ? 'new-post' : postId}:${key}`,
+  kind: 'postmeta',
+  spec: 'postmeta',
+  op: 'create',
+  title: key,
+  liveId: null,
+  ident: postId,
+  key,
+  creates: null,
+  write: { value },
+  expect: { $absent: true },
+  dependsOn,
+  seed: []
+})
+
+test('WordPress missing featured-image and page-template meta retain the existing parent post address', async () => {
+  const live = await engine({ platform: 'wordpress', records: { post: { 30: wpPost(30) } } })
+  try {
+    const dir = pushDir(
+      [createPostMeta(30, '_thumbnail_id', '200'), createPostMeta(30, '_wp_page_template', 'landing.php')],
+      'wordpress'
+    )
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.state, 'applied', JSON.stringify(answer))
+    assert.equal(live.records.postmeta['30:_thumbnail_id'].value, '200')
+    assert.equal(live.records.postmeta['30:_wp_page_template'].value, 'landing.php')
+    assert.equal(live.records.postmeta['0:_thumbnail_id'], undefined)
+    assert.equal(live.records.post[30].post_title, wpPost(30).post_title)
+  } finally {
+    await live.close()
+  }
+})
+
+test('WordPress new-post meta uses the resolved live parent ID and does not create another post', async () => {
+  const live = await engine({ platform: 'wordpress', records: { post: {} } })
+  try {
+    const parent = {
+      id: 'post:new:50',
+      kind: 'post',
+      spec: 'post',
+      op: 'create',
+      title: 'New page',
+      liveId: null,
+      ident: 0,
+      key: null,
+      creates: 'posts:50',
+      write: { post_title: 'New page', post_content: 'Body', post_type: 'page', post_status: 'publish' },
+      expect: {},
+      dependsOn: [],
+      seed: []
+    }
+    const dir = pushDir(
+      [
+        parent,
+        createPostMeta({ $new: 'posts:50' }, '_thumbnail_id', '200', [parent.id]),
+        createPostMeta({ $new: 'posts:50' }, '_wp_page_template', 'landing.php', [parent.id])
+      ],
+      'wordpress'
+    )
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.state, 'applied', JSON.stringify(answer))
+    const liveId = answer.created['posts:50']
+    assert.ok(liveId > 0)
+    assert.equal(Object.keys(live.records.post).length, 1)
+    assert.equal(live.records.postmeta[`${liveId}:_thumbnail_id`].value, '200')
+    assert.equal(live.records.postmeta[`${liveId}:_wp_page_template`].value, 'landing.php')
+    assert.equal((await undo(live, dir)).answer.restored.length, 3)
+    assert.equal(live.records.postmeta[`${liveId}:_thumbnail_id`], undefined)
+    assert.equal(live.records.postmeta[`${liveId}:_wp_page_template`], undefined)
+    assert.equal(live.records.post[liveId].post_status, 'trash')
+  } finally {
+    await live.close()
+  }
+})
+
+test('WordPress meta a customer created after preview is kept without a write', async () => {
+  const live = await engine({
+    platform: 'wordpress',
+    records: {
+      post: { 30: wpPost(30) },
+      postmeta: { '30:_thumbnail_id': { value: '300' } }
+    }
+  })
+  try {
+    const { answer } = await apply(live, pushDir([createPostMeta(30, '_thumbnail_id', '200')], 'wordpress'))
+    assert.equal(answer.written.length, 0)
+    assert.equal(live.records.postmeta['30:_thumbnail_id'].value, '300')
+    assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 0)
+  } finally {
+    await live.close()
+  }
+})
+
+for (const scenario of [
+  'normal',
+  'changed',
+  'native-conflict',
+  'empty-receipt',
+  'lost-response',
+  'legacy',
+  'restart'
+]) {
+  test(`WordPress new metadata Undo: ${scenario}`, async () => {
+    const live = await engine({ platform: 'wordpress', records: { post: { 30: wpPost(30) } } })
+    try {
+      const meta = createPostMeta(30, '_thumbnail_id', '200')
+      const dir = pushDir(
+        [
+          meta,
+          update(30, { post_title: 'Updated title' }, { post_title: wpPost(30).post_title }, { kind: 'post' })
+        ],
+        'wordpress'
+      )
+      assert.equal((await apply(live, dir)).answer.written.length, 2)
+      const snapshot = JSON.parse(readFileSync(join(dir, 'before.json')))
+      const nativeId = snapshot.items[meta.id].nativeApplyId
+      assert.ok(nativeId.includes('-meta-'))
+      const metaCall = live.calls.find((c) => c.action === 'content.update' && c.params.kind === 'postmeta')
+      const postCall = live.calls.find((c) => c.action === 'content.update' && c.params.kind === 'post')
+      assert.equal(metaCall.params.apply_id, nativeId)
+      assert.notEqual(nativeId, postCall.params.apply_id)
+      if (scenario === 'changed') live.records.postmeta['30:_thumbnail_id'].value = '300'
+      if (scenario === 'native-conflict') live.refuse['apply.revert'] = { error: 'conflict' }
+      if (scenario === 'empty-receipt') live.emptyMetaReceipt = true
+      if (scenario === 'lost-response') live.dropAfterRevert = true
+      if (scenario === 'legacy') {
+        delete snapshot.items[meta.id].nativeApplyId
+        writeFileSync(join(dir, 'before.json'), JSON.stringify(snapshot))
+      }
+      if (scenario === 'restart') {
+        for (const name of ['journal.jsonl', 'before.json', 'written.json']) rmSync(join(dir, name))
+        assert.equal((await apply(live, dir)).answer.written.length, 2)
+        assert.equal(
+          JSON.parse(readFileSync(join(dir, 'before.json'))).items[meta.id].nativeApplyId,
+          nativeId
+        )
+        assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 2)
+      }
+      const result = (await undo(live, dir)).answer
+      assert.equal(live.records.post[30].post_title, wpPost(30).post_title)
+      if (['normal', 'lost-response', 'restart'].includes(scenario)) {
+        assert.equal(live.records.postmeta['30:_thumbnail_id'], undefined)
+        assert.ok(
+          result.restored.some((r) => r.id === meta.id),
+          JSON.stringify(result)
+        )
+        await undo(live, dir)
+        assert.equal(live.calls.filter((c) => c.action === 'apply.revert').length, 1)
+      } else if (scenario === 'empty-receipt') {
+        assert.equal(result.failed.find((r) => r.id === meta.id)?.error, 'WRITE_OUTCOME_UNKNOWN')
+        await undo(live, dir)
+        assert.equal(live.calls.filter((c) => c.action === 'apply.revert').length, 1)
+      } else {
+        assert.equal(
+          result.kept.find((r) => r.id === meta.id)?.reason,
+          scenario === 'legacy' ? 'cannot-remove' : 'changed-on-live'
+        )
+        assert.equal(
+          live.calls.filter((c) => c.action === 'apply.revert').length,
+          scenario === 'native-conflict' ? 1 : 0
+        )
+      }
+      assert.ok(
+        live.calls.filter((c) => c.action === 'apply.revert').every((c) => c.params.apply_id === nativeId)
+      )
+    } finally {
+      await live.close()
+    }
+  })
+}
+
+for (const scenario of ['changed', 'empty-receipt', 'native-conflict']) {
+  test(`WordPress new parent stays published when its metadata Undo is held: ${scenario}`, async () => {
+    const live = await engine({ platform: 'wordpress', records: { post: {} } })
+    try {
+      const parent = {
+        id: 'post:new:50',
+        kind: 'post',
+        spec: 'post',
+        op: 'create',
+        ident: 0,
+        creates: 'posts:50',
+        key: null,
+        write: { post_title: 'New page', post_status: 'publish' },
+        expect: {},
+        dependsOn: [],
+        seed: []
+      }
+      const child = createPostMeta({ $new: 'posts:50' }, '_thumbnail_id', '200', [parent.id])
+      const dir = pushDir([parent, child], 'wordpress')
+      const applied = (await apply(live, dir)).answer
+      assert.equal(applied.written.length, 2)
+      const id = applied.created['posts:50']
+      if (scenario === 'changed') live.records.postmeta[`${id}:_thumbnail_id`].value = '300'
+      if (scenario === 'empty-receipt') live.emptyMetaReceipt = true
+      if (scenario === 'native-conflict') live.refuse['apply.revert'] = { error: 'conflict' }
+      const result = (await undo(live, dir)).answer
+      assert.equal(result.kept.find((r) => r.id === parent.id)?.reason, 'depends-on-failed')
+      assert.equal(live.records.post[id].post_status, 'publish')
+      assert.equal(live.records.postmeta[`${id}:_thumbnail_id`].value, scenario === 'changed' ? '300' : '200')
+      assert.equal(live.calls.filter((c) => c.action === 'content.delete').length, 0)
+    } finally {
+      await live.close()
+    }
+  })
+}
