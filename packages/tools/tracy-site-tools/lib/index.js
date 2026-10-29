@@ -24,9 +24,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 
-// ../../../../tch/node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/lib/encoder.js
+// ../../../node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/lib/encoder.js
 var require_encoder = __commonJS({
-  "../../../../tch/node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/lib/encoder.js"(exports, module) {
+  "../../../node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/lib/encoder.js"(exports, module) {
     var btoa = btoa || function(buf) {
       return Buffer.from(buf).toString("base64");
     };
@@ -1101,9 +1101,9 @@ var require_encoder = __commonJS({
   }
 });
 
-// ../../../../tch/node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/lib/decoder.js
+// ../../../node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/lib/decoder.js
 var require_decoder = __commonJS({
-  "../../../../tch/node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/lib/decoder.js"(exports, module) {
+  "../../../node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/lib/decoder.js"(exports, module) {
     var JpegImage = (function jpegImage() {
       "use strict";
       var dctZigZag = new Int32Array([
@@ -2163,9 +2163,9 @@ var require_decoder = __commonJS({
   }
 });
 
-// ../../../../tch/node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/index.js
+// ../../../node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/index.js
 var require_jpeg_js = __commonJS({
-  "../../../../tch/node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/index.js"(exports, module) {
+  "../../../node_modules/.pnpm/jpeg-js@0.4.4/node_modules/jpeg-js/index.js"(exports, module) {
     var encode = require_encoder();
     var decode2 = require_decoder();
     module.exports = {
