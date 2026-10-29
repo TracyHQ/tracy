@@ -126,7 +126,7 @@
   "tour.preview.body": "Eine echte, funktionsfähige Kopie Ihrer Site. Jede Änderung erscheint zuerst hier, damit Sie sie vor allen anderen sehen.",
   "tour.preview.heading": "Das ist Ihre Website",
   "tour.progress": "Tour-Fortschritt",
-  "tour.publish.body": "Besucher sehen Ihre Änderungen erst, wenn Sie auf Veröffentlichen klicken. Bis dahin können Sie alles ausprobieren.",
+  "tour.publish.body": "Ihre Änderungen erscheinen sofort in Tracy. Besucher Ihrer Live-Site sehen sie erst, wenn Sie auf Veröffentlichen klicken. Bis dahin können Sie alles ausprobieren.",
   "tour.publish.heading": "Sie entscheiden, wann es live geht",
   "tour.saveError": "Tracy konnte Ihren Tour-Fortschritt nicht speichern. Bitte versuchen Sie es erneut.",
   "tour.sendError": "Tracy konnte Ihre Anfrage nicht senden. Bitte versuchen Sie es erneut.",

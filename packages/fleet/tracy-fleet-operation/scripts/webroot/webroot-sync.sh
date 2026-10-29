@@ -654,6 +654,12 @@ merge() {
   has_live_read || { answer_refusal NO_LIVE_READ; return; }
   db_names
   [[ -n "$PREFIX" ]] || { answer_refusal NO_TABLE_PREFIX; return; }
+  # A Sync to live cut off before it recorded what it created (its host job lost): what its journal
+  # says it wrote joins the id map and pushed.json now, so this merge meets those records as the
+  # copy's own, never as the live site's new ones to copy a second time (#173).
+  if ! python3 "$LIB_DIR/live_push.py" record-cut --push-root "$STACK/push" --id-map "$ID_MAP" --pushed "$PUSHED" >&2; then
+    answer_refusal PUSH_RECORD_FAILED "an interrupted Sync to live could not be recorded"; return
+  fi
   local short
   if ! short="$(enough_disk)"; then answer_refusal NO_DISK_SPACE "need ${short% *} bytes, ${short#* } free"; return; fi
   local stamp

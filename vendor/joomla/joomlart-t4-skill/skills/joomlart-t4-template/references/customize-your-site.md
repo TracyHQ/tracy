@@ -86,7 +86,7 @@ prints (skipped items, utility-looking pages), then attach it to the release:
 ```bash
 tracy-dev site-pages --joomla <database.sql.gz | installer.zip> --out <release-dir>
 tracy-dev site-pages --joomla <same input> --check <release-dir>/tracy_site_pages.json   # ok: N pages resolve
-gh release upload <tag> <release-dir>/tracy_site_pages.json --repo JoomlArt-Products/ja-products
+gh release upload <tag> <release-dir>/tracy_site_pages.json --repo JoomlArt-Products/joomlart-products
 ```
 
 The tool is `TracyHQ/tracy-template-dev` PR #1 (`feat/site-pages-file`, plugin 0.8.0); until it merges,

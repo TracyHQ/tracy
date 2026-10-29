@@ -2085,7 +2085,7 @@ window.__ModuleLoader__.load({
               "tour.preview.body": "Bản sao thực sự hoạt động của site bạn. Mọi thay đổi đều xuất hiện ở đây trước để bạn xem trước mọi người.",
               "tour.preview.heading": "Đây là website của bạn",
               "tour.progress": "Tiến độ hướng dẫn",
-              "tour.publish.body": "Khách truy cập chỉ thấy thay đổi sau khi bạn nhấn Xuất bản. Trước đó, cứ thoải mái thử.",
+              "tour.publish.body": "Thay đổi của bạn xuất hiện ngay trong Tracy. Khách truy cập site thật của bạn chỉ thấy chúng sau khi bạn nhấn Xuất bản. Trước đó, cứ thoải mái thử.",
               "tour.publish.heading": "Bạn quyết định khi nào công khai",
               "tour.saveError": "Tracy không thể lưu tiến độ hướng dẫn của bạn. Vui lòng thử lại.",
               "tour.sendError": "Tracy không thể gửi yêu cầu của bạn. Vui lòng thử lại.",

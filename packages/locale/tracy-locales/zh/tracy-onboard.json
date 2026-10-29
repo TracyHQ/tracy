@@ -126,7 +126,7 @@
   "tour.preview.body": "这是你的 site 的真实可用副本。每项更改都会先显示在这里，让你比其他人更早看到。",
   "tour.preview.heading": "这就是你的网站",
   "tour.progress": "导览进度",
-  "tour.publish.body": "只有点击发布后，访客才会看到你的更改。在此之前，你可以随意尝试。",
+  "tour.publish.body": "你的更改会立即显示在 Tracy 中。只有点击发布后，访客才会在你的线上 site 看到这些更改。在此之前，你可以随意尝试。",
   "tour.publish.heading": "由你决定何时上线",
   "tour.saveError": "Tracy 无法保存你的导览进度。请重试。",
   "tour.sendError": "Tracy 无法发送你的请求。请重试。",

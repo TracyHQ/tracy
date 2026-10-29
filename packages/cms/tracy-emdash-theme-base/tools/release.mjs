@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Assemble a quickstart release from a packed artifact and a gate-verified clean site, in the
-// shape the Joomla/WordPress quickstarts use on JoomlArt-Products/ja-products (schema
+// shape the Joomla/WordPress quickstarts use on JoomlArt-Products/joomlart-products (schema
 // tracy-quickstart/v1): one zip anyone can build from, one state snapshot that skips the seed,
 // a manifest with hashes, gate results and receipts, SHA256SUMS and the release notes.
 //
@@ -207,7 +207,7 @@ if (version !== tcfg.version)
 const cmsVersion = pkg.dependencies?.emdash ?? fail('artifact package.json pins no emdash version')
 const line = `emdash-${cmsVersion.split('.')[0]}.x`
 const tag = opt('--tag', `${product}/${line}`)
-const repo = opt('--repo', 'JoomlArt-Products/ja-products')
+const repo = opt('--repo', 'JoomlArt-Products/joomlart-products')
 // Asset names carry the CMS the way the Joomla ones carry `j6`: tracy-business-emdash-quickstart-1.0.0.zip
 const slug = `${product}-emdash`
 
