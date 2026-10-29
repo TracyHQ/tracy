@@ -197,7 +197,8 @@ function createStandInPool({ role = 'admin', switchOn = true } = {}) {
         'rapidapi_key_cipher',
         'serpapi_key_cipher',
         'litescrape_key_cipher',
-        'scrapecreators_key_cipher'
+        'scrapecreators_key_cipher',
+        'monid_key_cipher'
       ]) {
         if (norm.includes(`insert into wo_ops_setting (id, ${col}`)) {
           state.settingRow = {
@@ -579,6 +580,7 @@ test('provider order: PUT saves one group, the payload shows every group with it
       'website-content',
       'web-search',
       'tripadvisor',
+      'google-reviews',
       'menu-links',
       'menu-photos',
       'menu-items'
@@ -650,7 +652,8 @@ test('woRuntime with nothing saved in /ops: env keys and default settings', asyn
     rapidapi: 'rapid-env-key',
     serpapi: null,
     litescrape: null,
-    scrapecreators: 'scrapecreators-env-key'
+    scrapecreators: 'scrapecreators-env-key',
+    monid: null
   })
   assert.equal(rt.settings.mapDiscoveryProvider, 'auto')
   assert.equal(rt.settings.defaultRadiusM, DEFAULT_WO_OPS_SETTINGS.defaultRadiusM)

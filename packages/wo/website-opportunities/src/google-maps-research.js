@@ -6,6 +6,7 @@ import {
   mapsListingUrl,
   supplementalMapsReviews
 } from './google-maps-serpapi.js'
+import { withMonidReviews } from './google-maps-monid.js'
 import { BudgetExceededError } from './cost-ledger.js'
 import { ceilingCents } from './cost-prices.js'
 import { StaleLeaseError, fenced } from './store.js'
@@ -181,10 +182,15 @@ export async function researchGoogleMaps(
         name: place.name,
         dataId: place.dataId,
         menuLink: place.menuLink ?? null,
-        reviews: supplementalMapsReviews(place.reviews, google?.reviews ?? []).map((review) => ({
-          ...review,
-          fetchedAt: at().toISOString()
-        })),
+        // Monid's reviews (`google-maps-monid-research.js`) are kept; a new SerpApi review replaces its Monid copy.
+        reviews: withMonidReviews(
+          supplementalMapsReviews(place.reviews, google?.reviews ?? []).map((review) => ({
+            ...review,
+            fetchedAt: at().toISOString()
+          })),
+          (data.reviews ?? []).filter((review) => review.provider === 'monid'),
+          google?.reviews ?? []
+        ),
         reviewsFetchedAt: at().toISOString()
       }
       await publish()
@@ -270,8 +276,9 @@ export function mapsMedia(data) {
     })
   }
   for (const photo of (data.menuPhotos ?? []).slice(0, 20)) add(photo, 'menu')
+  // Photos of Monid's reviews stay on their review only: they are not downloaded as Maps media.
   for (const review of data.reviews ?? [])
-    for (const photo of review.photos ?? []) add(photo, 'review', review)
+    if (review.provider !== 'monid') for (const photo of review.photos ?? []) add(photo, 'review', review)
   for (const photo of (data.overviewPhotos ?? []).slice(0, 20)) add(photo, 'overview')
   return [...byUrl.values()].slice(0, 90)
 }

@@ -25,7 +25,8 @@ const BEFORE_PRINCIPAL = '169-site-push.sql'
 const packageFiles = async () => (await readSchemaFiles()).map((f) => f.name)
 const TRACY_COPIES = {
   '0004-place-snapshot-guard.sql': '173-wo-place-snapshot-guard.sql',
-  '0009-site-check-read-tier.sql': '176-wo-site-check-read-tier.sql'
+  '0009-site-check-read-tier.sql': '176-wo-site-check-read-tier.sql',
+  '0010-monid-key.sql': '186-wo-monid-key.sql'
 }
 const CARRIED = Object.keys(TRACY_COPIES)
 const afterBaseline = async () =>

@@ -68,12 +68,17 @@ export async function tripadvisorJson(url, headers, options = {}) {
   })
 }
 
-/** One fixed HTTP attempt. */
-async function jsonAttempt(url, headers, { fetch: fetchImpl = fetch, timeoutMs = 25_000 } = {}) {
+/** One fixed HTTP attempt (a GET, or a POST of `body`). */
+async function jsonAttempt(
+  url,
+  headers,
+  { fetch: fetchImpl = fetch, timeoutMs = 25_000, body: payload } = {}
+) {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), timeoutMs)
   try {
     const res = await fetchImpl(url, {
+      ...(payload === undefined ? {} : { method: 'POST', body: payload }),
       headers,
       redirect: 'error',
       signal: controller.signal

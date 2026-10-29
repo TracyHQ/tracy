@@ -21,7 +21,7 @@ export const MENU_PARTS_PROSE =
 const OPERATOR =
   'Any /ops staff seat may read; a write needs an owner or admin seat, this deployment\u2019s `Origin` and a JSON body (415 `JSON_REQUIRED`). Signed out: 401; any other account: a bare 403.'
 const OP_PROVIDER =
-  'deepseek, firecrawl, jina, apify, google, rapidapi, serpapi, litescrape or scrapecreators'
+  'deepseek, firecrawl, jina, apify, google, rapidapi, serpapi, litescrape, scrapecreators or monid'
 
 /** @type {RouteDoc[]} */
 export const WEBSITE_OPPORTUNITIES_ROUTES = [

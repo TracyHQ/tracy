@@ -1460,6 +1460,8 @@ export function readConfig(env, { docsBuilt = false } = {}) {
     rapidapiKey: opt(env, 'RAPIDAPI_KEY'),
     // Public social-data API used as the first tier by the Website Opportunities social stats chain.
     scrapeCreatorsApiKey: opt(env, 'SCRAPECREATORS_API_KEY'),
+    // Optional Google reviews supplement (up to 100 a place); unset = never called.
+    monidApiKey: opt(env, 'MONID_API_KEY'),
     // Shared social is opt-in; standalone preserves existing deployments until an explicit cutover.
     ...readSocialService(env),
     // Website Opportunities research shared across accounts (`website-opportunities/src/place-requests.js`). ON unless

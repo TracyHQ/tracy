@@ -56,6 +56,9 @@ const FIXED = Object.freeze({
     'web-search': 3
   }),
   litescrape: Object.freeze({ search: 1, place: 1, reviews: 1 }),
+  // Checked 29/10/2026 (Monid listing of litescrape /google/reviews): $0.00015 a call. 1 cent is the ledger's
+  // whole-cent ceiling, not the price; a settled call counts Monid's reported `cost.value` when it gives one.
+  monid: Object.freeze({ 'google-reviews': 1 }),
   // Checked 22/10/2026 (vendor pricing page): $47 per 25,000 credits, one
   // credit a request ($0.00188). Each request is rounded UP to 1 cent; a profile = its requests.
   scrapecreators: Object.freeze({

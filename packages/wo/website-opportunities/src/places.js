@@ -151,16 +151,16 @@ const time = (v) => (v ? new Date(v).getTime() : Number.NaN)
  * `SOURCE_MAX_AGE_MS` and its last try older than `SOURCE_RETRY_MS` (a source that keeps failing is not
  * hammered on every request) — or older than `SOURCE_MAX_AGE_MS` when that try said the place has nothing there.
  */
-export function sourceDue(row, now, version = null, { manual = false } = {}) {
+export function sourceDue(row, now, version = null, { manual = false, maxAgeMs = SOURCE_MAX_AGE_MS } = {}) {
   // A pressed Research again looks again at once at what our setup failed on; what the place has not waits.
-  const wait = placeSettled(row) ? SOURCE_MAX_AGE_MS : manual ? 0 : SOURCE_RETRY_MS
+  const wait = placeSettled(row) ? maxAgeMs : manual ? 0 : SOURCE_RETRY_MS
   if (version && row?.collector_version !== version) {
     const attemptedVersion = row?.coverage?.version === version || row?.last_error?.version === version
     return !attemptedVersion || !row?.attempted_at || now - time(row.attempted_at) > wait
   }
   if (!row?.attempted_at) return true
   const collected = time(row.collected_at)
-  const stale = !Number.isFinite(collected) || now - collected > SOURCE_MAX_AGE_MS
+  const stale = !Number.isFinite(collected) || now - collected > maxAgeMs
   return stale && now - time(row.attempted_at) > wait
 }
 

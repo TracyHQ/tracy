@@ -19,6 +19,12 @@ import {
   GOOGLE_MAPS_SOURCE,
   GOOGLE_MAPS_VERSION
 } from './google-maps-research.js'
+import {
+  MONID_MAX_AGE_MS,
+  monidAttemptOf,
+  monidReviewsOn,
+  researchMonidReviews
+} from './google-maps-monid-research.js'
 import { researchTripadvisor, tripadvisorProviders } from './tripadvisor-research.js'
 import { TRIPADVISOR_SOURCE, TRIPADVISOR_VERSION } from './tripadvisor.js'
 import { BudgetExceededError } from './cost-ledger.js'
@@ -107,12 +113,13 @@ export function createPlaceRunner(h) {
    * accepted (and the page a search of it finds), with failures ours tried again at once; it drops a part no longer
    * due, it never adds one.
    */
-  const due = (job, part, row, version = null) => {
+  const due = (job, part, row, version = null, { maxAgeMs } = {}) => {
     if (forced(job, part)) return true
     const again = againParts(job)
-    if (!again) return sourceDue(row, now(), version)
+    if (!again) return sourceDue(row, now(), version, { maxAgeMs })
     return (
-      (again.has(part) || again.has(searchPart(part))) && sourceDue(row, now(), version, { manual: true })
+      (again.has(part) || again.has(searchPart(part))) &&
+      sourceDue(row, now(), version, { manual: true, maxAgeMs })
     )
   }
   const paidReceipt = h.researchLedger
@@ -647,6 +654,20 @@ export function createPlaceRunner(h) {
           save: collected,
           tried
         })
+      }
+      // Monid's Google reviews: a supplement after the Maps step, on its own last try, never another Places call.
+      if (monidReviewsOn(ctx) && wanted(job, GOOGLE_MAPS_SOURCE)) {
+        const row = await sourceOf(snapshotId, GOOGLE_MAPS_SOURCE)
+        if (due(job, GOOGLE_MAPS_SOURCE, monidAttemptOf(row), null, { maxAgeMs: MONID_MAX_AGE_MS }))
+          await researchMonidReviews(ctx, {
+            pool,
+            now,
+            fetch: h.apiFetch,
+            chargeable: h.chargeable,
+            row,
+            google: (await sourceOf(snapshotId, GOOGLE_FACTS_SOURCE))?.collected,
+            save: collected
+          })
       }
       const reviewRow = await sourceOf(snapshotId, TRIPADVISOR_SOURCE)
       if (

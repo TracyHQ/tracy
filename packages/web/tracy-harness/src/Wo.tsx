@@ -235,7 +235,8 @@ export function Wo({ entry, navigate }: { entry?: object; navigate?: WoNavigate 
     rapidapi: '',
     serpapi: '',
     litescrape: '',
-    scrapecreators: ''
+    scrapecreators: '',
+    monid: ''
   })
   const [savingKey, setSavingKey] = useState<string | null>(null)
   const [testingKey, setTestingKey] = useState<string | null>(null)
@@ -2181,6 +2182,12 @@ function WoSettingsView({
       title: t('wo.keys.scrapecreators.title'),
       subtitle: t('wo.keys.scrapecreators.subtitle'),
       placeholder: t('wo.keys.scrapecreators.placeholder')
+    },
+    {
+      id: 'monid',
+      title: t('wo.keys.monid.title'),
+      subtitle: t('wo.keys.monid.subtitle'),
+      placeholder: t('wo.keys.monid.placeholder')
     }
   ]
 

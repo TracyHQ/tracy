@@ -141,6 +141,18 @@ const heldReviewLines = (source) =>
       `- Not for the site: the review by ${JSON.stringify(r.author)} names ${r.namesHeld.join(' and ')}, whom the brief holds off the site; quote nothing of it.`
   )
 
+const BRIEF_MONID_REVIEWS = 30
+const BRIEF_MONID_PHOTO_LINES = 40
+
+/** Reviews the brief quotes: all held from Google itself, plus the longest Monid ones (the other 70 stay stored). */
+function briefReviews(reviews) {
+  const monid = reviews.filter((r) => r.provider === 'monid')
+  const keep = new Set(
+    monid.toSorted((a, b) => (b.text?.length ?? 0) - (a.text?.length ?? 0)).slice(0, BRIEF_MONID_REVIEWS)
+  )
+  return reviews.filter((r) => r.provider !== 'monid' || keep.has(r))
+}
+
 /** Menu images are source documents, not an extracted list of dishes or current prices. */
 function renderMapsSources(markdown, source) {
   if (!source) return markdown
@@ -151,14 +163,17 @@ function renderMapsSources(markdown, source) {
     '',
     `Exact Google place: ${JSON.stringify(source.placeId)}; source: ${JSON.stringify(source.url)}. Official Google Place facts remain separate.`
   ]
-  for (const review of source.reviews ?? []) {
+  let photoLines = 0
+  for (const review of briefReviews(source.reviews ?? [])) {
     lines.push(
       `- ${JSON.stringify(review.text)}, ${JSON.stringify(review.author)} on Google; ${JSON.stringify(review.url)}${review.authorUrl ? `; author profile: ${JSON.stringify(review.authorUrl)}` : ''}${review.authorAvatarUrl ? `; reviewer avatar (identity only): ${JSON.stringify(review.authorAvatarUrl)}` : ''}. Guest opinion, not business-fact evidence.`
     )
-    for (const photo of review.photos ?? [])
+    for (const photo of review.photos ?? []) {
+      if (review.provider === 'monid' && photoLines++ >= BRIEF_MONID_PHOTO_LINES) break
       lines.push(
         `  Attached review photo: ${JSON.stringify(photo.url)}; reviewId: ${JSON.stringify(review.id)}; source: ${JSON.stringify(photo.sourceUrl)}${photo.mediaId ? `; stored mediaId: ${JSON.stringify(photo.mediaId)}` : ''}. Do not infer photographer from reviewer.`
       )
+    }
   }
   lines.push(...heldReviewLines(source))
   if (source.menuPhotos?.length) {
