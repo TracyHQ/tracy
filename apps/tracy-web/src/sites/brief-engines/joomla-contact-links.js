@@ -11,6 +11,7 @@
  *
  * Framework-wide (Joomla custom modules), never per template: it reads the HTML, not a module id or a template's files.
  */
+import { lineOf, placeLines } from './joomla-contact-lines.js'
 
 /** A phone number as a page shows one. */
 const PHONE = /\(?\+?\d[\d\s().-]{4,}\d/g
@@ -87,46 +88,138 @@ function retargetMapLink(
 }
 
 /** The areas served as one more line beside the address, in the address line's own tag and class: nothing new is drawn. */
-function addAreaLine(/** @type {string} */ html, /** @type {Contact} */ contact) {
+function addAreaLine(
+  /** @type {string} */ html,
+  /** @type {Contact} */ contact,
+  /** @type {string[]} */ bound = []
+) {
   const address = contact.address?.value
   const area = contact.serviceArea?.value
   if (!address || !area || html.includes(escapeHtml(area))) return { html, added: 0 }
   const flat = (/** @type {string} */ t) => t.replace(/&amp;/g, '&').replace(/\s+/g, ' ').trim()
-  let added = 0
-  const out = html.replace(/<(p|div|li|span)\b([^>]*)>([^<]*)<\/\1>/gi, (whole, tag, attrs, inner) => {
-    if (added || flat(inner) !== flat(address)) return whole
-    added = 1
-    return `${whole}<${tag}${attrs}>${escapeHtml(area)}</${tag}>`
-  })
-  return { html: out, added }
+  const line = /<(p|div|li|span)\b([^>]*)>([^<]*)<\/\1>/gi
+  for (const m of html.matchAll(line)) {
+    if (flat(m[3]) !== flat(address)) continue
+    const [whole, tag, attrs] = m
+    const at = /** @type {number} */ (m.index) + whole.length
+    const placed = placeLines({
+      html,
+      line: { start: /** @type {number} */ (m.index), end: at, tag: null, open: '' },
+      links: [`<${tag}${attrs.replace(/\sid\s*=\s*(["'])[^"']*\1/i, '')}>${escapeHtml(area)}</${tag}>`],
+      bound
+    })
+    // The line is a sibling, not a link: no space between block lines.
+    return placed
+      ? { html: placed.replace(`${whole} <${tag}`, `${whole}<${tag}`), added: 1 }
+      : { html, added: 0 }
+  }
+  return { html, added: 0 }
 }
 
 /**
- * One module's HTML with its contact links leading to the business.
+ * @typedef {{ kind: 'phone' | 'whatsapp' | 'message', value: string, href: string, label: string }} Channel
+ */
+
+/** The channels of a plan that has none listed: its phone and its WhatsApp. */
+function channelsOfContact(/** @type {Contact} */ contact) {
+  /** @type {Channel[]} */
+  const out = []
+  if (contact.phone?.href)
+    out.push({
+      kind: 'phone',
+      value: contact.phone.value,
+      href: contact.phone.href,
+      label: `Call ${contact.phone.value}`
+    })
+  if (contact.whatsapp?.href)
+    out.push({
+      kind: 'whatsapp',
+      value: contact.whatsapp.value,
+      href: contact.whatsapp.href,
+      label: 'WhatsApp us'
+    })
+  return out
+}
+
+const textOf = (/** @type {string} */ inner) =>
+  inner
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/\s+/g, ' ')
+    .trim()
+const outside = (/** @type {string} */ href) =>
+  /^https?:/i.test(href) ? ' target="_blank" rel="noopener"' : ''
+/** A link's attributes with its target taken off: what a clone of it keeps (its class, its style hooks). */
+const ownAttrs = (/** @type {string} */ attrs) =>
+  attrs.replace(/\s(?:href|target|rel|id)\s*=\s*(["'])[\s\S]*?\1/gi, '').replace(/\s+$/, '')
+
+/** A link with its target set to `href` (and opened apart when it leaves the site). */
+function pointed(/** @type {string} */ attrs, /** @type {string} */ href) {
+  const set = HREF.test(attrs)
+    ? attrs.replace(HREF, (_m, lead, quote) => `${lead}${quote}${escapeHtml(href)}${quote}`)
+    : ` href="${escapeHtml(href)}"${attrs}`
+  return /\starget\s*=/i.test(set) ? set : `${set}${outside(href)}`
+}
+
+/**
+ * One module's HTML with its contact links leading to the business, and every channel of the brief it does not show yet
+ * added beside its phone line (COO rule 29/10/2026), without moving a bound node (`joomla-contact-lines.js`).
  * @param {string} html
  * @param {Contact} contact - the site plan's contact facts
+ * @param {{ channels?: Channel[] | null, bound?: string[] }} [options] - the plan's channels, and the content map's paths
+ *   into this HTML
  * @returns {{ html: string, moved: number, removed: number, added: number }}
  */
-export function joomlaContactLinks(html, contact) {
+export function joomlaContactLinks(html, contact, { channels = null, bound = [] } = {}) {
+  const facts = contact ?? {}
+  const reach = channels ?? channelsOfContact(facts)
+  const phones = reach.filter((c) => c.kind === 'phone')
+  const whatsapp = reach.find((c) => c.kind === 'whatsapp') ?? null
+  /** @type {Map<string, Channel>} */
+  const byLabel = new Map(reach.filter((c) => c.kind !== 'phone').map((c) => [c.label.toLowerCase(), c]))
   let moved = 0
   let removed = 0
   let added = 0
-  let phoneLinked = false
-  let whatsappLinked = false
-  let out = String(html ?? '').replace(ANCHOR, (whole, attrs, inner) => {
+  const source = String(html ?? '')
+  // The business's own numbers the block already shows: a demo number takes one it does not show yet.
+  const used = new Set()
+  const ownOf = (/** @type {string} */ text) =>
+    phones.find((p) => (text.match(PHONE) ?? []).some((n) => digits(n) === digits(p.value))) ?? null
+  for (const m of source.matchAll(ANCHOR)) {
+    const own = ownOf(textOf(m[2]))
+    if (own) used.add(own.href)
+  }
+  let out = source.replace(ANCHOR, (whole, attrs, inner) => {
     const href = HREF.exec(attrs)?.[3] ?? ''
     const kind = kindOf(href, inner)
     if (!kind) {
-      const pinned = retargetMapLink(whole, attrs, inner, contact)
+      // A line the plan wrote with a channel's words ("Message us on Instagram") leads to that channel.
+      const channel = byLabel.get(textOf(inner).toLowerCase())
+      if (channel) {
+        if (href.replace(/&amp;/g, '&').trim() === channel.href) return whole
+        moved += 1
+        return `<a${pointed(attrs, channel.href)}>${inner}</a>`
+      }
+      const pinned = retargetMapLink(whole, attrs, inner, facts)
       if (pinned) moved += 1
       return pinned ?? whole
     }
-    const fact = contact[kind]
-    if (kind === 'phone' && fact) phoneLinked = true
-    if (kind === 'whatsapp' && fact) whatsappLinked = true
+    if (kind === 'phone') {
+      const own = ownOf(textOf(inner))
+      const phone = own ?? phones.find((p) => !used.has(p.href)) ?? phones[0]
+      if (!phone) {
+        removed += 1
+        return ''
+      }
+      used.add(phone.href)
+      if (isOwn(href, phone) && own) return whole
+      moved += 1
+      return `<a${pointed(attrs, phone.href)}>${own ? inner : showOwn(inner, 'phone', phone.value)}</a>`
+    }
+    const fact = kind === 'whatsapp' ? (whatsapp ?? facts.whatsapp) : facts.email
     if (fact && isOwn(href, fact)) return whole
     if (!fact) {
-      // The demo's number or mailbox with nothing of the business's to stand in its place: taken off.
+      // The demo's mailbox or WhatsApp with nothing of the business's to stand in its place: taken off.
       removed += 1
       return ''
     }
@@ -140,23 +233,68 @@ export function joomlaContactLinks(html, contact) {
   out = out.replace(/(<[^>]*>)|([^<]+)/g, (_whole, tag, text) => {
     if (tag) return tag
     return text.replace(EMAIL, (/** @type {string} */ found) => {
-      if (contact.email && found.toLowerCase() === contact.email.value.toLowerCase()) return found
-      if (contact.email) moved += 1
+      if (facts.email && found.toLowerCase() === facts.email.value.toLowerCase()) return found
+      if (facts.email) moved += 1
       else removed += 1
-      return contact.email ? escapeHtml(contact.email.value) : ''
+      return facts.email ? escapeHtml(facts.email.value) : ''
     })
   })
-  // WhatsApp beside the phone, once, where the module calls the business and has no WhatsApp link yet.
-  if (contact.whatsapp?.href && phoneLinked && !whatsappLinked) {
-    let done = false
-    out = out.replace(/<a\b[^>]*\shref\s*=\s*(["'])tel:[^"']*\1[^>]*>[\s\S]*?<\/a\s*>/i, (link) => {
-      done = true
-      return `${link} <a href="${escapeHtml(contact.whatsapp?.href ?? '')}" target="_blank" rel="noopener">WhatsApp</a>`
-    })
-    if (done) added += 1
+  const lines = missingLines(out, reach)
+  if (lines) {
+    const placed = placeLines({ html: out, line: lines.line, links: lines.links, bound })
+    if (placed) {
+      out = placed
+      added += lines.links.length
+    }
   }
-  const areaLine = addAreaLine(out, contact)
+  const areaLine = addAreaLine(out, facts, bound)
   return { html: areaLine.html, moved, removed, added: added + areaLine.added }
+}
+
+/**
+ * The channels a contact block (one that calls or mails the business) does not show, each as a link cloned from the
+ * block's own: a number from its phone link, WhatsApp and a direct message from its other link (else the phone link),
+ * placed after its phone line (else its last contact line). Null when the block is no contact block or shows them all.
+ */
+function missingLines(/** @type {string} */ html, /** @type {Channel[]} */ reach) {
+  const anchors = [...html.matchAll(ANCHOR)].map((m) => ({
+    start: /** @type {number} */ (m.index),
+    end: /** @type {number} */ (m.index) + m[0].length,
+    attrs: m[1],
+    href: (HREF.exec(m[1])?.[3] ?? '').replace(/&amp;/g, '&').trim(),
+    text: textOf(m[2])
+  }))
+  const calls = anchors.filter((a) => /^tel:/i.test(a.href) && a.text !== '')
+  const mails = anchors.filter((a) => /^mailto:/i.test(a.href) && a.text !== '')
+  if (calls.length === 0 && mails.length === 0) return null
+  const hrefs = anchors.map((a) => a.href.toLowerCase())
+  const shown = (/** @type {Channel} */ c) => {
+    if (c.kind === 'phone')
+      return hrefs.includes(c.href.toLowerCase()) || digits(textOf(html)).includes(digits(c.value))
+    if (c.kind === 'whatsapp')
+      return hrefs.some(
+        (h) => /wa\.me\/|api\.whatsapp\.com|whatsapp:/.test(h) && digits(h).includes(digits(c.value))
+      )
+    return hrefs.includes(c.href.toLowerCase())
+  }
+  // A WhatsApp line follows the number it belongs to; the direct messages come last.
+  const phoneAt = (/** @type {Channel} */ c) =>
+    reach.findIndex((p) => p.kind === 'phone' && digits(p.value) === digits(c.value))
+  const rank = (/** @type {Channel} */ c) =>
+    c.kind === 'whatsapp' && phoneAt(c) >= 0 ? phoneAt(c) + 0.5 : reach.indexOf(c)
+  const missing = reach.filter((c) => !shown(c)).sort((a, b) => rank(a) - rank(b))
+  if (missing.length === 0) return null
+  const phoneLink = calls[0] ?? mails[0]
+  const other = [...anchors].reverse().find((a) => a.text !== '' && !/^tel:/i.test(a.href)) ?? phoneLink
+  const links = missing.map((c) => {
+    const attrs = ownAttrs(c.kind === 'phone' ? phoneLink.attrs : other.attrs)
+    const words = c.kind === 'phone' ? c.value : c.label
+    return `<a href="${escapeHtml(c.href)}"${attrs}${outside(c.href)}>${escapeHtml(words)}</a>`
+  })
+  const after =
+    calls.at(-1) ?? anchors.filter((a) => a.text !== '' && /^(?:mailto:|https?:)/i.test(a.href)).at(-1)
+  if (!after) return null
+  return { line: lineOf(html, after.start, after.end), links }
 }
 
 /**
@@ -165,9 +303,11 @@ export function joomlaContactLinks(html, contact) {
  * @param {Array<{ id: number | string, published?: number | string, language?: string, content?: unknown }>} input.modules
  * @param {Contact | null | undefined} input.contact - the site plan's contact facts; none = nothing written
  * @param {Set<string>} input.visible - the language tags a visitor can reach
+ * @param {Channel[] | null} [input.channels] - the site plan's channels (each phone, WhatsApp, each direct message)
+ * @param {any[]} [input.slots] - the content map's slots: no added line moves a node one of them binds to
  * @returns {{ steps: Array<{ kind: 'module', id: number, fields: { content: string } }>, moved: number, removed: number, added: number }}
  */
-export function moduleContactSteps({ modules, contact, visible }) {
+export function moduleContactSteps({ modules, contact, visible, channels = null, slots = [] }) {
   const steps = []
   let moved = 0
   let removed = 0
@@ -177,7 +317,12 @@ export function moduleContactSteps({ modules, contact, visible }) {
     const language = String(row.language ?? '*')
     if (Number(row.published) !== 1 || (language !== '*' && !visible.has(language))) continue
     if (typeof row.content !== 'string' || row.content === '') continue
-    const next = joomlaContactLinks(row.content, contact)
+    const bound = slots
+      .filter(
+        (s) => s?.entity === `module-${row.id}` && s.column === 'content' && typeof s.xpath === 'string'
+      )
+      .map((s) => s.xpath)
+    const next = joomlaContactLinks(row.content, contact, { channels, bound })
     if (next.html === row.content) continue
     steps.push({ kind: 'module', id: Number(row.id), fields: { content: next.html } })
     moved += next.moved

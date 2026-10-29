@@ -1,7 +1,8 @@
 /**
  * The first-screen lines of a brief build's site plan (`website-opportunities/domain/hero-first-screen.mjs` and
  * `page-intros.mjs`, spec TracyHQ/tracy#189, COO rule 29/10/2026): the home subline that names what the business offers and
- * where, the main button's label and link, and the intro of each offering page. They win over the copy writer's words for
+ * where, the main button's label and link, the intro of each offering page, and a card button's action words in place of a
+ * bare "Contact" (`contact-buttons.mjs`). They win over the copy writer's words for
  * the same slots, and a line the left-demo sweep would empty is not emptied.
  *
  * Decided at write time, against the words each heading will really hold (`current`), not its sample:
@@ -15,7 +16,9 @@
  * language leaves them to the copy writer, which writes in the site's language.
  */
 
-const REASONS = new Set(['hero-what', 'hero-why', 'hero-when', 'hero-contact', 'intro-what'])
+const REASONS = new Set(['hero-what', 'hero-why', 'hero-when', 'hero-contact', 'intro-what', 'cta-action'])
+/** A button's words that name no action (`contact-buttons.mjs` decides the words that replace them). */
+const BARE_CONTACT = /^(?:contact|contact us|get in touch|reach us|enquire|inquire)$/i
 
 /** The words of a line as a visitor reads them, lower case: style marks and tags taken off. */
 const wordsOf = (value) =>
@@ -47,6 +50,9 @@ export function heroSlotValues(sitePlan, locale = 'en', current = () => undefine
     const place = typeof s.place === 'string' ? s.place.toLowerCase() : ''
     const heading = s.heading ? wordsOf(current(s.heading)) : ''
     const headingHasPlace = place !== '' && heading.includes(place)
+    // A button's action words (`cta-action`) replace only a bare "Contact" the writer left.
+    if (s.when === 'bare-contact' && !BARE_CONTACT.test(wordsOf(current(s.key)).replace(/[.!]+$/, '')))
+      continue
     if (s.when === 'missing') {
       const now = wordsOf(current(s.key))
       const named = (s.offerings ?? []).some((o) => now.includes(String(o).toLowerCase()))

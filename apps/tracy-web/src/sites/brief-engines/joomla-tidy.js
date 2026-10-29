@@ -1083,9 +1083,10 @@ function placeLines({ address, area, row, cut }) {
  * @param {{ email?: string, phone?: string, address?: string, name?: string }} input.given
  * @param {Set<string>} input.visible
  * @param {{ address?: { value: string }, serviceArea?: { value: string } } | null} [input.contact] - the site plan's contact facts
+ * @param {Array<{ kind: string, value: string }> | null} [input.channels] - the site plan's channels: a second phone is the mobile
  * @returns {Promise<{ steps: Array<{ kind: string, id: number, fields: Record<string, string> }>, note: string | null }>}
  */
-export async function contactSteps({ apply, siteKey, given, visible, contact = null }) {
+export async function contactSteps({ apply, siteKey, given, visible, contact = null, channels = null }) {
   const email = String(given.email ?? '').trim()
   const phone = String(given.phone ?? '').trim()
   const address = String(given.address ?? '').trim()
@@ -1114,8 +1115,17 @@ export async function contactSteps({ apply, siteKey, given, visible, contact = n
       }
       // A phone given is the telephone; the template's other numbers go, and with none given every one of them goes (#1367).
       if (phone !== '' && row.telephone !== phone) fields.telephone = phone
+      // The brief's second number is the record's mobile line (COO rule 29/10/2026: every number shown).
+      const second =
+        phone !== ''
+          ? ((channels ?? []).find(
+              (c) => c?.kind === 'phone' && String(c.value).replace(/\D+/g, '') !== phone.replace(/\D+/g, '')
+            )?.value ?? '')
+          : ''
+      if (second !== '' && row.mobile !== second) fields.mobile = second
       for (const field of phone !== '' ? ['mobile', 'fax'] : ['telephone', 'mobile', 'fax'])
-        if (setByTemplate(row[field]) && row[field] !== phone) fields[field] = ''
+        if (!(field === 'mobile' && second !== '') && setByTemplate(row[field]) && row[field] !== phone)
+          fields[field] = ''
       // 🔒 THE ADDRESS IS THE BRIEF'S, WORD FOR WORD, ON THE LINES THE TEMPLATE HAS (spec TracyHQ/tracy#189): cut only where the
       // brief itself separates it, one part per line the demo used. With no address but areas served, the areas are the line
       // (no street); with neither, the template's own place goes (a visitor must never read the demo company's street).

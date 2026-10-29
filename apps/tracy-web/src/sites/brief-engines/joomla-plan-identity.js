@@ -219,6 +219,17 @@ export function keepsABlogPage(plan) {
   return pages.length === 0 || pages.some((p) => p?.decision === 'keep' && p?.role === 'blog')
 }
 
+/** The numbers and mailbox of a site plan an icon row calls and mails (`joomla-plan-social-lists.js`). */
+function contactIconsOf(/** @type {any} */ plan) {
+  const phones = (Array.isArray(plan?.channels) ? plan.channels : [])
+    .filter((c) => c?.kind === 'phone' && typeof c.href === 'string')
+    .map((c) => ({ href: c.href, value: String(c.value) }))
+  if (phones.length === 0 && plan?.contact?.phone?.href)
+    phones.push({ href: plan.contact.phone.href, value: String(plan.contact.phone.value) })
+  const email = plan?.contact?.email?.href ? { href: String(plan.contact.email.href) } : null
+  return phones.length || email ? { phones, email } : null
+}
+
 /**
  * The writes of the identity decisions: module HTML (merged over the steps already planned for the same module, so one
  * module gets one write), the module a taken-off map leaves empty unpublished, and the demo posts unpublished.
@@ -245,7 +256,8 @@ export async function planIdentitySteps({ apply, siteKey, ctx, woContent, visibl
       if (Number(row.published) !== 1 || (language !== '*' && !visible.has(language))) continue
       const before = planned.get(Number(row.id))
       // A JSON list of social links kept in the module's parameters (a JA ACM style module).
-      const listed = socialListParams(paramsOf(row), plan.socials)
+      // The row calls and mails the business before its networks (COO rule 29/10/2026): the plan's numbers and mailbox.
+      const listed = socialListParams(paramsOf(row), plan.socials, contactIconsOf(plan))
       if (listed.changed > 0) {
         counts.socials += listed.changed
         const fields = {

@@ -14,7 +14,8 @@
 import { pictureDecisionsOf } from './site-plan-pictures.mjs'
 import { CONTACT_FACTS_WHY } from './page-plan.mjs'
 import { answersFromBrief, contactFacts } from './site-answers.mjs'
-import { mapsLinkOf } from './contact-reading.mjs'
+import { contactChannelsOf, mapsLinkOf } from './contact-reading.mjs'
+import { contactButtonSlots } from './contact-buttons.mjs'
 import { IDENTITY_REASONS, planIdentity } from './site-plan-identity.mjs'
 import { planOutsideMap } from './outside-map.mjs'
 import { COLOUR_REASONS, planColours } from './brand-colours.mjs'
@@ -38,6 +39,9 @@ export const SITE_PLAN_REASONS = Object.freeze({
   'no-data': 'the brief holds nothing for this page',
   'emptied-page': 'every section of this page was taken off, so the page goes too',
   'contact-fact': 'a contact fact the brief holds',
+  'contact-channel':
+    'a channel the brief holds that this contact block does not show yet (each phone, WhatsApp, a direct message)',
+  'cta-action': 'a button that said a bare "Contact" names the action it leads to',
   'business-name': 'the business name the brief holds',
   'hero-what':
     'the first screen names what the business offers, who it serves and where (`hero-first-screen.mjs`)',
@@ -108,12 +112,65 @@ function pagesOf(pagePlan) {
   }))
 }
 
+/** A text slot that is the words of a link (`.../a/text()`, `.../a[2]/text()`): a link the contact step can point. */
+const LINK_WORDS = /\/a(?:\[\d+\])?\/text\(\)(?:\[\d+\])?$/
+
+/**
+ * The slots of a contact block the brief's channels fill (COO rule 29/10/2026): in each contact group of a module (never a
+ * contact RECORD, whose phones the record step writes), the k-th phone slot shows the k-th phone, and a mailbox slot that is
+ * the words of a link, with no mailbox in the brief, shows the next channel the block does not show yet: a direct message,
+ * else WhatsApp, else a phone. Its link is pointed at the channel by the module contact step (`joomla-contact-links.js`).
+ * @returns {Map<string, {value: string, reason: string, href?: string}>}
+ */
+function channelSlotsOf(slots, channels, contact) {
+  const out = new Map()
+  if (!channels.length) return out
+  const phones = channels.filter((c) => c.kind === 'phone')
+  const groups = new Map()
+  for (const slot of slots) {
+    if (slot.type !== 'text' || !String(slot.entity ?? slot.key).startsWith('module-')) continue
+    const id = slot.group?.id ?? slot.entity
+    if (!id) continue
+    groups.set(id, [...(groups.get(id) ?? []), slot])
+  }
+  for (const group of groups.values()) {
+    const phoneSlots = group.filter((s) => s.role === 'contact.phone')
+    const shown = new Set()
+    phoneSlots.forEach((slot, i) => {
+      const phone = phones[i] ?? phones[0]
+      if (!phone || i === 0) {
+        if (phone) shown.add(phone.href)
+        return
+      }
+      shown.add(phone.href)
+      out.set(slot.key, { value: phone.value, reason: 'contact-channel', href: phone.href })
+    })
+    if (contact.email) continue
+    const mailSlots = group.filter(
+      (s) => s.role === 'contact.email' && LINK_WORDS.test(String(s.xpath ?? ''))
+    )
+    const order = [
+      ...channels.filter((c) => c.kind === 'message'),
+      ...channels.filter((c) => c.kind === 'whatsapp'),
+      ...phones
+    ].filter((c) => !shown.has(c.href))
+    mailSlots.forEach((slot, i) => {
+      const channel = order[i]
+      if (channel) out.set(slot.key, { value: channel.label, reason: 'contact-channel', href: channel.href })
+    })
+  }
+  return out
+}
+
 /** The slot decisions: a contact fact or the name where the slot's role asks for one, else the fill plan's. */
-function slotsOf(contentMap, brief, contact, name, cardNames = {}) {
+function slotsOf(contentMap, brief, contact, name, cardNames = {}, channels = []) {
   if (!contentMap?.slots?.length) return []
   // Pictures: per slot, drawn where no photo fits, icons and cut-outs by subject (#194, #195).
   const fill = pictureDecisionsOf(contentMap, brief, cardNames)
+  const reach = channelSlotsOf(contentMap.slots, channels, contact)
   return contentMap.slots.map((slot) => {
+    const channel = reach.get(slot.key)
+    if (channel) return { key: slot.key, role: slot.role, decision: 'value', ...channel }
     const kind = slot.type === 'text' ? CONTACT_ROLES[slot.role] : null
     // With only the areas served, the address slot shows them (no street line, none invented); with neither it is taken off.
     if (kind === 'address' && !contact.address && contact.serviceArea)
@@ -203,6 +260,8 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
   const { questionnaire } = answered
   const facts = contactFacts(brief)
   const contact = contactOfBrief(facts, brief)
+  // Every channel a visitor reaches the business on, in the contact order (`contact-reading.mjs`, COO rule 29/10/2026).
+  const channels = contactChannelsOf(brief)
   const name = typeof answered.answers.name === 'string' ? answered.answers.name : null
   const brand = {}
   if (name) brand.name = { value: name, reason: 'brief-name' }
@@ -235,10 +294,13 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
     version: SITE_PLAN_VERSION,
     brand,
     contact,
+    channels,
     facts,
     pages: pageRows,
     // A kept card's picture shows what its words name: the honesty plan's card labels (#192, #194).
-    slots: withHero(slotsOf(contentMap, brief, contact, name, honesty.honesty.cardNames), [
+    slots: withHero(slotsOf(contentMap, brief, contact, name, honesty.honesty.cardNames, channels), [
+      // A button that would say a bare "Contact" names its action (`contact-buttons.mjs`); the hero's own plan wins.
+      ...contactButtonSlots(contentMap, { heroEntity: heroPlan.hero.entity }),
       ...heroPlan.slots,
       ...intros
     ]),

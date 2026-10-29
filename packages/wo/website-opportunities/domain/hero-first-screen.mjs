@@ -14,7 +14,7 @@
 // writer, which saw "Hero / desc" with a mood sample and no role, and wrote "Find your stride and enjoy every session, at
 // any age." under a button labelled "Contact", although the brief planned "...: tennis, padel, swimming lessons."
 import { cityOf, heroServicesOf } from './brief.mjs'
-import { serviceAreasOf } from './contact-reading.mjs'
+import { contactChannelsOf, serviceAreasOf } from './contact-reading.mjs'
 import { findUsp } from './hero-usp.mjs'
 import { inSentence } from './plain-prose.mjs'
 
@@ -367,12 +367,41 @@ export function heroContactOf(brief, contact = {}, contentMap = null) {
   const dm = list(home?.sections).find((s) => s?.kind === 'hero')?.cta
   if (dm?.kind === 'link' && nonEmpty(dm.label) && String(dm.href ?? '').startsWith('https://'))
     return { kind: 'message', label: dm.label.trim(), href: dm.href, source: 'sitemap.hero.cta' }
+  // Else the direct message of a social network the brief really has (`contactChannelsOf`).
+  const message = contactChannelsOf(brief).find((c) => c.kind === 'message')
+  if (message) return { kind: 'message', label: message.label, href: message.href, source: message.source }
   const page = contactPageLink(contentMap)
   return page ? { kind: 'form', label: 'Send us a message', href: page, source: 'contact-page' } : null
 }
 
 /** Whether a site link leads to the same page as another (`index.php?Itemid=30` and `/index.php?Itemid=30`). */
 const samePage = (a, b) => String(a ?? '').replace(/^\//, '') === String(b ?? '').replace(/^\//, '')
+
+/**
+ * The hero's second button (COO rule 29/10/2026): when the template gives the first slide a second button (its label and
+ * link in a group of their own) and the brief holds a channel after the main button's, that channel: WhatsApp after a call,
+ * then a direct message. Never in the contract slots: the template ships it empty and the contract cannot activate an empty
+ * slot, so the records step writes it (`joomla-hero-second-button.js`). Null when there is no such slot or channel.
+ */
+function secondButtonOf(brief, contentMap, hero, way) {
+  if (!hero?.cta?.label || !way) return null
+  const mainGroup = hero.cta.label.group?.id ?? null
+  const slots = list(contentMap?.slots).filter((s) => s.entity === hero.entity && itemOf(s) === 0)
+  const label = slots.find(
+    (s) => s.key !== hero.cta.label.key && kindOf(s) === 'label' && s.group?.id && s.group.id !== mainGroup
+  )
+  const href = label ? slots.find((s) => kindOf(s) === 'href' && s.group?.id === label.group.id) : null
+  if (!label || !href) return null
+  const after = contactChannelsOf(brief).filter((c) => c.kind !== 'phone' && c.href !== way.href)
+  const channel = after.find((c) => [...c.label].length <= limitOf(label))
+  if (!channel) return null
+  return {
+    label: { key: label.key, value: channel.label },
+    href: { key: href.key, value: channel.href },
+    kind: channel.kind,
+    source: channel.source
+  }
+}
 
 /**
  * The hero lines a brief build writes, as site plan slot decisions, and the three answers.
@@ -444,6 +473,8 @@ export function planHero(brief, contentMap, contact = {}, { themes = [] } = {}) 
         decide(href, way.href, 'hero-contact', way.source)
     }
   }
+  // The second button, when the template has one: the next channel after the main button's (`secondButtonOf`).
+  const second = secondButtonOf(brief, contentMap, hero, way)
   const missing = []
   if (!offeringNames(brief).length && !plannedHeroCopy(brief))
     missing.push({ kind: 'what', why: 'the brief names nothing the business offers' })
@@ -490,6 +521,7 @@ export function planHero(brief, contentMap, contact = {}, { themes = [] } = {}) 
       who,
       where,
       contact: way,
+      ...(second ? { second } : {}),
       missing
     }
   }

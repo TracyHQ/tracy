@@ -1,6 +1,6 @@
-// A contact fact the brief holds (address, email, phone, hours) that no page of the built site shows is reported here
+// A contact fact the brief holds (address, email, hours) or a channel (each phone, WhatsApp, each direct message) that no page of the built site shows is reported here
 // (spec TracyHQ/tracy#189, COO rule 29/10/2026). It runs beside the demo-leftover check and lands on the same receipt.
-import { readContact } from './contact-reading.mjs'
+import { contactChannelsOf, readContact } from './contact-reading.mjs'
 import { hoursLine } from './pinned-copy.mjs'
 
 const ENTITIES = { '&amp;': '&', '&lt;': '<', '&gt;': '>', '&quot;': '"', '&#39;': "'", '&nbsp;': ' ' }
@@ -41,6 +41,25 @@ function shows(kind, value, text) {
   return true
 }
 
+/** Every link target of a page, lower case, `&amp;` read as `&`. */
+function hrefsOf(html) {
+  return [...String(html).matchAll(/\bhref\s*=\s*["']([^"']*)["']/gi)].map((m) =>
+    m[1].replace(/&amp;/g, '&').trim().toLowerCase().replace(/\/+$/, '')
+  )
+}
+
+/** Whether a page links a channel: a phone by its digits anywhere, WhatsApp and a direct message only by their link. */
+function linksChannel(channel, page) {
+  const d = digits(channel.value)
+  if (channel.kind === 'phone') return d.length >= 6 && digits(page.text).includes(d)
+  if (channel.kind === 'whatsapp')
+    return page.hrefs.some(
+      (h) => (/wa\.me\/|api\.whatsapp\.com|whatsapp:/.test(h) && digits(h).includes(d)) || false
+    )
+  const want = channel.href.toLowerCase().replace(/\/+$/, '')
+  return page.hrefs.some((h) => h === want)
+}
+
 /**
  * @param {object} input
  * @param {Array<{ path: string, html: string }>} input.pages - the pages the check read
@@ -53,7 +72,9 @@ export function checkContactFacts({ pages, brief }) {
     .map((h) => hoursLine(h.trim()))
   const facts = readContact(brief, { hours })
   const texts = pages.map((p) => readable(p.html))
-  return Object.entries(facts)
+  const facts_ = Object.entries(facts)
+    // Phones and WhatsApp are judged as channels below: each number, and WhatsApp by its own link.
+    .filter(([kind]) => kind !== 'phone' && kind !== 'whatsapp')
     .filter(([kind, fact]) => !texts.some((t) => shows(kind, fact.value, t)))
     .map(([kind, fact]) => ({
       kind,
@@ -61,4 +82,18 @@ export function checkContactFacts({ pages, brief }) {
       source: fact.source,
       why: 'the brief holds this fact and no page of the built site shows it'
     }))
+  // Every channel the brief holds (each phone, WhatsApp, each direct message) is shown somewhere (COO rule 29/10/2026).
+  const read = pages.map((p, i) => ({ text: texts[i], hrefs: hrefsOf(p.html) }))
+  const channels = contactChannelsOf(brief)
+    .filter((c) => !read.some((page) => linksChannel(c, page)))
+    .map((c) => ({
+      kind: c.kind,
+      value: c.kind === 'message' ? c.href : c.value,
+      source: c.source,
+      why:
+        c.kind === 'phone'
+          ? 'the brief holds this number and no page of the built site shows it'
+          : 'the brief holds this channel and no page of the built site links it'
+    }))
+  return [...facts_, ...channels]
 }

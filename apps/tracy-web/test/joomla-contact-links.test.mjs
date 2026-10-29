@@ -24,7 +24,7 @@ test('a footer phone behind # and a demo mailbox lead to the business, with What
   const html = steps[0].fields.content
   assert.match(html, /<a href="tel:\+442079460321"><i class="fa fa-phone"><\/i> \+44 20 7946 0321<\/a>/)
   assert.match(html, /<a href="mailto:hello@copperleaf\.example">hello@copperleaf\.example<\/a>/)
-  assert.match(html, /<a href="https:\/\/wa\.me\/447700901111"[^>]*>WhatsApp<\/a>/)
+  assert.match(html, /<a href="https:\/\/wa\.me\/447700901111"[^>]*>WhatsApp us<\/a>/)
   assert.doesNotMatch(html, /demo\.example|555/)
 })
 

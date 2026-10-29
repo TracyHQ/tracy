@@ -316,11 +316,12 @@ test('socials in a module list: WhatsApp joins with the template icon font class
     acmParams(['', '', '', ''])
   )
   const list = listOf(step.fields.params)
-  assert.deepEqual(list['social-intro[font-icon]'], ['fa fa-instagram', 'fa fa-whatsapp', '', ''])
-  assert.deepEqual(list['social-intro[title]'], ['Instagram', 'WhatsApp', '', ''])
+  // The contact order (COO rule 29/10/2026): WhatsApp before the networks, its title says the action.
+  assert.deepEqual(list['social-intro[font-icon]'], ['fa fa-whatsapp', 'fa fa-instagram', '', ''])
+  assert.deepEqual(list['social-intro[title]'], ['WhatsApp us', 'Instagram', '', ''])
   assert.deepEqual(list['social-intro[link]'], [
-    'https://instagram.com/copperleaf.example',
     'https://wa.me/15550100222',
+    'https://instagram.com/copperleaf.example',
     '',
     ''
   ])

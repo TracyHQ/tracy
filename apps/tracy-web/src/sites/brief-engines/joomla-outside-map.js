@@ -175,7 +175,8 @@ export function ownerPictureOf(/** @type {string | null} */ html, /** @type {str
 }
 
 /**
- * The values the site plan writes into contract slots the copy path does not fill: the brief's own video in a video slot.
+ * The values the site plan writes into contract slots the copy path does not fill: the brief's own video in a video slot, and
+ * the address and channel lines of a module's contact block.
  * @param {any} plan - the site plan
  * @returns {Record<string, string>}
  */
@@ -186,7 +187,8 @@ export function plannedSlotValues(plan) {
         .filter((v) => v.decision === 'video' && v.value)
         .map((v) => [v.key, v.value])
     ),
-    ...plannedAddressLines(plan)
+    ...plannedAddressLines(plan),
+    ...plannedChannelLines(plan)
   }
 }
 
@@ -197,10 +199,32 @@ export function plannedSlotValues(plan) {
  * @returns {Record<string, string>}
  */
 export function plannedAddressLines(plan) {
+  return contactBlockLines(plan, (s) => s.role === 'contact.address' && s.reason === 'contact-fact')
+}
+
+/**
+ * The lines of a contact block the site plan gives a channel the block does not show yet (`contact-channel`: a second
+ * phone, a mailbox line that takes a direct message), by slot key. Its link is pointed by the module contact step.
+ * @param {any} plan - the site plan
+ * @returns {Record<string, string>}
+ */
+export function plannedChannelLines(plan) {
+  return contactBlockLines(plan, (s) => s.reason === 'contact-channel')
+}
+
+/** The planned values of a module's contact block slots that pass `pick` (never a contact RECORD's: `contactSteps` writes those). */
+function contactBlockLines(/** @type {any} */ plan, /** @type {(slot: any) => boolean} */ pick) {
   return Object.fromEntries(
-    (plan?.outside?.videos ?? [])
-      .filter((v) => v.decision === 'video' && v.value)
-      .map((v) => [v.key, v.value])
+    (plan?.slots ?? [])
+      .filter(
+        (/** @type {any} */ s) =>
+          s?.decision === 'value' &&
+          typeof s.value === 'string' &&
+          s.value.trim() !== '' &&
+          String(s.key).startsWith('module-') &&
+          pick(s)
+      )
+      .map((/** @type {any} */ s) => [s.key, s.value])
   )
 }
 

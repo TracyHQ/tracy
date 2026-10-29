@@ -1114,6 +1114,8 @@ export function createJoomlaEngine({
       const heroLines = heroSlotValues(sitePlan, written, (key) =>
         key in kept ? kept[key] : slotByKey.get(key)?.sample
       )
+      // A hero line's own marks (the USP's key words) style it; the copy writer's marks for that slot no longer count.
+      Object.assign(styleMarks, takeStyleMarks(heroLines))
       Object.assign(kept, heroLines)
       demoBlanks = demoBlanks.filter((slot) => !(slot.key in heroLines))
 
@@ -1910,6 +1912,7 @@ export function createJoomlaEngine({
             apply,
             siteKey,
             contact: planned?.contact ?? null,
+            channels: Array.isArray(planned?.channels) ? planned.channels : null,
             given: {
               email: ctx.normalized.email,
               phone: ctx.normalized.phone,
@@ -1925,7 +1928,9 @@ export function createJoomlaEngine({
             siteKey,
             ctx,
             woContent,
-            visible: visibleNow
+            visible: visibleNow,
+            // No contact line added beside a bound node moves it (`joomla-contact-lines.js`).
+            slots: [...staticState(ctx.contract).slots, ...(staticState(ctx.contract).declared ?? [])]
           })
           // The site plan's social links, map, demo logo picture and demo posts (`joomla-plan-identity.js`, #193), merged over the module writes above.
           const identity = await planIdentitySteps({

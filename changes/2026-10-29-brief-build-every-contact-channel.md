@@ -1,0 +1,3 @@
+- **A brief build shows every contact channel the brief holds and makes each one clickable: each phone on its own call line, WhatsApp only on a number the brief ties it to, the direct message link of each social network it has; the hero adds a second button, a bare "Contact" card button names its action, the footer icon row calls and mails first, and a channel no page shows is reported** — Akemi · #189 · `feat/brief-build-own-site` · 2026-10-29
+
+**Affects:** brief builds on Joomla templates (contact modules, contact record, hero, card buttons, social icon lists); the site plan gains `channels` and `hero.second`; `contactMissing` names each missing phone, WhatsApp and direct message. Lines added to a block never move a node a contract slot binds to.
