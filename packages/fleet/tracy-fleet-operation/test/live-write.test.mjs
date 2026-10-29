@@ -2406,6 +2406,31 @@ test('WordPress new parent stays published when its metadata ACK is ahead of sta
   }
 })
 
+test('Apply and Undo retain localized record descriptions', async () => {
+  const live = await engine({ records: { article: { 1: article(1) } } })
+  try {
+    const item = {
+      ...update(1, { title: 'Updated' }, { title: 'Article 1' }),
+      what: 'page',
+      label: 'featuredImage',
+      subject: 'About'
+    }
+    const dir = pushDir([item])
+    const { answer } = await apply(live, dir)
+    assert.deepEqual(
+      [answer.written[0].what, answer.written[0].label, answer.written[0].subject],
+      ['page', 'featuredImage', 'About']
+    )
+    const result = await undo(live, dir)
+    assert.deepEqual(
+      [result.answer.restored[0].what, result.answer.restored[0].label, result.answer.restored[0].subject],
+      ['page', 'featuredImage', 'About']
+    )
+  } finally {
+    await live.close()
+  }
+})
+
 test('Undo after an Apply lost before it answered takes back what its journal lists (#122)', async () => {
   const live = await engine({ records: { article: { 1: article(1), 2: article(2) } } })
   try {

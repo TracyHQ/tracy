@@ -1213,5 +1213,8 @@
   "sync.error.liveBlocked": "Tu site en línea devolvió una respuesta bloqueada o que no procede del motor. Revisa el cortafuegos o la protección contra bots y permite las solicitudes de Tracy.",
   "sync.error.livePassword": "Tu site en línea requiere una contraseña HTTP. Permite que Tracy acceda al punto de conexión de Claude Cowork sin esa contraseña y vuelve a intentarlo.",
   "sync.error.liveRateLimited": "Tu site en línea está limitando las solicitudes. Espera antes de volver a intentarlo; Tracy respeta el plazo Retry-After.",
-  "sync.error.liveToken": "Tu site en línea rechazó el token de Claude Cowork. Vuelve a conectarlo con su token actual e inténtalo de nuevo."
+  "sync.error.liveToken": "Tu site en línea rechazó el token de Claude Cowork. Vuelve a conectarlo con su token actual e inténtalo de nuevo.",
+  "push.label.featuredImage": "Imagen destacada",
+  "push.label.pageTemplate": "Template de página",
+  "push.label.altText": "Texto alternativo"
 }

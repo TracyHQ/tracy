@@ -1,0 +1,4 @@
+- **A page template both sites set is one row and a conflict, never two rows.** — David · issue #118 · `fix/sync-single-meta-both` · 2026-10-29
+  **Affects:** Sync from live on WordPress. Post meta that WordPress keeps one of per post (page template, featured image, alt text, menu item settings and similar) is matched by its post and key when both sites added it: under one number or two, the rows meet as one row, the same value merges and two values are a conflict where the copy's stays until a decision. Meta that may hold several values (`_wp_old_slug`) is left as before.
+
+  Verification: a new real MariaDB case (one meta_id and two, a decision for the live side, the same value on both sides, a multi-valued key) failed before the fix and passes after it. The WordPress DB, shared DB, pushed, WordPress flow and Joomla flow suites pass with zero skipped. The fleet needs the next shared-script image release.

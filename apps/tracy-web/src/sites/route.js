@@ -1289,6 +1289,8 @@ function lastLine(output) {
  */
 export function sitesRoutes({
   pool,
+  // The serving process only (server.js): pick up the syncs and pushes a restart left running.
+  resumeLiveJobs = false,
   config,
   host,
   mail = null,
@@ -1361,8 +1363,19 @@ export function sitesRoutes({
   // A backup point downloaded by its Owner (`backup-export.js`): the two export doors and the
   // site's delete reach it here, the cron's sweep through its own instance.
   const backupExports = createBackupExports({ pool, config, host, fetchImpl, now })
-  const sync = liveSync({ pool, config, host, fetchImpl, currentComponent, writeComponent, now })
-  const push = livePush({ pool, config, host, fetchImpl, sync, now })
+  // Built once, at boot: in the serving process (`resumeLiveJobs`, server.js) each picks up the syncs and
+  // pushes a restart left running (#123).
+  const sync = liveSync({
+    pool,
+    config,
+    host,
+    fetchImpl,
+    currentComponent,
+    writeComponent,
+    now,
+    resumeOnStart: resumeLiveJobs
+  })
+  const push = livePush({ pool, config, host, fetchImpl, sync, now, resumeOnStart: resumeLiveJobs })
 
   /**
    * The principal behind a request — `{kind, email, account, grant}` with a live grant on `siteKey`,

@@ -16,7 +16,7 @@ import { hostCall, hostJob } from '../src/host/client.js'
 import { mintSession } from '../src/lib/session.js'
 import { takeWriteLease, writeComponent } from '../src/sites/store.js'
 import { pushStageOf, previewOf } from '../src/sites/live-push-contract.js'
-import { failureDetailOf, stoppedAnswer } from '../src/sites/live-push.js'
+import { failureDetailOf, livePush, stoppedAnswer } from '../src/sites/live-push.js'
 
 const db = fileDb()
 before(db.open)
@@ -1135,6 +1135,47 @@ test('Apply is allowed when the one pushable item sits past the 500 the preview 
   assert.equal(rows[0]?.detail.change, 1)
   assert.equal(rows[0]?.detail.liveChanged, 500)
 })
+
+test(
+  'a push still running when tracy-web restarts keeps its lease; once its job ends the lease goes (#123)',
+  opts,
+  async () => {
+    const { pool } = db
+    const net = network({ answers: ANSWERS })
+    net.running.add('webroot-live-push-preview')
+    const { send, cookieFor } = harness(pool, net.fetchImpl)
+    await importedSite(pool)
+    const owner = await cookieFor('owner@x.y')
+    const started = await send('POST', `/api/sites/${SITE}/push/preview`, owner)
+    assert.equal(started.status, 202, started.text)
+    // The restart: nobody renewed the lease for longer than it lives.
+    await pool.query(
+      "update site_write_lease set wrote_at = now() - interval '100 seconds' where site_key = $1",
+      [SITE]
+    )
+    // The new process picks up the running push at boot (`resumeOnStart`, here called directly).
+    const config = readConfig(env)
+    const again = livePush({
+      pool,
+      config,
+      host: { hostCall, hostJob },
+      fetchImpl: net.fetchImpl,
+      watchEveryMs: 0
+    })
+    assert.equal(await again.resume(), 1)
+    const chat = await takeWriteLease(pool, { siteKey: SITE, sessionId: 'chat-1', actor: 'owner@x.y' })
+    assert.equal(chat.ok, false, 'the chat may not write while the push job still runs')
+    // The job ends: the next boot's read settles the row and gives the lease back.
+    net.running.delete('webroot-live-push-preview')
+    assert.equal(await again.resume(), 1)
+    const { rows } = await pool.query('select state from site_push where site_key = $1', [SITE])
+    assert.equal(rows[0].state, 'previewed')
+    assert.equal(
+      (await takeWriteLease(pool, { siteKey: SITE, sessionId: 'chat-1', actor: 'owner@x.y' })).ok,
+      true
+    )
+  }
+)
 
 /** `net` whose first `lost` apply jobs the host lost (it restarted mid-write): `failed` with `orphanedAt`. */
 function losing(net, lost) {
