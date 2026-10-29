@@ -25,7 +25,7 @@ import { type InstallFile, type ReleaseFacts, TONE_TEXT } from './quickstart-set
 const CHECKSUM_NAME = 'sha256'
 
 export const githubReleaseHref = (tag: string) =>
-  `https://github.com/JoomlArt-Products/ja-products/releases/tag/${encodeURIComponent(tag)}`
+  `https://github.com/JoomlArt-Products/joomlart-products/releases/tag/${encodeURIComponent(tag)}`
 
 export function OpenOnGithub({ tag }: { tag: string }) {
   const t = useT()

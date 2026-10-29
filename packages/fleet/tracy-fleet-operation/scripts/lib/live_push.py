@@ -2410,7 +2410,12 @@ GROUPS = {"create": "add", "upload": "add", "update": "change", "move": "change"
 def preview_answer(changeset: dict, preview_id: str, sync: dict | None, live_read_at: str | None,
                    engine: dict | None) -> dict:
     items = []
-    for item in changeset["items"][:ANSWER_ITEMS]:
+    # Listed up to ANSWER_ITEMS, what Apply can write before what it leaves (conflicts), each in its
+    # own order: a preview of 500 conflicts and one change still shows that change. Only what is
+    # shown is reordered; Apply reads the changeset itself.
+    listed = [i for i in changeset["items"] if not i.get("conflict")] + \
+        [i for i in changeset["items"] if i.get("conflict")]
+    for item in listed[:ANSWER_ITEMS]:
         group = item.get("group") or GROUPS[item["op"]]
         items.append({"id": item["id"], "kind": item["kind"], "op": item["op"], "group": group,
                       "title": item["title"], "liveId": item["liveId"], "fields": item["fields"],
@@ -2423,6 +2428,13 @@ def preview_answer(changeset: dict, preview_id: str, sync: dict | None, live_rea
                       # A parent theme's file: an update of that theme writes over it.
                       **({"warning": item["warning"]} if item.get("warning") else {}),
                       **({"conflict": item["conflict"]} if item.get("conflict") else {})})
+    # What Apply can write, by group, over the WHOLE changeset: the items above stop at ANSWER_ITEMS,
+    # and 500 conflicts listed first would otherwise hide the one change after them.
+    pushable = {group: 0 for group in ("add", "change", "remove", "files", "settings", "php")}
+    for item in changeset["items"]:
+        if not item.get("conflict"):
+            group = item.get("group")
+            pushable[group if group in pushable else GROUPS.get(item["op"], "change")] += 1
     nothing = not changeset["items"] and not changeset["unsupported"]
     # The Sync from live that ran first, its whole answer (tracy-web records it as a sync of its own).
     sync_summary = sync
@@ -2430,7 +2442,8 @@ def preview_answer(changeset: dict, preview_id: str, sync: dict | None, live_rea
             "platform": changeset["platform"], "liveReadAt": live_read_at, "sync": sync_summary,
             "counts": changeset["counts"], "limit": changeset["limit"], "overLimit": changeset["overLimit"],
             "hasDeletes": changeset["hasDeletes"], "hasPhp": changeset.get("hasPhp", False),
-            "items": items, "itemsTotal": len(changeset["items"]),
+            "items": items, "itemsTotal": len(changeset["items"]), "pushable": pushable,
+            "conflictsTotal": sum(1 for i in changeset["items"] if i.get("conflict")),
             "unsupported": changeset["unsupported"][:ANSWER_UNSUPPORTED],
             "unsupportedTotal": len(changeset["unsupported"]), "engine": engine or {},
             # Remembered numbers put right for this preview (`Changeset.repair_map`), written on apply.

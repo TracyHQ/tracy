@@ -58,7 +58,7 @@ test('a file that is not on the release yet is uploaded, once', async () => {
   const upload = calls.at(-1)
   assert.match(
     upload.url,
-    /^https:\/\/uploads\.github\.com\/repos\/JoomlArt-Products\/ja-products\/releases\/7\/assets\?name=/
+    /^https:\/\/uploads\.github\.com\/repos\/JoomlArt-Products\/joomlart-products\/releases\/7\/assets\?name=/
   )
   assert.match(upload.url, /name=tracy_design_inspiration\.json/)
   assert.equal(upload.method, 'POST')
@@ -105,7 +105,7 @@ test('a token GitHub refuses is a sentence naming the status, never a thrown 500
   const result = await uploadReleaseAsset(config, { tag: TAG, name: FILE, body: '{}' }, { fetchImpl })
   assert.equal(result.ok, false)
   assert.match(result.reason, /401/)
-  assert.match(result.reason, /JoomlArt-Products\/ja-products/)
+  assert.match(result.reason, /JoomlArt-Products\/joomlart-products/)
 
   const del = await deleteReleaseAsset(config, { tag: TAG, name: FILE }, { fetchImpl })
   assert.equal(del.ok, false)

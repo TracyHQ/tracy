@@ -172,7 +172,7 @@ const FRAMEWORK_RAISED = ['.bg-light']
 const FRAMEWORK_INKS = ['.text-black']
 // dark words on a Bootstrap colour fill (.badge.bg-warning.text-dark, .card.bg-info.text-dark, a progress bar) read
 // the page's text colour on the fill, 1.0-2.0:1 under Moxie (lane D 16/10/2026): on a fill, or inside one, they are
-// left to the fill's own words (ja-products' shared Bootstrap block pairs each .bg-* fill with its on-colour)
+// left to the fill's own words (joomlart-products' shared Bootstrap block pairs each .bg-* fill with its on-colour)
 // (one :is() member and a compact list: the module stays under the 64000 bytes Joomla stores)
 const FRAMEWORK_INKS_OFF_FILL = [':is(.text-dark,.text-body)']
 // .bg-light counts too: it is a worn fill of its own (FRAMEWORK_RAISED), and the page's text colour on it read

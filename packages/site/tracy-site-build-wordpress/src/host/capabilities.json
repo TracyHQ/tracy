@@ -8,11 +8,11 @@
       "kind": "tracy-runtime-quickstart",
       "version": "1.0.0",
       "release": "tracy-base/wp7",
-      "url": "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-base%2Fwp7/tracy-base-wp7-webroot-1.0.0.tar.gz",
+      "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-base%2Fwp7/tracy-base-wp7-webroot-1.0.0.tar.gz",
       "sha256": "d808b89b44a0596f207c1c2d90be5f64ebdf410b90562a5e2de7e6a0ec795802",
       "bytes": 45475996,
-      "githubAssetId": 562618745,
-      "$comment": "The webroot tar is the pinned artifact (the fleet reads both files of the pair through quickstarts.json, which pins the database too: sha256 e8600680…, asset 562618742)."
+      "githubAssetId": 683772947,
+      "$comment": "The webroot tar is the pinned artifact (the fleet reads both files of the pair through quickstarts.json, which pins the database too: sha256 e8600680…, asset 683771949)."
     }
   },
   "providers": {

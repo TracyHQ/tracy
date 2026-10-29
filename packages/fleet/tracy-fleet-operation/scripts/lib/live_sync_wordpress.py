@@ -652,6 +652,28 @@ class ThemeModReferences:
             mapper.sql.run("\n".join(updates))
 
 
+# WooCommerce rows that name a post by its number: an order IS a post number (HPOS keeps the
+# placeholder post and `wc_orders.id` equal; the legacy store keeps the order as the post), and its
+# lines, addresses, meta and lookups name it as `order_id`; lines and lookups name products and
+# variations (posts too). Renumbered with the post, or a live order placed under a number the copy
+# already holds stays on that number and attaches to the copy's post (#107). A table or column a
+# site lacks is passed over (`column_exists`).
+WOOCOMMERCE_POST_REFS = (
+    ("wc_orders", "id", None), ("wc_orders", "parent_order_id", None),
+    ("wc_orders_meta", "order_id", None), ("wc_order_addresses", "order_id", None),
+    ("wc_order_operational_data", "order_id", None), ("woocommerce_order_items", "order_id", None),
+    ("woocommerce_order_itemmeta", "meta_value", "meta_key IN ('_product_id', '_variation_id')"),
+    ("woocommerce_downloadable_product_permissions", "order_id", None),
+    ("woocommerce_downloadable_product_permissions", "product_id", None),
+    ("wc_order_stats", "order_id", None), ("wc_order_stats", "parent_id", None),
+    ("wc_order_product_lookup", "order_id", None), ("wc_order_product_lookup", "product_id", None),
+    ("wc_order_product_lookup", "variation_id", None),
+    ("wc_order_tax_lookup", "order_id", None), ("wc_order_coupon_lookup", "order_id", None),
+    ("wc_order_coupon_lookup", "coupon_id", None),
+    ("wc_product_meta_lookup", "product_id", None),
+)
+
+
 POLICY = {
     "tracyTables": re.compile(r"^claude_cowork_"),
     "tracyRows": {
@@ -716,7 +738,8 @@ POLICY = {
                             ("postmeta", "meta_value", MENU_OBJECT.format(kind="post_type")),
                             ("options", "option_value",
                              "option_name IN ('page_on_front', 'page_for_posts', 'wp_page_for_privacy_policy',"
-                             " 'site_logo', 'site_icon')")],
+                             " 'site_logo', 'site_icon')"),
+                            *WOOCOMMERCE_POST_REFS],
                    # The post's number written into text: its guid's `?p=`, an image's class and a
                    # block's attributes in the content of the live site's posts.
                    "texts": [("posts", "guid", "?p={id}"), ("posts", "guid", "?page_id={id}"),

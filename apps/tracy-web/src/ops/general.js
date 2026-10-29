@@ -132,10 +132,10 @@ export function generalRoutes({ pool, config, reservedLabels, env = process.env 
         ),
         block(
           'releases',
-          'Quickstart releases (ja-products)',
+          'Quickstart releases (joomlart-products)',
           ['TRACY_RELEASES_GITHUB_TOKEN'],
           env,
-          'A developer stand reads releases with this; production mints a token from the App. A shard whose own App is not installed on ja-products reads with this token too.'
+          'A developer stand reads releases with this; production mints a token from the App. A shard whose own App is not installed on joomlart-products reads with this token too.'
         )
       ],
       naming: {

@@ -624,14 +624,14 @@ test(
     assert.equal(of[joomla].templateUrl, 'https://www.joomlart.com/joomla/templates/ja-kinetic')
     assert.equal(
       of[joomla].releaseUrl,
-      'https://github.com/JoomlArt-Products/ja-products/releases/tag/quickstart/ja-kinetic/j6'
+      'https://github.com/JoomlArt-Products/joomlart-products/releases/tag/quickstart/ja-kinetic/j6'
     )
     assert.equal(of[joomla].referrer, page)
     // A cms that is not Joomla gets no guessed template page; a row from before recording has no referrer.
     assert.equal(of[wordpress].templateUrl, null)
     assert.equal(
       of[wordpress].releaseUrl,
-      'https://github.com/JoomlArt-Products/ja-products/releases/tag/quickstart/ja-purity/wp7'
+      'https://github.com/JoomlArt-Products/joomlart-products/releases/tag/quickstart/ja-purity/wp7'
     )
     assert.equal(of[wordpress].referrer, null)
     const found = await listStatistics(

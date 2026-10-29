@@ -1070,3 +1070,68 @@ test(
     assert.equal('resumeSyncId' in job, false)
   }
 )
+
+test('a preview capped at 500 items counts what Apply can write over the whole changeset', () => {
+  const conflicts = Array.from({ length: 500 }, (_, i) => ({
+    id: `article:${i + 1}`,
+    kind: 'article',
+    op: 'update',
+    title: `Article ${i + 1}`,
+    conflict: { reason: 'changed-on-both' }
+  }))
+  const p = previewOf({
+    items: conflicts,
+    itemsTotal: 501,
+    pushable: { add: 0, change: 1, remove: 0, files: 0, settings: 0, php: 0 },
+    conflictsTotal: 500
+  })
+  assert.deepEqual(p.change, [], 'the listed items are all conflicts')
+  assert.deepEqual(p.pushable, { add: 0, change: 1, remove: 0, files: 0, settings: 0, php: 0 })
+  assert.equal(p.liveChangedTotal, 500)
+  // A total the host did not send, or one below what is listed, falls back to the lists.
+  const old = previewOf({ items: [{ id: 'a', op: 'create' }], pushable: { add: -1, change: 'x' } })
+  assert.deepEqual(old.pushable, { add: 1, change: 0, remove: 0, files: 0, settings: 0, php: 0 })
+  assert.equal(old.liveChangedTotal, 0)
+})
+
+test('Apply is allowed when the one pushable item sits past the 500 the preview lists', opts, async () => {
+  const { pool } = db
+  const items = Array.from({ length: 500 }, (_, i) => ({
+    id: `article:${i + 1}`,
+    kind: 'article',
+    op: 'update',
+    group: 'change',
+    title: `Article ${i + 1}`,
+    liveId: i + 1,
+    fields: {},
+    conflict: { reason: 'changed-on-both', fields: ['title'] }
+  }))
+  const capped = {
+    ok: true,
+    state: 'ready',
+    platform: 'joomla',
+    limit: 200,
+    overLimit: true,
+    hasDeletes: false,
+    items,
+    itemsTotal: 501,
+    pushable: { add: 0, change: 1, remove: 0, files: 0, settings: 0, php: 0 },
+    conflictsTotal: 500,
+    unsupported: [],
+    unsupportedTotal: 0
+  }
+  const net = network({ answers: { ...ANSWERS, 'webroot-live-push-preview': capped } })
+  const { send, cookieFor } = harness(pool, net.fetchImpl)
+  await importedSite(pool)
+  const owner = await cookieFor('owner@x.y')
+  const p = await previewed(send, owner)
+  assert.deepEqual(p.preview.pushable, capped.pushable)
+  const applied = await send('POST', `/api/sites/${SITE}/push`, owner, { previewId: p.id })
+  assert.equal(applied.status, 202, applied.text)
+  // The Site changes row of the preview names the whole changeset's counts.
+  const { rows } = await pool.query(
+    "select detail from audit where action = 'site.push.preview.previewed' order by at desc limit 1"
+  )
+  assert.equal(rows[0]?.detail.change, 1)
+  assert.equal(rows[0]?.detail.liveChanged, 500)
+})

@@ -9,7 +9,7 @@
  *   node packages/design/tracy-ds-slot/scripts/lane.mjs --release <N>
  *
  *   <x.y.z>          a published version: the stand is restored from the release (cached on the iMac)
- *   <source folder>  ja-products .../ja_x/source edited here: laid over the release and built into the next
+ *   <source folder>  joomlart-products .../ja_x/source edited here: laid over the release and built into the next
  *                    version on the iMac (release-batch.mjs build --overlay), its default look checked
  *                    (release-batch.mjs verify), then that local build is restored
  *   --judge-only     measure nothing: judge the measurement file already in this tree (<x.y.z> needed)

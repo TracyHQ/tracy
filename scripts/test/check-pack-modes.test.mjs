@@ -1,11 +1,13 @@
 /**
  * `scripts/check-pack-modes.mjs` on a pack folder: a webroot at 0644/0755 passes, one holding
  * 0600/0700 members (the 12/10/2026 WordPress packs) is refused, a pack without a webroot has
- * nothing to check, and an unreadable argument is exit 2, never a pass.
+ * nothing to check, and an unreadable argument is exit 2, never a pass. The quickstart-contract
+ * skill, which tells an agent how to restore and pack, never runs those under `umask 077` (moved
+ * here from step S3 of REG-PR-1228 so CI runs it whenever the skill changes).
  */
 import assert from 'node:assert/strict'
 import { execFileSync, spawnSync } from 'node:child_process'
-import { chmodSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { chmodSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
@@ -73,6 +75,44 @@ test('a pack without a webroot passes with a note; a missing path is exit 2', ()
     assert.match(r.stdout, /no webroot archive to check/)
     assert.equal(run(path.join(dir, 'absent')).status, 2)
     assert.equal(run().status, 2)
+  } finally {
+    rmSync(dir, { recursive: true, force: true })
+  }
+})
+
+const SKILL = path.join(ROOT, '.agents/skills/quickstart-contract')
+
+/** What in a skill folder would cut a pack, or restore one, with 0600/0700 members. */
+function umaskProblems(skill) {
+  const problems = []
+  for (const file of [
+    'SKILL.md',
+    ...readdirSync(path.join(skill, 'references')).map((f) => `references/${f}`)
+  ]) {
+    const text = readFileSync(path.join(skill, file), 'utf8')
+    if (/\(umask 077;[^)]*"\$TD" (?:restore|quickstart)/.test(text))
+      problems.push(`${file} wraps a restore in umask 077`)
+    if (/^\s*umask 077; mkdir/m.test(text)) problems.push(`${file} sets umask 077 for the rest of a block`)
+  }
+  return problems
+}
+
+test('the quickstart-contract skill keeps umask 077 off restores and packs', () => {
+  assert.ok(readdirSync(path.join(SKILL, 'references')).length > 0, 'the skill has references to read')
+  assert.deepEqual(umaskProblems(SKILL), [])
+})
+
+test('the skill check flags a wrapped restore and a block-wide umask', () => {
+  const dir = mkdtempSync(path.join(tmpdir(), 'skill-umask-'))
+  try {
+    mkdirSync(path.join(dir, 'references'))
+    writeFileSync(path.join(dir, 'SKILL.md'), '(umask 077; "$TD" restore x.tar.gz)\n')
+    writeFileSync(path.join(dir, 'references', 'packing.md'), '```bash\n  umask 077; mkdir -p "$WORK"\n```\n')
+    writeFileSync(path.join(dir, 'references', 'ok.md'), '(umask 022; "$TD" quickstart pack)\n')
+    assert.deepEqual(umaskProblems(dir), [
+      'SKILL.md wraps a restore in umask 077',
+      'references/packing.md sets umask 077 for the rest of a block'
+    ])
   } finally {
     rmSync(dir, { recursive: true, force: true })
   }

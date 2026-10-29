@@ -1,6 +1,6 @@
 /**
  * Where a Joomla template shows a logo, and the two writes every Joomla logo shares: the upload and the footer image slot
- * (plan `tasks/plan-ten-logo-favicon.md`, T19, T20; measured 07/10/2026 from the release webroots of `ja-products`).
+ * (plan `tasks/plan-ten-logo-favicon.md`, T19, T20; measured 07/10/2026 from the release webroots of `joomlart-products`).
  *
  * 🔒 WHICH SPOT IS DARK IS MEASURED, NOT GUESSED. A spot is dark when the demo logo the template ships for it is a light
  * picture (mean luminance of its opaque pixels above 180 of 255, `sharp`): Seven's `home-4` profile shows a white logo,

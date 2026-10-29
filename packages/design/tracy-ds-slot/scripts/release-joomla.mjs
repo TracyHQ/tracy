@@ -58,7 +58,7 @@ import { COLOUR_TOKENS } from '../src/tokens56.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const CONTRACTS = join(ROOT, 'packages/cms/tracy-joomla-quickstart/contracts')
-const REPO = 'JoomlArt-Products/ja-products'
+const REPO = 'JoomlArt-Products/joomlart-products'
 const args = process.argv.slice(2)
 const opt = (n) => {
   const i = args.indexOf(n)

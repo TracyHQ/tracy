@@ -131,7 +131,7 @@ export async function demoStatusOn(ssh, slug) {
  * Build a demo on that server from a quickstart package.
  *
  * 🔒 THE PACKAGE GOES UP STDIN, AND THAT IS THE POINT. Tracy holds the App key that reads
- * `ja-products`; that machine holds none and gains none. The forced command takes a NAME and a
+ * `joomlart-products`; that machine holds none and gains none. The forced command takes a NAME and a
  * byte stream — never a URL, never a token. A verb that fetched a URL would turn this key into a
  * way to make somebody else's production server dial anywhere.
  *
