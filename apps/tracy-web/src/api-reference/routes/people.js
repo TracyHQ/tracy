@@ -180,9 +180,9 @@ export const PEOPLE_ROUTES = [
   {
     method: 'POST',
     path: '/login/visit',
-    summary: 'Count a sign-in page visit from a link with a source',
+    summary: 'Count a sign-in page visit',
     description:
-      'Sent once per tab by the sign-in page’s own script when its link carried `utm_*`, so visits per source can be read beside first sign-ins; a mail scanner that fetches the link runs no script and is not counted. Keeps only the four cleaned source values, never an account, address or cookie. The page’s own origin only (403 `FORBIDDEN` otherwise); at most 30 a client address an hour (429 `RATE_LIMITED`). A body with no source is answered 204 and kept nowhere.',
+      'Sent once per tab by the sign-in page’s own script, so visits per source can be read beside first sign-ins; a mail scanner that fetches the link runs no script and is not counted. Keeps the four cleaned source values the link carried and the host of the page that linked here, either, both or neither (a direct visit), never an account, address or cookie. The page’s own origin only (403 `FORBIDDEN` otherwise); at most 30 a client address an hour (429 `RATE_LIMITED`). A body that is not a JSON object is answered 204 and kept nowhere.',
     audience: ['public'],
     auth: 'none',
     internal: true,
@@ -195,7 +195,12 @@ export const PEOPLE_ROUTES = [
           description: '`email`, `blog`, `demo`, `site` or `forum`; anything else is kept as `other`'
         },
         utm_campaign: { type: 'string' },
-        utm_content: { type: 'string' }
+        utm_content: { type: 'string' },
+        referrer: {
+          type: 'string',
+          description:
+            'Host of the page that linked to `/login`, when it was another site; a value with a path, port or query is dropped'
+        }
       }
     },
     answers: '204; 403 `FORBIDDEN` from another origin; 429 `RATE_LIMITED`'

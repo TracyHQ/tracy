@@ -175,6 +175,8 @@ async function scripted(html, answer) {
   const { document, window } = parseHTML(html)
   const calls = []
   const fetchImpl = async (url, init) => {
+    // The visit beacon (`POST /login/visit`) fires on every page; it is not a sign-in request.
+    if (String(url) === '/login/visit') return new Response(null, { status: 204 })
     calls.push({ url: String(url), body: JSON.parse(init.body) })
     return answer(calls.length)
   }

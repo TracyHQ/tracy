@@ -1315,7 +1315,10 @@ class IdMap:
             # the base does not hold yet, or a base older than the map. Numbered again, it came to the
             # copy twice, and the map lost the copy's number of it (a later push made it again).
             remembered = self.applied.get(theirs, {}).get(table, {})
-            both = sorted((o & t) - b - set(remembered))
+            same: set[int] = set()
+            if rule.get("single"):
+                same, t = self.align_single(base, ours, theirs, table, rule, b, o, t)
+            both = sorted((o & t) - b - set(remembered) - same)
             differ = [i for i in both if digest(ours, table, i) != digest(theirs, table, i)]
             pairs = []
             taken = set(self.seen[table])
@@ -1334,6 +1337,47 @@ class IdMap:
                 self.added.append({"table": table, "live": raw, "copy": fresh, "why": "created-on-both"})
             self.held += self.unhandled_refs(base, theirs, table, pairs)
             self.renumber(theirs, table, rule, pairs)
+
+    def align_single(self, base: str, ours: str, theirs: str, table: str, rule: dict,
+                     b: set[int], o: set[int], t: set[int]) -> tuple[set[int], set[int]]:
+        """Rows that can be only one per record (`single`: their natural columns, and which rows): a
+        row both sites added for the same record is the same row, whatever number each gave it. The
+        live site's goes under the copy's number (and is remembered there), so the row merge meets
+        them as one row both added — the same value merges, two values are a conflict — and never as
+        two rows: two `_wp_page_template` rows for one page, one of them hidden from the preview (#118).
+        Answers the numbers that are such a row, and the live read's numbers after the move."""
+        natural, where = list(rule["single"]["natural"]), rule["single"]["where"]
+        cols = ", ".join(f"HEX(CAST({q(c)} AS BINARY))" for c in natural)
+        script = [f"SELECT {i}, {q(self.key(table))}, {cols} FROM {q(schema)}.{q(self.table(table))} WHERE ({where});"
+                  for i, schema in enumerate((ours, theirs))]
+        new: tuple[dict, dict] = ({}, {})
+        crowded: tuple[set, set] = (set(), set())
+        for r in self.sql.run("\n".join(script)):
+            side, number, nat = int(r[0]), int(r[1]), tuple(r[2:])
+            if number in b:
+                continue  # the base's row: what each side did to it is the row merge's
+            if nat in new[side]:
+                crowded[side].add(nat)  # two new rows for one record on one side: left as they are
+            new[side][nat] = number
+        same, pairs = set(), []
+        for nat, copy in new[0].items():
+            live = new[1].get(nat)
+            if live is None or nat in crowded[0] or nat in crowded[1]:
+                continue
+            if live == copy:
+                same.add(copy)
+            elif copy not in t and live not in o:
+                pairs.append((live, copy))
+                same.add(copy)
+        for live, copy in pairs:
+            raw = self.moved(theirs, table, live, copy)
+            self.map.setdefault(table, {})[raw] = copy
+            self.seen[table].add(copy)
+            self.added.append({"table": table, "live": raw, "copy": copy, "why": "same-record"})
+        if pairs:
+            self.renumber(theirs, table, rule, pairs)
+            t = (t - {live for live, _ in pairs}) | {copy for _, copy in pairs}
+        return same, t
 
     def moved(self, schema: str, table: str, number: int, to: int) -> int:
         """The record of `schema` under `number` now goes under `to`: answers its live site's own

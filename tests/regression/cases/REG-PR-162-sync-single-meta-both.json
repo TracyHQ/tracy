@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-162-sync-single-meta-both",
+  "kind": "fix",
+  "title": "A page template both sites set is one row and a conflict, never two rows",
+  "pr": 162,
+  "area": "sync/renumber",
+  "cms": ["wp"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": ["Run the real MariaDB case of a page template both sites added, under one meta_id and two."],
+  "expect": [
+    "One _wp_page_template row per page; the copy's value stays and the clash is a conflict.",
+    "A decision for the live side takes its template, still one row.",
+    "The same value on both sides merges with no conflict; a multi-valued key keeps both rows."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "--test-name-pattern=page template both sites set on one page",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-db.test.mjs"
+    ],
+    "tests": [
+      "a page template both sites set on one page is one row, a conflict, never two rows — under one meta_id or two (#118)"
+    ]
+  }
+}
