@@ -22,6 +22,7 @@ import { checkPageIntros } from './page-intro-check.js'
 import { checkOfferingSummaries } from './offering-summary-check.js'
 import { checkReviewQuotes } from './review-quotes-check.js'
 import { checkContactForms } from './contact-form-check.js'
+import { checkEmptyFrames } from './empty-frame-check.js'
 
 /** The most pages one check reads: a brief build's site has a handful, a demo's showcase branch can have dozens. */
 export const MAX_PAGES = 24
@@ -164,6 +165,9 @@ export async function runLeftoverCheck({
   // A kept call-to-action band shows a message with its button (COO decision, #189 item 7), where the map declares bands.
   const ctaBands = checkCtaBands({ pages, contentMap, sitePlan })
   report.findings.push(...ctaBands)
+  // No empty frame a visitor sees: a fact row group is shown complete or taken off on every page (#189 items 14, 15).
+  const emptyFrames = checkEmptyFrames({ pages })
+  report.findings.push(...emptyFrames)
   report.findings.push(...offeringSummaries.map((f) => ({ kind: 'C03', ...f })))
   report.counts.C03 = (report.counts.C03 ?? 0) + offeringSummaries.length
   const mainMenuFindings = (mainMenu?.findings ?? []).map((f) => ({
@@ -207,6 +211,7 @@ export async function runLeftoverCheck({
       offeringSummaries.length === 0 &&
       reviewQuotes.length === 0 &&
       contactForms.findings.length === 0 &&
+      emptyFrames.length === 0 &&
       ctaBands.length === 0 &&
       pageIntros.length === 0,
     findings: [

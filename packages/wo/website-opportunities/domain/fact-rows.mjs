@@ -135,6 +135,34 @@ export function factListsOf(group) {
   }))
 }
 
+/**
+ * 🔒 A FACT ROW IS SHOWN WHOLE OR EMPTIED WHOLE (COO decision, #189 items 14 and 15): the other cells of every fact row one
+ * of `keys` belongs to. A write that empties one cell (a refused value, a demo line swept after the write) empties the
+ * row's label and its other cells with it, so a visitor never reads a label over nothing, and the empty-frame net takes
+ * the row's frame off. Rows are read per card (`group.id`, else the entity), as `factListsOf` reads them.
+ * @param {any[]} slots - the content map's slots
+ * @param {Iterable<string>} keys - the keys being emptied
+ * @returns {any[]} the slots to empty beside them, each once
+ */
+export function wholeFactRowsOf(slots, keys) {
+  const emptied = new Set(keys)
+  const cards = new Map()
+  for (const slot of slots ?? []) {
+    if (!slot?.key) continue
+    const card = slot.group?.id ?? slot.entity
+    cards.set(card, [...(cards.get(card) ?? []), slot])
+  }
+  const out = new Map()
+  for (const card of cards.values())
+    for (const { rows } of factListsOf({ slots: card }))
+      for (const row of rows) {
+        const cells = [row.label, row.value, ...row.rest].filter(Boolean)
+        if (!cells.some((cell) => emptied.has(cell.key))) continue
+        for (const cell of cells) if (!emptied.has(cell.key)) out.set(cell.key, cell)
+      }
+  return [...out.values()]
+}
+
 /** The distinctive words of an offering's name: those no other offering of the brief shares, of four letters or more. */
 function ownWords(offering, offerings) {
   const others = offerings

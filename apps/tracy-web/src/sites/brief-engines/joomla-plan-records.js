@@ -15,6 +15,7 @@
  * and writes nothing here. A brief build stops when a mandatory fallback cannot reach its target.
  */
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
+import { wholeFactRowsOf } from 'website-opportunities/domain/fact-rows.mjs'
 import { paramsOf, readModules } from './joomla-tidy.js'
 import {
   blankBoundField,
@@ -320,6 +321,7 @@ export function recordSteps({
  * @param {any[]} [input.extraHides] - cards to take off beside the plan's, as its `hide` entries (a card whose title the
  *   writer left in the demo's words, `leftDemoWords`)
  * @param {Set<string>} [input.protectedKeys] - required offering summaries already decided after copy pins
+ * @param {any[]} [input.slots] - the content map's slots: the other cells of a fact row one blank empties (`wholeFactRowsOf`)
  * @returns {Promise<{ steps: Array<{ kind: string, id: number, fields: Record<string, unknown> }> }>}
  */
 export async function planRecordSteps({
@@ -329,7 +331,8 @@ export async function planRecordSteps({
   woContent,
   extraBlanks = [],
   extraHides = [],
-  protectedKeys = new Set()
+  protectedKeys = new Set(),
+  slots = []
 }) {
   const plan = await woContent?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
   // With no site plan, the demo lines handed in (a demo fact under the demo company's name, #189) are still emptied.
@@ -337,11 +340,19 @@ export async function planRecordSteps({
   if (!planned) return { steps: [] }
   // The demo lines the writer left, emptied beside the plan's own fact fields (`leftDemoWords`).
   const seen = new Set((planned.blanks ?? []).map((b) => b.key))
+  const blanks = [...(planned.blanks ?? []), ...extraBlanks.filter((b) => !seen.has(b.key))].filter(
+    (b) => !protectedKeys.has(b.key)
+  )
+  // A fact row is emptied whole: one cell emptied takes its label and other cells with it (`wholeFactRowsOf`, #189).
+  blanks.push(
+    ...wholeFactRowsOf(
+      slots,
+      blanks.map((b) => b.key)
+    ).filter((slot) => !protectedKeys.has(slot.key))
+  )
   const honesty = {
     ...planned,
-    blanks: [...(planned.blanks ?? []), ...extraBlanks.filter((b) => !seen.has(b.key))].filter(
-      (b) => !protectedKeys.has(b.key)
-    ),
+    blanks,
     // A card taken off whole joins the plan's hidden cards: an item hide is made only for a group the records hide.
     hide: [...(planned.hide ?? []), ...extraHides],
     records: [

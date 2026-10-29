@@ -58,6 +58,31 @@ const paramsOf = (/** @type {any} */ row) => {
   }
 }
 
+/** The most pages under the kept ones read for the head block. */
+const MAX_PAGES_UNDER = 24
+
+/**
+ * The pages the read pages link to whose address lies under a kept page's (other than home): an offering's own page under
+ * its list. Same site only, no files, no query; each once, never a page already read.
+ * @param {Array<{path: string, html: string}>} pages
+ * @param {string[]} kept
+ * @returns {string[]}
+ */
+export function pagesUnderKept(pages, kept) {
+  const bare = (/** @type {string} */ p) => p.replace(/^\/index\.php(?=\/|$)/, '').replace(/\/+$/, '') || '/'
+  const roots = kept.map(bare).filter((p) => p !== '/')
+  const read = new Set(pages.map((p) => bare(p.path)))
+  const out = new Map()
+  for (const { html } of pages)
+    for (const [, href] of String(html).matchAll(/<a\b[^>]*\shref\s*=\s*["']([^"'#?]+)["']/gi)) {
+      if (!href.startsWith('/') || href.startsWith('//') || /\.[a-z0-9]{2,4}$/i.test(href)) continue
+      const at = bare(href)
+      if (read.has(at) || out.has(at) || !roots.some((root) => at.startsWith(`${root}/`))) continue
+      out.set(at, href)
+    }
+  return [...out.values()].slice(0, MAX_PAGES_UNDER)
+}
+
 /** The content map of the contract a site is sealed by (its slots carry the demo's samples), or null. */
 export function contentMapAt(/** @type {string | null | undefined} */ dir) {
   if (!dir) return null
@@ -342,6 +367,12 @@ export async function writeOutsideMap({
           note(
             `the kept page ${path} could not be read for the head scanners: ${JSON.stringify(page.attempts)}`
           )
+      }
+      // 🔒 EVERY RENDERED INSTANCE, NOT ONE LAYOUT (COO decision, #189 items 14 and 15): an offering's own page, which a kept
+      // list links to under its own address, prints the card's fact box too; it is read beside the kept pages.
+      for (const path of pagesUnderKept(pages, sampled)) {
+        const html = await reader.text(path).catch(() => null)
+        if (html) pages.push({ path, html })
       }
       picture = ownerPictureOf(pages[0]?.html ?? null, pictures)
       pageHtml = pages.map((p) => p.html)

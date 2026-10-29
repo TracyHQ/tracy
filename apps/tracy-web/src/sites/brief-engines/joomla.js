@@ -2117,7 +2117,9 @@ export function createJoomlaEngine({
                 .map((key) => staticSlots.get(key))
                 .filter((slot) => slot && occupiedSample(slot))
             ],
-            extraHides: prepared.demoHides ?? []
+            extraHides: prepared.demoHides ?? [],
+            // A fact row emptied in one cell is emptied whole (`wholeFactRowsOf`, #189 items 14 and 15).
+            slots: [...staticSlots.values()]
           })
           const requiredRecords = new Set(records.steps.map((step) => `${step.kind}-${step.id}`))
           const requiredRecord = (step) => requiredRecords.has(`${step.kind}-${step.id}`)
