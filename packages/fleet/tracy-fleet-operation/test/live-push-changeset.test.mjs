@@ -12,7 +12,7 @@
  */
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { after, test } from 'node:test'
@@ -1824,4 +1824,62 @@ test('a new menu item goes only into a menu the live site has or this push makes
   assert.ok(made, JSON.stringify(jo.items.map((i) => i.id)))
   assert.ok(items['menuItem:new:104'].dependsOn.includes(made.id))
   assert.ok(items['menuItem:new:105'], 'an item in a live menu goes as before')
+})
+
+test('a push cut off before it recorded its writes is recorded from its journal before the next merge (#173)', () => {
+  const pushRoot = join(root, `push-root-${++n}`)
+  const item = (id) => ({
+    id: `article:new:${id}`,
+    kind: 'article',
+    op: 'create',
+    title: `Article ${id}`,
+    creates: `content:${id}`,
+    seed: [{ table: 'content', match: { id }, columns: ['title'], create: true, entity: 'content', id }]
+  })
+  const pushDir = (name, files) => {
+    const dir = join(pushRoot, name)
+    mkdirSync(dir, { recursive: true })
+    for (const [file, text] of Object.entries(files)) writeFileSync(join(dir, file), text)
+    return dir
+  }
+  const changeset = JSON.stringify({ ok: true, platform: 'joomla', items: [item(10), item(11), item(12)] })
+  const line = (id, live) =>
+    `${JSON.stringify({ id: `article:new:${id}`, state: 'written', created: { [`content:${id}`]: live } })}\n`
+  // Cut after two acknowledged creations: a journal, no written.json.
+  const cut = pushDir('cut', { 'changeset.json': changeset, 'journal.jsonl': line(10, 20) + line(11, 21) })
+  // A push that finished (written.json) and one already recorded: left alone.
+  pushDir('done', {
+    'changeset.json': changeset,
+    'journal.jsonl': line(12, 22),
+    'written.json': '{"written":[]}'
+  })
+  pushDir('recorded', { 'changeset.json': changeset, 'journal.jsonl': line(12, 23), recorded: '' })
+  mkdirSync(join(pushRoot, 'previews'), { recursive: true })
+  const idMap = join(pushRoot, 'id-map.json')
+  const pushed = join(pushRoot, 'pushed.json')
+  const run = () => {
+    const r = spawnSync(
+      'python3',
+      [PUSH, 'record-cut', '--push-root', pushRoot, '--id-map', idMap, '--pushed', pushed],
+      {
+        encoding: 'utf8'
+      }
+    )
+    assert.equal(r.status, 0, r.stderr + r.stdout)
+    return JSON.parse(r.stdout.trim().split('\n').at(-1))
+  }
+  assert.deepEqual(run().recorded, ['cut'])
+  assert.deepEqual(JSON.parse(readFileSync(idMap, 'utf8')), { content: { 20: 10, 21: 11 } })
+  assert.deepEqual(
+    JSON.parse(readFileSync(pushed, 'utf8'))
+      .records.map((r) => r.id)
+      .sort(),
+    [10, 11],
+    'the seeds of what it wrote, so the merge takes them as the copy’s own'
+  )
+  assert.deepEqual(run().recorded, [], 'recorded once')
+  // The same push run again (its id) wrote one more: recorded again, the earlier pairs unchanged.
+  writeFileSync(join(cut, 'journal.jsonl'), line(10, 20) + line(11, 21) + line(12, 24))
+  assert.deepEqual(run().recorded, ['cut'])
+  assert.deepEqual(JSON.parse(readFileSync(idMap, 'utf8')), { content: { 20: 10, 21: 11, 24: 12 } })
 })

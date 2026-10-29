@@ -2769,6 +2769,43 @@ def run_changeset(args) -> dict:
     return answer
 
 
+def record_cut(push_root: Path, id_map_path: Path, pushed_path: Path) -> dict:
+    """The pushes cut off before they recorded what they wrote (no `written.json`: the host job was
+    lost after some writes, and a new push or a Sync from live came next, #173): what each one's
+    journal says was written joins the id map and `pushed.json` (`record`), so the merge knows those
+    records as the copy's own, never as the live site's new ones. `recorded-journal` keeps how many
+    written items were recorded; a push run again that wrote more is recorded again (`record` adds the
+    same pairs and seeds once more, which changes nothing)."""
+    done = []
+    if not push_root.is_dir():
+        return {"ok": True, "recorded": done}
+    for d in sorted(p for p in push_root.iterdir() if p.is_dir() and p.name != "previews"):
+        journal, changeset_file, marker = d / "journal.jsonl", d / "changeset.json", d / "recorded-journal"
+        if not journal.exists() or not changeset_file.exists() or (d / "written.json").exists() or (d / "recorded").exists():
+            continue
+        last, created = {}, {}
+        for line in journal.read_text().splitlines():
+            try:
+                entry = json.loads(line)
+            except ValueError:
+                continue  # a line cut by the kill itself
+            if isinstance(entry, dict) and entry.get("id"):
+                last[entry["id"]] = entry
+                created.update(entry.get("created") or {})
+        written = [{"id": i} for i, e in last.items() if e.get("state") == "written"]
+        try:
+            before = int(json.loads(marker.read_text()).get("written", 0)) if marker.exists() else 0
+        except (ValueError, AttributeError):
+            before = 0
+        if len(written) <= before:
+            continue
+        record(json.loads(changeset_file.read_text()), {"written": written, "created": created},
+               id_map_path, pushed_path, False)
+        write_private(marker, {"written": len(written)})
+        done.append(d.name)
+    return {"ok": True, "recorded": done}
+
+
 def parse(argv):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="op", required=True)
@@ -2793,6 +2830,9 @@ def parse(argv):
     for flag in ("--changeset", "--result", "--id-map", "--pushed"):
         rec.add_argument(flag, required=True)
     rec.add_argument("--undo", action="store_true")
+    cut = sub.add_parser("record-cut")
+    for flag in ("--push-root", "--id-map", "--pushed"):
+        cut.add_argument(flag, required=True)
     li = sub.add_parser("lint")
     li.add_argument("--changeset", required=True)
     li.add_argument("--repo", required=True)
@@ -2816,6 +2856,8 @@ def main(argv) -> int:
             sync = json.loads(Path(args.sync).read_text()) if args.sync and Path(args.sync).exists() else None
             engine = json.loads(Path(args.engine).read_text()) if args.engine and Path(args.engine).exists() else None
             answer = preview_answer(changeset, args.preview_id, sync, (sync or {}).get("liveReadAt"), engine)
+        elif args.op == "record-cut":
+            answer = record_cut(Path(args.push_root), Path(args.id_map), Path(args.pushed))
         else:
             answer = record(json.loads(Path(args.changeset).read_text()), json.loads(Path(args.result).read_text()),
                             Path(args.id_map), Path(args.pushed), args.undo)
