@@ -327,7 +327,8 @@ export function checkBusinessReading(answer, sources, { trade = null, facts = []
   out.dropped += messages.dropped + praise.dropped
   // What customers say sets the business apart: kept only on verbatim quotes of two reviews and a specific line.
   const usp = checkUspThemesOf(parsed.uspThemes, byRef, { names, others: [trade ?? ''] })
-  if (usp.kept.length) out.uspThemes = usp.kept
+  out.uspThemes = usp.kept.length ? usp.kept : null
+  if (!usp.kept.length) out.uspThemesReason = usp.dropped ? 'rejected' : 'not_proposed'
   out.dropped += usp.dropped
   const sub = checkSubTrade(parsed.subTrade, trade, [...facts, ...sources])
   if (sub?.id) out.subTrade = sub

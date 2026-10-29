@@ -114,7 +114,8 @@ test('without a model the reading has no USP themes, and the hero falls back to 
   const provider = stubModel()
   const reading = await read({ state: 'not_configured' }, provider)
   assert.equal(provider.seen.length, 0)
-  assert.equal(reading.uspThemes, undefined)
+  assert.equal(reading.uspThemes, null)
+  assert.equal(reading.uspThemesReason, 'rules_not_configured')
   const brief = {
     business: { trade: 'fitness', subTrade: { id: 'coaching' } },
     reading,

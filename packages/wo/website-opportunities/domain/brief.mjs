@@ -1159,7 +1159,19 @@ function briefReading(reading, about) {
   })
   return {
     method: reading.method,
+    ...(reading.version ? { version: reading.version } : {}),
+    ...(reading.model ? { model: reading.model } : {}),
+    ...(reading.inputHash ? { inputHash: reading.inputHash } : {}),
     ...(reading.reason ? { reason: reading.reason } : {}),
+    // Keep the proved themes across the freeze boundary; an absent proposal must explain itself.
+    uspThemes: reading.uspThemes?.length ? reading.uspThemes : null,
+    ...(!reading.uspThemes?.length
+      ? {
+          uspThemesReason:
+            reading.uspThemesReason ??
+            (reading.method === 'rules' ? `rules_${reading.reason ?? 'only'}` : 'not_recorded')
+        }
+      : {}),
     services: reading.services.map((i) => ({ ...item(i), kind: i.kind ?? 'service' })),
     audience: reading.audience.map(item),
     ...(reading.facts?.length ? { facts: reading.facts.map(item) } : {}),

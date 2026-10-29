@@ -956,8 +956,8 @@
         "story": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
         "about": { "type": "string", "description": "The About line, made only of quoted words." },
         "uspThemes": {
-          "description": "Optional (#189). What customers say sets the business apart, as the business reading's model grouped it: a theme with a headline line, kept only on verbatim quotes of at least two different reviews and a line that is a specific claim (`business-reading.mjs checkUspThemesOf`). The hero headline says it (`hero-usp.mjs`).",
-          "type": "array",
+          "description": "What customers say sets the business apart, grouped by the reading's model and proved by at least two reviews. Null with uspThemesReason when none can be kept. The hero headline says a proved theme.",
+          "type": ["array", "null"],
           "items": {
             "type": "object",
             "required": ["label", "line", "quotes"],
@@ -970,7 +970,14 @@
               "quotes": { "type": "array", "minItems": 2 }
             }
           }
-        }
+        },
+        "uspThemesReason": {
+          "type": "string",
+          "description": "Why no theme is available: not_proposed, rejected, held_review_evidence, not_recorded for a legacy reading, or rules_<reason> for a rule fallback."
+        },
+        "version": { "type": "string" },
+        "model": { "type": "string" },
+        "inputHash": { "type": "string" }
       }
     }
   }

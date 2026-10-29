@@ -101,6 +101,10 @@ export function readingWithoutHeldReviews(reading, opts = {}) {
     out.uspThemes = reading.uspThemes
       .map((t) => ({ ...t, quotes: quotes(t?.quotes) ?? [] }))
       .filter((t) => new Set(t.quotes.map((q) => q?.source?.ref)).size >= 2)
+  if (reading.uspThemes?.length && !out.uspThemes?.length) {
+    out.uspThemes = null
+    out.uspThemesReason = 'held_review_evidence'
+  }
   if (Array.isArray(reading.team))
     out.team = reading.team.map((p) => {
       if (usable(p)) return Array.isArray(p?.mentions) ? { ...p, mentions: quotes(p.mentions) } : p
