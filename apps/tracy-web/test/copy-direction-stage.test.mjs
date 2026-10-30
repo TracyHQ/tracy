@@ -217,8 +217,8 @@ test('a specific fact is told apart from explanatory copy', () => {
   }).map((l) => l.key)
   assert.deepEqual(
     bad.sort(),
-    ['v', 'y'],
-    'a person’s name and a claim need a source; trade knowledge and an ordinal do not'
+    ['v'],
+    'a claim the brief never makes needs a source; a person the brief names, trade knowledge and an ordinal do not'
   )
 })
 
@@ -268,4 +268,95 @@ test('every other copy writer is given the digest and the direction, and an unso
   assert.equal(answer.lines.k3, undefined, 'the unsourced line is dropped')
   assert.deepEqual([...refused], ['k3'])
   assert.equal(wrapped.usage().calls, 2, 'the writer keeps its model’s usage')
+})
+
+// 🔒 THE COO DEFINITION OF A SPECIFIC FACT (30/10/2026): the system checks a fact against the whole brief, whatever the
+// writer cited; only business facts need the brief; trade knowledge with numbers needs none. A fictional climbing gym.
+const GYM = {
+  name: 'Crag Hall',
+  about: 'Crag Hall is an indoor bouldering gym with 6 courts for squash beside the walls.',
+  phone: '+44 20 7946 0321',
+  languages: ['en'],
+  sourceLanguage: 'en',
+  statistics: [{ kind: 'years', line: 'Since 2016', value: '9' }],
+  factSheet: briefFactSheet({
+    reading: {
+      about: 'Crag Hall is an indoor bouldering gym.',
+      services: [{ id: 's1', label: 'Intro session', quote: 'Intro session for first-timers, 25 GBP' }],
+      team: [{ id: 't1', label: 'Odile', role: 'route setter', quote: 'Odile sets the walls every week' }]
+    },
+    brand: { logoResearch: { chosen: { readsAs: 'CRAG HALL' } } }
+  })
+}
+const refusedOf = (values, sources = {}) =>
+  unsourcedLines({ slots: Object.keys(values).map((key) => ({ key })), values, sources, site: GYM })
+
+test('trade knowledge with numbers needs no source', () => {
+  assert.deepEqual(
+    refusedOf({
+      a: 'Squash is played 1 vs 1 and padel is played 2 vs 2.',
+      b: 'Bouldering walls are open 24/7 in many cities, and a 60-minute session suits a first visit.',
+      c: 'Coaching is 1-on-1, and a route is graded from 3 to 8.',
+      d: 'Warm up for 10 minutes before you climb.'
+    }),
+    []
+  )
+})
+
+test('a business fact the brief states passes with no sourceId or a wrong one', () => {
+  assert.deepEqual(
+    refusedOf(
+      {
+        a: 'The club has 6 courts beside the walls.',
+        b: 'Climbing with us since 2016.',
+        c: 'Call +44 20 7946 0321 to book.',
+        d: 'Odile sets every wall.',
+        e: 'Your intro session costs 25 GBP.'
+      },
+      { a: ['offering-9'], c: ['brief.phone'], e: ['nowhere'] }
+    ),
+    []
+  )
+})
+
+test('a business fact the brief does not state is refused: a count, an award, a price, a year, an email', () => {
+  const bad = refusedOf({
+    a: 'The club has 8 courts beside the walls.',
+    b: 'Voted best club 2024.',
+    c: 'Day passes from AED 90.',
+    d: '120.00/class',
+    e: 'Write to hello@craghall.example.',
+    f: '32',
+    g: 'We have trained over 500 members.'
+  })
+  assert.deepEqual(
+    bad.map((l) => l.key),
+    ['a', 'b', 'c', 'd', 'e', 'f', 'g']
+  )
+  assert.ok(bad.find((l) => l.key === 'a').facts.includes('8'))
+  assert.ok(bad.find((l) => l.key === 'b').facts.some((f) => /voted|2024/i.test(f)))
+})
+
+test('the rewrite request names each fact the brief does not state and says to write the line without it', async () => {
+  const { sourceComplaint } = await import('../../../packages/cms/tracy-seeder/src/fact-sources.mjs')
+  const text = sourceComplaint(refusedOf({ a: 'The club has 8 courts beside the walls.' }))
+  assert.match(text, /a \(8\)/)
+  assert.match(text, /does not state/)
+  assert.match(text, /without/)
+})
+
+test('a site direction keyed by route instead of page id still reaches the page writers', async () => {
+  const model = {
+    chat: async () =>
+      JSON.stringify({
+        voice: 'Calm.',
+        pages: { home: { leads: 'Bouldering for everyone.', sourceIds: ['offering-1'] } }
+      })
+  }
+  const direction = await writeSiteDirection({
+    model,
+    site: SITE,
+    pages: [{ entity: 'menuItem-101', route: 'home' }, { entity: 'menuItem-102', route: 'about-us' }]
+  })
+  assert.deepEqual(direction.pages['menuItem-101'], { leads: 'Bouldering for everyone.', sourceIds: ['offering-1'] })
 })

@@ -10,7 +10,15 @@ import { PROCESS_WRITING_RULE, processWritingOf } from './process-writing.mjs'
 import { copyJobs, copyLedger, duplicateComplaint, duplicates, pagesOfEntities } from './distinct-copy.mjs'
 import { PAGE_PASS_RULE, PAGE_RULE_RETRIES, pageBatches, pageHintOf } from './page-pass.mjs'
 import { factSheetFor } from './fact-sheet-batch.mjs'
-import { DIRECTION_RULE, SOURCE_RULE, sourceComplaint, sourceTexts, unsourcedLines } from './fact-sources.mjs'
+import {
+  DIRECTION_RULE,
+  SOURCE_RULE,
+  factSourceIds,
+  knownSources,
+  sourceComplaint,
+  sourceTexts,
+  unsourcedLines
+} from './fact-sources.mjs'
 import {
   countComplaint,
   overusedPhrases,
@@ -1533,8 +1541,14 @@ export async function planJoomlaContract({
       phrases.record(slot, written)
       if (written !== (slot.current ?? slot.sample)) {
         changes[slot.key] = written
-        if (texts && Array.isArray(body.sources?.[slot.key]) && body.sources[slot.key].length)
-          sourcesOf[slot.key] = body.sources[slot.key].map(String).filter((id) => texts.has(id))
+        // The receipt keeps the records that state the line's business facts, found by the system (COO rule 1,
+        // `fact-sources.mjs`), with the ones the writer cited.
+        if (texts) {
+          const ids = [
+            ...new Set([...knownSources(body.sources?.[slot.key], texts), ...factSourceIds(written, site, texts)])
+          ]
+          if (ids.length) sourcesOf[slot.key] = ids
+        }
         if (hints || complain) owners[slot.key] = handed[slot.key] ?? 'page-copy'
       }
     }

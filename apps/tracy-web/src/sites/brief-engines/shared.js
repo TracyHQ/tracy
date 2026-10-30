@@ -219,6 +219,9 @@ export function recordTextUsage(ctx, model) {
   ctx.time('textIn', spent.promptTokens ?? 0)
   ctx.time('textOut', spent.completionTokens ?? 0)
   ctx.time('textReasoning', spent.reasoningTokens ?? 0)
+  // The approximate dollar cost from the repo price table (`text-spend.js` `textPriceOf`); a fraction, so kept whole.
+  if (Number.isFinite(spent.costUsd)) ctx.record?.('textCostUsd', spent.costUsd)
+  if (Array.isArray(spent.unpriced) && spent.unpriced.length) ctx.record?.('textUnpriced', spent.unpriced)
   for (const [stage, s] of Object.entries(spent.stages ?? {})) {
     ctx.time(`text.${stage}.calls`, s.calls)
     ctx.time(`text.${stage}.in`, s.promptTokens)

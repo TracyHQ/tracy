@@ -1,10 +1,15 @@
 /**
- * 🔒 EVERY SPECIFIC FACT A COPY WRITER STATES NAMES ITS SOURCE IN THE BRIEF (COO, 30/10/2026, spec TracyHQ/tracy#189). The
- * writer is given the brief's fact digest (`brief-fact-sheet.js` of tracy-web: every record with a `sourceId`) and answers,
- * beside its words, the sourceIds each line rests on. A line that states a specific fact (a price, a person's name, a
- * number, a date, an address, a phone, an email, a web address, a claim such as an award or a certification) is kept only
- * when a source it cites states that fact; otherwise it is sent back once, then refused. Explanatory copy written from what
- * the trade generally involves states no specific fact and needs no source. CMS-neutral: every planner and writer uses it.
+ * 🔒 A BUSINESS FACT A COPY WRITER STATES MUST BE IN THE BRIEF (COO rule, 30/10/2026, spec TracyHQ/tracy#189).
+ *   1. The SYSTEM checks every fact against the whole brief fact sheet (`brief-fact-sheet.js` of tracy-web, the business
+ *      fields and the statistics), not the writer's citations: a fact the brief states anywhere passes, even when the writer
+ *      cited no sourceId or a wrong one. The writer is still asked for `sources`, which are kept for the receipt.
+ *   2. Only these are business facts: prices and money; a phone; an email; a web address; a street address; dates, years
+ *      and opening hours; the names of people or partners; counts about this business (members, courts, years in
+ *      business, coaches...); awards, certifications, rankings and guarantees.
+ *   3. Trade knowledge with numbers is NOT a fact about the business ("padel is played 2 vs 2", "24/7", "1-on-1", "a
+ *      60-minute session" as a generic format) unless it is phrased as this business's own offer with a price or a schedule.
+ * A line with a business fact the brief does not state is sent back once, naming that fact, then refused. Explanatory copy
+ * written from what the trade generally involves needs no source. CMS-neutral: every planner and writer uses it.
  */
 
 /** The fields of the brief itself that are a source by their own name. */
@@ -22,14 +27,15 @@ export const BRIEF_FIELDS = [
 
 /** Said to every writer whose input carries a fact digest. */
 export const SOURCE_RULE =
-  ' SOURCES: every record of the fact digest ("brief.factSheet", or "facts.factSheet") carries a "sourceId"; a field of ' +
-  "the brief itself (name, about, phone, email, address, hours, contact, details, social, and the digest's own fields " +
-  'such as logoReads or serviceAreas) is a source by its field name, and the n-th of "statistics" is "statistic-n". A ' +
-  'value that states a specific fact (a price, the name of a person, a number, a date or year, an address, a phone, an ' +
-  'email, a web address, or a claim such as an award, a certification, a licence or a guarantee) must rest on the brief: ' +
-  'list the sourceIds that state it in "sources" {"<key>": ["sourceId", ...]} at the top level of your JSON answer. A ' +
-  'specific fact no source states is never written: write the line without it. Explanatory copy about what the trade ' +
-  'generally involves states no specific fact and needs no source.'
+  ' BUSINESS FACTS: a price or amount of money, a phone, an email, a web address, a street address, a date, a year, ' +
+  'opening hours, the name of a person or partner, a count about this business (its members, courts, coaches, years in ' +
+  'business...), or an award, certification, ranking or guarantee, is written only when the brief states it (the business ' +
+  'fields, "statistics" and the fact digest "brief.factSheet" or "facts.factSheet"). Never invent one: write the line ' +
+  'without it. Trade knowledge with numbers ("played 2 vs 2", "open 24/7 in many cities", "1-on-1 coaching", "a ' +
+  '60-minute session" as a format) and explanatory copy about what the trade generally involves are no business facts ' +
+  'and are welcome. List in "sources" {"<key>": ["sourceId", ...]} at the top level of your JSON answer the sourceIds ' +
+  '(each digest record\'s "sourceId"; a brief field by its name; the n-th of "statistics" is "statistic-n") of the ' +
+  'business facts a line states.'
 
 /** Said to every writer whose brief carries the site direction. */
 export const DIRECTION_RULE =
@@ -80,10 +86,23 @@ export function sourceTexts(site) {
 }
 
 const CLAIM =
-  /\b(?:award(?:s|ed|-winning)?|certified|certification|accredited|licen[cs]ed|insured|guarantee[ds]?|champions?|championship|olympic|top-rated|five-star|5-star)\b/giu
+  /\b(?:award(?:s|ed|-winning)?|certified|certification|accredited|licen[cs]ed|insured|guarantee[ds]?|champions?|championship|olympic|top-rated|five-star|5-star|voted|ranked|number one|no\. ?1)\b|#1\b/giu
 const EMAIL = /[\p{L}0-9._%+-]+@[\p{L}0-9-]+(?:\.[\p{L}0-9-]+)+/gu
 const WEB = /\b(?:https?:\/\/|www\.)[^\s"')]+/giu
 const NUMBER = /\d(?:[\d.,:/]*\d)?/gu
+/** A phone: seven digits or more, with the spaces, dots, dashes and brackets phones are written with. */
+const PHONE = /\+?\(?\d[\d\s().-]{5,}\d/gu
+const CURRENCY =
+  /(?:[$€£¥₹]|\b(?:AED|USD|EUR|GBP|SAR|QAR|CHF|CAD|AUD|INR|VND|dhs?|dirhams?|dollars?|euros?|pounds?)\b)/iu
+const MONTH =
+  /\b(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b/iu
+/** A unit after a number that makes it a format of the trade, not a count of the business ("60-minute", "2 vs 2"). */
+const FORMAT_UNIT =
+  /^[\s-]*(?:vs\.?|v\b|on\b|x\b|times?\b|minutes?|mins?\b|hours?|hrs?\b|seconds?|secs?\b|rounds?|sets?\b|reps?\b|repetitions|laps?\b|km\b|kms?\b|kilomet(?:er|re)s?|met(?:er|re)s?|m\b|cm\b|kg\b|kgs?\b|lbs?\b|pounds?\b|percent|%|degrees?|°|weeks?|days?|months?|steps?|levels?|stages?|players?|people|persons?|per\b|a\b|an\b|\/\s?7)/iu
+/** Words that tie a count to this business ("we have", "our", "the club has"). */
+const OWN =
+  /\b(?:we|we've|we're|our|ours|us)\b|\b(?:has|have|had|counts?|employs?|operates?|runs?|owns?|boasts?|served|serves|trained|trains|coached|welcomed|hosted|opened|founded|established|since)\b/iu
+const HOURS = /\b\d{1,2}(?::\d{2})?\s?(?:am|pm)\b|\b\d{1,2}:\d{2}\b/giu
 
 /** A line as a visitor reads it: no markup (`<h2>`, `((h2))`), no style marks (`[[`, `]]`, `[[br]]`). */
 const plain = (/** @type {string} */ value) =>
@@ -102,27 +121,48 @@ const peopleOf = (/** @type {any} */ site) =>
 
 const escape = (/** @type {string} */ s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
+/** Whether the number at `at` in `line` is a business fact (COO rule 2), or trade knowledge (rule 3). */
+function isBusinessNumber(/** @type {string} */ line, /** @type {string} */ m, /** @type {number} */ at) {
+  const before = line.slice(Math.max(0, at - 12), at)
+  const after = line.slice(at + m.length, at + m.length + 14)
+  // Money: a currency beside it, or an amount with cents ("90.00").
+  if (CURRENCY.test(before.slice(-6)) || CURRENCY.test(after.slice(0, 9)) || /^\d+[.,]\d{2}$/.test(m)) return true
+  // A year, a date, a time of day.
+  if (/^(?:19|20)\d{2}$/.test(m)) return true
+  if (/[/.-]/.test(m) && /^\d{1,4}[/.-]\d{1,2}[/.-]\d{1,4}$/.test(m)) return true
+  if (MONTH.test(before.slice(-10)) || MONTH.test(after.slice(0, 11))) return true
+  // A line that is only a figure (a counter: "32", "100k+", "95%") is a figure of this business.
+  if (/^[\s+~]*\d[\d.,]*\s*(?:k|m|\+|%)*\s*\+?\s*$/iu.test(line)) return true
+  // A format of the trade ("2 vs 2", "24/7", "1-on-1", "60-minute", "3 to 8"): no fact about the business.
+  if (FORMAT_UNIT.test(after) || /^\s*(?:to|-|–|or|and)\s*\d/.test(after) || /\d\s*(?:to|-|–|or|and)\s*$/.test(before))
+    return false
+  // A web error code ("its 404 page") is no figure of the business.
+  if (/^[45]0\d$/.test(m) && /^\s*(?:page|error|not found)/iu.test(after)) return false
+  // A count of the business: tied to it in the same clause ("the club has 6 courts", "we coached 300 members").
+  const clause = line.slice(Math.max(0, line.lastIndexOf('.', at) + 1), at)
+  return OWN.test(clause)
+}
+
 /**
- * The specific facts one line states, or none for explanatory copy.
+ * The business facts one line states (COO rule, header), or none for explanatory copy and trade knowledge.
  * @param {string} value @param {{site?: any, slot?: any}} [context]
- * @returns {Array<{kind: 'number' | 'email' | 'web' | 'name' | 'claim', text: string}>}
+ * @returns {Array<{kind: 'number' | 'phone' | 'email' | 'web' | 'name' | 'claim' | 'time', text: string}>}
  */
 export function specificFacts(value, { site = null, slot = null } = {}) {
   const line = plain(value)
   const own = String(site?.name ?? '')
   /** @type {Array<{kind: any, text: string}>} */
   const out = []
-  const rest = line
-    .replace(EMAIL, (m) => (out.push({ kind: 'email', text: m }), ' '))
-    .replace(WEB, (m) => {
-      out.push({ kind: 'web', text: m })
-      return ' '
-    })
-  for (const m of rest.match(NUMBER) ?? []) {
+  const keep = (/** @type {any} */ kind) => (/** @type {string} */ m) => (out.push({ kind, text: m.trim() }), ' ')
+  let rest = line.replace(EMAIL, keep('email')).replace(WEB, keep('web'))
+  rest = rest.replace(PHONE, (m) => ((m.match(/\d/g) ?? []).length >= 7 ? keep('phone')(m) : m))
+  rest = rest.replace(HOURS, keep('time'))
+  for (const match of rest.matchAll(NUMBER)) {
+    const m = match[0]
     // A card's own ordinal ("2" on the second of three steps) and a number in the business's own name are no claims.
     if (Number(m) === Number(slot?.item?.n)) continue
     if (own && own.includes(m)) continue
-    out.push({ kind: 'number', text: m })
+    if (isBusinessNumber(rest, m, match.index ?? 0)) out.push({ kind: 'number', text: m })
   }
   for (const name of peopleOf(site))
     if (new RegExp(`(?<![\\p{L}])${escape(name.trim())}(?![\\p{L}])`, 'iu').test(rest))
@@ -131,40 +171,69 @@ export function specificFacts(value, { site = null, slot = null } = {}) {
   return out
 }
 
-/** Does a cited source text state this fact? */
+const digitsOf = (/** @type {string} */ s) => s.replace(/\D+/g, '')
+/** A number as a value: "1,200" and "1200" are one, "90.00" and "90" are one. */
+const amountOf = (/** @type {string} */ s) => {
+  const n = Number(s.replace(/,(?=\d{3}\b)/g, '').replace(',', '.'))
+  return Number.isFinite(n) ? n : null
+}
+const webOf = (/** @type {string} */ s) =>
+  s
+    .toLowerCase()
+    .replace(/^https?:\/\//, '')
+    .replace(/^www\./, '')
+    .replace(/[/.]+$/, '')
+
+/** Does a source text state this fact? */
 function states(/** @type {string} */ text, /** @type {{kind: string, text: string}} */ fact) {
   const lower = text.toLowerCase()
   if (fact.kind === 'number') {
-    const digits = fact.text.replace(/\D+/g, '')
-    return (
-      lower.includes(fact.text.toLowerCase()) ||
-      (text.match(NUMBER) ?? []).some((n) => n.replace(/\D+/g, '').includes(digits))
-    )
+    const want = amountOf(fact.text)
+    return (text.match(NUMBER) ?? []).some((n) => n === fact.text || (want !== null && amountOf(n) === want))
   }
+  if (fact.kind === 'phone') {
+    const want = digitsOf(fact.text)
+    return (text.match(PHONE) ?? []).some((p) => {
+      const have = digitsOf(p)
+      return have.length >= 7 && (have.endsWith(want) || want.endsWith(have))
+    })
+  }
+  if (fact.kind === 'web') {
+    const want = webOf(fact.text)
+    return (text.match(WEB) ?? []).some((w) => webOf(w) === want) || lower.includes(want)
+  }
+  if (fact.kind === 'time') return lower.replace(/\s+/g, '').includes(fact.text.toLowerCase().replace(/\s+/g, ''))
   if (fact.kind === 'claim') return lower.includes(fact.text.toLowerCase().slice(0, 5))
   return lower.includes(fact.text.toLowerCase())
 }
 
 /**
- * The lines whose specific facts no source they cite states: each with the facts left without one.
+ * The lines with a business fact the brief does not state, each with those facts (COO rule 1: checked against the whole
+ * brief, the writer's citations aside).
  * @param {{slots: Array<{key: string, item?: any}>, values: Record<string, unknown>, sources?: Record<string, unknown>, site: any, texts?: Map<string, string>}} input
  * @returns {Array<{key: string, facts: string[]}>}
  */
-export function unsourcedLines({ slots, values, sources = {}, site, texts = sourceTexts(site) }) {
+export function unsourcedLines({ slots, values, site, texts = sourceTexts(site) }) {
+  const brief = [...texts.values()].join(' \n ')
   const out = []
   for (const slot of slots) {
     const value = values?.[slot.key]
     if (typeof value !== 'string' || !value.trim()) continue
     const facts = specificFacts(value, { site, slot })
     if (facts.length === 0) continue
-    const cited = (Array.isArray(sources?.[slot.key]) ? /** @type {unknown[]} */ (sources[slot.key]) : [])
-      .map((id) => texts.get(String(id)))
-      .filter((t) => typeof t === 'string')
-      .join(' \n ')
-    const left = facts.filter((f) => !states(cited, f)).map((f) => f.text)
+    const left = facts.filter((f) => !states(brief, f)).map((f) => f.text)
     if (left.length) out.push({ key: slot.key, facts: [...new Set(left)] })
   }
   return out
+}
+
+/**
+ * The sourceIds of the brief that state the business facts of a line: what the receipt keeps, whatever the writer cited.
+ * @param {string} value @param {any} site @param {Map<string, string>} [texts]
+ */
+export function factSourceIds(value, site, texts = sourceTexts(site)) {
+  const facts = specificFacts(value, { site })
+  return [...texts.entries()].filter(([, text]) => facts.some((f) => states(text, f))).map(([id]) => id)
 }
 
 /**
@@ -173,13 +242,14 @@ export function unsourcedLines({ slots, values, sources = {}, site, texts = sour
  */
 export function sourceComplaint(lines) {
   return (
-    `These values state a specific fact that no source you cited states: ${lines
+    `These values state a business fact the brief does not state: ${lines
       .slice(0, 12)
       .map((l) => `${l.key} (${l.facts.slice(0, 3).join(', ')})`)
       .join(
         '; '
-      )}. Rewrite each one: list in "sources" the sourceIds of the brief records that state the fact, or write ` +
-    'the line without it. Answer every key again in the same JSON shape.'
+      )}. Rewrite each one without that fact: keep the line's job and length, and write about what the trade ` +
+    'generally involves instead. Never put another number, name or claim in its place unless the brief states it. ' +
+    'Answer every key again in the same JSON shape.'
   )
 }
 
@@ -188,5 +258,11 @@ export function sourceComplaint(lines) {
  * @param {unknown} ids @param {Map<string, string>} texts
  */
 export function knownSources(ids, texts) {
-  return [...new Set((Array.isArray(ids) ? ids : []).map(String).filter((id) => texts.has(id)))]
+  return [
+    ...new Set(
+      (Array.isArray(ids) ? ids : [])
+        .map((id) => String(id).replace(/^(?:brief|facts)\.(?:factSheet\.)?/, ''))
+        .filter((id) => texts.has(id))
+    )
+  ]
 }

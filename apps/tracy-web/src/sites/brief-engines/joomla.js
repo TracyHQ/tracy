@@ -3117,9 +3117,12 @@ export function createJoomlaEngine({
           locale: prepared.written ?? SOURCE,
           signal: ctx.signal,
           contentMap: staticState(ctx.contract),
-          known: Object.fromEntries(menu.items.map((i) => [i.pageId, i.label]))
+          known: Object.fromEntries(menu.items.map((i) => [i.pageId, i.label])),
+          // A footer label the fill check refuses falls back to a brief value and is named in the receipt (`text-fallback.js`).
+          note: ctx.note
         })
         ctx.time('footerNavigationLinks', footer?.columns.reduce((n, c) => n + c.links.length, 0) ?? 0)
+        ctx.time('footerTextFallbacks', footer?.fallbacks?.length ?? 0)
       }
       // 🔒 The SEO stage, last: every page's planned title and description over whatever the menu writes left, the record
       // pages' own, and the one business record (`joomla-seo-stage.js`, criteria 8.1, 8.4, 8.5).

@@ -365,6 +365,8 @@ export function createSeedModel({
 
   /** What this model has been asked and what it cost, in all and per stage. */
   const usage = () => ({
+    // The model's id, so a build's spend is priced (`text-spend.js`).
+    model: model.words,
     ...stats,
     stages: Object.fromEntries(Object.entries(stages).map(([name, s]) => [name, { ...s }]))
   })

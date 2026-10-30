@@ -183,6 +183,7 @@ test('usage counts calls, tokens and the reasoning tokens the model spent', asyn
   assert.deepEqual(
     { ...m.usage(), ms: 0 },
     {
+      model: 'm',
       calls: 2,
       retries: 0,
       budgetWaits: 0,

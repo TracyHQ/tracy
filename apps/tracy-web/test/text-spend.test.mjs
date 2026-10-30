@@ -49,3 +49,48 @@ test('the text models of one build are summed onto its timings across prepare an
 test('summed usage reads models with no usage as nothing', () => {
   assert.deepEqual(summedUsage([null, {}, modelSpending(2, 'x')]).calls, 2)
 })
+
+test('prepare and apply are handed copies of the build context, and the timings still keep both steps summed', async () => {
+  // The build runner spreads its context into each step (`{...ctx, signal}`), so the two steps never share one object.
+  let made = 0
+  const models = trackTextSpend(async () => ({ text: modelSpending(++made * 2, 'planner') }))
+  const engine = withTextSpend({
+    async prepare() {
+      await models()
+    },
+    async apply() {
+      await models()
+    }
+  })
+  const times = {}
+  const base = { time: (name, v) => (times[name] = v), record: (name, v) => (times[name] = v) }
+  await engine.prepare({ ...base, signal: null })
+  assert.equal(times.textCalls, 2)
+  await engine.apply({ ...base, signal: null }, {})
+  assert.equal(times.textCalls, 2 + 4, 'apply adds to what prepare spent, never replaces it')
+  assert.equal(times.textIn, 600)
+  assert.equal(times['text.planner.calls'], 6)
+})
+
+test('the text a build spent is priced from the repo price table, and a model with no price is named, not guessed', async () => {
+  const priced = (model, promptTokens, completionTokens) => ({
+    usage: () => ({ model, calls: 1, promptTokens, completionTokens, reasoningTokens: 0, stages: {} })
+  })
+  const total = summedUsage([
+    priced('deepseek/deepseek-v4-flash', 1_000_000, 100_000),
+    priced('deepseek/deepseek-v4-flash', 500_000, 0),
+    priced('a-model-nobody-priced', 10, 10)
+  ])
+  // deepseek-flash: 30 cents per million in, 120 cents per million out.
+  assert.equal(total.costUsd, 0.57)
+  assert.deepEqual(total.unpriced, ['a-model-nobody-priced'])
+  const times = {}
+  const ctx = { time: (name, v) => (times[name] = v), record: (name, v) => (times[name] = v) }
+  const models = trackTextSpend(async () => ({ text: priced('deepseek/deepseek-v4-flash', 2_000_000, 0) }))
+  await withTextSpend({
+    async prepare() {
+      await models()
+    }
+  }).prepare(ctx)
+  assert.equal(times.textCostUsd, 0.6)
+})
