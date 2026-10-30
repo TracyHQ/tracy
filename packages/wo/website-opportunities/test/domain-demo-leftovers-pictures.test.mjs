@@ -137,3 +137,20 @@ test('C04 and C13 count a demo file once per page, however many slots of the map
     assert.deepEqual(logos[0].slots, ['module-7.1', 'siteSetting-1.0', 'img /images/demo/logo/mark.png'])
   }
 })
+
+// R12 (30/10/2026): 33 of 98 findings were demo picture names that only stood in Tracy's own stylesheet, a rule that
+// hides a demo image (`img[src*="…"]{visibility:hidden}`) and a comment that lists files. Neither shows a picture, no
+// repair turn can take it away, and each was reported on every page.
+test('C01 a demo file named only in a stylesheet selector or a CSS comment shows no picture and is no leftover', () => {
+  const hideRule = `<style>/* kept: images/demo/hero/band.jpg */ img[src*="images/demo/gallery/tile.jpg"], img[src$='images/demo/about/oven.jpg' i]{visibility:hidden !important}</style>`
+  assert.deepEqual(kinds(run(CLUB, `${hideRule}<p>Open daily</p>`), 'C01'), [])
+  assert.deepEqual(kinds(run(BAKERY, `${hideRule}<p>Fresh bread</p>`), 'C01'), [])
+  // The same stylesheet that paints the file as a background still shows it.
+  assert.deepEqual(
+    kinds(run(CLUB, `<style>/* hero */ .band{background:url("/images/demo/hero/band.jpg")}</style>`), 'C01'),
+    ['module-1.0']
+  )
+  assert.deepEqual(kinds(run(BAKERY, `${hideRule}<img src="/images/demo/about/oven.jpg">`), 'C01'), [
+    'module-1.0'
+  ])
+})

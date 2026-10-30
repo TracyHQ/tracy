@@ -17749,6 +17749,8 @@ var LOST_STATUSES = Object.freeze([502, 503, 504]);
 var READ_RETRY_MS = 2e3;
 function answerLost(answer) {
   if (!isRecord12(answer) || answer.ok !== false) return false;
+  const own = isRecord12(answer.error) && typeof answer.error.code === "string" ? answer.error.code : "";
+  if (own !== "" && !LOST_ANSWER_CODES.includes(own)) return false;
   const code = typeof answer.code === "string" && answer.code !== "" ? answer.code : answer.error;
   return typeof code === "string" && LOST_ANSWER_CODES.includes(code) || LOST_STATUSES.includes(Number(answer.httpStatus));
 }

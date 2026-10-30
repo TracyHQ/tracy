@@ -445,19 +445,22 @@ export function createBriefBuilds({
 
   /**
    * Take the rebuilding lock and keep what became of it on the row (`timings.siteLock`). A site that cannot be locked is
-   * built open, as before, with a note; nothing here ever fails the run.
+   * built open, as before, with a note; nothing here ever fails the run. True once the lock was decided (locked, or
+   * built open with its note); false when no judging build holds the site (yet), so a later call may still take it.
    * @param {BriefContext} ctx
+   * @returns {Promise<boolean>}
    */
-  async function lockBeforeWrites(ctx) {
-    if (!siteLock) return
+  async function lockSiteNow(ctx) {
+    if (!siteLock) return true
     const lock = await siteLock.lock(ctx).catch((error) => ({
       version: 1,
       state: 'failed',
       reason: error instanceof Error ? error.message : String(error)
     }))
-    if (!lock) return
-    await updateBrief(pool, ctx.siteKey, { timings: { siteLock: lock } }).catch(() => {})
+    if (!lock) return false
+    await updateBrief(pool, ctx.siteKey, { timings: { siteLock: lock, siteLockAt: now() } }).catch(() => {})
     if (lock.state !== 'locked') ctx.note(LOCK_UNSUPPORTED_NOTE)
+    return true
   }
 
   /** @param {BriefInput} input */
@@ -579,6 +582,10 @@ export function createBriefBuilds({
         return up
       })
       siteUp.catch(() => {})
+      // 🔒 THE SITE IS LOCKED THE MOMENT ITS DOOR EXISTS (#189, COO rule: a visitor never sees the template demo). The door
+      // is up once the site is (`waitProvisioned` pairs it), so the lock is taken then, beside the words still being made,
+      // not minutes later before the first write (R12: the raw demo was served through provisioning and planning).
+      const locking = siteUp.then((up) => (up ? lockSiteNow(ctx) : true)).catch(() => false)
       const outcome = await preparedInTime(preparing, siteUp, prepareStop, startedAt)
       const notUp = async () => {
         prepareStop.abort()
@@ -609,8 +616,9 @@ export function createBriefBuilds({
       controller.signal.throwIfAborted()
 
       if (!(await advanceBrief(pool, siteKey, ['ready'], { state: 'applying', stage: STAGE.placing }))) return
-      // 🔒 THE SITE IS LOCKED BEFORE ITS FIRST WRITE (#189): visitors see the rebuilding page until the build ends full.
-      await lockBeforeWrites(ctx)
+      // 🔒 AND IN ANY CASE BEFORE ITS FIRST WRITE (#189): a lock the early try could not take (no judging build held the
+      // site yet) is tried once more here; visitors see the rebuilding page until the build ends full.
+      if (!(await locking)) await lockSiteNow(ctx)
       const held = await holdWebroot('open', ctx)
       const t3 = now()
       let report = null

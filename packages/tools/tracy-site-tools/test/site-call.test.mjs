@@ -5570,3 +5570,27 @@ test('a build whose saved plan agreed is not asked about a shared write; a delet
     assert.equal(site.row.introtext, LOREM)
   })
 }
+
+// R12 (30/10/2026): a repair turn's `content.read {view: "pages"}` met the Joomla reader's own coded refusal (503
+// `CONTENT_SOURCE_UNAVAILABLE`, a slot it could not resolve). Read as a lost answer, it was asked again and the turn was told
+// "do not call it again or change the site another way", so it stopped with 65 repairable findings left.
+for (const site of ['joomla', 'wordpress'])
+  test(`a coded refusal of the site's own reader is an answer, not a lost one: never re-asked, and the turn keeps the roads that work (${site})`, async () => {
+    const refusal = {
+      ok: false,
+      httpStatus: 503,
+      error: { code: 'CONTENT_SOURCE_UNAVAILABLE', message: 'Content source or binding could not be read' }
+    }
+    assert.equal(answerLost(refusal), false)
+    const slept = /** @type {number[]} */ ([])
+    const { sent, send } = relay(() => refusal)
+    const ctx = (site === 'joomla' ? joomla : wordpress)({
+      send,
+      sleep: async (/** @type {number} */ ms) => void slept.push(ms)
+    })
+    const answer = await call(ctx, { action: 'content.read', params: { view: 'pages', url: '/classes' } })
+    assert.equal(sent.length, 1)
+    assert.deepEqual(slept, [])
+    assert.doesNotMatch(String(answer.next), /change the site another way/)
+    assert.match(String(answer.next), /content list is down/)
+  })

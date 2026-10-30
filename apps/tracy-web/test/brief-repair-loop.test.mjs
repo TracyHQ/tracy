@@ -104,7 +104,8 @@ for (const trade of ['locksmith', 'yoga']) {
     // A record place the plan gives no record is hidden; a page-wide finding takes its rule's repair text.
     assert.match(
       asked[0].prompt,
-      /C17 .*\| page \/services \| m\.0 \| found "\(555\) 010-4477" \| instead: hide the block/
+      // One place every page shows is one line naming its pages (R12): the turn fixes it once.
+      /C17 .*\| pages \/, \/services, \/about, \/visit \(4 pages\) \| m\.0 \| found "\(555\) 010-4477" \| instead: hide the block/
     )
     assert.match(
       asked[0].prompt,
@@ -116,7 +117,8 @@ for (const trade of ['locksmith', 'yoga']) {
       asked[0].prompt,
       /A hard fact .* is written only when the owner data or the accepted statistics/
     )
-    assert.equal((asked[2].prompt.match(/- C17 /g) ?? []).length, 2)
+    assert.equal((asked[2].prompt.match(/- C17 /g) ?? []).length, 1)
+    assert.match(asked[2].prompt, /- C17 .*\(2 pages\) \| m\.0 /)
     assert.match(asked[0].prompt, new RegExp(`- name: "${briefs[trade].business.name}"`))
   })
 }

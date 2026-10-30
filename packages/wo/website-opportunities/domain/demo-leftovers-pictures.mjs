@@ -14,14 +14,38 @@ const SHARED_ROLES = new Set([...GENERAL_PICTURES, 'offering.image', 'person.ima
 
 const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
+/** A page's markup with the stylesheet text that shows no picture taken out, read once per page. */
+const shownCache = new WeakMap()
 /**
- * Whether a served page carries a demo file: the path itself (URL-encoded or not) in any attribute, style or script, or
+ * 🔒 A FILE NAMED IN A STYLESHEET BUT NOT PAINTED BY IT SHOWS NOTHING (R12, 30/10/2026): a CSS comment, and an attribute
+ * selector such as `img[src*="…"]` (the rule Tracy's own tidy writes to hide a demo image) name the file without drawing
+ * it. Both are taken out of every `<style>` block; a `url(…)` there still counts, it paints a background.
+ * @param {{html?: string}} page
+ */
+function shownMarkup(page) {
+  const html = page.html ?? ''
+  if (typeof page !== 'object' || page === null) return html
+  const known = shownCache.get(page)
+  if (known?.html === html) return known.shown
+  const shown = html.replace(
+    /(<style\b[^>]*>)([\s\S]*?)(<\/style>)/gi,
+    (_m, open, css, close) =>
+      `${open}${css
+        .replace(/\/\*[\s\S]*?\*\//g, ' ')
+        .replace(/\[\s*[\w:-]+\s*[*^$|~]?=\s*(["'])[^"']*\1\s*[is]?\s*\]/gi, '[]')}${close}`
+  )
+  shownCache.set(page, { html, shown })
+  return shown
+}
+
+/**
+ * Whether a served page carries a demo file: the path itself (URL-encoded or not) in any attribute, painted style or script, or
  * a copy the CMS made of it (the same name in another picture format, or with a size added).
  * @param {{html: string}} page
  * @param {string} file - `images/...`
  */
 export function carriesPicture(page, file) {
-  const html = page.html ?? ''
+  const html = shownMarkup(page)
   if (html.includes(file) || html.includes(encodeURI(file))) return true
   const stem = file.replace(/\.(?:jpe?g|png|webp|svg|gif|avif)$/i, '')
   return new RegExp(`${escapeRe(stem)}(?:[_-]\\d+x\\d+)?\\.(?:jpe?g|png|webp|gif|avif)`, 'i').test(html)

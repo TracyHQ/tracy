@@ -65,3 +65,31 @@ test('compareLeftovers separates fixed, remaining, introduced and lost pages', (
   assert.deepEqual(diff.pagesLost, ['/team'])
   assert.equal(summarizeLeftovers(before).total, 2)
 })
+
+// R12 (30/10/2026): one demo value left in a shared place (a footer, a module on every page) was listed once per page, so
+// eleven copies of three places filled 33 of the 40 lines a round shows and the places a turn could fix never reached it.
+test('a repair round lists one place found on many pages once, with its pages, so the other places reach the turn', async () => {
+  const { renderRepairPrompt, repairCount, CLEANUP_FINDINGS_SHOWN } = await import(
+    '../domain/leftover-cleanup.mjs'
+  )
+  for (const brief of [bakery, clinic]) {
+    const pages = Array.from({ length: 11 }, (_, i) => (i === 0 ? '/' : `/page-${i}`))
+    const shared = pages.flatMap((page) => [
+      finding('C17', page, 'footer', '(555) 010-4477'),
+      finding('C17', page, 'topbar', '(555) 010-9911')
+    ])
+    const own = Array.from({ length: 30 }, (_, i) =>
+      finding('C17', `/service-${i}`, `module-${i}.0`, `demo ${i}`)
+    )
+    const leftovers = { findings: [...shared, ...own] }
+    const text = renderRepairPrompt({ leftovers, brief })
+    const lines = text.split('\n').filter((l) => l.startsWith('- C17'))
+    assert.equal(lines.filter((l) => l.includes('| footer |')).length, 1)
+    assert.match(
+      lines.find((l) => l.includes('| footer |')),
+      /pages \/, \/page-1, .* \(11 pages\)/
+    )
+    assert.equal(lines.length, Math.min(32, CLEANUP_FINDINGS_SHOWN), 'every distinct place within the cap')
+    assert.equal(repairCount(leftovers), 52, 'the count the round must lower is still every finding')
+  }
+})

@@ -198,21 +198,40 @@ export function renderRepairPrompt({
     line()
   }
   line('## Places to fix (kind, page, place, found, instead, rule)')
-  for (const f of flagged.slice(0, CLEANUP_FINDINGS_SHOWN)) {
+  // 🔒 ONE LINE PER PLACE, NOT PER PAGE (R12, 30/10/2026): a value left in a place every page shows (a footer, a shared
+  // module) is one fix, and listed once per page it filled the round's lines and kept every other place from the turn.
+  const groups = new Map()
+  for (const f of flagged) {
     const k = f.finding
-    const name = LEFTOVER_KINDS[k.kind]?.name ?? f.rule ?? k.kind
-    const instead = recordInstead(String(k.place ?? ''), records, places) ?? f.repair
     // Findings of the page-wide checks (menu, footer, head blocks) name their page and place in their own fields.
     const page = k.page ?? k.path ?? 'the whole site'
     const place = k.place ?? k.href ?? k.why ?? k.reason ?? 'see the rule'
-    const found = k.found ?? k.label ?? ''
+    const found = String(k.found ?? k.label ?? '').slice(0, 80)
+    const key = JSON.stringify([k.kind, place, found, f.repair])
+    const known = groups.get(key)
+    if (known) {
+      if (!known.pages.includes(page)) known.pages.push(page)
+      continue
+    }
+    groups.set(key, { f, place, found, pages: [page] })
+  }
+  const listed = [...groups.values()]
+  const PAGES_SHOWN = 6
+  for (const { f, place, found, pages } of listed.slice(0, CLEANUP_FINDINGS_SHOWN)) {
+    const k = f.finding
+    const name = LEFTOVER_KINDS[k.kind]?.name ?? f.rule ?? k.kind
+    const instead = recordInstead(String(k.place ?? ''), records, places) ?? f.repair
     const why = f.guarantee ? ` | rule: ${f.guarantee}` : ''
+    const where =
+      pages.length === 1
+        ? `page ${pages[0]}`
+        : `pages ${pages.slice(0, PAGES_SHOWN).join(', ')}${pages.length > PAGES_SHOWN ? ', …' : ''} (${pages.length} pages)`
     line(
-      `- ${k.kind} ${name}${f.blocks ? ' (blocks the build)' : ''} | page ${page} | ${place} | found ${JSON.stringify(String(found).slice(0, 80))} | instead: ${instead}${why}`
+      `- ${k.kind} ${name}${f.blocks ? ' (blocks the build)' : ''} | ${where} | ${place} | found ${JSON.stringify(found)} | instead: ${instead}${why}`
     )
   }
-  if (flagged.length > CLEANUP_FINDINGS_SHOWN)
-    line(`- and ${flagged.length - CLEANUP_FINDINGS_SHOWN} more, listed in the next round.`)
+  if (listed.length > CLEANUP_FINDINGS_SHOWN)
+    line(`- and ${listed.length - CLEANUP_FINDINGS_SHOWN} more places, listed in the next round.`)
   const owner = ownerLines(brief)
   if (owner.length) {
     line()

@@ -234,6 +234,12 @@ export const READ_RETRY_MS = 2_000
  */
 export function answerLost(answer) {
   if (!isRecord(answer) || answer.ok !== false) return false
+  // 🔒 A REFUSAL THE SITE'S OWN CODE WROTE IS AN ANSWER (R12, 30/10/2026). The content door names its own failure in a
+  // structured `error: {code}` (the Joomla reader's 503 `CONTENT_SOURCE_UNAVAILABLE`); a gateway or a dead site never does.
+  // Read by its status alone it was asked again and the turn was told to stop changing the site, so no repair was made;
+  // its own next names the roads that still work.
+  const own = isRecord(answer.error) && typeof answer.error.code === 'string' ? answer.error.code : ''
+  if (own !== '' && !LOST_ANSWER_CODES.includes(own)) return false
   const code = typeof answer.code === 'string' && answer.code !== '' ? answer.code : answer.error
   return (
     (typeof code === 'string' && LOST_ANSWER_CODES.includes(code)) ||
