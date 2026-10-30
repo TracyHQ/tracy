@@ -19,14 +19,29 @@ export function offersSiteLock(answer) {
   )
 }
 
+/**
+ * Whether the lock also takes a preview key (`offline_preview_key`, answered on `X-Tracy-Preview-Key`): what lets the
+ * agent's page reads, which carry no token, see the real site while it is locked. @param {any} answer
+ */
+export function offersPreviewKey(answer) {
+  const also = (answer?.info ?? answer)?.site_offline?.bypass_also
+  return offersSiteLock(answer) && Array.isArray(also) && also.includes('preview-key')
+}
+
 /** @type {import('../site-lock.js').SiteLockWriter} */
 export const joomlaSiteLock = {
   action: 'site.identity',
   async supported(apply, siteKey) {
     const answer = await apply({ siteKey, action: 'info', params: {} }).catch(() => null)
-    return answer?.ok !== false && offersSiteLock(answer)
+    if (answer?.ok === false || !offersSiteLock(answer)) return false
+    return { previewKey: offersPreviewKey(answer) }
   },
   // 1: the offline page shows the custom message.
-  lockFields: (message) => ({ offline: 1, offline_message: message, display_offline_message: 1 }),
+  lockFields: (message, previewKey = null) => ({
+    offline: 1,
+    offline_message: message,
+    display_offline_message: 1,
+    ...(previewKey ? { offline_preview_key: previewKey } : {})
+  }),
   unlockFields: () => ({ offline: 0 })
 }

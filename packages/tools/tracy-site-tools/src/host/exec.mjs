@@ -30,6 +30,7 @@
 import { STYLE_PROBE } from '@tracy/site-build-core/design-check'
 import { execFile } from 'node:child_process'
 import { resolveDockerHost } from '../../../tracy-subprocess-docker/src/route.mjs'
+import { PREVIEW_KEY_HEADER, PREVIEW_KEY_SHAPE, previewKeyFor } from './preview-key.mjs'
 import {
   STYLE_VIEWPORTS,
   countPaints,
@@ -126,8 +127,12 @@ export const FETCH_NONCE = /^TRACY_FETCH_[0-9a-f]{32}$/
  * while the connection is ALWAYS `127.0.0.1:<connectPort>` inside the container (#154). Every value
  * is validated here and the argv is run by `execFile` with no shell, so a CR/LF in `host` cannot
  * become a second header even if a caller regresses: it throws instead.
+ *
+ * A locked site (#189, `preview-key.mjs`): `previewKey` adds `X-Tracy-Preview-Key`, which the Cowork plugin answers
+ * with the real site instead of its rebuilding page. Its shape is checked here like every other value, so it cannot
+ * become a second header either.
  * @param {{ container: string, connectPort: number, pathAndQuery: string, host: string,
- *   proto: 'http' | 'https', nonce: string, maxTimeS?: number, maxBytes?: number }} input
+ *   proto: 'http' | 'https', nonce: string, maxTimeS?: number, maxBytes?: number, previewKey?: string | null }} input
  * @returns {string[]}
  */
 export function fetchArgv({
@@ -138,9 +143,12 @@ export function fetchArgv({
   proto,
   nonce,
   maxTimeS = FETCH_MAX_TIME_S,
-  maxBytes = FETCH_MAX_BYTES
+  maxBytes = FETCH_MAX_BYTES,
+  previewKey = null
 }) {
   if (!FETCH_HOST.test(String(host))) throw new TypeError('fetchArgv: host is not an authority')
+  if (previewKey !== null && !PREVIEW_KEY_SHAPE.test(String(previewKey)))
+    throw new TypeError('fetchArgv: preview key has another shape')
   if (proto !== 'http' && proto !== 'https') throw new TypeError('fetchArgv: proto must be http or https')
   if (!/^\/[\x21-\x7e]*$/.test(String(pathAndQuery)))
     throw new TypeError('fetchArgv: path must be an encoded absolute path')
@@ -176,6 +184,7 @@ export function fetchArgv({
     'Accept: text/html,application/xhtml+xml;q=0.9,*/*;q=0.1',
     '--header',
     'Accept-Encoding: identity',
+    ...(previewKey !== null ? ['--header', `${PREVIEW_KEY_HEADER}: ${previewKey}`] : []),
     '--output',
     '-',
     '--write-out',
@@ -701,6 +710,9 @@ export const BROWSER_SCRIPT =
   // The container is a name, the port is `via`'s; both are checked before anything is launched.
   "const CHROME=(process.env&&process.env.TRACY_CHROME)||'chromium';" +
   "const serveIn=(process.env&&process.env.TRACY_SERVE_CONTAINER)||'';" +
+  // A locked site's preview key (#189, `preview-key.mjs`): from the environment only, shape-checked here too, and
+  // added ONLY to requests for the page's own origin (never a font or CDN host). With a key every request is paused.
+  "const pkRaw=(process.env&&process.env.TRACY_PREVIEW_KEY)||'';const pkey=/^[A-Za-z0-9_-]{32,128}$/.test(pkRaw)?pkRaw:'';" +
   // a private profile per call: concurrent renders must not share the default user-data-dir or cookies.
   "let profile='';try{profile=fs.mkdtempSync(path.join(os.tmpdir(),'tracy-look-'))}catch{}" +
   // navStarted gates the main-frame guard so the target's initial about:blank is ignored; errorText is
@@ -779,9 +791,9 @@ export const BROWSER_SCRIPT =
   Math.ceil(BROWSER_SERVE_MS / 1000) +
   "','--max-filesize','" +
   BROWSER_SERVE_MAX +
-  "','-H','Host: '+t.host,'-H','X-Forwarded-Proto: '+t.protocol.slice(0,-1),'-H','Accept-Encoding: identity'];" +
+  "','-H','Host: '+t.host,'-H','X-Forwarded-Proto: '+t.protocol.slice(0,-1),'-H','Accept-Encoding: identity'];if(pkey)args.push('-H','X-Tracy-Preview-Key: '+pkey);" +
   'const rh=(p.request&&p.request.headers)||{};for(const k of Object.keys(rh)){const l=k.toLowerCase();' +
-  "if(l==='host'||l==='connection'||l==='accept-encoding'||l==='content-length')continue;const v=String(rh[k]);if(/[\\r\\n]/.test(k+v))continue;args.push('-H',k+': '+v)}" +
+  "if(l==='host'||l==='connection'||l==='accept-encoding'||l==='content-length'||l==='x-tracy-preview-key')continue;const v=String(rh[k]);if(/[\\r\\n]/.test(k+v))continue;args.push('-H',k+': '+v)}" +
   "args.push('http://127.0.0.1:'+viaM[1]+t.pathname+t.search);" +
   "waiting.push((release)=>{if(finished||settled)return release();require('child_process').execFile('docker',args,{encoding:'buffer',maxBuffer:" +
   BROWSER_SERVE_MAX +
@@ -794,7 +806,7 @@ export const BROWSER_SCRIPT =
   'let t;try{t=new URL(p.request.url)}catch{return fin(null)}' +
   'const rh=(p.request&&p.request.headers)||{},h={};for(const k of Object.keys(rh)){const l=k.toLowerCase();' +
   "if(l==='host'||l==='connection'||l==='accept-encoding'||l==='content-length')continue;h[k]=rh[k]}" +
-  "h.host=t.host;h['x-forwarded-proto']=t.protocol.slice(0,-1);h['accept-encoding']='identity';" +
+  "h.host=t.host;h['x-forwarded-proto']=t.protocol.slice(0,-1);h['accept-encoding']='identity';if(pkey)h['x-tracy-preview-key']=pkey;" +
   "const body=typeof p.request.postData==='string'?Buffer.from(p.request.postData):null;if(body)h['content-length']=String(body.length);" +
   "let q;try{q=require('http').request({host:'127.0.0.1',port:Number(viaM[1]),method:p.request.method||'GET',path:t.pathname+t.search,headers:h},(r)=>{" +
   "const cs=[];let n=0;r.on('data',(d)=>{n+=d.length;if(n>" +
@@ -825,6 +837,10 @@ export const BROWSER_SCRIPT =
   "if(own&&served&&(p.request&&p.request.method)==='GET')return serveExec(p);" +
   "send('Fetch.failRequest',{requestId:rid,errorReason:'BlockedByClient'},sid).catch(()=>{});return}" +
   'if(allow&&via){let own=false;try{own=new URL(ru).origin===origin}catch{}if(own)return serve(p)}' +
+  // the preview key on a request for the page's own origin: its own headers kept, the key added.
+  'if(allow&&pkey){let own=false;try{own=new URL(ru).origin===origin}catch{}if(own){const hs=[];const rq=(p.request&&p.request.headers)||{};' +
+  "for(const k of Object.keys(rq)){if(k.toLowerCase()!=='x-tracy-preview-key')hs.push({name:k,value:String(rq[k])})}hs.push({name:'X-Tracy-Preview-Key',value:pkey});" +
+  "send('Fetch.continueRequest',{requestId:rid,headers:hs},sid).catch(()=>{});return}}" +
   "if(allow){send('Fetch.continueRequest',{requestId:rid},sid).catch(()=>{})}" +
   "else{offsite=ru;send('Fetch.failRequest',{requestId:rid,errorReason:'Aborted'},sid).catch(()=>{});done('TRACY_BROWSER OFFSITE '+ru)}};" +
   "rd.on('data',(d)=>{if(finished)return;buf=Buffer.concat([buf,d]);let i;while((i=buf.indexOf(0))!==-1){let m=null;try{m=JSON.parse(buf.slice(0,i))}catch{}buf=buf.slice(i+1);if(!m)continue;if(m.id&&pending.has(m.id)){const f=pending.get(m.id);pending.delete(m.id);f(m)}else if(m.method)onEvent(m)}});" +
@@ -836,7 +852,7 @@ export const BROWSER_SCRIPT =
   "const ft=await send('Page.getFrameTree',{},sid);topFrame=ft.result&&ft.result.frameTree&&ft.result.frameTree.frame&&ft.result.frameTree.frame.id;" +
   // on the public-origin route EVERY request is paused (subresources of that origin must be served
   // from loopback too); otherwise only Documents, as the off-site guard needs.
-  "await send('Fetch.enable',{patterns:via?[{urlPattern:'*',requestStage:'Request'}]:[{urlPattern:'*',resourceType:'Document',requestStage:'Request'}]},sid);" +
+  "await send('Fetch.enable',{patterns:via||pkey?[{urlPattern:'*',requestStage:'Request'}]:[{urlPattern:'*',resourceType:'Document',requestStage:'Request'}]},sid);" +
   // style: the oracle's viewport, set before the page is asked for (media queries read it at once).
   // A light scheme and reduced motion, as the oracle's Playwright context has them: a machine whose
   // OS runs dark would otherwise read the dark-mode tokens.
@@ -951,6 +967,16 @@ export const BROWSER_SCRIPT =
   "})().catch((e)=>done('TRACY_BROWSER ERR '+((e&&e.message)||String(e))));" +
   '}'
 
+/** The `-e TRACY_PREVIEW_KEY=<key>` pair for a site's web container while it is locked with a key, else none. */
+function previewKeyEnv(/** @type {string} */ container) {
+  const key = previewKeyFor(previewLabelOf(container))
+  return key ? ['-e', `TRACY_PREVIEW_KEY=${key}`] : []
+}
+
+/** The site label a web container is named after (`<label>-web-1`), or null. */
+const previewLabelOf = (/** @type {unknown} */ container) =>
+  /^([a-z0-9][a-z0-9-]*)-web-1$/.exec(String(container))?.[1] ?? null
+
 /**
  * The docker sub-argv for a browser call: the container's node driving chromium over CDP, as
  * www-data with a writable HOME (chromium's user-data-dir), wrapped in `timeout` as the backstop
@@ -992,6 +1018,8 @@ export function browserArgv({
     'HOME=/tmp',
     ...(resolverRule ? ['-e', `TRACY_RESOLVER_RULE=${resolverRule}`] : []),
     ...(via ? ['-e', `TRACY_PUBLIC_VIA=${via}`] : []),
+    // A locked site (#189): its preview key as an exec environment variable, never a file in the container.
+    ...previewKeyEnv(container),
     container,
     'timeout',
     '-k',
@@ -1096,6 +1124,9 @@ export function hostBrowserCommand({
       TRACY_CHROME: chrome,
       TRACY_SERVE_CONTAINER: target.container,
       TRACY_PUBLIC_VIA: target.via,
+      ...(previewKeyFor(previewLabelOf(target.container))
+        ? { TRACY_PREVIEW_KEY: /** @type {string} */ (previewKeyFor(previewLabelOf(target.container))) }
+        : {}),
       ...(dockerHost ? { DOCKER_HOST: dockerHost } : {})
     }
   }

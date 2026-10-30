@@ -230,6 +230,7 @@ import {
   styleRead,
   pageText as staticPageTextRoad
 } from './page.mjs'
+import { askPreviewKey, refreshPreviewKey } from './preview-key.mjs'
 import {
   COMMENT_ITEMS_PLUGIN,
   commentItemsRule,
@@ -2732,6 +2733,24 @@ export function apply(ctx: HostContext, config: Config = {}): void {
   }
 
   /**
+   * The preview key of a site a brief build holds on its rebuilding page (#189, `preview-key.mjs`), asked of tracy-web
+   * as this session's person for its own site, so the page reads of this call (the container's curl) see the real
+   * site. Kept a few seconds per site; any failure is no key, and the reads go on as before.
+   */
+  async function previewKeyBeforeReads(label: string | null, sessionId: string | null): Promise<void> {
+    if (label === null || !sessionId) return
+    const { plan } = planFor(sessionId)
+    if (plan === null) return
+    await refreshPreviewKey(label, () =>
+      askPreviewKey({
+        fetchImpl: (config.fetch ?? fetch) as typeof fetch,
+        origin: plan.origin,
+        headers: conversationHeaders(plan, label, sessionId, false)
+      })
+    )
+  }
+
+  /**
    * What `tracy_site` needs to know about a site to carry out a call: its platform (the one reader,
    * `sitePlatform`, and the container's own label for an EmDash site whose folder names none), whether
    * it is sealed (the fence's own reader), and so which surface of actions it has.
@@ -4379,6 +4398,8 @@ export function apply(ctx: HostContext, config: Config = {}): void {
         type?: string
         data?: unknown
       }[]
+      // A locked site's pictures carry its preview key too (#189).
+      await previewKeyBeforeReads(label, sessionId)
       // The page is looked at before the turn closes: the line under the chat says so (#1403 item 10).
       const result = await whileWaiting(
         sessionId,
@@ -5282,6 +5303,8 @@ export function apply(ctx: HostContext, config: Config = {}): void {
         }
       }
       const key = laneKey ?? plan.siteKey ?? '_conversation'
+      // A locked site's page reads in this call carry its preview key (#189).
+      await previewKeyBeforeReads(label ?? laneLabel, sessionId)
       // What Tracy corrected in the call (an alias, a key beside `params`), said once in the answer.
       const noted = (answer: unknown): unknown => withNotes(answer, plan.notes)
       // 🔒 A WHOLE NEW LOOK FROM THE CHAT FOLLOWS THE OPERATOR'S SWITCH (`chat-design-route.mjs`):

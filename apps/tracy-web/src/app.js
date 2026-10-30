@@ -2229,6 +2229,8 @@ export function buildApp(deps) {
     }
     const sites = sitesRoutes({
       pool: deps.pool,
+      // The agent's page reads of a locked site (#189, `sites/site-lock.js`).
+      previewKeyOf: (siteKey, asker) => siteLock.previewKey(siteKey, asker),
       resumeLiveJobs: deps.resumeLiveJobs === true,
       doorProbeToken: doorHealth ? doorProbeToken : null,
       doorHealth,

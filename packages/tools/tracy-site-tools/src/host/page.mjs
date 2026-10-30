@@ -42,6 +42,7 @@ import {
   parseBrowser,
   parseFetch
 } from './exec.mjs'
+import { previewKeyFor, renewPreviewKey } from './preview-key.mjs'
 import {
   WHERE_REGIONS,
   decodeEntities,
@@ -551,7 +552,28 @@ function unreachableReason(res, connectPort) {
  *   now?: () => number }} input
  * @returns {Promise<PageRead | PageReadFailure>}
  */
-export async function readPage({ run, label, internalPort, publicOrigin = null, path, now = Date.now }) {
+export async function readPage(input) {
+  // A site a brief build holds on its rebuilding page (#189): every hop is this site's own loopback read (`nextHop`
+  // refuses any other), so its preview key goes with each one. A key renewed since it was kept is answered with the
+  // offline page (503): the kept key is dropped, a fresh one asked, and the read made once more with it.
+  const previewKey = previewKeyFor(input.label)
+  const read = await readPageWithKey(input, previewKey)
+  if (previewKey === null || !read.ok || read.status !== 503) return read
+  const fresh = await renewPreviewKey(input.label)
+  return fresh !== null && fresh !== previewKey ? readPageWithKey(input, fresh) : read
+}
+
+/**
+ * {@link readPage} with one preview key (or none).
+ * @param {{ run: Run, label: string, internalPort: number, publicOrigin?: string | null, path: string,
+ *   now?: () => number }} input
+ * @param {string | null} previewKey
+ * @returns {Promise<PageRead | PageReadFailure>}
+ */
+async function readPageWithKey(
+  { run, label, internalPort, publicOrigin = null, path, now = Date.now },
+  previewKey
+) {
   const start = routeStart(label, internalPort)
   const asked = pagePathOf(path)
   if (start === null || !asked.ok)
@@ -576,7 +598,8 @@ export async function readPage({ run, label, internalPort, publicOrigin = null, 
         host: route.host,
         proto: route.proto,
         nonce,
-        maxTimeS
+        maxTimeS,
+        previewKey
       }),
       timeoutMs: maxTimeS * 1000 + 4000,
       maxBuffer: FETCH_MAX_BYTES + 256 * 1024

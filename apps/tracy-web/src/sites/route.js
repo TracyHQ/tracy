@@ -1357,7 +1357,9 @@ export function sitesRoutes({
   // between domains. The comment doors tell mentioned people, the thread and the author through it.
   notify = async () => [],
   // Closes the invitations and requests still open on a site once it is deleted (`notify.js`).
-  settleSiteNotifications = async () => 0
+  settleSiteNotifications = async () => 0,
+  // The rebuilding lock's preview key of a locked site (`site-lock.js`, #189), bound in by `app.js`; null: none.
+  previewKeyOf = null
 }) {
   const app = new Hono()
   // A backup point downloaded by its Owner (`backup-export.js`): the two export doors and the
@@ -7322,6 +7324,25 @@ export function sitesRoutes({
     const byThisConversation =
       at !== null && AUDIT_SESSION_SHAPE.test(session) && site?.last_write_session === session
     return json(c, { changedAt: at === null ? null : new Date(at).toISOString(), byThisConversation })
+  })
+
+  // ── GET /api/sites/:key/preview-key — the key a conversation's page reads send while the site is locked ──
+  // #189: a brief build keeps the public site on its rebuilding page, and `tracy-site-tools` reads pages with the site
+  // container's own curl, which carries no token. The plugin answers `X-Tracy-Preview-Key` with the real site, so
+  // site-tools asks for the key here, as the person who typed (or the viewer), for the conversation's own site. `key`
+  // is null whenever the site is not locked with one. 🔒 Never logged, never cached, never for an API key.
+  app.get('/api/sites/:key/preview-key', async (c) => {
+    c.header('Cache-Control', 'private, no-store')
+    const held = await conversationSite(c)
+    if (held.error) return held.error
+    const auth = await requireGrant(c, held.siteKey, true)
+    if (auth.error) return auth.error
+    if (auth.kind === 'key') return json(c, { code: 'SEAT_NOT_AUTHORIZED' }, 403)
+    const key =
+      typeof previewKeyOf === 'function'
+        ? await previewKeyOf(held.siteKey, auth.email).catch(() => null)
+        : null
+    return json(c, { key: typeof key === 'string' ? key : null })
   })
 
   // ── POST /api/sites/:key/lease/release — a conversation's turn ended: its write lease goes back ──

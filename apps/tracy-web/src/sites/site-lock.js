@@ -13,9 +13,18 @@
  * component token as `Authorization: Bearer`, which the plugin answers with the real site (`lockedRead`). Only to the
  * site's own address, never to a font host.
  *
+ * 🔒 AND THE AI TURNS READ IT WITH A PREVIEW KEY. `tracy-site-tools` reads pages with the container's own curl and holds
+ * no token. A plugin that lists "preview-key" in `info.site_offline.bypass_also` takes a fresh random key with the lock
+ * (`offline_preview_key`, write-only on its side) and answers `X-Tracy-Preview-Key: <key>` with the real site. The key
+ * lives in the lock state only (`previewKey`), so it dies at unlock; it is never logged and never in a receipt, a note
+ * or a URL ({@link publicLock}). Site-tools asks it of `previewKey(siteKey)` through the conversation door. The plugin
+ * stores only its SHA-256, refuses a key sent with `offline: 0`, clears it at unlock and lets it expire 6 hours after
+ * it was set, so a lock held longer gets a fresh key ({@link PREVIEW_KEY_RENEW_MS}), sent again with `offline: 1`.
+ *
  * The state lives on the site's brief row (`site_brief.timings.siteLock`), not in memory: the run that locks and the
  * runner that unlocks need not be the same process.
  */
+import { randomBytes } from 'node:crypto'
 import { CURRENT_BRIEF } from '../lib/site-brief-row.js'
 
 export const SITE_LOCK_VERSION = 1
@@ -27,17 +36,38 @@ export const REBUILDING_MESSAGE = 'This website is being updated. Please visit a
 export const LOCK_UNSUPPORTED_NOTE =
   'the site stayed open to visitors while it was rebuilt, because it cannot show a rebuilding page'
 
+/** The shape of a preview key the plugin accepts (32 to 128 URL-safe characters). */
+export const PREVIEW_KEY_SHAPE = /^[A-Za-z0-9_-]{32,128}$/
+
+/** The plugin lets a preview key expire 6 hours after it is set: a key older than this is replaced first. */
+export const PREVIEW_KEY_RENEW_MS = 5 * 60 * 60 * 1000
+
+/** A fresh preview key: 36 random bytes, 48 URL-safe characters. */
+const freshPreviewKey = () => randomBytes(36).toString('base64url')
+
+/**
+ * The lock as it may be shown or kept anywhere but the brief row: without its preview key.
+ * @param {any} lock
+ */
+export function publicLock(lock) {
+  if (!lock || typeof lock !== 'object') return lock
+  const { previewKey: _secret, previewKeyAt: _at, ...shown } = lock
+  return shown
+}
+
 /**
  * @typedef {object} SiteLockWriter one CMS's way of locking a site
  * @property {string} action - the door action that sets the lock fields
- * @property {(apply: Function, siteKey: string) => Promise<boolean>} supported - whether this site can be locked AND
- *   still be read by Tracy while it is
- * @property {(message: string) => Record<string, unknown>} lockFields
+ * @property {(apply: Function, siteKey: string) => Promise<boolean | {previewKey?: boolean}>} supported - whether this
+ *   site can be locked AND still be read by Tracy while it is; `{previewKey: true}` when it also takes a preview key
+ * @property {(message: string, previewKey?: string | null) => Record<string, unknown>} lockFields
  * @property {() => Record<string, unknown>} unlockFields
  */
 
 /**
- * @typedef {{version: number, state: 'locked' | 'unlocked' | 'unsupported' | 'failed', reason?: string}} SiteLockRecord
+ * @typedef {{version: number, state: 'locked' | 'unlocked' | 'unsupported' | 'failed', reason?: string,
+ *   previewKey?: string, previewKeyAt?: number, platform?: string, runId?: string}} SiteLockRecord (`previewKey` and
+ *   when it was set: only on the brief row, only while locked; `platform` and `runId`: what a renewal writes with)
  */
 
 const record = (/** @type {SiteLockRecord['state']} */ state, /** @type {string} */ reason = '') => ({
@@ -51,20 +81,31 @@ const said = (/** @type {any} */ answer) =>
 
 /**
  * Put the site on its rebuilding page, before the build's first write.
- * @param {{writer: SiteLockWriter | null | undefined, apply: Function, siteKey: string, applyId: string, message?: string}} input
+ * @param {{writer: SiteLockWriter | null | undefined, apply: Function, siteKey: string, applyId: string, message?: string,
+ *   now?: () => number}} input
  * @returns {Promise<SiteLockRecord>}
  */
-export async function lockSite({ writer, apply, siteKey, applyId, message = REBUILDING_MESSAGE }) {
+export async function lockSite({
+  writer,
+  apply,
+  siteKey,
+  applyId,
+  message = REBUILDING_MESSAGE,
+  now = Date.now
+}) {
   if (!writer) return record('unsupported', 'no rebuilding page for this CMS')
   try {
-    if (!(await writer.supported(apply, siteKey)))
-      return record('unsupported', 'the site plugin does not offer a rebuilding page')
+    const offer = await writer.supported(apply, siteKey)
+    if (!offer) return record('unsupported', 'the site plugin does not offer a rebuilding page')
+    // A fresh key per lock, so a Retry never reuses the key of a lock that was taken off.
+    const previewKey = typeof offer === 'object' && offer.previewKey === true ? freshPreviewKey() : null
     const answer = await apply({
       siteKey,
       action: writer.action,
-      params: { operation: 'set', apply_id: applyId, fields: writer.lockFields(message) }
+      params: { operation: 'set', apply_id: applyId, fields: writer.lockFields(message, previewKey) }
     })
-    return answer?.ok === false ? record('failed', said(answer)) : record('locked')
+    if (answer?.ok === false) return record('failed', said(answer))
+    return previewKey ? { ...record('locked'), previewKey, previewKeyAt: now() } : record('locked')
   } catch (error) {
     return record('failed', error instanceof Error ? error.message : String(error))
   }
@@ -120,14 +161,50 @@ export async function siteLockOf(pool, siteKey) {
  * @param {(siteKey: string) => Promise<boolean>} deps.holds - whether a build that judges the finished site (and so
  *   unlocks it) holds this site; a site nobody will judge is never locked
  * @param {(siteKey: string) => Promise<string | null>} deps.tokenOf - the site's own component token
+ * @param {() => number} [deps.now]
  */
-export function createSiteLock({ pool, writers, applyFor, holds, tokenOf }) {
+export function createSiteLock({ pool, writers, applyFor, holds, tokenOf, now = Date.now }) {
   const save = (/** @type {string} */ siteKey, /** @type {SiteLockRecord} */ lock) =>
     pool.query(
       `update site_brief set timings = timings || jsonb_build_object('siteLock', $2::jsonb), updated_at = now()
         where site_key = $1`,
       [siteKey, JSON.stringify(lock)]
     )
+  /** @type {Map<string, Promise<string | null>>} one renewal per site at a time, so two asks never race two keys */
+  const renewing = new Map()
+  const track = (/** @type {string} */ siteKey, /** @type {Promise<string | null>} */ work) => {
+    renewing.set(siteKey, work)
+    return work.finally(() => renewing.delete(siteKey))
+  }
+  /** A fresh key for a lock held past the renewal age; null (no key) when it cannot be written. */
+  const renew = async (
+    /** @type {string} */ siteKey,
+    /** @type {SiteLockRecord} */ held,
+    /** @type {any} */ asker
+  ) => {
+    const writer = held.platform ? writers[held.platform] : undefined
+    if (!writer || typeof asker !== 'string' || asker === '') return null
+    const previewKey = freshPreviewKey()
+    try {
+      const answer = await applyFor(
+        asker,
+        held.runId ?? null
+      )({
+        siteKey,
+        action: writer.action,
+        params: {
+          operation: 'set',
+          apply_id: `site-lock-renew-${held.runId ?? 'run'}-${now()}`,
+          fields: writer.lockFields(REBUILDING_MESSAGE, previewKey)
+        }
+      })
+      if (answer?.ok === false) return null
+    } catch {
+      return null
+    }
+    await save(siteKey, { ...held, previewKey, previewKeyAt: now() })
+    return previewKey
+  }
   return {
     /**
      * Lock before the run's first write. Null when no judging build holds the site (the Add site popup's own Apply).
@@ -136,12 +213,14 @@ export function createSiteLock({ pool, writers, applyFor, holds, tokenOf }) {
      */
     async lock(ctx) {
       if (!(await holds(ctx.siteKey).catch(() => false))) return null
-      return lockSite({
+      const lock = await lockSite({
         writer: writers[ctx.platform],
         apply: applyFor(ctx.email, ctx.runId),
         siteKey: ctx.siteKey,
-        applyId: `site-lock-${ctx.runId}`
+        applyId: `site-lock-${ctx.runId}`,
+        now
       })
+      return lock.previewKey ? { ...lock, platform: ctx.platform, runId: ctx.runId } : lock
     },
     /**
      * Unlock a site the build left full. A site that was never locked is answered as its row says, and nothing is written.
@@ -150,15 +229,38 @@ export function createSiteLock({ pool, writers, applyFor, holds, tokenOf }) {
      */
     async unlock(input) {
       const now = await siteLockOf(pool, input.siteKey)
-      if (now?.state !== 'locked') return now
+      if (now?.state !== 'locked') return publicLock(now)
       const lock = await unlockSite({
         writer: writers[input.platform],
         apply: applyFor(input.email, input.runId),
         siteKey: input.siteKey,
         applyId: `site-unlock-${input.runId}`
       })
-      await save(input.siteKey, lock)
-      return lock
+      // A site still locked keeps its key on the row, so Tracy can still read it; the answer never carries it.
+      const kept =
+        lock.state === 'locked' && now.previewKey
+          ? {
+              ...lock,
+              previewKey: now.previewKey,
+              previewKeyAt: now.previewKeyAt,
+              platform: now.platform,
+              runId: now.runId
+            }
+          : lock
+      await save(input.siteKey, kept)
+      return publicLock(lock)
+    },
+    /**
+     * The preview key a page read of the site sends while it is locked, else null. A key near the plugin's 6 hour
+     * expiry is replaced first, written as `asker` (the seat holder who asked), with `offline: 1` again.
+     * @param {string} siteKey @param {string | null} [asker]
+     */
+    async previewKey(siteKey, asker = null) {
+      const held = await siteLockOf(pool, siteKey).catch(() => null)
+      const key = held?.state === 'locked' ? held.previewKey : null
+      if (typeof key !== 'string' || !PREVIEW_KEY_SHAPE.test(key)) return null
+      if (now() - Number(held.previewKeyAt ?? 0) < PREVIEW_KEY_RENEW_MS) return key
+      return renewing.get(siteKey) ?? track(siteKey, renew(siteKey, held, asker))
     },
     /** The bearer a read of the site sends while it is locked, else null. @param {string} siteKey */
     async bearer(siteKey) {
