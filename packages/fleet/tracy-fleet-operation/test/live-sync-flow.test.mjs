@@ -1057,7 +1057,9 @@ test('a collation the live site changed, with no row changed, reaches the copy: 
 }, () => {
   const s = stack()
   const collation = (table) =>
-    rows(`SELECT TABLE_COLLATION FROM information_schema.TABLES WHERE TABLE_SCHEMA='joomla' AND TABLE_NAME='${table}'`)
+    rows(
+      `SELECT TABLE_COLLATION FROM information_schema.TABLES WHERE TABLE_SCHEMA='joomla' AND TABLE_NAME='${table}'`
+    )
   try {
     sql('ALTER TABLE jos_modules CONVERT TO CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci', 'livesrc')
     const first = s.sync(s.read())

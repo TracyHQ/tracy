@@ -1867,7 +1867,13 @@ test('WordPress: a menu the customer deleted on live that the copy kept is no me
   // The sync kept the deleted menu as the copy's (a delete-modify): its create is a conflict, and the
   // item in it is never written on its own.
   const held = changeset('wordpress', data, [
-    { id: 'db:wp_terms:["7"]', kind: 'row', table: 'wp_terms', key: { term_id: '7' }, reason: 'delete-modify' }
+    {
+      id: 'db:wp_terms:["7"]',
+      kind: 'row',
+      table: 'wp_terms',
+      key: { term_id: '7' },
+      reason: 'delete-modify'
+    }
   ])
   const term = held.items.find((i) => i.kind === 'term' && i.op === 'create')
   assert.ok(term?.conflict, JSON.stringify(held.items))

@@ -722,7 +722,9 @@ test(
         (25, 1, '_wp_page_template', 'page-wide.php'), (26, 1, '_thumbnail_id', '9');`
     })
     const meta = (key) =>
-      sql(`SELECT GROUP_CONCAT(meta_value ORDER BY meta_id) FROM wc_m.wp_postmeta WHERE post_id=1 AND meta_key='${key}'`)
+      sql(
+        `SELECT GROUP_CONCAT(meta_value ORDER BY meta_id) FROM wc_m.wp_postmeta WHERE post_id=1 AND meta_key='${key}'`
+      )
     assert.equal(meta('_wp_page_template'), 'page-no-title.php', JSON.stringify(answer.renumbered))
     assert.equal(meta('_thumbnail_id'), '9', 'the same value both added is one row')
     assert.equal(meta('customer_note'), 'live', 'the live site’s own new row comes over')

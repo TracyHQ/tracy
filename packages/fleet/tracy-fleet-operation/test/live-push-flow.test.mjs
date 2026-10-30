@@ -759,7 +759,10 @@ test('an article a push created and the customer then deleted on the live site g
       engine
     )
     assert.equal(pushed.ok, true, JSON.stringify(pushed))
-    assert.deepEqual(pushed.written.map((w) => w.id), ['article:new:3'])
+    assert.deepEqual(
+      pushed.written.map((w) => w.id),
+      ['article:new:3']
+    )
     assert.equal(pushed.sync.state, 'applied', JSON.stringify(pushed.sync))
     // The settle sync brought the live site's stamps: the two rows agree.
     assert.deepEqual(
