@@ -15844,6 +15844,7 @@ function shellWriteTargets(command, dir, siteRoot) {
 
 // src/host/site-context.mjs
 var GUIDE_RULE = "TRACY ITSELF. When the customer asks how to do something in Tracy or where a button is (own domain or DNS, publish, putting changes on their real website, backup and restore, export, inviting people, roles, design system, pricing, which CMS or theme a new site can use), call tracy_guide FIRST and answer from it: the steps for their case, the screen link it gives, who may do it. web_search is only for what is not Tracy, such as their DNS provider's own screens. Nothing found: say you do not know and give the Discord link; never describe a Tracy screen, price or DNS step from memory.";
+var BUILD_RULES_RULE = "BUILD RULES. After you change a page, a card, a menu or the footer, call tracy_build_check {path} for that page (the home page for a menu or footer change) and fix what it lists before you report done: a new item takes the shape of its siblings, the footer keeps its shape, every channel stays on the Contact page, a menu item is named by its page. The rules are in the site-build-rules skill. A hard fact comes only from the customer.";
 var TAKE_AWAY_LINE = "- A file for the customer to take (a zip, an export) stays here, outside public `.webroot/`: they download it from the side panel.";
 var SITE_CONTEXT_PLUGIN = "tracy-site-tools:site-context";
 var SITE_NOTICE_KIND = "tracy-site";
@@ -16717,6 +16718,7 @@ async function siteContext(folder, label, detectPlatform2, presetId, options = {
       `A TRANSLATION YOU CAN INSTALL BEATS ONE YOU WRITE. The PHRASES a platform ships are already translated \u2014 that is what a language pack is \u2014 so there the job is to find the right one and install it, then write an override only for what it does not cover. Only the WORDS somebody wrote have no pack, and they are the part you translate. Which packs exist is a fact THIS SITE holds \u2014 the platform line above says through which door, and a site that documents itself may pin a catalogue with a URL and a checksum apiece \u2014 and that list is the authoritative one: a language missing from it is an answer, not a reason to search the web.`
     ] : [],
     GUIDE_RULE,
+    BUILD_RULES_RULE,
     "STAY INSIDE WHAT WAS ASKED. Never offer to write pages, fill empty sections, or unpublish what you did not put there. If the site holds little, that IS the answer \u2014 say what you changed and what there was. And when something truly is not available, ONE authoritative list settles it: say so and stop, rather than trying a second host, a third URL shape, or a search engine.",
     "</system-reminder>"
   );
@@ -23258,6 +23260,71 @@ function guideAnswer(body) {
       ...a.screen ? { screen: a.screen } : {}
     })),
     next: "Answer in the customer's language, in a few plain steps for THEIR situation (use thisSite: say which record is missing, not the whole procedure). Give the screen as a Markdown link [label](href) copied exactly, so one click opens that tab. Say what only an Owner can do. You cannot press these buttons for them."
+  };
+}
+
+// src/host/build-check-tool.mjs
+var BUILD_CHECK_DESCRIPTION = 'tracy_build_check: check one page of this site against its build rules (sibling cards in one shape, footer shape, Contact page channels, menu names, no template demo left). Call {path:"/the/page"} after you changed that page, and once with {path:"/"} after a menu or footer change. Returns what to fix there, blockers first, with what to put instead. Read-only.';
+var BUILD_CHECK_PARAMETERS = Object.freeze({
+  type: "object",
+  properties: {
+    path: { type: "string", description: 'The page you changed, a site address such as "/lessons".' }
+  }
+});
+function buildCheckCall(args) {
+  const a = args && typeof args === "object" ? (
+    /** @type {Record<string, unknown>} */
+    args
+  ) : {};
+  let raw = typeof a.path === "string" ? a.path.trim() : typeof a.page === "string" ? a.page.trim() : "/";
+  const absolute = /^https?:\/\/[^/]+(\/.*)?$/i.exec(raw);
+  if (absolute) raw = absolute[1] ?? "/";
+  if (raw === "") raw = "/";
+  if (!raw.startsWith("/")) raw = `/${raw}`;
+  const path22 = raw.split(/[?#]/)[0].replace(/\/+$/, "") || "/";
+  if (path22.startsWith("//") || path22.length > 300 || /[\s\\]|\/\.\.?(?:\/|$)/.test(path22))
+    return {
+      ok: false,
+      code: "BUILD_CHECK_BAD_PATH",
+      error: "That is not a page address of this site.",
+      next: 'Call tracy_build_check again with {path:"/the/page"}, the address the page is served at.'
+    };
+  return { ok: true, path: path22, query: new URLSearchParams({ path: path22 }).toString() };
+}
+function buildCheckUnavailable(code, extra = {}) {
+  return {
+    ok: false,
+    code,
+    ...extra,
+    next: "The build check could not run. Look at the page yourself against the site-build-rules skill (siblings in one shape, the footer shape, the Contact page, menu names), and tell the customer the automatic check was not available."
+  };
+}
+function buildCheckAnswer(body) {
+  const findings = Array.isArray(body?.findings) ? body.findings : [];
+  const broken = Array.isArray(body?.broken) ? body.broken : [];
+  if (findings.length === 0 && broken.length === 0)
+    return {
+      ok: true,
+      pass: true,
+      path: body?.path ?? null,
+      next: "This page keeps the build rules. Tell the customer what you changed."
+    };
+  return {
+    ok: true,
+    pass: false,
+    path: body?.path ?? null,
+    blockers: Number(body?.blockers ?? 0),
+    ...broken.length ? { broken } : {},
+    findings: findings.map((f) => ({
+      ...f.rule ? { rule: f.rule } : {},
+      ...f.blocks ? { blocks: true } : {},
+      where: [f.page, f.place].filter(Boolean).join(" | ") || "the whole site",
+      ...f.found ? { found: f.found } : {},
+      ...f.instead ? { instead: f.instead } : {},
+      ...f.guarantee ? { why: f.guarantee } : {}
+    })),
+    ...Number(body?.more) > 0 ? { more: Number(body.more) } : {},
+    next: "Fix each finding at its place with its instead text, blockers first, touching nothing else; a hard fact (price, phone, address, hours, name, year, guarantee) only from the customer. Then call tracy_build_check again. What you cannot fix, tell the customer plainly."
   };
 }
 
@@ -46709,6 +46776,7 @@ var APPLY_TIMEOUT_MS = 18e4;
 var DEMO_CHECK_TIMEOUT_MS = 6e5;
 var CHANGED_TIMEOUT_MS = 1e4;
 var GUIDE_TIMEOUT_MS = 25e3;
+var BUILD_CHECK_TIMEOUT_MS = 9e4;
 var CHANGED_READ_TIMEOUT_MS = 3e3;
 var EMDASH_WARM_TOOL = "schema_list_collections";
 var HELD_FIRST_MS = 5e3;
@@ -50661,6 +50729,48 @@ ${text6}`);
     }
   };
   ctx.effect(() => ctx.tools.register(guideTool), "tracy-site-tools: tracy_guide");
+  const buildCheckTool = {
+    name: "tracy_build_check",
+    description: BUILD_CHECK_DESCRIPTION,
+    parameters: BUILD_CHECK_PARAMETERS,
+    isConcurrencySafe: () => true,
+    output: { schema: {}, render: (_args, value) => answerContent(value, []) },
+    async execute(args, exec) {
+      const asked = buildCheckCall(args);
+      if (!asked.ok) return asked;
+      const sessionId = exec?.agent?.session?.id ?? null;
+      if (typeof sessionId !== "string") return buildCheckUnavailable("NO_SESSION");
+      const sitesRoot = resolveSitesRoot(void 0);
+      let label = null;
+      try {
+        label = siteOf(String(exec?.agent?.session?.header?.cwd ?? ""), sitesRoot).label;
+      } catch {
+        label = null;
+      }
+      if (laneSiteKey() !== null) label = gatewaySetting("MCP_TRACY_SITE_LABEL");
+      if (label === null || label === "") return buildCheckUnavailable("NO_SITE_IN_CONVERSATION");
+      const { plan } = planFor(sessionId);
+      if (plan === null) return buildCheckUnavailable("NOBODY_TO_ACT_AS");
+      try {
+        const res = await (config.fetch ?? fetch)(
+          `${plan.origin}/api/sites/_conversation/build-check?${asked.query}`,
+          {
+            method: "GET",
+            headers: conversationHeaders(plan, label, sessionId, false),
+            signal: AbortSignal.timeout(BUILD_CHECK_TIMEOUT_MS)
+          }
+        );
+        if (res.status === 404 || res.status === 405) return buildCheckUnavailable("BUILD_CHECK_DOOR_MISSING");
+        if (!res.ok) return buildCheckUnavailable("BUILD_CHECK_REFUSED", { httpStatus: res.status });
+        return buildCheckAnswer(await res.json().catch(() => null));
+      } catch (error) {
+        return buildCheckUnavailable("BUILD_CHECK_UNREACHABLE", {
+          error: error instanceof Error ? error.message : String(error)
+        });
+      }
+    }
+  };
+  ctx.effect(() => ctx.tools.register(buildCheckTool), "tracy-site-tools: tracy_build_check");
   const designSystemTool = {
     name: "tracy_design_system",
     description: DESIGN_SYSTEM_DESCRIPTION,

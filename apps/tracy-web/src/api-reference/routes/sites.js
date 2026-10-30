@@ -688,6 +688,36 @@ export const SITES_ROUTES = [
     answers:
       '`{changedAt, byThisConversation}` — ISO time of the last recorded write, or null when none; whether that write was made by the asking conversation'
   },
+  // src/sites/route.js
+  {
+    method: 'GET',
+    path: '/api/sites/:key/preview-key',
+    summary: 'The preview key of a site held on its rebuilding page',
+    description:
+      'Called by the host before the site’s agent reads pages of a site a brief build keeps on its rebuilding page: the key the plugin accepts in `X-Tracy-Preview-Key` to serve the real site, sent only to the site’s own origin. `key` is null whenever the site is not locked with one. Never cached. Acts as the signed person who typed (`x-tracy-actor`) or a session, never an API key; `_conversation` with `x-tracy-workspace-label` names the conversation’s own site. Any live seat.',
+    audience: ['dsh'],
+    auth: 'session',
+    internal: true,
+    params: { path: { key: 'Site key, or `_conversation`' } },
+    answers: '`{key}` — the preview key, or null when the site is not locked with one'
+  },
+  // src/sites/route.js
+  {
+    method: 'GET',
+    path: '/api/sites/:key/build-check',
+    summary: 'The site build rules checked on one page',
+    description:
+      'Called by the host when the site’s agent runs `tracy_build_check` after it changed a page: the same final checks a brief build ends with (every check the site build rules registry names, contact facts and the first screen included), read from the served site with the site’s last brief build as the plan, and answered for `path`: that page’s findings and the site-wide ones (menu, footer), blockers first, each with its rule, the rule’s guarantee and what to put instead. Read-only. Acts as the signed person who typed (`x-tracy-actor`) or a session; `_conversation` with `x-tracy-workspace-label` names the conversation’s own site. Any live seat.',
+    audience: ['dsh'],
+    auth: 'session',
+    internal: true,
+    params: {
+      path: { key: 'Site key, or `_conversation`' },
+      query: { path: 'The page, a site-relative address such as `/lessons/beginners` (default `/`)' }
+    },
+    answers:
+      '`{version, path, pass, blockers, findings[], more, broken[], pages[]}` — each finding `{rule, blocks, kind, page, place, found, guarantee, instead}`'
+  },
   // src/sites/guide.js
   {
     method: 'GET',

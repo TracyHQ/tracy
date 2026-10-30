@@ -104,6 +104,8 @@ version, and *"I changed it but nothing changed"* is almost always this step.
 The admin is at `/administrator` but **you cannot open it**, and the database is **never** the
 answer instead.
 
+Then run `tracy_build_check {path}` on each page you changed (the site build rules: [`site-build-rules.md`](../../../../docs/references/site-build-rules.md)).
+
 ## Going deeper
 
 The T4 **build** skill holds the details, under the same subtree constraint as above:

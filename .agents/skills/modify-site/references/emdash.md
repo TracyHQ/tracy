@@ -74,6 +74,8 @@ the customer gave, no wrong-language copy, read as little as possible) apply unc
 Writes through a tool show up immediately — there is no cache like the other two CMSes. But any write that touches `/app` needs
 `site.rebuild`, because Astro serves the built output, not the source.
 
+Then run `tracy_build_check {path}` on each page you changed (the site build rules: [`site-build-rules.md`](../../../../docs/references/site-build-rules.md)).
+
 ## Going deeper
 
 Tracy's two EmDash themes ship their own documentation, and that is the source closest to the site:

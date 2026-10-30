@@ -31,6 +31,7 @@ import {
   derivedContractOf,
   contractOperationWrites,
   GUIDE_RULE,
+  BUILD_RULES_RULE,
   TAKE_AWAY_LINE,
   hasPlan,
   isNoticeFrom,
@@ -2276,6 +2277,9 @@ test('modes: the SEO/GEO mode, and only it, reads where the site keeps its head;
   // Tracy): one rule on every platform, sent at every step — "Tracy questions go to tracy_guide first".
   // `GUIDE_RULE` itself, so the budget moves with the sentence and not past it.
   const GUIDE = GUIDE_RULE.length + 1
+  // 30/10/2026 (#189): a page the agent changes keeps the site build rules, checked with tracy_build_check. One line
+  // on every platform; `BUILD_RULES_RULE` itself, so the budget moves with the sentence.
+  const BUILD_RULES = BUILD_RULES_RULE.length + 1
   // 23/10/2026 (beta week): the agent put a customer's template zip in the public webroot for them to fetch.
   // One line on every installed site: such a file stays outside `.webroot/` and goes by the side panel.
   const TAKE_AWAY = TAKE_AWAY_LINE.length + 1
@@ -2294,6 +2298,7 @@ test('modes: the SEO/GEO mode, and only it, reads where the site keeps its head;
         SCOPE +
         HIDE_OR_DELETE +
         GUIDE +
+        BUILD_RULES +
         TAKE_AWAY
     ],
     // The recipe fit the headroom this row already had (and so did the review's category and time-of-day
@@ -2302,7 +2307,16 @@ test('modes: the SEO/GEO mode, and only it, reads where the site keeps its head;
       'size-wp',
       'wordpress',
       { marker: { contract: 'tracy-business/wp7/1.1.0', platform: 'wordpress' }, facts: WP_FACTS },
-      8_922 + POINTER + EARLIER + DELETE_SCOPE + LADDER + SCOPE + HIDE_OR_DELETE + GUIDE + TAKE_AWAY
+      8_922 +
+        POINTER +
+        EARLIER +
+        DELETE_SCOPE +
+        LADDER +
+        SCOPE +
+        HIDE_OR_DELETE +
+        GUIDE +
+        BUILD_RULES +
+        TAKE_AWAY
     ],
     // No headroom on EmDash, WordPress or open Joomla: the recipe bought its bytes there. The review's
     // PP-1/PP-3 wording added 8 (EmDash: the midnight ISO example) and 39 (WordPress: the category and
@@ -2312,19 +2326,46 @@ test('modes: the SEO/GEO mode, and only it, reads where the site keeps its head;
       'size-ed',
       'emdash',
       {},
-      9_413 + POINTER + EARLIER + DELETE_SCOPE + LADDER + SCOPE + HIDE_OR_DELETE + GUIDE + TAKE_AWAY
+      9_413 +
+        POINTER +
+        EARLIER +
+        DELETE_SCOPE +
+        LADDER +
+        SCOPE +
+        HIDE_OR_DELETE +
+        GUIDE +
+        BUILD_RULES +
+        TAKE_AWAY
     ],
     [
       'open-j',
       'joomla',
       { facts: JOOMLA_FACTS },
-      10_125 + POINTER + EARLIER + DELETE_SCOPE + LADDER + SCOPE + HIDE_OR_DELETE + GUIDE + TAKE_AWAY
+      10_125 +
+        POINTER +
+        EARLIER +
+        DELETE_SCOPE +
+        LADDER +
+        SCOPE +
+        HIDE_OR_DELETE +
+        GUIDE +
+        BUILD_RULES +
+        TAKE_AWAY
     ],
     [
       'open-wp',
       'wordpress',
       { facts: { theme: 'x', themeKind: 'block' } },
-      9_467 + POINTER + EARLIER + DELETE_SCOPE + LADDER + SCOPE + HIDE_OR_DELETE + GUIDE + TAKE_AWAY
+      9_467 +
+        POINTER +
+        EARLIER +
+        DELETE_SCOPE +
+        LADDER +
+        SCOPE +
+        HIDE_OR_DELETE +
+        GUIDE +
+        BUILD_RULES +
+        TAKE_AWAY
     ]
   ]
   for (const [label, platform, options, budget] of cases)
@@ -3812,6 +3853,24 @@ for (const [label, platform, options] of [
       assert.ok(GUIDE_RULE.includes(phrase), phrase)
     assert.ok(
       text.indexOf(GUIDE_RULE) < text.indexOf('STAY INSIDE WHAT WAS ASKED'),
+      'it sits before the closing rule'
+    )
+  })
+
+// 30/10/2026 (#189): an owner's later edit keeps what the build made. The rule names the check tool and the skill, on
+// every platform, before the closing rule.
+for (const [label, platform, options] of [
+  ['joomla', 'joomla', { facts: { template: 'x' } }],
+  ['wordpress', 'wordpress', { facts: { theme: 'x', themeKind: 'block' } }],
+  ['emdash', 'emdash', {}]
+])
+  test(`build rules: the site context sends a changed page to tracy_build_check: ${label}`, async () => {
+    const text = await textOf(`build-rules-${label}`, platform, options)
+    assert.ok(text.includes(BUILD_RULES_RULE), 'the rule is in the context as written')
+    for (const phrase of ['tracy_build_check', 'site-build-rules skill', 'shape of its siblings'])
+      assert.ok(BUILD_RULES_RULE.includes(phrase), phrase)
+    assert.ok(
+      text.indexOf(BUILD_RULES_RULE) < text.indexOf('STAY INSIDE WHAT WAS ASKED'),
       'it sits before the closing rule'
     )
   })

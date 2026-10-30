@@ -1167,6 +1167,17 @@
       "note": "Tracy's skill: restyle with a design inspiration — a customer in any role may ask; settled 27/09."
     },
     {
+      "id": "site-build-rules",
+      "roles": {
+        "designer": false,
+        "developer": true,
+        "writer": true,
+        "seo-geo": false
+      },
+      "platforms": {},
+      "note": "Tracy's skill, generated from the site build rules registry (scripts/build-rules/gen.mjs): the rules every page of a built site keeps and the tracy_build_check call after a page changes. Developer and Writer on every CMS, the roles that change pages; settled 30/10/2026 (#189)."
+    },
+    {
       "id": "tracy-file-links",
       "roles": {
         "designer": true,

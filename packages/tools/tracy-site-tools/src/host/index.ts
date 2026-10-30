@@ -84,6 +84,13 @@ import {
   guideUnavailable
 } from './guide-tool.mjs'
 import {
+  BUILD_CHECK_DESCRIPTION,
+  BUILD_CHECK_PARAMETERS,
+  buildCheckAnswer,
+  buildCheckCall,
+  buildCheckUnavailable
+} from './build-check-tool.mjs'
+import {
   bodiesRead,
   canonicalProp,
   carriesLook,
@@ -450,6 +457,8 @@ const DEMO_CHECK_TIMEOUT_MS = 600_000
 const CHANGED_TIMEOUT_MS = 10_000
 /** The guide door re-reads DNS when asked to recheck: as long as a lookup takes, not longer. */
 const GUIDE_TIMEOUT_MS = 25_000
+/** The build-check door reads the site's pages (up to the leftover check's page cap) and judges them. */
+const BUILD_CHECK_TIMEOUT_MS = 90_000
 /**
  * `GET /changed` (`siteChangedAtOf`) is read while the person's turn waits to start: one column on
  * Tracy's side, so a slow answer means no notice this turn, never a slower turn.
@@ -6598,6 +6607,55 @@ export function apply(ctx: HostContext, config: Config = {}): void {
     }
   }
   ctx.effect(() => ctx.tools.register(guideTool), 'tracy-site-tools: tracy_guide')
+
+  /**
+   * `tracy_build_check` (`build-check-tool.mjs`): the site build rules checked on one page after the agent changed it
+   * (#189) — the same final checks a brief build ends with, run by tracy-web on the served site. Registered like
+   * `tracy_guide`: at the bundle layer, in none of the lists that hide or defer a tool, so any preset whose skill or
+   * site context sends it here can call it. It acts as the person who is talking. Read-only.
+   */
+  const buildCheckTool = {
+    name: 'tracy_build_check',
+    description: BUILD_CHECK_DESCRIPTION,
+    parameters: BUILD_CHECK_PARAMETERS,
+    isConcurrencySafe: () => true,
+    output: { schema: {}, render: (_args: unknown, value: unknown) => answerContent(value, []) },
+    async execute(args: unknown, exec: ToolRun) {
+      const asked = buildCheckCall(args)
+      if (!asked.ok) return asked
+      const sessionId = exec?.agent?.session?.id ?? null
+      if (typeof sessionId !== 'string') return buildCheckUnavailable('NO_SESSION')
+      const sitesRoot = resolveSitesRoot(undefined)
+      let label: string | null = null
+      try {
+        label = siteOf(String(exec?.agent?.session?.header?.cwd ?? ''), sitesRoot).label
+      } catch {
+        label = null
+      }
+      if (laneSiteKey() !== null) label = gatewaySetting('MCP_TRACY_SITE_LABEL')
+      if (label === null || label === '') return buildCheckUnavailable('NO_SITE_IN_CONVERSATION')
+      const { plan } = planFor(sessionId)
+      if (plan === null) return buildCheckUnavailable('NOBODY_TO_ACT_AS')
+      try {
+        const res = await (config.fetch ?? fetch)(
+          `${plan.origin}/api/sites/_conversation/build-check?${asked.query}`,
+          {
+            method: 'GET',
+            headers: conversationHeaders(plan, label, sessionId, false),
+            signal: AbortSignal.timeout(BUILD_CHECK_TIMEOUT_MS)
+          }
+        )
+        if (res.status === 404 || res.status === 405) return buildCheckUnavailable('BUILD_CHECK_DOOR_MISSING')
+        if (!res.ok) return buildCheckUnavailable('BUILD_CHECK_REFUSED', { httpStatus: res.status })
+        return buildCheckAnswer(await res.json().catch(() => null))
+      } catch (error) {
+        return buildCheckUnavailable('BUILD_CHECK_UNREACHABLE', {
+          error: error instanceof Error ? error.message : String(error)
+        })
+      }
+    }
+  }
+  ctx.effect(() => ctx.tools.register(buildCheckTool), 'tracy-site-tools: tracy_build_check')
 
   /**
    * `tracy_design_system` (`chat-design-route.mjs`): the chat route to a whole design system, through

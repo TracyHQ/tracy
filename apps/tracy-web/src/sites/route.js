@@ -1359,7 +1359,9 @@ export function sitesRoutes({
   // Closes the invitations and requests still open on a site once it is deleted (`notify.js`).
   settleSiteNotifications = async () => 0,
   // The rebuilding lock's preview key of a locked site (`site-lock.js`, #189), bound in by `app.js`; null: none.
-  previewKeyOf = null
+  previewKeyOf = null,
+  // The site build rules on one page (`opportunities-build/page-build-check.js`, #189), bound in by `app.js`; null: none.
+  buildCheckOf = null
 }) {
   const app = new Hono()
   // A backup point downloaded by its Owner (`backup-export.js`): the two export doors and the
@@ -7343,6 +7345,30 @@ export function sitesRoutes({
         ? await previewKeyOf(held.siteKey, auth.email).catch(() => null)
         : null
     return json(c, { key: typeof key === 'string' ? key : null })
+  })
+
+  // ── GET /api/sites/:key/build-check?path= — the site build rules on one page, for the editing agent ──
+  // #189 (COO, 30/10/2026): after the agent changes a page, `tracy_build_check` asks here for the same final checks a
+  // brief build ends with (`build-rules.mjs`), read from the served site: that page's findings and the site-wide ones,
+  // each with its rule and what to put instead. Read-only, any seat on the conversation's own site.
+  app.get('/api/sites/:key/build-check', async (c) => {
+    c.header('Cache-Control', 'private, no-store')
+    const held = await conversationSite(c)
+    if (held.error) return held.error
+    const auth = await requireGrant(c, held.siteKey, true)
+    if (auth.error) return auth.error
+    const raw = String(c.req.query('path') ?? '/').trim()
+    const path =
+      raw.startsWith('/') && !raw.startsWith('//') && raw.length <= 300 && !/[\s\\]|\/\.\.?(?:\/|$)/.test(raw)
+        ? raw.split(/[?#]/)[0].replace(/\/+$/, '') || '/'
+        : null
+    if (path === null) return json(c, { code: 'INVALID_REQUEST', field: 'path' }, 400)
+    if (typeof buildCheckOf !== 'function') return json(c, { code: 'BUILD_CHECK_UNAVAILABLE' }, 503)
+    try {
+      return json(c, await buildCheckOf(held.siteKey, path))
+    } catch {
+      return json(c, { code: 'BUILD_CHECK_FAILED' }, 502)
+    }
   })
 
   // ── POST /api/sites/:key/lease/release — a conversation's turn ended: its write lease goes back ──

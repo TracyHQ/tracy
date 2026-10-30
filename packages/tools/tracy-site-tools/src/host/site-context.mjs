@@ -59,6 +59,16 @@ export const GUIDE_RULE =
   "TRACY ITSELF. When the customer asks how to do something in Tracy or where a button is (own domain or DNS, publish, putting changes on their real website, backup and restore, export, inviting people, roles, design system, pricing, which CMS or theme a new site can use), call tracy_guide FIRST and answer from it: the steps for their case, the screen link it gives, who may do it. web_search is only for what is not Tracy, such as their DNS provider's own screens. Nothing found: say you do not know and give the Discord link; never describe a Tracy screen, price or DNS step from memory."
 
 /**
+ * A CHANGED PAGE KEEPS THE SITE BUILD RULES (#189, COO 30/10/2026). A brief build ends with the registry's final checks
+ * (`build-rules.mjs`); an owner's later edit ("add a lesson") went through this agent with none of them, so one new
+ * card could break the sibling shape, the footer shape or the Contact page the build had made. The rules are the
+ * `site-build-rules` skill; the check is `tracy_build_check` on the page. One sentence, the same bytes for every site
+ * (`test/site-context.test.mjs` holds that it names the tool).
+ */
+export const BUILD_RULES_RULE =
+  'BUILD RULES. After you change a page, a card, a menu or the footer, call tracy_build_check {path} for that page (the home page for a menu or footer change) and fix what it lists before you report done: a new item takes the shape of its siblings, the footer keeps its shape, every channel stays on the Contact page, a menu item is named by its page. The rules are in the site-build-rules skill. A hard fact comes only from the customer.'
+
+/**
  * 🔒 A FILE FOR THE CUSTOMER NEVER GOES PUBLIC (beta week, 21/10/2026): the side panel's download came
  * down as a .json, and the agent put the customer's template zip in `.webroot/images/` so they could fetch
  * it — a file anyone could open. The download is fixed (dsh-better-sidebar `-tracy.92`); this says where
@@ -2311,6 +2321,7 @@ export async function siteContext(folder, label, detectPlatform, presetId, optio
         ]
       : []),
     GUIDE_RULE,
+    BUILD_RULES_RULE,
     'STAY INSIDE WHAT WAS ASKED. Never offer to write pages, fill empty sections, or unpublish what you did not put there. If the site holds little, that IS the answer — say what you changed and what there was. And when something truly is not available, ONE authoritative list settles it: say so and stop, rather than trying a second host, a third URL shape, or a search engine.',
     '</system-reminder>'
   )

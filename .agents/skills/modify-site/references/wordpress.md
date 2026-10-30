@@ -130,6 +130,8 @@ The rules live in `packages/tools/tracy-site-tools/src/host/wp-blocks.mjs` and `
 If a page cache plugin is active, **flush** it — otherwise you are still looking at the old version. If you changed the permalink
 structure, flush the rewrite rules, otherwise new pages return 404 even though the record exists.
 
+Then run `tracy_build_check {path}` on each page you changed (the site build rules: [`site-build-rules.md`](../../../../docs/references/site-build-rules.md)).
+
 ## Going deeper
 
 The WordPress **build** skill carries the detailed reference, and it is the copy the upstream repo's gates

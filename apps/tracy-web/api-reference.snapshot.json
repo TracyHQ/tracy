@@ -46211,6 +46211,40 @@
           "x-audience": ["customer"]
         }
       },
+      "/api/sites/{key}/build-check": {
+        "get": {
+          "operationId": "get_api_sites_key_build_check",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "key",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "query",
+              "name": "path",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Sites"],
+          "x-audience": ["dsh"],
+          "x-internal": true
+        }
+      },
       "/api/sites/{key}/changed": {
         "get": {
           "operationId": "get_api_sites_key_changed",
@@ -48076,6 +48110,32 @@
           ],
           "tags": ["Sites"],
           "x-audience": ["customer"]
+        }
+      },
+      "/api/sites/{key}/preview-key": {
+        "get": {
+          "operationId": "get_api_sites_key_preview_key",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "key",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Sites"],
+          "x-audience": ["dsh"],
+          "x-internal": true
         }
       },
       "/api/sites/{key}/preview-ticket": {

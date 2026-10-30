@@ -6,6 +6,7 @@ import { lookup as dnsLookup } from 'node:dns/promises'
 import { Hono } from 'hono'
 import { apiRoutes } from './api/route.js'
 import { publicDemoRoutes } from './opportunities-build/public-demos-route.js'
+import { pageBuildCheck } from './opportunities-build/page-build-check.js'
 import { apiReferenceRoutes, docsReferenceRoutes, ownsDocsReferencePath } from './api-reference/route.js'
 import { buildOpenApi } from './api-reference/spec.js'
 import { assistantRoutes } from './assistant/route.js'
@@ -2231,6 +2232,16 @@ export function buildApp(deps) {
       pool: deps.pool,
       // The agent's page reads of a locked site (#189, `sites/site-lock.js`).
       previewKeyOf: (siteKey, asker) => siteLock.previewKey(siteKey, asker),
+      // The site build rules on one page, for the editing agent's `tracy_build_check` (#189,
+      // `opportunities-build/page-build-check.js`): the same final checks a brief build ends with.
+      buildCheckOf: async (/** @type {string} */ siteKey, /** @type {string} */ path) =>
+        pageBuildCheck(deps.pool, {
+          siteKey,
+          path,
+          readSitePage: (/** @type {string} */ key, /** @type {string} */ p) =>
+            /** @type {any} */ (app).readSitePage?.(key, p) ?? null,
+          domain: await (deps.websiteOpportunitiesDomain ?? websiteOpportunitiesDomain)()
+        }),
       resumeLiveJobs: deps.resumeLiveJobs === true,
       doorProbeToken: doorHealth ? doorProbeToken : null,
       doorHealth,

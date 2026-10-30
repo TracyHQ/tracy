@@ -150,7 +150,9 @@ test('🔒 the agent is given no notes tool: its tools are the ones it had befor
   assert.equal(tools.has('tracy_notes'), false)
   // `tracy_design_system` (11/10/2026) is the chat route to a design system, deferred to the design road.
   // `tracy_guide` (21/10/2026) answers how to use Tracy itself; it is in every conversation from the first step.
+  // `tracy_build_check` (30/10/2026, #189) checks a changed page against the site build rules.
   assert.deepEqual([...tools.keys()].sort(), [
+    'tracy_build_check',
     'tracy_demo',
     'tracy_design_check',
     'tracy_design_system',

@@ -112,6 +112,119 @@ export function renderLeftoverCleanupPrompt({
   return lines.join('\n')
 }
 
+/**
+ * The repair loop's bounds (COO decision 30/10/2026): at most three rounds, each a bounded turn (`CLEANUP_LIMITS`), all of
+ * them within twenty minutes. A round that would start with less than `minRoundMs` left does not start.
+ */
+export const REPAIR_LIMITS = Object.freeze({ rounds: 3, totalMs: 20 * 60_000, minRoundMs: 60_000 })
+
+/**
+ * The findings the repair loop hands the agent: only those whose site build rule (`build-rules.mjs`) says what to put
+ * instead, each with that rule's id, repair text and guarantee, the ones that block the build first, at most
+ * `CLEANUP_FINDINGS_SHOWN`. A finding no rule can repair stays for the person under Needs fixes.
+ * @param {{findings?: any[]}} report
+ * @returns {Array<{finding: any, rule: string | null, repair: string, guarantee: string | null, blocks: boolean}>}
+ */
+export function repairFindings(report) {
+  const findings = Array.isArray(report?.findings) ? report.findings : []
+  const flagged = []
+  for (const finding of findings) {
+    const repair = repairOf(finding)
+    if (!repair) continue
+    const rule = ruleOfFinding(finding)
+    flagged.push({
+      finding,
+      rule: rule?.id ?? null,
+      repair,
+      guarantee: rule?.guarantee ?? null,
+      blocks: rule?.severity === 'blocker' && rule.blocks?.(finding) === true
+    })
+  }
+  // A stable sort: blockers first, the check's own order inside each group.
+  return [...flagged.filter((f) => f.blocks), ...flagged.filter((f) => !f.blocks)]
+}
+
+/** The count each repair round must lower: every repairable finding, plus every kept page that is not served. */
+export function repairCount(report) {
+  const broken = Array.isArray(report?.broken) ? report.broken.length : 0
+  return repairFindings(report).length + broken
+}
+
+/**
+ * One repair round's message: the flagged findings with the registry's repair text and guarantee, the pages that do not
+ * answer, the owner data, and nothing else of the build task. Hard facts come only from the owner data and the accepted
+ * statistics below.
+ * @param {{leftovers: {findings?: any[], broken?: any[]}, brief?: any, limits?: {timeoutMs: number, toolCalls: number},
+ *   records?: Record<string, string>, recordPlaces?: Iterable<string>, round?: number, rounds?: number}} input
+ * @returns {string}
+ */
+export function renderRepairPrompt({
+  leftovers,
+  brief = null,
+  limits = CLEANUP_LIMITS,
+  records = {},
+  recordPlaces = [],
+  round = 1,
+  rounds = REPAIR_LIMITS.rounds
+}) {
+  const places = new Set([...recordPlaces, ...Object.keys(records)])
+  const flagged = repairFindings(leftovers)
+  const lines = []
+  const line = (s = '') => lines.push(s)
+  line(
+    `Repair round ${round} of at most ${rounds}. A check of this site found places that break its build rules. Fix only these places; the check runs again when you stop.`
+  )
+  line()
+  line('Rules:')
+  line(
+    "1. Put in each place what its line says instead. Use the owner's own data below; editorial words may be written from the business and its trade in the shape of the place's siblings. Never keep the demo value."
+  )
+  line(
+    '2. A hard fact (a price, a phone number, an address, opening hours, a name, a year, a guarantee, a statistic) is written only when the owner data or the accepted statistics below hold it. Never invent one: hide the element instead, only where the layout survives without it.'
+  )
+  line(
+    '3. Touch nothing else. Do not remove, rename or rebuild any page, section or menu entry that is not listed, and do not restyle the site.'
+  )
+  line(
+    `4. This is a short job: at most ${limits.toolCalls} tool calls and about ${Math.round(limits.timeoutMs / 60_000)} minutes. Stop when the listed places are done.`
+  )
+  line()
+  const broken = Array.isArray(leftovers?.broken) ? leftovers.broken : []
+  if (broken.length) {
+    line('## The site is not fully served (fix this before anything else)')
+    for (const b of broken.slice(0, CLEANUP_FINDINGS_SHOWN))
+      line(`- page ${b.path} | ${b.why ?? 'not served with 200'}`)
+    line('A page that does not answer could not be judged. Find why it fails and restore it.')
+    line()
+  }
+  line('## Places to fix (kind, page, place, found, instead, rule)')
+  for (const f of flagged.slice(0, CLEANUP_FINDINGS_SHOWN)) {
+    const k = f.finding
+    const name = LEFTOVER_KINDS[k.kind]?.name ?? f.rule ?? k.kind
+    const instead = recordInstead(String(k.place ?? ''), records, places) ?? f.repair
+    // Findings of the page-wide checks (menu, footer, head blocks) name their page and place in their own fields.
+    const page = k.page ?? k.path ?? 'the whole site'
+    const place = k.place ?? k.href ?? k.why ?? k.reason ?? 'see the rule'
+    const found = k.found ?? k.label ?? ''
+    const why = f.guarantee ? ` | rule: ${f.guarantee}` : ''
+    line(
+      `- ${k.kind} ${name}${f.blocks ? ' (blocks the build)' : ''} | page ${page} | ${place} | found ${JSON.stringify(String(found).slice(0, 80))} | instead: ${instead}${why}`
+    )
+  }
+  if (flagged.length > CLEANUP_FINDINGS_SHOWN)
+    line(`- and ${flagged.length - CLEANUP_FINDINGS_SHOWN} more, listed in the next round.`)
+  const owner = ownerLines(brief)
+  if (owner.length) {
+    line()
+    line('## Owner data')
+    for (const o of owner) line(o)
+  }
+  line()
+  line('## Accepted statistics (number, label, source)')
+  for (const row of statisticWriterLines(brief)) line(row)
+  return lines.join('\n')
+}
+
 const keyOf = (f) => `${f.kind}|${f.page}|${f.place}`
 
 /** A short, storable summary of one check report. */

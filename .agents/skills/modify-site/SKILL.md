@@ -86,3 +86,10 @@ to all three CMSes:
 The site context already requires re-reading `apply.list`. What this skill adds: **each CMS has a "make it
 show up" step** and it is NOT the same — see the *After writing* section in that CMS's reference. Skipping that step is
 the most common reason for *"I changed it but nothing looks different"*.
+
+Then **check the site build rules on every page you changed**: `tracy_build_check {path}` (the home page too after a menu
+or footer change). A site Tracy built keeps rules a later edit can break without noticing: a new lesson, dish or product
+in the shape of its sibling cards, the footer shape, every channel on the Contact page, a menu item named by its page,
+hard facts only from the customer. Fix what the check lists with its `instead` text before reporting done. The rules
+are the `site-build-rules` skill; the full list with its checks:
+[`docs/references/site-build-rules.md`](../../../docs/references/site-build-rules.md).

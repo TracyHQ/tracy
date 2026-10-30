@@ -117,7 +117,7 @@ export const overlays: Readonly<Record<PlatformId, PlatformOverlay>> = G.overlay
 >
 
 /** Skills Tracy wrote. Everything else in the library came from OpenDesign. */
-const TRACY_SKILLS = new Set(['tracy-file-links', 't4-framework-knowledge'])
+const TRACY_SKILLS = new Set(['tracy-file-links', 't4-framework-knowledge', 'site-build-rules'])
 
 /** Packages of ours, and where they sit in this repository. */
 const TRACY_PACKAGE_PATH: Record<string, string> = {

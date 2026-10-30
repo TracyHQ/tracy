@@ -1,21 +1,31 @@
 /**
- * The bounded cleanup turn (spec TracyHQ/tracy#189, ticket #197). After the Customize engine builds a brief site and the
- * leftover check runs (`demo-leftover-check.js`), a check that still reports leftovers starts ONE short agent turn whose
- * prompt holds only those findings (`website-opportunities/domain/leftover-cleanup.mjs`). The turn is bounded in time
- * and in tool calls, the check runs again at its end, and the build NEVER fails because of it: a turn that errors or
- * times out leaves the engine's site as it is and the hand-off report lists what is left. No findings, no turn.
+ * The bounded repair loop (spec TracyHQ/tracy#189, ticket #197, COO decision 30/10/2026). After the Customize engine builds
+ * a brief site and the leftover check runs (`demo-leftover-check.js`), a check that still reports findings a site build
+ * rule can repair starts at most three short agent turns, one per round. Each round's prompt holds only those findings
+ * with the registry's repair text (`website-opportunities/domain/leftover-cleanup.mjs`, `build-rules.mjs`); the full check
+ * runs again at its end, and the next round starts only when the count fell. The build NEVER fails because of it: a turn
+ * that errors or times out leaves the engine's site as it is and the hand-off report lists what is left. Nothing to
+ * repair, no turn.
  *
- * The turn goes through the same two doors the hand-off uses: `sessionAhead` makes a chat on the site, `prompt` queues
+ * The turns go through the same two doors the hand-off uses: `sessionAhead` makes a chat on the site, `prompt` queues
  * the message in it. It asks for nothing the site tools removed (it names no tool; the site's own agent preset decides).
+ * Reads of a locked site go through `readSitePage`, which carries the preview key.
  *
- * The receipt keeps `leftoverCleanup`: findings before, findings after, what the turn changed, and how the turn ended.
- * `receipt.leftovers` is replaced by the check that ran after the turn, so the hand-off lists what is left now.
+ * The receipt keeps `leftoverCleanup`: findings before the first round and after the last, what the loop changed, how the
+ * last turn ended, why the loop stopped, and `rounds[]` ({round, before, after, fixed, introduced, turn}).
+ * `receipt.leftovers` is replaced by the check that ran after the last round, so the hand-off lists what is left now.
  */
 import { createHash } from 'node:crypto'
 import { siteRowOf } from './build-store.js'
 import { runLeftoverCheck } from './demo-leftover-check.js'
 import { contentMapOfTemplate } from './brief-build-path.js'
 import { isRecordRole, recordValuesOf } from 'website-opportunities/domain/record-roles.mjs'
+import {
+  CLEANUP_LIMITS,
+  repairCount,
+  REPAIR_LIMITS,
+  renderRepairPrompt
+} from 'website-opportunities/domain/leftover-cleanup.mjs'
 
 const POLL_MS = 3_000
 const sleepFor = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
@@ -72,8 +82,43 @@ export function cleanupTurnPort(db, deps, { build, email }) {
   }
 }
 
+/** The check after a round: the same full check as the build's first one, contact facts and first screen included. */
+async function recheck({ build, revision, domain, readSitePage, contentMapOf, now }) {
+  const kept = (build.receipt?.sitePlan?.pages ?? [])
+    .filter((p) => p.decision === 'keep' && typeof p.path === 'string')
+    .map((p) => p.path)
+  return runLeftoverCheck({
+    readPage: (path) => readSitePage(build.site_key, path),
+    check: domain.checkDemoLeftovers,
+    contactCheck: domain.checkContactFacts ?? null,
+    heroCheck: domain.checkHeroAnswers ?? null,
+    contentMap: contentMapOf(revision.template),
+    brief: revision.brief,
+    // The same plan as the check before the round: a record a round overwrote is still found.
+    sitePlan: build.receipt?.sitePlan ?? null,
+    siteOrigin: build.site_key,
+    paths: kept,
+    now
+  })
+}
+
+/** Why the loop stops after a round, or null to run another. */
+function stopReason({ outcome, count, before, pagesLost, round, rounds }) {
+  if (outcome.state !== 'completed') return outcome.state === 'timeout' ? 'timeout' : 'error'
+  if (pagesLost.length) return 'pages-lost'
+  if (count === 0) return 'clean'
+  if (count >= before) return 'no-progress'
+  if (round >= rounds) return 'rounds'
+  return null
+}
+
 /**
- * Run the cleanup turn for one brief build whose check still reports findings. Answers the build as it stands afterwards.
+ * The repair loop for one brief build whose check still reports findings (COO decision 30/10/2026). Each round hands the
+ * agent only the findings a site build rule can repair, with that rule's repair text (`renderRepairPrompt`), in one turn
+ * of the same chat; the full check runs again; the loop goes on while the count falls, at most `REPAIR_LIMITS.rounds`
+ * rounds within `REPAIR_LIMITS.totalMs`. It stops at none left, a count that did not fall, a page lost, a turn that ended
+ * in an error or a timeout, or the last round, and the gate after it shows Needs fixes with what is left. It never fails
+ * the build. Answers the build as it stands afterwards.
  * @param {{query: Function}} db
  * @param {{build: any, revision: any, domain: any, readSitePage: Function, turn: Function,
  *   contentMapOf?: typeof contentMapOfTemplate, now?: () => number}} input
@@ -82,15 +127,16 @@ export async function cleanBuildLeftovers(
   db,
   { build, revision, domain, readSitePage, turn, contentMapOf = contentMapOfTemplate, now = Date.now }
 ) {
-  if (typeof domain.renderLeftoverCleanupPrompt !== 'function') return build
-  const before = build.receipt?.leftovers
-  // A broken site has no findings to fix and still needs the turn: it is told the pages that do not answer.
-  const noneBroken = !Array.isArray(before?.broken) || before.broken.length === 0
-  if (!before || !Array.isArray(before.findings) || (before.findings.length === 0 && noneBroken)) return build
-  // One turn per build: a worker that comes back after a lost lease finds the record and does not start another.
-  if (build.receipt?.leftoverCleanup && build.receipt.leftoverCleanup.turn?.state !== 'running') return build
-  const limits = domain.CLEANUP_LIMITS ?? { timeoutMs: 8 * 60_000, toolCalls: 40 }
-  const started = new Date(now()).toISOString()
+  const first = build.receipt?.leftovers
+  if (!first || !Array.isArray(first.findings)) return build
+  const earlier = build.receipt?.leftoverCleanup
+  const rounds0 = Array.isArray(earlier?.rounds) ? earlier.rounds : []
+  const running = earlier?.turn?.state === 'running' || rounds0.some((r) => r.turn?.state === 'running')
+  // One loop per build: a worker that comes back after a lost lease finds the record and does not start another.
+  if (earlier && !running) return build
+  if (!earlier && repairCount(first) === 0) return build
+  const limits = domain.CLEANUP_LIMITS ?? CLEANUP_LIMITS
+  const startedAt = now()
   const keep = async (patch) => {
     const { rows } = await db.query(
       `update wo_build set receipt = coalesce(receipt, '{}'::jsonb) || $2::jsonb, updated_at = now()
@@ -99,72 +145,125 @@ export async function cleanBuildLeftovers(
     )
     return rows[0] ?? { ...build, receipt: { ...build.receipt, ...patch } }
   }
-  const summary = domain.summarizeLeftovers(before)
+  const version = domain.LEFTOVER_CLEANUP_VERSION
+  const firstSummary = earlier?.before ?? domain.summarizeLeftovers(first)
+  // A record place takes its own record or comes off, never the business name (#189 item 18, `record-roles.mjs`).
+  const recordPlaces = (contentMapOf(revision.template)?.slots ?? [])
+    .filter((slot) => isRecordRole(slot.role))
+    .map((slot) => slot.key)
+  const records = recordValuesOf(build.receipt?.sitePlan)
+  /** @type {any[]} */
+  const rounds = [...rounds0]
+  let current = first
   let outcome = { state: 'error', code: 'CLEANUP_NOT_RUN' }
-  try {
-    // The record goes first: a crash while the turn runs leaves "running", and the next worker only re-checks.
-    const resumed = build.receipt?.leftoverCleanup?.turn?.state === 'running'
-    build = await keep({
+  let stopped = null
+  const final = async (after, reason) => {
+    const changed = domain.compareLeftovers(first, after)
+    return keep({
+      leftovers: after,
       leftoverCleanup: {
-        version: domain.LEFTOVER_CLEANUP_VERSION,
-        before: summary,
-        turn: { state: 'running', at: started }
+        version,
+        before: firstSummary,
+        after: domain.summarizeLeftovers(after),
+        fixed: changed.fixed,
+        introduced: changed.introduced,
+        pagesLost: changed.pagesLost,
+        turn: {
+          state: outcome.state,
+          ...(outcome.code ? { code: outcome.code } : {}),
+          at: new Date(now()).toISOString()
+        },
+        rounds,
+        stopped: reason
       }
     })
-    if (!resumed) {
-      // A record place takes its own record or comes off, never the business name (#189 item 18, `record-roles.mjs`).
-      const recordPlaces = (contentMapOf(revision.template)?.slots ?? [])
-        .filter((slot) => isRecordRole(slot.role))
-        .map((slot) => slot.key)
-      const prompt = domain.renderLeftoverCleanupPrompt({
-        leftovers: before,
-        brief: revision.brief,
-        limits,
-        records: recordValuesOf(build.receipt?.sitePlan),
-        recordPlaces
-      })
-      outcome = await turn({ prompt, requestId: `wo-cleanup:${build.id}`, limits })
-    } else outcome = { state: 'error', code: 'CLEANUP_INTERRUPTED' }
-  } catch (error) {
-    if (error?.code === 'DEMO_LEASE_LOST') throw error
-    outcome = { state: 'error', code: error?.code ?? 'CLEANUP_FAILED' }
   }
-  // The check again, whatever the turn did: the report names what is left. An unreadable site keeps the earlier report.
-  let after = before
   try {
-    const kept = (build.receipt?.sitePlan?.pages ?? [])
-      .filter((p) => p.decision === 'keep' && typeof p.path === 'string')
-      .map((p) => p.path)
-    after = await runLeftoverCheck({
-      readPage: (path) => readSitePage(build.site_key, path),
-      check: domain.checkDemoLeftovers,
-      contentMap: contentMapOf(revision.template),
-      brief: revision.brief,
-      // The same plan as the check before the turn: a record the turn overwrote is still found.
-      sitePlan: build.receipt?.sitePlan ?? null,
-      siteOrigin: build.site_key,
-      paths: kept,
-      now
-    })
-  } catch (error) {
-    if (error?.code === 'DEMO_LEASE_LOST') throw error
-  }
-  const changed = domain.compareLeftovers(before, after)
-  const record = {
-    version: domain.LEFTOVER_CLEANUP_VERSION,
-    before: summary,
-    after: domain.summarizeLeftovers(after),
-    fixed: changed.fixed,
-    introduced: changed.introduced,
-    pagesLost: changed.pagesLost,
-    turn: {
-      state: outcome.state,
-      ...(outcome.code ? { code: outcome.code } : {}),
-      at: new Date(now()).toISOString()
+    if (running) {
+      // 🔒 A round that was running when its worker died is marked interrupted and only re-checked: its turn may still be
+      // editing the site, so no new round starts over it.
+      outcome = { state: 'error', code: 'CLEANUP_INTERRUPTED' }
+      const at = rounds.length ? rounds.length - 1 : -1
+      let after = current
+      try {
+        after = await recheck({ build, revision, domain, readSitePage, contentMapOf, now })
+      } catch (error) {
+        if (error?.code === 'DEMO_LEASE_LOST') throw error
+      }
+      if (at >= 0) {
+        const changed = domain.compareLeftovers(first, after)
+        rounds[at] = {
+          ...rounds[at],
+          after: repairCount(after),
+          fixed: changed.fixed.length,
+          introduced: changed.introduced.length,
+          turn: { state: 'interrupted', code: 'CLEANUP_INTERRUPTED', at: new Date(now()).toISOString() }
+        }
+      }
+      return await final(after, 'interrupted')
     }
-  }
-  try {
-    return await keep({ leftovers: after, leftoverCleanup: record })
+    for (let round = rounds.length + 1; round <= REPAIR_LIMITS.rounds; round += 1) {
+      const before = repairCount(current)
+      const left = REPAIR_LIMITS.totalMs - (now() - startedAt)
+      if (left < REPAIR_LIMITS.minRoundMs) {
+        stopped = 'time'
+        break
+      }
+      const roundLimits = { ...limits, timeoutMs: Math.min(limits.timeoutMs, left) }
+      // The record goes first: a crash while the turn runs leaves "running", and the next worker only re-checks.
+      rounds.push({ round, before, turn: { state: 'running', at: new Date(now()).toISOString() } })
+      build = await keep({
+        leftoverCleanup: { version, before: firstSummary, turn: { state: 'running' }, rounds }
+      })
+      outcome = { state: 'error', code: 'CLEANUP_FAILED' }
+      try {
+        const prompt = renderRepairPrompt({
+          leftovers: current,
+          brief: revision.brief,
+          limits: roundLimits,
+          records,
+          recordPlaces,
+          round,
+          rounds: REPAIR_LIMITS.rounds
+        })
+        outcome = await turn({ prompt, requestId: `wo-cleanup:${build.id}:${round}`, limits: roundLimits })
+      } catch (error) {
+        if (error?.code === 'DEMO_LEASE_LOST') throw error
+        outcome = { state: 'error', code: error?.code ?? 'CLEANUP_FAILED' }
+      }
+      // The check again, whatever the turn did. An unreadable site keeps the earlier report.
+      let after = current
+      try {
+        after = await recheck({ build, revision, domain, readSitePage, contentMapOf, now })
+      } catch (error) {
+        if (error?.code === 'DEMO_LEASE_LOST') throw error
+      }
+      const count = repairCount(after)
+      const changed = domain.compareLeftovers(current, after)
+      rounds[rounds.length - 1] = {
+        round,
+        before,
+        after: count,
+        fixed: changed.fixed.length,
+        introduced: changed.introduced.length,
+        turn: {
+          state: outcome.state,
+          ...(outcome.code ? { code: outcome.code } : {}),
+          at: new Date(now()).toISOString()
+        }
+      }
+      current = after
+      stopped = stopReason({
+        outcome,
+        count,
+        before,
+        pagesLost: changed.pagesLost,
+        round,
+        rounds: REPAIR_LIMITS.rounds
+      })
+      if (stopped) break
+    }
+    return await final(current, stopped ?? 'rounds')
   } catch (error) {
     if (error?.code === 'DEMO_LEASE_LOST') throw error
     return build

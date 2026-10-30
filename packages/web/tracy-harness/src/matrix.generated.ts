@@ -1117,6 +1117,16 @@ export const generated = {
       "platforms": {}
     },
     {
+      "id": "site-build-rules",
+      "roles": {
+        "designer": false,
+        "developer": true,
+        "writer": true,
+        "seo-geo": false
+      },
+      "platforms": {}
+    },
+    {
       "id": "tracy-file-links",
       "roles": {
         "designer": true,
