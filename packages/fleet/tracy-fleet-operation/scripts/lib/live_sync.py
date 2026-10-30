@@ -1371,13 +1371,16 @@ class IdMap:
                 crowded[side].add(nat)  # two new rows for one record on one side: left as they are
             new[side][nat] = number
         same, pairs = set(), []
+        # A live row under a number the map gave it (`apply`) is the copy's record under that number,
+        # never a row to move aside.
+        remembered = self.applied.get(theirs, {}).get(table, {})
         for nat, copy in new[0].items():
             live = new[1].get(nat)
             if live is None or nat in crowded[0] or nat in crowded[1]:
                 continue
             if live == copy:
                 same.add(copy)
-            else:
+            elif copy not in t or copy not in remembered:
                 pairs.append((live, copy))
                 same.add(copy)
         # The numbers may cross: each side added other rows first, so the live site holds the copy's
