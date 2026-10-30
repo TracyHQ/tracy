@@ -140,3 +140,36 @@ test('WordPress automatic page-list placement becomes explicit kept-page navigat
   assert.ok(!header.includes('/pricing'))
   assert.match(header, /"overlayMenu":"mobile"/)
 })
+
+// A menu label is written at apply, after the site's one spelling was chosen (criterion 1.6): it is spelt the site's way,
+// the business's own name kept as it is.
+for (const [locale, offering, spelt] of [
+  ['en-GB', 'Color consults', 'Colour consults'],
+  ['en-US', 'Organised tours', 'Organized tours']
+])
+  test(`Joomla: a menu label of a ${locale} site takes the site's spelling`, async () => {
+    const rows = [
+      { id: 1, menutype: 'mainmenu', path: 'home', home: 1, parent_id: 0, published: 1, title: 'Home' },
+      { id: 2, menutype: 'mainmenu', path: 'services', parent_id: 0, published: 1, title: 'Demo' }
+    ]
+    const apply = async ({ action, params }) => {
+      if (action === 'content.list') return { ok: true, items: rows }
+      if (action === 'content.get') return { ok: true, item: rows.find((r) => r.id === params.id) }
+      if (action === 'content.batch') {
+        for (const step of params.operations ?? []) {
+          const row = rows.find((r) => r.id === step.id)
+          if (row) Object.assign(row, step.fields)
+        }
+        return { ok: true, results: (params.operations ?? []).map(() => ({ ok: true })) }
+      }
+      return { ok: true }
+    }
+    await writeJoomlaMainMenu({
+      apply,
+      siteKey: 'fictional',
+      sitePlan: { ...plan('Fictional trade.'), styleSheet: { locale } },
+      model: model(offering),
+      contentMap: { slots: [] }
+    })
+    assert.equal(rows[1].title, spelt)
+  })

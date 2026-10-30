@@ -1,5 +1,13 @@
+import { inSiteSpelling } from 'website-opportunities/domain/site-style-sheet.mjs'
+
 import { readMenu, writeSteps } from './joomla-tidy.js'
 import { writeMainMenu } from './main-menu.js'
+
+/** The names a spelling never changes: the business's and its offerings'. */
+const namesOf = (/** @type {any} */ sitePlan) => [
+  sitePlan?.brand?.name?.value,
+  ...(sitePlan?.pages ?? []).map((/** @type {any} */ p) => p?.offering?.label ?? null)
+]
 
 /** Joomla T3 and T4 declare placement by menutype and parent_id. Never touch footer menu rows. */
 export async function writeJoomlaMainMenu({ apply, siteKey, sitePlan, model, locale, signal, contentMap }) {
@@ -32,6 +40,10 @@ export async function writeJoomlaMainMenu({ apply, siteKey, sitePlan, model, loc
             60
         })),
     write: async (items) => {
+      // A menu label is written after the site's spelling was settled: it takes the site's one spelling too (criterion
+      // 1.6), the business's and its offerings' names kept as they are. Set on the item, so the read-back compares it.
+      for (const item of items)
+        item.label = String(inSiteSpelling(item.label, sitePlan?.styleSheet, { keep: namesOf(sitePlan) }))
       const result = await writeSteps({
         apply,
         siteKey,

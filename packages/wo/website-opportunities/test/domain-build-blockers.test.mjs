@@ -104,8 +104,10 @@ test('the footer shape, the Contact page and a picture on another record are blo
     [
       ['footer-shape', ['/']],
       ['contact-page', ['/contact', '/about']],
-      ['pictures-fit-record', ['/bikes/gravel']]
+      ['pictures-fit-record', ['/bikes/gravel']],
+      // A booking button that leads elsewhere blocks too (criterion 5.2, R12 group B handoff).
+      ['booking-buttons', ['/']]
     ]
   )
-  assert.equal(out.total, 4)
+  assert.equal(out.total, 5)
 })

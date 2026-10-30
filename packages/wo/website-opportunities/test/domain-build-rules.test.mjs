@@ -85,9 +85,10 @@ test('the gate reads the registry: its blocker ids are the blocker rules in orde
     ]
   )
   assert.deepEqual(
-    BLOCKER_RULES.slice(0, 7).map((r) => r.id),
+    BLOCKER_RULES.slice(0, 8).map((r) => r.id),
     [
       'demo-content',
+      'copy-lines-kept',
       'form-without-recipient',
       'record-not-from-brief',
       'missing-head-block',
@@ -96,6 +97,15 @@ test('the gate reads the registry: its blocker ids are the blocker rules in orde
       'sibling-record-pages'
     ]
   )
+  // A kept block's line left unwritten or emptied stops the build (R12 group A), never a note.
+  assert.equal(ruleOfFinding({ kind: 'unwritten' })?.id, 'copy-lines-kept')
+  assert.equal(ruleOfFinding({ kind: 'blanked' })?.severity, 'blocker')
+  // A mixed spelling (criterion 1.6) and a booking button leading elsewhere (criterion 5.2) stop the build too.
+  for (const kind of ['spelling-variant', 'booking-button-target'])
+    assert.ok(
+      BLOCKER_RULES.some((r) => r.id !== 'other-blocker' && r.matches({ kind, severity: 'major' })),
+      kind
+    )
 })
 
 test('each finding belongs to its rule: the blocking rule first, then the owning one', () => {

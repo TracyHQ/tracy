@@ -197,6 +197,8 @@ export interface BuildFix {
 
 const FIX_KEYS: Readonly<Record<string, string>> = {
   'demo-content': 'fix.demoContent',
+  // A kept block's line still in the demo words (or emptied) reads to the owner as demo words left on the site.
+  'copy-lines-kept': 'fix.demoContent',
   'form-without-recipient': 'fix.formWithoutRecipient',
   'record-not-from-brief': 'fix.recordNotFromBrief',
   'missing-head-block': 'fix.missingHeadBlock',
@@ -206,6 +208,8 @@ const FIX_KEYS: Readonly<Record<string, string>> = {
   'footer-shape': 'fix.footerShape',
   'contact-page': 'fix.contactPage',
   'pictures-fit-record': 'fix.picturesFitRecord',
+  // A booking button leading to another page reads to the owner as a button that does not do its job.
+  'booking-buttons': 'fix.linkWithoutJob',
   'kept-page-missing': 'fix.keptPageMissing'
 }
 

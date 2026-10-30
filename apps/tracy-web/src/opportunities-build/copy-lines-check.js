@@ -8,18 +8,41 @@
  * by); each becomes a finding here, for the repair loop to write. CMS-neutral: any engine that records `copyLines`.
  */
 
+/** A page's visible words, for finding a demo line still served. */
+const servedText = (/** @type {string} */ html) =>
+  ` ${String(html ?? '')
+    .replace(/<(script|style)\b[\s\S]*?<\/\1>/gi, ' ')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;|\u00a0/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&#0?39;|&apos;|&rsquo;/g, "'")
+    .replace(/\s+/g, ' ')
+    .toLowerCase()} `
+
 /**
- * @param {{copyLines?: {unwritten?: Array<{key: string, reason?: string, rule?: string}>, blanked?: string[]} | null}} input
+ * 🔒 THE ROW IS READ AGAINST THE SERVED PAGES (R12 group A): the rule is a blocker (`copy-lines-kept`), so a line the repair
+ * loop has since written, or whose block it took off, must not hold the gate. An unwritten line that carries its demo words
+ * (`sample`) stays a finding only while some served page still shows them; with no pages read, or no sample, it stays. An
+ * emptied line cannot be seen on a page, so it stays a finding.
+ * @param {{copyLines?: {unwritten?: Array<{key: string, reason?: string, rule?: string, sample?: string}>, blanked?: string[]} | null,
+ *   pages?: Array<{html?: string}> | null}} input
  * @returns {Array<{kind: 'unwritten' | 'blanked', severity: 'major', key: string, reason?: string, writeAs?: string, why: string}>}
  */
-export function checkCopyLines({ copyLines = null } = {}) {
+export function checkCopyLines({ copyLines = null, pages = null } = {}) {
   if (!copyLines || typeof copyLines !== 'object') return []
+  const served = Array.isArray(pages) && pages.length > 0 ? pages.map((p) => servedText(p?.html ?? '')) : null
+  const stillServed = (/** @type {string | undefined} */ sample) => {
+    const words = servedText(sample ?? '').trim()
+    if (!served || words.length < 3) return true
+    return served.some((text) => text.includes(words))
+  }
   /** @type {Array<{kind: 'unwritten' | 'blanked', severity: 'major', key: string, reason?: string, writeAs?: string, why: string}>} */
   const out = []
   const seen = new Set()
   for (const line of Array.isArray(copyLines.unwritten) ? copyLines.unwritten : []) {
     if (!line?.key || seen.has(line.key)) continue
     seen.add(line.key)
+    if (!stillServed(line.sample)) continue
     out.push({
       kind: 'unwritten',
       severity: 'major',

@@ -20,9 +20,9 @@ Needs fixes; a **note** is reported only. A template gets the declarations below
 
 ## The six site build rules
 
-1. Copy keeps the template layout: the demo length and line count, one shape for siblings. Carried by `sibling-copy-shape`, `sibling-record-pages`, `offering-rows`.
+1. Copy keeps the template layout: the demo length and line count, one shape for siblings. Carried by `copy-lines-kept`, `sibling-copy-shape`, `sibling-record-pages`, `offering-rows`.
 2. Copy first, then pictures: each frame shows its own record, a drawing is never reused on another record. Carried by `sibling-record-pages`, `pictures-fit-record`.
-3. The template structure is kept: a missing part is written in the shape of its siblings, hidden only when the grid survives. Carried by `demo-content`, `sibling-record-pages`, `structure-kept`, `layout-bands`.
+3. The template structure is kept: a missing part is written in the shape of its siblings, hidden only when the grid survives. Carried by `demo-content`, `copy-lines-kept`, `sibling-record-pages`, `structure-kept`, `layout-bands`.
 4. Icons are chosen by item meaning, one neutral icon for a whole row when nothing matches. Carried by `icons-per-meaning`.
 5. The footer keeps the template footer shape, the Contact page carries every channel. Carried by `footer-shape`, `contact-page`.
 6. Demo and showcase pages and menus are removed, menu titles take only page or record names. Carried by `showcase-removed`, `menu-label-is-page-name`.
@@ -37,6 +37,15 @@ No word, picture, person or fact of the template demo is left on a slot the buil
 - Writers that take its words: page-copy, offering, sibling, record-page, cta-band, repair.
 - A template declares: the slot roles: a known role on every text and picture slot.
 - Writer and check per CMS: Joomla writer yes, check yes; WordPress writer yes, check yes; EmDash writer yes, check yes.
+
+### `copy-lines-kept` (blocker)
+
+Every visible line of a kept block is written for the business, or its whole item or block is taken off: never an emptied line, never a demo line.
+
+- Checked by: `copy-lines` (`build-rule-checks.js`).
+- Writers that take its words: repair.
+- A template declares: the slot roles: an item group with a kind on every repeated card, step and item.
+- Writer and check per CMS: Joomla writer yes, check yes; WordPress writer no, check yes; EmDash writer no, check yes.
 
 ### `form-without-recipient` (blocker)
 
@@ -126,7 +135,7 @@ Every page the site keeps opens.
 
 ### `structure-kept` (note)
 
-The template structure is kept: no empty frame, every kept band with its message, each page intro in its place.
+The template structure is kept: no empty frame, every kept band with its message, each page intro in its place, no demo line left empty or unwritten.
 
 - Checked by: `empty-frames`, `page-intros`, `cta-bands` (`build-rule-checks.js`).
 - Writers that take its words: page-copy, cta-band, repair.
@@ -210,7 +219,7 @@ A showcase block the site keeps on one page is on one page only.
 - A template declares: nothing.
 - Writer and check per CMS: Joomla writer yes, check yes; WordPress writer no, check yes; EmDash writer no, check yes.
 
-### `booking-buttons` (note)
+### `booking-buttons` (blocker)
 
 A button whose words name booking or contact leads to the Contact page or to a channel of the business.
 

@@ -99,6 +99,33 @@ export const BUILD_RULES = Object.freeze(
       }
     },
     {
+      // 🔒 A KEPT BLOCK SHOWS NO EMPTIED LINE AND NO DEMO LINE (R12 group A, `settleKeptSlots` of the tidy step): every visible
+      // slot of a kept block is written for the business or its item or block is taken off. A line still unwritten after the
+      // repair loop stops the site at "Needs fixes" instead of serving the template's words or an empty card.
+      id: 'copy-lines-kept',
+      siteRules: [1, 3],
+      severity: 'blocker',
+      guarantee:
+        'Every visible line of a kept block is written for the business, or its whole item or block is taken off: never an emptied line, never a demo line',
+      checks: ['copy-lines'],
+      owns: kindIn(['unwritten', 'blanked']),
+      blocks: kindIn(['unwritten', 'blanked']),
+      prompt: {
+        writers: ['repair'],
+        text: 'Write every line you are given for this business: explanatory lines (steps, items to bring, benefits) may come from knowledge of the trade as long as they state no price, name or number the brief does not give. Never leave a line empty or in the demo words.'
+      },
+      repair:
+        "write the line for this business in its demo line's length and shape; if it cannot be written, hide its whole item or block only where the grid survives without it",
+      declares: [
+        { base: 'slot-roles', what: 'an item group with a kind on every repeated card, step and item' }
+      ],
+      cms: {
+        joomla: { writer: true, check: true },
+        wordpress: { writer: false, check: true },
+        emdash: { writer: false, check: true }
+      }
+    },
+    {
       id: 'form-without-recipient',
       severity: 'blocker',
       guarantee: "A form a visitor can fill in always sends to the owner's own email",
@@ -183,7 +210,8 @@ export const BUILD_RULES = Object.freeze(
         'The cards of one list share one text shape: the demo length and line count, no sparse card beside a full one',
       checks: ['sibling-copy'],
       owns: kindIn(['sibling-copy-shape', 'spelling-variant']),
-      blocks: kindIn(['sibling-copy-shape']),
+      // A mixed spelling across the site (criterion 1.6) stops the build like a broken shape.
+      blocks: kindIn(['sibling-copy-shape', 'spelling-variant']),
       prompt: {
         writers: ['page-copy', 'offering', 'sibling', 'record-page', 'repair'],
         text: "Write each slot to its demo text's length (between three quarters and one and a quarter of it) and its rendered line count. Siblings of one design level (cards in a row, items, outline sections, one record shown on several pages) get the same line count and shape: never a sparse slot beside a full one, never an empty body beside a filled one, never a page-level sentence in one item's slot. No exclamation marks; one spelling per site."
@@ -330,8 +358,8 @@ export const BUILD_RULES = Object.freeze(
       severity: 'note',
       guarantee:
         'The template structure is kept: no empty frame, every kept band with its message, each page intro in its place, no demo line left empty or unwritten',
-      checks: ['empty-frames', 'page-intros', 'cta-bands', 'copy-lines'],
-      owns: kindIn(['empty-frame', 'page-intro-role', 'cta-band', 'unwritten', 'blanked']),
+      checks: ['empty-frames', 'page-intros', 'cta-bands'],
+      owns: kindIn(['empty-frame', 'page-intro-role', 'cta-band']),
       prompt: {
         writers: ['page-copy', 'cta-band', 'repair'],
         text: "Keep the template's structure: write a missing section in the shape of its siblings, never leave it empty; hide a part only when the grid survives without it."
@@ -523,11 +551,13 @@ export const BUILD_RULES = Object.freeze(
     },
     {
       id: 'booking-buttons',
-      severity: 'note',
+      // A booking button that leads elsewhere sends the visitor away from the one thing they came for (criterion 5.2).
+      severity: 'blocker',
       guarantee:
         'A button whose words name booking or contact leads to the Contact page or to a channel of the business',
       checks: ['booking-buttons'],
       owns: kindIn(['booking-button-target']),
+      blocks: kindIn(['booking-button-target']),
       repair: 'point this button to the Contact page, or to the business channel when the site keeps none',
       declares: [],
       cms: {

@@ -1385,18 +1385,26 @@ test('a line the plugin refuses is set aside by name and the write is made again
           items: site.moduleRows.slice(call.params.offset ?? 0, (call.params.offset ?? 0) + call.params.limit)
         }
       : answer(call)
-  const { site: used, notes } = await run({ site })
+  const { site: used, notes, prepared } = await run({ site })
   assert.ok(used.applied, 'the write was made in the end')
   assert.ok(!(one in used.applied.changes) && !(two in used.applied.changes), 'without what was refused')
   assert.ok(Object.keys(used.applied.changes).length > 200)
   assert.ok(notes.some((n) => /2 line\(s\) were routed outside the contract write/.test(n)))
+  // 🔒 A refused line is never emptied in a kept block (R12 group A, `settleKeptSlots`): its block comes off whole, or it
+  // keeps the demo's words for the repair loop and is on the row as unwritten.
   const operations = used.batches.flatMap((batch) => batch.operations)
+  const unwritten = new Set((prepared.copyLines?.unwritten ?? []).map((line) => line.key))
   for (const slot of [text[3], text[40]]) {
+    const off = (prepared.factModules ?? []).some((m) => `module-${m.id}` === slot.entity)
+    assert.ok(
+      off || unwritten.has(slot.key),
+      `${slot.key} comes off with its block or goes to the repair loop`
+    )
     const write = operations.find((step) => `module-${step.id}` === slot.entity && step.fields.params)
-    assert.ok(write, `${slot.key} is neutralized through records`)
+    if (!write || off) continue
     let value = JSON.parse(JSON.parse(write.fields.params)[slot.nestedJson])
-    for (const part of slot.jsonPath) value = value[part]
-    assert.equal(value, '', `${slot.key} no longer keeps its demo`)
+    for (const part of slot.jsonPath) value = value?.[part]
+    assert.notEqual(value, '', `${slot.key} is never emptied in a kept block`)
   }
 })
 
@@ -3711,14 +3719,21 @@ test('JA Boxing, About and a name given: no demo company name survives in any li
   const written = Object.assign({}, ...site.applies.map((a) => a.changes ?? {}))
   // #189: "We opened Studio Getfit in 2008" states a founding year; renamed it would put that year under the owner's name,
   // so it is never renamed but emptied after the write.
+  // R12 group A (`settleKeptSlots`): never emptied silently either; the emptied line is on the row as "blanked", a blocker
+  // of the final check until the repair loop or a person writes it.
   const emptied = new Set((prepared.demoBlanks ?? []).map((s) => s.key))
+  const blanked = new Set(prepared.copyLines?.blanked ?? [])
   for (const key of ['article-2.3', 'article-14.3']) {
     assert.ok(emptied.has(key), `${key} is emptied`)
+    assert.ok(blanked.has(key), `${key} is reported as blanked`)
     assert.doesNotMatch(String(written[key] ?? ''), /2008/)
   }
   const leaks = []
+  // A block taken off whole shows none of its lines (R12 group A, `settleKeptSlots`).
+  const off = new Set((prepared.factModules ?? []).map((m) => `module-${m.id}`))
   for (const slot of mapOf(boxing).slots) {
-    if (slot.type !== 'text' || slot.requiresEvidence || emptied.has(slot.key)) continue
+    if (slot.type !== 'text' || slot.requiresEvidence || emptied.has(slot.key) || off.has(slot.entity))
+      continue
     const shown = String(written[slot.key] ?? slot.sample ?? '')
       // An address or a mailbox is the template's (K1), never a name a visitor reads.
       .replace(/[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g, '')
@@ -4087,9 +4102,14 @@ test('#189 lines the writer echoed in the demo’s words take the plan’s fallb
   assert.equal(prepared.changes[fallen.key], fallback)
   assert.equal(site.applied.changes[fallen.key], fallback)
   assert.ok(!(emptied.key in prepared.changes), 'the demo line is not written back')
-  assert.deepEqual(
-    prepared.demoBlanks.map((s) => s.key),
-    [emptied.key]
+  // 🔒 Never emptied in a kept block (R12 group A, `settleKeptSlots`): its block comes off whole, or the line goes to the
+  // repair loop as unwritten.
+  const off = (prepared.factModules ?? []).some((m) => `module-${m.id}` === emptied.entity)
+  const unwritten = (prepared.copyLines?.unwritten ?? []).map((line) => line.key)
+  assert.ok(off || unwritten.includes(emptied.key), `${emptied.key} comes off with its block or is unwritten`)
+  assert.ok(
+    off || !prepared.demoBlanks.some((s) => s.key === emptied.key),
+    'it is not emptied in a kept block'
   )
 })
 

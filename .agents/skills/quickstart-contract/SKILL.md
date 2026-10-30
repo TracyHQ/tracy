@@ -614,6 +614,7 @@ path):
    refuses the contract while a content-map declaration below is missing or malformed. The full list of rules and their
    checks: [`docs/references/site-build-rules.md`](../../../docs/references/site-build-rules.md).
    - `demo-content`: the slot roles: a known role on every text and picture slot
+   - `copy-lines-kept`: the slot roles: an item group with a kind on every repeated card, step and item
    - `record-not-from-brief`: packing rule `social-in-person-card`
    - `link-without-job`: `slots[].action` in the content map: an action on every button slot outside a `demoOnly` entity (`buttonActionProblems`)
    - `link-without-job`: packing rule `hero-button-no-link`

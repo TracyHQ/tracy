@@ -80,7 +80,8 @@ export const CHECKS = Object.freeze({
   'pages-served': (/** @type {CheckContext} */ c) => c.broken,
   'empty-frames': (/** @type {CheckContext} */ c) => checkEmptyFrames({ pages: c.pages }),
   'page-intros': (/** @type {CheckContext} */ c) => checkPageIntros({ pages: c.pages, sitePlan: c.sitePlan }),
-  'copy-lines': (/** @type {CheckContext} */ c) => checkCopyLines({ copyLines: c.copyLines ?? null }),
+  'copy-lines': (/** @type {CheckContext} */ c) =>
+    checkCopyLines({ copyLines: c.copyLines ?? null, pages: c.pages }),
   'cta-bands': (/** @type {CheckContext} */ c) =>
     checkCtaBands({ pages: c.pages, contentMap: c.contentMap, sitePlan: c.sitePlan }),
   'icon-rows': (/** @type {CheckContext} */ c) => checkIconRows({ pages: c.pages }),

@@ -27,6 +27,7 @@ what a template declares: `docs/references/site-build-rules.md` in the Tracy rep
 ## Writing
 
 - Never keep the demo's words, people, prices, numbers or facts: write the business's own, and state a hard fact (a price, a phone number, an address, hours, a name, a year, a guarantee) only when the brief holds it.
+- Write every line you are given for this business: explanatory lines (steps, items to bring, benefits) may come from knowledge of the trade as long as they state no price, name or number the brief does not give. Never leave a line empty or in the demo words.
 - A review's words, author and source, a person's name, a statistic and a contact line are records: write only the record a place is given, never the business name in its place; a record place given none is hidden.
 - Write each slot to its demo text's length (between three quarters and one and a quarter of it) and its rendered line count. Siblings of one design level (cards in a row, items, outline sections, one record shown on several pages) get the same line count and shape: never a sparse slot beside a full one, never an empty body beside a filled one, never a page-level sentence in one item's slot. No exclamation marks; one spelling per site.
 - The footer keeps the template footer shape: one primary line of each channel kind the demo footer shows; every other channel goes on the Contact page.
@@ -40,6 +41,7 @@ what a template declares: `docs/references/site-build-rules.md` in the Tracy rep
 ## The rules
 
 - `demo-content` (blocks): No word, picture, person or fact of the template demo is left on a slot the build did not fill. When broken: the owner's own data, otherwise a neutral substitute, otherwise hide it only where the layout survives.
+- `copy-lines-kept` (blocks): Every visible line of a kept block is written for the business, or its whole item or block is taken off: never an emptied line, never a demo line. When broken: write the line for this business in its demo line's length and shape; if it cannot be written, hide its whole item or block only where the grid survives without it.
 - `form-without-recipient` (blocks): A form a visitor can fill in always sends to the owner's own email. When broken: hide the whole form block (heading, text, field and button): a form stays only with a real destination.
 - `record-not-from-brief` (blocks): A review, its author, a person's name and a figure are shown exactly as the brief gives them, never invented. When broken: write exactly the record the brief gives this place, otherwise hide the block.
 - `missing-head-block` (blocks): Every page carries the brand colours and the layout fixes the build owes it. When broken: restore the head block the build wrote for this page.
@@ -50,7 +52,7 @@ what a template declares: `docs/references/site-build-rules.md` in the Tracy rep
 - `contact-page` (blocks): The Contact page lists every channel the brief holds, each one a link, and never invites a walk-in to a business by appointment. When broken: list this channel on the Contact page as a link, from the brief; say "By appointment" where the brief says so.
 - `pictures-fit-record` (blocks): Each picture shows its own record and page: a photo or a drawing never stands on another record's page. When broken: a picture of this record from the brief's photos, otherwise one drawn for this record.
 - `kept-page-missing` (blocks): Every page the site keeps opens. When broken: find why the page fails and restore it before anything else.
-- `structure-kept` (note): The template structure is kept: no empty frame, every kept band with its message, each page intro in its place. When broken: write the missing part in the shape of its siblings; hide it only when the grid survives without it.
+- `structure-kept` (note): The template structure is kept: no empty frame, every kept band with its message, each page intro in its place, no demo line left empty or unwritten. When broken: write the missing part in the shape of its siblings; hide it only when the grid survives without it.
 - `layout-bands` (note): A decoration never stays alone once the working parts beside it come off. When broken: take the decoration off with the parts it stood beside.
 - `icons-per-meaning` (note): Each item's icon says what the item is; a row with no fitting icons shows one neutral icon on every item. When broken: an icon chosen for the item's meaning, or one plain neutral icon for the whole row.
 - `showcase-removed` (note): Demo and showcase pages of the template, and their menu entries, are gone. When broken: hide the page and remove its menu entry.
@@ -60,6 +62,6 @@ what a template declares: `docs/references/site-build-rules.md` in the Tracy rep
 - `copy-voice` (note): The site speaks in one formal voice: no slang, no advertising tone, one spelling of each word. When broken: rewrite this line formally and plainly.
 - `repeated-copy` (note): No sentence is said twice, on one page or on two. When broken: rewrite one of the two sentences so each says its own thing.
 - `repeated-blocks` (note): A showcase block the site keeps on one page is on one page only. When broken: keep the block on the one page the plan gives it.
-- `booking-buttons` (note): A button whose words name booking or contact leads to the Contact page or to a channel of the business. When broken: point this button to the Contact page, or to the business channel when the site keeps none.
+- `booking-buttons` (blocks): A button whose words name booking or contact leads to the Contact page or to a channel of the business. When broken: point this button to the Contact page, or to the business channel when the site keeps none.
 - `demo-name-addresses` (note): No page address still carries the name of a demo person the page no longer shows. When broken: move the page to an address made from the name it now shows.
 - `first-screen-and-facts` (note): The home page's first screen says what, where and how to contact, and every contact fact of the brief is on the site. When broken: show the missing fact from the brief.

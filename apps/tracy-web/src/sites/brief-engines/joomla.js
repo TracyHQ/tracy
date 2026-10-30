@@ -48,7 +48,7 @@ import {
   nameAnswered,
   withTemplateName
 } from './shared.js'
-import { copyPlanBudget, keepUnwritten, recordCopyPlan } from './copy-plan-stage.js'
+import { copyPlanBudget, isBlockCopyLine, recordCopyPlan, settleKeptSlots } from './copy-plan-stage.js'
 import { factsOf, guardChanges, guardWritten } from './guard.js'
 import { drawPictures, pictureBriefs, pictureGroups, shapePictures, uploadPictures } from './pictures.js'
 import { keptPages, pictureReport, realPicturesOf, shapeReal } from './real-pictures.js'
@@ -640,6 +640,21 @@ async function chosenLanguages(asked, contract, note) {
  * @param {((siteKey: string, pages: string[]) => Promise<{findings?: any[]} | null>) | null} [deps.pictureOverlap] - the
  *   site's host reading the build's pictures over the words at every width (`picture-overlap-net.js`); none: unchecked
  */
+/** The keys of the slots whose demo words name one of the demo company's names (never served while unwritten). */
+function demoNamedKeys(/** @type {any[]} */ slots, /** @type {string[]} */ names) {
+  const own = names.map((n) => String(n).trim().toLowerCase()).filter((n) => n.length > 2)
+  if (own.length === 0) return []
+  return slots
+    .filter((slot) =>
+      own.some((n) =>
+        String(slot?.sample ?? '')
+          .toLowerCase()
+          .includes(n)
+      )
+    )
+    .map((slot) => slot.key)
+}
+
 export function createJoomlaEngine({
   models,
   applyFor,
@@ -1542,6 +1557,62 @@ export function createJoomlaEngine({
         const label = String(own[0]?.label ?? '').split(' / ')[0]
         factModules.push({ id, title: label.replace(/ \([A-Za-z]{2,3}(?:-[A-Za-z]+)?\)$/, '') })
       }
+      // 🔒 ONE SPELLING FOR THE WHOLE SITE (COO criterion 1.6, `site-voice.js`): every writer was told the site's style sheet;
+      // a line still spelt in the other English is respelt the site's way here, after the last writer, names kept as given.
+      const spelling = settleSiteSpelling(kept, sitePlan?.styleSheet, {
+        slots: state.slots,
+        keep: [String(ctx.normalized.name ?? ''), ...(honesty?.offerings ?? []).map((o) => o?.label)]
+      })
+      Object.assign(kept, spelling.values)
+      if (spelling.respelt.length) ctx.time('linesRespelt', spelling.respelt.length)
+      // 🔒 EVERY VISIBLE SLOT OF A KEPT BLOCK IS WRITTEN OR REMOVED (R12 group A, `settleKeptSlots` of `copy-plan-stage.js`): a
+      // demo line nobody wrote is never emptied in place. A line whose call was lost keeps the template's words for the repair
+      // loop; a refused one takes its item or its whole block off when the template can (the module unpublished with the fact
+      // modules above, before the band decoration is judged), else it too keeps its words for the repair loop. Either way the
+      // unwritten lines are on the build's row, and the final check reads them as blockers.
+      const settledLines = settleKeptSlots({
+        blanks: demoBlanks,
+        plan,
+        hints: passHints,
+        contentMap: staticState(ctx.contract),
+        slots: shownSlots,
+        written: kept,
+        // The demo company's own lines are never served while they wait for the repair loop (ABOUT-3).
+        unsafe: new Set([
+          ...factLines,
+          ...demoNamedKeys(shownSlots, listOf(declaredCopy(ctx.contract.dir).demoCompanyNames))
+        ]),
+        removed: {
+          entities: [
+            ...factModules.map((m) => `module-${m.id}`),
+            ...demoHides.filter((h) => h.how === 'entity').map((h) => h.entity),
+            ...(honesty?.hide ?? []).filter((h) => h.how === 'entity').map((h) => h.entity)
+          ],
+          groups: [
+            ...demoHides.map((h) => h.group).filter(Boolean),
+            ...(honesty?.records ?? []).filter((r) => r.decision === 'hide').map((r) => r.group)
+          ]
+        }
+      })
+      demoBlanks = settledLines.blanks
+      demoHides.push(
+        ...settledLines.hides.filter((h) => !demoHides.some((d) => d.group && d.group === h.group))
+      )
+      for (const entity of settledLines.modules) {
+        const id = Number(entity.slice('module-'.length))
+        const own = state.slots.filter((slot) => slot.entity === entity)
+        for (const slot of own) delete kept[slot.key]
+        demoBlanks = demoBlanks.filter((slot) => slot.entity !== entity)
+        if (factModules.some((m) => m.id === id)) continue
+        const label = String(own[0]?.label ?? '').split(' / ')[0]
+        factModules.push({ id, title: label.replace(/ \([A-Za-z]{2,3}(?:-[A-Za-z]+)?\)$/, '') })
+      }
+      if (settledLines.removedKeys.length) {
+        ctx.time('keptSlotsRemoved', settledLines.removedKeys.length)
+        ctx.note(
+          `${settledLines.hides.length + settledLines.modules.length} block(s) or card(s) whose words could not be written were taken off whole`
+        )
+      }
       // 🔒 A BAND THAT LOST ITS WORKING PARTS COMES OFF WHOLE (COO decision, #189 item 30, `layout-bands.mjs`): a logo or an
       // icon set beside a block taken off above (a sign-up box with no destination) would stand alone in an empty strip.
       // Its decoration modules are unpublished with it, unless the content map declares them standalone.
@@ -1568,23 +1639,27 @@ export function createJoomlaEngine({
           `${ctaBands.removed.length} call-to-action band(s) had no message that could be written and were taken off`
         )
       }
-      // 🔒 ONE SPELLING FOR THE WHOLE SITE (COO criterion 1.6, `site-voice.js`): every writer was told the site's style sheet;
-      // a line still spelt in the other English is respelt the site's way here, after the last writer, names kept as given.
-      const spelling = settleSiteSpelling(kept, sitePlan?.styleSheet, {
-        slots: state.slots,
-        keep: [String(ctx.normalized.name ?? ''), ...(honesty?.offerings ?? []).map((o) => o?.label)]
-      })
-      Object.assign(kept, spelling.values)
-      if (spelling.respelt.length) ctx.time('linesRespelt', spelling.respelt.length)
       // 🔒 A LINE WHOSE CALL WAS LOST IS NEVER BLANKED SILENTLY (copy-plan stage, invariant 5, `copy-plan-stage.js`): it keeps
       // the template's words for now and goes to the repair loop as "unwritten", with its rule, through the build's row.
-      const unwrittenLines = keepUnwritten({ blanks: demoBlanks, plan, hints: passHints })
-      demoBlanks = unwrittenLines.blanks
-      ctx.record?.('copyLines', {
-        unwritten: unwrittenLines.unwritten,
-        blanked: demoBlanks.filter((slot) => String(slot?.sample ?? '').trim()).map((slot) => slot.key)
-      })
-      if (unwrittenLines.unwritten.length) ctx.time('copyLinesUnwritten', unwrittenLines.unwritten.length)
+      const settledKeys = new Set(settledLines.removedKeys)
+      const copyLines = {
+        unwritten: settledLines.unwritten.filter(
+          (line) => !factModules.some((m) => line.key.startsWith(`module-${m.id}.`))
+        ),
+        // A copy line of a kept block emptied because its demo words name the demo company: a blocker until it is written.
+        blanked: demoBlanks
+          .filter(
+            (slot) =>
+              String(slot?.sample ?? '').trim() &&
+              isBlockCopyLine(slot) &&
+              !settledKeys.has(slot.key) &&
+              !factModules.some((m) => slot.entity === `module-${m.id}`) &&
+              !String(slot.entity).startsWith('menuItem-')
+          )
+          .map((slot) => slot.key)
+      }
+      ctx.record?.('copyLines', copyLines)
+      if (copyLines.unwritten.length) ctx.time('copyLinesUnwritten', copyLines.unwritten.length)
       // The languages the template does not ship are translated from the words as they will stand, while the site installs.
       const derive = []
       if (missing.length > 0 && !text)
@@ -1677,6 +1752,8 @@ export function createJoomlaEngine({
         demoBlanks,
         demoHides,
         demoAsked,
+        // The lines left for the repair loop (`settleKeptSlots`), merged with the lines the site refuses at the write.
+        copyLines,
         styleMarks,
         offeringSummaries,
         // The call-to-action bands' messages, kept through the cleanup, and the bands taken off (`cta-band-messages.js`).
@@ -2444,6 +2521,49 @@ export function createJoomlaEngine({
               `${named ? `"${named}"` : 'a card'} could not be shown: its name is too long for the template's box even written shorter, so its card and page were taken off`
             )
           }
+          // 🔒 A LINE THE SITE REFUSED IS SETTLED LIKE ANY UNWRITTEN LINE (`settleKeptSlots`, R12 group A): its block or item
+          // comes off when the template can, else it keeps the demo's words for the repair loop, never emptied in a kept block.
+          // A line the plan itself emptied (its planned words are '') is a decision of the plan, emptied as planned; only
+          // words the site refused are settled.
+          const refusedSlots = [...refusedByWrite]
+            .map((key) => staticSlots.get(key))
+            .filter((slot) => slot && occupiedSample(slot) && !nameRefusedGroups.has(slot.group?.id))
+          const plannedEmpty = refusedSlots.filter(
+            (slot) => String(plannedWords[slot.key] ?? '').trim() === ''
+          )
+          const refusedLines = settleKeptSlots({
+            blanks: refusedSlots.filter((slot) => !plannedEmpty.includes(slot)),
+            plan: null,
+            contentMap: staticState(ctx.contract),
+            removed: {
+              entities: [
+                ...(prepared.factModules ?? []).map((m) => `module-${m.id}`),
+                ...(prepared.demoHides ?? []).filter((h) => h.how === 'entity').map((h) => h.entity)
+              ],
+              groups: [...(prepared.demoHides ?? []), ...nameRefused].map((h) => h.group).filter(Boolean)
+            }
+          })
+          for (const entity of refusedLines.modules) {
+            const id = Number(entity.slice('module-'.length))
+            prepared.factModules = prepared.factModules ?? []
+            if (!prepared.factModules.some((m) => m.id === id))
+              prepared.factModules.push({
+                id,
+                title: String(staticSlots.get(`${entity}.0`)?.label ?? entity)
+              })
+          }
+          if (refusedLines.unwritten.length > 0 || refusedLines.removedKeys.length > 0) {
+            const before = prepared.copyLines ?? { unwritten: [], blanked: [] }
+            prepared.copyLines = {
+              unwritten: [
+                ...before.unwritten,
+                ...refusedLines.unwritten.filter((line) => !before.unwritten.some((u) => u.key === line.key))
+              ],
+              blanked: before.blanked.filter((key) => !refusedLines.removedKeys.includes(key))
+            }
+            ctx.record?.('copyLines', prepared.copyLines)
+          }
+          const refusedKept = new Set(refusedLines.unwritten.map((line) => line.key))
           const records = await planRecordSteps({
             apply,
             siteKey,
@@ -2455,11 +2575,10 @@ export function createJoomlaEngine({
             ]),
             extraBlanks: [
               ...(prepared.demoBlanks ?? []),
-              ...[...refusedByWrite]
-                .map((key) => staticSlots.get(key))
-                .filter((slot) => slot && occupiedSample(slot) && !nameRefusedGroups.has(slot.group?.id))
+              ...plannedEmpty,
+              ...refusedLines.blanks.filter((slot) => !refusedKept.has(slot.key))
             ],
-            extraHides: [...(prepared.demoHides ?? []), ...nameRefused],
+            extraHides: [...(prepared.demoHides ?? []), ...nameRefused, ...refusedLines.hides],
             // A fact row emptied in one cell is emptied whole (`wholeFactRowsOf`, #189 items 14 and 15).
             slots: [...staticSlots.values()]
           })

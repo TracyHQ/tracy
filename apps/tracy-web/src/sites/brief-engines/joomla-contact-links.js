@@ -13,6 +13,7 @@
  */
 import { sameBoundNode } from './joomla-bound-nodes.js'
 import { boundNodes, lineOf, placeLines } from './joomla-contact-lines.js'
+import { channelButtonLabel } from 'website-opportunities/domain/declared-button-plan.mjs'
 import { contactEntriesOf } from 'website-opportunities/domain/footer-contact-shape.mjs'
 
 /** A phone number as a page shows one. */
@@ -72,6 +73,32 @@ function showOwn(
     return text.replace(PHONE, (/** @type {string} */ found) =>
       digits(found).length >= NUMBER_DIGITS ? shown : found
     )
+  })
+}
+
+/**
+ * 🔒 A BUTTON THAT NOW CALLS, MAILS OR MESSAGES SAYS SO (COO criterion 1.8, group B handoff): a link whose words are a
+ * button label (no number or mailbox shown) repointed to `tel:`, `mailto:` or WhatsApp takes the channel's own words
+ * (`channelButtonLabel`: "Call us", "Email us", "Message us on WhatsApp"), never "How to reach us" over a phone. Its tags
+ * (an icon) stay; the first run of words takes the label and the other runs empty, so every bound node keeps its place.
+ * Null when the link shows a number or a mailbox, or no words (an icon).
+ */
+function channelWords(/** @type {string} */ inner, /** @type {string} */ href) {
+  const words = inner
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+  if (!words || new RegExp(EMAIL.source).test(words)) return null
+  if ((words.match(PHONE) ?? []).some((n) => digits(n).length >= NUMBER_DIGITS)) return null
+  const label = channelButtonLabel(href)
+  if (label === 'Contact us') return null
+  let placed = false
+  return inner.replace(/(<[^>]*>)|([^<]+)/g, (_whole, tag, text) => {
+    if (tag) return tag
+    if (!text.trim()) return text
+    if (placed) return ''
+    placed = true
+    return text.replace(/\S[\s\S]*\S|\S/, escapeHtml(label))
   })
 }
 
@@ -345,7 +372,8 @@ export function joomlaContactLinks(
         if (isOwn(href, fact) && (kind !== 'phone' || ownOf(textOf(inner)))) return whole
         moved += 1
         const shows =
-          kind === 'phone' || kind === 'email' ? showOwn(inner, kind, String(fact.value ?? '')) : inner
+          channelWords(inner, String(fact.href)) ??
+          (kind === 'phone' || kind === 'email' ? showOwn(inner, kind, String(fact.value ?? '')) : inner)
         return `<a${pointed(attrs, String(fact.href))}>${shows}</a>`
       }
       if (!kind) {
@@ -370,7 +398,8 @@ export function joomlaContactLinks(
         used.add(phone.href)
         if (isOwn(href, phone) && (own || icon)) return whole
         moved += 1
-        return `<a${pointed(attrs, phone.href)}>${own ? inner : showOwn(inner, 'phone', phone.value)}</a>`
+        const shows = own ? inner : (channelWords(inner, phone.href) ?? showOwn(inner, 'phone', phone.value))
+        return `<a${pointed(attrs, phone.href)}>${shows}</a>`
       }
       const fact = isApp(kind) ? appOf(kind) : facts.email
       if (fact && isOwn(href, fact)) return whole
@@ -383,7 +412,11 @@ export function joomlaContactLinks(
       const next = HREF.test(attrs)
         ? attrs.replace(HREF, (_m, lead, quote) => `${lead}${quote}${escapeHtml(fact.href ?? '')}${quote}`)
         : `${attrs} href="${escapeHtml(fact.href ?? '')}"`
-      return `<a${next}>${isApp(kind) ? inner : showOwn(inner, kind, fact.value)}</a>`
+      // A chat link keeps its own words ("WhatsApp"); a mail button takes "Email us".
+      const shows = isApp(kind)
+        ? inner
+        : (channelWords(inner, String(fact.href ?? '')) ?? showOwn(inner, kind, fact.value))
+      return `<a${next}>${shows}</a>`
     })
     return { html, moved, removed, dropped }
   }

@@ -41,3 +41,30 @@ test('an unpublished module, a module of a hidden language, or a site plan witho
   assert.deepEqual(moduleContactSteps({ modules, contact, visible }).steps, [])
   assert.deepEqual(moduleContactSteps({ modules: [footer], contact: null, visible }).steps, [])
 })
+
+test('a button repointed to a phone or a mailbox says the channel, never a vague label (criterion 1.8)', () => {
+  for (const [business, facts] of [
+    ['locksmith', contact],
+    ['yoga studio', { phone: { value: '+44 161 496 0777', href: 'tel:+441614960777' } }]
+  ]) {
+    const strip = {
+      id: 12,
+      published: 1,
+      language: '*',
+      content:
+        '<p><a class="btn" href="tel:5550104477"><span class="fa fa-phone"></span> How to reach us</a></p>' +
+        (facts.email ? '<p><a class="btn" href="mailto:info@demo.example">Write to the team</a></p>' : '')
+    }
+    const { steps } = moduleContactSteps({ modules: [strip], contact: facts, visible })
+    const html = steps[0].fields.content
+    assert.match(
+      html,
+      new RegExp(
+        `href="${facts.phone.href.replace('+', '\\+')}"[^>]*><span class="fa fa-phone"></span> Call us</a>`
+      ),
+      business
+    )
+    assert.doesNotMatch(html, /How to reach us/, business)
+    if (facts.email) assert.match(html, />Email us<\/a>/, business)
+  }
+})
