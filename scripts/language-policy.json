@@ -241,6 +241,16 @@
       "path": "apps/tracy-web/test/fixtures/template-customization-question-readiness/a/quickstart_ja-cagox_j6/ja-cagox-j6-webroot-1.0.1.tar.gz",
       "oid": "fc095d87133701ffb459f8b286c28b0e10dc4566",
       "reason": "Readiness test fixture for JA Cagox j6 1.0.1: a trimmed copy of the third-party template's pack (webroot and database), read only by the readiness tests."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "d053d8de625a3470c9b5d052dfff0c2d22889fc5",
+      "reason": "Intermediate bundle of commit c649a0dc6 (site brief v2 follow-ups, PR #1), approved by 2369e735b and dropped by 667a56dcf; a release pull request into main scans every develop commit again."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "b13e82900f2ee22b6334a916a6c6c05c42304f40",
+      "reason": "Intermediate Vietnamese bundle of commit c649a0dc6 (site brief v2 follow-ups, PR #1), approved by 2369e735b and dropped by 667a56dcf; a release pull request into main scans every develop commit again."
     }
   ]
 }
