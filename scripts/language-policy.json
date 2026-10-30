@@ -241,6 +241,21 @@
       "path": "apps/tracy-web/test/fixtures/template-customization-question-readiness/a/quickstart_ja-cagox_j6/ja-cagox-j6-webroot-1.0.1.tar.gz",
       "oid": "fc095d87133701ffb459f8b286c28b0e10dc4566",
       "reason": "Readiness test fixture for JA Cagox j6 1.0.1: a trimmed copy of the third-party template's pack (webroot and database), read only by the readiness tests."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "5ffa78015f45f05c3c2a4e8fa40c38a9cb9cf782",
+      "reason": "Exact generated interface translation bundle for PR #254 (Sync to live words: unknown write outcome, expired Undo, live site and original site refusals, one/other forms). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "f7c7a3eca99034147fd467c1cde015d1900b2b70",
+      "reason": "Exact generated Vietnamese interface bundle for PR #254 (Sync to live words, site thật / site gốc). Rebuilt from its localized JSON dictionary; the bundles gate verifies it matches its source. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/ui/tracy-assistant/lib/client.js",
+      "oid": "019f19a4ae9d1c8f7528745f6e8275278dcd2601",
+      "reason": "Assistant bundle rebuilt for PR #248 (onboarding draft from the composer row, stopped Help answers). Authored source is English; the localized interface-language names it inherits sit on changed minified lines, and the exact output passed the bundle gate."
     }
   ]
 }
