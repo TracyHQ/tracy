@@ -15,6 +15,8 @@ import { fileURLToPath } from 'node:url'
 
 import { load } from 'js-yaml'
 
+import { labelSets } from '../test-support/runs-on.mjs'
+
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const WORKFLOWS = join(ROOT, '.github/workflows')
 const ACTIONS = join(ROOT, '.github/actions')
@@ -32,6 +34,8 @@ const prWorkflows = workflows.filter((w) =>
   triggers(w.doc).some((t) => t === 'pull_request' || t === 'pull_request_target')
 )
 const labelsOf = (job) => [job['runs-on']].flat().map(String)
+/** Every label of every runner the job may ask for: the self-hosted list and, with `ci:hosted`, `ubuntu-latest`. */
+const everyLabelOf = (job) => labelSets(job['runs-on']).flat()
 
 test('the pull-request workflows were read', () => {
   const names = prWorkflows.map((w) => w.file).sort()
@@ -51,7 +55,7 @@ test('the pull-request workflows were read', () => {
 test('a self-hosted job of a pull-request workflow runs only for branches of this repository', () => {
   for (const { file, doc } of prWorkflows)
     for (const [name, job] of Object.entries(doc.jobs)) {
-      if (!labelsOf(job).includes('self-hosted')) continue
+      if (!everyLabelOf(job).includes('self-hosted')) continue
       const cond = String(job.if ?? '')
       // The nightly-only jobs never see a pull request; every other one must name the guard itself.
       assert.ok(
@@ -64,7 +68,7 @@ test('a self-hosted job of a pull-request workflow runs only for branches of thi
 test('no pull-request job asks for the production lane', () => {
   for (const { file, doc } of prWorkflows)
     for (const [name, job] of Object.entries(doc.jobs)) {
-      for (const label of labelsOf(job)) {
+      for (const label of everyLabelOf(job)) {
         if (!label.includes('tracy-lane-prod')) continue
         assert.ok(!label.includes('base_ref'), `${file} › ${name}: lane follows the PR base: ${label}`)
         assert.match(

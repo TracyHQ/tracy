@@ -18,16 +18,21 @@ import { fileURLToPath } from 'node:url'
 
 import { load } from 'js-yaml'
 
+import { runnerPaths } from '../test-support/runs-on.mjs'
+
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const DIR = join(ROOT, '.github/workflows')
 
-/** Every job's `runs-on`, as one string per label, across every workflow file. */
+/**
+ * Every job's self-hosted `runs-on`, as one string per label, across every workflow file. A Tracy CI
+ * job a pull request may move to GitHub-hosted (`ci:hosted`) is judged by its self-hosted list.
+ */
 const jobs = readdirSync(DIR)
   .filter((f) => f.endsWith('.yml') || f.endsWith('.yaml'))
   .flatMap((file) =>
     Object.entries(load(readFileSync(join(DIR, file), 'utf8')).jobs ?? {}).map(([name, job]) => ({
       where: `${file} › ${name}`,
-      labels: [job['runs-on']].flat().map(String)
+      labels: runnerPaths(job['runs-on']).selfHosted ?? []
     }))
   )
   .filter((j) => j.labels.includes('self-hosted'))

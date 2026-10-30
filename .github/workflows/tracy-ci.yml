@@ -173,9 +173,29 @@ jobs:
   # or "Ready for review": label events do not start this workflow) also asks for `X64`, which only
   # the EC2 runners carry. Without the label the extra element is `linux` again, already in the list,
   # so every other run picks its runner exactly as before.
+  #
+  # THE `ci:hosted` PR LABEL (since 30/10/2026; an opt-in to measure, not the default). The repo is
+  # public, so standard GitHub-hosted runners are free for it and outside the org quota the top of
+  # this file measured. A pull request labelled `ci:hosted` runs `dsh-lib`, `plan`, every
+  # `build-check` row, `suite-skipped`, `test-growth` and `new-test-proof` on `ubuntu-latest`
+  # (4 vCPU / 16 GB x64); `runs-on` is then one expression, `'ubuntu-latest'` or the self-hosted list
+  # above, unchanged. Read from the event payload like `ci:aws-only`, so the same rule holds: set it
+  # BEFORE the push or "Ready for review" (a re-run replays the old payload; `ci-label-rerun.yml`
+  # does not watch it). The nightly, manual runs and pushes carry no pull request, so they stay
+  # self-hosted; a fork's pull request never reaches these jobs (`fork-checks`). What the runner
+  # image gave is set up explicitly on a fresh VM, in steps gated on
+  # `runner.environment == 'github-hosted'`: Node from `.node-version` (the assert after it still
+  # compares), `php` 8.3 cli, and for `build-check` a PostgreSQL 16 service with TEST_DATABASE_URL.
+  # Secrets, the deploy key and the Turbo cache are the same-repo ones as before. `check-pr-merge.mjs`
+  # accepts such a job by its one label `ubuntu-latest` AND runner group `GitHub Actions`.
+  # Witness: `scripts/test/ci-hosted.test.mjs`.
   dsh-lib:
     name: build dsh once for this run
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-check, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: >-
+      ${{ contains(github.event.pull_request.labels.*.name, 'ci:hosted') && 'ubuntu-latest'
+      || fromJSON(format('["self-hosted","linux","{0}","tracy-check","{1}"]',
+      contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux',
+      (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev')) }}
     timeout-minutes: 45
     # Pull requests and manual runs only. The nightly builds dsh in `dsh-lib-nightly` below, which
     # waits for `plan`'s pinned commit; this job must NOT wait for `plan`, or every pull request
@@ -207,6 +227,14 @@ jobs:
             git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
           git submodule status vendor/tracy/deepseek-harness
 
+      # GitHub-hosted only (`ci:hosted`): a fresh VM has no runner image, so Node comes from
+      # `.node-version` here and the assert below checks what it installed. Skipped on our runners.
+      - name: Set up Node on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+
       - name: Assert the runner's Node matches .node-version
         run: |
           set -euo pipefail
@@ -214,7 +242,7 @@ jobs:
           HAVE="$(node -v | sed 's/^v//')"
           echo "want $WANT, runner has $HAVE"
           [ "$WANT" = "$HAVE" ] || {
-            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image"
+            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image, or on GitHub-hosted read the step \"Set up Node on a GitHub-hosted runner\""
             exit 1
           }
           corepack enable pnpm
@@ -242,7 +270,11 @@ jobs:
   # is still ANNOUNCED (notice + job summary) from here.
   plan:
     name: plan the build-check rows
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-light, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: >-
+      ${{ contains(github.event.pull_request.labels.*.name, 'ci:hosted') && 'ubuntu-latest'
+      || fromJSON(format('["self-hosted","linux","{0}","tracy-light","{1}"]',
+      contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux',
+      (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev')) }}
     timeout-minutes: 5
     if: github.event_name != 'pull_request' || (github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository)
     # `actions: read` + `checks: read` for `green-tree.mjs` only: it reads earlier Tracy CI runs, their
@@ -287,6 +319,14 @@ jobs:
           # 2, not 1: a pull request checks out its merge commit, and HEAD^1 (the base tip) is
           # what the plan diffs against.
           fetch-depth: 2
+
+      # GitHub-hosted only (`ci:hosted`): a fresh VM has no runner image, so Node comes from
+      # `.node-version`. Skipped on our runners, whose image carries it.
+      - name: Set up Node on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
 
       # The summary is written BEFORE the output on purpose: a step that dies half way must not
       # leave a usable `checkout_sha` behind. 40 lowercase hex is the whole accepted shape — the
@@ -571,6 +611,14 @@ jobs:
             git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
           git submodule status vendor/tracy/deepseek-harness
 
+      # GitHub-hosted only (`ci:hosted`): a fresh VM has no runner image, so Node comes from
+      # `.node-version` here and the assert below checks what it installed. Skipped on our runners.
+      - name: Set up Node on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+
       - name: Assert the runner's Node matches .node-version
         run: |
           set -euo pipefail
@@ -578,7 +626,7 @@ jobs:
           HAVE="$(node -v | sed 's/^v//')"
           echo "want $WANT, runner has $HAVE"
           [ "$WANT" = "$HAVE" ] || {
-            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image"
+            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image, or on GitHub-hosted read the step \"Set up Node on a GitHub-hosted runner\""
             exit 1
           }
           corepack enable pnpm
@@ -642,9 +690,12 @@ jobs:
     # ─────────────────────────────────────────────────────────────────────────────────────────
     # `tracy-check`, NOT `tracy-build` — changed 2026-09-21
     #
-    # NOT `ubuntu-latest`: the org's shared monthly quota is a dependency this gate cannot see and
-    # cannot fix (the measurement at the top of this file). What changed is WHICH self-hosted
-    # label it asks for, and the reason is a boundary rather than a preference.
+    # NOT `ubuntu-latest` by default: when this was written the org's shared monthly quota was a
+    # dependency this gate could not see or fix (the measurement at the top of this file). The repo
+    # is public since, and a pull request labelled `ci:hosted` (30/10/2026, at `dsh-lib`) runs
+    # every row on `ubuntu-latest` to measure it; without the label the list below is unchanged.
+    # What changed in 2026-09-21 is WHICH self-hosted label it asks for, and the reason is a
+    # boundary rather than a preference.
     #
     # 🔒 A `tracy-build` RUNNER HOLDS THE DOCKER SOCKET, WHICH IS ROOT ON ITS HOST. Only machines
     # that run nothing a customer depends on carry it. Checks need no daemon at all — the one
@@ -665,8 +716,29 @@ jobs:
     # today: the one test that needed a docker daemon needed it only to reach a PHP interpreter,
     # and the runner image carries `php-cli` since `tracy-runners@bf07c3a` — so the exception that
     # briefly lived here was removed rather than kept warm.
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", '${{ matrix.label }}', "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: >-
+      ${{ contains(github.event.pull_request.labels.*.name, 'ci:hosted') && 'ubuntu-latest'
+      || fromJSON(format('["self-hosted","linux","{0}","{1}","{2}"]',
+      contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux',
+      matrix.label,
+      (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev')) }}
     timeout-minutes: 45
+    # 🔒 THE RUNNER'S PostgreSQL ON A FRESH VM — `ci:hosted` only. An empty `image` starts no service
+    # container (GitHub's rule for conditional services), so our runners, which have no docker, see
+    # none. Same major as `deploy/compose.yml` and `check-tests.ts`'s throwaway (16); the step "Point
+    # the tests at the job's PostgreSQL…" exports TEST_DATABASE_URL for it.
+    services:
+      postgres:
+        image: ${{ contains(github.event.pull_request.labels.*.name, 'ci:hosted') && 'postgres:16-alpine' || '' }}
+        env:
+          POSTGRES_USER: tracy
+          POSTGRES_PASSWORD: tracy
+          POSTGRES_DB: tracy
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U tracy -d tracy"
+          --health-interval 2s --health-timeout 5s --health-retries 30
     # dsh is built by `dsh-lib` above and restored here, never built eight times (see there).
     #
     # 🔒 THE `if` SPELLS OUT WHAT `needs` USED TO IMPLY — changed 2026-10-05. Exactly one of the two
@@ -773,8 +845,30 @@ jobs:
 
       # The runner image pins Node; `.node-version` pins what the repo expects. Nothing keeps the
       # two in step, so compare them here rather than let a mismatch surface as some gate's odd
-      # failure twenty minutes in. No `actions/setup-node`: this is our box, not a fresh VM, and
-      # the two proven workflows on this runner do the same.
+      # failure twenty minutes in. On our runners there is no `actions/setup-node`: this is our box,
+      # not a fresh VM. On GitHub-hosted (`ci:hosted`) there is no runner image, so the steps below
+      # install what it carried, and the assert then checks what `setup-node` installed.
+      - name: Set up Node on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      # The runner image's `php` cli (`tracy-runners@bf07c3a`), for the tests that run real PHP.
+      - name: Set up PHP on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: none
+      # The runner's PostgreSQL, on a fresh VM: the job's `postgres` service (started only for
+      # `ci:hosted`). `check-tests.ts` uses an exported TEST_DATABASE_URL first, and is red if it
+      # does not answer. Through `GITHUB_ENV`, not a job `env`: an empty value there would hide
+      # the variable our runners export.
+      - name: Point the tests at the job's PostgreSQL on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        run: echo "TEST_DATABASE_URL=postgres://tracy:tracy@127.0.0.1:5432/tracy" >> "$GITHUB_ENV"
+
       - name: Assert the runner's Node matches .node-version
         run: |
           set -euo pipefail
@@ -782,7 +876,7 @@ jobs:
           HAVE="$(node -v | sed 's/^v//')"
           echo "want $WANT, runner has $HAVE"
           [ "$WANT" = "$HAVE" ] || {
-            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image on contabo2 (/opt/tracy-runner)"
+            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image on contabo2 (/opt/tracy-runner), or on GitHub-hosted read the step \"Set up Node on a GitHub-hosted runner\""
             exit 1
           }
           corepack enable pnpm
@@ -1034,7 +1128,11 @@ jobs:
   # in the job name itself. Its summary carries the same sentence.
   suite-skipped:
     name: "full suite skipped: tree ${{ needs.plan.outputs.tree }} already green in run ${{ needs.plan.outputs.green_run }}"
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-light, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: >-
+      ${{ contains(github.event.pull_request.labels.*.name, 'ci:hosted') && 'ubuntu-latest'
+      || fromJSON(format('["self-hosted","linux","{0}","tracy-light","{1}"]',
+      contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux',
+      (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev')) }}
     timeout-minutes: 2
     needs: [plan]
     if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && needs.plan.result == 'success' && needs.plan.outputs.green_run != ''
@@ -1085,7 +1183,11 @@ jobs:
   # Seconds are NOT reported here (nothing ran); the proof job below reports the seconds it measured.
   test-growth:
     name: test growth (report-only)
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-light, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: >-
+      ${{ contains(github.event.pull_request.labels.*.name, 'ci:hosted') && 'ubuntu-latest'
+      || fromJSON(format('["self-hosted","linux","{0}","tracy-light","{1}"]',
+      contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux',
+      (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev')) }}
     timeout-minutes: 5
     if: github.event_name == 'pull_request' && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository
     steps:
@@ -1095,6 +1197,13 @@ jobs:
           submodules: false
           # The merge commit and its parents: HEAD^1 is the base tip, as in `plan`.
           fetch-depth: 2
+
+      # GitHub-hosted only (`ci:hosted`), as in `plan`.
+      - name: Set up Node on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
 
       - name: Report what this pull request adds to and removes from the suite
         run: |
@@ -1124,7 +1233,11 @@ jobs:
   # `always()` step below removes whatever copy is left, by its owner file.
   new-test-proof:
     name: new-test proof (report-only)
-    runs-on: [self-hosted, linux, "${{ contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux' }}", tracy-check, "${{ (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: >-
+      ${{ contains(github.event.pull_request.labels.*.name, 'ci:hosted') && 'ubuntu-latest'
+      || fromJSON(format('["self-hosted","linux","{0}","tracy-check","{1}"]',
+      contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux',
+      (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev')) }}
     timeout-minutes: 30
     needs: [dsh-lib, plan]
     if: >-
@@ -1165,6 +1278,22 @@ jobs:
             git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
           git submodule status vendor/tracy/deepseek-harness
 
+      # GitHub-hosted only (`ci:hosted`): a fresh VM has no runner image, so Node comes from
+      # `.node-version` here and the assert below checks what it installed. Skipped on our runners.
+      - name: Set up Node on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+      # The runner image's `php` cli (`tracy-runners@bf07c3a`), for the tests that run real PHP.
+      - name: Set up PHP on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
+        with:
+          php-version: '8.3'
+          coverage: none
+          tools: none
+
       - name: Assert the runner's Node matches .node-version
         run: |
           set -euo pipefail
@@ -1172,7 +1301,7 @@ jobs:
           HAVE="$(node -v | sed 's/^v//')"
           echo "want $WANT, runner has $HAVE"
           [ "$WANT" = "$HAVE" ] || {
-            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image"
+            echo "::error::runner Node is $HAVE but .node-version asks for $WANT — rebuild the tracy-runner image, or on GitHub-hosted read the step \"Set up Node on a GitHub-hosted runner\""
             exit 1
           }
           corepack enable pnpm

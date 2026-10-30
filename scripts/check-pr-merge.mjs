@@ -29,7 +29,8 @@
  *   - into `develop`, a label the pull request carries (`ci:e2e`, `ci:integration`) was honoured by that
  *     run: its recorded `tested scope` did not leave out the suite the label asks for (`labelsHonoured`);
  *   - every job that ran asked for the dev runner lane, or ran on a fresh GitHub-hosted `ubuntu-latest`
- *     (label AND runner group `GitHub Actions`; the light gates since 30/10/2026): since 26/10/2026 pull-request code never runs on the
+ *     (label AND runner group `GitHub Actions`; the light gates since 30/10/2026, and every Tracy CI job
+ *     of a pull request labelled `ci:hosted`): since 26/10/2026 pull-request code never runs on the
  *     production lane, whatever the base (`docs/references/public-repo-ci.md`). The lane is
  *     therefore no record of the target any more; a retargeted pull request is caught by its rows
  *     (into `staging`/`main` every row, and the forced Turbo rows only with the plan's `full run`
