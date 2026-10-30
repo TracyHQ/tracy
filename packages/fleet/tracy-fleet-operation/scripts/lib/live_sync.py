@@ -1377,17 +1377,37 @@ class IdMap:
                 continue
             if live == copy:
                 same.add(copy)
-            elif copy not in t and live not in o:
+            else:
                 pairs.append((live, copy))
                 same.add(copy)
+        # The numbers may cross: each side added other rows first, so the live site holds the copy's
+        # number for a row of its own (re-test of #118: the copy's template under 3, the live site's
+        # under 4 and another row of the live site's under 3). That row is a new one both sites gave
+        # one number: it goes under a fresh number, as `clash` would number it, in the same move.
+        # Skipped instead, the two templates stayed two rows on the copy with no conflict.
+        sources = {live for live, _ in pairs}
+        aside = []
+        taken = set(self.seen[table])
+        for number in sorted(copy for _, copy in pairs if copy in t and copy not in sources):
+            fresh = self.fresh(table, taken)
+            taken.add(fresh)
+            self.seen[table].add(fresh)
+            aside.append((number, fresh))
+        for number, fresh in aside:
+            raw = self.moved(theirs, table, number, fresh)
+            self.map.setdefault(table, {})[raw] = fresh
+            self.added.append({"table": table, "live": raw, "copy": fresh, "why": "created-on-both"})
         for live, copy in pairs:
             raw = self.moved(theirs, table, live, copy)
             self.map.setdefault(table, {})[raw] = copy
             self.seen[table].add(copy)
             self.added.append({"table": table, "live": raw, "copy": copy, "why": "same-record"})
         if pairs:
-            self.renumber(theirs, table, rule, pairs)
-            t = (t - {live for live, _ in pairs}) | {copy for _, copy in pairs}
+            self.held += self.unhandled_refs(base, theirs, table, aside)
+            # One move: `renumber` goes through a far offset, so a swap or a chain never meets itself.
+            self.renumber(theirs, table, rule, aside + pairs)
+            t = ((t - sources - {n for n, _ in aside}) | {copy for _, copy in pairs}
+                 | {fresh for _, fresh in aside})
         return same, t
 
     def moved(self, schema: str, table: str, number: int, to: int) -> int:

@@ -708,6 +708,32 @@ test(
 )
 
 test(
+  'one-per-page meta both sites added under crossed meta_ids still meets as one row; the other new rows stay (#118)',
+  opts,
+  () => {
+    // Each side added other meta first, so the numbers cross: the copy's template is 24, the live
+    // site's is 25, and the live site holds 24 for a row of its own (the re-test of #118).
+    const answer = orderRecordMerge({
+      type: 'page',
+      extraSql: PAGE_META,
+      ours: `INSERT INTO wp_postmeta VALUES (24, 1, '_wp_page_template', 'page-no-title.php'),
+        (25, 1, '_thumbnail_id', '9');`,
+      theirs: `INSERT INTO wp_postmeta VALUES (24, 1, 'customer_note', 'live'),
+        (25, 1, '_wp_page_template', 'page-wide.php'), (26, 1, '_thumbnail_id', '9');`
+    })
+    const meta = (key) =>
+      sql(`SELECT GROUP_CONCAT(meta_value ORDER BY meta_id) FROM wc_m.wp_postmeta WHERE post_id=1 AND meta_key='${key}'`)
+    assert.equal(meta('_wp_page_template'), 'page-no-title.php', JSON.stringify(answer.renumbered))
+    assert.equal(meta('_thumbnail_id'), '9', 'the same value both added is one row')
+    assert.equal(meta('customer_note'), 'live', 'the live site’s own new row comes over')
+    assert.ok(
+      answer.conflicts.some((c) => c.table === 'wp_postmeta'),
+      `the two templates are a conflict: ${JSON.stringify(answer.conflicts)}`
+    )
+  }
+)
+
+test(
   'Polylang translation groups, term languages and per-language menus follow post and term renumbers (#105)',
   opts,
   () => {
