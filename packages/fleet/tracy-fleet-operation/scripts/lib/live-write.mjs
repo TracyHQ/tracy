@@ -33,9 +33,18 @@
  * into a file, a log line or an answer.
  */
 import { createHash } from 'node:crypto'
-import { closeSync, existsSync, fsyncSync, mkdirSync, openSync, readFileSync, writeFileSync } from 'node:fs'
+import {
+  closeSync,
+  existsSync,
+  fsyncSync,
+  mkdirSync,
+  openSync,
+  readdirSync,
+  readFileSync,
+  writeFileSync
+} from 'node:fs'
 import { request } from 'node:http'
-import { join } from 'node:path'
+import { basename, join } from 'node:path'
 import { durablePrivate, lockWriter, mutation, writeRequests } from './live-write-requests.mjs'
 
 const USER_AGENT = 'Mozilla/5.0 (compatible; TracyBot/1.0; +https://tracy.ai)'
@@ -2158,8 +2167,67 @@ function flag(args, name, fallback = null) {
   return at >= 0 ? args[at + 1] : fallback
 }
 
+/**
+ * Before a Sync from live meets what Sync to live made (webroot-sync.sh, ahead of `record-cut`): each
+ * push with a create whose answer never came is asked of the live site (`settleLost`), so a record it
+ * did make is the copy's own in the id map — never a new one of the live site's to copy over, nor one
+ * a new preview offers to make again (#74, #222). A push being written now (its lock held) or already
+ * undone is left alone, and so is everything when the live site does not answer. A create settled
+ * after the push had answered is named in `reconciled.json` for `record-cut`. Answers the pushes.
+ */
+async function settleRoot(pushRoot) {
+  const endpoint = process.env.TRACY_SYNC_ENDPOINT ?? ''
+  const token = process.env.TRACY_SYNC_TOKEN ?? ''
+  if (!/^https?:\/\//.test(endpoint) || !token || !pushRoot || !existsSync(pushRoot))
+    return { ok: true, settled: [] }
+  const waiting = readdirSync(pushRoot, { withFileTypes: true })
+    .filter((d) => d.isDirectory() && d.name !== 'previews')
+    .map((d) => join(pushRoot, d.name))
+    .filter(
+      (dir) =>
+        !existsSync(join(dir, 'undo-recorded')) &&
+        !existsSync(join(dir, 'undone.json')) &&
+        Object.values(readJson(join(dir, 'requests.json'), {})).some(
+          (r) => r.state === 'sending' && isCreate(r)
+        )
+    )
+  if (!waiting.length) return { ok: true, settled: [] }
+  let live
+  try {
+    live = await door(endpoint, token)
+  } catch {
+    return { ok: true, settled: [], unreachable: true }
+  }
+  const read = (action, params) => retried(() => call(live, token, action, params))
+  const settled = []
+  for (const dir of waiting) {
+    let release
+    try {
+      release = await lockWriter(dir)
+    } catch {
+      continue
+    }
+    try {
+      const pushId = basename(dir)
+      const platform = readJson(join(dir, 'push.json'), {}).platform ?? 'joomla'
+      const found = await settleLost(writeRequests(dir, live), read)
+      const written = journalSettled(found, pushJournal(dir, `tracy-push-${pushId}`, platform))
+      if (written.length && existsSync(join(dir, 'written.json'))) {
+        const path = join(dir, 'reconciled.json')
+        const had = readJson(path, { written: [] }).written.map((w) => w.id)
+        writePrivate(path, { written: [...new Set([...had, ...written])].map((id) => ({ id })) })
+      }
+      if (found.length) settled.push(pushId)
+    } finally {
+      await release()
+    }
+  }
+  return { ok: true, settled }
+}
+
 async function main(argv) {
   const [op, ...rest] = argv
+  if (op === 'settle') return await settleRoot(rest[0])
   if (op === 'apply') {
     const [previewDir, pushDir] = rest
     const release = await lockWriter(pushDir)

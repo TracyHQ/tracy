@@ -1896,3 +1896,57 @@ test('a push cut off before it recorded its writes is recorded from its journal 
   assert.deepEqual(run().recorded, ['cut'])
   assert.deepEqual(JSON.parse(readFileSync(idMap, 'utf8')), { content: { 20: 10, 21: 11, 24: 12 } })
 })
+
+test('record-cut never records an undone push again, and records a create settled after its push answered (#222, #74)', () => {
+  const pushRoot = join(root, `push-root-${++n}`)
+  const item = (id) => ({
+    id: `article:new:${id}`,
+    kind: 'article',
+    op: 'create',
+    title: `Article ${id}`,
+    creates: `content:${id}`,
+    seed: [{ table: 'content', match: { id }, columns: ['title'], create: true, entity: 'content', id }]
+  })
+  const changeset = JSON.stringify({ ok: true, platform: 'joomla', items: [item(10), item(11)] })
+  const line = (id, live) =>
+    `${JSON.stringify({ id: `article:new:${id}`, state: 'written', created: { [`content:${id}`]: live } })}\n`
+  const pushDir = (name, files) => {
+    const dir = join(pushRoot, name)
+    mkdirSync(dir, { recursive: true })
+    for (const [file, text] of Object.entries(files)) writeFileSync(join(dir, file), text)
+    return dir
+  }
+  // Cut off, then undone: its Undo recorded it (`undo-recorded`); recorded forward again, the settle
+  // sync trashed Tracy's post on the copy.
+  pushDir('undone', { 'changeset.json': changeset, 'journal.jsonl': line(10, 20), 'undo-recorded': '' })
+  // Answered with article 11 unknown; settled since from the live site's log (`reconciled.json`).
+  const answered = pushDir('answered', {
+    'changeset.json': changeset,
+    'journal.jsonl': line(10, 30),
+    'written.json': '{"written":[{"id":"article:new:10"}]}',
+    recorded: ''
+  })
+  const idMap = join(pushRoot, 'id-map.json')
+  const pushed = join(pushRoot, 'pushed.json')
+  const run = () => {
+    const r = spawnSync(
+      'python3',
+      [PUSH, 'record-cut', '--push-root', pushRoot, '--id-map', idMap, '--pushed', pushed],
+      {
+        encoding: 'utf8'
+      }
+    )
+    assert.equal(r.status, 0, r.stderr + r.stdout)
+    return JSON.parse(r.stdout.trim().split('\n').at(-1))
+  }
+  assert.deepEqual(run().recorded, [], 'an undone push and an answered one are left alone')
+  writeFileSync(join(answered, 'journal.jsonl'), line(10, 30) + line(11, 31))
+  writeFileSync(join(answered, 'reconciled.json'), '{"written":[{"id":"article:new:11"}]}')
+  assert.deepEqual(run().recorded, ['answered'])
+  assert.deepEqual(
+    JSON.parse(readFileSync(idMap, 'utf8')),
+    { content: { 31: 11 } },
+    'only the settled create'
+  )
+  assert.deepEqual(run().recorded, [], 'recorded once')
+})

@@ -654,9 +654,15 @@ merge() {
   has_live_read || { answer_refusal NO_LIVE_READ; return; }
   db_names
   [[ -n "$PREFIX" ]] || { answer_refusal NO_TABLE_PREFIX; return; }
-  # A Sync to live cut off before it recorded what it created (its host job lost): what its journal
-  # says it wrote joins the id map and pushed.json now, so this merge meets those records as the
-  # copy's own, never as the live site's new ones to copy a second time (#173).
+  # A create of a Sync to live whose answer never came (lost on the way back, or its job killed): the
+  # live engine's log of that push says whether it was made, so a made one joins the journal first
+  # (lib/live-write.mjs `settle`, #74, #222). Without a door to the live site, or with the site not
+  # answering, nothing changes. Then a Sync to live cut off before it recorded what it created (its
+  # host job lost): what its journal says it wrote joins the id map and pushed.json now, so this merge
+  # meets those records as the copy's own, never as the live site's new ones to copy a second time (#173).
+  if [[ -n "${TRACY_SYNC_ENDPOINT:-}" && -d "$STACK/push" ]]; then
+    node "$LIB_DIR/live-write.mjs" settle "$STACK/push" >&2 || echo "!! lost Sync to live answers not settled" >&2
+  fi
   if ! python3 "$LIB_DIR/live_push.py" record-cut --push-root "$STACK/push" --id-map "$ID_MAP" --pushed "$PUSHED" >&2; then
     answer_refusal PUSH_RECORD_FAILED "an interrupted Sync to live could not be recorded"; return
   fi

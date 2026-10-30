@@ -2772,3 +2772,55 @@ test('a firewall’s 403 on one write is LIVE_BLOCKED, never an unknown outcome;
     await live.close()
   }
 })
+
+test('a create in flight when the job was killed is settled before the next sync, and the Undo of that push takes it back (#222)', async () => {
+  const live = await engine({ platform: 'wordpress' })
+  let child
+  try {
+    live.holdAnswer = 'content.update'
+    const made = update(
+      1,
+      { post_title: 'Tracy post B' },
+      {},
+      { kind: 'post', op: 'create', creates: 'post:1' }
+    )
+    const dir = pushDir([made], 'wordpress')
+    child = spawn('node', [WRITE, 'apply', dir, dir], {
+      env: { ...process.env, TRACY_SYNC_ENDPOINT: live.endpoint, TRACY_SYNC_TOKEN: TOKEN },
+      stdio: 'ignore'
+    })
+    for (let i = 0; i < 500 && !live.held; i++) await new Promise((resolve) => setTimeout(resolve, 10))
+    const closed = new Promise((resolve) => child.once('close', resolve))
+    child.kill('SIGKILL')
+    await closed
+    live.heldResponse.destroy()
+    live.holdAnswer = null
+    // The settle webroot-sync.sh runs before `record-cut`: the post is in the journal, under its number.
+    const { answer } = await writer(live, ['settle', join(dir, '..')])
+    assert.deepEqual(answer.settled, [dir.split('/').at(-1)], JSON.stringify(answer))
+    const [post] = Object.keys(live.records.post).map(Number)
+    const journal = readFileSync(join(dir, 'journal.jsonl'), 'utf8')
+      .trim()
+      .split('\n')
+      .map((l) => JSON.parse(l))
+    assert.deepEqual(journal.at(-1), {
+      id: made.id,
+      state: 'written',
+      created: { 'post:1': post },
+      extra: { liveId: post }
+    })
+    // Asked again: nothing left to settle.
+    assert.deepEqual((await writer(live, ['settle', join(dir, '..')])).answer.settled, [])
+    const back = (await undo(live, dir)).answer
+    assert.deepEqual(
+      back.restored.map((r) => r.id),
+      [made.id]
+    )
+    assert.equal(live.records.post[post].post_status, 'trash')
+    assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 1, 'never made twice')
+  } finally {
+    child?.kill('SIGKILL')
+    live.heldResponse?.destroy()
+    await live.close()
+  }
+})
