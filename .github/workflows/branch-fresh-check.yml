@@ -5,8 +5,9 @@
 # pre-push hook only warns (a push is how unfinished work is saved); this job goes red once the
 # pull request is ready for review, when the code is about to reach a shared branch and a deploy.
 #
-# CI cannot block a merge here (free plan, private repo: no branch protection), so a red job is the
-# signal and `pr-merge` §3 is the rule: merge the base in before marking a pull request ready.
+# This job is not a required check (branch protection on `develop`/`main` requires only
+# `language-policy`), so a red job is the signal and `pr-merge` §3 is the rule: merge the base in
+# before marking a pull request ready.
 #
 # The logic lives in `scripts/check-branch-fresh.mjs`, runnable at a desk on a saved payload:
 #
@@ -20,8 +21,8 @@ permissions:
 on:
   pull_request:
     branches: [main, staging, develop]
-    # `edited` (26/10/2026): retargeting a pull request fires it, and every pull-request job now runs on
-    # the dev lane, so a fresh run is the only record of which base this verdict was made against.
+    # `edited` (26/10/2026): retargeting a pull request fires it, so a fresh run records which base
+    # this verdict was made against.
     types: [opened, edited, synchronize, reopened, ready_for_review]
 
 concurrency:
@@ -31,10 +32,9 @@ concurrency:
 jobs:
   branch-fresh:
     name: branch-fresh
-    # Pull-request code never runs on the production lane, whatever the base (public-repo-ci.md).
-    runs-on: [self-hosted, linux, tracy-light, tracy-lane-dev]
+    runs-on: ubuntu-latest
     timeout-minutes: 10
-    # Team runners take only branches of this repository; a fork gets `branch-fresh (fork)` below.
+    # Branches of this repository; a fork gets `branch-fresh (fork)` below.
     if: github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository
     steps:
       # 🔒 `fetch-depth: 0`: the gate walks the base's history back to the fork point; one commit is not enough.
@@ -42,6 +42,11 @@ jobs:
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
 
       - name: Check branch freshness
         run: node scripts/check-branch-fresh.mjs --ci

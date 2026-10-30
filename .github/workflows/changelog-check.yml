@@ -8,13 +8,11 @@
 # nothing that is alive; `develop` (where everyone works) and `main-v3` (production for the
 # tracy-web architecture) had no changelog gate at all. See the same block in `tracy-ci.yml`.
 #
-# WHERE IT RUNS, AND WHY THAT CHANGED — 2026-09-08. This gate installs nothing: the event
-# payload, a `git diff` and a bare `node`. That made `ubuntu-latest` the obvious host, and it was
-# the right host until the org exhausted its included Actions minutes: from 06/09 every
-# GitHub-hosted job here died in three seconds with zero steps executed, this gate 204 times in a
-# row. Those reds were indistinguishable from a missing changelog entry, which is the worst thing
-# a gate can be — wrong in the same colour as right. It now runs on `tracy-build-01`, the
-# contabo2 runner, with `tracy-ci.yml`; the measurement is at the top of that file.
+# WHERE IT RUNS — `ubuntu-latest` again since 2026-10-30. This gate installs nothing: the event
+# payload, a `git diff` and `node`. From 2026-09-08 it ran on self-hosted runners because the
+# private repo had spent the org's included Actions minutes (every GitHub-hosted job died in three
+# seconds, this gate 204 times in a row). The repo is public now, and standard GitHub-hosted
+# runners are free for public repositories, outside that quota.
 #
 # 🔒 `fetch-depth: 0`, NOT THE DEFAULT. `actions/checkout` takes exactly one commit by default; this
 # gate needs both `payload.before` and `payload.after` present in the tree before `git diff` has a
@@ -47,13 +45,9 @@ concurrency:
 jobs:
   check-changelog:
     name: changelog
-    # `tracy-light` (15/09): four 1-cpu runners on the CI box that take only these nine-second
-    # checks, so they never queue behind a Tracy CI or an image build on the `tracy-build` four.
-    # A push to `main`/`staging` is merged code and keeps the production lane; pull-request code never
-    # runs there, whatever the base (public-repo-ci.md).
-    runs-on: [self-hosted, linux, tracy-light, "${{ (github.event_name == 'push' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev' }}"]
+    runs-on: ubuntu-latest
     timeout-minutes: 10
-    # Team runners take pushes and branches of this repository; a fork gets `changelog (fork)` below.
+    # Pushes and branches of this repository; a fork gets `changelog (fork)` below.
     if: github.event_name == 'push' || (github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository)
     steps:
       - name: Check out Git repository
@@ -61,6 +55,11 @@ jobs:
         with:
           # The gate diffs two arbitrary commits of the push, so it needs history, not a snapshot.
           fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
 
       # `$GITHUB_EVENT_PATH` is the event payload the runner already wrote to disk — no token, no
       # API call, so nothing in this step can fail except the logic under test.
