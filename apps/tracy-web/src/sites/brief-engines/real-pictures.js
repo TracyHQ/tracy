@@ -127,6 +127,9 @@ export function contentMapOf(contract) {
  *   (`honesty.cardNames`, #192); when given it decides the cards' subjects instead of the copy pins
  * @param {{chat: Function} | null | (() => Promise<{chat: Function} | null>)} [input.textModel] - the text model the
  *   build writes with (or a getter of it): it reads which glyph of the icon set shows each item icon (#189)
+ * @param {Record<string, string> | null} [input.written] - the words the build planned, by slot key (copy first, #189):
+ *   each frame's photo and drawing follow the record page it sits on and the copy next to it, each icon the words of
+ *   its own item
  */
 export async function shapeReal({
   real,
@@ -148,7 +151,8 @@ export async function shapeReal({
   copy = null,
   declared = [],
   cardNames: plannedNames = null,
-  textModel = null
+  textModel = null,
+  written = null
 }) {
   const domain = await loadDomain()
   const policy = picturePolicy(real.picturePolicy)
@@ -206,7 +210,7 @@ export async function shapeReal({
     // next photo, else to a drawing.
     const { fill, unsharp, sharpness } = await sharpFill({
       plan: (refused) =>
-        domain.planFill({ contentMap, brief, demo, cardNames, perSlot: true, unsharp: refused }),
+        domain.planFill({ contentMap, brief, demo, cardNames, perSlot: true, unsharp: refused, written }),
       contentMap,
       real,
       shownWidthOf: domain.shownWidthOf,
@@ -214,7 +218,7 @@ export async function shapeReal({
     })
     // Only slots on a page the site keeps are drawn: a demo post the tidy-up takes off never spends the cap.
     const onSite = new Set(map.groups.flatMap((g) => (g.occurrences ?? []).map((o) => o.key)))
-    const drawnPlan = domain.planDrawings({ fill, contentMap, brief, demo, onSite, unsharp })
+    const drawnPlan = domain.planDrawings({ fill, contentMap, brief, demo, onSite, unsharp, written })
     const placed = domain.placementOfFill({ fill: { ...fill, slots: drawnPlan.slots }, groups: map.groups })
     map = { ...map, groups: placed.groups, never: [...map.never, ...placed.dropped] }
     made = { ...placed.plan, drawings: drawnPlan.drawings, drawCapped: drawnPlan.capped, sharpness }
@@ -222,19 +226,21 @@ export async function shapeReal({
     const decorMap = { ...contentMap, slots: [...contentMap.slots, ...declared] }
     // Each item icon's meaning is read by the text model from the item's words; the keywords decide without it (#189).
     const writer = typeof textModel === 'function' ? textModel() : textModel
+    // Copy first (#189): each icon reads the words planned for its own item, not only the sourced pins.
+    const words = withWritten(copy, written)
     const iconChoices = await iconMeanings({
       domain,
       model: await Promise.resolve(writer).catch(() => null),
       contentMap: decorMap,
       brief,
-      copy,
+      copy: words,
       note,
       signal
     })
     decorPlan = domain.planDecor({
       contentMap: decorMap,
       brief,
-      copy,
+      copy: words,
       offerings: fill.offerings,
       fill: fill.slots,
       iconChoices,
@@ -609,6 +615,22 @@ export function pictureReport({ shaped, values, refused, readback, homeHtml = nu
  * @param {any} real
  * @param {boolean} withClear
  */
+/**
+ * The copy pins with the words the build planned laid over them (#189): a planned line is the item's own words, so it is
+ * no placeholder any more. The pins alone when nothing was planned.
+ * @param {{pins?: Record<string, string>, sources?: Record<string, string>} | null} copy
+ * @param {Record<string, string> | null} written
+ */
+export function withWritten(copy, written) {
+  if (!written || typeof written !== 'object') return copy
+  const planned = Object.fromEntries(
+    Object.entries(written).filter(([, v]) => typeof v === 'string' && v.trim())
+  )
+  const sources = { ...copy?.sources }
+  for (const key of Object.keys(planned)) if (sources[key] === 'placeholder') delete sources[key]
+  return { ...copy, pins: { ...copy?.pins, ...planned }, sources }
+}
+
 async function briefAssetsOf(real, withClear) {
   const readable = new Map(real.pictures.map((p) => [p.id, p]))
   const clearGround = withClear ? await ownClearGrounds(real) : new Set()

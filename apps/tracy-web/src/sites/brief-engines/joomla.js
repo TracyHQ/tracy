@@ -78,6 +78,7 @@ import { offeringSummaryValues } from './offering-summaries.js'
 import { nameOnlyOfferingLines } from './offering-name-only.js'
 import { writeOfferingDescriptions } from './offering-description-writer.js'
 import { shapeSiblingCopy } from './sibling-copy-writer.js'
+import { writeRecordPages } from './record-page-writer.js'
 import { ctaBandValues } from './cta-band-messages.js'
 import { decorationLeftAlone } from 'website-opportunities/domain/layout-bands.mjs'
 import {
@@ -115,6 +116,7 @@ import {
   withoutKeptTakeOff,
   writeSteps
 } from './joomla-tidy.js'
+import { hideRecordPagers } from './joomla-record-pager.js'
 import {
   keptById,
   leaveShowcase,
@@ -524,6 +526,8 @@ function staticState(contract) {
       ctaBands: map.ctaBands ?? [],
       // The contact blocks the release declares: a footer keeps its demo entries kind by kind (#189, site build rule 5).
       contactBlocks: map.contactBlocks ?? [],
+      // The record pages the release declares, each with its layout: a landing one loses the blog pager (#189 rule 3).
+      recordPages: map.recordPages ?? [],
       declared: withFieldEvidence((map.slots ?? []).filter((slot) => !customizable(slot)))
     }
     maps.set(contract.id, entry)
@@ -537,7 +541,8 @@ function staticState(contract) {
     entities: entry.entities,
     navigationGroups: entry.navigationGroups,
     ctaBands: entry.ctaBands,
-    contactBlocks: entry.contactBlocks
+    contactBlocks: entry.contactBlocks,
+    recordPages: entry.recordPages
   }
 }
 
@@ -642,7 +647,15 @@ export function createJoomlaEngine({
    * `bound`: a slot plan's card pictures (`copyPinsOf`), each card's own entity's. `copy`: the copy pins, whose card
    * names decide which offering photo each card takes (`fill-plan.mjs`).
    */
-  const pictures = async (ctx, real, bound = {}, copy = null, drawDoor = null, shaped = undefined) => {
+  const pictures = async (
+    ctx,
+    real,
+    bound = {},
+    copy = null,
+    drawDoor = null,
+    shaped = undefined,
+    written = null
+  ) => {
     if (!realPictures || !siteFile || !ctx.contract) return null
     real ??= await realPictures.forSite({
       siteKey: ctx.siteKey,
@@ -679,6 +692,8 @@ export function createJoomlaEngine({
       cardNames: sitePlan?.honesty?.cardNames ?? null,
       // The writer's text model reads which glyph shows each item icon (#189).
       textModel: async () => (await models()).text ?? null,
+      // Copy first, then pictures (#189): the words settled in `prepare` choose each frame.
+      written,
       write: async ({ state, changes, replaceKept }) =>
         new Set(
           await writeContract({
@@ -716,7 +731,10 @@ export function createJoomlaEngine({
         drawDoor: prepared.drawDoor ?? null,
         declared: declaredPictureSlots(ctx.contract),
         cardNames: sitePlan?.honesty?.cardNames ?? null,
-        textModel: async () => (await models()).text ?? null
+        textModel: async () => (await models()).text ?? null,
+        // 🔒 COPY FIRST, THEN PICTURES (#189, site build rule 2): every word the plan writes is settled in `prepare`, so
+        // each frame is chosen and drawn from its page, the copy next to it and its role.
+        written: prepared.changes ?? null
       })
     },
     /** @param {import('../brief-build.js').BriefContext} ctx */
@@ -1316,6 +1334,33 @@ export function createJoomlaEngine({
           `${siblingShape.unreached.length} card text(s) could not be written to their list's shape: ${siblingShape.unreached.join(', ')}`
         )
       if (siblingShape.lists.length > 0) ctx.time('siblingListsShaped', siblingShape.lists.length)
+      // 🔒 EACH RECORD PAGE IS WRITTEN FOR ITS RECORD, AND NO CARD IS LEFT EMPTY (#189, site build rules 1 and 3,
+      // `record-page-writer.js`): a section that repeats a sibling page with the name swapped is written again, and a card
+      // of the layout a sibling page fills is written in the same shape, before any picture is chosen.
+      const recordCopy = await writeRecordPages({
+        contentMap: { ...staticState(ctx.contract), slots: shownSlots },
+        written: kept,
+        blanked: new Set(demoBlanks.map((slot) => slot.key)),
+        about: {
+          business: String(ctx.normalized.name ?? ''),
+          trade: String(ctx.normalized.sector ?? ''),
+          description: String(sitePlan?.brand?.description?.value ?? ''),
+          sourceText: [facts.text, ...Object.values(honesty?.values ?? {}).map((v) => String(v.value))].join(
+            ' '
+          )
+        },
+        model: text,
+        locale: written,
+        signal: ctx.signal
+      })
+      Object.assign(kept, recordCopy.values)
+      demoBlanks = demoBlanks.filter((slot) => !(slot.key in recordCopy.values))
+      if (recordCopy.unreached.length > 0)
+        ctx.note(
+          `${recordCopy.unreached.length} record page line(s) could not be written for their own record: ${recordCopy.unreached.join(', ')}`
+        )
+      if (Object.keys(recordCopy.values).length > 0)
+        ctx.time('recordPageLines', Object.keys(recordCopy.values).length)
 
       // 🔒 A MODULE THAT STATES ONLY ANOTHER COMPANY'S FACTS COMES OFF THE PAGE. Seven modules of `tracy-business/j6` are nothing
       // but facts the contract asks evidence for — the team and their titles, the certificates, the clients, three strips of
@@ -1554,7 +1599,8 @@ export function createJoomlaEngine({
             prepared.copyPins?.pictures,
             prepared.copyPins ?? null,
             prepared.drawDoor ?? null,
-            prepared.realPictureShape
+            prepared.realPictureShape,
+            prepared.changes ?? null
           )
         prepared.real = null
       }
@@ -2770,6 +2816,16 @@ export function createJoomlaEngine({
         note: ctx.note,
         time: ctx.time
       })
+      // 🔒 A record page laid out as a landing page shows no blog pager (#189, site build rule 3): the template declares
+      // which pages are (`recordPages`), and their Previous / Next article links are switched off.
+      const pagers = await hideRecordPagers({
+        apply,
+        siteKey,
+        contentMap: staticState(ctx.contract),
+        applyId: `pager-${Date.now().toString(36)}`,
+        note: ctx.note
+      })
+      if (pagers > 0) ctx.time('recordPagersOff', pagers)
       if (menuPlan?.pages?.some((p) => p.decision === 'keep')) {
         const { text: menuModel } = await models()
         const menu = await writeJoomlaMainMenu({

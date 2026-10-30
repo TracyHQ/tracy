@@ -65911,5 +65911,17 @@
       "placement": "footer",
       "container": "module-175"
     }
+  ],
+  "recordPages": [
+    {
+      "id": "classes",
+      "entities": [
+        "article-2",
+        "article-14",
+        "article-15",
+        "article-16"
+      ],
+      "layout": "landing"
+    }
   ]
 }

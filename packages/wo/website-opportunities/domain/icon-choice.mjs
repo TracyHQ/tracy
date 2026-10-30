@@ -21,7 +21,8 @@ import { foldWords } from './pictures/slot-map.mjs'
 export const ICON_SET = Object.freeze(
   [
     { words: ['tennis', 'racquet', 'racket', 'racquets', 'rackets'], icons: ['racquet', 'tennis-ball'] },
-    { words: ['padel', 'paddle', 'pickleball'], icons: ['ping-pong', 'racquet', 'tennis-ball'] },
+    // A padel or pickleball racket is a racket: the table-tennis paddle is another sport (#189).
+    { words: ['padel', 'paddle', 'pickleball'], icons: ['racquet', 'tennis-ball'] },
     { words: ['squash'], icons: ['tennis-ball', 'racquet'] },
     { words: ['badminton', 'shuttlecock'], icons: ['racquet', 'person-simple-throw'] },
     { words: ['ping', 'pong'], icons: ['ping-pong'] },

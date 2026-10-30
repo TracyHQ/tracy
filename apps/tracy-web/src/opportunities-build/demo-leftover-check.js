@@ -23,6 +23,7 @@ import { checkPageIntros } from './page-intro-check.js'
 import { checkOfferingSummaries } from './offering-summary-check.js'
 import { checkOfferingRows } from './offering-rows-check.js'
 import { checkSiblingCopy } from './sibling-copy-check.js'
+import { checkRecordPages } from './record-pages-check.js'
 import { checkReviewQuotes } from './review-quotes-check.js'
 import { checkContactForms } from './contact-form-check.js'
 import { checkContactPage } from './contact-page-check.js'
@@ -177,6 +178,9 @@ export async function runLeftoverCheck({
   // The cards of one list share one text shape, one record one shape everywhere, one spelling per site (COO rule 30/10/2026).
   const siblingCopy = checkSiblingCopy({ pages })
   report.findings.push(...siblingCopy)
+  // Sibling record pages: each shows its own pictures and its own words, no empty card, no blog pager (#189 rules 1-3).
+  const recordPages = checkRecordPages({ pages })
+  report.findings.push(...recordPages)
   // No visible message form without an email of the owner's, judged on the served pages (COO decision, #189 item 19).
   const contactForms = checkContactForms({ pages, brief })
   report.findings.push(...contactForms.findings)
@@ -240,6 +244,7 @@ export async function runLeftoverCheck({
     offeringSummaries,
     offeringRows,
     siblingCopy,
+    recordPages,
     reviewQuotes,
     recordSlots,
     repeatedCopy,
@@ -262,6 +267,7 @@ export async function runLeftoverCheck({
       offeringSummaries.length === 0 &&
       offeringRows.length === 0 &&
       siblingCopy.length === 0 &&
+      recordPages.length === 0 &&
       reviewQuotes.length === 0 &&
       contactForms.findings.length === 0 &&
       contactPage.length === 0 &&

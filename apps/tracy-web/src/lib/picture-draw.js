@@ -13,7 +13,7 @@ import { createHash } from 'node:crypto'
 import sharp from 'sharp'
 import { colourWords } from 'website-opportunities/domain/brand-colours.mjs'
 
-export const DRAW_PROMPT_VERSION = 'd7'
+export const DRAW_PROMPT_VERSION = 'd8'
 const REFERENCE_EDGE = 1024
 const NEVER = 'No text, no letters, no lettering, no numbers, no signs, no logos, no watermarks.'
 
@@ -54,6 +54,31 @@ function activityOf(subject) {
   return `the business's own place, ready or in use, as its customers arrive at it`
 }
 
+/**
+ * What a frame must show, from the copy written first (#189): its page's topic, the words next to it and where it sits;
+ * on a record page, people never with a face one could recognise. Empty for a drawing made without planned copy.
+ */
+function frameContextOf(subject) {
+  const what = subject?.record === true ? (subject.label ?? 'the offering') : 'the business'
+  const quote = (text) => `"${text.trim().replace(/"/g, "'")}"`
+  const topic =
+    typeof subject?.topic === 'string' && subject.topic.trim()
+      ? `\nThe page this picture is on is about ${quote(subject.topic)}.`
+      : ''
+  const near =
+    typeof subject?.near === 'string' && subject.near.trim()
+      ? `\nThe page says next to this picture: ${quote(subject.near)}. Show exactly that part of ${what}.`
+      : ''
+  const placement = subject?.placement?.role
+    ? `\nThe picture is a ${subject.placement.frame ?? 'card'} picture (${subject.placement.role}).`
+    : ''
+  const faces =
+    subject?.record === true
+      ? '\nPeople may appear, seen from behind, from a distance or out of focus: no recognisable face.'
+      : ''
+  return `${topic}${near}${placement}${faces}`
+}
+
 /** How the business's own photos are given: what it looks like, never a style or a frame to copy. */
 const REFERENCES =
   'The attached photos are real photos of this business: keep what its place, equipment and colours look like, but make a new, professional photograph, not a copy of their framing, text or graphics.'
@@ -82,6 +107,8 @@ function brandColoursOf(item) {
  * d5 (29/10/2026): an object for a cut-out is asked large, filling its frame; a small object in the middle of a white
  * ground was set floating across a hero's words instead of standing where the demo's figure stood.
  * d7 (29/10/2026): the owner's approved rule allows people and faces. Lettering remains forbidden in every mode.
+ * d8 (30/10/2026, #189 site build rule 2, copy first): every frame is drawn from its page's topic, the copy written next to
+ * it and its place on the page; a frame of a record page (one offering's page) is that record's, with no recognisable face.
  */
 export function drawPrompt(item) {
   const shape = `${ratio(item.aspect)} (width ${item.aspect.toFixed(2)} times the height), ${orientation(item.aspect)}`
@@ -104,7 +131,7 @@ export function drawPrompt(item) {
     item.subject?.kind === 'offering' && item.subject.label
       ? `for the page of one of its offerings, ${item.subject.label}`
       : 'for its website'
-  return `A photograph of this business, ${page}:${about}\nPhotorealistic, natural light, ${activityOf(item.subject)}, framed ${shape}.${brandColoursOf(item)}\n${REFERENCES}\n${NEVER}`
+  return `A photograph of this business, ${page}:${about}${frameContextOf(item.subject)}\nPhotorealistic, natural light, ${activityOf(item.subject)}, framed ${shape}.${brandColoursOf(item)}\n${REFERENCES}\n${NEVER}`
 }
 
 /** The cache key of a drawing: what it was made from, for what subject and shape, how, and by which model. */
@@ -115,7 +142,16 @@ export function drawKey(item, { model, shas }) {
         item.subject.id ?? null,
         item.subject.label ?? null,
         item.subject.category ?? null,
-        item.subject.about ?? null
+        item.subject.about ?? null,
+        // Only when the copy was planned first, so a drawing made without it keeps its key.
+        ...(item.subject.placement
+          ? [
+              item.subject.topic ?? null,
+              item.subject.near ?? null,
+              item.subject.placement,
+              item.subject.record ?? false
+            ]
+          : [])
       ]
     : null
   return createHash('sha256')

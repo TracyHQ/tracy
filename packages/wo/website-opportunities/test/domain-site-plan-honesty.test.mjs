@@ -413,7 +413,7 @@ test('a demo button with no way to reach the business reads "Learn more"; a demo
   const out = honestWritten({ slots: map.slots, written: {}, ownText: own, honesty: h, pages: map.pages })
   assert.equal(out.values['module-95.0'], 'Learn more')
   assert.equal(out.values['menuItem-120.0'], 'Tennis', 'the label of the page it opens')
-  // The clinic, in German: a menu entry opening no article falls back to the neutral label.
+  // The clinic, in German: a menu entry whose page title is unknown keeps no button words.
   const dental = dentalMap()
   dental.slots.push(
     {
@@ -443,6 +443,8 @@ test('a demo button with no way to reach the business reads "Learn more"; a demo
     locale: 'de',
     pages: dental.pages
   })
-  assert.equal(clinic.values['menuItem-130.0'], 'Mehr erfahren')
+  // A menu item never takes a button's words (#189, site build rule 6): with no title of its page it is left to the menu
+  // writers; the button still takes the neutral label.
+  assert.equal(clinic.values['menuItem-130.0'], undefined)
   assert.equal(clinic.values['module-21.0'], 'Mehr erfahren')
 })

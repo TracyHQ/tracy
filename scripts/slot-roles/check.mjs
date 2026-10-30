@@ -48,6 +48,11 @@
  *   demo's entries kind by kind and puts every other channel on the Contact page. Named contract folders fail on an
  *   undeclared or malformed block; the whole-tree gate only counts them.
  *
+ * - Every record page is declared (`recordPageProblems`, WO domain `record-pages.mjs`): sibling pages that each show one
+ *   record (an offering, a product, a person) are a `recordPages` entry with layout `landing` or `post`, so a brief build
+ *   takes the blog pager off a landing page. Named contract folders fail on an undeclared or malformed entry; the
+ *   whole-tree gate only counts them.
+ *
  *   node scripts/slot-roles/check.mjs                  every contract in the tree
  *   node scripts/slot-roles/check.mjs <contractDir>... only those (the packing check)
  */
@@ -61,6 +66,7 @@ import { navigationGroupProblems } from '../../packages/wo/website-opportunities
 import { ctaBandProblems } from '../../packages/wo/website-opportunities/domain/cta-bands.mjs'
 import { layoutBandProblems } from '../../packages/wo/website-opportunities/domain/layout-bands.mjs'
 import { contactBlockProblems } from '../../packages/wo/website-opportunities/domain/footer-contact-shape.mjs'
+import { recordPageProblems } from '../../packages/wo/website-opportunities/domain/record-pages.mjs'
 import { lintContractDir, lintSummary } from '../../apps/tracy-web/src/lib/content-map-lint.js'
 import { lintItemIconGrounds } from '../../apps/tracy-web/src/lib/content-map-lint-icons.js'
 import { fieldMapRolesOf } from '../../apps/tracy-web/src/lib/emdash-field-map-roles.js'
@@ -188,6 +194,17 @@ export function contactBlockErrors(dir) {
   }
 }
 
+/** The undeclared or malformed record pages (sibling pages of one record each) of a contract's content map. */
+export function recordPageErrors(dir) {
+  const file = path.join(dir, CONTENT_MAP_FILE)
+  if (!existsSync(file)) return []
+  try {
+    return recordPageProblems(JSON.parse(readFileSync(file, 'utf8')))
+  } catch {
+    return []
+  }
+}
+
 /** The undeclared or malformed footer link columns (navigation groups) of a contract's content map. */
 export function navigationGroupErrors(dir) {
   const file = path.join(dir, CONTENT_MAP_FILE)
@@ -284,6 +301,11 @@ export function checkAllSlotRoles(rootDir = DEFAULT_ROOT, explicitDirs = null) {
     .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, errors: contactBlockErrors(dir) }))
     .filter((b) => b.errors.length > 0)
   if (named) for (const b of contactBlocks) for (const error of b.errors) errors.push(`${b.dir}: ${error}`)
+  // The same for record pages: a named contract refuses sibling record pages no entry declares a layout for.
+  const recordPages = candidates
+    .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, errors: recordPageErrors(dir) }))
+    .filter((b) => b.errors.length > 0)
+  if (named) for (const b of recordPages) for (const error of b.errors) errors.push(`${b.dir}: ${error}`)
   return {
     ok: errors.length === 0,
     checkedCount: dirs.length,
@@ -295,7 +317,8 @@ export function checkAllSlotRoles(rootDir = DEFAULT_ROOT, explicitDirs = null) {
     navigation,
     bands,
     layoutBands,
-    contactBlocks
+    contactBlocks,
+    recordPages
   }
 }
 
@@ -371,6 +394,10 @@ if (isMain) {
   if (!named)
     process.stdout.write(
       `footer contact blocks: ${res.contactBlocks.length} released map(s) hold ${res.contactBlocks.reduce((n, b) => n + b.errors.length, 0)} undeclared or malformed block(s); the packing check refuses them.\n`
+    )
+  if (!named)
+    process.stdout.write(
+      `record pages: ${res.recordPages.length} released map(s) hold ${res.recordPages.reduce((n, b) => n + b.errors.length, 0)} undeclared or malformed record page(s); the packing check refuses them.\n`
     )
   const rules = lintSummary(res.lint.flatMap((l) => l.findings))
     .map((r) => `${r.rule} ${r.count}`)

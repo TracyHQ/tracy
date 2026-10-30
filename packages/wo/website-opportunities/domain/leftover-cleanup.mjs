@@ -26,7 +26,7 @@ const INSTEAD = Object.freeze({
   C06: "the owner's own pictures, one per card, otherwise hide the pictures of the cards",
   C07: "the owner's own person if the brief names one (name as text, initials in place of a photo), otherwise hide the block",
   C08: "the owner's own video link if the brief has one, otherwise hide the video block",
-  C09: 'a plain label in the business\'s own words ("Contact us", "Learn more"), or hide the decorative text',
+  C09: 'a plain button label in the business\'s own words ("Contact us", "Learn more"); a menu item takes only the name of the page it opens, never a button label; or hide the decorative text',
   C10: 'a plain neutral background colour in place of the demo picture',
   C11: 'hide the page and remove its menu entry',
   C12: "a plain address in the business's own words, with the old address redirecting to it",

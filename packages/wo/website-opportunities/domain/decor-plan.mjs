@@ -192,12 +192,14 @@ function iconDecisions({ slots, copy, list, pageOffering, choices, catalog }) {
         source: 'item',
         quote: written
       })),
-      ...(page ? keywordRanking(page.label) : []).map((glyph) => ({
+      // 🔒 AN ITEM'S ICON SAYS ITS OWN WORDS (#189, site build rule 4): the page's offering or another item's offering
+      // never stands in for them, or one item shows what its neighbour is about.
+      ...(!written && page ? keywordRanking(page.label) : []).map((glyph) => ({
         glyph,
         source: 'page',
         quote: page.label
       })),
-      ...(listed ? keywordRanking(listed.label) : []).map((glyph) => ({
+      ...(!written && listed ? keywordRanking(listed.label) : []).map((glyph) => ({
         glyph,
         source: 'offering',
         quote: listed.label
@@ -206,6 +208,13 @@ function iconDecisions({ slots, copy, list, pageOffering, choices, catalog }) {
     asked.set(i.id, { id: i.id, section: i.section, candidates })
   }
   const assigned = assignGlyphs([...asked.values()])
+  // 🔒 ONE NEUTRAL FOR A WHOLE ROW (#189, site build rule 4): when an item of a row matches no icon by its own words,
+  // every item of that row shows the same neutral mark, never a row where some items carry a meaning and others a filler.
+  const rowOf = (i) =>
+    i.slot.group?.id ? `${i.section}#${String(i.slot.group.id).replace(/\.\d+$/, '')}` : i.section
+  const neutralRows = new Set(items.filter((i) => !assigned.get(i.id)?.source).map(rowOf))
+  for (const i of items)
+    if (neutralRows.has(rowOf(i))) assigned.set(i.id, { glyph: NEUTRAL_GLYPHS[0], source: null })
   const out = new Map()
   for (const i of items) {
     const got = assigned.get(i.id)

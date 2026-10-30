@@ -13,12 +13,16 @@
 // 🔒 REUSE AND CAP: a drawing serves every slot of the same subject and a close shape on other pages, never two slots of
 // one page; at most `DRAW_CAP` drawings per build, the home page first, then the largest slot. A slot past the cap takes
 // the brand colour block.
+// 🔒 COPY FIRST, THEN PICTURES (#189, site build rule 2): every drawing is told its page's topic, the copy written next
+// to its frame and the frame's place (role and shape). A frame of a page about one offering is drawn as that offering and
+// is reused only for the same record, never on another record's page.
 // 🔒 ONLY WHAT THE SITE SHOWS: a slot on no page the site keeps (a demo post the tidy-up takes off) is never drawn and
 // never counts toward the cap, so the cap is spent on pictures a visitor sees.
 import { pagesOfMap, shownWidthOf, wordedPhoto } from './fill-plan.mjs'
 import { isMapPhotoByOthers, publisherRankOf } from './pictures/asset-origin.mjs'
 import { GENERAL } from './pictures/picture-links.mjs'
 import { declaredSize, fileOf } from './pictures/slot-map.mjs'
+import { nearbyCopyOf, pageTopicsOf } from './pictures/nearby-copy.mjs'
 
 export const DRAW_PLAN_VERSION = 'fill-draw/1'
 /** The most pictures one build draws (each is a paid model call, retried at most once). */
@@ -120,9 +124,13 @@ function drawable(decision, slot) {
  *   it: never extended into that slot (an extension keeps the photo whole, softness and all); still a scene's reference
  * @param {Set<string>} [input.onSite] - the keys of the slots on a page the site keeps (the slot map's occurrences);
  *   when given, every other slot is left as the fill plan decided it
+ * @param {Record<string, string> | null} [input.written] - the words the build writes, by slot key: a record page's
+ *   drawing is told the copy next to its frame
  * @returns {{version: string, slots: any[], drawings: Array<{id: string, mode: 'outpaint' | 'scene', sourceId?: string,
  *   referenceIds: string[], aspect: number, subject: {kind: 'offering' | 'venue', id?: string, label?: string,
- *   category: string | null, about?: string}, keys: string[]}>, capped: number}}
+ *   category: string | null, about?: string, record?: true, topic?: string, near?: string,
+ *   placement?: {role: string, frame: string}},
+ *   keys: string[]}>, capped: number}}
  */
 export function planDrawings({
   fill,
@@ -131,8 +139,12 @@ export function planDrawings({
   demo = new Map(),
   max = DRAW_CAP,
   onSite = null,
-  unsharp = new Map()
+  unsharp = new Map(),
+  written = null
 }) {
+  const near = nearbyCopyOf(contentMap, written)
+  const topics = pageTopicsOf(contentMap, written)
+  const recordOf = new Map((fill.records ?? []).map((r) => [r.offeringId, r]))
   const slotOf = new Map((contentMap?.slots ?? []).map((s) => [s.key, s]))
   const offeringOf = new Map((fill.offerings ?? []).map((o) => [o.groupId, o]))
   const pagesOf = pagesOfMap(contentMap)
@@ -171,7 +183,18 @@ export function planDrawings({
     const frame = demo.get(file) ?? slot?.fit?.source ?? declaredSize(slot?.sample)
     if (!frame?.width || !frame?.height) continue
     const aspect = fitAspectOf(slot) ?? frame.width / frame.height
-    const offering = d.groupId ? offeringOf.get(d.groupId) : null
+    const record = d.record ? recordOf.get(d.record) : null
+    const offering = (d.groupId ? offeringOf.get(d.groupId) : null) ?? record
+    // Copy first (#189): every drawing is told its page's topic, the copy written next to its frame and where the frame
+    // sits (its role and shape); a record page's drawing is its record's. Nothing when no words were planned.
+    const placed = written
+      ? {
+          ...(record ? { record: true } : {}),
+          ...(topics.get(d.entity) ? { topic: topics.get(d.entity) } : {}),
+          ...(near.get(d.key) ? { near: near.get(d.key) } : {}),
+          placement: { role: d.role, frame: aspect >= 1.6 ? 'wide band' : aspect <= 0.8 ? 'tall' : 'card' }
+        }
+      : {}
     const pages = pagesOf(d.entity)
     const width = shownWidthOf(slot) || frame.width
     candidates.push({
@@ -179,8 +202,8 @@ export function planDrawings({
       aspect,
       pages,
       subject: offering
-        ? { kind: 'offering', id: offering.offeringId, label: offering.label, category, ...told }
-        : { kind: 'venue', category, ...told },
+        ? { kind: 'offering', id: offering.offeringId, label: offering.label, category, ...told, ...placed }
+        : { kind: 'venue', category, ...told, ...placed },
       onHome: pages.some((p) => home.has(p)) ? 0 : 1,
       // The widest shown first: a band across the page before a tile beside others.
       width

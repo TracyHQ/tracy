@@ -49,6 +49,12 @@ export const BLOCKER_RULES = Object.freeze([
     matches: (f) => f.kind === 'sibling-copy-shape'
   },
   {
+    id: 'sibling-record-pages',
+    why: 'Sibling record pages share a picture or a section of words with only the name changed, show an empty card, or carry a blog pager',
+    matches: (f) =>
+      ['sibling-record-picture', 'sibling-record-copy', 'record-page-pager', 'empty-card'].includes(f.kind)
+  },
+  {
     id: 'other-blocker',
     why: 'A check marked this a blocker',
     matches: (f) => f.severity === 'blocker'

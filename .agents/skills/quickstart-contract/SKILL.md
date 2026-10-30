@@ -561,6 +561,15 @@ path):
    while a footer container with contact roles is not declared with placement `footer`. After a brief build, check the
    footer shows no more lines of a kind than the demo and the Contact page links every channel the footer links
    (`demo-leftovers-channels.mjs` C22 and `contact-page.mjs` report each on the build's receipt).
+   **Record pages declare their layout (every framework):** pages that each show one record of a kind (a lesson, a
+   service, a product page: one offering card name per page, two or more pages of one category) are declared in the
+   content map's top-level `recordPages`: `{id, entities, layout}`, `layout` one of `landing` (a page built of sections;
+   a brief build takes the blog pager, Previous / Next article, off it) or `post` (a blog post that keeps it).
+   `scripts/slot-roles/check.mjs "$P/$VER"` refuses the contract while such a page is not declared. A brief build then
+   chooses every picture of a record page from that record's own photos and the copy next to the frame, writes each
+   record page for its own record, and fills a card of the layout a sibling page fills. After a brief build, check
+   `record-pages-check.js` on the receipt: no picture shared by two record pages in one section, no section repeated
+   with the name swapped, no empty card, no pager on a landing record page.
    **A call-to-action band is one unit (every framework):** a block (not the hero) whose words are at most a heading and
    a short line above a conversion button (`primary-cta` or `contact`), usually over a ground picture, is declared in the
    content map's top-level `ctaBands`: `{id, entity, message: [{key, part: "heading" | "line"}], buttons, ground}`.

@@ -1,6 +1,6 @@
 // A menu label in the demo's words takes the title of the page it opens (`honestWritten`, spec TracyHQ/tracy#189): an
 // article's, a category's, the home page's own page title, or, through an alias entry, whatever the entry it points to opens.
-// Never "Learn more" when the page's own title is known. Templates and businesses are made up; two trades.
+// Never "Learn more" on a menu item, whether its page's own title is known or not. Templates and businesses are made up; two trades.
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { honestWritten, openedTitleSlot } from '../domain/honest-written.mjs'
@@ -45,7 +45,10 @@ test('a demo menu label takes the title of the category, home page or alias targ
   assert.equal(out.values['menuItem-201.0'], 'Swimming lessons', 'the category it lists')
   assert.equal(out.values['menuItem-202.0'], 'Harbourline Swim School', 'the home page title')
   assert.equal(out.values['menuItem-203.0'], 'Our pool', 'what the alias target opens')
-  assert.equal(out.values['menuItem-204.0'], 'Learn more', 'a component view names no page title')
+  // A menu item is named only by its page (#189, site build rule 6): never a button's words, so a component view whose
+  // page title the map does not say is left to the menu writers.
+  assert.equal(out.values['menuItem-204.0'], undefined, 'a component view names no page title')
+  assert.equal(out.counts.untitledMenus, 1)
 })
 
 test('openedTitleSlot: an alias loop ends, and an alias to a component view falls back to the target entry’s label', () => {

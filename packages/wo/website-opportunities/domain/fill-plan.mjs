@@ -24,6 +24,11 @@
 // photo someone else posted on a map listing, because it can show another venue.
 // 🔒 THE ROLE DECIDES KEEP (ADR 0040), never a name: a keep slot and every slot of a `demoOnly` entity stay as shipped.
 // The slots that share one demo file are replaced together, so they form one unit: the strictest need among them wins.
+// 🔒 A RECORD PAGE SHOWS ITS OWN RECORD (#189, site build rule 2): every general picture of a page about one offering (a
+// lesson, a service, a product page) takes only a photo of that offering, chosen per page; sibling record pages that
+// share one demo file never share one decision, so a swimming page never shows the tennis court of its sibling.
+// 🔒 COPY FIRST, THEN PICTURES: among the photos that qualify, the one whose labels share the most words with the copy
+// written next to its frame (`written`, `nearby-copy.mjs`) is met first. The copy ranks, it never refuses.
 import { keepDecisionOf } from './content-map-keep-decision.mjs'
 import { LOGO_ROLES } from './place-content-roles.mjs'
 import { closedListOf, GENERAL, namedIn } from './pictures/picture-links.mjs'
@@ -34,6 +39,7 @@ import { isMapPhotoByOthers, publisherRankOf } from './pictures/asset-origin.mjs
 import { ROLES } from './pictures/placement.mjs'
 import { declaredSize, fileOf } from './pictures/slot-map.mjs'
 import { subjectCrop } from './pictures/subject-crop.mjs'
+import { nearbyCopyOf, nearbyFit } from './pictures/nearby-copy.mjs'
 
 export const FILL_PLAN_VERSION = 'fill-plan/1'
 
@@ -198,8 +204,11 @@ export function shownWidthOf(slot) {
 }
 
 /** What one image slot needs, before any photo is looked at: a reason code alone means it takes no brief photo. */
-function needOf(slot, lockOf, peopleOf) {
+function needOf(slot, lockOf, peopleOf, record = null) {
   const role = slot.role
+  // A general picture of a record page shows that record (#189): a hero band stays the business's own.
+  if (record && GENERAL_ROLES.has(role) && role !== 'business.hero_image')
+    return { offering: record.offeringId, record: true }
   if (role === 'offering.image') {
     const offering = slot.group?.id ? lockOf.get(slot.group.id) : null
     return offering ? { offering: offering.offeringId } : { reason: 'no-offering-for-group' }
@@ -230,6 +239,8 @@ function unitNeed(needs) {
   if (people.length && offerings.length) return { reason: 'conflicting-needs' }
   if (people.length > 1) return { reason: 'conflicting-people' }
   if (people.length) return { person: people[0] }
+  // A unit of record frames alone is a record's (#189): its decision says so, and its drawing is that record's.
+  if (offerings.length && needs.every((n) => n.record)) return { offering: offerings[0], record: true }
   return offerings.length ? { offering: offerings[0] } : { general: true }
 }
 
@@ -268,6 +279,8 @@ const WIDE_ASPECT = 1.6
  *   unit gives each slot its own picture. Off by default for the writers that still write one file per demo file.
  * @param {Map<string, Set<string>>} [input.unsharp] - per slot key, the photos the sharpness gate measured too soft for
  *   it once cut and shown (`photo-sharpness.js`): refused there as `unsharp`, so the next photo of the ranking is met
+ * @param {Record<string, string> | null} [input.written] - the words the build writes, by slot key (copy first, #189):
+ *   the copy next to each frame ranks the photos that qualify for it
  * @returns {{version: string, offerings: Array<{groupId: string, offeringId: string, label: string}>,
  *   people: Array<{groupId: string, personId: string, label: string}>,
  *   slots: Array<{key: string, entity: string, type: string, role: string | null, groupId: string | null,
@@ -280,7 +293,8 @@ export function planFill({
   demo = new Map(),
   cardNames = {},
   perSlot = false,
-  unsharp = new Map()
+  unsharp = new Map(),
+  written = null
 }) {
   const slots = contentMap?.slots ?? []
   const demoOnly = new Set((contentMap?.entities ?? []).filter((e) => e?.demoOnly === true).map((e) => e.key))
@@ -313,6 +327,7 @@ export function planFill({
     if (hit) peopleOf.set(groupId, { personId: hit.id, label: hit.label })
   }
   const personById = new Map([...peopleOf.values()].map((p) => [p.personId, p]))
+  const records = recordsOf(slots, lockOf, contentMap, live)
 
   /** @type {Map<string, any>} */
   const decisions = new Map()
@@ -339,7 +354,7 @@ export function planFill({
     else if (LOGO_ROLES.includes(slot.role)) decide(slot, 'skip', 'logo-own-door')
     else {
       const file = fileOf(slot.sample)
-      const need = needOf(slot, lockOf, peopleOf)
+      const need = needOf(slot, lockOf, peopleOf, records.get(slot.entity))
       // Per slot (#194): one unit per need of the file, so cards of two offerings no longer wait on each other.
       const key = perSlot ? `${file}#${needKeyOf(need)}` : file
       const unit = units.get(key) ?? { file, key, slots: [], needs: [], frame: null }
@@ -362,6 +377,7 @@ export function planFill({
   const leads = leadsOf(slots)
   const identity = (u) => u.slots.some((s) => IDENTITY_ROLES.has(s.role) || leads.has(s.key))
   const order = [...units.values()].map((u) => ({ ...u, need: unitNeed(u.needs) }))
+  const near = nearbyCopyOf(contentMap, written)
   // Specific cards choose first, then the hero, then the other identity pictures, so they meet the owner's photos first.
   const rank = (u) => (u.need.offering || u.need.person ? 0 : hero(u) ? 1 : identity(u) ? 2 : 3)
   order.sort((a, b) => rank(a) - rank(b))
@@ -387,6 +403,7 @@ export function planFill({
         decide(slot, action, reason, {
           file: unit.file,
           ...(perSlot ? { unit: unit.key } : {}),
+          ...(unit.need.record ? { record: unit.need.offering } : {}),
           ...extra,
           ...substitute
         })
@@ -437,12 +454,19 @@ export function planFill({
     // A general slot meets the general and unsure photos first, then the photos of the offerings.
     const offeringPhoto = (a) => (unit.need.general && depictsOf(a) !== GENERAL ? 1 : 0)
     const lowQuality = (a) => (a.quality === 'low' ? 1 : 0)
+    // Copy first (#189): the photo whose labels say what the copy next to the frame says is met first.
+    const nearText = unit.slots
+      .map((s) => near.get(s.key))
+      .filter(Boolean)
+      .join(' ')
+    const fitOf = new Map(fitting.map((a) => [a.id, nearbyFit(a, nearText)]))
     // A gallery takes a photo with words added on it only when no clean photo is left.
     const worded = (a) => (wordedPhoto(a) ? 1 : 0)
     fitting.sort(
       (a, b) =>
         worded(a) - worded(b) ||
         offeringPhoto(a) - offeringPhoto(b) ||
+        fitOf.get(b.id) - fitOf.get(a.id) ||
         publisherRankOf(a) - publisherRankOf(b) ||
         lowQuality(a) - lowQuality(b) ||
         lossOf(a) - lossOf(b) ||
@@ -466,9 +490,32 @@ export function planFill({
     version: FILL_PLAN_VERSION,
     offerings,
     people: [...peopleOf].map(([groupId, p]) => ({ groupId, personId: p.personId, label: p.label })),
+    records: [...records].map(([entity, r]) => ({ entity, offeringId: r.offeringId, label: r.label })),
     slots: slots.map((s) => decisions.get(s.key)).filter(Boolean),
     unused: assets.filter((a) => !usedAnywhere.has(a.id)).map((a) => a.id)
   }
+}
+
+/**
+ * The record pages of a map: each entity that is not a shared block (a module) and whose offering cards all name one and
+ * the same brief offering (a lesson page, a service page, a product page). Its general pictures show that offering.
+ * @returns {Map<string, {offeringId: string, label: string}>}
+ */
+function recordsOf(slots, lockOf, contentMap, live) {
+  const kindOf = new Map((contentMap?.entities ?? []).map((e) => [e.key, e.kind]))
+  const named = new Map()
+  for (const slot of slots) {
+    const lock = slot.group?.id ? lockOf.get(slot.group.id) : null
+    if (!lock || !live(slot) || kindOf.get(slot.entity) === 'module') continue
+    named.set(slot.entity, (named.get(slot.entity) ?? new Map()).set(lock.offeringId, lock))
+  }
+  const out = new Map()
+  for (const [entity, locks] of named)
+    if (locks.size === 1) {
+      const [lock] = locks.values()
+      out.set(entity, { offeringId: lock.offeringId, label: lock.label })
+    }
+  return out
 }
 
 /** The text roles that name a card: an offering's and a person's. */

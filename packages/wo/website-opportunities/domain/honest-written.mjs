@@ -7,7 +7,9 @@
 // figure the customer's text does not hold. Measured 29/10/2026: the writer named four coaches nobody had given.
 // 🔒 A LABEL KEEPS NO DEMO WORD (brief builds): a button, a call to action or a menu label that still holds a word of its
 // demo sample the business never used ("Try a class" for a swimming school) takes a neutral label: a button "Contact" when
-// the business can be reached, else "Learn more"; a menu label the title of the page it opens, else "Learn more".
+// the business can be reached, else "Learn more"; a menu label the title of the page it opens.
+// 🔒 A MENU ITEM IS NAMED ONLY BY ITS PAGE (#189, site build rule 6): a menu label never takes a button's words ("Learn
+// more"); with no own title of its page to take it is left to the menu writers, which name or hide it by its page.
 // 🔒 THE SITE PLAN WINS: what the plan decided (`site-plan-honesty.mjs`: a brief value, an emptied fact, a hidden card) is
 // never left to the writer.
 import { neutralFor, neutralText } from './neutral-copy.mjs'
@@ -216,18 +218,18 @@ export function honestWritten({
       }
     }
   }
-  // A menu label in the demo's words takes the title of the page it opens, as that page's title will read; else "Learn more".
+  // A menu label in the demo's words takes the title of the page it opens, as that page's title will read; never a
+  // button's words (#189): one with no own title is left to the main-menu and footer writers.
   for (const slot of menus) {
     const title = openedTitleSlot(slot.entity, pages, slots)
     const titled = title ? (values[title.key] ?? (drop.has(title.key) ? null : written[title.key])) : null
     const own =
       typeof titled === 'string' &&
       demoWordsOf(title.sample, ownWords).every((w) => !wordsOf(titled).includes(w))
-    const label = own && fitsSlot(slot, titled) ? titled : neutralText('neutral.cta.learnMore', locale)
-    if (fitsSlot(slot, label)) {
-      values[slot.key] = label
+    if (own && fitsSlot(slot, titled)) {
+      values[slot.key] = titled
       counts.labels += 1
-    }
+    } else counts.untitledMenus = (counts.untitledMenus ?? 0) + 1
   }
   for (const key of Object.keys(values)) drop.delete(key)
   return { drop: [...drop], values, evidence, counts }

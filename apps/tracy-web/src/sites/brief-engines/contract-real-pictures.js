@@ -52,7 +52,8 @@ export async function prepareContractPictures({
   drawDoor = null,
   declared = [],
   cardNames = null,
-  textModel = null
+  textModel = null,
+  written = null
 }) {
   if (!real || !siteFile) return null
   ctx.signal?.throwIfAborted()
@@ -75,7 +76,9 @@ export async function prepareContractPictures({
     declared,
     cardNames,
     // The text model reads each item icon's meaning (#189); without it the icons follow their keywords.
-    textModel
+    textModel,
+    // Copy first, then pictures (#189): the words already planned for the page choose and describe its pictures.
+    written
   })
 }
 
@@ -95,6 +98,7 @@ export async function writeContractPictures({
   declared = [],
   cardNames = null,
   textModel = null,
+  written = null,
   shaped: suppliedShape
 }) {
   if (!real || !siteFile) return null
@@ -115,7 +119,8 @@ export async function writeContractPictures({
       drawDoor,
       declared,
       cardNames,
-      textModel
+      textModel,
+      written
     }))
   const slots = new Map(inspectedSlots(initial, contentMap).map((s) => [s.key, s]))
   // An icon or a cut-out the site's inspection does not list is left as shipped, never a reason to stop (#195).

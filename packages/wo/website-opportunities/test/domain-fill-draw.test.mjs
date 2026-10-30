@@ -395,11 +395,21 @@ test('#195 an icon on a page about one offering takes that offering; a demo word
     sources: { 'article-3.0': 'brief', 'article-3.4': 'brief' }
   }
   const at = byKey(planDecor({ contentMap, brief: { ...BAKERY }, copy }).slots)
-  assert.equal(at.get('article-3.1').glyph, 'bread', 'the page is about bread: a bakery glyph')
-  assert.equal(at.get('article-3.1').reason, 'icon-of-page-offering')
-  // The second item's words ("An apron") mean nothing the lexicon knows, and the page's bread is shown once: its
-  // offering's next icon stands in (#189).
-  assert.equal(at.get('article-3.3').glyph, 'grains')
+  // The second item's words ("An apron") mean nothing the lexicon knows: the page's offering never stands in for an
+  // item's own words, so the whole row takes one neutral mark (#189, site build rule 4), never bread beside a filler.
+  assert.equal(at.get('article-3.1').glyph, NEUTRAL_GLYPH)
+  assert.equal(at.get('article-3.3').glyph, NEUTRAL_GLYPH)
+  assert.equal(at.get('article-3.3').reason, 'icon-neutral')
+  // With no word written for any item, the page's offering still speaks for the row.
+  const page = byKey(
+    planDecor({
+      contentMap,
+      brief: { ...BAKERY },
+      copy: { pins: { 'article-3.0': 'Sourdough Bread' }, sources: { 'article-3.0': 'brief' } }
+    }).slots
+  )
+  assert.equal(page.get('article-3.1').glyph, 'bread', 'the page is about bread: a bakery glyph')
+  assert.equal(page.get('article-3.1').reason, 'icon-of-page-offering')
   // Without any written word, offering or page: a neutral mark, never the demo icon.
   const bare = byKey(planDecor({ contentMap, brief: { reading: {} }, copy: null }).slots)
   assert.equal(bare.get('article-3.1').glyph, NEUTRAL_GLYPH)
@@ -421,7 +431,8 @@ test('#195 a cut-out is never drawn: it is taken off, and a design piece stays',
   assert.equal(at.get('module-8.0').referenceIds, undefined, 'nothing is drawn from the owner photos')
   assert.equal(at.get('module-8.0').subject.label, 'Tennis Lessons')
   assert.equal(at.get('module-8.1').action, 'keep', 'a line stays as designed')
-  assert.equal(glyphOf('Padel and tennis'), 'ping-pong')
+  // A padel racket is a racket, never a table-tennis paddle (#189).
+  assert.equal(glyphOf('Padel and tennis'), 'racquet')
 })
 
 test('#195 every icon and cut-out decision carries the brief words the site takes a kept picture with', () => {
