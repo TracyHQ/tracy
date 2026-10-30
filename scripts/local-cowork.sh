@@ -142,10 +142,18 @@ ZIP="$CW_TREE/joomla/cowork/dist/pkg_claudecowork.zip"
 # administrator/lib/contracts.json, and each profile is a release asset the site fetches when it binds.
 # A local build has no release to fetch from, so the new or changed profiles are put into the
 # component, where the engine reads a carried profile first. A full Cowork already carries them.
+#
+# The package's postflight then prunes every profile the site is not held to (script-install.php,
+# `prune`), and a NEW site is held to nothing yet: the bind comes after the install. So on its own the
+# prune deleted every profile put in here, the provisioner's fetch went to the PUBLISHED release asset,
+# and the index of this build refused it on its sha256 ("contract profile <id>: not on disk"). The
+# prune of this package is therefore told to keep the profiles it carries; nothing else changes.
 python3 - "$ZIP" "$DEST" "${CHANGED[@]}" <<'PY'
-import io, os, sys, zipfile
+import io, json, os, sys, zipfile
 path, dest, profiles = sys.argv[1], sys.argv[2], sys.argv[3:]
 COMPONENT = 'packages/com_claudecowork.zip'
+INSTALLER = 'script-install.php'
+PRUNE = '    public static function prune($contracts, array $held): array\n    {\n'
 with zipfile.ZipFile(path) as outer:
     entries = [(info, outer.read(info)) for info in outer.infolist()]
 component = next(data for info, data in entries if info.filename == COMPONENT)
@@ -165,12 +173,17 @@ with zipfile.ZipFile(io.BytesIO(component)) as inner:
                 file = os.path.join(dest, p, name)
                 if os.path.isfile(file):
                     out.write(file, f'administrator/lib/contracts/{p}/{name}')
+installer = next((data for info, data in entries if info.filename == INSTALLER), None)
+if installer is None or installer.decode().count(PRUNE) != 1:
+    sys.exit(f'✖ {INSTALLER} has no single prune() to keep the carried profiles: the install would delete them')
+keep = '        $held = array_merge($held, ' + json.dumps(missing) + '); // carried by this local build (scripts/local-cowork.sh)\n'
+installer = installer.decode().replace(PRUNE, PRUNE + keep).encode()
 tmp = path + '.tmp'
 with zipfile.ZipFile(tmp, 'w', zipfile.ZIP_DEFLATED) as out:
     for info, data in entries:
-        out.writestr(info, rebuilt.getvalue() if info.filename == COMPONENT else data)
+        out.writestr(info, rebuilt.getvalue() if info.filename == COMPONENT else installer if info.filename == INSTALLER else data)
 os.replace(tmp, path)
-print(f'==> slim package: {len(missing)} profile(s) put into the component')
+print(f'==> slim package: {len(missing)} profile(s) put into the component, kept by its install-time prune')
 PY
 
 # Read back: every new or changed profile is inside the component the package wraps.
