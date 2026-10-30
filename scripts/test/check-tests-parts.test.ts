@@ -48,25 +48,39 @@ test('every workers row the planner makes is a part this gate takes, on our runn
   }
 })
 
-test('on GitHub-hosted the last shard is preloaded with the hosted cost of the small suites', () => {
-  const table = { preloadLastShardSeconds: 300, wallPerSummedSecond: 0.5 }
-  // Our runners: the table's own figure.
-  assert.equal(preloadFor(table, false), 300)
-  // Hosted: 473 s of hosted wall, in table seconds (one summed second costs 0.5 x 1.23 s there).
-  assert.equal(HOSTED_COST.restWallSeconds, 473)
-  assert.ok(Math.abs(preloadFor(table, true) - 473 / (0.5 * 1.23)) < 1e-9)
-  // A table without a factor cannot be converted: it keeps its own figure rather than guess one.
+test('on GitHub-hosted the last shard carries the hosted cost of the small suites, and the shards come out even', () => {
+  const table = { preloadLastShardSeconds: 100, wallPerSummedSecond: 0.5 }
+  // What a shard costs on a hosted row, in wall seconds: its files at the hosted factor, and on the
+  // last one the small suites at their hosted cost — the run the preload has to balance against.
+  const fileSeconds = 20
+  const oneFile = fileSeconds * table.wallPerSummedSecond * HOSTED_COST.workersFactor
+  const files = Array.from({ length: 90 }, (_, i) => `t/${String(i)}.test.mjs`)
+  const hostedWall = (preload: number): number[] =>
+    [1, 2, 3].map(
+      (index) =>
+        shardOf(
+          files,
+          { index, of: 3 },
+          { files: Object.fromEntries(files.map((f) => [f, fileSeconds])), preloadLastShardSeconds: preload }
+        ).length *
+          oneFile +
+        (index === 3 ? HOSTED_COST.restWallSeconds : 0)
+    )
+  const spread = (walls: number[]) => Math.max(...walls) - Math.min(...walls)
+  // With the hosted preload the three hosted rows end within one file of each other…
+  const even = hostedWall(preloadFor(table, true))
+  assert.ok(spread(even) <= oneFile + 1e-9, `hosted rows ${even.map(Math.round).join(' / ')} s`)
+  // …with our runners' figure the last one runs long by the difference: what the change is for.
+  const ours = hostedWall(preloadFor(table, false))
+  assert.ok(spread(ours) > 10 * oneFile, `with our preload ${ours.map(Math.round).join(' / ')} s`)
+  // Our runners keep the table's own figure; a table without a factor cannot be converted, so it
+  // keeps its own figure rather than guess one.
+  assert.equal(preloadFor(table, false), table.preloadLastShardSeconds)
   assert.equal(preloadFor({ preloadLastShardSeconds: 300 }, true), 300)
   assert.equal(preloadFor({}, false), 0)
-  // The heavier preload moves work off the last shard, and every file still lands once.
-  const files = Array.from({ length: 30 }, (_, i) => `t/${String(i)}.test.mjs`)
-  const timings = (hosted: boolean) => ({
-    files: Object.fromEntries(files.map((f) => [f, 20])),
-    preloadLastShardSeconds: preloadFor({ preloadLastShardSeconds: 100, wallPerSummedSecond: 0.5 }, hosted)
-  })
-  const last = (hosted: boolean) => shardOf(files, { index: 3, of: 3 }, timings(hosted)).length
-  assert.ok(last(true) < last(false), `${String(last(true))} < ${String(last(false))}`)
-  const all = [1, 2, 3].flatMap((index) => shardOf(files, { index, of: 3 }, timings(true)))
+  // Every file still lands once.
+  const timings = { files: {}, preloadLastShardSeconds: preloadFor(table, true) }
+  const all = [1, 2, 3].flatMap((index) => shardOf(files, { index, of: 3 }, timings))
   assert.deepEqual(all.sort(), [...files].sort())
 })
 
