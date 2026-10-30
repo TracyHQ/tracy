@@ -10,12 +10,12 @@
   "steps": [
     "S1: Take the forgery expression of website-opportunities-shared-social.test.mjs from that file and run it against the real mintSocialServiceKey/verifySocialServiceKey (an in-memory pool) with every secret forced to end in X.",
     "S2: Take the forgery expression of preview-ticket.test.mjs from that file; forge 16 real tickets from mintPreviewTicket and read them with readPreviewToken; then forge 64 signatures whose last 22 bits are zero.",
-    "S3: Read the //#test:ci:scripts inputs of turbo.json: check 21 paths of the kinds the 29/10 nightly reported uncovered, look for an input another of its inputs already covers, and run turbo-setup.mjs --check --structure-only."
+    "S3: Read the //#test:ci:scripts inputs of turbo.json: check 19 paths of the kinds the 29/10 nightly reported uncovered, look for an input another of its inputs already covers, and run turbo-setup.mjs --check --structure-only."
   ],
   "expect": [
     "S1: the genuine key verifies and the old fixed-X forgery verifies too (the defect reproduced), while the file's forgery differs from the key and gets SOCIAL_AUTH_INVALID for all 8 keys.",
     "S2: every genuine ticket reads and no forged one does; the old AAAA tail decodes to the genuine signature 64 of 64 times, the file's forgery never.",
-    "S3: all 21 paths are covered, no input is redundant (MACHINERY aside), and the structure check exits 0."
+    "S3: all 19 paths are covered, no input is redundant (MACHINERY aside), and the structure check exits 0."
   ],
   "selectors": {
     "files": "apps/tracy-web/test/website-opportunities-shared-social.test.mjs, apps/tracy-web/test/preview-ticket.test.mjs, turbo.json",

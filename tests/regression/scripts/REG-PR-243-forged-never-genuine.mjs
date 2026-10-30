@@ -158,10 +158,8 @@ function expressionIn(step, rel, pattern) {
     'tests/regression/fixtures/site-own-domain/compose.yml',
     'vendor/emdash/emdash/package.json',
     'vendor/emdash/emdash-mika/package.json',
-    'vendor/emdash/tracy-emdash-skill/skills/tracy-emdash-template/package.json',
     'vendor/joomla/html/tracy_business/support.js',
-    'vendor/tracy/dsh-subscriptions/package.json',
-    'vendor/wordpress/tracy-wordpress-theme/skills/tracy-wordpress-theme/package.json'
+    'vendor/tracy/dsh-subscriptions/package.json'
   ]
   const gone = reported.filter((rel) => !existsSync(path.join(ROOT, rel)))
   if (gone.length) fail(step, `paths this case names no longer exist (update the case): ${gone.join(' ')}`)
