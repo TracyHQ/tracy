@@ -342,3 +342,15 @@ test('a button that acts on its own page (a modal close, a form send) or opens i
   decisionOf(plan, 'button:module-161.3').action = { kind: 'item', target: 'cards:module-157.item' }
   assert.deepEqual((await check(plan)).reasons, [])
 })
+
+test('a plan that keeps no page is refused with no-page-kept', async () => {
+  const plan = completePlan()
+  plan.pages = plan.pages
+    .filter((p) => p.decision !== 'add')
+    .map((p) => ({ id: p.id, decision: 'drop', reason: 'not part of this business' }))
+  const result = await check(plan)
+  assert.ok(rules(result).includes('no-page-kept'), JSON.stringify(rules(result)))
+  assert.equal(result.ok, false)
+  // A plan that keeps pages never gets the reason.
+  assert.ok(!rules(await check(completePlan())).includes('no-page-kept'))
+})

@@ -1160,9 +1160,14 @@ export function createJoomlaEngine({
           : null
         if (byAuthor) {
           for (const slot of planned.slots)
-            if (!authorPages?.hidden.has(String(slot.entity))) authorAsked.add(slot.key)
+            if (!authorPages?.hidden.has(String(slot.entity)) && !byAuthor.droppedKeys.includes(slot.key))
+              authorAsked.add(slot.key)
           authorPageOf = byAuthor.pageOfKey
-          ctx.record?.('pageAuthor', { pages: byAuthor.pages, hidden: byAuthor.hiddenKeys.length })
+          ctx.record?.('pageAuthor', {
+            pages: byAuthor.pages,
+            hidden: byAuthor.hiddenKeys.length,
+            dropped: byAuthor.droppedKeys.length
+          })
           ctx.time('pageAuthorPages', byAuthor.pages.length)
         }
         const answered = await planConcurrently(
@@ -1725,6 +1730,14 @@ export function createJoomlaEngine({
             reason: pendingKindOf(plan.reasons?.[key]),
             check: plan.reasons?.[key],
             text: plan.tried?.[key]
+          })),
+          // What still breaks the site plan after its send-back (ticket #236): traced with the check plan-conformance.
+          ...Object.entries(plan.conformance ?? {}).map(([key, text]) => ({
+            key,
+            writer: 'page-writer',
+            reason: 'refused',
+            check: 'plan-conformance',
+            text
           })),
           ...Object.entries(plan.owners ?? {})
             .filter(([, owner]) => owner !== 'page-copy')

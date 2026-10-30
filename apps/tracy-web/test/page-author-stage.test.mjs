@@ -13,6 +13,7 @@ import { test } from 'node:test'
 
 import { contractFor, defaultContracts } from '../src/lib/contracts.js'
 import { createJoomlaEngine } from '../src/sites/brief-engines/joomla.js'
+import { pagesOfEntities } from '../../../packages/cms/tracy-seeder/src/distinct-copy.mjs'
 import { inventoryOfContract } from '../src/sites/brief-engines/template-inventory.js'
 
 const contract = contractFor(defaultContracts(), 'quickstart/ja-boxing/j6', '1.0.8')
@@ -50,17 +51,21 @@ const BRIEF = {
 const HOME = 'page:menuItem-101'
 const CLASSES = 'page:menuItem-167'
 const CONTACT = 'page:menuItem-168'
+/** The page of the plans: its package cards are the glossary items the name check reads. */
+const PLANS = 'page:menuItem-169'
 const TEAM = 'section:module-163'
 const ITEMS = ['Wedding bouquets', 'Flower subscription']
 /** The glossary description the offerings page writes and the home page, which summarises it, reuses verbatim. */
 const SHARED = 'Bouquets and buttonholes arranged by hand for the wedding day'
 /** A line of the offerings page the author always writes too long: it fails the length check after its send-back. */
 const FAIL = 'module-166.18'
+/** A fact of the brief the plan assigns to the home page (no figure: the page must carry its words). */
+const FACT = 'Fresh stems delivered every week'
 const RECORD_ROWS = new Set(['person', 'quote', 'service', 'package'])
 
 /** The author's plan: only the real choices; the home page summarises the offerings page; no team. */
-function authorPlan() {
-  const kept = new Set([HOME, CLASSES, CONTACT])
+function authorPlan({ plans = false } = {}) {
+  const kept = new Set([HOME, CLASSES, CONTACT, ...(plans ? [PLANS] : [])])
   const els = new Map(inventory.elements.map((e) => [e.id, e]))
   const onKept = (/** @type {any} */ e) => {
     const section = els.get(e.section)
@@ -75,9 +80,9 @@ function authorPlan() {
   const page = (/** @type {string} */ id, /** @type {string} */ lead, /** @type {string[]} */ dependsOn) => ({
     id,
     decision: 'keep',
-    purpose: `The ${id === HOME ? 'front door' : id === CLASSES ? 'list of offerings' : 'way to reach the shop'}`,
+    purpose: `The ${id === PLANS ? 'plans' : id === HOME ? 'front door' : id === CLASSES ? 'list of offerings' : 'way to reach the shop'}`,
     lead,
-    facts: [],
+    facts: id === HOME ? [FACT] : [],
     items: id === CONTACT ? [] : ITEMS,
     dependsOn
   })
@@ -87,6 +92,7 @@ function authorPlan() {
       page(HOME, 'Seasonal flowers arranged by hand', [CLASSES, 'record-page:classes']),
       page(CLASSES, 'What the shop makes for you', []),
       page(CONTACT, 'Visit or write to the shop', []),
+      ...(plans ? [page(PLANS, 'Plans for every budget', [])] : []),
       { id: 'record-page:classes', decision: 'keep' }
     ],
     decisions: [
@@ -145,7 +151,7 @@ function ownWords(/** @type {any} */ s) {
  * the page; the first long line of a page states the glossary description of the first offering, so the summary page
  * repeats words the summarised page wrote; `FAIL` is always written too long. Every other writer answers nothing.
  */
-function textDouble() {
+function textDouble(mode = {}) {
   /** @type {Array<{page: string, keys: string[], system: string, input: any}>} */
   const pageCalls = []
   return {
@@ -166,15 +172,30 @@ function textDouble() {
       })
       const values = {}
       let shared = false
+      const first = !input.fix
+      const glossary = new Map(input.glossary.map((/** @type {any} */ g) => [g.name, g]))
+      // The lead and the facts of the page's plan are said in the first slots that hold them.
+      const toSay = [input.plan.page?.lead, ...(input.plan.page?.facts ?? [])].filter(Boolean)
+      if (mode.omitFact && (first || mode.alwaysOmit)) toSay.splice(1)
       for (const s of input.slots) {
+        const entry = glossary.get(s.offering)
+        const word = (/** @type {string} */ t) => (t.length <= s.maxCharacters ? t : null)
         if (s.type !== 'text') values[s.key] = s.sample
         else if (!plain(s.sample)) values[s.key] = ''
+        else if ((s.role === 'offering.name' || s.role === 'package.name') && entry && word(entry.name))
+          values[s.key] = mode.wrongName && first ? 'Blooms by post' : entry.name
+        else if (s.role === 'offering.description' && entry && word(entry.description))
+          values[s.key] = entry.description
         else if (s.key === FAIL) values[s.key] = `${ownWords(s)} ${'longer '.repeat(60)}`.trim()
         else if (!shared && s.maxCharacters >= SHARED.length + 10 && plain(s.sample).length >= 60) {
           values[s.key] = `${SHARED}.`
           shared = true
-        } else values[s.key] = ownWords(s)
+        } else if (toSay.length && !s.shape && word(toSay[0])) values[s.key] = toSay.shift()
+        else values[s.key] = ownWords(s)
       }
+      // A page that writes into the section the plan hid.
+      if (mode.fillHidden && first && input.plan.page?.id === HOME)
+        values['module-163.0'] = ownWords({ key: 'x', maxCharacters: 40, sample: 'x'.repeat(40) })
       return JSON.stringify({ values, pending: [], invented: [] })
     },
     usage: () => ({ calls: pageCalls.length, promptTokens: 1_000 * pageCalls.length, completionTokens: 0 })
@@ -326,4 +347,83 @@ test('without an accepted plan the current page writer runs: no call carries a p
   assert.equal(text.pageCalls.length, 0)
   assert.equal(records.pageAuthor, undefined)
   assert.ok(prepared.changes)
+})
+
+const fixesOf = (/** @type {ReturnType<typeof textDouble>} */ text, /** @type {string} */ page) =>
+  text.pageCalls.filter((c) => c.page === page && c.input.fix).map((c) => String(c.input.fix))
+
+test('a page that names an offering differently from the glossary is sent back to the same author and then written as the glossary spells it', async () => {
+  const text = textDouble({ wrongName: true })
+  const { prepared, records } = await prepareWith({
+    text,
+    editorial: editorialDouble(authorPlan({ plans: true }))
+  })
+  const isName = (/** @type {any} */ s) =>
+    (s.role === 'offering.name' || s.role === 'package.name') && s.offering
+  const named = text.pageCalls.filter((c) => c.input.slots.some(isName))
+  assert.ok(named.length > 0, 'the template shows an offering name on a kept page')
+  const sent = named.flatMap((c) => fixesOf(text, c.page))
+  assert.ok(
+    sent.some((f) => /glossary/i.test(f) && /Wedding bouquets|Flower subscription/.test(f)),
+    sent.join('|')
+  )
+  for (const call of named)
+    for (const s of call.input.slots.filter(isName)) {
+      const kept = prepared.changes[s.key]
+      assert.ok(kept === undefined || ITEMS.includes(kept), `${s.key} says "${kept}"`)
+    }
+  assert.ok(!records.copyLineTrace?.some((t) => t.check === 'plan-conformance'), 'fixed after one send-back')
+})
+
+test('a page that omits a fact the plan assigned is sent back with the fact named, and then carries it', async () => {
+  const text = textDouble({ omitFact: true })
+  const { prepared } = await prepareWith({ text, editorial: editorialDouble(authorPlan()) })
+  const sent = fixesOf(text, HOME)
+  assert.ok(
+    sent.some((f) => f.includes(FACT)),
+    sent.join('|')
+  )
+  const home = text.pageCalls.filter((c) => c.page === HOME).flatMap((c) => c.keys)
+  assert.ok(
+    home.some((k) => String(prepared.changes[k] ?? '').includes(FACT)),
+    'the page carries the fact'
+  )
+})
+
+test('a page that fills a section the plan hid is sent back, and nothing of it reaches the site', async () => {
+  const text = textDouble({ fillHidden: true })
+  const { prepared } = await prepareWith({ text, editorial: editorialDouble(authorPlan()) })
+  const sent = fixesOf(text, HOME)
+  assert.ok(
+    sent.some((f) => /hid|hidden/i.test(f) && f.includes('module-163')),
+    sent.join('|')
+  )
+  assert.equal(prepared.changes['module-163.0'], undefined)
+})
+
+test('a page that still fails the plan after its send-back is in the line trace with the check plan-conformance', async () => {
+  const text = textDouble({ omitFact: true, alwaysOmit: true })
+  const { records } = await prepareWith({ text, editorial: editorialDouble(authorPlan()) })
+  const traced = records.copyLineTrace?.filter((t) => t.check === 'plan-conformance') ?? []
+  assert.ok(traced.length > 0, JSON.stringify(records.copyLineTrace?.slice(0, 5)))
+  assert.ok(traced.every((t) => t.page === 'menuItem-101'))
+})
+
+test('a page the plan dropped gets no writer call', async () => {
+  const text = textDouble()
+  await prepareWith({ text, editorial: editorialDouble(authorPlan()) })
+  const pageOf = pagesOfEntities(map.pages)
+  const kept = new Set([HOME, CLASSES, CONTACT].map((p) => p.replace('page:', '')))
+  const dropped = map.slots
+    .map((s) => s.key)
+    .filter((key) => {
+      const pages = pageOf(slotOf.get(key).entity)
+      return pages.length > 0 && pages.every((p) => !kept.has(p))
+    })
+  assert.ok(dropped.length > 0, 'the template has slots only on dropped pages')
+  const asked = new Set(text.pageCalls.flatMap((c) => c.keys))
+  assert.deepEqual(
+    dropped.filter((k) => asked.has(k)),
+    []
+  )
 })

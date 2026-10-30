@@ -30,7 +30,7 @@ import { buttonReasons, factReasons, glossaryReasons, orderReasons } from './sit
 
 /**
  * @typedef {{rule: 'undecided' | 'decided-twice' | 'unknown-element' | 'added-page-layout' | 'over-capacity' |
- *   'unsourced-fact' | 'missing-glossary' | 'writing-order-cycle' | 'writing-order-missing' | 'writing-order-late' | 'button-no-action' |
+ *   'unsourced-fact' | 'no-page-kept' | 'missing-glossary' | 'writing-order-cycle' | 'writing-order-missing' | 'writing-order-late' | 'button-no-action' |
  *   'photo-undecided' | 'photo-decided-twice' | 'unknown-photo' | 'photo-unusable-used',
  *   element?: string, message: string}} PlanReason
  */
@@ -78,6 +78,12 @@ export async function checkSitePlan(plan, { inventory, site, photos = null }) {
   }
 
   const shownPages = new Set(pages.filter((p) => ['keep', 'add'].includes(p?.decision)).map((p) => p.id))
+  // A site with no page has nothing to write: the plan is refused, never completed into an empty site.
+  if (shownPages.size === 0)
+    reasons.push({
+      rule: 'no-page-kept',
+      message: 'the plan keeps no page; keep or add at least one page (the home page at least)'
+    })
   const off = takenOff(elements, decided)
   for (const element of inventory.elements)
     if (element.decide && !decided.has(element.id) && !off(element))

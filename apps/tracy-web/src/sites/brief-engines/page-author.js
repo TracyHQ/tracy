@@ -9,6 +9,7 @@
  *   - a slot is written with the first page of the writing order it shows on; slots on no page of the plan (a band shown
  *     on every page, a page the plan dropped) are written last, as the site's shared parts;
  *   - a section the plan hid gets no call: its slots are listed apart, for the engine to take the section off;
+ *   - a slot shown only on pages the plan dropped gets no call either (`droppedKeys`): the page is not on the site;
  *   - every page's time, calls and tokens are recorded (`pages`).
  * Without an accepted plan nothing here runs and the current writers write the site. CMS-neutral: the engine passes its
  * slots, the pages each entity shows on, and its writer.
@@ -25,7 +26,8 @@ const entityOf = (/** @type {string} */ id) => String(id).replace(/^[a-z-]+:/, '
 /**
  * What the page writer needs of an accepted site plan run, or null when there is none.
  * @param {any} run - the site plan run (`writeSitePlan`)
- * @returns {{order: Array<{id: string, entity: string, page: any}>, hidden: Set<string>, glossary: any[]} | null}
+ * @returns {{order: Array<{id: string, entity: string, page: any}>, hidden: Set<string>, dropped: Set<string>,
+ *   cardItems: Record<string, string[]>, glossary: any[]} | null}
  */
 export function pageAuthorPlan(run) {
   const plan = run?.status === 'accepted' ? run.plan : null
@@ -49,7 +51,22 @@ export function pageAuthorPlan(run) {
       .filter((d) => d?.decision === 'hide' && String(d.element).startsWith('section:'))
       .map((d) => entityOf(d.element))
   )
-  return { order, hidden, glossary: list(plan.glossary) }
+  // The entities of the pages the plan drops: a slot shown only on them is written by nobody (a later stage takes it off).
+  const dropped = new Set(
+    list(plan.pages)
+      .filter((p) => p?.decision === 'drop' && String(p.id).startsWith('page:'))
+      .map((p) => entityOf(p.id))
+  )
+  // The names the plan gives the cards of a collection, in order, by the collection's id (`module-1.item`): card N is item N.
+  const cardItems = Object.fromEntries(
+    list(plan.decisions)
+      .filter(
+        (d) =>
+          d?.decision === 'keep' && /^cards:[^.]+\.[^.]+$/.test(String(d.element)) && list(d.items).length
+      )
+      .map((d) => [String(d.element).replace(/^cards:/, ''), list(d.items).map(String)])
+  )
+  return { order, hidden, dropped, cardItems, glossary: list(plan.glossary) }
 }
 
 /** Two plans of the page writer as one. */
@@ -62,6 +79,7 @@ function joinPlans(/** @type {any} */ a, /** @type {any} */ b) {
     pending: [...new Set([...list(a.pending), ...list(b.pending)])],
     reasons: { ...a.reasons, ...b.reasons },
     invented: [...new Set([...list(a.invented), ...list(b.invented)])],
+    ...(a.conformance || b.conformance ? { conformance: { ...a.conformance, ...b.conformance } } : {}),
     ...(a.owners || b.owners ? { owners: { ...a.owners, ...b.owners } } : {}),
     ...(a.sources || b.sources ? { sources: { ...a.sources, ...b.sources } } : {}),
     ...(a.tried || b.tried ? { tried: { ...a.tried, ...b.tried } } : {}),
@@ -78,7 +96,7 @@ function joinPlans(/** @type {any} */ a, /** @type {any} */ b) {
  *     Promise<{result: any, calls: number, failed: number, cut?: number, rounds?: number, callMs?: number[]}>,
  *   usage?: () => any, rulebook?: string, now?: () => number}} input
  * @returns {Promise<{plan: any, answered: {calls: number, failed: number, cut: number, rounds: number, callMs: number[]},
- *   pages: any[], hiddenKeys: string[], pageOfKey: Map<string, string>}>}
+ *   pages: any[], hiddenKeys: string[], droppedKeys: string[], pageOfKey: Map<string, string>}>}
  */
 export async function writePagesInOrder({
   plan,
@@ -94,6 +112,7 @@ export async function writePagesInOrder({
   /** @type {Map<string, any[]>} */
   const byPage = new Map()
   const hiddenKeys = []
+  const droppedKeys = []
   /** @type {Map<string, string>} the page entity each slot was written with */
   const pageOfKey = new Map()
   for (const slot of slots) {
@@ -101,7 +120,12 @@ export async function writePagesInOrder({
       hiddenKeys.push(slot.key)
       continue
     }
-    const first = pageOf(String(slot.entity))
+    const shows = pageOf(String(slot.entity))
+    if (shows.length > 0 && shows.every((p) => plan.dropped?.has(p) && !position.has(p))) {
+      droppedKeys.push(slot.key)
+      continue
+    }
+    const first = shows
       .filter((p) => position.has(p))
       .sort((a, b) => /** @type {number} */ (position.get(a)) - /** @type {number} */ (position.get(b)))[0]
     const page = first ?? SHARED_PAGE
@@ -142,6 +166,7 @@ export async function writePagesInOrder({
           rulebook,
           page: step.page,
           hiddenSections,
+          cardItems: plan.cardItems,
           glossary: plan.glossary,
           writtenPages: [...writtenPages]
         },
@@ -192,5 +217,5 @@ export async function writePagesInOrder({
       pending: list(result.pending).filter((k) => only.includes(k)).length
     })
   }
-  return { plan: joined, answered, pages, hiddenKeys, pageOfKey }
+  return { plan: joined, answered, pages, hiddenKeys, droppedKeys, pageOfKey }
 }

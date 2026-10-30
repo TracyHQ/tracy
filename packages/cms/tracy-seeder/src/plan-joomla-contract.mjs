@@ -10,7 +10,15 @@ import { PROCESS_WRITING_RULE, processWritingOf } from './process-writing.mjs'
 import { copyJobs, copyLedger, duplicateComplaint, duplicates, pagesOfEntities } from './distinct-copy.mjs'
 import { PAGE_PASS_RULE, PAGE_RULE_RETRIES, pageBatches, pageHintOf } from './page-pass.mjs'
 import { factSheetFor } from './fact-sheet-batch.mjs'
-import { AUTHOR_RULE, authorInput, lengthComplaint, withoutGlossary } from './page-author.mjs'
+import {
+  AUTHOR_RULE,
+  authorInput,
+  conformanceComplaint,
+  lengthComplaint,
+  planConformance,
+  withCardItems,
+  withoutGlossary
+} from './page-author.mjs'
 import {
   DIRECTION_RULE,
   SOURCE_RULE,
@@ -995,6 +1003,9 @@ export async function planJoomlaContract({
   /** The model's last words for each line it pended or a guard refused, cut short, for the build receipt (`copy-line-trace.js`). */
   /** @type {Record<string, string>} */
   const tried = {}
+  /** The lines (and page-level gaps, under the page's first line) that still break the site plan after the send-backs. */
+  /** @type {Record<string, string>} */
+  const conformed = {}
   // Only a quickstart whose archive already speaks in identity tokens ships the plugin that fills
   // them; anywhere else `{site.name}` would reach the page as it is.
   const tokenized = state.slots.some((slot) => /\{site\./.test(slot.sample ?? ''))
@@ -1253,14 +1264,19 @@ export async function planJoomlaContract({
     )
   const properNouns = properNounsOf(facts)
   const jobs = copyJobs(state.slots)
-  const complaintAbout = (body, known, slots, languages) => {
+  const complaintAbout = (body, known, slots, languages, plan = null) => {
     const shape = shapeComplaint(body)
     if (shape !== null) return shape
+    // 🔒 THE PLAN AXIS (ticket #236): what breaks the site plan is said first, beside any stray key.
+    const toPlan = conformanceComplaint(plan)
     const strays = straysIn(body, known)
-    if (strays.length)
-      return `Your previous answer named ${strays.length} slot key(s) outside this batch: ${strays.slice(0, 8).join(', ')}. Answer ONLY the keys supplied, every one of them, and nothing else.`
+    if (strays.length) {
+      const stray = `Your previous answer named ${strays.length} slot key(s) outside this batch: ${strays.slice(0, 8).join(', ')}. Answer ONLY the keys supplied, every one of them, and nothing else.`
+      return toPlan ? `${toPlan} ${stray}` : stray
+    }
     const wrong = wrongIn(body, slots)
     if (wrong.size) return languageComplaint(wrong, languages)
+    if (toPlan) return toPlan
     // 🔒 TWO SLOTS OF ONE SECTION NEVER CARRY THE SAME SENTENCE (spec #189, item 17): refused and rewritten, like a wrong language.
     // 🔒 THE AUTHOR'S LINE FITS ITS BOX (ticket #235): a line over its limit is sent back like any other rule.
     const long = author ? lengthComplaint(slots, body.values, withoutStyleMarks) : null
@@ -1274,6 +1290,7 @@ export async function planJoomlaContract({
     return overused.length ? phraseComplaint(overused) : null
   }
   const items = itemNumbers(state.slots)
+  const entityByKey = new Map(state.slots.map((s) => [s.key, s.entity]))
   /** The lines of an answer whose specific facts no source it cites states; none without a fact digest. */
   const unsourcedIn = (/** @type {any[]} */ slots, /** @type {any} */ body) =>
     texts
@@ -1286,7 +1303,7 @@ export async function planJoomlaContract({
         })
       : []
   const journeys = processWritingOf(state.slots, offerings)
-  const offeringOf = offeringBinding(offerings)
+  const offeringOf = withCardItems(offeringBinding(offerings), author?.cardItems)
   /** The owner's posts about the offerings the slots of a batch write about, by offering name, or null. */
   const postsFor = (slots) => {
     if (!offeringPosts || typeof offeringPosts !== 'object') return null
@@ -1356,6 +1373,7 @@ export async function planJoomlaContract({
         column: s.column,
         type: s.type,
         label: s.label,
+        ...(author && s.role ? { role: s.role } : {}),
         // The element a markup slot sits in (`h2`, `p`, `a`, `figcaption`): slots of one module often share a label, and
         // this is what tells a heading from its paragraph.
         ...(s.xpath
@@ -1395,6 +1413,10 @@ export async function planJoomlaContract({
     let sourceTries = 0
     /** @type {Set<string> | null} the keys a page-rule send-back may replace; null: every key of the batch */
     let only = null
+    /** @type {ReturnType<typeof planConformance> | null} what the last answer still breaks of the site plan */
+    let conformance = null
+    // The page-level checks (its lead and facts) wait for the batch that holds the page's last slot.
+    const lastOfCall = slots === batches.at(-1)
     for (let attempt = 0; attempt < ATTEMPTS; attempt += 1) {
       raw = await generate({
         system:
@@ -1417,7 +1439,30 @@ export async function planJoomlaContract({
       // A call that failed (`failed`: the model did not answer, or the budget cut it) is not asked again with a fix here:
       // a lost first answer is retried split below (`answerBatch`), a lost retry keeps what the first answer wrote.
       if (typeof answer?.failed === 'string') break
-      complaint = complaintAbout(answer, known, slots, languages)
+      conformance =
+        author && shapeComplaint(answer) === null
+          ? planConformance({
+              slots,
+              values: { ...(body?.values ?? {}), ...(answer.values ?? {}) },
+              written: changes,
+              author,
+              offeringOf,
+              entityOf: (key) => entityByKey.get(key),
+              last: lastOfCall,
+              site
+            })
+          : null
+      // A key the last answer wrote into a hidden section is read from the answer itself, not from the merged body.
+      if (conformance)
+        conformance.hidden = planConformance({
+          slots: [],
+          values: answer.values ?? {},
+          author,
+          offeringOf,
+          entityOf: (key) => entityByKey.get(key),
+          last: false
+        }).hidden
+      complaint = complaintAbout(answer, known, slots, languages, conformance)
       // 🔒 A LINE WITH AN UNSOURCED FACT IS SENT BACK ONCE (`fact-sources.mjs`), beside whatever else is wrong; what is still
       // unsourced after that is refused in `settle`.
       if (texts && sourceTries < 1 && shapeComplaint(body) === null) {
@@ -1444,15 +1489,15 @@ export async function planJoomlaContract({
       }
       if (complaint === null) break
     }
-    return { body, complaint, raw }
+    return { body, complaint, raw, conformance }
   }
   /** Take what one batch's answer wrote into the plan, and say why each line it did not write waits. */
   const settle = (
     /** @type {any[]} */ slots,
-    /** @type {{body: any, complaint: string | null, raw: any}} */ got
+    /** @type {{body: any, complaint: string | null, raw: any, conformance?: ReturnType<typeof planConformance> | null}} */ got
   ) => {
     const known = new Set(slots.map((s) => s.key))
-    const { body, complaint, raw } = got
+    const { body, complaint, raw, conformance } = got
     /** The lines of this call that still break a page rule, by the writer they are handed to. */
     const handed =
       complain && shapeComplaint(body) === null ? (complain(slots, body.values, soFar)?.keys ?? {}) : {}
@@ -1505,6 +1550,12 @@ export async function planJoomlaContract({
     const uncounted = new Set(countsIn(slots, body.values).map((c) => c.key))
     // A specific fact no cited source states is still not written after its one send-back: refused (`fact-sources.mjs`).
     const unsourced = new Set(unsourcedIn(slots, body).map((l) => l.key))
+    // 🔒 WHAT STILL BREAKS THE SITE PLAN after its send-back is traced (ticket #236): a glossary line is refused, a page's
+    // missing lead or fact and a hidden section's stray line are traced under the key they belong to.
+    const planBroken = new Set(Object.keys(conformance?.lines ?? {}))
+    Object.assign(conformed, conformance?.lines, conformance?.hidden)
+    if (conformance?.page.length && slots[0])
+      conformed[slots[0].key] = conformance.page.join('; ').slice(0, 200)
     /** @param {string} key */
     const isInvented = (key) => Array.isArray(body.invented) && body.invented.includes(key)
     for (const slot of slots) {
@@ -1520,27 +1571,29 @@ export async function planJoomlaContract({
           : 'model-pended'
         : typeof value !== 'string'
           ? 'no-answer'
-          : wrong.has(slot.key)
-            ? 'wrong-language'
-            : repeats.has(slot.key)
-              ? 'duplicate-copy'
-              : uncounted.has(slot.key)
-                ? 'ungrounded-count'
-                : unsourced.has(slot.key)
-                  ? 'unsourced-fact'
-                  : Boolean(slot.sample.trim()) !== Boolean(value.trim()) &&
-                      !(hints?.[slot.key]?.fill === true && value.trim())
-                    ? 'emptiness-mismatch'
-                    : [...withoutStyleMarks(value)].length > slot.maxCharacters
-                      ? 'too-long'
-                      : slot.requiresEvidence &&
-                          !isInvented(slot.key) &&
-                          !facts.some((fact) => fact.includes(value))
-                        ? 'evidence-missing'
-                        : (coworkWouldRefuse(slot, value) ??
-                          (slot.type === 'url' && pagesOfSite && siteLink(value) && !pagesOfSite.idOf(value)
-                            ? 'invented-route'
-                            : null))
+          : planBroken.has(slot.key)
+            ? 'plan-conformance'
+            : wrong.has(slot.key)
+              ? 'wrong-language'
+              : repeats.has(slot.key)
+                ? 'duplicate-copy'
+                : uncounted.has(slot.key)
+                  ? 'ungrounded-count'
+                  : unsourced.has(slot.key)
+                    ? 'unsourced-fact'
+                    : Boolean(slot.sample.trim()) !== Boolean(value.trim()) &&
+                        !(hints?.[slot.key]?.fill === true && value.trim())
+                      ? 'emptiness-mismatch'
+                      : [...withoutStyleMarks(value)].length > slot.maxCharacters
+                        ? 'too-long'
+                        : slot.requiresEvidence &&
+                            !isInvented(slot.key) &&
+                            !facts.some((fact) => fact.includes(value))
+                          ? 'evidence-missing'
+                          : (coworkWouldRefuse(slot, value) ??
+                            (slot.type === 'url' && pagesOfSite && siteLink(value) && !pagesOfSite.idOf(value)
+                              ? 'invented-route'
+                              : null))
       if (why !== null) {
         // 🔒 PENDING MEANS "STILL DEMO CONTENT AND NOBODY SUPPLIED A REPLACEMENT". A slot whose
         // current value already differs from the archive's sample holds words a person put there
@@ -1718,6 +1771,7 @@ export async function planJoomlaContract({
     ...(hints || complain ? { owners } : {}),
     ...(texts ? { sources: sourcesOf } : {}),
     ...(Object.keys(tried).length > 0 ? { tried } : {}),
+    ...(Object.keys(conformed).length > 0 ? { conformance: conformed } : {}),
     ...(emptyLinks.length > 0 ? { emptyLinks } : {})
   }
 }

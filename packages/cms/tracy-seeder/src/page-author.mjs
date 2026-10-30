@@ -7,6 +7,8 @@
  * CMS-neutral: no template, module or business is named.
  */
 
+import { factsNotIn, specificFacts } from './fact-sources.mjs'
+
 /** Said to the author on every page call, after its rulebook. */
 export const AUTHOR_RULE =
   '\n\n# Writing one page of the plan\n\nYou wrote the site plan; now you write its pages, one page per call, in the ' +
@@ -91,4 +93,116 @@ export function lengthComplaint(slots, values, plain) {
         `${s.key} (at most ${s.maxCharacters} characters, ${[...plain(String(values[s.key]))].length} written)`
     )
     .join('; ')}. Rewrite each within its limit, about the length of its sample.`
+}
+
+const NAME_ROLES = new Set(['offering.name', 'package.name'])
+const DESCRIPTION_ROLES = new Set(['offering.description', 'offering.summary'])
+
+/** The words a visitor reads, for comparing: markup out, case and end punctuation ignored. */
+const said = (/** @type {unknown} */ v) =>
+  String(v ?? '')
+    .replace(/\[\[br\]\]/g, ' ')
+    .replace(/\[\[|\]\]/g, '')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/\s+/g, ' ')
+    .replace(/[\s.!?,;:]+$/, '')
+    .trim()
+    .toLowerCase()
+
+/** Whether a phrase of the plan (a lead, a fact without a figure) is carried by a text: most of its main words are in it. */
+function carries(/** @type {string} */ text, /** @type {string} */ phrase, share) {
+  const words = [...new Set(said(phrase).match(/[\p{L}]{4,}/gu) ?? [])]
+  if (words.length === 0) return true
+  const have = words.filter((w) => text.includes(w.slice(0, 5))).length
+  return have >= Math.ceil(words.length * share)
+}
+
+/**
+ * 🔒 THE PLAN AXIS OF THE PAGE CHECK (spec TracyHQ/tracy#231, ticket #236): pure code. What a page the author wrote must
+ * still hold to the plan: it writes nothing into a section the plan hid, it names a glossary item as the glossary spells it
+ * (and says its description where the slot is that item's description and the description fits), and, once its last slot is
+ * written, it carries the lead and every fact the plan assigned to it.
+ * @param {{slots: any[], values: Record<string, unknown>, written?: Record<string, unknown>, author: any,
+ *   offeringOf: (slot: any) => string | null, entityOf: (key: string) => string | undefined, last?: boolean, site?: any}} input
+ *   `values`: this call's answer as it stands; `written`: the lines of this page already settled by earlier batches
+ * @returns {{lines: Record<string, string>, hidden: Record<string, string>, page: string[]}}
+ */
+export function planConformance({
+  slots,
+  values,
+  written = {},
+  author,
+  offeringOf,
+  entityOf,
+  last = true,
+  site = null
+}) {
+  const lines = {}
+  const hidden = {}
+  const page = []
+  const off = new Set((author?.hiddenSections ?? []).map((id) => String(id).replace(/^[a-z-]+:/, '')))
+  for (const [key, value] of Object.entries(values ?? {})) {
+    const entity = entityOf(key)
+    if (typeof value === 'string' && said(value) && entity && off.has(entity))
+      hidden[key] = `${key} is in a section the plan hid (${entity}); write nothing there`
+  }
+  const glossary = Array.isArray(author?.glossary) ? author.glossary : []
+  const entryOf = (/** @type {string | null} */ name) =>
+    name ? glossary.find((g) => said(g?.name) === said(name)) : undefined
+  for (const slot of slots) {
+    const value = values?.[slot.key]
+    if (typeof value !== 'string' || !said(value)) continue
+    const entry = entryOf(offeringOf(slot))
+    if (!entry) continue
+    if (
+      NAME_ROLES.has(slot.role) &&
+      entry.name.length <= slot.maxCharacters &&
+      said(value) !== said(entry.name)
+    )
+      lines[slot.key] =
+        `${slot.key} must be named exactly "${entry.name}" as the glossary spells it (you wrote "${said(value)}")`
+    else if (
+      DESCRIPTION_ROLES.has(slot.role) &&
+      said(entry.description) &&
+      entry.description.length <= slot.maxCharacters &&
+      !said(value).includes(said(entry.description))
+    )
+      lines[slot.key] =
+        `${slot.key} must use the glossary description of "${entry.name}" word for word: "${entry.description}"`
+  }
+  if (last && author?.page) {
+    const text = said(Object.values({ ...written, ...values }).join(' '))
+    if (author.page.lead && !carries(text, author.page.lead, 0.5))
+      page.push(`the page must lead with the plan's message: "${author.page.lead}"`)
+    for (const fact of Array.isArray(author.page.facts) ? author.page.facts : []) {
+      const figures = specificFacts(String(fact), { site }).length > 0
+      const missing = figures
+        ? factsNotIn(String(fact), text, site).length > 0
+        : !carries(text, String(fact), 0.6)
+      if (missing) page.push(`the page must carry the fact the plan assigned to it: "${fact}"`)
+    }
+  }
+  return { lines, hidden, page }
+}
+
+/** The sentence the author is sent back with for its plan conformance failures, or null. */
+export function conformanceComplaint(/** @type {ReturnType<typeof planConformance> | null} */ issues) {
+  if (!issues) return null
+  const all = [...Object.values(issues.lines), ...Object.values(issues.hidden), ...issues.page]
+  return all.length
+    ? `Your answer does not follow the site plan: ${all.slice(0, 10).join('; ')}. Fix only these, every other line as it was.`
+    : null
+}
+
+/**
+ * The offering binding of the site (`offeringBinding`) with the names the plan gave the cards of a collection as its
+ * fallback: card N of a collection (its group id without the card number) is plan item N, so a card is written from, and checked against, its
+ * own glossary item.
+ * @param {(slot: any) => string | null} base @param {Record<string, string[]> | undefined} cardItems
+ * @returns {(slot: any) => string | null}
+ */
+export function withCardItems(base, cardItems) {
+  if (!cardItems || Object.keys(cardItems).length === 0) return base
+  return (slot) =>
+    base(slot) ?? cardItems[String(slot?.group?.id ?? '').replace(/\.\d+$/, '')]?.[slot?.group?.item] ?? null
 }

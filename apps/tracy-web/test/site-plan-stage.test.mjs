@@ -443,3 +443,18 @@ test('a near-miss photo or slot id is put right by code and listed; an invented 
   assert.match(reason.message, /ids\.pictureSlots/)
   assert.match(reason.message, /picture:module-156\.0/)
 })
+
+test('a plan that keeps no page is refused with the no-page-kept reason', async () => {
+  const empty = planWith((p) => {
+    p.pages = []
+    return p
+  })
+  const author = scriptedAuthor([empty, empty, empty])
+  const { records } = await prepareWith({ text: quietText(), editorial: author })
+  const run = records.sitePlan
+  assert.equal(run.status, 'refused')
+  assert.ok(
+    run.rounds[0].reasons.some((r) => r.rule === 'no-page-kept'),
+    JSON.stringify(run.rounds[0].reasons)
+  )
+})
