@@ -1701,7 +1701,9 @@ async function readPhpInfo(fetchAuthed, adminBase, onAnswer) {
 }
 async function readSysinfoPhp(fetchAuthed, adminBase) {
   try {
-    const page = await fetchAuthed(`${adminBase}?option=com_admin&view=sysinfo&format=json`, { signal: timeout() });
+    const page = await fetchAuthed(`${adminBase}?option=com_admin&view=sysinfo&format=json`, {
+      signal: timeout()
+    });
     const body = await readCappedBody(page);
     return page.ok ? body.match(/"phpversion"\s*:\s*"(\d+\.\d+(?:\.\d+)?)/)?.[1] : void 0;
   } catch {

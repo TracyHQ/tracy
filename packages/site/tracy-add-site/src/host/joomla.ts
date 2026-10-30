@@ -1530,7 +1530,9 @@ async function readSysinfoPhp(
   adminBase: string
 ): Promise<string | undefined> {
   try {
-    const page = await fetchAuthed(`${adminBase}?option=com_admin&view=sysinfo&format=json`, { signal: timeout() })
+    const page = await fetchAuthed(`${adminBase}?option=com_admin&view=sysinfo&format=json`, {
+      signal: timeout()
+    })
     // Read as text, not parsed: a PHP warning printed ahead of the JSON (phpinfo() disabled, on
     // PHP 7) still leaves the field readable.
     const body = await readCappedBody(page)

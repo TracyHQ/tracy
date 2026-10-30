@@ -51,7 +51,8 @@ function render(source) {
   return { run, out: run.status === 0 ? readFileSync(join(dir, 'configuration.php'), 'utf8') : null }
 }
 
-const declared = (text, name) => text.match(new RegExp(`^\\s*(?:public|var)\\s+\\$${name}\\b`, 'gm'))?.length ?? 0
+const declared = (text, name) =>
+  text.match(new RegExp(`^\\s*(?:public|var)\\s+\\$${name}\\b`, 'gm'))?.length ?? 0
 
 const support = phpSupport()
 let php
@@ -63,14 +64,31 @@ after(() => php?.stop())
 test('a setting line with a comment after it is replaced in place, declared once, and PHP reads the file (#218)', () => {
   const { run, out } = render(SOURCE)
   assert.equal(run.status, 0, run.stderr)
-  for (const name of ['host', 'user', 'password', 'db', 'force_ssl', 'secret', 'live_site', 'behind_loadbalancer'])
+  for (const name of [
+    'host',
+    'user',
+    'password',
+    'db',
+    'force_ssl',
+    'secret',
+    'live_site',
+    'behind_loadbalancer'
+  ])
     assert.equal(declared(out, name), 1, `${name} declared once:\n${out}`)
   assert.match(out, /^\tpublic \$host = 'db'; \/\/ db host$/m, 'the comment stays')
   assert.match(out, /^\tpublic \$user = 'u';   # the account$/m)
-  assert.match(out, /^\tpublic \$password = 'p'; \/\* do not share \*\/$/m, 'a quoted ";" is part of the old value')
+  assert.match(
+    out,
+    /^\tpublic \$password = 'p'; \/\* do not share \*\/$/m,
+    'a quoted ";" is part of the old value'
+  )
   assert.match(out, /^\tvar \$db = 'joomla';$/m)
   assert.match(out, /^\tpublic \$force_ssl = 2; \/\/ always https$/m)
-  assert.match(out, /^\tpublic \$sitename = 'Shop; Co'; \/\/ shown in the title$/m, 'the customer’s own settings untouched')
+  assert.match(
+    out,
+    /^\tpublic \$sitename = 'Shop; Co'; \/\/ shown in the title$/m,
+    'the customer’s own settings untouched'
+  )
   assert.doesNotMatch(out, /source-secret|joomla_live|\$host = 'localhost'/)
 })
 
@@ -78,7 +96,10 @@ test('PHP loads the rendered file: no property declared twice', { skip: support.
   const { out } = render(SOURCE)
   const [r] = php.run([
     {
-      args: ['-r', '$f = tempnam(sys_get_temp_dir(), "c"); file_put_contents($f, stream_get_contents(STDIN)); require $f; $c = new JConfig; echo $c->host, "|", $c->password, "|", $c->sitename;'],
+      args: [
+        '-r',
+        '$f = tempnam(sys_get_temp_dir(), "c"); file_put_contents($f, stream_get_contents(STDIN)); require $f; $c = new JConfig; echo $c->host, "|", $c->password, "|", $c->sitename;'
+      ],
       input: out
     }
   ])
@@ -121,7 +142,10 @@ test('an import stops when the copy’s configuration.php does not load in its P
 }, () => {
   const twice = loads("<?php\nclass JConfig {\n\tpublic $host = 'db';\n\tpublic $host = 'db';\n}\n")
   assert.equal(twice.status, 1, twice.stderr)
-  assert.match(twice.stdout, /configuration\.php does not load in its PHP: .*Cannot redeclare JConfig::\$host/)
+  assert.match(
+    twice.stdout,
+    /configuration\.php does not load in its PHP: .*Cannot redeclare JConfig::\$host/
+  )
   const good = loads(render(SOURCE).out)
   assert.equal(good.status, 0, good.stdout + good.stderr)
   assert.equal(good.stdout, '')
