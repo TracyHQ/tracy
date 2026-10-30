@@ -183,13 +183,15 @@ jobs:
   # unchanged. `runs-on` is one expression: `'ubuntu-latest'` or that list. The label is read from the
   # event payload like `ci:aws-only`, so the same rule holds: set it BEFORE the push or "Ready for
   # review" (a re-run replays the old payload; `ci-label-rerun.yml` does not watch it). The nightly
-  # and manual runs carry no pull request, so they stay self-hosted; a fork's pull request never
+  # and manual runs carry no pull request, so they stay self-hosted (one exception, `pnpm-store-seed`,
+  # which saves the hosted pnpm store and must run where pull requests do); a fork's pull request never
   # reaches these jobs (`fork-checks`). On GitHub-hosted the full workers suite is THREE rows, not
   # two (`plan-ci.mjs`; `plan` reads where it runs itself, `ROWS_HOSTED`): two shards measured ~9 and ~20 min
   # there (run 41028805223). What the runner image gave is set up explicitly on a fresh VM, in steps
   # gated on `runner.environment == 'github-hosted'`: Node from `.node-version` (the assert after it
   # still compares), `php` 8.3 cli, and for `build-check` a PostgreSQL 16 service with
-  # TEST_DATABASE_URL. Secrets, the deploy key and the Turbo cache are the same-repo ones as before.
+  # TEST_DATABASE_URL. Secrets and the deploy key are the same-repo ones as before; the Turbo cache is
+  # this repository's GitHub Actions cache on either kind of runner (no secret since 30/10/2026).
   # `check-pr-merge.mjs` accepts such a job by its one label `ubuntu-latest` AND runner group
   # `GitHub Actions`.
   # Witness: `scripts/test/ci-hosted.test.mjs`.
@@ -423,18 +425,20 @@ jobs:
       # 🔒 EVERY EVENT ASKS TURBO, SINCE 17/10/2026 — a release pull request, the nightly and a manual
       # run too. Theirs is a FULL run: `plan-ci.mjs` gives each Turbo row `force`, the row runs every
       # task with `turbo run --force` (nothing is read from the cache; results are still written, so
-      # the nightly warms the cache for the next morning's pull requests), each task audits its own
+      # the nightly — ref `main`, the one cache scope every pull request reads — warms the cache for
+      # the next morning's pull requests), each task audits its own
       # inputs as it runs, and `checks` no longer runs every suite a second time under the tracer
       # (~19 of a release's ~23-minute `checks`, run 38930622899). Any failure above still falls back
       # to the two workers shards; their suites are then traced in `checks` on the nightly and manual
       # runs only — a pull request's `checks` traces none since 28/10/2026 (`check-all.ts`).
+      #
+      # 🔒 THE CACHE IS THE GITHUB ACTIONS CACHE, SINCE 30/10/2026 (`.github/actions/turbo-cache`). Until
+      # then it was an R2 bucket behind four `TURBO_CACHE_S3_*` secrets that were never set on the public
+      # repository: the cache never started, so every run, the nightly included, fell back to the
+      # workers shards and no Turbo artifact was ever written. Now it starts on every event with no
+      # secret, and the nightly's forced rows write under `main`.
       - name: Start the Turbo remote cache
         uses: ./.github/actions/turbo-cache
-        with:
-          endpoint: ${{ secrets.TURBO_CACHE_S3_ENDPOINT }}
-          bucket: ${{ secrets.TURBO_CACHE_S3_BUCKET }}
-          access-key: ${{ secrets.TURBO_CACHE_S3_ACCESS_KEY }}
-          secret-key: ${{ secrets.TURBO_CACHE_S3_SECRET_KEY }}
 
       # Only when the cache answered: without it every task is a miss and the fetch buys nothing.
       # Same command as the rows' "Fetch the vendored dsh submodule" (no --depth: the pinned commit
@@ -968,11 +972,6 @@ jobs:
       - name: Start the Turbo remote cache
         if: matrix.turbo
         uses: ./.github/actions/turbo-cache
-        with:
-          endpoint: ${{ secrets.TURBO_CACHE_S3_ENDPOINT }}
-          bucket: ${{ secrets.TURBO_CACHE_S3_BUCKET }}
-          access-key: ${{ secrets.TURBO_CACHE_S3_ACCESS_KEY }}
-          secret-key: ${{ secrets.TURBO_CACHE_S3_SECRET_KEY }}
 
       # NO `npm ci --prefix vendor/tracy/dsh-passwords` HERE — 06/09. It became a pnpm workspace member,
       # so the install above already built its `node_modules` and its `prepare` built `dist/`. Running
@@ -1207,6 +1206,118 @@ jobs:
           echo "::error::nightly Tracy CI on develop is RED (plan=$PLAN dsh-lib-nightly=$DSH build-check=$RESULT pinned-commit=$PINNED) — see the failed rows of this run"
           printf '### Nightly Tracy CI on develop: RED\n\nplan `%s` · dsh-lib-nightly `%s` · build-check `%s` · pinned commit `%s`. Open the failed rows of this run; the e2e and EmDash suites only run on PRs that touch them, so this is the first place a break in them shows.\n' "$PLAN" "$DSH" "$RESULT" "$PINNED" >> "$GITHUB_STEP_SUMMARY"
           exit 1
+
+  # ─────────────────────────────────────────────────────────────────────────────────────────────
+  # THE HOSTED PNPM STORE, SAVED ONCE A DAY UNDER `main` — added 30/10/2026.
+  #
+  # A pull request's hosted jobs only RESTORE the pnpm content store (`.github/actions/dsh-lib/
+  # hosted-pnpm`): a save from a pull request lands in its own scope, read by that pull request
+  # alone, ~870 MB each, and pushed everything else out of the repository's 10 GB. Every pull
+  # request reads the `main` scope, and a `schedule` run's ref IS `main` — but the nightly's jobs are
+  # self-hosted, so nothing on `main` ever filled a hosted store. This job does, on `ubuntu-latest`
+  # (same OS and architecture as a pull request's hosted rows), through the same action, so the key
+  # it saves is exactly the key they look up. The nightly checks out the commit `plan` pinned on
+  # `develop`, so the key matches a routine pull request into `develop`; one that changes the
+  # lockfile restores this store by prefix and downloads only the difference.
+  #
+  # Workspace store only: that is what every `build-check` row and `new-test-proof` install. The
+  # `dsh` scope (a cold hosted dsh build, when a pull request moves the submodule) is not seeded.
+  #
+  # `pnpm fetch` fills the store from `pnpm-lock.yaml` alone: no build, no script, no dsh. An entry
+  # already saved for the key is immutable, so a hit skips the fetch and the save.
+  #
+  # 🔒 REPORT-ONLY, AND IT GATES NOTHING. Not a `build-check` row, not in `nightly verdict`'s
+  # `needs`, never on a pull request. `continue-on-error` at job level, unlike the report-only jobs
+  # above, because a red job here would turn the nightly RUN red, and the run's conclusion is what
+  # `green-tree.mjs` and `check-pr-merge.mjs` read; a failure is still shown on the job.
+  pnpm-store-seed:
+    name: save the hosted pnpm store (report-only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    continue-on-error: true
+    needs: [plan]
+    if: (github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && github.ref_name == github.event.repository.default_branch
+    steps:
+      # The two guards of the nightly's pinned commit (reasons at `dsh-lib-nightly`); a manual run
+      # checks out its own ref, `main`.
+      - name: Refuse a nightly without its pinned commit
+        if: github.event_name == 'schedule'
+        env:
+          NIGHTLY_SHA: ${{ needs.plan.outputs.checkout_sha }}
+        run: |
+          set -euo pipefail
+          if ! [[ "$NIGHTLY_SHA" =~ ^[0-9a-f]{40}$ ]]; then
+            echo "::error::plan published no usable commit id for this nightly — refusing to check out (an empty ref would fall back to main)"
+            exit 1
+          fi
+          echo "nightly tree: plan selected $NIGHTLY_SHA"
+
+      - name: Check out Git repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          submodules: false
+          ref: ${{ github.event_name == 'schedule' && needs.plan.outputs.checkout_sha || '' }}
+
+      - name: Assert the nightly checkout is the pinned commit
+        if: github.event_name == 'schedule'
+        env:
+          NIGHTLY_SHA: ${{ needs.plan.outputs.checkout_sha }}
+        run: |
+          set -euo pipefail
+          HEAD_SHA="$(git rev-parse --verify 'HEAD^{commit}')"
+          echo "nightly tree: checked out $HEAD_SHA"
+          if [ "$HEAD_SHA" != "$NIGHTLY_SHA" ]; then
+            echo "::error::this job checked out $HEAD_SHA but plan pinned another commit for the nightly — the run would describe two trees"
+            exit 1
+          fi
+
+      # The key hashes the submodule's lockfile too, so the submodule must be there; nothing in it
+      # is installed or built.
+      - name: Fetch the vendored dsh submodule
+        env:
+          DEPLOY_KEY: ${{ secrets.TRACY_VENDOR_DEPLOY_KEY }}
+        run: |
+          set -euo pipefail
+          # An HTTPS submodule URL is the public repository's, fetched without a key.
+          # With a key set, an HTTPS URL is fetched over SSH: a private repository refuses anonymous HTTPS.
+          if [ -z "${DEPLOY_KEY:-}" ] && [[ "$(git config -f .gitmodules --get submodule.vendor/tracy/deepseek-harness.url)" != https://* ]]; then
+            echo "::error::secret TRACY_VENDOR_DEPLOY_KEY is missing. Set it with: gh secret set TRACY_VENDOR_DEPLOY_KEY --repo $GITHUB_REPOSITORY"
+            exit 1
+          fi
+          KEY_FILE="$RUNNER_TEMP/vendor_deploy"
+          ( umask 077; printf '%s\n' "$DEPLOY_KEY" > "$KEY_FILE" )
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          ssh-keyscan -t ed25519 github.com >> ~/.ssh/known_hosts 2>/dev/null
+          GIT_SSH_COMMAND="ssh -i $KEY_FILE -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
+            git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
+          git submodule status vendor/tracy/deepseek-harness
+
+      - name: Remove the deploy key
+        if: always()
+        run: rm -f "$RUNNER_TEMP/vendor_deploy"
+
+      - name: Set up Node from .node-version
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
+
+      # On the default branch the action only looks the key up (`cache-hit`); it restores nothing.
+      - name: Prepare pnpm and look up the store key
+        id: pnpm
+        uses: ./.github/actions/dsh-lib/hosted-pnpm
+        with:
+          scope: workspace
+
+      - name: Fill the store from the lockfile
+        if: steps.pnpm.outputs.cache-hit != 'true'
+        run: pnpm fetch
+
+      - name: Save the store under the default branch
+        if: steps.pnpm.outputs.cache-hit != 'true'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ${{ steps.pnpm.outputs.path }}
+          key: ${{ steps.pnpm.outputs.key }}
 
   # ─────────────────────────────────────────────────────────────────────────────────────────────
   # TEST GROWTH — added 2026-10-12. One line in the summary of EVERY non-draft pull request: test
