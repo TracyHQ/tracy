@@ -16,8 +16,241 @@
     {
       "path": "packages/cms/tracy-joomla-quickstart/translations/*/*/*/*.json",
       "reason": "CMS content translations; explanatory README files are not translation data."
+    },
+    {
+      "path": "packages/locale/tracy-locales/*/*.json",
+      "reason": "Interface language packs (de, es, fr, it, nl, zh); values are localized text shown to users."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/vi/*.json",
+      "reason": "Vietnamese interface language pack; values are localized text shown to users."
+    },
+    {
+      "path": "packages/wo/website-opportunities/domain/neutral-copy/*.json",
+      "reason": "Per-locale neutral copy for website opportunities (including the forbidden-phrases list keyed by locale); values are localized text."
     }
   ],
   "lines": [],
-  "objects": []
+  "objects": [
+    {
+      "path": "apps/tracy-web/src/lib/quickstart-releases.js",
+      "oid": "907ed3c9ccab76fbcaecde39d14991e3dfbd65ac",
+      "reason": "Reviewed text: the release reader after the move to JoomlArt-Products/joomlart-products. Its previous object carried two literal NUL separators, now written as \\u0000 escapes, so that old object cannot be decoded as text."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "03e1ed22b52f0a141604670b80c5af755d7eaf37",
+      "reason": "Bundle built from the interface language packs above, including the website opportunities labels; reviewed build output."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "53f190aee37b9ae3a50cea008e6ea36ab0af2b66",
+      "reason": "Bundle built from the Vietnamese interface language pack above, including the website opportunities labels; reviewed build output."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "81b5b21039bec790b64086ba4b87d97617c12258",
+      "reason": "Vietnamese interface bundle rebuilt for PR #5 from its localized JSON; exact output verified by the bundle and eight-language gates."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "b646fdc81fb6aaa4c149f6f214991013d27ce8dc",
+      "reason": "Interface language bundle rebuilt for PR #5 from its localized JSON; exact output verified by the bundle and eight-language gates."
+    },
+    {
+      "path": "packages/ui/tracy-assistant/lib/client.js",
+      "oid": "d4cda2efce909001292b70bd0658c85a684cbed7",
+      "reason": "Assistant bundle rebuilt for PR #5; inherited localized interface-language names are on changed minified lines. Authored source is English and the exact output passed the bundle gate."
+    },
+    {
+      "path": "packages/site/tracy-add-site/lib/client.js",
+      "oid": "c6f4cf910d8471f31a691168120bdb91fe247898",
+      "reason": "Reviewed generated Add site bundle for PR #5; reproducible from source and retains existing language-detection character ranges on changed minified lines."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.6/content-map.json",
+      "oid": "d390fd04b742260407f98e2095260518d7e9659d",
+      "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.6/presentation-lock.json",
+      "oid": "976fd27e671cb92c7ce0748adc98ca9af227990e",
+      "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.7/content-map.json",
+      "oid": "3575b301defc3f0440ef0d87c4f297f46b6895af",
+      "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.7/presentation-lock.json",
+      "oid": "976fd27e671cb92c7ce0748adc98ca9af227990e",
+      "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.8/content-map.json",
+      "oid": "12ab7c17bf2119036b4f03374e9acbacf1638299",
+      "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.8/presentation-lock.json",
+      "oid": "01232c87b1e9113922bf4002332d0a2b869c7abb",
+      "reason": "Third-party template demo content captured verbatim; the contract must match the demo byte for byte."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "bee4e091abc742c2967d7be83dc6aa6e51192c84",
+      "reason": "Exact generated translation bundle for PR #53. Rebuilt from its localized JSON dictionaries and checked for byte-for-byte reproducibility; authored executable source remains subject to English policy."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "84bcce538282172171709b1d3121a51679123278",
+      "reason": "Exact generated translation bundle for PR #53. Rebuilt from its localized JSON dictionaries and checked for byte-for-byte reproducibility; authored executable source remains subject to English policy."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "0243be2967998881460121b21d9102a5d2dd0a60",
+      "reason": "Exact generated translation bundle for PR #156 (Publish tour step wording). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "709365c193343077ee31d509852f6d6a3eede355",
+      "reason": "Exact generated translation bundle for PR #156 (Publish tour step wording). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "2f90d0646f3bf3f2d0a3e91cfab249cea2178fa8",
+      "reason": "Exact generated translation bundle for PR #186 (Sync step: what a sync does not bring). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "2c38e5e55224a975b0fdabe9d3c4c5e3bcb5fa7f",
+      "reason": "Exact generated translation bundle for PR #186 (Sync step: what a sync does not bring). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "87ee85eedff99beb43c461aac3c494d803183d18",
+      "reason": "Exact generated translation bundle for PR #186 after merging develop (Sync step: what a sync does not bring). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "cce9d9fea222ad33d3376f438f8027d3fc4b667e",
+      "reason": "Exact generated translation bundle for PR #186 after merging develop (Sync step: what a sync does not bring). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "8366f9fcda5de2b431afcc1eaa191250282b2f63",
+      "reason": "Exact regenerated language bundle for the PR #53 CI follow-up. Italian, Spanish and Chinese setup translations retain the required site term. The bundle reproduces from the localized JSON; future bytes still need review."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "68c645fe578fb2e7943bf191bba1b524ce962eae",
+      "reason": "Reviewed PR #92 generated interface translations for live access refusals; JSON sources are language dictionaries and the final bundles reproduce from the build scripts. Earlier output is retained only for commit-history validation."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "87073aedea878898422d7282155bb29b066a1567",
+      "reason": "Reviewed PR #92 generated interface translations for live access refusals; JSON sources are language dictionaries and the final bundles reproduce from the build scripts. Earlier output is retained only for commit-history validation."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "a545aeb683d97c1a46504d8c8ff2b47cf92846ed",
+      "reason": "Reviewed PR #92 generated interface translations for live access refusals; JSON sources are language dictionaries and the final bundles reproduce from the build scripts. Earlier output is retained only for commit-history validation."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "5ac40fe6527eebeaf11c5498ae8c6b6b2117464f",
+      "reason": "Reviewed PR #92 generated interface translation bundle after merging develop; JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "86ecd8bec58ef5d375c7298ac0878c62bd44dd15",
+      "reason": "Reviewed PR #92 generated interface translation bundle after merging develop; JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "077716d28c4276b595b17646008aef00d8260765",
+      "reason": "Reviewed generated interface translation bundle for the issue #104 push preview labels (Featured image, Page template, Alt text in eight languages); the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "e7c9c3c5c7bb8fc8e705ecfa85c7754a412a97d8",
+      "reason": "Reviewed generated interface translation bundle for the issue #104 push preview labels (Featured image, Page template, Alt text in eight languages); the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "33da0e19c4f6bdd3940b554a51537b98501aedf4",
+      "reason": "Reviewed PR #145 generated interface translations for a live site whose PHP is too old for Claude Cowork (sync.error.livePhpTooOld and livePhpTooOldPlain); the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "cddd79f6203247dc268f3e9349c1ae48c2eeae32",
+      "reason": "Reviewed PR #145 generated interface translations for a live site whose PHP is too old for Claude Cowork (sync.error.livePhpTooOld and livePhpTooOldPlain); the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "d483016f44c32b17342cbf14579be384be306c3b",
+      "reason": "Reviewed generated interface translation bundle for the issue #104 push preview labels after keeping the term template in Page template (eight languages); the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "d6d729644b77360b27f6acc776d9ac3f56bbd5fe",
+      "reason": "Reviewed generated interface translation bundle for the issue #104 push preview labels after keeping the term template in Page template (eight languages); the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "fff0dc518a111cfe7835ca687ddaf4e6ff0798ea",
+      "reason": "Reviewed generated interface translation bundle for the issue #105 Polylang refusal reason (eight languages, built on PR #129's labels); the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "cd60bf4120958904546a7180467d4ab17a175d5d",
+      "reason": "Reviewed generated interface translation bundle for the issue #105 Polylang refusal reason (eight languages, built on PR #129's labels); the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "ad6a617a1a3f88cbcb486b374a6453c2c2b5546d",
+      "reason": "Reviewed PR #145 generated interface translations for a live site whose PHP is too old for Claude Cowork (sync.error.livePhpTooOld and livePhpTooOldPlain), rebuilt after merging develop; the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "34b978d484941c6a8b67b68dfc489f35f2a04724",
+      "reason": "Reviewed PR #145 generated interface translations for a live site whose PHP is too old for Claude Cowork (sync.error.livePhpTooOld and livePhpTooOldPlain), rebuilt after merging develop; the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "74508765d682131c3b98738abf05cbe62d1d7f10",
+      "reason": "Reviewed PR #145 generated interface translations for a live site whose PHP is too old for Claude Cowork (sync.error.livePhpTooOld and livePhpTooOldPlain), rebuilt after merging develop again; the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "03f560608580ffec00c282f1d0c1068b025db945",
+      "reason": "Reviewed PR #145 generated interface translations for a live site whose PHP is too old for Claude Cowork (sync.error.livePhpTooOld and livePhpTooOldPlain), rebuilt after merging develop again; the JSON dictionaries and build scripts reproduce these exact bytes. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/cms/tracy-joomla-quickstart/contracts/ja-cagox/j6/1.0.2/content-coverage.json",
+      "oid": "c818c4b751aab1de3f9efbb1e31117e745e1dad4",
+      "reason": "Third-party template demo content captured verbatim (JA Cagox j6 1.0.2 coverage audit: VirtueMart country names in the shop address form); the contract must match the demo byte for byte."
+    },
+    {
+      "path": "apps/tracy-web/test/fixtures/template-customization-question-readiness/a/quickstart_ja-cagox_j6/ja-cagox-j6-database-1.0.1.sql.gz",
+      "oid": "deb59ade2c462cb79d1f6a9aa2169776f73ccb5e",
+      "reason": "Readiness test fixture for JA Cagox j6 1.0.1: a trimmed copy of the third-party template's pack (webroot and database), read only by the readiness tests."
+    },
+    {
+      "path": "apps/tracy-web/test/fixtures/template-customization-question-readiness/a/quickstart_ja-cagox_j6/ja-cagox-j6-webroot-1.0.1.tar.gz",
+      "oid": "fc095d87133701ffb459f8b286c28b0e10dc4566",
+      "reason": "Readiness test fixture for JA Cagox j6 1.0.1: a trimmed copy of the third-party template's pack (webroot and database), read only by the readiness tests."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "d053d8de625a3470c9b5d052dfff0c2d22889fc5",
+      "reason": "Intermediate bundle of commit c649a0dc6 (site brief v2 follow-ups, PR #1), approved by 2369e735b and dropped by 667a56dcf; a release pull request into main scans every develop commit again."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "b13e82900f2ee22b6334a916a6c6c05c42304f40",
+      "reason": "Intermediate Vietnamese bundle of commit c649a0dc6 (site brief v2 follow-ups, PR #1), approved by 2369e735b and dropped by 667a56dcf; a release pull request into main scans every develop commit again."
+    }
+  ]
 }
