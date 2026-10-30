@@ -1,0 +1,121 @@
+/**
+ * The site plan check of a brief build (spec TracyHQ/tracy#231, ticket #233): pure code, no model. It reads a site plan
+ * against the template inventory (`template-inventory.js`) and the brief, and lists EVERY reason it refuses the plan, so
+ * the author gets them all in one revision round.
+ *
+ * The site plan (`version: 'site-plan/1'`):
+ *   pages:        [{id, decision: 'keep' | 'drop' | 'add', copies?, route?, purpose, lead, facts: string[],
+ *                   items: string[], dependsOn: string[], seo?, reason?}] - an added page `copies` a template page
+ *                   (`page:<entity>`) or record page (`record-page:<id>`) of the inventory;
+ *   decisions:    [{element, decision: 'keep' | 'hide', reason?, count?, items?, picture?, icon?, action?}] - one per
+ *                   inventory element that is not a page; `count` for card collections, `action: {kind, target}` for
+ *                   buttons and links (kind: page, call, whatsapp, email, booking, map);
+ *   glossary:     [{name, kind, description}] - every item named on more than one page, written once;
+ *   writingOrder: page ids, a page after the pages it depends on;
+ *   outOfScope:   {template: [{element, reason}], brief: [{sourceId, reason}]};
+ *   identity, contact, legal, forms, seo: read by the later stages, not by this check.
+ *
+ * An element needs no decision of its own when the plan already takes it off: its section is hidden, its section's
+ * pages are all dropped, its card collection is hidden, or its card is past the collection's count.
+ */
+import { seeder } from '../../lib/seeder.js'
+
+import { buttonReasons, factReasons, glossaryReasons, orderReasons } from './site-plan-check-rules.js'
+
+/**
+ * @typedef {{rule: 'undecided' | 'decided-twice' | 'unknown-element' | 'added-page-layout' | 'over-capacity' |
+ *   'unsourced-fact' | 'missing-glossary' | 'writing-order-cycle' | 'writing-order-missing' | 'writing-order-late' | 'button-no-action',
+ *   element?: string, message: string}} PlanReason
+ */
+
+/**
+ * Check a site plan.
+ * @param {any} plan - the site plan
+ * @param {{inventory: {elements: any[]}, site: any}} input - the template inventory, and the brief as the writers get it
+ *   (the business fields, `statistics` and `factSheet`)
+ * @returns {Promise<{ok: boolean, reasons: PlanReason[]}>}
+ */
+export async function checkSitePlan(plan, { inventory, site }) {
+  const facts = await seeder('fact-sources')
+  /** @type {PlanReason[]} */
+  const reasons = []
+  const elements = new Map(inventory.elements.map((e) => [e.id, e]))
+  const pages = Array.isArray(plan?.pages) ? plan.pages : []
+  const decisions = Array.isArray(plan?.decisions) ? plan.decisions : []
+
+  /** @type {Map<string, any>} */
+  const decided = new Map()
+  for (const entry of [...pages.map((p) => ({ ...p, element: p.id })), ...decisions]) {
+    const id = String(entry?.element ?? '')
+    const known = elements.get(id)
+    if (!known && entry?.decision !== 'add')
+      reasons.push({
+        rule: 'unknown-element',
+        element: id,
+        message: `${id} is not an element of the template`
+      })
+    else if (decided.has(id))
+      reasons.push({ rule: 'decided-twice', element: id, message: `${id} has more than one decision` })
+    else decided.set(id, entry)
+  }
+
+  for (const page of pages.filter((p) => p?.decision === 'add')) {
+    const copies = elements.get(String(page.copies ?? ''))
+    if (!copies || !['page', 'record-page'].includes(copies.kind))
+      reasons.push({
+        rule: 'added-page-layout',
+        element: page.id,
+        message: `added page ${page.id} must copy an existing template page layout (a page or record page id); it names "${page.copies ?? ''}"`
+      })
+  }
+
+  const shownPages = new Set(pages.filter((p) => ['keep', 'add'].includes(p?.decision)).map((p) => p.id))
+  const off = takenOff(elements, decided)
+  for (const element of inventory.elements)
+    if (element.decide && !decided.has(element.id) && !off(element))
+      reasons.push({
+        rule: 'undecided',
+        element: element.id,
+        message: `${element.id} (${element.kind}) has no decision`
+      })
+
+  for (const [id, entry] of decided) {
+    const element = elements.get(id)
+    if (element?.kind !== 'cards' || entry.decision === 'hide' || off(element)) continue
+    const capacity = element.limits?.capacity ?? 0
+    if (Number(entry.count) > capacity)
+      reasons.push({
+        rule: 'over-capacity',
+        element: id,
+        message: `${id} holds at most ${capacity} cards; the plan places ${entry.count}`
+      })
+  }
+
+  reasons.push(...factReasons(plan, site, facts))
+  reasons.push(...glossaryReasons(plan, elements, shownPages))
+  reasons.push(...orderReasons(plan, shownPages))
+  reasons.push(...buttonReasons({ elements, decided, off, shownPages, site, facts }))
+  return { ok: reasons.length === 0, reasons }
+}
+
+/**
+ * Whether the plan already takes an element off without a decision of its own.
+ * @param {Map<string, any>} elements @param {Map<string, any>} decided
+ */
+function takenOff(elements, decided) {
+  const dropped = (/** @type {string} */ page) => decided.get(page)?.decision === 'drop'
+  const sectionOff = (/** @type {any} */ section) =>
+    !!section &&
+    (decided.get(section.id)?.decision === 'hide' ||
+      (section.pages?.length > 0 && section.pages.every(dropped)))
+  return (/** @type {any} */ element) => {
+    if (element.kind === 'section') return sectionOff(element)
+    if (element.section && sectionOff(elements.get(element.section))) return true
+    if (element.card) {
+      const cards = decided.get(element.card.collection)
+      if (cards?.decision === 'hide') return true
+      if (cards && Number.isInteger(cards.count) && element.card.index >= cards.count) return true
+    }
+    return false
+  }
+}
