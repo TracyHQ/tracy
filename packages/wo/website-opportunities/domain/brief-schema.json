@@ -910,6 +910,18 @@
           "isOwnPhoto": {
             "type": ["boolean", "null"],
             "description": "The business's own photo: from its uploader when known, else a Google author named as the business, else the vision model's reading; null when not known."
+          },
+          "isBlurry": {
+            "type": ["boolean", "null"],
+            "description": "The vision model found the photo out of focus or smeared by motion; null when no model looked (unknown, not bad)."
+          },
+          "hasTextOrWatermark": {
+            "type": ["boolean", "null"],
+            "description": "Words, a stamp, a logo or a watermark are written on the photo itself; null when no model looked (unknown, not bad)."
+          },
+          "showsOtherBusiness": {
+            "type": ["boolean", "null"],
+            "description": "Another business's brand, logo, shop front or packaging is clearly shown; null when no model looked (unknown, not bad)."
           }
         }
       }

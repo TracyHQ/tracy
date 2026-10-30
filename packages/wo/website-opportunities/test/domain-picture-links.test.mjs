@@ -188,6 +188,9 @@ test('a brief asset: text links win, then the model in the list, else general; n
     faceBoxes: [],
     peopleCount: null,
     isGraphic: null,
-    isOwnPhoto: null
+    isOwnPhoto: null,
+    isBlurry: null,
+    hasTextOrWatermark: null,
+    showsOtherBusiness: null
   })
 })

@@ -134,11 +134,11 @@ test('a label held without a list links nothing and carries no list digest', () 
 
 test('the cache key moves with the new prompt and schema', () => {
   // p6: the label a reader takes is made of a content label and its text links (item 27).
-  assert.equal(visionKey({ model: 'deepseek-chat' }), 'deepseek-chat|p6|s2|512q70')
+  assert.equal(visionKey({ model: 'deepseek-chat' }), 'deepseek-chat|p7|s3|512q70')
 })
 
 test('the content label has its own key, and that key has one prompt: no trade, no closed list', () => {
-  assert.equal(visionContentKey({ model: 'deepseek-chat' }), 'deepseek-chat|c1|s2|512q70')
+  assert.equal(visionContentKey({ model: 'deepseek-chat' }), 'deepseek-chat|c2|s3|512q70')
   assert.equal(isContentKey(visionContentKey({ model: 'm' })), true)
   assert.equal(isContentKey(visionKey({ model: 'm' })), false)
   assert.equal(pictureLabelSystem(null, null), PICTURE_LABEL_SYSTEM)

@@ -26,16 +26,17 @@ import { defectsOf, inspectionClause } from 'website-opportunities/domain/pictur
 // p3: the image-only code; p4: the content kind and caption the site brief shows for each asset (F08); p5: the brief's
 // offerings and team as a closed list, links with evidence, a v3 role, boxes instead of a focus word (#48); p6: the label
 // a reader takes, made of two cached halves (item 27): the content label (`visionContentKey`, prompt c1) and the links to
-// the brief's closed list asked of a text model from that content (`picture-link-text.js`, prompt l1).
-export const VISION_PROMPT_VERSION = 'p6'
+// the brief's closed list asked of a text model from that content (`picture-link-text.js`, prompt l1). p7 / c2: the same
+// call also answers sharpness, words or a watermark on the photo and another business shown (COO, 30/10/2026).
+export const VISION_PROMPT_VERSION = 'p7'
 /**
  * The content label's prompt: `pictureLabelSystem()` with no trade and no closed list, so what a photo shows is asked once
  * per photo and kept for good, whatever business or brief reads it (item 27). One prompt per key: every door that asks
  * this prompt writes under `visionContentKey`, and only this prompt is written there.
  */
-export const CONTENT_PROMPT_VERSION = 'c1'
-/** The answer's schema: s2 adds the links, role, boxes, people count, graphic and own-photo flags (#48). */
-const SCHEMA_VERSION = 's2'
+export const CONTENT_PROMPT_VERSION = 'c2'
+/** The answer's schema: s2 adds the links, role, boxes, people count, graphic and own-photo flags (#48); s3 the three risk flags. */
+const SCHEMA_VERSION = 's3'
 /** What a photo shows for any trade: the brief's asset vocabulary (`asset-labels.mjs`). */
 export const CONTENT_KINDS = ASSET_CONTENT_KINDS
 /** The thumbnail sent: long edge and JPEG quality (part of the cache key). */
@@ -89,7 +90,7 @@ export function listLines(closedList) {
 export function pictureLabelSystem(trade = null, closedList = null) {
   const tradeClause = typeof trade === 'string' && trade.trim() ? ` (trade: ${trade.trim()})` : ''
   return `You label photographs collected from the business's${tradeClause} public website and social media, so a web designer can choose which photo goes where on the business's website.
-Each picture follows a line "Picture id: <id>". Answer with JSON only: {"pictures": [{"id": "<id>", "subject": "...", "content": "...", "textPresence": "...", "hasTextOverlay": false, "isCollage": false, "quality": "...", "heroWorthy": false, "oneLine": "...", "caption": "...", "depicts": "general", "depictsEvidence": "...", "portraitOf": null, "portraitEvidence": "...", "role": "...", "subjectBox": [0, 0, 1, 1], "faceBoxes": [], "peopleCount": 0, "isGraphic": false, "isOwnPhoto": true}]} — one entry per picture, with the id exactly as given.
+Each picture follows a line "Picture id: <id>". Answer with JSON only: {"pictures": [{"id": "<id>", "subject": "...", "content": "...", "textPresence": "...", "hasTextOverlay": false, "isCollage": false, "quality": "...", "heroWorthy": false, "oneLine": "...", "caption": "...", "depicts": "general", "depictsEvidence": "...", "portraitOf": null, "portraitEvidence": "...", "role": "...", "subjectBox": [0, 0, 1, 1], "faceBoxes": [], "peopleCount": 0, "isGraphic": false, "isOwnPhoto": true, "isBlurry": false, "hasTextOrWatermark": false, "showsOtherBusiness": false}]} — one entry per picture, with the id exactly as given.
 ${listLines(closedList)}
 - subject: one of ${SUBJECTS.join(', ')}. "poster" = a designed graphic, flyer or announcement; "menu-board" = a menu, price list or chalkboard; "interior" = the inside space of the business; "exterior" = the building, terrace, garden or view outside; "people" = staff or guests are the subject; "service-in-action" = a service, class or treatment being performed; "work-result" = finished work or the result of a service; "equipment" = tools, machines or gear of the business; "room" = a treatment room, studio, classroom, gym floor or guest room; "product" = a retail item or product for sale.
 - content: one of ${CONTENT_KINDS.join(', ')}. "people-in-action" = people doing the business's work or taking part in it (a class, a treatment, a chef cooking, guests at an event); "team" = the staff posing or introduced; "venue-interior" / "venue-exterior" = the space inside / the building, terrace or view outside; "product" = an item for sale or a finished piece of work; "food" = food or drink; "equipment" = tools, machines or gear; "logo" = the business's mark alone; "text-graphic" = a flyer, poster, menu, price list or any picture made mostly of words; "other" = none of these.
@@ -101,6 +102,9 @@ ${listLines(closedList)}
 - role: where on a website the picture fits, one of ${PHOTO_ROLES.join(', ')}. "offering.image" needs depicts; "person.image" needs portraitOf; a general photo of the business is "business.gallery_image".
 - subjectBox: [x, y, width, height] of the main subject, as fractions 0 to 1 of the picture from its top left. faceBoxes: one such box per visible face, [] for none. peopleCount: how many people are visible.
 - isGraphic: true for a logo, flyer, banner, menu, price list, screenshot, stock illustration or placeholder rather than a photograph.
+- isBlurry: true when the photo is out of focus or smeared by motion so that its subject is not sharp; false when the subject is sharp.
+- hasTextOrWatermark: true when words, a logo, a stamp or a watermark are written on the photo itself (not signs that are part of the scene); false otherwise.
+- showsOtherBusiness: true when another business's brand, logo, shop front or product packaging is clearly shown; false otherwise.
 - isOwnPhoto: true when it looks taken or published by the business (staged, its own space, its staff); false when it looks like a guest's snapshot.
 - heroWorthy: true only for a sharp, well-lit, wide photo of the business, its space, its work or a signature item with no words on it, fit for the top of a homepage.
 - oneLine: at most 12 words saying what is shown.

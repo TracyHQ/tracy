@@ -16,6 +16,13 @@ export const POSTS_MAX = 20
 
 const text = (/** @type {unknown} */ v) => (typeof v === 'string' ? v.trim() : '')
 const unique = (/** @type {string[]} */ list) => [...new Set(list.filter(Boolean))]
+/** The risk labels a photo record holds (booleans); an unknown one stays out, so it is never read as bad. */
+const riskLabelsOf = (/** @type {any} */ a) =>
+  Object.fromEntries(
+    ['isBlurry', 'hasTextOrWatermark', 'showsOtherBusiness']
+      .filter((field) => typeof a?.[field] === 'boolean')
+      .map((field) => [field, a[field]])
+  )
 const quoteOf = (/** @type {any} */ q) => text(q?.quote ?? q?.text)
 
 /**
@@ -32,7 +39,8 @@ export function briefFactSheet(brief) {
   const photosOf = (/** @type {string} */ id) =>
     unique(assets.filter((a) => a?.depicts?.id === id).map((a) => text(a?.caption))).map((label) => ({
       sourceId: `photo-${(photoCount += 1)}`,
-      label
+      label,
+      ...riskLabelsOf(assets.find((a) => a?.depicts?.id === id && text(a?.caption) === label))
     }))
   const offerings = (Array.isArray(reading.services) ? reading.services : [])
     .filter((s) => text(s?.label))

@@ -127,6 +127,12 @@ export function focusOfBox(box) {
   return dy < 0 ? 'top' : 'bottom'
 }
 
+/**
+ * The labels the vision step answers beside the links (COO, 30/10/2026): sharpness, words or a watermark on the photo, another
+ * business shown. A boolean when a model looked; absent (null on the brief's photo record) is unknown, never bad.
+ */
+export const PHOTO_RISK_LABELS = Object.freeze(['isBlurry', 'hasTextOrWatermark', 'showsOtherBusiness'])
+
 /** The role a photo may fill given its links: offering and person roles need their link, a graphic fills none but the logo. */
 function roleFor(role, { depicts, portraitOf, isGraphic, content }) {
   if (content === 'logo') return 'business.logo'
@@ -165,6 +171,7 @@ export function heldVisionLinks(entry, list) {
   if (typeof entry?.isGraphic === 'boolean' || graphicByKind)
     out.isGraphic = entry?.isGraphic === true || graphicByKind
   if (typeof entry?.isOwnPhoto === 'boolean') out.isOwnPhoto = entry.isOwnPhoto
+  for (const field of PHOTO_RISK_LABELS) if (typeof entry?.[field] === 'boolean') out[field] = entry[field]
   out.role = roleFor(entry?.role, { ...out, content: entry?.content })
   return out
 }
@@ -242,6 +249,7 @@ export function assetRelationsOf(m, { list = null, posts = [], businessName = nu
     faceBoxes: seen?.faceBoxes ?? [],
     peopleCount: seen && 'peopleCount' in seen ? seen.peopleCount : null,
     isGraphic,
-    isOwnPhoto: owner === 'owner' ? true : owner === 'customer' ? false : (seen?.isOwnPhoto ?? null)
+    isOwnPhoto: owner === 'owner' ? true : owner === 'customer' ? false : (seen?.isOwnPhoto ?? null),
+    ...Object.fromEntries(PHOTO_RISK_LABELS.map((field) => [field, seen?.[field] ?? null]))
   }
 }
