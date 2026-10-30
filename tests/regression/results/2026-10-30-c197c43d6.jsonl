@@ -1,0 +1,4 @@
+{"id":"REG-PR-253-firewall-blocked-write","verdict":"PASS","commit":"c197c43d6423e2b8c61afa5e25abed313c14b5c2","ran_at":"2026-10-30T16:53:34.513Z","evidence":"tests/regression/.runs/2026-10-30-c197c43d6/REG-PR-253-firewall-blocked-write.log"}
+{"id":"REG-PR-253-lost-create-settled","verdict":"PASS","commit":"c197c43d6423e2b8c61afa5e25abed313c14b5c2","ran_at":"2026-10-30T16:54:23.335Z","evidence":"tests/regression/.runs/2026-10-30-c197c43d6/REG-PR-253-lost-create-settled.log"}
+{"id":"REG-PR-253-record-cut-undone","verdict":"PASS","commit":"c197c43d6423e2b8c61afa5e25abed313c14b5c2","ran_at":"2026-10-30T16:54:23.852Z","evidence":"tests/regression/.runs/2026-10-30-c197c43d6/REG-PR-253-record-cut-undone.log"}
+{"id":"REG-PR-253-undo-retry","verdict":"PASS","commit":"c197c43d6423e2b8c61afa5e25abed313c14b5c2","ran_at":"2026-10-30T16:54:39.553Z","evidence":"tests/regression/.runs/2026-10-30-c197c43d6/REG-PR-253-undo-retry.log"}
