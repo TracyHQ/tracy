@@ -1006,9 +1006,14 @@ function Demos({
         ) : (
           <div className="tracy-wo-row tracy-wo-wrap">
             <p className="tracy-wo-muted">
-              {status.current === null
-                ? t('brief.number', { n: status.n })
-                : t(status.current ? 'brief.current' : 'brief.stale', { n: status.n, when })}
+              {status.madeWhileLabelling
+                ? t('brief.madeWhileLabelling', { n: status.n, when })
+                : status.current === null
+                  ? t('brief.number', { n: status.n })
+                  : t(status.current ? 'brief.current' : 'brief.stale', { n: status.n, when })}
+              {status.labelling
+                ? ` ${t('brief.labellingProgress', { looked: status.labelling.looked, total: status.labelling.total })}`
+                : ''}
             </p>
             <Button type="button" size="xs" variant="outline" onClick={() => onOpen(status.id, status.n)}>
               <FileText aria-hidden="true" />

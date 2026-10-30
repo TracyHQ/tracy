@@ -639,6 +639,10 @@ export interface BriefStatus {
   createdAt: string | null
   /** Whether the research still reads as it did; null when the server could not tell. */
   current: boolean | null
+  /** The brief was made while photos were still being looked at. */
+  madeWhileLabelling: boolean
+  /** Photos looked at so far while the labelling still runs, else null. */
+  labelling: { looked: number; total: number } | null
 }
 
 /** The Details answer's `brief`: the latest brief of this research, or null before the first build. */
@@ -650,8 +654,18 @@ export function briefStatus(brief: unknown): BriefStatus | null {
     id: b.id,
     n: b.n,
     createdAt: typeof b.createdAt === 'string' ? b.createdAt : null,
-    current: typeof b.current === 'boolean' ? b.current : null
+    current: typeof b.current === 'boolean' ? b.current : null,
+    madeWhileLabelling: b.madeWhileLabelling === true,
+    labelling: labellingOf(b.labelling)
   }
+}
+
+function labellingOf(value: unknown): { looked: number; total: number } | null {
+  if (typeof value !== 'object' || value === null) return null
+  const v = value as Record<string, unknown>
+  return typeof v.looked === 'number' && typeof v.total === 'number' && v.total > 0
+    ? { looked: v.looked, total: v.total }
+    : null
 }
 
 export interface TripadvisorReviewView {

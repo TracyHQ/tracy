@@ -151,6 +151,8 @@
   "answer.yes": "Sí",
   "brief.current": "Brief {n} · al día · creado {when} a partir de esta investigación",
   "brief.failed": "No se pudo crear un nuevo site brief.",
+  "brief.labellingProgress": "Revisando fotos {looked}/{total}. Actualiza cuando termine.",
+  "brief.madeWhileLabelling": "Brief {n} · creado mientras aún se revisaban las fotos ({when})",
   "brief.none": "Aún no hay site brief: se crea a partir de esta investigación cuando construyes una demo.",
   "brief.number": "Brief {n}",
   "brief.readOnly": "Solo lectura. Creado a partir de la investigación, no indica CMS ni template: eliges ambos al construir.",

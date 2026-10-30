@@ -4234,6 +4234,8 @@ window.__ModuleLoader__.load({
               "answer.yes": "Có",
               "brief.current": "Brief {n} · mới nhất · làm {when} từ research này",
               "brief.failed": "Không làm được site brief mới.",
+              "brief.labellingProgress": "Đang xem ảnh {looked}/{total}. Hãy làm mới khi xong.",
+              "brief.madeWhileLabelling": "Brief {n} · được tạo khi ảnh vẫn đang được xem ({when})",
               "brief.none": "Chưa có site brief: brief được làm từ research này khi bạn dựng demo.",
               "brief.number": "Bản brief {n}",
               "brief.readOnly": "Chỉ đọc. Làm từ research, brief không ghi CMS hay template: bạn chọn cả hai khi dựng.",

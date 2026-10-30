@@ -151,6 +151,8 @@
   "answer.yes": "是",
   "brief.current": "简报 {n} · 最新 · {when}根据这份调研生成",
   "brief.failed": "无法生成新的 site brief。",
+  "brief.labellingProgress": "正在查看照片 {looked}/{total}。完成后请刷新。",
+  "brief.madeWhileLabelling": "简报 {n} · 在照片仍在查看时生成（{when}）",
   "brief.none": "还没有 site brief：构建演示时会根据这份调研生成。",
   "brief.number": "简报 {n}",
   "brief.readOnly": "只读。它根据调研生成，不指定 CMS 或 template：构建时由你选择。",

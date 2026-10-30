@@ -151,6 +151,8 @@
   "answer.yes": "Ja",
   "brief.current": "Brief {n} · actueel · {when} van dit onderzoek gemaakt",
   "brief.failed": "Kon geen nieuwe site brief maken.",
+  "brief.labellingProgress": "Foto’s worden bekeken {looked}/{total}. Vernieuw zodra het klaar is.",
+  "brief.madeWhileLabelling": "Brief {n} · gemaakt terwijl de foto’s nog werden bekeken ({when})",
   "brief.none": "Nog geen site brief: die wordt van dit onderzoek gemaakt wanneer je een demo bouwt.",
   "brief.number": "Briefing {n}",
   "brief.readOnly": "Alleen lezen. Gemaakt van het onderzoek, noemt het geen CMS of template: je kiest beide bij het bouwen.",

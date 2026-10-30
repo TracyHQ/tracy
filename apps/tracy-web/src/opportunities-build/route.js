@@ -256,11 +256,24 @@ export function createWebsiteBuilder(deps) {
     // 🔒 A brief made while its photos were still being looked at is never "up to date": the labels it lacked may have
     // arrived, and only a Refresh reads them (`labellingUnsettled`), so the page must offer one.
     const settled = !labellingUnsettled({ assetLabelling: { status: same?.labelling_status } })
+    // The shown brief was made while the photos were still being looked at (labelling or stalled): the page says so,
+    // and while the labelling still runs it shows how far it is, so the person knows when a Refresh is worth it.
+    const madeWhileLabelling = labellingUnsettled({ assetLabelling: { status: shown.labelling_status } })
+    const progress = madeWhileLabelling
+      ? await deps.photoLabelling
+          ?.progress({ accountId: opp.account_id, opportunityId: opp.id })
+          .catch(() => null)
+      : null
     return {
       id: shown.id,
       n: shown.n,
       createdAt: shown.created_at,
-      current: known ? Boolean(same) && settled : null
+      current: known ? Boolean(same) && settled : null,
+      madeWhileLabelling,
+      labelling:
+        progress?.state === 'running' && progress.total > 0
+          ? { looked: progress.looked, total: progress.total }
+          : null
     }
   }
 

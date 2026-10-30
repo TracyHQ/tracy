@@ -151,6 +151,8 @@
   "answer.yes": "Ja",
   "brief.current": "Brief {n} · aktuell · {when} aus dieser Recherche erstellt",
   "brief.failed": "Neuer Site-Brief konnte nicht erstellt werden.",
+  "brief.labellingProgress": "Fotos werden angesehen {looked}/{total}. Aktualisiere, wenn es fertig ist.",
+  "brief.madeWhileLabelling": "Brief {n} · erstellt, während die Fotos noch angesehen wurden ({when})",
   "brief.none": "Noch kein Site-Brief: Er wird aus dieser Recherche erstellt, wenn du eine Demo baust.",
   "brief.number": "Briefing {n}",
   "brief.readOnly": "Nur lesen. Aus der Recherche erstellt, nennt er weder CMS noch Template: Beides wählst du beim Bauen.",

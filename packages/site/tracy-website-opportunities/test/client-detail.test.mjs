@@ -413,10 +413,20 @@ test('demoRows: every demo newest first, numbered by age, with its CMS, template
 
 test('demoRows: a finished demo whose final check left blockers is marked as needing fixes, not live', async () => {
   const { demoRows } = await import('../src/client/detail-model.ts')
-  const blockers = { state: 'needs-fixes', items: [{ rule: 'demo-content', pages: ['/'], count: 2 }], total: 2 }
+  const blockers = {
+    state: 'needs-fixes',
+    items: [{ rule: 'demo-content', pages: ['/'], count: 2 }],
+    total: 2
+  }
   const rows = demoRows(
     [
-      { id: 'b1', state: 'completed', siteKey: 'a.test', createdAt: '2026-10-20T08:00:00Z', receipt: { blockers } },
+      {
+        id: 'b1',
+        state: 'completed',
+        siteKey: 'a.test',
+        createdAt: '2026-10-20T08:00:00Z',
+        receipt: { blockers }
+      },
       {
         id: 'b2',
         state: 'completed',
@@ -442,7 +452,9 @@ test('briefStatus: the latest brief and whether the research still reads the sam
     id: 'r2',
     n: 2,
     createdAt: '2026-10-24T08:00:00Z',
-    current: false
+    current: false,
+    madeWhileLabelling: false,
+    labelling: null
   })
   assert.equal(briefStatus({ id: 'r2', n: 2, current: true }).current, true)
   assert.equal(briefStatus({ id: 'r2', n: 2, current: null }).current, null, 'unknown stays unknown')
@@ -780,4 +792,27 @@ test('Google amenities any trade can have read as amenities: restroom, accessibi
   )
   assert.deepEqual(view.notOffered, ['acceptsCashOnly'])
   for (const id of ids) assert.equal(typeof EN_STRINGS[`amenity.${id}`], 'string', id)
+})
+
+test('a brief made while photos were still being looked at: the approved wording renders with its values', async () => {
+  const { briefStatus } = await import('../src/client/detail-model.ts')
+  const fill = (key, params) => EN_STRINGS[key].replace(/\{(\w+)\}/g, (_, name) => String(params[name]))
+  const status = briefStatus({
+    id: 'r3',
+    n: 3,
+    current: false,
+    madeWhileLabelling: true,
+    labelling: { looked: 12, total: 40 }
+  })
+  assert.equal(status.madeWhileLabelling, true)
+  assert.deepEqual(status.labelling, { looked: 12, total: 40 })
+  assert.equal(
+    fill('brief.madeWhileLabelling', { n: status.n, when: '2 hours ago' }),
+    'Brief 3 \u00b7 made while photos were still being looked at (2 hours ago)'
+  )
+  assert.equal(
+    fill('brief.labellingProgress', status.labelling),
+    'Looking at photos 12/40. Refresh when it is done.'
+  )
+  assert.equal(briefStatus({ id: 'r3', n: 3, labelling: { looked: 1, total: 0 } }).labelling, null)
 })

@@ -827,6 +827,9 @@ export const en = {
   /** Details: every demo of the place with what it was built with, and the latest brief's status. */
   'brief.current': 'Brief {n} · up to date · made {when} from this research',
   'brief.stale': 'Brief {n} · the research changed since this brief ({when})',
+  /** A brief made by Refresh while the photos were still being labelled, and how far that labelling is. */
+  'brief.madeWhileLabelling': 'Brief {n} · made while photos were still being looked at ({when})',
+  'brief.labellingProgress': 'Looking at photos {looked}/{total}. Refresh when it is done.',
   'brief.view': 'View brief',
   'brief.refresh': 'Refresh',
   'brief.refreshing': 'Refreshing…',
