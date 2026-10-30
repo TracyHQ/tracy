@@ -201,6 +201,11 @@ const FIX_KEYS: Readonly<Record<string, string>> = {
   'record-not-from-brief': 'fix.recordNotFromBrief',
   'missing-head-block': 'fix.missingHeadBlock',
   'link-without-job': 'fix.linkWithoutJob',
+  'sibling-copy-shape': 'fix.siblingCopyShape',
+  'sibling-record-pages': 'fix.siblingRecordPages',
+  'footer-shape': 'fix.footerShape',
+  'contact-page': 'fix.contactPage',
+  'pictures-fit-record': 'fix.picturesFitRecord',
   'kept-page-missing': 'fix.keptPageMissing'
 }
 

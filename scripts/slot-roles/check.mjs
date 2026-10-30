@@ -67,6 +67,7 @@ import { ctaBandProblems } from '../../packages/wo/website-opportunities/domain/
 import { layoutBandProblems } from '../../packages/wo/website-opportunities/domain/layout-bands.mjs'
 import { contactBlockProblems } from '../../packages/wo/website-opportunities/domain/footer-contact-shape.mjs'
 import { recordPageProblems } from '../../packages/wo/website-opportunities/domain/record-pages.mjs'
+import { declarationsOf } from '../../packages/wo/website-opportunities/domain/build-rules.mjs'
 import { lintContractDir, lintSummary } from '../../apps/tracy-web/src/lib/content-map-lint.js'
 import { lintItemIconGrounds } from '../../apps/tracy-web/src/lib/content-map-lint-icons.js'
 import { fieldMapRolesOf } from '../../apps/tracy-web/src/lib/emdash-field-map-roles.js'
@@ -217,6 +218,16 @@ export function navigationGroupErrors(dir) {
   }
 }
 
+/** The packing check of each declaration the registry names (`declares[].problems`), by that name. */
+export const DECLARATION_CHECKS = Object.freeze({
+  buttonActionProblems: buttonActionErrors,
+  navigationGroupProblems: navigationGroupErrors,
+  ctaBandProblems: ctaBandErrors,
+  layoutBandProblems: layoutBandErrors,
+  contactBlockProblems: contactBlockErrors,
+  recordPageProblems: recordPageErrors
+})
+
 /** The errors of the roles an EmDash theme declares in its field map, or null when the contract has none declared. */
 function fieldMapResult(dir) {
   const { cms, seedDir } = contractSlotInventory(dir)
@@ -276,36 +287,20 @@ export function checkAllSlotRoles(rootDir = DEFAULT_ROOT, explicitDirs = null) {
   const lint = candidates
     .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, ...lintContractDir(dir) }))
     .filter((l) => l.declared)
-  // A named (packing) contract refuses an undeclared button; the whole tree only counts the released maps that would.
-  const buttons = candidates
-    .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, errors: buttonActionErrors(dir) }))
-    .filter((b) => b.errors.length > 0)
-  if (named) for (const b of buttons) for (const error of b.errors) errors.push(`${b.dir}: ${error}`)
-  // The same for footer link columns: a named contract refuses one not declared as a navigation group.
-  const navigation = candidates
-    .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, errors: navigationGroupErrors(dir) }))
-    .filter((n) => n.errors.length > 0)
-  if (named) for (const n of navigation) for (const error of n.errors) errors.push(`${n.dir}: ${error}`)
-  // The same for call-to-action bands: a named contract refuses one not declared, or declared with no message slot role.
-  const bands = candidates
-    .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, errors: ctaBandErrors(dir) }))
-    .filter((b) => b.errors.length > 0)
-  if (named) for (const b of bands) for (const error of b.errors) errors.push(`${b.dir}: ${error}`)
-  // The same for layout bands: a named contract refuses a decoration beside working parts that no band declares.
-  const layoutBands = candidates
-    .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, errors: layoutBandErrors(dir) }))
-    .filter((b) => b.errors.length > 0)
-  if (named) for (const b of layoutBands) for (const error of b.errors) errors.push(`${b.dir}: ${error}`)
-  // The same for footer contact blocks: a named contract refuses a footer's contact lines no block declares.
-  const contactBlocks = candidates
-    .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, errors: contactBlockErrors(dir) }))
-    .filter((b) => b.errors.length > 0)
-  if (named) for (const b of contactBlocks) for (const error of b.errors) errors.push(`${b.dir}: ${error}`)
-  // The same for record pages: a named contract refuses sibling record pages no entry declares a layout for.
-  const recordPages = candidates
-    .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, errors: recordPageErrors(dir) }))
-    .filter((b) => b.errors.length > 0)
-  if (named) for (const b of recordPages) for (const error of b.errors) errors.push(`${b.dir}: ${error}`)
+  // 🔒 WHAT A TEMPLATE MUST DECLARE COMES FROM THE SITE BUILD RULES REGISTRY (`build-rules.mjs` `declarationsOf`): each
+  // declaration a rule needs is judged here; a named (packing) contract refuses a missing or malformed one, the whole tree
+  // only counts the released maps that would, because released contracts are never edited.
+  const declared = {}
+  for (const { field, problems } of declarationsOf().filter((d) => d.problems)) {
+    const errorsOf = DECLARATION_CHECKS[problems]
+    if (typeof errorsOf !== 'function') throw new Error(`no packing check for the declaration "${problems}"`)
+    declared[field] = candidates
+      .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, errors: errorsOf(dir) }))
+      .filter((b) => b.errors.length > 0)
+    if (named)
+      for (const b of declared[field]) for (const error of b.errors) errors.push(`${b.dir}: ${error}`)
+  }
+  const { buttons, navigation, bands, layoutBands, contactBlocks, recordPages } = declared
   return {
     ok: errors.length === 0,
     checkedCount: dirs.length,

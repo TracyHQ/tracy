@@ -7,7 +7,11 @@ import { tmpdir } from 'node:os'
 import path from 'node:path'
 import test from 'node:test'
 import { fileURLToPath } from 'node:url'
-import { checkAllSlotRoles } from '../slot-roles/check.mjs'
+import { DECLARATION_CHECKS, checkAllSlotRoles } from '../slot-roles/check.mjs'
+import { declarationsOf } from '../../packages/wo/website-opportunities/domain/build-rules.mjs'
+import { LINT_RULES } from '../../apps/tracy-web/src/lib/content-map-lint.js'
+import { ICON_GROUND_RULE } from '../../apps/tracy-web/src/lib/content-map-lint-icons.js'
+import { generatedFiles } from '../build-rules/gen.mjs'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..')
 const CHECK = path.join(ROOT, 'scripts/slot-roles/check.mjs')
@@ -133,4 +137,36 @@ test('run as a script on one contract, it exits 1 and says why', (t) => {
   const run = spawnSync(process.execPath, [CHECK, dir], { encoding: 'utf8' })
   assert.equal(run.status, 1)
   assert.match(run.stderr, /unknown role "quote\.speaker"/)
+})
+
+test('the packing check judges every declaration the site build rules registry names, by its own function', () => {
+  const declared = declarationsOf()
+  for (const d of declared.filter((x) => x.problems))
+    assert.equal(typeof DECLARATION_CHECKS[d.problems], 'function', `${d.rule} needs ${d.problems}`)
+  const lintIds = new Set([...LINT_RULES, ICON_GROUND_RULE].map((r) => r.id))
+  for (const d of declared.filter((x) => x.lint))
+    assert.ok(lintIds.has(d.lint), `${d.rule} names lint ${d.lint}`)
+})
+
+test('a template missing or breaking a declaration a rule needs is refused by the packing check', (t) => {
+  const keys = declarationsOf().filter((d) => d.problems && /^[A-Za-z]+$/.test(d.key))
+  assert.ok(keys.length >= 5)
+  for (const d of keys) {
+    const { root, dir } = treeWith(t, (map) => ({ ...map, [d.key]: 'not-a-list' }))
+    const res = checkAllSlotRoles(root, [dir])
+    assert.equal(res.ok, false, `${d.rule}: a broken ${d.key} passed the packing check`)
+    assert.ok(
+      res.errors.some((e) => e.startsWith(CONTRACT)),
+      d.key
+    )
+  }
+})
+
+test('the site build rules doc and the quickstart-contract block are what the registry says', () => {
+  for (const { file, text } of generatedFiles(ROOT))
+    assert.equal(
+      readFileSync(path.join(ROOT, file), 'utf8'),
+      text,
+      `${file}: run node scripts/build-rules/gen.mjs`
+    )
 })

@@ -8,32 +8,13 @@
  * address no page has, so the not-found page is read too (C16). A link to an address that answers 404 is a link that
  * leads nowhere (C19). A page that cannot be read is listed as unread, never as clean.
  */
-import { checkMainMenu } from './main-menu-check.js'
-import { checkFooterNavigation } from './footer-navigation-check.js'
-import { checkCtaBands } from './cta-band-check.js'
-import { checkSelfLinks } from './self-link-check.js'
-import { checkButtonsVideos } from './buttons-videos-check.js'
-import { peopleCardFindings } from './people-card-check.js'
-import { statisticFindings } from './statistic-check.js'
+import { ruleOfFinding } from 'website-opportunities/domain/build-rules.mjs'
 import { keptPageReader } from '../lib/kept-page-reader.js'
 import { keepEngineReport } from './engine-report.js'
 import { contentMapOfTemplate } from './brief-build-path.js'
 import { ownStylesheets, MAX_STYLES } from '../lib/own-stylesheets.js'
-import { checkPageIntros } from './page-intro-check.js'
-import { checkOfferingSummaries } from './offering-summary-check.js'
-import { checkOfferingRows } from './offering-rows-check.js'
-import { checkSiblingCopy } from './sibling-copy-check.js'
-import { checkRecordPages } from './record-pages-check.js'
-import { checkReviewQuotes } from './review-quotes-check.js'
-import { checkContactForms } from './contact-form-check.js'
-import { checkContactPage } from './contact-page-check.js'
-import { checkEmptyFrames } from './empty-frame-check.js'
-import { checkHeadBlocks } from './head-block-check.js'
-import { checkPageSeo, unusedBriefContent } from './page-seo-check.js'
-import { checkRecordSlots } from './record-slot-check.js'
-import { checkRepeatedCopy } from './repeated-copy-check.js'
-import { checkRepeatedBlocks } from './repeated-block-check.js'
-import { seeder } from '../lib/seeder.js'
+import { unusedBriefContent } from './page-seo-check.js'
+import { runRuleChecks } from './build-rule-checks.js'
 
 /** The most pages one check reads: a brief build's site has a handful, a demo's showcase branch can have dozens. */
 export const MAX_PAGES = 24
@@ -42,6 +23,12 @@ export { MAX_STYLES, ownStylesheets }
 export const MISSING_PROBE = '/tracy-leftover-check-missing-page'
 /** Findings kept on the receipt; the rest are counted. */
 const FINDINGS_KEPT = 400
+
+/** A finding with the id of the site build rule it belongs to (`rule`), when one owns it. */
+function withRule(finding) {
+  const rule = ruleOfFinding(finding)
+  return rule ? { ...finding, rule: rule.id } : finding
+}
 
 /** The site's own page addresses a page links to (same site, no files, no anchors). */
 function ownLinks(html) {
@@ -144,16 +131,32 @@ export async function runLeftoverCheck({
   const broken = answers.filter((a) => kept.includes(a.path))
   if (!served.includes('/') && !broken.some((b) => b.path === '/'))
     broken.unshift({ path: '/', status: null, why: 'the home page was not served with 200' })
-  const mainMenu = sitePlan ? checkMainMenu({ pages, sitePlan, origin: siteOrigin }) : null
+  // 🔒 THE CHECKS COME FROM THE REGISTRY (`website-opportunities/domain/build-rules.mjs`): every check a site build rule
+  // names runs here, once (`build-rule-checks.js`); the report keeps each check's own field as before.
+  const raw = await runRuleChecks({
+    pages,
+    contentMap,
+    brief,
+    sitePlan,
+    siteOrigin,
+    missing,
+    styles,
+    broken,
+    missingPath: MISSING_PROBE,
+    check,
+    contactCheck,
+    heroCheck
+  })
+  const mainMenu = raw['main-menu']
   // The footer link columns list every kept page (COO decision, #189 item 12), where the map declares them.
-  const footerNavigation = checkFooterNavigation({ pages, sitePlan, contentMap, origin: siteOrigin })
+  const footerNavigation = raw['footer-navigation']
   // A button never leads to the page it sits on (COO decision, #189 item 23).
-  const selfLinks = checkSelfLinks({ pages, origin: siteOrigin })
+  const selfLinks = raw['self-links']
   // No play control opens an empty frame, a channel's line leads to that channel, one page has one name (#189 round 9, C).
-  const buttonsVideos = checkButtonsVideos({ pages, sitePlan, origin: siteOrigin })
-  const checked = check({ pages, contentMap, brief, missing, styles, broken })
-  const people = peopleCardFindings({ pages, contentMap, brief })
-  const statistics = statisticFindings({ pages, contentMap, brief })
+  const buttonsVideos = raw['buttons-videos']
+  const checked = raw['demo-leftovers']
+  const people = raw['people-cards']
+  const statistics = raw.statistics
   const report = {
     ...checked,
     pass: checked.pass && people.length === 0 && statistics.length === 0,
@@ -165,53 +168,50 @@ export async function runLeftoverCheck({
     }
   }
   // A contact fact the brief holds that no page shows (address, email, phone, hours): reported beside the leftovers.
-  const contactMissing = typeof contactCheck === 'function' ? contactCheck({ pages, brief }) : []
+  const contactMissing = raw['contact-facts']
   // Which of what, where and how to contact the home page's first screen does not answer (`hero-first-screen.mjs`).
-  const heroMissing = typeof heroCheck === 'function' ? heroCheck({ pages, brief }) : []
-  const pageIntros = checkPageIntros({ pages, sitePlan })
-  const offeringSummaries = checkOfferingSummaries({ pages, brief })
-  const reviewQuotes = checkReviewQuotes({ pages, brief })
+  const heroMissing = raw['hero-first-screen']
+  const pageIntros = raw['page-intros']
+  const offeringSummaries = raw['offering-summaries']
+  const reviewQuotes = raw['review-quotes']
   report.findings.push(...reviewQuotes)
   // No line under an offering's name only repeats it, and one list's cards share one set of row labels (#189 round 9).
-  const offeringRows = checkOfferingRows({ pages, brief })
+  const offeringRows = raw['offering-rows']
   report.findings.push(...offeringRows)
   // The cards of one list share one text shape, one record one shape everywhere, one spelling per site (COO rule 30/10/2026).
-  const siblingCopy = checkSiblingCopy({ pages })
+  const siblingCopy = raw['sibling-copy']
   report.findings.push(...siblingCopy)
   // Sibling record pages: each shows its own pictures and its own words, no empty card, no blog pager (#189 rules 1-3).
-  const recordPages = checkRecordPages({ pages })
+  const recordPages = raw['record-pages']
   report.findings.push(...recordPages)
   // No visible message form without an email of the owner's, judged on the served pages (COO decision, #189 item 19).
-  const contactForms = checkContactForms({ pages, brief })
+  const contactForms = raw['contact-forms']
   report.findings.push(...contactForms.findings)
   // Every channel linked on the Contact page, numbers tappable, and no walk-in copy for a business by appointment (#189 item 19).
-  const contactPage = checkContactPage({ pages, sitePlan })
+  const contactPage = raw['contact-page']
   report.findings.push(...contactPage)
   // A kept call-to-action band shows a message with its button (COO decision, #189 item 7), where the map declares bands.
-  const ctaBands = checkCtaBands({ pages, contentMap, sitePlan })
+  const ctaBands = raw['cta-bands']
   report.findings.push(...ctaBands)
   // No empty frame a visitor sees: a fact row group is shown complete or taken off on every page (#189 items 14, 15).
-  const emptyFrames = checkEmptyFrames({ pages })
+  const emptyFrames = raw['empty-frames']
   report.findings.push(...emptyFrames)
   // Every head block the build owes a page is on it: the brand colours, the leftover rules, each centred card row (#189 item 28).
-  const headBlocks = checkHeadBlocks({ pages, sitePlan, styles })
+  const headBlocks = raw['head-blocks']
   report.findings.push(...headBlocks)
   // Every kept page says its planned title and description, and the not-found page speaks for the business (#189 round 9).
-  const pageSeo = checkPageSeo({ pages, sitePlan, missingPath: MISSING_PROBE })
+  const pageSeo = raw['page-seo']
   report.findings.push(...pageSeo)
   // The brief's content no page shows, each with why: a report, never a finding (#189 round 9, item I3).
   const unused = sitePlan ? unusedBriefContent({ pages, brief, sitePlan }) : []
   // Every record the site plan assigned (a review and its author, a person's name) is on the site as given (#189 item 18).
-  const recordSlots = sitePlan ? checkRecordSlots({ pages, sitePlan, contentMap }) : []
+  const recordSlots = raw['record-slots']
   report.findings.push(...recordSlots)
-  // No sentence said twice on a page, reworded or not, nor on two pages (#189 round 9, class F); near copies as the writers judge them.
-  const near = await seeder('distinct-copy')
-    .then((m) => m.containedCopy)
-    .catch(() => undefined)
-  const repeatedCopy = checkRepeatedCopy({ pages, near })
+  // No sentence said twice on a page, reworded or not, nor on two pages (#189 round 9, class F).
+  const repeatedCopy = raw['repeated-copy']
   report.findings.push(...repeatedCopy)
   // A showcase block the plan keeps on one page is on one page; an undeclared repeat is named (COO decision 30/10/2026).
-  const repeatedBlocks = checkRepeatedBlocks({ pages, sitePlan })
+  const repeatedBlocks = raw['repeated-blocks']
   report.findings.push(...repeatedBlocks)
   report.findings.push(...offeringSummaries.map((f) => ({ kind: 'C03', ...f })))
   report.counts.C03 = (report.counts.C03 ?? 0) + offeringSummaries.length
@@ -233,6 +233,22 @@ export async function runLeftoverCheck({
     severity: 'major',
     why: `Link to its own page: ${f.path} "${f.label}"`
   }))
+  // The site build rules that had no check before the registry (#189): rule 2, rule 4, booking buttons, demo-name addresses.
+  const ruleGaps = [
+    ...raw['record-pictures'],
+    ...raw['icon-rows'],
+    ...raw['booking-buttons'],
+    ...raw['demo-name-addresses']
+  ]
+  const all = [
+    ...report.findings,
+    ...mainMenuFindings,
+    ...footerFindings,
+    ...selfLinkFindings,
+    ...buttonsVideos,
+    ...pageIntros,
+    ...ruleGaps
+  ].map(withRule)
   return {
     ...report,
     mainMenu,
@@ -278,24 +294,11 @@ export async function runLeftoverCheck({
       repeatedCopy.length === 0 &&
       !repeatedBlocks.some((f) => f.severity === 'major') &&
       ctaBands.length === 0 &&
-      pageIntros.length === 0,
-    findings: [
-      ...report.findings,
-      ...mainMenuFindings,
-      ...footerFindings,
-      ...selfLinkFindings,
-      ...buttonsVideos,
-      ...pageIntros
-    ].slice(0, FINDINGS_KEPT),
-    truncated: Math.max(
-      0,
-      report.findings.length +
-        mainMenuFindings.length +
-        footerFindings.length +
-        selfLinkFindings.length +
-        pageIntros.length -
-        FINDINGS_KEPT
-    ),
+      pageIntros.length === 0 &&
+      !ruleGaps.some((f) => f.severity === 'blocker' || f.severity === 'major'),
+    ruleGaps,
+    findings: all.slice(0, FINDINGS_KEPT),
+    truncated: Math.max(0, all.length - FINDINGS_KEPT),
     pages: pages.map((p) => p.path),
     unread,
     missing,

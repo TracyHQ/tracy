@@ -82,3 +82,30 @@ test('every rule has an id the hand-off and the screen can name', () => {
   assert.equal(new Set(ids).size, ids.length)
   for (const id of ids) assert.match(id, /^[a-z-]+$/)
 })
+
+test('the footer shape, the Contact page and a picture on another record are blockers (site build rules 2 and 5)', () => {
+  const out = buildBlockers(
+    report([
+      { kind: 'C22', severity: 'major', page: '/', place: 'footer', found: 'two phone lines' },
+      { kind: 'contact-channel-missing', severity: 'major', path: '/contact', why: 'WhatsApp is not linked' },
+      { kind: 'walk-in-copy', severity: 'major', path: '/about', why: 'Come visit us' },
+      {
+        kind: 'record-picture-shared',
+        severity: 'blocker',
+        page: '/bikes/gravel',
+        found: '/images/road.jpg'
+      },
+      { kind: 'icon-row-mixed', severity: 'minor', page: '/' },
+      { kind: 'booking-button-target', severity: 'major', page: '/', found: 'Book a service -> /bikes' }
+    ])
+  )
+  assert.deepEqual(
+    out.items.map((i) => [i.rule, i.pages]),
+    [
+      ['footer-shape', ['/']],
+      ['contact-page', ['/contact', '/about']],
+      ['pictures-fit-record', ['/bikes/gravel']]
+    ]
+  )
+  assert.equal(out.total, 4)
+})

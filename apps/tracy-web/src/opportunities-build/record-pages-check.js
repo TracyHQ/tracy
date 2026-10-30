@@ -15,7 +15,7 @@ import { parse } from 'parse5'
 const SKIPPED = new Set(['script', 'style', 'template', 'noscript', 'header', 'footer'])
 const HEADINGS = new Set(['h2', 'h3', 'h4', 'h5', 'h6'])
 /** A family of record pages has at least this many sections in the same order. */
-const MIN_SECTIONS = 3
+export const MIN_SECTIONS = 3
 /** Two sections are one template when this share of the shorter one's sentences is the other's. */
 const SHARED_SHARE = 0.6
 /** Words that make a sentence worth comparing. */
@@ -32,14 +32,15 @@ const hidden = (node) =>
   /(?:display\s*:\s*none|visibility\s*:\s*hidden)/i.test(attr(node, 'style'))
 const kids = (node) => (node.childNodes ?? []).filter((n) => !hidden(n))
 const elements = (node) => kids(node).filter((n) => n.tagName)
-const walk = (node) => [node, ...kids(node).flatMap(walk)]
+export const walk = (node) => [node, ...kids(node).flatMap(walk)]
 const text = (node) => (node.nodeName === '#text' ? node.value : kids(node).map(text).join(' '))
-const plain = (node) => text(node).replace(/\s+/g, ' ').trim()
-const signature = (node) => `${node.tagName}.${attr(node, 'class').trim().split(/\s+/).sort().join('.')}`
-const parentPath = (path) => String(path).replace(/\/+$/, '').split('/').slice(0, -1).join('/') || '/'
+export const plain = (node) => text(node).replace(/\s+/g, ' ').trim()
+export const signature = (node) =>
+  `${node.tagName}.${attr(node, 'class').trim().split(/\s+/).sort().join('.')}`
+export const parentPath = (path) => String(path).replace(/\/+$/, '').split('/').slice(0, -1).join('/') || '/'
 
 /** The sections of a page: for each h2, the widest block around it that holds no other h2. */
-function sectionsOf(root) {
+export function sectionsOf(root) {
   const h2s = walk(root).filter((n) => n.tagName === 'h2')
   const count = (node) => walk(node).filter((n) => n.tagName === 'h2').length
   return h2s.map((h2) => {
@@ -67,7 +68,7 @@ function sentencesOf(node, nameWords) {
 }
 
 /** The photos of a section: their addresses, icons and vector marks left out. */
-const photosOf = (node) =>
+export const photosOf = (node) =>
   walk(node)
     .filter((n) => n.tagName === 'img')
     .map((n) => attr(n, 'src').split('?')[0])

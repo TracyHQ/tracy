@@ -5,13 +5,15 @@ import {
   mainMenuTargets,
   menuPath
 } from 'website-opportunities/domain/main-menu.mjs'
+import { ruleText } from 'website-opportunities/domain/build-rules.mjs'
 import { jsonObjectIn } from './shared.js'
 
 const SYSTEM =
   "Name the main menu of a business website from its kept pages and page roles. Use the business's own words from " +
   'the brief in the requested language. Name an offerings index using the words this business uses for its offerings. ' +
-  'A team page names its people. A booking page names booking. Never invent offerings or people. Never use a generic ' +
-  'action such as Learn more, Read more or Details as a menu label. Contact names only a contact page. Every item needs ' +
+  'A team page names its people. A booking page names booking. Never invent offerings or people. ' +
+  // The menu label rule is the site build rules registry's one wording (`build-rules.mjs`, rule 6).
+  `${ruleText('menu-label-is-page-name')} Every item needs ` +
   'a nonempty short label within maxCharacters; siblings in the same menu and parent must have distinct labels. ' +
   'Do not change paths or placement. Return JSON only: {"labels":{"<key>":"<label>"}} for every given item.'
 

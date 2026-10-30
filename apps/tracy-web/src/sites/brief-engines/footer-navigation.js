@@ -3,14 +3,16 @@ import {
   invalidFooterHeading,
   planFooterNavigation
 } from 'website-opportunities/domain/footer-navigation.mjs'
+import { ruleText } from 'website-opportunities/domain/build-rules.mjs'
 import { jsonObjectIn } from './shared.js'
 
 const SYSTEM =
   "Name the footer link columns of a business website and the links in them. Each column heading says what the column holds, in the business's own words from the brief, in the requested language: " +
   'a column of offerings names them the way this business does, a column of company pages names the business or its pages. ' +
   'Never use a generic heading such as Site map, Links, Quick links, Menu or Navigation, and never the demo heading given. ' +
-  'Each link names its page by its role; when a name is given, use it unless it is longer than maxCharacters. Never use a ' +
-  'generic action such as Learn more, Read more or Details. Contact names only a contact page. Labels in one column are ' +
+  'Each link names its page by its role; when a name is given, use it unless it is longer than maxCharacters. ' +
+  // The link label rule is the site build rules registry's one wording (`build-rules.mjs`, rule 6).
+  `${ruleText('menu-label-is-page-name')} Labels in one column are ` +
   'distinct. Never invent offerings or people. Return JSON only: {"headings":{"<column id>":"<heading>"},"labels":{"<link key>":"<label>"}}.'
 
 const fail = (code, detail) => Object.assign(new Error(`${code}: ${detail}`), { code })

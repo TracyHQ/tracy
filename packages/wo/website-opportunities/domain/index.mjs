@@ -58,6 +58,20 @@ export {
 } from './demo-leftovers.mjs'
 export { BLOCKER_RULES, BUILD_BLOCKERS_VERSION, buildBlockers } from './build-blockers.mjs'
 export {
+  BUILD_RULES,
+  BUILD_RULES_VERSION,
+  blockerRules,
+  checkIdsOf,
+  declarationsOf,
+  repairOf,
+  ruleOfFinding,
+  ruleProblems,
+  rulesFor,
+  ruleText,
+  RULE_WRITERS,
+  SITE_BUILD_RULES
+} from './build-rules.mjs'
+export {
   CLEANUP_FINDINGS_SHOWN,
   CLEANUP_LIMITS,
   compareLeftovers,
