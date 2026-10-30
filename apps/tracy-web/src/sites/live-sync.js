@@ -258,6 +258,14 @@ export function liveSync({
     return kept.ok
   }
 
+  async function dbAgeMs(at) {
+    const { rows } = await pool.query(
+      `select (extract(epoch from (now() - $1::timestamptz)) * 1000)::float8 as ms`,
+      [at]
+    )
+    return Number(rows[0]?.ms ?? 0)
+  }
+
   /** The newest sync of a site, read back from the host while it runs. */
   async function read(site) {
     const row = await latest(site.site_key)
@@ -266,7 +274,8 @@ export function liveSync({
     const polled = await host.hostJob(config, site.host, row.host_job, { fetchImpl })
     const job = polled.ok ? polled.body : null
     if (!job) {
-      if (now() - new Date(row.updated_at).getTime() > STUCK_MS)
+      // The row's age by the database's clock, the clock that stamped it (live-push.js `ageMs`).
+      if ((await dbAgeMs(row.updated_at)) > STUCK_MS)
         return view(await update(row.id, { state: 'failed', error: 'SYNC_LOST' }))
       // The host did not answer: the sync may still be restoring there, so the site stays the sync's (#224).
       await keepLease(site, row)
