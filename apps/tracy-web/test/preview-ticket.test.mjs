@@ -311,6 +311,13 @@ async function ticketFor(email = 'e@x.y', { site = 'lantern.example', aud = AUD,
   return (await mintPreviewTicket({ site, email, aud, secret: SECRET, now })).ticket
 }
 
+/**
+ * The ticket with its signature's last four characters changed. A fixed `AAAA` left the decoded
+ * signature unchanged about once in 2^22: the signature's last character carries two bits that
+ * base64url decoding drops. The first of the four carries only data bits and always differs here.
+ */
+const forge = (ticket) => `${ticket.slice(0, -4)}${ticket.at(-4) === 'A' ? 'B' : 'A'}AAA`
+
 function visit(app, path, { cookie, dest = 'iframe', proto = 'https', method = 'GET' } = {}) {
   return app.fetch(
     new Request(`http://lantern.tracy.test${path}`, {
@@ -416,7 +423,7 @@ test('redeem: refused tickets are stripped before the upstream fetch and change 
     ['signed out', await ticketFor(), null, {}],
     ['seat gone', await ticketFor(), 'e@x.y', { roles: {} }],
     ['not a seat role', await ticketFor(), 'e@x.y', { roles: { 'e@x.y': 'constructor' } }],
-    ['forged', `${(await ticketFor()).slice(0, -4)}AAAA`, 'e@x.y', {}]
+    ['forged', forge(await ticketFor()), 'e@x.y', {}]
   ]
   for (const [name, ticket, email, opts] of cases) {
     const { app, calls } = bar(opts)
