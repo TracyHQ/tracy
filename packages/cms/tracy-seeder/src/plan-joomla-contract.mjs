@@ -10,6 +10,7 @@ import { PROCESS_WRITING_RULE, processWritingOf } from './process-writing.mjs'
 import { copyJobs, copyLedger, duplicateComplaint, duplicates, pagesOfEntities } from './distinct-copy.mjs'
 import { PAGE_PASS_RULE, PAGE_RULE_RETRIES, pageBatches, pageHintOf } from './page-pass.mjs'
 import { factSheetFor } from './fact-sheet-batch.mjs'
+import { AUTHOR_RULE, authorInput, lengthComplaint, withoutGlossary } from './page-author.mjs'
 import {
   DIRECTION_RULE,
   SOURCE_RULE,
@@ -950,6 +951,9 @@ export const FACT_SHEET_RULE =
 const isHeading = (slot) =>
   slot?.role === 'editorial.heading' || /\/h[1-6](?:\[\d+\])?\/text\(\)$/i.test(String(slot?.xpath ?? ''))
 
+/** The most slots of one author call: a page is written whole, and only a page larger than this is split. */
+const AUTHOR_BATCH = 60
+
 /** Generate scalar copy against a trusted slot inventory; uncertainty is explicit, never a layout change. */
 export async function planJoomlaContract({
   state,
@@ -971,7 +975,10 @@ export async function planJoomlaContract({
   byPage = false,
   hints = null,
   complain = null,
-  rules = ''
+  rules = '',
+  // 🔒 ONE AUTHOR WRITES THE PAGES OF AN ACCEPTED SITE PLAN (spec TracyHQ/tracy#231, ticket #235, `page-author.mjs`): with
+  // `author` ({rulebook, page, hiddenSections, glossary, writtenPages}) the call is that page's, written by the plan's author.
+  author = null
 }) {
   if (!state?.contract || !Array.isArray(state.slots)) throw new Error('Invalid contract inventory')
   // 🔒 A slot the profile only DECLARES (`customize: "keep"`, written by `capture-contract.py --full-coverage`) is the site
@@ -1216,8 +1223,15 @@ export async function planJoomlaContract({
   const phrases = phraseLedger({
     pageOf,
     pages: new Set((state.pages ?? []).map((p) => p?.entity).filter(Boolean)).size,
-    keep: [site?.name, ...Object.values(offerings ?? {})].filter((k) => typeof k === 'string')
+    keep: [
+      site?.name,
+      ...Object.values(offerings ?? {}),
+      ...(author?.glossary ?? []).flatMap((g) => [g?.name, g?.description])
+    ].filter((k) => typeof k === 'string')
   })
+  /** The values the duplicate check reads: the glossary's shared names and descriptions are no repeat. */
+  const comparable = (/** @type {any} */ values) =>
+    author ? withoutGlossary(values, author.glossary) : values
   // Words other steps of the build already put on the site (the brief's own lines pinned to a slot) are what later
   // answers must not repeat: a pinned introduction was said a second and a third time in other sections (round 9).
   for (const slot of Array.isArray(written) ? written : [])
@@ -1248,7 +1262,10 @@ export async function planJoomlaContract({
     const wrong = wrongIn(body, slots)
     if (wrong.size) return languageComplaint(wrong, languages)
     // 🔒 TWO SLOTS OF ONE SECTION NEVER CARRY THE SAME SENTENCE (spec #189, item 17): refused and rewritten, like a wrong language.
-    const repeated = duplicates(slots, body.values, ledger)
+    // 🔒 THE AUTHOR'S LINE FITS ITS BOX (ticket #235): a line over its limit is sent back like any other rule.
+    const long = author ? lengthComplaint(slots, body.values, withoutStyleMarks) : null
+    if (long) return long
+    const repeated = duplicates(slots, comparable(body.values), ledger)
     if (repeated.length) return duplicateComplaint(repeated)
     // 🔒 A COUNT IS A FACT (round 9, class F): "one coach" over a team of two is refused like an invented phone number.
     const counts = countsIn(slots, body.values)
@@ -1290,7 +1307,12 @@ export async function planJoomlaContract({
       : null
   /** The complaints of the batches no answer could be read for (`model-unreadable`). */
   const unreadable = []
-  const batches = byPage ? pageBatches(planned, pageOf, 35, sectionBatches) : sectionBatches(planned, 35)
+  // An author's call is one page whole, split by its sections only when it is too large for one call.
+  const batches = author
+    ? sectionBatches(planned, AUTHOR_BATCH)
+    : byPage
+      ? pageBatches(planned, pageOf, 35, sectionBatches)
+      : sectionBatches(planned, 35)
   /** The words a slot holds so far: written by an earlier call of this plan. */
   const soFar = (key) => (typeof changes[key] === 'string' ? changes[key] : undefined)
   const pageRules = (hints ? PAGE_PASS_RULE : '') + (rules ? ` ${rules}` : '')
@@ -1327,6 +1349,7 @@ export async function planJoomlaContract({
       brief: site?.factSheet ? { ...site, factSheet: sheet } : site,
       ...(Object.keys(pageDirection).length ? { pageDirection } : {}),
       ...(ownPosts ? { ownPosts } : {}),
+      ...(author ? authorInput(author) : {}),
       slots: slots.map((s) => ({
         key: s.key,
         entity: s.entity,
@@ -1375,6 +1398,7 @@ export async function planJoomlaContract({
     for (let attempt = 0; attempt < ATTEMPTS; attempt += 1) {
       raw = await generate({
         system:
+          (author ? `${author.rulebook ?? ''}${AUTHOR_RULE}` : '') +
           (journeys.size ? SYSTEM + PROCESS_WRITING_RULE : SYSTEM) +
           (ownPosts ? OWN_POSTS_RULE : '') +
           (site?.factSheet ? FACT_SHEET_RULE + SOURCE_RULE : '') +
@@ -1476,7 +1500,7 @@ export async function planJoomlaContract({
     // A value still in the wrong language after the retries keeps the demo words and says why.
     const wrong = wrongIn(body, slots)
     // What is still a repeat after the retries is not written: the later slot is pended, the first keeps its words.
-    const repeats = new Set(duplicates(slots, body.values, ledger).map((d) => d.key))
+    const repeats = new Set(duplicates(slots, comparable(body.values), ledger).map((d) => d.key))
     // A count the brief does not state is still not written after the retries: an invented fact is worse than the slot's wait.
     const uncounted = new Set(countsIn(slots, body.values).map((c) => c.key))
     // A specific fact no cited source states is still not written after its one send-back: refused (`fact-sources.mjs`).

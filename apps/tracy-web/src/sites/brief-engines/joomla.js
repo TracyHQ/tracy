@@ -32,6 +32,7 @@ import { writeJoomlaPrivacyPage } from './joomla-privacy-page.js'
 import { briefFactSheet } from './brief-fact-sheet.js'
 import { briefPhotos } from './brief-photos.js'
 import { writeSitePlan } from './site-plan-author.js'
+import { pageAuthorPlan, writePagesInOrder } from './page-author.js'
 import { inventoryOfContract } from './template-inventory.js'
 import { writeSiteDirection } from './site-direction.js'
 import { sourcedWriter } from './copy-sources.js'
@@ -884,14 +885,20 @@ export function createJoomlaEngine({
       // About left blank: no line is written by a model (`ABOUT_BLANK_NOTE`), so no plan is asked for either.
       const sitePlanRun = (async () =>
         !(described || written !== SOURCE)
-          ? { version: 'site-plan-run/1', status: 'skipped', plan: null, rounds: [], notes: [ABOUT_BLANK_NOTE] }
+          ? {
+              version: 'site-plan-run/1',
+              status: 'skipped',
+              plan: null,
+              rounds: [],
+              notes: [ABOUT_BLANK_NOTE]
+            }
           : writeSitePlan({
-          models: { text, editorial: (await models()).editorial ?? null },
-          inventory: inventoryOfContract(ctx.contract),
-          site: { ...site },
-          photos: briefPhotos(contentBrief, factSheet),
-          signal: budgetSignal(ctx.signal, ctx.deadlineAt)
-        }))().catch((error) => ({
+              models: { text, editorial: (await models()).editorial ?? null },
+              inventory: inventoryOfContract(ctx.contract),
+              site: { ...site },
+              photos: briefPhotos(contentBrief, factSheet),
+              signal: budgetSignal(ctx.signal, ctx.deadlineAt)
+            }))().catch((error) => ({
         version: 'site-plan-run/1',
         status: 'failed',
         plan: null,
@@ -1030,13 +1037,22 @@ export function createJoomlaEngine({
             })
           : Promise.resolve({})
       let postsUnread = false
+      /** @type {ReturnType<typeof pageAuthorPlan>} the accepted site plan the author writes the pages from, or null */
+      let authorPages = null
+      /** @type {Set<string>} the keys the author was given: a line of them still failing is taken off, never left as demo */
+      const authorAsked = new Set()
+      /** @type {Map<string, string>} the page each line of the author's was written with, for the line trace */
+      let authorPageOf = new Map()
       if (!text) ctx.note('no text model is set, so the template keeps its own words')
       else if (!rewrites) ctx.note(ABOUT_BLANK_NOTE)
       else {
         const generate = firmGenerate(text, budgetSignal(ctx.signal, ctx.deadlineAt))
+        // 🔒 THE PLAN'S AUTHOR WRITES THE PAGES (spec TracyHQ/tracy#231, ticket #235, `page-author.js`): an accepted site plan
+        // is waited for, and replaces the site direction below; a refused, failed or skipped plan leaves the current writers.
+        authorPages = pageAuthorPlan(await sitePlanRun)
         // 🔒 ONE SITE DIRECTION BEFORE THE PAGE WRITERS (COO, 30/10/2026, `site-direction.js`): one call reads the whole fact
         // digest and the pages the plan writes, and every writer is given its voice, its lead per page and its facts per page.
-        if (factSheet) {
+        if (factSheet && !authorPages) {
           const { pagesOfEntities } = await seeder('distinct-copy')
           const pageOf = pagesOfEntities(state.pages)
           const used = new Set(planned.slots.flatMap((slot) => pageOf(slot.entity)))
@@ -1104,26 +1120,73 @@ export function createJoomlaEngine({
             .filter(([, h]) => typeof h?.action === 'string')
             .map(([key, h]) => [key, h.action])
         )
+        // The arguments of the page writer, the same for the author and the current writer.
+        const pageArgs = {
+          state: planned,
+          site,
+          dataDir,
+          surface: 'pages',
+          trimmed: true,
+          republished,
+          inventions: /** @type {'never'} */ ('never'),
+          offerings,
+          hidden: hiddenCards,
+          offeringPosts,
+          byPage: true,
+          hints: page?.hints ?? null,
+          complain: page?.complain ?? null,
+          rules: rulesFor({ writer: 'page-copy' })
+        }
+        const byAuthor = authorPages
+          ? await writePagesInOrder({
+              plan: authorPages,
+              slots: planned.slots,
+              pageOf: (await seeder('distinct-copy')).pagesOfEntities(state.pages),
+              usage: () => text.usage?.() ?? null,
+              write: ({ only, author, written: before }) =>
+                planConcurrently(
+                  (ask) =>
+                    planJoomlaContract({
+                      ...pageArgs,
+                      generate: ask,
+                      only,
+                      author,
+                      written: [...pinnedWords, ...before]
+                    }),
+                  generate,
+                  copyPlanBudget(ctx)
+                )
+            })
+          : null
+        if (byAuthor) {
+          for (const slot of planned.slots)
+            if (!authorPages?.hidden.has(String(slot.entity))) authorAsked.add(slot.key)
+          authorPageOf = byAuthor.pageOfKey
+          ctx.record?.('pageAuthor', { pages: byAuthor.pages, hidden: byAuthor.hiddenKeys.length })
+          ctx.time('pageAuthorPages', byAuthor.pages.length)
+        }
         const answered = await planConcurrently(
           async (ask) => {
-            const pages = await planJoomlaContract({
-              state: planned,
-              site,
-              generate: ask,
-              dataDir,
-              surface: 'pages',
-              trimmed: true,
-              republished,
-              inventions: 'never',
-              offerings,
-              hidden: hiddenCards,
-              written: pinnedWords,
-              offeringPosts,
-              byPage: true,
-              hints: page?.hints ?? null,
-              complain: page?.complain ?? null,
-              rules: rulesFor({ writer: 'page-copy' })
-            })
+            const pages = byAuthor
+              ? byAuthor.plan
+              : await planJoomlaContract({
+                  state: planned,
+                  site,
+                  generate: ask,
+                  dataDir,
+                  surface: 'pages',
+                  trimmed: true,
+                  republished,
+                  inventions: 'never',
+                  offerings,
+                  hidden: hiddenCards,
+                  written: pinnedWords,
+                  offeringPosts,
+                  byPage: true,
+                  hints: page?.hints ?? null,
+                  complain: page?.complain ?? null,
+                  rules: rulesFor({ writer: 'page-copy' })
+                })
             if (lineByLine.length === 0) return pages
             try {
               const articles = await planJoomlaContract({
@@ -1144,6 +1207,14 @@ export function createJoomlaEngine({
           generate,
           copyPlanBudget(ctx)
         )
+        // The author's page calls count with the articles' calls, on the same receipt.
+        if (byAuthor) {
+          answered.calls += byAuthor.answered.calls
+          answered.failed += byAuthor.answered.failed
+          answered.cut = (answered.cut ?? 0) + byAuthor.answered.cut
+          answered.rounds = Math.max(answered.rounds ?? 1, byAuthor.answered.rounds)
+          answered.callMs = [...(answered.callMs ?? []), ...byAuthor.answered.callMs]
+        }
         plan = answered.result
         recordCopyPlan(ctx, answered, plan)
         if (posts.articles > 0) ctx.time('articlesPlanned', postsUnread ? 0 : posts.articles)
@@ -1374,6 +1445,20 @@ export function createJoomlaEngine({
           ctx.time('demoLinesEmptied', left.counts.blanked)
         }
       }
+      // 🔒 A LINE THE AUTHOR STILL FAILS IS TAKEN OFF, NEVER LEFT AS DEMO (ticket #235): after its send-back, a line of the
+      // author's pages that a check still refuses is traced (`copyLineTrace`) and settled below as a line whose demo words are
+      // never served: its card or block comes off where the template can, else it is emptied.
+      /** @type {Set<string>} */
+      const authorRefused = new Set()
+      if (authorPages)
+        for (const key of plan.pending ?? []) {
+          const slot = slotByKey.get(key)
+          if (!authorAsked.has(key) || key in kept || pendingKindOf(plan.reasons?.[key]) !== 'refused')
+            continue
+          if (!String(slot?.sample ?? '').trim()) continue
+          authorRefused.add(key)
+          if (!demoBlanks.some((b) => b.key === key)) demoBlanks.push(slot)
+        }
       // A demo line stating a fact beside the demo company's name, given no other words, is emptied after the write (#189).
       const blanked = new Set(demoBlanks.map((slot) => slot.key))
       demoBlanks.push(
@@ -1577,8 +1662,18 @@ export function createJoomlaEngine({
       // visitor something false and swallowed their email (measured on a local build: "Join our coaching newsletter" in the
       // footer, its words rewritten by the copy writer). Any design, any framework: the module is unpublished in every language
       // with the fact modules above, and none of its words is written.
-      for (const hide of honesty?.hide ?? []) {
-        if (hide.reason !== 'no-form-destination' || hide.how !== 'entity' || hide.kind !== 'module') continue
+      // 🔒 A SECTION THE SITE PLAN HID COMES OFF (ticket #235): the author was given none of its lines, and its module is
+      // unpublished with the fact modules. A section that is no module (a page's own body) stays with its page.
+      const planHides = [...(authorPages?.hidden ?? [])]
+        .filter((entity) => /^module-\d+$/.test(entity))
+        .map((entity) => ({ reason: 'site-plan-hidden', how: 'entity', kind: 'module', entity }))
+      for (const hide of [...(honesty?.hide ?? []), ...planHides]) {
+        if (
+          !['no-form-destination', 'site-plan-hidden'].includes(hide.reason) ||
+          hide.how !== 'entity' ||
+          hide.kind !== 'module'
+        )
+          continue
         const own = state.slots.filter((slot) => slot.entity === hide.entity)
         for (const slot of own) delete kept[slot.key]
         demoBlanks = demoBlanks.filter((slot) => slot.entity !== hide.entity)
@@ -1643,7 +1738,8 @@ export function createJoomlaEngine({
         ]
         const trace = copyLineTrace({
           lines: [...planned, ...lineTrace],
-          pageOf: (key) => pagesOf(entityOf.get(key))
+          pageOf: (key) =>
+            authorPageOf.has(key) ? [String(authorPageOf.get(key))] : pagesOf(entityOf.get(key))
         })
         if (trace.length > 0) ctx.record?.('copyLineTrace', trace)
       }
@@ -1694,6 +1790,7 @@ export function createJoomlaEngine({
         // The demo company's own lines are never served while they wait for the repair loop (ABOUT-3).
         unsafe: new Set([
           ...factLines,
+          ...authorRefused,
           ...demoNamedKeys(shownSlots, listOf(declaredCopy(ctx.contract.dir).demoCompanyNames))
         ]),
         removed: {
