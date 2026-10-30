@@ -44,6 +44,11 @@ export const BLOCKER_RULES = Object.freeze([
     matches: (f) => ['C18', 'C19'].includes(f.kind) && EMPTY_HREF.test(String(f.place ?? ''))
   },
   {
+    id: 'sibling-copy-shape',
+    why: 'The cards of one list do not share one text shape: one long beside one short, one body of several, or an exclamation mark',
+    matches: (f) => f.kind === 'sibling-copy-shape'
+  },
+  {
     id: 'other-blocker',
     why: 'A check marked this a blocker',
     matches: (f) => f.severity === 'blocker'

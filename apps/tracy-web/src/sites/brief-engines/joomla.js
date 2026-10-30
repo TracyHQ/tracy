@@ -77,6 +77,7 @@ import { buttonActionValues } from './button-action-values.js'
 import { offeringSummaryValues } from './offering-summaries.js'
 import { nameOnlyOfferingLines } from './offering-name-only.js'
 import { writeOfferingDescriptions } from './offering-description-writer.js'
+import { shapeSiblingCopy } from './sibling-copy-writer.js'
 import { ctaBandValues } from './cta-band-messages.js'
 import { decorationLeftAlone } from 'website-opportunities/domain/layout-bands.mjs'
 import {
@@ -1280,6 +1281,38 @@ export function createJoomlaEngine({
         delete kept[slot.key]
         if (!demoBlanks.some((b) => b.key === slot.key)) demoBlanks.push(slot)
       }
+      // 🔒 SIBLINGS OF ONE LIST SHARE ONE SHAPE (COO rules 30/10/2026, `sibling-copy-writer.js`): every body of a repeated
+      // card list is written to the band its demo text gives (sentences, length, the demo's line count in that box), the
+      // same line count for every sibling. Never three lines beside one line, never one item body of four, never cut.
+      const shownSlots = state.slots.filter((slot) => !isDerived(slot) && shown(slot))
+      const siblingShape = await shapeSiblingCopy({
+        slots: shownSlots,
+        written: kept,
+        about: {
+          business: String(ctx.normalized.name ?? ''),
+          description: String(sitePlan?.brand?.description?.value ?? ''),
+          sourceText: [facts.text, ...Object.values(honesty?.values ?? {}).map((v) => String(v.value))].join(
+            ' '
+          )
+        },
+        model: text,
+        locale: written,
+        signal: ctx.signal,
+        apart: new Set([
+          ...Object.keys(heroLines),
+          ...(sitePlan?.slots ?? [])
+            .filter((s) => String(s?.reason ?? '').startsWith('intro-'))
+            .map((s) => s.key)
+        ])
+      })
+      Object.assign(kept, siblingShape.values)
+      Object.assign(offeringSummaries, siblingShape.values)
+      demoBlanks = demoBlanks.filter((slot) => !(slot.key in siblingShape.values))
+      if (siblingShape.unreached.length > 0)
+        ctx.note(
+          `${siblingShape.unreached.length} card text(s) could not be written to their list's shape: ${siblingShape.unreached.join(', ')}`
+        )
+      if (siblingShape.lists.length > 0) ctx.time('siblingListsShaped', siblingShape.lists.length)
 
       // 🔒 A MODULE THAT STATES ONLY ANOTHER COMPANY'S FACTS COMES OFF THE PAGE. Seven modules of `tracy-business/j6` are nothing
       // but facts the contract asks evidence for — the team and their titles, the certificates, the clients, three strips of

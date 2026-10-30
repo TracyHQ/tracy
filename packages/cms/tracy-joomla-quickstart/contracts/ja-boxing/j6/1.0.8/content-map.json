@@ -18908,6 +18908,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-2.feature.0",
+        "item": 0,
+        "kind": "business"
       }
     },
     {
@@ -18936,6 +18941,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-2.feature.0",
+        "item": 0,
+        "kind": "business"
       }
     },
     {
@@ -18976,6 +18986,11 @@
         "maxCharacters": 25,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.feature.0",
+        "item": 0,
+        "kind": "business"
       }
     },
     {
@@ -18992,11 +19007,11 @@
         "feature_desc"
       ],
       "label": "Group Boxing / feature_desc",
-      "role": "offering.description",
+      "role": "editorial.paragraph",
       "group": {
-        "id": "article-2.offering",
+        "id": "article-2.feature.0",
         "item": 0,
-        "kind": "service"
+        "kind": "business"
       },
       "fit": {
         "measured": true,
@@ -19049,6 +19064,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-2.feature.1",
+        "item": 1,
+        "kind": "business"
       }
     },
     {
@@ -19077,6 +19097,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-2.feature.1",
+        "item": 1,
+        "kind": "business"
       }
     },
     {
@@ -19117,6 +19142,11 @@
         "maxCharacters": 26,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.feature.1",
+        "item": 1,
+        "kind": "business"
       }
     },
     {
@@ -19133,11 +19163,11 @@
         "feature_desc"
       ],
       "label": "Group Boxing / feature_desc",
-      "role": "offering.description",
+      "role": "editorial.paragraph",
       "group": {
-        "id": "article-2.offering",
-        "item": 0,
-        "kind": "service"
+        "id": "article-2.feature.1",
+        "item": 1,
+        "kind": "business"
       },
       "fit": {
         "measured": true,
@@ -19190,6 +19220,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-2.feature.2",
+        "item": 2,
+        "kind": "business"
       }
     },
     {
@@ -19218,6 +19253,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-2.feature.2",
+        "item": 2,
+        "kind": "business"
       }
     },
     {
@@ -19258,6 +19298,11 @@
         "maxCharacters": 23,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.feature.2",
+        "item": 2,
+        "kind": "business"
       }
     },
     {
@@ -19274,11 +19319,11 @@
         "feature_desc"
       ],
       "label": "Group Boxing / feature_desc",
-      "role": "offering.description",
+      "role": "editorial.paragraph",
       "group": {
-        "id": "article-2.offering",
-        "item": 0,
-        "kind": "service"
+        "id": "article-2.feature.2",
+        "item": 2,
+        "kind": "business"
       },
       "fit": {
         "measured": true,
@@ -19331,6 +19376,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-2.feature.3",
+        "item": 3,
+        "kind": "business"
       }
     },
     {
@@ -19359,6 +19409,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-2.feature.3",
+        "item": 3,
+        "kind": "business"
       }
     },
     {
@@ -19399,6 +19454,11 @@
         "maxCharacters": 25,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.feature.3",
+        "item": 3,
+        "kind": "business"
       }
     },
     {
@@ -19439,6 +19499,11 @@
         "maxCharacters": 108,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-2.feature.3",
+        "item": 3,
+        "kind": "business"
       }
     },
     {
@@ -28515,6 +28580,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-14.feature.0",
+        "item": 0,
+        "kind": "business"
       }
     },
     {
@@ -28543,6 +28613,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-14.feature.0",
+        "item": 0,
+        "kind": "business"
       }
     },
     {
@@ -28583,6 +28658,11 @@
         "maxCharacters": 25,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.feature.0",
+        "item": 0,
+        "kind": "business"
       }
     },
     {
@@ -28599,11 +28679,11 @@
         "feature_desc"
       ],
       "label": "Beginner Boxing / feature_desc",
-      "role": "offering.description",
+      "role": "editorial.paragraph",
       "group": {
-        "id": "article-14.offering",
-        "item": 1,
-        "kind": "service"
+        "id": "article-14.feature.0",
+        "item": 0,
+        "kind": "business"
       },
       "fit": {
         "measured": true,
@@ -28656,6 +28736,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-14.feature.1",
+        "item": 1,
+        "kind": "business"
       }
     },
     {
@@ -28684,6 +28769,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-14.feature.1",
+        "item": 1,
+        "kind": "business"
       }
     },
     {
@@ -28724,6 +28814,11 @@
         "maxCharacters": 26,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.feature.1",
+        "item": 1,
+        "kind": "business"
       }
     },
     {
@@ -28740,11 +28835,11 @@
         "feature_desc"
       ],
       "label": "Beginner Boxing / feature_desc",
-      "role": "offering.description",
+      "role": "editorial.paragraph",
       "group": {
-        "id": "article-14.offering",
+        "id": "article-14.feature.1",
         "item": 1,
-        "kind": "service"
+        "kind": "business"
       },
       "fit": {
         "measured": true,
@@ -28797,6 +28892,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-14.feature.2",
+        "item": 2,
+        "kind": "business"
       }
     },
     {
@@ -28825,6 +28925,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-14.feature.2",
+        "item": 2,
+        "kind": "business"
       }
     },
     {
@@ -28865,6 +28970,11 @@
         "maxCharacters": 23,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.feature.2",
+        "item": 2,
+        "kind": "business"
       }
     },
     {
@@ -28881,11 +28991,11 @@
         "feature_desc"
       ],
       "label": "Beginner Boxing / feature_desc",
-      "role": "offering.description",
+      "role": "editorial.paragraph",
       "group": {
-        "id": "article-14.offering",
-        "item": 1,
-        "kind": "service"
+        "id": "article-14.feature.2",
+        "item": 2,
+        "kind": "business"
       },
       "fit": {
         "measured": true,
@@ -28938,6 +29048,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-14.feature.3",
+        "item": 3,
+        "kind": "business"
       }
     },
     {
@@ -28966,6 +29081,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-14.feature.3",
+        "item": 3,
+        "kind": "business"
       }
     },
     {
@@ -29006,6 +29126,11 @@
         "maxCharacters": 25,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.feature.3",
+        "item": 3,
+        "kind": "business"
       }
     },
     {
@@ -29046,6 +29171,11 @@
         "maxCharacters": 108,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-14.feature.3",
+        "item": 3,
+        "kind": "business"
       }
     },
     {
@@ -30827,6 +30957,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-15.feature.0",
+        "item": 0,
+        "kind": "business"
       }
     },
     {
@@ -30855,6 +30990,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-15.feature.0",
+        "item": 0,
+        "kind": "business"
       }
     },
     {
@@ -30895,6 +31035,11 @@
         "maxCharacters": 25,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.feature.0",
+        "item": 0,
+        "kind": "business"
       }
     },
     {
@@ -30911,11 +31056,11 @@
         "feature_desc"
       ],
       "label": "Private Training / feature_desc",
-      "role": "offering.description",
+      "role": "editorial.paragraph",
       "group": {
-        "id": "article-15.offering",
-        "item": 2,
-        "kind": "service"
+        "id": "article-15.feature.0",
+        "item": 0,
+        "kind": "business"
       },
       "fit": {
         "measured": true,
@@ -30968,6 +31113,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-15.feature.1",
+        "item": 1,
+        "kind": "business"
       }
     },
     {
@@ -30996,6 +31146,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-15.feature.1",
+        "item": 1,
+        "kind": "business"
       }
     },
     {
@@ -31036,6 +31191,11 @@
         "maxCharacters": 26,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.feature.1",
+        "item": 1,
+        "kind": "business"
       }
     },
     {
@@ -31052,11 +31212,11 @@
         "feature_desc"
       ],
       "label": "Private Training / feature_desc",
-      "role": "offering.description",
+      "role": "editorial.paragraph",
       "group": {
-        "id": "article-15.offering",
-        "item": 2,
-        "kind": "service"
+        "id": "article-15.feature.1",
+        "item": 1,
+        "kind": "business"
       },
       "fit": {
         "measured": true,
@@ -31109,6 +31269,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-15.feature.2",
+        "item": 2,
+        "kind": "business"
       }
     },
     {
@@ -31137,6 +31302,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-15.feature.2",
+        "item": 2,
+        "kind": "business"
       }
     },
     {
@@ -31177,6 +31347,11 @@
         "maxCharacters": 23,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.feature.2",
+        "item": 2,
+        "kind": "business"
       }
     },
     {
@@ -31193,11 +31368,11 @@
         "feature_desc"
       ],
       "label": "Private Training / feature_desc",
-      "role": "offering.description",
+      "role": "editorial.paragraph",
       "group": {
-        "id": "article-15.offering",
+        "id": "article-15.feature.2",
         "item": 2,
-        "kind": "service"
+        "kind": "business"
       },
       "fit": {
         "measured": true,
@@ -31250,6 +31425,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-15.feature.3",
+        "item": 3,
+        "kind": "business"
       }
     },
     {
@@ -31278,6 +31458,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-15.feature.3",
+        "item": 3,
+        "kind": "business"
       }
     },
     {
@@ -31318,6 +31503,11 @@
         "maxCharacters": 25,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.feature.3",
+        "item": 3,
+        "kind": "business"
       }
     },
     {
@@ -31358,6 +31548,11 @@
         "maxCharacters": 108,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-15.feature.3",
+        "item": 3,
+        "kind": "business"
       }
     },
     {
@@ -33229,6 +33424,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-16.feature.0",
+        "item": 0,
+        "kind": "business"
       }
     },
     {
@@ -33257,6 +33457,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-16.feature.0",
+        "item": 0,
+        "kind": "business"
       }
     },
     {
@@ -33297,6 +33502,11 @@
         "maxCharacters": 25,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.feature.0",
+        "item": 0,
+        "kind": "business"
       }
     },
     {
@@ -33313,11 +33523,11 @@
         "feature_desc"
       ],
       "label": "Advanced Boxing / feature_desc",
-      "role": "offering.description",
+      "role": "editorial.paragraph",
       "group": {
-        "id": "article-16.offering",
-        "item": 3,
-        "kind": "service"
+        "id": "article-16.feature.0",
+        "item": 0,
+        "kind": "business"
       },
       "fit": {
         "measured": true,
@@ -33370,6 +33580,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-16.feature.1",
+        "item": 1,
+        "kind": "business"
       }
     },
     {
@@ -33398,6 +33613,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-16.feature.1",
+        "item": 1,
+        "kind": "business"
       }
     },
     {
@@ -33438,6 +33658,11 @@
         "maxCharacters": 26,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.feature.1",
+        "item": 1,
+        "kind": "business"
       }
     },
     {
@@ -33454,11 +33679,11 @@
         "feature_desc"
       ],
       "label": "Advanced Boxing / feature_desc",
-      "role": "offering.description",
+      "role": "editorial.paragraph",
       "group": {
-        "id": "article-16.offering",
-        "item": 3,
-        "kind": "service"
+        "id": "article-16.feature.1",
+        "item": 1,
+        "kind": "business"
       },
       "fit": {
         "measured": true,
@@ -33511,6 +33736,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-16.feature.2",
+        "item": 2,
+        "kind": "business"
       }
     },
     {
@@ -33539,6 +33769,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-16.feature.2",
+        "item": 2,
+        "kind": "business"
       }
     },
     {
@@ -33579,6 +33814,11 @@
         "maxCharacters": 23,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.feature.2",
+        "item": 2,
+        "kind": "business"
       }
     },
     {
@@ -33595,11 +33835,11 @@
         "feature_desc"
       ],
       "label": "Advanced Boxing / feature_desc",
-      "role": "offering.description",
+      "role": "editorial.paragraph",
       "group": {
-        "id": "article-16.offering",
-        "item": 3,
-        "kind": "service"
+        "id": "article-16.feature.2",
+        "item": 2,
+        "kind": "business"
       },
       "fit": {
         "measured": true,
@@ -33652,6 +33892,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-16.feature.3",
+        "item": 3,
+        "kind": "business"
       }
     },
     {
@@ -33680,6 +33925,11 @@
           "height": 150,
           "format": "png"
         }
+      },
+      "group": {
+        "id": "article-16.feature.3",
+        "item": 3,
+        "kind": "business"
       }
     },
     {
@@ -33720,6 +33970,11 @@
         "maxCharacters": 25,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.feature.3",
+        "item": 3,
+        "kind": "business"
       }
     },
     {
@@ -33760,6 +34015,11 @@
         "maxCharacters": 108,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "group": {
+        "id": "article-16.feature.3",
+        "item": 3,
+        "kind": "business"
       }
     },
     {

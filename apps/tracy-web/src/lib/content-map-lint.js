@@ -29,6 +29,7 @@ import { inlineStylePattern } from 'website-opportunities/domain/inline-style.mj
 import { demoMarkupOf, isUnitPath } from '../sites/brief-engines/inline-styles.js'
 import { SECTION_RULES } from './content-map-lint-sections.js'
 import { LINK_RULES } from './content-map-lint-links.js'
+import { ITEM_GROUP_RULES } from './content-map-lint-item-groups.js'
 
 const list = (v) => (Array.isArray(v) ? v : [])
 const nonEmpty = (v) => typeof v === 'string' && v.trim() !== ''
@@ -243,7 +244,9 @@ export const LINT_RULES = [
   // Sections, card links, offering rows, outline items and text capacity (`content-map-lint-sections.js`).
   ...SECTION_RULES,
   // Link targets declared as links, and video slots that name their video (`content-map-lint-links.js`).
-  ...LINK_RULES
+  ...LINK_RULES,
+  // Repeated item cards declared as numbered groups, so their bodies share one shape (`content-map-lint-item-groups.js`).
+  ...ITEM_GROUP_RULES
 ]
 
 /**
