@@ -8,6 +8,7 @@ import { toneRule } from './tone.mjs'
 import { buttonKindOf, contactLabel, hasWords, iconLinkKeys, translateLabels } from './template-buttons.mjs'
 import { PROCESS_WRITING_RULE, processWritingOf } from './process-writing.mjs'
 import { copyJobs, copyLedger, duplicateComplaint, duplicates, pagesOfEntities } from './distinct-copy.mjs'
+import { PAGE_PASS_RULE, PAGE_RULE_RETRIES, pageBatches, pageHintOf } from './page-pass.mjs'
 import {
   countComplaint,
   overusedPhrases,
@@ -871,7 +872,13 @@ export async function planJoomlaContract({
   offerings = null,
   hidden = null,
   written = [],
-  offeringPosts = null
+  offeringPosts = null,
+  // 🔒 ONE PASS PER PAGE (spec TracyHQ/tracy#189, `page-pass.mjs`): `byPage` writes whole pages per call; `hints` (by slot key)
+  // and `complain` carry the page rules the engine judges an answer by; `rules` is the build rules text for this writer.
+  byPage = false,
+  hints = null,
+  complain = null,
+  rules = ''
 }) {
   if (!state?.contract || !Array.isArray(state.slots)) throw new Error('Invalid contract inventory')
   // 🔒 A slot the profile only DECLARES (`customize: "keep"`, written by `capture-contract.py --full-coverage`) is the site
@@ -889,7 +896,9 @@ export async function planJoomlaContract({
     /** Keys whose value the model made up to fit the customer, for the agent to ask about (Lee, 23/09). */
     invented = [],
     /** Which rule sent each pending slot back, so a required list can be triaged rather than read. */
-    reasons = {}
+    reasons = {},
+    /** Who owns each line written: the pass, or the writer of a page rule the line still breaks (`complain`). */
+    owners = {}
 
   // Site chrome first, and never through the model. These slots hold the base archive's own
   // branding rather than anything the customer could supply, so asking the model to replace them
@@ -1162,7 +1171,10 @@ export async function planJoomlaContract({
       : null
   /** The complaints of the batches no answer could be read for (`model-unreadable`). */
   const unreadable = []
-  const batches = sectionBatches(planned, 35)
+  const batches = byPage ? pageBatches(planned, pageOf, 35, sectionBatches) : sectionBatches(planned, 35)
+  /** The words a slot holds so far: written by an earlier call of this plan. */
+  const soFar = (key) => (typeof changes[key] === 'string' ? changes[key] : undefined)
+  const pageRules = (hints ? PAGE_PASS_RULE : '') + (rules ? ` ${rules}` : '')
   for (const slots of batches) {
     const known = new Set(slots.map((s) => s.key))
     // 🔒 THE LANGUAGE IS NAMED, ON THE BATCH AND ON EVERY SLOT — the WordPress planner's fix, for the
@@ -1211,7 +1223,8 @@ export async function planJoomlaContract({
         ...(offeringOf(s) ? { offering: offeringOf(s) } : {}),
         ...(shows(s) ? { shows: shows(s) } : {}),
         ...(labelled(s) ? { labels: labelled(s) } : {}),
-        ...(jobs.has(s.key) ? jobs.get(s.key) : {})
+        ...(jobs.has(s.key) ? jobs.get(s.key) : {}),
+        ...pageHintOf(s, hints)
       }))
     }
     // 🔒 ONE BAD BATCH USED TO LOSE THE WHOLE BUILD. A 1113-slot contract is ~32 model calls, and a
@@ -1223,9 +1236,13 @@ export async function planJoomlaContract({
     let body = null
     let complaint = null
     let raw = null
+    let ruleTries = 0
     for (let attempt = 0; attempt < ATTEMPTS; attempt += 1) {
       raw = await generate({
-        system: (journeys.size ? SYSTEM + PROCESS_WRITING_RULE : SYSTEM) + (ownPosts ? OWN_POSTS_RULE : ''),
+        system:
+          (journeys.size ? SYSTEM + PROCESS_WRITING_RULE : SYSTEM) +
+          (ownPosts ? OWN_POSTS_RULE : '') +
+          pageRules,
         input: complaint ? { ...input, fix: complaint } : input
       })
       const answer = parse(raw)
@@ -1233,8 +1250,20 @@ export async function planJoomlaContract({
       // read: a later answer replaces an earlier one only when it has the right shape.
       if (body === null || shapeComplaint(answer) === null) body = answer
       complaint = complaintAbout(answer, known, slots, languages)
+      // A page rule (a sibling's shape, a record page's own words) is sent back once; what it still breaks after that
+      // is handed to the rule's own writer below, never a reason to lose the answer.
+      if (complaint === null && complain && ruleTries < PAGE_RULE_RETRIES && attempt < ATTEMPTS - 1) {
+        const page = complain(slots, answer.values, soFar)
+        if (page) {
+          ruleTries += 1
+          complaint = page.message
+        }
+      }
       if (complaint === null) break
     }
+    /** The lines of this call that still break a page rule, by the writer they are handed to. */
+    const handed =
+      complain && shapeComplaint(body) === null ? (complain(slots, body.values, soFar)?.keys ?? {}) : {}
     // 🔒 A STRAY KEY IS NOISE THIS LOOP ALREADY IGNORES — IT MUST NOT BE THE END OF THE BUILD.
     // Below, every value is read as `body.values[slot.key]` for the slots of THIS batch, so a key
     // the answer invented is never looked at. Refusing the answer for it cost three model calls and
@@ -1300,7 +1329,8 @@ export async function planJoomlaContract({
               ? 'duplicate-copy'
               : uncounted.has(slot.key)
                 ? 'ungrounded-count'
-                : Boolean(slot.sample.trim()) !== Boolean(value.trim())
+                : Boolean(slot.sample.trim()) !== Boolean(value.trim()) &&
+                    !(hints?.[slot.key]?.fill === true && value.trim())
                   ? 'emptiness-mismatch'
                   : [...withoutStyleMarks(value)].length > slot.maxCharacters
                     ? 'too-long'
@@ -1342,7 +1372,10 @@ export async function planJoomlaContract({
           : said
       ledger.record(slot, written)
       phrases.record(slot, written)
-      if (written !== (slot.current ?? slot.sample)) changes[slot.key] = written
+      if (written !== (slot.current ?? slot.sample)) {
+        changes[slot.key] = written
+        if (hints || complain) owners[slot.key] = handed[slot.key] ?? 'page-copy'
+      }
     }
   }
   // Nothing at all could be read: that is the model, not a batch, and the run says so as it always did.
@@ -1450,6 +1483,7 @@ export async function planJoomlaContract({
     pending,
     reasons,
     invented,
+    ...(hints || complain ? { owners } : {}),
     ...(emptyLinks.length > 0 ? { emptyLinks } : {})
   }
 }

@@ -80,6 +80,10 @@ import { writeOfferingDescriptions } from './offering-description-writer.js'
 import { shapeSiblingCopy } from './sibling-copy-writer.js'
 import { writeRecordPages } from './record-page-writer.js'
 import { ctaBandValues } from './cta-band-messages.js'
+import { pagePass } from './page-pass.js'
+import { slotOwnership } from './slot-ownership.js'
+import { rulesFor } from 'website-opportunities/domain/build-rules.mjs'
+import { plainText, spellingKey } from 'website-opportunities/domain/sibling-copy-shape.mjs'
 import { decorationLeftAlone } from 'website-opportunities/domain/layout-bands.mjs'
 import {
   addDerivedLanguages,
@@ -883,7 +887,10 @@ export function createJoomlaEngine({
       // The lines of the articles that are no story (a legal text) are planned line by line, beside the pages.
       const lineByLine = posts.slots.filter((slot) => !stories.has(slot.entity))
 
+      /** @type {{changes: Record<string, any>, evidence: any, pending: string[], reasons: any, invented: string[], owners?: Record<string, string>}} */
       let plan = { changes: {}, evidence: {}, pending: [], reasons: {}, invented: [] }
+      /** @type {Record<string, string>} the band message lines the page pass was told an action for (`page-pass.js`) */
+      let passActions = {}
       let calls = 0
       let failed = 0
       // The pages the customer ticked that the demo trim hides come back in Apply: a button into one keeps its page (#1013).
@@ -973,6 +980,40 @@ export function createJoomlaEngine({
         const pinnedWords = state.slots
           .filter((slot) => typeof copyPins?.pins?.[slot.key] === 'string')
           .map((slot) => ({ ...slot, value: copyPins.pins[slot.key] }))
+        // 🔒 ONE PASS PER PAGE (COO decision 30/10/2026, spec TracyHQ/tracy#189, `page-pass.js`): the copy writer is given each
+        // page whole, with the shape of every sibling list, the lines of sibling record pages, the offerings a line must
+        // describe and the action of every band, and its answer is judged by the checks of the writers that used to patch
+        // the page afterwards. Those writers only write the lines the pass hands them, never a line the pass holds.
+        const page = rewrites
+          ? pagePass({
+              slots: state.slots.filter((slot) => !isDerived(slot) && shown(slot)),
+              contentMap: staticState(ctx.contract),
+              honesty: planHonesty,
+              sitePlan: statisticPlan,
+              apart: new Set([
+                ...Object.keys(heroSlotValues(statisticPlan, written, () => undefined)),
+                ...(statisticPlan?.slots ?? [])
+                  .filter((s) => String(s?.reason ?? '').startsWith('intro-'))
+                  .map((s) => s.key)
+              ]),
+              briefText: [
+                facts.text,
+                String(statisticPlan?.brand?.description?.value ?? ''),
+                ...Object.values(planHonesty?.values ?? {}).map((v) => String(v.value))
+              ].join(' '),
+              fixed: {
+                ...Object.fromEntries(
+                  Object.entries(planHonesty?.values ?? {}).map(([key, v]) => [key, String(v?.value ?? '')])
+                ),
+                ...copyPins?.pins
+              }
+            })
+          : null
+        passActions = Object.fromEntries(
+          Object.entries(page?.hints ?? {})
+            .filter(([, h]) => typeof h?.action === 'string')
+            .map(([key, h]) => [key, h.action])
+        )
         const answered = await planConcurrently(async (ask) => {
           const pages = await planJoomlaContract({
             state: planned,
@@ -986,7 +1027,11 @@ export function createJoomlaEngine({
             offerings,
             hidden: hiddenCards,
             written: pinnedWords,
-            offeringPosts
+            offeringPosts,
+            byPage: true,
+            hints: page?.hints ?? null,
+            complain: page?.complain ?? null,
+            rules: rulesFor({ writer: 'page-copy' })
           })
           if (lineByLine.length === 0) return pages
           try {
@@ -1039,6 +1084,13 @@ export function createJoomlaEngine({
       const madeUp = new Set(plan.invented)
       // The writer's style marks are kept apart: every step below reads plain words, the write styles them (#189).
       const styleMarks = takeStyleMarks(plan.changes)
+      // The lines the page pass holds: no later writer overwrites one while it still holds the pass's words.
+      const owned = slotOwnership()
+      owned.claim(
+        Object.fromEntries(Object.entries(plan.changes).filter(([key]) => key in (plan.owners ?? {}))),
+        'page-copy',
+        plan.owners ?? {}
+      )
       const candidate = Object.fromEntries(Object.entries(plan.changes).filter(([key]) => !madeUp.has(key)))
       const { kept, dropped } = guardChanges(candidate, slotByKey, facts)
       const left = dropped.length + [...madeUp].filter((key) => key in plan.changes).length
@@ -1289,7 +1341,7 @@ export function createJoomlaEngine({
         locale: written,
         signal: ctx.signal
       })
-      Object.assign(kept, describedLines)
+      Object.assign(kept, owned.admit(describedLines, 'offering', kept))
       Object.assign(offeringSummaries, describedLines)
       demoBlanks = demoBlanks.filter((slot) => !(slot.key in describedLines))
       // 🔒 A LINE UNDER AN OFFERING'S NAME SAYS MORE THAN THE NAME (COO rule, #189 round 9, `offering-name-only.js`): one that
@@ -1326,7 +1378,16 @@ export function createJoomlaEngine({
             .map((s) => s.key)
         ])
       })
-      Object.assign(kept, siblingShape.values)
+      // A spelling aligned to the card's own title keeps the pass's words: the one change of a held line allowed.
+      const spelt = (/** @type {string} */ v) =>
+        plainText(v)
+          .split(/\s+/)
+          .map((w) => spellingKey(w))
+          .join(' ')
+      Object.assign(
+        kept,
+        owned.admit(siblingShape.values, 'sibling', kept, { refines: (held, v) => spelt(held) === spelt(v) })
+      )
       Object.assign(offeringSummaries, siblingShape.values)
       demoBlanks = demoBlanks.filter((slot) => !(slot.key in siblingShape.values))
       if (siblingShape.unreached.length > 0)
@@ -1353,7 +1414,7 @@ export function createJoomlaEngine({
         locale: written,
         signal: ctx.signal
       })
-      Object.assign(kept, recordCopy.values)
+      Object.assign(kept, owned.admit(recordCopy.values, 'record-page', kept))
       demoBlanks = demoBlanks.filter((slot) => !(slot.key in recordCopy.values))
       if (recordCopy.unreached.length > 0)
         ctx.note(
@@ -1437,7 +1498,13 @@ export function createJoomlaEngine({
         },
         model: text,
         signal: ctx.signal,
-        note: ctx.note
+        note: ctx.note,
+        // The band lines the page pass wrote for the action it was told: kept when that is still the button's action.
+        passed: Object.fromEntries(
+          Object.entries(passActions)
+            .filter(([key]) => owned.ownerOf(key, kept[key]) === 'page-copy')
+            .map(([key, action]) => [key, { value: kept[key], action }])
+        )
       })
       Object.assign(kept, ctaBands.values)
       demoBlanks = demoBlanks.filter((slot) => !(slot.key in ctaBands.values))

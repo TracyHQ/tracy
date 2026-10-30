@@ -19,7 +19,7 @@ const SYSTEM =
 const text = (v) => (typeof v === 'string' ? v.trim() : '')
 
 /** The tighter of the slot's measured line and its contract limit: the site refuses words over either. */
-function maxOf(slot) {
+export function ctaMessageMax(slot) {
   const box = boxLimitOf(slot)
   const own = limitOf(slot)
   return box === null ? own : Math.min(own, box)
@@ -29,7 +29,9 @@ function maxOf(slot) {
  * The message of every declared band whose button stays on the page.
  * @param {{contentMap: any, slots: any[], sitePlan: any, written: Record<string, string>, locale?: string,
  *   briefText?: string, business?: {name?: string, description?: string, offerings?: string[]}, model?: any,
- *   signal?: AbortSignal, note?: (line: string) => void}} input
+ *   signal?: AbortSignal, note?: (line: string) => void, passed?: Record<string, {value: string, action: string}>}} input
+ *   `passed`: the band lines the page pass already wrote, each for the action it was told (`page-pass.js`): a line written
+ *   for the action its button carries now, and usable, is kept and never asked again
  * @returns {Promise<{values: Record<string, string>, blanks: any[], removed: Array<{entity: string, reason: string}>,
  *   bands: Array<{id: string, entity: string, action: string, written: boolean}>}>}
  */
@@ -43,7 +45,8 @@ export async function ctaBandValues({
   business = {},
   model = null,
   signal,
-  note = () => {}
+  note = () => {},
+  passed = {}
 }) {
   const out = { values: {}, blanks: [], removed: [], bands: [] }
   if (!sitePlan) return out
@@ -75,9 +78,14 @@ export async function ctaBandValues({
   }
   if (!asks.length) return out
   const problemOf = (m, value) =>
-    ctaBandMessageProblem(value, { slot: m.slot, max: maxOf(m.slot), briefText })
+    ctaBandMessageProblem(value, { slot: m.slot, max: ctaMessageMax(m.slot), briefText })
   /** @type {Record<string, string>} */
-  let said = {}
+  const said = {}
+  // A band's message is one unit: the pass's lines stand only when every line of the band was written for this action
+  // and is usable; otherwise the whole message is asked again, so its heading and line say one thing.
+  for (const { action, message } of asks)
+    if (message.every((m) => passed[m.key]?.action === action && !problemOf(m, passed[m.key].value)))
+      for (const m of message) said[m.key] = passed[m.key].value
   let why = null
   for (let attempt = 0; model && attempt < TRIES; attempt += 1) {
     const wanted = asks.flatMap((a) => a.message.filter((m) => problemOf(m, said[m.key])))
@@ -107,7 +115,7 @@ export async function ctaBandValues({
                       band: { id: a.band.id, action: a.action },
                       // The demo's words, to be replaced: never repeated.
                       sample: String(m.slot.sample ?? ''),
-                      maxCharacters: maxOf(m.slot)
+                      maxCharacters: ctaMessageMax(m.slot)
                     }))
                 )
               })
@@ -120,9 +128,7 @@ export async function ctaBandValues({
       )
       for (const [key, value] of Object.entries(answer?.values ?? {}))
         if (typeof value === 'string') said[key] = value.trim()
-      const bad = wanted
-        .map((m) => [m.key, problemOf(m, said[m.key])])
-        .filter(([, problem]) => problem)
+      const bad = wanted.map((m) => [m.key, problemOf(m, said[m.key])]).filter(([, problem]) => problem)
       why = bad.length
         ? `These answers could not be used: ${bad.map(([k, p]) => `${k} (${p})`).join(', ')}. Write them again within the rules.`
         : null
