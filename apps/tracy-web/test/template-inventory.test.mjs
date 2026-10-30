@@ -96,3 +96,77 @@ test('every element the plan must decide is of a known kind, and nothing else is
 test('an empty content map gives an empty inventory', () => {
   assert.deepEqual(templateInventory({ contentMap: {} }).elements, [])
 })
+
+// Which pages show an entity (COO rule "content map gaps", 30/10/2026): a section on no page is not in the plan at all, so
+// every way a page shows an entity is read, and an entity the map cannot place is declared with `shownOn`. A fictional
+// florist's map.
+const FLORIST = {
+  entities: [
+    { key: 'menuItem-1', kind: 'menuItem', sourceId: 1 },
+    { key: 'menuItem-2', kind: 'menuItem', sourceId: 2 },
+    { key: 'menuItem-3', kind: 'menuItem', sourceId: 3 },
+    { key: 'menuItem-4', kind: 'menuItem', sourceId: 4 },
+    { key: 'category-5', kind: 'category', sourceId: 5 },
+    { key: 'article-7', kind: 'article', sourceId: 7, identityReferences: { catid: 'category-5' } },
+    { key: 'contact-2', kind: 'contact', sourceId: 2 },
+    { key: 'user-9', kind: 'user', sourceId: 9, shownOn: ['menuItem-4'] },
+    { key: 'userProfile-900', kind: 'userProfile', sourceId: 900, identityReferences: { user_id: 'user-9' } },
+    { key: 'languageString-1', kind: 'languageString', sourceId: 1, shownOn: 'every-page' },
+    { key: 'tag-3', kind: 'tag', sourceId: 3, shownOn: [] },
+    { key: 'article-8', kind: 'article', sourceId: 8 }
+  ],
+  pages: [
+    { entity: 'menuItem-1', route: 'home', link: 'index.php?view=featured' },
+    {
+      entity: 'menuItem-2',
+      route: 'bouquets',
+      link: 'index.php?option=com_content&view=category&layout=blog&id=5'
+    },
+    { entity: 'menuItem-3', route: 'contact', link: 'index.php?option=com_contact&view=contact&id=2' },
+    { entity: 'menuItem-4', route: 'florists', link: 'index.php?view=team' }
+  ],
+  slots: [
+    'category-5',
+    'article-7',
+    'contact-2',
+    'user-9',
+    'userProfile-900',
+    'languageString-1',
+    'tag-3',
+    'article-8'
+  ].map((entity) => ({
+    key: `${entity}.0`,
+    entity,
+    type: 'text',
+    role: 'editorial.heading',
+    sample: 'Fresh tulips'
+  }))
+}
+
+test('a page shows its category and the articles in it, its contact, the entities it declares, and what they reference', () => {
+  const florist = new Map(templateInventory({ contentMap: FLORIST }).elements.map((e) => [e.id, e]))
+  const pagesOf = (/** @type {string} */ entity) => florist.get(`section:${entity}`).pages
+  assert.deepEqual(pagesOf('category-5'), ['page:menuItem-2'])
+  assert.deepEqual(pagesOf('article-7'), ['page:menuItem-2'])
+  assert.deepEqual(pagesOf('contact-2'), ['page:menuItem-3'])
+  assert.deepEqual(pagesOf('user-9'), ['page:menuItem-4'])
+  assert.deepEqual(pagesOf('userProfile-900'), ['page:menuItem-4'], 'a profile follows its user')
+  assert.deepEqual(pagesOf('languageString-1'), [
+    'page:menuItem-1',
+    'page:menuItem-2',
+    'page:menuItem-3',
+    'page:menuItem-4'
+  ])
+  assert.deepEqual(pagesOf('tag-3'), [])
+  assert.equal(florist.get('section:tag-3').shownOnNone, true, 'declared on no page on purpose')
+  assert.deepEqual(pagesOf('article-8'), [])
+  assert.equal(florist.get('section:article-8').shownOnNone, undefined)
+})
+
+test('every section of the released map is on a page, or declared on none', () => {
+  const lost = inventory.elements.filter((e) => e.kind === 'section' && !e.pages.length && !e.shownOnNone)
+  assert.deepEqual(
+    lost.map((e) => e.id),
+    []
+  )
+})

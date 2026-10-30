@@ -1271,7 +1271,11 @@
         "path": "boxing",
         "language": "*"
       },
-      "sourceId": 2
+      "sourceId": 2,
+      "shownOn": [
+        "menuItem-163",
+        "menuItem-166"
+      ]
     },
     {
       "key": "tag-3",
@@ -1280,7 +1284,11 @@
         "path": "gym",
         "language": "*"
       },
-      "sourceId": 3
+      "sourceId": 3,
+      "shownOn": [
+        "menuItem-163",
+        "menuItem-166"
+      ]
     },
     {
       "key": "tag-4",
@@ -1289,7 +1297,11 @@
         "path": "boxer",
         "language": "*"
       },
-      "sourceId": 4
+      "sourceId": 4,
+      "shownOn": [
+        "menuItem-163",
+        "menuItem-166"
+      ]
     },
     {
       "key": "field-1",
@@ -1298,7 +1310,10 @@
         "name": "phone",
         "context": "com_contact.mail"
       },
-      "sourceId": 1
+      "sourceId": 1,
+      "shownOn": [
+        "menuItem-168"
+      ]
     },
     {
       "key": "user-44",
@@ -1306,7 +1321,10 @@
       "identity": {
         "username": "Drew_Stokes"
       },
-      "sourceId": 44
+      "sourceId": 44,
+      "shownOn": [
+        "menuItem-165"
+      ]
     },
     {
       "key": "userProfile-4400",
@@ -1347,7 +1365,10 @@
       "identity": {
         "username": "Daniel Vasquez"
       },
-      "sourceId": 45
+      "sourceId": 45,
+      "shownOn": [
+        "menuItem-165"
+      ]
     },
     {
       "key": "userProfile-4500",
@@ -1388,7 +1409,10 @@
       "identity": {
         "username": "Franklin Wagner"
       },
-      "sourceId": 46
+      "sourceId": 46,
+      "shownOn": [
+        "menuItem-165"
+      ]
     },
     {
       "key": "userProfile-4600",
@@ -1429,7 +1453,10 @@
       "identity": {
         "username": "Lorene Bass"
       },
-      "sourceId": 47
+      "sourceId": 47,
+      "shownOn": [
+        "menuItem-165"
+      ]
     },
     {
       "key": "userProfile-4700",
@@ -1470,7 +1497,10 @@
       "identity": {
         "username": "Corey Gibson"
       },
-      "sourceId": 48
+      "sourceId": 48,
+      "shownOn": [
+        "menuItem-165"
+      ]
     },
     {
       "key": "userProfile-4800",
@@ -1511,7 +1541,10 @@
       "identity": {
         "username": "Cora Stephens"
       },
-      "sourceId": 49
+      "sourceId": 49,
+      "shownOn": [
+        "menuItem-165"
+      ]
     },
     {
       "key": "userProfile-4900",
@@ -1552,7 +1585,10 @@
       "identity": {
         "username": "Gene Roberts"
       },
-      "sourceId": 51
+      "sourceId": 51,
+      "shownOn": [
+        "menuItem-165"
+      ]
     },
     {
       "key": "userProfile-5100",
@@ -1594,7 +1630,10 @@
         "field": "aboutme",
         "user_id": "42"
       },
-      "sourceId": 4200
+      "sourceId": 4200,
+      "shownOn": [
+        "menuItem-165"
+      ]
     },
     {
       "key": "userProfile-4201",
@@ -1603,7 +1642,10 @@
         "field": "user_jobtitle",
         "user_id": "42"
       },
-      "sourceId": 4201
+      "sourceId": 4201,
+      "shownOn": [
+        "menuItem-165"
+      ]
     },
     {
       "key": "userProfile-4203",
@@ -1612,7 +1654,10 @@
         "field": "user_avatar",
         "user_id": "42"
       },
-      "sourceId": 4203
+      "sourceId": 4203,
+      "shownOn": [
+        "menuItem-165"
+      ]
     },
     {
       "key": "languageString-231238131",
@@ -1622,7 +1667,8 @@
         "key": "T4_OFF_CANVAS_TITLE",
         "language": "en-GB"
       },
-      "sourceId": 231238131
+      "sourceId": 231238131,
+      "shownOn": "every-page"
     },
     {
       "key": "languageString-76896395",
@@ -1632,7 +1678,10 @@
         "key": "TPL_CLASSES_TRIAL",
         "language": "en-GB"
       },
-      "sourceId": 76896395
+      "sourceId": 76896395,
+      "shownOn": [
+        "menuItem-167"
+      ]
     },
     {
       "key": "languageString-166748343",
@@ -1642,7 +1691,8 @@
         "key": "TPL_CLOSE",
         "language": "en-GB"
       },
-      "sourceId": 166748343
+      "sourceId": 166748343,
+      "shownOn": "every-page"
     },
     {
       "key": "languageString-169039348",
@@ -1652,7 +1702,10 @@
         "key": "TPL_CONTACT_EMAIL_FORM",
         "language": "en-GB"
       },
-      "sourceId": 169039348
+      "sourceId": 169039348,
+      "shownOn": [
+        "menuItem-168"
+      ]
     },
     {
       "key": "languageString-219823601",
@@ -1662,7 +1715,10 @@
         "key": "TPL_CONTACT_EMAIL_PLACEHOLDER",
         "language": "en-GB"
       },
-      "sourceId": 219823601
+      "sourceId": 219823601,
+      "shownOn": [
+        "menuItem-168"
+      ]
     },
     {
       "key": "languageString-58440578",
@@ -1672,7 +1728,10 @@
         "key": "TPL_CONTACT_ENTER_MESSAGE_PLACEHOLDER",
         "language": "en-GB"
       },
-      "sourceId": 58440578
+      "sourceId": 58440578,
+      "shownOn": [
+        "menuItem-168"
+      ]
     },
     {
       "key": "languageString-234398682",
@@ -1682,7 +1741,10 @@
         "key": "TPL_CONTACT_MESSAGE_SUBJECT_PLACEHOLDER",
         "language": "en-GB"
       },
-      "sourceId": 234398682
+      "sourceId": 234398682,
+      "shownOn": [
+        "menuItem-168"
+      ]
     },
     {
       "key": "languageString-50724917",
@@ -1692,7 +1754,10 @@
         "key": "TPL_CONTACT_NAME_PLACEHOLDER",
         "language": "en-GB"
       },
-      "sourceId": 50724917
+      "sourceId": 50724917,
+      "shownOn": [
+        "menuItem-168"
+      ]
     },
     {
       "key": "languageString-139204367",
@@ -1702,7 +1767,10 @@
         "key": "TPL_CONTACT_SEND",
         "language": "en-GB"
       },
-      "sourceId": 139204367
+      "sourceId": 139204367,
+      "shownOn": [
+        "menuItem-168"
+      ]
     },
     {
       "key": "languageString-34322868",
@@ -1712,7 +1780,10 @@
         "key": "TPL_CONTACT_VISIT",
         "language": "en-GB"
       },
-      "sourceId": 34322868
+      "sourceId": 34322868,
+      "shownOn": [
+        "menuItem-168"
+      ]
     },
     {
       "key": "languageString-10831042",
@@ -1722,7 +1793,10 @@
         "key": "TPL_DETAILS",
         "language": "en-GB"
       },
-      "sourceId": 10831042
+      "sourceId": 10831042,
+      "shownOn": [
+        "menuItem-168"
+      ]
     },
     {
       "key": "languageString-112732346",
@@ -1732,7 +1806,10 @@
         "key": "TPL_FOLLOW_US",
         "language": "en-GB"
       },
-      "sourceId": 112732346
+      "sourceId": 112732346,
+      "shownOn": [
+        "menuItem-168"
+      ]
     },
     {
       "key": "languageString-182937349",
@@ -1742,7 +1819,10 @@
         "key": "TPL_LEARNING_LEAD_DESC",
         "language": "en-GB"
       },
-      "sourceId": 182937349
+      "sourceId": 182937349,
+      "shownOn": [
+        "menuItem-194"
+      ]
     },
     {
       "key": "languageString-46373076",
@@ -1752,7 +1832,10 @@
         "key": "TPL_LEARNING_LEAD_TITLE",
         "language": "en-GB"
       },
-      "sourceId": 46373076
+      "sourceId": 46373076,
+      "shownOn": [
+        "menuItem-194"
+      ]
     },
     {
       "key": "languageString-37868544",
@@ -1762,7 +1845,8 @@
         "key": "TPL_NO_SUPPORT_GROUP",
         "language": "en-GB"
       },
-      "sourceId": 37868544
+      "sourceId": 37868544,
+      "shownOn": []
     },
     {
       "key": "languageString-30910664",
@@ -1772,7 +1856,10 @@
         "key": "TPL_OPEN_IN_GOOGLE_MAPS",
         "language": "en-GB"
       },
-      "sourceId": 30910664
+      "sourceId": 30910664,
+      "shownOn": [
+        "menuItem-168"
+      ]
     },
     {
       "key": "languageString-135820122",
@@ -1782,7 +1869,10 @@
         "key": "TPL_PASSWORD",
         "language": "en-GB"
       },
-      "sourceId": 135820122
+      "sourceId": 135820122,
+      "shownOn": [
+        "menuItem-156"
+      ]
     },
     {
       "key": "languageString-27872773",
@@ -1792,7 +1882,8 @@
         "key": "TPL_PLAY",
         "language": "en-GB"
       },
-      "sourceId": 27872773
+      "sourceId": 27872773,
+      "shownOn": "every-page"
     },
     {
       "key": "languageString-90793445",
@@ -1802,7 +1893,10 @@
         "key": "TPL_SEE_SCHEDULE",
         "language": "en-GB"
       },
-      "sourceId": 90793445
+      "sourceId": 90793445,
+      "shownOn": [
+        "menuItem-167"
+      ]
     },
     {
       "key": "languageString-256948293",
@@ -1812,7 +1906,10 @@
         "key": "TPL_TRY_CLASS",
         "language": "en-GB"
       },
-      "sourceId": 256948293
+      "sourceId": 256948293,
+      "shownOn": [
+        "menuItem-167"
+      ]
     },
     {
       "key": "languageString-44242957",
@@ -1822,7 +1919,10 @@
         "key": "TPL_USERNAME",
         "language": "en-GB"
       },
-      "sourceId": 44242957
+      "sourceId": 44242957,
+      "shownOn": [
+        "menuItem-156"
+      ]
     },
     {
       "key": "siteSetting-257986166",
@@ -1832,7 +1932,8 @@
         "profile": "default",
         "key": "site_logo"
       },
-      "sourceId": 257986166
+      "sourceId": 257986166,
+      "shownOn": "every-page"
     },
     {
       "key": "siteSetting-211586990",
@@ -1842,7 +1943,8 @@
         "profile": "default",
         "key": "site_logo_dark"
       },
-      "sourceId": 211586990
+      "sourceId": 211586990,
+      "shownOn": "every-page"
     }
   ],
   "slots": [

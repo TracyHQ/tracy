@@ -206,13 +206,11 @@ test('a refused first plan goes back to the same author with its reasons, and th
   // The author read the rulebook, the template and the brief photos.
   assert.match(author.calls[0].messages[0].content, /the brief decides what the site has/i)
   const input = JSON.parse(author.calls[0].messages[1].content)
-  assert.ok(input.template.some((e) => e.id === HOME))
+  assert.ok(input.template.pages.some((e) => e.id === HOME))
+  // Only the photos the labels accept are a choice; a refused one is skipped by code, with its reason.
   assert.deepEqual(
-    input.photos.map((p) => [p.id, p.verdict]),
-    [
-      ['photo:a1', 'accept'],
-      ['photo:a2', 'reject']
-    ]
+    input.photos.map((p) => p.id),
+    ['photo:a1']
   )
   assert.equal(input.brief.factSheet.people, undefined, 'the brief names no people')
   // Round one was refused for the person the brief never names; round two carries the reasons in the same conversation.
@@ -231,9 +229,10 @@ test('a brief with no people gets the team section hidden with a reason, in the 
   const team = records.sitePlan.plan.decisions.find((d) => d.element === TEAM)
   assert.equal(team.decision, 'hide')
   assert.match(team.reason, /no team/)
-  assert.deepEqual(records.sitePlan.plan.outOfScope.template, [
-    { element: TEAM, reason: 'the brief names no team members' }
-  ])
+  assert.deepEqual(
+    records.sitePlan.plan.outOfScope.template.filter((o) => o.element === TEAM),
+    [{ element: TEAM, reason: 'the brief names no team members' }]
+  )
 })
 
 test('the rounds, tokens, time and cost of every plan call are in the build record and in the text spend', async () => {
@@ -273,4 +272,110 @@ test('three refusals fall back to the current writers without failing the build,
   assert.ok(run.refusal.some((r) => r.rule === 'unsourced-fact'))
   assert.ok(run.notes.some((n) => /editorial model is not assigned/.test(n)))
   assert.ok(run.notes.some((n) => /site plan was refused 3 time/.test(n)))
+})
+
+// The author decides only the real choices (ticket TracyHQ/tracy#234 plan size): pages, the sections it hides, card counts,
+// facts and leads per page, the glossary, the writing order, the brief photos and the picture slots they fill. Code fills
+// every other decision before the check (children follow their section, icons follow their item, a button takes its
+// mapped action), and the check stays exhaustive over the merged plan.
+const KINDS_FILLED = ['icon', 'button', 'link', 'menu', 'footer-column', 'contact-block', 'cta-band', 'slot']
+
+const RECORD_ROWS = new Set(['person', 'quote', 'service', 'package'])
+
+/** An answer with only the real choices, its writing order out of dependency order. */
+function choicesOnly() {
+  const full = planOf({ team: false })
+  const kept = new Set([HOME, CLASSES, CONTACT])
+  const els = new Map(inventory.elements.map((e) => [e.id, e]))
+  const onKept = (/** @type {any} */ e) => {
+    const section = els.get(e.section)
+    return section && section.id !== TEAM && section.pages.some((p) => kept.has(p))
+  }
+  const cards = inventory.elements
+    .filter((e) => e.kind === 'cards' && onKept(e) && RECORD_ROWS.has(e.groupKind))
+    .map((e) => {
+      const count = Math.min(2, e.limits.capacity)
+      return { element: e.id, decision: 'keep', count, items: ITEMS.slice(0, count) }
+    })
+  // Only the kept pages are listed (every other page is dropped by code); the home page also names the record page
+  // family it summarises, which is decided twice the same way; no writing order and no template out-of-scope list.
+  const pages = full.pages.filter((p) => p.decision === 'keep')
+  pages.find((p) => p.id === HOME).dependsOn = [CLASSES, 'record-page:classes']
+  return {
+    ...full,
+    pages: [...pages, { id: 'record-page:classes', decision: 'keep' }],
+    photos: full.photos.filter((p) => p.photo !== 'photo:a2'),
+    decisions: [
+      { element: TEAM, decision: 'hide', reason: 'the brief names no team members' },
+      { element: 'record-page:classes', decision: 'keep' },
+      ...cards
+    ],
+    writingOrder: undefined,
+    outOfScope: { brief: [] }
+  }
+}
+
+test('the author is sent only the real choices: pages, sections on a page with their card rows and picture slots, and record pages', async () => {
+  const author = scriptedAuthor([choicesOnly()])
+  await prepareWith({ text: quietText(), editorial: author })
+  const input = JSON.parse(author.calls[0].messages[1].content)
+  assert.deepEqual(Object.keys(input.template).sort(), ['pages', 'recordPages', 'sections'])
+  const sent = JSON.stringify(input.template)
+  for (const kind of KINDS_FILLED) assert.ok(!sent.includes(`"${kind}:`), `no ${kind} is sent`)
+  assert.ok(
+    sent.includes('"picture:module-156.0 business.hero_image aspect 1.5"'),
+    'a picture slot is sent in one line'
+  )
+  assert.ok(
+    input.template.sections.every((e) => e.pages?.length > 0),
+    'a section on no page is not sent'
+  )
+  // A card row of brief records (people, offerings, packages, quotes) is a choice; a row of the template's own parts
+  // (statistic tiles, call-to-action cards, social links) follows its section.
+  assert.ok(sent.includes('"cards:module-163.person capacity 4"'))
+  assert.ok(!sent.includes('cards:module-160.stat'))
+  assert.match(author.calls[0].messages[0].content, /filled by code/i)
+})
+
+test('an answer with only the real choices is completed by code and accepted in one round', async () => {
+  const author = scriptedAuthor([choicesOnly()])
+  const { records } = await prepareWith({ text: quietText(), editorial: author })
+  const run = records.sitePlan
+  assert.deepEqual(
+    run.rounds.map((r) => [r.ok, r.reasonCount]),
+    [[true, 0]]
+  )
+  const plan = run.plan
+  const decision = (/** @type {string} */ id) => plan.decisions.find((d) => d.element === id)
+  // The author's own decisions stand; code fills the rest, and says so.
+  assert.equal(decision(TEAM).decision, 'hide')
+  assert.equal(decision(TEAM).by, undefined)
+  assert.deepEqual(decision('section:module-156'), {
+    element: 'section:module-156',
+    decision: 'keep',
+    by: 'default'
+  })
+  // The hero picture takes the brief photo the author placed in it; the hero button its mapped action, to a kept page.
+  assert.deepEqual(decision('picture:module-156.0').picture, { photo: 'photo:a1' })
+  assert.deepEqual(decision('button:module-156.5').action, { kind: 'page', target: CONTACT })
+  assert.equal(decision('icon:module-157.12').decision, 'keep')
+  // Nothing inside the hidden team section, and no section on no page, is in the plan.
+  assert.ok(!plan.decisions.some((d) => inventory.elements.find((e) => e.id === d.element)?.section === TEAM))
+  // A card row of the template's own parts keeps the cards the template shows; a refused photo is skipped with its reason.
+  assert.deepEqual(decision('cards:module-160.stat'), {
+    element: 'cards:module-160.stat',
+    decision: 'keep',
+    count: 1,
+    by: 'default'
+  })
+  assert.deepEqual(
+    plan.photos.find((p) => p.photo === 'photo:a2'),
+    { photo: 'photo:a2', decision: 'skip', reason: 'its labels refuse it: graphic', by: 'default' }
+  )
+  // A page left out is dropped; what the plan takes off is in the template out-of-scope list, with its reason.
+  assert.equal(plan.pages.find((p) => p.id === 'page:menuItem-152').decision, 'drop')
+  assert.ok(plan.outOfScope.template.some((o) => o.element === 'page:menuItem-152' && o.reason))
+  assert.ok(plan.outOfScope.template.some((o) => o.element === TEAM && /no team/.test(o.reason)))
+  // The writing order is put in dependency order by code: the summarised page before its summary.
+  assert.ok(plan.writingOrder.indexOf(CLASSES) < plan.writingOrder.indexOf(HOME))
 })

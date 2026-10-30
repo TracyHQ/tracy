@@ -15,7 +15,7 @@ import path from 'node:path'
 import { collectionOfGroupId } from 'website-opportunities/domain/content-map-repeatable-lists.mjs'
 import { slotCharacterLimit } from 'website-opportunities/domain/site-plan-honesty.mjs'
 
-import { membersOf, pagesOfEntity } from './template-inventory-pages.js'
+import { membersOf, pagesOfEntity, shownOnNone } from './template-inventory-pages.js'
 
 const LABEL_ROLE = /(?:^|\.)(?:cta_label|button_label)$/
 
@@ -84,17 +84,26 @@ export function templateInventory({ contentMap, showcaseNav = null, contract = n
       showcase: hidden.has(page.entity)
     })
   const pagesOf = pagesOfEntity(map)
+  const onNone = shownOnNone(map)
   const sections = new Set()
   const section = (entity) => {
     const id = `section:${entity}`
     if (!sections.has(id)) {
       sections.add(id)
-      elements.push({ id, kind: 'section', decide: true, entity, pages: pagesOf(entity) })
+      elements.push({
+        id,
+        kind: 'section',
+        decide: true,
+        entity,
+        pages: pagesOf(entity),
+        ...(onNone(entity) ? { shownOnNone: true } : {})
+      })
     }
     return id
   }
   const buttonUrls = new Set(slots.map((s) => s.action?.urlKey).filter(Boolean))
-  /** @type {Map<string, {id: string, groups: Set<string>, section: string}>} */
+  const sampleOf = new Map(slots.map((s) => [s.key, s.sample ?? null]))
+  /** @type {Map<string, {id: string, groups: Set<string>, section: string, kind: string | null}>} */
   const collections = new Map()
   for (const slot of slots) {
     if (String(slot.entity).startsWith('menuItem-')) continue
@@ -105,7 +114,12 @@ export function templateInventory({ contentMap, showcaseNav = null, contract = n
     let card = null
     if (collection) {
       const id = `cards:${collection}`
-      const entry = collections.get(id) ?? { id, groups: new Set(), section: owner }
+      const entry = collections.get(id) ?? {
+        id,
+        groups: new Set(),
+        section: owner,
+        kind: slot.group.kind ?? null
+      }
       entry.groups.add(slot.group.id)
       collections.set(id, entry)
       card = { collection: id, index: Number(slot.group.id.slice(collection.length + 1)) }
@@ -120,7 +134,13 @@ export function templateInventory({ contentMap, showcaseNav = null, contract = n
       role: slot.role ?? null,
       label: slot.label ?? null,
       sample: slot.sample ?? null,
-      ...(slot.action ? { action: slot.action.kind, urlKey: slot.action.urlKey ?? null } : {}),
+      ...(slot.action
+        ? {
+            action: slot.action.kind,
+            urlKey: slot.action.urlKey ?? null,
+            href: (slot.action.urlKey && sampleOf.get(slot.action.urlKey)) || null
+          }
+        : {}),
       limits: slotLimits(slot, kind)
     })
   }
@@ -139,8 +159,9 @@ export function templateInventory({ contentMap, showcaseNav = null, contract = n
       kind: 'cards',
       decide: true,
       section: entry.section,
+      groupKind: entry.kind,
       pages: pagesOf(collection.split('.')[0]),
-      limits: { capacity: capacityOf(map, collection, entry.groups.size) }
+      limits: { capacity: capacityOf(map, collection, entry.groups.size), shown: entry.groups.size }
     })
   }
   elements.push(...membersOf(map, section))

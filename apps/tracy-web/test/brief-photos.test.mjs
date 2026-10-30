@@ -34,7 +34,12 @@ const BRIEF = {
     team: [{ id: 'mia', label: 'Mia Stone', role: 'Teacher' }]
   },
   assets: [
-    asset({ id: 'a1', sha256: sha('1'), caption: 'Hands shaping a bowl on the wheel', depicts: { id: 'wheel' } }),
+    asset({
+      id: 'a1',
+      sha256: sha('1'),
+      caption: 'Hands shaping a bowl on the wheel',
+      depicts: { id: 'wheel' }
+    }),
     asset({
       id: 'a2',
       sha256: sha('2'),
@@ -101,4 +106,52 @@ test('a label the brief does not hold is named as unknown, never guessed', () =>
 test('a brief with no assets has no photos', () => {
   assert.deepEqual(briefPhotos({ reading: {} }), [])
   assert.deepEqual(briefPhotos(null), [])
+})
+
+test('a blurry photo, one with text or a watermark, and one of another business are refused, each with its own reason', () => {
+  const risky = briefPhotos({
+    assets: [
+      asset({ id: 'b1', sha256: sha('a'), caption: 'A soft, shaken shot of the kiln', isBlurry: true }),
+      asset({
+        id: 'b2',
+        sha256: sha('b'),
+        caption: 'A stock photo with a watermark',
+        hasTextOrWatermark: true
+      }),
+      asset({ id: 'b3', sha256: sha('c'), caption: 'The pottery shop next door', showsOtherBusiness: true }),
+      asset({
+        id: 'b4',
+        sha256: sha('d'),
+        caption: 'Glazed cups on a shelf',
+        isBlurry: false,
+        hasTextOrWatermark: false,
+        showsOtherBusiness: false
+      })
+    ]
+  })
+  const of = new Map(risky.map((p) => [p.id, p]))
+  assert.deepEqual(of.get('photo:b1').rejectedFor, ['blurry'])
+  assert.deepEqual(of.get('photo:b2').rejectedFor, ['text-or-watermark'])
+  assert.deepEqual(of.get('photo:b3').rejectedFor, ['other-business'])
+  for (const id of ['photo:b1', 'photo:b2', 'photo:b3']) assert.equal(of.get(id).verdict, 'reject')
+  assert.equal(of.get('photo:b4').verdict, 'accept')
+  assert.deepEqual(of.get('photo:b4').unknown, [])
+})
+
+test('a risk label the brief does not hold (null) is unknown, not a refusal', () => {
+  const [photo] = briefPhotos({
+    assets: [
+      asset({
+        id: 'c1',
+        sha256: sha('e'),
+        caption: 'A bowl drying',
+        isBlurry: null,
+        hasTextOrWatermark: null,
+        showsOtherBusiness: null
+      })
+    ]
+  })
+  assert.equal(photo.verdict, 'accept')
+  assert.deepEqual(photo.rejectedFor, [])
+  assert.deepEqual(photo.unknown, ['blurry', 'text-or-watermark', 'other-business'])
 })

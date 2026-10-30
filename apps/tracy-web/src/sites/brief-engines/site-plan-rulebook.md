@@ -1,6 +1,6 @@
 ---
 name: site-plan-rulebook
-version: 1
+version: 2
 description: How the author of a brief-built website plans the whole site before any page is written. Read by the site plan author (`site-plan-author.js`) as its instructions; code checks never read this file, they encode the same rules on their own (`site-plan-check.js`).
 ---
 
@@ -29,11 +29,17 @@ A business fact is placed on the site only when the brief states it. The approve
 - The system checks every fact against the whole brief, not your citations: a fact the brief states anywhere passes, a
   fact it does not state is refused. Explanatory copy written from what the trade generally involves needs no source.
 
-## 3. One decision for every element
+## 3. One decision for every element; code fills the defaults
 
-Every element of the inventory whose `decide` is true gets exactly one decision. An element needs no decision of its own
-when the plan already takes it off: its section is hidden, every page its section is on is dropped, its card row is
-hidden, or its card is past the row's count. Scope rules per kind:
+Every element of the site gets exactly one decision, but you are sent and decide only the real choices: every page, the
+sections you hide, every card row on a kept page (its count and items), the brief photos and the picture slots they fill,
+and a picture or record page only where you differ from its default. Code fills every other decision before the check,
+and the check reads the whole plan: a section you do not list is kept; what a section holds follows it; a picture shows
+the photo you place in it, else a drawing of its record, page and copy; an icon follows its item's meaning; a button or
+link takes its mapped action when the brief has it, else it is hidden; menus list the kept pages; the writing order is put
+in dependency order. An element on no page of the template is not in the plan at all. An element needs no decision of
+its own when the plan already takes it off: its section is hidden, every page its section is on is dropped, its card row
+is hidden, or its card is past the row's count. Scope rules per kind (the defaults follow the same rules):
 
 - **page**: `keep`, `drop` (with a reason) or `add`. Drop the template's showcase and demo pages (`showcase: true`) and
   any page the brief has nothing for. Keep a home page and a contact page.
@@ -47,7 +53,8 @@ hidden, or its card is past the row's count. Scope rules per kind:
   whole row when no item has a meaning of its own.
 - **button** and **link**: `keep` with `action: {kind, target}`, where kind is `page` (target: a kept or added page id),
   `call` or `whatsapp` (a phone the brief states), `email` (an email the brief states), `booking` (a booking address the
-  brief states) or `map`; or `hide` when the brief gives no real action.
+  brief states), `map`, `item` (the item its card shows) or `control` (acts on its own page: a modal close, a form
+  send); or `hide` when the brief gives no real action.
 - **menu** and **footer-column**: `keep` with `items` (the page ids it lists, kept or added pages only), or `hide`.
 - **contact-block**: `keep` when the brief has a phone, email or address; else `hide`.
 - **cta-band**: `keep` when its button has a real action; else `hide`.

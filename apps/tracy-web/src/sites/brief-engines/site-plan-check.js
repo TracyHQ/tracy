@@ -18,7 +18,9 @@
  *   identity, contact, legal, forms, seo: read by the later stages, not by this check.
  *
  * An element needs no decision of its own when the plan already takes it off: its section is hidden, its section's
- * pages are all dropped, its card collection is hidden, or its card is past the collection's count.
+ * pages are all dropped, its card collection is hidden, or its card is past the collection's count. A section no page of
+ * the template shows is not in the plan at all, nor is anything in it (the packing check reports it,
+ * `content-map-lint-pages.js`).
  */
 import { seeder } from '../../lib/seeder.js'
 
@@ -108,12 +110,12 @@ export async function checkSitePlan(plan, { inventory, site, photos = null }) {
  * Whether the plan already takes an element off without a decision of its own.
  * @param {Map<string, any>} elements @param {Map<string, any>} decided
  */
-function takenOff(elements, decided) {
+export function takenOff(elements, decided) {
   const dropped = (/** @type {string} */ page) => decided.get(page)?.decision === 'drop'
+  // A section on no page is not in the plan at all; one whose pages are all dropped, or that is hidden, is taken off.
   const sectionOff = (/** @type {any} */ section) =>
     !!section &&
-    (decided.get(section.id)?.decision === 'hide' ||
-      (section.pages?.length > 0 && section.pages.every(dropped)))
+    (decided.get(section.id)?.decision === 'hide' || !section.pages?.length || section.pages.every(dropped))
   return (/** @type {any} */ element) => {
     if (element.kind === 'section') return sectionOff(element)
     if (element.section && sectionOff(elements.get(element.section))) return true

@@ -306,3 +306,39 @@ test('a used photo placed in a slot that is not a template picture slot is refus
   plan.photos[0].slots = ['picture:module-999.0']
   assert.deepEqual(rules(await withPhotos(plan)), ['unknown-element'])
 })
+
+// A section no page shows is not in the plan at all (ticket TracyHQ/tracy#234 plan size): it and everything in it need no
+// decision. The packing check reports such a section for the admin (`content-map-lint-pages.js`).
+test('a section on no page of the template, and everything in it, needs no decision', async () => {
+  const lost = [
+    { id: 'section:module-900', kind: 'section', decide: true, entity: 'module-900', pages: [] },
+    {
+      id: 'picture:module-900.0',
+      kind: 'picture',
+      decide: true,
+      section: 'section:module-900',
+      card: null,
+      limits: {}
+    },
+    {
+      id: 'button:module-900.1',
+      kind: 'button',
+      decide: true,
+      section: 'section:module-900',
+      card: null,
+      limits: {}
+    }
+  ]
+  const result = await checkSitePlan(completePlan(), {
+    inventory: { elements: [...inventory.elements, ...lost] },
+    site: SITE
+  })
+  assert.deepEqual(result.reasons, [])
+})
+
+test('a button that acts on its own page (a modal close, a form send) or opens its card item is a real action', async () => {
+  const plan = completePlan()
+  decisionOf(plan, 'button:module-156.5').action = { kind: 'control', target: 'button:module-156.5' }
+  decisionOf(plan, 'button:module-161.3').action = { kind: 'item', target: 'cards:module-157.item' }
+  assert.deepEqual((await check(plan)).reasons, [])
+})

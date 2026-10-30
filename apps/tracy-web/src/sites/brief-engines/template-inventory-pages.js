@@ -3,14 +3,26 @@
  * which pages show an entity, and the menus, footer columns, contact blocks, CTA bands and record pages.
  */
 
+/** The entity a page link opens as its body: an article, a category (its listing) or a contact (Joomla link forms). */
+const LINK_BODIES = [
+  [/[?&]view=article&id=(\d+)/, 'article'],
+  [/[?&]view=category(?:&[^#]*?)?&id=(\d+)/, 'category'],
+  [/[?&]view=contact(?:&[^#]*?)?&id=(\d+)/, 'contact']
+]
+
 /**
- * Which pages show an entity: a module by its page assignments, an article by the page that opens it.
+ * Which pages show an entity (COO rule "content map gaps", 30/10/2026): a module by its page assignments; an article, a
+ * category or a contact by the page whose link opens it; an entity that references another (an article its category, a
+ * profile field its user) by the pages of what it references; and an entity the map cannot place by its declared
+ * `shownOn`: page entity keys, `"every-page"` (site-wide strings and settings), or `[]` (on no page, on purpose).
+ * The packing check reports every entity with slots that is on no page and not declared (`content-map-lint-pages.js`).
  * @param {any} map - a content map
  * @returns {(entity: string) => string[]} page element ids
  */
 export function pagesOfEntity(map) {
   const pages = Array.isArray(map.pages) ? map.pages : []
-  const sourceOf = new Map((map.entities ?? []).map((e) => [e.key, e.sourceId]))
+  const entities = Array.isArray(map.entities) ? map.entities : []
+  const sourceOf = new Map(entities.map((e) => [e.key, e.sourceId]))
   /** @type {Map<string, string[]>} */
   const out = new Map()
   const add = (entity, page) => out.set(entity, [...(out.get(entity) ?? []), `page:${page}`])
@@ -24,10 +36,38 @@ export function pagesOfEntity(map) {
         (a.assignmentMode === 'exclude' && !ids.includes(pageIds[i]))
       if (shows) add(a.entity, page.entity)
     }
-    const article = /view=article&id=(\d+)/.exec(page.link ?? '')
-    if (article) add(`article-${article[1]}`, page.entity)
+    for (const [pattern, kind] of LINK_BODIES) {
+      const id = pattern.exec(page.link ?? '')
+      if (id) add(`${kind}-${id[1]}`, page.entity)
+    }
   })
+  for (const entity of entities) {
+    if (entity?.shownOn === 'every-page') for (const page of pages) add(entity.key, page.entity)
+    else if (Array.isArray(entity?.shownOn)) for (const page of entity.shownOn) add(entity.key, page)
+  }
+  // An entity follows what it references, until nothing moves (a profile field its user, an article its category).
+  const referencing = entities.filter(
+    (e) => e?.identityReferences && typeof e.identityReferences === 'object'
+  )
+  for (let moved = true; moved; ) {
+    moved = false
+    for (const entity of referencing)
+      for (const target of Object.values(entity.identityReferences))
+        for (const page of out.get(String(target)) ?? [])
+          if (!(out.get(entity.key) ?? []).includes(page)) {
+            out.set(entity.key, [...(out.get(entity.key) ?? []), page])
+            moved = true
+          }
+  }
   return (entity) => [...new Set(out.get(entity) ?? [])]
+}
+
+/** Whether a content map declares an entity on no page on purpose (`shownOn: []`). */
+export function shownOnNone(map) {
+  const none = new Set(
+    (map.entities ?? []).filter((e) => Array.isArray(e?.shownOn) && e.shownOn.length === 0).map((e) => e.key)
+  )
+  return (/** @type {string} */ entity) => none.has(entity)
 }
 
 /**

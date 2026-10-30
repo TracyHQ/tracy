@@ -143,8 +143,9 @@ const webOf = (/** @type {string} */ s) =>
     .replace(/[/.]+$/, '')
 
 /**
- * Every kept button and link does something real for the business: opens a kept or added page, or reaches a phone,
- * email, booking address or street address the brief states.
+ * Every kept button and link does something real for the business: opens a kept or added page, opens the item its card
+ * shows (`item`, to a card row or record page), reaches a phone, email, booking address or street address the brief
+ * states, or acts on its own page (`control`: a modal close, a video play, a form send).
  * @param {{elements: Map<string, any>, decided: Map<string, any>, off: (e: any) => boolean, shownPages: Set<string>,
  *   site: any, facts: any}} input
  */
@@ -152,6 +153,8 @@ export function buttonReasons({ elements, decided, off, shownPages, site, facts 
   const brief = [...facts.sourceTexts(site).values()].join(' \n ')
   const phones = (brief.match(PHONE) ?? []).map(digits).filter((d) => d.length >= 7)
   const real = (/** @type {any} */ action) => {
+    // A control acts on the page it sits on (a modal close, a video play, a form send): real wherever it is kept.
+    if (action?.kind === 'control') return true
     const target = String(action?.target ?? '').trim()
     if (!target) return false
     switch (action?.kind) {
@@ -170,6 +173,8 @@ export function buttonReasons({ elements, decided, off, shownPages, site, facts 
         return /^https?:\/\/\S+$/i.test(target) && brief.toLowerCase().includes(webOf(target))
       case 'map':
         return norm(site?.address) !== ''
+      case 'item':
+        return ['cards', 'record-page', 'page'].includes(elements.get(target)?.kind) || shownPages.has(target)
       default:
         return false
     }

@@ -15,6 +15,12 @@
 
 const text = (/** @type {unknown} */ v) => (typeof v === 'string' ? v.trim() : '')
 const GRAPHIC_CONTENT = new Set(['logo', 'text-graphic'])
+/** The research-time risk labels of a photo and the refusal reason each gives when true. */
+const RISK_LABELS = /** @type {const} */ ([
+  ['isBlurry', 'blurry'],
+  ['hasTextOrWatermark', 'text-or-watermark'],
+  ['showsOtherBusiness', 'other-business']
+])
 
 /** The fact sheet's `photo-N` source id of each caption (`brief-fact-sheet.js` numbers the linked captions once). */
 function sourceIdsOf(/** @type {any} */ factSheet) {
@@ -43,11 +49,16 @@ export function briefPhotos(brief, factSheet = null) {
     const subject = content && content !== 'unlabelled' ? content : null
     const sized = Number.isInteger(asset.width) && Number.isInteger(asset.height)
     const rejectedFor = []
-    if (asset.isGraphic === true || GRAPHIC_CONTENT.has(content) || asset.unlabelledReason === 'not_a_photograph')
+    if (
+      asset.isGraphic === true ||
+      GRAPHIC_CONTENT.has(content) ||
+      asset.unlabelledReason === 'not_a_photograph'
+    )
       rejectedFor.push('graphic')
     if (asset.unlabelledReason === 'too_small') rejectedFor.push('too-small')
     if (asset.sha256 && seen.has(asset.sha256)) rejectedFor.push('duplicate')
     if (asset.sha256) seen.add(asset.sha256)
+    for (const [label, reason] of RISK_LABELS) if (asset[label] === true) rejectedFor.push(reason)
     out.push({
       id: `photo:${asset.id}`,
       sourceId: (caption && sourceIds.get(caption)) || null,
@@ -65,7 +76,11 @@ export function briefPhotos(brief, factSheet = null) {
       uploader: text(asset.uploaderRole) || null,
       verdict: rejectedFor.length ? 'reject' : 'accept',
       rejectedFor,
-      unknown: [...(subject ? [] : ['subject']), ...(sized ? [] : ['size'])]
+      unknown: [
+        ...(subject ? [] : ['subject']),
+        ...(sized ? [] : ['size']),
+        ...RISK_LABELS.filter(([label]) => asset[label] === null).map(([, reason]) => reason)
+      ]
     })
   }
   return out
