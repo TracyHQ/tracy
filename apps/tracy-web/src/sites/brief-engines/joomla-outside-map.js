@@ -39,6 +39,7 @@ import { sweepDeadLinks } from './joomla-link-sweep.js'
 import { brandColoursCss } from './joomla-brand-colours.js'
 import { blockBytes, HEAD_BLOCK_LIMIT, headBlocks, withoutTracyBlocks } from './joomla-head-blocks.js'
 import { CONTACT_LIST_HEADINGS } from './joomla-contact-page.js'
+import { writeDemoNameAliases } from './joomla-demo-name-aliases.js'
 
 /** The title link of an item in a Joomla articles module; the core marks the current article's `active`. */
 const JOOMLA_ARTICLE_TITLE = 'a.mod-articles-category-title'
@@ -312,8 +313,11 @@ export async function writeOutsideMap({
     } catch (error) {
       say("the template's credit line could not be read", error)
     }
+    /** @type {Array<{id: number, alias: string, from: string}>} */
+    let titleMoves = []
     try {
       const aliases = planAliases({ contentMap, articles: await readArticles(apply, siteKey) })
+      titleMoves = aliases
       steps.push(...aliases.map((a) => ({ kind: 'article', id: a.id, fields: { alias: a.alias } })))
       done.aliases = aliases.length
     } catch (error) {
@@ -325,6 +329,22 @@ export async function writeOutsideMap({
       const refused = new Set(wrote.refused.map((s) => `${s.kind}:${s.id}`))
       done.credit = steps.filter((s) => s.kind === 'module' && !refused.has(`module:${s.id}`)).length
       done.aliases = steps.filter((s) => s.kind === 'article' && !refused.has(`article:${s.id}`)).length
+      titleMoves = titleMoves.filter((a) => !refused.has(`article:${a.id}`))
+    }
+    // Addresses still named after a demo person whose page now names a real one, and the final check (`joomla-demo-name-aliases.js`).
+    try {
+      const names = await writeDemoNameAliases({
+        apply,
+        siteKey,
+        contentMap,
+        plan,
+        applyId,
+        note,
+        moved: titleMoves.map((a) => ({ kind: 'article', id: a.id, alias: a.alias, from: a.from }))
+      })
+      done.aliases += names.written
+    } catch (error) {
+      say('the addresses named after demo people could not be moved', error)
     }
     if (done.credit) time('creditLinesTakenOff', done.credit)
     if (done.aliases) time('aliasesWritten', done.aliases)
