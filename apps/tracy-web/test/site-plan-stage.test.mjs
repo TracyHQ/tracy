@@ -105,7 +105,12 @@ function planOf({ team }) {
     if (e.kind === 'cards')
       decisions.push({ element: e.id, decision: 'keep', count: Math.min(2, e.limits.capacity) })
     else if (e.kind === 'picture')
-      decisions.push({ element: e.id, decision: 'keep', picture: { draw: 'A tailor at a cutting table' } })
+      decisions.push({
+        element: e.id,
+        decision: 'keep',
+        // A logo slot takes the logo, never a drawing.
+        picture: e.role === 'business.logo' ? { logo: true } : { draw: 'A tailor at a cutting table' }
+      })
     else if (e.kind === 'icon') decisions.push({ element: e.id, decision: 'keep', icon: 'neutral' })
     else if (e.kind === 'button' || e.kind === 'link')
       decisions.push({ element: e.id, decision: 'keep', action: { kind: 'page', target: CONTACT } })

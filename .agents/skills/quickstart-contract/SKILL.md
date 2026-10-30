@@ -574,6 +574,11 @@ path):
    record page for its own record, and fills a card of the layout a sibling page fills. After a brief build, check
    `record-pages-check.js` on the receipt: no picture shared by two record pages in one section, no section repeated
    with the name swapped, no empty card, no pager on a landing record page.
+   Each family also names the page that lists it, `listing` (a page entity, e.g. the offerings category page), whose
+   body is the one parent its records share: when a brief lists more offerings than the template has record pages, the
+   build adds pages by copying the family's first record into that parent, so the listing lists them. The readiness
+   checker on /ops reports a family with no listing, or one whose listing does not open its records' parent
+   (`record-page-listing`).
    **Forms are declared (every framework):** every form of the template (a sign-up box, a booking widget, a login box,
    the contact form of a contact record) is listed in the content map's top-level `forms`: `{entity, kind}`, `kind` one
    of `newsletter`, `booking`, `login`, `contact`. A brief build keeps a form only when the brief gives it a real

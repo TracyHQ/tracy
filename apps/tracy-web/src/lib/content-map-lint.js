@@ -33,6 +33,7 @@ import { ITEM_GROUP_RULES } from './content-map-lint-item-groups.js'
 import { QUOTE_RULES } from './content-map-lint-quotes.js'
 import { PAGE_RULES } from './content-map-lint-pages.js'
 import { FORM_RULES } from './content-map-lint-forms.js'
+import { RECORD_PAGE_RULES } from './content-map-lint-record-pages.js'
 
 const list = (v) => (Array.isArray(v) ? v : [])
 const nonEmpty = (v) => typeof v === 'string' && v.trim() !== ''
@@ -255,7 +256,9 @@ export const LINT_RULES = [
   // Every entity with slots is shown on a page, or declared on none (`content-map-lint-pages.js`).
   ...PAGE_RULES,
   // Every form of the template is declared, so the site plan keeps or hides it (`content-map-lint-forms.js`).
-  ...FORM_RULES
+  ...FORM_RULES,
+  // Every record page family names the page that lists it, so a copied record page is listed (`content-map-lint-record-pages.js`).
+  ...RECORD_PAGE_RULES
 ]
 
 /**

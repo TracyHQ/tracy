@@ -49,6 +49,8 @@ is hidden, or its card is past the row's count. Scope rules per kind (the defaul
   cannot fill.
 - **picture**: `keep` with `picture: {photo: "<brief photo id>"}` or `picture: {draw: "<what the drawing shows>"}`, or
   `hide` when the layout survives without it. A drawing describes the record, page and copy it stands beside.
+  A logo slot (role `business.logo`) takes only `picture: {logo: true}`: the brief's logo or the business name, never a
+  photo or a drawing. A demo post of the template is never kept: the build does not write it, so it is hidden.
 - **icon**: `keep` with `icon: "<the item meaning>"`, or `icon: "neutral"` when nothing matches; one neutral icon for a
   whole row when no item has a meaning of its own.
 - **button** and **link**: `keep` with `action: {kind, target}`, where kind is `page` (target: a kept or added page id),
@@ -71,7 +73,10 @@ otherwise fill it with explanatory copy of the trade, which needs no source.
 
 When the brief lists more offerings than the template has sample pages, add a page with `decision: "add"`, a new id
 (`page:added-<slug>`), and `copies`: the id of the template page or record page whose layout it uses. Never add a page
-without a layout to copy.
+without a layout to copy. An added page shows exactly one item of the brief in its `items` (an offering or a person),
+one no other page of that layout shows, so the site never has more pages than the brief has items. Copy a record page
+(`record-page:<id>`) for an offering's own page; copy a page only when it opens an article of its own (a list page copied
+would show the same list again). The pages that list the item depend on the added page, which is written first.
 
 ## 6. A shared glossary for repeated items
 

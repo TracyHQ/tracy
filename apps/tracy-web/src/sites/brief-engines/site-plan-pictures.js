@@ -8,12 +8,14 @@
  *   - a picture the plan hides is cleared and hidden; one the plan takes off (its section hidden, its page dropped, its
  *     card past the row's count) is not written at all;
  *   - a kept slot with no usable decision is hidden, recorded: no demo picture stays in a kept slot;
+ *   - a logo slot takes only the logo (the brief's, or the business name), through the logo's own door;
  *   - a brief photo the plan does not use is never placed, extended or drawn from;
  *   - an icon shows the item meaning the plan names, or the one neutral icon for its whole row when the plan says
  *     neutral; the default (`item-meaning`) keeps the item's own words deciding.
  * With no accepted plan nothing here runs and the picture stage decides as before. CMS-neutral: it reads the plan, the
  * template inventory (`template-inventory.js`) and the picture stage's slot decisions only.
  */
+import { isLogoPicture, showsLogo } from './site-plan-check-identity.js'
 import { takenOff } from './site-plan-check.js'
 
 /** The drawing description `completePlan` fills by default: no description of the author's own. */
@@ -31,7 +33,7 @@ export const assetIdOf = (/** @type {unknown} */ photo) => String(photo ?? '').r
  * @param {any} plan - the accepted site plan (`site-plan/1`, completed by `completePlan`)
  * @param {{inventory: {elements: any[]}}} input
  * @returns {null | {
- *   pictures: Map<string, {element: string, decision: 'photo' | 'draw' | 'hide' | 'template' | 'off' | 'none',
+ *   pictures: Map<string, {element: string, decision: 'photo' | 'draw' | 'hide' | 'template' | 'off' | 'none' | 'logo',
  *     mediaId?: string, describe?: string, reason?: string}>,
  *   icons: Map<string, {element: string, decision: 'meaning' | 'neutral' | 'own' | 'off', meaning?: string}>,
  *   skipped: Set<string>, used: Set<string>}}
@@ -77,6 +79,15 @@ export function plannedPictures(plan, { inventory }) {
               ? 'own'
               : 'meaning'
       icons.set(e.key, { element: e.id, decision, ...(decision === 'meaning' ? { meaning } : {}) })
+      continue
+    }
+    // A logo slot shows the logo through its own door, whatever else the plan says (the plan check refuses anything else).
+    if (isLogoPicture(e)) {
+      pictures.set(e.key, {
+        element: e.id,
+        decision: 'logo',
+        ...(showsLogo(d) ? {} : { reason: 'a logo slot takes only the logo' })
+      })
       continue
     }
     if (!d) {
@@ -169,6 +180,11 @@ export function followPlannedPictures(slots, planned) {
         reason: 'the site plan takes its section, page or card off'
       })
       return { ...d, action: 'skip', reason: OFF_BY_PLAN }
+    }
+    // A logo slot never takes a photo or a drawing: the logo's own door writes the brief's logo or the business name.
+    if (p.decision === 'logo') {
+      record.set(d.key, { ...base, applied: 'logo', reason: 'the logo, through its own door' })
+      return d.reason === 'logo-own-door' ? d : { ...d, action: 'skip', reason: 'logo-own-door' }
     }
     // The logo and a slot the template's role keeps go through their own door, whatever the plan says.
     if (['logo-own-door', 'role-keeps', 'demo-only-entity'].includes(d.reason)) {

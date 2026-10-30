@@ -24,14 +24,16 @@
  */
 import { seeder } from '../../lib/seeder.js'
 
+import { addedItemReasons, uncopiable } from './site-plan-check-added.js'
+import { identityReasons } from './site-plan-check-identity.js'
 import { photoReasons } from './site-plan-check-photos.js'
 import { closestIds } from './site-plan-defaults-parts.js'
 import { buttonReasons, factReasons, glossaryReasons, orderReasons } from './site-plan-check-rules.js'
 
 /**
- * @typedef {{rule: 'undecided' | 'decided-twice' | 'unknown-element' | 'added-page-layout' | 'over-capacity' |
+ * @typedef {{rule: 'undecided' | 'decided-twice' | 'unknown-element' | 'added-page-layout' | 'added-page-item' | 'over-capacity' |
  *   'unsourced-fact' | 'no-page-kept' | 'missing-glossary' | 'writing-order-cycle' | 'writing-order-missing' | 'writing-order-late' | 'button-no-action' |
- *   'photo-undecided' | 'photo-decided-twice' | 'unknown-photo' | 'photo-unusable-used',
+ *   'photo-undecided' | 'photo-decided-twice' | 'unknown-photo' | 'photo-unusable-used' | 'logo-slot' | 'demo-post-kept',
  *   element?: string, message: string}} PlanReason
  */
 
@@ -68,14 +70,16 @@ export async function checkSitePlan(plan, { inventory, site, photos = null }) {
   }
 
   for (const page of pages.filter((p) => p?.decision === 'add')) {
-    const copies = elements.get(String(page.copies ?? ''))
-    if (!copies || !['page', 'record-page'].includes(copies.kind))
+    const why = uncopiable(elements.get(String(page.copies ?? '')))
+    if (why)
       reasons.push({
         rule: 'added-page-layout',
         element: page.id,
-        message: `added page ${page.id} must copy an existing template page layout (a page or record page id); it names "${page.copies ?? ''}"`
+        message: `added page ${page.id} must copy an existing template page layout (a page or record page id); it names "${page.copies ?? ''}": ${why}`
       })
   }
+  // An added page shows one brief item no other page of its layout shows: never more pages than the brief has items for.
+  reasons.push(...addedItemReasons(plan, elements, site))
 
   const shownPages = new Set(pages.filter((p) => ['keep', 'add'].includes(p?.decision)).map((p) => p.id))
   // A site with no page has nothing to write: the plan is refused, never completed into an empty site.
@@ -109,6 +113,8 @@ export async function checkSitePlan(plan, { inventory, site, photos = null }) {
   reasons.push(...glossaryReasons(plan, elements, shownPages))
   reasons.push(...orderReasons(plan, shownPages))
   reasons.push(...buttonReasons({ elements, decided, off, shownPages, site, facts }))
+  // A logo slot takes the logo; a demo post the build never writes is never kept (`site-plan-check-identity.js`).
+  reasons.push(...identityReasons({ plan, elements, decided, off }))
   if (Array.isArray(photos)) reasons.push(...photoReasons(plan, photos, elements))
   return { ok: reasons.length === 0, reasons }
 }

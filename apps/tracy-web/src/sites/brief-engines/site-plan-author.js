@@ -15,6 +15,7 @@ import { outputBudget } from '../../lib/seed-model.js'
 import { jsonObjectIn } from './shared.js'
 import { checkSitePlan } from './site-plan-check.js'
 import { authorElements, completePlan } from './site-plan-defaults.js'
+import { withBriefOutOfScope } from './site-plan-out-of-scope.js'
 import { textPriceOf } from './text-spend.js'
 
 /** The rulebook, read once: the author's instructions. Code checks never read it. */
@@ -61,7 +62,8 @@ dropped. Every photo you are sent appears in "photos" once. Name photos and pict
 that is on a kept page, with its "count" and "items"; every section you hide, with its reason; and only where you differ
 from the default, a picture you hide or want drawn differently, or a record page you hide.
 Everything else is filled by code before the check, so leave it out: a section not listed is kept; what a section holds follows it; a picture shows
-the photo your "photos" place in it, else a drawing of its record, page and copy; icons follow their item; buttons and
+the photo your "photos" place in it, else a drawing of its record, page and copy (a logo slot takes only the logo, never a
+photo; a demo post of the template is hidden); icons follow their item; buttons and
 links take their mapped action (a kept page, the brief's phone, email or address) or are hidden; menus list the kept
 pages; contact blocks and call-to-action bands follow the brief's contacts; the writing order is put in dependency order
 ("writingOrder" may be left out); the template out-of-scope list is made from your drops and hides. Each element is
@@ -308,7 +310,9 @@ export async function writeSitePlan({
     // Code completes the author's choices with every decision that follows from the template and the brief; the check
     // reads the merged plan, exhaustively.
     const answered = jsonObjectIn(answer)
-    const plan = answered ? completePlan(answered, { inventory, site, photos }) : null
+    const plan = answered
+      ? withBriefOutOfScope(completePlan(answered, { inventory, site, photos }), site)
+      : null
     const result = plan
       ? await checkSitePlan(plan, { inventory, site, photos })
       : {

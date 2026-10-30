@@ -15,7 +15,7 @@ import path from 'node:path'
 import { collectionOfGroupId } from 'website-opportunities/domain/content-map-repeatable-lists.mjs'
 import { slotCharacterLimit } from 'website-opportunities/domain/site-plan-honesty.mjs'
 
-import { membersOf, pagesOfEntity, shownOnNone } from './template-inventory-pages.js'
+import { membersOf, pageBodyOf, pagesOfEntity, shownOnNone } from './template-inventory-pages.js'
 
 const LABEL_ROLE = /(?:^|\.)(?:cta_label|button_label)$/
 
@@ -81,6 +81,8 @@ export function templateInventory({ contentMap, showcaseNav = null, contract = n
       route: page.route ?? null,
       layout: page.layout ?? null,
       link: page.link ?? null,
+      // The entity the page opens as its body: an added page copies a page by it (ticket #238).
+      body: pageBodyOf(page.link),
       showcase: hidden.has(page.entity)
     })
   const pagesOf = pagesOfEntity(map)

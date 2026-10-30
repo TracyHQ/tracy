@@ -12,6 +12,48 @@ const LINK_BODIES = [
 ]
 
 /**
+ * The entity a page link opens as its body (`article-<id>`, `category-<id>`, `contact-<id>`), or null: a list, a component
+ * view, an alias or no link. An added page copies a page by this body (ticket #238).
+ * @param {unknown} link
+ */
+export function pageBodyOf(link) {
+  for (const [pattern, kind] of LINK_BODIES) {
+    const id = pattern.exec(String(link ?? ''))
+    if (id) return `${kind}-${id[1]}`
+  }
+  return null
+}
+
+/**
+ * The page that lists a record page family (ticket #238): the one the map declares (`listing`, a page entity), else the page
+ * whose body is the parent every record of the family references (an article's category). A copy of a record page joins that
+ * parent, so the listing lists it. Null when the family has no single parent a page opens.
+ * @param {any} map - a content map @param {any} family - a `recordPages` entry
+ * @returns {string | null} a page element id
+ */
+export function recordListingOf(map, family) {
+  const pages = Array.isArray(map?.pages) ? map.pages : []
+  if (typeof family?.listing === 'string' && family.listing)
+    return pages.some((p) => p.entity === family.listing) ? `page:${family.listing}` : null
+  const parent = recordParentOf(map, family)
+  const page = parent ? pages.find((p) => pageBodyOf(p.link) === parent) : null
+  return page ? `page:${page.entity}` : null
+}
+
+/** The one parent entity every record of a family references (`identityReferences`), or null. */
+export function recordParentOf(/** @type {any} */ map, /** @type {any} */ family) {
+  const entities = new Map((map?.entities ?? []).map((/** @type {any} */ e) => [e.key, e]))
+  const parents = new Set(
+    (family?.entities ?? []).map((/** @type {string} */ key) => {
+      const refs = entities.get(key)?.identityReferences
+      return refs && typeof refs === 'object' ? String(refs.catid ?? Object.values(refs)[0] ?? '') : ''
+    })
+  )
+  const [only] = parents
+  return parents.size === 1 && only ? only : null
+}
+
+/**
  * Which pages show an entity (COO rule "content map gaps", 30/10/2026): a module by its page assignments; an article, a
  * category or a contact by the page whose link opens it; an entity that references another (an article its category, a
  * profile field its user) by the pages of what it references; and an entity the map cannot place by its declared
@@ -137,6 +179,8 @@ export function membersOf(map, section) {
       decide: true,
       layout: r.layout ?? null,
       entities: r.entities ?? [],
+      // The page that lists the family: a page added as a copy of a record joins its parent there (ticket #238).
+      listing: recordListingOf(map, r),
       limits: { capacity: (r.entities ?? []).length }
     })
   return out

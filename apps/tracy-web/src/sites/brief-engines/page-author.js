@@ -30,12 +30,18 @@ const entityOf = (/** @type {string} */ id) => String(id).replace(/^[a-z-]+:/, '
  * order does not place comes before every other page, since lists and the home page summarise it. Its records are bound
  * to the plan's items in order (`recordItems`): record N is item N, so each offering's own page is written from its
  * glossary entry.
+ * 🔒 AN ADDED PAGE IS WRITTEN LIKE ANY OTHER PAGE (ticket #238): a page the plan adds copies a template layout, so its
+ * slots are those of the entity it copies (`source`: the first record of a record page family, or the article a page opens,
+ * `bodyOf`), written for its one item; one the order does not place comes right after the record pages, before the pages
+ * that list it. Its words are kept apart (`added` of `writePagesInOrder`): the template's own record keeps its own.
  * @param {any} run - the site plan run (`writeSitePlan`)
- * @param {{recordPages?: Array<{id: string, entities?: string[]}>}} [template] - the content map's record pages
- * @returns {{order: Array<{id: string, entity: string, page: any, entities?: string[]}>, hidden: Set<string>,
+ * @param {{recordPages?: Array<{id: string, entities?: string[]}>, bodyOf?: (pageId: string) => string | null}} [template]
+ *   - the content map's record pages, and the entity a template page opens as its body (`article-<id>`), or null
+ * @returns {{order: Array<{id: string, entity: string, page: any, entities?: string[],
+ *   added?: {copies: string, source: string, item: string}}>, hidden: Set<string>,
  *   dropped: Set<string>, cardItems: Record<string, string[]>, recordItems: Record<string, string>, glossary: any[]} | null}
  */
-export function pageAuthorPlan(run, { recordPages = [] } = {}) {
+export function pageAuthorPlan(run, { recordPages = [], bodyOf = () => null } = {}) {
   const plan = run?.status === 'accepted' ? run.plan : null
   if (!plan) return null
   const records = new Map(
@@ -55,15 +61,27 @@ export function pageAuthorPlan(run, { recordPages = [] } = {}) {
   // A record page the plan keeps only by a decision (no page entry) is written too.
   for (const [id] of records)
     if (!pages.has(id) && decisionOf.get(id)?.decision === 'keep') pages.set(id, { id, decision: 'keep' })
+  /** @type {Map<string, {copies: string, source: string, item: string}>} the pages the plan adds, by id */
+  const added = new Map()
+  for (const p of list(plan.pages).filter((x) => x?.decision === 'add')) {
+    const copies = String(p.copies ?? '')
+    const source = records.has(copies) ? records.get(copies)?.[0] : bodyOf(copies)
+    const item = String(list(p.items)[0] ?? '')
+    if (!source || !item) continue
+    added.set(String(p.id), { copies, source, item })
+    pages.set(String(p.id), p)
+  }
   const isRecord = (/** @type {string} */ id) => records.has(id)
   const named = list(plan.writingOrder).map(String)
   const ordered = [
     ...[...pages.keys()].filter((id) => isRecord(id) && !named.includes(id)),
+    ...[...added.keys()].filter((id) => !named.includes(id)),
     ...named,
     ...pages.keys()
   ].filter((id, i, all) => pages.has(id) && all.indexOf(id) === i)
   const order = ordered.map((id) => {
     const { decision: _, by: __, dependsOn: ___, seo: ____, ...page } = pages.get(id)
+    if (added.has(id)) return { id, entity: id, page, added: added.get(id) }
     return isRecord(id)
       ? {
           id,
@@ -134,7 +152,9 @@ function joinPlans(/** @type {any} */ a, /** @type {any} */ b) {
  *     Promise<{result: any, calls: number, failed: number, cut?: number, rounds?: number, callMs?: number[]}>,
  *   usage?: () => any, rulebook?: string, now?: () => number}} input
  * @returns {Promise<{plan: any, answered: {calls: number, failed: number, cut: number, rounds: number, callMs: number[]},
- *   pages: any[], hiddenKeys: string[], droppedKeys: string[], pageOfKey: Map<string, string>}>}
+ *   pages: any[], hiddenKeys: string[], droppedKeys: string[], pageOfKey: Map<string, string>,
+ *   added: Array<{id: string, copies: string, source: string, item: string, values: Record<string, string>,
+ *     pending: string[]}>}>}
  */
 export async function writePagesInOrder({
   plan,
@@ -178,8 +198,19 @@ export async function writePagesInOrder({
     if (first) pageOfKey.set(slot.key, first)
     byPage.set(page, [...(byPage.get(page) ?? []), slot])
   }
+  // An added page writes the slots of the entity it copies, for its own item (ticket #238).
+  for (const step of plan.order.filter((p) => p.added)) {
+    const source = String(step.added?.source)
+    if (plan.hidden.has(source)) continue
+    byPage.set(
+      step.entity,
+      slots.filter((s) => String(s.entity) === source)
+    )
+  }
+  /** @type {Array<{id: string, copies: string, source: string, item: string, values: Record<string, string>, pending: string[]}>} */
+  const added = []
   const steps = [
-    ...plan.order.map((p) => ({ id: p.id, entity: p.entity, page: p.page })),
+    ...plan.order.map((p) => ({ id: p.id, entity: p.entity, page: p.page, added: p.added ?? null })),
     {
       id: SHARED_PAGE,
       entity: SHARED_PAGE,
@@ -187,7 +218,8 @@ export async function writePagesInOrder({
         id: SHARED_PAGE,
         purpose:
           'the parts of the site shown on several pages or on every page (header, footer, shared bands)'
-      }
+      },
+      added: null
     }
   ]
   const hiddenSections = [...plan.hidden].map((entity) => `section:${entity}`)
@@ -213,7 +245,10 @@ export async function writePagesInOrder({
           page: step.page,
           hiddenSections,
           cardItems: plan.cardItems,
-          recordItems: plan.recordItems,
+          // An added page binds the record it copies to its own item.
+          recordItems: step.added
+            ? { ...plan.recordItems, [step.added.source]: step.added.item }
+            : plan.recordItems,
           glossary: plan.glossary,
           writtenPages: [...writtenPages]
         },
@@ -235,7 +270,7 @@ export async function writePagesInOrder({
     }
     const after = usage() ?? {}
     const result = got.result ?? {}
-    joined = joinPlans(joined, result)
+    if (!step.added) joined = joinPlans(joined, result)
     answered.calls += got.calls ?? 0
     answered.failed += got.failed ?? 0
     answered.cut += got.cut ?? 0
@@ -244,7 +279,15 @@ export async function writePagesInOrder({
     const values = own
       .filter((s) => typeof result.changes?.[s.key] === 'string')
       .map((s) => ({ key: s.key, entity: String(s.entity), value: String(result.changes[s.key]) }))
-    written.push(...values)
+    // An added page's words are its own: kept apart, never over the template record it copies.
+    if (step.added)
+      added.push({
+        id: step.id,
+        ...step.added,
+        values: Object.fromEntries(values.map((v) => [v.key, v.value])),
+        pending: list(result.pending).filter((k) => only.includes(k))
+      })
+    else written.push(...values)
     writtenPages.push(
       compactPage(
         step.id,
@@ -264,5 +307,5 @@ export async function writePagesInOrder({
       pending: list(result.pending).filter((k) => only.includes(k)).length
     })
   }
-  return { plan: joined, answered, pages, hiddenKeys, droppedKeys, pageOfKey }
+  return { plan: joined, answered, pages, hiddenKeys, droppedKeys, pageOfKey, added }
 }

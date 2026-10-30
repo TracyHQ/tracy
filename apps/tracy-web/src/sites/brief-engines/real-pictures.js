@@ -338,7 +338,7 @@ export async function shapeReal({
       const sampleOf = new Map(contentMap.slots.map((s) => [s.key, String(s.sample ?? '').split('#')[0]]))
       for (const [key, r] of followed.record) {
         const why = unshown.get(sampleOf.get(key))
-        if (why && !['off', 'own-door', 'template'].includes(r.applied))
+        if (why && !['off', 'own-door', 'template', 'logo'].includes(r.applied))
           followed.record.set(key, { ...r, applied: 'not-shown', reason: why })
       }
       applied = {

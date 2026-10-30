@@ -33,6 +33,8 @@ import { briefFactSheet } from './brief-fact-sheet.js'
 import { briefPhotos } from './brief-photos.js'
 import { writeSitePlan } from './site-plan-author.js'
 import { pageAuthorPlan, writePagesInOrder } from './page-author.js'
+import { linkAddedPages, settleAddedPages, writeAddedPages } from './joomla-added-pages.js'
+import { pageBodyOf } from './template-inventory-pages.js'
 import { inventoryOfContract } from './template-inventory.js'
 import { overlaySitePlan, planFill, withPlanFill } from './site-plan-fill.js'
 import { plannedPictures } from './site-plan-pictures.js'
@@ -1063,6 +1065,8 @@ export function createJoomlaEngine({
       const authorAsked = new Set()
       /** @type {Map<string, string>} the page each line of the author's was written with, for the line trace */
       let authorPageOf = new Map()
+      /** @type {ReturnType<typeof settleAddedPages>} ADDED PAGES BY COPYING A TEMPLATE LAYOUT (#238): written by the author */
+      let addedPages = []
       if (!text) ctx.note('no text model is set, so the template keeps its own words')
       else if (!rewrites) ctx.note(ABOUT_BLANK_NOTE)
       else {
@@ -1070,7 +1074,13 @@ export function createJoomlaEngine({
         // 🔒 THE PLAN'S AUTHOR WRITES THE PAGES (spec TracyHQ/tracy#231, ticket #235, `page-author.js`): an accepted site plan
         // is waited for, and replaces the site direction below; a refused, failed or skipped plan leaves the current writers.
         authorPages = pageAuthorPlan(await sitePlanRun, {
-          recordPages: staticState(ctx.contract)?.recordPages ?? []
+          recordPages: staticState(ctx.contract)?.recordPages ?? [],
+          // An added copy of a template page is written from the article that page opens (#238).
+          bodyOf: (pageId) => {
+            const page = staticState(ctx.contract)?.pages?.find((p) => `page:${p?.entity}` === pageId)
+            const body = pageBodyOf(page?.link)
+            return body?.startsWith('article-') ? body : null
+          }
         })
         // 🔒 ONE SITE DIRECTION BEFORE THE PAGE WRITERS (COO, 30/10/2026, `site-direction.js`): one call reads the whole fact
         // digest and the pages the plan writes, and every writer is given its voice, its lead per page and its facts per page.
@@ -1185,6 +1195,13 @@ export function createJoomlaEngine({
             if (!authorPages?.hidden.has(String(slot.entity)) && !byAuthor.droppedKeys.includes(slot.key))
               authorAsked.add(slot.key)
           authorPageOf = byAuthor.pageOfKey
+          // The pages the plan adds keep their own words, apart from the template records they copy (#238).
+          addedPages = settleAddedPages({
+            added: byAuthor.added,
+            slots: planned.slots,
+            changes: byAuthor.plan.changes ?? {},
+            plan: (await sitePlanRun)?.plan ?? null
+          })
           ctx.record?.('pageAuthor', {
             pages: byAuthor.pages,
             hidden: byAuthor.hiddenKeys.length,
@@ -1555,7 +1572,10 @@ export function createJoomlaEngine({
       Object.assign(kept, heroLines)
       demoBlanks = demoBlanks.filter((slot) => !(slot.key in heroLines))
       // Required card summaries are settled after copy pins and protected from later empty-field cleanup.
+      /** @type {Set<string>} the summaries that fail with no sourced line that fits: settled below, never kept */
+      const summariesRefused = new Set()
       const offeringSummaries = await offeringSummaryValues({
+        refused: summariesRefused,
         slots: state.slots.filter((slot) => !isDerived(slot) && shown(slot)),
         honesty,
         written: kept,
@@ -1621,6 +1641,25 @@ export function createJoomlaEngine({
       Object.assign(kept, owned.admit(describedLines, 'offering', kept))
       Object.assign(offeringSummaries, describedLines)
       demoBlanks = demoBlanks.filter((slot) => !(slot.key in describedLines))
+      // 🔒 A FAILING SUMMARY WITH NO SOURCED LINE THAT FITS COMES OFF (COO rule, debt of ticket #237): never kept as written.
+      // It is traced (`copyLineTrace`, check offering-summary) and settled like a refused line: its card or block comes off
+      // where the template can, else it is emptied.
+      const summaryLeft = [...summariesRefused].filter((key) => !(key in describedLines))
+      if (authorPages) authorCheckRefuses(summaryLeft, 'offering-summary')
+      else
+        for (const key of summaryLeft) {
+          const slot = slotByKey.get(key)
+          lineTrace.push({
+            key,
+            writer: 'offering',
+            reason: 'refused',
+            check: 'offering-summary',
+            text: kept[key]
+          })
+          delete kept[key]
+          if (String(slot?.sample ?? '').trim() && !demoBlanks.some((b) => b.key === key))
+            demoBlanks.push(slot)
+        }
       // 🔒 A LINE UNDER AN OFFERING'S NAME SAYS MORE THAN THE NAME (COO rule, #189 round 9, `offering-name-only.js`): one that
       // would only repeat it, or one the writer still left unwritten, is emptied after the write, whoever wrote it.
       for (const slot of nameOnlyOfferingLines({
@@ -2078,7 +2117,9 @@ export function createJoomlaEngine({
         // The one author's accepted site plan (`site-plan-author.js`), null when refused: read by the writers from #235.
         authorPlan: sitePlanOutcome.plan ?? null,
         // What the fill stages take from the accepted plan (`site-plan-fill.js`, #240), null without one.
-        authorFill
+        authorFill,
+        // The pages the accepted plan adds by copying a template page, with their author's words (#238).
+        addedPages
       }
     },
 
@@ -3386,6 +3427,30 @@ export function createJoomlaEngine({
         note: ctx.note
       })
       if (pagers > 0) ctx.time('recordPagersOff', pagers)
+      // 🔒 PAGES ADDED BY COPYING A TEMPLATE PAGE (#238, `joomla-added-pages.js`): made after every cleanup and the pager
+      // switch, from the template record as it now stands, before the menus and the footer list the site's pages; then every
+      // button the plan sends to one is linked to it.
+      if (prepared.addedPages?.length) {
+        const made = await writeAddedPages({
+          apply,
+          siteKey,
+          added: prepared.addedPages,
+          contentMap: staticState(ctx.contract),
+          changes: prepared.changes ?? {},
+          note: ctx.note
+        })
+        ctx.time('addedPages', made.pages.length)
+        const linked = await linkAddedPages({
+          apply,
+          siteKey,
+          plan: prepared.authorPlan,
+          inventory: inventoryOfContract(ctx.contract),
+          contentMap: staticState(ctx.contract),
+          links: made.links,
+          note: ctx.note
+        })
+        if (linked > 0) ctx.time('addedPageLinks', linked)
+      }
       // 🔒 The Privacy Policy page (criterion 10.1) exists before the menus are written, so the footer link column lists it.
       const privacy = await writeJoomlaPrivacyPage({ apply, siteKey, sitePlan: menuPlan, note: ctx.note })
       if (privacy) ctx.time('privacyPage', privacy.articleId)

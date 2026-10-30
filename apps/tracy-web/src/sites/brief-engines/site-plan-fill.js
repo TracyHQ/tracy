@@ -25,7 +25,21 @@ const list = (/** @type {unknown} */ v) => (Array.isArray(v) ? v : [])
 const text = (/** @type {unknown} */ v) => (typeof v === 'string' ? v.trim() : '')
 const bare = (/** @type {unknown} */ v) => String(v ?? '').replace(/^\/+|\/+$/g, '')
 
-/** The link of a page of the site: a template page by its menu item; an added page has none yet. */
+/** The address part of an added page: its id without the `page:added-` prefix, in lower-case words joined by dashes. */
+export function addedSlug(/** @type {unknown} */ id) {
+  return String(id ?? '')
+    .replace(/^page:(?:added-)?/, '')
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+/**
+ * The link of a page of the site: a template page by its menu item. An added page has none until the build creates it;
+ * a button the plan sends there is linked by that stage (`joomla-added-pages.js` `linkAddedPages`, ticket #238).
+ */
 export function pageHref(/** @type {string} */ pageId) {
   const item = /^page:menuItem-(\d+)$/.exec(String(pageId))
   return item ? `index.php?Itemid=${item[1]}` : null
@@ -84,7 +98,10 @@ export function planFill(plan, { inventory, refuse = () => [] }) {
   const pages = []
   for (const p of list(plan.pages)) {
     const element = elements.get(String(p?.id))
-    const route = bare(element?.route ?? p?.route)
+    // An added page that copies a record page is listed by its family's listing page, never a menu page of its own
+    // (ticket #238); one that copies a page gets the menu entry the build makes for it, at its planned route.
+    if (p?.decision === 'add' && elements.get(String(p.copies))?.kind === 'record-page') continue
+    const route = bare(element?.route ?? p?.route ?? (p?.decision === 'add' ? addedSlug(p.id) : ''))
     if (!route) continue
     const item = /^menuItem-(\d+)$/.exec(String(element?.entity ?? ''))
     pages.push({

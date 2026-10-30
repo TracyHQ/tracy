@@ -23,6 +23,7 @@
  * Every filled decision carries `by: 'default'`. CMS-neutral, except the one demo link form read below.
  */
 
+import { demoPostSections, isLogoPicture } from './site-plan-check-identity.js'
 import { takenOff } from './site-plan-check.js'
 import { dedupe, mappedAction, orderedPages, repairIds } from './site-plan-defaults-parts.js'
 import { formDecisions, siteParts } from './site-plan-defaults-site.js'
@@ -90,14 +91,20 @@ export function completePlan(authored, { inventory, site, photos = [] }) {
   )
   // A page the author does not list is dropped. A dependency is order only: one on a page that is not written is moved.
   const named = new Set(own.map((p) => String(p.id)))
+  // An added page is written before every page that lists its item (#238): those pages summarise it.
+  const addedFor = (/** @type {any} */ p) =>
+    own
+      .filter((a) => a?.decision === 'add' && a.id !== p.id && p?.decision !== 'add')
+      .filter((a) => list(a.items).some((i) => list(p.items).map(String).includes(String(i))))
+      .map((a) => String(a.id))
   const pages = [
     ...own.map((p) =>
       shownPages.has(String(p.id))
         ? {
             ...p,
-            dependsOn: list(p.dependsOn)
-              .map(String)
-              .filter((d) => shownPages.has(d))
+            dependsOn: [...new Set([...list(p.dependsOn).map(String), ...addedFor(p)])].filter((d) =>
+              shownPages.has(d)
+            )
           }
         : p
     ),
@@ -120,9 +127,13 @@ export function completePlan(authored, { inventory, site, photos = [] }) {
   const filled = []
   const fill = (/** @type {any} */ d) => filled.push({ ...d, by: 'default' })
   const hasReach = !!(text(site?.phone) || text(site?.email) || text(site?.address))
+  // A demo post of the template is never written by the build: hidden, with all it holds (`site-plan-check-identity.js`).
+  const posts = demoPostSections(inventory.elements)
   for (const e of inventory.elements) {
     if (!e.decide || e.kind === 'page' || decided.has(e.id) || !onPage(e) || off(e)) continue
-    if (e.kind === 'cards') {
+    if (e.section && posts.has(e.section) && !decided.has(e.section)) continue
+    if (posts.has(e.id)) fill({ element: e.id, decision: 'hide', reason: 'a demo post of the template' })
+    else if (e.kind === 'cards') {
       if (!recordRow(e))
         fill({
           element: e.id,
@@ -135,11 +146,14 @@ export function completePlan(authored, { inventory, site, photos = [] }) {
       fill({
         element: e.id,
         decision: 'keep',
-        picture: photo
-          ? { photo }
-          : e.limits?.keep
-            ? { template: true }
-            : { draw: 'the record, page and copy beside this frame' }
+        // A logo slot takes the brief's logo or the business-name wordmark, never a photo or a drawing.
+        picture: isLogoPicture(e)
+          ? { logo: true }
+          : photo
+            ? { photo }
+            : e.limits?.keep
+              ? { template: true }
+              : { draw: 'the record, page and copy beside this frame' }
       })
     } else if (e.kind === 'icon') fill({ element: e.id, decision: 'keep', icon: 'item-meaning' })
     else if (e.kind === 'button' || e.kind === 'link') {

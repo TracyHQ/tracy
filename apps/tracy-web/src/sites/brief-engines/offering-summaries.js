@@ -12,7 +12,9 @@ const textOf = (node) =>
 const visibleWords = (value) => wordsOf(textOf(parseFragment(String(value ?? ''))))
 
 /** @param {{slots: any[], honesty: any, written: Record<string, string>, locale?: string,
- * model?: any, signal?: AbortSignal, note?: (line: string) => void}} input */
+ * model?: any, signal?: AbortSignal, note?: (line: string) => void, refused?: Set<string>}} input - `refused`
+ * collects the summaries that fail and have no sourced line that fits: the caller takes them off (or empties them where
+ * the template cannot), never keeps them as written, and traces them (COO rule, debt of ticket #237) */
 export async function offeringSummaryValues({
   slots,
   honesty,
@@ -20,7 +22,8 @@ export async function offeringSummaryValues({
   locale = 'en',
   model = null,
   signal,
-  note = () => {}
+  note = () => {},
+  refused = new Set()
 }) {
   const values = {}
   const translate = []
@@ -66,7 +69,12 @@ export async function offeringSummaryValues({
     }
     // The plan found no words about this offering beyond its name: the summary is taken off after the write
     // (`offering-name-only.js`), never filled with the name.
-    if (!fits(fallback) && (honesty.nameOnly ?? []).includes(slot.key)) continue
+    // The line it holds failed above: it is refused too, so it never stays as written (the offering writer may still write
+    // it; a line it leaves is taken off).
+    if (!fits(fallback) && (honesty.nameOnly ?? []).includes(slot.key)) {
+      refused.add(slot.key)
+      continue
+    }
     const settled = settleText({
       site: 'offering summary',
       key: slot.key,
@@ -76,6 +84,7 @@ export async function offeringSummaryValues({
     })
     if (settled.finding) {
       findings.push(settled.finding)
+      refused.add(slot.key)
       continue
     }
     values[slot.key] = fallback
@@ -103,6 +112,7 @@ export async function offeringSummaryValues({
         // The English summary never stands on a site in another language.
         findings.push(settled.finding)
         delete values[slot.key]
+        refused.add(slot.key)
         continue
       }
       values[slot.key] = said[slot.key]

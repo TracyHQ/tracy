@@ -20,7 +20,8 @@ const BRIEF = {
     about: 'Spoke & Chain fixes city bikes and cargo bikes while you wait.',
     services: [
       { id: 's1', label: 'Wheel truing', quote: 'Wheel truing from $25, done the same day' },
-      { id: 's2', label: 'Brake service', quote: 'Brake pads and cables checked and set' }
+      { id: 's2', label: 'Brake service', quote: 'Brake pads and cables checked and set' },
+      { id: 's3', label: 'Cargo bike repairs', quote: 'Cargo bikes carry families, so we keep them rolling' }
     ],
     story: [{ label: 'Our first bench', quote: 'We opened our first workshop bench in 2011' }]
   }
@@ -68,7 +69,8 @@ function completePlan() {
       purpose: 'Cargo bike repairs',
       lead: 'Cargo bikes carry families; we keep them rolling',
       facts: [],
-      items: [],
+      // An added page shows the one brief item no template record page shows (#238).
+      items: ['Cargo bike repairs'],
       dependsOn: []
     }
   ]
@@ -92,7 +94,12 @@ function completePlan() {
     if (e.kind === 'cards')
       decisions.push({ element: e.id, decision: 'keep', count: Math.min(2, e.limits.capacity) })
     else if (e.kind === 'picture')
-      decisions.push({ element: e.id, decision: 'keep', picture: { draw: 'A mechanic truing a wheel' } })
+      decisions.push({
+        element: e.id,
+        decision: 'keep',
+        // A logo slot takes the logo, never a drawing.
+        picture: e.role === 'business.logo' ? { logo: true } : { draw: 'A mechanic truing a wheel' }
+      })
     else if (e.kind === 'icon') decisions.push({ element: e.id, decision: 'keep', icon: 'neutral' })
     else if (e.kind === 'button' || e.kind === 'link')
       decisions.push({ element: e.id, decision: 'keep', action: { kind: 'page', target: CONTACT } })

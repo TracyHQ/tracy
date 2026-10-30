@@ -146,7 +146,7 @@ test('every picture slot of the plan has exactly one decision applied, recorded 
   for (const [key] of planned.pictures) assert.ok(keys.includes(key), `${key} has an applied decision`)
   for (const r of record)
     assert.ok(
-      ['photo', 'draw', 'hide', 'substitute', 'off', 'own-door', 'template', 'not-shown'].includes(r.applied),
+      ['photo', 'draw', 'hide', 'substitute', 'off', 'own-door', 'template', 'logo'].includes(r.applied),
       `${r.slot}: ${r.applied}`
     )
   const of = new Map(record.map((r) => [r.element, r]))
@@ -243,4 +243,33 @@ test('a planned photo the acceptance or crop rules refuse leaves its slot hidden
   assert.equal(slots[0].reason, 'site-plan-hidden')
   assert.equal(record.get('hero.0').applied, 'hide')
   assert.match(record.get('hero.0').reason, /too-small/)
+})
+
+test('a logo slot takes only the logo, through its own door: never a photo or a drawing', async () => {
+  const shaped = await withPlan
+  const logos = inventory.elements.filter((e) => e.kind === 'picture' && e.role === 'business.logo')
+  const record = new Map(shaped.sitePlan.pictures.map((r) => [r.slot, r]))
+  const drawn = new Set((shaped.plan.drawings ?? []).flatMap((g) => g.keys))
+  let seen = 0
+  for (const e of logos) {
+    const r = record.get(e.key)
+    if (!r || r.applied === 'off') continue
+    seen += 1
+    assert.equal(r.planned, 'logo', e.key)
+    assert.equal(r.applied, 'logo', e.key)
+    assert.ok(!drawn.has(e.key), `${e.key} is never drawn`)
+  }
+  assert.ok(seen > 0, 'the kept logo slots are recorded')
+})
+
+test('no demo blog post picture stays as the template wrote it: the plan takes the demo post off', async () => {
+  const shaped = await withPlan
+  assert.ok(
+    !shaped.sitePlan.pictures.some((r) => r.applied === 'not-shown' || r.applied === 'template'),
+    JSON.stringify(
+      shaped.sitePlan.pictures.filter((r) => ['not-shown', 'template'].includes(r.applied)).slice(0, 3)
+    )
+  )
+  const post = shaped.sitePlan.pictures.find((r) => r.slot === 'article-1.16')
+  assert.equal(post?.applied, 'off')
 })
