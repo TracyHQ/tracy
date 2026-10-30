@@ -1,2 +1,2 @@
-- **Sync from live and Sync to live finish what the re-tests of #87, #118, #119 and #120 still found, and fix #217, #219 and #223** — site operations (Claude, for David) · `fix/sync-merge-remaining` · 2026-10-30
+- **Sync from live and Sync to live finish what the re-tests of #87, #118, #119 and #120 still found, and fix #217, #219 and #223** — site operations (Claude, for David) · #245 · `fix/sync-merge-remaining` · 2026-10-30
   **Affects:** the fleet's sync and push scripts (`webroot-sync.sh`, `lib/live_sync.py`, `lib/live_push.py`, `sync-joomla-after.php`). Live on a host once the tracy-host and tracy-dsh images are rebuilt and deployed; nothing to do on a site.
