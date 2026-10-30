@@ -1,0 +1,1 @@
+{"id":"REG-PR-83-sync-write-receipts","verdict":"PASS","commit":"d7850e619cb735be3af384c47c23845bb37d10ca","ran_at":"2026-10-28T17:02:40.038Z","evidence":"tests/regression/.runs/2026-10-28-d7850e619/REG-PR-83-sync-write-receipts.log"}

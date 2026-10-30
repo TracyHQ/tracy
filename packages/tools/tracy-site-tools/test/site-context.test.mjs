@@ -2214,13 +2214,16 @@ test('modes: the SEO/GEO mode, and only it, reads where the site keeps its head;
       'persona'
     )
 
-    const notWritable = /- \*\*Not writable here:\*\*[\s\S]*?(?=\n- )/.exec(skill)?.[0] ?? ''
-    assert.ok(notWritable !== '', 'the skill still says what it cannot write')
+    // 26/10/2026: labels have their own tools, as the persona says (local round 26: "not writable here" kept a
+    // build off the term and form doors it has).
+    const labels = /- \*\*Labels change through their own tools\.\*\*[\s\S]*?(?=\n- )/.exec(skill)?.[0] ?? ''
+    assert.ok(labels !== '', 'the skill says where labels change')
     assertText(
-      notWritable,
-      { has: [/taxonomy term labels/, /form labels/], hasNot: [/\/app/, /template code/] },
-      'not writable'
+      labels,
+      { has: [/taxonomy_update_term/, /form_words/, /form_list/], hasNot: [/\/app/, /not writable/i] },
+      'labels'
     )
+    assert.doesNotMatch(skill, /Not writable here/)
     assertText(
       skill,
       {
@@ -3048,7 +3051,7 @@ test('contextRoom reads the last prompt against the window, and the check-again 
   assert.doesNotMatch(checkAgainNext({ checks: 2 }), /This conversation holds/)
 })
 
-// The Willow Nook local, build 13 (25/10/2026): each check answered past dsh's inline bound (spill-policy
+// The Living Room local, build 13 (25/10/2026): each check answered past dsh's inline bound (spill-policy
 // `maxInlineTokens` 12500), so the session kept its head, a gap, its tail and a notice. None parsed as JSON: every
 // check counted as none, the third still said "4 of 5 checks remain", and the build was never steered on.
 test('buildChecks: a check answer the tool cut still counts by the verdict at its head', () => {
@@ -3110,6 +3113,19 @@ test('changedSinceCheck: a write or a photo after the latest verdict counts; ano
     changedSinceCheck(events(check, { ...write, answer: { ok: false, code: 'BAD_PARAMS' } })),
     false
   )
+  // Local round 35 (26/10/2026): an EmDash build edited its views in the shell and restarted; "nothing changed", twice.
+  const restart = {
+    name: 'tracy_site_build_emdash',
+    args: { action: 'request', operation: 'site.restart', input: {} }
+  }
+  const shell = {
+    name: 'bash',
+    args: { command: "sed -i 's/Production/Viennoiserie/' /app/src/views/Home.astro" }
+  }
+  const read = { name: 'bash', args: { command: 'grep -rn sector /app/src/views' } }
+  assert.equal(changedSinceCheck(events(check, restart)), true)
+  assert.equal(changedSinceCheck(events(check, shell)), true)
+  assert.equal(changedSinceCheck(events(check, read)), false)
 })
 
 // 24/10/2026 on a local stand (round 15): with "4 of 5 checks remain" in its check's answer, a WordPress build still
@@ -3137,7 +3153,7 @@ test('checkAgainStep: a build ending before any check, or on a failed check with
   )
 })
 
-// The Willow Nook local, build 15 turn 1 (25/10/2026): the site was held by another writer, every write and the plan
+// The Living Room local, build 15 turn 1 (25/10/2026): the site was held by another writer, every write and the plan
 // were refused, the agent ended the turn with no check, and the build failed AGENT_DEMO_ENDED_UNCHECKED unsteered.
 test('checkAgainStep: a build turn about to end with no check run is steered on', () => {
   const demo = (args, answer) => ({ name: 'tracy_demo', args, answer })
@@ -3800,7 +3816,7 @@ for (const [label, platform, options] of [
     )
   })
 
-test('refusalStreak: a draft refused with a different list of issues each time is being corrected, not probed; the same list again is (The Willow Nook local, build 9, 25/10/2026)', () => {
+test('refusalStreak: a draft refused with a different list of issues each time is being corrected, not probed; the same list again is (The Living Room local, build 9, 25/10/2026)', () => {
   // Measured: plan.save refused six times in a row with 5, 6, 4, 3, 1 and 51 issues; the notices at 3 and 6 told the
   // agent to stop calling tracy_demo and it ended the build with no plan saved.
   const save = (...fields) => ({
@@ -3828,7 +3844,7 @@ test('refusalStreak: a draft refused with a different list of issues each time i
   assert.equal(refusalStreak(timedLog([...corrected, ...same]))?.count, 3)
 })
 
-test('planIssuesNext: a plan refused with its own issues is told to fix those rows and save again in this turn, never to ask (The Willow Nook local, build 10, 25/10/2026)', () => {
+test('planIssuesNext: a plan refused with its own issues is told to fix those rows and save again in this turn, never to ask (The Living Room local, build 10, 25/10/2026)', () => {
   // Measured: refused once with 8 issues of its review posts, the agent stopped to ask the customer "Want me to
   // carry on that way?"; nobody answers in a demo build, and the build failed AGENT_DEMO_ENDED_UNCHECKED.
   const refused = (code, extra = {}) => ({
@@ -3852,7 +3868,7 @@ test('planIssuesNext: a plan refused with its own issues is told to fix those ro
   assert.equal(planIssuesNext({ ok: true }), null)
 })
 
-test('checkAnswerForAgent: a failed check leads with its next and shows each list at most 12 long, the rest counted (The Willow Nook local, build 11, 25/10/2026)', () => {
+test('checkAnswerForAgent: a failed check leads with its next and shows each list at most 12 long, the rest counted (The Living Room local, build 11, 25/10/2026)', () => {
   // Measured: a check over every route answered 163 KB; the tool cut it at 50 KB, its next came last, and the agent
   // ended the turn "extremely deep into this turn" with four checks left.
   const many = (n) => Array.from({ length: n }, (_, i) => ({ page: `/p${i}` }))

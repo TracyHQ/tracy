@@ -40,7 +40,7 @@ function commit(files) {
   return git(['-c', 'user.name=t', '-c', 'user.email=t@t', 'commit-tree', tree, '-m', `s${snapshots}`])
 }
 
-function merge(base, ours, theirs, { platform = 'joomla', decisions, prefer } = {}) {
+function merge(base, ours, theirs, { platform = 'joomla', decisions, prefer, pushed } = {}) {
   const args = [
     ENGINE,
     'files',
@@ -60,6 +60,11 @@ function merge(base, ours, theirs, { platform = 'joomla', decisions, prefer } = 
     const file = join(root, `decisions${++snapshots}.json`)
     writeFileSync(file, JSON.stringify(decisions))
     args.push('--decisions', file)
+  }
+  if (pushed) {
+    const file = join(root, `pushed${++snapshots}.json`)
+    writeFileSync(file, JSON.stringify(pushed))
+    args.push('--pushed', file)
   }
   const done = spawnSync('python3', args, { encoding: 'utf8' })
   assert.equal(done.status, 0, done.stderr)
@@ -389,4 +394,55 @@ test('stat-manifest: the listed files named by the blobs of the tree where the s
     'configuration.php': { size: 3, mtime: 11 },
     'img/new.png': { size: 2, mtime: 12 }
   })
+})
+
+test('Undo receipts with a null file blob preserve a copy deletion while live changes still sync', () => {
+  for (const platform of ['joomla', 'wordpress']) {
+    const path = platform === 'joomla' ? 'images/deleted.png' : 'wp-content/uploads/deleted.png'
+    const before = commit({ [path]: 'old image', 'other.txt': 'old' })
+    const ours = commit({ 'other.txt': 'old' })
+    // Apply already advanced the live base to the deletion; Undo restores the live file.
+    const base = commit({ 'other.txt': 'old' })
+    const theirs = commit({ [path]: 'old image', 'other.txt': 'customer edit' })
+    const pushed = { files: [{ path, ours: null, side: 'theirs' }] }
+    const answer = merge(base, ours, theirs, { platform, pushed })
+    assert.deepEqual(answer.conflicts, [])
+    assert.equal(read(answer.tree, path), null)
+    assert.equal(read(answer.tree, 'other.txt'), 'customer edit')
+    // Without an Undo receipt, a customer-created file must still arrive normally.
+    const ordinary = merge(base, ours, theirs, { platform })
+    assert.equal(read(ordinary.tree, path), 'old image')
+    const deleted = merge(before, ours, ours, {
+      platform,
+      pushed: { files: [{ path, ours: null, side: 'ours' }] }
+    })
+    assert.equal(read(deleted.tree, path), null)
+  }
+})
+
+test('a WordPress object cache drop-in is the copy’s own: the live site’s never comes over (#106)', () => {
+  const drop = 'wp-content/object-cache.php'
+  const redis = '<?php // Redis Object Cache drop-in\n'
+  // The live site switched Redis on after the import: the copy, with no Redis, keeps none.
+  const base = commit({ 'index.php': 'a\n' })
+  const ours = commit({ 'index.php': 'a\n' })
+  const theirs = commit({ 'index.php': 'a\n', [drop]: redis, 'wp-content/plugins/x/x.php': '<?php\n' })
+  const got = merge(base, ours, theirs, { platform: 'wordpress' })
+  assert.equal(read(got.tree, drop), null)
+  assert.equal(
+    read(got.tree, 'wp-content/plugins/x/x.php'),
+    '<?php\n',
+    'the rest of the live files come over'
+  )
+  // Nor does a live change replace the one the copy has, or a live deletion take it away.
+  const base2 = commit({ [drop]: 'old\n' })
+  const ours2 = commit({ [drop]: 'old\n' })
+  assert.equal(
+    read(merge(base2, ours2, commit({ [drop]: redis }), { platform: 'wordpress' }).tree, drop),
+    'old\n'
+  )
+  assert.equal(
+    read(merge(base2, ours2, commit({ 'index.php': 'a\n' }), { platform: 'wordpress' }).tree, drop),
+    'old\n'
+  )
 })

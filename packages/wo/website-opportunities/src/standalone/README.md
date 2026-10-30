@@ -69,6 +69,7 @@ machine and name it (`localhost`, `127.0.0.1` or `[::1]` in the `Host` header).
 | `APIFY_TOKEN` | none | Google Maps through Apify, and the social connectors |
 | `SERPAPI_API_KEY`, `FIRECRAWL_API_KEY`, `JINA_API_KEY`, `LITESCRAPE_API_KEY` | none | Optional research providers |
 | `RAPIDAPI_KEY`, `SCRAPECREATORS_API_KEY` | none | Social page statistics |
+| `MONID_API_KEY` | none | Optional: up to 100 more Google reviews a place, once Monid is added to the Google reviews order in Settings |
 | `DEEPSEEK_API_KEY` | none | Model used by research steps that need one |
 | `TRACY_URL` | `https://cowork.tracy.ai` | The Tracy that "Build it with Tracy" connects to (OAuth device flow) and builds in |
 | `TRACY_API_URL` | `TRACY_URL` | Where that Tracy's `/v1` API answers, when it is another address |

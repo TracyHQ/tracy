@@ -804,6 +804,17 @@ const dig = (/** @type {unknown} */ obj, /** @type {(string | number)[]} */ at) 
   at.reduce((/** @type {any} */ o, k) => (o !== null && typeof o === 'object' ? o[k] : undefined), obj)
 
 /**
+ * Does theme.json's own CSS (`styles.css`, which WordPress prints at the END of global styles, after a
+ * block theme's Additional CSS) declare `token`?
+ * @param {unknown} json
+ * @param {string} token
+ */
+export function themeJsonCssSets(json, token) {
+  const css = dig(json, ['styles', 'css'])
+  return typeof css === 'string' && cssDeclarations(css).some((d) => d.name === token)
+}
+
+/**
  * Where in a theme.json a WordPress variable is set: `--wp--preset--<kind>--<slug>` is that preset's
  * entry, `--wp--custom--<a>--<b>` is `settings.custom.<a>.<b>` (keys compared kebab-cased). Null when
  * this file does not set it.
@@ -1036,7 +1047,7 @@ export async function lookSet({
    * specificity of the rule it must beat (`beat`: a WordPress block theme prints Additional CSS
    * BEFORE the theme's sheets, so there a rule must be MORE specific than that one, not as specific).
    */
-  /** @type {{ selector: string, media: string | null, decls: [string, string, boolean][], after: number, note: string, beat: number[], layer: string | null }[]} */
+  /** @type {{ selector: string, media: string | null, decls: [string, string, boolean][], after: number, note: string, beat: number[], layer: string | null, late: boolean }[]} */
   const appends = []
   const append = (
     /** @type {string} */ selector,
@@ -1045,7 +1056,8 @@ export async function lookSet({
     /** @type {string} */ note,
     /** @type {string | null} */ within = media,
     /** @type {number[]} */ beat = [0, 0, 0],
-    /** @type {string | null} */ layer = null
+    /** @type {string | null} */ layer = null,
+    /** @type {boolean} */ late = false
   ) => {
     const same = appends.find(
       (a) => a.selector === selector && a.note === note && a.media === within && a.layer === layer
@@ -1054,7 +1066,8 @@ export async function lookSet({
       same.decls.push(decl)
       same.after = Math.max(same.after, after)
       if (compareSpec(beat, same.beat) > 0) same.beat = beat
-    } else appends.push({ selector, media: within, decls: [decl], after, note, beat, layer })
+      same.late = same.late || late
+    } else appends.push({ selector, media: within, decls: [decl], after, note, beat, layer, late })
   }
   /** Tokens changed where they are set, resolved against the files below. */
   /** @type {{ token: string, value: string, by: string, sheet: string | null, line: number | null }[]} */
@@ -1275,11 +1288,18 @@ export async function lookSet({
    * declaration that sets it now, read from the theme stylesheet when it is one (the full selector
    * list, a cut cascade name made whole), else from the cascade's own name. Files are only READ here:
    * a `theme.json` for the colours that hold the same value, a stylesheet for its other declarations.
+   *
+   * `late`: in global styles, where the token is set may stand AFTER the Additional CSS — theme.json's
+   * own `styles.css` sets it (wp-ja-fresco sets `--wp--preset--color--bg` again there on `:root`), or
+   * no theme.json makes it a variable, so a `:root` there is CSS, not a preset. The same selector would
+   * then lose by order: it is made more specific (the global-styles rule below).
    * @param {{ token: string, value: string, by: string, sheet: string | null, line: number | null }} t
-   * @returns {Promise<{ selectors: string, media: string | null, important: boolean } | null>}
+   * @returns {Promise<{ selectors: string, media: string | null, important: boolean, late: boolean } | null>}
    */
   const wpTokenRule = async (t) => {
-    if (t.sheet !== null && /global-styles-inline-css/.test(t.sheet))
+    let late = false
+    if (t.sheet !== null && /global-styles-inline-css/.test(t.sheet)) {
+      let variable = false
       for (const theme of wpThemes(info)) {
         const bytes = await io.read(`${webroot}/wp-content/themes/${theme}/theme.json`)
         if (bytes === null) continue
@@ -1289,12 +1309,16 @@ export async function lookSet({
         } catch {
           continue
         }
+        if (themeJsonCssSets(json, t.token)) late = true
+        if (variable) continue
         const at = themeJsonPath(json, t.token)
         if (at === null) continue
+        variable = true
         for (const name of themeJsonSameValue(json, at.old, t.token))
           if (!sameValue.includes(name)) sameValue.push(name)
-        break
       }
+      if (!variable) late = true
+    }
     const fileSheet = editableSheet(platform, t.sheet)
     const bytes = fileSheet === null ? null : await io.read(`${webroot}${fileSheet}`)
     if (bytes !== null) {
@@ -1306,14 +1330,15 @@ export async function lookSet({
         return {
           selectors: picked.decl.theme ? ':root' : picked.decl.selectors.join(', '),
           media: inMedia[0] ?? null,
-          important: picked.decl.important
+          important: picked.decl.important,
+          late
         }
       }
     }
     const where = parseBy(t.by)
     return where === null || where.cut
       ? null
-      : { selectors: where.selectors, media: where.media, important: false }
+      : { selectors: where.selectors, media: where.media, important: false, late }
   }
 
   // 🔒 A TOKEN THE DESIGN-SYSTEM SLOT SETS IS THE SYSTEM'S (10/10/2026, `ds-slot-worn.mjs`). Measured on
@@ -1354,7 +1379,9 @@ export async function lookSet({
         posOf(t.sheet),
         `${t.token}, every page`,
         placed.media,
-        specificity(placed.selectors)
+        specificity(placed.selectors),
+        null,
+        placed.late
       )
       continue
     }
@@ -1411,9 +1438,13 @@ export async function lookSet({
     // styles and presets but BEFORE theme.json's own `styles.css` — where a design-system slot writes
     // its (0,6,0)+ rules — so a rule there exactly as specific as one of those loses. Which part of the
     // sheet a winner stands in, the cascade does not say; one more specific than `:root` (what the
-    // variables and presets stand on) is beaten strictly.
+    // variables and presets stand on) is beaten strictly, and so is a token `wpTokenRule` found set
+    // after the Additional CSS (`late`: theme.json's own `styles.css`, or no theme.json variable at all).
     for (const a of appends)
-      if (a.after > own || (merged && own >= 0 && a.after === own && compareSpec(a.beat, [0, 1, 0]) > 0))
+      if (
+        a.after > own ||
+        (merged && own >= 0 && a.after === own && (compareSpec(a.beat, [0, 1, 0]) > 0 || a.late))
+      )
         a.selector = beyond(a.selector, a.beat)
     const tail = appends.map((a) => ruleText(a)).join('\n')
     custom = {

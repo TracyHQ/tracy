@@ -48,6 +48,8 @@ export function capabilityOfCharge(provider, operation) {
   if (provider === 'rapidapi' && operation.startsWith('tripadvisor-'))
     return at('tripadvisor', 'rapidapi-tripadvisor')
   if (provider === 'litescrape') return at('tripadvisor')
+  if (provider === 'monid' && operation === 'google-reviews')
+    return at('google-reviews', 'monid-google-reviews')
   if (provider === 'serpapi' && operation === 'google-search')
     return at('menu-links', 'serpapi-google-search')
   if (provider === 'serpapi' && operation === 'web-search') return at('web-search', 'serpapi-google-search')

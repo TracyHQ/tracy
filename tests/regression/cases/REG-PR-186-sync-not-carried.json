@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-186-sync-not-carried",
+  "kind": "fix",
+  "title": "A table whose definition the live site changed is read again on Sync from live, and triggers and log tables a sync does not bring are named",
+  "pr": 186,
+  "area": "sync/live-pull",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Run the live-pull case where one table's definition moved with its rows unchanged, and the live site has a trigger and a changed log table."
+  ],
+  "expect": [
+    "The table whose definition moved is read again, not reused from the stored copy.",
+    "The answer names the trigger the copy lacks and the guessed log table that changed, names only."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#120",
+      "packages/fleet/tracy-fleet-operation/test/live-pull.test.mjs"
+    ],
+    "tests": [
+      "a table whose definition moved is read again though its rows did not; triggers and guessed log tables that moved are named (#120)"
+    ]
+  }
+}

@@ -1,4 +1,5 @@
-import { demoToolNeedsReady, runDemoLifecycle } from './demo-lifecycle.mjs'
+import { createBuildTurns } from './build-turns.mjs'
+import { copyWritten, demoToolNeedsReady, runDemoLifecycle } from './demo-lifecycle.mjs'
 import { resolveSweepCall } from './sweep-resolve.mjs'
 /**
  * The Node half of `@tracy/dsh-site-tools`: ONE agent tool, `tracy_site({ action, params })`.
@@ -36,12 +37,27 @@ import { REPORT_FILE } from '@tracy/site-build-core/design-check'
 import { pullDesign, readDesign, refreshDesign, tokensDirsOf } from '@tracy/site-build-core/design-record'
 import { catalogNames } from '@tracy/site-build-core/library-ids'
 import {
+  CONFIRM_QUESTION_PREFIX,
   confirmQuestion,
   createCallMemory,
   flightSeat,
   sameCallKey,
   untranslatedConfirmCard
 } from './call-memory.mjs'
+import { applyCopy } from './copy-apply.mjs'
+import {
+  appChangedSinceRebuild,
+  BUILD_REBUILD_UNNEEDED,
+  buildApprovalRefusal,
+  buildHide,
+  buildHideRefusal,
+  buildPictureRefusal,
+  buildPictureWrite,
+  buildQuestionRefusal,
+  buildShellRefusal,
+  buildTemplateRefusal,
+  buildTemplateWrite
+} from './build-fence.mjs'
 import { languageName } from '../../../../core/tracy-core/src/language/index.mjs'
 import { type Consequence, consequenceOf, lookReachOf } from './consequence.mjs'
 import {
@@ -161,6 +177,7 @@ import {
   parseMediaCopy,
   dockerExec,
   hostBrowserExec,
+  hostBrowserTarget,
   hostChromeOf,
   looksLikeMissingBinary,
   mcpArgv,
@@ -199,6 +216,7 @@ import {
 import { emdashMediaScan, measureReplaced } from './media-emdash.mjs'
 import { LOOK_FAILED_NEXT, lookParamsProblem, styleRequest } from './look-style.mjs'
 import {
+  browseAsSite,
   clampChars,
   contentDoor,
   fetchPageHtml,
@@ -323,7 +341,9 @@ import {
   toolReach,
   buildChecks,
   CHECK_AGAIN_PLUGIN,
+  cameBackNext,
   checkAgainStep,
+  findingsCameBack,
   PLAN_FROZEN_NEXT,
   planIssuesNext,
   checkAnswerForAgent,
@@ -375,6 +395,10 @@ import { isTurnStopped, stoppableSleep, stoppedAnswer } from './turn-stop.mjs'
 import { asksAttachment, filesTabPictures, mediaUpload, readChatPicture } from './upload.mjs'
 import type { AttachmentReader } from './upload.mjs'
 import {
+  VIEW_COLD_DEADLINE_MS,
+  VIEW_DEADLINE_MS,
+  VIEW_EXEC_MS,
+  VIEW_MAX_BUFFER,
   VIEW_PLUGIN,
   agentReadsImages,
   captureView,
@@ -392,6 +416,8 @@ export const name = 'tracy-site-tools'
 
 /** Resolves once every site-notes capture started so far has finished (tests; `captureWishes` never waits itself). */
 export { capturesSettled } from './site-notes.mjs'
+
+import { closedBuildRead, CLOSED_BUILD_REFUSAL } from './closed-build.mjs'
 
 /**
  * 🔒 Every `ctx.<name>` must be listed here. cordis throws the moment a property outside `inject`
@@ -860,7 +886,7 @@ let latest: Viewer | null = null
  * Read lazily and once — same reasoning as `tracy-site-tabs`.
  */
 function gatewaySetting(
-  name: 'MCP_TRACY_SITE_KEY' | 'MCP_TRACY_SITE_LABEL' | 'MCP_TRACY_ORIGIN'
+  name: 'MCP_TRACY_SITE_KEY' | 'MCP_TRACY_SITE_LABEL' | 'MCP_TRACY_ORIGIN' | 'TRACY_BUILD_REASONING_EFFORT'
 ): string | null {
   const value = process.env[name]?.trim() || null
   if (value === null) {
@@ -1052,7 +1078,7 @@ async function applyDoor(
   // viewer a call acts as (`planFor`), so it names the same thing everywhere.
   //
   // ⚠ ABSENT IS NOT AN ERROR HERE. This header ships in the dsh image and the door ships in
-  // `apps/tracy-web`, on different pipelines (`docs/references/build-only-on-change.md`), so a lane
+  // `apps/tracy-web`, on different pipelines (`docs/references/build-chi-khi-doi.md`), so a lane
   // running an older image simply does not send it — and the door treats that as today's behaviour
   // rather than refusing a customer for a deployment skew nobody can see.
   if (sessionId) headers['x-tracy-session'] = sessionId
@@ -2049,14 +2075,8 @@ async function renderedPageText(
 ): Promise<unknown> {
   const target = lookTarget(label, path, internalPort)
   if (!target.ok) return { ok: false, code: 'BAD_PATH', error: target.error }
-  const probe = await inContainerProbe(
-    config,
-    label,
-    internalPort,
-    target,
-    hostPublicOrigin(config, label),
-    door
-  )
+  const publicOrigin = hostPublicOrigin(config, label)
+  const probe = await inContainerProbe(config, label, internalPort, target, publicOrigin, door)
   if (!probe.ok) return probe.result
   const btarget = browserTargetFor(label, probe, internalPort, target)
   if (btarget === null)
@@ -2066,17 +2086,22 @@ async function renderedPageText(
       error: `${target.path} asks to be served on a port this site does not expose here.`,
       next: `Read a path this site serves itself; the words behind that page: ${door}.`
     }
-  const run = await runExec(config, {
-    argv: browserArgv({
-      container: btarget.container,
-      mode: 'dom',
-      url: btarget.url,
-      origin: btarget.origin,
-      resolverRule: btarget.resolverRule,
-      via: btarget.via
-    }),
-    timeoutMs: LOOK_TIMEOUT_MS,
-    maxBuffer: 16 * 1024 * 1024
+  const { res: run } = await browseAsSite({
+    target: btarget,
+    publicOrigin,
+    launch: (t) =>
+      runExec(config, {
+        argv: browserArgv({
+          container: t.container,
+          mode: 'dom',
+          url: t.url,
+          origin: t.origin,
+          resolverRule: t.resolverRule,
+          via: t.via
+        }),
+        timeoutMs: LOOK_TIMEOUT_MS,
+        maxBuffer: 16 * 1024 * 1024
+      })
   })
   const browser = parseBrowser(run.stdout)
   if (looksLikeMissingBinary(run) || (!browser.ok && browser.kind === 'no-browser'))
@@ -2378,7 +2403,8 @@ async function pageLook(
       req: styled.req,
       url: shownUrl,
       path: target.path,
-      cap: clampChars(params.maxChars, 2000)
+      cap: clampChars(params.maxChars, 2000),
+      publicOrigin
     })
     const ruler = await slotWork
     if (ruler?.slot) return slotPinNotes(answer, ruler.slot)
@@ -2399,19 +2425,27 @@ async function pageLook(
       next: LOOK_FAILED_NEXT
     }
   }
-  const run = await runExec(config, {
-    argv: browserArgv({
-      container: btarget.container,
-      mode: 'shot',
-      url: btarget.url,
-      origin: btarget.origin,
-      file: containerLookFile(label, ts),
-      resolverRule: btarget.resolverRule,
-      via: btarget.via
-    }),
-    timeoutMs: LOOK_TIMEOUT_MS,
-    maxBuffer: 8 * 1024 * 1024
+  const shot = await browseAsSite({
+    target: btarget,
+    publicOrigin,
+    launch: (t) =>
+      runExec(config, {
+        argv: browserArgv({
+          container: t.container,
+          mode: 'shot',
+          url: t.url,
+          origin: t.origin,
+          file: containerLookFile(label, ts),
+          resolverRule: t.resolverRule,
+          via: t.via
+        }),
+        timeoutMs: LOOK_TIMEOUT_MS,
+        maxBuffer: 8 * 1024 * 1024
+      })
   })
+  const run = shot.res
+  // Asked again as the site's own public origin: the picture is of that address.
+  if (shot.target !== btarget) shownUrl = shot.target.url
   const browser = parseBrowser(run.stdout)
   // 🔒 THE FLIP (F2 §3.7): once the static read has run, `page.text` needs no browser, so the next
   // names it; on the pre-F2 road it would fail the same way, and the next stays the content door.
@@ -2506,19 +2540,22 @@ function lookSetMeasure(
           code: 'REDIRECTED_OFF_SITE',
           error: `${target.path} asks to be served on a port this site does not expose here.`
         }
-      return { ok: true as const, target: b, url: target.url, path: target.path }
+      return { ok: true as const, target: b, url: target.url, path: target.path, publicOrigin }
     }
     if (!gate.ok) return gate.answer as Record<string, unknown>
-    return { ok: true as const, target: gate.target, url: gate.url, path: target.path }
+    return { ok: true as const, target: gate.target, url: gate.url, path: target.path, publicOrigin }
   }
   return async (req: Record<string, unknown>, asked: string) => {
     if (!opened.has(asked)) opened.set(asked, open(asked))
     const at = (await opened.get(asked)) as Record<string, any>
     if (at.ok !== true) return at
-    const read = (await styleRead({ run, target: at.target, req: req as any, path: at.path })) as Record<
-      string,
-      any
-    >
+    const read = (await styleRead({
+      run,
+      target: at.target,
+      req: req as any,
+      path: at.path,
+      publicOrigin: at.publicOrigin
+    })) as Record<string, any>
     return read.ok === true ? { ok: true, payload: read.payload, url: at.url } : read
   }
 }
@@ -2759,41 +2796,53 @@ export function apply(ctx: HostContext, config: Config = {}): void {
    * person pressed Build for, so `consequence.mjs` does not ask them again; a delete, an install or a rollback
    * still asks (`tiers.mjs`). Measured 23/10/2026: a one-press WordPress build stood 50 minutes on "This changes
    * the Header part every page of your site shows", with nobody at the chat to answer. Kept per session: a yes
-   * stays a yes, a no is read again after 30 s (the plan may be saved meanwhile).
+   * stays a yes only in that turn, until a lifecycle refusal; a no is read again after 30 s.
    */
-  const plannedBuilds = new Map<string, number>()
-  /** Conversations whose assigned demo or own-site build answered a `tracy_demo` call: builds, plan or not. */
-  const demoBuilds = new Set<string>()
-  /** Whether this conversation is a demo or own-site build: the whole site is its ask. */
-  const isBuild = (sessionId: string) =>
-    demoBuilds.has(sessionId) || plannedBuilds.get(sessionId) === Number.POSITIVE_INFINITY
-  /** A build's size as its `tracy_demo` answers named it (`loopNotices` `build`, `buildScale`). */
+  const buildTurns = createBuildTurns()
+  /** The lifecycle identity present before a request is sent, including steers within the same turn. */
+  const buildTurn = (agent: { session?: unknown } | undefined) => {
+    const session = agent?.session as
+      | {
+          seq?: number
+          eventAt?: (index: number) => unknown
+          snapshotEvents?: () => readonly { type?: string; data?: { turn?: unknown } }[]
+        }
+      | undefined
+    if (typeof session?.seq === 'number' && typeof session.eventAt === 'function') {
+      for (let i = session.seq - 1; i >= 0; i--) {
+        const event = session.eventAt(i) as { type?: string; data?: { turn?: unknown } } | undefined
+        if (event?.type === 'turn/start') return event.data?.turn ?? null
+      }
+      return null
+    }
+    const events = session?.snapshotEvents?.() ?? []
+    for (let i = events.length - 1; i >= 0; i--)
+      if (events[i]?.type === 'turn/start') return events[i]?.data?.turn ?? null
+    return null
+  }
+  const isBuild = (sessionId: string, agent: { session?: unknown } | undefined) =>
+    buildTurns.state(sessionId, buildTurn(agent))?.build === true
   const buildSizes = new Map<string, { records?: number; rows?: number }>()
   async function demoPlanAgreed(exec: ToolRun): Promise<boolean> {
     const sessionId = exec?.agent?.session?.id ?? null
     if (!sessionId) return false
-    const seen = plannedBuilds.get(sessionId)
-    if (seen === Number.POSITIVE_INFINITY) return true
-    if (seen !== undefined && Date.now() - seen < 30_000) return false
-    let result: { ok?: unknown; planHash?: unknown } | null = null
+    const turn = buildTurn(exec.agent)
+    const seen = buildTurns.state(sessionId, turn)
+    if (seen?.planned) return true
+    if (typeof seen?.planCheckedAt === 'number' && Date.now() - seen.planCheckedAt < 30_000) return false
     try {
-      result = (await demoGuard(exec, false)) as { ok?: unknown; planHash?: unknown } | null
+      await demoGuard(exec, false)
     } catch {
-      result = null
+      buildTurns.observe(sessionId, turn, null, buildTurn(exec.agent), Date.now(), true)
     }
-    const agreed = result?.ok === true && typeof result.planHash === 'string'
-    markPlanned(sessionId, agreed ? Number.POSITIVE_INFINITY : Date.now())
-    return agreed
-  }
-  /** One conversation's plan reading, the 500 newest kept. */
-  function markPlanned(sessionId: string, value: number): void {
-    plannedBuilds.delete(sessionId)
-    plannedBuilds.set(sessionId, value)
-    while (plannedBuilds.size > 500) plannedBuilds.delete(plannedBuilds.keys().next().value as string)
+    return (
+      turn !== null && turn === buildTurn(exec.agent) && buildTurns.state(sessionId, turn)?.planned === true
+    )
   }
 
   /** The server's `tracy_demo guard` for this conversation's assigned demo, or null when it has none. */
   async function demoGuard(exec: ToolRun, clientOnly: boolean): Promise<unknown | null> {
+    const assignedTurn = buildTurn(exec.agent)
     const sessionId = exec?.agent?.session?.id ?? null
     const sitesRoot = resolveSitesRoot(undefined)
     let label: string | null = null
@@ -2806,7 +2855,11 @@ export function apply(ctx: HostContext, config: Config = {}): void {
     const key =
       laneSiteKey() ??
       (label === null ? null : ((await siteKeyInFolder(`${sitesRoot}/${label}`)) ?? '_conversation'))
-    if (!route || !key || !sessionId) return null
+    if (!route || !key || !sessionId) {
+      if (sessionId)
+        buildTurns.observe(sessionId, assignedTurn, { code: 'AGENT_DEMO_NOT_GRANTED' }, buildTurn(exec.agent))
+      return null
+    }
     const result = (await applyDoor(
       config,
       route,
@@ -2817,6 +2870,7 @@ export function apply(ctx: HostContext, config: Config = {}): void {
       label,
       sessionId
     )) as { code?: string }
+    buildTurns.observe(sessionId, assignedTurn, result, buildTurn(exec.agent), Date.now(), true)
     return result
   }
 
@@ -2881,16 +2935,46 @@ export function apply(ctx: HostContext, config: Config = {}): void {
    * `config.viewContext: false` — the door then keeps nothing and no step is given a picture.
    */
   const viewsOn = config.viewContext !== false
-  /** One page of a site drawn in its own container, in one window and scroll (`captureView`). */
-  const drawView = async (label: string, view: Parameters<typeof captureView>[0]['view']) => {
+  /**
+   * One page of a site drawn in its own container, in one window and scroll (`captureView`). `check`:
+   * drawn for the visual check, which falls back on dsh's own browser where the container has none
+   * (`captureView` `host`); the conversation's own picture of the page does not.
+   */
+  const drawView = async (
+    label: string,
+    view: Parameters<typeof captureView>[0]['view'],
+    { check = false, patient = false }: { check?: boolean; patient?: boolean } = {}
+  ) => {
+    const deadlineMs = patient ? VIEW_COLD_DEADLINE_MS : VIEW_DEADLINE_MS
     const sitesRoot = resolveSitesRoot(undefined)
+    const chrome = check
+      ? config.hostChrome !== undefined
+        ? config.hostChrome
+        : hostChromeOf(process.env, existsSync)
+      : null
     return captureView({
       label,
       view,
       internalPort: await sitePortFor(config, sitesRoot, label),
       publicOrigin: hostPublicOrigin(config, label),
       run: (input) => runExec(config, input),
-      door: contentDoor(NO_SITE_FACTS)
+      door: contentDoor(NO_SITE_FACTS),
+      deadlineMs,
+      host: chrome
+        ? {
+            chrome,
+            run: ({ target, file, deadlineMs }) =>
+              hostBrowserExec({
+                chrome,
+                target,
+                mode: 'view',
+                file,
+                deadlineMs,
+                timeoutMs: deadlineMs + VIEW_EXEC_MS - VIEW_DEADLINE_MS,
+                maxBuffer: VIEW_MAX_BUFFER
+              })
+          }
+        : null
     })
   }
   // Words a page in Voice said it is about to send (`voice-reply.mjs`): the step that takes them gets
@@ -2900,9 +2984,9 @@ export function apply(ctx: HostContext, config: Config = {}): void {
     // A conversation whose turn is running is not drawn for while they write ahead (`chats` is made
     // further down; the store only asks when a report comes in, after the plugin is applied).
     busy: (sessionId) => chats.running().includes(sessionId),
-    capture: async ({ label, view }) => {
+    capture: async ({ label, view, check, patient }) => {
       try {
-        return await drawView(label, view)
+        return await drawView(label, view, { check: check === true, patient: patient === true })
       } catch (error) {
         warn(
           `[site-tools] the page open on ${label} could not be pictured: ${error instanceof Error ? error.message : String(error)}`
@@ -3831,7 +3915,9 @@ export function apply(ctx: HostContext, config: Config = {}): void {
                   open: views.viewOf(sessionId, label),
                   lastRead: pageReads.of(sessionId)[0]?.path ?? null
                 }),
-                draw: (view) => views.draw(label, view),
+                // Drawn while the agent reads, waited on by nobody: a cold container's first browser
+                // start fits (`VIEW_COLD_DEADLINE_MS`).
+                draw: (view) => views.draw(label, view, { patient: true }),
                 lastWrite: () => views.lastWrite(label),
                 wroteAt: () => ask.wroteAt
               })
@@ -4163,9 +4249,9 @@ export function apply(ctx: HostContext, config: Config = {}): void {
     }
     // Step budget (with its seconds, E4.3), turn length, then the refusal streak LAST (E4.2, CS3) —
     // one call, so a notice cannot be dropped or reordered here (`loopNotices`, P12).
-    // A demo or own-site build has the room a whole site takes (`demoBuilds`, `loopNotices` `build`).
+    // A demo or own-site build has the room a whole site takes (`buildTurns`, `loopNotices` `build`).
     const conversation = String(input.agent?.session?.id ?? '')
-    const building = isBuild(conversation)
+    const building = isBuild(conversation, input.agent)
     for (const n of loopNotices(input.agent, {
       tools,
       build: building && (buildSizes.get(conversation) ?? true)
@@ -4217,6 +4303,21 @@ export function apply(ctx: HostContext, config: Config = {}): void {
   ctx.on('agent/pre-step', stepListener, true)
 
   /**
+   * A BUILD'S REASONING, SET APART FROM A CHAT'S (plan "10/10" §7 S7, 26/10/2026): in local round 33 reasoning was ~45 %
+   * of a WordPress build's 208K output tokens at the host's `low`. `TRACY_BUILD_REASONING_EFFORT` (off, low, high, max)
+   * sets the effort of a build's requests only; unset, a build reasons as every conversation does. A switch for an A/B
+   * measured with the screenshots, never a default changed on faith.
+   */
+  const buildEffort = gatewaySetting('TRACY_BUILD_REASONING_EFFORT')
+  if (buildEffort !== null && ['off', 'low', 'high', 'max'].includes(buildEffort))
+    ctx.on('agent/request', async ({ agent }, next) => {
+      const config = await next()
+      const sessionId = agent?.session?.id
+      if (typeof sessionId !== 'string' || !isBuild(sessionId, agent)) return config
+      return { ...config, reasoningEffort: buildEffort }
+    })
+
+  /**
    * A BUILD DOES NOT END ON A FAILED CHECK WHILE CHECKS REMAIN (`checkAgainStep`): a demo or own-site build about to
    * close its turn is steered one more step to repair and check again, at most `CHECK_AGAIN_STEERS` times between two checks, so a
    * model that will not continue still ends. The steered step's writes land: the turn its host closed opens again
@@ -4231,7 +4332,7 @@ export function apply(ctx: HostContext, config: Config = {}): void {
     try {
       const sessionId = agent?.session?.id
       if (typeof sessionId !== 'string' || signal?.aborted) return
-      if (!isBuild(sessionId)) return
+      if (!isBuild(sessionId, agent)) return
       const events = (agent?.session?.snapshotEvents?.() ?? []) as readonly {
         type?: string
         data?: unknown
@@ -4268,7 +4369,7 @@ export function apply(ctx: HostContext, config: Config = {}): void {
    */
   ctx.on('agent/turn-stopping', async ({ agent, turn, signal }) => {
     const sessionId = agent?.session?.id
-    if (checkMode === 'off' || typeof sessionId !== 'string' || isBuild(sessionId)) return
+    if (checkMode === 'off' || typeof sessionId !== 'string' || isBuild(sessionId, agent)) return
     const ask = turnAsks.get(sessionId)
     if (ask === undefined || ask.turn !== turn || ask.checked) return
     ask.checked = true
@@ -4294,7 +4395,7 @@ export function apply(ctx: HostContext, config: Config = {}): void {
           turn,
           events,
           eyes: () => pickEyes(llm, route, config.lookModel),
-          capture: (view) => drawView(label, view),
+          capture: (view) => drawView(label, view, { check: true }),
           store: (jpeg) => storePicture(ctx, { jpeg } as Parameters<typeof storePicture>[1]),
           llm,
           ...(signal ? { signal } : {})
@@ -4357,13 +4458,49 @@ export function apply(ctx: HostContext, config: Config = {}): void {
    *
    * It decides before `next()`: a refused call needs no other listener's opinion. The log is read only
    * for a tool that can write; the stderr line is the operator's trace, like the path fence's `DENY`.
+   *
+   * THE BUILD FENCE (`build-fence.mjs`, council 25/10/2026) rides the same hook: a demo or own-site build
+   * (`isBuild`) shows nobody a question — its own, a door's `confirm-` card, a shell rule's card, or a
+   * later listener's `ask` for an approval — and writes none of the template's own files. Local round 31
+   * stood 80 minutes on one such question after the agent had rewritten three theme PHP patterns.
    */
   ctx.on(
     'tools/pre-execute',
-    async (exec: PreToolExecution, next: () => Promise<PreToolDecision>): Promise<PreToolDecision> => {
+    async (exec: PreToolExecution, onward: () => Promise<PreToolDecision>): Promise<PreToolDecision> => {
+      const caller = exec?.agent?.session?.id
+      const closedBuild =
+        typeof caller === 'string' && buildTurns.state(caller, buildTurn(exec.agent))?.closedBuild === true
+      if (closedBuild && !closedBuildRead(exec.name, exec.arguments)) {
+        console.error(`site-tools: DENY guard=closed-build tool=${String(exec.name)}`)
+        return { kind: 'deny', reason: CLOSED_BUILD_REFUSAL }
+      }
+      const building = typeof caller === 'string' && caller !== '' && isBuild(caller, exec.agent)
+      // Recheck after downstream listeners: a parallel lifecycle answer can close the turn while they wait.
+      const next = async (): Promise<PreToolDecision> => {
+        const decision = await onward()
+        const closedNow =
+          typeof caller === 'string' && buildTurns.state(caller, buildTurn(exec.agent))?.closedBuild === true
+        if (closedNow && (!closedBuildRead(exec.name, exec.arguments) || decision.kind === 'ask'))
+          return { kind: 'deny', reason: CLOSED_BUILD_REFUSAL }
+        if (building && decision.kind === 'ask') {
+          console.error(`site-tools: DENY guard=build-approval tool=${String(exec?.name)}`)
+          return { kind: 'deny', reason: buildApprovalRefusal(String(exec?.name)) }
+        }
+        return decision
+      }
       // E5.e4: a card whose `confirm-…` id Tracy never wrote is answered for no call — stop it before
       // the customer sees it, so the agent re-sends the refusal's own question (`confirmCardRefusal`).
       if (exec?.name === 'ask_user_question') {
+        if (building) {
+          const questions = (exec.arguments as { questions?: unknown } | null)?.questions
+          const confirm =
+            Array.isArray(questions) &&
+            questions.some(
+              (q) => typeof q?.id === 'string' && (q.id as string).startsWith(CONFIRM_QUESTION_PREFIX)
+            )
+          console.error(`site-tools: DENY guard=build-question confirm=${String(confirm)}`)
+          return { kind: 'deny', reason: buildQuestionRefusal(confirm) }
+        }
         // The door's question in the person's language and meaning (live run 20/10/2026): read from the
         // language the conversation was found in (`mainLanguageOf`, set before each step).
         const asker = exec.agent?.session?.id
@@ -4392,6 +4529,42 @@ export function apply(ctx: HostContext, config: Config = {}): void {
         // A lane's workspace is the site folder itself.
         label = gatewaySetting('MCP_TRACY_SITE_LABEL')
       }
+      // A build rebuilds EmDash only after writing its template code under /app (`appChangedSinceRebuild`).
+      if (
+        building &&
+        exec.name === 'tracy_site_build_emdash' &&
+        (exec.arguments as { operation?: unknown } | null)?.operation === 'site.rebuild' &&
+        !appChangedSinceRebuild(
+          sessionEvents(caller) as readonly { type?: string; data?: unknown }[],
+          cwd,
+          siteRoot
+        )
+      ) {
+        console.error('site-tools: DENY guard=build-rebuild')
+        return { kind: 'deny', reason: BUILD_REBUILD_UNNEEDED }
+      }
+      // A build writes none of the template's own files: the theme's or plugin's next update writes them back.
+      if (building) {
+        const file = buildTemplateWrite({ name: exec.name, args: exec.arguments, cwd, siteRoot })
+        if (file !== null) {
+          console.error(
+            `site-tools: DENY guard=build-template tool=${exec.name} file=${JSON.stringify(file)}`
+          )
+          return { kind: 'deny', reason: buildTemplateRefusal(exec.name, file) }
+        }
+        const picture = buildPictureWrite({ name: exec.name, args: exec.arguments, cwd, siteRoot })
+        if (picture !== null) {
+          console.error(
+            `site-tools: DENY guard=build-picture tool=${exec.name} file=${JSON.stringify(picture)}`
+          )
+          return { kind: 'deny', reason: buildPictureRefusal(exec.name, picture) }
+        }
+        const hide = exec.name === 'tracy_site' ? buildHide(exec.arguments) : null
+        if (hide !== null) {
+          console.error(`site-tools: DENY guard=build-hide prop=${JSON.stringify(hide)}`)
+          return { kind: 'deny', reason: buildHideRefusal(hide) }
+        }
+      }
       // Ladder DL14/DL15 (14/10/2026): a shell write of the site's name, description or tagline has a
       // recorded door that does the same write with a receipt (`recorded-door.mjs`); through the shell
       // nothing listed it, and the customer's undo in the next conversation found no such change. A
@@ -4408,6 +4581,11 @@ export function apply(ctx: HostContext, config: Config = {}): void {
       // after their yes (`shell-writes.mjs` — best effort, read by its words).
       const shell = shellConsequence(exec?.name, exec?.arguments)
       const shellSession = exec?.agent?.session?.id
+      // In a build nobody answers its card: the command is refused with no question (`buildShellRefusal`).
+      if (shell !== null && building) {
+        console.error(`site-tools: DENY guard=build-shell tool=${String(exec?.name)} reason=${shell.reason}`)
+        return { kind: 'deny', reason: buildShellRefusal(shell) }
+      }
       if (shell !== null && typeof shellSession === 'string' && shellSession !== '') {
         const key = `shell:${label ?? ''}:${shell.command}`
         if (!memory.confirmed(shellSession, key)) {
@@ -4529,7 +4707,11 @@ export function apply(ctx: HostContext, config: Config = {}): void {
         const ask = turnAsks.get(root)
         if (ask === undefined || ask.checked || (turn !== null && ask.turn !== turn)) return decision
         const label = sessionSite(exec?.agent)
-        if (label === null) return decision
+        if (label === null) {
+          // Said at the check (`no-before-no-site`): a write from a session standing in no site's folder.
+          ask.missing ??= 'no-site'
+          return decision
+        }
         const postTypeOf = (id: number) => memory.readOf(sessionId, { kind: 'post', id })?.postType ?? null
         if (asksFirst(call, { postTypeOf })) return decision
         const reach = writeReach(call, {
@@ -5200,6 +5382,7 @@ export function apply(ctx: HostContext, config: Config = {}): void {
         return withNext({
           ok: false,
           code: 'CONFIRM_FIRST',
+          ...(confirm === true ? { confirmationMissing: true } : {}),
           action: plan.action,
           tier: 'mutating',
           consequence: consequence.reason,
@@ -6173,20 +6356,38 @@ export function apply(ctx: HostContext, config: Config = {}): void {
       return { ok: false, why: `${at} is served on a port this site does not expose here` }
     const measured = await measurePage({
       target: btarget,
-      runInContainer: (t) =>
-        runExec(config, {
-          argv: browserArgv({
-            container: t.container,
-            mode: 'styles',
-            url: t.url,
-            origin: t.origin,
-            resolverRule: t.resolverRule,
-            via: t.via
-          }),
-          timeoutMs: LOOK_TIMEOUT_MS,
-          maxBuffer: 8 * 1024 * 1024
-        }),
-      runOnHost: (t, chrome) => (config.hostBrowser ?? hostBrowserExec)({ chrome, target: t }),
+      runInContainer: async (t) =>
+        (
+          await browseAsSite({
+            target: t,
+            publicOrigin,
+            launch: (at) =>
+              runExec(config, {
+                argv: browserArgv({
+                  container: at.container,
+                  mode: 'styles',
+                  url: at.url,
+                  origin: at.origin,
+                  resolverRule: at.resolverRule,
+                  via: at.via
+                }),
+                timeoutMs: LOOK_TIMEOUT_MS,
+                maxBuffer: 8 * 1024 * 1024
+              })
+          })
+        ).res,
+      runOnHost: async (t, chrome) =>
+        (
+          await browseAsSite({
+            target: { ...t, resolverRule: '' },
+            publicOrigin,
+            launch: (at) =>
+              (config.hostBrowser ?? hostBrowserExec)({
+                chrome,
+                target: hostBrowserTarget(at) ?? t
+              })
+          })
+        ).res,
       hostChrome: config.hostChrome !== undefined ? config.hostChrome : hostChromeOf(process.env, existsSync)
     })
     if (!measured.ok) return { ok: false, why: measured.why }
@@ -6477,6 +6678,9 @@ export function apply(ctx: HostContext, config: Config = {}): void {
             'structure.read',
             'plan.read',
             'plan.save',
+            'plan.add',
+            'copy.write',
+            'copy.apply',
             'media.import',
             'media.look',
             'provision.start',
@@ -6498,14 +6702,46 @@ export function apply(ctx: HostContext, config: Config = {}): void {
           description:
             'Records a `structure.read` page holds, at most 200 (default 200); a `read` page of research, at most 50 (default 20).'
         },
+        page: {
+          type: 'integer',
+          minimum: 0,
+          description: 'read part sources: one crawled page of the source at offset, whole.'
+        },
+        path: {
+          type: 'string',
+          description:
+            'copy.apply: the one page whose words to place (a path such as "/about/"); without it, every page.'
+        },
         assetId: { type: 'string' },
+        record: {
+          type: 'string',
+          description:
+            'structure.read: one record as the template installed it, by the key a failed check names ("post/101", "templatePart/footer").'
+        },
         rowIndex: {
           type: 'integer',
           minimum: 0,
           description:
             'Frozen plan row selecting this photo crop/source canvas; import returns derivative provenance.'
         },
-        plan: { type: 'object', additionalProperties: true }
+        plan: { type: 'object', additionalProperties: true },
+        // `plan.add` (plan "10/10" §7 S1): only the new part of a saved plan, never the whole plan again.
+        rows: {
+          type: 'array',
+          items: { type: 'object', additionalProperties: true },
+          description: 'plan.add: rows appended after the saved ones.'
+        },
+        images: {
+          type: 'object',
+          additionalProperties: true,
+          description: 'plan.add: {"<rowIndex>": <image>} for saved rows that have no image.'
+        },
+        tones: {
+          type: 'object',
+          additionalProperties: { type: 'string', enum: ['dark', 'light'] },
+          description: 'plan.add: {"<rowIndex>": "dark" | "light"} for saved images that carry words.'
+        },
+        unplaced: { type: 'array', items: { type: 'object', additionalProperties: true } }
       },
       required: ['operation'],
       additionalProperties: false
@@ -6516,6 +6752,12 @@ export function apply(ctx: HostContext, config: Config = {}): void {
       ),
     output: { schema: {}, render: (_args: unknown, value: unknown) => answerContent(value, []) },
     async execute(args: unknown, exec: ToolRun) {
+      const assignedTurn = buildTurn(exec.agent)
+      const remember = (answer: unknown) => {
+        const session = exec?.agent?.session?.id
+        if (session) buildTurns.observe(session, assignedTurn, answer, buildTurn(exec.agent))
+        return answer
+      }
       const laneKey = laneSiteKey()
       const sitesRoot = resolveSitesRoot(undefined)
       let label: string | null = null
@@ -6532,7 +6774,7 @@ export function apply(ctx: HostContext, config: Config = {}): void {
       const key =
         laneKey ??
         (label === null ? null : ((await siteKeyInFolder(`${sitesRoot}/${label}`)) ?? '_conversation'))
-      if (!route || !key || !sessionId) return { ok: false, code: 'AGENT_DEMO_NOT_GRANTED' }
+      if (!route || !key || !sessionId) return remember({ ok: false, code: 'AGENT_DEMO_NOT_GRANTED' })
       const log = exec?.agent?.session
       const events =
         log && typeof log.seq === 'number' && typeof log.eventAt === 'function'
@@ -6541,6 +6783,56 @@ export function apply(ctx: HostContext, config: Config = {}): void {
       // A check with nothing changed since the last one would fail the same way: it is not sent, and costs nothing.
       if ((args as { operation?: unknown })?.operation === 'check' && !changedSinceCheck(events))
         return { ...CHECK_UNCHANGED }
+      // The words the copy tasks wrote, put on the site page by page with content.replace (`copy-apply.mjs`).
+      if ((args as { operation?: unknown })?.operation === 'copy.apply') {
+        const page = (args as { path?: unknown })?.path
+        const research = async (params: Record<string, unknown>) =>
+          remember(
+            await applyDoor(
+              config,
+              route,
+              key,
+              'demo.research',
+              params,
+              null,
+              laneKey === null ? label : null,
+              sessionId
+            )
+          )
+        return remember(
+          await withTurnSignal(
+            exec,
+            async () => {
+              // The words may still be being written (`copy.write` only starts them): wait for them first.
+              const written = (await copyWritten(research, { signal: exec?.signal ?? null })) as {
+                ok?: unknown
+                running?: unknown
+              }
+              if (written?.ok === false || written?.running === true) return written
+              return applyCopy({
+                read: (path?: string) =>
+                  research({ operation: 'copy.read', ...(path !== undefined ? { page: path } : {}) }),
+                replace: async (
+                  path: string,
+                  changes: { find: string; replace: string }[],
+                  options?: { all?: true | 'page'; expect?: number }
+                ) =>
+                  (await siteTool.execute(
+                    { action: 'content.replace', params: { path, changes, ...options } },
+                    exec
+                  )) as {
+                    ok?: unknown
+                    change?: unknown
+                    code?: unknown
+                  },
+                page: typeof page === 'string' ? page : undefined,
+                signal: exec?.signal ?? null
+              })
+            },
+            stopped
+          )
+        )
+      }
       const answer = await withTurnSignal(
         exec,
         () =>
@@ -6595,7 +6887,10 @@ export function apply(ctx: HostContext, config: Config = {}): void {
           BUILD_CHECKS,
           contextRoom(events)
         )
-        if (next !== null) (answer as Record<string, unknown>).next = next
+        // Findings repaired at one check and back at this one say so first (`findingsCameBack`, local round 31).
+        const came = findingsCameBack(events, verdict as Parameters<typeof findingsCameBack>[1])
+        if (next !== null)
+          (answer as Record<string, unknown>).next = came === null ? next : `${cameBackNext(came)} ${next}`
       }
       // `media.look`'s sheet of the research's photos, handed to the model as the picture it can see (local round 21).
       const sheet = (answer as { sheet?: unknown } | null)?.sheet
@@ -6609,20 +6904,14 @@ export function apply(ctx: HostContext, config: Config = {}): void {
       const frozen = answer as { code?: unknown; next?: unknown } | null
       if (frozen?.code === 'AGENT_DEMO_PLAN_FROZEN' && typeof frozen.next !== 'string')
         (answer as Record<string, unknown>).next = PLAN_FROZEN_NEXT
+      // Only a successful answer assigns this turn. Lifecycle refusals revoke this turn's cached exemptions.
+      remember(answer)
       const issuesNext = planIssuesNext(answer)
       if (issuesNext !== null) (answer as Record<string, unknown>).next = issuesNext
-      // A saved plan makes this conversation a planned build (`demoPlanAgreed`) from its next step on; any
-      // answer at all makes it a build, which the loop brakes give a whole site's room (`loopNotices` `build`).
-      const saved = answer as { ok?: unknown; planHash?: unknown; code?: unknown } | null
-      if (saved?.ok === true && typeof saved.planHash === 'string')
-        markPlanned(sessionId, Number.POSITIVE_INFINITY)
-      if (saved?.code !== 'AGENT_DEMO_NOT_GRANTED') {
-        demoBuilds.delete(sessionId)
-        demoBuilds.add(sessionId)
-        while (demoBuilds.size > 500) demoBuilds.delete(demoBuilds.values().next().value as string)
-      }
+      // A saved plan makes this turn a planned build (`demoPlanAgreed`) from its next step on, and any answer at
+      // all makes it a build: `remember` above already recorded both in `buildTurns` (`planned` follows `planHash`).
       const size = buildSizeOf(answer)
-      if (size !== null) {
+      if (size !== null && assignedTurn === buildTurn(exec.agent) && isBuild(sessionId, exec.agent)) {
         const held = buildSizes.get(sessionId)
         buildSizes.delete(sessionId)
         buildSizes.set(sessionId, { ...held, ...size })
@@ -6632,13 +6921,20 @@ export function apply(ctx: HostContext, config: Config = {}): void {
     }
   }
   ctx.effect(() => ctx.tools.register(demoTool), 'tracy-site-tools: tracy_demo')
-  // Existing generic shell/file tools cannot race an untouched demo's provision or baseline.
+  // Native local writes and generic shell/file tools cannot race provision, the baseline or the plan.
   ctx.on('tools/pre-execute', async (exec, next) => {
-    if (!demoToolNeedsReady(exec.name, exec.arguments)) return next()
-    const result = (await withTurnSignal(exec, () => demoWriteGuard({}, exec, true))) as {
+    const nativeWrite =
+      ['tracy_site', 'tracy_emdash'].includes(exec.name) &&
+      changesSite({ name: exec.name, arguments: exec.arguments })
+    if (!nativeWrite && !demoToolNeedsReady(exec.name, exec.arguments)) return next()
+    const result = (await withTurnSignal(exec, () =>
+      nativeWrite ? demoGuard(exec, false) : demoWriteGuard({}, exec, true)
+    )) as {
       code?: string
     } | null
-    return result?.code ? { kind: 'deny', reason: result.code } : next()
+    return result?.code && result.code !== 'AGENT_DEMO_NOT_GRANTED'
+      ? { kind: 'deny', reason: result.code }
+      : next()
   })
 
   /**

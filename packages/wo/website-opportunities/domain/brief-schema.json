@@ -18,9 +18,39 @@
     "sources"
   ],
   "$defs": {
-    "readingItem": {
+    "assetBox": {
+      "type": "array",
+      "items": { "type": "number", "minimum": 0, "maximum": 1 },
+      "minItems": 4,
+      "maxItems": 4,
+      "description": "[x, y, width, height] as fractions of the picture."
+    },
+    "assetLink": {
       "type": "object",
-      "required": ["id", "label", "quote", "source"],
+      "required": ["id", "evidence"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "evidence": {
+          "type": "object",
+          "required": ["via"],
+          "properties": {
+            "via": { "enum": ["alt", "post", "vision", "none"] },
+            "quote": { "type": "string" }
+          }
+        }
+      }
+    },
+    "readingItem": {
+      "allOf": [{ "$ref": "#/$defs/readingItemFields" }],
+      "required": ["id", "label", "quote", "source"]
+    },
+    "teamItem": {
+      "allOf": [{ "$ref": "#/$defs/readingItemFields" }],
+      "required": ["id", "label", "source"],
+      "description": "A team entry: quoted like any reading item, except a person held off the site, who is named with where they were read and no quote, since the reviews naming them are never quoted."
+    },
+    "readingItemFields": {
+      "type": "object",
       "properties": {
         "id": { "type": "string", "minLength": 1 },
         "label": { "type": "string", "minLength": 1, "description": "The item in words of its quote." },
@@ -286,7 +316,11 @@
               }
             }
           },
-          "decidedBy": { "enum": ["rule", "owner"] }
+          "decidedBy": { "enum": ["rule", "owner"] },
+          "basis": {
+            "enum": ["praise"],
+            "description": "A theme customers praise in at least two reviews, on their verbatim quotes; tied to the on-site services or audience it names. Said as praise, never as the business's own claim."
+          }
         }
       }
     },
@@ -304,6 +338,15 @@
         "properties": {
           "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
           "title": { "type": "string", "minLength": 1 },
+          "seo": {
+            "description": "The page's HTML title and meta description, made only of facts on the site (name when on the site, kind of business, city, top services). Absent in briefs before 27/10/2026.",
+            "type": "object",
+            "required": ["title", "description"],
+            "properties": {
+              "title": { "type": "string", "minLength": 1, "maxLength": 60 },
+              "description": { "type": "string", "minLength": 1, "maxLength": 155 }
+            }
+          },
           "sections": {
             "type": "array",
             "items": {
@@ -323,7 +366,7 @@
                 },
                 "assetIds": { "type": "array", "items": { "type": "string" } },
                 "heroCandidates": {
-                  "description": "Hero only (#1780): up to three pictures to open the site with, the most pixels first; never the logo or a profile picture. Absent when none qualifies. The build step picks one and crops it.",
+                  "description": "Hero only (#1780): up to three pictures to open the site with, best first (landscape, high resolution grade, people at work or the venue, then the most pixels); never the logo, a profile picture or a graphic of words. Absent when none qualifies. The build step picks one and crops it.",
                   "type": "array",
                   "maxItems": 3,
                   "items": {
@@ -359,6 +402,18 @@
                       "kind": { "type": "string" },
                       "quote": { "type": "string" },
                       "source": { "type": "object" }
+                    }
+                  }
+                },
+                "inferred": {
+                  "description": "Optional. Lines of the copy Tracy concluded rather than quoted (\"By appointment.\" when the only hours say open 24 hours every day), each with its reason code; no excerpt backs them and none is shown as hours.",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["text", "reason"],
+                    "properties": {
+                      "text": { "type": "string", "minLength": 1 },
+                      "reason": { "type": "string", "minLength": 1 }
                     }
                   }
                 },
@@ -401,7 +456,7 @@
               "id": { "type": "string", "minLength": 1 },
               "kinds": {
                 "type": "array",
-                "items": { "enum": ["dish", "story", "product", "event", "offer", "news"] }
+                "items": { "enum": ["dish", "story", "product", "service", "event", "offer", "news"] }
               },
               "title": { "type": "string", "minLength": 1 },
               "body": { "type": "string", "minLength": 1 },
@@ -455,6 +510,19 @@
           "properties": {
             "origin": { "enum": ["website", "social"] },
             "official": { "type": "boolean" },
+            "name": {
+              "type": ["string", "null"],
+              "description": "The decided business name; null while that name is held off the site (see nameHeld)."
+            },
+            "nameHeld": {
+              "type": "object",
+              "description": "Present while the business name is held off the site: the brand names nobody, and the held name, its reasons and the other names the business uses are in the Missing entry of the field named here.",
+              "required": ["missing", "reasons"],
+              "properties": {
+                "missing": { "const": "name" },
+                "reasons": { "type": "array", "items": { "type": "string" } }
+              }
+            },
             "colors": {
               "type": "array",
               "items": {
@@ -525,6 +593,19 @@
               "language": { "type": "string" },
               "publishTime": { "type": "string" },
               "googleMapsUri": { "type": "string" }
+            }
+          }
+        },
+        "heldReviews": {
+          "description": "Optional. Reviews the site may not quote: each names someone the brief holds off the site (a person named only in guest reviews), listed in namesHeld. Named, never quoted: the fields of reviews less text (a brief made before kept the text).",
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["author", "namesHeld"],
+            "properties": {
+              "author": { "type": "string", "minLength": 1 },
+              "text": { "type": "string", "minLength": 1 },
+              "namesHeld": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
             }
           }
         },
@@ -613,6 +694,30 @@
                 "values": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
               }
             }
+          },
+          "otherNames": {
+            "description": "Optional, on the held name's entry. The names the business gives itself on its own marks (its logo, its social page's display name or handle), each with those marks as evidence: the builder and the owner see them; no copy, title or meta description prints them either.",
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["name", "evidence"],
+              "properties": {
+                "name": { "type": "string", "minLength": 1 },
+                "evidence": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["source"],
+                    "properties": {
+                      "source": { "type": "string" },
+                      "ref": { "type": "string" },
+                      "quote": { "type": "string" }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -629,6 +734,27 @@
         }
       }
     },
+    "assetLabelling": {
+      "description": "Optional (F08): how the photographs were labelled by a vision model when this brief was made. A failure leaves them unlabelled and says why.",
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {
+          "enum": ["labelled", "partial", "cached", "failed", "off", "none"],
+          "description": "labelled: every picture asked was labelled; partial: some were not, each such asset says why (unlabelledReason)."
+        },
+        "asked": { "type": "integer", "minimum": 0 },
+        "labelled": { "type": "integer", "minimum": 0 },
+        "failed": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Pictures asked that came back without a label."
+        },
+        "cached": { "type": "integer", "minimum": 0 },
+        "max": { "type": "integer", "minimum": 0 },
+        "reason": { "type": "string" }
+      }
+    },
     "assets": {
       "type": "array",
       "items": {
@@ -637,8 +763,127 @@
         "properties": {
           "id": { "type": "string", "minLength": 1 },
           "kind": { "enum": ["image", "video"] },
-          "category": { "enum": ["food", "space", "event", "people", "other"] },
-          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+          "category": {
+            "enum": ["food", "space", "event", "people", "menu", "other"],
+            "description": "Broad category: a source menu photo stays menu; else what a vision model saw (people, space, food); else the caption keywords read at collection."
+          },
+          "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Where the picture was collected (website, instagram, google-places…). Required on every new write; a brief stored before it has none."
+          },
+          "credit": {
+            "type": "string",
+            "description": "The attribution its source requires shown, authors with their link; empty only when the source names no one. Required on every new write."
+          },
+          "uploaderRole": {
+            "enum": ["owner", "customer", "unknown"],
+            "description": "Who uploaded it: the business, a customer, or not known. Required on every new write."
+          },
+          "width": {
+            "type": ["integer", "null"],
+            "minimum": 1,
+            "description": "Pixels; null when unknown (a video whose size was never read)."
+          },
+          "height": {
+            "type": ["integer", "null"],
+            "minimum": 1,
+            "description": "Pixels; null when unknown (a video whose size was never read)."
+          },
+          "orientation": { "enum": ["landscape", "portrait", "square", "unknown"] },
+          "quality": {
+            "enum": ["high", "medium", "low", "unknown"],
+            "description": "Resolution grade from the size: high fits a full-width hero (long edge 1600 px, short edge 900 px), medium a gallery (long edge 800 px), low a thumbnail."
+          },
+          "content": {
+            "enum": [
+              "people-in-action",
+              "team",
+              "venue-interior",
+              "venue-exterior",
+              "product",
+              "food",
+              "equipment",
+              "logo",
+              "text-graphic",
+              "other",
+              "unlabelled"
+            ],
+            "description": "What the picture shows, as a vision model labelled it; unlabelled when no model has looked at it."
+          },
+          "caption": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 124,
+            "description": "Short alt text from the vision model; absent when none."
+          },
+          "unlabelledReason": {
+            "enum": [
+              "video",
+              "not_a_photograph",
+              "too_small",
+              "over_cap",
+              "no_bytes",
+              "no_vision_model",
+              "decode_failed",
+              "http_error",
+              "timeout",
+              "answer_unparseable",
+              "image_code_mismatch",
+              "not_in_answer",
+              "vision_failed"
+            ],
+            "description": "Why content is unlabelled: never shown to a vision model, or shown and not answered. Absent when labelled or when the brief was made without a labelling step."
+          },
+          "sizeUnknownReason": {
+            "enum": ["not_measured"],
+            "description": "Why width and height are null (orientation and quality unknown): nothing measured the file when it was collected."
+          },
+          "depicts": {
+            "$ref": "#/$defs/assetLink",
+            "description": "The offering of this brief the picture shows (an offering id), or id general when unsure. Words the business wrote with it (alt text, post text) link first; a vision model may only name an id of the brief's list."
+          },
+          "portraitOf": {
+            "oneOf": [{ "$ref": "#/$defs/assetLink" }, { "type": "null" }],
+            "description": "The person of this brief's team the picture portrays (a person id), only when sure; null otherwise."
+          },
+          "role": {
+            "enum": [
+              "business.hero_image",
+              "business.gallery_image",
+              "offering.image",
+              "person.image",
+              "event.image",
+              "quote.author_image",
+              "editorial.illustration",
+              "business.logo",
+              null
+            ],
+            "description": "The place content role (version 3) the picture can fill; null for a graphic or when nothing looked at it. Offering and person roles need their link."
+          },
+          "subjectBox": {
+            "$ref": "#/$defs/assetBox",
+            "description": "Where the main subject is; absent when no model looked."
+          },
+          "faceBoxes": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/assetBox" },
+            "description": "Each face seen, so a crop or a round frame keeps it."
+          },
+          "peopleCount": {
+            "type": ["integer", "null"],
+            "minimum": 0,
+            "description": "People seen; null when no model looked."
+          },
+          "isGraphic": {
+            "type": ["boolean", "null"],
+            "description": "A logo, flyer, banner, menu or other designed graphic rather than a photograph: kept out of photo slots. Null when no model looked."
+          },
+          "isOwnPhoto": {
+            "type": ["boolean", "null"],
+            "description": "The business's own photo: from its uploader when known, else a Google author named as the business, else the vision model's reading; null when not known."
+          }
         }
       }
     },
@@ -652,12 +897,44 @@
           "source": { "type": "string", "minLength": 1 },
           "status": { "enum": ["complete", "partial", "blocked", "failed"] },
           "reason": { "type": "string" },
+          "code": {
+            "type": "string",
+            "description": "Optional. The machine code of `reason` (HTTP_429, HTTP_402, APPLICATION_ERROR)."
+          },
+          "httpStatus": {
+            "type": "integer",
+            "description": "Optional. The HTTP status behind `code` when it is one (429 rate limited, 402 paid quota spent)."
+          },
           "coverage": {
             "type": "object",
             "properties": {
               "fetched": { "type": "integer" },
               "total": { "type": "integer" },
-              "until": { "type": "string" }
+              "pages": { "type": "integer" },
+              "until": { "type": "string" },
+              "reviews": {
+                "type": "integer",
+                "description": "Optional. Of fetched, the reviews this source gave (Google Places)."
+              },
+              "photos": {
+                "type": "integer",
+                "description": "Optional. Of fetched, the photos of the brief this source gave (Google Places)."
+              }
+            }
+          },
+          "attempts": {
+            "description": "Optional. The providers this source called, in order, each with its outcome: why the data is thin when one failed.",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["provider", "status"],
+              "properties": {
+                "provider": { "type": "string", "minLength": 1 },
+                "status": { "type": "string", "minLength": 1 },
+                "step": { "type": "string" },
+                "code": { "type": "string" },
+                "httpStatus": { "type": "integer" }
+              }
             }
           }
         }
@@ -675,7 +952,7 @@
         },
         "services": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
         "audience": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
-        "team": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
+        "team": { "type": "array", "items": { "$ref": "#/$defs/teamItem" } },
         "story": { "type": "array", "items": { "$ref": "#/$defs/readingItem" } },
         "about": { "type": "string", "description": "The About line, made only of quoted words." }
       }

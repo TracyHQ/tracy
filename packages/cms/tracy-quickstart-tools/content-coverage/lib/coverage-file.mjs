@@ -2,17 +2,28 @@
 // Compact on purpose: counts per class and one line per distinct hole, never screenshots or pages.
 // /ops reads it (apps/tracy-web/src/lib/content-coverage/) and holds Publish on unexplained holes
 // and on page hygiene findings (raw language constants, PHP errors, unfilled placeholders).
+import { labelRulesOf } from './label-rules.mjs'
 import { normText } from './normalize.mjs'
 import { rootCause } from './root-cause.mjs'
 
 export const SCHEMA = 'tracy-content-coverage/v1'
 /** Bump when a change makes the audit see more (or less): /ops can then ask for a new measurement. */
 // 1.1.0 (24/10/2026): page hygiene (`hygiene` list); a 1.0.0 file never looked, so /ops asks again.
-export const TOOL_VERSION = '1.1.0'
+// 1.2.0 (28/10/2026): mechanical label rules R2 to R9 and R1 (`labelRules`, ADR 0040); a 1.1.0 file has none.
+// 1.3.0 (28/10/2026): the LLM label judge's verdicts (`labelJudge`, `label-judge.mjs`); a 1.2.0 file has none.
+// 1.4.0 (28/10/2026): the label judge is the agent that runs the release (record-judge.mjs); the block names it in
+//   `judgedBy` and carries no model, calls or cents.
+export const TOOL_VERSION = '1.5.0'
 export const COVERAGE_FILE = 'content-coverage.json'
 
 /** The prototype's letters, in the words the policy and /ops use. */
-export const CLASS_NAME = Object.freeze({ a: 'capture', b: 'template', c: 'core', d: 'unknown' })
+export const CLASS_NAME = Object.freeze({
+  a: 'capture',
+  b: 'template',
+  c: 'core',
+  d: 'unknown',
+  e: 'catalogue'
+})
 
 const cut = (s, n) => (String(s ?? '').length > n ? `${String(s).slice(0, n - 3)}...` : String(s ?? ''))
 const bucketOf = (kind) => (kind === 'image' ? 'images' : kind === 'link' ? 'links' : 'text')
@@ -82,18 +93,21 @@ const emptyBucket = () => ({
   template: 0,
   core: 0,
   unknown: 0,
+  catalogue: 0,
   ignored: 0
 })
 
 /**
- * @param {{ result: any, contract: any, previous?: any, measuredAt?: string }} input
- *   `result` = what `runAudit` returned; `previous` = the file this run replaces (accepted reasons carry over)
+ * @param {{ result: any, contract: any, previous?: any, measuredAt?: string, labelJudge?: any }} input
+ *   `result` = what `runAudit` returned; `previous` = the file this run replaces (accepted reasons carry over);
+ *   `labelJudge` = the label judge's block (`prepareLabelJudge`, `recordLabelJudge`), written beside `labelRules` when given
  */
 export function buildCoverageFile({
   result,
   contract,
   previous = null,
-  measuredAt = new Date().toISOString()
+  measuredAt = new Date().toISOString(),
+  labelJudge = null
 }) {
   const accepted = new Map()
   for (const h of Array.isArray(previous?.holes) ? previous.holes : []) {
@@ -141,7 +155,7 @@ export function buildCoverageFile({
     if (reason) hole.accepted = reason
     holes.push(hole)
   }
-  const order = { capture: 0, template: 1, unknown: 2 }
+  const order = { capture: 0, template: 1, unknown: 2, catalogue: 3 }
   holes.sort(
     (a, b) =>
       order[a.class] - order[b.class] || a.cause.localeCompare(b.cause) || a.value.localeCompare(b.value)
@@ -167,7 +181,21 @@ export function buildCoverageFile({
     counts,
     coverage: Object.fromEntries(Object.entries(counts).map(([k, c]) => [k, percent(c)])),
     holes,
-    hygiene: hygieneOf(result, previous)
+    hygiene: hygieneOf(result, previous),
+    // Rules R2 to R9 over the map, the page snapshots and every hole found (core strings are skipped by R9 itself).
+    labelRules: labelRulesOf({
+      map: contract.map,
+      pages: result.pages,
+      holes: [...unique.values()]
+        .filter((it) => it.status === 'hole')
+        .map((it) => ({
+          kind: it.kind === 'attr' || it.kind === 'meta' ? `${it.kind}:${it.attr}` : it.kind,
+          value: shownValue(it),
+          class: CLASS_NAME[it.class] ?? 'unknown'
+        }))
+    }),
+    // The label judge (spec #37): per slot right or wrong with a suggested role; also the cache of the next run.
+    ...(labelJudge ? { labelJudge } : {})
   }
 }
 

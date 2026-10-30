@@ -24,6 +24,10 @@ import { ungatedFactSlots } from '../../../../apps/tracy-web/src/lib/fact-fields
 
 const SCRIPT = fileURLToPath(new URL('../scripts/capture-contract.py', import.meta.url))
 const SLOTS_HELPER = fileURLToPath(new URL('fixtures/capture-contract/ContentSlots.php', import.meta.url))
+// Answers like the real helper: one slot per text node (the stub above answers none).
+const PER_TEXT_HELPER = fileURLToPath(
+  new URL('fixtures/capture-contract/ContentSlotsPerText.php', import.meta.url)
+)
 const FILES = ['manifest.json', 'content-map.json', 'presentation-lock.json']
 // The tool spawns `php` itself (the access snapshot), so `scripts/test-support/php.mjs`'s docker
 // fallback cannot stand in; its rule still holds: fail on CI, skip with the reason on a laptop.
@@ -109,7 +113,16 @@ const clean = () => ({
 /** Run the tool on `inventory` (and `countsFrom`, when given) into a fresh output folder. */
 function capture(
   inventory,
-  { countsFrom, args = [], existing, previous, blockFolders = [], schemas = {}, files = {} } = {}
+  {
+    countsFrom,
+    args = [],
+    existing,
+    previous,
+    blockFolders = [],
+    schemas = {},
+    files = {},
+    helper = SLOTS_HELPER
+  } = {}
 ) {
   const dir = mkdtempSync(path.join(tmpdir(), 'capture-contract-'))
   mkdirSync(path.join(dir, 'webroot/templates/tracy'), { recursive: true })
@@ -154,7 +167,7 @@ function capture(
       '--manifest',
       path.join(dir, 'release.json'),
       '--slots-helper',
-      SLOTS_HELPER,
+      helper,
       '--out',
       out,
       '--file-roots',
@@ -944,6 +957,45 @@ test('--full-coverage declares the rest of what a visitor reads, each kept from 
 })
 
 test(
+  '--full-coverage leaves out a module option typed as text: how many items, how many per row, an opacity',
+  needsPhp,
+  () => {
+    // A shop module (VirtueMart's product module) types its counts as text fields; their demo values are numbers.
+    const shopXml = `<?xml version="1.0" encoding="utf-8"?>
+<extension type="module"><config><fields name="params"><fieldset name="basic">
+  <field name="headerText" type="text"/>
+  <field name="max_items" type="text"/>
+  <field name="products_per_row" type="text"/>
+  <field name="img-opacity" type="text"/>
+</fieldset></fields></config></extension>`
+    const inv = fullInventory()
+    inv.modules.push(
+      module('12', {
+        title: 'New Arrivals',
+        module: 'mod_shop_products',
+        params: JSON.stringify({
+          headerText: 'Fresh in this week',
+          max_items: '8',
+          products_per_row: '4',
+          'img-opacity': '100'
+        })
+      })
+    )
+    inv.modules_menu.push({ id: '12', moduleid: '12', menuid: '101' })
+    const run = capture(inv, {
+      args: ['--module-prefix', '', '--list-items', '--full-coverage'],
+      schemas: { features: ICONS_XML },
+      files: { ...FULL_FILES, 'modules/mod_shop_products/mod_shop_products.xml': shopXml }
+    })
+    assertWritten(run)
+    assert.deepEqual(
+      described(run).filter((s) => s.startsWith('module-12 ')),
+      ['module-12 params headerText text Fresh in this week keep']
+    )
+  }
+)
+
+test(
   '--full-coverage with --evidence-by-field leaves no fact field the contracts gate refuses',
   needsPhp,
   () => {
@@ -1237,7 +1289,11 @@ test(
     assertWritten(run)
     const map = run.read('content-map.json')
     assert.equal(map.roleVocabularyVersion, 'place-content-roles/2')
-    assert.equal(roleOf(run, 'eyebrow').role, 'business.category_label')
+    assert.equal(
+      roleOf(run, 'eyebrow').role,
+      'editorial.heading',
+      'an eyebrow is words, not the business category'
+    )
     assert.equal(roleOf(run, 'heading').role, 'business.tagline')
     assert.equal(roleOf(run, 'intro').role, 'business.summary')
     assert.equal(roleOf(run, 'heading').group.kind, 'business')
@@ -1291,6 +1347,207 @@ test('a new slot is bound by the rule tables, or listed when they cannot place i
   const run = bannerRun(withSupport, previous)
   assertWritten(run)
   assert.equal(roleOf(run, 'support').role, 'business.summary')
-  assert.equal(roleOf(run, 'eyebrow').role, 'business.category_label')
+  assert.equal(
+    roleOf(run, 'eyebrow').role,
+    'editorial.heading',
+    'an eyebrow is words, not the business category'
+  )
   assert.equal(unplacedBanner(run).length, 1, 'only the panel size remains')
 })
+
+/** A module body the way a template writes one: a cut heading, a sentence with a link, a footer link list. */
+const bodyInventory = (content) => {
+  const inv = clean()
+  inv.modules = [module('1'), module('2', { title: '[Tracy] Yard', content })]
+  inv.modules_menu = [
+    { id: '1', moduleid: '1', menuid: '101' },
+    { id: '2', moduleid: '2', menuid: '101' }
+  ]
+  return inv
+}
+const bodySlots = (run) =>
+  run
+    .read('content-map.json')
+    .slots.filter((s) => s.entity === 'module-2')
+    .map((s) => [s.type, s.sample, s.xpath, s.role ?? null, s.group?.id ?? null])
+const bodyRun = (content, args = []) => capture(bodyInventory(content), { helper: PER_TEXT_HELPER, args })
+
+const CUT_HEADING = '<h2>No1 <span>boxing</span> since 2008</h2><h3>Plain</h3>'
+
+test(
+  'C1: a heading the helper cuts in three is three slots without the flag and one with it',
+  needsPhp,
+  () => {
+    const plain = bodyRun(CUT_HEADING)
+    assertWritten(plain)
+    assert.equal(bodySlots(plain).length, 4, 'the helper cuts "No1", "boxing" and "since 2008", then "Plain"')
+    const run = bodyRun(CUT_HEADING, ['--whole-units'])
+    assertWritten(run)
+    assert.deepEqual(
+      bodySlots(run).map(([type, sample, xpath]) => [type, sample, xpath]),
+      [
+        ['text', 'No1 boxing since 2008', '/html/body/div/h2'],
+        ['text', 'Plain', '/html/body/div/h3/text()']
+      ]
+    )
+    assert.equal(bodySlots(run)[0][3], 'editorial.heading', 'the whole heading reads as a heading')
+  }
+)
+
+test(
+  'C1: a sentence with a link keeps its pieces apart, so writing it never empties the link',
+  needsPhp,
+  () => {
+    // The plugin writes an element slot as one text node and keeps any element carrying href/src/alt/title, so a
+    // merged `Call <a href="tel:...">us</a> today` would come back as `New text<a href="tel:..."></a>`: a link with
+    // no words. The unit stays three text slots, each written in place, beside the link's url slot.
+    const run = bodyRun('<p>Call <a href="tel:+000-0100">us</a> today</p>', ['--whole-units'])
+    assertWritten(run)
+    assert.deepEqual(
+      bodySlots(run).map(([type, sample, xpath]) => [type, sample, xpath]),
+      [
+        ['text', 'Call', '/html/body/div/p/text()[1]'],
+        ['url', 'tel:+000-0100', '/html/body/div/p/a/@href'],
+        ['text', 'us', '/html/body/div/p/a/text()'],
+        ['text', 'today', '/html/body/div/p/text()[2]']
+      ]
+    )
+  }
+)
+
+test('C1: text inside an element with a title or alt of its own also keeps the unit apart', needsPhp, () => {
+  const run = bodyRun('<h3>Read the <abbr title="Frequently asked">FAQ</abbr> first</h3>', ['--whole-units'])
+  assertWritten(run)
+  assert.deepEqual(
+    bodySlots(run).map(([, sample, xpath]) => [sample, xpath]),
+    [
+      ['Read the', '/html/body/div/h3/text()[1]'],
+      ['Frequently asked', '/html/body/div/h3/abbr/@title'],
+      ['FAQ', '/html/body/div/h3/abbr/text()'],
+      ['first', '/html/body/div/h3/text()[2]']
+    ]
+  )
+})
+
+test(
+  'C1: an image beside the words keeps the unit apart, so writing it never drops the words',
+  needsPhp,
+  () => {
+    // The image carries no text of its own, so no text node sits inside it; still, one text node written over the unit
+    // would sit beside the kept image and lose the words around it. The pieces stay separate slots.
+    const run = bodyRun('<p><img src="/images/sample-glove.png"> Train <b>hard</b> daily</p>', [
+      '--whole-units'
+    ])
+    assertWritten(run)
+    assert.deepEqual(
+      bodySlots(run).map(([type, sample, xpath]) => [type, sample, xpath]),
+      [
+        ['image', '/images/sample-glove.png', '/html/body/div/p/img/@src'],
+        ['text', 'Train', '/html/body/div/p/text()[1]'],
+        ['text', 'hard', '/html/body/div/p/b/text()'],
+        ['text', 'daily', '/html/body/div/p/text()[2]']
+      ]
+    )
+  }
+)
+
+test('C1: a heading cut by a span and a br is still one slot', needsPhp, () => {
+  const run = bodyRun('<h2>Strong <span>arms</span><br>calm minds</h2>', ['--whole-units'])
+  assertWritten(run)
+  assert.deepEqual(
+    bodySlots(run).map(([type, sample, xpath]) => [type, sample, xpath]),
+    [['text', 'Strong arms calm minds', '/html/body/div/h2']]
+  )
+})
+
+test('C1: a list item with an icon and cut text is still one slot', needsPhp, () => {
+  const run = bodyRun('<ul><li><i class="icon-clock"></i> Open <strong>daily</strong> from nine</li></ul>', [
+    '--whole-units'
+  ])
+  assertWritten(run)
+  assert.deepEqual(
+    bodySlots(run).map(([type, sample, xpath]) => [type, sample, xpath]),
+    [['text', 'Open daily from nine', '/html/body/div/ul/li']]
+  )
+})
+
+test('C1: a fragment with no heading or paragraph at all is one slot for the whole field', needsPhp, () => {
+  const run = bodyRun('THE <br>WORKOUT <b>YARD</b>', ['--whole-units'])
+  assertWritten(run)
+  assert.deepEqual(
+    bodySlots(run).map(([type, sample, xpath]) => [type, sample, xpath]),
+    [['text', 'THE WORKOUT YARD', '/html/body/div']]
+  )
+})
+
+test('C1: loose text beside real paragraphs is not glued into one slot', needsPhp, () => {
+  const run = bodyRun('lead <i>in</i><p>One</p><p>Two <b>more</b></p>', ['--whole-units'])
+  assertWritten(run)
+  assert.deepEqual(
+    bodySlots(run).map(([, sample, xpath]) => [sample, xpath]),
+    [
+      ['lead', '/html/body/div/text()'],
+      ['in', '/html/body/div/i/text()'],
+      ['One', '/html/body/div/p[1]/text()'],
+      ['Two more', '/html/body/div/p[2]']
+    ]
+  )
+})
+
+const LINK_LIST =
+  '<ul><li><a href="index.php?Itemid=21">Classes</a></li><li><a href="index.php?Itemid=22">Prices</a></li>' +
+  '<li><a href="https://www.facebook.com/larkspurtearoom">Facebook</a></li></ul>'
+
+test('C2: a link list is one slot per item, grouped; version 3 labels its page links', needsPhp, () => {
+  const run = bodyRun(LINK_LIST, ['--whole-units', '--role-vocabulary', '3'])
+  assertWritten(run)
+  const map = run.read('content-map.json')
+  assert.equal(map.roleVocabularyVersion, 'place-content-roles/3')
+  assert.deepEqual(
+    bodySlots(run).map(([type, sample, , role, group]) => [type, sample, role, group]),
+    [
+      ['url', 'index.php?Itemid=21', 'editorial.navigation_url', 'module-2.content.ul.0'],
+      ['text', 'Classes', 'editorial.menu_label', 'module-2.content.ul.0'],
+      ['url', 'index.php?Itemid=22', 'editorial.navigation_url', 'module-2.content.ul.1'],
+      ['text', 'Prices', 'editorial.menu_label', 'module-2.content.ul.1'],
+      ['url', 'https://www.facebook.com/larkspurtearoom', 'contact.social_url', 'module-2.content.ul.2'],
+      ['text', 'Facebook', 'contact.social_label', 'module-2.content.ul.2']
+    ]
+  )
+  // The map the capture wrote passes the contract check of its own vocabulary.
+  const roles = spawnSync(
+    'node',
+    [
+      '--input-type=module',
+      '-e',
+      "import {checkContentMapRoles} from './packages/wo/website-opportunities/domain/content-map-roles.mjs';" +
+        "import {readFileSync} from 'node:fs';" +
+        'const r=checkContentMapRoles(JSON.parse(readFileSync(process.argv[1],"utf8")));' +
+        'process.stdout.write(JSON.stringify(r.errors))',
+      path.join(run.out, 'content-map.json')
+    ],
+    { encoding: 'utf8', cwd: fileURLToPath(new URL('../../../../', import.meta.url)) }
+  )
+  assert.equal(roles.stdout, '[]', roles.stdout + roles.stderr)
+})
+
+test(
+  'C2: the default vocabulary stays 2: page links get no role and only the social item is grouped',
+  needsPhp,
+  () => {
+    const run = bodyRun(LINK_LIST, ['--whole-units'])
+    assertWritten(run)
+    assert.equal(run.read('content-map.json').roleVocabularyVersion, 'place-content-roles/2')
+    assert.deepEqual(
+      bodySlots(run).map(([type, sample, , role, group]) => [type, sample, role, group]),
+      [
+        ['url', 'index.php?Itemid=21', null, null],
+        ['text', 'Classes', 'editorial.menu_label', null],
+        ['url', 'index.php?Itemid=22', null, null],
+        ['text', 'Prices', 'editorial.menu_label', null],
+        ['url', 'https://www.facebook.com/larkspurtearoom', 'contact.social_url', 'module-2.content.ul.2'],
+        ['text', 'Facebook', 'contact.social_label', 'module-2.content.ul.2']
+      ]
+    )
+  }
+)

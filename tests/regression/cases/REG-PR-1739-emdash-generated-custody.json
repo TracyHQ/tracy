@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-1739-emdash-generated-custody",
+  "kind": "fix",
+  "title": "Generated isolated EmDash compose retains protected token custody",
+  "pr": 1739,
+  "area": "fleet/emdash-token-custody",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {
+    "files": "apps/tracy-host/src/webroot.js packages/fleet/tracy-fleet-operation/scripts/provision/mint-agent-token.sh"
+  },
+  "steps": [
+    "Render short and long EmDash site labels with shared or isolated networks, with and without an access-key mount; send every output to both custody recognizers.",
+    "Mutate token and access mount sources, targets and permissions, aliases, network footers, mail, caps and token placement."
+  ],
+  "expect": [
+    "All eight official generated forms are protected in JS and awk.",
+    "Every forged or hybrid form is unknown in both recognizers, never legacy none."
+  ],
+  "evidence": "The local provisioned isolated EmDash Retry returned TOKEN_CUSTODY_UNKNOWN although its regular single-inode host token was root:root 0600. Before the fix six of eight current generator combinations failed; after the fix the matrix and negative mutations pass.",
+  "fence": "Recognize exact shared and isolated generator forms; derive readonly access mount from this site's canonical parent; require caps, mail and a generator-slot protected token for new forms.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "--test-name-pattern=EmDash current generated custody",
+      "packages/fleet/tracy-fleet-operation/test/render-compose.test.mjs"
+    ],
+    "tests": [
+      "EmDash current generated custody: long=false, isolated=true, access=true",
+      "EmDash current generated custody: long=true, isolated=true, access=true",
+      "EmDash current generated custody: long=true, isolated=false, access=true"
+    ]
+  }
+}

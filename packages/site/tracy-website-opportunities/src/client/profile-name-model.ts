@@ -1,7 +1,9 @@
 /**
  * The "Name on the site" row of the Details Profile card, from `profile.nameCheck` (the server's decision,
  * `website-opportunities/src/business-name.js`): the name the site carries, whether a person should check it, and
- * what each source calls the business. Nothing is decided here; the row only shows the server's decision.
+ * what each source calls the business. While the brief holds the name off the site (its `name` fact is off, #1791), the
+ * row says so, with the neutral identity the site goes by instead (`siteName` of `GET …/place-profile`) and why.
+ * Nothing is decided here; the row only shows the server's decisions.
  */
 type Rec = Record<string, unknown>
 
@@ -14,6 +16,15 @@ export interface NameLineView {
   name: string
   sources: NameSourceView[]
 }
+/** A business name held off the site: what the site goes by instead, who left it off and the rule's reasons. */
+export interface HeldNameView {
+  /** The neutral identity the site goes by instead; null when the brief made none. */
+  siteName: string | null
+  /** Who left it off: a rule of Tracy, or the owner on this card. */
+  decidedBy: 'rule' | 'owner'
+  /** Reason codes of the rule's decision. */
+  reasons: string[]
+}
 export interface NameRowView {
   /** The name the site carries now. */
   name: string
@@ -25,6 +36,8 @@ export interface NameRowView {
   other: string | null
   /** The actions show without a press: the name still needs a check. */
   open: boolean
+  /** Set while the name is held off the site: the row then says it is not on the site and what the site uses. */
+  held: HeldNameView | null
 }
 
 const rec = (v: unknown): Rec => (v !== null && typeof v === 'object' && !Array.isArray(v) ? (v as Rec) : {})
@@ -56,8 +69,25 @@ export const nameKey = (value: string): string =>
     .replace(/&/g, 'and')
     .replace(/[^\p{L}\p{N}]+/gu, '')
 
+/**
+ * The held name, or null while the name is on the site: from the card's fact decisions (`decisions` of
+ * `GET …/place-profile`, its `name` fact off) and the neutral identity the server names (`siteName`).
+ */
+export function heldNameOf(decisions: unknown, siteName: unknown): HeldNameView | null {
+  const name = (Array.isArray(decisions) ? decisions : []).map(rec).find((d) => d.field === 'name')
+  if (name === undefined || name.onSite !== false) return null
+  return {
+    siteName: text(siteName),
+    decidedBy: name.decidedBy === 'owner' ? 'owner' : 'rule',
+    reasons: (Array.isArray(name.reasons) ? name.reasons : []).flatMap((r) => {
+      const code = text(r)
+      return code === null ? [] : [code]
+    })
+  }
+}
+
 /** The row, or null when the profile carries no name decision (research from before, or none yet). */
-export function nameRowView(profile: unknown): NameRowView | null {
+export function nameRowView(profile: unknown, held: HeldNameView | null = null): NameRowView | null {
   const check = rec(rec(profile).nameCheck)
   const name = text(check.name)
   if (name === null) return null
@@ -83,7 +113,8 @@ export function nameRowView(profile: unknown): NameRowView | null {
     chip: state === 'check' ? 'check' : state === 'chosen' && disagree ? 'checked' : null,
     lines: ordered,
     other: ordered.find((l) => nameKey(l.name) !== key)?.name ?? null,
-    open: state === 'check'
+    open: state === 'check',
+    held
   }
 }
 

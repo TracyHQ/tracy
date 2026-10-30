@@ -25,7 +25,9 @@
 import { createGzip } from 'node:zlib'
 
 import type { SiteArtifacts } from './artifacts.js'
-import { engineReply, isPhpParseFailure } from './doors.mjs'
+import type { Diagnostic } from './joomla.js'
+import { DIAGNOSTIC_ACTIONS, DIAGNOSTIC_ENGINE_ERRORS } from './diagnostic.mjs'
+import { answerKind, engineReply, isPhpParseFailure } from './doors.mjs'
 import { failureCode } from './error-code.mjs'
 import { firewallOf, gatewayOf, USER_AGENT } from './firewall.mjs'
 import { forgetUpload, heldUpload, rememberUpload, staleUpload } from './resume.js'
@@ -109,7 +111,9 @@ export class ExportFailed extends Error {
    */
   constructor(
     readonly reason: ExportRefusal,
-    readonly detail?: string
+    readonly detail?: string,
+    /** Where it stopped, from closed sets only (`diagnostic.mjs`): what the stuck signal keeps. */
+    readonly diagnostic?: Diagnostic
   ) {
     super(detail ? `The export stopped: ${reason} (${detail})` : `The export stopped: ${reason}`)
     this.name = 'ExportFailed'
@@ -293,7 +297,17 @@ async function callPlugin(
       else siteOverloads.add(error)
       throw error
     }
-    throw new ExportFailed('call_failed')
+    // 🔒 SAID, NOT SWALLOWED (beta report, 28/10/2026). Two customers left after `call_failed` here
+    // with nothing kept: the detail was built and dropped, and the container log was gone when the
+    // runs were looked at. The stuck signal now keeps which call, the status and what came back
+    // instead — as a fixed kind, never the body; the body's head goes to the operator log only.
+    throw new ExportFailed('call_failed', detail, {
+      at: 'export',
+      check: 'no_engine_reply',
+      status: response.status,
+      ...(DIAGNOSTIC_ACTIONS.has(action) ? { action } : {}),
+      answer: answerKind(text)
+    })
   }
   if (!result.ok) {
     // 🔒 THE ENGINE PUTS TO STORAGE ITSELF, then reports storage's 502 as ITS OWN `ok:false`.
@@ -312,7 +326,15 @@ async function callPlugin(
         throw error
       }
     }
-    throw new ExportFailed('call_failed')
+    const code =
+      typeof result.error === 'string' && DIAGNOSTIC_ENGINE_ERRORS.has(result.error) ? result.error : 'other'
+    throw new ExportFailed('call_failed', detail, {
+      at: 'export',
+      check: 'engine_refused',
+      status: response.status,
+      ...(DIAGNOSTIC_ACTIONS.has(action) ? { action } : {}),
+      engine_error: code
+    })
   }
   return result
 }

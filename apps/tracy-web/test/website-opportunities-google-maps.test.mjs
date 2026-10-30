@@ -25,6 +25,7 @@ import { snapshotProfileOf } from 'website-opportunities/src/places.js'
 import { createRevision } from '../src/opportunities-build/revisions.js'
 import { insertOpportunity } from 'website-opportunities/src/store.js'
 import { buildPlaced } from '../src/opportunities-build/build-store.js'
+import { briefSourceEntry } from 'website-opportunities/domain/brief-sources.mjs'
 import { fileDb } from './_db.mjs'
 import { createTracyWoHost } from '../src/wo-host.js'
 
@@ -143,7 +144,8 @@ async function fixture({
   noCategory = false,
   emptyMenu = false,
   hook = null,
-  extraSettings = {}
+  extraSettings = {},
+  providerRetry = { maxWaitMs: 0 }
 } = {}) {
   const { pool } = db
   const accountId = (
@@ -215,6 +217,8 @@ async function fixture({
     loadDomain: async () => domain,
     runtime,
     chargeable: createChargeable(ledger),
+    // One try per provider call, so each test counts its calls (the retry is tested in provider-retry and shared-research).
+    providerRetry,
     apiFetch: async (url) => {
       const q = new URL(url).searchParams
       const operation =
@@ -275,6 +279,70 @@ async function fixture({
     }
   }
 }
+
+test(
+  'a Maps 429 is retried within bounds and every try is listed with its code in the brief sources',
+  opts,
+  async () => {
+    const waits = []
+    const h = await fixture({
+      failure: 'place',
+      providerRetry: {
+        retries: 2,
+        baseDelayMs: 100,
+        maxWaitMs: 4000,
+        sleep: async (ms) => void waits.push(ms)
+      }
+    })
+    await h.research('rate-limited')
+    await drain(h.ex)
+    assert.deepEqual(h.calls, ['place', 'place', 'place'], 'the 429 is tried again, within the retry bounds')
+    assert.deepEqual(waits, [100, 200])
+    const row = await one(
+      h.pool,
+      "select s.* from wo_place_snapshot_source s join wo_place p on p.current_snapshot_id=s.snapshot_id where s.source='google-maps'"
+    )
+    assert.equal(row.status, 'failed')
+    assert.deepEqual(
+      row.coverage.attempts.map((a) => [a.provider, a.step, a.status, a.reason]),
+      Array.from({ length: 3 }, () => ['serpapi', 'place', 'failed', 'HTTP_429'])
+    )
+    const entry = briefSourceEntry(row)
+    assert.deepEqual(
+      entry.attempts.map((a) => [a.provider, a.status, a.code, a.httpStatus]),
+      Array.from({ length: 3 }, () => ['serpapi', 'failed', 'HTTP_429', 429]),
+      'the brief lists each try, not one'
+    )
+  }
+)
+
+test('a Maps 429 then a success lists both tries and reads the place', opts, async () => {
+  let left = 1
+  const h = await fixture({
+    hook: async (operation) => {
+      if (operation === 'place' && left-- > 0) h.fail('place')
+      else h.fail(null)
+    },
+    providerRetry: { retries: 2, baseDelayMs: 100, maxWaitMs: 4000, sleep: async () => {} }
+  })
+  await h.research('rate-limited-once')
+  await drain(h.ex)
+  assert.deepEqual(h.calls, ['place', 'place', 'overview', 'menu'])
+  const row = await one(
+    h.pool,
+    "select s.* from wo_place_snapshot_source s join wo_place p on p.current_snapshot_id=s.snapshot_id where s.source='google-maps'"
+  )
+  assert.equal(row.status, 'complete')
+  assert.deepEqual(
+    row.coverage.attempts.map((a) => [a.step, a.status, a.reason ?? null]),
+    [
+      ['place', 'failed', 'HTTP_429'],
+      ['place', 'complete', null],
+      ['overview', 'complete', null],
+      ['menu', 'complete', null]
+    ]
+  )
+})
 
 test(
   'menu photos switched off on /ops/wo: no SerpApi menu call, place and overview still run',

@@ -203,5 +203,62 @@ export const OPS_WO_PLACES_ROUTES = [
       }
     },
     answers: '`{ok, place, from, restored, opportunities}`'
+  },
+  {
+    method: 'GET',
+    path: '/api/ops/wo/revisions/:revId/labels',
+    summary: 'Read the photo labels and readiness of a brief revision',
+    description: `What one brief revision holds about its photos: each photo with its source, credit, uploader, role, boxes and the offering or person it is linked to (with how the link was decided: the owner's alt text, a post, a vision model, or none), the offerings and named people with their photos, and the readiness verdict a build acts on (\`null\` for a revision made before readiness was measured). The same view the page \`/ops/wo/revisions/<id>/labels\` renders. ${READ_RULE}`,
+    audience: ['team'],
+    auth: 'admin',
+    internal: true,
+    params: { path: { revId: 'Brief revision id (uuid), of any account; an unknown id answers 404' } },
+    answers: '`{revision, readiness, counts, offerings, people, photos}`'
+  },
+  {
+    method: 'GET',
+    path: '/api/ops/wo/places/:id/briefs',
+    summary: "Read the label views of a place's briefs",
+    description: `One label view (see \`/api/ops/wo/revisions/:revId/labels\`) for the latest brief revision of each opportunity that resolved to the place, newest first, at most 20. The page \`/ops/wo/places/<id>/briefs\` renders them. ${READ_RULE}`,
+    audience: ['team'],
+    auth: 'admin',
+    internal: true,
+    params: { path: PLACE },
+    answers: '`{revisions: [label view]}`'
+  },
+  {
+    method: 'GET',
+    path: '/api/ops/wo/revisions/:revId/assets/:assetId/image',
+    summary: 'Read the stored bytes of a photo a brief revision pinned',
+    description: `The bytes of one photo of the revision's asset manifest, served only when the stored row still has the sha256 the manifest pinned (404 \`MEDIA_NOT_STORED\` otherwise, 503 without a file store). ${READ_RULE}`,
+    audience: ['team'],
+    auth: 'admin',
+    internal: true,
+    params: {
+      path: { revId: 'Brief revision id (uuid)', assetId: 'The asset id of the revision manifest' }
+    },
+    answers: 'The image, or a redirect to a short-lived address of it'
+  },
+  {
+    method: 'GET',
+    path: '/ops/wo/revisions/:revId/labels',
+    summary: 'Review page of a brief revision',
+    description: `An HTML page for staff: each photo of the brief revision with its source, credit, role and boxes, the offering or person it is linked to and how, the named people with their portraits, and the readiness verdict with its checks. It renders the data of \`/api/ops/wo/revisions/:revId/labels\`. Works for any revision id. ${READ_RULE}`,
+    audience: ['team'],
+    auth: 'admin',
+    internal: true,
+    params: { path: { revId: 'Brief revision id (uuid); an unknown id answers 404' } },
+    answers: 'An HTML document'
+  },
+  {
+    method: 'GET',
+    path: '/ops/wo/places/:id/briefs',
+    summary: "Review page of a place's briefs",
+    description: `The same review page for the latest brief revision of each opportunity that resolved to the place. ${READ_RULE}`,
+    audience: ['team'],
+    auth: 'admin',
+    internal: true,
+    params: { path: PLACE },
+    answers: 'An HTML document'
   }
 ]

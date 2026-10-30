@@ -525,11 +525,13 @@ test(
       assert.equal(done.status, 200)
       assert.equal((await done.json()).complete, true)
       const [stamp] = (
-        await pool.query('select undone_at, undo_complete from site_turn where turn_id = $1', [
-          `${SESSION}:1`
-        ])
+        await pool.query(
+          'select undone_at, undo_proven_at, undo_complete from site_turn where turn_id = $1',
+          [`${SESSION}:1`]
+        )
       ).rows
       assert.ok(stamp.undone_at instanceof Date, 'undone_at is stamped')
+      assert.ok(stamp.undo_proven_at instanceof Date, 'the press proved it: undo_proven_at is stamped')
       assert.equal(stamp.undo_complete, true)
 
       const open = (n) =>

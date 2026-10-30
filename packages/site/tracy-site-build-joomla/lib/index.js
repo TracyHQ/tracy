@@ -1131,6 +1131,14 @@ import { existsSync as existsSync2, mkdirSync as mkdirSync5, readFileSync as rea
 import path6 from "node:path";
 
 // ../tracy-site-build-core/src/host/design-check.mjs
+var ACCENT_ROLES = Object.freeze([
+  "--ds-c-accent",
+  "--ds-c-accent-hover",
+  "--ds-c-accent-active",
+  "--ds-c-accent-on",
+  "--ds-c-accent-text",
+  "--ds-c-accent-text-hover"
+]);
 var NAMED = {
   white: "#ffffff",
   black: "#000000",
@@ -1220,6 +1228,9 @@ var STYLE_PROBE = `(() => {
   const inSkipped = (el) => typeof el.closest === 'function' && !!(el.closest('svg') || el.closest('#wpadminbar') || el.closest('.wp-block-social-link') || el.closest('[data-tracy-design-ignore]'))
   const name = (el) => { const t = String(el.tagName || '').toLowerCase(); if (el.id) return t + '#' + el.id; const c = typeof el.className === 'string' ? el.className.trim().split(/\\s+/)[0] : ''; return c ? t + '.' + c : t }
   const map = new Map(); let seen = 0
+  const ROLES = ${JSON.stringify(ACCENT_ROLES)}
+  const accent = {}
+  try { const root = document.documentElement; const rs = root ? getComputedStyle(root) : null; if (rs && typeof rs.getPropertyValue === 'function') for (const r of ROLES) { const v = String(rs.getPropertyValue(r) || '').trim(); if (v) accent[r] = v } } catch {}
   const add = (prop, value, el) => { if (!value) return; const k = prop + '|' + value; let e = map.get(k); if (!e) { e = { prop, value, count: 0, where: [] }; map.set(k, e) } e.count += 1; if (e.where.length < 3) { const n = name(el); if (!e.where.includes(n)) e.where.push(n) } }
   const all = document.body ? document.body.querySelectorAll('*') : []
   for (const el of all) {
@@ -1235,11 +1246,22 @@ var STYLE_PROBE = `(() => {
     add('font-family', cs.fontFamily, el)
     if (map.size > 400) break
   }
-  return { href: String(document.location && document.location.href || ''), seen, samples: [...map.values()] }
+  return { href: String(document.location && document.location.href || ''), seen, samples: [...map.values()], accent }
 })()`;
+function withAccent(palette, accent) {
+  if (!accent || typeof accent !== "object") return palette;
+  const colors = [...palette.colors];
+  for (const role of ACCENT_ROLES) {
+    const c = typeof accent[role] === "string" ? parseColor(accent[role]) : null;
+    if (c && c.a === 1)
+      colors.push({ token: role, rgb: { r: Math.round(c.r), g: Math.round(c.g), b: Math.round(c.b) } });
+  }
+  return colors.length === palette.colors.length ? palette : { ...palette, colors };
+}
 var distance = (a, b) => Math.max(Math.abs(a.r - b.r), Math.abs(a.g - b.g), Math.abs(a.b - b.b));
-function judge(probe, palette, opts = {}) {
+function judge(probe, given, opts = {}) {
   const allow = new Set((opts.allow ?? []).map((a) => `${a.prop}|${a.value}`));
+  const palette = withAccent(given, probe.accent);
   const colors = { on: 0, near: 0, off: 0, offenders: [] };
   const fonts = { on: 0, off: 0, offenders: [] };
   let judged = 0;
@@ -4370,37 +4392,37 @@ var capabilities_default = {
       kind: "akeeba-quickstart",
       version: "1.0.0",
       release: "tracy-apple/j6",
-      url: "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-quickstart-1.0.0.zip",
+      url: "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-quickstart-1.0.0.zip",
       sha256: "d082349a9c17b2984fb0c5d52b5319fab2bcbe58cbd69a67b2fe01392bfefa68",
       bytes: 66104008,
-      githubAssetId: 557340948
+      githubAssetId: 683864763
     },
     "tracy-airbnb-j6-1.0.0": {
       kind: "joomla-extension",
       version: "1.0.0",
       release: "tracy-airbnb/j6",
-      url: "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-airbnb%2Fj6/tpl_tracy_airbnb-j6-1.0.0.zip",
+      url: "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-airbnb%2Fj6/tpl_tracy_airbnb-j6-1.0.0.zip",
       sha256: "10785c4754b1be4439971d2b7013a5ab9edec9d94e41cd651f10776bf5d50e22",
       bytes: 841866,
-      githubAssetId: 557827939
+      githubAssetId: 683869317
     },
     "tracy-apple-j6-runtime-1.1.0": {
       kind: "tracy-runtime-quickstart",
       version: "1.1.0",
       release: "tracy-apple/j6",
-      url: "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-runtime-quickstart-1.1.0.zip",
+      url: "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-apple%2Fj6/tracy-apple-j6-runtime-quickstart-1.1.0.zip",
       sha256: "b09ced26a2e96c4afb5feccca43a8bcec61dd56a6b91d41534d98d989ca5d2ed",
       bytes: 58601214,
-      githubAssetId: 557831008
+      githubAssetId: 683865249
     },
     "tracy-business-j6-runtime-1.1.0": {
       kind: "tracy-runtime-quickstart",
       version: "1.1.0",
       release: "tracy-business/j6",
-      url: "https://github.com/JoomlArt-Products/ja-products/releases/download/tracy-business%2Fj6/tracy-business-j6-runtime-quickstart-1.1.0.zip",
+      url: "https://github.com/JoomlArt-Products/joomlart-products/releases/download/tracy-business%2Fj6/tracy-business-j6-runtime-quickstart-1.1.0.zip",
       sha256: "aaf6ccff459b5520931e5ae1da5f5ad08a64f0ba633f204f1291b347277ba1ff",
       bytes: 86309219,
-      githubAssetId: 579502177
+      githubAssetId: 683847567
     }
   },
   providers: {

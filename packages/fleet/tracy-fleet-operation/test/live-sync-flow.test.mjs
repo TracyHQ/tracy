@@ -196,7 +196,7 @@ function write(root, files) {
   }
 }
 
-function stack() {
+function stack(extraTables = '') {
   const srv = mkdtempSync(join(tmpdir(), 'tracy-live-sync-'))
   const priv = join(srv, LABEL)
   const webroot = join(priv, '.webroot')
@@ -239,7 +239,7 @@ function stack() {
     sql(`DROP DATABASE \`${db}\``)
   }
   sql('CREATE DATABASE joomla CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
-  sql(TABLES, 'joomla')
+  sql(TABLES + extraTables, 'joomla')
   sql(`UPDATE jos_extensions SET params='{"domain": ""}' WHERE element='sef'`, 'joomla')
   write(webroot, { ...SITE_FILES, 'configuration.php': config(COPY_CONFIG) })
   execFileSync(
@@ -254,7 +254,7 @@ function stack() {
   const live = join(srv, 'live-site')
   write(live, { ...SITE_FILES, 'configuration.php': config(LIVE_CONFIG) })
   sql('CREATE DATABASE livesrc CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
-  sql(TABLES, 'livesrc')
+  sql(TABLES + extraTables, 'livesrc')
 
   let reads = 0
   return {
@@ -311,6 +311,39 @@ function stack() {
       })
       assert.equal(r.status, 0, r.stderr)
       return JSON.parse(r.stdout.trim().split('\n').at(-1))
+    },
+    /**
+     * `sync` as tracy-host starts it, with a live read that succeeds: a `live-pull.mjs` stand-in
+     * that lays the read in `from` (a `read()`'s `live/`) into the run and answers `pull`. The
+     * script's own stderr comes back with the answer: the progress tracy-host keeps from it.
+     */
+    syncPulled: (dir, pull, from) => {
+      const lib = join(srv, 'lib-copy-pull')
+      if (!existsSync(lib)) {
+        mkdirSync(lib)
+        for (const name of readdirSync(join(scripts, 'lib')))
+          if (name !== 'live-pull.mjs') symlinkSync(join(scripts, 'lib', name), join(lib, name))
+        writeFileSync(
+          join(lib, 'live-pull.mjs'),
+          `import { cpSync } from 'node:fs'
+cpSync(process.env.FAKE_LIVE, process.argv[2] + '/live', { recursive: true })
+console.log(process.env.FAKE_PULL)
+`
+        )
+      }
+      const r = spawnSync('bash', [SYNC, '--label', LABEL, '--op', 'sync', '--dir', dir], {
+        encoding: 'utf8',
+        env: {
+          ...env,
+          TRACY_LIB_DIR: lib,
+          TRACY_SYNC_ENDPOINT: 'https://shop.example/claudecowork',
+          TRACY_SYNC_TOKEN: 'token-of-test',
+          FAKE_LIVE: from,
+          FAKE_PULL: JSON.stringify(pull)
+        }
+      })
+      assert.equal(r.status, 0, r.stderr)
+      return { answer: JSON.parse(r.stdout.trim().split('\n').at(-1)), stderr: r.stderr }
     },
     /**
      * `sync` as tracy-host starts a Sync anyway (#1649): the held sync's run named, people's word
@@ -1221,7 +1254,7 @@ test(
       // Cut off after the files and before the database swap, nothing else on the copy: put back.
       const dir3 = s.read()
       assert.equal(s.merge(dir3).state, 'ready')
-      s.applyKilledAt(dir3, 'restore-swap')
+      s.applyKilledAt(dir3, 'restore-foreign-keys')
       assert.equal(
         readFileSync(join(s.webroot, 'images/team.jpg'), 'utf8'),
         'team',
@@ -1355,7 +1388,7 @@ test(
 
 // #1564: the read's own reason reaches the answer — the owner is told the site kept changing, not
 // that it could not be read. No database: the read ends before any lock or merge.
-test('a live site that kept changing is answered LIVE_BUSY; any other failed read LIVE_READ_FAILED', () => {
+test('failed live reads retain busy and access codes; unknown failures use LIVE_READ_FAILED', () => {
   const srv = mkdtempSync(join(tmpdir(), 'tracy-live-sync-read-'))
   try {
     const priv = join(srv, LABEL)
@@ -1390,7 +1423,15 @@ test('a live site that kept changing is answered LIVE_BUSY; any other failed rea
     const busy = { ok: false, code: 'LIVE_BUSY', detail: 'the database kept changing (content, weblinks)' }
     assert.deepEqual(said(busy), { ok: false, code: 'LIVE_BUSY', read: busy })
     const refused = { ok: false, code: 'TOKEN_REFUSED' }
-    assert.deepEqual(said(refused), { ok: false, code: 'LIVE_READ_FAILED', read: refused })
+    assert.deepEqual(said(refused), { ok: false, code: 'TOKEN_REFUSED', read: refused })
+    for (const code of ['LIVE_PASSWORD_PROTECTED', 'LIVE_BLOCKED', 'LIVE_RATE_LIMITED']) {
+      const read = { ok: false, code }
+      assert.deepEqual(said(read), { ok: false, code, read })
+    }
+    const php = { ok: false, code: 'LIVE_PHP_TOO_OLD', php: '7.3.33', min: '7.4.0' }
+    assert.deepEqual(said(php), { ok: false, code: 'LIVE_PHP_TOO_OLD', read: php })
+    const unknown = { ok: false, code: 'UNKNOWN_READ_FAILURE' }
+    assert.deepEqual(said(unknown), { ok: false, code: 'LIVE_READ_FAILED', read: unknown })
   } finally {
     rmSync(srv, { recursive: true, force: true })
   }
@@ -1404,4 +1445,123 @@ test('the live read is normalised the way provision normalised the copy (one sta
   assert.ok(provision.replaceAll('\\$', '$').includes(clause))
   assert.ok(provision.includes("WHERE type = 'plugin' AND folder = 'system' AND element = 'sef'"))
   assert.ok(engine.includes("WHERE type = 'plugin' AND folder = 'system' AND element = 'sef'"))
+})
+
+// Phoca Cart's product tables (Phoca Cart 6.1.9's install SQL, the columns the merge reads): a table
+// the adapter cannot number again, and two tables of rows that belong to a product.
+const PHOCA_TABLES = `
+CREATE TABLE jos_phocacart_products (id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255), alias VARCHAR(255));
+CREATE TABLE jos_phocacart_product_categories (product_id INT NOT NULL DEFAULT 0, category_id INT NOT NULL DEFAULT 0,
+  ordering INT NOT NULL DEFAULT 0, UNIQUE KEY idx_category (product_id, category_id));
+CREATE TABLE jos_phocacart_product_images (id INT AUTO_INCREMENT PRIMARY KEY, product_id INT NOT NULL DEFAULT 0,
+  image VARCHAR(255) NOT NULL DEFAULT '');
+INSERT INTO jos_phocacart_products VALUES (5,'Mug','mug');
+INSERT INTO jos_phocacart_product_categories VALUES (5,1,1);
+`
+
+test(
+  'a product both sites added under one number is held with the rows the live site made for it; Sync anyway leaves them out, and the read’s timing line reaches the row',
+  opts,
+  async () => {
+    const { syncProgressLine } = await import('../../../../apps/tracy-host/src/webroot.js')
+    const { timingOf } = await import('../../../../apps/tracy-web/src/sites/live-sync.js')
+    const s = stack(PHOCA_TABLES)
+    try {
+      sql(
+        "INSERT INTO jos_phocacart_products VALUES (6,'Tracy hat','tracy-hat'); INSERT INTO jos_phocacart_product_categories VALUES (6,1,2);",
+        'joomla'
+      )
+      sql(
+        "INSERT INTO jos_phocacart_products VALUES (6,'Live scarf','live-scarf'); INSERT INTO jos_phocacart_product_categories VALUES (6,2,1);" +
+          " INSERT INTO jos_phocacart_product_images VALUES (2,6,'scarf.jpg');",
+        'livesrc'
+      )
+      const staged = s.read()
+      const dir = join(s.priv, 'sync', 'runs', 'phoca')
+      mkdirSync(dir, { recursive: true })
+      writeFileSync(join(staged, 'live', 'fingerprint.json'), JSON.stringify({ version: 1, pageSize: 50000 }))
+      const pull = {
+        ok: true,
+        liveReadAt: '2026-10-28T09:00:00.000Z',
+        mode: 'incremental',
+        seconds: 3.2,
+        timing: { fingerprint: 0.4, database: 2.1, files: 0.7 }
+      }
+      const { answer, stderr } = s.syncPulled(dir, pull, join(staged, 'live'))
+      assert.equal(answer.state, 'needs_attention', JSON.stringify(answer))
+      assert.deepEqual(
+        answer.held.map((h) => [h.id, h.reason, h.belonging]),
+        [
+          [
+            'db:jos_phocacart_products:["6"]',
+            'added-both',
+            [
+              { table: 'jos_phocacart_product_categories', key: { product_id: '6', category_id: '2' } },
+              { table: 'jos_phocacart_product_images', key: { id: '2' } }
+            ]
+          ]
+        ]
+      )
+      // F1: the read's timing line as the real script printed it, kept by tracy-host and read by tracy-web.
+      const kept = stderr.split('\n').map(syncProgressLine).filter(Boolean)
+      assert.ok(
+        kept.some((l) => l.startsWith('{')),
+        `no read line kept from:\n${stderr}`
+      )
+      assert.deepEqual(timingOf(kept.join('\n')).read, {
+        mode: 'incremental',
+        seconds: 3.2,
+        parts: { fingerprint: 0.4, database: 2.1, files: 0.7 }
+      })
+
+      // Sync anyway: Tracy's product stays as Tracy made it, in its own category, with no live image.
+      const anywayDir = join(s.priv, 'sync', 'runs', 'phoca-anyway')
+      mkdirSync(anywayDir, { recursive: true })
+      const anyway = s.syncAnyway(anywayDir, dir, {
+        check: { ok: true, unchanged: 'fingerprint', liveReadAt: '2026-10-28T09:00:00.000Z' }
+      })
+      assert.equal(anyway.answer.state, 'applied', JSON.stringify(anyway.answer))
+      assert.deepEqual(rows('SELECT title FROM jos_phocacart_products WHERE id = 6'), [['Tracy hat']])
+      assert.deepEqual(
+        rows('SELECT product_id, category_id FROM jos_phocacart_product_categories ORDER BY 1, 2'),
+        [
+          ['5', '1'],
+          ['6', '1']
+        ]
+      )
+      assert.deepEqual(rows('SELECT id FROM jos_phocacart_product_images'), [])
+    } finally {
+      s.dispose()
+    }
+  }
+)
+
+test('a pre-swap trigger failure retires its foreign-key plan before cleaning the stage', opts, () => {
+  const s = stack(`CREATE TABLE jos_parent (id INT PRIMARY KEY); INSERT INTO jos_parent VALUES (1);
+CREATE TABLE jos_child (id INT PRIMARY KEY, parent_id INT, title VARCHAR(40), CONSTRAINT child_parent FOREIGN KEY (parent_id) REFERENCES jos_parent(id) ON DELETE RESTRICT);
+INSERT INTO jos_child VALUES (1,1,'base');`)
+  try {
+    sql(
+      "ALTER TABLE jos_child DROP FOREIGN KEY child_parent; ALTER TABLE jos_child ADD CONSTRAINT child_parent FOREIGN KEY (parent_id) REFERENCES jos_parent(id) ON DELETE CASCADE; UPDATE jos_child SET title='live';",
+      'livesrc'
+    )
+    const dir = s.read()
+    assert.equal(s.merge(dir).state, 'ready')
+    const answer = s.run(SYNC, ['--op', 'apply', '--dir', dir], () => ({
+      TRACY_TEST_FAIL_STAGE_TRIGGERS: '1'
+    }))
+    assert.equal(answer.ok, false)
+    assert.equal(existsSync(join(s.priv, '.restore-foreign-keys.json')), false)
+    const graph = () =>
+      rows(
+        "SELECT delete_rule FROM information_schema.referential_constraints WHERE constraint_schema='joomla' AND constraint_name='child_parent'"
+      )
+    assert.deepEqual(graph(), [['RESTRICT']], 'the live graph was never replaced by the staged CASCADE graph')
+    assert.deepEqual(rows('SELECT title FROM jos_child'), [['base']])
+    // Recovery on the next sync must leave the old graph alone after stage cleanup.
+    s.merge(s.read())
+    assert.deepEqual(graph(), [['RESTRICT']])
+  } finally {
+    s.dispose()
+  }
 })

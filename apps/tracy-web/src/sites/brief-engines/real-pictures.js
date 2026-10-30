@@ -16,7 +16,8 @@
  */
 import { readFileSync } from 'node:fs'
 import path from 'node:path'
-import { cutForPlace, demoTransparency, placeholderPicture } from '../../lib/picture-cut.js'
+import { cutForPlace, demoTransparency } from '../../lib/picture-cut.js'
+import { substitutePicture } from '../../lib/substitute-picture.js'
 import { drawForPlace, drawKey } from '../../lib/picture-draw.js'
 import { seeder } from '../../lib/seeder.js'
 import { websiteOpportunitiesDomain } from 'website-opportunities/src/domain-loader.js'
@@ -76,7 +77,13 @@ export function keptPages(pages) {
 export function contentMapOf(contract) {
   const map = JSON.parse(readFileSync(path.join(contract.dir, 'content-map.json'), 'utf8'))
   // A slot the profile only declares (`customize: "keep"`) keeps the demo's picture (`lib/contract-customize.js`).
-  return { slots: customizableSlots(map.slots ?? []), pages: map.pages ?? [] }
+  // The vocabulary version and the entities (their `demoOnly` mark) decide whether the fill plan places the pictures.
+  return {
+    slots: customizableSlots(map.slots ?? []),
+    pages: map.pages ?? [],
+    roleVocabularyVersion: map.roleVocabularyVersion ?? null,
+    entities: map.entities ?? []
+  }
 }
 
 /**
@@ -101,6 +108,8 @@ export function contentMapOf(contract) {
  * @param {number} [input.drawMs] - one drawing's own limit (a test's stand-in for {@link DRAW_MS})
  * @param {Record<string, string | {space: true} | null>} [input.bound] - a slot plan's card pictures (`slotFillPins`): each
  *   card slot of an entity takes that entity's own picture, the place's space or the placeholder (`planPlacement`)
+ * @param {{pins?: Record<string, string>, sources?: Record<string, string>} | null} [input.copy] - the text path's copy
+ *   pins (`copyPinsOf`): the fill plan gives each offering card the photo of the offering its pinned name says
  */
 export async function shapeReal({
   real,
@@ -118,7 +127,8 @@ export async function shapeReal({
   maxDraws,
   signal,
   drawMs = DRAW_MS,
-  bound = {}
+  bound = {},
+  copy = null
 }) {
   const domain = await loadDomain()
   const policy = picturePolicy(real.picturePolicy)
@@ -149,21 +159,38 @@ export async function shapeReal({
     }),
     READ_AT_ONCE
   )
-  const map = domain.slotMap(contentMap, { ...keep, demo })
+  let map = domain.slotMap(contentMap, { ...keep, demo })
   clock('pictureDemoMs', started)
 
   // The plan: the one a run before wrote, else made now and written before anything is uploaded.
   started = Date.now()
   const labels = real.pictures.map((p) => domain.labelPicture(p))
   const labelOf = new Map(labels.map((l) => [l.id, l]))
-  const { clusterOf } = domain.nearCopies(labels)
-  const made = domain.planPlacement({ groups: map.groups, labels, clusterOf, bound })
+  // A Joomla contract whose map says each slot's v3 role (ADR 0040) is filled by the fill plan from the brief's links:
+  // a card takes only its own offering's photo, a general slot only a general one; no role is guessed from a name.
+  let made
+  if (cms === 'joomla' && real.brief && domain.roleDecidesKeep(contentMap)) {
+    const readable = new Map(real.pictures.map((p) => [p.id, p]))
+    const assets = (real.brief.assets ?? [])
+      .filter((a) => readable.has(a?.id))
+      .map((a) => ({ ...a, width: readable.get(a.id).width, height: readable.get(a.id).height }))
+    // A card's offering is the one its name says, and the name is the text path's (`copy`): one decider for both.
+    const cardNames = domain.cardNamesOf(contentMap, copy)
+    const fill = domain.planFill({ contentMap, brief: { ...real.brief, assets }, demo, cardNames })
+    const placed = domain.placementOfFill({ fill, groups: map.groups })
+    map = { ...map, groups: placed.groups, never: [...map.never, ...placed.dropped] }
+    made = placed.plan
+  } else {
+    const { clusterOf } = domain.nearCopies(labels)
+    made = domain.planPlacement({ groups: map.groups, labels, clusterOf, bound })
+  }
   const fresh = {
     ...made,
     versions: {
       slotMap: domain.SLOT_MAP_VERSION,
       labels: domain.LABELS_VERSION,
-      planner: domain.PLANNER_VERSION
+      planner: domain.PLANNER_VERSION,
+      ...(made.fill ? { fill: made.fill } : {})
     },
     media: labels.map((l) => l.id).sort()
   }
@@ -286,10 +313,12 @@ export async function shapeReal({
       .map((u) => async () => {
         if (drawn.has(u.groupId)) return drawn.get(u.groupId)
         const group = byGroup.get(u.groupId)
-        return group?.demo ? placeholderFor(group, real.colours) : null
+        return group?.demo ? placeholderFor(group, real.colours, u.substitute ?? null) : null
       })
   ]
-  async function placeholderFor(group, colours) {
+  // A person picture's substitute is an initials avatar (#134), a signature's the signer's name (#137); every other
+  // place takes the plain placeholder (`substitute-picture.js`).
+  async function placeholderFor(group, colours, substitute = null) {
     const aspect = group.demo.width / group.demo.height
     const out = domain.outputSize(
       { width: group.demo.width, height: group.demo.height },
@@ -297,14 +326,18 @@ export async function shapeReal({
       Math.min(group.demo.width, PLACEHOLDER_MAX_W)
     )
     if (!out) return null
-    const fill = await placeholderPicture({ ...out, colours })
-    return {
-      group: asGroup(group),
-      bytes: fill.bytes,
-      ext: fill.ext,
-      hash: fill.sha256,
-      receipt: { kind: 'placeholder', origin: 'placeholder', width: out.width, height: out.height }
-    }
+    const fill = await substitutePicture({ substitute, ...out, colours })
+    const receipt =
+      fill.kind === 'avatar'
+        ? {
+            kind: 'avatar',
+            origin: 'placeholder',
+            initials: substitute.initials,
+            width: out.width,
+            height: out.height
+          }
+        : { kind: fill.kind, origin: 'placeholder', width: out.width, height: out.height }
+    return { group: asGroup(group), bytes: fill.bytes, ext: fill.ext, hash: fill.sha256, receipt }
   }
   const answers = await pool(jobs, CUT_AT_ONCE)
   const shaped = []
@@ -379,7 +412,10 @@ export function pictureReport({ shaped, values, refused, readback, homeHtml = nu
     report: {
       groups: shaped.map.groups.length,
       photos: shaped.plan.placements.length,
-      placeholders: Object.values(receipts).filter((r) => r.kind === 'placeholder').length,
+      // An initials avatar, a script signature and a blank are a placeholder each: they count as one.
+      placeholders: Object.values(receipts).filter((r) =>
+        ['placeholder', 'avatar', 'signature', 'blank'].includes(r.kind)
+      ).length,
       drawn: Object.values(receipts).filter((r) => r.kind === 'drawn').length,
       drawCostUsd: Number(
         Object.values(receipts)

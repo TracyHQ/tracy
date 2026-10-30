@@ -141,7 +141,7 @@ key at all.
 | What for | Providers the code calls today |
 |---|---|
 | Finding places in an area or by name | Google Places API (New), Apify (Google Maps), OpenStreetMap (Nominatim + Overpass, no key) |
-| Google reviews and menu photos | Google Places API, SerpApi (Google Maps) |
+| Google reviews and menu photos | Google Places API, SerpApi (Google Maps); optionally Monid for up to 100 more Google reviews a place (off until added to the Google reviews order) |
 | Tripadvisor reviews | SerpApi, RapidAPI (TripAdvisor), Litescrape |
 | Facebook, Instagram, TikTok pages | ScrapeCreators, RapidAPI, Apify |
 | YouTube channels | YouTube Data API (Google key), RapidAPI, Apify, or the public channel page (no key) |

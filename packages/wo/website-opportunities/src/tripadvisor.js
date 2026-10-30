@@ -1,4 +1,6 @@
-/** Server-only Litescrape adapter. Fixed origin, no redirects, one bounded HTTP attempt per operation. */
+/** Server-only Litescrape adapter. Fixed origin, no redirects, a bounded retry on 429 and transient 5xx only. */
+import { withProviderRetry } from '../domain/provider-retry.mjs'
+
 export const TRIPADVISOR_SOURCE = 'tripadvisor'
 export const TRIPADVISOR_VERSION = 'tripadvisor-5'
 const API = 'https://api.litescrape.com/api/tripadvisor/'
@@ -26,7 +28,7 @@ export function tripadvisorUrl(value) {
 export async function litescrapeCall(
   operation,
   params,
-  { key, fetch: fetchImpl = fetch, timeoutMs = 25_000 } = {}
+  { key, fetch: fetchImpl = fetch, timeoutMs = 25_000, retry } = {}
 ) {
   if (!key) throw fail('CREDENTIAL_MISSING')
   if (!['search', 'place', 'reviews'].includes(operation)) throw fail('INVALID_OPERATION')
@@ -39,7 +41,7 @@ export async function litescrapeCall(
   const body = await tripadvisorJson(
     u.href,
     { authorization: `Bearer ${key}`, accept: 'application/json' },
-    { fetch: fetchImpl, timeoutMs }
+    { fetch: fetchImpl, timeoutMs, retry }
   )
   const group = { search: 'search_results', place: 'place_results', reviews: 'reviews' }[operation]
   if (
@@ -53,19 +55,41 @@ export async function litescrapeCall(
   return body[group]
 }
 
-/** One fixed HTTP attempt. Callers own endpoint allowlists, schemas and billing reservations. */
-export async function tripadvisorJson(url, headers, { fetch: fetchImpl = fetch, timeoutMs = 25_000 } = {}) {
+/**
+ * One provider request: a 429 or transient 5xx is tried again within a few seconds (`provider-retry.mjs`,
+ * `retry` overrides its defaults, `onTry` hears each try), a 402 or any other answer is final. Callers own endpoint allowlists,
+ * schemas and billing reservations.
+ */
+export async function tripadvisorJson(url, headers, options = {}) {
+  // `onTry` hears each HTTP try (`provider-retry.mjs`): the caller lists every one with its code.
+  return withProviderRetry(() => jsonAttempt(url, headers, options), {
+    ...options.retry,
+    ...(options.onTry ? { onTry: options.onTry } : {})
+  })
+}
+
+/** One fixed HTTP attempt (a GET, or a POST of `body`). */
+async function jsonAttempt(
+  url,
+  headers,
+  { fetch: fetchImpl = fetch, timeoutMs = 25_000, body: payload } = {}
+) {
   const controller = new AbortController()
   const timer = setTimeout(() => controller.abort(), timeoutMs)
   try {
     const res = await fetchImpl(url, {
+      ...(payload === undefined ? {} : { method: 'POST', body: payload }),
       headers,
       redirect: 'error',
       signal: controller.signal
     })
     if (!res.ok) {
       await res.body?.cancel()
-      throw fail(`HTTP_${res.status}`)
+      // The status and Retry-After decide a retry; neither carries provider text.
+      throw Object.assign(fail(`HTTP_${res.status}`), {
+        status: res.status,
+        retryAfter: res.headers?.get?.('retry-after') ?? null
+      })
     }
     if (Number(res.headers.get('content-length')) > MAX_BYTES) {
       await res.body?.cancel()

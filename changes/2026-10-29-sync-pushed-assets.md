@@ -1,0 +1,4 @@
+- **Joomla records a push created meet the copy's own assets on the next sync: no false asset_id conflicts.** — David · issue #172 · `fix/sync-pushed-assets` · 2026-10-29
+  **Affects:** Sync to live then Sync from live on Joomla. Joomla gives each record a push creates (article, category, module…) an `assets` row numbered in the order the push writes, the copy's in the order it made them. The push's seed for each created record now names its asset by name (`com_content.article.<id>`) to be aligned before clashes are numbered, so the live asset takes the copy's number: no `asset_id` conflict is kept, and `id-map.json` holds only assets the copy has.
+
+  Verification: a real MariaDB merge case (two articles whose assets live numbered the other way round) fails with the old seed and passes with the new one; a changeset case checks the seed. Changeset 42/42 and the sync and push suites with zero skipped. The fleet needs the next shared-script image release.

@@ -17,16 +17,27 @@
 #
 # That makes the merge rule simple and one-directional: `origin/main` is the truth, this host's
 # lanes contribute to it. Every run resets the clone to origin, copies in the lane folders that are
-# NEWER than what origin has (by `source.extractedAt`), rebuilds what is generated, and pushes.
-# Two hosts pushing within the same minute is a rejected push, not a lost brand: the loser resets
-# to the winner's commit and runs the whole body again.
+# NEWER than what origin has (by `source.extractedAt`), rebuilds what is generated, and publishes.
+#
+# ## Published through a pull request, never pushed to `main`
+#
+# `main` is protected (PR required, admins included, no force-push), so the commit goes to a fresh
+# branch `automation/brands/<host>/<short-sha>`, a PR is opened against `main` and merged through
+# the REST API with the pushed head pinned, and the branch is deleted once the merge commit is on
+# `main` (`lib/github-pr-publish.mjs`). Two hosts publishing within the same minute is a PR closed
+# and regenerated, not a lost brand: when `main` moved or the merge conflicts, the PR is closed,
+# its branch deleted, and the whole body runs again on top of the new `main` — once. An open PR a
+# crashed run of THIS host left behind (authored by this token's identity, from this repository,
+# branch unchanged) is closed and its branch deleted, never merged; any other PR is left alone.
+# There is no fallback to a direct push.
 #
 # ## Token: ASKED FOR, never held
 #
 # 🔒 ADR 0023 — the fleet never holds the GitHub App key. It asks tracy-web's `/fleet/git-token`
 # through `lib/relay-git-token.sh` (`tracy_relay_git_token_shared`: signed with this host's own
 # `HOST_SECRET`, the one signing path every fleet caller shares) and gets back a token that lives
-# one hour and reaches one repository. This repository is not a customer's, so no site record can
+# one hour and reaches one repository (contents write, pull requests write — the PR and its merge
+# go through the API with the same token, so this host needs nothing else and no `gh`). This repository is not a customer's, so no site record can
 # vouch for it; the door's closed `fleetSharedRepos` list is what vouches instead, and it names
 # exactly this one.
 #
@@ -52,6 +63,18 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 . "$HERE/../lib/relay-git-token.sh"
 
 REPO=TracyHQ/design-inspirations
+# 🔒 Where the clone talks to and the API the PR goes through are FIXED: github.com and
+# api.github.com. The token goes nowhere else. The tests stand a bare repository and a local stub in
+# for GitHub through TRACY_BRANDS_REMOTE / TRACY_GITHUB_API, and those are honoured only when they
+# can only reach this machine (checked below, before the lock or the token): a loopback http URL,
+# or for the remote a local bare repository. Anything else is refused, never used.
+REMOTE_URL="https://github.com/$REPO.git"
+API_URL="https://api.github.com"
+PUBLISH="$HERE/../lib/github-pr-publish.mjs"
+# This host's own branch prefix: leftovers under it are this host's to settle, and another host's
+# never are.
+PUBLISHER_HOST=$(printf '%s' "${HOST_NAME:-$(hostname)}" | tr -c 'A-Za-z0-9._-' '-')
+BRANCH_PREFIX="automation/brands/$PUBLISHER_HOST/"
 # The third root (lib/roots.sh): a shared clone, not per-site content, so neither TRACY_SITES_ROOT
 # nor TRACY_PRIVATE_ROOT is quite right for it.
 STORE="$TRACY_BRANDS_DIR"
@@ -70,10 +93,36 @@ DRY_RUN=false
 die() { echo "sync-brands: $*" >&2; exit 1; }
 say() { echo "sync-brands: $*"; }
 
+if [ -n "${TRACY_GITHUB_API:-}" ]; then
+  [[ "$TRACY_GITHUB_API" =~ ^http://(127\.0\.0\.1|localhost):[0-9]{1,5}/?$ ]] \
+    || die "refusing TRACY_GITHUB_API=$TRACY_GITHUB_API — only a loopback http URL (tests) may replace api.github.com"
+  API_URL="$TRACY_GITHUB_API"
+fi
+if [ -n "${TRACY_BRANDS_REMOTE:-}" ]; then
+  if [[ "$TRACY_BRANDS_REMOTE" =~ ^http://(127\.0\.0\.1|localhost):[0-9]{1,5}(/[A-Za-z0-9._-]+)*/?$ ]]; then
+    :
+  else
+    remote_path="${TRACY_BRANDS_REMOTE#file://}"
+    [[ "$remote_path" = /* ]] && [ -d "$remote_path" ] \
+      && [ "$(git -C "$remote_path" rev-parse --is-bare-repository 2>/dev/null)" = true ] \
+      || die "refusing TRACY_BRANDS_REMOTE=$TRACY_BRANDS_REMOTE — only a loopback http URL or an absolute path to a local bare repository (tests) may replace github.com"
+  fi
+  REMOTE_URL="$TRACY_BRANDS_REMOTE"
+fi
+LOCK_FILE=/var/lock/tracy-brands-sync
+if [ -n "${TRACY_BRANDS_LOCK:-}" ]; then
+  # Only a file of this name, never a symlink or anything but a regular file: the run opens it as
+  # root, and a lock must not become a way to create or touch an arbitrary file.
+  [ "$(basename "$TRACY_BRANDS_LOCK")" = tracy-brands-sync.lock ] && [ ! -L "$TRACY_BRANDS_LOCK" ] \
+    && { [ ! -e "$TRACY_BRANDS_LOCK" ] || [ -f "$TRACY_BRANDS_LOCK" ]; } \
+    || die "refusing TRACY_BRANDS_LOCK=$TRACY_BRANDS_LOCK — it must be a regular file named tracy-brands-sync.lock"
+  LOCK_FILE="$TRACY_BRANDS_LOCK"
+fi
+
 # One sync at a time per host: the timer and a hand run must not push the same repo twice at once.
 # Ten minutes at most, like sync-site-folders.sh: a run stuck behind a hung one must not queue
 # forever, with every later tick queueing behind it.
-exec 9>/var/lock/tracy-brands-sync
+exec 9>>"$LOCK_FILE"
 flock -w 600 9 || die "another brand sync has held the lock for 10 minutes — giving up this run"
 
 command -v node >/dev/null || die "no node on this host — build-catalog.mjs needs it"
@@ -99,24 +148,34 @@ GH_TOKEN=$(tracy_relay_git_token_shared "$REPO") || die "no token for $REPO (see
 export GH_TOKEN
 # shellcheck disable=SC2016 # expanded by git's shell, from the environment, on purpose
 HELPER='!f() { echo username=x-access-token; echo password=$GH_TOKEN; }; f'
+# 🔒 The helper answers for https://github.com ONLY (every other helper is reset first): whatever the
+# remote is, git hands the token to no other host.
+CRED=(-c credential.helper= -c "credential.https://github.com.helper=$HELPER")
 
 if [ ! -d "$STORE/.git" ]; then
   say "no clone yet — cloning $REPO into $STORE"
   [ "$DRY_RUN" = true ] && die "--dry-run cannot run before the first clone"
   mkdir -p "$(dirname "$STORE")"
-  git -c credential.helper="$HELPER" clone -q "https://github.com/$REPO.git" "$STORE" \
-    || die "clone failed"
+  git "${CRED[@]}" clone -q "$REMOTE_URL" "$STORE" \
+    || die "clone of $REPO failed (see git's message above: auth, network, or no such repo)"
   git -C "$STORE" config user.email "fleet@tracy.ai"
   git -C "$STORE" config user.name "Tracy Fleet"
 fi
 
 # The remote carries NO token — see the 🔒 block at the top.
-git -C "$STORE" remote set-url origin "https://github.com/$REPO.git"
+git -C "$STORE" remote set-url origin "$REMOTE_URL"
 
-# One pass: reset to origin, copy in every lane folder that is newer, rebuild, commit, push.
-# Returns 0 published, 10 nothing to publish, 20 push rejected (someone else got there first).
+# One pass: reset to origin, copy in every lane folder that is newer, rebuild, commit, publish
+# through a PR. `attempt --last` is the second pass: a PR that still cannot merge is left open and
+# named instead of closed.
+# Returns 0 published, 10 nothing to publish, 20 `main` moved or the merge conflicted (the PR is
+# closed and its branch deleted: run again), 1 failed (the cause is printed).
 attempt() {
-  git -C "$STORE" -c credential.helper="$HELPER" fetch -q origin main || return 1
+  local last="${1:-}"
+  git -C "$STORE" "${CRED[@]}" fetch -q origin main || {
+    say "fetch of main failed (see git's message above: auth, network, or no such repo)"
+    return 1
+  }
   git -C "$STORE" reset -q --hard origin/main
   git -C "$STORE" clean -qfd
   mkdir -p "$STORE/systems"
@@ -189,20 +248,28 @@ attempt() {
 Published by $(hostname) from the lanes on this host (sync-brands.sh). Each folder
 is one public page as the brand engine measured it; the index is generated."
 
-  if git -C "$STORE" -c credential.helper="$HELPER" push -q origin HEAD:main 2>/dev/null; then
-    return 0
-  fi
-  say "push rejected — the other host published first; redoing on top of theirs"
-  return 20
+  local base head
+  base=$(git -C "$STORE" rev-parse origin/main)
+  head=$(git -C "$STORE" rev-parse --short=12 HEAD)
+  # The token reaches git through the same environment-reading helper as above (never argv).
+  TRACY_PUBLISH_GIT_TOKEN=1 node "$PUBLISH" publish --dir "$STORE" --repo "$REPO" --api "$API_URL" \
+    --branch "$BRANCH_PREFIX$head" --base "$base" --title "brands: $hosts" \
+    --body "Published by $(hostname) from the lanes on this host (sync-brands.sh)." ${last:+"$last"}
 }
+
+if [ "$DRY_RUN" = false ]; then
+  # A run that died between opening its PR and merging it left that PR open: settle it before
+  # generating anything, so this run never opens a duplicate beside it.
+  TRACY_PUBLISH_GIT_TOKEN=1 node "$PUBLISH" leftover --dir "$STORE" --repo "$REPO" --api "$API_URL" \
+    --prefix "$BRANCH_PREFIX" || die "could not settle this host's leftover PR (see above)"
+fi
 
 attempt
 CODE=$?
 if [ "$CODE" = 20 ]; then
-  attempt
+  attempt --last
   CODE=$?
-  [ "$CODE" = 20 ] && die "push rejected twice — another host is publishing right now, try again"
 fi
-[ "$CODE" = 0 ] || [ "$CODE" = 10 ] || die "sync failed"
+[ "$CODE" = 0 ] || [ "$CODE" = 10 ] || die "sync failed (see above)"
 [ "$CODE" = 0 ] && say "published to https://github.com/$REPO"
 exit 0

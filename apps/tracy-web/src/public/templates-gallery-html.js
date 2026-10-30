@@ -13,6 +13,7 @@ import {
   document,
   platformName,
   platformsOf,
+  blurbOf,
   relatedCard,
   templatePath,
   heroImage,
@@ -98,7 +99,7 @@ ${cards ? `<div class="grid">${cards}</div><p class="lead nomatch" id="nomatch" 
     numberOfItems: all.length,
     itemListElement: all.map((t, i) => {
       const image = heroImage(t)
-      const blurb = typeof t.card?.blurb === 'string' ? t.card.blurb.trim() : ''
+      const blurb = blurbOf(t, w.lang)
       return {
         '@type': 'ListItem',
         position: i + 1,

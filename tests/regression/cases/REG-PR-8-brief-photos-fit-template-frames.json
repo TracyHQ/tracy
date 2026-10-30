@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-8-brief-photos-fit-template-frames",
+  "kind": "fix",
+  "title": "Brief photos on the agent demo path are cut to each template frame; icons, avatar strips, cut-outs and kept slots stay",
+  "pr": 8,
+  "area": "opportunities-build/pictures",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test apps/tracy-web/test/wo-agent-demo-slot-fit.test.mjs apps/tracy-host/test/demo-qa-picture-frames.test.mjs",
+    "S2: Read the pass/fail counts and the tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "plan.save refuses a replace-image row aimed at an icon, an avatar strip, a kept slot or a cut-out, and a phone portrait aimed at a wide card.",
+    "media.import with no crop recipe uploads a picture of the frame's shape (704/302 within 0.005) and refuses a portrait for that frame with AGENT_DEMO_IMAGE_DOES_NOT_FIT.",
+    "picture-frames-kept fails a box that changed shape or a kept picture that was replaced, and passes photos cut to each frame."
+  ],
+  "selectors": {
+    "function": "apps/tracy-web/src/opportunities-build/agent-demo-slot-fit.js framePictureIssues; apps/tracy-host/src/demo-qa.js checkPictureFramesKept",
+    "test": "apps/tracy-web/test/wo-agent-demo-slot-fit.test.mjs; apps/tracy-host/test/demo-qa-picture-frames.test.mjs"
+  },
+  "evidence": "A demo built from a brief onto a Joomla boxing template had 186 picture boxes change shape over 9 pages: phone portraits placed whole into wide cards, square cards and icon slots, and the avatar strip replaced by one square photo.",
+  "fence": "The agent demo plan validator and media.import ask the shared picture planner (shapeFit, fitCrop, protectedPicture); the host QA compares each picture box with the baseline's.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/wo-agent-demo-slot-fit.test.mjs",
+      "apps/tracy-host/test/demo-qa-picture-frames.test.mjs"
+    ],
+    "tests": [
+      "no photo replaces an icon, an avatar strip, a kept slot or a cut-out: each row is sent back to retain",
+      "a phone portrait never goes into a wide class card; the plan names the photo that fits",
+      "media.import cuts the photo to the frame the baseline measured, with no recipe from the agent",
+      "a portrait placed whole into a wide card and a photo over an icon or the avatar strip fail, each named"
+    ]
+  }
+}

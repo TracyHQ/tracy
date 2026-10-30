@@ -1,0 +1,332 @@
+{
+  "search_metadata": {
+    "id": "e8be065e2245c95759195bca",
+    "status": "Success",
+    "created_at": "2026-10-29 09:58:15 UTC",
+    "processed_at": "2026-10-29 09:58:15 UTC",
+    "total_time_taken": 2.911,
+    "google_maps_reviews_url": "https://www.google.com/maps/place/data=!4m7!3m6!1s0x3e5f6526b3102cb7:0x8974196ab8161854!5m2!4m1!1i2!9m1!1b1?hl=en"
+  },
+  "search_parameters": {
+    "place_id": "ChIJtywQsyZlXz4RVBgWuGoZdIk",
+    "num": "100",
+    "hl": "en"
+  },
+  "place_info": {
+    "title": "HideOut Al Barari - Best Restaurant & Bar",
+    "address": "Al Barari, E 311 Sheikh Mohammed Bin Zayed Rd, opposite to Global village - Wadi Al Safa 3 - Al Barari - Dubai, United Arab Emirates",
+    "rating": 4.8,
+    "reviews": 1766,
+    "type": "Restaurant"
+  },
+  "reviews": [
+    {
+      "date": "4 months ago",
+      "iso_date": "2026-06-25T18:28:03Z",
+      "iso_date_of_last_edit": "2026-06-25T18:28:03Z",
+      "snippet": "Synthetic guest review 0 of HideOut: the food was good and the staff were kind.",
+      "extracted_snippet": {
+        "original": "Synthetic guest review 0 of HideOut: the food was good and the staff were kind."
+      },
+      "position": 1,
+      "review_id": "Ci9DQUlRQUNvZENodHljRjlvTfd2f31923327a9e488770052102fe1RAB",
+      "rating": 5,
+      "user": {
+        "name": "Guest Hide 0",
+        "link": "https://www.google.com/maps/contrib/100000132070155201513?hl=en",
+        "contributor_id": "100000132070155201513",
+        "thumbnail": "https://lh3.googleusercontent.com/a/test-avatar-c7c2030ee3=s120-c-rp-mo-br100",
+        "reviews": 1,
+        "photos": 10
+      },
+      "source": "Google",
+      "likes": 0,
+      "details": {
+        "meal_type": "Dinner",
+        "food": 5,
+        "service": 5,
+        "atmosphere": 5
+      },
+      "subratings": {
+        "food": 5,
+        "service": 5,
+        "atmosphere": 5
+      },
+      "images": [
+        "https://lh3.googleusercontent.com/grass-cs/test-96303d5e-0=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-96303d5e-1=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-96303d5e-2=k-no"
+      ],
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvTfd2f31923327a9e488770052102fe1RAB!2m1!1s0x0:0x8974196ab8161854!3m1!1s2@1:CAIQACodChtycF9oOlBNMFp6bldDSkMwbC0taUtTRko5eVE%7C%7C?hl=en",
+      "response": {
+        "date": "4 months ago",
+        "iso_date": "2026-06-27T15:47:12Z",
+        "iso_date_of_last_edit": "2026-06-27T15:47:12Z",
+        "snippet": "Thank you for visiting HideOut, guest 0. We hope to see you again.",
+        "extracted_snippet": {
+          "original": "Thank you for visiting HideOut, guest 0. We hope to see you again."
+        }
+      }
+    },
+    {
+      "date": "2 weeks ago",
+      "iso_date": "2026-10-14T18:55:19Z",
+      "iso_date_of_last_edit": "2026-10-14T18:55:19Z",
+      "snippet": "Synthetic guest review 1 of HideOut: the food was good and the staff were kind.",
+      "extracted_snippet": {
+        "original": "Synthetic guest review 1 of HideOut: the food was good and the staff were kind."
+      },
+      "position": 2,
+      "review_id": "Ci9DQUlRQUNvZENodHljRjlvT2f03006e54f8f4028b072a662d2c18RAB",
+      "rating": 5,
+      "user": {
+        "name": "Guest Hide 1",
+        "link": "https://www.google.com/maps/contrib/100000092479641746871?hl=en",
+        "contributor_id": "100000092479641746871",
+        "thumbnail": "https://lh3.googleusercontent.com/a/test-avatar-b653846129=s120-c-rp-mo-br100",
+        "reviews": 5,
+        "photos": 0
+      },
+      "source": "Google",
+      "likes": 0,
+      "details": {
+        "food": 5,
+        "service": 5,
+        "atmosphere": 4
+      },
+      "subratings": {
+        "food": 5,
+        "service": 5,
+        "atmosphere": 4
+      },
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2f03006e54f8f4028b072a662d2c18RAB!2m1!1s0x0:0x8974196ab8161854!3m1!1s2@1:CAIQACodChtycF9oOkZIZHY0dGp6c1dwQUtrOFUxY1R4OUE%7C%7C?hl=en",
+      "response": {
+        "date": "a week ago",
+        "iso_date": "2026-10-15T17:25:03Z",
+        "iso_date_of_last_edit": "2026-10-15T17:25:03Z",
+        "snippet": "Thank you for visiting HideOut, guest 1. We hope to see you again.",
+        "extracted_snippet": {
+          "original": "Thank you for visiting HideOut, guest 1. We hope to see you again."
+        }
+      },
+      "images": null
+    },
+    {
+      "date": "8 months ago",
+      "iso_date": "2026-02-19T17:55:32Z",
+      "iso_date_of_last_edit": "2026-02-19T17:55:32Z",
+      "snippet": "Synthetic guest review 2 of HideOut: the food was good and the staff were kind.",
+      "extracted_snippet": {
+        "original": "Synthetic guest review 2 of HideOut: the food was good and the staff were kind."
+      },
+      "position": 3,
+      "review_id": "Ci9DQUlRQUNvZENodHljRjlvTfca204e6dfb388c29fc8dcb61e708cRAB",
+      "rating": 5,
+      "user": {
+        "name": "Guest Hide 2",
+        "link": "https://www.google.com/maps/contrib/100000014768591972740?hl=en",
+        "contributor_id": "100000014768591972740",
+        "thumbnail": "https://lh3.googleusercontent.com/a/test-avatar-b219638a52=s120-c-rp-mo-br100",
+        "local_guide": true,
+        "reviews": 27,
+        "photos": 48
+      },
+      "source": "Google",
+      "likes": 0,
+      "details": {
+        "meal_type": "Dinner",
+        "food": 5,
+        "service": 5,
+        "atmosphere": 5,
+        "group_size": "Suitable for all group sizes",
+        "wait_time": "No wait",
+        "parking_space": "Plenty of parking",
+        "parking_options": "Free parking lot",
+        "wheelchair_accessibility": "Synthetic detail text"
+      },
+      "subratings": {
+        "food": 5,
+        "service": 5,
+        "atmosphere": 5
+      },
+      "images": [
+        "https://lh3.googleusercontent.com/grass-cs/test-3d43989d-0=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-3d43989d-1=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-3d43989d-2=k-no"
+      ],
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvTfca204e6dfb388c29fc8dcb61e708cRAB!2m1!1s0x0:0x8974196ab8161854!3m1!1s2@1:CAIQACodChtycF9oOmYzMkVGRG5hMGpUVTJrRzhwUkc0eFE%7C%7C?hl=en"
+    },
+    {
+      "date": "4 months ago",
+      "iso_date": "2026-06-27T20:27:12Z",
+      "iso_date_of_last_edit": "2026-06-27T20:27:12Z",
+      "snippet": "Synthetic guest review 3 of HideOut: the food was good and the staff were kind.",
+      "extracted_snippet": {
+        "original": "Synthetic guest review 3 of HideOut: the food was good and the staff were kind."
+      },
+      "position": 4,
+      "review_id": "Ci9DQUlRQUNvZENodHljRjlvT2977710605c4cd98ed63fa80bf2d9cRAB",
+      "rating": 5,
+      "user": {
+        "name": "Guest Hide 3",
+        "link": "https://www.google.com/maps/contrib/100000150445827660750?hl=en",
+        "contributor_id": "100000150445827660750",
+        "thumbnail": "https://lh3.googleusercontent.com/a/test-avatar-93f3a3ea53=s120-c-rp-mo-br100",
+        "local_guide": true,
+        "reviews": 35,
+        "photos": 73
+      },
+      "source": "Google",
+      "likes": 0,
+      "details": {
+        "meal_type": "Dinner",
+        "group_size": "Suitable for all group sizes",
+        "wait_time": "No wait",
+        "parking_space": "Plenty of parking"
+      },
+      "images": [
+        "https://lh3.googleusercontent.com/grass-cs/test-17e75ba8-0=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-17e75ba8-1=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-17e75ba8-2=k-no"
+      ],
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT2977710605c4cd98ed63fa80bf2d9cRAB!2m1!1s0x0:0x8974196ab8161854!3m1!1s2@1:CAIQACodChtycF9oOl9JNDkzbHRTNHlkUWdBSEhCODB2eFE%7C%7C?hl=en",
+      "response": {
+        "date": "3 months ago",
+        "iso_date": "2026-07-05T12:44:43Z",
+        "iso_date_of_last_edit": "2026-07-05T12:44:43Z",
+        "snippet": "Thank you for visiting HideOut, guest 3. We hope to see you again.",
+        "extracted_snippet": {
+          "original": "Thank you for visiting HideOut, guest 3. We hope to see you again."
+        }
+      }
+    },
+    {
+      "date": "4 months ago",
+      "iso_date": "2026-06-25T17:41:32Z",
+      "iso_date_of_last_edit": "2026-06-25T17:41:32Z",
+      "snippet": "Synthetic guest review 4 of HideOut: the food was good and the staff were kind.",
+      "extracted_snippet": {
+        "original": "Synthetic guest review 4 of HideOut: the food was good and the staff were kind."
+      },
+      "position": 5,
+      "review_id": "Ci9DQUlRQUNvZENodHljRjlvT30a2891d83ff7a8fd03e60af9a9af5RAB",
+      "rating": 5,
+      "user": {
+        "name": "Guest Hide 4",
+        "link": "https://www.google.com/maps/contrib/100000057547644603568?hl=en",
+        "contributor_id": "100000057547644603568",
+        "thumbnail": "https://lh3.googleusercontent.com/a/test-avatar-5be4ffba1e=s120-c-rp-mo-br100",
+        "local_guide": true,
+        "reviews": 22,
+        "photos": 45
+      },
+      "source": "Google",
+      "likes": 0,
+      "details": {
+        "food": 5,
+        "service": 5,
+        "atmosphere": 5
+      },
+      "subratings": {
+        "food": 5,
+        "service": 5,
+        "atmosphere": 5
+      },
+      "images": [
+        "https://lh3.googleusercontent.com/grass-cs/test-51441ab4-0=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-51441ab4-1=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-51441ab4-2=k-no"
+      ],
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT30a2891d83ff7a8fd03e60af9a9af5RAB!2m1!1s0x0:0x8974196ab8161854!3m1!1s2@1:CAIQACodChtycF9oOkJYUjZPR3FzU0RCbjNlekVqN1NQbEE%7C%7C?hl=en",
+      "response": {
+        "date": "4 months ago",
+        "iso_date": "2026-06-27T15:50:07Z",
+        "iso_date_of_last_edit": "2026-06-27T15:50:07Z",
+        "snippet": "Thank you for visiting HideOut, guest 4. We hope to see you again.",
+        "extracted_snippet": {
+          "original": "Thank you for visiting HideOut, guest 4. We hope to see you again."
+        }
+      }
+    },
+    {
+      "date": "Edited 5 months ago",
+      "iso_date": "2026-04-23T18:25:02Z",
+      "iso_date_of_last_edit": "2026-04-29T19:14:40Z",
+      "snippet": "Synthetic guest review 5 of HideOut: the food was good and the staff were kind.",
+      "extracted_snippet": {
+        "original": "Synthetic guest review 5 of HideOut: the food was good and the staff were kind."
+      },
+      "position": 6,
+      "review_id": "Ci9DQUlRQUNvZENodHljRjlvT0c53b6ee1236c27afaba5f5ebed5f0RAB",
+      "rating": 5,
+      "user": {
+        "name": "Guest Hide 5",
+        "link": "https://www.google.com/maps/contrib/100000276591513020313?hl=en",
+        "contributor_id": "100000276591513020313",
+        "thumbnail": "https://lh3.googleusercontent.com/a/test-avatar-b6862a86c4=s120-c-rp-mo-br100",
+        "local_guide": true,
+        "reviews": 128,
+        "photos": 114
+      },
+      "source": "Google",
+      "likes": 0,
+      "details": {
+        "order_type": "Dine in",
+        "meal_type": "Dinner",
+        "price_per_person": "AED 150–200",
+        "food": 5,
+        "service": 5,
+        "atmosphere": 5,
+        "group_size": "3-4 people",
+        "seating_type": "Indoor dining area",
+        "parking_space": "Plenty of parking",
+        "parking_options": "Free parking lot",
+        "kid_friendliness": "Synthetic detail text"
+      },
+      "subratings": {
+        "food": 5,
+        "service": 5,
+        "atmosphere": 5
+      },
+      "images": [
+        "https://lh3.googleusercontent.com/grass-cs/test-1bbfa92e-0=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-1bbfa92e-1=k-no",
+        "https://lh3.googleusercontent.com/grass-cs/test-1bbfa92e-2=k-no"
+      ],
+      "link": "https://www.google.com/maps/reviews/data=!4m8!14m7!1m6!2m5!1sCi9DQUlRQUNvZENodHljRjlvT0c53b6ee1236c27afaba5f5ebed5f0RAB!2m1!1s0x0:0x8974196ab8161854!3m1!1s2@1:CAIQACodChtycF9oOjZRdERVTlEyckdpRldBa01mVm1WNHc%7C%7C?hl=en",
+      "response": {
+        "date": "5 months ago",
+        "iso_date": "2026-05-02T19:31:19Z",
+        "iso_date_of_last_edit": "2026-05-02T19:31:19Z",
+        "snippet": "Thank you for visiting HideOut, guest 5. We hope to see you again.",
+        "extracted_snippet": {
+          "original": "Thank you for visiting HideOut, guest 5. We hope to see you again."
+        }
+      }
+    }
+  ],
+  "topics": [
+    {
+      "keyword": "sunday roast",
+      "mentions": 60,
+      "id": "UCV6Xm3xAhc"
+    },
+    {
+      "keyword": "live music",
+      "mentions": 183,
+      "id": "bdOKu_b9hgo"
+    }
+  ],
+  "pagination": {
+    "next": {
+      "endpoint": "/google/reviews",
+      "queryParams": {
+        "place_id": "ChIJtywQsyZlXz4RVBgWuGoZdIk",
+        "num": 20,
+        "hl": "en",
+        "next_page_token": "ls1.WyJDakVJQVJJcENnb0FQN19MQU9oU19fX19FaEQ0Q3VFY1ZLUGVyUTRfYmFVQUFBQUFHZ245MlJJQ2JHZktaWUFZQUNJQToxMDAiLCJwNmY1MkJMb0dKNDA3RFlyVlR0QmsiXQ"
+      }
+    },
+    "next_page_token": "ls1.WyJDakVJQVJJcENnb0FQN19MQU9oU19fX19FaEQ0Q3VFY1ZLUGVyUTRfYmFVQUFBQUFHZ245MlJJQ2JHZktaWUFZQUNJQToxMDAiLCJwNmY1MkJMb0dKNDA3RFlyVlR0QmsiXQ"
+  }
+}

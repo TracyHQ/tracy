@@ -395,11 +395,71 @@ platform_configure() {
 #
 # Mail is the third step (#803), after setup and token custody and on BOTH branches: see
 # `_emdash_configure_mail`.
-platform_post_up() {
+platform_post_up() (
+  # provision.sh holds FD 8's per-label flock until this entire hook returns. A second provision
+  # cannot mistake our temporary connection for a preexisting connection and outlive its owner.
+  # Subshell-scoped rather than local: Bash 3 unwinds function locals before EXIT on a signal.
+  _emdash_borrowed_host="" _emdash_borrowed_net="" _emdash_origin_network=""
+  trap '_emdash_release_site_network "$?"' EXIT
+  trap 'exit 130' INT
+  trap 'exit 143' TERM
+  _emdash_prepare_site_network || return 1
   _emdash_setup_site || return 1
   _emdash_configure_mail || return 1
   _emdash_quiet_forms || return 1
   if _emdash_content_api_image; then _emdash_content_api_post_up || return 1; fi
+)
+
+# The fleet reaches published loopback ports. A bridged local tracy-host needs a temporary
+# endpoint on an isolated site's network; the SITE never joins the shared control-plane network.
+# The helper's PAT stays on the host and is sent only to the inspected web-container address.
+_emdash_prepare_site_network() {
+  [ -f "$SITE_DIR/network-isolated" ] || return 0
+  curl -s -m 3 -o /dev/null "http://127.0.0.1:${HOST_PORT}/" >/dev/null 2>&1 && return 0
+  local host="${HOSTNAME:-}" stack="${TRACY_SITE_NETWORK:-tracy_tracy}" identity id service running networks ip
+  local net="${LABEL}_default"
+  if ! [[ "$host" =~ ^[a-f0-9]{12,64}$ ]]; then
+    echo "!! cannot identify this bridged tracy-host — refusing isolated site setup" >&2
+    return 1
+  fi
+  identity=$(docker inspect --format '{{.Id}}|{{index .Config.Labels "com.docker.compose.service"}}|{{.State.Running}}|{{range $k, $v := .NetworkSettings.Networks}}{{$k}} {{end}}' "$host") || return 1
+  IFS='|' read -r id service running networks <<< "$identity"
+  if ! [[ "$id" =~ ^[a-f0-9]{12,64}$ ]] || [[ "$id" != "$host"* ]] || [ "$service" != tracy-host ] || [ "$running" != true ]; then
+    echo "!! this container is not the running tracy-host — refusing isolated site setup" >&2
+    return 1
+  fi
+  case " $networks " in *" $stack "*) ;; *) echo "!! tracy-host is not on this stack's network — refusing isolated site setup" >&2; return 1 ;; esac
+  # Check the exact site's membership before joining, and again when resolving its address.
+  ip=$(docker inspect --format "{{with index .NetworkSettings.Networks \"$net\"}}{{.IPAddress}}{{end}}" "${LABEL}-web-1") || return 1
+  if ! [[ "$ip" =~ ^[0-9]{1,3}(\.[0-9]{1,3}){3}$ ]]; then
+    echo "!! isolated site's web container is not on $net — refusing setup" >&2
+    return 1
+  fi
+  _emdash_origin_network="$net"
+  case " $networks " in
+    *" $net "*) ;;
+    *)
+      # Record intent before the blocking command: a signal after connect must still clean up.
+      _emdash_borrowed_host="$host" _emdash_borrowed_net="$net"
+      docker network connect "$net" "$host" || return 1
+      ;;
+  esac
+  curl -s -m 5 -o /dev/null "http://$ip:4321/" >/dev/null 2>&1 || {
+    echo "!! isolated site does not answer from tracy-host — refusing setup" >&2
+    return 1
+  }
+}
+
+_emdash_release_site_network() {
+  local rc="$1"
+  trap - EXIT
+  if [ -n "$_emdash_borrowed_host" ]; then
+    if ! docker network disconnect "$_emdash_borrowed_net" "$_emdash_borrowed_host"; then
+      echo "!! could not release tracy-host's temporary site network connection" >&2
+      [ "$rc" != 0 ] || rc=1
+    fi
+  fi
+  exit "$rc"
 }
 
 # ── site mail: the relay path is configured and proven before the site is ready (#803) ──────────
@@ -515,12 +575,12 @@ _emdash_quiet_forms() {
 # reached over the shared docker network instead. Loopback is asked first, with no credential.
 #
 # 🔒 The second road is the web container's IP as `docker inspect` of THIS container reports it on
-# the fleet's network — not a DNS name: the daemon's own record decides where the PAT goes, a lookup
+# the network selected for this hook — not a DNS name: the daemon's record decides where the PAT goes, a lookup
 # does not. Anything but one dotted quad is refused here, and the helper refuses a public address.
 _emdash_site_origin() {
-  local web="$1" net="${TRACY_SITE_NETWORK:-tracy_tracy}" ip
+  local web="$1" net="${_emdash_origin_network:-${TRACY_SITE_NETWORK:-tracy_tracy}}" ip
   # stdout is this function's answer: nothing the probe prints may reach it.
-  if curl -s -m 3 -o /dev/null "http://127.0.0.1:${HOST_PORT}/" >/dev/null 2>&1; then
+  if [ -z "${_emdash_origin_network:-}" ] && curl -s -m 3 -o /dev/null "http://127.0.0.1:${HOST_PORT}/" >/dev/null 2>&1; then
     printf 'http://127.0.0.1:%s' "$HOST_PORT"
     return 0
   fi

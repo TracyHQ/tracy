@@ -48,6 +48,7 @@ sources:
   - .github/workflows/build-dsh-image.yml
   - apps/tracy-host/Dockerfile
   - apps/tracy-web/src/lib/quickstart-releases.js
+  - apps/tracy-web/src/lib/template-blurb-translations.js
   - deploy/scripts/check-fleet-files-in-image.sh
   - packages/fleet/tracy-fleet-operation/dsh/host-dsh-init.sh
   - scripts/ci/image-context.mjs
@@ -99,7 +100,7 @@ Seven services, plus `minio-init`, which runs once locally:
 | `docker-proxy` | HAProxy in front of the docker socket; dsh may only `exec` into `*-web-1` containers, everything else is 403 |
 | `minio` (+ `minio-init`) | Local only, plays the role of R2 |
 | `dns` | Local only: resolves `*.tracy.test` to `tracy-web` |
-| `<label>-web-1`, `<label>-db-1` | One pair per site, built by `tracy-host`. Per-CMS web images in [`packages/fleet/tracy-fleet-operation/web`](packages/fleet/tracy-fleet-operation/web) |
+| `<label>-web-1`, `<label>-db-1` | One pair per site, built by `tracy-host`. Per-CMS web images in [`packages/fleet/tracy-fleet-operation/web`](packages/fleet/tracy-fleet-operation/web): a site runs the `IMAGE_TAGS` line for its exact upstream base (its PHP), which carries the agent's tools and the visual check's chromium + node. A provision builds a missing line on the spot ([`web-image.sh`](packages/fleet/tracy-fleet-operation/scripts/lib/web-image.sh)); only a failed build leaves a new site on the bare upstream image, said loudly in the provision log. A site already on one is moved by [`move-off-upstream-image.sh`](packages/fleet/tracy-fleet-operation/scripts/provision/move-off-upstream-image.sh) |
 
 Three places run this same shape:
 
@@ -110,6 +111,14 @@ Three places run this same shape:
 | Your own machine | `<label>.tracy.test:51710` | [`running-tracy-locally.md`](docs/references/running-tracy-locally.md) |
 
 Env and pitfalls of the dev machine: [`may-dev.md`](docs/references/may-dev.md).
+
+The site agent's visual check can draw its before/after pictures with dsh's browser when the site's
+container has none (`tracy-site-tools` `captureView`, host mode `view`). Chromium has no network
+route: same-origin documents, stylesheets, images and fonts are fetched through that site's
+`docker exec curl`; page scripts stay disabled and other requests fail. This fallback is used only
+for visual-check captures. It cannot evaluate changes that require page scripts or external assets.
+
+Host-mode capture scrolls synchronously and waits for rendering in the Node process: page timers do not run while page scripts are disabled. The script and network restrictions remain in force.
 
 ## 3. Where the browser lands
 
@@ -124,6 +133,16 @@ Every request reaches `tracy-web` first. [`app.js`](apps/tracy-web/src/app.js) m
    `/design-inspiration` (public), `/tracy-badge.js`, beta, sign-in (`identity/`), seats
    (`seats/`, `lanes/`), `/api/sites/*` (`sites/`), public REST `/v1` (`api/`), notifications,
    `/ops` (`ops/`), the AI assistant `/api/assistant/*` (`assistant/`: answers with a model, hands over to a real person via Telegram; read-only, never writes to a site).
+   On the new-site screen, pressing a setup action calls `POST /api/assistant/onboarding-draft`.
+   It reads only the signed-in account's current session conversation and uses the Help model to
+   extract an editable draft from the canonical CMS question feeds. It never creates a site,
+   reads file contents or fetches a supplied address. The latest user revision is checked before
+   and after extraction and again in the browser; queued corrections prevent stale handoffs.
+   The limits are 50 turns, 32,000 characters, 12 requests per minute and 50 per day, without
+   silently truncating history. Tab metadata carries the draft into Add site, where untouched
+   answers can update while manual edits and intentional clears win. Multilingual requests stay
+   in the description because the initial build selects one language. Import and business flows
+   receive only their address or search seed and retain the customer's explicit next action.
    Tracy's Discord bot calls `/api/discord/*` (`discord/`, see §9).
    Voice input in the chat box: `GET /api/speech` and WebSocket `/api/speech/stream`; reading answers aloud:
    `POST /api/speech/say`; per-turn Voice timings measured by the page: `POST /api/speech/trace` (metrics only, stored as
@@ -443,7 +462,9 @@ reads the tables above for one session — the turn's commits (trailer `Tracy-Tu
 `apply_id`, and the reason something cannot be undone; `POST /api/sites/:key/turns/undo` pre-checks a multi-moment turn (read-only host
 op `undo-check`), holds the site's write lease, then reverts files through the same `/restore` path in mode `undo` (one
 `site_operation` row per moment) and content through `apply.revert` (branch 4c), newest → oldest, stopping at the first failure. A turn that was undone (fully or partly) is stamped
-`site_turn.undone_at` + `undo_complete` (migration 067); when the session's next turn opens with `POST /turn`, the answer
+`site_turn.undone_at` + `undo_complete` (migration 067, the last press; also when it only may have gone, e.g. the host answered 202) — the press, read by the agent notice and ops usage —
+and, only when something of it verifiably went, `undo_proven_at` (migration 182) + `undo_proven_complete` (migration 185; a complete proof stays complete) — the proof, the only stamp the Site changes row reads
+(an unproven press never clears an earlier proof); when the session's next turn opens with `POST /turn`, the answer
 (and `POST /turn/undone`, read early since 16/10) carries `undone`, and `tracy-site-tabs` inserts a notice for the agent right after the user's message (the undo runs within that same
 session, so the "site changed" notice stays silent).
 The deciding logic is in [`turn-undo.js`](apps/tracy-web/src/sites/turn-undo.js). No undo on EmDash (the server
@@ -500,6 +521,10 @@ doors forgets all pages of that site at once (edits to the site from elsewhere s
 a system → 409 `DS_PREVIEW_UNAVAILABLE` (`NO_SLOT`), and the popup says it cannot preview yet; a page that cannot be read → 502
 `DS_PREVIEW_FAILED`, the popup offers Try again. The main button is still **Try on <site>** (a real apply, Keep/Undo). The popup calls the site by
 the name the site gives itself on its home page (`name` of the words door); `/api/sites` only has the address (`displayName` is the domain).
+
+A newly claimed fleet site with neither an attachment nor an address returns `supported: false`,
+`canApply: false`, `reason: SITE_NOT_READY` without reading a container or the library. The tab explains
+that the site must finish building and opens the existing site’s Build tab; this press starts no build.
 
 **Design system library — Refero only** (12/10/2026). The Design system tab and the **Pick a design system** card of the
 Add site form read the same list: the door **`GET /api/design-system/library`** (signed-in seat,
@@ -620,15 +645,28 @@ Only for `origin='migrated'` sites on Joomla (WordPress waits for its own adapte
   it into the copy's DB right after loading the DB (step 4b), and when attaching the door `site_component` keeps `liveEndpoint` + `liveToken` separate
   from the copy's `token`. The real site's token only travels to the host in the job body, then into the script through an environment variable.
   Copies imported earlier (still holding the real token) get their token changed before their first Sync (`webroot-sync.sh --op copy-token`).
+- **Joomla copy address:** verification tries the registered front/administrator pair on the copy first, then the same
+  pair at the webroot. Imports from a live subdirectory may be installed at the copy's root. Only a response that did
+  not reach the plugin (`not_json`, `not_engine`, `redirected`) permits the next candidate; requests refuse redirects.
+  A successful authenticated `core.manifest` for Joomla selects the copy endpoint. The original live endpoint and token
+  remain separate for Sync; verification never calls the live origin.
 - **Host:** the `webroot-sync` job runs `webroot/webroot-sync.sh`: reads the real site with `lib/live-pull.mjs` (the
-  Import protocol, inline tar part, straight to the host disk, **outside** the heavy lock) → normalizes the read the way provision did for the copy
+  Import protocol, inline tar part, straight to the host disk, **outside** the heavy lock; the tables the merge never takes —
+  `live_sync.py never-taken`, Tracy's own and the ignored ones — keep the last read's part and are not read again; the dump is
+  one gzip member per table with `<dump>.index.json`, so an unmoved table is copied as it is, 2026-10-27; a big table
+  keeps its range checksums in `<dump>.ranges.json`, and when it moves only the ranges that moved are read again —
+  claude-cowork `db.range_checksums` + `db.dump_after`, 2026-10-28) → normalizes the read the way provision did for the copy
   → three-way merge with `lib/live_sync.py` (base = the previous read at `refs/tracy/live` + `sync/live-base.sql.gz`,
   otherwise the import archive, otherwise `tracy-baseline` + v1) → the result becomes a backup point
   (`webroot-backup.sh --op create-from`, trailer `Tracy-Backup: sync`) → **Restore everything** to that point (the
   "Before restore" point is the way back) → rebuild the nested set, assign content identity, clear cache, copy files > 50 MB.
   The sync's restore runs `--only-tables` (23/10/2026): it only loads and swaps tables whose `CHECKSUM TABLE` differs between the point and the
   copy (cutting the dump with `lib/dump_tables.py`, loading in parallel with the "Before restore" copy); other tables, their triggers and
-  the session table stay as they are. The Restore button in the Backups tab still swaps the whole DB.
+  the session table stay as they are. The Restore button in the Backups tab still swaps the whole DB. Live reads load into
+  scratch schemas over several connections (`tracy_db_load_dump`, `dump_sections.py split`: 2 + 2 in the merge, 4 for the
+  preview's base; 2026-10-27). The two reads load beside the copy's dump (`load_reads`, in the background), not after it. A machine runs
+  `TRACY_HEAVY_SLOTS` heavy webroot jobs at once (default 2; `lib/heavy-slots.sh`, slot 0 the old lock file).
+- **WordPress counters after Sync:** the merge queues native recounts when posts, comments or term relationships change, including whole-table replacement and deletion. After restoring the complete merged DB, WordPress recalculates term counts using each taxonomy's own counter and approved-comment counts through its native API. Kept column conflicts that change no row queue no recount, and absent final target tables are omitted.
 - **Conflicts: Tracy's version wins** (20/10/2026). Where both sites edited the same thing differently, the copy's version is kept —
   files with `git merge-file --ours` (colliding hunks take Tracy's, the rest of the live file still comes over), DB with
   the copy's value/row — and listed in `kept` with the live-side value; the Export dialog shows that list once
@@ -636,9 +674,18 @@ Only for `origin='migrated'` sites on Joomla (WordPress waits for its own adapte
 - **Both sides created new records with the same id:** in core Joomla tables (articles, categories, menus, modules, users, tags, assets,
   `history` versions, the 404 log `redirect_links`) the customer's record gets a **new id** and everything pointing to it follows —
   including text columns such as `fields_values.item_id` (filtered by `fields.context`) and `history.item_id`
-  (`com_content.article.<id>`); renumbered tables are remembered in `sync/id-map.json` for later runs. In extension tables the merge cannot renumber, or when an extension table points to an id just changed: the sync run
+  (`com_content.article.<id>`); renumbered tables are remembered in `sync/id-map.json` for later runs. WordPress theme-mod references use typed serialized paths for logos, custom CSS posts, header media and menu locations. The same paths participate in fresh-ID allocation, remembered-map reads, batch rewrites and reverse Preview mapping; dimensions and unrelated values retain their bytes. Unreadable or aliased serialized theme values stop the merge safely rather than guessing at IDs. In extension tables the merge cannot renumber, or when an extension table points to an id just changed: the sync run
   **stops before applying** (`needs_resolution`, list `held`), and only after a person reviews and clicks "Sync anyway" (`allowHeld`) is
   Tracy's version kept there.
+- **WooCommerce record counts:** the five analytics/admin tables `wc_admin_notes`, `wc_admin_note_actions`,
+  `wc_order_stats`, `wc_order_product_lookup` and `wc_customer_lookup` are ignored as background state.
+  Order metadata, addresses, operational rows and order-item rows still merge but do not count as independent records.
+  HPOS `shop_order_placehold` posts also remain in the copy without counting twice: whole-table and row merges count
+  a taken change when its copy row before or after the actual merge represents a record. Legacy `shop_order` posts
+  still count normally. When all three snapshots agree on WooCommerce storage, HPOS counts `wc_orders`
+  and legacy counts order posts; synchronized backup orders and refunds remain merged without double counting.
+  Missing required tables or differing storage modes keep the existing per-table counts. Child-only changes
+  still merge under the existing uncounted-child rule.
 - **First run after import (22/10/2026):** at import, dsh takes the live `site.fingerprint` right before reading and
   sends it with provision; tracy-web keeps it at `site_component.config.importFingerprint` (next to the live token), and hands it to the first
   sync run (`baseFingerprint` → the host writes `base-fingerprint.json` next to the run); while no run has applied yet, comparison is
@@ -701,7 +748,7 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   (writing the whole option, CAS on the whole option), Additional CSS (post `custom_css`). Permalinks are never pushed. Places where sync kept
   Tracy's version for **files and configuration settings** also go into `sync/kept.json` (names only) and become `changed-on-both`.
   `sync/pushed.json` adds `files`/`settings`: the file merge takes the live version of a file just pushed (`ours`), and keeps the copy's version after Undo
-  (`theirs`) — `live_sync.py files --pushed`.
+  (`theirs`) — `live_sync.py files --pushed`. Deleted files are recorded with `ours: null`; Undo restores live while the copy keeps its deletion, so the next preview offers that deletion again.
 - **Jobs** `webroot-live-push-{preview,apply,undo}` run `webroot/webroot-live-push.sh`; the live endpoint + token travel only through
   environment variables, as in sync. **preview** runs Sync from live first (stopping with `SYNC_NEEDS_ATTENTION` when the sync is held), then
   under the site lock computes changeset = copy − base (`sync/live-base.sql.gz` loaded raw into a temporary schema + `refs/tracy/live`),
@@ -710,13 +757,25 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   writes item by item: `content.get` first, writing only when every field still holds the base value (CAS; Joomla in batches via
   `content.batch` with `expected`), otherwise `conflict`; at most 200 items; deletes only when the owner confirms. Places where a
   sync run kept Tracy's version even though the customer also edited (`sync/kept.json`, names only, no values) are
-  `changed-on-both`, never overwritten.
+  `changed-on-both`, never overwritten. A whole table kept after a schema change holds every push item whose seeds write that table, including creates and deletes, while unrelated tables remain available.
+- **WordPress menu addresses:** existing menu-item updates and deletions retain the base menu slug as their CMS key alongside the mapped live item ID, so subsequent writes and Undo use the native menu writer address.
+- **Replacement addresses:** a WordPress delete that frees the same slug in the same post type/parent scope is a prerequisite of its replacement. Unconfirmed or conflicting deletes block that create. Undo removes the replacement first and restores the original slug; a customer-edited replacement holds both records. Joomla trash keeps aliases occupied, so both sides of a same-alias replacement are held before writing.
 - **After pushing:** live ids of newly created records go into the id map, and the places written go into `sync/pushed.json`; Sync from live runs again
   and the merge takes those places as base before comparing (`live_sync.py --pushed`, `DbMerge.seed_pushed`), so a record Tracy
   just created is not copied back to the copy twice. `pushed.json` is dropped when a sync run puts its read in place (`remember_read`).
+- **Optional CMS schema:** dependent-row rules are used only when their parent key, parent reference and dependent column exist in both schemas. Stock Joomla contacts and banners do not need an asset_id column. The Live Sync Integration workflow runs the real MariaDB sync/push suites on an isolated GitHub-hosted Docker VM; skipped cases fail that job.
+- **Live access refusals:** both sync directions distinguish HTTP password protection (401), firewall/non-engine responses (403 or non-engine HTTP 200), rate limits (429), and an engine-refused token. Read retries respect numeric or HTTP-date Retry-After; rate limits never trigger an alternate-door request. Mutations retain the durable receipt rule and do not resend an uncertain response.
 - **Retention:** `<private>/<label>/push/previews/<id>/` (changeset; swept after 24 hours), `<private>/<label>/push/<id>/`
   (`before.json` 0600 = the live values at write time + a re-read after writing, `journal.jsonl` to resume when cut off; 30 days).
+  Before each mutation, `requests.json` durably stores its item identity and preimage, then stores the engine ACK before
+  read-back. Resume recovers acknowledged writes and their Undo evidence without sending them again. A lost answer,
+  interrupted write or incomplete rollback is `WRITE_OUTCOME_UNKNOWN`: no automatic resend and dependent items stay held.
+  Only an explicit `writer_busy` refusal retries a mutation; transient reads still retry. Apply and Undo share an OS lock
+  per push directory; Undo keeps separate receipts in `undo-requests.json`. Receipts and snapshots are private (0600).
+  A stopped apply drains in-flight writes before saving its complete partial result in `written.json`. The shell still records
+  acknowledged live IDs and reports the written/conflict/failed/skipped lists with the error, so the failed push remains undoable.
   **undo** is a reverse CAS: it restores "before" only where live still holds exactly the value the push left; the copy keeps Tracy's changes.
+  WordPress postmeta creates retain the resolved parent post ID and use a stable per-item native apply ID, stored in the durable preimage and Undo snapshot. Undo reverts only that native receipt after comparing the written value, verifies the metadata is absent, and never replays an uncertain mutation. Older snapshots without a dedicated receipt remain held; newer native writes retain their conflict guard. A new parent post stays in place when dependent metadata Undo is kept or failed, or a durable metadata receipt is ahead of the saved Apply output.
 - The web door, lease `push:<id>`, owner-only, switch `site-sync-to-live`, audit: on the tracy-web side.
 - Screen (25/10/2026): one flow of the Publish tab (`@tracy/core` `site-tabs/publish/PushStep.tsx`, Review › Send), opened from the Sync to live row of the ••• menu or by choosing "Send changes to your live site" in the tab; the old My Sites dialog was removed.
 
@@ -728,6 +787,7 @@ The host part; job contract: [`scripts/webroot/LIVE-PUSH-CONTRACT.md`](packages/
   `site_component`, `site_build`, `site_design`), changes and comments (§5, `site_comment*`),
   `quickstart_releases`, `template_readiness` (results of the Customize your site check for each release, §8),
   `template_ds_readiness` (results of the Design system check, same shape, §8),
+  `template_blurb_translation` + `template_blurb_translation_failure` (a card blurb's translations for the public Templates pages, keyed by the sha256 of the English, §8),
   `ui_setting`, `speech_setting` (the ElevenLabs key for voice input, sealed with `secret-box.js`), `notification*`, `audit`, `site_brand_upload` (logo/favicon customers upload before a site exists, §8).
   `account_seen_hint` keeps the seen marks for step 2 of the tour (`site-tour`) and the voice hint (`voice-tip`), primary
   key `(account_id, hint)`, first time `seen_at`, deleted automatically when the account is deleted; the closed list of names
@@ -1006,7 +1066,7 @@ It never overwrites a Build or a later system change, and never re-reads the sit
 the measurements stay unknown; the same for old jobs without a snapshot. A template that declares no system (the current Business
 EmDash) never gets a record created for it.
 
-- **Quickstarts** are read from releases of `JoomlArt-Products/ja-products` into the `quickstart_releases` table
+- **Quickstarts** are read from releases of `JoomlArt-Products/joomlart-products` into the `quickstart_releases` table
   ([ADR 0017](docs/adr/0017-github-release-is-quickstart-source-of-truth.md)). There is no catalogue
   file in the repo. (`apps/tracy-web/src/quickstarts.json` only pins the Claude
   Cowork plugin version.)
@@ -1041,6 +1101,17 @@ EmDash) never gets a record created for it.
   installer/webroot, WordPress theme zip, EmDash source zip), no database, into `TRACY_READINESS_DIR/design-system`. The
   `design-system` step of Road to live (after `customize`, waits for the install file) and the Publish door (`DESIGN_SYSTEM_NOT_READY`, only for
   releases not yet live) read this table. Check again: `POST /api/ops/quickstart/design-system/check`.
+- **A card's blurb is translated for the public Templates pages in the background, on the master only** (29/10/2026,
+  [`template-blurb-translations.js`](apps/tracy-web/src/lib/template-blurb-translations.js)). The English blurb stays the release's own
+  (`tracy_design_inspiration.json`, rewritten into `quickstart_releases.inspiration` by every read), so translations live apart, in
+  `template_blurb_translation` keyed by `(sha256 of the English, lang)`, for de, fr, es, it and nl. After each read of the releases (the same
+  places that kick the Customize your site check) and after a card is saved or published, a single-flight sweep sends ONE call per English
+  blurb missing a language to the model of the `web` door, and stores each language only if it keeps every kept term the English holds
+  ([`kept-terms.js`](apps/tracy-web/src/lib/kept-terms.js), a tested copy of `packages/locale/tracy-locale-vi/terms.ts`), the template
+  name and the CMS names, has no em or en dash, is at most 300 characters and is not the English. A failed call or a refused language
+  backs that blurb off (`template_blurb_translation_failure`, 30 minutes doubling up to a day). `GET /api/templates` adds `card.blurbs`
+  (`{ lang: text }`, one query per request) and a shard reads it from the master's list; the page, gallery, JSON-LD and meta description
+  use `card.blurbs[lang]`, else the English. No model on the `web` door: nothing runs and the pages stay English.
 - **Content coverage does not run in the background; it only reads a file** (24/10/2026, decided): `content-coverage.json` sits next to
   the contract in the profile folder (enters the image through the same COPY as the contract), committed by whoever measures it after running
   [`content-coverage/cli.mjs`](packages/cms/tracy-quickstart-tools/README.md) on a site built from the package (skill
@@ -1768,7 +1839,7 @@ can still be read, running jobs stop at the next checkpoint with `paused` + `FEA
   the session search, fetches a missing place again by place id through `places/suggest/:placeId` + search `intent: 'place'`, marks it
   as picked, and does not research it automatically.
   **Research and profile (23/10/2026 evening):** a stranger clicking Research on `/find` → `POST /find/api/research` (Google place id only; the server fetches every fact itself) is queued into a **shared per-place job** (`place-jobs.js`, table `wo_place_public_request`): a published place costs nothing, a running job is joined, a new place only goes through the quota (`publicResearchNewPlacesPerAddressDay` 50, `publicResearchNewPlacesPerDay` 1,000, budget `researchPublicDailyCapCents`); `GET /find/api/research` only reads progress and creates no job. **Build demo** is the first step that requires sign-in (`wo-build=<placeId>` through `/login`). Place profile: social networks follow `providerOrder` in `/ops/wo` › Settings (`domain/capabilities.mjs`; ScrapeCreators first); a place without a website gets its social pages found by web search, kept only with evidence of the branch (`wo_place_link.verified_by='search'`, never leads to merging places); menu links are read into `profile.menuItems` (only dishes with a price on the same line are `verified`; Build uses only `verified` dishes).
-  **Wired provider order (24/10/2026):** besides the 4 social network groups, research now reads the order in `/ops/wo` › Settings › Provider order for **Tripadvisor** (SerpApi → RapidAPI → LiteScrape by default), **Web search** (default ScrapeCreators Google search — what research ran before; plus Jina Search, Firecrawl Search; DeepSeek removed from the group because it has no search API), **Menu links** (default website only; plus finding menu links with SerpApi/ScrapeCreators Google search — dishes read from a found link are always `verified:false` because it may be another branch), **Menu photos** (SerpApi, `[]` = turns off just the `menu` call), **Menu dishes** (PDF/page readers only; no vision model yet), **Website content** (default direct crawl → Apify browser as before; plus Jina Reader, Firecrawl scrape, reading the rendered HTML with the same `extractPage`; DeepSeek removed). The default order = the old behaviour. **Not wired yet:** Google reviews (Places Details is the place-facts call and always runs first; SerpApi only supplements) and Find places in an area (the Google → Apify → OSM chain with its own cost fence for both Finds).
+  **Wired provider order (24/10/2026):** besides the 4 social network groups, research now reads the order in `/ops/wo` › Settings › Provider order for **Tripadvisor** (SerpApi → RapidAPI → LiteScrape by default), **Web search** (default ScrapeCreators Google search — what research ran before; plus Jina Search, Firecrawl Search; DeepSeek removed from the group because it has no search API), **Menu links** (default website only; plus finding menu links with SerpApi/ScrapeCreators Google search — dishes read from a found link are always `verified:false` because it may be another branch), **Menu photos** (SerpApi, `[]` = turns off just the `menu` call), **Menu dishes** (PDF/page readers only; no vision model yet), **Website content** (default direct crawl → Apify browser as before; plus Jina Reader, Firecrawl scrape, reading the rendered HTML with the same `extractPage`; DeepSeek removed). The default order = the old behaviour. **Not wired yet:** Google reviews (Places Details is the place-facts call and always runs first; SerpApi only supplements; since 29/10/2026 the group is read only to turn Monid on, see the Monid entry) and Find places in an area (the Google → Apify → OSM chain with its own cost fence for both Finds).
 - **Doors** ([`website-opportunities/src/route.js`](packages/wo/website-opportunities/src/route.js)): `/api/website-opportunities/…`, every door
   reads the account from the session and filters by account (someone else's = 404). Default CMS per account (`wo_preference`, no
   row = joomla); a CMS is "available" only when `GET /api/templates` has a template for it.
@@ -1842,6 +1913,22 @@ can still be read, running jobs stop at the next checkpoint with `paused` + `FEA
   address before the reviews, with profile/avatar and the pictures
   attached to each review; Google keeps its own section/attribution. No data means no section and no error banner;
   quota/provider diagnostics only in admin/logs. `tripadvisor` is not in the social collectors enum.
+- **Google reviews through Monid — optional, OFF by default** (29/10/2026): provider `monid-google-reviews` in the
+  `google-reviews` group (research reads the group only to know whether Monid runs; Places and SerpApi still always
+  run as before). It runs when a `monid` key is set (column `monid_key_cipher`, migration 186 = package `0010`, or env
+  `MONID_API_KEY`) **and** the operator adds Monid to the group's order in `/ops/wo` › Settings. It is a SUPPLEMENTARY
+  pass after the Maps step ([`google-maps-monid-research.js`](packages/wo/website-opportunities/src/google-maps-monid-research.js)),
+  never calling Places again: `POST api.monid.ai/v1/run` (route pinned to `litescrape` `/google/reviews`, `num` 100,
+  never retried so a 5xx cannot start two paid runs), poll `GET /v1/runs/{id}` for at most ~60 s, a large result is
+  fetched from its `download_link` (https `*.monid.ai` only, the key is not sent). Reviews are normalized once into the
+  `google-maps` source's `collected.reviews` (`provider:'monid'`, `route`, `fetchedAt`, `googleReviewId`,
+  `ownerResponse`, `subratings`); a review that repeats a Places/SerpApi one (same review id or link, or same
+  contributor and exact words) is dropped, and a refresh REPLACES the whole earlier Monid set. The pass's own last try
+  lives in `collected.monid` (no raw answer is kept in coverage); reviews are fresh for 90 days (`MONID_MAX_AGE_MS`),
+  a failure waits a day, a timeout/429/5xx is retried by a later job, and a failure never fails the research. The
+  brief quotes the 30 longest Monid reviews and at most 40 of their photo lines; the rest stay stored. Photos of a
+  Monid review do not enter the Maps media. Cost ledger: `monid`/`google-reviews`, ceiling 1 cent (listed price
+  $0.00015). Monid's terms need written permission before this is turned on in production.
 - **Google Maps menu pictures in Research** (22/10/2026): users and admins run the same place job,
   source `google-maps` through SerpApi, independent of the official Google Places. When metadata is missing, it resolves
   Google place ID → photos overview, takes the Menu category actually returned → at most 20 menu pictures; no hard-coded
@@ -1942,7 +2029,9 @@ can still be read, running jobs stop at the next checkpoint with `paused` + `FEA
   the build still goes through `POST /api/sites` itself, keeping that door's permission/quota/template/site_design checks.
   The build receipt keeps `demoActionId`: an accepted failure of the current action does not re-provision on its own because of
   app/DB clock drift. Fill Retry keeps `timings.woRetryActionId` in the same `failed → queued` transaction; the same action does not
-  restart a fill that just failed, and does not create a brief for a site that has been replaced. A lost provision receipt may
+  restart a fill that just failed, and does not create a brief for a site that has been replaced. A recovery that interrupted
+  `applying` records `timings.lostFrom`; Create and Retry leave that row stopped even when no apply ID was saved,
+  because a write may have reached the site before its receipt was recorded. A lost provision receipt may
   replay the same `buildId` within the attempt limit; it is the same site, with no promise of exactly one POST. Dying after
   the fill is queued still follows the brief runner's lost-worker detection and needs a new Retry once failed.
   EmDash recognises WO through the link `site_creation.build_id` → `wo_build` before picking a model (callback
@@ -2291,12 +2380,12 @@ it waits for; a second, prefixed dsh on the same machine must set all five varia
 `HOST_DSH_ENV_FILE`, `HOST_DSH_GATEWAY`, `HOST_DSH_CONTAINER`, otherwise it keeps the first dsh's `dsh-passwords.env`.
 Details of each flag and the order for setting up a host: `packages/fleet/tracy-fleet-operation/dsh/HOST-DSH.md` §3.
 
-**Reading `ja-products` when the host's App is not installed there.** `releasesToken` in
+**Reading `joomlart-products` when the host's App is not installed there.** `releasesToken` in
 [`quickstart-releases.js`](apps/tracy-web/src/lib/quickstart-releases.js) still mints a token from the GitHub App when the App
-is installed on `ja-products` (production). Only when GitHub returns 404 for the installation query (`installationIdFor` returns
+is installed on `joomlart-products` (production). Only when GitHub returns 404 for the installation query (`installationIdFor` returns
 `null`: the App is configured but not installed on that repo, like a shard's own App) and
 `TRACY_RELEASES_GITHUB_TOKEN` is set, does it use that read-only token. GitHub 5xx, network errors, or an installed App whose token
-GitHub refuses to issue are still errors, and do not fall back to the token. Consequence worth knowing: if someone removes the App from `ja-products` on
+GitHub refuses to issue are still errors, and do not fall back to the token. Consequence worth knowing: if someone removes the App from `joomlart-products` on
 production while the token variable is set, tracy-web silently reads with the token. How to set up a shard's own App
 (permissions, org, the four GitHub variables, key rotation) is in the runbook
 [`shard-github-app.md`](docs/references/shard-github-app.md).
@@ -2518,12 +2607,18 @@ or when fewer than min(collected photos, 3) of the place's photos appear on the 
 `replace-image` row at save time; only when the template has nowhere for a testimonial does the plan write
 `unplaced:[{item:"reviews",reason}]`, and the reason goes into the check result for the reviewer.
 
-After demo QA, `opportunities-build/demo-look.js` captures every page QA read (at most 15) at 1440 and 390 via
-`POST /_host/capture`, cutting each image top to bottom (footer included), sending two pages per turn to the `vision` model (same door and same research cost ledger as WO image labels).
+After demo QA, `opportunities-build/demo-look.js` captures every page QA read (up to 165) at 1440 and 390 via
+`POST /_host/capture`, cutting each image from top to bottom (footer included). Ordinary captures keep their JSON response;
+vision uses the opt-in `vision-tiles/1` NDJSON stream. At most two routes travel in a capture request, while rendering and model calls
+run one page at a time. The vision path bounds each model request to four images and 4 MiB, acknowledges tiles only after a valid
+verdict, and stops at the run budget with unread pages reported. Cancelling a request aborts capture and releases its browser context
+before another page starts. A page and viewport count as inspected only when their complete image was decoded and included in a
+successful model call; partial coverage can retain real findings but cannot pass. The calls use the same vision door and research cost
+ledger as WO image labels.
 The model only names visible defects from a closed list (hard-to-read text, broken/badly cropped images, duplicated images, template
 leftovers, broken layout, mixed languages); it does not judge aesthetics. The result is the `looks-finished` check returned to the agent
 along with the other checks. With no model, over budget or a failed capture, the check records `looked:false` (or `partly` with `unlooked`
-per page) and the reason, without failing the build; the build is still `needs-review`.
+per page and viewport) and the reason, without failing the build; the build is still `needs-review`.
 
 The check runs in the background so the agent does not hold one request for minutes (24/10/2026): dsh calls the Apply door through the public
 origin, and Cloudflare cuts at ~100 s (524), while a whole-site check runs for several minutes. dsh's `tracy_demo check` sends
@@ -2593,3 +2688,15 @@ re-run, and content, mail and publish state are unchanged. Custom policies and `
 loosened. A sync error returns a pre-translated, embeddable notice page before reading the CMS; the next turn
 retries. Regular visitors and hosts outside the system cause no configuration writes.
 
+
+
+### Foreign keys during Sync from live and database restore
+
+The merge disables foreign-key checks only in its scratch SQL session and copies foreign-key
+metadata when taking a whole table. Restore captures outgoing constraints of replaced tables and
+incoming constraints from retained tables before the atomic rename. It temporarily drops that
+subset and recreates it in the site database with checks enabled. Cross-schema outgoing references
+keep their original target; inbound references from other databases are outside the site contract.
+The private site folder holds `.restore-foreign-keys.json` before any live FK DDL; interrupted-sync
+recovery and the next restore repair that graph before interpreting row checksums. A failed graph
+validation invokes the existing database/files rollback, and an incomplete rollback keeps its plan.

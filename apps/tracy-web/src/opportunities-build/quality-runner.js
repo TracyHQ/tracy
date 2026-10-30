@@ -87,7 +87,8 @@ export function createQualityDemoRunner(deps) {
           },
           ops: (await runtime()).settings,
           now,
-          editorial: quality.editorialFor({ action, lease, cookie, origin, checkAllowed, mode })
+          editorial: quality.editorialFor({ action, lease, cookie, origin, checkAllowed, mode }),
+          pictureLabels: deps.pictureLabels ?? null
         }).catch((error) =>
           error?.code === 'TEMPLATES_UNREADABLE' ? { error: 'TEMPLATES_UNREADABLE' } : Promise.reject(error)
         )

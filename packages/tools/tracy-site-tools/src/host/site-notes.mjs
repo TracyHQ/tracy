@@ -117,16 +117,22 @@ function oneLine(value) {
 
 /** Combining accents, built from code points. */
 const COMBINING = new RegExp(`[${String.fromCharCode(0x0300)}-${String.fromCharCode(0x036f)}]`, 'g')
+const D_STROKE_LOWER = new RegExp(String.fromCharCode(0x0111), 'g')
+const D_STROKE_UPPER = new RegExp(String.fromCharCode(0x0110), 'g')
+const CURLY_QUOTES = new RegExp(
+  `[${[0x201c, 0x201d, 0x2018, 0x2019].map((point) => String.fromCharCode(point)).join('')}]`,
+  'g'
+)
 
 /** A string compared the way a person reads it: case, accents and spacing do not count. @param {unknown} value */
 function loose(value) {
   return oneLine(value)
     .normalize('NFD')
     .replace(COMBINING, '')
-    .replace(/đ/g, 'd')
-    .replace(/Đ/g, 'D')
+    .replace(D_STROKE_LOWER, 'd')
+    .replace(D_STROKE_UPPER, 'D')
     .toLowerCase()
-    .replace(/["'“”‘’`]/g, '')
+    .replace(new RegExp(`["'\`${CURLY_QUOTES.source.slice(1, -1)}]`, 'g'), '')
     .replace(/\s+/g, ' ')
 }
 

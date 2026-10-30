@@ -51,7 +51,16 @@ const PROVEN_SINCE = {
   // JA Boxing 1.0.4 (25/10/2026): alt text and the preview's ?theme= only, the same row and the same proof
   'quickstart/ja-boxing/j6@1.0.4': { footer: true },
   // JA Boxing 1.0.5 (27/10/2026): an empty footer column is not drawn, the same row and the same proof
-  'quickstart/ja-boxing/j6@1.0.5': { footer: true }
+  'quickstart/ja-boxing/j6@1.0.5': { footer: true },
+  // JA Boxing 1.0.6 (27/10/2026): phone and tablet layout rules only, the same row and the same proof
+  'quickstart/ja-boxing/j6@1.0.6': { footer: true },
+  // JA Boxing 1.0.7 (28/10/2026): the 1.0.6 installer byte for byte with a Slot fit contract, the same row and proof
+  'quickstart/ja-boxing/j6@1.0.7': { footer: true },
+  // JA Boxing 1.0.8 (29/10/2026): one ACM layout and one demo row (Private Training contact fields), the same row and proof
+  'quickstart/ja-boxing/j6@1.0.8': { footer: true },
+  // JA Cagox's first row (29/10/2026): measured on a site restored from 1.0.2 (1.0.1 with language keys and dated articles), the footer band and its logo are dark
+  'quickstart/ja-cagox/j6@1.0.1': { footer: true },
+  'quickstart/ja-cagox/j6@1.0.2': { footer: true }
 }
 
 /** `darkSpotsOf` as it read the table above. */
@@ -118,6 +127,10 @@ const problemsOf = (table) => profileTableProblems(table).join('\n')
 test('a clean darkSpots names T4 profiles of the row, the footer, and a proof sentence', () => {
   assert.equal(problemsOf(joomlaRow({ profiles: ['home-2'], footer: true, proof: 'home-2 lum 243' })), '')
   assert.equal(problemsOf(joomlaRow({ header: true }, { framework: 't3', profiles: undefined })), '')
+  assert.equal(
+    problemsOf(joomlaRow({ footer: true }, { framework: 't3', profiles: undefined, footerSlot: undefined })),
+    ''
+  )
 })
 
 test('darkSpots must be a non-empty object of known keys, each true or a profile of the row', () => {
@@ -143,7 +156,7 @@ test('darkSpots holds each spot to the framework that has it, and to Joomla', ()
   )
   assert.match(
     problemsOf(joomlaRow({ footer: true }, { footerSlot: undefined })),
-    /darkSpots.footer .*no footerSlot/
+    /darkSpots.footer .*no footerSlot and is not T3/
   )
   assert.match(
     problemsOf(joomlaRow({ footer: true }, { logos: 'dark' })),

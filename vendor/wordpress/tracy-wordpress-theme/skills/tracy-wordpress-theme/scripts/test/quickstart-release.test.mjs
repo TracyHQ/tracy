@@ -219,7 +219,7 @@ function fixture({ exceptions = null, pages = [{ id: 'home', path: '/' }], id = 
   }
   f.currentSource = { ok: true, fingerprint: f.sweep.sourceFingerprint }
   f.readSource = () => f.currentSource
-  f.o = () => ({ pack, readSource: f.readSource, behaviourSweep: f.sweepFile, out: f.out, parity: f.parity, restoreReport: f.restore, runRoot, spec, themeZip, visualLedger: f.ledger, checkpoint: f.line.run, contractBind: f.contractBind, repo: 'JoomlArt-Products/ja-products', admin: 'tracyagent' })
+  f.o = () => ({ pack, readSource: f.readSource, behaviourSweep: f.sweepFile, out: f.out, parity: f.parity, restoreReport: f.restore, runRoot, spec, themeZip, visualLedger: f.ledger, checkpoint: f.line.run, contractBind: f.contractBind, repo: 'JoomlArt-Products/joomlart-products', admin: 'tracyagent' })
   return f.write()
 }
 

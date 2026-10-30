@@ -54,14 +54,14 @@ TCH's `contracts` gate and the upload script also refuse such a pack.
 
 ## 2. Choose the path (do this before anything else)
 
-Before reading the release: do **section 3a** (shared variables, tools, the `ja-products` worktree, `PRODUCT`).
+Before reading the release: do **section 3a** (shared variables, tools, the `joomlart-products` worktree, `PRODUCT`).
 Per-version variables — **section 3b** (`VER`, `CID`, `PACK`, `PACK_SHA`) — are set right after choosing the path here.
 
 Read the currently released version:
 
 ```bash
 REL_SETTING="$WORK/release-now/tracy_setting.json"
-gh release download "$REL" -R JoomlArt-Products/ja-products -p tracy_setting.json -D "$WORK/release-now" --clobber
+gh release download "$REL" -R JoomlArt-Products/joomlart-products -p tracy_setting.json -D "$WORK/release-now" --clobber
 node -p 'const s = require(process.argv[1]); JSON.stringify({ version: s.version, install: Object.keys(s.install || {}) })' "$REL_SETTING"
 ```
 
@@ -94,16 +94,16 @@ git -C "$TCH_HOME" ls-tree -d origin/develop "packages/cms/tracy-joomla-quicksta
 Rows that produce a new pack (installer; snapshot pack missing agent docs): run the `ls-tree` command again with
 `<release version + 1 patch>`.
 
-Check the agent docs of a snapshot pack (in the `ja-products` worktree at latest `main` — section 3a; the checker
+Check the agent docs of a snapshot pack (in the `joomlart-products` worktree at latest `main` — section 3a; the checker
 compares against the clone's **working tree**):
 
 ```bash
-gh release download "$REL" -R JoomlArt-Products/ja-products -p "$REL_WEBROOT" -D "$WORK/release-now" --clobber
+gh release download "$REL" -R JoomlArt-Products/joomlart-products -p "$REL_WEBROOT" -D "$WORK/release-now" --clobber
 cd "$JAP" && ruby tools/quickstart_docs.rb check "$PRODUCT" "$WORK/release-now/$REL_WEBROOT"
 ```
 
 Exit 0 → complete. Exit 1 → "missing": the pack lacks the agent docs of **any part** whose source in
-`ja-products` has docs (template, blocks such as `mod_ja_acm`, framework, plugin) — exactly the scope the `check` command reports.
+`joomlart-products` has docs (template, blocks such as `mod_ja_acm`, framework, plugin) — exactly the scope the `check` command reports.
 
 After choosing the path: set section 3b. Full path: `VER` per the chosen row. Direct-capture path: `VER` = the
 release's version (`VER=$(node -p 'require(process.argv[1]).version' "$REL_SETTING")`).
@@ -134,7 +134,7 @@ Full path
 - [ ] Section 6: local Tracy creates a site from the pack; trial site + local release deleted; `.env` restored
 - [ ] Section 7: K1, K7, K4, K2+K3 `--pack`, K5, K6 pass 1, K8 (loop 7b down to exit 0, before the PR); contract placed locally
 - [ ] Section 8: `tch` PR · plugin version · file upload · Tracy pin · PR into `develop` (each stop point with a go)
-- [ ] Section 9: flip the switch · K2+K3 pass 2 · `ja-products` PR (when `github_release_url` still points at the installer) · K6 pass 2
+- [ ] Section 9: flip the switch · K2+K3 pass 2 · `joomlart-products` PR (when `github_release_url` still points at the installer) · K6 pass 2
 - [ ] Sections 11–12: clean up, run report
 
 Direct-capture path
@@ -171,8 +171,8 @@ WORK=<working folder — outside every repo; the requester says where>
 QC=<folder holding this SKILL.md>/scripts
 TCH_HOME=<main tch checkout on the machine>            # only to cut worktrees
 CW_HOME=<main claude-cowork checkout on the machine>
-JAP_HOME=<main ja-products checkout on the machine>
-TCH_WT=<new tch worktree>  CW_WT=<new claude-cowork worktree>  JAP=<new ja-products worktree>
+JAP_HOME=<main joomlart-products checkout on the machine>
+TCH_WT=<new tch worktree>  CW_WT=<new claude-cowork worktree>  JAP=<new joomlart-products worktree>
 export TRACY_DEV_TCH=<tch checkout running the local Tracy>
 ```
 
@@ -181,7 +181,7 @@ Ruby must be able to run `quickstart_docs.rb`: Ruby 2.6 lacks `Array#filter_map`
 if `ruby -e 'require "rexml/document"'` fails, `gem install rexml --install-dir "$WORK/ruby-gems"` and
 run the checker with `GEM_PATH="$WORK/ruby-gems:$(gem env gempath)"`.
 
-The `ja-products` worktree at latest `main`, detached — the template's own branch (its name carries `VER`) is
+The `joomlart-products` worktree at latest `main`, detached — the template's own branch (its name carries `VER`) is
 created in section 9 step 4, before the first file edit:
 
 ```bash
@@ -375,6 +375,10 @@ path):
      `client-name`, `price`… per `apps/tracy-web/src/lib/fact-fields.json`) ask for evidence whatever the module is called —
      "Home - Stats" does not match `Statistics`, a hero has four counters. Without the flag the `contracts` gate is red for a new profile;
      for an already captured profile run `node scripts/regate-contract.mjs <profile folder>` BEFORE cutting the plugin (after that the bytes are pinned).
+   - `--whole-units` always for a new profile (spec #37 C1, C2): a heading, sentence or list item that the HTML helper cuts into
+     several text pieces becomes ONE slot on its element, and the rule tables group each link-list item (label and link) into one card.
+     Add `--role-vocabulary 3` only with the release that moves the template to `place-content-roles/3` (it writes `article.title`,
+     `editorial.navigation_url` and `editorial.illustration`, and derives `customize` from the role); the default stays 2.
    - `--file-roots`: `templates/$TPL` + the template's own framework code (`plugins/system/t4` or
      `plugins/system/t3`) + `modules/mod_ja_acm` + `media`, only folders that actually exist in the pack's webroot:
 
@@ -464,9 +468,15 @@ path):
    cd "$TCH_WT" && node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
      --site "$VERIFY_URL" --contract "$P/$VER" \
      --db-dump "$PACK_DATABASE" --webroot "$WORK/chup/webroot" \
-     --out "$WORK/coverage" --write
+     --out "$WORK/coverage" --write --fit
    ```
 
+   `--fit` measures **Slot fit** ([ADR 0039](../../../docs/adr/0039-slot-fit-lives-in-content-map.md)) in the same
+   crawl and writes it into `content-map.json` before the coverage file: each picture slot's kind, box per viewport,
+   aspect and whether its demo file is transparent, each text slot's characters and lines per viewport. It also sets
+   each picture's `customize: "keep"` from its kind (kept: icon, logo, avatar, signature, cut-out, decoration, map;
+   replaceable: photo, video still). Never edit `fit` by hand; read the `slotFit` summary in the JSON line (kinds,
+   kept count, `cutouts`) and look at any kind that surprises you in the report before committing.
    It writes `content-coverage.json` next to the contract (committed with the contract) and `"$WORK/coverage/report.html"` (screenshots
    with holes circled, **not committed**). The same scan also checks **page hygiene**: raw language
    constants (`TPL_FOLLOW_US`, `COM_FINDER_…` in text or in `aria-label`/`placeholder`/`title`),
@@ -476,6 +486,28 @@ path):
    `packages/cms/tracy-quickstart-tools/content-coverage/hygiene-rules.json`, thresholds in
    `apps/tracy-web/src/lib/content-coverage/policy.json` (changed only by a product owner decision).
    Exit 0 = pass. Exit 1 = holes or page problems remain → **section 7b**.
+   **You are the label judge** (no model, no key). The audit writes `"$WORK/coverage/label-judge/request.json"` for the
+   slots without a cached verdict (`labelJudge.reason` is `AWAITING_AGENT`; no file means nothing to judge):
+   1. Read the request top to bottom: the question, the allowed verdicts and roles, the answer format, then per component
+      its `crop` (open the image; the slots are numbered on it) and its `slots` table. `alreadyJudged` is context only.
+   2. Judge each listed slot by key: `right`, or `wrong` with one `suggestedRole` and a short `why`. Write the answers to
+      `"$WORK/coverage/verdicts.json"` (`{"judgedBy": "agent", "slots": [...]}`).
+   3. `node packages/cms/tracy-quickstart-tools/content-coverage/record-judge.mjs --request "$WORK/coverage/label-judge/request.json" --verdicts "$WORK/coverage/verdicts.json"`.
+      It refuses the whole file on a missing, unknown or doubled key or a role outside version 3; fix and rerun.
+   4. Relabel every slot you marked wrong in `content-map.json` (a wrong fact/editorial group holds Publish for a new
+      release), run the audit again with `--write`, and answer the new request: only changed slots are asked again.
+   Slots never answered stay `not judged` and Road to live warns.
+   Then **look at the map on the real pages** with the verify viewer (needs the `--fit` map written above; the contract is read
+   from the tree for the version you are cutting):
+
+   ```bash
+   node packages/cms/tracy-quickstart-tools/content-coverage/verify-viewer.mjs \
+     --site "$VERIFY_URL" --template ja-boxing/j6 --version "$VER" --out "$WORK/verify"
+   ```
+
+   Open `"$WORK/verify/index.html"` (not committed). Fix every slot under *Not located* or *Not shown* that a visitor can see,
+   and judge each red or amber slot by eye; the tool marks, a person decides. Details: the tools README, section
+   `verify-viewer.mjs`.
    Re-capturing the contract means **measuring again**: the file records the sha256 of `content-map.json` and `presentation-lock.json`; a
    mismatch makes /ops treat it as not measured.
 8. **Slot roles (in `content-map.json`)** — there is no sidecar: every text and image slot carries `role` and `group`, and the
@@ -507,7 +539,7 @@ a second PR after the gate goes red.
    again. A `lock: locked` hole is still a hole: the lock is only for real presentation; demo content that is locked cannot be
    changed by the customer → the rule must declare it as a slot (a declared slot is carved out of the lock automatically).
 3. **`template`** (text hard-coded in a template file / language file) and **every page hygiene problem**: fix in the
-   **template source** in `ja-products`, build the **next quickstart version** (same pack shape as the released version,
+   **template source** in `joomlart-products`, build the **next quickstart version** (same pack shape as the released version,
    see the lessons below), and capture the contract again on that version. The template's language strings (`TPL_…`) are declared through
    Joomla's **language override** (the template language-string capture rule); do not edit the template's ini files.
 4. **`core`**: Joomla / framework strings, do nothing.
@@ -555,7 +587,7 @@ a second PR after the gate goes red.
 Each outward-facing action is a stop point waiting for a go. Order (full path): `tch` PR (step 1) → Claude
 Cowork plugin version carrying the contract → **upload the files** → Tracy pins → `tch` PR into `develop` → section 9 (flip the switch). The upload goes
 **before** pinning because Tracy pins webroot + database together with `githubAssetId` — that number exists only after the file is on the
-release; `ja-products` is a private repo, and Tracy can only download files that have a `githubAssetId` (downloaded through the API, with a
+release; `joomlart-products` is a private repo, and Tracy can only download files that have a `githubAssetId` (downloaded through the API, with a
 token). Customers see nothing until the switch is flipped: the template card changes version according to `tracy_setting.json`.
 
 Direct-capture path: **no file upload** — the pack files and `githubAssetId` are already on the release. Order: `tch` PR
@@ -571,7 +603,7 @@ PR into `develop`). Done when the `tch` PR into `develop` is merged and Tracy de
 
 After section 8: do section 9 in the same file
 [`references/ship-and-release.md`](references/ship-and-release.md) — full path steps 1–5
-(flip the switch, K2+K3 pass 2, `ja-products` PR, K6 pass 2); direct-capture path only step 5 (K6 pass 2);
+(flip the switch, K2+K3 pass 2, `joomlart-products` PR, K6 pass 2); direct-capture path only step 5 (K6 pass 2);
 batch per the batch schedule. Never on production.
 
 ## 10. Stop points
@@ -589,7 +621,7 @@ batch per the batch schedule. Never on production.
 | Upcoming Cowork plugin version (section 7) | the requester gives the number |
 | K8 red in class `template` / `unknown` or a page hygiene problem (fix in the template, release the next version); next pack's shape differs from the released version's (sections 7b, 7c) | report |
 | Commit / `tch` PR; merge + `claude-cowork` release; file upload; `tch` PR into `develop` (section 8) | a go |
-| Flip the switch; `ja-products` PR (section 9, full path); K6 pass 2 (section 9 step 5, both paths) | a go |
+| Flip the switch; `joomlart-products` PR (section 9, full path); K6 pass 2 (section 9 step 5, both paths) | a go |
 | Any unforeseen error; a hook or permission blocking a command — **never work around it** | report |
 
 Report briefly: which step you stopped at · what you saw (with command + result) · how many options there are · which one you propose.

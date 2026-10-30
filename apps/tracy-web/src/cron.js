@@ -37,6 +37,7 @@ import { readSweep, recordSweepEnd, recordSweepStart } from './inventory/store.j
 import { startBuildAtDoor } from './lib/build-door.js'
 import { DELETE_BRIEF_OF_GONE } from './lib/site-brief-row.js'
 import { kickReadiness, startReadinessJob } from './lib/customize-readiness.js'
+import { kickBlurbTranslations, startBlurbTranslationJob } from './lib/template-blurb-translations.js'
 import { kickDsReadiness, startDsReadinessJob } from './lib/design-system-readiness.js'
 import { sweepDemos } from './lib/demo-sites.js'
 import { settleEndedBuilds } from './opportunities-build/builds.js'
@@ -1387,11 +1388,15 @@ export function start(
   // system check (`lib/design-system-readiness.js`, ADR 0031) follows on its own sweep.
   startReadinessJob()
   startDsReadinessJob()
+  // The blurb translations of the public Templates pages (`lib/template-blurb-translations.js`) are
+  // written on the master only: a shard reads them inside the master's `GET /api/templates`.
+  if (config.deploymentRole !== 'shard') startBlurbTranslationJob()
   const releases = setInterval(() => {
     refreshReleases(pool, config, { fetchImpl, log })
       .then(() => {
         kickReadiness(pool, config, { fetchImpl, log })
         kickDsReadiness(pool, config, { fetchImpl, log })
+        kickBlurbTranslations(pool, config, { fetchImpl, log })
       })
       .catch((error) => log.error('[cron] releases refresh failed', error))
   }, RELEASES_MS)
@@ -1402,6 +1407,7 @@ export function start(
     .then(() => {
       kickReadiness(pool, config, { fetchImpl, log })
       kickDsReadiness(pool, config, { fetchImpl, log })
+      kickBlurbTranslations(pool, config, { fetchImpl, log })
     })
     .catch((error) => log.error('[cron] first releases refresh failed', error))
 

@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-1739-retry-qa-before-submit",
+  "kind": "fix",
+  "title": "A client-send Retry waits for its own submission and create receipt before judging previous failures",
+  "pr": 1739,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["any"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "Finish an accepted client-send action, then accept an explicit Retry on its existing site and chat.",
+    "Leave failed QA with eight checks on the shared build; run the scheduler before prepare and again before the browser submits the new brief.",
+    "Submit the Retry and inspect its QA, baseline and native request reservation.",
+    "Leave a failed provision receipt owned by the previous action and poll before the new provision.start; then record a failed create receipt for the new action and poll again."
+  ],
+  "expect": [
+    "The newly accepted action stays queued in both scheduler windows; no server prompt or duplicate site is created.",
+    "The new request keeps the untouched baseline, resets attempts and human acceptance, and carries no previous check job or verdict.",
+    "The prior action's failed provision cannot close the new submitted Retry; a failed create receipt for this action still closes it."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/opportunities-build/client-demo.js apps/tracy-web/test/website-opportunities-demo-runner.test.mjs",
+    "door": "POST /api/website-opportunities/demo/actions/:id/chat/send"
+  },
+  "evidence": "Local round 41 on 27 October 2026: a newly accepted Retry failed QA_NEEDS_REVIEW before its browser submitted the brief; the old build still held failed QA with eight attempts. PostgreSQL regression reproduces failed instead of queued before the fix.",
+  "fence": "reconcile requires this action's native submission before reading shared-build QA; send resets turn-owned QA atomically",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=client-send reserves real chat",
+      "apps/tracy-web/test/website-opportunities-demo-runner.test.mjs"
+    ],
+    "needs": ["postgres"],
+    "tests": [
+      "client-send reserves real chat and one native user request before provision; agent tools own install/check and server prompt stays zero"
+    ]
+  }
+}

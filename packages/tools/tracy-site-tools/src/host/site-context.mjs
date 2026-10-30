@@ -44,6 +44,7 @@ import {
 } from './site.mjs'
 // The Claude Cowork plugin's own search title and description keys, and the version that prints them.
 import { WP_SEO_META } from './wp-seo.mjs'
+import { callWriteTargets } from './comment-fence.mjs'
 
 /** The producer a context message names; also how an earlier one is found in the session log. */
 /**
@@ -2719,6 +2720,9 @@ export function buildsSite(call) {
   const operation = /** @type {{ operation?: unknown } | null} */ (args)?.operation
   return (
     operation === 'plan.save' ||
+    operation === 'plan.add' ||
+    operation === 'copy.write' ||
+    operation === 'copy.apply' ||
     operation === 'media.import' ||
     operation === 'check' ||
     operation === 'check.start'
@@ -2764,31 +2768,33 @@ function answerOf(text) {
 }
 
 /**
- * The events of the latest turn. 🔒 A BUILD'S CHECKS ARE ITS TURN'S (The Willow Nook local, build 13, 25/10/2026): each
- * Retry is a new build in the same conversation, which the server gives five checks again
- * (`state.build.qa.clientCheckAttempts`); counted over the conversation, build 13's first check read as its third.
- * A steer at turn-stopping adds a step to the same turn, so a build steered on keeps its count.
- * @param {readonly { type?: string, data?: any }[]} events
- */
-function latestTurn(events) {
-  const list = events ?? []
-  for (let i = list.length - 1; i >= 0; i -= 1) if (list[i]?.type === 'turn/start') return list.slice(i)
-  return list
-}
-
-/**
  * The checks a build's conversation has run, read off its log: how many answered a verdict, whether the latest passed,
  * and whether the server said none remain. A check still running (`DEMO_CHECK_RUNNING`) or refused is no verdict.
  * @param {readonly { type?: string, data?: any }[]} events - the session's events, oldest first.
  * @returns {{ checks: number, lastPass: boolean | null, exhausted: boolean }}
  */
+/**
+ * Only the latest turn spends the current build's check budget and contributes returning findings.
+ * @param {readonly { type?: string, data?: any }[]} events
+ */
+export function latestTurn(events) {
+  let start = 0
+  for (let i = (events?.length ?? 0) - 1; i >= 0; i--)
+    if (events[i]?.type === 'turn/start') {
+      start = i
+      break
+    }
+  return (events ?? []).slice(start)
+}
+
+/** @param {readonly { type?: string, data?: any }[]} events */
 export function buildChecks(events) {
   events = latestTurn(events)
   const calls = new Set()
   let checks = 0
   let lastPass = null
   let exhausted = false
-  for (const event of events ?? []) {
+  for (const event of latestTurn(events)) {
     if (event?.type === 'tool/call' && event.data?.name === 'tracy_demo') {
       let args = event.data.arguments
       if (typeof args === 'string')
@@ -2809,6 +2815,119 @@ export function buildChecks(events) {
     }
   }
   return { checks, lastPass, exhausted }
+}
+
+/**
+ * Every check verdict a build got, oldest first: the `tracy_demo` answers that carry `pass` (the same reading as
+ * `buildChecks`).
+ * @param {readonly { type?: string, data?: any }[]} events
+ * @returns {{ pass: boolean, checks?: { id?: string, pass?: boolean, detail?: unknown[] }[] }[]}
+ */
+export function checkVerdicts(events) {
+  const calls = new Set()
+  const out = []
+  for (const event of latestTurn(events)) {
+    if (event?.type === 'tool/call' && event.data?.name === 'tracy_demo') {
+      let args = event.data.arguments
+      if (typeof args === 'string')
+        try {
+          args = JSON.parse(args)
+        } catch {
+          continue
+        }
+      if (args?.operation === 'check' || args?.operation === 'check.start') calls.add(event.data.callId)
+    } else if (event?.type === 'tool/result' && calls.has(event.data?.message?.source?.callId))
+      for (const text of resultTexts(event.data.message.content ?? [])) {
+        try {
+          const answer = JSON.parse(text)
+          if (typeof answer?.pass === 'boolean') out.push(answer)
+        } catch {
+          // not a verdict
+        }
+      }
+  }
+  return out
+}
+
+/**
+ * What names a finding, never how much of it there is: a page, a record and its path, a selector, a file, a style.
+ * `looks-finished` is left out — a vision model words the same fault differently each time, so its findings have no
+ * identity to come back with.
+ */
+const FINDING_NAMES = [
+  'page',
+  'record',
+  'path',
+  'part',
+  'selector',
+  'file',
+  'style',
+  'declaration',
+  'viewport',
+  'src',
+  'text'
+]
+/** @param {string} check @param {unknown} detail */
+function findingKey(check, detail) {
+  if (check === 'looks-finished' || detail === null || typeof detail !== 'object') return null
+  const named = FINDING_NAMES.filter((k) => /** @type {Record<string, unknown>} */ (detail)[k] !== undefined)
+  if (named.length === 0) return null
+  return `${check}|${JSON.stringify(named.map((k) => [k, /** @type {Record<string, unknown>} */ (detail)[k]]))}`
+}
+/** @param {{ checks?: { id?: string, pass?: boolean, detail?: unknown[] }[] }} verdict */
+function findingsOf(verdict) {
+  /** @type {Map<string, { check: string, detail: Record<string, unknown> }>} */
+  const out = new Map()
+  for (const c of verdict?.checks ?? []) {
+    if (c?.pass !== false || typeof c.id !== 'string') continue
+    for (const d of c.detail ?? []) {
+      const key = findingKey(c.id, d)
+      if (key !== null) out.set(key, { check: c.id, detail: /** @type {Record<string, unknown>} */ (d) })
+    }
+  }
+  return out
+}
+
+/**
+ * The findings of a new verdict that an earlier check had and the check right before it no longer had: repaired,
+ * then undone. Local round 31 (25/10/2026, WordPress): native-structure went 9 → 3 → 9 → 9 → 3 findings across five
+ * checks while each repair of `looks-finished` (a darkened picture written into the block, an overlay colour in
+ * global styles) broke what the repair before had put back, and no answer said so; the build spent its eight checks.
+ * @param {readonly { type?: string, data?: any }[]} events - the log BEFORE the new verdict.
+ * @param {{ checks?: { id?: string, pass?: boolean, detail?: unknown[] }[] }} verdict - the new one.
+ * @returns {{ fixedAt: number, back: { check: string, detail: Record<string, unknown> }[] } | null} `fixedAt`: the
+ *   1-based number of the check that no longer had them.
+ */
+export function findingsCameBack(events, verdict) {
+  const before = checkVerdicts(events)
+  if (before.length < 2) return null
+  const now = findingsOf(verdict)
+  const last = findingsOf(before[before.length - 1])
+  const earlier = new Map()
+  for (const v of before.slice(0, -1)) for (const [k, f] of findingsOf(v)) earlier.set(k, f)
+  const back = [...now].filter(([k]) => !last.has(k) && earlier.has(k)).map(([, f]) => f)
+  return back.length === 0 ? null : { fixedAt: before.length, back }
+}
+
+/** The checks that guard the template as installed: a repair that breaks one is undone by putting the template back. */
+const GUARD_CHECKS = new Set(['native-structure', 'look-kept', 'css-intact'])
+
+/**
+ * What a verdict with findings that came back says first (`findingsCameBack`).
+ * @param {{ fixedAt: number, back: { check: string, detail: Record<string, unknown> }[] }} came
+ */
+export function cameBackNext(came) {
+  const shown = came.back
+    .slice(0, 6)
+    .map((f) => {
+      const where = [f.detail.page, f.detail.record, f.detail.path ?? f.detail.selector ?? f.detail.file]
+        .filter((x) => typeof x === 'string' && x !== '')
+        .join(' ')
+      return `${f.check}${where === '' ? '' : ` (${where})`}`
+    })
+    .join('; ')
+  const guards = came.back.some((f) => GUARD_CHECKS.has(f.check))
+  return `These came back after check ${came.fixedAt} had them repaired: ${shown}${came.back.length > 6 ? ` and ${came.back.length - 6} more` : ''}. A change made since check ${came.fixedAt} undid them — put that change back as it was before you repair anything else.${guards ? " native-structure, look-kept and css-intact keep the template as installed: never repair another failure by changing a block's markup, adding a colour or editing a stylesheet the template loads; words over a photo get a calmer photo or another crop of it." : ''}`
 }
 
 /**
@@ -2846,9 +2965,48 @@ export function changedSinceCheck(events) {
     (event, i) =>
       i > lastVerdict &&
       event?.type === 'tool/call' &&
-      (changesSite(event.data) || (buildsSite(event.data) && !checks.has(event.data?.callId))) &&
+      (changesSite(event.data) ||
+        servesAgain(event.data) ||
+        shellWrites(event.data) ||
+        (buildsSite(event.data) && !checks.has(event.data?.callId))) &&
       settled.get(event.data?.callId) === true
   )
+}
+
+/**
+ * An EmDash site served again after its code changed: `site.rebuild` or `site.restart`, and a shell or file write
+ * before it (local round 35, 26/10/2026: an EmDash build edited three views under /app, restarted, and its check was
+ * answered "nothing changed" twice).
+ * @param {{ name?: unknown, arguments?: unknown } | undefined} call
+ */
+function servesAgain(call) {
+  if (call?.name !== 'tracy_site_build_emdash') return false
+  let args = call.arguments
+  if (typeof args === 'string')
+    try {
+      args = JSON.parse(args)
+    } catch {
+      return false
+    }
+  const op = /** @type {{ operation?: unknown } | null} */ (args)?.operation
+  return op === 'site.rebuild' || op === 'site.restart'
+}
+
+/**
+ * A shell command that writes a file (`callWriteTargets`), wherever: a site's files changed under the check.
+ * @param {{ name?: unknown, arguments?: unknown } | undefined} call
+ */
+function shellWrites(call) {
+  if (call?.name !== 'bash' && call?.name !== 'shell') return false
+  let args = call.arguments
+  if (typeof args === 'string')
+    try {
+      args = JSON.parse(args)
+    } catch {
+      return false
+    }
+  const targets = callWriteTargets({ name: String(call.name), args, cwd: '/', siteRoot: '/' })
+  return Array.isArray(targets) && targets.length > 0
 }
 
 /** What a check asked with nothing changed since the last one answers instead of running (`changedSinceCheck`). */
@@ -2944,7 +3102,7 @@ export function checkAgainStep(events) {
  * Measured 24/10/2026 on a local stand: a WordPress build rewrote saved rows three times, then gave up.
  */
 export const PLAN_FROZEN_NEXT =
-  'A saved plan only grows: send plan.save again with every saved row unchanged at its index (read it with plan.read), and put the new work in rows appended after them, or in an image added to a row that had none.'
+  'A saved plan only grows, and only by its new part: tracy_demo {operation:"plan.add", rows:[<new rows, appended after the saved ones>], images:{"<rowIndex>":<image>}, tones:{"<rowIndex>":"dark"|"light"}} — never the saved rows again.'
 
 /** How many entries of one list a failed check shows the agent; the rest are counted (`checkAnswerForAgent`). */
 const CHECK_LIST_SHOWN = 12

@@ -7,8 +7,13 @@
  * `wp_safe_redirect` records where the visitor is sent. Every PHP warning or notice raised while a handler runs is recorded, and
  * each case asserts there were none.
  *
- * WHAT IT DOES NOT RUN. WordPress, a database (the clean-up's DELETE is not exercised: no `$wpdb`), a mail server, PHP's clock
- * across a window boundary.
+ * THE CLOCK IS THE CASE'S. The limits are fixed windows of `time()` (`intdiv(time(), $window)`), so on the real clock a case that
+ * straddles a ten-minute mark gets fresh places half-way (`[0, 1]` instead of `[0, 0]`, CI run 40716937675). `account.php` is
+ * therefore loaded inside a namespace whose `time()` answers the `now` each request is given: the theme's unqualified `time()`
+ * resolves there first, every other call falls back to the global stubs. A theme that stopped reading `time()` this way would not
+ * see the moved clock, and the cases that advance it would fail.
+ *
+ * WHAT IT DOES NOT RUN. WordPress, a database (the clean-up's DELETE is not exercised: no `$wpdb`), a mail server.
  */
 import assert from 'node:assert/strict'
 import path from 'node:path'
@@ -81,7 +86,7 @@ function home_url($p = '') { return 'https://site.test' . $p; }
 function add_query_arg($k, $v, $u) { return $u . '?' . $k . '=' . $v; }
 function wp_safe_redirect($u, $s = 302) { $GLOBALS['jr']['redirect'] = $u; return true; }
 function wp_mail($to, $subject, $body, $headers = []) { $GLOBALS['jr']['mails'][] = $to; return true; }
-function get_user_by($f, $v) { return $v === 'known@site.test' ? (object) ['user_login' => 'known'] : false; }
+function get_user_by($f, $v) { return $v === 'known@site.test' || preg_match('/^a[0-9]+@site\.test$/', $v) ? (object) ['user_login' => 'known'] : false; }
 function username_exists($v) { return false; }
 function email_exists($v) { return false; }
 function wp_insert_user($a) { $GLOBALS['jr']['users']++; return 42; }
@@ -98,17 +103,23 @@ function add_option($name, $value = '', $dep = '', $auto = true) {
 $GLOBALS['store'] = $in['store'];
 $_SERVER['REMOTE_ADDR'] = $in['ip'];
 $_POST = $in['post'];
-require $in['account'];
-$in['handler']();
+$GLOBALS['now'] = $in['now'];
+eval('namespace JmClock; function time() { return $GLOBALS[\'now\']; } ?>' . file_get_contents($in['account']));
+('JmClock\\' . $in['handler'])();
 `
 
-function request(base, n, { handler, post, ip = '203.0.113.7' }) {
+/** The start of a ten-minute window that is also the start of an hour; the cases run five minutes into it. */
+const WINDOW_START = 1_800_000_000
+const NOW = WINDOW_START + 300
+
+function request(base, n, { handler, post, ip = '203.0.113.7' }, now = NOW) {
   const out = run(
     PROBE,
     [],
     JSON.stringify({
       store: `${scratch}/store-${n}.json`,
       ip,
+      now,
       post,
       handler,
       account: path.join(php.root, base, 'wp-ja-restaurant/inc/groups/account.php')
@@ -152,6 +163,16 @@ for (const base of BASES) {
       mails += r.mails.length
     }
     assert.equal(mails, 1, 'one mail for four requests on the same address')
+    assert.equal(
+      request(base, n, remind('known@site.test'), WINDOW_START + 599).mails.length,
+      0,
+      'still the same window'
+    )
+    assert.equal(
+      request(base, n, remind('known@site.test'), WINDOW_START + 600).mails.length,
+      1,
+      'the next window mails again'
+    )
     assert.ok(
       answers.every((a) => a === answers[0] && a.endsWith('jm_notice=ok')),
       `same ok answer each time: ${answers}`
@@ -166,24 +187,42 @@ for (const base of BASES) {
 
   test(`${base}: one client cannot mail more than five addresses per window`, { skip: PHP_SKIP }, () => {
     const n = ++store
-    // every address is "known" for this case: the stub knows one, so count the places the client took instead
-    const answers = []
-    for (let i = 0; i < 7; i++) answers.push(request(base, n, remind(`a${i}@site.test`)).redirect)
-    assert.ok(answers.every((a) => a.endsWith('jm_notice=ok')))
+    // the stub knows every `a<i>@site.test`, so each request that took a place mails
+    const sent = []
+    for (let i = 0; i < 7; i++) {
+      const r = request(base, n, remind(`a${i}@site.test`))
+      assert.ok(r.redirect.endsWith('jm_notice=ok'), `same ok answer, mail or not: ${r.redirect}`)
+      sent.push(r.mails.length)
+    }
+    assert.deepEqual(
+      sent,
+      [1, 1, 1, 1, 1, 0, 0],
+      'five distinct addresses are mailed, the sixth and seventh are not'
+    )
     const known = []
     for (let i = 0; i < 2; i++) known.push(request(base, n, remind('known@site.test')).mails.length)
     assert.deepEqual(known, [0, 0], 'after five requests the client gets no mail, even for a known address')
     // another client is not held by the first one's count
     assert.equal(request(base, n, { ...remind('known@site.test'), ip: '198.51.100.9' }).mails.length, 1)
+    // the window ends: still held in its last second, five places again in the next one
+    assert.equal(
+      request(base, n, remind('a7@site.test'), WINDOW_START + 599).mails.length,
+      0,
+      'last second of the window'
+    )
+    const next = []
+    for (let i = 7; i < 13; i++)
+      next.push(request(base, n, remind(`a${i}@site.test`), WINDOW_START + 600).mails.length)
+    assert.deepEqual(next, [1, 1, 1, 1, 1, 0], 'the next window gives the client five places again')
   })
 
   test(`${base}: registration creates at most five accounts per client per hour`, { skip: PHP_SKIP }, () => {
     const n = ++store
     const results = []
     for (let i = 0; i < 7; i++) results.push(request(base, n, register(i)))
-    assert.equal(
-      results.reduce((s, r) => s + r.users, 0),
-      5
+    assert.deepEqual(
+      results.map((r) => r.users),
+      [1, 1, 1, 1, 1, 0, 0]
     )
     assert.ok(results.slice(0, 5).every((r) => r.redirect.endsWith('jm_notice=ok')))
     assert.ok(results.slice(5).every((r) => r.redirect.endsWith('jm_notice=error-limit')))
@@ -192,5 +231,9 @@ for (const base of BASES) {
       1,
       'another client still registers'
     )
+    assert.equal(request(base, n, register(20), WINDOW_START + 3599).users, 0, 'last second of the hour')
+    const next = []
+    for (let i = 21; i < 27; i++) next.push(request(base, n, register(i), WINDOW_START + 3600).users)
+    assert.deepEqual(next, [1, 1, 1, 1, 1, 0], 'the next hour gives the client five accounts again')
   })
 }

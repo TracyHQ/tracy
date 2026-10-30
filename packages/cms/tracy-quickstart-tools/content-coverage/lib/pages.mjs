@@ -5,6 +5,9 @@ const NOT_A_PAGE =
   /\.(pdf|jpe?g|png|gif|webp|avif|svg|ico|zip|rar|gz|mp4|webm|mp3|wav|docx?|xlsx?|pptx?|css|js|json|xml|txt)(\?|$)/i
 const NOT_PUBLIC =
   /\/administrator\b|[?&](task|format|tmpl|print|layout=edit|return)=|\/component\/(users|mailto|ajax)|logout/i
+// A shop listing re-sorted (VirtueMart `/by,<field>`, `/dirAsc`, `/dirDesc`, `?orderby=`) shows the same products in
+// another order, once per sort field and per filter: 90 of the 400 pages of one shop crawl were such re-sorts.
+const REORDERED = /\/by,[^/?#]*|\/dir(Asc|Desc)(\/|\?|$)|[?&]orderby=/i
 // Pagination (`?start=N`) and author pages are crawled: their intro images and author names are demo content too.
 // Menu item types that never render a page of their own.
 const NO_PAGE_TYPES = new Set(['alias', 'separator', 'heading', 'url'])
@@ -17,6 +20,7 @@ export class PagePlan {
     this.seen = new Set() // normalized request URLs
     this.byFinal = new Map() // normalized final URL -> page record
     this.skipped = []
+    this.offsite = [] // {url, landedOn}: requests that a redirect took to another host
     this.capReached = false
     for (const p of contract.pages) {
       if (NO_PAGE_TYPES.has(p.type)) {
@@ -35,7 +39,7 @@ export class PagePlan {
         })
         continue
       }
-      const url = new URL(`index.php?Itemid=${p.sourceId}`, this.site).href
+      const url = new URL(p.openAs ?? `index.php?Itemid=${p.sourceId}`, this.site).href
       this.seen.add(normHref(url, siteUrl))
       this.queue.push({ url, origin: 'map', mapPage: p })
     }
@@ -80,6 +84,22 @@ export class PagePlan {
     return null
   }
 
+  /**
+   * A same-host link can answer with a redirect to another host (a banner click, a web link): that
+   * page is not the site's, so it is recorded in `offsite` and never audited. True when it left.
+   */
+  leftSite(job, finalUrl) {
+    let host
+    try {
+      host = new URL(finalUrl).host
+    } catch {
+      return false
+    }
+    if (host === this.site.host) return false
+    this.offsite.push({ url: job.url, landedOn: finalUrl })
+    return true
+  }
+
   /** Queue the same-host page links found on a rendered page. */
   addLinks(hrefs, fromUrl) {
     for (const h of hrefs) {
@@ -92,7 +112,7 @@ export class PagePlan {
       if (u.host !== this.site.host || !/^https?:$/.test(u.protocol)) continue
       u.hash = ''
       const href = u.href
-      if (NOT_A_PAGE.test(href) || NOT_PUBLIC.test(href)) continue
+      if (NOT_A_PAGE.test(href) || NOT_PUBLIC.test(href) || REORDERED.test(href)) continue
       const key = normHref(href, this.site.href)
       if (this.seen.has(key) || this.byFinal.has(key)) continue
       this.seen.add(key)

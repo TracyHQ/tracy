@@ -984,6 +984,9 @@
   "sync.keptTable": "Die Fassung von Tracy wurde für diese ganze Tabelle behalten.",
   "sync.keptOrder": "Beide Sites haben die Reihenfolge dieser Einträge geändert. Die Reihenfolge von Tracy wurde behalten.",
   "sync.dropped": "Diese Kopie hat {count} Einträge Ihrer ursprünglichen Site nicht übernommen.",
+  "sync.notCarried": "Nicht von Ihrer ursprünglichen Site übernommen",
+  "sync.notCarriedTriggers": "Datenbank-Trigger ({names}). Eine Synchronisierung kopiert sie nicht; fügen Sie sie dieser Site selbst hinzu, wenn sie sie braucht.",
+  "sync.notCarriedTables": "Tabellen, die diese Kopie als eigene Logs behält und die sich auf Ihrer ursprünglichen Site geändert haben ({names}).",
   "sync.dropReason.addedBoth": "Beide Sites haben unter dieser Nummer einen Eintrag hinzugefügt. Der von Tracy wurde behalten.",
   "sync.dropReason.reference": "Er verweist auf einen Eintrag Ihrer ursprünglichen Site, der hier eine neue Nummer hat, und Tracy konnte ihn nicht anpassen.",
   "sync.failed": "Die Synchronisierung wurde nicht abgeschlossen ({error}). An dieser Kopie wurde nichts geändert.",
@@ -1063,6 +1066,7 @@
   "push.reason.phpUnchecked": "Konnte für die PHP-Version Ihrer Live-Site nicht geprüft werden",
   "push.reason.extensionFile": "Gehört zu einer Erweiterung und geht daher nur mit ihr",
   "push.reason.noDoor": "Für diese Einstellung gibt es noch keinen sicheren Weg zum Schreiben",
+  "push.reason.translationGroup": "Sprachen und welche Seiten Übersetzungen voneinander sind, werden noch nicht gesendet. Nehmen Sie diese Änderung in Polylang auf Ihrer Live-Site vor",
   "push.reason.phpDisabled": "PHP-files sind für Claude Cowork auf Ihrer Live-Site ausgeschaltet. Um sie zu senden, schalten Sie „Allow PHP in template files“ in den Optionen von Claude Cowork auf Ihrer site ein",
   "push.reason.phpDisabledWordpress": "PHP-files sind für Claude Cowork auf Ihrer Live-Site ausgeschaltet. Um sie zu senden, schalten Sie „Allow PHP in theme files“ unter Settings › Claude Cowork auf Ihrer site ein",
   "push.reason.templateFilesOff": "Template-files sind für Claude Cowork auf Ihrer Live-Site ausgeschaltet. Um sie zu senden, schalten Sie „Template files“ in den Optionen von Claude Cowork auf Ihrer site ein",
@@ -1209,5 +1213,14 @@
   "sync.error.interruptedKept": "Eine frühere Synchronisierung wurde durch ein Tracy-Update gestoppt, während sie Änderungen auf diese Kopie übertrug, und diese Kopie hat sich seitdem geändert. Tracy hat sie so gelassen. Um diese frühere Synchronisierung rückgängig zu machen, stelle den Sicherungspunkt „Before restore“ unter Backups wieder her und synchronisiere dann erneut.",
   "sync.error.liveUnreachable": "Tracy konnte Ihre ursprüngliche Site nicht lesen. An dieser Kopie wurde nichts geändert. Prüfen Sie, ob die Site online ist und Claude Cowork noch darauf installiert ist.",
   "sync.error.copyChanged": "Diese Kopie hat sich während der Synchronisierung geändert, daher wurde nichts übernommen. Versuche es erneut.",
-  "sync.error.noSpace": "Auf dem Server von Tracy war nicht genug Platz für diese Synchronisierung. An dieser Kopie wurde nichts geändert. Bitte kontaktiere uns."
+  "sync.error.noSpace": "Auf dem Server von Tracy war nicht genug Platz für diese Synchronisierung. An dieser Kopie wurde nichts geändert. Bitte kontaktiere uns.",
+  "sync.error.liveBlocked": "Deine Live-Site hat eine blockierte Antwort oder keine Engine-Antwort zurückgegeben. Prüfe Firewall und Bot-Schutz und erlaube Anfragen von Tracy.",
+  "sync.error.livePassword": "Deine Live-Site verlangt ein HTTP-Passwort. Erlaube Tracy den Zugriff auf den Claude-Cowork-Endpunkt ohne dieses Passwort und versuche es erneut.",
+  "sync.error.livePhpTooOld": "Deine Live-Site läuft mit PHP {php}. Claude Cowork braucht PHP {min} oder neuer. Bitte deinen Hoster, PHP zu aktualisieren, und versuche es dann erneut.",
+  "sync.error.livePhpTooOldPlain": "Deine Live-Site läuft mit einer PHP-Version, die für Claude Cowork zu alt ist. Bitte deinen Hoster, PHP zu aktualisieren, und versuche es dann erneut.",
+  "sync.error.liveRateLimited": "Deine Live-Site begrenzt Anfragen. Warte vor einem neuen Versuch; Tracy beachtet die Retry-After-Wartezeit.",
+  "sync.error.liveToken": "Deine Live-Site hat das Claude-Cowork-Token abgelehnt. Verbinde sie erneut mit ihrem aktuellen Token und versuche es erneut.",
+  "push.label.featuredImage": "Beitragsbild",
+  "push.label.pageTemplate": "Seiten-Template",
+  "push.label.altText": "Alternativtext"
 }

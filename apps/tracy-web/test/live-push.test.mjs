@@ -16,7 +16,7 @@ import { hostCall, hostJob } from '../src/host/client.js'
 import { mintSession } from '../src/lib/session.js'
 import { takeWriteLease, writeComponent } from '../src/sites/store.js'
 import { pushStageOf, previewOf } from '../src/sites/live-push-contract.js'
-import { failureDetailOf, stoppedAnswer } from '../src/sites/live-push.js'
+import { failureDetailOf, livePush, stoppedAnswer, view } from '../src/sites/live-push.js'
 
 const db = fileDb()
 before(db.open)
@@ -657,6 +657,33 @@ test('why a phase stopped: the detail, the inner sync’s, or a stopped step —
   assert.equal(stoppedAnswer({ output: '==> [1s] stage: writing\n' }), null)
 })
 
+test('a push stopped by a live PHP too old for Claude Cowork names both versions, in each phase', () => {
+  const at = new Date()
+  const row = { id: 'p', state: 'failed', created_at: at, updated_at: at, error: 'LIVE_PHP_TOO_OLD' }
+  // live-write.mjs's answer (webroot-live-push.sh `engine_refusal`) and the preview's inner sync.
+  const written = { ok: false, code: 'LIVE_PHP_TOO_OLD', php: '7.3.33', min: '7.4.0' }
+  const preview = {
+    ok: false,
+    code: 'LIVE_PHP_TOO_OLD',
+    sync: { ok: false, code: 'LIVE_PHP_TOO_OLD', read: written }
+  }
+  assert.deepEqual(view({ ...row, phase: 'apply', result: written }).php, { php: '7.3.33', min: '7.4.0' })
+  assert.deepEqual(view({ ...row, phase: 'preview', preview }).php, { php: '7.3.33', min: '7.4.0' })
+  const undone = view({
+    ...row,
+    error: null,
+    state: 'pushed',
+    phase: 'undo',
+    undo_error: 'LIVE_PHP_TOO_OLD',
+    undo: written
+  })
+  assert.deepEqual(undone.undoPhp, { php: '7.3.33', min: '7.4.0' })
+  // An Apply stopped after some writes: webroot-live-push.sh `finish` hands written.json on whole.
+  const partial = { ...written, state: 'partial', written: [{ id: 'file:a.css' }], pushId: 'p', sync: {} }
+  assert.deepEqual(view({ ...row, phase: 'apply', result: partial }).php, { php: '7.3.33', min: '7.4.0' })
+  assert.equal(view({ ...row, error: 'LIVE_BLOCKED', phase: 'apply', result: written }).php, null)
+})
+
 test('the contract helpers: stages from host steps, and a preview answer grouped by op', () => {
   assert.equal(pushStageOf('stage: comparing'), 'comparing')
   assert.equal(pushStageOf('reading the live site'), 'syncing')
@@ -1068,5 +1095,194 @@ test(
     const job = [...net.jobs.values()].find((j) => j.kind === 'webroot-sync')
     assert.equal(job.allowHeld, true)
     assert.equal('resumeSyncId' in job, false)
+  }
+)
+
+test('a preview capped at 500 items counts what Apply can write over the whole changeset', () => {
+  const conflicts = Array.from({ length: 500 }, (_, i) => ({
+    id: `article:${i + 1}`,
+    kind: 'article',
+    op: 'update',
+    title: `Article ${i + 1}`,
+    conflict: { reason: 'changed-on-both' }
+  }))
+  const p = previewOf({
+    items: conflicts,
+    itemsTotal: 501,
+    pushable: { add: 0, change: 1, remove: 0, files: 0, settings: 0, php: 0 },
+    conflictsTotal: 500
+  })
+  assert.deepEqual(p.change, [], 'the listed items are all conflicts')
+  assert.deepEqual(p.pushable, { add: 0, change: 1, remove: 0, files: 0, settings: 0, php: 0 })
+  assert.equal(p.liveChangedTotal, 500)
+  // A total the host did not send, or one below what is listed, falls back to the lists.
+  const old = previewOf({ items: [{ id: 'a', op: 'create' }], pushable: { add: -1, change: 'x' } })
+  assert.deepEqual(old.pushable, { add: 1, change: 0, remove: 0, files: 0, settings: 0, php: 0 })
+  assert.equal(old.liveChangedTotal, 0)
+})
+
+test('Apply is allowed when the one pushable item sits past the 500 the preview lists', opts, async () => {
+  const { pool } = db
+  const items = Array.from({ length: 500 }, (_, i) => ({
+    id: `article:${i + 1}`,
+    kind: 'article',
+    op: 'update',
+    group: 'change',
+    title: `Article ${i + 1}`,
+    liveId: i + 1,
+    fields: {},
+    conflict: { reason: 'changed-on-both', fields: ['title'] }
+  }))
+  const capped = {
+    ok: true,
+    state: 'ready',
+    platform: 'joomla',
+    limit: 200,
+    overLimit: true,
+    hasDeletes: false,
+    items,
+    itemsTotal: 501,
+    pushable: { add: 0, change: 1, remove: 0, files: 0, settings: 0, php: 0 },
+    conflictsTotal: 500,
+    unsupported: [],
+    unsupportedTotal: 0
+  }
+  const net = network({ answers: { ...ANSWERS, 'webroot-live-push-preview': capped } })
+  const { send, cookieFor } = harness(pool, net.fetchImpl)
+  await importedSite(pool)
+  const owner = await cookieFor('owner@x.y')
+  const p = await previewed(send, owner)
+  assert.deepEqual(p.preview.pushable, capped.pushable)
+  const applied = await send('POST', `/api/sites/${SITE}/push`, owner, { previewId: p.id })
+  assert.equal(applied.status, 202, applied.text)
+  // The Site changes row of the preview names the whole changeset's counts.
+  const { rows } = await pool.query(
+    "select detail from audit where action = 'site.push.preview.previewed' order by at desc limit 1"
+  )
+  assert.equal(rows[0]?.detail.change, 1)
+  assert.equal(rows[0]?.detail.liveChanged, 500)
+})
+
+test(
+  'a push still running when tracy-web restarts keeps its lease; once its job ends the lease goes (#123)',
+  opts,
+  async () => {
+    const { pool } = db
+    const net = network({ answers: ANSWERS })
+    net.running.add('webroot-live-push-preview')
+    const { send, cookieFor } = harness(pool, net.fetchImpl)
+    await importedSite(pool)
+    const owner = await cookieFor('owner@x.y')
+    const started = await send('POST', `/api/sites/${SITE}/push/preview`, owner)
+    assert.equal(started.status, 202, started.text)
+    // The restart: nobody renewed the lease for longer than it lives.
+    await pool.query(
+      "update site_write_lease set wrote_at = now() - interval '100 seconds' where site_key = $1",
+      [SITE]
+    )
+    // The new process picks up the running push at boot (`resumeOnStart`, here called directly).
+    const config = readConfig(env)
+    const again = livePush({
+      pool,
+      config,
+      host: { hostCall, hostJob },
+      fetchImpl: net.fetchImpl,
+      watchEveryMs: 0
+    })
+    assert.equal(await again.resume(), 1)
+    const chat = await takeWriteLease(pool, { siteKey: SITE, sessionId: 'chat-1', actor: 'owner@x.y' })
+    assert.equal(chat.ok, false, 'the chat may not write while the push job still runs')
+    // The job ends: the next boot's read settles the row and gives the lease back.
+    net.running.delete('webroot-live-push-preview')
+    assert.equal(await again.resume(), 1)
+    const { rows } = await pool.query('select state from site_push where site_key = $1', [SITE])
+    assert.equal(rows[0].state, 'previewed')
+    assert.equal(
+      (await takeWriteLease(pool, { siteKey: SITE, sessionId: 'chat-1', actor: 'owner@x.y' })).ok,
+      true
+    )
+  }
+)
+
+/** `net` whose first `lost` apply jobs the host lost (it restarted mid-write): `failed` with `orphanedAt`. */
+function losing(net, lost) {
+  return async (input, init) => {
+    const m = /\/_host\/jobs\/(.+)$/.exec(String(input))
+    const job = m && net.jobs.get(m[1])
+    if (job?.kind === 'webroot-live-push-apply') {
+      const order = [...net.jobs.entries()]
+        .filter(([, j]) => j.kind === job.kind)
+        .findIndex(([id]) => id === m[1])
+      if (order < lost)
+        return Response.json({
+          state: 'failed',
+          step: job.kind,
+          orphanedAt: new Date().toISOString(),
+          output: ''
+        })
+    }
+    return net.fetchImpl(input, init)
+  }
+}
+
+test(
+  'an Apply whose host job was lost is started again once with the same push id and ends pushed (#122)',
+  opts,
+  async () => {
+    const { pool } = db
+    const net = network({ answers: ANSWERS })
+    const { send, cookieFor } = harness(pool, losing(net, 1))
+    await importedSite(pool)
+    const owner = await cookieFor('owner@x.y')
+    const p = await previewed(send, owner)
+    const pushed = await send('POST', `/api/sites/${SITE}/push`, owner, {
+      previewId: p.id,
+      confirm: { php: true }
+    })
+    assert.equal(pushed.status, 202, pushed.text)
+    const first = await send('GET', `/api/sites/${SITE}/push`, owner)
+    assert.equal(first.body.push.state, 'running', 'started again, not failed')
+    const applies = [...net.jobs.values()].filter((j) => j.kind === 'webroot-live-push-apply')
+    assert.equal(applies.length, 2)
+    assert.deepEqual(
+      applies.map((j) => [j.pushId, j.previewId, j.confirm?.php]),
+      [
+        [p.id, p.id, true],
+        [p.id, p.id, true]
+      ],
+      'the same push, with what the Owner confirmed'
+    )
+    // The lease stays the push's while it runs again.
+    assert.equal(
+      (await takeWriteLease(pool, { siteKey: SITE, sessionId: 'chat-1', actor: 'owner@x.y' })).ok,
+      false
+    )
+    const done = await send('GET', `/api/sites/${SITE}/push`, owner)
+    assert.equal(done.body.push.state, 'pushed')
+    assert.equal(done.body.push.undoable, true)
+  }
+)
+
+test(
+  'an Apply lost twice ends interrupted, and Undo stays offered for what the journal may hold (#122)',
+  opts,
+  async () => {
+    const { pool } = db
+    const net = network({ answers: ANSWERS })
+    const { send, cookieFor } = harness(pool, losing(net, 2))
+    await importedSite(pool)
+    const owner = await cookieFor('owner@x.y')
+    const p = await previewed(send, owner)
+    assert.equal((await send('POST', `/api/sites/${SITE}/push`, owner, { previewId: p.id })).status, 202)
+    await send('GET', `/api/sites/${SITE}/push`, owner)
+    const ended = await send('GET', `/api/sites/${SITE}/push`, owner)
+    assert.equal(ended.body.push.state, 'failed')
+    assert.equal(ended.body.push.error, 'PUSH_INTERRUPTED')
+    assert.equal(ended.body.push.undoable, true)
+    assert.equal(
+      [...net.jobs.values()].filter((j) => j.kind === 'webroot-live-push-apply').length,
+      2,
+      'started again once, never more'
+    )
   }
 )

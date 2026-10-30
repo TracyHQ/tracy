@@ -33,7 +33,7 @@ test('quickstartAsset: the one `*-quickstart-x.y.z.zip` of a release, with its A
   assert.deepEqual(found, {
     name: 'ja-kinetic-j6-quickstart-1.0.0.zip',
     size: 55,
-    apiUrl: 'https://api.github.com/repos/JoomlArt-Products/ja-products/releases/assets/42',
+    apiUrl: 'https://api.github.com/repos/JoomlArt-Products/joomlart-products/releases/assets/42',
     sha256: sha('a')
   })
 })
@@ -82,7 +82,7 @@ const ENV = {
 }
 const TAG = 'quickstart/ja-kinetic/j6'
 const ZIP = 'ja-kinetic-j6-quickstart-1.0.0.zip'
-const ASSET_URL = `https://api.github.com/repos/JoomlArt-Products/ja-products/releases/assets/42`
+const ASSET_URL = `https://api.github.com/repos/JoomlArt-Products/joomlart-products/releases/assets/42`
 const BYTES = Buffer.from('PK\u0003\u0004 not really a zip, but exactly these bytes')
 const DOOR = '/api/quickstarts/ja-kinetic/j6/quickstart.zip'
 

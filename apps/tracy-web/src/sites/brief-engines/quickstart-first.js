@@ -26,6 +26,7 @@ import {
   reconcileQuickstartTemplateTitles
 } from './quickstart-template-metadata.js'
 import { quickstartContactFacts } from './quickstart-facts.js'
+import { quickstartFillInput, quickstartTextPins } from './quickstart-fill-copy.js'
 
 export const QUICKSTART_WORKFLOW = 'quickstart-first/1'
 /** A website page's words the editor reads: the model's input budget, not a cut of what is shown. */
@@ -117,7 +118,8 @@ export function quickstartSources(source, { researchOf = embeddedResearch } = {}
   for (const [key, value] of Object.entries(business)) add(`business.${key}`, value)
   add('profile.bio', profile.bio)
   add('profile.amenities', profile.googlePlace?.amenities)
-  for (const [n, review] of quickstartReviews(profile).entries()) add(`profile.reviews.${n}`, review)
+  for (const [n, review] of quickstartReviews(profile, source.brief).entries())
+    add(`profile.reviews.${n}`, review)
   // 🔒 Everything research collected of the place itself is a source (product owner, 26/10/2026): its website's pages, its
   // own posts, Google's rating and its social figures, each with where it came from.
   const pages = (researchOf(source)?.sources ?? [])
@@ -297,7 +299,7 @@ export function createQuickstartFirstEngine({
           ctx,
           business: prepared.source.brief.business,
           checkpoint,
-          reviews: quickstartReviews(prepared.source.profile_effective)
+          reviews: quickstartReviews(prepared.source.profile_effective, prepared.source.brief)
         })
         const result = {
           ...filled,
@@ -534,10 +536,13 @@ export function createQuickstartFirstEngine({
             })
       if (!resume && !photosOnlyRetry && !real?.pictures?.length)
         throw fail('QUICKSTART_PHOTOGRAPHS_REQUIRED')
+      // A v3 content map and a brief that links its photos: the fill plan decides the pictures and pins its words (#141).
+      const fill = resume || photosOnlyRetry ? null : await quickstartFillInput({ ctx, woContent, real })
       const photos =
         resume || photosOnlyRetry
           ? held['quickstart:pictures'].report
           : await placePictures({
+              fill,
               adapter,
               ctx,
               reader,
@@ -591,7 +596,7 @@ export function createQuickstartFirstEngine({
             base: reader.base,
             navigationFallback: true,
             bindings,
-            referenceUrls: quickstartReviews(prepared.source.profile_effective).map(
+            referenceUrls: quickstartReviews(prepared.source.profile_effective, prepared.source.brief).map(
               (review) => review.provenance.url
             )
           })
@@ -614,10 +619,13 @@ export function createQuickstartFirstEngine({
         pins: quickstartFactCopy(
           record,
           prepared.source.brief.business,
-          quickstartReviews(prepared.source.profile_effective)
+          quickstartReviews(prepared.source.profile_effective, prepared.source.brief)
         )
       }))
-      const pins = new Map(facts.map((f) => [f.key, f.pins]))
+      // The fill plan's words: each card's name its photo was chosen by, a claim without its demo number, a signer's
+      // name. The facts code pins win over them.
+      const filled = fill ? quickstartTextPins({ adapter, input: fill }) : null
+      const pins = new Map(facts.map((f) => [f.key, { ...filled?.pins.get(f.key), ...f.pins }]))
       const editable = adapter.records.map((record) => ({
         ...record,
         context: {
@@ -660,7 +668,7 @@ export function createQuickstartFirstEngine({
         ctx,
         business: prepared.source.brief.business,
         checkpoint,
-        reviews: quickstartReviews(prepared.source.profile_effective)
+        reviews: quickstartReviews(prepared.source.profile_effective, prepared.source.brief)
       })
       const identity = await quickstartIdentity({
         adapter,
@@ -687,12 +695,15 @@ export function createQuickstartFirstEngine({
         reviewFallback,
         links: { state: 'verified', receipts: linkReceipts },
         coverage: adapter.coverage ?? [],
-        reviewProvenance: quickstartReviews(prepared.source.profile_effective).map((review) => ({
-          author: review.author,
-          ...review.provenance
-        })),
+        reviewProvenance: quickstartReviews(prepared.source.profile_effective, prepared.source.brief).map(
+          (review) => ({
+            author: review.author,
+            ...review.provenance
+          })
+        ),
         needsVisualCheck: true,
-        baseline: baseline?.baseline ?? null
+        baseline: baseline?.baseline ?? null,
+        ...(filled ? { textSubstitutes: filled.substitutes } : {})
       }
       await checkpoint('fill', result)
       ctx.time('quickstartCopyFields', result.wrote)
@@ -747,7 +758,7 @@ export function createQuickstartFirstEngine({
         (report.photos.gaps ?? []).some(
           (gap) =>
             !report.photos.receipts?.some(
-              (receipt) => receipt.key === gap.groupId && receipt.kind === 'placeholder'
+              (receipt) => receipt.key === gap.groupId && receipt.kind !== 'photo'
             )
         )
       )

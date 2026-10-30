@@ -23,6 +23,7 @@ import { Hono } from 'hono'
 
 import { uploadReleaseAsset } from '../lib/release-assets.js'
 import { kickReadiness } from '../lib/customize-readiness.js'
+import { kickBlurbTranslations } from '../lib/template-blurb-translations.js'
 import { kickDsReadiness } from '../lib/design-system-readiness.js'
 import { readReleases, refreshReleases, RELEASES_REPO, releasesToken } from '../lib/quickstart-releases.js'
 import { packageOf, proposalFrom, readPackage } from '../lib/setting-proposal.js'
@@ -36,7 +37,7 @@ const SETTING_FILE = 'tracy_setting.json'
 /**
  * One release's asset bytes, fetched BY ID with this deployment's own token.
  *
- * By id rather than by browser address: `ja-products` is private, and the public
+ * By id rather than by browser address: `joomlart-products` is private, and the public
  * `/releases/download/…` address answers 404 to a token that is not a browser session. It is the
  * same road `quickstart.py` takes on a fleet host, for the same reason.
  */
@@ -179,6 +180,8 @@ export function quickstartSettingRoutes({ pool, config, fetchImpl = fetch }) {
     if (read.ok) {
       kickReadiness(pool, config, { fetchImpl })
       kickDsReadiness(pool, config, { fetchImpl })
+      // A new or reworded blurb is translated for the public Templates pages (master only).
+      kickBlurbTranslations(pool, config, { fetchImpl })
     }
     const [after] = (await readReleases(pool)).filter((r) => r.tag === t.release.tag)
     return c.json({

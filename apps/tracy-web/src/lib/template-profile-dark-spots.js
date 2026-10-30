@@ -6,7 +6,8 @@
  * Shape: `{ profiles?: string[], header?: true, footer?: true, proof?: string }`
  *   profiles  T4 only: site profiles (`etc/site/<name>.json`) whose header is dark; each must be one of the row's `profiles`
  *   header    T3 only: every template style's header is dark, whatever its title says
- *   footer    the footer image slot (`footerSlot`) sits on a dark background
+ *   footer    the footer logo sits on a dark background: the footer image slot (`footerSlot`), or on T3 the footer logo
+ *             a template style keeps in its params (`logofooterimage`, JA Cagox)
  *   proof     the demo logo that proved it (a light picture, mean luminance above 180 of 255)
  */
 
@@ -43,8 +44,10 @@ export function darkSpotsProblems(at, tag, row) {
       problems.push(`${at}: darkSpots.${flag} must be true (leave it out otherwise)`)
   if (spots.header !== undefined && row.framework !== 't3')
     problems.push(`${at}: darkSpots.header is a T3 style spot, but the row's framework is ${row.framework}`)
-  if (spots.footer !== undefined && typeof row.footerSlot !== 'string')
-    problems.push(`${at}: darkSpots.footer marks the footer logo dark, but the row has no footerSlot`)
+  if (spots.footer !== undefined && typeof row.footerSlot !== 'string' && row.framework !== 't3')
+    problems.push(
+      `${at}: darkSpots.footer marks the footer logo dark, but the row has no footerSlot and is not T3`
+    )
   if (spots.profiles !== undefined) {
     if (row.framework !== 't4')
       problems.push(`${at}: darkSpots.profiles is a T4 spot, but the row's framework is ${row.framework}`)

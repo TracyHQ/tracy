@@ -361,13 +361,24 @@ with `/v1` (`tasks/todo-api-public.md` S8); `manifest_design`, `wrote_by` do not
 - **Bounded exceptions for the checkers.**
   - The `look-kept` gate (tracy-host `demo-qa.js`) allows exactly the accent tokens at exactly the values the server gave
     (`accentTokens`); any other value or any other `--ds-c-*` token is still a look change and fails.
-  - The `OFF_PALETTE_COLOR` warning of `tracy_site` and `tracy_design_check` still reports these values (the checker does
-    not know the brief); the build step's instructions say this is known and to leave it. Warning only, as in decision 5.
+  - The `OFF_PALETTE_COLOR` warning of `tracy_site` and `tracy_design_check` no longer reports the accent (27/10/2026,
+    option A): the checker does not know the brief, so its probe reads the accent role variables
+    (`--ds-c-accent`, its hover, pressed, on-accent and text roles) off the page root and counts their values as the
+    site's accent (`site-build-core` `design-check.mjs` `ACCENT_ROLES`). Only those roles: another `--ds-c-*` value
+    and any other colour are still reported. Setting the roles by hand stays held by `look-kept` on a demo and by the
+    Design system door on a customer site.
   - The "do not change colours" sentence in the brief (`brief.mjs`) must also state this exception for the
     quickstart-first path.
+- **Links (27/10/2026, option A, one rule for every template).** Links are the readable accent as text
+  (`--ds-c-accent-text`, `--ds-c-accent-text-hover`). They take the logo accent only when it reaches 4.5:1 (WCAG AA,
+  normal text) against every page ground the template paints, light and dark, as its slot contract records them
+  (`baseTokens`/`darkTokens` `--bg`, `apps/tracy-web/src/lib/ds-slot.js` `pageGroundsOf`). Otherwise, or with no
+  ground recorded, the links keep the template's own colour. The build's steps and the `look-kept` gate read the same
+  grounds, so the link tokens the build writes are exactly the ones the gate allows.
 - **Risk accepted.** A dark accent on a dark template (a forest-green button on a near-black page) can be hard to see even
-  though the text on the button still meets AA. There is no rule yet measuring contrast between the accent and the page
-  background; reviewing the demo is where it is caught.
+  though the text on the button still meets AA: the link rule above measures links, not the button fill against the
+  page; reviewing the demo is where that is caught. A side of the page the slot contract does not record (a template
+  whose switch has a second side measured nowhere) is not measured either.
 - **Unchanged.** The door for changing a colour for customers (`theme.palette`) stays outside `APPLY_RULES`; this section
   is only the Website Opportunities demo build step.
 

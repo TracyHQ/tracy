@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-1739-isolated-php-front-page",
+  "kind": "fix",
+  "title": "A rendering isolated PHP quickstart is not refused because host probe roads are unavailable",
+  "pr": 1739,
+  "area": "fleet/provision",
+  "cms": ["jo", "wp"],
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {
+    "files": "packages/fleet/tracy-fleet-operation/scripts/lib/front-page.sh"
+  },
+  "steps": [
+    "Make DNS and host port unavailable while the exact isolated site web container renders HTTP 200.",
+    "Repeat with a server error, wrong container identity and unsuccessful or malformed internal curl."
+  ],
+  "expect": [
+    "Only a verified running web container for the exact compose project may supply fallback HTTP evidence.",
+    "Previously received 5xx is never hidden; unknown identity, failed exec and malformed HTTP remain refused."
+  ],
+  "evidence": "Local pr1739-joomla57 provisioning failed despite internal and public HTTP 200; source fallback run inside tracy-host now returns 200.",
+  "fence": "Fallback pins docker exec to an inspected full container ID and passes fixed curl arguments without a shell.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/front-page.test.mjs"
+    ],
+    "tests": [
+      "an isolated PHP site is probed inside its verified running web container",
+      "an unverified container cannot supply health evidence",
+      "missing curl, failed exec and malformed HTTP output remain unavailable"
+    ]
+  }
+}

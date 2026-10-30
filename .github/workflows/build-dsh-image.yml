@@ -324,7 +324,7 @@ jobs:
           #
           # Measured 08/09, twice: `pnpm dsh:build` died with
           #   Cannot find package '@jridgewell/gen-mapping' imported from
-          #   vendor/tracy/deepseek-harness/packages/typert/generator/lib/types/emitter.js
+          #   the generated typert emitter (the output layout at that time)
           # with the root `node_modules` gone and the submodule's present but incomplete. It reads
           # like a missing dependency and is not one — the lockfiles are fine; the tree on disk is
           # a mixture of two installs. `--frozen-lockfile` does not repair it, and the first time it

@@ -24,9 +24,8 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..')
 const tracked = execFileSync('git', ['ls-files', '-z'], { cwd: root, encoding: 'utf8', maxBuffer: 64 << 20 })
   .split('\0')
   .filter(Boolean)
-// The public export has no journal: a journal entry stands in as a tracked file, as in the private repo.
-const JOURNAL =
-  tracked.find((f) => /^tasks\/nhat-ky\/\d{4}-.+\.md$/.test(f)) ?? 'tasks/nhat-ky/2026-10-09-x.md'
+// A tree without a journal entry yet: one stands in as a tracked file.
+const JOURNAL = tracked.find((f) => /^changes\/\d{4}-.+\.md$/.test(f)) ?? 'changes/2026-10-09-x.md'
 const allFiles = tracked.includes(JOURNAL) ? tracked : [...tracked, JOURNAL]
 const dependencies = workspaceDependencies(root, allFiles)
 const readText = repoReader(root)

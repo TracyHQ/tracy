@@ -11,7 +11,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 
-import { apiDoors, engineReply, isEngineAnswer } from '../src/host/doors.mjs'
+import { afterPhpNotices, answerKind, apiDoors, engineReply, isEngineAnswer } from '../src/host/doors.mjs'
 
 test('the front door comes first, the administrator door second', () => {
   assert.deepEqual(apiDoors('https://example.com'), [
@@ -75,4 +75,47 @@ test('a page of HTML is not an engine reply', () => {
 
 test("Joomla's own JSON error for a guest is not an engine reply", () => {
   assert.equal(engineReply('{"error":true,"code":403,"message":"Forbidden"}'), null)
+})
+
+// PHP's notices in front of the engine's JSON (beta report, 27/10/2026: PHP 8.5, display_errors on).
+
+test('the engine reply after PHP notices is the engine reply; HTML or plain notices, one or several', () => {
+  const html =
+    '<br />\n<b>Deprecated</b>:  Function curl_close() is deprecated since 8.5, as it has no effect since PHP 8.0 in <b>/home/u1/Uploader.php</b> on line <b>53</b><br />\n{"ok":true,"part":1}'
+  assert.deepEqual(engineReply(html), { ok: true, part: 1 })
+  const plain =
+    '\nDeprecated: Function curl_close() is deprecated in /x/Uploader.php on line 53\nPHP Warning:  Undefined array key "a" in /x/Engine.php on line 9\n{"ok":false,"error":"read_failed"}'
+  assert.deepEqual(engineReply(plain), { ok: false, error: 'read_failed' })
+})
+
+test('only PHP notice lines are taken off, and what remains must be the engine', () => {
+  assert.equal(
+    engineReply('<b>Fatal error</b>: Allowed memory size exhausted in /x.php on line 3\n{"ok":true}'),
+    null
+  )
+  assert.equal(engineReply('Please wait on line 3\n{"ok":true}'), null)
+  assert.equal(
+    engineReply(
+      '<br />\n<b>Deprecated</b>:  x in <b>/a.php</b> on line <b>1</b><br />\n<html>Coming soon</html>'
+    ),
+    null
+  )
+  assert.equal(engineReply('Deprecated: x in /a.php on line 1\n{"error":true,"code":403}'), null)
+  assert.equal(afterPhpNotices('{"ok":true}'), null)
+})
+
+test('what came back instead of the engine is named by kind, never by its text', () => {
+  assert.equal(answerKind(''), 'empty')
+  assert.equal(
+    answerKind('<br />\n<b>Fatal error</b>: Allowed memory size of 134217728 bytes exhausted'),
+    'php_fatal'
+  )
+  assert.equal(
+    answerKind('<br />\n<b>Warning</b>:  x in <b>/a.php</b> on line <b>2</b><br />\n<html></html>'),
+    'php_notice'
+  )
+  assert.equal(answerKind('<!DOCTYPE html><html></html>'), 'html')
+  assert.equal(answerKind('{"error":true,"code":403}'), 'json')
+  assert.equal(answerKind('0'), 'json')
+  assert.equal(answerKind('Service unavailable'), 'text')
 })

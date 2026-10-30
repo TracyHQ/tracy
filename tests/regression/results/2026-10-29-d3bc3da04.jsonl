@@ -1,0 +1,1 @@
+{"id":"REG-PR-155-sync-security-cache-dropins","verdict":"PASS","commit":"d3bc3da04c6e849c365367997428513c0ce32878","ran_at":"2026-10-29T06:20:09.019Z","evidence":"tests/regression/.runs/2026-10-29-d3bc3da04/REG-PR-155-sync-security-cache-dropins.log"}

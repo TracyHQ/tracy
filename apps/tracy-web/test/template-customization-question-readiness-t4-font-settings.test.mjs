@@ -7,7 +7,7 @@
  *
  * Fixtures (`c/ja-trip-t4-font-settings/`, `c/ja-tour-t4-font-settings/`): css/tpl/theme.tpl.css,
  * css/language-fonts.css (byte for byte) and the T4 profile (reformatted by biome) of the JA Trip 1.0.5 and JA Tour 1.0.2
- * webroots (green packs of ja-products fix/published-joomla-templates-green, 12/10/2026). The woff2 files the replacements
+ * webroots (green packs of joomlart-products fix/published-joomla-templates-green, 12/10/2026). The woff2 files the replacements
  * load stand in with Be Vietnam Pro 400, which draws Vietnamese like the real cuts.
  */
 import assert from 'node:assert/strict'

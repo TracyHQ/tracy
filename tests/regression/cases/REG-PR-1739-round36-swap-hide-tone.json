@@ -1,0 +1,67 @@
+{
+  "id": "REG-PR-1739-round36-swap-hide-tone",
+  "kind": "fix",
+  "title": "Round 36's build faults: photos swapped in a block, nothing hidden, words on a placed photo judged with their tone, the copy writer's thinking off and its buttons knowing where they go, and checks that read a repeat or a renamed term as a visitor does",
+  "pr": 1739,
+  "area": "website-opportunities/agent-demo",
+  "cms": ["wp", "jo", "em"],
+  "needs": ["postgres"],
+  "flaky_model": false,
+  "steps": [
+    "S1: a WordPress block with an image block (srcset, wp-image-35, \"id\":35) and a background url(); blocks:{\"0\":{pictures:{…}}} with and without attachmentId.",
+    "S2: look.set {display:none}, {visibility:hidden}, {opacity:0}, {max-height:0px}, {color:transparent}, {display:block}, {opacity:0.85} in a build.",
+    "S3: copy.apply with an AMBIGUOUS that names no pair, a NOT_EDITABLE pair and a COMPONENT_BAD_RESPONSE; copy.write then copyWritten.",
+    "S4: dark words over a dark photo the build placed, unreadable at baseline over the template's photo; the same over the template's own photo.",
+    "S5: one photo behind a feature card and in a strip 2,300 px below; then 600 px below. Titles \"Happy Hour 1/2/3\" with a brief saying happy hour.",
+    "S6: a post row's list:tags fish → menus; an EmDash picture {id: ULID, alt}; a template picture no record holds; a record with its identity holding the picture.",
+    "S7: copy calls to api.deepseek.com and to openrouter.ai refusing the reasoning field; button blocks to /contact/, /investors, tel: and another site."
+  ],
+  "expect": [
+    "S1: the new path with origin kept, no srcset/sizes, wp-image-301 and \"id\":301; without attachmentId neither class nor id; words untouched.",
+    "S2: the five hiding values refused naming the gettext and block doors; the other two pass.",
+    "S3: the first again with all:\"page\", the second with all:true, the third under notPlaced; copy.write answers running at once, copyWritten polls to the pages.",
+    "S4: fails with fix image.tone \"light\"; over the template's own photo it keeps its exemption.",
+    "S5: far apart passes, near fails; the three numbered titles fail, \"Suite 12\" alone does not.",
+    "S6: pass; pass; in.setting names the setting road; in.swap names content.update blocks pictures.",
+    "S7: thinking {type:disabled}; reasoning {enabled:false} then asked again without it; to: /contact/, /investors, phone, another site."
+  ],
+  "selectors": {
+    "files": "packages/tools/tracy-site-tools/src/host/wp-blocks.mjs packages/tools/tracy-site-tools/src/host/build-fence.mjs packages/tools/tracy-site-tools/src/host/copy-apply.mjs packages/tools/tracy-site-tools/src/host/demo-lifecycle.mjs apps/tracy-host/src/demo-qa.js apps/tracy-host/src/demo-qa-browser.js apps/tracy-web/src/sites/agent-demo-inventory.js apps/tracy-web/src/opportunities-build/demo-copy.js apps/tracy-web/src/opportunities-build/agent-demo.js",
+    "dom": ""
+  },
+  "evidence": "Local round 36 (26/10/2026): WordPress 32 min, failed after 8 checks (19 blocks retyped for their photos, banner and \"Most Read\" hidden with display:none, a dark line on a dark placed photo unjudged); EmDash 26 min, passed at check 7 after 4 checks on {id, alt} pictures; Joomla 30 min, failed after 8 checks (copy JSON cut by the model's reasoning, far-apart repeats, \"Happy Hour 1/2/3\").",
+  "fence": "swapPictures; buildHide; copy-apply setAside/again; startCopy/copyWritten; placedUnder + tone fix; REPEAT_NEAR_PX; numbered titles; list:tags/list:categories; PICTURE_KEYS; PICTURE_SETTING_HINT + swap; noReasoningBody in askJson; button to",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-concurrency=1",
+      "--test-reporter=tap",
+      "packages/tools/tracy-site-tools/test/wp-blocks.test.mjs",
+      "packages/tools/tracy-site-tools/test/build-fence.test.mjs",
+      "packages/tools/tracy-site-tools/test/copy-apply.test.mjs",
+      "packages/tools/tracy-site-tools/test/demo-lifecycle.test.mjs",
+      "apps/tracy-host/test/demo-qa.test.mjs",
+      "apps/tracy-web/test/agent-demo-native-inventory.test.mjs",
+      "apps/tracy-web/test/wo-demo-copy.test.mjs",
+      "apps/tracy-web/test/wo-agent-demo.test.mjs"
+    ],
+    "tests": [
+      "{pictures} swaps a picture in a block — img, srcset, url() and its attachment — without retyping it",
+      "a look value that hides something is a build's refusal; one that shows or colours is not",
+      "an unnamed AMBIGUOUS goes again with all:\"page\"; a NOT_EDITABLE pair with all:true; others stay set aside",
+      "copy.write starts the copy tasks and answers at once; copyWritten polls them until they answer",
+      "contrast-readable judges words over a picture against the worst of what lies under them, at both widths",
+      "photos-fit skips carousel copies, sees a photo under words, and keeps the repeats the template has",
+      "no-demo-words: template titles differing only by a number fail even when the brief has their words",
+      "the baseline keeps each page's words in order, headings and buttons marked, forms and nav left out",
+      "a WordPress tag renamed is the same tag; a post given more tags differs",
+      "EmDash: a picture written as its library id with its alt is the same picture; another object is not",
+      "picturesWhere names the record and the WordPress block of each template picture, numbered as the outline is",
+      "a copy call switches the model's thinking off, and asks again without the field when a provider refuses it",
+      "a button keeps where it goes into the page tasks, shared or not, and the prompt says booking words need it",
+      "media.import on EmDash answers the library item’s id to write into a picture field"
+    ],
+    "needs": ["postgres"]
+  }
+}

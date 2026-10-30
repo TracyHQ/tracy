@@ -35,6 +35,19 @@ test('header-brand: the collected logo in the header passes; the name alone, or 
   )
   assert.equal(photo.detail[0].code, 'LOGO_NOT_IN_HEADER')
   assert.ok(CHECK_IDS.includes('header-brand'))
+  // Local round 35: on Joomla the first finding names where a T4 or T3 template keeps its logo, once.
+  const joomla = checkHeaderBrand(
+    [
+      page({ brand: brand({ text: 'Death & Co' }) }),
+      page({ path: '/menu', brand: brand({ text: 'Death & Co' }) })
+    ],
+    { ...withLogo, platform: 'joomla' }
+  )
+  // 28/10/2026: the agent's tool has no door to a T4 template's site settings; Tracy's sweep wears the logo there.
+  assert.match(joomla.detail[0].fix, /on Joomla T4 Tracy puts the business’s logo in the header itself/)
+  assert.doesNotMatch(joomla.detail[0].fix, /template\.siteSettings|mkdir|\bcp\b/)
+  assert.doesNotMatch(joomla.detail[1].fix, /Joomla T4/)
+  assert.doesNotMatch(nameOnly.detail[0].fix, /Joomla T4/)
 })
 
 test("header-brand: the sweep's fitted copy of the logo passes when the page read matches it to the logo", () => {
@@ -123,4 +136,23 @@ test('css-intact: a block stylesheet no longer loaded names the block that was r
     cssRules: { 'wp-content/themes/tracy/style.css': { rules: 9, page: '/' } }
   })
   assert.doesNotMatch(theme.detail[0].fix ?? '', /block/)
+})
+
+// Local measure 28/10/2026: the sweep wore Death & Co's logo on its Joomla T4 header under the brand writer's own
+// name, and the check still said the header showed no logo of the business.
+test("header-brand: the logo the sweep's brand writer wore counts, only once it is worn and only from its folder", () => {
+  const withLogo = {
+    ...asked({ name: 'Death & Co', logo: 'm-logo' }, { [LOGO]: '$logo' }),
+    platform: 'joomla'
+  }
+  const header = (src) => [page({ brand: brand({ images: [{ src: `http://x/${src}`, alt: '' }] }) })]
+  const worn = 'images/tracy-brand/logo-c703b88468adc5b4-sweep-logo-mvshdh23.png'
+  assert.equal(checkHeaderBrand(header(worn), { ...withLogo, logoWorn: true }).pass, true)
+  // Not worn by this build's sweep: a brand-writer file alone proves nothing.
+  assert.equal(checkHeaderBrand(header(worn), withLogo).detail[0].code, 'LOGO_NOT_IN_HEADER')
+  // Worn, but the header shows the template's own logo.
+  assert.equal(
+    checkHeaderBrand(header('images/joomlart/logo/logo.png'), { ...withLogo, logoWorn: true }).detail[0].code,
+    'LOGO_NOT_IN_HEADER'
+  )
 })

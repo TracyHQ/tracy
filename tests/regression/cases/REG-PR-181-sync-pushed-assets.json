@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-181-sync-pushed-assets",
+  "kind": "fix",
+  "title": "Joomla records a push created meet the copy's own assets on the next sync: no false asset_id conflicts",
+  "pr": 181,
+  "area": "sync/renumber",
+  "cms": ["jo"],
+  "needs": ["docker"],
+  "flaky_model": false,
+  "steps": [
+    "Run the real MariaDB merge case of pushed articles with assets numbered the other way round, and the seed case."
+  ],
+  "expect": [
+    "No asset_id conflict; each live asset maps to the copy's asset of the same article.",
+    "The id map holds only asset ids the copy has; a created article's seed names its asset."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "--test-name-pattern=#172",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-pushed.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-push-changeset.test.mjs"
+    ],
+    "tests": [
+      "Joomla: the assets of articles a push created meet the copy’s own assets, never a false conflict or an id the copy lacks (#172)",
+      "Joomla: an article the push creates seeds its asset to be aligned by name, so the next sync meets the copy’s own (#172)"
+    ]
+  }
+}

@@ -82,6 +82,7 @@ export function readStandaloneConfig(env) {
     jinaApiKey: opt(env, 'JINA_API_KEY'),
     rapidapiKey: opt(env, 'RAPIDAPI_KEY'),
     scrapeCreatorsApiKey: opt(env, 'SCRAPECREATORS_API_KEY'),
+    monidApiKey: opt(env, 'MONID_API_KEY'),
     woSocialRole: 'standalone',
     woSharedResearch: flag(env, 'WO_SHARED_RESEARCH', true),
     // Site checks read a homepage that refused Node again with Chrome's TLS fingerprint (`impit`); off by default.

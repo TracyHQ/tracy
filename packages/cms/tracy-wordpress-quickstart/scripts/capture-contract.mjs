@@ -30,6 +30,13 @@
  *     --release-manifest <manifest.json> --tag <release tag> --cowork-version <x.y.z>
  *     --contracts-root <dir> [--webroot-members <file listing the archive's paths>]
  *     [--previous-map <previous version's content-map.json>] [--unplaced-report <file>]
+ *     [--all-text] [--role-vocabulary 2|3]
+ *
+ * ALL VISIBLE TEXT (spec #37, issue #43): `--all-text` also makes a slot for every heading, paragraph, list item, button,
+ * table cell, cite and menu label that has no `metadata.name` (or repeats one), and a url slot for each link in them.
+ * Such a slot is addressed by position (`target.blockType` + `target.occurrence`, see `capture-all-text.mjs`); a named
+ * first block keeps its name key and target. Off by default so every released profile re-captures byte for byte.
+ * `--role-vocabulary 3` writes version 3 roles (default 2), as the Joomla capture does.
  *
  * SLOT ROLES (ADR 0038): every text and image slot of the map carries a `role` and a `group`. A recapture passes the
  * previous version's content map as --previous-map: a slot whose key AND sample are unchanged keeps its role and group
@@ -43,6 +50,7 @@ import { fileURLToPath } from 'node:url'
 import { readDump, tableRows, wordpressPrefix } from '../../tracy-quickstart-tools/mysqldump.mjs'
 import { setBlockValue } from '../../tracy-seeder/src/apply-wordpress-contract.mjs'
 import { proposeContentMapRoles } from '../../../../scripts/slot-roles/rule-tables.mjs'
+import { allTextSlots } from './capture-all-text.mjs'
 
 const TEXT_BLOCKS = new Set(['heading', 'paragraph', 'list-item', 'button'])
 const OPTION_SLOTS = [
@@ -98,11 +106,26 @@ export function readUrl(found) {
   return m ? decodeEntities(m[1]) : null
 }
 
+/** Why the plugin cannot address the first block of `name` by its name, or null: the check the named path always made. */
+const nameProblemIn = (content) => (name, start) => {
+  const found = findNamedBlock(content, name)
+  if (!found || found.start !== start) return 'the plugin would find another block under that name'
+  try {
+    if (setBlockValue(content, name, 'content', '{{slot}}') === content)
+      throw new Error('masking changed nothing')
+  } catch (e) {
+    if (found.block !== 'button' || !/no text element/.test(e.message))
+      return `setBlockValue refuses it: ${e.message}`
+  }
+  return null
+}
+
 /**
  * The slots of one page and everything that was left out of it, with the reason.
  * @returns {{ slots: object[], skipped: string[] }}
  */
-export function pageSlots({ content, entityKey, prefix }) {
+export function pageSlots({ content, entityKey, prefix, allText = false }) {
+  if (allText) return allTextSlots({ content, entityKey, prefix, nameProblem: nameProblemIn(content) })
   const slots = []
   const skipped = []
   const seen = new Set()
@@ -202,7 +225,16 @@ export function normalizeRelease(m) {
  * `release` is the release's own manifest.json; `card` carries tag, version, install parts.
  * Throws a plain Error naming the first thing that makes a profile impossible.
  */
-export function deriveProfile({ sql, release: raw, card, coworkVersion, themeRoots, previousMap }) {
+export function deriveProfile({
+  sql,
+  release: raw,
+  card,
+  coworkVersion,
+  themeRoots,
+  previousMap,
+  allText = false,
+  vocabulary
+}) {
   const release = normalizeRelease(raw)
   if (!release.webroot?.file || !release.database?.file)
     throw new Error('manifest.json names no webroot/database archive')
@@ -251,7 +283,7 @@ export function deriveProfile({ sql, release: raw, card, coworkVersion, themeRoo
     }
     taken.add(p.post_name)
     const key = `page-${p.post_name}`
-    const got = pageSlots({ content: p.post_content, entityKey: key, prefix: p.post_name })
+    const got = pageSlots({ content: p.post_content, entityKey: key, prefix: p.post_name, allText })
     coverage.skipped.push(...got.skipped)
     if (got.slots.length === 0) {
       coverage.pagesWithoutSlots.push(p.post_name)
@@ -265,7 +297,7 @@ export function deriveProfile({ sql, release: raw, card, coworkVersion, themeRoo
     if (keys.has(s.key)) throw new Error(`slot key ${s.key} is made twice`)
     keys.add(s.key)
   }
-  const pageSlotCount = slots.filter((s) => s.target.block).length
+  const pageSlotCount = slots.filter((s) => !s.target.option).length
   if (entities.filter((e) => e.kind === 'page').length === 0 || pageSlotCount === 0)
     throw new Error(
       'no page of the dump has a named text block the plugin can address; the map would hold only the site name'
@@ -308,7 +340,10 @@ export function deriveProfile({ sql, release: raw, card, coworkVersion, themeRoo
     slots
   }
   const carried = carryRoles(contentMap, previousMap)
-  const { contentMap: mapWithRoles, unplaced } = proposeContentMapRoles(carried, { cms: 'wordpress' })
+  const { contentMap: mapWithRoles, unplaced } = proposeContentMapRoles(carried, {
+    cms: 'wordpress',
+    ...(vocabulary ? { vocabulary } : {})
+  })
   const lock = {
     schemaVersion: 'tracy-quickstart-presentation-lock/wordpress/v1',
     $comment: `What a build must leave alone on a restored ${card.tag} ${card.version} site. Options are compared by value; files by sha256 of the shipped theme, captured from the release's webroot archive; each governed page by the hash of its markup with every slot masked.`,
@@ -346,7 +381,8 @@ function main() {
   const args = {}
   for (let i = 2; i < process.argv.length; i++) {
     const a = process.argv[i]
-    if (a.startsWith('--')) args[a.slice(2)] = process.argv[++i]
+    if (a === '--all-text') args['all-text'] = true
+    else if (a.startsWith('--')) args[a.slice(2)] = process.argv[++i]
   }
   const need = [
     'contract',
@@ -373,9 +409,17 @@ function main() {
   const out = deriveProfile({
     sql: readDump(args.dump),
     release,
-    card: { slug, version, tag: args.tag, repo: args.repo ?? 'JoomlArt-Products/ja-products', assets: {} },
+    card: {
+      slug,
+      version,
+      tag: args.tag,
+      repo: args.repo ?? 'JoomlArt-Products/joomlart-products',
+      assets: {}
+    },
     coworkVersion: args['cowork-version'],
     themeRoots: args['theme-roots'].split(','),
+    allText: args['all-text'] === true,
+    vocabulary: args['role-vocabulary'] === '3' ? 'place-content-roles/3' : undefined,
     previousMap: args['previous-map'] ? JSON.parse(readFileSync(args['previous-map'], 'utf8')) : undefined
   })
   const dir = path.join(path.resolve(args['contracts-root']), args.contract)

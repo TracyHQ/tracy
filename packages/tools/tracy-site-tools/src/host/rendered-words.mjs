@@ -17,12 +17,12 @@ import { createHash } from 'node:crypto'
 
 import { decodeEntities } from './html-units.mjs'
 import {
-  REPLACE_CONFIRM_OVER,
-  REPLACE_HREF_MAX,
   clip,
   followHref,
   isEmail,
   isPhone,
+  REPLACE_CONFIRM_OVER,
+  REPLACE_HREF_MAX,
   receipt,
   replaceText,
   undoOf
@@ -71,6 +71,11 @@ export const RENDERED_TEXT = Object.freeze({
   ambiguousNext: 'the same call with all:"page" changes every one of them on this page',
   readError: 'this site could not show what its theme prints on {path}; nothing was written',
   readNext: 'make the same call once; if it fails again, tell the customer the page cannot be read right now',
+  rebaseError: 'the theme changed after earlier edits on {path}; nothing was written',
+  rebaseNext:
+    'send all earlier theme-printed edits of this page together, or undo them newest first; this call cannot restore edits it did not name',
+  rebaseNote:
+    'this call covers every earlier theme-printed rule; applying it will bind only these requested edits to the current theme',
   changedError: '{path} changed while this call ran; nothing was written',
   changedNext:
     'someone else is editing this site: tell the customer, and make the same call once when they are done',
@@ -90,19 +95,19 @@ export const RENDERED_TEXT = Object.freeze({
   allNext:
     'these words are printed on {path} by the theme, and such words change one page at a time: the same call with all:"page" instead of all:true',
   outsideNext:
-    'the theme prints these words outside the main part of {path} (header, footer, menu, form or a hidden copy); they cannot change here: tell the customer they stay',
+    'printed by the theme outside the main part: content.find {text:"<words>"} names its translation call; content.contract {operation:"string", domain, msgid, locale, value} changes it; else they stay',
   noRecordNext:
-    'the theme prints these words on {path}, a page with no record of its own (an archive or a list); they cannot change here: tell the customer they stay',
+    'printed by the theme on a list page: content.find {text:"<words>"} names its translation call; content.contract {operation:"string", domain, msgid, locale, value} changes it; else they stay',
   unscannedNext:
     "the site's plugin could not read {path} as it reads a page, so the words the theme prints there stay: tell the customer which words stay and why",
   unsupportedNext:
-    "the site's plugin does not take theme-printed words on {path}: tell the customer which words stay and why",
+    'printed by the theme here: content.find {text:"<words>"} names its translation call; content.contract {operation:"string", domain, msgid, locale, value} changes it; else they stay',
   viewerNext:
     "words the theme prints change only through the agent's own call, and this one went out as a viewer: tell the customer which words stay and why",
   stayError: 'the theme prints "{find}" when the page renders; nothing was written',
   // The same sentence as `replace-wordpress.mjs` `untracedNext`, which reads it from here.
   stayNext:
-    'the theme prints these words when the page renders, and this site cannot replace them through a door yet: tell the customer which words stay and why',
+    'printed by the theme: content.find {text:"<words>"} names its translation call; content.contract {operation:"string", domain, msgid, locale, value} changes it; else tell the customer they stay',
   renderedWhy: 'words the theme prints when the page renders',
   linkHeldNote:
     'the {href} link stays: it is kept in {what}; content.get that record and change it with content.update',
@@ -142,7 +147,7 @@ const refuse = (code, error, next, extra = {}) => ({ ok: false, code, verdict: c
  * What the site's plugin says it can do with rendered words, or null when it says nothing (an older
  * plugin) or cannot inspect and apply text.
  * @param {unknown} info - the `info` answer
- * @returns {{ href: boolean, maxRules: number } | null}
+ * @returns {{ href: boolean, maxRules: number, composition?: boolean } | null}
  */
 export function renderedSupport(info) {
   if (!isRecord(info) || info.ok === false) return null
@@ -157,7 +162,11 @@ export function renderedSupport(info) {
   if (!ops.includes('inspect') || !ops.includes('apply') || !targets.includes('text')) return null
   const max =
     Number.isInteger(rw.max_rules_request) && rw.max_rules_request > 0 ? rw.max_rules_request : RULES_MAX
-  return { href: targets.includes('attribute:href'), maxRules: Math.min(max, RULES_MAX) }
+  return {
+    href: targets.includes('attribute:href'),
+    maxRules: Math.min(max, RULES_MAX),
+    ...(Array.isArray(rw.composition) && rw.composition.includes('whole-output') ? { composition: true } : {})
+  }
 }
 
 /**
@@ -713,11 +722,24 @@ export async function replaceRendered(input) {
     return built.older === true ? older() : /** @type {Record<string, unknown>} */ (built)
   const targets = /** @type {Target[]} */ (built.targets)
   for (let attempt = 0; attempt < 2; attempt += 1) {
-    const inspected = await read(RENDERED_WORDS_ACTION, {
+    let inspected = await read(RENDERED_WORDS_ACTION, {
       operation: 'inspect',
       path,
+      ...(support.composition ? { composition: 'whole-output' } : {}),
       targets: targets.map((t) => ({ kind: t.kind, ...(t.name ? { name: t.name } : {}), old: t.old }))
     })
+    // An old theme's rules are inactive. Rebinding them is safe only if this call supersedes
+    // every rule, including href companions, after the normal DOM/candidate selection below.
+    const rebase =
+      isRecord(inspected) &&
+      String(inspected.code ?? inspected.error ?? '').toLowerCase() === 'conflict' &&
+      messageOf(inspected) === 'The active theme changed since the rules were written'
+    if (rebase)
+      inspected = await read(RENDERED_WORDS_ACTION, {
+        operation: 'inspect',
+        path,
+        targets: targets.map((t) => ({ kind: t.kind, ...(t.name ? { name: t.name } : {}), old: t.old }))
+      })
     if (!isRecord(inspected) || inspected.ok !== true) return inspectRefusal(inspected, input)
     /** @type {{ t: Target, c: Record<string, any>, region: string }[]} */
     const found = []
@@ -729,6 +751,16 @@ export async function replaceRendered(input) {
       const usable = candidates.filter(
         (c) => typeof c.anchor === 'string' && Number.isInteger(c.count) && c.count > 0
       )
+      if (
+        usable.some(
+          (c) =>
+            c.replaces_rule !== undefined &&
+            (!support.composition ||
+              typeof c.replaces_rule !== 'string' ||
+              !/^[a-f0-9]{16}$/.test(c.replaces_rule))
+        )
+      )
+        return refuse('READ_FAILED', renderedText('readError', { path }), renderedText('readNext'))
       // 🔒 A CANDIDATE IS APPLIED ONLY WHERE THE PAGE READ SAW IT (review 23/10/2026). The plugin
       // reads the page again on its own, so its answer must be the same places this call's page holds:
       // each anchor, as often, and nothing more. Words and a following link must also sit in the main
@@ -805,13 +837,23 @@ export async function replaceRendered(input) {
       }))
     if (plan.all === false && plan.expect === null)
       for (const [i, c] of changes.entries())
-        if (placesOf(i) > 1)
+        if (c.expect === undefined && placesOf(i) > 1)
           return refuse(
             'AMBIGUOUS',
             renderedText('ambiguousError', { find: c.find, n: placesOf(i), path }),
             renderedText('ambiguousNext'),
             { find: c.find, candidates: shown.slice(0, 4) }
           )
+    // A change that carries its own `expect` is counted on its own, as the store search counts it (`countRefusal`).
+    for (const [i, c] of changes.entries())
+      if (c.expect !== undefined && placesOf(i) !== c.expect)
+        return refuse(
+          'COUNT_MISMATCH',
+          replaceText('countMismatchError', { expect: c.expect, n: placesOf(i), find: c.find }),
+          replaceText('countMismatchNext', { n: placesOf(i) }),
+          { would: shown, count: placesOf(i), ...(changes.length > 1 ? { change: i } : {}) }
+        )
+    const unconfirmed = changes.reduce((n, c, i) => n + (c.expect === undefined ? placesOf(i) : 0), 0)
     if (plan.expect !== null && places !== plan.expect)
       return refuse(
         'COUNT_MISMATCH',
@@ -828,15 +870,51 @@ export async function replaceRendered(input) {
       plan.expect === null &&
       input.confirmed !== true &&
       !plan.dryRun &&
-      places > REPLACE_CONFIRM_OVER
+      unconfirmed > REPLACE_CONFIRM_OVER
     )
       return refuse(
         'VALUE_NOT_ALLOWED',
-        replaceText('confirmCountError', { n: places, how: '' }),
-        replaceText('confirmCountNext', { n: places }),
-        { rule: 'confirm-count', would: shown, count: places }
+        replaceText('confirmCountError', { n: unconfirmed, how: '' }),
+        replaceText('confirmCountNext', { n: unconfirmed }),
+        { rule: 'confirm-count', would: shown, count: unconfirmed }
       )
-    const notes = [renderedText('themeNote', { path }), ...new Set([...left, ...away])]
+    if (rebase) {
+      const identity = (/** @type {Record<string, any>} */ r) =>
+        [r.kind, r.name ?? '', r.anchor, r.old].join('\0')
+      const ruleId = (/** @type {Record<string, any>} */ r) =>
+        createHash('sha256').update(identity(r)).digest('hex').slice(0, 16)
+      const incoming = new Set(found.map(({ t, c }) => ruleId({ ...t, anchor: c.anchor })))
+      const seenIds = new Set()
+      if (
+        !Array.isArray(inspected.rules) ||
+        inspected.rules.some((r) => {
+          if (
+            !isRecord(r) ||
+            !['text', 'attribute'].includes(r.kind) ||
+            (r.kind === 'attribute' ? r.name !== 'href' : r.name !== undefined) ||
+            typeof r.anchor !== 'string' ||
+            !/^[a-f0-9]{16}$/.test(r.anchor) ||
+            typeof r.old !== 'string' ||
+            !r.old ||
+            typeof r.new !== 'string' ||
+            !Number.isInteger(r.expected_matches) ||
+            r.expected_matches < 1 ||
+            r.id !== ruleId(r) ||
+            seenIds.has(r.id) ||
+            !incoming.has(r.id)
+          )
+            return true
+          seenIds.add(r.id)
+          return false
+        })
+      )
+        return refuse('STORE_CHANGED', renderedText('rebaseError', { path }), renderedText('rebaseNext'))
+    }
+    const notes = [
+      renderedText('themeNote', { path }),
+      ...(rebase ? [RENDERED_TEXT.rebaseNote] : []),
+      ...new Set([...left, ...away])
+    ]
     if (plan.dryRun)
       return {
         ok: true,
@@ -864,7 +942,8 @@ export async function replaceRendered(input) {
         anchor: c.anchor,
         old: t.old,
         new: t.new,
-        expected_matches: c.count
+        expected_matches: c.count,
+        ...(c.replaces_rule ? { replaces_rule: c.replaces_rule } : {})
       }))
     })
     if (isRecord(applied) && applied.ok === true) {
@@ -975,7 +1054,13 @@ function inspectRefusal(answer, input) {
           renderedText('olderError', { find: input.changes[0]?.find ?? '' }),
           renderedText('olderNext')
         )
-  if (code === 'read_failed' || code === 'conflict')
+  if (code === 'conflict' || code === 'CONFLICT')
+    return refuse(
+      'STORE_CHANGED',
+      renderedText('changedError', { path: input.path }),
+      renderedText('changedNext')
+    )
+  if (code === 'read_failed')
     return refuse('READ_FAILED', renderedText('readError', { path: input.path }), renderedText('readNext'))
   return /** @type {Record<string, unknown>} */ (answer)
 }

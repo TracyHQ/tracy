@@ -8,6 +8,7 @@ export function rootCause(it) {
   }
   if (it.class === 'c') return `core: ${it.classLabel}`
   if (it.class === 'd') return 'unknown source'
+  if (it.class === 'e') return it.classLabel ?? 'shop catalogue'
   if ((it.classLabel ?? '').startsWith('language pattern'))
     return 'language pattern filled from configuration/DB value (e.g. %sitename%)'
   const m = ev.replace(/^"[^"]*" <- /, '').match(/^([a-z_.]+)#([^.]+)\.(\w+)(?: -> (\S+))?(?: \((\w+))?/)

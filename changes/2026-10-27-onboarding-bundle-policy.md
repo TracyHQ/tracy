@@ -1,0 +1,6 @@
+- **Review exact generated bundles needed by conversational onboarding** — Lee · `chore/chat-onboarding-bundle-policy` · 2026-10-27
+  **Affects:** the English contribution policy for PR #5. This prerequisite must reach develop before that feature can use these reviewed object exceptions. It changes no validator, wildcard, interface translation or runtime behavior.
+
+Four exact path/object pairs retain existing localized data or technical language-detection ranges on changed generated lines. An independent council review reran each package's build check and confirmed that the committed output is reproducible from the English authored source and localized dictionaries. The assistant bundle contains code and inherited interface-language names; the Add site bundle contains an existing language-detection regex. Neither is classified as a translation dictionary.
+
+The candidate policy accepted all four commits and the final diff of PR #5 with zero findings. Fifteen validator tests passed. Separate negative controls confirmed that a foreign source label remains rejected and changing one byte in a reviewed artifact loses its exception. Existing object exceptions stay in place; any future artifact change needs a new review. The separate PR is necessary because a contribution cannot exempt itself using its own policy.

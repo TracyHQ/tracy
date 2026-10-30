@@ -6,6 +6,7 @@
 import { readFileSync } from 'node:fs'
 import { DEFAULT_NEUTRAL_BY_ROLE } from './place-content-roles.mjs'
 import { hoursLine, shownPrice } from './pinned-copy.mjs'
+import { numberIn } from './number-in-locale.mjs'
 import { assessProfile } from './fact-assessment.mjs'
 import { defaultOfferingKind, statedTradeOf } from './trades.mjs'
 
@@ -225,15 +226,6 @@ function priceOf(offering, locale) {
     .join(' · ')
 }
 
-/** A figure as the site's language prints numbers: 12,400 in English, 12.400 in Vietnamese. */
-function numberIn(amount, locale) {
-  try {
-    return new Intl.NumberFormat(locale || 'en').format(amount)
-  } catch {
-    return new Intl.NumberFormat('en').format(amount)
-  }
-}
-
 const durationOf = (offering) => {
   const v = list(offering.value?.variants).find((x) => x?.duration || text(x?.price?.unit))
   if (!v) return ''
@@ -274,7 +266,9 @@ export function planSlotFill({ slotRoles, profile, assessment, locale = 'en', ne
   const found = entitiesOf(profile ?? {}, ok)
   const b = profile?.business ?? {}
   const fact = (f) => (f && ok(f.id) ? f : null)
-  const name = fact(b.name) ?? fact(profile?.brand?.name)
+  // The brand's name only stands in for a business name the profile does not have: a business name held off the
+  // site is never replaced by the brand's record of the same name.
+  const name = b.name ? fact(b.name) : fact(profile?.brand?.name)
   const phone = fact(b.phone) ?? fact(b.internationalPhoneNumber) ?? fact(b.nationalPhoneNumber)
   const email = fact(b.email)
   const booking = found.links.find((l) => l.value?.kind === 'booking' && /^https:\/\//i.test(l.value.url))

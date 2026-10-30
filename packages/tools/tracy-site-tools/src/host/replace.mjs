@@ -79,8 +79,10 @@ export const REPLACE_KEYS = Object.freeze([
 /**
  * The keys of one `changes[]` item. `href:true` says `find` and `replace` are the whole target of a
  * link (`<a href>`), not words: only WordPress's rendered-words road writes one (`replace-wordpress.mjs`).
+ * `expect` counts that item's own places (`countRefusal`), so one call carries several pairs each with the
+ * count its read gave: the residue sweep writes a page's record once for all of its pairs (28/10/2026).
  */
-export const REPLACE_CHANGE_KEYS = Object.freeze(['find', 'replace', 'href'])
+export const REPLACE_CHANGE_KEYS = Object.freeze(['find', 'replace', 'href', 'expect'])
 /** The longest link target an `href:true` change carries (the plugin's own `MAX_URL`). */
 export const REPLACE_HREF_MAX = 2048
 /**
@@ -155,6 +157,10 @@ export const REPLACE_NEXT = Object.freeze({
     'A picture is not words: change its image slot, or on WordPress its block by position — content.get {kind:"post", id, outline:true}, then content.update {kind:"post", id, blocks:{"<n>":<block>}}.',
   notFoundNext:
     'page.text {path:"{page}", match:"{word}"}, then this replace quoting those words exactly; only a NOT_FOUND needs a read.',
+  // Local round 31, 25/10/2026: a build's call with no path read the home page, this answer then sent it to read the
+  // home page again, and the agent gave up and edited the theme's PHP; words a theme prints are found only where shown.
+  notFoundNoPathNext:
+    'No path was given, so only the home page was read: the same call with path:"<the page that shows them>" (a check names it). Words a theme prints are found only on their page.',
   notHereError: 'those words are on {page}, not on this page; nothing was written',
   notHereNext: 'the same call with path:"{page}"',
   otherLanguageError: 'those words are on {page}, in another language; nothing was written',
@@ -271,16 +277,17 @@ function refuse(code, error, next, extra = {}) {
 
 // ── Parameters (D21: the closed check, after IX2's aliasing) ─────────────────────────────────────
 
-/** @typedef {{ find: string, replace: string, href?: true }} ReplaceChange */
+/** @typedef {{ find: string, replace: string, href?: true, expect?: number }} ReplaceChange */
 /** @typedef {{ at: string, value: string }} RestoreValue */
 /**
  * @typedef {{ at: string, value: string, now?: string } | { at: string, was: string, now: string }} RestoreItem
  *   One undo item as the call carries it: see {@link REPLACE_RESTORE_KEYS}.
  */
 /**
- * @typedef {{ ok: true, mode: 'replace', changes: ReplaceChange[], path: string,
+ * @typedef {{ ok: true, mode: 'replace', changes: ReplaceChange[], path: string, pathGiven: boolean,
  *   where: Region | null, at: string[] | null, all: false | true | 'page', dryRun: boolean,
  *   expect: number | null, normalized: string[] }} ReplacePlan
+ *   `pathGiven`: the call named its page; without one `path` is the home page.
  * @typedef {{ ok: true, mode: 'restore', restore: RestoreItem[], path: string, dryRun: boolean,
  *   normalized: string[] }} RestorePlan
  */
@@ -595,6 +602,17 @@ export function planReplace(params) {
           return unknownKey(`changes[${i}].${key}`, key, REPLACE_CHANGE_KEYS)
       const change = checkChange(c, `changes[${i}].`)
       if ('ok' in change) return change
+      if (c.expect !== undefined && c.expect !== null) {
+        const own = /** @type {number} */ (c.expect)
+        if (!Number.isInteger(own) || own < 1 || own > REPLACE_MAX_TARGETS)
+          return badType(
+            `changes[${i}].expect`,
+            `a whole number 1 to ${REPLACE_MAX_TARGETS}`,
+            c.expect,
+            '{changes:[{find, replace, expect:2}], all:"page"}'
+          )
+        change.expect = own
+      }
       const key = foldForMatch(change.find)
       if (seen.has(key))
         return refuse(
@@ -708,7 +726,8 @@ export function planReplace(params) {
     expect = /** @type {number} */ (p.expect)
   }
 
-  return { ok: true, mode: 'replace', changes, path, where, at, all, dryRun, expect, normalized }
+  const pathGiven = p.path !== undefined && p.path !== null
+  return { ok: true, mode: 'replace', changes, path, pathGiven, where, at, all, dryRun, expect, normalized }
 }
 
 // ── Matching (F3 §3.3) ───────────────────────────────────────────────────────────────────────────
@@ -1183,9 +1202,10 @@ const matchWord = (find) =>
  * change, as David's language rule says.
  *
  * @param {{ page: { units: RenderedUnit[], lang: string | null } | null, stored: readonly StoredUnit[],
- *   change: ReplaceChange, path?: string, where?: Region | null, at?: string[] | null,
+ *   change: ReplaceChange, path?: string, pathGiven?: boolean, where?: Region | null, at?: string[] | null,
  *   all?: false | true | 'page', expect?: number | null, confirmed?: boolean, dryRun?: boolean,
  *   mustKeepTwo?: boolean, countRules?: boolean, hooks?: LocateHooks }} input
+ *   `pathGiven: false`: the call named no page, so `path` is the home page it was read as.
  * @returns {Located | Refusal}
  */
 export function locate(input) {
@@ -1488,10 +1508,12 @@ export function locate(input) {
       // a path is part of a call here: whole, or a placeholder — never cut into a call that fails
       PICTURE_PATH.test(find.trim())
         ? replaceText('pictureNotFoundNext')
-        : replaceText('notFoundNext', {
-            page: path.length <= 60 ? path : '<the page>',
-            word: matchWord(find).slice(0, 30)
-          }),
+        : input.pathGiven === false
+          ? replaceText('notFoundNoPathNext')
+          : replaceText('notFoundNext', {
+              page: path.length <= 60 ? path : '<the page>',
+              word: matchWord(find).slice(0, 30)
+            }),
       { find, near: nearWords(pool, find) }
     )
   }
@@ -1584,6 +1606,8 @@ function candidateOf(t) {
   }
 }
 
+export { refusedBeforeWrite } from './refused-before-write.mjs'
+
 /**
  * The count rules, over every change of one call (one receipt): TOO_MANY, COUNT_MISMATCH, and
  * confirm-count — `all` writing more than {@link REPLACE_CONFIRM_OVER} places, or any place not spelled
@@ -1605,6 +1629,24 @@ export function countRefusal(results, { all, expect, confirmed, dryRun }) {
       replaceText('tooManyNext'),
       { would: would.slice(0, REPLACE_MAX_TARGETS), count: places }
     )
+  // A CHANGE THAT CARRIES ITS OWN `expect` IS COUNTED ON ITS OWN (28/10/2026): a sum over the call would let one
+  // pair's extra place hide behind another's missing one. The refusal names the change, so a caller can set it aside
+  // and send the rest (`copy-apply.mjs`, the residue sweep's `demo-lifecycle.mjs`).
+  for (let i = 0; i < results.length; i += 1) {
+    const r = results[i]
+    const own = r.change.expect
+    if (own === undefined || r.places === own) continue
+    return refuse(
+      'COUNT_MISMATCH',
+      replaceText('countMismatchError', { expect: own, n: r.places, find: r.change.find }),
+      replaceText('countMismatchNext', { n: r.places }),
+      {
+        would: r.targets.map((t) => wouldOf(t, r.change)),
+        count: r.places,
+        ...(results.length > 1 ? { change: i } : {})
+      }
+    )
+  }
   if (expect !== null && places !== expect)
     return refuse(
       'COUNT_MISMATCH',
@@ -1612,13 +1654,24 @@ export function countRefusal(results, { all, expect, confirmed, dryRun }) {
       replaceText('countMismatchNext', { n: places }),
       { would, count: places }
     )
-  const exact = results.every((r) => r.targets.every((t) => t.exact))
-  if (all && expect === null && !confirmed && !dryRun && (places > REPLACE_CONFIRM_OVER || !exact))
+  // Confirm-count weighs the places no `expect` counted: a call whose every change is counted needs no other
+  // confirmation, and a call with no counted change is weighed whole, as before.
+  const loose = results.filter((r) => r.change.expect === undefined)
+  const unconfirmed = loose.reduce((n, r) => n + r.places, 0)
+  const exact = loose.every((r) => r.targets.every((t) => t.exact))
+  if (
+    all &&
+    expect === null &&
+    loose.length > 0 &&
+    !confirmed &&
+    !dryRun &&
+    (unconfirmed > REPLACE_CONFIRM_OVER || !exact)
+  )
     return refuse(
       'VALUE_NOT_ALLOWED',
-      replaceText('confirmCountError', { n: places, how: exact ? '' : REPLACE_NEXT.confirmCountHow }),
-      replaceText(exact ? 'confirmCountNext' : 'confirmCountInexactNext', { n: places }),
-      { rule: 'confirm-count', would, count: places }
+      replaceText('confirmCountError', { n: unconfirmed, how: exact ? '' : REPLACE_NEXT.confirmCountHow }),
+      replaceText(exact ? 'confirmCountNext' : 'confirmCountInexactNext', { n: unconfirmed }),
+      { rule: 'confirm-count', would, count: unconfirmed }
     )
   return null
 }
@@ -1740,6 +1793,7 @@ export function locateAll({ plan, page, stored, confirmed = false, mustKeepTwo =
       stored: typeof stored === 'function' ? stored(plan.changes[i], i) : stored,
       change: plan.changes[i],
       path: plan.path,
+      pathGiven: plan.pathGiven,
       where: plan.where,
       at: plan.at,
       all: plan.all,

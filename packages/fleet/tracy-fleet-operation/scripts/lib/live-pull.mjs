@@ -44,23 +44,27 @@
  * 🔒 The token arrives in the environment and goes only into request bodies: never on a command line,
  * into a file, a log line or an answer.
  */
-import { createHash } from 'node:crypto'
+
 import { spawnSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
+import { once } from 'node:events'
 import {
+  closeSync,
   createReadStream,
   createWriteStream,
   existsSync,
   mkdirSync,
-  readFileSync,
+  openSync,
   readdirSync,
+  readFileSync,
+  readSync,
   rmSync,
   statSync,
   writeFileSync
 } from 'node:fs'
-import { dirname } from 'node:path'
 import { request } from 'node:http'
-import { join } from 'node:path'
-import { createGunzip, createGzip } from 'node:zlib'
+import { dirname, join } from 'node:path'
+import { createGunzip, createGzip, gunzipSync } from 'node:zlib'
 
 const USER_AGENT = 'Mozilla/5.0 (compatible; TracyBot/1.0; +https://tracy.ai)'
 const REQUEST_TIMEOUT_MS = 120_000
@@ -154,19 +158,58 @@ class PullFailed extends Error {
 /** A failure worth asking again: the site's 429/5xx, or the network. */
 class Transient extends Error {}
 
+/** Failures no other door, call or retry can change: the run stops on them at once. */
+const STOP_NOW = ['TOKEN_REFUSED', 'LIVE_PASSWORD_PROTECTED', 'LIVE_RATE_LIMITED', 'LIVE_PHP_TOO_OLD']
+
+/**
+ * An engine refusing to run on the site's PHP (claude-cowork 0.24.73: `{ok: false, error:
+ * 'php_too_old', php, min}` on both doors, HTTP 200): LIVE_PHP_TOO_OLD with both versions, so the
+ * owner is told to have PHP upgraded rather than that the site could not be reached.
+ */
+function phpTooOld(reply) {
+  const version = (value) => (/^\d+(\.\d+){0,3}$/.test(String(value ?? '')) ? String(value) : null)
+  const error = new PullFailed('LIVE_PHP_TOO_OLD')
+  error.php = version(reply.php)
+  error.min = version(reply.min)
+  return error
+}
+
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
 
 /** The engine's reply out of a raw body, or null when something else answered (`doors.mjs`). */
 function engineReply(text) {
-  try {
-    const value = JSON.parse(text)
-    return value && typeof value === 'object' && !Array.isArray(value) && typeof value.ok === 'boolean'
-      ? value
-      : null
-  } catch {
-    return null
+  const read = (body) => {
+    try {
+      const value = JSON.parse(body)
+      return value && typeof value === 'object' && !Array.isArray(value) && typeof value.ok === 'boolean'
+        ? value
+        : null
+    } catch {
+      return null
+    }
   }
+  const whole = read(text)
+  if (whole !== null) return whole
+  // PHP's notices printed ahead of the engine's JSON by a host that shows its errors (PHP 8.5
+  // deprecates the engine uploader's `curl_close()`): whole notice lines are taken off, and what
+  // remains must be an engine answer — the same rule as tracy-add-site `doors.mjs` `afterPhpNotices`.
+  const lines = String(text).split(/\r?\n/)
+  let k = 0
+  let notices = 0
+  while (k < lines.length) {
+    const line = lines[k].trim()
+    if (line === '' || /^<br\s*\/?>$/i.test(line)) k += 1
+    else if (PHP_NOTICE_LINE.test(line)) {
+      notices += 1
+      k += 1
+    } else break
+  }
+  return notices > 0 && k < lines.length ? read(lines.slice(k).join('\n')) : null
 }
+
+/** One line of PHP's report of a problem it survived, as `display_errors` prints it (`doors.mjs`). */
+const PHP_NOTICE_LINE =
+  /^(?:<br\s*\/?>)?\s*(?:PHP\s+)?(?:<b>)?(?:Deprecated|Notice|Warning|Strict Standards|User Deprecated|User Notice|User Warning)(?:<\/b>)?:\s.*\bon line\b/i
 
 /**
  * Where to connect for `endpoint`. On a stand on one machine (deploy/compose.macos.yml) a test
@@ -198,7 +241,13 @@ function viaPost(target, body, headers) {
       (res) => {
         const chunks = []
         res.on('data', (c) => chunks.push(c))
-        res.on('end', () => resolve({ status: res.statusCode, text: Buffer.concat(chunks).toString('utf8') }))
+        res.on('end', () =>
+          resolve({
+            status: res.statusCode,
+            text: Buffer.concat(chunks).toString('utf8'),
+            retryAfter: res.headers['retry-after']
+          })
+        )
       }
     )
     req.on('timeout', () => req.destroy(new Error('timeout')))
@@ -210,12 +259,13 @@ function viaPost(target, body, headers) {
 async function call(endpoint, token, action, params = {}) {
   let response
   let text
+  let retryAfter
   const target = route(endpoint)
   const body = JSON.stringify({ token, action, params })
   const headers = { 'content-type': 'application/json', 'user-agent': USER_AGENT }
   try {
     if (target) {
-      ;({ status: response, text } = await viaPost(target, body, headers))
+      ;({ status: response, text, retryAfter } = await viaPost(target, body, headers))
       response = { status: response }
     } else {
       response = await fetch(endpoint, {
@@ -225,21 +275,38 @@ async function call(endpoint, token, action, params = {}) {
         signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
         redirect: 'error'
       })
+      retryAfter = response.headers.get('retry-after')
       text = await response.text()
     }
   } catch (error) {
     throw new Transient(`${action}: ${error.cause?.code ?? error.code ?? error.message ?? error.name}`)
   }
   const reply = engineReply(text)
+  if (reply && !reply.ok && ['unauthorized', 'forbidden', 'bad_token'].includes(reply.error))
+    throw new PullFailed('TOKEN_REFUSED')
+  if (response.status === 401) throw new PullFailed('LIVE_PASSWORD_PROTECTED')
+  if (response.status === 403) throw new PullFailed('LIVE_BLOCKED')
+  if (response.status === 429) {
+    const error = new Transient(`${action} answered 429`)
+    error.code = 'LIVE_RATE_LIMITED'
+    const seconds = /^\s*\d+\s*$/.test(String(retryAfter ?? '')) ? Number(retryAfter) : null
+    const date = seconds === null ? Date.parse(String(retryAfter ?? '')) : NaN
+    error.retryAfterMs =
+      seconds !== null ? seconds * 1000 : Number.isFinite(date) ? Math.max(0, date - Date.now()) : 0
+    throw error
+  }
   if (reply === null) {
-    if (response.status === 429 || response.status >= 500)
-      throw new Transient(`${action} answered ${response.status}`)
-    throw new PullFailed('NOT_THE_ENGINE', `${action} answered ${response.status}`)
+    if (response.status >= 500) throw new Transient(`${action} answered ${response.status}`)
+    throw new PullFailed(
+      response.status === 200 ? 'LIVE_BLOCKED' : 'NOT_THE_ENGINE',
+      `${action} answered ${response.status}`
+    )
   }
   if (!reply.ok) {
     if (reply.error === 'unauthorized' || reply.error === 'forbidden' || reply.error === 'bad_token') {
       throw new PullFailed('TOKEN_REFUSED')
     }
+    if (reply.error === 'php_too_old') throw phpTooOld(reply)
     throw new PullFailed('ENGINE_REFUSED', `${action}: ${String(reply.error ?? '').slice(0, 80)}`)
   }
   return reply
@@ -252,9 +319,11 @@ async function retried(fn, onTransient = () => {}, tries = TRIES) {
       return await fn()
     } catch (error) {
       if (!(error instanceof Transient)) throw error
-      if (attempt >= tries) throw new PullFailed('SITE_RESOURCE_LIMIT', error.message)
+      if (attempt >= tries) throw new PullFailed(error.code ?? 'SITE_RESOURCE_LIMIT', error.message)
       onTransient()
-      await sleep(500 * 2 ** attempt)
+      // A long Retry-After is a refusal, never permission to retry sooner. Avoid timer overflow.
+      if (error.retryAfterMs > 2_147_483_647) throw new PullFailed('LIVE_RATE_LIMITED')
+      await sleep(Math.max(500 * 2 ** attempt, error.retryAfterMs ?? 0))
     }
   }
 }
@@ -266,15 +335,18 @@ async function door(endpoint, token) {
   const front = endpoint.replace(/\/administrator\/index\.php\?/, '/index.php?')
   for (const other of [admin, front]) if (!doors.includes(other)) doors.push(other)
   let last
+  let blocked
   for (const candidate of doors) {
     try {
       await retried(() => call(candidate, token, 'core.manifest'))
       return candidate
     } catch (error) {
       last = error
-      if (error.code === 'TOKEN_REFUSED') throw error
+      if (error.code === 'LIVE_BLOCKED') blocked = error
+      if (STOP_NOW.includes(error.code)) throw error
     }
   }
+  if (blocked) throw blocked
   throw last instanceof PullFailed ? last : new PullFailed('UNREACHABLE')
 }
 
@@ -289,7 +361,7 @@ async function abilities(endpoint, token) {
   try {
     info = (await retried(() => call(endpoint, token, 'info'))).info ?? {}
   } catch (error) {
-    if (error.code === 'TOKEN_REFUSED') throw error
+    if (STOP_NOW.includes(error.code)) throw error
   }
   const many = info.db_dump_many
   const maxFiles = Number(info.site_fingerprint?.max_files)
@@ -308,6 +380,17 @@ async function abilities(endpoint, token) {
         ? {
             limit: Math.max(100, Math.min(5000, Math.floor(Number(info.files_list.max_stat_limit) || 1000))),
             hashPaths: Math.max(1, Math.min(500, Math.floor(Number(info.files_hash.max_paths))))
+          }
+        : null,
+    // Checksums of a table's rows range by range, and one range read again (claude-cowork `db.range_checksums`).
+    ranges:
+      Number(info.db_range_checksums?.version) >= 1 && Number(info.db_range_checksums.max_starts) > 0
+        ? {
+            maxStarts: Math.max(1, Math.min(5000, Math.floor(Number(info.db_range_checksums.max_starts)))),
+            maxLimit: Math.max(
+              50,
+              Math.min(5000, Math.floor(Number(info.db_range_checksums.max_limit) || 2000))
+            )
           }
         : null,
     // How many named files one pack may carry: the changed files file.read will not serve.
@@ -770,18 +853,22 @@ function digestOf(path, table) {
 /**
  * One read of the database, a file per table: `{tables, rows, reread, parts: [{table, path, digest}]}`.
  * `only` reads just those tables (into the same files), keeping `previous` for the others; `partial`:
- * those tables are all that is wanted (`sameRows`).
+ * those tables are all that is wanted (`sameRows`). `ranges` (`{kept, dump, skip}`, an engine that
+ * answers `db.range_checksums`): a table with ranges `kept` beside the last read `dump` is read range
+ * by range (`spliceRanges`), and a big one read whole has its ranges taken (`takeRanges`).
  */
 async function readDatabase(
   endpoint,
   token,
   scratch,
   ability,
-  { only = null, previous = null, reuse = null, partial = false } = {}
+  { only = null, previous = null, reuse = null, partial = false, seeded = null, ranges = null } = {}
 ) {
   const { tables: listed } = await retried(() => call(endpoint, token, 'db.tables'))
   const all = listed.filter((t) => !isTracyCopy(t))
-  const tables = only ? all.filter((t) => only.has(t)) : all.filter((t) => !reuse?.has(t))
+  // Parts already read for this read (`seeded`: the row comparison's, moments ago): not asked again.
+  const have = new Map((seeded ?? []).map((p) => [p.table, p]))
+  const tables = only ? all.filter((t) => only.has(t)) : all.filter((t) => !reuse?.has(t) && !have.has(t))
   const limits = { value: DB_CHUNK_LIMIT }
   const fileOf = (table) => join(scratch, `t${all.indexOf(table)}.sql`)
   let reread = 0
@@ -793,8 +880,39 @@ async function readDatabase(
       tables: [{ table, rows: null, count: true, housekeeping: false }]
     })
   const began = Date.now()
+  // A table that moved since the last read and kept its ranges: only the ranges that moved are asked for.
+  const spliced = new Map()
+  const index = ranges?.kept && ability.ranges ? readIndex(ranges.dump) : null
+  for (const table of index ? tables : []) {
+    const was = ranges.kept.get(table)
+    const at = index.get(table)
+    if (!was || !at || isVolatile(table)) continue
+    try {
+      const member = { file: ranges.dump, offset: at.offset, length: at.length }
+      const got = await spliceRanges(
+        endpoint,
+        token,
+        table,
+        was,
+        member,
+        ranges.skip,
+        ability,
+        join(scratch, 'ranges')
+      )
+      if (got.part) spliced.set(table, got.part)
+      note(
+        got.part
+          ? `database: ${table}: ${got.moved} of ${got.of} range(s) moved, ${got.rows} row(s) read`
+          : `database: ${table}: read whole (${got.whole})`
+      )
+    } catch (error) {
+      if (STOP_NOW.includes(error.code)) throw error
+      note(`database: ${table}: ranges not answered (${error.code ?? 'error'}); read whole`)
+    }
+  }
+  const whole = tables.filter((table) => !spliced.has(table))
   if (ability.dumpMany) {
-    let pending = tables
+    let pending = whole
     for (let attempt = 1; pending.length; attempt++) {
       const got = await pullMany(endpoint, token, pending, fileOf, limits, ability.dumpMany)
       for (const [table, read] of got) reads.set(table, read)
@@ -804,7 +922,7 @@ async function readDatabase(
       if (pending.length) note(`database: ${pending.slice(0, 5).join(', ')} moved while read; again`)
     }
   } else
-    for (const table of tables) {
+    for (const table of whole) {
       for (let attempt = 1; ; attempt++) {
         const read = await pullTable(endpoint, token, table, fileOf(table), limits)
         reads.set(table, read)
@@ -825,12 +943,33 @@ async function readDatabase(
       `database: ${reads.size} table(s) asked for in ${Math.round((Date.now() - began) / 100) / 10}s (rows: ${largest.join(', ')})`
     )
   }
-  const kept = new Map([...(reuse ?? new Map()), ...(previous?.parts ?? []).map((p) => [p.table, p])])
+  // The ranges of each big table just read whole, for the next read to compare with.
+  const ranged = new Map()
+  for (const table of ranges && ability.ranges ? reads.keys() : []) {
+    try {
+      const taken = await takeRanges(endpoint, token, { table, path: fileOf(table) }, ranges.skip, ability)
+      if (taken) ranged.set(table, taken)
+    } catch (error) {
+      if (STOP_NOW.includes(error.code)) throw error
+    }
+  }
+  const kept = new Map([
+    ...(reuse ?? new Map()),
+    ...have,
+    ...(previous?.parts ?? []).map((p) => [p.table, p]),
+    ...spliced
+  ])
   const parts = all
     .filter((table) => reads.has(table) || kept.has(table))
     .map((table) =>
       reads.has(table)
-        ? { table, path: fileOf(table), digest: digestOf(fileOf(table), table), rows: reads.get(table).rows }
+        ? {
+            table,
+            path: fileOf(table),
+            digest: digestOf(fileOf(table), table),
+            rows: reads.get(table).rows,
+            ...(ranged.has(table) ? { ranges: ranged.get(table) } : {})
+          }
         : kept.get(table)
     )
   if (!partial && parts.length !== all.length)
@@ -845,7 +984,7 @@ async function readDatabase(
     rows: parts.reduce((n, p) => n + (p.rows ?? 0), 0),
     reread,
     parts,
-    tablesRead: (previous?.tablesRead ?? 0) + tables.length
+    tablesRead: (previous?.tablesRead ?? 0) + tables.length + have.size
   }
 }
 
@@ -855,11 +994,43 @@ async function readDatabase(
  * for again. A file per table under `dir`: `Map<table, {table, path, digest, rows}>`.
  */
 async function reusableTables(last, now, dir) {
-  const same = new Set(
-    Object.keys(now).filter((t) => now[t] != null && last.tables?.[t] != null && now[t] === last.tables[t])
+  // A table the merge never takes from the live site (`isIgnored`: Tracy's own, sessions, logs) is
+  // the last read's whatever its checksum says: read again, it changes nothing the copy holds.
+  // A table whose definition moved (a charset, a collation, a column) holds the same rows and the same
+  // checksum, yet is no longer the last read's: read again (#120). Unknown on either side: as before.
+  const sameDefinition = (t) =>
+    !last.definitions ||
+    !last.definitionsNow ||
+    last.definitions[t] == null ||
+    last.definitionsNow[t] == null ||
+    last.definitions[t] === last.definitionsNow[t]
+  let same = new Set(
+    Object.keys(now).filter(
+      (t) =>
+        now[t] != null &&
+        last.tables?.[t] != null &&
+        ((now[t] === last.tables[t] && sameDefinition(t)) || isIgnored(t))
+    )
   )
   const out = new Map()
   if (same.size === 0) return out
+  // Written with its index: each unmoved table is its member, taken as it is — nothing unpacked.
+  const index = readIndex(last.dump)
+  if (index) {
+    for (const table of same) {
+      const at = index.get(table)
+      if (at)
+        out.set(table, {
+          table,
+          member: { file: last.dump, offset: at.offset, length: at.length },
+          digest: at.digest,
+          rows: null,
+          reused: true
+        })
+    }
+    same = new Set([...same].filter((t) => !out.has(t)))
+    if (same.size === 0) return out
+  }
   mkdirSync(dir, { recursive: true, mode: 0o700 })
   let n = 0
   const open = new Map()
@@ -919,12 +1090,18 @@ const ignored = (() => {
     return {
       prefix: rule.prefix,
       names: new Set(rule.names ?? []),
-      patterns: (rule.patterns ?? []).map((p) => new RegExp(p))
+      patterns: (rule.patterns ?? []).map((p) => new RegExp(p)),
+      guessed: (rule.guessed ?? []).map((p) => new RegExp(p))
     }
   } catch {
     return null
   }
 })()
+/** A table left out only by the shape of its name (`…_log`): a site's own table may look like that. */
+const isGuessed = (table) =>
+  Boolean(ignored?.guessed?.length) &&
+  table.startsWith(ignored.prefix) &&
+  ignored.guessed.some((p) => p.test(table.slice(ignored.prefix.length)))
 const isIgnored = (table) => {
   if (!ignored || !table.startsWith(ignored.prefix)) return false
   const bare = table.slice(ignored.prefix.length)
@@ -966,13 +1143,329 @@ function movedTables(a, b, ignored = isVolatile) {
   return moved
 }
 
+/**
+ * The read's dump: one gzip member a table, in the order read, and beside it `<dump>.index.json` —
+ * where each table's member lies and its digest. A table the next read finds unmoved is that
+ * member's bytes as they are: a WordPress read that took one small table spent 15 s unpacking and
+ * packing again the 60 MB of the others (dev, 27/10/2026). Every reader of a gzip file (gzip -dc,
+ * Python, this module) reads the members one after the other as one dump.
+ */
 async function writeDump(path, parts, scratch) {
-  const out = writer(path, true)
-  for (const part of parts) for await (const chunk of createReadStream(part.path)) await out.write(chunk)
-  await out.close()
+  const file = createWriteStream(path, { mode: 0o600 })
+  const put = async (chunk) => {
+    if (!file.write(chunk)) await once(file, 'drain')
+  }
+  const entries = []
+  let offset = 0
+  for (const part of parts) {
+    let length = 0
+    if (part.member && !part.path) {
+      const { file: from, offset: start, length: size } = part.member
+      for await (const chunk of createReadStream(from, { start, end: start + size - 1 })) {
+        length += chunk.length
+        await put(chunk)
+      }
+    } else {
+      const gz = createGzip({ level: 6 })
+      const feeding = (async () => {
+        for await (const chunk of createReadStream(part.path)) if (!gz.write(chunk)) await once(gz, 'drain')
+        gz.end()
+      })()
+      for await (const chunk of gz) {
+        length += chunk.length
+        await put(chunk)
+      }
+      await feeding
+    }
+    entries.push({ table: part.table, offset, length, digest: part.digest })
+    offset += length
+  }
+  await new Promise((resolve, reject) => {
+    file.on('finish', resolve)
+    file.on('error', reject)
+    file.end()
+  })
+  writeFileSync(
+    indexOf(path),
+    JSON.stringify({ version: INDEX_VERSION, rules: DIGEST_RULES, bytes: offset, parts: entries }),
+    { mode: 0o600 }
+  )
   const digests = Object.fromEntries(parts.map((p) => [p.table, p.digest]))
   rmSync(scratch, { recursive: true, force: true })
   return digests
+}
+
+/** The dump's index (`writeDump`); its version moves with `rowDigest`, whose digests it holds. */
+const INDEX_VERSION = 1
+const indexOf = (dump) => `${dump}.index.json`
+/** The rules a digest leaves rows out by: an index written under others holds digests of other rows. */
+const DIGEST_RULES = createHash('sha1')
+  .update(JSON.stringify([process.env.TRACY_SYNC_VOLATILE_ROWS ?? '', process.env.TRACY_SYNC_VOLATILE ?? '']))
+  .digest('hex')
+/** `Map<table, {offset, length, digest}>` of a dump written with its index, or null: none, another
+ * version, or a dump that is not the one indexed (its size says). */
+function readIndex(dump) {
+  try {
+    const index = JSON.parse(readFileSync(indexOf(dump), 'utf8'))
+    if (index?.version !== INDEX_VERSION || index.rules !== DIGEST_RULES || !Array.isArray(index.parts))
+      return null
+    if (index.bytes !== statSync(dump).size) return null
+    return new Map(index.parts.map((p) => [p.table, p]))
+  } catch {
+    return null
+  }
+}
+/** A part's rows in a file of its own: a member kept from the last read is unpacked when asked. */
+function partPath(part, dir) {
+  if (part.path) return part.path
+  mkdirSync(dir, { recursive: true, mode: 0o700 })
+  const bytes = Buffer.alloc(part.member.length)
+  const fd = openSync(part.member.file, 'r')
+  try {
+    readSync(fd, bytes, 0, bytes.length, part.member.offset)
+  } finally {
+    closeSync(fd)
+  }
+  part.path = join(dir, `m${part.member.offset}.sql`)
+  writeFileSync(part.path, gunzipSync(bytes), { mode: 0o600 })
+  return part.path
+}
+
+/**
+ * Ranges of a big table. A table of RANGE_MIN_BYTES of dump and more, read whole, is cut into ranges
+ * of its rows by its one integer key — about RANGE_BYTES of dump, at most RANGE_ROWS rows, each — and
+ * the site's checksum of each range (claude-cowork's `db.range_checksums`) is kept beside the read
+ * (`<dump>.ranges.json`). When the table moves, the next read asks for the same ranges, reads again
+ * only those whose checksum moved (`db.dump_after`) and keeps the last read's rows for the others: a
+ * WordPress sync read the 135 000 rows of `wp_postmeta` again, 15 s, for one edited title (dev,
+ * 27/10/2026). Anything that does not add up — a count, a key out of its range, a refusal — reads
+ * the table whole, as before.
+ */
+const RANGE_BYTES = Number(process.env.TRACY_SYNC_RANGE_BYTES) || 512 * 1024
+const RANGE_ROWS = 2000
+const RANGE_MIN_BYTES = Number(process.env.TRACY_SYNC_RANGE_MIN_BYTES) || 2 * 1024 * 1024
+const RANGES_VERSION = 1
+const rangesOf = (dump) => `${dump}.ranges.json`
+const countOf = (range) => Number(String(range).split(':')[0])
+
+/** The table's one integer key column and its place in a row, from its CREATE TABLE; null when it has none. */
+function rangeKey(head) {
+  const create = head.slice(head.indexOf('CREATE TABLE'))
+  const primary = /^\s*PRIMARY KEY \(`((?:[^`]|``)+)`\)/m.exec(create)
+  if (!primary) return null
+  const columns = [...create.matchAll(/^ {2}`((?:[^`]|``)+)` (\S+)/gm)]
+  const pos = columns.findIndex((column) => column[1] === primary[1])
+  if (pos < 0 || !/^(tiny|small|medium|big)?int\b/i.test(columns[pos][2])) return null
+  return { key: primary[1].replace(/``/g, '`'), pos }
+}
+
+/** A table's dump cut into its lines before the rows and each row with its key (`pos` in the tuple). */
+function keyedRows(bytes, pos) {
+  const head = []
+  const rows = []
+  const scan = rowScanner({
+    onOther: (b) => {
+      if (!rows.length) head.push(Buffer.from(b))
+    },
+    onTuple: (tuple) => rows.push({ key: BigInt(tupleValues(tuple.toString('latin1'), pos + 1)[pos]), tuple })
+  })
+  scan.write(bytes)
+  scan.end()
+  return { head: Buffer.concat(head).toString('utf8'), rows }
+}
+
+/** INTERVAL(): how many of the ascending `starts` are at or below `key` — the range it is in. */
+function rangeOf(key, starts) {
+  let lo = 0
+  let hi = starts.length
+  while (lo < hi) {
+    const mid = (lo + hi) >> 1
+    if (starts[mid] <= key) lo = mid + 1
+    else hi = mid
+  }
+  return lo
+}
+
+const SAFE = BigInt(Number.MAX_SAFE_INTEGER)
+/** Each range's rows counted, `starts` cutting them: what `db.range_checksums` counts. */
+const countsOf = (rows, starts) => {
+  const counts = Array.from({ length: starts.length + 1 }, () => 0)
+  for (const row of rows) counts[rangeOf(row.key, starts)]++
+  return counts
+}
+
+/**
+ * The ranges of a table this read took whole (`part.path`), as `{key, pos, starts, ranges}`, or null:
+ * not big enough, no one integer key, or the site's counts are not the rows read (it moved since).
+ */
+async function takeRanges(endpoint, token, part, skip, ability) {
+  if (!ability.ranges || isVolatile(part.table) || statSync(part.path).size < RANGE_MIN_BYTES) return null
+  const bytes = readFileSync(part.path)
+  const at = bytes.indexOf('INSERT INTO ')
+  const found = rangeKey(bytes.subarray(0, at < 0 ? bytes.length : at).toString('utf8'))
+  if (!found) return null
+  const { rows } = keyedRows(bytes, found.pos)
+  let starts = []
+  let size = 0
+  let count = 0
+  for (const row of rows) {
+    if (count && (size >= RANGE_BYTES || count >= RANGE_ROWS)) {
+      starts.push(row.key)
+      size = 0
+      count = 0
+    }
+    size += row.tuple.length
+    count++
+  }
+  if (starts.length > ability.ranges.maxStarts) {
+    const step = Math.ceil(starts.length / ability.ranges.maxStarts)
+    starts = starts.filter((_, i) => i % step === step - 1)
+  }
+  if (starts.some((start) => start > SAFE || start < -SAFE)) return null
+  const { ranges } = await retried(() =>
+    call(endpoint, token, 'db.range_checksums', {
+      table: part.table,
+      key: found.key,
+      starts: starts.map(Number),
+      skip_columns: skip
+    })
+  )
+  if (!Array.isArray(ranges) || ranges.length !== starts.length + 1) return null
+  const counts = countsOf(rows, starts)
+  if (ranges.some((range, i) => countOf(range) !== counts[i])) return null
+  return { key: found.key, pos: found.pos, starts: starts.map(Number), ranges }
+}
+
+/**
+ * A table that moved, from the last read's rows (`member`) and its kept ranges (`was`): the ranges
+ * whose checksum moved read again, the others kept. `{part, rows, moved, of}` — the part as a whole
+ * read now would write it (the site's CREATE TABLE now, the rows in key order), the rows read and
+ * how many ranges moved of how many — or `{whole: why}`: the table is read whole.
+ */
+async function spliceRanges(endpoint, token, table, was, member, skip, ability, dir) {
+  const now = await retried(() =>
+    call(endpoint, token, 'db.range_checksums', {
+      table,
+      key: was.key,
+      starts: was.starts,
+      skip_columns: skip
+    })
+  )
+  if (!Array.isArray(now.ranges) || now.ranges.length !== was.ranges.length || typeof now.create !== 'string')
+    return { whole: 'an answer of another shape' }
+  const moved = now.ranges.flatMap((range, i) => (range === was.ranges[i] ? [] : [i]))
+  // None moved though the table's checksum did: a write between the two questions. Most moved: one
+  // whole read costs less than many range reads.
+  if (!moved.length) return { whole: 'no range moved' }
+  if (moved.length * 2 > now.ranges.length)
+    return { whole: `${moved.length} of ${now.ranges.length} ranges moved` }
+  const starts = was.starts.map(BigInt)
+  const kept = Array.from({ length: now.ranges.length }, () => [])
+  for (const row of keyedRows(readFileSync(partPath({ member }, dir)), was.pos).rows)
+    kept[rangeOf(row.key, starts)].push(row)
+  // The last read's rows are the ones its ranges were taken over.
+  if (kept.some((rows, i) => rows.length !== countOf(was.ranges[i])))
+    return { whole: 'the last read is not what its ranges counted' }
+  let read = 0
+  for (const i of moved) {
+    const want = countOf(now.ranges[i])
+    const got = []
+    let after = i === 0 ? null : Number(starts[i - 1] - 1n)
+    while (got.length < want) {
+      const chunk = await retried(() =>
+        call(endpoint, token, 'db.dump_after', {
+          table,
+          key: was.key,
+          after,
+          limit: Math.min(want - got.length, ability.ranges.maxLimit)
+        })
+      )
+      const { rows } = keyedRows(Buffer.from(chunk.sql_b64 ?? '', 'base64'), was.pos)
+      if (!rows.length) break
+      got.push(...rows)
+      const last = rows.at(-1).key
+      if (last > SAFE) return { whole: 'a key past what JSON carries' }
+      after = Number(last)
+    }
+    if (got.length !== want || got.some((row) => rangeOf(row.key, starts) !== i))
+      return { whole: 'a range read again is not what its checksum counted' }
+    kept[i] = got
+    read += got.length
+  }
+  // As DbDumper heads a table, then the rows in key order: range by range.
+  mkdirSync(dir, { recursive: true, mode: 0o700 })
+  const path = join(dir, `s${member.offset}.sql`)
+  const out = writer(path, false)
+  const name = table.replace(/`/g, '``')
+  await out.write(
+    `-- table \`${table}\`\nDROP TABLE IF EXISTS \`${name}\`;\n${now.create ? `${now.create};\n` : ''}`
+  )
+  const insert = `INSERT INTO \`${name}\` VALUES `
+  let batch = []
+  let size = 0
+  const flush = async () => {
+    if (!batch.length) return
+    await out.write(
+      Buffer.concat([Buffer.from(insert), ...batch.flatMap((t, i) => (i ? [COMMA, t] : [t])), END])
+    )
+    batch = []
+    size = 0
+  }
+  let rows = 0
+  for (const range of kept)
+    for (const row of range) {
+      batch.push(row.tuple)
+      size += row.tuple.length
+      rows++
+      if (size >= 1024 * 1024) await flush()
+    }
+  await flush()
+  await out.close()
+  return {
+    part: {
+      table,
+      path,
+      digest: digestOf(path, table),
+      rows,
+      ranges: { key: was.key, pos: was.pos, starts: was.starts, ranges: now.ranges }
+    },
+    rows: read,
+    moved: moved.length,
+    of: now.ranges.length
+  }
+}
+const COMMA = Buffer.from(',')
+const END = Buffer.from(';\n')
+
+/** The ranges kept beside a read (`writeRanges`) as `Map<table, {key, pos, starts, ranges}>`, or null:
+ * none, taken another way, or not that dump's (its size says, as its index's does). */
+function readRanges(dump, skip) {
+  try {
+    const kept = JSON.parse(readFileSync(rangesOf(dump), 'utf8'))
+    if (kept?.version !== RANGES_VERSION || kept.rules !== DIGEST_RULES) return null
+    if (JSON.stringify(kept.skip) !== JSON.stringify(skip) || kept.bytes !== statSync(dump).size) return null
+    if (!readIndex(dump)) return null
+    return new Map(Object.entries(kept.tables ?? {}))
+  } catch {
+    return null
+  }
+}
+
+/** The ranges of the parts that have them, beside the dump just written; none at all, no file. */
+function writeRanges(dump, parts, skip) {
+  const tables = Object.fromEntries(parts.filter((p) => p.ranges).map((p) => [p.table, p.ranges]))
+  if (!Object.keys(tables).length) return rmSync(rangesOf(dump), { force: true })
+  writeFileSync(
+    rangesOf(dump),
+    JSON.stringify({
+      version: RANGES_VERSION,
+      rules: DIGEST_RULES,
+      skip,
+      bytes: statSync(dump).size,
+      tables
+    }),
+    { mode: 0o600 }
+  )
 }
 
 /**
@@ -983,13 +1476,26 @@ async function writeDump(path, parts, scratch) {
  * agree row for row on every table but the volatile ones. Either way the read is one moment of the
  * site. `checksumsBefore` is the quick check's, when taken.
  */
-async function pullDatabase(endpoint, token, path, scratch, ability, checksumsBefore = null, last = null) {
+async function pullDatabase(
+  endpoint,
+  token,
+  path,
+  scratch,
+  ability,
+  checksumsBefore = null,
+  last = null,
+  seeded = null
+) {
   if (ability.fingerprint) {
     const skip = ability.fingerprint.skip
     let before = checksumsBefore ?? (await tableChecksums(endpoint, token, skip))
     // Only the tables that moved since the last applied read are read; the others are that read's.
     const reuse = last && before ? await reusableTables(last, before, join(scratch, 'base')) : null
-    let read = await readDatabase(endpoint, token, join(scratch, 'a'), ability, { reuse })
+    // The ranges kept beside that read: an unmoved table keeps its own, a moved one is read by them.
+    const kept = ability.ranges && last ? readRanges(last.dump, skip) : null
+    for (const [table, part] of reuse ?? []) if (kept?.has(table)) part.ranges = kept.get(table)
+    const ranges = ability.ranges ? { kept, dump: last?.dump, skip } : null
+    let read = await readDatabase(endpoint, token, join(scratch, 'a'), ability, { reuse, seeded, ranges })
     // A checksum covers every row: WordPress's `wp_options` moves with each WP-Cron tick (`cron`, the
     // transients), so its checksum never holds still on a site with visitors, and comparing checksums
     // alone made every read of it busy (dev, 24/10/2026). Its two reads compared row by row decide.
@@ -1003,6 +1509,13 @@ async function pullDatabase(endpoint, token, path, scratch, ability, checksumsBe
       if (moved === null) break // A table the server gives no checksum for: the two-read way below.
       if (moved.length === 0) {
         const digests = await writeDump(path, read.parts, scratch)
+        // A table settled by two reads that agree still moves (its rows the site rewrites by itself):
+        // its ranges may not be its rows. It is read whole next time and its ranges taken then.
+        writeRanges(
+          path,
+          read.parts.filter((p) => !settled.has(p.table)),
+          skip
+        )
         return {
           tables: read.tables,
           tablesRead: read.tablesRead,
@@ -1024,7 +1537,8 @@ async function pullDatabase(endpoint, token, path, scratch, ability, checksumsBe
       // Each round in a folder of its own: the read before stays, to be compared with.
       read = await readDatabase(endpoint, token, join(scratch, `r${round}`), ability, {
         only: new Set(moved),
-        previous: read
+        previous: read,
+        ranges: ranges && { kept: null, skip }
       })
       for (const part of read.parts) {
         const prior = was.get(part.table)
@@ -1032,7 +1546,8 @@ async function pullDatabase(endpoint, token, path, scratch, ability, checksumsBe
         if (prior.digest === part.digest) {
           settled.add(part.table)
           differed.delete(part.table)
-        } else differed.set(part.table, rowsMoved(part.table, prior.path, part.path))
+        } else
+          differed.set(part.table, rowsMoved(part.table, partPath(prior, join(scratch, 'kept')), part.path))
       }
       before = after
     }
@@ -1272,6 +1787,12 @@ async function pullWebroot(endpoint, token, live, ability, steady = null) {
   const changed = base
     ? [...listing].filter(([p, f]) => f.unknown || baseSha(p) !== f.sha1).map(([p]) => p)
     : []
+  // Which files moved, by path (the first few): a WordPress read with nothing new went on to merge
+  // for a file that brought nothing, and nothing said which (dev, 27/10/2026).
+  if (changed.length)
+    note(
+      `files: ${changed.length} changed (${changed.slice(0, 3).join(', ')}${changed.length > 3 ? ', …' : ''})`
+    )
   // What file.read will not serve — a protected file (configuration.php: no sha1 either, the site
   // will not hash it) or one too large — comes in a pack cut to those files where the engine can
   // cut one; else the whole tree is read. A changed Global Configuration alone made a sync read
@@ -1432,6 +1953,8 @@ async function fingerprintNow(endpoint, token, maxFiles, skip = [], { tables: wi
   let count = 0
   let bytes = 0
   let tables = null
+  let definitions = null
+  let triggers = null
   let after = ''
   for (let page = 0; ; page++) {
     const { fingerprint } = await retried(() =>
@@ -1439,10 +1962,16 @@ async function fingerprintNow(endpoint, token, maxFiles, skip = [], { tables: wi
         after,
         limit: maxFiles,
         checksums: withTables && page === 0,
+        // Each table's definition and the triggers (an engine without them answers neither, #120).
+        ...(withTables && page === 0 ? { definitions: true } : {}),
         ...(page === 0 && skip.length ? { skip_columns: skip } : {})
       })
     )
-    if (page === 0) tables = fingerprint?.tables ?? null
+    if (page === 0) {
+      tables = fingerprint?.tables ?? null
+      definitions = fingerprint?.definitions ?? null
+      triggers = Array.isArray(fingerprint?.triggers) ? fingerprint.triggers : null
+    }
     const files = fingerprint?.files
     if (!files) break
     pages.push(files.digest)
@@ -1451,7 +1980,15 @@ async function fingerprintNow(endpoint, token, maxFiles, skip = [], { tables: wi
     if (!files.next_after) break
     after = files.next_after
   }
-  return { version: 1, pageSize: maxFiles, skip, files: { count, bytes, pages }, tables }
+  return {
+    version: 1,
+    pageSize: maxFiles,
+    skip,
+    files: { count, bytes, pages },
+    tables,
+    ...(definitions ? { definitions } : {}),
+    ...(triggers ? { triggers } : {})
+  }
 }
 
 /** The files of two fingerprints taken with one page size: the same pages, so nothing moved between them. */
@@ -1478,7 +2015,34 @@ function sameFingerprint(a, b) {
   if (a.files?.count !== b.files?.count || a.files?.bytes !== b.files?.bytes) return false
   if (JSON.stringify(a.files?.pages) !== JSON.stringify(b.files?.pages)) return false
   const moved = movedTables(a.tables, b.tables, isNoise)
-  return moved !== null && moved.length === 0
+  return moved !== null && moved.length === 0 && sameDefinitions(a, b)
+}
+
+/** No table's definition moved (a charset, collation or column change moves no row, #120); unknown on either side: the same. */
+const sameDefinitions = (a, b) =>
+  !a?.definitions ||
+  !b?.definitions ||
+  Object.keys(b.definitions).every(
+    (t) =>
+      isNoise(t) ||
+      a.definitions[t] == null ||
+      b.definitions[t] == null ||
+      a.definitions[t] === b.definitions[t]
+  )
+
+/**
+ * What a read saw that a sync does not bring (#120): the live site's triggers (no dump carries one;
+ * webroot-sync names those the copy lacks), and the tables left out only by the shape of their name
+ * (`…_log`) that the live site changed since the last read. `{}` when nothing.
+ */
+function notCarriedOf(stored, fingerprint) {
+  const tables = Object.keys(fingerprint?.tables ?? {})
+    .filter((t) => isGuessed(t) && stored?.tables?.[t] != null && fingerprint.tables[t] !== stored.tables[t])
+    .sort()
+  return {
+    ...(fingerprint?.triggers ? { triggers: fingerprint.triggers.slice(0, 200) } : {}),
+    ...(tables.length ? { tables: tables.slice(0, 200) } : {})
+  }
 }
 
 /**
@@ -1496,12 +2060,21 @@ async function sameRows(endpoint, token, ability, stored, fingerprint, scratch) 
   if (!base || !existsSync(base)) return null
   const moved = movedTables(stored.tables, fingerprint.tables, isNoise)
   if (!moved?.length || !moved.every((table) => rowSkip(table) !== null)) return null
+  let keep = false
   try {
     const read = await readDatabase(endpoint, token, scratch, ability, {
       only: new Set(moved),
-      partial: true
+      partial: true,
+      ranges: ability.ranges
+        ? { kept: readRanges(base, ability.fingerprint.skip), dump: base, skip: ability.fingerprint.skip }
+        : null
     })
-    const was = await dumpDigests(base, new Set(moved))
+    // The last read's digests from its index when it has one: nothing of it unpacked.
+    const index = readIndex(base)
+    const was =
+      index && moved.every((t) => index.has(t))
+        ? new Map(moved.map((t) => [t, index.get(t).digest]))
+        : await dumpDigests(base, new Set(moved))
     const same =
       read.parts.length === moved.length &&
       read.parts.every((p) => was.has(p.table) && was.get(p.table) === p.digest)
@@ -1509,15 +2082,34 @@ async function sameRows(endpoint, token, ability, stored, fingerprint, scratch) 
     // still went on to read and merge for 60 s, and nothing said which row held it (dev, 27/10/2026).
     if (!same) {
       const differs = read.parts.filter((p) => was.get(p.table) !== p.digest).map((p) => p.table)
-      const files = await tablesOf(base, new Set(differs), join(scratch, 'base'))
+      // The last read's part of each from its index when it has one (its member alone unpacked).
+      const files = new Map()
+      for (const table of differs) {
+        const at = index?.get(table)
+        if (at)
+          files.set(
+            table,
+            partPath({ member: { file: base, offset: at.offset, length: at.length } }, join(scratch, 'base'))
+          )
+      }
+      const rest = differs.filter((t) => !files.has(t))
+      if (rest.length)
+        for (const [t, path] of await tablesOf(base, new Set(rest), join(scratch, 'base'))) files.set(t, path)
       for (const part of read.parts) {
         const at = files.get(part.table)
         if (at) note(`compare: ${movedLine(rowsMoved(part.table, at, part.path))}`)
       }
     }
-    return { same, tables: moved, rows: read.parts.reduce((n, p) => n + (p.rows ?? 0), 0) }
+    const answer = { same, tables: moved, rows: read.parts.reduce((n, p) => n + (p.rows ?? 0), 0) }
+    // A row of substance: the read goes on, and the tables just read are its own — not asked for
+    // again (a WordPress read asked for wp_postmeta's 135 000 rows twice, 15 s each; dev, 27/10/2026).
+    if (!same) {
+      answer.parts = read.parts
+      keep = true
+    }
+    return answer
   } finally {
-    rmSync(scratch, { recursive: true, force: true })
+    if (!keep) rmSync(scratch, { recursive: true, force: true })
   }
 }
 
@@ -1567,15 +2159,18 @@ async function main(dir) {
     timing.fingerprint = since(at)
     stored = readJson(process.env.TRACY_SYNC_FINGERPRINT_IN)
     note(`fingerprint ${timing.fingerprint}s${sameFingerprint(stored, fingerprint) ? ': nothing moved' : ''}`)
-    if (sameFingerprint(stored, fingerprint))
+    if (sameFingerprint(stored, fingerprint)) {
+      const notCarried = notCarriedOf(stored, fingerprint)
       return {
         ok: true,
         unchanged: 'fingerprint',
         liveReadAt,
         abilities: reads,
         timing,
-        seconds: since(started)
+        seconds: since(started),
+        ...(Object.keys(notCarried).length ? { notCarried } : {})
       }
+    }
   }
   // Only the question (TRACY_SYNC_CHECK_ONLY, a Sync anyway taking a held sync's read): the live site
   // moved since that read's fingerprint, or cannot say (no fingerprint here) — nothing is read.
@@ -1622,9 +2217,16 @@ async function main(dir) {
     comparable(stored, fingerprint) &&
       process.env.TRACY_SYNC_DB_BASE &&
       existsSync(process.env.TRACY_SYNC_DB_BASE)
-      ? { tables: stored.tables, dump: process.env.TRACY_SYNC_DB_BASE }
-      : null
+      ? {
+          tables: stored.tables,
+          definitions: stored.definitions ?? null,
+          definitionsNow: fingerprint?.definitions ?? null,
+          dump: process.env.TRACY_SYNC_DB_BASE
+        }
+      : null,
+    compared?.parts ?? null
   )
+  rmSync(join(out, 'compare'), { recursive: true, force: true })
   timing.database = since(at)
   note(
     `database ${timing.database}s: ${db.tablesRead ?? db.tables ?? '?'} of ${db.tables ?? '?'} table(s) read, ${db.dbRounds ?? '?'} round(s) (${db.dbCheck ?? '?'})`
@@ -1687,6 +2289,7 @@ async function main(dir) {
       was.size === now.size && [...now].every(([table, d]) => isVolatile(table) || was.get(table) === d)
     if (same) unchanged = 'compare'
   }
+  const notCarried = notCarriedOf(stored, fingerprint)
   return {
     ok: true,
     ...(unchanged ? { unchanged } : {}),
@@ -1695,7 +2298,8 @@ async function main(dir) {
     timing,
     seconds: since(started),
     ...db,
-    ...files
+    ...files,
+    ...(Object.keys(notCarried).length ? { notCarried } : {})
   }
 }
 
@@ -1708,7 +2312,8 @@ main(process.argv[2] ?? '')
         ok: false,
         code: error.code ?? 'PULL_FAILED',
         ...(detail ? { detail } : {}),
-        ...(error.moved ? { moved: error.moved } : {})
+        ...(error.moved ? { moved: error.moved } : {}),
+        ...(error.code === 'LIVE_PHP_TOO_OLD' ? { php: error.php ?? null, min: error.min ?? null } : {})
       })
     )
   })

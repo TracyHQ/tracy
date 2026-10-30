@@ -123,3 +123,26 @@ test('a hand-edited value behind a plain Sass variable is out of sync; a source 
   assert.equal(at('#fff').twin, 'scss/template.scss', 'stale map line: found by selector')
   assert.equal(at('#c1c9d0').twin, 'scss/template.scss', 'computed by darken()')
 })
+
+test('a right-to-left build is the twin of the left-to-right LESS source (T3 build_rtl)', () => {
+  // JA Cagox 1.0.1, 29/10/2026: T3 compiles less/x.less again for css/rtl/x.css (and an ACM block's
+  // css/rtl/style.css from its less/style.less), so the RTL copy has no source of its own name
+  const less = '@brand: #da4e35;\n.hx-nav a {\n  color: @brand;\n}\n'
+  const css = '.hx-nav a {\n  color: #da4e35;\n}\n'
+  const s = scanTemplate(
+    writeFixture({
+      'templateDetails.xml': XML,
+      'less/template.less': less,
+      'css/template.css': css,
+      'css/rtl/template.css': css,
+      'acm/hero/less/style.less': less,
+      'acm/hero/css/style.css': css,
+      'acm/hero/css/rtl/style.css': css
+    })
+  )
+  const twinOf = (file) => s.findings.find((f) => f.file === file && f.text === '#da4e35')?.twin
+  assert.equal(twinOf('css/template.css'), 'less/template.less')
+  assert.equal(twinOf('css/rtl/template.css'), 'less/template.less')
+  assert.equal(twinOf('acm/hero/css/style.css'), 'acm/hero/less/style.less')
+  assert.equal(twinOf('acm/hero/css/rtl/style.css'), 'acm/hero/less/style.less')
+})

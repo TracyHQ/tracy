@@ -6,7 +6,7 @@
  * for. Words have their own roles: `--ds-c-accent-text` for the accent, `--ds-c-on-ink` and
  * `--ds-c-accent-on` for the words on a band or a fill, `--ds-c-<status>-text` for a status. A code
  * review of JA Restaurant (20/10/2026) found a text `color` reading `var(--ds-c-accent)` in the
- * ja-products sources: under a system with a light accent the words fade into the page. The scan is
+ * joomlart-products sources: under a system with a light accent the words fade into the page. The scan is
  * `@tracy/ds-slot` `text-roles.mjs` (`groundRolesAsText`); static, so it runs on Check again with no
  * measurement.
  */

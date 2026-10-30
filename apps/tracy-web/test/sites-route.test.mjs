@@ -5175,7 +5175,9 @@ test(
       (await door('/api/sites/_conversation/turn', { turnId: 'session-u9:1', title: 'Make it blue' })).status,
       200
     )
-    await markTurnsUndone(pool, 'lantern.localhost', [{ turnId: 'session-u9:1', complete: true }])
+    await markTurnsUndone(pool, 'lantern.localhost', [
+      { turnId: 'session-u9:1', complete: true, proven: true }
+    ])
     const jobsBefore = calls.filter((c) => c.url.endsWith('/_host/site')).length
     const res = await door('/api/sites/_conversation/turn/undone', { turnId: 'session-u9:2' })
     assert.equal(res.status, 200)

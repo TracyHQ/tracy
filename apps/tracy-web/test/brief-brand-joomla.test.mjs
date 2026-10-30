@@ -358,6 +358,67 @@ test('T31 T3 a style without logoimage_dark never gets one', async () => {
   assert.ok(!Object.hasOwn(paramsOf(site, 9), 'logoimage_dark'))
 })
 
+/** JA Cagox 1.0.2: every style keeps a second logo for its dark footer in `logofooterimage` (footer.php). */
+const CAGOX = [9, 10].map((id) =>
+  t3Style(
+    id,
+    `ja_cagox - Style ${id}`,
+    {
+      logotype: 'image',
+      sitename: '',
+      logoimage: 'images/joomlart/logo/logo-default.png',
+      enable_logoimage_sm: '1',
+      logoimage_sm: 'images/joomlart/logo/logo-mobile.png',
+      logofootertype: 'image',
+      logofooterimage: 'images/joomlart/logo/logo-footer.png'
+    },
+    'ja_cagox'
+  )
+)
+
+test('T3 JA Cagox pair: the header takes the light logo, the dark footer logo (logofooterimage) the dark one', async () => {
+  const site = fakeJoomla({ styles: CAGOX, template: 'ja_cagox', framework: 't3' })
+  await brand(
+    site,
+    { tag: 'quickstart/ja-cagox/j6', version: '1.0.2' },
+    { name: 'Tamq', logo: { light: await png(600, 200), dark: await png(600, 201) } }
+  )
+  for (const id of [9, 10]) {
+    const params = paramsOf(site, id)
+    assert.match(params.logoimage, /logo-light/)
+    assert.equal(params.logofootertype, 'image')
+    assert.match(params.logofooterimage, /logo-dark/)
+  }
+})
+
+test('T3 JA Cagox light logo only: the dark footer shows the name as text, never the demo logo (Q7)', async () => {
+  const site = fakeJoomla({ styles: CAGOX, template: 'ja_cagox', framework: 't3' })
+  await brand(
+    site,
+    { tag: 'quickstart/ja-cagox/j6', version: '1.0.2' },
+    { name: 'Tamq', logo: { light: await png(600, 200) } }
+  )
+  for (const id of [9, 10]) {
+    const params = paramsOf(site, id)
+    assert.match(params.logoimage, /logo-light/)
+    assert.equal(params.logofootertype, 'text')
+    assert.equal(params.logofooterimage, 'images/joomlart/logo/logo-footer.png')
+  }
+})
+
+test('T3 a style without logofooterimage never gets one', async () => {
+  const site = fakeJoomla({ styles: SMALLBIZ, template: 'ja_smallbiz', framework: 't3' })
+  await brand(
+    site,
+    { tag: 'quickstart/ja-smallbiz/j6', version: '1.0.0' },
+    { logo: { light: await png(600, 200), dark: await png(600, 201) } }
+  )
+  for (const id of [10, 11, 12, 13]) {
+    assert.ok(!Object.hasOwn(paramsOf(site, id), 'logofooterimage'))
+    assert.ok(!Object.hasOwn(paramsOf(site, id), 'logofootertype'))
+  }
+})
+
 test('T3 favicon through template.siteSettings other_faviconFile', async () => {
   const site = fakeJoomla({ styles: SMALLBIZ, template: 'ja_smallbiz', framework: 't3' })
   const result = await brand(

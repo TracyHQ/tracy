@@ -7,7 +7,7 @@ const WRITE_RULE =
 const WO_RULE =
   "Staff may read and mark their own rows read; every other door needs an owner or admin role and this deployment's public `Origin` (403 otherwise)."
 const WO_PROVIDER =
-  '`google`, `apify`, `deepseek`, `firecrawl`, `jina`, `rapidapi`, `serpapi` or `litescrape`'
+  '`google`, `apify`, `deepseek`, `firecrawl`, `jina`, `rapidapi`, `serpapi`, `litescrape` or `monid`'
 const LLM_RULE = "Owner or admin role only, reads included; writes also need this deployment's public origin."
 
 /** @type {import('./index.js').RouteDoc[]} */
@@ -241,7 +241,7 @@ export const OPS_B_ROUTES = [
     method: 'POST',
     path: '/api/ops/wo/keys/:provider/test',
     summary: 'Test one provider key against its live API',
-    description: `Calls the provider with the key in use (saved or environment). SerpApi checks account credits through its non-billable account endpoint; it never runs a search from Test. For \`litescrape\`, only the documented non-billable \`/api/keys/status\` endpoint is read; Test never runs a paid search. For \`google\`, Places API (New), PageSpeed Insights and Maps Embed are probed one by one and \`ok\` is true only when all three answer. ${WO_RULE}`,
+    description: `Calls the provider with the key in use (saved or environment). SerpApi checks account credits through its non-billable account endpoint; it never runs a search from Test. For \`litescrape\`, only the documented non-billable \`/api/keys/status\` endpoint is read; Test never runs a paid search. For \`monid\`, Test makes no call (Monid has no free key check) and answers \`not_checkable\`. For \`google\`, Places API (New), PageSpeed Insights and Maps Embed are probed one by one and \`ok\` is true only when all three answer. ${WO_RULE}`,
     audience: ['team'],
     auth: 'admin',
     internal: true,

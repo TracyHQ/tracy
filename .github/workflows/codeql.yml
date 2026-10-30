@@ -1,0 +1,143 @@
+name: CodeQL
+
+# Advanced setup, replacing code scanning default setup (default setup must be switched off in the
+# repository settings, or GitHub rejects these uploads).
+#
+# Two jobs, one per scope:
+#   · `analyze` — team pull requests into `develop`, pushes to `develop`/`main`, the weekly scan.
+#     Reads `.github/codeql/codeql-config.yml`, which leaves out data, tests and fixtures.
+#   · `analyze-full` — pull requests from forks and every pull request into another base than
+#     `develop`: `main` (the release), or a stacked pull request into a feature branch.
+#     No config: everything is scanned.
+#
+# Every pull request, whatever its base, gets one of the two scans and the dependency review.
+# `edited` is there for a retarget (`develop` -> `main` must start the full scan without a new
+# commit); an edit of the title or body starts nothing and cancels nothing.
+#
+# Overlay (incremental) analysis, which is what makes a pull request fast: codeql-action builds and
+# caches an overlay-base database only when it analyzes the DEFAULT branch (`main`: its pushes and
+# the weekly scan), and a pull request restores it. A cache saved on the default branch is readable
+# from every branch, so team pull requests into `develop` use it. The cache key carries the
+# workflow, the job id and the matrix, so `analyze` must keep its id and matrix on every event, and
+# `analyze-full` never finds an overlay base: it always runs a full analysis.
+# The weekly scan runs on `main` and refreshes the base before the 7-day cache eviction.
+# A push to `develop` is not the default branch, so it runs a full (filtered) analysis and caches
+# nothing.
+
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+  schedule:
+    - cron: '17 4 * * 1'
+
+permissions:
+  contents: read
+
+concurrency:
+  # A retarget joins the pull request's group and cancels the scan of the old base. A title or body
+  # edit gets a group of its own, so it cannot cancel a running scan.
+  group: >-
+    codeql-${{ github.event.pull_request.number || github.ref }}${{
+    github.event.action == 'edited' && !github.event.changes.base &&
+    format('-edit-{0}', github.run_id) || '' }}
+  # Never cancel a push or the weekly scan: on `main` they build the overlay base.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  analyze:
+    name: CodeQL (${{ matrix.language }})
+    if: >-
+      github.event_name != 'pull_request' ||
+      (github.event.pull_request.head.repo.full_name == github.repository &&
+      github.base_ref == 'develop' &&
+      (github.event.action != 'edited' || github.event.changes.base))
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: actions
+            build-mode: none
+          - language: javascript-typescript
+            build-mode: none
+          - language: python
+            build-mode: none
+    steps:
+      - name: Check out
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+          config-file: ./.github/codeql/codeql-config.yml
+
+      - name: Analyze
+        uses: github/codeql-action/analyze@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        with:
+          category: /language:${{ matrix.language }}
+
+  analyze-full:
+    name: CodeQL full (${{ matrix.language }})
+    if: >-
+      github.event_name == 'pull_request' &&
+      (github.event.pull_request.head.repo.full_name != github.repository ||
+      github.base_ref != 'develop') &&
+      (github.event.action != 'edited' || github.event.changes.base)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    # A fork pull request gets a read-only token whatever is asked here (GitHub caps it).
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: actions
+            build-mode: none
+          - language: javascript-typescript
+            build-mode: none
+          - language: python
+            build-mode: none
+    steps:
+      - name: Check out
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+
+      # Same category as `analyze`, so the alerts compare against the base branch's analysis.
+      - name: Analyze
+        uses: github/codeql-action/analyze@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4.39.1
+        with:
+          category: /language:${{ matrix.language }}
+
+  dependency-review:
+    name: Dependency review
+    if: >-
+      github.event_name == 'pull_request' &&
+      (github.event.action != 'edited' || github.event.changes.base)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - name: Review dependency changes
+        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0

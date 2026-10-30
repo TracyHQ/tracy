@@ -20,7 +20,8 @@ export const WO_PROVIDERS = Object.freeze([
   'rapidapi',
   'serpapi',
   'litescrape',
-  'scrapecreators'
+  'scrapecreators',
+  'monid'
 ])
 
 export const PROVIDER_COLUMN = Object.freeze({
@@ -32,7 +33,8 @@ export const PROVIDER_COLUMN = Object.freeze({
   rapidapi: 'rapidapi_key_cipher',
   serpapi: 'serpapi_key_cipher',
   litescrape: 'litescrape_key_cipher',
-  scrapecreators: 'scrapecreators_key_cipher'
+  scrapecreators: 'scrapecreators_key_cipher',
+  monid: 'monid_key_cipher'
 })
 
 export const DEFAULT_WO_OPS_SETTINGS = Object.freeze({
@@ -718,6 +720,10 @@ export function envFallbackKey(config, provider) {
   }
   if (provider === 'scrapecreators') {
     const k = config?.scrapeCreatorsApiKey
+    return typeof k === 'string' && k.trim() !== '' ? k.trim() : null
+  }
+  if (provider === 'monid') {
+    const k = config?.monidApiKey
     return typeof k === 'string' && k.trim() !== '' ? k.trim() : null
   }
   return null

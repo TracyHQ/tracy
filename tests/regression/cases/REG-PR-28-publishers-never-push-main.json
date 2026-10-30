@@ -1,0 +1,60 @@
+{
+  "id": "REG-PR-28-publishers-never-push-main",
+  "kind": "fix",
+  "title": "The brand and WO publishers reach main only through a PR they opened and merged themselves: never a push or force-push to main, never another user's PR or branch, and the token goes to GitHub only",
+  "pr": 28,
+  "area": "fleet/publishers",
+  "cms": ["any"],
+  "needs": ["node"],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the TCH checkout run: node --test --test-reporter=tap packages/fleet/tracy-fleet-operation/test/sync-brands.test.mjs scripts/test/wo-export-public.test.mjs (a local bare repository stands in for the GitHub repo, a local HTTP stub for the pulls API and /fleet/git-token; nothing reaches github.com).",
+    "S2: Record the exit code and the result of every test named in run.tests."
+  ],
+  "expect": [
+    "S1 exits 0 with '# fail 0'.",
+    "Never pushes main: on a conflict twice or merged:false main is unchanged and the run fails naming the PR URL; --replace, --remote --push and a target without main are refused and an empty repository stays empty.",
+    "Merges only the commit it pushed: the merge is pinned to the pushed head; after main moved the first PR is closed and a regenerated one merged; a leftover PR of the publisher itself is closed, never merged.",
+    "Never merges or deletes another user's PR or branch: PRs by another user, from a fork, with a force-updated branch, or from another host stay open with their branches; a branch moved while its PR is being closed survives (compare-and-delete).",
+    "Sends the token to nothing but GitHub: non-loopback API/remote overrides are refused before a token is asked for, and the git credential helper offers nothing to a non-github.com remote."
+  ],
+  "selectors": {
+    "publisher": "makePublisher in packages/fleet/tracy-fleet-operation/scripts/lib/github-pr-publish.mjs",
+    "brands": "packages/fleet/tracy-fleet-operation/scripts/tools/sync-brands.sh",
+    "wo": "scripts/wo-export-public.mjs"
+  },
+  "evidence": "Before #28 sync-brands.sh pushed HEAD:main and reported every push error as 'another host won'; wo-export-public.mjs pushed main and could force-push it (--replace). Review rounds on #28 found leftover PRs merged by branch prefix, the token sent to an overridable API/remote, and an unconditional REST branch delete; each has a test here that failed before its fix.",
+  "fence": "The publisher mechanism itself (github-pr-publish.mjs and its two callers), driven against a bare repository and a pulls-API stub: no model, no stand.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/fleet/tracy-fleet-operation/test/sync-brands.test.mjs",
+      "scripts/test/wo-export-public.test.mjs"
+    ],
+    "needs": [],
+    "tests": [
+      "happy path: one PR from automation/brands/<host>/, merged via the API, branch deleted",
+      "main moved once: the first PR is closed, the run regenerates on the new main and merges",
+      "conflict twice: fails with the second PR URL, never pushes main",
+      "merge API answers merged:false: a failure naming the PR, not a success",
+      "a leftover branch someone moves while its PR is being closed survives: the delete is compare-and-delete",
+      "the run branch someone moves while its failed PR is being closed survives too",
+      "a crash left the own PR of this host open: it is closed, never merged, and the run publishes fresh",
+      "PRs that do not belong to this publisher are neither merged nor closed, and do not block the run",
+      "an API override that is not a loopback http URL is refused before a token is asked for",
+      "a remote override that is not loopback http or a local bare repository is refused",
+      "the credential helper answers only for github.com: a loopback remote never sees the token",
+      "apiBase: api.github.com by default, a loopback http stub at most, nothing else",
+      "happy path: PR from automation/wo/<source>/<export>, merged via the API, branch deleted",
+      "main moved once: the first PR is closed and the export redone on the new main",
+      "conflict twice: fails with the second PR URL and main untouched",
+      "merge API answers merged:false: a failure naming the PR",
+      "a leftover PR of this maintainer is closed, never merged; one by another user is left alone",
+      "no token: GITHUB_TOKEN unset and no gh — fails before cloning anything",
+      "an --api that is not a loopback http stub is refused before any work",
+      "there is no path that pushes main: --replace, --remote --push and a target without main all refuse"
+    ]
+  }
+}

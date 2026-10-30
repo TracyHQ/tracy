@@ -6,6 +6,7 @@ import {
   mapsListingUrl,
   supplementalMapsReviews
 } from './google-maps-serpapi.js'
+import { withMonidReviews } from './google-maps-monid.js'
 import { BudgetExceededError } from './cost-ledger.js'
 import { ceilingCents } from './cost-prices.js'
 import { StaleLeaseError, fenced } from './store.js'
@@ -35,7 +36,7 @@ export const controlError = (error) =>
 
 export async function researchGoogleMaps(
   ctx,
-  { pool, now, fetch: fetchImpl, chargeable, row, google, save, tried }
+  { pool, now, fetch: fetchImpl, retry, chargeable, row, google, save, tried }
 ) {
   if (
     ctx.prefetch ||
@@ -67,8 +68,17 @@ export async function researchGoogleMaps(
     data.cache?.version === CACHE_VERSION && data.cache.placeId === placeId
       ? { ...data.cache }
       : { version: CACHE_VERSION, placeId }
+  // Every HTTP try of this run, in order, with its code: a 429 retried twice reads as three tries in the brief
+  // (`brief-sources.mjs`), not as one.
+  const attempts = sameJob && Array.isArray(row?.coverage?.attempts) ? [...row.coverage.attempts] : []
   let pending = true
-  const coverage = () => ({ version: GOOGLE_MAPS_VERSION, pipelineJobId: job.id, pipeline, pending })
+  const coverage = () => ({
+    version: GOOGLE_MAPS_VERSION,
+    pipelineJobId: job.id,
+    pipeline,
+    pending,
+    attempts
+  })
   const persist = async () =>
     fenced(pool, lease, (db) =>
       db.query(
@@ -116,15 +126,44 @@ export async function researchGoogleMaps(
       async () => {
         pipeline[operation] = { state: 'sent' }
         await persist()
+        const tries = []
+        // A try that got an HTTP answer is settled by what the call made of it (a 200 can still be an
+        // APPLICATION_ERROR); a try that failed at HTTP keeps its own code.
+        const settle = (error) => {
+          const outcome = error
+            ? {
+                provider: 'serpapi',
+                step: operation,
+                status: 'failed',
+                reason: error?.code ?? 'PROVIDER_ERROR'
+              }
+            : { provider: 'serpapi', step: operation, status: 'complete' }
+          if (!tries.length || tries.at(-1) === null) tries[Math.max(tries.length - 1, 0)] = outcome
+          attempts.push(...tries)
+        }
         try {
           const result = await googleMapsSerpapiCall(operation, params, {
             key: ctx.keys.serpapi,
-            fetch: fetchImpl
+            fetch: fetchImpl,
+            retry,
+            onTry: ({ error }) =>
+              tries.push(
+                error
+                  ? {
+                      provider: 'serpapi',
+                      step: operation,
+                      status: 'failed',
+                      reason: error.code ?? 'PROVIDER_ERROR'
+                    }
+                  : null
+              )
           })
+          settle(null)
           pipeline[operation] = { state: 'done', result }
           await persist()
           return result
         } catch (error) {
+          settle(error)
           if (!['TIMEOUT', 'PROVIDER_ERROR'].includes(error?.code)) {
             pipeline[operation] = { state: 'failed', code: error?.code ?? 'PROVIDER_ERROR' }
             await persist()
@@ -143,10 +182,15 @@ export async function researchGoogleMaps(
         name: place.name,
         dataId: place.dataId,
         menuLink: place.menuLink ?? null,
-        reviews: supplementalMapsReviews(place.reviews, google?.reviews ?? []).map((review) => ({
-          ...review,
-          fetchedAt: at().toISOString()
-        })),
+        // Monid's reviews (`google-maps-monid-research.js`) are kept; a new SerpApi review replaces its Monid copy.
+        reviews: withMonidReviews(
+          supplementalMapsReviews(place.reviews, google?.reviews ?? []).map((review) => ({
+            ...review,
+            fetchedAt: at().toISOString()
+          })),
+          (data.reviews ?? []).filter((review) => review.provider === 'monid'),
+          google?.reviews ?? []
+        ),
         reviewsFetchedAt: at().toISOString()
       }
       await publish()
@@ -232,8 +276,9 @@ export function mapsMedia(data) {
     })
   }
   for (const photo of (data.menuPhotos ?? []).slice(0, 20)) add(photo, 'menu')
+  // Photos of Monid's reviews stay on their review only: they are not downloaded as Maps media.
   for (const review of data.reviews ?? [])
-    for (const photo of review.photos ?? []) add(photo, 'review', review)
+    if (review.provider !== 'monid') for (const photo of review.photos ?? []) add(photo, 'review', review)
   for (const photo of (data.overviewPhotos ?? []).slice(0, 20)) add(photo, 'overview')
   return [...byUrl.values()].slice(0, 90)
 }

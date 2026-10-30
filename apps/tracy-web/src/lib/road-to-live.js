@@ -27,7 +27,7 @@
  *     skill, a claude-cowork release, the Tracy pin, a PR, a CI deploy), so it starts at once;
  *   - the demo waits for this release's own contract while there is none (`no-contract`): the
  *     skill may cut a NEW version (an installer release always, a captured pack without the agent
- *     docs too, which only the ja-products source can tell), and a demo made before it would sit on
+ *     docs too, which only the joomlart-products source can tell), and a demo made before it would sit on
  *     the old one. A live demo is kept: if the contract brings a new version, `demo-version` says so;
  *   - the listing waits for a live demo: Create listing fills the form and takes the pictures from
  *     it. A saved listing stays done even if the demo later goes down;
@@ -40,8 +40,8 @@
  *     only warn, and a release already published only warns;
  *   - Content coverage waits for the contract: the audit measures that contract on a built site and
  *     commits `content-coverage.json` beside it (`content-coverage/road-step.js`, owner 24/10/2026).
- *     Unexplained holes, and slot roles missing from the content map (ADR 0038), hold Publish; a release
- *     already published only warns;
+ *     Unexplained holes, slot roles missing from the content map (ADR 0038), and on Joomla a content map
+ *     without Slot fit (ADR 0039), hold Publish; a release already published only warns;
  *   - Publish needs the release, the install file, the listing, the contract, Content coverage,
  *     Customize your site and Design system, never a demo (a warning never takes a card off, 04/10/2026); the one
  *     exception is Design system's DEMO-1 (14/10/2026: must-fix): with no demo the preview door has
@@ -57,6 +57,7 @@ import {
   contentCoverageStep,
   coverageOfRelease
 } from './content-coverage/road-step.js'
+import { fitOfRelease } from './content-coverage/fit.js'
 import { rolesOfRelease } from './content-coverage/roles.js'
 import { cardRefusal, cardWarnings, notShownWhy } from './design-inspiration.js'
 import { listingProblems } from './listing-pages.js'
@@ -149,12 +150,14 @@ function batchScopeOf(release) {
  *   dsReadiness?: import('./customize-readiness.js').Readiness | null,
  *   doorHealth?: { checkedAt: number, assets: number, failed: { path: string, status: number }[] } | null,
  *   coverage?: import('./content-coverage/reader.js').Coverage,
- *   roles?: import('./content-coverage/roles.js').Roles
+ *   roles?: import('./content-coverage/roles.js').Roles,
+ *   fit?: import('./content-coverage/fit.js').Fit
  * }} world this server's live demo of the release, its failed demo job, the pictures it holds,
  *   the contract index, every choosable release of the same template (the door asks a contract of
  *   each of them), and the stored Customize your site and Design system checks of this release's version.
  *   `coverage`: the content coverage of the sealing contract; read from its folder when left out.
  *   `roles`: its slot roles, the third group of Content coverage; read the same way when left out.
+ *   `fit`: the Slot fit of its content map, the fourth group (ADR 0039); read the same way when left out.
  * @returns {{ step: string, state: 'done' | 'blocked' | 'todo' | 'warn' | 'checking', code: string, params: Record<string, unknown>, blockedBy?: string }[] | null}
  */
 export function roadOf(
@@ -170,7 +173,8 @@ export function roadOf(
     dsSeverity = undefined,
     doorHealth = null,
     coverage = undefined,
-    roles = undefined
+    roles = undefined,
+    fit = undefined
   }
 ) {
   if (!release || release.kind === 'design-pack') return null
@@ -260,7 +264,8 @@ export function roadOf(
     version,
     contractId: own.profile,
     coverage: coverage ?? coverageOfRelease(release, contracts),
-    roles: roles ?? rolesOfRelease(release, contracts)
+    roles: roles ?? rolesOfRelease(release, contracts),
+    fit: fit ?? fitOfRelease(release, contracts)
   })
 
   // 4. Customize your site: the stored readiness check of this version (see the 🔒 above).

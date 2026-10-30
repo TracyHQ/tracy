@@ -11,6 +11,7 @@ const NOTIFY = new Set([
   'site.create',
   'site.import',
   'site.stuck',
+  'invitations.queue_paused',
   'ops.daily',
   'discord.linked',
   'discord.bug_report',
@@ -34,7 +35,7 @@ const FIELDS = {
   // `detail`: where a Joomla import stopped (step, check, HTTP status, bare path, error code), shaped
   // field by field in `sites/route.js` before it reaches here.
   'site.stuck': ['step', 'reason', 'platform', 'attempt', 'sign_in', 'detail'],
-  'site.edit': ['action', 'ok', 'refusal', 'from_comment'],
+  'site.edit': ['action', 'ok', 'refusal', 'copy_reason', 'from_comment'],
   // Usage (`tasks/todo-do-dung-that.md`): a person opened a site's workspace page (one per half hour),
   // and the Add site wizard opened, by the id the wizard drew for that opening — `site.create` carries
   // the same `wizard_id`, so an opening with no create after a day is a wizard left before Create.
@@ -48,6 +49,8 @@ const FIELDS = {
   'onboard.step': ['run_id', 'flow', 'step'],
   'onboard.exit': ['run_id', 'flow', 'step', 'end'],
   'site.undo': ['moment', 'ok', 'refusal'],
+  // An Invitations send queue the cron paused (`invitations/real-queue.js`); it waits for a person.
+  'invitations.queue_paused': ['campaign_id', 'reason'],
   'site.go_live': ['domain'],
   'site.delete': ['platform', 'age_days'],
   'team.invite': ['role'],
@@ -59,9 +62,14 @@ const FIELDS = {
   'team.cancel_invite': ['role', 'target'],
   'team.decline_request': ['role', 'target'],
   'team.role_change': ['from', 'to', 'target'],
-  // A signed-out visit to `/login` whose link carried `utm_*` (`POST /login/visit`, sent by the page's own
-  // script so a mail scanner fetching the link is not counted). No account, no address: only the source.
-  'login.visited': ['source', 'medium', 'campaign', 'content'],
+  // A signed-out visit to `/login` (`POST /login/visit`, sent by the page's own script so a mail scanner
+  // fetching the link is not counted): the link's `utm_*` source and the host of the page that linked
+  // here, when there were any; neither is a direct visit. No account, no address.
+  'login.visited': ['source', 'medium', 'campaign', 'content', 'referrer'],
+  // The two ways a signed-out person starts signing in (`identity/route.js` `recordSignInStart`): an email
+  // code asked for, and a Google or GitHub sign-in begun. No account, no address: the source, and the provider.
+  'login.code_requested': ['source', 'medium', 'campaign', 'content'],
+  'login.oauth_started': ['provider', 'source', 'medium', 'campaign', 'content'],
   'beta.waitlist': ['via'],
   'beta.waitlist_form': ['platforms', 'role', 'site_count'],
   'ops.daily': ['day', 'counts', 'active', 'badges', 'sources'],
@@ -118,6 +126,10 @@ const stuckWhere = (value) => {
   if (detail.status) parts.push(`HTTP ${detail.status}`)
   if (detail.path) parts.push(detail.path)
   if (detail.error) parts.push(detail.error)
+  // "Where: export/no_engine_reply · HTTP 200 · db.dump · answered php_notice"
+  if (detail.action) parts.push(detail.action)
+  if (detail.answer) parts.push(`answered ${detail.answer}`)
+  if (detail.engine_error) parts.push(`engine ${detail.engine_error}`)
   return `\nWhere: ${parts.join(' · ')}${installRoads(detail)}${sizes(detail)}`
 }
 // "Sign-in: password · username is an email address": how the run came in (the row's own
@@ -219,6 +231,8 @@ export function signalText(event, label) {
     return `🌐 ${prefix} New site (import registered)\n${actor}\nSite: ${site} · Platform: ${clean(d.platform)}`
   if (event.kind === 'site.stuck')
     return `🔴 ${prefix} Customer stuck: ${clean(d.step)} failed\n${actor}\nSite: ${site} · ${clean(d.platform)}\nReason: ${clean(d.reason)}${stuckWhere(d.detail)}${signIn(d)}`
+  if (event.kind === 'invitations.queue_paused')
+    return `⏸ ${prefix} Invitations send queue paused: ${clean(d.reason)}\nCampaign: ${clean(d.campaign_id)}\nNothing more is sent until someone resumes it in /ops › Invitations › Send.`
   if (event.kind === 'discord.linked')
     return `💬 ${prefix} Discord member verified\n${actor}\nDiscord user: ${discordUser(d)}`
   if (event.kind === 'discord.bug_report')

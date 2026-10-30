@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-185-site-tools-plan-save-planned",
+  "kind": "fix",
+  "title": "A successful tracy_demo plan.save marks its turn planned instead of throwing a ReferenceError",
+  "pr": 185,
+  "area": "site-tools/demo-plan",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test --test-timeout=60000 packages/tools/tracy-site-tools/test/build-fence-wiring.test.mjs; the test named 'a saved plan marks its own turn planned' drives tracy_demo plan.save with a successful answer, then a tracy_site call."
+  ],
+  "expect": [
+    "S1: plan.save answers ok instead of throwing, and the following call sends no guard request to tracy-web."
+  ],
+  "selectors": {
+    "test": "packages/tools/tracy-site-tools/test/build-fence-wiring.test.mjs"
+  },
+  "evidence": "Before the fix every plan.save threw ReferenceError: markPlanned is not defined and the session stayed locked behind AGENT_DEMO_PLAN_REQUIRED",
+  "fence": "The per-turn buildTurns state records the plan from the saved answer",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-timeout=60000",
+      "packages/tools/tracy-site-tools/test/build-fence-wiring.test.mjs"
+    ]
+  }
+}

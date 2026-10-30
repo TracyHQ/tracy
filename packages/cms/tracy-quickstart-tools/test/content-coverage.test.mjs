@@ -13,7 +13,7 @@ import { createClassifier } from '../content-coverage/lib/classify.mjs'
 import { loadContract } from '../content-coverage/lib/contract.mjs'
 import { buildCoverageFile, holeKey } from '../content-coverage/lib/coverage-file.mjs'
 import { buildDbIndex } from '../content-coverage/lib/db-index.mjs'
-import { annotate } from '../content-coverage/lib/items.mjs'
+import { annotate, mergeViewports } from '../content-coverage/lib/items.mjs'
 import { createMatcher } from '../content-coverage/lib/match.mjs'
 import { parseConfigurationPhp } from '../content-coverage/lib/site-config.mjs'
 import {
@@ -42,9 +42,14 @@ function contractDir() {
       { key: 'article-2.title', type: 'text', sample: 'Advanced Boxing' },
       { key: 'article-2.intro', type: 'html', sample: '<p>Train like a champion every single day.</p>' },
       { key: 'article-2.image', type: 'image', sample: 'images/joomlart/classes/intro-1.jpg' },
+      // A whole-unit slot (capture --whole-units): the xpath names the heading, the sample joins its pieces.
+      { key: 'article-2.heading', type: 'text', sample: 'Ring Ready Now', xpath: '/html/body/div/h2' },
       { key: 'module-90.video', type: 'text', sample: '7CZ5I-PZjEg' },
       { key: 'module-90.email', type: 'text', sample: 'sale@getfit.com' },
-      { key: 'module-90.info', type: 'html', sample: '<p>Call us: <span>(239) 555-0108</span></p>' }
+      { key: 'module-90.info', type: 'html', sample: '<p>Call us: <span>(239) 555-0108</span></p>' },
+      // A label and a phone number in fields of their own, printed as one list item ("or CALL: <a>number</a>").
+      { key: 'module-90.phone-label', type: 'text', sample: 'or CALL:' },
+      { key: 'module-90.phone', type: 'text', sample: '(239) 555-0177' }
     ],
     pages: [{ entity: 'menu-101', route: 'home' }]
   })
@@ -70,7 +75,9 @@ function dbDump() {
       'CREATE TABLE `jos_modules` (\n  `id` int,\n  `title` varchar(255),\n  `params` text\n);',
       'INSERT INTO `jos_modules` VALUES (90,\'Newsletter\',\'{\\"heading\\":\\"Join over 100k of inspiring creatives\\"}\');',
       'CREATE TABLE `jos_users` (\n  `id` int,\n  `name` varchar(255),\n  `email` varchar(255)\n);',
-      "INSERT INTO `jos_users` VALUES (44,'Drew Stokes','drew@example.com');"
+      "INSERT INTO `jos_users` VALUES (44,'Drew Stokes','drew@example.com');",
+      'CREATE TABLE `jos_virtuemart_products_en_gb` (\n  `virtuemart_product_id` int,\n  `product_name` varchar(255)\n);',
+      "INSERT INTO `jos_virtuemart_products_en_gb` VALUES (7,'Linen Wrap Dress');"
     ].join('\n')
   )
   return file
@@ -112,6 +119,33 @@ test('a phone number declared inside a field of markup is declared: a segment wi
   assert.equal(byValue(items, '(239) 555-0108').status, 'matched')
   // another number is not covered by it
   assert.notEqual(byValue(items, '(239) 555-0199').status, 'matched')
+})
+
+test('a block made of a label slot and a phone slot is that pair: a figure slot with no letter still counts', () => {
+  // JA Boxing 1.0.8: "or CALL: (239) 555-0108" is one list item printed from two fields; the number has no letter.
+  const { items } = audit([{ kind: 'text', value: 'or CALL: (239) 555-0177' }])
+  const block = items[0]
+  assert.deepEqual(
+    [block.status, block.matchBy, [...block.slots].sort()],
+    ['matched', 'composite', ['module-90.phone', 'module-90.phone-label']]
+  )
+})
+
+test('a word-bounded piece of a whole-unit slot is that slot; a piece cut inside a word is not', () => {
+  // The page shows "Ring Ready" <br> "Now" as two blocks; each is a piece of the one heading slot, which a writer
+  // replaces as a whole.
+  const { items } = audit([
+    { kind: 'text', value: 'Ring Ready' },
+    { kind: 'text', value: 'Now' },
+    { kind: 'text', value: 'Rea' }
+  ])
+  const piece = byValue(items, 'Ring Ready')
+  assert.deepEqual(
+    [piece.status, piece.matchBy, piece.slots],
+    ['matched', 'piece-of-whole-unit', ['article-2.heading']]
+  )
+  assert.equal(byValue(items, 'Now').status, 'matched')
+  assert.notEqual(byValue(items, 'Rea').status, 'matched')
 })
 
 test('a price is demo content: numeric-only text is not ignored, and is found in the database; a bare counter is core', () => {
@@ -200,4 +234,84 @@ test('the contract loader names the exact map and lock it read', () => {
   mkdirSync(path.join(dir, 'x'), { recursive: true })
   assert.match(contract.sha256.presentationLock, /^[0-9a-f]{64}$/)
   assert.notEqual(contract.sha256.contentMap, contract.sha256.presentationLock)
+})
+
+test('a shop catalogue (VirtueMart) is its own class: listed in the file, never a blocking hole, never read by R9', () => {
+  const { contract, items } = audit([
+    // a price VirtueMart computes inside its own markup: in no database cell as printed
+    { kind: 'text', value: '$98.00', zone: 'catalogue' },
+    // a product name, found only in a virtuemart_ table
+    { kind: 'text', value: 'Linen Wrap Dress' },
+    // a product picture under VirtueMart's media folder
+    { kind: 'image', value: '/images/virtuemart/product/wrap-dress.jpg' },
+    // demo copy outside the catalogue stays a capture hole
+    { kind: 'text', value: 'Join over 100k of inspiring creatives' }
+  ])
+  assert.deepEqual(
+    items.map((i) => [i.value, i.status, i.class]),
+    [
+      ['$98.00', 'hole', 'e'],
+      ['Linen Wrap Dress', 'hole', 'e'],
+      ['/images/virtuemart/product/wrap-dress.jpg', 'hole', 'e'],
+      ['Join over 100k of inspiring creatives', 'hole', 'a']
+    ]
+  )
+  const result = {
+    pages: [{ url: `${SITE}index.php?Itemid=101`, items }],
+    failures: [],
+    capReached: false,
+    viewports: ['desktop'],
+    summary: { pages: 1, mappedPages: 1, unmappedPages: 0 }
+  }
+  const doc = buildCoverageFile({ result, contract, measuredAt: '2026-10-29T00:00:00.000Z' })
+  assert.deepEqual([doc.counts.text.catalogue, doc.counts.images.catalogue], [2, 1])
+  assert.deepEqual(
+    doc.holes
+      .filter((h) => h.class === 'catalogue')
+      .map((h) => h.value)
+      .sort(),
+    ['$98.00', 'Linen Wrap Dress', 'images/virtuemart/product/wrap-dress.jpg']
+  )
+  assert.equal(doc.labelRules.rules?.R9?.count ?? doc.labelRules.failing?.R9 ?? 0, 0)
+  const verdict = judgeCoverage(doc)
+  assert.deepEqual(
+    verdict.blocking.map((h) => h.value),
+    ['Join over 100k of inspiring creatives']
+  )
+})
+
+test('a news feed Joomla fetches from another site when the page is viewed is core output, never read by R9', () => {
+  const { contract, items } = audit([
+    // an item of a remote feed (com_newsfeeds): in no database cell and no source file of the site
+    { kind: 'text', value: 'Security advisory: CVE-2026-00001, reported 2026-01-01', zone: 'feed' },
+    // demo copy beside it stays a capture hole
+    { kind: 'text', value: 'Join over 100k of inspiring creatives' }
+  ])
+  assert.deepEqual(
+    items.map((i) => [i.value, i.class]),
+    [
+      ['Security advisory: CVE-2026-00001, reported 2026-01-01', 'c'],
+      ['Join over 100k of inspiring creatives', 'a']
+    ]
+  )
+  const result = {
+    pages: [{ url: `${SITE}index.php?Itemid=101`, items }],
+    failures: [],
+    capReached: false,
+    viewports: ['desktop'],
+    summary: { pages: 1, mappedPages: 1, unmappedPages: 0 }
+  }
+  const doc = buildCoverageFile({ result, contract, measuredAt: '2026-10-29T00:00:00.000Z' })
+  assert.equal(doc.labelRules.rules?.R9?.count ?? 0, 0)
+})
+
+test('an item VirtueMart printed on one viewport keeps its catalogue zone when the viewports merge', () => {
+  const merged = mergeViewports(
+    {
+      desktop: { items: [{ kind: 'text', value: '$98.00', visible: true, zone: 'catalogue' }] },
+      phone: { items: [{ kind: 'text', value: '$98.00', visible: true }] }
+    },
+    SITE
+  )
+  assert.equal(merged[0].zone, 'catalogue')
 })

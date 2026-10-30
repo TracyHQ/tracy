@@ -13,7 +13,7 @@ import { readConfig } from '../src/config.js'
 import { hostCall, hostJob } from '../src/host/client.js'
 import { mintSession } from '../src/lib/session.js'
 import { writeComponent, currentComponent, notePresence, takeWriteLease } from '../src/sites/store.js'
-import { openConflicts, partOfTable, view } from '../src/sites/live-sync.js'
+import { liveSync, openConflicts, partOfTable, phpTooOldOf, view } from '../src/sites/live-sync.js'
 import { sweepLiveSyncReads } from '../src/cron.js'
 
 const db = fileDb()
@@ -77,6 +77,8 @@ const CONFLICTED = {
 /** A host that answers every job with `answers[kind]` (or `{ok:true,state:'applied'}`), and a model. */
 function network({ answers = {}, model = '[]' } = {}) {
   const jobs = new Map()
+  // `held.on`: every host job says it still runs.
+  const held = { on: false }
   const calls = []
   const fetchImpl = async (input, init) => {
     const url = String(input)
@@ -90,6 +92,12 @@ function network({ answers = {}, model = '[]' } = {}) {
     const m = /\/_host\/jobs\/(.+)$/.exec(url)
     if (m) {
       const job = jobs.get(m[1])
+      if (held.on)
+        return Response.json({
+          state: 'running',
+          step: job.kind,
+          progress: ['==> [3s] reading the live site']
+        })
       const answer = answers[job.kind] ?? { ok: true, state: 'applied', apply: { ok: true, version: 4 } }
       return Response.json({ state: 'done', step: job.kind, output: `==> done\n${JSON.stringify(answer)}` })
     }
@@ -98,7 +106,7 @@ function network({ answers = {}, model = '[]' } = {}) {
     }
     return new Response('{}', { status: 404 })
   }
-  return { fetchImpl, calls, jobs }
+  return { fetchImpl, calls, jobs, held }
 }
 
 function harness(pool, fetchImpl) {
@@ -332,7 +340,12 @@ test('pure pieces: an applied sync names what it left out of the live site, and 
     table: 'ng_phocacart_products',
     reason: 'added-both',
     key: { id: '6' },
-    values: { base: null, ours: { title: { text: 'Tracy mug' } }, theirs: { title: { text: 'Live mug' } } }
+    values: { base: null, ours: { title: { text: 'Tracy mug' } }, theirs: { title: { text: 'Live mug' } } },
+    belonging: [
+      { table: 'ng_phocacart_product_categories', key: { product_id: '6', category_id: '2' } },
+      { table: 'ng_phocacart_product_images', key: { id: '1' }, changed: true }
+    ],
+    belongingCount: 2
   }
   const skipped = {
     id: 'db:ng_action_logs:["37"]',
@@ -394,6 +407,9 @@ test('pure pieces: an applied sync names what it left out of the live site, and 
     'the skipped log rows stay in the record'
   )
   assert.equal(applied.dropped[0].values.theirs.title.text, 'Live mug')
+  // The held product's own rows left out with it: named with it, so its category is not lost silently.
+  assert.deepEqual(applied.dropped[0].belonging, held.belonging)
+  assert.equal(applied.dropped[0].belongingCount, 2)
   assert.deepEqual(applied.kept[0], {
     id: 'file:configuration.php#sitename',
     kind: 'setting',
@@ -411,6 +427,7 @@ test('pure pieces: an applied sync names what it left out of the live site, and 
   const waiting = view({ ...at, state: 'needs_resolution' })
   assert.deepEqual(waiting.dropped, [])
   assert.equal(waiting.held.length, 1)
+  assert.deepEqual(waiting.held[0].belonging, held.belonging)
 })
 
 test(
@@ -812,21 +829,86 @@ test(
         detail: 'the database kept changing (ng_content (2 rows); ng_weblinks (1 row))'
       })
     }
-    const net = network({
-      answers: {
-        'webroot-sync': { ok: false, code: 'LIVE_READ_FAILED', read: { ok: false, code: 'TOKEN_REFUSED' } }
-      }
-    })
-    await db.reset()
-    const { send, cookieFor } = harness(pool, net.fetchImpl)
-    await importedSite(pool)
-    const owner = await cookieFor('owner@x.y')
-    await send('POST', '/api/sites/shop.example/sync', owner)
-    const { sync } = await (await send('GET', '/api/sites/shop.example/sync', owner)).json()
-    assert.equal(sync.error, 'LIVE_READ_FAILED', 'any other failed read stays what it was')
-    assert.equal(sync.busy, null)
+    for (const code of [
+      'TOKEN_REFUSED',
+      'LIVE_PASSWORD_PROTECTED',
+      'LIVE_BLOCKED',
+      'LIVE_RATE_LIMITED',
+      'UNKNOWN_READ_FAILURE'
+    ]) {
+      const net = network({
+        answers: {
+          'webroot-sync': { ok: false, code: 'LIVE_READ_FAILED', read: { ok: false, code } }
+        }
+      })
+      await db.reset()
+      const { send, cookieFor } = harness(pool, net.fetchImpl)
+      await importedSite(pool)
+      const owner = await cookieFor('owner@x.y')
+      await send('POST', '/api/sites/shop.example/sync', owner)
+      const { sync } = await (await send('GET', '/api/sites/shop.example/sync', owner)).json()
+      assert.equal(sync.error, code === 'UNKNOWN_READ_FAILURE' ? 'LIVE_READ_FAILED' : code)
+      assert.equal(sync.busy, null)
+    }
   }
 )
+
+test(
+  'a live site whose PHP is too old for Claude Cowork is filed LIVE_PHP_TOO_OLD with both versions',
+  opts,
+  async () => {
+    const { pool } = db
+    // live-pull.mjs's answer to claude-cowork 0.24.73 refusing PHP 7.3.33, wrapped or not by the host.
+    const read = { ok: false, code: 'LIVE_PHP_TOO_OLD', php: '7.3.33', min: '7.4.0' }
+    for (const answer of [
+      { ok: false, code: 'LIVE_PHP_TOO_OLD', read },
+      { ok: false, code: 'LIVE_READ_FAILED', read }
+    ]) {
+      await db.reset()
+      const net = network({ answers: { 'webroot-sync': answer } })
+      const { send, cookieFor } = harness(pool, net.fetchImpl)
+      await importedSite(pool)
+      const owner = await cookieFor('owner@x.y')
+      await send('POST', '/api/sites/shop.example/sync', owner)
+      const { sync } = await (await send('GET', '/api/sites/shop.example/sync', owner)).json()
+      assert.equal(sync.error, 'LIVE_PHP_TOO_OLD', JSON.stringify(answer))
+      assert.deepEqual(sync.php, { php: '7.3.33', min: '7.4.0' })
+    }
+  }
+)
+
+test('pure pieces: LIVE_PHP_TOO_OLD names only versions, from the answer, its read or a push sync', () => {
+  assert.deepEqual(phpTooOldOf({ ok: false, code: 'LIVE_PHP_TOO_OLD', php: '7.3.33', min: '7.4.0' }), {
+    php: '7.3.33',
+    min: '7.4.0'
+  })
+  assert.deepEqual(
+    phpTooOldOf({
+      ok: false,
+      code: 'SYNC_FAILED',
+      sync: {
+        ok: false,
+        code: 'LIVE_READ_FAILED',
+        read: { code: 'LIVE_PHP_TOO_OLD', php: '7.2.1', min: '7.4.0' }
+      }
+    }),
+    { php: '7.2.1', min: '7.4.0' }
+  )
+  // Anything but a bare version is dropped, never shown to the owner.
+  assert.deepEqual(phpTooOldOf({ code: 'LIVE_PHP_TOO_OLD', php: '<b>7.3</b>', min: null }), {
+    php: null,
+    min: null
+  })
+  assert.equal(phpTooOldOf({ ok: false, code: 'LIVE_BLOCKED' }), null)
+  const row = { id: 'x', state: 'failed', created_at: new Date(), updated_at: new Date() }
+  const answer = {
+    ok: false,
+    code: 'LIVE_PHP_TOO_OLD',
+    read: { code: 'LIVE_PHP_TOO_OLD', php: '7.3.33', min: '7.4.0' }
+  }
+  assert.deepEqual(view({ ...row, error: 'LIVE_PHP_TOO_OLD', answer }).php, { php: '7.3.33', min: '7.4.0' })
+  assert.equal(view({ ...row, error: 'SYNC_FAILED', answer }).php, null)
+})
 
 test('pure pieces: a busy live read names the parts of the site that kept changing, cut short (#1664)', () => {
   const row = (answer) => ({
@@ -910,4 +992,69 @@ test("the import's fingerprint is kept with the live token and handed to the fir
     fingerprint: { ...fingerprint, files: { ...fingerprint.files, pages: ['not-a-digest'] } }
   })
   assert.equal((await currentComponent(pool, 'shop.example')).config.importFingerprint, undefined)
+})
+
+test(
+  'a sync still running when tracy-web restarts keeps its lease; once its job ends the lease goes (#123)',
+  opts,
+  async () => {
+    const { pool } = db
+    const net = network()
+    net.held.on = true
+    const { send, cookieFor } = harness(pool, net.fetchImpl)
+    await importedSite(pool)
+    const owner = await cookieFor('owner@x.y')
+    assert.equal((await send('POST', '/api/sites/shop.example/sync', owner)).status, 202)
+    await pool.query(
+      "update site_write_lease set wrote_at = now() - interval '100 seconds' where site_key = $1",
+      ['shop.example']
+    )
+    const config = readConfig(env)
+    const again = liveSync({
+      pool,
+      config,
+      host: { hostCall, hostJob },
+      fetchImpl: net.fetchImpl,
+      currentComponent,
+      writeComponent,
+      watchEveryMs: 0
+    })
+    assert.equal(await again.resume(), 1)
+    const chat = await takeWriteLease(pool, {
+      siteKey: 'shop.example',
+      sessionId: 'chat-1',
+      actor: 'owner@x.y'
+    })
+    assert.equal(chat.ok, false, 'the chat may not write while the sync job still runs')
+    net.held.on = false
+    assert.equal(await again.resume(), 1)
+    const { rows } = await pool.query('select state from site_sync where site_key = $1', ['shop.example'])
+    assert.notEqual(rows[0].state, 'running')
+    assert.equal(
+      (await takeWriteLease(pool, { siteKey: 'shop.example', sessionId: 'chat-1', actor: 'owner@x.y' })).ok,
+      true
+    )
+  }
+)
+
+test('a sync row names what the live site has that a sync does not bring, names only (#120)', () => {
+  const row = {
+    id: 's1',
+    state: 'applied',
+    created_at: '2026-10-29T10:00:00Z',
+    updated_at: '2026-10-29T10:01:00Z',
+    answer: {
+      notCarried: {
+        triggers: [
+          { name: 'shop_after_insert', table: 'wp_shop', event: 'INSERT', timing: 'AFTER', body: 'SECRET' }
+        ],
+        tables: ['wp_shop_log', 42]
+      }
+    }
+  }
+  assert.deepEqual(view(row).notCarried, {
+    triggers: [{ name: 'shop_after_insert', table: 'wp_shop' }],
+    tables: ['wp_shop_log']
+  })
+  assert.equal(view({ ...row, answer: {} }).notCarried, null)
 })

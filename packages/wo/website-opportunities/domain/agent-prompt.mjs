@@ -6,6 +6,7 @@ import { neutralItemName, SECTION_ACTIONS, sectionAction } from './section-fills
 import { forbiddenFillers } from './slot-fill-manifest.mjs'
 import { TRADE_WORDS, businessWords, otherKindWords } from './trade-words.mjs'
 import { untrackedUrl } from './social-links.mjs'
+import { siteNameOf } from './held-name.mjs'
 
 // 🔒 No filler stands in for a fact (plan §7, 26/10/2026): these words show only as a sourced value.
 const NO_FILLER = `Never write ${forbiddenFillers('en')
@@ -64,7 +65,13 @@ export function withheldLines(brief) {
   const others = held.map((h) => WITHHELD_OTHER_FORMS[h.field]).filter(Boolean)
   return [
     `   Withheld by the brief (see "Missing"): ${held.map((h) => `${h.field}: ${h.values.map((v) => `"${v}"`).join(', ')}`).join('; ')}. None of these appears anywhere on the site: not on a page, nor in the header, the footer, a sidebar or footer module, a widget or the structured data${others.length ? `, nor written another way (${others.join('; ')})` : ''}.`,
-    "   The template's own demo opening-hours and rating blocks (a footer's hours line, a \"5.0 rating\" badge or counter) are emptied, or their line is taken out; never left with the template's sample values or with a withheld one."
+    "   The template's own demo opening-hours and rating blocks (a footer's hours line, a \"5.0 rating\" badge or counter) are emptied, or their line is taken out; never left with the template's sample values or with a withheld one.",
+    // The business's logo carries a name its own marks give: the picture may stay, its words go nowhere in text.
+    ...(held.some((h) => h.field === 'name')
+      ? [
+          '   A withheld business name may still show inside the logo picture; it is written nowhere in the text, the page title, the meta description or an alt text.'
+        ]
+      : [])
   ]
 }
 
@@ -98,7 +105,8 @@ export function renderAgentPrompt({
   // The neutral words go on the site: in its language, the one the build wrote (`slot-fill`).
   // The trade's words, or its sub-trade's when the brief decided one (`sub-trades.mjs`).
   const w = { ...businessWords(brief.business), locale }
-  const name = brief.business?.name ?? `the ${w.noun}`
+  // The name the site goes by: a name held off the site gives way to the brief's neutral identity (`held-name.mjs`).
+  const name = siteNameOf(brief) ?? `the ${w.noun}`
   const cms = CMS_LABEL[revision.cms] ?? revision.cms
   const lines = []
   const line = (s = '') => lines.push(s)
@@ -411,10 +419,10 @@ export function renderSocialFigures(figures, line) {
   line()
   line(SOCIAL_FIGURES_HEADING)
   line(
-    'Put these in the template\'s figures or stats block, or its social block: each number exactly as listed (digit grouping only — never rounded, never "10K+"), with its platform and a link to that profile. Never write a figure this list does not hold, and never add one up across platforms.'
+    'Put these in the template\'s figures or stats block, or its social block: each number exactly as listed (digit grouping only, never rounded, never "10K+"), with its platform and a link to that profile. Never write a figure this list does not hold, and never add one up across platforms.'
   )
   for (const f of figures)
-    line(`- ${f.platform}: ${f.amount} ${f.label} — ${f.url}${f.asOf ? ` (as of ${f.asOf})` : ''}`)
+    line(`- ${f.platform}: ${f.amount} ${f.label}, ${f.url}${f.asOf ? ` (as of ${f.asOf})` : ''}`)
 }
 
 /** What fills each kept page of the template, and the pages the build already took off. */

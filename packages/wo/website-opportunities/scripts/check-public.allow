@@ -59,6 +59,9 @@ test/fixtures/social-stats/instagram-looter2-user-feeds2-large.json | high-entro
 test/fixtures/social-stats/youtube-official-channels-forusername.json | high-entropy | * | a response etag
 test/fixtures/social-stats/youtube-official-channels-missing.json | high-entropy | * | a response etag
 test/fixtures/social-stats/yt-api-channel-videos.json | high-entropy | * | a videos continuation token
+test/fixtures/monid/litescrape-reviews-hideout.json | high-entropy | * | synthetic Google review ids, review links and a pagination token in the litescrape shape
+test/fixtures/monid/litescrape-reviews-oishii.json | high-entropy | * | synthetic Google review ids, review links and a pagination token in the litescrape shape
+test/fixtures/monid/litescrape-reviews-tartine.json | high-entropy | * | synthetic Google review ids, review links and a pagination token in the litescrape shape
 test/guarded-connect-proxy.test.mjs | private-ip | * | the proxy must refuse each private range
 test/guarded-connect-proxy.test.mjs | public-ip | * | X.509 OIDs in the TLS fixture and sample addresses of a public host
 domain/dish-photos-generic.json | vietnamese | * | generic menu words in several languages, matched against real menus

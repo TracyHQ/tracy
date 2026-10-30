@@ -117,8 +117,9 @@ import { createClientDemoService } from './opportunities-build/client-demo.js'
 import { createDemoContactPreview } from 'website-opportunities/src/contact-preview.js'
 import { capsFromRuntime, createChargeable, createCostLedger } from 'website-opportunities/src/cost-ledger.js'
 import { createDemoLook } from './opportunities-build/demo-look.js'
+import { createDemoPhotoLabels } from './opportunities-build/demo-photo-labels.js'
+import { createDemoCopy } from './opportunities-build/demo-copy.js'
 import { ownSiteOn } from './opportunities-build/own-site.js'
-import { MAX_PICTURE_BYTES } from './lib/template-shots.js'
 import { claimAndRunQa, sweepDemoQa } from './opportunities-build/demo-qa.js'
 import { sweepDemos } from './opportunities-build/demo-retention.js'
 import { createDemoRunner } from './opportunities-build/demo-runner.js'
@@ -141,6 +142,7 @@ import { createWebsiteBuilder } from './opportunities-build/route.js'
 import { createSiteChecks } from 'website-opportunities/src/site-checks.js'
 import { createSiteContent, quickstartActionOpen } from './opportunities-build/site-content.js'
 import { createSitePictures } from './opportunities-build/site-pictures.js'
+import { createBriefPictureLabels } from './opportunities-build/brief-picture-labels.js'
 import {
   createSocialClient,
   replicaSocialDomain,
@@ -225,6 +227,7 @@ import { createEmdashEngine } from './sites/brief-engines/emdash.js'
 import { createJoomlaEngine } from './sites/brief-engines/joomla.js'
 import { headerReader } from './sites/brief-engines/pictures.js'
 import { createQuickstartFirstEngine } from './sites/brief-engines/quickstart-first.js'
+import { quickstartSlotPhotoEvidence } from './opportunities-build/slot-photo-evidence.js'
 import { quickstartReviews } from './lib/quickstart-reviews.js'
 import { createWordpressEngine } from './sites/brief-engines/wordpress.js'
 import { normalizeBrief } from './sites/brief-normalize.js'
@@ -1189,7 +1192,7 @@ export function buildApp(deps) {
                 port: site.port ?? null,
                 // The names the site answers to (WordPress writes every link and redirect with them).
                 ...demoSelfNames(deps.config, site),
-                // A baseline is read inside the hand-off request, under the proxy's 100 s; a round has time.
+                // The host's hard deadline includes its queue and closes the context before transport expires.
                 budgetMs: payload.baseline ? 180_000 : 45_000,
                 ...payload
               },
@@ -1206,8 +1209,8 @@ export function buildApp(deps) {
       deps.websiteOpportunitiesDemoLook ??
       (deps.host
         ? createDemoLook({
-            capture: (site, layouts) =>
-              deps.host.hostCall(
+            capture: (site, layouts, { onFrame, signal }) =>
+              deps.host.hostStreamCall(
                 deps.config,
                 site.host ?? deps.config.defaultHost,
                 '/capture',
@@ -1219,9 +1222,9 @@ export function buildApp(deps) {
                   // Pages open at the site's own name, served from the address that answers, as `/demo-qa` reads
                   // them: on the stand every page but home redirected to `<label>-web-1:8080` (24/10/2026).
                   ...demoSelfNames(deps.config, site),
-                  maxBytes: MAX_PICTURE_BYTES
+                  mode: 'vision-tiles/1'
                 },
-                { fetchImpl: deps.fetchImpl ?? fetch, timeoutMs: 240_000 }
+                { onFrame, signal, fetchImpl: deps.fetchImpl ?? fetch, timeoutMs: 240_000 }
               ),
             visionFor: woVisionDoor,
             chargeable: createChargeable(
@@ -1422,6 +1425,28 @@ export function buildApp(deps) {
       },
       siteChecks,
       socialStats,
+      // What the brief's photographs show, labelled when the brief is made (F08): the build's vision door, key and cache,
+      // every own photo plus others up to TRACY_BRIEF_VISION_MAX_PICTURES (60) in total, billed to the research caps. `deps.…PictureLabels`: a test's own.
+      pictureLabels:
+        deps.websiteOpportunitiesPictureLabels ??
+        createBriefPictureLabels({
+          pool: deps.pool,
+          objects,
+          chargeable: createChargeable(
+            createCostLedger({
+              pool: deps.pool,
+              caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config))
+            })
+          ),
+          visionFor: async () => {
+            const door = await visionDoorFor(deps)
+            return door ? { door, key: visionKey(door) } : null
+          },
+          ...(Number(process.env.TRACY_BRIEF_VISION_MAX_PICTURES) > 0
+            ? { maxPictures: Number(process.env.TRACY_BRIEF_VISION_MAX_PICTURES) }
+            : {}),
+          log: deps.log ?? console
+        }),
       quality: deps.websiteOpportunitiesQuality ?? null,
       resolve,
       fetchImpl: crawlFetch,
@@ -1897,11 +1922,13 @@ export function buildApp(deps) {
       (async ({ ctx, source, report, baseline = null, stage = 'final' }) => {
         const site = await siteByKey(deps.pool, ctx.siteKey)
         if (!site) throw new Error('QUICKSTART_SITE_MISSING')
-        const reviewTestimonials = quickstartReviews(source.profile_effective).map((review) => ({
-          text: review.text,
-          author: review.author,
-          ...review.provenance
-        }))
+        const reviewTestimonials = quickstartReviews(source.profile_effective, source.brief).map(
+          (review) => ({
+            text: review.text,
+            author: review.author,
+            ...review.provenance
+          })
+        )
         const answer = await deps.host.hostCall(
           deps.config,
           site.host,
@@ -1924,7 +1951,9 @@ export function buildApp(deps) {
               JSON.stringify(source.brief.business) + '\n' + String(source.profile_effective?.bio ?? ''),
             placed: (report?.photos?.receipts ?? [])
               .map((r) => r.uploaded.path ?? r.uploaded.url)
-              .filter(Boolean)
+              .filter(Boolean),
+            // `photos-match-slots`, `faces-named` and the pictures the fill plan keeps (#141).
+            ...quickstartSlotPhotoEvidence(source.brief, report?.photos)
           },
           { fetchImpl: deps.fetchImpl ?? fetch, timeoutMs: 300_000 }
         )
@@ -2081,6 +2110,7 @@ export function buildApp(deps) {
     }
     const sites = sitesRoutes({
       pool: deps.pool,
+      resumeLiveJobs: deps.resumeLiveJobs === true,
       doorProbeToken: doorHealth ? doorProbeToken : null,
       doorHealth,
       config: deps.config,
@@ -2105,6 +2135,29 @@ export function buildApp(deps) {
           inventoryInvariant,
           objects: placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch),
           now: deps.now ?? Date.now,
+          // The words of every page in small structured tasks (`opportunities-build/demo-copy.js`).
+          writeCopy: createDemoCopy({
+            doorFor: () => modelForChain(deps.pool, ['seedText', 'web'], deps.config),
+            chargeable: createChargeable(
+              createCostLedger({
+                pool: deps.pool,
+                caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config))
+              })
+            ),
+            fetchImpl: deps.fetchImpl ?? fetch
+          }),
+          // What each photo shows, labelled once (`opportunities-build/demo-photo-labels.js`).
+          photoLabels: createDemoPhotoLabels({
+            pool: deps.pool,
+            visionFor: () => visionDoorFor(deps),
+            chargeable: createChargeable(
+              createCostLedger({
+                pool: deps.pool,
+                caps: capsFromRuntime(() => woRuntime(deps.pool, deps.config))
+              })
+            ),
+            fetchImpl: deps.fetchImpl ?? fetch
+          }),
           lifecycle: (auth, params, held) => {
             if (!clientDemoService) throw new Error('DEMO_CHAT_UNAVAILABLE')
             return clientDemoService.operation(auth, params, held)
@@ -2392,6 +2445,8 @@ export function buildApp(deps) {
       '/',
       opsRoutes({
         prefetch: app.dubaiPrefetch ?? null,
+        // The place pictures of a brief revision are read through the same objects Website Opportunities uses.
+        objects: placeMediaObjectsFor(deps.config, deps.fetchImpl ?? fetch),
         pool: deps.pool,
         config: deps.config,
         doorHealth,
@@ -2410,6 +2465,10 @@ export function buildApp(deps) {
         ...(deps.now ? { now: deps.now } : {}),
         // The slot roles of a release (Content coverage, ADR 0038); a test hands in its own answer.
         ...(deps.rolesOf ? { rolesOf: deps.rolesOf } : {}),
+        // The Slot fit of a release (Content coverage, ADR 0039); a test hands in its own answer.
+        ...(deps.fitOf ? { fitOf: deps.fitOf } : {}),
+        // The committed content coverage of a release (Content coverage); a test hands in its own answer.
+        ...(deps.coverageOf ? { coverageOf: deps.coverageOf } : {}),
         workspaces: {
           app: workspacesRoutes({
             pool: deps.pool,

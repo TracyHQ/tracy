@@ -124,3 +124,113 @@ export function judgeRoles(roles, { live }, policy = COVERAGE_POLICY) {
   const holds = !live && policy.rolesHoldNewRelease !== false
   return { holds, warns: !holds }
 }
+
+/**
+ * The verdict on the Slot fit group (ADR 0039 decision 7), the same rule as roles: a release not shown on Design
+ * inspiration whose content map lacks Slot fit is held from Publish (when the policy says so); one already shown only
+ * warns. A platform the fit audit does not measure yet (`policy.fitPlatforms`) is not judged at all.
+ * @param {import('./fit.js').Fit | { state: 'not-applicable' }} fit
+ * @param {{ live: boolean }} about
+ * @param {any} [policy]
+ * @returns {{ holds: boolean, warns: boolean }}
+ */
+export function judgeFit(fit, { live }, policy = COVERAGE_POLICY) {
+  if (fit.state === 'ready' || fit.state === 'not-applicable') return { holds: false, warns: false }
+  const holds = !live && policy.fitHoldNewRelease !== false
+  return { holds, warns: !holds }
+}
+
+/**
+ * The verdict on the label rules group (ADR 0040, spec #37), read from the `labelRules` block the audit committed in
+ * `content-coverage.json`; this never measures anything. R2 to R9 hold a release not shown on Design inspiration when
+ * one fails (`policy.labelRules.blocking`), a release already shown only warns. R1 is a number and never holds. A map
+ * whose role vocabulary is not in `policy.labelRules.blockingVocabularies` (version 2) is `reported`: its failing rules
+ * are listed and nothing holds. A file measured before the rules existed has none (`none`).
+ *
+ *   none      the file has no `labelRules` block (an audit before 1.2.0): not judged
+ *   reported  failing rules are listed, the map's vocabulary is not judged yet: never holds
+ *   ready     the map is judged and no blocking rule fails
+ *   failing   at least one blocking rule fails
+ * @param {any} doc a coverage file `coverageFileProblem` accepts
+ * @param {{ live: boolean }} about
+ * @param {any} [policy]
+ * @returns {{ state: 'none' | 'reported' | 'ready' | 'failing', holds: boolean, warns: boolean, failing: Array<{rule: string, title: string, count: number, keys: string[]}>, factShare: number | null }}
+ */
+export function judgeLabelRules(doc, { live }, policy = COVERAGE_POLICY) {
+  const block = doc?.labelRules
+  if (!block || typeof block !== 'object' || typeof block.rules !== 'object' || block.rules === null)
+    return { state: 'none', holds: false, warns: false, failing: [], factShare: null }
+  const failing = Object.entries(block.rules)
+    .filter(([, r]) => Number(r?.count) > 0)
+    .map(([rule, r]) => ({
+      rule,
+      title: String(r.title ?? rule),
+      count: Number(r.count),
+      keys: Array.isArray(r.keys) ? r.keys.map(String) : []
+    }))
+  const factShare = Number.isFinite(block.r1?.percent) ? block.r1.percent : null
+  const settings = policy.labelRules ?? {}
+  if (!(settings.blockingVocabularies ?? []).includes(block.roleVocabularyVersion))
+    return { state: 'reported', holds: false, warns: false, failing, factShare }
+  const blocking = failing.filter((f) => (settings.blocking ?? []).includes(f.rule))
+  if (blocking.length === 0) return { state: 'ready', holds: false, warns: false, failing, factShare }
+  const holds = !live && policy.labelRulesHoldNewRelease !== false
+  return { state: 'failing', holds, warns: !holds, failing, factShare }
+}
+
+/**
+ * The verdict on the LLM label judge (spec #37), read from the `labelJudge` block the audit committed in
+ * `content-coverage.json` beside `labelRules`; this never calls a model. It belongs to the label rules group and takes
+ * its policy: only maps of `policy.labelRules.blockingVocabularies` are judged. A slot the judge says belongs to the
+ * other side of fact/editorial holds a release not shown on Design inspiration (`policy.labelJudgeHoldNewRelease`) and
+ * warns for one already shown; a finer role mismatch warns; slots nobody judged warn, so a missing verdict is
+ * never read as a pass.
+ *
+ *   none         the file has no `labelJudge` block (an audit before 1.3.0): not judged, nothing held
+ *   reported     the map's vocabulary is not judged yet (version 2): listed, never holds or warns
+ *   wrong-group  at least one slot is on the wrong side of fact/editorial
+ *   mismatch     at least one slot has a finer wrong role
+ *   not-judged   no slot was judged (the request not answered yet, --no-judge, no crop): warns
+ *   partly       some located slots were not judged: warns
+ *   ready        every located slot was judged and is right
+ * @param {any} doc a coverage file `coverageFileProblem` accepts
+ * @param {{ live: boolean }} about
+ * @param {any} [policy]
+ */
+export function judgeLabelJudge(doc, { live }, policy = COVERAGE_POLICY) {
+  const block = doc?.labelJudge
+  const none = {
+    state: 'none',
+    holds: false,
+    warns: false,
+    reason: null,
+    wrongGroup: [],
+    mismatch: [],
+    notJudged: 0
+  }
+  if (!block || typeof block !== 'object' || !Array.isArray(block.slots)) return none
+  const of = (s) => ({
+    key: String(s.key),
+    role: s.role ?? null,
+    suggested: s.suggested ?? null,
+    why: String(s.why ?? '')
+  })
+  const wrong = block.slots.filter((s) => s?.verdict === 'wrong')
+  const base = {
+    reason: typeof block.reason === 'string' ? block.reason : null,
+    wrongGroup: wrong.filter((s) => s.groupWrong === true).map(of),
+    mismatch: wrong.filter((s) => s.groupWrong !== true).map(of),
+    notJudged: Number(block.counts?.notJudged ?? 0)
+  }
+  if (!(policy.labelRules?.blockingVocabularies ?? []).includes(block.roleVocabularyVersion))
+    return { ...base, state: 'reported', holds: false, warns: false }
+  if (base.wrongGroup.length > 0) {
+    const holds = !live && policy.labelJudgeHoldNewRelease !== false
+    return { ...base, state: 'wrong-group', holds, warns: !holds }
+  }
+  if (base.mismatch.length > 0) return { ...base, state: 'mismatch', holds: false, warns: true }
+  if (block.state === 'not-judged' || block.state === 'partly')
+    return { ...base, state: block.state, holds: false, warns: true }
+  if (block.state !== 'judged') return { ...base, state: 'not-judged', holds: false, warns: true }
+  return { ...base, state: 'ready', holds: false, warns: false }
+}

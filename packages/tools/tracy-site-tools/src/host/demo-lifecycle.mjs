@@ -1,5 +1,9 @@
 /** Native finite provision wait: each poll remains in this user turn and stops before its next dispatch. */
+import { refusedBeforeWrite } from './refused-before-write.mjs'
 import { pause, stoppedAnswer } from './turn-stop.mjs'
+
+/** A pair kept back because another pair of its page's call has an unknown outcome: the next check reads it. */
+const NOT_SENT = Object.freeze({ ok: false, code: 'SWEEP_NOT_SENT' })
 
 /**
  * @param {Record<string, unknown>} params
@@ -14,6 +18,7 @@ export async function runDemoLifecycle(
 ) {
   if (signal?.aborted) return stoppedAnswer()
   if (params.operation === 'check') return sweptCheck(send, { signal, sleep, now, sweep })
+  if (params.operation === 'copy.write') return startCopy(send)
   if (params.operation !== 'provision.wait') return send(params)
   const seconds = params.waitSeconds ?? 30
   if (typeof seconds !== 'number' || !Number.isInteger(seconds) || seconds < 1 || seconds > 30)
@@ -47,8 +52,10 @@ const CHECK_POLL_MISSES = 6
  * @param {{signal: AbortSignal | null, sleep: (ms: number, signal?: AbortSignal | null) => Promise<unknown>, now: () => number}} options
  */
 async function runCheck(send, { signal, sleep, now }) {
-  let answer = await send({ operation: 'check.start' })
-  if (answer?.code === 'AGENT_DEMO_BAD_OPERATION') return send({ operation: 'check' })
+  // `sweepBatches`: this dsh sends a sweep call's pairs together and sets a refused one aside (`sweepRound`), so
+  // tracy-web may plan a page's words as one call; a tracy-web that does not know it plans one pair per call.
+  let answer = await send({ operation: 'check.start', sweepBatches: true })
+  if (answer?.code === 'AGENT_DEMO_BAD_OPERATION') return send({ operation: 'check', sweepBatches: true })
   const until = now() + CHECK_WAIT_MS
   let misses = 0
   while (answer?.running === true) {
@@ -104,24 +111,37 @@ async function sweptCheck(send, { signal, sleep, now, sweep }) {
     if (calls.length === 0 || sweep === null || round >= SWEEPS_MAX || signal?.aborted)
       return heard(answer, sweeps)
     const refused = []
+    let sent = 0
     const sendOne = sweepRound(sweep)
     for (const call of calls) {
       if (signal?.aborted) return stoppedAnswer({ lastReceipt: heard(answer, []) })
-      const done = await sendOne(call)
-      if (done?.ok === true && typeof done.cleared === 'string')
-        unseen.push({ path: call.params?.path ?? null, find: call.params?.find ?? null, by: done.cleared })
-      if (done?.ok !== true)
-        refused.push({
-          action: call.action,
-          find: call.params?.find ?? null,
-          code: done?.code ?? 'SWEEP_CALL_FAILED',
-          // 🔒 A FAILURE WITH NO CODE KEEPS ITS WORDS (lrsweep rig, JA Diner wp7, 25/10/2026): 80 featured-picture
-          // writes of one build failed with no code of the site's, and with the error dropped nothing said why.
-          ...((done?.code ?? 'SWEEP_CALL_FAILED') === 'SWEEP_CALL_FAILED' && done?.error
-            ? { error: String(done.error).slice(0, 160) }
-            : {}),
-          ...(done?.unresolved === true ? { waits: true } : {})
-        })
+      const answered = await sendOne(call)
+      // A page's pairs sent as one call answer pair by pair (`sweepRound`), each reported as its own call was.
+      const rows = Array.isArray(answered?.pairs)
+        ? answered.pairs
+        : [{ find: call.params?.find ?? null, done: answered }]
+      for (const { find, done } of rows) {
+        sent++
+        if (done?.ok === true && typeof done.cleared === 'string')
+          unseen.push({ path: call.params?.path ?? null, find, by: done.cleared })
+        if (done?.ok !== true)
+          refused.push({
+            action: call.action,
+            find,
+            code: done?.code ?? 'SWEEP_CALL_FAILED',
+            // 🔒 A FAILURE WITH NO CODE KEEPS ITS WORDS (lrsweep rig, JA Diner wp7, 25/10/2026): 80 featured-picture
+            // writes of one build failed with no code of the site's, and with the error dropped nothing said why.
+            ...((done?.code ?? 'SWEEP_CALL_FAILED') === 'SWEEP_CALL_FAILED' && done?.error
+              ? { error: String(done.error).slice(0, 160) }
+              : {}),
+            ...(done?.unresolved === true ? { waits: true } : {}),
+            // A replace whose answer proves nothing (lost, thrown, unknown) may have written its words: never a pair to
+            // send again unread; the check after this round reads the page.
+            ...(call.action === 'content.replace' && done?.code !== NOT_SENT.code && !refusedBeforeWrite(done)
+              ? { unknown: true }
+              : {})
+          })
+      }
     }
     sweeps.push({
       calls: calls.length,
@@ -132,8 +152,7 @@ async function sweptCheck(send, { signal, sleep, now, sweep }) {
     // 🔒 A ROUND WHOSE EVERY CALL WAITS FOR A DOOR CHANGES NOTHING (24/10/2026): a check again would plan the same
     // calls, so the check as it stands is the answer. A call waits when the resolver answers it `unresolved` (a
     // plugin door or a logo writer not built yet).
-    if (refused.length === calls.length && refused.every((r) => r.waits === true))
-      return heard(answer, sweeps)
+    if (refused.length === sent && refused.every((r) => r.waits === true)) return heard(answer, sweeps)
   }
 }
 
@@ -209,20 +228,90 @@ const wordsKey = (text) =>
 export function sweepRound(sweep) {
   /** @type {string[]} */
   const written = []
-  return async (call) => {
-    const done = await sweep(call).catch((failure) => ({
+  /** @param {{action: string, params: Record<string, any>}} call */
+  const sent = (call) =>
+    sweep(call).catch((failure) => ({
       ok: false,
       code: 'SWEEP_CALL_FAILED',
       error: String(failure?.message ?? failure)
     }))
+  /** @param {{action: string, params: Record<string, any>}} call */
+  const one = async (call) => {
+    const done = await sent(call)
     if (call.action !== 'content.replace') return done
-    const find = wordsKey(call.params?.find)
+    return heldBy(call.params?.find, done)
+  }
+  /** A pair's answer: written, or a NOT_FOUND an earlier write of the round explains. @param {unknown} words @param {any} done */
+  const heldBy = (words, done) => {
+    const find = wordsKey(words)
     if (done?.ok === true) written.push(find)
     else if (done?.code === 'NOT_FOUND' && find !== '') {
       const by = written.find((w) => w.includes(find))
       if (by !== undefined) return { ok: true, count: 0, cleared: by }
     }
     return done
+  }
+  return async (call) => {
+    const changes = call.action === 'content.replace' ? call.params?.changes : undefined
+    if (!Array.isArray(changes)) return one(call)
+    return { ok: true, pairs: await batch(call, changes) }
+  }
+
+  /**
+   * A PAGE'S PAIRS GO AS ONE CALL; A REFUSED PAIR IS SET ASIDE, NEVER THE PAGE (28/10/2026). The replace job writes
+   * a call whole or not at all (`locateAll`: the first refusal wins, nothing is written, `change` names the pair), so
+   * the pair it names answers that refusal as its own call would have, and the rest are sent again, as
+   * `copy-apply.mjs` does. A pair refused for sharing words with another pair of the call (BAD_PARAMS) is sent alone
+   * after the rest is written: the order the sweep gave pair by pair. A refusal that names no pair (the call's count
+   * over the job's limit, a call mixing stored and theme-printed words) has each pair sent alone, as before.
+   *
+   * 🔒 ONLY A REFUSAL THAT PROVES NOTHING WAS WRITTEN IS SENT AGAIN (28/10/2026, `refusedBeforeWrite`): a
+   * lost receipt, a timeout, a thrown call or an unknown outcome may have written every pair, and a pair whose new
+   * words hold its old ones ("Menu item" → "Menu item for customer") would be written twice. Such an answer is each
+   * pair's answer, as one pair's unknown outcome always was, and the next check reads the page. A pair waiting for
+   * the rest of its call (the overlap above) is sent only once every answer of the call is known.
+   * @param {{action: string, params: Record<string, any>}} call
+   * @param {Array<{find: string, replace: string, expect?: number}>} changes
+   * @returns {Promise<Array<{find: string, done: any}>>}
+   */
+  async function batch(call, changes) {
+    const { changes: _changes, ...base } = call.params
+    /** @param {{find: string, replace: string, expect?: number}} pair */
+    const alone = (pair) => ({ action: call.action, params: { ...base, ...pair } })
+    /** @type {Array<{find: string, done: any}>} */
+    const rows = []
+    /** @type {typeof changes} */
+    const after = []
+    let queue = [...changes]
+    while (queue.length > 0) {
+      const done = await sent(
+        queue.length === 1 ? alone(queue[0]) : { action: call.action, params: { ...base, changes: queue } }
+      )
+      if (done?.ok === true) {
+        for (const pair of queue) rows.push({ find: pair.find, done: heldBy(pair.find, done) })
+        break
+      }
+      if (!refusedBeforeWrite(done)) {
+        for (const pair of queue) rows.push({ find: pair.find, done })
+        break
+      }
+      const at =
+        queue.length === 1
+          ? 0
+          : Number.isInteger(done?.change) && done.change >= 0 && done.change < queue.length
+            ? done.change
+            : null
+      if (at === null) {
+        for (const pair of queue) rows.push({ find: pair.find, done: await one(alone(pair)) })
+        break
+      }
+      if (queue.length > 1 && done?.code === 'BAD_PARAMS') after.push(queue[at])
+      else rows.push({ find: queue[at].find, done: heldBy(queue[at].find, done) })
+      queue = queue.filter((_pair, i) => i !== at)
+    }
+    const known = rows.every((r) => r.done?.ok === true || refusedBeforeWrite(r.done))
+    for (const pair of after) rows.push({ find: pair.find, done: known ? await one(alone(pair)) : NOT_SENT })
+    return rows
   }
 }
 
@@ -248,4 +337,54 @@ export function demoToolNeedsReady(name, args) {
       args.command === 'view'
     )
   )
+}
+
+/** What `copy.write` answers while the words are being written: the photos meanwhile, then `copy.apply`. */
+export const COPY_STARTED_NEXT =
+  'The words are being written (a minute or two): place the photos now; tracy_demo {operation:"copy.apply"} waits for the words and puts them on the site.'
+
+/**
+ * 🔒 THE WORDS ARE WRITTEN WHILE THE AGENT PLACES THE PHOTOS (local round 36, 26/10/2026): `copy.write` held the turn
+ * 71–104 s polling tracy-web's copy tasks, the agent idle. It starts them and answers; `copy.apply` waits for them
+ * (`copyWritten`). Words already written answer their summary at once.
+ * @param {(params: Record<string, unknown>) => Promise<any>} send
+ */
+async function startCopy(send) {
+  const answer = await send({ operation: 'copy.start' })
+  return answer?.running === true ? { ok: true, running: true, next: COPY_STARTED_NEXT } : answer
+}
+
+/** How long `copy.apply` waits for the copy tasks before it answers that they still run. */
+const COPY_WAIT_MS = 600_000
+const COPY_POLL_MS = 3_000
+
+/**
+ * The words of every page written by tracy-web's copy tasks (`demo-copy.js`): started if they were not, then polled
+ * until written, as a check is — a whole site's tasks take longer than one request may stay open on dev. What
+ * `copy.apply` waits for before it reads the packs.
+ * @param {(params: Record<string, unknown>) => Promise<any>} send
+ * @param {{signal?: AbortSignal | null, sleep?: (ms: number, signal?: AbortSignal | null) => Promise<unknown>, now?: () => number}} [options]
+ */
+export async function copyWritten(send, { signal = null, sleep = pause, now = Date.now } = {}) {
+  let answer = await send({ operation: 'copy.start' })
+  const until = now() + COPY_WAIT_MS
+  let misses = 0
+  while (answer?.running === true) {
+    if (signal?.aborted) return stoppedAnswer({ lastReceipt: answer })
+    if (now() >= until)
+      return {
+        ...answer,
+        ok: false,
+        code: 'COPY_STILL_RUNNING',
+        error:
+          'The words are still being written. Call tracy_demo copy.apply again to wait for them; they are not started twice.'
+      }
+    await sleep(Math.min(COPY_POLL_MS, until - now()), signal)
+    if (signal?.aborted) return stoppedAnswer({ lastReceipt: answer })
+    const polled = await send({ operation: 'copy.status' })
+    if (onTheWay(polled) && ++misses < CHECK_POLL_MISSES) continue
+    answer = polled
+    misses = 0
+  }
+  return answer
 }

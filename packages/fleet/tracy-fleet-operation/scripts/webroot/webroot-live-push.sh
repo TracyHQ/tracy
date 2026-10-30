@@ -35,6 +35,8 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 LIB_DIR="${TRACY_LIB_DIR:-$HERE/../lib}"
 # shellcheck source=../lib/roots.sh
 . "$LIB_DIR/roots.sh"
+# shellcheck source=../lib/heavy-slots.sh
+. "$LIB_DIR/heavy-slots.sh"
 # shellcheck source=../lib/webroot-repo-git.sh
 . "$LIB_DIR/webroot-repo-git.sh"
 # shellcheck source=../lib/webroot-platform.sh
@@ -98,10 +100,9 @@ print("" if v is None else (json.dumps(v) if isinstance(v, (dict, list, bool)) e
 HEAVY_LOCK="${TRACY_HEAVY_LOCK:-/var/lock/tracy-webroot-heavy.lock}"
 run_heavy() {
   if [[ -n "${TRACY_HEAVY_LOCK_HELD:-}" ]] || ! command -v flock >/dev/null 2>&1; then "$@"; return; fi
-  exec 9>"$HEAVY_LOCK"
-  if ! flock -n 9; then
-    step "waiting for another site's heavy webroot job (one at a time per machine)"
-    flock -w 1800 9 || { echo "another heavy webroot job is running; try again shortly" >&2; exit 1; }
+  if ! heavy_try "$HEAVY_LOCK"; then
+    step "waiting for another site's heavy webroot job (the machine's heavy jobs are full)"
+    heavy_wait "$HEAVY_LOCK" 1800 || { echo "another heavy webroot job is running; try again shortly" >&2; exit 1; }
   fi
   export TRACY_HEAVY_LOCK_HELD=1
   "$@"
@@ -182,12 +183,14 @@ PYEOF
   step "Sync from live: $(json_get "$1.json" state)$(json_get "$1.json" code)"
 }
 
-# An engine's refusal (live-write.mjs) as this job's answer, its codes the contract's.
+# An engine's refusal (live-write.mjs) as this job's answer, its codes the contract's; on
+# LIVE_PHP_TOO_OLD the site's PHP and the engine's minimum go along.
 engine_refusal() { # answer
   python3 -c 'import json,sys
 a = json.loads(sys.argv[1] or "{}")
 code = a.get("code") or "WRITE_FAILED"
-print(json.dumps({"ok": False, "code": code, **({"detail": a["detail"]} if a.get("detail") else {})}))' "$1"
+print(json.dumps({"ok": False, "code": code, **({"detail": a["detail"]} if a.get("detail") else {}),
+                 **({"php": a.get("php"), "min": a.get("min")} if code == "LIVE_PHP_TOO_OLD" else {})}))' "$1"
 }
 
 # ── preview ──────────────────────────────────────────────────────────────────────────────────
@@ -213,7 +216,7 @@ preview() {
     return 0
   fi
   if [[ "$ok" != true || "$state" != applied ]]; then
-    python3 -c 'import json,sys; print(json.dumps({"ok": False, "code": "SYNC_FAILED", "sync": json.load(open(sys.argv[1]))}, ensure_ascii=False))' "$PREVIEW_DIR/sync.json"
+    python3 -c 'import json,sys; s=json.load(open(sys.argv[1])); print(json.dumps({"ok": False, "code": s.get("code") if s.get("code") in ("LIVE_BLOCKED", "LIVE_PASSWORD_PROTECTED", "LIVE_PHP_TOO_OLD", "LIVE_RATE_LIMITED", "TOKEN_REFUSED") else "SYNC_FAILED", "sync": s}, ensure_ascii=False))' "$PREVIEW_DIR/sync.json"
     return 0
   fi
   rm -rf "$PREVIEW_DIR/sync"
@@ -256,7 +259,7 @@ changeset() {
   # Every step checked by hand: this runs inside a command substitution, where bash turns `set -e`
   # off — and a base the server refused or loaded half would make the live site's records look new.
   if ! tracy_db_exec mariadb -uroot -e "CREATE DATABASE \`$SCHEMA_BASE\` CHARACTER SET $CHARSET COLLATE $COLLATION" \
-     || ! gzip -dc "$LIVE_BASE_DUMP" | tracy_db_exec mariadb -uroot --max-allowed-packet=256M --init-command="SET FOREIGN_KEY_CHECKS=0" "$SCHEMA_BASE" \
+     || ! tracy_db_load_dump "$SCHEMA_BASE" "$LIVE_BASE_DUMP" "$PREVIEW_DIR/load-base" \
      || ! tracy_db_drop_triggers "$SCHEMA_BASE" >&2 \
      || ! sync_engine normalise --schema "$SCHEMA_BASE" --platform "$(tracy_backup_platform)" --prefix "$PREFIX" >&2; then
     drop_scratch; trap - EXIT
@@ -341,7 +344,7 @@ PYEOF
               $([[ "$CONFIRM_DELETES" == 1 ]] && echo --confirm-deletes) \
               $([[ "$CONFIRM_PHP" == 1 ]] && echo --confirm-php) | tail -1)"
     if [[ "$(python3 -c 'import json,sys; print(json.loads(sys.argv[1] or "{}").get("ok"))' "$said")" != True ]]; then
-      engine_refusal "$said"; return 0
+      if [[ ! -f "$PUSH_DIR/written.json" ]]; then engine_refusal "$said"; return 0; fi
     fi
   fi
   local written
@@ -405,7 +408,9 @@ PYEOF
 # ── undo ─────────────────────────────────────────────────────────────────────────────────────
 undo() {
   [[ -n "$PUSH_ID" ]] || { echo "need --push-id" >&2; exit 2; }
-  [[ -f "$PUSH_DIR/written.json" && -f "$PUSH_DIR/before.json" ]] || { answer_refusal NOT_PUSHED; return 0; }
+  # An Apply whose job was lost before it answered leaves its journal: Undo takes back what it lists (#122).
+  [[ ( -f "$PUSH_DIR/written.json" || -f "$PUSH_DIR/journal.jsonl" ) && -f "$PUSH_DIR/before.json" ]] \
+    || { answer_refusal NOT_PUSHED; return 0; }
   if [[ -f "$PUSH_DIR/undone.json" ]]; then
     python3 -c 'import json,sys; a = json.load(open(sys.argv[1])); a["repeated"] = True; print(json.dumps(a, ensure_ascii=False))' "$PUSH_DIR/undone.json"
     return 0

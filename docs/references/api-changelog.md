@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-10-28: The name the site goes by while the business name is held
+
+Changed (internal, not in the public reference): `GET /api/website-opportunities/:id/place-profile` also answers `siteName` while the latest brief holds the business name off the site and the owner has not shown it since: the neutral identity the site goes by instead (the brief's home page title made without the name). Absent otherwise.
+
 ## 2026-10-27: Templates pages served at tracy.ai
 
 Added: `GET /templates/sitemap.xml` and `GET /templates/llms.txt`, the same sitemap and plain text as `/sitemap.xml` and `/llms.txt`, under `/templates/` so they also exist on the public origin. Changed: on the production deployment the Templates pages, sitemap, llms.txt and JSON-LD state `https://tracy.ai` addresses; a direct `GET`/`HEAD` of any `/templates*` address there answers 301 to the same path and query on `https://tracy.ai`, except a request from that host's Cloudflare Worker (`CF-Worker: tracy.ai`), which is served the page. `/robots.txt` names `<public origin>/templates/sitemap.xml`; the old `/design-inspiration` addresses move to `https://tracy.ai/templates/...` in one hop.
@@ -961,3 +965,4 @@ the operation (`METHOD /path`), parameter, field or action — added, changed or
   not part of this public API and not covered by this changelog.
 
 - 18 October 2026 — PR #1426 adds internal GET/POST `/api/ops/speech/providers/:provider/models`: independent metadata caches, server-only credentials, and no inference or selection/revision changes. Models incompatible with the STT/TTS transport are rejected; VoiceStudio ASR is read-only. Public API v1 is unchanged.
+- 28 October 2026 — adds internal GET `/api/ops/wo/revisions/:revId/labels`, `/api/ops/wo/places/:id/briefs` and `/api/ops/wo/revisions/:revId/assets/:assetId/image` (staff read of a brief revision's photo labels, links and readiness). Public API v1 is unchanged.

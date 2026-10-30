@@ -24,6 +24,7 @@ import {
   type PushView,
   conflictGroups,
   pushFailureText,
+  pushableOf,
   unsupportedReasonText,
   withNotes
 } from './push-words'
@@ -135,7 +136,7 @@ function UndoBlock({ live, t }: { live: LivePush; t: Translate }): JSX.Element |
           {t('push.lastPush', { when: agoText(target.pushedAt), count: target.result?.pushed.length ?? 0 })}
         </p>
       )}
-      {target.undoError && <p>{pushFailureText(target.undoError, t, live.max)}</p>}
+      {target.undoError && <p>{pushFailureText(target.undoError, t, live.max, target.undoPhp)}</p>}
       {target.undoError && target.undoErrorDetail && (
         <Code code={target.undoError} detail={target.undoErrorDetail} t={t} />
       )}
@@ -180,6 +181,8 @@ function PreviewGroups({ live, t }: { live: LivePush; t: Translate }): JSX.Eleme
   const { phase } = live
   const locked = phase === 'confirm' || live.pressed || live.running
   const goes = phase === 'review' || phase === 'confirm'
+  // Headings count the whole changeset; the lists under them stop at the host's answer cap.
+  const n = pushableOf(v)
   return (
     <>
       {goes && (
@@ -187,7 +190,7 @@ function PreviewGroups({ live, t }: { live: LivePush; t: Translate }): JSX.Eleme
           <Group
             t={t}
             id="add"
-            title={t('push.group.add', { count: v.add.length })}
+            title={t('push.group.add', { count: n.add })}
             items={v.add}
             open
             fields={false}
@@ -195,14 +198,14 @@ function PreviewGroups({ live, t }: { live: LivePush; t: Translate }): JSX.Eleme
           <Group
             t={t}
             id="change"
-            title={t('push.group.change', { count: v.change.length })}
+            title={t('push.group.change', { count: n.change })}
             items={v.change}
             open
           />
           <Group
             t={t}
             id="files"
-            title={t('push.group.files', { count: v.files?.length ?? 0 })}
+            title={t('push.group.files', { count: n.files })}
             hint={t('push.group.filesHint')}
             items={withNotes(v.files ?? [], t, v.platform)}
             open
@@ -210,20 +213,20 @@ function PreviewGroups({ live, t }: { live: LivePush; t: Translate }): JSX.Eleme
           <Group
             t={t}
             id="settings"
-            title={t('push.group.settings', { count: v.settings?.length ?? 0 })}
+            title={t('push.group.settings', { count: n.settings })}
             items={v.settings ?? []}
             open
           />
           <Group
             t={t}
             id="php"
-            title={t('push.group.php', { count: v.php?.length ?? 0 })}
+            title={t('push.group.php', { count: n.php })}
             hint={t('push.group.phpHint')}
             items={withNotes(v.php ?? [], t, v.platform)}
             open
             tick={{
               name: 'php',
-              label: t('push.sendPhp', { count: v.php?.length ?? 0 }),
+              label: t('push.sendPhp', { count: n.php }),
               checked: live.phpTicked,
               disabled: locked,
               onTick: live.setPhpTicked
@@ -232,12 +235,12 @@ function PreviewGroups({ live, t }: { live: LivePush; t: Translate }): JSX.Eleme
           <Group
             t={t}
             id="remove"
-            title={t('push.group.remove', { count: v.remove.length })}
+            title={t('push.group.remove', { count: n.remove })}
             hint={t('push.group.removeHint')}
             items={withNotes(v.remove, t, v.platform)}
             open
             tick={{
-              label: t('push.removeAll', { count: v.remove.length }),
+              label: t('push.removeAll', { count: n.remove }),
               checked: live.ticked,
               disabled: locked,
               onTick: live.setTicked
@@ -255,7 +258,7 @@ function PreviewGroups({ live, t }: { live: LivePush; t: Translate }): JSX.Eleme
         <Group
           t={t}
           id="liveChanged"
-          title={t('push.group.liveChanged', { count: v.liveChanged.length })}
+          title={t('push.group.liveChanged', { count: v.liveChangedTotal ?? v.liveChanged.length })}
           hint={t('push.group.liveChangedHint')}
           items={v.liveChanged}
         />
@@ -367,7 +370,7 @@ function ReviewPage({ live, onBack, t }: { live: LivePush; onBack?: () => void; 
   if (phase === 'failed')
     state = (
       <Notice severity="error" title={t('push.status.failed')}>
-        <p>{pushFailureText(failure, t, live.max)}</p>
+        <p>{pushFailureText(failure, t, live.max, live.error ? null : push?.php)}</p>
         {failure && <Code code={failure} detail={live.error ? null : push?.errorDetail} t={t} />}
       </Notice>
     )
@@ -452,6 +455,7 @@ function SendPage({ live, t }: { live: LivePush; t: Translate }): JSX.Element {
     state = partial ? (
       <Notice severity="error" title={t('push.status.partial')}>
         <p>{t('push.status.partialBody', { count: push?.result?.pushed.length ?? 0 })}</p>
+        {push?.error === 'LIVE_PHP_TOO_OLD' && <p>{pushFailureText(push.error, t, live.max, push.php)}</p>}
         {push?.error && <Code code={push.error} detail={push.errorDetail} t={t} />}
       </Notice>
     ) : sent === 0 ? (
@@ -481,7 +485,7 @@ function SendPage({ live, t }: { live: LivePush; t: Translate }): JSX.Element {
   if (phase === 'failed')
     state = (
       <Notice severity="error" title={t('push.status.failed')}>
-        <p>{pushFailureText(failure, t, live.max)}</p>
+        <p>{pushFailureText(failure, t, live.max, live.error ? null : push?.php)}</p>
         {failure && <Code code={failure} detail={live.error ? null : push?.errorDetail} t={t} />}
       </Notice>
     )

@@ -35,6 +35,7 @@ export const DIAGNOSTIC_CHECKS = new Set([
   'connection_refused_after_ban',
   'connection_refused_after_progress',
   'contract_unavailable',
+  'engine_refused',
   'firewall',
   'forbidden',
   'http_status',
@@ -49,6 +50,7 @@ export const DIAGNOSTIC_CHECKS = new Set([
   'no_csrf',
   'no_door',
   'no_engine',
+  'no_engine_reply',
   'no_redirect',
   'no_token',
   'not_answering',
@@ -62,6 +64,45 @@ export const DIAGNOSTIC_CHECKS = new Set([
   'tls',
   'too_large',
   'untrusted_target'
+])
+
+/**
+ * The engine calls an import makes, named on a `call_failed` (`at: 'export'`): which one stopped.
+ */
+export const DIAGNOSTIC_ACTIONS = new Set([
+  'info',
+  'site.fingerprint',
+  'db.tables',
+  'db.dump',
+  'db.dump_many',
+  'files.pack'
+])
+
+/**
+ * What a body that was not the engine's reply looked like (`doors.mjs` `answerKind`), never its
+ * text: nothing, PHP's fatal, PHP's notices with no engine reply after them, a page, other JSON, text.
+ */
+export const DIAGNOSTIC_ANSWERS = new Set(['empty', 'php_fatal', 'php_notice', 'html', 'json', 'text'])
+
+/**
+ * The engine's own refusal codes (Claude Cowork's `err('<code>')`), named on `engine_refused`; any
+ * other value is `other`.
+ */
+export const DIAGNOSTIC_ENGINE_ERRORS = new Set([
+  'bad_action',
+  'bad_params',
+  'dump_failed',
+  'fatal',
+  'list_failed',
+  'pack_failed',
+  'read_failed',
+  'too_large',
+  'unauthorized',
+  'unavailable',
+  'unsupported',
+  'upload_failed',
+  'walk_failed',
+  'other'
 ])
 
 /** The install roads whose answers ride in `roads`, each kept apart. */
@@ -140,7 +181,10 @@ export const DIAGNOSTIC_ERRORS = new Set([
  *   roads?: Record<string, ImportRoad>,
  *   php_limits?: Record<string, number>,
  *   package_bytes?: number,
- *   username_is_email?: boolean
+ *   username_is_email?: boolean,
+ *   action?: string,
+ *   answer?: string,
+ *   engine_error?: string
  * }} ImportDiagnostic
  */
 
@@ -177,8 +221,20 @@ function importRoad(value) {
  */
 export function importDiagnostic(value) {
   if (!value || typeof value !== 'object') return undefined
-  const { at, check, status, path, error, roads, php_limits, package_bytes, username_is_email } =
-    /** @type {Record<string, unknown>} */ (value)
+  const {
+    at,
+    check,
+    status,
+    path,
+    error,
+    roads,
+    php_limits,
+    package_bytes,
+    username_is_email,
+    action,
+    answer,
+    engine_error
+  } = /** @type {Record<string, unknown>} */ (value)
   if (typeof at !== 'string' || !DIAGNOSTIC_STEPS.has(at)) return undefined
   if (typeof check !== 'string' || !DIAGNOSTIC_CHECKS.has(check)) return undefined
   /** @type {ImportDiagnostic} */
@@ -209,6 +265,12 @@ export function importDiagnostic(value) {
     detail.package_bytes = Number(package_bytes)
   // Of the username only whether it had an email address's shape: a boolean, or nothing.
   if (typeof username_is_email === 'boolean') detail.username_is_email = username_is_email
+  // A `call_failed`: which engine call, what came back instead of its reply, or the engine's own code.
+  if (typeof action === 'string' && DIAGNOSTIC_ACTIONS.has(action)) detail.action = action
+  if (typeof answer === 'string' && DIAGNOSTIC_ANSWERS.has(answer)) detail.answer = answer
+  if (engine_error !== undefined)
+    detail.engine_error =
+      typeof engine_error === 'string' && DIAGNOSTIC_ENGINE_ERRORS.has(engine_error) ? engine_error : 'other'
   return detail
 }
 

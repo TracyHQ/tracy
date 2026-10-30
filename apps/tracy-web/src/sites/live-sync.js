@@ -24,7 +24,14 @@
  * the agent on the copy can read its database.
  */
 import { randomBytes, randomUUID } from 'node:crypto'
-import { audit, auditSiteWrite, handOverWriteLease, releaseWriteLease, takeWriteLease } from './store.js'
+import {
+  audit,
+  auditSiteWrite,
+  handOverWriteLease,
+  releaseWriteLease,
+  siteByKey,
+  takeWriteLease
+} from './store.js'
 
 /**
  * The platforms whose adapter passed the merge's cases (plan §4): Joomla, and WordPress with its address
@@ -51,7 +58,8 @@ export function liveSync({
   currentComponent,
   writeComponent,
   now = Date.now,
-  watchEveryMs = 30_000
+  watchEveryMs = 30_000,
+  resumeOnStart = false
 }) {
   /** The live door and token of an imported, paired site, or why there is none. */
   async function liveCredential(site) {
@@ -374,7 +382,40 @@ export function liveSync({
 
   // Sync to live (`live-push.js`) runs a Sync from live first, so it gives the copy its own token
   // the same way and reads the live door from the same place.
-  return { start, read, latest, forgetStale, connected, ensureCopyToken, liveCredential, stuckMs: STUCK_MS }
+  /**
+   * After a restart, every sync still running is read back from its host job at once, then watched
+   * again: the read renews the site's write lease while the job runs (stale after 90 s with nobody
+   * renewing it, the chat could write while the job still did, #123) and releases it, or settles the
+   * row, once the job has ended or is lost. Only the process that serves the doors does this
+   * (`resumeOnStart`); the cron's instance does not.
+   */
+  async function resume() {
+    const { rows } = await pool.query(`select id, site_key from site_sync where state = 'running'`)
+    for (const row of rows) {
+      const site = await siteByKey(pool, row.site_key)
+      if (!site) continue
+      try {
+        await read(site)
+      } catch {
+        // the host does not answer yet: the watch below asks again
+      }
+      watch(site, row.id)
+    }
+    return rows.length
+  }
+
+  if (resumeOnStart) setTimeout(() => void resume().catch(() => {}), 0).unref?.()
+  return {
+    start,
+    read,
+    latest,
+    forgetStale,
+    connected,
+    ensureCopyToken,
+    liveCredential,
+    resume,
+    stuckMs: STUCK_MS
+  }
 }
 
 /**
@@ -413,11 +454,13 @@ export function timingOf(output) {
   }
   let read = null
   for (const line of lines) {
-    if (!line.startsWith('{"ok":true,') || !line.includes('"liveReadAt"')) continue
+    // Parsed, never matched by its first bytes: the script prints Python's `json.dumps` form
+    // (`{"ok": true, …}`), and a prefix match kept every row's `read` null.
+    if (!line.startsWith('{') || !line.includes('"liveReadAt"')) continue
     try {
       const r = JSON.parse(line)
       // The read's own line (live-pull): its timing, and no sync state of its own.
-      if (!r.timing || typeof r.timing !== 'object' || r.state !== undefined) continue
+      if (r?.ok !== true || !r.timing || typeof r.timing !== 'object' || r.state !== undefined) continue
       read = {
         mode: typeof r.mode === 'string' ? r.mode : r.unchanged ? 'unchanged' : null,
         seconds: typeof r.seconds === 'number' ? r.seconds : null,
@@ -436,7 +479,18 @@ export function timingOf(output) {
  * (#1564): the owner is told to try again when the site is quiet, not that it could not be read.
  */
 function failedCode(said, fallback) {
-  if (said?.code === 'LIVE_READ_FAILED' && said.read?.code === 'LIVE_BUSY') return 'LIVE_BUSY'
+  if (
+    said?.code === 'LIVE_READ_FAILED' &&
+    [
+      'LIVE_BUSY',
+      'LIVE_BLOCKED',
+      'LIVE_PASSWORD_PROTECTED',
+      'LIVE_PHP_TOO_OLD',
+      'LIVE_RATE_LIMITED',
+      'TOKEN_REFUSED'
+    ].includes(said.read?.code)
+  )
+    return said.read.code
   return said?.code ?? fallback
 }
 
@@ -493,6 +547,17 @@ function brief(c) {
     for (const side of ['base', 'ours', 'theirs'])
       out[side] = Array.isArray(c[side]) ? c[side].slice(0, 30).map(String) : null
   if (c.values) out.values = c.values
+  // A held live record's own rows the merge left out with it (its category, images…), named by
+  // table and key (`live_sync.py` `name_held_rows`): what the dialog says went with it.
+  if (Array.isArray(c.belonging)) {
+    out.belonging = c.belonging.slice(0, 50).map((b) => ({
+      table: String(b?.table ?? ''),
+      key: b?.key ?? null,
+      // A row the copy had that the live site pointed at the held record: the copy's version stayed.
+      ...(b?.changed === true ? { changed: true } : {})
+    }))
+    out.belongingCount = typeof c.belongingCount === 'number' ? c.belongingCount : out.belonging.length
+  }
   return out
 }
 
@@ -596,6 +661,35 @@ export function busyOf(answer) {
   }
 }
 
+/**
+ * The versions a LIVE_PHP_TOO_OLD names (claude-cowork 0.24.73 refusing to run below its minimum,
+ * live-pull/live-write `phpTooOld`): the PHP the live site runs and the one the engine needs, each a
+ * bare version or null — from the answer itself, its read, or a push's inner sync. Null when no
+ * part of the answer is that refusal.
+ * @returns {{ php: string | null, min: string | null } | null}
+ */
+export function phpTooOldOf(answer) {
+  const said = [answer, answer?.read, answer?.sync, answer?.sync?.read].find(
+    (a) => a && typeof a === 'object' && a.code === 'LIVE_PHP_TOO_OLD' && ('php' in a || 'min' in a)
+  )
+  if (!said) return null
+  const version = (v) => (typeof v === 'string' && /^\d+(\.\d+){0,3}$/.test(v) ? v : null)
+  return { php: version(said.php), min: version(said.min) }
+}
+
+/** `notCarried` of a sync's answer, names only and bounded; null when there is none. */
+function notCarriedOf(answer) {
+  const seen = answer?.notCarried
+  if (!seen || typeof seen !== 'object') return null
+  const name = (v) => (typeof v === 'string' && v ? v.slice(0, 64) : null)
+  const triggers = (Array.isArray(seen.triggers) ? seen.triggers : [])
+    .map((t) => ({ name: name(t?.name), table: name(t?.table) }))
+    .filter((t) => t.name)
+    .slice(0, 50)
+  const tables = (Array.isArray(seen.tables) ? seen.tables : []).map(name).filter(Boolean).slice(0, 50)
+  return triggers.length || tables.length ? { triggers, tables } : null
+}
+
 /** A sync row as a client sees it. */
 export function view(row) {
   const answer = row.answer ?? {}
@@ -624,6 +718,9 @@ export function view(row) {
     dropped: droppedRecords(row),
     // Log rows both sites wrote under one number: the copy's stayed. Named for support, not shown.
     skipped: (answer.skipped ?? []).map(brief),
+    // What the live site has that a sync does not bring, named (#120): its triggers the copy lacks,
+    // and the tables left out by the shape of their name (`…_log`) that it changed.
+    notCarried: notCarriedOf(answer),
     summary:
       answer.files || answer.database || answer.apply || row.state === 'applied'
         ? {
@@ -638,6 +735,8 @@ export function view(row) {
     // Where the time went: each step's second, and the live read's parts (a sync read back as slow).
     timing: answer.timing ?? null,
     // A read that found the live site still changing: which part of it kept changing.
-    busy: row.error === 'LIVE_BUSY' ? busyOf(answer) : null
+    busy: row.error === 'LIVE_BUSY' ? busyOf(answer) : null,
+    // The live site's PHP is below what Claude Cowork needs: both versions, for the owner's sentence.
+    php: row.error === 'LIVE_PHP_TOO_OLD' ? phpTooOldOf(answer) : null
   }
 }

@@ -24,13 +24,32 @@ export const KIND_TABLE = {
   field: 'fields'
 }
 
+/** WordPress contracts name their platform, or carry `wp<major>` in their id (`ja-diner/wp7/1.0.1`). */
+const isWordpress = (manifest) =>
+  manifest.platform === 'wordpress' || /\/wp\d+\//.test(String(manifest.id ?? ''))
+
 export function loadContract(dir, siteUrl) {
   const manifest = readJson(dir, 'manifest.json')
   const map = readJson(dir, 'content-map.json')
   const lock = readJson(dir, 'presentation-lock.json')
+  const platform = isWordpress(manifest) ? 'wordpress' : 'joomla'
   const entityByKey = new Map(map.entities.map((e) => [e.key, e]))
   // "table:id" -> entity key, so a DB row found by the classifier can say whether the contract knows it.
   const entityByRow = new Map(map.entities.map((e) => [`${KIND_TABLE[e.kind]}:${e.sourceId}`, e.key]))
+  /**
+   * The contract entity a database row is, or undefined. A Joomla entity names its row by id; a WordPress entity names
+   * its page by slug and its option by name, so the row is matched by those.
+   */
+  const entityOfRow = (table, id, row) => {
+    if (platform !== 'wordpress') return entityByRow.get(`${table}:${id}`)
+    const key =
+      table === 'posts' && row?.post_type === 'page'
+        ? `page-${row.post_name}`
+        : table === 'options'
+          ? `option-${row?.option_name}`
+          : null
+    return key && entityByKey.has(key) ? key : undefined
+  }
 
   const text = new Map() // normText(sample) -> [slot keys]
   const textCompact = new Map() // compact(normText(sample)) -> [slot keys]
@@ -71,14 +90,23 @@ export function loadContract(dir, siteUrl) {
           }
         }
       }
-      if (letterCount(n) >= 3) textList.push({ norm: n, key: s.key })
+      // A phone number or a figure in a field of its own has no letter: count digits too, as for a segment above, so
+      // a block that prints it after a label slot ("or CALL: (239) 555-0108") is that pair, not a hole.
+      if (letterCount(n) >= 3 || alnumCount(n) >= 7) textList.push({ norm: n, key: s.key })
     }
   }
   textList.sort((a, b) => b.norm.length - a.norm.length)
 
   // Pages declared by the map: menu item id + route. `index.php?Itemid=<id>` opens any of them
   // whatever the site's SEF settings, so the audit never depends on guessing URL rewriting.
-  const pages = map.pages.map((p) => {
+  const mapPages =
+    platform === 'wordpress'
+      ? // A WordPress map declares no routes: every page entity opens by its slug, whatever the permalinks are.
+        map.entities
+          .filter((e) => e.kind === 'page' && typeof e.identity?.slug === 'string')
+          .map((e) => ({ entity: e.key, route: e.identity.slug, openAs: `?pagename=${e.identity.slug}` }))
+      : map.pages
+  const pages = mapPages.map((p) => {
     const ent = entityByKey.get(p.entity)
     const initial = lock.entities?.[p.entity] ?? {}
     return {
@@ -86,8 +114,9 @@ export function loadContract(dir, siteUrl) {
       sourceId: ent?.sourceId,
       route: p.route,
       link: p.link,
-      type: initial.type,
-      published: initial.published,
+      openAs: p.openAs,
+      type: platform === 'wordpress' ? 'page' : initial.type,
+      published: platform === 'wordpress' ? '1' : initial.published,
       title: initial.title,
       assignedModules: p.assignedModules?.map((m) => m.entity) ?? []
     }
@@ -107,12 +136,14 @@ export function loadContract(dir, siteUrl) {
     },
     entityByKey,
     entityByRow,
+    entityOfRow,
+    platform,
     pages,
     lockedFiles,
     slotsByKey: new Map(map.slots.map((s) => [s.key, s])),
     index: { text, textCompact, textList, image, imageBase, url, rawSample },
-    template: manifest.template,
-    prefix: manifest.quickstart?.prefix ?? ''
+    template: manifest.template ?? manifest.theme,
+    prefix: manifest.quickstart?.prefix ?? manifest.quickstart?.tablePrefix ?? ''
   }
 }
 

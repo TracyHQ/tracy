@@ -172,6 +172,7 @@ export type WoProviderId =
   | 'serpapi'
   | 'litescrape'
   | 'scrapecreators'
+  | 'monid'
 
 /** The provider budgets of social stats (`website-opportunities/src/social-stats.js`), each capped per day. */
 export type WoSocialBudgetId =

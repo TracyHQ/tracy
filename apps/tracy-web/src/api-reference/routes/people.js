@@ -180,9 +180,9 @@ export const PEOPLE_ROUTES = [
   {
     method: 'POST',
     path: '/login/visit',
-    summary: 'Count a sign-in page visit from a link with a source',
+    summary: 'Count a sign-in page visit',
     description:
-      'Sent once per tab by the sign-in page’s own script when its link carried `utm_*`, so visits per source can be read beside first sign-ins; a mail scanner that fetches the link runs no script and is not counted. Keeps only the four cleaned source values, never an account, address or cookie. The page’s own origin only (403 `FORBIDDEN` otherwise); at most 30 a client address an hour (429 `RATE_LIMITED`). A body with no source is answered 204 and kept nowhere.',
+      'Sent once per tab by the sign-in page’s own script, so visits per source can be read beside first sign-ins; a mail scanner that fetches the link runs no script and is not counted. Keeps the four cleaned source values the link carried and the host of the page that linked here, either, both or neither (a direct visit), never an account, address or cookie. The page’s own origin only (403 `FORBIDDEN` otherwise); at most 30 a client address an hour (429 `RATE_LIMITED`). A body that is not a JSON object is answered 204 and kept nowhere.',
     audience: ['public'],
     auth: 'none',
     internal: true,
@@ -195,7 +195,12 @@ export const PEOPLE_ROUTES = [
           description: '`email`, `blog`, `demo`, `site` or `forum`; anything else is kept as `other`'
         },
         utm_campaign: { type: 'string' },
-        utm_content: { type: 'string' }
+        utm_content: { type: 'string' },
+        referrer: {
+          type: 'string',
+          description:
+            'Host of the page that linked to `/login`, when it was another site; a value with a path, port or query is dropped'
+        }
       }
     },
     answers: '204; 403 `FORBIDDEN` from another origin; 429 `RATE_LIMITED`'
@@ -206,7 +211,7 @@ export const PEOPLE_ROUTES = [
     path: '/login',
     summary: 'Mail a sign-in code to an address',
     description:
-      'Stores a hashed six-digit code for the address and emails it. Accepts JSON (answers `{ok:true}`, or 400 `INVALID_EMAIL`) or a plain HTML form post (answers the page at its code step). The code expires after a short window. Codes mailed per hour are capped per address and per client address; over either cap answers 429 `RATE_LIMITED` (JSON) or the sign-in page with a message (form post), and no code is written or mailed.',
+      'Stores a hashed six-digit code for the address and emails it. Accepts JSON (answers `{ok:true}`, or 400 `INVALID_EMAIL`) or a plain HTML form post (answers the page at its code step). The code expires after a short window. Codes mailed per hour are capped per address and per client address; over either cap answers 429 `RATE_LIMITED` (JSON) or the sign-in page with a message (form post), and no code is written or mailed. An accepted request records a `login.code_requested` usage signal with the cleaned `utm_*` values only, never the address, at most 30 an hour per client address.',
     audience: ['customer', 'public'],
     auth: 'none',
     internal: false,
@@ -398,7 +403,7 @@ export const PEOPLE_ROUTES = [
     path: '/signin/:provider',
     summary: 'Start a Google or GitHub sign-in',
     description:
-      'Records a one-time OAuth state, sets it as a short-lived cookie, and redirects to the provider. A provider that is unknown or not configured on this deployment answers 404.',
+      'Records a one-time OAuth state, sets it as a short-lived cookie, and redirects to the provider. A provider that is unknown or not configured on this deployment answers 404. A start records a `login.oauth_started` usage signal with the provider and the cleaned `utm_*` values, at most 30 an hour per client address.',
     audience: ['customer', 'public'],
     auth: 'none',
     internal: false,
@@ -1582,6 +1587,28 @@ export const PEOPLE_ROUTES = [
     internal: false,
     body: { type: 'object', properties: { conversationId: { type: 'string', format: 'uuid' } } },
     answers: '{conversationId, state}'
+  },
+  {
+    method: 'POST',
+    path: '/api/assistant/onboarding-draft',
+    summary: 'Prepare an editable setup draft from the saved onboarding conversation',
+    description:
+      'Called only after an explicit creation action. Reads the current conversation owned by the signed-in account and session, then uses the assistant model to extract volunteered details against the shipped CMS Site questions. Both sides supply reference context; only customer statements and confirmations supply facts. The latest user turn must match sourceRevision before and after extraction. Does not create or import a site, fetch a supplied address, read file contents or assign a logo. At most 50 turns and 32000 characters; no silent truncation. At most 12 requests per minute and 50 per day per account. Refusals: 400 BAD_DRAFT, 409 DRAFT_CHANGED / DRAFT_UNAVAILABLE / DRAFT_AMBIGUOUS, 413 DRAFT_TOO_LONG, 429 RATE_LIMITED, 502 DRAFT_FAILED. Returns no provider error body.',
+    audience: ['customer'],
+    auth: 'session',
+    internal: false,
+    body: {
+      type: 'object',
+      required: ['intent', 'session', 'sourceRevision'],
+      properties: {
+        intent: { type: 'string', enum: ['create', 'import', 'business'] },
+        session: { type: 'string' },
+        sourceRevision: { type: 'string' },
+        platform: { type: 'string', enum: ['wordpress', 'joomla', 'emdash'] }
+      }
+    },
+    answers:
+      '{draft: {version: 1, sourceRevision, intent, platform, answersByFeed, importUrl, businessQuery}}'
   },
   {
     method: 'POST',

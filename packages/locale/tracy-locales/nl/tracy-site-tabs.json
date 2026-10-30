@@ -984,6 +984,9 @@
   "sync.keptTable": "De versie van Tracy van deze hele tabel is behouden.",
   "sync.keptOrder": "Beide sites hebben de volgorde van deze items gewijzigd. De volgorde van Tracy is behouden.",
   "sync.dropped": "Deze kopie heeft {count} records van je oorspronkelijke site niet overgenomen.",
+  "sync.notCarried": "Niet overgenomen van je oorspronkelijke site",
+  "sync.notCarriedTriggers": "Databasetriggers ({names}). Een synchronisatie kopieert ze niet; voeg ze zelf aan deze site toe als die ze nodig heeft.",
+  "sync.notCarriedTables": "Tabellen die deze kopie als eigen logs bewaart en die op je oorspronkelijke site zijn gewijzigd ({names}).",
   "sync.dropReason.addedBoth": "Beide sites hebben onder dit nummer een record toegevoegd. Die van Tracy is behouden.",
   "sync.dropReason.reference": "Het verwijst naar een record van je oorspronkelijke site dat hier een nieuw nummer heeft, en Tracy kon het niet bijwerken.",
   "sync.failed": "De synchronisatie is niet voltooid ({error}). Er is niets aan deze kopie veranderd.",
@@ -1063,6 +1066,7 @@
   "push.reason.phpUnchecked": "Kon niet worden gecontroleerd voor de PHP-versie van je live site",
   "push.reason.extensionFile": "Hoort bij een extensie, dus gaat alleen mee met die extensie",
   "push.reason.noDoor": "Er is nog geen veilige manier om deze instelling te schrijven",
+  "push.reason.translationGroup": "Talen en welke pagina’s elkaars vertaling zijn worden nog niet verzonden. Breng deze wijziging aan in Polylang op je live site",
   "push.reason.phpDisabled": "PHP-files staan uit voor Claude Cowork op je live site. Zet “Allow PHP in template files” aan in de opties van Claude Cowork op je site om ze te sturen",
   "push.reason.phpDisabledWordpress": "PHP-files staan uit voor Claude Cowork op je live site. Zet “Allow PHP in theme files” aan onder Settings › Claude Cowork op je site om ze te sturen",
   "push.reason.templateFilesOff": "Template-files staan uit voor Claude Cowork op je live site. Zet “Template files” aan in de opties van Claude Cowork op je site om ze te sturen",
@@ -1209,5 +1213,14 @@
   "sync.error.interruptedKept": "Een eerdere synchronisatie werd gestopt door een Tracy-update terwijl ze wijzigingen op deze kopie zette, en deze kopie is sindsdien veranderd. Tracy heeft hem gelaten zoals hij is. Om die synchronisatie ongedaan te maken, zet je het back-uppunt “Before restore” in Backups terug en synchroniseer je opnieuw.",
   "sync.error.liveUnreachable": "Tracy kon je oorspronkelijke site niet lezen. Aan deze kopie is niets gewijzigd. Controleer of de site online is en Claude Cowork er nog op staat.",
   "sync.error.copyChanged": "Deze kopie veranderde tijdens het synchroniseren, dus er is niets toegepast. Probeer het opnieuw.",
-  "sync.error.noSpace": "De server van Tracy had geen ruimte voor deze synchronisatie. Aan deze kopie is niets veranderd. Neem contact met ons op."
+  "sync.error.noSpace": "De server van Tracy had geen ruimte voor deze synchronisatie. Aan deze kopie is niets veranderd. Neem contact met ons op.",
+  "sync.error.liveBlocked": "Je live-site gaf een geblokkeerd antwoord of een antwoord dat niet van de engine komt. Controleer de firewall of botbeveiliging en sta verzoeken van Tracy toe.",
+  "sync.error.livePassword": "Je live-site vereist een HTTP-wachtwoord. Geef Tracy toegang tot het Claude Cowork-eindpunt zonder dat wachtwoord en probeer het opnieuw.",
+  "sync.error.livePhpTooOld": "Je live-site draait PHP {php}. Claude Cowork heeft PHP {min} of nieuwer nodig. Vraag je hostingpartij PHP bij te werken en probeer het daarna opnieuw.",
+  "sync.error.livePhpTooOldPlain": "Je live-site draait een PHP-versie die te oud is voor Claude Cowork. Vraag je hostingpartij PHP bij te werken en probeer het daarna opnieuw.",
+  "sync.error.liveRateLimited": "Je live-site beperkt verzoeken. Wacht voordat je het opnieuw probeert; Tracy respecteert de Retry-After-wachttijd.",
+  "sync.error.liveToken": "Je live-site heeft het Claude Cowork-token geweigerd. Verbind de site opnieuw met het huidige token en probeer het opnieuw.",
+  "push.label.featuredImage": "Uitgelichte afbeelding",
+  "push.label.pageTemplate": "Pagina-template",
+  "push.label.altText": "Alternatieve tekst"
 }

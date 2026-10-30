@@ -58,7 +58,7 @@ import { COLOUR_TOKENS } from '../src/tokens56.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 const CONTRACTS = join(ROOT, 'packages/cms/tracy-joomla-quickstart/contracts')
-const REPO = 'JoomlArt-Products/ja-products'
+const REPO = 'JoomlArt-Products/joomlart-products'
 const args = process.argv.slice(2)
 const opt = (n) => {
   const i = args.indexOf(n)
@@ -362,7 +362,7 @@ if (edits.length && INSTALLER) {
   files.forEach((f, i) => writeFileSync(f, after[i], 'latin1'))
 }
 if (edits.length)
-  repair.push(`demo content: ${edits.length} edits (${edits.map((e) => e.entity).join(', ')})`)
+  repair.push(`demo content: ${edits.length} edits (${edits.map((e) => e.entity ?? e.table).join(', ')})`)
 const cache = join(site, 'media/t4/optimize')
 if (existsSync(cache))
   for (const d of readdirSync(cache)) rmSync(join(cache, d), { recursive: true, force: true })

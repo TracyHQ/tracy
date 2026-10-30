@@ -8,7 +8,8 @@
  *   is one spot, and its background is told by its demo picture: a light picture (mean luminance
  *   above 180) is drawn for a dark background.
  * - T3: a `logoimage_dark` parameter, or a style titled "Dark" beside others, is `pair`; only "Dark"
- *   styles is `dark`; else the `logoimage` pictures decide, as above.
+ *   styles is `dark`; else the `logoimage` pictures decide, as above, together with the footer logo a
+ *   style shows from its own params (`logofootertype` image, `logofooterimage`: JA Cagox).
  *
  * Returns the layout with the reasons, or `layout: null` with why it cannot be told without a site.
  */
@@ -115,6 +116,13 @@ export async function joomlaLogoLayout(context) {
         value: String(s.params.logoimage),
         darkKey: false
       }))
+    for (const s of places.t3)
+      if (s.params.logofootertype === 'image' && String(s.params.logofooterimage ?? '').trim() !== '')
+        pictures.push({
+          where: `style "${s.title}" logofooterimage`,
+          value: String(s.params.logofooterimage),
+          darkKey: false
+        })
     if (pictures.length === 0)
       return {
         layout: null,

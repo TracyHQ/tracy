@@ -1,0 +1,60 @@
+{
+  "id": "REG-PR-22-wo-brief-v2-dev-scratches",
+  "kind": "fix",
+  "title": "WO brief v2 dev fixes: every Google Maps try listed, Places field mask refresh, no false stale banner, every picture labelled or explained, video size from the file, held name and held reviews out of the brief and the demo research",
+  "pr": 22,
+  "area": "website-opportunities/brief",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run the provider retry and Google Maps research tests: attempts listed with their code in the brief sources, the Places field mask version, and the collector version digest.",
+    "S2: Run the brief staleness test of apps/tracy-web (revision research key against the shared vision labels).",
+    "S3: Run the picture labelling tests: vision failure reasons, brief picture labels with reasons, asset category from what the vision model saw, asset labels.",
+    "S4: Run the video size tests of apps/tracy-web and packages/wo/website-opportunities.",
+    "S5: Run the held name and held reviews domain tests of packages/wo/website-opportunities (brief, grading scratches, hero, SEO and praise, business name research).",
+    "S6: Run the agent demo and site tests of apps/tracy-web for held research and the held name on the site, and the one fact decision test.",
+    "S7: Run the Profile card name row test of packages/site/tracy-website-opportunities."
+  ],
+  "expect": [
+    "S1: every test passes: a retried 429 shows as attempts with provider, step, status and code in the brief sources; a place fetched under an older Place Details field mask is refreshed once and a place fetched under the current mask keeps its cache.",
+    "S2: a brief made from the latest research is not reported as stale because of picture labels.",
+    "S3: every brief picture is labelled or carries an unlabelledReason (video, logo, too small, over the cap, no bytes, no model, or the vision failure code); a failed vision call is retried once within one budget; status is labelled only when every asked picture was, otherwise partial with a failed count; the category follows what the vision model saw and a source menu photo stays menu.",
+    "S4: a stored video's width and height are read from its MP4 track header, and sizeUnknownReason names why when they cannot be.",
+    "S5: while the business name is held, business.name is the neutral identity and the held name stays only in its fact and Missing entry; the business reading loses every quote of a held review before a quote is picked; earlier grading behaviour is unchanged.",
+    "S6: the agent demo's research drops reviews naming a held person or printing the held name, keeps held names and people only in nameHeld and heldPeople, and its instructions name the business by the neutral identity; the one fact decision keeps the held name off the site.",
+    "S7: the Profile card's name row shows a Not on the site chip with the name the site goes by while the name is held."
+  ],
+  "selectors": {
+    "test": "packages/wo/website-opportunities/test/provider-retry.test.mjs"
+  },
+  "evidence": "Dev scratches of the site brief v2 on the develop environment; these test files fence each fix",
+  "fence": "pure domain functions, the revision labelling, the agent demo research bundle and the card model with stubbed vision; some tests need Postgres",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/wo/website-opportunities/test/provider-retry.test.mjs",
+      "apps/tracy-web/test/website-opportunities-google-maps.test.mjs",
+      "packages/wo/website-opportunities/test/google-places-field-mask-version.test.mjs",
+      "apps/tracy-web/test/wo-brief-staleness-picture-labels.test.mjs",
+      "apps/tracy-web/test/picture-vision-reasons.test.mjs",
+      "apps/tracy-web/test/wo-brief-picture-labels-reasons.test.mjs",
+      "apps/tracy-web/test/wo-brief-picture-labels.test.mjs",
+      "packages/wo/website-opportunities/test/domain-asset-category-reasons.test.mjs",
+      "packages/wo/website-opportunities/test/domain-asset-labels.test.mjs",
+      "apps/tracy-web/test/website-opportunities-video-size.test.mjs",
+      "packages/wo/website-opportunities/test/domain-video-size.test.mjs",
+      "packages/wo/website-opportunities/test/domain-brief-held-name-reviews.test.mjs",
+      "packages/wo/website-opportunities/test/domain-brief.test.mjs",
+      "packages/wo/website-opportunities/test/domain-brief-grading-scratches.test.mjs",
+      "packages/wo/website-opportunities/test/domain-brief-hero-seo-praise.test.mjs",
+      "packages/wo/website-opportunities/test/business-name-research.test.mjs",
+      "apps/tracy-web/test/wo-agent-demo-held-research.test.mjs",
+      "apps/tracy-web/test/held-name-on-site.test.mjs",
+      "apps/tracy-web/test/wo-one-fact-decision.test.mjs",
+      "packages/site/tracy-website-opportunities/test/client-profile-name.test.mjs"
+    ],
+    "needs": ["postgres"]
+  }
+}

@@ -12,7 +12,7 @@
  */
 import assert from 'node:assert/strict'
 import { execFileSync, spawnSync } from 'node:child_process'
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { after, before, test } from 'node:test'
@@ -397,14 +397,14 @@ CREATE TABLE jos_content (id INT PRIMARY KEY, asset_id INT, title VARCHAR(255), 
 CREATE TABLE jos_assets (id INT PRIMARY KEY, parent_id INT, lft INT, rgt INT, level INT, name VARCHAR(50) NOT NULL, title VARCHAR(100), UNIQUE KEY idx_asset_name (name));
 CREATE TABLE jos_workflow_associations (item_id INT NOT NULL, stage_id INT NOT NULL, extension VARCHAR(50) NOT NULL, PRIMARY KEY (item_id, extension));
 CREATE TABLE jos_contentitem_tag_map (type_alias VARCHAR(255) NOT NULL DEFAULT '', core_content_id INT UNSIGNED NOT NULL, content_item_id INT NOT NULL, tag_id INT UNSIGNED NOT NULL, tag_date TIMESTAMP NOT NULL DEFAULT '2026-01-01 00:00:00', type_id MEDIUMINT NOT NULL, UNIQUE KEY uc_ItemnameTagid (type_id, content_item_id, tag_id));
-CREATE TABLE jos_fields (id INT PRIMARY KEY, context VARCHAR(255));
+CREATE TABLE jos_fields (id INT PRIMARY KEY, context VARCHAR(255), asset_id INT NOT NULL DEFAULT 0);
 CREATE TABLE jos_fields_values (field_id INT UNSIGNED NOT NULL, item_id VARCHAR(255) NOT NULL, value MEDIUMTEXT, KEY idx_field_id (field_id));
 CREATE TABLE jos_ucm_content (core_content_id INT PRIMARY KEY, core_type_alias VARCHAR(255), core_content_item_id INT, core_title VARCHAR(255));
 CREATE TABLE jos_menu (id INT PRIMARY KEY, menutype VARCHAR(24), title VARCHAR(255), parent_id INT, lft INT, rgt INT, level INT, path VARCHAR(400), client_id TINYINT NOT NULL DEFAULT 0);
 CREATE TABLE jos_banners (id INT PRIMARY KEY, name VARCHAR(255), impmade INT, clicks INT);
 CREATE TABLE jos_action_logs (id INT PRIMARY KEY, message TEXT);
 CREATE TABLE jos_loose (a INT, b INT);
-CREATE TABLE jos_contact_details (id INT PRIMARY KEY, name VARCHAR(255), checked_out INT UNSIGNED NOT NULL DEFAULT 0, checked_out_time DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00');
+CREATE TABLE jos_contact_details (id INT PRIMARY KEY, asset_id INT NOT NULL DEFAULT 0, name VARCHAR(255), checked_out INT UNSIGNED NOT NULL DEFAULT 0, checked_out_time DATETIME NOT NULL DEFAULT '2000-01-01 00:00:00');
 INSERT INTO jos_contact_details (id, name) VALUES (1,'Shop');
 INSERT INTO jos_content VALUES (17,117,'Seventeen',0),(22,122,'Twenty-two',0),(23,123,'Twenty-three',0);
 ALTER TABLE jos_content ADD checked_out INT UNSIGNED NULL, ADD checked_out_time DATETIME NULL;
@@ -413,7 +413,7 @@ INSERT INTO jos_assets VALUES (1,0,0,7,0,'root.1','Root'),(117,1,1,2,1,'com_cont
 INSERT INTO jos_workflow_associations VALUES (17,1,'com_content.article'),(22,1,'com_content.article'),(23,1,'com_content.article');
 INSERT INTO jos_contentitem_tag_map (type_alias, core_content_id, content_item_id, tag_id, type_id) VALUES
   ('com_content.article',1,17,2,1),('com_content.article',2,22,2,1),('com_content.article',3,23,2,1),('com_content.article',3,23,5,1);
-INSERT INTO jos_fields VALUES (1,'com_content.article');
+INSERT INTO jos_fields (id, context) VALUES (1,'com_content.article');
 INSERT INTO jos_fields_values VALUES (1,'17','red'),(1,'22','blue'),(1,'23','green');
 INSERT INTO jos_ucm_content VALUES (1,'com_content.article',17,'Seventeen'),(2,'com_content.article',22,'Twenty-two'),(3,'com_content.article',23,'Twenty-three');
 INSERT INTO jos_menu VALUES (1,'','Menu_Item_Root',0,0,17,0,'',0),
@@ -935,5 +935,581 @@ test(
     )
     assert.deepEqual(rows('SELECT title FROM sm.jos_assets WHERE id = 11'), [['A Tracy']])
     assert.equal(answer.counts.records, 0)
+  }
+)
+
+// ── a held record's rows: Phoca Cart, both sites added a product under one number ──────────────────
+function stagePhoca(ours, theirs) {
+  // Columns as Phoca Cart 6.1.9's install SQL has them (the ones the merge reads).
+  const base = `
+CREATE TABLE jos_phocacart_products (id INT AUTO_INCREMENT PRIMARY KEY, title VARCHAR(255), alias VARCHAR(255));
+CREATE TABLE jos_phocacart_product_categories (product_id INT NOT NULL DEFAULT 0, category_id INT NOT NULL DEFAULT 0, ordering INT NOT NULL DEFAULT 0, UNIQUE KEY idx_category (product_id, category_id));
+CREATE TABLE jos_phocacart_product_images (id INT AUTO_INCREMENT PRIMARY KEY, product_id INT NOT NULL DEFAULT 0, image VARCHAR(255) NOT NULL DEFAULT '');
+CREATE TABLE jos_phocacart_product_featured (product_id INT NOT NULL DEFAULT 0 PRIMARY KEY, ordering INT NOT NULL DEFAULT 0);
+CREATE TABLE jos_phocacart_item_groups (item_id INT NOT NULL DEFAULT 0, group_id INT NOT NULL DEFAULT 0, product_id INT NOT NULL DEFAULT 0, type TINYINT NOT NULL DEFAULT 0);
+CREATE TABLE jos_phocacart_logs (a INT, b INT);
+INSERT INTO jos_phocacart_item_groups VALUES (5,1,0,3);
+INSERT INTO jos_phocacart_logs VALUES (1,1);
+INSERT INTO jos_phocacart_products VALUES (5,'Mug','mug');
+INSERT INTO jos_phocacart_product_categories VALUES (5,1,1);
+INSERT INTO jos_phocacart_product_images VALUES (1,5,'mug.jpg');`
+  sql(
+    ['sb', 'sm', 'st']
+      .map((s) => `DROP DATABASE IF EXISTS ${s}; CREATE DATABASE ${s}; USE ${s}; ${base}`)
+      .join('\n') + `\nUSE sm; ${ours}\nUSE st; ${theirs}`
+  )
+}
+
+const PHOCA_OURS = `INSERT INTO jos_phocacart_products VALUES (6,'Tracy hat','tracy-hat');
+INSERT INTO jos_phocacart_product_categories VALUES (6,1,2);`
+const PHOCA_THEIRS = `INSERT INTO jos_phocacart_products VALUES (6,'Live scarf','live-scarf'),(7,'Live socks','live-socks');
+INSERT INTO jos_phocacart_product_categories VALUES (6,2,1),(7,2,2);
+INSERT INTO jos_phocacart_product_images VALUES (2,6,'scarf.jpg'),(3,7,'socks.jpg');
+INSERT INTO jos_phocacart_product_featured VALUES (6,1);`
+
+test(
+  'a held live product keeps its rows out of the copy and names them; a live product with no clash brings its own',
+  opts,
+  () => {
+    stagePhoca(PHOCA_OURS, PHOCA_THEIRS)
+    const answer = merge(null, 'ours')
+    // Tracy's product 6 stays as Tracy made it: in its own category, with no image or flag of the live one.
+    assert.deepEqual(rows('SELECT id, title FROM sm.jos_phocacart_products ORDER BY id'), [
+      ['5', 'Mug'],
+      ['6', 'Tracy hat'],
+      ['7', 'Live socks']
+    ])
+    assert.deepEqual(
+      rows('SELECT product_id, category_id FROM sm.jos_phocacart_product_categories ORDER BY 1, 2'),
+      [
+        ['5', '1'],
+        ['6', '1'],
+        ['7', '2']
+      ]
+    )
+    assert.deepEqual(rows('SELECT id, product_id FROM sm.jos_phocacart_product_images ORDER BY id'), [
+      ['1', '5'],
+      ['3', '7']
+    ])
+    assert.deepEqual(rows('SELECT product_id FROM sm.jos_phocacart_product_featured'), [])
+    const held = answer.held.find((h) => h.id === 'db:jos_phocacart_products:["6"]')
+    assert.equal(held?.reason, 'added-both', JSON.stringify(answer.held))
+    assert.deepEqual(held.belonging, [
+      { table: 'jos_phocacart_product_categories', key: { product_id: '6', category_id: '2' } },
+      { table: 'jos_phocacart_product_featured', key: { product_id: '6' } },
+      { table: 'jos_phocacart_product_images', key: { id: '2' } }
+    ])
+    assert.equal(held.belongingCount, 3)
+  }
+)
+
+test(
+  'a held live product taken by a person (“theirs”) brings its rows; “ours” names them as skipped',
+  opts,
+  () => {
+    stagePhoca(PHOCA_OURS, PHOCA_THEIRS)
+    merge({ 'db:jos_phocacart_products:["6"]': 'theirs' }, 'ours')
+    assert.deepEqual(rows('SELECT title FROM sm.jos_phocacart_products WHERE id = 6'), [['Live scarf']])
+    assert.deepEqual(rows('SELECT id FROM sm.jos_phocacart_product_images WHERE product_id = 6'), [['2']])
+    stagePhoca(PHOCA_OURS, PHOCA_THEIRS)
+    const answer = merge({ 'db:jos_phocacart_products:["6"]': 'ours' }, 'ours')
+    assert.deepEqual(rows('SELECT id FROM sm.jos_phocacart_product_images WHERE product_id = 6'), [])
+    assert.deepEqual(
+      answer.skipped.filter((s) => s.reason === 'belongs-to-held').map((s) => [s.table, s.record]),
+      [
+        ['jos_phocacart_product_categories', { table: 'jos_phocacart_products', id: '6' }],
+        ['jos_phocacart_product_featured', { table: 'jos_phocacart_products', id: '6' }],
+        ['jos_phocacart_product_images', { table: 'jos_phocacart_products', id: '6' }]
+      ]
+    )
+  }
+)
+
+test(
+  'a product the live site deleted and Tracy changed keeps its rows (`dependents`, the kept side)',
+  opts,
+  () => {
+    stagePhoca(
+      "UPDATE jos_phocacart_products SET title='Mug Tracy' WHERE id=5;",
+      'DELETE FROM jos_phocacart_products WHERE id=5; DELETE FROM jos_phocacart_product_categories WHERE product_id=5; DELETE FROM jos_phocacart_product_images WHERE product_id=5;'
+    )
+    merge(null, 'ours')
+    assert.deepEqual(rows('SELECT title FROM sm.jos_phocacart_products'), [['Mug Tracy']])
+    assert.deepEqual(rows('SELECT product_id, category_id FROM sm.jos_phocacart_product_categories'), [
+      ['5', '1']
+    ])
+    assert.deepEqual(rows('SELECT id FROM sm.jos_phocacart_product_images'), [['1']])
+  }
+)
+
+// Phoca Cart's `item_groups` has no key (6.1.9): a held product's customer groups go, the others come.
+const GROUPS_THEIRS = `${PHOCA_THEIRS}
+INSERT INTO jos_phocacart_item_groups VALUES (6,2,0,3),(7,2,0,3),(6,4,0,2);
+INSERT INTO jos_phocacart_logs VALUES (2,2);`
+
+test(
+  'a held product’s customer groups stay out of a table taken whole; every other live row of it comes',
+  opts,
+  () => {
+    stagePhoca(PHOCA_OURS, GROUPS_THEIRS)
+    const answer = merge(null, 'ours')
+    assert.equal(answer.tables.jos_phocacart_item_groups, 'from-theirs', JSON.stringify(answer.tables))
+    // (6,4,0,2) is category 6's group (type 2), not the product's: it comes.
+    assert.deepEqual(rows('SELECT item_id, group_id, type FROM sm.jos_phocacart_item_groups ORDER BY 1, 2'), [
+      ['5', '1', '3'],
+      ['6', '4', '2'],
+      ['7', '2', '3']
+    ])
+    // A table with no key and no held row in it is taken whole, as before.
+    assert.equal(answer.tables.jos_phocacart_logs, 'from-theirs')
+    assert.deepEqual(rows('SELECT a FROM sm.jos_phocacart_logs ORDER BY a'), [['1'], ['2']])
+    const held = answer.held.find((h) => h.id === 'db:jos_phocacart_products:["6"]')
+    assert.deepEqual(
+      held.belonging.filter((b) => b.table === 'jos_phocacart_item_groups'),
+      [
+        {
+          table: 'jos_phocacart_item_groups',
+          key: { item_id: '6', group_id: '2', product_id: '0', type: '3' }
+        }
+      ]
+    )
+  }
+)
+
+test(
+  'a held product’s customer groups stay out when the copy changed the table too (merged row by row)',
+  opts,
+  () => {
+    stagePhoca(`${PHOCA_OURS}\nINSERT INTO jos_phocacart_item_groups VALUES (6,1,0,3);`, GROUPS_THEIRS)
+    const answer = merge(null, 'ours')
+    assert.equal(answer.tables.jos_phocacart_item_groups, 'merged', JSON.stringify(answer.tables))
+    assert.deepEqual(rows('SELECT item_id, group_id, type FROM sm.jos_phocacart_item_groups ORDER BY 1, 2'), [
+      ['5', '1', '3'],
+      ['6', '1', '3'],
+      ['6', '4', '2'],
+      ['7', '2', '3']
+    ])
+  }
+)
+
+// A row the base had that the live site pointed at its held product: the copy's version stays, never
+// grafted onto Tracy's product of that number nor lost, and the held product names it as changed.
+const REPOINT_THEIRS = `${PHOCA_THEIRS}
+UPDATE jos_phocacart_product_images SET product_id = 6, image = 'scarf-2.jpg' WHERE id = 1;`
+
+test(
+  'a base row the live site pointed at a held product stays the copy’s, in a table taken whole',
+  opts,
+  () => {
+    stagePhoca(PHOCA_OURS, REPOINT_THEIRS)
+    const answer = merge(null, 'ours')
+    assert.equal(answer.tables.jos_phocacart_product_images, 'from-theirs', JSON.stringify(answer.tables))
+    assert.deepEqual(rows('SELECT id, product_id, image FROM sm.jos_phocacart_product_images ORDER BY id'), [
+      ['1', '5', 'mug.jpg'],
+      ['3', '7', 'socks.jpg']
+    ])
+    const held = answer.held.find((h) => h.id === 'db:jos_phocacart_products:["6"]')
+    assert.deepEqual(
+      held.belonging.filter((b) => b.table === 'jos_phocacart_product_images'),
+      [
+        { table: 'jos_phocacart_product_images', key: { id: '1' }, changed: true },
+        { table: 'jos_phocacart_product_images', key: { id: '2' } }
+      ]
+    )
+  }
+)
+
+test('a base row the live site pointed at a held product stays the copy’s, merged row by row', opts, () => {
+  // The copy changed the table too (an image of its own product 5), so it is merged row by row.
+  stagePhoca(
+    `${PHOCA_OURS}\nINSERT INTO jos_phocacart_product_images VALUES (4,5,'mug-2.jpg');`,
+    REPOINT_THEIRS
+  )
+  const answer = merge(null, 'ours')
+  assert.equal(answer.tables.jos_phocacart_product_images, 'merged', JSON.stringify(answer.tables))
+  assert.deepEqual(rows('SELECT id, product_id, image FROM sm.jos_phocacart_product_images ORDER BY id'), [
+    ['1', '5', 'mug.jpg'],
+    ['3', '7', 'socks.jpg'],
+    ['4', '5', 'mug-2.jpg']
+  ])
+  const held = answer.held.find((h) => h.id === 'db:jos_phocacart_products:["6"]')
+  assert.deepEqual(
+    held.belonging.filter((b) => b.table === 'jos_phocacart_product_images'),
+    [
+      { table: 'jos_phocacart_product_images', key: { id: '1' }, changed: true },
+      { table: 'jos_phocacart_product_images', key: { id: '2' } }
+    ]
+  )
+})
+
+test(
+  'a keyless row the live site moved to a held product: the new row stays out, the old one’s deletion stands',
+  opts,
+  () => {
+    // `item_groups` is matched by all its columns: (5,1,0,3) → (6,1,0,3) reads as one deleted, one added.
+    stagePhoca(
+      PHOCA_OURS,
+      `${PHOCA_THEIRS}\nUPDATE jos_phocacart_item_groups SET item_id = 6 WHERE item_id = 5;`
+    )
+    const answer = merge(null, 'ours')
+    assert.deepEqual(rows('SELECT item_id, group_id FROM sm.jos_phocacart_item_groups'), [])
+    const held = answer.held.find((h) => h.id === 'db:jos_phocacart_products:["6"]')
+    assert.deepEqual(
+      held.belonging.filter((b) => b.table === 'jos_phocacart_item_groups'),
+      [
+        {
+          table: 'jos_phocacart_item_groups',
+          key: { item_id: '6', group_id: '1', product_id: '0', type: '3' }
+        }
+      ]
+    )
+  }
+)
+
+const FK_SCHEMA = `
+CREATE TABLE jos_parent (a INT, b INT, title VARCHAR(40), PRIMARY KEY (a,b), KEY reverse_key(b,a));
+CREATE TABLE jos_child (id INT PRIMARY KEY, a INT, b INT, title VARCHAR(40),
+CONSTRAINT child_parent FOREIGN KEY (b,a) REFERENCES jos_parent(b,a) ON DELETE CASCADE ON UPDATE CASCADE,
+CONSTRAINT child_second FOREIGN KEY (a,b) REFERENCES jos_parent(a,b) ON DELETE RESTRICT);
+INSERT INTO jos_parent VALUES (1,1,'parent');
+INSERT INTO jos_child VALUES (1,1,1,'child');`
+
+function stageForeignKeys(ours, theirs) {
+  sql(
+    'SET FOREIGN_KEY_CHECKS=0;' +
+      ['sb', 'sm', 'st']
+        .map((s) => `DROP DATABASE IF EXISTS ${s}; CREATE DATABASE ${s}; USE ${s}; ${FK_SCHEMA}`)
+        .join('\n') +
+      `\nSET FOREIGN_KEY_CHECKS=1; USE sm; ${ours} USE st; ${theirs}`
+  )
+}
+
+test('whole-table sync preserves foreign keys and can replace a referenced parent', opts, () => {
+  for (const theirs of [
+    "UPDATE jos_child SET title='live child';",
+    "UPDATE jos_parent SET title='live parent';",
+    "UPDATE jos_parent SET title='live parent'; UPDATE jos_child SET title='live child';"
+  ]) {
+    stageForeignKeys('', theirs)
+    const answer = merge(null, 'ours')
+    assert.equal(answer.ok, true)
+    const keys = rows(
+      "SELECT constraint_name,referenced_table_schema,column_name FROM information_schema.key_column_usage WHERE table_schema='sm' AND referenced_table_name IS NOT NULL ORDER BY constraint_name,ordinal_position"
+    )
+    assert.deepEqual(keys, [
+      ['child_parent', 'sm', 'b'],
+      ['child_parent', 'sm', 'a'],
+      ['child_second', 'sm', 'a'],
+      ['child_second', 'sm', 'b']
+    ])
+    assert.throws(() => sql("INSERT INTO sm.jos_child VALUES (9,999,999,'bad parent')"), /1452|foreign key/)
+  }
+})
+
+test('partial restore rebinds outgoing and untouched incoming foreign keys and rolls them back', opts, () => {
+  const helper = join(here, '..', 'scripts', 'lib', 'foreign_keys.py')
+  for (const moved of ['jos_child', 'jos_parent', 'jos_child\njos_parent']) {
+    stageForeignKeys('', '')
+    sql(
+      'DROP DATABASE IF EXISTS fk_trash; DROP DATABASE IF EXISTS fk_failed; CREATE DATABASE fk_trash; CREATE DATABASE fk_failed;'
+    )
+    const oldFile = join(root, 'fk-old.txt'),
+      newFile = join(root, 'fk-new.txt'),
+      plan = join(root, 'fk-plan.json')
+    writeFileSync(oldFile, moved)
+    writeFileSync(newFile, moved)
+    const run = (op, ...extra) =>
+      execFileSync('python3', [helper, op, '--plan', plan, ...extra], {
+        env: { ...process.env, TRACY_SYNC_SQL: JSON.stringify(CLIENT) },
+        encoding: 'utf8'
+      })
+    const tables = moved.split('\n')
+    // Restore loads only selected tables. Unselected staging tables must not participate.
+    sql(
+      'SET FOREIGN_KEY_CHECKS=0; ' +
+        ['jos_child', 'jos_parent']
+          .filter((t) => !tables.includes(t))
+          .map((t) => `DROP TABLE st.${t};`)
+          .join(' ')
+    )
+    run(
+      'prepare',
+      '--live',
+      'sm',
+      '--stage',
+      'st',
+      '--old-tables',
+      oldFile,
+      '--new-tables',
+      newFile,
+      '--trash',
+      'fk_trash'
+    )
+    const savedPlan = readFileSync(plan, 'utf8')
+    run('drop-before')
+    // A process can die here, before rename: a new process must restore the old graph.
+    run('recover')
+    writeFileSync(plan, savedPlan)
+    // Staged FKs already dropped by the interrupted run.
+    sql(
+      'SET FOREIGN_KEY_CHECKS=0; ' +
+        JSON.parse(savedPlan)
+          .old.map((k) => `ALTER TABLE sm.${k.table} DROP FOREIGN KEY ${k.name};`)
+          .join(' ')
+    )
+    const pairs = tables
+      .map((t) => `sm.${t} TO fk_trash.${t}`)
+      .concat(tables.map((t) => `st.${t} TO sm.${t}`))
+    sql('RENAME TABLE ' + pairs.join(', ') + ';')
+    run('apply')
+    const graph = () =>
+      rows(
+        "SELECT constraint_name,referenced_table_schema,column_name FROM information_schema.key_column_usage WHERE table_schema='sm' AND referenced_table_name IS NOT NULL ORDER BY constraint_name,ordinal_position"
+      )
+    const expected = [
+      ['child_parent', 'sm', 'b'],
+      ['child_parent', 'sm', 'a'],
+      ['child_second', 'sm', 'a'],
+      ['child_second', 'sm', 'b']
+    ]
+    assert.deepEqual(graph(), expected)
+    sql('DROP DATABASE st;')
+    sql("INSERT INTO sm.jos_child VALUES (2,1,1,'valid')")
+    assert.throws(() => sql("INSERT INTO sm.jos_child VALUES (3,999,999,'invalid')"), /1452|foreign key/)
+    run('drop-after')
+    sql(
+      'RENAME TABLE ' +
+        tables
+          .map((t) => `sm.${t} TO fk_failed.${t}`)
+          .concat(tables.map((t) => `fk_trash.${t} TO sm.${t}`))
+          .join(', ') +
+        ';'
+    )
+    run('rollback')
+    assert.deepEqual(graph(), expected)
+    assert.throws(() => sql("INSERT INTO sm.jos_child VALUES (3,999,999,'invalid')"), /1452|foreign key/)
+  }
+})
+
+test('generated columns recompute through whole-table and row merges', opts, () => {
+  for (const kind of ['STORED', 'VIRTUAL']) {
+    const base = `CREATE TABLE jos_computed (id INT PRIMARY KEY, amount INT, doubled INT AS (amount * 2) ${kind}, title VARCHAR(100)); INSERT INTO jos_computed (id,amount,title) VALUES (1,2,'base'),(2,4,'base two');`
+    for (const rowMerge of [false, true]) {
+      sql(
+        ['sb', 'sm', 'st']
+          .map((s) => `DROP DATABASE IF EXISTS ${s}; CREATE DATABASE ${s}; USE ${s}; ${base}`)
+          .join('\n') +
+          `USE sm; ${rowMerge ? "UPDATE jos_computed SET title='copy' WHERE id=1;" : ''} USE st; UPDATE jos_computed SET amount=8 WHERE id=1; INSERT INTO jos_computed (id,amount,title) VALUES (3,9,'new');`
+      )
+      const answer = merge(null, 'ours')
+      assert.equal(answer.ok, true)
+      assert.deepEqual(rows('SELECT amount,doubled,title FROM sm.jos_computed WHERE id=1'), [
+        ['8', '16', rowMerge ? 'copy' : 'base']
+      ])
+      assert.deepEqual(rows('SELECT amount,doubled FROM sm.jos_computed WHERE id=3'), [['9', '18']])
+    }
+  }
+})
+
+test('generated-only tables retain every row when taken whole', opts, () => {
+  sql(
+    ['sb', 'sm', 'st']
+      .map(
+        (s) =>
+          `DROP DATABASE IF EXISTS ${s}; CREATE DATABASE ${s}; USE ${s}; CREATE TABLE jos_constants (value INT AS (7) STORED); INSERT INTO jos_constants () VALUES ();`
+      )
+      .join('\n') + 'USE st; INSERT INTO jos_constants () VALUES (),();'
+  )
+  const answer = merge(null, 'ours')
+  assert.equal(answer.ok, true)
+  assert.deepEqual(rows('SELECT value FROM sm.jos_constants'), [['7'], ['7'], ['7']])
+})
+
+function stageHeldContactFields(ours, theirs) {
+  const base = `
+CREATE TABLE jos_contact_details (id INT PRIMARY KEY, name VARCHAR(100), asset_id INT);
+CREATE TABLE jos_fields (id INT PRIMARY KEY, title VARCHAR(100), context VARCHAR(100), asset_id INT);
+CREATE TABLE jos_fields_values (field_id INT, item_id VARCHAR(100), value TEXT, PRIMARY KEY(field_id,item_id));
+CREATE TABLE jos_fields_categories (field_id INT, category_id INT, PRIMARY KEY(field_id,category_id));
+CREATE TABLE jos_contentitem_tag_map (type_alias VARCHAR(100), content_item_id INT, tag_id INT, PRIMARY KEY(type_alias,content_item_id,tag_id));
+CREATE TABLE jos_ucm_content (core_content_id INT PRIMARY KEY, core_content_item_id INT, core_type_alias VARCHAR(100));
+CREATE TABLE jos_content_types (type_id INT PRIMARY KEY, type_alias VARCHAR(100));
+CREATE TABLE jos_ucm_base (ucm_id INT PRIMARY KEY, ucm_item_id INT, ucm_type_id INT);
+CREATE TABLE jos_assets (id INT PRIMARY KEY, name VARCHAR(100));
+INSERT INTO jos_content_types VALUES (1,'com_contact.contact');
+INSERT INTO jos_fields VALUES (1,'Contact field','com_contact.contact',0);
+INSERT INTO jos_fields_values VALUES (1,'1','base');`
+  sql(
+    ['sb', 'sm', 'st']
+      .map((s) => `DROP DATABASE IF EXISTS ${s}; CREATE DATABASE ${s}; USE ${s}; ${base}`)
+      .join('\n') + `\nUSE sm; ${ours}\nUSE st; ${theirs}`
+  )
+}
+
+test('held contacts and custom fields keep live dependent rows off the copy', opts, () => {
+  for (const rowMerge of [false, true]) {
+    const ours = `INSERT INTO jos_contact_details VALUES (2,'Tracy contact',0);
+INSERT INTO jos_fields VALUES (4,'Tracy field','com_content.article',0);
+${rowMerge ? "UPDATE jos_fields_values SET value='copy base' WHERE field_id=1;" : ''}`
+    const theirs = `INSERT INTO jos_contact_details VALUES (2,'Live contact',102);
+INSERT INTO jos_fields VALUES (4,'Live field','com_content.article',104);
+INSERT INTO jos_fields_values VALUES (1,'2','contact value'),(4,'9','article value');
+INSERT INTO jos_fields_categories VALUES (4,9);
+INSERT INTO jos_contentitem_tag_map VALUES ('com_contact.contact',2,7),('com_content.article',2,8);
+INSERT INTO jos_ucm_content VALUES (1,2,'com_contact.contact');
+INSERT INTO jos_ucm_base VALUES (1,2,1);
+INSERT INTO jos_assets VALUES (102,'com_contact.contact.2'),(104,'com_content.field.4');`
+    stageHeldContactFields(ours, theirs)
+    const answer = merge(null, 'ours')
+    assert.equal(
+      answer.held.find((h) => h.table === 'jos_contact_details')?.belongingCount,
+      5,
+      JSON.stringify(answer.held)
+    )
+    assert.equal(
+      answer.held.find((h) => h.table === 'jos_fields')?.belongingCount,
+      3,
+      JSON.stringify(answer.held)
+    )
+    assert.deepEqual(rows('SELECT field_id,item_id FROM sm.jos_fields_values ORDER BY 1,2'), [['1', '1']])
+    assert.deepEqual(rows('SELECT * FROM sm.jos_fields_categories'), [])
+    assert.deepEqual(rows('SELECT type_alias FROM sm.jos_contentitem_tag_map'), [['com_content.article']])
+    assert.deepEqual(rows('SELECT * FROM sm.jos_ucm_content'), [])
+    assert.deepEqual(rows('SELECT * FROM sm.jos_ucm_base'), [])
+    assert.deepEqual(rows('SELECT * FROM sm.jos_assets'), [])
+  }
+})
+
+test('a live delete kept as a copy edit is not counted as taken', opts, () => {
+  stageRecords("UPDATE jos_content SET title='Tracy edit' WHERE id=1;", 'DELETE FROM jos_content WHERE id=1;')
+  const answer = merge(null, 'ours')
+  assert.equal(answer.counts.records, 0)
+  assert.deepEqual(rows('SELECT title FROM sm.jos_content WHERE id=1'), [['Tracy edit']])
+  assert.equal(answer.kept[0].reason, 'delete-modify')
+  stageRecords('', 'DELETE FROM jos_content WHERE id=1;')
+  const removed = merge(null, 'ours')
+  assert.equal(removed.counts.records, 1)
+  assert.deepEqual(rows('SELECT id FROM sm.jos_content WHERE id=1'), [])
+  stageRecords("UPDATE jos_content SET title='Tracy edit' WHERE id=1;", 'DELETE FROM jos_content WHERE id=1;')
+  const chosenDelete = merge({ 'db:jos_content:["1"]': 'theirs' }, 'ours')
+  assert.equal(chosenDelete.counts.records, 1)
+  assert.deepEqual(rows('SELECT id FROM sm.jos_content WHERE id=1'), [])
+  stageRecords('DELETE FROM jos_content WHERE id=1;', "UPDATE jos_content SET title='Live edit' WHERE id=1;")
+  const keptDelete = merge(null, 'ours')
+  assert.equal(keptDelete.counts.records, 0)
+  assert.deepEqual(rows('SELECT id FROM sm.jos_content WHERE id=1'), [])
+  stageRecords('DELETE FROM jos_content WHERE id=1;', "UPDATE jos_content SET title='Live edit' WHERE id=1;")
+  const chosenLive = merge({ 'db:jos_content:["1"]': 'theirs' }, 'ours')
+  assert.equal(chosenLive.counts.records, 1)
+  assert.deepEqual(rows('SELECT title FROM sm.jos_content WHERE id=1'), [['Live edit']])
+})
+
+test('renumbered assets update custom fields and every other core asset reference', opts, () => {
+  const tables = [
+    'fields',
+    'fields_groups',
+    'contact_details',
+    'banners',
+    'workflows',
+    'workflow_stages',
+    'workflow_transitions'
+  ]
+  const base =
+    `CREATE TABLE jos_assets (id INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(100));
+INSERT INTO jos_assets VALUES (1,'root.1');` +
+    tables
+      .map((t) => `CREATE TABLE jos_${t} (id INT PRIMARY KEY, asset_id INT, title VARCHAR(100));`)
+      .join('\n')
+  sql(
+    ['sb', 'sm', 'st']
+      .map((s) => `DROP DATABASE IF EXISTS ${s}; CREATE DATABASE ${s}; USE ${s}; ${base}`)
+      .join('\n') +
+      `\nUSE sm; INSERT INTO jos_assets VALUES (155,'com_content.category.2');
+USE st; INSERT INTO jos_assets VALUES (155,'com_content.field.3');` +
+      tables.map((t) => `INSERT INTO jos_${t} VALUES (3,155,'live');`).join('\n')
+  )
+  const answer = merge(null, 'ours')
+  const moved = answer.renumbered.find((r) => r.table === 'assets')
+  assert.ok(moved, JSON.stringify(answer.renumbered))
+  for (const table of tables) {
+    assert.deepEqual(
+      rows(`SELECT a.name FROM sm.jos_${table} r JOIN sm.jos_assets a ON a.id=r.asset_id`),
+      [['com_content.field.3']],
+      table
+    )
+    assert.notEqual(rows(`SELECT asset_id FROM sm.jos_${table}`)[0][0], '155', table)
+  }
+  assert.deepEqual(rows('SELECT name FROM sm.jos_assets WHERE id=155'), [['com_content.category.2']])
+})
+
+test('stock Joomla contacts and banners without asset_id do not break dependent-row SQL', opts, () => {
+  for (const missing of ['both', 'ours', 'theirs']) {
+    stageHeldContactFields(
+      "INSERT INTO jos_contact_details VALUES (2,'Tracy contact',0);",
+      "INSERT INTO jos_contact_details VALUES (2,'Live contact',102); INSERT INTO jos_assets VALUES (102,'com_contact.contact.2'); INSERT INTO jos_fields_values VALUES (1,'2','live value');"
+    )
+    sql(
+      ['sb', 'sm', 'st']
+        .map(
+          (schema) =>
+            `USE ${schema}; CREATE TABLE jos_banners (id INT PRIMARY KEY, name VARCHAR(100), asset_id INT); INSERT INTO jos_banners VALUES (1,'Ad',0); CREATE TABLE jos_content (id INT PRIMARY KEY,title VARCHAR(100)); INSERT INTO jos_content VALUES (1,'News');`
+        )
+        .join('\n') + " USE st; UPDATE jos_content SET title='News renamed';"
+    )
+    const schemas = missing === 'both' ? ['sb', 'sm', 'st'] : [missing === 'ours' ? 'sm' : 'st']
+    sql(
+      schemas
+        .map(
+          (schema) =>
+            `ALTER TABLE ${schema}.jos_contact_details DROP COLUMN asset_id; ALTER TABLE ${schema}.jos_banners DROP COLUMN asset_id;`
+        )
+        .join('\n')
+    )
+    const answer = merge(null, 'ours')
+    assert.equal(answer.ok, true, JSON.stringify(answer))
+    assert.deepEqual(rows('SELECT title FROM sm.jos_content'), [['News renamed']])
+    if (missing === 'both')
+      assert.ok(
+        answer.held.some((h) => h.table === 'jos_contact_details'),
+        JSON.stringify(answer)
+      )
+    else
+      assert.ok(
+        answer.kept.some((h) => h.table === 'jos_contact_details' && h.reason === 'schema-changed'),
+        JSON.stringify(answer)
+      )
+  }
+})
+
+test(
+  'Joomla: a menu or category the customer deleted on live stays while the copy’s new item or article uses it: a conflict, never an orphan (#119)',
+  opts,
+  () => {
+    const tables = `
+      CREATE TABLE jos_menu_types (id int NOT NULL PRIMARY KEY, menutype varchar(24), title varchar(48), client_id int NOT NULL DEFAULT 0);
+      CREATE TABLE jos_menu (id int NOT NULL PRIMARY KEY, menutype varchar(24), title varchar(255), client_id int NOT NULL DEFAULT 0, published int NOT NULL DEFAULT 1);
+      CREATE TABLE jos_categories (id int NOT NULL PRIMARY KEY, title varchar(255), extension varchar(50), published int NOT NULL DEFAULT 1);
+      CREATE TABLE jos_content (id int NOT NULL PRIMARY KEY, catid int, title varchar(255), state int NOT NULL DEFAULT 1);
+      INSERT INTO jos_menu_types VALUES (1, 'mainmenu', 'Main', 0), (2, 'extra', 'Extra', 0);
+      INSERT INTO jos_menu VALUES (101, 'mainmenu', 'Home', 0, 1), (102, 'extra', 'Old', 0, 1);
+      INSERT INTO jos_categories VALUES (2, 'Uncategorised', 'com_content', 1), (8, 'News', 'com_content', 1);
+      INSERT INTO jos_content VALUES (1, 8, 'Live article', 1);`
+    sql(
+      ['sb', 'sm', 'st']
+        .map((s) => `DROP DATABASE IF EXISTS ${s}; CREATE DATABASE ${s}; USE ${s}; ${tables}`)
+        .join('\n') +
+        `\nUSE sm; INSERT INTO jos_menu VALUES (103, 'extra', 'Tracy page', 0, 1); INSERT INTO jos_content VALUES (2, 8, 'Tracy article', 1);` +
+        `\nUSE st; DELETE FROM jos_menu WHERE id = 102; DELETE FROM jos_menu_types WHERE id = 2;
+          DELETE FROM jos_content WHERE id = 1; DELETE FROM jos_categories WHERE id = 8;`
+    )
+    const answer = merge()
+    assert.deepEqual(rows("SELECT menutype FROM sm.jos_menu_types WHERE menutype = 'extra'"), [['extra']])
+    assert.deepEqual(rows('SELECT title FROM sm.jos_categories WHERE id = 8'), [['News']])
+    assert.deepEqual(rows('SELECT id FROM sm.jos_menu WHERE id IN (102, 103) ORDER BY id'), [['103']])
+    const deleted = answer.conflicts.filter((c) => c.reason === 'delete-modify').map((c) => c.table)
+    assert.ok(
+      deleted.includes('jos_menu_types') && deleted.includes('jos_categories'),
+      JSON.stringify(answer.conflicts)
+    )
   }
 )

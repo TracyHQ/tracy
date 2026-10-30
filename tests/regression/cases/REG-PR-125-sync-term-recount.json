@@ -1,0 +1,37 @@
+{
+  "id": "REG-PR-125-sync-term-recount",
+  "kind": "fix",
+  "title": "WordPress counter dependencies recount after successful Sync mutations",
+  "pr": 125,
+  "area": "sync/database",
+  "cms": ["wp", "jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "Merge relationship, post and comment mutations through both table and row paths; preserve kept conflicts and absent targets.",
+    "Run the existing shared Joomla merge fixture to guard adapter isolation."
+  ],
+  "expect": [
+    "Relationship add/delete and post status/type changes queue native taxonomy recounts.",
+    "Comment add/delete/approval changes queue native post comment recounts.",
+    "Kept column conflicts queue nothing; explicit live choices queue their dependencies.",
+    "Missing final targets are omitted and Joomla rebuild behavior stays unchanged."
+  ],
+  "selectors": {},
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=WordPress counter|live site.s changes come over",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-db.test.mjs",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-db.test.mjs"
+    ],
+    "tests": [
+      "WordPress counters follow dependency mutations (whole table)",
+      "WordPress counters follow dependency mutations (row merge)",
+      "WordPress counter dependencies keep decisions and missing target tables safe",
+      "the live site’s changes come over, the copy’s stay, and every clash is a conflict, not a guess"
+    ]
+  }
+}

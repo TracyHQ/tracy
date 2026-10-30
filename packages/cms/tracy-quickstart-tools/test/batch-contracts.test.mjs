@@ -77,7 +77,7 @@ const SHA = 'a'.repeat(64)
 const GOOD = {
   baseline: 'HEAD',
   platform: 'all',
-  repo: 'JoomlArt-Products/ja-products',
+  repo: 'JoomlArt-Products/joomlart-products',
   jobs: '2',
   'project-prefix': 'tch-bc-test',
   'project-capacity': '40',

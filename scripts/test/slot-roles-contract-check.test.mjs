@@ -77,6 +77,51 @@ test('a content map that declares no roles is not held: contracts released befor
   assert.ok(res.errors.some((e) => e.includes('no slot roles found')))
 })
 
+/** Every text and image slot of the fixture with a fit no page measured (Slot fit, ADR 0039). */
+function withFit(map) {
+  map.slotFitVersion = 'slot-fit/1'
+  for (const s of map.slots)
+    if (s.type === 'text' || s.type === 'image')
+      s.fit =
+        s.type === 'image'
+          ? { measured: false, kind: 'photo', replace: 'photo', transparent: null, source: null }
+          : { measured: false }
+  return map
+}
+
+test('a content map with Slot fit on every text and image slot passes, and the result counts no slot without one', (t) => {
+  const { root, dir } = treeWith(t, withFit)
+  const res = checkAllSlotRoles(root)
+  assert.deepEqual(res.errors, [])
+  assert.deepEqual(res.fit, [{ dir, declared: true, missing: { image: 0, text: 0 } }])
+})
+
+test('a broken Slot fit fails the contract check: a kept photo, a missing fit', (t) => {
+  const { root } = treeWith(t, (m) => {
+    withFit(m)
+    slot(m, 'module-502.0').customize = 'keep'
+    delete slot(m, 'module-503.0').fit
+    return m
+  })
+  const res = checkAllSlotRoles(root)
+  assert.equal(res.ok, false)
+  assert.ok(
+    res.errors.some((e) => e.includes('slot "module-502.0" (image) is kind photo')),
+    res.errors.join('\n')
+  )
+  assert.ok(
+    res.errors.some((e) => e.includes('slot "module-503.0" (text) has no fit')),
+    res.errors.join('\n')
+  )
+})
+
+test('a content map without Slot fit is not held, and its slots without a fit are counted', (t) => {
+  const { root, dir } = treeWith(t)
+  const res = checkAllSlotRoles(root)
+  assert.equal(res.ok, true)
+  assert.deepEqual(res.fit, [{ dir, declared: false, missing: { image: 2, text: 12 } }])
+})
+
 test('the committed tree passes, sidecars included', () => {
   const res = checkAllSlotRoles(ROOT)
   assert.deepEqual(res.errors, [])

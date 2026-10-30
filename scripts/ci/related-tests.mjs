@@ -96,41 +96,166 @@ const STANDALONE = /^packages\/cms\/tracy-emdash-theme-(?:base|business|saas)\//
 const GLOBAL =
   /^(?:\.github\/workflows\/tracy-ci\.yml|\.node-version|package\.json|pnpm-lock\.yaml|pnpm-workspace\.yaml|scripts\/check-(?:all|tests)\.ts|scripts\/ci\/|scripts\/test-timings\.json|vendor\/tracy\/deepseek-harness(?:\/|$))/
 const DOCS =
-  /^(?:(?:docs|tasks)\/.*\.md$|tasks\/(?:bang-chung|evidence)\/|tests\/regression\/|\.github\/pull_request_template\.md$|(?:AGENTS|CLAUDE|CONTEXT|DESIGN|SYSTEM|README)\.md$)/
+  /^(?:(?:docs|tasks)\/.*\.md$|changes\/[^/]+\.md$|tasks\/(?:bang-chung|evidence)\/|tests\/regression\/|\.github\/pull_request_template\.md$|(?:AGENTS|CLAUDE|CONTEXT|DESIGN|SYSTEM|README)\.md$)/
 
 /**
- * Vendored skill trees whose change runs the `checks` row plus only the tests that read the tree.
+ * The /ops harness tests that load `problem-guides.ts`, whose prompts name skill files by path
+ * (problem-guides.test.mjs also checks that every named path exists). A skill they name selects all.
+ */
+const PROMPT_READERS = [
+  'packages/web/tracy-harness/test/card-chip-status.test.mjs',
+  'packages/web/tracy-harness/test/card-save-publish.test.mjs',
+  'packages/web/tracy-harness/test/listing-actions-top.test.mjs',
+  'packages/web/tracy-harness/test/ops-shell-language.test.mjs',
+  'packages/web/tracy-harness/test/ops-small-defects.test.mjs',
+  'packages/web/tracy-harness/test/problem-guides.test.mjs',
+  'packages/web/tracy-harness/test/quickstart-settings-facts.test.mjs',
+  'packages/web/tracy-harness/test/template-fold.test.mjs'
+]
+
+/**
+ * One of Tracy's own skills under `.agents/skills/`. Every one is also read by the skills mirror
+ * (`skills-common.ts` walks the root; `skills-check.ts` and `skills-sync.ts` use it), which only the
+ * `skills` gate and `pnpm skills:sync` run.
+ */
+function ownSkill(
+  name,
+  { reason, gate = 'skills, vocabulary and doc-links in the checks row', readers = [], modules = [] }
+) {
+  return {
+    prefix: `.agents/skills/${name}/`,
+    reason,
+    gate,
+    readers,
+    modules: [...modules, 'scripts/skills-check.ts', 'scripts/skills-common.ts', 'scripts/skills-sync.ts']
+  }
+}
+
+/**
+ * Skill trees (vendored, and Tracy's own under `.agents/skills/`) whose change runs the `checks` row
+ * plus only the tests that read the tree.
  * NOT derived from `NOT_RUN_HERE` in `scripts/check-tests.ts`: that list says the tree's own tests
  * do not run here, not that TCH tests do not depend on the tree. An entry needs an audit of every
- * test folder (apps, scripts, packages, interop, e2e and the three EmDash suites) and names the
- * gate in `checks` that guards the tie to TCH. `readers` are the exact worker test files that read
- * the tree (audited 09/10/2026); a guard test fails when any other test starts to read it, and a
- * reader that no longer exists runs the full suite. Quickstart scripts that import the T4 skill
- * (`packages/cms/tracy-joomla-quickstart/studio-content.mjs` and its dependents) are exercised by
- * no test. `vendor/emdash/` is skipped further down by its own older exception.
+ * tracked file that runs (code, shell, Python, workflows, regression cases, Dockerfiles, compose
+ * files) outside the tree and names the gate in `checks` that guards the tie to TCH.
+ * - `readers` are the exact worker test files that read the tree: the change selects them.
+ * - `outsideCi` are readers no CI row runs: regression scripts and cases under `tests/regression/`
+ *   (run by hand through the regression runner) and Dockerfiles no pull request builds (they read the
+ *   tree at image build). They are declared so the audit stays whole and the plan names them; they
+ *   never force the full suite, which does not run them either (decision 29/10/2026).
+ * - `modules` are the non-test files that read or name the tree (gates, hand-run scripts, prompt
+ *   text); no test loads one unless it is a reader.
+ * Vendored trees audited 09/10/2026, everything re-audited over the whole tree 28-29/10/2026.
+ * `scripts/test/related-tests.test.mjs` fails when any other file starts to read a tree, and a
+ * declared reader of either kind that no longer exists runs the full suite. `vendor/emdash/` is
+ * skipped further down by its own older exception.
  */
 export const REVIEWED_SKILLS = [
   {
     prefix: 'vendor/wordpress/tracy-wordpress-theme/',
     reason:
-      'its own tests run in the skill home repo; stand-restore.test.mjs reads the quickstart method (scripts/quickstart/restore.mjs and lib.mjs, directly and through tracy-wordpress-quickstart/scripts/stand.mjs, which restores published packs with it); nothing else in the test folders reads the tree (check-tests-environment only lists it as a tree that holds tests)',
+      'its own tests run in the skill home repo; stand-restore.test.mjs reads the quickstart method (scripts/quickstart/restore.mjs and lib.mjs, directly and through tracy-wordpress-quickstart/scripts/stand.mjs, which restores published packs with it); problem-guides.test.mjs checks that the SKILL.md the WordPress template prompt names exists, and the other harness tests load those prompts (re-audit 28/10/2026); nothing else reads the tree (check-tests-environment only lists it as a tree that holds tests); fourteen regression cases run its scripts or tests (REG-PR-1559 runs scripts/test/road-precheck.test.mjs inside it, the sweep cases run scripts/visual/site-sweep.mjs); no CI row runs a regression case, they run by hand through the regression runner (29/10/2026)',
     gate: 'check-site-model (plus doc links and self-contained) in the checks row',
-    readers: ['packages/cms/tracy-wordpress-quickstart/test/stand-restore.test.mjs']
+    readers: ['packages/cms/tracy-wordpress-quickstart/test/stand-restore.test.mjs', ...PROMPT_READERS],
+    outsideCi: [
+      'tests/regression/cases/REG-110-ja-nova-wp7-sweep-fixes.json',
+      'tests/regression/cases/REG-111-ja-vega-wp7-sweep-fixes.json',
+      'tests/regression/cases/REG-112-ja-essence-wp7-sweep-audit-fixes.json',
+      'tests/regression/cases/REG-113-ja-morgan-wp7-sweep-fixes.json',
+      'tests/regression/cases/REG-114-ja-vega-wp7-checkpoint-fixes.json',
+      'tests/regression/cases/REG-PR-1551-wp-skill-unmeasured-cells.json',
+      'tests/regression/cases/REG-PR-1558-wp-verification-portable.json',
+      'tests/regression/cases/REG-PR-1559-wp-skill-road-gates-early.json',
+      'tests/regression/cases/REG-PR-928-ja-essence-wp7-behaviour-fixes.json',
+      'tests/regression/cases/REG-PR-935-ja-nova-wp7-behaviour-layout-fixes.json',
+      'tests/regression/cases/REG-PR-938-ja-impact-wp7-behaviour-layout-fixes.json',
+      'tests/regression/cases/REG-PR-941-ja-morgan-wp7-behaviour-layout-fixes.json',
+      'tests/regression/cases/REG-PR-942-ja-kinetic-wp7-behaviour-layout-fixes.json',
+      'tests/regression/cases/REG-PR-943-ja-vega-wp7-behaviour-layout-fixes.json'
+    ],
+    modules: [
+      'packages/cms/tracy-wordpress-quickstart/scripts/pack-and-verify.mjs',
+      'packages/cms/tracy-wordpress-quickstart/scripts/stand.mjs',
+      'packages/web/tracy-harness/src/cms/problem-guides.ts',
+      'scripts/check-site-model.ts'
+    ]
   },
   {
     prefix: 'vendor/joomla/joomlart-t4-skill/',
     reason:
-      'skill-catalog.test.mjs reads skills/joomlart-t4-template/SKILL.md for the catalog; nothing else in the test folders reads the tree',
+      'skill-catalog.test.mjs reads skills/joomlart-t4-template/SKILL.md for the catalog; web-image-never-upstream.test.mjs holds where the tree sits on a fleet host (build.sh finds it beside web/, tracy-host copies it there); nothing else in the test folders reads the tree; the quickstart scripts that import it are run by hand; the dsh image and the Joomla web image copy the tree and check its SKILL.md, and the tracy-host image copies it so provision can build a missing Joomla web image on the host; none is built on a pull request: they read it at image build (build-dsh-image.yml and build-app-images.yml on push and by hand, joomla.Dockerfile by hand or on the host) (29/10/2026)',
     gate: 'check-site-model in the checks row',
-    readers: ['scripts/test/skill-catalog.test.mjs']
+    readers: [
+      'packages/fleet/tracy-fleet-operation/test/web-image-never-upstream.test.mjs',
+      'scripts/test/skill-catalog.test.mjs'
+    ],
+    outsideCi: [
+      'apps/tracy-host/Dockerfile',
+      'packages/fleet/tracy-fleet-operation/dsh/Dockerfile',
+      'packages/fleet/tracy-fleet-operation/web/joomla.Dockerfile'
+    ],
+    modules: [
+      'deploy/scripts/install-shard-steps.sh',
+      'packages/cms/tracy-joomla-quickstart/audit-content.mjs',
+      'packages/cms/tracy-joomla-quickstart/audit-marketing-samples.mjs',
+      'packages/cms/tracy-joomla-quickstart/build-contact-information.mjs',
+      'packages/cms/tracy-joomla-quickstart/build-content-plan.mjs',
+      'packages/cms/tracy-joomla-quickstart/build-marketing-samples.mjs',
+      'packages/cms/tracy-joomla-quickstart/check-marketing-samples.mjs',
+      'packages/cms/tracy-joomla-quickstart/design-capture.mjs',
+      'packages/cms/tracy-joomla-quickstart/design-shots.mjs',
+      'packages/cms/tracy-joomla-quickstart/studio-content.mjs',
+      'packages/fleet/tracy-fleet-operation/web/build.sh',
+      'scripts/check-site-model.ts',
+      'scripts/skills-common.ts'
+    ]
   },
   {
     prefix: 'vendor/emdash/tracy-emdash-skill/',
     reason:
-      'no test and none of the three EmDash suites read the tree; it is only mirrored into .claude/skills by the skills mirror script',
+      'no worker test and none of the three EmDash suites read the tree; four regression scripts run tests of the skill (REG-PR-1156, 1159, 1161, 1177); no CI row runs a regression script, they run by hand through the regression runner',
     gate: 'check-site-model and check-emdash-kit-sync in the checks row',
-    readers: []
-  }
+    readers: [],
+    outsideCi: [
+      'tests/regression/scripts/REG-PR-1156-g63-system-fixes-released.mjs',
+      'tests/regression/scripts/REG-PR-1159-g64-blog-plan-released.mjs',
+      'tests/regression/scripts/REG-PR-1161-tcqr-final-released.mjs',
+      'tests/regression/scripts/REG-PR-1177-tcqr-final-cleanup.mjs'
+    ],
+    modules: ['scripts/check-emdash-kit-sync.ts', 'scripts/check-site-model.ts', 'scripts/skills-common.ts']
+  },
+  // Tracy's own skills (audited 28/10/2026 over every tracked executable file). One entry per skill:
+  // the readers differ. The skills root itself (`public-skills.txt`, `.gitignore`, README) and the
+  // `.claude/skills` mirror are not listed, so a change there keeps the full suite. App and package
+  // code only NAMES skill paths (problem-guides.ts prompt text, the site-folder layout of a
+  // customer site); none loads a skill file at runtime.
+  ownSkill('quickstart-contract', {
+    reason:
+      'problem-guides.test.mjs reads SKILL.md (the K8 fix loop) and the harness tests load prompts naming it; check-pack-modes.test.mjs reads SKILL.md and every reference for the restore and pack commands (moved there from regression script REG-PR-1228 on 28/10/2026, so a change here stays narrow); its scripts/ are run by hand and imported by nothing',
+    readers: [...PROMPT_READERS, 'scripts/test/check-pack-modes.test.mjs'],
+    modules: ['packages/web/tracy-harness/src/cms/problem-guides.ts']
+  }),
+  ownSkill('tdsr', {
+    reason:
+      'problem-guides.ts names SKILL.md in the Design system prompt; the harness tests that load it are the only readers',
+    readers: PROMPT_READERS,
+    modules: ['packages/web/tracy-harness/src/cms/problem-guides.ts']
+  }),
+  ownSkill('pr-merge', {
+    reason: 'check-pr-merge.test.mjs reads the merge sequence from SKILL.md; nothing else reads the tree',
+    readers: ['scripts/test/check-pr-merge.test.mjs']
+  }),
+  ownSkill('modify-site', {
+    reason:
+      'no test reads the tree; check-infra-contracts.test.ts imports only the pure checkers, the gate itself reads SKILL.md and references/',
+    gate: 'infra-contracts (plus skills, vocabulary and doc-links) in the checks row'
+  }),
+  ...['desktop-release', 'run-dev', 'staging-check', 'tch-dev'].map((name) =>
+    ownSkill(name, {
+      reason:
+        'no test reads the tree (check-push.test.mjs only passes a path of tch-dev to a pure classifier)'
+    })
+  )
 ]
 
 /**
@@ -226,8 +351,8 @@ export const TEMPLATE_DATA = [
 ]
 /** Gates every template-data run keeps: biome format and the typecheck of JSON imports, and doc pointers. */
 // `turbo-config` imports check-tests.ts, so its closure names every data tree, and it simply always
-// runs: on a pull request it measures only the Turbo tasks whose inputs the diff touches (for template
-// data, the suites that read it), and checks the generated config of every task in a few seconds.
+// runs: on a pull request it is `--structure-only` (since 28/10/2026), checking the generated config
+// and ignored inputs of every task without tracing a suite; the nightly measures what suites read.
 export const TEMPLATE_DATA_ALWAYS = ['lint', 'doc-links', 'turbo-config']
 
 const CODE = /\.[cm]?[jt]sx?$/
@@ -308,17 +433,27 @@ function templateDataLane(changed, allFiles, readText) {
 }
 
 /**
- * The declared readers of every reviewed skill tree the diff touches, deduplicated. `missing` names
- * a reader that is not a worker test in the inventory: the caller then runs the full suite.
+ * The declared readers of every reviewed skill tree the diff touches, deduplicated, and its declared
+ * readers no CI row runs (`outsideCi`: named in the plan, never selected). `missing` says why the
+ * declaration cannot be trusted (a reader of either kind gone from the inventory, or a `readers`
+ * entry that is not a worker test): the caller then runs the full suite.
  */
 function skillReaders(changed, present) {
   const readers = new Set()
+  const outsideCi = new Set()
   for (const skill of REVIEWED_SKILLS) {
     if (!changed.some((file) => file.startsWith(skill.prefix))) continue
     for (const test of skill.readers) readers.add(test)
+    for (const file of skill.outsideCi ?? []) outsideCi.add(file)
   }
-  const missing = [...readers].find((test) => !present.has(test) || !WORKER.test(test))
-  return { readers, missing }
+  const lost = [...readers, ...outsideCi].find((file) => !present.has(file))
+  const unrun = [...readers].find((test) => !WORKER.test(test))
+  const missing = lost
+    ? `skill reader ${lost} is missing`
+    : unrun
+      ? `skill reader ${unrun} is not a worker test`
+      : undefined
+  return { readers, outsideCi: [...outsideCi], missing }
 }
 
 /**
@@ -332,9 +467,8 @@ function dataShortcut(changed, allFiles, allWorkers) {
   if (mapped.length === 0) return null
   if (changed.some((file) => GLOBAL.test(file))) return null
   if (!changed.every((file) => mapped.includes(file) || isReviewedSkill(file) || DOCS.test(file))) return null
-  const { readers, missing } = skillReaders(changed, present)
-  if (missing)
-    return { full: true, workers: allWorkers, interop: true, why: `skill reader ${missing} is missing` }
+  const { readers, outsideCi, missing } = skillReaders(changed, present)
+  if (missing) return { full: true, workers: allWorkers, interop: true, why: missing }
   const tests = new Set(readers)
   for (const file of mapped) {
     for (const test of DATA_FILE_TESTS.get(file)) {
@@ -350,6 +484,7 @@ function dataShortcut(changed, allFiles, allWorkers) {
     owners: [],
     // The planner must not also select e2e or EmDash rows by the path of a file `workers` covers.
     covered: mapped,
+    outsideCi,
     why: `data file(s) ${mapped.join(', ')} map to ${String(tests.size)} test file(s)`
   }
 }
@@ -420,9 +555,8 @@ export function relatedTests({ changed, allFiles, dependencies = {}, readText })
   }
   const shortcut = dataShortcut(changed, allFiles, allWorkers)
   if (shortcut) return shortcut
-  const { readers, missing } = skillReaders(changed, new Set(allFiles))
-  if (missing)
-    return { full: true, workers: allWorkers, interop: true, why: `skill reader ${missing} is missing` }
+  const { readers, outsideCi, missing } = skillReaders(changed, new Set(allFiles))
+  if (missing) return { full: true, workers: allWorkers, interop: true, why: missing }
   const direct = new Set()
   const sourceOwners = new Set()
   let codeChanged = false
@@ -480,6 +614,7 @@ export function relatedTests({ changed, allFiles, dependencies = {}, readText })
     workers,
     interop,
     owners: [...affected].sort(),
+    outsideCi,
     why: `${affected.size} affected workspace owner(s)`
   }
 }

@@ -22,10 +22,9 @@ import { modelTokensOf } from 'website-opportunities/src/wo-model-tokens.js'
 import { featuresOf } from 'website-opportunities/src/media-info.js'
 import { acceptedDishPhotos } from 'website-opportunities/domain/dish-photos.mjs'
 import { siteBuildOf } from './site-build.js'
+import { claimAnalyses as claimShas, settleAnalysis as settleSha } from './media-analysis.js'
 import { picturePolicy } from '../lib/wo-picture-policy.js'
 
-/** How long a claim on a picture's vision label holds while the model answers. */
-const ANALYSIS_LEASE = `interval '10 minutes'`
 /** How many pictures are read from the store at once to measure the ones collected before measuring existed. */
 const MEASURE_AT_ONCE = 6
 /** The largest picture read back for a site. */
@@ -172,8 +171,9 @@ export function createSitePictures({
     })
     if (shortlist.length === 0) return { labelled: 0, calls: 0, tokens: 0, failed: 0, ms: 0 }
     // A place's picture is sent only when this build holds its claim; another build labelling it answers later.
-    const claimed = await claimAnalyses(
-      shortlist.filter((r) => r.origin === 'place'),
+    const claimed = await claimShas(
+      pool,
+      shortlist.filter((r) => r.origin === 'place').map((r) => r.sha256),
       vision
     )
     const sent = shortlist.filter((r) => r.origin !== 'place' || claimed.has(r.sha256))
@@ -210,7 +210,7 @@ export function createSitePictures({
       signal?.throwIfAborted()
     } catch (error) {
       // Over the cap, or the model failed: the claims go back, a later build asks again.
-      for (const sha of claimed) await settleAnalysis(sha, null, vision)
+      for (const sha of claimed) await settleSha(pool, sha, null, vision)
       throw error
     }
     const { labels, usage, failed } = answer
@@ -218,7 +218,7 @@ export function createSitePictures({
     for (const r of sent) {
       signal?.throwIfAborted()
       const own = labels.get(r.id)
-      if (r.origin === 'place') await settleAnalysis(r.sha256, own ?? null, vision)
+      if (r.origin === 'place') await settleSha(pool, r.sha256, own ?? null, vision)
       if (!own) continue
       const entry = { key: vision.key, model: vision.door.model, at, labels: own }
       r.labels = { ...r.labels, vision: entry }
@@ -239,39 +239,6 @@ export function createSitePictures({
       failed,
       ms: Date.now() - started
     }
-  }
-
-  /** The shas of `rows` this build may label now: no done label of the current key, no live claim by another. */
-  async function claimAnalyses(rows, vision) {
-    const shas = [...new Set(rows.map((r) => r.sha256))]
-    if (shas.length === 0) return new Set()
-    const { rows: got } = await pool.query(
-      `insert into wo_media_analysis (media_sha256, model, version, state, lease_until, attempts)
-       select sha, $2, $3, 'pending', now() + ${ANALYSIS_LEASE}, 1 from unnest($1::text[]) as sha
-       on conflict (media_sha256, model, version) do update
-         set state = 'pending', lease_until = now() + ${ANALYSIS_LEASE},
-           attempts = wo_media_analysis.attempts + 1, updated_at = now()
-         where wo_media_analysis.state <> 'done'
-           and (wo_media_analysis.lease_until is null or wo_media_analysis.lease_until < now())
-       returning media_sha256`,
-      [shas, vision.door.model, vision.key]
-    )
-    return new Set(got.map((r) => r.media_sha256))
-  }
-
-  /** The model's answer for a claimed picture (`failed` when it gave none: asked again by a later build). */
-  async function settleAnalysis(sha256, result, vision) {
-    await pool.query(
-      `update wo_media_analysis set state = $4, result = $5::jsonb, lease_until = null, updated_at = now()
-       where media_sha256 = $1 and model = $2 and version = $3 and state = 'pending'`,
-      [
-        sha256,
-        vision.door.model,
-        vision.key,
-        result ? 'done' : 'failed',
-        result ? JSON.stringify(result) : null
-      ]
-    )
   }
 
   /**
@@ -381,6 +348,11 @@ export function createSitePictures({
           receipts: build.pictures?.receipts ?? {},
           vision: labelled,
           colours,
+          // The brief's links of each photo (the offering it shows, the person it portrays) and its closed list of
+          // offerings: what the fill plan qualifies a photo by (`fill-plan.mjs`).
+          brief: build.brief
+            ? { assets: build.brief.assets ?? [], reading: build.brief.reading ?? null }
+            : null,
           pictures: own.map((r) => ({
             id: r.id,
             postId: manifest.get(r.id)?.postId ?? null,

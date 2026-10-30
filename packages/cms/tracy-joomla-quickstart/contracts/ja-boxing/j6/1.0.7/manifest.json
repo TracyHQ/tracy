@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-boxing/j6/1.0.7",
+  "platform": "joomla",
+  "template": "ja_boxing",
+  "quickstart": {
+    "product": "ja-boxing",
+    "platform": "joomla",
+    "version": "1.0.7",
+    "cms": {
+      "version": "6.1.1"
+    },
+    "template": "ja_boxing",
+    "parts": {
+      "installer": {
+        "file": "ja-boxing-j6-quickstart-1.0.7.zip",
+        "bytes": 67420943,
+        "sha256": "890407dd8c2301c199d278b0cdad2617b42a05cfbe0b183699e056eed8cead92"
+      }
+    },
+    "createdAt": "2026-10-27T20:04:59.000Z",
+    "builtFrom": {
+      "from": "quickstart/ja-boxing/j6@1.0.6",
+      "by": "copy of the 1.0.6 installer",
+      "change": "none: the 1.0.6 installer byte for byte; the new version carries a content map with Slot fit (ADR 0039)"
+    },
+    "release": "quickstart/ja-boxing/j6"
+  },
+  "coworkContractVersion": "0.24.69",
+  "mode": "content-recommendation"
+}

@@ -29,6 +29,7 @@ import {
   plannedWrites,
   rawSpan,
   receipt,
+  refusedBeforeWrite,
   replaceText,
   restoreOf,
   splitTwoLines,
@@ -98,6 +99,7 @@ test('planReplace: the defaults, and the closed key set is exactly the schema', 
     mode: 'replace',
     changes: [{ find: 'See our capabilities', replace: 'Get a free quote' }],
     path: '/',
+    pathGiven: false,
     where: null,
     at: null,
     all: false,
@@ -187,12 +189,42 @@ test('planReplace: every shape mistake is BAD_PARAMS with the path, the rule and
   bad({ find: 'a1b', replace: 'x', all: true, at: ['u1'] }, 'at', /send one of them/)
   bad({ find: 'a1b', replace: 'x', expect: 0 }, 'expect')
   bad({ find: 'a1b', replace: 'x', expect: 2.5 }, 'expect')
+  bad({ changes: [{ find: 'a1b', replace: 'x', expect: 0 }] }, 'changes[0].expect')
+  bad({ changes: [{ find: 'a1b', replace: 'x', expect: 41 }] }, 'changes[0].expect')
+  bad(
+    {
+      changes: [
+        { find: 'a1b', replace: 'x' },
+        { find: 'c1d', replace: 'y', expect: '2' }
+      ]
+    },
+    'changes[1].expect'
+  )
   bad({ find: 'a1b', replace: 'x', dryRun: 'yes' }, 'dryRun')
   bad({ restore: [{ at: 'site#hotline', value: 'x' }], find: 'y' }, 'restore', /restore:\[\{at, value\}\]/)
   bad({ restore: [] }, 'restore')
   bad({ restore: [{ at: 'site#hotline', value: 'x', why: 'y' }] }, 'restore[0].why')
   bad({ restore: [{ at: '', value: 'x' }] }, 'restore[0].at')
   bad({ restore: [{ at: 'a', value: 'x'.repeat(RESTORE_LEAF_MAX + 1) }] }, 'restore[0].value')
+})
+
+test('a pair of changes may carry its own expect: kept on that change, the call-level expect left as it was', () => {
+  const plan = /** @type {any} */ (
+    planReplace({
+      path: '/',
+      all: 'page',
+      changes: [
+        { find: 'Smoked Venison', replace: 'Menu item', expect: 3 },
+        { find: 'Lorem ipsum', replace: '' }
+      ]
+    })
+  )
+  assert.equal(plan.ok, true, JSON.stringify(plan))
+  assert.deepEqual(plan.changes, [
+    { find: 'Smoked Venison', replace: 'Menu item', expect: 3 },
+    { find: 'Lorem ipsum', replace: '' }
+  ])
+  assert.equal(plan.expect, null)
 })
 
 test('find+replace beside changes is merged into them, once, and said in normalized', () => {
@@ -231,6 +263,29 @@ test('NOT_FOUND sends to page.text, then this replace quoting exactly — and sa
     next,
     'page.text {path:"/about", match:"Hotline"}, then this replace quoting those words exactly; only a NOT_FOUND needs a read.'
   )
+})
+
+// Local round 31, 25/10/2026: a build's replace with no path read the home page, was told to read the home page again,
+// gave up and edited the theme's PHP. The answer now says only the home page was read, and to name the page.
+test('NOT_FOUND of a call with no path says only the home page was read and asks for the page that shows the words', () => {
+  const page = pageOf('<main><h1>Fresh bread every morning</h1></main>')
+  const { stored, hooks } = identityStore(page)
+  assert.equal(
+    /** @type {any} */ (planReplace({ find: 'Most Read', replace: 'Popular stories' })).pathGiven,
+    false
+  )
+  const asked = /** @type {any} */ (
+    run({ find: 'Most Read', replace: 'Popular stories' }, page, stored, { hooks })
+  )
+  assert.equal(asked.code, 'NOT_FOUND')
+  assert.equal(asked.next, REPLACE_NEXT.notFoundNoPathNext)
+  assert.match(asked.next, /only the home page was read/)
+  assert.doesNotMatch(asked.next, /path:"\/"/)
+  const params = { find: 'Most Read', replace: 'Popular stories', path: '/blog/' }
+  assert.equal(/** @type {any} */ (planReplace(params)).pathGiven, true)
+  const named = /** @type {any} */ (run(params, page, stored, { hooks }))
+  assert.equal(named.code, 'NOT_FOUND')
+  assert.equal(named.next, replaceText('notFoundNext', { page: '/blog/', word: 'Most' }))
 })
 
 test('planReplace: a lone `at` string is one place, corrected and said; restore goes alone', () => {
@@ -1372,4 +1427,31 @@ test('locate: a picture’s file asked as words is sent to the block that holds 
   assert.doesNotMatch(r.next, /page\.text/)
   const words = locate({ page, stored, change: { find: 'Nowhere words', replace: 'x' } })
   assert.match(words.next, /^page\.text/)
+})
+
+test('only a refusal that carries no mark of a write proves nothing was written', () => {
+  for (const code of [
+    'BAD_PARAMS',
+    'NOT_FOUND',
+    'COUNT_MISMATCH',
+    'TOO_MANY',
+    'VALUE_NOT_ALLOWED',
+    'SITE_BUSY'
+  ])
+    assert.equal(refusedBeforeWrite({ ok: false, code, change: 1 }), true, code)
+  for (const answer of [
+    null,
+    { ok: true },
+    { ok: false },
+    { ok: false, code: 'OUTCOME_UNKNOWN' },
+    { ok: false, code: 'SWEEP_CALL_FAILED' },
+    { ok: false, code: 'COWORK_WEB_BAD_RESPONSE', httpStatus: 502 },
+    { ok: false, code: 'PARTIAL', written: 1 },
+    { ok: false, code: 'STORE_CHANGED' },
+    // A write undone after it landed: the code is a value rule's, the answer says a record was written.
+    { ok: false, code: 'VALUE_NOT_ALLOWED', written: 1, reverted: true },
+    { ok: false, code: 'SITE_BUSY', written: 2, partial: true },
+    { ok: false, code: 'NOT_FOUND', apply_id: 'replace-1' }
+  ])
+    assert.equal(refusedBeforeWrite(answer), false, JSON.stringify(answer))
 })

@@ -187,6 +187,58 @@ const ROLES_MISSING = {
   rolesCount: 3,
   rolesShown: ['module-183.9', 'module-191.2', 'module-236.5']
 }
+/** The Slot fit group (ADR 0039 decision 7): ten slots of a map that declares Slot fit have no fit. */
+const FIT_MISSING = {
+  ...COVERAGE_BASE,
+  fitState: 'missing',
+  fitCount: 10,
+  fitShown: ['module-183.9', 'module-191.2']
+}
+/** The label rules group (ADR 0040): R3 and R2 fail on a version 3 map. */
+const LABELS_FAILING = {
+  ...COVERAGE_BASE,
+  labelState: 'failing',
+  labelFailing: [
+    { rule: 'R2', title: 'fact-like sample without a contact or price role', count: 1, keys: ['home.intro'] },
+    {
+      rule: 'R3',
+      title: 'URL slot without a role',
+      count: 14,
+      keys: ['home.paragraph.2.link.1', 'home.button.1.url']
+    }
+  ],
+  labelFactShare: 7.5,
+  labelHolds: true,
+  labelWarns: false
+}
+/** The label judge (spec #37): a phone labelled editorial, a claim heading labelled editorial, one finer mismatch. */
+const JUDGE_WRONG = {
+  ...COVERAGE_BASE,
+  judgeState: 'wrong-group',
+  judgeReason: null,
+  judgeWrongGroup: [
+    {
+      key: 'module-12.phone',
+      role: 'editorial.paragraph',
+      suggested: 'contact.phone',
+      why: 'a phone number'
+    },
+    {
+      key: 'module-9.title',
+      role: 'editorial.heading',
+      suggested: 'claim.heading',
+      why: 'a ranking and a year'
+    }
+  ],
+  judgeWrongGroupCount: 3,
+  judgeMismatch: [
+    { key: 'module-13.intro', role: 'editorial.paragraph', suggested: 'editorial.heading', why: 'a heading' }
+  ],
+  judgeMismatchCount: 1,
+  judgeNotJudged: 0,
+  judgeHolds: true,
+  judgeWarns: false
+}
 const COVERAGE_HOLES = {
   ...COVERAGE_BASE,
   coverage: { text: 88.4, images: 61.5, links: 100 },
@@ -250,6 +302,35 @@ const EVERY_CODE = [
     'content-coverage',
     'coverage-roles',
     { ...COVERAGE_BASE, rolesState: 'stale', rolesReason: 'the contract files changed', rolesShown: [] }
+  ],
+  ['content-coverage', 'coverage-fit', FIT_MISSING],
+  ['content-coverage', 'coverage-live-fit', { ...FIT_MISSING, live: true }],
+  [
+    'content-coverage',
+    'coverage-fit',
+    { ...COVERAGE_BASE, fitState: 'none', fitCount: 1521, fitShown: ['a'] }
+  ],
+  [
+    'content-coverage',
+    'coverage-fit',
+    {
+      ...COVERAGE_BASE,
+      fitState: 'invalid',
+      fitReason: 'slot "a" (image) needs customize "keep"',
+      fitShown: []
+    }
+  ],
+  ['content-coverage', 'coverage-labels', LABELS_FAILING],
+  [
+    'content-coverage',
+    'coverage-live-labels',
+    { ...LABELS_FAILING, live: true, labelHolds: false, labelWarns: true }
+  ],
+  ['content-coverage', 'coverage-judge', JUDGE_WRONG],
+  [
+    'content-coverage',
+    'coverage-judge-warn',
+    { ...JUDGE_WRONG, live: true, judgeHolds: false, judgeWarns: true }
   ],
   ['customize', 'customize-waiting', { passed: 0, total: 0, mustFix: [], worthFixing: [] }],
   ['customize', 'customize-not-checked', { passed: 0, total: 0, mustFix: [], worthFixing: [] }],
@@ -558,7 +639,7 @@ test('no contract on Joomla: ONE prompt with the whole sequence, the version not
   const prompt = o.text
   assert.ok(
     prompt.startsWith(
-      'Use the quickstart-contract skill to make the content contract for the Joomla release quickstart/ja-restaurant/j6 (currently 1.0.2). First check this machine has what the skill needs (DDEV, Docker, gh signed in on the machine that runs DDEV, tracy-dev 0.7.1, checkouts of claude-cowork and ja-products, and a local Tracy) and tell me what is missing before you start.'
+      'Use the quickstart-contract skill to make the content contract for the Joomla release quickstart/ja-restaurant/j6 (currently 1.0.2). First check this machine has what the skill needs (DDEV, Docker, gh signed in on the machine that runs DDEV, tracy-dev 0.7.1, checkouts of claude-cowork and joomlart-products, and a local Tracy) and tell me what is missing before you start.'
     ),
     prompt
   )
@@ -803,7 +884,7 @@ test('Customize your site: the score in the title, both groups, ONE prompt namin
   const prompt = g.outside.text
   for (const rule of ['LOGO-1', 'STAB-1', 'LANG-6']) assert.match(prompt, new RegExp(rule))
   assert.match(prompt, /quickstart\/ja-restaurant\/j6/)
-  assert.match(prompt, /JoomlArt-Products\/ja-products/)
+  assert.match(prompt, /JoomlArt-Products\/joomlart-products/)
   assert.match(prompt, /joomlart-t4-template skill/)
   assert.match(prompt, /quickstart-contract skill/)
   assert.match(prompt, /template-customization-question-readiness\.mjs/)
@@ -837,7 +918,7 @@ test('Customize your site names the skill of each CMS, and a rule only Tracy fix
   assert.equal(tracyOnly.outside.label, 'Send to the dev team')
 })
 
-test('Customize your site sends each fix where its file lives: the contract in tch, a JA template to ja-products, an EmDash template to its folder in tch', () => {
+test('Customize your site sends each fix where its file lives: the contract in tch, a JA template to joomlart-products, an EmDash template to its folder in tch', () => {
   const about3 = (owner) => ({
     ...CUSTOMIZE_FAILING,
     mustFix: [
@@ -864,10 +945,10 @@ test('Customize your site sends each fix where its file lives: the contract in t
   })
   assert.match(wp, /ABOUT-3 \(must fix, Business name, fix in the content contract in the tch repository/)
   assert.doesNotMatch(wp, /fix in the template package/)
-  // A JA template's source is on ja-products, in its own product folder.
+  // A JA template's source is on joomlart-products, in its own product folder.
   assert.match(
     prompt('template', JOOMLA),
-    /fix in the template source in JoomlArt-Products\/ja-products \(products\/joomlart\/\*\/ja_restaurant\/source\)\)/
+    /fix in the template source in JoomlArt-Products\/joomlart-products \(products\/joomlart\/\*\/ja_restaurant\/source\)\)/
   )
   // Tracy's EmDash templates are built from their folder in tch, and that folder exists.
   const em = prompt('template', {
@@ -976,7 +1057,7 @@ test('every tch file or folder a Customize your site prompt names exists, on eve
   assert.deepEqual([...missing], [])
 })
 
-test('a template fix goes where that template is made: JA Joomla on ja-products, Tracy Joomla to the patches, WordPress to its overlay', () => {
+test('a template fix goes where that template is made: JA Joomla on joomlart-products, Tracy Joomla to the patches, WordPress to its overlay', () => {
   const at = (tag) =>
     promptOf(
       FAMILIES.find((f) => f.tag === tag),
@@ -984,7 +1065,7 @@ test('a template fix goes where that template is made: JA Joomla on ja-products,
     )
   assert.match(
     at('quickstart/ja-kinetic/j6'),
-    /fix in the template source in JoomlArt-Products\/ja-products \(products\/joomlart\/\*\/ja_kinetic\/source\)/
+    /fix in the template source in JoomlArt-Products\/joomlart-products \(products\/joomlart\/\*\/ja_kinetic\/source\)/
   )
   for (const tag of ['tracy-business/j6', 'tracy-base/j6', 'tracy-apple/j6']) {
     assert.match(at(tag), /packages\/cms\/tracy-joomla-quickstart\/template-patches/, tag)
@@ -1239,7 +1320,7 @@ test('Content coverage red: the prompt carries the whole fix loop, so an agent t
   // template and page problems: the template source, the next version, the same package format; language strings by override
   assert.match(
     text,
-    /fix the template source in JoomlArt-Products\/ja-products, build the next quickstart version in the same package format/
+    /fix the template source in JoomlArt-Products\/joomlart-products, build the next quickstart version in the same package format/
   )
   assert.match(text, /language override/)
   // core: nothing; accepted only with a reason of 12 characters or more; measure again; order of PRs and releases
@@ -1388,4 +1469,292 @@ test('Slot roles group of Content coverage: guides, lists and ONE prompt that bi
     ['Not declared', 'Slots without a role']
   )
   assert.match(both.outside.text, /5a\. Slot roles: bind roles in content-map\.json during capture/)
+})
+
+test('Slot fit group of Content coverage: guides, lists and ONE prompt that measures Slot fit with the audit', () => {
+  const missing = mod.guideOf(
+    { step: 'content-coverage', state: 'todo', code: 'coverage-fit', params: FIT_MISSING },
+    JOOMLA
+  )
+  assert.equal(missing.title, 'Content coverage · 10 slots without a fit')
+  assert.equal(missing.detail, 'Every text and image slot needs a measured fit in content-map.json.')
+  assert.deepEqual(missing.lists, [
+    { heading: 'Slots without a fit', count: 10, lines: ['module-183.9', 'module-191.2'] }
+  ])
+  assert.equal(missing.outside.label, 'Paste into Claude Code')
+  const prompt = missing.outside.text
+  assert.match(prompt, /Slot fit of the release quickstart\/ja-restaurant\/j6 \(Joomla 1\.0\.2\)/)
+  assert.match(prompt, /leaves 10 text or image slots without a fit \(module-183\.9, module-191\.2, \.\.\.\)/)
+  assert.match(prompt, /content-coverage\/cli\.mjs .*--write --fit/)
+  assert.match(prompt, /Never write a fit by hand/)
+  assert.match(prompt, /next contract version/)
+  assert.match(
+    prompt,
+    /node scripts\/slot-roles\/check\.mjs packages\/cms\/tracy-joomla-quickstart\/contracts\/ja-restaurant\/j6\//
+  )
+  assert.match(prompt, /wait for my go/)
+  assert.ok(existsSync(path.join(repoRoot, 'packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs')))
+  assert.ok(existsSync(path.join(repoRoot, 'docs/adr/0039-slot-fit-lives-in-content-map.md')))
+
+  const live = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'warn',
+      code: 'coverage-live-fit',
+      params: { ...FIT_MISSING, live: true }
+    },
+    JOOMLA
+  )
+  assert.equal(live.title, 'Content coverage · 10 slots without a fit')
+  assert.equal(live.detail, 'Live, so it stays published. Fix it in the next version.')
+
+  const none = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'todo',
+      code: 'coverage-fit',
+      params: { ...COVERAGE_BASE, fitState: 'none', fitCount: 1521, fitShown: ['a', 'b'] }
+    },
+    JOOMLA
+  )
+  assert.equal(none.title, 'Content coverage · no Slot fit')
+  assert.equal(none.detail, 'Captured before Slot fit existed. Measure it for the next version.')
+  assert.equal(none.lists, undefined)
+  assert.match(none.outside.text, /declares no Slot fit/)
+
+  const invalid = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'todo',
+      code: 'coverage-fit',
+      params: {
+        ...COVERAGE_BASE,
+        fitState: 'invalid',
+        fitReason:
+          'slot "p" (image) is kind photo, which a build replaces, so it must not carry customize "keep"',
+        fitShown: []
+      }
+    },
+    JOOMLA
+  )
+  assert.equal(invalid.title, 'Content coverage · Slot fit invalid')
+  assert.match(invalid.outside.text, /must not carry customize "keep"/)
+
+  // roles and fit together: one prompt, both groups' steps
+  const both = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'todo',
+      code: 'coverage-roles',
+      params: { ...ROLES_MISSING, ...FIT_MISSING }
+    },
+    JOOMLA
+  )
+  assert.match(both.title, /3 slots without a role, 10 slots without a fit/)
+  assert.deepEqual(
+    both.lists.map((l) => l.heading),
+    ['Slots without a role', 'Slots without a fit']
+  )
+  assert.match(both.outside.text, /Slot roles: bind roles/)
+  assert.match(both.outside.text, /Slot fit: measure it/)
+
+  // holes and fit together: the fit steps join the coverage fix loop
+  const holes = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'todo',
+      code: 'coverage-holes',
+      params: { ...COVERAGE_HOLES, ...FIT_MISSING }
+    },
+    JOOMLA
+  )
+  assert.match(holes.title, /holes.*10 slots without a fit/)
+  assert.deepEqual(
+    holes.lists.map((l) => l.heading),
+    ['Not declared', 'Slots without a fit']
+  )
+  assert.match(holes.outside.text, /5a\. Slot fit: measure it/)
+
+  // a platform the audit does not measure: the group says nothing
+  const wp = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'todo',
+      code: 'coverage-roles',
+      params: { ...ROLES_MISSING, fitState: 'not-applicable', fitShown: [] }
+    },
+    JOOMLA
+  )
+  assert.doesNotMatch(wp.title, /fit/i)
+})
+
+test('label rules group of Content coverage: names the failing rules and gives ONE prompt to relabel and re-run the audit', () => {
+  const held = mod.guideOf(
+    { step: 'content-coverage', state: 'todo', code: 'coverage-labels', params: LABELS_FAILING },
+    JOOMLA
+  )
+  assert.equal(held.title, 'Content coverage · 2 label rules failing')
+  assert.equal(held.detail, 'Relabel the listed slots in Claude Code, then run the audit again.')
+  assert.deepEqual(held.lists, [
+    {
+      heading: 'R2 fact-like sample without a contact or price role',
+      count: 1,
+      lines: ['home.intro']
+    },
+    {
+      heading: 'R3 URL slot without a role',
+      count: 14,
+      lines: ['home.paragraph.2.link.1', 'home.button.1.url']
+    }
+  ])
+  assert.equal(held.outside.label, 'Paste into Claude Code')
+  const prompt = held.outside.text
+  assert.match(
+    prompt,
+    /label rules of the release quickstart\/ja-restaurant\/j6 \(Joomla 1\.0\.2\) .* fail: R2 /
+  )
+  assert.match(
+    prompt,
+    /R3 URL slot without a role \(14: home\.paragraph\.2\.link\.1, home\.button\.1\.url, \.\.\.\)/
+  )
+  assert.match(prompt, /node scripts\/slot-roles\/check\.mjs/)
+  // R5 (ADR 0040): faces that prove a number may carry stat.proof_image.
+  assert.match(
+    prompt,
+    /a face needs a person, quote or business role, or stat\.proof_image when the faces prove a number/
+  )
+  assert.match(prompt, /audit again with --write/)
+  assert.match(prompt, /wait for my go/)
+
+  const live = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'warn',
+      code: 'coverage-live-labels',
+      params: { ...LABELS_FAILING, live: true, labelHolds: false, labelWarns: true }
+    },
+    JOOMLA
+  )
+  assert.equal(live.detail, 'Live, so it stays published. Fix it in the next version.')
+
+  const one = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'todo',
+      code: 'coverage-labels',
+      params: { ...LABELS_FAILING, labelFailing: [LABELS_FAILING.labelFailing[1]] }
+    },
+    JOOMLA
+  )
+  assert.equal(one.title, 'Content coverage · 1 label rule failing')
+})
+
+test('Content coverage on WordPress: the prompt measures the WordPress contract folder and names the WordPress capture', () => {
+  const wordpress = { ...COVERAGE_HOLES, platform: 'wordpress', contract: 'ja-diner/wp7/1.0.1' }
+  const guide = mod.guideOf(
+    { step: 'content-coverage', state: 'todo', code: 'coverage-holes', params: wordpress },
+    { ...JOOMLA, platform: 'wordpress', tag: 'quickstart/ja-diner/wp7', version: '1.0.1' }
+  )
+  const prompt = guide.outside.text
+  assert.match(
+    prompt,
+    /--contract packages\/cms\/tracy-wordpress-quickstart\/contracts\/ja-diner\/wp7\/1\.0\.1 /
+  )
+  assert.match(prompt, /tracy-wordpress-quickstart\/scripts\/capture-contract\.mjs \(run it with --all-text/)
+  assert.doesNotMatch(prompt, /capture-contract\.py|tracy-joomla-quickstart/)
+})
+
+test('label judge of Content coverage: lists the wrongly labelled slots with the suggested role and gives ONE prompt', () => {
+  const held = mod.guideOf(
+    { step: 'content-coverage', state: 'todo', code: 'coverage-judge', params: JUDGE_WRONG },
+    JOOMLA
+  )
+  assert.equal(held.title, 'Content coverage · 3 slots in the wrong group')
+  assert.equal(
+    held.detail,
+    'Relabel the listed slots in Claude Code, then run the audit so the judge looks again.'
+  )
+  assert.deepEqual(held.lists, [
+    {
+      heading: 'Fact or editorial group wrong',
+      count: 3,
+      lines: [
+        'module-12.phone: editorial.paragraph -> contact.phone',
+        'module-9.title: editorial.heading -> claim.heading'
+      ]
+    },
+    {
+      heading: 'Another role suggested',
+      count: 1,
+      lines: ['module-13.intro: editorial.paragraph -> editorial.heading']
+    }
+  ])
+  const prompt = held.outside.text
+  assert.match(prompt, /label judge of the release quickstart\/ja-restaurant\/j6 \(Joomla 1\.0\.2\)/)
+  assert.match(
+    prompt,
+    /module-12\.phone is labelled editorial\.paragraph, the judge suggests contact\.phone \(a phone number\)/
+  )
+  assert.match(prompt, /, \.\.\./)
+  assert.match(prompt, /labelJudge in content-coverage\.json/)
+  assert.match(prompt, /wait for my go/)
+
+  const live = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'warn',
+      code: 'coverage-judge-warn',
+      params: { ...JUDGE_WRONG, live: true, judgeHolds: false, judgeWarns: true }
+    },
+    JOOMLA
+  )
+  assert.equal(live.detail, 'Live, so it stays published. Fix it in the next version.')
+
+  const finer = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'warn',
+      code: 'coverage-judge-warn',
+      params: {
+        ...JUDGE_WRONG,
+        judgeState: 'mismatch',
+        judgeWrongGroup: [],
+        judgeWrongGroupCount: 0,
+        judgeHolds: false,
+        judgeWarns: true
+      }
+    },
+    JOOMLA
+  )
+  assert.equal(finer.title, 'Content coverage · 1 slot role to check')
+
+  const unjudged = mod.guideOf(
+    {
+      step: 'content-coverage',
+      state: 'warn',
+      code: 'coverage-judge-warn',
+      params: {
+        ...JUDGE_WRONG,
+        judgeState: 'not-judged',
+        judgeReason: 'AWAITING_AGENT',
+        judgeWrongGroup: [],
+        judgeWrongGroupCount: 0,
+        judgeMismatch: [],
+        judgeMismatchCount: 0,
+        judgeNotJudged: 40,
+        judgeHolds: false,
+        judgeWarns: true
+      }
+    },
+    JOOMLA
+  )
+  assert.equal(unjudged.title, 'Content coverage · 40 slots not judged')
+  assert.equal(
+    unjudged.detail,
+    'Nobody has judged these labels yet. Run the audit, then answer its judge request with record-judge.'
+  )
+  assert.equal(unjudged.lists, undefined)
+  assert.match(unjudged.outside.text, /label-judge\/request\.json under --out: look at each crop yourself/)
+  assert.match(unjudged.outside.text, /record-judge\.mjs/)
+  assert.doesNotMatch(unjudged.outside.text, /TRACY_VISION|API_KEY|vision key/)
 })

@@ -595,6 +595,7 @@ function fakeInstaller({
         )
       if (engine === 'parse_error') return withUrl(new Response(PARSE_ERROR, { status: 500 }), url)
       if (engine === 'cloudflare') return withUrl(cloudflareChallenge(), url)
+      if (engine === 'php_too_old') return withUrl(new Response(PHP_TOO_OLD), url)
       return withUrl(new Response(JSON.stringify({ ok: true, info: { component: LATEST } })), url)
     }
     if (url === PACKAGE_URL && packageDownload === 'fails')
@@ -1072,6 +1073,33 @@ test('an install whose engine then dies on a parse error is php_too_old', async 
     detail: { ...PARSE_DETAIL, ...BOTH_ROADS_REDIRECTED }
   })
   assert.deepEqual(state.posts, ['upload', 'url'])
+})
+
+/** claude-cowork 0.24.73 on PHP below 7.4: HTTP 200 and this answer, on both doors. */
+const PHP_TOO_OLD = JSON.stringify({
+  ok: false,
+  error: 'php_too_old',
+  code: 'php_too_old',
+  php: '7.3.33',
+  min: '7.4.0'
+})
+
+test('an engine that says its PHP is too old is php_too_old with its own versions, at install and at the door', async () => {
+  // phpinfo is disabled, so only the engine names the site's PHP.
+  fakeInstaller({ engine: 'php_too_old' })
+  const result = await joomla.installCowork(SESSION, PACKAGE_URL, LATEST, undefined, { requiresPhp: '7.4' })
+  assert.equal(result.ok, false)
+  assert.equal(result.reason, 'php_too_old')
+  assert.equal(result.php, '7.3.33')
+  assert.equal(result.minimumPhp, '7.4.0')
+  assert.equal(result.detail.check, 'below_minimum')
+  routes({ [FRONT_DOOR]: () => new Response(PHP_TOO_OLD), [ADMIN_DOOR]: () => new Response(PHP_TOO_OLD) })
+  const door = await joomla.resolveDoor(ROOT, TOKEN, { secondLookMs: 0 })
+  assert.equal(door.refusal, 'php_too_old')
+  assert.equal(door.php, '7.3.33')
+  assert.equal(door.minimumPhp, '7.4.0')
+  assert.equal(door.detail.check, 'below_minimum')
+  assert.equal(refusal.importErrorKey('php_too_old'), 'import_error_php_too_old')
 })
 
 test('a parse error on a PHP the manifest accepts names no versions', async () => {

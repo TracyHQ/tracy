@@ -1,6 +1,7 @@
 import { fetchLimited } from './fetch-limited.mjs'
 import { redactToken } from './apify.mjs'
 import { sniffMime } from './media.mjs'
+import { withProviderRetry } from './provider-retry.mjs'
 
 const API = 'https://places.googleapis.com/v1/'
 const DETAILS_MAX_BYTES = 2 * 1024 * 1024
@@ -29,8 +30,36 @@ const AMENITIES = [
   'dineIn',
   'goodForChildren',
   'goodForGroups',
-  'allowsDogs'
+  'allowsDogs',
+  // Attributes any trade can have, not only food and drink (Place Details Enterprise + Atmosphere, like the above).
+  'restroom',
+  'goodForWatchingSports',
+  'curbsidePickup'
 ]
+
+/**
+ * Google's grouped attributes (Places API (New) `AccessibilityOptions`, `ParkingOptions`, `PaymentOptions`), each
+ * sub-field a boolean that reads as one amenity: a gym, a clinic or a shop has them as much as a restaurant.
+ * `accessibilityOptions` is a Pro field; the call already bills at Enterprise + Atmosphere, so none costs more.
+ */
+const AMENITY_GROUPS = {
+  accessibilityOptions: [
+    'wheelchairAccessibleEntrance',
+    'wheelchairAccessibleParking',
+    'wheelchairAccessibleRestroom',
+    'wheelchairAccessibleSeating'
+  ],
+  parkingOptions: [
+    'freeParkingLot',
+    'paidParkingLot',
+    'freeStreetParking',
+    'paidStreetParking',
+    'valetParking',
+    'freeGarageParking',
+    'paidGarageParking'
+  ],
+  paymentOptions: ['acceptsCreditCards', 'acceptsDebitCards', 'acceptsCashOnly', 'acceptsNfc']
+}
 
 // One Atmosphere-tier call per researched place, never per search result. `websiteUri` is the place's own
 // website as Google records it: the shared research starts from it, never from a website a client sent.
@@ -58,14 +87,15 @@ export const GPLACES_DETAIL_FIELDS = [
   // nothing more. A place added by its link has no search listing to carry Google's rating.
   'rating',
   'userRatingCount',
-  ...AMENITIES
+  ...AMENITIES,
+  ...Object.keys(AMENITY_GROUPS)
 ].join(',')
 
 const fail = (code, message, extra) => Object.assign(new Error(message), { code, ...extra })
 const text = (v) => (typeof v === 'string' && v.trim() ? v.trim() : undefined)
 const local = (v) => text(v?.text)
 
-/** One authenticated call to the Places API; returns the parsed JSON or throws {code}. */
+/** One authenticated call to the Places API; returns the parsed JSON or throws {code} (with `status`, `retryAfter`). */
 async function placesCall(url, headers, deps) {
   const key = deps.googleKey
   if (!key) throw fail('CREDENTIAL_MISSING', 'no Google key')
@@ -83,9 +113,12 @@ async function placesCall(url, headers, deps) {
   }
   const body = new TextDecoder().decode(res.bytes)
   if (res.status === 429 || (res.status === 403 && /quota|billing/i.test(body)))
-    throw fail('QUOTA', 'quota', { status: res.status })
+    throw fail('QUOTA', 'quota', { status: res.status, retryAfter: res.retryAfter ?? null })
   if (res.status < 200 || res.status >= 300)
-    throw fail('PROVIDER_ERROR', `HTTP ${res.status}`, { status: res.status })
+    throw fail('PROVIDER_ERROR', `HTTP ${res.status}`, {
+      status: res.status,
+      retryAfter: res.retryAfter ?? null
+    })
   try {
     return JSON.parse(body)
   } catch {
@@ -100,7 +133,12 @@ export async function fetchPlaceDetails(placeId, deps = {}) {
     throw fail('PROVIDER_ERROR', 'invalid place id')
   const url = new URL(`places/${placeId}`, API)
   if (text(deps.language)) url.searchParams.set('languageCode', deps.language.trim())
-  return placesCall(url.href, { 'X-Goog-FieldMask': GPLACES_DETAIL_FIELDS }, deps)
+  // The research's one Details call (reviews, amenities): a 429 or transient 5xx is tried again within a few seconds
+  // (`provider-retry.mjs`, `deps.retry` overrides its defaults); the last answer's code stands.
+  return withProviderRetry(
+    () => placesCall(url.href, { 'X-Goog-FieldMask': GPLACES_DETAIL_FIELDS }, deps),
+    deps.retry
+  )
 }
 
 /**
@@ -283,6 +321,8 @@ function photoOf(p) {
 export function placeFactsFromDetails(raw, { now = () => new Date() } = {}) {
   const amenities = {}
   for (const k of AMENITIES) if (typeof raw?.[k] === 'boolean') amenities[k] = raw[k]
+  for (const [group, keys] of Object.entries(AMENITY_GROUPS))
+    for (const k of keys) if (typeof raw?.[group]?.[k] === 'boolean') amenities[k] = raw[group][k]
   const summaries = {}
   const editorial = local(raw?.editorialSummary)
   const generative = local(raw?.generativeSummary?.overview)

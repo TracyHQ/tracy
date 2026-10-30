@@ -3,9 +3,63 @@ import { test } from 'node:test'
 import {
   createAgentDemoInventory,
   compareAgentInventory,
+  expandPatterns,
   picturesWhere
 } from '../src/sites/agent-demo-inventory.js'
 import { topBlocks } from '../../../packages/tools/tracy-site-tools/src/host/wp-blocks.mjs'
+
+// Levain: no collected logo, so the native site title occupies one of the two brand slots.
+test('a no-logo WordPress header may use its site title in the same frozen brand slot only', () => {
+  const logo = '<!-- wp:site-logo {"className":"jr-logo jr-logo--light"} /-->'
+  const title = '<!-- wp:site-title {"level":0} /-->'
+  const body = `<!-- wp:group {"className":"logo"} --><div class="wp-block-group logo">${logo}${logo}<!-- wp:paragraph --><p>Bakery</p><!-- /wp:paragraph --></div><!-- /wp:group -->`
+  const inventory = (content, key = 'header') => ({
+    complete: true,
+    records: [
+      {
+        key: `templatePart/${key}`,
+        identity: { kind: 'templatePart', key },
+        publication: { status: 'publish' },
+        routes: [],
+        relations: {},
+        data: { content },
+        editorialFields: ['content']
+      }
+    ]
+  })
+  const before = inventory(body)
+  const after = inventory(body.replace(logo, title))
+  const policy = { allowWordPressSiteTitle: true }
+  assert.equal(compareAgentInventory(before, after).pass, false)
+  const allowed = compareAgentInventory(before, after, policy)
+  assert.equal(allowed.pass, true)
+  assert.deepEqual(allowed.brandFallbacks, [
+    { record: 'templatePart/header', field: 'content', path: [0, 0] }
+  ])
+  assert.equal(compareAgentInventory(before, after, { allowWordPressSiteTitle: false }).pass, false)
+  for (const changed of [
+    body.replace(logo, logo + title),
+    body.replace(logo, ''),
+    body.replace(logo, title).replace('class="wp-block-group logo"', 'class="wp-block-group other"'),
+    body.replace(logo, title).replace('wp:paragraph', 'wp:heading'),
+    body.replace(logo, '<!-- wp:paragraph --><p>Bakery</p><!-- /wp:paragraph -->'),
+    body.replace(logo, title).replace('"className":"logo"', '"className":"other"')
+  ])
+    assert.equal(compareAgentInventory(before, inventory(changed), policy).pass, false)
+  assert.equal(
+    compareAgentInventory(inventory(body, 'sidebar'), inventory(body.replace(logo, title), 'sidebar'), policy)
+      .pass,
+    false
+  )
+  const outside = body.replace('"className":"logo"', '"className":"content"')
+  assert.equal(
+    compareAgentInventory(inventory(outside), inventory(outside.replace(logo, title)), policy).pass,
+    false
+  )
+  assert.equal(compareAgentInventory(after, before, policy).pass, false)
+  assert.equal(before.records[0].data.content, body)
+  assert.equal(after.records[0].data.content, body.replace(logo, title))
+})
 
 function php(
   platform = 'joomla',
@@ -615,6 +669,76 @@ test('Joomla: a contact link relabelled keeps the structure; its address removed
   )
 })
 
+// Local measure 28/10/2026: Death & Co's contact took the business's site in the `webpage` the template left as words.
+test("Joomla: a contact's webpage set to the business's site keeps the structure", () => {
+  const contact = (data) => ({
+    complete: true,
+    records: [
+      {
+        key: 'contact/1',
+        identity: { kind: 'contact', id: 1 },
+        publication: {},
+        routes: [],
+        relations: {},
+        editorialFields: [],
+        data
+      }
+    ]
+  })
+  for (const was of ['', 'Fresco', 'https://www.joomlart.com'])
+    assert.equal(
+      compareAgentInventory(
+        contact({ alias: 'fresco', webpage: was }),
+        contact({ alias: 'fresco', webpage: 'https://www.deathandcompany.com/' })
+      ).pass,
+      true,
+      was
+    )
+})
+
+// Local measure 28/10/2026: Death & Co's blog posts written from the research without the template's quote block.
+test('Joomla: a blog post rewritten in other markup keeps the structure; a page article does not', () => {
+  const site = (article1, article2) => ({
+    complete: true,
+    records: [
+      {
+        key: 'article/1',
+        identity: { kind: 'article', id: 1 },
+        publication: {},
+        routes: [],
+        relations: {},
+        editorialFields: ['title', 'introtext', 'fulltext'],
+        data: article1
+      },
+      {
+        key: 'article/2',
+        identity: { kind: 'article', id: 2 },
+        publication: {},
+        routes: [],
+        relations: {},
+        editorialFields: ['title', 'introtext', 'fulltext'],
+        data: article2
+      },
+      {
+        key: 'menuItem/101',
+        identity: { kind: 'menuItem', id: 101 },
+        publication: {},
+        routes: [],
+        relations: {},
+        editorialFields: ['title'],
+        data: { link: 'index.php?option=com_content&view=article&id=2' }
+      }
+    ]
+  })
+  const template = {
+    introtext: '<p>Intro words</p>',
+    fulltext: '<p>Body</p><figure class="area-blockquote"><blockquote><p>Quote</p></blockquote></figure>'
+  }
+  const rewritten = { introtext: 'A new intro', fulltext: 'A new body in one paragraph' }
+  assert.equal(compareAgentInventory(site(template, template), site(rewritten, template)).pass, true)
+  assert.equal(compareAgentInventory(site(template, template), site(template, rewritten)).pass, false)
+})
+
 // lrsweep rig, JA Spa j6 (24/10/2026): Claude Cowork's `content.list` gives a menu item no `url`, so the item that opens
 // /index.php/contact had no route, and the residue sweep said "the site has no Contact page" for 17 links. Its route
 // is read off its own row (`path`, `home`, `type`) in the address form the site's other rows show.
@@ -887,13 +1011,13 @@ test('an address in angle brackets is words; a tag is still structure', () => {
   })
   const same = compareAgentInventory(
     page('Northgate <no-reply@northgate-ind.ru>'),
-    page('q. patisserie <contact@qpatisserie.example>')
+    page('b. patisserie <contact@bpatisserie.com>')
   )
   assert.equal(same.pass, true, JSON.stringify(same.detail))
   assert.equal(compareAgentInventory(page('Shop <div>x</div>'), page('Shop <p>x</p>')).pass, false)
 })
 
-// Local round 20, 25/10/2026 (q. patisserie, EmDash): six template networks became the business's two; vacancies'
+// Local round 20, 25/10/2026 (b. patisserie, EmDash): six template networks became the business's two; vacancies'
 // `type` rewritten for a bakery.
 test('a list of the business’s own profiles takes the business’s length; a type a visitor reads is words, a machine type is not', () => {
   const site = (data) => ({
@@ -1072,9 +1196,32 @@ test('a WordPress tag renamed is the same tag; a post given more tags differs', 
   })
   assert.equal(compareAgentInventory(post(['Fish', 'menus']), post(['Breads', 'Cookies'])).pass, true)
   assert.equal(compareAgentInventory(post(['Fish']), post(['Breads', 'Cookies'])).pass, false)
+  // Local round 36: the row's own lists of categories and tags name them too.
+  const listed = (tags, categories) => ({
+    complete: true,
+    records: [
+      {
+        key: 'post/81',
+        identity: { kind: 'post', id: 81 },
+        publication: {},
+        routes: [],
+        relations: { 'list:tags': tags, 'list:categories': categories },
+        editorialFields: [],
+        data: { post_type: 'post' }
+      }
+    ]
+  })
+  assert.equal(
+    compareAgentInventory(listed(['fish'], ['Restaurant News']), listed(['menus'], ['Bakery News'])).pass,
+    true
+  )
+  assert.equal(
+    compareAgentInventory(listed(['fish'], ['News']), listed(['menus', 'gifts'], ['News'])).pass,
+    false
+  )
 })
 
-// Local round 25, 25/10/2026 (q. patisserie, EmDash): a key the build added, set null to take it out again.
+// Local round 25, 25/10/2026 (b. patisserie, EmDash): a key the build added, set null to take it out again.
 test('a key holding null is a key left out; a key holding a value is not', () => {
   const page = (sample) => ({
     complete: true,
@@ -1100,7 +1247,7 @@ test('a key holding null is a key left out; a key holding a value is not', () =>
   )
 })
 
-// Local round 21, 25/10/2026 (q. patisserie, EmDash): a figure emptied and a cell set to "—" where the research had none.
+// Local round 21, 25/10/2026 (b. patisserie, EmDash): a figure emptied and a cell set to "—" where the research had none.
 test('EmDash: a field emptied or set to a dash is words; a technical value emptied still differs', () => {
   const site = (data) => ({
     complete: true,
@@ -1127,7 +1274,7 @@ test('EmDash: a field emptied or set to a dash is words; a technical value empti
   )
 })
 
-// Local round 21, 25/10/2026 (q. patisserie, EmDash): project galleries the template left empty, filled.
+// Local round 21, 25/10/2026 (b. patisserie, EmDash): project galleries the template left empty, filled.
 test('EmDash: a list the template left empty may be filled; a list that had rows keeps its count', () => {
   const project = (gallery) => ({
     complete: true,
@@ -1146,6 +1293,42 @@ test('EmDash: a list the template left empty may be filled; a list that had rows
   const shot = (id) => ({ caption: 'x', image: { id, provider: 'emdash', mimeType: 'image/jpeg' } })
   assert.equal(compareAgentInventory(project([]), project([shot('a'), shot('b')])).pass, true)
   assert.equal(compareAgentInventory(project([shot('t')]), project([shot('a'), shot('b')])).pass, false)
+})
+
+// Local measure 29/10/2026 (Levain, EmDash): history written with 5 of its 6 items and new ids, seven checks in a row.
+test('EmDash: a list that lost items, or an item given a new id, says how to put it back', () => {
+  const about = (history) => ({
+    complete: true,
+    records: [
+      {
+        key: 'about/1@en',
+        identity: { collection: 'about', id: '1' },
+        publication: {},
+        routes: [],
+        relations: {},
+        editorialFields: ['history'],
+        data: { history }
+      }
+    ]
+  })
+  const item = (id, title) => ({ _rowId: id, title, text: 'words' })
+  const was = about(['r1', 'r2', 'r3', 'r4', 'r5', 'r6'].map((id) => item(id, id)))
+  const short = compareAgentInventory(was, about(['r1', 'r2', 'r3', 'r4', 'r5'].map((id) => item(id, 'new'))))
+  assert.equal(short.pass, false)
+  const lost = short.detail.find((d) => d.path === '.history')
+  assert.deepEqual([lost.was, lost.now], ['6 items', '5 items'])
+  assert.match(lost.fix, /keep all 6 items, in order, each with its _rowId/)
+  const renamed = compareAgentInventory(
+    was,
+    about(['h1', 'r2', 'r3', 'r4', 'r5', 'r6'].map((id) => item(id, 'new')))
+  )
+  const id = renamed.detail.find((d) => d.path === '.history[0]._rowId')
+  assert.match(id.fix, /never given a new id/)
+  const long = compareAgentInventory(
+    was,
+    about(['r1', 'r2', 'r3', 'r4', 'r5', 'r6', 'r7'].map((id) => item(id, 'new')))
+  )
+  assert.match(long.detail.find((d) => d.path === '.history').fix, /remove the 1 added item/)
 })
 
 // Local round 21, 25/10/2026 (Levain, WordPress): template news posts rewritten in fewer paragraphs.
@@ -1170,7 +1353,39 @@ test('WordPress: an article rewritten in other paragraphs keeps the structure; a
   assert.equal(compareAgentInventory(record('page', long), record('page', short)).pass, false)
 })
 
-// Local round 22, 25/10/2026 (q. patisserie, EmDash): picture fields written with the import's file path.
+// Local round 22, 25/10/2026 (b. patisserie, EmDash): picture fields written with the import's file path.
+// Local round 36 (26/10/2026): an EmDash build wrote picture fields as `{id, alt}`; four checks failed on their shape.
+test('EmDash: a picture written as its library id with its alt is the same picture; another object is not', () => {
+  const page = (image) => ({
+    complete: true,
+    records: [
+      {
+        key: 'pages/home@en',
+        identity: { collection: 'pages', id: 'home', slug: 'home', locale: 'en' },
+        publication: {},
+        routes: [],
+        relations: {},
+        editorialFields: [],
+        data: { sample: { image } }
+      }
+    ]
+  })
+  const before = page({
+    id: '01M5AJ2XRAF4BV0Z4RPTCH58MQ',
+    provider: 'local',
+    mimeType: 'image/jpeg',
+    src: '/x.jpg'
+  })
+  assert.equal(
+    compareAgentInventory(before, page({ id: '01M5TPQBS5G51XJX01DTTSPYPG', alt: 'Croissants' })).pass,
+    true
+  )
+  assert.equal(compareAgentInventory(before, page({ id: 'hero', label: 'Croissants' })).pass, false)
+  // Round 37: written as the bare id inside a JSON field, it is still that picture; a word there is not.
+  assert.equal(compareAgentInventory(before, page('01M5TWDK7PT6Y86T0AJXTCHY80')).pass, true)
+  assert.equal(compareAgentInventory(before, page('Croissants')).pass, false)
+})
+
 test('EmDash: a picture field holding an external src of the library is still a picture', () => {
   const home = (hero_image) => ({
     complete: true,
@@ -1293,7 +1508,12 @@ test('picturesWhere names the record and the WordPress block of each template pi
   assert.deepEqual(pictures.detail[0].in, { record: 'post/97', block: 3 })
   assert.deepEqual(pictures.detail[1].in, { record: 'post/97', block: 2 })
   assert.deepEqual(pictures.detail[2].in, { record: 'media/01M5' })
-  assert.equal(pictures.detail[3].in, undefined)
+  // Local round 35: a picture no record holds is a setting's, and says how that is changed.
+  assert.match(
+    pictures.detail[3].in.setting,
+    /a template setting picks it[\s\S]*attachmentId[\s\S]*kind:"option"/
+  )
+  assert.match(pictures.detail[3].in.setting, /template\.siteSettings[\s\S]*operation:"set"[\s\S]*site_logo/)
   assert.deepEqual(picturesWhere(checks, null), checks)
   // One template file on two pages: the page the read saw it on names its own record (local round 27).
   const twice = {
@@ -1313,8 +1533,52 @@ test('picturesWhere names the record and the WordPress block of each template pi
     twice
   )
   assert.deepEqual(onAbout[0].detail[0].in, { record: 'post/99', block: 3 })
+  // Local round 36: a record with its identity names the swap of that block's picture, never a retyped block.
+  const [swapped] = picturesWhere(
+    [
+      {
+        id: 'no-demo-pictures',
+        pass: false,
+        detail: [{ page: '/', file: 'wp-content/uploads/2026/10/chef.png', selector: 'img' }]
+      }
+    ],
+    {
+      records: [
+        { key: 'post/97', identity: { kind: 'post', id: 97 }, routes: ['/'], data: { post_content: body } }
+      ]
+    }
+  )
+  // A list's thumbnail is the post's featured picture (local round 37).
+  const [thumb] = picturesWhere(
+    [
+      {
+        id: 'no-demo-pictures',
+        pass: false,
+        detail: [
+          {
+            page: '/gallery/',
+            file: 'wp-content/uploads/2026/10/chef-300x300.png',
+            selector: 'div.item-image > img.attachment-large.size-large'
+          }
+        ]
+      }
+    ],
+    {
+      records: [
+        { key: 'post/97', identity: { kind: 'post', id: 97 }, routes: [], data: { post_content: body } }
+      ]
+    }
+  )
+  assert.deepEqual(thumb.detail[0].in, {
+    record: 'post/97',
+    featured: 'content.update {kind:"postmeta", id:97, key:"_thumbnail_id", fields:{value:<attachmentId>}}'
+  })
+  assert.equal(
+    swapped.detail[0].in.swap,
+    'content.get {kind:"post", id:97, outline:true} gives rev; content.update {kind:"post", id:97, rev, blocks:{"2":{pictures:{"chef.png":{path, attachmentId}}}}}'
+  )
   // A file is named whole (local round 31): `banner-1` is not the anchor `acm-text-banner-130`, and a picture no record
-  // holds is left without `in`; its sized copy is the same file.
+  // holds is named a setting's; its sized copy is the same file.
   const banner = {
     records: [
       { key: 'post/106', routes: ['/blog/'], data: { post_content: '<div id="acm-text-banner-130"></div>' } },
@@ -1335,7 +1599,262 @@ test('picturesWhere names the record and the WordPress block of each template pi
     ],
     banner
   )
-  assert.equal(named.detail[0].in, undefined)
+  assert.ok(named.detail[0].in.setting)
   assert.deepEqual(named.detail[1].in, { record: 'post/12' })
-  assert.equal(named.detail[2].in, undefined)
+  assert.ok(named.detail[2].in.setting)
+})
+
+// Plan "10/10" §5 (David 26/10/2026): local round 31 left posts at the template's own addresses and dates
+// (`/how-the-gop-and-dems-differ-on-restaurant-issues/`, 27 September 2021); an article's address and date are the
+// build's, a page's address is not.
+test("an article's address and date are the build's on every CMS; a page's address, its count and its publication are not", () => {
+  const inventory = (records) => ({ complete: true, records })
+  const wp = (type, slug, date, status = 'publish') => ({
+    key: `post/${type === 'page' ? 9 : 79}`,
+    identity: { kind: 'post', id: type === 'page' ? 9 : 79 },
+    publication: { status },
+    routes: [`/${slug}/`],
+    relations: {},
+    editorialFields: ['post_title', 'post_content'],
+    data: {
+      post_type: type,
+      post_title: 'A title',
+      post_content: '<!-- wp:paragraph --><p>Words</p><!-- /wp:paragraph -->',
+      post_name: slug,
+      post_date: date,
+      post_date_gmt: date,
+      post_author: '1'
+    }
+  })
+  const before = inventory([
+    wp('post', 'how-the-gop-and-dems-differ-on-restaurant-issues', '2021-09-27 10:00:00'),
+    wp('page', 'about-us', '2021-09-27 10:00:00')
+  ])
+  const rewritten = inventory([
+    wp('post', 'our-cookie-club', '2026-10-26 09:00:00'),
+    wp('page', 'about-us', '2021-09-27 10:00:00')
+  ])
+  assert.equal(compareAgentInventory(before, rewritten).pass, true)
+  // a page keeps its address: menus and buttons point at it
+  const page = inventory([
+    wp('post', 'our-cookie-club', '2026-10-26 09:00:00'),
+    wp('page', 'our-story', '2021-09-27 10:00:00')
+  ])
+  assert.equal(compareAgentInventory(before, page).pass, false)
+  // the author, the status and the count stay held
+  const author = inventory([
+    {
+      ...wp('post', 'our-cookie-club', '2026-10-26'),
+      data: { ...wp('post', 'x', 'y').data, post_author: '2' }
+    },
+    wp('page', 'about-us', '2021-09-27 10:00:00')
+  ])
+  assert.equal(compareAgentInventory(before, author).pass, false)
+  const draft = inventory([
+    wp('post', 'our-cookie-club', '2026-10-26', 'draft'),
+    wp('page', 'about-us', '2021-09-27 10:00:00')
+  ])
+  assert.equal(compareAgentInventory(before, draft).pass, false)
+  // EmDash: an entry outside pages carries its slug in its identity and route; a page does not move
+  const em = (collection, slug, date) => ({
+    key: `${collection}/01J@en`,
+    identity: { collection, id: '01J', slug, locale: 'en' },
+    publication: { status: 'published', deletedAt: null, scheduledAt: null, draft: false },
+    routes: [{ pattern: `/${collection}/${slug}`, locale: 'en' }],
+    relations: {},
+    editorialFields: ['title'],
+    data: { title: 'A title', publishedAt: date }
+  })
+  assert.equal(
+    compareAgentInventory(
+      inventory([em('posts', 'lorem-news', '2021-01-01')]),
+      inventory([em('posts', 'croissants-at-dawn', '2026-10-26')])
+    ).pass,
+    true
+  )
+  assert.equal(
+    compareAgentInventory(inventory([em('pages', 'about', 'x')]), inventory([em('pages', 'story', 'x')]))
+      .pass,
+    false
+  )
+  // Joomla: an article's alias, created and publish_up dates and its byline alias
+  const jo = (alias, created, byline) => ({
+    key: 'article/12',
+    identity: { kind: 'article', id: 12 },
+    publication: { state: 1 },
+    routes: [`/blog/${alias}`],
+    relations: {},
+    editorialFields: ['title', 'introtext'],
+    data: { title: 'A title', alias, created, publish_up: created, created_by_alias: byline, created_by: 42 }
+  })
+  assert.equal(
+    compareAgentInventory(
+      inventory([jo('template-news', '2019-05-01', '')]),
+      inventory([jo('our-new-menu', '2026-10-26', 'Death & Co')])
+    ).pass,
+    true
+  )
+})
+
+// Local round 33 (26/10/2026, WordPress JA Restaurant): the sidebar part held only a pattern reference; the build
+// expanded it into the stored part to change "Most Read", and native-structure failed it at every check.
+test('a pattern is read as the blocks it inserts: an expanded part keeps its structure, an added block does not', async () => {
+  const pattern =
+    '<!-- wp:group --><div class="wp-block-group t3-module module"><!-- wp:heading --><h3 class="module-title">Most Read</h3><!-- /wp:heading --><!-- wp:pattern {"slug":"t/latest"} /--></div><!-- /wp:group -->'
+  const latest = '<!-- wp:paragraph --><p>More Articles …</p><!-- /wp:paragraph -->'
+  const read = async (key) => ({ 't/part-sidebar': pattern, 't/latest': latest })[key] ?? null
+  const ref = '<!-- wp:pattern {"slug":"t/part-sidebar"} /-->'
+  const expanded = await expandPatterns(ref, read)
+  assert.equal(expanded, pattern.replace('<!-- wp:pattern {"slug":"t/latest"} /-->', latest))
+  // a pattern the plugin cannot read stays the reference it was
+  assert.equal(
+    await expandPatterns('<!-- wp:pattern {"slug":"t/gone"} /-->', read),
+    '<!-- wp:pattern {"slug":"t/gone"} /-->'
+  )
+  const part = (content, extra = {}) => ({
+    key: 'templatePart/sidebar',
+    identity: { kind: 'templatePart', key: 'sidebar' },
+    publication: { status: 'template' },
+    routes: [],
+    relations: {},
+    editorialFields: ['content'],
+    data: { content, ...extra },
+    ...extra.record
+  })
+  const inventory = (records, patternsRead = true) => ({
+    complete: true,
+    ...(patternsRead ? { patternsRead } : {}),
+    records
+  })
+  const before = inventory([part(expanded)])
+  const written = expanded.replace('Most Read', 'Popular stories').replace('More Articles …', 'More stories')
+  assert.equal(compareAgentInventory(before, inventory([part(written)])).pass, true)
+  const added = written.replace(
+    '</div><!-- /wp:group -->',
+    '<!-- wp:image --><figure class="wp-block-image"><img src="x.jpg" alt=""/></figure><!-- /wp:image --></div><!-- /wp:group -->'
+  )
+  assert.equal(compareAgentInventory(before, inventory([part(added)])).pass, false)
+  // A frozen inventory read before patterns were holds an untouched part to its reference as read.
+  const old = inventory([part(ref)], false)
+  const untouched = { ...part(expanded), patternsAsRead: { content: ref } }
+  assert.equal(compareAgentInventory(old, inventory([untouched])).pass, true)
+})
+
+// Plan "10/10" §5 (David 26/10/2026): local round 31 shipped the template's empty OpenTable group as an orange band; a
+// button to the business's real way in, put inside it, keeps the structure; filling a decorative box does not.
+test('a service box the template left empty may be filled; a decorative box, or the box itself, may not change', () => {
+  const page = (content) => ({
+    key: 'post/100',
+    identity: { kind: 'post', id: 100 },
+    publication: { status: 'publish' },
+    routes: ['/'],
+    relations: {},
+    editorialFields: ['post_title', 'post_content'],
+    data: { post_type: 'page', post_title: 'Home', post_content: content }
+  })
+  const inventory = (content) => ({ complete: true, records: [page(content)] })
+  const empty =
+    '<!-- wp:group {"className":"acm-opentable"} --><div class="wp-block-group acm-opentable"><!-- wp:group {"className":"ot-form"} --><div class="wp-block-group ot-form"></div><!-- /wp:group --></div><!-- /wp:group --><!-- wp:group {"className":"jr-band"} --><div class="wp-block-group jr-band"></div><!-- /wp:group -->'
+  const button =
+    '<!-- wp:buttons --><div class="wp-block-buttons"><!-- wp:button --><div class="wp-block-button"><a class="wp-block-button__link wp-element-button" href="tel:+19174643769">Call 917.464.3769</a></div><!-- /wp:button --></div><!-- /wp:buttons -->'
+  const before = inventory(empty)
+  const filled = empty.replace(
+    '<div class="wp-block-group ot-form"></div>',
+    `<div class="wp-block-group ot-form">${button}</div>`
+  )
+  assert.equal(compareAgentInventory(before, inventory(filled)).pass, true)
+  const band = empty.replace(
+    '<div class="wp-block-group jr-band"></div>',
+    `<div class="wp-block-group jr-band">${button}</div>`
+  )
+  assert.equal(compareAgentInventory(before, inventory(band)).pass, false)
+  const gone = empty.replace(
+    '<!-- wp:group {"className":"ot-form"} --><div class="wp-block-group ot-form"></div><!-- /wp:group -->',
+    ''
+  )
+  assert.equal(compareAgentInventory(before, inventory(gone)).pass, false)
+})
+
+// Offline/error pages put a full stop after emphasized text, as its own text node.
+test('punctuation beside rewritten inline words is copy; its containing native frame still counts', () => {
+  const page = (content) => ({
+    complete: true,
+    records: [
+      {
+        key: 'post/119',
+        identity: { kind: 'post', id: 119 },
+        publication: {},
+        routes: [],
+        relations: {},
+        editorialFields: ['post_content'],
+        data: { post_content: content }
+      }
+    ]
+  })
+  const before = page(
+    '<center>Each <strong>JA Joomla Template</strong> has its own <strong>Offline page style</strong>.</center>'
+  )
+  assert.equal(
+    compareAgentInventory(before, page('<center>The bakery <strong>will be back</strong> soon.</center>'))
+      .pass,
+    true
+  )
+  assert.equal(
+    compareAgentInventory(before, page('<center>The bakery will be back soon.</center>')).pass,
+    true
+  )
+  assert.equal(compareAgentInventory(before, page('<div>The bakery will be back soon.</div>')).pass, false)
+  assert.equal(
+    compareAgentInventory(before, page('<center>The bakery will be back soon.</center><p>New frame</p>'))
+      .pass,
+    false
+  )
+})
+
+test('Joomla article image alt and caption are copy; alignment, keys and types remain structure', () => {
+  const inventory = (images) => ({
+    complete: true,
+    records: [
+      {
+        key: 'article/1',
+        identity: { kind: 'article', id: 1 },
+        publication: { state: 1 },
+        routes: ['/news/example'],
+        relations: {},
+        editorialFields: ['title'],
+        data: { title: 'A story', images: JSON.stringify(images) }
+      }
+    ]
+  })
+  const images = {
+    image_intro: 'images/a.jpg',
+    image_intro_alt: '',
+    image_intro_caption: '',
+    image_fulltext: 'images/b.jpg',
+    image_fulltext_alt: '',
+    image_fulltext_caption: '',
+    float_intro: 'left'
+  }
+  const before = inventory(images)
+  const edited = {
+    ...images,
+    image_intro_alt: 'Oysters at Via Carota',
+    image_intro_caption: 'At the table',
+    image_fulltext_alt: 'A bowl of artichokes',
+    image_fulltext_caption: 'Seasonal vegetables'
+  }
+  assert.equal(compareAgentInventory(before, inventory(edited)).pass, true)
+  assert.equal(
+    compareAgentInventory(inventory(edited), inventory({ ...edited, image_intro_alt: 'Fresh oysters' })).pass,
+    true
+  )
+  for (const changed of [
+    { ...edited, float_intro: 'right' },
+    { ...edited, image_intro_alt: true },
+    { ...edited, arbitrary_layout: 'different' }
+  ])
+    assert.equal(compareAgentInventory(before, inventory(changed)).pass, false)
+  const removed = { ...edited }
+  delete removed.image_fulltext_caption
+  assert.equal(compareAgentInventory(before, inventory(removed)).pass, false)
 })

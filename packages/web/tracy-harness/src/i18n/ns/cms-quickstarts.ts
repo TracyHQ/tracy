@@ -1,4 +1,4 @@
-/** The Quickstarts screen: every release on ja-products, and one release with its setting and sites. */
+/** The Quickstarts screen: every release on joomlart-products, and one release with its setting and sites. */
 export const NS = 'cms-quickstarts'
 
 /** Files whose visible words belong to this namespace (paths under `src/`; the gate scans them). */

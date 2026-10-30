@@ -3,7 +3,7 @@
  * PAGE-1, PAGE-2, PAGE-4, PAGE-5, PAGE-7, PAGE-8, LANG-1, LANG-2, LANG-3, LANG-5, called directly.
  *
  * Fixtures (`fixtures/template-customization-question-readiness/b/`) are cut from the real release
- * assets of `JoomlArt-Products/ja-products` (09/10/2026): settings and page lists byte for byte;
+ * assets of `JoomlArt-Products/joomlart-products` (09/10/2026): settings and page lists byte for byte;
  * demo databases cut to the rows the rules read (articles and modules keep no text, other editions
  * one row each); theme zips, webroots and the EmDash source zip cut to the files the rules read
  * (the EmDash seed keeps two default-locale entries per collection, values shortened). Contracts are
@@ -11,7 +11,7 @@
  * (/contact, /home/home-2, /pages/j-pages/typography), for PAGE-5.
  */
 import assert from 'node:assert/strict'
-import { cpSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
+import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
@@ -344,6 +344,29 @@ test('PAGE-4: Tracy Business WordPress, JA Essence Joomla and Tracy Business EmD
     const result = await run(page4NoDeadLinks, tag)
     assert.equal(result.status, 'pass', result.message)
   }
+})
+
+test("PAGE-4: a link slot under a published component item is that component's page; under a heading it leads nowhere", async () => {
+  // The JA Essence 1.0.2 contract with three link slots changed in memory: a VirtueMart style address
+  // under the published Login Form item (Joomla hands the rest of the path to com_users), the same
+  // under the Pages heading, and one under no item at all (JA Cagox module-134 links the shop's terms
+  // of service this way: /index.php/shop/all-categories/vendor/<vendor>?layout=tos answers 200).
+  const contracts = contractsWithout('joomla', 'ja-essence/j6/1.0.2', [])
+  const file = path.join(
+    [...contracts.values()].find((c) => c.id === 'ja-essence/j6/1.0.2').dir,
+    'content-map.json'
+  )
+  const map = JSON.parse(readFileSync(file, 'utf8'))
+  const links = map.slots.filter((s) => s.type === 'url')
+  links[0].sample = '/index.php/pages/user/login-form/vendor/demo-store?layout=tos'
+  links[1].sample = '/index.php/pages/vendor/demo-store?layout=tos'
+  links[2].sample = '/index.php/no-such-page/vendor'
+  writeFileSync(file, JSON.stringify(map))
+  const result = await run(page4NoDeadLinks, ESSENCE_J6, { contracts })
+  assert.equal(result.status, 'fail')
+  assert.ok(!result.message.includes(links[0].key), result.message)
+  assert.match(result.message, new RegExp(`${links[1].key.replace('.', '\\.')} → /index\\.php/pages/vendor`))
+  assert.match(result.message, new RegExp(`${links[2].key.replace('.', '\\.')} → /index\\.php/no-such-page`))
 })
 
 // PAGE-5

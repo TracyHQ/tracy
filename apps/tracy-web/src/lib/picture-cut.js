@@ -78,10 +78,13 @@ export async function demoTransparency(bytes) {
   }
 }
 
-/** Where a crop of `box` sits inside `width × height` for an anchor. */
-function placeOf(width, height, box, anchor) {
+/**
+ * Where a crop of `box` sits inside `width × height` for an anchor, or at `share` of the free room (a subject crop, #136:
+ * the fill plan placed it around the subject and every face, as a share so a smaller copy keeps the same place).
+ */
+function placeOf(width, height, box, anchor, share = null) {
   const free = { x: width - box.width, y: height - box.height }
-  const at = { x: 0.5, y: 0.5 }
+  const at = share ? { x: share.x, y: share.y } : { x: 0.5, y: 0.5 }
   if (anchor === 'centre-low') at.y = 0.6
   if (anchor === 'left') at.x = 0
   if (anchor === 'right') at.x = 1
@@ -101,7 +104,8 @@ function placeOf(width, height, box, anchor) {
  * (q. patisserie, local round 24, 25/10/2026: a PNG logo became a black block in a light header).
  * @param {Uint8Array} bytes
  * @param {{aspect: number, source: {width: number, height: number}, output: {width: number, height: number},
- *   strategy: 'attention' | 'entropy' | 'centre' | 'anchor', anchor?: string}} crop
+ *   strategy: 'attention' | 'entropy' | 'centre' | 'anchor' | 'subject', anchor?: string,
+ *   at?: {x: number, y: number}}} crop
  * @param {{keepAlpha?: boolean}} [opts]
  * @returns {Promise<{bytes: Buffer, ext: 'jpg' | 'png', width: number, height: number, sha256: string, rect: object | null}>}
  */
@@ -133,7 +137,8 @@ export async function cutForPlace(bytes, crop, { keepAlpha = false } = {}) {
         .toBuffer()
     )
   } else {
-    rect = placeOf(width, height, box, crop.strategy === 'anchor' ? crop.anchor : 'centre')
+    const share = crop.strategy === 'subject' ? crop.at : null
+    rect = placeOf(width, height, box, crop.strategy === 'anchor' ? crop.anchor : 'centre', share)
     image = sharp(await image.extract(rect).toBuffer())
   }
   // Only a cut-out stays PNG: an opaque photo that merely carries an alpha channel is a JPEG, or it weighs megabytes
@@ -241,3 +246,5 @@ export async function placeholderPicture({ width, height, colours = [] }) {
   const out = await sharp(Buffer.from(svg)).resize(width, height, { fit: 'fill' }).jpeg(JPEG).toBuffer()
   return { bytes: out, ext: 'jpg', width, height, sha256: createHash('sha256').update(out).digest('hex') }
 }
+
+export { initialsAvatar } from './initials-avatar.js'

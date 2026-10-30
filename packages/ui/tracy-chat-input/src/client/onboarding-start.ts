@@ -29,7 +29,8 @@ export function openOnboardingStart(
   right: SidebarRight | undefined,
   action: StartAction,
   question = '',
-  platform?: StartPlatform
+  platform?: StartPlatform,
+  chatDraft?: unknown
 ): void {
   if (!sidebar) return
   if (action === 'templates') {
@@ -40,6 +41,11 @@ export function openOnboardingStart(
   const picked = action === 'create' ? (platform ?? platformOfQuestion(question)) : undefined
   openTabWithMeta(sidebar, right, {
     type: 'tracy:add-site',
-    meta: { origin: action, pressedAt: Date.now(), ...(picked ? { platform: picked } : {}) }
+    meta: {
+      origin: action,
+      pressedAt: Date.now(),
+      ...(picked ? { platform: picked } : {}),
+      ...(chatDraft ? { chatDraft } : {})
+    }
   })
 }

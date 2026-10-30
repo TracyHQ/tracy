@@ -25,8 +25,8 @@
  * refuses a copy that moved since its preview.
  */
 import { randomUUID } from 'node:crypto'
-import { audit, auditSiteWrite, releaseWriteLease, takeWriteLease } from './store.js'
-import { SYNC_PLATFORMS, lastJson } from './live-sync.js'
+import { audit, auditSiteWrite, releaseWriteLease, siteByKey, takeWriteLease } from './store.js'
+import { SYNC_PLATFORMS, lastJson, phpTooOldOf } from './live-sync.js'
 import {
   PREVIEW_TTL_MS,
   PUSH_MAX_ITEMS,
@@ -58,7 +58,8 @@ export function livePush({
   fetchImpl = fetch,
   sync,
   now = Date.now,
-  watchEveryMs = 30_000
+  watchEveryMs = 30_000,
+  resumeOnStart = false
 }) {
   async function latest(siteKey) {
     const { rows } = await pool.query(
@@ -222,15 +223,16 @@ export function livePush({
     if (newest.state !== 'previewed')
       return { refused: { code: 'PREVIEW_NOT_READY', state: newest.state }, status: 409 }
     if (expired(newest, now())) return { refused: { code: 'PREVIEW_EXPIRED' }, status: 409 }
-    const shown = previewOf(newest.preview)
-    // Over the host's limit is not refused: it writes the first ones and leaves the rest for the next push.
+    // Counted over the whole changeset (`pushable`), not the items the answer lists. Over the host's
+    // limit is not refused: it writes the first ones and leaves the rest for the next push.
+    const { pushable } = previewOf(newest.preview)
     const count =
-      shown.add.length +
-      shown.change.length +
-      shown.files.length +
-      shown.settings.length +
-      (deletes ? shown.remove.length : 0) +
-      (php ? shown.php.length : 0)
+      pushable.add +
+      pushable.change +
+      pushable.files +
+      pushable.settings +
+      (deletes ? pushable.remove : 0) +
+      (php ? pushable.php : 0)
     if (count === 0) return { refused: { code: 'PUSH_NOTHING' }, status: 409 }
     const busy = await lease(site, previewId, email)
     if (busy) return busy
@@ -242,9 +244,9 @@ export function livePush({
     // Claimed before the job, so a second press (another tab) finds it running, not previewed.
     const { rows: claimed } = await pool.query(
       `update site_push set state = 'running', phase = 'apply', step = 'starting', deletes = $2,
-              pushed_by = $3, error = null, updated_at = now()
+              pushed_by = $3, php = $4, error = null, updated_at = now()
         where id = $1 and state = 'previewed' returning *`,
-      [previewId, deletes === true, email ?? null]
+      [previewId, deletes === true, email ?? null, php === true]
     )
     if (!claimed.length) {
       await release(site, previewId)
@@ -340,6 +342,33 @@ export function livePush({
     setTimeout(tick, watchEveryMs).unref?.()
   }
 
+  /** `settle`'s second start of a lost apply or undo: the started row, or null to end it as interrupted. */
+  async function resumeLost(site, row) {
+    if (!['apply', 'undo'].includes(row.phase) || (row.resumed ?? 0) >= 1) return null
+    const email = (row.phase === 'apply' ? row.pushed_by : row.undone_by) ?? undefined
+    const door = await liveDoor(site, email)
+    if (door.refused) return null
+    const options = row.phase === 'apply' ? { deletes: row.deletes === true, php: row.php === true } : {}
+    const started = await hostJob(
+      site,
+      jobBody(row.phase, { id: row.id, ...door, ...options, byEmail: email })
+    )
+    if (started.error) return null
+    const { rows } = await pool.query(
+      `update site_push set host_job = $2, resumed = resumed + 1, step = 'starting', updated_at = now()
+        where id = $1 and state = 'running' and host_job = $3 returning *`,
+      [row.id, started.jobId, row.host_job]
+    )
+    if (!rows.length) return null
+    await takeWriteLease(pool, {
+      siteKey: site.site_key,
+      sessionId: leaseOf(row.id),
+      actor: row.created_by ?? 'push'
+    })
+    watch(site, row.id)
+    return rows[0]
+  }
+
   /** A running row read back from the host: its step while it runs, its answer once it ended. */
   async function settle(site, row) {
     if (row.state !== 'running') return row
@@ -365,6 +394,14 @@ export function livePush({
         .findLast((s) => pushStageOf(s))
       const stage = step ? pushStageOf(step) : null
       return stage && stage !== row.step ? update(row.id, { step: stage }) : row
+    }
+    // A write or an Undo whose job the host lost (it restarted mid-run): the same job again, once, with
+    // the same push id — the host goes on from its write journal, never writes an item twice, and ends
+    // with the id map, the push's record and its Sync from live as a whole run does (#122). The lease
+    // stays the push's in between.
+    if (job.state === 'failed' && job.orphanedAt != null) {
+      const again = await resumeLost(site, row)
+      if (again) return again
     }
     // A job that ended with no answer of its own still said why in its progress
     // (`==> [Ns] <phase> stopped: CODE: why`, webroot-live-push.sh `said_stop`): kept as its answer.
@@ -567,7 +604,30 @@ export function livePush({
     }
   }
 
-  return { preview, apply, undo, read, latest, unavailable }
+  /**
+   * After a restart, every push still running is read back from its host job at once, then watched
+   * again: the read renews the site's write lease while the job runs (stale after 90 s with nobody
+   * renewing it, the chat could write while the job still did, #123) and releases it, or settles the
+   * row, once the job has ended or is lost. Only the process that serves the doors does this
+   * (`resumeOnStart`); the cron's instance does not.
+   */
+  async function resume() {
+    const { rows } = await pool.query(`select id, site_key from site_push where state = 'running'`)
+    for (const row of rows) {
+      const site = await siteByKey(pool, row.site_key)
+      if (!site) continue
+      try {
+        await read(site)
+      } catch {
+        // the host does not answer yet: the watch below asks again
+      }
+      watch(site, row.id)
+    }
+    return rows.length
+  }
+
+  if (resumeOnStart) setTimeout(() => void resume().catch(() => {}), 0).unref?.()
+  return { preview, apply, undo, read, latest, unavailable, resume }
 }
 
 /**
@@ -630,15 +690,11 @@ export function syncAnswerOf(s, pushId) {
 const json = (value) =>
   JSON.stringify(value ?? null, (_k, v) => (typeof v === 'string' ? v.replaceAll('\0', '�') : v))
 
+// Totals over the whole changeset, not the capped lists the answer carries.
 const counts = (p) => ({
-  add: p.add.length,
-  change: p.change.length,
-  remove: p.remove.length,
-  files: p.files.length,
-  settings: p.settings.length,
-  php: p.php.length,
-  unsupported: p.unsupported.length,
-  liveChanged: p.liveChanged.length
+  ...p.pushable,
+  unsupported: p.unsupportedTotal,
+  liveChanged: p.liveChangedTotal
 })
 
 /** A preview past its time. */
@@ -649,6 +705,9 @@ function expired(row, at) {
 /** A push whose writes reached the live site and have not been undone. */
 function undoableRow(row) {
   if (!['pushed', 'failed'].includes(row.state) || row.phase === 'preview') return false
+  // An Apply whose job was lost twice answered nothing, yet may have written: the host's Undo takes
+  // back what its journal lists, or answers that nothing was written (#122).
+  if (row.state === 'failed' && row.phase === 'apply' && row.error === 'PUSH_INTERRUPTED') return true
   return resultOf(row.result).pushed.length > 0
 }
 
@@ -665,8 +724,14 @@ export function view(row, { now = Date.now(), undoable = false } = {}) {
     errorDetail: row.error
       ? failureDetailOf(row.phase === 'preview' ? row.preview : row.phase === 'apply' ? row.result : null)
       : null,
+    // LIVE_PHP_TOO_OLD: the live site's PHP and the one Claude Cowork needs (`live-sync.js` phpTooOldOf).
+    php:
+      row.error === 'LIVE_PHP_TOO_OLD'
+        ? phpTooOldOf(row.phase === 'preview' ? row.preview : row.phase === 'apply' ? row.result : null)
+        : null,
     undoError: row.undo_error ?? null,
     undoErrorDetail: row.undo_error ? failureDetailOf(row.undo) : null,
+    undoPhp: row.undo_error === 'LIVE_PHP_TOO_OLD' ? phpTooOldOf(row.undo) : null,
     startedAt: new Date(row.created_at).toISOString(),
     updatedAt: new Date(row.updated_at).toISOString(),
     startedBy: row.created_by ?? null,

@@ -65,6 +65,8 @@ ambiguous, and there is no way to detect it by machine.
 | [0036](0036-website-opportunities-independent-public-repo.md) | Website Opportunities is an independent public repo (Apache-2.0): library + bin, one codebase, Tracy is the builder adapter and the default hub of the shared research store | (binding) |
 | [0037](0037-place-profile-is-template-independent.md) | The place profile is sourced facts, independent of the template (`place-profile` 1.0, coverage, slot roles attached at packaging time, wording written at build time); a slot missing facts keeps the full template layout | (binding) — **decision 5 superseded by 0038** |
 | [0038](0038-slot-roles-live-in-content-map.md) | Slot roles live on each slot of the content map; the Road to live checks them under Content coverage; released contracts are never edited | (binding) |
+| [0039](0039-slot-fit-lives-in-content-map.md) | Slot fit (box, kind, transparency, text limits) lives on each slot of the content map, measured at capture; a picture's keep flag follows its measured kind | (binding) — **decision 3 superseded by 0040 for `place-content-roles/3` maps** |
+| [0040](0040-place-content-roles-v3-role-is-the-single-keep-decider.md) | Place content roles v3: new roles, the decorative picture split, repeatable lists; the slot role is the only decider of keep or replace, `customize` and `fit.replace` derive from it | (binding) |
 
 ## Inheritance — `tracy-infra` ADRs still binding here
 

@@ -7,13 +7,25 @@
 // evidence, and a cut-out — a transparent PNG replaced by a rectangular photo shows a box in the middle of the design. A
 // PNG whose transparency was not measured counts as a cut-out until it is.
 
+import { PICTURE_KINDS, slotFitOf } from './content-map-fit.mjs'
+
+// Each rule names the kind of picture it protects (`protectedPicture`): every build path keeps these as the template drew them.
 const NEVER = [
-  [/\bmaps?\b|google\.[a-z.]+\/maps/i, 'a map: a picture of a place would invent one'],
-  [/\blogos?\b|hp-brand|\bbrand\b|favicon/i, 'a logo or mark: a photo of it would invent another brand'],
-  [/avatars?|author-img|\bauthor\b|testimonial|\bfaces?\b/i, 'a face (avatar): somebody’s own picture'],
-  [/\bicons?\b|\bflags?\b|sprite|\bbadges?\b|signature|partners?|clients?/i, 'an icon or mark'],
-  [/decor|\bshapes?\b|pattern|\bmask\b|ornament|cut-?out/i, 'decoration, not a photograph'],
-  [/\b404\b|offline|error[- ]page|erro-page/i, 'an error or offline page']
+  ['map', /\bmaps?\b|google\.[a-z.]+\/maps/i, 'a map: a picture of a place would invent one'],
+  [
+    'logo',
+    /\blogos?\b|hp-brand|\bbrand\b|favicon/i,
+    'a logo or mark: a photo of it would invent another brand'
+  ],
+  [
+    'avatar',
+    /avatars?|author-img|\bauthor\b|testimonial|\bfaces?\b/i,
+    'a face (avatar): somebody’s own picture'
+  ],
+  ['signature', /signature/i, 'a signature: somebody’s own hand'],
+  ['icon', /\bicons?\b|\bflags?\b|sprite|\bbadges?\b|partners?|clients?/i, 'an icon or mark'],
+  ['decoration', /decor|\bshapes?\b|pattern|\bmask\b|ornament|cut-?out/i, 'decoration, not a photograph'],
+  ['error-page', /\b404\b|offline|error[- ]page|erro-page/i, 'an error or offline page']
 ]
 
 // Role by the words of a slot, first match wins; tested on the slot's own name, then its section, then the file.
@@ -121,16 +133,50 @@ function roleOf(slot, file) {
   return 'section'
 }
 
+/**
+ * Whether a demo picture is one no build path replaces, and why: the slot is only declared (`customize: "keep"`), its
+ * words or file say it is a map, a logo, a face, a signature, an icon or decoration, it is drawn (SVG), it is shown
+ * smaller than an icon, or it is a cut-out (a PNG measured transparent, or not measured at all). Null for a photograph.
+ * @param {{label?: string, customize?: unknown, target?: {block?: string}} | null | undefined} slot
+ * @param {string} file - the demo file, as `fileOf` reads it
+ * @param {{width?: number, height?: number, alpha?: boolean} | null} [demo] - what is known of the demo file
+ * @returns {{kind: string, reason: string} | null}
+ */
+export function protectedPicture(slot, file, demo = null) {
+  // A content map with Slot fit (ADR 0039) says what the picture is, measured at capture: no name or file guess below.
+  // A well-formed fit keeps `customize: "keep"` in step with its kind, so a photo it declares is never a kept slot.
+  const fit = slot ? slotFitOf({ type: 'image', ...slot }) : null
+  if (fit?.kind)
+    return fit.replace === 'photo' ? null : { kind: fit.kind, reason: PICTURE_KINDS[fit.kind].what }
+  if (slot?.customize === 'keep')
+    return { kind: 'keep', reason: 'a slot the template only declares (customize "keep"): its picture stays' }
+  const { section, name } = partsOf(slot ?? {})
+  const words = `${name} ${section} ${slot?.target?.block ?? ''} ${file}`
+  for (const [kind, re, reason] of NEVER) if (re.test(words)) return { kind, reason }
+  if (/\.svg$/i.test(file)) return { kind: 'icon', reason: 'a drawing (SVG), not a photograph' }
+  if (demo?.width && demo?.height && Math.max(demo.width, demo.height) < ICON_PX)
+    return { kind: 'icon', reason: `an icon (smaller than ${ICON_PX}px)` }
+  if (/\.png$/i.test(file)) {
+    if (demo?.alpha === true)
+      return { kind: 'cutout', reason: 'a cut-out (transparent PNG): a photograph would show a box' }
+    if (demo?.alpha !== false)
+      return { kind: 'cutout', reason: 'a PNG that may be a cut-out: its transparency was not measured' }
+  }
+  return null
+}
+
 function neverOf(slot, file, demo) {
   if (slot.requiresEvidence) return 'a fact that needs evidence (a real person or record)'
-  const { section, name } = partsOf(slot)
-  const words = `${name} ${section} ${slot.target?.block ?? ''} ${file}`
-  for (const [re, reason] of NEVER) if (re.test(words)) return reason
   if (/^https?:/i.test(file)) return 'not a file of the site'
-  if (demo && Math.max(demo.width, demo.height) < ICON_PX) return `an icon (smaller than ${ICON_PX}px)`
-  if (/\.png$/i.test(file)) {
-    if (demo?.alpha === true) return 'a cut-out (transparent PNG): a photograph would show a box'
-    if (demo?.alpha !== false) return 'a PNG that may be a cut-out: its transparency was not measured'
+  return protectedPicture(slot, file, demo)?.reason ?? null
+}
+
+/** The demo file as the content map's Slot fit measured it (ADR 0039), or null. */
+function declaredSource(slots) {
+  for (const slot of slots) {
+    const fit = slotFitOf(slot)
+    if (fit?.source?.width && fit?.source?.height)
+      return { width: fit.source.width, height: fit.source.height, alpha: fit.transparent ?? undefined }
   }
   return null
 }
@@ -193,7 +239,7 @@ export function slotMap(
   const never = []
   const skipped = []
   for (const entry of files.values()) {
-    const measured = demo.get(entry.file) ?? null
+    const measured = demo.get(entry.file) ?? declaredSource(entry.slots)
     // The file the site serves beats what the contract declares: a sealed site checks the shape against the file.
     const size =
       measured?.width && measured?.height

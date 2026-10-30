@@ -50,7 +50,9 @@ let sites = 0
  *   onList(round, write) — called before each whole listing, may change files on disk;
  *   packLeavesOut — paths a whole pack leaves out (an engine that would not pack a protected file);
  *   modern — claude-cowork 0.24.51: `db.dump_many`, `site.fingerprint`, `files.list {hash:false}`,
- *     `files.hash`; dumpManyOnly — `db.dump_many` alone; manyRows(call) — rows per INSERT there.
+ *     `files.hash`; dumpManyOnly — `db.dump_many` alone; manyRows(call) — rows per INSERT there;
+ *   ranges — `db.range_checksums` and `db.dump_after` (keyed by the first column, an integer);
+ *     onAfter(table, db) — called on every db.dump_after (a live site writing while a range is read).
  */
 async function engine(options = {}) {
   const webroot = join(root, `site-${++sites}`)
@@ -76,6 +78,8 @@ async function engine(options = {}) {
     jos_session: [['s1', 'x']]
   }
   const seen = {
+    ranges: [],
+    after: [],
     limits: [],
     listLimits: [],
     lists: 0,
@@ -88,6 +92,9 @@ async function engine(options = {}) {
     packs: []
   }
   const hits = {}
+  // A table's definition, as `definitions` answers it (only when `options.definitions`), and the triggers.
+  const defs = {}
+  const triggers = []
   if (options.noise) db.jos_action_logs = [[1, 'login']]
   let manyCalls = 0
   let failures = options.fail503 ?? 0
@@ -108,7 +115,8 @@ async function engine(options = {}) {
         res.writeHead(status, {
           'content-type': typeof value === 'string' ? 'text/html' : 'application/json'
         })
-        res.end(typeof value === 'string' ? value : JSON.stringify(value))
+        // `phpNotice`: a host that prints PHP's notices ahead of every answer (PHP 8.5, display_errors on)
+        res.end(typeof value === 'string' ? value : (options.phpNotice ?? '') + JSON.stringify(value))
       }
       seen.hosts.push(req.headers.host)
       if (options.gatedFront && !req.url.includes('/administrator/'))
@@ -131,7 +139,10 @@ async function engine(options = {}) {
                     site_fingerprint: { version: options.fpVersion ?? 1, max_files: 50000 },
                     files_list: { stat: true, max_stat_limit: 5000 },
                     files_hash: { max_paths: 500 },
-                    ...(options.packPaths ? { files_pack: { max_paths: options.packPaths } } : {})
+                    ...(options.packPaths ? { files_pack: { max_paths: options.packPaths } } : {}),
+                    ...(options.ranges
+                      ? { db_range_checksums: { version: 1, max_starts: 5000, max_limit: 5000 } }
+                      : {})
                   }
                 : {})
             }
@@ -152,12 +163,9 @@ async function engine(options = {}) {
             const all = db[table]
             const start = row === null ? 0 : all.findIndex((r) => String(r[0]) === row) + 1
             if (start === 0) sql += `-- table \`${table}\`\nDROP TABLE IF EXISTS \`${table}\`;\n`
-            // As MariaDB's dumper writes it: the table, with the counter its next insert takes.
-            if (start === 0 && options.createTables)
-              sql += `CREATE TABLE \`${table}\` (\n  \`id\` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  PRIMARY KEY (\`id\`)\n) ENGINE=InnoDB AUTO_INCREMENT=${Math.max(0, ...all.map((r) => Number(r[0]) || 0)) + 1} DEFAULT CHARSET=utf8mb4;\n`
+            if (start === 0 && options.createTables) sql += `${createOf(table, all)};\n`
             const page = all.slice(start, start + per)
-            if (page.length)
-              sql += `INSERT INTO \`${table}\` VALUES ${page.map((r) => `(${r.map((v) => `'${v}'`).join(',')})`).join(',')};\n`
+            if (page.length) sql += insertOf(table, page)
             const done = start + page.length >= all.length
             progress.push({ index: at, table, rows: page.length, total: all.length, done })
             pages++
@@ -174,6 +182,34 @@ async function engine(options = {}) {
             done,
             stopped: done ? 'done' : 'bytes',
             progress
+          })
+        }
+        case 'db.range_checksums': {
+          // A range's checksum: its rows' count and a hash of them, "0:0" when it has none.
+          seen.ranges.push({ table: p.table, starts: p.starts.length })
+          const per = Array.from({ length: p.starts.length + 1 }, () => [])
+          for (const row of db[p.table]) per[p.starts.filter((s) => s <= Number(row[0])).length].push(row)
+          return send(200, {
+            ok: true,
+            table: p.table,
+            key: p.key,
+            ranges: per.map((rows) => (rows.length ? `${rows.length}:${sha1(JSON.stringify(rows))}` : '0:0')),
+            create: options.createTables ? createOf(p.table, db[p.table]) : ''
+          })
+        }
+        case 'db.dump_after': {
+          seen.after.push({ table: p.table, after: p.after, limit: p.limit })
+          options.onAfter?.(p.table, db)
+          const rows = db[p.table]
+            .filter((r) => p.after === null || Number(r[0]) > p.after)
+            .sort((a, b) => Number(a[0]) - Number(b[0]))
+            .slice(0, p.limit)
+          return send(200, {
+            ok: true,
+            table: p.table,
+            sql_b64: Buffer.from(insertOf(p.table, rows)).toString('base64'),
+            rows: rows.length,
+            last: rows.length ? String(rows.at(-1)[0]) : null
           })
         }
         case 'site.fingerprint': {
@@ -204,6 +240,12 @@ async function engine(options = {}) {
                         )
                       ])
                     ),
+              ...(options.definitions && p.definitions === true && p.checksums !== false
+                ? {
+                    definitions: Object.fromEntries(Object.keys(db).map((t) => [t, defs[t] ?? 'd0'])),
+                    triggers
+                  }
+                : {}),
               seconds: 0
             }
           })
@@ -341,6 +383,8 @@ async function engine(options = {}) {
         seen,
         db,
         hits,
+        defs,
+        triggers,
         write,
         webroot,
         url: `http://127.0.0.1:${server.address().port}/index.php?option=com_claudecowork&task=api.exec&format=json`
@@ -348,6 +392,15 @@ async function engine(options = {}) {
     )
   )
 }
+
+/** As MariaDB's dumper writes a table: keyed by `id`, with the counter its next insert takes. */
+const createOf = (table, rows) =>
+  `CREATE TABLE \`${table}\` (\n  \`id\` bigint(20) unsigned NOT NULL AUTO_INCREMENT,\n  PRIMARY KEY (\`id\`)\n) ENGINE=InnoDB AUTO_INCREMENT=${Math.max(0, ...rows.map((r) => Number(r[0]) || 0)) + 1} DEFAULT CHARSET=utf8mb4`
+/** One INSERT of `rows`, as the engine's SqlValue writes it ('' for none). */
+const insertOf = (table, rows) =>
+  rows.length
+    ? `INSERT INTO \`${table}\` VALUES ${rows.map((r) => `(${r.map((v) => `'${v}'`).join(',')})`).join(',')};\n`
+    : ''
 
 function pull(dir, endpoint, extra = {}) {
   return new Promise((resolve) => {
@@ -381,6 +434,21 @@ test('a first read: the database twice in agreement, the whole tree checked file
     assert.equal(manifest['index.php'], sha1(readFileSync(join(site.webroot, 'index.php'))))
     assert.equal(existsSync(join(dir, 'live', 'webroot.tar')), false, 'the tar is unpacked and gone')
     assert.ok(!(out + err).includes(TOKEN))
+  } finally {
+    site.server.close()
+  }
+})
+
+test('a host that prints PHP notices ahead of each answer is read all the same (PHP 8.5 curl_close)', async () => {
+  const site = await engine({
+    phpNotice:
+      '<br />\n<b>Deprecated</b>:  Function curl_close() is deprecated since 8.5, as it has no effect since PHP 8.0 in <b>/home/u1/public_html/plugins/Uploader.php</b> on line <b>53</b><br />\n'
+  })
+  try {
+    const dir = join(root, 'notice')
+    const { answer } = await pull(dir, site.url)
+    assert.equal(answer.ok, true, JSON.stringify(answer))
+    assert.equal((dump(dir).match(/INSERT INTO jos_content/g) ?? []).length, 5)
   } finally {
     site.server.close()
   }
@@ -849,6 +917,212 @@ test('only the tables that moved since the last applied read are read; the other
     assert.match(sqlText, /-- table `jos_session`/)
     assert.match(sqlText, /'login'/)
     assert.equal((sqlText.match(/^-- table `/gm) ?? []).length, 3, 'every table once')
+    // The dump is a gzip member a table, with its index: the next read takes an unmoved table's
+    // member byte for byte from this one, nothing unpacked or packed again.
+    const index = JSON.parse(readFileSync(join(dir, 'live', 'db.sql.gz.index.json'), 'utf8'))
+    assert.deepEqual(index.parts.map((p) => p.table).sort(), [
+      'jos_action_logs',
+      'jos_content',
+      'jos_session'
+    ])
+    site.db.jos_content[3][1] = 'Shop, again'
+    site.seen.many.length = 0
+    const third = join(root, 'reuse-3')
+    const again = await pull(third, site.url, {
+      TRACY_SYNC_FINGERPRINT_IN: join(dir, 'live', 'fingerprint.json'),
+      TRACY_SYNC_MANIFEST_IN: join(dir, 'live', 'manifest.json'),
+      TRACY_SYNC_DB_BASE: join(dir, 'live', 'db.sql.gz')
+    })
+    assert.equal(again.answer.ok, true, JSON.stringify(again.answer))
+    assert.deepEqual(site.seen.many, [['jos_content']])
+    const member = (file, idx, table) => {
+      const at = idx.parts.find((p) => p.table === table)
+      return readFileSync(file).subarray(at.offset, at.offset + at.length)
+    }
+    const index3 = JSON.parse(readFileSync(join(third, 'live', 'db.sql.gz.index.json'), 'utf8'))
+    assert.ok(
+      member(join(third, 'live', 'db.sql.gz'), index3, 'jos_action_logs').equals(
+        member(join(dir, 'live', 'db.sql.gz'), index, 'jos_action_logs')
+      ),
+      'the unmoved table is the last read’s member as it was'
+    )
+    const sql3 = dump(third)
+    assert.match(sql3, /'Shop, again'/)
+    assert.match(sql3, /'login'/)
+    assert.equal((sql3.match(/^-- table `/gm) ?? []).length, 3)
+  } finally {
+    site.server.close()
+  }
+})
+
+/** A content table big enough to be cut into ranges when ranges are this small. */
+const SMALL_RANGES = { TRACY_SYNC_RANGE_BYTES: '200', TRACY_SYNC_RANGE_MIN_BYTES: '100' }
+const sinceRead = (dir, extra = {}) => ({
+  ...SMALL_RANGES,
+  TRACY_SYNC_FINGERPRINT_IN: join(dir, 'live', 'fingerprint.json'),
+  TRACY_SYNC_MANIFEST_IN: join(dir, 'live', 'manifest.json'),
+  TRACY_SYNC_DB_BASE: join(dir, 'live', 'db.sql.gz'),
+  ...extra
+})
+const indexed = (dir, table) =>
+  JSON.parse(readFileSync(join(dir, 'live', 'db.sql.gz.index.json'), 'utf8')).parts.find(
+    (p) => p.table === table
+  )
+const contentRows = (dir) =>
+  dump(dir)
+    .split('-- table `jos_content`')[1]
+    .split('-- table `')[0]
+    .match(/\('[^']*','[^']*'\)/g)
+
+test('a big table that moved is read range by range: only the ranges that moved, and the rows a whole read brings', async () => {
+  const site = await engine({ modern: true, fpVersion: 2, createTables: true, ranges: true })
+  site.db.jos_content = Array.from({ length: 200 }, (_, i) => [i + 1, `title ${i + 1}`])
+  /** The same site read whole now, with nothing kept: what each read range by range must equal. */
+  const wholeNow = async (name) => {
+    const dir = join(root, name)
+    assert.equal((await pull(dir, site.url, SMALL_RANGES)).answer.ok, true)
+    return dir
+  }
+  try {
+    const first = join(root, 'ranges-1')
+    const one = await pull(first, site.url, SMALL_RANGES)
+    assert.equal(one.answer.ok, true, JSON.stringify(one.answer))
+    const kept = JSON.parse(readFileSync(join(first, 'live', 'db.sql.gz.ranges.json'), 'utf8'))
+    assert.deepEqual(Object.keys(kept.tables), ['jos_content'], 'the sessions move by themselves: no ranges')
+    const n = kept.tables.jos_content.ranges.length
+    assert.ok(n >= 10, `${n} ranges`)
+
+    // One title edited on the live site: its range alone is asked for again.
+    site.db.jos_content[149][1] = 'title 150, edited'
+    site.seen.many.length = 0
+    site.seen.after.length = 0
+    const second = join(root, 'ranges-2')
+    const two = await pull(second, site.url, sinceRead(first))
+    assert.equal(two.answer.ok, true, JSON.stringify(two.answer) + two.err)
+    assert.deepEqual(site.seen.many.flat(), [], 'jos_content is not read whole')
+    assert.equal(site.seen.after.length, 1, JSON.stringify(site.seen.after))
+    assert.match(two.err, new RegExp(`jos_content: 1 of ${n} range\\(s\\) moved, \\d+ row\\(s\\) read`))
+    let whole = await wholeNow('ranges-whole-2')
+    assert.equal(indexed(second, 'jos_content').digest, indexed(whole, 'jos_content').digest)
+    assert.deepEqual(contentRows(second), contentRows(whole), 'row for row, in key order')
+    assert.match(dump(second), /AUTO_INCREMENT=201 /, 'headed by the table as it is now')
+
+    // A row deleted in the middle and five added at the end: two ranges, from the read before.
+    site.db.jos_content.splice(29, 1)
+    for (let id = 201; id <= 205; id++) site.db.jos_content.push([id, `title ${id}`])
+    site.seen.many.length = 0
+    site.seen.after.length = 0
+    const third = join(root, 'ranges-3')
+    const three = await pull(third, site.url, sinceRead(second))
+    assert.equal(three.answer.ok, true, JSON.stringify(three.answer) + three.err)
+    assert.deepEqual(site.seen.many.flat(), [])
+    assert.match(three.err, new RegExp(`jos_content: 2 of ${n} range\\(s\\) moved`))
+    whole = await wholeNow('ranges-whole-3')
+    assert.equal(indexed(third, 'jos_content').digest, indexed(whole, 'jos_content').digest)
+    assert.deepEqual(contentRows(third), contentRows(whole))
+    assert.match(dump(third), /AUTO_INCREMENT=206 /)
+
+    // Most of the table rewritten: one whole read costs less than many range reads.
+    for (const row of site.db.jos_content) row[1] = `${row[1]} (new)`
+    site.seen.many.length = 0
+    const fourth = join(root, 'ranges-4')
+    const four = await pull(fourth, site.url, sinceRead(third))
+    assert.equal(four.answer.ok, true, JSON.stringify(four.answer))
+    assert.match(four.err, /jos_content: read whole \(\d+ of \d+ ranges moved\)/)
+    assert.deepEqual(site.seen.many.flat(), ['jos_content'])
+    whole = await wholeNow('ranges-whole-4')
+    assert.deepEqual(contentRows(fourth), contentRows(whole))
+  } finally {
+    site.server.close()
+  }
+  // An engine that does not answer ranges: the read is as before, and leaves none beside it.
+  const older = await engine({ modern: true, fpVersion: 2, createTables: true })
+  older.db.jos_content = Array.from({ length: 200 }, (_, i) => [i + 1, `title ${i + 1}`])
+  try {
+    const dir = join(root, 'ranges-none')
+    assert.equal((await pull(dir, older.url, SMALL_RANGES)).answer.ok, true)
+    assert.equal(existsSync(join(dir, 'live', 'db.sql.gz.ranges.json')), false)
+  } finally {
+    older.server.close()
+  }
+})
+
+test('a range the live site writes to while it is read is never half of two moments: the table is read again whole', async () => {
+  let writes = 0
+  const site = await engine({
+    modern: true,
+    fpVersion: 2,
+    createTables: true,
+    ranges: true,
+    // The customer saves the next article just as its range is read.
+    onAfter: (table, db) => {
+      if (table === 'jos_content' && writes++ === 0) db.jos_content[150][1] = 'title 151, saved meanwhile'
+    }
+  })
+  site.db.jos_content = Array.from({ length: 200 }, (_, i) => [i + 1, `title ${i + 1}`])
+  try {
+    const first = join(root, 'ranges-busy-1')
+    assert.equal((await pull(first, site.url, SMALL_RANGES)).answer.ok, true)
+    site.db.jos_content[149][1] = 'title 150, edited'
+    site.seen.many.length = 0
+    const second = join(root, 'ranges-busy-2')
+    const two = await pull(second, site.url, sinceRead(first))
+    assert.equal(two.answer.ok, true, JSON.stringify(two.answer) + two.err)
+    assert.equal(two.answer.dbRounds, 2, 'the checksum after the read saw the write')
+    assert.deepEqual(site.seen.many.flat(), ['jos_content'], 'read again whole')
+    const whole = join(root, 'ranges-busy-whole')
+    assert.equal((await pull(whole, site.url, SMALL_RANGES)).answer.ok, true)
+    assert.deepEqual(contentRows(second), contentRows(whole))
+    assert.match(dump(second), /'title 151, saved meanwhile'/)
+  } finally {
+    site.server.close()
+  }
+})
+
+test('a table the merge never takes (the engine’s undo log) is the last read’s: never read again, and alone it is no change', async () => {
+  const site = await engine({ modern: true, fpVersion: 2 })
+  site.db.jos_claudecowork_apply_log = [[1, 'push one']]
+  const never = {
+    TRACY_SYNC_IGNORED_TABLES: execFileSync(
+      'python3',
+      [
+        join(here, '..', 'scripts', 'lib', 'live_sync.py'),
+        'never-taken',
+        '--platform',
+        'joomla',
+        '--prefix',
+        'jos_'
+      ],
+      { encoding: 'utf8' }
+    ).trim()
+  }
+  try {
+    const first = join(root, 'never-1')
+    assert.equal((await pull(first, site.url, never)).answer.ok, true)
+    const since = (dir) => ({
+      ...never,
+      TRACY_SYNC_FINGERPRINT_IN: join(dir, 'live', 'fingerprint.json'),
+      TRACY_SYNC_MANIFEST_IN: join(dir, 'live', 'manifest.json'),
+      TRACY_SYNC_DB_BASE: join(dir, 'live', 'db.sql.gz')
+    })
+    // A Sync to live wrote on the live site: the engine logged its undo, and nothing else moved.
+    site.db.jos_claudecowork_apply_log.push([2, 'push two'])
+    site.seen.many.length = 0
+    const quiet = await pull(join(root, 'never-2'), site.url, since(first))
+    assert.equal(quiet.answer.unchanged, 'fingerprint', JSON.stringify(quiet.answer))
+    assert.deepEqual(site.seen.many, [], 'nothing read')
+    // The customer edits an article beside another logged write: only the article's table is read,
+    // the undo log is the first read's.
+    site.db.jos_claudecowork_apply_log.push([3, 'push three'])
+    site.db.jos_content[3][1] = 'Shop!'
+    const dir = join(root, 'never-3')
+    const { answer } = await pull(dir, site.url, since(first))
+    assert.equal(answer.ok, true, JSON.stringify(answer))
+    assert.deepEqual(site.seen.many, [['jos_content']])
+    const sqlText = dump(dir)
+    assert.match(sqlText, /'Shop!'/)
+    assert.match(sqlText, /'push one'/)
+    assert.doesNotMatch(sqlText, /'push three'/, 'the undo log as the first read held it')
   } finally {
     site.server.close()
   }
@@ -1486,9 +1760,14 @@ test('a WordPress site whose only moves since the last read are its own housekee
     // A post edited: its table has a rule too (auto-drafts), and the post differs row by row.
     site.db.wp_options[0][2] = 'Shop'
     site.db.wp_posts[0][5] = 'Hello again'
+    const asked = site.seen.many.length
     const post = await pull(join(root, 'wp-rows-post'), site.url, since())
     assert.equal(post.answer.unchanged, undefined, JSON.stringify(post.answer))
     assert.match(post.err, /wp_posts.*a row of substance differs/)
+    // The rows the comparison read are the read's own: each table asked for once, not again.
+    const tablesAsked = site.seen.many.slice(asked).flat()
+    assert.equal(tablesAsked.filter((t) => t === 'wp_posts').length, 1, JSON.stringify(tablesAsked))
+    assert.match(dump(join(root, 'wp-rows-post')), /'Hello again'/)
     // A table with no such rules moved: nothing to compare row by row, the site is read.
     site.db.wp_posts[0][5] = 'Hello'
     site.db.wp_terms[0][1] = 'News'
@@ -1496,6 +1775,46 @@ test('a WordPress site whose only moves since the last read are its own housekee
     assert.equal(term.answer.unchanged, undefined, JSON.stringify(term.answer))
     assert.doesNotMatch(term.err, /row by row/)
     assert.match(dump(join(root, 'wp-rows-term')), /'News'/)
+  } finally {
+    site.server.close()
+  }
+})
+
+test('a WordPress meta table moved only by an edit lock is compared range by range, and a real meta edit is read from those ranges, not whole', async () => {
+  const site = await wpEngine({ modern: true, fpVersion: 2, createTables: true, ranges: true })
+  site.db.wp_postmeta = Array.from({ length: 200 }, (_, i) => [
+    i + 1,
+    i + 1,
+    i % 2 ? '_edit_lock' : '_price',
+    `${i}`
+  ])
+  try {
+    const first = join(root, 'wp-ranges-1')
+    const one = await pull(first, site.url, wpRules(SMALL_RANGES))
+    assert.equal(one.answer.ok, true, JSON.stringify(one.answer))
+    const kept = JSON.parse(readFileSync(join(first, 'live', 'db.sql.gz.ranges.json'), 'utf8'))
+    assert.ok(kept.tables.wp_postmeta, Object.keys(kept.tables).join(', '))
+    const since = (extra = {}) => wpRules({ ...sinceRead(first), TRACY_SYNC_MANIFEST_IN: '', ...extra })
+    // wp-admin opened a post: its edit lock moved, nothing else.
+    site.db.wp_postmeta[99][3] = '1761300000:1'
+    site.seen.many.length = 0
+    site.seen.after.length = 0
+    const quiet = await pull(join(root, 'wp-ranges-quiet'), site.url, since())
+    assert.equal(quiet.answer.unchanged, 'rows', JSON.stringify(quiet.answer) + quiet.err)
+    assert.deepEqual(site.seen.many.flat(), [], 'wp_postmeta is not read whole to be compared')
+    assert.equal(site.seen.after.length, 1)
+    // A price edited: a row of substance, read from its range; the read goes on without asking again.
+    site.db.wp_postmeta[100][3] = '42.50'
+    site.seen.many.length = 0
+    site.seen.after.length = 0
+    const dir = join(root, 'wp-ranges-edited')
+    const edited = await pull(dir, site.url, since())
+    assert.equal(edited.answer.ok, true, JSON.stringify(edited.answer) + edited.err)
+    assert.equal(edited.answer.unchanged, undefined)
+    assert.deepEqual(site.seen.many.flat(), [], 'never read whole')
+    assert.equal(site.seen.after.length, 1, 'its range read once, for the comparison and the read both')
+    assert.match(dump(dir), /'42\.50'/)
+    assert.match(dump(dir), /'1761300000:1'/)
   } finally {
     site.server.close()
   }
@@ -1549,5 +1868,42 @@ test('a file the site deletes between listing it and reading it is gone, not a b
     assert.deepEqual(answer.moved, { files: ['templates/t4/css/custom.css'] })
   } finally {
     busy.server.close()
+  }
+})
+
+test('a table whose definition moved is read again though its rows did not; triggers and guessed log tables that moved are named (#120)', async () => {
+  const site = await engine({ modern: true, fpVersion: 2, noise: true, definitions: true })
+  const rule = {
+    prefix: 'jos_',
+    names: ['session'],
+    patterns: ['(^|_)(logs?|sessions?|cache|queue|hits)$'],
+    guessed: ['(^|_)(logs?|sessions?|cache|queue|hits)$']
+  }
+  const env = (first) => ({
+    TRACY_SYNC_FINGERPRINT_IN: join(first, 'live', 'fingerprint.json'),
+    TRACY_SYNC_MANIFEST_IN: join(first, 'live', 'manifest.json'),
+    TRACY_SYNC_DB_BASE: join(first, 'live', 'db.sql.gz'),
+    TRACY_SYNC_IGNORED_TABLES: JSON.stringify(rule)
+  })
+  try {
+    const first = join(root, 'defs-1')
+    assert.equal(
+      (await pull(first, site.url, { TRACY_SYNC_IGNORED_TABLES: JSON.stringify(rule) })).answer.ok,
+      true
+    )
+    // The collation of jos_content changes on live; no row moves. A trigger is added, a log moves.
+    site.defs.jos_content = 'd1'
+    site.triggers.push({ name: 'shop_after_insert', table: 'jos_content', event: 'INSERT', timing: 'AFTER' })
+    site.db.jos_action_logs.push([2, 'logout'])
+    site.seen.many.length = 0
+    const { answer } = await pull(join(root, 'defs-2'), site.url, env(first))
+    assert.equal(answer.ok, true, JSON.stringify(answer))
+    assert.ok(site.seen.many.flat().includes('jos_content'), JSON.stringify(site.seen.many))
+    assert.deepEqual(answer.notCarried, {
+      triggers: [{ name: 'shop_after_insert', table: 'jos_content', event: 'INSERT', timing: 'AFTER' }],
+      tables: ['jos_action_logs']
+    })
+  } finally {
+    site.server.close()
   }
 })

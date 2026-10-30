@@ -368,19 +368,21 @@ export function replyOf(t) {
 }
 
 /**
- * Whether the undo engine (`POST /api/sites/:key/turns/undo`, `turn-undo.js`) undid this turn, as
- * it stamps `site_turn.undone_at` / `undo_complete` (migration 067): `{at, complete}` — `complete`
- * false when only part of the turn (its files or its content) went back — or null when never. The
- * Site changes row says "Undone" / "Partly undone" from it, in place of the files-only status the
- * reversal index gives (that index sees the commits the engine undid, not the content it reverted).
- * @param {{undone_at?: Date|string|null, undo_complete?: boolean|null}} t
+ * Whether the undo engine (`POST /api/sites/:key/turns/undo`, `turn-undo.js`) PROVABLY undid this turn,
+ * as it stamps `site_turn.undo_proven_at` / `undo_proven_complete` (migrations 182, 185): `{at, complete}` —
+ * `complete` false when no press undid all of it, only part (its files or its content) — or null when
+ * nothing of it is proven gone. A press whose outcome was only `unsure` (the host answered 202) stamps
+ * `undone_at` for the agent's notice, never this. The Site changes row says "Undone" / "Partly undone"
+ * from it, in place of the files-only status the reversal index gives (that index sees the commits the
+ * engine undid, not the content it reverted).
+ * @param {{undo_proven_at?: Date|string|null, undo_proven_complete?: boolean|null}} t
  * @returns {{at: string, complete: boolean} | null}
  */
 export function turnUndoneOf(t) {
-  if (t.undone_at === null || t.undone_at === undefined) return null
-  const at = t.undone_at instanceof Date ? t.undone_at : new Date(t.undone_at)
+  if (t.undo_proven_at === null || t.undo_proven_at === undefined) return null
+  const at = t.undo_proven_at instanceof Date ? t.undo_proven_at : new Date(t.undo_proven_at)
   if (Number.isNaN(at.getTime())) return null
-  return { at: at.toISOString(), complete: t.undo_complete === true }
+  return { at: at.toISOString(), complete: t.undo_proven_complete === true }
 }
 
 // ── Undone ──────────────────────────────────────────────────────────────────────────────────────

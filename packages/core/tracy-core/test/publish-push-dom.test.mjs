@@ -548,6 +548,30 @@ test('a push the live site refused for its switch says where to turn it on; a fa
     /“Allow PHP in template files” in the Claude Cowork options/
   )
 
+  // An Apply stopped after some writes by a live PHP too old for Claude Cowork: the partial result
+  // says which PHP it runs and which it needs, the code beside it for support.
+  await open(() =>
+    json(200, {
+      available: true,
+      push: row({
+        id: 'p8',
+        state: 'failed',
+        phase: 'apply',
+        error: 'LIVE_PHP_TOO_OLD',
+        php: { php: '7.3.33', min: '7.4.0' },
+        pushedAt: ago(1),
+        preview,
+        result: { ...result, failed: [] }
+      }),
+      lastPush: null
+    })
+  )
+  assert.equal(phase(), 'pushed')
+  assert.ok(
+    document.body.textContent.includes(t('sync.error.livePhpTooOld', { php: '7.3.33', min: '7.4.0' })),
+    document.body.textContent
+  )
+
   // A preview that stopped: its code and why, one line for support, on the Review step.
   const detail = 'SqlError: ERROR 1267 (HY000) at line 125: Illegal mix of collations'
   await open(() =>
@@ -824,6 +848,18 @@ test('the pure parts: phases from answers, the step each is drawn on, failure wo
   assert.equal(lib.pushStepOf('failed', row({ state: 'failed', phase: 'apply' })), 'send')
   assert.equal(lib.pushFailureText('PREVIEW_STALE', t), t('push.error.copyChanged'))
   assert.equal(lib.pushFailureText('LIVE_UNREACHABLE', t), t('push.error.liveUnreachable'))
+  for (const [code, key] of Object.entries({
+    LIVE_BLOCKED: 'sync.error.liveBlocked',
+    LIVE_PASSWORD_PROTECTED: 'sync.error.livePassword',
+    LIVE_RATE_LIMITED: 'sync.error.liveRateLimited',
+    TOKEN_REFUSED: 'sync.error.liveToken'
+  }))
+    assert.equal(lib.pushFailureText(code, t), t(key))
+  assert.equal(
+    lib.pushFailureText('LIVE_PHP_TOO_OLD', t, 200, { php: '7.3.33', min: '7.4.0' }),
+    t('sync.error.livePhpTooOld', { php: '7.3.33', min: '7.4.0' })
+  )
+  assert.equal(lib.pushFailureText('LIVE_PHP_TOO_OLD', t), t('sync.error.livePhpTooOldPlain'))
   assert.equal(lib.pushFailureText('NOT_PUSHED', t), t('push.error.notPushed'))
   assert.equal(lib.pushFailureText('WEIRD', t), t('push.failed', { error: 'WEIRD' }))
   assert.equal(lib.itemName({ id: 'x', kind: 'post', title: null }, t), 'Post')
@@ -861,4 +897,64 @@ test('the pure parts: phases from answers, the step each is drawn on, failure wo
       .note,
     t('push.reason.templateFilesOff')
   )
+})
+
+test('a preview capped at the host answer counts what Apply can write over the whole changeset', async () => {
+  // 500 conflicts were listed first by an older host: no pushable item in the lists, one in the totals.
+  const capped = {
+    ...PREVIEW,
+    add: [],
+    change: [],
+    remove: [],
+    liveChanged: [item('l1', 'Contact')],
+    itemsTotal: 501,
+    pushable: { add: 0, change: 1, remove: 0, files: 0, settings: 0, php: 0 },
+    liveChangedTotal: 500
+  }
+  const answer = (push) => ({ available: true, push, lastPush: null })
+  const no = { unreadable: false, confirming: false }
+  assert.equal(lib.pushPhaseOf(answer(row({ preview: capped })), no), 'review')
+  // Without the totals (a host before them), the lists decide, as before.
+  const { pushable: _p, liveChangedTotal: _l, ...old } = capped
+  assert.equal(lib.pushPhaseOf(answer(row({ preview: old })), no), 'nothing')
+
+  await open(() => json(200, { available: true, push: row({ preview: capped }), lastPush: null }))
+  assert.equal(phase(), 'review')
+  assert.match(text(), /Changed on your live site since the last sync \(500\)/)
+  await press(go())
+  assert.equal(phase(), 'confirm')
+  assert.match(text(), /1 change goes to your live site|1 changes go to your live site/)
+})
+
+test('Preview translates metadata subjects and keeps page types in every interface language', async () => {
+  const dictionaries = { en }
+  for (const language of ['vi', 'de', 'it', 'fr', 'nl', 'zh', 'es']) {
+    const relative =
+      language === 'vi'
+        ? 'packages/locale/tracy-locale-vi/vi/tracy-site-tabs.json'
+        : `packages/locale/tracy-locales/${language}/tracy-site-tabs.json`
+    dictionaries[language] = JSON.parse(
+      await (await import('node:fs/promises')).readFile(path.join(repo, relative), 'utf8')
+    )
+  }
+  for (const [language, words] of Object.entries(dictionaries)) {
+    const tr = (key) => words[key] ?? `missing:${key}`
+    for (const label of ['featuredImage', 'pageTemplate', 'altText']) {
+      const item = {
+        id: 'meta',
+        kind: 'postmeta',
+        what: 'pageDetail',
+        title: '_thumbnail_id',
+        label,
+        subject: 'About us'
+      }
+      assert.equal(lib.itemName(item, tr), `${words[`push.label.${label}`]} · About us`, language)
+      assert.ok(!lib.itemName(item, tr).includes('_thumbnail_id'), language)
+    }
+    assert.equal(
+      lib.itemLine({ id: 'post', kind: 'post', what: 'page', fields: ['post_title'] }, tr, true),
+      `${words['push.what.page']} · ${words['push.field.title']}`,
+      language
+    )
+  }
 })

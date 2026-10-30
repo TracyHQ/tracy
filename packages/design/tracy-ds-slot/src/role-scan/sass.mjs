@@ -66,9 +66,15 @@ export function compiledTwins(root, files) {
       )
       .find((s) => sources.has(s))
     const stem = f.rel.replace(/\.css$/i, '')
+    // a right-to-left build (`css/rtl/x.css`, `acm/<block>/css/rtl/style.css`) is the left-to-right
+    // source compiled again and flipped (T3's build_rtl: less/x.less, then the few overrides of
+    // less/rtl/x.less appended), so its source is the left-to-right one
+    const ltr = stem.replace(/(^|\/)css\/rtl\//, '$1css/')
     const guess = ['scss', 'less']
       .flatMap((ext) =>
-        [stem.replace(/^css\//, `${ext}/`).replace(/\/css\//, `/${ext}/`), stem].map((s) => `${s}.${ext}`)
+        [...new Set([ltr, stem])].flatMap((st) =>
+          [st.replace(/^css\//, `${ext}/`).replace(/\/css\//, `/${ext}/`), st].map((s) => `${s}.${ext}`)
+        )
       )
       .find((s) => sources.has(s))
     const twin = fromMap ?? guess

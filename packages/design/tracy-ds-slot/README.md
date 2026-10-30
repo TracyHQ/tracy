@@ -26,10 +26,10 @@ model and no rebuild**; when they pick none, the template keeps its own look. Pl
 | `src/bands.mjs` | Bands the template paints itself (dark hero, brand-colour band, footer, light panel) **wear the system's ground**: pick a system colour on which every text colour the band has still reads; the template's accent inside the band takes the system's accent; images, logos and text stay. Contract key `bands` (section below) |
 | `src/remnant.mjs` | The share of **area** (images excluded) still carrying the template's own colours under a system, read from screenshots — first screen and full page. `flow.mjs` writes it to the "Template colours left" column |
 | `scripts/bands.mjs` | Read the kept bands on the running default page: ground, text colours, accent-painted parts; `--draft` writes a draft `bands` into a contract that has none |
-| `scripts/sweep.mjs` | Every **released** quickstart of a CMS (releases on `ja-products`) through `pass-*.mjs` `--no-tokenize --bands`, measured with an OpenDesign system, **one stand at a time**; one `sweep.jsonl` line per result, a rerun resumes where it stopped |
+| `scripts/sweep.mjs` | Every **released** quickstart of a CMS (releases on `joomlart-products`) through `pass-*.mjs` `--no-tokenize --bands`, measured with an OpenDesign system, **one stand at a time**; one `sweep.jsonl` line per result, a rerun resumes where it stopped |
 | `scripts/lane.mjs` | **Measure one JA Joomla version with one command**, several lanes in parallel (measuring machine + Docker host): build overlay → verify → stand → flow over 15 systems → light/dark preview `--write` → score as /ops does → tear down. Section *Measuring with `lane.mjs`* below |
 | `scripts/lane-shell.mjs` | Child processes of one `lane.mjs` run: each step is a process group (local or on the Docker host); when the run dies, the whole tree + its Chrome is killed |
-| `scripts/template-css.mjs` | Compile a JA template's `css/*.css` from the ja-products source (T4 SCSS with sass 1.97.3, T3 LESS with lessc 4.2.0), compare with the shipped CSS (`same`), `--write` to write |
+| `scripts/template-css.mjs` | Compile a JA template's `css/*.css` from the joomlart-products source (T4 SCSS with sass 1.97.3, T3 LESS with lessc 4.2.0), compare with the shipped CSS (`same`), `--write` to write |
 
 **Rules:** source data is read-only · applied without a model · empty slot = old look (control measures 0
 difference) · no invented values. Templates that can wear a system today:
@@ -131,8 +131,8 @@ light ground. So every `ready` contract also has:
 
 ```sh
 # Joomla: list releases, download the webroot, count var(--ds-c- in the template's css, compare with the checked release
-gh release view quickstart/<slug>/j6 -R JoomlArt-Products/ja-products --json assets -q '.assets[].name'
-gh release download quickstart/<slug>/j6 -R JoomlArt-Products/ja-products -p '<slug>-j6-webroot-<v>.tar.gz' -D <empty dir>
+gh release view quickstart/<slug>/j6 -R JoomlArt-Products/joomlart-products --json assets -q '.assets[].name'
+gh release download quickstart/<slug>/j6 -R JoomlArt-Products/joomlart-products -p '<slug>-j6-webroot-<v>.tar.gz' -D <empty dir>
 tar -xzf <file> -C <dir> --include='*.css'   # then grep -o 'var(--ds-c-' per file, compare each file with the old release
 # EmDash: quickstart zip — src/lib/ds-slot.ts identical, same set of var(--ds-*) in the css, diff of src/ has no new colour classes
 # WordPress: gh release download wordpress-theme-<slug>-v<v> -R TracyHQ/claude-cowork — css still has var(--ds-c-, still has tracy_apply_inspiration
@@ -460,12 +460,12 @@ the measuring browsers run on the measuring machine, and `~/bin/imac-tunnel` for
 ```
 # the released version (unchanged): build from the release, measure, score
 node packages/design/tracy-ds-slot/scripts/lane.mjs ja-sensei 1.0.4
-# a fix in ja-products: overlay → release-batch build + verify → measure the new version
-node packages/design/tracy-ds-slot/scripts/lane.mjs ja-sensei ~/<ja-products worktree>/products/joomlart/paid-templates/ja_sensei/source
+# a fix in joomlart-products: overlay → release-batch build + verify → measure the new version
+node packages/design/tracy-ds-slot/scripts/lane.mjs ja-sensei ~/<joomlart-products worktree>/products/joomlart/paid-templates/ja_sensei/source
 # only re-score the measurement file already in the tree, build nothing
 node packages/design/tracy-ds-slot/scripts/lane.mjs ja-sensei 1.0.4 --judge-only
 # recompile CSS after editing scss/less (check `same` before --write: false = the shipped CSS was hand-edited)
-node packages/design/tracy-ds-slot/scripts/template-css.mjs <ja-products>/products/joomlart/paid-templates/ja_x/source [--files template] [--write]
+node packages/design/tracy-ds-slot/scripts/template-css.mjs <joomlart-products>/products/joomlart/paid-templates/ja_x/source [--files template] [--write]
 ```
 
 - **Lane = a slot on the Docker host.** The script claims `~/tracy-work/locks/slot-N` (`mkdir`, N = 1..5 by default,

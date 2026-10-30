@@ -305,6 +305,26 @@ test('controller: a background session opens when the side card shows it', async
   stop()
 })
 
+test('controller: a second call with identical questions reopens the form and clears the old answer', async () => {
+  const h = harness()
+  const stop = h.controller.start()
+  await h.ready()
+  const first = pending({ key: 'question:page:1' })
+  h.setPending({ s1: first })
+  h.controller.drafts.set(takeKey(first), { price: { selected: ['More'] } })
+  const second = pending({ key: 'question:page:2' })
+  h.setPending({ s1: second })
+  assert.equal(h.opens.length, 2, 'the new call is a new answer surface even when its wording is unchanged')
+  assert.deepEqual(
+    h.controller.drafts.get(takeKey(second)),
+    {},
+    'the first call does not select consent for the second'
+  )
+  h.setPending({ s1: { ...second } })
+  assert.equal(h.opens.length, 2, 're-reading the same call does not reopen it')
+  stop()
+})
+
 test('controller: a refused open takes nothing, so dsh’s card keeps the request', async () => {
   const h = harness({ allowed: false })
   const stop = h.controller.start()

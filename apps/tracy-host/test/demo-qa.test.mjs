@@ -9,6 +9,7 @@ import { test } from 'node:test'
 import { buildApp } from '../src/app.js'
 import {
   CHECK_IDS,
+  READ_AT_ONCE,
   baselineOf,
   checkContentReachable,
   checkContrastReadable,
@@ -21,7 +22,9 @@ import {
   checkNoCmsErrorLeak,
   checkNoDemoPictures,
   checkNoDemoWords,
+  checkNoEmptyBoxes,
   checkNoEmptyPictureSlots,
+  checkPhotosFit,
   checkNoGoogleReviewQuoted,
   checkPlacedPicturesVisible,
   checkCollectedUsed,
@@ -33,6 +36,7 @@ import {
   checkPagesLoad,
   checkStructureKept,
   contrastRatio,
+  overImageRatio,
   DEMO_FILLERS,
   DEMO_NEUTRAL_WORDS,
   cssTextProblems,
@@ -309,7 +313,7 @@ test("no-demo-pictures: a background drawn from the theme's own file is its desi
 })
 
 test("no-demo-pictures: a Media Library upload the hand-off never showed is the template's too — build 13's blog grid", () => {
-  // The Willow Nook local, build 13: the template's home showed four posts' cards (marketing-*.jpg); the agent's
+  // The Living Room local, build 13: the template's home showed four posts' cards (marketing-*.jpg); the agent's
   // turn reordered the posts and the grid then showed eight others, their pictures kept in the theme's
   // `jd_intro_image` meta (news-1.jpg…). No baseline named them, so the check passed them.
   const card = (/** @type {string} */ name, /** @type {number} */ post) => ({
@@ -460,17 +464,25 @@ test('no-demo-words: a category or tag the template named fails while the page s
     }).pass,
     true
   )
+  // Local round 35: the first label left names how this CMS renames one; the rest do not repeat it.
+  const emdash = checkNoDemoWords(
+    [page({ blocks: [], labels: labels('Engineering', 'Disclosures'), text: '' })],
+    { baseline, briefText, platform: 'emdash' }
+  )
+  assert.match(emdash.detail[0].fix, /taxonomy_update_term \{taxonomy, termSlug, label\}/)
+  assert.equal(emdash.detail[1].fix, undefined)
+  assert.equal(kept.detail[0].fix, undefined)
 })
 
 test('no-demo-words: a copyright line is the brief’s when its holder is the brief’s name; the template’s holder still fails', () => {
   const lines = [
-    'Copyright © 2026 The Larch House. All Rights Reserved.',
-    '© 2020–2026 The Larch House',
+    'Copyright © 2026 The Ridge House. All Rights Reserved.',
+    '© 2020–2026 The Ridge House',
     'Copyright © 2026 JA Restaurant. All Rights Reserved.',
     'Copyright © 2026. All Rights Reserved.'
   ]
   const baseline = { texts: lines.map(textKey) }
-  const briefText = 'The Larch House — deli, bar and café in Sa Pa. Phone +84 214 0000 111.'
+  const briefText = 'The Ridge House \u2014 deli, bar and caf\u00e9 in Sa Pa. Phone +84 214 0000 111.'
   const r = checkNoDemoWords([page({ blocks: lines.map((text) => ({ text })), text: '' })], {
     baseline,
     briefText
@@ -482,15 +494,16 @@ test('no-demo-words: a copyright line is the brief’s when its holder is the br
   // The holder must be the brief's name as whole words, not part of a longer one.
   const near = checkNoDemoWords([page({ blocks: [{ text: lines[0] }], text: '' })], {
     baseline,
-    briefText: 'The Larch Housewares — paper goods in Sa Pa.'
+    briefText: 'The Ridge Housewares — paper goods in Sa Pa.'
   })
   assert.equal(near.pass, false, JSON.stringify(near.detail))
 })
 
-test('facts-from-brief: a postcode before a place name is no price — build 13\'s "1454 København"', () => {
-  // The Willow Nook local, build 13: every post's footer read "Søbjørnsstræde 17, 1454 København" and the check
+test('facts-from-brief: a postcode before a place name is no price \u2014 build 13\'s "1454 K\u00f8benhavn"', () => {
+  // The Living Room local, build 13: every post's footer read "Larsbj\u00f8rnsstr\u00e6de 17, 1454 K\u00f8benhavn" and the check
   // took "1454 K" for a price of 1454k, since a JavaScript `\b` sees no word going on into "ø".
-  const text = 'Søbjørnsstræde 17, 1454 København, Denmark. Kaffe 45 kr, latte 5k, a 30K budget.'
+  const text =
+    'Larsbj\u00f8rnsstr\u00e6de 17, 1454 K\u00f8benhavn, Denmark. Kaffe 45 kr, latte 5k, a 30K budget.'
   assert.deepEqual(
     factsIn(text)
       .filter((f) => f.kind === 'price')
@@ -498,8 +511,8 @@ test('facts-from-brief: a postcode before a place name is no price — build 13\
     ['5k', '30K']
   )
   assert.equal(
-    checkFactsFromBrief([page({ text: 'Søbjørnsstræde 17, 1454 København' })], {
-      briefText: 'The Willow Nook, Søbjørnsstræde 17, 1454 København K.'
+    checkFactsFromBrief([page({ text: 'Larsbj\u00f8rnsstr\u00e6de 17, 1454 K\u00f8benhavn' })], {
+      briefText: 'The Living Room, Larsbj\u00f8rnsstr\u00e6de 17, 1454 K\u00f8benhavn K.'
     }).pass,
     true
   )
@@ -529,9 +542,9 @@ test('facts-from-brief: hours, prices, phones and a founding year the brief hold
   )
   assert.match(shown.detail[0].words, /Happy hour/)
   // a street number right after the brief's phone is no other phone (pilot 24/10/2026)
-  const street = 'Call (720) 555-0160 818 E. Elm, Los Angeles'
+  const street = 'Call (720) 330-2660 818 E. 3rd, Los Angeles'
   assert.equal(
-    checkFactsFromBrief([page({ text: street })], { briefText: 'Phone: (720) 555-0160' }).pass,
+    checkFactsFromBrief([page({ text: street })], { briefText: 'Phone: (720) 330-2660' }).pass,
     true
   )
   assert.equal(
@@ -563,7 +576,7 @@ test('facts: a run of years is no phone, and a phone never runs across a line br
   ])
     assert.deepEqual(phones(years), [], years)
   assert.deepEqual(phones('Call 0235 3910\n777 today'), ['02353910'], 'a line break ends a phone')
-  assert.deepEqual(phones('Call (720) 555-0160'), ['7205550160'])
+  assert.deepEqual(phones('Call (720) 330-2660'), ['7203302660'])
   assert.deepEqual(phones('Dubai +971 4 123 4567'), ['97141234567'])
   assert.deepEqual(phones('Office 04 123 4567'), ['041234567'])
   assert.deepEqual(phones('Office 04 3826 1234'), ['0438261234'], 'a short first group of a real phone stays')
@@ -602,14 +615,14 @@ test('collected-used: the main phone is required, the business’s other phones 
   )
   assert.deepEqual(both.detail, [])
   const onlyOther = checkCollectedUsed(
-    [page({ path: '/contact', text: 'Harbour Sport Club. Call +971 50 000 5678 or +91 124 555 0121.' })],
+    [page({ path: '/contact', text: 'Harbour Sport Club. Call +971 50 000 5678 or +91 124 401 0021.' })],
     { collected }
   )
   assert.deepEqual(
     onlyOther.detail.map((d) => [d.code, d.what, d.value]),
     [
       ['COLLECTED_NOT_SHOWN', 'phone', '+971 50 000 1234'],
-      ['COLLECTED_UNSOURCED', 'phone', '+91 124 555 0121']
+      ['COLLECTED_UNSOURCED', 'phone', '+91 124 401 0021']
     ]
   )
 })
@@ -760,6 +773,24 @@ test('cta-real: with the plan naming its contact page, a slug saying contact is 
   const ctas = [{ href: '/contact-offers/', text: 'Book a table', booking: true, button: true }]
   assert.equal(checkCtaReal([page({ ctas })]).pass, true)
   assert.equal(checkCtaReal([page({ ctas })], { contactPaths: ['/lien-he'] }).pass, false)
+  // Local round 35: the site's own reservation page takes a booking too (a theme prints the button, no door moves it).
+  for (const href of ['/contact/phone-reservation/', '/reservations', '/book-a-table/'])
+    assert.equal(
+      checkCtaReal([page({ ctas: [{ href, text: 'Book a table', booking: true, button: true }] })], {
+        contactPaths: ['/lien-he']
+      }).pass,
+      true,
+      href
+    )
+  assert.equal(
+    checkCtaReal(
+      [page({ ctas: [{ href: '/reservation-policy-pdf-and-more/x', text: 'Book', booking: true }] })],
+      {
+        contactPaths: ['/lien-he']
+      }
+    ).pass,
+    false
+  )
 })
 
 test('demoQaBody keeps the contact pages of the plan and drops anything that is not a site path', () => {
@@ -795,7 +826,7 @@ test('no-horizontal-scroll, no-third-party-demo, broken assets, CMS errors and r
     '[contact-form-7 id="12"]',
     'Price: NaN',
     'TPL_JA_RESTAURANT_READMORE',
-    'TamarelHoiAn\\nHoi An',
+    'LumoraHoiAn\\nHoi An',
     'Caf\\u00e9 open',
     'EUROPEAN DELI, CAFÉ\\NAND WINE BAR'
   ])
@@ -834,13 +865,447 @@ test('contrast-readable and no-text-overlap: white on white fails, text over a p
   assert.equal(checkNoTextOverlap([page({ overlaps: [] })]).pass, true)
 })
 
+// Plan "10/10" P0-5 (26/10/2026): words over a picture were left to the eye; local rounds 27–31 on WordPress failed
+// looks-finished on a white heading over a bright photo with no number the build could act on.
+test('contrast-readable judges words over a picture against the worst of what lies under them, at both widths', () => {
+  const white = [255, 255, 255, 1]
+  const dark = [36, 26, 18, 1]
+  const over = (fg, under, underPhone, extra = {}) => ({
+    where: 'heading',
+    fg,
+    bg: null,
+    overImage: true,
+    over: 0,
+    large: true,
+    selector: 'section.hero > h1',
+    text: 'Fresh cookies',
+    under,
+    underPhone,
+    ...extra
+  })
+  // A dark photo with one bright cookie: the mean reads, the bright end does not.
+  const cookie = { p15: 0.01, p50: 0.03, p85: 0.62 }
+  const calm = { p15: 0.01, p50: 0.02, p85: 0.05 }
+  assert.ok(overImageRatio(over(white, cookie), 'under') < 3)
+  assert.ok(overImageRatio(over(white, calm), 'under') > 3)
+  // Dark words are read against the dark end.
+  assert.ok(overImageRatio(over(dark, { p15: 0.02, p50: 0.6, p85: 0.9 }), 'under') < 3)
+  const failed = checkContrastReadable([page({ contrast: [over(white, calm, cookie)] })])
+  assert.equal(failed.pass, false)
+  assert.deepEqual(
+    failed.detail.map((d) => [d.viewport, d.overImage, d.needs]),
+    [['phone', true, 3]]
+  )
+  assert.equal(checkContrastReadable([page({ contrast: [over(white, calm, calm)] })]).pass, true)
+  const desktopOnly = checkContrastReadable([
+    page({ contrast: [over(white, calm), over(white, undefined, undefined, { text: 'Not measured' })] })
+  ])
+  assert.deepEqual(
+    desktopOnly.measuredOver.map((m) => [m.text, m.viewports]),
+    [['Fresh cookies', ['desktop']]]
+  )
+  // Body text needs 4.5:1: 3.4:1 reads for a heading, not for a paragraph.
+  const grey = { p15: 0.1, p50: 0.12, p85: 0.26 }
+  assert.equal(checkContrastReadable([page({ contrast: [over(white, grey)] })]).pass, true)
+  assert.equal(
+    checkContrastReadable([page({ contrast: [over(white, grey, undefined, { large: false })] })]).pass,
+    false
+  )
+  // The template's own words over its own picture, unreadable as installed, are not the build's; once measured
+  // readable at baseline, the same words failing later are.
+  const kept = baselineOf([page({ contrast: [over(white, cookie)] })], [])
+  assert.equal(
+    checkContrastReadable([page({ contrast: [over(white, cookie)] })], { baseline: kept }).pass,
+    true
+  )
+  const fine = baselineOf([page({ contrast: [over(white, calm)] })], [])
+  assert.equal(
+    checkContrastReadable([page({ contrast: [over(white, cookie)] })], { baseline: fine }).pass,
+    false
+  )
+  // Local round 36: the same words unreadable at baseline are the build's once they lie on a photo it placed, and the
+  // fix says which way the photo goes — dark words want a lighter photo, light words a darker one.
+  const darkLine = { p15: 0.0135, p50: 0.0371, p85: 0.102 }
+  const was = baselineOf(
+    [
+      page({
+        contrast: [
+          over(dark, darkLine, undefined, { underSrc: 'http://lev.test/wp-content/uploads/2026/10/hp-1.jpg' })
+        ]
+      })
+    ],
+    []
+  )
+  const placedPhoto = over(dark, darkLine, undefined, {
+    underSrc: 'http://lev.test/wp-content/uploads/tracy-content/034c9add.jpg'
+  })
+  const judged = checkContrastReadable([page({ contrast: [placedPhoto] })], { baseline: was })
+  assert.equal(judged.pass, false)
+  assert.match(judged.detail[0].fix, /uniform ground luminance/)
+  assert.equal(
+    checkContrastReadable(
+      [
+        page({
+          contrast: [
+            over(dark, darkLine, undefined, {
+              underSrc: 'http://lev.test/wp-content/uploads/2026/10/hp-1.jpg'
+            })
+          ]
+        })
+      ],
+      { baseline: was }
+    ).pass,
+    true,
+    "the template's own photo keeps its exemption"
+  )
+  assert.match(failed.detail[0].fix, /not a guarantee/)
+  // A coloured title can read over a sufficiently dark or light ground; neither direction is discarded.
+  const orange = over([210, 74, 36, 1], { p15: 0.1, p50: 0.4, p85: 0.8 }, undefined, {
+    underSrc: 'http://lev.test/wp-content/uploads/tracy-content/034c9add.jpg'
+  })
+  const pale = checkContrastReadable([page({ contrast: [orange] })], { baseline: was })
+  assert.match(pale.detail[0].fix, /uniform ground luminance in [\s\S]* or /)
+})
+
+test('contrast repair considers both ground directions and all texts in each measured background frame', () => {
+  const probe = (fg, frame, extra = {}) => ({
+    fg: [...fg, 1],
+    overImage: true,
+    large: true,
+    underFrame: frame,
+    under: { p15: 0.1, p50: 0.4, p85: 0.8 },
+    underSrc: 'http://site.test/shared.jpg',
+    ...extra
+  })
+  const orange = probe([210, 74, 36], 'frame-1')
+  const white = probe([255, 255, 255], 'frame-1')
+  const joint = checkContrastReadable([page({ contrast: [orange, white] })])
+  assert.equal(joint.pass, false)
+  assert.equal(joint.detail[0].uniformGround.length, 1)
+  assert.equal(joint.detail[0].uniformGround[0][0], 0)
+  assert.ok(joint.detail[0].uniformGround[0][1] < 0.03)
+  assert.match(joint.detail[0].fix, /2 measured texts/)
+  assert.match(joint.detail[0].fix, /not a guarantee/)
+  // A passing line still constrains repair of its neighbour.
+  const passedWhite = { ...white, under: { p15: 0, p50: 0.01, p85: 0.02 } }
+  const held = checkContrastReadable([page({ contrast: [orange, passedWhite] })])
+  assert.deepEqual(held.detail[0].uniformGround, joint.detail[0].uniformGround)
+  // Dark brown large text and white body text have no common uniform ground.
+  const impossible = checkContrastReadable([
+    page({ contrast: [probe([58, 53, 47], 'frame-2'), probe([255, 255, 255], 'frame-2', { large: false })] })
+  ])
+  assert.deepEqual(impossible.detail[0].uniformGround, [])
+  assert.match(impossible.detail[0].fix, /No uniform background luminance/)
+  assert.doesNotMatch(impossible.detail[0].fix, /no photo can/i)
+  // An identical file in another frame must not constrain this frame.
+  const separate = checkContrastReadable([page({ contrast: [orange, probe([58, 53, 47], 'frame-other')] })])
+  assert.equal(separate.detail[0].uniformGround.length, 2)
+  // Old cached reads without a measured frame cannot establish shared-image constraints.
+  const unknown = checkContrastReadable([page({ contrast: [probe([210, 74, 36], undefined), white] })])
+  assert.match(unknown.detail[0].fix, /frame was not identified/)
+})
+
+test('no-empty-boxes fails each service box a page shows empty, and passes when none is', () => {
+  const r = checkNoEmptyBoxes([
+    page({ emptyBoxes: [{ selector: 'div.acm-opentable > div.ot-form', size: '1000×60' }] })
+  ])
+  assert.equal(r.pass, false)
+  assert.deepEqual(r.detail, [{ page: '/', selector: 'div.acm-opentable > div.ot-form', size: '1000×60' }])
+  assert.equal(checkNoEmptyBoxes([page({ emptyBoxes: [] }), page({})]).pass, true)
+  assert.ok(CHECK_IDS.includes('no-empty-boxes'))
+})
+
+// Plan "10/10" P1 (26/10/2026): local rounds 31–33 put a selfie behind a section and one photo on two posts side by side.
+test('photos-fit fails a photo of people behind a section and a photo repeated while others are unused', () => {
+  const img = (src, kind, selector, size = 400) => ({
+    src,
+    kind,
+    selector,
+    width: size,
+    height: size,
+    broken: false
+  })
+  const asked = {
+    placedSources: {
+      '/wp-content/uploads/tracy-content/s1.jpg': 'selfie',
+      '/wp-content/uploads/tracy-content/f1.jpg': 'flowers',
+      '/wp-content/uploads/tracy-content/c1.jpg': 'cookies',
+      '/wp-content/uploads/tracy-content/logo.png': '$logo'
+    },
+    sourceSubjects: { selfie: 'people', flowers: 'other', cookies: 'food' },
+    collected: { pictures: 12 }
+  }
+  const at = (p) => `http://127.0.0.1:5000/wp-content/uploads/tracy-content/${p}`
+  const r = checkPhotosFit(
+    [
+      page({
+        path: '/offers/',
+        images: [
+          img(at('s1.jpg'), 'background', 'section.offers > figure.jr-section-bg'),
+          img(at('c1.jpg'), 'img', 'div.card > img')
+        ]
+      }),
+      page({
+        path: '/blog/',
+        images: [
+          img(at('f1.jpg'), 'img', 'article.p1 > img'),
+          img(at('f1.jpg'), 'img', 'article.p2 > img'),
+          img(at('f1.jpg'), 'img', 'li.thumb > img', 60),
+          img(at('logo.png'), 'img', 'header img'),
+          img(at('logo.png'), 'img', 'footer img')
+        ]
+      })
+    ],
+    asked
+  )
+  assert.equal(r.pass, false)
+  assert.deepEqual(
+    r.detail.map((d) => [d.page, d.problem, d.subject ?? d.frames]),
+    [
+      ['/offers/', 'a photo of this subject behind a section', 'people'],
+      ['/blog/', 'repeat', 2]
+    ]
+  )
+  // with fewer photos than frames, using them again is the brief's own rule
+  const few = checkPhotosFit(
+    [page({ path: '/blog/', images: [img(at('f1.jpg'), 'img', 'a'), img(at('f1.jpg'), 'img', 'b')] })],
+    { ...asked, collected: { pictures: 1 } }
+  )
+  assert.equal(few.pass, true)
+  // a food photo behind a section, and photos with no label, pass
+  assert.equal(
+    checkPhotosFit([page({ images: [img(at('c1.jpg'), 'background', 'section.hero > figure')] })], asked)
+      .pass,
+    true
+  )
+  assert.ok(CHECK_IDS.includes('photos-fit'))
+})
+
+// Local round 35 (26/10/2026): a carousel's copies of its slides read as repeats, a selfie cropped to one face behind
+// a WordPress cover block's words was not seen as a background, and the badge the template puts on each of its three
+// happy-hours cards failed as a repeat and as a misplaced logo.
+test('photos-fit skips carousel copies, sees a photo under words, and keeps the repeats the template has', () => {
+  const at = (p) => `http://127.0.0.1:5000/images/tracy-content/${p}`
+  const img = (src, selector, extra = {}) => ({
+    src,
+    kind: 'img',
+    selector,
+    width: 400,
+    height: 300,
+    broken: false,
+    ...extra
+  })
+  const asked = {
+    placedSources: {
+      '/images/tracy-content/s1.jpg': 'selfie',
+      '/images/tracy-content/c1.jpg': 'cookies',
+      '/images/tracy-content/logo.png': '$logo'
+    },
+    sourceSubjects: { selfie: 'people', cookies: 'food' },
+    collected: { pictures: 12 }
+  }
+  const clones = checkPhotosFit(
+    [
+      page({
+        images: [
+          img(at('c1.jpg'), 'div.owl-item > div.item-inner > img'),
+          img(at('c1.jpg'), 'div.owl-item > div.item-inner > img', { clone: true }),
+          img(at('c1.jpg'), 'div.owl-item > div.item-inner > img', { clone: true })
+        ]
+      })
+    ],
+    asked
+  )
+  assert.equal(clones.pass, true)
+  const under = checkPhotosFit(
+    [
+      page({
+        path: '/about-us/',
+        images: [img(at('s1.jpg'), 'div.wp-block-cover > img', { underWords: true })]
+      })
+    ],
+    asked
+  )
+  assert.deepEqual(
+    under.detail.map((d) => [d.problem, d.subject]),
+    [['a photo of this subject behind a section', 'people']]
+  )
+  // The template's own repeat, read at the baseline: three cards, one badge file, attachment ids aside.
+  const template = baselineOf(
+    [
+      page({
+        path: '/offers/',
+        images: [
+          img(
+            'http://127.0.0.1:5000/wp-content/uploads/2026/10/badge-brand.png',
+            'figure.hp > img.wp-image-11'
+          ),
+          img(
+            'http://127.0.0.1:5000/wp-content/uploads/2026/10/badge-brand.png',
+            'figure.hp > img.wp-image-11'
+          ),
+          img(
+            'http://127.0.0.1:5000/wp-content/uploads/2026/10/badge-brand.png',
+            'figure.hp > img.wp-image-11'
+          ),
+          img('http://127.0.0.1:5000/wp-content/uploads/2026/10/logo.png', 'header img', {
+            width: 100,
+            height: 50
+          }),
+          img('http://127.0.0.1:5000/wp-content/uploads/2026/10/logo.png', 'footer img', {
+            width: 100,
+            height: 50
+          })
+        ]
+      })
+    ],
+    []
+  )
+  assert.deepEqual(template.repeats, {
+    '/offers/': [['figure.hp > img', 'figure.hp > img', 'figure.hp > img']]
+  })
+  assert.deepEqual(template.marks, { '/offers/': 5 })
+  const cards = [
+    img(at('c1.jpg'), 'figure.hp > img.wp-image-268'),
+    img(at('c1.jpg'), 'figure.hp > img.wp-image-268'),
+    img(at('c1.jpg'), 'figure.hp > img.wp-image-268')
+  ]
+  assert.equal(checkPhotosFit([page({ path: '/offers/', images: cards })], asked).pass, false)
+  assert.equal(
+    checkPhotosFit([page({ path: '/offers/', images: cards })], { ...asked, baseline: template }).pass,
+    true
+  )
+  // the same repeat in frames the template filled with different pictures still fails
+  assert.equal(
+    checkPhotosFit([page({ path: '/', images: cards })], { ...asked, baseline: template }).pass,
+    false
+  )
+  // Round 36: one photo behind a feature card and again in a strip far down the page is not seen twice; within a
+  // screen it is.
+  const far = [
+    img(at('c1.jpg'), 'div.features-item', { top: 900 }),
+    img(at('c1.jpg'), 'div.item-inner > img', { top: 3200 })
+  ]
+  assert.equal(checkPhotosFit([page({ path: '/', images: far })], asked).pass, true)
+  const near = [
+    img(at('c1.jpg'), 'div.features-item', { top: 900 }),
+    img(at('c1.jpg'), 'div.item-inner > img', { top: 1500 })
+  ]
+  assert.equal(checkPhotosFit([page({ path: '/', images: near })], asked).pass, false)
+})
+
+// Plan "10/10" §7 S3 (26/10/2026): a check read ~15 pages one after another at 2.6–6 s each.
+test('runDemoQa reads home alone, then the rest a few at once, and keeps page order whatever finishes first', async () => {
+  let open = 0
+  let most = 0
+  const order = []
+  const read = async (url, path) => {
+    open++
+    most = Math.max(most, open)
+    order.push(path)
+    // later pages finish first
+    await new Promise((r) => setTimeout(r, path === '/' ? 1 : 30 - path.length))
+    open--
+    return page({ path, url, navLinks: path === '/' ? ['/a', '/bb', '/ccc', '/dddd', '/eeeee'] : [] })
+  }
+  const asked = demoQaBody({ label: 'acme', platform: 'wordpress', discover: true })
+  const result = await runDemoQa({ asked, base: 'http://127.0.0.1:5000/', read })
+  assert.equal(order[0], '/')
+  assert.equal(most, READ_AT_ONCE)
+  assert.deepEqual(result.pages, ['/', '/a', '/bb', '/ccc', '/dddd', '/eeeee'])
+  assert.deepEqual(
+    result.visited.map((v) => v.path),
+    ['/', '/a', '/bb', '/ccc', '/dddd', '/eeeee']
+  )
+  assert.deepEqual(result.reused, [])
+})
+
+// 28/10/2026: a host with room reads a check's pages a few at once; the verdict is the one-at-a-time verdict.
+test('runDemoQa with three tabs gives the one-tab result, page by page, whatever finishes first', async () => {
+  const run = async (readAtOnce) => {
+    let open = 0
+    let most = 0
+    let routesOpen = 0
+    let routesMost = 0
+    const read = async (url, path) => {
+      open++
+      most = Math.max(most, open)
+      if (path.startsWith('/post-')) routesMost = Math.max(routesMost, ++routesOpen)
+      await new Promise((r) => setTimeout(r, path === '/' ? 1 : 30 - path.length))
+      open--
+      if (path.startsWith('/post-')) routesOpen--
+      return page({ path, url, navLinks: path === '/' ? ['/a', '/bb', '/ccc', '/dddd', '/eeeee'] : [] })
+    }
+    // Routes too (28/10/2026): a template's post routes were read one after another.
+    const routes = Array.from({ length: 7 }, (_, i) => `/post-${i}/`)
+    const asked = demoQaBody({
+      label: 'acme',
+      platform: 'wordpress',
+      discover: true,
+      routes,
+      routeBudgetMs: 60_000
+    })
+    const result = await runDemoQa({ asked, base: 'http://127.0.0.1:5000/', read, readAtOnce })
+    return { result, most, routesMost }
+  }
+  const one = await run(1)
+  const three = await run(3)
+  assert.equal(one.most, 1)
+  assert.equal(three.most, 3)
+  assert.equal(three.routesMost, 3)
+  assert.deepEqual(
+    three.result.routes,
+    Array.from({ length: 7 }, (_, i) => `/post-${i}/`)
+  )
+  const { durationMs: _a, ...a } = one.result
+  const { durationMs: _b, ...b } = three.result
+  assert.deepEqual(JSON.parse(JSON.stringify(b)), JSON.parse(JSON.stringify(a)))
+})
+
+// Plan "10/10" §7 S5 (26/10/2026): the build's words are written page by page from the baseline's reading of each page.
+test("the baseline keeps each page's words in order, headings and buttons marked, forms and nav left out", () => {
+  const b = baselineOf(
+    [
+      page({
+        path: '/',
+        blocks: [
+          { text: 'Welcome to Levain', selector: 'div.x > h2.title' },
+          { text: 'Bar & Restaurant', selector: 'div.x > p' },
+          { text: 'Your name', selector: 'form > p', form: true },
+          { text: 'Welcome to Levain', selector: 'footer > p' }
+        ],
+        ctas: [
+          { text: 'Book a Table', nav: false, href: '/contact/' },
+          { text: 'Investor relations', nav: false, href: 'http://127.0.0.1:5000/investors' },
+          { text: 'Call us', nav: false, href: 'tel:+19174643769' },
+          { text: 'Facebook', nav: false, href: 'https://facebook.com/x' },
+          { text: 'Home', nav: true }
+        ]
+      })
+    ],
+    []
+  )
+  // Each button keeps where it goes (local round 36: buttons to /investors written "Order a cake").
+  assert.deepEqual(b.pageBlocks, {
+    '/': [
+      { text: 'Welcome to Levain', kind: 'heading' },
+      { text: 'Bar & Restaurant', kind: 'text' },
+      { text: 'Book a Table', kind: 'button', to: '/contact/' },
+      { text: 'Investor relations', kind: 'button', to: '/investors' },
+      { text: 'Call us', kind: 'button', to: 'phone' },
+      { text: 'Facebook', kind: 'button', to: 'another site' }
+    ]
+  })
+  assert.equal(demoQaBody({ label: 'a', platform: 'wordpress', incremental: true }).incremental, true)
+})
+
 test('selfOriginIn reads the name a site gives itself from its home page, only on one of its own hosts', () => {
-  const hosts = ['wp-tamarel1.wo.tracy.test']
-  const wp = `<html><head><link rel='alternate' type="application/rss+xml" href="http://wp-tamarel1.wo.tracy.test:46080/feed/" />
-    <link href="http://wp-tamarel1.wo.tracy.test:46080/wp-json/" rel="https://api.w.org/" /></head></html>`
-  assert.equal(selfOriginIn(wp, hosts), 'http://wp-tamarel1.wo.tracy.test:46080')
-  const emdash = '<link rel="canonical" href="http://em-tamarel1.wo.tracy.test:46080/">'
-  assert.equal(selfOriginIn(emdash, ['em-tamarel1.wo.tracy.test']), 'http://em-tamarel1.wo.tracy.test:46080')
+  const hosts = ['wp-lumora1.wo.tracy.test']
+  const wp = `<html><head><link rel='alternate' type="application/rss+xml" href="http://wp-lumora1.wo.tracy.test:46080/feed/" />
+    <link href="http://wp-lumora1.wo.tracy.test:46080/wp-json/" rel="https://api.w.org/" /></head></html>`
+  assert.equal(selfOriginIn(wp, hosts), 'http://wp-lumora1.wo.tracy.test:46080')
+  const emdash = '<link rel="canonical" href="http://em-lumora1.wo.tracy.test:46080/">'
+  assert.equal(selfOriginIn(emdash, ['em-lumora1.wo.tracy.test']), 'http://em-lumora1.wo.tracy.test:46080')
   assert.equal(
     selfOriginIn('<meta property="og:url" content="https://acme.tracy.site/" />', ['acme.tracy.site']),
     'https://acme.tracy.site'
@@ -860,14 +1325,14 @@ test('navPathsOf keeps links on the page origin or the published host, never hom
     'http://127.0.0.1:5000/index.php',
     'http://127.0.0.1:5000/menu',
     // WordPress writes its menu with the site's published address, not the one the reader opened.
-    'http://wp-tamarel1.wo.tracy.test:46080/about/',
-    'http://WP-TAMAREL1.wo.tracy.test:46080/about/',
-    'http://wp-tamarel1.wo.tracy.test:46080/menu.pdf',
+    'http://wp-lumora1.wo.tracy.test:46080/about/',
+    'http://WP-LUMORA1.wo.tracy.test:46080/about/',
+    'http://wp-lumora1.wo.tracy.test:46080/menu.pdf',
     'http://evil.test/contact',
-    'https://www.facebook.com/TamarelHoiAn',
+    'https://www.facebook.com/LumoraHoiAn',
     'http://127.0.0.1:5000/gallery?x=1'
   ]
-  assert.deepEqual(navPathsOf(hrefs, page, ['wp-tamarel1.wo.tracy.test']), [
+  assert.deepEqual(navPathsOf(hrefs, page, ['wp-lumora1.wo.tracy.test']), [
     '/menu',
     '/about/',
     '/gallery?x=1'
@@ -895,18 +1360,20 @@ test('runDemoQa reads home first, follows its nav with discover, never leaves th
     CHECK_IDS
   )
   assert.ok(result.baseline.cssRules && result.baseline.pictures && Array.isArray(result.baseline.texts))
-  // Past its budget, no further page is started: home is always read.
+  // A partial read must never become a passing check or a baseline.
   let clock = 0
-  const slow = await runDemoQa({
-    asked: { ...asked, budgetMs: 1000 },
-    base: 'http://127.0.0.1:5000/',
-    now: () => clock,
-    read: async (url, path) => {
-      clock += 5000
-      return page({ path, url, navLinks: ['/menu', '/contact'] })
-    }
-  })
-  assert.deepEqual(slow.pages, ['/'])
+  await assert.rejects(
+    runDemoQa({
+      asked: { ...asked, budgetMs: 1000 },
+      base: 'http://127.0.0.1:5000/',
+      now: () => clock,
+      read: async (url, path) => {
+        clock += 5000
+        return page({ path, url, navLinks: ['/menu', '/contact'] })
+      }
+    }),
+    { code: 'DEMO_QA_DEADLINE' }
+  )
 })
 
 test('a signed /_host/demo-qa runs the reader against the composed target; no browser answers 503', async () => {
@@ -968,7 +1435,7 @@ test('the demo is dialled on the first address that answers: hostname, then loop
 })
 
 test('content-reachable: a document that stops scrolling before its content ends fails, with the overflow it found', () => {
-  // The Larch House, 18/10/2026: `html, body { overflow-x: hidden }` on a skrollr page → 900 px document, 3829 px content.
+  // The Ridge House, 18/10/2026: `html, body { overflow-x: hidden }` on a skrollr page → 900 px document, 3829 px content.
   const clipped = checkContentReachable([
     page({
       reach: { documentHeight: 900, contentHeight: 3829, htmlOverflowY: 'auto', bodyOverflowY: 'auto' }
@@ -1008,7 +1475,7 @@ test('css-intact: T3 optimize bundles are held as one pool, so re-bundling after
   // Same rules under new names: fine.
   const renamed = [bundle('css-aaaaa-32190', 1572), bundle('css-bbbbb-32190', 1784)]
   assert.equal(checkCssIntact([page({ sheets: renamed })], baseline).pass, true)
-  // Half the pool gone: the tamarelhoian shape, whatever the names.
+  // Half the pool gone: the lumorahoian shape, whatever the names.
   const halved = checkCssIntact([page({ sheets: [bundle('css-ccccc-32190', 1200)] })], baseline)
   assert.equal(halved.pass, false)
   assert.match(halved.detail[0].problem, /1200 of the 3356 rules/)
@@ -1027,7 +1494,7 @@ test('css-intact: a content-hashed stylesheet (Astro, Vite) is held by its stem,
     sentinelFound,
     text: 'a{b:c}'
   })
-  // em-tamarel1, 18/10/2026: EmDash rule 8 rebuilds the site; Astro renames Base.<hash>.css; the rules stay.
+  // em-lumora1, 18/10/2026: EmDash rule 8 rebuilds the site; Astro renames Base.<hash>.css; the rules stay.
   const baseline = {
     cssRules: {
       '_astro/Base.BNyaLx3F.css': { rules: 147, sentinel: '.z{color:red}', page: '/' },
@@ -1928,7 +2395,7 @@ test('collected-used: the name, phone, email, street, an opening time, a review 
   const collected = collectedOf({
     name: 'Bếp Nhà Lu',
     phone: '+84 235 0000 777',
-    email: 'hello@bepnhalu.example',
+    email: 'hello@bepnhalu.vn',
     address: '12 Trần Phú, Hội An, Quảng Nam',
     hours: ['Monday: 10:00\u202fAM – 9:30\u202fPM'],
     reviews: [
@@ -1953,7 +2420,7 @@ test('collected-used: the name, phone, email, street, an opening time, a review 
     }),
     page({
       path: '/contact',
-      text: 'Find us at 12 Trần Phú. Open 10am to 9.30pm. hello@bepnhalu.example “The cao lầu here is the best we had in Hội An, and the staff remember you.” — Mai',
+      text: 'Find us at 12 Tr\u1ea7n Ph\u00fa. Open 10am to 9.30pm. hello@bepnhalu.vn \u201cThe cao l\u1ea7u here is the best we had in H\u1ed9i An, and the staff remember you.\u201d \u2014 Mai',
       images: [photo(3)]
     })
   ]
@@ -1993,6 +2460,15 @@ test('collected-used: the name, phone, email, street, an opening time, a review 
       .map((d) => [d.code, d.value]),
     [['COLLECTED_MISPLACED', "the business's logo in 4 frames of /"]]
   )
+  // Local round 35 (26/10/2026): where the template showed its own mark in four frames, the business's may fill them.
+  assert.equal(
+    checkCollectedUsed([logoPage(4), full[1]], {
+      collected,
+      placedSources: logoFile,
+      baseline: { marks: { '/': 4 } }
+    }).detail.some((d) => d.what === 'logo'),
+    false
+  )
   const one = checkCollectedUsed(full, { collected, placedSources: crops })
   assert.deepEqual(
     one.detail.map((d) => [d.what, d.value]),
@@ -2031,7 +2507,7 @@ test('collected-used: a street kind spelt long or short is the same street; anot
     checkCollectedUsed(read('q. patisserie, at 2821 Maple Street.'), { collected: profile }).pass,
     true
   )
-  const heard = collectedOf({ name: 'q. patisserie', sourced: 'We are at 2821 Maple St. @ Larkspur.' })
+  const heard = collectedOf({ name: 'q. patisserie', sourced: 'We are at 2821 Maple St. @ Divisadero.' })
   assert.equal(
     checkCollectedUsed(read('q. patisserie, at 2821 Maple Street.'), { collected: heard }).pass,
     true
@@ -2088,9 +2564,9 @@ test('collected-used: an email, phone or street address the research never colle
   assert.deepEqual(unsourced(marked), [['email', 'hello@bepnhalu.example']])
   assert.equal(marked.sample, undefined)
   // The research has an email: another one beside or instead of it is still wrong.
-  const both = collectedOf({ ...none, email: 'real@bepnhalu.example' })
+  const both = collectedOf({ ...none, email: 'real@bepnhalu.vn' })
   const wrong = checkCollectedUsed(
-    [page({ path: '/contact', text: 'Bếp Nhà Lu. real@bepnhalu.example or hello@bepnhalu.example' })],
+    [page({ path: '/contact', text: 'B\u1ebfp Nh\u00e0 Lu. real@bepnhalu.vn or hello@bepnhalu.example' })],
     { collected: both }
   )
   assert.deepEqual(unsourced(wrong), [['email', 'hello@bepnhalu.example']])
@@ -2114,7 +2590,7 @@ test('no-demo-words: filler the agent wrote ("Ask at the counter", "Sample", a m
   const before = [page({ blocks: [], residue: { units: [], links: [] } })]
   const baseline = { ...baselineOf(before), ledger: { units: [], links: [] } }
   const reads = [page({ blocks: [], residue: { units, links: [] } })]
-  const asked = { baseline, briefText: 'The Willow Nook, Smørrebrød' }
+  const asked = { baseline, briefText: 'The Living Room, Sm\u00f8rrebr\u00f8d' }
   const residue = residueOf(reads, asked)
   assert.deepEqual(
     residue.items.map((i) => [i.field, i.text]),
@@ -2152,7 +2628,7 @@ test('no-demo-words: a made-up dish name with "Market price" run into it is fill
   const before = [page({ blocks: [], residue: { units: [], links: [] } })]
   const baseline = { ...baselineOf(before), ledger: { units: [], links: [] } }
   const reads = [page({ blocks: [], residue: { units, links: [] } })]
-  const residue = residueOf(reads, { baseline, briefText: 'The Willow Nook' })
+  const residue = residueOf(reads, { baseline, briefText: 'The Living Room' })
   assert.deepEqual(
     residue.items.map((i) => [i.field, i.text, i.filler]),
     [
@@ -2178,7 +2654,7 @@ test('no-demo-pictures: a theme decor badge (decor_*.png) is named unresolved wi
 })
 
 test('runDemoQa reads every inventory route for the content checks, past the pages every check reads', async () => {
-  // The Willow Nook build 8c (25/10/2026): QA read eight pages, so a post's template words on any other route were
+  // The Living Room build 8c (25/10/2026): QA read eight pages, so a post's template words on any other route were
   // never residue and never swept. The routes are read after the pages, in the same browser, within their own budget.
   const LOREM = 'Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod'
   const opened = []
@@ -2574,4 +3050,125 @@ test('demoQaBody keeps the accent tokens and WhatsApp links it is sent, only tho
   assert.deepEqual(asked.accentTokens, { '--ds-c-accent': '#052514' })
   assert.deepEqual(asked.whatsappLinks, ['https://wa.me/971500001234'])
   assert.deepEqual(demoQaBody({ label: 'acme', platform: 'joomla' }).accentTokens, {})
+})
+
+test('cta-real: ordinary navigation cannot lead to a read-confirmed empty main', () => {
+  const source = page({
+    ctas: [{ href: '/contact/', text: 'Visit us', booking: false, button: false, nav: true }]
+  })
+  const empty = page({ path: '/contact/', mainContent: { state: 'empty', selector: 'main' } })
+  const populated = page({
+    path: '/contact/contact-us/',
+    mainContent: { state: 'present', selector: 'main' }
+  })
+  const bad = checkCtaReal([source, empty, populated])
+  assert.equal(bad.pass, false)
+  assert.match(bad.detail[0].problem, /no main content/)
+  assert.equal(bad.detail[0].target, '/contact/')
+  assert.equal(
+    checkCtaReal([
+      { ...source, ctas: [{ ...source.ctas[0], href: '/contact/contact-us/' }] },
+      empty,
+      populated
+    ]).pass,
+    true
+  )
+})
+
+test('cta-real: unread, unknown, failed and query-distinct navigation destinations are not judged empty', () => {
+  const source = page({
+    ctas: [{ href: '/contact/', text: 'Visit us', booking: false, button: false, nav: true }]
+  })
+  for (const destination of [
+    [],
+    [page({ path: '/contact', mainContent: { state: 'empty', selector: 'main' } })],
+    [page({ path: '/contact/', mainContent: { state: 'unknown', selector: null } })],
+    [page({ path: '/contact/', status: 500, mainContent: { state: 'empty', selector: 'main' } })],
+    [page({ path: '/contact/?q=search', mainContent: { state: 'empty', selector: 'main' } })]
+  ]) {
+    const answer = checkCtaReal([source, ...destination])
+    assert.equal(answer.pass, true)
+    assert.deepEqual(answer.navigationTargets, { checked: 0, unknown: 1 })
+  }
+})
+
+test('cta-real: a redirect to populated main and a submenu toggle are valid navigation', () => {
+  const source = page({
+    ctas: [
+      { href: '/contact/', text: 'Visit us', booking: false, button: false, nav: true },
+      { href: '#', text: 'More', booking: false, button: false, nav: true, opens: true }
+    ]
+  })
+  const destination = page({
+    path: '/contact/',
+    finalUrl: 'http://127.0.0.1:5000/contact/contact-us/',
+    mainContent: { state: 'present', selector: 'main' }
+  })
+  const answer = checkCtaReal([source, destination])
+  assert.equal(answer.pass, true)
+  assert.deepEqual(answer.navigationTargets, { checked: 1, unknown: 0 })
+})
+
+test('cta-real: footer fragments and redirected aliases retain destination identity without trusting an off-site read', () => {
+  const link = {
+    href: '/contact/#enquiries',
+    text: 'Bakery',
+    booking: false,
+    button: false,
+    navigation: true
+  }
+  const source = page({ ctas: [link] })
+  const alias = page({
+    path: '/alias',
+    finalUrl: 'http://127.0.0.1:5000/contact/',
+    mainContent: { state: 'empty', selector: 'main' }
+  })
+  assert.equal(checkCtaReal([source, alias]).pass, false)
+  const foreign = { ...alias, path: '/contact/', finalUrl: 'https://elsewhere.test/contact/' }
+  const unknown = checkCtaReal([source, foreign])
+  assert.equal(unknown.pass, true)
+  assert.deepEqual(unknown.navigationTargets, { checked: 0, unknown: 1 })
+  assert.equal(
+    checkCtaReal([
+      page({ path: '/contact/', ctas: [link], mainContent: { state: 'present', selector: 'main' } })
+    ]).pass,
+    true
+  )
+  const booking = { ...link, href: '/about/', text: 'Book a table', booking: true }
+  assert.equal(checkCtaReal([page({ ctas: [booking] })]).pass, false)
+})
+
+test('demoQaBody keeps the link tokens of the brand accent, where the build gave them, and the gate allows them', () => {
+  const sent = {
+    '--ds-c-accent': '#9c2a1e',
+    '--ds-c-accent-hover': '#89251a',
+    '--ds-c-accent-active': '#7a2118',
+    '--ds-c-accent-on': '#ffffff',
+    '--ds-c-accent-text': '#9c2a1e',
+    '--ds-c-accent-text-hover': '#89251a'
+  }
+  const asked = demoQaBody({ label: 'acme', platform: 'joomla', accentTokens: sent })
+  assert.deepEqual(asked.accentTokens, sent)
+  const template = {
+    path: 'templates/tracy/css/template.css',
+    rules: 1,
+    sentinel: null,
+    sentinelFound: null,
+    text: ''
+  }
+  const custom = (text) => ({
+    path: 'templates/tracy/css/custom.css',
+    rules: 1,
+    sentinel: null,
+    sentinelFound: null,
+    text
+  })
+  const baseline = baselineOf([page({ sheets: [template, custom('.x{margin:0}')], styles: [], inline: [] })])
+  const rule = `:root{${Object.entries(sent)
+    .map(([t, v]) => `${t}:${v}`)
+    .join(';')}}`
+  assert.equal(
+    checkLookKept([page({ sheets: [template, custom(rule)], styles: [], inline: [] })], baseline, asked).pass,
+    true
+  )
 })

@@ -68,8 +68,16 @@ const EXPECT_MAX = 40
  * `replace.mjs`).
  */
 const CONFIRM_OVER = 5
-/** How many calls one sweep sends: the check after it finds what is left. */
-export const SWEEP_MAX_CALLS = 120
+/**
+ * How many changes one sweep round takes, the check after it finding what is left. It counts pairs, not calls: with
+ * `batches` one call carries a page's pairs (`onePerPage`), so fewer calls go, while each lane's share of a round and
+ * what `left` counts stay as they were. 🔒 240, NOT 120 (local measure 29/10/2026): every round ends in a read of the
+ * whole site, and JA Restaurant on WordPress (48 pages, four of them showcase copies of the home page) needed ~830 —
+ * six rounds of 120 reached `SWEEP_ROUNDS_MAX` with words left, and a counted check ran on them.
+ */
+export const SWEEP_MAX_CALLS = 240
+/** How many pairs one `content.replace` call carries (`REPLACE_MAX_CHANGES` in `tracy-site-tools` `replace.mjs`). */
+const CHANGES_MAX = 20
 /** How many characters of a text the page read keeps (`TEXT_MAX` in tracy-host `demo-residue-page.js`). */
 const READ_LIMIT = 2000
 /** The longest words one replace looks for (`REPLACE_FIND_MAX` in `tracy-site-tools` `replace.mjs`). */
@@ -718,9 +726,103 @@ function fairShare(lanes, max) {
       picked.push(q.shift())
     }
   // Longest words first whatever their lane, so a passage is cleared before a name it holds is looked for.
-  const words = picked.filter((g) => g[0].action === 'content.replace' && !g[0].params.href)
+  const words = picked.filter(isWords)
   const rest = picked.filter((g) => !words.includes(g))
-  return [...words.sort((a, b) => b[0].params.find.length - a[0].params.find.length), ...rest].flat()
+  return [...words.sort((a, b) => b[0].params.find.length - a[0].params.find.length), ...rest]
+}
+
+/** Whether a lane entry replaces words, not a link's address. */
+const isWords = (g) => g[0].action === 'content.replace' && !g[0].params.href
+
+/** Words as the replace job compares them: one case, one space (`demo-lifecycle.mjs` `wordsKey`). */
+const wordsKey = (text) =>
+  String(text ?? '')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim()
+
+/**
+ * ONE PAGE'S WORDS, ONE CALL, ONE WRITE OF EACH RECORD (dev, ja-diner WordPress, 27/10/2026): one call per
+ * (page, words) saved the same record once per pair, so four colour copies of Home took 58 saves each in one check, a
+ * second or two apart. The pairs a round took for a page go as one `content.replace` with `changes`, each pair
+ * carrying the count its read gave (`expect`, counted on its own by the job), and the job saves each record it
+ * changes once. The same words on five pages are still five calls: each page is its own count (`all:"page"`).
+ *
+ * The order the sequential sweep gave stays where it matters: a pair whose words an earlier, longer pair of its page
+ * holds waits for a later call (a passage before a label inside it, else the job refuses the two as one overlap), and
+ * each next part of a long text waits for the part before it (`partsOf`). A call carries at most `CHANGES_MAX` pairs
+ * and `EXPECT_MAX` places, and the places no `expect` counts (a whole passage, a category's name) at most
+ * `CONFIRM_OVER`, so a call stays within what the job writes unasked; a page past that takes more calls. A
+ * single pair goes in the shape it always had.
+ *
+ * The job writes a call whole or not at all (`locateAll`); dsh sets a refused pair aside, reports it as that pair's
+ * own refusal and sends the rest again, and a refusal naming no pair has each pair sent alone, as before
+ * (`demo-lifecycle.mjs` `sweepRound`).
+ * @param {Array<Array<{action: string, params: Record<string, any>}>>} groups - `fairShare`'s picks, in order
+ * @param {WeakMap<object, number>} looseCount - the places the read showed for a pair sent without `expect`
+ */
+function onePerPage(groups, looseCount) {
+  const words = groups.filter(isWords)
+  const rest = groups.filter((g) => !isWords(g)).flat()
+  /** @type {Map<string, Array<{params: Record<string, any>, find: string, layer: number}>>} */
+  const pages = new Map()
+  for (const run of words) {
+    let after = -1
+    for (const { params } of run) {
+      const page = pages.get(params.path) ?? []
+      const find = wordsKey(params.find)
+      let layer = after + 1
+      for (const q of page) if (q.find.includes(find)) layer = Math.max(layer, q.layer + 1)
+      page.push({ params, find, layer })
+      pages.set(params.path, page)
+      after = layer
+    }
+  }
+  /** @type {Array<{layer: number, longest: number, pairs: Array<Record<string, any>>}>} */
+  const batches = []
+  for (const page of pages.values()) {
+    const layers = [...new Set(page.map((q) => q.layer))].sort((a, b) => a - b)
+    for (const layer of layers) {
+      let open = null
+      for (const { params } of page.filter((q) => q.layer === layer)) {
+        const counted = typeof params.expect === 'number'
+        const places = counted ? params.expect : (looseCount.get(params) ?? CONFIRM_OVER)
+        const fits =
+          open !== null &&
+          open.pairs.length < CHANGES_MAX &&
+          open.places + places <= EXPECT_MAX &&
+          (counted || open.loose + places <= CONFIRM_OVER)
+        if (!fits) {
+          open = { layer, longest: params.find.length, pairs: [], places: 0, loose: 0 }
+          batches.push(open)
+        }
+        open.pairs.push(params)
+        open.places += places
+        if (!counted) open.loose += places
+      }
+    }
+  }
+  // Every page's first calls before any page's later ones, longest words first, as the sweep always sent them.
+  batches.sort((a, b) => a.layer - b.layer || b.longest - a.longest)
+  return [
+    ...batches.map(({ pairs }) => {
+      if (pairs.length === 1) return { action: 'content.replace', params: pairs[0] }
+      const { path, all } = pairs[0]
+      return {
+        action: 'content.replace',
+        params: {
+          path,
+          all,
+          changes: pairs.map((p) => ({
+            find: p.find,
+            replace: p.replace,
+            ...(typeof p.expect === 'number' ? { expect: p.expect } : {})
+          }))
+        }
+      }
+    }),
+    ...rest
+  ]
 }
 
 /** An address as a path key on this site, or null for another site's. */
@@ -933,8 +1035,10 @@ const TERM_PLATFORMS = new Set(['wordpress', 'joomla', 'emdash'])
  *   theme's type when there is none (`demo-qa.js`). `design`: the template pictures the QA passed as the theme's
  *   design (`no-demo-pictures` `unresolved`), reported by name, never written. `contact`: the research's phone,
  *   email, website and address, which a template's own contact fact takes (`contactFactOf`). `checksLeft`: the
- *   counted checks left after this one; while any remain, prose is left for the agent (`isProse`).
- * @returns {{calls: Array<{action: string, params: Record<string, any>}>, unresolved: Array<Record<string, any>>, left: number, shown: string[]}}
+ *   counted checks left after this one; while any remain, prose is left for the agent (`isProse`). `renamedBefore`:
+ *   the template category names an earlier sweep round of this counted check sent a rename for (`renamed`).
+ *   `batches`: the pairs of one page go as one call (`onePerPage`).
+ * @returns {{calls: Array<{action: string, params: Record<string, any>}>, unresolved: Array<Record<string, any>>, renamed: string[], left: number, shown: string[]}}
  */
 export function planSweep(
   residue,
@@ -953,6 +1057,7 @@ export function planSweep(
     design = [],
     categories = [],
     topicNames = [],
+    renamedBefore = [],
     leadLine = null,
     postFacts = [],
     postDrafts = [],
@@ -962,7 +1067,10 @@ export function planSweep(
     sweepTerms = false,
     // The neutral name a template dish takes speaks of what the business offers, in the site's language.
     itemKind = 'dish',
-    locale = 'en'
+    locale = 'en',
+    // dsh sends one call's pairs together and sets a refused one aside (`sweepBatches` on `check.start`): a page's
+    // words go as one call (`onePerPage`). An older dsh sends each call as it is, so it is given one pair per call.
+    batches = false
   }
 ) {
   // 🔒 A TEMPLATE PHOTO A RECORD HOLDS IS THE BUSINESS'S TO FILL, WHATEVER IT PASSED AS (product owner, 25/10/2026):
@@ -985,6 +1093,8 @@ export function planSweep(
   const items = residue?.items ?? []
   /** @type {Record<string, Array<{action: string, params: Record<string, any>}>>} */
   const lanes = { post: [], link: [], image: [], term: [], price: [], dish: [], title: [], passage: [] }
+  /** The places a page's read showed for a pair sent without `expect`, so a call keeps them within `CONFIRM_OVER`. */
+  const looseCount = new WeakMap()
   // 🔒 A TERM DESCRIPTION STILL THE TEMPLATE'S LOREM IS CLEARED (product owner, round 10, 25/10/2026): no page this
   // QA reads may print it, so the sweep asks once, on the last counted check, for every term of the site to be read
   // and its lorem description emptied (`sweep-resolve.mjs` `loremTerms`); `sweepTerms` is false once it has asked.
@@ -1444,6 +1554,7 @@ export function planSweep(
     else if (w.count > EXPECT_MAX)
       unresolved.push({ ...w.item, why: `shown in ${w.count} places, over the replace job's limit` })
     else {
+      const loose = w.item.whole && w.count <= CONFIRM_OVER
       const run = partsOf(w.text, w.to).map((find) => ({
         action: 'content.replace',
         params: {
@@ -1451,9 +1562,10 @@ export function planSweep(
           replace: w.to,
           path: w.page,
           all: 'page',
-          ...(w.item.whole && w.count <= CONFIRM_OVER ? {} : { expect: w.count })
+          ...(loose ? {} : { expect: w.count })
         }
       }))
+      if (loose) for (const c of run) looseCount.set(c.params, w.count)
       lanes[laneOf(w.item.field)].push(run.length === 1 ? run[0] : run)
     }
   }
@@ -1759,10 +1871,33 @@ export function planSweep(
   const free = names.filter((n) => !kept.has(n))
   const renamed = new Map()
   const onPage = new Set()
+  // A TERM'S NAME IS WRITTEN ON ITS OWN ARCHIVE, AND ONLY ON WORDPRESS (dev 27/10/2026): ja-diner's four template
+  // categories were planned on the post pages that show them, six rounds in a row, and stayed. The replace job reads a
+  // term only where the page names its id — WordPress prints it on the category's or tag's own archive (`<body class=
+  // "category-<id>">`, `replace-wordpress.mjs` `archiveOf`); a post's category link is a road to that page, never a
+  // write. On Joomla a category title has no content slot and on EmDash a taxonomy label is not writable by a replace:
+  // no text replace clears them, so they are reported unresolved on the first check, never planned, never in `left`.
+  // A rename already sent in an earlier round of this counted check (`renamedBefore`) whose name the page still shows
+  // did not take: it is reported the same way rather than planned again.
+  const tried = new Set(renamedBefore)
   for (const c of named) {
     const { was } = c
-    if (names.includes(was) || onPage.has(`${c.page}\u0000${was}`)) continue
-    onPage.add(`${c.page}\u0000${was}`)
+    const archive = typeof c.category === 'string' && c.category.startsWith('/') ? c.category : null
+    const path = archive ?? c.page
+    if (names.includes(was) || onPage.has(`${path}\u0000${was}`)) continue
+    onPage.add(`${path}\u0000${was}`)
+    const cannot =
+      platform !== 'wordpress'
+        ? `a ${platform} category or tag name is not words a text replace can write: rename it through its own door`
+        : !archive
+          ? 'the page links this category to no page of the site, and a term is renamed only on its own archive'
+          : tried.has(was)
+            ? "renamed on its own archive in an earlier round, the page still shows the template's name"
+            : null
+    if (cannot) {
+      unresolved.push({ ...c, field: 'category', why: cannot })
+      continue
+    }
     if (!renamed.has(was)) renamed.set(was, free[renamed.size] ?? null)
     const to = renamed.get(was)
     if (!to) {
@@ -1775,19 +1910,25 @@ export function planSweep(
     }
     lanes.term.push({
       action: 'content.replace',
-      params: { find: was, replace: to, path: c.page, all: 'page' }
+      params: { find: was, replace: to, path, all: 'page' }
     })
   }
   const firstOf = (e) => (Array.isArray(e) ? e[0] : e)
   for (const lane of [lanes.price, lanes.dish, lanes.title, lanes.passage])
     lane.sort((a, b) => firstOf(b).params.find.length - firstOf(a).params.find.length)
   const asked = Object.values(lanes).flat(2)
+  const picked = fairShare(lanes, SWEEP_MAX_CALLS)
+  // The calls this round takes, before a page's pairs are joined into one call (`onePerPage`).
+  const sent = picked.flat()
   return {
-    calls: fairShare(lanes, SWEEP_MAX_CALLS),
+    calls: batches ? onePerPage(picked, looseCount) : sent,
     unresolved,
+    // The template category names this round sends a rename for: one that still shows next round did not take.
+    renamed: lanes.term.filter((c) => sent.includes(c)).map((c) => c.params.find),
     // The page leads this read left with no sourced line: they say the placeholder.
     thinLeads,
-    // Every call this read asks for, before the cap: what a round must make smaller (`client-demo.js` `settle`).
+    // Every change this read asks for, before the cap, a page's words counted pair by pair however few calls carry
+    // them: what a round must make smaller (`client-demo.js` `settle`).
     left: asked.length,
     // Every page's words a replace would still clear, cap or not: the evidence a `cleared` row is checked against
     // after the round (`demo-lifecycle.mjs`).

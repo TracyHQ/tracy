@@ -11,7 +11,7 @@
  */
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { announceSiteSynced } from '../../turn-undo/index.mjs'
-import { type PushAnswer, type PushPhase, type PushView, pushPhaseOf } from './push-words'
+import { type PushAnswer, type PushPhase, type PushView, pushPhaseOf, pushableOf } from './push-words'
 
 const POLL_MS = 3000
 
@@ -141,11 +141,13 @@ export function useLivePush({ siteKey, enabled = true }: { siteKey: string; enab
   )
 
   const v = push?.preview ?? null
-  const removals = ticked ? (v?.remove.length ?? 0) : 0
-  const phpFiles = phpTicked ? (v?.php?.length ?? 0) : 0
+  // Over the whole changeset, not only the items the preview lists.
+  const n = v ? pushableOf(v) : null
+  const removals = ticked ? (n?.remove ?? 0) : 0
+  const phpFiles = phpTicked ? (n?.php ?? 0) : 0
   // Files and settings are changes too (the confirm line counts them with the changed records).
-  const changed = (v?.change.length ?? 0) + (v?.files?.length ?? 0) + (v?.settings?.length ?? 0) + phpFiles
-  const add = v?.add.length ?? 0
+  const changed = (n?.change ?? 0) + (n?.files ?? 0) + (n?.settings ?? 0) + phpFiles
+  const add = n?.add ?? 0
   const undoTarget = push?.undoable ? push : answer?.lastPush?.undoable ? answer.lastPush : null
 
   return {

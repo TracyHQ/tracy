@@ -399,8 +399,19 @@ PLATFORM_HAS_WEBROOT=""
 . "$HERE/../lib/showcase-nav.sh"
 
 [ -f "$HERE/platform/$PLATFORM.sh" ] || { echo "unknown platform: $PLATFORM" >&2; exit 2; }
+# 🔒 THIS IS THE ONE CALLER THAT BUILDS A MISSING WEB IMAGE. The platform file resolves its image
+# the moment it is sourced, and a NEW site whose IMAGE_TAGS line is not built on this host gets that
+# one line built now (lib/web-image.sh, the 🔒 at its top) instead of the bare upstream image, which
+# has no browser for the visual check. Set as a plain variable, not exported, and dropped right
+# after: go-live/restore/snapshot source the same platform files and must never wait on a build,
+# and nothing this script starts later inherits it. The `mark` gives the build its own line in the
+# timing log (a first provision on a host can spend ~5 minutes here) without a step on the Build
+# screen.
+mark "the site's web image (built here when its line is missing)"
+TRACY_WEB_IMAGE_BUILD=1
 # shellcheck source=/dev/null
 . "$HERE/platform/$PLATFORM.sh"
+unset TRACY_WEB_IMAGE_BUILD
 PLATFORM_HAS_WEBROOT="${PLATFORM_HAS_WEBROOT:-$PLATFORM_NEEDS_WEBROOT}"
 
 # The archive and the credentials to fetch it are only required by platforms that restore one.

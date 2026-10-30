@@ -1,0 +1,2 @@
+- **Neutral substitutes for signature slots and headings that carry a number.** — Akemi (with Claude Code) · #137 · `feat/neutral-signature-numberless` · 2026-10-29
+  **Affects:** nothing on a built site yet. `website-opportunities/domain` gains `scriptSignature` (the signer's name in a script font, sized to the slot's Slot fit box, as SVG or text) and `numberlessSentence` (a demo heading's numbers become the brief's own number for the same thing, or go with their glue words; a demo number never stays). The fill plan (#133) is the intended caller.

@@ -1367,7 +1367,7 @@ export function readConfig(env, { docsBuilt = false } = {}) {
     actorSecret: opt(env, 'MCP_TRACY_ACTOR_SECRET'),
     seatPlanKek: opt(env, 'SEAT_PLAN_KEK'),
     github: readGithub(env),
-    // How this deployment reads JoomlArt-Products/ja-products when it has no App key of its own (a
+    // How this deployment reads JoomlArt-Products/joomlart-products when it has no App key of its own (a
     // developer's stand, ADR 0017) or its App is not installed there (a shard's own App).
     // Production mints a repo-scoped token from its App instead.
     releasesToken: opt(env, 'TRACY_RELEASES_GITHUB_TOKEN'),
@@ -1460,6 +1460,8 @@ export function readConfig(env, { docsBuilt = false } = {}) {
     rapidapiKey: opt(env, 'RAPIDAPI_KEY'),
     // Public social-data API used as the first tier by the Website Opportunities social stats chain.
     scrapeCreatorsApiKey: opt(env, 'SCRAPECREATORS_API_KEY'),
+    // Optional Google reviews supplement (up to 100 a place); unset = never called.
+    monidApiKey: opt(env, 'MONID_API_KEY'),
     // Shared social is opt-in; standalone preserves existing deployments until an explicit cutover.
     ...readSocialService(env),
     // Website Opportunities research shared across accounts (`website-opportunities/src/place-requests.js`). ON unless

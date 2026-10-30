@@ -94,7 +94,7 @@ export const DISCORD_MAIL_LIMIT_PER_MEMBER_PER_HOUR = 5
 export const DESKTOP_LINK_SESSION_LIMIT_PER_IP_PER_HOUR = 60
 
 /**
- * The most `POST /login/visit` records (a signed-out visit to `/login` from a link with `utm_*`) one
+ * The most `POST /login/visit` records (a signed-out visit to `/login`) one
  * client address leaves in an hour. A person sends one per tab; the cap is room for an office behind
  * one NAT, and a brake on a script filling `ops_signal`. Not a measured demand.
  */

@@ -1,0 +1,40 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-cagox/j6/1.0.2",
+  "platform": "joomla",
+  "template": "ja_cagox",
+  "quickstart": {
+    "schemaVersion": "tracy-quickstart/v1",
+    "product": "ja-cagox",
+    "id": "quickstart/ja-cagox/j6",
+    "version": "1.0.2",
+    "platform": "joomla",
+    "cms": {
+      "name": "joomla",
+      "version": "6.2.0"
+    },
+    "template": "ja_cagox",
+    "parts": {
+      "webroot": {
+        "file": "ja-cagox-j6-webroot-1.0.2.tar.gz",
+        "bytes": 107553299,
+        "sha256": "109c45a5a4db1e857db5f40334bcc63f24fc8d257c143ebd51b27aa44f46a6b7"
+      },
+      "database": {
+        "file": "ja-cagox-j6-database-1.0.2.sql.gz",
+        "bytes": 249456,
+        "sha256": "b4900d134bf5e19f7e600a070e17c61159b222f8a7d07fd1b8f2af8094329cef"
+      }
+    },
+    "release": "quickstart/ja-cagox/j6",
+    "repository": "JoomlArt-Products/joomlart-products",
+    "createdAt": "2026-10-29T14:02:32.847Z",
+    "builtFrom": {
+      "from": "quickstart/ja-cagox/j6@1.0.1",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 11 files replaced (templates/ja_cagox/html, templates/ja_cagox/language); 1 installed language files (language/en-GB/en-GB.tpl_ja_cagox.ini); demo content: 152 edits (article-2, article-2, article-3, article-3, article-4, article-4, article-5, article-5, article-6, article-6, article-8, article-8, article-9, article-9, article-10, article-10, article-41, article-41, article-42, article-42, article-43, article-43, article-44, article-44, article-55, article-55, article-66, article-66, article-79, article-79, article-80, article-80, article-81, article-81, article-11, article-11, article-12, article-12, article-13, article-13, article-14, article-14, article-15, article-15, article-16, article-16, article-17, article-17, article-18, article-18, article-19, article-19, article-20, article-20, article-21, article-21, article-22, article-22, article-23, article-23, article-24, article-24, article-25, article-25, article-26, article-26, article-27, article-27, article-28, article-28, article-29, article-29, article-30, article-30, article-31, article-31, article-32, article-32, article-33, article-33, article-34, article-34, article-35, article-35, article-36, article-36, article-37, article-37, article-38, article-38, article-39, article-39, article-40, article-40, article-45, article-45, article-46, article-46, article-47, article-47, article-48, article-48, article-49, article-49, article-50, article-50, article-51, article-51, article-52, article-52, article-53, article-53, article-54, article-54, article-56, article-56, article-58, article-58, article-61, article-61, article-62, article-62, article-63, article-63, article-64, article-64, article-65, article-65, article-71, article-71, article-72, article-72, article-73, article-73, article-74, article-74, article-75, article-75, article-76, article-76, article-77, article-77, article-78, article-78, article-84, article-84, article-85, article-85, menuItem-154, article-2, ucm_content, finder_links); stylesheets read the worn design system (--ds-c-*)"
+    }
+  },
+  "coworkContractVersion": "0.24.75",
+  "mode": "content-recommendation"
+}

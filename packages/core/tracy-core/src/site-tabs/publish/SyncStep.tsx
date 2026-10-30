@@ -107,6 +107,7 @@ export function SyncStep({
   const took = stageSeconds(sync?.timing, sync?.startedAt)
   // Content records only: a log row both sites wrote under one number is not one the owner lost.
   const dropped = (sync?.dropped ?? []).filter((d) => d.reason !== 'log-added-both')
+  const notCarried = sync?.notCarried ?? null
   const busyParts = failure === 'LIVE_BUSY' ? busyPartsText(sync?.busy?.parts, t) : ''
   const footer: PageFooter = {}
   if (phase !== 'running' || !live.starting) footer.onBack = onBack
@@ -242,7 +243,7 @@ export function SyncStep({
       )}
       {phase === 'failed' && (
         <Notice severity="error" title={t('sync.status.failed')}>
-          <p>{failureText(failure, t)}</p>
+          <p>{failureText(failure, t, sync?.php)}</p>
           {busyParts && (
             <p className="tv-pub-small" data-live-sync-busy>
               {busyParts}
@@ -273,6 +274,20 @@ export function SyncStep({
           </CollapsibleContent>
         </Collapsible>
       )}
+      {phase === 'applied' &&
+        notCarried &&
+        (notCarried.triggers.length > 0 || notCarried.tables.length > 0) && (
+          <Notice severity="info" title={t('sync.notCarried')} attrs={{ 'data-live-sync-not-carried': '1' }}>
+            {notCarried.triggers.length > 0 && (
+              <p>
+                {t('sync.notCarriedTriggers', { names: notCarried.triggers.map((x) => x.name).join(', ') })}
+              </p>
+            )}
+            {notCarried.tables.length > 0 && (
+              <p>{t('sync.notCarriedTables', { names: notCarried.tables.join(', ') })}</p>
+            )}
+          </Notice>
+        )}
       {phase === 'applied' && dropped.length > 0 && (
         <Collapsible className="tv-pub-collapse" data-live-sync-dropped>
           <CollapsibleTrigger className="tv-pub-collapse-trigger">

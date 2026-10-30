@@ -1,0 +1,44 @@
+{
+  "id": "REG-PR-170-fill-plan-on-demo-paths",
+  "kind": "fix",
+  "title": "The fill plan decides pictures and text on the quickstart-first and agent demo paths, and the size minimum reads the displayed desktop box",
+  "pr": 170,
+  "area": "wo/demo-build/fill-plan",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test packages/wo/website-opportunities/test/domain-fill-plan-photo-rules.test.mjs packages/wo/website-opportunities/test/domain-fill-plan-demo-fallback.test.mjs packages/wo/website-opportunities/test/domain-fill-text.test.mjs",
+    "S2: Run: node --test apps/tracy-web/test/brief-quickstart-first-fill-plan.test.mjs apps/tracy-web/test/wo-agent-demo-fill-plan.test.mjs apps/tracy-web/test/wo-slot-photo-evidence.test.mjs",
+    "S3: Read the exit code and the fail count of each run."
+  ],
+  "expect": [
+    "Every run exits 0 with 0 failures.",
+    "Size: a 1500 pixel photo is refused for a hero whose desktop box is 1920 wide (more than 1.25 enlargement), and a hero whose file is 1920 wide but whose desktop box is 1440 takes a 1200 pixel photo.",
+    "quickstart-first: a v3 map with a brief places each card's photo by the fill plan (the offering the copy pins name), keeps an icon, never puts a stranger's face in a person slot, draws an initials avatar where no portrait fits, and reports qaEvidence placedSlots carrying the offering.",
+    "agent-demo: plan.save refuses a row whose photo differs from the fill plan's, and a photo in a substitute slot; media.import refuses another photo with AGENT_DEMO_FILL_PLAN_PHOTO and draws the initials avatar for media.import {rowIndex}; slotPhotoEvidence names the card's offering.",
+    "Text: a claim heading with a demo number and no brief fact becomes numberless ('Boxing studio'), with a founded fact it keeps that fact; a signature slot takes the signer's name, empty when nobody signs.",
+    "Demo fallback: a general slot takes an offering photo when no general one fits (general photos first), an unsure photo never fills an offering card, a logo or non-photograph never fills a photo slot, a photo serves once a page, a non-fact picture with no fitting photo keeps the demo picture (only person, quote author, proof and signature pictures take a substitute), a demo file shared by cards of two offerings takes only a general photo, else keeps the demo picture (cards of one offering may share its photo), and extra offering cards keep their demo picture with no-offering-for-group.",
+    "Ranking and wide crops: a low-quality photo ranks below normal and high ones and still fills a slot nothing better fits; a wide general slot (aspect 1.6 or more) may cut up to 70% of a photo only when its labelled subject box and every face stay whole, with reason general-photo-wide-crop, and quickstart-first cuts the native frame the same way."
+  ],
+  "selectors": {
+    "fill_plan": "planFill, shownWidthOf in packages/wo/website-opportunities/domain/fill-plan.mjs",
+    "text": "textSubstitutesOf in packages/wo/website-opportunities/domain/fill-text.mjs",
+    "quickstart_first": "fillPlacements in apps/tracy-web/src/sites/brief-engines/quickstart-fill-pictures.js",
+    "agent_demo": "agentFillPlan, fillRowIssues in apps/tracy-web/src/opportunities-build/agent-demo-fill-plan.js"
+  },
+  "evidence": "29/10/2026, #141: the fill plan (#133 to #137) was used only by the editorial engine (workflow none); the quickstart-first and agent demo builds still placed pictures by their own planners and the size minimum used the demo file's natural width.",
+  "fence": "Module seams with a fictional boxing studio brief and a trimmed content map; a fake pool and object store for the agent capabilities. Not exercised: a real CMS, the real host QA run, the agent model itself.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "packages/wo/website-opportunities/test/domain-fill-plan-photo-rules.test.mjs",
+      "packages/wo/website-opportunities/test/domain-fill-plan-demo-fallback.test.mjs",
+      "packages/wo/website-opportunities/test/domain-fill-text.test.mjs",
+      "apps/tracy-web/test/brief-quickstart-first-fill-plan.test.mjs",
+      "apps/tracy-web/test/wo-agent-demo-fill-plan.test.mjs",
+      "apps/tracy-web/test/wo-slot-photo-evidence.test.mjs"
+    ]
+  }
+}

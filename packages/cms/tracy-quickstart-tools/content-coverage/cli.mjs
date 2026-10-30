@@ -11,14 +11,27 @@
 //     [--db-dump <database.sql[.gz]>] [--webroot <unpacked webroot>] [--site-config <json>] \
 //     [--max-pages 150] [--viewports desktop,phone] [--write] [--no-report] \
 //     [--report-only | --reclassify]   (rebuild from an existing findings.json, no browser run)
+//     [--fit]   Slot fit (ADR 0039): measure a `fit` on every text and image slot from this run and settle each
+//               picture's keep flag by its kind (in a place-content-roles/3 map every keep flag follows the role,
+//               ADR 0040); with --write the content map gets them, BEFORE content-coverage.json is built, so the
+//               coverage file names the map with its fit. Without --write: <out>/content-map.fit.json.
+//     [--no-judge]
+//               The label judge (spec #37): no model is called. For every component with a slot whose verdict is not
+//               cached in content-coverage.json, the audit writes <out>/label-judge/request.json (the question, the
+//               allowed answers, and per component its crop with numbered slots and the slots to judge). The agent
+//               that runs the release answers it and records the answers with record-judge.mjs. Until then, and with
+//               --no-judge, those slots stay `not judged`, never right.
 //
 // Exit: 0 the policy passes · 1 holes, page problems (or an incomplete run) hold Publish · 2 usage or run error.
+import { execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
-import { join, resolve } from 'node:path'
+import { dirname, join, resolve } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 import { COVERAGE_POLICY, judgeCoverage } from '../../../../apps/tracy-web/src/lib/content-coverage/judge.js'
 import { guessEntity, runAudit, summarize } from './lib/audit.mjs'
 import { createClassifier } from './lib/classify.mjs'
+import { runLabelJudge } from './lib/label-judge-run.mjs'
 import { loadContract } from './lib/contract.mjs'
 import { buildCoverageFile, COVERAGE_FILE } from './lib/coverage-file.mjs'
 import { buildDbIndex } from './lib/db-index.mjs'
@@ -28,10 +41,11 @@ import { buildReport } from './lib/report-html.mjs'
 import { groupByCause } from './lib/root-cause.mjs'
 import { createShrinker } from './lib/shrink.mjs'
 import { readSiteConfig } from './lib/site-config.mjs'
+import { measureSlotFit } from './lib/slot-fit.mjs'
 import { buildSourceIndex } from './lib/sources.mjs'
 
 const USAGE =
-  'usage: cli.mjs --site <url> --contract <dir> --out <dir> [--db-dump f] [--webroot d] [--site-config f] [--max-pages 150] [--viewports desktop,phone] [--write] [--no-report] [--report-only | --reclassify]'
+  'usage: cli.mjs --site <url> --contract <dir> --out <dir> [--db-dump f] [--webroot d] [--site-config f] [--max-pages 150] [--viewports desktop,phone] [--write] [--no-report] [--report-only | --reclassify] [--fit] [--no-judge]'
 
 function parseArgs(argv) {
   const o = {}
@@ -54,7 +68,7 @@ function loadIndexes(o, contract) {
   const siteConfig = readSiteConfig({ siteConfig: o['site-config'], webroot: o.webroot })
   const dbIndex = o['db-dump'] && existsSync(o['db-dump']) ? buildDbIndex(o['db-dump'], siteConfig) : null
   const webrootOk = o.webroot && existsSync(o.webroot) && statSync(o.webroot).isDirectory()
-  const sourceIndex = webrootOk ? buildSourceIndex(o.webroot, contract.template) : null
+  const sourceIndex = webrootOk ? buildSourceIndex(o.webroot, contract.template, contract.platform) : null
   return { siteConfig, dbIndex, sourceIndex }
 }
 
@@ -88,6 +102,40 @@ function reclassify(result, contract, siteUrl, o) {
   return result
 }
 
+const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
+
+/** Slot fit from this run's findings into the content map (or beside the evidence), formatted as capture formats it. */
+function writeSlotFit({ result, contractDir, outDir, write }) {
+  const mapFile = join(contractDir, 'content-map.json')
+  const { map, summary } = measureSlotFit({
+    map: JSON.parse(readFileSync(mapFile, 'utf8')),
+    findings: result
+  })
+  const file = write ? mapFile : join(outDir, 'content-map.fit.json')
+  writeFileSync(file, `${JSON.stringify(map, null, 2)}\n`)
+  try {
+    // biome.jsonc leaves every Joomla contract JSON out of formatting (byte-pinned data), and biome
+    // exits 1 when every path it was given is ignored: that is "nothing to format", not a failure.
+    const args = [
+      'exec',
+      'biome',
+      'format',
+      '--write',
+      '--no-errors-on-unmatched',
+      '--files-max-size=4000000',
+      file
+    ]
+    execFileSync('pnpm', args, {
+      cwd: REPO_ROOT,
+      stdio: 'ignore'
+    })
+  } catch (error) {
+    // The copy beside the evidence is for reading; only the contract's own map must be formatted.
+    if (write) throw error
+  }
+  return { ...summary, file }
+}
+
 async function main() {
   const o = parseArgs(process.argv.slice(2))
   if (!o.site || !o.contract || !o.out) {
@@ -98,7 +146,7 @@ async function main() {
   const outDir = resolve(o.out)
   const contractDir = resolve(o.contract)
   mkdirSync(outDir, { recursive: true })
-  const contract = loadContract(contractDir, siteUrl)
+  let contract = loadContract(contractDir, siteUrl)
   const viewports = String(o.viewports ?? 'desktop,phone').split(',')
   const findings = join(outDir, 'findings.json')
   const chromium = o['report-only'] && o['no-report'] ? null : await chromiumOf()
@@ -146,9 +194,15 @@ async function main() {
     }
   }
 
+  const slotFit = o.fit ? writeSlotFit({ result, contractDir, outDir, write: Boolean(o.write) }) : null
+  if (slotFit && o.write) contract = loadContract(contractDir, siteUrl)
+
   const target = join(contractDir, COVERAGE_FILE)
   const previous = existsSync(target) ? JSON.parse(readFileSync(target, 'utf8')) : null
-  const doc = buildCoverageFile({ result, contract, previous })
+  const coverageFiles = [join(outDir, COVERAGE_FILE), ...(o.write ? [target] : [])]
+  const judge = await runLabelJudge({ o, result, contract, outDir, chromium, previous, coverageFiles })
+  const labelJudge = judge.block
+  const doc = buildCoverageFile({ result, contract, previous, labelJudge })
   writeFileSync(join(outDir, COVERAGE_FILE), `${JSON.stringify(doc, null, 2)}\n`)
   if (o.write) writeFileSync(target, `${JSON.stringify(doc, null, 2)}\n`)
   const verdict = judgeCoverage(doc, COVERAGE_POLICY)
@@ -168,6 +222,23 @@ async function main() {
         hygieneAccepted: verdict.hygieneAccepted,
         incomplete: verdict.incomplete,
         written: o.write ? target : null,
+        slotFit,
+        labelRules: {
+          applies: doc.labelRules.applies,
+          factSharePercent: doc.labelRules.r1.percent,
+          failing: Object.fromEntries(
+            Object.entries(doc.labelRules.rules)
+              .filter(([, r]) => r.count > 0)
+              .map(([id, r]) => [id, r.count])
+          )
+        },
+        labelJudge: {
+          state: labelJudge.state,
+          reason: labelJudge.reason,
+          ...labelJudge.counts,
+          asked: judge.asked,
+          request: judge.requestFile
+        },
         findings,
         report: o['no-report'] ? null : join(outDir, 'report.html')
       },

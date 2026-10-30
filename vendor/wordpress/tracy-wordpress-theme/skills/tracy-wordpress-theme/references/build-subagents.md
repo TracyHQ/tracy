@@ -215,7 +215,7 @@ Binds the main agent and every subagent. Figures are past measurements, not guar
 - **Lens readers**: a lens reader gets a brief file path and only the crops of its cell; it does not load
   `SKILL.md` or other references.
 - **Source sanity first**: before Phase 2 read the source's agent docs (JoomlArt:
-  `products/<family>/<tier>/<id>/source/docs/design-system.md` in ja-products) and check live that its
+  `products/<family>/<tier>/<id>/source/docs/design-system.md` in joomlart-products) and check live that its
   typography, line-height and fonts render as intended. Fix a broken source (e.g. empty T4 Site
   typography → browser serif, 16 px headings) before freezing the reference. Measured: pilot findings
   243 → 26.

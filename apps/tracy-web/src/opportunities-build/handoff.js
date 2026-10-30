@@ -1,3 +1,4 @@
+import { visionLabelOf } from './demo-photo-labels.js'
 import { isAgentDemo, checkedResearch, agentDemoPrompt, researchHash } from './agent-demo.js'
 import { renderBriefWithReviews } from 'website-opportunities/src/review-sources.js'
 import { briefWithResearch } from './revision-research.js'
@@ -23,6 +24,7 @@ import { briefWithResearch } from './revision-research.js'
  */
 import { createHash } from 'node:crypto'
 import { acceptedDishPhotos } from 'website-opportunities/domain/dish-photos.mjs'
+import { FILL_REASONS } from 'website-opportunities/domain/fill-plan.mjs'
 import { socialFiguresOfRevision } from './place-profile-of-revision.js'
 import { buildPlaced, saveHandoff } from './build-store.js'
 import { picturePolicy } from '../lib/wo-picture-policy.js'
@@ -365,7 +367,7 @@ export function videoFrameIds(media) {
  * `videoFrame` (`videoFrameIds`) takes it down whatever the label says.
  */
 export function pictureWorth(m) {
-  const seen = m.labels?.vision?.labels
+  const seen = visionLabelOf(m)
   const frame = m.videoFrame === true ? VIDEO_FRAME_WORTH : 0
   if (!seen) return 3 + frame
   return (
@@ -377,11 +379,11 @@ export function pictureWorth(m) {
 }
 
 /**
- * A photograph a frame takes only once every better one is on the page: a video frame, one the vision model called
- * blurry, or one whose subject is a person (staff or guests fill the frame, `lib/picture-vision.js`).
+ * A frame is a poor picture when it is a still from a video, blurry or mainly people.
+ * @param {any} m
  */
 export function poorPicture(m) {
-  const seen = m.labels?.vision?.labels
+  const seen = visionLabelOf(m)
   return m.videoFrame === true || seen?.quality === 'blurry' || seen?.subject === 'people'
 }
 
@@ -412,7 +414,7 @@ export function pictureCredit(m) {
 
 /** The label the prompt prints beside an uploaded picture, so the agent places it by what it shows, not by its name. */
 export function pictureDescription(m) {
-  const seen = m.labels?.vision?.labels
+  const seen = visionLabelOf(m)
   if (!seen) return null
   return {
     subject: seen.subject ?? null,
@@ -423,7 +425,7 @@ export function pictureDescription(m) {
 
 /** The build's pictures as `acceptedDishPhotos` reads them: a candidate vision labelled since the brief counts. */
 const visionOfPictures = (media) =>
-  media.map((m) => ({ id: m.id, postId: m.post_id ?? null, vision: m.labels?.vision?.labels ?? null }))
+  media.map((m) => ({ id: m.id, postId: m.post_id ?? null, vision: visionLabelOf(m) ?? null }))
 
 /**
  * The pictures handed to the agent beside what the build placed: photographs only — never a picture a vision label calls a
@@ -439,7 +441,7 @@ export function leftoverPictures(media, onSite, first = new Set()) {
     .filter((m) => m.kind === 'image' && !onSite.has(m.id))
     .map((m) => (frames.has(m.id) ? { ...m, videoFrame: true } : m))
     .filter((m) => {
-      const seen = m.labels?.vision?.labels
+      const seen = visionLabelOf(m)
       return (
         !seen || (!['poster', 'menu-board', 'logo'].includes(seen.subject) && seen.textPresence !== 'present')
       )
@@ -480,7 +482,19 @@ export function picturesOfBuild(held) {
     .map((u) => ({ file: u.groupId, routes: u.routes ?? [], reason: u.reason }))
   const seen = new Set()
   const demoLeft = (report.demoLeft ?? []).filter((d) => !seen.has(d.file) && seen.add(d.file))
-  return { placed, placeholders, demoLeft, demoOutside: report.demoOutside ?? [], kept: report.never ?? [] }
+  // A fill plan's build (`fill-plan.mjs`) says what it decided for every picture slot, each with its reason code.
+  const decisions = (held.plan.decisions ?? []).map((d) => ({
+    ...d,
+    why: FILL_REASONS[d.reason] ?? d.reason
+  }))
+  return {
+    placed,
+    placeholders,
+    demoLeft,
+    demoOutside: report.demoOutside ?? [],
+    kept: report.never ?? [],
+    ...(decisions.length ? { decisions } : {})
+  }
 }
 
 /**

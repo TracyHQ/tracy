@@ -984,6 +984,9 @@
   "sync.keptTable": "Se mantuvo la versión de Tracy de toda esta tabla.",
   "sync.keptOrder": "Ambos sites cambiaron el orden de estos elementos. Se mantuvo el orden de Tracy.",
   "sync.dropped": "Esta copia no tomó {count} registros de tu site original.",
+  "sync.notCarried": "No traído de tu site original",
+  "sync.notCarriedTriggers": "Disparadores de la base de datos ({names}). Una sincronización no los copia; añádelos tú a este site si los necesita.",
+  "sync.notCarriedTables": "Tablas guardadas como logs propios de esta copia, que cambiaron en tu site original ({names}).",
   "sync.dropReason.addedBoth": "Ambos sites añadieron un registro con este número. Se mantuvo el de Tracy.",
   "sync.dropReason.reference": "Apunta a un registro de tu site original que aquí tiene un número nuevo, y Tracy no pudo actualizarlo.",
   "sync.failed": "La sincronización no terminó ({error}). No se cambió nada en esta copia.",
@@ -1063,6 +1066,7 @@
   "push.reason.phpUnchecked": "No se pudo comprobar para la versión de PHP de tu site publicado",
   "push.reason.extensionFile": "Pertenece a una extensión, así que solo va con esa extensión",
   "push.reason.noDoor": "Aún no hay una forma segura de escribir este ajuste",
+  "push.reason.translationGroup": "Los idiomas y qué páginas son traducción unas de otras aún no se envían. Haz este cambio en Polylang en tu site publicado",
   "push.reason.phpDisabled": "Los file PHP están desactivados para Claude Cowork en tu site publicado. Para enviarlos, activa “Allow PHP in template files” en las opciones de Claude Cowork en tu site",
   "push.reason.phpDisabledWordpress": "Los file PHP están desactivados para Claude Cowork en tu site publicado. Para enviarlos, activa “Allow PHP in theme files” en Settings › Claude Cowork en tu site",
   "push.reason.templateFilesOff": "Los file del template están desactivados para Claude Cowork en tu site publicado. Para enviarlos, activa “Template files” en las opciones de Claude Cowork en tu site",
@@ -1209,5 +1213,14 @@
   "sync.error.interruptedKept": "Una sincronización anterior se detuvo por una actualización de Tracy mientras aplicaba cambios a esta copia, y esta copia ha cambiado desde entonces. Tracy la dejó tal cual. Para deshacer esa sincronización, restaura el punto de copia de seguridad “Before restore” en Backups y vuelve a sincronizar.",
   "sync.error.liveUnreachable": "Tracy no pudo leer tu site original. No se cambió nada en esta copia. Comprueba que el site está en línea y que Claude Cowork sigue instalado en él.",
   "sync.error.copyChanged": "Esta copia cambió durante la sincronización, así que no se aplicó nada. Inténtalo de nuevo.",
-  "sync.error.noSpace": "El servidor de Tracy no tenía espacio para esta sincronización. No se cambió nada en esta copia. Contáctanos."
+  "sync.error.noSpace": "El servidor de Tracy no tenía espacio para esta sincronización. No se cambió nada en esta copia. Contáctanos.",
+  "sync.error.liveBlocked": "Tu site en línea devolvió una respuesta bloqueada o que no procede del motor. Revisa el cortafuegos o la protección contra bots y permite las solicitudes de Tracy.",
+  "sync.error.livePassword": "Tu site en línea requiere una contraseña HTTP. Permite que Tracy acceda al punto de conexión de Claude Cowork sin esa contraseña y vuelve a intentarlo.",
+  "sync.error.livePhpTooOld": "Tu site en línea usa PHP {php}. Claude Cowork necesita PHP {min} o posterior. Pide a tu proveedor de hosting que actualice PHP y vuelve a intentarlo.",
+  "sync.error.livePhpTooOldPlain": "Tu site en línea usa una versión de PHP demasiado antigua para Claude Cowork. Pide a tu proveedor de hosting que actualice PHP y vuelve a intentarlo.",
+  "sync.error.liveRateLimited": "Tu site en línea está limitando las solicitudes. Espera antes de volver a intentarlo; Tracy respeta el plazo Retry-After.",
+  "sync.error.liveToken": "Tu site en línea rechazó el token de Claude Cowork. Vuelve a conectarlo con su token actual e inténtalo de nuevo.",
+  "push.label.featuredImage": "Imagen destacada",
+  "push.label.pageTemplate": "Template de página",
+  "push.label.altText": "Texto alternativo"
 }

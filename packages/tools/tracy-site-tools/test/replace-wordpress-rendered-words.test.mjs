@@ -6,18 +6,18 @@
  */
 import assert from 'node:assert/strict'
 import test from 'node:test'
-
-import { planReplace } from '../src/host/replace.mjs'
+import { createHash } from 'node:crypto'
 import {
-  RENDERED_TEXT,
   linkBesideWords,
   linkTargetOk,
   placesOfTarget,
+  RENDERED_TEXT,
   renderedSupport,
   renderedText,
   scanPlaces
 } from '../src/host/rendered-words.mjs'
-import { WP_REPLACE_NEXT, replaceOnWordPress } from '../src/host/replace-wordpress.mjs'
+import { planReplace } from '../src/host/replace.mjs'
+import { replaceOnWordPress, WP_REPLACE_NEXT } from '../src/host/replace-wordpress.mjs'
 
 import { component, PAGES } from './fixtures/replace/fake-wordpress.mjs'
 
@@ -762,4 +762,167 @@ test('a reason with a road of its own keeps its next: the theme file on a page w
   assert.match(out.error, /theme's template file/)
   assert.notEqual(out.next, renderedText('noRecordNext', { path: '/news/' }))
   assert.match(out.next, /that is an answer/)
+})
+
+test('a whole-output capable plugin receives the visible edit with its proven raw rule identity', async () => {
+  const visible = 'For enquiries, telephone our bakery.'
+  const page = html(`<div class="ja-contact-info"><p>${visible}</p></div>`)
+  const plugin = renderedPlugin({ page })
+  const rule = '0123456789abcdef'
+  const { out, rendered } = await run(
+    { find: visible, replace: 'Contact the bakery using this form.' },
+    {
+      plugin,
+      page,
+      script(action, params) {
+        if (action === 'info')
+          return { ...INFO, rendered_words: { ...INFO.rendered_words, composition: ['whole-output'] } }
+        if (action === 'content.renderedWords' && params.operation === 'inspect') {
+          const seen = plugin.script(action, params)
+          return {
+            ...seen,
+            targets: seen.targets.map((t) => ({
+              ...t,
+              candidates: t.candidates.map((c) => ({ ...c, replaces_rule: rule }))
+            }))
+          }
+        }
+      }
+    }
+  )
+  assert.equal(out.ok, true, JSON.stringify(out))
+  assert.equal(rendered[0].composition, 'whole-output')
+  assert.deepEqual(
+    rendered[1].rules.map((r) => [r.old, r.new, r.replaces_rule]),
+    [[visible, 'Contact the bakery using this form.', rule]]
+  )
+  assert.equal(out.changed[0].before.includes(visible), true)
+})
+
+for (const capable of [false, true]) {
+  test(`unproven composition candidates never dispatch a write (capability ${capable})`, async () => {
+    const plugin = renderedPlugin()
+    const { out } = await run(
+      { find: '(084) 555-0110', replace: '(028) 3822 1234' },
+      {
+        plugin,
+        script(action, params) {
+          if (action === 'info' && capable)
+            return { ...INFO, rendered_words: { ...INFO.rendered_words, composition: ['whole-output'] } }
+          if (action === 'content.renderedWords' && params.operation === 'inspect') {
+            const seen = plugin.script(action, params)
+            return {
+              ...seen,
+              targets: seen.targets.map((t) => ({
+                ...t,
+                candidates: t.candidates.map((c) => ({
+                  ...c,
+                  replaces_rule: capable ? '../bad-rule' : '0123456789abcdef'
+                }))
+              }))
+            }
+          }
+        }
+      }
+    )
+    assert.equal(out.ok, false)
+    assert.equal(out.code, 'READ_FAILED')
+    assert.equal(plugin.applied.length, 0)
+  })
+}
+
+for (const coverage of [
+  'full',
+  'partial',
+  'wrong-anchor',
+  'wrong-kind',
+  'duplicate',
+  'missing',
+  'empty',
+  'dropped-companion'
+]) {
+  test(`theme recovery requires every old raw rule to be superseded: ${coverage}`, async () => {
+    const plugin = renderedPlugin()
+    const oldRules = [
+      { kind: 'text', old: '(084) 555-0110', new: 'Old inactive phone' },
+      { kind: 'attribute', name: 'href', old: 'tel:0845550110', new: 'tel:111' }
+    ].map((r) => {
+      const [[anchor, { count }]] = placesOfTarget(scanPlaces(html()), r)
+      const rule = { ...r, anchor, expected_matches: count }
+      return {
+        ...rule,
+        id: createHash('sha256')
+          .update([r.kind, r.name ?? '', anchor, r.old].join('\0'))
+          .digest('hex')
+          .slice(0, 16)
+      }
+    })
+    if (coverage === 'partial')
+      oldRules.push({ ...oldRules[0], old: 'An unrelated earlier edit', id: '0123456789abcdef' })
+    if (coverage === 'wrong-anchor') oldRules[0].anchor = '0123456789abcdef'
+    if (coverage === 'wrong-kind') oldRules[0].kind = 'attribute'
+    if (coverage === 'duplicate') oldRules.push({ ...oldRules[0] })
+    for (const r of oldRules)
+      r.id = createHash('sha256')
+        .update([r.kind, r.name ?? '', r.anchor, r.old].join('\0'))
+        .digest('hex')
+        .slice(0, 16)
+    const success = coverage === 'full' || coverage === 'empty'
+    const { out, rendered } = await run(
+      { find: '(084) 555-0110', replace: '(028) 3822 1234' },
+      {
+        plugin,
+        script(action, params) {
+          if (action === 'info')
+            return { ...INFO, rendered_words: { ...INFO.rendered_words, composition: ['whole-output'] } }
+          if (action === 'content.renderedWords' && params.operation === 'inspect') {
+            if (params.composition)
+              return {
+                ok: false,
+                error: 'conflict',
+                message: 'The active theme changed since the rules were written'
+              }
+            const inspected = plugin.script(action, params)
+            if (coverage === 'missing') {
+              delete inspected.rules
+              return inspected
+            }
+            if (coverage === 'dropped-companion')
+              inspected.targets = inspected.targets.map((t) =>
+                t.kind === 'attribute' ? { ...t, candidates: [] } : t
+              )
+            return { ...inspected, rules: coverage === 'empty' ? [] : oldRules }
+          }
+        }
+      }
+    )
+    assert.equal(rendered[0].composition, 'whole-output')
+    assert.equal(rendered[1].composition, undefined)
+    assert.equal(out.ok, success, JSON.stringify(out))
+    assert.equal(plugin.applied.length, success ? 1 : 0)
+    if (!success) assert.equal(out.code, 'STORE_CHANGED')
+    else {
+      assert.equal(plugin.applied[0].proof, 'proof-3')
+      assert.deepEqual(
+        plugin.applied[0].rules.map((r) => r.new),
+        ['(028) 3822 1234', 'tel:02838221234']
+      )
+      assert.ok(out.notes.some((n) => n.includes('current theme')))
+    }
+  })
+}
+
+test('an ordinary inspect conflict does not trigger raw recovery or claim a failed read', async () => {
+  const { out, rendered, plugin } = await run(
+    { find: '(084) 555-0110', replace: 'New number' },
+    {
+      script(action) {
+        if (action === 'content.renderedWords')
+          return { ok: false, error: 'conflict', message: 'Another revision changed' }
+      }
+    }
+  )
+  assert.equal(out.code, 'STORE_CHANGED')
+  assert.equal(rendered.length, 1)
+  assert.equal(plugin.applied.length, 0)
 })

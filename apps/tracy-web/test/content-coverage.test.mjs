@@ -6,7 +6,7 @@
  */
 import assert from 'node:assert/strict'
 import { createHash } from 'node:crypto'
-import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
+import { mkdirSync, mkdtempSync, readFileSync, utimesSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
@@ -17,10 +17,14 @@ import { readContracts } from '../src/lib/contracts.js'
 import { publishRefusalOf, ROAD_STEPS, roadOf } from '../src/lib/road-to-live.js'
 
 const TAG = 'quickstart/ja-boxing/j6'
-/** A content map whose every text and image slot has a role (ADR 0038): the fixture of a release that passes. */
+/**
+ * A content map whose every text and image slot has a role (ADR 0038) and a Slot fit (ADR 0039): the fixture of a
+ * release that passes.
+ */
 const MAP = JSON.stringify({
   roleVocabularyVersion: 'place-content-roles/2',
-  slots: [{ key: 'a', type: 'text', role: 'editorial.heading' }]
+  slotFitVersion: 'slot-fit/1',
+  slots: [{ key: 'a', type: 'text', role: 'editorial.heading', fit: { measured: false } }]
 })
 /** A content map of a contract released before ADR 0038: it declares no roles anywhere. */
 const MAP_WITHOUT_ROLES = '{"slots":[{"key":"a","type":"text"}]}'
@@ -29,8 +33,13 @@ const MAP_MISSING_ROLES = JSON.stringify({
   roleVocabularyVersion: 'place-content-roles/2',
   slots: [
     { key: 'a', type: 'text', role: 'editorial.heading' },
-    ...Array.from({ length: 10 }, (_, i) => ({ key: `module-100.${i + 1}`, type: 'text' }))
-  ]
+    ...Array.from({ length: 10 }, (_, i) => ({
+      key: `module-100.${i + 1}`,
+      type: 'text',
+      fit: { measured: false }
+    }))
+  ],
+  slotFitVersion: 'slot-fit/1'
 })
 const LOCK = '{"entities":{}}'
 const sha = (s) => createHash('sha256').update(s).digest('hex')
@@ -140,6 +149,25 @@ test('the threshold is data: the same file passes under a looser policy', () => 
     loose
   )
   assert.equal(verdict.holds, false)
+})
+
+test('the reader re-reads a map written in the same clock tick as its last read', () => {
+  const { contracts } = profile(doc())
+  const contract = [...contracts.values()][0]
+  const mapFile = path.join(contract.dir, 'content-map.json')
+  // A write just now, in whole milliseconds, so restoring the time below gives back exactly the same stamp.
+  const tick = new Date(Math.floor(Date.now()))
+  utimesSync(mapFile, tick, tick)
+  assert.equal(coverageOfContract(contract).state, 'measured')
+  // Same size, same modification time: only the bytes differ, as when two writes share a tick.
+  const original = readFileSync(mapFile, 'utf8')
+  const cut = original.indexOf('\n')
+  const sameLength =
+    cut >= 0 ? `${original.slice(0, cut)} ${original.slice(cut + 1)}` : `${original.slice(0, -1)} `
+  assert.equal(sameLength.length, original.length)
+  writeFileSync(mapFile, sameLength)
+  utimesSync(mapFile, tick, tick)
+  assert.equal(coverageOfContract(contract).state, 'stale')
 })
 
 test('a failed page or a cut crawl is an incomplete measurement and holds', () => {
@@ -298,19 +326,22 @@ test('a platform with no content map or field map at all does not need the step'
   assert.equal(stepOf(roadOf(shop, { contracts })).code, 'coverage-not-needed')
 })
 
-test('WordPress: holes and page hygiene are not measured, but the slot roles group is judged like on Joomla', () => {
+test("WordPress: the audit result is read like Joomla's, and the slot roles group is judged beside it", () => {
   const { contracts, wp } = wordpressProfile(MAP)
+  const measured = { state: 'measured', doc: doc() }
   const missing = { state: 'missing', count: 3, shown: ['a', 'b', 'c'], reason: null }
-  const ready = stepOf(roadOf(wp, { contracts, roles: { state: 'ready' } }))
-  assert.deepEqual([ready.state, ready.code], ['done', 'coverage-not-needed'])
-  const held = stepOf(roadOf(wp, { contracts, roles: missing }))
+  const ready = stepOf(roadOf(wp, { contracts, coverage: measured, roles: { state: 'ready' } }))
+  assert.deepEqual([ready.state, ready.code], ['done', 'coverage-ready'])
+  const held = stepOf(roadOf(wp, { contracts, coverage: measured, roles: missing }))
   assert.deepEqual(roleFields(held), ['todo', 'coverage-roles', 'missing', 3])
-  assert.equal(held.params.holes, undefined)
-  const none = stepOf(roadOf(wp, { contracts, roles: { state: 'none' } }))
+  assert.equal(held.params.holes, 0)
+  const none = stepOf(roadOf(wp, { contracts, coverage: measured, roles: { state: 'none' } }))
   assert.deepEqual([none.state, none.code], ['todo', 'coverage-roles'])
   const shown = { ...wp, inspiration: { template: 'ja-boxing' }, inspirationHidden: false }
-  const warned = stepOf(roadOf(shown, { contracts, roles: missing }))
+  const warned = stepOf(roadOf(shown, { contracts, coverage: measured, roles: missing }))
   assert.deepEqual([warned.state, warned.code], ['warn', 'coverage-live-roles'])
+  const holes = stepOf(roadOf(wp, { contracts, coverage: { state: 'measured', doc: doc([hole()]) } }))
+  assert.deepEqual([holes.state, holes.code, holes.params.holes], ['todo', 'coverage-holes', 1])
   const blocked = {
     step: 'published',
     state: 'blocked',
@@ -321,16 +352,24 @@ test('WordPress: holes and page hygiene are not measured, but the slot roles gro
   assert.match(publishRefusalOf([held, blocked], wp).reason, /3 text or image slots have no role/)
 })
 
+test('WordPress: a contract with no measurement waits for the audit, a live one only warns', () => {
+  const { contracts, wp } = wordpressProfile(MAP)
+  const none = stepOf(roadOf(wp, { contracts }))
+  assert.deepEqual([none.state, none.code], ['todo', 'coverage-not-measured'])
+  const shown = { ...wp, inspiration: { template: 'ja-boxing' }, inspirationHidden: false }
+  const warned = stepOf(roadOf(shown, { contracts }))
+  assert.deepEqual([warned.state, warned.code], ['warn', 'coverage-not-measured'])
+})
+
 test('WordPress: the roles are read from the content map of its own contract', () => {
+  const measured = { state: 'measured', doc: doc() }
   const missing = wordpressProfile(MAP_MISSING_ROLES)
-  assert.deepEqual(roleFields(stepOf(roadOf(missing.wp, { contracts: missing.contracts }))), [
-    'todo',
-    'coverage-roles',
-    'missing',
-    10
-  ])
+  assert.deepEqual(
+    roleFields(stepOf(roadOf(missing.wp, { contracts: missing.contracts, coverage: measured }))),
+    ['todo', 'coverage-roles', 'missing', 10]
+  )
   const full = wordpressProfile(MAP)
-  assert.equal(stepOf(roadOf(full.wp, { contracts: full.contracts })).state, 'done')
+  assert.equal(stepOf(roadOf(full.wp, { contracts: full.contracts, coverage: measured })).state, 'done')
 })
 
 test('EmDash: the roles group is judged too, whatever the contract state', () => {
@@ -481,4 +520,233 @@ test('roles group: the caller may hand the roles in', () => {
   const roles = { state: 'missing', count: 2, shown: ['x', 'y'], reason: null }
   const step = stepOf(roadOf(release(), { contracts, roles }))
   assert.deepEqual(roleFields(step), ['todo', 'coverage-roles', 'missing', 2])
+})
+
+// The Slot fit group (ADR 0039 decision 7): a fourth group of Content coverage, judged like roles.
+
+/** Text and image slots with roles; `fitOf(i)` gives the fit of slot i (undefined: none); `version`: slotFitVersion. */
+function fitMap(count, fitOf, version = 'slot-fit/1') {
+  return JSON.stringify({
+    roleVocabularyVersion: 'place-content-roles/2',
+    ...(version ? { slotFitVersion: version } : {}),
+    slots: Array.from({ length: count }, (_, i) => {
+      const fit = fitOf(i)
+      return {
+        key: `module-200.${i + 1}`,
+        type: 'text',
+        role: 'editorial.heading',
+        ...(fit ? { fit } : {})
+      }
+    })
+  })
+}
+/** Roles on every slot, no Slot fit anywhere: every contract captured before ADR 0039, such as JA Boxing 1.0.5. */
+const MAP_WITHOUT_FIT = fitMap(12, () => undefined, null)
+/** Slot fit declared, ten of twelve slots without a fit. */
+const MAP_MISSING_FIT = fitMap(12, (i) => (i < 2 ? { measured: false } : undefined))
+/** A picture measured as a photo that still carries customize "keep": the flag disagrees with its kind. */
+const MAP_KEEP_DISAGREES = JSON.stringify({
+  roleVocabularyVersion: 'place-content-roles/2',
+  slotFitVersion: 'slot-fit/1',
+  slots: [
+    { key: 'a', type: 'text', role: 'editorial.heading', fit: { measured: false } },
+    {
+      key: 'article-12.image_intro',
+      type: 'image',
+      role: 'editorial.decorative_image',
+      customize: 'keep',
+      fit: { measured: false, kind: 'photo', replace: 'photo' }
+    }
+  ]
+})
+const fitFields = (step) => [step.state, step.code, step.params.fitState, step.params.fitCount]
+const refusalOf = (step, r) =>
+  publishRefusalOf(
+    [
+      step,
+      {
+        step: 'published',
+        state: 'blocked',
+        code: 'not-published',
+        params: {},
+        blockedBy: 'content-coverage'
+      }
+    ],
+    r
+  )
+
+test('fit group: a content map without Slot fit holds a release not shown, naming Slot fit and the first keys', () => {
+  const { contracts } = profile(doc(), MAP_WITHOUT_FIT)
+  const step = stepOf(roadOf(release(), { contracts }))
+  assert.deepEqual(fitFields(step), ['todo', 'coverage-fit', 'none', 12])
+  assert.deepEqual(
+    step.params.fitShown,
+    Array.from({ length: 8 }, (_, i) => `module-200.${i + 1}`)
+  )
+  assert.deepEqual(
+    [step.params.fitHolds, step.params.fitWarns, step.params.rolesState],
+    [true, false, 'ready']
+  )
+  const refusal = refusalOf(step, release())
+  assert.equal(refusal.error, 'CONTENT_COVERAGE_NOT_READY')
+  assert.match(refusal.reason, /Slot fit/)
+  assert.match(refusal.reason, /declares no Slot fit/)
+  assert.match(refusal.reason, /--fit/)
+})
+
+test('fit group: the same release shown on Design inspiration only warns', () => {
+  const { contracts } = profile(doc(), MAP_WITHOUT_FIT)
+  const step = stepOf(roadOf(live(), { contracts }))
+  assert.deepEqual(fitFields(step), ['warn', 'coverage-live-fit', 'none', 12])
+  assert.deepEqual([step.params.fitHolds, step.params.fitWarns], [false, true])
+})
+
+test('fit group: slots without a fit in a map that declares Slot fit are counted and named', () => {
+  const { contracts } = profile(doc(), MAP_MISSING_FIT)
+  const step = stepOf(roadOf(release(), { contracts }))
+  assert.deepEqual(fitFields(step), ['todo', 'coverage-fit', 'missing', 10])
+  assert.equal(step.params.fitShown.length, 8)
+  assert.equal(step.params.fitShown[0], 'module-200.3')
+  const reason = refusalOf(step, release()).reason
+  assert.match(reason, /Slot fit: 10 text or image slots have no fit \(module-200\.3/)
+  assert.match(reason, /\.\.\.\)/)
+})
+
+test('fit group: a keep flag that disagrees with the measured kind is invalid, with its reason', () => {
+  const { contracts } = profile(doc(), MAP_KEEP_DISAGREES)
+  const step = stepOf(roadOf(release(), { contracts }))
+  assert.deepEqual(fitFields(step), ['todo', 'coverage-fit', 'invalid', 0])
+  assert.match(step.params.fitReason, /must not carry customize "keep"/)
+  assert.match(refusalOf(step, release()).reason, /Slot fit .*not valid.*customize "keep"/)
+  const warned = stepOf(roadOf(live(), { contracts }))
+  assert.deepEqual([warned.state, warned.code], ['warn', 'coverage-live-fit'])
+})
+
+test('fit group: a map with roles and a full Slot fit passes the step', () => {
+  const full = fitMap(3, () => ({ measured: false }))
+  const step = stepOf(roadOf(release(), { contracts: profile(doc(), full).contracts }))
+  assert.deepEqual(fitFields(step), ['done', 'coverage-ready', 'ready', 0])
+  assert.deepEqual([step.params.fitHolds, step.params.fitWarns], [false, false])
+})
+
+test('fit group: roles come first, and the refusal names both groups when both hold', () => {
+  const { contracts } = profile(doc(), MAP_WITHOUT_ROLES)
+  const step = stepOf(roadOf(release(), { contracts }))
+  assert.deepEqual(
+    [step.code, step.params.rolesState, step.params.fitState, step.params.fitHolds],
+    ['coverage-roles', 'none', 'none', true]
+  )
+  const reason = refusalOf(step, release()).reason
+  assert.match(reason, /declares no slot roles/)
+  assert.match(reason, /Slot fit: the content map declares no Slot fit/)
+})
+
+test('fit group: holes keep their verdict, and Slot fit rides along in the refusal', () => {
+  const { contracts } = profile(doc([hole()]), MAP_WITHOUT_FIT)
+  const step = stepOf(roadOf(release(), { contracts }))
+  assert.deepEqual([step.code, step.params.holes, step.params.fitState], ['coverage-holes', 1, 'none'])
+  const reason = refusalOf(step, release()).reason
+  assert.match(reason, /1 piece of demo content/)
+  assert.match(reason, /Slot fit/)
+})
+
+test('fit group: WordPress and EmDash are not judged until their audit measures Slot fit', () => {
+  const { contracts, wp } = wordpressProfile(MAP_WITHOUT_FIT)
+  const step = stepOf(roadOf(wp, { contracts, coverage: { state: 'measured', doc: doc() } }))
+  assert.deepEqual(
+    [step.state, step.code, step.params.fitState, step.params.fitHolds],
+    ['done', 'coverage-ready', 'not-applicable', false]
+  )
+})
+
+test('fit group: the caller may hand the fit in', () => {
+  const { contracts } = profile(doc())
+  const fit = { state: 'missing', count: 2, shown: ['x', 'y'] }
+  const step = stepOf(roadOf(release(), { contracts, fit }))
+  assert.deepEqual(fitFields(step), ['todo', 'coverage-fit', 'missing', 2])
+})
+
+test('fit group: the released JA Boxing 1.0.5 contract has no Slot fit, so it warns while live and holds otherwise', () => {
+  const contracts = readContracts(
+    path.join(import.meta.dirname, '../../../packages/cms/tracy-joomla-quickstart/contracts')
+  )
+  const at = (over) => release({ setting: { ...release().setting, version: '1.0.5' }, ...over })
+  const shown = stepOf(
+    roadOf(at({ inspiration: { template: 'ja-boxing' }, inspirationHidden: false }), { contracts })
+  )
+  assert.equal(shown.state, 'warn')
+  assert.deepEqual([shown.params.fitState, shown.params.fitHolds], ['none', false])
+  assert.ok(shown.params.fitCount > 1000)
+  const hidden = stepOf(roadOf(at({}), { contracts }))
+  assert.equal(hidden.state, 'todo')
+  assert.deepEqual([hidden.params.fitState, hidden.params.fitHolds], ['none', true])
+})
+
+test('fit group: the released JA Boxing 1.0.7 contract carries a complete Slot fit, so nothing holds and the hero boxer asks for a cut-out', () => {
+  const root = path.join(import.meta.dirname, '../../../packages/cms/tracy-joomla-quickstart/contracts')
+  const contracts = readContracts(root)
+  const at = (over) => release({ setting: { ...release().setting, version: '1.0.7' }, ...over })
+  const hidden = stepOf(roadOf(at({}), { contracts }))
+  assert.equal(hidden.params.fitState, 'ready')
+  assert.equal(hidden.params.fitHolds, false)
+  const map = JSON.parse(readFileSync(path.join(root, 'ja-boxing/j6/1.0.7/content-map.json'), 'utf8'))
+  assert.equal(map.slotFitVersion, 'slot-fit/1')
+  const hero = map.slots.find((slot) => slot.key === 'module-156.1')
+  assert.ok(hero, 'the hero boxer slot is in the map')
+  assert.equal(hero.fit.kind, 'cutout')
+  assert.equal(hero.fit.transparent, true)
+})
+
+test('label rules group: the released JA Boxing 1.0.8 contract (role vocabulary 3) holds nothing: every rule at 0, every located slot judged right, its style-guide page demo-only', () => {
+  const root = path.join(import.meta.dirname, '../../../packages/cms/tracy-joomla-quickstart/contracts')
+  const contracts = readContracts(root)
+  const at = (over) => release({ setting: { ...release().setting, version: '1.0.8' }, ...over })
+  const step = stepOf(roadOf(at({}), { contracts }))
+  assert.deepEqual(
+    [step.params.labelHolds, step.params.labelFailing, step.params.judgeState, step.params.judgeHolds],
+    [false, [], 'ready', false]
+  )
+  assert.deepEqual([step.params.judgeWrongGroupCount, step.params.judgeMismatchCount], [0, 0])
+  assert.deepEqual([step.params.fitState, step.params.fitHolds], ['ready', false])
+  const map = JSON.parse(readFileSync(path.join(root, 'ja-boxing/j6/1.0.8/content-map.json'), 'utf8'))
+  assert.equal(map.roleVocabularyVersion, 'place-content-roles/3')
+  const typography = map.entities.find((entity) => entity.key === 'article-17')
+  assert.equal(typography?.demoOnly, true)
+  // the Private Training phone has a slot of its own (ja-products #57), not a line inside the description
+  const phone = map.slots.find((slot) => slot.key === 'module-177.14')
+  assert.deepEqual([phone?.role, phone?.sample], ['contact.phone', '(239) 555-0108'])
+})
+
+test('label rules group: the JA Cagox 1.0.2 contract (the first shop template) holds nothing: every rule at 0, a complete Slot fit, the label judge only warns', () => {
+  const root = path.join(import.meta.dirname, '../../../packages/cms/tracy-joomla-quickstart/contracts')
+  const contracts = readContracts(root)
+  const at = (over) =>
+    release({
+      tag: 'quickstart/ja-cagox/j6',
+      name: 'JA Cagox',
+      setting: { ...release().setting, version: '1.0.2', template: 'ja-cagox' },
+      ...over
+    })
+  const step = stepOf(roadOf(at({}), { contracts }))
+  assert.deepEqual(
+    [step.params.labelState, step.params.labelHolds, step.params.labelFailing, step.params.holes],
+    ['ready', false, [], 0]
+  )
+  assert.deepEqual([step.params.fitState, step.params.fitHolds], ['ready', false])
+  assert.equal(step.params.judgeHolds, false)
+  const coverage = JSON.parse(
+    readFileSync(path.join(root, 'ja-cagox/j6/1.0.2/content-coverage.json'), 'utf8')
+  )
+  // the shop's own inventory is listed as catalogue, and every other hole carries its reason
+  assert.ok(coverage.holes.some((h) => h.class === 'catalogue'))
+  assert.deepEqual(
+    coverage.holes.filter((h) => ['capture', 'template', 'unknown'].includes(h.class) && !h.accepted),
+    []
+  )
+  const map = JSON.parse(readFileSync(path.join(root, 'ja-cagox/j6/1.0.2/content-map.json'), 'utf8'))
+  // the trust strip states the shop's own terms: shipping, returns, payments
+  const terms = ['module-134.1', 'module-134.2', 'module-134.3'].map(
+    (key) => map.slots.find((s) => s.key === key)?.role
+  )
+  assert.deepEqual(terms, ['offering.price_note', 'offering.price_note', 'offering.price_note'])
 })

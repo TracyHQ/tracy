@@ -1,3 +1,4 @@
+import { chatDraftOf } from './chat-draft.mjs'
 /**
  * The platforms a site can be BORN on, and the platforms a site can be IMPORTED from — two different
  * questions, two different tables.
@@ -65,6 +66,7 @@ export function toggleKeyFor(platform: CreatePlatform): string {
  * the same `pressedAt`), so an update never undoes a pick made by hand in between.
  */
 export interface PlatformPress {
+  chatDraft?: ReturnType<typeof chatDraftOf>
   /** Absent when the press named no platform this wizard creates on: the pill is left as it is. */
   platform?: CreatePlatform
   /** The template the press starts from: `design` (`buildOpener`), else `id` (`tracy-tab-link`). */
@@ -92,12 +94,13 @@ const PRESS_ORIGINS: readonly PressOrigin[] = ['create', 'import', 'business']
  */
 export function platformPressOf(meta: unknown): PlatformPress | undefined {
   if (meta === null || typeof meta !== 'object') return undefined
-  const { platform, pressedAt, design, id, origin } = meta as {
+  const { platform, pressedAt, design, id, origin, chatDraft } = meta as {
     platform?: unknown
     pressedAt?: unknown
     design?: unknown
     id?: unknown
     origin?: unknown
+    chatDraft?: unknown
   }
   const entry = CREATE_PLATFORMS.find((one) => one.value === platform)
   const named = [design, id]
@@ -105,7 +108,9 @@ export function platformPressOf(meta: unknown): PlatformPress | undefined {
     ?.trim()
   const card = PRESS_ORIGINS.find((one) => one === origin)
   if (entry === undefined && named === undefined && card === undefined) return undefined
+  const draft = chatDraftOf(chatDraft)
   return {
+    ...(draft ? { chatDraft: draft } : {}),
     ...(entry === undefined ? {} : { platform: entry.value }),
     ...(named === undefined ? {} : { design: named }),
     ...(card === undefined ? {} : { origin: card }),

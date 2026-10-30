@@ -12,8 +12,11 @@ import { bornSiteAddress } from '../lib/site-address.js'
 
 import { contractStatus, contractWarnings } from '../lib/brief-support.js'
 import { defaultContracts } from '../lib/contracts.js'
+import { fitOfRelease } from '../lib/content-coverage/fit.js'
+import { coverageOfRelease } from '../lib/content-coverage/road-step.js'
 import { rolesOfRelease } from '../lib/content-coverage/roles.js'
 import { checkAgain, kickReadiness, readinessForRoad, readinessRows } from '../lib/customize-readiness.js'
+import { kickBlurbTranslations } from '../lib/template-blurb-translations.js'
 import {
   dsCheckAgain,
   dsReadinessOf,
@@ -157,7 +160,11 @@ export function quickstartRoutes({
   doorHealth = null,
   // The slot roles group of Content coverage (ADR 0038). A test hands in its own answer: the released
   // contracts its fixtures borrow are never edited (ADR 0038 decision 6), so they cannot gain roles.
-  rolesOf = rolesOfRelease
+  rolesOf = rolesOfRelease,
+  // The Slot fit group of Content coverage (ADR 0039), the same way: released contracts never gain Slot fit.
+  fitOf = fitOfRelease,
+  // The committed content-coverage.json of a release's contract, the same way: a released contract never gains one.
+  coverageOf = coverageOfRelease
 }) {
   const app = new Hono()
 
@@ -255,6 +262,8 @@ export function quickstartRoutes({
         doorHealth: doorHealth?.of(r.tag) ?? null,
         contracts,
         roles: rolesOf(r, contracts),
+        fit: fitOf(r, contracts),
+        coverage: coverageOf(r, contracts),
         siblings: id ? sameTemplate(releases, id) : [],
         readiness: readinessForRoad(checks, r),
         dsReadiness: dsReadinessOf(dsChecks, r)
@@ -525,6 +534,8 @@ export function quickstartRoutes({
     if (result.ok) {
       kickReadiness(pool, config, { fetchImpl })
       kickDsReadiness(pool, config, { fetchImpl })
+      // A new or reworded blurb is translated for the public Templates pages (master only).
+      kickBlurbTranslations(pool, config, { fetchImpl })
     }
     return c.json(result, result.ok ? 200 : 503)
   })
@@ -817,6 +828,8 @@ export function quickstartRoutes({
       tag,
       JSON.stringify(card)
     ])
+    // A reworded blurb of a shown card is live at once; its translations follow in the background.
+    kickBlurbTranslations(pool, config, { fetchImpl })
     return c.json({ ok: true, replaced: written.replaced, inspiration: card, hidden: !shown })
   })
 
@@ -853,6 +866,8 @@ export function quickstartRoutes({
       failed: (await failedDemosByTag(pool)).get(tag) ?? null,
       contracts,
       roles: rolesOf(release, contracts),
+      fit: fitOf(release, contracts),
+      coverage: coverageOf(release, contracts),
       siblings: builds,
       readiness: readinessForRoad(await readinessRows(pool), release),
       dsReadiness: dsReadinessOf(await dsReadinessRows(pool), release),
@@ -870,6 +885,8 @@ export function quickstartRoutes({
     )
     if (!unmarked.ok) return c.json({ error: 'GITHUB_REFUSED', reason: unmarked.reason }, 502)
     await pool.query('update quickstart_releases set inspiration_hidden = false where tag = $1', [tag])
+    // The card just reached customers: translate its blurb now rather than at the next read of the releases.
+    kickBlurbTranslations(pool, config, { fetchImpl })
     // A lower profile does not refuse: the card is published and the sheet says what is not proven.
     return c.json({ ok: true, warnings: contractWarnings(builds, contracts) })
   })

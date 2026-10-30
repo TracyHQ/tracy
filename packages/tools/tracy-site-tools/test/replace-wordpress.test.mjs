@@ -2169,3 +2169,32 @@ test('lorem replaced one find at a time never piles up into a BODY_SHRINK agains
   assert.equal(writes.length, 4)
   assert.ok(writes.every((w) => w.ok === true))
 })
+
+test('confirm-count weighs only the places no expect counts: a counted pair beside a loose one writes, the loose pair alone still asks', async () => {
+  const hotline = { find: '8 800 550-67-89', replace: '0909 123 456' }
+  const eyebrow = { find: 'Established 2004', replace: 'Since 2010' }
+  // Six places, none counted: confirm-count asks first, as it always did.
+  const loose = await run({ path: '/', all: true, changes: [hotline, eyebrow] })
+  assert.equal(loose.out.code, 'VALUE_NOT_ALLOWED')
+  assert.equal(loose.out.rule, 'confirm-count')
+  assert.deepEqual(loose.site.writes(), [])
+  // The hotline's five places counted by its own expect: one loose place is left to weigh, and every record is
+  // written once.
+  const counted = await run({ path: '/', all: true, changes: [{ ...hotline, expect: 5 }, eyebrow] })
+  assert.equal(counted.out.ok, true, JSON.stringify(counted.out).slice(0, 300))
+  const records = counted.site.writes().map((w) => `${w.kind}:${w.key ?? w.id}`)
+  assert.equal(records.length, 6)
+  assert.equal(new Set(records).size, records.length)
+  // A longer phrase and a shorter one inside it in one call share their words: refused, naming the shorter.
+  const overlap = await run({
+    path: '/',
+    all: 'page',
+    changes: [
+      { find: 'Building the groundwork for next-generation plants', replace: 'Overview', expect: 1 },
+      { find: 'next-generation plants', replace: 'our plants', expect: 1 }
+    ]
+  })
+  assert.equal(overlap.out.code, 'BAD_PARAMS')
+  assert.equal(overlap.out.change, 1)
+  assert.deepEqual(overlap.site.writes(), [])
+})

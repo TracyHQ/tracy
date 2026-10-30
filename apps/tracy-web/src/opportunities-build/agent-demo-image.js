@@ -1,4 +1,5 @@
 /** Bounded variants of a frozen source, using the existing Sharp crop/source-canvas helpers. */
+import { createHash } from 'node:crypto'
 import sharp from 'sharp'
 import { cutForPlace, extendForPlace } from '../lib/picture-cut.js'
 
@@ -54,7 +55,7 @@ const fail = (code, why = null) => Object.assign(new Error(code), { code, ...(wh
 const recipeFail = (why) => fail('AGENT_DEMO_IMAGE_RECIPE_INVALID', why)
 
 /** A slot's shape as a number: `1.5`, `"3/2"` or `"3:2"` (the forms a slot's size is written in). */
-function aspectOf(value) {
+export function aspectOf(value) {
   if (typeof value === 'number') return value
   const m =
     typeof value === 'string' ? value.trim().match(/^(\d+(?:\.\d+)?)\s*[/:]\s*(\d+(?:\.\d+)?)$/) : null
@@ -101,8 +102,12 @@ const allowed = (value, keys) =>
  */
 export function agentImageRecipe(image, assetIds) {
   if (image === undefined) return null
-  if (!allowed(image, ['assetId', 'crop', 'canvas']))
-    throw recipeFail('image takes assetId, crop and an optional canvas, nothing else')
+  if (!allowed(image, ['assetId', 'crop', 'canvas', 'tone']))
+    throw recipeFail('image takes assetId, crop, an optional canvas and an optional tone, nothing else')
+  if (image.tone !== undefined && !Object.hasOwn(TONE, image.tone))
+    throw recipeFail(
+      'image.tone is "dark" (the photo carries light words) or "light" (it carries dark words)'
+    )
   if (!assetIds.includes(image.assetId)) throw recipeFail("image.assetId must be one of the row's assetIds")
   if (!allowed(image.crop, ['aspect', 'source', 'output', 'strategy', 'anchor']))
     throw recipeFail('image.crop takes aspect, source, output, strategy and an optional anchor')
@@ -158,14 +163,113 @@ export function agentImageRecipe(image, assetIds) {
 
 export async function makeAgentImage(bytes, image) {
   try {
-    const variant = image.canvas
+    const cut = image.canvas
       ? await extendForPlace(bytes, image.crop, image.canvas)
       : await cutForPlace(bytes, image.crop, { keepAlpha: true })
+    const variant = image.tone ? await toneForWords(cut, image.tone) : cut
     if (variant.bytes.length > 8 * 1024 * 1024) throw fail('AGENT_DEMO_IMAGE_TOO_LARGE')
     return variant
   } catch (error) {
-    throw fail(
-      error.code === 'AGENT_DEMO_IMAGE_TOO_LARGE' ? error.code : 'AGENT_DEMO_IMAGE_RECIPE_UNAVAILABLE'
+    if (['AGENT_DEMO_IMAGE_TOO_LARGE', 'AGENT_DEMO_IMAGE_TONE_UNREACHABLE'].includes(error.code)) throw error
+    throw fail('AGENT_DEMO_IMAGE_RECIPE_UNAVAILABLE')
+  }
+}
+
+/**
+ * 🔒 A PHOTO THAT CARRIES WORDS IS TONED ITSELF, NOT COVERED (plan "10/10" §3, council 26/10/2026). Local rounds 27–31
+ * on WordPress put the place's photo behind a hero's white words, and every way the build found to make them read
+ * broke a guard: a `filter:brightness` written into the block failed native-structure, an overlay colour in global
+ * styles failed look-kept. The photo's own pixels change nothing the template holds. `dark`: the photo's bright end
+ * (85th percentile of its luminance) is brought down to where white words read at 4.5:1; `light`: its dark end (15th)
+ * up to where black ones do. The least change that gets there is taken, within a limit — never darker than half its
+ * brightness, never more than half way to white — so a photo stays a photo; one that cannot get there within it is refused and
+ * another, calmer photo is the way (`AGENT_DEMO_IMAGE_TONE_UNREACHABLE`).
+ */
+export const TONE = Object.freeze({
+  // white (1.0) at 4.5:1 → ground ≤ 1.05 / 4.5 − 0.05
+  dark: { percentile: 0.85, target: 1.05 / 4.5 - 0.05, limit: 0.5 },
+  // black (0) at 4.5:1 → ground ≥ 4.5 × 0.05 − 0.05
+  light: { percentile: 0.15, target: 4.5 * 0.05 - 0.05, limit: 0.5 }
+})
+const linear = (v) => {
+  const c = v / 255
+  return c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+}
+
+/**
+ * One percentile of a picture's luminance after a change of its channels (`apply` maps 0–255 to 0–255).
+ * @param {Buffer} raw - RGB triplets of a sample of the picture.
+ * @param {number} p - the percentile, 0–1.
+ * @param {(v: number) => number} apply
+ */
+function luminanceAt(raw, p, apply) {
+  const lums = []
+  for (let i = 0; i + 2 < raw.length; i += 3)
+    lums.push(
+      0.2126 * linear(apply(raw[i])) + 0.7152 * linear(apply(raw[i + 1])) + 0.0722 * linear(apply(raw[i + 2]))
     )
+  lums.sort((x, y) => x - y)
+  return lums[Math.min(lums.length - 1, Math.floor(p * lums.length))] ?? 0
+}
+
+/**
+ * The cut photo toned for the words it carries (`TONE`): the same size and format, a new hash, and the change in its
+ * recipe. Exported for the test.
+ * @param {{ bytes: Buffer, ext: string, width: number, height: number, sha256: string, recipe?: object }} variant
+ * @param {'dark' | 'light'} mode
+ */
+export async function toneForWords(variant, mode) {
+  const rule = TONE[mode]
+  // A cut-out kept transparent (a logo) carries no words over it: it stays as cut.
+  if (variant.ext === 'png')
+    return { ...variant, recipe: { ...variant.recipe, tone: { mode, skipped: 'transparent' } } }
+  const { data: raw } = await sharp(variant.bytes)
+    .resize(160, 160, { fit: 'inside' })
+    .removeAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true })
+  const mapFor =
+    mode === 'dark' ? (a) => (v) => Math.round(v * a) : (k) => (v) => Math.round(v + (255 - v) * k)
+  const reads = (x) => {
+    const at = luminanceAt(raw, rule.percentile, mapFor(x))
+    return mode === 'dark' ? at <= rule.target : at >= rule.target
+  }
+  const before = luminanceAt(raw, rule.percentile, (v) => v)
+  // dark: the largest factor (least darkening) in [limit, 1]; light: the smallest blend in [0, limit]
+  const [lo, hi] = mode === 'dark' ? [rule.limit, 1] : [0, rule.limit]
+  const none = mode === 'dark' ? 1 : 0
+  if (reads(none))
+    return { ...variant, recipe: { ...variant.recipe, tone: { mode, change: none, before, after: before } } }
+  const end = mode === 'dark' ? lo : hi
+  if (!reads(end))
+    throw fail(
+      'AGENT_DEMO_IMAGE_TONE_UNREACHABLE',
+      mode === 'dark'
+        ? 'this photo stays too bright under light words even darkened as far as a photo may be: put a calmer, darker photo of the place in this frame'
+        : 'this photo stays too dark under dark words even lightened as far as a photo may be: put a lighter photo of the place in this frame'
+    )
+  let [a, b] = [lo, hi]
+  for (let n = 0; n < 12; n++) {
+    const mid = (a + b) / 2
+    if (mode === 'dark' ? reads(mid) : !reads(mid)) a = mid
+    else b = mid
+  }
+  // rounded on the side that still reads
+  const change = mode === 'dark' ? Math.floor(a * 1000) / 1000 : Math.ceil(b * 1000) / 1000
+  const image = sharp(variant.bytes)
+  const toned =
+    mode === 'dark'
+      ? image.linear([change, change, change], [0, 0, 0])
+      : image.linear([1 - change, 1 - change, 1 - change], [255 * change, 255 * change, 255 * change])
+  // the cut's own JPEG settings (`picture-cut.js`)
+  const bytes = await toned.jpeg({ quality: 84, mozjpeg: false }).toBuffer()
+  return {
+    ...variant,
+    bytes,
+    sha256: createHash('sha256').update(bytes).digest('hex'),
+    recipe: {
+      ...variant.recipe,
+      tone: { mode, change, before, after: luminanceAt(raw, rule.percentile, mapFor(change)) }
+    }
   }
 }

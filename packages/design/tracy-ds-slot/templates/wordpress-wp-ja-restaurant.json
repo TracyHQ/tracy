@@ -6,9 +6,9 @@
     "wp-ja-restaurant": "1.0.0"
   },
   "maxVersion": {
-    "wp-ja-restaurant": "1.0.1"
+    "wp-ja-restaurant": "1.0.2"
   },
-  "maxVersionNote": "1.0.0 20/10/2026: the first cut of the theme, a port of the JA Restaurant Joomla 6 (T3) quickstart 1.0.6. Checked statically only (template-design-system-readiness.mjs on the local theme zip): the carried source sheets (assets/css/source/, from the tokenized 1.0.6 sheets by tasks/ja-restaurant-wp7/tools/port-css.mjs) read the slot with the template's own value as the fallback, the colour block of theme.overlay.json reads every role on both sides, tracy_apply_inspiration kept. Not yet measured on a built site under any system. 1.0.1 22/10/2026: a stylesheet-only patch (the hero heading's accent bar under a system, D-30); measured on a built site, see readyNote.",
+  "maxVersionNote": "1.0.0 20/10/2026: the first cut of the theme, a port of the JA Restaurant Joomla 6 (T3) quickstart 1.0.6. Checked statically only (template-design-system-readiness.mjs on the local theme zip): the carried source sheets (assets/css/source/, from the tokenized 1.0.6 sheets by tasks/ja-restaurant-wp7/tools/port-css.mjs) read the slot with the template's own value as the fallback, the colour block of theme.overlay.json reads every role on both sides, tracy_apply_inspiration kept. Not yet measured on a built site under any system. 1.0.1 22/10/2026: a stylesheet-only patch (the hero heading's accent bar under a system, D-30); measured on a built site, see readyNote. 1.0.2 27/10/2026: installed candidate ZIP checked with CSS-1/CSS-2/DEF-1/PLAT-1 (all PASS, 2141 fallback-preserving slot reads); the complete slot-read sequence of every CSS file equals develop 1.0.1, functions.php retains tracy_apply_inspiration. The CSS delta is touch-action only; gallery input was exercised on the installed package (3/3 browser cases). This patch did not remeasure the full worn-system matrix.",
   "release": "quickstart/ja-restaurant/wp7",
   "baseTokensFile": "packages/cms/tracy-wordpress-theme/overlays/wp-ja-restaurant/tokens.css",
   "roles": {

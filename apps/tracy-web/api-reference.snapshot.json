@@ -2422,6 +2422,48 @@
           "x-audience": ["customer"]
         }
       },
+      "/api/assistant/onboarding-draft": {
+        "post": {
+          "operationId": "post_api_assistant_onboarding_draft",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "intent": {
+                      "enum": ["create", "import", "business"],
+                      "type": "string"
+                    },
+                    "platform": {
+                      "enum": ["wordpress", "joomla", "emdash"],
+                      "type": "string"
+                    },
+                    "session": {
+                      "type": "string"
+                    },
+                    "sourceRevision": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["intent", "session", "sourceRevision"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["customer"]
+        }
+      },
       "/api/assistant/tip/seen": {
         "post": {
           "operationId": "post_api_assistant_tip_seen",
@@ -25084,6 +25126,48 @@
           "x-audience": ["customer"]
         }
       },
+      "/api/assistant/onboarding-draft": {
+        "post": {
+          "operationId": "post_api_assistant_onboarding_draft",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "intent": {
+                      "enum": ["create", "import", "business"],
+                      "type": "string"
+                    },
+                    "platform": {
+                      "enum": ["wordpress", "joomla", "emdash"],
+                      "type": "string"
+                    },
+                    "session": {
+                      "type": "string"
+                    },
+                    "sourceRevision": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["intent", "session", "sourceRevision"],
+                  "type": "object"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Accounts & seats"],
+          "x-audience": ["customer"]
+        }
+      },
       "/api/assistant/telegram/webhook": {
         "post": {
           "operationId": "post_api_assistant_telegram_webhook",
@@ -32068,6 +32152,32 @@
           "x-internal": true
         }
       },
+      "/api/ops/wo/places/{id}/briefs": {
+        "get": {
+          "operationId": "get_api_ops_wo_places_id_briefs",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Ops: fleet"],
+          "x-audience": ["team"],
+          "x-internal": true
+        }
+      },
       "/api/ops/wo/places/{id}/media/{mediaId}/revoke": {
         "post": {
           "operationId": "post_api_ops_wo_places_id_media_mediaId_revoke",
@@ -32587,6 +32697,66 @@
             },
             "required": true
           },
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Ops: fleet"],
+          "x-audience": ["team"],
+          "x-internal": true
+        }
+      },
+      "/api/ops/wo/revisions/{revId}/assets/{assetId}/image": {
+        "get": {
+          "operationId": "get_api_ops_wo_revisions_revId_assets_assetId_image",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "revId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            },
+            {
+              "in": "path",
+              "name": "assetId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Ops: fleet"],
+          "x-audience": ["team"],
+          "x-internal": true
+        }
+      },
+      "/api/ops/wo/revisions/{revId}/labels": {
+        "get": {
+          "operationId": "get_api_ops_wo_revisions_revId_labels",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "revId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
           "responses": {
             "200": {}
           },
@@ -52422,6 +52592,9 @@
               "application/json": {
                 "schema": {
                   "properties": {
+                    "referrer": {
+                      "type": "string"
+                    },
                     "utm_campaign": {
                       "type": "string"
                     },
@@ -52847,6 +53020,58 @@
             }
           ],
           "tags": ["Ops"],
+          "x-audience": ["team"],
+          "x-internal": true
+        }
+      },
+      "/ops/wo/places/{id}/briefs": {
+        "get": {
+          "operationId": "get_ops_wo_places_id_briefs",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "id",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Ops: fleet"],
+          "x-audience": ["team"],
+          "x-internal": true
+        }
+      },
+      "/ops/wo/revisions/{revId}/labels": {
+        "get": {
+          "operationId": "get_ops_wo_revisions_revId_labels",
+          "parameters": [
+            {
+              "in": "path",
+              "name": "revId",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "responses": {
+            "200": {}
+          },
+          "security": [
+            {
+              "session": []
+            }
+          ],
+          "tags": ["Ops: fleet"],
           "x-audience": ["team"],
           "x-internal": true
         }

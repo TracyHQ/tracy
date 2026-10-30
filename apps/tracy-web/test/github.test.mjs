@@ -1808,7 +1808,7 @@ test(
 )
 
 test(
-  '/github/release: a signed release event on ja-products reads GitHub again; a push on it does not',
+  '/github/release: a signed release event on joomlart-products reads GitHub again; a push on it does not',
   opts,
   async () => {
     const { pool } = db
@@ -1841,14 +1841,14 @@ test(
 
     const published = await post('release', {
       action: 'published',
-      repository: { full_name: 'JoomlArt-Products/ja-products' }
+      repository: { full_name: 'JoomlArt-Products/joomlart-products' }
     })
     assert.equal(published.status, 200)
     assert.equal(reads, 1)
 
     // A push on the same repository is the OTHER webhook's business: tying the two together
     // would re-read GitHub every time a customer's site pushed a commit.
-    const pushed = await post('push', { repository: { full_name: 'JoomlArt-Products/ja-products' } })
+    const pushed = await post('push', { repository: { full_name: 'JoomlArt-Products/joomlart-products' } })
     assert.deepEqual(await pushed.json(), { ignored: true })
     // And a release somewhere else says nothing about the quickstarts.
     const elsewhere = await post('release', {

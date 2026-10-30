@@ -129,8 +129,12 @@ const briefOf = (profile, opportunity = GOOGLE_OPP) =>
 test('the brief, and so the site check, carries the suggested name, never Google’s back', () => {
   const p = withNameDecision(mergeProfile(GOOGLE_OPP, ROWS), { opportunity: GOOGLE_OPP, brand: LOGO_BRAND })
   assert.equal(briefOf(p).business.name, 'Harbour Sport Club')
-  // A profile whose `name` was left at Google's still briefs the decided name.
-  assert.equal(briefOf({ ...p, name: 'Padel & Tennis Coach' }).business.name, 'Harbour Sport Club')
+  // A profile whose `name` was left at Google's holds that name off the site (its own marks say another), so the brief
+  // names the business by its neutral identity: never Google's name back.
+  const stale = briefOf({ ...p, name: 'Padel & Tennis Coach' })
+  assert.equal(stale.facts.find((f) => f.field === 'name').onSite, false)
+  assert.notEqual(stale.business.name, 'Padel & Tennis Coach')
+  assert.equal(stale.business.name, stale.sitemap.find((pg) => pg.slug === 'home').seo.title)
 })
 
 test('the brief carries the picked name', () => {

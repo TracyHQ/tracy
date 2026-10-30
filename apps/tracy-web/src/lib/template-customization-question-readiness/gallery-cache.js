@@ -12,7 +12,7 @@
 import { isLocalTag } from '../local-releases.js'
 import { themeZipsOfSetting } from './readers/theme-zips.js'
 
-/** A release tag as `ja-products` spells them: `quickstart/ja-essence/j6`, `tracy-business/emdash-0.x`. */
+/** A release tag as `joomlart-products` spells them: `quickstart/ja-essence/j6`, `tracy-business/emdash-0.x`. */
 const TAG = /^[a-z0-9][a-z0-9._-]*(\/[a-z0-9][a-z0-9._-]*){1,2}$/
 
 /** One asset name the cache may hold (the same rule `release-source.js` reads by). */

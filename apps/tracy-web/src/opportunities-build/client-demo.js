@@ -1,8 +1,10 @@
 /** Client-submitted demo chat: reserve identity and evidence; never dispatch an agent prompt. */
+import { nameHeldOf, siteNameOf } from 'website-opportunities/domain/held-name.mjs'
 import { createHash, randomUUID } from 'node:crypto'
 import { mintSession } from '../lib/session.js'
 import {
   agentDemoCollected,
+  agentDemoInventoryPolicy,
   checkedResearch,
   DEMO_CHECKS,
   inventoryRoutes,
@@ -16,19 +18,24 @@ import {
   templatePostTitles,
   templatePostsLeft
 } from './agent-demo.js'
-import { deterministicBuildId, suggestedLabel, startBuild, settleBuild } from './builds.js'
+import { liveReadinessOf } from './live-readiness.js'
+import { deterministicBuildId, readinessOfBuild, suggestedLabel, startBuild, settleBuild } from './builds.js'
 import { revisionForAction } from './revisions.js'
 import { logoResearchDoor, logoResearchNote } from './logo-research.js'
 import { withBuildChoice } from './build-choice.js'
-import { insertBuild, saveBuildLabel } from './build-store.js'
+import { buildPlaced, insertBuild, saveBuildLabel } from './build-store.js'
+import { deferToMeasure, reusableLookPages } from './demo-look.js'
+import { visionLabelOf } from './demo-photo-labels.js'
+import { slotPhotoEvidence } from './slot-photo-evidence.js'
 import { demoActionOf } from './demo-actions.js'
 import { handOff, pictureWorth, poorPicture, videoFrameIds } from './handoff.js'
-import { baselineTrust, briefOf, summary } from './demo-qa.js'
+import { baselineForHost, baselineTrust, briefOf, summary } from './demo-qa.js'
 import { planSweep, routePath, siteLocaleOf, sweepOf } from './residue-sweep.js'
 import { currentPostRoutes, postMoves } from './post-routes.js'
 import { contactOf, pinnedCopy } from 'website-opportunities/domain/pinned-copy.mjs'
 import { tradeWords } from 'website-opportunities/domain/trade-words.mjs'
 import { isPlaceholderText } from 'website-opportunities/domain/editorial-guide.mjs'
+import { neutralWords } from 'website-opportunities/domain/neutral-copy.mjs'
 import { checkResearchSourced } from './demo-sourced.js'
 
 /** The research's phone, email, address and website as plain strings, for the sweep's contact swap. */
@@ -59,6 +66,52 @@ const BASELINE_ROUTES_MS = 90_000
 const CHECK_ROUTES_MS = 150_000
 /** How long the look may start batches: every route at `LOOK_PARALLEL` calls at once, inside the same wait. */
 const LOOK_MS = 150_000
+/**
+ * 🔒 THE EYE SEES EVERY PAGE AND A FEW OF EACH SITE'S POSTS (local measure 28/10/2026). A look ran out of `LOOK_MS` on 9 of
+ * a Joomla site's 29 pages, 20 of them template posts of one layout, and the next check looked at the same 9 again:
+ * `looks-finished` could never pass, and a WordPress build spent $16 of vision on it. Every page is looked at, then
+ * `LOOK_POSTS` template posts, those the last look did not see first, so successive checks see different posts; the data
+ * checks still read every post. The look's time follows what it looks at, per page, within its bounds.
+ */
+export const LOOK_POSTS = 2
+const LOOK_MS_PER_PAGE = 25_000
+const LOOK_MS_MAX = 300_000
+
+/**
+ * The pages a look looks at, in order: every page that is not a template post as given, then up to `LOOK_POSTS` posts,
+ * those `seen` does not name first. `posts` names the template posts' paths.
+ * @param {string[]} pages @param {Set<string>} posts @param {string[]} [seen]
+ * @returns {{ pages: string[], postsLeft: number }}
+ */
+export function lookSample(pages, posts, seen = []) {
+  const plain = pages.filter((page) => !posts.has(page))
+  const asPost = pages.filter((page) => posts.has(page))
+  const ordered = [
+    ...asPost.filter((page) => !seen.includes(page)),
+    ...asPost.filter((page) => seen.includes(page))
+  ]
+  const picked = ordered.slice(0, LOOK_POSTS)
+  return {
+    pages: [...plain, ...asPost.filter((page) => picked.includes(page))],
+    postsLeft: asPost.length - picked.length
+  }
+}
+/** A look's time for `n` pages. */
+export const lookBudgetMs = (n) => Math.min(LOOK_MS_MAX, Math.max(LOOK_MS, n * LOOK_MS_PER_PAGE))
+/** The paths a build's template posts answer at: their frozen routes and where they moved since (`postRoutes`). */
+function templatePostPaths(build, postRoutes = []) {
+  const records = build.content?.agentDemo?.structure?.inventory?.records ?? []
+  const paths = new Set()
+  for (const record of records)
+    if (isTemplatePost(record, records))
+      for (const route of record.routes ?? []) {
+        const p = typeof route === 'string' ? route : route?.pattern
+        if (typeof p === 'string') paths.add(p)
+      }
+  for (const moved of postRoutes)
+    for (const p of [moved?.was, moved?.route]) if (typeof p === 'string') paths.add(p)
+  return paths
+}
 
 /** The frozen inventory's routes for one QA run, with the time they may take; nothing without an inventory. */
 function qaRoutes(build, routeBudgetMs) {
@@ -109,7 +162,7 @@ const doneCheck = (job, result) => ({ ...job, state: 'done', result, resultText:
 /**
  * The agent's plan with the structure it was checked against. 🔒 `plan.save` KEEPS THE STRUCTURE BESIDE THE PLAN,
  * NEVER IN IT (`agent-demo.js`), so every reader of the template's posts (`templatePostsLeft`, `templatePostTitles`,
- * `postCoverage`) read none from the saved plan: the sweep never dated a post the check did not open (The Willow Nook
+ * `postCoverage`) read none from the saved plan: the sweep never dated a post the check did not open (The Living Room
  * local, 25/10/2026: eight posts kept 2021).
  * @param {{plan: Record<string, any>, structure?: unknown}} agentDemo
  */
@@ -120,9 +173,9 @@ const checkedPlan = (agentDemo) => ({ ...agentDemo.plan, structure: agentDemo.st
  * texts: the cap, not a refusal, was what stopped it. So a round is followed by another as long as the check after it
  * plans fewer calls than the check before it (`planSweep` `left`): a round that clears nothing would plan the same
  * calls again, and stops. The bound keeps one check, which runs inside the agent's turn (each round is a whole-site
- * read, minutes), from running on without end when every round clears a little: 6 rounds of 120 calls clear more than
- * a template site shows (the rig planned ~260), so reaching it means the sweep is not converging, and it is reported
- * unresolved with what is left, never passed over.
+ * read, minutes), from running on without end when every round clears a little: 6 rounds of SWEEP_MAX_CALLS clear more
+ * than a template site shows (the rig planned ~260, JA Restaurant on WordPress ~830 on 29/10/2026), so reaching it
+ * means the sweep is not converging, and it is reported unresolved with what is left, never passed over.
  */
 export const SWEEP_ROUNDS_MAX = 6
 
@@ -141,6 +194,75 @@ export function sweepDecision(swept, attempts, sweep) {
   if (rounds > 0 && !((sweep.left ?? 0) < (swept?.left ?? Infinity)))
     return { go: false, rounds, stopped: 'no-progress' }
   return { go: true, rounds }
+}
+/**
+ * The look a sweep round carries instead of looking: the last look as it stands, with every page read anew since then
+ * (not `reused`) named unlooked and its faults dropped, so a later check keeps only verdicts newer than each page's
+ * last change. With no look before, the round is plainly not looked at.
+ */
+export function lookCarried(last, readPages, reused) {
+  const changed = readPages.filter((page) => !reused.has(page))
+  if (!last || !last.looked)
+    return {
+      id: 'looks-finished',
+      pass: false,
+      looked: false,
+      measured: 'not looked at in a sweep round; the check after the sweep looks',
+      expected:
+        'a vision model saw no visible fault from top to footer on every page at desktop and phone width',
+      detail: []
+    }
+  const unlooked = [
+    ...(Array.isArray(last.unlooked) ? last.unlooked : []).filter((u) => !changed.includes(u?.page)),
+    ...changed.map((page) => ({ page, why: 'CHANGED_SINCE_LOOK', viewports: ['desktop', 'phone'] }))
+  ]
+  return {
+    ...last,
+    pass: false,
+    looked: unlooked.length ? 'partly' : true,
+    seen: (Array.isArray(last.seen) ? last.seen : []).filter((page) => !changed.includes(page)),
+    detail: (Array.isArray(last.detail) ? last.detail : []).filter((f) => !changed.includes(f?.page)),
+    unlooked,
+    measured: `the last look, carried while the sweep runs; ${changed.length} page(s) read anew since`
+  }
+}
+/**
+ * Whether the sweep has the brand writer wear the business's imported logo: a header with no logo of the business
+ * (`header-brand` `LOGO_NOT_IN_HEADER`), a CMS whose logo dsh's tools do not set (not WordPress), and not worn
+ * already in this build.
+ * @param {any[]} checks @param {{platform: string, logo: {url: string} | null, worn?: string | null}} at
+ */
+export function businessLogoDue(checks, { platform, logo, worn = null }) {
+  if (platform === 'wordpress' || !logo || worn === logo.url) return false
+  const brand = checks.find((c) => c?.id === 'header-brand')
+  return Boolean(brand && !brand.pass && (brand.detail ?? []).some((d) => d?.code === 'LOGO_NOT_IN_HEADER'))
+}
+/**
+ * Whether the next check may keep the last read of every page whose document did not change (`incremental`): after a
+ * counted check, and after a sweep round of the current one. A ROUND'S CHECK READS ONLY WHAT THE SWEEP CHANGED
+ * (dev 27/10/2026): ja-diner's first check read and looked at the whole site after each of its 6 rounds, ~60 min in
+ * one tool call, though each round wrote some pages only. The host fingerprints each page as served and reads again
+ * only those whose document changed, so a page the sweep wrote, or one showing a shared part it wrote (a footer, a
+ * menu, a post list), is read and looked at anew and every other keeps its last read (`demo-qa-browser.js`). A pass
+ * found that way is still confirmed by a full read before it counts (`measure`), so a passing check means what it did.
+ * @param {{clientCheckAttempts?: number, residueSweeps?: {attempt?: number, n?: number}} | null | undefined} qa
+ */
+export function checkIsIncremental(qa) {
+  const attempts = qa?.clientCheckAttempts ?? 0
+  const swept = qa?.residueSweeps
+  return attempts > 0 || (swept?.attempt === attempts && (swept.n ?? 0) > 0)
+}
+/**
+ * The template category names the sweep rounds of the current counted check sent a rename for (`planSweep`
+ * `renamedBefore`); a new counted check starts with none.
+ * @param {{clientCheckAttempts?: number, residueSweeps?: {attempt?: number, renamed?: string[]}} | null | undefined} qa
+ * @returns {string[]}
+ */
+export function renamedBeforeOf(qa) {
+  const swept = qa?.residueSweeps
+  return swept?.attempt === (qa?.clientCheckAttempts ?? 0) && Array.isArray(swept.renamed)
+    ? swept.renamed
+    : []
 }
 /** A turn record closed this recently may still be reopened by a turn-stopping steer (see `endedUnchecked`). */
 const STEER_GRACE_MS = 120_000
@@ -226,7 +348,8 @@ export function createClientDemoService(deps) {
           ops: (await deps.runtime()).settings,
           now,
           // 🔒 Asked as the demo's account, through the same door an operator presses (logo-research.js).
-          logoResearch: { research: logoResearchDoor({ request, origin, cookie: state.cookie }) }
+          logoResearch: { research: logoResearchDoor({ request, origin, cookie: state.cookie }) },
+          pictureLabels: deps.pictureLabels ?? null
         })
         // 🔒 Never waited for here: this runs inside HTTP requests (`/v1/demos`). The caller asks again, and the
         // runner's `reconcile` prepares it once the research is done or its minute is over.
@@ -235,6 +358,9 @@ export function createClientDemoService(deps) {
         if (made.error) throw error(made.error)
         state.revision = made.revision
       }
+      // A blocked brief claims no site and no chat (#50): the same verdict `startBuild` honours.
+      if (!state.build && readinessOfBuild(state.revision, domain)?.verdict === 'block')
+        throw error('BRIEF_NOT_READY')
       if (!state.build)
         state.build = (
           await insertBuild(pool, {
@@ -275,7 +401,10 @@ export function createClientDemoService(deps) {
         throw error(claim.code ?? 'DEMO_SESSION_UNAVAILABLE', response.status >= 500 ? 503 : 409)
       const bundle = checkedResearch(state.revision)
       const ownSite = state.action.selection?.ownSite === true
-      const business = bundle.profile?.name ?? state.revision.brief?.business?.name ?? 'this business'
+      // A business name the brief holds off the site is named nowhere the agent builds from: its neutral identity is.
+      const business = nameHeldOf(state.revision.brief)
+        ? (siteNameOf(state.revision.brief) ?? 'this business')
+        : (bundle.profile?.name ?? state.revision.brief?.business?.name ?? 'this business')
       // The message a person sees as theirs is one plain sentence, a customer's own site's (`own-site.js`) as a demo's:
       // the steps travel in the research catalogue (`agent-demo.js` `clientSendSteps`), which the `tracy_demo` tool's
       // own description says to read first (tracy-site-tools) — no tool call in the person's words.
@@ -340,8 +469,12 @@ export function createClientDemoService(deps) {
         baselineTries: state.build.qa?.baseline ? state.build.qa.baselineTries : 0,
         baselineError: null,
         machinePassed: false,
+        humanAccepted: false,
         reason: null
       }
+      // A Retry keeps the untouched baseline, never the previous turn's check job or verdict.
+      delete qa.clientCheck
+      delete qa.clientChecks
       await pool.query(
         `update wo_build set content=jsonb_set(content,'{agentDemo,clientChat}',$2::jsonb),qa=$3::jsonb where id=$1`,
         [
@@ -352,6 +485,36 @@ export function createClientDemoService(deps) {
       )
       return { action: await demoActionOf(pool, accountId, actionId), ...view, submission }
     })
+  }
+  /**
+   * The demo's site provisioned (`startBuild`, idempotent by the action's request id), asked by the agent's
+   * `provision.start` only: 🔒 a chat sent reserves the request, and only the agent's tool inside that real turn
+   * installs a site (a reservation whose turn never comes costs no container). Plan "10/10" §7 S4 (26/10/2026) keeps
+   * this and moves the wait instead: the brief has the agent start the install first and read the research while it
+   * runs (it waited 40–140 s on `provision.wait` doing nothing).
+   */
+  async function startProvision(state, accountId, proof) {
+    const held = await pool.query(
+      `update wo_build set content=jsonb_set(content,'{agentDemo,clientChat,provisionRequested}',$2::jsonb)
+      where id=$1 and exists(select 1 from wo_demo_action where id=$3 and status='queued') returning id`,
+      [state.build.id, JSON.stringify(proof), state.action.id]
+    )
+    if (!held.rowCount) throw error('AGENT_DEMO_ACTION_CLOSED')
+    const result = await startBuild({
+      pool,
+      request,
+      origin,
+      cookie: state.cookie,
+      domain: await loadDomain(),
+      config,
+      accountId,
+      revision: state.revision,
+      requestId: state.action.build_request_id,
+      label: state.build.label,
+      demoActionId: state.action.id
+    })
+    if (result.status >= 300) throw error(result.body.code ?? 'PROVISION_FAILED')
+    return result
   }
   async function stopped(state) {
     const expected =
@@ -384,7 +547,7 @@ export function createClientDemoService(deps) {
     if (stop) throw error(stop)
   }
   /**
-   * 🔒 A TURN THAT ENDED WITHOUT A PASSING CHECK ENDS THE BUILD (Fern Hollow 41cfe7d9, 24/10/2026): the agent closed its
+   * 🔒 A TURN THAT ENDED WITHOUT A PASSING CHECK ENDS THE BUILD (HideOut 41cfe7d9, 24/10/2026): the agent closed its
    * turn `completed` after one failed check and the job read "fill" until the 2 h timeout. Its last expected turn
    * closed normally, no turn of the chat is open (an owner follow-up keeps it) and no check still runs.
    *
@@ -438,7 +601,7 @@ export function createClientDemoService(deps) {
       )
       return { terminal: true, state: 'failed', error: 'AGENT_DEMO_ENDED_UNCHECKED' }
     }
-    // 🔒 AN EARLIER ACTION'S VERDICT IS NOT ITS RETRY'S (The Willow Nook local, 25/10/2026): the build's QA still read
+    // 🔒 AN EARLIER ACTION'S VERDICT IS NOT ITS RETRY'S (The Living Room local, 25/10/2026): the build's QA still read
     // the turn that ended unchecked, so the Retry closed with QA_NEEDS_REVIEW before its chat could be prepared, and
     // the demo could never go again. `send` stamps `qa.since` with the sending action's `accepted_at`, so a verdict
     // older than this Retry is the earlier action's and ends neither rule below (`send` resets QA).
@@ -471,7 +634,7 @@ export function createClientDemoService(deps) {
     }
   }
   /**
-   * 🔒 AN UNREAD STARTING INVENTORY IS A BASELINE TRY (Reverb 4d53fccd, 24/10/2026): every read hit the inventory's
+   * 🔒 AN UNREAD STARTING INVENTORY IS A BASELINE TRY (Bebop 4d53fccd, 24/10/2026): every read hit the inventory's
    * time cap, `baselineTries` stayed 0, the agent read again forever and told the person to create a new site.
    */
   async function inventoryFailed(state, body) {
@@ -559,32 +722,12 @@ export function createClientDemoService(deps) {
         throw error('AGENT_DEMO_NOT_GRANTED')
       await throwIfStopped(state)
       if (params.operation === 'provision.start') {
-        const proof = {
+        const result = await startProvision(state, auth.accountId, {
           actionId: state.action.id,
           nativeRequestId: build.current_rpc_id,
           turnId: auth.turnId,
           at: new Date(now()).toISOString()
-        }
-        const held = await pool.query(
-          `update wo_build set content=jsonb_set(content,'{agentDemo,clientChat,provisionRequested}',$2::jsonb)
-          where id=$1 and exists(select 1 from wo_demo_action where id=$3 and status='queued') returning id`,
-          [state.build.id, JSON.stringify(proof), state.action.id]
-        )
-        if (!held.rowCount) throw error('AGENT_DEMO_ACTION_CLOSED')
-        const result = await startBuild({
-          pool,
-          request,
-          origin,
-          cookie: state.cookie,
-          domain: await loadDomain(),
-          config,
-          accountId: auth.accountId,
-          revision: state.revision,
-          requestId: state.action.build_request_id,
-          label: state.build.label,
-          demoActionId: state.action.id
         })
-        if (result.status >= 300) throw error(result.body.code ?? 'PROVISION_FAILED')
         return {
           ok: true,
           state: result.body.build.state,
@@ -595,10 +738,12 @@ export function createClientDemoService(deps) {
       state.build = await settleBuild({ pool, request, origin, cookie: state.cookie, build: state.build })
       if (params.operation === 'provision.status')
         return { ok: true, ...(await ready(state)), jobId: state.build.site_job_id }
-      if (params.operation === 'check.start') return checkStart(auth, state)
+      // `sweepBatches`: the dsh sends a page's sweep words as one call and sets a refused pair aside (`planSweep`).
+      const sweep = { batches: params.sweepBatches === true }
+      if (params.operation === 'check.start') return checkStart(auth, state, sweep)
       if (params.operation !== 'check') throw error('AGENT_DEMO_BAD_OPERATION')
       checkAllowed(state)
-      const outcome = await measure(auth, state)
+      const outcome = await measure(auth, state, sweep)
       await throwIfStopped(state)
       // 🔒 A CHECK NOBODY HEARD IS NOT COUNTED (pilot 24/10/2026): the agent's call gave up waiting at its
       // timeout while this check ran on, so it was counted, the agent called again, and three counted checks
@@ -613,48 +758,98 @@ export function createClientDemoService(deps) {
     if (!state.build.qa?.baseline || !state.build.content?.agentDemo?.plan)
       throw error('AGENT_DEMO_PLAN_REQUIRED')
   }
+  /** Each photo of the build's research by its subject, where a label says it; never fails a check run. */
+  async function sourceSubjectsOf(pool, state) {
+    try {
+      const rows = await buildPlaced(pool, state.build.account_id, state.revision)
+      return Object.fromEntries(
+        rows
+          .map((row) => [row.id, visionLabelOf(row)?.subject])
+          .filter(([, subject]) => typeof subject === 'string')
+      )
+    } catch {
+      return {}
+    }
+  }
   /** Reads, shoots and looks at the site: minutes on a whole site. Saves nothing. */
-  async function measure(auth, state) {
+  /**
+   * One check of the site: incremental after the first and after a sweep round (pages whose document did not change
+   * keep their last read, plan "10/10" §7 S6; `checkIsIncremental`), and a pass found that way is confirmed by a full
+   * read before it counts — the last check that passes a build has read every page anew (council 26/10/2026).
+   * 🔒 A KEPT READ IS NEVER THE EVIDENCE FOR A COUNTED FAILURE (review 27/10/2026): a page's fingerprint is its
+   * document as loaded, before lazy content scrolls in, and the look keeps the last look's faults on kept pages
+   * (`keptLook`), so an incremental check can fail on what a write already changed. A failing incremental check that
+   * would be counted (no sweep round follows it, `sweepDecision`) is read again in full, and that read is the answer;
+   * one a sweep round follows costs no attempt and is measured again after the round.
+   */
+  async function measure(auth, state, sweep = {}) {
+    const incremental = checkIsIncremental(state.build.qa)
+    // 🔒 AN INCREMENTAL READ LEAVES THE LOOK TO THE FULL ONE (29/10/2026): its look is never the answer — a pass is
+    // confirmed by a full read, a counted failure is read again in full, and a round that sweeps is not looked at — so
+    // a WordPress check looked twice, ~190 s each. The verdicts are the same; the full read looks.
+    const first = await measureOnce(auth, state, incremental, { ...sweep, look: !incremental })
+    if (!incremental) return first
+    const attempts = state.build.qa?.clientCheckAttempts ?? 0
+    if (!first.pass && sweepDecision(state.build.qa?.residueSweeps, attempts, first.sweep).go) return first
+    return measureOnce(auth, state, false, sweep)
+  }
+  async function measureOnce(auth, state, incremental, { batches = false, look = true } = {}) {
+    const started = now()
     const site = (await pool.query('select * from site where site_key=$1', [state.build.site_key])).rows[0]
-    const inventory = await deps.readNativeInventory({
-      site,
-      email: state.account.email,
-      structure: state.build.content.agentDemo.structure
-    })
+    // 🔒 The live records first: the QA reads each template post where it answers now (`currentQaRoutes`), and a
+    // rewritten post takes a slug from its new title. The photo labels are read beside them (plan "10/10" §7 S3).
+    const [inventory, sourceSubjects] = await Promise.all([
+      deps.readNativeInventory({
+        site,
+        email: state.account.email,
+        structure: state.build.content.agentDemo.structure
+      }),
+      sourceSubjectsOf(pool, state)
+    ])
+    const inventoryAt = now()
     const structure = deps.compareNativeInventory(
       state.build.content.agentDemo.structure.inventory,
-      inventory
+      inventory,
+      agentDemoInventoryPolicy(state.revision, site.platform)
     )
     // The business's own logo where the research found one; else its name, drawn as a wordmark in the theme's type.
     const logo = importedLogo(state.build, state.revision.brief?.brand)
-    const name = checkedResearch(state.revision).profile?.name ?? state.revision.brief?.business?.name
+    // 🔒 No wordmark of a business name the brief holds off the site: its neutral identity instead (`held-name.mjs`).
+    const name = nameHeldOf(state.revision.brief)
+      ? siteNameOf(state.revision.brief)
+      : (checkedResearch(state.revision).profile?.name ?? state.revision.brief?.business?.name)
+    const routesNow = currentQaRoutes(state.build, inventory, site.platform, CHECK_ROUTES_MS)
     const measured = await deps.demoQa(site, {
       pages: ['/'],
       discover: true,
-      baseline: state.build.qa.baseline,
-      ...currentQaRoutes(state.build, inventory, site.platform, CHECK_ROUTES_MS),
+      incremental,
+      baseline: baselineForHost(state.build.qa.baseline),
+      ...routesNow,
       ...briefOf(state.revision),
       ...(!logo && typeof name === 'string' && name.trim() ? { wordmark: name.trim() } : {}),
       // The business's own logo, laid in the template logo's box by the page reader (`fittedLogo`).
       ...(logo ? { logoPicture: logo.url } : {}),
+      // …and worn by the sweep's brand writer, under that writer's own file name (`businessLogoDue`).
+      ...(logo && state.build.qa?.brandLogoWorn === logo.url ? { logoWorn: true } : {}),
       // A heading repeating a template post's title is residue the sweep plans, not the page's frame.
       templateTitles: templatePostTitles(checkedPlan(state.build.content.agentDemo)),
       // `collected-used`: everything the research collected is on the site, not only nothing false.
-      ...agentDemoCollected(state.revision, state.build)
+      ...agentDemoCollected(state.revision, state.build),
+      // `photos-fit`: what each photo shows, from the labels `media.look` made (`demo-photo-labels.js`).
+      sourceSubjects,
+      // `photos-match-slots`, `faces-named`: each placed photo's slot and what the brief says it shows (#140).
+      ...slotPhotoEvidence(state.revision, state.build)
     })
+    const readAt = now()
     if (!measured.ok || !Array.isArray(measured.body?.checks)) throw error('DEMO_QA_UNAVAILABLE')
-    // What a visitor sees: the pages the QA read, shot at both widths and looked at (`demo-look.js`).
-    const look = deps.demoLook
-      ? await deps.demoLook(site, {
-          pages: [
-            ...(Array.isArray(measured.body.pages) ? measured.body.pages : ['/']),
-            ...(Array.isArray(measured.body.routes) ? measured.body.routes : [])
-          ],
-          accountId: auth.accountId,
-          opportunityId: state.action.opportunity_id,
-          budgetMs: LOOK_MS,
-          buildId: state.build.id
-        })
+    const readPages = [
+      ...(Array.isArray(measured.body.pages) ? measured.body.pages : ['/']),
+      ...(Array.isArray(measured.body.routes) ? measured.body.routes : [])
+    ]
+    const reused =
+      incremental && Array.isArray(measured.body.reused) ? new Set(measured.body.reused) : new Set()
+    const lastLook = incremental
+      ? (state.build.qa?.clientCheck?.result?.checks ?? []).find((c) => c?.id === 'looks-finished')
       : null
     const sourced = checkResearchSourced(state.build.content.agentDemo.structure.inventory, inventory, {
       research: checkedResearch(state.revision),
@@ -664,7 +859,9 @@ export function createClientDemoService(deps) {
     const read = deps.picturesWhere
       ? deps.picturesWhere(measured.body.checks, inventory)
       : measured.body.checks
-    const checks = [
+    // Words the host measured over a photo are judged by that measure, never also by the look (`deferToMeasure`).
+    const contrast = read.find((c) => c?.id === 'contrast-readable')
+    const head = [
       ...read,
       structure,
       sourced,
@@ -676,10 +873,10 @@ export function createClientDemoService(deps) {
           ...(Array.isArray(measured.body.routes) ? measured.body.routes : [])
         ],
         records: Array.isArray(inventory?.records) ? inventory.records : []
-      }),
-      ...(look ? [look] : []),
-      ...[logoResearchNote(state.action.selection?.logoResearch)].filter(Boolean)
+      })
     ]
+    // The look's verdict (`looks-finished`) goes after these, once the sweep is planned (below).
+    const checks = [...head, ...[logoResearchNote(state.action.selection?.logoResearch)].filter(Boolean)]
     const records = Array.isArray(inventory?.records) ? inventory.records : []
     const plan = planSweep(measured.body.residue ?? null, {
       // A template post's date becomes the build day.
@@ -695,6 +892,8 @@ export function createClientDemoService(deps) {
       design: checks.find((check) => check.id === 'no-demo-pictures')?.unresolved ?? [],
       // A template category the page still names takes a name from the written posts' research topics.
       categories: templateCategoriesOf(checks),
+      // …and one an earlier round of this counted check sent a rename for, still shown, is reported, not sent again.
+      renamedBefore: renamedBeforeOf(state.build.qa),
       topicNames: postTopicNames(checkedPlan(state.build.content.agentDemo), checkedResearch(state.revision)),
       // The logo is the logo's, never a photo laid in a picture's place.
       media: importedMedia(state.build, checkedResearch(state.revision)).filter((m) => m.url !== logo?.url),
@@ -720,22 +919,124 @@ export function createClientDemoService(deps) {
       // A lead or a description is the agent's to write while counted checks remain after this one.
       checksLeft: Math.max(0, DEMO_CHECKS - (state.build.qa?.clientCheckAttempts ?? 0) - 1),
       // The term descriptions are read and cleared once a build (`planSweep`).
-      sweepTerms: state.build.qa?.residueSweeps?.terms !== true
+      sweepTerms: state.build.qa?.residueSweeps?.terms !== true,
+      batches
     })
     const thin = leadsThin(Math.max(plan.thinLeads ?? 0, state.build.qa?.residueSweeps?.thinLeads ?? 0))
     if (thin) checks.push(thin)
+    // 🔒 THE BUSINESS'S OWN LOGO IS WORN BY THE BRAND WRITER TOO (local measure 28/10/2026): a Joomla T4 header keeps its
+    // logo in the template's site settings, the agent's tool has no door to them, and every check of a Death & Co
+    // build named the Fresco logo in all seven headers. Where the header shows no logo of the business and the build
+    // imported it, the sweep has the brand writer wear it as it wears a drawn wordmark (`wornLogo`), once a build.
+    const logoCall = businessLogoDue(read, {
+      platform: site.platform,
+      logo,
+      worn: state.build.qa?.brandLogoWorn
+    })
+      ? await businessLogoCall(state, logo)
+      : null
+    if (logoCall) plan.calls = [...plan.calls, logoCall]
     const worn = await wornLogo(plan, {
       platform: site?.platform,
       wear: deps.wearLogo ? (input) => deps.wearLogo(state.build, site, input) : null,
       now
     })
+    if (
+      logoCall &&
+      !worn.calls.includes(logoCall) &&
+      !worn.unresolved?.some((u) => u.file === logoCall.params.find)
+    )
+      await pool.query(`update wo_build set qa=qa||$2::jsonb where id=$1`, [
+        state.build.id,
+        JSON.stringify({ brandLogoWorn: logo.url })
+      ])
+    const sweep = sweepOf(worn)
+    const lookStarted = now()
+    // 🔒 A ROUND THAT SWEEPS IS NOT LOOKED AT (28/10/2026). Its answer is the sweep's calls and is not counted; dsh runs
+    // them and checks again, and that check looks. A look here (up to `LOOK_MS_MAX`, every page at both widths) was thrown
+    // away, up to six times in one check. The last look is carried instead, every page read anew since it named
+    // unlooked, so no later check keeps a verdict on a page that changed after it was looked at (`lookCarried`).
+    const sweeping = sweepDecision(
+      state.build.qa?.residueSweeps,
+      state.build.qa?.clientCheckAttempts ?? 0,
+      sweep
+    ).go
+    // What a visitor sees: the pages the QA read, shot at both widths and looked at (`demo-look.js`). In an incremental
+    // check a page whose document did not change keeps the faults the last look found on it (plan "10/10" §7 S6).
+    let kept = []
+    let fresh = []
+    let judged = null
+    if (sweeping || !look) judged = lookCarried(lastLook, readPages, reused)
+    else {
+      kept = reusableLookPages(lastLook, readPages, reused)
+      const sample = lookSample(
+        readPages.filter((p) => !kept.includes(p)),
+        templatePostPaths(state.build, routesNow.postRoutes),
+        Array.isArray(lastLook?.seen) ? lastLook.seen : []
+      )
+      fresh = sample.pages
+      const lookNow = deps.demoLook
+        ? await deps.demoLook(site, {
+            pages: fresh.length ? fresh : ['/'],
+            accountId: auth.accountId,
+            opportunityId: state.action.opportunity_id,
+            budgetMs: lookBudgetMs(fresh.length || 1),
+            buildId: state.build.id,
+            // The words a card with no source keeps (`neutralNote`), in English and in the site's language.
+            neutral: [...new Set([...neutralWords('en'), ...neutralWords(siteLocaleOf(state.build))])]
+          })
+        : null
+      const look = lookNow && kept.length ? keptLook(lookNow, lastLook, kept) : lookNow
+      judged = look ? deferToMeasure(look, contrast?.measuredOver) : null
+      if (judged && sample.postsLeft > 0)
+        judged = {
+          ...judged,
+          measured: `${judged.measured}; ${sample.postsLeft} more template posts left to the data checks (the eye sees ${LOOK_POSTS} a check)`
+        }
+    }
+    if (judged) checks.splice(head.length, 0, judged)
+    // Where a check's minutes go, one line per check (28/10/2026: nothing said it before).
+    const secs = (ms) => (ms / 1000).toFixed(1)
+    console.info(
+      `[demo-check] ${site.site_key} ${incremental ? 'incremental' : 'full'}${sweeping ? ' sweep round' : ''}: inventory ${secs(inventoryAt - started)}s, page reads ${secs(readAt - inventoryAt)}s (${readPages.length} page(s), ${reused.size} unchanged), ${sweeping ? 'look skipped' : !look ? 'look left to the full read' : `look ${secs(now() - lookStarted)}s (${fresh.length} page(s) looked at, ${kept.length} kept)`}`
+    )
     return {
       checks: checksForAgent(checks),
       pass: checks.length > 0 && checks.every((check) => check.pass === true && !check.skipped),
-      sweep: sweepOf(worn),
+      sweep,
       // What a sweep with no call to run still names unresolved (a slot the replace job refuses to empty, a linked
       // title with no sourced words): kept on the check's answer, so the QA lists it (`sweepUnresolvedOf`).
       unswept: worn.calls.length === 0 ? worn.unresolved : []
+    }
+  }
+  /**
+   * The sweep's call that has the brand writer wear the business's logo: only when `header-brand` found a header with
+   * no logo of the business, and the logo's bytes are the research's own; null otherwise.
+   */
+  async function businessLogoCall(state, logo) {
+    const id = state.revision.brief?.brand?.logo
+    if (typeof id !== 'string' || !deps.objects) return null
+    try {
+      const row = (await buildPlaced(pool, state.build.account_id, state.revision)).find((r) => r.id === id)
+      const stored = row?.object_key ? await deps.objects.get(row.object_key) : null
+      if (!stored?.ok) return null
+      const bytes = Buffer.from(await stored.arrayBuffer())
+      return { action: 'logo', params: { png: bytes.toString('base64'), path: '/', find: logo.url } }
+    } catch {
+      return null
+    }
+  }
+  /** This look with the faults the last look found on the pages kept unchanged (`kept`), judged as one. */
+  function keptLook(now, last, kept) {
+    const carried = (Array.isArray(last?.detail) ? last.detail : []).filter((f) => kept.includes(f?.page))
+    const detail = [...(Array.isArray(now.detail) ? now.detail : []), ...carried]
+    return {
+      ...now,
+      pass: now.pass === true && carried.length === 0,
+      detail,
+      kept,
+      seen: [...new Set([...(Array.isArray(now.seen) ? now.seen : []), ...kept])],
+      measured: `${now.measured ?? ''}; ${kept.length} unchanged pages keep the last look (${carried.length} faults)`
     }
   }
   /**
@@ -780,7 +1081,8 @@ export function createClientDemoService(deps) {
           left: outcome.sweep.left ?? 0,
           // Kept past the round that wrote the placeholder, so the check that passes still says so.
           thinLeads: Math.max(swept?.thinLeads ?? 0, outcome.sweep.thinLeads ?? 0),
-          terms: swept?.terms === true || outcome.sweep.calls.some((call) => call.action === 'terms')
+          terms: swept?.terms === true || outcome.sweep.calls.some((call) => call.action === 'terms'),
+          renamed: [...new Set([...renamedBeforeOf(state.build.qa), ...(outcome.sweep.renamed ?? [])])]
         },
         ...(job ? { clientCheck: doneCheck(job, result) } : {})
       })
@@ -794,6 +1096,7 @@ export function createClientDemoService(deps) {
     // Counted as the server QA counts its rounds, so every reader of `qa.rounds`/`qa.repairs` sees the checks.
     const rounds = state.build.qa?.rounds ?? []
     const repaired = attempts > 0 && state.build.qa?.machinePassed === false
+    const live = liveReadinessOf(state.revision?.brief?.readiness, checks)
     await pool.query(`update wo_build set qa=qa||$2::jsonb where id=$1`, [
       state.build.id,
       checkJson({
@@ -806,7 +1109,9 @@ export function createClientDemoService(deps) {
             at: new Date(now()).toISOString(),
             checks: summary(checks),
             failed: checks.filter((c) => !c.pass && !c.skipped),
-            ...(sweep?.stopped ? { sweepStopped: sweep.stopped } : {})
+            ...(sweep?.stopped ? { sweepStopped: sweep.stopped } : {}),
+            // What the live site shows of the brief (#50, `live-readiness.js`).
+            ...(live ? { readiness: live } : {})
           }
         ],
         repairs: (state.build.qa?.repairs ?? 0) + (repaired ? 1 : 0),
@@ -827,7 +1132,7 @@ export function createClientDemoService(deps) {
    * (any replica reads it); one whose process restarted reads as lost, uncounted, and the next start runs
    * a new one. A result is counted once, when it is saved, heard or not.
    */
-  async function checkStart(auth, state) {
+  async function checkStart(auth, state, sweep = {}) {
     const job = state.build.qa?.clientCheck
     if (job?.state === 'running' && !checkLost(job)) return { ok: true, running: true, checkId: job.id }
     checkAllowed(state)
@@ -841,11 +1146,11 @@ export function createClientDemoService(deps) {
       state.build.id,
       JSON.stringify({ clientCheck: started })
     ])
-    const run = runCheck(auth, state, started).finally(() => runningChecks.delete(started.id))
+    const run = runCheck(auth, state, started, sweep).finally(() => runningChecks.delete(started.id))
     runningChecks.set(started.id, run)
     return { ok: true, running: true, checkId: started.id }
   }
-  async function runCheck(auth, state, job) {
+  async function runCheck(auth, state, job, sweep = {}) {
     const beat = setInterval(() => {
       pool
         .query(
@@ -857,7 +1162,7 @@ export function createClientDemoService(deps) {
     beat.unref?.()
     let outcome
     try {
-      outcome = await measure(auth, state)
+      outcome = await measure(auth, state, sweep)
     } catch (failure) {
       outcome = { code: failure.code ?? 'DEMO_QA_UNAVAILABLE' }
     } finally {
@@ -903,7 +1208,7 @@ export function createClientDemoService(deps) {
 }
 
 /**
- * A counted check's sweep that ended with calls still planned: no calls to run, why it stopped, and what is left,
+ * A counted check's sweep that ended with changes still planned: no calls to run, why it stopped, and what is left,
  * reported unresolved; `shown` stays so dsh can check the last round's `cleared` rows against it.
  * @param {{calls: any[], unresolved?: any[], left?: number, shown?: string[]}} sweep
  * @param {'bound' | 'no-progress'} why
@@ -920,8 +1225,8 @@ export function sweepStopped(sweep, why, rounds) {
         field: 'sweep',
         why:
           why === 'bound'
-            ? `the sweep reached its bound of ${SWEEP_ROUNDS_MAX} rounds with ${left} calls still planned`
-            : `the sweep's round ${rounds} cleared nothing: ${left} calls still planned`
+            ? `the sweep reached its bound of ${SWEEP_ROUNDS_MAX} rounds with ${left} changes still planned`
+            : `the sweep's round ${rounds} cleared nothing: ${left} changes still planned`
       }
     ],
     shown: sweep.shown ?? []

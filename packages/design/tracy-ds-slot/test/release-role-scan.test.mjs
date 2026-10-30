@@ -109,6 +109,23 @@ test('blockers mirror VARS-1: a missing required role, an unhandled spot, a keep
   ])
 })
 
+test('blockers mirror VARS-1: a required role declared not used, with its reason, is not missing', () => {
+  // VARS-1 passes report.notUsed to missingRoleVariables, so a build that stops on it stops for nothing
+  const name = '--ds-c-surface-warm'
+  const declared = REQUIRED_ROLE_VARIABLES.filter((n) => n !== name)
+  const notUsed = [{ name, reason: 'no alternate section ground' }]
+  assert.deepEqual(roleScanBlockers({ declared, hardcoded: [], notUsed }), [])
+  // without a reason it declares nothing
+  assert.deepEqual(roleScanBlockers({ declared, hardcoded: [], notUsed: [{ name, reason: ' ' }] }), [
+    `missing: ${name} (no shipped source reads it)`
+  ])
+  // the scan itself: a stylesheet comment declares it
+  const css = `${REQUIRED_ROLE_VARIABLES.filter((n) => n !== name)
+    .map((n, i) => `.r${i} { --x: var(${n}); }`)
+    .join('\n')}\n/* ds-not-used: ${name}: no alternate section ground */\n`
+  assert.deepEqual(scanInto({ 'css/template.css': css }).r.blockers, [])
+})
+
 // release-batch.mjs commands reads only the release folder (no network): a stand-in manifest is enough
 const batchFolder = (report) => {
   const out = mkdtempSync(join(tmpdir(), 'release-batch-'))

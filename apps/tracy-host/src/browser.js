@@ -17,6 +17,7 @@
  */
 
 import { selfNamedServer } from './self-named.js'
+import { createVisionCapturer } from './vision-capture.js'
 
 /** Chromium in a container needs both of these; the dsh image's `tracy-chrome` wrapper sets the
  * same pair. `--no-sandbox` because there is no user namespace to sandbox into, and
@@ -53,13 +54,17 @@ const OTHER_ORIGIN_TIMEOUT_MS = 5000
  *
  * @param {{ route?: Function }} context a Playwright browser context
  * @param {string} pageUrl the page about to be opened in it
- * @param {{ serveFrom?: string | null, siteHosts?: string[] }} [self] where the site's own names are served from
+ * @param {{ serveFrom?: string | null, serveFromIsProxy?: boolean, proxySiteLabel?: string | null, siteHosts?: string[] }} [self] where the site's own names are served from
  *   when `pageUrl` is a name that does not resolve here (`self-named.js`)
  */
-async function boundOtherOrigins(context, pageUrl, { serveFrom = null, siteHosts = [] } = {}) {
+async function boundOtherOrigins(
+  context,
+  pageUrl,
+  { serveFrom = null, serveFromIsProxy = false, proxySiteLabel = null, siteHosts = [] } = {}
+) {
   if (typeof context.route !== 'function') return
   const own = new URL(pageUrl).origin
-  const self = selfNamedServer({ url: pageUrl, serveFrom, siteHosts })
+  const self = selfNamedServer({ url: pageUrl, serveFrom, serveFromIsProxy, proxySiteLabel, siteHosts })
   await context.route('**/*', async (route) => {
     let url
     try {
@@ -71,7 +76,8 @@ async function boundOtherOrigins(context, pageUrl, { serveFrom = null, siteHosts
       try {
         return await self.serve(route, url)
       } catch {
-        // the answering address did not answer: the browser's own attempt is what the shot shows
+        if (serveFromIsProxy) return route.abort('failed').catch(() => {})
+        // Direct transports retain the browser's own attempt when their answering address fails.
       }
     if (url.origin === own || !/^https?:$/.test(url.protocol)) return route.continue()
     try {
@@ -228,7 +234,7 @@ function ladder(height) {
  * @param {{ log?: Console }} [opts]
  * @returns {Promise<((args: { url: string, width: number, height: number, maxBytes?: number | null }) => Promise<Buffer>) | null>}
  */
-export async function makeShoot({ log = console, playwright = null } = {}) {
+export async function makeShoot({ log = console, playwright = null, visionStreams = 1 } = {}) {
   // `playwright` may be handed in — a test pins the context and screenshot options that way
   // without launching a browser; production lets the import decide whether this host has one.
   try {
@@ -271,6 +277,8 @@ export async function makeShoot({ log = console, playwright = null } = {}) {
     signal,
     progress,
     serveFrom = null,
+    serveFromIsProxy = false,
+    proxySiteLabel = null,
     siteHosts = []
   }) => {
     // 🔒 EVERY WAIT FITS THE SHOT'S OWN DEADLINE (12/10/2026, fleet01). The waits below were fixed
@@ -309,7 +317,7 @@ export async function makeShoot({ log = console, playwright = null } = {}) {
     signal?.addEventListener('abort', stop, { once: true })
     try {
       if (signal?.aborted) throw new Error('shot cancelled')
-      await boundOtherOrigins(context, url, { serveFrom, siteHosts })
+      await boundOtherOrigins(context, url, { serveFrom, serveFromIsProxy, proxySiteLabel, siteHosts })
       const page = await context.newPage()
       await open(page, url, {
         gotoMs: Math.max(1000, Math.min(GOTO_TIMEOUT_MS, end - Date.now())),
@@ -398,7 +406,7 @@ export async function makeShoot({ log = console, playwright = null } = {}) {
     }
   }
 
-  return async ({
+  const shoot = async ({
     url,
     width,
     height,
@@ -407,10 +415,12 @@ export async function makeShoot({ log = console, playwright = null } = {}) {
     signal = null,
     progress = null,
     serveFrom = null,
+    serveFromIsProxy = false,
+    proxySiteLabel = null,
     siteHosts = []
   }) => {
     const ceiling = Number.isInteger(maxBytes) && maxBytes > 0 ? maxBytes : null
-    const timing = { deadlineMs, signal, progress, serveFrom, siteHosts }
+    const timing = { deadlineMs, signal, progress, serveFrom, serveFromIsProxy, proxySiteLabel, siteHosts }
     // No ceiling asked for: one shot at full density, exactly the behaviour every caller had
     // before a ceiling existed. An absent ceiling must never silently shrink anyone's picture.
     if (ceiling === null)
@@ -431,6 +441,8 @@ export async function makeShoot({ log = console, playwright = null } = {}) {
       ...timing
     })
   }
+  shoot.vision = createVisionCapturer({ launched, prepare: boundOtherOrigins, streams: visionStreams })
+  return shoot
 }
 
 /**

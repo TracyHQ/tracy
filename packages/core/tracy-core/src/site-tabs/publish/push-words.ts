@@ -7,6 +7,7 @@
 import { interfaceLocale } from '../../interface-languages/index.mjs'
 import type { Translate } from '../../team/translate'
 import { fieldsText, labelText, whatText } from './record-words'
+import { type PhpTooOld, phpTooOldText } from './sync-words'
 
 /** One change as `view()` names it: titles and field names, never values. */
 export type PushItem = {
@@ -95,6 +96,8 @@ export function unsupportedReasonText(
         : t('push.reason.tooLarge')
     case 'permalink':
       return t('push.reason.permalink')
+    case 'translation-group':
+      return t('push.reason.translationGroup')
     case 'php-lint-failed':
       return t('push.reason.phpLint')
     case 'php-lint-unavailable':
@@ -119,6 +122,9 @@ export type PushView = {
   errorDetail?: string | null
   undoError: string | null
   undoErrorDetail?: string | null
+  /** LIVE_PHP_TOO_OLD (`error` / `undoError`): the live site's PHP and the one Claude Cowork needs. */
+  php?: PhpTooOld | null
+  undoPhp?: PhpTooOld | null
   startedAt: string
   pushedAt: string | null
   undoneAt: string | null
@@ -137,12 +143,39 @@ export type PushView = {
     limit: number
     itemsTotal: number
     unsupportedTotal: number
+    /** What Apply can write, by group, over the whole changeset (the lists above are capped). */
+    pushable?: PushGroupCounts
+    /** The live site's changes the push leaves alone, over the whole changeset. */
+    liveChangedTotal?: number
   } | null
   deletes: boolean
   result: { pushed: PushItem[]; conflicts: PushItem[]; failed: PushItem[]; skipped: PushItem[] } | null
   undo: { restored: PushItem[]; conflicts: PushItem[]; failed: PushItem[] } | null
   undoable: boolean
   maxItems: number
+}
+
+export type PushGroupCounts = {
+  add: number
+  change: number
+  remove: number
+  files: number
+  settings: number
+  php: number
+}
+
+/** A preview's counts by group: the whole changeset's when the answer has them, else its lists'. */
+export function pushableOf(v: NonNullable<PushView['preview']>): PushGroupCounts {
+  return (
+    v.pushable ?? {
+      add: v.add.length,
+      change: v.change.length,
+      remove: v.remove.length,
+      files: v.files?.length ?? 0,
+      settings: v.settings?.length ?? 0,
+      php: v.php?.length ?? 0
+    }
+  )
 }
 
 export type PushAnswer = {
@@ -193,13 +226,8 @@ export function pushPhaseOf(
   if (p.state === 'expired') return 'expired'
   if (p.state === 'previewed') {
     const v = p.preview
-    const total =
-      (v?.add.length ?? 0) +
-      (v?.change.length ?? 0) +
-      (v?.remove.length ?? 0) +
-      (v?.files?.length ?? 0) +
-      (v?.settings?.length ?? 0) +
-      (v?.php?.length ?? 0)
+    const n = v ? pushableOf(v) : null
+    const total = n ? n.add + n.change + n.remove + n.files + n.settings + n.php : 0
     if (!v || total === 0) return 'nothing'
     return confirming ? 'confirm' : 'review'
   }
@@ -211,7 +239,15 @@ export function pushPhaseOf(
 }
 
 /** Why a phase did not finish, in a sentence a customer can act on; the code stays for support. */
-export function pushFailureText(code: string, t: Translate, max = 200): string {
+export function pushFailureText(code: string, t: Translate, max = 200, php?: PhpTooOld | null): string {
+  if (code === 'LIVE_PHP_TOO_OLD') return phpTooOldText(php, t)
+  const liveErrors: Record<string, string> = {
+    LIVE_BLOCKED: 'sync.error.liveBlocked',
+    LIVE_PASSWORD_PROTECTED: 'sync.error.livePassword',
+    LIVE_RATE_LIMITED: 'sync.error.liveRateLimited',
+    TOKEN_REFUSED: 'sync.error.liveToken'
+  }
+  if (liveErrors[code]) return t(liveErrors[code])
   if (code === 'PUSH_SITE_BUSY' || code === 'SYNC_SITE_BUSY') return t('push.error.busy')
   if (code === 'PUSH_SYNC_RUNNING') return t('push.error.syncRunning')
   if (code === 'PREVIEW_EXPIRED') return t('push.status.expiredBody')

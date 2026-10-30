@@ -185,7 +185,7 @@ workers/
 # tsc --incremental build-info (CI restores it; see tracy-ci.yml)
 .cache/
 
-# Output of `pnpm qa` (manual QA suite runs, stand manifests, fixture secrets).
+# Default artifact folder of tests/qa/layers/static/lib/common.mjs (the former QA runner's output).
 qa-results/
 # dsh-subscriptions runtime state (accounts, quarantine) when a local profile runs the plan card — never commit
 tch/subscriptions/

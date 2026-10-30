@@ -10,7 +10,8 @@ const PROVIDER_LABEL = Object.freeze({
   rapidapi: 'RapidAPI',
   serpapi: 'SerpApi',
   litescrape: 'Litescrape',
-  scrapecreators: 'ScrapeCreators'
+  scrapecreators: 'ScrapeCreators',
+  monid: 'Monid'
 })
 
 export const providerLabel = (id) => PROVIDER_LABEL[id] ?? id

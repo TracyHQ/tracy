@@ -17,6 +17,7 @@
  */
 import assert from 'node:assert/strict'
 import { execFileSync, spawn, spawnSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import {
   chmodSync,
   existsSync,
@@ -29,7 +30,6 @@ import {
   symlinkSync,
   writeFileSync
 } from 'node:fs'
-import { createHash } from 'node:crypto'
 import { createServer } from 'node:http'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
@@ -219,6 +219,25 @@ function liveEngine(liveDir, { templateFiles = null } = {}) {
     req.on('end', () => {
       const { token, action, params = {} } = JSON.parse(body)
       state.calls.push(action)
+      // claude-cowork 0.24.73 on a PHP below its minimum: HTTP 200 and this answer.
+      if (state.phpTooOldBatch && action === 'content.batch') {
+        res.writeHead(200, { 'content-type': 'application/json' })
+        res.end(
+          JSON.stringify({
+            ok: false,
+            error: 'php_too_old',
+            code: 'php_too_old',
+            php: '7.3.33',
+            min: '7.4.0'
+          })
+        )
+        return
+      }
+      if (state.blockBatch && action === 'content.batch') {
+        res.writeHead(403, { 'content-type': 'text/html' })
+        res.end('blocked')
+        return
+      }
       const answer = (value) => {
         res.writeHead(200, { 'content-type': 'application/json' })
         res.end(JSON.stringify(value))
@@ -569,6 +588,7 @@ test('preview, apply, a second preview and Undo: the copy’s changes reach the 
       ['--op', 'apply', '--preview-id', previewId, '--push-id', pushId],
       engine
     )
+    assert.equal(pushed.failed.length, 0, JSON.stringify(pushed))
     assert.equal(pushed.ok, true, JSON.stringify(pushed))
     assert.equal(pushed.state, 'partial')
     assert.deepEqual(
@@ -769,6 +789,119 @@ test('template files: a template’s own CSS goes through the live site’s temp
     assert.equal(readFileSync(join(s.live, 'templates/t4/css/custom.css'), 'utf8'), '.a {}\n')
     assert.ok(!existsSync(join(s.live, 'templates/t4/css/new.css')), 'the file the push added is gone again')
     assert.equal(readFileSync(join(s.webroot, 'templates/t4/css/new.css'), 'utf8'), '.n { color: blue }\n')
+  } finally {
+    await engine.close()
+    s.dispose()
+  }
+})
+
+test('the shell preserves partial writes and Undo after a firewall blocks a later batch', {
+  ...opts,
+  timeout: 900_000
+}, async () => {
+  const s = stack()
+  const engine = await liveEngine(s.live)
+  try {
+    sql("UPDATE jos_content SET title='After' WHERE id=1", 'joomla')
+    const path = 'media/templates/site/cassiopeia/css/user.css'
+    write(s.webroot, { [path]: '.b { color: green }\n' })
+    const previewId = id()
+    assert.equal((await s.runPush(['--op', 'preview', '--preview-id', previewId], engine)).answer.ok, true)
+    engine.blockBatch = true
+    const pushId = id()
+    const args = ['--op', 'apply', '--preview-id', previewId, '--push-id', pushId]
+    const { answer } = await s.runPush(args, engine)
+    assert.equal(answer.ok, false)
+    assert.equal(answer.state, 'partial')
+    assert.deepEqual(
+      answer.written.map((w) => w.id),
+      [`file:${path}`]
+    )
+    assert.equal(readFileSync(join(s.live, path), 'utf8'), '.b { color: green }\n')
+    const repeated = (await s.runPush(args, engine)).answer
+    assert.equal(repeated.repeated, true)
+    assert.deepEqual(repeated.written, answer.written)
+    engine.blockBatch = false
+    const back = (await s.runPush(['--op', 'undo', '--push-id', pushId], engine)).answer
+    assert.equal(back.restored.length, 1, JSON.stringify(back))
+    assert.equal(readFileSync(join(s.live, path), 'utf8'), '.b {}\n')
+  } finally {
+    await engine.close()
+    s.dispose()
+  }
+})
+
+test('a PHP too old met mid-Apply reaches the push answer with both versions, the earlier writes kept', {
+  ...opts,
+  timeout: 900_000
+}, async () => {
+  const s = stack()
+  const engine = await liveEngine(s.live)
+  try {
+    sql("UPDATE jos_content SET title='After' WHERE id=1", 'joomla')
+    const path = 'media/templates/site/cassiopeia/css/user.css'
+    write(s.webroot, { [path]: '.b { color: green }\n' })
+    const previewId = id()
+    assert.equal((await s.runPush(['--op', 'preview', '--preview-id', previewId], engine)).answer.ok, true)
+    engine.phpTooOldBatch = true
+    const args = ['--op', 'apply', '--preview-id', previewId, '--push-id', id()]
+    const { answer } = await s.runPush(args, engine)
+    assert.equal(answer.ok, false)
+    assert.equal(answer.code, 'LIVE_PHP_TOO_OLD', JSON.stringify(answer))
+    assert.equal(answer.php, '7.3.33')
+    assert.equal(answer.min, '7.4.0')
+    assert.equal(answer.state, 'partial')
+    assert.deepEqual(
+      answer.written.map((w) => w.id),
+      [`file:${path}`]
+    )
+  } finally {
+    await engine.close()
+    s.dispose()
+  }
+})
+
+test('a pushed template file deletion survives Undo and Sync on the copy and is offered again', {
+  ...opts,
+  timeout: 900_000
+}, async () => {
+  const s = stack()
+  const path = 'templates/t4/css/custom.css'
+  const engine = await liveEngine(s.live, {
+    templateFiles: [{ path: 'templates/t4', kind: 'template', name: 't4', php: true }]
+  })
+  try {
+    rmSync(join(s.webroot, path))
+    const previewId = id()
+    const preview = (await s.runPush(['--op', 'preview', '--preview-id', previewId], engine)).answer
+    assert.equal(preview.ok, true, JSON.stringify(preview))
+    assert.deepEqual(
+      preview.items.map((i) => [i.id, i.op]),
+      [[`file:${path}`, 'delete']]
+    )
+    const pushId = id()
+    const applied = (
+      await s.runPush(
+        ['--op', 'apply', '--preview-id', previewId, '--push-id', pushId, '--confirm-deletes'],
+        engine
+      )
+    ).answer
+    assert.equal(applied.state, 'applied', JSON.stringify(applied))
+    assert.equal(applied.sync.state, 'applied', JSON.stringify(applied.sync))
+    assert.ok(!existsSync(join(s.live, path)))
+    assert.ok(!existsSync(join(s.webroot, path)))
+    const undone = (await s.runPush(['--op', 'undo', '--push-id', pushId], engine)).answer
+    assert.equal(undone.state, 'undone', JSON.stringify(undone))
+    assert.equal(undone.sync.state, 'applied', JSON.stringify(undone.sync))
+    assert.equal(readFileSync(join(s.live, path), 'utf8'), '.a {}\n')
+    assert.ok(!existsSync(join(s.webroot, path)), 'Undo keeps Tracy deletion on the copy')
+    const again = (await s.runPush(['--op', 'preview', '--preview-id', id()], engine)).answer
+    assert.equal(again.ok, true, JSON.stringify(again))
+    assert.deepEqual(
+      again.items.map((i) => [i.id, i.op]),
+      [[`file:${path}`, 'delete']]
+    )
+    assert.ok(!existsSync(join(s.webroot, path)), 'the preview sync also preserves the deletion')
   } finally {
     await engine.close()
     s.dispose()

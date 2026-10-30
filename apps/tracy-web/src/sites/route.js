@@ -266,7 +266,7 @@ import { importDiagnostic, importSignIn } from '../lib/import-diagnostic.js'
 import { markOwnReads } from '../lib/own-read.js'
 import { DOOR_PROBE_HEADER, isDoorProbe } from '../lib/preview-door-health.js'
 import { markDemoDeletedBySite } from '../lib/wo-demo-marks.js'
-import { copyEndpointFor, isOnCopy } from './component-target.js'
+import { DOOR_WHYS, copyDoorsFor, isOnCopy, verifyCopy } from './component-target.js'
 import {
   buildDescribe,
   CONTENT_PROTOCOL,
@@ -349,18 +349,45 @@ const COMPONENT_TIMEOUT_MS = 170_000
 const FLEET_COPY_BUDGETS_MS = Object.freeze([30_000, 60_000])
 
 /**
- * @typedef {'timeout' | 'unreachable' | 'unauthorized' | 'not_json' | 'refused' |
- *   'platform_mismatch' | 'no_registered_component' | 'no_copy_address'} FleetCopyWhy
- * Why an imported site's fleet copy was not verified. `timeout` and `unreachable` are the copy
- * still warming up (tried again, and the agent is told to retry in a moment); the others are an
- * answer that will not change by waiting.
+ * @typedef {'timeout' | 'unreachable' | 'unauthorized' | 'not_json' | 'not_engine' | 'refused' |
+ *   'redirected' | 'no_copy' | 'copy_error' | 'platform_mismatch' | 'no_registered_component' |
+ *   'no_copy_address'} FleetCopyWhy
+ * Why an imported site's fleet copy was not verified (`component-target.js` `verifyCopy`). `timeout`
+ * and `unreachable` are the copy still warming up (tried again, and the agent is told to retry in a
+ * moment); the others are an answer that will not change by waiting: a redirect, no container under
+ * the site's name, a server error, a door that answers without the plugin, a wrong token.
  */
 /** The reasons worth a second try, and a retry by the agent. */
 const FLEET_COPY_TRANSIENT = new Set(['timeout', 'unreachable'])
 
-/** @param {unknown} error @returns {boolean} true when an `AbortSignal.timeout` cut the call. */
-const isTimeout = (error) =>
-  error instanceof Error && (error.name === 'TimeoutError' || error.name === 'AbortError')
+/**
+ * Every reason `pairFleetCopy` gives, the closed set a `site.edit` signal may name (`copy_reason`).
+ */
+const FLEET_COPY_WHYS = new Set([
+  'timeout',
+  'unreachable',
+  'unauthorized',
+  'not_json',
+  'not_engine',
+  'refused',
+  'redirected',
+  'no_copy',
+  'copy_error',
+  'platform_mismatch',
+  'no_registered_component',
+  'no_copy_address'
+])
+
+/**
+ * How long a copy may stay "warming up" before the refusal stops saying a retry will help.
+ *
+ * 🔒 A COPY THAT HAS NOT ANSWERED FOR A DAY IS NOT WARMING UP (beta report, 26/10/2026). A re-imported
+ * Joomla site's copy failed verification on every write from 25/10 18:51 to 26/10 22:31, and each
+ * refusal told the agent to retry in a moment, so the customer was told the same for a day. Past this
+ * long without one verified call the refusal is no longer `transient`: the agent tells the customer
+ * the copy needs checking, and the `site.edit` signal names why (`copy_reason`).
+ */
+const FLEET_COPY_WARM_MS = 10 * 60_000
 
 /** The three platforms a site may be BORN as — ported from `CREATE_PLATFORMS`
  * (`workers/cowork-web/src/worker.js`). Checked here, not left to the host: the host's own
@@ -1262,6 +1289,8 @@ function lastLine(output) {
  */
 export function sitesRoutes({
   pool,
+  // The serving process only (server.js): pick up the syncs and pushes a restart left running.
+  resumeLiveJobs = false,
   config,
   host,
   mail = null,
@@ -1334,8 +1363,19 @@ export function sitesRoutes({
   // A backup point downloaded by its Owner (`backup-export.js`): the two export doors and the
   // site's delete reach it here, the cron's sweep through its own instance.
   const backupExports = createBackupExports({ pool, config, host, fetchImpl, now })
-  const sync = liveSync({ pool, config, host, fetchImpl, currentComponent, writeComponent, now })
-  const push = livePush({ pool, config, host, fetchImpl, sync, now })
+  // Built once, at boot: in the serving process (`resumeLiveJobs`, server.js) each picks up the syncs and
+  // pushes a restart left running (#123).
+  const sync = liveSync({
+    pool,
+    config,
+    host,
+    fetchImpl,
+    currentComponent,
+    writeComponent,
+    now,
+    resumeOnStart: resumeLiveJobs
+  })
+  const push = livePush({ pool, config, host, fetchImpl, sync, now, resumeOnStart: resumeLiveJobs })
 
   /**
    * The principal behind a request — `{kind, email, account, grant}` with a live grant on `siteKey`,
@@ -1674,6 +1714,9 @@ export function sitesRoutes({
     return { siteKey: own.site_key }
   }
 
+  /** When each imported site's copy first failed to verify since it last did (`FLEET_COPY_WARM_MS`). */
+  const copyFailingSince = new Map()
+
   /**
    * Move an IMPORTED site's component onto its fleet copy (`component-target.js` says why the
    * registered endpoint is the customer's live site). The copy must answer `core.manifest` with
@@ -1700,22 +1743,31 @@ export function sitesRoutes({
     const cred = await currentComponent(pool, site.site_key)
     if (!cred?.config?.endpoint || !cred?.config?.token) return { cred: null, why: 'no_registered_component' }
     if (isOnCopy(cred.config.endpoint, site, config)) return { cred }
-    const endpoint = copyEndpointFor(cred.config.endpoint, site, config)
-    if (endpoint === null) return { cred: null, why: 'no_copy_address' }
+    // The registered door on the copy first, then — a Joomla copy — its other door (`copyDoorsFor`).
+    const doors = copyDoorsFor(cred.config.endpoint, site, config)
+    if (doors.length === 0) return { cred: null, why: 'no_copy_address' }
     /** @type {FleetCopyWhy} */
     let why = 'unreachable'
     // The copy's own token when the provision gave it one; the live token where it could not (a host
     // image from before step 4b, a copy whose prefix was not read): that copy still holds it.
     const tokens = cred.config.copyToken ? [cred.config.copyToken, cred.config.token] : [cred.config.token]
     let token = tokens[0]
+    let endpoint = doors[0]
+    const verify = (/** @type {string} */ at, /** @type {string} */ key, /** @type {number} */ budget) =>
+      verifyCopy({ fetchImpl, endpoint: at, token: key, platform: site.platform, budgetMs: budget })
     for (const [attempt, budget] of budgets.entries()) {
-      why = await verifyFleetCopy(endpoint, token, site.platform, budget)
-      if (why === 'unauthorized' && token !== tokens.at(-1)) {
-        console.warn(
-          `[fleet-copy] ${site.label} does not hold its own token — it still holds the live site's`
-        )
-        token = tokens.at(-1)
-        why = await verifyFleetCopy(endpoint, token, site.platform, budget)
+      for (const door of doors) {
+        endpoint = door
+        why = await verify(door, token, budget)
+        if (why === 'unauthorized' && token !== tokens.at(-1)) {
+          console.warn(
+            `[fleet-copy] ${site.label} does not hold its own token — it still holds the live site's`
+          )
+          token = tokens.at(-1)
+          why = await verify(door, token, budget)
+        }
+        // Only a door that did not reach the plugin sends the call to the other door.
+        if (why === 'verified' || !DOOR_WHYS.has(why)) break
       }
       if (why === 'verified') break
       console.warn(
@@ -1736,44 +1788,6 @@ export function sitesRoutes({
     }
     await writeComponent(pool, site.site_key, config_, email)
     return { cred: { ...cred, config: config_ } }
-  }
-
-  /**
-   * One `core.manifest` on the copy, and what it says: `verified`, or why not.
-   * @param {string} endpoint
-   * @param {string} token
-   * @param {string} platform - the site row's platform, which the manifest must name.
-   * @param {number} budget - ms before the call is cut.
-   * @returns {Promise<'verified' | FleetCopyWhy>}
-   */
-  async function verifyFleetCopy(endpoint, token, platform, budget) {
-    let response
-    try {
-      response = await fetchImpl(endpoint, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ token, action: 'core.manifest', params: {} }),
-        redirect: 'error',
-        signal: AbortSignal.timeout(budget)
-      })
-    } catch (error) {
-      return isTimeout(error) ? 'timeout' : 'unreachable'
-    }
-    let body
-    try {
-      body = await response.json()
-    } catch (error) {
-      // The body can be cut by the same signal while it streams in.
-      if (isTimeout(error)) return 'timeout'
-      return response.status >= 500 ? 'unreachable' : 'not_json'
-    }
-    if (response.status === 401 || response.status === 403 || body?.error === 'unauthorized')
-      return 'unauthorized'
-    // A gateway or PHP answering 5xx while the copy's container starts is the copy not being up yet.
-    if (response.status >= 500) return 'unreachable'
-    if (!response.ok || body?.ok !== true) return 'refused'
-    if (body.manifest?.platform !== platform) return 'platform_mismatch'
-    return 'verified'
   }
 
   /**
@@ -6238,6 +6252,11 @@ export function sitesRoutes({
             !answered.body?.code &&
             !answered.body?.error,
           refusal: refusalCodeOf(answered.body),
+          // Why an imported site's copy was not verified, from `pairFleetCopy`'s closed set.
+          ...(answered.body?.code === 'COMPONENT_NOT_ON_FLEET_COPY' &&
+          FLEET_COPY_WHYS.has(answered.body?.copyReason)
+            ? { copy_reason: answered.body.copyReason }
+            : {}),
           from_comment: call.comment == null ? null : Boolean(commentNumbers(call.comment)?.length),
           moment: call.params?.apply_id ?? null
         }
@@ -6628,15 +6647,18 @@ export function sitesRoutes({
       const paired = await pairFleetCopy(site, auth.email)
       if (paired.cred === null) {
         if (heldLease) await releaseWriteLease(pool, { siteKey, sessionId: chatSession, turnId })
+        const since = copyFailingSince.get(siteKey) ?? Date.now()
+        copyFailingSince.set(siteKey, since)
         return reply(
           {
             code: 'COMPONENT_NOT_ON_FLEET_COPY',
             copyReason: paired.why,
-            transient: FLEET_COPY_TRANSIENT.has(paired.why)
+            transient: FLEET_COPY_TRANSIENT.has(paired.why) && Date.now() - since < FLEET_COPY_WARM_MS
           },
           409
         )
       }
+      copyFailingSince.delete(siteKey)
       cred = paired.cred
       // The whole call keeps the budget it always had (`FLEET_COPY_BUDGETS_MS`).
       componentBudgetMs = Math.max(1_000, COMPONENT_TIMEOUT_MS - (Date.now() - pairingFrom))

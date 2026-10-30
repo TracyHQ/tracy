@@ -16,8 +16,26 @@ docker() {
       esac
       printf '%s\n' "${STUB_TEMPLATE_ID:-}"; return "${STUB_IMAGE_RC:-0}" ;;
     cp)    return "${STUB_CP_RC:-0}" ;;
-    inspect)   # `docker inspect --format …` of the web container: its address on the fleet network
+    inspect)
+      case "$*" in
+        *Config.Labels*)
+          local identity="${STUB_HOST_IDENTITY-123456abcdef00|tracy-host|true|tracy_tracy}"
+          [ "${STUB_HOST_JOINED:-0}" = 1 ] && identity="$identity demo_default"
+          printf '%s\n' "$identity"; return 0 ;;
+        *123456abcdef*) [ "${STUB_HOST_JOINED:-0}" = 1 ] && printf 'tracy_tracy demo_default\n' || printf 'tracy_tracy\n'; return 0 ;;
+      esac
       printf '%s\n' "${STUB_SITE_IP-172.30.0.7}"; return "${STUB_INSPECT_RC:-0}" ;;
+    network)
+      case "$1" in
+        connect)
+          case "${STUB_CONNECT_SIGNAL:-}" in
+            TERM) /bin/sh -c 'kill -TERM "$PPID"' ;;
+            INT) /bin/sh -c 'kill -INT "$PPID"' ;;
+          esac
+          return "${STUB_CONNECT_RC:-0}" ;;
+        disconnect) return "${STUB_DISCONNECT_RC:-0}" ;;
+      esac
+      return 0 ;;
     exec)
       local all="$*"
       case "$all" in
@@ -73,7 +91,12 @@ node() {
 curl() {
   [ -n "${STUB_DOCKER_LOG:-}" ] && printf 'curl %s\n' "$*" >> "$STUB_DOCKER_LOG"
   case "$*" in
-    *http://127.0.0.1:*) [ "${STUB_LOOPBACK_DOWN:-0}" = 1 ] && return 7 ;;
+    *http://127.0.0.1:*)
+      if [ "${STUB_LOOPBACK_DOWN:-0}" = 1 ]; then
+        if [ "${STUB_LOOPBACK_RECOVERS:-0}" = 1 ] && [ -f "$STUB_DOCKER_LOG.loopback" ]; then :
+        else touch "$STUB_DOCKER_LOG.loopback"; return 7; fi
+      fi ;;
+    *http://172.30.0.7:*) [ "${STUB_PRIVATE_DOWN:-0}" = 1 ] && return 7 ;;
   esac
   printf '%s' '{"setupComplete":true}'
 }

@@ -1303,6 +1303,14 @@ export const en = {
   'sync.keptOrder': 'Both sites changed the order of these items. Tracy’s order was kept.',
   /** After an applied sync: the original site's records the copy did not take (opens a list). */
   'sync.dropped': 'This copy did not take {count} records of your original site.',
+  /** After a sync: what the original site has that a sync does not bring (its triggers, its log tables). */
+  'sync.notCarried': 'Not brought from your original site',
+  /** Database triggers of the original site this copy does not have; a sync never copies them. */
+  'sync.notCarriedTriggers':
+    'Database triggers ({names}). A sync does not copy them; add them to this site yourself if it needs them.',
+  /** Tables a sync treats as logs (by their name) that changed on the original site. */
+  'sync.notCarriedTables':
+    'Tables kept as this copy’s own logs, which changed on your original site ({names}).',
   /** Why one was not taken: new on both sites under one number. */
   'sync.dropReason.addedBoth': 'Both sites added a record under this number. Tracy’s was kept.',
   /** … a row pointing at a record of the original site that was numbered again. */
@@ -1410,6 +1418,8 @@ export const en = {
   'push.reason.phpUnchecked': 'Could not be checked for your live site’s PHP version',
   'push.reason.extensionFile': 'Belongs to an extension, so it goes only with that extension',
   'push.reason.noDoor': 'There is no safe way to write this setting yet',
+  'push.reason.translationGroup':
+    'Languages and which pages translate each other are not sent yet. Make this change in Polylang on your live site',
   'push.reason.phpDisabled':
     'PHP files are switched off for Claude Cowork on your live site. To send them, turn on “Allow PHP in template files” in the Claude Cowork options on your site',
   'push.reason.phpDisabledWordpress':
@@ -1489,6 +1499,9 @@ export const en = {
   'push.field.shareImage': 'Share image',
   'push.field.fonts': 'Fonts',
   'push.field.other': 'Other details',
+  'push.label.featuredImage': 'Featured image',
+  'push.label.pageTemplate': 'Page template',
+  'push.label.altText': 'Alt text',
   'push.label.blogname': 'Site title',
   'push.label.blogdescription': 'Tagline',
   'push.label.date_format': 'Date format',
@@ -1581,6 +1594,20 @@ export const en = {
   /** An earlier apply was cut off and the copy changed since: nothing was written (APPLY_INTERRUPTED_KEPT). */
   'sync.error.interruptedKept':
     'An earlier sync was stopped by a Tracy update while it was putting changes on this copy, and this copy has changed since. Tracy left it as it is. To undo that earlier sync, restore the backup point “Before restore” in Backups, then sync again.',
+  'sync.error.liveBlocked':
+    'Your live site returned a blocked or non-engine response. Check its firewall or bot protection and allow Tracy’s requests.',
+  'sync.error.livePassword':
+    'Your live site requires an HTTP password. Allow Tracy to access the Claude Cowork endpoint without that password, then try again.',
+  /** The live site's PHP is below what Claude Cowork needs (LIVE_PHP_TOO_OLD), both versions known. */
+  'sync.error.livePhpTooOld':
+    'Your live site runs PHP {php}. Claude Cowork needs PHP {min} or newer. Ask your host to upgrade PHP, then try again.',
+  /** LIVE_PHP_TOO_OLD from an answer that did not name the versions. */
+  'sync.error.livePhpTooOldPlain':
+    'Your live site runs a PHP version too old for Claude Cowork. Ask your host to upgrade PHP, then try again.',
+  'sync.error.liveRateLimited':
+    'Your live site is limiting requests. Wait before trying again; Tracy respects its Retry-After delay.',
+  'sync.error.liveToken':
+    'Your live site refused the Claude Cowork token. Reconnect the live site with its current token, then try again.',
   'sync.error.liveUnreachable':
     'Tracy could not read your original site. Nothing on this copy was changed. Check that the site is online and that Claude Cowork is still installed on it.',
   'sync.error.copyChanged': 'This copy changed while the sync ran, so nothing was put in place. Try again.',

@@ -279,6 +279,15 @@ export async function testProviderKey(pool, config, host, provider, fetchImpl = 
 
   if (provider === 'google') return testGoogleKey(key, fetchImpl)
   if (provider === 'rapidapi') return testRapidApiKey(key, fetchImpl)
+  // Monid documents no free key check, and every run is billed: Test never spends one.
+  if (provider === 'monid')
+    return {
+      ok: false,
+      provider,
+      status: 'not_checkable',
+      detail:
+        'Monid has no free key check; the key is first used by a research run with Monid in the Google reviews order.'
+    }
 
   const startedAt = Date.now()
   const controller = new AbortController()

@@ -33,6 +33,7 @@ an `https://` home) is left as it is on all three sides alike.
 from __future__ import annotations
 
 import re
+from typing import Callable, NamedTuple
 
 # ── SQL helpers (live_sync.py's own: this module is loaded by it and cannot import it back) ────
 
@@ -71,11 +72,25 @@ def _quoted(data: bytes, at: int, length: int) -> tuple[bytes, int]:
     return data[at + 1:at + 1 + length], at + 2 + length
 
 
-def _walk(data: bytes, at: int, old: bytes, new: bytes, depth: int) -> tuple[bytes, int]:
-    """One serialized value at `at`, rewritten: (its new bytes, the index past the old ones)."""
+def _walk(data: bytes, at: int, old: bytes, new: bytes, depth: int, visit=None, path=(),
+          layout=None) -> tuple[bytes, int]:
+    """One serialized value at `at`, rewritten: (its new bytes, the index past the old ones). With
+    `visit`, the record numbers `layout` places in the value (by path) are handed to it as well."""
     if depth > _MAX_DEPTH or at >= len(data):
         raise _Unreadable(at)
     kind = data[at:at + 2]
+    layout = layout or THEME_MODS
+    entity = layout.entity(path) if visit else None
+    if visit and kind in (b"r:", b"R:"):
+        raise _Unreadable("aliased serialized value")
+    if entity and kind in (b"r:", b"R:", b"C:", b"O:"):
+        raise _Unreadable("aliased serialized reference")
+    if visit and path in layout.containers and kind == b"C:":
+        raise _Unreadable("opaque reference container")
+    if entity and kind == b"i:":
+        number, end = _int_until(data, at + 2, b";")
+        got = visit(entity, number) if number > 0 else number
+        return (data[at:end] if got == number else b"i:%d;" % got), end
     if data[at:at + 2] == b"N;":
         return b"N;", at + 2
     if kind in (b"b:", b"i:", b"r:", b"R:"):
@@ -94,8 +109,13 @@ def _walk(data: bytes, at: int, old: bytes, new: bytes, depth: int) -> tuple[byt
         inner, after = _quoted(data, at2, length)
         if data[after:after + 1] != b";":
             raise _Unreadable(after)
-        # A string inside may hold serialized PHP of its own (a plugin serializing twice).
-        rewritten = replace_value(inner, old, new, depth + 1)
+        if entity and _NUMBER.fullmatch(inner):
+            number = int(inner)
+            got = visit(entity, number) if number > 0 else number
+            rewritten = inner if got == number else str(got).encode("ascii")
+        else:
+            # A string inside may hold serialized PHP of its own (a plugin serializing twice).
+            rewritten = replace_value(inner, old, new, depth + 1)
         return b"s:%d:\"" % len(rewritten) + rewritten + b"\";", after + 1
     if kind == b"E:":
         length, at2 = _int_until(data, at + 2, b":")
@@ -105,14 +125,14 @@ def _walk(data: bytes, at: int, old: bytes, new: bytes, depth: int) -> tuple[byt
         return data[at:after + 1], after + 1
     if kind == b"a:":
         count, at2 = _int_until(data, at + 2, b":")
-        return _members(data, at, at2, count, old, new, depth)
+        return _members(data, at, at2, count, old, new, depth, visit, path, layout)
     if kind == b"O:":
         length, at2 = _int_until(data, at + 2, b":")
         _, after = _quoted(data, at2, length)
         if data[after:after + 1] != b":":
             raise _Unreadable(after)
         count, at3 = _int_until(data, after + 1, b":")
-        return _members(data, at, at3, count, old, new, depth)
+        return _members(data, at, at3, count, old, new, depth, visit, path, layout)
     if kind == b"C:":
         # A class serializing itself (`Serializable`): its payload is the class's own format, not
         # PHP's, and is carried as it is.
@@ -127,7 +147,8 @@ def _walk(data: bytes, at: int, old: bytes, new: bytes, depth: int) -> tuple[byt
     raise _Unreadable(at)
 
 
-def _members(data: bytes, start: int, at: int, count: int, old: bytes, new: bytes, depth: int):
+def _members(data: bytes, start: int, at: int, count: int, old: bytes, new: bytes, depth: int, visit=None, path=(),
+             layout=None):
     """An array's or an object's `{key value …}` from `at`, its keys kept and its values rewritten;
     the head (`a:2:` / `O:8:"stdClass":2:`) from `start` kept as it is."""
     if data[at:at + 1] != b"{":
@@ -139,7 +160,13 @@ def _members(data: bytes, start: int, at: int, count: int, old: bytes, new: byte
             raise _Unreadable(at)
         key_end = _walk_key(data, at)
         out.append(data[at:key_end])
-        value, at = _walk(data, key_end, old, new, depth + 1)
+        if data[at:at + 2] == b"s:":
+            length, key_at = _int_until(data, at + 2, b":")
+            key, _ = _quoted(data, key_at, length)
+            key = key.decode("utf-8", "surrogateescape")
+        else:
+            key, _ = _int_until(data, at + 2, b";")
+        value, at = _walk(data, key_end, old, new, depth + 1, visit, path + (key,), layout)
         out.append(value)
     if data[at:at + 1] != b"}":
         raise _Unreadable(at)
@@ -198,6 +225,28 @@ def option_value(sql, schema: str, prefix: str, name: str) -> str | None:
 def _has_table(sql, schema: str, table: str) -> bool:
     return bool(sql.run(f"SELECT 1 FROM information_schema.tables WHERE table_schema = {sql_str(schema)}"
                         f" AND table_name = {sql_str(table)};"))
+
+
+def counting_policy(sql, names: dict, prefix: str) -> dict:
+    """Count the authoritative WooCommerce store when all three reads agree on its mode.
+    A mode transition keeps per-table counts; an ID alone never proves a backup order."""
+    schemas = sorted(set(names.values()))
+    tables = [prefix + name for name in ("posts", "options", "wc_orders")]
+    have = {tuple(row) for row in sql.run(
+        "SELECT table_schema, table_name FROM information_schema.tables"
+        f" WHERE table_schema IN ({', '.join(sql_str(s) for s in schemas)})"
+        f" AND table_name IN ({', '.join(sql_str(t) for t in tables)});")}
+    if not all((schema, table) in have for schema in schemas for table in tables):
+        return {}
+    # WooCommerce's controller uses get_option(...) === 'yes'; a missing row means legacy.
+    modes = {option_value(sql, schema, prefix, "woocommerce_custom_orders_table_enabled") == "yes"
+             for schema in schemas}
+    if len(modes) != 1:
+        return {}
+    if modes == {True}:
+        return {"uncountedRows": {**POLICY["uncountedRows"], "posts": {
+            "post_type": {"shop_order_placehold", "shop_order", "shop_order_refund"}}}}
+    return {"uncountedTables": POLICY["uncountedTables"] | {"wc_orders"}}
 
 
 def rewrite_address(sql, schema: str, old: str, new: str) -> dict:
@@ -398,7 +447,12 @@ def yield_auto_drafts(sql, names: dict, prefix: str, log=lambda _m: None) -> lis
     if _has_table(sql, names["ours"], meta):
         script.append(f"DELETE FROM {o}.{q(meta)} WHERE post_id IN ({listed});")
     if _has_table(sql, names["ours"], terms):
-        script.append(f"DELETE FROM {o}.{q(terms)} WHERE object_id IN ({listed});")
+        # The posts' relationships only: under the same number, a link's categories and a term's
+        # Polylang language and group are another record's (`TT_OF_POST`).
+        taxonomies = prefix + "term_taxonomy"
+        own = (f" AND {TT_OF_POST.replace('{term_taxonomy}', f'{o}.{q(taxonomies)}')}"
+               if _has_table(sql, names["ours"], taxonomies) else "")
+        script.append(f"DELETE FROM {o}.{q(terms)} WHERE object_id IN ({listed}){own};")
     script.append(f"DELETE FROM {o}.{q(posts)} WHERE ID IN ({listed}) AND post_status = {sql_str(AUTO_DRAFT)};")
     sql.run("\n".join(script))
     log(f"the copy's auto-drafts under a number the live site's post has: {listed} given up")
@@ -545,8 +599,188 @@ TRACY_POSTMETA = "r.meta_key LIKE '\\_tracy\\_%'"
 # `_menu_item_object_id` names a post or a term, as the item's `_menu_item_type` says.
 MENU_OBJECT = ("meta_key = '_menu_item_object_id' AND post_id IN (SELECT m.post_id FROM {{postmeta}} m"
                " WHERE m.meta_key = '_menu_item_type' AND m.meta_value = '{kind}')")
-# `term_relationships.object_id` names a post, or a link under `link_category`.
-TT_OF = "term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {{term_taxonomy}} tt WHERE tt.taxonomy {cmp} 'link_category')"
+# `term_relationships.object_id` names a post, a link under `link_category`, or — under Polylang's
+# `term_language` and `term_translations` — a term: Polylang files a term's language and its
+# translation group as relationships of the term itself.
+TERM_OBJECT_TAXONOMIES = ("term_language", "term_translations")
+TT_OF = "term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {{term_taxonomy}} tt WHERE tt.taxonomy {cmp})"
+_TERM_OBJECTS = ", ".join(sql_str(t) for t in TERM_OBJECT_TAXONOMIES)
+TT_OF_POST = TT_OF.format(cmp=f"NOT IN ('link_category', {_TERM_OBJECTS})")
+TT_OF_LINK = TT_OF.format(cmp="= 'link_category'")
+TT_OF_TERM = TT_OF.format(cmp=f"IN ({_TERM_OBJECTS})")
+
+
+def theme_mod_entity(path: tuple) -> str | None:
+    """Only WordPress's documented theme-mod reference paths name records."""
+    if len(path) == 1 and path[0] in ("custom_logo", "custom_css_post_id", "header_video"):
+        return "posts"
+    if len(path) == 2 and path[0] == "nav_menu_locations":
+        return "terms"
+    if path == ("header_image_data", "attachment_id"):
+        return "posts"
+    return None
+
+
+class Layout(NamedTuple):
+    """Where a serialized value names records: `entity(path)` says which kind of record the value at
+    a path (its keys from the top) names, or None; `containers` are paths whose value must be readable
+    PHP (a custom-serialized payload there could hide a reference)."""
+    entity: Callable[[tuple], str | None]
+    containers: frozenset = frozenset()
+
+
+THEME_MODS = Layout(theme_mod_entity, frozenset({("header_image_data",), ("nav_menu_locations",)}))
+
+
+def polylang_group(entity: str) -> Layout:
+    """A Polylang translation group (`post_translations` / `term_translations` description): language
+    slug → the post's or term's number. Polylang Pro's `sync` entry maps languages to languages."""
+    return Layout(lambda path: entity if len(path) == 1 and path[0] != "sync" else None)
+
+
+# Polylang's settings (`polylang` option): the menu shown at each theme location, per language.
+POLYLANG_SETTINGS = Layout(lambda path: "terms" if len(path) == 4 and path[0] == "nav_menus" else None,
+                           frozenset({("nav_menus",)}))
+
+
+def visit_serialized(data: bytes, visit, layout: Layout) -> bytes:
+    """Walk one complete serialized value, retaining all non-reference bytes and representations."""
+    try:
+        result, end = _walk(data, 0, b"", b"", 0, visit, (), layout)
+        if end != len(data):
+            raise _Unreadable(end)
+        return result
+    except _Unreadable:
+        raise ValueError("WordPress serialized references cannot be safely read or renumbered") from None
+
+
+def visit_theme_mods(data: bytes, visit) -> bytes:
+    """Walk complete serialized theme mods, retaining all non-reference bytes and representations."""
+    return visit_serialized(data, visit, THEME_MODS)
+
+
+class Serialized(NamedTuple):
+    """Rows of one table whose column holds serialized PHP naming records (`layout`): `name` is the
+    column that names the row. `strict`: a value that cannot be read stops the merge; otherwise it
+    names nothing, as it names nothing to the plugin that reads it (`maybe_unserialize` gives up)."""
+    table: str
+    name: str
+    column: str
+    where: str
+    layout: Layout
+    strict: bool = True
+
+
+SERIALIZED_REFS = {
+    "posts": (
+        Serialized("options", "option_name", "option_value", "option_name LIKE 'theme\\_mods\\_%'", THEME_MODS),
+        Serialized("term_taxonomy", "term_taxonomy_id", "description", "taxonomy = 'post_translations'",
+                   polylang_group("posts"), strict=False),
+    ),
+    "terms": (
+        Serialized("options", "option_name", "option_value", "option_name LIKE 'theme\\_mods\\_%'", THEME_MODS),
+        Serialized("options", "option_name", "option_value", "option_name = 'polylang'", POLYLANG_SETTINGS),
+        Serialized("term_taxonomy", "term_taxonomy_id", "description", "taxonomy = 'term_translations'",
+                   polylang_group("terms"), strict=False),
+    ),
+}
+
+
+class SerializedReferences:
+    """Typed serialized references of one kind of record, used for both allocating IDs and moving
+    them (`IdMap` `typedRefs`): the theme mods' logo and menus, Polylang's translation groups and
+    its per-language menus."""
+
+    def __init__(self, entity: str, sources: tuple = ()):
+        self.entity = entity
+        self.sources = sources or SERIALIZED_REFS[entity]
+
+    @staticmethod
+    def rows(mapper, schema: str, source: Serialized):
+        if not all(mapper.column_exists(schema, source.table, c) for c in (source.name, source.column)):
+            return []
+        return [(bytes.fromhex(name), bytes.fromhex(value)) for name, value in mapper.sql.run(
+            f"SELECT HEX(CAST({q(source.name)} AS BINARY)), HEX({q(source.column)}) FROM {q(schema)}.{q(mapper.table(source.table))}"
+            f" WHERE ({source.where}) AND {q(source.column)} IS NOT NULL;")]
+
+    def visit(self, data: bytes, source: Serialized, visit) -> bytes:
+        if not source.strict:
+            # Not serialized PHP at all, or not whole: no number Polylang would read.
+            try:
+                return visit_serialized(data, visit, source.layout)
+            except ValueError:
+                return data
+        return visit_serialized(data, visit, source.layout)
+
+    def read(self, mapper, schema: str) -> set[int]:
+        found = set()
+
+        def collect(entity, number):
+            if entity == self.entity:
+                found.add(number)
+            return number
+
+        for source in self.sources:
+            for _, data in self.rows(mapper, schema, source):
+                self.visit(data, source, collect)
+        return found
+
+    def rewrite(self, mapper, schema: str, pairs: list[tuple[int, int]]) -> None:
+        mapping = dict(pairs)
+        updates = []
+        for source in self.sources:
+            for name, data in self.rows(mapper, schema, source):
+                result = self.visit(data, source, lambda entity, number:
+                                    mapping.get(number, number) if entity == self.entity else number)
+                if result != data:
+                    updates.append(f"UPDATE {q(schema)}.{q(mapper.table(source.table))}"
+                                   f" SET {q(source.column)} = X'{result.hex()}'"
+                                   f" WHERE CAST({q(source.name)} AS BINARY) = X'{name.hex()}' AND ({source.where});")
+        if updates:
+            mapper.sql.run("\n".join(updates))
+
+
+# WooCommerce rows that name a post by its number: an order IS a post number (HPOS keeps the
+# placeholder post and `wc_orders.id` equal; the legacy store keeps the order as the post), and its
+# lines, addresses, meta and lookups name it as `order_id`; lines and lookups name products and
+# variations (posts too). Renumbered with the post, or a live order placed under a number the copy
+# already holds stays on that number and attaches to the copy's post (#107). A table or column a
+# site lacks is passed over (`column_exists`).
+WOOCOMMERCE_POST_REFS = (
+    ("wc_orders", "id", None), ("wc_orders", "parent_order_id", None),
+    ("wc_orders_meta", "order_id", None), ("wc_order_addresses", "order_id", None),
+    ("wc_order_operational_data", "order_id", None), ("woocommerce_order_items", "order_id", None),
+    ("woocommerce_order_itemmeta", "meta_value", "meta_key IN ('_product_id', '_variation_id')"),
+    ("woocommerce_downloadable_product_permissions", "order_id", None),
+    ("woocommerce_downloadable_product_permissions", "product_id", None),
+    ("wc_order_stats", "order_id", None), ("wc_order_stats", "parent_id", None),
+    ("wc_order_product_lookup", "order_id", None), ("wc_order_product_lookup", "product_id", None),
+    ("wc_order_product_lookup", "variation_id", None),
+    ("wc_order_tax_lookup", "order_id", None), ("wc_order_coupon_lookup", "order_id", None),
+    ("wc_order_coupon_lookup", "coupon_id", None),
+    ("wc_product_meta_lookup", "product_id", None),
+)
+
+
+# The taxonomy rows the copy's own relationships name that the base does not hold (a post filed or a
+# menu item placed by Tracy): the SELECT `DbMerge.in_use_rows` reads, `{ours.…}`/`{base.…}` its tables.
+NEW_RELATIONSHIPS = ("SELECT c.term_taxonomy_id FROM {ours.term_relationships} c WHERE NOT EXISTS"
+                     " (SELECT 1 FROM {base.term_relationships} x WHERE x.object_id = c.object_id"
+                     " AND x.term_taxonomy_id = c.term_taxonomy_id)")
+RELATIONSHIP_COLUMNS = ("term_relationships.object_id", "term_relationships.term_taxonomy_id")
+# Post meta WordPress keeps one of per post (`get_post_meta($id, $key, true)` everywhere it reads
+# them): a row both sites added for one post is one row (`IdMap.align_single`, #118). Not a key that
+# may hold several values on purpose (`_wp_old_slug`: one row per former address).
+SINGLE_POSTMETA = ", ".join(sql_str(k) for k in (
+    "_wp_page_template", "_thumbnail_id", "_wp_attachment_image_alt", "_wp_attached_file",
+    "_wp_attachment_metadata", "_edit_last", "_wp_desired_post_slug", "_wp_trash_meta_status",
+    "_wp_trash_meta_time", "_menu_item_type", "_menu_item_menu_item_parent", "_menu_item_object_id",
+    "_menu_item_object", "_menu_item_target", "_menu_item_classes", "_menu_item_xfn", "_menu_item_url"))
+
+
+# Any `…_log(s)`, `…_session(s)`, `…_cache`, `…_queue`, `…_hits` table: ignored by the shape of its name.
+GUESSED_TABLES = r"(^|_)(logs?|sessions?|cache|queue|hits)$"
+
 
 POLICY = {
     "tracyTables": re.compile(r"^claude_cowork_"),
@@ -567,17 +801,41 @@ POLICY = {
     # its settings it rewrites on every scan), Yoast's indexables (rebuilt from the posts), any
     # `…_log(s)`, `…_session(s)`, `…_cache`, `…_queue`, `…_hits`.
     "ignoreTables": TableNames(
+        names=("wc_admin_notes", "wc_admin_note_actions", "wc_order_stats",
+               "wc_order_product_lookup", "wc_customer_lookup"),
         patterns=(r"^actionscheduler_", r"^wf[a-z]", r"^yoast_indexable(_hierarchy)?$", r"^yoast_migrations$",
-                  r"(^|_)(logs?|sessions?|cache|queue|hits)$")),
+                  GUESSED_TABLES)),
+    # Of those, the ones left out only by the shape of their name: a shop's own `…_log` table is one,
+    # and when the live site changes it the Owner is told it did not come over (#120).
+    "guessedTables": (GUESSED_TABLES,),
+    # A category, tag or menu the live site deleted stays while the copy's own new or moved rows use it
+    # (`DbMerge.in_use_rows`, #119): the taxonomy rows its new relationships name (a post filed in a
+    # category, a menu item in a menu), and those rows' terms.
+    "inUseParents": {
+        "term_taxonomy": ("term_taxonomy_id", NEW_RELATIONSHIPS, RELATIONSHIP_COLUMNS),
+        "terms": ("term_id", f"SELECT tt.term_id FROM {{ours.term_taxonomy}} tt WHERE tt.term_taxonomy_id IN ({NEW_RELATIONSHIPS})",
+                  RELATIONSHIP_COLUMNS + ("term_taxonomy.term_id", "term_taxonomy.term_taxonomy_id")),
+    },
     "appendTables": set(),
     # Rows that belong to a record (its meta, its terms' links), merged as any other but not counted
     # as records the live site brought (`live_sync.py` `records`): a new post with its meta is one.
-    "uncountedTables": {"postmeta", "termmeta", "commentmeta", "usermeta", "term_relationships", "term_taxonomy"},
+    "uncountedTables": {"postmeta", "termmeta", "commentmeta", "usermeta", "term_relationships", "term_taxonomy",
+                        "wc_orders_meta", "wc_order_addresses", "wc_order_operational_data",
+                        "woocommerce_order_items", "woocommerce_order_itemmeta"},
+    # HPOS reserves the order number with a post row. Keep it, but count the order's own row once.
+    "uncountedRows": {"posts": {"post_type": {"shop_order_placehold"}}},
     # Counters WordPress recounts from the rows (sync-wordpress-after.php): not compared; a table that
     # took rows from the live site is recounted.
     "derivedColumns": {
         "posts": {"comment_count"},
         "term_taxonomy": {"count"},
+    },
+    # The source tables of those counters can change while the counter's own row stays put.
+    "rebuildDependencies": {
+        "term_relationships": {"term_taxonomy"},
+        "posts": {"posts", "term_taxonomy"},
+        "term_taxonomy": {"term_taxonomy"},
+        "comments": {"posts"},
     },
     # Stamped by every save: when both sites saved one post, the live site's stamp, not a conflict.
     "volatileColumns": {"post_modified", "post_modified_gmt", "link_updated"},
@@ -590,16 +848,17 @@ POLICY = {
         ("users", {"key": "ID",
                    "refs": [("usermeta", "user_id", None), ("posts", "post_author", None),
                             ("comments", "user_id", None), ("links", "link_owner", None)]}),
-        ("posts", {"key": "ID",
+        ("posts", {"key": "ID", "typedRefs": SerializedReferences("posts"),
                    "refs": [("posts", "post_parent", None), ("postmeta", "post_id", None),
                             ("comments", "comment_post_ID", None),
-                            ("term_relationships", "object_id", TT_OF.format(cmp="<>")),
+                            ("term_relationships", "object_id", TT_OF_POST),
                             # A featured image, a menu item's parent item and what it opens.
                             ("postmeta", "meta_value", "meta_key IN ('_thumbnail_id', '_menu_item_menu_item_parent')"),
                             ("postmeta", "meta_value", MENU_OBJECT.format(kind="post_type")),
                             ("options", "option_value",
                              "option_name IN ('page_on_front', 'page_for_posts', 'wp_page_for_privacy_policy',"
-                             " 'site_logo', 'site_icon')")],
+                             " 'site_logo', 'site_icon')"),
+                            *WOOCOMMERCE_POST_REFS],
                    # The post's number written into text: its guid's `?p=`, an image's class and a
                    # block's attributes in the content of the live site's posts.
                    "texts": [("posts", "guid", "?p={id}"), ("posts", "guid", "?page_id={id}"),
@@ -607,9 +866,11 @@ POLICY = {
                              ("posts", "post_content", "wp-image-{id}"),
                              ("posts", "post_content", '{{"id":{id}'),
                              ("posts", "post_content", '{{"ref":{id}')]}),
-        ("terms", {"key": "term_id",
+        ("terms", {"key": "term_id", "typedRefs": SerializedReferences("terms"),
                    "refs": [("term_taxonomy", "term_id", None), ("term_taxonomy", "parent", None),
                             ("termmeta", "term_id", None),
+                            # Polylang: a term's language and translation group.
+                            ("term_relationships", "object_id", TT_OF_TERM),
                             ("postmeta", "meta_value", MENU_OBJECT.format(kind="taxonomy")),
                             ("options", "option_value",
                              "option_name IN ('default_category', 'default_link_category', 'default_email_category')")]}),
@@ -618,9 +879,10 @@ POLICY = {
         ("comments", {"key": "comment_ID",
                       "refs": [("comments", "comment_parent", None), ("commentmeta", "comment_id", None)]}),
         ("links", {"key": "link_id",
-                   "refs": [("term_relationships", "object_id", TT_OF.format(cmp="="))]}),
+                   "refs": [("term_relationships", "object_id", TT_OF_LINK)]}),
         # Meta rows: nothing points at their numbers, but both sites add them under the same ones.
-        ("postmeta", {"key": "meta_id"}),
+        ("postmeta", {"key": "meta_id", "single": {"natural": ("post_id", "meta_key"),
+                                                     "where": f"meta_key IN ({SINGLE_POSTMETA})"}}),
         ("termmeta", {"key": "meta_id"}),
         ("commentmeta", {"key": "meta_id"}),
         ("usermeta", {"key": "umeta_id"}),

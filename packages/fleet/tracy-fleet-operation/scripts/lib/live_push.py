@@ -358,7 +358,8 @@ OPTION_LABELS = {"blogname": "Site title", "blogdescription": "Tagline", "date_f
 # Fixed words of a title (`Changeset.worded`), by the name the dialog translates them under
 # (`push.label.<name>`): each option's label, and the words of a setting's title.
 LABELS = {**OPTION_LABELS, "additionalCss": "Additional CSS", "customizer": "Customizer",
-          "templateStyle": "Template style", "styles": "Styles", "globalConfiguration": "Global Configuration"}
+          "templateStyle": "Template style", "styles": "Styles", "globalConfiguration": "Global Configuration",
+          "featuredImage": "Featured image", "pageTemplate": "Page template", "altText": "Alt text"}
 # What each kind of change is, as the dialog names it (`push.what.<name>`): a record, a setting, a file.
 WHAT = {"article": "article", "category": "category", "tag": "tag", "menuItem": "menuItem", "menutype": "menu",
         "module": "module", "moduleAssignment": "module", "fieldValue": "customField", "redirect": "redirect",
@@ -366,13 +367,13 @@ WHAT = {"article": "article", "category": "category", "tag": "tag", "menuItem": 
         "customCss": "setting", "globalStyles": "setting", "siteIdentity": "setting", "templateSettings": "setting",
         "templatePart": "templatePart", "template": "template", "postmeta": "pageDetail", "attachment": "media",
         "file": "file"}
-# Theme mods whose value names a record: the custom logo and the Additional CSS post (attachments,
-# posts), the menu shown at each location (`nav_menu_locations`: location → menu term).
-W_MOD_POSTS = ("custom_logo", "custom_css_post_id")
-W_MOD_TERMS = ("nav_menu_locations",)
+# Polylang's language and translation group of a post or a term (`Changeset.translation_refused`):
+# compared on their own, never written — the live engine's write door has no read of them to check
+# against and no undo (`content.language`), so a change of them is named, not sent.
+W_POLYLANG = frozenset({"language", "translations"})
 # Post meta never offered: WordPress's and Tracy's own bookkeeping, the menu item's (its own kind).
 W_META_SKIP = ("_edit_lock", "_edit_last", "_encloseme", "_pingme", "_wp_old_slug", "_wp_old_date",
-               "_wp_trash_meta_status", "_wp_trash_meta_time", "_wp_attached_file", "_wp_attachment_metadata")
+               "_wp_trash_meta_status", "_wp_trash_meta_time", "_wp_desired_post_slug", "_wp_attached_file", "_wp_attachment_metadata")
 
 
 def _menu_object_entity(row: dict) -> str | None:
@@ -400,6 +401,13 @@ def wordpress_specs(prefix: str) -> list[Spec]:
     def meta(key: str) -> str:
         return f"(SELECT m.meta_value FROM {t('postmeta')} m WHERE m.post_id = r.ID AND m.meta_key = '{key}' LIMIT 1)"
 
+    def filed(record: str, taxonomy: str, value: str) -> str:
+        """One term of `taxonomy` the record (`r.ID`, `r.term_id`) is filed under: Polylang's language
+        (`x.slug`) or translation group (`tt.description`)."""
+        return (f"(SELECT {value} FROM {t('term_relationships')} tr JOIN {t('term_taxonomy')} tt"
+                f" ON tt.term_taxonomy_id = tr.term_taxonomy_id JOIN {t('terms')} x ON x.term_id = tt.term_id"
+                f" WHERE tr.object_id = {record} AND tt.taxonomy = '{taxonomy}' ORDER BY tt.term_taxonomy_id LIMIT 1)")
+
     menu_slug = (f"(SELECT x.slug FROM {t('term_relationships')} tr JOIN {t('term_taxonomy')} tt"
                  f" ON tt.term_taxonomy_id = tr.term_taxonomy_id JOIN {t('terms')} x ON x.term_id = tt.term_id"
                  f" WHERE tr.object_id = r.ID AND tt.taxonomy = 'nav_menu' LIMIT 1)")
@@ -417,6 +425,14 @@ def wordpress_specs(prefix: str) -> list[Spec]:
     # same two-collation reason as the theme mods below.
     of_active_theme = (f"CAST({term_of('wp_theme')} AS BINARY) = (SELECT CAST(st.option_value AS BINARY)"
                        f" FROM {t('options')} st WHERE st.option_name = 'stylesheet' LIMIT 1)")
+    menu_object_title = (
+        f"CASE WHEN {meta('_menu_item_type')} = 'post_type' THEN"
+        f" (SELECT target.post_title FROM {t('posts')} target WHERE target.ID = CAST({meta('_menu_item_object_id')} AS UNSIGNED)"
+        f" AND target.post_type = {meta('_menu_item_object')} LIMIT 1)"
+        f" WHEN {meta('_menu_item_type')} = 'taxonomy' THEN"
+        f" (SELECT target.name FROM {t('terms')} target JOIN {t('term_taxonomy')} taxonomy ON taxonomy.term_id = target.term_id"
+        f" WHERE target.term_id = CAST({meta('_menu_item_object_id')} AS UNSIGNED)"
+        f" AND taxonomy.taxonomy = {meta('_menu_item_object')} LIMIT 1) END")
     skip = ", ".join(LS.sql_str(k) for k in W_META_SKIP + WP.VOLATILE_NAMES["postmeta"][1])
     options = ", ".join(LS.sql_str(o) for o in W_OPTIONS)
     tracy_option = WP.TRACY_OPTIONS
@@ -433,8 +449,11 @@ def wordpress_specs(prefix: str) -> list[Spec]:
              where="tt.taxonomy IN ('category', 'post_tag', 'nav_menu')",
              columns={"term_id": "r.term_id", "taxonomy": "tt.taxonomy", "name": "r.name", "slug": "r.slug",
                       "description": "tt.description", "parent": "tt.parent"},
+             extra={"language": filed("r.term_id", "term_language", "x.slug"),
+                    "translations": filed("r.term_id", "term_translations", "tt.description")},
              title=("name", "slug"), write=("name", "slug", "description", "parent"),
-             create=("name", "slug", "description", "parent"), refs={"parent": "terms"}, address=True),
+             create=("name", "slug", "description", "parent"), ignore=W_POLYLANG, refs={"parent": "terms"},
+             address=True),
         Spec("attachment", "media", "posts", "posts", key=("ID",), where="r.post_type = 'attachment'",
              columns={"ID": "r.ID", "post_title": "r.post_title", "file": meta("_wp_attached_file")},
              title=("post_title", "file"), write=(), ignore=frozenset({"post_title"}), delete_absent=False,
@@ -443,18 +462,20 @@ def wordpress_specs(prefix: str) -> list[Spec]:
              where=f"r.post_type IN ({types}) AND r.post_status NOT IN ('auto-draft', 'inherit')",
              extra={"categories": terms_of("category", "term_id"), "tags": terms_of("post_tag", "term_id"),
                     "category_slugs": terms_of("category", "slug"), "tag_slugs": terms_of("post_tag", "slug"),
-                    "tag_names": terms_of("post_tag", "name")},
+                    "tag_names": terms_of("post_tag", "name"),
+                    "language": filed("r.ID", "language", "x.slug"),
+                    "translations": filed("r.ID", "post_translations", "tt.description")},
              title=("post_title", "post_name"), write=W_POST + ("categories", "tags"),
              create=("post_type",) + W_POST + ("categories", "tags"), trash=("post_status", "trash"),
-             ignore=W_STAMPS, refs={"post_parent": "posts"}, lists={"categories": "terms", "tags": "terms"},
+             ignore=W_STAMPS | W_POLYLANG, refs={"post_parent": "posts"}, lists={"categories": "terms", "tags": "terms"},
              texts=("post_content",), address=True),
         Spec("menuItem", "menuItem", "posts", "posts", key=("ID",), where="r.post_type = 'nav_menu_item'",
              columns={"ID": "r.ID", "title": "r.post_title", "position": "r.menu_order",
                       "type": meta("_menu_item_type"), "object": meta("_menu_item_object"),
                       "object_id": meta("_menu_item_object_id"), "url": meta("_menu_item_url"),
-                      "parent": meta("_menu_item_menu_item_parent"), "menu": menu_slug},
-             title=("title", "url"), write=W_MENU, create=W_MENU,
-             refs={"object_id": _menu_object_entity, "parent": "posts"}, address=True),
+                      "parent": meta("_menu_item_menu_item_parent"), "menu": menu_slug, "object_title": menu_object_title},
+             title=("title", "object_title", "url"), write=W_MENU, create=W_MENU,
+             ignore=frozenset({"object_title"}), refs={"object_id": _menu_object_entity, "parent": "posts"}, address=True),
         Spec("option", "option", "options", None, key=("option_name",), key_refs={},
              where=f"r.option_name IN ({options})",
              columns={"option_name": "r.option_name", "value": "r.option_value"},
@@ -632,14 +653,32 @@ class SqlSource:
         """Whether every table an expression names (`{s}.<table>`) is on both sides."""
         return all(self.has(w, name[len(self.prefix):]) for name in self.NAMED.findall(text) for w in ("base", "copy"))
 
+    # A column of the record's own row named in an expression (`r.post_excerpt`, `r.\`ID\``).
+    OWN_COLUMN = re.compile(r"(?<![A-Za-z0-9_.`])r\.`?([A-Za-z_][A-Za-z0-9_]*)`?")
+    PLAIN_COLUMN = re.compile(r"^r\.`?([A-Za-z_][A-Za-z0-9_]*)`?$")
+
+    def both_columns(self, table: str) -> set[str]:
+        return set(self.table_columns("base", table)) & set(self.table_columns("copy", table))
+
     def usable(self, spec: Spec) -> bool:
-        return (self.has("base", spec.table) and self.has("copy", spec.table)
-                and self.present(spec.joins + spec.where + " ".join((spec.columns or {}).values())))
+        if not (self.has("base", spec.table) and self.has("copy", spec.table)
+                and self.present(spec.joins + spec.where + " ".join((spec.columns or {}).values()))):
+            return False
+        # A kind whose filter or key names a column this site's table lacks (an older or trimmed
+        # schema) is not this site's kind: left out, never a changeset that stops on ERROR 1054.
+        both = self.both_columns(spec.table)
+        keys = [spec.columns.get(k, "") for k in spec.key] if spec.columns is not None else []
+        needed = self.OWN_COLUMN.findall(spec.where) + [m.group(1) for k in keys if (m := self.PLAIN_COLUMN.match(k))]
+        return all(c in both for c in needed)
 
     def expressions(self, spec: Spec, which: str) -> dict[str, str]:
         schema = LS.q(self.side(which))
         if spec.columns is not None:
-            cols = dict(spec.columns)
+            # A plain column one side's table lacks is left out of what is compared (a trimmed schema
+            # with no `post_excerpt`), as the table's own columns are when the kind names none.
+            both = self.both_columns(spec.table)
+            cols = {c: e for c, e in spec.columns.items()
+                    if not (m := self.PLAIN_COLUMN.match(e)) or m.group(1) in both}
         else:
             base_cols = set(self.table_columns("base", spec.table))
             cols = {c: f"r.{LS.q(c)}" for c in self.table_columns("copy", spec.table) if c in base_cols}
@@ -771,7 +810,23 @@ class SqlSource:
                 **({"tree": {w: self.tree(spec, w) for w in ("base", "copy")}} if spec.tree is not None else {}),
             }
         out["tables"] = self.other_tables(specs)
+        if self.platform == "wordpress":
+            out["languages"] = self.languages()
         return out
+
+    def languages(self) -> dict:
+        """The live site's Polylang default language (`polylang` option, `default_lang`), as the base
+        holds it: the language Polylang gives a post or term the engine creates. `{}` with no Polylang."""
+        if not self.has("base", "options"):
+            return {}
+        rows = self.sql.run(f"SELECT HEX(option_value) FROM {LS.q(self.base)}.{LS.q(self.prefix + 'options')}"
+                            f" WHERE option_name = 'polylang' LIMIT 1;")
+        try:
+            settings = php_unserialize(decode(rows[0][0]) or "") if rows and rows[0][0] else None
+        except (Unserializable, TypeError):
+            settings = None
+        default = settings.get("default_lang") if isinstance(settings, dict) else None
+        return {"default": default} if isinstance(default, str) and default else {}
 
     def other_tables(self, specs: list[Spec]) -> list[dict]:
         """Tables no kind covers and no rule leaves out, whose rows differ between the two sides:
@@ -912,7 +967,7 @@ class Unserializable(ValueError):
 def php_unserialize(text: str):
     """PHP `unserialize` of `N;`, `b:`, `i:`, `d:`, `s:` and `a:`, as JSON-able values the way the engine's
     `json_encode` answers them: an array keyed 0..n-1 in order is a list, any other one an object. An
-    object (`O:`/`C:`), a reference (`r:`/`R:`) or anything left over raises `Unserializable`."""
+    `stdClass` becomes an object as JSON does; other objects, references or trailing bytes are refused."""
     data = text.encode("utf-8", "surrogateescape")
 
     def number(at: int, end: bytes) -> tuple[str, int]:
@@ -944,8 +999,15 @@ def php_unserialize(text: str):
             if data[end:end + 2] != b'";':
                 raise Unserializable("string length")
             return data[start:end].decode("utf-8", "surrogateescape"), end + 2
-        if tag == b"a:":
-            count, at = number(at + 2, b":")
+        if tag in (b"a:", b"O:"):
+            if tag == b"O:":
+                size, at = number(at + 2, b":")
+                end = at + 1 + int(size)
+                if data[at:at + 1] != b'"' or data[end:end + 2] != b'":' or data[at + 1:end] != b"stdClass":
+                    raise Unserializable("object")
+                count, at = number(end + 2, b":")
+            else:
+                count, at = number(at + 2, b":")
             if data[at:at + 1] != b"{":
                 raise Unserializable("array")
             at += 1
@@ -958,7 +1020,7 @@ def php_unserialize(text: str):
                 pairs.append((key, item))
             if data[at:at + 1] != b"}":
                 raise Unserializable("array end")
-            if [k for k, _ in pairs] == list(range(len(pairs))):
+            if tag == b"a:" and [k for k, _ in pairs] == list(range(len(pairs))):
                 return [v for _, v in pairs], at + 1
             return {str(k): v for k, v in pairs}, at + 1
         raise Unserializable(f"tag {tag!r}")
@@ -1226,6 +1288,11 @@ class Changeset:
         return text
 
     def title(self, spec: Spec, row: dict | None, key: tuple) -> str:
+        if spec.name == "postmeta":
+            label = {"_thumbnail_id": "featuredImage", "_wp_page_template": "pageTemplate",
+                     "_wp_attachment_image_alt": "altText"}.get((row or {}).get("meta_key"))
+            subject = str((row or {}).get("post_title") or "").strip()[:200]
+            return self.worded(label, subject or None) if label else subject
         if spec.kind == "option" and (row or {}).get("option_name") in OPTION_LABELS:
             return self.worded(row["option_name"])
         if spec.name == "customCss":
@@ -1242,12 +1309,10 @@ class Changeset:
             value = (row or {}).get(column)
             if isinstance(value, str) and value.strip():
                 text = value.strip()
-                if spec.name == "postmeta":
-                    return f"{text} · {(row or {}).get('meta_key') or key[1]}"
                 if spec.name == "moduleAssignment":
                     return text
                 return text[:200]
-        return f"{spec.kind} {' '.join(str(k) for k in key)}"
+        return "" if spec.name == "menuItem" else f"{spec.kind} {' '.join(str(k) for k in key)}"
 
     def item_id(self, spec: Spec, key: tuple, created: bool = False, suffix: str = "") -> str:
         name = spec.name if spec.name not in ("optionOther",) else "option"
@@ -1267,6 +1332,9 @@ class Changeset:
             return 0, named["option_name"]
         if spec.name == "postmeta":
             return named["post_id"], named["meta_key"]
+        if spec.name == "menuItem" and self.platform == "wordpress":
+            ident = named["ID"]
+            return (ident if isinstance(ident, Placeholder) else int(ident)), (base_row or {}).get("menu")
         if spec.name in W_THEME_ROWS:
             return 0, named["post_name"]
         if spec.live_id:
@@ -1339,10 +1407,18 @@ class Changeset:
         if op == "delete" and row is None:
             out.append({"table": spec.table, "match": {pk: ident}, "rows": "theirs"})
         else:
+            asset = self.asset_name(spec.entity, ident) if op == "create" else None
             out.append({"table": spec.table, "match": {pk: ident}, "columns": db_columns,
-                        **({"create": True, "entity": spec.entity, "id": ident} if op == "create" else {})})
+                        **({"create": True, "entity": spec.entity, "id": ident} if op == "create" else {}),
+                        # Joomla gives the new record its `assets` row on its own: the copy's number for
+                        # it, found by the asset's name on both sides, before clashes are numbered (#172).
+                        **({"align": {"entity": "assets", "match": {"name": asset}}} if asset else {})})
         if self.platform == "wordpress" and spec.name == "post" and ({"categories", "tags"} & set(columns)):
-            out.append({"table": "term_relationships", "match": {"object_id": ident}, "rows": "ours"})
+            # Only the categories and tags it writes: the post's other terms (Polylang's language and
+            # translation group, a plugin's taxonomy) were never sent, and taken as base they would read
+            # as removed on the live site and leave the copy (#105).
+            out.append({"table": "term_relationships", "match": {"object_id": ident}, "rows": "ours",
+                        "taxonomies": ["category", "post_tag"]})
         return out
 
     # — building —
@@ -1358,7 +1434,7 @@ class Changeset:
             prepared[spec.name] = (spec, pairs, rows)
             if spec.create is not None and spec.entity and spec.name not in ("moduleAssignment",):
                 for c in pairs["copy_only"]:
-                    if self.known_live(spec, c) is None:
+                    if self.known_live(spec, c) is None and not self.translation_refused(spec, None, rows["copy"].get(c)):
                         self.creatable.add(f"{spec.entity}:{int(c[0])}")
             if spec.name == "attachment":
                 for c in pairs["copy_only"]:
@@ -1367,12 +1443,14 @@ class Changeset:
                         self.creatable.add(f"posts:{int(c[0])}")
             if spec.name == "term":
                 for c in pairs["copy_only"]:
-                    self.creatable.add(f"terms:{int(c[0])}")
+                    if not self.translation_refused(spec, None, rows["copy"].get(c)):
+                        self.creatable.add(f"terms:{int(c[0])}")
         for spec in self.specs:
             spec_, pairs, rows = prepared[spec.name]
             self.build_kind(spec, pairs, rows, kinds_data[spec.name])
         self.build_files()
         self.unsupported += self.data.get("tables", [])
+        self.menu_items_made()
         self.order()
         # The dialog's groups (contract §2): records by what happens to them; files and settings apart,
         # a PHP file in its own group that needs its own OK; every removal under "remove".
@@ -1444,6 +1522,9 @@ class Changeset:
             base_row, copy_row = rows["base"].get(b), rows["copy"].get(c)
             if base_row is None or copy_row is None:
                 continue  # same digest, same number: nothing changed
+            if self.translation_refused(spec, base_row, copy_row):
+                self.refuse_translation(spec, copy_row, c, "update")
+                continue
             after = self.to_live(spec, copy_row)
             changed, unsupported = {}, []
             for column in compared(copy_row):
@@ -1474,6 +1555,13 @@ class Changeset:
                 self.delete_item(spec, c, live_key, base_row, copy_row, title, ident, key)
                 continue
             self.update_item(spec, c, live_key, base_row, changed, title, ident, key)
+            # The live record is in the trash and the copy's is not: the push brings it back (an
+            # Undo trashed a post the push made, and the copy kept it). The same live record, out of
+            # the trash, never a second one beside it — shown as what it is to the Owner, an
+            # addition, not a change of "Status" and a `__trashed` slug (#117).
+            if (spec.trash and str(base_row.get(spec.trash[0])) == spec.trash[1] and self.items
+                    and self.items[-1].get("copyKey") == list(c) and self.items[-1]["spec"] == spec.name):
+                self.items[-1]["group"] = "add"
         for c in self.copy_order(spec, pairs["copy_only"], data):
             copy_row = rows["copy"].get(c)
             if copy_row is None:
@@ -1510,6 +1598,9 @@ class Changeset:
                 continue
             if spec.trash and str(copy_row.get(spec.trash[0])) == spec.trash[1]:
                 continue  # made and trashed on the copy: nothing to add
+            if self.translation_refused(spec, None, copy_row):
+                self.refuse_translation(spec, copy_row, c, "create")
+                continue
             self.create_item(spec, c, copy_row, title)
         for b in pairs["base_only"]:
             base_row = rows["base"].get(b)
@@ -1538,6 +1629,55 @@ class Changeset:
             self.delete_item(spec, to_copy_key(spec, b, self.id_map), tuple(b), base_row, None, title, ident, key)
         if spec.tree is not None:
             self.tree_moves(spec, data, pairs, rows)
+
+    # — Polylang's languages and translation groups —
+    #
+    # Polylang files a post's language and its translation group (`post_translations`: language →
+    # post) as terms, and a term's the same way (`term_language`, `term_translations`). The live
+    # engine's `content.update` writes neither, and its `content.language` door is no safe write for a
+    # push: `content.get` reads no language or group back, so the base's cannot be checked before the
+    # write (`pll_save_post_translations` sets the whole group, unlinking a translation the customer
+    # linked since), nor taken back on Undo, and a language the live site lacks is made there. Sent
+    # anyway, a translation reached the live site in the default language and unlinked, and the sync
+    # after the push dropped the copy's own language and group rows (#105). So a post or term whose
+    # language or group Tracy changed — a new translation, a new link, another language — is named
+    # and not sent; one in a group Tracy left alone (a French title renamed) goes as before.
+    TRANSLATED = {"post": "posts", "term": "terms"}
+
+    def translation_state(self, spec: Spec, row: dict, live: bool) -> tuple[str | None, dict]:
+        """A row's language and translation group (language → number, the copy's in live numbers, a
+        record this push creates by its marker); a group of one member is no group."""
+        entity = self.TRANSLATED[spec.name]
+        language = row.get("language")
+        language = language.removeprefix("pll_") if isinstance(language, str) and language else None
+        group = {}
+        raw = row.get("translations")
+        try:
+            parsed = php_unserialize(raw) if isinstance(raw, str) and raw else None
+        except Unserializable:
+            parsed = None  # unreadable to Polylang too: no group
+        for lang, member in (parsed.items() if isinstance(parsed, dict) else ()):
+            if lang == "sync" or not INT.match(str(member)) or int(member) <= 0:
+                continue
+            got = self.live_id(entity, member) if live else int(member)
+            group[lang] = got.marker() if isinstance(got, Placeholder) else int(got)
+        return language, (group if len(group) > 1 else {})
+
+    def translation_refused(self, spec: Spec, base_row: dict | None, copy_row: dict | None) -> bool:
+        """Whether Tracy changed the record's Polylang language or translation group. A record made on
+        the copy: in a group, or in a language other than the one Polylang gives it on the live site."""
+        if self.platform != "wordpress" or spec.name not in self.TRANSLATED or copy_row is None:
+            return False
+        language, group = self.translation_state(spec, copy_row, live=True)
+        if base_row is None:
+            return bool(group) or (language is not None and language != self.data.get("languages", {}).get("default"))
+        return (language, group) != self.translation_state(spec, base_row, live=False)
+
+    def refuse_translation(self, spec: Spec, row: dict, key: tuple, op: str) -> None:
+        kind = (str(row.get("post_type") or "post") if spec.name == "post"
+                else {"post_tag": "tag"}.get(str(row.get("taxonomy")), "category"))
+        self.unsupported.append({"what": "record", "kind": kind, "title": self.title(spec, row, key), "op": op,
+                                 "reason": "translation-group"})
 
     @staticmethod
     def copy_order(spec: Spec, keys: list, data: dict) -> list:
@@ -1617,20 +1757,18 @@ class Changeset:
             got = self.live_id(entity, v)
             # The type the theme stored it in (`i:12;` or `s:2:"12";`), the record's live number.
             return got if isinstance(got, Placeholder) else (str(got) if isinstance(v, str) else int(got))
-        if key in W_MOD_POSTS:
-            return number("posts", value)
-        if key in W_MOD_TERMS and isinstance(value, dict):
-            return {k: number("terms", v) for k, v in value.items()}
-
-        def walk(v):
+        def walk(v, path):
+            entity = LS._WORDPRESS.theme_mod_entity(path)
+            if entity:
+                return number(entity, v)
             if isinstance(v, str):
                 return self.address(v)
             if isinstance(v, list):
-                return [walk(x) for x in v]
+                return [walk(x, path + (i,)) for i, x in enumerate(v)]
             if isinstance(v, dict):
-                return {k: walk(x) for k, x in v.items()}
+                return {k: walk(x, path + (k,)) for k, x in v.items()}
             return v
-        return walk(value)
+        return walk(value, (key,))
 
     @staticmethod
     def same_json(a, b) -> bool:
@@ -1711,6 +1849,46 @@ class Changeset:
             "dependsOn": sorted(set(deps)), "seed": self.seeds(spec, copy_key, columns, "update", copy_row),
         })
 
+    def asset_name(self, entity: str | None, ident) -> str | None:
+        """The name of the Joomla `assets` row of record `ident` of `entity` (the merge's `names` rule,
+        `com_content.article.{id}`), or None when the record has none."""
+        if self.platform != "joomla" or not entity:
+            return None
+        rule = dict(LS.POLICIES["joomla"].get("entities", [])).get(entity, {})
+        template = next((t for table, _, t in rule.get("names", []) if table == "assets"), None)
+        return template.format(id=ident) if template else None
+
+    def menu_of(self, copy_row: dict):
+        """The menu a new menu item goes in, on the live site: True when the live site has it, the id of
+        this push's item that makes it, or None when neither (WordPress: no menu at all, its term gone)."""
+        if self.platform == "wordpress":
+            return True if copy_row.get("menu") else None
+        menutype = copy_row.get("menutype")
+        # Every menu the live read holds is in its keys (its rows are only the ones that differ).
+        live = self.data.get("kinds", {}).get("menutype", {}).get("keys", {}).get("base", [])
+        if any(list(k) == [menutype] or (k and str(k[0]) == str(menutype)) for k in live):
+            return True
+        kinds = self.data.get("kinds", {})
+        if "menutype" not in kinds:
+            return True  # no read of the live menus to go by (an older read): as before, nothing refused
+        # A menu the copy has and the live site does not: this push makes it first (`menu_items_made`
+        # names the item instead when that menu is not made after all).
+        if any(k and str(k[0]) == str(menutype) for k in kinds["menutype"].get("keys", {}).get("copy", [])):
+            spec = next(sp for sp in self.specs if sp.name == "menutype")
+            return self.item_id(spec, (menutype,))  # made under its name, as `menutype:<name>`
+        return None
+
+    def menu_items_made(self) -> None:
+        """A new menu item waiting for a menu this push was to make, which it does not make (refused
+        or held): named, never written into a menu the live site does not have (#119)."""
+        ids = {i["id"] for i in self.items}
+        for item in [i for i in self.items if i.get("spec") == "menuItem" and i["op"] == "create"]:
+            gone = [d for d in item.get("dependsOn", []) if d.startswith("menutype:") and d not in ids]
+            if gone:
+                self.items.remove(item)
+                self.unsupported.append({"what": "record", "kind": item["kind"], "title": item["title"],
+                                         "op": "create", "reason": "depends-on-unsupported", "on": ["menu"]})
+
     def restore_of(self, spec: Spec, columns, base_row: dict | None) -> dict:
         """What an Undo writes back where the live site's read of the record cannot be written as it is
         (a post's categories are read as ids and written as slugs)."""
@@ -1730,6 +1908,14 @@ class Changeset:
         # A tree node placed under its parent (Joomla), a term under its parent term: the parent first.
         refs = self.blocked_by(*write.values(), *(after.get(c) for c in columns))
         deps, missing = self.depends(refs)
+        if spec.name == "menuItem":
+            # Never a menu item in a menu the live site does not have and this push does not make (the
+            # customer deleted it, #119): the live engine refused it, or wrote one nobody could see.
+            menu = self.menu_of(copy_row)
+            if menu is None:
+                missing = [*missing, "menu"]
+            elif menu is not True:
+                deps = [*deps, menu]
         if missing:
             self.unsupported.append({"what": "record", "kind": spec.kind, "title": title, "op": "create",
                                      "reason": "depends-on-unsupported", "on": missing[:10]})
@@ -2152,7 +2338,43 @@ class Changeset:
         by_id = {i["id"]: i for i in self.items}
         creates = {i["creates"]: i["id"] for i in self.items if i.get("creates")}
         for item in self.items:
-            item["dependsOn"] = sorted({creates[d] for d in item["dependsOn"] if d in creates and creates[d] != item["id"]})
+            # Each dependency a record this push creates (`creates`), or an item of this push named by
+            # its id (a menu made under its name, `menu_of`).
+            item["dependsOn"] = sorted({creates.get(d, d) for d in item["dependsOn"]
+                                        if (creates.get(d) or (d if d in by_id else None)) not in (None, item["id"])})
+        # Only replacement pairs change order: a confirmed trash must free the exact address
+        # before the new record asks the CMS to allocate it. Other removals keep their old order.
+        for item in self.items:
+            if item["op"] != "create":
+                continue
+            values = item.get("write", {})
+            slug = values.get("post_name") if self.platform == "wordpress" else values.get("alias")
+            if not slug:
+                continue
+            for old in self.items:
+                if old["op"] != "delete" or old["kind"] != item["kind"]:
+                    continue
+                expected = old.get("expect", {})
+                if self.platform == "wordpress":
+                    post_type = values.get("post_type")
+                    # Hierarchical/custom post types have CMS-specific scopes. Conservative extra
+                    # dependencies within one type are harmless; never couple unrelated types.
+                    same_scope = post_type == self.post_type_of(old["spec"], old)
+                    if post_type == "page":
+                        same_scope = same_scope and values.get("post_parent", "0") == expected.get("post_parent", "0")
+                    match = same_scope and slug == expected.get("post_name")
+                else:
+                    scope = {"article": ("catid",), "contact": ("catid",),
+                             "category": ("parent_id", "extension"), "menuItem": ("parent_id", "menutype", "language")}.get(item["kind"], ())
+                    match = slug == expected.get("alias") and all(values.get(k) == expected.get(k) for k in scope)
+                if match:
+                    item["dependsOn"] = sorted(set(item["dependsOn"]) | {old["id"]})
+                    item.setdefault("replaces", []).append(old["id"])
+                    # Joomla keeps aliases occupied in trash. Name the conflict before writing
+                    # instead of silently allocating another URL or permanently deleting content.
+                    if self.platform == "joomla":
+                        item["conflict"] = {"reason": "changed-on-live", "fields": ["alias"]}
+                        old["conflict"] = {"reason": "changed-on-live", "fields": ["alias"]}
         done: list[dict] = []
         placed: set[str] = set()
         seq = {i["id"]: at for at, i in enumerate(self.items)}
@@ -2185,6 +2407,7 @@ class Changeset:
         over the customer's change on the live site, so each such item is a conflict, shown and never
         written, until the two sides agree there (then the item is gone: nothing differs)."""
         places: dict[tuple, set] = {}
+        whole_tables: set[str] = set()
         # A file, or a setting of the configuration file, both sides changed (the file merge's `kept`).
         paths: set[str] = set()
         settings: dict[str, set] = {}
@@ -2210,21 +2433,26 @@ class Changeset:
                     names[(table, str(row[pk]))] = tuple(sorted((c, str(row[c])) for c in natural))
         for k in kept or []:
             table, key = k.get("table"), k.get("key")
-            if not isinstance(table, str) or not isinstance(key, dict):
+            if not isinstance(table, str):
                 continue
             bare = table[len(self.prefix):] if table.startswith(self.prefix) else table
+            if k.get("kind") == "table" and not isinstance(key, dict):
+                whole_tables.add(bare)
+                continue
+            if not isinstance(key, dict):
+                continue
             ident = (bare, tuple(sorted((str(a), str(b)) for a, b in key.items())))
             places.setdefault(ident, set()).add(k.get("column") or "*")
             pk = KEPT_NAMES.get(self.platform, {}).get(bare, (None,))[0]
             if pk and list(key) == [pk] and (bare, str(key[pk])) in names:
                 places.setdefault((bare, names[(bare, str(key[pk]))]), set()).add(k.get("column") or "*")
-        if not places:
+        if not places and not whole_tables:
             return
         for item in self.items:
             hits = []
             for seed in item.get("seed", []):
                 ident = (seed["table"], tuple(sorted((str(a), str(b)) for a, b in seed["match"].items())))
-                hit = places.get(ident)
+                hit = {"*"} if seed["table"] in whole_tables else places.get(ident)
                 if hit:
                     found = self.kept_fields(item, seed, hit)
                     if found is not None:
@@ -2337,11 +2565,17 @@ GROUPS = {"create": "add", "upload": "add", "update": "change", "move": "change"
 def preview_answer(changeset: dict, preview_id: str, sync: dict | None, live_read_at: str | None,
                    engine: dict | None) -> dict:
     items = []
-    for item in changeset["items"][:ANSWER_ITEMS]:
+    # Listed up to ANSWER_ITEMS, what Apply can write before what it leaves (conflicts), each in its
+    # own order: a preview of 500 conflicts and one change still shows that change. Only what is
+    # shown is reordered; Apply reads the changeset itself.
+    listed = [i for i in changeset["items"] if not i.get("conflict")] + \
+        [i for i in changeset["items"] if i.get("conflict")]
+    for item in listed[:ANSWER_ITEMS]:
         group = item.get("group") or GROUPS[item["op"]]
         items.append({"id": item["id"], "kind": item["kind"], "op": item["op"], "group": group,
                       "title": item["title"], "liveId": item["liveId"], "fields": item["fields"],
                       "dependsOn": item["dependsOn"],
+                      **{name: item[name] for name in ("what", "label", "subject") if name in item},
                       # A file: its name and size, never its bytes; whether it is new on the live site.
                       **({"path": item["path"], "size": item.get("size", 0), "change": item.get("change")}
                          if item.get("spec") in ("file", "attachment") else {}),
@@ -2349,6 +2583,13 @@ def preview_answer(changeset: dict, preview_id: str, sync: dict | None, live_rea
                       # A parent theme's file: an update of that theme writes over it.
                       **({"warning": item["warning"]} if item.get("warning") else {}),
                       **({"conflict": item["conflict"]} if item.get("conflict") else {})})
+    # What Apply can write, by group, over the WHOLE changeset: the items above stop at ANSWER_ITEMS,
+    # and 500 conflicts listed first would otherwise hide the one change after them.
+    pushable = {group: 0 for group in ("add", "change", "remove", "files", "settings", "php")}
+    for item in changeset["items"]:
+        if not item.get("conflict"):
+            group = item.get("group")
+            pushable[group if group in pushable else GROUPS.get(item["op"], "change")] += 1
     nothing = not changeset["items"] and not changeset["unsupported"]
     # The Sync from live that ran first, its whole answer (tracy-web records it as a sync of its own).
     sync_summary = sync
@@ -2356,7 +2597,8 @@ def preview_answer(changeset: dict, preview_id: str, sync: dict | None, live_rea
             "platform": changeset["platform"], "liveReadAt": live_read_at, "sync": sync_summary,
             "counts": changeset["counts"], "limit": changeset["limit"], "overLimit": changeset["overLimit"],
             "hasDeletes": changeset["hasDeletes"], "hasPhp": changeset.get("hasPhp", False),
-            "items": items, "itemsTotal": len(changeset["items"]),
+            "items": items, "itemsTotal": len(changeset["items"]), "pushable": pushable,
+            "conflictsTotal": sum(1 for i in changeset["items"] if i.get("conflict")),
             "unsupported": changeset["unsupported"][:ANSWER_UNSUPPORTED],
             "unsupportedTotal": len(changeset["unsupported"]), "engine": engine or {},
             # Remembered numbers put right for this preview (`Changeset.repair_map`), written on apply.
@@ -2403,7 +2645,7 @@ def record(changeset: dict, result: dict, id_map_path: Path, pushed_path: Path, 
             continue
         # A file the push sent (or a door file a setting wrote): the next merge takes the live site's
         # version of it while the copy still holds what was sent; after an Undo the copy's stays.
-        if item.get("path") and item.get("blob") and item.get("spec") in ("file", "templateSettings"):
+        if item.get("path") and "blob" in item and item.get("spec") in ("file", "templateSettings"):
             pushed["files"] = [f for f in pushed["files"] if f.get("path") != item["path"]]
             pushed["files"].append({"path": item["path"], "ours": item["blob"], "side": "theirs" if undo else "ours"})
         if item.get("spec") == "siteIdentity":
@@ -2540,6 +2782,43 @@ def run_changeset(args) -> dict:
     return answer
 
 
+def record_cut(push_root: Path, id_map_path: Path, pushed_path: Path) -> dict:
+    """The pushes cut off before they recorded what they wrote (no `written.json`: the host job was
+    lost after some writes, and a new push or a Sync from live came next, #173): what each one's
+    journal says was written joins the id map and `pushed.json` (`record`), so the merge knows those
+    records as the copy's own, never as the live site's new ones. `recorded-journal` keeps how many
+    written items were recorded; a push run again that wrote more is recorded again (`record` adds the
+    same pairs and seeds once more, which changes nothing)."""
+    done = []
+    if not push_root.is_dir():
+        return {"ok": True, "recorded": done}
+    for d in sorted(p for p in push_root.iterdir() if p.is_dir() and p.name != "previews"):
+        journal, changeset_file, marker = d / "journal.jsonl", d / "changeset.json", d / "recorded-journal"
+        if not journal.exists() or not changeset_file.exists() or (d / "written.json").exists() or (d / "recorded").exists():
+            continue
+        last, created = {}, {}
+        for line in journal.read_text().splitlines():
+            try:
+                entry = json.loads(line)
+            except ValueError:
+                continue  # a line cut by the kill itself
+            if isinstance(entry, dict) and entry.get("id"):
+                last[entry["id"]] = entry
+                created.update(entry.get("created") or {})
+        written = [{"id": i} for i, e in last.items() if e.get("state") == "written"]
+        try:
+            before = int(json.loads(marker.read_text()).get("written", 0)) if marker.exists() else 0
+        except (ValueError, AttributeError):
+            before = 0
+        if len(written) <= before:
+            continue
+        record(json.loads(changeset_file.read_text()), {"written": written, "created": created},
+               id_map_path, pushed_path, False)
+        write_private(marker, {"written": len(written)})
+        done.append(d.name)
+    return {"ok": True, "recorded": done}
+
+
 def parse(argv):
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sub = parser.add_subparsers(dest="op", required=True)
@@ -2564,6 +2843,9 @@ def parse(argv):
     for flag in ("--changeset", "--result", "--id-map", "--pushed"):
         rec.add_argument(flag, required=True)
     rec.add_argument("--undo", action="store_true")
+    cut = sub.add_parser("record-cut")
+    for flag in ("--push-root", "--id-map", "--pushed"):
+        cut.add_argument(flag, required=True)
     li = sub.add_parser("lint")
     li.add_argument("--changeset", required=True)
     li.add_argument("--repo", required=True)
@@ -2587,6 +2869,8 @@ def main(argv) -> int:
             sync = json.loads(Path(args.sync).read_text()) if args.sync and Path(args.sync).exists() else None
             engine = json.loads(Path(args.engine).read_text()) if args.engine and Path(args.engine).exists() else None
             answer = preview_answer(changeset, args.preview_id, sync, (sync or {}).get("liveReadAt"), engine)
+        elif args.op == "record-cut":
+            answer = record_cut(Path(args.push_root), Path(args.id_map), Path(args.pushed))
         else:
             answer = record(json.loads(Path(args.changeset).read_text()), json.loads(Path(args.result).read_text()),
                             Path(args.id_map), Path(args.pushed), args.undo)

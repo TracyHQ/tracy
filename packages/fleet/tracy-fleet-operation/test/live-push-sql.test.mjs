@@ -723,7 +723,7 @@ INSERT INTO wp_options (option_name, option_value) VALUES ('home', 'HOME'), ('si
   ('blogdescription', 'Per studenti'), ('stylesheet', 'astra'), ('template', 'astra'),
   ('theme_mods_astra', 'a:5:{i:0;b:0;s:18:"nav_menu_locations";a:2:{s:7:"primary";i:2;s:6:"footer";i:3;}s:18:"custom_css_post_id";i:3524;s:11:"custom_logo";i:3527;s:11:"header_html";S((<a href="HOME/it/">Home</a>));}'),
   ('theme_mods_twentytwentyfive', 'a:1:{s:18:"custom_css_post_id";i:-1;}'),
-  ('polylang', 'a:4:{s:7:"browser";i:0;s:7:"rewrite";i:1;s:12:"default_lang";s:2:"it";s:9:"post_types";a:0:{}}'),
+  ('polylang', 'a:4:{s:7:"browser";i:0;s:7:"rewrite";i:1;s:12:"default_lang";s:2:"it";s:10:"post_types";a:0:{}}'),
   ('sidebars_widgets', 'a:2:{s:19:"wp_inactive_widgets";a:0:{}s:13:"array_version";i:3;}'),
   ('widget_text', 'a:1:{s:12:"_multiwidget";i:1;}'), ('page_on_front', '3518'), ('show_on_front', 'page'), ('site_icon', '3527'),
   ('permalink_structure', '/%postname%/'), ('cron', 'a:0:{}'), ('claude_cowork_token', 'secret'),
@@ -954,3 +954,21 @@ test(
     })
   }
 )
+
+test('WordPress preview uses native menu object titles and skips trash bookkeeping', opts, () => {
+  schemas(
+    'wlabels',
+    WORDPRESS.replaceAll('HOME', 'https://shop.example'),
+    `INSERT INTO wp_posts (ID,post_title,post_name,post_type) VALUES (66,'','menu-item','nav_menu_item');
+      INSERT INTO wp_postmeta (post_id,meta_key,meta_value) VALUES (66,'_menu_item_type','post_type'),(66,'_menu_item_object','page'),(66,'_menu_item_object_id','10'),(66,'_menu_item_url',''),(66,'_menu_item_menu_item_parent','0');
+      INSERT INTO wp_term_relationships VALUES (66,2,0);`,
+    `INSERT INTO wp_posts (ID,post_title,post_name,post_type,menu_order) VALUES (66,'','menu-item','nav_menu_item',2);
+      INSERT INTO wp_postmeta (post_id,meta_key,meta_value) VALUES (66,'_menu_item_type','post_type'),(66,'_menu_item_object','page'),(66,'_menu_item_object_id','10'),(66,'_menu_item_url',''),(66,'_menu_item_menu_item_parent','0'),(10,'_wp_desired_post_slug','about-old');
+      INSERT INTO wp_term_relationships VALUES (66,2,0);`
+  )
+  const answer = changeset('wlabels', 'wordpress', 'wp_')
+  const item = answer.items.find((i) => i.kind === 'menuItem')
+  assert.equal(item.title, 'About')
+  assert.deepEqual(item.write, { position: '2' })
+  assert.ok(!answer.items.some((i) => i.key === '_wp_desired_post_slug'))
+})

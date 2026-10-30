@@ -49,9 +49,9 @@
  * `test/view.test.mjs` holds every rule above without docker.
  */
 import { SESSION_ID } from './deploy-hold.mjs'
-import { browserArgv, looksLikeMissingBinary, parseBrowser } from './exec.mjs'
+import { browserArgv, hostBrowserTarget, looksLikeMissingBinary, parseBrowser } from './exec.mjs'
 import { pictureRef, readsImages, sessionRoute } from './look.mjs'
-import { pageLookGate } from './page.mjs'
+import { browseAsSite, pageLookGate } from './page.mjs'
 import { lookTarget } from './site.mjs'
 
 /** The producer of the notice that carries the picture; also how a reader finds it in a session log. */
@@ -91,6 +91,15 @@ export const VIEW_SITE_QUEUE = 2
 /** The script's own deadline for one picture, and the docker client's, which must outlast it. */
 export const VIEW_DEADLINE_MS = 16_000
 export const VIEW_EXEC_MS = 28_000
+/**
+ * The deadline of a picture nobody waits on: the visual check's early "before", drawn while the agent
+ * is still reading (`check-pages.mjs` `earlyPicture`). It is often the first browser a site's container
+ * starts since it booted, and that start is slow. Measured on the local stand 29/10/2026: chromium alone
+ * took 7.5 s cold against 3.7 s warm, and the early picture of the first turn on a just-started
+ * WordPress and Joomla site both ended `TRACY_BROWSER ERR timed out` at 16 s (`no-before-capture-LOOK_FAILED`
+ * / `-timeout`), while the same picture on the warm site took 4 to 5 s.
+ */
+export const VIEW_COLD_DEADLINE_MS = 40_000
 /** The biggest JPEG kept (decoded), and the biggest answer read back (its base64 and the line around it). */
 export const VIEW_MAX_BYTES = 1_500_000
 export const VIEW_MAX_BUFFER = 4 * 1024 * 1024
@@ -301,7 +310,7 @@ function within(promise, ms) {
  * last write is not usable: the next warm report or message draws the page again. A turn's own writes
  * come after its first step froze its picture (`visual-check.mjs`), so they never reach that picture.
  * @param {{
- *   capture: (input: { label: string, view: View }) => Promise<Capture>,
+ *   capture: (input: { label: string, view: View, check?: boolean, patient?: boolean }) => Promise<Capture>,
  *   busy?: (sessionId: string) => boolean,
  *   now?: () => number,
  *   waitMs?: number,
@@ -345,10 +354,11 @@ export function createViewStore({
    * Draw one picture after the ones of the same site that came first; refused while the site already
    * has {@link VIEW_SITE_QUEUE} of them, which is not a failure of the page — it is asked again.
    * `at`: when the browser was asked to draw it, which a write after it makes too old.
-   * @param {string} label @param {View} view
+   * @param {string} label @param {View} view @param {boolean} [check] - drawn for the visual check
+   * @param {boolean} [patient] - nobody waits on it: the browser gets {@link VIEW_COLD_DEADLINE_MS}
    * @returns {Promise<{ drawn: Capture, at: number }>}
    */
-  function drawInTurn(label, view) {
+  function drawInTurn(label, view, check = false, patient = false) {
     let queue = sites.get(label)
     if (queue === undefined) {
       queue = { tail: Promise.resolve(), count: 0 }
@@ -361,7 +371,8 @@ export function createViewStore({
     mine.count += 1
     const start = () => {
       const at = now()
-      return capture({ label, view }).then((drawn) => ({ drawn, at }))
+      const input = check ? { label, view, check, ...(patient ? { patient } : {}) } : { label, view }
+      return capture(input).then((drawn) => ({ drawn, at }))
     }
     /** @type {Promise<{ drawn: Capture, at: number }>} */
     let job
@@ -565,12 +576,13 @@ export function createViewStore({
      * Draw one page of a site now, for no conversation's tab: the "before" a turn's write is held for
      * (`check-pages.mjs`). It waits its turn behind the site's other pictures and is refused `BUSY`
      * like them ({@link VIEW_SITE_QUEUE}), so the site's container never draws two at once. Nothing is
-     * kept here: the caller decides whether the picture came in time.
-     * @param {string} label @param {View} view
+     * kept here: the caller decides whether the picture came in time. `patient`: a picture nobody waits
+     * on (the turn's early "before"), given a cold container's first browser start.
+     * @param {string} label @param {View} view @param {{ patient?: boolean }} [options]
      * @returns {Promise<Capture>}
      */
-    draw(label, view) {
-      return drawInTurn(label, view).then(
+    draw(label, view, { patient = false } = {}) {
+      return drawInTurn(label, view, true, patient).then(
         ({ drawn }) => drawn,
         () => /** @type {Capture} */ ({ ok: false, code: 'ERROR' })
       )
@@ -615,9 +627,19 @@ export function createViewStore({
  * The same road as `page.look` — the container's own curl decides where the browser may go (this
  * site's own redirects, refused off-site), then the container's browser draws it — but in mode `view`:
  * the customer's window and scroll, a JPEG on stdout, no file in the folder the customer can open.
+ *
+ * `host`: where the site's container has no browser, dsh's own draws it instead (`BROWSER_SCRIPT`
+ * host mode: chromium dials nothing, every document, stylesheet, picture and font of the page comes
+ * from the site's container through its own curl, and the page's scripts do not run). Only the
+ * visual check passes it: its "before" and "after" are then drawn the same way, so the two compare.
+ * Reported 28/10/2026: every check on a Joomla site skipped as `no-before-capture-NO_BROWSER`.
+ *
+ * `deadlineMs`: the browser's own deadline, {@link VIEW_DEADLINE_MS} unless the caller waits on nothing
+ * ({@link VIEW_COLD_DEADLINE_MS}); the docker client's timeout keeps the same margin over it.
  * @param {{
  *   label: string, view: View, internalPort: number, publicOrigin?: string | null, run: Run, door?: string,
- *   gate?: typeof pageLookGate
+ *   gate?: typeof pageLookGate, deadlineMs?: number,
+ *   host?: { chrome: string, run: (input: { target: { url: string, origin: string, container: string, via: string }, file: string, deadlineMs: number }) => ReturnType<Run> } | null
  * }} input - `gate` is `pageLookGate` unless a test stands in for it.
  * @returns {Promise<Capture>}
  */
@@ -628,7 +650,9 @@ export async function captureView({
   publicOrigin = null,
   run,
   door,
-  gate = pageLookGate
+  gate = pageLookGate,
+  host = null,
+  deadlineMs = VIEW_DEADLINE_MS
 }) {
   const target = lookTarget(label, view.path, internalPort)
   if (!target.ok) return { ok: false, code: 'BAD_PATH' }
@@ -636,24 +660,44 @@ export async function captureView({
   // No curl in the container is a site image this feature has nothing to say about: no picture.
   if ('legacy' in checked) return { ok: false, code: 'NO_CURL' }
   if (!checked.ok) return { ok: false, code: String(checked.answer.code ?? 'REFUSED') }
-  const t = checked.target
-  const res = await run({
-    argv: browserArgv({
-      container: t.container,
-      mode: 'view',
-      url: t.url,
-      origin: t.origin,
-      file: JSON.stringify({ w: view.w, h: view.h, y: view.y, dark: view.dark }),
-      resolverRule: t.resolverRule,
-      via: t.via,
-      deadlineMs: VIEW_DEADLINE_MS
-    }),
-    timeoutMs: VIEW_EXEC_MS,
-    maxBuffer: VIEW_MAX_BUFFER
+  const frame = JSON.stringify({ w: view.w, h: view.h, y: view.y, dark: view.dark })
+  let { res } = await browseAsSite({
+    target: checked.target,
+    publicOrigin,
+    launch: (t) =>
+      run({
+        argv: browserArgv({
+          container: t.container,
+          mode: 'view',
+          url: t.url,
+          origin: t.origin,
+          file: frame,
+          resolverRule: t.resolverRule,
+          via: t.via,
+          deadlineMs
+        }),
+        timeoutMs: deadlineMs + VIEW_EXEC_MS - VIEW_DEADLINE_MS,
+        maxBuffer: VIEW_MAX_BUFFER
+      })
   })
-  const out = parseBrowser(res.stdout)
-  if (looksLikeMissingBinary(res) || (!out.ok && out.kind === 'no-browser'))
-    return { ok: false, code: 'NO_BROWSER' }
+  let out = parseBrowser(res.stdout)
+  const noBrowser = () => looksLikeMissingBinary(res) || (!out.ok && out.kind === 'no-browser')
+  if (noBrowser() && host !== null) {
+    const onHost = host
+    ;({ res } = await browseAsSite({
+      target: checked.target,
+      publicOrigin,
+      launch: async (t) => {
+        const pinned = hostBrowserTarget(t)
+        // A route dsh cannot pin to this container's loopback is not drawn from dsh at all.
+        if (pinned === null)
+          return { code: 0, stdout: 'TRACY_BROWSER NOCHROME no route to pin', stderr: '', timedOut: false }
+        return onHost.run({ target: pinned, file: frame, deadlineMs })
+      }
+    }))
+    out = parseBrowser(res.stdout)
+  }
+  if (noBrowser()) return { ok: false, code: 'NO_BROWSER' }
   if (!out.ok) return { ok: false, code: out.kind === 'offsite' ? 'REDIRECTED_OFF_SITE' : 'LOOK_FAILED' }
   // The same clean-exit rule as page.text and page.look: an OK line over a cut answer is not a picture.
   if (!(res.code === 0 && !res.spawnError && !res.timedOut)) return { ok: false, code: 'LOOK_FAILED' }

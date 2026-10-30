@@ -1204,3 +1204,56 @@ test('Sync: "x minutes ago" is redrawn every half minute while the step is open'
     Date.now = realNow
   }
 })
+
+test('Sync, failed on a live PHP too old for Claude Cowork: both versions and the upgrade, in the dialog', async () => {
+  const php = { php: '7.3.33', min: '7.4.0' }
+  const { phase, text } = await openSync(() =>
+    json(200, { available: true, sync: sync({ id: 's6', state: 'failed', error: 'LIVE_PHP_TOO_OLD', php }) })
+  )
+  assert.equal(phase, 'failed')
+  const said = t('sync.error.livePhpTooOld', php)
+  assert.ok(said.includes('7.3.33') && said.includes('7.4.0') && /upgrade PHP/.test(said), said)
+  assert.ok(text.includes(said), text)
+  assert.ok(text.includes(t('sync.status.code', { code: 'LIVE_PHP_TOO_OLD' })), text)
+  // No versions named (or not bare ones): the sentence without them, never a made-up version.
+  assert.equal(lib.failureText('LIVE_PHP_TOO_OLD', t, null), t('sync.error.livePhpTooOldPlain'))
+  assert.equal(
+    lib.failureText('LIVE_PHP_TOO_OLD', t, { php: null, min: '7.4.0' }),
+    t('sync.error.livePhpTooOldPlain')
+  )
+  assert.ok(!t('sync.error.livePhpTooOldPlain').includes('⟦'))
+})
+
+test('Sync: firewall, HTTP password, rate limit and token each have actionable words', () => {
+  const keys = {
+    LIVE_BLOCKED: 'sync.error.liveBlocked',
+    LIVE_PASSWORD_PROTECTED: 'sync.error.livePassword',
+    LIVE_RATE_LIMITED: 'sync.error.liveRateLimited',
+    TOKEN_REFUSED: 'sync.error.liveToken'
+  }
+  for (const [code, key] of Object.entries(keys)) {
+    assert.equal(lib.failureText(code, t), t(key))
+    assert.ok(!t(key).includes('⟦'))
+  }
+  assert.equal(new Set(Object.keys(keys).map((code) => lib.failureText(code, t))).size, 4)
+})
+
+test('Sync, applied: what the original site has that a sync does not bring is named (#120)', async () => {
+  const panel = await openApplied({
+    notCarried: {
+      triggers: [{ name: 'shop_after_insert', table: 'wp_shop' }],
+      tables: ['wp_shop_log']
+    }
+  })
+  const notice = panel.querySelector('[data-live-sync-not-carried]')
+  assert.ok(notice, 'the notice is there')
+  const text = notice.textContent
+  assert.ok(text.includes(t('sync.notCarried')), text)
+  assert.ok(text.includes(t('sync.notCarriedTriggers', { names: 'shop_after_insert' })), text)
+  assert.ok(text.includes(t('sync.notCarriedTables', { names: 'wp_shop_log' })), text)
+})
+
+test('Sync, applied with nothing left behind: no not-brought notice (#120)', async () => {
+  const panel = await openApplied({ notCarried: null })
+  assert.equal(panel.querySelector('[data-live-sync-not-carried]'), null)
+})

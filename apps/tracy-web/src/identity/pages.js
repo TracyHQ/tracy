@@ -7,6 +7,7 @@
  */
 import { escapeHtml, emailOff } from '../lib/html.js'
 import { pageShell, GOOGLE_MARK, GITHUB_MARK } from '../lib/page-shell.js'
+import { LINKS } from '../lib/public-links.js'
 import { safePath } from '../lib/safe-path.js'
 import { SOURCE_KEYS, signInSource, sourceQuery } from '../lib/sign-in-source.js'
 import { translator } from '../lib/i18n/index.js'
@@ -109,8 +110,18 @@ export function loginPage({
   const langQuery = explicitLang ? `?lang=${encodeURIComponent(explicitLang)}` : ''
   const emailValue = escapeHtml(email ?? '')
 
+  // Google leads the card (a third of first sign-ins, and no code to wait for). GitHub stays where a
+  // deployment lights it up (`config.oauth.github`): whether it shows is the deployment's call.
   const providerButtons = [
-    oauth?.google ? providerForm('google', GOOGLE_MARK, 'Google', safeNext, sourceFields) : '',
+    oauth?.google
+      ? providerForm(
+          'google',
+          GOOGLE_MARK,
+          t.html('login.continueWithProvider', { provider: 'Google' }),
+          safeNext,
+          sourceFields
+        )
+      : '',
     oauth?.github ? providerForm('github', GITHUB_MARK, 'GitHub', safeNext, sourceFields) : ''
   ]
     .filter(Boolean)
@@ -128,19 +139,22 @@ export function loginPage({
   // cannot know one left: with the beta gate on, `POST /login` answers a rate-limited, a queued
   // and a refused address alike, and the script below shows this same step on that answer.
   const emailStrong = emailOff(`<strong id="code-step-email">${emailValue}</strong>`)
-  const body = `<div class="auth-hero">
-<h1>${t.html('login.heroTitle')}</h1>
-</div>
+  const body = `${signInPitch(t)}<div class="signin-side">
 <div class="card auth-card" id="email-step"${onCodeStep ? ' hidden' : ''}>
+<div class="card-header">
+<h2 class="card-title">${t.html('login.getStarted')}</h2>
+<p class="card-description">${t.html('login.getStartedNote')}</p>
+</div>
 <div class="card-content">
+${providerButtons ? `<div class="providers">${providerButtons}</div><p class="separator-label">${t.html('login.orUseEmail')}</p>` : ''}
 <form id="email-form" method="post" action="/login${langQuery}">
 <input type="hidden" name="next" value="${escapeHtml(safeNext)}">
 ${sourceFields}<input id="login-email" type="email" name="email" value="${emailValue}" placeholder="${t.html('login.emailPlaceholder')}" aria-label="${t.html('login.emailLabel')}" autocomplete="email" required>
+<p class="email-suggest" id="email-suggest" hidden><button type="button" id="email-suggest-use"></button></p>
 ${alertBlock('email-error', onCodeStep ? '' : error)}
-<button type="submit">${t.html('login.continueWithEmail')}</button>
+<button type="submit">${t.html('login.emailMeCode')}</button>
 </form>
-<p class="note">${t.html('login.noPassword')}</p>
-${providerButtons ? `<p class="separator-label">${t.html('login.orContinueWith')}</p><div class="providers">${providerButtons}</div>` : ''}
+<p class="note">${t.html('login.codeEachTime')}</p>
 </div>
 </div>
 <div class="card auth-card" id="code-step"${onCodeStep ? '' : ' hidden'}>
@@ -168,10 +182,14 @@ ${sourceFields}<button type="submit">${t.html('login.resend')}</button>
 <p class="note">${t.html('login.codeLifetime', LIFETIME)} <a href="/login?next=${encodeURIComponent(safeNext)}${explicitLang ? `&amp;lang=${encodeURIComponent(explicitLang)}` : ''}${sourceLink}">${t.html('login.useDifferentAddress')}</a></p>
 ${spamTip(t, 'spam-signin', t('login.spamTip'))}
 </div>
+</div>
+${signInLinks()}
+</div>
 </div>`
 
   return pageShell(t('login.title'), body, loginScript(safeNext, t) + SPAM_TIP_SCRIPT + visitScript(source), {
-    lang: t.htmlLang
+    lang: t.htmlLang,
+    style: SIGN_IN_STYLE
   })
 }
 
@@ -233,6 +251,104 @@ border:1px solid var(--border);color:var(--muted-foreground)}
 `
 
 /**
+ * The left half of `/login`: what Tracy is, in the words tracy.ai and joomlart.com open with, so a
+ * person who clicked through from either reads the same promise here. The two pictures are real
+ * template cards this server already serves (`/api/templates/:id/shots/:file?w=720`, public, same
+ * origin, so the page's `img-src 'self'` allows them); when a deployment lacks a card, `loginScript`
+ * hides the pictures and the words stand alone. Decorative: the pictures and the example chat are hidden from screen readers.
+ * @param {(key: string, values?: object) => string & {html: Function}} t
+ */
+function signInPitch(t) {
+  const frame = (id, cls) =>
+    `<div class="signin-frame ${cls}"><div class="signin-frame-bar"><i></i><i></i><i></i></div><img src="/api/templates/${id}/shots/${id}-home-1440.png?w=720" alt="" decoding="async"></div>`
+  return `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&amp;display=swap">
+<div class="signin-split">
+<section class="signin-pitch">
+<p class="signin-eyebrow">${t.html('login.heroTitle')}</p>
+<h1 class="signin-title">${t.html('login.pitchTitle')}</h1>
+<p class="signin-lede">${t.html('login.pitchLede')}</p>
+<div class="signin-stage" aria-hidden="true">
+${frame('ja-voyara', 'signin-frame-back')}
+${frame('ja-kinetic', 'signin-frame-front')}
+<p class="signin-ask"><span>&#10042;</span>${t.html('login.exampleAsk')}</p>
+<p class="signin-done">${t.html('login.exampleDone')}</p>
+</div>
+<p class="signin-works"><span>${t.html('login.worksWith')}</span> Joomla <span aria-hidden="true">&middot;</span> WordPress <span aria-hidden="true">&middot;</span> EmDash</p>
+</section>`
+}
+
+/** tracy.ai, Discord and X under the sign-in card, from the one list the public pages link to (`LINKS`). */
+function signInLinks() {
+  const link = (href, label, mark) =>
+    `<a href="${escapeHtml(href)}" target="_blank" rel="noopener">${mark}${escapeHtml(label)}</a>`
+  return `<nav class="signin-links">
+${link(LINKS.home, new URL(LINKS.home).host, GLOBE_MARK)}
+${link(LINKS.discord, 'Discord', DISCORD_MARK)}
+${link(LINKS.x, '@tracydotai', X_MARK)}
+</nav>`
+}
+
+const GLOBE_MARK =
+  '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>'
+const DISCORD_MARK =
+  '<svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true"><path d="M20.3 4.4A19.6 19.6 0 0 0 15.4 3l-.6 1.3a18 18 0 0 0-5.6 0L8.6 3a19.6 19.6 0 0 0-4.9 1.4C.6 9-.3 13.6.1 18.1A19.8 19.8 0 0 0 6.1 21l1.3-2a12.8 12.8 0 0 1-2-1l.5-.4a14 14 0 0 0 12.2 0l.5.4c-.6.4-1.3.7-2 1l1.3 2a19.7 19.7 0 0 0 6-2.9c.5-5.2-.8-9.7-3.6-13.7ZM8 15.4c-1.2 0-2.2-1.1-2.2-2.4S6.8 10.6 8 10.6s2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Zm8 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Z"/></svg>'
+const X_MARK =
+  '<svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M18.2 2h3.4l-7.4 8.5L23 22h-6.8l-5.3-6.9L4.8 22H1.4l7.9-9L1 2h7l4.8 6.3L18.2 2Zm-1.2 18h1.9L7.1 4H5.1l11.9 16Z"/></svg>'
+
+/**
+ * The two-column `/login` (pitch left, sign-in right; stacked under 52rem, pictures dropped).
+ * Page-shell tokens only (docs/references/page-shell-tokens.md): the warm wash is `--primary` mixed
+ * into `--background`, so dark mode gets a dark wash, never a light one.
+ */
+const SIGN_IN_STYLE = `
+main:has(.signin-split){max-width:68rem}
+body:has(.signin-split){background:
+radial-gradient(70rem 36rem at 15% -10%,color-mix(in oklab,var(--primary) 14%,var(--background)) 0%,transparent 70%),
+var(--background)}
+.signin-split{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,26rem);gap:3.5rem;align-items:center}
+.signin-pitch{display:flex;flex-direction:column;gap:0.875rem;min-width:0}
+.signin-eyebrow{align-self:flex-start;margin:0;padding:0.3rem 0.75rem;border-radius:999px;font-size:0.8125rem;font-weight:600;
+background:color-mix(in oklab,var(--primary) 16%,var(--background));color:color-mix(in oklab,var(--primary) 80%,var(--foreground))}
+.signin-title{font-family:Fraunces,Newsreader,Georgia,serif;font-size:2.625rem;font-weight:600;line-height:1.08;
+letter-spacing:-0.015em;margin:0;text-wrap:balance;color:color-mix(in oklab,var(--primary) 22%,var(--foreground))}
+.signin-lede{margin:0;font-size:1.0625rem;line-height:1.55;color:color-mix(in oklab,var(--foreground) 72%,transparent);max-width:32rem}
+.signin-stage{position:relative;height:15.5rem;max-width:32.5rem;margin:0.5rem 0 0.25rem}
+.signin-frame{position:absolute;overflow:hidden;border-radius:0.75rem;background:var(--card);
+border:1px solid color-mix(in oklab,var(--foreground) 10%,transparent);box-shadow:0 18px 40px color-mix(in oklab,var(--foreground) 14%,transparent)}
+.signin-frame-bar{height:1.375rem;display:flex;align-items:center;gap:0.3rem;padding:0 0.55rem;
+background:color-mix(in oklab,var(--foreground) 5%,var(--card))}
+.signin-frame-bar i{width:0.45rem;height:0.45rem;border-radius:50%;background:color-mix(in oklab,var(--foreground) 16%,var(--card))}
+.signin-frame img{display:block;width:100%;height:calc(100% - 1.375rem);object-fit:cover;object-position:top}
+.signin-frame-front{left:0;top:1.1rem;width:24rem;height:13.75rem;z-index:2}
+.signin-frame-back{left:9.5rem;top:0;width:21rem;height:12.5rem;transform:rotate(2deg);opacity:.9}
+.signin-ask,.signin-done{position:absolute;z-index:3;margin:0;border-radius:999px;font-size:0.8125rem;line-height:1.35}
+.signin-ask{left:12.5rem;top:9.25rem;max-width:18rem;display:flex;gap:0.5rem;align-items:center;padding:0.55rem 0.9rem 0.55rem 0.65rem;
+background:var(--card);color:var(--foreground);border:1px solid color-mix(in oklab,var(--foreground) 10%,transparent);
+box-shadow:0 10px 26px color-mix(in oklab,var(--foreground) 16%,transparent)}
+.signin-ask span{color:var(--primary);font-size:0.9375rem}
+.signin-done{right:0.5rem;top:12.6rem;padding:0.35rem 0.75rem;white-space:nowrap;background:var(--foreground);color:var(--background);font-size:0.75rem}
+.signin-works{margin:0;padding-top:0.875rem;font-size:0.875rem;border-top:1px solid color-mix(in oklab,var(--foreground) 10%,transparent);max-width:32.5rem}
+.signin-works span:first-child{display:block;margin-bottom:0.375rem;font-size:0.6875rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-foreground)}
+.signin-side{display:flex;flex-direction:column;gap:1rem;min-width:0}
+.signin-side .card-title{font-size:1.125rem}
+.signin-side .providers{grid-template-columns:repeat(auto-fit,minmax(0,1fr))}
+.signin-side .providers button{height:2.75rem}
+.email-suggest{margin:-0.25rem 0 0;font-size:0.8125rem;color:var(--muted-foreground)}
+.email-suggest button{all:unset;cursor:pointer;color:inherit}
+.email-suggest button strong{color:var(--primary);font-weight:500;text-decoration:underline;text-underline-offset:0.15em}
+.email-suggest button:focus-visible{outline:1px solid var(--ring);outline-offset:2px;border-radius:2px}
+.signin-links{display:flex;justify-content:center;flex-wrap:wrap;gap:0.5rem 1.25rem;font-size:0.8125rem}
+.signin-links a{display:inline-flex;align-items:center;gap:0.375rem;color:var(--muted-foreground);text-decoration:none}
+.signin-links a:hover{color:var(--foreground)}
+@media (max-width:52rem){
+  main:has(.signin-split){max-width:26rem}
+  .signin-split{grid-template-columns:minmax(0,1fr);gap:1.75rem}
+  .signin-title{font-size:1.875rem}
+  .signin-stage{display:none}
+}
+`
+
+/**
  * `/login?onboard=1`: the desktop app's first run (`tasks/todo-desktop-onboard-v2.md`, contract
  * item 1). The same two ways in as the plain page, inside the app's four-step Setup frame: step 1
  * open, steps 2–4 shown and disabled, no Skip or Continue — there is nothing to skip to before a
@@ -281,15 +397,15 @@ ${google ? `<p class="separator-label">${t.html('login.orContinueWith')}</p><div
 }
 
 /**
- * Tell `POST /login/visit` that this page was opened from a link with a source (usage: visits per
- * source, beside the first sign-ins). Once per tab, so a reload or the code step's re-render is one
- * visit; never waited on, and nothing on the page depends on it. `''` when the link carried no source.
+ * Tell `POST /login/visit` that this page was opened (usage: visits per source, beside the first
+ * sign-ins), with the link's source when it carried one and the host of the page that linked here when
+ * that was another site. Once per tab, so a reload or the code step's re-render is one visit; never
+ * waited on, and nothing on the page depends on it. A visit with neither is still sent: it is the
+ * direct visit (typed address, bookmark, the desktop app) that a source-only count could not see.
  * The values were cleaned by `signInSource` (a-z, 0-9, `-`, `_`, `.`), and `<` is escaped regardless.
  */
 function visitScript(source) {
-  const params = sourceParams(source)
-  if (!params) return ''
-  const body = JSON.stringify(params).replace(/</g, '\\u003c')
+  const body = JSON.stringify(sourceParams(source) ?? {}).replace(/</g, '\\u003c')
   return `
 (function(){
   try {
@@ -297,7 +413,12 @@ function visitScript(source) {
     sessionStorage.setItem('tracy-login-visit', '1');
   } catch (e) {}
   try {
-    fetch('/login/visit', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(${body}), keepalive: true }).catch(function(){});
+    var body = ${body};
+    try {
+      var from = document.referrer ? new URL(document.referrer).hostname : '';
+      if (from && from !== location.hostname) body.referrer = from;
+    } catch (e) {}
+    fetch('/login/visit', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body), keepalive: true }).catch(function(){});
   } catch (e) {}
 })();`
 }
@@ -362,6 +483,7 @@ function loginScript(safeNext, t) {
   const rateLimited = JSON.stringify(t('login.rateLimited'))
   const notAdmitted = JSON.stringify(t('login.notAdmitted'))
   const accessUnavailable = JSON.stringify(t('login.accessUnavailable'))
+  const suggestEmail = JSON.stringify(t('login.suggestEmail'))
   // S40: the sentence of the `503 NO_SHARD_ACCEPTING` page, for the verify door this script calls.
   const betaFull = JSON.stringify(`${t('shards.betaFullHeading')}. ${t('shards.betaFullBody')}`)
   return `
@@ -379,6 +501,77 @@ function loginScript(safeNext, t) {
   var codeFormEmail = codeForm.querySelector('input[name=email]');
   var slots = Array.prototype.slice.call(document.querySelectorAll('.otp-slot'));
   var waitlistNote = document.getElementById('waitlist-note');
+  // A template card this deployment does not serve hides the pictures; the words stand alone.
+  Array.prototype.forEach.call(document.querySelectorAll('.signin-stage img'), function (img) {
+    function drop() { img.closest('.signin-stage').hidden = true; }
+    if (img.complete && !img.naturalWidth) drop();
+    else img.addEventListener('error', drop);
+  });
+  // A mistyped domain of a big mailbox ("gmail.con", "hotmial.com") would send the code nowhere: offer
+  // the likely address under the field, never change it unasked. A provider's own country domains
+  // ("hotmail.fr", "gmx.at") are left alone: only a typo of the ".com" is read as one.
+  var suggestBox = document.getElementById('email-suggest');
+  var suggestUse = document.getElementById('email-suggest-use');
+  var MAILBOXES = ['gmail', 'yahoo', 'hotmail', 'outlook', 'icloud', 'live', 'aol', 'msn'];
+  var COM_TYPOS = ['con', 'cmo', 'cpm', 'comm', 'coom', 'om', 'cm', 'vom', 'xom', 'cim'];
+  // Edits between two names, a swap of two neighbours counting as one ("hotmial").
+  function editDistance(a, b) {
+    var d = [];
+    for (var i = 0; i <= a.length; i++) {
+      d[i] = [i];
+      for (var j = 1; j <= b.length; j++) {
+        if (i === 0) {
+          d[i][j] = j;
+          continue;
+        }
+        var cost = a[i - 1] === b[j - 1] ? 0 : 1;
+        d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + cost);
+        if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+      }
+    }
+    return d[a.length][b.length];
+  }
+  function likelyAddress(value) {
+    var at = value.lastIndexOf('@');
+    if (at < 1) return null;
+    var domain = value.slice(at + 1).toLowerCase();
+    var dot = domain.indexOf('.');
+    if (dot < 1) return null;
+    var name = domain.slice(0, dot);
+    var tld = domain.slice(dot + 1);
+    var comLike = tld === 'com' || COM_TYPOS.indexOf(tld) >= 0 || (name === 'gmail' && tld === 'co');
+    if (!comLike) return null;
+    for (var m = 0; m < MAILBOXES.length; m++) {
+      var box = MAILBOXES[m];
+      var close = name === box || (name.length >= 4 && editDistance(name, box) === 1);
+      if (close && (name !== box || tld !== 'com')) return value.slice(0, at + 1) + box + '.com';
+    }
+    return null;
+  }
+  function offerAddress() {
+    if (!suggestBox) return;
+    var likely = likelyAddress(emailInput.value.trim());
+    if (!likely) {
+      suggestBox.hidden = true;
+      return;
+    }
+    var parts = ${suggestEmail}.split('{email}');
+    var strong = document.createElement('strong');
+    strong.textContent = likely;
+    suggestUse.textContent = '';
+    suggestUse.append(parts[0], strong, parts.slice(1).join(''));
+    suggestUse.dataset.address = likely;
+    suggestBox.hidden = false;
+  }
+  if (suggestBox) {
+    emailInput.addEventListener('blur', offerAddress);
+    emailInput.addEventListener('input', function () { if (!suggestBox.hidden) offerAddress(); });
+    suggestUse.addEventListener('click', function () {
+      emailInput.value = suggestUse.dataset.address;
+      suggestBox.hidden = true;
+      emailInput.focus();
+    });
+  }
 
   // What a refusal said, or null: a body that is not JSON (a gateway's page) is no answer at all.
   function refusalOf(response){

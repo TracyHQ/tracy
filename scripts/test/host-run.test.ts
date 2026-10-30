@@ -17,6 +17,7 @@
  */
 
 import assert from 'node:assert/strict'
+import { pbkdf2, pbkdf2Sync } from 'node:crypto'
 import { mkdtempSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
@@ -58,6 +59,7 @@ afterEach(() => {
   mock.timers.reset()
 })
 
+import { queueFleetHandover } from '../../packages/site/tracy-add-site/src/host/fleet-handover.ts'
 import { runStatus, startRun } from '../../packages/site/tracy-add-site/src/host/run.ts'
 
 const MANIFEST = {
@@ -155,15 +157,27 @@ async function settled(id: string, tries = 200): Promise<ReturnType<typeof runSt
   return runStatus(id)
 }
 
-/** Advance the mocked pacing timers while waiting for a run to finish. */
-async function pacedSettled(id: string, budget = 20_000): Promise<ReturnType<typeof runStatus>> {
-  for (let turn = 0; turn < budget; turn++) {
+/**
+ * Advance the mocked pacing timers while waiting for a run to finish.
+ *
+ * 🔒 THE BUDGET IS WALL-CLOCK TIME, NOT A COUNT OF LOOP TURNS. Only the run's pacing timers are mocked; its
+ * file writes (`$DSH_HOME`, the lease, the handover book) are real and finish on the libuv thread pool, at
+ * the speed of the machine's disk. A turn of this loop costs a few microseconds, so the old budget of
+ * 20 000 turns was about 100 ms of real time: a loaded CI runner whose disk answered later than that saw
+ * "run did not settle" on a run that was still working (CI 28/10/2026, reproduced by keeping the thread
+ * pool busy). `performance.now()` is not one of the mocked APIs, so it measures real time here.
+ */
+async function pacedSettled(id: string, deadlineMs = 15_000): Promise<ReturnType<typeof runStatus>> {
+  const until = performance.now() + deadlineMs
+  while (performance.now() < until) {
     const run = runStatus(id)
     if (run && run.state !== 'running') return run
     await new Promise((resolve) => setImmediate(resolve))
     mock.timers.runAll()
   }
-  throw new Error('run did not settle')
+  throw new Error(
+    `run did not settle within ${deadlineMs} ms, still at step ${runStatus(id)?.step ?? 'unknown'}`
+  )
 }
 
 test('a hand-pasted code goes straight to the export — not a single call to the admin page', async () => {
@@ -217,6 +231,50 @@ test('DATABASE first, WEBROOT after — the cheap one fails before the expensive
     assert.ok(dbAt >= 0 && filesAt >= 0, 'both parts must run')
     assert.ok(dbAt < filesAt, 'the database must go before the webroot')
   } finally {
+    restore()
+  }
+})
+
+/**
+ * Keep every thread of the libuv pool busy for about `ms` of real time: the run's file writes queue behind it,
+ * the way they queue behind other jobs' disk work on a loaded CI runner. Sized by timing one small hash here,
+ * so the delay is about the same on a fast laptop and a slow runner.
+ */
+function busyThreadPool(ms: number): Promise<void> {
+  const sample = 20_000
+  const started = performance.now()
+  pbkdf2Sync('busy', 'pool', sample, 64, 'sha512')
+  const perIteration = Math.max((performance.now() - started) / sample, 1e-6)
+  const iterations = Math.ceil(ms / perIteration)
+  const threads = Number(process.env.UV_THREADPOOL_SIZE) || 4
+  return Promise.all(
+    Array.from(
+      { length: threads },
+      () => new Promise<void>((resolve) => pbkdf2('busy', 'pool', iterations, 64, 'sha512', () => resolve()))
+    )
+  ).then(() => undefined)
+}
+
+test('a paced run still settles when the disk answers late', async () => {
+  // CI 28/10/2026: the two paced tests above failed with "run did not settle" after about 100 ms, because the
+  // wait counted loop turns while the run was waiting on a real file write. A second of slow disk must not fail
+  // a run that is still working; only the wall-clock deadline of `pacedSettled` may.
+  mock.timers.enable({ apis: ['setTimeout', 'Date'], now: 0 })
+  const { restore } = world()
+  const pool = busyThreadPool(1000)
+  try {
+    const started = startRun({
+      siteKey: 'slow-disk.example',
+      platform: 'joomla',
+      token: 'tok',
+      webRootUrl: 'https://slow-disk.example',
+      origin: 'https://cowork.example',
+      cookie: 'session=fictional'
+    })
+    const run = await pacedSettled(started.id)
+    assert.equal(run?.state, 'done', `the run must finish, error: ${run?.error ?? 'none'}`)
+  } finally {
+    await pool
     restore()
   }
 })
@@ -315,6 +373,39 @@ test('the installed version is read from `info.component` — the wrong level re
       0,
       'an extension already at the right version must NOT be reinstalled'
     )
+  } finally {
+    restore()
+  }
+})
+
+test('a run id on the real clock is one the fleet handover accepts', async () => {
+  // The paced tests above freeze the clock at 0, so their ids are a single time digit plus the random
+  // part, too short for the handover queue: they log "unsafe run id" and never queue a handover. That
+  // log is a property of the frozen clock, not of the product, and this test is what says so. On the
+  // real clock an id must pass `queueFleetHandover`'s own check, or no finished read is ever handed
+  // to the fleet by the host.
+  const { restore } = world()
+  try {
+    const started = startRun({
+      siteKey: 'bakery.example',
+      platform: 'wordpress',
+      origin: 'https://cowork.example',
+      cookie: 'session=fictional'
+    })
+    await settled(started.id)
+    await queueFleetHandover({
+      origin: 'https://cowork.example',
+      cookie: 'session=fictional',
+      runId: started.id,
+      siteKey: 'bakery.example',
+      platform: 'wordpress',
+      result: {
+        webrootKey: 'sites/x/webroot.tar',
+        dbKey: 'sites/x/db.sql.gz',
+        liveSite: 'https://bakery.example'
+      },
+      finishedAt: Date.now()
+    })
   } finally {
     restore()
   }

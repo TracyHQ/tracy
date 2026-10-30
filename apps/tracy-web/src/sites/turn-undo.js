@@ -744,11 +744,14 @@ export async function runUndo(steps, { undoCommit, revertApply, undoLook }) {
  * what `runUndo` came to. A turn is stamped when anything of it went, or may have gone: a moment
  * verifiably undone (`undoneShas`, counted by the caller's `undoCommit`), a moment or a revert left
  * `unsure`, or a content write reverted. `complete`: every moment undone and every write reverted.
+ * `proven`: something of the turn verifiably went — a moment in `undoneShas`, a write reverted, a look
+ * undone (or all of it: `complete`). Every mark tells the agent (`undone_at`); only a proven one marks
+ * the Site changes row (`undo_proven_at`, migration 182), which is undone only by proof.
  * A turn the press never reached, or one that failed before changing anything, is not stamped.
  * @param {Array<{ turnId: string, commits: string[], applyIds: string[], looks?: string[] }>} steps
  * @param {Awaited<ReturnType<typeof runUndo>>} result
  * @param {ReadonlySet<string>} undoneShas
- * @returns {Array<{ turnId: string, complete: boolean }>}
+ * @returns {Array<{ turnId: string, complete: boolean, proven: boolean }>}
  */
 export function undoneMarks(steps, result, undoneShas) {
   const marks = []
@@ -765,15 +768,10 @@ export function undoneMarks(steps, result, undoneShas) {
       look.failed.length === 0 &&
       look.unsure.length === 0 &&
       look.undone.length === (step.looks ?? []).length
+    const proven = complete || filesGone > 0 || done.content.reverted.length > 0 || look.undone.length > 0
     const touched =
-      complete ||
-      filesGone > 0 ||
-      done.files.status === 'unsure' ||
-      done.content.reverted.length > 0 ||
-      done.content.unsure.length > 0 ||
-      look.undone.length > 0 ||
-      look.unsure.length > 0
-    if (touched) marks.push({ turnId: done.turnId, complete })
+      proven || done.files.status === 'unsure' || done.content.unsure.length > 0 || look.unsure.length > 0
+    if (touched) marks.push({ turnId: done.turnId, complete, proven })
   }
   return marks
 }

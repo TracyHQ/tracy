@@ -66,16 +66,16 @@ async function onWordPress(call, script) {
 
 /**
  * Joomla: fake doors that answer each apply from `applies` (the last one repeats).
- * @param {Record<string, unknown>[]} applies
+ * @param {Record<string, unknown>[]} applies @param {Record<string, unknown>} [call]
  */
-async function onJoomla(applies) {
+async function onJoomla(applies, call = JOOMLA_ASK) {
   const snapshot = JSON.parse(fixture('joomla/inspect-1.2.0.json'))
   const html = fixture('pages/joomla-home.html')
   let sent = 0
   const answers = [...applies]
   const out = /** @type {any} */ (
     await replaceOnJoomla({
-      plan: planReplace(JOOMLA_ASK),
+      plan: planReplace(call),
       snapshot: async () => snapshot,
       apply: async () => {
         sent += 1
@@ -247,3 +247,74 @@ const NEVER_CAME = [
       assert.match(result.out.next, /dryRun/, platform)
     })
 }
+
+// ── several pairs in one call, each with its own count (the residue sweep's page call, 28/10/2026) ─────────────────
+
+const ok = { ok: true, apply_id: 'replace-test-1' }
+const none = () => undefined
+const PAIRS = [
+  [
+    'wordpress',
+    (/** @type {number} */ second) =>
+      onWordPress(
+        {
+          path: '/',
+          all: 'page',
+          changes: [
+            { find: 'Established 2004', replace: 'Since 2010', expect: 1 },
+            { find: 'Talk to our sales team', replace: 'Write to us', expect: second }
+          ]
+        },
+        none
+      )
+  ],
+  [
+    'joomla',
+    (/** @type {number} */ second) =>
+      onJoomla([ok], {
+        path: '/',
+        all: 'page',
+        changes: [
+          { ...JOOMLA_ASK, expect: 1 },
+          { find: 'Four core service lines', replace: 'Our services', expect: second }
+        ]
+      })
+  ],
+  [
+    'emdash',
+    (/** @type {number} */ second) =>
+      onEmdash(
+        {
+          path: '/',
+          all: 'page',
+          changes: [
+            { find: EMDASH_CARD.find, replace: EMDASH_CARD.replace, expect: 1 },
+            {
+              find: 'Drawing revision cycles cut to under 48 hours.',
+              replace: 'Within two days.',
+              expect: second
+            }
+          ]
+        },
+        none
+      )
+  ]
+]
+
+for (const [platform, go] of PAIRS)
+  test(`several pairs in one call: each counted on its own, the record written once, a miscount names its pair and writes nothing: ${rowName(platform)}`, async () => {
+    const both = await go(1)
+    assert.equal(both.out.ok, true, `${platform} ${JSON.stringify(both.out).slice(0, 300)}`)
+    assert.equal(both.writes, 1, `${platform}: one write for both pairs of one record`)
+    assert.equal(both.out.changed.length, 2, platform)
+
+    const miscounted = await go(2)
+    assert.equal(
+      miscounted.out.code,
+      'COUNT_MISMATCH',
+      `${platform} ${JSON.stringify(miscounted.out).slice(0, 300)}`
+    )
+    assert.equal(miscounted.out.change, 1, `${platform}: the refusal names the pair`)
+    assert.equal(miscounted.out.count, 1, platform)
+    assert.equal(miscounted.writes, 0, `${platform}: a call is written whole or not at all`)
+  })

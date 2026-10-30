@@ -61,6 +61,8 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 LIB_DIR="${TRACY_LIB_DIR:-$HERE/../lib}"
 # shellcheck source=../lib/roots.sh
 . "$LIB_DIR/roots.sh"
+# shellcheck source=../lib/heavy-slots.sh
+. "$LIB_DIR/heavy-slots.sh"
 # shellcheck source=../lib/webroot-repo-git.sh
 . "$LIB_DIR/webroot-repo-git.sh"
 # shellcheck source=../lib/webroot-platform.sh
@@ -134,10 +136,9 @@ answer_refusal() { # code [detail]
 HEAVY_LOCK="${TRACY_HEAVY_LOCK:-/var/lock/tracy-webroot-heavy.lock}"
 run_heavy() {
   if [[ -n "${TRACY_HEAVY_LOCK_HELD:-}" ]] || ! command -v flock >/dev/null 2>&1; then "$@"; return; fi
-  exec 9>"$HEAVY_LOCK"
-  if ! flock -n 9; then
-    echo "==> [${SECONDS}s] waiting for another site's heavy webroot job (one at a time per machine)" >&2
-    flock -w 1800 9 || { echo "another heavy webroot job is running; try again shortly" >&2; exit 1; }
+  if ! heavy_try "$HEAVY_LOCK"; then
+    echo "==> [${SECONDS}s] waiting for another site's heavy webroot job (the machine's heavy jobs are full)" >&2
+    heavy_wait "$HEAVY_LOCK" 1800 || { echo "another heavy webroot job is running; try again shortly" >&2; exit 1; }
   fi
   export TRACY_HEAVY_LOCK_HELD=1
   "$@"
@@ -195,12 +196,13 @@ drop_scratch() {
 # database", 24/10/2026) or, worse, one half loaded: merged as if the live site had dropped the rest.
 load_schema() {
   tracy_db_exec mariadb -uroot -e "DROP DATABASE IF EXISTS \`$1\`; CREATE DATABASE \`$1\` CHARACTER SET $CHARSET COLLATE $COLLATION" || return 1
-  if [[ -s "${3:-}" ]]; then
-    gzip -dc "$2" | python3 "$LIB_DIR/dump_sections.py" cut --skip "$3" \
-      | tracy_db_exec mariadb -uroot --max-allowed-packet=256M --init-command="SET FOREIGN_KEY_CHECKS=0" "$1" || return 1
-  else
-    gzip -dc "$2" | tracy_db_exec mariadb -uroot --max-allowed-packet=256M --init-command="SET FOREIGN_KEY_CHECKS=0" "$1" || return 1
+  # Two loads each (the base and the live read load side by side): four connections in all.
+  local error="$DIR/load-$1.error"
+  if ! TRACY_LOAD_STREAMS="${TRACY_LOAD_STREAMS:-2}" tracy_db_load_dump "$1" "$2" "$DIR/load-$1" "${3:-}" 2> "$error"; then
+    cat "$error" >&2
+    return 1
   fi
+  cat "$error" >&2
   tracy_db_drop_triggers "$1" >&2 || return 1
 }
 
@@ -484,6 +486,7 @@ tree_of_archive() {
 # the hardening block every clone gets.
 normalise_htaccess() {
   if [[ "$(tracy_backup_platform)" == wordpress ]]; then tracy_neutralize_https_redirect "$1/.htaccess" >&2; fi
+  tracy_neutralize_auto_prepend "$1" >&2
   tracy_ensure_webroot_htaccess "$1" >&2
 }
 
@@ -499,6 +502,8 @@ tree_of_changes() { # [the read the changes are laid over: the last read by defa
   rm -rf "$changes/installation"
   # The root .htaccess is hardened as provision hardens the copy's — only when this read brought one.
   if [[ -f "$changes/.htaccess" ]]; then normalise_htaccess "$changes"; fi
+  # A firewall's prepend line in the other server files too, only when this read brought them.
+  if [[ -f "$changes/.user.ini" || -f "$changes/php.ini" ]]; then tracy_neutralize_auto_prepend "$changes" >&2; fi
   keep_large_files "$changes"
   tracy_write_webroot_exclude "$REPO" "$changes"
   (
@@ -610,6 +615,37 @@ commit_tree() { # tree message [parent]
 }
 
 # ── merge ────────────────────────────────────────────────────────────────────────────────────
+# load_reads <base dump> <base kind> <platform>: the two reads of the live site into scratch schemas
+# (SCHEMA_BASE, SCHEMA_LIVE), normalised, as `merge` runs it in the background beside the copy's dump.
+# A table both reads hold alike loads into neither (`same_tables`). It answers with its status only
+# (its lines go to stderr like every step's): 0 loaded, 1 a load the server refused, 2 the base and
+# 3 the live read not normalised.
+load_reads() {
+  local base_dump="$1" base_kind="$2" platform="$3"
+  local alike="$DIR/same-tables.txt"
+  same_tables "$base_dump" "$DIR/live/db.sql.gz" "$alike"
+  if [[ -s "$alike" ]]; then
+    echo "==> [${SECONDS}s] the live read: $(grep -c . "$alike") table(s) as the base holds them, loaded into neither" >&2
+  fi
+  # The two loads share nothing: side by side, as the server allows (9 s one after the other on
+  # the stand, 22/10/2026). Each one's failure still stops the sync, once both have ended.
+  local loads=() load failed=0
+  load_schema "$SCHEMA_BASE" "$base_dump" "$alike" & loads+=("$!")
+  load_schema "$SCHEMA_LIVE" "$DIR/live/db.sql.gz" "$alike" & loads+=("$!")
+  for load in "${loads[@]}"; do wait "$load" || failed=1; done
+  if [[ "$failed" == 0 && -s "$alike" && "$platform" == wordpress ]] && ! same_home; then
+    echo "==> [${SECONDS}s] the live site's address moved between its reads: loading every table" >&2
+    load_more "$SCHEMA_BASE" "$base_dump" "$alike" & loads=("$!")
+    load_more "$SCHEMA_LIVE" "$DIR/live/db.sql.gz" "$alike" & loads+=("$!")
+    for load in "${loads[@]}"; do wait "$load" || failed=1; done
+  fi
+  if [[ "$failed" != 0 ]] || ! scratch_loaded "$SCHEMA_BASE" "$SCHEMA_LIVE"; then return 1; fi
+  if [[ "$base_kind" != built ]] && ! engine normalise --schema "$SCHEMA_BASE" --platform "$platform" --prefix "$PREFIX" >&2; then
+    return 2
+  fi
+  engine normalise --schema "$SCHEMA_LIVE" --platform "$platform" --prefix "$PREFIX" >&2 || return 3
+}
+
 merge() {
   [[ -d "$REPO" ]] && g rev-parse --verify HEAD >/dev/null 2>&1 || { answer_refusal NO_HISTORY; return; }
   local platform
@@ -618,21 +654,52 @@ merge() {
   has_live_read || { answer_refusal NO_LIVE_READ; return; }
   db_names
   [[ -n "$PREFIX" ]] || { answer_refusal NO_TABLE_PREFIX; return; }
+  # A Sync to live cut off before it recorded what it created (its host job lost): what its journal
+  # says it wrote joins the id map and pushed.json now, so this merge meets those records as the
+  # copy's own, never as the live site's new ones to copy a second time (#173).
+  if ! python3 "$LIB_DIR/live_push.py" record-cut --push-root "$STACK/push" --id-map "$ID_MAP" --pushed "$PUSHED" >&2; then
+    answer_refusal PUSH_RECORD_FAILED "an interrupted Sync to live could not be recorded"; return
+  fi
   local short
   if ! short="$(enough_disk)"; then answer_refusal NO_DISK_SPACE "need ${short% *} bytes, ${short#* } free"; return; fi
   local stamp
   stamp="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
+  local previous="" theirs_commit
+  previous="$(g rev-parse --verify --quiet "$LIVE_REF^{commit}" || true)"
   # 1. ours: the copy sealed (whatever was edited outside Tracy is in the history) and dumped.
   echo "==> [${SECONDS}s] the copy: sealing its files" >&2
   TRACY_WEBROOT_LOCK_HELD=1 bash "$HERE/webroot-git.sh" --label "$LABEL" --op seal-outside >&2
   local ours_commit
   ours_commit="$(g rev-parse HEAD)"
-  echo "==> [${SECONDS}s] the copy: dumping its database" >&2
+  # 3. base.
+  local base_commit base_dump base_kind
+  if [[ -n "$previous" && -f "$LIVE_BASE_DUMP" ]]; then
+    base_commit="$previous" base_dump="$LIVE_BASE_DUMP" base_kind=last-sync
+  elif [[ -f "$DIR/base/webroot.tar" && -f "$DIR/base/db.sql.gz" ]]; then
+    base_commit="$(commit_tree "$(tree_of_archive "$DIR/base/webroot.tar" base)" "live: read at import")"
+    base_dump="$DIR/base/db.sql.gz" base_kind=import
+  elif g rev-parse --verify --quiet "refs/tags/tracy-baseline^{commit}" >/dev/null \
+       && [[ -f "$(tracy_backup_dir)/v1.mysql.gz" ]]; then
+    base_commit="$(g rev-parse "tracy-baseline^{commit}")" base_dump="$(tracy_backup_dir)/v1.mysql.gz" base_kind=built
+  else
+    answer_refusal NO_BASE "neither a last sync, an import archive nor an Initial backup with its database"
+    return
+  fi
+  echo "==> [${SECONDS}s] base: $base_kind ($base_commit)" >&2
+
+  # The two reads of the live site load into their scratch schemas beside the copy's dump: they share
+  # nothing with it (a WordPress sync spent 10 s dumping the copy, then 9 s loading the reads, one after
+  # the other; dev, 2026-10-27). `load_reads` prints no answer of its own: its status says how it ended.
+  echo "==> [${SECONDS}s] the live read and its base: loading beside the copy's dump" >&2
   drop_scratch
   trap drop_scratch EXIT
+  local reads
+  load_reads "$base_dump" "$base_kind" "$platform" & reads=$!
+  echo "==> [${SECONDS}s] the copy: dumping its database" >&2
   local loaded=0
   load_ours || loaded=$?
+  if [[ "$loaded" != 0 ]]; then wait "$reads" 2>/dev/null || true; fi
   if [[ "$loaded" == 1 ]]; then answer_refusal COPY_BUSY "the copy's database kept changing"; return; fi
   if [[ "$loaded" != 0 ]]; then
     drop_scratch
@@ -651,12 +718,10 @@ merge() {
   schema_checksums "$SCHEMA_OURS" > "$DIR/ours-loaded.checksums.tmp" & loaded_sums=$!
 
   # 2. theirs: the read of the live site, as a commit whose parent is the last read (if any).
-  local previous="" theirs_commit
-  previous="$(g rev-parse --verify --quiet "$LIVE_REF^{commit}" || true)"
   # A first read laid over the copy as built (`first_read_manifest`) names that commit in D/live-over.
   local over="$previous"
   [[ -n "$over" || ! -f "$DIR/live-over" ]] || over="$(g rev-parse --verify --quiet "$(cat "$DIR/live-over")^{commit}" || true)"
-  if [[ -f "$DIR/live/deleted.json" && -z "$over" ]]; then answer_refusal NO_LIVE_READ "changes without a last read"; return; fi
+  if [[ -f "$DIR/live/deleted.json" && -z "$over" ]]; then wait "$reads" 2>/dev/null || true; answer_refusal NO_LIVE_READ "changes without a last read"; return; fi
   echo "==> [${SECONDS}s] the live read: its files as a tree" >&2
   local theirs_tree
   theirs_commit="$(theirs_of_last_merge)"
@@ -671,22 +736,6 @@ merge() {
     theirs_commit="$(commit_tree "$theirs_tree" "live: read $stamp" "$previous")"
   fi
 
-  # 3. base.
-  local base_commit base_dump base_kind
-  if [[ -n "$previous" && -f "$LIVE_BASE_DUMP" ]]; then
-    base_commit="$previous" base_dump="$LIVE_BASE_DUMP" base_kind=last-sync
-  elif [[ -f "$DIR/base/webroot.tar" && -f "$DIR/base/db.sql.gz" ]]; then
-    base_commit="$(commit_tree "$(tree_of_archive "$DIR/base/webroot.tar" base)" "live: read at import")"
-    base_dump="$DIR/base/db.sql.gz" base_kind=import
-  elif g rev-parse --verify --quiet "refs/tags/tracy-baseline^{commit}" >/dev/null \
-       && [[ -f "$(tracy_backup_dir)/v1.mysql.gz" ]]; then
-    base_commit="$(g rev-parse "tracy-baseline^{commit}")" base_dump="$(tracy_backup_dir)/v1.mysql.gz" base_kind=built
-  else
-    answer_refusal NO_BASE "neither a last sync, an import archive nor an Initial backup with its database"
-    return
-  fi
-  echo "==> [${SECONDS}s] base: $base_kind ($base_commit)" >&2
-
   # 4. files.
   # An engine that stops answers in words, last: the job's reader takes the last JSON line it sees,
   # and a traceback leaves the normaliser's `{"ok": true, …}` as that line (20/10/2026).
@@ -696,41 +745,44 @@ merge() {
   if ! engine files --repo "$REPO" --base "$base_commit" --ours "$ours_commit" --theirs "$theirs_commit" \
     --platform "$platform" --prefer ours ${DECISIONS:+--decisions "$DECISIONS"} \
     ${PUSHED_FILES_ARG[@]+"${PUSHED_FILES_ARG[@]}"} > "$DIR/files.json"; then
+    wait "$reads" 2>/dev/null || true
     answer_refusal MERGE_FAILED "the file merge stopped$(engine_said "$DIR/files.json")"; return
   fi
 
-  # 5. database: the two reads of the live site into scratch schemas beside the copy's (loaded at 1),
-  # normalised. A table both reads hold alike loads into neither (`same_tables`).
-  echo "==> [${SECONDS}s] files merged; loading the three databases" >&2
-  local alike="$DIR/same-tables.txt"
-  same_tables "$base_dump" "$DIR/live/db.sql.gz" "$alike"
-  if [[ -s "$alike" ]]; then
-    echo "==> [${SECONDS}s] the live read: $(grep -c . "$alike") table(s) as the base holds them, loaded into neither" >&2
-  fi
-  # The two loads share nothing: side by side, as the server allows (9 s one after the other on
-  # the stand, 22/10/2026). Each one's failure still stops the sync, once both have ended.
-  local loads=() load failed=0
-  load_schema "$SCHEMA_BASE" "$base_dump" "$alike" & loads+=("$!")
-  load_schema "$SCHEMA_LIVE" "$DIR/live/db.sql.gz" "$alike" & loads+=("$!")
-  for load in "${loads[@]}"; do wait "$load" || failed=1; done
-  if [[ "$failed" == 0 && -s "$alike" && "$platform" == wordpress ]] && ! same_home; then
-    echo "==> [${SECONDS}s] the live site's address moved between its reads: loading every table" >&2
-    load_more "$SCHEMA_BASE" "$base_dump" "$alike" & loads=("$!")
-    load_more "$SCHEMA_LIVE" "$DIR/live/db.sql.gz" "$alike" & loads+=("$!")
-    for load in "${loads[@]}"; do wait "$load" || failed=1; done
-  fi
-  if [[ "$failed" != 0 ]] || ! scratch_loaded "$SCHEMA_BASE" "$SCHEMA_LIVE" "$SCHEMA_OURS"; then
-    echo "loading the three databases failed" >&2
+  # 5. database: the reads' loads (started beside the copy's dump) waited for; then the merge.
+  local said_reads=0
+  wait "$reads" || said_reads=$?
+  case "$said_reads" in
+    0) ;;
+    2) answer_refusal MERGE_FAILED "the base could not be normalised"; return ;;
+    3) answer_refusal MERGE_FAILED "the live read could not be normalised"; return ;;
+    *)
+      echo "loading the three databases failed" >&2
+      drop_scratch
+      trap - EXIT
+      local load_why
+      load_why="$(python3 - "$DIR/load-$SCHEMA_BASE.error" "$DIR/load-$SCHEMA_LIVE.error" <<'PYERR'
+import pathlib, re, sys
+for file in sys.argv[1:]:
+    path = pathlib.Path(file)
+    if not path.exists(): continue
+    for line in reversed(path.read_text(errors='replace').splitlines()):
+        found = re.search(r'ERROR (\d+) \(([^)]+)\)', line)
+        if found:
+            # Do not echo SQL values from the dump to a customer. The code and schema identify
+            # the failed load; the host log retains the full server diagnostic.
+            print(f"the dump load failed with database error {found.group(1)} ({found.group(2)})")
+            sys.exit()
+PYERR
+)"
+      answer_refusal MERGE_FAILED "${load_why:-$SCRATCH_REFUSED}"
+      return ;;
+  esac
+  if ! scratch_loaded "$SCHEMA_OURS"; then
     drop_scratch
     trap - EXIT
     answer_refusal MERGE_FAILED "$SCRATCH_REFUSED"
     return
-  fi
-  if [[ "$base_kind" != built ]] && ! engine normalise --schema "$SCHEMA_BASE" --platform "$platform" --prefix "$PREFIX" >&2; then
-    answer_refusal MERGE_FAILED "the base could not be normalised"; return
-  fi
-  if ! engine normalise --schema "$SCHEMA_LIVE" --platform "$platform" --prefix "$PREFIX" >&2; then
-    answer_refusal MERGE_FAILED "the live read could not be normalised"; return
   fi
   if wait "$loaded_sums" && [[ -s "$DIR/ours-loaded.checksums.tmp" ]]; then
     mv "$DIR/ours-loaded.checksums.tmp" "$DIR/ours-loaded.checksums"
@@ -795,6 +847,9 @@ sys.exit(0 if not f["conflicts"] and not d["conflicts"] and d.get("held") else 1
 
   local recovered=""
   [[ ! -f "$DIR/recovered" ]] || recovered="$(cat "$DIR/recovered")"
+  # The copy's own triggers, by name: a live trigger the copy lacks is named as not brought (#120).
+  tracy_db_exec mariadb -uroot -N -B -e "SELECT TRIGGER_NAME FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA = '$DB'" \
+    > "$DIR/copy-triggers.txt" 2>/dev/null || : > "$DIR/copy-triggers.txt"
   TRACY_SYNC_REUSED="$REUSED" python3 - "$DIR" "$ours_commit" "$theirs_commit" "$base_kind" "$stamp" "$version" "$point" "$recovered" "$merged_commit" "$nothing" <<'PYEOF'
 import json, os, sys
 d, ours, theirs, base_kind, stamp, version, point, recovered, merged, nothing = sys.argv[1:11]
@@ -807,12 +862,25 @@ state = {"oursCommit": ours, "theirsCommit": theirs, "mergedCommit": merged or N
          "version": int(version) if version else None, "rebuild": db["rebuild"], "largeFiles": large}
 json.dump(state, open(os.path.join(d, "merge.json"), "w"))
 held = db.get("held", [])
+# What the live read saw that Sync from live does not bring (live-pull `notCarried`, #120): the
+# triggers the copy does not have (no dump carries one), and the tables left out only by the shape of
+# their name that the live site changed. Named for the Owner, never copied by guess.
+read_path = os.path.join(d, "live-read.json")
+seen = (json.load(open(read_path)).get("notCarried") or {}) if os.path.exists(read_path) else {}
+copy_triggers = set(open(os.path.join(d, "copy-triggers.txt")).read().split()) if os.path.exists(os.path.join(d, "copy-triggers.txt")) else set()
+not_carried = {}
+triggers = [t for t in seen.get("triggers") or [] if isinstance(t, dict) and t.get("name") not in copy_triggers]
+if triggers:
+    not_carried["triggers"] = [{k: str(t.get(k, ""))[:64] for k in ("name", "table", "event", "timing")} for t in triggers[:50]]
+if seen.get("tables"):
+    not_carried["tables"] = [str(t)[:64] for t in seen["tables"][:50]]
 print(json.dumps({"ok": True, "state": "nothing" if nothing else "ready" if version else ("needs_attention" if held else "needs_resolution"), **state,
                   "conflicts": conflicts, "held": held, "kept": files.get("kept", []) + db.get("kept", []),
                   "renumbered": db.get("renumbered", []),
                   # The live site's rows the merge left out without a clash (a log row both sites
                   # wrote under one number), named: `database.skipped` alone named nothing (#1648).
                   "skipped": db.get("skipped", []),
+                  **({"notCarried": not_carried} if not_carried else {}),
                   "files": files["counts"], "database": db["counts"],
                   "tables": db["tables"], "point": json.loads(point),
                   # A sync a restart cut off, settled before this one (`recover_apply`).
@@ -1032,6 +1100,18 @@ remember_read() { # theirs_commit
   python3 -c 'import json,sys; json.dump(json.load(open(sys.argv[1])).get("idMap", {}), open(sys.argv[2], "w"))' \
     "$DIR/db.json" "$ID_MAP.tmp" && chmod 600 "$ID_MAP.tmp" && mv "$ID_MAP.tmp" "$ID_MAP"
   cp "$DIR/live/db.sql.gz" "$LIVE_BASE_DUMP.tmp" && chmod 600 "$LIVE_BASE_DUMP.tmp" && mv "$LIVE_BASE_DUMP.tmp" "$LIVE_BASE_DUMP"
+  # Where each table's gzip member lies in it (live-pull.mjs `writeDump`): the next read takes an
+  # unmoved table's bytes as they are. And each big table's range checksums (`writeRanges`): the next
+  # read of a moved one asks only for the ranges that moved. A read written without one leaves none.
+  local beside
+  for beside in index.json ranges.json; do
+    if [[ -f "$DIR/live/db.sql.gz.$beside" ]]; then
+      cp "$DIR/live/db.sql.gz.$beside" "$LIVE_BASE_DUMP.$beside.tmp" && chmod 600 "$LIVE_BASE_DUMP.$beside.tmp" \
+        && mv "$LIVE_BASE_DUMP.$beside.tmp" "$LIVE_BASE_DUMP.$beside"
+    else
+      rm -f "$LIVE_BASE_DUMP.$beside"
+    fi
+  done
   # The read in place holds what a push wrote: the next base needs no word about it.
   rm -f "$PUSHED"
   remember_kept
@@ -1212,6 +1292,9 @@ a = json.load(open(sys.argv[1]))
 print(a["stage"], a["dir"], a["version"], a["oursCommit"], a["theirsCommit"], a.get("rebuild") or "-",
       a.get("mergedCommit") or "-", a["startedAt"])' "$APPLYING")
   db_names
+  if ! tracy_db_foreign_keys recover --plan "$STACK/.restore-foreign-keys.json" >&2; then
+    answer_refusal APPLY_RECOVERY_FAILED "the interrupted restore's foreign keys could not be recovered"; return 1
+  fi
   local how
   if [[ "$stage" == finishing ]]; then
     echo "==> [${SECONDS}s] the last sync was cut off once in place: finishing it from its run" >&2
@@ -1398,7 +1481,7 @@ copy_token() {
 }
 
 forget() {
-  rm -f "$LIVE_BASE_DUMP" "$SYNC_DIR/live-manifest.json" "$LIVE_FINGERPRINT" "$KEPT"
+  rm -f "$LIVE_BASE_DUMP" "$LIVE_BASE_DUMP.index.json" "$LIVE_BASE_DUMP.ranges.json" "$SYNC_DIR/live-manifest.json" "$LIVE_FINGERPRINT" "$KEPT"
   g update-ref -d "$LIVE_REF" 2>/dev/null || true
   # Every run's folder but this job's own; a sync that began meanwhile reads before it locks, and
   # its folder is newer than a day — the sweep's age (`sweep_runs`) is what leaves it.
@@ -1431,14 +1514,16 @@ read_live() {
     if [[ -z "$manifest" ]] && first_read_manifest; then manifest="$DIR/first-manifest.json"; fi
     # WordPress rewrites its transients, WP-Cron, sessions and auto-drafts on every visit: rows the
     # comparison of two reads leaves out (lib/live_sync_wordpress.py `volatile_rows`), with the
-    # column that names a row (`row-names`: a read that kept changing says which rows) and the plugin
-    # tables the merge never takes (`ignored-tables`, under the copy's own table prefix).
+    # column that names a row (`row-names`: a read that kept changing says which rows). On both
+    # platforms, the tables the merge never takes (lib/live_sync.py `never-taken`: Tracy's own, the
+    # ignored ones, under the copy's own table prefix): kept from the last read, never read again.
     local volatile_rows='{}' row_names='{}' ignored_tables='{}'
+    [[ -n "$DB" ]] || DB="$(tracy_backup_db_name)"
+    ignored_tables="$(python3 "$LIB_DIR/live_sync.py" never-taken --platform "$(tracy_backup_platform)" --prefix "$(site_prefix)")" \
+      || ignored_tables='{}'
     if [[ "$(tracy_backup_platform)" == wordpress ]]; then
       volatile_rows="$(python3 "$LIB_DIR/live_sync_wordpress.py" volatile-rows)"
       row_names="$(python3 "$LIB_DIR/live_sync_wordpress.py" row-names)"
-      [[ -n "$DB" ]] || DB="$(tracy_backup_db_name)"
-      ignored_tables="$(python3 "$LIB_DIR/live_sync_wordpress.py" ignored-tables --prefix "$(site_prefix)")" || ignored_tables='{}'
     fi
     pulled="$(TRACY_SYNC_MANIFEST_IN="$manifest" TRACY_SYNC_FINGERPRINT_IN="$fingerprint" TRACY_SYNC_DB_BASE="$base_dump" \
       TRACY_SYNC_VOLATILE_ROWS="$volatile_rows" TRACY_SYNC_ROW_NAMES="$row_names" TRACY_SYNC_IGNORED_TABLES="$ignored_tables" \
@@ -1453,16 +1538,18 @@ read_live() {
       python3 -c 'import json,sys
 a = json.loads(sys.argv[1])
 if a.get("code") == "LIVE_BUSY": print("!! the live site kept changing: " + str(a.get("detail") or "")[:300], file=sys.stderr)
-print(json.dumps({"ok": False, "code": "LIVE_BUSY" if a.get("code") == "LIVE_BUSY" else "LIVE_READ_FAILED", "read": a}))' "$pulled"
+print(json.dumps({"ok": False, "code": a["code"] if a.get("code") in ("LIVE_BUSY", "LIVE_BLOCKED", "LIVE_PASSWORD_PROTECTED", "LIVE_PHP_TOO_OLD", "LIVE_RATE_LIMITED", "TOKEN_REFUSED") else "LIVE_READ_FAILED", "read": a}))' "$pulled"
       return 1
     fi
     printf '%s\n' "$pulled" > "$DIR/live-read.json"
     # The read's end and its own timing in the job's output as they happen (tracy-host keeps both as
     # the sync's progress, tracy-web `timingOf`): the answer above goes to a file, and a slow read was
     # not told from a slow merge (#1649). Only the timing: the read's answer holds no value of the site.
+    # Compact JSON, the form the readers were first written for; they parse it, so a spaced line from an
+    # older host is read too.
     python3 -c 'import json,sys
 r = json.loads(sys.argv[1])
-print(json.dumps({"ok": True, "liveReadAt": r.get("liveReadAt"), **{k: r[k] for k in ("mode", "unchanged", "seconds", "timing") if k in r}}))' "$pulled" >&2
+print(json.dumps({"ok": True, "liveReadAt": r.get("liveReadAt"), **{k: r[k] for k in ("mode", "unchanged", "seconds", "timing") if k in r}}, separators=(",", ":")))' "$pulled" >&2
     echo "==> [${SECONDS}s] the live site read" >&2
     # The read took only what differs from the copy as built: its changes are laid over that commit.
     if [[ "$manifest" == "$DIR/first-manifest.json" && -f "$DIR/live/deleted.json" ]]; then
@@ -1513,10 +1600,23 @@ keep_fingerprint() {
 # stays the one of the last applied read: it is that read's tables the next read reuses, and a noise
 # table (a log) that moved since is read then.
 answer_unchanged() {
-  python3 - "$DIR/live-read.json" <<'PYEOF'
+  [[ -n "$DB" ]] || DB="$(tracy_backup_db_name)"
+  tracy_db_exec mariadb -uroot -N -B -e "SELECT TRIGGER_NAME FROM information_schema.TRIGGERS WHERE TRIGGER_SCHEMA = '$DB'" \
+    > "$DIR/copy-triggers.txt" 2>/dev/null || : > "$DIR/copy-triggers.txt"
+  python3 - "$DIR/live-read.json" "$DIR/copy-triggers.txt" <<'PYEOF'
 import json, sys
 read = json.load(open(sys.argv[1]))
+# What the live site has that Sync from live does not bring, even with nothing new to merge (#120).
+seen = read.get("notCarried") or {}
+copy_triggers = set(open(sys.argv[2]).read().split())
+not_carried = {}
+triggers = [t for t in seen.get("triggers") or [] if isinstance(t, dict) and t.get("name") not in copy_triggers]
+if triggers:
+    not_carried["triggers"] = [{k: str(t.get(k, ""))[:64] for k in ("name", "table", "event", "timing")} for t in triggers[:50]]
+if seen.get("tables"):
+    not_carried["tables"] = [str(t)[:64] for t in seen["tables"][:50]]
 print(json.dumps({"ok": True, "state": "applied", "unchanged": read.get("unchanged"),
+                  **({"notCarried": not_carried} if not_carried else {}),
                   "liveReadAt": read.get("liveReadAt"), "read": read,
                   "conflicts": [], "held": [], "kept": [], "renumbered": [],
                   "files": {"fromTheirs": 0, "merged": 0, "tracyOwned": 0},
@@ -1530,7 +1630,7 @@ live_unchanged() {
 # What a finished sync leaves behind: the answers, not the site's bytes. The live read is the
 # customer's whole database (users, orders): once applied, its one kept copy is the next base;
 # otherwise none (a refused sync used to keep a 564 MB read with the database for a day, 20/10/2026).
-tidy() { rm -rf "$DIR/live" "$DIR/large" "$DIR/base" "$DIR/ours.sql.gz" "$DIR/ours-triggers.sql" "$DIR/ours-shares" "$DIR"/tree-* "$DIR"/index-* "$DIR/merged.sql.gz" "$DIR/held.json"; }
+tidy() { rm -rf "$DIR/live" "$DIR/large" "$DIR/base" "$DIR"/load-* "$DIR/ours.sql.gz" "$DIR/ours-triggers.sql" "$DIR/ours-shares" "$DIR"/tree-* "$DIR"/index-* "$DIR/merged.sql.gz" "$DIR/held.json"; }
 
 # The folders of syncs older than a day — failed, abandoned, or never applied — hold the same
 # reads; none is merged again after that long (the live site has moved on). Swept at every start.

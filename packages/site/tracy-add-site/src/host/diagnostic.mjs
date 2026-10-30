@@ -39,6 +39,7 @@ export const DIAGNOSTIC_CHECKS = new Set([
   'connection_refused_after_ban',
   'connection_refused_after_progress',
   'contract_unavailable',
+  'engine_refused',
   'firewall',
   'forbidden',
   'http_status',
@@ -53,6 +54,7 @@ export const DIAGNOSTIC_CHECKS = new Set([
   'no_csrf',
   'no_door',
   'no_engine',
+  'no_engine_reply',
   'no_redirect',
   'no_token',
   'not_answering',
@@ -66,6 +68,45 @@ export const DIAGNOSTIC_CHECKS = new Set([
   'tls',
   'too_large',
   'untrusted_target'
+])
+
+/**
+ * The engine calls an import makes, named on a `call_failed` (`at: 'export'`): which one stopped.
+ */
+export const DIAGNOSTIC_ACTIONS = new Set([
+  'info',
+  'site.fingerprint',
+  'db.tables',
+  'db.dump',
+  'db.dump_many',
+  'files.pack'
+])
+
+/**
+ * What a body that was not the engine's reply looked like (`doors.mjs` `answerKind`), never its
+ * text: nothing, PHP's fatal, PHP's notices with no engine reply after them, a page, other JSON, text.
+ */
+export const DIAGNOSTIC_ANSWERS = new Set(['empty', 'php_fatal', 'php_notice', 'html', 'json', 'text'])
+
+/**
+ * The engine's own refusal codes (Claude Cowork's `err('<code>')`), named on `engine_refused`; any
+ * other value is `other`.
+ */
+export const DIAGNOSTIC_ENGINE_ERRORS = new Set([
+  'bad_action',
+  'bad_params',
+  'dump_failed',
+  'fatal',
+  'list_failed',
+  'pack_failed',
+  'read_failed',
+  'too_large',
+  'unauthorized',
+  'unavailable',
+  'unsupported',
+  'upload_failed',
+  'walk_failed',
+  'other'
 ])
 
 /** The install roads whose answers ride in `roads`, each kept apart. */

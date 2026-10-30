@@ -105,6 +105,45 @@ test(
   }
 )
 
+test('Retry refuses a deleted build before accepting or charging another action', opts, async () => {
+  const { account, ids } = await fixture(1)
+  const first = await acceptDemoActions(db.pool, {
+    accountId: account,
+    entries: [entry(ids[0], 'deleted-initial')]
+  })
+  const id = first.body.actions[0].id
+  const held = (await db.pool.query('select * from wo_demo_action where id=$1', [id])).rows[0]
+  await db.pool.query(
+    `insert into wo_revision (id, opportunity_id, account_id, n, brief, brief_md)
+     values ($1,$2,$3,1,'{}','')`,
+    [held.revision_id, ids[0], account]
+  )
+  await db.pool.query(
+    `insert into wo_build (account_id,revision_id,request_id,build_id,site_key,state,choice,choice_key)
+     values ($1,$2,$3,$4,'deleted-demo.tracy.test','deleted','{}'::jsonb,'fixture')`,
+    [account, held.revision_id, held.build_request_id, id]
+  )
+  await db.pool.query("update wo_demo_action set status='failed' where id=$1", [id])
+  for (const [state, deletedAt] of [
+    ['deleted', null],
+    ['done', new Date()]
+  ]) {
+    await db.pool.query('update wo_build set state=$1,demo_deleted_at=$2 where account_id=$3', [
+      state,
+      deletedAt,
+      account
+    ])
+    const retry = await acceptDemoActions(db.pool, {
+      accountId: account,
+      entries: [{ ...entry(ids[0], `deleted-retry-${state}`), retryOf: id }]
+    })
+    assert.equal(retry.status, 409)
+    assert.equal(retry.body.code, 'DEMO_DELETED')
+    assert.equal((await db.pool.query('select id from wo_demo_action')).rowCount, 1)
+    assert.equal((await readDemoUsage(db.pool, account, 20)).used, 1)
+  }
+})
+
 // These tests use different connections/transactions on the real database: counting before an
 // insert, or charging an idempotent replay, changes their observable accepted actions/usage.
 test('two replicas compete for the last daily slot: exactly one action is accepted', opts, async () => {

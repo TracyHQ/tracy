@@ -13,6 +13,7 @@
  */
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { followSyncToEnd } from './live-sync-follow'
+import type { PhpTooOld } from './sync-words'
 
 const POLL_MS = 3000
 
@@ -48,11 +49,15 @@ export type SyncView = {
   held?: Array<SyncConflict & { points_at?: string | null; live?: number | null }>
   /** Applied: the live site's content records the copy did not take (held, then synced anyway). */
   dropped?: Array<SyncConflict & { points_at?: string | null; live?: number | null }>
+  /** What the live site has that a sync does not bring: triggers the copy lacks, guessed log tables it changed. */
+  notCarried?: { triggers: Array<{ name: string; table: string | null }>; tables: string[] } | null
   startedAt?: string
   /** Where the time went, while it runs too: each step's second since the start, and its stage. */
   timing?: { steps: Array<{ at: number; step: string; stage: string | null }> } | null
   /** LIVE_BUSY: which parts of the live site kept changing while it was read (`busy.parts`). */
   busy?: { parts: string[] } | null
+  /** LIVE_PHP_TOO_OLD: the live site's PHP and the one Claude Cowork needs (`sync-words` phpTooOldText). */
+  php?: PhpTooOld | null
   summary: {
     backup?: number | null
     files?: { fromTheirs?: number; merged?: number } | null

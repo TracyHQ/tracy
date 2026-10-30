@@ -6,9 +6,19 @@
 #
 # Since Plan 3 it supplies one more thing: the agent's shell. One dsh per host execs into this
 # container, so the image has to carry git, ripgrep, less, jq and wp. web/IMAGE_TAGS says which
-# built image answers for this base; when there is none, the resolver says so and leaves the site
-# on the upstream image below (scripts/lib/web-image.sh).
-WEB_IMAGE="$(tracy_web_image wordpress "wordpress:php8.3-apache")"
+# built image answers for this base; a provision builds it when it is missing, and when there is no
+# line (or the build fails) the resolver says so and leaves the site on the upstream image below
+# (scripts/lib/web-image.sh).
+#
+# Which base, decided BEFORE the one lookup: a clone (and a quickstart) on the pinned php8.3 tag,
+# whose captured sites are what they are; a fleet-born site (FRESH) on the rolling `apache` tag, born
+# current. One lookup and not a default overridden later: the lookup may BUILD the image, and a
+# fresh provision must not spend five minutes building the clone's first.
+if [ "${FRESH:-0}" = 1 ]; then
+  WEB_IMAGE="$(tracy_web_image wordpress "wordpress:apache")"
+else
+  WEB_IMAGE="$(tracy_web_image wordpress "wordpress:php8.3-apache")"
+fi
 DB_NAME="wordpress"
 # Old WordPress and old plugins write '0000-00-00' into date columns, and strict mode rejects it
 # on import. Relax the server rather than editing the customer's data on the way in.
@@ -139,6 +149,14 @@ platform_configure() {
   # (lib/webroot-htaccess.sh, sourced by provision.sh: "Sync from live" does the same to every read
   # of the live site, so this change never reads as the customer's.)
   tracy_neutralize_https_redirect "$webroot/.htaccess"
+  tracy_neutralize_auto_prepend "$webroot"
+  # The object cache drop-in talks to the live server's cache (Redis, Memcached), which the clone
+  # does not have: kept, every request answers 500. Removed from the clone only; "Sync from live"
+  # keeps the clone's own (none) from then on (lib/live_sync.py ENVIRONMENT_FILES, #106).
+  if [ -f "$webroot/wp-content/object-cache.php" ]; then
+    rm -f "$webroot/wp-content/object-cache.php"
+    echo "==> removed the live server's object cache drop-in from the clone"
+  fi
 
   # Everything the address is baked into, which no config file reaches.
   #
@@ -936,9 +954,8 @@ if [ "${FRESH:-0}" = 1 ]; then
   # No archive to download, BUT the installer writes a real webroot — so it must be recorded,
   # or the owner/developer cannot edit the site just built for them.
   PLATFORM_HAS_WEBROOT=1
-  # The newest WordPress from the official image. The pinned php8.3 tag at the top of this file
-  # is for clones, whose captured sites are what they are; a site born today is born current.
-  WEB_IMAGE="$(tracy_web_image wordpress "wordpress:apache")"
+  # The newest WordPress from the official image: WEB_IMAGE at the top of this file is already the
+  # rolling `wordpress:apache` line for a FRESH site.
 
   # The image writes wp-config.php itself from WORDPRESS_* env, correctly, for THIS environment —
   # nothing to rewrite, no live domain to search-replace out of a database that was born here.
