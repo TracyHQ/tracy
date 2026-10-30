@@ -168,6 +168,8 @@ test('Joomla: a new article in a new category is two creates, the category first
       create: true,
       entity: 'content',
       id: 3,
+      // The times Joomla stamps on it by itself: the next sync's base holds the copy's (#223).
+      stamps: ['created', 'created_time', 'modified', 'modified_time'],
       // Its asset, which Joomla numbers on its own, aligned by name on the next sync (#172).
       align: { entity: 'assets', match: { name: 'com_content.article.3' } }
     }

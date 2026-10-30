@@ -1894,6 +1894,14 @@ class DbMerge:
                 if sets:
                     script.append(f"UPDATE {self.ref('base', table)} bb, {self.ref(side, table)} s SET {sets}"
                                   f" WHERE {self._match('bb', match)} AND {self._match('s', match)};")
+                # The times the live site stamped on a record the push created: the base holds the
+                # copy's, so the live site's come over as its change and the two rows agree (#223).
+                stamps = [c for c in rec.get("stamps", []) if isinstance(c, str) and c in all_columns
+                          and c in self.writable_columns("base", table)] if rec.get("create") else []
+                if stamps:
+                    script.append(f"UPDATE {self.ref('base', table)} bb, {self.ref('ours', table)} s SET "
+                                  + ", ".join(f"bb.{q(c)} = s.{q(c)}" for c in stamps)
+                                  + f" WHERE {self._match('bb', match)} AND {self._match('s', match)};")
                 continue
             # dependents: the rows of a created record that the live site made with it.
             if not rec.get("create") or rec.get("entity") not in entities or rec.get("id") is None:

@@ -244,6 +244,13 @@ J_STAMPS = frozenset({"asset_id", "created", "created_by", "modified", "modified
                       "checked_out_time", "version", "hits", "created_user_id", "created_time",
                       "modified_user_id", "modified_time"})
 J_TREE = frozenset({"lft", "rgt", "level", "path", "parent_id"})
+# The times a CMS stamps by itself on a record it creates (never sent): the record a push created
+# holds the live site's, the copy's row its own. Named in the create's seed (`stamps`), so the base
+# of the sync after it holds the copy's (lib/live_sync.py `seed_pushed`): the live site's come over
+# as its change, and the copy's row stops reading as changed — a live delete of it was held as a
+# false delete-modify (#223).
+CREATE_STAMPS = frozenset({"created", "modified", "created_time", "modified_time", "post_date",
+                           "post_date_gmt", "post_modified", "post_modified_gmt"})
 
 # claude-cowork JoomlaSiteWriter::MAP columns (update) and NESTED createColumns (create).
 J_ARTICLE = ("title", "alias", "introtext", "fulltext", "state", "catid", "images", "urls", "attribs",
@@ -1408,8 +1415,10 @@ class Changeset:
             out.append({"table": spec.table, "match": {pk: ident}, "rows": "theirs"})
         else:
             asset = self.asset_name(spec.entity, ident) if op == "create" else None
+            stamps = sorted((CREATE_STAMPS & spec.ignore) - set(db_columns)) if op == "create" else []
             out.append({"table": spec.table, "match": {pk: ident}, "columns": db_columns,
                         **({"create": True, "entity": spec.entity, "id": ident} if op == "create" else {}),
+                        **({"stamps": stamps} if stamps else {}),
                         # Joomla gives the new record its `assets` row on its own: the copy's number for
                         # it, found by the asset's name on both sides, before clashes are numbered (#172).
                         **({"align": {"entity": "assets", "match": {"name": asset}}} if asset else {})})

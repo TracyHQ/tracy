@@ -739,6 +739,51 @@ test('a table Sync from live kept whole holds the push through sync/kept.json: t
   }
 })
 
+test('an article a push created and the customer then deleted on the live site goes from the copy too (#223)', {
+  ...opts,
+  timeout: 900_000
+}, async () => {
+  const s = stack()
+  const engine = await liveEngine(s.live)
+  try {
+    // Tracy's new article carries the copy's own stamps; the live site stamps its copy itself.
+    sql(
+      "INSERT INTO jos_content (id, title, alias, introtext, `fulltext`, created, modified) VALUES (3, 'Tracy news', 'tracy-news', 'new by Tracy', '', '2026-01-01 08:05:30', '2026-01-01 08:05:30')",
+      'joomla'
+    )
+    const previewId = id()
+    const { answer: preview } = await s.runPush(['--op', 'preview', '--preview-id', previewId], engine)
+    assert.equal(preview.ok, true, JSON.stringify(preview))
+    const { answer: pushed } = await s.runPush(
+      ['--op', 'apply', '--preview-id', previewId, '--push-id', id()],
+      engine
+    )
+    assert.equal(pushed.ok, true, JSON.stringify(pushed))
+    assert.deepEqual(pushed.written.map((w) => w.id), ['article:new:3'])
+    assert.equal(pushed.sync.state, 'applied', JSON.stringify(pushed.sync))
+    // The settle sync brought the live site's stamps: the two rows agree.
+    assert.deepEqual(
+      rows('SELECT created, modified FROM jos_content WHERE id=3'),
+      rows("SELECT created, modified FROM jos_content WHERE title='Tracy news'", 'livesrc')
+    )
+
+    // The customer deletes it on the live site; nothing touched it on the copy since.
+    sql("DELETE FROM jos_content WHERE title='Tracy news'", 'livesrc')
+    const dir = join(s.srv, 'after-delete')
+    mkdirSync(dir)
+    const sync = s.runSync(SYNC, ['--op', 'sync', '--dir', dir], {
+      TRACY_SYNC_ENDPOINT: engine.endpoint,
+      TRACY_SYNC_TOKEN: TOKEN
+    })
+    assert.equal(sync.state, 'applied', JSON.stringify(sync))
+    assert.deepEqual(sync.kept, [], JSON.stringify(sync.kept))
+    assert.deepEqual(rows("SELECT COUNT(*) FROM jos_content WHERE title='Tracy news'"), [['0']])
+  } finally {
+    await engine.close()
+    s.dispose()
+  }
+})
+
 test('--settle-later: the answer comes once the writes are in; the Sync from live after them, run on its own, brings nothing back twice', {
   ...opts,
   timeout: 900_000
