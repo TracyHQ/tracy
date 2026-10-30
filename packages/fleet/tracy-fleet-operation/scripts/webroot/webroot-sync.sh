@@ -714,8 +714,9 @@ merge() {
   # leaves every table and file as it was has nothing to put in place (`took_nothing`). Read beside
   # the file merge, which does not touch the database; waited for before the database merge.
   local loaded_sums
-  rm -f "$DIR/ours-loaded.checksums"
-  schema_checksums "$SCHEMA_OURS" > "$DIR/ours-loaded.checksums.tmp" & loaded_sums=$!
+  rm -f "$DIR/ours-loaded.checksums" "$DIR/ours-loaded.definitions"
+  { schema_checksums "$SCHEMA_OURS" > "$DIR/ours-loaded.checksums.tmp"
+    schema_definitions "$SCHEMA_OURS" > "$DIR/ours-loaded.definitions"; } & loaded_sums=$!
 
   # 2. theirs: the read of the live site, as a commit whose parent is the last read (if any).
   # A first read laid over the copy as built (`first_read_manifest`) names that commit in D/live-over.
@@ -826,7 +827,8 @@ print(len(f["conflicts"]) + len(d["conflicts"]) + held)' "$DIR/files.json" "$DIR
     # The point's database as it will be put in place: what a cut-off apply is recognised by. Read
     # while the point is dumped: both only read the schema, and nothing writes it any more.
     local sums
-    schema_checksums "$SCHEMA_OURS" > "$DIR/point.checksums" & sums=$!
+    { schema_checksums "$SCHEMA_OURS" > "$DIR/point.checksums"
+      schema_definitions "$SCHEMA_OURS" > "$DIR/point.definitions"; } & sums=$!
     local tree
     tree="$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["tree"])' "$DIR/files.json")"
     merged_commit="$(commit_tree "$tree" "sync: from live, read $stamp" "$ours_commit")"
@@ -892,17 +894,20 @@ PYEOF
 }
 
 # Whether the merge in SCHEMA_OURS and D/files.json leaves the copy exactly as it was dumped: the
-# merged tree is the copy's, every table's checksum is the one it had before the merge wrote into
-# it (`merge`, D/ours-loaded.checksums), and no live file over 50 MiB waits to be copied in.
+# merged tree is the copy's, every table's checksum and definition are the ones it had before the
+# merge wrote into it (`merge`, D/ours-loaded.checksums and .definitions), and no live file over
+# 50 MiB waits to be copied in. A checksum reads rows only: a table the merge took from the live site
+# for its new collation alone read the same, and never reached the copy (#120).
 took_nothing() { # ours_commit
-  [[ -s "$DIR/ours-loaded.checksums" ]] || return 1
+  [[ -s "$DIR/ours-loaded.checksums" && -s "$DIR/ours-loaded.definitions" ]] || return 1
   python3 -c 'import json,os,sys
 f = json.load(open(os.path.join(sys.argv[1], "files.json")))
 p = os.path.join(sys.argv[1], "large.json")
 large = json.load(open(p)) if os.path.exists(p) else {}
 sys.exit(0 if f.get("tree") and not large.get("copy") else 1)' "$DIR" || return 1
   [[ "$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["tree"])' "$DIR/files.json")" == "$(g rev-parse "$1^{tree}")" ]] || return 1
-  [[ "$(schema_checksums "$SCHEMA_OURS")" == "$(cat "$DIR/ours-loaded.checksums")" ]]
+  [[ "$(schema_checksums "$SCHEMA_OURS")" == "$(cat "$DIR/ours-loaded.checksums")" ]] || return 1
+  [[ "$(schema_definitions "$SCHEMA_OURS")" == "$(cat "$DIR/ours-loaded.definitions")" ]]
 }
 
 # ── Sync anyway: the read and the merge a held sync kept (#1649) ─────────────────────────────
@@ -1035,7 +1040,7 @@ print(m["oursCommit"], m["theirsCommit"], m["version"] or "-", names or "-", m.g
   # other they were most of the wait before the restore.
   local subst="$DIR/apply-substance" sums="$DIR/apply-sums" ps pc
   db_checksums > "$subst" & ps=$!
-  schema_checksums "$DB" > "$sums" & pc=$!
+  { schema_checksums "$DB" > "$sums"; schema_definitions "$DB" > "$DIR/apply-definitions"; } & pc=$!
   TRACY_WEBROOT_LOCK_HELD=1 bash "$HERE/webroot-git.sh" --label "$LABEL" --op seal-outside >&2
   local subst_ok=1
   wait "$ps" || subst_ok=0
@@ -1057,14 +1062,20 @@ print(m["oursCommit"], m["theirsCommit"], m["version"] or "-", names or "-", m.g
   # loaded and swapped all 93). The session table is in neither list, so a person signed in to the
   # copy stays signed in. Without both lists, the whole point, as before.
   local only=()
-  if python3 - "$APPLYING" "$DIR/point.checksums" > "$DIR/only-tables.txt" <<'PYEOF'
-import json, sys
+  # A table whose definition alone changed (a collation the live site set, #120) differs too.
+  if python3 - "$APPLYING" "$DIR/point.checksums" "$DIR/apply-definitions" "$DIR/point.definitions" > "$DIR/only-tables.txt" <<'PYEOF'
+import json, os, sys
 parse = lambda text: dict(l.split("\t", 1) for l in text.splitlines() if "\t" in l)
 ours = parse(json.load(open(sys.argv[1])).get("oursDb", ""))
 point = parse(open(sys.argv[2]).read())
 if not ours or not point:
     sys.exit(1)
-print("\n".join(sorted(t for t in set(ours) | set(point) if ours.get(t) != point.get(t))))
+differ = {t for t in set(ours) | set(point) if ours.get(t) != point.get(t)}
+if not all(os.path.exists(p) and os.path.getsize(p) for p in sys.argv[3:5]):
+    sys.exit(1)
+ours_def, point_def = (parse(open(p).read()) for p in sys.argv[3:5])
+differ |= {t for t in set(ours_def) | set(point_def) if ours_def.get(t) != point_def.get(t)}
+print("\n".join(sorted(differ)))
 PYEOF
   then
     only=(--only-tables "$DIR/only-tables.txt")
@@ -1209,6 +1220,21 @@ schema_checksums() { # schema
   tracy_db_exec mariadb -uroot -N -B -e "CHECKSUM TABLE $listing" | python3 -c 'import sys
 rows = sorted(l.rstrip("\n").split("\t", 1)[0].split(".", 1)[-1] + "\t" + l.rstrip("\n").split("\t", 1)[1]
               for l in sys.stdin if "\t" in l)
+print("\n".join(r for r in rows if not r.split("\t")[0].endswith("session")))'
+}
+
+# Every table's definition in `schema`, one `table<TAB>sha1` per line, sorted, without the schema's
+# name: its engine and collation, and each column's name, type, collation, nullability, default and
+# extra, in order. CHECKSUM TABLE reads rows only (#120). The session table is left out, as above.
+schema_definitions() { # schema
+  tracy_db_exec mariadb -uroot -N -B -e "SET SESSION group_concat_max_len = 16777216;
+SELECT c.TABLE_NAME, SHA1(CONCAT_WS('|', t.ENGINE, t.TABLE_COLLATION, GROUP_CONCAT(CONCAT_WS(':', c.COLUMN_NAME,
+  c.COLUMN_TYPE, IFNULL(c.COLLATION_NAME, '-'), c.IS_NULLABLE, IFNULL(c.COLUMN_DEFAULT, '-'), c.EXTRA)
+  ORDER BY c.ORDINAL_POSITION SEPARATOR ',')))
+FROM information_schema.COLUMNS c JOIN information_schema.TABLES t ON t.TABLE_SCHEMA = c.TABLE_SCHEMA AND t.TABLE_NAME = c.TABLE_NAME
+WHERE c.TABLE_SCHEMA = '$1' AND t.TABLE_TYPE = 'BASE TABLE' AND c.TABLE_NAME NOT LIKE '\\_tracy\\_snap\\_%'
+GROUP BY c.TABLE_NAME, t.ENGINE, t.TABLE_COLLATION" | python3 -c 'import sys
+rows = sorted(l.rstrip("\n") for l in sys.stdin if "\t" in l)
 print("\n".join(r for r in rows if not r.split("\t")[0].endswith("session")))'
 }
 

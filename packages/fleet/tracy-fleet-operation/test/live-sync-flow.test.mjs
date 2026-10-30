@@ -1051,6 +1051,35 @@ test('`sync` merges and applies in one go, a clash included: Tracy’s side stay
   }
 })
 
+test('a collation the live site changed, with no row changed, reaches the copy: first read and after a stored one (#120)', {
+  ...opts,
+  timeout: 600_000
+}, () => {
+  const s = stack()
+  const collation = (table) =>
+    rows(`SELECT TABLE_COLLATION FROM information_schema.TABLES WHERE TABLE_SCHEMA='joomla' AND TABLE_NAME='${table}'`)
+  try {
+    sql('ALTER TABLE jos_modules CONVERT TO CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci', 'livesrc')
+    const first = s.sync(s.read())
+    assert.equal(first.state, 'applied', JSON.stringify(first))
+    assert.notEqual(first.unchanged, 'merge', 'the merge put the table in place')
+    assert.deepEqual(collation('jos_modules'), [['utf8mb3_general_ci']])
+    assert.deepEqual(rows('SELECT title FROM jos_modules WHERE id=441'), [['Home - Hero']])
+
+    // Again, now that a read is stored as the base: another table, its collation only.
+    sql('ALTER TABLE jos_content CONVERT TO CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci', 'livesrc')
+    const second = s.sync(s.read())
+    assert.equal(second.state, 'applied', JSON.stringify(second))
+    assert.deepEqual(collation('jos_content'), [['utf8mb3_general_ci']])
+    assert.deepEqual(rows('SELECT id, title FROM jos_content ORDER BY id'), [
+      ['1', 'Hello'],
+      ['2', 'About']
+    ])
+  } finally {
+    s.dispose()
+  }
+})
+
 test('`sync` keeps thousands of places both sides changed: its answer never goes through one argument (#219)', {
   ...opts,
   timeout: 600_000
