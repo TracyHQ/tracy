@@ -22,7 +22,8 @@ import {
   pickEyes,
   runVisualCheck,
   turnWrites,
-  visualCheckMode
+  visualCheckMode,
+  writesShownInTurn
 } from '../src/host/visual-check.mjs'
 
 const VIEW = { path: '/about', y: 0, w: 1280, h: 800, dark: false }
@@ -666,4 +667,83 @@ test('a picture drawn back at another scroll is not measured: the comparison run
   const content = runtime.asked[0].messages[0].content
   assert.equal(content.filter((b) => b.type === 'image').length, 2)
   assert.ok(!content.some((b) => b.type === 'text' && /MEASURED/.test(b.text)))
+})
+
+// ── #209: a write that read its own words back on the page ─────────────────────────────────────────
+
+/** A turn whose writes are `content.replace` calls answered with `answers` (one receipt each). */
+function replaceTurn(answers) {
+  const events = [{ type: 'turn/start', data: { turn: 3 } }]
+  answers.forEach((answer, i) => {
+    events.push({
+      type: 'tool/call',
+      data: {
+        name: 'tracy_site',
+        callId: `r${i}`,
+        arguments: { action: 'content.replace', params: { find: 'Tacos', replace: 'Tacos made fresh every day' } }
+      }
+    })
+    events.push({
+      type: 'tool/result',
+      data: { message: { source: { callId: `r${i}` }, content: [{ type: 'text', text: JSON.stringify(answer) }] } }
+    })
+  })
+  events.push({
+    type: 'assistant/message',
+    data: { turn: 3, message: { role: 'assistant', content: [{ type: 'text', text: 'Done.' }] } }
+  })
+  return events
+}
+
+const SHOWN = { ok: true, platform: 'wordpress', changed: [{ at: 'post:2.post_title' }], verified: 'shown on /' }
+
+test('a turn whose every write read its words back on the page is not redrawn or judged (#209)', async () => {
+  let drawn = 0
+  const runtime = llm('{"verdict":"shown","target":"the heading","seen":"x"}')
+  const result = await runVisualCheck(
+    job({
+      llm: runtime,
+      events: replaceTurn([SHOWN]),
+      capture: async () => {
+        drawn += 1
+        return { ok: true, jpeg: JPEG, y: 0, loaded: true }
+      }
+    })
+  )
+  assert.deepEqual([result.status, result.reason], ['skipped', 'verified-on-page'])
+  assert.equal(drawn, 0, 'no new browser drew the page')
+  assert.equal(runtime.asked.length, 0, 'no image model was asked')
+  assert.deepEqual(checkReportOf(result), { visual: 'skipped', note: 'verified-on-page' })
+})
+
+test('the check still runs when a write did not prove itself, or touched more than its words (#209)', () => {
+  assert.equal(writesShownInTurn(replaceTurn([SHOWN, SHOWN])), true)
+  for (const other of [
+    { ...SHOWN, verified: 'not shown on / yet: a page cache may still hold the old words' },
+    { ...SHOWN, verified: undefined },
+    { ...SHOWN, companions: [{ at: 'module-90.2' }] },
+    { ok: false, code: 'COWORK_WEB_UNREACHABLE' }
+  ])
+    assert.equal(writesShownInTurn(replaceTurn([SHOWN, other])), false, JSON.stringify(other))
+  // Another kind of write in the same turn (a shell command): checked as before.
+  const mixed = replaceTurn([SHOWN])
+  mixed.splice(1, 0, { type: 'tool/call', data: { name: 'bash', callId: 'b1', arguments: { command: 'wp option update x y' } } })
+  assert.equal(writesShownInTurn(mixed), false)
+  assert.equal(writesShownInTurn(log()), false, 'a shell write alone')
+})
+
+test('a verified write to a shared part (pages of it held as extras) is still checked (#209)', async () => {
+  let drawn = 0
+  const result = await runVisualCheck(
+    job({
+      events: replaceTurn([SHOWN]),
+      ask: ask({ extras: [{ view: { ...VIEW, path: '/about' }, jpeg: JPEG }] }),
+      capture: async () => {
+        drawn += 1
+        return { ok: true, jpeg: JPEG, y: 0, loaded: true }
+      }
+    })
+  )
+  assert.notEqual(result.reason, 'verified-on-page')
+  assert.ok(drawn >= 1)
 })
