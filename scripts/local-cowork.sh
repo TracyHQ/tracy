@@ -134,6 +134,14 @@ fi
 echo "==> contracts new or changed against the published package (${#CHANGED[@]}):"
 printf '    %s\n' "${CHANGED[@]}"
 
+# Every pinned sidecar of a carried profile must still match the base files beside it. The receiver
+# refuses a stale one without failing the build (a content map edited after its showcase-navigation map
+# was generated: the site keeps the template showcase in its menus), so a stale pin stops the build here.
+PIN_DIRS=()
+for rel in "${CHANGED[@]}"; do PIN_DIRS+=("$SRC/$rel"); done
+node "$REPO/scripts/check-joomla-contract-pins.mjs" "${PIN_DIRS[@]}" ||
+  { echo "✖ a carried contract has a stale pin: regenerate it on the ref and run this again" >&2; exit 1; }
+
 echo "==> building the Joomla package"
 ( cd "$CW_TREE/joomla/cowork" && bash build.sh )
 ZIP="$CW_TREE/joomla/cowork/dist/pkg_claudecowork.zip"
