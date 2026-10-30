@@ -42,9 +42,20 @@ function render(source) {
     'python3',
     [
       RENDER,
-      ...['--source', join(dir, 'in.php'), '--out', join(dir, 'configuration.php')],
-      ...['--db-host', 'db', '--db-user', 'u', '--db-password', 'p', '--db-name', 'joomla'],
-      ...['--live-site', 'https://copy.tracy.ai']
+      '--source',
+      join(dir, 'in.php'),
+      '--out',
+      join(dir, 'configuration.php'),
+      '--db-host',
+      'db',
+      '--db-user',
+      'u',
+      '--db-password',
+      'p',
+      '--db-name',
+      'joomla',
+      '--live-site',
+      'https://copy.tracy.ai'
     ],
     { encoding: 'utf8' }
   )
