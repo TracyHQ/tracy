@@ -683,6 +683,62 @@ test('preview, apply, a second preview and Undo: the copy’s changes reach the 
   }
 })
 
+test('a table Sync from live kept whole holds the push through sync/kept.json: the customer’s edit there stays (#87)', {
+  ...opts,
+  timeout: 900_000
+}, async () => {
+  const s = stack()
+  const engine = await liveEngine(s.live)
+  try {
+    // The live site's table gains a column (an extension's update), and the customer retitles an
+    // article; Tracy edits another one on the copy. The sync keeps the copy's table whole.
+    sql('ALTER TABLE jos_content ADD customer_flag INT NULL', 'livesrc')
+    sql("UPDATE jos_content SET title='About, by the customer' WHERE id=2", 'livesrc')
+    sql("UPDATE jos_content SET title='Hello, by Tracy' WHERE id=1", 'joomla')
+
+    const previewId = id()
+    const { answer: preview } = await s.runPush(['--op', 'preview', '--preview-id', previewId], engine)
+    assert.equal(preview.ok, true, JSON.stringify(preview))
+    assert.deepEqual(
+      preview.sync.kept.filter((k) => k.kind === 'table').map((k) => [k.table, k.reason]),
+      [['jos_content', 'schema-changed']]
+    )
+    const kept = JSON.parse(readFileSync(join(s.priv, 'sync', 'kept.json'), 'utf8'))
+    assert.deepEqual(
+      kept.filter((k) => k.kind === 'table').map((k) => [k.id, k.table]),
+      [['db:jos_content', 'jos_content']],
+      'the whole table reaches what the push reads'
+    )
+    const articles = preview.items.filter((i) => i.id.startsWith('article:'))
+    assert.deepEqual(
+      articles.map((i) => [i.id, i.conflict?.reason]),
+      [
+        ['article:1', 'changed-on-both'],
+        ['article:2', 'changed-on-both']
+      ],
+      JSON.stringify(preview.items)
+    )
+
+    const { answer: pushed } = await s.runPush(
+      ['--op', 'apply', '--preview-id', previewId, '--push-id', id()],
+      engine
+    )
+    assert.equal(pushed.ok, true, JSON.stringify(pushed))
+    assert.deepEqual(
+      pushed.written.filter((w) => w.id.startsWith('article:')),
+      [],
+      JSON.stringify(pushed.written)
+    )
+    assert.deepEqual(rows('SELECT id, title FROM jos_content ORDER BY id', 'livesrc'), [
+      ['1', 'Hello'],
+      ['2', 'About, by the customer']
+    ])
+  } finally {
+    await engine.close()
+    s.dispose()
+  }
+})
+
 test('--settle-later: the answer comes once the writes are in; the Sync from live after them, run on its own, brings nothing back twice', {
   ...opts,
   timeout: 900_000

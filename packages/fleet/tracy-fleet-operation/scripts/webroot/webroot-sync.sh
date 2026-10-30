@@ -1144,6 +1144,12 @@ remember_kept() {
 import json, os, sys
 said, out, files = sys.argv[1:4]
 kept = json.load(open(out)) if os.path.exists(out) else []
+# A whole table kept (its definition changed on both sides, or it has no key) holds every push into
+# it, so it stands only while this run's database merge still kept it: one the merge put in place or
+# merged row by row since is free again. Dropped here, it let Sync to live write over the customer's
+# edit in that table (#87).
+if os.path.exists(said):
+    kept = [k for k in kept if k.get("kind") != "table"]
 seen = {k.get("id") for k in kept}
 for path in (said, files):
     if not os.path.exists(path):
@@ -1153,6 +1159,8 @@ for path in (said, files):
             continue
         if k.get("kind") in ("column", "row"):
             kept.append({n: k[n] for n in ("id", "kind", "table", "column", "key", "reason") if n in k})
+        elif k.get("kind") == "table" and isinstance(k.get("table"), str):
+            kept.append({n: k[n] for n in ("id", "kind", "table", "reason") if n in k})
         elif k.get("kind") in ("file", "setting"):
             # Names only, never a value: a setting's three values stay out of the file.
             kept.append({n: k[n] for n in ("id", "kind", "path", "setting", "reason") if n in k})
