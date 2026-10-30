@@ -25,6 +25,7 @@ import { IDENTITY_REASONS, planIdentity } from './site-plan-identity.mjs'
 import { planOutsideMap, planVideos } from './outside-map.mjs'
 import { COLOUR_REASONS, planColours } from './brand-colours.mjs'
 import { HONESTY_REASONS, planHonesty } from './site-plan-honesty.mjs'
+import { BRIEF_ITEM_REASONS } from './brief-decides-items.mjs'
 import { EMPTIED_PAGE_WHY, emptiedPages } from './site-plan-empty-pages.mjs'
 import { peopleFromReviewsNote, showablePeopleOf } from './brief-people.mjs'
 import { limitOf, planHero } from './hero-first-screen.mjs'
@@ -201,7 +202,8 @@ function slotsOf(
   cardNames = {},
   channels = [],
   unwritten = new Set(),
-  records = {}
+  records = {},
+  off = new Map()
 ) {
   if (!contentMap?.slots?.length) return []
   // Pictures: per slot, drawn where no photo fits, icons and cut-outs by subject (#194, #195).
@@ -215,6 +217,9 @@ function slotsOf(
     // A block taken off whole (a sign-up form with no destination) has no words to write.
     if (unwritten.has(slot.key))
       return { key: slot.key, role: slot.role ?? null, decision: 'skip', reason: 'no-form-destination' }
+    // An item the brief holds nothing for is taken off, and a person's fact it does not hold is emptied: no writer words them.
+    if (off.has(slot.key))
+      return { key: slot.key, role: slot.role ?? null, decision: 'skip', reason: off.get(slot.key) }
     const channel = reach.get(slot.key)
     if (channel) return { key: slot.key, role: slot.role, decision: 'value', ...channel }
     const kind = slot.type === 'text' ? CONTACT_ROLES[slot.role] : null
@@ -309,6 +314,32 @@ function withoutEmptiedPages(answered, served, contentMap, honesty) {
   return { ...answered, answers, notes, pagePlan: { ...plan, pages, keep } }
 }
 
+/** A person's own fact the brief does not hold: emptied, never written (COO criterion 2.1). */
+const PERSON_FACT = /^(?:person\.(?:bio|role|social_url)|contact\.social_(?:label|url))$/
+
+/**
+ * The slots no writer words, by key with the reason (`brief-decides-items.mjs`): every slot of an item the brief holds
+ * nothing for (a video tile, a person's social item), and a person's bio, role or profile the plan empties.
+ * @param {any} contentMap @param {any} honesty
+ * @returns {Map<string, string>}
+ */
+function briefOffSlots(contentMap, honesty) {
+  const off = new Map()
+  const groups = new Map(
+    (honesty?.records ?? [])
+      .filter((r) => r.decision === 'hide' && Object.hasOwn(BRIEF_ITEM_REASONS, r.reason))
+      .map((r) => [r.group, r.reason])
+  )
+  const blanked = new Set((honesty?.blanks ?? []).map((b) => b.key))
+  for (const slot of contentMap?.slots ?? []) {
+    const reason = groups.get(slot?.group?.id)
+    // A video slot keeps its own decision: its demo id stays for the leftover rule that hides a play control.
+    if (reason && slot.role !== 'business.video') off.set(slot.key, reason)
+    else if (blanked.has(slot.key) && PERSON_FACT.test(slot.role ?? '')) off.set(slot.key, 'no-brief-fact')
+  }
+  return off
+}
+
 /** The slot decisions with the hero's lines laid over them: a hero line is a value, never the copy writer's. */
 function withHero(slots, hero) {
   // A slot of a block taken off whole keeps its skip: no button or intro line is written into it.
@@ -390,7 +421,8 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
         honesty.honesty.cardNames,
         channels,
         new Set(honesty.honesty.unwritten),
-        honesty.honesty.values ?? {}
+        honesty.honesty.values ?? {},
+        briefOffSlots(contentMap, honesty.honesty)
       ),
       [
         // A button that would say a bare "Contact" names its action (`contact-buttons.mjs`); the hero's own plan wins.

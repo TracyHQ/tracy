@@ -213,6 +213,18 @@ function loneFrame(kid, parent, scripts) {
   )
 }
 
+const isColumn = (node) => classesOf(node).some((c) => COLUMN.test(c))
+
+/**
+ * Whether a lone grid column is an emptied one: it holds boxes but nothing a visitor reads or sees, no link, control or
+ * code, nothing a script fills, and a sibling column of the same row shows content.
+ */
+function emptyColumn(kid, kids, scripts) {
+  if (!isColumn(kid) || takenOff(kid) || hasContent(kid) || elements(kid).length === 0) return false
+  if (holdsLive(kid) || holdsCode(kid) || scripted(kid, scripts) || isControl(kid)) return false
+  return kids.some((k) => k !== kid && isColumn(k) && hasContent(k))
+}
+
 /**
  * The empty frames of one page: those to hide, the tiles of a photo grid to show as an owner photo, and the rows whose
  * kept cards are centred.
@@ -250,6 +262,12 @@ export function emptyFramesOf(html) {
         if (body !== node && loneFrame(same[0], node, scripts)) {
           hide.push(frameSelectorOf(same[0]))
           hidden.add(same[0])
+        } else if (body !== node && emptyColumn(same[0], kids, scripts)) {
+          // A grid column whose content the build took off (a channel the business does not have) leaves no hole: it is
+          // hidden and the row centres the columns kept (R12 group C, criterion 4.1).
+          hide.push(frameSelectorOf(same[0]))
+          hidden.add(same[0])
+          if (!centre.includes(selectorOf(node))) centre.push(selectorOf(node))
         }
         continue
       }

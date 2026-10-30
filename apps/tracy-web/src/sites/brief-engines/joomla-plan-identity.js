@@ -270,6 +270,11 @@ export async function planIdentitySteps({ apply, siteKey, ctx, woContent, visibl
     base.filter((s) => s.kind === 'module' && typeof s.fields?.content === 'string').map((s) => [s.id, s])
   )
   let counts = { socials: 0, maps: 0, logos: 0 }
+  // A person's own social row is never filled with the business's networks: the honesty plan takes its items off
+  // (`brief-decides-items.mjs` `personSocials`, R12 group C).
+  const personal = new Set(
+    (plan.honesty?.personSocials ?? []).map((entity) => Number(String(entity).split('-')[1]))
+  )
   try {
     for (const row of await readModules(apply, siteKey)) {
       const language = String(row.language ?? '*')
@@ -277,7 +282,9 @@ export async function planIdentitySteps({ apply, siteKey, ctx, woContent, visibl
       const before = planned.get(Number(row.id))
       // A JSON list of social links kept in the module's parameters (a JA ACM style module).
       // The row calls and mails the business before its networks (COO rule 29/10/2026): the plan's numbers and mailbox.
-      const listed = socialListParams(paramsOf(row), plan.socials, contactIconsOf(plan))
+      const listed = personal.has(Number(row.id))
+        ? { params: paramsOf(row), changed: 0, empty: false }
+        : socialListParams(paramsOf(row), plan.socials, contactIconsOf(plan))
       if (listed.changed > 0) {
         counts.socials += listed.changed
         const fields = {

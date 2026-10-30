@@ -303,6 +303,17 @@ export function recordSteps({
     list.indexes.push(hide.index)
     lists.set(key, list)
   }
+  // 🔒 A RECORD LIST SHOWS THE BRIEF'S COUNT (`brief-decides-items.mjs` `planRecordLists`, R12 group C): an articles module
+  // lists as many records as the brief holds, never the template's count; the current page's own item is hidden by the
+  // head block's current-item rule, so a related list shows every real sibling.
+  for (const list of honesty?.lists ?? []) {
+    if (list.decision !== 'keep' || gone.has(list.entity) || !Number.isInteger(list.count)) continue
+    if (String(list.entity).split('-')[0] !== 'module') continue
+    const edit = editOf(list.entity, 'params', null)
+    if (!edit || !('count' in edit.container) || Number(edit.container.count) === list.count) continue
+    edit.container.count = list.count
+    edit.edit.changed = true
+  }
   for (const { edit, parents, fields, indexes } of lists.values())
     if (dropItems(edit.container, parents, fields, indexes)) {
       edit.edit.changed = true

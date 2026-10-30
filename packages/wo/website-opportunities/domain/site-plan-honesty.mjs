@@ -20,6 +20,7 @@ import { planReviewGroup, sourcedReviewsOf } from './review-quotes.mjs'
 import { strayQuoteLinesOf } from './quote-cards.mjs'
 import { shortOfferingName } from './offering-short-name.mjs'
 import { labelsOfBlanks, planOfferingTabs } from './offering-tabs-plan.mjs'
+import { BRIEF_ITEM_REASONS, briefItemHides, planRecordLists } from './brief-decides-items.mjs'
 
 export const HONESTY_VERSION = 'site-plan-honesty/1'
 
@@ -53,7 +54,8 @@ export const HONESTY_REASONS = Object.freeze({
   'whole-collection-hidden': 'every card of this section is hidden',
   'no-place-to-hide': 'the record sits where the site cannot hide it',
   'no-form-destination':
-    'a sign-up, booking or login block with no destination for this business (no email-marketing account, booking link or member area), taken off whole'
+    'a sign-up, booking or login block with no destination for this business (no email-marketing account, booking link or member area), taken off whole',
+  ...BRIEF_ITEM_REASONS
 })
 
 /** Group kinds whose cards each show one offering of the business. Dishes (`menu_item`) are the copy pins'. */
@@ -272,6 +274,11 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
       byCollection.set(at, [...(byCollection.get(at) ?? []), group])
       continue
     }
+    // The business's own profile as a site user: a person's bio, role or profile the brief does not hold is emptied.
+    if (group.kind === 'business')
+      for (const slot of group.slots)
+        if (/^person\.(bio|role|social_url)$/.test(slot.role ?? ''))
+          blanks.push(blankOf(slot, 'no-brief-fact'))
     if (group.kind === 'stat_item') {
       // A box shows a sourced fact, else an owner photo (in a photo grid), else it goes (a band): `stat-box-plan.mjs`.
       const box = statBoxes.get(group.id)
@@ -359,8 +366,12 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
       if (authors) {
         // A post's author is a user of the site: never hidden, never a made-up person.
         records.push({ ...record, decision: 'keep', reason: 'author-as-business' })
+        // The business signs as the author: a person's bio, role or profile the brief does not hold is emptied, and the CMS
+        // prints no empty field (COO criterion 1.1).
         for (const slot of group.slots)
           if (slot.role === 'person.name') setValue(slot, name, 'author-as-business')
+          else if (/^person\.(bio|role|social_url)$/.test(slot.role ?? ''))
+            blanks.push(blankOf(slot, 'no-brief-fact'))
         return
       }
       const list = group.kind === 'person' ? people : group.kind === 'package' ? [] : offerings
@@ -496,6 +507,25 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
       .map((r) => groupsOf(contentMap).find((g) => g.id === r.group)?.slots[0]?.entity)
       .filter(Boolean)
   )
+  // 🔒 THE BRIEF DECIDES THE ITEMS (`brief-decides-items.mjs`, R12 group C): a video tile with no playable video and a kept
+  // person's social item go whole with the template's own hide, never kept blank or pointing at their own page.
+  const itemHides = briefItemHides({
+    contentMap,
+    brief,
+    groups: groupsOf(contentMap),
+    personEntities,
+    placeOf: hidePlaceOf
+  })
+  records.push(...itemHides.records)
+  const lists = planRecordLists(contentMap, { offerings, people })
+  for (const list of lists.filter((l) => l.decision === 'hide'))
+    records.push({
+      group: `${list.entity}.list`,
+      kind: list.kind,
+      decision: 'hide',
+      reason: list.reason,
+      place: { how: 'entity', entity: list.entity, kind: entityKindOf(contentMap, list.entity) }
+    })
   // 🔒 A FORM WITH NO DESTINATION GOES WHOLE (`form-blocks.mjs`): its module is taken off, its words are never written.
   const forms = planFormBlocks(brief, contentMap)
   for (const block of forms.off)
@@ -536,6 +566,9 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
       nameOnly,
       cardNames,
       offerings,
+      // Every record list's count, from the brief (`planRecordLists`); the lists of a person's own social profiles.
+      lists,
+      personSocials: itemHides.personSocials,
       // The keys of the blocks taken off whole: no step writes them.
       unwritten: [...forms.unwritten]
     }
