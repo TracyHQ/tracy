@@ -1106,7 +1106,7 @@
     {
       "path": "packages/cms/tracy-joomla-quickstart/contracts/**",
       "category": "email",
-      "match": "@(acme\\.com|anstudio\\.com|blooms\\.com|company\\.ru|company\\.com|conference\\.eu|fresco\\.com|getfit\\.com|gmail\\.com|helixlabs\\.dev|helix\\.dev|imed\\.com|jadirectory\\.com|jarent\\.com|joomlart\\.com|joomsolutions\\.com|kineticlabs\\.dev|kinetic\\.dev|lensofadventure\\.com|morgan\\.com|nicast\\.com|no-reply\\.com|northgate-ind\\.ru|phio\\.com|prodex\\.com|salmon\\.com|stark\\.com)$",
+      "match": "@(acme\\.com|anstudio\\.com|blooms\\.com|company\\.ru|company\\.com|conference\\.eu|fresco\\.com|getfit\\.com|gmail\\.com|helixlabs\\.dev|helix\\.dev|imed\\.com|jadirectory\\.com|jarent\\.com|joomlart\\.com|joomsolutions\\.com|kineticlabs\\.dev|kinetic\\.dev|lensofadventure\\.com|morgan\\.com|nicast\\.com|no-reply\\.com|northgate-ind\\.ru|phio\\.com|prodex\\.com|salmon\\.com|stark\\.com|yoursite\\.com)$",
       "kind": "third-party-content",
       "reason": "JoomlArt template demo content captured byte for byte into quickstart contracts (sealed: carried by shipped plugins and pinned hashes)"
     },

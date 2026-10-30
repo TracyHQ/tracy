@@ -1,0 +1,31 @@
+{
+  "schemaVersion": "tracy-quickstart-contract/v1",
+  "id": "ja-kidscorner/j6/1.0.3",
+  "platform": "joomla",
+  "template": "ja_kidscorner",
+  "quickstart": {
+    "product": "ja-kidscorner",
+    "platform": "joomla",
+    "version": "1.0.3",
+    "cms": {
+      "version": "6.0.3"
+    },
+    "template": "ja_kidscorner",
+    "parts": {
+      "installer": {
+        "file": "ja-kidscorner-j6-quickstart-1.0.3.zip",
+        "bytes": 48754630,
+        "sha256": "202602be6b86f759bdc3ab82ab477f9d694644341dfb64206e72e8654e6b1919"
+      }
+    },
+    "release": "quickstart/ja-kidscorner/j6",
+    "createdAt": "2026-10-30T16:44:52.903Z",
+    "builtFrom": {
+      "from": "quickstart/ja-kidscorner/j6@1.0.2",
+      "by": "tracy-ds-slot release-joomla.mjs",
+      "change": "repaired: 87 files replaced (modules/mod_ja_acm/AGENTS.md, modules/mod_ja_acm/CLAUDE.md, templates/ja_kidscorner/error.php, templates/ja_kidscorner/offline.php, modules/mod_ja_acm/docs, templates/ja_kidscorner/css, templates/ja_kidscorner/etc, templates/ja_kidscorner/less, templates/ja_kidscorner/fonts, templates/ja_kidscorner/html, templates/ja_kidscorner/images, templates/ja_kidscorner/language, templates/ja_kidscorner/acm); 1 installed language files (language/en-GB/en-GB.tpl_ja_kidscorner.ini); demo data: 2 statements appended; demo content: 73 edits (article-28, article-29, article-30, article-31, article-3, article-32, article-33, article-6, article-7, article-8, article-9, article-10, article-11, article-12, article-13, article-14, article-15, article-16, article-17, article-18, article-19, article-20, article-21, article-22, article-23, article-24, article-26, article-27, article-37, article-38, article-39, article-40, article-41, article-35, article-36, article-28, article-29, article-30, article-31, article-3, article-32, article-33, article-6, article-7, article-8, article-9, article-10, article-11, article-12, article-13, article-14, article-15, article-16, article-17, article-18, article-19, article-20, article-21, article-22, article-23, article-24, article-26, article-27, article-37, article-38, article-39, article-40, article-41, article-35, article-36, menuItem-139, article-28, article-28); stylesheets read the worn design system (--ds-c-*)"
+    }
+  },
+  "coworkContractVersion": "0.24.76",
+  "mode": "content-recommendation"
+}
