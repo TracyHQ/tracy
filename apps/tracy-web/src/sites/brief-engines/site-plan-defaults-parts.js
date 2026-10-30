@@ -90,3 +90,111 @@ export function dedupe(/** @type {any[]} */ decisions) {
     return true
   })
 }
+
+/** An id as compared for a near miss: trimmed, lower case, no spaces. */
+const normId = (/** @type {unknown} */ id) =>
+  String(id ?? '')
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, '')
+/** An id without its kind prefix ("picture:", "photo:"). */
+const tailOf = (/** @type {string} */ id) => normId(id).replace(/^[a-z-]+:/, '')
+
+/**
+ * 🔒 AN ID THE AUTHOR WRITES IS AN ID THAT EXISTS (ticket TracyHQ/tracy#234, 30/10/2026: round 1 of the pilot plan was
+ * refused for three invented picture slot ids). The valid id a near miss means, or null: the same id with other case or
+ * spaces, or the same id with its kind prefix missing or another one, when exactly one valid id matches. Never a different
+ * number: `article-14.43` is not `article-14.40`, and a guess would put a photo in the wrong frame; that is left to the check,
+ * whose reason names the valid ids (`closestIds`).
+ * @param {unknown} given @param {Iterable<string>} valid
+ * @returns {string | null}
+ */
+export function nearMissId(given, valid) {
+  const ids = [...valid]
+  const raw = String(given ?? '')
+  if (ids.includes(raw)) return raw
+  for (const key of [normId, tailOf]) {
+    const want = key(raw)
+    if (!want) continue
+    const hits = ids.filter((id) => key(id) === want)
+    if (hits.length === 1) return hits[0]
+    if (hits.length > 1) return null
+  }
+  return null
+}
+
+/**
+ * The valid ids closest to an unknown one, for a check reason: the longest shared beginning first, then the closest
+ * number at the end, at most `n`.
+ * @param {unknown} given @param {Iterable<string>} valid @param {number} [n]
+ * @returns {string[]}
+ */
+export function closestIds(given, valid, n = 8) {
+  const want = normId(given)
+  const shared = (/** @type {string} */ id) => {
+    const a = normId(id)
+    let i = 0
+    while (i < a.length && i < want.length && a[i] === want[i]) i += 1
+    return i
+  }
+  const number = (/** @type {string} */ s) => Number(/(\d+)\D*$/.exec(s)?.[1] ?? Number.NaN)
+  const target = number(want)
+  const gap = (/** @type {string} */ id) => {
+    const d = Math.abs(number(normId(id)) - target)
+    return Number.isFinite(d) ? d : Number.POSITIVE_INFINITY
+  }
+  return [...valid]
+    .map((id) => ({ id, shared: shared(id), gap: gap(id) }))
+    .sort((a, b) => b.shared - a.shared || a.gap - b.gap)
+    .slice(0, n)
+    .map((x) => x.id)
+}
+
+/**
+ * The author's answer with every near-miss id put right (`nearMissId`): the photo of each photo decision, the picture slots
+ * it fills, and the element of each decision. What was put right is listed in `repaired`, for the build record; an id with
+ * no unambiguous match is left as written, for the check to refuse with the valid ids.
+ * @param {any} answer
+ * @param {{photoIds: string[], pictureIds: string[], elementIds: string[]}} ids
+ * @returns {{answer: any, repaired: Array<{field: string, from: string, to: string}>}}
+ */
+export function repairIds(answer, { photoIds, pictureIds, elementIds }) {
+  /** @type {Array<{field: string, from: string, to: string}>} */
+  const repaired = []
+  const fix = (/** @type {unknown} */ id, /** @type {string[]} */ valid, /** @type {string} */ field) => {
+    if (typeof id !== 'string' || valid.includes(id)) return id
+    const to = nearMissId(id, valid)
+    if (!to) return id
+    repaired.push({ field, from: id, to })
+    return to
+  }
+  if (!answer || typeof answer !== 'object') return { answer, repaired }
+  const photos = list(answer.photos).map((p) =>
+    p && typeof p === 'object'
+      ? {
+          ...p,
+          photo: fix(p.photo, photoIds, 'photos.photo'),
+          ...(Array.isArray(p.slots) ? { slots: p.slots.map((s) => fix(s, pictureIds, 'photos.slots')) } : {})
+        }
+      : p
+  )
+  const decisions = list(answer.decisions).map((d) =>
+    d && typeof d === 'object'
+      ? {
+          ...d,
+          element: fix(d.element, elementIds, 'decisions.element'),
+          ...(typeof d.picture?.photo === 'string'
+            ? { picture: { ...d.picture, photo: fix(d.picture.photo, photoIds, 'decisions.picture.photo') } }
+            : {})
+        }
+      : d
+  )
+  return {
+    answer: {
+      ...answer,
+      ...(Array.isArray(answer.photos) ? { photos } : {}),
+      ...(Array.isArray(answer.decisions) ? { decisions } : {})
+    },
+    repaired
+  }
+}

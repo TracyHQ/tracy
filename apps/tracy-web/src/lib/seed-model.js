@@ -31,12 +31,49 @@ const BUDGET_WAIT_TOTAL_MS = 60_000
 /** Spread so calls refused together are not all asked again in the same instant. */
 const BUDGET_JITTER_MS = 1000
 /**
- * The reply cap of a call asked with `maxTokens: 'max'` when the provider's model listing names none: DeepSeek's documented
+ * The model maximum assumed when the provider's model listing names none: DeepSeek's documented
  * output limit for its chat model, and the cap the translation and seeder calls of this pipeline already send.
  */
 export const FALLBACK_MAX_OUTPUT = 8192
 /** How long the model listing may take before the fallback cap is used. */
 const LISTING_TIMEOUT_MS = 10_000
+
+/**
+ * 🔒 A CALL ASKS FOR THE OUTPUT ITS WORK NEEDS, NEVER THE MODEL MAXIMUM (ticket TracyHQ/tracy#234, 30/10/2026). OpenRouter
+ * reserves credit for the whole `max_tokens` before it answers: the site plan asked for deepseek-v4-pro's 384000 and was
+ * refused with HTTP 402 on a key that could pay for 188778, though the answer needed under 20000. `outputBudget` estimates
+ * the reply from the work asked (the characters and items the answer holds, with headroom) plus a reasoning allowance, and
+ * `chat({maxTokens: {budget}})` clamps it to the model's stated maximum. An answer that still stops at the budget throws
+ * `TRUNCATED`, and its caller splits the work (the copy batches) or asks once with more room (the site plan).
+ */
+/** Characters per output token assumed: low on purpose, as JSON punctuation and non-Latin scripts cost more tokens. */
+export const CHARS_PER_TOKEN = 3
+/** Tokens an answer spends around each item it holds: its key, quotes, separators and a source id. */
+export const ITEM_TOKENS = 40
+/** Headroom on the estimated answer, for words written a little longer than counted. */
+const BUDGET_HEADROOM = 1.25
+/** The smallest budget asked: a short answer still has room for its JSON frame. */
+export const MIN_BUDGET = 1024
+/**
+ * The reasoning allowance on top of the answer, by the effort asked. `unasked` is a model asked not to reason that does
+ * anyway: the stand's relay model reasoned 2.2-2.5k tokens per copy batch (R13), and a 4096 cap cut five batches. `low`:
+ * deepseek-v4-pro reasoned 14027 tokens over the pilot site plan at low effort (30/10/2026).
+ */
+export const REASONING_ALLOWANCE = { unasked: 4096, low: 16384, medium: 32768, high: 65536 }
+
+/**
+ * The output budget of one call, from the work it asks.
+ * @param {{characters?: number, items?: number, reasoning?: keyof typeof REASONING_ALLOWANCE | null}} work - the
+ *   characters the answer may write at most, the items it holds, and the reasoning allowance to add
+ * @returns {number}
+ */
+export function outputBudget({ characters = 0, items = 0, reasoning = null }) {
+  const answer = Math.ceil(
+    (Math.max(0, characters) / CHARS_PER_TOKEN + Math.max(0, items) * ITEM_TOKENS) * BUDGET_HEADROOM
+  )
+  const think = reasoning ? (REASONING_ALLOWANCE[reasoning] ?? REASONING_ALLOWANCE.medium) : 0
+  return Math.max(MIN_BUDGET, answer + think)
+}
 
 /**
  * A provider's `finish_reason` that says the answer stopped at the reply cap, not at its end: OpenAI-compatible "length",
@@ -117,19 +154,25 @@ export function noReasoningBody(baseUrl) {
 
 /**
  * The field that asks a provider TO reason, in its own words: the site plan author (`site-plan-author.js`, ticket
- * TracyHQ/tracy#234) plans the whole site on the editorial door with reasoning on. Empty for a provider with no known field.
- * @param {string} baseUrl
+ * TracyHQ/tracy#234) plans the whole site on the editorial door with reasoning on. With an `effort` ('low', 'medium',
+ * 'high'), OpenRouter is sent `reasoning: {effort}`, DeepSeek's own API `reasoning_effort` beside `thinking` (its levels
+ * low, high, max: api-docs.deepseek.com/guides/thinking_mode, as `llm-effort.js` reads them), and another OpenAI-compatible
+ * provider `reasoning_effort`. Empty for a provider with no known field and no effort.
+ * Measured 30/10/2026 on the stand (deepseek-v4-pro, the pilot brief's plan): default effort took 2 rounds, 608 s; low
+ * effort 1 round, 173 s.
+ * @param {string} baseUrl @param {string | null} [effort]
  */
-export function reasoningBody(baseUrl) {
+export function reasoningBody(baseUrl, effort = null) {
   let host = ''
   try {
     host = new URL(baseUrl).host
   } catch {
     return {}
   }
-  if (host === 'api.deepseek.com') return { thinking: { type: 'enabled' } }
-  if (host === 'openrouter.ai') return { reasoning: { enabled: true } }
-  return {}
+  if (host === 'api.deepseek.com')
+    return { thinking: { type: 'enabled' }, ...(effort ? { reasoning_effort: effort } : {}) }
+  if (host === 'openrouter.ai') return { reasoning: effort ? { effort } : { enabled: true } }
+  return effort ? { reasoning_effort: effort } : {}
 }
 
 /**
@@ -224,11 +267,9 @@ export function createSeedModel({
   /** @type {Promise<number> | null} the model's maximum output, read once from the provider's listing */
   let ceiling = null
   /**
-   * 🔒 THE COPY WRITER IS NEVER SQUEEZED BY ITS OWN REASONING (R13, 30/10/2026): with a 4096 cap and the stand's model
-   * reasoning 2.2-2.5k tokens, five 35-slot batches stopped mid-JSON (finish "length"). `maxTokens: 'max'` asks for the
-   * model's own maximum output, as the provider's listing states it (the stand relay: 128000 for claude-sonnet-5-5);
-   * a provider that states none gets `FALLBACK_MAX_OUTPUT`. The cap is a ceiling, not a target: the answer is as long as
-   * the slots need.
+   * The model's own maximum output, as the provider's listing states it (the stand relay: 128000 for claude-sonnet-5-5),
+   * read once; a provider that states none gets `FALLBACK_MAX_OUTPUT`. A budget (`maxTokens: {budget}`, `outputBudget`) is
+   * clamped to it.
    */
   const maxOutput = () =>
     (ceiling ??= (async () => {
@@ -268,11 +309,25 @@ export function createSeedModel({
    * ahead of the ones waiting for a place (`createLimiter`): the calls made once a person is waiting on the site.
    * An answer cut at the reply cap (`isCutFinish`) throws `TRUNCATED` at once: its text is half an answer, and the same
    * request would be cut again.
-   * @param {{messages: Array<{role: string, content: string}>, maxTokens?: number | 'max', temperature?: number, signal?: AbortSignal, first?: boolean, stage?: string}} request
+   * `maxTokens: {budget}` asks for that budget, clamped to the model's stated maximum (`outputBudget`). `effort` is the
+   * reasoning effort of a reasoning model (`reasoningBody`); a model asked not to reason ignores it.
+   * @param {{messages: Array<{role: string, content: string}>, maxTokens?: number | {budget: number}, effort?: string | null, temperature?: number, signal?: AbortSignal, first?: boolean, stage?: string}} request
    * @returns {Promise<string>} the answer's text
    */
-  async function chat({ messages, maxTokens = 4096, temperature, signal, first = false, stage = 'other' }) {
-    const cap = maxTokens === 'max' ? await maxOutput() : maxTokens
+  async function chat({
+    messages,
+    maxTokens = 4096,
+    effort = null,
+    temperature,
+    signal,
+    first = false,
+    stage = 'other'
+  }) {
+    const cap =
+      typeof maxTokens === 'object' && maxTokens !== null
+        ? Math.max(1, Math.min(Math.ceil(Number(maxTokens.budget) || MIN_BUDGET), await maxOutput()))
+        : maxTokens
+    const ask = reasoning && effort ? reasoningBody(model.baseUrl, effort) : quiet
     return limit(
       async () => {
         const started = Date.now()
@@ -287,7 +342,7 @@ export function createSeedModel({
             messages,
             max_tokens: cap,
             ...(temperature !== undefined ? { temperature } : {}),
-            ...(refusesQuiet ? {} : quiet)
+            ...(refusesQuiet ? {} : ask)
           }
           try {
             const { res, parsed, text } = await once(body, signal)
@@ -327,7 +382,7 @@ export function createSeedModel({
               // A provider that does not know the no-reasoning field says 400: ask again without it, once.
               if (
                 res.status === 400 &&
-                Object.keys(quiet).length > 0 &&
+                Object.keys(ask).length > 0 &&
                 !refusesQuiet &&
                 /think|reason/i.test(lastFailure)
               ) {
@@ -369,7 +424,7 @@ export function createSeedModel({
 
   /**
    * The `generate` the seeder's planners take: `({system, input}) => Promise<text>`.
-   * @param {{system: string, input: unknown, maxTokens?: number | 'max', first?: boolean, stage?: string}} call
+   * @param {{system: string, input: unknown, maxTokens?: number | {budget: number}, first?: boolean, stage?: string}} call
    */
   const generate = ({ system, input, maxTokens, first, stage }) =>
     chat({

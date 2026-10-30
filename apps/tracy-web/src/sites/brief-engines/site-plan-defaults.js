@@ -22,7 +22,7 @@
  */
 
 import { takenOff } from './site-plan-check.js'
-import { dedupe, mappedAction, orderedPages } from './site-plan-defaults-parts.js'
+import { dedupe, mappedAction, orderedPages, repairIds } from './site-plan-defaults-parts.js'
 
 /** The element kinds the author is sent: everything else is filled by code. */
 export const AUTHOR_KINDS = new Set(['page', 'section', 'cards', 'picture', 'record-page'])
@@ -62,12 +62,18 @@ export function onTemplatePage(elements) {
 /**
  * The author's answer completed by code: every decision that follows from the template and the brief, under the author's
  * own; the writing order in dependency order.
- * @param {any} answer - the author's plan
+ * @param {any} authored - the author's plan
  * @param {{inventory: {elements: any[]}, site: any, photos?: any[] | null}} input - with the brief photos
  *   (`brief-photos.js`)
  */
-export function completePlan(answer, { inventory, site, photos = [] }) {
+export function completePlan(authored, { inventory, site, photos = [] }) {
   const elements = new Map(inventory.elements.map((e) => [e.id, e]))
+  // A near-miss id (other case, a missing or other kind prefix) is put right first, and listed on the plan (`repairIds`).
+  const { answer, repaired } = repairIds(authored, {
+    photoIds: list(photos).map((p) => String(p?.id)),
+    pictureIds: inventory.elements.filter((e) => e.kind === 'picture').map((e) => e.id),
+    elementIds: [...elements.keys()]
+  })
   const onPage = onTemplatePage(elements)
   const templatePages = inventory.elements.filter((e) => e.kind === 'page')
   // An entry of "pages" that is another element (a record page family) is a decision of that element.
@@ -193,7 +199,8 @@ export function completePlan(answer, { inventory, site, photos = [] }) {
       template: outOfTemplate,
       brief: list(answer?.outOfScope?.brief)
     },
-    writingOrder: orderedPages(shown, list(answer?.writingOrder).map(String))
+    writingOrder: orderedPages(shown, list(answer?.writingOrder).map(String)),
+    ...(repaired.length ? { idRepairs: repaired } : {})
   }
 }
 

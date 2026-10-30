@@ -5,6 +5,8 @@
  * already refuse it (`verdict: 'reject'`) is never used; a used photo goes only into picture slots of the template.
  */
 
+import { closestIds } from './site-plan-defaults-parts.js'
+
 const list = (/** @type {unknown} */ v) => (Array.isArray(v) ? v : [])
 
 /**
@@ -13,12 +15,17 @@ const list = (/** @type {unknown} */ v) => (Array.isArray(v) ? v : [])
 export function photoReasons(plan, photos, elements) {
   const out = []
   const known = new Map(list(photos).map((p) => [p.id, p]))
+  const pictures = [...elements.values()].filter((e) => e?.kind === 'picture').map((e) => e.id)
   /** @type {Map<string, any>} */
   const decided = new Map()
   for (const entry of list(plan?.photos)) {
     const id = String(entry?.photo ?? '')
     if (!known.has(id))
-      out.push({ rule: 'unknown-photo', element: id, message: `${id} is not a photo of the brief` })
+      out.push({
+        rule: 'unknown-photo',
+        element: id,
+        message: `${id} is not a photo of the brief; use an id of ids.photos exactly, the closest: ${closestIds(id, known.keys()).join(', ')}`
+      })
     else if (decided.has(id))
       out.push({ rule: 'photo-decided-twice', element: id, message: `${id} has more than one decision` })
     else decided.set(id, entry)
@@ -48,7 +55,7 @@ export function photoReasons(plan, photos, elements) {
       out.push({
         rule: 'unknown-element',
         element: slot,
-        message: `${photo.id} is placed in ${slot}, which is not a picture slot of the template`
+        message: `${photo.id} is placed in ${slot}, which is not a picture slot of the template; use an id of ids.pictureSlots exactly, the closest: ${closestIds(slot, pictures).join(', ')}`
       })
   }
   return out

@@ -19,7 +19,7 @@ import { createSeedModel } from '../src/lib/seed-model.js'
 import { briefFactSheet } from '../src/sites/brief-engines/brief-fact-sheet.js'
 import { COPY_BUDGET, copyBudgetMs } from '../src/sites/brief-engines/copy-plan-budget.js'
 import { pendingByKind, UNWRITTEN_KINDS } from '../src/sites/brief-engines/copy-plan-stage.js'
-import { firmGenerate, planConcurrently } from '../src/sites/brief-engines/shared.js'
+import { copyBudget, firmGenerate, planConcurrently } from '../src/sites/brief-engines/shared.js'
 
 const contract = contractFor(defaultContracts(), 'quickstart/ja-boxing/j6', '1.0.8')
 const map = JSON.parse(readFileSync(path.join(contract.dir, 'content-map.json'), 'utf8'))
@@ -70,8 +70,8 @@ const provider = ({ cut = () => false } = {}) => {
       return Response.json({ data: [{ id: 'gw/writer', root: 'writer', max_output_tokens: MODEL_MAX }] })
     const body = JSON.parse(init.body)
     seen.bodies.push(init.body)
-    seen.caps.push(body.max_tokens)
     const input = JSON.parse(body.messages[1].content)
+    seen.caps.push({ cap: body.max_tokens, budget: copyBudget(input) })
     seen.sizes.push(input.slots.length)
     seen.briefs.push(input.brief)
     if (input.fix) seen.fixes.push(input.fix)
@@ -142,8 +142,11 @@ test('a batch whose answer is cut at the reply cap is split until it fits: no li
   // Within the words budget: no call cut by it, and no more rounds than the budget allows.
   assert.equal(out.cut, 0)
   assert.ok(out.rounds <= 4, `rounds: ${out.rounds}`)
-  // The reply cap is the model's own maximum output, read from its listing.
-  assert.ok(double.seen.caps.every((c) => c === MODEL_MAX))
+  // The reply cap is the call's own budget from the slots it sends, never the model's maximum (OpenRouter reserves credit
+  // for the whole cap: asking for the maximum was refused with HTTP 402).
+  assert.ok(double.seen.caps.every(({ cap, budget }) => cap === budget && cap < MODEL_MAX))
+  const sizes = double.seen.caps.map((c) => c.cap)
+  assert.ok(Math.min(...sizes) < Math.max(...sizes), 'a smaller batch asks a smaller budget')
   // Every call carries the brief's fact sheet whole: offerings, people, reviews, key messages.
   for (const brief of double.seen.briefs) {
     assert.deepEqual(brief.factSheet, FACT_SHEET)

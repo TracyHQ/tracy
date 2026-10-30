@@ -8,6 +8,7 @@
  *
  * A failed or unreadable call is no reason to stop the build: the writers write without a direction, as before.
  */
+import { outputBudget } from '../../lib/seed-model.js'
 import { seeder } from '../../lib/seeder.js'
 import { jsonObjectIn } from './shared.js'
 
@@ -23,6 +24,8 @@ const SYSTEM =
 /** The longest voice and lead kept: a direction is short, the writers read it on every call. */
 const VOICE_MAX = 400
 const LEAD_MAX = 300
+/** Items budgeted per page of the direction: its lead and a few source ids. */
+const DIRECTION_SOURCES = 4
 
 /**
  * The site direction, or null when there is no fact digest, no model, or no readable answer.
@@ -62,7 +65,15 @@ export async function writeSiteDirection({ model, site, pages, signal, note }) {
             })
           }
         ],
-        maxTokens: 'max',
+        // The voice and one lead per page with its source ids, plus the allowance of a model that reasons though asked
+        // not to: never the model maximum, which OpenRouter reserves credit for (ticket TracyHQ/tracy#234).
+        maxTokens: {
+          budget: outputBudget({
+            characters: VOICE_MAX + list.length * LEAD_MAX,
+            items: list.length * DIRECTION_SOURCES,
+            reasoning: 'unasked'
+          })
+        },
         temperature: 0.2,
         signal
       })

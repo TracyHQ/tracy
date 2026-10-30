@@ -89,6 +89,8 @@ pages it depends on, with no cycle.
 Every brief photo gets exactly one decision: `use` with the picture slot ids it fills, or `skip` with a reason (blurry,
 too small, wrong subject, another business, text or a watermark on it, a duplicate, no slot fits). A photo whose labels
 already refuse it (`verdict: "reject"`) is never used. Use the business's own photos first; draw only where no photo fits.
+Name a photo only by an id of `ids.photos` and a picture slot only by an id of `ids.pictureSlots`, copied exactly; an id
+that is not listed is refused, and a picture slot of a text slot's number does not exist.
 
 ## 9. Two out-of-scope lists
 

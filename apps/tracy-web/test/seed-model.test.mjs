@@ -6,12 +6,17 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
 import {
+  CHARS_PER_TOKEN,
   createLimiter,
   createSeedModel,
   FALLBACK_MAX_OUTPUT,
+  ITEM_TOKENS,
   isCutFinish,
+  MIN_BUDGET,
   maxOutputOf,
   noReasoningBody,
+  outputBudget,
+  REASONING_ALLOWANCE,
   reasoningBody
 } from '../src/lib/seed-model.js'
 
@@ -459,7 +464,7 @@ test('an answer cut at the reply cap throws TRUNCATED at once: never returned, n
   for (const finish of ['stop', 'tool_calls', null, undefined]) assert.equal(isCutFinish(finish), false)
 })
 
-test("maxTokens 'max' asks for the model's own maximum output, read once from its listing; none stated is the fallback", async () => {
+test('a budget is asked as the work needs and clamped to the model maximum read once from its listing; none stated is the fallback', async () => {
   const listing = { data: [{ id: 'gw/claude-x', root: 'claude-x', max_output_tokens: 128000 }] }
   assert.equal(maxOutputOf(listing, 'claude-x'), 128000)
   assert.equal(
@@ -467,7 +472,7 @@ test("maxTokens 'max' asks for the model's own maximum output, read once from it
     16000
   )
   assert.equal(maxOutputOf({ data: [{ id: 'deepseek-chat' }] }, 'deepseek-chat'), null)
-  for (const [answer, want] of [
+  for (const [answer, ceiling] of [
     [listing, 128000],
     [{ data: [] }, FALLBACK_MAX_OUTPUT]
   ]) {
@@ -485,10 +490,56 @@ test("maxTokens 'max' asks for the model's own maximum output, read once from it
       },
       sleep: instant
     })
-    await m.chat({ messages: [{ role: 'user', content: 'a' }], maxTokens: 'max' })
-    await m.chat({ messages: [{ role: 'user', content: 'b' }], maxTokens: 'max' })
+    await m.chat({ messages: [{ role: 'user', content: 'a' }], maxTokens: { budget: 6000 } })
+    await m.chat({ messages: [{ role: 'user', content: 'b' }], maxTokens: { budget: 900000 } })
     await m.chat({ messages: [{ role: 'user', content: 'c' }], maxTokens: 500 })
-    assert.deepEqual(caps, [want, want, 500])
+    assert.deepEqual(caps, [Math.min(6000, ceiling), ceiling, 500])
     assert.equal(listed, 1, 'the listing is read once')
+  }
+})
+
+test('the output budget grows with the work asked and the reasoning allowance, never the model maximum', () => {
+  const small = outputBudget({ characters: 300, items: 3 })
+  const large = outputBudget({ characters: 30000, items: 300 })
+  assert.equal(small, MIN_BUDGET, 'a short answer still gets the floor')
+  assert.ok(large > small)
+  assert.ok(
+    large >= Math.ceil(30000 / CHARS_PER_TOKEN + 300 * ITEM_TOKENS),
+    'room for every character and item'
+  )
+  assert.equal(
+    outputBudget({ characters: 30000, items: 300, reasoning: 'low' }),
+    large + REASONING_ALLOWANCE.low
+  )
+  assert.equal(
+    outputBudget({ characters: 30000, items: 300, reasoning: 'unasked' }),
+    large + REASONING_ALLOWANCE.unasked
+  )
+})
+
+test('a reasoning model asked for an effort sends it in its provider words; a quiet model ignores it', async () => {
+  assert.deepEqual(reasoningBody('https://openrouter.ai/api/v1', 'low'), { reasoning: { effort: 'low' } })
+  assert.deepEqual(reasoningBody('https://api.openai.com/v1', 'low'), { reasoning_effort: 'low' })
+  assert.deepEqual(reasoningBody('https://api.deepseek.com', 'low'), {
+    thinking: { type: 'enabled' },
+    reasoning_effort: 'low'
+  })
+  for (const reasoning of [true, false]) {
+    const seen = []
+    const m = createSeedModel({
+      model: { apiKey: KEY, baseUrl: 'https://openrouter.ai/api/v1', words: 'deepseek/deepseek-v4-pro' },
+      reasoning,
+      fetchImpl: async (url, init) => {
+        seen.push(JSON.parse(init.body))
+        return reply('{}')
+      },
+      sleep: instant
+    })
+    await m.chat({ messages: [{ role: 'user', content: 'x' }], effort: 'low' })
+    await m.chat({ messages: [{ role: 'user', content: 'y' }] })
+    assert.deepEqual(
+      seen.map((b) => b.reasoning),
+      reasoning ? [{ effort: 'low' }, { enabled: true }] : [{ enabled: false }, { enabled: false }]
+    )
   }
 })

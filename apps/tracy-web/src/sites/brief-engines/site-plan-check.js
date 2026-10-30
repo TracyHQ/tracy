@@ -25,6 +25,7 @@
 import { seeder } from '../../lib/seeder.js'
 
 import { photoReasons } from './site-plan-check-photos.js'
+import { closestIds } from './site-plan-defaults-parts.js'
 import { buttonReasons, factReasons, glossaryReasons, orderReasons } from './site-plan-check-rules.js'
 
 /**
@@ -59,7 +60,7 @@ export async function checkSitePlan(plan, { inventory, site, photos = null }) {
       reasons.push({
         rule: 'unknown-element',
         element: id,
-        message: `${id} is not an element of the template`
+        message: `${id} is not an element of the template; the closest ids: ${closestIds(id, elements.keys()).join(', ')}`
       })
     else if (decided.has(id))
       reasons.push({ rule: 'decided-twice', element: id, message: `${id} has more than one decision` })

@@ -11,6 +11,7 @@
  */
 import { readFileSync } from 'node:fs'
 
+import { outputBudget } from '../../lib/seed-model.js'
 import { jsonObjectIn } from './shared.js'
 import { checkSitePlan } from './site-plan-check.js'
 import { authorElements, completePlan } from './site-plan-defaults.js'
@@ -29,6 +30,19 @@ const SAMPLE_MAX = 60
 const SECTION_SAMPLES = 2
 /** The stage the author's calls are counted under (`usage().stages`). */
 export const PLAN_STAGE = 'site-plan'
+/**
+ * 🔒 THE PLAN IS MADE WITH LOW REASONING EFFORT (ticket TracyHQ/tracy#234). Measured 30/10/2026 on the stand
+ * (deepseek-v4-pro via OpenRouter, the pilot brief): at the provider's default effort the plan took 2 rounds, 608 s and 72k
+ * tokens; at low effort 1 round, 173 s and 38k tokens. The choices are few and code fills the rest (`site-plan-defaults.js`).
+ */
+export const PLAN_EFFORT = 'low'
+/**
+ * Characters of the answer budgeted per element the author is sent (`planBudget`): a kept page writes its purpose, lead,
+ * facts, items and seo; a card names one item per card; a photo its slots or reason; a glossary entry its description.
+ */
+const PLAN_CHARS = { page: 600, section: 80, card: 80, photo: 160, glossary: 160 }
+/** Times the budget may grow for an answer cut at it: once, to twice its size. */
+const BUDGET_GROWTHS = 1
 
 const CONTRACT = `Answer one JSON object, the site plan:
 {"version": "site-plan/1",
@@ -42,7 +56,8 @@ const CONTRACT = `Answer one JSON object, the site plan:
  "writingOrder": ["<page id>"],
  "outOfScope": {"brief": [{"sourceId": "<id>", "reason": "..."}]}}
 Keep it short: write only what you choose. "pages" lists the pages you keep or add; every other template page is
-dropped. Every photo you are sent appears in "photos" once. In "decisions" give: every card row ("cards") you are sent
+dropped. Every photo you are sent appears in "photos" once. Name photos and picture slots only by the ids listed in "ids"
+("ids.photos", "ids.pictureSlots"), copied exactly: an id that is not listed is refused. In "decisions" give: every card row ("cards") you are sent
 that is on a kept page, with its "count" and "items"; every section you hide, with its reason; and only where you differ
 from the default, a picture you hide or want drawn differently, or a record page you hide.
 Everything else is filled by code before the check, so leave it out: a section not listed is kept; what a section holds follows it; a picture shows
@@ -126,6 +141,35 @@ export function authorView(inventory) {
   }
 }
 
+/**
+ * The output budget of the plan call (`outputBudget`), from the work asked: the pages, sections, cards and photos the author
+ * is sent and the glossary the brief's records make, plus the reasoning allowance of `PLAN_EFFORT`. Never the model maximum:
+ * OpenRouter reserves credit for the whole cap before it answers, and asking for deepseek-v4-pro's 384000 was refused with
+ * HTTP 402 (30/10/2026).
+ * @param {ReturnType<typeof authorView>} view @param {any[]} photos @param {any} site
+ */
+export function planBudget(view, photos, site) {
+  const cards = view.sections
+    .flatMap((s) => s.cards ?? [])
+    .reduce((n, c) => n + (Number(/capacity (\d+)/.exec(c)?.[1]) || 0), 0)
+  const sheet = site?.factSheet ?? {}
+  const glossary = ['offerings', 'people'].reduce(
+    (n, k) => n + (Array.isArray(sheet[k]) ? sheet[k].length : 0),
+    0
+  )
+  const pages = view.pages.length + view.recordPages.length
+  return outputBudget({
+    characters:
+      pages * PLAN_CHARS.page +
+      view.sections.length * PLAN_CHARS.section +
+      cards * PLAN_CHARS.card +
+      photos.length * PLAN_CHARS.photo +
+      glossary * PLAN_CHARS.glossary,
+    items: pages + view.sections.length + cards + photos.length + glossary,
+    reasoning: PLAN_EFFORT
+  })
+}
+
 /** The usage counters of a model, read now. */
 const usageOf = (/** @type {any} */ model) => model?.usage?.() ?? {}
 
@@ -182,6 +226,8 @@ export async function writeSitePlan({
     /** @type {string[]} what the run has to say, for the operator; also handed to `note` when one is given */
     notes: [],
     rounds: /** @type {any[]} */ ([]),
+    /** What the plan call asks: the reasoning effort (null on the text door, which is asked not to reason) and its budget. */
+    request: { effort: /** @type {string | null} */ (null), maxTokens: 0 },
     totals: { calls: 0, ms: 0, promptTokens: 0, completionTokens: 0, reasoningTokens: 0, costUsd: 0 }
   }
   const say = (/** @type {string} */ s) => {
@@ -195,15 +241,28 @@ export async function writeSitePlan({
   if (door !== 'woEditorial')
     say('the editorial model is not assigned, so the site plan was made on the text model')
   const { factSheet, statistics, direction: _, ...business } = site ?? {}
+  const view = authorView(inventory)
+  // Only the photos the labels accept are a choice; code skips the refused ones with their reasons.
+  const choices = (photos ?? []).filter((p) => p?.verdict !== 'reject')
+  run.request = {
+    effort: door === 'woEditorial' ? PLAN_EFFORT : null,
+    maxTokens: planBudget(view, choices, site)
+  }
   const messages = [
     { role: 'system', content: `${rulebook}\n\n# Output\n\n${CONTRACT}` },
     {
       role: 'user',
       content: JSON.stringify({
-        template: authorView(inventory),
+        template: view,
         brief: { ...business, statistics: statistics ?? [], factSheet: factSheet ?? null },
-        // Only the photos the labels accept are a choice; code skips the refused ones with their reasons.
-        photos: (photos ?? []).filter((p) => p?.verdict !== 'reject').map((p) => compact(p))
+        photos: choices.map((p) => compact(p)),
+        // 🔒 THE ONLY IDS A PHOTO DECISION MAY NAME (ticket #234: round 1 of the pilot plan invented three picture slots).
+        ids: {
+          pictureSlots: authorElements(inventory)
+            .filter((e) => e.kind === 'picture')
+            .map((e) => e.id),
+          photos: choices.map((p) => p.id)
+        }
       })
     }
   ]
@@ -213,17 +272,33 @@ export async function writeSitePlan({
     const started = Date.now()
     let answer = ''
     let error = null
-    try {
-      answer = await model.chat({ messages, maxTokens: 'max', signal, stage: PLAN_STAGE })
-    } catch (e) {
-      error = e instanceof Error ? e.message : String(e)
+    let truncated = 0
+    // An answer cut at the budget is asked again once with twice the room (clamped to the model maximum by the model).
+    for (let growth = 0; growth <= BUDGET_GROWTHS; growth += 1) {
+      try {
+        answer = await model.chat({
+          messages,
+          maxTokens: { budget: run.request.maxTokens },
+          ...(run.request.effort ? { effort: run.request.effort } : {}),
+          signal,
+          stage: PLAN_STAGE
+        })
+        error = null
+        break
+      } catch (e) {
+        error = e instanceof Error ? e.message : String(e)
+        if (/** @type {any} */ (e)?.code !== 'TRUNCATED' || growth === BUDGET_GROWTHS) break
+        truncated += 1
+        run.request.maxTokens *= 2
+      }
     }
     const spent = { ms: Date.now() - started, ...spentBetween(before, usageOf(model)) }
     run.model ??= usageOf(model).model ?? null
-    run.totals.calls += 1
+    run.totals.calls += 1 + truncated
     run.totals.ms += spent.ms
     for (const k of ['promptTokens', 'completionTokens', 'reasoningTokens']) run.totals[k] += spent[k]
     run.totals.costUsd = Math.round((run.totals.costUsd + (spent.costUsd ?? 0)) * 1e6) / 1e6
+    if (truncated) Object.assign(spent, { truncated })
     if (error) {
       run.rounds.push({ round, ok: false, error, ...spent })
       run.status = 'failed'
@@ -241,7 +316,14 @@ export async function writeSitePlan({
           reasons: [{ rule: 'unreadable', message: 'the answer is not one JSON object of the plan' }]
         }
     const reasons = result.reasons.slice(0, REASONS_MAX)
-    run.rounds.push({ round, ok: result.ok, reasons, reasonCount: result.reasons.length, ...spent })
+    run.rounds.push({
+      round,
+      ok: result.ok,
+      reasons,
+      reasonCount: result.reasons.length,
+      ...(plan?.idRepairs ? { idRepairs: plan.idRepairs } : {}),
+      ...spent
+    })
     last = plan
     if (result.ok) {
       run.status = 'accepted'

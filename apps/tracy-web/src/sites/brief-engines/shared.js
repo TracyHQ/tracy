@@ -3,6 +3,7 @@
  * cut into the batches a model can answer in seconds, and how a model's call is made firm about facts.
  */
 import { FACT_RULES, VOICE_RULES } from './guard.js'
+import { outputBudget } from '../../lib/seed-model.js'
 
 /** Slots per model call. The seeder's own number (`plan-*-contract.mjs` `BATCH`), kept because its prompts are tuned to it. */
 export const BATCH = 35
@@ -231,10 +232,27 @@ export function recordTextUsage(ctx, model) {
 }
 
 /**
+ * The output budget of one copy call (ticket TracyHQ/tracy#234): every slot it sends at its `maxCharacters` (a slot with
+ * none at twice its sample), one item per slot, and the allowance of a model that reasons though asked not to (R13: the
+ * stand's model reasoned 2.2-2.5k tokens per batch, and a flat 4096 cap cut five batches). A call with no slots is budgeted
+ * by its input's size. An answer that still stops at the budget throws `TRUNCATED` and the planner splits the batch.
+ * @param {unknown} input
+ */
+export function copyBudget(input) {
+  const slots = /** @type {any} */ (input)?.slots
+  if (!Array.isArray(slots) || slots.length === 0)
+    return outputBudget({ characters: JSON.stringify(input ?? '').length, reasoning: 'unasked' })
+  const characters = slots.reduce((sum, s) => {
+    const max = Number(s?.maxCharacters)
+    return sum + (max > 0 ? max : Math.max(80, 2 * String(s?.sample ?? '').length))
+  }, 0)
+  return outputBudget({ characters, items: slots.length, reasoning: 'unasked' })
+}
+
+/**
  * The planners' `generate`, over a seed model, with the fact rules and the copy voice (`VOICE_RULES`) added to every
- * instruction and the
- * run's abort signal on every call. The reply cap is the model's own maximum output (`seed-model.js` `maxTokens: 'max'`):
- * the writer reasons from the brief before it answers, and at 4096 that reasoning cut five R13 batches mid-JSON.
+ * instruction and the run's abort signal on every call. The reply cap is the call's own budget (`copyBudget`), clamped to
+ * the model's maximum: never the model maximum itself, which OpenRouter reserves credit for before it answers.
  * @param {{ chat: Function }} model
  * @param {AbortSignal} [signal]
  * @returns {(call: {system: string, input: unknown}) => Promise<string>}
@@ -246,7 +264,7 @@ export function firmGenerate(model, signal) {
         { role: 'system', content: `${system}${FACT_RULES}${VOICE_RULES}` },
         { role: 'user', content: JSON.stringify(input) }
       ],
-      maxTokens: 'max',
+      maxTokens: { budget: copyBudget(input) },
       signal
     })
 }

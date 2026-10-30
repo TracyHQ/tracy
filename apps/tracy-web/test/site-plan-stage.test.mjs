@@ -140,10 +140,11 @@ function scriptedAuthor(answers) {
   const used = { calls: 0, promptTokens: 0, completionTokens: 0, reasoningTokens: 0 }
   return {
     calls,
-    chat: async ({ messages, stage }) => {
-      calls.push({ messages: messages.map((m) => ({ ...m })), stage })
+    chat: async ({ messages, stage, maxTokens, effort }) => {
+      calls.push({ messages: messages.map((m) => ({ ...m })), stage, maxTokens, effort })
       const answer = answers[Math.min(calls.length - 1, answers.length - 1)]
       used.calls += 1
+      if (answer instanceof Error) throw answer
       used.promptTokens += 30_000
       used.completionTokens += 9_000
       used.reasoningTokens += 4_000
@@ -378,4 +379,67 @@ test('an answer with only the real choices is completed by code and accepted in 
   assert.ok(plan.outOfScope.template.some((o) => o.element === TEAM && /no team/.test(o.reason)))
   // The writing order is put in dependency order by code: the summarised page before its summary.
   assert.ok(plan.writingOrder.indexOf(CLASSES) < plan.writingOrder.indexOf(HOME))
+})
+
+/** A plan answer with its ids changed: `edit` gets the plan and returns it. */
+const planWith = (edit) => edit(structuredClone(planOf({ team: false })))
+const cut = () =>
+  Object.assign(new Error('TRUNCATED: the answer stopped at the reply limit'), { code: 'TRUNCATED' })
+
+test('the plan call asks low reasoning effort and a budget from its work, never the model maximum, both on the build record', async () => {
+  const author = scriptedAuthor([planOf({ team: false })])
+  const { records } = await prepareWith({ text: quietText(), editorial: author })
+  const run = records.sitePlan
+  assert.equal(run.status, 'accepted')
+  assert.equal(author.calls[0].effort, 'low')
+  const budget = author.calls[0].maxTokens?.budget
+  assert.ok(
+    Number.isInteger(budget) && budget > 16_384,
+    `a budget with room for the answer and its reasoning: ${budget}`
+  )
+  assert.ok(budget < 100_000, `never the model maximum (384000 was refused with HTTP 402): ${budget}`)
+  assert.deepEqual(run.request, { effort: 'low', maxTokens: budget })
+  // The author is given the only ids a photo decision may name.
+  const input = JSON.parse(author.calls[0].messages[1].content)
+  assert.deepEqual(input.ids.photos, ['photo:a1'])
+  assert.ok(input.ids.pictureSlots.includes('picture:module-156.0'))
+  assert.ok(input.ids.pictureSlots.every((id) => id.startsWith('picture:')))
+})
+
+test('a plan cut at its budget is asked again once with twice the room, in the same round', async () => {
+  const author = scriptedAuthor([cut(), planOf({ team: false })])
+  const { records } = await prepareWith({ text: quietText(), editorial: author })
+  const run = records.sitePlan
+  assert.equal(run.status, 'accepted')
+  assert.equal(run.rounds.length, 1)
+  assert.equal(run.rounds[0].truncated, 1)
+  assert.equal(author.calls[1].maxTokens.budget, author.calls[0].maxTokens.budget * 2)
+  assert.equal(run.totals.calls, 2)
+})
+
+test('a near-miss photo or slot id is put right by code and listed; an invented one is refused with the valid ids named', async () => {
+  const near = planWith((p) => {
+    p.photos[0] = { photo: 'PHOTO:a1', decision: 'use', slots: ['module-156.0'] }
+    return p
+  })
+  const author = scriptedAuthor([near])
+  const { records } = await prepareWith({ text: quietText(), editorial: author })
+  const run = records.sitePlan
+  assert.equal(run.status, 'accepted', JSON.stringify(run.rounds[0]?.reasons))
+  assert.equal(run.rounds.length, 1)
+  assert.deepEqual(run.rounds[0].idRepairs, [
+    { field: 'photos.photo', from: 'PHOTO:a1', to: 'photo:a1' },
+    { field: 'photos.slots', from: 'module-156.0', to: 'picture:module-156.0' }
+  ])
+  // A different number is never guessed: the reason names the closest valid slots, and round two fixes it.
+  const invented = planWith((p) => {
+    p.photos[0] = { photo: 'photo:a1', decision: 'use', slots: ['picture:module-156.97'] }
+    return p
+  })
+  const again = scriptedAuthor([invented, planOf({ team: false })])
+  const second = (await prepareWith({ text: quietText(), editorial: again })).records.sitePlan
+  assert.equal(second.status, 'accepted')
+  const reason = second.rounds[0].reasons.find((r) => r.element === 'picture:module-156.97')
+  assert.match(reason.message, /ids\.pictureSlots/)
+  assert.match(reason.message, /picture:module-156\.0/)
 })
