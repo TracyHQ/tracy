@@ -808,6 +808,62 @@ export function sectionShows(slots, hidden = null, bodies = null) {
   }
 }
 
+/** How many times a lost batch is split again: per page, then per section. */
+export const SPLIT_DEPTH = 2
+
+/**
+ * One answer merged into an earlier one, key by key (copy-plan stage, invariant 1): a key of `next` replaces the earlier
+ * words only when it is a key of the batch, `only` allows it (a page-rule send-back names the keys it was sent for), and
+ * its value is readable (a string; an empty one never replaces written words). A key the retry pended or left out keeps
+ * what the earlier answer wrote. What is invented follows the answer each key's words came from.
+ * @param {{values: Record<string, unknown>, pending: string[], invented?: string[]}} prev
+ * @param {{values: Record<string, unknown>, pending: string[], invented?: string[]}} next
+ * @param {Set<string>} known - the keys of the batch
+ * @param {Set<string> | null} [only] - the keys the retry may replace; null: every key of the batch
+ */
+export function mergeAnswer(prev, next, known, only = null) {
+  const values = { ...prev.values }
+  const invented = new Set(Array.isArray(prev.invented) ? prev.invented : [])
+  const theirs = new Set(Array.isArray(next.invented) ? next.invented : [])
+  const may = (/** @type {string} */ key) => known.has(key) && (only === null || only.has(key))
+  for (const [key, value] of Object.entries(next.values ?? {})) {
+    if (!may(key) || typeof value !== 'string') continue
+    const had = values[key]
+    if (!value.trim() && typeof had === 'string' && had.trim()) continue
+    values[key] = value
+    if (theirs.has(key)) invented.add(key)
+    else invented.delete(key)
+  }
+  const pending = [...new Set([...prev.pending, ...next.pending.filter(may)])].filter(
+    (key) => typeof values[key] !== 'string'
+  )
+  return { ...prev, values, pending, invented: [...invented] }
+}
+
+/**
+ * The parts a lost batch is asked again in: its pages apart when it holds several (`byPage`), else its sections, else its
+ * halves. One part (nothing left to split) means the batch waits as it is.
+ * @template {{ entity?: string }} T @param {T[]} slots @param {(entity: string) => string[]} pageOf @param {boolean} byPage
+ * @returns {T[][]}
+ */
+export function lostBatchParts(slots, pageOf, byPage) {
+  if (byPage) {
+    /** @type {Map<string, T[]>} */
+    const pages = new Map()
+    for (const slot of slots) {
+      const page = pageOf(String(slot.entity ?? ''))[0] ?? ''
+      pages.set(page, [...(pages.get(page) ?? []), slot])
+    }
+    if (pages.size > 1) return [...pages.values()]
+  }
+  const sections = sectionBatches(slots, Math.max(1, Math.ceil(slots.length / 2)))
+  return sections.length > 1
+    ? sections
+    : slots.length > 1
+      ? [slots.slice(0, Math.ceil(slots.length / 2)), slots.slice(Math.ceil(slots.length / 2))]
+      : [slots]
+}
+
 /**
  * The slots in model-sized batches that end at a section boundary whenever the section fits: half
  * of a section cannot be kept consistent with the other half. A section larger than a batch is
@@ -1175,7 +1231,10 @@ export async function planJoomlaContract({
   /** The words a slot holds so far: written by an earlier call of this plan. */
   const soFar = (key) => (typeof changes[key] === 'string' ? changes[key] : undefined)
   const pageRules = (hints ? PAGE_PASS_RULE : '') + (rules ? ` ${rules}` : '')
-  for (const slots of batches) {
+  /** Batches answered with a readable object: a plan with none stops the run, as before. */
+  let readable = 0
+  /** Ask one batch, with its retries: the answer, merged key by key, and what was still wrong with the last one. */
+  const askBatch = async (/** @type {any[]} */ slots) => {
     const known = new Set(slots.map((s) => s.key))
     // 🔒 THE LANGUAGE IS NAMED, ON THE BATCH AND ON EVERY SLOT — the WordPress planner's fix, for the
     // same hole: the brief is in whatever language the customer typed, and a Vietnamese brief put
@@ -1237,6 +1296,8 @@ export async function planJoomlaContract({
     let complaint = null
     let raw = null
     let ruleTries = 0
+    /** @type {Set<string> | null} the keys a page-rule send-back may replace; null: every key of the batch */
+    let only = null
     for (let attempt = 0; attempt < ATTEMPTS; attempt += 1) {
       raw = await generate({
         system:
@@ -1246,21 +1307,40 @@ export async function planJoomlaContract({
         input: complaint ? { ...input, fix: complaint } : input
       })
       const answer = parse(raw)
-      // A retry asked for a stray key or a wrong language must not cost an answer that could be
-      // read: a later answer replaces an earlier one only when it has the right shape.
-      if (body === null || shapeComplaint(answer) === null) body = answer
+      // 🔒 A LINE A READABLE ANSWER WROTE IS NEVER LOST BY A LATER STEP OF THE SAME PLAN (copy-plan stage, R12). A retry is
+      // merged key by key (`mergeAnswer`): it replaces only the keys it was sent back for with readable words, and a retry
+      // that failed, came back empty or was cut by the budget keeps the earlier answer whole. Before, a failed send-back's
+      // empty answer (valid shape, no values) replaced the first one and the whole batch went pending.
+      if (body === null || (shapeComplaint(body) !== null && shapeComplaint(answer) === null)) body = answer
+      else if (shapeComplaint(answer) === null && typeof answer.failed !== 'string')
+        body = mergeAnswer(body, answer, known, only)
+      // A call that failed (`failed`: the model did not answer, or the budget cut it) is not asked again with a fix here:
+      // a lost first answer is retried split below (`answerBatch`), a lost retry keeps what the first answer wrote.
+      if (typeof answer?.failed === 'string') break
       complaint = complaintAbout(answer, known, slots, languages)
+      only = null
       // A page rule (a sibling's shape, a record page's own words) is sent back once; what it still breaks after that
-      // is handed to the rule's own writer below, never a reason to lose the answer.
+      // is handed to the rule's own writer below, never a reason to lose the answer. The send-backs of every batch go out
+      // together, as one concurrent round inside the budget (`planConcurrently`), never one live call after another.
       if (complaint === null && complain && ruleTries < PAGE_RULE_RETRIES && attempt < ATTEMPTS - 1) {
-        const page = complain(slots, answer.values, soFar)
+        const page = complain(slots, body.values, soFar)
         if (page) {
           ruleTries += 1
           complaint = page.message
+          only = new Set(Object.keys(page.keys ?? {}))
         }
       }
       if (complaint === null) break
     }
+    return { body, complaint, raw }
+  }
+  /** Take what one batch's answer wrote into the plan, and say why each line it did not write waits. */
+  const settle = (
+    /** @type {any[]} */ slots,
+    /** @type {{body: any, complaint: string | null, raw: any}} */ got
+  ) => {
+    const known = new Set(slots.map((s) => s.key))
+    const { body, complaint, raw } = got
     /** The lines of this call that still break a page rule, by the writer they are handed to. */
     const handed =
       complain && shapeComplaint(body) === null ? (complain(slots, body.values, soFar)?.keys ?? {}) : {}
@@ -1280,6 +1360,7 @@ export async function planJoomlaContract({
     // This batch keeps its demo words and says why, the way the WordPress planner keeps a batch that
     // never answered; a plan with NO readable batch still stops the run, below. Strays, after the
     // retries have been spent, are dropped with a warning.
+    if (shapeComplaint(body) === null) readable += 1
     if (complaint !== null) {
       if (shapeComplaint(body) !== null) {
         let held = 0
@@ -1294,7 +1375,7 @@ export async function planJoomlaContract({
         console.warn(
           `[plan-joomla-contract] ${held} slot(s) keep their words: no readable answer in ${ATTEMPTS} tries (${said.length} chars, ends ${JSON.stringify(said.slice(-60))})`
         )
-        continue
+        return
       }
       const strays = straysIn(body, known)
       if (strays.length)
@@ -1320,7 +1401,9 @@ export async function planJoomlaContract({
       // fix a length. Recording the rule that rejected each key turns the required list into
       // something a person can act on, and it costs one string per pending slot.
       const why = body.pending.includes(slot.key)
-        ? 'model-pended'
+        ? typeof body.failed === 'string'
+          ? body.failed
+          : 'model-pended'
         : typeof value !== 'string'
           ? 'no-answer'
           : wrong.has(slot.key)
@@ -1378,8 +1461,25 @@ export async function planJoomlaContract({
       }
     }
   }
+  /**
+   * 🔒 ONE LOST CALL NEVER BLANKS WHOLE PAGES (copy-plan stage, R12: four record pages shared one batch and one failed call
+   * left all of them in the demo's words). A batch whose call failed is asked again split, per page, then per section, as
+   * part of the next concurrent round inside the budget; only a part that still fails, or one the budget cut, waits.
+   */
+  const answerBatch = async (/** @type {any[]} */ slots, /** @type {number} */ depth) => {
+    const got = await askBatch(slots)
+    if (got.body?.failed === 'model-failed' && depth < SPLIT_DEPTH && slots.length > 1) {
+      const parts = lostBatchParts(slots, pageOf, byPage && depth === 0)
+      if (parts.length > 1) {
+        for (const part of parts) await answerBatch(part, depth + 1)
+        return
+      }
+    }
+    settle(slots, got)
+  }
+  for (const slots of batches) await answerBatch(slots, 0)
   // Nothing at all could be read: that is the model, not a batch, and the run says so as it always did.
-  if (batches.length > 0 && unreadable.length === batches.length)
+  if (batches.length > 0 && readable === 0 && unreadable.length > 0)
     throw new Error(`Content mapping refused ${ATTEMPTS} times: ${unreadable[0]}`)
   // 🔒 THE TEMPLATE'S BUTTONS ARE SAID IN THE SITE'S LANGUAGE, NEVER WRITTEN AS AN ACTION (K6, PAGE-5, TCH #1013): a social
   // button's label, and the label of a button whose link still leads nowhere (the model's words for it are not written).

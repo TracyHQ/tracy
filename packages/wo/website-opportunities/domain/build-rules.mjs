@@ -329,9 +329,9 @@ export const BUILD_RULES = Object.freeze(
       siteRules: [3],
       severity: 'note',
       guarantee:
-        'The template structure is kept: no empty frame, every kept band with its message, each page intro in its place',
-      checks: ['empty-frames', 'page-intros', 'cta-bands'],
-      owns: kindIn(['empty-frame', 'page-intro-role', 'cta-band']),
+        'The template structure is kept: no empty frame, every kept band with its message, each page intro in its place, no demo line left empty or unwritten',
+      checks: ['empty-frames', 'page-intros', 'cta-bands', 'copy-lines'],
+      owns: kindIn(['empty-frame', 'page-intro-role', 'cta-band', 'unwritten', 'blanked']),
       prompt: {
         writers: ['page-copy', 'cta-band', 'repair'],
         text: "Keep the template's structure: write a missing section in the shape of its siblings, never leave it empty; hide a part only when the grid survives without it."

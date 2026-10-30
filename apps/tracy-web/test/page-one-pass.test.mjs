@@ -14,6 +14,7 @@ import { contractFor, defaultContracts } from '../src/lib/contracts.js'
 import { createJoomlaEngine } from '../src/sites/brief-engines/joomla.js'
 import { pagePass, reachable } from '../src/sites/brief-engines/page-pass.js'
 import { siblingLists } from 'website-opportunities/domain/sibling-copy-shape.mjs'
+import { recordFamilies } from 'website-opportunities/domain/record-page-copy.mjs'
 import { slotOwnership } from '../src/sites/brief-engines/slot-ownership.js'
 
 const contract = contractFor(defaultContracts(), 'quickstart/ja-boxing/j6', '1.0.8')
@@ -293,4 +294,172 @@ for (const [trade, name, about, services, action] of [
     // The band keeps the pass's message, written for the action its button carries.
     const band = mapOf(contract).ctaBands[0]
     assert.match(String(obeys.prepared.changes[band.message[0].key]), new RegExp(action, 'i'))
+  })
+
+/**
+ * 🔒 THE COPY-PLAN STAGE KEEPS ITS INVARIANTS UNDER A FAILING MODEL (spec TracyHQ/tracy#189, R12 stage diff): the same
+ * contract and brief, the writer that ignores the page rules (so its pages are sent back), and three doubles of what went
+ * wrong on the pilot: (a) every send-back fails, (b) send-backs are slower than the budget, (c) one batch is lost.
+ */
+function faulty(model, { failSendBacks = false, sendBackMs = 0, loseBatchWith = null } = {}) {
+  const lost = { count: null, done: false }
+  const stats = { sendBacks: 0, lost: 0 }
+  return {
+    stats,
+    models: async () => {
+      const { text } = await model.models()
+      return {
+        text: {
+          usage: () => ({}),
+          chat: async (call) => {
+            const input = JSON.parse(call.messages[1].content)
+            const pass = call.messages[0].content.startsWith('Replace Joomla quickstart')
+            if (pass && input.fix) {
+              stats.sendBacks += 1
+              if (failSendBacks) throw new Error('the model did not answer')
+              if (sendBackMs && call.signal?.aborted)
+                throw Object.assign(new Error('aborted'), { name: 'AbortError' })
+              if (sendBackMs)
+                await new Promise((resolve, reject) => {
+                  const timer = setTimeout(resolve, sendBackMs)
+                  call.signal?.addEventListener('abort', () => {
+                    clearTimeout(timer)
+                    reject(Object.assign(new Error('aborted'), { name: 'AbortError' }))
+                  })
+                })
+            }
+            const keys = (input.slots ?? []).map((s) => s.key)
+            if (pass && loseBatchWith && keys.includes(loseBatchWith)) {
+              lost.count ??= keys.length
+              if (!lost.done && keys.length === lost.count) {
+                lost.done = true
+                stats.lost += 1
+                throw new Error('the model did not answer')
+              }
+            }
+            return text.chat(call)
+          }
+        }
+      }
+    }
+  }
+}
+
+/** One build of the stage, its prepared plan and what the run recorded on its row. */
+async function stageRun(name, about, plan, models, deadlineMs = 60_000) {
+  const { ctx } = contextOf(name, about)
+  const times = {}
+  const records = {}
+  ctx.time = (k, v) => {
+    times[k] = v
+  }
+  ctx.record = (k, v) => {
+    records[k] = v
+  }
+  ctx.deadlineAt = Date.now() + deadlineMs
+  const engine = createJoomlaEngine({ models, woContent: { sitePlanFor: async () => plan } })
+  const prepared = await engine.prepare(ctx)
+  return { prepared, times, records }
+}
+
+const MAP = mapOf(contract)
+const slotOf = new Map(MAP.slots.map((s) => [s.key, s]))
+/** The demo lines each record page of a family still shows: a text slot the demo filled that the plan did not write. */
+function demoKeptByRecord(prepared) {
+  return recordFamilies(MAP).map((family) =>
+    family.map(
+      (entity) =>
+        MAP.slots.filter(
+          (s) =>
+            s.entity === entity &&
+            s.type === 'text' &&
+            String(s.sample ?? '').trim() &&
+            !(s.key in prepared.changes) &&
+            !(prepared.demoBlanks ?? []).some((b) => b.key === s.key)
+        ).length
+    )
+  )
+}
+const written = (prepared) => Object.keys(prepared.changes).length
+
+for (const [trade, name, about, services, action] of [
+  [
+    'dental clinic',
+    'Lindenhof Dental Care',
+    'Lindenhof Dental Care cleans, fills and whitens teeth for families.',
+    ['Check ups', 'Fillings', 'Whitening', 'Hygiene visits'],
+    'Book a visit'
+  ],
+  [
+    'flower shop',
+    'Moss and Petal Florist',
+    'Moss and Petal Florist arranges bouquets and wedding flowers by hand.',
+    ['Bouquets', 'Wedding flowers', 'Plants', 'Wreaths'],
+    'Order flowers'
+  ]
+])
+  test(`${trade}: a lost send-back, a slow one or a lost batch never costs a line a readable answer wrote`, async () => {
+    const plan = await planFor(name, about, services, action)
+    // The baseline: the same writer, every send-back answered as the first answer was (a page rule changes nothing).
+    const base = await stageRun(name, about, plan, textModel({ obeys: false }).models)
+    assert.ok(written(base.prepared) > 0)
+
+    // (a) every send-back fails: the first answers stand, nothing is pending as model-pended, nothing blanked for it.
+    const a = faulty(textModel({ obeys: false }), { failSendBacks: true })
+    const runA = await stageRun(name, about, plan, a.models)
+    assert.ok(a.stats.sendBacks > 0, 'the writer is sent back')
+    assert.ok(
+      written(runA.prepared) >= written(base.prepared),
+      `lines written ${written(runA.prepared)} >= ${written(base.prepared)}`
+    )
+    for (const [key, value] of Object.entries(base.prepared.changes))
+      if (slotOf.get(key)?.type === 'text')
+        assert.equal(runA.prepared.changes[key], value, `the first answer of ${key} survives`)
+
+    // (b) send-backs slower than the budget: cut, recorded as "deadline", and the first answers stand.
+    const b = faulty(textModel({ obeys: false }), { sendBackMs: 5_000 })
+    const runB = await stageRun(name, about, plan, b.models, 2_500)
+    assert.ok(
+      runB.times.copyCallsCut >= 1,
+      `a call the budget cut is recorded: ${JSON.stringify(runB.times)}`
+    )
+    assert.ok(Number.isFinite(runB.times.copyCallP95Ms), 'the per-call p95 is recorded')
+    for (const key of Object.keys(base.prepared.changes))
+      if (slotOf.get(key)?.type === 'text' && slotOf.get(key)?.entity?.startsWith('article-'))
+        assert.ok(key in runB.prepared.changes, `${key} keeps its first answer past the budget`)
+
+    // (c) one batch is lost: it is retried split, so no record page keeps more demo lines than its siblings.
+    const family = recordFamilies(MAP)[0]
+    const key = MAP.slots.find(
+      (s) => s.entity === family[0] && s.type === 'text' && String(s.sample ?? '').trim()
+    )?.key
+    const c = faulty(textModel({ obeys: false }), { loseBatchWith: key })
+    const runC = await stageRun(name, about, plan, c.models)
+    assert.equal(c.stats.lost, 1, 'one batch is lost')
+    assert.ok(written(runC.prepared) >= written(base.prepared), 'the split retry writes what the batch held')
+    // The template's own record pages differ in how many lines the writer is given; a lost batch adds none to any of them.
+    const before = demoKeptByRecord(base.prepared)
+    demoKeptByRecord(runC.prepared).forEach((counts, f) =>
+      counts.forEach((n, i) =>
+        assert.ok(
+          n <= before[f][i],
+          `record page ${family[i]} keeps ${n} demo line(s), ${before[f][i]} without the loss`
+        )
+      )
+    )
+
+    // No visible demo line whose call was lost is blanked silently: it is kept out of the blanks and recorded "unwritten".
+    for (const run of [runA, runB, runC]) {
+      const lost = new Set([
+        ...(run.records.copyPending?.['model-failed'] ?? []),
+        ...(run.records.copyPending?.deadline ?? [])
+      ])
+      const blanked = (run.prepared.demoBlanks ?? []).filter((s) => lost.has(s.key))
+      assert.deepEqual(
+        blanked.map((s) => s.key),
+        [],
+        'a lost line is never in the blanks'
+      )
+      assert.ok(run.records.copyLines, 'the lines the build emptied or never wrote are on the row')
+    }
   })

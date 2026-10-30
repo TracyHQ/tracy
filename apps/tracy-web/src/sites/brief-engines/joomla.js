@@ -48,6 +48,7 @@ import {
   nameAnswered,
   withTemplateName
 } from './shared.js'
+import { copyPlanBudget, keepUnwritten, recordCopyPlan } from './copy-plan-stage.js'
 import { factsOf, guardChanges, guardWritten } from './guard.js'
 import { drawPictures, pictureBriefs, pictureGroups, shapePictures, uploadPictures } from './pictures.js'
 import { keptPages, pictureReport, realPicturesOf, shapeReal } from './real-pictures.js'
@@ -891,6 +892,8 @@ export function createJoomlaEngine({
       let plan = { changes: {}, evidence: {}, pending: [], reasons: {}, invented: [] }
       /** @type {Record<string, string>} the band message lines the page pass was told an action for (`page-pass.js`) */
       let passActions = {}
+      /** @type {Record<string, any> | null} the page pass's hints, by key: the rule an unwritten line is repaired by */
+      let passHints = null
       let calls = 0
       let failed = 0
       // The pages the customer ticked that the demo trim hides come back in Apply: a button into one keeps its page (#1013).
@@ -1009,48 +1012,54 @@ export function createJoomlaEngine({
               }
             })
           : null
+        passHints = page?.hints ?? null
         passActions = Object.fromEntries(
           Object.entries(page?.hints ?? {})
             .filter(([, h]) => typeof h?.action === 'string')
             .map(([key, h]) => [key, h.action])
         )
-        const answered = await planConcurrently(async (ask) => {
-          const pages = await planJoomlaContract({
-            state: planned,
-            site,
-            generate: ask,
-            dataDir,
-            surface: 'pages',
-            trimmed: true,
-            republished,
-            inventions: 'never',
-            offerings,
-            hidden: hiddenCards,
-            written: pinnedWords,
-            offeringPosts,
-            byPage: true,
-            hints: page?.hints ?? null,
-            complain: page?.complain ?? null,
-            rules: rulesFor({ writer: 'page-copy' })
-          })
-          if (lineByLine.length === 0) return pages
-          try {
-            const articles = await planJoomlaContract({
-              state: { ...planned, slots: lineByLine },
+        const answered = await planConcurrently(
+          async (ask) => {
+            const pages = await planJoomlaContract({
+              state: planned,
               site,
               generate: ask,
               dataDir,
-              trimmed: false,
-              inventions: 'never'
+              surface: 'pages',
+              trimmed: true,
+              republished,
+              inventions: 'never',
+              offerings,
+              hidden: hiddenCards,
+              written: pinnedWords,
+              offeringPosts,
+              byPage: true,
+              hints: page?.hints ?? null,
+              complain: page?.complain ?? null,
+              rules: rulesFor({ writer: 'page-copy' })
             })
-            return joinPlans(pages, articles)
-          } catch {
-            // No batch of the articles could be read: they keep the template's words, and the pages are not lost with them.
-            postsUnread = true
-            return pages
-          }
-        }, generate)
+            if (lineByLine.length === 0) return pages
+            try {
+              const articles = await planJoomlaContract({
+                state: { ...planned, slots: lineByLine },
+                site,
+                generate: ask,
+                dataDir,
+                trimmed: false,
+                inventions: 'never'
+              })
+              return joinPlans(pages, articles)
+            } catch {
+              // No batch of the articles could be read: they keep the template's words, and the pages are not lost with them.
+              postsUnread = true
+              return pages
+            }
+          },
+          generate,
+          copyPlanBudget(ctx)
+        )
         plan = answered.result
+        recordCopyPlan(ctx, answered, plan)
         if (posts.articles > 0) ctx.time('articlesPlanned', postsUnread ? 0 : posts.articles)
         if (postsUnread) ctx.note('the demo articles could not be written and keep the template’s words')
         if (posts.left > 0)
@@ -1551,6 +1560,15 @@ export function createJoomlaEngine({
           `${ctaBands.removed.length} call-to-action band(s) had no message that could be written and were taken off`
         )
       }
+      // 🔒 A LINE WHOSE CALL WAS LOST IS NEVER BLANKED SILENTLY (copy-plan stage, invariant 5, `copy-plan-stage.js`): it keeps
+      // the template's words for now and goes to the repair loop as "unwritten", with its rule, through the build's row.
+      const unwrittenLines = keepUnwritten({ blanks: demoBlanks, plan, hints: passHints })
+      demoBlanks = unwrittenLines.blanks
+      ctx.record?.('copyLines', {
+        unwritten: unwrittenLines.unwritten,
+        blanked: demoBlanks.filter((slot) => String(slot?.sample ?? '').trim()).map((slot) => slot.key)
+      })
+      if (unwrittenLines.unwritten.length) ctx.time('copyLinesUnwritten', unwrittenLines.unwritten.length)
       // The languages the template does not ship are translated from the words as they will stand, while the site installs.
       const derive = []
       if (missing.length > 0 && !text)

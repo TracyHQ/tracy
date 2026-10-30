@@ -71,6 +71,11 @@ export const DEFAULT_LIMITS = Object.freeze({
    * Also the backstop past `prepareMs` for a `prepare` that does not honour its own deadline.
    */
   prepareGraceMs: 90_000,
+  /**
+   * The most the words may wait past the site being up, however much work the copy plan says it has (`ctx.wordsDueAt`, sized
+   * by `copy-plan-budget.js`): the grace stretches to the plan's own due time, never past this.
+   */
+  prepareCeilingMs: 6 * 60_000,
   /** Told to hand back what is ready, how long `prepare` has to do it before the site is handed over with the template's words. */
   prepareStopMs: 10_000,
   /** Read/shape/draw real pictures after provision, before the independent site-write clock starts. */
@@ -203,6 +208,9 @@ export function refusalOf(/** @type {any} */ call, /** @type {any} */ answer) {
  * @property {(call: any, answer: any) => void} [refused] - a door call the site refused or that threw (`recordedDoor`): kept
  *   on the row with its reason
  * @property {number} deadlineAt - epoch ms by which `prepare` should hand back what it has
+ * @property {(name: string, value: unknown) => void} [record] - keep a value whole on the row's timings (a list of keys)
+ * @property {(at: number) => void} [wordsDueAt] - the copy plan's work-sized due time (epoch ms): the grace waits for it
+ * @property {number | null} [copyCallP95Ms] - the p95 of one copy-plan call the last build of this process measured
  */
 
 /**
@@ -252,6 +260,8 @@ export function createBriefBuilds({
   recoverOnStart = true
 }) {
   const cap = { ...DEFAULT_LIMITS, ...limits }
+  /** The p95 of one copy-plan call the last build of this process measured: the next build's budget starts from it. */
+  let learnedCallP95Ms = /** @type {number | null} */ (null)
   /** @type {Map<string, Promise<void>>} the runs this process is doing */
   const running = new Map()
 
@@ -362,9 +372,10 @@ export function createBriefBuilds({
    * @param {Promise<boolean>} siteUp
    * @param {AbortController} stop
    * @param {number} startedAt
+   * @param {() => number} [dueAt] - when the copy plan says its work is done (epoch ms, 0: it has not said)
    * @returns {Promise<{value: unknown} | {down: true}>} `down`: the site will not come up, so nothing will be written
    */
-  async function preparedInTime(preparing, siteUp, stop, startedAt) {
+  async function preparedInTime(preparing, siteUp, stop, startedAt, dueAt = () => 0) {
     let settled = false
     /** @type {Array<ReturnType<typeof setTimeout>>} */
     const timers = []
@@ -373,12 +384,22 @@ export function createBriefBuilds({
         if (!settled) timers.push(setTimeout(resolve, Math.max(1, ms)))
       })
     const tooLong = () => new Error('writing the text took too long')
-    const backstop = after(startedAt + cap.prepareMs + cap.prepareGraceMs - now()).then(() => {
+    const backstop = after(
+      startedAt + cap.prepareMs + Math.max(cap.prepareGraceMs, cap.prepareCeilingMs) - now()
+    ).then(() => {
       throw tooLong()
     })
     const graced = siteUp.then(async (up) => {
       if (!up) return /** @type {const} */ ({ down: true })
-      await after(cap.prepareGraceMs)
+      // 🔒 THE GRACE IS SIZED BY THE WORK (copy-plan stage, invariant 3): at least `prepareGraceMs` after the site is up, and as
+      // long as the copy plan's own budget says its calls need (it may say so after the site came up), never past the ceiling.
+      // R11b and R12 were cut at a fixed 90 s with 8 of 22 and 10 of 19 calls still out.
+      const upAt = now()
+      for (;;) {
+        const end = Math.min(upAt + cap.prepareCeilingMs, Math.max(upAt + cap.prepareGraceMs, dueAt()))
+        if (settled || now() >= end) break
+        await after(end - now())
+      }
       stop.abort(new Error('the site is up and the words had their time'))
       await after(cap.prepareStopMs)
       throw tooLong()
@@ -478,6 +499,8 @@ export function createBriefBuilds({
     // The row's own clock: a worker that is alive keeps touching it, and `gate` reads silence as death.
     const beat = setInterval(() => void updateBrief(pool, siteKey, {}).catch(() => {}), 5_000)
     const phase = {}
+    /** When the copy plan says its words are done (epoch ms; 0 until it says): what the grace after the site is up waits for. */
+    let wordsDue = 0
     const notes = []
     const pictureClock = createEnginePictureClock({ now, onViolation: (message) => notes.push(message) })
     /** @type {Array<{action: string, kind?: string, id?: unknown, code?: string, reason: string}>} */
@@ -566,7 +589,16 @@ export function createBriefBuilds({
           refusals.push(refusalOf(call, answer))
         },
         applied,
-        deadlineAt: startedAt + cap.prepareMs
+        deadlineAt: startedAt + cap.prepareMs,
+        // A value the report keeps whole (a list of keys by reason), beside the measured phases.
+        record: (name, value) => {
+          phase[name] = value
+        },
+        // When the copy plan says its work is done: the grace after the site is up waits for it, up to the ceiling.
+        wordsDueAt: (at) => {
+          if (Number.isFinite(at)) wordsDue = at
+        },
+        copyCallP95Ms: learnedCallP95Ms
       }
       // The words are made while the site is waited for, side by side: the site may come up first, and then the words
       // get `prepareGraceMs` from that moment (`preparedInTime`). `prepare` itself honours `ctx.deadlineAt` too.
@@ -586,7 +618,7 @@ export function createBriefBuilds({
       // is up once the site is (`waitProvisioned` pairs it), so the lock is taken then, beside the words still being made,
       // not minutes later before the first write (R12: the raw demo was served through provisioning and planning).
       const locking = siteUp.then((up) => (up ? lockSiteNow(ctx) : true)).catch(() => false)
-      const outcome = await preparedInTime(preparing, siteUp, prepareStop, startedAt)
+      const outcome = await preparedInTime(preparing, siteUp, prepareStop, startedAt, () => wordsDue)
       const notUp = async () => {
         prepareStop.abort()
         const row = await briefOf(pool, siteKey)
@@ -596,6 +628,9 @@ export function createBriefBuilds({
       const prepared = (made = outcome.value)
       const preparedAt = now()
       time('prepareMs', preparedAt - t2)
+      if (Number.isFinite(phase.copyCallP95Ms) && phase.copyCallP95Ms > 0)
+        learnedCallP95Ms = phase.copyCallP95Ms
+      if (wordsDue > 0) time('wordsBudgetMs', Math.max(0, wordsDue - t2))
       // How long the site waited for its words: what the grace bounds.
       if (siteUpAt > 0) time('wordsAfterUpMs', Math.max(0, preparedAt - siteUpAt))
       // Only from `preparing`: a row the host's failure abandoned is not put back to work.

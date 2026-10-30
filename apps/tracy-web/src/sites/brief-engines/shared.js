@@ -305,8 +305,17 @@ export function budgetSignal(signal, deadlineAt) {
 const keysOf = (call) =>
   Array.isArray(call?.input?.slots) ? call.input.slots.map((slot) => slot?.key).filter(Boolean) : []
 
-/** An answer that writes nothing and leaves every slot of the call with the template's own words. */
-const leaveAll = (call) => JSON.stringify({ values: {}, pending: keysOf(call), invented: [] })
+/**
+ * An answer that writes nothing and leaves every slot of the call with the template's own words. A call that failed says
+ * why (`failed`: "model-failed", or "deadline" for one the budget cut), so the planner can retry it split, and the receipt
+ * can list its keys by reason, never as lines the model chose to leave.
+ * @param {{input?: any}} call @param {string} [reason]
+ */
+const leaveAll = (call, reason) =>
+  JSON.stringify({ values: {}, pending: keysOf(call), invented: [], ...(reason ? { failed: reason } : {}) })
+
+/** Concurrent rounds after the first at most: a send-back, then the split retries of a lost batch and their parts. */
+const LATER_ROUNDS = 3
 
 /**
  * Run a seeder planner with its model calls made ALL AT ONCE instead of one after another.
@@ -314,25 +323,50 @@ const leaveAll = (call) => JSON.stringify({ values: {}, pending: keysOf(call), i
  * The planners (`plan-wordpress-contract`, `plan-joomla-contract`, `plan-joomla-language`) walk their batches in a
  * loop and wait for each answer before asking the next, so a 267-slot plan is eight round trips in a row. Their
  * rules — which slots are theirs, the language check, the retries, what counts as pending — are exactly what keeps a
- * model off a sealed site, so they are not copied here. Instead the planner runs THREE ways round the same code:
+ * model off a sealed site, so they are not copied here. Instead the planner runs round the same code, in ROUNDS:
  *
  *   1. with a `generate` that only writes down what it is asked and answers `quiet` ("nothing, leave it") — the list of
  *      batches the planner would send, exact, at the cost of a few milliseconds;
- *   2. every one of those calls goes to the model at once;
- *   3. the planner runs again for real, and its `generate` answers from step 2.
+ *   2. every one of those calls goes to the model at once (at most `inFlight` in flight);
+ *   3. the planner runs again, answered from what came back; a call it makes that no round has answered yet (a send-back
+ *      with a `fix`, the split retry of a lost batch) is written down and answered `quiet`, and all of those go to the
+ *      model at once, as ONE concurrent round, never one live call after another (R12: every send-back was a serial
+ *      live call, and the budget ran out on them);
+ *   4. step 3 again until a run asks nothing new: that run is the result.
  *
- * A call the planner makes that step 1 never saw — the retry it sends when an answer came back in the wrong language,
- * which carries a `fix` — goes to the model live. A call that fails is answered `quiet` (`failure: 'leave'`, for the
- * text planners: ONE bad batch costs its own slots and never the whole plan; the Joomla planner keeps a batch it cannot
- * read pending, and stops only when no batch could be read) or fails the planner's own call (`failure: 'throw'`, for a translation: an answer that is not one must
- * never be taken for one and kept).
+ * 🔒 THE ROUNDS ARE BUDGETED. After the first round the measured p95 of one call says whether another round still fits
+ * before `deadlineAt` (and `budgetOf`, the work-sized budget the caller is told through `onDue`); a round that does not
+ * fit, or past `LATER_ROUNDS`, is not sent: its calls are answered `quiet(call, 'deadline')`, so the planner keeps the
+ * answers it has (a retry that never came keeps the first answer) and says which keys the budget cut.
+ *
+ * A call that fails is answered `quiet(call, 'model-failed')` (`failure: 'leave'`, for the text planners: ONE bad batch
+ * costs its own slots and never the whole plan) or fails the planner's own call (`failure: 'throw'`, for a translation: an
+ * answer that is not one must never be taken for one and kept).
  * @template T
  * @param {(generate: (call: {system: string, input: any}) => Promise<string>) => Promise<T>} plan
  * @param {(call: {system: string, input: any}) => Promise<string>} generate - the real one
- * @param {{ quiet?: (call: {system: string, input: any}) => string, failure?: 'leave' | 'throw' }} [options]
- * @returns {Promise<{result: T, calls: number, failed: number}>}
+ * @param {{ quiet?: (call: {system: string, input: any}, reason?: string) => string, failure?: 'leave' | 'throw',
+ *   deadlineAt?: number, stop?: AbortSignal, inFlight?: number, now?: () => number,
+ *   budgetOf?: (work: {calls: number, p95Ms: number | null}) => number, onDue?: (at: number) => void,
+ *   p95Ms?: number | null }} [options]
+ * @returns {Promise<{result: T, calls: number, failed: number, cut: number, rounds: number, callMs: number[]}>}
  */
-export async function planConcurrently(plan, generate, { quiet = leaveAll, failure = 'leave' } = {}) {
+export async function planConcurrently(
+  plan,
+  generate,
+  {
+    quiet = leaveAll,
+    failure = 'leave',
+    deadlineAt = Number.POSITIVE_INFINITY,
+    stop,
+    inFlight = Number.POSITIVE_INFINITY,
+    now = Date.now,
+    budgetOf,
+    onDue,
+    p95Ms = null
+  } = {}
+) {
+  const startedAt = now()
   /** @type {Array<{system: string, input: any}>} */
   const asked = []
   await plan(async (call) => {
@@ -342,37 +376,84 @@ export async function planConcurrently(plan, generate, { quiet = leaveAll, failu
   const idOf = (call) => `${call.system}\u0000${JSON.stringify(call.input)}`
   /** @type {Map<string, string | {error: unknown}>} */
   const answers = new Map()
-  // Every call the model was asked, ahead or live, and every one of them that failed: counted the same way, so
-  // "all of them failed" and "none of them failed" mean what they say.
-  let calls = asked.length
+  /** How long each answered call took, in ms: the p95 of these sizes the next round and the next build's budget. */
+  /** @type {number[]} */
+  const callMs = []
+  // Every call the model was asked, and every one of them that failed or the budget cut: counted the same way, so "all of
+  // them failed" and "none of them failed" mean what they say.
+  let calls = 0
   let failed = 0
-  await Promise.all(
-    asked.map(async (call) => {
-      try {
-        answers.set(idOf(call), await generate(call))
-      } catch (error) {
-        // Said once here, and not asked again when the planner reaches the same batch below.
-        failed += 1
-        answers.set(idOf(call), failure === 'throw' ? { error } : quiet(call))
-      }
-    })
-  )
-  const result = await plan(async (call) => {
-    const known = answers.get(idOf(call))
-    if (known !== undefined) {
-      if (typeof known === 'object') throw known.error
-      return known
-    }
-    calls += 1
-    try {
-      return await generate(call)
-    } catch (error) {
+  let cut = 0
+  const p95 = () => {
+    const sorted = [...callMs].sort((a, b) => a - b)
+    return sorted.length ? sorted[Math.min(sorted.length - 1, Math.ceil(sorted.length * 0.95) - 1)] : p95Ms
+  }
+  let due = deadlineAt
+  if (typeof budgetOf === 'function') {
+    due = Math.min(deadlineAt, startedAt + budgetOf({ calls: asked.length, p95Ms }))
+    onDue?.(due)
+  }
+  const late = (error) =>
+    now() >= due ||
+    stop?.aborted === true ||
+    /abort|timeout|deadline/i.test(String(error?.name ?? error?.message ?? error))
+  /** Answer `list` from the model, at most `inFlight` at once; one that fails or is cut is answered `quiet` with its reason. */
+  const send = (list) =>
+    pool(
+      list.map((call) => async () => {
+        calls += 1
+        const t = now()
+        try {
+          const said = await generate(call)
+          callMs.push(now() - t)
+          answers.set(idOf(call), said)
+        } catch (error) {
+          failed += 1
+          const reason = late(error) ? 'deadline' : 'model-failed'
+          if (reason === 'deadline') cut += 1
+          answers.set(idOf(call), failure === 'throw' ? { error } : quiet(call, reason))
+        }
+      }),
+      Number.isFinite(inFlight) ? inFlight : Math.max(1, list.length)
+    )
+  /** Answer `list` without asking: the budget has no room for it. */
+  const skip = (list) => {
+    for (const call of list) {
+      calls += 1
       failed += 1
-      if (failure === 'throw') throw error
-      return quiet(call)
+      cut += 1
+      answers.set(
+        idOf(call),
+        failure === 'throw' ? { error: new Error('the words budget ran out') } : quiet(call, 'deadline')
+      )
     }
-  })
-  return { result, calls, failed }
+  }
+  await send(asked)
+  let rounds = 1
+  for (;;) {
+    /** @type {Map<string, {system: string, input: any}>} */
+    const fresh = new Map()
+    const result = await plan(async (call) => {
+      const known = answers.get(idOf(call))
+      if (known !== undefined) {
+        if (typeof known === 'object') throw known.error
+        return known
+      }
+      fresh.set(idOf(call), call)
+      return quiet(call)
+    })
+    // A planner that keeps asking new calls past every round is answered by its last run: never a loop without end.
+    if (fresh.size === 0 || rounds > LATER_ROUNDS + 3) return { result, calls, failed, cut, rounds, callMs }
+    if (typeof budgetOf === 'function' && rounds === 1) {
+      // The first round measured what one call costs here: the budget is sized again by it.
+      due = Math.min(deadlineAt, startedAt + budgetOf({ calls: asked.length, p95Ms: p95() }))
+      onDue?.(due)
+    }
+    const room = rounds <= LATER_ROUNDS && stop?.aborted !== true && now() + (p95() ?? 0) <= due
+    if (room) await send([...fresh.values()])
+    else skip([...fresh.values()])
+    rounds += 1
+  }
 }
 
 /**

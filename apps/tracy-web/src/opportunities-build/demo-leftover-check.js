@@ -56,6 +56,7 @@ function ownLinks(html) {
  * @param {any} input.contentMap
  * @param {any} input.brief
  * @param {string[]} [input.paths] - the pages the site plan keeps
+ * @param {any} [input.copyLines] - the demo lines the engine emptied or never wrote (`copy-lines-check.js`)
  * @param {() => number} [input.now]
  * @returns {Promise<{version: string, pass: boolean, broken: Array<{path: string, status: number | null, why: string}>, findings: any[], counts: Record<string, number>, pages: string[],
  *   unread: string[], missing: string[], truncated: number, at: string}>}
@@ -70,6 +71,7 @@ export async function runLeftoverCheck({
   sitePlan = null,
   siteOrigin = null,
   paths = [],
+  copyLines = null,
   now = Date.now
 }) {
   const kept = [...new Set(['/', ...paths.map((p) => p.replace(/\/+$/, '') || '/')])]
@@ -145,7 +147,8 @@ export async function runLeftoverCheck({
     missingPath: MISSING_PROBE,
     check,
     contactCheck,
-    heroCheck
+    heroCheck,
+    copyLines
   })
   const mainMenu = raw['main-menu']
   // The footer link columns list every kept page (COO decision, #189 item 12), where the map declares them.
@@ -234,6 +237,8 @@ export async function runLeftoverCheck({
     why: `Link to its own page: ${f.path} "${f.label}"`
   }))
   // The site build rules that had no check before the registry (#189): rule 2, rule 4, booking buttons, demo-name addresses.
+  // A demo line the build emptied or never wrote is a finding, never clean (copy-plan stage, invariant 6).
+  const copyLineFindings = raw['copy-lines'] ?? []
   const ruleGaps = [
     ...raw['record-pictures'],
     ...raw['icon-rows'],
@@ -247,7 +252,8 @@ export async function runLeftoverCheck({
     ...selfLinkFindings,
     ...buttonsVideos,
     ...pageIntros,
-    ...ruleGaps
+    ...ruleGaps,
+    ...copyLineFindings
   ].map(withRule)
   return {
     ...report,
@@ -295,14 +301,27 @@ export async function runLeftoverCheck({
       !repeatedBlocks.some((f) => f.severity === 'major') &&
       ctaBands.length === 0 &&
       pageIntros.length === 0 &&
+      copyLineFindings.length === 0 &&
       !ruleGaps.some((f) => f.severity === 'blocker' || f.severity === 'major'),
     ruleGaps,
+    copyLines: copyLineFindings,
     findings: all.slice(0, FINDINGS_KEPT),
     truncated: Math.max(0, all.length - FINDINGS_KEPT),
     pages: pages.map((p) => p.path),
     unread,
     missing,
     at: new Date(now()).toISOString()
+  }
+}
+
+/** The demo lines the engine emptied or never wrote, as its run row keeps them (`timings.copyLines`), or null. */
+async function copyLinesOf(/** @type {{query: Function}} */ db, /** @type {string} */ siteKey) {
+  try {
+    const { rows } = await db.query('select timings from site_brief where site_key = $1', [siteKey])
+    const lines = rows?.[0]?.timings?.copyLines
+    return lines && typeof lines === 'object' ? lines : null
+  } catch {
+    return null
   }
 }
 
@@ -329,6 +348,7 @@ export async function checkBuildLeftovers(
     sitePlan: build.receipt?.sitePlan ?? null,
     siteOrigin: build.site_key,
     paths: kept,
+    copyLines: await copyLinesOf(db, build.site_key),
     now
   })
   const { rows } = await db.query(

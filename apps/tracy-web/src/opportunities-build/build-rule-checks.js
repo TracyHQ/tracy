@@ -10,6 +10,7 @@ import { checkIdsOf } from 'website-opportunities/domain/build-rules.mjs'
 import { checkButtonsVideos } from './buttons-videos-check.js'
 import { checkContactForms } from './contact-form-check.js'
 import { checkContactPage } from './contact-page-check.js'
+import { checkCopyLines } from './copy-lines-check.js'
 import { checkCtaBands } from './cta-band-check.js'
 import { checkEmptyFrames } from './empty-frame-check.js'
 import { checkFooterNavigation } from './footer-navigation-check.js'
@@ -35,7 +36,7 @@ import { seeder } from '../lib/seeder.js'
 /**
  * @typedef {{pages: any[], contentMap: any, brief: any, sitePlan: any, siteOrigin: string | null, missing: string[],
  *   styles: any[], broken: any[], missingPath: string, check: Function, contactCheck?: Function | null,
- *   heroCheck?: Function | null}} CheckContext
+ *   heroCheck?: Function | null, copyLines?: any}} CheckContext
  */
 
 /** Each final check by id: what it returns is that check's own report (an array of findings, or its report object). */
@@ -79,6 +80,7 @@ export const CHECKS = Object.freeze({
   'pages-served': (/** @type {CheckContext} */ c) => c.broken,
   'empty-frames': (/** @type {CheckContext} */ c) => checkEmptyFrames({ pages: c.pages }),
   'page-intros': (/** @type {CheckContext} */ c) => checkPageIntros({ pages: c.pages, sitePlan: c.sitePlan }),
+  'copy-lines': (/** @type {CheckContext} */ c) => checkCopyLines({ copyLines: c.copyLines ?? null }),
   'cta-bands': (/** @type {CheckContext} */ c) =>
     checkCtaBands({ pages: c.pages, contentMap: c.contentMap, sitePlan: c.sitePlan }),
   'icon-rows': (/** @type {CheckContext} */ c) => checkIconRows({ pages: c.pages }),

@@ -693,7 +693,9 @@ test('a prepare that never ends is given up on, and the site is handed over', db
   const b = builds(
     pool,
     { wordpress: engine({ prepare: () => new Promise(() => {}) }) },
-    { limits: { prepareMs: 20, prepareGraceMs: 20 } }
+    // The backstop waits up to the work-sized ceiling and a cut prepare gets `prepareStopMs` to hand back: both shrunk here,
+    // or the give-up comes after the default 10 s stop, past what `untilSettled` polls.
+    { limits: { prepareMs: 20, prepareGraceMs: 20, prepareCeilingMs: 20, prepareStopMs: 20 } }
   )
   await b.start(input())
   const settled = await untilSettled(b, 'bakery.tracy.test')
