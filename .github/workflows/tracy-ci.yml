@@ -553,6 +553,20 @@ jobs:
           TRACY_CI_TESTED_SCOPE: ${{ steps.plan.outputs.tested_scope }}
         run: node scripts/ci/green-tree.mjs
 
+      # Turbo only warns "502 Bad Gateway" when a write fails; the cache server's own log says which
+      # call to the GitHub Actions cache failed, with its status and the start of the answer (no
+      # token, no signed URL's query: `redact` in `scripts/ci/turbo-cache-server.mjs`).
+      - name: Print the Turbo remote cache log
+        if: always()
+        run: |
+          LOG="$RUNNER_TEMP/turbo-cache.log"
+          if [ -s "$LOG" ]; then
+            echo "$(grep -c 'cache-service failure' "$LOG" || true) cache-service failure(s); full log:"
+            cat "$LOG"
+          else
+            echo "No Turbo remote cache log (the cache did not start, or logged nothing)."
+          fi
+
   # ─────────────────────────────────────────────────────────────────────────────────────────────
   # THE NIGHTLY'S dsh BUILD — added 2026-10-05. Same work as `dsh-lib`, for the commit `plan` pinned.
   #
@@ -1149,6 +1163,19 @@ jobs:
       - name: Remove the deploy key
         if: always()
         run: rm -f "$RUNNER_TEMP/vendor_deploy"
+      # Turbo only warns "502 Bad Gateway" when a write fails; the cache server's own log says which
+      # call to the GitHub Actions cache failed, with its status and the start of the answer (no
+      # token, no signed URL's query: `redact` in `scripts/ci/turbo-cache-server.mjs`).
+      - name: Print the Turbo remote cache log
+        if: always() && matrix.turbo
+        run: |
+          LOG="$RUNNER_TEMP/turbo-cache.log"
+          if [ -s "$LOG" ]; then
+            echo "$(grep -c 'cache-service failure' "$LOG" || true) cache-service failure(s); full log:"
+            cat "$LOG"
+          else
+            echo "No Turbo remote cache log (the cache did not start, or logged nothing)."
+          fi
 
   # A red nightly is ANNOUNCED, not left for someone to notice on the Actions page. Nobody is
   # looking at a 02:30 run, so the verdict goes to the run's summary (and an error annotation).
