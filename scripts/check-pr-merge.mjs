@@ -28,8 +28,9 @@
  *     (job `full suite skipped: …`), and only once that proof is re-checked here (`verifiedSkip`);
  *   - into `develop`, a label the pull request carries (`ci:e2e`, `ci:integration`) was honoured by that
  *     run: its recorded `tested scope` did not leave out the suite the label asks for (`labelsHonoured`);
- *   - every job that ran asked for the dev runner lane: since 26/10/2026 pull-request code never runs on
- *     the production lane, whatever the base (`docs/references/public-repo-ci.md`). The lane is
+ *   - every job that ran asked for the dev runner lane, or ran on a fresh GitHub-hosted `ubuntu-latest`
+ *     (label AND runner group `GitHub Actions`; the light gates since 30/10/2026): since 26/10/2026 pull-request code never runs on the
+ *     production lane, whatever the base (`docs/references/public-repo-ci.md`). The lane is
  *     therefore no record of the target any more; a retargeted pull request is caught by its rows
  *     (into `staging`/`main` every row, and the forced Turbo rows only with the plan's `full run`
  *     mark) and by `branch-fresh`, which re-runs on `edited`;
@@ -83,6 +84,10 @@ export const EXIT = { PASS: 0, FAIL: 1, USAGE: 2, UNKNOWN: 3 }
 export const LANES = { develop: 'tracy-lane-dev', staging: 'tracy-lane-dev', main: 'tracy-lane-dev' }
 /** Every runner lane label, so a job on the wrong one is seen, not ignored. */
 export const ALL_LANES = ['tracy-lane-dev', 'tracy-lane-prod']
+/** The one label of a GitHub-hosted job: a fresh machine on no lane, so it needs none. */
+export const HOSTED = 'ubuntu-latest'
+/** The runner group the jobs API names for GitHub's own machines; a self-hosted runner can carry `HOSTED` too. */
+export const HOSTED_GROUP = 'GitHub Actions'
 
 /**
  * The workflows a ready pull request runs, and the jobs each must show. `tracy-ci.yml` adds its
@@ -454,6 +459,7 @@ async function checkWorkflow(get, workflow, ctx) {
     if (j.status !== 'completed') fail(`${at}: job "${j.name}" is \`${j.status}\`, not finished`)
     if (j.conclusion === 'skipped' && mayBeSkipped) continue
     if (j.conclusion !== 'success') fail(`${at}: job "${j.name}" ended \`${j.conclusion}\``)
+    if (j.labels.length === 1 && j.labels[0] === HOSTED && j.runner_group_name === HOSTED_GROUP) continue
     const lanes = j.labels.filter((l) => ALL_LANES.includes(l))
     if (lanes.length !== 1 || lanes[0] !== lane)
       fail(

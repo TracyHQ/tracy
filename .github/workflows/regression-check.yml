@@ -8,8 +8,8 @@
 # How to write and run a case: `tests/regression/README.md`.
 #
 # IT DOES NOT RUN THE CASES. That needs a stand and a model (`tests/regression/run.mjs`); this gate
-# reads the event payload and git, nothing else, so it lives on the `tracy-light` runners with
-# `description` and `changelog`.
+# reads the event payload and git, nothing else, so it runs on `ubuntu-latest` with `description`
+# and `changelog` (free for a public repository; see `pr-description-check.yml`).
 #
 # 🔒 `fetch-depth: 0`, NOT THE DEFAULT. The gate asks git whether a result's commit is reachable
 # from the head and not from the merge base; a one-commit checkout cannot answer that, and the gate
@@ -36,10 +36,9 @@ concurrency:
 jobs:
   check-regression:
     name: Regression
-    # Pull-request code never runs on the production lane, whatever the base (public-repo-ci.md).
-    runs-on: [self-hosted, linux, tracy-light, tracy-lane-dev]
+    runs-on: ubuntu-latest
     timeout-minutes: 10
-    # Team runners take only branches of this repository; a fork gets `Regression (fork)` below.
+    # Branches of this repository; a fork gets `Regression (fork)` below.
     if: github.event.pull_request.head.repo.full_name == github.repository
     # Runs on drafts too (06/10/2026), for the same reason as `description`: it reads the payload and
     # git only, so it is cheap, and a draft that is missing its case should hear it before the flip.
@@ -48,6 +47,11 @@ jobs:
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
 
       # `$GITHUB_EVENT_PATH` is the event payload the runner already wrote to disk — no token, no
       # API call, so nothing in this step can fail except the logic under test.

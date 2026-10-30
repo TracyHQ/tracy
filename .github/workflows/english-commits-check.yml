@@ -4,7 +4,7 @@
 #
 # It reads `base..head`, never older history, so it needs real history (`fetch-depth: 0`) but
 # stays quiet about older commits already on `develop`. Same runner choice as
-# `pr-description-check.yml`: no install step, a few seconds on a `tracy-light` runner.
+# `pr-description-check.yml`: no install step, a few seconds on `ubuntu-latest`.
 
 name: English Commits Check
 
@@ -23,16 +23,20 @@ concurrency:
 jobs:
   check-english:
     name: english
-    # Pull-request code never runs on the production lane, whatever the base (public-repo-ci.md).
-    runs-on: [self-hosted, linux, tracy-light, tracy-lane-dev]
+    runs-on: ubuntu-latest
     timeout-minutes: 10
-    # Team runners take only branches of this repository; a fork gets `english (fork)` below.
+    # Branches of this repository; a fork gets `english (fork)` below.
     if: github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - name: Check out Git repository
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
         with:
           fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .node-version
 
       - name: Check commits, title and description are English
         run: node scripts/check-english-commits.mjs

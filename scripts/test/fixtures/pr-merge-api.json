@@ -299,7 +299,9 @@
             "name": "changelog",
             "status": "completed",
             "conclusion": "success",
-            "labels": ["self-hosted", "linux", "x64", "tracy-light", "tracy-lane-dev"],
+            "labels": ["ubuntu-latest"],
+            "runner_name": "GitHub Actions 1000000123",
+            "runner_group_name": "GitHub Actions",
             "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753301/job/111680877880"
           }
         ]
@@ -408,7 +410,9 @@
             "name": "description",
             "status": "completed",
             "conclusion": "success",
-            "labels": ["self-hosted", "linux", "x64", "tracy-light", "tracy-lane-dev"],
+            "labels": ["ubuntu-latest"],
+            "runner_name": "GitHub Actions 1000000123",
+            "runner_group_name": "GitHub Actions",
             "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753318/job/111680877811"
           }
         ]
@@ -517,7 +521,9 @@
             "name": "Regression",
             "status": "completed",
             "conclusion": "success",
-            "labels": ["self-hosted", "linux", "x64", "tracy-light", "tracy-lane-dev"],
+            "labels": ["ubuntu-latest"],
+            "runner_name": "GitHub Actions 1000000123",
+            "runner_group_name": "GitHub Actions",
             "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753432/job/111680878282"
           }
         ]
@@ -598,7 +604,9 @@
             "name": "branch-fresh",
             "status": "completed",
             "conclusion": "success",
-            "labels": ["self-hosted", "linux", "x64", "tracy-light", "tracy-lane-dev"],
+            "labels": ["ubuntu-latest"],
+            "runner_name": "GitHub Actions 1000000123",
+            "runner_group_name": "GitHub Actions",
             "html_url": "https://github.com/TracyHQ/tch/actions/runs/37284753567/job/111680879252"
           }
         ]

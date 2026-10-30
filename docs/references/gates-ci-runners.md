@@ -1010,7 +1010,7 @@ Before, there was only one number for the whole gate (median 61.3 s, maximum 93 
 
 ## Runners
 
-- 🔒 **Every workflow runs on self-hosted runners** (since 08/09/2026): `ubuntu-latest` sits behind **one org-wide monthly quota**; when another repo exhausts it, CI here dies silently (jobs end in 3 s with 0 steps and a 404 log — no failure is code-related). Exceptions: fork pull-request jobs, and the two jobs holding a write token — `auto-merge-develop.yml` › `merge` and `ci-label-rerun.yml` › `rerun` (29/10/2026) — which run on `ubuntu-latest` so no token sits on a machine that also runs PR code ([`public-repo-ci.md`](public-repo-ci.md)).
+- 🔒 **Tracy CI, image builds and deploys run on self-hosted runners** (since 08/09/2026, when the then-private repo had spent the org's included Actions minutes and every GitHub-hosted job died in 3 s with 0 steps). **The light gates run on GitHub-hosted `ubuntu-latest` since 30/10/2026**: the repo is public, and standard GitHub-hosted runners are free for public repositories, outside that quota — `changelog`, `description`, `Regression`, `branch-fresh`, `english`, `CI Before Merge`, plus fork pull-request jobs and the two jobs holding a write token (`auto-merge-develop.yml` › `merge`, `ci-label-rerun.yml` › `rerun`, so no token sits on a machine that also runs PR code — [`public-repo-ci.md`](public-repo-ci.md)).
 - 🔒 **The runner fleet is declared in a separate repo since 21/09/2026: [`TracyHQ/tracy-runners`](https://github.com/TracyHQ/tracy-runners)** — `hosts.tsv` is the source of truth, one `compose.yml` for every machine, resource caps **computed** (80% of the machine), never hand-typed. **A label no runner carries makes jobs queue silently.**
 - ⚠ **Labels say what a job needs, not which machine runs it:**
 
@@ -1018,7 +1018,7 @@ Before, there was only one number for the whole gate (median 61.3 s, maximum 93 
 |---|---|---|
 | `tracy-check` | Tracy CI (`checks` + the test rows chosen by the diff; release/nightly run everything), and `decide` of build-dsh | **no docker**; `php` cli in the runner image (since 21/09 — `joomla-contract-bind.test.mjs` runs real PHP; without it falls back to docker; without both → deliberately red) |
 | `tracy-build` | the two image-build jobs | docker socket = **root on the host** |
-| `tracy-light` | `changelog` + `pr-description` + `Regression` | nothing; 9 s |
+| `tracy-light` | Tracy CI's light jobs (`plan`, …); the light gates moved to `ubuntu-latest` on 30/10/2026 | nothing; 9 s |
 | `tracy-dev` / `tracy-staging` / `tracy-prod` | deploys, plus that host's own dispatch jobs (`build-web-images`, EmDash maintenance jobs in `build-app-images.yml`) | exactly ONE runner per target machine |
 | `tracy-lane-dev` / `tracy-lane-prod` | added to EVERY `tracy-check`/`tracy-build`/`tracy-light` job: a push or manual run on `main` or `staging` → `lane-prod`, anything else → `lane-dev` — **a pull request always `lane-dev`, whatever its base, since 26/10/2026** ([`public-repo-ci.md`](public-repo-ci.md); fork pull requests run only on GitHub-hosted runners) (staging joined 06/10/2026: its images are the ones `main` reuses, [`may-staging.md`](may-staging.md)) | since 29/09/2026 — main's images are built on a machine no pull-request code ever runs on |
 

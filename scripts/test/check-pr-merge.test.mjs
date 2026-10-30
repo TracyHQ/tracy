@@ -32,6 +32,8 @@ import {
   expectedHeadOf,
   fixtureTransport,
   ghTransport,
+  HOSTED,
+  HOSTED_GROUP,
   LANES,
   newestRun,
   parseArgs,
@@ -146,7 +148,11 @@ test('policy: the five workflows exist, run on pull requests, and still carry th
     // Pull-request jobs never ask for the production lane (docs/references/public-repo-ci.md).
     for (const job of Object.values(load(yml).jobs)) {
       const labels = [job['runs-on']].flat().map(String)
-      if (!labels.includes('self-hosted')) continue
+      // A GitHub-hosted job has no lane; the merge check knows it only by this one label.
+      if (!labels.includes('self-hosted')) {
+        assert.deepEqual(labels, [HOSTED], `${w.file}: runs-on ${labels}`)
+        continue
+      }
       const lane = labels.at(-1)
       assert.ok(
         lane === LANES.develop ||
@@ -1128,24 +1134,52 @@ test('into main every row is required', async () => {
 })
 
 test('a pull-request job that ran on the production lane is refused, whatever the target', async () => {
-  // Since 26/10/2026 every pull-request job asks for the dev lane (docs/references/public-repo-ci.md).
+  // Since 26/10/2026 every self-hosted pull-request job asks for the dev lane; a GitHub-hosted one is on none.
   for (const file of FILES) {
     const w = intoMain()
     for (const j of jobsOf(w, file).jobs)
-      j.labels = j.labels.map((l) => (l === LANES.develop ? 'tracy-lane-prod' : l))
+      j.labels = j.labels.includes(LANES.develop)
+        ? j.labels.map((l) => (l === LANES.develop ? 'tracy-lane-prod' : l))
+        : ['self-hosted', 'linux', 'tracy-light', 'tracy-lane-prod']
     await refuses(w, 'FAIL', /ran on lane \["tracy-lane-prod"\], not `tracy-lane-dev`/, { base: 'main' })
   }
   const lanes = {
     none: (l) => l.filter((x) => x !== LANES.develop),
-    both: (l) => [...l, 'tracy-lane-prod']
+    both: (l) => [...l, 'tracy-lane-prod'],
+    'hosted plus a lane': () => [HOSTED, 'tracy-lane-prod'],
+    'hosted plus a team label': () => [HOSTED, 'tracy-light'],
+    'self-hosted, no lane': () => ['self-hosted', 'linux', 'tracy-light']
   }
   for (const [name, change] of Object.entries(lanes)) {
     const w = world()
-    const job = jobsOf(w, 'branch-fresh-check.yml').jobs[0]
+    const job = jobsOf(w, 'tracy-ci.yml').jobs[0]
     job.labels = change(job.labels)
     const { v } = await verdictOf(w)
     assert.equal(v.verdict, 'FAIL', `${name}: ${v.reason}`)
     assert.match(v.reason, /ran on lane/)
+  }
+})
+
+test('a job on no lane passes only when the jobs API says GitHub ran it, not on its label alone', async () => {
+  const hosted = world()
+  const gate = jobsOf(hosted, 'changelog-check.yml').jobs[0]
+  assert.deepEqual([gate.labels, gate.runner_group_name], [[HOSTED], HOSTED_GROUP])
+  const { v: pass } = await verdictOf(hosted)
+  assert.equal(pass.verdict, 'PASS', pass.reason)
+  // A self-hosted runner may be registered with the label `ubuntu-latest` and no default labels.
+  const runners = {
+    'a self-hosted runner carrying the hosted label': (j) => {
+      j.runner_name = 'aws-prod-light-01'
+      j.runner_group_name = 'Default'
+    },
+    'no runner group': (j) => delete j.runner_group_name
+  }
+  for (const [name, change] of Object.entries(runners)) {
+    const w = world()
+    change(jobsOf(w, 'changelog-check.yml').jobs[0])
+    const { v } = await verdictOf(w)
+    assert.equal(v.verdict, 'FAIL', `${name}: ${v.reason}`)
+    assert.match(v.reason, /job "changelog" ran on lane \[\]/)
   }
 })
 
