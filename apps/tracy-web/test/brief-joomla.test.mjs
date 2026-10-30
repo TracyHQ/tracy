@@ -656,7 +656,7 @@ test('a two-edition template: the words are planned before the site exists and w
     1,
     'the write is handed the reading already made'
   )
-  for (const phase of ['planMs', 'trimMs', 'inspectMs', 'writeMs', 'retireMs'])
+  for (const phase of ['planMs', 'trimMs', 'inspectMs', 'writeMs', 'retireMs', 'keptSlotsRemoved'])
     assert.ok(phase in times, phase)
   assert.ok(prepared.planned > 0)
 })

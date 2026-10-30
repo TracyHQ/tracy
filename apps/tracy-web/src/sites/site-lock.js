@@ -30,6 +30,8 @@ import { CURRENT_BRIEF } from '../lib/site-brief-row.js'
 export const SITE_LOCK_VERSION = 1
 
 /** What a visitor reads on a locked site. English: no door names the site's language yet. Plain text, no dashes. */
+/** The rebuilding page's title when the brief names no business. */
+export const NEUTRAL_SITE_NAME = 'Website under construction'
 export const REBUILDING_MESSAGE = 'This website is being updated. Please visit again shortly.'
 
 /** The run's note when the site cannot be locked: the build goes on as before. */
@@ -121,14 +123,20 @@ export const SOURCE_LOCK_PLATFORMS = new Set(['joomla'])
  * the provision instruction (the key and the message, written into the restored files before the web server serves);
  * `record` is what the brief row keeps, so the build's readers send the key and the end of a full build unlocks it.
  * Null for a CMS whose provisioning cannot do it yet (the lock is then taken through the door, as before).
- * @param {{platform: string, now?: () => number}} input
- * @returns {{host: {previewKey: string, message: string}, record: SiteLockRecord} | null}
+ * @param {{platform: string, now?: () => number, siteName?: string}} input
+ * @returns {{host: {previewKey: string, message: string, siteName: string}, record: SiteLockRecord} | null}
  */
-export function sourceLock({ platform, now = Date.now }) {
+export function sourceLock({ platform, now = Date.now, siteName = '' }) {
   if (!SOURCE_LOCK_PLATFORMS.has(platform)) return null
   const previewKey = freshPreviewKey()
+  // The rebuilding page's title is the site name: the business's when the brief names it, else a neutral one, never the
+  // restored demo's own name.
+  const name = String(siteName ?? '')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, 200)
   return {
-    host: { previewKey, message: REBUILDING_MESSAGE },
+    host: { previewKey, message: REBUILDING_MESSAGE, siteName: name || NEUTRAL_SITE_NAME },
     record: { ...record('locked'), source: 'provision', previewKey, previewKeyAt: now(), platform }
   }
 }

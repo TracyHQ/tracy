@@ -9,7 +9,13 @@
 import assert from 'node:assert/strict'
 import { after, before, beforeEach, test } from 'node:test'
 import { fileDb } from './_db.mjs'
-import { createSiteLock, PREVIEW_KEY_SHAPE, REBUILDING_MESSAGE, sourceLock } from '../src/sites/site-lock.js'
+import {
+  createSiteLock,
+  NEUTRAL_SITE_NAME,
+  PREVIEW_KEY_SHAPE,
+  REBUILDING_MESSAGE,
+  sourceLock
+} from '../src/sites/site-lock.js'
 import { joomlaSiteLock } from '../src/sites/brief-engines/site-lock-joomla.js'
 import { briefBuildPress } from '../src/opportunities-build/build-site-lock.js'
 import { BRIEF_BUILD } from '../src/opportunities-build/brief-build-path.js'
@@ -75,6 +81,15 @@ const TRADES = [
   },
   { trade: 'tailor', name: 'Needle Point Tailors', siteKey: 'needle-point.tracy.test', label: 'needle-point' }
 ]
+
+test('the rebuilding page is titled with the business name, else a neutral title', () => {
+  assert.equal(
+    sourceLock({ platform: 'joomla', siteName: '  Anna  Tailoring ' }).host.siteName,
+    'Anna Tailoring'
+  )
+  assert.equal(sourceLock({ platform: 'joomla' }).host.siteName, NEUTRAL_SITE_NAME)
+  assert.equal(sourceLock({ platform: 'joomla', siteName: '   ' }).host.siteName, NEUTRAL_SITE_NAME)
+})
 
 test('a Joomla site is locked at the source with a fresh key and the approved message; other CMS not yet', () => {
   const a = sourceLock({ platform: 'joomla', now: () => 1000 })

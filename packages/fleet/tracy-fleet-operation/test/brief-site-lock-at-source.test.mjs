@@ -102,6 +102,15 @@ test('a brief build’s site is restored offline, on the approved message, reada
   assert.equal(setting(config, 'sitename'), "'Crumb and Crust Bakery'")
 })
 
+test('the rebuilding page is titled with the business name, not the restored demo’s, quotes kept safe', () => {
+  const { config } = restore({
+    site: 'Demo Template Name',
+    env: { ...locked, TRACY_SITE_LOCK_SITENAME: "Anna's Tailoring" }
+  })
+  assert.equal(setting(config, 'sitename'), "'Anna\\'s Tailoring'")
+  assert.equal(setting(config, 'offline'), '1')
+})
+
 test('a normal create (no brief build) is restored online, whatever the release was packed with', () => {
   const { config } = restore({ site: 'Needle Point Tailors' })
   assert.equal(setting(config, 'offline'), '0')

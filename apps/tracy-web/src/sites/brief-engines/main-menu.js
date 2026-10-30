@@ -6,6 +6,7 @@ import {
   menuPath
 } from 'website-opportunities/domain/main-menu.mjs'
 import { ruleText } from 'website-opportunities/domain/build-rules.mjs'
+import { inSiteSpelling } from 'website-opportunities/domain/site-style-sheet.mjs'
 import { jsonObjectIn } from './shared.js'
 
 const SYSTEM =
@@ -21,7 +22,7 @@ const fail = (code, detail) => Object.assign(new Error(`${code}: ${detail}`), { 
 
 /**
  * The last menu write, after all copy pins and cleanup, followed by native readback. Every CMS supplies only its main
- * menu placements. Plain demo builds have no site plan and never enter this stage. Failures stop the build clearly.
+ * menu placements. Plain demo builds have no site plan and never enter this stage. A label that fails takes its page title (recorded in `fallbacks`); a page with no valid title is a blocker `finding`.
  * @param {{sitePlan: any, read: Function, write?: Function, model: any, locale?: string, signal?: AbortSignal}} input
  */
 export async function writeMainMenu({ sitePlan, read, write, model, locale = 'en', signal }) {
@@ -64,15 +65,43 @@ export async function writeMainMenu({ sitePlan, read, write, model, locale = 'en
   const firstOf = new Map()
   for (const item of items) if (!firstOf.has(item.pageId)) firstOf.set(item.pageId, item.key)
   const siblings = new Set()
-  const values = items.map((item) => {
-    const label = String(result?.labels?.[firstOf.get(item.pageId) ?? item.key] ?? '').trim()
-    const invalid = invalidMenuLabel(label, item.role, item.maxCharacters ?? 60)
-    const sibling = `${item.menu ?? ''}\u0000${item.parent ?? ''}\u0000${label.toLocaleLowerCase(locale)}`
-    if (invalid || siblings.has(sibling))
-      throw fail('MAIN_MENU_INVALID', `${item.key}: ${invalid ?? 'duplicate-label'}`)
-    siblings.add(sibling)
-    return { ...item, label }
-  })
+  /** Items whose model label failed and took the page's own title, and items no valid name exists for (blockers). */
+  const fallbacks = []
+  const findings = []
+  const pageTitle = (/** @type {any} */ item) => {
+    const page = (sitePlan.pages ?? []).find((/** @type {any} */ p) => p.id === item.pageId)
+    const title = String(page?.title ?? page?.label ?? '').trim()
+    return title ? String(inSiteSpelling(title, sitePlan?.styleSheet, { keep: [business.name] })) : ''
+  }
+  const values = []
+  for (const item of items) {
+    let label = String(result?.labels?.[firstOf.get(item.pageId) ?? item.key] ?? '').trim()
+    const keyOf = (/** @type {string} */ l) =>
+      `${item.menu ?? ''}\u0000${item.parent ?? ''}\u0000${l.toLocaleLowerCase(locale)}`
+    let invalid = invalidMenuLabel(label, item.role, item.maxCharacters ?? 60)
+    if (invalid || siblings.has(keyOf(label))) {
+      // 🔒 THE FALLBACK OF A MENU LABEL IS THE PAGE TITLE (registry rule `menu-label-is-page-name`), never a generic action
+      // and never a build stop: one bad label of the model names its page by its own title.
+      const title = pageTitle(item)
+      const why = invalid ?? 'duplicate-label'
+      invalid = invalidMenuLabel(title, item.role, item.maxCharacters ?? 60)
+      if (invalid || siblings.has(keyOf(title))) {
+        findings.push({
+          kind: 'main-menu',
+          severity: 'blocker',
+          key: item.key,
+          pageId: item.pageId,
+          reason: invalid ?? 'duplicate-label'
+        })
+        continue
+      }
+      fallbacks.push({ key: item.key, pageId: item.pageId, was: label, reason: why, label: title })
+      label = title
+    }
+    siblings.add(keyOf(label))
+    values.push({ ...item, label })
+  }
+  if (!values.length) return { items: values, fallbacks, findings }
   await write(values)
   const after = await read()
   const refused = values.filter(
@@ -82,5 +111,5 @@ export async function writeMainMenu({ sitePlan, read, write, model, locale = 'en
       )
   )
   if (refused.length) throw fail('MAIN_MENU_READBACK', refused.map((i) => i.key).join(', '))
-  return { items: values }
+  return { items: values, fallbacks, findings }
 }

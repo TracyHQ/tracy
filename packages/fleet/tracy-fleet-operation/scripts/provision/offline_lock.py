@@ -34,13 +34,15 @@ from pathlib import Path
 
 KEY_ENV = "TRACY_SITE_LOCK_PREVIEW_KEY"
 MESSAGE_ENV = "TRACY_SITE_LOCK_MESSAGE"
+# The offline page is titled with the site name: the business's, not the restored demo's.
+SITENAME_ENV = "TRACY_SITE_LOCK_SITENAME"
 # The plugin's own shape for a preview key (SiteIdentity::PREVIEW_KEY_PATTERN).
 KEY_SHAPE = re.compile(r"^[A-Za-z0-9_-]{32,128}$")
 # The plugin's limit for the offline message (SiteIdentity::MAX_CHARACTERS).
 MAX_MESSAGE = 1000
 
 # Settings this module writes, by how configuration.php holds them.
-QUOTED = {"offline_message", "tracy_offline_preview_key"}
+QUOTED = {"offline_message", "tracy_offline_preview_key", "sitename"}
 BARE = {"offline", "display_offline_message"}
 
 
@@ -52,7 +54,7 @@ def stored_message(message: str) -> str:
     return joined.replace("\\", "\\\\").replace("'", "\\'")
 
 
-def lock_values(key: str, message: str, now: int | None = None) -> dict[str, str]:
+def lock_values(key: str, message: str, now: int | None = None, sitename: str = "") -> dict[str, str]:
     """The settings that put a restored site on its rebuilding page, readable with `key`."""
     if not KEY_SHAPE.match(key):
         raise ValueError("the preview key must be 32 to 128 characters of A-Z, a-z, 0-9, _ and -")
@@ -60,7 +62,9 @@ def lock_values(key: str, message: str, now: int | None = None) -> dict[str, str
     if not message or len(message) > MAX_MESSAGE:
         raise ValueError(f"the offline message must be 1 to {MAX_MESSAGE} characters")
     at = int(time.time() if now is None else now)
+    name = " ".join(sitename.split())[:200]
     return {
+        **({"sitename": name.replace("\\", "\\\\").replace("'", "\\'")} if name else {}),
         "offline": "1",
         "offline_message": stored_message(message),
         # 1: the offline page shows the custom message (the plugin's lockFields).
@@ -80,7 +84,7 @@ def lock_from_env(env: dict[str, str] | None = None) -> dict[str, str] | None:
     key = env.get(KEY_ENV, "")
     if not key:
         return None
-    return lock_values(key, env.get(MESSAGE_ENV, ""))
+    return lock_values(key, env.get(MESSAGE_ENV, ""), sitename=env.get(SITENAME_ENV, ""))
 
 
 def literal(name: str, value: str) -> str:

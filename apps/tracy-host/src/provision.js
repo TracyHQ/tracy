@@ -96,11 +96,11 @@ const PREVIEW_KEY = /^[A-Za-z0-9_-]{32,128}$/
  * none or it is not one: a key of the plugin's shape, and plain text of 1 to 1000 characters with no
  * control character but a line break (the plugin's limit for the offline message).
  * @param {unknown} raw
- * @returns {{previewKey: string, message: string} | null}
+ * @returns {{previewKey: string, message: string, siteName?: string} | null}
  */
 export function siteLockOf(raw) {
   if (!raw || typeof raw !== 'object') return null
-  const { previewKey, message } = /** @type {any} */ (raw)
+  const { previewKey, message, siteName } = /** @type {any} */ (raw)
   if (typeof previewKey !== 'string' || !PREVIEW_KEY.test(previewKey)) return null
   if (typeof message !== 'string') return null
   const text = message.trim()
@@ -109,7 +109,11 @@ export function siteLockOf(raw) {
     return (code < 32 && code !== 10) || code === 127
   })
   if (text === '' || text.length > 1000 || control) return null
-  return { previewKey, message: text }
+  // The offline page's title: optional, one plain line of 1 to 200 characters.
+  const name = typeof siteName === 'string' ? siteName.trim() : ''
+  if (siteName !== undefined && (name === '' || name.length > 200 || /[\u0000-\u001f\u007f]/.test(name)))
+    return null
+  return { previewKey, message: text, ...(name ? { siteName: name } : {}) }
 }
 
 export const PROVISION_FLAGS = {
@@ -314,6 +318,7 @@ export async function runProvisionJob({ jobId, body, config, jobs, run }) {
     if (siteLock) {
       env.TRACY_SITE_LOCK_PREVIEW_KEY = siteLock.previewKey
       env.TRACY_SITE_LOCK_MESSAGE = siteLock.message
+      if (siteLock.siteName) env.TRACY_SITE_LOCK_SITENAME = siteLock.siteName
     }
     // Signed GET URLs for the import archive, minted by tracy-web — the only process holding the
     // artifact store's keys. Same road as the git token and for the same reason: a signed URL is

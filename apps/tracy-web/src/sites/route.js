@@ -3043,7 +3043,12 @@ export function sitesRoutes({
       // paired. Only a brief build's press (the build that will be judged and unlocked); the popup's Apply stays open.
       const lockAtSource =
         brief && (await briefBuildPress(pool, caller.id, buildId).catch(() => false))
-          ? sourceLock({ platform })
+          ? sourceLock({
+              platform,
+              siteName: String(
+                (brief.answers ?? []).find((/** @type {any} */ a) => a.feeds?.includes('site.name'))?.value ?? ''
+              )
+            })
           : null
       if (lockAtSource) instruction.siteLock = lockAtSource.host
       const answer = await host.hostCall(config, config.defaultHost, '/provision', instruction, { fetchImpl })

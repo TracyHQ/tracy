@@ -41,6 +41,15 @@ test('a brief build’s lock travels to provision.sh as environment, never argv'
   assert.ok(!seen.args.join(' ').includes(KEY), 'the key is env, never argv')
 })
 
+test('the rebuilding page title (the business name) travels the same road', async () => {
+  const seen = await provisionEnv({
+    siteLock: { previewKey: KEY, message: MESSAGE, siteName: 'Anna Tailoring' }
+  })
+  assert.equal(seen.env.TRACY_SITE_LOCK_SITENAME, 'Anna Tailoring')
+  assert.equal(siteLockOf({ previewKey: KEY, message: MESSAGE, siteName: '' }), null)
+  assert.equal(siteLockOf({ previewKey: KEY, message: MESSAGE, siteName: 'a\nb' }), null)
+})
+
 test('a normal create asks for no lock', async () => {
   const seen = await provisionEnv({})
   assert.equal(seen.env.TRACY_SITE_LOCK_PREVIEW_KEY, undefined)

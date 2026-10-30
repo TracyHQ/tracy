@@ -1610,8 +1610,8 @@ export function createJoomlaEngine({
         const label = String(own[0]?.label ?? '').split(' / ')[0]
         factModules.push({ id, title: label.replace(/ \([A-Za-z]{2,3}(?:-[A-Za-z]+)?\)$/, '') })
       }
+      ctx.time('keptSlotsRemoved', settledLines.removedKeys.length)
       if (settledLines.removedKeys.length) {
-        ctx.time('keptSlotsRemoved', settledLines.removedKeys.length)
         ctx.note(
           `${settledLines.hides.length + settledLines.modules.length} block(s) or card(s) whose words could not be written were taken off whole`
         )
@@ -3064,6 +3064,9 @@ export function createJoomlaEngine({
           contentMap: staticState(ctx.contract)
         })
         ctx.time('mainMenuLabels', menu.items.length)
+        ctx.time('mainMenuTitleFallbacks', menu.fallbacks?.length ?? 0)
+        for (const f of menu.findings ?? [])
+          ctx.note(`BLOCKER main menu item ${f.key} (${f.pageId}): no valid page title (${f.reason})`)
         // The footer link columns list every kept page, each with the name the main menu gave it.
         const footer = await writeJoomlaFooterNavigation({
           apply,
