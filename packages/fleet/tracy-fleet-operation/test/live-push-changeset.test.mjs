@@ -1830,6 +1830,50 @@ test('a new menu item goes only into a menu the live site has or this push makes
   assert.ok(items['menuItem:new:105'], 'an item in a live menu goes as before')
 })
 
+test('WordPress: a menu the customer deleted on live that the copy kept is no menu of the live site; its new item waits for it (#119)', () => {
+  const menu = (id, slug) => ({
+    term_id: String(id),
+    taxonomy: 'nav_menu',
+    name: slug,
+    slug,
+    description: '',
+    parent: '0'
+  })
+  const menuItem = (id, slug) => ({
+    ID: String(id),
+    title: `Item ${id}`,
+    position: '1',
+    type: 'post_type',
+    object: 'page',
+    object_id: '10',
+    url: '',
+    parent: '0',
+    menu: slug
+  })
+  const data = {
+    entities: { posts: { base: [10], copy: [10, 62, 63] }, terms: { base: [2], copy: [2, 7] } },
+    kinds: {
+      term: kind([menu(2, 'main')], [menu(2, 'main'), menu(7, 'gone')], ['term_id', 'taxonomy']),
+      menuItem: kind([], [menuItem(62, 'gone'), menuItem(63, 'main')], ['ID'])
+    }
+  }
+  const answer = changeset('wordpress', data)
+  const items = byId(answer)
+  const made = answer.items.find((i) => i.kind === 'term' && i.op === 'create')
+  assert.ok(made, JSON.stringify(answer.items.map((i) => i.id)))
+  assert.ok(items['menuItem:new:62'].dependsOn.includes(made.id), JSON.stringify(items['menuItem:new:62']))
+  assert.deepEqual(items['menuItem:new:63'].dependsOn, [], 'an item in a live menu goes as before')
+
+  // The sync kept the deleted menu as the copy's (a delete-modify): its create is a conflict, and the
+  // item in it is never written on its own.
+  const held = changeset('wordpress', data, [
+    { id: 'db:wp_terms:["7"]', kind: 'row', table: 'wp_terms', key: { term_id: '7' }, reason: 'delete-modify' }
+  ])
+  const term = held.items.find((i) => i.kind === 'term' && i.op === 'create')
+  assert.ok(term?.conflict, JSON.stringify(held.items))
+  assert.ok(byId(held)['menuItem:new:62'].dependsOn.includes(term.id))
+})
+
 test('Joomla: an article the push creates seeds its asset to be aligned by name, so the next sync meets the copy’s own (#172)', () => {
   const answer = changeset('joomla', {
     entities: { content: { base: [1], copy: [1, 10] } },
