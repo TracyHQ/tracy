@@ -25,25 +25,63 @@ const entityOf = (/** @type {string} */ id) => String(id).replace(/^[a-z-]+:/, '
 
 /**
  * What the page writer needs of an accepted site plan run, or null when there is none.
+ * 🔒 RECORD PAGES ARE WRITTEN BEFORE THE PAGES THAT SUMMARISE THEM (ticket #237): a record page the plan keeps
+ * (`record-page:<id>`, its entities from the content map's `recordPages`) is a page of the writing order, and one the
+ * order does not place comes before every other page, since lists and the home page summarise it. Its records are bound
+ * to the plan's items in order (`recordItems`): record N is item N, so each offering's own page is written from its
+ * glossary entry.
  * @param {any} run - the site plan run (`writeSitePlan`)
- * @returns {{order: Array<{id: string, entity: string, page: any}>, hidden: Set<string>, dropped: Set<string>,
- *   cardItems: Record<string, string[]>, glossary: any[]} | null}
+ * @param {{recordPages?: Array<{id: string, entities?: string[]}>}} [template] - the content map's record pages
+ * @returns {{order: Array<{id: string, entity: string, page: any, entities?: string[]}>, hidden: Set<string>,
+ *   dropped: Set<string>, cardItems: Record<string, string[]>, recordItems: Record<string, string>, glossary: any[]} | null}
  */
-export function pageAuthorPlan(run) {
+export function pageAuthorPlan(run, { recordPages = [] } = {}) {
   const plan = run?.status === 'accepted' ? run.plan : null
   if (!plan) return null
+  const records = new Map(
+    list(recordPages).map((r) => [`record-page:${r?.id}`, list(r?.entities).map(String)])
+  )
+  const decisionOf = new Map(list(plan.decisions).map((d) => [String(d?.element), d]))
   const pages = new Map(
     list(plan.pages)
-      .filter((p) => p?.decision === 'keep' && String(p.id).startsWith('page:'))
+      .filter(
+        (p) =>
+          p?.decision === 'keep' &&
+          (String(p.id).startsWith('page:') ||
+            (records.has(String(p.id)) && decisionOf.get(String(p.id))?.decision !== 'hide'))
+      )
       .map((p) => [String(p.id), p])
   )
-  const ordered = [...list(plan.writingOrder).map(String), ...pages.keys()].filter(
-    (id, i, all) => pages.has(id) && all.indexOf(id) === i
-  )
+  // A record page the plan keeps only by a decision (no page entry) is written too.
+  for (const [id] of records)
+    if (!pages.has(id) && decisionOf.get(id)?.decision === 'keep') pages.set(id, { id, decision: 'keep' })
+  const isRecord = (/** @type {string} */ id) => records.has(id)
+  const named = list(plan.writingOrder).map(String)
+  const ordered = [
+    ...[...pages.keys()].filter((id) => isRecord(id) && !named.includes(id)),
+    ...named,
+    ...pages.keys()
+  ].filter((id, i, all) => pages.has(id) && all.indexOf(id) === i)
   const order = ordered.map((id) => {
     const { decision: _, by: __, dependsOn: ___, seo: ____, ...page } = pages.get(id)
-    return { id, entity: entityOf(id), page }
+    return isRecord(id)
+      ? {
+          id,
+          entity: id,
+          page: { purpose: 'the own page of each record (offering) the site lists', ...page },
+          entities: records.get(id)
+        }
+      : { id, entity: entityOf(id), page }
   })
+  /** @type {Record<string, string>} the item each record page shows, by its entity */
+  const recordItems = {}
+  for (const step of order.filter((s) => s.entities)) {
+    const items = [...list(decisionOf.get(step.id)?.items), ...list(pages.get(step.id)?.items)].map(String)
+    const names = items.filter((n, i) => items.indexOf(n) === i)
+    step.entities?.forEach((entity, i) => {
+      if (names[i]) recordItems[entity] = names[i]
+    })
+  }
   // A plan that keeps no page has nothing to write page by page: the current writers write the site.
   if (order.length === 0) return null
   const hidden = new Set(
@@ -66,7 +104,7 @@ export function pageAuthorPlan(run) {
       )
       .map((d) => [String(d.element).replace(/^cards:/, ''), list(d.items).map(String)])
   )
-  return { order, hidden, dropped, cardItems, glossary: list(plan.glossary) }
+  return { order, hidden, dropped, cardItems, recordItems, glossary: list(plan.glossary) }
 }
 
 /** Two plans of the page writer as one. */
@@ -109,6 +147,8 @@ export async function writePagesInOrder({
 }) {
   const { compactPage } = await seeder('page-author')
   const position = new Map(plan.order.map((p, i) => [p.entity, i]))
+  /** @type {Map<string, string>} the record page step each record entity is written with */
+  const recordStep = new Map(plan.order.flatMap((p) => (p.entities ?? []).map((e) => [e, p.entity])))
   /** @type {Map<string, any[]>} */
   const byPage = new Map()
   const hiddenKeys = []
@@ -118,6 +158,12 @@ export async function writePagesInOrder({
   for (const slot of slots) {
     if (plan.hidden.has(String(slot.entity))) {
       hiddenKeys.push(slot.key)
+      continue
+    }
+    const record = recordStep.get(String(slot.entity))
+    if (record) {
+      pageOfKey.set(slot.key, record)
+      byPage.set(record, [...(byPage.get(record) ?? []), slot])
       continue
     }
     const shows = pageOf(String(slot.entity))
@@ -167,6 +213,7 @@ export async function writePagesInOrder({
           page: step.page,
           hiddenSections,
           cardItems: plan.cardItems,
+          recordItems: plan.recordItems,
           glossary: plan.glossary,
           writtenPages: [...writtenPages]
         },

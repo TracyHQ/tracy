@@ -58,7 +58,8 @@ is hidden, or its card is past the row's count. Scope rules per kind (the defaul
 - **menu** and **footer-column**: `keep` with `items` (the page ids it lists, kept or added pages only), or `hide`.
 - **contact-block**: `keep` when the brief has a phone, email or address; else `hide`.
 - **cta-band**: `keep` when its button has a real action; else `hide`.
-- **record-page**: `keep` (the record pages are written from the brief's records) or `hide`.
+- **record-page**: `keep` with `items` (the names of the records its pages show, in the order of its pages: page N is
+  item N, written before every page that lists or summarises them) or `hide`.
 
 ## 4. Hide what the brief cannot fill, and say why
 
@@ -76,7 +77,8 @@ without a layout to copy.
 
 Every item named on more than one page (an offering, a person, a programme) has one glossary entry: its canonical `name`,
 its `kind`, and one short `description`. Every page uses that name and description unchanged, so an offering reads the
-same on the home page, the offerings page and its own page.
+same on the home page, the offerings page and its own page. A person's description is their short role ("Head
+coach"), shown under their name wherever it fits.
 
 ## 7. Writing order: the summarised before the summary
 

@@ -14,8 +14,8 @@ export const AUTHOR_RULE =
   '\n\n# Writing one page of the plan\n\nYou wrote the site plan; now you write its pages, one page per call, in the ' +
   'plan\'s writing order. "plan.page" is this page\'s plan: lead with "lead", serve "purpose", state the "facts" it ' +
   'assigns and name its "items". "plan.hiddenSections" are taken off the site: never refer to them. "glossary" holds ' +
-  'the shared items: write each name exactly as the glossary spells it, and where a slot describes that item use its ' +
-  'description word for word. "writtenPages" holds the pages already written: a page that summarises them reuses their ' +
+  'the shared items (offerings, people): write each name exactly as the glossary spells it, and where a slot describes ' +
+  'that item use its description word for word. A slot\'s "offering" names the glossary item it shows. "writtenPages" holds the pages already written: a page that summarises them reuses their ' +
   'names and descriptions, never contradicts them, and never repeats their other sentences.\n\n'
 
 /** The most lines of one written page the next pages are told, and the longest line kept: a compact view. */
@@ -95,8 +95,20 @@ export function lengthComplaint(slots, values, plain) {
     .join('; ')}. Rewrite each within its limit, about the length of its sample.`
 }
 
-const NAME_ROLES = new Set(['offering.name', 'package.name'])
-const DESCRIPTION_ROLES = new Set(['offering.description', 'offering.summary'])
+// 🔒 PEOPLE ARE GLOSSARY ITEMS LIKE OFFERINGS (ticket #237): a coach's or team member's name is spelt as the glossary spells it on
+// every page, and the short line under it (their role) is its glossary description where it fits.
+const NAME_ROLES = new Set(['offering.name', 'package.name', 'person.name'])
+const DESCRIPTION_ROLES = new Set(['offering.description', 'offering.summary', 'person.role'])
+// A card the plan bound to a glossary item whose own words are a plain heading and paragraph (a feature row the plan uses to
+// show its offerings): its heading is the item's name and its paragraph carries the item's description.
+const CARD_NAME_ROLES = new Set(['editorial.heading'])
+const CARD_DESCRIPTION_ROLES = new Set(['editorial.paragraph'])
+
+/** Whether a slot names its glossary item, or describes it. */
+const namesItem = (/** @type {any} */ slot) =>
+  NAME_ROLES.has(slot?.role) || (CARD_NAME_ROLES.has(slot?.role) && !!slot?.group)
+const describesItem = (/** @type {any} */ slot) =>
+  DESCRIPTION_ROLES.has(slot?.role) || (CARD_DESCRIPTION_ROLES.has(slot?.role) && !!slot?.group)
 
 /** The words a visitor reads, for comparing: markup out, case and end punctuation ignored. */
 const said = (/** @type {unknown} */ v) =>
@@ -154,15 +166,11 @@ export function planConformance({
     if (typeof value !== 'string' || !said(value)) continue
     const entry = entryOf(offeringOf(slot))
     if (!entry) continue
-    if (
-      NAME_ROLES.has(slot.role) &&
-      entry.name.length <= slot.maxCharacters &&
-      said(value) !== said(entry.name)
-    )
+    if (namesItem(slot) && entry.name.length <= slot.maxCharacters && said(value) !== said(entry.name))
       lines[slot.key] =
         `${slot.key} must be named exactly "${entry.name}" as the glossary spells it (you wrote "${said(value)}")`
     else if (
-      DESCRIPTION_ROLES.has(slot.role) &&
+      describesItem(slot) &&
       said(entry.description) &&
       entry.description.length <= slot.maxCharacters &&
       !said(value).includes(said(entry.description))
@@ -197,12 +205,19 @@ export function conformanceComplaint(/** @type {ReturnType<typeof planConformanc
 /**
  * The offering binding of the site (`offeringBinding`) with the names the plan gave the cards of a collection as its
  * fallback: card N of a collection (its group id without the card number) is plan item N, so a card is written from, and checked against, its
- * own glossary item.
+ * own glossary item. `recordItems` binds the record pages the same way: every slot of a record page's entity is that
+ * record's item (ticket #237), so an offering's own page is written from, and checked against, its glossary entry.
  * @param {(slot: any) => string | null} base @param {Record<string, string[]> | undefined} cardItems
+ * @param {Record<string, string> | undefined} [recordItems] - the item of each record page, by its entity
  * @returns {(slot: any) => string | null}
  */
-export function withCardItems(base, cardItems) {
-  if (!cardItems || Object.keys(cardItems).length === 0) return base
+export function withCardItems(base, cardItems, recordItems) {
+  const cards = cardItems && Object.keys(cardItems).length > 0 ? cardItems : null
+  const records = recordItems && Object.keys(recordItems).length > 0 ? recordItems : null
+  if (!cards && !records) return base
   return (slot) =>
-    base(slot) ?? cardItems[String(slot?.group?.id ?? '').replace(/\.\d+$/, '')]?.[slot?.group?.item] ?? null
+    base(slot) ??
+    cards?.[String(slot?.group?.id ?? '').replace(/\.\d+$/, '')]?.[slot?.group?.item] ??
+    records?.[String(slot?.entity ?? '')] ??
+    null
 }

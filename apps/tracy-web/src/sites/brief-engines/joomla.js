@@ -1054,7 +1054,9 @@ export function createJoomlaEngine({
         const generate = firmGenerate(text, budgetSignal(ctx.signal, ctx.deadlineAt))
         // 🔒 THE PLAN'S AUTHOR WRITES THE PAGES (spec TracyHQ/tracy#231, ticket #235, `page-author.js`): an accepted site plan
         // is waited for, and replaces the site direction below; a refused, failed or skipped plan leaves the current writers.
-        authorPages = pageAuthorPlan(await sitePlanRun)
+        authorPages = pageAuthorPlan(await sitePlanRun, {
+          recordPages: staticState(ctx.contract)?.recordPages ?? []
+        })
         // 🔒 ONE SITE DIRECTION BEFORE THE PAGE WRITERS (COO, 30/10/2026, `site-direction.js`): one call reads the whole fact
         // digest and the pages the plan writes, and every writer is given its voice, its lead per page and its facts per page.
         if (factSheet && !authorPages) {
@@ -1500,6 +1502,19 @@ export function createJoomlaEngine({
         )
       )
       // The sourced words, as their sources say them: no guard of the model's words is theirs.
+      // 🔒 THE AUTHOR'S LINES MEET THE SEPARATE WRITERS' CHECKS, OR COME OFF (ticket #237): with an accepted plan no sibling,
+      // record-page, offering or call-to-action writer runs after the author; their checks (`page-pass.js`) judged its answer
+      // and sent it back. A line still breaking one is traced (`copyLineTrace`, by the rule it breaks) and settled like a
+      // refused line: its card or block comes off where the template can, else it is emptied, never left as demo.
+      if (authorPages)
+        for (const [key, owner] of Object.entries(plan.owners ?? {})) {
+          if (owner === 'page-copy' || !authorAsked.has(key)) continue
+          const slot = slotByKey.get(key)
+          delete kept[key]
+          if (!String(slot?.sample ?? '').trim()) continue
+          authorRefused.add(key)
+          if (!demoBlanks.some((b) => b.key === key)) demoBlanks.push(slot)
+        }
       Object.assign(kept, copyPins?.pins ?? {}, plannedSlotValues(sitePlan))
       // A planned statistic is a complete sourced unit even when the profile copy reader returned no pins.
       demoBlanks = demoBlanks.filter((slot) => !(slot.key in plannedSlotValues(sitePlan)))
@@ -1530,7 +1545,8 @@ export function createJoomlaEngine({
         honesty,
         written: kept,
         locale: written,
-        model: text,
+        // With an accepted plan the author wrote the summaries: this is their check, with no model to translate a fallback.
+        model: authorPages ? null : text,
         signal: ctx.signal,
         note: ctx.note
       })
@@ -1546,7 +1562,29 @@ export function createJoomlaEngine({
       /** @type {any[]} */
       const lineTrace = []
       const copyWriterFor = (/** @type {string} */ writer) =>
-        text ? sourcedWriter(text, { site, refused: unsourcedRefused, writer, trace: lineTrace }) : text
+        authorPages
+          ? null
+          : text
+            ? sourcedWriter(text, { site, refused: unsourcedRefused, writer, trace: lineTrace })
+            : text
+      /** With an accepted plan: a line a writer's check still refuses is traced by that check and settled as refused. */
+      const authorCheckRefuses = (/** @type {string[]} */ keys, /** @type {string} */ check, tried = {}) => {
+        for (const key of keys) {
+          const slot = slotByKey.get(key)
+          if (!authorRefused.has(key))
+            lineTrace.push({
+              key,
+              writer: 'page-writer',
+              reason: 'refused',
+              check,
+              text: kept[key] ?? tried?.[key]?.text ?? null
+            })
+          delete kept[key]
+          if (!String(slot?.sample ?? '').trim()) continue
+          authorRefused.add(key)
+          if (!demoBlanks.some((b) => b.key === key)) demoBlanks.push(slot)
+        }
+      }
       const describedLines = await writeOfferingDescriptions({
         slots: state.slots.filter((slot) => !isDerived(slot) && shown(slot)),
         honesty,
@@ -1560,6 +1598,8 @@ export function createJoomlaEngine({
           )
         },
         model: copyWriterFor('offering'),
+      // 🔒 WITH AN ACCEPTED SITE PLAN THE AUTHOR IS THE ONLY WRITER (ticket #237): the offering, sibling-list, record-page and
+      // call-to-action writers below get no model, so each runs as its check alone; a line it still refuses is taken off.
         locale: written,
         signal: ctx.signal
       })
@@ -1613,8 +1653,10 @@ export function createJoomlaEngine({
       )
       Object.assign(offeringSummaries, siblingShape.values)
       demoBlanks = demoBlanks.filter((slot) => !(slot.key in siblingShape.values))
-      for (const key of siblingShape.unreached)
-        lineTrace.push({ key, writer: 'sibling-list', reason: 'unwritten', ...siblingShape.tried?.[key] })
+      if (authorPages) authorCheckRefuses(siblingShape.unreached, 'sibling-shape', siblingShape.tried)
+      else
+        for (const key of siblingShape.unreached)
+          lineTrace.push({ key, writer: 'sibling-list', reason: 'unwritten', ...siblingShape.tried?.[key] })
       if (siblingShape.unreached.length > 0)
         ctx.note(
           `${siblingShape.unreached.length} card text(s) could not be written to their list's shape: ${siblingShape.unreached.join(', ')}`
@@ -1642,8 +1684,10 @@ export function createJoomlaEngine({
       })
       Object.assign(kept, owned.admit(recordCopy.values, 'record-page', kept))
       demoBlanks = demoBlanks.filter((slot) => !(slot.key in recordCopy.values))
-      for (const key of recordCopy.unreached)
-        lineTrace.push({ key, writer: 'record-page', reason: 'unwritten', ...recordCopy.tried?.[key] })
+      if (authorPages) authorCheckRefuses(recordCopy.unreached, 'record-page', recordCopy.tried)
+      else
+        for (const key of recordCopy.unreached)
+          lineTrace.push({ key, writer: 'record-page', reason: 'unwritten', ...recordCopy.tried?.[key] })
       if (recordCopy.unreached.length > 0)
         ctx.note(
           `${recordCopy.unreached.length} record page line(s) could not be written for their own record: ${recordCopy.unreached.join(', ')}`
@@ -1772,8 +1816,9 @@ export function createJoomlaEngine({
             .map(([key, owner]) => ({
               key,
               writer: 'page-writer',
-              reason: 'complaint-unmet',
-              check: `handed to ${owner}`,
+              // With an accepted plan nobody writes it after the author: it is refused by that writer's check (#237).
+              reason: authorPages ? 'refused' : 'complaint-unmet',
+              check: authorPages ? `${owner}-check` : `handed to ${owner}`,
               text: plan.changes?.[key]
             }))
         ]

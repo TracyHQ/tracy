@@ -146,6 +146,23 @@ function ownWords(/** @type {any} */ s) {
   return `${text[0].toUpperCase()}${text.slice(1)}`.slice(0, s.maxCharacters)
 }
 
+/** Words of their own in the band a card row's line is told (`shape`): its sentences and characters (#237). */
+function shapedWords(/** @type {any} */ s, /** @type {string | undefined} */ title) {
+  const [count] = s.shape.sentences
+  const target = Math.round((s.shape.characters[0] + s.shape.characters[1]) / 2)
+  const parts = []
+  for (let n = 0; n < count; n += 1) {
+    const room = Math.floor((target - [...parts.join(' ')].length) / (count - n)) - 1
+    // A card's line is about its own title: the first sentence names it.
+    const words = n === 0 && title ? [plain(title).toLowerCase()] : []
+    let i = 0
+    while ([...words.join(' ')].length < room - 8) words.push(wordOf(`${s.key}:${n}:${i++}`))
+    const text = words.join(' ') || wordOf(`${s.key}:${n}`)
+    parts.push(`${text[0].toUpperCase()}${text.slice(1)}.`)
+  }
+  return parts.join(' ')
+}
+
 /**
  * The text door double. A page-author call (one that carries `plan`) is answered with words of its own for every slot of
  * the page; the first long line of a page states the glossary description of the first offering, so the summary page
@@ -187,11 +204,18 @@ function textDouble(mode = {}) {
         else if (s.role === 'offering.description' && entry && word(entry.description))
           values[s.key] = entry.description
         else if (s.key === FAIL) values[s.key] = `${ownWords(s)} ${'longer '.repeat(60)}`.trim()
-        else if (!shared && s.maxCharacters >= SHARED.length + 10 && plain(s.sample).length >= 60) {
+        // A line of a card row has its row's shape to keep (#237: one breaking it is taken off): the shared words go elsewhere.
+        else if (
+          !shared &&
+          !s.shape &&
+          s.maxCharacters >= SHARED.length + 10 &&
+          plain(s.sample).length >= 60
+        ) {
           values[s.key] = `${SHARED}.`
           shared = true
         } else if (toSay.length && !s.shape && word(toSay[0])) values[s.key] = toSay.shift()
-        else values[s.key] = ownWords(s)
+        else
+          values[s.key] = s.shape ? shapedWords(s, values[s.shape.title] ?? s.shape.titleText) : ownWords(s)
       }
       // A page that writes into the section the plan hid.
       if (mode.fillHidden && first && input.plan.page?.id === HOME)

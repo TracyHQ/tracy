@@ -1303,7 +1303,7 @@ export async function planJoomlaContract({
         })
       : []
   const journeys = processWritingOf(state.slots, offerings)
-  const offeringOf = withCardItems(offeringBinding(offerings), author?.cardItems)
+  const offeringOf = withCardItems(offeringBinding(offerings), author?.cardItems, author?.recordItems)
   /** The owner's posts about the offerings the slots of a batch write about, by offering name, or null. */
   const postsFor = (slots) => {
     if (!offeringPosts || typeof offeringPosts !== 'object') return null
