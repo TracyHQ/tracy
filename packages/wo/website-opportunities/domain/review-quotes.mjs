@@ -82,16 +82,23 @@ export function sentenceExcerptOf(words, limit) {
   return best
 }
 
-/** The text limit of the quote's words: the tightest of its declared limit and every measured viewport. */
+/**
+ * The text limit of the quote's words: per quote.text slot the tightest of its declared limit and every measured viewport,
+ * then the roomiest of those slots (the words stand once, in the first slot they fit: a pull-quote heading or the body).
+ * A slot with no limit imposes no cut.
+ */
 function textLimitOf(slots) {
-  const limits = slots
+  const perSlot = slots
     .filter((s) => s.type === 'text' && s.role === 'quote.text')
-    .flatMap((s) => {
+    .map((s) => {
       const fit = s.fit?.measured === true ? s.fit : null
-      return [s.maxCharacters, fit?.maxCharacters, ...Object.values(fit?.maxChars ?? {})]
+      const limits = [s.maxCharacters, fit?.maxCharacters, ...Object.values(fit?.maxChars ?? {})].filter(
+        (n) => Number.isInteger(n) && n > 0
+      )
+      return limits.length ? Math.min(...limits) : null
     })
-    .filter((n) => Number.isInteger(n) && n > 0)
-  return limits.length ? Math.min(...limits) : null
+  if (!perSlot.length || perSlot.includes(null)) return null
+  return Math.max(...perSlot)
 }
 
 /** The values of one whole guest review on this card, or null when any required part has no place or does not fit. */

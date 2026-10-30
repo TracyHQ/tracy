@@ -90,9 +90,12 @@ test('the released Joomla T4 map: a guest review over 900 characters pins its ow
     googlePlace: { reviews: [{ author: 'Nell Ashdown', text: review }] }
   }
   const quote = map.slots.filter((s) => s.group?.kind === 'quote' && s.type === 'text')
-  const words = quote.find((s) => s.role === 'quote.text')
   const out = await pinsFor(t, 'joomla', map, brief)
   assert.ok(out)
+  // The card declares two quote.text slots (a pull-quote heading and a body): the words stand once, in the slot they fit.
+  const homes = quote.filter((s) => s.role === 'quote.text' && out.pins[s.key])
+  assert.equal(homes.length, 1, 'the review stands once on its card')
+  const [words] = homes
   const pinned = out.pins[words.key]
   assert.ok(review.startsWith(pinned) && pinned.length > 300, 'real leading words, not a stub')
   assert.match(pinned, /\.$/, 'ends where a sentence of the review ends')
