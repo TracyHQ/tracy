@@ -32,6 +32,9 @@ import { limitOf, planHero } from './hero-first-screen.mjs'
 import { planPageIntros, planPlaceIntros } from './page-intros.mjs'
 import { placeSeoOf } from './place-seo.mjs'
 import { notFoundPageOf, pageSeoOf } from './page-seo.mjs'
+import { businessSchemaOf } from './business-schema.mjs'
+import { recordSeoPlanOf } from './record-seo.mjs'
+import { heroWhereOf as seoWhereOf } from './hero-first-screen.mjs'
 import { isRecordRole } from './record-roles.mjs'
 import { planRepeatedBlocks, REPEATED_BLOCK_REASONS } from './repeated-blocks.mjs'
 import { summaryContactContainers } from './footer-contact-shape.mjs'
@@ -111,11 +114,15 @@ function contactOfBrief(facts, brief = null) {
 }
 
 /** The home's search result with every kept page's own and the not-found page's words; null when there is no home result. */
-function withPageSeo(brief, seo, { name, pages, contact }) {
+function withPageSeo(brief, seo, { name, pages, contact, contentMap = null, honesty = null }) {
   if (!seo) return null
   return {
     ...seo,
+    // The one LocalBusiness record of the site: the trade's type, the hours and the owner's profiles (`business-schema.mjs`).
+    schema: businessSchemaOf(brief, seo.schema),
     pages: pageSeoOf(brief, { seo, name, pages, contact }),
+    // Every kept record page's search result, finished by the writer from its own copy (`record-seo.mjs`, R12 group G).
+    records: recordSeoPlanOf(contentMap, honesty, { name, city: seoWhereOf(brief)?.city ?? null }),
     notFound: notFoundPageOf(brief, { name, pages })
   }
 }
@@ -443,7 +450,9 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
     seo: withPageSeo(brief, placeSeoOf(brief, { name, phone: contact?.phone?.value ?? null }), {
       name,
       pages: pageRows,
-      contact
+      contact,
+      contentMap,
+      honesty: honesty.honesty
     }),
     // Logo, posts, social profiles and map (ticket #193): `site-plan-identity.mjs`.
     ...planIdentity(brief, contentMap),

@@ -524,6 +524,121 @@ export const BUILD_RULES = Object.freeze(
       }
     },
     {
+      // 🔒 EVERY SERVED PAGE, RECORD PAGES INCLUDED, HAS ITS OWN TITLE AND DESCRIPTION, NEVER THE TEMPLATE'S (criterion 8.1, R12
+      // group G): a page with none, or with the template's advertising, stops the build; one without the name, said twice or
+      // outside the length band is a note (`site-head-check.js`).
+      id: 'page-head',
+      severity: 'blocker',
+      guarantee:
+        "Every page, record pages included, has its own browser title with the business name and its own description, written from that page's copy, never the template's",
+      checks: ['page-heads'],
+      owns: kindIn(['page-title', 'page-description']),
+      blocks: (f) => kindIn(['page-title', 'page-description'])(f) && f?.severity === 'blocker',
+      prompt: {
+        writers: ['page-copy', 'record-page', 'repair'],
+        text: "Each page's browser title is '<page or record name> | <business name>' (about 50 to 60 characters) and its description is one or two sentences of that page's own copy (about 140 to 160 characters), never the template's words."
+      },
+      repair: "write the page's own title with the business name and a description from its own copy",
+      declares: [],
+      cms: {
+        joomla: { writer: true, check: true },
+        wordpress: { writer: false, check: true },
+        emdash: { writer: false, check: true }
+      }
+    },
+    {
+      // 🔒 ONE MAIN HEADING PER PAGE (criterion 8.2): none stops the build, several is a note. The template's own heading levels
+      // are kept; only what the build left without one, or doubled, is fixed.
+      id: 'page-main-heading',
+      severity: 'blocker',
+      guarantee: 'Every page has exactly one main heading (h1)',
+      checks: ['page-heads'],
+      owns: kindIn(['page-h1']),
+      blocks: (f) => f?.kind === 'page-h1' && f?.severity === 'blocker',
+      repair:
+        "make the page's own title its one main heading (h1), keeping the template's other heading levels",
+      declares: [
+        {
+          key: 'mainHeadings',
+          problems: 'mainHeadingProblems',
+          field: 'mainHeadings',
+          what: 'where each page prints its one main heading (template, page-heading or a record field)'
+        }
+      ],
+      cms: {
+        joomla: { writer: true, check: true },
+        wordpress: { writer: false, check: true },
+        emdash: { writer: false, check: true }
+      }
+    },
+    {
+      // Criterion 8.4: a shared link shows the page's own title, description and picture (its hero, else the logo).
+      id: 'share-preview',
+      severity: 'note',
+      guarantee:
+        "A link to any page shared on Facebook, Zalo or WhatsApp shows that page's title, description, own picture (else the logo) and address",
+      checks: ['page-heads'],
+      owns: kindIn(['share-preview']),
+      repair: "set the page's og:title, og:description, og:image and og:url",
+      declares: [],
+      cms: {
+        joomla: { writer: false, check: true },
+        wordpress: { writer: false, check: true },
+        emdash: { writer: false, check: true }
+      }
+    },
+    {
+      // Criterion 8.5: one LocalBusiness record for the site, from brief facts only (`business-schema.mjs`).
+      id: 'business-schema',
+      severity: 'note',
+      guarantee:
+        "Search engines read the business's name, address, phone, opening hours and profiles from one LocalBusiness record, written from the brief's facts only",
+      checks: ['business-schema'],
+      owns: kindIn(['business-schema']),
+      repair: "write the site plan's LocalBusiness record once on the site",
+      declares: [],
+      cms: {
+        joomla: { writer: true, check: true },
+        wordpress: { writer: false, check: true },
+        emdash: { writer: false, check: true }
+      }
+    },
+    {
+      // Criterion 8.5: a sitemap.xml lists every published page and robots.txt points to it.
+      id: 'sitemap',
+      severity: 'note',
+      guarantee: 'A sitemap.xml lists every published page, and robots.txt points to it',
+      checks: ['sitemap'],
+      owns: kindIn(['sitemap']),
+      repair: 'publish a sitemap.xml of every published page and add its Sitemap line to robots.txt',
+      declares: [],
+      cms: {
+        joomla: { writer: false, check: true },
+        wordpress: { writer: false, check: true },
+        emdash: { writer: false, check: true }
+      }
+    },
+    {
+      // Criterion 8.3: every placed picture says what it shows; a decorative frame has an empty alt.
+      id: 'picture-alt',
+      severity: 'note',
+      guarantee:
+        'Every picture has alt text describing what it shows, from its label; a decorative frame has an empty alt',
+      checks: ['picture-alt'],
+      owns: kindIn(['picture-alt']),
+      prompt: {
+        writers: ['picture', 'repair'],
+        text: 'Every placed picture carries alt text saying what it shows, from its label, in a few plain words; a decorative frame carries an empty alt.'
+      },
+      repair: 'give each picture alt text describing what it shows, from its label',
+      declares: [],
+      cms: {
+        joomla: { writer: false, check: true },
+        wordpress: { writer: false, check: true },
+        emdash: { writer: false, check: true }
+      }
+    },
+    {
       id: 'copy-voice',
       severity: 'note',
       guarantee:

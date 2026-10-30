@@ -126,6 +126,13 @@ export async function runLeftoverCheck({
     if (sheet && sheet.status === 200) styles.push({ href, css: sheet.html })
     else unread.push(href)
   }
+  // The sitemap and robots files, read with the same reader, for the SEO stage's check (criterion 8.5).
+  /** @type {Record<string, {status: number | null, html: string} | null>} */
+  const files = {}
+  for (const file of ['/sitemap.xml', '/robots.txt']) {
+    const read = await readPage(file).catch(() => null)
+    files[file] = read ? { status: read.status ?? null, html: String(read.html ?? '') } : null
+  }
   // 🔒 A SITE THAT DOES NOT ANSWER IS NEVER CLEAN. Pages that fail to answer carry no demo words, so a broken site used to
   // report 0 in every kind. A page the plan keeps (home, and every kept page: its address or the same address under the
   // site's index prefix) that is not served with 200 makes the whole report `broken`, and `pass` false.
@@ -148,7 +155,8 @@ export async function runLeftoverCheck({
     check,
     contactCheck,
     heroCheck,
-    copyLines
+    copyLines,
+    files
   })
   const mainMenu = raw['main-menu']
   // The footer link columns list every kept page (COO decision, #189 item 12), where the map declares them.
@@ -245,7 +253,12 @@ export async function runLeftoverCheck({
     ...raw['booking-buttons'],
     ...raw['demo-name-addresses'],
     // The Privacy Policy page (criterion 10.1): present, linked from the footer, in the business's name.
-    ...(raw['privacy-policy'] ?? [])
+    ...(raw['privacy-policy'] ?? []),
+    // The SEO stage (criteria 8.1 to 8.5): titles, descriptions, one h1, share previews, the business record, sitemap, alt.
+    ...(raw['page-heads'] ?? []),
+    ...(raw['business-schema'] ?? []),
+    ...(raw.sitemap ?? []),
+    ...(raw['picture-alt'] ?? [])
   ]
   const all = [
     ...report.findings,

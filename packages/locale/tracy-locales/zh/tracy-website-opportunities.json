@@ -503,6 +503,8 @@
   "fix.missingHeadBlock": "构建添加的页面样式缺失",
   "fix.otherBlocker": "另一项检查发现了问题",
   "fix.privacyPolicy": "网站没有隐私政策页面，或页脚没有链接到该页面",
+  "fix.pageHead": "某个页面没有用于搜索结果的专属标题或描述，或显示的是模板自带的内容",
+  "fix.pageMainHeading": "某个页面没有主标题",
   "fix.picturesFitRecord": "某张图片出现在另一条记录的页面上",
   "fix.recordNotFromBrief": "某个评价作者、联系方式或数字并非来自需求简报",
   "fix.siblingCopyShape": "同一列表中的卡片文字形式不一致",

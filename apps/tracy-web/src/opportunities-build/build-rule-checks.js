@@ -20,6 +20,7 @@ import { checkOfferingRows } from './offering-rows-check.js'
 import { checkOfferingSummaries } from './offering-summary-check.js'
 import { checkPageIntros } from './page-intro-check.js'
 import { checkPageSeo } from './page-seo-check.js'
+import { checkBusinessSchema, checkPageHeads, checkPictureAlt, checkSitemap } from './site-head-check.js'
 import { checkPrivacyPolicy } from './privacy-policy-check.js'
 import { peopleCardFindings } from './people-card-check.js'
 import { checkRecordPages } from './record-pages-check.js'
@@ -37,7 +38,7 @@ import { seeder } from '../lib/seeder.js'
 /**
  * @typedef {{pages: any[], contentMap: any, brief: any, sitePlan: any, siteOrigin: string | null, missing: string[],
  *   styles: any[], broken: any[], missingPath: string, check: Function, contactCheck?: Function | null,
- *   heroCheck?: Function | null, copyLines?: any}} CheckContext
+ *   heroCheck?: Function | null, copyLines?: any, files?: Record<string, any>}} CheckContext
  */
 
 /** Each final check by id: what it returns is that check's own report (an array of findings, or its report object). */
@@ -91,6 +92,16 @@ export const CHECKS = Object.freeze({
   'offering-rows': (/** @type {CheckContext} */ c) => checkOfferingRows({ pages: c.pages, brief: c.brief }),
   'page-seo': (/** @type {CheckContext} */ c) =>
     checkPageSeo({ pages: c.pages, sitePlan: c.sitePlan, missingPath: c.missingPath }),
+  // The SEO stage on every served page (criteria 8.1 to 8.5, `site-head-check.js`): a brief build's, whose site plan holds
+  // a search plan; a plain demo build keeps the demo's head and is not judged here.
+  'page-heads': (/** @type {CheckContext} */ c) =>
+    c.sitePlan?.seo ? checkPageHeads({ pages: c.pages, sitePlan: c.sitePlan }) : [],
+  'business-schema': (/** @type {CheckContext} */ c) =>
+    checkBusinessSchema({ pages: c.pages, sitePlan: c.sitePlan }),
+  sitemap: (/** @type {CheckContext} */ c) =>
+    c.sitePlan?.seo ? checkSitemap({ pages: c.pages, files: c.files ?? {} }) : [],
+  'picture-alt': (/** @type {CheckContext} */ c) =>
+    c.sitePlan?.seo ? checkPictureAlt({ pages: c.pages }) : [],
   'privacy-policy': (/** @type {CheckContext} */ c) =>
     checkPrivacyPolicy({ pages: c.pages, sitePlan: c.sitePlan, brief: c.brief, origin: c.siteOrigin }),
   'repeated-copy': async (/** @type {CheckContext} */ c) => {

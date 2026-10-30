@@ -866,6 +866,9 @@ export const en = {
   'fix.siblingRecordPages': "Sibling pages repeat each other's words or pictures, or show an empty card",
   'fix.footerShape': 'The footer does not keep the template footer shape',
   'fix.privacyPolicy': 'The site has no Privacy Policy page, or it is not linked from the footer',
+  'fix.pageHead':
+    'A page has no title or description of its own for search results, or shows the template one',
+  'fix.pageMainHeading': 'A page has no main heading',
   'fix.contactPage': 'The Contact page is missing a channel of the business, or a channel is not a link',
   'fix.picturesFitRecord': 'A picture stands on the page of another record',
   'fix.keptPageMissing': 'A page the site keeps does not open',

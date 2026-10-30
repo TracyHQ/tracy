@@ -36,6 +36,8 @@ what a template declares: `docs/references/site-build-rules.md` in the Tracy rep
 - Choose each item's icon by the item's meaning; when nothing matches, one neutral icon for the whole row.
 - The Privacy Policy page is in the business's name and says only what the brief holds: its contact channels, the form only when there is one, no law, registration, date or promise the brief does not give.
 - A menu or footer link label is the name of the page or record it opens, in the business's own words; with nothing better given, that page's title. Never a button's words or a generic action such as Learn more, Read more or Details. Contact names only a contact page.
+- Each page's browser title is '<page or record name> | <business name>' (about 50 to 60 characters) and its description is one or two sentences of that page's own copy (about 140 to 160 characters), never the template's words.
+- Every placed picture carries alt text saying what it shows, from its label, in a few plain words; a decorative frame carries an empty alt.
 - Write formally and plainly: no slang, no advertising tone, no exclamation marks.
 - Never say the same sentence twice on the site, reworded or not.
 
@@ -61,6 +63,12 @@ what a template declares: `docs/references/site-build-rules.md` in the Tracy rep
 - `menu-label-is-page-name` (note): A menu or footer link is named by the page or record it opens, one name per page across the site. When broken: name the menu item by the title of the page it opens.
 - `offering-rows` (note): No line under an offering's name only repeats it, and one list's cards share one set of row labels. When broken: write what this offering is in the shape of its sibling cards' lines.
 - `seo` (note): Every kept page says its planned title and description, and the not-found page speaks for the business. When broken: set the page's planned title and description.
+- `page-head` (blocks): Every page, record pages included, has its own browser title with the business name and its own description, written from that page's copy, never the template's. When broken: write the page's own title with the business name and a description from its own copy.
+- `page-main-heading` (blocks): Every page has exactly one main heading (h1). When broken: make the page's own title its one main heading (h1), keeping the template's other heading levels.
+- `share-preview` (note): A link to any page shared on Facebook, Zalo or WhatsApp shows that page's title, description, own picture (else the logo) and address. When broken: set the page's og:title, og:description, og:image and og:url.
+- `business-schema` (note): Search engines read the business's name, address, phone, opening hours and profiles from one LocalBusiness record, written from the brief's facts only. When broken: write the site plan's LocalBusiness record once on the site.
+- `sitemap` (note): A sitemap.xml lists every published page, and robots.txt points to it. When broken: publish a sitemap.xml of every published page and add its Sitemap line to robots.txt.
+- `picture-alt` (note): Every picture has alt text describing what it shows, from its label; a decorative frame has an empty alt. When broken: give each picture alt text describing what it shows, from its label.
 - `copy-voice` (note): The site speaks in one formal voice: no slang, no advertising tone, one spelling of each word. When broken: rewrite this line formally and plainly.
 - `repeated-copy` (note): No sentence is said twice, on one page or on two. When broken: rewrite one of the two sentences so each says its own thing.
 - `repeated-blocks` (note): A showcase block the site keeps on one page is on one page only. When broken: keep the block on the one page the plan gives it.

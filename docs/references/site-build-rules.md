@@ -202,6 +202,56 @@ Every kept page says its planned title and description, and the not-found page s
 - A template declares: nothing.
 - Writer and check per CMS: Joomla writer yes, check yes; WordPress writer no, check yes; EmDash writer no, check yes.
 
+### `page-head` (blocker)
+
+Every page, record pages included, has its own browser title with the business name and its own description, written from that page's copy, never the template's.
+
+- Checked by: `page-heads` (`build-rule-checks.js`).
+- Writers that take its words: page-copy, record-page, repair.
+- A template declares: nothing.
+- Writer and check per CMS: Joomla writer yes, check yes; WordPress writer no, check yes; EmDash writer no, check yes.
+
+### `page-main-heading` (blocker)
+
+Every page has exactly one main heading (h1).
+
+- Checked by: `page-heads` (`build-rule-checks.js`).
+- A template declares: `mainHeadings` in the content map: where each page prints its one main heading (template, page-heading or a record field) (`mainHeadingProblems`).
+- Writer and check per CMS: Joomla writer yes, check yes; WordPress writer no, check yes; EmDash writer no, check yes.
+
+### `share-preview` (note)
+
+A link to any page shared on Facebook, Zalo or WhatsApp shows that page's title, description, own picture (else the logo) and address.
+
+- Checked by: `page-heads` (`build-rule-checks.js`).
+- A template declares: nothing.
+- Writer and check per CMS: Joomla writer no, check yes; WordPress writer no, check yes; EmDash writer no, check yes.
+
+### `business-schema` (note)
+
+Search engines read the business's name, address, phone, opening hours and profiles from one LocalBusiness record, written from the brief's facts only.
+
+- Checked by: `business-schema` (`build-rule-checks.js`).
+- A template declares: nothing.
+- Writer and check per CMS: Joomla writer yes, check yes; WordPress writer no, check yes; EmDash writer no, check yes.
+
+### `sitemap` (note)
+
+A sitemap.xml lists every published page, and robots.txt points to it.
+
+- Checked by: `sitemap` (`build-rule-checks.js`).
+- A template declares: nothing.
+- Writer and check per CMS: Joomla writer no, check yes; WordPress writer no, check yes; EmDash writer no, check yes.
+
+### `picture-alt` (note)
+
+Every picture has alt text describing what it shows, from its label; a decorative frame has an empty alt.
+
+- Checked by: `picture-alt` (`build-rule-checks.js`).
+- Writers that take its words: picture, repair.
+- A template declares: nothing.
+- Writer and check per CMS: Joomla writer no, check yes; WordPress writer no, check yes; EmDash writer no, check yes.
+
 ### `copy-voice` (note)
 
 The site speaks in one formal voice: no slang, no advertising tone, one spelling of each word.

@@ -68,6 +68,7 @@ import { ctaBandProblems } from '../../packages/wo/website-opportunities/domain/
 import { layoutBandProblems } from '../../packages/wo/website-opportunities/domain/layout-bands.mjs'
 import { contactBlockProblems } from '../../packages/wo/website-opportunities/domain/footer-contact-shape.mjs'
 import { recordPageProblems } from '../../packages/wo/website-opportunities/domain/record-pages.mjs'
+import { mainHeadingProblems } from '../../packages/wo/website-opportunities/domain/main-headings.mjs'
 import { declarationsOf } from '../../packages/wo/website-opportunities/domain/build-rules.mjs'
 import { lintContractDir, lintSummary } from '../../apps/tracy-web/src/lib/content-map-lint.js'
 import { lintItemIconGrounds } from '../../apps/tracy-web/src/lib/content-map-lint-icons.js'
@@ -207,6 +208,17 @@ export function recordPageErrors(dir) {
   }
 }
 
+/** The pages of a contract's content map with no declared main heading, or a malformed declaration (criterion 8.2). */
+export function mainHeadingErrors(dir) {
+  const file = path.join(dir, CONTENT_MAP_FILE)
+  if (!existsSync(file)) return []
+  try {
+    return mainHeadingProblems(JSON.parse(readFileSync(file, 'utf8')))
+  } catch {
+    return []
+  }
+}
+
 /** The undeclared or malformed footer link columns (navigation groups) of a contract's content map. */
 export function navigationGroupErrors(dir) {
   const file = path.join(dir, CONTENT_MAP_FILE)
@@ -226,7 +238,8 @@ export const DECLARATION_CHECKS = Object.freeze({
   ctaBandProblems: ctaBandErrors,
   layoutBandProblems: layoutBandErrors,
   contactBlockProblems: contactBlockErrors,
-  recordPageProblems: recordPageErrors
+  recordPageProblems: recordPageErrors,
+  mainHeadingProblems: mainHeadingErrors
 })
 
 /** The errors of the roles an EmDash theme declares in its field map, or null when the contract has none declared. */
@@ -301,7 +314,7 @@ export function checkAllSlotRoles(rootDir = DEFAULT_ROOT, explicitDirs = null) {
     if (named)
       for (const b of declared[field]) for (const error of b.errors) errors.push(`${b.dir}: ${error}`)
   }
-  const { buttons, navigation, bands, layoutBands, contactBlocks, recordPages } = declared
+  const { buttons, navigation, bands, layoutBands, contactBlocks, recordPages, mainHeadings } = declared
   return {
     ok: errors.length === 0,
     checkedCount: dirs.length,
@@ -314,7 +327,8 @@ export function checkAllSlotRoles(rootDir = DEFAULT_ROOT, explicitDirs = null) {
     bands,
     layoutBands,
     contactBlocks,
-    recordPages
+    recordPages,
+    mainHeadings
   }
 }
 

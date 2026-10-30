@@ -125,6 +125,8 @@ import {
   writeSteps
 } from './joomla-tidy.js'
 import { hideRecordPagers } from './joomla-record-pager.js'
+import { writeJoomlaSeo } from './joomla-seo-stage.js'
+import { pictureAltsOf } from './joomla-picture-alt.js'
 import {
   keptById,
   leaveShowcase,
@@ -3078,4 +3080,18 @@ export function createJoomlaEngine({
       return { wrote, kept }
     }
   }
+      // 🔒 The SEO stage, last: every page's planned title and description over whatever the menu writes left, the record
+      // pages' own, and the one business record (`joomla-seo-stage.js`, criteria 8.1, 8.4, 8.5).
+      await writeJoomlaSeo({
+        apply,
+        siteKey,
+        sitePlan: menuPlan,
+        contentMap: staticState(ctx.contract),
+        written: prepared.changes ?? {},
+        template: templateOf(ctx.contract.dir),
+        // Every placed picture's alt text, from the labelling step (`joomla-picture-alt.js`, criterion 8.3).
+        alts: pictureAltsOf(await shaping.catch(() => []), menuPlan?.honesty?.cardNames ?? {}),
+        note: ctx.note,
+        time: ctx.time
+      })
 }

@@ -66053,5 +66053,60 @@
       ],
       "layout": "landing"
     }
+  ],
+  "mainHeadings": [
+    {
+      "entities": [
+        "menuItem-101"
+      ],
+      "via": "template"
+    },
+    {
+      "entities": [
+        "article-2",
+        "article-14",
+        "article-15",
+        "article-16"
+      ],
+      "via": "field",
+      "column": "attribs",
+      "jsonPath": [
+        "classes-title"
+      ]
+    },
+    {
+      "entities": [
+        "menuItem-156",
+        "menuItem-157",
+        "menuItem-158",
+        "menuItem-159",
+        "menuItem-160",
+        "menuItem-161",
+        "menuItem-162",
+        "menuItem-163",
+        "menuItem-164",
+        "menuItem-165",
+        "menuItem-166",
+        "menuItem-168",
+        "menuItem-169",
+        "menuItem-193",
+        "menuItem-195",
+        "menuItem-197",
+        "menuItem-198",
+        "menuItem-199",
+        "menuItem-214"
+      ],
+      "via": "page-heading"
+    },
+    {
+      "entities": [
+        "menuItem-167",
+        "menuItem-194"
+      ],
+      "via": "menu-param",
+      "params": {
+        "page_subheading": "{name}"
+      }
+    }
   ]
 }

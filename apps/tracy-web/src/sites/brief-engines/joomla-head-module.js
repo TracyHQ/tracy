@@ -126,7 +126,8 @@ export async function writeHeadModule({ apply, siteKey, block, applyId, note, pa
 const LOSS = {
   leftovers:
     'the demo-leftover styles could not be put on the pages, so the demo backgrounds and videos stay',
-  colours: 'the brand colours could not be put on the pages, so the template keeps its own colours'
+  colours: 'the brand colours could not be put on the pages, so the template keeps its own colours',
+  schema: 'the business record for search engines could not be put on the pages'
 }
 
 /**

@@ -503,6 +503,8 @@
   "fix.missingHeadBlock": "Mancano gli stili di pagina aggiunti dalla build",
   "fix.otherBlocker": "Un altro controllo ha trovato un problema",
   "fix.privacyPolicy": "Il sito non ha una pagina Informativa sulla privacy, oppure non è collegata dal footer",
+  "fix.pageHead": "Una pagina non ha un titolo o una descrizione propri per i risultati di ricerca, oppure mostra quelli del template",
+  "fix.pageMainHeading": "Una pagina non ha un titolo principale",
   "fix.picturesFitRecord": "Un’immagine si trova nella pagina di un altro record",
   "fix.recordNotFromBrief": "L’autore di una recensione, un dato di contatto o una cifra non proviene dal brief",
   "fix.siblingCopyShape": "Le schede di un elenco non hanno la stessa forma di testo",

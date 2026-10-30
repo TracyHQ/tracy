@@ -211,7 +211,10 @@ const FIX_KEYS: Readonly<Record<string, string>> = {
   // A booking button leading to another page reads to the owner as a button that does not do its job.
   'booking-buttons': 'fix.linkWithoutJob',
   'kept-page-missing': 'fix.keptPageMissing',
-  'privacy-policy': 'fix.privacyPolicy'
+  'privacy-policy': 'fix.privacyPolicy',
+  // The SEO stage (criteria 8.1 and 8.2): a page with no title or description of its own, or no main heading.
+  'page-head': 'fix.pageHead',
+  'page-main-heading': 'fix.pageMainHeading'
 }
 
 /** The string key that names one blocker kind on screen; a kind this screen does not know is still shown. */

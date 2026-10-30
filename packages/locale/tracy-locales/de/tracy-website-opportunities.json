@@ -503,6 +503,8 @@
   "fix.missingHeadBlock": "Vom Build hinzugefügte Seitenstile fehlen",
   "fix.otherBlocker": "Eine andere Prüfung hat ein Problem gefunden",
   "fix.privacyPolicy": "Die Website hat keine Datenschutzerklärung-Seite, oder sie ist nicht im Footer verlinkt",
+  "fix.pageHead": "Eine Seite hat keinen eigenen Titel oder keine eigene Beschreibung für Suchergebnisse, oder sie zeigt die der Vorlage",
+  "fix.pageMainHeading": "Eine Seite hat keine Hauptüberschrift",
   "fix.picturesFitRecord": "Ein Bild steht auf der Seite eines anderen Eintrags",
   "fix.recordNotFromBrief": "Ein Bewertungsautor, eine Kontaktangabe oder eine Zahl stammt nicht aus dem Briefing",
   "fix.siblingCopyShape": "Karten einer Liste haben nicht dieselbe Textform",

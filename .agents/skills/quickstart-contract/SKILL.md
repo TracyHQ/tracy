@@ -633,6 +633,7 @@ path):
    - `icons-per-meaning`: packing rule `item-icon-ground-undeclared`
    - `showcase-removed`: `showcase-nav-map.json` beside the content map: the template's showcase menus (checked with the contract pins)
    - `offering-rows`: packing rule `offering-rows-short`
+   - `page-main-heading`: `mainHeadings` in the content map: where each page prints its one main heading (template, page-heading or a record field) (`mainHeadingProblems`)
    - `demo-name-addresses`: the slot roles: person.name and quote.author_name roles on the demo names
    <!-- build-rules:end -->
 9. **The first T3 template run through this skill:** look at and record in the report two points — (a) local Tracy
