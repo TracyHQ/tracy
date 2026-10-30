@@ -116,6 +116,23 @@ export function noReasoningBody(baseUrl) {
 }
 
 /**
+ * The field that asks a provider TO reason, in its own words: the site plan author (`site-plan-author.js`, ticket
+ * TracyHQ/tracy#234) plans the whole site on the editorial door with reasoning on. Empty for a provider with no known field.
+ * @param {string} baseUrl
+ */
+export function reasoningBody(baseUrl) {
+  let host = ''
+  try {
+    host = new URL(baseUrl).host
+  } catch {
+    return {}
+  }
+  if (host === 'api.deepseek.com') return { thinking: { type: 'enabled' } }
+  if (host === 'openrouter.ai') return { reasoning: { enabled: true } }
+  return {}
+}
+
+/**
  * A bound on jobs in flight: the rest wait their turn, in order.
  * @param {number} limit
  */
@@ -164,6 +181,7 @@ function say(error, key) {
  * @param {number} [options.timeoutMs]
  * @param {(ms: number) => Promise<void>} [options.sleep]
  * @param {() => number} [options.random] - the jitter's source
+ * @param {boolean} [options.reasoning] - ask the model to reason (`reasoningBody`) instead of asking it not to
  */
 export function createSeedModel({
   model,
@@ -172,7 +190,8 @@ export function createSeedModel({
   shared = null,
   timeoutMs = DEFAULT_TIMEOUT_MS,
   sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms)),
-  random = Math.random
+  random = Math.random,
+  reasoning = false
 }) {
   const own = createLimiter(Math.max(1, concurrency))
   const limit = shared
@@ -180,7 +199,7 @@ export function createSeedModel({
         own(() => shared(job, options), options)
     : own
   const url = `${model.baseUrl.replace(/\/+$/, '')}/chat/completions`
-  const quiet = noReasoningBody(model.baseUrl)
+  const quiet = reasoning ? reasoningBody(model.baseUrl) : noReasoningBody(model.baseUrl)
   const stats = {
     calls: 0,
     retries: 0,

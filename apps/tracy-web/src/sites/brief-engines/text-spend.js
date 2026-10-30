@@ -46,7 +46,11 @@ export function trackTextSpend(models) {
   return /** @type {M} */ (
     async (/** @type {any[]} */ ...args) => {
       const made = await models(...args)
-      if (made?.text) scope.getStore()?.push(made.text)
+      // The text door and the editorial door (the site plan author, `site-plan-author.js`) both spend the build's words.
+      // A model handed out twice is counted once.
+      const list = scope.getStore()
+      for (const model of new Set([made?.text, made?.editorial]))
+        if (model && list && !list.includes(model)) list.push(model)
       return made
     }
   )

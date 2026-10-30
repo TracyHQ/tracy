@@ -30,6 +30,9 @@ import { writeJoomlaMainMenu } from './main-menu-joomla.js'
 import { writeJoomlaFooterNavigation } from './footer-navigation-joomla.js'
 import { writeJoomlaPrivacyPage } from './joomla-privacy-page.js'
 import { briefFactSheet } from './brief-fact-sheet.js'
+import { briefPhotos } from './brief-photos.js'
+import { writeSitePlan } from './site-plan-author.js'
+import { inventoryOfContract } from './template-inventory.js'
 import { writeSiteDirection } from './site-direction.js'
 import { sourcedWriter } from './copy-sources.js'
 import { trackTextSpend, withTextSpend } from './text-spend.js'
@@ -858,11 +861,10 @@ export function createJoomlaEngine({
         woContent?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
       ).catch(() => null)
       // The content brief's own records, for the copy writer (`brief-fact-sheet.js`).
-      const factSheet = briefFactSheet(
-        await Promise.resolve(woContent?.briefFor?.({ siteKey: ctx.siteKey, email: ctx.email })).catch(
-          () => null
-        )
-      )
+      const contentBrief = await Promise.resolve(
+        woContent?.briefFor?.({ siteKey: ctx.siteKey, email: ctx.email })
+      ).catch(() => null)
+      const factSheet = briefFactSheet(contentBrief)
       const site = {
         ...siteBlock(ctx.normalized),
         ...(factSheet ? { factSheet } : {}),
@@ -874,6 +876,30 @@ export function createJoomlaEngine({
         languages: editions ? languages : [written],
         ...(editions ? {} : { sourceLanguage: written })
       }
+      // 🔒 ONE AUTHOR PLANS THE WHOLE SITE BEFORE THE COPY WRITERS (spec TracyHQ/tracy#231, ticket #234, `site-plan-author.js`):
+      // the plan runs beside the current writers and is kept on the build record; it does not drive them yet (#235). A
+      // refused or failed plan never fails the build, and says why on the build record only (`sitePlan.notes`), not in the
+      // build report: it changes nothing on the site yet.
+      const sitePlanStarted = Date.now()
+      // About left blank: no line is written by a model (`ABOUT_BLANK_NOTE`), so no plan is asked for either.
+      const sitePlanRun = (async () =>
+        !(described || written !== SOURCE)
+          ? { version: 'site-plan-run/1', status: 'skipped', plan: null, rounds: [], notes: [ABOUT_BLANK_NOTE] }
+          : writeSitePlan({
+          models: { text, editorial: (await models()).editorial ?? null },
+          inventory: inventoryOfContract(ctx.contract),
+          site: { ...site },
+          photos: briefPhotos(contentBrief, factSheet),
+          signal: budgetSignal(ctx.signal, ctx.deadlineAt)
+        }))().catch((error) => ({
+        version: 'site-plan-run/1',
+        status: 'failed',
+        plan: null,
+        rounds: [],
+        notes: [
+          `the site plan could not be made, so the pages are written as before: ${error instanceof Error ? error.message : error}`
+        ]
+      }))
       // 🔒 THE KIT SAMPLE PAGES KEEP THE TEMPLATE'S CONTENT, IN THE SITE'S LANGUAGE (K3): never planned in the customer's words,
       // translated beside the plan when the site is written in another language (`joomla-kit.js`).
       const kit = kitEntities(ctx.contract.dir)
@@ -1794,6 +1820,9 @@ export function createJoomlaEngine({
       else if (!image) ctx.note('no picture model is set, so the template keeps its own pictures')
       else if (art.failed > 0)
         ctx.note(`${art.failed} picture(s) could not be drawn, so the template keeps its own`)
+      const sitePlanOutcome = await sitePlanRun
+      ctx.time('sitePlanMs', Date.now() - sitePlanStarted)
+      ctx.record?.('sitePlan', sitePlanOutcome)
       ctx.time('planMs', Date.now() - started)
       // What the words cost, for the report: calls and tokens (a model double has no meter, and then there is nothing to say).
       const spent = text?.usage?.()
@@ -1847,7 +1876,9 @@ export function createJoomlaEngine({
         // The call-to-action bands' messages, kept through the cleanup, and the bands taken off (`cta-band-messages.js`).
         ctaBands,
         // The site plan's search title, description and LocalBusiness record (`place-seo.mjs`).
-        seo: sitePlan?.seo ?? null
+        seo: sitePlan?.seo ?? null,
+        // The one author's accepted site plan (`site-plan-author.js`), null when refused: read by the writers from #235.
+        authorPlan: sitePlanOutcome.plan ?? null
       }
     },
 

@@ -247,3 +247,62 @@ test('every reason is listed, not only the first', async () => {
 function firstLink(plan) {
   return plan.decisions.find((d) => d.element.startsWith('link:')).element.slice('link:'.length)
 }
+
+// Every brief photo is decided once (COO, 30/10/2026): used in named picture slots, or not used with a reason; a photo the
+// brief's own labels refuse (`brief-photos.js`) is never placed.
+const PHOTOS = [
+  { id: 'photo:p1', caption: 'A mechanic truing a wheel', verdict: 'accept', rejectedFor: [] },
+  { id: 'photo:p2', caption: 'Shop logo', verdict: 'reject', rejectedFor: ['graphic'] }
+]
+const withPhotos = (plan) => checkSitePlan(plan, { inventory, site: SITE, photos: PHOTOS })
+function photoPlan() {
+  const plan = completePlan()
+  plan.photos = [
+    { photo: 'photo:p1', decision: 'use', slots: ['picture:module-156.0'] },
+    { photo: 'photo:p2', decision: 'skip', reason: 'a logo, not a photograph' }
+  ]
+  return plan
+}
+
+test('a plan that decides every brief photo once passes', async () => {
+  assert.deepEqual((await withPhotos(photoPlan())).reasons, [])
+})
+
+test('a brief photo with no decision, a used photo with no slot or a skipped one with no reason is refused', async () => {
+  const plan = photoPlan()
+  plan.photos = [{ photo: 'photo:p1', decision: 'use', slots: [] }]
+  const result = await withPhotos(plan)
+  assert.deepEqual(
+    result.reasons.map((r) => [r.rule, r.element]),
+    [
+      ['photo-undecided', 'photo:p1'],
+      ['photo-undecided', 'photo:p2']
+    ]
+  )
+  plan.photos = [
+    { photo: 'photo:p1', decision: 'use', slots: ['picture:module-156.0'] },
+    { photo: 'photo:p2', decision: 'skip' }
+  ]
+  assert.deepEqual(rules(await withPhotos(plan)), ['photo-undecided'])
+})
+
+test('a photo decided twice, or a photo the brief does not have, is refused', async () => {
+  const plan = photoPlan()
+  plan.photos.push({ photo: 'photo:p1', decision: 'skip', reason: 'twice' })
+  plan.photos.push({ photo: 'photo:p9', decision: 'skip', reason: 'unknown' })
+  assert.deepEqual(rules(await withPhotos(plan)), ['photo-decided-twice', 'unknown-photo'])
+})
+
+test('a photo the brief labels refuse is never placed', async () => {
+  const plan = photoPlan()
+  plan.photos[1] = { photo: 'photo:p2', decision: 'use', slots: ['picture:module-156.0'] }
+  const result = await withPhotos(plan)
+  assert.deepEqual(rules(result), ['photo-unusable-used'])
+  assert.match(result.reasons[0].message, /graphic/)
+})
+
+test('a used photo placed in a slot that is not a template picture slot is refused', async () => {
+  const plan = photoPlan()
+  plan.photos[0].slots = ['picture:module-999.0']
+  assert.deepEqual(rules(await withPhotos(plan)), ['unknown-element'])
+})

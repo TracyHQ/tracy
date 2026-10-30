@@ -1751,11 +1751,16 @@ export function buildApp(deps) {
     }
     // One bound on model calls in flight for EVERY Apply running in this process: a run alone is held to eight (the
     // measured-safe level; sixteen at once left a quarter of the answers unusable), and several runs at once would add up.
+    /** One site plan call: a whole-site plan with reasoning takes minutes, not the seconds of a copy batch. */
+    const EDITORIAL_TIMEOUT_MS = 600_000
     const seedCalls = createLimiter(Number(process.env.TRACY_SEED_MODEL_CONCURRENCY) || DEFAULT_CONCURRENCY)
     const seedModels = async (input = null) => {
       const door = deps.seedTextDoorFor
         ? await deps.seedTextDoorFor(input)
         : await modelForChain(deps.pool, ['seedText', 'web'], deps.config)
+      const editorialDoor = deps.seedEditorialDoorFor
+        ? await deps.seedEditorialDoorFor(input)
+        : await modelForChain(deps.pool, /** @type {any} */ (['woEditorial']), deps.config, { env: null })
       return {
         text: door
           ? createSeedModel({
@@ -1765,6 +1770,10 @@ export function buildApp(deps) {
             })
           : null,
         textDoor: door,
+        // 🔒 THE SITE PLAN IS MADE ON THE EDITORIAL DOOR, WITH REASONING (ticket TracyHQ/tracy#234, `site-plan-author.js`).
+        // Only an assigned `woEditorial` door answers here, never the environment's model: unassigned, the author falls back
+        // to the text door and says so on the build record.
+        editorial: editorialDoor ? createSeedModel({ model: editorialDoor, reasoning: true, timeoutMs: EDITORIAL_TIMEOUT_MS }) : null,
         image: await seedImageDoor()
       }
     }

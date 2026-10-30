@@ -11,7 +11,8 @@ import {
   FALLBACK_MAX_OUTPUT,
   isCutFinish,
   maxOutputOf,
-  noReasoningBody
+  noReasoningBody,
+  reasoningBody
 } from '../src/lib/seed-model.js'
 
 const KEY = 'sk-secret-key'
@@ -54,6 +55,24 @@ test('the request carries the no-reasoning field, the bearer key and the model',
     { role: 'system', content: 'S' },
     { role: 'user', content: '{"a":1}' }
   ])
+})
+
+test('a reasoning model (the editorial door) is asked, in the words of its provider, to think', async () => {
+  assert.deepEqual(reasoningBody('https://api.deepseek.com'), { thinking: { type: 'enabled' } })
+  assert.deepEqual(reasoningBody('https://openrouter.ai/api/v1'), { reasoning: { enabled: true } })
+  assert.deepEqual(reasoningBody('https://api.openai.com/v1'), {})
+  const seen = []
+  const m = createSeedModel({
+    model: { apiKey: KEY, baseUrl: 'https://api.deepseek.com', words: 'deepseek-v4-pro' },
+    reasoning: true,
+    fetchImpl: async (url, init) => {
+      seen.push(JSON.parse(init.body))
+      return reply('{}')
+    },
+    sleep: instant
+  })
+  await m.chat({ messages: [{ role: 'user', content: 'x' }] })
+  assert.deepEqual(seen[0].thinking, { type: 'enabled' })
 })
 
 test('a provider that does not know the field is asked again without it, and then remembered', async () => {

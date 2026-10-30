@@ -12,6 +12,8 @@
  *                   buttons and links (kind: page, call, whatsapp, email, booking, map);
  *   glossary:     [{name, kind, description}] - every item named on more than one page, written once;
  *   writingOrder: page ids, a page after the pages it depends on;
+ *   photos:       [{photo, decision: 'use' | 'skip', slots?: string[], reason?}] - one per brief photo
+ *                   (`brief-photos.js`): used in named picture slots, or not used with a reason;
  *   outOfScope:   {template: [{element, reason}], brief: [{sourceId, reason}]};
  *   identity, contact, legal, forms, seo: read by the later stages, not by this check.
  *
@@ -20,22 +22,25 @@
  */
 import { seeder } from '../../lib/seeder.js'
 
+import { photoReasons } from './site-plan-check-photos.js'
 import { buttonReasons, factReasons, glossaryReasons, orderReasons } from './site-plan-check-rules.js'
 
 /**
  * @typedef {{rule: 'undecided' | 'decided-twice' | 'unknown-element' | 'added-page-layout' | 'over-capacity' |
- *   'unsourced-fact' | 'missing-glossary' | 'writing-order-cycle' | 'writing-order-missing' | 'writing-order-late' | 'button-no-action',
+ *   'unsourced-fact' | 'missing-glossary' | 'writing-order-cycle' | 'writing-order-missing' | 'writing-order-late' | 'button-no-action' |
+ *   'photo-undecided' | 'photo-decided-twice' | 'unknown-photo' | 'photo-unusable-used',
  *   element?: string, message: string}} PlanReason
  */
 
 /**
  * Check a site plan.
  * @param {any} plan - the site plan
- * @param {{inventory: {elements: any[]}, site: any}} input - the template inventory, and the brief as the writers get it
- *   (the business fields, `statistics` and `factSheet`)
+ * @param {{inventory: {elements: any[]}, site: any, photos?: any[] | null}} input - the template inventory, the brief as
+ *   the writers get it (the business fields, `statistics` and `factSheet`), and the brief photos (`brief-photos.js`); with
+ *   no photos given, the plan's photo list is not checked
  * @returns {Promise<{ok: boolean, reasons: PlanReason[]}>}
  */
-export async function checkSitePlan(plan, { inventory, site }) {
+export async function checkSitePlan(plan, { inventory, site, photos = null }) {
   const facts = await seeder('fact-sources')
   /** @type {PlanReason[]} */
   const reasons = []
@@ -95,6 +100,7 @@ export async function checkSitePlan(plan, { inventory, site }) {
   reasons.push(...glossaryReasons(plan, elements, shownPages))
   reasons.push(...orderReasons(plan, shownPages))
   reasons.push(...buttonReasons({ elements, decided, off, shownPages, site, facts }))
+  if (Array.isArray(photos)) reasons.push(...photoReasons(plan, photos, elements))
   return { ok: reasons.length === 0, reasons }
 }
 
