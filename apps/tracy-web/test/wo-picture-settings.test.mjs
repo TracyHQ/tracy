@@ -26,14 +26,49 @@ function fixture(policy) {
     asset_manifest: rows.map((r) => ({ id: r.id, sha256: r.sha256, kind: 'image' })),
     brief: { picturePolicy: picturePolicy(policy) }
   }
+  // `wo_media_analysis` by (sha256, model, key): where a build keeps the labels it paid for (item 27).
+  const analyses = new Map()
   const pool = {
-    query: async (sql) => {
+    query: async (sql, params = []) => {
       if (sql.startsWith('select account_id'))
         return { rows: [{ account_id: 'account', build_id: 'creation' }] }
       if (sql.startsWith('select id from account')) return { rows: [{ id: 'account' }] }
       if (sql.includes('from wo_build b join')) return { rows: [build] }
-      if (sql.includes('from wo_media where')) return { rows }
-      if (sql.startsWith('update wo_media')) return { rows: [] }
+      // Fresh row objects each read, as a database gives: what one build attaches in memory never reaches the next.
+      if (sql.includes('from wo_media where')) return { rows: rows.map((r) => structuredClone(r)) }
+      if (sql.startsWith('update wo_media ')) return { rows: [] }
+      // The shared label cache (`media-analysis.js`): claim, settle and read the done labels of one (model, key).
+      if (sql.startsWith('insert into wo_media_analysis')) {
+        const [shas, model, key] = params
+        const claimed = []
+        for (const sha of shas) {
+          const id = `${sha}|${model}|${key}`
+          if (analyses.get(id)?.state === 'done') continue
+          analyses.set(id, { state: 'pending', result: null })
+          claimed.push({ media_sha256: sha })
+        }
+        return { rows: claimed }
+      }
+      if (sql.startsWith('update wo_media_analysis set state = $4')) {
+        const [sha, model, key, state, result] = params
+        const id = `${sha}|${model}|${key}`
+        if (analyses.get(id)?.state === 'pending')
+          analyses.set(id, { state, result: result === null ? null : JSON.parse(result) })
+        return { rows: [] }
+      }
+      if (sql.startsWith('select media_sha256') && sql.includes('from wo_media_analysis')) {
+        const [shas, model, key] = params
+        return {
+          rows: shas
+            .map((sha) => ({
+              media_sha256: sha,
+              model,
+              version: key,
+              ...analyses.get(`${sha}|${model}|${key}`)
+            }))
+            .filter((r) => r.state === 'done')
+        }
+      }
       assert.fail(`Unexpected query: ${sql}`)
     }
   }
@@ -61,7 +96,7 @@ function fixture(policy) {
     },
     log: { warn: (message) => assert.fail(message) }
   })
-  return { reader, calls, resolved, rows }
+  return { reader, calls, resolved, rows, analyses }
 }
 
 test('a frozen ten-picture setting limits actual vision egress despite a larger model default, then reuses labels', async () => {
@@ -121,7 +156,7 @@ test('a metered invocation override bypasses the generic ledger and never change
 
 test('strict root overrides propagate uncertain work and Stop without caching a successful label', async () => {
   for (const stop of [false, true]) {
-    const { reader, rows } = fixture({ maxVisionPictures: 10 })
+    const { reader, rows, analyses } = fixture({ maxVisionPictures: 10 })
     const controller = new AbortController()
     const failure = new Error(stop ? 'STOPPED' : 'ATTEMPT_UNCERTAIN')
     await assert.rejects(
@@ -149,6 +184,9 @@ test('strict root overrides propagate uncertain work and Stop without caching a 
       (error) => error === failure
     )
     assert.ok(rows.every((r) => !r.labels.vision))
+    // Every claim went back unanswered: no label of an uncertain or stopped call is kept for a later build.
+    assert.ok(analyses.size > 0)
+    assert.ok([...analyses.values()].every((a) => a.state === 'failed' && a.result === null))
   }
 })
 
