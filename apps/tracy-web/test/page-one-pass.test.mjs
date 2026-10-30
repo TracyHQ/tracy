@@ -102,7 +102,12 @@ function shaped(key, shape, title) {
     const line = words.join(' ')
     sentences.push(`${line[0].toUpperCase()}${line.slice(1)}.`)
   }
-  return sentences.join(' ')
+  // Words of whole letters overshoot a narrow band: the last word is cut or grown so the text lands inside it.
+  let text = sentences.join(' ')
+  const [least, most] = shape.characters
+  while ([...text].length > most && /\p{L}{2}\.$/u.test(text)) text = `${text.slice(0, -2)}.`
+  while ([...text].length < least) text = `${text.slice(0, -1)}o.`
+  return text
 }
 
 /**

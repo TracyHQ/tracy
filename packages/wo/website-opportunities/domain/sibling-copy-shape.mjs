@@ -90,14 +90,52 @@ function perLineOf(slot) {
 /** The lines a text takes in a box that holds `perLine` characters a line. */
 const linesAt = (characters, perLine) => Math.max(1, Math.ceil(characters / perLine))
 
+/** The fewest characters a sentence takes, so a band never asks for more sentences than its characters hold. */
+const MIN_SENTENCE_CHARS = 20
+
+/** The characters that take exactly `n` lines at `perLine` characters a line: `[least, most]`. */
+const charsForLines = (n, perLine) => [Math.floor((n - 1) * perLine) + 1, Math.floor(n * perLine)]
+
+/** The intersection of the character spans that take each view's line count (`[1, Infinity]` with no measured view). */
+function lineSpan(lines) {
+  let low = 1
+  let high = Infinity
+  for (const { lines: n, perLine } of Object.values(lines)) {
+    const [l, h] = charsForLines(n, perLine)
+    low = Math.max(low, l)
+    high = Math.min(high, h)
+  }
+  return [low, high]
+}
+
 /**
- * The band the template's demo text gives a list: its fewest to most sentences, its shortest to longest length with a
- * little give, and, where the boxes were measured, the line count per viewport the longest demo text takes (every sibling
- * takes that many lines). Null when the demo holds no text there.
+ * Why a band no text can meet is empty (its least above its most, or no length in its characters taking its line count
+ * on every measured viewport), or null when some text can meet it.
+ * @param {{sentences: [number, number], characters: [number, number], lines: Record<string, {lines: number, perLine: number}>}} band
+ */
+export function emptyBandReason(band) {
+  const [sLow, sHigh] = band.sentences
+  const [low, high] = band.characters
+  if (sLow > sHigh) return `sentences ${sLow}-${sHigh}`
+  if (!(low >= 1 && low <= high)) return `characters ${low}-${high}`
+  const [lineLow, lineHigh] = lineSpan(band.lines)
+  if (Math.max(low, lineLow) > Math.min(high, lineHigh))
+    return `characters ${low}-${high} meet no length taking lines ${JSON.stringify(band.lines)}`
+  return null
+}
+
+/**
+ * The band the template's demo text gives a list. Every measure comes from the same demo samples and the slots' real
+ * boxes, and the band is their intersection: the demo's fewest to most sentences, its shortest to longest length with a
+ * little give capped by the smallest box (`limit`), and, where the boxes were measured, the line count per viewport the
+ * longest demo text renders, read at the narrowest sibling box. 🔒 ALWAYS SATISFIABLE: when the demo's lengths and its
+ * line count exclude each other, the demo's rendered line count is kept and the characters follow from the box; when the
+ * box cannot hold that line count, the line count follows from the most the box holds. Never a least above a most.
+ * Null when the demo holds no text there.
  * @param {Array<unknown | {sample?: unknown, fit?: any}>} samples - demo texts, or the slots holding them
  * @param {number} [limit]
  * @returns {{sentences: [number, number], characters: [number, number],
- *   lines: Record<string, {lines: number, perLine: number}>} | null}
+ *   lines: Record<string, {lines: number, perLine: number}>, notes?: string[]} | null}
  */
 export function bandOf(samples, limit = Infinity) {
   const slots = samples.map((s) => (s && typeof s === 'object' ? s : { sample: s }))
@@ -105,34 +143,58 @@ export function bandOf(samples, limit = Infinity) {
     .map((slot) => ({ slot, ...shapeOf(/** @type {any} */ (slot).sample) }))
     .filter((s) => s.characters > 0 && s.sentences > 0)
   if (shapes.length === 0) return null
-  const sentences = shapes.map((s) => s.sentences)
   const chars = shapes.map((s) => s.characters)
-  let high = Math.min(Math.round(Math.max(...chars) * BAND_GIVE.high), limit)
-  let low = Math.min(Math.round(Math.min(...chars) * BAND_GIVE.low), high)
+  const cap = Number(limit) >= 1 ? Number(limit) : Infinity
+  const high = Math.max(1, Math.min(Math.round(Math.max(...chars) * BAND_GIVE.high), cap))
+  const low = Math.max(1, Math.min(Math.round(Math.min(...chars) * BAND_GIVE.low), high))
+  // The demo's rendered line count per viewport (the most lines a demo text takes in its own box), read at the narrowest
+  // sibling box of that viewport, since the band holds one count per viewport for every sibling.
   /** @type {Record<string, {lines: number, perLine: number}>} */
-  const lines = {}
+  const demoLines = {}
   for (const s of shapes)
     for (const [view, perLine] of Object.entries(perLineOf(s.slot))) {
+      const at = demoLines[view]
       const taken = linesAt(s.characters, perLine)
-      const at = lines[view]
-      if (!at || taken > at.lines || (taken === at.lines && perLine < at.perLine))
-        lines[view] = { lines: taken, perLine: at ? Math.min(at.perLine, perLine) : perLine }
-      else lines[view] = { lines: at.lines, perLine: Math.min(at.perLine, perLine) }
+      demoLines[view] = {
+        lines: Math.max(at?.lines ?? 0, taken),
+        perLine: Math.min(at?.perLine ?? Infinity, perLine)
+      }
     }
-  // The characters that take exactly the demo's line count on every measured viewport.
-  let lineLow = 0
-  let lineHigh = Infinity
-  for (const { lines: n, perLine } of Object.values(lines)) {
-    lineLow = Math.max(lineLow, Math.floor((n - 1) * perLine) + 1)
-    lineHigh = Math.min(lineHigh, Math.floor(n * perLine))
+  const [lineLow, lineHigh] = lineSpan(demoLines)
+  /** @type {[number, number]} */
+  let characters
+  let lines = demoLines
+  if (Math.max(low, lineLow) <= Math.min(high, lineHigh))
+    characters = [Math.max(low, lineLow), Math.min(high, lineHigh)]
+  else if (lineLow <= lineHigh && Math.max(1, lineLow) <= Math.min(cap, lineHigh))
+    characters = [lineLow, Math.min(cap, lineHigh)]
+  else {
+    // The box cannot hold the demo's line count on every viewport at once: one length the demo span allows (the one
+    // nearest the demo's line count) sets the line count, and the characters are those that take it.
+    const target = Math.min(high, Math.max(low, lineHigh < low ? lineHigh : lineLow))
+    lines = {}
+    for (const [view, { perLine }] of Object.entries(demoLines))
+      lines[view] = { lines: linesAt(target, perLine), perLine }
+    const [l, h] = lineSpan(lines)
+    characters = [Math.max(low, l), Math.min(high, h)]
   }
-  if (lineLow <= lineHigh) {
-    const l = Math.max(low, lineLow)
-    const h = Math.min(high, lineHigh)
-    if (l <= h) [low, high] = [l, h]
-    else [low, high] = [lineLow, Math.min(lineHigh, limit)]
+  const sentenceCounts = shapes.map((s) => s.sentences)
+  const sHigh = Math.max(
+    1,
+    Math.min(Math.max(...sentenceCounts), Math.floor(characters[1] / MIN_SENTENCE_CHARS))
+  )
+  const band = {
+    sentences: /** @type {[number, number]} */ ([Math.min(Math.min(...sentenceCounts), sHigh), sHigh]),
+    characters,
+    lines
   }
-  return { sentences: [Math.min(...sentences), Math.max(...sentences)], characters: [low, high], lines }
+  const empty = emptyBandReason(band)
+  if (empty) {
+    // A guard, not a path: under a test it fails loud; in production the band carries the note for the build receipt.
+    if (process.env.NODE_TEST_CONTEXT) throw new Error(`bandOf: empty band (${empty})`)
+    return { ...band, notes: [`empty-band: ${empty}`] }
+  }
+  return band
 }
 
 /** The lines a text takes per measured viewport of a band, or {} when its boxes were not measured. */

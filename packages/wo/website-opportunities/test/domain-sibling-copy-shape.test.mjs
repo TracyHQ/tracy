@@ -7,6 +7,7 @@ import {
   acceptsSiblingRewrite,
   alignSpelling,
   bandOf,
+  emptyBandReason,
   fitsBand,
   shapeDrift,
   linesOf,
@@ -173,4 +174,91 @@ test('one spelling per site: a body follows its title', () => {
     ['personalised', 'personalized']
   ])
   assert.deepEqual(spellingVariants(['Opening hours', 'Our hours are long']), [])
+})
+
+/** A measured box: its characters and lines per viewport. */
+const box = (desktop, phone) => ({
+  measured: true,
+  lines: { desktop: desktop[1], phone: phone[1] },
+  maxChars: { desktop: desktop[0], phone: phone[0] },
+  maxCharacters: Math.min(desktop[0], phone[0])
+})
+
+/** Whether some length sits in a band's characters and takes its line count on every measured viewport. */
+function satisfiable(band) {
+  if (band.characters[0] > band.characters[1] || band.sentences[0] > band.sentences[1]) return false
+  for (let c = band.characters[0]; c <= band.characters[1]; c += 1)
+    if (
+      Object.values(band.lines).every(({ lines, perLine }) => Math.max(1, Math.ceil(c / perLine)) === lines)
+    )
+      return true
+  return false
+}
+
+const words = (n) =>
+  `${'Warm rooms and fresh towels are ready for every guest who stays the night with us here'.repeat(4).slice(0, n - 1)}.`
+
+test('a tall box beside a short one never gives a band whose least is above its most', () => {
+  // Two room cards of a guest house: the first box holds four desktop lines, the second three, and the demo fills each.
+  const band = bandOf(
+    [
+      { sample: words(307), fit: box([328, 4], [368, 8]) },
+      { sample: words(171), fit: box([240, 3], [220, 5]) }
+    ],
+    220
+  )
+  assert.ok(band.characters[0] <= band.characters[1], JSON.stringify(band))
+  assert.ok(band.characters[1] <= 220)
+  assert.equal(satisfiable(band), true, JSON.stringify(band))
+})
+
+test('a wide one-line box beside three-line boxes never asks for three lines in one line of characters', () => {
+  // Four tour summaries: three narrow boxes of three lines and one wide box of a single 117-character line.
+  const band = bandOf(
+    [
+      { sample: words(255), fit: box([261, 3], [261, 3]) },
+      { sample: words(130), fit: box([146, 2], [136, 3]) },
+      { sample: words(255), fit: box([261, 3], [261, 3]) },
+      { sample: words(110), fit: box([117, 1], [117, 3]) }
+    ],
+    117
+  )
+  assert.ok(band.characters[1] <= 117)
+  assert.equal(satisfiable(band), true, JSON.stringify(band))
+})
+
+test('the demo line count is kept when the box allows it', () => {
+  const fit = box([80, 2], [75, 3])
+  const band = bandOf([
+    { sample: words(70), fit },
+    { sample: words(66), fit }
+  ])
+  assert.deepEqual(band.lines, { desktop: { lines: 2, perLine: 40 }, phone: { lines: 3, perLine: 25 } })
+})
+
+test('no sibling group of a real content map, nor of the fixtures, gets an empty band', async () => {
+  const { readFile } = await import('node:fs/promises')
+  const maps = [
+    '../../../cms/tracy-joomla-quickstart/contracts/ja-boxing/j6/1.0.8/content-map.json',
+    './fixtures/content-map-with-roles.json'
+  ]
+  let lists = 0
+  for (const path of maps) {
+    const map = JSON.parse(await readFile(new URL(path, import.meta.url), 'utf8'))
+    for (const list of siblingLists(map.slots ?? [])) {
+      lists += 1
+      assert.equal(satisfiable(list.band), true, `${path} ${list.id}: ${JSON.stringify(list.band)}`)
+    }
+  }
+  assert.ok(lists > 0)
+})
+
+test('the guard names a band no text can meet', () => {
+  assert.match(
+    String(emptyBandReason({ sentences: [2, 3], characters: [265, 220], lines: {} })),
+    /characters/
+  )
+  const threeLinesInOne = { desktop: { lines: 3, perLine: 73 }, phone: { lines: 3, perLine: 39 } }
+  assert.ok(emptyBandReason({ sentences: [2, 2], characters: [88, 117], lines: threeLinesInOne }))
+  assert.equal(emptyBandReason({ sentences: [2, 2], characters: [88, 117], lines: {} }), null)
 })
