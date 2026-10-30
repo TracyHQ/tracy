@@ -15,7 +15,9 @@
  * service `image` starts no container on a runner without docker. Only a real run shows those.
  */
 import assert from 'node:assert/strict'
-import { readFileSync } from 'node:fs'
+import { spawnSync } from 'node:child_process'
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import { dirname, join, resolve } from 'node:path'
 import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
@@ -27,6 +29,8 @@ import { labelSets, runnerPaths } from '../test-support/runs-on.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const { jobs } = load(readFileSync(join(ROOT, '.github/workflows/tracy-ci.yml'), 'utf8'))
+const pnpmAction = load(readFileSync(join(ROOT, '.github/actions/dsh-lib/hosted-pnpm/action.yml'), 'utf8'))
+const dshAction = load(readFileSync(join(ROOT, '.github/actions/dsh-lib/action.yml'), 'utf8'))
 const HOSTED_ONLY = "runner.environment == 'github-hosted'"
 const NODE_STEP = 'Set up Node on a GitHub-hosted runner'
 const PHP_STEP = 'Set up PHP on a GitHub-hosted runner'
@@ -102,6 +106,8 @@ test('the rows that ran on the php-carrying image get php 8.3 cli on GitHub-host
     assert.equal(step.if, HOSTED_ONLY, name)
     assert.match(step.uses, /^shivammathur\/setup-php@[0-9a-f]{40}$/, name)
     assert.equal(step.with['php-version'], '8.3', name)
+    assert.equal(step.with.coverage, 'none', name)
+    assert.equal(step.with.tools, 'none', name)
     assert.ok(indexOf(jobs[name], PHP_STEP) < indexOf(jobs[name], 'Install dependencies'), name)
   }
 })
@@ -139,4 +145,113 @@ test('the deploy key is still removed on every path', () => {
     assert.equal(remove.if, 'always()', name)
     assert.equal(remove.run, 'rm -f "$RUNNER_TEMP/vendor_deploy"', name)
   }
+})
+
+test('only hosted test jobs select mawk and pin pnpm before installing or running tests', () => {
+  for (const name of ['build-check', 'new-test-proof']) {
+    const job = jobs[name]
+    const awk = job.steps[indexOf(job, 'Select mawk on a GitHub-hosted runner')]
+    const pnpm = job.steps[indexOf(job, 'Prepare pnpm on a GitHub-hosted runner')]
+    assert.equal(awk.if, HOSTED_ONLY, name)
+    assert.match(awk.run, /if ! command -v mawk/)
+    assert.match(awk.run, /sudo apt-get install --yes --no-install-recommends mawk/)
+    assert.match(awk.run, /sudo update-alternatives --set awk "\$\(command -v mawk\)"/)
+    assert.equal(pnpm.if, HOSTED_ONLY, name)
+    assert.equal(pnpm.uses, './.github/actions/dsh-lib/hosted-pnpm', name)
+    assert.deepEqual(pnpm.with, { scope: 'workspace' }, name)
+    assert.ok(
+      indexOf(job, 'Select mawk on a GitHub-hosted runner') < indexOf(job, 'Install dependencies'),
+      name
+    )
+    assert.ok(indexOf(job, ASSERT_NODE) < indexOf(job, pnpm.name), name)
+    assert.ok(indexOf(job, pnpm.name) < indexOf(job, 'Install dependencies'), name)
+    // Preserve the existing bootstrap: the root install must relink the submodule's members LAST.
+    assert.ok(indexOf(job, 'Build the vendored dsh') < indexOf(job, 'Install dependencies'), name)
+    assert.equal(job.steps[indexOf(job, 'Install dependencies')].run, 'pnpm install --frozen-lockfile')
+  }
+})
+
+test('a hosted dsh cache hit does not download the pnpm store; cold builds use a separate store key', () => {
+  const steps = dshAction.runs.steps
+  const at = steps.findIndex((s) => s.uses === './.github/actions/dsh-lib/hosted-pnpm')
+  assert.ok(at > steps.findIndex((s) => s.id === 'probe'))
+  assert.ok(at < steps.findIndex((s) => s.name === 'Build dsh once for this key (not cached yet)'))
+  assert.equal(
+    steps[at].if,
+    `${HOSTED_ONLY} && inputs.mode == 'ensure' && steps.probe.outputs.cache-hit != 'true'`
+  )
+  assert.deepEqual(steps[at].with, { scope: 'dsh' })
+  // Keep the existing native-build key and archive contract, including architecture and Node.
+  assert.match(steps.find((s) => s.id === 'key').run, /node scripts\/build-dsh\.mjs --print-key/)
+  for (const step of steps.filter((s) => String(s.uses).startsWith('actions/cache/'))) {
+    assert.equal(step.with.path, '.dsh-lib/dsh-lib.tar')
+    assert.equal(step.with.key, '${{ steps.key.outputs.key }}')
+    assert.equal(step.with['restore-keys'], undefined)
+  }
+})
+
+test('the hosted download cache binds both installs, Node, architecture and dsh, and caches no checkout', () => {
+  const cache = pnpmAction.runs.steps.find((s) => String(s.uses).startsWith('actions/cache@'))
+  assert.match(cache.uses, /^actions\/cache@[0-9a-f]{40}$/)
+  assert.equal(cache.with.path, '${{ steps.store.outputs.path }}')
+  for (const input of [
+    'runner.os',
+    'runner.arch',
+    'inputs.scope',
+    '.node-version',
+    'package.json',
+    'pnpm-lock.yaml',
+    'pnpm-workspace.yaml',
+    '.npmrc',
+    'vendor/tracy/deepseek-harness/pnpm-lock.yaml',
+    'steps.store.outputs.dsh'
+  ])
+    assert.ok(cache.with.key.includes(input), input)
+  assert.equal(cache.with['restore-keys'], undefined)
+  assert.doesNotMatch(JSON.stringify(pnpmAction), /secrets\.|node_modules|\.npmrc\s*\n/)
+  // Existing public-repo boundary still gates every job that can populate this cache.
+  for (const name of ['dsh-lib', 'build-check', 'new-test-proof'])
+    assert.match(jobs[name].if, /github\.event\.pull_request\.head\.repo\.full_name == github\.repository/)
+})
+
+test('the hosted pnpm bootstrap activates the checkout pin globally before asking pnpm for its store', (t) => {
+  const dir = mkdtempSync(join(tmpdir(), 'ci-hosted-pnpm-'))
+  t.after(() => rmSync(dir, { recursive: true, force: true }))
+  mkdirSync(join(dir, 'bin'))
+  writeFileSync(join(dir, 'package.json'), JSON.stringify({ packageManager: 'pnpm@11.17.0' }))
+  const put = (name, script) =>
+    writeFileSync(join(dir, 'bin', name), `#!/usr/bin/env node\n${script}`, { mode: 0o755 })
+  put(
+    'corepack',
+    `
+    const fs = require('node:fs');
+    require('node:assert/strict').deepEqual(process.argv.slice(2), ['install', '--global', 'pnpm@11.17.0']);
+    fs.writeFileSync('activated', 'pnpm@11.17.0');
+  `
+  )
+  put(
+    'pnpm',
+    `
+    const assert = require('node:assert/strict');
+    assert.equal(require('node:fs').readFileSync('activated', 'utf8'), 'pnpm@11.17.0');
+    assert.deepEqual(process.argv.slice(2), ['store', 'path', '--silent']);
+    console.log(process.cwd() + '/content store');
+  `
+  )
+  put(
+    'git',
+    `
+    require('node:assert/strict').deepEqual(process.argv.slice(2), ['rev-parse', 'HEAD:vendor/tracy/deepseek-harness']);
+    console.log('d'.repeat(40));
+  `
+  )
+  const output = join(dir, 'output')
+  const step = pnpmAction.runs.steps.find((s) => s.id === 'store')
+  const result = spawnSync('bash', ['-c', step.run], {
+    cwd: dir,
+    env: { ...process.env, PATH: `${join(dir, 'bin')}:${process.env.PATH}`, GITHUB_OUTPUT: output },
+    encoding: 'utf8'
+  })
+  assert.equal(result.status, 0, result.stderr)
+  assert.equal(readFileSync(output, 'utf8'), `path=${dir}/content store\ndsh=${'d'.repeat(40)}\n`)
 })

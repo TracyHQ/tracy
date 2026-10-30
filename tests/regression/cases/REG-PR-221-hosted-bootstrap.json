@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-221-hosted-bootstrap",
+  "kind": "fix",
+  "title": "Hosted CI pins the scratch-repository pnpm default, selects mawk and caches only compatible downloads",
+  "pr": 221,
+  "area": "ci/hosted",
+  "cms": ["any"],
+  "needs": ["node", "installed workspace"],
+  "flaky_model": false,
+  "steps": [
+    "Run node --test --test-reporter=tap scripts/test/ci-hosted.test.mjs from an installed checkout.",
+    "The tests execute the composite action's bootstrap shell against a fixture packageManager and recording tools, and read the workflow's runner conditions, bootstrap ordering and cache inputs."
+  ],
+  "expect": [
+    "The bootstrap activates the checkout's packageManager globally before asking pnpm for the store path.",
+    "Only hosted test jobs select mawk and prepare pnpm; the root frozen install follows the dsh build.",
+    "A built-dsh cache hit does not fetch the pnpm store; cold dsh and workspace stores have separate keys.",
+    "The store cache binds lockfiles, Node, architecture and dsh, carries no checkout or secrets, and has no broad restore prefix."
+  ],
+  "selectors": {},
+  "evidence": "Hosted run 41019550735; locally reproduced Node 24.11.1/Corepack 0.34.2 MODULE_NOT_FOUND for pnpm 12 bin/pnpm.cjs and GNU awk 5.2.1 Node_array_ref crash. Full runtime verification is recorded in docs/references/gates-ci-runners.md; this case guards workflow wiring.",
+  "fence": "Hosted-only bootstrap; no change to self-hosted selection, install order or test assertions",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "scripts/test/ci-hosted.test.mjs"],
+    "tests": [
+      "only hosted test jobs select mawk and pin pnpm before installing or running tests",
+      "a hosted dsh cache hit does not download the pnpm store; cold builds use a separate store key",
+      "the hosted download cache binds both installs, Node, architecture and dsh, and caches no checkout",
+      "the hosted pnpm bootstrap activates the checkout pin globally before asking pnpm for its store"
+    ]
+  }
+}

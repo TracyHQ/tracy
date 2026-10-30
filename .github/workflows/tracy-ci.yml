@@ -861,6 +861,19 @@ jobs:
           php-version: '8.3'
           coverage: none
           tools: none
+
+      # GNU awk 5.2.1 crashes in token_mount_custody on malformed compose input (Node_array_ref).
+      # Match the self-hosted image's mawk; only this disposable VM's alternative is changed.
+      - name: Select mawk on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        run: |
+          set -euo pipefail
+          if ! command -v mawk >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install --yes --no-install-recommends mawk
+          fi
+          sudo update-alternatives --set awk "$(command -v mawk)"
+          awk -W version
       # The runner's PostgreSQL, on a fresh VM: the job's `postgres` service (started only for
       # `ci:hosted`). `check-tests.ts` uses an exported TEST_DATABASE_URL first, and is red if it
       # does not answer. Through `GITHUB_ENV`, not a job `env`: an empty value there would hide
@@ -927,6 +940,12 @@ jobs:
           set -euo pipefail
           rm -rf node_modules vendor/tracy/deepseek-harness/node_modules
           node scripts/build-dsh.mjs --skip-if-built
+
+      - name: Prepare pnpm on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: ./.github/actions/dsh-lib/hosted-pnpm
+        with:
+          scope: workspace
 
       - name: Install dependencies
         id: install
@@ -1294,6 +1313,17 @@ jobs:
           coverage: none
           tools: none
 
+      - name: Select mawk on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        run: |
+          set -euo pipefail
+          if ! command -v mawk >/dev/null; then
+            sudo apt-get update
+            sudo apt-get install --yes --no-install-recommends mawk
+          fi
+          sudo update-alternatives --set awk "$(command -v mawk)"
+          awk -W version
+
       - name: Assert the runner's Node matches .node-version
         run: |
           set -euo pipefail
@@ -1318,6 +1348,12 @@ jobs:
           set -euo pipefail
           rm -rf node_modules vendor/tracy/deepseek-harness/node_modules
           node scripts/build-dsh.mjs --skip-if-built
+
+      - name: Prepare pnpm on a GitHub-hosted runner
+        if: runner.environment == 'github-hosted'
+        uses: ./.github/actions/dsh-lib/hosted-pnpm
+        with:
+          scope: workspace
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
