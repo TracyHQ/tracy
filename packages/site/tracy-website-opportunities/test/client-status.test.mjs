@@ -6,7 +6,15 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { buildView, fixKey, jobView, reasonKey, shouldPoll, siteLinks, sourceRow } from '../src/client/status.ts'
+import {
+  buildView,
+  fixKey,
+  jobView,
+  reasonKey,
+  shouldPoll,
+  siteLinks,
+  sourceRow
+} from '../src/client/status.ts'
 
 test('each source status keeps its own label and tone', () => {
   assert.deepEqual(
@@ -219,4 +227,26 @@ test('each blocker kind has its own words on screen, and an unknown one still sh
   assert.equal(fixKey('form-without-recipient'), 'fix.formWithoutRecipient')
   assert.equal(fixKey('kept-page-missing'), 'fix.keptPageMissing')
   assert.equal(fixKey('a-kind-added-later'), 'fix.otherBlocker')
+})
+
+test('a built site whose fill failed is Failed with its reason, never done with Hand off (#189)', () => {
+  for (const key of ['locksmith-north', 'tea-room-east']) {
+    const failed = buildView({
+      build: { state: 'done', receipt: { fill: { state: 'failed', code: 'SITE_FILL_FAILED' } } },
+      site: { key }
+    })
+    assert.equal(failed.phase, 'failed')
+    assert.equal(failed.reasonKey, 'reason.demo_fill_failed')
+    assert.deepEqual(failed.links, { workspace: `/${key}/`, live: null })
+    const again = buildView({
+      build: { state: 'done', receipt: { fill: { state: 'running' } } },
+      site: { key }
+    })
+    assert.equal(again.phase, 'running', 'a Retry filling the site again is still running')
+    const filled = buildView({
+      build: { state: 'done', receipt: { fill: { state: 'applied' } } },
+      site: { key }
+    })
+    assert.equal(filled.phase, 'done')
+  }
 })

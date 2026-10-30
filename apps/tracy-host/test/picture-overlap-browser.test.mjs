@@ -14,6 +14,9 @@ let browser = null
 let server = null
 let base = ''
 const files = new Map()
+/** What a locked site saw: each path, and whether the read carried the site token. */
+const seen = []
+const TOKEN = 'locked-site-token-0123456789'
 
 /** A figure on a clear ground, and an opaque picture, as SVG (the host carries no image library). */
 const clearWith = (width, height, part) =>
@@ -76,6 +79,19 @@ before(async () => {
   files.set('/images/tracy-content/tile.svg', opaque(640, 480))
   server = createServer((req, res) => {
     const path = new URL(req.url, 'http://x').pathname
+    // A site on its rebuilding page (#189): the real page only for a read carrying its token.
+    if (path.startsWith('/locked') || path === '/images/other-origin.svg') {
+      const carried = req.headers.authorization === `Bearer ${TOKEN}`
+      seen.push({ host: req.headers.host, path, carried })
+      if (path === '/images/other-origin.svg') {
+        res.writeHead(200, { 'content-type': 'image/svg+xml' })
+        return res.end(opaque(10, 10))
+      }
+      res.writeHead(200, { 'content-type': 'text/html' })
+      if (!carried) return res.end(page('<h1>This website is being updated.</h1>'))
+      const other = `http://localhost:${server.address().port}/images/other-origin.svg`
+      return res.end(PAGES['/over'].replace('</body>', `<img src="${other}" width="10" height="10"></body>`))
+    }
     if (PAGES[path]) {
       res.writeHead(200, { 'content-type': 'text/html' })
       return res.end(PAGES[path])
@@ -149,6 +165,42 @@ test("the route's browser reads every named page of the site and answers the fin
     answer.findings.map((f) => f.src),
     ['images/tracy-content/ball.svg']
   )
+})
+
+test("a locked site is read through its token, sent to the site's own origin only (#189)", async (t) => {
+  if (skip()) return t.skip(skip())
+  const playwright = await import('playwright')
+  const check = await makePictureOverlap({ playwright, log: {} })
+  const read = (bearer) =>
+    check({
+      asked: { pages: ['/locked-over'], folder: 'tracy-content/' },
+      base: `${base}/`,
+      bearer,
+      signal: new AbortController().signal
+    })
+  const blind = await read(null)
+  assert.deepEqual(blind.findings, [], 'without the token only the rebuilding page is seen')
+  seen.length = 0
+  const answer = await read(TOKEN)
+  await check.close()
+  assert.deepEqual(
+    answer.findings.map((f) => f.src),
+    ['images/tracy-content/ball.svg']
+  )
+  assert.ok(seen.some((s) => s.path === '/locked-over' && s.carried))
+  const other = seen.filter((s) => s.path === '/images/other-origin.svg')
+  assert.ok(other.length > 0, 'the other origin was asked')
+  assert.ok(
+    other.every((s) => !s.carried),
+    'no other origin gets the token'
+  )
+})
+
+test('only a plain token is handed on to the browser', async () => {
+  const { overlapBearerOf } = await import('../src/picture-overlap-browser.js')
+  assert.equal(overlapBearerOf(TOKEN), TOKEN)
+  for (const bad of [null, 'short', 'a b c d e f g h i j k', `${TOKEN}\r\nx-evil: 1`, 42])
+    assert.equal(overlapBearerOf(bad), null)
 })
 
 test('the findings merge the widths of one picture', () => {

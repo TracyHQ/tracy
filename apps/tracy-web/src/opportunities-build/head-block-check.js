@@ -14,7 +14,7 @@
  * Pure: pages, plan and stylesheets in, findings out.
  */
 import { brandColourCss } from 'website-opportunities/domain/brand-colour-css.mjs'
-import { emptyFramesOf } from '../sites/brief-engines/empty-frames.js'
+import { emptyFramesOf } from '../lib/empty-frames.js'
 
 /** The text of the page's Tracy style blocks. */
 const tracyCss = (/** @type {string} */ html) =>

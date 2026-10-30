@@ -5,7 +5,7 @@
 import { SOCIAL_NETWORKS, socialLine, type SocialLine } from '@tracy/wo-views/model'
 
 import { toSocialStat } from './flow.ts'
-import { buildView, type BuildView } from './status.ts'
+import { buildView, fillState, type BuildView } from './status.ts'
 
 export const PROFILE_FIELDS = ['name', 'branch', 'address', 'phone', 'hours', 'bio'] as const
 export type ProfileField = (typeof PROFILE_FIELDS)[number]
@@ -139,14 +139,19 @@ export function buildFailure(
   answer: { build?: Record<string, unknown> | null } | null | undefined
 ): BuildFailure | null {
   const build = answer?.build
-  if (!build || !BUILD_ENDED.has(String(build.state ?? '')) || typeof build.requestId !== 'string')
+  if (
+    !build ||
+    !(BUILD_ENDED.has(String(build.state ?? '')) || fillState(build.receipt) === 'failed') ||
+    typeof build.requestId !== 'string'
+  )
     return null
   const receipt = (build.receipt ?? null) as {
     failure?: { code?: unknown; reason?: unknown }
     body?: { code?: unknown }
     demoActionId?: unknown
+    fill?: { code?: unknown }
   } | null
-  const code = receipt?.failure?.code ?? receipt?.body?.code
+  const code = receipt?.failure?.code ?? receipt?.fill?.code ?? receipt?.body?.code
   const reason = receipt?.failure?.reason
   return {
     requestId: build.requestId,

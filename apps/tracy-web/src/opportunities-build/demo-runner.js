@@ -15,6 +15,7 @@ import { isBriefBuild } from './brief-build-path.js'
 import { checkBuildLeftovers } from './demo-leftover-check.js'
 import { cleanBuildLeftovers, cleanupTurnPort } from './demo-leftover-cleanup.js'
 import { gateBuildBlockers } from './build-blocker-gate.js'
+import { fillFailed, saveReceiptPart, unlockFullSite } from './build-site-lock.js'
 
 const POLL_MS = 10_000
 const LEASE_MS = 6 * 60_000
@@ -323,10 +324,25 @@ export function createDemoRunner(deps) {
             brief.timings?.woRetryActionId !== action.id &&
             deps.resumeFill &&
             (await deps.resumeFill(build, account.email, action.id))
-          )
+          ) {
+            if (build.receipt?.fill) await saveReceiptPart(db, build, { fill: { state: 'running' } })
             return wait()
+          }
+          // 🔒 A failed fill is a failed build on the panel (Failed with Retry, never Hand off), and its site stays on the
+          // rebuilding page it was locked on (#189).
+          await fillFailed(db, build, 'SITE_FILL_FAILED')
           return finish('failed', 'SITE_FILL_FAILED')
         }
+        if (build.receipt?.fill && build.receipt.fill.state !== 'applied')
+          build = await saveReceiptPart(db, build, { fill: { state: 'applied' } })
+        // A manual brief build is judged by nobody after its fill: the site is full now, so it is unlocked here.
+        if (!action.automatic && isBriefBuild(revision))
+          await unlockFullSite(db, {
+            build,
+            platform: revision.cms,
+            email: account.email,
+            unlock: deps.unlockSite
+          })
         if (!action.automatic) return finish('completed')
         if (revision.brief?.quickstartWorkflow === 'quickstart-first/1') {
           const current = (
@@ -439,6 +455,14 @@ export function createDemoRunner(deps) {
         }
         // A baseline the site check could not read yet is the QA sweep's to read again (`takeDueBaselines`),
         // and it sends the prompt once one holds: the worker waits instead of spending the reads.
+        // 🔒 The final check is over (clear or Needs fixes): the site is full, so its rebuilding page comes off (#189).
+        if (isBriefBuild(revision))
+          build = await unlockFullSite(db, {
+            build,
+            platform: revision.cms,
+            email: account.email,
+            unlock: deps.unlockSite
+          })
         if (!build.handoff?.promptSent && build.qa?.state !== 'baseline') {
           await mark('check')
           // 🔒 The door's press and this worker hand one build over one at a time (`withHandoffLock`).

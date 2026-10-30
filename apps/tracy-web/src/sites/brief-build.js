@@ -34,6 +34,7 @@
 import { randomUUID } from 'node:crypto'
 import { createEnginePictureClock } from './engine-picture-clock.js'
 import { preparePicturesBeforeApply } from './picture-preparation.js'
+import { LOCK_UNSUPPORTED_NOTE } from './site-lock.js'
 
 import {
   advanceBrief,
@@ -229,6 +230,9 @@ export function refusalOf(/** @type {any} */ call, /** @type {any} */ answer) {
  * @param {(ctx: BriefContext, step: {applyId: string}) => Promise<{written: string[], skipped: Array<{where: string, reason: string}>}>} [deps.brand]
  *   - the "set the site's brand" step (`brief-engines/brand.js` `createSiteBrand`): run after `apply`, whatever became of it
  * @param {Partial<typeof DEFAULT_LIMITS>} [deps.limits]
+ * @param {{lock: (ctx: BriefContext) => Promise<{state: string, reason?: string} | null>} | null} [deps.siteLock] - the
+ *   rebuilding lock (`site-lock.js`): taken before the first write and never taken off here (the build runner unlocks a full
+ *   site; a failed one stays locked)
  */
 export function createBriefBuilds({
   pool,
@@ -243,6 +247,7 @@ export function createBriefBuilds({
   pairSite = null,
   brand = null,
   webroot = null,
+  siteLock = null,
   limits = {},
   recoverOnStart = true
 }) {
@@ -297,7 +302,7 @@ export function createBriefBuilds({
         )
       : Promise.resolve()
 
-  /** Record a failure on the row, softly: the site is handed over as it is. */
+  /** Record a failure on the row, softly: the site is handed over as it is, still on its rebuilding page when it was locked. */
   async function fail(siteKey, error) {
     const message = error instanceof Error ? error.message : String(error)
     log.warn?.(`[brief] ${siteKey}: ${message}`)
@@ -436,6 +441,23 @@ export function createBriefBuilds({
       )
       return false
     }
+  }
+
+  /**
+   * Take the rebuilding lock and keep what became of it on the row (`timings.siteLock`). A site that cannot be locked is
+   * built open, as before, with a note; nothing here ever fails the run.
+   * @param {BriefContext} ctx
+   */
+  async function lockBeforeWrites(ctx) {
+    if (!siteLock) return
+    const lock = await siteLock.lock(ctx).catch((error) => ({
+      version: 1,
+      state: 'failed',
+      reason: error instanceof Error ? error.message : String(error)
+    }))
+    if (!lock) return
+    await updateBrief(pool, ctx.siteKey, { timings: { siteLock: lock } }).catch(() => {})
+    if (lock.state !== 'locked') ctx.note(LOCK_UNSUPPORTED_NOTE)
   }
 
   /** @param {BriefInput} input */
@@ -587,6 +609,8 @@ export function createBriefBuilds({
       controller.signal.throwIfAborted()
 
       if (!(await advanceBrief(pool, siteKey, ['ready'], { state: 'applying', stage: STAGE.placing }))) return
+      // 🔒 THE SITE IS LOCKED BEFORE ITS FIRST WRITE (#189): visitors see the rebuilding page until the build ends full.
+      await lockBeforeWrites(ctx)
       const held = await holdWebroot('open', ctx)
       const t3 = now()
       let report = null

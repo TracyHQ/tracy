@@ -59,7 +59,7 @@ import { emdashMediaRoute } from './emdash-media.js'
 import { CMS_LOG_KIND, runCmsLogJob, validateCmsLogBody } from './cms-log.js'
 import { LOOK_CSS_KIND, runLookCssJob, validateLookCssBody } from './look-css.js'
 import { DS_SLOT_KIND, runDsSlotJob, validateDsSlotBody } from './ds-slot.js'
-import { overlapFolderOf } from './picture-overlap-browser.js'
+import { overlapBearerOf, overlapFolderOf } from './picture-overlap-browser.js'
 
 /** Same shape `uuid.uuid4().hex[:12]` produces on the Python side — short enough for a log line,
  * long enough that two jobs never collide. */
@@ -1068,7 +1068,13 @@ function pictureOverlapRoute({ pictureOverlap, proxyOrigin = null }) {
       const address = await demoAddress(asked, { discover: true, signal: deadline.signal, proxyOrigin })
       deadline.signal.throwIfAborted()
       return c.json(
-        await pictureOverlap({ asked: { pages: asked.pages, folder }, ...address, signal: deadline.signal }),
+        await pictureOverlap({
+          asked: { pages: asked.pages, folder },
+          ...address,
+          // A locked site's token (#189): the browser sends it to the site's own origin only.
+          bearer: overlapBearerOf(body.bearer),
+          signal: deadline.signal
+        }),
         200
       )
     } catch (error) {

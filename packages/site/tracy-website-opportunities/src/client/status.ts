@@ -169,7 +169,7 @@ export function siteLinks(
 export interface BuildAnswer {
   build?: {
     state?: string | null
-    receipt?: { body?: { code?: unknown } | null; blockers?: unknown } | null
+    receipt?: { body?: { code?: unknown } | null; blockers?: unknown; fill?: unknown } | null
     lastError?: { code?: string } | null
     last_error?: { code?: string } | null
   }
@@ -231,6 +231,14 @@ export function buildFixes(receipt: unknown): BuildFix[] {
 }
 
 const BUILD_DONE = new Set(['completed', 'done'])
+
+/** Where the receipt says the site's fill stands (`opportunities-build/build-site-lock.js`), or null when it says nothing. */
+export function fillState(receipt: unknown): 'failed' | 'running' | 'applied' | null {
+  if (typeof receipt !== 'object' || receipt === null) return null
+  const fill = (receipt as { fill?: unknown }).fill
+  const state = typeof fill === 'object' && fill !== null ? (fill as { state?: unknown }).state : null
+  return state === 'failed' || state === 'running' || state === 'applied' ? state : null
+}
 const BUILD_FAILED = new Set(['failed', 'cancelled', 'blocked', 'refused'])
 
 export function buildView(answer: BuildAnswer): BuildView {
@@ -240,6 +248,10 @@ export function buildView(answer: BuildAnswer): BuildView {
   const links = siteLinks(answer.site)
   const code =
     (answer.build?.lastError ?? answer.build?.last_error)?.code ?? answer.build?.receipt?.body?.code
+  // A built site whose fill failed is a failed build (Retry), and one a Retry is filling again still runs (#189).
+  const fill = fillState(answer.build?.receipt)
+  if (fill === 'failed') return { phase: 'failed', links, reasonKey: 'reason.demo_fill_failed', fixes: [] }
+  if (fill === 'running') return { phase: 'running', links, reasonKey: null, fixes: [] }
   if (BUILD_DONE.has(state) || siteState === 'done')
     return { phase: 'done', links, reasonKey: null, fixes: buildFixes(answer.build?.receipt) }
   if (BUILD_FAILED.has(state) || BUILD_FAILED.has(siteState)) {

@@ -11,7 +11,7 @@
  * A band that lost its working parts and kept only a logo or an icon beside their emptied column (#189 item 30) is
  * reported as `lone-decoration-band` when the head block does not hide it: the band was meant to come off whole.
  */
-import { emptyFramesOf } from '../sites/brief-engines/empty-frames.js'
+import { emptyFramesOf } from '../lib/empty-frames.js'
 
 /** The text of the page's Tracy style blocks (the leftovers head block, wherever the template prints it). */
 const tracyCss = (/** @type {string} */ html) =>

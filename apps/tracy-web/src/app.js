@@ -248,6 +248,7 @@ import { hostnamesFromConfig } from './sites/site-domain-provider.js'
 import {
   appendPreviewErrors,
   appliesOfSession,
+  currentComponent,
   openJobOfKind as openContactJob,
   previewErrorsFor,
   putJob as recordContactJob,
@@ -256,6 +257,9 @@ import {
   updateJob as updateContactJob
 } from './sites/store.js'
 import { speechRoutes } from './speech/route.js'
+import { createSiteLock, lockedRead } from './sites/site-lock.js'
+import { joomlaSiteLock } from './sites/brief-engines/site-lock-joomla.js'
+import { briefBuildHoldsSite } from './opportunities-build/build-site-lock.js'
 import { widgetRoutes } from './widget/route.js'
 import { workspaceRoutes } from './workspace/route.js'
 import { onboardingGrant } from './workspace/scope.js'
@@ -1510,6 +1514,7 @@ export function buildApp(deps) {
       // The demo-leftover check's page reader (#191): the site reader is made with the host, below.
       readSitePage: (/** @type {string} */ siteKey, /** @type {string} */ path) =>
         /** @type {any} */ (app).readSitePage?.(siteKey, path) ?? null,
+      unlockSite: (/** @type {any} */ input) => /** @type {any} */ (app).unlockSite?.(input) ?? null,
       runtime: woRuntimeOf,
       switchOn: woWorkOn,
       log: deps.log ?? console
@@ -1799,6 +1804,17 @@ export function buildApp(deps) {
     // `setupRun`: the brief run these writes belong to, so Site changes reads them as "Tracy setup" (sweep #4).
     const applyFor = (email, setupRun) => (call) =>
       /** @type {any} */ (sitesApp).applyAs(email, call, { setupRun })
+    // The rebuilding lock of a brief build (`sites/site-lock.js`, #189): Joomla only for now.
+    const siteLock = createSiteLock({
+      pool: deps.pool,
+      writers: { joomla: joomlaSiteLock },
+      applyFor,
+      holds: (siteKey) => briefBuildHoldsSite(deps.pool, siteKey),
+      tokenOf: async (siteKey) => {
+        const token = (await currentComponent(deps.pool, siteKey))?.config?.token
+        return typeof token === 'string' && token !== '' ? token : null
+      }
+    })
     // The host's own word on a provision job, and the content door connected before the host says `done`: what lets the
     // words be written during the last seconds of the install instead of after them (`sites/brief-build.js`).
     const hostJob = async (hostName, jobId) => {
@@ -1832,7 +1848,10 @@ export function buildApp(deps) {
         // A path names a file OF THE SITE: one that resolves anywhere else is not asked for.
         const url = new URL(path, base)
         if (url.origin !== base.origin) throw new Error('not a path on the site')
-        return (deps.fetchImpl ?? fetch)(url, init)
+        // A locked site answers Tracy's own reads with the real site (`sites/site-lock.js`).
+        const bearer = await siteLock.bearer(siteKey)
+        const headers = lockedRead(Object.fromEntries(new Headers(init?.headers ?? {})), bearer, true)
+        return (deps.fetchImpl ?? fetch)(url, { ...init, headers })
       })
     // 🔒 A site as a visitor reads it, at its own public address (`sites/brief-engines/glyph-fallback.js`): its pages and
     // stylesheets, its font files, and the Google Fonts sheets and files it names. Nothing else is asked for.
@@ -1840,6 +1859,8 @@ export function buildApp(deps) {
       const site = await siteByKey(deps.pool, siteKey)
       if (!site) return null
       const base = new URL(site.address || bornSiteAddress(site.label, deps.config))
+      // 🔒 While a brief build holds the site on its rebuilding page, its own reads carry the site's token (#189).
+      const bearer = await siteLock.bearer(siteKey)
       const allowed = (/** @type {string} */ url) => {
         const u = new URL(url, base)
         if (u.origin !== base.origin && !/^fonts\.(googleapis|gstatic)\.com$/.test(u.hostname))
@@ -1852,7 +1873,7 @@ export function buildApp(deps) {
         markOwnReads(deps.fetchImpl ?? fetch, deps.config)(
           siteReadUrl({ ...site, address: base.href }, deps.config, allowed(url)),
           {
-            headers,
+            headers: lockedRead(headers, bearer, new URL(url, base).origin === base.origin),
             // A redirect would lead off the addresses checked above: it is an answer that cannot be read.
             redirect: 'manual',
             signal: AbortSignal.timeout(15_000)
@@ -1880,7 +1901,9 @@ export function buildApp(deps) {
     // The demo-leftover check's page reader (#191), read by the demo runner above through `app`.
     Object.assign(app, {
       readSitePage: async (/** @type {string} */ siteKey, /** @type {string} */ path) =>
-        (await siteReader(siteKey))?.page(path) ?? null
+        (await siteReader(siteKey))?.page(path) ?? null,
+      // The build runner takes the rebuilding page off a full site (`opportunities-build/build-site-lock.js`).
+      unlockSite: (/** @type {any} */ input) => siteLock.unlock(input)
     })
     readAgentNativeInventory = createAgentDemoInventory({
       siteAccess,
@@ -2032,7 +2055,9 @@ export function buildApp(deps) {
               platform: site.platform,
               port: site.port ?? null,
               ...demoSelfNames(deps.config, site),
-              pages
+              pages,
+              // A locked site (#189): the host's browser reads it with its token, on its own origin only.
+              ...(await siteLock.bearer(siteKey).then((bearer) => (bearer ? { bearer } : {})))
             },
             { fetchImpl: deps.fetchImpl ?? fetch, timeoutMs: 150_000 }
           )
@@ -2089,6 +2114,7 @@ export function buildApp(deps) {
         // instead: where its last step and the first writes fight over one disk, waiting can be the faster of the two.
         hostJob: process.env.TRACY_BRIEF_EARLY_START === 'off' ? null : hostJob,
         pairSite,
+        siteLock,
         // SC-3: the run holds the site's webroot like a chat turn, so the files its writes leave are Tracy's own moment.
         webroot: {
           open: (ctx) =>

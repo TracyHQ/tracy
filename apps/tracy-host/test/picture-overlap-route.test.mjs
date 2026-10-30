@@ -52,3 +52,19 @@ test('a signed /_host/picture-overlap reads the named pages at the composed targ
   assert.equal(calls[0].base, 'http://127.0.0.1:52019/')
   assert.equal(body.findings[0].widths[0], 1440)
 })
+
+test('a locked site token reaches the browser, and a malformed one is dropped (#189)', async () => {
+  for (const label of ['harbour-locks', 'willow-tea']) {
+    const seen = []
+    const pictureOverlap = async ({ asked, bearer }) => {
+      seen.push(bearer)
+      return { findings: [], pages: asked.pages.map((path) => ({ path, ok: true })) }
+    }
+    const app = buildApp({ config, run, pictureOverlap })
+    const asked = { label, platform: 'joomla', port: 52019, pages: ['/'] }
+    assert.equal((await post(app, { ...asked, bearer: 'site-token-abcdefghijkl' })).status, 200)
+    assert.equal((await post(app, { ...asked, bearer: 'bad\r\nx-other: 1' })).status, 200)
+    assert.equal((await post(app, asked)).status, 200)
+    assert.deepEqual(seen, ['site-token-abcdefghijkl', null, null])
+  }
+})

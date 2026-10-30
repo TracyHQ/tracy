@@ -359,6 +359,21 @@ test('a failed build is retried through the demo action that made it, and says t
     }
   )
   assert.equal(buildFailure({ build: { state: 'provisioning', requestId: 'req-3' } }), null)
+  // A built site whose fill failed is retried through its demo action (#189).
+  assert.deepEqual(
+    buildFailure({
+      build: {
+        state: 'done',
+        requestId: 'req-4',
+        receipt: { demoActionId: 'action-4', fill: { state: 'failed', code: 'SITE_FILL_FAILED' } }
+      }
+    }),
+    { requestId: 'req-4', actionId: 'action-4', code: 'SITE_FILL_FAILED', reason: null }
+  )
+  assert.equal(
+    buildFailure({ build: { state: 'done', requestId: 'req-5', receipt: { fill: { state: 'applied' } } } }),
+    null
+  )
   assert.equal(buildFailure({ build: { state: 'failed' } }), null, 'no request id: nothing to retry with')
 })
 
