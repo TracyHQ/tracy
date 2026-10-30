@@ -639,7 +639,12 @@ export function capturesSettled() {
  * @typedef {{ stream: (options: Record<string, unknown>) => AsyncIterable<{ type: string, text?: string, usage?: Record<string, number>, reason?: { kind?: string, failure?: { code?: string } }, block?: { type?: string, text?: string } }> }} SideLlm
  */
 
-/** A capture that failed, on `job.warn` (dsh's logger): where and why by code, nothing of the wish. */
+/**
+ * A capture that failed, on `job.warn` (dsh's logger): where and why by code, nothing of the wish.
+ * @param {{ storeDir: string, warn?: (line: string) => void }} job
+ * @param {string} stage
+ * @param {unknown} e
+ */
 function said_(job, stage, e) {
   const code = /** @type {any} */ (e)?.code ?? /** @type {any} */ (e)?.name ?? 'ERROR'
   job.warn?.(`site-notes: ${stage} failed in ${path.basename(String(job.storeDir))}: ${String(code).slice(0, 40)}`)

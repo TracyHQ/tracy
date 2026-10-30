@@ -661,7 +661,7 @@ function categoryStores(id, row) {
  * A contact's columns that print words on its page (`com_contact`) and that the component writes
  * (`JoomlaSiteWriter::MAP` — `state` is not among them): plain values, and `misc` as HTML.
  */
-const CONTACT_WORDS = /** @type {const} */ ([
+export const CONTACT_WORDS = /** @type {const} */ ([
   ['name', 'its name'],
   ['con_position', 'its position'],
   ['address', 'its address'],
