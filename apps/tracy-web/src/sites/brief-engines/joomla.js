@@ -1502,6 +1502,19 @@ export function createJoomlaEngine({
           authorRefused.add(key)
           if (!demoBlanks.some((b) => b.key === key)) demoBlanks.push(slot)
         }
+      // 🔒 THE AUTHOR'S LINES MEET THE SEPARATE WRITERS' CHECKS, OR COME OFF (ticket #237): with an accepted plan no sibling,
+      // record-page, offering or call-to-action writer runs after the author; their checks (`page-pass.js`) judged its answer
+      // and sent it back. A line still breaking one is traced (`copyLineTrace`, by the rule it breaks) and settled like a
+      // refused line: its card or block comes off where the template can, else it is emptied, never left as demo.
+      if (authorPages)
+        for (const [key, owner] of Object.entries(plan.owners ?? {})) {
+          if (owner === 'page-copy' || !authorAsked.has(key)) continue
+          const slot = slotByKey.get(key)
+          delete kept[key]
+          if (!String(slot?.sample ?? '').trim()) continue
+          authorRefused.add(key)
+          if (!demoBlanks.some((b) => b.key === key)) demoBlanks.push(slot)
+        }
       // 🔒 A BUTTON THE SITE PLAN HIDES HAS NO REAL ACTION (ticket #240): its words and link are not written, and its label is
       // settled like any unwritten line, taken off where the template can, else emptied; never left with a demo link.
       for (const key of authorFill?.hidden ?? []) {
@@ -1517,19 +1530,6 @@ export function createJoomlaEngine({
         )
       )
       // The sourced words, as their sources say them: no guard of the model's words is theirs.
-      // 🔒 THE AUTHOR'S LINES MEET THE SEPARATE WRITERS' CHECKS, OR COME OFF (ticket #237): with an accepted plan no sibling,
-      // record-page, offering or call-to-action writer runs after the author; their checks (`page-pass.js`) judged its answer
-      // and sent it back. A line still breaking one is traced (`copyLineTrace`, by the rule it breaks) and settled like a
-      // refused line: its card or block comes off where the template can, else it is emptied, never left as demo.
-      if (authorPages)
-        for (const [key, owner] of Object.entries(plan.owners ?? {})) {
-          if (owner === 'page-copy' || !authorAsked.has(key)) continue
-          const slot = slotByKey.get(key)
-          delete kept[key]
-          if (!String(slot?.sample ?? '').trim()) continue
-          authorRefused.add(key)
-          if (!demoBlanks.some((b) => b.key === key)) demoBlanks.push(slot)
-        }
       Object.assign(kept, copyPins?.pins ?? {}, plannedSlotValues(sitePlan))
       // A planned statistic is a complete sourced unit even when the profile copy reader returned no pins.
       demoBlanks = demoBlanks.filter((slot) => !(slot.key in plannedSlotValues(sitePlan)))
@@ -1576,6 +1576,8 @@ export function createJoomlaEngine({
       // 🔒 EVERY LINE LEFT UNWRITTEN IS TRACED BY WRITER (`copy-line-trace.js`): each writer gets its own named wrapper.
       /** @type {any[]} */
       const lineTrace = []
+      // 🔒 WITH AN ACCEPTED SITE PLAN THE AUTHOR IS THE ONLY WRITER (ticket #237): the offering, sibling-list, record-page and
+      // call-to-action writers below get no model, so each runs as its check alone; a line it still refuses is taken off.
       const copyWriterFor = (/** @type {string} */ writer) =>
         authorPages
           ? null
@@ -1613,8 +1615,6 @@ export function createJoomlaEngine({
           )
         },
         model: copyWriterFor('offering'),
-      // 🔒 WITH AN ACCEPTED SITE PLAN THE AUTHOR IS THE ONLY WRITER (ticket #237): the offering, sibling-list, record-page and
-      // call-to-action writers below get no model, so each runs as its check alone; a line it still refuses is taken off.
         locale: written,
         signal: ctx.signal
       })
