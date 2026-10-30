@@ -440,15 +440,24 @@ export function createSitePictures({
             : null,
           // The photo labeller read on a drawn picture (#194): what it sees decides whether the drawing may be shown
           // (`drawnPictureVerdict`). One picture a call, charged like the build's own labels; null with no labeller.
+          // `expect` (#189): what the frame must show, so the same call also names the drawing's faults (`inspect`).
           checkDrawing:
             vision && label
-              ? async (bytes) => {
+              ? async (bytes, expect = null) => {
                   const model = vision.door.model
                   const invoke = () =>
                     vision.label({
                       door: vision.door,
                       pictures: [{ id: 'drawn', bytes }],
                       trade: build.brief?.business?.trade ?? null,
+                      ...(expect
+                        ? {
+                            inspect: {
+                              trade: expect.trade ?? build.brief?.business?.trade ?? null,
+                              shows: expect.shows ?? null
+                            }
+                          }
+                        : {}),
                       signal
                     })
                   const answer = vision.metered

@@ -12,6 +12,7 @@
 import { createHash } from 'node:crypto'
 import sharp from 'sharp'
 import { colourWords } from 'website-opportunities/domain/brand-colours.mjs'
+import { avoidLine } from 'website-opportunities/domain/pictures/picture-acceptance.mjs'
 
 export const DRAW_PROMPT_VERSION = 'd8'
 const REFERENCE_EDGE = 1024
@@ -109,8 +110,14 @@ function brandColoursOf(item) {
  * d7 (29/10/2026): the owner's approved rule allows people and faces. Lettering remains forbidden in every mode.
  * d8 (30/10/2026, #189 site build rule 2, copy first): every frame is drawn from its page's topic, the copy written next to
  * it and its place on the page; a frame of a record page (one offering's page) is that record's, with no recognisable face.
+ * A redraw (`item.avoid`, #189 acceptance check) names the fault the first drawing was refused for, at the prompt's end.
  */
 export function drawPrompt(item) {
+  return `${promptOf(item)}${avoidLine(item.avoid)}`
+}
+
+/** The prompt of one mode, before any refused fault is named. */
+function promptOf(item) {
   const shape = `${ratio(item.aspect)} (width ${item.aspect.toFixed(2)} times the height), ${orientation(item.aspect)}`
   if (item.mode === 'outpaint')
     return `Extend this photograph to a wider frame of ${shape}. Keep the original photograph unchanged in the middle and continue its scene naturally on every side, with the same light, colours and perspective. Photorealistic. ${NEVER}`

@@ -21,6 +21,7 @@
 import { pagesOfMap, shownWidthOf, wordedPhoto } from './fill-plan.mjs'
 import { isMapPhotoByOthers, publisherRankOf } from './pictures/asset-origin.mjs'
 import { GENERAL } from './pictures/picture-links.mjs'
+import { defectsOf } from './pictures/picture-acceptance.mjs'
 import { declaredSize, fileOf } from './pictures/slot-map.mjs'
 import { nearbyCopyOf, pageTopicsOf } from './pictures/nearby-copy.mjs'
 
@@ -295,8 +296,10 @@ export function planDrawings({
 const colourBlock = (reason) => ({ action: 'substitute', reason, substitute: { kind: 'brand-colour' } })
 
 /**
- * The drawn-picture content rule: refuse lettering, accept people and faces in every slot. Owner photos use planFill's
- * separate eligibility and face-safe crop rules; this verdict never changes them.
+ * The drawn-picture content rule: refuse lettering and every fault the labeller's inspection names (`DRAWING_DEFECTS`:
+ * garbled lettering, a distorted face or body, a visible seam, another trade, another topic); accept people and clear
+ * faces drawn right (decision faces = B, COO 30/10/2026). Owner photos use planFill's separate eligibility and face-safe
+ * crop rules; this verdict never changes them.
  * @param {Record<string, any> | null | undefined} labels - the labeller's labels of the drawing, null when it gave none
  *   (then the drawing is refused: `labeller-unavailable`)
  * @returns {{ok: boolean, reason: string | null}}
@@ -310,5 +313,8 @@ export function drawnPictureVerdict(labels) {
     labels.content === 'text-graphic'
   )
     return { ok: false, reason: 'text-found' }
+  // The first fault the inspection names is the reason a receipt and the redraw's prompt carry (criteria 3.1, 3.4, 3.6).
+  const defects = defectsOf(labels.defects)
+  if (defects.length) return { ok: false, reason: defects[0] }
   return { ok: true, reason: null }
 }

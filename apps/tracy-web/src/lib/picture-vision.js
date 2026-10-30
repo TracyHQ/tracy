@@ -21,6 +21,7 @@ import {
   focusOfBox,
   heldVisionLinks
 } from 'website-opportunities/domain/pictures/picture-links.mjs'
+import { defectsOf, inspectionClause } from 'website-opportunities/domain/pictures/picture-acceptance.mjs'
 
 // p3: the image-only code; p4: the content kind and caption the site brief shows for each asset (F08); p5: the brief's
 // offerings and team as a closed list, links with evidence, a v3 role, boxes instead of a focus word (#48); p6: the label
@@ -168,6 +169,8 @@ export function held(entry, closedList = null) {
   if (focus) out.focus = focus
   const digest = closedListDigest(closedList)
   if (digest) out.closedList = digest
+  // A drawing's inspection (`inspect`): the faults named, kept only when the answer gave the list.
+  if (Array.isArray(entry.defects)) out.defects = defectsOf(entry.defects)
   return { id: entry.id, labels: out }
 }
 
@@ -189,7 +192,10 @@ const reasonOf = (error) =>
 
 /**
  * @param {{door: {url: string, key: string, model: string}, pictures: Array<{id: string, bytes: Uint8Array}>,
- *   trade?: string | null, closedList?: {offerings?: any[], people?: any[]} | null, batch?: number, concurrency?: number, retry?: number, fetchImpl?: typeof fetch, signal?: AbortSignal, challengeFor?: typeof createVisionChallenge}} input
+ *   trade?: string | null, closedList?: {offerings?: any[], people?: any[]} | null, batch?: number, concurrency?: number, retry?: number, fetchImpl?: typeof fetch, signal?: AbortSignal, challengeFor?: typeof createVisionChallenge,
+ *   inspect?: {trade?: string | null, shows?: string | null} | null}} input
+ *   `inspect`: the pictures are drawings to accept or refuse (#189, criteria 3.1, 3.4, 3.6): the same call is also asked
+ *   for the faults it sees (`inspectionClause`), answered as `defects`. Never cached: a drawing is labelled once.
  *   `retry`: rounds that send the pictures of a failed call (or missing from an answer) again, each round at most as
  *   many calls as the first; 0 (a build's default) sends each picture once.
  * @returns {Promise<{labels: Map<string, Record<string, any>>, reasons: Map<string, string>,
@@ -206,7 +212,8 @@ export async function labelWithVision({
   retry = 0,
   fetchImpl = fetch,
   signal,
-  challengeFor = createVisionChallenge
+  challengeFor = createVisionChallenge,
+  inspect = null
 }) {
   const labels = new Map()
   /** @type {Map<string, string>} */
@@ -226,7 +233,9 @@ export async function labelWithVision({
       reasons.set(p.id, 'decode_failed')
     }
   }
-  const systemPrompt = pictureLabelSystem(trade, closedList)
+  const systemPrompt = inspect
+    ? `${pictureLabelSystem(trade, closedList)}\n${inspectionClause(inspect)}`
+    : pictureLabelSystem(trade, closedList)
   const run = async (group) => {
     const challenge = await challengeFor()
     const content = [

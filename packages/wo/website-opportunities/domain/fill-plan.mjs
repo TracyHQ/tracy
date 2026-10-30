@@ -39,6 +39,7 @@ import { isMapPhotoByOthers, publisherRankOf } from './pictures/asset-origin.mjs
 import { ROLES } from './pictures/placement.mjs'
 import { declaredSize, fileOf } from './pictures/slot-map.mjs'
 import { subjectCrop } from './pictures/subject-crop.mjs'
+import { weightCapOf } from './pictures/picture-acceptance.mjs'
 import { nearbyCopyOf, nearbyFit } from './pictures/nearby-copy.mjs'
 
 export const FILL_PLAN_VERSION = 'fill-plan/1'
@@ -420,6 +421,16 @@ export function planFill({
     // target. A photo may still be enlarged by `MAX_SCALE` to reach it (`subjectCrop`).
     const declared = unit.slots.map(shownWidthOf).filter((n) => Number.isFinite(n) && n > 0)
     const min = declared.length ? Math.max(...declared) : hero(unit) ? ROLES.hero.min : ROLES.section.min
+    // Never written past twice the widest box it is shown in (criterion 9.2): a 4000 px photo for a 600 px card is not
+    // uploaded at the demo file's own width when the demo file is larger than the card.
+    const maxWidth = declared.length ? weightCapOf({ shown: Math.max(...declared) }) : null
+    // The one offering the copy next to the frame names (copy first, #189): a general frame under the words "tennis
+    // lesson" never takes a photo the brief links to padel (criterion 3.1).
+    const nearSaid = unit.slots
+      .map((s) => near.get(s.key))
+      .filter(Boolean)
+      .join(' ')
+    const topic = unit.need.general && nearSaid ? namedIn(nearSaid, list) : null
     // A card's own offering or person is a match: its photo may lose more of itself to the crop (#136).
     const matches = Boolean(unit.need.offering || unit.need.person)
     // Every photo that qualifies, with its crop; a wide general slot looks again with the wider crop when none does.
@@ -433,9 +444,10 @@ export function planFill({
           (identity(unit) && isMapPhotoByOthers(asset) ? 'map-photo-by-others' : null) ??
           (pages.some((page) => shownOn.get(page)?.has(asset.id)) ? 'used' : null) ??
           (wordedPhoto(asset) && !galleryUnit(unit, entityKindOf) ? 'words-on-photo' : null) ??
-          (unit.slots.some((slot) => unsharp.get(slot.key)?.has(asset.id)) ? 'unsharp' : null)
+          (unit.slots.some((slot) => unsharp.get(slot.key)?.has(asset.id)) ? 'unsharp' : null) ??
+          (topic && depictsOf(asset) !== GENERAL && depictsOf(asset) !== topic.id ? 'other-topic' : null)
         if (!why) {
-          const cut = subjectCrop(asset, unit.frame, { min, matches, wide })
+          const cut = subjectCrop(asset, unit.frame, { min, matches, wide, maxWidth })
           if (cut.refused) why = cut.refused
           else crops.set(asset.id, cut.crop)
         }

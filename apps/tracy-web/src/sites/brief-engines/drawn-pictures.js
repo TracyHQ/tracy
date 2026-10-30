@@ -4,8 +4,11 @@
  * which icons and cut-outs follow the business (`domain/decor-plan.mjs`); this step makes the pictures.
  *
  *   drawings   each planned drawing once, through the picture model door (`lib/picture-draw.js`), at most `DRAW_AT_ONCE`
- *              at a time and each within its own time limit; read back by the photo labeller and refused when it shows
- *              lettering; people and faces are accepted. Refused once more, its slots try owner photos then neutral fill. A drawing
+ *              at a time and each within its own time limit; read back by the photo labeller, told what the frame shows, and
+ *              refused when it shows lettering or a fault the inspection names (a distorted face or body, a visible seam,
+ *              another trade, another topic: `picture-acceptance.mjs`); people and faces drawn right are accepted. A refused
+ *              drawing is drawn once more with its fault named in the prompt; refused again, its slots try owner photos then
+ *              neutral fill. A drawing
  *              accepted is cached by references, shape, mode, subject, prompt version and model, so a rebuild pays nothing.
  *   icons      each subject-carrying item icon rendered from the icon set (`lib/icon-glyphs.js`) at the demo icon's size,
  *              in the demo icon's own colour
@@ -63,6 +66,23 @@ async function paddedAt(bytes, aspect) {
 }
 
 /**
+ * What a drawing must show, told to the labeller's inspection (#189): the frame's record or page topic and the trade.
+ * @param {any} item
+ * @param {any} real
+ */
+function expectOf(item, real) {
+  const subject = item.subject ?? {}
+  const own = subject.kind === 'offering' && subject.label ? subject.label : null
+  const shows =
+    item.mode === 'outpaint'
+      ? 'the same photograph, extended to a wider frame with no visible join'
+      : [own ?? (typeof subject.topic === 'string' ? subject.topic : null), subject.near]
+          .filter((v) => typeof v === 'string' && v.trim())
+          .join(': ') || "the business's own place and work"
+  return { shows, trade: real.brief?.business?.subTrade ?? real.brief?.business?.trade ?? null }
+}
+
+/**
  * Draw one item: from the cache, else from the model, checked by the labeller and drawn once more when refused.
  * @returns {Promise<{bytes: Buffer, costUsd: number, calls: number, cached: boolean, checked: boolean} |
  *   {refused: string[], reasonClass: string, costUsd: number, calls: number}>}
@@ -101,6 +121,8 @@ async function drawChecked({ item, real, drawDoor, chat, signal, drawMs, verdict
       signal?.throwIfAborted()
       const cutoff = AbortSignal.any([AbortSignal.timeout(drawMs), ...(signal ? [signal] : [])])
       let got
+      // A redraw names the fault the labeller refused the first drawing for (#189), never in the cache key.
+      const fault = attempt > 0 ? refused.at(-1) : null
       try {
         got = await drawForPlace({
           door: drawDoor,
@@ -108,7 +130,7 @@ async function drawChecked({ item, real, drawDoor, chat, signal, drawMs, verdict
             calls += 1
             return chat(...args)
           },
-          item,
+          item: fault ? { ...item, avoid: fault } : item,
           references,
           signal: cutoff
         })
@@ -123,7 +145,8 @@ async function drawChecked({ item, real, drawDoor, chat, signal, drawMs, verdict
       costUsd += Number(got.costUsd) || 0
       // The labeller is asked twice at most; still no answer, the drawing is refused (it is not the drawing's fault, so
       // it is not drawn again).
-      const readLabels = () => pictureDeadline(() => real.checkDrawing(got.bytes), cutoff).catch(() => null)
+      const readLabels = () =>
+        pictureDeadline(() => real.checkDrawing(got.bytes, expectOf(item, real)), cutoff).catch(() => null)
       let labels = await readLabels()
       labels ??= await readLabels()
       signal?.throwIfAborted()

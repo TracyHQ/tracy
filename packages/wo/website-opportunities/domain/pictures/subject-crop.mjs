@@ -3,6 +3,9 @@
 //
 // 🔒 THE FRAME NEVER CHANGES SHAPE: the box always has the slot's aspect (`cropBox`), and the output is written at it.
 // 🔒 A FACE IS NEVER CUT: every face box lies whole inside the crop, or the photo is refused for the slot (`cuts-a-face`).
+// 🔒 PEOPLE ARE NEVER CUT (#189, criterion 3.6): a photo with people in it keeps its whole subject box in the crop, so a
+//    head turned away (no face box) is not cut off at the frame's edge; a subject that cannot fit the slot's shape refuses
+//    the photo (`cuts-the-subject`) and the next photo is met.
 // 🔒 A MATCH LOOSENS ONLY THE LOSS LIMIT: a photo the brief links to the slot's own offering or person may lose more of
 //    itself (`MATCH_MAX_LOSS`) than one that does not (`CROP_MAX_LOSS`, today's limit). The size limit is the same for
 //    both: a crop that would be enlarged past `MAX_SCALE` to reach the slot's minimum is refused (`too-small-after-crop`).
@@ -20,7 +23,8 @@ export const WIDE_MAX_LOSS = 0.7
 export const CROP_REFUSALS = Object.freeze({
   'crop-loss': 'the crop would cut away too much of the photo',
   'too-small-after-crop': "the photo is below the slot's minimum size after cropping",
-  'cuts-a-face': 'every crop of the slot shape would cut through a face'
+  'cuts-a-face': 'every crop of the slot shape would cut through a face',
+  'cuts-the-subject': 'every crop of the slot shape would cut through the people the photo shows'
 })
 
 /** A box `[x, y, width, height]` in fractions of the photo, or null when it is not one. */
@@ -56,13 +60,14 @@ function startAlong(full, span, centre, faces) {
  * The crop of a photo of `size` for a slot whose frame is `frame`, or why there is none.
  * @param {{width: number, height: number, subjectBox?: number[], faceBoxes?: number[][]}} photo
  * @param {{width: number, height: number}} frame - the demo picture's size (the slot's shape)
- * @param {{min: number, matches?: boolean, wide?: boolean}} opts - `min`: the slot's minimum width; `matches`: the photo
+ * @param {{min: number, matches?: boolean, wide?: boolean, maxWidth?: number | null}} opts - `min`: the slot's minimum
+ *   width; `maxWidth`: the widest the picture is written (`weightCapOf`, criterion 9.2); `matches`: the photo
  *   is linked to the slot's own offering or person; `wide`: a wide general slot may cut up to `WIDE_MAX_LOSS` of a photo
  *   whose subject box stays whole (the crop then says `loosened: true`)
  * @returns {{crop: {aspect: number, source: {width: number, height: number}, output: {width: number, height: number},
  *   strategy: 'subject' | 'attention', at?: {x: number, y: number}}} | {refused: keyof typeof CROP_REFUSALS}}
  */
-export function subjectCrop(photo, frame, { min, matches = false, wide = false }) {
+export function subjectCrop(photo, frame, { min, matches = false, wide = false, maxWidth = null }) {
   const aspect = frame.width / frame.height
   const box = cropBox(photo.width, photo.height, aspect)
   const limit = matches ? MATCH_MAX_LOSS : CROP_MAX_LOSS
@@ -70,13 +75,18 @@ export function subjectCrop(photo, frame, { min, matches = false, wide = false }
   const loosened = box.loss > limit && wide && box.loss <= WIDE_MAX_LOSS && Boolean(boxOf(photo.subjectBox))
   if (box.loss > limit && !loosened) return { refused: 'crop-loss' }
   if (Math.min(frame.width, min) / box.width > MAX_SCALE) return { refused: 'too-small-after-crop' }
-  const output = outputSize(box, aspect, frame.width)
+  const output = outputSize(
+    box,
+    aspect,
+    Number(maxWidth) > 0 ? Math.min(frame.width, Number(maxWidth)) : frame.width
+  )
   if (!output) return { refused: 'too-small-after-crop' }
   const base = { aspect: Number(aspect.toFixed(6)), source: { width: box.width, height: box.height }, output }
   const subject = boxOf(photo.subjectBox)
   const faces = (photo.faceBoxes ?? []).map(boxOf).filter(Boolean)
-  // A loosened crop must hold the whole subject, as it holds every face.
-  const whole = loosened ? [...faces, subject] : faces
+  // A loosened crop must hold the whole subject, as it holds every face; so must a crop of a photo with people in it.
+  const people = faces.length > 0 || Number(photo.peopleCount) > 0
+  const whole = (loosened || people) && subject ? [...faces, subject] : faces
   // Nothing labelled: the cutter finds the subject by attention, as it always did.
   if (!subject && !faces.length) return { crop: { ...base, strategy: 'attention' } }
   const centre = (axis) => (subject ? (subject[axis] + subject[axis + 2]) / 2 : null)
@@ -92,7 +102,19 @@ export function subjectCrop(photo, frame, { min, matches = false, wide = false }
     centre(1),
     whole.map((f) => [f[1], f[3]])
   )
-  if (left === null || top === null) return { refused: loosened ? 'crop-loss' : 'cuts-a-face' }
+  if (left === null || top === null) {
+    if (loosened) return { refused: 'crop-loss' }
+    // Faces alone would fit: it is the people's whole figure the shape cannot hold.
+    const facesFit = (axis, full, span) =>
+      startAlong(
+        full,
+        span,
+        centre(axis),
+        faces.map((f) => [f[axis], f[axis + 2]])
+      ) !== null
+    const facesOnly = facesFit(0, photo.width, box.width) && facesFit(1, photo.height, box.height)
+    return { refused: whole.length > faces.length && facesOnly ? 'cuts-the-subject' : 'cuts-a-face' }
+  }
   // The start as a share of the free room: the cutter places the box the same way on a copy of another size.
   const share = (start, free) => (free > 0 ? Number((start / free).toFixed(6)) : 0.5)
   const at = { x: share(left, photo.width - box.width), y: share(top, photo.height - box.height) }

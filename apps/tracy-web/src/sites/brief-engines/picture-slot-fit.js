@@ -11,10 +11,15 @@
  *
  * So the last step before the upload shapes each picture to its slots the way the browser shows it: cropped to the
  * aspect around its focus (`crop: 'cover'`), or padded with a clear ground (`crop: 'contain'`), enlarged to the widest
- * minWidth, and given clear corners where the slot shows a cut-out. A picture that already fits is untouched, byte for byte.
+ * minWidth, and given clear corners where the slot shows a cut-out. Last, its weight (#189, criterion 9.2): a photo wider
+ * than twice its widest box, or heavier than its byte budget, is scaled and re-encoded (`picture-weight.js`). A picture
+ * that already fits is untouched, byte for byte.
  */
 import { createHash } from 'node:crypto'
 import sharp from 'sharp'
+import { weightCapOf } from 'website-opportunities/domain/pictures/picture-acceptance.mjs'
+import { shownWidthOf } from 'website-opportunities/domain/fill-plan.mjs'
+import { weighed } from '../../lib/picture-weight.js'
 
 const MAX_PIXELS = 100_000_000
 const JPEG = { quality: 84, mozjpeg: false }
@@ -116,10 +121,10 @@ export async function meetSlotFit(shaped, contentMap) {
   const out = []
   for (const item of shaped) {
     const fit = slotFitOf(item.group, slotByKey)
-    if (!fit.aspect && !fit.minWidth && !fit.transparent) {
-      out.push(item)
-      continue
-    }
+    const shown = Math.max(
+      0,
+      ...(item.group?.slots ?? []).map((b) => Number(shownWidthOf(slotByKey.get(b.key))) || 0)
+    )
     try {
       const open = (/** @type {Buffer} */ b) => sharp(b, { limitInputPixels: MAX_PIXELS, failOn: 'none' })
       const meta = await open(item.bytes).metadata()
@@ -177,6 +182,16 @@ export async function meetSlotFit(shaped, contentMap) {
           .toBuffer()
         ext = 'png'
         changed.push('ground')
+      }
+      // 4. The weight: never several times the size it is shown at, never past its byte budget.
+      const weight = await weighed(bytes, {
+        ext,
+        maxWidth: weightCapOf({ shown: shown || null, minWidth: fit.minWidth || null })
+      })
+      if (weight.changed) {
+        bytes = weight.bytes
+        ;[width, height] = [weight.width, weight.height]
+        changed.push('weight')
       }
       if (changed.length === 0) {
         out.push(item)
