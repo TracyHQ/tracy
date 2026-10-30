@@ -4151,6 +4151,7 @@ export function apply(ctx: HostContext, config: Config = {}): void {
                 storeDir: store,
                 message: wish,
                 session: typeof sessionId === 'string' ? sessionId : null,
+                warn,
                 // The plugin's own clock, like the today notice above: a note's date is the day the
                 // host says it is, never a second clock read behind it.
                 ...(config.now ? { now: config.now } : {})
