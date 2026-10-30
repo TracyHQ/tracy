@@ -210,7 +210,7 @@ jobs:
     steps:
       # Same three steps as `build-check` below; the reasons are written there.
       - name: Check out Git repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
 
@@ -318,7 +318,7 @@ jobs:
       # 🔒 THE ONLY PLACE THE NIGHTLY NAMES `develop`. Every later job takes the commit this checkout
       # resolved (`checkout_sha`), never the branch — the branch moves while the run is in flight.
       - name: Check out Git repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
           ref: ${{ github.event_name == 'schedule' && 'develop' || '' }}
@@ -601,7 +601,7 @@ jobs:
           echo "nightly tree: plan selected $NIGHTLY_SHA"
 
       - name: Check out Git repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
           ref: ${{ needs.plan.outputs.checkout_sha }}
@@ -824,7 +824,7 @@ jobs:
           echo "nightly tree: plan selected $NIGHTLY_SHA"
 
       - name: Check out Git repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
           ref: ${{ github.event_name == 'schedule' && needs.plan.outputs.checkout_sha || '' }}
@@ -1280,7 +1280,7 @@ jobs:
           echo "nightly tree: plan selected $NIGHTLY_SHA"
 
       - name: Check out Git repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
           ref: ${{ github.event_name == 'schedule' && needs.plan.outputs.checkout_sha || '' }}
@@ -1367,7 +1367,7 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.pull_request.draft == false && github.event.pull_request.head.repo.full_name == github.repository
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
           # The merge commit and its parents: HEAD^1 is the base tip, as in `plan`.
@@ -1427,7 +1427,7 @@ jobs:
       }}
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
           # The merge commit and its parents: the proof compares HEAD^1 (the base tip) with HEAD,
@@ -1550,7 +1550,7 @@ jobs:
       contents: read
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
           persist-credentials: false
