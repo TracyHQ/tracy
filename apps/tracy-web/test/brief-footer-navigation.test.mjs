@@ -286,36 +286,40 @@ for (const [name, index, offerings, headings] of [
     assert.equal(after.pass, true)
   })
 
-  test(`${name}: a demo heading or a generic action from the model is refused before any write`, async () => {
-    const native = site(index, offerings)
+  test(`${name}: a demo heading or a generic action from the model takes a brief value, recorded, and the build goes on`, async () => {
     for (const answer of [
       { headings: { ...headings, 'footer-company': 'Site map' } },
       { headings, labelOverride: 'Learn more' }
-    ])
-      await assert.rejects(
-        writeJoomlaFooterNavigation({
-          apply: async (call) => {
-            if (call.action !== 'content.list') assert.fail('nothing may be written')
-            return native.apply(call)
-          },
-          siteKey: 'fictional',
-          sitePlan,
-          contentMap,
-          model: {
-            chat: async ({ messages }) =>
-              JSON.stringify({
-                headings: answer.headings,
-                labels: Object.fromEntries(
-                  JSON.parse(messages[1].content).links.map((l) => [
-                    l.key,
-                    answer.labelOverride ?? l.name ?? l.role
-                  ])
-                )
-              })
-          }
-        }),
-        /FOOTER_INVALID/
-      )
+    ]) {
+      const native = site(index, offerings)
+      const notes = []
+      const result = await writeJoomlaFooterNavigation({
+        apply: native.apply,
+        siteKey: 'fictional',
+        sitePlan,
+        contentMap,
+        note: (line) => notes.push(line),
+        model: {
+          chat: async ({ messages }) =>
+            JSON.stringify({
+              headings: answer.headings,
+              labels: Object.fromEntries(
+                JSON.parse(messages[1].content).links.map((l) => [
+                  l.key,
+                  answer.labelOverride ?? l.name ?? l.role
+                ])
+              )
+            })
+        }
+      })
+      // No refused word reaches the site: the generic heading becomes the business name, a generic label the page's name.
+      const shown = result.columns.flatMap((c) => [c.heading, ...c.links.map((l) => l.label)])
+      assert.equal(shown.includes('Site map'), false)
+      assert.equal(shown.includes('Learn more'), false)
+      assert.ok(result.fallbacks.length > 0)
+      assert.equal(notes.length, result.fallbacks.length + result.findings.length)
+      if (!answer.labelOverride) assert.equal(result.columns[1].heading, name)
+    }
   })
 }
 

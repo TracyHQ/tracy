@@ -1,8 +1,13 @@
 // Declared button decisions share the ordinary translation door; their URLs are language-independent.
 import { translateKit } from './joomla-kit.js'
 import { boxLimitOf } from './slot-box-limits.js'
+import { settleText, textFallbackNotes } from './text-fallback.js'
 
-/** Enforce every declared action after writer copy, translating words while retaining the paired real destinations. */
+/**
+ * Enforce every declared action after writer copy, translating words while retaining the paired real destinations. Words
+ * that do not fit their box or could not be translated are a recorded blocker (`text-fallback.js`): that one label is
+ * left to the copy writer's words in the site language and the build goes on; its destination is still enforced.
+ */
 export async function buttonActionValues({
   sitePlan,
   locale = 'en',
@@ -25,13 +30,20 @@ export async function buttonActionValues({
       maxCharacters: limitOf(byKey.get(s.key))
     }))
   const checked = (out) => {
+    const findings = []
     for (const word of words) {
-      if (typeof out[word.key] === 'string' && [...out[word.key]].length > word.maxCharacters)
-        throw Object.assign(
-          new Error(`The declared button action does not fit its measured text slot: ${word.key}`),
-          { code: 'BUTTON_ACTION_DOES_NOT_FIT' }
-        )
+      const settled = settleText({
+        site: 'button action',
+        key: word.key,
+        value: out[word.key],
+        invalid: (t) => (!t ? 'not-translated' : [...t].length > word.maxCharacters ? 'does-not-fit' : null)
+      })
+      if (settled.finding) {
+        findings.push(settled.finding)
+        delete out[word.key]
+      }
     }
+    for (const line of textFallbackNotes({ findings })) note(line)
     return out
   }
   if (/^en(?:-|$)/i.test(locale) || decisions.length === 0) return checked(values)
@@ -45,11 +57,9 @@ export async function buttonActionValues({
     note,
     what: 'the declared button actions'
   })
-  if (words.some((s) => !(s.key in translated)))
-    throw Object.assign(new Error('Declared button actions could not be translated into the site language'), {
-      code: 'BUTTON_ACTION_TRANSLATION_REQUIRED'
-    })
-  return checked({ ...values, ...translated })
+  // Untranslated words never stand in the site language: they are left out of the values and recorded.
+  const own = Object.fromEntries(Object.entries(values).filter(([key]) => !words.some((w) => w.key === key)))
+  return checked({ ...own, ...translated })
 }
 
 /** The tighter of a slot's contract limit and its measured box: the plugin refuses words over either. */

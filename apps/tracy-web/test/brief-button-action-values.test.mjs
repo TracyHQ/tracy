@@ -47,30 +47,30 @@ test('declared button words use the ordinary translation door while the channel 
   )
 })
 
-test('an unavailable action translation fails explicitly instead of retaining generic writer words', async () => {
-  await assert.rejects(buttonActionValues({ sitePlan, locale: 'de-DE' }), {
-    code: 'BUTTON_ACTION_TRANSLATION_REQUIRED'
-  })
+test('an unavailable action translation is a recorded blocker: the words are left to the writer, the URL stays', async () => {
+  const notes = []
+  const values = await buttonActionValues({ sitePlan, locale: 'de-DE', note: (l) => notes.push(l) })
+  assert.deepEqual(values, { 'button.url': sitePlan.slots[1].value })
+  assert.equal(notes.filter((l) => l.startsWith('BLOCKER button action button.label')).length, 1)
 })
 
-test('a canonical action longer than its measured slot refuses instead of truncating or silently keeping demo copy', async () => {
-  await assert.rejects(
-    buttonActionValues({
-      sitePlan: { slots: [{ ...sitePlan.slots[0], value: 'Book an appointment' }] },
-      slots: [{ key: 'button.label', maxCharacters: 17 }]
-    }),
-    { code: 'BUTTON_ACTION_DOES_NOT_FIT' }
-  )
+test('a canonical action longer than its measured slot is never truncated: it is recorded and left out', async () => {
+  const notes = []
+  const values = await buttonActionValues({
+    sitePlan: { slots: [{ ...sitePlan.slots[0], value: 'Book an appointment' }] },
+    slots: [{ key: 'button.label', maxCharacters: 17 }],
+    note: (l) => notes.push(l)
+  })
+  assert.deepEqual(values, {})
+  assert.match(notes[0], /does-not-fit/)
 })
 
 test('the measured box constrains an action even when the raw contract allows longer text', async () => {
-  await assert.rejects(
-    buttonActionValues({
-      sitePlan: { slots: [{ ...sitePlan.slots[0], value: 'Book an appointment' }] },
-      slots: [
-        { key: 'button.label', type: 'text', maxCharacters: 40, fit: { measured: true, maxCharacters: 17 } }
-      ]
-    }),
-    { code: 'BUTTON_ACTION_DOES_NOT_FIT' }
-  )
+  const values = await buttonActionValues({
+    sitePlan: { slots: [{ ...sitePlan.slots[0], value: 'Book an appointment' }] },
+    slots: [
+      { key: 'button.label', type: 'text', maxCharacters: 40, fit: { measured: true, maxCharacters: 17 } }
+    ]
+  })
+  assert.deepEqual(values, {})
 })

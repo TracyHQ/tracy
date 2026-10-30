@@ -5,7 +5,9 @@ import {
 } from 'website-opportunities/domain/footer-navigation.mjs'
 import { ruleText } from 'website-opportunities/domain/build-rules.mjs'
 import { PRIVACY_TITLE } from 'website-opportunities/domain/privacy-policy.mjs'
+import { pageNameOf } from 'website-opportunities/domain/declared-button-plan.mjs'
 import { jsonObjectIn } from './shared.js'
+import { settleText, textFallbackNotes } from './text-fallback.js'
 
 const SYSTEM =
   "Name the footer link columns of a business website and the links in them. Each column heading says what the column holds, in the business's own words from the brief, in the requested language: " +
@@ -37,7 +39,8 @@ export async function writeFooterNavigation({
   model,
   locale = 'en',
   known = {},
-  signal
+  signal,
+  note = () => {}
 }) {
   if (!sitePlan || !(sitePlan.pages ?? []).some((p) => p.decision === 'keep')) return null
   const inventory = await read()
@@ -104,30 +107,80 @@ export async function writeFooterNavigation({
     }
   ]
   const result = jsonObjectIn(await model.chat({ messages, maxTokens: 2000, temperature: 0, signal }))
-  const written = plan.columns.map((c) => {
-    const heading = String(result?.headings?.[c.id] ?? '').trim()
-    const bad = invalidFooterHeading(heading, { max: byId.get(c.id)?.headingMax ?? 40, demo })
-    if (bad) throw fail('FOOTER_INVALID', `${c.id}: ${bad}`)
+  const business = String(sitePlan.brand?.name?.value ?? '').trim()
+  const pageOf = (/** @type {string} */ id) => (sitePlan.pages ?? []).find((p) => p.id === id)
+  const titleOf = (/** @type {string} */ id) => String(pageOf(id)?.title ?? pageOf(id)?.label ?? '').trim()
+  /** @type {import('./text-fallback.js').TextFallback[]} */
+  const fallbacks = []
+  /** @type {import('./text-fallback.js').TextFinding[]} */
+  const findings = []
+  const usedHeadings = new Set()
+  const written = []
+  for (const c of plan.columns) {
+    const column = byId.get(c.id)
+    // The heading's stand-ins: an offerings column is named by its offerings index page, any column by the business; the
+    // template's own heading only when it is not demo words (the check refuses those).
+    const index = c.links.find((l) => ['services', 'menu', 'offerings'].includes(l.role))
+    const candidates = [
+      ...(index && c.holds !== 'company'
+        ? [
+            { source: 'offerings page name', text: known[index.pageId] },
+            { source: 'offerings page title', text: titleOf(index.pageId) }
+          ]
+        : []),
+      { source: 'business name', text: business },
+      { source: 'template heading', text: column?.demoHeading }
+    ]
+    // A heading another column already shows is tried last, so two columns do not share one name when they need not.
+    const fold = (/** @type {unknown} */ t) =>
+      String(t ?? '')
+        .trim()
+        .toLowerCase()
+    candidates.sort((a, b) => Number(usedHeadings.has(fold(a.text))) - Number(usedHeadings.has(fold(b.text))))
+    const settled = settleText({
+      site: 'footer heading',
+      key: c.id,
+      value: result?.headings?.[c.id],
+      invalid: (t) => invalidFooterHeading(t, { max: column?.headingMax ?? 40, demo }),
+      candidates
+    })
+    if (settled.fallback) fallbacks.push(settled.fallback)
+    // No value passes: the column keeps the heading it shows now and the final check judges the served footer.
+    if (settled.finding) findings.push(settled.finding)
+    const heading = settled.text ?? String(column?.heading ?? '')
+    usedHeadings.add(fold(heading))
     const seen = new Set()
-    return {
-      id: c.id,
-      heading,
-      links: links
-        .filter((l) => l.column === c.id)
-        .map((l) => {
-          const max = byId.get(c.id)?.linkMax ?? 40
-          const own = typeof l.fixed === 'string' ? l.fixed.trim() : ''
-          const label =
-            own && !invalidMenuLabel(own, l.role, max) ? own : String(result?.labels?.[l.key] ?? '').trim()
-          const invalid = invalidMenuLabel(label, l.role, max)
-          const folded = label.toLocaleLowerCase(locale)
-          if (invalid || seen.has(folded))
-            throw fail('FOOTER_INVALID', `${l.key}: ${invalid ?? 'duplicate-label'}`)
-          seen.add(folded)
-          return { pageId: l.pageId, path: l.path, role: l.role, label }
-        })
+    const max = column?.linkMax ?? 40
+    const columnLinks = []
+    for (const l of links.filter((x) => x.column === c.id)) {
+      const own = typeof l.fixed === 'string' ? l.fixed.trim() : ''
+      const invalid = (/** @type {string} */ t) =>
+        invalidMenuLabel(t, l.role, max) ?? (seen.has(t.toLocaleLowerCase(locale)) ? 'duplicate-label' : null)
+      const label = settleText({
+        site: 'footer link',
+        key: l.key,
+        value: own && !invalid(own) ? own : result?.labels?.[l.key],
+        invalid,
+        candidates: [
+          { source: 'page name', text: l.name },
+          { source: 'page title', text: titleOf(l.pageId) },
+          { source: 'offering name', text: l.label },
+          // The name its address reads ("about/our-team" is "Our team"), the last deterministic name a page has.
+          { source: 'page address', text: l.path ? pageNameOf({ path: l.path }) : null }
+        ]
+      })
+      if (label.fallback) fallbacks.push(label.fallback)
+      // A link no name passes for is left out of its column (a finding), never written with a refused name.
+      if (label.finding || label.text === null) {
+        if (label.finding) findings.push(label.finding)
+        continue
+      }
+      seen.add(label.text.toLocaleLowerCase(locale))
+      columnLinks.push({ pageId: l.pageId, path: l.path, role: l.role, label: label.text })
     }
-  })
+    written.push({ id: c.id, heading, links: columnLinks })
+  }
+  for (const line of textFallbackNotes({ fallbacks, findings })) note(line)
   await write({ columns: written, off: plan.off })
   const after = (await read()).columns ?? []
   const refused = []
@@ -140,5 +193,5 @@ export async function writeFooterNavigation({
   }
   for (const id of plan.off) if (after.find((c) => c.id === id && !c.hidden)) refused.push(id)
   if (refused.length) throw fail('FOOTER_READBACK', refused.join(', '))
-  return { columns: written, off: plan.off }
+  return { columns: written, off: plan.off, fallbacks, findings }
 }

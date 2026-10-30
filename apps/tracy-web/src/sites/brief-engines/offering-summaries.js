@@ -4,6 +4,7 @@ import { wordsOf } from 'website-opportunities/domain/honest-written.mjs'
 import { offeringCrossTalk } from 'website-opportunities/domain/offering-cross-talk.mjs'
 import { onlyNamesOffering } from 'website-opportunities/domain/offering-description.mjs'
 import { translateKit } from './joomla-kit.js'
+import { settleText, textFallbackNotes } from './text-fallback.js'
 import { parseFragment } from 'parse5'
 
 const textOf = (node) =>
@@ -23,6 +24,8 @@ export async function offeringSummaryValues({
 }) {
   const values = {}
   const translate = []
+  /** Summaries no text passes for: recorded blockers, left to the offering description writer that runs next. */
+  const findings = []
   const hidden = new Set((honesty?.records ?? []).filter((r) => r.decision === 'hide').map((r) => r.group))
   const cardNames = {
     ...Object.fromEntries((honesty?.offerings ?? []).map((o) => [`brief:${o.id}`, o.label])),
@@ -64,10 +67,17 @@ export async function offeringSummaryValues({
     // The plan found no words about this offering beyond its name: the summary is taken off after the write
     // (`offering-name-only.js`), never filled with the name.
     if (!fits(fallback) && (honesty.nameOnly ?? []).includes(slot.key)) continue
-    if (!fits(fallback))
-      throw Object.assign(new Error(`A kept offering has no sourced summary that fits: ${slot.key}`), {
-        code: 'OFFERING_SUMMARY_REQUIRED'
-      })
+    const settled = settleText({
+      site: 'offering summary',
+      key: slot.key,
+      value: '',
+      invalid: (t) => (fits(t) ? null : 'no-sourced-summary-fits'),
+      candidates: [{ source: 'sourced summary', text: fallback }]
+    })
+    if (settled.finding) {
+      findings.push(settled.finding)
+      continue
+    }
     values[slot.key] = fallback
     if (!/^en(?:-|$)/i.test(locale)) translate.push({ ...slot, sample: fallback })
   }
@@ -83,13 +93,22 @@ export async function offeringSummaryValues({
       what: 'the offering summaries'
     })
     for (const slot of translate) {
-      if (!said[slot.key]?.trim())
-        throw Object.assign(new Error(`An offering summary could not be translated: ${slot.key}`), {
-          code: 'OFFERING_SUMMARY_TRANSLATION_REQUIRED'
-        })
+      const settled = settleText({
+        site: 'offering summary',
+        key: slot.key,
+        value: said[slot.key],
+        invalid: (t) => (t ? null : 'not-translated')
+      })
+      if (settled.finding) {
+        // The English summary never stands on a site in another language.
+        findings.push(settled.finding)
+        delete values[slot.key]
+        continue
+      }
       values[slot.key] = said[slot.key]
     }
   }
+  for (const line of textFallbackNotes({ findings })) note(line)
   return values
 }
 

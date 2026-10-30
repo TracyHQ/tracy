@@ -82,7 +82,8 @@ export async function writeJoomlaFooterNavigation({
   locale,
   signal,
   contentMap,
-  known
+  known,
+  note
 }) {
   const groups = footerNavigationGroups(contentMap)
   if (!groups.length) return null
@@ -153,6 +154,7 @@ export async function writeJoomlaFooterNavigation({
     locale,
     signal,
     known,
+    note,
     read: state,
     write: async ({ columns, off }) => {
       const { rows, columns: native, offeringPages } = await state()

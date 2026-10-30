@@ -8,6 +8,7 @@ import {
 import { ruleText } from 'website-opportunities/domain/build-rules.mjs'
 import { inSiteSpelling } from 'website-opportunities/domain/site-style-sheet.mjs'
 import { jsonObjectIn } from './shared.js'
+import { settleText } from './text-fallback.js'
 
 const SYSTEM =
   "Name the main menu of a business website from its kept pages and page roles. Use the business's own words from " +
@@ -75,29 +76,42 @@ export async function writeMainMenu({ sitePlan, read, write, model, locale = 'en
   }
   const values = []
   for (const item of items) {
-    let label = String(result?.labels?.[firstOf.get(item.pageId) ?? item.key] ?? '').trim()
     const keyOf = (/** @type {string} */ l) =>
       `${item.menu ?? ''}\u0000${item.parent ?? ''}\u0000${l.toLocaleLowerCase(locale)}`
-    let invalid = invalidMenuLabel(label, item.role, item.maxCharacters ?? 60)
-    if (invalid || siblings.has(keyOf(label))) {
-      // 🔒 THE FALLBACK OF A MENU LABEL IS THE PAGE TITLE (registry rule `menu-label-is-page-name`), never a generic action
-      // and never a build stop: one bad label of the model names its page by its own title.
+    // 🔒 THE FALLBACK OF A MENU LABEL IS THE PAGE TITLE (registry rule `menu-label-is-page-name`), never a generic action
+    // and never a build stop: one bad label of the model names its page by its own title (`text-fallback.js`).
+    const settled = settleText({
+      site: 'main menu label',
+      key: item.key,
+      value: result?.labels?.[firstOf.get(item.pageId) ?? item.key],
+      invalid: (t) =>
+        invalidMenuLabel(t, item.role, item.maxCharacters ?? 60) ??
+        (siblings.has(keyOf(t)) ? 'duplicate-label' : null),
+      candidates: [{ source: 'page title', text: pageTitle(item) }]
+    })
+    if (settled.finding || settled.text === null) {
+      // The title fails too: the reason recorded is the title's own, as the main menu check names it.
       const title = pageTitle(item)
-      const why = invalid ?? 'duplicate-label'
-      invalid = invalidMenuLabel(title, item.role, item.maxCharacters ?? 60)
-      if (invalid || siblings.has(keyOf(title))) {
-        findings.push({
-          kind: 'main-menu',
-          severity: 'blocker',
-          key: item.key,
-          pageId: item.pageId,
-          reason: invalid ?? 'duplicate-label'
-        })
-        continue
-      }
-      fallbacks.push({ key: item.key, pageId: item.pageId, was: label, reason: why, label: title })
-      label = title
+      findings.push({
+        kind: 'main-menu',
+        severity: 'blocker',
+        key: item.key,
+        pageId: item.pageId,
+        reason:
+          invalidMenuLabel(title, item.role, item.maxCharacters ?? 60) ??
+          (siblings.has(keyOf(title)) ? 'duplicate-label' : (settled.finding?.reason ?? 'empty-label'))
+      })
+      continue
     }
+    const label = settled.text
+    if (settled.fallback)
+      fallbacks.push({
+        key: item.key,
+        pageId: item.pageId,
+        was: settled.fallback.was,
+        reason: settled.fallback.reason,
+        label
+      })
     siblings.add(keyOf(label))
     values.push({ ...item, label })
   }

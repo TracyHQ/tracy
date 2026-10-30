@@ -55,7 +55,7 @@ for (const [label, other, quote] of [
       assert.equal(values['article-31.intro'], quote)
     }
   })
-  test(`${label}: valid own copy stays and an untranslatable fallback fails visibly`, async () => {
+  test(`${label}: valid own copy stays and an untranslatable fallback is a recorded blocker, not a build stop`, async () => {
     const own = `${label} described for this card.`
     assert.equal(
       (await offeringSummaryValues({ slots, honesty, written: { 'article-31.intro': own } }))[
@@ -63,9 +63,16 @@ for (const [label, other, quote] of [
       ],
       own
     )
-    await assert.rejects(() => offeringSummaryValues({ slots, honesty, written: {}, locale: 'de' }), {
-      code: 'OFFERING_SUMMARY_TRANSLATION_REQUIRED'
+    const notes = []
+    const values = await offeringSummaryValues({
+      slots,
+      honesty,
+      written: {},
+      locale: 'de',
+      note: (line) => notes.push(line)
     })
+    assert.equal('article-31.intro' in values, false)
+    assert.ok(notes.some((line) => line.startsWith('BLOCKER offering summary article-31.intro')))
   })
   test(`${label}: later record cleanup cannot empty a protected summary`, async () => {
     const steps = await planRecordSteps({
