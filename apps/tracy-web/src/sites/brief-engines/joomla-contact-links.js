@@ -13,6 +13,7 @@
  */
 import { sameBoundNode } from './joomla-bound-nodes.js'
 import { boundNodes, lineOf, placeLines } from './joomla-contact-lines.js'
+import { contactEntriesOf } from 'website-opportunities/domain/footer-contact-shape.mjs'
 
 /** A phone number as a page shows one. */
 const PHONE = /\(?\+?\d[\d\s().-]{4,}\d/g
@@ -214,54 +215,45 @@ function keepsPaths(
 }
 
 /**
- * @typedef {{ kind: string, href: string, value: string, words: string }} Chosen
- */
-
-/**
- * The one channel a summary block shows (COO decision 30/10/2026): the main phone, else WhatsApp, else the mailbox, else
- * a direct message. Null when the brief holds none.
- * @param {Channel[]} phones - the main number first
- * @param {(kind: string) => any} appOf
- * @param {Contact} facts
- * @param {Channel[]} reach
- * @returns {Chosen | null}
- */
-function chosenOf(phones, appOf, facts, reach) {
-  if (phones[0])
-    return { kind: 'phone', href: phones[0].href, value: phones[0].value, words: phones[0].value }
-  const chat = appOf('whatsapp')
-  if (chat?.href)
-    return { kind: 'whatsapp', href: chat.href, value: chat.value, words: chat.label ?? 'WhatsApp us' }
-  if (facts.email?.href)
-    return { kind: 'email', href: facts.email.href, value: facts.email.value, words: facts.email.value }
-  const message = reach.find((c) => c.kind === 'message')
-  return message ? { kind: 'message', href: message.href, value: message.value, words: message.label } : null
-}
-
-/**
  * One module's HTML with its contact links leading to the business (COO rule 29/10/2026), without moving a bound node
  * (`joomla-contact-lines.js`).
  *
- * 🔒 ONE ICON PER CHANNEL KIND, ONE CHANNEL IN A SUMMARY BLOCK (COO decision 30/10/2026). Measured on a brief build of a
- * Joomla T4 template: the footer's icon row showed two identical phone icons for the brief's two numbers, and the footer's
- * "get in touch" block listed both numbers, WhatsApp and a direct message. So:
+ * 🔒 ONE ICON PER CHANNEL KIND; A SUMMARY BLOCK KEEPS THE DEMO'S LINES KIND BY KIND (COO decisions 30/10/2026). Measured
+ * on a brief build of a Joomla T4 template: the footer's icon row showed two identical phone icons for the brief's two
+ * numbers, and the footer's "get in touch" block, one phone, one address and one mailbox in the demo, listed both numbers,
+ * WhatsApp, the areas served and a direct message. So:
  * - links that show an icon and no words (an icon row) keep one link per kind; a call icon calls the main number;
- * - a summary block (`summary`: a block shown on every page, `summaryModuleIds`) shows one channel, the main phone, else
- *   WhatsApp, else the mailbox, else a direct message, on its first contact line; every other contact line goes whole, and
- *   so do the lines of the areas served beside the street address. A line a contract slot binds is hidden in place instead,
- *   so its path keeps its node;
+ * - a summary block (`summary`: a footer or header, `summaryModuleIds`) keeps the template's footer shape: each contact
+ *   line keeps its kind and shows the business's own of that kind (the k-th call line the k-th number, main first; the
+ *   mailbox line the mailbox; a chat line its app), no more lines of a kind than the demo shows (`caps`, the demo's entries
+ *   from the content map, `footer-contact-shape.mjs`; one of each kind without them), and a line of a kind the business
+ *   lacks goes whole, as do the lines of the areas served beside the street address. No line is ever added there: every
+ *   other channel is the Contact page's. A line a contract slot binds is hidden in place instead, so its path keeps its node;
  * - any other block (the contact page's own) shows every channel of the brief, each number its own line, added beside its
  *   phone line.
  * @param {string} html
  * @param {Contact} contact - the site plan's contact facts
- * @param {{ channels?: Channel[] | null, bound?: string[], summary?: boolean }} [options] - the plan's channels, the content
- *   map's paths into this HTML, and whether the block is a summary block
+ * @param {{ channels?: Channel[] | null, bound?: string[], summary?: boolean, caps?: Record<string, number> | null }} [options]
+ *   - the plan's channels, the content map's paths into this HTML, whether the block is a summary block, and the demo's
+ *   lines of each kind (`contactEntriesOf`)
  * @returns {{ html: string, moved: number, removed: number, added: number }}
  */
-export function joomlaContactLinks(html, contact, { channels = null, bound = [], summary = false } = {}) {
+export function joomlaContactLinks(
+  html,
+  contact,
+  { channels = null, bound = [], summary = false, caps = null } = {}
+) {
   const facts = contact ?? {}
   const reach = channels ?? channelsOfContact(facts)
   const phones = reach.filter((c) => c.kind === 'phone')
+  // A plan whose channels list no number still has its contact phone.
+  if (phones.length === 0 && facts.phone?.href)
+    phones.push({
+      kind: 'phone',
+      value: facts.phone.value,
+      href: facts.phone.href,
+      label: `Call ${facts.phone.value}`
+    })
   // The main number first: the plan's contact phone.
   const main = String(facts.phone?.href ?? '').toLowerCase()
   const at = main ? phones.findIndex((p) => p.href.toLowerCase() === main) : -1
@@ -270,7 +262,10 @@ export function joomlaContactLinks(html, contact, { channels = null, bound = [],
     reach.find((c) => c.kind === kind) ?? (kind === 'whatsapp' ? (facts.whatsapp ?? null) : null)
   /** @type {Map<string, Channel>} */
   const byLabel = new Map(reach.filter((c) => c.kind !== 'phone').map((c) => [c.label.toLowerCase(), c]))
-  const chosen = summary ? chosenOf(phones, appOf, facts, reach) : null
+  // The most call and mailbox lines a summary block keeps: the demo's, else one of each.
+  const declaredCaps = caps && Object.keys(caps).length > 0 ? caps : null
+  const capOf = (/** @type {string} */ kind) =>
+    declaredCaps && (kind === 'phone' || kind === 'email') ? (declaredCaps[kind] ?? 0) : 1
   const source = String(html ?? '')
   // The business's own numbers the block already shows: a demo number takes one it does not show yet.
   const ownOf = (/** @type {string} */ text) =>
@@ -287,7 +282,8 @@ export function joomlaContactLinks(html, contact, { channels = null, bound = [],
       if (own) used.add(own.href)
     }
     const iconKinds = new Set()
-    let shownChosen = false
+    /** @type {Map<string, number>} */
+    const shownOfKind = new Map()
     const drop = (/** @type {string} */ attrs, /** @type {string} */ words) => {
       const ordinal = dropped
       dropped += 1
@@ -314,9 +310,28 @@ export function joomlaContactLinks(html, contact, { channels = null, bound = [],
         : (byLabel.get(textOf(inner).toLowerCase()) ??
           reach.find((c) => c.kind === 'message' && c.href.toLowerCase() === target) ??
           null)
-      // A summary block: its first contact line shows the chosen channel, every other one goes.
-      if (chosen && !icon && (kind || channel)) {
-        if (shownChosen) {
+      // A summary block: each contact line keeps its kind and shows the business's own of that kind, up to the demo's count.
+      if (summary && !icon && (kind || channel)) {
+        const lineKind = kind ?? /** @type {Channel} */ (channel).kind
+        const n = shownOfKind.get(lineKind) ?? 0
+        shownOfKind.set(lineKind, n + 1)
+        const fact =
+          n >= capOf(lineKind)
+            ? null
+            : lineKind === 'phone'
+              ? (phones[n] ?? null)
+              : lineKind === 'email'
+                ? n === 0 && facts.email?.value
+                  ? { value: facts.email.value, href: facts.email.href ?? `mailto:${facts.email.value}` }
+                  : null
+                : kind && isApp(kind)
+                  ? n === 0
+                    ? appOf(kind)
+                    : null
+                  : n === 0
+                    ? channel
+                    : null
+        if (!fact?.href) {
           const words =
             kind === 'phone'
               ? (ownOf(textOf(inner)) ?? phones[0])?.value
@@ -325,17 +340,13 @@ export function joomlaContactLinks(html, contact, { channels = null, bound = [],
                 : kind && isApp(kind)
                   ? (appOf(kind)?.label ?? textOf(inner))
                   : channel?.label
-          return drop(attrs, words ?? '')
+          return drop(attrs, words ?? textOf(inner))
         }
-        shownChosen = true
-        if (kind === chosen.kind) {
-          if (isOwn(href, chosen) && (kind !== 'phone' || ownOf(textOf(inner)))) return whole
-          moved += 1
-          const shows = kind === 'phone' || kind === 'email' ? showOwn(inner, kind, chosen.value) : inner
-          return `<a${pointed(attrs, chosen.href)}>${shows}</a>`
-        }
+        if (isOwn(href, fact) && (kind !== 'phone' || ownOf(textOf(inner)))) return whole
         moved += 1
-        return `<a${pointed(attrs, chosen.href)}>${escapeHtml(chosen.words)}</a>`
+        const shows =
+          kind === 'phone' || kind === 'email' ? showOwn(inner, kind, String(fact.value ?? '')) : inner
+        return `<a${pointed(attrs, String(fact.href))}>${shows}</a>`
       }
       if (!kind) {
         // A line the plan wrote with a channel's words ("Message us on Instagram") leads to that channel.
@@ -525,7 +536,8 @@ function missingLines(/** @type {string} */ html, /** @type {Channel[]} */ reach
  * @param {Set<string>} input.visible - the language tags a visitor can reach
  * @param {Channel[] | null} [input.channels] - the site plan's channels (each phone, WhatsApp, each direct message)
  * @param {any[]} [input.slots] - the content map's slots: no added line moves a node one of them binds to
- * @param {Set<number>} [input.summaries] - the modules that are summary blocks (`summaryModuleIds`): one channel each
+ * @param {Set<number>} [input.summaries] - the modules that are summary blocks (`summaryModuleIds`): the demo's lines kind by kind
+ * @param {any} [input.contentMap] - the release's content map: each summary block's demo entries (`contactEntriesOf`)
  * @returns {{ steps: Array<{ kind: 'module', id: number, fields: { content: string } }>, moved: number, removed: number, added: number }}
  */
 export function moduleContactSteps({
@@ -534,7 +546,8 @@ export function moduleContactSteps({
   visible,
   channels = null,
   slots = [],
-  summaries = new Set()
+  summaries = new Set(),
+  contentMap = null
 }) {
   const steps = []
   let moved = 0
@@ -553,7 +566,8 @@ export function moduleContactSteps({
     const next = joomlaContactLinks(row.content, contact, {
       channels,
       bound,
-      summary: summaries.has(Number(row.id))
+      summary: summaries.has(Number(row.id)),
+      caps: contentMap ? contactEntriesOf(contentMap, `module-${row.id}`) : null
     })
     if (next.html === row.content) continue
     steps.push({ kind: 'module', id: Number(row.id), fields: { content: next.html } })

@@ -2,11 +2,14 @@
 // 30/10/2026), read from the HTML any CMS serves (Joomla, WordPress, EmDash):
 // - an ICON ROW (links that show an icon and no words, side by side) shows one icon per channel kind: two links of one kind
 //   (two phones, a phone and a mobile, two mailboxes) are a finding;
-// - a SUMMARY CONTACT BLOCK (a run of contact lines shown on every page, such as a footer "get in touch") shows one channel
-//   and one location line: a second channel, or a line of the areas served beside the street address, is a finding. The
-//   contact page's own block, shown on that page only, lists every channel and is not judged here;
+// - a SUMMARY CONTACT BLOCK (a run of contact lines shown on every page, such as a footer "get in touch") keeps the demo's
+//   footer shape (COO decision 30/10/2026, `footer-contact-shape.mjs`): no more lines of a kind than the demo's footer shows
+//   (one of each kind when the content map declares none), no kind the demo's footer lacks, and one location line; a line
+//   of the areas served beside the street address is a finding. The contact page's own block, shown on that page only,
+//   lists every channel and is not judged here;
 // - an ADDRESS shows its parts with commas: a spaced hyphen or dash between two parts of the brief's address is a finding.
 // Pure: the served pages and the brief in, findings out.
+import { summaryContactShape } from './footer-contact-shape.mjs'
 
 /** An `<a>` element, its attributes and what it shows. */
 const ANCHOR = /<a\b([^>]*)>([\s\S]*?)<\/a\s*>/gi
@@ -127,7 +130,33 @@ function areasOf(/** @type {any} */ brief) {
 }
 
 /**
- * @param {{ served: Array<{ path: string, html: string }>, brief?: any }} ctx
+ * The contact blocks of the served pages shown on two pages or more (a footer, a header): runs of contact lines in words,
+ * recognised again on every page they are shown on, by the links they hold.
+ * @param {Array<{ path: string, html: string }>} pages
+ * @returns {Map<string, { pages: Set<string>, first: string, run: Array<{ href: string, kind: string, words: string }>, tail: string }>}
+ */
+export function summaryContactBlocks(pages) {
+  const blocks = new Map()
+  for (const page of pages ?? []) {
+    const html = String(page.html ?? '')
+    const lines = linksOf(html).filter(
+      (l) => !l.icon && (LINE_KINDS.has(l.kind) || DIRECT_MESSAGE.test(l.href) || MESSAGE_WORDS.test(l.words))
+    )
+    for (const run of runsOf(html, lines, BLOCK_GAP, 200)) {
+      const key = run.map((l) => l.href).join(' ')
+      const after = html.slice(run.at(-1).end, run.at(-1).end + BLOCK_TAIL)
+      const tail = after.split(/<h[1-6]\b/i)[0]
+      const seen = blocks.get(key) ?? { pages: new Set(), first: page.path, run, tail: '' }
+      seen.pages.add(page.path)
+      seen.tail = textOf(html.slice(run[0].start, run.at(-1).end) + tail)
+      blocks.set(key, seen)
+    }
+  }
+  return new Map([...blocks].filter(([, block]) => block.pages.size >= 2))
+}
+
+/**
+ * @param {{ served: Array<{ path: string, html: string }>, brief?: any, contentMap?: any }} ctx
  * @returns {Array<{ page: string, place: string, found: string }>}
  */
 export function channelLeftovers(ctx) {
@@ -142,8 +171,6 @@ export function channelLeftovers(ctx) {
     reported.add(key)
     out.push(finding)
   }
-  /** @type {Map<string, { pages: Set<string>, first: string, run: any[], tail: string }>} */
-  const blocks = new Map()
   for (const page of pages) {
     const links = linksOf(page.html)
     // Icon rows: one icon per kind.
@@ -162,32 +189,27 @@ export function channelLeftovers(ctx) {
             found: `${n} ${kind} icons in one row`
           })
     }
-    // Contact blocks: runs of contact lines in words, recognised again on every page they are shown on.
-    const lines = links.filter(
-      (l) => !l.icon && (LINE_KINDS.has(l.kind) || DIRECT_MESSAGE.test(l.href) || MESSAGE_WORDS.test(l.words))
-    )
-    for (const run of runsOf(page.html, lines, BLOCK_GAP, 200)) {
-      const key = run.map((l) => l.href).join(' ')
-      const after = page.html.slice(run.at(-1).end, run.at(-1).end + BLOCK_TAIL)
-      const tail = after.split(/<h[1-6]\b/i)[0]
-      const seen = blocks.get(key) ?? { pages: new Set(), first: page.path, run, tail: '' }
-      seen.pages.add(page.path)
-      seen.tail = textOf(page.html.slice(run[0].start, run.at(-1).end) + tail)
-      blocks.set(key, seen)
-    }
   }
-  // A block shown on two pages or more is a summary block: one channel, one location line.
+  // A block shown on two pages or more is a summary block: the demo's lines kind by kind, one location line.
   const areas = areasOf(ctx.brief)
   const street = addressPartsOf(ctx.brief)[0] ?? null
-  for (const [key, block] of blocks) {
-    if (block.pages.size < 2) continue
-    const channels = new Set(block.run.map((l) => l.href))
-    if (channels.size > 1)
-      report(`summary|${key}`, {
-        page: block.first,
-        place: 'summary contact block',
-        found: `${channels.size} channels: ${[...channels].join(', ')}`
-      })
+  const shape = summaryContactShape(ctx.contentMap)
+  for (const [key, block] of summaryContactBlocks(pages)) {
+    /** @type {Map<string, Set<string>>} */
+    const byKind = new Map()
+    for (const l of block.run) {
+      const kind = DIRECT_MESSAGE.test(l.href) || MESSAGE_WORDS.test(l.words) ? 'message' : l.kind
+      byKind.set(kind, (byKind.get(kind) ?? new Set()).add(l.href))
+    }
+    for (const [kind, hrefs] of byKind) {
+      const allowed = shape ? (shape.get(kind) ?? 0) : 1
+      if (hrefs.size > allowed)
+        report(`summary|${key}|${kind}`, {
+          page: block.first,
+          place: 'summary contact block',
+          found: `${hrefs.size} ${kind} line(s) where the template's footer shows ${allowed}: ${[...hrefs].join(', ')}`
+        })
+    }
     const area = street && block.tail.includes(street) ? areas.find((a) => block.tail.includes(a)) : null
     if (area)
       report(`location|${key}`, {

@@ -32,6 +32,7 @@ import { placeSeoOf } from './place-seo.mjs'
 import { notFoundPageOf, pageSeoOf } from './page-seo.mjs'
 import { isRecordRole } from './record-roles.mjs'
 import { planRepeatedBlocks, REPEATED_BLOCK_REASONS } from './repeated-blocks.mjs'
+import { summaryContactContainers } from './footer-contact-shape.mjs'
 
 export const SITE_PLAN_VERSION = 'site-plan/1'
 
@@ -146,9 +147,11 @@ const LINK_WORDS = /\/a(?:\[\d+\])?\/text\(\)(?:\[\d+\])?$/
  * contact RECORD, whose phones the record step writes), the k-th phone slot shows the k-th phone, and a mailbox slot that is
  * the words of a link, with no mailbox in the brief, shows the next channel the block does not show yet: a direct message,
  * else WhatsApp, else a phone. Its link is pointed at the channel by the module contact step (`joomla-contact-links.js`).
+ * 🔒 A footer or header block (`summaries`, `footer-contact-shape.mjs`) keeps the demo's kinds (COO decision 30/10/2026): its
+ * mailbox line with no mailbox in the brief is hidden, never turned into another channel.
  * @returns {Map<string, {value: string, reason: string, href?: string}>}
  */
-function channelSlotsOf(slots, channels, contact) {
+function channelSlotsOf(slots, channels, contact, summaries = new Set()) {
   const out = new Map()
   if (!channels.length) return out
   const phones = channels.filter((c) => c.kind === 'phone')
@@ -171,7 +174,7 @@ function channelSlotsOf(slots, channels, contact) {
       shown.add(phone.href)
       out.set(slot.key, { value: phone.value, reason: 'contact-channel', href: phone.href })
     })
-    if (contact.email) continue
+    if (contact.email || group.some((s) => summaries.has(s.entity))) continue
     const mailSlots = group.filter(
       (s) => s.role === 'contact.email' && LINK_WORDS.test(String(s.xpath ?? ''))
     )
@@ -206,7 +209,7 @@ function slotsOf(
   // demo's id so the leftover block finds its play control and hides it. Emptied by the writer, the play button stayed and
   // opened an empty frame, and the hide rule had no id to match.
   const videos = new Map(planVideos({ contentMap, brief }).map((v) => [v.key, v]))
-  const reach = channelSlotsOf(contentMap.slots, channels, contact)
+  const reach = channelSlotsOf(contentMap.slots, channels, contact, summaryContactContainers(contentMap))
   return contentMap.slots.map((slot) => {
     // A block taken off whole (a sign-up form with no destination) has no words to write.
     if (unwritten.has(slot.key))

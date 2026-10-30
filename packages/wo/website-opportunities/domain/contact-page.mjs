@@ -8,6 +8,7 @@
 // 🔒 A BUSINESS THAT WORKS BY APPOINTMENT IS NEVER INVITED TO AS A WALK-IN. The same page said "Come say hello", "Come visit"
 // and "Get directions" for a coach whose brief says "By appointment" and who teaches at locations across the city.
 import { BY_APPOINTMENT } from './brief.mjs'
+import { summaryContactBlocks } from './demo-leftovers-channels.mjs'
 
 export { BY_APPOINTMENT }
 
@@ -159,6 +160,20 @@ export function contactPageFindings({ pages, plan, contactPath = null }) {
           severity: 'major',
           why: `The Contact page does not link the ${line.kind} channel of the brief (${line.href})`
         })
+    // 🔒 THE CONTACT PAGE CARRIES EVERY CHANNEL THE FOOTER CARRIES (COO decision 30/10/2026, `footer-contact-shape.mjs`): a
+    // channel a block shown on every page links is linked in the Contact page's own body too.
+    const listed = new Set(contactPageLines(plan).map((line) => line.href))
+    for (const block of summaryContactBlocks(pages ?? []).values())
+      for (const link of block.run)
+        if (!listed.has(link.href) && !ownMore((h) => linksTo(h, link.href))) {
+          listed.add(link.href)
+          findings.push({
+            kind: 'contact-channel-missing',
+            path: page.path,
+            severity: 'major',
+            why: `The Contact page does not link the ${link.kind} channel its footer shows (${link.href})`
+          })
+        }
   }
   return findings
 }

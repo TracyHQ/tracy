@@ -551,6 +551,16 @@ path):
    footer `mod_menu` module is not declared. After a brief build, check that every kept page and each offering page is
    linked from the footer, the footer has at least as many links as the header, and no demo heading or link remains
    (`footer-navigation-check.js` reports each on the build's receipt).
+   **A footer contact block keeps its demo shape (every framework):** a block of contact lines in a footer or header (a
+   phone, an address, a mailbox) is declared in the content map's top-level `contactBlocks`: `{id, placement, container}`,
+   `placement` one of `footer`, `header`, `contact-page`, `page`, and `container` the entity whose text slots carry the
+   lines' roles (`contact.phone`, `contact.email`, `contact.address`, `contact.hours`). The roles give the demo's count of
+   each kind: a brief build shows the business's one primary of each kind there (the k-th call line the k-th number), hides
+   a kind the business lacks and adds no kind the demo lacks; every other channel (a second phone, WhatsApp, a direct
+   message, the areas served) goes on the Contact page only. `scripts/slot-roles/check.mjs "$P/$VER"` refuses the contract
+   while a footer container with contact roles is not declared with placement `footer`. After a brief build, check the
+   footer shows no more lines of a kind than the demo and the Contact page links every channel the footer links
+   (`demo-leftovers-channels.mjs` C22 and `contact-page.mjs` report each on the build's receipt).
    **A call-to-action band is one unit (every framework):** a block (not the hero) whose words are at most a heading and
    a short line above a conversion button (`primary-cta` or `contact`), usually over a ground picture, is declared in the
    content map's top-level `ctaBands`: `{id, entity, message: [{key, part: "heading" | "line"}], buttons, ground}`.

@@ -43,6 +43,11 @@
  *   them unless it is declared standalone. Named contract folders fail on an undeclared band; the whole-tree gate only
  *   counts them.
  *
+ * - Every footer contact block is declared (`contactBlockProblems`, WO domain `footer-contact-shape.mjs`): a container with
+ *   contact role slots in a footer place is a `contactBlocks` entry with placement `footer`, so the brief build keeps the
+ *   demo's entries kind by kind and puts every other channel on the Contact page. Named contract folders fail on an
+ *   undeclared or malformed block; the whole-tree gate only counts them.
+ *
  *   node scripts/slot-roles/check.mjs                  every contract in the tree
  *   node scripts/slot-roles/check.mjs <contractDir>... only those (the packing check)
  */
@@ -55,6 +60,7 @@ import { buttonActionProblems } from '../../packages/wo/website-opportunities/do
 import { navigationGroupProblems } from '../../packages/wo/website-opportunities/domain/footer-navigation.mjs'
 import { ctaBandProblems } from '../../packages/wo/website-opportunities/domain/cta-bands.mjs'
 import { layoutBandProblems } from '../../packages/wo/website-opportunities/domain/layout-bands.mjs'
+import { contactBlockProblems } from '../../packages/wo/website-opportunities/domain/footer-contact-shape.mjs'
 import { lintContractDir, lintSummary } from '../../apps/tracy-web/src/lib/content-map-lint.js'
 import { lintItemIconGrounds } from '../../apps/tracy-web/src/lib/content-map-lint-icons.js'
 import { fieldMapRolesOf } from '../../apps/tracy-web/src/lib/emdash-field-map-roles.js'
@@ -171,6 +177,17 @@ export function layoutBandErrors(dir) {
   }
 }
 
+/** The undeclared or malformed contact blocks (a footer's contact lines) of a contract's content map. */
+export function contactBlockErrors(dir) {
+  const file = path.join(dir, CONTENT_MAP_FILE)
+  if (!existsSync(file)) return []
+  try {
+    return contactBlockProblems(JSON.parse(readFileSync(file, 'utf8')))
+  } catch {
+    return []
+  }
+}
+
 /** The undeclared or malformed footer link columns (navigation groups) of a contract's content map. */
 export function navigationGroupErrors(dir) {
   const file = path.join(dir, CONTENT_MAP_FILE)
@@ -262,6 +279,11 @@ export function checkAllSlotRoles(rootDir = DEFAULT_ROOT, explicitDirs = null) {
     .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, errors: layoutBandErrors(dir) }))
     .filter((b) => b.errors.length > 0)
   if (named) for (const b of layoutBands) for (const error of b.errors) errors.push(`${b.dir}: ${error}`)
+  // The same for footer contact blocks: a named contract refuses a footer's contact lines no block declares.
+  const contactBlocks = candidates
+    .map((dir) => ({ dir: path.relative(rootDir, dir) || dir, errors: contactBlockErrors(dir) }))
+    .filter((b) => b.errors.length > 0)
+  if (named) for (const b of contactBlocks) for (const error of b.errors) errors.push(`${b.dir}: ${error}`)
   return {
     ok: errors.length === 0,
     checkedCount: dirs.length,
@@ -272,7 +294,8 @@ export function checkAllSlotRoles(rootDir = DEFAULT_ROOT, explicitDirs = null) {
     buttons,
     navigation,
     bands,
-    layoutBands
+    layoutBands,
+    contactBlocks
   }
 }
 
@@ -344,6 +367,10 @@ if (isMain) {
   if (!named)
     process.stdout.write(
       `layout bands: ${res.layoutBands.length} released map(s) hold ${res.layoutBands.reduce((n, b) => n + b.errors.length, 0)} undeclared or malformed band(s); the packing check refuses them.\n`
+    )
+  if (!named)
+    process.stdout.write(
+      `footer contact blocks: ${res.contactBlocks.length} released map(s) hold ${res.contactBlocks.reduce((n, b) => n + b.errors.length, 0)} undeclared or malformed block(s); the packing check refuses them.\n`
     )
   const rules = lintSummary(res.lint.flatMap((l) => l.findings))
     .map((r) => `${r.rule} ${r.count}`)

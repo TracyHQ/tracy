@@ -522,6 +522,8 @@ function staticState(contract) {
       navigationGroups: map.navigationGroups ?? [],
       // The call-to-action bands the release declares: message, button and ground as one unit (#189 item 7).
       ctaBands: map.ctaBands ?? [],
+      // The contact blocks the release declares: a footer keeps its demo entries kind by kind (#189, site build rule 5).
+      contactBlocks: map.contactBlocks ?? [],
       declared: withFieldEvidence((map.slots ?? []).filter((slot) => !customizable(slot)))
     }
     maps.set(contract.id, entry)
@@ -534,7 +536,8 @@ function staticState(contract) {
     roleVocabularyVersion: entry.roleVocabularyVersion,
     entities: entry.entities,
     navigationGroups: entry.navigationGroups,
-    ctaBands: entry.ctaBands
+    ctaBands: entry.ctaBands,
+    contactBlocks: entry.contactBlocks
   }
 }
 
@@ -2258,7 +2261,9 @@ export function createJoomlaEngine({
             woContent,
             visible: visibleNow,
             // No contact line added beside a bound node moves it (`joomla-contact-lines.js`).
-            slots: [...staticState(ctx.contract).slots, ...(staticState(ctx.contract).declared ?? [])]
+            slots: [...staticState(ctx.contract).slots, ...(staticState(ctx.contract).declared ?? [])],
+            // A footer block keeps the demo's entries kind by kind (`footer-contact-shape.mjs`, site build rule 5).
+            contentMap: staticState(ctx.contract)
           })
           // The site plan's social links, map, demo logo picture and demo posts (`joomla-plan-identity.js`, #193), merged over the module writes above.
           const identity = await planIdentitySteps({

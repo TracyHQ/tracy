@@ -34,6 +34,8 @@ export function contentMapOfTemplate(template, contracts = defaultContracts()) {
       entities: map.entities ?? [],
       navigationGroups: map.navigationGroups ?? [],
       ctaBands: map.ctaBands ?? [],
+      // The contact blocks the release declares: a footer keeps its demo entries kind by kind (#189, site build rule 5).
+      contactBlocks: map.contactBlocks ?? [],
       roleVocabularyVersion: map.roleVocabularyVersion ?? null,
       intros: pageIntrosOf(dir)
     }

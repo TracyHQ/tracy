@@ -104,9 +104,12 @@ test('the check names each channel no page shows: the second phone, the WhatsApp
   assert.deepEqual(checkContactFacts({ pages: [{ path: '/', html: '<p>Hi</p>' }], brief: florist }), [])
 })
 
-// A footer contact block as a content map declares it: phone, address and a mailbox in the anchors of one group.
+// A page's own contact block as a content map declares it: phone, address and a mailbox in the anchors of one group. A
+// footer block keeps the demo's kinds instead (`domain-footer-contact-shape.test.mjs`).
 const footerMap = {
-  entities: [{ key: 'module-9', kind: 'module', identity: { module: 'mod_custom', position: 'footer-2' } }],
+  entities: [
+    { key: 'module-9', kind: 'module', identity: { module: 'mod_custom', position: 'content-bottom' } }
+  ],
   pages: [],
   slots: [
     ['module-9.1', 'contact.phone', '(555) 010-0000', '/html/body/div/a[1]/text()'],
