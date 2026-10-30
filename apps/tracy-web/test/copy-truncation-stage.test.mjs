@@ -194,15 +194,22 @@ test('the fact sheet is read from the content brief whole: every record with its
   const sheet = briefFactSheet(brief)
   assert.deepEqual(sheet.offerings, [
     {
+      sourceId: 'offering-1',
       name: 'Repotting',
       said: ['We repot your plants', 'Bring your plant in'],
-      photos: ['Hands repotting a fern on a wooden bench']
+      photos: [{ sourceId: 'photo-1', label: 'Hands repotting a fern on a wooden bench' }]
     },
-    { name: 'Workshops', said: ['Terrarium evenings'] }
+    { sourceId: 'offering-2', name: 'Workshops', said: ['Terrarium evenings'] }
   ])
-  assert.deepEqual(sheet.people, [{ name: 'Mara', role: 'florist', said: ['Mara knows every fern'] }])
-  assert.deepEqual(sheet.reviews, [{ text: 'Lovely shop, kind advice.', author: 'Noor', rating: 5 }])
-  assert.deepEqual(sheet.posts, [{ title: 'Spring workshop', text: 'Join our spring terrarium evening.' }])
+  assert.deepEqual(sheet.people, [
+    { sourceId: 'person-1', name: 'Mara', role: 'florist', said: ['Mara knows every fern'] }
+  ])
+  assert.deepEqual(sheet.reviews, [
+    { sourceId: 'review-1', text: 'Lovely shop, kind advice.', author: 'Noor', rating: 5 }
+  ])
+  assert.deepEqual(sheet.posts, [
+    { sourceId: 'post-1', title: 'Spring workshop', text: 'Join our spring terrarium evening.' }
+  ])
   assert.equal(sheet.hours, undefined, 'hours the brief kept off the site are not on the sheet')
   assert.deepEqual(sheet.serviceAreas, ['North quarter'])
   assert.equal(sheet.logoReads, 'FERN & FIG PLANTS')

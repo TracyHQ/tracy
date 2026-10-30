@@ -44,6 +44,7 @@ export const SEEDER_MODULES = Object.freeze([
   'apply-wordpress-contract',
   'chrome-slots',
   'distinct-copy',
+  'fact-sources',
   'locales',
   'model',
   'nav-labels',

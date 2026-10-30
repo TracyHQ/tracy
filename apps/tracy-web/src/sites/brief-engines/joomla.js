@@ -30,6 +30,8 @@ import { writeJoomlaMainMenu } from './main-menu-joomla.js'
 import { writeJoomlaFooterNavigation } from './footer-navigation-joomla.js'
 import { writeJoomlaPrivacyPage } from './joomla-privacy-page.js'
 import { briefFactSheet } from './brief-fact-sheet.js'
+import { writeSiteDirection } from './site-direction.js'
+import { sourcedWriter } from './copy-sources.js'
 import { trackTextSpend, withTextSpend } from './text-spend.js'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
@@ -999,6 +1001,23 @@ export function createJoomlaEngine({
       else if (!rewrites) ctx.note(ABOUT_BLANK_NOTE)
       else {
         const generate = firmGenerate(text, budgetSignal(ctx.signal, ctx.deadlineAt))
+        // 🔒 ONE SITE DIRECTION BEFORE THE PAGE WRITERS (COO, 30/10/2026, `site-direction.js`): one call reads the whole fact
+        // digest and the pages the plan writes, and every writer is given its voice, its lead per page and its facts per page.
+        if (factSheet) {
+          const { pagesOfEntities } = await seeder('distinct-copy')
+          const pageOf = pagesOfEntities(state.pages)
+          const used = new Set(planned.slots.flatMap((slot) => pageOf(slot.entity)))
+          const startedAt = Date.now()
+          const direction = await writeSiteDirection({
+            model: text,
+            site,
+            pages: (state.pages ?? []).filter((p) => used.has(p?.entity)),
+            signal: budgetSignal(ctx.signal, ctx.deadlineAt),
+            note: ctx.note
+          })
+          ctx.time('siteDirectionMs', Date.now() - startedAt)
+          if (direction) Object.assign(site, { direction })
+        }
         // 🔒 EACH OFFERING'S CARD AND PAGE IS WRITTEN FROM THAT OFFERING (spec TracyHQ/tracy#189): a brief build's site plan names
         // the offering of every kept card (`honesty.cardNames`), and the writer is told it line by line.
         // The cards the plan takes off are not named in the heading of the section that held them (`sectionShows`).
@@ -1369,6 +1388,10 @@ export function createJoomlaEngine({
       // 🔒 EVERY KEPT OFFERING CARD DESCRIBES ITS OFFERING (COO rule, #189 round 9, `offering-description-writer.js`): a line
       // the brief has no words for beyond the name, left unwritten or only naming it, is written once more by the text
       // model from the trade (editorial words only), and kept through the cleanup like a summary.
+      // 🔒 EVERY LATER COPY WRITER IS GIVEN THE DIGEST AND THE DIRECTION, AND SOURCES ITS FACTS (`copy-sources.js`): a line it
+      // writes with a specific fact no cited record states is sent back once, then dropped and counted as refused.
+      const unsourcedRefused = new Set()
+      const copyWriter = text ? sourcedWriter(text, { site, refused: unsourcedRefused }) : text
       const describedLines = await writeOfferingDescriptions({
         slots: state.slots.filter((slot) => !isDerived(slot) && shown(slot)),
         honesty,
@@ -1381,7 +1404,7 @@ export function createJoomlaEngine({
             ' '
           )
         },
-        model: text,
+        model: copyWriter,
         locale: written,
         signal: ctx.signal
       })
@@ -1413,7 +1436,7 @@ export function createJoomlaEngine({
             ' '
           )
         },
-        model: text,
+        model: copyWriter,
         locale: written,
         signal: ctx.signal,
         apart: new Set([
@@ -1456,7 +1479,7 @@ export function createJoomlaEngine({
             ' '
           )
         },
-        model: text,
+        model: copyWriter,
         locale: written,
         signal: ctx.signal
       })
@@ -1543,7 +1566,7 @@ export function createJoomlaEngine({
           description: String(sitePlan?.brand?.description?.value ?? ''),
           offerings: (honesty?.offerings ?? []).map((o) => o?.label)
         },
-        model: text,
+        model: copyWriter,
         signal: ctx.signal,
         note: ctx.note,
         // The band lines the page pass wrote for the action it was told: kept when that is still the button's action.
@@ -1554,6 +1577,12 @@ export function createJoomlaEngine({
         )
       })
       Object.assign(kept, ctaBands.values)
+      if (unsourcedRefused.size > 0) {
+        ctx.record?.('copyUnsourcedRefused', [...unsourcedRefused])
+        ctx.note(
+          `${unsourcedRefused.size} line(s) stated a fact no part of the brief states and were refused: ${[...unsourcedRefused].join(', ')}`
+        )
+      }
       demoBlanks = demoBlanks.filter((slot) => !(slot.key in ctaBands.values))
       demoBlanks.push(...ctaBands.blanks.filter((slot) => !demoBlanks.some((b) => b.key === slot.key)))
       // A band's message group is no demo card: the left-demo sweep never takes it off once the band has its message.

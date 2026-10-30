@@ -10,6 +10,7 @@ import { PROCESS_WRITING_RULE, processWritingOf } from './process-writing.mjs'
 import { copyJobs, copyLedger, duplicateComplaint, duplicates, pagesOfEntities } from './distinct-copy.mjs'
 import { PAGE_PASS_RULE, PAGE_RULE_RETRIES, pageBatches, pageHintOf } from './page-pass.mjs'
 import { factSheetFor } from './fact-sheet-batch.mjs'
+import { DIRECTION_RULE, SOURCE_RULE, sourceComplaint, sourceTexts, unsourcedLines } from './fact-sources.mjs'
 import {
   countComplaint,
   overusedPhrases,
@@ -831,6 +832,7 @@ export const SPLIT_FAILURES = new Set(['model-failed', 'truncated'])
  */
 export function mergeAnswer(prev, next, known, only = null) {
   const values = { ...prev.values }
+  const sources = { ...prev.sources }
   const invented = new Set(Array.isArray(prev.invented) ? prev.invented : [])
   const theirs = new Set(Array.isArray(next.invented) ? next.invented : [])
   const may = (/** @type {string} */ key) => known.has(key) && (only === null || only.has(key))
@@ -839,13 +841,22 @@ export function mergeAnswer(prev, next, known, only = null) {
     const had = values[key]
     if (!value.trim() && typeof had === 'string' && had.trim()) continue
     values[key] = value
+    // The sources a line names follow the answer its words came from (`fact-sources.mjs`).
+    if (next.sources?.[key] !== undefined) sources[key] = next.sources[key]
+    else delete sources[key]
     if (theirs.has(key)) invented.add(key)
     else invented.delete(key)
   }
   const pending = [...new Set([...prev.pending, ...next.pending.filter(may)])].filter(
     (key) => typeof values[key] !== 'string'
   )
-  return { ...prev, values, pending, invented: [...invented] }
+  return {
+    ...prev,
+    values,
+    pending,
+    invented: [...invented],
+    ...(prev.sources || next.sources ? { sources } : {})
+  }
 }
 
 /**
@@ -960,6 +971,11 @@ export async function planJoomlaContract({
   if (state.slots.some((slot) => slot?.customize === 'keep'))
     state = { ...state, slots: state.slots.filter((slot) => slot?.customize !== 'keep') }
   const facts = briefFacts(site)
+  // 🔒 A SPECIFIC FACT NAMES ITS SOURCE (COO, 30/10/2026, `fact-sources.mjs`): with the brief's fact digest, every line that
+  // states a price, a name, a number, a date, an address or a claim lists the records it rests on, or is refused.
+  const texts = site?.factSheet ? sourceTexts(site) : null
+  /** The sources each written line rests on, by key. */
+  const sourcesOf = {}
   // Only a quickstart whose archive already speaks in identity tokens ships the plugin that fills
   // them; anywhere else `{site.name}` would reach the page as it is.
   const tokenized = state.slots.some((slot) => /\{site\./.test(slot.sample ?? ''))
@@ -1225,6 +1241,17 @@ export async function planJoomlaContract({
     return overused.length ? phraseComplaint(overused) : null
   }
   const items = itemNumbers(state.slots)
+  /** The lines of an answer whose specific facts no source it cites states; none without a fact digest. */
+  const unsourcedIn = (/** @type {any[]} */ slots, /** @type {any} */ body) =>
+    texts
+      ? unsourcedLines({
+          slots: slots.map((s) => ({ key: s.key, item: items.get(s.key) })),
+          values: body?.values ?? {},
+          sources: body?.sources ?? {},
+          site,
+          texts
+        })
+      : []
   const journeys = processWritingOf(state.slots, offerings)
   const offeringOf = offeringBinding(offerings)
   /** The owner's posts about the offerings the slots of a batch write about, by offering name, or null. */
@@ -1273,9 +1300,16 @@ export async function planJoomlaContract({
     // 🔒 EVERY CALL CARRIES THE BRIEF'S DATA (COO, 30/10/2026, `fact-sheet-batch.mjs`): the whole fact sheet, or for a large
     // catalogue the full records of the offerings this batch writes about.
     const sheet = factSheetFor(site?.factSheet ?? null, [...new Set(slots.map(offeringOf).filter(Boolean))])
+    // 🔒 THE SITE DIRECTION (`site-direction.js` of tracy-web) travels whole in the brief; the entries of this batch's own
+    // pages are named apart, so a page leads with what the direction gives it.
+    const here = new Set(slots.flatMap((s) => pageOf(s.entity)))
+    const pageDirection = Object.fromEntries(
+      Object.entries(site?.direction?.pages ?? {}).filter(([page]) => here.has(page))
+    )
     const input = {
       language: languages.length === 1 ? languages[0] : undefined,
       brief: site?.factSheet ? { ...site, factSheet: sheet } : site,
+      ...(Object.keys(pageDirection).length ? { pageDirection } : {}),
       ...(ownPosts ? { ownPosts } : {}),
       slots: slots.map((s) => ({
         key: s.key,
@@ -1319,6 +1353,7 @@ export async function planJoomlaContract({
     let complaint = null
     let raw = null
     let ruleTries = 0
+    let sourceTries = 0
     /** @type {Set<string> | null} the keys a page-rule send-back may replace; null: every key of the batch */
     let only = null
     for (let attempt = 0; attempt < ATTEMPTS; attempt += 1) {
@@ -1326,7 +1361,8 @@ export async function planJoomlaContract({
         system:
           (journeys.size ? SYSTEM + PROCESS_WRITING_RULE : SYSTEM) +
           (ownPosts ? OWN_POSTS_RULE : '') +
-          (site?.factSheet ? FACT_SHEET_RULE : '') +
+          (site?.factSheet ? FACT_SHEET_RULE + SOURCE_RULE : '') +
+          (site?.direction ? DIRECTION_RULE : '') +
           pageRules,
         input: complaint ? { ...input, fix: complaint } : input
       })
@@ -1342,6 +1378,15 @@ export async function planJoomlaContract({
       // a lost first answer is retried split below (`answerBatch`), a lost retry keeps what the first answer wrote.
       if (typeof answer?.failed === 'string') break
       complaint = complaintAbout(answer, known, slots, languages)
+      // 🔒 A LINE WITH AN UNSOURCED FACT IS SENT BACK ONCE (`fact-sources.mjs`), beside whatever else is wrong; what is still
+      // unsourced after that is refused in `settle`.
+      if (texts && sourceTries < 1 && shapeComplaint(body) === null) {
+        const bad = unsourcedIn(slots, body)
+        if (bad.length) {
+          sourceTries += 1
+          complaint = [complaint, sourceComplaint(bad)].filter(Boolean).join(' ')
+        }
+      }
       // 🔒 AN UNREADABLE ANSWER IS ASKED AGAIN ONCE, THEN SPLIT (R13): the second retry of a batch is the same request as the
       // first retry, answered from the round's own record (`planConcurrently`), so it never had a chance; a smaller batch has.
       if (attempt >= 1 && shapeComplaint(answer) !== null) break
@@ -1418,6 +1463,8 @@ export async function planJoomlaContract({
     const repeats = new Set(duplicates(slots, body.values, ledger).map((d) => d.key))
     // A count the brief does not state is still not written after the retries: an invented fact is worse than the slot's wait.
     const uncounted = new Set(countsIn(slots, body.values).map((c) => c.key))
+    // A specific fact no cited source states is still not written after its one send-back: refused (`fact-sources.mjs`).
+    const unsourced = new Set(unsourcedIn(slots, body).map((l) => l.key))
     /** @param {string} key */
     const isInvented = (key) => Array.isArray(body.invented) && body.invented.includes(key)
     for (const slot of slots) {
@@ -1439,19 +1486,21 @@ export async function planJoomlaContract({
               ? 'duplicate-copy'
               : uncounted.has(slot.key)
                 ? 'ungrounded-count'
-                : Boolean(slot.sample.trim()) !== Boolean(value.trim()) &&
-                    !(hints?.[slot.key]?.fill === true && value.trim())
-                  ? 'emptiness-mismatch'
-                  : [...withoutStyleMarks(value)].length > slot.maxCharacters
-                    ? 'too-long'
-                    : slot.requiresEvidence &&
-                        !isInvented(slot.key) &&
-                        !facts.some((fact) => fact.includes(value))
-                      ? 'evidence-missing'
-                      : (coworkWouldRefuse(slot, value) ??
-                        (slot.type === 'url' && pagesOfSite && siteLink(value) && !pagesOfSite.idOf(value)
-                          ? 'invented-route'
-                          : null))
+                : unsourced.has(slot.key)
+                  ? 'unsourced-fact'
+                  : Boolean(slot.sample.trim()) !== Boolean(value.trim()) &&
+                      !(hints?.[slot.key]?.fill === true && value.trim())
+                    ? 'emptiness-mismatch'
+                    : [...withoutStyleMarks(value)].length > slot.maxCharacters
+                      ? 'too-long'
+                      : slot.requiresEvidence &&
+                          !isInvented(slot.key) &&
+                          !facts.some((fact) => fact.includes(value))
+                        ? 'evidence-missing'
+                        : (coworkWouldRefuse(slot, value) ??
+                          (slot.type === 'url' && pagesOfSite && siteLink(value) && !pagesOfSite.idOf(value)
+                            ? 'invented-route'
+                            : null))
       if (why !== null) {
         // 🔒 PENDING MEANS "STILL DEMO CONTENT AND NOBODY SUPPLIED A REPLACEMENT". A slot whose
         // current value already differs from the archive's sample holds words a person put there
@@ -1484,6 +1533,8 @@ export async function planJoomlaContract({
       phrases.record(slot, written)
       if (written !== (slot.current ?? slot.sample)) {
         changes[slot.key] = written
+        if (texts && Array.isArray(body.sources?.[slot.key]) && body.sources[slot.key].length)
+          sourcesOf[slot.key] = body.sources[slot.key].map(String).filter((id) => texts.has(id))
         if (hints || complain) owners[slot.key] = handed[slot.key] ?? 'page-copy'
       }
     }
@@ -1615,6 +1666,7 @@ export async function planJoomlaContract({
     reasons,
     invented,
     ...(hints || complain ? { owners } : {}),
+    ...(texts ? { sources: sourcesOf } : {}),
     ...(emptyLinks.length > 0 ? { emptyLinks } : {})
   }
 }

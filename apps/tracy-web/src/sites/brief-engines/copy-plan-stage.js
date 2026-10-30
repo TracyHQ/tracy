@@ -34,7 +34,9 @@ export const PENDING_KINDS = Object.freeze({
     'emptiness-mismatch',
     'too-long',
     'evidence-missing',
-    'invented-route'
+    'invented-route',
+    // A specific fact no source the writer cited states (`fact-sources.mjs`), still so after its one send-back.
+    'unsourced-fact'
   ]
 })
 
