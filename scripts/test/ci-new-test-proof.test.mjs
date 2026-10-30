@@ -144,7 +144,7 @@ test('every non-draft pull request gets the growth line, with or without a plann
   // No `needs`: it reports when green-tree skipped every row, and a failure of plan cannot hide it.
   assert.equal(growth.needs, undefined)
   assert.ok(runnerPaths(growth['runs-on']).selfHosted.includes('tracy-light'))
-  // The Node step runs only on GitHub-hosted (`ci:hosted`); our runners carry Node in their image.
+  // The Node step runs only on GitHub-hosted (a pull request without `ci:self-hosted`); our runners carry Node in their image.
   assert.deepEqual(
     growth.steps.map((s) => s.name),
     ['Check out Git repository', 'Set up Node on a GitHub-hosted runner', GROW],

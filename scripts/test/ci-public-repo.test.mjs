@@ -34,7 +34,7 @@ const prWorkflows = workflows.filter((w) =>
   triggers(w.doc).some((t) => t === 'pull_request' || t === 'pull_request_target')
 )
 const labelsOf = (job) => [job['runs-on']].flat().map(String)
-/** Every label of every runner the job may ask for: the self-hosted list and, with `ci:hosted`, `ubuntu-latest`. */
+/** Every label of every runner the job may ask for: the self-hosted list and, without `ci:self-hosted`, `ubuntu-latest`. */
 const everyLabelOf = (job) => labelSets(job['runs-on']).flat()
 
 test('the pull-request workflows were read', () => {

@@ -30,10 +30,11 @@
  *     run: its recorded `tested scope` did not leave out the suite the label asks for (`labelsHonoured`);
  *   - every job that ran asked for the dev runner lane, or ran on a fresh GitHub-hosted `ubuntu-latest`
  *     (label AND runner group `GitHub Actions`; the light gates since 30/10/2026, and every Tracy CI job
- *     of a pull request labelled `ci:hosted`): since 26/10/2026 pull-request code never runs on the
+ *     of a pull request without the label `ci:self-hosted`): since 26/10/2026 pull-request code never runs on the
  *     production lane, whatever the base (`docs/references/public-repo-ci.md`). The lane is
  *     therefore no record of the target any more; a retargeted pull request is caught by its rows
- *     (into `staging`/`main` every row, and the forced Turbo rows only with the plan's `full run`
+ *     (into `staging`/`main` every row — three workers shards when the run's `plan` job ran
+ *     GitHub-hosted, two on our runners — and the forced Turbo rows only with the plan's `full run`
  *     mark) and by `branch-fresh`, which re-runs on `edited`;
  *   - a second read of every run list, after the jobs, still names the same run, attempt and
  *     result (a re-run started while the jobs were read would otherwise pass on its old attempt);
@@ -66,11 +67,15 @@ import { resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import {
   forcedFullRunOf,
+  HOSTED_GROUP,
+  HOSTED_LABEL,
   inspectRun,
   planAnnotations,
   PLAN_JOB,
   proofProblem,
+  ranHosted,
   recordedBy,
+  runnerKindOf,
   SKIP_JOB_PREFIX,
   skipNoticeOf,
   testedTreeOf
@@ -86,9 +91,9 @@ export const LANES = { develop: 'tracy-lane-dev', staging: 'tracy-lane-dev', mai
 /** Every runner lane label, so a job on the wrong one is seen, not ignored. */
 export const ALL_LANES = ['tracy-lane-dev', 'tracy-lane-prod']
 /** The one label of a GitHub-hosted job: a fresh machine on no lane, so it needs none. */
-export const HOSTED = 'ubuntu-latest'
+export const HOSTED = HOSTED_LABEL
 /** The runner group the jobs API names for GitHub's own machines; a self-hosted runner can carry `HOSTED` too. */
-export const HOSTED_GROUP = 'GitHub Actions'
+export { HOSTED_GROUP }
 
 /**
  * The workflows a ready pull request runs, and the jobs each must show. `tracy-ci.yml` adds its
@@ -177,14 +182,17 @@ const unknown = (reason) => {
  * returned by the run is still checked for success below.
  *
  * A release run whose `plan` marked its tests forced Turbo rows (`full run` notice, 17/10/2026)
- * requires that set instead of the two workers shards (`fullRowSets()` in `plan-ci.mjs`); without
- * the mark, the shards — so a run missing both is never complete.
+ * requires that set instead of the workers shards (`fullRowSets()` in `plan-ci.mjs`); without
+ * the mark, the shards — so a run missing both is never complete. How many shards is the planner's
+ * answer for the runner the run's `plan` job had (`hosted`, 30/10/2026): three on GitHub-hosted,
+ * two on ours — the rows ask for the runner by the same condition, so the two never differ.
  * @param {string} file
  * @param {'develop' | 'staging' | 'main'} base
- * @param {{ forced?: boolean }} [options] - whether the run's plan printed the `full run` notice.
+ * @param {{ forced?: boolean, hosted?: boolean }} [options] - whether the run's plan printed the
+ *   `full run` notice, and whether its plan job and rows ran GitHub-hosted (`runnerKindOf`).
  * @returns {string[]}
  */
-export function requiredJobs(file, base, { forced = false } = {}) {
+export function requiredJobs(file, base, { forced = false, hosted = false } = {}) {
   const workflow = WORKFLOWS.find((w) => w.file === file)
   if (!workflow) throw new Error(`not a required workflow: ${file}`)
   if (file !== 'tracy-ci.yml') return [...workflow.jobs]
@@ -192,7 +200,8 @@ export function requiredJobs(file, base, { forced = false } = {}) {
     event: 'pull_request',
     baseRef: base,
     changed: ['docs/references/example.md'],
-    allFiles: []
+    allFiles: [],
+    hosted
   })
   const rows =
     base !== 'develop' && forced ? fullRowSets().turbo : plan.matrix.include.map((row) => row.group)
@@ -450,7 +459,16 @@ async function checkWorkflow(get, workflow, ctx) {
     base !== 'develop' &&
     !skipped &&
     (await forcedRun(get, ctx, run, jobs))
-  const required = requiredJobs(workflow.file, base, { forced }).filter(
+  // The planner sized the workers rows for the runner its own job had, and the rows ran on the same
+  // kind (one `runs-on` condition): the plan job and every row that ran must agree, or the rows
+  // present are not the ones planned (`runnerKindOf` in `green-tree.mjs`).
+  let hosted = false
+  if (workflow.file === 'tracy-ci.yml') {
+    const kind = runnerKindOf(jobs)
+    if ('problem' in kind) fail(`${at}: ${kind.problem}`)
+    hosted = kind.hosted
+  }
+  const required = requiredJobs(workflow.file, base, { forced, hosted }).filter(
     (name) => !(skipped && name.startsWith(ROW_PREFIX))
   )
   for (const name of required) if (!byName.has(name)) fail(`${at}: required job "${name}" is missing`)
@@ -460,7 +478,7 @@ async function checkWorkflow(get, workflow, ctx) {
     if (j.status !== 'completed') fail(`${at}: job "${j.name}" is \`${j.status}\`, not finished`)
     if (j.conclusion === 'skipped' && mayBeSkipped) continue
     if (j.conclusion !== 'success') fail(`${at}: job "${j.name}" ended \`${j.conclusion}\``)
-    if (j.labels.length === 1 && j.labels[0] === HOSTED && j.runner_group_name === HOSTED_GROUP) continue
+    if (ranHosted(j)) continue
     const lanes = j.labels.filter((l) => ALL_LANES.includes(l))
     if (lanes.length !== 1 || lanes[0] !== lane)
       fail(

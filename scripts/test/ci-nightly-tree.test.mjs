@@ -517,7 +517,7 @@ test('nightly: exactly one dsh job runs per event, and the nightly one is dsh-li
   }
 
   // Same machine class, same budget, same steps — only the two guards and the pinned ref differ.
-  // `dsh-lib` may also run GitHub-hosted (`ci:hosted`, pull requests only): its self-hosted list is compared.
+  // `dsh-lib` runs GitHub-hosted on a pull request without `ci:self-hosted`: its self-hosted list is compared.
   const labels = (job) =>
     runnerPaths(job['runs-on']).selfHosted.map((l) => template(l, contextOf({ event: 'schedule' })))
   assert.deepEqual(labels(nightly), labels(jobs['dsh-lib']))
@@ -607,7 +607,7 @@ test('pull requests and manual runs check out the event ref and skip the nightly
   assert.equal(workflow.concurrency['cancel-in-progress'], "${{ github.event_name == 'pull_request' }}")
 })
 
-test('GitHub-hosted only for a pull request labelled ci:hosted; the nightly and manual runs stay on our runners', () => {
+test('GitHub-hosted for a pull request unless labelled ci:self-hosted; the nightly and manual runs stay on our runners', () => {
   const labelled = (names) => {
     const context = contextOf({ event: 'pull_request' })
     context.github.event.pull_request.labels = names.map((name) => ({ name }))
@@ -627,17 +627,29 @@ test('GitHub-hosted only for a pull request labelled ci:hosted; the nightly and 
     for (const [label, context] of [
       ['the nightly', contextOf({ event: 'schedule' })],
       ['a manual run', contextOf({ event: 'workflow_dispatch' })],
-      ['an unlabelled pull request', contextOf({ event: 'pull_request' })],
-      ['a pull request labelled ci:aws-only', labelled(['ci:aws-only'])]
+      ['a pull request labelled ci:self-hosted', labelled(['ci:e2e', 'ci:self-hosted'])],
+      ['a pull request labelled CI:SELF-HOSTED', labelled(['CI:SELF-HOSTED'])]
     ])
       assert.equal(truthy(evaluate(condition, context)), false, `${name} on ${label}`)
-    assert.equal(truthy(evaluate(condition, labelled(['ci:e2e', 'ci:hosted']))), true, name)
+    for (const [label, context] of [
+      ['an unlabelled pull request', contextOf({ event: 'pull_request' })],
+      ['a pull request labelled ci:aws-only', labelled(['ci:aws-only'])],
+      // The opt-in label of #221 is just another label now.
+      ['a pull request labelled ci:hosted', labelled(['ci:e2e', 'ci:hosted'])]
+    ])
+      assert.equal(truthy(evaluate(condition, context)), true, `${name} on ${label}`)
   }
-  // The PostgreSQL service starts with the same label, and only with it: an empty image starts none.
+  // The PostgreSQL service starts on the hosted path only: an empty image starts none.
   const image = jobs['build-check'].services.postgres.image
   assert.equal(template(image, contextOf({ event: 'schedule' })), '')
-  assert.equal(template(image, contextOf({ event: 'pull_request' })), '')
-  assert.equal(template(image, labelled(['ci:hosted'])), 'postgres:16-alpine')
+  assert.equal(template(image, contextOf({ event: 'workflow_dispatch' })), '')
+  assert.equal(template(image, labelled(['ci:self-hosted'])), '')
+  assert.equal(template(image, contextOf({ event: 'pull_request' })), 'postgres:16-alpine')
+  // `plan` and the rows pick their runner by one condition, so `plan` can size the rows by its own.
+  assert.equal(
+    runnerPaths(jobs.plan['runs-on']).condition,
+    runnerPaths(jobs['build-check']['runs-on']).condition
+  )
 })
 
 // ── the verdict ──────────────────────────────────────────────────────────────────────────────────

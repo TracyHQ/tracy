@@ -371,13 +371,39 @@ const RUN = goodRun(1)
 const PULLS = pullsOf(RUN)
 const goodJobs = (extra: object = {}) => jobsOf(RUN, extra)
 
-test('only a green Linux pull-request run into develop is eligible', () => {
+test('only a green Linux pull-request run into develop, or a green Linux nightly, is eligible', () => {
   assert.equal(refusal(RUN, { pulls: PULLS, jobs: goodJobs() }, 2, REPO), null)
+  // The nightly (30/10/2026): no pull request to tie it to, so none is asked for; its jobs still are.
+  const nightly = goodRun(1, { event: 'schedule', head_branch: 'main' })
+  assert.equal(refusal(nightly, { pulls: null, jobs: null }, 2, REPO), null)
+  assert.equal(refusal(nightly, { pulls: [], jobs: jobsOf(nightly) }, 2, REPO), null)
+  // A nightly that ran GitHub-hosted, red or on forced Turbo rows teaches nothing.
+  assert.match(
+    String(refusal(nightly, { pulls: [], jobs: jobsOf(nightly, { labels: ['ubuntu-latest'] }) }, 2, REPO)),
+    /linux runner/
+  )
+  assert.match(
+    String(refusal(nightly, { pulls: [], jobs: jobsOf(nightly, { conclusion: 'failure' }) }, 2, REPO)),
+    /is failure/
+  )
+  assert.match(String(refusal(nightly, { pulls: [], jobs: [] }, 2, REPO)), /lists no job/)
+  assert.match(
+    String(
+      refusal(goodRun(1, { event: 'schedule', conclusion: 'failure' }), { pulls: null, jobs: null }, 2, REPO)
+    ),
+    /not a green run/
+  )
   // Repository names compare without case, as GitHub does.
   assert.equal(refusal(RUN, { pulls: PULLS, jobs: goodJobs() }, 2, swapCase(REPO)), null)
   const cases: [string, unknown, unknown, unknown, RegExp][] = [
     ['a push', goodRun(1, { event: 'push' }), PULLS, goodJobs(), /event is push/],
-    ['the nightly', goodRun(1, { event: 'schedule' }), PULLS, goodJobs(), /event is schedule/],
+    [
+      'a manual run',
+      goodRun(1, { event: 'workflow_dispatch' }),
+      PULLS,
+      goodJobs(),
+      /event is workflow_dispatch/
+    ],
     ['a red run', goodRun(1, { conclusion: 'failure' }), PULLS, goodJobs(), /not a green run/],
     ['a cancelled run', goodRun(1, { conclusion: 'cancelled' }), PULLS, goodJobs(), /not a green run/],
     [
@@ -808,11 +834,37 @@ function fakeGh(
   }
 }
 const sha = (n: number): string => String(n).repeat(40).slice(0, 40)
+/** The develop commit a fixture nightly pinned, and the lines its plan job and two shards print with it. */
+const DEVELOP = 'd'.repeat(40)
+const pins = (commit: string): string =>
+  ['plan the build-check rows', 'build check (tests 1/2)', 'build check (tests 2/2)']
+    .map((job) => line(job, `nightly tree: plan selected ${commit}`))
+    .join('\n')
 const fixtureRuns = () => {
   const r = (id: number, extra: object = {}) => goodRun(id, { head_sha: sha(id - 10), ...extra })
   return {
     11: { run: r(11), log: runLog(1, 140) },
-    12: { run: r(12, { event: 'schedule' }) },
+    // A nightly: no pull request, our runners, two shards — a sample like any pull-request run,
+    // recorded against the develop commit its plan pinned (DEVELOP), not the run's `main` head.
+    12: {
+      run: r(12, { event: 'schedule', head_branch: 'main' }),
+      log: `${pins(DEVELOP)}\n${runLog(2, 150)}`
+    },
+    // Nightlies whose tested commit cannot be told: one shard never printed it, or two commits.
+    22: {
+      run: r(22, { event: 'schedule', head_branch: 'main' }),
+      log: `${pins(DEVELOP).split('\n').slice(0, 2).join('\n')}\n${runLog(2, 150)}`
+    },
+    23: {
+      run: r(23, { event: 'schedule', head_branch: 'main' }),
+      log: `${pins(DEVELOP)}\n${line('build check (tests 1/2)', `nightly tree: plan selected ${'e'.repeat(40)}`)}\n${runLog(2, 150)}`
+    },
+    // A nightly that ran GitHub-hosted is not one.
+    21: {
+      run: r(21, { event: 'schedule', head_branch: 'main' }),
+      jobs: jobsOf(r(21), { labels: ['ubuntu-latest'] }),
+      log: runLog(8, 800)
+    },
     13: { run: r(13), log: runLog(2, 150) },
     14: { run: r(14), pulls: [pull(r(14), { base: { ref: 'main', repo: { full_name: REPO } } })] },
     15: { run: r(15), log: line('build check (tests 1/2)', '✔ ran before the reporter (1ms)') },
@@ -854,12 +906,19 @@ test('refresh: eligible runs only, a written table that then verifies; --check-c
   const table = JSON.parse(readFileSync(box.table, 'utf8'))
   assert.deepEqual(
     table.source.runs.map((r: { id: number }) => r.id),
-    [11, 13, 17]
+    [11, 12, 13, 17]
   )
+  assert.equal(table.source.runs[1].pr, null, 'the nightly names no pull request')
+  // …and names the develop commit it tested, never the scheduled run's `main` head.
+  assert.equal(table.source.runs[1].headSha, DEVELOP)
+  assert.notEqual(DEVELOP, runs[12].run.head_sha)
+  assert.deepEqual(table.source.events, ['pull_request', 'schedule'])
   assert.equal(table.files['apps/a/test/two.test.mjs'], 60)
   assert.ok(!('preloadLastShardSeconds' in table) || table.preloadLastShardSeconds === 300)
   for (const reason of [
-    /12: event is schedule/,
+    /21: .*linux runner/,
+    /22: nightly: "build check \(tests 2\/2\)" printed the pinned develop commit 0 time\(s\)/,
+    /23: nightly: "build check \(tests 1\/2\)" printed the pinned develop commit 2 time\(s\)/,
     /14: pull request #7 base is main/,
     /15: its log has no tracy-test-timing line/,
     /16: .*linux runner/,
@@ -1054,4 +1113,33 @@ test('the prediction uses the gate’s own split, counts rest once in wall secon
   })
   assert.match(none.problems.join(' | '), /gets no file/)
   assert.equal(predictBalance({ files: FILES, table, shardOf, shardCount: 1 }).ok, false)
+})
+
+test('a nightly is tied to the develop commit its own log says it tested, or not used at all', () => {
+  const { nightlyCommitOf: read } = timings
+  /** Its answer, read as either shape. */
+  const nightlyCommitOf = (text: string, n: number): { sha?: string; refused?: string } => read(text, n)
+  const D = 'd'.repeat(40)
+  const say = (job: string, commit: string) => line(job, `nightly tree: plan selected ${commit}`)
+  const jobs = ['plan the build-check rows', 'build check (tests 1/2)', 'build check (tests 2/2)']
+  assert.deepEqual(read(jobs.map((j) => say(j, D)).join('\n'), 2), { sha: D })
+  // Every job names one commit, but not the same one.
+  const two = [say(jobs[0], D), say(jobs[1], D), say(jobs[2], 'e'.repeat(40))].join('\n')
+  assert.match(String(nightlyCommitOf(two, 2).refused), /2 different pinned commits/)
+  // The plan job never said it: nothing ties the rows to a commit.
+  assert.match(
+    String(nightlyCommitOf([say(jobs[1], D), say(jobs[2], D)].join('\n'), 2).refused),
+    /"plan the build-check rows" printed the pinned develop commit 0 time/
+  )
+  // Not a whole log line, a short commit, or the line inside other text: not the pin.
+  for (const bad of [
+    `nightly tree: plan selected ${D}`,
+    jobs.map((j) => say(j, D.slice(0, 39))).join('\n'),
+    jobs.map((j) => line(j, `echo nightly tree: plan selected ${D}`)).join('\n')
+  ])
+    assert.ok('refused' in nightlyCommitOf(bad, 2), bad.slice(0, 60))
+  // The workflow prints exactly that line: in `plan`, and in each row before its checkout.
+  const yml = readFileSync(join(import.meta.dirname, '../../.github/workflows/tracy-ci.yml'), 'utf8')
+  assert.match(yml, /echo "nightly tree: plan selected \$SHA"/)
+  assert.match(yml, /echo "nightly tree: plan selected \$NIGHTLY_SHA"/)
 })

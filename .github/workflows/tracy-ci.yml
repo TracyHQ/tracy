@@ -174,25 +174,29 @@ jobs:
   # the EC2 runners carry. Without the label the extra element is `linux` again, already in the list,
   # so every other run picks its runner exactly as before.
   #
-  # THE `ci:hosted` PR LABEL (since 30/10/2026; an opt-in to measure, not the default). The repo is
-  # public, so standard GitHub-hosted runners are free for it and outside the org quota the top of
-  # this file measured. A pull request labelled `ci:hosted` runs `dsh-lib`, `plan`, every
-  # `build-check` row, `suite-skipped`, `test-growth` and `new-test-proof` on `ubuntu-latest`
-  # (4 vCPU / 16 GB x64); `runs-on` is then one expression, `'ubuntu-latest'` or the self-hosted list
-  # above, unchanged. Read from the event payload like `ci:aws-only`, so the same rule holds: set it
-  # BEFORE the push or "Ready for review" (a re-run replays the old payload; `ci-label-rerun.yml`
-  # does not watch it). The nightly, manual runs and pushes carry no pull request, so they stay
-  # self-hosted; a fork's pull request never reaches these jobs (`fork-checks`). What the runner
-  # image gave is set up explicitly on a fresh VM, in steps gated on
-  # `runner.environment == 'github-hosted'`: Node from `.node-version` (the assert after it still
-  # compares), `php` 8.3 cli, and for `build-check` a PostgreSQL 16 service with TEST_DATABASE_URL.
-  # Secrets, the deploy key and the Turbo cache are the same-repo ones as before. `check-pr-merge.mjs`
-  # accepts such a job by its one label `ubuntu-latest` AND runner group `GitHub Actions`.
+  # GITHUB-HOSTED BY DEFAULT ON A PULL REQUEST (30/10/2026, Hano; opt-in `ci:hosted` the same morning,
+  # #221). The repo is public, so standard GitHub-hosted runners are free for it and outside the org
+  # quota the top of this file measured; moving pull requests there takes their load off our
+  # machines. A pull request from this repository runs `dsh-lib`, `plan`, every `build-check` row,
+  # `suite-skipped`, `test-growth` and `new-test-proof` on `ubuntu-latest` (4 vCPU / 16 GB x64)
+  # unless it carries the label `ci:self-hosted`, which puts it back on the self-hosted list above,
+  # unchanged. `runs-on` is one expression: `'ubuntu-latest'` or that list. The label is read from the
+  # event payload like `ci:aws-only`, so the same rule holds: set it BEFORE the push or "Ready for
+  # review" (a re-run replays the old payload; `ci-label-rerun.yml` does not watch it). The nightly
+  # and manual runs carry no pull request, so they stay self-hosted; a fork's pull request never
+  # reaches these jobs (`fork-checks`). On GitHub-hosted the full workers suite is THREE rows, not
+  # two (`plan-ci.mjs`; `plan` reads where it runs itself, `ROWS_HOSTED`): two shards measured ~9 and ~20 min
+  # there (run 41028805223). What the runner image gave is set up explicitly on a fresh VM, in steps
+  # gated on `runner.environment == 'github-hosted'`: Node from `.node-version` (the assert after it
+  # still compares), `php` 8.3 cli, and for `build-check` a PostgreSQL 16 service with
+  # TEST_DATABASE_URL. Secrets, the deploy key and the Turbo cache are the same-repo ones as before.
+  # `check-pr-merge.mjs` accepts such a job by its one label `ubuntu-latest` AND runner group
+  # `GitHub Actions`.
   # Witness: `scripts/test/ci-hosted.test.mjs`.
   dsh-lib:
     name: build dsh once for this run
     runs-on: >-
-      ${{ contains(github.event.pull_request.labels.*.name, 'ci:hosted') && 'ubuntu-latest'
+      ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'ci:self-hosted') && 'ubuntu-latest'
       || fromJSON(format('["self-hosted","linux","{0}","tracy-check","{1}"]',
       contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux',
       (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev')) }}
@@ -227,7 +231,7 @@ jobs:
             git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
           git submodule status vendor/tracy/deepseek-harness
 
-      # GitHub-hosted only (`ci:hosted`): a fresh VM has no runner image, so Node comes from
+      # GitHub-hosted only (a pull request without `ci:self-hosted`): a fresh VM has no runner image, so Node comes from
       # `.node-version` here and the assert below checks what it installed. Skipped on our runners.
       - name: Set up Node on a GitHub-hosted runner
         if: runner.environment == 'github-hosted'
@@ -271,7 +275,7 @@ jobs:
   plan:
     name: plan the build-check rows
     runs-on: >-
-      ${{ contains(github.event.pull_request.labels.*.name, 'ci:hosted') && 'ubuntu-latest'
+      ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'ci:self-hosted') && 'ubuntu-latest'
       || fromJSON(format('["self-hosted","linux","{0}","tracy-light","{1}"]',
       contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux',
       (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev')) }}
@@ -320,7 +324,7 @@ jobs:
           # what the plan diffs against.
           fetch-depth: 2
 
-      # GitHub-hosted only (`ci:hosted`): a fresh VM has no runner image, so Node comes from
+      # GitHub-hosted only (a pull request without `ci:self-hosted`): a fresh VM has no runner image, so Node comes from
       # `.node-version`. Skipped on our runners, whose image carries it.
       - name: Set up Node on a GitHub-hosted runner
         if: runner.environment == 'github-hosted'
@@ -505,6 +509,10 @@ jobs:
           # again from the labels and is red when its answer differs from the scope step's.
           PR_LABELS: ${{ steps.labels.outputs.labels }}
           SCOPE_SKIP_DB: ${{ steps.scope.outputs.skip_db }}
+          # Where the rows will run: this job's `runs-on` and `build-check`'s pick `ubuntu-latest` by the
+          # same condition, so this job's own runner says it without reading the payload's labels here
+          # (the rule above). `true` plans three workers shards, anything else our runners' two.
+          ROWS_HOSTED: ${{ runner.environment == 'github-hosted' }}
         run: node scripts/ci/plan-ci.mjs
 
       # 🔒 SAME TREE, SAME VERDICT — added 10/10/2026. Two jobs in one step:
@@ -611,7 +619,7 @@ jobs:
             git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
           git submodule status vendor/tracy/deepseek-harness
 
-      # GitHub-hosted only (`ci:hosted`): a fresh VM has no runner image, so Node comes from
+      # GitHub-hosted only (a pull request without `ci:self-hosted`): a fresh VM has no runner image, so Node comes from
       # `.node-version` here and the assert below checks what it installed. Skipped on our runners.
       - name: Set up Node on a GitHub-hosted runner
         if: runner.environment == 'github-hosted'
@@ -685,15 +693,21 @@ jobs:
   # A routine PR into develop now runs only the related workers files in one row. The two full
   # shards above still run for release PRs, manual runs and the nightly. The browser-driven suites
   # — `e2e` and the three EmDash themes — remain conditional by path on develop PRs.
+  #
+  # THREE SHARDS ON GITHUB-HOSTED — 30/10/2026. A pull request's rows run on `ubuntu-latest` by
+  # default (`dsh-lib`), and there a full run's workers suite is `tests 1/3`, `tests 2/3` and
+  # `tests 3/3` (`workers:3/3,rest`), planned from the same table. Two shards took 7-11 and 18-19
+  # minutes of `Build check` on a 4-vCPU VM (run 41028805223, two attempts) against ~9.5 and ~14
+  # minutes of job on our runners. Our runners keep two: they share their pool with the image builds.
   build-check:
     name: build check (${{ matrix.group }})
     # ─────────────────────────────────────────────────────────────────────────────────────────
     # `tracy-check`, NOT `tracy-build` — changed 2026-09-21
     #
-    # NOT `ubuntu-latest` by default: when this was written the org's shared monthly quota was a
-    # dependency this gate could not see or fix (the measurement at the top of this file). The repo
-    # is public since, and a pull request labelled `ci:hosted` (30/10/2026, at `dsh-lib`) runs
-    # every row on `ubuntu-latest` to measure it; without the label the list below is unchanged.
+    # Self-hosted when this was written: the org's shared monthly quota was a dependency this gate
+    # could not see or fix (the measurement at the top of this file). The repo is public since, and
+    # a pull request's rows run on `ubuntu-latest` unless it carries `ci:self-hosted` (30/10/2026,
+    # reasons at `dsh-lib`); the nightly, manual runs and that label take the list below, unchanged.
     # What changed in 2026-09-21 is WHICH self-hosted label it asks for, and the reason is a
     # boundary rather than a preference.
     #
@@ -717,19 +731,19 @@ jobs:
     # and the runner image carries `php-cli` since `tracy-runners@bf07c3a` — so the exception that
     # briefly lived here was removed rather than kept warm.
     runs-on: >-
-      ${{ contains(github.event.pull_request.labels.*.name, 'ci:hosted') && 'ubuntu-latest'
+      ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'ci:self-hosted') && 'ubuntu-latest'
       || fromJSON(format('["self-hosted","linux","{0}","{1}","{2}"]',
       contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux',
       matrix.label,
       (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev')) }}
     timeout-minutes: 45
-    # 🔒 THE RUNNER'S PostgreSQL ON A FRESH VM — `ci:hosted` only. An empty `image` starts no service
+    # 🔒 THE RUNNER'S PostgreSQL ON A FRESH VM — GitHub-hosted rows only. An empty `image` starts no service
     # container (GitHub's rule for conditional services), so our runners, which have no docker, see
     # none. Same major as `deploy/compose.yml` and `check-tests.ts`'s throwaway (16); the step "Point
     # the tests at the job's PostgreSQL…" exports TEST_DATABASE_URL for it.
     services:
       postgres:
-        image: ${{ contains(github.event.pull_request.labels.*.name, 'ci:hosted') && 'postgres:16-alpine' || '' }}
+        image: ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'ci:self-hosted') && 'postgres:16-alpine' || '' }}
         env:
           POSTGRES_USER: tracy
           POSTGRES_PASSWORD: tracy
@@ -766,8 +780,8 @@ jobs:
       # Every verdict, always: a red lint must not hide what the tests would have said.
       fail-fast: false
       # 🔒 LONGEST FIRST, and the order is `plan-ci.mjs`'s: EmDash suites (5-10 min), then e2e, then
-      # the two halves of the workers suite, then `checks` (lint + every gate but the tests). Three
-      # rows always exist; the EmDash rows and `e2e` exist only when the pull request touches their
+      # the shards of the workers suite (two on our runners, three on GitHub-hosted), then `checks`
+      # (lint + every gate but the tests). The full set of rows always exists; the EmDash rows and `e2e` exist only when the pull request touches their
       # inputs, on a PR into `main`, on manual runs and on the nightly. Rows are built by `plan`.
       matrix: ${{ fromJSON(needs.plan.outputs.matrix) }}
     steps:
@@ -846,7 +860,7 @@ jobs:
       # The runner image pins Node; `.node-version` pins what the repo expects. Nothing keeps the
       # two in step, so compare them here rather than let a mismatch surface as some gate's odd
       # failure twenty minutes in. On our runners there is no `actions/setup-node`: this is our box,
-      # not a fresh VM. On GitHub-hosted (`ci:hosted`) there is no runner image, so the steps below
+      # not a fresh VM. On GitHub-hosted (a pull request without `ci:self-hosted`) there is no runner image, so the steps below
       # install what it carried, and the assert then checks what `setup-node` installed.
       - name: Set up Node on a GitHub-hosted runner
         if: runner.environment == 'github-hosted'
@@ -874,8 +888,8 @@ jobs:
           fi
           sudo update-alternatives --set awk "$(command -v mawk)"
           awk -W version
-      # The runner's PostgreSQL, on a fresh VM: the job's `postgres` service (started only for
-      # `ci:hosted`). `check-tests.ts` uses an exported TEST_DATABASE_URL first, and is red if it
+      # The runner's PostgreSQL, on a fresh VM: the job's `postgres` service (started only on
+      # the GitHub-hosted path). `check-tests.ts` uses an exported TEST_DATABASE_URL first, and is red if it
       # does not answer. Through `GITHUB_ENV`, not a job `env`: an empty value there would hide
       # the variable our runners export.
       - name: Point the tests at the job's PostgreSQL on a GitHub-hosted runner
@@ -1041,6 +1055,10 @@ jobs:
           # run, provisions no database for it, and says so. `0` everywhere else, the nightly and the
           # release pull requests included.
           TRACY_TESTS_SKIP_DB: ${{ needs.plan.outputs.skip_db == 'true' && '1' || '0' }}
+          # `1` on GitHub-hosted: the workers shards place the small suites on the last shard at their
+          # hosted cost (`HOSTED_COST` in `check-tests.ts`), not the table's, which our runners measured.
+          # Every row of a run gets the same value (one `runs-on` condition), so they agree on the split.
+          TRACY_TESTS_HOSTED: ${{ runner.environment == 'github-hosted' && '1' || '0' }}
           # `turbo-config` on the `checks` row (`check-all.ts`, `TURBO_CONFIG_ARGS`): on every pull
           # request `--structure-only` — structure and ignored inputs, NO suite traced (28/10/2026:
           # the traced run cost this row 8.3 and 26.0 minutes on two pull requests). The nightly and
@@ -1148,7 +1166,7 @@ jobs:
   suite-skipped:
     name: "full suite skipped: tree ${{ needs.plan.outputs.tree }} already green in run ${{ needs.plan.outputs.green_run }}"
     runs-on: >-
-      ${{ contains(github.event.pull_request.labels.*.name, 'ci:hosted') && 'ubuntu-latest'
+      ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'ci:self-hosted') && 'ubuntu-latest'
       || fromJSON(format('["self-hosted","linux","{0}","tracy-light","{1}"]',
       contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux',
       (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev')) }}
@@ -1203,7 +1221,7 @@ jobs:
   test-growth:
     name: test growth (report-only)
     runs-on: >-
-      ${{ contains(github.event.pull_request.labels.*.name, 'ci:hosted') && 'ubuntu-latest'
+      ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'ci:self-hosted') && 'ubuntu-latest'
       || fromJSON(format('["self-hosted","linux","{0}","tracy-light","{1}"]',
       contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux',
       (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev')) }}
@@ -1217,7 +1235,7 @@ jobs:
           # The merge commit and its parents: HEAD^1 is the base tip, as in `plan`.
           fetch-depth: 2
 
-      # GitHub-hosted only (`ci:hosted`), as in `plan`.
+      # GitHub-hosted only (a pull request without `ci:self-hosted`), as in `plan`.
       - name: Set up Node on a GitHub-hosted runner
         if: runner.environment == 'github-hosted'
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
@@ -1253,7 +1271,7 @@ jobs:
   new-test-proof:
     name: new-test proof (report-only)
     runs-on: >-
-      ${{ contains(github.event.pull_request.labels.*.name, 'ci:hosted') && 'ubuntu-latest'
+      ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'ci:self-hosted') && 'ubuntu-latest'
       || fromJSON(format('["self-hosted","linux","{0}","tracy-check","{1}"]',
       contains(github.event.pull_request.labels.*.name, 'ci:aws-only') && 'X64' || 'linux',
       (github.event_name == 'workflow_dispatch' && (github.ref_name == 'main' || github.ref_name == 'staging')) && 'tracy-lane-prod' || 'tracy-lane-dev')) }}
@@ -1297,7 +1315,7 @@ jobs:
             git ${DEPLOY_KEY:+-c url.git@github.com:.insteadOf=https://github.com/} submodule update --init vendor/tracy/deepseek-harness
           git submodule status vendor/tracy/deepseek-harness
 
-      # GitHub-hosted only (`ci:hosted`): a fresh VM has no runner image, so Node comes from
+      # GitHub-hosted only (a pull request without `ci:self-hosted`): a fresh VM has no runner image, so Node comes from
       # `.node-version` here and the assert below checks what it installed. Skipped on our runners.
       - name: Set up Node on a GitHub-hosted runner
         if: runner.environment == 'github-hosted'
