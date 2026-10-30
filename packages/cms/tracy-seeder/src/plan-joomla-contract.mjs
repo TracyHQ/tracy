@@ -1134,7 +1134,10 @@ export async function planJoomlaContract({
     // "Come say hello", "Come visit" and "Get directions" on the site of a coach the brief says works by appointment.
     (site?.byAppointment
       ? ' This business works by appointment only: never invite a visitor to come by, drop in, visit, say hello in person or get directions; write about booking an appointment instead (a heading over the address names the place or the area served, a map button says it opens the map).'
-      : '')
+      : '') +
+    // 🔒 ONE STYLE SHEET FOR THE WHOLE SITE (COO criterion 1.6): the spelling, casing and number formats the site plan chose
+    // once from the brief (`site-style-sheet.mjs` of the domain, handed over as one sentence).
+    (typeof site?.styleRule === 'string' ? site.styleRule : '')
   // 🔒 A MALFORMED ANSWER IS A COMPLAINT, NOT AN EXCEPTION. Left to throw, a single truncated or
   // unquoted reply escaped the retry below and failed `seed` outright — measured twice on the same
   // batch, once as a stray key and once as `Expected ':' after property name`.

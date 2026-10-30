@@ -10,6 +10,11 @@ import {
   acceptsWrittenDescription,
   onlyNamesOffering
 } from 'website-opportunities/domain/offering-description.mjs'
+import {
+  inSiteSpelling,
+  inSiteVoice,
+  styleSheetRule
+} from 'website-opportunities/domain/site-style-sheet.mjs'
 import { jsonObjectIn } from './shared.js'
 
 const DESCRIBING = new Set(['offering.description', 'offering.summary'])
@@ -52,8 +57,8 @@ export function descriptionAsks({ slots, honesty, written }) {
  * @param {any[]} input.slots
  * @param {any} input.honesty
  * @param {Record<string, string>} input.written - the words each slot will hold
- * @param {{business?: string, description?: string, sourceText?: string}} input.about - who the business is, and every
- *   word it gave (the only place a hard fact may come from)
+ * @param {{business?: string, description?: string, sourceText?: string, styleSheet?: any}} input.about - who the
+ *   business is, every word it gave (the only place a hard fact may come from), and the site's style sheet
  * @param {{chat: (input: any) => Promise<string>} | null} [input.model]
  * @param {string} [input.locale]
  * @param {AbortSignal} [input.signal]
@@ -80,7 +85,8 @@ export async function writeOfferingDescriptions({
         "marks). Say what the offering is and what a visitor does in it, from your knowledge of the trade and the business's " +
         "words. Never repeat or only restate the offering's name, never name another offering, and state no fact the business " +
         'did not give: no number, age, level, year, price, guarantee or award. Lines of the same card must differ. Answer JSON ' +
-        '{"lines": {"<key>": "<line>"}}.'
+        '{"lines": {"<key>": "<line>"}}.' +
+        styleSheetRule(about.styleSheet)
     },
     {
       role: 'user',
@@ -114,10 +120,12 @@ export async function writeOfferingDescriptions({
       sourceText: about.sourceText ?? '',
       limit: ask.limit
     })
-    if (!ok || taken.has(String(line).toLowerCase())) continue
+    if (!ok || !inSiteVoice(line, { names: [ask.assigned.label] }) || taken.has(String(line).toLowerCase()))
+      continue
     taken.add(String(line).toLowerCase())
     byCard.set(ask.card, taken)
-    out[ask.key] = line
+    // One spelling for the whole site: a line in the other English is respelt the site's way (`site-style-sheet.mjs`).
+    out[ask.key] = inSiteSpelling(line, about.styleSheet, { keep: [ask.assigned.label, about.business] })
   }
   return out
 }

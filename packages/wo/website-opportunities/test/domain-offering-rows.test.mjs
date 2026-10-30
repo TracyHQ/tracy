@@ -122,7 +122,7 @@ const briefOf = (t) => ({
 })
 
 for (const t of trades) {
-  test(`${t.trade}: a description never falls back to the offering's name; the owner's own post stands in, never a review`, () => {
+  test(`${t.trade}: a description never falls back to the offering's name, a review or a post; siblings fall back as one`, () => {
     const [one, two, three] = t.offerings
     const { honesty } = planHonesty(
       briefOf(t),
@@ -132,18 +132,18 @@ for (const t of trades) {
         [3, three.label, 0]
       ])
     )
-    // The quote only repeats the name: the owner's posts take its place, a different one for each line of the card.
-    assert.equal(honesty.fallbacks['article-1.intro'].value, one.mentions[1].quote)
-    assert.equal(honesty.fallbacks['article-1.intro'].reason, 'brief-offering-mention')
-    assert.equal(honesty.fallbacks['article-1.body'].value, one.mentions[2].quote)
-    // Nothing beyond the name: no fallback, and the line is listed for the copy writer to write.
-    for (const key of ['article-2.intro', 'article-2.body']) {
-      assert.equal(key in honesty.fallbacks, false, key)
-      assert.ok(honesty.nameOnly.includes(key), key)
-    }
-    // A quote that says more than the name is still the first choice.
-    assert.equal(honesty.fallbacks['article-3.intro'].value, three.quote)
-    for (const v of Object.values(honesty.fallbacks))
+    // The quote only repeats the name, and a guest's review or a post's line is never copied onto a card (COO criterion
+    // 1.3, R12): cards 1 and 2 have no line of their own, so the list falls back as one unit and every card goes to the
+    // copy writer, card 3's quote included.
+    for (const n of [1, 2, 3])
+      for (const key of [`article-${n}.intro`, `article-${n}.body`]) {
+        assert.equal(key in honesty.fallbacks, false, key)
+        assert.ok(honesty.nameOnly.includes(key), key)
+      }
+    // Alone, card 3's quote that says more than the name is still its first choice.
+    const alone = planHonesty(briefOf({ ...t, offerings: [three] }), mapOf([[3, three.label, 0]])).honesty
+    assert.equal(alone.fallbacks['article-3.intro'].value, three.quote)
+    for (const v of Object.values(alone.fallbacks))
       assert.equal(
         onlyNamesOffering(
           v.value,
@@ -234,7 +234,7 @@ for (const [trade, label, other, post] of [
     'Each Wheel Building job is laced and tensioned by hand'
   ]
 ]) {
-  test(`${trade}: the business's own post about an offering stands in when nothing is quoted under it`, () => {
+  test(`${trade}: the business's own post about an offering is never copied onto its card`, () => {
     const brief = {
       content: {
         items: [
@@ -291,9 +291,12 @@ for (const [trade, label, other, post] of [
       ]
     }
     const { honesty } = planHonesty(brief, map)
-    // The title of its own post, then a line of it naming the offering; never a credited post or one naming another offering.
-    assert.equal(honesty.fallbacks['article-5.intro'].value, `${label} at the workshop`)
-    assert.equal(honesty.fallbacks['article-5.body'].value, `${post}.`)
+    // A post's line speaks in a post's voice, so it is never copied onto the card as it stands (COO criterion 1.3, R12):
+    // the card's lines go to the copy writer, which writes them from the trade and the business's words.
+    for (const key of ['article-5.intro', 'article-5.body']) {
+      assert.equal(key in honesty.fallbacks, false, key)
+      assert.ok(honesty.nameOnly.includes(key), key)
+    }
   })
 
   test(`${trade}: a written description may be editorial, never the name again, another offering or an unsourced fact`, () => {

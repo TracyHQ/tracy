@@ -344,6 +344,8 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
       if (hit) taken.add(hit.id)
       return hit ? offerings.find((o) => o.id === hit.id) : null
     }
+    const fallbackBefore = new Set(Object.keys(fallbacks))
+    const nameOnlyBefore = nameOnly.length
     ordered.forEach((group, n) => {
       const authors = entityKindOf(contentMap, group.slots[0].entity) === 'user'
       const record = { group: group.id, collection, kind: group.kind, item: n }
@@ -470,6 +472,7 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
         }
       }
     })
+    siblingsFallBackTogether(ordered, { fallbacks, nameOnly, fallbackBefore, nameOnlyBefore })
     const planned = planCollectionFactRows(rowCards, rowFacts)
     rowCards.forEach(({ group }, c) => {
       const byKey = new Map(group.slots.map((s) => [s.key, s]))
@@ -558,4 +561,39 @@ function hidesOf(records) {
     else out.push({ ...place, group: r.group, reason: r.reason })
   }
   return out
+}
+
+/**
+ * 🔒 SIBLINGS OF ONE LIST FALL BACK AS ONE UNIT (COO criterion 1.3, R12): the n-th describing line of every card of a
+ * collection either all take the business's own words, or all go to the writer (`nameOnly`). Never three cards with a
+ * quoted line beside one the writer must fill or leaves empty: a mixed set sends every one of them to the writer, which
+ * writes them together in one shape (`offering-description-writer.js`), or leaves them all off (`offering-name-only.js`).
+ * @param {any[]} groups - the collection's groups, in order
+ * @param {{fallbacks: Record<string, any>, nameOnly: string[], fallbackBefore: Set<string>, nameOnlyBefore: number}} state
+ */
+function siblingsFallBackTogether(groups, { fallbacks, nameOnly, fallbackBefore, nameOnlyBefore }) {
+  const DESCRIBING = new Set(['offering.description', 'offering.summary'])
+  /** Each describing slot's place: its role and its rank among the card's slots of that role. */
+  const place = new Map()
+  for (const group of groups) {
+    const rank = {}
+    for (const slot of group.slots)
+      if (DESCRIBING.has(slot.role)) {
+        rank[slot.role] = (rank[slot.role] ?? -1) + 1
+        place.set(slot.key, { slot, at: `${slot.role}#${rank[slot.role]}` })
+      }
+  }
+  const own = Object.keys(fallbacks).filter((k) => !fallbackBefore.has(k) && place.has(k))
+  const waiting = new Set(
+    nameOnly
+      .slice(nameOnlyBefore)
+      .filter((k) => place.has(k))
+      .map((k) => place.get(k).at)
+  )
+  for (const key of own) {
+    const { slot, at } = place.get(key)
+    if (!waiting.has(at)) continue
+    delete fallbacks[key]
+    if (slot.type === 'text' && !nameOnly.includes(key)) nameOnly.push(key)
+  }
 }

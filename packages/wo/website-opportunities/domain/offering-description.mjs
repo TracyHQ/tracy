@@ -11,10 +11,17 @@
 // shorter form its card shows) only repeats the name, whatever its casing, spelling of spaces or HTML.
 // 🔒 ONLY THE BUSINESS'S OWN WORDS ABOUT THAT OFFERING: its quote, else a post or page line quoted under it, never a guest
 // review (a guest's words are no description of the business), never a line that names another offering of the brief.
+// 🔒 A FALLBACK PASSES THE SITE'S VOICE (`inSiteVoice`) and is never a social post's line copied as it stands; siblings
+// of one list fall back as one unit (`site-plan-honesty.mjs`): every card from the business's words, or none.
 // 🔒 RULES BY ROLE AND SOURCE KIND, never by template, trade or business.
 
-/** Source kinds whose words are a guest's, never the business's own description of an offering. */
-const GUEST_SOURCES = new Set(['review'])
+import { inSiteVoice } from './site-style-sheet.mjs'
+
+/**
+ * Source kinds a fallback never copies: a guest's words (no description of the business), and a social post's line, which
+ * speaks in a post's voice ("Join us in Dubai!"), not a card's (COO criterion 1.3, R12).
+ */
+const GUEST_SOURCES = new Set(['review', 'post', 'social', 'instagram', 'facebook', 'tiktok', 'twitter', 'x'])
 
 const folded = (value) =>
   ` ${String(value ?? '')
@@ -129,6 +136,8 @@ export function offeringDescriptionOf(
     !onlyNamesOffering(line, all) &&
     !namesOther(line, assigned, offerings) &&
     ![...taken].some((t) => folded(t) === folded(line)) &&
+    // The same voice filter as written copy: no exclamation mark, no Title Case slogan.
+    inSiteVoice(line, { names: [...all, ...offerings.map((o) => o.label)] }) &&
     fits(line.trim())
   if (usable(assigned.quote)) return { value: String(assigned.quote).trim(), reason: 'brief-offering-quote' }
   for (const mention of assigned.mentions ?? [])

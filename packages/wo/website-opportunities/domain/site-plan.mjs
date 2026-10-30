@@ -20,6 +20,7 @@ import { addressThatFits, cityOf, contactChannelsOf, mapsLinkOf } from './contac
 import { BY_APPOINTMENT, byAppointmentOf } from './contact-page.mjs'
 import { contactButtonSlots } from './contact-buttons.mjs'
 import { declaredButtonSlots } from './declared-button-plan.mjs'
+import { siteStyleSheetOf } from './site-style-sheet.mjs'
 import { IDENTITY_REASONS, planIdentity } from './site-plan-identity.mjs'
 import { planOutsideMap, planVideos } from './outside-map.mjs'
 import { COLOUR_REASONS, planColours } from './brand-colours.mjs'
@@ -373,6 +374,9 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
     contact,
     channels,
     primaryAction: brief?.primaryAction ?? null,
+    // One spelling, casing and number format for the whole site, read once from the brief, given to every writer
+    // (`site-style-sheet.mjs`, COO criterion 1.6).
+    styleSheet: siteStyleSheetOf(brief),
     statistics: statFactsOf(brief, { now: year }),
     facts,
     pages: pageRows,
@@ -393,7 +397,7 @@ export function planSite(brief, served, { now, contentMap = null } = {}) {
         ...contactButtonSlots(contentMap, { heroEntity: heroPlan.hero.entity }),
         ...heroPlan.slots,
         ...intros,
-        ...declaredButtonSlots(brief, contentMap)
+        ...declaredButtonSlots(brief, contentMap, { pages: pageRows, channels })
       ]
     ),
     // The first screen answers what, where and how to contact (COO rule 29/10/2026): `hero-first-screen.mjs`.

@@ -5,7 +5,8 @@
  * `SHAPE_LIMITS` in sentence count or length, hold an exclamation mark, or (one body of a list of items) speak of
  * something other than their own title; and when one record (one card title) reads in a different shape in two lists
  * (a home block and the list page). Each such finding is a blocker (`build-blockers.mjs`, rule `sibling-copy-shape`).
- * A word the site spells two ways ("Personalised" beside "Personalized") is reported too (`spelling-variant`, major).
+ * A word the site spells two ways ("Personalised" beside "Personalized") in any text a visitor reads is reported too
+ * (`spelling-variant`, major).
  * Pure: pages in, findings out.
  */
 import { parse } from 'parse5'
@@ -36,6 +37,25 @@ const headingsOf = (node) => walk(node).filter((n) => HEADINGS.has(n.tagName))
 const inside = (node, stop, test) => {
   for (let at = node.parentNode; at && at !== stop; at = at.parentNode) if (test(at)) return true
   return false
+}
+
+/** Tags whose text a visitor never reads. */
+const UNREAD = new Set(['script', 'style', 'template', 'noscript'])
+const unread = (node) =>
+  UNREAD.has(node.tagName) ||
+  node.attrs?.some((a) => a.name === 'hidden') ||
+  /(?:display\s*:\s*none|visibility\s*:\s*hidden)/i.test(attr(node, 'style'))
+
+/** Every text node of a page a visitor reads, wherever it sits (nav, header, footer, a button included). */
+function visibleTexts(node, out = []) {
+  if (node.nodeName === '#text') {
+    const t = node.value.replace(/\s+/g, ' ').trim()
+    if (t) out.push(t)
+    return out
+  }
+  if (node.tagName && unread(node)) return out
+  for (const child of node.childNodes ?? []) visibleTexts(child, out)
+  return out
 }
 
 /** The body words of a card: its paragraphs and description blocks, outside headings, links and buttons. */
@@ -73,8 +93,9 @@ export function checkSiblingCopy({ pages }) {
     if (page.status !== undefined && page.status !== 200) continue
     const seen = new Set()
     const nodes = walk(parse(String(page.html ?? '')))
-    for (const n of nodes)
-      if (n.tagName === 'p' || HEADINGS.has(n.tagName) || n.tagName === 'h1') said.push(plain(n))
+    // Every text node a visitor reads (menus, buttons, footers, captions too), not only paragraphs and headings: one
+    // spelling per site is judged over all of it (COO criterion 1.6; R12 found 0 variants reading paragraphs only).
+    said.push(...visibleTexts(parse(String(page.html ?? ''))))
     for (const parent of nodes) {
       const row = elements(parent)
       if (row.length < 2) continue

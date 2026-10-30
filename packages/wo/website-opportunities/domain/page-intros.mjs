@@ -134,6 +134,8 @@ export function planPageIntros({ brief, contentMap, pages = [], cardNames = {} }
   const owners = introOwners(contentMap, pages, kept)
   const done = new Set()
   const out = []
+  /** Whether a line is already planned for another page. */
+  const said = (value) => out.some((d) => d.value.trim().toLowerCase() === String(value).trim().toLowerCase())
   for (const page of list(contentMap?.pages)) {
     if (page?.route === 'home' || !kept.has(String(page?.route ?? ''))) continue
     const articles = offeringArticlesOf(page, contentMap, offering)
@@ -149,7 +151,7 @@ export function planPageIntros({ brief, contentMap, pages = [], cardNames = {} }
         ['services', 'offerings'].includes(declared) && names.length
           ? offeringLine(names, null, limitOf(slot))?.value
           : roleIntro(declared)
-      if (value && slot && [...value].length <= limitOf(slot))
+      if (value && slot && [...value].length <= limitOf(slot) && !said(value))
         out.push({
           key: slot.key,
           role: slot.role ?? null,
@@ -172,7 +174,9 @@ export function planPageIntros({ brief, contentMap, pages = [], cardNames = {} }
     if (!slot) continue
     const heading = intro?.heading ?? null
     const line = offeringLine(names, where, limitOf(slot), who)
-    if (!line) continue
+    // 🔒 NO SECTION REUSES ANOTHER SECTION'S LINE (COO criterion 1.1, R12): a line another page already says is left to
+    // the copy writer, which writes that page's own words.
+    if (!line || said(line.value)) continue
     out.push({
       key: slot.key,
       role: slot.role ?? null,
@@ -218,6 +222,8 @@ export function planPlaceIntros({ brief, contentMap, pages = [] }) {
   const owners = introOwners(contentMap, pages, kept)
   const done = new Set()
   const out = []
+  /** Whether a line is already planned for another page. */
+  const said = (value) => out.some((d) => d.value.trim().toLowerCase() === String(value).trim().toLowerCase())
   for (const page of list(contentMap?.pages)) {
     if (page?.route === 'home') continue
     const declared = declaredRoleOf(page, pages)

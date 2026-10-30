@@ -6,6 +6,7 @@ import { ctaBandMessageProblem, ctaBandsOf } from 'website-opportunities/domain/
 import { limitOf } from 'website-opportunities/domain/hero-first-screen.mjs'
 import { jsonObjectIn } from './shared.js'
 import { boxLimitOf } from './slot-box-limits.js'
+import { styleSheetRule } from 'website-opportunities/domain/site-style-sheet.mjs'
 
 const TRIES = 2
 const SYSTEM =
@@ -94,7 +95,7 @@ export async function ctaBandValues({
       const answer = jsonObjectIn(
         await model.chat({
           messages: [
-            { role: 'system', content: SYSTEM },
+            { role: 'system', content: SYSTEM + styleSheetRule(business.styleSheet) },
             {
               role: 'user',
               content: JSON.stringify({

@@ -78,7 +78,7 @@ test('an ungrouped single-button record uses its own URL', () => {
     slots: [slot('module-1.0', 'url', 'index.php?Itemid=40'), slot('module-1.1', 'text', 'Contact')]
   }
   const plan = planSite({ business: { name: 'Fictional clinic' } }, { questions: [] }, { contentMap: own })
-  assert.equal(plan.slots.find((s) => s.key === 'module-1.1')?.value, 'How to reach us')
+  assert.equal(plan.slots.find((s) => s.key === 'module-1.1')?.value, 'Contact us')
 })
 
 test('an inferred main action is disclosed once in the build notes', () => {

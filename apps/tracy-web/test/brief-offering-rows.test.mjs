@@ -77,8 +77,10 @@ for (const t of trades) {
       written: { 'article-41.intro': `<p>${t.said}</p>`, 'article-42.intro': t.other }
     })
     assert.equal('article-41.intro' in values, false)
-    // The second card has the owner's words: they replace a name-only line.
-    assert.equal(values['article-42.intro'], t.post)
+    // The second card has the owner's words, but its sibling has none: the list falls back as one unit (COO criterion
+    // 1.3, R12), so both summaries go to the writer and neither name-only line is kept.
+    assert.equal('article-42.intro' in values, false)
+    assert.ok(honesty.nameOnly.includes('article-41.intro') && honesty.nameOnly.includes('article-42.intro'))
   })
 
   test(`${t.trade}: every line only repeating the name is emptied after the write, whoever wrote it`, () => {
@@ -91,8 +93,14 @@ for (const t of trades) {
         'article-42.body': `${t.other}`
       }
     }).map((s) => s.key)
-    // 41.body was never written and the plan has nothing beyond the name: it goes too, never the template's words.
-    assert.deepEqual(off.sort(), ['article-41.body', 'article-41.intro', 'article-42.body'])
+    // 41.body was never written and the plan has nothing beyond the name: it goes too, never the template's words. A line
+    // taken off one card takes the same line off its sibling: 42.intro goes with 41.intro.
+    assert.deepEqual(off.sort(), [
+      'article-41.body',
+      'article-41.intro',
+      'article-42.body',
+      'article-42.intro'
+    ])
   })
 
   test(`${t.trade}: the final check names a line only repeating the name and a list of cards with mixed row labels`, () => {
@@ -133,14 +141,20 @@ for (const t of trades) {
       about: { business: 'Fictional', sourceText: t.post },
       model
     })
-    // The first card has no owner words; the second used its one owner line on its summary, so its body waits too.
-    assert.deepEqual(asked, [['article-41.intro', 'article-41.body', 'article-42.body']])
+    // The first card has no owner words, so the whole list is written together: the second card's summary too.
+    assert.deepEqual(asked, [['article-41.intro', 'article-41.body', 'article-42.intro', 'article-42.body']])
     assert.deepEqual(lines, {
       'article-41.intro': `Hands-on ${t.said.toLowerCase()} sessions guided step by step.`
     })
-    // What the writer could not write goes after the write, never the template's words.
+    // What the writer could not write goes after the write, never the template's words, and takes the same line off every
+    // sibling: the list shows all its summaries or none.
     const off = nameOnlyOfferingLines({ slots: map.slots, honesty, written: lines }).map((s) => s.key)
-    assert.deepEqual(off.sort(), ['article-41.body', 'article-42.body'])
+    assert.deepEqual(off.sort(), [
+      'article-41.body',
+      'article-41.intro',
+      'article-42.body',
+      'article-42.intro'
+    ])
   })
 
   test(`${t.trade}: a kept card with no summary is still reported`, () => {

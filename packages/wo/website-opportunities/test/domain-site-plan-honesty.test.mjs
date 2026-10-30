@@ -289,8 +289,10 @@ test('one card per real offering: extra class articles are hidden, kept ones tak
     ['article-74']
   )
   assert.ok(h.blanks.some((b) => b.key === 'article-70.2'))
-  // A kept card's demo filler gives way to the business's own words about that offering.
-  assert.equal(h.fallbacks['article-73.1'].value, 'Personal fitness lessons')
+  // A kept card's demo filler gives way to words about that offering: its siblings (Tennis, Padel) have no line of their
+  // own, so the list falls back as one unit and the Fitness line goes to the writer with them (COO criterion 1.3, R12).
+  assert.equal('article-73.1' in h.fallbacks, false)
+  assert.ok(h.nameOnly.includes('article-73.1'))
 })
 
 test('#189 a card falls back to the quote about its own offering, never one that speaks for several', () => {
@@ -300,7 +302,8 @@ test('#189 a card falls back to the quote about its own offering, never one that
   assert.equal('article-70.1' in h.fallbacks, false)
   assert.equal('article-71.1' in h.fallbacks, false)
   assert.ok(h.nameOnly.includes('article-70.1') && h.nameOnly.includes('article-71.1'))
-  assert.equal(h.fallbacks['article-73.1'].value, 'Personal fitness lessons')
+  // Siblings fall back as one unit: the Fitness quote is not shown beside two cards the writer must fill.
+  assert.equal('article-73.1' in h.fallbacks, false)
   // Dental clinic: the Cleaning card's quote also names Check-ups, and its own label alone would only repeat the name.
   const brief = clinicBrief()
   brief.reading.services[1].quote = 'Check-ups and Cleaning for the whole family'

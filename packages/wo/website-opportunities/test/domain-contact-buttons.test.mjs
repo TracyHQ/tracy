@@ -40,12 +40,12 @@ const map = {
   ]
 }
 
-test('a card button with no link of its own says it opens the card; a button to the Contact page says how it helps', () => {
+test('a card button with no link of its own says it opens the card; a button to the Contact page names it', () => {
   const out = contactButtonSlots(map, { heroEntity: null })
   const by = Object.fromEntries(out.map((d) => [d.key, d]))
   assert.equal(by['module-20.6'].value, 'Learn more')
   assert.equal(by['module-20.6'].when, 'bare-contact')
-  assert.equal(by['module-21.3'].value, 'How to reach us')
+  assert.equal(by['module-21.3'].value, 'Contact us')
   // A link to another page, and a line inside an article, are not contact buttons of a block.
   assert.equal(by['module-22.1'], undefined)
   assert.equal(by['article-3.1'], undefined)

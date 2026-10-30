@@ -12,6 +12,7 @@
 import { sharedShare, siblingRecordCopy } from 'website-opportunities/domain/record-page-copy.mjs'
 import { limitOf } from 'website-opportunities/domain/sibling-copy-shape.mjs'
 import { jsonObjectIn } from './shared.js'
+import { styleSheetRule } from 'website-opportunities/domain/site-style-sheet.mjs'
 
 const ASK_CHUNK = 40
 const ROUNDS = 2
@@ -106,7 +107,7 @@ export async function writeRecordPages({
         const answer = jsonObjectIn(
           await model.chat({
             messages: [
-              { role: 'system', content: SYSTEM },
+              { role: 'system', content: SYSTEM + styleSheetRule(about.styleSheet) },
               {
                 role: 'user',
                 content: JSON.stringify({

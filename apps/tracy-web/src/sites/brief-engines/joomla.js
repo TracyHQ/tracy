@@ -78,6 +78,8 @@ import { buttonActionValues } from './button-action-values.js'
 import { offeringSummaryValues } from './offering-summaries.js'
 import { nameOnlyOfferingLines } from './offering-name-only.js'
 import { writeOfferingDescriptions } from './offering-description-writer.js'
+import { settleSiteSpelling } from './site-voice.js'
+import { styleSheetRule } from 'website-opportunities/domain/site-style-sheet.mjs'
 import { shapeSiblingCopy } from './sibling-copy-writer.js'
 import { writeRecordPages } from './record-page-writer.js'
 import { ctaBandValues } from './cta-band-messages.js'
@@ -828,6 +830,8 @@ export function createJoomlaEngine({
         statistics: statisticPlan?.statistics ?? [],
         // The copy writer never invites a walk-in to a business that works by appointment (#189 item 19).
         byAppointment: Boolean(statisticPlan?.contact?.booking),
+        // One spelling, casing and number format for the whole site (`site-style-sheet.mjs`, COO criterion 1.6).
+        styleRule: styleSheetRule(statisticPlan?.styleSheet),
         languages: editions ? languages : [written],
         ...(editions ? {} : { sourceLanguage: written })
       }
@@ -1340,6 +1344,7 @@ export function createJoomlaEngine({
         honesty,
         written: kept,
         about: {
+          styleSheet: sitePlan?.styleSheet ?? null,
           business: String(ctx.normalized.name ?? ''),
           description: String(sitePlan?.brand?.description?.value ?? ''),
           sourceText: [facts.text, ...Object.values(honesty?.values ?? {}).map((v) => String(v.value))].join(
@@ -1371,6 +1376,7 @@ export function createJoomlaEngine({
         slots: shownSlots,
         written: kept,
         about: {
+          styleSheet: sitePlan?.styleSheet ?? null,
           business: String(ctx.normalized.name ?? ''),
           description: String(sitePlan?.brand?.description?.value ?? ''),
           sourceText: [facts.text, ...Object.values(honesty?.values ?? {}).map((v) => String(v.value))].join(
@@ -1412,6 +1418,7 @@ export function createJoomlaEngine({
         written: kept,
         blanked: new Set(demoBlanks.map((slot) => slot.key)),
         about: {
+          styleSheet: sitePlan?.styleSheet ?? null,
           business: String(ctx.normalized.name ?? ''),
           trade: String(ctx.normalized.sector ?? ''),
           description: String(sitePlan?.brand?.description?.value ?? ''),
@@ -1501,6 +1508,7 @@ export function createJoomlaEngine({
           ...Object.values(honesty?.values ?? {}).map((v) => String(v.value))
         ].join(' '),
         business: {
+          styleSheet: sitePlan?.styleSheet ?? null,
           name: String(sitePlan?.brand?.name?.value ?? ctx.normalized.name ?? ''),
           description: String(sitePlan?.brand?.description?.value ?? ''),
           offerings: (honesty?.offerings ?? []).map((o) => o?.label)
@@ -1560,6 +1568,14 @@ export function createJoomlaEngine({
           `${ctaBands.removed.length} call-to-action band(s) had no message that could be written and were taken off`
         )
       }
+      // 🔒 ONE SPELLING FOR THE WHOLE SITE (COO criterion 1.6, `site-voice.js`): every writer was told the site's style sheet;
+      // a line still spelt in the other English is respelt the site's way here, after the last writer, names kept as given.
+      const spelling = settleSiteSpelling(kept, sitePlan?.styleSheet, {
+        slots: state.slots,
+        keep: [String(ctx.normalized.name ?? ''), ...(honesty?.offerings ?? []).map((o) => o?.label)]
+      })
+      Object.assign(kept, spelling.values)
+      if (spelling.respelt.length) ctx.time('linesRespelt', spelling.respelt.length)
       // 🔒 A LINE WHOSE CALL WAS LOST IS NEVER BLANKED SILENTLY (copy-plan stage, invariant 5, `copy-plan-stage.js`): it keeps
       // the template's words for now and goes to the repair loop as "unwritten", with its rule, through the build's row.
       const unwrittenLines = keepUnwritten({ blanks: demoBlanks, plan, hints: passHints })

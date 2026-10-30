@@ -1,11 +1,11 @@
-import { buttonUrlOf } from './declared-button-plan.mjs'
+import { buttonUrlOf, channelButtonLabel } from './declared-button-plan.mjs'
 // A button of a contact block or an offering card that would say a bare "Contact" names the action it leads to (spec
 // TracyHQ/tracy#189, COO rule 29/10/2026). Measured 29/10/2026 on a brief build of a Joomla T4 template: every class card
 // carried a "Contact" button that opened the class's own page, not a way to reach the business.
 //
 // 🔒 BY SLOT ROLE AND GROUP, NEVER BY TEMPLATE: a button label (ADR 0040 roles) whose group holds no link of its own is a
 // button the template links to the card's page, so it says "Learn more"; one whose link is the Contact page keeps that link
-// and says how it helps ("How to reach us"). A label never promises a booking or a call it does not lead to. The words are
+// and says which channel it opens ("Contact us", "Call us", "Email us"). A label never promises a booking or a call it does not lead to. The words are
 // a decision with `when: 'bare-contact'`: the writer uses them only where the words written are a bare "Contact"
 // (`hero-lines.js`), so a button the copy writer already named by its action keeps its words. The hero is decided by
 // `hero-first-screen.mjs`; a line inside an article is not a block's button.
@@ -48,11 +48,17 @@ export function contactButtonSlots(contentMap, { heroEntity = null } = {}) {
     const paired = buttonUrlOf(slot, contentMap)
     const urls = paired ? [paired] : urlsOf(slot.group?.id)
     let value = null
+    // 🔒 THE WORDS NAME THE CHANNEL THE BUTTON'S OWN LINK OPENS (COO criterion 1.8): a call "Call us", a mailbox "Email us",
+    // the Contact page "Contact us"; never one label for every kind (`channelButtonLabel`).
+    const channel = urls.find((u) =>
+      /^(?:tel:|mailto:|https?:\/\/(?:wa\.me|api\.whatsapp\.com)\/)/i.test(String(u.sample ?? ''))
+    )
     if (urls.length === 0) value = 'Learn more'
+    else if (channel) value = channelButtonLabel(channel.sample)
     else if (
       urls.some((u) => (contactPage && samePage(u.sample, contactPage)) || /contact/i.test(String(u.sample)))
     )
-      value = 'How to reach us'
+      value = channelButtonLabel(contactPage)
     if (value)
       out.push({
         key: slot.key,

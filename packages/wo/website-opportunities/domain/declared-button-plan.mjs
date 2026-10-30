@@ -72,11 +72,13 @@ function leadsToItsOwnPage(slot, contentMap) {
 }
 
 /**
- * A navigation button's words: its destination page's title. A string shared by different jobs takes neutral words
- * valid for every use. Otherwise null: the writer words it from the page it leads to, never a fixed fallback.
+ * A navigation button's words: its destination page's name (`pageNameOf`), so a button never says "Contact" over a link to
+ * the classes (COO criterion 1.8). A string shared by different jobs takes neutral words valid for every use. Null when
+ * the destination has no name: the writer words it from the page it leads to, never a fixed fallback.
  */
-function navigationWords(slot, contentMap) {
+function navigationWords(slot, contentMap, planned = null) {
   const mixed = new Set(list(slot.action?.uses).map((u) => u.kind)).size > 1
+  if (mixed) return 'View details'
   const url = buttonUrlOf(slot, contentMap)?.sample
   const id = url ? /(?:[?&])Itemid=(\d+)/.exec(String(url))?.[1] : null
   const page = url
@@ -84,11 +86,63 @@ function navigationWords(slot, contentMap) {
         id ? p.entity === `menuItem-${id}` : [p.route, p.path, p.slug].includes(url)
       )
     : null
-  return text(page?.title) ?? text(page?.label) ?? (mixed ? 'View details' : null)
+  return pageNameOf(page, planned)
+}
+
+/**
+ * The name a button gives the page it leads to (COO criterion 1.8): the page's own title, else the name its address
+ * reads ("about-us/our-trainers" is "Our trainers"), in sentence case. Null for a page the site plan drops, a page with no
+ * address, or the home page.
+ * @param {any} page - a content-map page
+ * @param {Array<{id: string, path?: string, decision?: string}> | null} [planned] - the site plan's page decisions
+ */
+export function pageNameOf(page, planned = null) {
+  if (!page) return null
+  const route = String(page.route ?? page.path ?? page.slug ?? '').replace(/^\/+|\/+$/g, '')
+  const row = list(planned).find((r) =>
+    [r.id, r.path].map((v) => String(v ?? '').replace(/^\/+|\/+$/g, '')).includes(route)
+  )
+  if (row && row.decision === 'drop') return null
+  const own = text(page.title) ?? text(page.label)
+  if (own) return own
+  const last = route.split('/').at(-1) ?? ''
+  if (!last || last === 'home' || /[^a-z0-9-]/i.test(last)) return null
+  const words = last.replace(/-+/g, ' ').trim()
+  return words ? words[0].toUpperCase() + words.slice(1).toLowerCase() : null
+}
+
+/** A link that reaches the business on one channel. */
+const TEL = /^tel:/i
+const MAIL = /^mailto:/i
+const CHAT = /^(?:https?:\/\/(?:wa\.me|api\.whatsapp\.com)\/|whatsapp:)/i
+
+/**
+ * The words of a button that reaches the business, named by where it leads (COO criterion 1.8): a call says "Call us", a
+ * mailbox "Email us", WhatsApp "Message us on WhatsApp"; the Contact page says the main action when that action is taken
+ * there ("Book a court"), else "Contact us". Never one label for every channel.
+ * @param {string | null | undefined} href
+ * @param {{label?: string, href?: string} | null} [primary] - the site's main action, resolved (`primaryActionOf`)
+ */
+export function channelButtonLabel(href, primary = null) {
+  const h = String(href ?? '').trim()
+  if (TEL.test(h)) return 'Call us'
+  if (MAIL.test(h)) return 'Email us'
+  if (CHAT.test(h)) return 'Message us on WhatsApp'
+  if (primary?.label && primary.href && String(primary.href) === h) return primary.label
+  return 'Contact us'
+}
+
+/** The channel a contact button leads to when the site keeps no Contact page: WhatsApp, then a phone, then a mailbox. */
+function channelHrefOf(channels) {
+  for (const test of [CHAT, TEL, MAIL]) {
+    const hit = list(channels).find((c) => test.test(String(c?.href ?? '')))
+    if (hit) return String(hit.href)
+  }
+  return null
 }
 
 /** Declared actions override both the generic writer and the older hero plan; modal URLs remain template-owned. */
-export function declaredButtonSlots(brief, contentMap) {
+export function declaredButtonSlots(brief, contentMap, { pages = null, channels = [] } = {}) {
   const out = []
   const primary = primaryActionOf(brief, contentMap)
   if (!primary && list(contentMap?.slots).some((s) => s.action?.kind === 'primary-cta'))
@@ -120,8 +174,14 @@ export function declaredButtonSlots(brief, contentMap) {
       decide(url, primary.href)
     } else if (kind === 'open-map') decide(slot, 'Get directions')
     else if (kind === 'go-to-item') decide(slot, 'View details')
-    else if (kind === 'contact') decide(slot, 'How to reach us')
-    else if (kind === 'external-profile') decide(slot, 'View profile')
+    else if (kind === 'contact') {
+      // 🔒 A CONTACT BUTTON LEADS TO THE CONTACT PAGE, OR TO THE BRIEF'S OWN CHANNEL, AND SAYS WHICH (COO criteria 1.8, 5.2).
+      const contactKept = !list(pages).some((p) => p?.role === 'contact' && p?.decision === 'drop')
+      const href = (contactKept ? contactDestination(contentMap) : null) ?? channelHrefOf(channels)
+      const url = buttonUrlOf(slot, contentMap)
+      decide(slot, channelButtonLabel(href, primary))
+      if (url && href) decide(url, href)
+    } else if (kind === 'external-profile') decide(slot, 'View profile')
     else if (kind === 'navigation' && leadsToItsOwnPage(slot, contentMap)) {
       // Its section already sits on the destination: the next useful action is the main one, or nothing is written.
       const url = buttonUrlOf(slot, contentMap)
@@ -130,7 +190,7 @@ export function declaredButtonSlots(brief, contentMap) {
         decide(url, primary.href)
       }
     } else if (kind === 'navigation') {
-      const words = navigationWords(slot, contentMap)
+      const words = navigationWords(slot, contentMap, pages)
       if (words) decide(slot, words)
     }
   }

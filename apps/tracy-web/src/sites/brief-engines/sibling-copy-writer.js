@@ -20,6 +20,7 @@ import {
   siblingLists
 } from 'website-opportunities/domain/sibling-copy-shape.mjs'
 import { jsonObjectIn } from './shared.js'
+import { styleSheetRule } from 'website-opportunities/domain/site-style-sheet.mjs'
 
 /** Lines asked of the model in one call: a list of 150 dishes is asked in several calls. */
 const ASK_CHUNK = 40
@@ -109,7 +110,7 @@ export async function shapeSiblingCopy({
         const answer = jsonObjectIn(
           await model.chat({
             messages: [
-              { role: 'system', content: SYSTEM },
+              { role: 'system', content: SYSTEM + styleSheetRule(about.styleSheet) },
               {
                 role: 'user',
                 content: JSON.stringify({
