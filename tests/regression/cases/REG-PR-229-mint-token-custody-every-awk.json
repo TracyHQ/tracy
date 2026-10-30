@@ -1,0 +1,22 @@
+{
+  "id": "REG-PR-229-mint-token-custody-every-awk",
+  "kind": "fix",
+  "title": "mint-agent-token.sh token_mount_custody answers every row of the shared custody table the same under gawk, mawk and busybox awk (gawk 5.2.1 aborted on short composes)",
+  "pr": 229,
+  "area": "fleet/emdash-token-custody",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": ["S1: Run the door/script agreement test over the shared custody table; it asks the table of the plain awk and of each of gawk, mawk and busybox awk found on PATH."],
+  "expect": ["S1: every row answers as token-custody-cases.mjs says under every awk; 'short form, relative to the site directory' is `unknown` under gawk 5.2.1, not an empty answer."],
+  "selectors": {
+    "files": "packages/fleet/tracy-fleet-operation/scripts/provision/mint-agent-token.sh, apps/tracy-host/test/webroot.test.mjs",
+    "tool": "node --test apps/tracy-host/test/webroot.test.mjs"
+  },
+  "evidence": "GNU Awk 5.2.1: `fatal: internal error: file interpret.h, line 263: unexpected parameter type Node_array_ref`, exit 2, on a 6-line short-form compose; mawk answered unknown",
+  "fence": "the extracted awk of mint-agent-token.sh against the shared table, under an awk shim first in PATH",
+  "run": {
+    "cmd": ["node", "--test", "--test-reporter=tap", "apps/tracy-host/test/webroot.test.mjs"],
+    "tests": ["🔒 the door and mint-agent-token.sh classify every compose shape as the shared table says"]
+  }
+}
