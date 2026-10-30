@@ -343,7 +343,7 @@ test('#195 decorative slots are labelled: item icons and cut-outs carry the subj
   assert.equal(decorOf(image('module-8.2', 'business.gallery_image', 'tile.jpg')), null)
 })
 
-test('#195 a sports brief gets racquet, ball and swimming icons in place of the demo icons', () => {
+test('#195 #189 a row where some items have no words of their own shows one neutral mark, never the offerings by position', () => {
   const g = (n) => ({ id: `module-7.item.${n}`, item: n, kind: 'business' })
   const contentMap = {
     slots: [
@@ -358,7 +358,7 @@ test('#195 a sports brief gets racquet, ball and swimming icons in place of the 
       icon('module-7.8', 'dark-4.png', g(3))
     ]
   }
-  // Item 0 is written as racquet words; the others take the brief's offerings in item order.
+  // Item 0 is written as racquet words; the others have no words of their own (criterion 3.5).
   const copy = { pins: { 'module-7.0': 'Bring your racquet' }, sources: { 'module-7.0': 'brief' } }
   const brief = {
     reading: {
@@ -370,14 +370,29 @@ test('#195 a sports brief gets racquet, ball and swimming icons in place of the 
     }
   }
   const at = byKey(planDecor({ contentMap, brief, copy }).slots)
-  assert.deepEqual(
-    ['module-7.1', 'module-7.2', 'module-7.4', 'module-7.6'].map((k) => at.get(k).glyph),
-    ['racquet', 'racquet', 'soccer-ball', 'person-simple-swim']
+  // The brief's offerings never stand in for an item's own words by their place in the list: the whole row is neutral.
+  for (const k of ['module-7.1', 'module-7.2', 'module-7.4', 'module-7.6', 'module-7.8']) {
+    assert.equal(at.get(k).glyph, NEUTRAL_GLYPH, k)
+    assert.equal(at.get(k).reason, 'icon-neutral', k)
+  }
+  // Each card named for its own offering (the site plan's card names) speaks for itself.
+  const named = byKey(
+    planDecor({
+      contentMap,
+      brief,
+      copy,
+      offerings: [
+        { groupId: 'module-7.item.1', offeringId: 'svc-foot', label: 'Football Camp' },
+        { groupId: 'module-7.item.2', offeringId: 'svc-swim', label: 'Swimming Lessons' },
+        { groupId: 'module-7.item.3', offeringId: 'svc-tennis', label: 'Tennis Lessons' }
+      ]
+    }).slots
   )
-  assert.equal(at.get('module-7.1').reason, 'icon-of-item')
-  assert.equal(at.get('module-7.4').reason, 'icon-of-offering')
-  // Four items, three offerings: the fourth wraps to the first, whose racquet the section already shows (#189).
-  assert.equal(at.get('module-7.8').glyph, 'tennis-ball')
+  assert.deepEqual(
+    ['module-7.1', 'module-7.4', 'module-7.6', 'module-7.8'].map((k) => named.get(k).glyph),
+    ['racquet', 'soccer-ball', 'person-simple-swim', 'tennis-ball']
+  )
+  assert.equal(named.get('module-7.4').reason, 'icon-of-item')
 })
 
 test('#195 an icon on a page about one offering takes that offering; a demo word never chooses the icon', () => {
@@ -400,7 +415,7 @@ test('#195 an icon on a page about one offering takes that offering; a demo word
   assert.equal(at.get('article-3.1').glyph, NEUTRAL_GLYPH)
   assert.equal(at.get('article-3.3').glyph, NEUTRAL_GLYPH)
   assert.equal(at.get('article-3.3').reason, 'icon-neutral')
-  // With no word written for any item, the page's offering still speaks for the row.
+  // With no word written for any item, the page's offering never speaks for the row: one neutral mark (criterion 3.5).
   const page = byKey(
     planDecor({
       contentMap,
@@ -408,8 +423,9 @@ test('#195 an icon on a page about one offering takes that offering; a demo word
       copy: { pins: { 'article-3.0': 'Sourdough Bread' }, sources: { 'article-3.0': 'brief' } }
     }).slots
   )
-  assert.equal(page.get('article-3.1').glyph, 'bread', 'the page is about bread: a bakery glyph')
-  assert.equal(page.get('article-3.1').reason, 'icon-of-page-offering')
+  assert.equal(page.get('article-3.1').glyph, NEUTRAL_GLYPH)
+  assert.equal(page.get('article-3.3').glyph, NEUTRAL_GLYPH)
+  assert.equal(page.get('article-3.1').reason, 'icon-neutral')
   // Without any written word, offering or page: a neutral mark, never the demo icon.
   const bare = byKey(planDecor({ contentMap, brief: { reading: {} }, copy: null }).slots)
   assert.equal(bare.get('article-3.1').glyph, NEUTRAL_GLYPH)
@@ -447,12 +463,16 @@ test('#195 every icon and cut-out decision carries the brief words the site take
       image('module-8.1', 'editorial.design_element', 'shapes/line.png', { kind: 'decoration' })
     ]
   }
-  // A bakery and a dental clinic: the words quote the brief's offering that chose the icon, never a demo word.
-  for (const [brief, first] of [
-    [BAKERY, 'Celebration Cakes'],
-    [{ reading: { services: [{ id: 'svc-white', label: 'Teeth Whitening' }] } }, 'Teeth Whitening']
+  // A bakery and a dental clinic: the words quote the offering each card is named for, never a demo word.
+  for (const [brief, first, second] of [
+    [BAKERY, 'Celebration Cakes', 'Sourdough Bread'],
+    [{ reading: { services: [{ id: 'svc-white', label: 'Teeth Whitening' }] } }, 'Teeth Whitening', 'Braces']
   ]) {
-    const at = byKey(planDecor({ contentMap, brief, copy: null }).slots)
+    const offerings = [
+      { groupId: 'module-7.item.0', offeringId: 'o1', label: first },
+      { groupId: 'module-7.item.1', offeringId: 'o2', label: second }
+    ]
+    const at = byKey(planDecor({ contentMap, brief, copy: null, offerings }).slots)
     assert.match(at.get('module-7.1').asked, new RegExp(`"${first}"`))
     assert.doesNotMatch(at.get('module-7.1').asked, /Demo item/)
     assert.ok(at.get('module-8.0').asked, 'a cleared figure says why it goes')
@@ -491,11 +511,17 @@ test("#194 #195 the site plan carries each slot's drawing, icon and cut-out deci
     ...CLUB_MAP,
     slots: [
       ...CLUB_MAP.slots,
-      icon('module-3.5', 'dark-1.png', { id: 'module-3.item.0', item: 0, kind: 'business' }),
+      // An offering card whose own name the site plan gives: its icon shows that offering.
+      text('module-3.6', 'offering.name', 'Demo court', { id: 'module-3.item.0', item: 0, kind: 'service' }),
+      icon('module-3.5', 'dark-1.png', { id: 'module-3.item.0', item: 0, kind: 'service' }),
       image('module-1.4', 'business.hero_image', 'hero/figure.png', { kind: 'cutout', size: [1175, 960] })
     ]
   }
-  const at = pictureDecisionsOf(contentMap, { ...CLUB, assets: [photo('court-1'), photo('court-2')] })
+  const at = pictureDecisionsOf(
+    contentMap,
+    { ...CLUB, assets: [photo('court-1'), photo('court-2')] },
+    { 'module-3.item.0': 'Tennis Lessons' }
+  )
   assert.equal(at.get('module-1.0').action, 'draw')
   assert.equal(at.get('module-3.5').action, 'icon')
   assert.equal(at.get('module-3.5').glyph, 'racquet')

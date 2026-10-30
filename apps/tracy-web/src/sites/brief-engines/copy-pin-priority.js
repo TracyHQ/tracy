@@ -37,6 +37,10 @@ export function withHonestyPins(copy, contentMap, honesty, planSlots = []) {
   )
   const hidden = new Set((honesty.records ?? []).filter((r) => r.decision === 'hide').map((r) => r.group))
   const blanked = new Set((honesty.blanks ?? []).map((s) => s.key))
+  /** The lines of a guest quote card emptied by the plan: they never return to the copy writer, whatever their role. */
+  const quoteLines = new Set(
+    (honesty.blanks ?? []).filter((s) => s.reason === 'quote-card-line').map((s) => s.key)
+  )
   for (const fact of facts) {
     const key = fact.key
     if (nonempty(pins[key]) && sources[key] !== 'placeholder') continue
@@ -48,7 +52,11 @@ export function withHonestyPins(copy, contentMap, honesty, planSlots = []) {
   for (const slot of contentMap.slots ?? []) {
     const key = slot.key
     // A guest quote rejected as a whole must stay empty on both CMS write paths, not return to the copy writer.
-    if (blanked.has(key) && slot.type === 'text' && slot.role?.startsWith('quote.')) {
+    if (
+      blanked.has(key) &&
+      slot.type === 'text' &&
+      (slot.role?.startsWith('quote.') || quoteLines.has(key))
+    ) {
       pins[key] = ''
       sources[key] = 'site-plan:no-fitting-review'
       roles[key] = slot.role

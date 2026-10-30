@@ -17,6 +17,7 @@ import { offeringDescriptionOf, ownPostLinesOf } from './offering-description.mj
 import { roleInCasingOf, showablePeopleOf } from './brief-people.mjs'
 import { planFormBlocks } from './form-blocks.mjs'
 import { planReviewGroup, sourcedReviewsOf } from './review-quotes.mjs'
+import { strayQuoteLinesOf } from './quote-cards.mjs'
 import { shortOfferingName } from './offering-short-name.mjs'
 import { labelsOfBlanks, planOfferingTabs } from './offering-tabs-plan.mjs'
 
@@ -33,6 +34,8 @@ export const HONESTY_REASONS = Object.freeze({
   'brief-owner': 'the owner the brief names',
   'brief-review': 'one whole sourced guest review with its real author and platform',
   'no-fitting-review': 'no whole attributed review fits this quote card',
+  'quote-card-line':
+    'a line of a guest quote card declared outside its quote group: no writer words go under a reviewer, so it stays empty',
   'author-as-business': 'a post’s author shown as the business, never as a made-up person',
   'no-brief-person': 'the brief names no person for this card',
   'person-name-unavailable': 'the accepted name cannot be shown whole on this card',
@@ -325,6 +328,10 @@ export function planHonesty(brief, contentMap, { name = null, contact = {}, now 
           blanks.push(blankOf(slot, 'no-signer'))
       }
   }
+  // 🔒 A LINE OF A QUOTE CARD OUTSIDE ITS GROUP IS NEVER PAGE COPY (#189, criterion 2.2, `quote-cards.mjs`): the copy
+  // writer would put the business's own words under a reviewer's name. The packing check refuses such a map; a released
+  // one still builds with the line empty.
+  for (const { slot } of strayQuoteLinesOf(contentMap)) blanks.push(blankOf(slot, 'quote-card-line'))
   for (const [collection, groups] of byCollection) {
     const ordered = [...groups].sort((a, b) => (Number(a.item) || 0) - (Number(b.item) || 0))
     // 🔒 A PRICED CARD STANDS ONLY FOR AN OFFERING ITS OWN NAME SAYS: a gift card, a membership or a plan the brief does not

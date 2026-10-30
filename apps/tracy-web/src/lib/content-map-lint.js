@@ -30,6 +30,7 @@ import { demoMarkupOf, isUnitPath } from '../sites/brief-engines/inline-styles.j
 import { SECTION_RULES } from './content-map-lint-sections.js'
 import { LINK_RULES } from './content-map-lint-links.js'
 import { ITEM_GROUP_RULES } from './content-map-lint-item-groups.js'
+import { QUOTE_RULES } from './content-map-lint-quotes.js'
 
 const list = (v) => (Array.isArray(v) ? v : [])
 const nonEmpty = (v) => typeof v === 'string' && v.trim() !== ''
@@ -246,7 +247,9 @@ export const LINT_RULES = [
   // Link targets declared as links, and video slots that name their video (`content-map-lint-links.js`).
   ...LINK_RULES,
   // Repeated item cards declared as numbered groups, so their bodies share one shape (`content-map-lint-item-groups.js`).
-  ...ITEM_GROUP_RULES
+  ...ITEM_GROUP_RULES,
+  // Every line of a guest quote card is a slot of its quote group (`content-map-lint-quotes.js`).
+  ...QUOTE_RULES
 ]
 
 /**

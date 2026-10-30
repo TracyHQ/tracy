@@ -98,7 +98,8 @@ const TRADES = {
       ['Squash sessions', 'Fast squash games for every level.'],
       ['Badminton club', 'Indoor badminton nights for juniors and adults.']
     ],
-    expected: ['racquet', 'ping-pong', 'tennis-ball', 'person-simple-throw']
+    // A padel racket is a racket (the lexicon's padel entry): the table-tennis paddle is another sport.
+    expected: ['racquet', 'tennis-ball', 'target', 'person-simple-throw']
   },
   bakery: {
     brief: { business: { trade: 'food' }, reading: { services: [{ id: 'b1', label: 'Celebration Cakes' }] } },
@@ -128,10 +129,10 @@ const TRADES = {
     cards: [
       ['Emergency lockout', 'Locked out? We open the door without damage.'],
       ['Lock change', 'New locks fitted the same day.'],
-      ['Spare copies', 'Copies made while you wait.'],
+      ['Spare keys', 'Spare keys cut while you wait.'],
       ['Door survey', 'A survey of every door in your flat.']
     ],
-    expected: ['lock', 'lock-key', 'keyhole', 'door']
+    expected: ['lock', 'lock-key', 'key', 'door']
   }
 }
 
@@ -144,7 +145,7 @@ test('#189 no two cards of one section show the same icon, on four trades, witho
   }
 })
 
-test('#189 a section the lexicon has no word for still shows distinct neutral marks, never the demo icon', () => {
+test('#189 a section the lexicon has no word for shows one neutral mark on the whole row, never the demo icon', () => {
   const { contentMap, copy } = section('module-9', [
     ['Flue survey', 'A look at the flue.'],
     ['Cowl tops', 'A cowl on the stack.'],
@@ -152,11 +153,11 @@ test('#189 a section the lexicon has no word for still shows distinct neutral ma
     ['Bird guards', 'Guards against nests.']
   ])
   const plan = planDecor({ contentMap, brief: { reading: {} }, copy })
-  assert.deepEqual(glyphsOf(plan, 'module-9', 4), NEUTRAL_GLYPHS.slice(0, 4))
+  assert.deepEqual(glyphsOf(plan, 'module-9', 4), Array(4).fill(NEUTRAL_GLYPHS[0]))
   assert.ok(plan.slots.every((d) => d.reason === 'icon-neutral'))
   // With a catalog, a tag the words say only reaches a model's menu; the fallback reads catalog names alone.
   const withCatalog = planDecor({ contentMap, brief: { reading: {} }, copy, iconCatalog: CATALOG })
-  assert.deepEqual(glyphsOf(withCatalog, 'module-9', 4), NEUTRAL_GLYPHS.slice(0, 4))
+  assert.deepEqual(glyphsOf(withCatalog, 'module-9', 4), Array(4).fill(NEUTRAL_GLYPHS[0]))
 })
 
 test('#189 a page about one offering gives its icon once; the other items take their own or a neutral mark', () => {
@@ -189,7 +190,7 @@ test('#189 a page about one offering gives its icon once; the other items take t
   for (const k of [1, 5, 9, 13])
     assert.equal(at.get(`article-2.${k + 1}`).glyph, at.get(`article-2.${k}`).glyph)
   assert.deepEqual(glyphs, ['person-simple-swim', 'swimming-pool', 'clock', 'graduation-cap'])
-  // Without words of their own, the four features take the page offering's icons once each.
+  // Without words of their own, the four features never take the page offering's icons: one neutral mark for the row.
   const bare = planDecor({
     contentMap: { slots },
     brief,
@@ -198,9 +199,9 @@ test('#189 a page about one offering gives its icon once; the other items take t
   const byKey = new Map(bare.slots.map((d) => [d.key, d]))
   assert.deepEqual(
     [1, 5, 9, 13].map((k) => byKey.get(`article-2.${k}`).glyph),
-    ['person-simple-swim', 'swimming-pool', 'waves', 'chalkboard-teacher']
+    Array(4).fill(NEUTRAL_GLYPHS[0])
   )
-  assert.equal(byKey.get('article-2.1').reason, 'icon-of-page-offering')
+  assert.equal(byKey.get('article-2.1').reason, 'icon-neutral')
 })
 
 test('#189 a model ranking wins over the lexicon; a name outside the catalog is dropped and the lexicon still stands', () => {
@@ -263,7 +264,7 @@ test('#189 each item gets a menu from the catalog; the answer keeps only asked i
 })
 
 test('#189 the curated lexicon ranks an item subject before broad words', () => {
-  assert.deepEqual(keywordRanking('Padel lessons for kids').slice(0, 1), ['ping-pong'])
+  assert.deepEqual(keywordRanking('Padel lessons for kids').slice(0, 1), ['racquet'])
   assert.deepEqual(keywordRanking('Celebration cakes').slice(0, 1), ['cake'])
   assert.deepEqual(keywordRanking('Nothing to see'), [])
 })
@@ -280,4 +281,44 @@ test('#189 assignment is deterministic and per section: two sections may share a
     ['racquet', NEUTRAL_GLYPHS[0], 'racquet']
   )
   assert.deepEqual(assignGlyphs(items), once)
+})
+
+test('#189 a what-to-bring row with one item no icon matches shows one neutral mark on every item', () => {
+  // A fictional swim school: three items say what they are, the fourth ("Patience") matches no icon.
+  const { contentMap, copy } = section('module-11', [
+    ['Towel', 'A large towel for after the lesson.'],
+    ['Water bottle', 'A bottle of water to drink.'],
+    ['Swimsuit', 'A swimsuit that fits well.'],
+    ['Patience', 'Your patience on the first day.']
+  ])
+  const brief = { reading: { services: [{ id: 'sw', label: 'Swimming Lessons' }] } }
+  const plan = planDecor({ contentMap, brief, copy })
+  const glyphs = glyphsOf(plan, 'module-11', 4)
+  assert.deepEqual(glyphs, Array(4).fill(NEUTRAL_GLYPHS[0]), glyphs.join(', '))
+  assert.ok(plan.slots.every((d) => d.reason === 'icon-neutral'))
+})
+
+test("#189 items with no words of their own never take the page's or another offering's icon", () => {
+  // A fictional pottery studio whose brief lists other offerings: the items' words were not written.
+  const { contentMap } = section('module-12', [
+    ['', ''],
+    ['', ''],
+    ['', ''],
+    ['', '']
+  ])
+  contentMap.slots.push(text('module-12.99', 'article.title'))
+  const brief = {
+    reading: {
+      services: [
+        { id: 'p1', label: 'Wheel Throwing Class' },
+        { id: 'p2', label: 'Swimming Lessons' },
+        { id: 'p3', label: 'Tennis Coaching' }
+      ]
+    }
+  }
+  const copy = { pins: { 'module-12.99': 'Tennis Coaching' }, sources: { 'module-12.99': 'brief' } }
+  const plan = planDecor({ contentMap, brief, copy })
+  const glyphs = glyphsOf(plan, 'module-12', 4)
+  assert.deepEqual(glyphs, Array(4).fill(NEUTRAL_GLYPHS[0]), glyphs.join(', '))
+  for (const d of plan.slots) assert.equal(d.reason, 'icon-neutral', d.key)
 })

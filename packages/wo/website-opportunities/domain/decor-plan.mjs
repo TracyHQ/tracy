@@ -150,19 +150,18 @@ export function iconItemsOf({ contentMap, copy = null }) {
   return out
 }
 
-const SOURCE_REASON = Object.freeze({
-  item: 'icon-of-item',
-  page: 'icon-of-page-offering',
-  offering: 'icon-of-offering'
-})
+const SOURCE_REASON = Object.freeze({ item: 'icon-of-item' })
 
 /**
- * The glyph of every item icon, by slot key. Each item ranks its candidates: a model's reading of its words, the keyword
- * lexicon on its words, the offering of the page it sits on, the brief's offering of its place in the list; then
- * `assignGlyphs` gives every item of a section its own glyph (`icon-choice.mjs`).
+ * The glyph of every item icon, by slot key. Each item ranks its candidates from its OWN meaning only (its written words,
+ * else the offering its own card is named for): a model's reading of them, the keyword lexicon on them, an offering they
+ * name; then `assignGlyphs` gives every item of a section
+ * its own glyph (`icon-choice.mjs`). An item with no words, or none that match, makes its whole row neutral.
  * @returns {Map<string, {glyph: string, reason: string, quote: string | null}>}
  */
-function iconDecisions({ slots, copy, list, pageOffering, choices, catalog }) {
+function iconDecisions({ slots, copy, list, offerings = [], choices, catalog }) {
+  // The offering a card's own name says (the site plan's `cardNames`, read by the fill plan): that card's own meaning.
+  const cardOffering = new Map((offerings ?? []).map((o) => [o.groupId, o]))
   const items = iconItems(slots, copy)
   const usable = catalog ? usableCatalog(catalog) : null
   const allowed = usable ? new Set(usable.map((c) => c.name)) : null
@@ -172,10 +171,8 @@ function iconDecisions({ slots, copy, list, pageOffering, choices, catalog }) {
   const asked = new Map()
   for (const i of items) {
     if (asked.has(i.id)) continue
-    const written = i.words.join(' ')
-    const page = pageOffering.get(i.slot.entity)
-    const n = Number.isInteger(i.slot.group?.item) ? i.slot.group.item : null
-    const listed = n !== null && list.length ? list[n % list.length] : null
+    const card = i.slot.group?.id ? cardOffering.get(i.slot.group.id) : null
+    const written = i.words.join(' ') || (card?.label ?? '')
     const named = written ? namedIn(written, list)?.label : null
     const candidates = [
       ...(written ? chosen(choices?.[i.id]) : []).map((glyph) => ({
@@ -191,19 +188,10 @@ function iconDecisions({ slots, copy, list, pageOffering, choices, catalog }) {
         glyph,
         source: 'item',
         quote: written
-      })),
-      // 🔒 AN ITEM'S ICON SAYS ITS OWN WORDS (#189, site build rule 4): the page's offering or another item's offering
-      // never stands in for them, or one item shows what its neighbour is about.
-      ...(!written && page ? keywordRanking(page.label) : []).map((glyph) => ({
-        glyph,
-        source: 'page',
-        quote: page.label
-      })),
-      ...(!written && listed ? keywordRanking(listed.label) : []).map((glyph) => ({
-        glyph,
-        source: 'offering',
-        quote: listed.label
       }))
+      // 🔒 AN ITEM'S ICON SAYS ITS OWN WORDS ONLY (#189, site build rule 4, criterion 3.5): the page's offering or the n-th
+      // offering of the brief never stands in for an item without words (measured on a pilot build: a padel page row
+      // showed a swimmer and a barbell taken from other offerings). Such an item has no candidate, and its row turns neutral.
     ]
     asked.set(i.id, { id: i.id, section: i.section, candidates })
   }
@@ -212,7 +200,7 @@ function iconDecisions({ slots, copy, list, pageOffering, choices, catalog }) {
   // every item of that row shows the same neutral mark, never a row where some items carry a meaning and others a filler.
   const rowOf = (i) =>
     i.slot.group?.id ? `${i.section}#${String(i.slot.group.id).replace(/\.\d+$/, '')}` : i.section
-  const neutralRows = new Set(items.filter((i) => !assigned.get(i.id)?.source).map(rowOf))
+  const neutralRows = new Set(items.filter((i) => assigned.get(i.id)?.source !== 'item').map(rowOf))
   for (const i of items)
     if (neutralRows.has(rowOf(i))) assigned.set(i.id, { glyph: NEUTRAL_GLYPHS[0], source: null })
   const out = new Map()
@@ -277,7 +265,7 @@ export function planDecor({
     slots,
     copy,
     list,
-    pageOffering,
+    offerings,
     choices: iconChoices,
     catalog: iconCatalog
   })

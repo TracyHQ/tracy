@@ -102,9 +102,13 @@ export function reviewValuesOf(slots, review) {
   const source = slots.some(
     (s) => s.type === 'text' && ['quote.author_context', 'quote.rating_or_source'].includes(s.role)
   )
+  // 🔒 THE REVIEW'S WORDS STAND ONCE ON A CARD (#189, criterion 2.2): a card with a pull-quote heading and a body both
+  // declared quote.text shows them in the first one they fit whole; the other is left empty, never a second copy.
+  const home = words.find((s) => reviewFits(s, review.text))
+  if (!home) return null
   const values = {}
   for (const slot of slots) {
-    if (slot.type !== 'text') continue
+    if (slot.type !== 'text' || (slot.role === 'quote.text' && slot !== home)) continue
     const value = {
       'quote.text': review.text,
       'quote.author_name': source ? review.author : `${review.author}, ${review.context}`,

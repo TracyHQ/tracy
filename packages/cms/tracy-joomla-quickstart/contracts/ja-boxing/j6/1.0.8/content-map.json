@@ -14215,7 +14215,12 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Our Story / title",
-      "role": "editorial.paragraph",
+      "role": "quote.text",
+      "group": {
+        "id": "module-183.quote.0",
+        "item": 0,
+        "kind": "quote"
+      },
       "fit": {
         "measured": true,
         "boxes": {
