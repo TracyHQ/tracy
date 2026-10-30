@@ -1229,9 +1229,10 @@ const SHELL_BATCH_TIMEOUT_MS = 60_000
  * @param {string} functions - the function definitions the call needs, as the script has them.
  * @param {string} call - one row's call, reading that row's arguments as "$1", "$2"...
  * @param {Array<{name: string, argv: string[]}>} rows - every row passes the same number of arguments.
+ * @param {string} [awkDir] - a directory put first in PATH, so its `awk` is the one the function runs.
  * @returns {Promise<string[]>} each row's answer, trimmed, in row order.
  */
-async function shellAnswers(functions, call, rows) {
+async function shellAnswers(functions, call, rows, awkDir) {
   const arity = rows[0].argv.length
   assert.ok(
     rows.every((row) => row.argv.length === arity),
@@ -1251,7 +1252,10 @@ async function shellAnswers(functions, call, rows) {
   const answers = await Promise.all(
     batches.map(async (batch) => {
       const argv = ['-c', script, 'agreement', ...batch.flatMap((row) => row.argv)]
-      const out = await execFileAsync('bash', argv, { timeout: SHELL_BATCH_TIMEOUT_MS }).then(
+      const env = awkDir
+        ? { ...process.env, PATH: `${awkDir}${path.delimiter}${process.env.PATH}` }
+        : process.env
+      const out = await execFileAsync('bash', argv, { timeout: SHELL_BATCH_TIMEOUT_MS, env }).then(
         ({ stdout }) => stdout.split('\0'),
         (error) => {
           // The answers that did arrive say which row never did.
@@ -1266,6 +1270,32 @@ async function shellAnswers(functions, call, rows) {
     })
   )
   return answers.flat()
+}
+
+// 🔒 EVERY AWK A SERVER MAY CALL `awk` (30/10/2026). `token_mount_custody` runs whatever `awk` the
+// host has: mawk on a stock Debian, GNU awk where someone installed it, busybox awk on a slim image.
+// GNU awk 5.2.1 once aborted (exit 2, no answer) on short composes mawk answered, so the table is
+// asked of each one this machine has, through an `awk` shim put first in PATH, plus the plain `awk`.
+const AWKS = [
+  ['gawk', 'gawk', []],
+  ['mawk', 'mawk', []],
+  ['busybox awk', 'busybox', ['awk']]
+]
+
+/** `[name, directory whose awk is that awk]` for each awk of `AWKS` found on PATH. */
+async function awkShims() {
+  const found = []
+  for (const [name, bin, args] of AWKS) {
+    const dir = (process.env.PATH ?? '').split(path.delimiter).find((d) => d && existsSync(path.join(d, bin)))
+    if (!dir) continue
+    const shimDir = await mkdtemp(path.join(tmpdir(), 'tracy-host-awk-'))
+    tempRoots.push(shimDir)
+    const quoted = [path.join(dir, bin), ...args].map((word) => `'${word}'`).join(' ')
+    await writeFile(path.join(shimDir, 'awk'), `#!/bin/sh\nexec ${quoted} "$@"\n`)
+    await chmod(path.join(shimDir, 'awk'), 0o755)
+    found.push([name, shimDir])
+  }
+  return found
 }
 
 // The door and `mint-agent-token.sh` must agree about every compose file both read: if they split,
@@ -1290,10 +1320,14 @@ test('🔒 the door and mint-agent-token.sh classify every compose shape as the 
         rows.push({ name, expect: expected, text, siteDir, argv: [file, siteDir] })
       }
     }
-    const shell = await shellAnswers(custody, 'token_mount_custody "$1" "$2"', rows)
-    for (const [i, row] of rows.entries()) {
+    for (const row of rows) {
       assert.equal(classifyTokenMount(row.text, row.siteDir), row.expect, `door: ${row.name}`)
-      assert.equal(shell[i], row.expect, `script: ${row.name}`)
+    }
+    for (const [awk, awkDir] of [['awk', undefined], ...(await awkShims())]) {
+      const shell = await shellAnswers(custody, 'token_mount_custody "$1" "$2"', rows, awkDir)
+      for (const [i, row] of rows.entries()) {
+        assert.equal(shell[i], row.expect, `script under ${awk}: ${row.name}`)
+      }
     }
   } finally {
     await rm(root, { recursive: true, force: true })

@@ -435,15 +435,21 @@ token_mount_custody() {
     function abspath(s) { return s ~ /^(\/[A-Za-z0-9._-]+)+$/ && s !~ /\/\.\.?(\/|$)/ }
     function starts(s, pre) { return substr(s, 1, length(pre)) == pre }
     function ends(s, suf) { return length(s) >= length(suf) && substr(s, length(s) - length(suf) + 1) == suf }
-    function lit(s) { if (p <= n && L[p] == s) p++; else bad = 1 }
+    # Every line is read through `at`, never as `L[i]` directly: past the end it answers "" without
+    # creating the element. GNU awk 5.2.1 (Debian 12) aborts with `fatal: internal error ...
+    # Node_array_ref` (exit 2, no answer) when an element that does not exist is passed to a
+    # function, compared, then passed again (a short compose read past its last line); mawk and
+    # busybox awk do not, so the three awks gave different answers for the same file.
+    function at(i) { return (i >= 1 && i <= n) ? L[i] : "" }
+    function lit(s) { if (p <= n && at(p) == s) p++; else bad = 1 }
     function ok(cond) { if (p <= n && cond) p++; else bad = 1 }
     # `slot` names the place: first or last where the migration inserts it, or where the generator puts it.
-    function opt_token(slot) { if (p <= n && L[p] == TOKEN) { p++; tokens++; if (slot == "generator") gen++ } }
+    function opt_token(slot) { if (p <= n && at(p) == TOKEN) { p++; tokens++; if (slot == "generator") gen++ } }
     function opt_dns(  s, mid, o, ip4) {
       o = "(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])"
       ip4 = o "\\." o "\\." o "\\." o
       if (p > n) return
-      s = L[p]
+      s = at(p)
       if (!starts(s, "    dns: [") || !ends(s, "]") || length(s) < 12) return
       mid = substr(s, 11, length(s) - 11)
       # IPv4 addresses, comma-separated, one optional space after each comma — as webroot.js.
@@ -453,13 +459,13 @@ token_mount_custody() {
     function valued(s, pre, re) { return starts(s, pre) && substr(s, length(pre) + 1) ~ re }
     function web_networks() {
       if (bad || p > n) { bad = 1; return }
-      if (length(label "-web-1") <= 63 && L[p] == "    networks: [default]") { isolated = 1; p++; return }
-      if (length(label "-web-1") > 63 && ALIAS != "" && p + 2 <= n && L[p] == "    networks:" &&
-          L[p + 1] == "      default:" && L[p + 2] == "        aliases: [\"" ALIAS "\"]") { isolated = 1; p += 3; return }
-      if (L[p] == "    networks: [default, tracy]") { p++; return }
-      if (length(label "-web-1") > 63 && ALIAS != "" && p + 3 <= n && L[p] == "    networks:" &&
-          L[p + 1] == "      default: {}" && L[p + 2] == "      tracy:" &&
-          L[p + 3] == "        aliases: [\"" ALIAS "\"]") { p += 4; return }
+      if (length(label "-web-1") <= 63 && at(p) == "    networks: [default]") { isolated = 1; p++; return }
+      if (length(label "-web-1") > 63 && ALIAS != "" && p + 2 <= n && at(p) == "    networks:" &&
+          at(p + 1) == "      default:" && at(p + 2) == "        aliases: [\"" ALIAS "\"]") { isolated = 1; p += 3; return }
+      if (at(p) == "    networks: [default, tracy]") { p++; return }
+      if (length(label "-web-1") > 63 && ALIAS != "" && p + 3 <= n && at(p) == "    networks:" &&
+          at(p + 1) == "      default: {}" && at(p + 2) == "      tracy:" &&
+          at(p + 3) == "        aliases: [\"" ALIAS "\"]") { p += 4; return }
       bad = 1
     }
     # The site-mail run render-compose.sh writes since #289 (`tracy_web_mail_env`), all or nothing,
@@ -468,11 +474,11 @@ token_mount_custody() {
     # label, and the token interpolation. Consumes the run and returns 1, or consumes nothing and returns 0.
     function mail_env(hdr,   q) {
       q = p
-      if (hdr) { if (q > n || L[q] != "    environment:") return 0; q++ }
+      if (hdr) { if (q > n || at(q) != "    environment:") return 0; q++ }
       if (q + 2 > n) return 0
-      if (!valued(L[q], "      TRACY_MAIL_URL: ", MAILURL)) return 0
-      if (L[q + 1] != "      TRACY_MAIL_LABEL: \"" label "\"") return 0
-      if (L[q + 2] != "      TRACY_MAIL_TOKEN: \"${TRACY_MAIL_TOKEN:-}\"") return 0
+      if (!valued(at(q), "      TRACY_MAIL_URL: ", MAILURL)) return 0
+      if (at(q + 1) != "      TRACY_MAIL_LABEL: \"" label "\"") return 0
+      if (at(q + 2) != "      TRACY_MAIL_TOKEN: \"${TRACY_MAIL_TOKEN:-}\"") return 0
       p = q + 3
       return 1
     }
@@ -481,11 +487,11 @@ token_mount_custody() {
     # Consumes the run and returns 1, or consumes nothing and returns 0.
     function limits(   mem) {
       if (p + 3 > n) return 0
-      if (!valued(L[p], "    mem_limit: ", MEM)) return 0
-      mem = substr(L[p], length("    mem_limit: ") + 1)
-      if (L[p + 1] != "    memswap_limit: " mem) return 0
-      if (!valued(L[p + 2], "    cpus: ", CPUS)) return 0
-      if (!valued(L[p + 3], "    pids_limit: ", PIDS)) return 0
+      if (!valued(at(p), "    mem_limit: ", MEM)) return 0
+      mem = substr(at(p), length("    mem_limit: ") + 1)
+      if (at(p + 1) != "    memswap_limit: " mem) return 0
+      if (!valued(at(p + 2), "    cpus: ", CPUS)) return 0
+      if (!valued(at(p + 3), "    pids_limit: ", PIDS)) return 0
       p += 4
       return 1
     }
@@ -513,7 +519,7 @@ token_mount_custody() {
       p = 1; tokens = 0; gen = 0; bad = 0; isolated = 0; access = 0
       lit("services:")
       lit("  web:")
-      ok(valued(L[p], "    image: ", IMG))
+      ok(valued(at(p), "    image: ", IMG))
       lit("    restart: unless-stopped")
       lit("    security_opt: [\"no-new-privileges:true\"]")
       lit("    shm_size: 512m")
@@ -529,12 +535,12 @@ token_mount_custody() {
       lit("      - ./data:/app/data")
       lit("      - ./uploads:/app/uploads")
       opt_token("generator")
-      ok(sites_mount(L[p]))
+      ok(sites_mount(at(p)))
       lit("      - " site "/data:/site/" label "/.webroot/data")
       lit("      - " site "/uploads:/site/" label "/.webroot/uploads")
       opt_token("last")
       parent = site; sub("/[^/]+$", "", parent)
-      if (L[p] == "      - " parent "/.site-access/" label ":/run/tracy-access:ro") { access = 1; p++ }
+      if (at(p) == "      - " parent "/.site-access/" label ":/run/tracy-access:ro") { access = 1; p++ }
       web_networks()
       if (!isolated) opt_dns()
       lit("    ports:")
@@ -548,7 +554,7 @@ token_mount_custody() {
       if (!isolated) {
         lit("  tracy:")
         lit("    external: true")
-        ok(valued(L[p], "    name: ", NET))
+        ok(valued(at(p), "    name: ", NET))
       }
       if (bad || p != n + 1) print "unknown"
       # The mail run dates the file (#289): only a generator that writes the bind in its own place
