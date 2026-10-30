@@ -163,7 +163,7 @@ export const BUILD_RULES = Object.freeze(
           key: 'slots[].action',
           problems: 'buttonActionProblems',
           field: 'buttons',
-          what: 'an action on every button slot'
+          what: 'an action on every button slot outside a `demoOnly` entity'
         },
         { lint: 'hero-button-no-link' },
         { lint: 'link-target-wrong-role' },

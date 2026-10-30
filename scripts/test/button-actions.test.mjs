@@ -274,3 +274,39 @@ test('a contact form send button declares the form job, never a contact or conve
   )
   assert.equal(uses.get('TPL_SEND_FORM')[0].kind, 'submit-form')
 })
+
+test('a page control is a declared action, and the buttons of a demo-only style-guide page need none', () => {
+  // A fictional pottery studio template: a style guide article of sample buttons beside a kept lessons article.
+  const map = {
+    entities: [
+      { key: 'article-5', kind: 'article', sourceId: 5, demoOnly: true },
+      { key: 'article-2', kind: 'article', sourceId: 2 }
+    ],
+    slots: [
+      {
+        key: 'languageString-1.0',
+        type: 'text',
+        role: 'editorial.button_label',
+        action: { kind: 'page-control' }
+      },
+      {
+        key: 'article-5.3',
+        entity: 'article-5',
+        type: 'text',
+        role: 'editorial.button_label',
+        sample: 'Primary'
+      },
+      {
+        key: 'article-2.7',
+        entity: 'article-2',
+        type: 'text',
+        role: 'editorial.button_label',
+        sample: 'Book a wheel'
+      }
+    ],
+    roleVocabularyVersion: 'place-content-roles/3'
+  }
+  assert.deepEqual(buttonActionProblems(map), ['slot "article-2.7" has no action role'])
+  map.entities[0].demoOnly = false
+  assert.equal(buttonActionProblems(map).length, 2)
+})

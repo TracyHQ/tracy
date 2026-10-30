@@ -2315,6 +2315,10 @@
       },
       "fit": {
         "measured": false
+      },
+      "action": {
+        "kind": "navigation",
+        "urlKey": "module-156.8"
       }
     },
     {
@@ -2337,6 +2341,9 @@
         "id": "module-156.cta.2",
         "item": 0,
         "kind": "contact"
+      },
+      "action": {
+        "kind": "navigation"
       }
     },
     {
@@ -7959,6 +7966,10 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
+      },
+      "action": {
+        "kind": "primary-cta",
+        "urlKey": "module-167.16"
       }
     },
     {
@@ -8005,6 +8016,10 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
+      },
+      "action": {
+        "kind": "primary-cta",
+        "urlKey": "module-167.17"
       }
     },
     {
@@ -8051,6 +8066,10 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
+      },
+      "action": {
+        "kind": "primary-cta",
+        "urlKey": "module-167.18"
       }
     },
     {
@@ -8097,15 +8116,19 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
+      },
+      "action": {
+        "kind": "primary-cta",
+        "urlKey": "module-167.19"
       }
     },
     {
       "key": "module-167.16",
       "entity": "module-167",
       "column": "params",
-      "type": "text",
+      "type": "url",
       "sample": "#",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -8120,17 +8143,17 @@
         "item": 0,
         "kind": "package"
       },
-      "fit": {
-        "measured": false
+      "action": {
+        "kind": "primary-cta"
       }
     },
     {
       "key": "module-167.17",
       "entity": "module-167",
       "column": "params",
-      "type": "text",
+      "type": "url",
       "sample": "#",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -8145,17 +8168,17 @@
         "item": 1,
         "kind": "package"
       },
-      "fit": {
-        "measured": false
+      "action": {
+        "kind": "primary-cta"
       }
     },
     {
       "key": "module-167.18",
       "entity": "module-167",
       "column": "params",
-      "type": "text",
+      "type": "url",
       "sample": "#",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -8170,17 +8193,17 @@
         "item": 2,
         "kind": "package"
       },
-      "fit": {
-        "measured": false
+      "action": {
+        "kind": "primary-cta"
       }
     },
     {
       "key": "module-167.19",
       "entity": "module-167",
       "column": "params",
-      "type": "text",
+      "type": "url",
       "sample": "#",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -8195,8 +8218,8 @@
         "item": 3,
         "kind": "package"
       },
-      "fit": {
-        "measured": false
+      "action": {
+        "kind": "primary-cta"
       }
     },
     {
@@ -9157,6 +9180,10 @@
         "maxCharacters": 29,
         "casing": "upper",
         "overflow": "rewrite"
+      },
+      "action": {
+        "kind": "primary-cta",
+        "urlKey": "module-172.8"
       }
     },
     {
@@ -9203,15 +9230,19 @@
         "maxCharacters": 29,
         "casing": "upper",
         "overflow": "rewrite"
+      },
+      "action": {
+        "kind": "primary-cta",
+        "urlKey": "module-172.9"
       }
     },
     {
       "key": "module-172.8",
       "entity": "module-172",
       "column": "params",
-      "type": "text",
+      "type": "url",
       "sample": "#",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -9226,17 +9257,17 @@
         "item": 0,
         "kind": "service"
       },
-      "fit": {
-        "measured": false
+      "action": {
+        "kind": "primary-cta"
       }
     },
     {
       "key": "module-172.9",
       "entity": "module-172",
       "column": "params",
-      "type": "text",
+      "type": "url",
       "sample": "#",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -9251,8 +9282,8 @@
         "item": 1,
         "kind": "service"
       },
-      "fit": {
-        "measured": false
+      "action": {
+        "kind": "primary-cta"
       }
     },
     {
@@ -12445,11 +12476,11 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Darlene Robertson / link",
-      "role": "contact.social_url",
+      "role": "person.social_url",
       "group": {
-        "id": "module-180.social.0",
+        "id": "module-180.person.0",
         "item": 0,
-        "kind": "contact"
+        "kind": "person"
       }
     },
     {
@@ -12467,11 +12498,11 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Darlene Robertson / link",
-      "role": "contact.social_url",
+      "role": "person.social_url",
       "group": {
-        "id": "module-180.social.1",
+        "id": "module-180.person.0",
         "item": 0,
-        "kind": "contact"
+        "kind": "person"
       }
     },
     {
@@ -12489,11 +12520,11 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Darlene Robertson / link",
-      "role": "contact.social_url",
+      "role": "person.social_url",
       "group": {
-        "id": "module-180.social.2",
+        "id": "module-180.person.0",
         "item": 0,
-        "kind": "contact"
+        "kind": "person"
       }
     },
     {
@@ -12511,11 +12542,11 @@
       ],
       "nestedJson": "jatools-config",
       "label": "Darlene Robertson / link",
-      "role": "contact.social_url",
+      "role": "person.social_url",
       "group": {
-        "id": "module-180.social.3",
+        "id": "module-180.person.0",
         "item": 0,
-        "kind": "contact"
+        "kind": "person"
       }
     },
     {
@@ -15129,6 +15160,10 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
+      },
+      "action": {
+        "kind": "primary-cta",
+        "urlKey": "module-188.16"
       }
     },
     {
@@ -15175,6 +15210,10 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
+      },
+      "action": {
+        "kind": "primary-cta",
+        "urlKey": "module-188.17"
       }
     },
     {
@@ -15221,6 +15260,10 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
+      },
+      "action": {
+        "kind": "primary-cta",
+        "urlKey": "module-188.18"
       }
     },
     {
@@ -15267,15 +15310,19 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
+      },
+      "action": {
+        "kind": "primary-cta",
+        "urlKey": "module-188.19"
       }
     },
     {
       "key": "module-188.16",
       "entity": "module-188",
       "column": "params",
-      "type": "text",
+      "type": "url",
       "sample": "#",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15290,17 +15337,17 @@
         "item": 0,
         "kind": "package"
       },
-      "fit": {
-        "measured": false
+      "action": {
+        "kind": "primary-cta"
       }
     },
     {
       "key": "module-188.17",
       "entity": "module-188",
       "column": "params",
-      "type": "text",
+      "type": "url",
       "sample": "#",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15315,17 +15362,17 @@
         "item": 1,
         "kind": "package"
       },
-      "fit": {
-        "measured": false
+      "action": {
+        "kind": "primary-cta"
       }
     },
     {
       "key": "module-188.18",
       "entity": "module-188",
       "column": "params",
-      "type": "text",
+      "type": "url",
       "sample": "#",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15340,17 +15387,17 @@
         "item": 2,
         "kind": "package"
       },
-      "fit": {
-        "measured": false
+      "action": {
+        "kind": "primary-cta"
       }
     },
     {
       "key": "module-188.19",
       "entity": "module-188",
       "column": "params",
-      "type": "text",
+      "type": "url",
       "sample": "#",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -15365,8 +15412,8 @@
         "item": 3,
         "kind": "package"
       },
-      "fit": {
-        "measured": false
+      "action": {
+        "kind": "primary-cta"
       }
     },
     {
@@ -16100,6 +16147,10 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
+      },
+      "action": {
+        "kind": "primary-cta",
+        "urlKey": "module-189.16"
       }
     },
     {
@@ -16146,6 +16197,10 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
+      },
+      "action": {
+        "kind": "primary-cta",
+        "urlKey": "module-189.17"
       }
     },
     {
@@ -16192,6 +16247,10 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
+      },
+      "action": {
+        "kind": "primary-cta",
+        "urlKey": "module-189.18"
       }
     },
     {
@@ -16238,15 +16297,19 @@
         "maxCharacters": 19,
         "casing": "upper",
         "overflow": "rewrite"
+      },
+      "action": {
+        "kind": "primary-cta",
+        "urlKey": "module-189.19"
       }
     },
     {
       "key": "module-189.16",
       "entity": "module-189",
       "column": "params",
-      "type": "text",
+      "type": "url",
       "sample": "#",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -16261,17 +16324,17 @@
         "item": 0,
         "kind": "package"
       },
-      "fit": {
-        "measured": false
+      "action": {
+        "kind": "primary-cta"
       }
     },
     {
       "key": "module-189.17",
       "entity": "module-189",
       "column": "params",
-      "type": "text",
+      "type": "url",
       "sample": "#",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -16286,17 +16349,17 @@
         "item": 1,
         "kind": "package"
       },
-      "fit": {
-        "measured": false
+      "action": {
+        "kind": "primary-cta"
       }
     },
     {
       "key": "module-189.18",
       "entity": "module-189",
       "column": "params",
-      "type": "text",
+      "type": "url",
       "sample": "#",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -16311,17 +16374,17 @@
         "item": 2,
         "kind": "package"
       },
-      "fit": {
-        "measured": false
+      "action": {
+        "kind": "primary-cta"
       }
     },
     {
       "key": "module-189.19",
       "entity": "module-189",
       "column": "params",
-      "type": "text",
+      "type": "url",
       "sample": "#",
-      "maxCharacters": 40,
+      "maxCharacters": 2048,
       "requiresEvidence": false,
       "jsonPath": [
         "features-intro",
@@ -16336,8 +16399,8 @@
         "item": 3,
         "kind": "package"
       },
-      "fit": {
-        "measured": false
+      "action": {
+        "kind": "primary-cta"
       }
     },
     {
@@ -57884,6 +57947,17 @@
         "maxCharacters": 39,
         "casing": "upper",
         "overflow": "rewrite"
+      },
+      "action": {
+        "kind": "primary-cta",
+        "urlKey": "article-2.8",
+        "uses": [
+          {
+            "kind": "primary-cta",
+            "selector": "templates/ja_boxing/html/com_content/article/classes.php:a.btn.btn-secondary",
+            "destination": "classes-signup"
+          }
+        ]
       }
     },
     {
@@ -57898,6 +57972,31 @@
       "role": "editorial.button_label",
       "fit": {
         "measured": false
+      },
+      "action": {
+        "kind": "page-control",
+        "uses": [
+          {
+            "kind": "page-control",
+            "selector": "templates/ja_boxing/html/com_content/article/learning.php:button.btn-close",
+            "destination": "dismiss modal"
+          },
+          {
+            "kind": "page-control",
+            "selector": "templates/ja_boxing/html/com_contact/contact/default.php:button.btn-close",
+            "destination": "dismiss modal"
+          },
+          {
+            "kind": "page-control",
+            "selector": "templates/ja_boxing/html/com_content/article/classes.php:button.close",
+            "destination": "dismiss modal"
+          },
+          {
+            "kind": "page-control",
+            "selector": "templates/ja_boxing/acm/features-intro/tmpl/style-4.php:button.close",
+            "destination": "dismiss modal"
+          }
+        ]
       }
     },
     {
@@ -58044,7 +58143,7 @@
       "maxCharacters": 40,
       "requiresEvidence": false,
       "label": "TPL_CONTACT_VISIT (template string, en-GB)",
-      "role": "editorial.button_label",
+      "role": "editorial.heading",
       "fit": {
         "measured": true,
         "boxes": {
@@ -58079,7 +58178,7 @@
       "maxCharacters": 40,
       "requiresEvidence": false,
       "label": "TPL_DETAILS (template string, en-GB)",
-      "role": "editorial.button_label",
+      "role": "editorial.heading",
       "fit": {
         "measured": false
       }
@@ -58275,6 +58374,21 @@
         "maxCharacters": 9,
         "casing": "none",
         "overflow": "rewrite"
+      },
+      "action": {
+        "kind": "page-control",
+        "uses": [
+          {
+            "kind": "page-control",
+            "selector": "templates/ja_boxing/html/com_content/article/classes.php:a#media-lead.video-btn",
+            "destination": "#videoModal"
+          },
+          {
+            "kind": "page-control",
+            "selector": "templates/ja_boxing/acm/features-intro/tmpl/style-4.php:a#media-lead.video-btn",
+            "destination": "#videoModal"
+          }
+        ]
       }
     },
     {
@@ -58310,6 +58424,17 @@
         "maxCharacters": 38,
         "casing": "upper",
         "overflow": "rewrite"
+      },
+      "action": {
+        "kind": "primary-cta",
+        "urlKey": "article-2.8",
+        "uses": [
+          {
+            "kind": "primary-cta",
+            "selector": "templates/ja_boxing/html/com_content/article/classes.php:a.btn.btn-secondary",
+            "destination": "classes-signup"
+          }
+        ]
       }
     },
     {

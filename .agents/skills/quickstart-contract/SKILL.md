@@ -532,13 +532,17 @@ path):
    `data-bs-toggle` modal trigger, a header button, a `*.cta_label`/`*.cta_url` or `editorial.button_label` slot) carries
    `action.kind`, separate from its `role`: `primary-cta` (the business's main conversion: header button, hero main
    button, closing CTA band), `go-to-item` (opens the page of the item its card shows), `open-map`, `contact`,
-   `external-profile`, `navigation`, or `submit-form` (a form's own send button). Bind a label to its URL slot with
+   `external-profile`, `navigation`, `submit-form` (a form's own send button), or `page-control` (a control of the page
+   itself: closes a dialog, plays a video, switches a tab; its words name the control). The buttons of a style-guide
+   page (a Typography page of style samples) need no action: mark its entity `"demoOnly": true` (ADR 0040) and the
+   check leaves them out. Bind a label to its URL slot with
    `action.urlKey`. A shared language string used as button text lists every rendered use in `action.uses`
    (`kind` plus `selector`, `route` or `destination`); uses that disagree take `kind: "navigation"`, and the writer
    picks words valid for all. The capture's rule tables propose actions from the destination and placement (pass
    `--webroot <webroot> --template <name>` so template overrides are read); `node scripts/slot-roles/declare-actions.mjs
    "$P/$VER" --webroot "$WORK/chup/webroot"` proposes them for a map already written. A button whose job its markup
-   does not prove (`#`, an empty link, a demo style-guide button) stays undeclared until you declare it by hand:
+   does not prove (`#`, an empty link) stays undeclared until you declare it by hand from the demo (a `#` plan or
+   purchase button is the business's conversion, `primary-cta`, with its link slot typed `url`):
    `scripts/slot-roles/check.mjs "$P/$VER"` refuses the contract while any button has no action. The brief build gives
    every `primary-cta` the business's own action and channel, so a missing declaration ships the demo's words.
    **Footer link columns are navigation groups (every framework):** the header main menu may be shorter and group pages,
@@ -611,7 +615,7 @@ path):
    checks: [`docs/references/site-build-rules.md`](../../../docs/references/site-build-rules.md).
    - `demo-content`: the slot roles: a known role on every text and picture slot
    - `record-not-from-brief`: packing rule `social-in-person-card`
-   - `link-without-job`: `slots[].action` in the content map: an action on every button slot (`buttonActionProblems`)
+   - `link-without-job`: `slots[].action` in the content map: an action on every button slot outside a `demoOnly` entity (`buttonActionProblems`)
    - `link-without-job`: packing rule `hero-button-no-link`
    - `link-without-job`: packing rule `link-target-wrong-role`
    - `link-without-job`: packing rule `video-slot-names-no-video`

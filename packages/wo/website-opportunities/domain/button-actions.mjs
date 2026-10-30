@@ -7,7 +7,10 @@ export const ACTION_KINDS = Object.freeze([
   'external-profile',
   'navigation',
   // A form's own send button: its words belong to the form, never to a conversion or contact label.
-  'submit-form'
+  'submit-form',
+  // A control of the page itself (closes a dialog, plays a video, switches a tab): it leads nowhere, its words name
+  // the control, never a conversion, a page or a channel.
+  'page-control'
 ])
 const known = (kind) => ACTION_KINDS.includes(kind)
 const object = (value) => value !== null && typeof value === 'object' && !Array.isArray(value)
@@ -39,13 +42,22 @@ export function actionKindsOf(slot) {
     : [slot?.action?.kind].filter(Boolean)
 }
 
-/** Structural declaration check, independent of the historical editorial-role vocabulary. */
+/**
+ * Structural declaration check, independent of the historical editorial-role vocabulary.
+ * A slot of a `demoOnly` entity (a style-guide page, ADR 0040) is left out: its buttons are style samples no build
+ * writes, and the mark on the entity is the declaration.
+ */
 export function buttonActionProblems(contentMap) {
+  const demoOnly = new Set(
+    (Array.isArray(contentMap?.entities) ? contentMap.entities : [])
+      .filter((entity) => entity?.demoOnly === true)
+      .map((entity) => entity.key)
+  )
   const slots = Array.isArray(contentMap?.slots) ? contentMap.slots : []
   const byKey = new Map(slots.map((slot) => [slot.key, slot]))
   const errors = []
   for (const slot of slots) {
-    if (!isButtonSlot(slot)) continue
+    if (!isButtonSlot(slot) || demoOnly.has(slot.entity ?? String(slot.key).split('.')[0])) continue
     const named = `slot "${slot.key}"`
     const action = slot.action
     if (!object(action) || !known(action.kind)) {

@@ -25,8 +25,9 @@
  *
  * - Every button slot declares its action (`buttonActionProblems`, WO domain `button-actions.mjs`): what a visitor does
  *   with it (primary call to action, go to an item, open a map, contact, an external profile, navigation, submit a
- *   form). Named contract folders (the packing run) fail on an undeclared button; the whole-tree gate only counts the
- *   maps that would fail, because released contracts are never edited and the build reads their roles all the same.
+ *   form, a control of the page itself). Named contract folders (the packing run) fail on an undeclared button; the
+ *   whole-tree gate only counts the maps that would fail, because released contracts are never edited and the build
+ *   reads their roles all the same. The buttons of a `demoOnly` entity (a style-guide page, ADR 0040) are not judged.
  *
  * - Every footer link column is declared as a navigation group (`navigationGroupProblems`, WO domain
  *   `footer-navigation.mjs`): which pages it holds (offerings, company, pages), its heading slot, its native container and

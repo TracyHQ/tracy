@@ -68,7 +68,7 @@ Every page carries the brand colours and the layout fixes the build owes it.
 Every button and link leads somewhere real, never to its own page or to an empty frame.
 
 - Checked by: `demo-leftovers`, `self-links`, `buttons-videos` (`build-rule-checks.js`).
-- A template declares: `slots[].action` in the content map: an action on every button slot (`buttonActionProblems`); packing rule `hero-button-no-link`; packing rule `link-target-wrong-role`; packing rule `video-slot-names-no-video`.
+- A template declares: `slots[].action` in the content map: an action on every button slot outside a `demoOnly` entity (`buttonActionProblems`); packing rule `hero-button-no-link`; packing rule `link-target-wrong-role`; packing rule `video-slot-names-no-video`.
 - Writer and check per CMS: Joomla writer yes, check yes; WordPress writer yes, check yes; EmDash writer yes, check yes.
 
 ### `sibling-copy-shape` (blocker)
