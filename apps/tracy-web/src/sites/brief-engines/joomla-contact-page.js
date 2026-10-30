@@ -100,3 +100,40 @@ export const CONTACT_LIST_HEADINGS = Object.freeze([
   'h3:has(+ .com-contact__miscinfo .contact-channels):not(:has(+ .com-contact__miscinfo > h3))',
   '.contact-miscinfo:has(.contact-channels) > h3'
 ])
+
+/**
+ * 🔒 A RECORDS WRITE MADE LATER NEVER PUTS BACK A FIELD THE TIDY-UP ALREADY WROTE (#189 item 19, round 11). The writes that
+ * empty demo lines in record HTML (`joomla-plan-records.js`) are computed from the rows as read before the tidy-up and are
+ * written after it, last. Measured 30/10/2026 on a brief build: the tidy-up wrote the Contact page's channel list into the
+ * contact record's extra information, then the records write wrote the old field back with its demo paragraph emptied, and
+ * the Contact page showed an empty column. A field the tidy-up wrote is a whole decision of this build (the channel list
+ * replaces the demo's text whole), so the later write leaves that field and keeps every other one; a step left with no field
+ * is not written. Any record kind, any field: framework-wide, never per template.
+ * @param {Array<{ kind: string, id: number, fields: Record<string, unknown> }>} later - the records steps written after
+ * @param {Array<{ kind: string, id: number, fields: Record<string, unknown> }>} earlier - the tidy-up steps written before
+ * @returns {{ steps: Array<{ kind: string, id: number, fields: Record<string, unknown> }>, held: Array<{ kind: string, id: number, keys: string[] }> }}
+ */
+export function withoutStaleRecordFields(later, earlier) {
+  /** @type {Map<string, Set<string>>} */
+  const written = new Map()
+  for (const step of earlier ?? []) {
+    const at = `${step.kind}-${Number(step.id)}`
+    const keys = written.get(at) ?? new Set()
+    for (const key of Object.keys(step.fields ?? {})) keys.add(key)
+    written.set(at, keys)
+  }
+  const steps = []
+  const held = []
+  for (const step of later ?? []) {
+    const taken = written.get(`${step.kind}-${Number(step.id)}`)
+    const keys = taken ? Object.keys(step.fields ?? {}).filter((key) => taken.has(key)) : []
+    if (keys.length === 0) {
+      steps.push(step)
+      continue
+    }
+    held.push({ kind: step.kind, id: step.id, keys })
+    const fields = Object.fromEntries(Object.entries(step.fields).filter(([key]) => !taken?.has(key)))
+    if (Object.keys(fields).length > 0) steps.push({ ...step, fields })
+  }
+  return { steps, held }
+}

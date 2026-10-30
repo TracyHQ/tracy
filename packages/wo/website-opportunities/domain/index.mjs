@@ -86,6 +86,7 @@ export {
   WALK_IN_WORDS
 } from './contact-page.mjs'
 export { contactButtonSlots } from './contact-buttons.mjs'
+export { BOOKING_WORDS, bookingButtonTargets } from './booking-button-targets.mjs'
 export {
   MESSAGING_APP_BY_COUNTRY,
   MESSAGING_HREF,

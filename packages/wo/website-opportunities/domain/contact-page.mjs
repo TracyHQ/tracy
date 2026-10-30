@@ -135,7 +135,16 @@ export function contactPageFindings({ pages, plan, contactPath = null }) {
       })
     if (contactPath === null || page.path !== contactPath) continue
     const html = String(page.html ?? '')
-    if (appointment && !/\bappointment\b/i.test(texts.join(' ')))
+    // 🔒 THE CONTACT PAGE'S OWN BODY, NOT THE CHROME EVERY PAGE SHARES (round 11): a link or a word counts on the Contact
+    // page only when it shows there more often than on any other page read. Measured 30/10/2026: the page's channel column
+    // was empty while the footer on every page linked the phone and WhatsApp, and the check passed. CMS-neutral: counts on
+    // served HTML, no landmark or template class (a T4 page's main element wraps its footer too).
+    const others = (pages ?? []).filter((p) => p !== page && (p.status === undefined || p.status === 200))
+    const ownMore = (/** @type {(html: string) => number} */ count) =>
+      count(html) > Math.max(0, ...others.map((p) => count(String(p.html ?? ''))))
+    const appointmentsIn = (/** @type {string} */ h) =>
+      visibleTexts(h).filter((t) => /\bappointment\b/i.test(t)).length
+    if (appointment && !ownMore(appointmentsIn))
       findings.push({
         kind: 'contact-booking-missing',
         path: page.path,
@@ -143,11 +152,7 @@ export function contactPageFindings({ pages, plan, contactPath = null }) {
         why: 'The business works by appointment, but its Contact page does not say so'
       })
     for (const line of contactPageLines(plan))
-      if (
-        line.href &&
-        !html.includes(`href="${escapeHtml(line.href)}"`) &&
-        !html.includes(`href="${line.href}"`)
-      )
+      if (line.href && !ownMore((h) => linksTo(h, line.href)))
         findings.push({
           kind: 'contact-channel-missing',
           path: page.path,
@@ -156,6 +161,12 @@ export function contactPageFindings({ pages, plan, contactPath = null }) {
         })
   }
   return findings
+}
+
+/** How many links of a page lead to `href` (as written, or with its characters escaped). */
+function linksTo(html, href) {
+  const forms = [...new Set([`href="${escapeHtml(href)}"`, `href="${href}"`])]
+  return forms.reduce((n, form) => n + String(html ?? '').split(form).length - 1, 0)
 }
 
 /** The text of every element a visitor reads, one entry per block, scripts and styles and hidden blocks left out. */

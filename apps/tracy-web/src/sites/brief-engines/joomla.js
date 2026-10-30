@@ -64,6 +64,8 @@ import { withInlineStyles } from './inline-styles.js'
 import { inlineStylesLost, placeInlineStyles, styleChanges, takeStyleMarks } from './joomla-inline-styles.js'
 import { planIdentitySteps } from './joomla-plan-identity.js'
 import { guardBoundNodes } from './joomla-bound-nodes.js'
+import { withoutStaleRecordFields } from './joomla-contact-page.js'
+import { bookingButtonTargets } from 'website-opportunities/domain/booking-button-targets.mjs'
 import { contentMapAt, plannedSlotValues, showcaseOff, writeOutsideMap } from './joomla-outside-map.js'
 import { takenOffPicturePaths } from './cutout-css.js'
 import { onceNote, overlapSafetyNet } from './picture-overlap-net.js'
@@ -1628,10 +1630,21 @@ export function createJoomlaEngine({
       // A declared action is an explicit customization of a shared template string, including a kept language string.
       for (const s of outsidePlan?.slots ?? [])
         if (s.reason === 'button-action' && s.key in prepared.changes) keepWritten.add(s.key)
+      // 🔒 A button whose written words name booking or contact leads to the Contact page, else to the brief's channel
+      // (`booking-button-targets.mjs`, COO rule 30/10/2026): its link is a declared customization like a button action's.
+      const bookingTargets = bookingButtonTargets({
+        words: { ...prepared.changes, ...plannedSlotValues(outsidePlan) },
+        contentMap: staticState(ctx.contract),
+        sitePlan: outsidePlan
+      })
+      for (const key of Object.keys(bookingTargets)) keepWritten.add(key)
+      if (Object.keys(bookingTargets).length > 0)
+        ctx.time('bookingButtonsRetargeted', Object.keys(bookingTargets).length)
       for (const [key, value] of Object.entries({
         ...prepared.changes,
         ...art.values,
-        ...plannedSlotValues(outsidePlan)
+        ...plannedSlotValues(outsidePlan),
+        ...bookingTargets
       })) {
         // A fact the site plan wrote (the address line of a contact block) is its own evidence: the brief is its source.
         const planFact = key in plannedSlotValues(outsidePlan)
@@ -2444,12 +2457,22 @@ export function createJoomlaEngine({
           }
           // 🔒 THE WRITES OUTSIDE THE CONTRACT INTO MODULE AND ARTICLE HTML GO LAST (#189): every contract write of the tidy-up
           // (the links taken off above) is made first, so none reads a row these steps rewrite.
-          if (bound.steps.length > 0) {
+          // 🔒 No later records write puts back a field the tidy-up wrote above, the Contact page's channel list in a contact
+          // record first among them (`withoutStaleRecordFields`, #189 item 19 round 11): those steps were computed from the rows
+          // as read before the tidy-up.
+          const fresh = withoutStaleRecordFields(bound.steps, tidySteps)
+          if (fresh.held.length > 0) {
+            ctx.time('recordFieldsKeptFromTidy', fresh.held.length)
+            console.warn(
+              `[brief-joomla] ${siteKey}: records fields the tidy-up already wrote, left as written: ${fresh.held.map((h) => `${h.kind}-${h.id} (${h.keys.join(', ')})`).join('; ')}`
+            )
+          }
+          if (fresh.steps.length > 0) {
             const wroteRecords = await time('recordsMs', () =>
               writeSteps({
                 apply,
                 siteKey,
-                steps: bound.steps,
+                steps: fresh.steps,
                 applyId: `tidy-records-${Date.now().toString(36)}`
               })
             )
