@@ -1,6 +1,33 @@
 /** Chat supplies an editable seed; the form and its served questions remain authoritative. */
 const FEEDS = ['site.name', 'copy.about', 'copy.tone', 'site.languages']
 
+/**
+ * The installation address an import draft may carry: the origin, or the origin and the folder the
+ * site is installed in (`https://example.com/shop/`), as the address field takes it. A trailing
+ * `index.php` is cut back to its folder; an admin page is refused. Only the root was once kept, so a
+ * subfolder WordPress never reached the import (#202). Credentials, a query or a fragment: never prefilled.
+ * @param {string} raw @returns {string|undefined}
+ */
+export function installAddress(raw) {
+  let url
+  try {
+    url = new URL(raw)
+  } catch {
+    return undefined
+  }
+  if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password || url.search || url.hash)
+    return undefined
+  // An admin page is an operation, not an address to import: refused, as before.
+  if (/\/(?:wp-admin|wp-login\.php|administrator|_emdash)(?:\/|$)/i.test(url.pathname)) return undefined
+  const folder = url.pathname.replace(/\/index\.php$/i, '/').replace(/\/+$/, '')
+  if (
+    /[^A-Za-z0-9\-._~%!$&'()*+,;=:@/]/.test(folder) ||
+    folder.split('/').some((p) => p === '..' || p === '.')
+  )
+    return undefined
+  return folder ? `${url.origin}${folder}/` : url.origin
+}
+
 /** Validate tab metadata again: a tab is not an API trust boundary. @param {unknown} raw */
 export function chatDraftOf(raw) {
   const d = /** @type {any} */ (raw)
@@ -24,23 +51,7 @@ export function chatDraftOf(raw) {
     } else if (typeof value === 'string' && value.length <= (feed === 'copy.about' ? 300 : 200))
       answersByFeed[feed] = value
   }
-  let importUrl
-  if (typeof d.importUrl === 'string') {
-    try {
-      const url = new URL(d.importUrl)
-      if (
-        ['http:', 'https:'].includes(url.protocol) &&
-        !url.username &&
-        !url.password &&
-        !url.search &&
-        !url.hash &&
-        url.pathname === '/'
-      )
-        importUrl = url.origin
-    } catch {
-      /* An invalid address is never prefilled. */
-    }
-  }
+  const importUrl = typeof d.importUrl === 'string' ? installAddress(d.importUrl) : undefined
   return {
     sourceRevision: String(d.sourceRevision),
     answersByFeed,

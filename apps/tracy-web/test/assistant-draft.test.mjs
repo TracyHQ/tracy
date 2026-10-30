@@ -67,6 +67,15 @@ test('import addresses carry no credentials or operations; each intent exposes o
     assert.equal(parse(valid({ importUrl: address }), 'import'), null)
   const imported = parse(valid({ importUrl: 'https://example.test/' }), 'import')
   assert.equal(imported.importUrl, 'https://example.test')
+  // A site installed in a folder keeps its folder: the import reads the installation there (#202).
+  for (const [address, kept] of [
+    ['https://example.test/shop/', 'https://example.test/shop/'],
+    ['https://example.test/shop', 'https://example.test/shop/'],
+    ['https://example.test/shop/index.php', 'https://example.test/shop/'],
+    ['http://example.test/a/b/', 'http://example.test/a/b/']
+  ])
+    assert.equal(parse(valid({ importUrl: address }), 'import')?.importUrl, kept, address)
+  assert.equal(parse(valid({ importUrl: 'https://example.test/shop/wp-admin/' }), 'import'), null)
   assert.deepEqual(imported.answersByFeed, {})
   assert.equal(
     parse(valid({ businessQuery: 'Hoa Mai Da Nang' }), 'business').businessQuery,
