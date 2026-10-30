@@ -36,6 +36,19 @@ export function createSiteContent({ pool, log = console }) {
         return null
       }
     },
+    /**
+     * The content brief a brief build was made from (`wo_build` brief: facts, reading, reviews, posts, assets): what the copy
+     * writer's fact sheet is read from (`brief-fact-sheet.js`). A site no brief build made answers null.
+     * @param {{siteKey: string, email: string}} who
+     */
+    async briefFor({ siteKey, email }) {
+      try {
+        return (await siteBuildOf(pool, siteKey, email))?.brief ?? null
+      } catch (error) {
+        log.warn?.(`[content] ${siteKey}: the build's brief could not be read (${error?.message ?? error})`)
+        return null
+      }
+    },
     /** Identity does not depend on posts, the page plan or the create response receipt. Read errors must reject. */
     async isOpportunity({ siteKey, email }) {
       return Boolean(await siteBuildOf(pool, siteKey, email))

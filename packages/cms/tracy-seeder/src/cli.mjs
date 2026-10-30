@@ -449,9 +449,11 @@ export async function main(argv, deps = {}) {
       }
       // REPLAN path: the same rule, one source of truth.
       mapping = settle(mapping, carried?.changes ?? {})
-      // A plan with a batch the model never answered readably is not this brief's plan yet: left unstamped, the next run
-      // asks again instead of taking the template's words for the answer (the slots already written are carried).
-      if (!Object.values(mapping.reasons ?? {}).includes('model-unreadable')) mapping.briefHash = briefHash
+      // A plan with a batch the model never answered readably, or whose answer was cut at the reply cap, is not this brief's
+      // plan yet: left unstamped, the next run asks again instead of taking the template's words for the answer (the slots
+      // already written are carried).
+      if (!Object.values(mapping.reasons ?? {}).some((r) => r === 'model-unreadable' || r === 'truncated'))
+        mapping.briefHash = briefHash
       else log('contract: some batches had no readable answer; this plan is not kept for the next run')
       mkdirSync(seedDir, { recursive: true })
       writeFileSync(mappingFile, JSON.stringify(mapping, null, 2), { mode: 0o600 })

@@ -230,7 +230,8 @@ export function recordTextUsage(ctx, model) {
 /**
  * The planners' `generate`, over a seed model, with the fact rules and the copy voice (`VOICE_RULES`) added to every
  * instruction and the
- * run's abort signal on every call.
+ * run's abort signal on every call. The reply cap is the model's own maximum output (`seed-model.js` `maxTokens: 'max'`):
+ * the writer reasons from the brief before it answers, and at 4096 that reasoning cut five R13 batches mid-JSON.
  * @param {{ chat: Function }} model
  * @param {AbortSignal} [signal]
  * @returns {(call: {system: string, input: unknown}) => Promise<string>}
@@ -242,7 +243,7 @@ export function firmGenerate(model, signal) {
         { role: 'system', content: `${system}${FACT_RULES}${VOICE_RULES}` },
         { role: 'user', content: JSON.stringify(input) }
       ],
-      maxTokens: 4096,
+      maxTokens: 'max',
       signal
     })
 }
@@ -307,7 +308,8 @@ const keysOf = (call) =>
 
 /**
  * An answer that writes nothing and leaves every slot of the call with the template's own words. A call that failed says
- * why (`failed`: "model-failed", or "deadline" for one the budget cut), so the planner can retry it split, and the receipt
+ * why (`failed`: "model-failed", "truncated" for one cut at the reply cap, or "deadline" for one the budget cut), so the
+ * planner can retry it split, and the receipt
  * can list its keys by reason, never as lines the model chose to leave.
  * @param {{input?: any}} call @param {string} [reason]
  */
@@ -409,7 +411,14 @@ export async function planConcurrently(
           answers.set(idOf(call), said)
         } catch (error) {
           failed += 1
-          const reason = late(error) ? 'deadline' : 'model-failed'
+          // An answer cut at the reply cap (`TRUNCATED`) is its own reason: the planner splits it, and its half text is
+          // never kept as the call's answer.
+          const reason =
+            /** @type {any} */ (error)?.code === 'TRUNCATED'
+              ? 'truncated'
+              : late(error)
+                ? 'deadline'
+                : 'model-failed'
           if (reason === 'deadline') cut += 1
           answers.set(idOf(call), failure === 'throw' ? { error } : quiet(call, reason))
         }

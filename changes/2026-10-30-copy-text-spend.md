@@ -1,0 +1,2 @@
+- **A Joomla brief build records what its words cost.** — build maintainers · #189 · `feat/brief-build-own-site` · 2026-10-30
+  **Affects:** brief build timings. The Joomla engine makes a new seed model at every step, so no total was kept; `text-spend.js` keeps every text model made during a build's `prepare` and `apply` and records their summed usage (`textCalls`, `textIn`, `textOut`, `textReasoning`, and `text.<stage>.*`) however the step ends. WordPress already recorded its own; EmDash does not yet.

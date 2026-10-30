@@ -186,6 +186,8 @@ test('5: pending keys by kind, and a lost visible line is never blanked: it is u
     owners: { d: 'sibling', e: 'page-copy' }
   }
   assert.deepEqual(pendingByKind(plan), {
+    truncated: [],
+    unreadable: [],
     'model-failed': ['a'],
     deadline: ['b'],
     refused: ['c'],

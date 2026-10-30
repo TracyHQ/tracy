@@ -243,8 +243,14 @@ export async function planWordpressContract({
   const journeys = processWritingOf(contentMap.slots ?? [])
   const system = `${SYSTEM}${toneRule(facts.tone)}${journeys.size ? PROCESS_WRITING_RULE : ''}`
 
-  for (let offset = 0; offset < planned.length; offset += BATCH) {
-    const batch = planned.slice(offset, offset + BATCH)
+  // 🔒 A BATCH CUT AT THE REPLY CAP OR LOST IS ASKED AGAIN IN HALVES (R13, the Joomla planner's `answerBatch`): the same
+  // request would be cut again. Twice at most; a half still lost keeps its demo words under the call's own reason.
+  /** @type {Array<{batch: any[], depth: number}>} */
+  const queue = []
+  for (let offset = 0; offset < planned.length; offset += BATCH)
+    queue.push({ batch: planned.slice(offset, offset + BATCH), depth: 0 })
+  while (queue.length > 0) {
+    const { batch, depth } = /** @type {{batch: any[], depth: number}} */ (queue.shift())
     const known = new Set(batch.map((s) => s.key))
     // One language for the whole batch whenever its slots share one: a field repeated on every slot
     // is the one a model skips (measured: a dry run wrote 11 of 15 English values in Vietnamese).
@@ -266,6 +272,8 @@ export async function planWordpressContract({
     /** The values of `body` written in another language than their slot's. */
     let wrong = new Set()
     let complaint = null
+    /** Why the batch's call was lost (`failed` of a concurrent run: "truncated", "model-failed", "deadline"), or null. */
+    let lost = null
     for (let attempt = 0; attempt < ATTEMPTS; attempt += 1) {
       let raw
       if (complaint) askedAgain += 1
@@ -275,6 +283,10 @@ export async function planWordpressContract({
         raw = null
       }
       const answer = parse(raw)
+      if (answer && typeof answer.failed === 'string') {
+        lost = answer.failed
+        break
+      }
       if (!answer) continue
       // 🔒 A BATCH IN THE WRONG LANGUAGE IS ASKED AGAIN, AND ITS VALUES ARE NEVER WRITTEN. The
       // prompt names the language twice and a whole batch still came back in the brief's (see
@@ -289,13 +301,21 @@ export async function planWordpressContract({
       if (wrong.size === 0) break
       complaint = languageComplaint(wrong, languages)
     }
+    if (!body && (lost === 'truncated' || lost === 'model-failed') && depth < 2 && batch.length > 1) {
+      const half = Math.ceil(batch.length / 2)
+      queue.unshift(
+        { batch: batch.slice(0, half), depth: depth + 1 },
+        { batch: batch.slice(half), depth: depth + 1 }
+      )
+      continue
+    }
     if (!body) {
       // 🔒 A BATCH THAT NEVER ANSWERED IS PENDING, NOT FAILED. The demo words stay, the build goes
       // on, and the report names them — the same ending the Joomla planner gives, and the reason a
       // model outage cannot cost a customer their site.
       for (const s of batch) {
         pending.push(s.key)
-        reasons[s.key] = 'model-unavailable'
+        reasons[s.key] = lost ?? 'model-unavailable'
       }
       continue
     }

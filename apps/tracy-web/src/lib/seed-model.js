@@ -30,6 +30,44 @@ const BUDGET_WAIT_CAP_MS = 30_000
 const BUDGET_WAIT_TOTAL_MS = 60_000
 /** Spread so calls refused together are not all asked again in the same instant. */
 const BUDGET_JITTER_MS = 1000
+/**
+ * The reply cap of a call asked with `maxTokens: 'max'` when the provider's model listing names none: DeepSeek's documented
+ * output limit for its chat model, and the cap the translation and seeder calls of this pipeline already send.
+ */
+export const FALLBACK_MAX_OUTPUT = 8192
+/** How long the model listing may take before the fallback cap is used. */
+const LISTING_TIMEOUT_MS = 10_000
+
+/**
+ * A provider's `finish_reason` that says the answer stopped at the reply cap, not at its end: OpenAI-compatible "length",
+ * an Anthropic-format "max_tokens", Gemini's "MAX_TOKENS".
+ * @param {unknown} finish
+ */
+export function isCutFinish(finish) {
+  return typeof finish === 'string' && /^(?:length|max_tokens)$/i.test(finish)
+}
+
+/**
+ * The maximum output a provider's model listing (`GET /models`) states for a model, or null. Read from the gateway's
+ * `max_output_tokens`, else OpenRouter's `top_provider.max_completion_tokens`. Matched by id, by `root`, or by an id that
+ * ends with "/<model>" (a gateway's provider prefix).
+ * @param {any} listing @param {string} words
+ * @returns {number | null}
+ */
+export function maxOutputOf(listing, words) {
+  const rows = Array.isArray(listing?.data) ? listing.data : []
+  const row =
+    rows.find((r) => r?.id === words) ??
+    rows.find((r) => r?.root === words) ??
+    rows.find((r) => typeof r?.id === 'string' && r.id.endsWith(`/${words}`))
+  const n = Number(row?.max_output_tokens ?? row?.top_provider?.max_completion_tokens)
+  return Number.isInteger(n) && n > 0 ? n : null
+}
+
+/** An error a caller can tell apart: the answer was cut at the reply cap, so its text is never taken for an answer. */
+function truncated() {
+  return Object.assign(new Error('TRUNCATED: the answer stopped at the reply limit'), { code: 'TRUNCATED' })
+}
 
 /**
  * Whether a refusal is OpenRouter's in-flight spending budget being full: a 402 that clears once running and recently
@@ -149,6 +187,8 @@ export function createSeedModel({
     /** Waits for OpenRouter's in-flight budget to clear (`isInFlightBudget`). */
     budgetWaits: 0,
     empty: 0,
+    /** Answers cut at the reply cap (`TRUNCATED`): never returned as text, never asked again at the same size. */
+    truncated: 0,
     promptTokens: 0,
     completionTokens: 0,
     reasoningTokens: 0,
@@ -162,6 +202,28 @@ export function createSeedModel({
   const stages = {}
   /** Whether this provider has refused the no-reasoning parameter (then it is not sent again). */
   let refusesQuiet = false
+  /** @type {Promise<number> | null} the model's maximum output, read once from the provider's listing */
+  let ceiling = null
+  /**
+   * 🔒 THE COPY WRITER IS NEVER SQUEEZED BY ITS OWN REASONING (R13, 30/10/2026): with a 4096 cap and the stand's model
+   * reasoning 2.2-2.5k tokens, five 35-slot batches stopped mid-JSON (finish "length"). `maxTokens: 'max'` asks for the
+   * model's own maximum output, as the provider's listing states it (the stand relay: 128000 for claude-sonnet-5-5);
+   * a provider that states none gets `FALLBACK_MAX_OUTPUT`. The cap is a ceiling, not a target: the answer is as long as
+   * the slots need.
+   */
+  const maxOutput = () =>
+    (ceiling ??= (async () => {
+      try {
+        const res = await fetchImpl(`${model.baseUrl.replace(/\/+$/, '')}/models`, {
+          headers: { authorization: `Bearer ${model.apiKey}` },
+          signal: AbortSignal.timeout(LISTING_TIMEOUT_MS)
+        })
+        if (!res.ok) return FALLBACK_MAX_OUTPUT
+        return maxOutputOf(await res.json(), model.words) ?? FALLBACK_MAX_OUTPUT
+      } catch {
+        return FALLBACK_MAX_OUTPUT
+      }
+    })())
 
   async function once(body, signal) {
     const res = await fetchImpl(url, {
@@ -185,10 +247,13 @@ export function createSeedModel({
   /**
    * One chat call, to the end: no-reasoning parameter, a limit on calls in flight, bounded retries. `first` puts the call
    * ahead of the ones waiting for a place (`createLimiter`): the calls made once a person is waiting on the site.
-   * @param {{messages: Array<{role: string, content: string}>, maxTokens?: number, temperature?: number, signal?: AbortSignal, first?: boolean, stage?: string}} request
+   * An answer cut at the reply cap (`isCutFinish`) throws `TRUNCATED` at once: its text is half an answer, and the same
+   * request would be cut again.
+   * @param {{messages: Array<{role: string, content: string}>, maxTokens?: number | 'max', temperature?: number, signal?: AbortSignal, first?: boolean, stage?: string}} request
    * @returns {Promise<string>} the answer's text
    */
   async function chat({ messages, maxTokens = 4096, temperature, signal, first = false, stage = 'other' }) {
+    const cap = maxTokens === 'max' ? await maxOutput() : maxTokens
     return limit(
       async () => {
         const started = Date.now()
@@ -201,7 +266,7 @@ export function createSeedModel({
           const body = {
             model: model.words,
             messages,
-            max_tokens: maxTokens,
+            max_tokens: cap,
             ...(temperature !== undefined ? { temperature } : {}),
             ...(refusesQuiet ? {} : quiet)
           }
@@ -224,6 +289,10 @@ export function createSeedModel({
               own.completionTokens += Number(usage.completion_tokens) || 0
               own.reasoningTokens += Number(usage.completion_tokens_details?.reasoning_tokens) || 0
               stats.ms += Date.now() - started
+              if (isCutFinish(parsed.choices?.[0]?.finish_reason)) {
+                stats.truncated += 1
+                throw truncated()
+              }
               const content = parsed.choices?.[0]?.message?.content
               if (typeof content === 'string' && content.trim() !== '') return content
               // An answer with nothing in it (a reasoning budget spent, a filtered reply) can pass: it is asked again.
@@ -263,6 +332,7 @@ export function createSeedModel({
               if (!(res.status === 429 || res.status >= 500)) break
             }
           } catch (error) {
+            if (/** @type {any} */ (error)?.code === 'TRUNCATED') throw error
             onlyEmpty = false
             if (signal?.aborted) throw error
             lastFailure = say(error, model.apiKey)
@@ -280,7 +350,7 @@ export function createSeedModel({
 
   /**
    * The `generate` the seeder's planners take: `({system, input}) => Promise<text>`.
-   * @param {{system: string, input: unknown, maxTokens?: number, first?: boolean, stage?: string}} call
+   * @param {{system: string, input: unknown, maxTokens?: number | 'max', first?: boolean, stage?: string}} call
    */
   const generate = ({ system, input, maxTokens, first, stage }) =>
     chat({

@@ -16,9 +16,15 @@ import { hidePlaceOf as contentMapHidePlace } from 'website-opportunities/domain
 
 import { COPY_BUDGET, copyBudgetMs, p95Of } from './copy-plan-budget.js'
 
-/** The reasons a planner gives a pending key, by the receipt's four kinds. */
+/**
+ * The reasons a planner gives a pending key, by the receipt's kinds (with `complaint-unmet`, six): a call cut at the reply
+ * cap (`truncated`), an answer that could not be read or left the key out (`unreadable`), a call that failed
+ * (`model-failed`), a call the budget cut (`deadline`), and a line the model or a guard refused (`refused`).
+ */
 export const PENDING_KINDS = Object.freeze({
-  'model-failed': ['model-failed', 'model-unreadable', 'no-answer'],
+  truncated: ['truncated'],
+  unreadable: ['model-unreadable', 'no-answer'],
+  'model-failed': ['model-failed'],
   deadline: ['deadline'],
   refused: [
     'model-pended',
@@ -33,7 +39,7 @@ export const PENDING_KINDS = Object.freeze({
 })
 
 /** The kinds whose lines were never written because a call was lost, not because the model or a guard refused them. */
-export const UNWRITTEN_KINDS = new Set(['model-failed', 'deadline'])
+export const UNWRITTEN_KINDS = new Set(['truncated', 'unreadable', 'model-failed', 'deadline'])
 
 /** The receipt kind of one planner reason; a reason no kind lists (a door's own refusal) is "refused". */
 export function pendingKindOf(/** @type {string | undefined} */ reason) {
@@ -59,16 +65,25 @@ export function copyPlanBudget(ctx) {
   }
 }
 
+/** @typedef {'truncated' | 'unreadable' | 'model-failed' | 'deadline' | 'refused' | 'complaint-unmet'} PendingKind */
+
 /**
  * The keys of a plan still pending, by kind; and the keys a page rule still holds against (handed to the rule's writer).
  * @param {{pending?: string[], reasons?: Record<string, string>, owners?: Record<string, string>}} plan
- * @returns {Record<'model-failed' | 'deadline' | 'refused' | 'complaint-unmet', string[]>}
+ * @returns {Record<PendingKind, string[]>}
  */
 export function pendingByKind(plan) {
-  /** @type {Record<'model-failed' | 'deadline' | 'refused' | 'complaint-unmet', string[]>} */
-  const out = { 'model-failed': [], deadline: [], refused: [], 'complaint-unmet': [] }
+  /** @type {Record<PendingKind, string[]>} */
+  const out = {
+    truncated: [],
+    unreadable: [],
+    'model-failed': [],
+    deadline: [],
+    refused: [],
+    'complaint-unmet': []
+  }
   for (const key of new Set(plan?.pending ?? [])) {
-    const kind = /** @type {'model-failed' | 'deadline' | 'refused'} */ (pendingKindOf(plan?.reasons?.[key]))
+    const kind = /** @type {PendingKind} */ (pendingKindOf(plan?.reasons?.[key]))
     out[kind].push(key)
   }
   for (const [key, owner] of Object.entries(plan?.owners ?? {}))
@@ -96,7 +111,14 @@ export function recordCopyPlan(ctx, answered, plan) {
   }
   const byKind = pendingByKind(plan)
   ctx?.record?.('copyPending', byKind)
-  const lost = byKind['model-failed'].length + byKind.deadline.length
+  const lost = [...UNWRITTEN_KINDS].reduce(
+    (n, kind) => n + byKind[/** @type {PendingKind} */ (kind)].length,
+    0
+  )
+  if (byKind.truncated.length > 0)
+    ctx?.note?.(
+      `${byKind.truncated.length} line(s) of text were cut at the model's reply limit, even split, and are sent to the repair turn`
+    )
   if (byKind.deadline.length > 0)
     ctx?.note?.(
       `${byKind.deadline.length} line(s) of text were cut by the words budget and are sent to the repair turn`
@@ -203,7 +225,7 @@ function removalOf(slot, { contentMap, hidePlaceOf }) {
 /**
  * 🔒 EVERY VISIBLE SLOT OF A KEPT BLOCK IS WRITTEN OR REMOVED (spec TracyHQ/tracy#189, R12 group A; COO criteria 1.1, 1.2,
  * 1.5, 4.3). The tidy step settles each demo line the copy plan left unwritten into exactly one of two states:
- *   - its call was lost (`model-failed`, `deadline`): it keeps the demo's words for now and goes to the repair loop as
+ *   - its call was lost (`truncated`, `unreadable`, `model-failed`, `deadline`): it keeps the demo's words for now and goes to the repair loop as
  *     "unwritten" (invariant 5 above);
  *   - the model refused it, or no writer could word it: its item or block comes off with the template's own hide mechanism
  *     (a record of its own unpublished, the module unpublished whole) when the template allows; else it keeps the demo's

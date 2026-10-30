@@ -507,9 +507,10 @@ test('🔒 a batch the model never answers readably keeps its demo words and say
   assert.equal(result.pending.length, 30, 'the unreadable batch keeps its demo words')
   assert.equal(result.reasons['module-7.line0'], 'model-unreadable')
 
-  // Nothing readable at all is the model, not a batch: the run says so, as it did.
+  // Nothing readable at all is the model, not a batch: the run says so, as it did. (An answer cut at a size is asked again in
+  // smaller parts, which a fixed cut lets through: this model never answers readably at any size.)
   await assert.rejects(
-    planJoomlaContract({ state: big, site: {}, generate: async ({ input }) => cut(input) }),
+    planJoomlaContract({ state: big, site: {}, generate: async () => '{"values":{"module-7.line0":"Harb' }),
     /Content mapping refused 3 times/
   )
   // A model that throws is not retried here (its own client retried it): it reaches the caller as before.

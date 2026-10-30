@@ -9,6 +9,7 @@ import { buttonKindOf, contactLabel, hasWords, iconLinkKeys, translateLabels } f
 import { PROCESS_WRITING_RULE, processWritingOf } from './process-writing.mjs'
 import { copyJobs, copyLedger, duplicateComplaint, duplicates, pagesOfEntities } from './distinct-copy.mjs'
 import { PAGE_PASS_RULE, PAGE_RULE_RETRIES, pageBatches, pageHintOf } from './page-pass.mjs'
+import { factSheetFor } from './fact-sheet-batch.mjs'
 import {
   countComplaint,
   overusedPhrases,
@@ -808,8 +809,15 @@ export function sectionShows(slots, hidden = null, bodies = null) {
   }
 }
 
-/** How many times a lost batch is split again: per page, then per section. */
-export const SPLIT_DEPTH = 2
+/**
+ * How many times a lost batch is split again: per page, then per section, then in halves. Three: one split per later round
+ * the words budget allows (`planConcurrently` `LATER_ROUNDS`), so a 35-slot batch cut at the reply cap is asked at last in
+ * parts of four or five (R13).
+ */
+export const SPLIT_DEPTH = 3
+
+/** The call failures a smaller batch can cure: a failed call, and an answer cut at the reply cap. Never the budget's cut. */
+export const SPLIT_FAILURES = new Set(['model-failed', 'truncated'])
 
 /**
  * One answer merged into an earlier one, key by key (copy-plan stage, invariant 1): a key of `next` replaces the earlier
@@ -908,6 +916,15 @@ export const OWN_POSTS_RULE =
   ' "ownPosts" holds the owner\'s own posts about an offering, by its name: every slot with that "offering" is written from ' +
   "them (what the offering includes, who it is for, how it is booked), in your own words and in the site's register, " +
   'never copied with their hashtags or emoji. State only the facts the posts state.'
+
+/**
+ * Said to the writer when the brief carries `factSheet`: the business's own records, each with its sourced words.
+ */
+export const FACT_SHEET_RULE =
+  ' "brief.factSheet" holds what the business and its customers said, record by record: its offerings with their own words ' +
+  'and photos, its people, its reviews, its posts, its key messages and audience. Write every slot from the records it is ' +
+  'about (an offering slot from that offering, a team slot from those people, a quote slot from those reviews), in your own ' +
+  "words and in the site's register; state only the facts the sheet states."
 
 /** Is a slot a heading: its declared role, or the element its words sit in? */
 const isHeading = (slot) =>
@@ -1253,9 +1270,12 @@ export async function planJoomlaContract({
     // 🔒 AN OFFERING'S PAGE IS WRITTEN FROM THE OWNER'S OWN POSTS ABOUT IT (round 9, class F): only the posts of the
     // offerings this batch writes about travel with it, so a catalogue of hundreds never fills one call.
     const ownPosts = postsFor(slots)
+    // 🔒 EVERY CALL CARRIES THE BRIEF'S DATA (COO, 30/10/2026, `fact-sheet-batch.mjs`): the whole fact sheet, or for a large
+    // catalogue the full records of the offerings this batch writes about.
+    const sheet = factSheetFor(site?.factSheet ?? null, [...new Set(slots.map(offeringOf).filter(Boolean))])
     const input = {
       language: languages.length === 1 ? languages[0] : undefined,
-      brief: site,
+      brief: site?.factSheet ? { ...site, factSheet: sheet } : site,
       ...(ownPosts ? { ownPosts } : {}),
       slots: slots.map((s) => ({
         key: s.key,
@@ -1306,6 +1326,7 @@ export async function planJoomlaContract({
         system:
           (journeys.size ? SYSTEM + PROCESS_WRITING_RULE : SYSTEM) +
           (ownPosts ? OWN_POSTS_RULE : '') +
+          (site?.factSheet ? FACT_SHEET_RULE : '') +
           pageRules,
         input: complaint ? { ...input, fix: complaint } : input
       })
@@ -1321,6 +1342,9 @@ export async function planJoomlaContract({
       // a lost first answer is retried split below (`answerBatch`), a lost retry keeps what the first answer wrote.
       if (typeof answer?.failed === 'string') break
       complaint = complaintAbout(answer, known, slots, languages)
+      // 🔒 AN UNREADABLE ANSWER IS ASKED AGAIN ONCE, THEN SPLIT (R13): the second retry of a batch is the same request as the
+      // first retry, answered from the round's own record (`planConcurrently`), so it never had a chance; a smaller batch has.
+      if (attempt >= 1 && shapeComplaint(answer) !== null) break
       only = null
       // A page rule (a sibling's shape, a record page's own words) is sent back once; what it still breaks after that
       // is handed to the rule's own writer below, never a reason to lose the answer. The send-backs of every batch go out
@@ -1466,12 +1490,16 @@ export async function planJoomlaContract({
   }
   /**
    * 🔒 ONE LOST CALL NEVER BLANKS WHOLE PAGES (copy-plan stage, R12: four record pages shared one batch and one failed call
-   * left all of them in the demo's words). A batch whose call failed is asked again split, per page, then per section, as
-   * part of the next concurrent round inside the budget; only a part that still fails, or one the budget cut, waits.
+   * left all of them in the demo's words). A batch whose call failed, was cut at the reply cap (`truncated`, R13) or never
+   * came back readable is asked again split, per page, then per section, as part of the next concurrent round inside the
+   * budget; only a part that still fails, or one the budget cut, waits.
    */
   const answerBatch = async (/** @type {any[]} */ slots, /** @type {number} */ depth) => {
     const got = await askBatch(slots)
-    if (got.body?.failed === 'model-failed' && depth < SPLIT_DEPTH && slots.length > 1) {
+    const lost =
+      SPLIT_FAILURES.has(String(got.body?.failed)) ||
+      (got.complaint !== null && shapeComplaint(got.body) !== null)
+    if (lost && depth < SPLIT_DEPTH && slots.length > 1) {
       const parts = lostBatchParts(slots, pageOf, byPage && depth === 0)
       if (parts.length > 1) {
         for (const part of parts) await answerBatch(part, depth + 1)

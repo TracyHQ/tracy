@@ -5,7 +5,14 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 
-import { createLimiter, createSeedModel, noReasoningBody } from '../src/lib/seed-model.js'
+import {
+  createLimiter,
+  createSeedModel,
+  FALLBACK_MAX_OUTPUT,
+  isCutFinish,
+  maxOutputOf,
+  noReasoningBody
+} from '../src/lib/seed-model.js'
 
 const KEY = 'sk-secret-key'
 const reply = (content, extra = {}) =>
@@ -180,6 +187,7 @@ test('usage counts calls, tokens and the reasoning tokens the model spent', asyn
       retries: 0,
       budgetWaits: 0,
       empty: 0,
+      truncated: 0,
       promptTokens: 200,
       completionTokens: 80,
       reasoningTokens: 14,
@@ -410,4 +418,57 @@ test('an in-flight 402 that never clears is given up after a bounded number of w
     `waits ${waits}`
   )
   assert.ok(waits.reduce((a, b) => a + b, 0) <= 60_000, 'all the waits stay inside one call time limit')
+})
+
+test('an answer cut at the reply cap throws TRUNCATED at once: never returned, never asked again at the same size', async () => {
+  let asked = 0
+  const m = createSeedModel({
+    model: { apiKey: KEY, baseUrl: 'https://gateway.example/v1', words: 'm' },
+    fetchImpl: async () => {
+      asked += 1
+      return reply('{"values":{"a":"half', {
+        choices: [{ finish_reason: 'length', message: { content: '{"values":{"a":"half' } }]
+      })
+    },
+    sleep: instant
+  })
+  await assert.rejects(m.generate({ system: 's', input: 'x' }), { code: 'TRUNCATED' })
+  assert.equal(asked, 1)
+  assert.equal(m.usage().truncated, 1)
+  for (const finish of ['length', 'max_tokens', 'MAX_TOKENS']) assert.ok(isCutFinish(finish), finish)
+  for (const finish of ['stop', 'tool_calls', null, undefined]) assert.equal(isCutFinish(finish), false)
+})
+
+test("maxTokens 'max' asks for the model's own maximum output, read once from its listing; none stated is the fallback", async () => {
+  const listing = { data: [{ id: 'gw/claude-x', root: 'claude-x', max_output_tokens: 128000 }] }
+  assert.equal(maxOutputOf(listing, 'claude-x'), 128000)
+  assert.equal(
+    maxOutputOf({ data: [{ id: 'or/m', top_provider: { max_completion_tokens: 16000 } }] }, 'm'),
+    16000
+  )
+  assert.equal(maxOutputOf({ data: [{ id: 'deepseek-chat' }] }, 'deepseek-chat'), null)
+  for (const [answer, want] of [
+    [listing, 128000],
+    [{ data: [] }, FALLBACK_MAX_OUTPUT]
+  ]) {
+    const caps = []
+    let listed = 0
+    const m = createSeedModel({
+      model: { apiKey: KEY, baseUrl: 'https://gateway.example/v1', words: 'claude-x' },
+      fetchImpl: async (url, init) => {
+        if (String(url).endsWith('/models')) {
+          listed += 1
+          return Response.json(answer)
+        }
+        caps.push(JSON.parse(init.body).max_tokens)
+        return reply('{}')
+      },
+      sleep: instant
+    })
+    await m.chat({ messages: [{ role: 'user', content: 'a' }], maxTokens: 'max' })
+    await m.chat({ messages: [{ role: 'user', content: 'b' }], maxTokens: 'max' })
+    await m.chat({ messages: [{ role: 'user', content: 'c' }], maxTokens: 500 })
+    assert.deepEqual(caps, [want, want, 500])
+    assert.equal(listed, 1, 'the listing is read once')
+  }
 })

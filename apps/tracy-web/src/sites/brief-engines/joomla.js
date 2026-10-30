@@ -29,6 +29,8 @@
 import { writeJoomlaMainMenu } from './main-menu-joomla.js'
 import { writeJoomlaFooterNavigation } from './footer-navigation-joomla.js'
 import { writeJoomlaPrivacyPage } from './joomla-privacy-page.js'
+import { briefFactSheet } from './brief-fact-sheet.js'
+import { trackTextSpend, withTextSpend } from './text-spend.js'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { seeder, seederDataDir, translationsDirOf } from '../../lib/seeder.js'
@@ -668,6 +670,8 @@ export function createJoomlaEngine({
   woContent = null,
   pictureOverlap = null
 }) {
+  // Every text model a build step asks for is kept for that build, so the words it spent are recorded (`text-spend.js`).
+  models = trackTextSpend(models)
   /**
    * `bound`: a slot plan's card pictures (`copyPinsOf`), each card's own entity's. `copy`: the copy pins, whose card
    * names decide which offering photo each card takes (`fill-plan.mjs`).
@@ -735,7 +739,8 @@ export function createJoomlaEngine({
         )
     })
   }
-  return {
+  // What the build's words cost is recorded on its timings (`text-spend.js`).
+  return withTextSpend({
     pictures,
     async preparePictures(ctx, prepared) {
       if (!prepared.real || !realPictures || !siteFile || !ctx.contract) return null
@@ -843,8 +848,15 @@ export function createJoomlaEngine({
       const statisticPlan = await Promise.resolve(
         woContent?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
       ).catch(() => null)
+      // The content brief's own records, for the copy writer (`brief-fact-sheet.js`).
+      const factSheet = briefFactSheet(
+        await Promise.resolve(woContent?.briefFor?.({ siteKey: ctx.siteKey, email: ctx.email })).catch(
+          () => null
+        )
+      )
       const site = {
         ...siteBlock(ctx.normalized),
+        ...(factSheet ? { factSheet } : {}),
         statistics: statisticPlan?.statistics ?? [],
         // The copy writer never invites a walk-in to a business that works by appointment (#189 item 19).
         byAppointment: Boolean(statisticPlan?.contact?.booking),
@@ -3096,5 +3108,5 @@ export function createJoomlaEngine({
       })
       return { wrote, kept }
     }
-  }
+  })
 }
