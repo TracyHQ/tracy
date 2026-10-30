@@ -18,11 +18,14 @@
  *     twice with the same decision is decided once;
  *   - the writing order is put in dependency order, the author's order breaking ties; the template out-of-scope list
  *     names every dropped page and hidden element with its reason.
+ *   - a form keeps where it sends when the brief gives it a real destination, else it is hidden; the contact details,
+ *     identity and privacy page follow the brief (`site-plan-defaults-site.js`, ticket #240).
  * Every filled decision carries `by: 'default'`. CMS-neutral, except the one demo link form read below.
  */
 
 import { takenOff } from './site-plan-check.js'
 import { dedupe, mappedAction, orderedPages, repairIds } from './site-plan-defaults-parts.js'
+import { formDecisions, siteParts } from './site-plan-defaults-site.js'
 
 /** The element kinds the author is sent: everything else is filled by code. */
 export const AUTHOR_KINDS = new Set(['page', 'section', 'cards', 'picture', 'record-page'])
@@ -170,6 +173,8 @@ export function completePlan(authored, { inventory, site, photos = [] }) {
         : { element: e.id, decision: 'hide', reason: 'its button has no real action for this business' }
     )
   }
+  // A form keeps where it sends, else it is hidden with the reason (`site-plan-defaults-site.js`, ticket #240).
+  for (const d of formDecisions({ elements: inventory.elements, decided, onPage, off, site })) fill(d)
   // A photo the brief's own labels refuse is skipped by code, with their reason; the author decides the others.
   const photoDecided = new Set(list(answer?.photos).map((p) => String(p?.photo ?? '')))
   const skipped = list(photos)
@@ -200,6 +205,8 @@ export function completePlan(authored, { inventory, site, photos = [] }) {
       brief: list(answer?.outOfScope?.brief)
     },
     writingOrder: orderedPages(shown, list(answer?.writingOrder).map(String)),
+    // The contact details, identity and legal pages the later stages read (`site-plan-fill.js`, ticket #240).
+    ...siteParts(answer, site),
     ...(repaired.length ? { idRepairs: repaired } : {})
   }
 }

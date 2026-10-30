@@ -34,6 +34,8 @@ import { briefPhotos } from './brief-photos.js'
 import { writeSitePlan } from './site-plan-author.js'
 import { pageAuthorPlan, writePagesInOrder } from './page-author.js'
 import { inventoryOfContract } from './template-inventory.js'
+import { overlaySitePlan, planFill, withPlanFill } from './site-plan-fill.js'
+import { formDestinationsOf } from 'website-opportunities/domain/form-blocks.mjs'
 import { writeSiteDirection } from './site-direction.js'
 import { sourcedWriter } from './copy-sources.js'
 import { trackTextSpend, withTextSpend } from './text-spend.js'
@@ -685,6 +687,8 @@ export function createJoomlaEngine({
 }) {
   // Every text model a build step asks for is kept for that build, so the words it spent are recorded (`text-spend.js`).
   models = trackTextSpend(models)
+  /** The brief build's content door as given; Apply reads it with the accepted site plan laid over (`withPlanFill`). */
+  const woSource = woContent
   /**
    * `bound`: a slot plan's card pictures (`copyPinsOf`), each card's own entity's. `copy`: the copy pins, whose card
    * names decide which offering photo each card takes (`fill-plan.mjs`).
@@ -895,7 +899,8 @@ export function createJoomlaEngine({
           : writeSitePlan({
               models: { text, editorial: (await models()).editorial ?? null },
               inventory: inventoryOfContract(ctx.contract),
-              site: { ...site },
+              // Where the brief lets a form send (ticket #240): told to the plan only, never to a page writer.
+              site: { ...site, formDestinations: formDestinationsOf(contentBrief) },
               photos: briefPhotos(contentBrief, factSheet),
               signal: budgetSignal(ctx.signal, ctx.deadlineAt)
             }))().catch((error) => ({
@@ -1383,9 +1388,25 @@ export function createJoomlaEngine({
       // 🔒 NO INVENTED PERSON, PRICE OR NUMBER, AND THE SITE PLAN'S RECORDS AND FACTS (#192, `joomla-plan-records.js`): a name or a
       // figure the customer never gave is not written, whatever build; on a brief build the plan's people, offerings and emptied
       // facts win over the writer, and a label left in the demo's words takes its neutral label.
-      const sitePlan = await Promise.resolve(
-        woContent?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })
-      ).catch(() => null)
+      // 🔒 THE FILL TAKES ITS DECISIONS FROM THE ACCEPTED SITE PLAN (ticket #240, `site-plan-fill.js`): from here on, every
+      // stage that reads the brief build's site plan reads it with the accepted plan's buttons, pages, SEO and forms over it.
+      const acceptedRun = await sitePlanRun
+      const authorFill =
+        acceptedRun?.status === 'accepted'
+          ? planFill(acceptedRun.plan, {
+              inventory: inventoryOfContract(ctx.contract),
+              refuse: await seeder('fact-sources').then((facts) => {
+                const brief = [...facts.sourceTexts(site).values()].join(' \n ')
+                return (/** @type {string} */ line) => facts.factsNotIn(line, brief, site)
+              })
+            })
+          : null
+      const sitePlan = overlaySitePlan(
+        await Promise.resolve(woContent?.sitePlanFor?.({ siteKey: ctx.siteKey, email: ctx.email })).catch(
+          () => null
+        ),
+        authorFill
+      )
       const honesty = sitePlan?.honesty ?? null
       const honest = await honestWords({
         kept,
@@ -1464,6 +1485,13 @@ export function createJoomlaEngine({
           authorRefused.add(key)
           if (!demoBlanks.some((b) => b.key === key)) demoBlanks.push(slot)
         }
+      // 🔒 A BUTTON THE SITE PLAN HIDES HAS NO REAL ACTION (ticket #240): its words and link are not written, and its label is
+      // settled like any unwritten line, taken off where the template can, else emptied; never left with a demo link.
+      for (const key of authorFill?.hidden ?? []) {
+        delete kept[key]
+        const slot = slotByKey.get(key)
+        if (slot?.type === 'text' && !demoBlanks.some((b) => b.key === key)) demoBlanks.push(slot)
+      }
       // A demo line stating a fact beside the demo company's name, given no other words, is emptied after the write (#189).
       const blanked = new Set(demoBlanks.map((slot) => slot.key))
       demoBlanks.push(
@@ -1988,7 +2016,9 @@ export function createJoomlaEngine({
         // The site plan's search title, description and LocalBusiness record (`place-seo.mjs`).
         seo: sitePlan?.seo ?? null,
         // The one author's accepted site plan (`site-plan-author.js`), null when refused: read by the writers from #235.
-        authorPlan: sitePlanOutcome.plan ?? null
+        authorPlan: sitePlanOutcome.plan ?? null,
+        // What the fill stages take from the accepted plan (`site-plan-fill.js`, #240), null without one.
+        authorFill
       }
     },
 
@@ -1997,6 +2027,9 @@ export function createJoomlaEngine({
      * @param {Awaited<ReturnType<ReturnType<typeof createJoomlaEngine>['prepare']>>} prepared
      */
     async apply(ctx, prepared) {
+      // 🔒 EVERY FILL STAGE READS THE ACCEPTED SITE PLAN'S DECISIONS (ticket #240, `site-plan-fill.js`): buttons, pages, menus,
+      // footer, privacy page, SEO, contact and forms; without an accepted plan the door is the one given.
+      const woContent = withPlanFill(woSource, prepared.authorFill ?? null)
       let preparedPictures = null
       if (prepared.real && realPictures && siteFile) {
         if (!prepared.realPicturesPrepared || prepared.realPictureShape)
@@ -2450,6 +2483,23 @@ export function createJoomlaEngine({
             unpicked.ids = [...new Set([...unpicked.ids, ...off])]
             ctx.time('showcaseTakenOff', off.length)
           }
+        }
+        // 🔒 A PAGE THE ACCEPTED SITE PLAN DROPS GOES (ticket #240): its entry is unpublished with the unpicked pages, so it
+        // leaves every menu and the footer, its articles go with it and the links into it are taken off.
+        const planDropped = (prepared.authorFill?.pages ?? [])
+          .filter((p) => p.decision === 'drop' && Number.isInteger(p.menuId))
+          .map((p) => /** @type {number} */ (p.menuId))
+        if (menu && planDropped.length > 0) {
+          const ids = new Set(menu.map((row) => Number(row.id)))
+          const off = leaveShowcase(
+            planDropped.filter(
+              (id) => ids.has(id) && Number(menu?.find((r) => Number(r.id) === id)?.home) !== 1
+            ),
+            menu,
+            showcaseHolders(menu, showcase)
+          ).ids
+          unpicked.ids = [...new Set([...unpicked.ids, ...off])]
+          ctx.time('planPagesDropped', off.length)
         }
         // What goes with them (dead-end links, aliases into pages that are off, pages under entries that are off): read beside
         // the long step too.

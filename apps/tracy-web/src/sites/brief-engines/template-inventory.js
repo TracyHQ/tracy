@@ -6,7 +6,7 @@
  *
  * Ids are stable across reads of one release: `page:<entity>`, `section:<entity>`, `cards:<collection>`,
  * `picture:<slot>`, `icon:<slot>`, `button:<slot>`, `link:<slot>`, `slot:<slot>`, `menu:<menutype>`,
- * `footer-column:<id>`, `contact-block:<id>`, `cta-band:<id>`, `record-page:<id>`.
+ * `footer-column:<id>`, `contact-block:<id>`, `cta-band:<id>`, `record-page:<id>`, `form:<entity>`.
  * CMS-neutral: it reads only the content-map schema every released template ships.
  */
 import { readFileSync } from 'node:fs'

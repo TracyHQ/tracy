@@ -102,5 +102,14 @@ that is not listed is refused, and a picture slot of a text slot's number does n
 ## 10. Per page
 
 Each kept or added page carries its `purpose`, its `lead` (one sentence: what the page leads with), the `facts` it
-carries (short phrases of brief facts), the `items` it names, and its `seo` intent (what a searcher looking for this page
-wants).
+carries (short phrases of brief facts), the `items` it names, and its `seo`: the search `title` (at most 60 characters)
+and `description` (at most 155 characters) that answer what a searcher looking for this page wants. The site takes them
+as the page's search title and description; one that states a fact the brief does not, or does not fit, is replaced by
+one made from the brief.
+
+## 11. What code decides from the brief
+
+Leave these out; code fills them from the brief and the fill stages follow them: every form of the template (kept with
+where it sends when the brief gives it a real destination: the owner's email for a contact form, a verified list for a
+sign-up form, a verified booking link for a booking form; otherwise hidden), the contact details (phone, email, address,
+hours, map, socials), the identity (business name, logo, favicon) and the privacy page.

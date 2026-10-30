@@ -1,7 +1,8 @@
 /**
  * The parts of the template inventory (`template-inventory.js`) read from a content map's page and band declarations:
- * which pages show an entity, and the menus, footer columns, contact blocks, CTA bands and record pages.
+ * which pages show an entity, and the menus, footer columns, contact blocks, CTA bands, record pages and forms.
  */
+import { formsOf } from 'website-opportunities/domain/form-blocks.mjs'
 
 /** The entity a page link opens as its body: an article, a category (its listing) or a contact (Joomla link forms). */
 const LINK_BODIES = [
@@ -115,6 +116,19 @@ export function membersOf(map, section) {
       decide: true,
       section: band.entity ? section(band.entity) : null,
       buttons: (band.buttons ?? []).map((k) => `button:${k}`)
+    })
+  // A form (ticket #240): what the map declares in `forms`, else what it contains (`formsOf`). Code decides it from the
+  // brief's destinations (`site-plan-defaults-site.js`), not the author, so the plan check does not ask for it (`decide`).
+  for (const f of formsOf(map))
+    out.push({
+      id: `form:${f.entity}`,
+      kind: 'form',
+      decide: false,
+      entity: f.entity,
+      formKind: f.kind,
+      declared: f.declared,
+      // The section of its entity when it has one; a form adds no section of its own for the author to decide.
+      section: `section:${f.entity}`
     })
   for (const r of map.recordPages ?? [])
     out.push({

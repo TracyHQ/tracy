@@ -32,6 +32,7 @@ import { LINK_RULES } from './content-map-lint-links.js'
 import { ITEM_GROUP_RULES } from './content-map-lint-item-groups.js'
 import { QUOTE_RULES } from './content-map-lint-quotes.js'
 import { PAGE_RULES } from './content-map-lint-pages.js'
+import { FORM_RULES } from './content-map-lint-forms.js'
 
 const list = (v) => (Array.isArray(v) ? v : [])
 const nonEmpty = (v) => typeof v === 'string' && v.trim() !== ''
@@ -252,7 +253,9 @@ export const LINT_RULES = [
   // Every line of a guest quote card is a slot of its quote group (`content-map-lint-quotes.js`).
   ...QUOTE_RULES,
   // Every entity with slots is shown on a page, or declared on none (`content-map-lint-pages.js`).
-  ...PAGE_RULES
+  ...PAGE_RULES,
+  // Every form of the template is declared, so the site plan keeps or hides it (`content-map-lint-forms.js`).
+  ...FORM_RULES
 ]
 
 /**

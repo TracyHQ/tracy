@@ -66144,6 +66144,11 @@
       "container": "module-175"
     }
   ],
+  "forms": [
+    { "entity": "module-16", "kind": "login" },
+    { "entity": "module-169", "kind": "newsletter" },
+    { "entity": "contact-1", "kind": "contact" }
+  ],
   "recordPages": [
     {
       "id": "classes",

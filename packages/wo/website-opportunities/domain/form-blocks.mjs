@@ -100,3 +100,55 @@ export function planFormBlocks(brief, contentMap) {
     unwritten: new Set(off.flatMap((b) => b.slots))
   }
 }
+
+/** The kinds a content map may declare a form as: the block kinds above, and the site's contact form (a contact record). */
+export const DECLARED_FORM_KINDS = Object.freeze(['newsletter', 'booking', 'login', 'contact'])
+
+/**
+ * The forms of a content map (COO rule "content map gaps", 30/10/2026; spec TracyHQ/tracy#231 ticket #240): what the template
+ * declares in `forms` (`[{entity, kind}]`), and what it contains undeclared: every form block (`formBlocksOf`) and every
+ * contact record, which shows the contact form. The declaration wins for the entities it names.
+ * @param {any} contentMap
+ * @returns {Array<{entity: string, kind: string, declared: boolean}>}
+ */
+export function formsOf(contentMap) {
+  const declared = (Array.isArray(contentMap?.forms) ? contentMap.forms : [])
+    .filter((f) => isText(f?.entity) && DECLARED_FORM_KINDS.includes(f?.kind))
+    .map((f) => ({ entity: f.entity, kind: f.kind, declared: true }))
+  const named = new Set(declared.map((f) => f.entity))
+  const found = [
+    ...formBlocksOf(contentMap).map((b) => ({ entity: b.entity, kind: b.kind })),
+    ...(contentMap?.entities ?? [])
+      .filter((e) => e?.kind === 'contact' && isText(e.key))
+      .map((e) => ({ entity: e.key, kind: 'contact' }))
+  ]
+  return [...declared, ...found.filter((f) => !named.has(f.entity)).map((f) => ({ ...f, declared: false }))]
+}
+
+/**
+ * The form declaration problems of a content map: a malformed `forms` entry, one naming no entity of the map, and every form
+ * the template contains that it does not declare (the readiness checker reports them, so an admin declares each once).
+ * @param {any} contentMap
+ * @returns {Array<{entity: string, problem: string}>}
+ */
+export function formProblems(contentMap) {
+  const raw = contentMap?.forms
+  if (raw !== undefined && !Array.isArray(raw)) return [{ entity: '', problem: 'forms must be an array' }]
+  const entities = new Set((contentMap?.entities ?? []).map((e) => e?.key))
+  const out = []
+  for (const f of raw ?? []) {
+    if (!isText(f?.entity) || !DECLARED_FORM_KINDS.includes(f?.kind))
+      out.push({
+        entity: String(f?.entity ?? ''),
+        problem: `a form needs an entity and a kind of ${DECLARED_FORM_KINDS.join(', ')}`
+      })
+    else if (!entities.has(f.entity))
+      out.push({ entity: f.entity, problem: `form ${f.entity} is no entity of the map` })
+  }
+  for (const f of formsOf(contentMap).filter((x) => !x.declared))
+    out.push({
+      entity: f.entity,
+      problem: `${f.entity} holds a ${f.kind} form that "forms" does not declare`
+    })
+  return out
+}

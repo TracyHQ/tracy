@@ -48,7 +48,7 @@ const CONTRACT = `Answer one JSON object, the site plan:
 {"version": "site-plan/1",
  "pages": [{"id": "<page id>", "decision": "keep" | "add", "copies": "<for add: a page or record-page id>",
    "route": "<for add>", "purpose": "...", "lead": "...", "facts": ["..."], "items": ["..."],
-   "dependsOn": ["<page id>"], "seo": "..."}],
+   "dependsOn": ["<page id>"], "seo": {"title": "<at most 60 characters>", "description": "<at most 155 characters>"}}],
  "decisions": [{"element": "<element id>", "decision": "keep" | "hide", "reason": "<for hide>", "count": <for cards>,
    "items": ["..."], "picture": {"draw": "..."}}],
  "photos": [{"photo": "<photo id>", "decision": "use" | "skip", "slots": ["<picture element id>"], "reason": "<for skip>"}],

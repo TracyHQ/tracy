@@ -574,6 +574,10 @@ path):
    record page for its own record, and fills a card of the layout a sibling page fills. After a brief build, check
    `record-pages-check.js` on the receipt: no picture shared by two record pages in one section, no section repeated
    with the name swapped, no empty card, no pager on a landing record page.
+   **Forms are declared (every framework):** every form of the template (a sign-up box, a booking widget, a login box,
+   the contact form of a contact record) is listed in the content map's top-level `forms`: `{entity, kind}`, `kind` one
+   of `newsletter`, `booking`, `login`, `contact`. A brief build keeps a form only when the brief gives it a real
+   destination and hides it otherwise; the readiness checker on /ops reports an undeclared form (`form-undeclared`).
    **A call-to-action band is one unit (every framework):** a block (not the hero) whose words are at most a heading and
    a short line above a conversion button (`primary-cta` or `contact`), usually over a ground picture, is declared in the
    content map's top-level `ctaBands`: `{id, entity, message: [{key, part: "heading" | "line"}], buttons, ground}`.
