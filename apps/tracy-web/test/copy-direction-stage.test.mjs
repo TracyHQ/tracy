@@ -327,11 +327,12 @@ test('a business fact the brief does not state is refused: a count, an award, a 
     d: '120.00/class',
     e: 'Write to hello@craghall.example.',
     f: '32',
-    g: 'We have trained over 500 members.'
+    g: 'We have trained over 500 members.',
+    h: 'Bouldering for 30 years.'
   })
   assert.deepEqual(
     bad.map((l) => l.key),
-    ['a', 'b', 'c', 'd', 'e', 'f', 'g']
+    ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
   )
   assert.ok(bad.find((l) => l.key === 'a').facts.includes('8'))
   assert.ok(bad.find((l) => l.key === 'b').facts.some((f) => /voted|2024/i.test(f)))
@@ -356,7 +357,62 @@ test('a site direction keyed by route instead of page id still reaches the page 
   const direction = await writeSiteDirection({
     model,
     site: SITE,
-    pages: [{ entity: 'menuItem-101', route: 'home' }, { entity: 'menuItem-102', route: 'about-us' }]
+    pages: [
+      { entity: 'menuItem-101', route: 'home' },
+      { entity: 'menuItem-102', route: 'about-us' }
+    ]
   })
-  assert.deepEqual(direction.pages['menuItem-101'], { leads: 'Bouldering for everyone.', sourceIds: ['offering-1'] })
+  assert.deepEqual(direction.pages['menuItem-101'], {
+    leads: 'Bouldering for everyone.',
+    sourceIds: ['offering-1']
+  })
+})
+
+test('the planner count check follows the same rule: trade formats pass, business counts and prices not in the brief are refused', async () => {
+  const lines = {
+    a: 'A first visit is one-on-one, padel is played two vs two, and one session a week is a good start.',
+    b: 'We have eight courts beside the walls.',
+    c: 'Day passes cost $95.00 per class.',
+    d: 'The club has 6 courts beside the walls.',
+    e: 'Our award-winning coaches run every court.'
+  }
+  let chosen = null
+  const generate = async ({ input }) => {
+    if (!chosen) {
+      const fit = input.slots.filter(
+        (s) =>
+          (s.element === 'p' || s.element === undefined) &&
+          s.maxCharacters >= 110 &&
+          String(s.sample).trim() &&
+          !s.requiresEvidence
+      )
+      if (fit.length >= 5)
+        chosen = { a: fit[0].key, b: fit[1].key, c: fit[2].key, d: fit[3].key, e: fit[4].key }
+    }
+    const values = {}
+    input.slots.forEach((s) => {
+      values[s.key] = String(s.sample ?? '')
+    })
+    for (const [name, key] of Object.entries(chosen ?? {}))
+      if (input.slots.some((s) => s.key === key)) values[key] = lines[name]
+    return JSON.stringify({ values, pending: [], invented: [] })
+  }
+  const plan = await planJoomlaContract({
+    state,
+    site: GYM,
+    surface: 'pages',
+    inventions: 'never',
+    byPage: true,
+    generate
+  })
+  assert.ok(chosen)
+  assert.equal(plan.changes[chosen.a], lines.a, `trade formats are written (${plan.reasons[chosen.a]})`)
+  assert.equal(
+    plan.changes[chosen.d],
+    lines.d,
+    `a count the brief states is written (${plan.reasons[chosen.d]})`
+  )
+  assert.equal(plan.changes[chosen.b], undefined, 'a count the brief does not state is refused')
+  assert.equal(plan.changes[chosen.c], undefined, 'a price the brief does not state is refused')
+  assert.equal(plan.changes[chosen.e], undefined, 'an award the brief does not state is refused')
 })

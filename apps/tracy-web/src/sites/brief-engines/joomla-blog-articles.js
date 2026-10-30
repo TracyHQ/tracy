@@ -149,6 +149,7 @@ export function joinPlans(pages, posts) {
     evidence: { ...pages.evidence, ...posts.evidence },
     pending: [...(pages.pending ?? []), ...(posts.pending ?? [])],
     reasons: { ...pages.reasons, ...posts.reasons },
-    invented: [...(pages.invented ?? []), ...(posts.invented ?? [])]
+    invented: [...(pages.invented ?? []), ...(posts.invented ?? [])],
+    ...(pages.tried || posts.tried ? { tried: { ...pages.tried, ...posts.tried } } : {})
   }
 }

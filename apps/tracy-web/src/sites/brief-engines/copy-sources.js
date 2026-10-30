@@ -25,10 +25,12 @@ const linesOf = (/** @type {any} */ answer) =>
  * The text model a copy writer is given, with the brief's digest and direction on every call and its facts sourced.
  * @template {{chat: Function}} M
  * @param {M} model
- * @param {{site: any, refused?: Set<string>}} options - `refused`: the keys dropped as unsourced, for the receipt
+ * @param {{site: any, refused?: Set<string>, writer?: string, trace?: any[]}} options - `refused`: the keys dropped as
+ *   unsourced, for the receipt; `trace`: each dropped line with this `writer`'s name, the facts and the model's last text
+ *   (`copy-line-trace.js`)
  * @returns {M}
  */
-export function sourcedWriter(model, { site, refused = new Set() }) {
+export function sourcedWriter(model, { site, refused = new Set(), writer = 'copy', trace = [] }) {
   if (!model?.chat || !site?.factSheet) return model
   const { factSheet, statistics, direction, ...business } = site
   const facts = { ...business, statistics: statistics ?? [], factSheet }
@@ -101,6 +103,13 @@ export function sourcedWriter(model, { site, refused = new Set() }) {
           delete lines[key]
           delete sources[key]
           refused.add(key)
+          trace.push({
+            key,
+            writer,
+            reason: 'refused',
+            check: 'unsourced-fact',
+            text: typeof line === 'string' ? line : answer[field]?.[key]
+          })
         }
       }
       return JSON.stringify({ ...answer, [field]: lines, sources })

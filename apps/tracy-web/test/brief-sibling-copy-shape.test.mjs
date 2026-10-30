@@ -212,3 +212,27 @@ test('the packing rule: item cards of a field list must be one numbered group wi
   assert.equal(hits(map(false)).length, 4)
   assert.equal(hits(map(true)).length, 0)
 })
+
+test('a sibling rewrite follows the one business-fact rule: a trade-format number passes, an invented award year is refused', async () => {
+  const format = await shapeSiblingCopy({
+    slots: clinicSlots,
+    written: clinicWritten,
+    about,
+    model: modelSaying({
+      'post-3.0':
+        'Whitening at our Riverton studio takes about 60 minutes. Each session is set at a pace that suits the patient.'
+    })
+  })
+  assert.deepEqual(format.unreached, [], 'a 60-minute session is a format of the trade')
+  const award = await shapeSiblingCopy({
+    slots: clinicSlots,
+    written: clinicWritten,
+    about,
+    model: modelSaying({
+      'post-3.0':
+        'Whitening at our Riverton studio, voted the top clinic in 2024. Each session suits the patient well.'
+    })
+  })
+  assert.deepEqual(award.unreached, ['post-3.0'])
+  assert.equal(award.tried['post-3.0'].check, 'business-fact-not-in-sources')
+})

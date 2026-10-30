@@ -70,17 +70,20 @@ export function ownPostLinesOf(brief, service, services) {
  * business's own words do not hold. Editorial words about the trade are free (COO rule).
  * @param {unknown} line
  * @param {{assigned: {id: string, label: string}, offerings: Array<{id: string, label: string}>, names?: string[],
- *   sourceText?: string, limit?: number}} context - `sourceText`: every word the business gave
+ *   sourceText?: string, limit?: number, unstated?: ((text: string, sources: string) => string[]) | null}} context -
+ *   `sourceText`: every word the business gave; `unstated`: the copy step's one business-fact check (`fact-sources.mjs`
+ *   `factsNotIn` of the seeder), which replaces this module's own figure and fact-word checks when given
  */
 export function acceptsWrittenDescription(
   line,
-  { assigned, offerings, names = [], sourceText = '', limit = Infinity }
+  { assigned, offerings, names = [], sourceText = '', limit = Infinity, unstated = null }
 ) {
   if (typeof line !== 'string') return false
   const text = line.trim()
   if (!text || text.includes('\n') || [...text].length > limit) return false
   if (onlyNamesOffering(text, [assigned.label, ...names]) || namesOther(text, assigned, offerings))
     return false
+  if (unstated) return unstated(text, String(sourceText)).length === 0
   const source = folded(sourceText)
   const digits = String(sourceText).replace(/\D+/g, ' ')
   for (const n of text.match(/\d+/g) ?? []) if (!` ${digits} `.includes(` ${n} `)) return false

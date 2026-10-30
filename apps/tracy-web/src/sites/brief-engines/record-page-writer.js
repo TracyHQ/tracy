@@ -11,6 +11,7 @@
  */
 import { sharedShare, siblingRecordCopy } from 'website-opportunities/domain/record-page-copy.mjs'
 import { limitOf } from 'website-opportunities/domain/sibling-copy-shape.mjs'
+import { seeder } from '../../lib/seeder.js'
 import { jsonObjectIn } from './shared.js'
 import { styleSheetRule } from 'website-opportunities/domain/site-style-sheet.mjs'
 
@@ -45,17 +46,31 @@ const wordSet = (t) =>
   )
 
 /** Whether a line the model gave may be written. */
-export function acceptsRecordLine(line, { slot, like = [], sourceText = '', task }) {
+export function acceptsRecordLine(line, context) {
+  return recordLineRefusal(line, context) === null
+}
+
+/**
+ * The check a record-page line fails, or null when it may be written: what the build receipt names for a line left
+ * unwritten (`copy-line-trace.js`).
+ * @returns {null | 'no-answer' | 'exclamation' | 'too-long' | 'number-not-in-sources' | 'same-as-sibling' | 'too-close-to-sibling'}
+ */
+export function recordLineRefusal(line, { slot, like = [], sourceText = '', task, unstated = null }) {
   const text = plain(line)
-  if (!text || text.includes('!')) return false
-  if ([...text].length > limitOf(slot)) return false
-  // A number the sources do not hold is a hard fact nobody gave.
-  for (const n of text.match(/\d+(?:[.,]\d+)?/g) ?? []) if (!String(sourceText).includes(n)) return false
+  if (!text) return 'no-answer'
+  if (text.includes('!')) return 'exclamation'
+  if ([...text].length > limitOf(slot)) return 'too-long'
+  // 🔒 ONE DETECTOR IN THE COPY STEP (COO rule 30/10/2026, `fact-sources.mjs` `factsNotIn`): a business fact the sources do
+  // not state is refused; a trade-format number ("a 10-minute rest") is not a fact.
+  if (unstated && unstated(text, sourceText).length > 0) return 'business-fact-not-in-sources'
   if (task === 'rewrite' || task === 'fill')
-    if (like.some((other) => plain(other).toLowerCase() === text.toLowerCase())) return false
-  if (task === 'rewrite')
-    return like.every((other) => sharedShare(wordSet(text), wordSet(other)) < DIFFERENT_SHARE)
-  return true
+    if (like.some((other) => plain(other).toLowerCase() === text.toLowerCase())) return 'same-as-sibling'
+  if (
+    task === 'rewrite' &&
+    !like.every((other) => sharedShare(wordSet(text), wordSet(other)) < DIFFERENT_SHARE)
+  )
+    return 'too-close-to-sibling'
+  return null
 }
 
 /**
@@ -78,6 +93,7 @@ export async function writeRecordPages({
   locale = 'en',
   signal
 }) {
+  const { factsNotIn } = await seeder('fact-sources')
   const { copied, missing } = siblingRecordCopy({ contentMap, written, blanked })
   const slotOf = new Map((contentMap?.slots ?? []).map((s) => [s.key, s]))
   let open = [
@@ -86,6 +102,9 @@ export async function writeRecordPages({
   ]
   /** @type {Record<string, string>} */
   const values = {}
+  /** The last line the model gave each key and the check it failed, for the build receipt (`copy-line-trace.js`). */
+  /** @type {Record<string, {text: string | null, check: string}>} */
+  const tried = {}
   for (let round = 0; round < ROUNDS && model?.chat && open.length; round += 1) {
     /** @type {Record<string, string>} */
     const answers = {}
@@ -131,15 +150,25 @@ export async function writeRecordPages({
       }
     }
     open = open.filter((l) => {
-      const ok = acceptsRecordLine(answers[l.key], {
+      const check = recordLineRefusal(answers[l.key], {
         slot: slotOf.get(l.key),
         like: l.like,
         sourceText: `${about.sourceText ?? ''} ${about.description ?? ''}`,
-        task: l.task
+        task: l.task,
+        unstated: factsNotIn
       })
-      if (ok) values[l.key] = plain(answers[l.key])
-      return !ok
+      if (check === null) values[l.key] = plain(answers[l.key])
+      else tried[l.key] = { text: answers[l.key] ?? tried[l.key]?.text ?? null, check }
+      return check !== null
     })
   }
-  return { values, unreached: open.map((l) => l.key), copied: copied.length, missing: missing.length }
+  return {
+    values,
+    unreached: open.map((l) => l.key),
+    copied: copied.length,
+    missing: missing.length,
+    tried: Object.fromEntries(
+      open.map((l) => [l.key, tried[l.key] ?? { text: null, check: model?.chat ? 'no-answer' : 'no-model' }])
+    )
+  }
 }

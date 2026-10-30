@@ -392,24 +392,41 @@ function namesIn(value) {
  * @param {unknown} line
  * @param {{original?: string, sourceText?: string, band: any, title?: string, items?: boolean}} context
  */
-export function acceptsSiblingRewrite(
+export function acceptsSiblingRewrite(line, context) {
+  return siblingRewriteRefusal(line, context) === null
+}
+
+/**
+ * The check a sibling rewrite fails, or null when it may stand (`acceptsSiblingRewrite`): what the build receipt names
+ * for a line left unwritten (`copy-line-trace.js` of tracy-web).
+ * @param {unknown} line
+ * @param {{original?: string, sourceText?: string, band: any, title?: string, items?: boolean, unstated?: ((text: string, sources: string) => string[]) | null}} context
+ *   `unstated`: the copy step's one business-fact check (`fact-sources.mjs` `factsNotIn` of the seeder); given, it replaces
+ *   this module's own figure and fact-word checks, so a trade-format number ("60 minutes") is no new fact
+ * @returns {null | 'no-answer' | 'not-one-line' | 'out-of-band' | 'new-figure' | 'figure-dropped' | 'new-fact-word' | 'business-fact-not-in-sources' | 'new-name' | 'name-dropped' | 'not-about-title'}
+ */
+export function siblingRewriteRefusal(
   line,
-  { original = '', sourceText = '', band, title = '', items = false }
+  { original = '', sourceText = '', band, title = '', items = false, unstated = null }
 ) {
-  if (typeof line !== 'string' || line.includes('\n')) return false
+  if (typeof line !== 'string' || !line.trim()) return 'no-answer'
+  if (line.includes('\n')) return 'not-one-line'
   const text = plainText(line)
-  if (!fitsBand(text, band)) return false
+  if (!fitsBand(text, band)) return 'out-of-band'
   const sources = `${original} ${sourceText} ${title}`
   const digits = ` ${sources.replace(/\D+/g, ' ')} `
-  for (const n of text.match(/\d+/g) ?? []) if (!digits.includes(` ${n} `)) return false
+  if (unstated) {
+    if (unstated(text, sources).length > 0) return 'business-fact-not-in-sources'
+  } else for (const n of text.match(/\d+/g) ?? []) if (!digits.includes(` ${n} `)) return 'new-figure'
   for (const n of plainText(original).match(/\d+/g) ?? [])
-    if (!` ${text.replace(/\D+/g, ' ')} `.includes(` ${n} `)) return false
+    if (!` ${text.replace(/\D+/g, ' ')} `.includes(` ${n} `)) return 'figure-dropped'
   const known = folded(sources)
-  for (const m of text.matchAll(FACT_WORDS)) if (!known.includes(folded(m[0]))) return false
-  for (const name of namesIn(text)) if (!known.includes(` ${name} `)) return false
-  for (const name of namesIn(original)) if (!folded(text).includes(` ${name} `)) return false
-  if (items && title && !aboutTitle(text, title)) return false
-  return true
+  if (!unstated)
+    for (const m of text.matchAll(FACT_WORDS)) if (!known.includes(folded(m[0]))) return 'new-fact-word'
+  for (const name of namesIn(text)) if (!known.includes(` ${name} `)) return 'new-name'
+  for (const name of namesIn(original)) if (!folded(text).includes(` ${name} `)) return 'name-dropped'
+  if (items && title && !aboutTitle(text, title)) return 'not-about-title'
+  return null
 }
 
 /**

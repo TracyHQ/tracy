@@ -113,11 +113,11 @@ test('the writer writes a copied section again for its own record and fills the 
   }
   const asked = []
   const answers = [
-    // First round: the fill holds a number nobody gave, so it is asked again.
+    // First round: the fill holds a count of the business nobody gave, so it is asked again.
     {
       'article-2.1': 'Clipping starts slowly, one paw at a time, with a treat between each one.',
       'article-2.2': 'Settle',
-      'article-2.3': 'Wait 5 minutes'
+      'article-2.3': 'Our 9 groomers wait'
     },
     { 'article-2.3': 'A treat on the table' }
   ]
@@ -167,4 +167,32 @@ test('a landing record page loses its blog pager; a page already without it, or 
     recordPagerSteps({ ...MAP, recordPages: [{ ...MAP.recordPages[0], layout: 'post' }] }, articles),
     []
   )
+})
+
+test('a record-page line follows the one business-fact rule: a trade-format number passes, an invented count is refused', async () => {
+  const written = {
+    'article-1.0': 'Bath and Brush',
+    'article-2.0': 'Nail Trim',
+    'article-1.1': 'Our bath and brush visits are calm and gentle and end with a short note for the owner.',
+    'article-2.1': 'Clipping starts slowly, one paw at a time, with a treat between each one.',
+    'article-1.2': 'Rinse',
+    'article-1.3': 'Warm water first'
+  }
+  const say = (lines) => ({ chat: async () => JSON.stringify({ lines }) })
+  const about = { business: 'Fernwood Paws', trade: 'pet grooming', sourceText: 'Fernwood Paws grooms dogs.' }
+  const format = await writeRecordPages({
+    contentMap: MAP,
+    written,
+    about,
+    model: say({ 'article-2.2': 'Settle', 'article-2.3': 'A 10-minute rest' })
+  })
+  assert.equal(format.values['article-2.3'], 'A 10-minute rest', 'a trade format needs no source')
+  const counted = await writeRecordPages({
+    contentMap: MAP,
+    written,
+    about,
+    model: say({ 'article-2.2': 'Settle', 'article-2.3': 'We have 9 groomers' })
+  })
+  assert.deepEqual(counted.unreached, ['article-2.3'])
+  assert.equal(counted.tried['article-2.3'].check, 'business-fact-not-in-sources')
 })

@@ -42,7 +42,9 @@ export async function writeSiteDirection({ model, site, pages, signal, note }) {
   const ids = new Set(list.map((p) => p.page))
   // 🔒 A DIRECTION KEYED BY ROUTE STILL REACHES ITS PAGE (R14): the model answered "home", "about" instead of the page ids,
   // and every entry was dropped. A key is read as a page id, else as its route ("/home" and "home" alike).
-  const byRoute = new Map(list.filter((p) => p.route).map((p) => [String(p.route).replace(/^\/+|\/+$/g, ''), p.page]))
+  const byRoute = new Map(
+    list.filter((p) => p.route).map((p) => [String(p.route).replace(/^\/+|\/+$/g, ''), p.page])
+  )
   const pageOf = (/** @type {string} */ key) =>
     ids.has(key) ? key : (byRoute.get(String(key).replace(/^\/+|\/+$/g, '')) ?? null)
   const { factSheet, statistics, direction: _, ...business } = site

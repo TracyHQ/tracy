@@ -98,11 +98,43 @@ const MONTH =
   /\b(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\b/iu
 /** A unit after a number that makes it a format of the trade, not a count of the business ("60-minute", "2 vs 2"). */
 const FORMAT_UNIT =
-  /^[\s-]*(?:vs\.?|v\b|on\b|x\b|times?\b|minutes?|mins?\b|hours?|hrs?\b|seconds?|secs?\b|rounds?|sets?\b|reps?\b|repetitions|laps?\b|km\b|kms?\b|kilomet(?:er|re)s?|met(?:er|re)s?|m\b|cm\b|kg\b|kgs?\b|lbs?\b|pounds?\b|percent|%|degrees?|°|weeks?|days?|months?|steps?|levels?|stages?|players?|people|persons?|per\b|a\b|an\b|\/\s?7)/iu
+  /^[\s-]*(?:of\b|by\b|more\b|another\b|vs\.?|v\b|on\b|x\b|times?\b|minutes?|mins?\b|hours?|hrs?\b|seconds?|secs?\b|rounds?|sets?\b|reps?\b|repetitions|laps?\b|km\b|kms?\b|kilomet(?:er|re)s?|met(?:er|re)s?|m\b|cm\b|kg\b|kgs?\b|lbs?\b|pounds?\b|percent|%|degrees?|°|weeks?|days?|months?|steps?|levels?|stages?|players?|people|persons?|per\b|a\b|an\b|\/\s?7)/iu
 /** Words that tie a count to this business ("we have", "our", "the club has"). */
 const OWN =
   /\b(?:we|we've|we're|our|ours|us)\b|\b(?:has|have|had|counts?|employs?|operates?|runs?|owns?|boasts?|served|serves|trained|trains|coached|welcomed|hosted|opened|founded|established|since)\b/iu
 const HOURS = /\b\d{1,2}(?::\d{2})?\s?(?:am|pm)\b|\b\d{1,2}:\d{2}\b/giu
+
+/** Numbers written as words, read as digits so one rule judges "eight courts" and "8 courts" alike. */
+const NUMBER_WORDS = Object.freeze({
+  one: 1,
+  two: 2,
+  three: 3,
+  four: 4,
+  five: 5,
+  six: 6,
+  seven: 7,
+  eight: 8,
+  nine: 9,
+  ten: 10,
+  eleven: 11,
+  twelve: 12,
+  fifteen: 15,
+  twenty: 20,
+  thirty: 30,
+  forty: 40,
+  fifty: 50,
+  hundred: 100
+})
+const NUMBER_WORD = new RegExp(`\\b(${Object.keys(NUMBER_WORDS).join('|')})\\b`, 'giu')
+/** Words before "one" that make it a pronoun ("no one", "the one"), never a count. */
+const PRONOUN_BEFORE = /\b(?:no|every|any|each|the|this|that|which|someone|anyone)\s+$/iu
+/** A text with its number words as digits ("one-on-one" reads "1-on-1"). */
+const numerals = (/** @type {string} */ text) =>
+  String(text ?? '').replace(NUMBER_WORD, (word, _w, at, all) =>
+    word.toLowerCase() === 'one' && PRONOUN_BEFORE.test(all.slice(Math.max(0, at - 12), at))
+      ? word
+      : String(NUMBER_WORDS[/** @type {keyof typeof NUMBER_WORDS} */ (word.toLowerCase())])
+  )
 
 /** A line as a visitor reads it: no markup (`<h2>`, `((h2))`), no style marks (`[[`, `]]`, `[[br]]`). */
 const plain = (/** @type {string} */ value) =>
@@ -121,21 +153,44 @@ const peopleOf = (/** @type {any} */ site) =>
 
 const escape = (/** @type {string} */ s) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
+/**
+ * Whether the number at `at` in `line` is a format of the trade (COO rule 3): a unit after it ("60-minute", "2 vs 2",
+ * "1-on-1", "24/7", "per week") or a range ("3 to 8"). The one test both checks use: this module's and the planner's
+ * count check.
+ */
+function isTradeFormat(/** @type {string} */ line, /** @type {string} */ m, /** @type {number} */ at) {
+  const before = line.slice(Math.max(0, at - 12), at)
+  const after = line.slice(at + m.length, at + m.length + 14)
+  return (
+    FORMAT_UNIT.test(after) ||
+    // A frequency ("one session a week", "2 classes per day").
+    /^\s*\p{L}+\s+(?:a|per|each|every)\s+(?:day|week|month|year)\b/iu.test(
+      line.slice(at + m.length, at + m.length + 30)
+    ) ||
+    /^\s*(?:to|-|–|or|and)\s*\d/.test(after) ||
+    // The second number of a pairing ("1-on-1", "2 vs 2", "1 to 1").
+    /\d\s*(?:-\s*on\s*-|\s+on\s+|\s*vs\.?\s*|\s+v\s+)\s*$/iu.test(before) ||
+    /\d\s*(?:to|-|–|or|and)\s*$/.test(before)
+  )
+}
+
 /** Whether the number at `at` in `line` is a business fact (COO rule 2), or trade knowledge (rule 3). */
 function isBusinessNumber(/** @type {string} */ line, /** @type {string} */ m, /** @type {number} */ at) {
   const before = line.slice(Math.max(0, at - 12), at)
   const after = line.slice(at + m.length, at + m.length + 14)
   // Money: a currency beside it, or an amount with cents ("90.00").
-  if (CURRENCY.test(before.slice(-6)) || CURRENCY.test(after.slice(0, 9)) || /^\d+[.,]\d{2}$/.test(m)) return true
+  if (CURRENCY.test(before.slice(-6)) || CURRENCY.test(after.slice(0, 9)) || /^\d+[.,]\d{2}$/.test(m))
+    return true
   // A year, a date, a time of day.
   if (/^(?:19|20)\d{2}$/.test(m)) return true
   if (/[/.-]/.test(m) && /^\d{1,4}[/.-]\d{1,2}[/.-]\d{1,4}$/.test(m)) return true
   if (MONTH.test(before.slice(-10)) || MONTH.test(after.slice(0, 11))) return true
+  // Years in business or of experience ("for 25 years", "12+ years of coaching"), never an age ("6 years old").
+  if (/^\+?\s+(?:years?|yrs?)\b(?!\s+old)/iu.test(after)) return true
   // A line that is only a figure (a counter: "32", "100k+", "95%") is a figure of this business.
   if (/^[\s+~]*\d[\d.,]*\s*(?:k|m|\+|%)*\s*\+?\s*$/iu.test(line)) return true
   // A format of the trade ("2 vs 2", "24/7", "1-on-1", "60-minute", "3 to 8"): no fact about the business.
-  if (FORMAT_UNIT.test(after) || /^\s*(?:to|-|–|or|and)\s*\d/.test(after) || /\d\s*(?:to|-|–|or|and)\s*$/.test(before))
-    return false
+  if (isTradeFormat(line, m, at)) return false
   // A web error code ("its 404 page") is no figure of the business.
   if (/^[45]0\d$/.test(m) && /^\s*(?:page|error|not found)/iu.test(after)) return false
   // A count of the business: tied to it in the same clause ("the club has 6 courts", "we coached 300 members").
@@ -149,11 +204,13 @@ function isBusinessNumber(/** @type {string} */ line, /** @type {string} */ m, /
  * @returns {Array<{kind: 'number' | 'phone' | 'email' | 'web' | 'name' | 'claim' | 'time', text: string}>}
  */
 export function specificFacts(value, { site = null, slot = null } = {}) {
-  const line = plain(value)
+  const line = numerals(plain(value))
   const own = String(site?.name ?? '')
   /** @type {Array<{kind: any, text: string}>} */
   const out = []
-  const keep = (/** @type {any} */ kind) => (/** @type {string} */ m) => (out.push({ kind, text: m.trim() }), ' ')
+  const keep = (/** @type {any} */ kind) => (/** @type {string} */ m) => (
+    out.push({ kind, text: m.trim() }), ' '
+  )
   let rest = line.replace(EMAIL, keep('email')).replace(WEB, keep('web'))
   rest = rest.replace(PHONE, (m) => ((m.match(/\d/g) ?? []).length >= 7 ? keep('phone')(m) : m))
   rest = rest.replace(HOURS, keep('time'))
@@ -169,6 +226,19 @@ export function specificFacts(value, { site = null, slot = null } = {}) {
       out.push({ kind: 'name', text: name.trim() })
   for (const m of rest.match(CLAIM) ?? []) out.push({ kind: 'claim', text: m })
   return out
+}
+
+/**
+ * Whether a count the planner's count check found ("one coach", "8 courts", before a word the brief uses for its people,
+ * places or offerings) is a count of the business under the rule: yes unless every place it is said is a format of the
+ * trade (`isTradeFormat`: "one-on-one", "two vs two", "one session per week").
+ * @param {string} value @param {number} n
+ */
+export function isBusinessCount(value, n) {
+  const line = numerals(plain(value))
+  return [...line.matchAll(NUMBER)].some(
+    (match) => amountOf(match[0]) === n && !isTradeFormat(line, match[0], match.index ?? 0)
+  )
 }
 
 const digitsOf = (/** @type {string} */ s) => s.replace(/\D+/g, '')
@@ -189,7 +259,9 @@ function states(/** @type {string} */ text, /** @type {{kind: string, text: stri
   const lower = text.toLowerCase()
   if (fact.kind === 'number') {
     const want = amountOf(fact.text)
-    return (text.match(NUMBER) ?? []).some((n) => n === fact.text || (want !== null && amountOf(n) === want))
+    return (numerals(text).match(NUMBER) ?? []).some(
+      (n) => n === fact.text || (want !== null && amountOf(n) === want)
+    )
   }
   if (fact.kind === 'phone') {
     const want = digitsOf(fact.text)
@@ -202,7 +274,8 @@ function states(/** @type {string} */ text, /** @type {{kind: string, text: stri
     const want = webOf(fact.text)
     return (text.match(WEB) ?? []).some((w) => webOf(w) === want) || lower.includes(want)
   }
-  if (fact.kind === 'time') return lower.replace(/\s+/g, '').includes(fact.text.toLowerCase().replace(/\s+/g, ''))
+  if (fact.kind === 'time')
+    return lower.replace(/\s+/g, '').includes(fact.text.toLowerCase().replace(/\s+/g, ''))
   if (fact.kind === 'claim') return lower.includes(fact.text.toLowerCase().slice(0, 5))
   return lower.includes(fact.text.toLowerCase())
 }
@@ -225,6 +298,23 @@ export function unsourcedLines({ slots, values, site, texts = sourceTexts(site) 
     if (left.length) out.push({ key: slot.key, facts: [...new Set(left)] })
   }
   return out
+}
+
+/**
+ * The business facts a line states that a source text does not (COO rule, header): the one check every later copy writer
+ * of the copy step uses (record pages, sibling lists, offering descriptions), given the business's own words as text.
+ * @param {unknown} value @param {unknown} sourceText @param {any} [site]
+ * @returns {string[]}
+ */
+export function factsNotIn(value, sourceText, site = null) {
+  const text = String(sourceText ?? '')
+  return [
+    ...new Set(
+      specificFacts(String(value ?? ''), { site })
+        .filter((f) => !states(text, f))
+        .map((f) => f.text)
+    )
+  ]
 }
 
 /**

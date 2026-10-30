@@ -12,13 +12,14 @@
  * Rules by role and group, never by template, trade or business; any CMS with a text model (the Joomla engine calls it).
  */
 import {
-  acceptsSiblingRewrite,
+  siblingRewriteRefusal,
   aboutTitle,
   alignSpelling,
   fitsBand,
   plainText,
   siblingLists
 } from 'website-opportunities/domain/sibling-copy-shape.mjs'
+import { seeder } from '../../lib/seeder.js'
 import { jsonObjectIn } from './shared.js'
 import { styleSheetRule } from 'website-opportunities/domain/site-style-sheet.mjs'
 
@@ -48,7 +49,7 @@ const SYSTEM =
  * @param {AbortSignal} [input.signal]
  * @param {Set<string>} [input.apart] - keys shown one per page (a page's masthead intro, a hero line): a list holding one
  *   is a set of page mastheads, never cards side by side, and is left alone
- * @returns {Promise<{values: Record<string, string>, unreached: string[], lists: Array<{id: string, outcome: string}>}>}
+ * @returns {Promise<{values: Record<string, string>, unreached: string[], lists: Array<{id: string, outcome: string}>, tried: Record<string, {text: string | null, check: string}>}>}
  */
 export async function shapeSiblingCopy({
   slots,
@@ -59,6 +60,7 @@ export async function shapeSiblingCopy({
   signal,
   apart = new Set()
 }) {
+  const { factsNotIn } = await seeder('fact-sources')
   /** @type {Record<string, string>} */
   const values = {}
   const unreached = []
@@ -82,13 +84,18 @@ export async function shapeSiblingCopy({
     work.push({ list, cards, open: cards.filter((c) => !good(c)) })
   }
 
-  const accepts = (list, c, line) =>
-    acceptsSiblingRewrite(line, {
+  /** The last line the model gave each key and the check it failed, for the build receipt (`copy-line-trace.js`). */
+  /** @type {Record<string, {text: string | null, check: string}>} */
+  const tried = {}
+  const refusalOf = (list, c, line) =>
+    siblingRewriteRefusal(line, {
       original: list.items && !aboutTitle(c.text, c.title) ? '' : c.text,
       sourceText: `${about.sourceText ?? ''} ${about.description ?? ''}`,
       band: list.band,
       title: c.title,
-      items: list.items
+      items: list.items,
+      // 🔒 The copy step's one business-fact check (COO rule 30/10/2026, `fact-sources.mjs`).
+      unstated: factsNotIn
     })
   for (let round = 0; round < ROUNDS && model?.chat; round += 1) {
     const asks = work.flatMap(({ list, open }) =>
@@ -134,14 +141,19 @@ export async function shapeSiblingCopy({
     }
     for (const job of work)
       job.open = job.open.filter((c) => {
-        if (!accepts(job.list, c, answers[c.key])) return true
+        const check = refusalOf(job.list, c, answers[c.key])
+        if (check !== null) {
+          tried[c.key] = { text: answers[c.key] ?? tried[c.key]?.text ?? null, check }
+          return true
+        }
         values[c.key] = alignSpelling(plainText(answers[c.key]), c.title)
         return false
       })
   }
   for (const { list, open } of work) {
     unreached.push(...open.map((c) => c.key))
+    for (const c of open) tried[c.key] ??= { text: null, check: model?.chat ? 'no-answer' : 'no-model' }
     lists.push({ id: list.id, outcome: open.length ? 'unreached' : 'band' })
   }
-  return { values, unreached, lists }
+  return { values, unreached, lists, tried: Object.fromEntries(unreached.map((k) => [k, tried[k]])) }
 }

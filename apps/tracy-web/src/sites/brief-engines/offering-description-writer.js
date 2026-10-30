@@ -15,6 +15,7 @@ import {
   inSiteVoice,
   styleSheetRule
 } from 'website-opportunities/domain/site-style-sheet.mjs'
+import { seeder } from '../../lib/seeder.js'
 import { jsonObjectIn } from './shared.js'
 
 const DESCRIBING = new Set(['offering.description', 'offering.summary'])
@@ -73,6 +74,7 @@ export async function writeOfferingDescriptions({
   locale = 'en',
   signal
 }) {
+  const { factsNotIn } = await seeder('fact-sources')
   const asks = descriptionAsks({ slots, honesty, written })
   const out = {}
   if (asks.length === 0 || !model?.chat) return out
@@ -118,7 +120,9 @@ export async function writeOfferingDescriptions({
       assigned: ask.assigned,
       offerings: honesty?.offerings ?? [],
       sourceText: about.sourceText ?? '',
-      limit: ask.limit
+      limit: ask.limit,
+      // 🔒 The copy step's one business-fact check (COO rule 30/10/2026, `fact-sources.mjs`).
+      unstated: factsNotIn
     })
     if (!ok || !inSiteVoice(line, { names: [ask.assigned.label] }) || taken.has(String(line).toLowerCase()))
       continue

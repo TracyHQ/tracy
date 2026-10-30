@@ -53,7 +53,14 @@ import {
   nameAnswered,
   withTemplateName
 } from './shared.js'
-import { copyPlanBudget, isBlockCopyLine, recordCopyPlan, settleKeptSlots } from './copy-plan-stage.js'
+import {
+  copyPlanBudget,
+  isBlockCopyLine,
+  pendingKindOf,
+  recordCopyPlan,
+  settleKeptSlots
+} from './copy-plan-stage.js'
+import { copyLineTrace } from './copy-line-trace.js'
 import { factsOf, guardChanges, guardWritten } from './guard.js'
 import { drawPictures, pictureBriefs, pictureGroups, shapePictures, uploadPictures } from './pictures.js'
 import { keptPages, pictureReport, realPicturesOf, shapeReal } from './real-pictures.js'
@@ -1391,7 +1398,11 @@ export function createJoomlaEngine({
       // 🔒 EVERY LATER COPY WRITER IS GIVEN THE DIGEST AND THE DIRECTION, AND SOURCES ITS FACTS (`copy-sources.js`): a line it
       // writes with a specific fact no cited record states is sent back once, then dropped and counted as refused.
       const unsourcedRefused = new Set()
-      const copyWriter = text ? sourcedWriter(text, { site, refused: unsourcedRefused }) : text
+      // 🔒 EVERY LINE LEFT UNWRITTEN IS TRACED BY WRITER (`copy-line-trace.js`): each writer gets its own named wrapper.
+      /** @type {any[]} */
+      const lineTrace = []
+      const copyWriterFor = (/** @type {string} */ writer) =>
+        text ? sourcedWriter(text, { site, refused: unsourcedRefused, writer, trace: lineTrace }) : text
       const describedLines = await writeOfferingDescriptions({
         slots: state.slots.filter((slot) => !isDerived(slot) && shown(slot)),
         honesty,
@@ -1404,7 +1415,7 @@ export function createJoomlaEngine({
             ' '
           )
         },
-        model: copyWriter,
+        model: copyWriterFor('offering'),
         locale: written,
         signal: ctx.signal
       })
@@ -1436,7 +1447,7 @@ export function createJoomlaEngine({
             ' '
           )
         },
-        model: copyWriter,
+        model: copyWriterFor('sibling-list'),
         locale: written,
         signal: ctx.signal,
         apart: new Set([
@@ -1458,6 +1469,8 @@ export function createJoomlaEngine({
       )
       Object.assign(offeringSummaries, siblingShape.values)
       demoBlanks = demoBlanks.filter((slot) => !(slot.key in siblingShape.values))
+      for (const key of siblingShape.unreached)
+        lineTrace.push({ key, writer: 'sibling-list', reason: 'unwritten', ...siblingShape.tried?.[key] })
       if (siblingShape.unreached.length > 0)
         ctx.note(
           `${siblingShape.unreached.length} card text(s) could not be written to their list's shape: ${siblingShape.unreached.join(', ')}`
@@ -1479,12 +1492,14 @@ export function createJoomlaEngine({
             ' '
           )
         },
-        model: copyWriter,
+        model: copyWriterFor('record-page'),
         locale: written,
         signal: ctx.signal
       })
       Object.assign(kept, owned.admit(recordCopy.values, 'record-page', kept))
       demoBlanks = demoBlanks.filter((slot) => !(slot.key in recordCopy.values))
+      for (const key of recordCopy.unreached)
+        lineTrace.push({ key, writer: 'record-page', reason: 'unwritten', ...recordCopy.tried?.[key] })
       if (recordCopy.unreached.length > 0)
         ctx.note(
           `${recordCopy.unreached.length} record page line(s) could not be written for their own record: ${recordCopy.unreached.join(', ')}`
@@ -1566,7 +1581,7 @@ export function createJoomlaEngine({
           description: String(sitePlan?.brand?.description?.value ?? ''),
           offerings: (honesty?.offerings ?? []).map((o) => o?.label)
         },
-        model: copyWriter,
+        model: copyWriterFor('cta-band'),
         signal: ctx.signal,
         note: ctx.note,
         // The band lines the page pass wrote for the action it was told: kept when that is still the button's action.
@@ -1577,6 +1592,35 @@ export function createJoomlaEngine({
         )
       })
       Object.assign(kept, ctaBands.values)
+      {
+        // The page writer's leftovers first: the lines it pended or a guard refused, and the ones a page rule handed on.
+        const { pagesOfEntities } = await seeder('distinct-copy')
+        const pagesOf = pagesOfEntities(state.pages)
+        const entityOf = new Map(state.slots.map((slot) => [slot.key, slot.entity]))
+        const planned = [
+          ...(plan.pending ?? []).map((key) => ({
+            key,
+            writer: 'page-writer',
+            reason: pendingKindOf(plan.reasons?.[key]),
+            check: plan.reasons?.[key],
+            text: plan.tried?.[key]
+          })),
+          ...Object.entries(plan.owners ?? {})
+            .filter(([, owner]) => owner !== 'page-copy')
+            .map(([key, owner]) => ({
+              key,
+              writer: 'page-writer',
+              reason: 'complaint-unmet',
+              check: `handed to ${owner}`,
+              text: plan.changes?.[key]
+            }))
+        ]
+        const trace = copyLineTrace({
+          lines: [...planned, ...lineTrace],
+          pageOf: (key) => pagesOf(entityOf.get(key))
+        })
+        if (trace.length > 0) ctx.record?.('copyLineTrace', trace)
+      }
       if (unsourcedRefused.size > 0) {
         ctx.record?.('copyUnsourcedRefused', [...unsourcedRefused])
         ctx.note(

@@ -14,6 +14,7 @@ import {
   DIRECTION_RULE,
   SOURCE_RULE,
   factSourceIds,
+  isBusinessCount,
   knownSources,
   sourceComplaint,
   sourceTexts,
@@ -984,6 +985,9 @@ export async function planJoomlaContract({
   const texts = site?.factSheet ? sourceTexts(site) : null
   /** The sources each written line rests on, by key. */
   const sourcesOf = {}
+  /** The model's last words for each line it pended or a guard refused, cut short, for the build receipt (`copy-line-trace.js`). */
+  /** @type {Record<string, string>} */
+  const tried = {}
   // Only a quickstart whose archive already speaks in identity tokens ships the plugin that fills
   // them; anywhere else `{site.name}` would reach the page as it is.
   const tokenized = state.slots.some((slot) => /\{site\./.test(slot.sample ?? ''))
@@ -1226,7 +1230,11 @@ export async function planJoomlaContract({
   const countsIn = (slots, values) =>
     slots.flatMap((slot) =>
       typeof values?.[slot.key] === 'string'
-        ? ungroundedCounts(values[slot.key], facts, statistics).map((c) => ({ key: slot.key, ...c }))
+        ? ungroundedCounts(values[slot.key], facts, statistics)
+            // 🔒 ONE DEFINITION OF A BUSINESS FACT (COO, 30/10/2026, `fact-sources.mjs`): a number of the trade's formats
+            // ("one-on-one", "two vs two", "one session") is no count of the business.
+            .filter((c) => isBusinessCount(values[slot.key], c.n))
+            .map((c) => ({ key: slot.key, ...c }))
         : []
     )
   const properNouns = properNounsOf(facts)
@@ -1520,6 +1528,7 @@ export async function planJoomlaContract({
         if (slot.current !== undefined && slot.current !== slot.sample) continue
         pending.push(slot.key)
         reasons[slot.key] = why
+        if (typeof value === 'string' && value.trim()) tried[slot.key] = value.slice(0, 200)
         continue
       }
       // A path to a live page is written by its id, so it answers whether or not the site rewrites.
@@ -1545,7 +1554,10 @@ export async function planJoomlaContract({
         // `fact-sources.mjs`), with the ones the writer cited.
         if (texts) {
           const ids = [
-            ...new Set([...knownSources(body.sources?.[slot.key], texts), ...factSourceIds(written, site, texts)])
+            ...new Set([
+              ...knownSources(body.sources?.[slot.key], texts),
+              ...factSourceIds(written, site, texts)
+            ])
           ]
           if (ids.length) sourcesOf[slot.key] = ids
         }
@@ -1681,6 +1693,7 @@ export async function planJoomlaContract({
     invented,
     ...(hints || complain ? { owners } : {}),
     ...(texts ? { sources: sourcesOf } : {}),
+    ...(Object.keys(tried).length > 0 ? { tried } : {}),
     ...(emptyLinks.length > 0 ? { emptyLinks } : {})
   }
 }
