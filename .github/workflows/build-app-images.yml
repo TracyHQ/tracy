@@ -173,7 +173,7 @@ jobs:
       # in `scripts/`. The runner keeps this checkout, so the ~220 MB history is fetched once per
       # runner and incrementally after that.
       - name: Checkout (without submodules)
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
           fetch-depth: 0
@@ -527,7 +527,7 @@ jobs:
       packages: read
     steps:
       - name: Checkout (without submodules)
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
 
@@ -621,7 +621,7 @@ jobs:
       contents: read
       packages: read
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
       # 🔒 NO REGISTRY HOLDS THE WEB IMAGES: each host builds its own (web/build.sh), and a new site whose
@@ -750,7 +750,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout (no submodules)
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
       # The runner image pins Node; `.node-version` pins what the repo expects. The inventory script
@@ -839,7 +839,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout (no submodules)
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
       # The runner image pins Node; `.node-version` pins what the repo expects. The migration source
@@ -916,7 +916,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout (no submodules)
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
       - name: Build the missing web images on this host
@@ -1028,7 +1028,7 @@ jobs:
       contents: read
       packages: read
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
       # 🔒 NO REGISTRY HOLDS THE WEB IMAGES: each host builds its own (web/build.sh), and a new site whose
@@ -1082,7 +1082,7 @@ jobs:
       contents: read
       packages: read
     steps:
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           submodules: false
       # 🔒 NO REGISTRY HOLDS THE WEB IMAGES: each host builds its own (web/build.sh), and a new site whose
