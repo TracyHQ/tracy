@@ -170,9 +170,14 @@ test('release pull requests, the nightly and manual runs force every Turbo row; 
 })
 
 test('the full row sets: the shards or the forced Turbo rows, each with checks and every conditional row', () => {
-  const { legacy, turbo } = fullRowSets()
+  const { legacy, hosted, turbo } = fullRowSets()
   const conditional = ['tests e2e', 'tests emdash-base', 'tests emdash-business', 'tests emdash-saas']
   assert.deepEqual([...legacy].sort(), ['checks', ...conditional, 'tests 1/2', 'tests 2/2'].sort())
+  // The same fallback on GitHub-hosted runners: three shards (30/10/2026).
+  assert.deepEqual(
+    [...hosted].sort(),
+    ['checks', ...conditional, 'tests 1/3', 'tests 2/3', 'tests 3/3'].sort()
+  )
   assert.deepEqual(
     [...turbo].sort(),
     [

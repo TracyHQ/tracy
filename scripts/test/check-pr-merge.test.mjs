@@ -147,7 +147,7 @@ test('policy: the five workflows exist, run on pull requests, and still carry th
     assert.match(yml, /^ {2}pull_request:\n {4}branches: \[main, staging, develop\]$/m, w.file)
     for (const job of w.jobs) assert.ok(yml.includes(`    name: ${job}\n`), `${w.file}: job "${job}"`)
     // Pull-request jobs never ask for the production lane (docs/references/public-repo-ci.md).
-    // A Tracy CI job with the `ci:hosted` path has two label sets: each is judged on its own.
+    // A Tracy CI job with a GitHub-hosted path has two label sets: each is judged on its own.
     for (const labels of Object.values(load(yml).jobs).flatMap((job) => labelSets(job['runs-on']))) {
       // A GitHub-hosted job has no lane; the merge check knows it only by this one label.
       if (!labels.includes('self-hosted')) {
@@ -1120,6 +1120,77 @@ test('into main, a run whose plan forced the Turbo rows requires those rows inst
   await refuses(unmarked, 'FAIL', /required job "build check \(tests [12]\/2\)" is missing/, { base: 'main' })
 })
 
+test('into main, a run whose plan job ran GitHub-hosted requires three workers shards, one on our runners two', async () => {
+  const two = ['build check (tests 1/2)', 'build check (tests 2/2)']
+  const three = ['build check (tests 1/3)', 'build check (tests 2/3)', 'build check (tests 3/3)']
+  const hostedRows = requiredJobs('tracy-ci.yml', 'main', { hosted: true })
+  for (const name of three) assert.ok(hostedRows.includes(name), name)
+  for (const name of two) assert.ok(!hostedRows.includes(name), name)
+  // Everything else is the same list, and into develop the runner changes nothing.
+  assert.deepEqual(
+    hostedRows.filter((n) => !three.includes(n)).sort(),
+    requiredJobs('tracy-ci.yml', 'main')
+      .filter((n) => !two.includes(n))
+      .sort()
+  )
+  assert.deepEqual(
+    requiredJobs('tracy-ci.yml', 'develop', { hosted: true }),
+    requiredJobs('tracy-ci.yml', 'develop')
+  )
+  // The forced Turbo rows do not depend on the runner.
+  assert.deepEqual(
+    requiredJobs('tracy-ci.yml', 'main', { forced: true, hosted: true }),
+    requiredJobs('tracy-ci.yml', 'main', { forced: true })
+  )
+
+  /** A release run on GitHub-hosted: every job hosted, the rows the plan made for it. */
+  const hostedMain = (rows = three) => {
+    const w = intoMain()
+    const list = jobsOf(w, 'tracy-ci.yml')
+    const row = list.jobs.find((j) => j.name === 'build check (checks)')
+    list.jobs = list.jobs.filter((j) => !two.includes(j.name))
+    for (const name of rows)
+      list.jobs.push({ ...structuredClone(row), id: row.id + 100 + list.jobs.length, name })
+    for (const j of list.jobs) onHosted(j)
+    list.total_count = list.jobs.length
+    return w
+  }
+  const ok = await verdictOf(hostedMain(), { base: 'main' })
+  assert.equal(ok.v.verdict, 'PASS', ok.v.reason)
+  // Two shards from a hosted plan are a run that tested less than its plan asked for.
+  await refuses(hostedMain(two), 'FAIL', /required job "build check \(tests 1\/3\)" is missing/, {
+    base: 'main'
+  })
+  // A shard missing is missing.
+  await refuses(hostedMain(three.slice(1)), 'FAIL', /required job "build check \(tests 1\/3\)" is missing/, {
+    base: 'main'
+  })
+  // A self-hosted plan job in front of hosted rows: not the rows it planned, whatever their count.
+  const selfPlan = hostedMain()
+  const plan = jobsOf(selfPlan, 'tracy-ci.yml').jobs.find((j) => j.name === 'plan the build-check rows')
+  const ours = jobsOf(intoMain(), 'tracy-ci.yml').jobs.find((j) => j.name === 'plan the build-check rows')
+  Object.assign(plan, {
+    labels: ours.labels,
+    runner_name: ours.runner_name,
+    runner_group_name: ours.runner_group_name
+  })
+  await refuses(
+    selfPlan,
+    'FAIL',
+    /ran on different runner kinds .*self-hosted: plan the build-check rows\)/,
+    {
+      base: 'main'
+    }
+  )
+  // The review's case: a self-hosted plan job and the two-row set run on GitHub-hosted rows. Two rows
+  // pass the count a self-hosted plan asks for, so only the runner kinds can refuse it.
+  const twoHosted = intoMain()
+  for (const j of jobsOf(twoHosted, 'tracy-ci.yml').jobs) if (j.name.startsWith('build check (')) onHosted(j)
+  await refuses(twoHosted, 'FAIL', /ran on different runner kinds/, { base: 'main' })
+  // All self-hosted, two rows: passes as it always did.
+  assert.equal((await verdictOf(intoMain(), { base: 'main' })).v.verdict, 'PASS')
+})
+
 test('into main every row is required', async () => {
   const ok = await verdictOf(intoMain(), { base: 'main' })
   assert.equal(ok.v.verdict, 'PASS', ok.v.reason)
@@ -1184,13 +1255,15 @@ test('a job on no lane passes only when the jobs API says GitHub ran it, not on 
   }
 })
 
-test('a Tracy CI run on GitHub-hosted runners (`ci:hosted`) passes by the same rule, and only by it', async () => {
-  // Since 30/10/2026 a pull request labelled `ci:hosted` runs every Tracy CI job on `ubuntu-latest`.
-  const onHosted = (j) => {
-    j.labels = [HOSTED]
-    j.runner_name = 'GitHub Actions 1000000456'
-    j.runner_group_name = HOSTED_GROUP
-  }
+/** A job as the API reports one GitHub ran on its own `ubuntu-latest`. */
+const onHosted = (j) => {
+  j.labels = [HOSTED]
+  j.runner_name = 'GitHub Actions 1000000456'
+  j.runner_group_name = HOSTED_GROUP
+}
+
+test('a Tracy CI run on GitHub-hosted runners passes by the same rule, and only by it', async () => {
+  // Since 30/10/2026 a pull request without the label `ci:self-hosted` runs every Tracy CI job on `ubuntu-latest`.
   const hosted = world()
   const ci = jobsOf(hosted, 'tracy-ci.yml').jobs
   assert.ok(
@@ -1200,12 +1273,15 @@ test('a Tracy CI run on GitHub-hosted runners (`ci:hosted`) passes by the same r
   for (const j of ci) onHosted(j)
   const { v: pass } = await verdictOf(hosted)
   assert.equal(pass.verdict, 'PASS', pass.reason)
-  // Every job of one run reads the same payload, so a mixed run should not occur; each job is
-  // judged on its own all the same.
+  // Every job of one run reads the same payload, so the plan job and its rows run on one kind; a mix
+  // means rows that are not the ones planned, and is refused (the other jobs are judged one by one).
   const mixed = world()
   onHosted(jobsOf(mixed, 'tracy-ci.yml').jobs.find((j) => j.name === 'build check (checks)'))
-  const { v: mixedPass } = await verdictOf(mixed)
-  assert.equal(mixedPass.verdict, 'PASS', mixedPass.reason)
+  await refuses(mixed, 'FAIL', /ran on different runner kinds \(GitHub-hosted: build check \(checks\);/)
+  // A job outside the plan and its rows may still run on either kind.
+  const dshHosted = world()
+  onHosted(jobsOf(dshHosted, 'tracy-ci.yml').jobs.find((j) => j.name === 'build dsh once for this run'))
+  assert.equal((await verdictOf(dshHosted)).v.verdict, 'PASS')
   // A self-hosted runner registered with the hosted label is still held to the lane rule.
   const pretender = world()
   const row = jobsOf(pretender, 'tracy-ci.yml').jobs.find((j) => j.name === 'build check (checks)')

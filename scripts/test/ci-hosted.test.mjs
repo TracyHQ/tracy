@@ -1,5 +1,7 @@
 /**
- * Tracy CI on GitHub-hosted runners, opt-in with the pull-request label `ci:hosted` (30/10/2026).
+ * Tracy CI on GitHub-hosted runners: opt-in with the label `ci:hosted` the morning of 30/10/2026, the
+ * default for a pull request from this repository since that afternoon, with the label
+ * `ci:self-hosted` to go back to our runners. There the full workers suite is three rows, not two.
  *
  * A job that may run on `ubuntu-latest` lands on a fresh VM without what the self-hosted runner image
  * carried: Node at `.node-version`, `php` cli, and (for `build-check`) a PostgreSQL that the
@@ -24,6 +26,7 @@ import { fileURLToPath } from 'node:url'
 
 import { load } from 'js-yaml'
 
+import { planMatrix } from '../ci/plan-ci.mjs'
 import { DATABASE_MARK } from '../ci/related-tests.mjs'
 import { labelSets, runnerPaths } from '../test-support/runs-on.mjs'
 
@@ -36,6 +39,9 @@ const NODE_STEP = 'Set up Node on a GitHub-hosted runner'
 const PHP_STEP = 'Set up PHP on a GitHub-hosted runner'
 const DB_STEP = "Point the tests at the job's PostgreSQL on a GitHub-hosted runner"
 const ASSERT_NODE = "Assert the runner's Node matches .node-version"
+/** The one condition that picks `ubuntu-latest`: a pull request without the label `ci:self-hosted`. */
+const HOSTED_WHEN =
+  "github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'ci:self-hosted')"
 
 const hostedJobs = Object.entries(jobs).filter(([, job]) => runnerPaths(job['runs-on']).condition !== null)
 const indexOf = (job, name) => job.steps.findIndex((s) => s.name === name)
@@ -57,8 +63,10 @@ test('the runs-on reader returns both paths, and refuses a shape it does not kno
   for (const bad of [
     '${{ matrix.runner }}',
     "${{ contains(github.event.pull_request.labels.*.name, 'ci:other') && 'ubuntu-latest' || fromJSON(format('[\"self-hosted\",\"{0}\"]', a)) }}",
-    "${{ contains(github.event.pull_request.labels.*.name, 'ci:hosted') && 'ubuntu-latest' || fromJSON(format('[\"self-hosted\",\"{0}\"]', a, b)) }}",
-    "${{ contains(github.event.pull_request.labels.*.name, 'ci:hosted') && 'ubuntu-latest' || fromJSON(format('[\"linux\",\"{0}\"]', a)) }}"
+    // The opt-in of #221: a condition this reader no longer takes for the hosted path.
+    "${{ contains(github.event.pull_request.labels.*.name, 'ci:hosted') && 'ubuntu-latest' || fromJSON(format('[\"self-hosted\",\"{0}\"]', a)) }}",
+    `\${{ ${HOSTED_WHEN} && 'ubuntu-latest' || fromJSON(format('["self-hosted","{0}"]', a, b)) }}`,
+    `\${{ ${HOSTED_WHEN} && 'ubuntu-latest' || fromJSON(format('["linux","{0}"]', a)) }}`
   ])
     assert.throws(() => runnerPaths(bad), bad)
 })
@@ -75,6 +83,44 @@ test('the jobs that may run GitHub-hosted are the pull-request ones; the nightly
   // The nightly-only jobs keep a plain self-hosted list: no pull request, no label, no hosted path.
   for (const name of ['dsh-lib-nightly', 'nightly-report'])
     assert.equal(runnerPaths(jobs[name]['runs-on']).hosted, null, name)
+})
+
+test('every hosted-capable job asks for ubuntu-latest by the same condition, and plan sizes the rows by it', () => {
+  for (const [name, job] of hostedJobs) assert.equal(runnerPaths(job['runs-on']).condition, HOSTED_WHEN, name)
+  // `plan` tells the planner where the rows will run by where it runs itself: the same condition
+  // picked both runners (the loop above), and the plan job reads no payload label (ci-test-scope).
+  const step = jobs.plan.steps.find((s) => s.name === 'Plan the rows')
+  assert.equal(step.env.ROWS_HOSTED, `\${{ ${HOSTED_ONLY} }}`)
+  assert.equal(step.run, 'node scripts/ci/plan-ci.mjs')
+})
+
+test('the gate learns from the runner whether the small suites cost their hosted time', () => {
+  const step = jobs['build-check'].steps.find((s) => s.name === 'Build check')
+  assert.equal(step.env.TRACY_TESTS_HOSTED, `\${{ ${HOSTED_ONLY} && '1' || '0' }}`)
+})
+
+test('a full run plans three workers shards on GitHub-hosted and two on our runners', () => {
+  const groups = (hosted) =>
+    planMatrix({ event: 'workflow_dispatch', changed: null, allFiles: [], hosted }).matrix.include
+  const shards = (rows) => rows.filter((r) => /^tests \d\/\d$/.test(r.group))
+  assert.deepEqual(
+    shards(groups(true)).map((r) => [r.group, r.args, Boolean(r.clock)]),
+    [
+      ['tests 1/3', '--only tests --tests-part workers:1/3', false],
+      ['tests 2/3', '--only tests --tests-part workers:2/3', false],
+      ['tests 3/3', '--only tests --tests-part workers:3/3,rest', true]
+    ]
+  )
+  assert.deepEqual(
+    shards(groups(false)).map((r) => [r.group, r.args, Boolean(r.clock)]),
+    [
+      ['tests 1/2', '--only tests --tests-part workers:1/2', false],
+      ['tests 2/2', '--only tests --tests-part workers:2/2,rest', true]
+    ]
+  )
+  // Every other row is the same on both runners.
+  const others = (rows) => rows.filter((r) => !/^tests \d\/\d$/.test(r.group))
+  assert.deepEqual(others(groups(true)), others(groups(false)))
 })
 
 test('a hosted-capable job sets up Node from .node-version before the first step that uses it', () => {

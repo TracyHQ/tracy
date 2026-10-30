@@ -301,11 +301,45 @@ export function shardOf(
   return owned[shard.index - 1].sort()
 }
 
+/**
+ * What the small suites cost on a GitHub-hosted `ubuntu-latest` row (30/10/2026), measured on run
+ * 41028805223 (#221, both attempts green), where `tests 2/2` carried them. The table is measured on our
+ * runners. There the workers files ran 1.23x their table seconds (`tests 1/2`: 549 s of `Build
+ * check` for 446 s predicted), and `tests 2/2` ran 1096 s for 514 s of workers: the remainder,
+ * ~464 s, is `rest` (interop + dsh-passwords; the table says 185 s), plus the ~9 s step of tests
+ * with the clock moved forward that rides the same row. So on hosted the last shard is preloaded
+ * with 473 s in hosted wall time, converted to the unit `shardOf` balances in. Two samples only:
+ * replace these figures when hosted runs report their own `tracy-test-timing` lines.
+ */
+export const HOSTED_COST = { workersFactor: 1.23, restWallSeconds: 464 + 9 } as const
+
+/** `TRACY_TESTS_HOSTED=1`: this row runs on GitHub-hosted (`tracy-ci.yml`, step `Build check`). */
+const HOSTED_ENV = 'TRACY_TESTS_HOSTED'
+
+/**
+ * The last shard's preload in `shardOf`'s unit (summed table seconds). On our runners the table's own
+ * figure; on GitHub-hosted the hosted cost of the small suites, divided by what one summed table
+ * second costs there (`wallPerSummedSecond` x the hosted workers factor).
+ */
+export function preloadFor(
+  table: { readonly preloadLastShardSeconds?: number; readonly wallPerSummedSecond?: number },
+  hosted: boolean
+): number {
+  const own = table.preloadLastShardSeconds ?? 0
+  const wall = table.wallPerSummedSecond
+  if (!hosted || typeof wall !== 'number' || !(wall > 0)) return own
+  return HOSTED_COST.restWallSeconds / (wall * HOSTED_COST.workersFactor)
+}
+
 /** Read the committed table; a missing or unreadable file means equal weights, never a failure. */
-function loadTimings(): Timings {
+function loadTimings(hosted = false): Timings {
   try {
-    const raw = JSON.parse(readFileSync(join(ROOT, 'scripts/test-timings.json'), 'utf8')) as Partial<Timings>
-    return { files: raw.files ?? {}, preloadLastShardSeconds: raw.preloadLastShardSeconds ?? 0 }
+    const raw = JSON.parse(
+      readFileSync(join(ROOT, 'scripts/test-timings.json'), 'utf8')
+    ) as Partial<Timings> & {
+      wallPerSummedSecond?: number
+    }
+    return { files: raw.files ?? {}, preloadLastShardSeconds: preloadFor(raw, hosted) }
   } catch {
     return NO_TIMINGS
   }
@@ -1234,33 +1268,33 @@ function runWorkers(shard?: { index: number; of: number }, selected?: readonly s
     return
   }
 
-  const assigned = shardOf(all, shard, loadTimings())
-  // 🔒 AN EMPTY SHARD IS RED. `node --test` with no files exits 0, which on the Actions page is a
-  // green tick for a shard that tested nothing — the same fail-open shape this gate exists to
-  // refuse. It can only happen when the shard count exceeds the file count, i.e. a workflow typo.
-  // Judged BEFORE the skip: a shard the skip empties is a different thing, and is red just below.
-  if (assigned.length === 0) {
+  // 🔒 THE SKIP IS APPLIED BEFORE THE SPLIT (30/10/2026): the rows balance only the files they will
+  // run. Until then the table split the whole list and each row dropped its database files after,
+  // which left the rows of a routine pull request uneven (predicted 446 / 699 s on two shards). A
+  // file is still in exactly one row: every row computes the same split from the same list.
+  const { run: runnable, dropped } = splitWorkers(all, skip)
+  announceDatabaseSkip(`the workers shards (this is ${String(shard.index)}/${String(shard.of)})`, dropped)
+  if (runnable.length === 0) {
     process.stderr.write(
-      `check-tests: shard ${String(shard.index)}/${String(shard.of)} has no file — ` +
-        `the shard count (${String(shard.of)}) is larger than the file count (${String(all.length)}).\n`
+      `check-tests: every workers file reads ${DATABASE_MARK} and ${SKIP_DB_ENV} left them all out — nothing would run.\n`
     )
     process.exit(1)
   }
-  // The skip is applied to the shard the table assigned, never before the split: the same file lands
-  // in the same shard with or without it, so a run that skipped and one that did not agree on who owns what.
-  const { run: mine, dropped } = splitWorkers(assigned, skip)
-  announceDatabaseSkip(`workers shard ${String(shard.index)}/${String(shard.of)}`, dropped)
+  const mine = shardOf(runnable, shard, loadTimings(process.env[HOSTED_ENV] === '1'))
+  // 🔒 AN EMPTY SHARD IS RED. `node --test` with no files exits 0, which on the Actions page is a
+  // green tick for a shard that tested nothing — the same fail-open shape this gate exists to
+  // refuse. It can only happen when the shard count exceeds the number of files to run.
+  if (mine.length === 0) {
+    process.stderr.write(
+      `check-tests: shard ${String(shard.index)}/${String(shard.of)} has no file — ` +
+        `the shard count (${String(shard.of)}) is larger than the file count (${String(runnable.length)}).\n`
+    )
+    process.exit(1)
+  }
   process.stdout.write(
     `check-tests: workers + scripts + packages — shard ${String(shard.index)}/${String(shard.of)}, ` +
       `${String(mine.length)}/${String(all.length)} file\n`
   )
-  if (mine.length === 0) {
-    process.stderr.write(
-      `check-tests: shard ${String(shard.index)}/${String(shard.of)} holds only files that read ${DATABASE_MARK}, ` +
-        `and ${SKIP_DB_ENV} left them all out — nothing would run, and a shard that tested nothing is red.\n`
-    )
-    process.exit(1)
-  }
   // The two `tracy-test-timing` lines bracket this shard's file records in the log; the table is
   // refreshed from them (`scripts/update-test-timings.mjs`). `end` is printed for a green shard only.
   const tag = `part=workers shard=${String(shard.index)}/${String(shard.of)}`

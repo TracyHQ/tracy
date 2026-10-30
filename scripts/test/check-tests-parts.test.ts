@@ -20,11 +20,54 @@ import { test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 
 import * as gate from '../check-tests.ts'
-import { parsePart, parseParts, shardOf } from '../check-tests.ts'
+import { HOSTED_COST, parsePart, parseParts, preloadFor, shardOf } from '../check-tests.ts'
+import { planMatrix } from '../ci/plan-ci.mjs'
 
 test('no --part means the whole gate, exactly as before', () => {
   assert.equal(parsePart([]), null)
   assert.equal(parsePart(['--only', 'tests']), null)
+})
+
+test('every workers row the planner makes is a part this gate takes, on our runners and on GitHub-hosted', () => {
+  for (const hosted of [false, true]) {
+    const rows = planMatrix({
+      event: 'workflow_dispatch',
+      changed: null,
+      allFiles: [],
+      readText: undefined,
+      hosted
+    }).matrix.include as { args: string }[]
+    const shards = rows.map((r) => r.args).filter((args) => /workers:/.test(args))
+    assert.equal(shards.length, hosted ? 3 : 2)
+    for (const args of shards) {
+      const spec = /--tests-part (\S+)/.exec(args)?.[1] ?? ''
+      assert.ok(Array.isArray(parseParts(['--part', spec])), `${String(hosted)}: ${spec}`)
+    }
+    // The small suites ride the last shard only: `parseParts` refuses them anywhere else.
+    assert.match(shards.at(-1) ?? '', /,rest$/)
+  }
+})
+
+test('on GitHub-hosted the last shard is preloaded with the hosted cost of the small suites', () => {
+  const table = { preloadLastShardSeconds: 300, wallPerSummedSecond: 0.5 }
+  // Our runners: the table's own figure.
+  assert.equal(preloadFor(table, false), 300)
+  // Hosted: 473 s of hosted wall, in table seconds (one summed second costs 0.5 x 1.23 s there).
+  assert.equal(HOSTED_COST.restWallSeconds, 473)
+  assert.ok(Math.abs(preloadFor(table, true) - 473 / (0.5 * 1.23)) < 1e-9)
+  // A table without a factor cannot be converted: it keeps its own figure rather than guess one.
+  assert.equal(preloadFor({ preloadLastShardSeconds: 300 }, true), 300)
+  assert.equal(preloadFor({}, false), 0)
+  // The heavier preload moves work off the last shard, and every file still lands once.
+  const files = Array.from({ length: 30 }, (_, i) => `t/${String(i)}.test.mjs`)
+  const timings = (hosted: boolean) => ({
+    files: Object.fromEntries(files.map((f) => [f, 20])),
+    preloadLastShardSeconds: preloadFor({ preloadLastShardSeconds: 100, wallPerSummedSecond: 0.5 }, hosted)
+  })
+  const last = (hosted: boolean) => shardOf(files, { index: 3, of: 3 }, timings(hosted)).length
+  assert.ok(last(true) < last(false), `${String(last(true))} < ${String(last(false))}`)
+  const all = [1, 2, 3].flatMap((index) => shardOf(files, { index, of: 3 }, timings(true)))
+  assert.deepEqual(all.sort(), [...files].sort())
 })
 
 test('each declared part parses to itself', () => {

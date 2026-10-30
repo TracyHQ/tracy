@@ -18,7 +18,8 @@
  *     this one (no rows at all) never qualifies, so skips cannot chain. Since 17/10/2026 a full run's
  *     tests may be the forced Turbo rows instead of the two workers shards (`fullRowSets()`); that
  *     set counts ONLY when the run's `plan` also printed the `full run` notice, because a pull
- *     request into develop has rows of the same names whose tasks the cache may have served;
+ *     request into develop has rows of the same names whose tasks the cache may have served. Since
+ *     30/10/2026 the three workers shards of a GitHub-hosted run count as the two do;
  *   - its `plan` job RECORDED the tree it tested (a `tested tree` notice, written by every run since
  *     this change) and that tree is ours. The run's head-commit tree only nominates candidates: a
  *     pull-request run tests a merge with its base, which is not its head when the base had moved.
@@ -71,21 +72,65 @@ export function forcedFullRunOf(annotations) {
   return annotations.some((a) => a?.title === FULL_RUN_TITLE && String(a.message ?? '').trim() === 'turbo')
 }
 
+/** The one label of a GitHub-hosted job, and the runner group the jobs API names for GitHub's machines. */
+export const HOSTED_LABEL = 'ubuntu-latest'
+export const HOSTED_GROUP = 'GitHub Actions'
+/** A job GitHub ran on its own `ubuntu-latest`: its one label AND GitHub's runner group (a self-hosted runner can carry the label). */
+export const ranHosted = (j) =>
+  Array.isArray(j?.labels) &&
+  j.labels.length === 1 &&
+  j.labels[0] === HOSTED_LABEL &&
+  j.runner_group_name === HOSTED_GROUP
+
 /**
- * Which full row set a run's jobs prove, or null: the legacy set alone, or the forced Turbo set with
- * `plan`'s mark. Every row of the set must be there and `success`. Shared with the pre-merge check.
+ * The runner kind the planned rows of a Tracy CI run ran on (30/10/2026): the plan job and every
+ * `build check` row that ran must agree, GitHub-hosted or ours. `plan` sizes the workers rows for its
+ * own runner (three shards hosted, two ours) and the rows ask for theirs by the same condition, so a
+ * mix means rows that were not the ones planned — refused, never read as either kind. A skipped row
+ * ran nowhere and is not counted.
+ * @param {any[]} jobs
+ * @returns {{ hosted: boolean } | { problem: string }}
+ */
+export function runnerKindOf(jobs) {
+  const ran = jobs.filter(
+    (j) =>
+      j?.name === PLAN_JOB || (String(j?.name).startsWith('build check (') && j?.conclusion !== 'skipped')
+  )
+  const hosted = ran.filter(ranHosted).map((j) => j.name)
+  const ours = ran.filter((j) => !ranHosted(j)).map((j) => j.name)
+  if (hosted.length > 0 && ours.length > 0)
+    return {
+      problem: `the plan job and the build-check rows ran on different runner kinds (GitHub-hosted: ${hosted.join(', ')}; self-hosted: ${ours.join(', ')}), so the rows are not the ones planned`
+    }
+  return { hosted: hosted.length > 0 }
+}
+
+/**
+ * Which full row set a run's jobs prove, or null: the legacy set alone (two workers shards on our
+ * runners, three on GitHub-hosted — each only on the runner kind the rows ran on), or the forced
+ * Turbo set with `plan`'s mark. Every row of the set must be there and `success`. Shared with the
+ * pre-merge check.
  * @param {any[]} jobs @param {boolean} forced
- * @returns {{ set: 'legacy' | 'turbo', rows: string[] } | { problem: string }}
+ * @returns {{ set: 'legacy' | 'hosted' | 'turbo', rows: string[] } | { problem: string }}
  */
 export function fullSetOf(jobs, forced) {
+  const kind = runnerKindOf(jobs)
+  if ('problem' in kind) return kind
   const byName = new Map(jobs.map((j) => [j?.name, j]))
   const sets = fullRowSets()
   const tried = []
-  for (const set of /** @type {const} */ (['legacy', 'turbo'])) {
+  for (const set of /** @type {const} */ (['legacy', 'hosted', 'turbo'])) {
     const rows = sets[set].map((group) => `build check (${group})`)
     const missing = rows.find((name) => !byName.has(name))
     if (missing) {
       tried.push(`no "${missing}"`)
+      continue
+    }
+    // The workers shards are sized for a runner kind: two on ours, three on GitHub-hosted.
+    if (set !== 'turbo' && (set === 'hosted') !== kind.hosted) {
+      tried.push(
+        `the ${set === 'hosted' ? 'three' : 'two'} workers shards ran ${kind.hosted ? 'GitHub-hosted' : 'self-hosted'}, where ${kind.hosted ? 'three' : 'two'} are planned`
+      )
       continue
     }
     if (set === 'turbo' && !forced) {

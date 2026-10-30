@@ -1,7 +1,8 @@
 // The runners a workflow job's `runs-on` can ask for, read without GitHub's expression engine.
 //
-// A job is either a plain label list (or one label), or — the Tracy CI jobs a pull request may move to
-// GitHub-hosted with the `ci:hosted` label (30/10/2026) — ONE expression of exactly this shape:
+// A job is either a plain label list (or one label), or — the Tracy CI jobs a pull request runs on
+// GitHub-hosted unless it carries the `ci:self-hosted` label (30/10/2026) — ONE expression of exactly
+// this shape:
 //
 //   ${{ <condition> && 'ubuntu-latest' || fromJSON(format('["self-hosted",…,"{0}",…]', <arg0>, …)) }}
 //
@@ -10,7 +11,7 @@
 // evaluates a label (the lane, `ci:aws-only`) reads the same text either way. Any other expression in
 // `runs-on` throws: a test must refuse a shape it does not know, never guess it.
 const HOSTED_RUNS_ON =
-  /^\$\{\{\s*(contains\(github\.event\.pull_request\.labels\.\*\.name, 'ci:hosted'\))\s*&&\s*'ubuntu-latest'\s*\|\|\s*fromJSON\(format\('(\[[^']*\])',\s*([\s\S]*)\)\)\s*\}\}$/
+  /^\$\{\{\s*(github\.event_name == 'pull_request' && !contains\(github\.event\.pull_request\.labels\.\*\.name, 'ci:self-hosted'\))\s*&&\s*'ubuntu-latest'\s*\|\|\s*fromJSON\(format\('(\[[^']*\])',\s*([\s\S]*)\)\)\s*\}\}$/
 
 /** Split `a, b(c, d), 'e, f'` on its top-level commas. */
 function splitArgs(source) {

@@ -25,7 +25,7 @@ const DIR = join(ROOT, '.github/workflows')
 
 /**
  * Every job's self-hosted `runs-on`, as one string per label, across every workflow file. A Tracy CI
- * job a pull request may move to GitHub-hosted (`ci:hosted`) is judged by its self-hosted list.
+ * job a pull request runs GitHub-hosted (unless labelled `ci:self-hosted`) is judged by its self-hosted list.
  */
 const jobs = readdirSync(DIR)
   .filter((f) => f.endsWith('.yml') || f.endsWith('.yaml'))

@@ -303,6 +303,92 @@ test('the workflow is wired to this module: record + lookup in plan, rows gated,
   )
 })
 
+// ── a full run on GitHub-hosted runners: three workers shards (30/10/2026) ──────────────────────
+
+/** What the jobs API says of a job GitHub ran on its own `ubuntu-latest`. */
+const HOSTED_JOB = { labels: ['ubuntu-latest'], runner_group_name: 'GitHub Actions' }
+/** What it says of one of ours. */
+const OUR_JOB = {
+  labels: ['self-hosted', 'linux', 'tracy-check', 'tracy-lane-dev'],
+  runner_group_name: 'Default'
+}
+/** The jobs of a full green run, every job on one runner kind, with the row set of that kind by default. */
+const kindJobs = (job, set = job === HOSTED_JOB ? 'hosted' : 'legacy') => [
+  { name: 'plan the build-check rows', conclusion: 'success', ...job },
+  { name: 'build dsh once for this run', conclusion: 'success', ...job },
+  ...fullRowSets()[set].map((g) => ({ name: `build check (${g})`, conclusion: 'success', ...job }))
+]
+/** The jobs of a full green run whose rows ran GitHub-hosted: three workers shards, not two. */
+const hostedJobs = () => kindJobs(HOSTED_JOB)
+const proofOf = (jobs) =>
+  proofProblem({ run: run(), jobs, testedTree: TREE, testedScope: 'full', tree: TREE, repo: REPO })
+
+test('the row set must be the one planned for the runner kind the plan job and its rows ran on', () => {
+  // Pass: all hosted with three shards; all ours with two (labelled or, as in older fixtures, not).
+  assert.equal(proofOf(kindJobs(HOSTED_JOB)), null)
+  assert.equal(proofOf(kindJobs(OUR_JOB)), null)
+  // The review's case: a hosted plan and hosted rows that are our two-row set, scope full.
+  assert.match(String(proofOf(kindJobs(HOSTED_JOB, 'legacy'))), /two workers shards ran GitHub-hosted/)
+  // Three shards on our runners are not what our plan makes either.
+  assert.match(String(proofOf(kindJobs(OUR_JOB, 'hosted'))), /three workers shards ran self-hosted/)
+  // A hosted plan with the two-row set run on our runners: plan and rows disagree.
+  const mixed = kindJobs(OUR_JOB, 'legacy')
+  Object.assign(mixed[0], HOSTED_JOB)
+  assert.match(String(proofOf(mixed)), /different runner kinds .*GitHub-hosted: plan the build-check rows;/)
+  // One hosted row among ours is a mix too; a skipped row ran nowhere and is not counted.
+  const oneRow = kindJobs(OUR_JOB)
+  Object.assign(
+    oneRow.find((j) => j.name === 'build check (checks)'),
+    HOSTED_JOB
+  )
+  assert.match(String(proofOf(oneRow)), /different runner kinds/)
+  const skipped = kindJobs(OUR_JOB)
+  skipped.push({
+    name: 'build check (tests related)',
+    conclusion: 'skipped',
+    labels: [],
+    runner_group_name: null
+  })
+  assert.equal(proofOf(skipped), null)
+  // The forced Turbo set is not sized by runner kind, but its jobs must still agree.
+  assert.equal(
+    proofProblem({
+      run: run(),
+      jobs: kindJobs(HOSTED_JOB, 'turbo'),
+      testedTree: TREE,
+      testedScope: 'full',
+      tree: TREE,
+      repo: REPO,
+      forced: true
+    }),
+    null
+  )
+})
+
+test('a full GitHub-hosted run is a proof with its three shards, and not with two of them', async () => {
+  const proof = run()
+  const d = await findProof({
+    tree: TREE,
+    repo: REPO,
+    runs: [proof],
+    inspect: inspector({ [proof.id]: { jobs: hostedJobs(), testedTree: TREE, testedScope: 'full' } })
+  })
+  assert.equal(d.skip, true, d.why)
+  // A shard missing is not a full run, whichever count the run had.
+  const short = hostedJobs().filter((j) => j.name !== 'build check (tests 2/3)')
+  assert.match(
+    proofProblem({ run: run(), jobs: short, testedTree: TREE, testedScope: 'full', tree: TREE, repo: REPO }),
+    /not a full run/
+  )
+  // A red shard is red.
+  const red = hostedJobs()
+  red.find((j) => j.name === 'build check (tests 3/3)').conclusion = 'failure'
+  assert.match(
+    proofProblem({ run: run(), jobs: red, testedTree: TREE, testedScope: 'full', tree: TREE, repo: REPO }),
+    /"build check \(tests 3\/3\)" ended failure/
+  )
+})
+
 // ── a full run whose tests are the forced Turbo rows (17/10/2026) ───────────────────────────────
 
 /** The jobs of a full green run whose `plan` forced every Turbo row, instead of the two shards. */
