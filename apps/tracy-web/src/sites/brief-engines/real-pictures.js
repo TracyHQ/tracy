@@ -33,6 +33,13 @@ import { iconMeanings } from './icon-meanings.js'
 import { correctedCut, sharpFill } from './sharpness-gate.js'
 import { phosphorCatalog } from '../../lib/phosphor-icons.js'
 import { drawingFallbacks } from './drawing-fallbacks.js'
+import {
+  HIDDEN_BY_PLAN,
+  followPlannedIcons,
+  followPlannedPictures,
+  onlyPhotos,
+  settleDrawings
+} from './site-plan-pictures.js'
 
 /** Pictures cut at once: each holds a decoded photograph in memory (C15). */
 const CUT_AT_ONCE = 4
@@ -130,6 +137,9 @@ export function contentMapOf(contract) {
  * @param {Record<string, string> | null} [input.written] - the words the build planned, by slot key (copy first, #189):
  *   each frame's photo and drawing follow the record page it sits on and the copy next to it, each icon the words of
  *   its own item
+ * @param {ReturnType<typeof import('./site-plan-pictures.js').plannedPictures>} [input.sitePlan] - the accepted site
+ *   plan's picture and icon decisions (`plannedPictures`, ticket #239): with them each picture slot takes exactly the
+ *   plan's decision and each icon the plan's meaning, and the answer carries what was applied per slot (`sitePlan`)
  */
 export async function shapeReal({
   real,
@@ -152,9 +162,12 @@ export async function shapeReal({
   declared = [],
   cardNames: plannedNames = null,
   textModel = null,
-  written = null
+  written = null,
+  sitePlan: planned = null
 }) {
   const domain = await loadDomain()
+  /** What the accepted site plan applied, per picture and icon slot (ticket #239). */
+  let applied = null
   const policy = picturePolicy(real.picturePolicy)
   const clock = (phase, started) => time(phase, Date.now() - started)
   const keep = { cms, keepRoute: pages.keepRoute, ...(pages.homeRoute ? { homeRoute: pages.homeRoute } : {}) }
@@ -205,20 +218,55 @@ export async function shapeReal({
     const cardNames = plannedNames ?? domain.cardNamesOf(contentMap, copy)
     // Per slot (#194): cards that share one demo file each get their own decision and file; where no photo fits, a
     // picture is drawn from the owner's photos (`fill-draw.mjs`), else the slot takes a brand colour block.
-    const brief = { ...real.brief, assets }
+    // 🔒 A BRIEF PHOTO THE SITE PLAN DOES NOT USE IS NEVER PLACED, EXTENDED OR DRAWN FROM (ticket #239).
+    const brief = {
+      ...real.brief,
+      assets: planned ? assets.filter((a) => !planned.skipped.has(String(a?.id))) : assets
+    }
+    // Each slot the site plan decides may take only its planned photo, or none; acceptance and crop still judge it.
+    const only = planned ? onlyPhotos(planned) : null
     // Every owner photo placed is judged as it will be shown (`sharpness-gate.js`): an unsharp one loses the slot to the
     // next photo, else to a drawing.
-    const { fill, unsharp, sharpness } = await sharpFill({
+    const {
+      fill: judged,
+      unsharp,
+      sharpness
+    } = await sharpFill({
       plan: (refused) =>
-        domain.planFill({ contentMap, brief, demo, cardNames, perSlot: true, unsharp: refused, written }),
+        domain.planFill({
+          contentMap,
+          brief,
+          demo,
+          cardNames,
+          perSlot: true,
+          unsharp: refused,
+          written,
+          ...(only ? { only } : {})
+        }),
       contentMap,
       real,
       shownWidthOf: domain.shownWidthOf,
       note
     })
+    // 🔒 EACH PICTURE SLOT TAKES EXACTLY THE SITE PLAN'S DECISION (ticket #239, `site-plan-pictures.js`): its photo, a
+    // drawing, or hidden; only the slots the plan draws are left for the drawing planner.
+    const followed = planned ? followPlannedPictures(judged.slots, planned) : null
+    const fill = followed ? { ...judged, slots: followed.slots } : judged
     // Only slots on a page the site keeps are drawn: a demo post the tidy-up takes off never spends the cap.
     const onSite = new Set(map.groups.flatMap((g) => (g.occurrences ?? []).map((o) => o.key)))
-    const drawnPlan = domain.planDrawings({ fill, contentMap, brief, demo, onSite, unsharp, written })
+    const described = followed
+      ? new Map(
+          [...followed.record]
+            .filter(([, r]) => r.applied === 'draw' && r.describe)
+            .map(([key, r]) => [key, r.describe])
+        )
+      : null
+    const drawnPlan = followed
+      ? settleDrawings(
+          domain.planDrawings({ fill, contentMap, brief, demo, onSite, unsharp, written, described }),
+          followed.record
+        )
+      : domain.planDrawings({ fill, contentMap, brief, demo, onSite, unsharp, written })
     const placed = domain.placementOfFill({ fill: { ...fill, slots: drawnPlan.slots }, groups: map.groups })
     map = { ...map, groups: placed.groups, never: [...map.never, ...placed.dropped] }
     made = { ...placed.plan, drawings: drawnPlan.drawings, drawCapped: drawnPlan.capped, sharpness }
@@ -246,6 +294,59 @@ export async function shapeReal({
       iconChoices,
       iconCatalog: phosphorCatalog()
     })
+    if (planned) {
+      // Icons follow the plan's meanings, one neutral icon for a row the plan calls neutral (site build rule 4).
+      const slotOf = new Map(decorMap.slots.map((s) => [s.key, s]))
+      const usable = domain.usableCatalog(phosphorCatalog())
+      const sectionOf = (/** @type {string} */ key) => String(slotOf.get(key)?.entity ?? key)
+      const icons = followPlannedIcons(decorPlan.slots, planned, {
+        rank: (meaning) => [
+          ...new Set([...domain.keywordRanking(meaning), ...domain.catalogNameRanking(meaning, usable)])
+        ],
+        neutral: domain.NEUTRAL_GLYPHS,
+        sectionOf,
+        rowOf: (key) => {
+          const group = slotOf.get(key)?.group?.id
+          return group ? `${sectionOf(key)}#${String(group).replace(/\.\d+$/, '')}` : sectionOf(key)
+        }
+      })
+      // A cut-out frame (the decor ladder's) shows only the photo the plan names there; any other decision, or a photo the
+      // ladder cannot stand in the frame, clears it and takes it off (ladder step 2). A cut-out is never drawn.
+      const slots = icons.slots.map((d) => {
+        const r = d.action === 'cut-out' ? followed.record.get(d.key) : null
+        if (!r || ['off', 'own-door', 'template'].includes(r.applied)) return d
+        const own = planned.pictures.get(d.key)
+        if ((d.mode === 'own' || d.mode === 'framed') && d.mediaId && d.mediaId === own?.mediaId) {
+          followed.record.set(d.key, { ...r, applied: 'photo', mediaId: d.mediaId, cutOut: d.mode })
+          return d
+        }
+        followed.record.set(d.key, {
+          ...r,
+          applied: 'hide',
+          reason:
+            r.applied === 'hide'
+              ? r.reason
+              : own?.decision === 'photo'
+                ? `the planned photo ${own.mediaId} cannot stand in this cut-out frame`
+                : 'a cut-out frame is never drawn'
+        })
+        return { ...d, mode: 'off', step: 2, reason: HIDDEN_BY_PLAN, mediaId: undefined, crop: undefined }
+      })
+      decorPlan = { ...decorPlan, slots }
+      // A picture the slot map leaves on no page the site shows (a demo blog post kept as written) is not written: said so.
+      const unshown = new Map((map.skipped ?? []).map((k) => [k.file, k.reason]))
+      const sampleOf = new Map(contentMap.slots.map((s) => [s.key, String(s.sample ?? '').split('#')[0]]))
+      for (const [key, r] of followed.record) {
+        const why = unshown.get(sampleOf.get(key))
+        if (why && !['off', 'own-door', 'template'].includes(r.applied))
+          followed.record.set(key, { ...r, applied: 'not-shown', reason: why })
+      }
+      applied = {
+        version: 'site-plan-pictures/1',
+        pictures: [...followed.record.values()],
+        icons: [...icons.record.values()]
+      }
+    }
   } else {
     const { clusterOf } = domain.nearCopies(labels)
     made = domain.planPlacement({ groups: map.groups, labels, clusterOf, bound })
@@ -285,7 +386,8 @@ export async function shapeReal({
       planner: domain.PLANNER_VERSION,
       ...(made.fill ? { fill: made.fill } : {})
     },
-    media: labels.map((l) => l.id).sort()
+    media: labels.map((l) => l.id).sort(),
+    ...(applied ? { sitePlan: applied } : {})
   }
   const plan = real.plan ?? (await realPictures.recordPlan(real.buildId, fresh))
   clock('picturePlanMs', started)
@@ -458,6 +560,13 @@ export async function shapeReal({
           return gate
             ? { ...drawn.get(u.groupId), receipt: { ...drawn.get(u.groupId).receipt, sharpness: gate } }
             : drawn.get(u.groupId)
+        // A picture the site plan hides is cleared, and the head block takes it off wherever it shows (ticket #239).
+        if (u.code === HIDDEN_BY_PLAN && group?.demo) {
+          const blank = await placeholderFor(group, real.colours, { kind: 'blank' })
+          return blank
+            ? { ...blank, hide: true, receipt: { ...blank.receipt, reason: HIDDEN_BY_PLAN } }
+            : null
+        }
         if (fallbacks.has(u.groupId)) return fallbacks.get(u.groupId)
         if (group?.role === 'gallery') {
           const blank = await placeholderFor(group, real.colours, { kind: 'blank' })
@@ -516,7 +625,13 @@ export async function shapeReal({
     drawing = { ...drawing, decor: decor.stats }
     clock('pictureDecorMs', started)
   }
-  return { shaped, plan, map, ...(drawing ? { drawing } : {}) }
+  return {
+    shaped,
+    plan,
+    map,
+    ...(drawing ? { drawing } : {}),
+    ...(plan.sitePlan ? { sitePlan: plan.sitePlan } : {})
+  }
 }
 
 /**

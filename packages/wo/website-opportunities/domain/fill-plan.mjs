@@ -65,7 +65,9 @@ export const FILL_REASONS = Object.freeze({
     'one demo picture is shared by cards of two offerings, and no general photo fits it',
   'conflicting-people': 'one demo picture is shared by cards of two people',
   'conflicting-needs': 'one demo picture is shared by a person card and an offering card',
-  'demo-size-unknown': "the demo picture's size is not known"
+  'demo-size-unknown': "the demo picture's size is not known",
+  'site-plan-hidden': 'the site plan hides this picture, or gives it no usable decision',
+  'site-plan-off': "the site plan takes this picture's section, page or card off"
 })
 
 /** Group kinds whose cards each show one offering. */
@@ -282,6 +284,9 @@ const WIDE_ASPECT = 1.6
  *   it once cut and shown (`photo-sharpness.js`): refused there as `unsharp`, so the next photo of the ranking is met
  * @param {Record<string, string> | null} [input.written] - the words the build writes, by slot key (copy first, #189):
  *   the copy next to each frame ranks the photos that qualify for it
+ * @param {Map<string, Set<string>> | null} [input.only] - per slot key, the only photos it may take (an accepted site
+ *   plan's photo for it, or none, TracyHQ/tracy#239): every other photo is refused there as `not-in-site-plan`, and the
+ *   acceptance and crop rules still judge the one left. A slot not listed takes any photo that qualifies, as before
  * @returns {{version: string, offerings: Array<{groupId: string, offeringId: string, label: string}>,
  *   people: Array<{groupId: string, personId: string, label: string}>,
  *   slots: Array<{key: string, entity: string, type: string, role: string | null, groupId: string | null,
@@ -295,7 +300,8 @@ export function planFill({
   cardNames = {},
   perSlot = false,
   unsharp = new Map(),
-  written = null
+  written = null,
+  only = null
 }) {
   const slots = contentMap?.slots ?? []
   const demoOnly = new Set((contentMap?.entities ?? []).filter((e) => e?.demoOnly === true).map((e) => e.key))
@@ -357,7 +363,10 @@ export function planFill({
       const file = fileOf(slot.sample)
       const need = needOf(slot, lockOf, peopleOf, records.get(slot.entity))
       // Per slot (#194): one unit per need of the file, so cards of two offerings no longer wait on each other.
-      const key = perSlot ? `${file}#${needKeyOf(need)}` : file
+      // A slot an accepted site plan pins to one photo (or to none) is its own unit with the slots pinned alike.
+      const pinned = only?.get(slot.key)
+      const planKey = pinned ? `#plan:${[...pinned].sort().join(',') || 'none'}` : ''
+      const key = perSlot ? `${file}#${needKeyOf(need)}${planKey}` : `${file}${planKey}`
       const unit = units.get(key) ?? { file, key, slots: [], needs: [], frame: null }
       unit.slots.push(slot)
       unit.needs.push(need)
@@ -445,6 +454,9 @@ export function planFill({
           (pages.some((page) => shownOn.get(page)?.has(asset.id)) ? 'used' : null) ??
           (wordedPhoto(asset) && !galleryUnit(unit, entityKindOf) ? 'words-on-photo' : null) ??
           (unit.slots.some((slot) => unsharp.get(slot.key)?.has(asset.id)) ? 'unsharp' : null) ??
+          (unit.slots.some((slot) => only?.get(slot.key) && !only.get(slot.key).has(asset.id))
+            ? 'not-in-site-plan'
+            : null) ??
           (topic && depictsOf(asset) !== GENERAL && depictsOf(asset) !== topic.id ? 'other-topic' : null)
         if (!why) {
           const cut = subjectCrop(asset, unit.frame, { min, matches, wide, maxWidth })

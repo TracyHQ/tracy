@@ -70,6 +70,11 @@ function frameContextOf(subject) {
     typeof subject?.near === 'string' && subject.near.trim()
       ? `\nThe page says next to this picture: ${quote(subject.near)}. Show exactly that part of ${what}.`
       : ''
+  // What an accepted site plan says this picture shows (TracyHQ/tracy#239): the author's own description of the frame.
+  const describe =
+    typeof subject?.describe === 'string' && subject.describe.trim()
+      ? `\nThe picture shows: ${quote(subject.describe)}.`
+      : ''
   const placement = subject?.placement?.role
     ? `\nThe picture is a ${subject.placement.frame ?? 'card'} picture (${subject.placement.role}).`
     : ''
@@ -77,7 +82,7 @@ function frameContextOf(subject) {
     subject?.record === true
       ? '\nPeople may appear, seen from behind, from a distance or out of focus: no recognisable face.'
       : ''
-  return `${topic}${near}${placement}${faces}`
+  return `${topic}${near}${describe}${placement}${faces}`
 }
 
 /** How the business's own photos are given: what it looks like, never a style or a frame to copy. */
@@ -158,7 +163,9 @@ export function drawKey(item, { model, shas }) {
               item.subject.placement,
               item.subject.record ?? false
             ]
-          : [])
+          : []),
+        // Only when a site plan described it, so a drawing made without one keeps its key.
+        ...(item.subject.describe ? [item.subject.describe] : [])
       ]
     : null
   return createHash('sha256')

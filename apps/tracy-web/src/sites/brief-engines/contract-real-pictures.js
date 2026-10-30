@@ -53,11 +53,12 @@ export async function prepareContractPictures({
   declared = [],
   cardNames = null,
   textModel = null,
-  written = null
+  written = null,
+  sitePlan = null
 }) {
   if (!real || !siteFile) return null
   ctx.signal?.throwIfAborted()
-  return shapeReal({
+  const shaped = await shapeReal({
     real,
     contentMap,
     cms: ctx.platform,
@@ -78,8 +79,13 @@ export async function prepareContractPictures({
     // The text model reads each item icon's meaning (#189); without it the icons follow their keywords.
     textModel,
     // Copy first, then pictures (#189): the words already planned for the page choose and describe its pictures.
-    written
+    written,
+    // The accepted site plan's picture and icon decisions (#239, `site-plan-pictures.js`), null without one.
+    sitePlan
   })
+  // What the plan applied to each picture and icon slot is kept on the build record (#239).
+  if (shaped?.sitePlan) ctx.record?.('sitePlanPictures', shaped.sitePlan)
+  return shaped
 }
 
 export async function writeContractPictures({
@@ -99,6 +105,7 @@ export async function writeContractPictures({
   cardNames = null,
   textModel = null,
   written = null,
+  sitePlan = null,
   shaped: suppliedShape
 }) {
   if (!real || !siteFile) return null
@@ -120,7 +127,8 @@ export async function writeContractPictures({
       declared,
       cardNames,
       textModel,
-      written
+      written,
+      sitePlan
     }))
   const slots = new Map(inspectedSlots(initial, contentMap).map((s) => [s.key, s]))
   // An icon or a cut-out the site's inspection does not list is left as shipped, never a reason to stop (#195).

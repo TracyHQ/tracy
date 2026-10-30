@@ -35,6 +35,7 @@ import { writeSitePlan } from './site-plan-author.js'
 import { pageAuthorPlan, writePagesInOrder } from './page-author.js'
 import { inventoryOfContract } from './template-inventory.js'
 import { overlaySitePlan, planFill, withPlanFill } from './site-plan-fill.js'
+import { plannedPictures } from './site-plan-pictures.js'
 import { formDestinationsOf } from 'website-opportunities/domain/form-blocks.mjs'
 import { writeSiteDirection } from './site-direction.js'
 import { sourcedWriter } from './copy-sources.js'
@@ -700,7 +701,8 @@ export function createJoomlaEngine({
     copy = null,
     drawDoor = null,
     shaped = undefined,
-    written = null
+    written = null,
+    authorPictures = null
   ) => {
     if (!realPictures || !siteFile || !ctx.contract) return null
     real ??= await realPictures.forSite({
@@ -740,6 +742,8 @@ export function createJoomlaEngine({
       textModel: async () => (await models()).text ?? null,
       // Copy first, then pictures (#189): the words settled in `prepare` choose each frame.
       written,
+      // The accepted site plan's picture and icon decisions (#239): each slot takes exactly the plan's.
+      sitePlan: authorPictures,
       write: async ({ state, changes, replaceKept }) =>
         new Set(
           await writeContract({
@@ -756,6 +760,15 @@ export function createJoomlaEngine({
         )
     })
   }
+  /**
+   * The accepted site plan's picture and icon decisions (`plannedPictures`, #239), or null: only a plan the fill stages
+   * also follow (`authorFill`) decides the pictures; without one the picture stage decides as before.
+   * @param {any} ctx @param {any} prepared
+   */
+  const authorPicturesOf = (ctx, prepared) =>
+    prepared?.authorFill && prepared.authorPlan && ctx.contract
+      ? plannedPictures(prepared.authorPlan, { inventory: inventoryOfContract(ctx.contract) })
+      : null
   // What the build's words cost is recorded on its timings (`text-spend.js`).
   return withTextSpend({
     pictures,
@@ -781,7 +794,9 @@ export function createJoomlaEngine({
         textModel: async () => (await models()).text ?? null,
         // 🔒 COPY FIRST, THEN PICTURES (#189, site build rule 2): every word the plan writes is settled in `prepare`, so
         // each frame is chosen and drawn from its page, the copy next to it and its role.
-        written: prepared.changes ?? null
+        written: prepared.changes ?? null,
+        // 🔒 PICTURES AND ICONS FOLLOW THE ACCEPTED SITE PLAN (#239, `site-plan-pictures.js`): photo, drawing or hidden.
+        sitePlan: authorPicturesOf(ctx, prepared)
       })
     },
     /** @param {import('../brief-build.js').BriefContext} ctx */
@@ -2085,7 +2100,8 @@ export function createJoomlaEngine({
             prepared.copyPins ?? null,
             prepared.drawDoor ?? null,
             prepared.realPictureShape,
-            prepared.changes ?? null
+            prepared.changes ?? null,
+            authorPicturesOf(ctx, prepared)
           )
         prepared.real = null
       }

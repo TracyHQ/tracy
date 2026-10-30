@@ -127,6 +127,8 @@ function drawable(decision, slot) {
  *   when given, every other slot is left as the fill plan decided it
  * @param {Record<string, string> | null} [input.written] - the words the build writes, by slot key: a record page's
  *   drawing is told the copy next to its frame
+ * @param {Map<string, string> | null} [input.described] - per slot key, what an accepted site plan says its drawing
+ *   shows (TracyHQ/tracy#239): told to the drawing as `subject.describe`; a drawing serves only slots described alike
  * @returns {{version: string, slots: any[], drawings: Array<{id: string, mode: 'outpaint' | 'scene', sourceId?: string,
  *   referenceIds: string[], aspect: number, subject: {kind: 'offering' | 'venue', id?: string, label?: string,
  *   category: string | null, about?: string, record?: true, topic?: string, near?: string,
@@ -141,7 +143,8 @@ export function planDrawings({
   max = DRAW_CAP,
   onSite = null,
   unsharp = new Map(),
-  written = null
+  written = null,
+  described = null
 }) {
   const near = nearbyCopyOf(contentMap, written)
   const topics = pageTopicsOf(contentMap, written)
@@ -198,6 +201,8 @@ export function planDrawings({
       : {}
     const pages = pagesOf(d.entity)
     const width = shownWidthOf(slot) || frame.width
+    const describe = described?.get(d.key)
+    if (describe) placed.describe = describe
     candidates.push({
       d,
       aspect,
@@ -217,7 +222,8 @@ export function planDrawings({
   const drawings = []
   const decided = new Map()
   let capped = 0
-  const subjectKey = (s) => (s.kind === 'offering' ? `offering:${s.id}` : 'venue')
+  const subjectKey = (s) =>
+    `${s.kind === 'offering' ? `offering:${s.id}` : 'venue'}${s.describe ? `#${s.describe}` : ''}`
   for (const c of candidates) {
     const key = subjectKey(c.subject)
     // Reuse: the same subject, a close shape, and none of its slots on this slot's pages.

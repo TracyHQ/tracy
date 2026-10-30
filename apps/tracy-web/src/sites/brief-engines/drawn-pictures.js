@@ -76,7 +76,7 @@ function expectOf(item, real) {
   const shows =
     item.mode === 'outpaint'
       ? 'the same photograph, extended to a wider frame with no visible join'
-      : [own ?? (typeof subject.topic === 'string' ? subject.topic : null), subject.near]
+      : [own ?? (typeof subject.topic === 'string' ? subject.topic : null), subject.describe ?? subject.near]
           .filter((v) => typeof v === 'string' && v.trim())
           .join(': ') || "the business's own place and work"
   return { shows, trade: real.brief?.business?.subTrade ?? real.brief?.business?.trade ?? null }
