@@ -386,9 +386,10 @@ export function createHelp(deps: HelpDeps): HelpController {
           ...(reply ? { answerId: reply.id } : {}),
           ...(reply?.rating === 1 || reply?.rating === -1 ? { rating: reply.rating } : {}),
           ...(atOf(reply?.at ?? turn.at) !== undefined ? { at: atOf(reply?.at ?? turn.at) } : {}),
-          // A question the server stored without an answer was cut: the stream broke after it.
-          status: reply ? 'done' : 'error',
-          ...(reply ? {} : { error: 'error.cut' as const }),
+          // A question the server stored without an answer was cut: the stream broke after it. An
+          // answer it stored part of says how it ended: stopped, or cut — never read as finished (#206).
+          status: !reply || reply.ended === 'cut' ? 'error' : reply.ended === 'stopped' ? 'stopped' : 'done',
+          ...(!reply || reply.ended === 'cut' ? { error: 'error.cut' as const } : {}),
           ...(turn.files?.length ? { files: turn.files } : {}),
           links
         }
