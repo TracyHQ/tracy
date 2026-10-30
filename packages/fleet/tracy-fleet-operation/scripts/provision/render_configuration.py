@@ -25,19 +25,28 @@ door for exactly that reason — and the copy kept it, so the customer's preview
 page pictures showed the offline page (beta week 16–23/10/2026: every turn on one site said it could
 not check the screen). Being in ``BARE`` also makes it an environment setting for Sync from live
 (``live_sync.py``), so a sync never takes the copy offline again.
+
+And one is turned ON for a site provisioned for a brief build (``--offline-lock``): the rebuilding
+lock, written here so the restored site is offline before the web server first serves it
+(``offline_lock.py``, spec TracyHQ/tracy#189 criterion 12.1). Its key and message come from the
+environment, never from argv.
 """
 
 from __future__ import annotations
 
 import argparse
+import os
 import re
 import secrets
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import offline_lock  # noqa: E402
+
 # Settings replaced. Everything not named here is the customer's and is left untouched.
-QUOTED = {"host", "user", "password", "db", "secret", "log_path", "tmp_path", "live_site", "mailer", "smtpuser", "smtppass", "smtphost"}
-BARE = {"force_ssl", "behind_loadbalancer", "offline"}
+QUOTED = {"host", "user", "password", "db", "secret", "log_path", "tmp_path", "live_site", "mailer", "smtpuser", "smtppass", "smtphost"} | offline_lock.QUOTED
+BARE = {"force_ssl", "behind_loadbalancer", "offline"} | offline_lock.BARE
 
 
 def _literal(name: str, value: str) -> str:
@@ -112,6 +121,9 @@ def build_values(args: argparse.Namespace) -> dict[str, str]:
         "smtphost": "localhost",
         # The copy is for looking at: online, whatever the source said (module docstring).
         **({"offline": "0"} if getattr(args, "online", False) else {}),
+        # A brief build's site: on its rebuilding page from the first request (module docstring).
+        # After `--online`, so a lock always wins over it.
+        **(offline_lock.lock_from_env() or {} if getattr(args, "offline_lock", False) else {}),
     }
 
 
@@ -136,9 +148,23 @@ def main(argv: list[str]) -> int:
         action="store_true",
         help="Set offline = 0: an imported copy is looked at, whatever its source site said.",
     )
+    p.add_argument(
+        "--offline-lock",
+        action="store_true",
+        help="Restore the site offline on its rebuilding page, readable with the preview key in "
+        f"{offline_lock.KEY_ENV} (a brief build, spec TracyHQ/tracy#189).",
+    )
     args = p.parse_args(argv)
 
-    rendered, unset = substitute(args.source.read_text(encoding="utf-8"), build_values(args))
+    if args.offline_lock and not os.environ.get(offline_lock.KEY_ENV):
+        print(f"--offline-lock needs {offline_lock.KEY_ENV} in the environment", file=sys.stderr)
+        return 1
+    try:
+        values = build_values(args)
+    except ValueError as error:
+        print(f"site lock refused: {error}", file=sys.stderr)
+        return 1
+    rendered, unset = substitute(args.source.read_text(encoding="utf-8"), values)
 
     # Refuse rather than half-configure: reaching here means the file is not a JConfig class,
     # so nothing could be set — a site with the old host's database password still in place.

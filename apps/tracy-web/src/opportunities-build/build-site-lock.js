@@ -28,6 +28,23 @@ export async function briefBuildHoldsSite(pool, siteKey) {
 }
 
 /**
+ * Whether a create press is a brief build's (the one that will be judged and unlocked), from its `buildId`, before the
+ * site exists: the create door asks it to restore the site already on its rebuilding page (`sites/site-lock.js`
+ * `sourceLock`). The press's own account only, so a press can never name another account's build.
+ * @param {{query: Function}} pool @param {string} accountId @param {string | null} buildId
+ */
+export async function briefBuildPress(pool, accountId, buildId) {
+  if (!buildId) return false
+  const { rows } = await pool.query(
+    `select 1 from wo_build b
+      where b.account_id = $1 and b.build_id = $2 and b.choice->>'quickstartWorkflow' = $3 and b.state <> 'deleted'
+      limit 1`,
+    [accountId, buildId, BRIEF_BUILD]
+  )
+  return rows.length > 0
+}
+
+/**
  * Merge `part` into the build's receipt; the build as it stands afterwards.
  * @param {{query: Function}} db @param {any} build @param {Record<string, unknown>} part
  */

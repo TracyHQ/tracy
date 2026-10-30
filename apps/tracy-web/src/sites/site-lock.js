@@ -66,8 +66,9 @@ export function publicLock(lock) {
 
 /**
  * @typedef {{version: number, state: 'locked' | 'unlocked' | 'unsupported' | 'failed', reason?: string,
- *   previewKey?: string, previewKeyAt?: number, platform?: string, runId?: string}} SiteLockRecord (`previewKey` and
- *   when it was set: only on the brief row, only while locked; `platform` and `runId`: what a renewal writes with)
+ *   previewKey?: string, previewKeyAt?: number, platform?: string, runId?: string, source?: 'provision'}} SiteLockRecord
+ *   (`previewKey` and when it was set: only on the brief row, only while locked; `platform` and `runId`: what a renewal
+ *   writes with; `source`: taken by provisioning, before the door existed, `sourceLock`)
  */
 
 const record = (/** @type {SiteLockRecord['state']} */ state, /** @type {string} */ reason = '') => ({
@@ -108,6 +109,27 @@ export async function lockSite({
     return previewKey ? { ...record('locked'), previewKey, previewKeyAt: now() } : record('locked')
   } catch (error) {
     return record('failed', error instanceof Error ? error.message : String(error))
+  }
+}
+
+/** The CMS whose provisioning can restore a site already locked (`offline_lock.py` writes Joomla's configuration.php). */
+export const SOURCE_LOCK_PLATFORMS = new Set(['joomla'])
+
+/**
+ * The lock taken AT THE SOURCE (#189, criterion 12.1): a brief build's site is restored already on its rebuilding page,
+ * so no visitor is served the raw demo between the CMS's first answer and the moment its door is paired. `host` goes in
+ * the provision instruction (the key and the message, written into the restored files before the web server serves);
+ * `record` is what the brief row keeps, so the build's readers send the key and the end of a full build unlocks it.
+ * Null for a CMS whose provisioning cannot do it yet (the lock is then taken through the door, as before).
+ * @param {{platform: string, now?: () => number}} input
+ * @returns {{host: {previewKey: string, message: string}, record: SiteLockRecord} | null}
+ */
+export function sourceLock({ platform, now = Date.now }) {
+  if (!SOURCE_LOCK_PLATFORMS.has(platform)) return null
+  const previewKey = freshPreviewKey()
+  return {
+    host: { previewKey, message: REBUILDING_MESSAGE },
+    record: { ...record('locked'), source: 'provision', previewKey, previewKeyAt: now(), platform }
   }
 }
 
@@ -213,14 +235,26 @@ export function createSiteLock({ pool, writers, applyFor, holds, tokenOf, now = 
      */
     async lock(ctx) {
       if (!(await holds(ctx.siteKey).catch(() => false))) return null
+      const apply = applyFor(ctx.email, ctx.runId)
+      const writer = writers[ctx.platform]
       const lock = await lockSite({
-        writer: writers[ctx.platform],
-        apply: applyFor(ctx.email, ctx.runId),
+        writer,
+        apply,
         siteKey: ctx.siteKey,
         applyId: `site-lock-${ctx.runId}`,
         now
       })
-      return lock.previewKey ? { ...lock, platform: ctx.platform, runId: ctx.runId } : lock
+      if (lock.state === 'locked')
+        return lock.previewKey ? { ...lock, platform: ctx.platform, runId: ctx.runId } : lock
+      // 🔒 A SITE PROVISIONED LOCKED IS NEVER LEFT LOCKED WITH NOBODY TO LIFT IT. The door could not lock it again: a
+      // refused or failed write keeps the source lock on the row (the end of a full build still unlocks it, and the
+      // readers keep its key); a plugin that offers no lock has it lifted now, and the build runs open with its note.
+      const held = await siteLockOf(pool, ctx.siteKey).catch(() => null)
+      if (held?.state !== 'locked' || held.source !== 'provision') return lock
+      if (lock.state === 'failed') return { ...held, runId: ctx.runId, reason: lock.reason }
+      if (writer)
+        await unlockSite({ writer, apply, siteKey: ctx.siteKey, applyId: `site-unlock-source-${ctx.runId}` })
+      return lock
     },
     /**
      * Unlock a site the build left full. A site that was never locked is answered as its row says, and nothing is written.

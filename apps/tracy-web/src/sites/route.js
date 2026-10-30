@@ -334,6 +334,8 @@ import {
   writeComponent
 } from './store.js'
 import { teardownSaid } from './teardown-said.js'
+import { sourceLock } from './site-lock.js'
+import { briefBuildPress } from '../opportunities-build/build-site-lock.js'
 
 /** How long a call to a site's component may take. Why this number: the signal it feeds. */
 const COMPONENT_TIMEOUT_MS = 170_000
@@ -3029,19 +3031,28 @@ export function sitesRoutes({
         jobKey: `${caller.id}:${creationId}:${attempt}`,
         ...(await gitTokenFields(claim.row.repo))
       }
+      // The popup's "Apply": the text and pictures are made WHILE the host installs the site and written
+      // the moment it is up (`brief-build.js`). "I will do it later" sends no brief and this does nothing.
+      // Read before the host is asked, because a brief build's site is restored locked (below).
+      const brief =
+        briefs && !qualityContext && !agentDemoContext
+          ? await briefOfPress(body.brief, platform, chosenQuickstart, { accountId: caller.id, siteKey })
+          : null
+      // 🔒 A BRIEF BUILD'S SITE IS RESTORED ON ITS REBUILDING PAGE (#189, criterion 12.1): the host writes the lock into
+      // the restored files before the web server first serves, so a visitor never meets the raw demo while the site is
+      // paired. Only a brief build's press (the build that will be judged and unlocked); the popup's Apply stays open.
+      const lockAtSource =
+        brief && (await briefBuildPress(pool, caller.id, buildId).catch(() => false))
+          ? sourceLock({ platform })
+          : null
+      if (lockAtSource) instruction.siteLock = lockAtSource.host
       const answer = await host.hostCall(config, config.defaultHost, '/provision', instruction, { fetchImpl })
       if (!answer.ok || typeof answer.body?.jobId !== 'string') {
         if (creationKey) await updateCreation(pool, creationKey, { state: 'refused' })
         return json(c, provisionRefusal(answer, requestLanguage(c)), answer.status || 502)
       }
       await putJob(pool, { id: answer.body.jobId, siteKey, host: config.defaultHost, kind: 'provision' })
-      // The popup's "Apply": the text and pictures are made WHILE the host installs the site and written
-      // the moment it is up (`brief-build.js`). "I will do it later" sends no brief and this does nothing.
       // `start` never throws and never waits: the site is answered 202 exactly when it would have been.
-      const brief =
-        briefs && !qualityContext && !agentDemoContext
-          ? await briefOfPress(body.brief, platform, chosenQuickstart, { accountId: caller.id, siteKey })
-          : null
       if (brief)
         await briefs.start({
           siteKey,
@@ -3053,7 +3064,8 @@ export function sitesRoutes({
           contract: sealing,
           brief,
           jobId: answer.body.jobId,
-          host: config.defaultHost
+          host: config.defaultHost,
+          ...(lockAtSource ? { siteLock: lockAtSource.record } : {})
         })
       // The design system picked in the form: kept on the site, and put on it by this server once the install and the
       // brief are done (`design-system-at-create.js`). Never waits: the site is answered 202 exactly as before.

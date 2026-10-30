@@ -48,6 +48,14 @@ platform_configure() {
   # the customer rebuilds it showed them, and the agent, only its offline page (beta week 16–23/10).
   local online=""
   [ "${SITE_ORIGIN:-}" = imported ] && online="--online"
+  # A quickstart is a new site: online, whatever the release was packed with, unless it is restored
+  # for a brief build (below). A normal create is never left on an offline page nobody will lift.
+  [ -n "${QUICKSTART:-}" ] && online="--online"
+  # 🔒 A BRIEF BUILD'S SITE IS OFFLINE BEFORE ITS FIRST REQUEST (#189, criterion 12.1). tracy-web
+  # sends the lock's preview key for exactly those creates (TRACY_SITE_LOCK_PREVIEW_KEY, environment
+  # only); the rebuilding page is written here, before stage 6 starts the web container, so no
+  # visitor is ever served the raw demo. The end of a full build lifts it through the Cowork plugin.
+  [ -n "${TRACY_SITE_LOCK_PREVIEW_KEY:-}" ] && [ "${SITE_ORIGIN:-}" != imported ] && online="--offline-lock"
   python3 "$HERE/render_configuration.py" \
     --source "$SITE_DIR/work/configuration.source.php" --out "$source_config" \
     --db-host db --db-user "$DB_USER" --db-password "$DB_PASSWORD" --db-name "$DB_NAME" \
@@ -56,6 +64,29 @@ platform_configure() {
 
   platform_neutralize_live_domain
   platform_check_in_all
+}
+
+# A site restored offline for a brief build (platform_configure) must stay readable by Tracy, or its
+# build cannot check what it wrote. Readable means the Cowork plugin now installed serves the real
+# site to the lock's preview key (`lib/SiteOffline.php` with `preview-key`, and the system plugin's
+# offline bypass), on Joomla 4 or later (the plugin advertises the lock only there). Otherwise the
+# lock is lifted here, before the site is handed over: the build then runs open with a note, as it
+# did before the lock existed. Run by provision.sh after platform_post_up has installed the plugin.
+platform_site_lock_settle() {
+  [ -n "${TRACY_SITE_LOCK_PREVIEW_KEY:-}" ] && [ "${SITE_ORIGIN:-}" != imported ] || return 0
+  local webroot major
+  webroot="$(tracy_webroot_dir "$LABEL")"
+  [ -f "$webroot/configuration.php" ] || return 0
+  major="$(grep -oE "MAJOR_VERSION *= *[0-9]+" "$webroot/libraries/src/Version.php" 2>/dev/null | grep -oE "[0-9]+$" | sed -n 1p)"
+  if [ "${major:-0}" -ge 4 ] 2>/dev/null &&
+     grep -qs "preview-key" "$webroot/administrator/components/com_claudecowork/lib/SiteOffline.php" &&
+     grep -qs "decideOfflineBypass" "$webroot/plugins/system/claudecoworkapi/src/Extension/ClaudeCoworkApi.php"; then
+    echo "==> the rebuilding page stays on: the Cowork plugin serves Tracy's readers through it"
+    return 0
+  fi
+  python3 "$HERE/offline_lock.py" --config "$webroot/configuration.php" release ||
+    { echo "!! could not lift the rebuilding page the Cowork plugin cannot serve through" >&2; return 1; }
+  echo "==> the rebuilding page is lifted: this site's Cowork plugin cannot serve Tracy's readers through it"
 }
 
 # Every record the captured site had open in an editor, checked in on the copy. Joomla keeps a
@@ -837,6 +868,12 @@ LOAD
 
       [ -f "$webroot/configuration.php" ] || {
         echo 'the CLI installer reported success but wrote no configuration.php' >&2; return 1; }
+      # A brief build's site goes on its rebuilding page the moment Joomla's CLI has written its
+      # configuration (platform_configure says why); before this the webroot held only the installer.
+      if [ -n "${TRACY_SITE_LOCK_PREVIEW_KEY:-}" ]; then
+        python3 "$HERE/offline_lock.py" --config "$webroot/configuration.php" lock || return 1
+        echo '==> the site is on its rebuilding page until its brief build has filled it'
+      fi
       # Belt and braces: the CLI removes this itself on a Stable release and keeps it on a
       # development build, and Joomla redirects to a missing installer with a 500 rather than serving.
       rm -rf "$webroot/installation"

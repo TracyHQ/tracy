@@ -26,21 +26,44 @@ if ! declare -F tracy_web_dns_name >/dev/null; then
   . "$(dirname "${BASH_SOURCE[0]}")/../provision/render-compose.sh"
 fi
 
+# 🔒 A SITE ON ITS REBUILDING PAGE IS ASKED WITH ITS PREVIEW KEY. A brief build's site is restored
+# offline (platform/joomla.sh, #189), and Joomla's offline page answers 503 to everybody else, so the
+# question "does the CMS render" is put the way Tracy's own readers put it: `X-Tracy-Preview-Key`.
+# The key never goes into argv: a header file of mode 600 on this side, stdin inside the container.
+tracy_front_page_key_header() {
+  local file
+  file="$(mktemp)" || return 1
+  chmod 600 "$file"
+  printf 'X-Tracy-Preview-Key: %s\n' "$TRACY_SITE_LOCK_PREVIEW_KEY" > "$file"
+  printf '%s\n' "$file"
+}
+
 # tracy_front_page_status <label> <port>
 # Prints the HTTP status of the front page, or 000 when no road answered at all.
 tracy_front_page_status() {
   local label="$1" port="$2" code identity id running project service extra
+  local -a keyed=()
+  local header_file=""
   if [[ ! "$label" =~ ^[a-z0-9][a-z0-9-]*$ ]]; then printf '000\n'; return 0; fi
+  if [ -n "${TRACY_SITE_LOCK_PREVIEW_KEY:-}" ] && header_file="$(tracy_front_page_key_header)"; then
+    keyed=(-H "@$header_file")
+  fi
   for url in "http://$(tracy_web_dns_name "$label")/" "http://127.0.0.1:${port}/"; do
-    if code="$(curl -s -m 20 -o /dev/null -w '%{http_code}' "$url" 2>/dev/null)"; then
-      if [[ "$code" =~ ^[1-5][0-9]{2}$ ]]; then printf '%s\n' "$code"; return 0; fi
+    if code="$(curl -s -m 20 ${keyed[@]+"${keyed[@]}"} -o /dev/null -w '%{http_code}' "$url" 2>/dev/null)"; then
+      if [[ "$code" =~ ^[1-5][0-9]{2}$ ]]; then [ -z "$header_file" ] || rm -f "$header_file"; printf '%s\n' "$code"; return 0; fi
     fi
   done
+  [ -z "$header_file" ] || rm -f "$header_file"
   # Pin the exec to the inspected container ID: a replacement must not change the target.
   identity="$(docker inspect --type container --format '{{.Id}}|{{.State.Running}}|{{index .Config.Labels "com.docker.compose.project"}}|{{index .Config.Labels "com.docker.compose.service"}}' "${label}-web-1" 2>/dev/null)" || identity=''
   IFS='|' read -r id running project service extra <<< "$identity"
   if [[ "$id" =~ ^[a-f0-9]{64}$ && "$running" == true && "$project" == "$label" && "$service" == web && -z "$extra" && "$identity" == "$id|true|$label|web" ]]; then
-    if code="$(docker exec "$id" curl --noproxy '*' -s --max-time 20 -o /dev/null --write-out '%{http_code}' --header "Host: $(tracy_web_dns_name "$label")" http://127.0.0.1/ 2>/dev/null)"; then
+    if [ -n "${TRACY_SITE_LOCK_PREVIEW_KEY:-}" ]; then
+      code="$(printf '%s\n' "$TRACY_SITE_LOCK_PREVIEW_KEY" | docker exec -i "$id" sh -c 'IFS= read -r key; exec curl --noproxy "*" -s --max-time 20 -o /dev/null --write-out "%{http_code}" --header "Host: $0" --header "X-Tracy-Preview-Key: $key" http://127.0.0.1/' "$(tracy_web_dns_name "$label")" 2>/dev/null)" || code=000
+    else
+      code="$(docker exec "$id" curl --noproxy '*' -s --max-time 20 -o /dev/null --write-out '%{http_code}' --header "Host: $(tracy_web_dns_name "$label")" http://127.0.0.1/ 2>/dev/null)" || code=000
+    fi
+    if [ "$code" != 000 ]; then
       if [[ "$code" =~ ^[1-5][0-9]{2}$ ]]; then printf '%s\n' "$code"; return 0; fi
     fi
   fi

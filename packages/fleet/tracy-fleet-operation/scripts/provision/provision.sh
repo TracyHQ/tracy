@@ -938,6 +938,11 @@ fi
 if declare -F platform_post_up >/dev/null 2>&1; then
   platform_post_up
 fi
+# A site restored on its rebuilding page for a brief build keeps it only where the plugin just
+# installed lets Tracy read through it (platform/joomla.sh says how it decides).
+if declare -F platform_site_lock_settle >/dev/null 2>&1; then
+  platform_site_lock_settle || exit 1
+fi
 
 # ── 6c½. the signed access verifier, on every new site ─────────────────────────────────────
 # After 6c: the Claude Cowork package that hook installs on Joomla still carries the old

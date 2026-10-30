@@ -32,6 +32,7 @@ import {
   unreserveSite,
   PROVISION_FLAGS,
   runProvisionJob,
+  siteLockOf,
   runTeardownJob,
   SAFE_ARG,
   SAFE_URL,
@@ -216,6 +217,10 @@ function provisionRoute({ config, jobs, run, slots, inTurn }) {
     // site's that came inside the database: same fence as any token handed over in a body.
     if (body.copyToken !== undefined && !SAFE_TOKEN.test(String(body.copyToken)))
       return badRequest(c, 'refused copyToken')
+    // A brief build's site is restored on its rebuilding page (#189): the lock's preview key and the
+    // message visitors read, both checked before they reach the environment of provision.sh.
+    if (body.siteLock !== undefined && siteLockOf(body.siteLock) === null)
+      return badRequest(c, 'refused siteLock')
 
     const jobKey = typeof body.jobKey === 'string' ? body.jobKey : ''
     if (jobKey !== '' && !SAFE_JOB_KEY.test(jobKey)) return badRequest(c, 'refused jobKey')

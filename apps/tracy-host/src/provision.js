@@ -88,6 +88,30 @@ export const SAFE_LABEL = /^[A-Za-z0-9][A-Za-z0-9._-]*$/
  * `accessAud`/`accessTeamDomain` dropped, everything else kept. Order matters only for a human
  * reading the argv in a log; `provision.sh` parses flags, not positions.
  */
+/** The plugin's shape for a preview key (claude-cowork `SiteIdentity::PREVIEW_KEY_PATTERN`). */
+const PREVIEW_KEY = /^[A-Za-z0-9_-]{32,128}$/
+
+/**
+ * The rebuilding lock a brief build's create asks for (`{previewKey, message}`), or null when there is
+ * none or it is not one: a key of the plugin's shape, and plain text of 1 to 1000 characters with no
+ * control character but a line break (the plugin's limit for the offline message).
+ * @param {unknown} raw
+ * @returns {{previewKey: string, message: string} | null}
+ */
+export function siteLockOf(raw) {
+  if (!raw || typeof raw !== 'object') return null
+  const { previewKey, message } = /** @type {any} */ (raw)
+  if (typeof previewKey !== 'string' || !PREVIEW_KEY.test(previewKey)) return null
+  if (typeof message !== 'string') return null
+  const text = message.trim()
+  const control = [...text].some((ch) => {
+    const code = ch.charCodeAt(0)
+    return (code < 32 && code !== 10) || code === 127
+  })
+  if (text === '' || text.length > 1000 || control) return null
+  return { previewKey, message: text }
+}
+
 export const PROVISION_FLAGS = {
   site: '--site',
   label: '--label',
@@ -284,6 +308,13 @@ export async function runProvisionJob({ jobId, body, config, jobs, run }) {
     if (body.releasesToken) env.TRACY_RELEASES_GITHUB_TOKEN = String(body.releasesToken)
     // The copy's own Claude Cowork token (provision.sh step 4b): environment only, like the above.
     if (body.copyToken) env.TRACY_COPY_COWORK_TOKEN = String(body.copyToken)
+    // The rebuilding lock of a brief build, written into the restored site before it first serves
+    // (`offline_lock.py`): environment only, like the tokens above; the key opens the locked site.
+    const siteLock = siteLockOf(body.siteLock)
+    if (siteLock) {
+      env.TRACY_SITE_LOCK_PREVIEW_KEY = siteLock.previewKey
+      env.TRACY_SITE_LOCK_MESSAGE = siteLock.message
+    }
     // Signed GET URLs for the import archive, minted by tracy-web — the only process holding the
     // artifact store's keys. Same road as the git token and for the same reason: a signed URL is
     // a bearer credential for its lifetime, so it goes through the environment, never argv.

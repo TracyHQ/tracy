@@ -788,6 +788,10 @@ export function createBriefBuilds({
             !(await restartBrief(pool, input.siteKey, input.brief, input.retryActionId)))
         )
           return { started: false }
+        // A site the host restores already on its rebuilding page (`site-lock.js` `sourceLock`): the row knows it is
+        // locked from the start, so the readers send its key and the end of a full build lifts it.
+        if (input.siteLock)
+          await updateBrief(pool, input.siteKey, { timings: { siteLock: input.siteLock, siteLockAt: now() } })
         const run = work(input)
           .catch((error) => fail(input.siteKey, error))
           .finally(() => running.delete(input.siteKey))
