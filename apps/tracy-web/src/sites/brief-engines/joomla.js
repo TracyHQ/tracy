@@ -3077,9 +3077,6 @@ export function createJoomlaEngine({
         })
         ctx.time('footerNavigationLinks', footer?.columns.reduce((n, c) => n + c.links.length, 0) ?? 0)
       }
-      return { wrote, kept }
-    }
-  }
       // 🔒 The SEO stage, last: every page's planned title and description over whatever the menu writes left, the record
       // pages' own, and the one business record (`joomla-seo-stage.js`, criteria 8.1, 8.4, 8.5).
       await writeJoomlaSeo({
@@ -3094,4 +3091,7 @@ export function createJoomlaEngine({
         note: ctx.note,
         time: ctx.time
       })
+      return { wrote, kept }
+    }
+  }
 }
