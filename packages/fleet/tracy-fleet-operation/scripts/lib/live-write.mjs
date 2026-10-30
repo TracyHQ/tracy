@@ -231,16 +231,25 @@ async function call(endpoint, token, action, params = {}) {
       text = await response.text()
     }
   } catch (error) {
-    throw new Transient(`${action}: ${error.cause?.code ?? error.code ?? error.message ?? error.name}`)
+    // No answer at all (a refused or reset connection, a timeout): the live site is not reachable,
+    // which is not a resource limit of its own (#227) — said so once the tries run out.
+    const unreachable = new Transient(`${action}: ${error.cause?.code ?? error.code ?? error.message ?? error.name}`)
+    unreachable.code = 'LIVE_UNREACHABLE'
+    throw unreachable
   }
   const reply = engineReply(text)
   if (reply && !reply.ok && ['unauthorized', 'forbidden', 'bad_token'].includes(reply.error))
     throw new WriteFailed('TOKEN_REFUSED')
-  if (status === 401) throw new WriteFailed('LIVE_PASSWORD_PROTECTED')
-  if (status === 403) throw new WriteFailed('LIVE_BLOCKED')
+  // A 401 or a 403 that is not the engine's answer (a password in front of the site, a firewall rule
+  // in front of its door): the engine never ran, so nothing was written — a refusal, never an unknown
+  // outcome (#220).
+  if (status === 401) throw refusedBefore(new WriteFailed('LIVE_PASSWORD_PROTECTED'), reply)
+  if (status === 403) throw refusedBefore(new WriteFailed('LIVE_BLOCKED', `${action} answered 403`), reply)
   if (status === 429) {
     const error = new Transient(`${action} answered 429`)
     error.code = 'LIVE_RATE_LIMITED'
+    // Turned away before it was run, whoever answered: nothing of it was written.
+    error.definitelyRefused = true
     const seconds = /^\s*\d+\s*$/.test(String(retryAfter ?? '')) ? Number(retryAfter) : null
     const date = seconds === null ? Date.parse(String(retryAfter ?? '')) : NaN
     error.retryAfterMs =
@@ -266,6 +275,12 @@ async function call(endpoint, token, action, params = {}) {
   return reply
 }
 
+/** `error`, marked as a refusal made before the engine ran, when the answer is not the engine's own. */
+function refusedBefore(error, reply) {
+  if (reply === null) error.definitelyRefused = true
+  return error
+}
+
 async function retried(fn, tries = TRIES, onTransient = () => {}) {
   for (let attempt = 1; ; attempt++) {
     try {
@@ -273,7 +288,12 @@ async function retried(fn, tries = TRIES, onTransient = () => {}) {
     } catch (error) {
       if (!(error instanceof Transient)) throw error
       onTransient()
-      if (attempt >= tries) throw new WriteFailed(error.code ?? 'SITE_RESOURCE_LIMIT', error.message)
+      if (attempt >= tries) {
+        const out = new WriteFailed(error.code ?? 'SITE_RESOURCE_LIMIT', error.message)
+        // The last answer was a refusal (a 429, the engine's write lock): nothing of it was written.
+        if (error.definitelyRefused) out.definitelyRefused = true
+        throw out
+      }
       // A long Retry-After is a refusal, never permission to retry sooner. Avoid timer overflow.
       if (error.retryAfterMs > 2_147_483_647) throw new WriteFailed('LIVE_RATE_LIMITED')
       await sleep(Math.max(500 * 2 ** attempt, error.retryAfterMs ?? 0))
@@ -455,34 +475,13 @@ const shown = (value) => {
   return text.length > 2000 ? { text: text.slice(0, 2000), truncated: text.length } : { text }
 }
 
-async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, webroot }) {
-  const t0 = Date.now()
-  const endpoint = process.env.TRACY_SYNC_ENDPOINT ?? ''
-  const token = process.env.TRACY_SYNC_TOKEN ?? ''
-  if (!/^https?:\/\//.test(endpoint) || !token) throw new WriteFailed('NO_LIVE_DOOR')
-  const changeset = readJson(join(previewDir, 'changeset.json'), null)
-  if (!changeset?.items) throw new WriteFailed('NOT_PREVIEWED')
-  const pushId = pushDir.split('/').filter(Boolean).at(-1)
-  const applyId = `tracy-push-${pushId}`
-  const live = await door(endpoint, token)
-  const platform = changeset.platform
-  // A live site that answered busy or slow even once (a 429, a 5xx, a timeout) is written one item
-  // at a time from then on: a small shared host is the customer's, and its visitors come first.
-  let strained = false
-  const requests = writeRequests(pushDir, live)
-  const ask = (action, params, recovery = []) =>
-    retried(
-      () =>
-        mutation(action, params)
-          ? requests.send(action, params, () => call(live, token, action, params), recovery, recover)
-          : call(live, token, action, params),
-      TRIES,
-      () => {
-        strained = true
-      }
-    )
-
-  // What an earlier run of this push already did (a restart cut it): written items stay written.
+/**
+ * A push's own record of what it wrote, as `apply` keeps it and `settle` reads it again: the journal
+ * (`journal.jsonl`, one line per item as it ended, the last one winning), the numbers of the records
+ * it made (`created`), the live values Undo needs (`before.json`), and `recover`, which turns an
+ * acknowledged receipt into its journal line without asking the live site anything.
+ */
+function pushJournal(pushDir, applyId, platform) {
   const journalPath = join(pushDir, 'journal.jsonl')
   const done = new Map()
   const created = {}
@@ -549,6 +548,142 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
       journal({ id: item.id, state: 'written', ...(made ? { created: made } : {}), extra })
     }
   }
+  const saveBefore = () => writePrivate(beforePath, before)
+  return { done, created, before, journal, keep, recover, saveBefore }
+}
+
+/** A content create the push sent (`content.update` with no number yet, under an apply id). */
+const isCreate = (r) =>
+  r?.action === 'content.update' &&
+  Number(r.params?.id) === 0 &&
+  typeof r.params?.apply_id === 'string' &&
+  typeof r.params?.kind === 'string'
+
+/**
+ * The creates whose answer never came (#74, #122, #222): a receipt still `sending` may have made its
+ * record on the live site. The engine logs every write of a push under its apply id before it answers
+ * (`apply.list`, a read), so asked once it says which: a record of that kind made under the push's id
+ * that no answered receipt names is that create's, and its number is taken as the answer — the item is
+ * written, Undo can take it back, and the next preview never offers it again. Two or more such creates
+ * of one kind are told apart by the fields they wrote. A log that names none says the create was not
+ * made: refused, so it may be sent again. An engine without the listing, or a listing that cannot be
+ * matched, leaves the receipt unknown, as before — never sent twice. Answers the receipts it settled.
+ */
+async function settleLost(requests, ask) {
+  const lost = Object.values(requests.entries).filter((r) => r.state === 'sending' && isCreate(r))
+  const settled = []
+  for (const applyId of new Set(lost.map((r) => r.params.apply_id))) {
+    let steps
+    try {
+      steps = (await ask('apply.list', { apply_id: applyId })).steps
+    } catch {
+      continue
+    }
+    if (!Array.isArray(steps)) continue
+    const answered = new Set(
+      Object.values(requests.entries)
+        .filter((r) => r.state === 'acknowledged' && isCreate(r) && r.params.apply_id === applyId)
+        .map((r) => `${r.params.kind}:${Number(r.reply?.id)}`)
+    )
+    const mine = lost.filter((r) => r.params.apply_id === applyId)
+    for (const kind of new Set(mine.map((r) => r.params.kind))) {
+      const asked = mine.filter((r) => r.params.kind === kind)
+      const made = [
+        ...new Set(
+          steps
+            .filter((st) => st?.op === 'content' && st.created === true && st.kind === kind && Number(st.id) > 0)
+            .map((st) => Number(st.id))
+        )
+      ].filter((id) => !answered.has(`${kind}:${id}`))
+      const pairs =
+        made.length === 1 && asked.length === 1 ? [[asked[0], made[0]]] : await byFields(asked, made, kind, ask)
+      for (const [receipt, id] of pairs) {
+        receipt.state = 'acknowledged'
+        receipt.reply = { ok: true, kind, id, created: true, settledBy: 'apply.list' }
+        settled.push(receipt)
+      }
+      // Every record the log names is accounted for: the creates left over were never made.
+      if (pairs.length === made.length)
+        for (const receipt of asked)
+          if (receipt.state === 'sending') {
+            receipt.state = 'refused'
+            settled.push(receipt)
+          }
+    }
+  }
+  if (settled.length) requests.save()
+  return settled
+}
+
+/** `settleLost` with several creates of one kind: each record read, paired with the one create whose fields it holds. */
+async function byFields(asked, made, kind, ask) {
+  const rows = new Map()
+  for (const id of made)
+    try {
+      rows.set(id, (await ask('content.get', { kind, id })).item)
+    } catch {
+      // Unread: never paired.
+    }
+  const pairs = []
+  const used = new Set()
+  for (const receipt of asked) {
+    const fields = Object.entries(receipt.params.fields ?? {}).filter(
+      ([, v]) => typeof v === 'string' || typeof v === 'number'
+    )
+    const hits = [...rows].filter(
+      ([id, row]) => !used.has(id) && row && fields.length && fields.every(([f, v]) => same(row[f], v))
+    )
+    if (hits.length !== 1) continue
+    used.add(hits[0][0])
+    pairs.push([receipt, hits[0][0]])
+  }
+  return pairs
+}
+
+/** What `settleLost` found, into the push's journal: a create made is written, one never made may go again. */
+function journalSettled(settled, { done, journal, recover }) {
+  const written = []
+  for (const receipt of settled) {
+    if (receipt.state === 'acknowledged') {
+      recover(receipt)
+      for (const { item } of receipt.recovery ?? []) if (done.get(item.id)?.state === 'written') written.push(item.id)
+    } else
+      for (const { item } of receipt.recovery ?? [])
+        if (done.get(item.id)?.state !== 'written')
+          journal({ id: item.id, state: 'failed', extra: { error: 'NOT_WRITTEN' } })
+  }
+  return written
+}
+
+async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, webroot }) {
+  const t0 = Date.now()
+  const endpoint = process.env.TRACY_SYNC_ENDPOINT ?? ''
+  const token = process.env.TRACY_SYNC_TOKEN ?? ''
+  if (!/^https?:\/\//.test(endpoint) || !token) throw new WriteFailed('NO_LIVE_DOOR')
+  const changeset = readJson(join(previewDir, 'changeset.json'), null)
+  if (!changeset?.items) throw new WriteFailed('NOT_PREVIEWED')
+  const pushId = pushDir.split('/').filter(Boolean).at(-1)
+  const applyId = `tracy-push-${pushId}`
+  const live = await door(endpoint, token)
+  const platform = changeset.platform
+  // A live site that answered busy or slow even once (a 429, a 5xx, a timeout) is written one item
+  // at a time from then on: a small shared host is the customer's, and its visitors come first.
+  let strained = false
+  const requests = writeRequests(pushDir, live)
+  const ask = (action, params, recovery = []) =>
+    retried(
+      () =>
+        mutation(action, params)
+          ? requests.send(action, params, () => call(live, token, action, params), recovery, recover)
+          : call(live, token, action, params),
+      TRIES,
+      () => {
+        strained = true
+      }
+    )
+
+  // What an earlier run of this push already did (a restart cut it): written items stay written.
+  const { done, created, before, journal, keep, recover, saveBefore } = pushJournal(pushDir, applyId, platform)
   for (const receipt of Object.values(requests.entries)) {
     recover(receipt)
     if (receipt.state === 'sending')
@@ -556,6 +691,8 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         if (done.get(item.id)?.state !== 'written')
           journal({ id: item.id, state: 'failed', extra: { error: 'WRITE_OUTCOME_UNKNOWN' } })
   }
+  // A run cut off with a create in flight (#122): the engine's log says whether it was made.
+  journalSettled(await settleLost(requests, ask), { done, journal, recover })
 
   const written = []
   const conflicts = []
@@ -716,6 +853,10 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
       return
     } catch (error) {
       if (error.code === 'WRITE_OUTCOME_UNKNOWN')
+        return journal({ id: item.id, state: 'failed', extra: { error: error.code } })
+      // A firewall in front of the live site turned this one write away before the engine ran (#220):
+      // not written, said as LIVE_BLOCKED, and the other items go on.
+      if (error.code === 'LIVE_BLOCKED' && error.onWrite)
         return journal({ id: item.id, state: 'failed', extra: { error: error.code } })
       if (error instanceof Refused) {
         const reply = error.reply
@@ -1021,6 +1162,12 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
         }))
       )
     } catch (error) {
+      // The lot turned away by a firewall before the engine ran (#220): none of it written, each item
+      // said as LIVE_BLOCKED, and the push goes on — as an item written alone.
+      if (error.code === 'LIVE_BLOCKED' && error.onWrite) {
+        for (const { item } of ready) journal({ id: item.id, state: 'failed', extra: { error: error.code } })
+        return
+      }
       if (!(error instanceof Refused)) throw error
       // Refused whole (a row open in the editor, a value moved since the read, a write the engine took
       // back): each item alone, which reads and compares again.
@@ -1211,7 +1358,7 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
       const undoId = typeof answer.undo_id === 'string' ? answer.undo_id : null
       if (undoId) {
         before.templateUndo = [...new Set([...(before.templateUndo ?? []), undoId])]
-        writePrivate(beforePath, before)
+        saveBefore()
       }
       const said = new Map((answer.files ?? []).map((f) => [f.path, f]))
       for (const { item } of pending) {
@@ -1357,6 +1504,9 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
       })
     }
   }
+  // A create whose answer was lost in this run (#74): the engine's log says whether it was made.
+  if (!STOP_NOW.includes(stopped?.code))
+    journalSettled(await settleLost(requests, ask), { done, journal, recover })
   for (const item of queue) {
     const entry = done.get(item.id)
     if (entry) ended(entry, item)

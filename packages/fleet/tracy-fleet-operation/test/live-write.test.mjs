@@ -51,6 +51,7 @@ function engine({
     templateFiles,
     themeFiles,
     undoLog: {},
+    applyLog: {},
     calls: [],
     refuse: {},
     next: 1000,
@@ -234,6 +235,14 @@ function engine({
         }
         const previous = structuredClone(get(params.kind, params.id, params.key))
         const done = update(params)
+        // The engine's own log of each write under its apply id (`apply.list`), recorded before it answers.
+        if (done && params.apply_id)
+          (state.applyLog[params.apply_id] ??= []).push({
+            op: 'content',
+            kind: params.kind,
+            id: done.id,
+            created: previous === null
+          })
         if (done && params.kind === 'postmeta') {
           ;(state.metaReceipts ??= {})[params.apply_id] = { ...params, before: previous }
         }
@@ -246,6 +255,11 @@ function engine({
         if (state.failReadback) state.refuse['content.get'] = 503
         if (!done) return answer(200, { ok: false, error: 'write_failed', message: 'target does not exist' })
         return answer(200, { ok: true, ...done })
+      }
+      if (action === 'apply.list') {
+        // An older engine without the listing (`noApplyList`) does not know the action.
+        if (state.noApplyList) return answer(200, { ok: false, error: 'unknown_action' })
+        return answer(200, { ok: true, apply_id: params.apply_id, steps: state.applyLog[params.apply_id] ?? [] })
       }
       if (action === 'apply.revert') {
         const receipt = state.metaReceipts?.[params.apply_id]
@@ -1827,9 +1841,11 @@ test('a live site that answers busy even once is written one item at a time from
   }
 })
 
-test('lost create response is uncertain and Apply never creates it again or starts its dependents', async () => {
+test('lost create response on an engine with no write log is uncertain and Apply never creates it again or starts its dependents', async () => {
   const live = await engine({ platform: 'wordpress' })
   try {
+    // An engine older than `apply.list`: nothing can tell whether the create was made.
+    live.noApplyList = true
     live.dropAfterUpdate = true
     const made = update(1, { post_title: 'Once' }, {}, { kind: 'post', op: 'create', creates: 'post:1' })
     const dir = pushDir(
@@ -1855,6 +1871,64 @@ test('lost create response is uncertain and Apply never creates it again or star
     }
     assert.equal(Object.keys(live.records.post).length, 1)
     assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 1)
+  } finally {
+    await live.close()
+  }
+})
+
+test('a lost create answer is settled by the engine’s own log: written under its number, never sent twice, Undo takes it back (#74)', async () => {
+  const live = await engine({ platform: 'wordpress' })
+  try {
+    live.dropAfterUpdate = true
+    const made = update(1, { post_title: 'Dup74 A' }, {}, { kind: 'post', op: 'create', creates: 'post:1' })
+    const dir = pushDir([made], 'wordpress')
+    const { answer } = await apply(live, dir)
+    const ids = Object.keys(live.records.post).map(Number)
+    assert.equal(ids.length, 1)
+    assert.deepEqual(
+      answer.written.map((w) => [w.id, w.liveId]),
+      [[made.id, ids[0]]],
+      JSON.stringify(answer)
+    )
+    assert.deepEqual(answer.created, { 'post:1': ids[0] }, 'the id map learns it: no new preview offers it again')
+    assert.equal(answer.failed.length, 0)
+    // The same push again: nothing is sent.
+    await apply(live, dir)
+    assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 1)
+    const back = await undo(live, dir)
+    assert.deepEqual(
+      back.answer.restored.map((r) => r.id),
+      [made.id]
+    )
+    assert.equal(live.records.post[ids[0]].post_status, 'trash')
+  } finally {
+    await live.close()
+  }
+})
+
+test('two lost creates of one kind are told apart by their fields; one the log never names may go again', async () => {
+  const live = await engine({ platform: 'wordpress' })
+  try {
+    // Two creates of one kind, both outcomes unknown: the first answered with an error that does not
+    // prove nothing was written, the second made with its answer lost. The log names one post.
+    const a = update(1, { post_title: 'A' }, {}, { kind: 'post', op: 'create', creates: 'post:1' })
+    const b = update(2, { post_title: 'B' }, {}, { kind: 'post', op: 'create', creates: 'post:2' })
+    const dir = pushDir([a, b], 'wordpress')
+    live.refuse['content.update'] = { error: 'write_failed' }
+    live.dropUpdateKind = 'post'
+    const { answer } = await apply(live, dir)
+    const ids = Object.keys(live.records.post).map(Number)
+    assert.equal(ids.length, 1)
+    assert.equal(live.records.post[ids[0]].post_title, 'B')
+    assert.deepEqual(
+      answer.written.map((w) => [w.id, w.liveId]),
+      [[b.id, ids[0]]]
+    )
+    // The one the log never names was not made: said so, and free to be sent again.
+    assert.deepEqual(
+      answer.failed.map((f) => [f.id, f.error]),
+      [[a.id, 'NOT_WRITTEN']]
+    )
   } finally {
     await live.close()
   }
@@ -1974,7 +2048,8 @@ test('a worker killed after create cannot resend that create when Apply restarts
   let child
   try {
     live.holdAnswer = 'content.update'
-    const dir = pushDir([update(1, { post_title: 'Once' }, {}, { kind: 'post', op: 'create' })], 'wordpress')
+    const made = update(1, { post_title: 'Once' }, {}, { kind: 'post', op: 'create' })
+    const dir = pushDir([made], 'wordpress')
     child = spawn('node', [WRITE, 'apply', dir, dir], {
       env: { ...process.env, TRACY_SYNC_ENDPOINT: live.endpoint, TRACY_SYNC_TOKEN: TOKEN },
       stdio: 'ignore'
@@ -1987,7 +2062,13 @@ test('a worker killed after create cannot resend that create when Apply restarts
     live.heldResponse.destroy()
     live.holdAnswer = null
     const { answer } = await apply(live, dir)
-    assert.equal(answer.failed[0].error, 'WRITE_OUTCOME_UNKNOWN')
+    // The engine's log of the push names the post the killed run made (#122): written, under its
+    // number, never sent again.
+    const [post] = Object.keys(live.records.post).map(Number)
+    assert.deepEqual(
+      answer.written.map((w) => [w.id, w.liveId]),
+      [[made.id, post]]
+    )
     assert.equal(Object.keys(live.records.post).length, 1)
     assert.equal(live.calls.filter((c) => c.action === 'content.update').length, 1)
   } finally {
@@ -2148,7 +2229,7 @@ test('a stopped parallel Apply drains acknowledged siblings and preserves a comp
   }
 })
 
-test('a blocked batch retains earlier writes in the failed Apply answer and Undo', async () => {
+test('a blocked batch retains earlier writes in the Apply answer and Undo; its items are LIVE_BLOCKED (#220)', async () => {
   const live = await engine({ records: { article: { 1: article(1), 2: article(2) } } })
   try {
     live.refuse['content.batch'] = 403
@@ -2158,10 +2239,15 @@ test('a blocked batch retains earlier writes in the failed Apply answer and Undo
       update(2, { title: 'After 2' }, { title: 'Article 2' })
     ])
     const { answer } = await apply(live, dir)
-    assert.equal(answer.ok, false)
+    // A firewall's 403 turned the lot away before the engine ran: not written, said so, the push
+    // goes on (it once stopped the Apply and named the two as unknown).
+    assert.equal(answer.ok, true)
     assert.equal(answer.state, 'partial')
     assert.equal(answer.written.length, 1)
-    assert.equal(answer.failed.length, 2)
+    assert.deepEqual(
+      answer.failed.map((f) => f.error),
+      ['LIVE_BLOCKED', 'LIVE_BLOCKED']
+    )
     assert.equal((await undo(live, dir)).answer.restored.length, 1)
   } finally {
     await live.close()

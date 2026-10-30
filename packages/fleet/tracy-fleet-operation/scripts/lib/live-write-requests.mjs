@@ -35,7 +35,7 @@ export function durablePrivate(path, value) {
 
 export function mutation(action, params = {}) {
   return (
-    !['core.manifest', 'info', 'content.get', 'file.read', 'template.files.status'].includes(action) &&
+    !['core.manifest', 'info', 'content.get', 'file.read', 'template.files.status', 'apply.list'].includes(action) &&
     !(['site.identity', 'template.siteSettings'].includes(action) && params.operation !== 'set')
   )
 }
@@ -45,7 +45,17 @@ export function writeRequests(pushDir, endpoint, name = 'requests.json') {
   const entries = existsSync(path) ? JSON.parse(readFileSync(path, 'utf8')) : {}
   return {
     entries,
-    async send(action, params, send, recovery = [], acknowledged = () => {}) {
+    /** Writes the receipts as they now stand (`settleLost` changes them after asking the live site). */
+    save() {
+      durablePrivate(path, entries)
+    },
+    /**
+     * `resendable`: the caller has just read the live site and found what this request would change
+     * still as it was, and the request sets values rather than making a record (an Undo's own write):
+     * sent again rather than refused, so an Undo cut by a proxy's 503 can finish once the site is back
+     * (#227). A create is never resendable: sent twice, it makes two records.
+     */
+    async send(action, params, send, recovery = [], acknowledged = () => {}, { resendable = false } = {}) {
       const key = createHash('sha256')
         .update(JSON.stringify([endpoint, recovery.map((r) => r.item.id), action, params]))
         .digest('hex')
@@ -54,7 +64,7 @@ export function writeRequests(pushDir, endpoint, name = 'requests.json') {
         acknowledged(previous)
         return previous.reply
       }
-      if (previous?.state === 'sending') {
+      if (previous?.state === 'sending' && !resendable) {
         const error = new Error('The previous request may have reached the live site; it was not sent again.')
         error.code = 'WRITE_OUTCOME_UNKNOWN'
         throw error
@@ -73,6 +83,8 @@ export function writeRequests(pushDir, endpoint, name = 'requests.json') {
         if (error.definitelyRefused) {
           entries[key] = { ...entries[key], state: 'refused' }
           durablePrivate(path, entries)
+          // Turned away on its way to the engine: this write, not the site (live-write.mjs, #220).
+          error.onWrite = true
         }
         if (!error.definitelyRefused) {
           const unknown = new Error('The request may have reached the live site; it was not sent again.')
