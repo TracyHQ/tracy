@@ -1441,25 +1441,27 @@ sync_op() {
     # A Sync anyway that took a held sync's read: its merge too, when nothing it merged moved.
     [[ "$try" != 1 ]] || merged="$(resume_held | tail -1)"
     [[ -n "$merged" ]] || merged="$(merge | tail -1)"
-    state="$(python3 -c 'import json,sys; print(json.loads(sys.argv[1]).get("state", ""))' "$merged")"
+    state="$(printf '%s' "$merged" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("state", ""))')"
     if [[ "$state" == nothing ]]; then
       # Nothing to put in place: the read becomes the next sync's base, as an applied one's does, and
       # the answer is the live site's "nothing new" — the copy did not change (no last-write stamp).
-      remember_read "$(python3 -c 'import json,sys; print(json.loads(sys.argv[1])["theirsCommit"])' "$merged")"
-      python3 -c 'import json,sys
-m = json.loads(sys.argv[1])
-print(json.dumps({**m, "state": "applied", "unchanged": "merge"}, ensure_ascii=False))' "$merged"
+      remember_read "$(printf '%s' "$merged" | python3 -c 'import json,sys; print(json.load(sys.stdin)["theirsCommit"])')"
+      printf '%s' "$merged" | python3 -c 'import json,sys
+m = json.load(sys.stdin)
+print(json.dumps({**m, "state": "applied", "unchanged": "merge"}, ensure_ascii=False))'
       return
     fi
     if [[ "$state" != ready ]]; then printf '%s\n' "$merged"; return; fi
     applied="$(apply | tail -1)"
-    code="$(python3 -c 'import json,sys; print(json.loads(sys.argv[1]).get("code", ""))' "$applied")"
+    code="$(printf '%s' "$applied" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("code", ""))')"
     [[ "$code" == COPY_CHANGED && "$try" == 1 ]] || break
     echo "==> [${SECONDS}s] the copy moved between merge and apply; merging again" >&2
   done
-  python3 -c 'import json,sys
-m, a = json.loads(sys.argv[1]), json.loads(sys.argv[2])
-print(json.dumps({**m, "state": "applied" if a.get("ok") else m["state"], "apply": a}, ensure_ascii=False))' "$merged" "$applied"
+  # Both answers on stdin, one line each: a merge that names many kept places is past the kernel's
+  # limit for one argument (`Argument list too long`, #219).
+  printf '%s\n%s\n' "$merged" "$applied" | python3 -c 'import json,sys
+m, a = (json.loads(line) for line in sys.stdin.read().splitlines()[:2])
+print(json.dumps({**m, "state": "applied" if a.get("ok") else m["state"], "apply": a}, ensure_ascii=False))'
 }
 
 copy_token() {
@@ -1528,17 +1530,17 @@ read_live() {
     pulled="$(TRACY_SYNC_MANIFEST_IN="$manifest" TRACY_SYNC_FINGERPRINT_IN="$fingerprint" TRACY_SYNC_DB_BASE="$base_dump" \
       TRACY_SYNC_VOLATILE_ROWS="$volatile_rows" TRACY_SYNC_ROW_NAMES="$row_names" TRACY_SYNC_IGNORED_TABLES="$ignored_tables" \
       node "$LIB_DIR/live-pull.mjs" "$DIR" | tail -1)"
-    if ! python3 -c 'import json,sys; sys.exit(0 if json.loads(sys.argv[1]).get("ok") else 1)' "$pulled"; then
+    if ! printf '%s' "$pulled" | python3 -c 'import json,sys; sys.exit(0 if json.load(sys.stdin).get("ok") else 1)'; then
       rm -rf "$DIR/live"
       # A live site that kept changing while it was read was reached and read: it is not a door that
       # failed, and the owner is told to try again when it is quiet (#1564). Every other end of the
       # read is LIVE_READ_FAILED; the read's own answer goes along under `read`.
       # What kept changing in the job's output too (live-pull's `moved`: tables, row names, file
       # paths — never a value): the dialog and support see which part of the live site moved.
-      python3 -c 'import json,sys
-a = json.loads(sys.argv[1])
+      printf '%s' "$pulled" | python3 -c 'import json,sys
+a = json.load(sys.stdin)
 if a.get("code") == "LIVE_BUSY": print("!! the live site kept changing: " + str(a.get("detail") or "")[:300], file=sys.stderr)
-print(json.dumps({"ok": False, "code": a["code"] if a.get("code") in ("LIVE_BUSY", "LIVE_BLOCKED", "LIVE_PASSWORD_PROTECTED", "LIVE_PHP_TOO_OLD", "LIVE_RATE_LIMITED", "TOKEN_REFUSED") else "LIVE_READ_FAILED", "read": a}))' "$pulled"
+print(json.dumps({"ok": False, "code": a["code"] if a.get("code") in ("LIVE_BUSY", "LIVE_BLOCKED", "LIVE_PASSWORD_PROTECTED", "LIVE_PHP_TOO_OLD", "LIVE_RATE_LIMITED", "TOKEN_REFUSED") else "LIVE_READ_FAILED", "read": a}))'
       return 1
     fi
     printf '%s\n' "$pulled" > "$DIR/live-read.json"
@@ -1547,9 +1549,9 @@ print(json.dumps({"ok": False, "code": a["code"] if a.get("code") in ("LIVE_BUSY
     # not told from a slow merge (#1649). Only the timing: the read's answer holds no value of the site.
     # Compact JSON, the form the readers were first written for; they parse it, so a spaced line from an
     # older host is read too.
-    python3 -c 'import json,sys
-r = json.loads(sys.argv[1])
-print(json.dumps({"ok": True, "liveReadAt": r.get("liveReadAt"), **{k: r[k] for k in ("mode", "unchanged", "seconds", "timing") if k in r}}, separators=(",", ":")))' "$pulled" >&2
+    printf '%s' "$pulled" | python3 -c 'import json,sys
+r = json.load(sys.stdin)
+print(json.dumps({"ok": True, "liveReadAt": r.get("liveReadAt"), **{k: r[k] for k in ("mode", "unchanged", "seconds", "timing") if k in r}}, separators=(",", ":")))' >&2
     echo "==> [${SECONDS}s] the live site read" >&2
     # The read took only what differs from the copy as built: its changes are laid over that commit.
     if [[ "$manifest" == "$DIR/first-manifest.json" && -f "$DIR/live/deleted.json" ]]; then

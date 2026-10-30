@@ -218,7 +218,8 @@ function stack(extraTables = '') {
   const run = (script, args, extra = () => ({})) => {
     const r = spawnSync('bash', [script, '--label', LABEL, ...args], {
       env: { ...env, ...extra(env) },
-      encoding: 'utf8'
+      encoding: 'utf8',
+      maxBuffer: 1 << 28
     })
     assert.equal(r.status, 0, `${args.join(' ')}\n${r.stderr}\n${r.stdout}`)
     return JSON.parse(r.stdout.trim().split('\n').at(-1))
@@ -1045,6 +1046,28 @@ test('`sync` merges and applies in one go, a clash included: Tracy’s side stay
       ['db:jos_content:["2"]:title']
     )
     assert.deepEqual(rows('SELECT title FROM jos_content WHERE id=2'), [['About (Tracy)']])
+  } finally {
+    s.dispose()
+  }
+})
+
+test('`sync` keeps thousands of places both sides changed: its answer never goes through one argument (#219)', {
+  ...opts,
+  timeout: 600_000
+}, () => {
+  // 8000 titles both sides changed: about 1.2 MB of `kept`, past one argument's limit on Linux
+  // (128 KB) and the whole command line's on macOS (1 MB). It ended `Argument list too long`.
+  const s = stack(
+    "INSERT INTO jos_content (id, title, introtext, hits, modified) SELECT seq, CONCAT('Post ', seq), 'x', 0, '2026-01-01' FROM seq_100_to_8099;"
+  )
+  try {
+    sql("UPDATE jos_content SET title=CONCAT(title, ' (Tracy)') WHERE id >= 100", 'joomla')
+    sql("UPDATE jos_content SET title=CONCAT(title, ' (live)') WHERE id >= 100", 'livesrc')
+    const done = s.sync(s.read())
+    assert.equal(done.state, 'applied', JSON.stringify(done).slice(0, 2000))
+    assert.equal(done.kept.length, 8000)
+    assert.ok(JSON.stringify(done).length > 1 << 20)
+    assert.deepEqual(rows('SELECT title FROM jos_content WHERE id=4321'), [['Post 4321 (Tracy)']])
   } finally {
     s.dispose()
   }
