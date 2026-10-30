@@ -233,7 +233,9 @@ async function call(endpoint, token, action, params = {}) {
   } catch (error) {
     // No answer at all (a refused or reset connection, a timeout): the live site is not reachable,
     // which is not a resource limit of its own (#227) — said so once the tries run out.
-    const unreachable = new Transient(`${action}: ${error.cause?.code ?? error.code ?? error.message ?? error.name}`)
+    const unreachable = new Transient(
+      `${action}: ${error.cause?.code ?? error.code ?? error.message ?? error.name}`
+    )
     unreachable.code = 'LIVE_UNREACHABLE'
     throw unreachable
   }
@@ -591,12 +593,16 @@ async function settleLost(requests, ask) {
       const made = [
         ...new Set(
           steps
-            .filter((st) => st?.op === 'content' && st.created === true && st.kind === kind && Number(st.id) > 0)
+            .filter(
+              (st) => st?.op === 'content' && st.created === true && st.kind === kind && Number(st.id) > 0
+            )
             .map((st) => Number(st.id))
         )
       ].filter((id) => !answered.has(`${kind}:${id}`))
       const pairs =
-        made.length === 1 && asked.length === 1 ? [[asked[0], made[0]]] : await byFields(asked, made, kind, ask)
+        made.length === 1 && asked.length === 1
+          ? [[asked[0], made[0]]]
+          : await byFields(asked, made, kind, ask)
       for (const [receipt, id] of pairs) {
         receipt.state = 'acknowledged'
         receipt.reply = { ok: true, kind, id, created: true, settledBy: 'apply.list' }
@@ -646,7 +652,8 @@ function journalSettled(settled, { done, journal, recover }) {
   for (const receipt of settled) {
     if (receipt.state === 'acknowledged') {
       recover(receipt)
-      for (const { item } of receipt.recovery ?? []) if (done.get(item.id)?.state === 'written') written.push(item.id)
+      for (const { item } of receipt.recovery ?? [])
+        if (done.get(item.id)?.state === 'written') written.push(item.id)
     } else
       for (const { item } of receipt.recovery ?? [])
         if (done.get(item.id)?.state !== 'written')
@@ -683,7 +690,11 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
     )
 
   // What an earlier run of this push already did (a restart cut it): written items stay written.
-  const { done, created, before, journal, keep, recover, saveBefore } = pushJournal(pushDir, applyId, platform)
+  const { done, created, before, journal, keep, recover, saveBefore } = pushJournal(
+    pushDir,
+    applyId,
+    platform
+  )
   for (const receipt of Object.values(requests.entries)) {
     recover(receipt)
     if (receipt.state === 'sending')
@@ -1548,6 +1559,36 @@ async function apply(previewDir, pushDir, { confirmDeletes, confirmPhp, limit, w
 // ── undo ─────────────────────────────────────────────────────────────────────────────────────
 
 /** Kinds the engine can put in a trash (`content.delete`), per platform. */
+/**
+ * Whether the live record `now` holds what an Undo puts back for `snap`: a record the push made is in
+ * the trash, a record it trashed is out again, a change is back to the value before the push.
+ */
+function undoneOnLive(snap, now, platform) {
+  if (!now) return false
+  if (snap.op === 'create')
+    return platform === 'wordpress' ? now.post_status === 'trash' : Number(now.state ?? now.published) === -2
+  if (snap.op === 'delete') {
+    const [column] = snap.trash ?? []
+    return Boolean(column) && same(now[column], snap.before?.[column])
+  }
+  const fields = Object.keys(snap.op === 'move' ? (snap.restore ?? {}) : (snap.written ?? {}))
+  return (
+    fields.length > 0 &&
+    fields.every((f) => same(now[f], snap.restore && f in snap.restore ? snap.restore[f] : snap.before?.[f]))
+  )
+}
+
+/** Why an Undo's write may not have gone through, and an Undo pressed again can finish (#227). */
+const RETRY_UNDO = [
+  'WRITE_OUTCOME_UNKNOWN',
+  'LIVE_BLOCKED',
+  'LIVE_UNREACHABLE',
+  'SITE_RESOURCE_LIMIT',
+  'LIVE_RATE_LIMITED'
+]
+/** Of those, the live site not answering at all: the next writes would not go either. */
+const UNREACHABLE = ['LIVE_UNREACHABLE', 'SITE_RESOURCE_LIMIT', 'LIVE_RATE_LIMITED']
+
 const TRASHABLE = {
   joomla: new Set(['article', 'category', 'tag', 'menuItem', 'module', 'redirect']),
   wordpress: new Set(['post', 'menuItem', 'templatePart', 'template'])
@@ -1580,27 +1621,63 @@ async function undo(pushDir) {
   const endpoint = process.env.TRACY_SYNC_ENDPOINT ?? ''
   const token = process.env.TRACY_SYNC_TOKEN ?? ''
   if (!/^https?:\/\//.test(endpoint) || !token) throw new WriteFailed('NO_LIVE_DOOR')
-  const before = readJson(join(pushDir, 'before.json'), null)
-  // An Apply cut off before it answered (its job lost, #122): what it wrote is in its journal.
-  const writtenAnswer = readJson(join(pushDir, 'written.json'), null) ?? journalWritten(pushDir)
-  if (!before || !writtenAnswer) throw new WriteFailed('NOT_PUSHED')
+  if (!existsSync(join(pushDir, 'before.json'))) throw new WriteFailed('NOT_PUSHED')
   const pushId = pushDir.split('/').filter(Boolean).at(-1)
   const applyId = `tracy-push-undo-${pushId}`
   const live = await door(endpoint, token)
   const platform = readJson(join(pushDir, 'push.json'), {}).platform ?? 'joomla'
+  // A create the Apply sent whose answer never came (cut off, or lost on the way back): the engine's
+  // log of the push says whether it was made, and a made one is taken back like any other (#222).
+  const pushed = pushJournal(pushDir, `tracy-push-${pushId}`, platform)
+  const read = (action, params) => retried(() => call(live, token, action, params))
+  journalSettled(await settleLost(writeRequests(pushDir, live), read), pushed)
+  const before = pushed.before
+  // An Apply cut off before it answered (its job lost, #122): what it wrote is in its journal — and
+  // what the journal learnt since its answer (a create settled above) is taken back too.
+  const answered = readJson(join(pushDir, 'written.json'), null)
+  const journaled = journalWritten(pushDir)
+  const writtenAnswer = answered
+    ? {
+        ...answered,
+        written: [
+          ...answered.written,
+          ...(journaled?.written ?? []).filter((w) => !answered.written.some((a) => a.id === w.id))
+        ]
+      }
+    : journaled
+  if (!writtenAnswer?.written?.length && !answered) throw new WriteFailed('NOT_PUSHED')
   const requests = writeRequests(pushDir, live, 'undo-requests.json')
+  // This Undo's own writes from an earlier run of it, per item: answered (the item is back), or sent
+  // with no answer (it may be back) — #227.
+  const undoReceipts = new Map()
+  for (const r of Object.values(requests.entries))
+    for (const { item } of r.recovery ?? [])
+      if (['acknowledged', 'sending'].includes(r.state) && undoReceipts.get(item.id) !== 'acknowledged')
+        undoReceipts.set(item.id, r.state)
   let undoItemId = 'template-files'
+  // An Undo's write sets values back, after reading that the live site still holds what the push
+  // left: sent again when an earlier run's went unanswered (a proxy's 503, the site down), rather
+  // than refused for ever (#227). A record made again (`id: 0`) and an engine revert are not.
+  const resendable = (action, params) =>
+    !(action === 'content.update' && Number(params?.id) === 0) && action !== 'apply.revert'
   const ask = (action, params) =>
     retried(() =>
       mutation(action, params)
-        ? requests.send(action, params, () => call(live, token, action, params), [
-            { item: { id: undoItemId } }
-          ])
+        ? requests.send(
+            action,
+            params,
+            () => call(live, token, action, params),
+            [{ item: { id: undoItemId } }],
+            undefined,
+            { resendable: resendable(action, params) }
+          )
         : call(live, token, action, params)
     )
   const restored = []
   const kept = []
   const failed = []
+  // Items whose undo did not go through this run (`RETRY_UNDO`): the Undo answers unfinished.
+  const pending = []
 
   /** The live file's blob now, or null when there is none. */
   async function liveBlobOf(path) {
@@ -1724,125 +1801,74 @@ async function undo(pushDir) {
   progress(t0, `taking back ${order.length} item(s) on the live site`)
   for (const out of order) {
     undoItemId = out.id
-    const snap = before.items[out.id]
-    if (
-      order.some(
-        (other) =>
-          before.items[other.id]?.replaces?.includes(out.id) && !restored.some((r) => r.id === other.id)
-      )
-    ) {
-      kept.push({ ...out, reason: 'depends-on-failed' })
-      continue
-    }
-    if (!snap) {
-      kept.push({ ...out, reason: 'nothing-kept' })
-      continue
-    }
-    // Keep a new parent if metadata depending on it could not be safely taken back.
-    if (
-      snap.kind === 'post' &&
-      snap.op === 'create' &&
-      (receiptMetaChildren.some(
-        (child) => child.parents.includes(out.id) && !restored.some((r) => r.id === child.id)
-      ) ||
-        order.some((other) => {
-          const child = before.items[other.id]
-          return (
-            child?.kind === 'postmeta' &&
-            child.dependsOn?.includes(out.id) &&
-            !restored.some((r) => r.id === other.id)
-          )
-        }))
-    ) {
-      kept.push({ ...out, reason: 'depends-on-failed' })
-      continue
-    }
-    if (snap.kind === 'file' && snap.door === 'template') {
-      templateUndone ??= await undoTemplateFiles()
-      if (templateUndone.error) {
-        failed.push({ ...out, error: templateUndone.error, message: templateUndone.message })
+    try {
+      // Its own undo write was answered in an earlier run of this Undo, cut before it ended: back (#227).
+      if (undoReceipts.get(out.id) === 'acknowledged') {
+        restored.push(out)
         continue
       }
-      const said = templateUndone.all ?? templateUndone.paths.get(snap.path) ?? { reason: 'nothing-kept' }
-      if (said === true) restored.push(out)
-      else kept.push({ ...out, ...said })
-      continue
-    }
-    if (snap.op === 'upload' && snap.kind !== 'file') {
-      // A new Media Library item (WordPress): its attachment is the live site's own record now.
-      kept.push({ ...out, reason: 'media-not-undone' })
-      continue
-    }
-    try {
-      if (snap.kind === 'file') {
-        const said = await undoFile(snap)
+      const snap = before.items[out.id]
+      if (
+        order.some(
+          (other) =>
+            before.items[other.id]?.replaces?.includes(out.id) && !restored.some((r) => r.id === other.id)
+        )
+      ) {
+        kept.push({ ...out, reason: 'depends-on-failed' })
+        continue
+      }
+      if (!snap) {
+        kept.push({ ...out, reason: 'nothing-kept' })
+        continue
+      }
+      // Keep a new parent if metadata depending on it could not be safely taken back.
+      if (
+        snap.kind === 'post' &&
+        snap.op === 'create' &&
+        (receiptMetaChildren.some(
+          (child) => child.parents.includes(out.id) && !restored.some((r) => r.id === child.id)
+        ) ||
+          order.some((other) => {
+            const child = before.items[other.id]
+            return (
+              child?.kind === 'postmeta' &&
+              child.dependsOn?.includes(out.id) &&
+              !restored.some((r) => r.id === other.id)
+            )
+          }))
+      ) {
+        kept.push({ ...out, reason: 'depends-on-failed' })
+        continue
+      }
+      if (snap.kind === 'file' && snap.door === 'template') {
+        templateUndone ??= await undoTemplateFiles()
+        if (templateUndone.error) {
+          failed.push({ ...out, error: templateUndone.error, message: templateUndone.message })
+          continue
+        }
+        const said = templateUndone.all ?? templateUndone.paths.get(snap.path) ?? { reason: 'nothing-kept' }
         if (said === true) restored.push(out)
         else kept.push({ ...out, ...said })
         continue
       }
-      if (snap.kind === 'siteIdentity' || snap.kind === 'templateSettings') {
-        const said = await undoSetting(snap)
-        if (said === true) restored.push(out)
-        else kept.push({ ...out, ...said })
-        continue
-      }
-    } catch (error) {
-      if (!(error instanceof Refused)) throw error
-      failed.push({
-        ...out,
-        error: String(error.reply.error ?? 'refused').slice(0, 60),
-        message: String(error.reply.message ?? '').slice(0, 300)
-      })
-      continue
-    }
-    const params = { kind: snap.kind, id: snap.liveId }
-    if (snap.key !== null && snap.key !== undefined) params.key = snap.key
-    const nativeMetaCreate =
-      platform === 'wordpress' &&
-      snap.kind === 'postmeta' &&
-      snap.op === 'create' &&
-      typeof snap.nativeApplyId === 'string' &&
-      snap.nativeApplyId ===
-        `tracy-push-${pushId}-meta-${createHash('sha256').update(out.id).digest('hex').slice(0, 16)}`
-    let now = null
-    let stored = true
-    try {
-      const got = await ask('content.get', params)
-      now = got.item
-      stored = got.stored !== false
-    } catch (error) {
-      if (!(error instanceof Refused)) throw error
-      if (nativeMetaCreate && error.reply.error === 'not_found') {
-        restored.push(out)
-        continue
-      }
-      if (!(snap.op === 'delete' && snap.kind === 'menuItem')) {
-        kept.push({ ...out, reason: 'gone-on-live', fields: [] })
-        continue
-      }
-    }
-    if (THEME_ROWS.has(snap.kind) && (snap.op === 'delete' || (snap.op === 'create' && !stored))) {
-      // A part the push made that the live site has since handed back to the theme: already undone.
-      if (snap.op === 'create') {
-        restored.push(out)
-        continue
-      }
-      // A part the push handed back to the theme: saved again as it was, unless the live site saved
-      // one of its own since.
-      if (stored) {
-        kept.push({ ...out, reason: 'changed-on-live', fields: ['content'] })
-        continue
-      }
-      const back = {}
-      for (const field of ['content', 'title', 'area'])
-        if (snap.before?.[field] !== undefined) back[field] = snap.before[field]
-      if (typeof back.content !== 'string') {
-        kept.push({ ...out, reason: 'cannot-restore' })
+      if (snap.op === 'upload' && snap.kind !== 'file') {
+        // A new Media Library item (WordPress): its attachment is the live site's own record now.
+        kept.push({ ...out, reason: 'media-not-undone' })
         continue
       }
       try {
-        await ask('content.update', { apply_id: applyId, ...params, id: 0, fields: back })
-        restored.push(out)
+        if (snap.kind === 'file') {
+          const said = await undoFile(snap)
+          if (said === true) restored.push(out)
+          else kept.push({ ...out, ...said })
+          continue
+        }
+        if (snap.kind === 'siteIdentity' || snap.kind === 'templateSettings') {
+          const said = await undoSetting(snap)
+          if (said === true) restored.push(out)
+          else kept.push({ ...out, ...said })
+          continue
+        }
       } catch (error) {
         if (!(error instanceof Refused)) throw error
         failed.push({
@@ -1850,135 +1876,223 @@ async function undo(pushDir) {
           error: String(error.reply.error ?? 'refused').slice(0, 60),
           message: String(error.reply.message ?? '').slice(0, 300)
         })
+        continue
       }
-      continue
-    }
-    // The live site must still hold what the push left there (read back after the write), field by field.
-    const left = snap.after ?? snap.written
-    // A record the push made may have been placed by a move of the same push after it was read back.
-    const fields =
-      snap.op === 'delete'
-        ? snap.trash
-          ? [
-              snap.trash[0],
+      const params = { kind: snap.kind, id: snap.liveId }
+      if (snap.key !== null && snap.key !== undefined) params.key = snap.key
+      const nativeMetaCreate =
+        platform === 'wordpress' &&
+        snap.kind === 'postmeta' &&
+        snap.op === 'create' &&
+        typeof snap.nativeApplyId === 'string' &&
+        snap.nativeApplyId ===
+          `tracy-push-${pushId}-meta-${createHash('sha256').update(out.id).digest('hex').slice(0, 16)}`
+      let now = null
+      let stored = true
+      try {
+        const got = await ask('content.get', params)
+        now = got.item
+        stored = got.stored !== false
+      } catch (error) {
+        if (!(error instanceof Refused)) throw error
+        if (nativeMetaCreate && error.reply.error === 'not_found') {
+          restored.push(out)
+          continue
+        }
+        // A record the push made, gone since this Undo's unanswered delete of an earlier run: taken back.
+        if (
+          snap.op === 'create' &&
+          undoReceipts.get(out.id) === 'sending' &&
+          error.reply.error === 'not_found'
+        ) {
+          restored.push(out)
+          continue
+        }
+        if (!(snap.op === 'delete' && snap.kind === 'menuItem')) {
+          kept.push({ ...out, reason: 'gone-on-live', fields: [] })
+          continue
+        }
+      }
+      if (THEME_ROWS.has(snap.kind) && (snap.op === 'delete' || (snap.op === 'create' && !stored))) {
+        // A part the push made that the live site has since handed back to the theme: already undone.
+        if (snap.op === 'create') {
+          restored.push(out)
+          continue
+        }
+        // A part the push handed back to the theme: saved again as it was, unless the live site saved
+        // one of its own since.
+        if (stored) {
+          kept.push({ ...out, reason: 'changed-on-live', fields: ['content'] })
+          continue
+        }
+        const back = {}
+        for (const field of ['content', 'title', 'area'])
+          if (snap.before?.[field] !== undefined) back[field] = snap.before[field]
+        if (typeof back.content !== 'string') {
+          kept.push({ ...out, reason: 'cannot-restore' })
+          continue
+        }
+        try {
+          await ask('content.update', { apply_id: applyId, ...params, id: 0, fields: back })
+          restored.push(out)
+        } catch (error) {
+          if (!(error instanceof Refused)) throw error
+          failed.push({
+            ...out,
+            error: String(error.reply.error ?? 'refused').slice(0, 60),
+            message: String(error.reply.message ?? '').slice(0, 300)
+          })
+        }
+        continue
+      }
+      // The live site must still hold what the push left there (read back after the write), field by field.
+      const left = snap.after ?? snap.written
+      // A record the push made may have been placed by a move of the same push after it was read back.
+      const fields =
+        snap.op === 'delete'
+          ? snap.trash
+            ? [
+                snap.trash[0],
+                ...(platform === 'wordpress' && snap.kind === 'post' && snap.before?.post_name
+                  ? ['post_name']
+                  : [])
+              ]
+            : []
+          : Object.keys(snap.written ?? {}).filter((f) => !(snap.op === 'create' && f === 'parent_id'))
+      const moved = []
+      for (const field of fields) {
+        if (field === 'move_after') continue
+        const want =
+          snap.op === 'delete' && field === snap.trash?.[0]
+            ? snap.trash[1]
+            : (left?.[field] ?? snap.written?.[field])
+        const have = now?.[field]
+        if (field === 'categories' || field === 'tags') {
+          const read = field === 'categories' ? 'post_category' : 'tags_input'
+          if (!same(now?.[read] ?? [], snap.after?.[read] ?? [])) moved.push(field)
+          continue
+        }
+        if (!same(have, want)) moved.push(field)
+      }
+      if (snap.op === 'delete' && snap.kind === 'menuItem' && platform === 'wordpress') {
+        kept.push({ ...out, reason: 'cannot-restore' })
+        continue
+      }
+      // This Undo's write of an earlier run went unanswered, and the live site holds what it puts
+      // back: that write landed (#227).
+      if (moved.length && undoReceipts.get(out.id) === 'sending' && undoneOnLive(snap, now, platform)) {
+        restored.push(out)
+        continue
+      }
+      if (moved.length) {
+        kept.push({ ...out, reason: 'changed-on-live', fields: moved })
+        continue
+      }
+      if (nativeMetaCreate) {
+        let revertError = null
+        try {
+          await ask('apply.revert', { apply_id: snap.nativeApplyId })
+        } catch (error) {
+          revertError = error
+        }
+        if (revertError instanceof Refused && revertError.reply.error === 'conflict') {
+          kept.push({ ...out, reason: 'changed-on-live', fields: ['value'] })
+          continue
+        }
+        // Empty or expired native receipts can report success without removing the metadata.
+        // Read back even after a lost response; the durable request must never be sent twice.
+        let absent = false
+        try {
+          await ask('content.get', params)
+        } catch (error) {
+          absent = error instanceof Refused && error.reply.error === 'not_found'
+        }
+        if (absent) restored.push(out)
+        else if (revertError instanceof Refused) {
+          failed.push({
+            ...out,
+            error: String(revertError.reply.error ?? 'refused').slice(0, 60),
+            message: String(revertError.reply.message ?? '').slice(0, 300)
+          })
+        } else {
+          failed.push({ ...out, error: 'WRITE_OUTCOME_UNKNOWN' })
+        }
+        continue
+      }
+      try {
+        if (snap.op === 'create') {
+          if (!TRASHABLE[platform]?.has(snap.kind)) {
+            kept.push({ ...out, reason: 'cannot-remove' })
+            continue
+          }
+          await ask('content.delete', { apply_id: applyId, ...params })
+        } else if (snap.op === 'delete') {
+          const [column] = snap.trash ?? []
+          if (!column) {
+            kept.push({ ...out, reason: 'cannot-restore' })
+            continue
+          }
+          await ask('content.update', {
+            apply_id: applyId,
+            ...params,
+            fields: {
+              [column]: snap.before?.[column],
               ...(platform === 'wordpress' && snap.kind === 'post' && snap.before?.post_name
-                ? ['post_name']
-                : [])
-            ]
-          : []
-        : Object.keys(snap.written ?? {}).filter((f) => !(snap.op === 'create' && f === 'parent_id'))
-    const moved = []
-    for (const field of fields) {
-      if (field === 'move_after') continue
-      const want =
-        snap.op === 'delete' && field === snap.trash?.[0]
-          ? snap.trash[1]
-          : (left?.[field] ?? snap.written?.[field])
-      const have = now?.[field]
-      if (field === 'categories' || field === 'tags') {
-        const read = field === 'categories' ? 'post_category' : 'tags_input'
-        if (!same(now?.[read] ?? [], snap.after?.[read] ?? [])) moved.push(field)
-        continue
-      }
-      if (!same(have, want)) moved.push(field)
-    }
-    if (snap.op === 'delete' && snap.kind === 'menuItem' && platform === 'wordpress') {
-      kept.push({ ...out, reason: 'cannot-restore' })
-      continue
-    }
-    if (moved.length) {
-      kept.push({ ...out, reason: 'changed-on-live', fields: moved })
-      continue
-    }
-    if (nativeMetaCreate) {
-      let revertError = null
-      try {
-        await ask('apply.revert', { apply_id: snap.nativeApplyId })
+                ? { post_name: snap.before.post_name }
+                : {})
+            }
+          })
+        } else if (snap.op === 'move') {
+          if (!snap.restore?.parent_id) {
+            kept.push({ ...out, reason: 'cannot-restore' })
+            continue
+          }
+          await ask('content.update', { apply_id: applyId, ...params, fields: snap.restore })
+        } else {
+          const back = {}
+          for (const field of Object.keys(snap.written ?? {})) {
+            if (snap.restore && field in snap.restore) back[field] = snap.restore[field]
+            else if (snap.kind === 'moduleAssignment') back[field] = snap.before?.[field] ?? '[]'
+            else back[field] = snap.before?.[field] ?? null
+          }
+          // Taken back only over what the push left: a field changed on the live site since is kept.
+          const expected = platform === 'wordpress' ? expectedOf(snap.after, back) : null
+          await ask('content.update', {
+            apply_id: applyId,
+            ...params,
+            fields: back,
+            ...(expected ? { expected } : {})
+          })
+        }
+        restored.push(out)
       } catch (error) {
-        revertError = error
-      }
-      if (revertError instanceof Refused && revertError.reply.error === 'conflict') {
-        kept.push({ ...out, reason: 'changed-on-live', fields: ['value'] })
-        continue
-      }
-      // Empty or expired native receipts can report success without removing the metadata.
-      // Read back even after a lost response; the durable request must never be sent twice.
-      let absent = false
-      try {
-        await ask('content.get', params)
-      } catch (error) {
-        absent = error instanceof Refused && error.reply.error === 'not_found'
-      }
-      if (absent) restored.push(out)
-      else if (revertError instanceof Refused) {
+        if (!(error instanceof Refused)) throw error
+        if (error.reply.error === 'revision_stale') {
+          kept.push({ ...out, reason: 'changed-on-live', fields: staleFields(error.reply) })
+          continue
+        }
         failed.push({
           ...out,
-          error: String(revertError.reply.error ?? 'refused').slice(0, 60),
-          message: String(revertError.reply.message ?? '').slice(0, 300)
-        })
-      } else {
-        failed.push({ ...out, error: 'WRITE_OUTCOME_UNKNOWN' })
-      }
-      continue
-    }
-    try {
-      if (snap.op === 'create') {
-        if (!TRASHABLE[platform]?.has(snap.kind)) {
-          kept.push({ ...out, reason: 'cannot-remove' })
-          continue
-        }
-        await ask('content.delete', { apply_id: applyId, ...params })
-      } else if (snap.op === 'delete') {
-        const [column] = snap.trash ?? []
-        if (!column) {
-          kept.push({ ...out, reason: 'cannot-restore' })
-          continue
-        }
-        await ask('content.update', {
-          apply_id: applyId,
-          ...params,
-          fields: {
-            [column]: snap.before?.[column],
-            ...(platform === 'wordpress' && snap.kind === 'post' && snap.before?.post_name
-              ? { post_name: snap.before.post_name }
-              : {})
-          }
-        })
-      } else if (snap.op === 'move') {
-        if (!snap.restore?.parent_id) {
-          kept.push({ ...out, reason: 'cannot-restore' })
-          continue
-        }
-        await ask('content.update', { apply_id: applyId, ...params, fields: snap.restore })
-      } else {
-        const back = {}
-        for (const field of Object.keys(snap.written ?? {})) {
-          if (snap.restore && field in snap.restore) back[field] = snap.restore[field]
-          else if (snap.kind === 'moduleAssignment') back[field] = snap.before?.[field] ?? '[]'
-          else back[field] = snap.before?.[field] ?? null
-        }
-        // Taken back only over what the push left: a field changed on the live site since is kept.
-        const expected = platform === 'wordpress' ? expectedOf(snap.after, back) : null
-        await ask('content.update', {
-          apply_id: applyId,
-          ...params,
-          fields: back,
-          ...(expected ? { expected } : {})
+          error: String(error.reply.error ?? 'refused').slice(0, 60),
+          message: String(error.reply.message ?? '').slice(0, 300)
         })
       }
-      restored.push(out)
     } catch (error) {
-      if (!(error instanceof Refused)) throw error
-      if (error.reply.error === 'revision_stale') {
-        kept.push({ ...out, reason: 'changed-on-live', fields: staleFields(error.reply) })
-        continue
-      }
-      failed.push({
-        ...out,
-        error: String(error.reply.error ?? 'refused').slice(0, 60),
-        message: String(error.reply.message ?? '').slice(0, 300)
-      })
+      // One write that did not go through (no answer, a firewall's 403) or a live site that stopped
+      // answering: what can be taken back is, and this Undo answers that it did not finish, so it can
+      // be pressed again — it then knows what it already took back (#227).
+      if (!RETRY_UNDO.includes(error.code)) throw error
+      pending.push({ ...out, error: error.code })
+      if (UNREACHABLE.includes(error.code)) break
     }
+  }
+  if (pending.length) {
+    const unfinished = new WriteFailed(
+      pending[0].error,
+      `${pending.length} change(s) not taken back yet, ${restored.length} taken back; Undo again once the live site answers`
+    )
+    unfinished.pending = pending.map((p) => p.id)
+    throw unfinished
   }
   progress(t0, `restored ${restored.length}, kept ${kept.length}, failed ${failed.length}`)
   const state = restored.length === 0 ? 'nothing' : kept.length || failed.length ? 'partial' : 'undone'

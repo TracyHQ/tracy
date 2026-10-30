@@ -35,8 +35,9 @@ export function durablePrivate(path, value) {
 
 export function mutation(action, params = {}) {
   return (
-    !['core.manifest', 'info', 'content.get', 'file.read', 'template.files.status', 'apply.list'].includes(action) &&
-    !(['site.identity', 'template.siteSettings'].includes(action) && params.operation !== 'set')
+    !['core.manifest', 'info', 'content.get', 'file.read', 'template.files.status', 'apply.list'].includes(
+      action
+    ) && !(['site.identity', 'template.siteSettings'].includes(action) && params.operation !== 'set')
   )
 }
 

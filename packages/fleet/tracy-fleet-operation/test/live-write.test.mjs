@@ -259,7 +259,11 @@ function engine({
       if (action === 'apply.list') {
         // An older engine without the listing (`noApplyList`) does not know the action.
         if (state.noApplyList) return answer(200, { ok: false, error: 'unknown_action' })
-        return answer(200, { ok: true, apply_id: params.apply_id, steps: state.applyLog[params.apply_id] ?? [] })
+        return answer(200, {
+          ok: true,
+          apply_id: params.apply_id,
+          steps: state.applyLog[params.apply_id] ?? []
+        })
       }
       if (action === 'apply.revert') {
         const receipt = state.metaReceipts?.[params.apply_id]
@@ -1890,7 +1894,11 @@ test('a lost create answer is settled by the engine’s own log: written under i
       [[made.id, ids[0]]],
       JSON.stringify(answer)
     )
-    assert.deepEqual(answer.created, { 'post:1': ids[0] }, 'the id map learns it: no new preview offers it again')
+    assert.deepEqual(
+      answer.created,
+      { 'post:1': ids[0] },
+      'the id map learns it: no new preview offers it again'
+    )
     assert.equal(answer.failed.length, 0)
     // The same push again: nothing is sent.
     await apply(live, dir)
@@ -2672,6 +2680,94 @@ test('WordPress: Undo keeps a title the customer changed after the push, and tak
     )
     assert.equal(live.records.post[10].post_title, 'Customer title after the push')
     assert.equal(live.records.post[11].post_title, 'Other')
+  } finally {
+    await live.close()
+  }
+})
+
+test('an Undo write a proxy answered 503: the rest is taken back, the Undo answers unfinished, and pressed again it finishes (#227)', async () => {
+  const live = await engine({ platform: 'wordpress', records: { post: { 1: wpPost(1), 2: wpPost(2) } } })
+  try {
+    const dir = pushDir([postItem(1), postItem(2)], 'wordpress')
+    assert.equal((await apply(live, dir)).answer.written.length, 2)
+    const writes = () => live.calls.filter((c) => c.action === 'content.update').length
+    const pushed = writes()
+    // The first undo write (post 2: Undo goes newest first) meets a 503 from a proxy, once.
+    live.refuse['content.update'] = 503
+    const first = (await undo(live, dir)).answer
+    assert.equal(first.ok, false, JSON.stringify(first))
+    assert.equal(first.code, 'WRITE_OUTCOME_UNKNOWN')
+    assert.equal(live.records.post[1].post_title, 'Old 1', 'the other change was taken back')
+    assert.equal(live.records.post[2].post_title, 'New 2')
+    // Pressed again with the proxy fine: post 2 still holds what the push left, so it is sent again.
+    const again = (await undo(live, dir)).answer
+    assert.equal(again.ok, true, JSON.stringify(again))
+    assert.equal(again.state, 'undone')
+    assert.deepEqual(again.restored.map((r) => r.id).sort(), ['post:1', 'post:2'])
+    assert.equal(live.records.post[2].post_title, 'Old 2')
+    assert.equal(writes() - pushed, 3, 'the 503, post 1, post 2 again — post 1 never twice')
+  } finally {
+    await live.close()
+  }
+})
+
+test('an Undo write that landed with its answer lost, or answered before a later stop, counts as taken back (#227)', async () => {
+  const live = await engine({ platform: 'wordpress', records: { post: { 1: wpPost(1), 2: wpPost(2) } } })
+  try {
+    const dir = pushDir([postItem(1), postItem(2)], 'wordpress')
+    await apply(live, dir)
+    const writes = () => live.calls.filter((c) => c.action === 'content.update').length
+    const pushed = writes()
+    // Post 2's undo write lands and its answer is lost; post 1 cannot be read (a firewall's 403).
+    live.dropAfterUpdate = true
+    live.failGetId = 1
+    const first = (await undo(live, dir)).answer
+    assert.equal(first.ok, false, JSON.stringify(first))
+    assert.equal(live.records.post[2].post_title, 'Old 2')
+    live.failGetId = null
+    const again = (await undo(live, dir)).answer
+    assert.equal(again.ok, true, JSON.stringify(again))
+    assert.equal(again.state, 'undone', JSON.stringify(again.kept))
+    assert.deepEqual(again.kept, [])
+    assert.deepEqual(again.restored.map((r) => r.id).sort(), ['post:1', 'post:2'])
+    assert.equal(writes() - pushed, 2, 'post 2 is not written again')
+    // A third press: the Undo already answered, nothing is sent.
+    await undo(live, dir)
+    assert.equal(writes() - pushed, 2)
+  } finally {
+    await live.close()
+  }
+})
+
+test('an Undo that cannot reach the live site says LIVE_UNREACHABLE, not a resource limit (#227)', async () => {
+  const live = await engine({ platform: 'wordpress', records: { post: { 1: wpPost(1) } } })
+  const dir = pushDir([postItem(1)], 'wordpress')
+  await apply(live, dir)
+  await live.close()
+  const { answer } = await undo(live, dir)
+  assert.equal(answer.ok, false)
+  assert.equal(answer.code, 'LIVE_UNREACHABLE', JSON.stringify(answer))
+})
+
+test('a firewall’s 403 on one write is LIVE_BLOCKED, never an unknown outcome; the other items are written (#220)', async () => {
+  const live = await engine({ platform: 'wordpress', records: { post: { 1: wpPost(1), 2: wpPost(2) } } })
+  try {
+    // A rule in front of the engine answers one write with its own 403 page: the engine never ran.
+    live.refuse['content.update'] = 403
+    const dir = pushDir([postItem(1), postItem(2)], 'wordpress')
+    const { answer } = await apply(live, dir)
+    assert.equal(answer.ok, true, JSON.stringify(answer))
+    assert.equal(answer.written.length, 1)
+    assert.deepEqual(
+      answer.failed.map((f) => f.error),
+      ['LIVE_BLOCKED']
+    )
+    const blocked = answer.failed[0].id
+    const receipts = Object.values(JSON.parse(readFileSync(join(dir, 'requests.json'), 'utf8')))
+    assert.ok(
+      receipts.some((r) => r.state === 'refused' && r.recovery.some((x) => x.item.id === blocked)),
+      'known not written: the same push may send it again'
+    )
   } finally {
     await live.close()
   }
