@@ -23,6 +23,7 @@ import { load } from 'js-yaml'
 
 import { DEFAULT_BUDGET_SECONDS } from '../ci/new-test-proof.mjs'
 import { planMatrix, planProof } from '../ci/plan-ci.mjs'
+import { runnerPaths } from '../test-support/runs-on.mjs'
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const TEXT = readFileSync(join(ROOT, '.github/workflows/tracy-ci.yml'), 'utf8')
@@ -128,7 +129,7 @@ test('the proof job starts only for a non-draft fix pull request whose plan and 
   for (const [name, job] of Object.entries(jobs))
     for (const needed of [job.needs ?? []].flat())
       assert.ok(!['new-test-proof', 'test-growth'].includes(needed), `${name} must not wait for ${needed}`)
-  assert.ok(proof['runs-on'].includes('tracy-check'))
+  assert.ok(runnerPaths(proof['runs-on']).selfHosted.includes('tracy-check'))
 })
 
 test('every non-draft pull request gets the growth line, with or without a planned suite', () => {
@@ -142,8 +143,14 @@ test('every non-draft pull request gets the growth line, with or without a plann
   )
   // No `needs`: it reports when green-tree skipped every row, and a failure of plan cannot hide it.
   assert.equal(growth.needs, undefined)
-  assert.ok(growth['runs-on'].includes('tracy-light'))
-  assert.equal(growth.steps.length, 2, 'checkout and the report: no install, no test run')
+  assert.ok(runnerPaths(growth['runs-on']).selfHosted.includes('tracy-light'))
+  // The Node step runs only on GitHub-hosted (`ci:hosted`); our runners carry Node in their image.
+  assert.deepEqual(
+    growth.steps.map((s) => s.name),
+    ['Check out Git repository', 'Set up Node on a GitHub-hosted runner', GROW],
+    'checkout and the report: no install, no test run'
+  )
+  assert.equal(growth.steps[1].if, "runner.environment == 'github-hosted'")
   assert.match(step(growth, GROW).run, /--growth-only --base HEAD\^1 --head HEAD/)
 })
 

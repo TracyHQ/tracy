@@ -26,6 +26,7 @@ import { dirname, join, resolve } from 'node:path'
 import { after, test } from 'node:test'
 import { fileURLToPath } from 'node:url'
 import { load } from 'js-yaml'
+import { labelSets } from '../test-support/runs-on.mjs'
 import {
   EXIT,
   emit,
@@ -146,8 +147,8 @@ test('policy: the five workflows exist, run on pull requests, and still carry th
     assert.match(yml, /^ {2}pull_request:\n {4}branches: \[main, staging, develop\]$/m, w.file)
     for (const job of w.jobs) assert.ok(yml.includes(`    name: ${job}\n`), `${w.file}: job "${job}"`)
     // Pull-request jobs never ask for the production lane (docs/references/public-repo-ci.md).
-    for (const job of Object.values(load(yml).jobs)) {
-      const labels = [job['runs-on']].flat().map(String)
+    // A Tracy CI job with the `ci:hosted` path has two label sets: each is judged on its own.
+    for (const labels of Object.values(load(yml).jobs).flatMap((job) => labelSets(job['runs-on']))) {
       // A GitHub-hosted job has no lane; the merge check knows it only by this one label.
       if (!labels.includes('self-hosted')) {
         assert.deepEqual(labels, [HOSTED], `${w.file}: runs-on ${labels}`)
@@ -1181,6 +1182,38 @@ test('a job on no lane passes only when the jobs API says GitHub ran it, not on 
     assert.equal(v.verdict, 'FAIL', `${name}: ${v.reason}`)
     assert.match(v.reason, /job "changelog" ran on lane \[\]/)
   }
+})
+
+test('a Tracy CI run on GitHub-hosted runners (`ci:hosted`) passes by the same rule, and only by it', async () => {
+  // Since 30/10/2026 a pull request labelled `ci:hosted` runs every Tracy CI job on `ubuntu-latest`.
+  const onHosted = (j) => {
+    j.labels = [HOSTED]
+    j.runner_name = 'GitHub Actions 1000000456'
+    j.runner_group_name = HOSTED_GROUP
+  }
+  const hosted = world()
+  const ci = jobsOf(hosted, 'tracy-ci.yml').jobs
+  assert.ok(
+    ci.some((j) => j.name.startsWith('build check (')),
+    'the fixture has build-check rows'
+  )
+  for (const j of ci) onHosted(j)
+  const { v: pass } = await verdictOf(hosted)
+  assert.equal(pass.verdict, 'PASS', pass.reason)
+  // Every job of one run reads the same payload, so a mixed run should not occur; each job is
+  // judged on its own all the same.
+  const mixed = world()
+  onHosted(jobsOf(mixed, 'tracy-ci.yml').jobs.find((j) => j.name === 'build check (checks)'))
+  const { v: mixedPass } = await verdictOf(mixed)
+  assert.equal(mixedPass.verdict, 'PASS', mixedPass.reason)
+  // A self-hosted runner registered with the hosted label is still held to the lane rule.
+  const pretender = world()
+  const row = jobsOf(pretender, 'tracy-ci.yml').jobs.find((j) => j.name === 'build check (checks)')
+  onHosted(row)
+  row.runner_group_name = 'Default'
+  const { v } = await verdictOf(pretender)
+  assert.equal(v.verdict, 'FAIL', v.reason)
+  assert.match(v.reason, /job "build check \(checks\)" ran on lane \[\]/)
 })
 
 test('job rows that contradict the run they were asked for are UNKNOWN', async () => {

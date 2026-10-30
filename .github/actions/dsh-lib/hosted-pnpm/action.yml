@@ -1,0 +1,34 @@
+# Fresh hosted VMs have neither the runner image's Corepack default nor its pnpm store.
+# The default matters outside the checkout: regenerate-bundles tests create repositories with
+# no packageManager field. Corepack 0.34.2 otherwise downloads today's latest pnpm (12), whose
+# entry point it cannot load. Use this repository's pin, including in those scratch repositories.
+#
+# Only the npmjs content store is cached, never node_modules, credentials or test verdicts.
+# dsh and workspace installs have separate keys so a dsh-only install cannot freeze an incomplete
+# workspace cache. GitHub scopes PR writes to refs/pull/N/merge; these callers admit same-repo PRs
+# only, and no privileged workflow consumes this cache. No restore prefix crosses an input change.
+name: Hosted pnpm
+description: Pin Corepack's default and cache pnpm downloads on a GitHub-hosted runner.
+
+inputs:
+  scope:
+    description: Separate the dsh toolchain store from the complete workspace store.
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Pin the default pnpm and locate its store
+      id: store
+      shell: bash
+      run: |
+        set -euo pipefail
+        corepack install --global "$(node -p 'require("./package.json").packageManager')"
+        echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
+        echo "dsh=$(git rev-parse HEAD:vendor/tracy/deepseek-harness)" >> "$GITHUB_OUTPUT"
+
+    - name: Cache the pnpm content store
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ steps.store.outputs.path }}
+        key: hosted-pnpm-v1-${{ runner.os }}-${{ runner.arch }}-${{ inputs.scope }}-${{ hashFiles('.node-version', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', '.npmrc', 'vendor/tracy/deepseek-harness/pnpm-lock.yaml') }}-${{ steps.store.outputs.dsh }}

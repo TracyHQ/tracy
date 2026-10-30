@@ -28,6 +28,8 @@ import { fileURLToPath } from 'node:url'
 
 import { load } from 'js-yaml'
 
+import { runnerPaths } from '../test-support/runs-on.mjs'
+
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const workflow = load(readFileSync(join(ROOT, '.github/workflows/tracy-ci.yml'), 'utf8'))
 const jobs = workflow.jobs
@@ -515,7 +517,9 @@ test('nightly: exactly one dsh job runs per event, and the nightly one is dsh-li
   }
 
   // Same machine class, same budget, same steps — only the two guards and the pinned ref differ.
-  const labels = (job) => job['runs-on'].map((l) => template(l, contextOf({ event: 'schedule' })))
+  // `dsh-lib` may also run GitHub-hosted (`ci:hosted`, pull requests only): its self-hosted list is compared.
+  const labels = (job) =>
+    runnerPaths(job['runs-on']).selfHosted.map((l) => template(l, contextOf({ event: 'schedule' })))
   assert.deepEqual(labels(nightly), labels(jobs['dsh-lib']))
   assert.equal(nightly['timeout-minutes'], jobs['dsh-lib']['timeout-minutes'])
   const shared = nightly.steps
@@ -593,7 +597,7 @@ test('pull requests and manual runs check out the event ref and skip the nightly
   }
   // The lane: production runners only for a manual run on main; pull requests (into main too) and
   // the nightly take the dev lane (docs/references/public-repo-ci.md).
-  const lane = (context) => template(jobs['build-check']['runs-on'].at(-1), context)
+  const lane = (context) => template(runnerPaths(jobs['build-check']['runs-on']).selfHosted.at(-1), context)
   assert.equal(lane(contextOf({ event: 'pull_request', baseRef: 'main' })), 'tracy-lane-dev')
   const dispatchOnMain = contextOf({ event: 'workflow_dispatch' })
   dispatchOnMain.github.ref_name = 'main'
@@ -601,6 +605,39 @@ test('pull requests and manual runs check out the event ref and skip the nightly
   assert.equal(lane(contextOf({ event: 'pull_request', baseRef: 'develop' })), 'tracy-lane-dev')
   assert.equal(lane(contextOf({ event: 'schedule' })), 'tracy-lane-dev')
   assert.equal(workflow.concurrency['cancel-in-progress'], "${{ github.event_name == 'pull_request' }}")
+})
+
+test('GitHub-hosted only for a pull request labelled ci:hosted; the nightly and manual runs stay on our runners', () => {
+  const labelled = (names) => {
+    const context = contextOf({ event: 'pull_request' })
+    context.github.event.pull_request.labels = names.map((name) => ({ name }))
+    return context
+  }
+  const hostedJobs = Object.entries(jobs).filter(([, job]) => runnerPaths(job['runs-on']).condition !== null)
+  assert.deepEqual(hostedJobs.map(([name]) => name).sort(), [
+    'build-check',
+    'dsh-lib',
+    'new-test-proof',
+    'plan',
+    'suite-skipped',
+    'test-growth'
+  ])
+  for (const [name, job] of hostedJobs) {
+    const { condition } = runnerPaths(job['runs-on'])
+    for (const [label, context] of [
+      ['the nightly', contextOf({ event: 'schedule' })],
+      ['a manual run', contextOf({ event: 'workflow_dispatch' })],
+      ['an unlabelled pull request', contextOf({ event: 'pull_request' })],
+      ['a pull request labelled ci:aws-only', labelled(['ci:aws-only'])]
+    ])
+      assert.equal(truthy(evaluate(condition, context)), false, `${name} on ${label}`)
+    assert.equal(truthy(evaluate(condition, labelled(['ci:e2e', 'ci:hosted']))), true, name)
+  }
+  // The PostgreSQL service starts with the same label, and only with it: an empty image starts none.
+  const image = jobs['build-check'].services.postgres.image
+  assert.equal(template(image, contextOf({ event: 'schedule' })), '')
+  assert.equal(template(image, contextOf({ event: 'pull_request' })), '')
+  assert.equal(template(image, labelled(['ci:hosted'])), 'postgres:16-alpine')
 })
 
 // ── the verdict ──────────────────────────────────────────────────────────────────────────────────

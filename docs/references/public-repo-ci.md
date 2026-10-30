@@ -24,7 +24,7 @@ self-hosted runners (owner decision, 26/10/2026). Enforced by `scripts/test/ci-p
 | Code | Where it runs | Credentials |
 |---|---|---|
 | A push to `main`/`staging`/`develop`, a manual run, the nightly | the team's self-hosted runners, as before | the secrets each workflow already uses |
-| A pull request from a **branch of this repository** | Tracy CI: the team's self-hosted runners, **always the dev lane** (`tracy-lane-dev`), whatever the base; the light gates (`changelog`, `description`, `Regression`, `branch-fresh`, `english`, `CI Before Merge`): GitHub-hosted `ubuntu-latest` since 30/10/2026 | as before (the CI read App token in `plan` and `CI Before Merge`, the vendor deploy key, the Turbo cache keys) |
+| A pull request from a **branch of this repository** | Tracy CI: the team's self-hosted runners, **always the dev lane** (`tracy-lane-dev`), whatever the base, or GitHub-hosted `ubuntu-latest` when it carries the opt-in label `ci:hosted` (30/10/2026, [`gates-ci-runners.md`](gates-ci-runners.md) › Runners); the light gates (`changelog`, `description`, `Regression`, `branch-fresh`, `english`, `CI Before Merge`): GitHub-hosted `ubuntu-latest` since 30/10/2026 | as before (the CI read App token in `plan` and `CI Before Merge`, the vendor deploy key, the Turbo cache keys) |
 | A pull request from a **fork** | **GitHub-hosted** `ubuntu-latest` only | none: `permissions: { contents: read }`, `actions/checkout` with `persist-credentials: false`, no `secrets.*` |
 
 Each same-repository job of a pull-request workflow carries
