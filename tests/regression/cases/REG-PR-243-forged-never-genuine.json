@@ -1,0 +1,29 @@
+{
+  "id": "REG-PR-243-forged-never-genuine",
+  "kind": "fix",
+  "title": "A forged credential in the shared-social and preview-ticket tests is never the genuine one, and the scripts Turbo task hashes what its suite reads (nightly red 29/10)",
+  "pr": 243,
+  "area": "ci/nightly",
+  "cms": ["any"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Take the forgery expression of website-opportunities-shared-social.test.mjs from that file and run it against the real mintSocialServiceKey/verifySocialServiceKey (an in-memory pool) with every secret forced to end in X.",
+    "S2: Take the forgery expression of preview-ticket.test.mjs from that file; forge 16 real tickets from mintPreviewTicket and read them with readPreviewToken; then forge 64 signatures whose last 22 bits are zero.",
+    "S3: Read the //#test:ci:scripts inputs of turbo.json: check 21 paths of the kinds the 29/10 nightly reported uncovered, look for an input another of its inputs already covers, and run turbo-setup.mjs --check --structure-only."
+  ],
+  "expect": [
+    "S1: the genuine key verifies and the old fixed-X forgery verifies too (the defect reproduced), while the file's forgery differs from the key and gets SOCIAL_AUTH_INVALID for all 8 keys.",
+    "S2: every genuine ticket reads and no forged one does; the old AAAA tail decodes to the genuine signature 64 of 64 times, the file's forgery never.",
+    "S3: all 21 paths are covered, no input is redundant (MACHINERY aside), and the structure check exits 0."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/test/website-opportunities-shared-social.test.mjs, apps/tracy-web/test/preview-ticket.test.mjs, turbo.json",
+    "script": "tests/regression/scripts/REG-PR-243-forged-never-genuine.mjs"
+  },
+  "evidence": "Nightly run 40973572289 (29/10): tests 2/2 `website-opportunities-shared-social.test.mjs:211` got undefined, expected 'SOCIAL_AUTH_INVALID'; checks `turbo-config` 4792 lines `//#test:ci:scripts: its suite reads …, which is not among the task's inputs`",
+  "fence": "each test file's own forgery expression against the real token code with the collision forced, and the scripts task's input list read off turbo.json",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-243-forged-never-genuine.mjs"]
+  }
+}
