@@ -1,0 +1,2 @@
+- **AI onboarding keeps a subfolder installation address and carries the chat's details through the composer's Create/Import buttons, and AI Help restores a stopped or cut answer as stopped** — product (Claude, for David) · `fix/assistant-onboarding-help` · 2026-10-30
+  **Affects:** tracy-web's assistant (`onboarding-draft.js`, the conversation store and route) and the assistant and add-site plugins (`lib/client.js` rebuilt). Live once the tracy-web and tracy-dsh images are rebuilt and deployed.
