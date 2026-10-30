@@ -1693,11 +1693,26 @@ async function readPhpInfo(fetchAuthed, adminBase, onAnswer) {
     onAnswer?.(page, html, url);
     const limits = phpLimits(html);
     const fromPage = html.match(/<h1 class="p">PHP Version (\d+\.\d+(?:\.\d+)?)/)?.[1];
-    const php = fromPage ?? page.headers.get("x-powered-by")?.match(/PHP\/(\d+\.\d+(?:\.\d+)?)/i)?.[1];
+    const php = fromPage ?? page.headers.get("x-powered-by")?.match(/PHP\/(\d+\.\d+(?:\.\d+)?)/i)?.[1] ?? await readSysinfoPhp(fetchAuthed, adminBase);
     return { ...php ? { php } : {}, limits };
   } catch {
     return { limits: {} };
   }
+}
+async function readSysinfoPhp(fetchAuthed, adminBase) {
+  try {
+    const page = await fetchAuthed(`${adminBase}?option=com_admin&view=sysinfo&format=json`, { signal: timeout() });
+    const body = await readCappedBody(page);
+    return page.ok ? body.match(/"phpversion"\s*:\s*"(\d+\.\d+(?:\.\d+)?)/)?.[1] : void 0;
+  } catch {
+    return void 0;
+  }
+}
+function installerPhpFloor(html) {
+  const said = html.match(
+    /Claude Cowork needs PHP (\d+\.\d+(?:\.\d+)?) or newer; this site runs PHP (\d+\.\d+(?:\.\d+)?)/
+  );
+  return said ? { php: said[2], minimumPhp: said[1] } : void 0;
 }
 var PHP_LIMIT_NAMES = ["memory_limit", "upload_max_filesize", "post_max_size"];
 function phpLimits(html) {
@@ -1951,6 +1966,7 @@ async function installSteps(session, packageUrl, latestVersion, existingToken, o
     return info?.ok === true && !needsInstall(info.component, latestVersion);
   };
   let lastResult;
+  let phpFloor;
   let postDenied;
   let tooLarge;
   const roads = {};
@@ -1990,12 +2006,14 @@ async function installSteps(session, packageUrl, latestVersion, existingToken, o
         const html = await readCappedBody(posted, MAX_POST_BODY_BYTES);
         note(at, posted, html, installUrl);
         if (MEMORY_EXHAUSTED.test(html)) road.cause = "memory_exhausted";
+        phpFloor = installerPhpFloor(html) ?? phpFloor;
       }
     }
     lastResult = await fetchAuthed(installUrl, { signal: timeout() });
     road.result_status = lastResult.status;
     const resultHtml = await readCappedBody(lastResult);
     note(at, lastResult, resultHtml, installUrl);
+    phpFloor = installerPhpFloor(resultHtml) ?? phpFloor;
     if (/alert-success">\s*Installation of the \w+ was successful/i.test(resultHtml)) return true;
     return installedNow(at);
   };
@@ -2129,6 +2147,13 @@ async function installSteps(session, packageUrl, latestVersion, existingToken, o
   if (!installed && uploadThrown && urlError)
     return recordedCause() ?? { ok: false, reason: "unreachable", detail: withEvidence(uploadThrown) };
   if (!installed) {
+    if (phpFloor)
+      return {
+        ok: false,
+        reason: "php_too_old",
+        ...phpFloor,
+        detail: withEvidence({ at: lastRoad, check: "installer_php_floor" })
+      };
     const cause = recordedCause();
     if (cause) return cause;
     const landed = await readInstalledToken("proof");
