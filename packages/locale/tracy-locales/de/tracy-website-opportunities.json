@@ -502,6 +502,7 @@
   "fix.linkWithoutJob": "Eine Schaltfläche oder ein Link führt ins Leere",
   "fix.missingHeadBlock": "Vom Build hinzugefügte Seitenstile fehlen",
   "fix.otherBlocker": "Eine andere Prüfung hat ein Problem gefunden",
+  "fix.privacyPolicy": "Die Website hat keine Datenschutzerklärung-Seite, oder sie ist nicht im Footer verlinkt",
   "fix.picturesFitRecord": "Ein Bild steht auf der Seite eines anderen Eintrags",
   "fix.recordNotFromBrief": "Ein Bewertungsautor, eine Kontaktangabe oder eine Zahl stammt nicht aus dem Briefing",
   "fix.siblingCopyShape": "Karten einer Liste haben nicht dieselbe Textform",

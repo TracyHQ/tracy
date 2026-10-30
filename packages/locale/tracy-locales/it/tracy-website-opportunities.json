@@ -502,6 +502,7 @@
   "fix.linkWithoutJob": "Un pulsante o un link non porta da nessuna parte",
   "fix.missingHeadBlock": "Mancano gli stili di pagina aggiunti dalla build",
   "fix.otherBlocker": "Un altro controllo ha trovato un problema",
+  "fix.privacyPolicy": "Il sito non ha una pagina Informativa sulla privacy, oppure non è collegata dal footer",
   "fix.picturesFitRecord": "Un’immagine si trova nella pagina di un altro record",
   "fix.recordNotFromBrief": "L’autore di una recensione, un dato di contatto o una cifra non proviene dal brief",
   "fix.siblingCopyShape": "Le schede di un elenco non hanno la stessa forma di testo",

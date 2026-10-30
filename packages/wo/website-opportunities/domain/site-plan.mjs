@@ -48,6 +48,7 @@ export const SITE_PLAN_REASONS = Object.freeze({
   'template-page': 'a page of the template the business has content for',
   'showcase-page': 'a sample page the template ships to show its features',
   'no-data': 'the brief holds nothing for this page',
+  'privacy-page': "the Privacy Policy page, written for the business from the brief's facts (criterion 10.1)",
   'emptied-page': 'every section of this page was taken off, so the page goes too',
   'contact-fact': 'a contact fact the brief holds',
   'contact-channel':
@@ -126,12 +127,15 @@ function pagesOf(pagePlan) {
     ...(row.path ? { path: row.path } : {}),
     role: mainMenuRole(row),
     decision: row.keep ? 'keep' : 'drop',
+    ...(row.create ? { create: true } : {}),
     reason: row.keep
       ? row.why === CONTACT_FACTS_WHY
         ? 'contact-facts'
-        : row.role === 'home'
-          ? 'home-page'
-          : 'template-page'
+        : row.role === 'privacy'
+          ? 'privacy-page'
+          : row.role === 'home'
+            ? 'home-page'
+            : 'template-page'
       : row.role === 'sample'
         ? 'showcase-page'
         : row.why === EMPTIED_PAGE_WHY
@@ -302,7 +306,7 @@ function withoutEmptiedPages(answered, served, contentMap, honesty) {
     const { fill: _fill, items: _items, ...rest } = row
     return { ...rest, keep: false, why: EMPTIED_PAGE_WHY }
   })
-  const keep = pages.filter((row) => row.keep).map((row) => row.id)
+  const keep = pages.filter((row) => row.keep && !row.create).map((row) => row.id)
   const question = (served?.questions ?? []).find(
     (q) => q?.kind === 'multi' && (q.feeds ?? []).includes('site.pages')
   )

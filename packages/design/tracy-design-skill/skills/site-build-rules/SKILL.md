@@ -34,6 +34,7 @@ what a template declares: `docs/references/site-build-rules.md` in the Tracy rep
 - The Contact page carries every channel of the brief, each a link (a phone number a tel: link); a business that works by appointment says so and is never written as a walk-in place.
 - Keep the template's structure: write a missing section in the shape of its siblings, never leave it empty; hide a part only when the grid survives without it.
 - Choose each item's icon by the item's meaning; when nothing matches, one neutral icon for the whole row.
+- The Privacy Policy page is in the business's name and says only what the brief holds: its contact channels, the form only when there is one, no law, registration, date or promise the brief does not give.
 - A menu or footer link label is the name of the page or record it opens, in the business's own words; with nothing better given, that page's title. Never a button's words or a generic action such as Learn more, Read more or Details. Contact names only a contact page.
 - Write formally and plainly: no slang, no advertising tone, no exclamation marks.
 - Never say the same sentence twice on the site, reworded or not.
@@ -56,6 +57,7 @@ what a template declares: `docs/references/site-build-rules.md` in the Tracy rep
 - `layout-bands` (note): A decoration never stays alone once the working parts beside it come off. When broken: take the decoration off with the parts it stood beside.
 - `icons-per-meaning` (note): Each item's icon says what the item is; a row with no fitting icons shows one neutral icon on every item. When broken: an icon chosen for the item's meaning, or one plain neutral icon for the whole row.
 - `showcase-removed` (note): Demo and showcase pages of the template, and their menu entries, are gone. When broken: hide the page and remove its menu entry.
+- `privacy-policy` (blocks): The site has one Privacy Policy page in the business's name, linked from the footer, written from the brief's facts only, with no demo legal page left. When broken: rewrite the Privacy Policy page from the brief's facts, add it to the footer link column, and take every demo terms or privacy page off the site.
 - `menu-label-is-page-name` (note): A menu or footer link is named by the page or record it opens, one name per page across the site. When broken: name the menu item by the title of the page it opens.
 - `offering-rows` (note): No line under an offering's name only repeats it, and one list's cards share one set of row labels. When broken: write what this offering is in the shape of its sibling cards' lines.
 - `seo` (note): Every kept page says its planned title and description, and the not-found page speaks for the business. When broken: set the page's planned title and description.

@@ -120,7 +120,8 @@ test("a template's utility pages are samples: profile, offline, error, reminder,
     now: NOW
   })
   assert.deepEqual(plan.keep, ['homepage'])
-  for (const p of plan.pages.filter((r) => r.id !== 'homepage')) assert.equal(p.role, 'sample', p.id)
+  for (const p of plan.pages.filter((r) => r.id !== 'homepage' && !r.create))
+    assert.equal(p.role, 'sample', p.id)
 })
 
 test('a page of history is kept only when the posts tell a story beyond the about page', () => {
@@ -417,4 +418,69 @@ test('a services page shows the services the reading quoted; without any it is w
     ).fill
   assert.equal(services({ ...FACTS, services: 4 }), 'services')
   assert.equal(services(FACTS), 'written')
+})
+
+// 🔒 EVERY SITE HAS A PRIVACY POLICY (criterion 10.1): kept or created, never two, no demo legal page left.
+test('a template without a legal page plans a Privacy Policy page for the build to create, outside the create door options', () => {
+  const plan = pagePlan({
+    pages: [{ id: 'home', home: true }, { id: 'about' }, { id: 'contact' }],
+    content: LARCH,
+    facts: FACTS,
+    now: NOW
+  })
+  const privacy = plan.pages.filter((p) => p.role === 'privacy')
+  assert.equal(privacy.length, 1)
+  assert.deepEqual(
+    { keep: privacy[0].keep, create: privacy[0].create, path: privacy[0].path, id: privacy[0].id },
+    { keep: true, create: true, path: '/privacy-policy', id: 'privacy-policy' }
+  )
+  assert.deepEqual(
+    plan.keep,
+    ['home', 'about', 'contact'],
+    'a page the template does not have is no option of the create door'
+  )
+})
+
+test('a template legal page is kept and rewritten, the other demo terms pages are taken off, nothing is created', () => {
+  const plan = pagePlan({
+    pages: [
+      { id: 'home', home: true },
+      { id: 'terms-of-use', label: 'Terms of use' },
+      { id: 'legal/privacy-policy', label: 'Privacy Policy' },
+      { id: 'cookie-policy' }
+    ],
+    content: LARCH,
+    facts: FACTS,
+    now: NOW
+  })
+  assert.deepEqual(plan.keep, ['home', 'legal/privacy-policy'])
+  assert.equal(plan.pages.filter((p) => p.create).length, 0)
+  for (const id of ['terms-of-use', 'cookie-policy'])
+    assert.match(plan.pages.find((p) => p.id === id).why, /Privacy Policy page replaces it/)
+  assert.equal(plan.pages.find((p) => p.id === 'legal/privacy-policy').fill, 'privacy')
+})
+
+test('with only a terms page, that page becomes the Privacy Policy', () => {
+  const plan = pagePlan({
+    pages: [{ id: 'home', home: true }, { id: 'terms' }],
+    content: [],
+    facts: {},
+    now: NOW
+  })
+  assert.deepEqual(plan.keep, ['home', 'terms'])
+  assert.equal(plan.pages.find((p) => p.id === 'terms').role, 'privacy')
+})
+
+test('a law firm services page is not mistaken for a legal page, and WordPress and EmDash plans create nothing yet', () => {
+  const pages = [
+    { id: 'home', home: true },
+    { id: 'legal-services', label: 'Legal services' }
+  ]
+  const joomla = pagePlan({ pages, content: [], facts: {}, now: NOW })
+  assert.equal(joomla.pages.find((p) => p.id === 'legal-services').role, 'services')
+  for (const cms of ['wordpress', 'emdash'])
+    assert.equal(
+      pagePlan({ pages, content: [], facts: {}, now: NOW, cms }).pages.some((p) => p.create),
+      false
+    )
 })

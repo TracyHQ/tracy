@@ -4585,6 +4585,7 @@ window.__ModuleLoader__.load({
               "fix.linkWithoutJob": "Có nút hoặc link không dẫn đến đâu",
               "fix.missingHeadBlock": "Thiếu phần style trang mà bản dựng đã thêm",
               "fix.otherBlocker": "Một bước kiểm tra khác đã tìm thấy lỗi",
+              "fix.privacyPolicy": "Site chưa có trang Chính sách quyền riêng tư, hoặc trang đó chưa được liên kết ở chân trang",
               "fix.picturesFitRecord": "Một ảnh nằm trên trang của bản ghi khác",
               "fix.recordNotFromBrief": "Tên người đánh giá, thông tin liên hệ hoặc số liệu không có trong brief",
               "fix.siblingCopyShape": "Các thẻ trong cùng một danh sách không có cùng một dạng văn bản",

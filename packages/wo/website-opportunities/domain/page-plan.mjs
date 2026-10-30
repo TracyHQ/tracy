@@ -1,4 +1,5 @@
 import { dishWordsIn } from './content-pool.mjs'
+import { PRIVACY_PAGE_ID, PRIVACY_PAGE_PATH } from './privacy-policy.mjs'
 
 // Which of a template's pages a demo keeps, and what fills each one — decided at build time, from the release's own
 // page list, deterministically.
@@ -17,6 +18,11 @@ const ROLES = [
   [
     'sample',
     /\b(j[- ]?pages|j[- ]?content|joomla[- ]content|featured[- ]articles|all[- ]categories|blog[- ]detail|typography|elements|shortcodes|components|style[- ]guide|design[- ]system|spacing|grid|samples?|colou?rs?|login|registration|sign[- ]in|your[- ]profile|user[- ]profile|offline[- ]page|erro?r?[- ]page|404|reminder|reset[- ]password|tagged[- ]items)\b/
+  ],
+  // A legal page of the template (terms, privacy, cookies, disclaimer): the Privacy Policy page replaces it (criterion 10.1).
+  [
+    'privacy',
+    /\b(privacy|cookies?[- ]polic(?:y|ies)|disclaimer|imprint|legal[- ](?:notice|terms|information)|terms)\b/
   ],
   ['history', /\b(history|our[- ]story|story)\b/],
   ['menu', /\b(menus?|food|dishes|drinks|product|products)\b/],
@@ -57,6 +63,13 @@ const ONE_OF = new Set([
 export const CONTACT_FACTS_WHY = 'the business gave contact details'
 /** Why a team page is kept: the brief names people a site may show (`brief-people.mjs`). */
 export const TEAM_PEOPLE_WHY = 'the brief names people to show on it'
+
+/** Why the Privacy Policy page is kept, whether the template had a legal page of its own or the build creates one. */
+export const PRIVACY_REUSED_WHY = "the template's own legal page, rewritten as the business's Privacy Policy"
+export const PRIVACY_CREATED_WHY = 'the template has no legal page, so the build creates the Privacy Policy'
+export const PRIVACY_DROPPED_WHY = "a legal page of the template's demo; the Privacy Policy page replaces it"
+/** CMSs whose writers do not make the page yet (debt batch): their plan keeps what the template has and creates nothing. */
+export const PRIVACY_NOT_CREATED_FOR = new Set(['wordpress', 'emdash'])
 
 const BLOG_MAX = 3
 const BLOG_MIN = 2
@@ -131,6 +144,11 @@ export function pagePlan({ pages = [], locked = [], content = [], facts = {}, no
   const contactPage = roles.find(
     (r) => r.role === 'contact' && /\bcontact\b/.test(r.page.id.toLowerCase().split('/').at(-1))
   )?.page.id
+  // Of several legal pages the one called privacy stays; the others are the demo's own terms.
+  const legalRows = roles.filter((r) => r.role === 'privacy')
+  const privacyPage = (
+    legalRows.find((r) => /privacy/i.test(`${r.page.id} ${r.page.label ?? ''}`)) ?? legalRows[0]
+  )?.page.id
   const seen = new Set()
   const rows = roles.map(({ page, role }) => {
     const parent = parentOf(page, ids)
@@ -138,6 +156,11 @@ export function pagePlan({ pages = [], locked = [], content = [], facts = {}, no
     // not always its route (Tracy Base's `services_page` is served at /services, stand wobrief 19/10/2026), so it has none.
     const at = cms === 'emdash' ? {} : { path: role === 'home' ? '/' : `/${page.id}` }
     const off = (why) => ({ id: page.id, ...at, role, keep: false, why })
+    if (role === 'privacy' && !page.home) {
+      if (page.id !== privacyPage) return off(PRIVACY_DROPPED_WHY)
+      seen.add('privacy')
+      return { id: page.id, ...at, role, keep: true, why: PRIVACY_REUSED_WHY }
+    }
     if (page.home || locked.includes(page.id))
       return {
         id: page.id,
@@ -213,6 +236,8 @@ export function pagePlan({ pages = [], locked = [], content = [], facts = {}, no
     else if (row.role === 'about') fillFrom(row, take(stories, 1), 1)
     else if (row.role === 'gallery') row.fill = 'pictures'
     else if (row.role === 'home' || row.role === 'contact') row.fill = 'facts'
+    // The legal page is written from the brief's facts by `privacy-policy.mjs`; no item of the research goes into it.
+    else if (row.role === 'privacy') row.fill = 'privacy'
     // Collected prices only (`facts.prices`: how many priced items the research holds); none, and the rows stay neutral.
     else if (row.role === 'pricing') row.fill = facts.prices > 0 ? 'prices' : 'neutral'
     else if (NEUTRAL.has(row.role)) row.fill = 'neutral'
@@ -228,7 +253,19 @@ export function pagePlan({ pages = [], locked = [], content = [], facts = {}, no
       Object.assign(row, { keep: false, why: 'no post of the restaurant is left for the blog' })
     else fillFrom(row, items, BLOG_MIN)
   }
-  return { pages: rows, keep: rows.filter((r) => r.keep).map((r) => r.id) }
+  // 🔒 EVERY SITE HAS A PRIVACY POLICY (criterion 10.1): a template with no legal page gets one the build creates. It is no
+  // option of the create door, so it is not in `keep`; the writer makes it (`create`).
+  if (!seen.has('privacy') && !PRIVACY_NOT_CREATED_FOR.has(cms ?? ''))
+    rows.push({
+      id: PRIVACY_PAGE_ID,
+      path: PRIVACY_PAGE_PATH,
+      role: 'privacy',
+      keep: true,
+      why: PRIVACY_CREATED_WHY,
+      create: true,
+      fill: 'privacy'
+    })
+  return { pages: rows, keep: rows.filter((r) => r.keep && !r.create).map((r) => r.id) }
 }
 
 /** Sourced when the research gave enough; written (by the agent, from the brief's facts) otherwise. */

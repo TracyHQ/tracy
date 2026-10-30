@@ -502,6 +502,7 @@
   "fix.linkWithoutJob": "Een knop of link leidt nergens naartoe",
   "fix.missingHeadBlock": "Paginastijlen die de build heeft toegevoegd ontbreken",
   "fix.otherBlocker": "Een andere controle heeft een probleem gevonden",
+  "fix.privacyPolicy": "De site heeft geen pagina met een privacybeleid, of die is niet gelinkt vanuit de footer",
   "fix.picturesFitRecord": "Een afbeelding staat op de pagina van een ander record",
   "fix.recordNotFromBrief": "De auteur van een review, een contactgegeven of een cijfer komt niet uit de brief",
   "fix.siblingCopyShape": "Kaarten van één lijst hebben niet dezelfde tekstvorm",

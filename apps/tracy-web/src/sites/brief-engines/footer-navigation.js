@@ -4,6 +4,7 @@ import {
   planFooterNavigation
 } from 'website-opportunities/domain/footer-navigation.mjs'
 import { ruleText } from 'website-opportunities/domain/build-rules.mjs'
+import { PRIVACY_TITLE } from 'website-opportunities/domain/privacy-policy.mjs'
 import { jsonObjectIn } from './shared.js'
 
 const SYSTEM =
@@ -14,6 +15,9 @@ const SYSTEM =
   // The link label rule is the site build rules registry's one wording (`build-rules.mjs`, rule 6).
   `${ruleText('menu-label-is-page-name')} Labels in one column are ` +
   'distinct. Never invent offerings or people. Return JSON only: {"headings":{"<column id>":"<heading>"},"labels":{"<link key>":"<label>"}}.'
+
+/** The plain name of the Privacy Policy link: in full where the column's link fits it, else the one word. */
+const privacyLabel = (max) => [PRIVACY_TITLE, 'Privacy'].find((t) => [...t].length <= max) ?? null
 
 const fail = (code, detail) => Object.assign(new Error(`${code}: ${detail}`), { code })
 
@@ -65,7 +69,11 @@ export async function writeFooterNavigation({
       key: `${c.id}.${i}`,
       name: known[l.pageId] ?? l.label ?? '',
       // The page's own name, used as it is: the main menu's label, or the plan's name of an offering (#189 round 9, C6).
-      fixed: known[l.pageId] ?? (l.planned ? l.label : null) ?? null
+      // The Privacy Policy page keeps its plain name in English (criterion 10.1); another language lets the model translate it.
+      fixed:
+        known[l.pageId] ??
+        (l.planned ? l.label : null) ??
+        (l.role === 'privacy' && /^en\b/i.test(locale) ? privacyLabel(byId.get(c.id)?.linkMax ?? 40) : null)
     }))
   )
   const messages = [

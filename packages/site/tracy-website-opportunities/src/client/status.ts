@@ -210,7 +210,8 @@ const FIX_KEYS: Readonly<Record<string, string>> = {
   'pictures-fit-record': 'fix.picturesFitRecord',
   // A booking button leading to another page reads to the owner as a button that does not do its job.
   'booking-buttons': 'fix.linkWithoutJob',
-  'kept-page-missing': 'fix.keptPageMissing'
+  'kept-page-missing': 'fix.keptPageMissing',
+  'privacy-policy': 'fix.privacyPolicy'
 }
 
 /** The string key that names one blocker kind on screen; a kind this screen does not know is still shown. */

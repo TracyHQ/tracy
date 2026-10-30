@@ -8,10 +8,17 @@ import { cleanBuildLeftovers } from '../src/opportunities-build/demo-leftover-cl
 import { checkBuildLeftovers } from '../src/opportunities-build/demo-leftover-check.js'
 import { gateBuildBlockers } from '../src/opportunities-build/build-blocker-gate.js'
 
+// The Privacy Policy page every build owes (criterion 10.1), linked from the footer of the home page.
+const FOOTER = '<footer><ul><li><a href="/privacy-policy">Privacy Policy</a></li></ul></footer>'
+const PRIVACY_PAGE =
+  '<html><head><style data-tracy-leftovers>.x{}</style></head><body><h1>Privacy Policy</h1><p>How we handle your details.</p></body></html>'
 const contentMap = { roleVocabularyVersion: 3, entities: [], pages: [], slots: [] }
 // The plan hides a demo video, so every page owes the leftovers head block.
 const sitePlan = {
-  pages: [{ path: '/', decision: 'keep' }],
+  pages: [
+    { path: '/', decision: 'keep' },
+    { path: '/privacy-policy', role: 'privacy', decision: 'keep' }
+  ],
   outside: { videos: [{ decision: 'still', demo: true }] }
 }
 
@@ -33,7 +40,10 @@ function fakeDb(receipt) {
 
 async function world(brief) {
   const domain = await websiteOpportunitiesDomain()
-  const site = { '/': '<html><head></head><body><h1>Welcome</h1></body></html>' }
+  const site = {
+    '/': `<html><head></head><body><h1>Welcome</h1>${FOOTER}</body></html>`,
+    '/privacy-policy': PRIVACY_PAGE
+  }
   const readSitePage = async (_key, path) =>
     path in site ? { status: 200, html: site[path] } : { status: 404, html: '' }
   const revision = { template: null, brief }
@@ -91,7 +101,7 @@ test('a turn that fixes every blocker leaves the build clear', async () => {
     readSitePage: w.readSitePage,
     turn: async () => {
       w.site['/'] =
-        '<html><head><style data-tracy-leftovers>.x{}</style></head><body><h1>Welcome</h1></body></html>'
+        `<html><head><style data-tracy-leftovers>.x{}</style></head><body><h1>Welcome</h1>${FOOTER}</body></html>`
       return { state: 'completed' }
     },
     contentMapOf: () => contentMap

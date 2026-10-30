@@ -444,6 +444,31 @@ export const BUILD_RULES = Object.freeze(
       }
     },
     {
+      // 🔒 EVERY SITE HAS A PRIVACY POLICY PAGE IN THE BUSINESS'S NAME (criterion 10.1, `privacy-policy.mjs`): the template's own
+      // legal page rewritten, or one the build creates in the template's plain article layout; linked from the footer; written
+      // from the brief's facts only; no demo terms or privacy page left.
+      id: 'privacy-policy',
+      siteRules: [6],
+      severity: 'blocker',
+      guarantee:
+        "The site has one Privacy Policy page in the business's name, linked from the footer, written from the brief's facts only, with no demo legal page left",
+      checks: ['privacy-policy'],
+      owns: kindIn(['privacy-policy']),
+      blocks: kindIn(['privacy-policy']),
+      prompt: {
+        writers: ['repair'],
+        text: "The Privacy Policy page is in the business's name and says only what the brief holds: its contact channels, the form only when there is one, no law, registration, date or promise the brief does not give."
+      },
+      repair:
+        "rewrite the Privacy Policy page from the brief's facts, add it to the footer link column, and take every demo terms or privacy page off the site",
+      declares: [],
+      cms: {
+        joomla: { writer: true, check: true },
+        wordpress: { writer: false, check: true },
+        emdash: { writer: false, check: true }
+      }
+    },
+    {
       id: 'menu-label-is-page-name',
       siteRules: [6],
       severity: 'note',

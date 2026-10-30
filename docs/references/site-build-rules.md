@@ -25,7 +25,7 @@ Needs fixes; a **note** is reported only. A template gets the declarations below
 3. The template structure is kept: a missing part is written in the shape of its siblings, hidden only when the grid survives. Carried by `demo-content`, `copy-lines-kept`, `sibling-record-pages`, `structure-kept`, `layout-bands`.
 4. Icons are chosen by item meaning, one neutral icon for a whole row when nothing matches. Carried by `icons-per-meaning`.
 5. The footer keeps the template footer shape, the Contact page carries every channel. Carried by `footer-shape`, `contact-page`.
-6. Demo and showcase pages and menus are removed, menu titles take only page or record names. Carried by `showcase-removed`, `menu-label-is-page-name`.
+6. Demo and showcase pages and menus are removed, menu titles take only page or record names. Carried by `showcase-removed`, `privacy-policy`, `menu-label-is-page-name`.
 
 ## Every rule
 
@@ -166,6 +166,15 @@ Demo and showcase pages of the template, and their menu entries, are gone.
 - Checked by: `demo-leftovers` (`build-rule-checks.js`).
 - A template declares: `showcase-nav-map.json` beside the content map: the template's showcase menus (checked with the contract pins).
 - Writer and check per CMS: Joomla writer yes, check yes; WordPress writer yes, check yes; EmDash writer no, check yes.
+
+### `privacy-policy` (blocker)
+
+The site has one Privacy Policy page in the business's name, linked from the footer, written from the brief's facts only, with no demo legal page left.
+
+- Checked by: `privacy-policy` (`build-rule-checks.js`).
+- Writers that take its words: repair.
+- A template declares: nothing.
+- Writer and check per CMS: Joomla writer yes, check yes; WordPress writer no, check yes; EmDash writer no, check yes.
 
 ### `menu-label-is-page-name` (note)
 

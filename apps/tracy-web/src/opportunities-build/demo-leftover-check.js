@@ -243,7 +243,9 @@ export async function runLeftoverCheck({
     ...raw['record-pictures'],
     ...raw['icon-rows'],
     ...raw['booking-buttons'],
-    ...raw['demo-name-addresses']
+    ...raw['demo-name-addresses'],
+    // The Privacy Policy page (criterion 10.1): present, linked from the footer, in the business's name.
+    ...(raw['privacy-policy'] ?? [])
   ]
   const all = [
     ...report.findings,

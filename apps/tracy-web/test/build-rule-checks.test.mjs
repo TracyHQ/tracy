@@ -136,5 +136,9 @@ test('the final report tags each finding with its rule and carries the new check
   assert.equal(ofKind('icon-row-mixed')?.rule, 'icons-per-meaning')
   assert.equal(ofKind('booking-button-target')?.rule, 'booking-buttons')
   assert.equal(report.pass, false)
-  assert.deepEqual(report.ruleGaps.map((f) => f.kind).sort(), ['booking-button-target', 'icon-row-mixed'])
+  assert.deepEqual(report.ruleGaps.map((f) => f.kind).sort(), [
+    'booking-button-target',
+    'icon-row-mixed',
+    'privacy-policy'
+  ])
 })

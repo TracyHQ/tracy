@@ -20,6 +20,7 @@ import { checkOfferingRows } from './offering-rows-check.js'
 import { checkOfferingSummaries } from './offering-summary-check.js'
 import { checkPageIntros } from './page-intro-check.js'
 import { checkPageSeo } from './page-seo-check.js'
+import { checkPrivacyPolicy } from './privacy-policy-check.js'
 import { peopleCardFindings } from './people-card-check.js'
 import { checkRecordPages } from './record-pages-check.js'
 import { checkRecordPictures } from './record-picture-check.js'
@@ -90,6 +91,8 @@ export const CHECKS = Object.freeze({
   'offering-rows': (/** @type {CheckContext} */ c) => checkOfferingRows({ pages: c.pages, brief: c.brief }),
   'page-seo': (/** @type {CheckContext} */ c) =>
     checkPageSeo({ pages: c.pages, sitePlan: c.sitePlan, missingPath: c.missingPath }),
+  'privacy-policy': (/** @type {CheckContext} */ c) =>
+    checkPrivacyPolicy({ pages: c.pages, sitePlan: c.sitePlan, brief: c.brief, origin: c.siteOrigin }),
   'repeated-copy': async (/** @type {CheckContext} */ c) => {
     // Near copies as the writers judge them.
     const near = await seeder('distinct-copy')

@@ -502,6 +502,7 @@
   "fix.linkWithoutJob": "Un botón o enlace no lleva a ninguna parte",
   "fix.missingHeadBlock": "Faltan los estilos de página que añadió la construcción",
   "fix.otherBlocker": "Otra comprobación encontró un problema",
+  "fix.privacyPolicy": "El sitio no tiene una página de Política de privacidad, o no está enlazada desde el pie de página",
   "fix.picturesFitRecord": "Una imagen aparece en la página de otro registro",
   "fix.recordNotFromBrief": "El autor de una reseña, un dato de contacto o una cifra no proviene del brief",
   "fix.siblingCopyShape": "Las tarjetas de una misma lista no comparten la misma forma de texto",

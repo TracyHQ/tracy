@@ -865,6 +865,7 @@ export const en = {
   'fix.siblingCopyShape': 'Cards of one list do not share one text shape',
   'fix.siblingRecordPages': "Sibling pages repeat each other's words or pictures, or show an empty card",
   'fix.footerShape': 'The footer does not keep the template footer shape',
+  'fix.privacyPolicy': 'The site has no Privacy Policy page, or it is not linked from the footer',
   'fix.contactPage': 'The Contact page is missing a channel of the business, or a channel is not a link',
   'fix.picturesFitRecord': 'A picture stands on the page of another record',
   'fix.keptPageMissing': 'A page the site keeps does not open',

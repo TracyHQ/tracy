@@ -28,6 +28,7 @@
  */
 import { writeJoomlaMainMenu } from './main-menu-joomla.js'
 import { writeJoomlaFooterNavigation } from './footer-navigation-joomla.js'
+import { writeJoomlaPrivacyPage } from './joomla-privacy-page.js'
 import { existsSync, readdirSync, readFileSync } from 'node:fs'
 import path from 'node:path'
 import { seeder, seederDataDir, translationsDirOf } from '../../lib/seeder.js'
@@ -3046,6 +3047,9 @@ export function createJoomlaEngine({
         note: ctx.note
       })
       if (pagers > 0) ctx.time('recordPagersOff', pagers)
+      // 🔒 The Privacy Policy page (criterion 10.1) exists before the menus are written, so the footer link column lists it.
+      const privacy = await writeJoomlaPrivacyPage({ apply, siteKey, sitePlan: menuPlan, note: ctx.note })
+      if (privacy) ctx.time('privacyPage', privacy.articleId)
       if (menuPlan?.pages?.some((p) => p.decision === 'keep')) {
         const { text: menuModel } = await models()
         const menu = await writeJoomlaMainMenu({
