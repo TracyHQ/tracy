@@ -2,5 +2,4 @@
 Install Extension
 =================
 
- [OK] Extension installed successfully.                                         
-
+ [OK] Extension installed successfully.
