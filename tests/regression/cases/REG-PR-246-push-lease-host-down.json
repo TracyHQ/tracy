@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-246-push-lease-host-down",
+  "kind": "fix",
+  "title": "A running push or sync keeps its write lease when tracy-web restarts while the host does not answer",
+  "pr": 246,
+  "area": "sync/lease",
+  "cms": ["any"],
+  "steps": [
+    "Start a preview (and a sync), age the lease past 90 s, read the rows back with every host job request failing."
+  ],
+  "expect": [
+    "The lease is renewed and still the push/sync; a chat takeWriteLease is refused; once the host answers and the job ended, the lease goes."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "--test-name-pattern=#224",
+      "apps/tracy-web/test/live-push.test.mjs",
+      "apps/tracy-web/test/live-sync.test.mjs"
+    ],
+    "tests": [
+      "a push read back while the host does not answer keeps its lease",
+      "a sync read back while the host does not answer keeps its lease"
+    ],
+    "needs": ["postgres"]
+  },
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {}
+}

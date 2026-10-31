@@ -1,0 +1,3 @@
+{"id":"REG-PR-246-joomla-config-comments","verdict":"PASS","commit":"62c90b235f3f041b56590f3906d5c533a7afb5c3","ran_at":"2026-10-30T14:40:41.038Z","evidence":"tests/regression/.runs/2026-10-30-62c90b235/REG-PR-246-joomla-config-comments.log"}
+{"id":"REG-PR-246-joomla-php-without-phpinfo","verdict":"PASS","commit":"62c90b235f3f041b56590f3906d5c533a7afb5c3","ran_at":"2026-10-30T14:40:42.162Z","evidence":"tests/regression/.runs/2026-10-30-62c90b235/REG-PR-246-joomla-php-without-phpinfo.log"}
+{"id":"REG-PR-246-push-lease-host-down","verdict":"PASS","commit":"62c90b235f3f041b56590f3906d5c533a7afb5c3","ran_at":"2026-10-30T14:40:47.835Z","evidence":"tests/regression/.runs/2026-10-30-62c90b235/REG-PR-246-push-lease-host-down.log"}

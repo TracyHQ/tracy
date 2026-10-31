@@ -128,6 +128,8 @@ curl() {
 }
 docker() {
   local script tag=''
+  # The copy's configuration loads (lib/joomla-config-loads.sh, #218): not one of the scripts counted here.
+  case "$*" in *'new JConfig'*) echo loaded; return 0 ;; esac
   script="$(cat)"
   # Which provision script went down stdin: several execs share the same argv (\`compose exec -T web php\`).
   [ "$script" = "$(cat "$HERE/joomla-content-identity.php")" ] && tag=' <identity>'
