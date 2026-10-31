@@ -1,0 +1,2 @@
+- **The primary colour reads at WCAG AA: a label on a primary button and terracotta words on white** — site agent (Claude, for David) · `fix/primary-contrast` · 2026-10-31
+  **Affects:** every Tracy surface reading `--primary` (`tokens.css`, the server-rendered pages' `page-shell.js`, the widget page, the public docs accent) — one step darker, `#b75436` for `#bf5b3d`. The brand mark, the focus ring and the marketing scenes keep `#bf5b3d`. Live once the images are rebuilt and deployed.

@@ -151,7 +151,7 @@ ${bodyFontLinks(htmlLang)}
   --radius-xl:calc(var(--radius) + 4px);
   --background:oklch(1 0 0);--foreground:oklch(0.145 0 0);
   --card:oklch(1 0 0);--card-foreground:oklch(0.145 0 0);
-  --primary:oklch(0.588 0.136 37.4);--primary-foreground:oklch(0.985 0 0);
+  --primary:oklch(0.565 0.136 37.4);--primary-foreground:oklch(0.985 0 0);
   --ring:oklch(0.588 0.136 37.4);
   --secondary:oklch(0.97 0 0);--secondary-foreground:oklch(0.205 0 0);
   --muted:oklch(0.97 0 0);--muted-foreground:oklch(0.556 0 0);
