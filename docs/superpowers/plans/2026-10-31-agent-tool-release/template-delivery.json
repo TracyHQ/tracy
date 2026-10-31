@@ -1,0 +1,72 @@
+[
+  {
+    "theme": "base",
+    "version": "0.5.7",
+    "draft": true,
+    "tag": "tracy-base/emdash-0.5.7-reader-candidate",
+    "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/tag/untagged-40616bc141e25c7ed330",
+    "assetCount": 16,
+    "downloadVerified": [
+      {
+        "file": "tracy-base-emdash-quickstart-0.5.7.zip",
+        "sha256": "076c959b0e055eeae2133d3f72ab9f7c58c2f28f3092e8521e32f127c916006e",
+        "bytes": 7075986
+      },
+      {
+        "file": "tracy-base-emdash-state-0.5.7.tar.gz",
+        "sha256": "31ef8740a8e762d50dedd0cbdb6c4fb10bb51c12071fe0e0f993ce2b38330d52",
+        "bytes": 6168464
+      }
+    ],
+    "rollingReleaseActivated": false,
+    "activeSettingUnchanged": true,
+    "activeVersion": "0.5.6",
+    "activeSettingSha256": "ae6abfe48ceb204ba148e7e86d65dd3906585e86de147ed9f941e3ae6241e281",
+    "checkedAt": "2026-10-31T11:59:21.404211+00:00"
+  },
+  {
+    "theme": "business",
+    "version": "1.7.24",
+    "draft": true,
+    "tag": "tracy-business/emdash-1.7.24-reader-candidate",
+    "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/tag/untagged-2034fcde0a49d75f2c96",
+    "assetCount": 14,
+    "downloadVerified": [
+      {
+        "file": "tracy-business-emdash-quickstart-1.7.24.zip",
+        "sha256": "362fd165b3dcbc40e685357d98fbb2f76eb5e50e5b42a1e0c2fb5f0dbb5cd793",
+        "bytes": 6483040
+      },
+      {
+        "file": "tracy-business-emdash-state-1.7.24.tar.gz",
+        "sha256": "8d6eaff4dfc267822319d795054a27543a10e03400a9f6658f7d075b48c63e55",
+        "bytes": 8485789
+      }
+    ],
+    "rollingReleaseActivated": false,
+    "activeSettingUnchanged": true,
+    "activeVersion": "1.7.23",
+    "activeSettingSha256": "cc5801b481d8628b317e64bbb9a92385b4ad16472af8c46f6ad884e62a939f26",
+    "checkedAt": "2026-10-31T11:59:23.569845+00:00"
+  },
+  {
+    "theme": "saas",
+    "version": "1.4.15",
+    "draft": true,
+    "tag": "tracy-saas/emdash-1.4.15-reader-candidate",
+    "url": "https://github.com/JoomlArt-Products/joomlart-products/releases/tag/untagged-499d94d93b4fceedf1f2",
+    "assetCount": 5,
+    "downloadVerified": [
+      {
+        "file": "tracy-saas-emdash-reader-candidate-1.4.15.zip",
+        "sha256": "3ac845881cac58a629fb5c2f61155f03579b30346a192be9354fa11e91417a2b",
+        "bytes": 7810153
+      }
+    ],
+    "rollingReleaseActivated": false,
+    "activeSettingUnchanged": true,
+    "activeVersion": "1.4.14",
+    "activeSettingSha256": "020720a73faa7afbf50257d45d253702b96fa6c0f73fe96fafadf3eafee2f95a",
+    "checkedAt": "2026-10-31T11:59:25.930605+00:00"
+  }
+]

@@ -2,7 +2,7 @@
   "$comment": "Template identity and site-specific wiring read by the generic tools (tools/*.mjs, *.sh). Demo content is Northgate Industrial; the template product is Tracy Business.",
   "id": "tracy-business",
   "label": "Tracy Business",
-  "version": "1.7.24",
+  "version": "1.7.23",
   "locales": [
     "en",
     "af",

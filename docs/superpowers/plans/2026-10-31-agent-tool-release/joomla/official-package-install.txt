@@ -1,0 +1,6 @@
+
+Install Extension
+=================
+
+ [OK] Extension installed successfully.                                         
+

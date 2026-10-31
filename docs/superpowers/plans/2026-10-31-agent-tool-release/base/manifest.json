@@ -1,0 +1,202 @@
+{
+  "schemaVersion": "tracy-quickstart/v1",
+  "product": "tracy-base",
+  "version": "0.5.7",
+  "release": "tracy-base/emdash-0.x",
+  "repository": "JoomlArt-Products/joomlart-products",
+  "cms": {
+    "name": "emdash",
+    "version": "1.1.0"
+  },
+  "artifact": "tracy-base-emdash-quickstart-0.5.7.zip",
+  "file": "tracy-base-emdash-quickstart-0.5.7.zip",
+  "bytes": 7075986,
+  "sha256": "076c959b0e055eeae2133d3f72ab9f7c58c2f28f3092e8521e32f127c916006e",
+  "format": "zip of the packed template source (build with pnpm + Docker or node); distribution.json inside carries the per-file checksums",
+  "defaultTemplate": "tracy-base",
+  "templateVersion": "0.5.7",
+  "license": "GPL-3.0-or-later",
+  "languages": {
+    "live": ["en"],
+    "default": "en"
+  },
+  "agent": {
+    "token": "minted per site after restore (tools/mint-admin.cjs, tools/bootstrap-site.sh)"
+  },
+  "template": {
+    "artifactHash": "sha256:c1d84caef3781932597e14a5680528407414fdb15e393db85d0920906b1bfebd",
+    "contractHash": "sha256:6db50259173d21957d6673e0cb8f61cf43eacf283df2f1a24156860d9ff9b1e9",
+    "files": 308
+  },
+  "questions": {
+    "file": "seed/questions.json",
+    "sha256": "a3d1cbf0d4842eb86c6ce5e2b91abde8bd6075c61935e8a302252358088e9fe0",
+    "owner": "tracy-base/emdash",
+    "count": 3,
+    "languages": [
+      "ar",
+      "de",
+      "en",
+      "es",
+      "fr",
+      "hi",
+      "id",
+      "it",
+      "ja",
+      "ko",
+      "nl",
+      "pl",
+      "pt",
+      "ru",
+      "sv",
+      "th",
+      "tr",
+      "vi",
+      "zh",
+      "zh-HK",
+      "zh-MO",
+      "zh-TW"
+    ]
+  },
+  "state": {
+    "file": "tracy-base-emdash-state-0.5.7.tar.gz",
+    "bytes": 6168464,
+    "sha256": "31ef8740a8e762d50dedd0cbdb6c4fb10bb51c12071fe0e0f993ce2b38330d52",
+    "contents": "data/data.db (SQLite, scrubbed; keeps the agent user row without credentials), data/seed-receipts.json, uploads/",
+    "scrubbed": {
+      "_emdash_api_tokens": {
+        "removed": 1,
+        "why": "agent token (hash) \u2014 re-minted per site"
+      },
+      "auth_tokens": {
+        "removed": 0,
+        "why": "sign-in state"
+      },
+      "auth_challenges": {
+        "removed": 0,
+        "why": "sign-in state"
+      },
+      "credentials": {
+        "removed": 0,
+        "why": "passkeys"
+      },
+      "oauth_accounts": {
+        "removed": 0,
+        "why": "linked accounts"
+      },
+      "_emdash_oauth_tokens": {
+        "removed": 0,
+        "why": "OAuth state"
+      },
+      "_emdash_oauth_clients": {
+        "removed": 0,
+        "why": "OAuth state"
+      },
+      "_emdash_authorization_codes": {
+        "removed": 0,
+        "why": "OAuth state"
+      },
+      "_emdash_device_codes": {
+        "removed": 0,
+        "why": "OAuth state"
+      },
+      "_emdash_404_log": {
+        "removed": 0,
+        "why": "this machine\u2019s traffic"
+      },
+      "_emdash_rate_limits": {
+        "removed": 0,
+        "why": "this machine\u2019s traffic"
+      },
+      "_emdash_media_upload_attempts": {
+        "removed": 0,
+        "why": "this machine\u2019s traffic"
+      },
+      "audit_logs": {
+        "removed": 0,
+        "why": "this machine\u2019s history"
+      },
+      "_emdash_transfer_approvals": {
+        "removed": 0,
+        "why": "this machine\u2019s transfers"
+      },
+      "_emdash_transfer_media_blobs": {
+        "removed": 0,
+        "why": "this machine\u2019s transfers"
+      },
+      "_emdash_transfer_package_index": {
+        "removed": 0,
+        "why": "this machine\u2019s transfers"
+      },
+      "_emdash_transfer_staged_files": {
+        "removed": 0,
+        "why": "this machine\u2019s transfers"
+      },
+      "_emdash_transfer_identity_map": {
+        "removed": 0,
+        "why": "this machine\u2019s transfers"
+      },
+      "_emdash_transfer_operations": {
+        "removed": 0,
+        "why": "this machine\u2019s transfers"
+      },
+      "_emdash_redirect_write_lock": {
+        "removed": 0,
+        "cleared": 1,
+        "why": "this machine\u2019s write lease (cleared; the singleton row stays)"
+      },
+      "_plugin_storage:audit-log": {
+        "removed": 57,
+        "why": "seeding history of this machine"
+      }
+    },
+    "collections": {
+      "about": 1,
+      "blog": 1,
+      "careers": 1,
+      "contact": 1,
+      "design_system": 1,
+      "help": 1,
+      "home": 1,
+      "home_2": 1,
+      "landing": 1,
+      "marketing": 1,
+      "onepage": 1,
+      "people": 4,
+      "posts": 42,
+      "pricing": 1,
+      "product": 1,
+      "services": 7,
+      "services_page": 1,
+      "site": 1,
+      "team": 1
+    },
+    "media": 32
+  },
+  "gates": {
+    "contracts": "pass",
+    "distribution": "pass",
+    "preflight": "pass",
+    "browser": "pending",
+    "routing": "pending",
+    "visual": "pending",
+    "build": "pending",
+    "security": "pending",
+    "visual-review": "pending",
+    "font-review": "pending",
+    "viewing-contexts": "pending",
+    "editability": "pending",
+    "forms": "pending",
+    "recovery": "pending",
+    "clean-install": "pending",
+    "independent": "pending",
+    "reader-source": "pass",
+    "reader-runtime": "pass"
+  },
+  "receipts": {},
+  "readerPatch": {
+    "evidence": "patch-evidence.json",
+    "stateBytesReused": true,
+    "previousVersion": "0.5.6"
+  }
+}

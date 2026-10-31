@@ -1,0 +1,52 @@
+TAP version 13
+# Subtest: sourceRows gives the per-entry scan's records, byte for byte: published scope
+ok 1 - sourceRows gives the per-entry scan's records, byte for byte: published scope
+  ---
+  duration_ms: 971.535833
+  type: 'test'
+  ...
+# Subtest: sourceRows gives the per-entry scan's records, byte for byte: editorial scope
+ok 2 - sourceRows gives the per-entry scan's records, byte for byte: editorial scope
+  ---
+  duration_ms: 2064.230959
+  type: 'test'
+  ...
+# Subtest: sourceRows gives the per-entry scan's records, byte for byte: caller without read_drafts
+ok 3 - sourceRows gives the per-entry scan's records, byte for byte: caller without read_drafts
+  ---
+  duration_ms: 1874.650542
+  type: 'test'
+  ...
+# Subtest: a listing summary is the full projection with its detail dropped
+ok 4 - a listing summary is the full projection with its detail dropped
+  ---
+  duration_ms: 90.983292
+  type: 'test'
+  ...
+# Subtest: a draft whose overlay failed still fails closed
+ok 5 - a draft whose overlay failed still fails closed
+  ---
+  duration_ms: 2.895959
+  type: 'test'
+  ...
+# Subtest: reference-free schema avoids per-entry hydration and retains exact native revisions
+ok 6 - reference-free schema avoids per-entry hydration and retains exact native revisions
+  ---
+  duration_ms: 128.385083
+  type: 'test'
+  ...
+# Subtest: a reference collection falls back independently without disabling safe sibling collections
+ok 7 - a reference collection falls back independently without disabling safe sibling collections
+  ---
+  duration_ms: 106.217958
+  type: 'test'
+  ...
+1..7
+# tests 7
+# suites 0
+# pass 7
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 5493.941

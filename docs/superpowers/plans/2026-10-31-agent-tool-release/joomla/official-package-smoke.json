@@ -1,0 +1,13 @@
+{
+  "release": "https://github.com/TracyHQ/claude-cowork/releases/tag/joomla-v0.24.76",
+  "sha256": "33ccc3d910e8e1851e0555187430c01bc6bc93bb3da05d1e6811f1a0c6490da2",
+  "scope": "owned local Joomla fixture only",
+  "status": 200,
+  "schemaVersion": "tracy-content/v1",
+  "snapshot": {
+    "revision": "5a352540cb08aff5bdb3cdc1c64eeee38e2e939fbf13805859234738d02a2f17",
+    "inventoryRevision": "17834f760ddabf43219c5cabd4204dc7053f7f6a5645b71e1ac49b82dec99a77",
+    "readAt": "2026-10-31T11:49:24Z"
+  },
+  "rows": 1
+}

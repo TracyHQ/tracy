@@ -1,0 +1,30 @@
+{
+  "theme": "business",
+  "version": "1.7.24",
+  "container": "toolbench-release-emdash-business",
+  "origin": "http://127.0.0.1:55253",
+  "image": "tracy/tracy-business-emdash:1.7.24-tools",
+  "imageId": "sha256:098d21d21668dc2d15a9cd701697decdcfcd9ac1d8e785b9651d9372f72b42d9",
+  "startedAt": "2026-10-31T11:46:54.309441755Z",
+  "public": [
+    {
+      "path": "/",
+      "status": 200,
+      "bytes": 69099
+    },
+    {
+      "path": "/_emdash/admin/",
+      "status": 200,
+      "bytes": 273833
+    }
+  ],
+  "contentApi": {
+    "status": 200,
+    "rows": 50,
+    "sourceCalls": "119",
+    "snapshotRevision": "RzEqE9L9p-gCL08z6I5JK8zMIAsC0s5TbaWWPl9UoqA"
+  },
+  "stateSourceSha256": "8d6eaff4dfc267822319d795054a27543a10e03400a9f6658f7d075b48c63e55",
+  "scope": "owned isolated release fixture; no borrowed service mutation",
+  "fixtureStoppedAndRemoved": true
+}

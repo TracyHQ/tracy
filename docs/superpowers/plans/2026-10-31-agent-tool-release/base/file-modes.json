@@ -1,0 +1,1241 @@
+{
+  "source": "previous published zip UNIX member modes",
+  "preserved": [
+    {
+      "file": "pnpm-lock.yaml",
+      "mode": "0o644"
+    },
+    {
+      "file": "distribution.json",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/personalize.json",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/field-map.json",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/questions.json",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media-map.json",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/content-api-map.json",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/site-model.json",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/seed.json",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/misc/sam-4.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/misc/sam-6.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/misc/sam-7.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/misc/sam-3.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/misc/sam-16.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/misc/sam-14.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/misc/sam-15.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/misc/sam-9.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/misc/sam-13.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/misc/sam-8.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/blog/blog-15.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/blog/blog-12.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/blog/blog-10.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/blog/blog-6.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/blog/blog-4.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/magz/magz-10.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/magz/magz-13.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/magz/magz-9.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/magz/magz-3.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/magz/magz-2.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/members/mem-4.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/members/mem-1.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/members/mem-2.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/demo/members/mem-3.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/tracy-demo/studio-workspace.png",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/tracy-base/chapter-depth.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/tracy-base/chapter-precision.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/tracy-base/chapter-material.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/tracy-base/mark-4.png",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/tracy-base/mark-5.png",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/tracy-base/mark-6.png",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/tracy-base/mark-2.png",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/tracy-base/mark-3.png",
+      "mode": "0o644"
+    },
+    {
+      "file": "seed/media/images/tracy-base/mark-1.png",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/qa-receipt.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/compile-seed.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/mint-admin.cjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/personalize.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/artifact.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/from-emdash-seed.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/qa.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/clean-install.sh",
+      "mode": "0o755"
+    },
+    {
+      "file": "tools/configure-smtp.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/visual-qa.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/distribution.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/release.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/content-api/command.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/content-api/integration.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/content-api/route.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/content-api/alias.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/content-api/README.md",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/content-api/errors.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/content-api/reader.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/content-api/identity-sqlite.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/personalize-gate.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/visual-qa.mjs.orig",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/provenance.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/qa-notes.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/admin-roundtrip.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/shoot.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/restore.sh",
+      "mode": "0o755"
+    },
+    {
+      "file": "tools/render-source.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/qa-contract.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/visual-scan.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/backup.sh",
+      "mode": "0o755"
+    },
+    {
+      "file": "tools/docker-entrypoint.sh",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/build-seed.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/validate-seed.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/mega-hover.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/forms.json",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/seed-apply.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/inventory.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/fast-gate.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/extract.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/qa-browser.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/admin-session.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/recovery-check.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/generate-docs.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/audit.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/build-qa-contract.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/bootstrap-site.sh",
+      "mode": "0o755"
+    },
+    {
+      "file": "tools/content-api-gate.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tools/visual-lib.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "LICENSE",
+      "mode": "0o644"
+    },
+    {
+      "file": "Dockerfile",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/personalize-social.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/content-api.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/personalize-brand.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/personalize-labels-destination.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/qa.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/personalize-pages.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/font-subsets.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/audit.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/content-api-integration.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/personalize-apply.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/qa-contract.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/qa-notes.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/qa-receipt.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/ui-words.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/stamps.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/personalize-rewrite-trade.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/personalize-fallback-gate.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/seed-apply.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/personalize-samples.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/distribution.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/personalize-journal.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/personalize-gate.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/ds-slot.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/ds-slot-template.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/display-locale.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/fast-gate.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/visual.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/content-api-dockerfile.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/release-role-scan.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/personalize-written-language.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/brand.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/personalize-facts.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/fixtures/mini/seed/media-map.json",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/fixtures/mini/seed/seed.json",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/fixtures/mini/seed/media/logo.png",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/fixtures/mini/qa-contract.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/fixtures/mini/forms.json",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/fixtures/mini/logo-other-bytes.png",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/fixtures/mini/template.config.json",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/fixtures/mini-html/logo.png",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/fixtures/mini-html/style.css",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/fixtures/mini-html/de/index.html",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/fixtures/mini-html/de/kontakt.html",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/fixtures/mini-html/fr/index.html",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/fixtures/mini-html/fr/contact.html",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/form-embed-words.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/personalize-tone.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/site-model-from-seed.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/empty-claims.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/mock-emdash.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/content-api-identity.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/clean-install.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/page-gate.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/content-api-source.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/theme-preference.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/content-api-gate.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/ds-slot-no-shipped-pins.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/restore.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/personalize-labels.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/content-api-command.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/release-site-pages.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "tests/personalize-labels-echoed.test.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "PROVENANCE.md",
+      "mode": "0o644"
+    },
+    {
+      "file": "docs/generated/inventory.md",
+      "mode": "0o644"
+    },
+    {
+      "file": "docs/generated/inventory.json",
+      "mode": "0o644"
+    },
+    {
+      "file": "docs/architecture.md",
+      "mode": "0o644"
+    },
+    {
+      "file": "docs/content-rules.md",
+      "mode": "0o644"
+    },
+    {
+      "file": "docs/languages.md",
+      "mode": "0o644"
+    },
+    {
+      "file": "docs/install.md",
+      "mode": "0o644"
+    },
+    {
+      "file": "docs/content-api.md",
+      "mode": "0o644"
+    },
+    {
+      "file": "docs/checks-and-recovery.md",
+      "mode": "0o644"
+    },
+    {
+      "file": "docs/content-model.md",
+      "mode": "0o644"
+    },
+    {
+      "file": "docs/design-system.md",
+      "mode": "0o644"
+    },
+    {
+      "file": "astro.config.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "README.md",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/images/demo/members/mem-4.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/images/demo/members/mem-1.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/images/demo/members/mem-2.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/images/demo/members/mem-3.jpg",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/marketing/slide-light.html",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/marketing/LICENSE",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/marketing/form-dark.html",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/marketing/newsletter-dark.html",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/marketing/NOTICE",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/marketing/typography-light.html",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/marketing/manifest.json",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/marketing/poster-dark.html",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/marketing/newsletter-light.html",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/marketing/form-light.html",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/marketing/poster-light.html",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/marketing/email-dark.html",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/marketing/slide-dark.html",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/marketing/typography-dark.html",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/marketing/email-light.html",
+      "mode": "0o644"
+    },
+    {
+      "file": "public/favicon.svg",
+      "mode": "0o644"
+    },
+    {
+      "file": "package.json",
+      "mode": "0o644"
+    },
+    {
+      "file": "components.json",
+      "mode": "0o644"
+    },
+    {
+      "file": "tsconfig.json",
+      "mode": "0o644"
+    },
+    {
+      "file": ".env.example",
+      "mode": "0o644"
+    },
+    {
+      "file": "AGENTS.md",
+      "mode": "0o644"
+    },
+    {
+      "file": "template.config.json",
+      "mode": "0o644"
+    },
+    {
+      "file": "emdash-env.d.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "pnpm-workspace.yaml",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/middleware.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/live.config.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/styles/global.css",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/styles/tokens.css",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/styles/forms.css",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/ui/popover.tsx",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/ui/label.tsx",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/ui/PROVENANCE.md",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/ui/button.tsx",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/ui/checkbox.tsx",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/ui/dropdown-menu.tsx",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/ui/textarea.tsx",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/ui/input.tsx",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/sections/ProofStrip.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/sections/Quotes.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/sections/Steps.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/sections/HeroOd.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/sections/FaqList.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/sections/FeatureRows.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/sections/SectionHead.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/sections/Timeline.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/sections/TeamGrid.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/sections/PricingTiers.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/sections/FeaturesIntro.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/sections/TeamCards.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/sections/InlineCta.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/sections/HeroAcm.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/sections/Clients.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/sections/CtaBand.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/sections/Chapter.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/sections/StatsBand.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/sections/CardList.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/islands/Tabs.tsx",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/islands/MegaMenu.tsx",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/islands/MobileNav.tsx",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/islands/Carousel.tsx",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/SampleFrame.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/SpacingScale.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/Swatches.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/Photo.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/PersonCard.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/ProseBlock.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/ProseQuote.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/OnepageHeader.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/Logo.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/Icon.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/Figures.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/AppearanceSwitch.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/Footer.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/ArticleH2.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/OnepageFooter.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/TypeSpecimen.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/FormWords.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/SocialIcon.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/BlogSidebar.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/BrandLogo.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/PostCard.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/BodyImage.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/PageOwner.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/Header.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/Breadcrumb.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/Pagination.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/components/site/ProseListItem.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/layouts/Base.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/brand.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/stamps.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/ui-words.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/ds-slot.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/chrome.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/public-origin.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/display-locale.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/i18n.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/link-gate.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/hreflang.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/utils.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/chrome-labels.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/posts.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/hreflang-plugin.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/icons.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/listed-children.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/ui.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/page-records.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/media.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/font-subsets.mjs",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/form-embed-words.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/lib/toc.ts",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/fonts.json",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/Home.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/Team.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/DesignSystem.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/About.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/Help.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/Person.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/Service.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/Onepage.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/Services.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/Careers.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/Blog.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/Marketing.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/Search.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/Contact.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/Sitemap.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/Article.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/Landing.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/Pricing.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/Product.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/NotFound.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/Topics.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/views/Home2.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/pages/404.astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "src/pages/[...path].astro",
+      "mode": "0o644"
+    },
+    {
+      "file": "artifact.json",
+      "mode": "0o644"
+    }
+  ]
+}

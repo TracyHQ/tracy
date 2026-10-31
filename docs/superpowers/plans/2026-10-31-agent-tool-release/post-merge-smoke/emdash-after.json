@@ -1,0 +1,119 @@
+{
+  "platform": "emdash",
+  "phase": "after",
+  "producer": "authenticated buildApp + isolated migrated PostgreSQL + shipped site-tools + real vendored AgentLoop + actual CMS HTTP",
+  "fixtureOrigin": "http://127.0.0.1:60619",
+  "bundleSha256": "4cb35c6aacc4afaf52f09f096b421989dcc8c7f133a9b5aa7b47195bc78a0716",
+  "rows": [
+    {
+      "repeat": 0,
+      "task": "independent-titles",
+      "ms": 1695.3567910000002,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 119,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 1302.2518329999984,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 119
+        }
+      ],
+      "resultChars": 5748
+    },
+    {
+      "repeat": 0,
+      "task": "batched-titles",
+      "ms": 853.0407090000008,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 119,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 517.9582919999993,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 119
+        }
+      ],
+      "resultChars": 1887
+    },
+    {
+      "repeat": 0,
+      "task": "known-url",
+      "ms": 959.8775420000002,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 119,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 772.3715000000011,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 119
+        }
+      ],
+      "resultChars": 1466
+    },
+    {
+      "repeat": 0,
+      "task": "empty-search",
+      "ms": 561.9928749999999,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 119,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 424.1164169999993,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 119
+        }
+      ],
+      "resultChars": 1292
+    },
+    {
+      "repeat": 0,
+      "task": "explicit-details",
+      "ms": 579.1840839999986,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 119,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 424.4432079999988,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "id": "yPoynZlZYpbNnBxr7Ap8ONbMNTF6ocoBUxE69Y-FzGM",
+            "maxBytes": 65536
+          },
+          "sourceCalls": 119
+        }
+      ],
+      "resultChars": 7473
+    }
+  ]
+}

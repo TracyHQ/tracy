@@ -2,7 +2,7 @@
   "$comment": "Template identity and site-specific wiring read by the generic tools (tools/*.mjs, *.sh). Source: JA Kinetic Joomla 6 quickstart 1.0.0; demo content is Helix, a fictional observability product.",
   "id": "tracy-saas",
   "label": "Tracy SaaS",
-  "version": "1.4.15",
+  "version": "1.4.14",
   "locales": ["en"],
   "defaultLocale": "en",
   "site": {

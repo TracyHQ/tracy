@@ -1,0 +1,30 @@
+{
+  "theme": "base",
+  "version": "0.5.7",
+  "container": "toolbench-release-emdash-base",
+  "origin": "http://127.0.0.1:54662",
+  "image": "tracy/tracy-base-emdash:0.5.7-tools",
+  "imageId": "sha256:b82e6a1cfa6baa3de15b25007b6e2a91f3c85b0a0e78b1c8308c643eabb79c57",
+  "startedAt": "2026-10-31T11:40:14.213318208Z",
+  "public": [
+    {
+      "path": "/",
+      "status": 200,
+      "bytes": 63824
+    },
+    {
+      "path": "/_emdash/admin/",
+      "status": 200,
+      "bytes": 273836
+    }
+  ],
+  "contentApi": {
+    "status": 200,
+    "rows": 69,
+    "sourceCalls": "38",
+    "snapshotRevision": "qrcPbD6CvXCOoME940YZD39RFBQj4iDLjNEmoP6gr3M"
+  },
+  "stateSourceSha256": "31ef8740a8e762d50dedd0cbdb6c4fb10bb51c12071fe0e0f993ce2b38330d52",
+  "scope": "owned isolated release fixture; no borrowed service mutation",
+  "fixtureStoppedAndRemoved": true
+}

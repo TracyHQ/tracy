@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "theme": "business",
+  "scope": "reader-only patch to the previously published source archive; storefront, dependencies, content and state retained",
+  "previousArtifactHash": "sha256:bdcdacdfea5277d841237362280c4a6bcf3ad8af5164af8f4ea08648e586284e",
+  "artifactHash": "sha256:68edd4407a8534100c10b110746f5ddd5c1c33227ba6f40a459f780d12969c46",
+  "contractHash": "sha256:5e589316cc6e334c1b09c046216d30d531a4958a2daa984ab7277392a7628978",
+  "changedFiles": [
+    {
+      "file": "Dockerfile",
+      "before": "sha256:924899be379e6517139428b80718bf05b93be89c8370362dfa19835b81188545",
+      "after": "sha256:ede9246d4c2e0f825e9e61d1f0c2db2226f00ca71bb128009e9301bf4b927f22"
+    },
+    {
+      "file": "artifact.json",
+      "before": "sha256:8279d5a905717445d443ca2cd377ddfed20d44341dd7309b657f0eb62f78ab51",
+      "after": "sha256:ff4fbe6413859983ad84326eda96e9ae8f9e814fc85212e3f789ba0fde4eebb7"
+    },
+    {
+      "file": "package.json",
+      "before": "sha256:110e824d029ee09a2e31761f7aac93beadd8eb696fdc11c01689229ee293eff6",
+      "after": "sha256:51cdf7ff2ce9768b60376f02cf56c3122291910ca31ff77221c18b2d8729097a"
+    },
+    {
+      "file": "template.config.json",
+      "before": "sha256:3810e5356b7e04bd407634665e68d8ca10bb03b053a1faba6a024b0bda5d1d67",
+      "after": "sha256:e13df416f6bf8313659737b6a4b734b76e704db9b8ea714209f62bb7dab33925"
+    },
+    {
+      "file": "tests/content-api-source.test.mjs",
+      "before": "sha256:a0df9edfbd82083d5cbbbfbe57b1b49bf282cd999ab2ff44211b0d369413d636",
+      "after": "sha256:caa343f76ed37228255c2f7e615e9062c1ece3910c7461295c9b95cc83ebc609"
+    },
+    {
+      "file": "tools/content-api/reader.mjs",
+      "before": "sha256:ea98ab4d2aef4a6a10b40efa839fef3479e133ce0e6af768ad1776ba459f6125",
+      "after": "sha256:1225a28ac66ba75a3bb0c122c908009735ce3a4645963e86fd1b0ebfb89917db"
+    },
+    {
+      "file": "tools/content-api/route.mjs",
+      "before": "sha256:e93b58748aa5735a7560f0af010ada575519c8afa1e5ea4b09012d33b4bb25ad",
+      "after": "sha256:5fb2e66f4baff5f5c16f35043dc3345b05681b406657bc3cde70cfcff7429edf"
+    }
+  ],
+  "unchangedFiles": 293,
+  "allowedFileSetVerified": true,
+  "owningKitRelease": "https://github.com/JoomlArt-Products/tracy-emdash-template/releases/tag/v1.5.3",
+  "nativeParityReport": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/emdash-native-parity.json",
+  "acceptanceScope": "Source parity tests plus exact packed image build and runtime smoke; full storefront visual acceptance is not claimed. Existing pending review gates remain explicit."
+}

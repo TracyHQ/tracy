@@ -113,3 +113,7 @@ Repeat reader/streaming commands for Joomla and EmDash. Use the component edit/U
 - Optimize cold complete-inventory projection. Current validation still reads a fresh head, and a cold miss walks the full inventory; native CMS indexed lookup would need separate contracts and benchmarks.
 - Release/adopt Joomla's complete inventory fingerprint through its owning component workflow. Older installations remain correct with full walks and receive no completed-inventory reuse benefit.
 - Measure larger sites and interleaved runs under representative load before asserting production tail-latency or settled-cost gains.
+
+## Release follow-up
+
+Owning component releases, template draft candidates, release blockers and Tracy delivery status are recorded in the [release follow-up](2026-10-31-agent-tool-release.md).

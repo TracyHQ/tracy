@@ -1,0 +1,216 @@
+{
+  "release": "tracy-business/emdash-0.x",
+  "version": "1.7.24",
+  "report": {
+    "startedAt": "2026-10-31T11:29:47.120Z",
+    "finishedAt": "2026-10-31T11:29:48.602Z",
+    "origin": "http://127.0.0.1:4321",
+    "status": "pending",
+    "node": "v22.22.2"
+  },
+  "gates": {
+    "contracts": {
+      "status": "pass",
+      "errors": []
+    },
+    "distribution": {
+      "status": "pass",
+      "artifact": "/tmp/tracy-tool-release/business/pack",
+      "files": 300,
+      "errors": []
+    },
+    "preflight": {
+      "status": "pass",
+      "node": "v22.22.2",
+      "abi": "127",
+      "sqlite": {
+        "version": "3.53.2"
+      }
+    },
+    "browser": {
+      "status": "pending",
+      "reason": "No browser measurements requested"
+    },
+    "routing": {
+      "status": "pending",
+      "reason": "audit.mjs runs with --browser"
+    },
+    "visual": {
+      "status": "pending",
+      "reason": "No visual pass requested (--visual)"
+    },
+    "build": {
+      "status": "pending",
+      "reason": "Current acceptance receipt required"
+    },
+    "security": {
+      "status": "pending",
+      "reason": "Current acceptance receipt required"
+    },
+    "visual-review": {
+      "status": "pending",
+      "reason": "Current acceptance receipt required"
+    },
+    "font-review": {
+      "status": "pending",
+      "reason": "Current acceptance receipt required"
+    },
+    "viewing-contexts": {
+      "status": "pending",
+      "reason": "Current acceptance receipt required"
+    },
+    "editability": {
+      "status": "pending",
+      "reason": "Current acceptance receipt required"
+    },
+    "forms": {
+      "status": "pending",
+      "reason": "Current acceptance receipt required"
+    },
+    "recovery": {
+      "status": "pending",
+      "reason": "Current acceptance receipt required"
+    },
+    "clean-install": {
+      "status": "pending",
+      "reason": "Current acceptance receipt required"
+    },
+    "independent": {
+      "status": "pending",
+      "reason": "Current acceptance receipt required"
+    },
+    "reader-source": {
+      "status": "pass",
+      "tests": 7,
+      "evidence": "reader-tests.txt"
+    },
+    "reader-runtime": {
+      "status": "pass",
+      "evidence": "runtime-smoke.json",
+      "imageId": "sha256:098d21d21668dc2d15a9cd701697decdcfcd9ac1d8e785b9651d9372f72b42d9",
+      "contentApi": {
+        "status": 200,
+        "rows": 50,
+        "sourceCalls": "119",
+        "snapshotRevision": "RzEqE9L9p-gCL08z6I5JK8zMIAsC0s5TbaWWPl9UoqA"
+      }
+    }
+  },
+  "artifactHash": "sha256:68edd4407a8534100c10b110746f5ddd5c1c33227ba6f40a459f780d12969c46",
+  "contractHash": "sha256:5e589316cc6e334c1b09c046216d30d531a4958a2daa984ab7277392a7628978",
+  "state": {
+    "file": "tracy-business-emdash-state-1.7.24.tar.gz",
+    "bytes": 8485789,
+    "sha256": "8d6eaff4dfc267822319d795054a27543a10e03400a9f6658f7d075b48c63e55",
+    "contents": "data/data.db (SQLite, scrubbed; keeps the agent user row without credentials), data/seed-receipts.json, uploads/",
+    "scrubbed": {
+      "_emdash_api_tokens": {
+        "removed": 1,
+        "why": "agent token (hash) \u2014 re-minted per site"
+      },
+      "auth_tokens": {
+        "removed": 0,
+        "why": "sign-in state"
+      },
+      "auth_challenges": {
+        "removed": 0,
+        "why": "sign-in state"
+      },
+      "credentials": {
+        "removed": 0,
+        "why": "passkeys"
+      },
+      "oauth_accounts": {
+        "removed": 0,
+        "why": "linked accounts"
+      },
+      "_emdash_oauth_tokens": {
+        "removed": 0,
+        "why": "OAuth state"
+      },
+      "_emdash_oauth_clients": {
+        "removed": 0,
+        "why": "OAuth state"
+      },
+      "_emdash_authorization_codes": {
+        "removed": 0,
+        "why": "OAuth state"
+      },
+      "_emdash_device_codes": {
+        "removed": 0,
+        "why": "OAuth state"
+      },
+      "_emdash_404_log": {
+        "removed": 0,
+        "why": "this machine\u2019s traffic"
+      },
+      "_emdash_rate_limits": {
+        "removed": 0,
+        "why": "this machine\u2019s traffic"
+      },
+      "_emdash_media_upload_attempts": {
+        "removed": 0,
+        "why": "this machine\u2019s traffic"
+      },
+      "audit_logs": {
+        "removed": 0,
+        "why": "this machine\u2019s history"
+      },
+      "_emdash_transfer_approvals": {
+        "removed": 0,
+        "why": "this machine\u2019s transfers"
+      },
+      "_emdash_transfer_media_blobs": {
+        "removed": 0,
+        "why": "this machine\u2019s transfers"
+      },
+      "_emdash_transfer_package_index": {
+        "removed": 0,
+        "why": "this machine\u2019s transfers"
+      },
+      "_emdash_transfer_staged_files": {
+        "removed": 0,
+        "why": "this machine\u2019s transfers"
+      },
+      "_emdash_transfer_identity_map": {
+        "removed": 0,
+        "why": "this machine\u2019s transfers"
+      },
+      "_emdash_transfer_operations": {
+        "removed": 0,
+        "why": "this machine\u2019s transfers"
+      },
+      "_emdash_redirect_write_lock": {
+        "removed": 0,
+        "cleared": 1,
+        "why": "this machine\u2019s write lease (cleared; the singleton row stays)"
+      },
+      "_plugin_storage:audit-log": {
+        "removed": 1320,
+        "why": "seeding history of this machine"
+      }
+    },
+    "collections": {
+      "about": 40,
+      "careers": 40,
+      "contact": 40,
+      "home": 40,
+      "investors": 40,
+      "news_page": 40,
+      "pages": 280,
+      "posts": 480,
+      "projects": 400,
+      "projects_page": 40,
+      "services": 240,
+      "services_page": 40,
+      "site": 40,
+      "vacancies": 240
+    },
+    "media": 39
+  },
+  "scope": "Reader patch acceptance; full storefront review gates remain pending.",
+  "readerPatch": {
+    "stateBytesReused": true,
+    "previousVersion": "1.7.23"
+  }
+}

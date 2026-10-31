@@ -1,7 +1,7 @@
 {
   "id": "tracy-base",
   "label": "Tracy Base",
-  "version": "0.5.7",
+  "version": "0.5.6",
   "locales": ["en"],
   "defaultLocale": "en",
   "site": {

@@ -1,0 +1,179 @@
+{
+  "platform": "wordpress",
+  "phase": "after",
+  "producer": "authenticated buildApp + isolated migrated PostgreSQL + shipped site-tools + real vendored AgentLoop + actual CMS HTTP",
+  "fixtureOrigin": "http://127.0.0.1:59939",
+  "bundleSha256": "4cb35c6aacc4afaf52f09f096b421989dcc8c7f133a9b5aa7b47195bc78a0716",
+  "rows": [
+    {
+      "repeat": 0,
+      "task": "independent-titles",
+      "ms": 681.5357499999991,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 74.81120799999917,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 4597
+    },
+    {
+      "repeat": 0,
+      "task": "batched-titles",
+      "ms": 392.9591250000012,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 65.6850830000003,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1588
+    },
+    {
+      "repeat": 0,
+      "task": "known-url",
+      "ms": 713.9989580000001,
+      "verified": true,
+      "backendReads": 7,
+      "nativeSourceCalls": 0,
+      "relayRequests": 2,
+      "reads": [
+        {
+          "ms": 116.55870800000048,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 1
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 68.73324999999932,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en-US",
+            "limit": 100
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 87.15991700000086,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en-US",
+            "limit": 100,
+            "cursor": "eyJraW5kIjoibGlzdCIsImZpbHRlcnMiOnsidHlwZSI6bnVsbCwibG9jYWxlIjoiZW4tVVMiLCJsaW1pdCI6IjEwMCJ9LCJvZmZzZXQiOjEwMCwidiI6MSwic2l0ZSI6InNhMmRlYmI1NzU1YzA4MDk5MzVhOWU4M2E5OCIsInByaW5jaXBhbCI6InNlYXQ6ODA0MGZlYTM0YzNmY2I2ZDNlYTgyNmZiNWNmNzY5Zjc0YWQ1YzM5MzM4ZTMwNmU5ZTdkMzVhYmFiNDMyNjE0NiIsInNjb3BlIjoicHVibGlzaGVkIiwicmV2aXNpb24iOiIzNTk3N2U4MjA1NzZiNTM0YzFiZThjOWM3NjBhMTQ0NTdmOWFmMTJlZDU5NWIwODBmOGJiMzkxNjcwMzZmN2MwIiwiZXhwaXJlcyI6MTc5MzQ0Nzg1Mn0.c9d3d67367540185400ef7ab078cb92eee407b275a80c3dc42b42077d5ea250e"
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 40.99045800000022,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en-US",
+            "limit": 100,
+            "cursor": "eyJraW5kIjoibGlzdCIsImZpbHRlcnMiOnsidHlwZSI6bnVsbCwibG9jYWxlIjoiZW4tVVMiLCJsaW1pdCI6IjEwMCJ9LCJvZmZzZXQiOjIwMCwidiI6MSwic2l0ZSI6InNhMmRlYmI1NzU1YzA4MDk5MzVhOWU4M2E5OCIsInByaW5jaXBhbCI6InNlYXQ6ODA0MGZlYTM0YzNmY2I2ZDNlYTgyNmZiNWNmNzY5Zjc0YWQ1YzM5MzM4ZTMwNmU5ZTdkMzVhYmFiNDMyNjE0NiIsInNjb3BlIjoicHVibGlzaGVkIiwicmV2aXNpb24iOiIzNTk3N2U4MjA1NzZiNTM0YzFiZThjOWM3NjBhMTQ0NTdmOWFmMTJlZDU5NWIwODBmOGJiMzkxNjcwMzZmN2MwIiwiZXhwaXJlcyI6MTc5MzQ0Nzg1Mn0.edf6c6c1e0e7b8097b42b9c256541ad4121522d4f75ec349024820fac6d2eb8d"
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 32.142500000001746,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en-US",
+            "limit": 100,
+            "cursor": "eyJraW5kIjoibGlzdCIsImZpbHRlcnMiOnsidHlwZSI6bnVsbCwibG9jYWxlIjoiZW4tVVMiLCJsaW1pdCI6IjEwMCJ9LCJvZmZzZXQiOjMwMCwidiI6MSwic2l0ZSI6InNhMmRlYmI1NzU1YzA4MDk5MzVhOWU4M2E5OCIsInByaW5jaXBhbCI6InNlYXQ6ODA0MGZlYTM0YzNmY2I2ZDNlYTgyNmZiNWNmNzY5Zjc0YWQ1YzM5MzM4ZTMwNmU5ZTdkMzVhYmFiNDMyNjE0NiIsInNjb3BlIjoicHVibGlzaGVkIiwicmV2aXNpb24iOiIzNTk3N2U4MjA1NzZiNTM0YzFiZThjOWM3NjBhMTQ0NTdmOWFmMTJlZDU5NWIwODBmOGJiMzkxNjcwMzZmN2MwIiwiZXhwaXJlcyI6MTc5MzQ0Nzg1Mn0.704f3d4bdbd9f1c24cce3f06142a630ea5ec67549aeac1b1cfce51e1e12c69d7"
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 38.16312499999913,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en-US",
+            "limit": 100,
+            "cursor": "eyJraW5kIjoibGlzdCIsImZpbHRlcnMiOnsidHlwZSI6bnVsbCwibG9jYWxlIjoiZW4tVVMiLCJsaW1pdCI6IjEwMCJ9LCJvZmZzZXQiOjQwMCwidiI6MSwic2l0ZSI6InNhMmRlYmI1NzU1YzA4MDk5MzVhOWU4M2E5OCIsInByaW5jaXBhbCI6InNlYXQ6ODA0MGZlYTM0YzNmY2I2ZDNlYTgyNmZiNWNmNzY5Zjc0YWQ1YzM5MzM4ZTMwNmU5ZTdkMzVhYmFiNDMyNjE0NiIsInNjb3BlIjoicHVibGlzaGVkIiwicmV2aXNpb24iOiIzNTk3N2U4MjA1NzZiNTM0YzFiZThjOWM3NjBhMTQ0NTdmOWFmMTJlZDU5NWIwODBmOGJiMzkxNjcwMzZmN2MwIiwiZXhwaXJlcyI6MTc5MzQ0Nzg1Mn0.c1772a59c8ab03745389e4d5baa56cd5faa0755295e1081ed233f3d81eb19fde"
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 33.60766599999988,
+          "status": 200,
+          "action": "content.get",
+          "params": {
+            "kind": "post",
+            "id": 401
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1264
+    },
+    {
+      "repeat": 0,
+      "task": "empty-search",
+      "ms": 224.17470800000046,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 38.06279200000063,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1005
+    },
+    {
+      "repeat": 0,
+      "task": "explicit-details",
+      "ms": 315.5243329999994,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 140.6529160000009,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "id": "c9961fdd50f116ed212fee81e9e",
+            "maxBytes": 65536
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 3072
+    }
+  ]
+}

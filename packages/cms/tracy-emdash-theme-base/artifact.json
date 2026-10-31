@@ -1,13 +1,13 @@
 {
 	"templateId": "tracy-base",
 	"label": "Tracy Base",
-	"version": "0.5.7",
+	"version": "0.5.6",
 	"package": {
 		"name": "@tracy/emdash-theme-base",
-		"version": "0.5.7"
+		"version": "0.5.6"
 	},
 	"demoContent": "Tracy Base",
-	"generatedAt": "2026-10-31T11:28:38.815Z",
+	"generatedAt": "2026-10-27T09:14:01.157Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
@@ -75,11 +75,11 @@
 		"docs/content-model.md": "sha256:473a35157a0307ae82d9536b7fd452e8e289be17b4bc77fa29a829e33d6f0340",
 		"docs/content-rules.md": "sha256:8fa94b535b01291201f0c2f295b39258d787489cadaadf33b1d177b68c92ad2d",
 		"docs/design-system.md": "sha256:35755830844a775fa099957f8ee8cc20ea7f227e7ab1dfdedf7f12e68bac1003",
-		"docs/generated/inventory.json": "sha256:4bb31b73a8aa92bc6b023a0b98e5093f788714cf889d2fd6fbcee00efb1ae597",
+		"docs/generated/inventory.json": "sha256:4353fe9c1f3fec2218e6d0587da38c67bb3d3e77e0364e98a72ff0f2e4019f24",
 		"docs/generated/inventory.md": "sha256:ce36fa7c57df4362e01174da66b18945da8bcdb8832858c91fd91d858b741c6c",
 		"docs/install.md": "sha256:c8f6f443f5ade64f5e2eb09e99044cc89ee74ad663fb5b6d65ce7db92bcdd1ca",
 		"docs/languages.md": "sha256:83e4775f4d3afb8334e553149519444184518b908afff802eda2e100eb3fd768",
-		"template.config.json": "sha256:505f5d4a3b910e8733bdef51a263e4e8e9330c38418805d818fccc892ca6cd3c",
+		"template.config.json": "sha256:719706b8be5dced05e6e628ae2c09a8399a302952f1ba770e045faf4d74387f5",
 		"seed/seed.json": "sha256:e4450591a62cbebab968faca7f816ccb663da3eb0e4f7747b8e62e6983b18330",
 		"seed/media-map.json": "sha256:f06f5537626627d4e71f82535fe660846d353fffc79b7113d62302fa3a9f085f",
 		"seed/field-map.json": "sha256:1f6871b8028eda81b8400a7cb9982aa6259be060d556730edb45e2f25587ec46",
