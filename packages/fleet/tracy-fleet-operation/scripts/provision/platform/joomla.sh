@@ -68,6 +68,19 @@ platform_configure() {
   platform_check_in_all
 }
 
+# Once the stack runs: the configuration.php rewritten above loads in the site's own PHP, or the
+# provision stops here, saying why — never a site called up that answers 500 on every page (#218).
+# Called first by the import's `platform_post_up` (below).
+platform_config_loads() {
+  # shellcheck source=../../lib/joomla-config-loads.sh
+  . "$HERE/../lib/joomla-config-loads.sh"
+  local refusal
+  if ! refusal="$(tracy_joomla_config_refusal "$SITE_DIR")"; then
+    echo "!! $refusal" >&2
+    exit 1
+  fi
+}
+
 # Every record the captured site had open in an editor, checked in on the copy. Joomla keeps a
 # check-out (`checked_out` = the user, `checked_out_time`) until that editor is closed, and a tab
 # closed instead leaves it there; the archive carries it, and on the copy nobody can close it: the
@@ -1064,6 +1077,7 @@ fi
 # working copy.
 if [ "${FRESH:-0}" != 1 ] && [ -z "${QUICKSTART:-}" ]; then
   platform_post_up() {
+    platform_config_loads
     [ "${DB_IMPORTED:-0}" = 1 ] && rm -f "$SITE_DIR/content-identity.done"
     echo '==> content reader (import): opting the copy in through its Claude Cowork component'
     joomla_enable_content_reader \

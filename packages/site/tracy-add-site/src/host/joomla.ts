@@ -1496,7 +1496,10 @@ export async function resolveDoor(
  * The `<h1 class="p">PHP Version 8.0.30</h1>` there is PHP's own output, untranslated whatever the
  * backend language, and so is each directive's row (`<td class="e">memory_limit</td>` then its Local
  * Value, then its Master Value). Hosts that disable `phpinfo()` blank that page; the `X-Powered-By`
- * header is the fallback for the version, and many hosts strip it too — so `undefined` means
+ * header is the fallback for the version, and many hosts strip it too. The last one is Joomla's own
+ * System Information as JSON (`format=json`, Joomla 3.5 to 6): its `info.phpversion` is
+ * `phpversion()`, which no host setting hides — a Joomla 3 site on PHP 7.3 with `phpinfo` disabled
+ * was told the install failed instead of that its PHP is too old (#225). `undefined` still means
  * "unknown", never "too old", and an absent limit means unknown, never "no limit".
  */
 export async function readPhpInfo(
@@ -1511,11 +1514,43 @@ export async function readPhpInfo(
     onAnswer?.(page, html, url)
     const limits = phpLimits(html)
     const fromPage = html.match(/<h1 class="p">PHP Version (\d+\.\d+(?:\.\d+)?)/)?.[1]
-    const php = fromPage ?? page.headers.get('x-powered-by')?.match(/PHP\/(\d+\.\d+(?:\.\d+)?)/i)?.[1]
+    const php =
+      fromPage ??
+      page.headers.get('x-powered-by')?.match(/PHP\/(\d+\.\d+(?:\.\d+)?)/i)?.[1] ??
+      (await readSysinfoPhp(fetchAuthed, adminBase))
     return { ...(php ? { php } : {}), limits }
   } catch {
     return { limits: {} }
   }
+}
+
+/** `info.phpversion` of the administrator's System Information as JSON, or `undefined` (`readPhpInfo`). */
+async function readSysinfoPhp(
+  fetchAuthed: (url: string, init?: RequestInit) => Promise<Response>,
+  adminBase: string
+): Promise<string | undefined> {
+  try {
+    const page = await fetchAuthed(`${adminBase}?option=com_admin&view=sysinfo&format=json`, {
+      signal: timeout()
+    })
+    // Read as text, not parsed: a PHP warning printed ahead of the JSON (phpinfo() disabled, on
+    // PHP 7) still leaves the field readable.
+    const body = await readCappedBody(page)
+    return page.ok ? body.match(/"phpversion"\s*:\s*"(\d+\.\d+(?:\.\d+)?)/)?.[1] : undefined
+  } catch {
+    return undefined
+  }
+}
+
+/**
+ * The Claude Cowork package installer's own refusal of an old PHP (its `script.php` preflight, in
+ * English whatever the backend language): the site's version and the minimum, or `undefined`.
+ */
+export function installerPhpFloor(html: string): { php: string; minimumPhp: string } | undefined {
+  const said = html.match(
+    /Claude Cowork needs PHP (\d+\.\d+(?:\.\d+)?) or newer; this site runs PHP (\d+\.\d+(?:\.\d+)?)/
+  )
+  return said ? { php: said[2], minimumPhp: said[1] } : undefined
 }
 
 const PHP_LIMIT_NAMES = ['memory_limit', 'upload_max_filesize', 'post_max_size'] as const
@@ -1926,6 +1961,8 @@ async function installSteps(
   // on the POST itself, told apart like the one on the install page (Joomla's own, or a server's —
   // mod_security refusing a large upload is the usual one).
   let lastResult: Response | undefined
+  // The package's own installer refused this PHP (`installerPhpFloor`): that decides the outcome.
+  let phpFloor: { php: string; minimumPhp: string } | undefined
   let postDenied: { by: 'joomla' | 'server'; response: Response; at: string; html: string } | undefined
   // A 413 on the upload: the web server's body limit (nginx `client_max_body_size`, Apache
   // `LimitRequestBody`) refused the package before PHP saw it. Nothing Joomla can do changes that,
@@ -1987,12 +2024,14 @@ async function installSteps(
         const html = await readCappedBody(posted, MAX_POST_BODY_BYTES)
         note(at, posted, html, installUrl)
         if (MEMORY_EXHAUSTED.test(html)) road.cause = 'memory_exhausted'
+        phpFloor = installerPhpFloor(html) ?? phpFloor
       }
     }
     lastResult = await fetchAuthed(installUrl, { signal: timeout() })
     road.result_status = lastResult.status
     const resultHtml = await readCappedBody(lastResult)
     note(at, lastResult, resultHtml, installUrl)
+    phpFloor = installerPhpFloor(resultHtml) ?? phpFloor
     // The English sentence is only a shortcut; every other language goes through asking the
     // component itself. Joomla names the extension TYPE in it ("the package", "the component"), so
     // match the shape, not one word.
@@ -2182,6 +2221,15 @@ async function installSteps(
     return recordedCause() ?? { ok: false, reason: 'unreachable', detail: withEvidence(uploadThrown) }
 
   if (!installed) {
+    // The package refused the site's PHP itself, naming both versions: the owner's next step is the
+    // host's PHP, not installing it by hand (which the same check refuses) (#225).
+    if (phpFloor)
+      return {
+        ok: false,
+        reason: 'php_too_old',
+        ...phpFloor,
+        detail: withEvidence({ at: lastRoad, check: 'installer_php_floor' })
+      }
     const cause = recordedCause()
     if (cause) return cause
     // A backend in another language never says "successful" in English, so the component itself

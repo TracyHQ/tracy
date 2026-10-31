@@ -69,6 +69,7 @@ import { parseCommentTurn } from '../../../../ui/tracy-chat-input/src/client/com
 import { askImageModel, imageModel, readsImages } from './look.mjs'
 import { MOSTLY_CHANGED, pictureChanges } from './picture-diff.mjs'
 import { noticeSource } from './site-context.mjs'
+import { canonicalCall } from './site.mjs'
 
 /** What this check counts as a write of the site; the host ages its pictures by the same reading (`view.mjs`). */
 export { callChangedSite }
@@ -184,6 +185,76 @@ export function turnWrites(events) {
   }
   const all = lines.join('\n')
   return all.length <= WRITES_MAX ? all : `${all.slice(0, WRITES_MAX - 1)}…`
+}
+
+/**
+ * Whether every write of the LAST turn was a `content.replace` whose receipt read its own words back
+ * on the page it changed (`verified: "shown on <path>"`) and touched nothing else: no companion slot,
+ * no contact it could not write. Such a turn proved what it was asked; redrawing the page in a new
+ * browser and asking an image model held every small edit 8–17 s after "Done" and found nothing in
+ * any of the measured turns (#209). Any other write in the turn — a shell, a file, a contract apply, a
+ * replace whose receipt did not say "shown on" — and the check runs as before.
+ * @param {readonly { type?: string, data?: any }[] | undefined} events
+ * @returns {boolean}
+ */
+export function writesShownInTurn(events) {
+  if (!Array.isArray(events)) return false
+  /** @type {Map<string, boolean>} */
+  const writes = new Map()
+  /** @type {Map<string, string>} */
+  const results = new Map()
+  for (let i = events.length - 1; i >= 0; i -= 1) {
+    const event = events[i]
+    if (event?.type === 'turn/start') break
+    if (event?.type === 'tool/result') {
+      const id = event.data?.message?.source?.callId
+      if (typeof id === 'string') results.set(id, textOf(event.data?.message?.content))
+      continue
+    }
+    if (event?.type !== 'tool/call' || !callChangedSite(event.data)) continue
+    const { action } = canonicalCall(argsOf(event.data))
+    writes.set(
+      String(event.data?.callId ?? i),
+      event.data?.name === 'tracy_site' && action === 'content.replace'
+    )
+  }
+  if (writes.size === 0) return false
+  for (const [id, replace] of writes) {
+    if (!replace) return false
+    /** @type {any} */
+    let answer = null
+    try {
+      answer = JSON.parse(results.get(id) ?? '')
+    } catch {
+      return false
+    }
+    if (
+      answer?.ok !== true ||
+      typeof answer.verified !== 'string' ||
+      !answer.verified.startsWith('shown on ')
+    )
+      return false
+    if ((Array.isArray(answer.companions) && answer.companions.length) || answer.contactsFailed) return false
+  }
+  return true
+}
+
+/** A tool call's arguments as an object (they may come as a JSON string). */
+function argsOf(/** @type {any} */ call) {
+  const args = call?.arguments
+  if (typeof args !== 'string') return args ?? {}
+  try {
+    return JSON.parse(args)
+  } catch {
+    return {}
+  }
+}
+
+/** The text of a tool result's content parts, joined. */
+function textOf(/** @type {unknown} */ content) {
+  if (typeof content === 'string') return content
+  if (!Array.isArray(content)) return ''
+  return content.map((part) => (typeof part?.text === 'string' ? part.text : '')).join('')
 }
 
 /**
@@ -636,6 +707,8 @@ export async function runVisualCheck(job) {
     if (job.mode === 'off') return skip('off')
     if (ask === undefined || ask.turn !== job.turn) return skip('no-ask')
     if (!siteChangedInTurn(job.events)) return skip('no-write')
+    // Every write read its own words back on its page, and no shared part was written: proven (#209).
+    if (!ask.extras?.length && writesShownInTurn(job.events)) return skip('verified-on-page')
     // The page drawn as the turn began, kept by a write that named no page, when nothing better came.
     const before = ask.before ?? ask.fallback ?? null
     // 🔒 A MISSING "BEFORE" ALWAYS SAYS WHY (beta report, 28/10/2026: 10 customer turns on production
