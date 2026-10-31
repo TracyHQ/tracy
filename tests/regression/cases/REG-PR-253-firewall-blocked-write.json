@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-253-firewall-blocked-write",
+  "kind": "fix",
+  "title": "A firewall 403 on a write is LIVE_BLOCKED, never an unknown outcome, and the push goes on",
+  "pr": 253,
+  "area": "sync/push",
+  "cms": ["wp", "jo"],
+  "steps": [
+    "Apply two posts with a non-engine 403 on one content.update; apply a Joomla lot with a 403 on content.batch."
+  ],
+  "expect": [
+    "The blocked item is failed LIVE_BLOCKED with a refused receipt; the other is written; the lot items are LIVE_BLOCKED and the Apply answers ok."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#220",
+      "packages/fleet/tracy-fleet-operation/test/live-write.test.mjs"
+    ],
+    "tests": [
+      "a firewall’s 403 on one write is LIVE_BLOCKED",
+      "a blocked batch retains earlier writes in the Apply answer and Undo"
+    ]
+  },
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {}
+}

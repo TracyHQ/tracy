@@ -2826,8 +2826,20 @@ def record_cut(push_root: Path, id_map_path: Path, pushed_path: Path) -> dict:
         return {"ok": True, "recorded": done}
     for d in sorted(p for p in push_root.iterdir() if p.is_dir() and p.name != "previews"):
         journal, changeset_file, marker = d / "journal.jsonl", d / "changeset.json", d / "recorded-journal"
-        if not journal.exists() or not changeset_file.exists() or (d / "written.json").exists() or (d / "recorded").exists():
+        if not journal.exists() or not changeset_file.exists():
             continue
+        # An undone push is the Undo's to record (`record --undo`). Recorded again here as a forward
+        # push, its seeds came after the Undo's and the settle sync trashed Tracy's own post (#222).
+        if (d / "undo-recorded").exists() or (d / "undone.json").exists():
+            continue
+        # A push that answered was recorded by its own `record`; only a create settled since from the
+        # live site's log (live-write.mjs `settle`, `reconciled.json`) joins now.
+        answered = (d / "written.json").exists() or (d / "recorded").exists()
+        reconciled = d / "reconciled.json"
+        if answered and not reconciled.exists():
+            continue
+        if answered:
+            marker = d / "recorded-reconciled"
         last, created = {}, {}
         for line in journal.read_text().splitlines():
             try:
@@ -2838,14 +2850,24 @@ def record_cut(push_root: Path, id_map_path: Path, pushed_path: Path) -> dict:
                 last[entry["id"]] = entry
                 created.update(entry.get("created") or {})
         written = [{"id": i} for i, e in last.items() if e.get("state") == "written"]
+        changeset = json.loads(changeset_file.read_text())
+        if answered:
+            try:
+                named = {w.get("id") for w in json.loads(reconciled.read_text()).get("written", [])}
+            except (ValueError, AttributeError):
+                named = set()
+            written = [w for w in written if w["id"] in named]
+            # Only those creates' numbers: the rest were recorded with the push's answer, and their
+            # seeds again would hold a later sync's base to the copy's values.
+            makes = {i.get("id"): i.get("creates") for i in changeset.get("items", [])}
+            created = {k: v for k, v in created.items() if k in {makes.get(w["id"]) for w in written}}
         try:
             before = int(json.loads(marker.read_text()).get("written", 0)) if marker.exists() else 0
         except (ValueError, AttributeError):
             before = 0
         if len(written) <= before:
             continue
-        record(json.loads(changeset_file.read_text()), {"written": written, "created": created},
-               id_map_path, pushed_path, False)
+        record(changeset, {"written": written, "created": created}, id_map_path, pushed_path, False)
         write_private(marker, {"written": len(written)})
         done.append(d.name)
     return {"ok": True, "recorded": done}

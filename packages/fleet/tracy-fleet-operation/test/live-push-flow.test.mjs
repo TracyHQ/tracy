@@ -915,11 +915,17 @@ test('the shell preserves partial writes and Undo after a firewall blocks a late
     const pushId = id()
     const args = ['--op', 'apply', '--preview-id', previewId, '--push-id', pushId]
     const { answer } = await s.runPush(args, engine)
-    assert.equal(answer.ok, false)
+    // The firewall turned the lot away before the engine ran: its item is LIVE_BLOCKED, never an
+    // unknown outcome, and the push goes on (#220).
+    assert.equal(answer.ok, true, JSON.stringify(answer))
     assert.equal(answer.state, 'partial')
     assert.deepEqual(
       answer.written.map((w) => w.id),
       [`file:${path}`]
+    )
+    assert.deepEqual(
+      answer.failed.map((f) => [f.id, f.error]),
+      [['article:1', 'LIVE_BLOCKED']]
     )
     assert.equal(readFileSync(join(s.live, path), 'utf8'), '.b { color: green }\n')
     const repeated = (await s.runPush(args, engine)).answer
