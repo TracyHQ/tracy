@@ -197,7 +197,7 @@ function contextOf({ event, draft = false, baseRef = 'develop', cancelled = fals
       base_ref: pr ? baseRef : '',
       // A schedule event runs the default branch's copy of the file, so `ref_name` is `main`.
       ref_name: pr ? '7/merge' : event === 'schedule' ? 'main' : 'develop',
-      event: pr ? { pull_request: { draft } } : {}
+      event: { ...(pr ? { pull_request: { draft } } : {}), repository: { default_branch: 'main' } }
     },
     needs,
     matrix: { label: 'tracy-check', group: 'checks' },
@@ -301,7 +301,7 @@ const PIN = 'Pin the nightly to one commit'
 const REFUSE = 'Refuse a nightly without its pinned commit'
 const ASSERT = 'Assert the nightly checkout is the pinned commit'
 /** The jobs that check out the nightly's tree after `plan`. */
-const CONSUMERS = ['dsh-lib-nightly', 'build-check']
+const CONSUMERS = ['dsh-lib-nightly', 'build-check', 'pnpm-store-seed']
 const EVENTS = ['schedule', 'pull_request', 'workflow_dispatch']
 const RESULTS = ['success', 'failure', 'cancelled', 'skipped']
 

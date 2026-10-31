@@ -237,9 +237,35 @@ test('a hosted dsh cache hit does not download the pnpm store; cold builds use a
 })
 
 test('the hosted download cache binds both installs, Node, architecture and dsh, and caches no checkout', () => {
-  const cache = pnpmAction.runs.steps.find((s) => String(s.uses).startsWith('actions/cache@'))
-  assert.match(cache.uses, /^actions\/cache@[0-9a-f]{40}$/)
-  assert.equal(cache.with.path, '${{ steps.store.outputs.path }}')
+  const steps = pnpmAction.runs.steps
+  const key = steps.find((s) => s.id === 'key')
+  const restore = steps.find((s) => s.name === 'Restore the pnpm content store')
+  const probe = steps.find((s) => s.id === 'probe')
+  // Nothing in the action saves: no `actions/cache@` (whose post step saves) and no `/save`.
+  assert.deepEqual(
+    steps.filter((s) => String(s.uses ?? '').startsWith('actions/cache')).map((s) => s.uses.split('@')[0]),
+    ['actions/cache/restore', 'actions/cache/restore']
+  )
+  for (const step of [restore, probe]) {
+    assert.match(step.uses, /^actions\/cache\/restore@[0-9a-f]{40}$/)
+    assert.equal(step.with.path, '${{ steps.store.outputs.path }}')
+    assert.equal(step.with.key, '${{ steps.key.outputs.key }}')
+  }
+  // Off the default branch: restore, with the prefix fallback. On it: a lookup, nothing downloaded.
+  const onDefault = "github.ref == format('refs/heads/{0}', github.event.repository.default_branch)"
+  assert.equal(probe.if, onDefault)
+  assert.equal(restore.if, onDefault.replace('==', '!='))
+  assert.equal(restore.with['restore-keys'], '${{ steps.key.outputs.prefix }}')
+  assert.equal(probe.with['lookup-only'], true)
+  assert.equal(probe.with['restore-keys'], undefined)
+  assert.equal(pnpmAction.outputs.key.value, '${{ steps.key.outputs.key }}')
+  assert.equal(pnpmAction.outputs['cache-hit'].value, '${{ steps.probe.outputs.cache-hit }}')
+  // The prefix stops before the hashed inputs, so a lockfile change still finds the nearest store
+  // of the same OS, architecture and scope; the key carries every input.
+  assert.equal(key.env.PREFIX, 'hosted-pnpm-v1-${{ runner.os }}-${{ runner.arch }}-${{ inputs.scope }}-')
+  assert.match(key.run, /echo "key=\$PREFIX\$INPUTS-\$DSH"/)
+  assert.match(key.run, /echo "prefix=\$PREFIX"/)
+  const keyText = JSON.stringify(key.env)
   for (const input of [
     'runner.os',
     'runner.arch',
@@ -252,12 +278,52 @@ test('the hosted download cache binds both installs, Node, architecture and dsh,
     'vendor/tracy/deepseek-harness/pnpm-lock.yaml',
     'steps.store.outputs.dsh'
   ])
-    assert.ok(cache.with.key.includes(input), input)
-  assert.equal(cache.with['restore-keys'], undefined)
+    assert.ok(keyText.includes(input), input)
   assert.doesNotMatch(JSON.stringify(pnpmAction), /secrets\.|node_modules|\.npmrc\s*\n/)
-  // Existing public-repo boundary still gates every job that can populate this cache.
+  // Existing public-repo boundary still gates every job that restores this cache.
   for (const name of ['dsh-lib', 'build-check', 'new-test-proof'])
     assert.match(jobs[name].if, /github\.event\.pull_request\.head\.repo\.full_name == github\.repository/)
+})
+
+test('only the seed job saves the hosted pnpm store: default branch, nightly or manual, report-only', () => {
+  const seed = jobs['pnpm-store-seed']
+  assert.equal(seed['runs-on'], 'ubuntu-latest')
+  assert.equal(seed['continue-on-error'], true)
+  assert.deepEqual(seed.needs, ['plan'])
+  assert.equal(
+    seed.if,
+    "(github.event_name == 'schedule' || github.event_name == 'workflow_dispatch') && github.ref_name == github.event.repository.default_branch"
+  )
+  // It gates nothing: not in the nightly verdict, and no job waits for it.
+  for (const [name, job] of Object.entries(jobs))
+    assert.ok(![job.needs ?? []].flat().includes('pnpm-store-seed'), `${name} waits for the seed`)
+  const pnpm = seed.steps[indexOf(seed, 'Prepare pnpm and look up the store key')]
+  assert.equal(pnpm.uses, './.github/actions/dsh-lib/hosted-pnpm')
+  assert.deepEqual(pnpm.with, { scope: 'workspace' })
+  const fill = seed.steps[indexOf(seed, 'Fill the store from the lockfile')]
+  const save = seed.steps[indexOf(seed, 'Save the store under the default branch')]
+  assert.equal(fill.run, 'pnpm fetch')
+  assert.match(save.uses, /^actions\/cache\/save@[0-9a-f]{40}$/)
+  assert.deepEqual(save.with, {
+    path: '${{ steps.pnpm.outputs.path }}',
+    key: '${{ steps.pnpm.outputs.key }}'
+  })
+  // An entry already saved for the key is immutable: a hit skips the fetch and the save.
+  for (const step of [fill, save]) assert.equal(step.if, "steps.pnpm.outputs.cache-hit != 'true'")
+  // The key hashes the submodule's lockfile, so the submodule is fetched before the key is computed.
+  assert.ok(indexOf(seed, 'Fetch the vendored dsh submodule') < indexOf(seed, pnpm.name))
+  assert.ok(indexOf(seed, 'Set up Node from .node-version') < indexOf(seed, pnpm.name))
+  assert.ok(indexOf(seed, pnpm.name) < indexOf(seed, fill.name))
+  assert.ok(indexOf(seed, fill.name) < indexOf(seed, save.name))
+  // Nothing else in the workflow saves this store.
+  const savers = Object.entries(jobs).flatMap(([name, job]) =>
+    (job.steps ?? [])
+      .filter(
+        (s) => /^actions\/cache(\/save)?@/.test(String(s.uses ?? '')) && /pnpm/.test(JSON.stringify(s.with))
+      )
+      .map(() => name)
+  )
+  assert.deepEqual(savers, ['pnpm-store-seed'])
 })
 
 test('the hosted pnpm bootstrap activates the checkout pin globally before asking pnpm for its store', (t) => {

@@ -333,6 +333,7 @@
         "$TURBO_ROOT$/scripts/test-timing-reporter.mjs",
         "$TURBO_ROOT$/scripts/test-database.ts",
         "$TURBO_ROOT$/scripts/ci/related-tests.mjs",
+        "$TURBO_ROOT$/.github/workflows/**",
         "$TURBO_ROOT$/apps/tracy-docs/**",
         "$TURBO_ROOT$/apps/tracy-host/**",
         "$TURBO_ROOT$/apps/tracy-web/**",
