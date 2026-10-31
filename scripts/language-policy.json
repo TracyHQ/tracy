@@ -256,6 +256,11 @@
       "path": "packages/ui/tracy-assistant/lib/client.js",
       "oid": "019f19a4ae9d1c8f7528745f6e8275278dcd2601",
       "reason": "Assistant bundle rebuilt for PR #248 (onboarding draft from the composer row, stopped Help answers). Authored source is English; the localized interface-language names it inherits sit on changed minified lines, and the exact output passed the bundle gate."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "5ffa78015f45f05c3c2a4e8fa40c38a9cb9cf782",
+      "reason": "Earlier exact build of the interface translation bundle in PR #254 (commit 265a058d1, Sync to live words before the kept-terms fix). The language-policy check reads every commit of a pull request, so this intermediate object needs the same approval as the final one. Rebuilt from its localized JSON dictionaries at that commit; different bytes require a separate review."
     }
   ]
 }

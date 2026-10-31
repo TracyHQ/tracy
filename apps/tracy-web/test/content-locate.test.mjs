@@ -849,9 +849,11 @@ test('snapshot: a build past the budget answers incomplete, runs on, and is kept
   assert.equal((await fresh.snapshotFor(input(broken.ask))).incomplete, true)
   broken.asked.length = 0
   assert.equal((await fresh.snapshotFor(input(broken.ask))).incomplete, true)
-  assert.ok(
-    broken.asked.some((p) => p.id === 'p-1'),
-    'built again, not answered from a partial snapshot'
+  // Built again, never answered as complete from what the first build read: the failed record is
+  // asked again, and the ones read whole are taken over rather than read twice (#252).
+  assert.deepEqual(
+    broken.asked.filter((p) => p.id !== undefined).map((p) => p.id),
+    ['a-1']
   )
 })
 
@@ -934,7 +936,10 @@ test('snapshot: calls that overlap share one build, then one revalidation; `cach
   assert.equal(site.asked.filter((p) => p.id !== undefined).length, 3, 'each record read once')
   assert.equal(site.asked.filter((p) => p.limit === 100 && p.locale === 'en').length, 1, 'one listing walk')
   assert.equal(built.length, 1, 'one build heard')
-  assert.deepEqual({ ...built[0], ms: 0 }, { siteKey: 's.test', locale: 'en', records: 3, kept: true, ms: 0 })
+  assert.deepEqual(
+    { ...built[0], ms: 0 },
+    { siteKey: 's.test', locale: 'en', records: 3, kept: true, ms: 0, resumed: 0 }
+  )
 
   // Kept: two overlapping calls walk the listing once, and both say it was current.
   site.asked.length = 0
@@ -1011,8 +1016,92 @@ test('snapshot: what a batch leaves pending is asked again, and what never fits 
 test('locateReads: both Claude Cowork plugins read in batches, one call at a time only on Joomla', () => {
   assert.deepEqual(locateReads('joomla'), { concurrency: 1, batch: LOCATE_BATCH })
   assert.deepEqual(locateReads('wordpress'), { concurrency: 4, batch: LOCATE_BATCH })
-  assert.deepEqual(locateReads('emdash'), { concurrency: 4, batch: 0 })
-  assert.deepEqual(locateReads(undefined), { concurrency: 4, batch: 0 })
+  // #252: EmDash answers no {ids} and projects the whole site per read: one at a time, with a pause.
+  assert.deepEqual(locateReads('emdash'), { concurrency: 1, batch: 0, pause: 1 })
+  assert.deepEqual(locateReads(undefined), { concurrency: 1, batch: 0, pause: 1 })
+})
+
+/** Five EmDash-like records, read one id per call. */
+const FIVE = Array.from({ length: 5 }, (_, i) => ({
+  id: `e-${i}`,
+  type: 'page',
+  slug: `p${i}`,
+  url: `https://s.test/p${i}`,
+  title: `Page number ${i}`,
+  revision: 'r1'
+}))
+
+// #252 (survey 29–30/10/2026): four one-id reads at a time held b-patisserie's single Node process at
+// 100–135 % CPU for two minutes; its home page took 5–17 s for every visitor.
+test('snapshot: an EmDash-like site is read one record at a time, each read followed by a pause as long as it took (#252)', async () => {
+  const site = reader(FIVE)
+  let clock = 0
+  let inFlight = 0
+  let most = 0
+  /** @type {number[]} */
+  const slept = []
+  const ask = async (/** @type {any} */ params) => {
+    if (params.id === undefined) return site.ask(params)
+    inFlight += 1
+    most = Math.max(most, inFlight)
+    clock += 40
+    await new Promise((resolve) => setTimeout(resolve, 1))
+    inFlight -= 1
+    return site.ask(params)
+  }
+  const store = createLocateStore({
+    now: () => clock,
+    budgetMs: 5_000,
+    sleep: async (ms) => {
+      slept.push(ms)
+    }
+  })
+  const built = await store.snapshotFor(input(ask, locateReads('emdash')))
+  assert.equal(built.incomplete, false)
+  assert.equal(most, 1, 'never two reads in the site at once')
+  assert.deepEqual(slept, [40, 40, 40, 40, 40], 'each read is followed by a pause as long as it took')
+})
+
+// #252: "41 records in 128058 ms, not kept (incomplete)" — every Edit and every new chat built again
+// from nothing. What a build read before its limit is now taken over by the next one.
+test('snapshot: a build past its limit keeps what it read whole; the next build reads only the rest (#252)', async () => {
+  const details = FIVE.map((one) => ({ ...one }))
+  const site = reader(details)
+  let clock = 0
+  const ask = async (/** @type {any} */ params) => {
+    if (params.id !== undefined) clock += 10
+    return site.ask(params)
+  }
+  /** @type {any[]} */
+  const builds = []
+  const store = createLocateStore({
+    now: () => clock,
+    budgetMs: 5_000,
+    buildLimitMs: 25,
+    onBuilt: (one) => builds.push(one)
+  })
+  const first = await store.snapshotFor(input(ask))
+  assert.equal(first.incomplete, true)
+  const readFirst = site.asked.filter((p) => p.id !== undefined).map((p) => p.id)
+  assert.equal(readFirst.length, 3, 'three reads fit the limit')
+  assert.equal(builds[0].kept, false)
+  // One of the records it read has moved since: read again; the other two are taken over.
+  details[1] = { ...details[1], title: 'Page number one, moved', revision: 'r2' }
+  site.asked.length = 0
+  clock = 1_000
+  const second = await store.snapshotFor(input(ask))
+  assert.equal(second.incomplete, false, 'finished over two builds')
+  assert.deepEqual(
+    site.asked.filter((p) => p.id !== undefined).map((p) => p.id),
+    ['e-1', 'e-3', 'e-4'],
+    'only what moved and what was never read'
+  )
+  assert.equal(builds[1].resumed, 2)
+  assert.equal(builds[1].kept, true)
+  assert.equal(
+    locateElement(second.index, { url: 'https://s.test/p1', text: 'Page number one, moved' }).status,
+    'resolved'
+  )
 })
 
 test('snapshot: WordPress-sized batches — four at a time, a third fitting each answer — read every record', async () => {
