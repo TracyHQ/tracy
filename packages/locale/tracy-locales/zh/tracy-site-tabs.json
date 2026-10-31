@@ -1169,7 +1169,7 @@
   "push.result.failed": "无法写入（{count}）",
   "push.result.unknown": "可能已在你的线上 site 上（{count}）",
   "push.result.unknownHint": "Tracy 已发送这些修改但没有收到回应，因此它们可能已经生效。再次同步到线上之前，请先在你的线上 site 上检查，以免重复创建。",
-  "push.note.liveBlocked": "你的线上 site 的防火墙或安全插件拒绝了这项修改，因此它没有写入。请在那里允许 Tracy 的请求，然后再次同步到线上。",
+  "push.note.liveBlocked": "你的线上 site 的防火墙或安全 plugin 拒绝了这项修改，因此它没有写入。请在那里允许 Tracy 的请求，然后再次同步到线上。",
   "push.note.notWritten": "Tracy 已检查你的线上 site：这项修改没有生效。请再次同步到线上来发送它。",
   "push.undo.conflicts": "未恢复：已在线上 site 上再次改动（{count}）",
   "push.undo.conflictsHint": "同步之后，有人在你的线上 site 上改动了这些。保留对方的版本。",

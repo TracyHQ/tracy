@@ -1169,7 +1169,7 @@
   "push.result.failed": "Impossible de les écrire ({count})",
   "push.result.unknown": "Peut-être déjà sur votre site en ligne ({count})",
   "push.result.unknownHint": "Tracy a envoyé ces modifications sans recevoir de réponse : elles ont peut-être été faites. Vérifiez-les sur votre site en ligne avant de synchroniser à nouveau, pour que rien ne soit créé deux fois.",
-  "push.note.liveBlocked": "Le pare-feu ou une extension de sécurité de votre site en ligne a refusé cette modification : elle n’a pas été écrite. Autorisez-y les requêtes de Tracy, puis synchronisez à nouveau.",
+  "push.note.liveBlocked": "Le pare-feu ou un plugin de sécurité de votre site en ligne a refusé cette modification : elle n’a pas été écrite. Autorisez-y les requêtes de Tracy, puis synchronisez à nouveau.",
   "push.note.notWritten": "Tracy a vérifié votre site en ligne : cette modification n’a pas été faite. Synchronisez à nouveau pour l’envoyer.",
   "push.undo.conflicts": "Non remis : modifiés à nouveau sur votre site en ligne ({count})",
   "push.undo.conflictsHint": "Quelqu’un les a modifiés sur votre site en ligne après la synchronisation. Sa version est conservée.",

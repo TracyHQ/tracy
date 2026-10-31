@@ -1169,7 +1169,7 @@
   "push.result.failed": "Kon niet worden geschreven ({count})",
   "push.result.unknown": "Mogelijk al op je live site ({count})",
   "push.result.unknownHint": "Tracy heeft deze wijzigingen verstuurd maar kreeg geen antwoord, dus ze zijn misschien al doorgevoerd. Controleer ze op je live site voordat je opnieuw synchroniseert, zodat niets twee keer wordt aangemaakt.",
-  "push.note.liveBlocked": "De firewall of een beveiligingsplugin van je live site heeft deze wijziging geweigerd, dus die is niet geschreven. Sta daar verzoeken van Tracy toe en synchroniseer daarna opnieuw.",
+  "push.note.liveBlocked": "De firewall of een plugin voor beveiliging van je live site heeft deze wijziging geweigerd, dus die is niet geschreven. Sta daar verzoeken van Tracy toe en synchroniseer daarna opnieuw.",
   "push.note.notWritten": "Tracy heeft je live site gecontroleerd: deze wijziging is niet doorgevoerd. Synchroniseer opnieuw om haar te versturen.",
   "push.undo.conflicts": "Niet teruggezet: opnieuw gewijzigd op je live site ({count})",
   "push.undo.conflictsHint": "Iemand heeft deze na de synchronisatie op je live site gewijzigd. Die versie blijft.",
