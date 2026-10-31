@@ -790,3 +790,33 @@ test('the look is told the approved neutral words a card with no source keeps, a
   await createDemoLook({ ...plain, visionFor: door })({}, { pages: ['/'] })
   assert.ok(!plain.asked[0].body.messages[0].content[0].text.includes('neutral words'))
 })
+
+// #247: every look of a 29-page build ran the full 300 s and saw no page whole. A whole look says what a page
+// cost; the next check takes what its time holds, and says the rest are left, never passing them unseen.
+test('a look says what a page seen whole cost, and the next takes the pages its time holds (#247)', async () => {
+  const { lookFit } = await import('../src/opportunities-build/client-demo.js')
+  let clock = 0
+  const fake = await fakes({ faults: [] }, { height: 10604 })
+  const timed = createDemoLook({
+    ...fake,
+    visionFor: door,
+    now: () => {
+      clock += 1_000
+      return clock
+    }
+  })
+  const whole = await timed({}, { pages: ['/', '/menu'] })
+  assert.equal(whole.looked, true)
+  assert.equal(typeof whole.msPerPage, 'number')
+  assert.ok(whole.msPerPage > 0)
+  // No rate yet: every page is tried, as before.
+  const pages = ['/menu', '/', '/about', '/contact', '/team']
+  assert.deepEqual(lookFit(pages, {}), { pages, left: [] })
+  // 100 s a page in a 300 s look: three pages — home first, then the unseen, then the seen.
+  assert.deepEqual(lookFit(pages, { msPerPage: 100_000, seen: ['/menu', '/about'] }), {
+    pages: ['/', '/contact', '/team'],
+    left: ['/menu', '/about']
+  })
+  // A page that alone outlasts the look is still tried, one at a time.
+  assert.deepEqual(lookFit(pages, { msPerPage: 900_000 }).pages, ['/'])
+})

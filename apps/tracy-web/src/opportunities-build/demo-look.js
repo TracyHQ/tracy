@@ -646,6 +646,7 @@ export function createDemoLook({
         unlooked
       }
     const unseen = new Set(unlooked.map((u) => u.page))
+    const seenCount = layouts.length - unseen.size
     return {
       id: 'looks-finished',
       pass: unlooked.length === 0 && faults.length === 0,
@@ -659,6 +660,9 @@ export function createDemoLook({
         'a vision model saw no visible fault from top to footer on every page at desktop and phone width',
       detail: faults,
       ...(unlooked.length ? { unlooked } : {}),
+      // What one page seen whole cost this look, at this deployment's vision speed: the next check fits its pages
+      // to the look's time with it (`client-demo.js` `lookFit`, #247).
+      ...(seenCount > 0 ? { msPerPage: Math.round((now() - started) / seenCount) } : {}),
       usage
     }
 

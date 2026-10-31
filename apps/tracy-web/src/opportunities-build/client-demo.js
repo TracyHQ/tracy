@@ -103,6 +103,28 @@ export function lookSample(pages, posts, seen = []) {
 }
 /** A look's time for `n` pages. */
 export const lookBudgetMs = (n) => Math.min(LOOK_MS_MAX, Math.max(LOOK_MS, n * LOOK_MS_PER_PAGE))
+
+/**
+ * 🔒 A LOOK TAKES THE PAGES ITS TIME HOLDS (#247). With the vision door at ~36 s a call and 3 at once, 29 pages never fit
+ * `LOOK_MS_MAX`: every look ran the full 300 s, cut every stream and saw nothing whole. The last look says what a page
+ * seen whole cost (`msPerPage`); this look takes as many pages as `LOOK_MS_MAX` holds at that rate — the home page first,
+ * then pages no look has seen, then the rest — and leaves the others to the next check, said as not looked at. With no
+ * rate yet (the first look) every page is tried, as before.
+ * @param {string[]} pages @param {{ msPerPage?: unknown, seen?: unknown }} [last]
+ * @returns {{ pages: string[], left: string[] }}
+ */
+export function lookFit(pages, last = {}) {
+  const rate = typeof last?.msPerPage === 'number' && last.msPerPage > 0 ? last.msPerPage : null
+  if (rate === null) return { pages, left: [] }
+  const seen = new Set(Array.isArray(last?.seen) ? last.seen : [])
+  const ordered = [
+    ...pages.filter((p) => p === '/'),
+    ...pages.filter((p) => p !== '/' && !seen.has(p)),
+    ...pages.filter((p) => p !== '/' && seen.has(p))
+  ]
+  const room = Math.max(1, Math.floor(LOOK_MS_MAX / rate))
+  return { pages: ordered.slice(0, room), left: ordered.slice(room) }
+}
 /** The paths a build's template posts answer at: their frozen routes and where they moved since (`postRoutes`). */
 function templatePostPaths(build, postRoutes = []) {
   const records = build.content?.agentDemo?.structure?.inventory?.records ?? []
@@ -1040,7 +1062,9 @@ export function createClientDemoService(deps) {
         templatePostPaths(state.build, routesNow.postRoutes),
         Array.isArray(lastLook?.seen) ? lastLook.seen : []
       )
-      fresh = sample.pages
+      // The pages this look's time holds; the rest wait for the next check (#247).
+      const fit = lookFit(sample.pages, lastLook ?? {})
+      fresh = fit.pages
       const lookNow = deps.demoLook
         ? await deps.demoLook(site, {
             pages: fresh.length ? fresh : ['/'],
@@ -1054,6 +1078,17 @@ export function createClientDemoService(deps) {
         : null
       const look = lookNow && kept.length ? keptLook(lookNow, lastLook, kept) : lookNow
       judged = look ? deferToMeasure(look, contrast?.measuredOver) : null
+      if (judged && fit.left.length > 0)
+        judged = {
+          ...judged,
+          pass: false,
+          looked: 'partly',
+          unlooked: [
+            ...(Array.isArray(judged.unlooked) ? judged.unlooked : []),
+            ...fit.left.map((page) => ({ page, why: 'LEFT_FOR_NEXT_LOOK', viewports: ['desktop', 'phone'] }))
+          ],
+          measured: `${judged.measured}; ${fit.left.length} page(s) left to the next check's look (about ${Math.round(lastLook.msPerPage / 1000)} s a page here)`
+        }
       if (judged && sample.postsLeft > 0)
         judged = {
           ...judged,
