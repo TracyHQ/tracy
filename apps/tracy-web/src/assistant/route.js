@@ -616,6 +616,8 @@ export function assistantRoutes({
     streaming.set(accountId, (streaming.get(accountId) ?? 0) + 1)
     const encoder = new TextEncoder()
     let said = ''
+    // The asker's side ended the stream (Stop, or the page closed): `cancel` below.
+    let cancelled = false
     const stream = new ReadableStream({
       async start(controller) {
         const send = (event, data) => controller.enqueue(encoder.encode(frame(event, data)))
@@ -659,7 +661,8 @@ export function assistantRoutes({
           log.warn('[assistant] stream EMPTY')
         }
         // Kept even when cut short: the next turn should know what the asker already read. A
-        // conversation cleared meanwhile keeps nothing (`write` answers null).
+        // conversation cleared meanwhile keeps nothing (`write` answers null). Kept with how it ended,
+        // so a reload shows a stopped or cut answer as such, with Retry, never as a finished one (#206).
         let turnId = null
         if (said.trim() !== '')
           turnId = await write({
@@ -668,7 +671,8 @@ export function assistantRoutes({
             content: said,
             model: modelName,
             inputTokens: usage?.inputTokens ?? null,
-            outputTokens: usage?.outputTokens ?? null
+            outputTokens: usage?.outputTokens ?? null,
+            ended: cancelled ? 'stopped' : failure ? 'cut' : null
           }).catch(() => null)
         try {
           if (failure) send('error', { code: abort.signal.aborted ? 'TIMEOUT' : failure })
@@ -679,6 +683,7 @@ export function assistantRoutes({
         }
       },
       cancel() {
+        cancelled = true
         abort.abort()
       }
     })
