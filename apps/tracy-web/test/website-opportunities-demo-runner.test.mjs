@@ -1,6 +1,10 @@
 import { handOffToAgent } from '../src/opportunities-build/handoff-service.js'
 import { promptHandoff } from '../src/opportunities-build/handoff.js'
-import { createClientDemoService, LOGO_RESEARCH_PENDING } from '../src/opportunities-build/client-demo.js'
+import {
+  createClientDemoService,
+  LOGO_RESEARCH_PENDING,
+  PICTURE_LABELS_PENDING
+} from '../src/opportunities-build/client-demo.js'
 import { LOGO_RESEARCH_WAIT_MS, logoResearchNote } from '../src/opportunities-build/logo-research.js'
 import { LOOK_PROMPT_VERSION } from '../src/opportunities-build/demo-look.js'
 import { compareAgentInventory } from '../src/sites/agent-demo-inventory.js'
@@ -2865,6 +2869,60 @@ test(
     assert.equal(logoResearchNote(held).id, 'logo-research')
     assert.deepEqual(w.asked, [w.actionId])
     const prepared = await w.deps.clientDemo.prepare({ accountId: w.account, actionId: w.actionId })
+    assert.ok(prepared.brief.hash)
+  }
+)
+
+test(
+  'an own-site build never waits for its photo labelling inside prepare: pending until the run settles, then the runner briefs it (#250)',
+  opts,
+  async () => {
+    const w = await world({ historical: false, agentWorkflow: true, chatMode: 'client-send/1' })
+    const actionId = (await w.accept()).body.actions[0].id
+    await w.pool.query(
+      `update wo_demo_action set selection = selection || '{"ownSite": true}'::jsonb where id = $1`,
+      [actionId]
+    )
+    const asked = []
+    let settle = () => {}
+    const answered = new Promise((resolve) => {
+      settle = resolve
+    })
+    w.deps.pictureLabels = (input) => {
+      asked.push(input)
+      return answered
+    }
+    w.deps.clientDemo = createClientDemoService(w.deps)
+    const counts = async () =>
+      (
+        await w.pool.query(
+          'select (select count(*)::int from wo_revision) as revisions, (select count(*)::int from wo_build) as builds'
+        )
+      ).rows[0]
+    const started = Date.now()
+    await assert.rejects(w.deps.clientDemo.prepare({ accountId: w.account, actionId }), (failure) => {
+      assert.equal(failure.code, PICTURE_LABELS_PENDING)
+      assert.equal(failure.status, 409)
+      assert.ok(Date.parse(failure.retryAt) > w.deps.now())
+      return true
+    })
+    assert.ok(Date.now() - started < 2_000, 'prepare never waits for the labelling')
+    assert.deepEqual(await counts(), { revisions: 0, builds: 0 }, 'no brief while its photos are labelled')
+    const selection = (await w.pool.query('select selection from wo_demo_action where id=$1', [actionId]))
+      .rows[0].selection
+    assert.equal(selection.pictureLabels.state, 'requested')
+    // Still labelling: the runner asks again and makes nothing.
+    await w.advance()
+    await w.runner().drain()
+    assert.deepEqual(await counts(), { revisions: 0, builds: 0 })
+    settle({ labels: new Map(), note: { status: 'none', asked: 0, labelled: 0, cached: 0, max: 60 } })
+    await w.deps.clientDemo.pictureRuns.idle()
+    // Nobody reads the demo again: the runner prepares it once the labelling settled.
+    await w.advance()
+    await w.runner().drain()
+    assert.deepEqual(await counts(), { revisions: 1, builds: 1 })
+    assert.equal(asked.length, 1, 'labelled once')
+    const prepared = await w.deps.clientDemo.prepare({ accountId: w.account, actionId })
     assert.ok(prepared.brief.hash)
   }
 )

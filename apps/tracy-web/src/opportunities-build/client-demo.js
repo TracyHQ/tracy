@@ -20,7 +20,8 @@ import {
 } from './agent-demo.js'
 import { liveReadinessOf } from './live-readiness.js'
 import { deterministicBuildId, readinessOfBuild, suggestedLabel, startBuild, settleBuild } from './builds.js'
-import { revisionForAction } from './revisions.js'
+import { freezeDemoResearchInput, pictureLabelInputOf, revisionForAction } from './revisions.js'
+import { createPictureLabelRuns, PICTURE_LABELS_PENDING } from './picture-label-runs.js'
 import { logoResearchDoor, logoResearchNote } from './logo-research.js'
 import { withBuildChoice } from './build-choice.js'
 import { buildPlaced, insertBuild, saveBuildLabel } from './build-store.js'
@@ -49,6 +50,8 @@ function contactFacts(brief) {
 export const CLIENT_DEMO = 'client-send/1'
 /** `prepare`'s answer while the demo's logo research may still answer: ask again later (`retryAt`). */
 export const LOGO_RESEARCH_PENDING = 'DEMO_LOGO_RESEARCH_PENDING'
+/** `prepare`'s answer while the brief's photographs are still being labelled (#250): ask again later (`retryAt`). */
+export { PICTURE_LABELS_PENDING }
 const CMS_NAMES = { wordpress: 'WordPress', joomla: 'Joomla', emdash: 'EmDash' }
 const error = (code, status = 409) => Object.assign(new Error(code), { code, status })
 
@@ -58,6 +61,8 @@ const sha = (text) => createHash('sha256').update(text, 'utf8').digest('hex')
 const ended = new Set(['aborted', 'blocked', 'error', 'interrupted', 'max-tokens'])
 /** This process: a running check whose row names it but which it no longer runs died with a restart. */
 const BOOT = randomUUID()
+/** A business labelled ahead is not read for it again sooner (its research rarely changes meanwhile; the brief's own ask starts a run for a changed one). */
+const WARM_AGAIN_MS = 10 * 60_000
 /**
  * How long the host's QA may read the inventory's routes past its pages (`inventoryRoutes`): the baseline inside the
  * agent's first check, the check inside dsh's 10 min wait beside the look and the sweep.
@@ -274,6 +279,18 @@ export function createClientDemoService(deps) {
   const now = deps.now ?? Date.now
   const origin = String(config.origin).replace(/\/+$/, '')
   const runningChecks = new Map()
+  /**
+   * 🔒 THE PHOTO LABELLING RUNS BESIDE THE REQUEST (#250): Build from my business labels its brief's photographs from
+   * the moment its research is done (`warmPictureLabels`), and `prepare` answers `DEMO_PICTURE_LABELS_PENDING` while
+   * they are still being labelled, instead of holding the request for every vision call (113 s measured).
+   */
+  const pictureRuns = deps.pictureLabels
+    ? createPictureLabelRuns({ label: deps.pictureLabels, now, log: deps.log ?? console })
+    : null
+  /** Whether this action's brief labels its photographs beside the request: the page of an own site asks again. */
+  /** When each own-site business was last labelled ahead: its state door is read every few seconds. */
+  const warmed = new Map()
+  const labelsBeside = (action) => Boolean(pictureRuns && action.selection?.ownSite === true)
   async function locked(actionId, fn) {
     const lock = await pool.connect()
     try {
@@ -349,8 +366,26 @@ export function createClientDemoService(deps) {
           now,
           // 🔒 Asked as the demo's account, through the same door an operator presses (logo-research.js).
           logoResearch: { research: logoResearchDoor({ request, origin, cookie: state.cookie }) },
-          pictureLabels: deps.pictureLabels ?? null
+          ...(labelsBeside(state.action)
+            ? { pictureLabelRuns: pictureRuns }
+            : { pictureLabels: deps.pictureLabels ?? null })
         })
+        // 🔒 The photographs still being labelled (#250): the brief is made once their run settles. The mark lets the
+        // runner's `reconcile` prepare it then, whether or not the page asks again.
+        if (made.pending && made.waitingFor === 'pictures') {
+          if (state.action.selection?.pictureLabels?.state !== 'requested')
+            await pool.query(
+              `update wo_demo_action set selection = selection || $2::jsonb, updated_at = $3 where id = $1`,
+              [
+                state.action.id,
+                JSON.stringify({ pictureLabels: { state: 'requested', at: new Date(now()).toISOString() } }),
+                new Date(now())
+              ]
+            )
+          throw Object.assign(error(PICTURE_LABELS_PENDING), {
+            retryAt: new Date(made.retryAt).toISOString()
+          })
+        }
         // 🔒 Never waited for here: this runs inside HTTP requests (`/v1/demos`). The caller asks again, and the
         // runner's `reconcile` prepares it once the research is done or its minute is over.
         if (made.pending)
@@ -578,9 +613,13 @@ export function createClientDemoService(deps) {
     // 🔒 A demo whose brief waits for its logo research is prepared here once that is settled, so its build starts
     // whether or not anyone reads the demo again (logo-research.js). Before the Retry guard below: an action with no
     // build has sent no brief yet, so that guard would return first and the build would never start.
-    if (!state.build && state.action.selection?.logoResearch?.state === 'requested')
+    if (
+      !state.build &&
+      (state.action.selection?.logoResearch?.state === 'requested' ||
+        state.action.selection?.pictureLabels?.state === 'requested')
+    )
       await prepare({ accountId: action.account_id, actionId: action.id }).catch((failure) => {
-        if (failure?.code !== LOGO_RESEARCH_PENDING)
+        if (failure?.code !== LOGO_RESEARCH_PENDING && failure?.code !== PICTURE_LABELS_PENDING)
           (deps.log ?? console).warn(
             `client demo ${action.id} not prepared after its logo research: ${failure?.code ?? failure}`
           )
@@ -1204,7 +1243,28 @@ export function createClientDemoService(deps) {
     if (job.state === 'error') throw error(job.code ?? 'DEMO_QA_UNAVAILABLE')
     return { ok: true, checkId: job.id, ...(job.resultText ? JSON.parse(job.resultText) : job.result) }
   }
-  return { prepare, send, operation, reconcile }
+  /**
+   * Starts labelling the photographs of an own-site business's research as soon as it is done (#250), so the brief
+   * pressing build makes finds them labelled. Never awaited by its caller; never throws.
+   * @param {{accountId: string, opportunityId: string}} args
+   */
+  async function warmPictureLabels({ accountId, opportunityId }) {
+    if (!pictureRuns) return
+    const key = `${accountId}:${opportunityId}`
+    if (now() - (warmed.get(key) ?? Number.NEGATIVE_INFINITY) < WARM_AGAIN_MS) return
+    warmed.set(key, now())
+    for (const [k, at] of warmed) if (now() - at >= WARM_AGAIN_MS) warmed.delete(k)
+    try {
+      const frozen = await freezeDemoResearchInput(pool, opportunityId, accountId)
+      const input = await pictureLabelInputOf(pool, { accountId, opportunityId, frozenResearchRead: frozen })
+      if (input) pictureRuns.start(input)
+    } catch (failure) {
+      ;(deps.log ?? console).warn?.(
+        `[brief pictures] not labelled ahead for ${opportunityId}: ${failure?.code ?? failure?.message ?? failure}`
+      )
+    }
+  }
+  return { prepare, send, operation, reconcile, warmPictureLabels, pictureRuns }
 }
 
 /**
