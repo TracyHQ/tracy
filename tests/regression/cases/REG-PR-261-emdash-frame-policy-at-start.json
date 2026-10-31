@@ -8,10 +8,10 @@
   "needs": [],
   "flaky_model": false,
   "steps": [
-    "S1: start the frame policy warm-up with three sites, two of them EmDash."
+    "S1: start the frame policy warm-up over three EmDash sites, the second of which fails its check."
   ],
   "expect": [
-    "S1: only the EmDash sites are checked, one at a time with a pause between; a failure on one is logged and the next is still checked."
+    "S1: only sites with platform 'emdash' are read; they are checked one at a time, never two at once; the failing site does not stop the third; the count of ready sites is logged at the end."
   ],
   "selectors": {
     "file": "apps/tracy-web/src/host/frame-policy.js",
