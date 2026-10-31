@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-245-crossed-meta-ids",
+  "kind": "fix",
+  "title": "One-per-page post meta both sites added under crossed meta ids merges as one row",
+  "pr": 245,
+  "area": "sync/merge",
+  "cms": ["wp"],
+  "steps": [
+    "Run the WordPress merge case: copy template under meta_id 24, live template under 25 and another live row under 24."
+  ],
+  "expect": [
+    "The page has one _wp_page_template row (the copy value) and a conflict; the same _thumbnail_id is one row; the live row of its own comes over."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#118",
+      "packages/fleet/tracy-fleet-operation/test/live-sync-wordpress-db.test.mjs"
+    ],
+    "tests": ["one-per-page meta both sites added under crossed meta_ids still meets as one row"]
+  },
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {}
+}

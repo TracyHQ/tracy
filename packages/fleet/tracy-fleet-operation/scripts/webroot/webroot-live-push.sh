@@ -186,11 +186,11 @@ PYEOF
 # An engine's refusal (live-write.mjs) as this job's answer, its codes the contract's; on
 # LIVE_PHP_TOO_OLD the site's PHP and the engine's minimum go along.
 engine_refusal() { # answer
-  python3 -c 'import json,sys
-a = json.loads(sys.argv[1] or "{}")
+  printf '%s' "$1" | python3 -c 'import json,sys
+a = json.loads(sys.stdin.read() or "{}")
 code = a.get("code") or "WRITE_FAILED"
 print(json.dumps({"ok": False, "code": code, **({"detail": a["detail"]} if a.get("detail") else {}),
-                 **({"php": a.get("php"), "min": a.get("min")} if code == "LIVE_PHP_TOO_OLD" else {})}))' "$1"
+                 **({"php": a.get("php"), "min": a.get("min")} if code == "LIVE_PHP_TOO_OLD" else {})}))'
 }
 
 # ── preview ──────────────────────────────────────────────────────────────────────────────────
@@ -225,10 +225,11 @@ preview() {
   step "stage: comparing"
   local answer
   answer="$(run_heavy webroot_locked changeset | tail -1)"
-  case "$(python3 -c 'import json,sys
-try: a = json.loads(sys.argv[1])
+  # On stdin, never as an argument: a long answer is past the kernel's limit for one (#219).
+  case "$(printf '%s' "$answer" | python3 -c 'import json,sys
+try: a = json.loads(sys.stdin.read())
 except ValueError: a = None
-print("none" if not isinstance(a, dict) else a.get("ok"))' "$answer")" in
+print("none" if not isinstance(a, dict) else a.get("ok"))')" in
     True) ;;
     # Stopped with no answer of its own (killed, out of memory): said, never an empty line.
     none) answer_refusal CHANGESET_FAILED "the changeset stopped with no answer"; return 0 ;;
@@ -343,7 +344,7 @@ PYEOF
     said="$(node "$LIB_DIR/live-write.mjs" apply "$PUSH_DIR" "$PUSH_DIR" --limit "$LIMIT" --webroot "$WEBROOT" \
               $([[ "$CONFIRM_DELETES" == 1 ]] && echo --confirm-deletes) \
               $([[ "$CONFIRM_PHP" == 1 ]] && echo --confirm-php) | tail -1)"
-    if [[ "$(python3 -c 'import json,sys; print(json.loads(sys.argv[1] or "{}").get("ok"))' "$said")" != True ]]; then
+    if [[ "$(printf '%s' "$said" | python3 -c 'import json,sys; print(json.loads(sys.stdin.read() or "{}").get("ok"))')" != True ]]; then
       if [[ ! -f "$PUSH_DIR/written.json" ]]; then engine_refusal "$said"; return 0; fi
     fi
   fi
@@ -420,7 +421,7 @@ undo() {
     step "stage: undoing"
     local said
     said="$(node "$LIB_DIR/live-write.mjs" undo "$PUSH_DIR" | tail -1)"
-    if [[ "$(python3 -c 'import json,sys; print(json.loads(sys.argv[1] or "{}").get("ok"))' "$said")" != True ]]; then
+    if [[ "$(printf '%s' "$said" | python3 -c 'import json,sys; print(json.loads(sys.stdin.read() or "{}").get("ok"))')" != True ]]; then
       engine_refusal "$said"; return 0
     fi
   fi
@@ -453,13 +454,13 @@ sweep() {
 # quote — no value of the site), or the inner sync's when the stop was the Sync from live's.
 said_stop() { # answer
   local why
-  why="$(python3 -c 'import json,sys
-try: a = json.loads(sys.argv[1])
+  why="$(printf '%s' "$1" | python3 -c 'import json,sys
+try: a = json.loads(sys.stdin.read())
 except ValueError: a = None
 if isinstance(a, dict) and a.get("ok") is False:
     s = a.get("sync") if isinstance(a.get("sync"), dict) else {}
     detail = a.get("detail") or (": ".join(str(x) for x in (s.get("code"), s.get("detail")) if x) if s.get("ok") is False else "")
-    print(str(a.get("code") or "FAILED") + (": " + str(detail) if detail else ""))' "$1" 2>/dev/null)" || true
+    print(str(a.get("code") or "FAILED") + (": " + str(detail) if detail else ""))' 2>/dev/null)" || true
   [[ -z "$why" ]] || step "$OP stopped: ${why:0:400}"
 }
 

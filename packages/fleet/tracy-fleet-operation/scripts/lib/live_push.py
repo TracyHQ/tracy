@@ -244,6 +244,13 @@ J_STAMPS = frozenset({"asset_id", "created", "created_by", "modified", "modified
                       "checked_out_time", "version", "hits", "created_user_id", "created_time",
                       "modified_user_id", "modified_time"})
 J_TREE = frozenset({"lft", "rgt", "level", "path", "parent_id"})
+# The times a CMS stamps by itself on a record it creates (never sent): the record a push created
+# holds the live site's, the copy's row its own. Named in the create's seed (`stamps`), so the base
+# of the sync after it holds the copy's (lib/live_sync.py `seed_pushed`): the live site's come over
+# as its change, and the copy's row stops reading as changed — a live delete of it was held as a
+# false delete-modify (#223).
+CREATE_STAMPS = frozenset({"created", "modified", "created_time", "modified_time", "post_date",
+                           "post_date_gmt", "post_modified", "post_modified_gmt"})
 
 # claude-cowork JoomlaSiteWriter::MAP columns (update) and NESTED createColumns (create).
 J_ARTICLE = ("title", "alias", "introtext", "fulltext", "state", "catid", "images", "urls", "attribs",
@@ -1408,8 +1415,10 @@ class Changeset:
             out.append({"table": spec.table, "match": {pk: ident}, "rows": "theirs"})
         else:
             asset = self.asset_name(spec.entity, ident) if op == "create" else None
+            stamps = sorted((CREATE_STAMPS & spec.ignore) - set(db_columns)) if op == "create" else []
             out.append({"table": spec.table, "match": {pk: ident}, "columns": db_columns,
                         **({"create": True, "entity": spec.entity, "id": ident} if op == "create" else {}),
+                        **({"stamps": stamps} if stamps else {}),
                         # Joomla gives the new record its `assets` row on its own: the copy's number for
                         # it, found by the asset's name on both sides, before clashes are numbered (#172).
                         **({"align": {"entity": "assets", "match": {"name": asset}}} if asset else {})})
@@ -1862,7 +1871,7 @@ class Changeset:
         """The menu a new menu item goes in, on the live site: True when the live site has it, the id of
         this push's item that makes it, or None when neither (WordPress: no menu at all, its term gone)."""
         if self.platform == "wordpress":
-            return True if copy_row.get("menu") else None
+            return self.wordpress_menu_of(copy_row.get("menu"))
         menutype = copy_row.get("menutype")
         # Every menu the live read holds is in its keys (its rows are only the ones that differ).
         live = self.data.get("kinds", {}).get("menutype", {}).get("keys", {}).get("base", [])
@@ -1877,6 +1886,29 @@ class Changeset:
             spec = next(sp for sp in self.specs if sp.name == "menutype")
             return self.item_id(spec, (menutype,))  # made under its name, as `menutype:<name>`
         return None
+
+    def wordpress_menu_of(self, slug):
+        """`menu_of` on WordPress, where a menu is a `nav_menu` term named by its slug. The copy keeping
+        a menu the customer deleted on the live site (the sync holds that deletion as a conflict, #119)
+        no longer means the live site has it: its term is the copy's alone, so the item waits for the
+        push to make it, or is named as depending on it. Sent anyway, it failed WRITE_OUTCOME_UNKNOWN."""
+        if not slug:
+            return None
+        term = self.data.get("kinds", {}).get("term")
+        if term is None:
+            return True  # no read of the live menus to go by (an older read): as before, nothing refused
+        # Only the terms that differ are listed: a menu not among them is on the live site as the copy has it.
+        row = next((r for r in term.get("rows", {}).get("copy", [])
+                    if str(r.get("taxonomy")) == "nav_menu" and str(r.get("slug")) == str(slug)), None)
+        if row is None:
+            return True
+        spec = next(sp for sp in self.specs if sp.name == "term")
+        mine = (str(row.get("term_id")), "nav_menu")
+        alone = pair_keys(spec, term["keys"]["base"], term["keys"]["copy"], self.id_map)["copy_only"]
+        if mine not in {tuple(str(x) for x in k) for k in alone}:
+            return True  # the live site has it (renamed, or changed on either side)
+        ref = f"terms:{int(row['term_id'])}"
+        return ref if ref in self.creatable else None
 
     def menu_items_made(self) -> None:
         """A new menu item waiting for a menu this push was to make, which it does not make (refused
