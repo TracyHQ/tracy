@@ -1,0 +1,1 @@
+{"id":"REG-PR-272-host-read-line","verdict":"PASS","commit":"9bd28dcd7c5a08320a8199c8be28fb680919a086","ran_at":"2026-10-31T12:37:34.189Z","evidence":"tests/regression/.runs/2026-10-31-9bd28dcd7/REG-PR-272-host-read-line.log"}

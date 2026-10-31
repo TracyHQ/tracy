@@ -2683,6 +2683,7 @@ const SYNC_SCRIPT = new URL(
 
 test('syncProgressLine keeps the read line the real script prints, and the spaced form of older scripts', async () => {
   const script = await readFile(SYNC_SCRIPT, 'utf8')
+  // #219: the read's answer goes to python on stdin (an argv of a large answer hit "Argument list too long").
   const m =
     /printf '%s' "\$pulled" \| python3 -c '(import json,sys\nr = json\.load\(sys\.stdin\)\nprint\(json\.dumps\(\{"ok": True, "liveReadAt"[^']*)' >&2/.exec(
       script
