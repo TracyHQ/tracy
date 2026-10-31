@@ -2248,10 +2248,14 @@ export async function runSiteCall(input) {
       isRecord(lost) ? lost : { ok: false, code: 'COWORK_WEB_UNREACHABLE' }
     ),
     asked,
+    // The call never reached Tracy's own server (`COWORK_WEB_UNREACHABLE`: the way from this host to
+    // tracy-web failed): the site was never asked, so it is not "the site not answering" (#208).
     next:
-      asked === 2
-        ? 'Tracy asked the site twice, 2 s apart, and its content door answered neither time: tell the customer the site is not answering now; do not call it again or change the site another way.'
-        : `The site's content door gave no answer in ${Math.round(ms / 1000)} s, too long to ask again: tell the customer the site is not answering now; do not call it again or change the site another way.`
+      !isRecord(lost) || lost.code === 'COWORK_WEB_UNREACHABLE'
+        ? "The call did not reach Tracy's own server, so the site was not asked at all: tell the customer Tracy had a connection problem and to ask again in a minute; never say their site is not answering."
+        : asked === 2
+          ? 'Tracy asked the site twice, 2 s apart, and its content door answered neither time: tell the customer the site is not answering now; do not call it again or change the site another way.'
+          : `The site's content door gave no answer in ${Math.round(ms / 1000)} s, too long to ask again: tell the customer the site is not answering now; do not call it again or change the site another way.`
   })
 
   /**

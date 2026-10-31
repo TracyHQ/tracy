@@ -1,0 +1,32 @@
+{
+  "id": "REG-PR-245-push-held-table-and-stamps",
+  "kind": "fix",
+  "title": "Sync to live holds a table the sync kept whole, and a record a push created then deleted on live leaves the copy",
+  "pr": 245,
+  "area": "sync/push",
+  "cms": ["jo"],
+  "steps": [
+    "Run the push flow case where the live table gains a column and the customer retitles an article.",
+    "Run the push flow case where Tracy creates an article, pushes it, and the customer deletes it on live."
+  ],
+  "expect": [
+    "sync/kept.json holds the kept table and both articles in it are changed-on-both conflicts; nothing is written to them; the customer title stays on live.",
+    "After the push the copy row has the live created/modified; the next sync deletes it from the copy with nothing kept."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#87|#223",
+      "packages/fleet/tracy-fleet-operation/test/live-push-flow.test.mjs"
+    ],
+    "tests": [
+      "a table Sync from live kept whole holds the push through sync/kept.json",
+      "an article a push created and the customer then deleted on the live site goes from the copy too"
+    ]
+  },
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {}
+}

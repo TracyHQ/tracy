@@ -170,6 +170,28 @@ export function livePush({
   }
   const release = (site, id) => releaseWriteLease(pool, { siteKey: site.site_key, sessionId: leaseOf(id) })
 
+  /**
+   * The lease of a running push, renewed on every read of it, whether the host answered or not: a push
+   * read back by a tracy-web that restarted while the host was unreachable went stale at 90 s, and a
+   * chat's write was accepted while the push still ran (#224). Another holder that took it in such a
+   * window is named in the audit log; the next read asks again.
+   */
+  async function keepLease(site, row) {
+    const kept = await takeWriteLease(pool, {
+      siteKey: site.site_key,
+      sessionId: leaseOf(row.id),
+      actor: row.created_by ?? 'push'
+    })
+    if (!kept.ok)
+      await audit(pool, {
+        actor: null,
+        action: 'site.push.lease_held_by_other',
+        siteKey: site.site_key,
+        detail: { pushId: row.id, holder: kept.holder?.holder_session ?? null }
+      })
+    return kept.ok
+  }
+
   /** Start a preview: the host syncs from live, then lists the copy's changes against it. */
   async function preview(site, { email, name }) {
     const no = await refusal(site)
@@ -360,11 +382,7 @@ export function livePush({
       [row.id, started.jobId, row.host_job]
     )
     if (!rows.length) return null
-    await takeWriteLease(pool, {
-      siteKey: site.site_key,
-      sessionId: leaseOf(row.id),
-      actor: row.created_by ?? 'push'
-    })
+    await keepLease(site, rows[0])
     watch(site, row.id)
     return rows[0]
   }
@@ -379,14 +397,12 @@ export function livePush({
         await release(site, row.id)
         return ended(site, row, { state: 'failed', error: 'PUSH_LOST' })
       }
+      // The host did not answer: the push may still be writing there, so the site stays the push's.
+      await keepLease(site, row)
       return row
     }
     if (job.state === 'running' || job.state === 'queued') {
-      await takeWriteLease(pool, {
-        siteKey: site.site_key,
-        sessionId: leaseOf(row.id),
-        actor: row.created_by ?? 'push'
-      })
+      await keepLease(site, row)
       const lines = Array.isArray(job.progress) ? job.progress : String(job.output ?? '').split('\n')
       const step = lines
         .map((l) => /^==> \[\d+s\] (.+)$/.exec(String(l))?.[1])

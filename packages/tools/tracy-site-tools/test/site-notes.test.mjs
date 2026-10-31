@@ -823,3 +823,29 @@ test('reading: a missing or unreadable folder gives no notes, never an error', a
   await fs.writeFile(path.join(folder, NOTES_FILE), '\u0000\u0001 not a notes file\n')
   assert.deepEqual(await readNotes(folder), [])
 })
+
+test('capture: a store the host process cannot create is said on the log by its code, never silently (#210)', async () => {
+  // A host dsh's sites root is root's (`/site`, 755) while dsh runs as www-data: mkdir answers EACCES.
+  const root = await tmp()
+  await fs.chmod(root, 0o555)
+  const warned = []
+  try {
+    const result = await captureWishes({
+      llm: fakeLlm(ADD_SHORT),
+      route: ROUTE,
+      storeDir: path.join(root, '.site-notes', 'shop1'),
+      message: WISH,
+      session: 's-1',
+      now: () => new Date('2026-10-08T03:00:00Z'),
+      warn: (line) => warned.push(line)
+    })
+    assert.equal(result.kept, 0)
+    assert.ok(
+      warned.some((l) => /^site-notes: (capture|log) failed in shop1: EACCES$/.test(l)),
+      JSON.stringify(warned)
+    )
+    assert.ok(!warned.some((l) => l.includes('15')), 'nothing of the wish itself')
+  } finally {
+    await fs.chmod(root, 0o755)
+  }
+})

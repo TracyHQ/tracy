@@ -168,6 +168,8 @@ test('Joomla: a new article in a new category is two creates, the category first
       create: true,
       entity: 'content',
       id: 3,
+      // The times Joomla stamps on it by itself: the next sync's base holds the copy's (#223).
+      stamps: ['created', 'created_time', 'modified', 'modified_time'],
       // Its asset, which Joomla numbers on its own, aligned by name on the next sync (#172).
       align: { entity: 'assets', match: { name: 'com_content.article.3' } }
     }
@@ -1828,6 +1830,56 @@ test('a new menu item goes only into a menu the live site has or this push makes
   assert.ok(items['menuItem:new:105'], 'an item in a live menu goes as before')
 })
 
+test('WordPress: a menu the customer deleted on live that the copy kept is no menu of the live site; its new item waits for it (#119)', () => {
+  const menu = (id, slug) => ({
+    term_id: String(id),
+    taxonomy: 'nav_menu',
+    name: slug,
+    slug,
+    description: '',
+    parent: '0'
+  })
+  const menuItem = (id, slug) => ({
+    ID: String(id),
+    title: `Item ${id}`,
+    position: '1',
+    type: 'post_type',
+    object: 'page',
+    object_id: '10',
+    url: '',
+    parent: '0',
+    menu: slug
+  })
+  const data = {
+    entities: { posts: { base: [10], copy: [10, 62, 63] }, terms: { base: [2], copy: [2, 7] } },
+    kinds: {
+      term: kind([menu(2, 'main')], [menu(2, 'main'), menu(7, 'gone')], ['term_id', 'taxonomy']),
+      menuItem: kind([], [menuItem(62, 'gone'), menuItem(63, 'main')], ['ID'])
+    }
+  }
+  const answer = changeset('wordpress', data)
+  const items = byId(answer)
+  const made = answer.items.find((i) => i.kind === 'term' && i.op === 'create')
+  assert.ok(made, JSON.stringify(answer.items.map((i) => i.id)))
+  assert.ok(items['menuItem:new:62'].dependsOn.includes(made.id), JSON.stringify(items['menuItem:new:62']))
+  assert.deepEqual(items['menuItem:new:63'].dependsOn, [], 'an item in a live menu goes as before')
+
+  // The sync kept the deleted menu as the copy's (a delete-modify): its create is a conflict, and the
+  // item in it is never written on its own.
+  const held = changeset('wordpress', data, [
+    {
+      id: 'db:wp_terms:["7"]',
+      kind: 'row',
+      table: 'wp_terms',
+      key: { term_id: '7' },
+      reason: 'delete-modify'
+    }
+  ])
+  const term = held.items.find((i) => i.kind === 'term' && i.op === 'create')
+  assert.ok(term?.conflict, JSON.stringify(held.items))
+  assert.ok(byId(held)['menuItem:new:62'].dependsOn.includes(term.id))
+})
+
 test('Joomla: an article the push creates seeds its asset to be aligned by name, so the next sync meets the copy’s own (#172)', () => {
   const answer = changeset('joomla', {
     entities: { content: { base: [1], copy: [1, 10] } },
@@ -1895,4 +1947,58 @@ test('a push cut off before it recorded its writes is recorded from its journal 
   writeFileSync(join(cut, 'journal.jsonl'), line(10, 20) + line(11, 21) + line(12, 24))
   assert.deepEqual(run().recorded, ['cut'])
   assert.deepEqual(JSON.parse(readFileSync(idMap, 'utf8')), { content: { 20: 10, 21: 11, 24: 12 } })
+})
+
+test('record-cut never records an undone push again, and records a create settled after its push answered (#222, #74)', () => {
+  const pushRoot = join(root, `push-root-${++n}`)
+  const item = (id) => ({
+    id: `article:new:${id}`,
+    kind: 'article',
+    op: 'create',
+    title: `Article ${id}`,
+    creates: `content:${id}`,
+    seed: [{ table: 'content', match: { id }, columns: ['title'], create: true, entity: 'content', id }]
+  })
+  const changeset = JSON.stringify({ ok: true, platform: 'joomla', items: [item(10), item(11)] })
+  const line = (id, live) =>
+    `${JSON.stringify({ id: `article:new:${id}`, state: 'written', created: { [`content:${id}`]: live } })}\n`
+  const pushDir = (name, files) => {
+    const dir = join(pushRoot, name)
+    mkdirSync(dir, { recursive: true })
+    for (const [file, text] of Object.entries(files)) writeFileSync(join(dir, file), text)
+    return dir
+  }
+  // Cut off, then undone: its Undo recorded it (`undo-recorded`); recorded forward again, the settle
+  // sync trashed Tracy's post on the copy.
+  pushDir('undone', { 'changeset.json': changeset, 'journal.jsonl': line(10, 20), 'undo-recorded': '' })
+  // Answered with article 11 unknown; settled since from the live site's log (`reconciled.json`).
+  const answered = pushDir('answered', {
+    'changeset.json': changeset,
+    'journal.jsonl': line(10, 30),
+    'written.json': '{"written":[{"id":"article:new:10"}]}',
+    recorded: ''
+  })
+  const idMap = join(pushRoot, 'id-map.json')
+  const pushed = join(pushRoot, 'pushed.json')
+  const run = () => {
+    const r = spawnSync(
+      'python3',
+      [PUSH, 'record-cut', '--push-root', pushRoot, '--id-map', idMap, '--pushed', pushed],
+      {
+        encoding: 'utf8'
+      }
+    )
+    assert.equal(r.status, 0, r.stderr + r.stdout)
+    return JSON.parse(r.stdout.trim().split('\n').at(-1))
+  }
+  assert.deepEqual(run().recorded, [], 'an undone push and an answered one are left alone')
+  writeFileSync(join(answered, 'journal.jsonl'), line(10, 30) + line(11, 31))
+  writeFileSync(join(answered, 'reconciled.json'), '{"written":[{"id":"article:new:11"}]}')
+  assert.deepEqual(run().recorded, ['answered'])
+  assert.deepEqual(
+    JSON.parse(readFileSync(idMap, 'utf8')),
+    { content: { 31: 11 } },
+    'only the settled create'
+  )
+  assert.deepEqual(run().recorded, [], 'recorded once')
 })

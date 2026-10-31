@@ -106,14 +106,15 @@ export async function saveTurn(
     inputTokens = null,
     outputTokens = null,
     replyToId = null,
-    requestId = null
+    requestId = null,
+    ended = null
   }
 ) {
   const { rows } = await db.query(
     `insert into assistant_turn
        (conversation_id, account_id, role, content, model, handoff_id, staff_name, telegram_message_id, attachment_id, anchor_seq,
-        input_tokens, output_tokens, reply_to_turn_id, request_id)
-     values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
+        input_tokens, output_tokens, reply_to_turn_id, request_id, ended)
+     values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15)
      on conflict (handoff_id, telegram_message_id) where telegram_message_id is not null do nothing
      returning id`,
     [
@@ -130,7 +131,8 @@ export async function saveTurn(
       inputTokens,
       outputTokens,
       replyToId,
-      requestId
+      requestId,
+      ended
     ]
   )
   await db.query('update assistant_conversation set updated_at = now() where id = $1', [conversationId])
@@ -183,6 +185,8 @@ function publicTurn(row) {
     ...(row.attachment_id ? { attachmentId: row.attachment_id } : {}),
     ...(row.rating ? { rating: Number(row.rating) } : {}),
     ...(row.anchor_seq !== null && row.anchor_seq !== undefined ? { anchorSeq: Number(row.anchor_seq) } : {}),
+    // An answer that did not finish says how it ended (`stopped` | `cut`), so a restore keeps it (#206).
+    ...(row.ended ? { ended: row.ended } : {}),
     at: row.created_at instanceof Date ? row.created_at.toISOString() : null
   }
 }
@@ -197,7 +201,7 @@ function publicTurn(row) {
  */
 export async function turnsOf(pool, accountId, conversationId, after) {
   const select =
-    'select id, role, content, staff_name, attachment_id, anchor_seq, rating, created_at, reply_to_turn_id from assistant_turn'
+    'select id, role, content, staff_name, attachment_id, anchor_seq, rating, created_at, reply_to_turn_id, ended from assistant_turn'
   const { rows } =
     after === null
       ? await pool.query(

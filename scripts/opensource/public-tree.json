@@ -4542,6 +4542,109 @@
       "secretSha256": ["5389f1e4bfa9a3f81390b8fd98e7769f3d54bb0565eb0cdbe4715c3316578045"],
       "kind": "false-positive",
       "reason": "sha256 content digest in a generated lock or manifest, not a credential"
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-30-agent-tool-calling-cross-cms/emdash-integrity-probe.json",
+      "category": "secret",
+      "match": "^(generic-api-key)$",
+      "secretSha256": ["a117288688ad59388f308b82aa30755bcd67d6461625521d70a42c11912dcc05"],
+      "kind": "false-positive",
+      "reason": "SHA256 of the empty JSON array used as a read-integrity table digest; not an authentication value."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-30-agent-tool-calling-cross-cms/emdash.json",
+      "category": "secret",
+      "match": "^(generic-api-key)$",
+      "secretSha256": ["a117288688ad59388f308b82aa30755bcd67d6461625521d70a42c11912dcc05"],
+      "kind": "false-positive",
+      "reason": "SHA256 of the empty JSON array used as a read-integrity table digest; not an authentication value."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/emdash-streaming-before-pagination-guide/10-known-url.json",
+      "category": "secret",
+      "match": "^(generic-api-key)$",
+      "secretSha256": ["184d573e076874be9764a22a169b96aeafedd35ca4953c7b19a65b90be7e749a"],
+      "kind": "false-positive",
+      "reason": "Opaque public Content API record ID quoted in model prose and the same captured tool response; not a credential. Exact value hashes only."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/emdash-streaming-before-recovery/16-refusal-recovery.json",
+      "category": "secret",
+      "match": "^(generic-api-key)$",
+      "secretSha256": ["cddf4a65adebb0acd754d50eee970bfef0e2b4e0c108e227b1d274a6bdb46df8"],
+      "kind": "false-positive",
+      "reason": "Opaque public Content API record ID quoted in model prose and the same captured tool response; not a credential. Exact value hashes only."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/emdash-streaming/01-known-url.json",
+      "category": "secret",
+      "match": "^(generic-api-key)$",
+      "secretSha256": ["184d573e076874be9764a22a169b96aeafedd35ca4953c7b19a65b90be7e749a"],
+      "kind": "false-positive",
+      "reason": "Opaque public Content API record ID quoted in model prose and the same captured tool response; not a credential. Exact value hashes only."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/emdash-streaming/10-known-url.json",
+      "category": "secret",
+      "match": "^(generic-api-key)$",
+      "secretSha256": ["184d573e076874be9764a22a169b96aeafedd35ca4953c7b19a65b90be7e749a"],
+      "kind": "false-positive",
+      "reason": "Opaque public Content API record ID quoted in model prose and the same captured tool response; not a credential. Exact value hashes only."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/wordpress-streaming-before-pagination-guide/01-known-url.json",
+      "category": "secret",
+      "match": "^(generic-api-key)$",
+      "secretSha256": ["b3e46c3346266c7a2b271f48debac18164bc5413137671e4b38dd46223a8fe52"],
+      "kind": "false-positive",
+      "reason": "Opaque public Content API record ID quoted in model prose and the same captured tool response; not a credential. Exact value hashes only."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/wordpress-streaming-before-pagination-guide/09-exact-title.json",
+      "category": "secret",
+      "match": "^(generic-api-key)$",
+      "secretSha256": ["b3e46c3346266c7a2b271f48debac18164bc5413137671e4b38dd46223a8fe52"],
+      "kind": "false-positive",
+      "reason": "Opaque public Content API record ID quoted in model prose and the same captured tool response; not a credential. Exact value hashes only."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/wordpress-streaming-before-pagination-guide/10-known-url.json",
+      "category": "secret",
+      "match": "^(generic-api-key)$",
+      "secretSha256": ["b3e46c3346266c7a2b271f48debac18164bc5413137671e4b38dd46223a8fe52"],
+      "kind": "false-positive",
+      "reason": "Opaque public Content API record ID quoted in model prose and the same captured tool response; not a credential. Exact value hashes only."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/wordpress-streaming/01-known-url.json",
+      "category": "secret",
+      "match": "^(generic-api-key)$",
+      "secretSha256": ["b3e46c3346266c7a2b271f48debac18164bc5413137671e4b38dd46223a8fe52"],
+      "kind": "false-positive",
+      "reason": "Opaque public Content API record ID quoted in model prose and the same captured tool response; not a credential. Exact value hashes only."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/wordpress-streaming/09-exact-title.json",
+      "category": "secret",
+      "match": "^(generic-api-key)$",
+      "secretSha256": ["b3e46c3346266c7a2b271f48debac18164bc5413137671e4b38dd46223a8fe52"],
+      "kind": "false-positive",
+      "reason": "Opaque public Content API record ID quoted in model prose and the same captured tool response; not a credential. Exact value hashes only."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/wordpress-streaming/10-known-url.json",
+      "category": "secret",
+      "match": "^(generic-api-key)$",
+      "secretSha256": ["b3e46c3346266c7a2b271f48debac18164bc5413137671e4b38dd46223a8fe52"],
+      "kind": "false-positive",
+      "reason": "Opaque public Content API record ID quoted in model prose and the same captured tool response; not a credential. Exact value hashes only."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/site-tools-tests.txt",
+      "category": "email",
+      "match": "^hello@example\\.vn$",
+      "kind": "placeholder",
+      "reason": "Demo contact address in the captured 40-language replacement test name; copied verbatim from a repository test, not a customer account or private credential."
     }
   ],
   "excludeReasons": {

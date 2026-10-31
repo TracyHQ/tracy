@@ -1,0 +1,30 @@
+{
+  "id": "REG-PR-248-subfolder-import-address",
+  "kind": "fix",
+  "title": "An AI import draft keeps the folder a site is installed in",
+  "pr": 248,
+  "area": "onboarding/draft",
+  "cms": ["any"],
+  "steps": [
+    "Parse a draft whose importUrl is https://example.test/shop/ (and /shop, /shop/index.php) on the server, and as tab metadata in Add site."
+  ],
+  "expect": [
+    "The draft is accepted with importUrl https://example.test/shop/; an admin page, credentials, a query or a fragment are still refused."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "apps/tracy-web/test/assistant-draft.test.mjs",
+      "packages/site/tracy-add-site/test/chat-draft.test.mjs"
+    ],
+    "tests": [
+      "import addresses carry no credentials or operations",
+      "malformed metadata and unsafe import URLs cannot prefill a form"
+    ]
+  },
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {}
+}

@@ -1904,6 +1904,10 @@ test('a relay that throws is an answer, never a throw; Tracy already asked twice
 
   assert.deepEqual([answer.ok, answer.code, answer.asked], [false, 'COWORK_WEB_UNREACHABLE', 2])
   assert.doesNotMatch(answer.next, /\bretry\b/i)
+  // The call never reached Tracy's own server: the site was not asked, so it is never "the site is not
+  // answering" — the customer is told Tracy had a connection problem (#208).
+  assert.doesNotMatch(answer.next, /tell the customer the site is not answering/)
+  assert.match(answer.next, /did not reach Tracy's own server/)
 })
 
 // ── lost answers (E2.2) ──────────────────────────────────────────────────────────────────────────────
