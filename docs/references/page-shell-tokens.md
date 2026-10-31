@@ -36,7 +36,7 @@ redeclaration, and it exists because before 01/09 there **was none** — agents 
 | `--card` | `oklch(1 0 0)` | `oklch(0.195 0 0)` |
 | `--card-foreground` | `oklch(0.145 0 0)` | `oklch(0.985 0 0)` |
 | `--popover` / `--popover-foreground` | as `--card` | as `--card` |
-| `--primary` | `oklch(0.588 0.136 37.4)` | *unchanged* |
+| `--primary` | `oklch(0.565 0.136 37.4)` | *unchanged* |
 | `--primary-foreground` | `oklch(0.985 0 0)` | *unchanged* |
 | `--ring` | `oklch(0.588 0.136 37.4)` | *unchanged* |
 | `--secondary` | `oklch(0.97 0 0)` | `oklch(0.269 0 0)` |
@@ -79,8 +79,9 @@ not a cleanup to make the table match.
 
 ### `--primary` is Tracy's terracotta (since 14/09/2026), and it does NOT colour the submit button
 
-`tokens.css` and `apps/tracy-web/src/lib/page-shell.js` both pin `--primary`/`--ring` =
-`oklch(0.588 0.136 37.4)` (`#bf5b3d`): Akemi decided terracotta is the primary of the whole system (#81),
+`tokens.css` and `apps/tracy-web/src/lib/page-shell.js` both pin `--ring` = `oklch(0.588 0.136 37.4)` (`#bf5b3d`) and
+`--primary` one step darker, `oklch(0.565 0.136 37.4)` (`#b75436`), so a label on it and it as text on white read at
+WCAG AA (#228; the brand mark keeps `#bf5b3d`): Akemi decided terracotta is the primary of the whole system (#81),
 Tracy blue `#5b8def` is retired. It does not follow `--dsw-alias-brand-primary` because following the alias would mean **Tracy's
 buttons change brand with the dsh skin**.
 
