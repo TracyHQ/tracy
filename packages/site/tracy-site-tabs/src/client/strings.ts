@@ -675,6 +675,7 @@ export const en = {
   'event.type.theme': 'theme',
   'event.type.plugin': 'plugin',
   'event.type.item': 'item',
+  'event.target.home': 'the home page',
   // Units of the scope line "1 page · 2 files": resources, operations and files never summed together.
   'event.unit.page.one': '1 page',
   'event.unit.page.many': '{count} pages',
@@ -1384,11 +1385,14 @@ export const en = {
   'push.status.pushing': 'Syncing to live…',
   'push.status.pushed': 'Synced to live',
   'push.status.pushedBody': '{count} changes reached your live site {when}.',
+  'push.status.pushedBody.one': '1 change reached your live site {when}.',
   'push.status.partial': 'Sync to live stopped part way',
   'push.status.partialBody': '{count} changes reached your live site before it stopped. You can undo them.',
+  'push.status.partialBody.one': '1 change reached your live site before it stopped. You can undo it.',
   'push.status.undoing': 'Undoing…',
   'push.status.undone': 'Sync to live undone',
   'push.status.undoneBody': '{count} changes on your live site were put back as they were.',
+  'push.status.undoneBody.one': '1 change on your live site was put back as it was.',
   'push.status.failed': 'Couldn’t sync to live',
   'push.group.add': 'Will add ({count})',
   'push.group.change': 'Will change ({count})',
@@ -1531,6 +1535,16 @@ export const en = {
   'push.label.styles': 'Styles',
   'push.label.globalConfiguration': 'Global Configuration',
   'push.result.failed': 'Could not be written ({count})',
+  /** Sent with no answer back (WRITE_OUTCOME_UNKNOWN): the change may already be on the live site (#226). */
+  'push.result.unknown': 'May already be on your live site ({count})',
+  'push.result.unknownHint':
+    'Tracy sent these changes but got no answer, so they may have been made. Check them on your live site before you sync to live again, so nothing is made twice.',
+  /** An item's note: the live site's firewall refused its write before it was made (LIVE_BLOCKED). */
+  'push.note.liveBlocked':
+    'Your live site’s firewall or security plugin refused this change, so it was not written. Allow Tracy’s requests there, then sync to live again.',
+  /** An item's note: Tracy asked the live site and the change was not made (NOT_WRITTEN). */
+  'push.note.notWritten':
+    'Tracy checked your live site: this change was not made. Sync to live again to send it.',
   'push.undo.conflicts': 'Not put back: changed again on your live site ({count})',
   'push.undo.conflictsHint': 'Someone changed these on your live site after the sync. Their version stays.',
   'push.undo.failed': 'Could not be put back ({count})',
@@ -1545,6 +1559,7 @@ export const en = {
   'push.undoNow': 'Undo on live',
   'push.keep': 'Keep',
   'push.lastPush': 'Last sync to live {when}: {count} changes.',
+  'push.lastPush.one': 'Last sync to live {when}: 1 change.',
   'push.stage.syncing': 'Bring in what changed on your live site',
   'push.stage.comparing': 'List what Tracy changed',
   'push.stage.writing': 'Write the changes to your live site',
@@ -1566,7 +1581,16 @@ export const en = {
     'Over the limit of one sync to live, a removal you did not tick, or a change that needed one that failed. Preview again to send them.',
   'push.error.syncFailed':
     'Tracy could not first bring in what changed on your live site, so nothing was listed. Open Sync from live to see why.',
-  'push.error.notPushed': 'This sync to live can no longer be undone: Tracy keeps what it needs for 30 days.',
+  /** Undo answered NOT_PUSHED: nothing the push wrote is left to take back (none, or kept past 30 days). */
+  'push.error.notPushed':
+    'Tracy has nothing left to undo for this sync to live: nothing it wrote can be taken back, or what it kept for Undo has expired (after 30 days).',
+  /** The Sync to live screen's words for a live site's refusals (the Sync from live screen has its own). */
+  'push.error.liveBlocked':
+    'Your live site blocked Tracy’s request. Check its firewall or bot protection and allow Tracy’s requests, then try again.',
+  'push.error.livePhpTooOld':
+    'Your live site runs PHP {php}. Claude Cowork needs PHP {min} or newer. Ask your host to upgrade PHP, then try again.',
+  'push.error.livePhpTooOldPlain':
+    'Your live site runs a PHP version too old for Claude Cowork. Ask your host to upgrade PHP, then try again.',
   'push.failed': 'Sync to live did not finish ({error}).',
   /** Why a site has no Sync from live (`GET /api/sites/:key/sync` `why`). */
   'sync.why.not-imported': 'This site was built in Tracy, so there is no original site to sync from.',
@@ -1595,15 +1619,15 @@ export const en = {
   'sync.error.interruptedKept':
     'An earlier sync was stopped by a Tracy update while it was putting changes on this copy, and this copy has changed since. Tracy left it as it is. To undo that earlier sync, restore the backup point “Before restore” in Backups, then sync again.',
   'sync.error.liveBlocked':
-    'Your live site returned a blocked or non-engine response. Check its firewall or bot protection and allow Tracy’s requests.',
+    'Your original site blocked Tracy’s request. Check its firewall or bot protection and allow Tracy’s requests, then try again.',
   'sync.error.livePassword':
     'Your live site requires an HTTP password. Allow Tracy to access the Claude Cowork endpoint without that password, then try again.',
   /** The live site's PHP is below what Claude Cowork needs (LIVE_PHP_TOO_OLD), both versions known. */
   'sync.error.livePhpTooOld':
-    'Your live site runs PHP {php}. Claude Cowork needs PHP {min} or newer. Ask your host to upgrade PHP, then try again.',
+    'Your original site runs PHP {php}. Claude Cowork needs PHP {min} or newer. Ask your host to upgrade PHP, then try again.',
   /** LIVE_PHP_TOO_OLD from an answer that did not name the versions. */
   'sync.error.livePhpTooOldPlain':
-    'Your live site runs a PHP version too old for Claude Cowork. Ask your host to upgrade PHP, then try again.',
+    'Your original site runs a PHP version too old for Claude Cowork. Ask your host to upgrade PHP, then try again.',
   'sync.error.liveRateLimited':
     'Your live site is limiting requests. Wait before trying again; Tracy respects its Retry-After delay.',
   'sync.error.liveToken':

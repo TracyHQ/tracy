@@ -2742,6 +2742,8 @@ function createCallMemory(opts = {}) {
         slotShapes: /* @__PURE__ */ new Map(),
         reads: /* @__PURE__ */ new Map(),
         titles: /* @__PURE__ */ new Map(),
+        front: null,
+        drift: /* @__PURE__ */ new Set(),
         partKeys: /* @__PURE__ */ new Map(),
         receipts: /* @__PURE__ */ new Map(),
         wp: /* @__PURE__ */ new Map(),
@@ -3134,6 +3136,45 @@ ${typeof key.actor === "string" ? key.actor : ""}`;
       const kind = typeof address?.kind === "string" ? address.kind : "";
       if (kind === "" || !Number.isInteger(id) || id <= 0) return null;
       return session(sessionId).titles.get(`${kind}:${id}`) ?? null;
+    },
+    /**
+     * The presentation drift lines of `messages` this conversation has not been told yet (#258), which
+     * from now on count as told. A site's drift is permanent once built, and the Joomla Claude Cowork
+     * plugin repeats its whole list in every contract answer (`site-call.mjs` `driftSaidOnce`).
+     * @param {unknown} sessionId
+     * @param {string[]} messages
+     * @returns {string[]}
+     */
+    unsaidDrift(sessionId, messages) {
+      if (!named3(sessionId)) return messages;
+      const s = session(sessionId);
+      const fresh = messages.filter((m) => !s.drift.has(m));
+      for (const m of fresh) s.drift.add(m);
+      while (s.drift.size > MAX_TITLES) s.drift.delete(
+        /** @type {string} */
+        s.drift.values().next().value
+      );
+      return fresh;
+    },
+    /**
+     * The site's static front page, as a read found it (#257: `replace-wordpress.mjs` `onFront`).
+     * @param {unknown} sessionId
+     * @param {unknown} id - its post id
+     */
+    rememberFront(sessionId, id) {
+      const n = Number(id);
+      if (named3(sessionId) && Number.isInteger(n) && n > 0) session(sessionId).front = n;
+    },
+    /**
+     * Whether a write names the site's static front page: a WordPress `post` or `page` of that id. The
+     * write is then labelled the home page (`x-tracy-write-front`), whatever title its record keeps.
+     * @param {unknown} sessionId
+     * @param {{ kind?: unknown, id?: unknown }} address
+     */
+    isFront(sessionId, address) {
+      if (!named3(sessionId)) return false;
+      const front = session(sessionId).front;
+      return typeof front === "number" && (address?.kind === "post" || address?.kind === "page") && Number(address?.id) === front;
     },
     /**
      * A record's title Tracy read itself, by its kind and id (`site-call.mjs` `recordTitleOf`).
@@ -14742,6 +14783,10 @@ function chatRouteLine(routes) {
   if (!routes || routes.chat) return null;
   return `- Design systems through the chat: OFF (the operator's switch). When the customer asks to apply or switch to a design system \u2014 by name, from a design template, or by pasting a DESIGN.md \u2014 or for a whole new look of the site (redesign, restyle, "make the whole site look like \u2026"), change nothing, propose nothing, and ${routeSentence(routes.button)}; a new site gets its design when it is created (Add site). This is not an element edit: a button, a colour, a section or one page is still changed as asked, relative to the design system the site wears.`;
 }
+function libraryLine(routes) {
+  if (routes?.library !== false) return null;
+  return "- Design systems: OFF (the operator's switch): no design system is offered, read or previewed. A request to see design styles or a new look is answered from the finished templates published on Design templates, which the design library answers with at once: read nothing of the site first.";
+}
 var DESIGN_SYSTEM_DESCRIPTION = `The site's design system through the Design system tab's own door. action "read": what the site wears and whether its template can wear one. action "apply" {id}: put a library design template (refero:<uuid>) on the running site, no rebuild; toolbar Undo reverts it. CONFIRM_FIRST asks the customer first. Refused CHAT_DESIGN_SYSTEM_OFF while the operator keeps the chat route off.`;
 var DESIGN_SYSTEM_PARAMETERS = Object.freeze({
   type: "object",
@@ -16430,6 +16475,8 @@ async function siteContext(folder, label, detectPlatform2, presetId, options = {
   if (worn) lines.push(worn);
   const route = chatRouteLine(options?.chatDesign ?? null);
   if (route) lines.push(route);
+  const library = libraryLine(options?.chatDesign ?? null);
+  if (library) lines.push(library);
   const answered = answersLine(job);
   if (answered)
     lines.push(
@@ -18772,7 +18819,7 @@ async function runSiteCall(input) {
   if (n.action === "content.read") n = { ...n, params: withReadBudget(n.params) };
   if (expectedBodyRevision !== null && n.action === "content.update")
     n = { ...n, params: { ...n.params, expected_body_revision: expectedBodyRevision } };
-  if (n.action === "content.contract") answer = await contractCall(n);
+  if (n.action === "content.contract") answer = driftSaidOnce(await contractCall(n), memory, sessionId);
   else if (wholeGroup !== null && n.action === "content.delete") answer = await deleteGroup(n, wholeGroup);
   else if (BUSY_RETRY_ACTIONS.has(n.action) && platform === "joomla" && memory)
     answer = await memory.flight(label, () => sendLost(n.action, n.params));
@@ -19829,6 +19876,33 @@ function judgeWholeBody({
       // 🔒 WHAT THIS CONVERSATION READ, NOT WHAT THE SITE HOLDS: the site may have changed since.
       error: read.theme !== null ? `${field} is ${chars(length)} chars; ${what}'s theme file holds ${chars(baseline)}` : baseline > read.baseline ? `${field} is ${chars(length)} chars; ${what} holds ${chars(baseline)} now` : `${field} is ${chars(length)} chars; this conversation last read ${what} at ${chars(baseline)}`
     }
+  };
+}
+function driftSaidOnce(answer, memory, sessionId) {
+  if (!isRecord12(answer) || !Array.isArray(answer.warnings) || typeof memory?.unsaidDrift !== "function")
+    return answer;
+  const isDrift = (w) => isRecord12(w) && w.code === "PRESENTATION_DRIFT" && typeof w.message === "string";
+  const drift = answer.warnings.filter(isDrift);
+  if (drift.length === 0) return answer;
+  const fresh = new Set(
+    memory.unsaidDrift(
+      sessionId,
+      drift.map((w) => w.message)
+    )
+  );
+  const repeated = drift.filter((w) => !fresh.has(w.message)).length;
+  if (repeated === 0) return answer;
+  return {
+    ...answer,
+    warnings: [
+      ...answer.warnings.filter((w) => !isDrift(w) || fresh.has(w.message)),
+      {
+        code: "PRESENTATION_DRIFT",
+        severity: "warning",
+        said: repeated,
+        message: `${repeated} presentation drift ${repeated === 1 ? "line" : "lines"} already said in this conversation: where the site's design differs from its quickstart; unchanged, and not about this call.`
+      }
+    ]
   };
 }
 async function recordTitleOf(send, platform, params) {
@@ -24664,13 +24738,57 @@ async function readHidden(call) {
 
 // src/host/chat-design-switch.mjs
 async function designRoutesAt(origin, fetchImpl) {
-  const on = await switchesAtTracy(origin, { ...fetchImpl ? { fetch: fetchImpl } : {}, timeoutMs: 2500 });
-  return { chat: on?.(CHAT_DS_SWITCH) === true, button: on === null ? true : on(BUTTON_SWITCH) };
+  const [on, library] = await Promise.all([
+    switchesAtTracy(origin, { ...fetchImpl ? { fetch: fetchImpl } : {}, timeoutMs: 2500 }),
+    libraryShownAt(origin, fetchImpl ?? fetch)
+  ]);
+  return { chat: on?.(CHAT_DS_SWITCH) === true, button: on === null ? true : on(BUTTON_SWITCH), library };
+}
+async function libraryShownAt(origin, fetchImpl) {
+  if (!origin) return false;
+  try {
+    const response = await fetchImpl(new URL("/api/design-systems", origin).href, {
+      headers: { accept: "application/json" },
+      signal: AbortSignal.timeout(2500)
+    });
+    if (!response.ok) return false;
+    return (await response.json())?.shown === true;
+  } catch {
+    return false;
+  }
 }
 
 // src/host/call-origin.mjs
+import { lookup } from "node:dns/promises";
 function callOrigin(origin, publicOrigin, internal) {
   return internal && /^https?:\/\/[^/\s]+$/.test(internal) && origin === publicOrigin ? internal : origin;
+}
+var FLEET_TRACY_WEB = "http://tracy-web:8080";
+function createInternalOrigin({
+  configured,
+  fleet,
+  resolve = (host) => lookup(host),
+  now = Date.now
+}) {
+  let held = null;
+  return async () => {
+    const named3 = configured();
+    if (named3) return named3;
+    if (!fleet()) return null;
+    if (held && now() - held.at < (held.origin ? 3e5 : 3e4)) return held.origin;
+    let origin = null;
+    try {
+      await Promise.race([
+        resolve("tracy-web"),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("slow")), 1e3).unref?.())
+      ]);
+      origin = FLEET_TRACY_WEB;
+    } catch {
+      origin = null;
+    }
+    held = { at: now(), origin };
+    return origin;
+  };
 }
 
 // src/host/site-notes.mjs
@@ -24734,7 +24852,10 @@ function nextId(notes) {
 }
 var PAGE_BLOCK = /```tracy-(?:element|page)\n[\s\S]*?(?:\n```|$)/g;
 function withoutPageBlocks(text6) {
-  return text6.replace(PAGE_BLOCK, "").trim();
+  const blocks = [...text6.matchAll(PAGE_BLOCK)];
+  const last = blocks.at(-1);
+  const typed = last === void 0 ? text6 : text6.slice(0, (last.index ?? 0) + last[0].length);
+  return typed.replace(PAGE_BLOCK, "").trim();
 }
 var UNSPACED = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/gu;
 var MIN_UNSPACED_SAID = 4;
@@ -26468,6 +26589,7 @@ function slotChoices(slots) {
   });
   return { slots: lines, ...slots.length > SLOTS_LISTED ? { moreSlots: slots.length - SLOTS_LISTED } : {} };
 }
+var SLOT_OR_LIBRARY = 'On this quickstart site a picture placed on a page goes into an image slot: media.draw {prompt, slot:"<image slot key>"}. A picture kept in the media library only takes its own shape: media.draw {prompt, aspect:"<w>:<h>"}.';
 async function slotRefusal({ code, slot, imageSlots }) {
   let found = [];
   if (imageSlots) {
@@ -26482,12 +26604,12 @@ async function slotRefusal({ code, slot, imageSlots }) {
     return {
       ok: false,
       code,
-      error: slot === null ? 'On this quickstart site a picture goes into an image slot: media.draw {prompt, slot:"<image slot key>"}. content.read names the slot of a picture (field.slotKey), or content.contract {operation:"inspect", slots:"image"} lists them.' : `${slot} is not an image slot of this site's contract; list them with content.contract {operation:"inspect", slots:"image"}`
+      error: slot === null ? `${SLOT_OR_LIBRARY} content.read names the slot of a picture (field.slotKey), or content.contract {operation:"inspect", slots:"image"} lists them.` : `${slot} is not an image slot of this site's contract; list them with content.contract {operation:"inspect", slots:"image"}`
     };
   return {
     ok: false,
     code,
-    error: slot === null ? 'On this quickstart site a picture goes into an image slot: media.draw {prompt, slot:"<image slot key>"}.' : `${slot} is not an image slot of this site.`,
+    error: slot === null ? SLOT_OR_LIBRARY : `${slot} is not an image slot of this site.`,
     ...slotChoices(found),
     next: slot === null ? "Take the slot the picture replaces from slots and call media.draw again with it: the shape comes with the slot, so no aspect or like." : 'Call media.draw again with one of slots: the shape comes with the slot. None fits: content.contract {operation:"inspect", slots:"image", page:"<route>"}.'
   };
@@ -26552,7 +26674,8 @@ async function mediaDraw({
       error: "replaces is for EmDash sites: here the shape is a contract image slot (slot) or a picture on the site (like)."
     };
   }
-  if (slotOnly && plan.slot === null) return slotRefusal({ code: "SLOT_REQUIRED", slot: null, imageSlots });
+  if (slotOnly && plan.slot === null && plan.like === null && plan.aspect === null)
+    return slotRefusal({ code: "SLOT_REQUIRED", slot: null, imageSlots });
   if (!door?.imageModel)
     return {
       ok: false,
@@ -26603,6 +26726,14 @@ async function mediaDraw({
       next: `${emdashPlacedNext(id, url, picture.path)}${id ? ` To look at it: media.scan {id:"${id}"}.` : ""} ${DRAWN_RULES}`
     });
   }
+  if (slotOnly && plan.slot === null)
+    return said({
+      ok: true,
+      path: picture.path,
+      width: picture.width,
+      height: picture.height,
+      next: `The picture is in the media library as ${picture.path}, placed on no page. To show a picture in an image slot, draw it with that slot (media.draw {prompt, slot}): the slot brings the shape its apply checks. ${DRAWN_RULES}`
+    });
   return said({
     ok: true,
     path: picture.path,
@@ -37216,11 +37347,11 @@ function storeUnits(shape, raw) {
   const v2 = views(raw);
   return /[\p{L}\p{N}]/u.test(v2.cased) ? [{ ...v2, unitKind: "plain", tag: "p", block: null, slot: null }] : [];
 }
-function postStores(item, { id, family, lang }) {
+function postStores(item, { id, family, lang, front = false }) {
   const title = String(item.post_title ?? item.title ?? "");
   const body = item.post_content ?? item.content;
   const excerpt = item.post_excerpt ?? item.excerpt;
-  const name2 = title ? `"${title.slice(0, 40)}"` : `post ${id}`;
+  const name2 = front ? "the home page" : title ? `"${title.slice(0, 40)}"` : `post ${id}`;
   const group = `post:${id}`;
   const base3 = {
     kind: (
@@ -37579,6 +37710,7 @@ function pageFactsOf(html, status = 200) {
     lang: r.lang,
     pageId: idTok ? Number(idTok[1]) : null,
     blog: body.includes("blog"),
+    front: body.includes("home"),
     theme,
     themeVersion,
     posts: [...posts],
@@ -37770,6 +37902,17 @@ async function readStores(read, page, { site, lang, theme = false, posts: extraP
         });
     });
   const postIds = /* @__PURE__ */ new Set([...page?.pageId ? [page.pageId] : [], ...page?.posts ?? [], ...extraPosts]);
+  const frontRead = page?.front === true && page.pageId ? Promise.resolve(page.pageId) : !site ? Promise.resolve(null) : Promise.all([
+    read("content.get", { kind: "option", key: "page_on_front" }),
+    read("content.get", { kind: "option", key: "show_on_front" })
+  ]).then(
+    ([on, shows]) => {
+      const value = (a) => isRecord17(a) && a.ok === true && isRecord17(a.item) ? a.item.value : null;
+      const id = positive2(value(on));
+      return id > 0 && value(shows) === "page" ? id : null;
+    },
+    () => null
+  );
   let postsPage = null;
   if (page?.blog)
     wave1.push(async () => {
@@ -37779,10 +37922,16 @@ async function readStores(read, page, { site, lang, theme = false, posts: extraP
   for (const id of postIds)
     wave1.push(async () => {
       const got = await read("content.get", { kind: "post", id });
+      const front = await frontRead;
       if (cut4(got)) cutWhat.push(`post ${id}`);
       else if (ok(got) && isRecord17(got.item))
         stores.push(
-          ...postStores(got.item, { id, family: id === page?.pageId ? "page" : "post", lang: null })
+          ...postStores(got.item, {
+            id,
+            family: id === page?.pageId ? "page" : "post",
+            lang: null,
+            front: id === front
+          })
         );
     });
   for (const id of page?.forms ?? [])
@@ -37853,7 +38002,7 @@ async function readStores(read, page, { site, lang, theme = false, posts: extraP
           if (!isRecord17(row) || row.status !== "publish" || typeof row.content !== "string") continue;
           const id = positive2(row.id);
           if (id === 0 || postIds.has(id)) continue;
-          stores.push(...postStores(row, { id, family: "site", lang }));
+          stores.push(...postStores(row, { id, family: "site", lang, front: id === await frontRead }));
         }
         if (got.items.length < SITE_PAGE_ROWS) return;
         if (n === SITE_PAGES_MAX - 1) capped = true;
@@ -38117,6 +38266,7 @@ async function readStores(read, page, { site, lang, theme = false, posts: extraP
       scanned,
       capped,
       postsPage,
+      front: await frontRead,
       identity: identity2
     }
   };
@@ -39300,6 +39450,7 @@ async function replaceOnWordPress(deps) {
       /** @type {WordPressPlan} */
       located
     );
+    if (typeof located0.set.front === "number") deps.onFront?.(located0.set.front);
     const rewrite = rewriteRecords(located0.results, located0.storeById, {
       identity: located0.set.identity,
       contractDoor: located0.contractDoor
@@ -43667,6 +43818,8 @@ async function runReplace(input) {
       confirmed,
       removes: latestCustomerWords(events),
       bound: input.contractBound === true || memory.learned(label).contractBound,
+      // The front page the read found: its writes are named as the home page's (#257).
+      onFront: (id) => memory.rememberFront?.(sessionId, id),
       // The identity a token prints is set through the contract where the surface has that door.
       contractDoor: key === "wordpress-contract"
     });
@@ -45285,16 +45438,16 @@ var UPLOAD_CALL = "media.upload {file, alt?} (Files-tab name) | {attachment, alt
 var DRAW_CALL = {
   open: ' \xB7 media.draw {prompt, like?:"<a site picture>" | aspect?:"16/10"}',
   "joomla-slot": ' \xB7 media.draw {prompt, slot:"module-441.8"}',
-  "wordpress-slot": ' \xB7 media.draw {prompt, slot:"home.hero.img"}',
+  "wordpress-slot": ' \xB7 media.draw {prompt, slot:"home.hero.img" | aspect (library only)}',
   emdash: ' \xB7 media.draw {prompt, replaces:{collection, id, field} | aspect:"<w>:<h>" (a new picture)}'
 };
-var SLOT_KEY_FROM = ' (key: inspect {slots:"image", page}; the slot sets the shape: no aspect, like or media.scan)';
+var SLOT_KEY_FROM = ' (key: inspect {slots:"image", page}; a slot sets its shape: no like/media.scan)';
 var picturesBlock = (mode) => {
   const emdash = mode === "emdash";
   const slot = mode === "joomla-slot" || mode === "wordpress-slot";
   const mediaDelete = emdash ? "" : " \xB7 media.delete: preview, confirm; no shell/files; report refusals.";
   const style = " \xB7 style: each prop's value, rule and var(--token) source";
-  const effects = emdash ? "Effects: media.draw adds one picture per call: write its id with tracy_emdash content_update." : slot ? "Effects: media.draw adds ONE picture per call: apply its path to the slot." : "Effects: media.draw adds ONE picture per call: write its path where it belongs.";
+  const effects = emdash ? "Effects: media.draw adds one picture per call: write its id with tracy_emdash content_update." : slot ? "Effects: media.draw adds ONE picture per call: apply its path." : "Effects: media.draw adds ONE picture per call: write its path where it belongs.";
   return `page.look \xB7 media.scan \xB7 media.draw \xB7 media.upload: a page's look, the site's pictures. Use when asked about either. Not for words (page.text). Call page.look {path:"/", style?:{text|selector, nth?:0 = the first, props?, viewport?}} \xB7 media.scan {${emdash ? "limit?:\u2264100 | id" : "limit?:\u2264100"}}${DRAW_CALL[mode]}${slot ? SLOT_KEY_FROM : ""} \xB7 ${UPLOAD_CALL}${mediaDelete}. ${emdash ? `Returns {file, url}${style} \xB7 {id, alt, url}, id: the picture \xB7 {id, url}` : `Returns {file, url, description?}: follow its next${style} \xB7 the largest images {path, url, width, height} \xB7 {path}`}. ${effects} Refusals: NO_BROWSER \u2192 page.text.`;
 };
 var wordpressWriteBlock = (readBack, replace = false) => (
@@ -46959,8 +47112,12 @@ function actorHeader(plan) {
 }
 var bySession = /* @__PURE__ */ new Map();
 var latest = null;
-function apiOriginOf(publicOrigin) {
-  return callOrigin(publicOrigin, gatewaySetting("MCP_TRACY_ORIGIN"), gatewaySetting("MCP_TRACY_API_ORIGIN"));
+var internalOrigin = createInternalOrigin({
+  configured: () => gatewaySetting("MCP_TRACY_API_ORIGIN"),
+  fleet: () => process.env.MCP_TRACY_FLEET?.trim() === "1"
+});
+async function apiOriginOf(publicOrigin) {
+  return callOrigin(publicOrigin, gatewaySetting("MCP_TRACY_ORIGIN"), await internalOrigin());
 }
 function gatewaySetting(name2) {
   const value = process.env[name2]?.trim() || null;
@@ -47047,7 +47204,7 @@ function withTurn(headers, sessionId) {
   const turn = turnIdOf(sessionId);
   if (turn !== null) headers["x-tracy-turn"] = turn;
 }
-async function applyDoor(config, plan, key, action, params, target, label = null, sessionId = null, preset = null, title = null) {
+async function applyDoor(config, plan, key, action, params, target, label = null, sessionId = null, preset = null, title = null, front = false) {
   const headers = plan.as === "prompter" ? (
     // The signature is added per send below, never here: one header for the whole call is V5S-1.
     { "content-type": "application/json", accept: "application/json" }
@@ -47057,6 +47214,7 @@ async function applyDoor(config, plan, key, action, params, target, label = null
   withTurn(headers, sessionId);
   if (preset) headers["x-tracy-preset"] = preset;
   if (title) headers["x-tracy-write-title"] = encodeURIComponent(title.slice(0, 120));
+  if (front) headers["x-tracy-write-front"] = "1";
   const comment = answeringComment.getStore();
   const sendOnce = () => applyDoorOnce(
     config,
@@ -47096,7 +47254,7 @@ async function applyDoorOnce(config, plan, key, action, params, target, headers,
   let text6;
   try {
     res = await (config.fetch ?? fetch)(
-      `${apiOriginOf(plan.origin)}/api/sites/${encodeURIComponent(key)}/apply`,
+      `${await apiOriginOf(plan.origin)}/api/sites/${encodeURIComponent(key)}/apply`,
       {
         method: "POST",
         headers,
@@ -48206,7 +48364,20 @@ function apply(ctx, config = {}) {
     const writes = relayWrites(action, params);
     if (writes) memory.invalidateSite(site);
     const title = writes ? memory.titleOf(sessionId, params) : null;
-    const answer = await applyDoor(config, plan, key, action, params, target, label, sessionId, preset, title);
+    const front = writes && memory.isFront(sessionId, params);
+    const answer = await applyDoor(
+      config,
+      plan,
+      key,
+      action,
+      params,
+      target,
+      label,
+      sessionId,
+      preset,
+      title,
+      front
+    );
     if (writes) memory.invalidateSite(site);
     if (sessionId && doorTakesLease(action, params) && !isLeaseBusy(answer) && !isTurnStopped(answer))
       leaseHolders.set(sessionId, { key, label });
@@ -50076,7 +50247,8 @@ ${text6}`);
             webroot,
             // The folder the site's Claude Cowork plugin takes an upload into differs by CMS.
             platform: facts.platform === "wordpress" || facts.platform === "joomla" ? facts.platform : await detectPlatform(webroot),
-            // A bound WordPress site: a picture lands in an image slot or nowhere.
+            // A bound WordPress site: a picture placed on a page lands in an image slot; one drawn with a
+            // shape of its own is kept in the media library only (#255).
             slotOnly: facts.platform === "wordpress" && facts.contractDoor === true,
             door: pictureDoor(process.env),
             draw: drawPicture,

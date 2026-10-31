@@ -141,8 +141,9 @@ services:
       DSH_PASSWORDS_ENV_FILE: /desk-home/dsh-passwords.env
       TRACY_DOCKER_HOST: tcp://docker-proxy:2375
       # Where the site agent's calls to tracy-web go when this host can reach it without the public
-      # edge (#208): empty keeps MCP_TRACY_ORIGIN, the public origin, for calls too. Set
-      # HOST_TRACY_API_ORIGIN in host-dsh.env to a bare http(s) origin dsh can reach on this host.
+      # edge (#208). Empty: dsh uses http://tracy-web:8080 while that name resolves on its egress
+      # network (the server stack joins tracy-web to it), else MCP_TRACY_ORIGIN. Set
+      # HOST_TRACY_API_ORIGIN in host-dsh.env only for an address dsh cannot find that way.
       MCP_TRACY_API_ORIGIN: ${HOST_TRACY_API_ORIGIN:-}
       # dsh refuses any Host header not on this list, so the public hostname is named here and
       # not at the proxy. 127.0.0.1:51700 is the host's own loopback address — the one the

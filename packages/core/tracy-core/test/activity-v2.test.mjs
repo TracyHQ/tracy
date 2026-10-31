@@ -174,6 +174,15 @@ test('the Description says the result from the recorded key, or the request labe
     }
   })
   assert.equal(describe(byId, t).text, 'Updated article 551')
+  // #257: the site's static front page reads as the home page, never by its record's (demo) title.
+  const front = item({
+    description: {
+      key: 'resource.op',
+      params: { op: 'update', type: 'post', id: '97', title: 'Read the latest News + Blog', front: true },
+      isRequestOnly: false
+    }
+  })
+  assert.equal(describe(front, t).text, 'Updated the home page')
   const summary = item({
     description: { key: 'effects.summary', params: {}, isRequestOnly: false },
     effects: effects({

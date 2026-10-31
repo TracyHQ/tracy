@@ -2683,8 +2683,9 @@ const SYNC_SCRIPT = new URL(
 
 test('syncProgressLine keeps the read line the real script prints, and the spaced form of older scripts', async () => {
   const script = await readFile(SYNC_SCRIPT, 'utf8')
+  // #219: the read's answer goes to python on stdin (an argv of a large answer hit "Argument list too long").
   const m =
-    /python3 -c '(import json,sys\nr = json\.loads\(sys\.argv\[1\]\)\nprint\(json\.dumps\(\{"ok": True, "liveReadAt"[^']*)' "\$pulled" >&2/.exec(
+    /printf '%s' "\$pulled" \| python3 -c '(import json,sys\nr = json\.load\(sys\.stdin\)\nprint\(json\.dumps\(\{"ok": True, "liveReadAt"[^']*)' >&2/.exec(
       script
     )
   assert.ok(m, 'webroot-sync.sh prints the read timing line with the snippet this test runs')
@@ -2695,7 +2696,10 @@ test('syncProgressLine keeps the read line the real script prints, and the space
     seconds: 9.8,
     timing: { database: 7.6 }
   }
-  const line = execFileSync('python3', ['-c', m[1], JSON.stringify(answer)], { encoding: 'utf8' }).trim()
+  const line = execFileSync('python3', ['-c', m[1]], {
+    input: JSON.stringify(answer),
+    encoding: 'utf8'
+  }).trim()
   assert.equal(syncProgressLine(line), line)
   const spaced =
     '{"ok": true, "liveReadAt": "x", "mode": "incremental", "seconds": 2, "timing": {"database": 1.5}}'

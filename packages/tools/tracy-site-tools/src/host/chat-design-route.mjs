@@ -61,7 +61,7 @@ export function chatRouteRefusal(button) {
  * The site context's line while the chat route is off, or null while it is on (the
  * `tracy-design-inspiration` skill then leads, with `tracy_design_system`). It names no tool: a
  * deferred tool must never be named where it is still hidden (`deferred-tools.mjs`).
- * @param {{ chat: boolean, button: boolean } | null | undefined} routes
+ * @param {{ chat: boolean, button: boolean, library?: boolean } | null | undefined} routes
  * @returns {string | null}
  */
 export function chatRouteLine(routes) {
@@ -71,6 +71,20 @@ export function chatRouteLine(routes) {
     `change nothing, propose nothing, and ${routeSentence(routes.button)}; a new site gets its design when it is created (Add site). ` +
     'This is not an element edit: a button, a colour, a section or one page is still changed as asked, relative to the design system the site wears.'
   )
+}
+
+/**
+ * 🔒 THE LIBRARY'S STATE BEFORE THE FIRST STEP (#259, survey 30/10/2026). With the design-system library
+ * off, a "show me design styles" turn followed the skill's "Step 1 — Read the site" — five reads, ~48 s —
+ * before the one call that decides what can be offered refused DESIGN_SYSTEMS_OFF. The site context says
+ * it now, as it says the chat route's; null while the library is on or its state is unknown here. It
+ * names no tool, for the same reason as {@link chatRouteLine}.
+ * @param {{ library?: boolean } | null | undefined} routes
+ * @returns {string | null}
+ */
+export function libraryLine(routes) {
+  if (routes?.library !== false) return null
+  return "- Design systems: OFF (the operator's switch): no design system is offered, read or previewed. A request to see design styles or a new look is answered from the finished templates published on Design templates, which the design library answers with at once: read nothing of the site first."
 }
 
 /** `tracy_design_system`'s description: within 400 characters of `name:` (`scripts/build-agent-tools.mjs`). */

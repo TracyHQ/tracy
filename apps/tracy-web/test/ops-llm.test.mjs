@@ -368,6 +368,23 @@ test('model aliases survive catalog refresh and require an admin', opts, async (
   await send('PUT', path, admin, { aliases: { 'deepseek-flash': '' } })
   const cleared = (await (await get('/api/ops/llm', admin)).json()).providers[0]
   assert.deepEqual(cleared.modelAliases, {})
+  // #249: a display name that names another maker than the route's is refused, by model, and not saved.
+  const misnamed = await send('PUT', path, admin, {
+    aliases: { 'deepseek-flash': 'Claude Opus 5.5' },
+    providerAlias: 'OpenAI'
+  })
+  assert.equal(misnamed.status, 400)
+  assert.deepEqual(await misnamed.json(), {
+    error: 'ALIAS_NAMES_ANOTHER_MAKER',
+    models: [{ model: 'deepseek-flash', alias: 'Claude Opus 5.5', word: 'claude' }],
+    providerAlias: { alias: 'OpenAI', word: 'openai' }
+  })
+  const kept = (await (await get('/api/ops/llm', admin)).json()).providers[0]
+  assert.deepEqual(kept.modelAliases, {})
+  assert.equal(
+    (await send('PUT', path, admin, { aliases: { 'deepseek-flash': 'DeepSeek Fast' } })).status,
+    200
+  )
 })
 
 async function qualityBookHarness(t) {

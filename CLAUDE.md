@@ -137,7 +137,7 @@ pnpm profiles           # link tch/profiles/* plugin trees from the workspace
 - **Commit messages, PR titles and PR descriptions are English**, whatever language you chat in. `scripts/check-english-commits.mjs` also runs as a local `commit-msg` hook for early feedback. The mandatory enforcement is the required `language-policy` PR check, configured after publication. A local hook alone cannot prevent a push.
 - **`vendor/`** is others' code: keep its comments as they are; don't back-translate.
 - **MUST READ** before writing any on-screen text: [`docs/references/vocabulary.md`](docs/references/vocabulary.md) — canonical vocabulary, banned words with replacements, and "names that are NOT displayed are vocabulary too".
-- **MUST READ** before editing CSS of a server-rendered page (`apps/tracy-web/src/lib/page-shell.js`): [`docs/references/page-shell-tokens.md`](docs/references/page-shell-tokens.md) — such pages **can't load `tokens.css`**, so tokens are redeclared by hand. Variable names match `tokens.css`; values are the fallback. `--primary` is terracotta `#bf5b3d` in both.
+- **MUST READ** before editing CSS of a server-rendered page (`apps/tracy-web/src/lib/page-shell.js`): [`docs/references/page-shell-tokens.md`](docs/references/page-shell-tokens.md) — such pages **can't load `tokens.css`**, so tokens are redeclared by hand. Variable names match `tokens.css`; values are the fallback. `--primary` is terracotta `#b75436` in both (one step darker than the brand mark `#bf5b3d`, for WCAG AA, #228).
 
 ## 8. UI
 

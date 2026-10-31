@@ -2198,3 +2198,63 @@ test('confirm-count weighs only the places no expect counts: a counted pair besi
   assert.equal(overlap.out.change, 1)
   assert.deepEqual(overlap.site.writes(), [])
 })
+
+// #257 (survey 29/10/2026): a quickstart's front page record keeps the template demo's title, which no
+// visitor sees ("Read the latest News + Blog"), and a home page hero edit was named after it in the
+// receipt, the card under the reply and Site changes. The front page is the home page.
+test('a write to the static front page is named the home page, whatever title its record keeps (#257)', async () => {
+  const home = SITE.posts.find((/** @type {any} */ p) => p.ID === 42)
+  const demoTitled = () => component({ posts: [{ ...home, post_title: 'Read the latest News + Blog' }] })
+  // The home page as a page read that does not say `home` (the options must answer instead).
+  const unsaid = { ...PAGES, '/': PAGES['/'].replace('<body class="home ', '<body class="') }
+  assert.notEqual(unsaid['/'], PAGES['/'])
+  /** @param {Record<string, unknown>} params @param {(site: any) => any} [door] @param {Record<string, string>} [pages] */
+  const replace = async (params, door = (site) => site.door, pages = PAGES) => {
+    const site = demoTitled()
+    /** @type {number[]} */
+    const fronts = []
+    const out = /** @type {any} */ (
+      await replaceOnWordPress({
+        plan: /** @type {any} */ (planReplace(params)),
+        read: door(site),
+        write: door(site),
+        pageHtml: pagesOf(pages),
+        mintApplyId: () => 'replace-front-1',
+        onFront: (id) => fronts.push(id),
+        verify: false
+      })
+    )
+    return { out, fronts }
+  }
+  // The home page read: its body says `home`, so no option is asked.
+  const page = await replace({
+    find: 'Building the groundwork for next-generation plants',
+    replace: 'Built for the way you work',
+    path: '/'
+  })
+  assert.equal(page.out.ok, true, JSON.stringify(page.out))
+  assert.deepEqual(page.fronts, [42])
+  assert.match(JSON.stringify(page.out), /the home page, its content/)
+  assert.doesNotMatch(JSON.stringify(page.out), /Read the latest News/)
+  // Site-wide, the page read saying nothing: `page_on_front` while `show_on_front` is `page`.
+  const all = await replace(
+    { find: 'Design–build main contractor', replace: 'Design–build contractor', all: true },
+    undefined,
+    unsaid
+  )
+  assert.equal(all.out.ok, true, JSON.stringify(all.out))
+  assert.deepEqual(all.fronts, [42])
+  assert.doesNotMatch(JSON.stringify(all.out), /Read the latest News/)
+  // A site that shows its latest posts on the front: page_on_front left over names nothing.
+  const posts = await replace(
+    { find: 'Design–build main contractor', replace: 'Design–build contractor', all: true },
+    (site) => async (/** @type {string} */ action, /** @type {any} */ params) =>
+      action === 'content.get' && params.kind === 'option' && params.key === 'show_on_front'
+        ? { ok: true, item: { value: 'posts' } }
+        : site.door(action, params),
+    unsaid
+  )
+  assert.equal(posts.out.ok, true, JSON.stringify(posts.out))
+  assert.deepEqual(posts.fronts, [])
+  assert.match(JSON.stringify(posts.out), /Read the latest News/)
+})

@@ -481,7 +481,7 @@ test('creation answers carry no action buttons: copy, thumbs and time only (Akem
   assert.match(done.html, /<div class="tv-help-me">How do I add a page\?<\/div>/)
 })
 
-test('conversation mode shows the three coloured start cards in one row above the composer', () => {
+test('conversation mode shows the three coloured start cards in one row above the composer', async () => {
   const { registered, nodes, notifyNodes } = applied({ onboarding: true, subagent: false })
   const Composer = registered.get('conversation.composer.bar').component
   const mounted = lib.mount(lib.h(Composer, { sessionId: 'cards' }))
@@ -533,7 +533,14 @@ test('conversation mode shows the three coloured start cards in one row above th
     return true
   }
   try {
-    for (const card of cards()) lib.act(() => card.click())
+    // Create and Import first ask for the chat's draft (#203); its latest question is still being
+    // answered here, so there is no settled request and each opens the plain step, as before. One
+    // press at a time: each is let through before the next.
+    for (const [at, card] of cards().entries()) {
+      lib.act(() => card.click())
+      for (let i = 0; i < 20 && events.length <= at; i++)
+        await new Promise((resolve) => setTimeout(resolve, 0))
+    }
   } finally {
     window.dispatchEvent = dispatch
   }
@@ -543,6 +550,65 @@ test('conversation mode shows the three coloured start cards in one row above th
     { action: 'templates', question: 'Can Tracy edit my Joomla site?' },
     { action: 'import', question: 'Can Tracy edit my Joomla site?' }
   ])
+  mounted.stop()
+})
+
+test('the row’s Create carries the conversation’s prepared draft to Add site, as the answer’s action does (#203)', async () => {
+  const { registered, nodes, notifyNodes } = applied({ onboarding: true, subagent: false })
+  const Composer = registered.get('conversation.composer.bar').component
+  const mounted = lib.mount(lib.h(Composer, { sessionId: 'cards' }))
+  nodes.push({
+    key: 'q1',
+    kind: lib.HELP_KIND,
+    data: row({
+      sessionId: 'tracy-onboarding-help',
+      rowId: 'q1',
+      userTurnId: '41',
+      question: 'Create a WordPress website for May Bakery in Da Nang. Vietnamese, minimalist.',
+      answer: 'I can set that up.'
+    })
+  })
+  notifyNodes()
+  const asked = []
+  const events = []
+  const previousFetch = globalThis.fetch
+  const dispatch = window.dispatchEvent
+  globalThis.fetch = async (url, init) => {
+    asked.push({ url: String(url), body: init?.body ? JSON.parse(init.body) : null })
+    return new Response(
+      JSON.stringify({
+        draft: {
+          version: 1,
+          sourceRevision: '41',
+          intent: 'create',
+          platform: 'wordpress',
+          answersByFeed: { 'site.name': 'May Bakery', 'site.languages': ['vi-vn'] }
+        }
+      })
+    )
+  }
+  window.dispatchEvent = (event) => {
+    if (event.type === 'tracy:onboarding-start') events.push(event.detail)
+    return true
+  }
+  try {
+    const create = mounted.container.querySelector('.tv-onboarding-start .tv-start-card')
+    lib.act(() => create.click())
+    for (let i = 0; i < 20 && events.length === 0; i++) await new Promise((resolve) => setTimeout(resolve, 0))
+  } finally {
+    globalThis.fetch = previousFetch
+    window.dispatchEvent = dispatch
+  }
+  assert.deepEqual(
+    asked
+      .filter((a) => a.url.includes('onboarding-draft'))
+      .map((a) => [a.url, a.body?.intent, a.body?.sourceRevision]),
+    [['/api/assistant/onboarding-draft', 'create', '41']]
+  )
+  assert.equal(events.length, 1)
+  assert.equal(events[0].action, 'create')
+  assert.equal(events[0].platform, 'wordpress')
+  assert.equal(events[0].chatDraft?.answersByFeed?.['site.name'], 'May Bakery')
   mounted.stop()
 })
 
