@@ -79,7 +79,7 @@ export function chatRouteLine(routes) {
  * before the one call that decides what can be offered refused DESIGN_SYSTEMS_OFF. The site context says
  * it now, as it says the chat route's; null while the library is on or its state is unknown here. It
  * names no tool, for the same reason as {@link chatRouteLine}.
- * @param {{ library?: boolean } | null | undefined} routes
+ * @param {{ chat?: boolean, button?: boolean, library?: boolean } | null | undefined} routes
  * @returns {string | null}
  */
 export function libraryLine(routes) {

@@ -184,7 +184,7 @@ test('a slow tab shows the bar after 250 ms, keeps it while loading, then fades 
   assert.equal(loading.header, SITE, 'the header (site picker) stays while loading')
   assert.equal(loading.text.trim(), SITE, 'under the header, nothing')
   assert.equal(loading.paint, loading.primary, 'painted in --primary')
-  assert.match(loading.primary, /oklch\(0\.588 0\.136 37\.4\)|rgb\(191, 91, 61\)/, '--primary is terracotta')
+  assert.match(loading.primary, /oklch\(0\.565 0\.136 37\.4\)|rgb\(183, 84, 54\)/, '--primary is terracotta')
   assert.deepEqual(
     {
       top: loading.place.top,
