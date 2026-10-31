@@ -2696,7 +2696,10 @@ test('syncProgressLine keeps the read line the real script prints, and the space
     seconds: 9.8,
     timing: { database: 7.6 }
   }
-  const line = execFileSync('python3', ['-c', m[1]], { input: JSON.stringify(answer), encoding: 'utf8' }).trim()
+  const line = execFileSync('python3', ['-c', m[1]], {
+    input: JSON.stringify(answer),
+    encoding: 'utf8'
+  }).trim()
   assert.equal(syncProgressLine(line), line)
   const spaced =
     '{"ok": true, "liveReadAt": "x", "mode": "incremental", "seconds": 2, "timing": {"database": 1.5}}'

@@ -846,6 +846,83 @@ test(
 )
 
 test(
+  'Help: an answer the asker stopped, or the provider cut, keeps its words and says how it ended on restore (#206)',
+  opts,
+  async () => {
+    const { pool } = db
+    await twoTenants(pool)
+    const config = readConfig(env)
+    // The provider says two words, then: fails (cut), or waits until the stream is aborted (stopped).
+    let mode = 'cut'
+    const model = {
+      async *stream({ signal }) {
+        yield { model: 'fake-1' }
+        yield { text: 'Every change' }
+        if (mode === 'cut') throw Object.assign(new Error('provider gone'), { code: 'UPSTREAM' })
+        await new Promise((resolve) => signal.addEventListener('abort', resolve, { once: true }))
+        throw Object.assign(new Error('aborted'), { code: 'ABORTED' })
+      }
+    }
+    const app = assistantRoutes({ pool, config, readers, model, log: { warn() {}, info() {} } })
+    const cookie = `tracy_sess=${await mintSession('a@x.y', config.sessionSecret)}`
+    const call = (path, init) => app.fetch(new Request(`http://tracy.test/api/assistant${path}`, init))
+    const ask = (message) =>
+      call('/turns', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', cookie },
+        body: JSON.stringify({ message, session: { id: 's1' } })
+      })
+    const answers = async () =>
+      (await (await call('/conversation?session=s1', { headers: { cookie } })).json()).turns.filter(
+        (t) => t.role === 'assistant'
+      )
+
+    const cut = await frames(await ask('explain backups'))
+    assert.equal(cut.at(-1).event, 'error')
+    assert.deepEqual(
+      (await answers()).map((t) => [t.text, t.ended]),
+      [['Every change', 'cut']]
+    )
+
+    // Stopped: the asker reads the first words, then closes the stream.
+    mode = 'stop'
+    const res = await ask('explain restore')
+    const reader = res.body.getReader()
+    let seen = ''
+    while (!seen.includes('Every change')) seen += new TextDecoder().decode((await reader.read()).value)
+    await reader.cancel()
+    let stopped
+    for (let i = 0; i < 50 && !stopped; i++) {
+      stopped = (await answers()).find((t) => t.ended === 'stopped')
+      if (!stopped) await new Promise((resolve) => setTimeout(resolve, 20))
+    }
+    assert.equal(stopped?.text, 'Every change')
+
+    // A finished answer carries no `ended` at all: old rows read as finished too.
+    mode = 'cut'
+    const done = assistantRoutes({
+      pool,
+      config,
+      readers,
+      model: fakeModel(['All done.']),
+      log: { warn() {} }
+    })
+    await frames(
+      await done.fetch(
+        new Request('http://tracy.test/api/assistant/turns', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json', cookie },
+          body: JSON.stringify({ message: 'thanks', session: { id: 's1' } })
+        })
+      )
+    )
+    const finished = (await answers()).find((t) => t.text === 'All done.')
+    assert.ok(finished)
+    assert.equal('ended' in finished, false)
+  }
+)
+
+test(
   'Help: an answer can be rated by its own account only, and the rating comes back with the turn',
   opts,
   async () => {

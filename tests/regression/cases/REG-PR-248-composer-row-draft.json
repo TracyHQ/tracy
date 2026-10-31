@@ -1,0 +1,34 @@
+{
+  "id": "REG-PR-248-composer-row-draft",
+  "kind": "fix",
+  "title": "The composer row Create and Import carry the conversation draft to Add site",
+  "pr": 248,
+  "area": "onboarding/start",
+  "cms": ["any"],
+  "steps": [
+    "Mount the onboarding composer with a settled request, press the row Create button.",
+    "Press the row buttons with no settled request, with Templates, and with a failing draft."
+  ],
+  "expect": [
+    "One POST /api/assistant/onboarding-draft with the request revision; the start event carries chatDraft and its platform.",
+    "The plain start otherwise, one press at a time."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#203",
+      "test/help-ui.test.mjs",
+      "test/onboarding.test.mjs"
+    ],
+    "cwd": "packages/ui/tracy-assistant",
+    "tests": [
+      "the row’s Create carries the conversation’s prepared draft to Add site",
+      "the composer row’s Create and Import carry the chat’s draft"
+    ]
+  },
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {}
+}
