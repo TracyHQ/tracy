@@ -119,6 +119,7 @@ test('the old guard triggers are replaced, not kept beside the stamp', () => {
     .prepare("SELECT name FROM sqlite_master WHERE type='trigger' ORDER BY name")
     .all()
     .map((t) => t.name)
+    .filter((name) => !name.startsWith('tracy_change_'))
   assert.deepEqual(names, [
     'tracy_rowid_posts_rows_ai',
     'tracy_rowid_posts_rows_au',

@@ -939,6 +939,18 @@ carry the template's recipients (`tracy-business`: `sales@northgate-ind.ru` on a
 turns off digests, drops the webhooks of every form, then reads back; submissions are still stored in the site for the owner to read. A site with no form plugin
 has nothing to do; any other error means the site is not marked ready.
 
+**EmDash Content API reads are kept in the site's process while its database is unchanged** (31/10/2026, templates Base 0.5.8,
+Business 1.7.25, SaaS 1.4.16): every read of `/_emdash/api/content/tracy-content-v1.json` needs the whole site's records (the
+snapshot revision covers them all), which cost about 3 s of the site's only Node process per read on dev (#252). The identity step
+of `platform/emdash.sh` (`tools/content-api/identity-sqlite.mjs init|fork`) now also creates `_tracy_content_changes` (one row:
+`nonce`, `n`) and three triggers on every table a native list or GET may read, which count each row written by any connection.
+The template's reader keeps the rows it read, per caller rights, under (nonce, count, schema cookie) and reads fresh when the key
+moved or any watched table lacks its triggers (a table created since, a site whose identity step ran on an older template). Tables
+only routine traffic writes are not watched (`_emdash_api_tokens`, sign-in, locks, logs, the media-usage index, and the
+scheduler's `system:scheduler:*` rows of `options`); the list is `UNWATCHED` in `tools/content-api/reader.mjs`. The cache is
+memory only and starts empty with the process. `redeploy-template.mjs` does not run the identity step, so a redeployed site
+reads fresh every time until `identity-sqlite.mjs init` runs in its web container.
+
 ### Invitations: sandbox and real campaigns kept separate in Ops, no real mail sent yet
 
 The real-customer campaign path has its own API `/api/ops/invitations/real`, mounted before the sandbox at the

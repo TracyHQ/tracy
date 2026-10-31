@@ -150,7 +150,12 @@ for (const [label, published, stripDrafts] of [
     if (stripDrafts)
       // The first GET differs from its list item, so every entry is read natively, as before.
       assert.equal(after.calls.get, before.calls.get)
-    else assert.equal(after.calls.get, 40 + 1, 'one GET per draft, plus the one that checks the list shape')
+    else
+      assert.equal(
+        after.calls.get,
+        40 + collections.length,
+        'one GET per draft, plus one shape check per collection'
+      )
 
     const now = Date.now
     Date.now = () => 1790000000000
@@ -202,4 +207,46 @@ test('a draft whose overlay failed still fails closed', async () => {
     status: 503,
     code: 'CONTENT_SOURCE_UNAVAILABLE'
   })
+})
+
+test('reference-free schema avoids per-entry hydration and retains exact native revisions', async () => {
+  for (const published of [true, false]) {
+    const s = source()
+    const get = async (collection, id) => {
+      const answer = await s.get(collection, id)
+      if (answer.item.translationGroup) answer.item.references = {}
+      return answer
+    }
+    const expected = await perEntryRows({ list: s.list, get }, published)
+    s.calls.get = 0
+    const rows = await sourceRows({
+      collections,
+      list: s.list,
+      get,
+      published,
+      referenceFree: new Set(collections)
+    })
+    assert.equal(JSON.stringify(rows), JSON.stringify(expected))
+    assert.equal(s.calls.get, 43)
+  }
+})
+test('a reference collection falls back independently without disabling safe sibling collections', async () => {
+  const s = source()
+  const get = async (collection, id) => {
+    const answer = await s.get(collection, id)
+    if (answer.item.translationGroup)
+      answer.item.references = collection === 'pages' ? { child: { children: [{ id: 'real-child' }] } } : {}
+    return answer
+  }
+  const expected = await perEntryRows({ list: s.list, get }, true)
+  s.calls.get = 0
+  const rows = await sourceRows({
+    collections,
+    list: s.list,
+    get,
+    published: true,
+    referenceFree: new Set(['posts', 'site'])
+  })
+  assert.equal(JSON.stringify(rows), JSON.stringify(expected))
+  assert(s.calls.get < 1500)
 })
