@@ -1,0 +1,11 @@
+{
+  "ref": "f006ebba9e33d6ae3f4573d90752f6980010c1cd",
+  "gitleaks": {
+    "version": "8.28.0",
+    "findings": 250
+  },
+  "baselineBlocking": 49,
+  "finalBlocking": 49,
+  "newBlocking": 0,
+  "newFindings": []
+}
