@@ -396,6 +396,7 @@
   "event.type.category": "categoria",
   "event.type.entry": "voce",
   "event.type.item": "elemento",
+  "event.target.home": "home page",
   "event.type.media": "file multimediale",
   "event.type.menu": "menu",
   "event.type.page": "pagina",

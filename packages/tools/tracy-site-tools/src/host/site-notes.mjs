@@ -179,9 +179,20 @@ function nextId(notes) {
  */
 const PAGE_BLOCK = /```tracy-(?:element|page)\n[\s\S]*?(?:\n```|$)/g
 
-/** @param {string} text */
+/**
+ * What the person typed in a message: the comment blocks cut, and with them the hint the chat input
+ * appends after the LAST block (`comment-turn.mjs`: "the hint still follows the last block"). Each
+ * comment's words stand above its own block, so nothing the person wrote comes after the last one.
+ * 🔒 THE HINT IS TRACY'S (#256, 29/10/2026): it says "never write one…", "never edit theme…", and left in,
+ * every comment turn opened the wish gate and started a side call, and a proposal quoting one of those
+ * lines passed `quoteIsSaid` as the customer's own words.
+ * @param {string} text
+ */
 export function withoutPageBlocks(text) {
-  return text.replace(PAGE_BLOCK, '').trim()
+  const blocks = [...text.matchAll(PAGE_BLOCK)]
+  const last = blocks.at(-1)
+  const typed = last === undefined ? text : text.slice(0, (last.index ?? 0) + last[0].length)
+  return typed.replace(PAGE_BLOCK, '').trim()
 }
 
 /**

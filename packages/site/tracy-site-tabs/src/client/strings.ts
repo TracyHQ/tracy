@@ -675,6 +675,7 @@ export const en = {
   'event.type.theme': 'theme',
   'event.type.plugin': 'plugin',
   'event.type.item': 'item',
+  'event.target.home': 'the home page',
   // Units of the scope line "1 page · 2 files": resources, operations and files never summed together.
   'event.unit.page.one': '1 page',
   'event.unit.page.many': '{count} pages',

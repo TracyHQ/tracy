@@ -785,15 +785,20 @@ export function storeUnits(shape, raw) {
 
 /**
  * @param {Record<string, any>} item - a `content.get {kind:"post"}` item or a `content.list` row.
- * @param {{ id: number, family: 'page' | 'post' | 'nav' | 'site' | 'block', lang: string | null }} how
+ * @param {{ id: number, family: 'page' | 'post' | 'nav' | 'site' | 'block', lang: string | null,
+ *   front?: boolean }} how
  *   `block`: a synced pattern (`wp_block`) — only its body renders, wherever a `core/block` names it.
+ *   `front`: the record is the site's static front page.
  * @returns {Store[]}
  */
-function postStores(item, { id, family, lang }) {
+function postStores(item, { id, family, lang, front = false }) {
   const title = String(item.post_title ?? item.title ?? '')
   const body = item.post_content ?? item.content
   const excerpt = item.post_excerpt ?? item.excerpt
-  const name = title ? `"${title.slice(0, 40)}"` : `post ${id}`
+  // 🔒 THE FRONT PAGE IS THE HOME PAGE (#257, survey 29/10/2026): a quickstart's front page record keeps
+  // the template demo's title ("Read the latest News + Blog"), which no visitor sees, so a home page
+  // hero edit was named after it in the receipt, the card under the reply and Site changes.
+  const name = front ? 'the home page' : title ? `"${title.slice(0, 40)}"` : `post ${id}`
   const group = `post:${id}`
   const base = {
     kind: /** @type {const} */ ('post'),
@@ -1202,7 +1207,7 @@ function identityAnswer({
 // ── The page ─────────────────────────────────────────────────────────────────────────────────────
 
 /**
- * @typedef {{ units: RenderedUnit[], lang: string | null, pageId: number | null, blog: boolean,
+ * @typedef {{ units: RenderedUnit[], lang: string | null, pageId: number | null, blog: boolean, front: boolean,
  *   theme: string | null, themeVersion: string | null, posts: number[], forms: number[],
  *   cats: number[], alternates: number, alternatePaths: { code: string, path: string }[],
  *   defaultLang: string | null, status: number,
@@ -1231,7 +1236,7 @@ function buttonLabels(html) {
 
 /**
  * What the rendered page says about its own records (F3 §5.1): `page-id-N`/`postid-N` on `<body>`
- * (the page's record), `blog` (the posts page), `wp-theme-<slug>` and the theme's `?ver=` on its own
+ * (the page's record), `blog` (the posts page), `home` (the front page, `is_front_page()`), `wp-theme-<slug>` and the theme's `?ver=` on its own
  * assets (the theme table's key), `post-N` query items, `cat-item-N` links, `wpcf7-f<ID>-` forms, and
  * the `hreflang` alternates a translation plugin prints (the language rule).
  * @param {string} html
@@ -1292,6 +1297,7 @@ export function pageFactsOf(html, status = 200) {
     lang: r.lang,
     pageId: idTok ? Number(idTok[1]) : null,
     blog: body.includes('blog'),
+    front: body.includes('home'),
     theme,
     themeVersion,
     posts: [...posts],
@@ -1408,7 +1414,8 @@ async function inPool(items, fn) {
  *   The navigation blocks of one part or page body, and the area it renders in.
  * @typedef {{ stores: Store[], navRefs: NavUse[], fallback: number[], navUnresolved: boolean,
  *   blockRefs: Map<string, string[]>, partAreas: Set<string>, scanned: number, capped: boolean,
- *   postsPage: number | null, identity: Identity | null }} ReadSet
+ *   postsPage: number | null, front: number | null, identity: Identity | null }} ReadSet
+ *   `front`: the static front page's post id, when the page read or the options said it (#257).
  *   `fallback`: the wp_navigation posts WordPress's fallback menu renders from (one, or several
  *   published at the same second), empty when there is none or it could not be resolved;
  *   `navUnresolved`: the page needed that fallback and it could not be resolved. `blockRefs`: per
@@ -1621,6 +1628,27 @@ async function readStores(
     })
   /** @type {Set<number>} */
   const postIds = new Set([...(page?.pageId ? [page.pageId] : []), ...(page?.posts ?? []), ...extraPosts])
+  // Which record is the static front page (#257): the page read says so (`front`); a site-wide read asks
+  // the two options once — `page_on_front` counts only while `show_on_front` is `page`. A refused or
+  // missing option leaves it unknown and stops nothing: it only names a record.
+  /** @type {Promise<number | null>} */
+  const frontRead =
+    page?.front === true && page.pageId
+      ? Promise.resolve(page.pageId)
+      : !site
+        ? Promise.resolve(null)
+        : Promise.all([
+            read('content.get', { kind: 'option', key: 'page_on_front' }),
+            read('content.get', { kind: 'option', key: 'show_on_front' })
+          ]).then(
+            ([on, shows]) => {
+              const value = (/** @type {unknown} */ a) =>
+                isRecord(a) && a.ok === true && isRecord(a.item) ? a.item.value : null
+              const id = positive(value(on))
+              return id > 0 && value(shows) === 'page' ? id : null
+            },
+            () => null
+          )
   /** @type {number | null} */
   let postsPage = null
   if (page?.blog)
@@ -1631,10 +1659,16 @@ async function readStores(
   for (const id of postIds)
     wave1.push(async () => {
       const got = await read('content.get', { kind: 'post', id })
+      const front = await frontRead
       if (cut(got)) cutWhat.push(`post ${id}`)
       else if (ok(got) && isRecord(got.item))
         stores.push(
-          ...postStores(got.item, { id, family: id === page?.pageId ? 'page' : 'post', lang: null })
+          ...postStores(got.item, {
+            id,
+            family: id === page?.pageId ? 'page' : 'post',
+            lang: null,
+            front: id === front
+          })
         )
     })
   for (const id of page?.forms ?? [])
@@ -1706,7 +1740,7 @@ async function readStores(
           if (!isRecord(row) || row.status !== 'publish' || typeof row.content !== 'string') continue
           const id = positive(row.id)
           if (id === 0 || postIds.has(id)) continue
-          stores.push(...postStores(row, { id, family: 'site', lang }))
+          stores.push(...postStores(row, { id, family: 'site', lang, front: id === (await frontRead) }))
         }
         if (got.items.length < SITE_PAGE_ROWS) return
         if (n === SITE_PAGES_MAX - 1) capped = true
@@ -2017,6 +2051,7 @@ async function readStores(
       scanned,
       capped,
       postsPage,
+      front: await frontRead,
       identity
     }
   }
@@ -3863,11 +3898,15 @@ function valueIn(answer, store) {
  * contract (`LEGACY_STRUCTURE_CODE`, `Engine.php` structural-write block list; IX2: `facts.contractBound
  * || memory.learned(label).contractBound`). Answered `NOT_SUPPORTED_HERE` before any read.
  *
+ * `onFront(id)` — told the static front page's post id when the read found it (#257), before any write,
+ * so the caller names that record's writes as the home page's (IX2: `memory.rememberFront`).
+ *
  * `contractDoor` — the site's surface has `content.contract` (`wordpress-contract`): words an identity
  * token prints are answered with its identity slot, else with the option write ({@link identityAnswer}).
  * @param {{ plan: ReplacePlan | RestorePlan | Record<string, unknown>, read: Door, write?: Door,
  *   pageHtml: (path: string) => Promise<any>, mintApplyId?: () => string, confirmed?: boolean,
- *   removes?: string | null, bound?: boolean, verify?: boolean, contractDoor?: boolean }} deps
+ *   removes?: string | null, bound?: boolean, verify?: boolean, contractDoor?: boolean,
+ *   onFront?: (id: number) => void }} deps
  * @returns {Promise<Record<string, unknown>>}
  */
 export async function replaceOnWordPress(deps) {
@@ -3913,6 +3952,8 @@ export async function replaceOnWordPress(deps) {
       })
     }
     const located0 = /** @type {WordPressPlan} */ (located)
+    // The front page this read found (#257): the caller names its writes as the home page's.
+    if (typeof located0.set.front === 'number') deps.onFront?.(located0.set.front)
     const rewrite = rewriteRecords(located0.results, located0.storeById, {
       identity: located0.set.identity,
       contractDoor: located0.contractDoor

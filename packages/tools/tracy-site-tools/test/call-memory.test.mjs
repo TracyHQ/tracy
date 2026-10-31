@@ -1355,3 +1355,17 @@ test("🔒 the door's card still in English is stopped for a person who speaks a
     "a question of the agent's own is its business"
   )
 })
+
+// #257: a write to the front page is labelled the home page (`x-tracy-write-front`), never by its title.
+test('isFront: a WordPress post or page of the front page id this conversation found, and nothing else (#257)', () => {
+  const memory = createCallMemory({ now: () => 1_000 })
+  assert.equal(memory.isFront('s1', { kind: 'post', id: 42 }), false, 'nothing found yet')
+  memory.rememberFront('s1', 42)
+  assert.equal(memory.isFront('s1', { kind: 'post', id: 42 }), true)
+  assert.equal(memory.isFront('s1', { kind: 'page', id: '42' }), true)
+  assert.equal(memory.isFront('s1', { kind: 'post', id: 43 }), false)
+  assert.equal(memory.isFront('s1', { kind: 'article', id: 42 }), false, 'a Joomla article is not it')
+  assert.equal(memory.isFront('s2', { kind: 'post', id: 42 }), false, 'another conversation found none')
+  memory.rememberFront('s1', 0)
+  assert.equal(memory.isFront('s1', { kind: 'post', id: 42 }), true, 'a bad id changes nothing')
+})

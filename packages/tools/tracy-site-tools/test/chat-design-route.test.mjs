@@ -15,35 +15,50 @@ import {
   chatRouteRefusal,
   DESIGN_SYSTEM_DESCRIPTION,
   designSystemArgs,
-  designSystemRequest
+  designSystemRequest,
+  libraryLine
 } from '../src/host/chat-design-route.mjs'
 import { designRoutesAt } from '../src/host/chat-design-switch.mjs'
 import { DEFERRED_TOOLS, namedDeferredTools } from '../src/host/deferred-tools.mjs'
 import { siteContext } from '../src/host/site-context.mjs'
 
-/** Tracy's `/api/ui` answering `hidden`, or failing with `status`. */
+/**
+ * Tracy's `/api/ui` answering `hidden`, or failing with `status`; and its `/api/design-systems`
+ * answering `shown` (the design-system library, #259), failing with the same `status`.
+ */
 const tracyUi =
-  (hidden, status = 200) =>
+  (hidden, status = 200, shown = false) =>
   async (url) => {
+    if (String(url).endsWith('/api/design-systems'))
+      return new Response(JSON.stringify({ shown }), { status })
     assert.match(String(url), /\/api\/ui$/)
     return new Response(JSON.stringify({ hidden }), { status })
   }
 
 test('the switch is read at Tracy; off, unreadable or no origin is OFF', async () => {
-  assert.deepEqual(await designRoutesAt('https://tracy.test', tracyUi([])), { chat: true, button: true })
+  assert.deepEqual(await designRoutesAt('https://tracy.test', tracyUi([])), {
+    chat: true,
+    button: true,
+    library: false
+  })
   assert.deepEqual(await designRoutesAt('https://tracy.test', tracyUi(['chat-design-system'])), {
     chat: false,
-    button: true
+    button: true,
+    library: false
   })
   assert.deepEqual(
     await designRoutesAt('https://tracy.test', tracyUi(['chat-design-system', 'toolbar-design-system'])),
-    { chat: false, button: false }
+    { chat: false, button: false, library: false }
   )
   assert.deepEqual(await designRoutesAt('https://tracy.test', tracyUi([], 503)), {
     chat: false,
-    button: true
+    button: true,
+    library: false
   })
-  assert.deepEqual(await designRoutesAt(null), { chat: false, button: true })
+  assert.deepEqual(await designRoutesAt(null), { chat: false, button: true, library: false })
+  // #259: the library is read beside the switches; only a plain `shown: true` is on.
+  assert.equal((await designRoutesAt('https://tracy.test', tracyUi([], 200, true))).library, true)
+  assert.equal((await designRoutesAt('https://tracy.test', tracyUi([], 200, 'yes'))).library, false)
 })
 
 test('off: the refusal and the context line point at the Design system button, in one sentence, and change nothing', () => {
@@ -191,4 +206,31 @@ test('off, element edits keep their rule: the slot line stays beside the OFF lin
       `${platform}: the OFF line follows the worn system`
     )
   }
+})
+
+// #259 (survey 30/10/2026): with the library off, "show me design styles I could choose from" read the
+// site for ~48 s (five reads) before the library call refused DESIGN_SYSTEMS_OFF. The site context says
+// it before the first step, in a line that names no tool.
+test('the site context says the design-system library is off before the first step, and only when read off (#259)', async () => {
+  const line = libraryLine({ chat: true, button: true, library: false })
+  assert.match(line ?? '', /^- Design systems: OFF/)
+  assert.match(line ?? '', /read nothing of the site first/)
+  assert.deepEqual(namedDeferredTools(line), [], 'the line names no tool the agent may not see yet')
+  assert.equal(libraryLine({ chat: true, button: true, library: true }), null)
+  assert.equal(libraryLine({ chat: true, button: true }), null, 'a caller that read nothing adds nothing')
+  assert.equal(libraryLine(null), null)
+  const folder = mkdtempSync(path.join(tmpdir(), 'library-line-'))
+  mkdirSync(path.join(folder, '.tracy'), { recursive: true })
+  mkdirSync(path.join(folder, '.webroot'))
+  writeFileSync(path.join(folder, '.tracy', 'site.json'), JSON.stringify({ siteKey: 'shop.tracy.test' }))
+  const detect = async () => 'emdash'
+  const off = await siteContext(folder, 'shop', detect, null, {
+    chatDesign: { chat: true, button: true, library: false }
+  })
+  assert.match(off?.text ?? '', /- Design systems: OFF \(the operator's switch\)/)
+  assert.ok(!/Design systems through the chat/.test(off?.text ?? ''), 'the chat route is on')
+  const on = await siteContext(folder, 'shop', detect, null, {
+    chatDesign: { chat: true, button: true, library: true }
+  })
+  assert.ok(!/- Design systems: OFF/.test(on?.text ?? ''))
 })

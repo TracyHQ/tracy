@@ -10,6 +10,8 @@ import os from 'node:os'
 import path from 'node:path'
 import { test } from 'node:test'
 
+import { buildCommentTurn } from '../../../ui/tracy-chat-input/src/client/comment-turn.mjs'
+
 import {
   CAPTURE_MAX_TOKENS,
   CAPTURE_SYSTEM,
@@ -426,6 +428,39 @@ test('the page text inside a Browser-tab comment is cut, so it is never somethin
     withoutPageBlocks('```tracy-element\n<mentioned-element n="1">\nx\n</mentioned-element>\n```'),
     ''
   )
+})
+
+// #256 (survey 29/10/2026): every Browser-tab comment turn opened the gate and started a side call,
+// because the hint the chat input appends after the last block says "never write one…", "never edit
+// theme…". The turns here are built by the chat input itself, so a change to its layout cannot pass unseen.
+test('the hint after a comment turn’s last block is Tracy’s, not the customer’s: no wish, no quote (#256)', () => {
+  const element = { url: 'https://s.test/', selector: 'h1', label: 'heading', text: 'Tacos', marks: [] }
+  const one = buildCommentTurn({
+    text: 'Make this heading say: Tacos de trompo, made to order',
+    element,
+    locate: null
+  })
+  const many = buildCommentTurn({
+    items: [
+      { n: 1, text: 'Make this red', element, locate: null },
+      { n: 2, text: 'Make this one blue', element: { ...element, selector: 'h2' }, locate: null }
+    ]
+  })
+  assert.match(one, /never/, 'the fixture holds the hint that tripped the gate')
+  assert.match(many, /never/)
+  assert.equal(withoutPageBlocks(one), 'Make this heading say: Tacos de trompo, made to order')
+  assert.equal(mayHoldWish(one), false)
+  assert.equal(mayHoldWish(many), false)
+  const typed = withoutPageBlocks(many)
+  assert.match(typed, /Make this red/)
+  assert.match(typed, /Make this one blue/)
+  assert.doesNotMatch(typed, /never/)
+  const hintLine = one.slice(one.lastIndexOf('```') + 3).trim()
+  assert.ok(hintLine.length > 40)
+  assert.equal(quoteIsSaid(hintLine.split(/[.;:]/)[0], [withoutPageBlocks(one)]), false)
+  // A wish the customer typed in a comment still opens the gate.
+  const wish = buildCommentTurn({ text: 'From now on, keep every heading this short', element, locate: null })
+  assert.equal(mayHoldWish(wish), true)
 })
 
 // ── the gate: which messages are looked at at all ─────────────────────────────

@@ -134,7 +134,7 @@ export function singularType(source, type) {
 const emptyGroup = () => ({ resources: [], operations: 0 })
 
 /**
- * @typedef {{type: string|null, id: string|null, title: string|null, ops: string[]}} EffectResource
+ * @typedef {{type: string|null, id: string|null, title: string|null, ops: string[], front?: boolean}} EffectResource
  * @typedef {{resources: EffectResource[], operations: number}} EffectGroup
  * @typedef {{content: EffectGroup, settings: EffectGroup,
  *   files: {count: number|null, sha: string|null, state: FilesState},
@@ -143,8 +143,11 @@ const emptyGroup = () => ({ resources: [], operations: 0 })
  * @typedef {'recorded'|'not-tracked'|'unread'|'not-linked'} FilesState
  */
 
-/** Add one operation on `(type, id)` to a group: one resource per type + id, ops kept in order. */
-function addTo(group, type, id, title, op) {
+/**
+ * Add one operation on `(type, id)` to a group: one resource per type + id, ops kept in order.
+ * `front`: the record is the site's static front page (#257), said as the home page.
+ */
+function addTo(group, type, id, title, op, front = false) {
   if (id === null || id === undefined || id === '') {
     group.operations += 1
     return
@@ -156,6 +159,7 @@ function addTo(group, type, id, title, op) {
     group.resources.push(found)
   }
   if (!found.title && title) found.title = title
+  if (front) found.front = true
   if (!found.ops.includes(op)) found.ops.push(op)
 }
 
@@ -200,7 +204,7 @@ export function effectsOf({
     // Dev e2e 04/10 (E3.2): the title the write's own answer carried (`tracy-site-tools` records it
     // with the write), so the row reads "Updated home “Home”", not a ULID. Never looked up later.
     const title = typeof target.title === 'string' && target.title ? target.title : null
-    addTo(group === 'settings' ? settings : content, kind, id, title, verbOf(w.action))
+    addTo(group === 'settings' ? settings : content, kind, id, title, verbOf(w.action), target.front === true)
   }
   if (cms) {
     const group = cmsGroup(cms.resource_type)
@@ -280,7 +284,13 @@ export function describeEffects(effects, { technical = [], requestOnlyAllowed = 
       const r = only.resources[0]
       return {
         key: 'resource.op',
-        params: { op: r.ops[r.ops.length - 1] ?? 'change', type: r.type, id: r.id, title: r.title },
+        params: {
+          op: r.ops[r.ops.length - 1] ?? 'change',
+          type: r.type,
+          id: r.id,
+          title: r.title,
+          ...(r.front ? { front: true } : {})
+        },
         isRequestOnly: false
       }
     }

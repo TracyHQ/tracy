@@ -1837,7 +1837,7 @@ test('media.draw with no slot on a bound WordPress site is answered with its ima
       calls
     )
   })
-  const out = await runSite(tools, { action: 'media.draw', params: { prompt: 'a lake', aspect: '4:5' } }, cwd)
+  const out = await runSite(tools, { action: 'media.draw', params: { prompt: 'a lake' } }, cwd)
   assert.equal(out.code, 'SLOT_REQUIRED')
   assert.deepEqual(out.slots, ['home.hero.img: banner.png', 'about.team.img: crew.png'])
   assert.match(out.next, /Take the slot the picture replaces from slots and call media\.draw again with it/)

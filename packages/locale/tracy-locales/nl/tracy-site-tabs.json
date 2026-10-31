@@ -396,6 +396,7 @@
   "event.type.category": "categorie",
   "event.type.entry": "item",
   "event.type.item": "element",
+  "event.target.home": "homepage",
   "event.type.media": "media-file",
   "event.type.menu": "menu",
   "event.type.page": "pagina",

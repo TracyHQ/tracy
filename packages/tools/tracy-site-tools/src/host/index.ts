@@ -1083,7 +1083,8 @@ async function applyDoor(
   label: string | null = null,
   sessionId: string | null = null,
   preset: string | null = null,
-  title: string | null = null
+  title: string | null = null,
+  front = false
 ): Promise<unknown> {
   // WHOSE NAME THIS WRITE LEAVES IN. `prompter` is the person who typed the message that started
   // this turn, vouched for by a signed assertion the gate mints (`prompter.mjs` says why). `viewer`
@@ -1121,6 +1122,9 @@ async function applyDoor(
   // label only — tracy-web never decides which record is written by it — and a header, so a door that
   // does not know it ignores it and the component never sees it.
   if (title) headers['x-tracy-write-title'] = encodeURIComponent(title.slice(0, 120))
+  // The record is the site's static front page (#257, `memory.isFront`): the card and Site changes say
+  // "the home page" in the reader's language, not the title a quickstart's demo left on the record.
+  if (front) headers['x-tracy-write-front'] = '1'
   const comment = answeringComment.getStore()
   // A write refused because another conversation holds the site's lease is sent again, bounded, until
   // it goes through (`lease-wait.mjs`, acceptance v4 S09/SEND-v4-new-11). Only a call that names its
@@ -3101,7 +3105,20 @@ export function apply(ctx: HostContext, config: Config = {}): void {
     const writes = relayWrites(action, params)
     if (writes) memory.invalidateSite(site)
     const title = writes ? memory.titleOf(sessionId, params) : null
-    const answer = await applyDoor(config, plan, key, action, params, target, label, sessionId, preset, title)
+    const front = writes && memory.isFront(sessionId, params)
+    const answer = await applyDoor(
+      config,
+      plan,
+      key,
+      action,
+      params,
+      target,
+      label,
+      sessionId,
+      preset,
+      title,
+      front
+    )
     if (writes) memory.invalidateSite(site)
     // A write the door took holds the site's lease for this conversation until its turn ends.
     // 🔒 A WRITE BY THE DOOR'S OWN RULE (`doorTakesLease`, review C3), not "makes reads stale": a media
@@ -5772,7 +5789,8 @@ export function apply(ctx: HostContext, config: Config = {}): void {
               facts.platform === 'wordpress' || facts.platform === 'joomla'
                 ? facts.platform
                 : await detectPlatform(webroot),
-            // A bound WordPress site: a picture lands in an image slot or nowhere.
+            // A bound WordPress site: a picture placed on a page lands in an image slot; one drawn with a
+            // shape of its own is kept in the media library only (#255).
             slotOnly: facts.platform === 'wordpress' && facts.contractDoor === true,
             door: pictureDoor(process.env),
             draw: drawPicture,

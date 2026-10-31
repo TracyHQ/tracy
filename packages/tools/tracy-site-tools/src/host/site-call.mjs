@@ -2347,7 +2347,7 @@ export async function runSiteCall(input) {
   if (n.action === 'content.read') n = { ...n, params: withReadBudget(n.params) }
   if (expectedBodyRevision !== null && n.action === 'content.update')
     n = { ...n, params: { ...n.params, expected_body_revision: expectedBodyRevision } }
-  if (n.action === 'content.contract') answer = await contractCall(n)
+  if (n.action === 'content.contract') answer = driftSaidOnce(await contractCall(n), memory, sessionId)
   else if (wholeGroup !== null && n.action === 'content.delete') answer = await deleteGroup(n, wholeGroup)
   else if (BUSY_RETRY_ACTIONS.has(n.action) && platform === 'joomla' && memory)
     answer = await memory.flight(label, () => sendLost(n.action, n.params))
@@ -4077,6 +4077,46 @@ export function judgeWholeBody({
             ? `${field} is ${chars(length)} chars; ${what} holds ${chars(baseline)} now`
             : `${field} is ${chars(length)} chars; this conversation last read ${what} at ${chars(baseline)}`
     }
+  }
+}
+
+/**
+ * 🔒 A SITE'S PRESENTATION DRIFT IS SAID ONCE A CONVERSATION (#258, survey 29/10/2026). The Joomla Claude
+ * Cowork plugin answers every contract inspect and apply with the site's whole drift against its
+ * quickstart (`warnings[]`, `{code: PRESENTATION_DRIFT, message, severity: warning}`, ADR 0022): 17 lines,
+ * 80 % of each answer and ~4,500 tokens over one phone-number turn, none of it about the change. On a
+ * built site that drift is permanent. A line this conversation was told is folded into one count; a
+ * line it was not told stays whole. A new answer object: a flight's shared answer is never changed.
+ * @param {unknown} answer
+ * @param {{ unsaidDrift?: (sessionId: unknown, messages: string[]) => string[] } | null | undefined} memory
+ * @param {unknown} sessionId
+ */
+export function driftSaidOnce(answer, memory, sessionId) {
+  if (!isRecord(answer) || !Array.isArray(answer.warnings) || typeof memory?.unsaidDrift !== 'function')
+    return answer
+  /** @param {unknown} w @returns {w is { code: string, message: string }} */
+  const isDrift = (w) => isRecord(w) && w.code === 'PRESENTATION_DRIFT' && typeof w.message === 'string'
+  const drift = answer.warnings.filter(isDrift)
+  if (drift.length === 0) return answer
+  const fresh = new Set(
+    memory.unsaidDrift(
+      sessionId,
+      drift.map((w) => w.message)
+    )
+  )
+  const repeated = drift.filter((w) => !fresh.has(w.message)).length
+  if (repeated === 0) return answer
+  return {
+    ...answer,
+    warnings: [
+      ...answer.warnings.filter((w) => !isDrift(w) || fresh.has(w.message)),
+      {
+        code: 'PRESENTATION_DRIFT',
+        severity: 'warning',
+        said: repeated,
+        message: `${repeated} presentation drift ${repeated === 1 ? 'line' : 'lines'} already said in this conversation: where the site's design differs from its quickstart; unchanged, and not about this call.`
+      }
+    ]
   }
 }
 
