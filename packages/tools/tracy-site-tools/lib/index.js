@@ -24727,7 +24727,10 @@ function nextId(notes) {
 }
 var PAGE_BLOCK = /```tracy-(?:element|page)\n[\s\S]*?(?:\n```|$)/g;
 function withoutPageBlocks(text6) {
-  return text6.replace(PAGE_BLOCK, "").trim();
+  const blocks = [...text6.matchAll(PAGE_BLOCK)];
+  const last = blocks.at(-1);
+  const typed = last === void 0 ? text6 : text6.slice(0, (last.index ?? 0) + last[0].length);
+  return typed.replace(PAGE_BLOCK, "").trim();
 }
 var UNSPACED = /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/gu;
 var MIN_UNSPACED_SAID = 4;
