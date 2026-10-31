@@ -5,7 +5,7 @@
     "tracy-business/emdash-0.x": "1.7.23"
   },
   "maxVersion": {
-    "tracy-business/emdash-0.x": "1.7.23"
+    "tracy-business/emdash-0.x": "1.7.25"
   },
   "maxVersionNote": "1.7.23 (19/10/2026, design system dot 3) is 1.7.22 with the four places the slot contract patched for 1.7.20-1.7.22 (emdash-tracy-business-roles.json followRules/shapeRules, probe v10) read at the source: src/styles/global.css :root[data-ds-worn] .tb-meta-on-card (kit form step labels and region arrow read meta), .tb-mark (the empty filled marks of the kit form, search filter and kit slides read fg), .btn-forest.tb-quote (the header call to action and its phone menu copy read accent-text with bg words), .tb-header-search (the header search button takes the button corner). Worn-only, so with no system the look is the template's (DEF-1); re-measured on the release build (contracts/1.7.23)",
   "splitNote": "19/10/2026 (design system dot 3): from 1.7.23 the theme reads at its source the roles emdash-tracy-business-roles.json patches for 1.7.20-1.7.22 (followRules, shapeRules), so this contract carries no per-template patch: the slot writes the role values only. EmDash sites never update their theme, so 1.7.20-1.7.22 keep the patched contract; 1.7.6-1.7.19 keep emdash-tracy-business.json",
