@@ -1,2 +1,2 @@
-- **Publish the owning reader components and prepare guarded EmDash template candidates.** — runtime engineer · PR pending · `perf/agent-tool-calling` · 2026-10-31
+- **Publish the owning reader components and prepare guarded EmDash template candidates.** — runtime engineer · #270 · `perf/agent-tool-calling` · 2026-10-31
   **Affects:** Joomla complete-inventory reuse requires Claude Cowork 0.24.76; EmDash kit 1.5.3 contains the native reader optimization. Base 0.5.7, Business 1.7.24 and SaaS 1.4.15 remain template candidates until their acceptance gates pass; active rolling-release settings are unchanged. The integration follow-up aligns an inherited host test with the script's stdin transport without changing sync product code. Tracy main and production are excluded.
