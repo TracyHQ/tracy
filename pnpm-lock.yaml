@@ -113,8 +113,8 @@ importers:
   apps/tracy-host:
     dependencies:
       '@hono/node-server':
-        specifier: 2.1.1
-        version: 2.1.1(hono@4.13.11)
+        specifier: 2.1.3
+        version: 2.1.3(hono@4.13.11)
       hono:
         specifier: 4.13.11
         version: 4.13.11
@@ -125,8 +125,8 @@ importers:
   apps/tracy-web:
     dependencies:
       '@hono/node-server':
-        specifier: 2.1.1
-        version: 2.1.1(hono@4.13.11)
+        specifier: 2.1.3
+        version: 2.1.3(hono@4.13.11)
       acorn:
         specifier: 8.18.0
         version: 8.18.0
@@ -1508,8 +1508,8 @@ importers:
   packages/wo/website-opportunities:
     dependencies:
       '@hono/node-server':
-        specifier: 2.1.1
-        version: 2.1.1(hono@4.13.11)
+        specifier: 2.1.3
+        version: 2.1.3(hono@4.13.11)
       hono:
         specifier: 4.13.11
         version: 4.13.11
@@ -19986,6 +19986,12 @@ packages:
     peerDependencies:
       hono: 4.13.11
 
+  '@hono/node-server@2.1.3':
+    resolution: {integrity: sha512-TA//nWMqPhbfdfneACk6t5a9eqbS9lABEPyKn0/xZTah3H3U2XaVg85rJFl0/Fyit0I552YDHgXGVSf3GwqbUw==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      hono: 4.13.11
+
   '@huanlin/dsh-plugin-better-locale@0.1.0':
     resolution: {integrity: sha512-fGXDgVq1R3gVTi2M9TMn2x5ROqiaYkhEsFJqYF5xiVUFfs9KjwIpOF0ZbhUyK6vFBOeYP4uetc/ZVknQb38WrQ==}
     engines: {node: '>=22.0.0'}
@@ -34993,6 +34999,10 @@ snapshots:
       hono: 4.13.11
 
   '@hono/node-server@2.1.1(hono@4.13.11)':
+    dependencies:
+      hono: 4.13.11
+
+  '@hono/node-server@2.1.3(hono@4.13.11)':
     dependencies:
       hono: 4.13.11
 
