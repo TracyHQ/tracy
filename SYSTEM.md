@@ -2380,6 +2380,14 @@ it waits for; a second, prefixed dsh on the same machine must set all five varia
 `HOST_DSH_ENV_FILE`, `HOST_DSH_GATEWAY`, `HOST_DSH_CONTAINER`, otherwise it keeps the first dsh's `dsh-passwords.env`.
 Details of each flag and the order for setting up a host: `packages/fleet/tracy-fleet-operation/dsh/HOST-DSH.md` §3.
 
+**The site agent's calls to tracy-web can stay on the machine (#208).** `MCP_TRACY_ORIGIN` stays the public origin
+people are sent to and read in messages; `MCP_TRACY_API_ORIGIN`, when set to a bare http(s) origin, is where the Apply
+door (`tracy-site-tools` `applyDoorOnce`) sends its calls instead. The whole-machine stack (`deploy/compose.yml`) sets
+it to `http://tracy-web:8080`, which `tracy-dsh` reaches on the stack's own `tracy` network. A host dsh (`host-dsh.yml`,
+its own compose project) takes it from `HOST_TRACY_API_ORIGIN` in `host-dsh.env`, empty by default: that host's
+operator names an address its dsh can reach, or calls keep going through the public edge as before. A call that never
+reached tracy-web is told to the agent as Tracy's connection problem, never as the site not answering.
+
 **Reading `joomlart-products` when the host's App is not installed there.** `releasesToken` in
 [`quickstart-releases.js`](apps/tracy-web/src/lib/quickstart-releases.js) still mints a token from the GitHub App when the App
 is installed on `joomlart-products` (production). Only when GitHub returns 404 for the installation query (`installationIdFor` returns

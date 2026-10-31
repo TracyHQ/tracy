@@ -271,6 +271,9 @@ services:
       MCP_SEAT_SECRET: ${SEAT_local_SECRET}
       # The component Apply door verifies the identity signed by dsh against this same key.
       MCP_TRACY_ORIGIN: ${TRACY_ORIGIN}
+      # The agent's calls to tracy-web stay inside this project's network (#208); MCP_TRACY_ORIGIN
+      # stays the public address people are sent to.
+      MCP_TRACY_API_ORIGIN: http://tracy-web:8080
       # Empty by default: the seat doors are tracy-web's own since 16/09/2026, on TRACY_ORIGIN.
       MCP_TRACY_SEATS_ORIGIN: ${MCP_TRACY_SEATS_ORIGIN:-}
       # Where this deployment serves its sites (`https://<label>.<SITE_DOMAIN>`). `page.text` and

@@ -119,6 +119,7 @@ import {
   designSystemRequest
 } from './chat-design-route.mjs'
 import { designRoutesAt } from './chat-design-switch.mjs'
+import { callOrigin } from './call-origin.mjs'
 import { captureWishes, mayHoldWish, notesNotice, readNotes, storeDirOf, WISH_KEPT } from './site-notes.mjs'
 import {
   COMMENT_KEY,
@@ -882,11 +883,28 @@ const bySession = new Map<string, Viewer>()
 let latest: Viewer | null = null
 
 /**
+ * Where a call from this host to tracy-web goes: `MCP_TRACY_API_ORIGIN` when the host names an
+ * internal address (the stack's `http://tracy-web:8080`), else the public origin it was given. Every
+ * Apply call once left the host through the public edge and came back to tracy-web on the same machine;
+ * on dev 30–40 % of fresh connections stalled there and the agent told the customer their site was not
+ * answering (#208). Only the address the call is SENT to changes: words the customer reads keep the
+ * public origin. A test that names its own origin (`config.origin`) keeps it.
+ */
+function apiOriginOf(publicOrigin: string): string {
+  return callOrigin(publicOrigin, gatewaySetting('MCP_TRACY_ORIGIN'), gatewaySetting('MCP_TRACY_API_ORIGIN'))
+}
+
+/**
  * The site this lane serves, from the env file the lane was created with (`MCP_TRACY_SITE_KEY`).
  * Read lazily and once — same reasoning as `tracy-site-tabs`.
  */
 function gatewaySetting(
-  name: 'MCP_TRACY_SITE_KEY' | 'MCP_TRACY_SITE_LABEL' | 'MCP_TRACY_ORIGIN' | 'TRACY_BUILD_REASONING_EFFORT'
+  name:
+    | 'MCP_TRACY_SITE_KEY'
+    | 'MCP_TRACY_SITE_LABEL'
+    | 'MCP_TRACY_ORIGIN'
+    | 'MCP_TRACY_API_ORIGIN'
+    | 'TRACY_BUILD_REASONING_EFFORT'
 ): string | null {
   const value = process.env[name]?.trim() || null
   if (value === null) {
@@ -1172,25 +1190,34 @@ async function applyDoorOnce(
   comment: number | number[] | undefined
 ): Promise<unknown> {
   let res: Response
+  let text: string
   try {
-    res = await (config.fetch ?? fetch)(`${plan.origin}/api/sites/${encodeURIComponent(key)}/apply`, {
-      method: 'POST',
-      headers,
-      // `target` sits beside `action`, not inside `params`: the Apply door reads it there, and it is
-      // omitted entirely when absent so a call with no target keeps the exact shape it always had.
-      // `comment` beside `action` too, and only when the call answers one: the door then writes the
-      // words a comment points at for whoever commented (`apps/tracy-web/src/sites/comment-answer.js`,
-      // Brian 29/09/2026), after checking the number is that person's own sent comment on the site.
-      body: JSON.stringify({
-        action,
-        params,
-        ...(target === null ? {} : { target }),
-        ...(comment === undefined ? {} : { comment })
-      }),
-      signal: AbortSignal.timeout(
-        action === 'demo.research' && params.operation === 'check' ? DEMO_CHECK_TIMEOUT_MS : APPLY_TIMEOUT_MS
-      )
-    })
+    res = await (config.fetch ?? fetch)(
+      `${apiOriginOf(plan.origin)}/api/sites/${encodeURIComponent(key)}/apply`,
+      {
+        method: 'POST',
+        headers,
+        // `target` sits beside `action`, not inside `params`: the Apply door reads it there, and it is
+        // omitted entirely when absent so a call with no target keeps the exact shape it always had.
+        // `comment` beside `action` too, and only when the call answers one: the door then writes the
+        // words a comment points at for whoever commented (`apps/tracy-web/src/sites/comment-answer.js`,
+        // Brian 29/09/2026), after checking the number is that person's own sent comment on the site.
+        body: JSON.stringify({
+          action,
+          params,
+          ...(target === null ? {} : { target }),
+          ...(comment === undefined ? {} : { comment })
+        }),
+        signal: AbortSignal.timeout(
+          action === 'demo.research' && params.operation === 'check'
+            ? DEMO_CHECK_TIMEOUT_MS
+            : APPLY_TIMEOUT_MS
+        )
+      }
+    )
+    // The body is part of the answer: a deadline or a reset while it is read is the same lost answer as
+    // one before the headers, never a raw throw out of the call (#208).
+    text = await res.text()
   } catch (error) {
     return {
       ok: false,
@@ -1198,7 +1225,6 @@ async function applyDoorOnce(
       error: error instanceof Error ? error.message : String(error)
     }
   }
-  const text = await res.text()
   let body: unknown
   try {
     body = JSON.parse(text)
