@@ -1300,9 +1300,456 @@
         "client_id": "0"
       },
       "sourceId": 10
+    },
+    {
+      "key": "contact-1",
+      "kind": "contact",
+      "identity": {
+        "alias": "ja-kidscorner",
+        "catid": "4",
+        "language": "*"
+      },
+      "sourceId": 1
+    },
+    {
+      "key": "contact-4",
+      "kind": "contact",
+      "identity": {
+        "alias": "kids-corner",
+        "catid": "4",
+        "language": "*"
+      },
+      "sourceId": 4
+    },
+    {
+      "key": "tag-2",
+      "kind": "tag",
+      "identity": {
+        "path": "joomla",
+        "language": "*"
+      },
+      "sourceId": 2
+    },
+    {
+      "key": "tag-3",
+      "kind": "tag",
+      "identity": {
+        "path": "study",
+        "language": "*"
+      },
+      "sourceId": 3
+    },
+    {
+      "key": "tag-4",
+      "kind": "tag",
+      "identity": {
+        "path": "summer",
+        "language": "*"
+      },
+      "sourceId": 4
+    },
+    {
+      "key": "tag-5",
+      "kind": "tag",
+      "identity": {
+        "path": "play",
+        "language": "*"
+      },
+      "sourceId": 5
+    },
+    {
+      "key": "tag-6",
+      "kind": "tag",
+      "identity": {
+        "path": "toy",
+        "language": "*"
+      },
+      "sourceId": 6
+    },
+    {
+      "key": "tag-7",
+      "kind": "tag",
+      "identity": {
+        "path": "kids",
+        "language": "*"
+      },
+      "sourceId": 7
+    },
+    {
+      "key": "tag-8",
+      "kind": "tag",
+      "identity": {
+        "path": "children",
+        "language": "*"
+      },
+      "sourceId": 8
+    },
+    {
+      "key": "tag-9",
+      "kind": "tag",
+      "identity": {
+        "path": "kidscorner",
+        "language": "*"
+      },
+      "sourceId": 9
+    },
+    {
+      "key": "languageString-70319338",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "COM_TAGS_FILTER_SEARCH_DESC",
+        "language": "en-GB"
+      },
+      "sourceId": 70319338
+    },
+    {
+      "key": "languageString-172109843",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "T3_MISSING_T3_PLUGIN",
+        "language": "en-GB"
+      },
+      "sourceId": 172109843
+    },
+    {
+      "key": "languageString-9531873",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "T3_POWER_BY_HTML",
+        "language": "en-GB"
+      },
+      "sourceId": 9531873
+    },
+    {
+      "key": "languageString-99519298",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "T3_POWER_BY_TEXT",
+        "language": "en-GB"
+      },
+      "sourceId": 99519298
+    },
+    {
+      "key": "languageString-129210608",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "TPL_AGE",
+        "language": "en-GB"
+      },
+      "sourceId": 129210608
+    },
+    {
+      "key": "languageString-95563480",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "TPL_CONTACT_MAP",
+        "language": "en-GB"
+      },
+      "sourceId": 95563480
+    },
+    {
+      "key": "languageString-145166199",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "TPL_DAY",
+        "language": "en-GB"
+      },
+      "sourceId": 145166199
+    },
+    {
+      "key": "languageString-246092030",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "TPL_INFO",
+        "language": "en-GB"
+      },
+      "sourceId": 246092030
+    },
+    {
+      "key": "languageString-76089964",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "TPL_JA_KIDSCORNER_BACK_TO_TOP",
+        "language": "en-GB"
+      },
+      "sourceId": 76089964
+    },
+    {
+      "key": "languageString-203642144",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "TPL_JA_KIDSCORNER_DESIGNED_BY",
+        "language": "en-GB"
+      },
+      "sourceId": 203642144
+    },
+    {
+      "key": "languageString-186873007",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "TPL_JA_KIDSCORNER_FOOTER_LINE2",
+        "language": "en-GB"
+      },
+      "sourceId": 186873007
+    },
+    {
+      "key": "languageString-199211394",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "TPL_JA_KIDSCORNER_MAP_LOCATION",
+        "language": "en-GB"
+      },
+      "sourceId": 199211394
+    },
+    {
+      "key": "languageString-67130045",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "TPL_JA_KIDSCORNER_OFF_CANVAS_TOGGLE",
+        "language": "en-GB"
+      },
+      "sourceId": 67130045
+    },
+    {
+      "key": "languageString-13180607",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "TPL_JA_KIDSCORNER_VIEW_MORE",
+        "language": "en-GB"
+      },
+      "sourceId": 13180607
+    },
+    {
+      "key": "languageString-18614246",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "TPL_JA_KIDSCORNER_VISIT_JOOMLART",
+        "language": "en-GB"
+      },
+      "sourceId": 18614246
+    },
+    {
+      "key": "languageString-1313918",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "TPL_LOCATION",
+        "language": "en-GB"
+      },
+      "sourceId": 1313918
+    },
+    {
+      "key": "languageString-120261246",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "TPL_MONTH",
+        "language": "en-GB"
+      },
+      "sourceId": 120261246
+    },
+    {
+      "key": "languageString-186268624",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "TPL_MORE_INFO",
+        "language": "en-GB"
+      },
+      "sourceId": 186268624
+    },
+    {
+      "key": "languageString-81105322",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "TPL_NO_SUPPORT_GROUP",
+        "language": "en-GB"
+      },
+      "sourceId": 81105322
+    },
+    {
+      "key": "languageString-230321395",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "TPL_PRICE",
+        "language": "en-GB"
+      },
+      "sourceId": 230321395
+    },
+    {
+      "key": "languageString-55355196",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "TPL_SIDE_BAR",
+        "language": "en-GB"
+      },
+      "sourceId": 55355196
+    },
+    {
+      "key": "languageString-204331590",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "TPL_SIZE",
+        "language": "en-GB"
+      },
+      "sourceId": 204331590
+    },
+    {
+      "key": "languageString-216156060",
+      "kind": "languageString",
+      "identity": {
+        "extension": "tpl_ja_kidscorner",
+        "key": "TPL_TIME",
+        "language": "en-GB"
+      },
+      "sourceId": 216156060
     }
   ],
   "slots": [
+    {
+      "key": "category-2.0",
+      "entity": "category-2",
+      "column": "title",
+      "type": "text",
+      "sample": "Uncategorised",
+      "maxCharacters": 46,
+      "requiresEvidence": false,
+      "label": "Uncategorised / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "category-2.1",
+      "entity": "category-2",
+      "column": "description",
+      "type": "text",
+      "sample": "In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus.",
+      "maxCharacters": 300,
+      "requiresEvidence": false,
+      "xpath": "/html/body/div/p/text()",
+      "label": "Uncategorised / description",
+      "role": "editorial.paragraph"
+    },
+    {
+      "key": "category-8.0",
+      "entity": "category-8",
+      "column": "title",
+      "type": "text",
+      "sample": "Programs",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "Programs / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "category-8.1",
+      "entity": "category-8",
+      "column": "description",
+      "type": "text",
+      "sample": "In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus.",
+      "maxCharacters": 300,
+      "requiresEvidence": false,
+      "xpath": "/html/body/div/p/text()",
+      "label": "Programs / description",
+      "role": "editorial.paragraph"
+    },
+    {
+      "key": "category-9.0",
+      "entity": "category-9",
+      "column": "title",
+      "type": "text",
+      "sample": "Events",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "Events / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "category-9.1",
+      "entity": "category-9",
+      "column": "description",
+      "type": "text",
+      "sample": "In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus.",
+      "maxCharacters": 300,
+      "requiresEvidence": false,
+      "xpath": "/html/body/div/p/text()",
+      "label": "Events / description",
+      "role": "editorial.paragraph"
+    },
+    {
+      "key": "category-10.0",
+      "entity": "category-10",
+      "column": "title",
+      "type": "text",
+      "sample": "Blog",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "Blog / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "category-10.1",
+      "entity": "category-10",
+      "column": "description",
+      "type": "text",
+      "sample": "In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus.",
+      "maxCharacters": 300,
+      "requiresEvidence": false,
+      "xpath": "/html/body/div/p/text()",
+      "label": "Blog / description",
+      "role": "editorial.paragraph"
+    },
+    {
+      "key": "category-11.0",
+      "entity": "category-11",
+      "column": "title",
+      "type": "text",
+      "sample": "Playgroup",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "Playgroup / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "category-12.0",
+      "entity": "category-12",
+      "column": "title",
+      "type": "text",
+      "sample": "Hobby Class",
+      "maxCharacters": 42,
+      "requiresEvidence": false,
+      "label": "Hobby Class / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "category-13.0",
+      "entity": "category-13",
+      "column": "title",
+      "type": "text",
+      "sample": "Summer Camp",
+      "maxCharacters": 42,
+      "requiresEvidence": false,
+      "label": "Summer Camp / title",
+      "role": "editorial.heading"
+    },
     {
       "key": "module-95.0",
       "entity": "module-95",
@@ -1324,6 +1771,17 @@
       "requiresEvidence": false,
       "xpath": "/html/body/div/ul/li[2]/text()",
       "label": "Topbar Left"
+    },
+    {
+      "key": "module-95.2",
+      "entity": "module-95",
+      "column": "title",
+      "type": "text",
+      "sample": "Topbar Left",
+      "maxCharacters": 42,
+      "requiresEvidence": false,
+      "label": "Topbar Left / title",
+      "role": "editorial.heading"
     },
     {
       "key": "module-96.0",
@@ -1479,6 +1937,17 @@
       "role": "editorial.illustration"
     },
     {
+      "key": "module-96.12",
+      "entity": "module-96",
+      "column": "title",
+      "type": "text",
+      "sample": "Slideshow",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "Slideshow / title",
+      "role": "editorial.heading"
+    },
+    {
       "key": "module-97.0",
       "entity": "module-97",
       "column": "params",
@@ -1567,6 +2036,40 @@
       "label": "Welcome to Kids Corner,  Ultimate Kids' Fun Center. / image-alt"
     },
     {
+      "key": "module-97.7",
+      "entity": "module-97",
+      "column": "title",
+      "type": "text",
+      "sample": "Welcome to Kids Corner,  Ultimate Kids' Fun Center.",
+      "maxCharacters": 122,
+      "requiresEvidence": false,
+      "label": "Welcome to Kids Corner,  Ultimate Kids' Fun Center. / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-97.8",
+      "entity": "module-97",
+      "column": "params",
+      "type": "text",
+      "sample": "Welcome to Kids Corner",
+      "maxCharacters": 64,
+      "requiresEvidence": false,
+      "jsonPath": ["sub-heading"],
+      "label": "Welcome to Kids Corner,  Ultimate Kids' Fun Center. / sub-heading",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-98.0",
+      "entity": "module-98",
+      "column": "title",
+      "type": "text",
+      "sample": "Login",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "Login / title",
+      "role": "editorial.heading"
+    },
+    {
       "key": "module-99.0",
       "entity": "module-99",
       "column": "content",
@@ -1652,6 +2155,40 @@
       "requiresEvidence": false,
       "xpath": "/html/body/div/ul/li[3]/a/@title",
       "label": "Social Head"
+    },
+    {
+      "key": "module-99.6",
+      "entity": "module-99",
+      "column": "title",
+      "type": "text",
+      "sample": "Social Head",
+      "maxCharacters": 42,
+      "requiresEvidence": false,
+      "label": "Social Head / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-100.0",
+      "entity": "module-100",
+      "column": "title",
+      "type": "text",
+      "sample": "Check Our Programs  for Your Childs.",
+      "maxCharacters": 92,
+      "requiresEvidence": false,
+      "label": "Check Our Programs  for Your Childs. / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-100.1",
+      "entity": "module-100",
+      "column": "params",
+      "type": "text",
+      "sample": "Select Program",
+      "maxCharacters": 48,
+      "requiresEvidence": false,
+      "jsonPath": ["sub-heading"],
+      "label": "Check Our Programs  for Your Childs. / sub-heading",
+      "role": "editorial.heading"
     },
     {
       "key": "module-101.0",
@@ -1920,6 +2457,64 @@
       "role": "editorial.illustration"
     },
     {
+      "key": "module-101.21",
+      "entity": "module-101",
+      "column": "title",
+      "type": "text",
+      "sample": "The Largest Indoor  Activity Centre.",
+      "maxCharacters": 92,
+      "requiresEvidence": false,
+      "label": "The Largest Indoor  Activity Centre. / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-101.22",
+      "entity": "module-101",
+      "column": "params",
+      "type": "text",
+      "sample": "Kids activities",
+      "maxCharacters": 50,
+      "requiresEvidence": false,
+      "jsonPath": ["sub-heading"],
+      "label": "The Largest Indoor  Activity Centre. / sub-heading",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-101.23",
+      "entity": "module-101",
+      "column": "params",
+      "type": "image",
+      "sample": "images/joomlart/others/bg-decor.png",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["bg-module"],
+      "label": "The Largest Indoor  Activity Centre. / bg-module",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "module-102.0",
+      "entity": "module-102",
+      "column": "title",
+      "type": "text",
+      "sample": "Join Our Events.",
+      "maxCharacters": 52,
+      "requiresEvidence": false,
+      "label": "Join Our Events. / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-102.1",
+      "entity": "module-102",
+      "column": "params",
+      "type": "text",
+      "sample": "Upcoming Events",
+      "maxCharacters": 50,
+      "requiresEvidence": false,
+      "jsonPath": ["sub-heading"],
+      "label": "Join Our Events. / sub-heading",
+      "role": "editorial.heading"
+    },
+    {
       "key": "module-103.0",
       "entity": "module-103",
       "column": "params",
@@ -2175,6 +2770,52 @@
       "label": "Meet our Qualified  Staff of Kids Corner. / link"
     },
     {
+      "key": "module-103.20",
+      "entity": "module-103",
+      "column": "title",
+      "type": "text",
+      "sample": "Meet our Qualified  Staff of Kids Corner.",
+      "maxCharacters": 102,
+      "requiresEvidence": false,
+      "label": "Meet our Qualified  Staff of Kids Corner. / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-103.21",
+      "entity": "module-103",
+      "column": "params",
+      "type": "text",
+      "sample": "Expert People",
+      "maxCharacters": 46,
+      "requiresEvidence": false,
+      "jsonPath": ["sub-heading"],
+      "label": "Meet our Qualified  Staff of Kids Corner. / sub-heading",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-104.0",
+      "entity": "module-104",
+      "column": "title",
+      "type": "text",
+      "sample": "Recent Articles",
+      "maxCharacters": 50,
+      "requiresEvidence": false,
+      "label": "Recent Articles / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-104.1",
+      "entity": "module-104",
+      "column": "params",
+      "type": "text",
+      "sample": "News & Articles",
+      "maxCharacters": 50,
+      "requiresEvidence": false,
+      "jsonPath": ["sub-heading"],
+      "label": "Recent Articles / sub-heading",
+      "role": "editorial.heading"
+    },
+    {
       "key": "module-105.0",
       "entity": "module-105",
       "column": "params",
@@ -2312,6 +2953,29 @@
       "label": "Gallery / alt"
     },
     {
+      "key": "module-105.11",
+      "entity": "module-105",
+      "column": "title",
+      "type": "text",
+      "sample": "Gallery",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "Gallery / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-105.12",
+      "entity": "module-105",
+      "column": "params",
+      "type": "text",
+      "sample": "JoomlArt Advanced Custom module",
+      "maxCharacters": 82,
+      "requiresEvidence": false,
+      "jsonPath": ["sub-heading"],
+      "label": "Gallery / sub-heading",
+      "role": "editorial.heading"
+    },
+    {
       "key": "module-106.0",
       "entity": "module-106",
       "column": "content",
@@ -2322,6 +2986,17 @@
       "xpath": "/html/body/div/p/text()",
       "label": "About",
       "role": "editorial.paragraph"
+    },
+    {
+      "key": "module-106.1",
+      "entity": "module-106",
+      "column": "title",
+      "type": "text",
+      "sample": "About",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "About / title",
+      "role": "editorial.heading"
     },
     {
       "key": "module-107.0",
@@ -2393,6 +3068,17 @@
       }
     },
     {
+      "key": "module-107.5",
+      "entity": "module-107",
+      "column": "title",
+      "type": "text",
+      "sample": "Open Hours",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "Open Hours / title",
+      "role": "editorial.heading"
+    },
+    {
       "key": "module-108.0",
       "entity": "module-108",
       "column": "content",
@@ -2461,6 +3147,250 @@
         "item": 0,
         "kind": "contact"
       }
+    },
+    {
+      "key": "module-108.5",
+      "entity": "module-108",
+      "column": "title",
+      "type": "text",
+      "sample": "Contact List",
+      "maxCharacters": 44,
+      "requiresEvidence": false,
+      "label": "Contact List / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-109.0",
+      "entity": "module-109",
+      "column": "title",
+      "type": "text",
+      "sample": "Footer",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "Footer / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-110.0",
+      "entity": "module-110",
+      "column": "title",
+      "type": "text",
+      "sample": "JA Masthead",
+      "maxCharacters": 42,
+      "requiresEvidence": false,
+      "label": "JA Masthead / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-110.1",
+      "entity": "module-110",
+      "column": "params",
+      "type": "text",
+      "sample": "JA Kids Corner",
+      "maxCharacters": 48,
+      "requiresEvidence": false,
+      "jsonPath": ["default-title"],
+      "label": "JA Masthead / default-title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-110.2",
+      "entity": "module-110",
+      "column": "params",
+      "type": "text",
+      "sample": "Colorful Joomla Template for kids Preschool, kindergartens",
+      "maxCharacters": 136,
+      "requiresEvidence": false,
+      "jsonPath": ["default-description"],
+      "label": "JA Masthead / default-description",
+      "role": "editorial.paragraph"
+    },
+    {
+      "key": "module-110.3",
+      "entity": "module-110",
+      "column": "params",
+      "type": "text",
+      "sample": "Login",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": ["menuitem_config", "title", 0],
+      "label": "JA Masthead / title",
+      "role": "editorial.menu_label"
+    },
+    {
+      "key": "module-110.4",
+      "entity": "module-110",
+      "column": "params",
+      "type": "text",
+      "sample": "Registration",
+      "maxCharacters": 44,
+      "requiresEvidence": false,
+      "jsonPath": ["menuitem_config", "title", 1],
+      "label": "JA Masthead / title",
+      "role": "editorial.menu_label"
+    },
+    {
+      "key": "module-110.5",
+      "entity": "module-110",
+      "column": "params",
+      "type": "text",
+      "sample": "Profile",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": ["menuitem_config", "title", 2],
+      "label": "JA Masthead / title",
+      "role": "editorial.menu_label"
+    },
+    {
+      "key": "module-110.6",
+      "entity": "module-110",
+      "column": "params",
+      "type": "text",
+      "sample": "Edit Profile",
+      "maxCharacters": 44,
+      "requiresEvidence": false,
+      "jsonPath": ["menuitem_config", "title", 3],
+      "label": "JA Masthead / title",
+      "role": "editorial.menu_label"
+    },
+    {
+      "key": "module-110.7",
+      "entity": "module-110",
+      "column": "params",
+      "type": "text",
+      "sample": "What Are You Looking For? ",
+      "maxCharacters": 72,
+      "requiresEvidence": false,
+      "jsonPath": ["menuitem_config", "title", 4],
+      "label": "JA Masthead / title",
+      "role": "editorial.menu_label"
+    },
+    {
+      "key": "module-110.8",
+      "entity": "module-110",
+      "column": "params",
+      "type": "text",
+      "sample": "Smart Search",
+      "maxCharacters": 44,
+      "requiresEvidence": false,
+      "jsonPath": ["menuitem_config", "title", 5],
+      "label": "JA Masthead / title",
+      "role": "editorial.menu_label"
+    },
+    {
+      "key": "module-110.9",
+      "entity": "module-110",
+      "column": "params",
+      "type": "text",
+      "sample": "Featured Articles",
+      "maxCharacters": 54,
+      "requiresEvidence": false,
+      "jsonPath": ["menuitem_config", "title", 6],
+      "label": "JA Masthead / title",
+      "role": "editorial.menu_label"
+    },
+    {
+      "key": "module-110.10",
+      "entity": "module-110",
+      "column": "params",
+      "type": "text",
+      "sample": "Category Blog",
+      "maxCharacters": 46,
+      "requiresEvidence": false,
+      "jsonPath": ["menuitem_config", "title", 7],
+      "label": "JA Masthead / title",
+      "role": "editorial.menu_label"
+    },
+    {
+      "key": "module-110.11",
+      "entity": "module-110",
+      "column": "params",
+      "type": "text",
+      "sample": "Tagged Items",
+      "maxCharacters": 44,
+      "requiresEvidence": false,
+      "jsonPath": ["menuitem_config", "title", 8],
+      "label": "JA Masthead / title",
+      "role": "editorial.menu_label"
+    },
+    {
+      "key": "module-110.12",
+      "entity": "module-110",
+      "column": "params",
+      "type": "text",
+      "sample": "Do you need our help or support?",
+      "maxCharacters": 84,
+      "requiresEvidence": false,
+      "jsonPath": ["menuitem_config", "title", 9],
+      "label": "JA Masthead / title",
+      "role": "editorial.menu_label"
+    },
+    {
+      "key": "module-110.13",
+      "entity": "module-110",
+      "column": "params",
+      "type": "text",
+      "sample": "Typography",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": ["menuitem_config", "title", 10],
+      "label": "JA Masthead / title",
+      "role": "editorial.menu_label"
+    },
+    {
+      "key": "module-115.0",
+      "entity": "module-115",
+      "column": "title",
+      "type": "text",
+      "sample": "Tags",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "Tags / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-118.0",
+      "entity": "module-118",
+      "column": "title",
+      "type": "text",
+      "sample": "Categories",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "Categories / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-119.0",
+      "entity": "module-119",
+      "column": "title",
+      "type": "text",
+      "sample": "Latest Programs",
+      "maxCharacters": 50,
+      "requiresEvidence": false,
+      "label": "Latest Programs / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-122.0",
+      "entity": "module-122",
+      "column": "title",
+      "type": "text",
+      "sample": "Login",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "Login / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-123.0",
+      "entity": "module-123",
+      "column": "title",
+      "type": "text",
+      "sample": "Latest Events",
+      "maxCharacters": 46,
+      "requiresEvidence": false,
+      "label": "Latest Events / title",
+      "role": "editorial.heading"
     },
     {
       "key": "module-124.0",
@@ -2623,6 +3553,29 @@
       "jsonPath": ["gallery", "isotope[gallery]", "isotope[gallery][alt]", 5],
       "nestedJson": "jatools-config",
       "label": "Gallery / alt"
+    },
+    {
+      "key": "module-124.13",
+      "entity": "module-124",
+      "column": "title",
+      "type": "text",
+      "sample": "Gallery",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "Gallery / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "module-124.14",
+      "entity": "module-124",
+      "column": "params",
+      "type": "text",
+      "sample": "JoomlArt Advanced Custom module",
+      "maxCharacters": 82,
+      "requiresEvidence": false,
+      "jsonPath": ["sub-heading"],
+      "label": "Gallery / sub-heading",
+      "role": "editorial.heading"
     },
     {
       "key": "module-125.0",
@@ -3197,6 +4150,78 @@
       }
     },
     {
+      "key": "article-2.14",
+      "entity": "article-2",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/program/pic-2.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Colors for Toddlers / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-2.15",
+      "entity": "article-2",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-1.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Colors for Toddlers / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-2.16",
+      "entity": "article-2",
+      "column": "attribs",
+      "type": "text",
+      "sample": "$15",
+      "maxCharacters": 40,
+      "requiresEvidence": true,
+      "jsonPath": ["price"],
+      "label": "Colors for Toddlers / price",
+      "customize": "keep"
+    },
+    {
+      "key": "article-2.17",
+      "entity": "article-2",
+      "column": "attribs",
+      "type": "text",
+      "sample": "0-2 years",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": ["age"],
+      "label": "Colors for Toddlers / age",
+      "customize": "keep"
+    },
+    {
+      "key": "article-2.18",
+      "entity": "article-2",
+      "column": "attribs",
+      "type": "text",
+      "sample": "5 seats",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": ["size"],
+      "label": "Colors for Toddlers / size",
+      "customize": "keep"
+    },
+    {
+      "key": "article-2.19",
+      "entity": "article-2",
+      "column": "attribs",
+      "type": "text",
+      "sample": "Nullam consectetur laoreet dui, ac dolor dictum ipsum pulvinar vel. Suspendisse at erat at neque acumi.",
+      "maxCharacters": 226,
+      "requiresEvidence": false,
+      "jsonPath": ["more_info"],
+      "label": "Colors for Toddlers / more_info",
+      "role": "editorial.paragraph"
+    },
+    {
       "key": "article-3.0",
       "entity": "article-3",
       "column": "introtext",
@@ -3368,6 +4393,78 @@
       }
     },
     {
+      "key": "article-3.14",
+      "entity": "article-3",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/program/pic-3.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Numbers Matching / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-3.15",
+      "entity": "article-3",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-17.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Numbers Matching / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-3.16",
+      "entity": "article-3",
+      "column": "attribs",
+      "type": "text",
+      "sample": "$18",
+      "maxCharacters": 40,
+      "requiresEvidence": true,
+      "jsonPath": ["price"],
+      "label": "Numbers Matching / price",
+      "customize": "keep"
+    },
+    {
+      "key": "article-3.17",
+      "entity": "article-3",
+      "column": "attribs",
+      "type": "text",
+      "sample": "2-4 years",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": ["age"],
+      "label": "Numbers Matching / age",
+      "customize": "keep"
+    },
+    {
+      "key": "article-3.18",
+      "entity": "article-3",
+      "column": "attribs",
+      "type": "text",
+      "sample": "10 seats",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": ["size"],
+      "label": "Numbers Matching / size",
+      "customize": "keep"
+    },
+    {
+      "key": "article-3.19",
+      "entity": "article-3",
+      "column": "attribs",
+      "type": "text",
+      "sample": "When an unknown printer took a galley of type and scrambled it to make",
+      "maxCharacters": 160,
+      "requiresEvidence": false,
+      "jsonPath": ["more_info"],
+      "label": "Numbers Matching / more_info",
+      "role": "editorial.paragraph"
+    },
+    {
       "key": "article-4.0",
       "entity": "article-4",
       "column": "introtext",
@@ -3537,6 +4634,66 @@
         "item": 0,
         "kind": "post"
       }
+    },
+    {
+      "key": "article-4.14",
+      "entity": "article-4",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/program/pic-4.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Cooking Fun Cake / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-4.15",
+      "entity": "article-4",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-6.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Cooking Fun Cake / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-4.16",
+      "entity": "article-4",
+      "column": "attribs",
+      "type": "text",
+      "sample": "$16",
+      "maxCharacters": 40,
+      "requiresEvidence": true,
+      "jsonPath": ["price"],
+      "label": "Cooking Fun Cake / price",
+      "customize": "keep"
+    },
+    {
+      "key": "article-4.17",
+      "entity": "article-4",
+      "column": "attribs",
+      "type": "text",
+      "sample": "3-5 years",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": ["age"],
+      "label": "Cooking Fun Cake / age",
+      "customize": "keep"
+    },
+    {
+      "key": "article-4.18",
+      "entity": "article-4",
+      "column": "attribs",
+      "type": "text",
+      "sample": "12 seats",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": ["size"],
+      "label": "Cooking Fun Cake / size",
+      "customize": "keep"
     },
     {
       "key": "article-5.0",
@@ -3867,6 +5024,30 @@
       }
     },
     {
+      "key": "article-5.27",
+      "entity": "article-5",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/8.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Kids have a fun time at this summer fest  / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-5.28",
+      "entity": "article-5",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-8.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Kids have a fun time at this summer fest  / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
       "key": "article-6.0",
       "entity": "article-6",
       "column": "introtext",
@@ -4193,6 +5374,30 @@
         "item": 0,
         "kind": "post"
       }
+    },
+    {
+      "key": "article-6.27",
+      "entity": "article-6",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/3.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": true,
+      "jsonPath": ["image_intro"],
+      "label": "Superhero Party with Avenger Team / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-6.28",
+      "entity": "article-6",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-3.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": true,
+      "jsonPath": ["image_fulltext"],
+      "label": "Superhero Party with Avenger Team / image_fulltext",
+      "role": "editorial.illustration"
     },
     {
       "key": "article-7.0",
@@ -4523,6 +5728,30 @@
       }
     },
     {
+      "key": "article-7.27",
+      "entity": "article-7",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/1.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Inviting Grandparents to Our Nursery School / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-7.28",
+      "entity": "article-7",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-1.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Inviting Grandparents to Our Nursery School / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
       "key": "article-8.0",
       "entity": "article-8",
       "column": "introtext",
@@ -4849,6 +6078,30 @@
         "item": 0,
         "kind": "post"
       }
+    },
+    {
+      "key": "article-8.27",
+      "entity": "article-8",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/11.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Year 6 Explore the Amazing Human Body / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-8.28",
+      "entity": "article-8",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-11.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Year 6 Explore the Amazing Human Body / image_fulltext",
+      "role": "editorial.illustration"
     },
     {
       "key": "article-9.0",
@@ -5179,6 +6432,30 @@
       }
     },
     {
+      "key": "article-9.27",
+      "entity": "article-9",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/2.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "First Day of KIdSchool Kindergarten: 8 Survival Skills / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-9.28",
+      "entity": "article-9",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-2.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "First Day of KIdSchool Kindergarten: 8 Survival Skills / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
       "key": "article-10.0",
       "entity": "article-10",
       "column": "introtext",
@@ -5505,6 +6782,30 @@
         "item": 0,
         "kind": "post"
       }
+    },
+    {
+      "key": "article-10.27",
+      "entity": "article-10",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/20.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Year 2 Picture Frame Building / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-10.28",
+      "entity": "article-10",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-20.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Year 2 Picture Frame Building / image_fulltext",
+      "role": "editorial.illustration"
     },
     {
       "key": "article-11.0",
@@ -5835,6 +7136,30 @@
       }
     },
     {
+      "key": "article-11.27",
+      "entity": "article-11",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/7.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Preschool serve cups of kindness at the lemonade stand / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-11.28",
+      "entity": "article-11",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-7.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Preschool serve cups of kindness at the lemonade stand / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
       "key": "article-12.0",
       "entity": "article-12",
       "column": "introtext",
@@ -6161,6 +7486,30 @@
         "item": 0,
         "kind": "post"
       }
+    },
+    {
+      "key": "article-12.27",
+      "entity": "article-12",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/14.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "It’s World Book Day next week (Thursday 1st March) / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-12.28",
+      "entity": "article-12",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-14.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "It’s World Book Day next week (Thursday 1st March) / image_fulltext",
+      "role": "editorial.illustration"
     },
     {
       "key": "article-13.0",
@@ -6491,6 +7840,30 @@
       }
     },
     {
+      "key": "article-13.27",
+      "entity": "article-13",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/19.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Year 4 are Safety-Conscious Electricians / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-13.28",
+      "entity": "article-13",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-19.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Year 4 are Safety-Conscious Electricians / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
       "key": "article-14.0",
       "entity": "article-14",
       "column": "introtext",
@@ -6817,6 +8190,30 @@
         "item": 0,
         "kind": "post"
       }
+    },
+    {
+      "key": "article-14.27",
+      "entity": "article-14",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/10.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Amazing Animators are Flipping Brilliant! / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-14.28",
+      "entity": "article-14",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-10.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Amazing Animators are Flipping Brilliant! / image_fulltext",
+      "role": "editorial.illustration"
     },
     {
       "key": "article-15.0",
@@ -7147,6 +8544,30 @@
       }
     },
     {
+      "key": "article-15.27",
+      "entity": "article-15",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/17.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Cool tech toys for kids who love to learn even while playing  / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-15.28",
+      "entity": "article-15",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-17.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Cool tech toys for kids who love to learn even while playing  / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
       "key": "article-16.0",
       "entity": "article-16",
       "column": "introtext",
@@ -7473,6 +8894,30 @@
         "item": 0,
         "kind": "post"
       }
+    },
+    {
+      "key": "article-16.27",
+      "entity": "article-16",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/6.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Experts recommend your child to get bored during summer break  / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-16.28",
+      "entity": "article-16",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-6.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Experts recommend your child to get bored during summer break  / image_fulltext",
+      "role": "editorial.illustration"
     },
     {
       "key": "article-17.0",
@@ -7803,6 +9248,30 @@
       }
     },
     {
+      "key": "article-17.27",
+      "entity": "article-17",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/22.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Summer camp to entertain and educate kids  / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-17.28",
+      "entity": "article-17",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-22.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Summer camp to entertain and educate kids  / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
       "key": "article-18.0",
       "entity": "article-18",
       "column": "introtext",
@@ -8129,6 +9598,30 @@
         "item": 0,
         "kind": "post"
       }
+    },
+    {
+      "key": "article-18.27",
+      "entity": "article-18",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/24.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Kids who aren't read to face 'million word gap': Study / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-18.28",
+      "entity": "article-18",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-24.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Kids who aren't read to face 'million word gap': Study / image_fulltext",
+      "role": "editorial.illustration"
     },
     {
       "key": "article-19.0",
@@ -8459,6 +9952,30 @@
       }
     },
     {
+      "key": "article-19.27",
+      "entity": "article-19",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/23.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Youngsters enjoy literary corner at bookstore  / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-19.28",
+      "entity": "article-19",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-23.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Youngsters enjoy literary corner at bookstore  / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
       "key": "article-20.0",
       "entity": "article-20",
       "column": "introtext",
@@ -8785,6 +10302,30 @@
         "item": 0,
         "kind": "post"
       }
+    },
+    {
+      "key": "article-20.27",
+      "entity": "article-20",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/15.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Kids' sunglasses: Best options from Ray-Ban, Disney & more  / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-20.28",
+      "entity": "article-20",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-15.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Kids' sunglasses: Best options from Ray-Ban, Disney & more  / image_fulltext",
+      "role": "editorial.illustration"
     },
     {
       "key": "article-21.0",
@@ -9115,6 +10656,30 @@
       }
     },
     {
+      "key": "article-21.27",
+      "entity": "article-21",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/13.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Here's why it is important to read in front of kids / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-21.28",
+      "entity": "article-21",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-13.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Here's why it is important to read in front of kids / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
       "key": "article-22.0",
       "entity": "article-22",
       "column": "introtext",
@@ -9441,6 +11006,30 @@
         "item": 0,
         "kind": "post"
       }
+    },
+    {
+      "key": "article-22.27",
+      "entity": "article-22",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/9.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Should you bribe your kids to make them do daily chores? / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-22.28",
+      "entity": "article-22",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-9.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Should you bribe your kids to make them do daily chores? / image_fulltext",
+      "role": "editorial.illustration"
     },
     {
       "key": "article-23.0",
@@ -9771,6 +11360,30 @@
       }
     },
     {
+      "key": "article-23.27",
+      "entity": "article-23",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/18.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Learning From Playing: It's All About Fun / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-23.28",
+      "entity": "article-23",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-18.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Learning From Playing: It's All About Fun / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
       "key": "article-24.0",
       "entity": "article-24",
       "column": "introtext",
@@ -10099,6 +11712,30 @@
       }
     },
     {
+      "key": "article-24.27",
+      "entity": "article-24",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/4.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Storytelling Opens the World to Discovery / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-24.28",
+      "entity": "article-24",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-4.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Storytelling Opens the World to Discovery / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
       "key": "article-25.0",
       "entity": "article-25",
       "column": "introtext",
@@ -10268,6 +11905,54 @@
         "item": 0,
         "kind": "post"
       }
+    },
+    {
+      "key": "article-25.14",
+      "entity": "article-25",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/events/pic-2.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": true,
+      "jsonPath": ["image_intro"],
+      "label": "Superhero Party with Avenger Team / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-25.15",
+      "entity": "article-25",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-15.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": true,
+      "jsonPath": ["image_fulltext"],
+      "label": "Superhero Party with Avenger Team / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-25.16",
+      "entity": "article-25",
+      "column": "attribs",
+      "type": "text",
+      "sample": "10:00 AM - 2:30 PM",
+      "maxCharacters": 56,
+      "requiresEvidence": true,
+      "jsonPath": ["event-time"],
+      "label": "Superhero Party with Avenger Team / event-time",
+      "customize": "keep"
+    },
+    {
+      "key": "article-25.17",
+      "entity": "article-25",
+      "column": "attribs",
+      "type": "text",
+      "sample": "Kids Corner",
+      "maxCharacters": 42,
+      "requiresEvidence": true,
+      "jsonPath": ["event-location"],
+      "label": "Superhero Party with Avenger Team / event-location",
+      "customize": "keep"
     },
     {
       "key": "article-26.0",
@@ -10441,6 +12126,54 @@
       }
     },
     {
+      "key": "article-26.14",
+      "entity": "article-26",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/events/pic-3.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Happines is Joy of Learning / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-26.15",
+      "entity": "article-26",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-10.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Happines is Joy of Learning / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-26.16",
+      "entity": "article-26",
+      "column": "attribs",
+      "type": "text",
+      "sample": "9:30 AM - 4:10 PM",
+      "maxCharacters": 54,
+      "requiresEvidence": false,
+      "jsonPath": ["event-time"],
+      "label": "Happines is Joy of Learning / event-time",
+      "customize": "keep"
+    },
+    {
+      "key": "article-26.17",
+      "entity": "article-26",
+      "column": "attribs",
+      "type": "text",
+      "sample": "Kids Corner",
+      "maxCharacters": 42,
+      "requiresEvidence": false,
+      "jsonPath": ["event-location"],
+      "label": "Happines is Joy of Learning / event-location",
+      "customize": "keep"
+    },
+    {
       "key": "article-27.0",
       "entity": "article-27",
       "column": "introtext",
@@ -10610,6 +12343,54 @@
         "item": 0,
         "kind": "post"
       }
+    },
+    {
+      "key": "article-27.14",
+      "entity": "article-27",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/events/pic-4.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Day of Love, Family and Fidelity / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-27.15",
+      "entity": "article-27",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-20.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Day of Love, Family and Fidelity / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-27.16",
+      "entity": "article-27",
+      "column": "attribs",
+      "type": "text",
+      "sample": "10:00 AM - 2:30 PM",
+      "maxCharacters": 56,
+      "requiresEvidence": false,
+      "jsonPath": ["event-time"],
+      "label": "Day of Love, Family and Fidelity / event-time",
+      "customize": "keep"
+    },
+    {
+      "key": "article-27.17",
+      "entity": "article-27",
+      "column": "attribs",
+      "type": "text",
+      "sample": "Kids Corner",
+      "maxCharacters": 42,
+      "requiresEvidence": false,
+      "jsonPath": ["event-location"],
+      "label": "Day of Love, Family and Fidelity / event-location",
+      "customize": "keep"
     },
     {
       "key": "article-28.0",
@@ -15492,6 +17273,66 @@
       }
     },
     {
+      "key": "article-32.14",
+      "entity": "article-32",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/program/pic-5.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Kids Preschool Nursery Rhymes / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-32.15",
+      "entity": "article-32",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-9.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Kids Preschool Nursery Rhymes / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-32.16",
+      "entity": "article-32",
+      "column": "attribs",
+      "type": "text",
+      "sample": "$17",
+      "maxCharacters": 40,
+      "requiresEvidence": true,
+      "jsonPath": ["price"],
+      "label": "Kids Preschool Nursery Rhymes / price",
+      "customize": "keep"
+    },
+    {
+      "key": "article-32.17",
+      "entity": "article-32",
+      "column": "attribs",
+      "type": "text",
+      "sample": "2-4 years",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": ["age"],
+      "label": "Kids Preschool Nursery Rhymes / age",
+      "customize": "keep"
+    },
+    {
+      "key": "article-32.18",
+      "entity": "article-32",
+      "column": "attribs",
+      "type": "text",
+      "sample": "13 seats",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": ["size"],
+      "label": "Kids Preschool Nursery Rhymes / size",
+      "customize": "keep"
+    },
+    {
       "key": "article-33.0",
       "entity": "article-33",
       "column": "introtext",
@@ -15661,6 +17502,66 @@
         "item": 0,
         "kind": "post"
       }
+    },
+    {
+      "key": "article-33.14",
+      "entity": "article-33",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/program/pic-6.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Cute Dolls Drawing Pages for Kids / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-33.15",
+      "entity": "article-33",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-18.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Cute Dolls Drawing Pages for Kids / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-33.16",
+      "entity": "article-33",
+      "column": "attribs",
+      "type": "text",
+      "sample": "$14",
+      "maxCharacters": 40,
+      "requiresEvidence": true,
+      "jsonPath": ["price"],
+      "label": "Cute Dolls Drawing Pages for Kids / price",
+      "customize": "keep"
+    },
+    {
+      "key": "article-33.17",
+      "entity": "article-33",
+      "column": "attribs",
+      "type": "text",
+      "sample": "2-6 years",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": ["age"],
+      "label": "Cute Dolls Drawing Pages for Kids / age",
+      "customize": "keep"
+    },
+    {
+      "key": "article-33.18",
+      "entity": "article-33",
+      "column": "attribs",
+      "type": "text",
+      "sample": "17 seats",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": ["size"],
+      "label": "Cute Dolls Drawing Pages for Kids / size",
+      "customize": "keep"
     },
     {
       "key": "article-34.0",
@@ -15834,6 +17735,66 @@
       }
     },
     {
+      "key": "article-34.14",
+      "entity": "article-34",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/program/pic-7.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Learn to Draw Painting Games / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-34.15",
+      "entity": "article-34",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-4.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Learn to Draw Painting Games / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-34.16",
+      "entity": "article-34",
+      "column": "attribs",
+      "type": "text",
+      "sample": "$19",
+      "maxCharacters": 40,
+      "requiresEvidence": true,
+      "jsonPath": ["price"],
+      "label": "Learn to Draw Painting Games / price",
+      "customize": "keep"
+    },
+    {
+      "key": "article-34.17",
+      "entity": "article-34",
+      "column": "attribs",
+      "type": "text",
+      "sample": "1-4 years",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": ["age"],
+      "label": "Learn to Draw Painting Games / age",
+      "customize": "keep"
+    },
+    {
+      "key": "article-34.18",
+      "entity": "article-34",
+      "column": "attribs",
+      "type": "text",
+      "sample": "16 seats",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": ["size"],
+      "label": "Learn to Draw Painting Games / size",
+      "customize": "keep"
+    },
+    {
       "key": "article-35.0",
       "entity": "article-35",
       "column": "introtext",
@@ -16003,6 +17964,78 @@
         "item": 0,
         "kind": "post"
       }
+    },
+    {
+      "key": "article-35.14",
+      "entity": "article-35",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/program/pic-8.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Bedtime Stories for Kids / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-35.15",
+      "entity": "article-35",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-3.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Bedtime Stories for Kids / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-35.16",
+      "entity": "article-35",
+      "column": "attribs",
+      "type": "text",
+      "sample": "$18",
+      "maxCharacters": 40,
+      "requiresEvidence": true,
+      "jsonPath": ["price"],
+      "label": "Bedtime Stories for Kids / price",
+      "customize": "keep"
+    },
+    {
+      "key": "article-35.17",
+      "entity": "article-35",
+      "column": "attribs",
+      "type": "text",
+      "sample": "2-3 years",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": ["age"],
+      "label": "Bedtime Stories for Kids / age",
+      "customize": "keep"
+    },
+    {
+      "key": "article-35.18",
+      "entity": "article-35",
+      "column": "attribs",
+      "type": "text",
+      "sample": "11 seats",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": ["size"],
+      "label": "Bedtime Stories for Kids / size",
+      "customize": "keep"
+    },
+    {
+      "key": "article-35.19",
+      "entity": "article-35",
+      "column": "attribs",
+      "type": "text",
+      "sample": "Letraset sheets containing Lorem Ipsum passages, and more recently with desktop",
+      "maxCharacters": 178,
+      "requiresEvidence": false,
+      "jsonPath": ["more_info"],
+      "label": "Bedtime Stories for Kids / more_info",
+      "role": "editorial.paragraph"
     },
     {
       "key": "article-36.0",
@@ -16176,6 +18209,66 @@
       }
     },
     {
+      "key": "article-36.14",
+      "entity": "article-36",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/program/pic-9.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Story Books To Read / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-36.15",
+      "entity": "article-36",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-5.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Story Books To Read / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-36.16",
+      "entity": "article-36",
+      "column": "attribs",
+      "type": "text",
+      "sample": "$20",
+      "maxCharacters": 40,
+      "requiresEvidence": true,
+      "jsonPath": ["price"],
+      "label": "Story Books To Read / price",
+      "customize": "keep"
+    },
+    {
+      "key": "article-36.17",
+      "entity": "article-36",
+      "column": "attribs",
+      "type": "text",
+      "sample": "1-6 years",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": ["age"],
+      "label": "Story Books To Read / age",
+      "customize": "keep"
+    },
+    {
+      "key": "article-36.18",
+      "entity": "article-36",
+      "column": "attribs",
+      "type": "text",
+      "sample": "16 seats",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "jsonPath": ["size"],
+      "label": "Story Books To Read / size",
+      "customize": "keep"
+    },
+    {
       "key": "article-37.0",
       "entity": "article-37",
       "column": "introtext",
@@ -16345,6 +18438,54 @@
         "item": 0,
         "kind": "post"
       }
+    },
+    {
+      "key": "article-37.14",
+      "entity": "article-37",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/events/pic-1.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Story Books To Read / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-37.15",
+      "entity": "article-37",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-8.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Story Books To Read / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-37.16",
+      "entity": "article-37",
+      "column": "attribs",
+      "type": "text",
+      "sample": "8:15 AM - 5:50 PM",
+      "maxCharacters": 54,
+      "requiresEvidence": false,
+      "jsonPath": ["event-time"],
+      "label": "Story Books To Read / event-time",
+      "customize": "keep"
+    },
+    {
+      "key": "article-37.17",
+      "entity": "article-37",
+      "column": "attribs",
+      "type": "text",
+      "sample": "Kids Corner",
+      "maxCharacters": 42,
+      "requiresEvidence": false,
+      "jsonPath": ["event-location"],
+      "label": "Story Books To Read / event-location",
+      "customize": "keep"
     },
     {
       "key": "article-38.0",
@@ -16518,6 +18659,54 @@
       }
     },
     {
+      "key": "article-38.14",
+      "entity": "article-38",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/events/pic-5.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Funny Food Games for Toddlers! / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-38.15",
+      "entity": "article-38",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-24.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Funny Food Games for Toddlers! / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-38.16",
+      "entity": "article-38",
+      "column": "attribs",
+      "type": "text",
+      "sample": "2:00 AM - 6:30 PM",
+      "maxCharacters": 54,
+      "requiresEvidence": false,
+      "jsonPath": ["event-time"],
+      "label": "Funny Food Games for Toddlers! / event-time",
+      "customize": "keep"
+    },
+    {
+      "key": "article-38.17",
+      "entity": "article-38",
+      "column": "attribs",
+      "type": "text",
+      "sample": "Kids Corner",
+      "maxCharacters": 42,
+      "requiresEvidence": false,
+      "jsonPath": ["event-location"],
+      "label": "Funny Food Games for Toddlers! / event-location",
+      "customize": "keep"
+    },
+    {
       "key": "article-39.0",
       "entity": "article-39",
       "column": "introtext",
@@ -16687,6 +18876,54 @@
         "item": 0,
         "kind": "post"
       }
+    },
+    {
+      "key": "article-39.14",
+      "entity": "article-39",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/events/pic-6.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Smart Cycle Mission Tech City / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-39.15",
+      "entity": "article-39",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-16.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Smart Cycle Mission Tech City / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-39.16",
+      "entity": "article-39",
+      "column": "attribs",
+      "type": "text",
+      "sample": "11:00 AM - 3:35 PM",
+      "maxCharacters": 56,
+      "requiresEvidence": false,
+      "jsonPath": ["event-time"],
+      "label": "Smart Cycle Mission Tech City / event-time",
+      "customize": "keep"
+    },
+    {
+      "key": "article-39.17",
+      "entity": "article-39",
+      "column": "attribs",
+      "type": "text",
+      "sample": "Kids Corner",
+      "maxCharacters": 42,
+      "requiresEvidence": false,
+      "jsonPath": ["event-location"],
+      "label": "Smart Cycle Mission Tech City / event-location",
+      "customize": "keep"
     },
     {
       "key": "article-40.0",
@@ -16860,6 +19097,54 @@
       }
     },
     {
+      "key": "article-40.14",
+      "entity": "article-40",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/events/pic-7.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Color Ripple for Toddlers / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-40.15",
+      "entity": "article-40",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-23.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Color Ripple for Toddlers / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-40.16",
+      "entity": "article-40",
+      "column": "attribs",
+      "type": "text",
+      "sample": "6:10 AM - 7:30 PM",
+      "maxCharacters": 54,
+      "requiresEvidence": false,
+      "jsonPath": ["event-time"],
+      "label": "Color Ripple for Toddlers / event-time",
+      "customize": "keep"
+    },
+    {
+      "key": "article-40.17",
+      "entity": "article-40",
+      "column": "attribs",
+      "type": "text",
+      "sample": "Kids Corner",
+      "maxCharacters": 42,
+      "requiresEvidence": false,
+      "jsonPath": ["event-location"],
+      "label": "Color Ripple for Toddlers / event-location",
+      "customize": "keep"
+    },
+    {
       "key": "article-41.0",
       "entity": "article-41",
       "column": "introtext",
@@ -17031,6 +19316,54 @@
       }
     },
     {
+      "key": "article-41.14",
+      "entity": "article-41",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/events/pic-8.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_intro"],
+      "label": "Free Games for kids  / image_intro",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-41.15",
+      "entity": "article-41",
+      "column": "images",
+      "type": "image",
+      "sample": "images/joomlart/blog/detail-22.jpg",
+      "maxCharacters": 255,
+      "requiresEvidence": false,
+      "jsonPath": ["image_fulltext"],
+      "label": "Free Games for kids  / image_fulltext",
+      "role": "editorial.illustration"
+    },
+    {
+      "key": "article-41.16",
+      "entity": "article-41",
+      "column": "attribs",
+      "type": "text",
+      "sample": "4:25 AM - 3:35 PM",
+      "maxCharacters": 54,
+      "requiresEvidence": false,
+      "jsonPath": ["event-time"],
+      "label": "Free Games for kids  / event-time",
+      "customize": "keep"
+    },
+    {
+      "key": "article-41.17",
+      "entity": "article-41",
+      "column": "attribs",
+      "type": "text",
+      "sample": "Kids Corner",
+      "maxCharacters": 42,
+      "requiresEvidence": false,
+      "jsonPath": ["event-location"],
+      "label": "Free Games for kids  / event-location",
+      "customize": "keep"
+    },
+    {
       "key": "menuItem-101.0",
       "entity": "menuItem-101",
       "column": "title",
@@ -17040,6 +19373,30 @@
       "requiresEvidence": false,
       "label": "Home",
       "role": "editorial.menu_label"
+    },
+    {
+      "key": "menuItem-101.1",
+      "entity": "menuItem-101",
+      "column": "params",
+      "type": "text",
+      "sample": "Kids preschool, Kindergarten Joomla Template - JA Kids Corner",
+      "maxCharacters": 142,
+      "requiresEvidence": false,
+      "jsonPath": ["page_title"],
+      "label": "Home / page_title",
+      "role": "editorial.menu_label"
+    },
+    {
+      "key": "menuItem-101.2",
+      "entity": "menuItem-101",
+      "column": "params",
+      "type": "text",
+      "sample": "Kids preschool, Kindergarten Joomla Template - JA Kids Corner",
+      "maxCharacters": 142,
+      "requiresEvidence": false,
+      "jsonPath": ["menu-meta_description"],
+      "label": "Home / menu-meta_description",
+      "role": "editorial.paragraph"
     },
     {
       "key": "menuItem-102.0",
@@ -17447,6 +19804,553 @@
       "requiresEvidence": false,
       "label": "Test",
       "role": "editorial.menu_label"
+    },
+    {
+      "key": "contact-1.0",
+      "entity": "contact-1",
+      "column": "name",
+      "type": "text",
+      "sample": "Ja KidsCorner",
+      "maxCharacters": 46,
+      "requiresEvidence": true,
+      "label": "Ja KidsCorner / name",
+      "customize": "keep"
+    },
+    {
+      "key": "contact-1.1",
+      "entity": "contact-1",
+      "column": "address",
+      "type": "text",
+      "sample": "621 Bungalow Road\r\nClatonia, NE 68328",
+      "maxCharacters": 94,
+      "requiresEvidence": true,
+      "label": "Ja KidsCorner / address",
+      "customize": "keep"
+    },
+    {
+      "key": "contact-1.2",
+      "entity": "contact-1",
+      "column": "telephone",
+      "type": "text",
+      "sample": "402-989-6685",
+      "maxCharacters": 44,
+      "requiresEvidence": true,
+      "label": "Ja KidsCorner / telephone",
+      "customize": "keep"
+    },
+    {
+      "key": "contact-1.3",
+      "entity": "contact-1",
+      "column": "mobile",
+      "type": "text",
+      "sample": "0145645627",
+      "maxCharacters": 40,
+      "requiresEvidence": true,
+      "label": "Ja KidsCorner / mobile",
+      "customize": "keep"
+    },
+    {
+      "key": "contact-1.4",
+      "entity": "contact-1",
+      "column": "email_to",
+      "type": "text",
+      "sample": "no-reply@gmail.com",
+      "maxCharacters": 56,
+      "requiresEvidence": true,
+      "label": "Ja KidsCorner / email_to",
+      "customize": "keep"
+    },
+    {
+      "key": "contact-1.5",
+      "entity": "contact-1",
+      "column": "webpage",
+      "type": "url",
+      "sample": "https://joomlart.com",
+      "maxCharacters": 2048,
+      "requiresEvidence": true,
+      "label": "Ja KidsCorner / webpage",
+      "customize": "keep"
+    },
+    {
+      "key": "contact-1.6",
+      "entity": "contact-1",
+      "column": "misc",
+      "type": "text",
+      "sample": "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large lang",
+      "maxCharacters": 428,
+      "requiresEvidence": false,
+      "xpath": "/html/body/div/p/text()",
+      "label": "Ja KidsCorner / misc",
+      "role": "editorial.paragraph"
+    },
+    {
+      "key": "contact-4.0",
+      "entity": "contact-4",
+      "column": "name",
+      "type": "text",
+      "sample": "Kids Corner",
+      "maxCharacters": 42,
+      "requiresEvidence": true,
+      "label": "Kids Corner / name",
+      "customize": "keep"
+    },
+    {
+      "key": "contact-4.1",
+      "entity": "contact-4",
+      "column": "address",
+      "type": "text",
+      "sample": "621 Bungalow Road\r\nClatonia, NE 68328",
+      "maxCharacters": 94,
+      "requiresEvidence": true,
+      "label": "Kids Corner / address",
+      "customize": "keep"
+    },
+    {
+      "key": "contact-4.2",
+      "entity": "contact-4",
+      "column": "telephone",
+      "type": "text",
+      "sample": "402-989-6685",
+      "maxCharacters": 44,
+      "requiresEvidence": true,
+      "label": "Kids Corner / telephone",
+      "customize": "keep"
+    },
+    {
+      "key": "contact-4.3",
+      "entity": "contact-4",
+      "column": "mobile",
+      "type": "text",
+      "sample": "0145645627",
+      "maxCharacters": 40,
+      "requiresEvidence": true,
+      "label": "Kids Corner / mobile",
+      "customize": "keep"
+    },
+    {
+      "key": "contact-4.4",
+      "entity": "contact-4",
+      "column": "email_to",
+      "type": "text",
+      "sample": "no-reply@gmail.com",
+      "maxCharacters": 56,
+      "requiresEvidence": true,
+      "label": "Kids Corner / email_to",
+      "customize": "keep"
+    },
+    {
+      "key": "contact-4.5",
+      "entity": "contact-4",
+      "column": "webpage",
+      "type": "url",
+      "sample": "https://joomlart.com",
+      "maxCharacters": 2048,
+      "requiresEvidence": true,
+      "label": "Kids Corner / webpage",
+      "customize": "keep"
+    },
+    {
+      "key": "contact-4.6",
+      "entity": "contact-4",
+      "column": "misc",
+      "type": "text",
+      "sample": "Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large lang",
+      "maxCharacters": 428,
+      "requiresEvidence": false,
+      "xpath": "/html/body/div/p/text()",
+      "label": "Kids Corner / misc",
+      "role": "editorial.paragraph"
+    },
+    {
+      "key": "tag-2.0",
+      "entity": "tag-2",
+      "column": "title",
+      "type": "text",
+      "sample": "Joomla",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "Joomla / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "tag-3.0",
+      "entity": "tag-3",
+      "column": "title",
+      "type": "text",
+      "sample": "study",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "study / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "tag-4.0",
+      "entity": "tag-4",
+      "column": "title",
+      "type": "text",
+      "sample": "summer",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "summer / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "tag-5.0",
+      "entity": "tag-5",
+      "column": "title",
+      "type": "text",
+      "sample": "play",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "play / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "tag-6.0",
+      "entity": "tag-6",
+      "column": "title",
+      "type": "text",
+      "sample": "toy",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "toy / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "tag-7.0",
+      "entity": "tag-7",
+      "column": "title",
+      "type": "text",
+      "sample": "kids",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "kids / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "tag-8.0",
+      "entity": "tag-8",
+      "column": "title",
+      "type": "text",
+      "sample": "children",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "children / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "tag-9.0",
+      "entity": "tag-9",
+      "column": "title",
+      "type": "text",
+      "sample": "kidscorner",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "kidscorner / title",
+      "role": "editorial.heading"
+    },
+    {
+      "key": "languageString-70319338.0",
+      "entity": "languageString-70319338",
+      "column": "value",
+      "type": "text",
+      "sample": "Enter all or part of the title to search for.",
+      "maxCharacters": 110,
+      "requiresEvidence": false,
+      "label": "COM_TAGS_FILTER_SEARCH_DESC (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-172109843.0",
+      "entity": "languageString-172109843",
+      "column": "value",
+      "type": "text",
+      "sample": "T3 Plugin is not enabled",
+      "maxCharacters": 68,
+      "requiresEvidence": false,
+      "label": "T3_MISSING_T3_PLUGIN (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-9531873.0",
+      "entity": "languageString-9531873",
+      "column": "value",
+      "type": "text",
+      "sample": "Powered By T3 Framework",
+      "maxCharacters": 66,
+      "requiresEvidence": false,
+      "xpath": "/html/body/div",
+      "label": "T3_POWER_BY_HTML (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-99519298.0",
+      "entity": "languageString-99519298",
+      "column": "value",
+      "type": "text",
+      "sample": "Powered By T3 Framework",
+      "maxCharacters": 66,
+      "requiresEvidence": false,
+      "label": "T3_POWER_BY_TEXT (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-129210608.0",
+      "entity": "languageString-129210608",
+      "column": "value",
+      "type": "text",
+      "sample": "Age",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "TPL_AGE (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-95563480.0",
+      "entity": "languageString-95563480",
+      "column": "value",
+      "type": "text",
+      "sample": "Location",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "TPL_CONTACT_MAP (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-145166199.0",
+      "entity": "languageString-145166199",
+      "column": "value",
+      "type": "text",
+      "sample": "d",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "TPL_DAY (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-246092030.0",
+      "entity": "languageString-246092030",
+      "column": "value",
+      "type": "text",
+      "sample": "Info detail",
+      "maxCharacters": 42,
+      "requiresEvidence": false,
+      "label": "TPL_INFO (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-76089964.0",
+      "entity": "languageString-76089964",
+      "column": "value",
+      "type": "text",
+      "sample": "Back to Top",
+      "maxCharacters": 42,
+      "requiresEvidence": false,
+      "label": "TPL_JA_KIDSCORNER_BACK_TO_TOP (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-203642144.0",
+      "entity": "languageString-203642144",
+      "column": "value",
+      "type": "text",
+      "sample": "Designed by",
+      "maxCharacters": 42,
+      "requiresEvidence": false,
+      "label": "TPL_JA_KIDSCORNER_DESIGNED_BY (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-186873007.0",
+      "entity": "languageString-186873007",
+      "column": "value",
+      "type": "url",
+      "sample": "https://www.joomla.org",
+      "maxCharacters": 64,
+      "requiresEvidence": false,
+      "xpath": "/html/body/div/a[1]/@href",
+      "label": "TPL_JA_KIDSCORNER_FOOTER_LINE2 (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-186873007.1",
+      "entity": "languageString-186873007",
+      "column": "value",
+      "type": "text",
+      "sample": "Joomla!",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "xpath": "/html/body/div/a[1]/text()",
+      "label": "TPL_JA_KIDSCORNER_FOOTER_LINE2 (template string, en-GB)",
+      "role": "editorial.button_label"
+    },
+    {
+      "key": "languageString-186873007.2",
+      "entity": "languageString-186873007",
+      "column": "value",
+      "type": "text",
+      "sample": " is Free Software released under the ",
+      "maxCharacters": 94,
+      "requiresEvidence": false,
+      "xpath": "/html/body/div/text()",
+      "label": "TPL_JA_KIDSCORNER_FOOTER_LINE2 (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-186873007.3",
+      "entity": "languageString-186873007",
+      "column": "value",
+      "type": "url",
+      "sample": "https://www.gnu.org/licenses/gpl-2.0.html",
+      "maxCharacters": 102,
+      "requiresEvidence": false,
+      "xpath": "/html/body/div/a[2]/@href",
+      "label": "TPL_JA_KIDSCORNER_FOOTER_LINE2 (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-186873007.4",
+      "entity": "languageString-186873007",
+      "column": "value",
+      "type": "text",
+      "sample": "GNU General Public License.",
+      "maxCharacters": 74,
+      "requiresEvidence": false,
+      "xpath": "/html/body/div/a[2]/text()",
+      "label": "TPL_JA_KIDSCORNER_FOOTER_LINE2 (template string, en-GB)",
+      "role": "editorial.button_label"
+    },
+    {
+      "key": "languageString-199211394.0",
+      "entity": "languageString-199211394",
+      "column": "value",
+      "type": "text",
+      "sample": "London, UK",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "TPL_JA_KIDSCORNER_MAP_LOCATION (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-67130045.0",
+      "entity": "languageString-67130045",
+      "column": "value",
+      "type": "text",
+      "sample": "Toggle Navigation",
+      "maxCharacters": 54,
+      "requiresEvidence": false,
+      "label": "TPL_JA_KIDSCORNER_OFF_CANVAS_TOGGLE (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-13180607.0",
+      "entity": "languageString-13180607",
+      "column": "value",
+      "type": "text",
+      "sample": "View More",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "TPL_JA_KIDSCORNER_VIEW_MORE (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-18614246.0",
+      "entity": "languageString-18614246",
+      "column": "value",
+      "type": "text",
+      "sample": "Visit Joomlart.com!",
+      "maxCharacters": 58,
+      "requiresEvidence": false,
+      "label": "TPL_JA_KIDSCORNER_VISIT_JOOMLART (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-1313918.0",
+      "entity": "languageString-1313918",
+      "column": "value",
+      "type": "text",
+      "sample": "Location",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "TPL_LOCATION (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-120261246.0",
+      "entity": "languageString-120261246",
+      "column": "value",
+      "type": "text",
+      "sample": "M",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "TPL_MONTH (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-186268624.0",
+      "entity": "languageString-186268624",
+      "column": "value",
+      "type": "text",
+      "sample": "More info",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "TPL_MORE_INFO (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-81105322.0",
+      "entity": "languageString-81105322",
+      "column": "value",
+      "type": "text",
+      "sample": "TPL_NO_SUPPORT_GROUP",
+      "maxCharacters": 60,
+      "requiresEvidence": false,
+      "label": "TPL_NO_SUPPORT_GROUP (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-230321395.0",
+      "entity": "languageString-230321395",
+      "column": "value",
+      "type": "text",
+      "sample": "Price",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "TPL_PRICE (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-55355196.0",
+      "entity": "languageString-55355196",
+      "column": "value",
+      "type": "text",
+      "sample": "Sidebar",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "TPL_SIDE_BAR (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-204331590.0",
+      "entity": "languageString-204331590",
+      "column": "value",
+      "type": "text",
+      "sample": "Size",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "TPL_SIZE (template string, en-GB)",
+      "customize": "keep"
+    },
+    {
+      "key": "languageString-216156060.0",
+      "entity": "languageString-216156060",
+      "column": "value",
+      "type": "text",
+      "sample": "Time",
+      "maxCharacters": 40,
+      "requiresEvidence": false,
+      "label": "TPL_TIME (template string, en-GB)",
+      "customize": "keep"
     }
   ],
   "pages": [
@@ -21307,7 +24211,7 @@
     {
       "entity": "menuItem-146",
       "route": "events",
-      "link": "index.php?option=com_dtregister&view=event&layout=categorylist&controller=event&task=category&list[0]=3&dt_theme[name]=dt_default",
+      "link": "index.php?option=com_content&view=category&layout=blog&id=9",
       "style": "templateStyle-10",
       "layout": null,
       "assignedModules": [
