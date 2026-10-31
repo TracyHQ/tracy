@@ -33,7 +33,8 @@ export async function designRoutesAt(origin, fetchImpl) {
 async function libraryShownAt(origin, fetchImpl) {
   if (!origin) return false
   try {
-    const response = await fetchImpl(`${origin.replace(/\/+$/, '')}/api/design-systems`, {
+    // An absolute path against the origin: no trailing-slash regex over a configured value.
+    const response = await fetchImpl(new URL('/api/design-systems', origin).href, {
       headers: { accept: 'application/json' },
       signal: AbortSignal.timeout(2500)
     })

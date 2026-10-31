@@ -24745,7 +24745,7 @@ async function designRoutesAt(origin, fetchImpl) {
 async function libraryShownAt(origin, fetchImpl) {
   if (!origin) return false;
   try {
-    const response = await fetchImpl(`${origin.replace(/\/+$/, "")}/api/design-systems`, {
+    const response = await fetchImpl(new URL("/api/design-systems", origin).href, {
       headers: { accept: "application/json" },
       signal: AbortSignal.timeout(2500)
     });
