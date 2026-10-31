@@ -30,7 +30,38 @@
       "reason": "Per-locale neutral copy for website opportunities (including the forbidden-phrases list keyed by locale); values are localized text."
     }
   ],
-  "lines": [],
+  "lines": [
+    {
+      "path": "apps/tracy-web/test/content-pages.test.mjs",
+      "sha256": "445d5f20d624e5f6c9b9be95baf29c09f93016a72435be76ed54bf3ff2f67159",
+      "count": 1,
+      "reason": "Exact multilingual page-title fixture or expected query value used to verify Unicode matching. Test names, comments and executable behavior remain subject to English policy."
+    },
+    {
+      "path": "packages/tools/tracy-site-tools/test/read-compact.test.mjs",
+      "sha256": "487d734ceb836ed660eeb6d98c0a8204343ed1c40cc507538630b9b64d8ccd68",
+      "count": 1,
+      "reason": "Exact multilingual page-title fixture or expected query value used to verify Unicode matching. Test names, comments and executable behavior remain subject to English policy."
+    },
+    {
+      "path": "packages/tools/tracy-site-tools/test/read-compact.test.mjs",
+      "sha256": "301209a21fd40a52c37215b48f0e388c0ec29aa515438d985fb66249a29f5679",
+      "count": 1,
+      "reason": "Exact multilingual page-title fixture or expected query value used to verify Unicode matching. Test names, comments and executable behavior remain subject to English policy."
+    },
+    {
+      "path": "packages/tools/tracy-site-tools/test/read-compact.test.mjs",
+      "sha256": "ca39acd51298435fac460143d77c4a03576eda2346159a4812cf64dc18aa2b82",
+      "count": 1,
+      "reason": "Exact multilingual page-title fixture or expected query value used to verify Unicode matching. Test names, comments and executable behavior remain subject to English policy."
+    },
+    {
+      "path": "packages/tools/tracy-site-tools/test/read-compact.test.mjs",
+      "sha256": "5aa6bc27be710e9146d21c078f9a28e0474d090e6e2c6e878e15ea56392edfdb",
+      "count": 1,
+      "reason": "Exact multilingual page-title fixture or expected query value used to verify Unicode matching. Test names, comments and executable behavior remain subject to English policy."
+    }
+  ],
   "objects": [
     {
       "path": "apps/tracy-web/src/lib/quickstart-releases.js",
@@ -261,6 +292,46 @@
       "path": "packages/locale/tracy-locales/lib/client.js",
       "oid": "5ffa78015f45f05c3c2a4e8fa40c38a9cb9cf782",
       "reason": "Earlier exact build of the interface translation bundle in PR #254 (commit 265a058d1, Sync to live words before the kept-terms fix). The language-policy check reads every commit of a pull request, so this intermediate object needs the same approval as the final one. Rebuilt from its localized JSON dictionaries at that commit; different bytes require a separate review."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/emdash-streaming-before-pagination-guide/08-language.json",
+      "oid": "69a39c386c159adcc974a2ceb8cb1af5bb684a37",
+      "reason": "Exact captured multilingual agent acceptance transcript or test output. Localized model responses and existing fixture labels are retained verbatim as measured evidence; authored reports are English."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/emdash-streaming-before-pagination-guide/17-language.json",
+      "oid": "f7b6d5f38fe9e91429c3e77d02615c24c6e6d1e2",
+      "reason": "Exact captured multilingual agent acceptance transcript or test output. Localized model responses and existing fixture labels are retained verbatim as measured evidence; authored reports are English."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/emdash-streaming-before-recovery/08-language.json",
+      "oid": "88a59b4d711cd3f452b09560e0646a28f8eb6909",
+      "reason": "Exact captured multilingual agent acceptance transcript or test output. Localized model responses and existing fixture labels are retained verbatim as measured evidence; authored reports are English."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/emdash-streaming-before-recovery/17-language.json",
+      "oid": "afba8e6a4eea4f7553ecc8fc8ef590a6a1fc3275",
+      "reason": "Exact captured multilingual agent acceptance transcript or test output. Localized model responses and existing fixture labels are retained verbatim as measured evidence; authored reports are English."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/emdash-streaming/08-language.json",
+      "oid": "8c0f6470f72a711c9ebfa935ab37d89e3df497bf",
+      "reason": "Exact captured multilingual agent acceptance transcript or test output. Localized model responses and existing fixture labels are retained verbatim as measured evidence; authored reports are English."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/emdash-streaming/17-language.json",
+      "oid": "013e9c8d4a1dd8c1f6ec0cd8cbe262678cc9b89b",
+      "reason": "Exact captured multilingual agent acceptance transcript or test output. Localized model responses and existing fixture labels are retained verbatim as measured evidence; authored reports are English."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/focused-tests.txt",
+      "oid": "89170d942be8d667cdbf972e005ea21fcd99e7d5",
+      "reason": "Exact captured multilingual agent acceptance transcript or test output. Localized model responses and existing fixture labels are retained verbatim as measured evidence; authored reports are English."
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/site-tools-tests.txt",
+      "oid": "b379c51580015ae624c607e820977960f54d69d3",
+      "reason": "Exact captured multilingual agent acceptance transcript or test output. Localized model responses and existing fixture labels are retained verbatim as measured evidence; authored reports are English."
     }
   ]
 }
