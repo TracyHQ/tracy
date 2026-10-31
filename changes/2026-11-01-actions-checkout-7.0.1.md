@@ -1,0 +1,2 @@
+- **actions/checkout 7.0.1 in every workflow** — CI maintainer (Claude, for David) · `ci/actions-checkout-7.0.1` · 2026-11-01
+  **Affects:** every GitHub Actions job's checkout step (pinned by SHA). v7 refuses to check out a fork's pull request under `pull_request_target` and `workflow_run`; `ci-label-rerun.yml` and `auto-merge-develop.yml` check out only the base commit or the default branch, so nothing here changes. Replaces dependabot's #215.
