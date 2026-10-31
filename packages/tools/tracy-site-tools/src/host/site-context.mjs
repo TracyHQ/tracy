@@ -1679,7 +1679,7 @@ function recordLine(record) {
  * @param {{ wordpressReadBack?: boolean, buildInBlock?: boolean, tools?: Iterable<string> | null,
  *   slot?: { id: string, name: string | null, where: string, vars: string[], platform?: string } | null | undefined,
  *   roles?: { vars: string[], tokens?: Record<string, string>, values?: Record<string, string> } | null,
- *   chatDesign?: { chat: boolean, button: boolean } | null }} [options] - `chatDesign`: whether the
+ *   chatDesign?: { chat: boolean, button: boolean, library?: boolean } | null }} [options] - `chatDesign`: whether the
  *   operator lets the chat apply a design system (`chat-design-route.mjs`), read by the caller at
  *   Tracy; off, the block says so on the line after the design system's (`chatRouteLine`). `slot`:
  *   the design-system slot the site wears, read from the site by the caller (`ds-slot-worn.mjs`: a

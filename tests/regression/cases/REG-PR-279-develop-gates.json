@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-279-develop-gates",
+  "kind": "fix",
+  "title": "The server-rendered pages declare the AA primary the tests pin, and the EmDash inventories are current",
+  "pr": 279,
+  "area": "ci/gates",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: render the page shell, a bar page, the sign-in page and a seats page and read their --primary."
+  ],
+  "expect": ["S1: each declares --primary:oklch(0.565 0.136 37.4)."],
+  "selectors": {
+    "file": "apps/tracy-web/src/lib/page-shell.js",
+    "exports": "pageShell"
+  },
+  "evidence": "develop red after #276: five tests pinned --primary 0.588; also TS2345 in site-context.mjs and stale EmDash inventories after #263 and #271",
+  "fence": "CI gates",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=token block",
+      "apps/tracy-web/test/page-shell.test.mjs",
+      "apps/tracy-web/test/bar-pages.test.mjs",
+      "apps/tracy-web/test/seats-pages.test.mjs"
+    ],
+    "tests": [
+      "pageShell: the token block mirrors docs/references/page-shell-tokens.md, values unchanged",
+      "unknownSitePage and messagePage carry the shared shell — token block, color-scheme",
+      "every page in this file carries the shared shell — token block, color-scheme, favicon"
+    ]
+  }
+}
