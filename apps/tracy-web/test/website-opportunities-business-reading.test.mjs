@@ -17,6 +17,10 @@ import { placeViewOf } from 'website-opportunities/src/place-view.js'
 import { briefResearchOf, makeSiteBrief } from 'website-opportunities/src/brief-research.js'
 import { readPlaceProfile } from 'website-opportunities/src/place-profile-read.js'
 import { BUSINESS_READING_SYSTEM } from 'website-opportunities/domain/business-reading.mjs'
+import {
+  businessReadingDoorOf,
+  businessReadingMaxTokens
+} from 'website-opportunities/src/business-reading.js'
 import { validatePlaceProfile } from 'website-opportunities/domain/place-profile.mjs'
 import { fileDb } from './_db.mjs'
 // Whether a person shows lives in their fact (brief schema 2, #1791); an older brief said it on the item.
@@ -68,7 +72,7 @@ const ANSWER = {
   story: [{ text: 'European coaching in Dubai', quote: 'European Coaching in Dubai', ref: 'bio' }]
 }
 
-async function research({ door = 'ready', answer = ANSWER, candidate = {} } = {}) {
+async function research({ door = 'ready', answer = ANSWER, candidate = {}, effort = null } = {}) {
   const { pool } = db
   const accountId = (await pool.query("insert into account(email) values('reading@tracy.test') returning id"))
     .rows[0].id
@@ -78,7 +82,7 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {} } = {}
     providerId: PLACE_ID,
     candidate: { provider: 'google-places', providerId: PLACE_ID, name: 'Harbour Sport Club', ...candidate }
   })
-  const calls = { model: 0, bodies: [] }
+  const calls = { model: 0, bodies: [], progress: [] }
   const real = await websiteOpportunitiesDomain()
   const blocked = { available: false, collect: async () => ({ status: 'blocked', media: [] }) }
   const domain = {
@@ -131,7 +135,7 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {} } = {}
     chargeable: createChargeable(ledger),
     businessReadingDoor: async () =>
       door === 'ready'
-        ? { state: 'ready', door: { url: MODEL_URL, key: 'test-key', model: 'deepseek-chat', effort: null } }
+        ? { state: 'ready', door: { url: MODEL_URL, key: 'test-key', model: 'deepseek-chat', effort } }
         : { state: door },
     apiFetch: async (url, init) => {
       if (String(url) === MODEL_URL) {
@@ -139,6 +143,11 @@ async function research({ door = 'ready', answer = ANSWER, candidate = {} } = {}
         assert.equal(body.messages[0].content, BUSINESS_READING_SYSTEM)
         calls.model += 1
         calls.bodies.push(body)
+        // What the page following the research reads while the reading runs (#251).
+        calls.progress.push(
+          (await pool.query('select stage, progress from wo_place_job order by created_at desc limit 1'))
+            .rows[0]
+        )
         return Response.json({
           id: 'reading-1',
           choices: [{ message: { content: JSON.stringify(answer) } }],
@@ -189,6 +198,10 @@ test(
   async () => {
     const r = await research()
     assert.equal(r.calls.model, 1, 'one model call per research run')
+    // #251: while the reading runs, the job says so and names no source still being collected.
+    assert.equal(r.calls.progress[0].stage, 'profile')
+    assert.equal(r.calls.progress[0].progress.reading, 'business')
+    assert.equal(r.calls.progress[0].progress.collecting, null)
     assert.ok(!JSON.stringify(r.calls.bodies).includes('[Your Location]'), 'a template line is never sent')
 
     // The brief: what the club sells, for whom, who teaches, in its own words.
@@ -381,5 +394,40 @@ test(
       ]
     )
     assert.match(r.domain.renderBriefMarkdown(brief), /Alex/)
+  }
+)
+
+test('a reading asks for no reasoning where the provider can turn it off, and a JSON-sized answer (#251)', () => {
+  const host = {
+    effortOptions: ({ presetId }) =>
+      presetId === 'deepseek'
+        ? { mode: 'selectable', choices: ['low', 'high', 'max'], parameter: 'reasoning_effort' }
+        : { mode: 'unsupported', choices: [], parameter: null }
+  }
+  const found = (presetId, effort) => ({
+    state: 'ok',
+    credential: { apiKey: 'k', baseUrl: 'https://api.deepseek.com', model: 'deepseek-v4-pro' },
+    snapshot: { presetId, effort, metadata: {} }
+  })
+  // The /ops assignment says `high` (as on dev): the step still reads without reasoning.
+  const deepseek = businessReadingDoorOf(found('deepseek', 'high'), host)
+  assert.equal(deepseek.door.effort, 'off')
+  assert.equal(businessReadingMaxTokens(deepseek.door), 4_000)
+  // A provider whose reasoning cannot be turned off keeps the room a thinking model needs.
+  const other = businessReadingDoorOf(found('openrouter', null), host)
+  assert.equal(other.door.effort, null)
+  assert.equal(businessReadingMaxTokens(other.door), 12_000)
+})
+
+test(
+  'a reading without reasoning sends thinking off and a 4k answer budget, and still reads the business (#251)',
+  opts,
+  async () => {
+    const r = await research({ effort: 'off' })
+    assert.equal(r.calls.model, 1)
+    assert.deepEqual(r.calls.bodies[0].thinking, { type: 'disabled' })
+    assert.equal(r.calls.bodies[0].max_tokens, 4_000)
+    assert.equal(r.calls.bodies[0].reasoning_effort, undefined)
+    assert.equal(r.brief.reading.method, 'model')
   }
 )

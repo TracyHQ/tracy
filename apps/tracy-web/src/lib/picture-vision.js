@@ -154,6 +154,19 @@ export function held(entry, closedList = null) {
   return { id: entry.id, labels: out }
 }
 
+/**
+ * Runs `fn` over `items` with at most `limit` running at once, starting the next as soon as any one finishes (#250): a
+ * wave of `limit` awaited as a whole was as slow as its slowest call, and the calls after it waited for that one.
+ * `fn` must not throw (each call here catches its own failure).
+ */
+async function eachAtMost(items, limit, fn) {
+  let next = 0
+  const worker = async () => {
+    while (next < items.length) await fn(items[next++])
+  }
+  await Promise.all(Array.from({ length: Math.max(1, Math.min(limit, items.length)) }, worker))
+}
+
 /** Why a call labelled none of its pictures, in the brief's vocabulary (`ASSET_UNLABELLED_REASONS`). */
 class CallFailed extends Error {
   constructor(reason) {
@@ -269,8 +282,7 @@ export async function labelWithVision({
     const batches = []
     for (let i = 0; i < todo.length && batches.length < firstCalls; i += batch)
       batches.push(todo.slice(i, i + batch))
-    for (let i = 0; i < batches.length; i += concurrency)
-      await Promise.all(batches.slice(i, i + concurrency).map(run))
+    await eachAtMost(batches, concurrency, run)
     todo = todo.filter((p) => !labels.has(p.id))
   }
   return { labels, reasons, usage, failed }

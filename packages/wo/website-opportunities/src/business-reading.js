@@ -31,13 +31,23 @@ export const BUSINESS_READING_DOOR = 'woEditorial'
 // whole budget on dev (26/10/2026, Harbour Sport Club: ledger settled at the ceiling) and the JSON answer was cut off.
 // The editorial model's own client (`opportunities-build/editorial-model.js`) allows 12k for the same reason.
 const MAX_OUTPUT_TOKENS = 12_000
+// With its reasoning off the answer is the JSON alone: about 1.1k tokens measured (Zuni Cafe, 30/10/2026), so 4k
+// leaves it more than three times the room and reserves a third of the ceiling.
+const MAX_OUTPUT_TOKENS_NO_REASONING = 4_000
 const CALL_MS = 120_000
-const EFFORT = 'low'
 const EFFORT_OFF = 'off'
+
+/** The most this step lets the model write: its JSON answer, plus its reasoning when the door reasons. */
+export const businessReadingMaxTokens = (door) =>
+  door?.effort === EFFORT_OFF ? MAX_OUTPUT_TOKENS_NO_REASONING : MAX_OUTPUT_TOKENS
 
 /**
  * What the door gives this step, from `lookupDoor`'s answer (pure): `ready` with the call's credential, or why not.
- * `effort` is `low` when the provider takes one, `off` when the assignment turned reasoning off, else null.
+ * `effort` is `off` when the provider's reasoning can be turned off (`reasoning_effort` profile), else null.
+ * 🔒 NO REASONING FOR A READING (#251). The reading quotes what the collected texts say into a fixed JSON shape, and
+ * `checkBusinessReading` holds every quote to the sources; it needs no chain of thought. At effort `low` the measured call
+ * still reasoned for 9,004 of its 10,148 output tokens and took 109 s, most of a research. The /ops assignment chooses
+ * the model; how much this one step reasons is the step's own choice, as `low` was before.
  * @returns {{state: 'ready', door: {url: string, key: string, model: string, effort: string | null}}
  *   | {state: 'not_configured' | 'unavailable', reason?: string}}
  */
@@ -57,14 +67,7 @@ export function businessReadingDoorOf(found, host) {
       url: `${baseUrl.replace(/\/+$/, '')}/chat/completions`,
       key: apiKey,
       model,
-      effort:
-        options.parameter !== 'reasoning_effort'
-          ? null
-          : found.snapshot?.effort === EFFORT_OFF
-            ? EFFORT_OFF
-            : options.choices.includes(EFFORT)
-              ? EFFORT
-              : null
+      effort: options.parameter === 'reasoning_effort' ? EFFORT_OFF : null
     }
   }
 }
@@ -91,10 +94,10 @@ const inputHashOf = (sources, name, trade, facts) =>
     .slice(0, 24)
 
 /** The most one reading may cost, in cents: its prompt (about 3 characters a token) and the longest answer. */
-export const businessReadingCeilingCents = (model, prompt) =>
+export const businessReadingCeilingCents = (model, prompt, maxTokens = MAX_OUTPUT_TOKENS) =>
   visionCostCents(model, {
     promptTokens: Math.ceil(String(prompt).length / 3) + 1_000,
-    completionTokens: MAX_OUTPUT_TOKENS
+    completionTokens: maxTokens
   })
 
 /**
@@ -150,7 +153,7 @@ export async function readBusiness({
     answer = await charge(
       {
         operation: ready.model,
-        maxCents: businessReadingCeilingCents(ready.model, prompt),
+        maxCents: businessReadingCeilingCents(ready.model, prompt, businessReadingMaxTokens(ready)),
         actualCents: (r) =>
           visionCostCents(ready.model, {
             promptTokens: r.promptTokens,
@@ -181,7 +184,7 @@ async function askText({ door, system, text, fetchImpl }) {
     headers: { authorization: `Bearer ${door.key}`, 'content-type': 'application/json' },
     body: JSON.stringify({
       model: door.model,
-      max_tokens: MAX_OUTPUT_TOKENS,
+      max_tokens: businessReadingMaxTokens(door),
       ...(door.effort === EFFORT_OFF
         ? { thinking: { type: 'disabled' } }
         : door.effort

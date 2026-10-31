@@ -1,6 +1,10 @@
 import { handOffToAgent } from '../src/opportunities-build/handoff-service.js'
 import { promptHandoff } from '../src/opportunities-build/handoff.js'
-import { createClientDemoService, LOGO_RESEARCH_PENDING } from '../src/opportunities-build/client-demo.js'
+import {
+  createClientDemoService,
+  LOGO_RESEARCH_PENDING,
+  PICTURE_LABELS_PENDING
+} from '../src/opportunities-build/client-demo.js'
 import { LOGO_RESEARCH_WAIT_MS, logoResearchNote } from '../src/opportunities-build/logo-research.js'
 import { LOOK_PROMPT_VERSION } from '../src/opportunities-build/demo-look.js'
 import { compareAgentInventory } from '../src/sites/agent-demo-inventory.js'
@@ -2427,8 +2431,12 @@ test(
       0,
       'the same calls planned again stop the sweep: this check counts'
     )
-    // Looked at once, pass or fail (29/10/2026): the incremental read leaves its look to the whole read after it.
+    // Looked at once, pass or fail (29/10/2026). #247: this incremental read kept no page (its answer names none
+    // reused), so it was a whole read: it looks itself, and the site is not read a second time.
     assert.equal(visions.length, 1)
+    assert.equal(looked.length, 2, 'never read twice')
+    // #247: the check hands the site's exact address for the reply to copy, never one typed from memory.
+    assert.equal(again.siteAddress, 'https://pho-ba.localhost')
     assert.equal(again.checks.find((c) => c.id === 'looks-finished')?.looked, true)
   }
 )
@@ -2525,7 +2533,8 @@ test(
       const answer = await qa(site, args)
       if (!args.incremental) return answer
       const stale = { id: 'no-demo-words', pass: false, measured: 'kept read', detail: [{ page: '/' }] }
-      return { ...answer, body: { ...answer.body, checks: [...answer.body.checks, stale] } }
+      // The host kept home's read: its document did not change.
+      return { ...answer, body: { ...answer.body, reused: ['/'], checks: [...answer.body.checks, stale] } }
     }
     const counted = await capability.call(auth, { operation: 'check' })
     assert.equal(looked[1].incremental, true)
@@ -2538,6 +2547,15 @@ test(
       !counted.checks.some((c) => c.measured === 'kept read'),
       'the counted answer is the full read, never the kept one'
     )
+    // #247: an incremental read that kept no page read every page anew; its answer stands and is never read twice.
+    w.deps.demoQa = async (site, args) => {
+      looked.push(args)
+      const answer = await qa(site, args)
+      return args.incremental ? { ...answer, body: { ...answer.body, reused: [] } } : answer
+    }
+    await capability.call(auth, { operation: 'check' })
+    assert.equal(looked[3].incremental, true)
+    assert.equal(looked.length, 4, 'no second, full read of the same pages')
   }
 )
 
@@ -2870,6 +2888,60 @@ test(
 )
 
 test(
+  'an own-site build never waits for its photo labelling inside prepare: pending until the run settles, then the runner briefs it (#250)',
+  opts,
+  async () => {
+    const w = await world({ historical: false, agentWorkflow: true, chatMode: 'client-send/1' })
+    const actionId = (await w.accept()).body.actions[0].id
+    await w.pool.query(
+      `update wo_demo_action set selection = selection || '{"ownSite": true}'::jsonb where id = $1`,
+      [actionId]
+    )
+    const asked = []
+    let settle = () => {}
+    const answered = new Promise((resolve) => {
+      settle = resolve
+    })
+    w.deps.pictureLabels = (input) => {
+      asked.push(input)
+      return answered
+    }
+    w.deps.clientDemo = createClientDemoService(w.deps)
+    const counts = async () =>
+      (
+        await w.pool.query(
+          'select (select count(*)::int from wo_revision) as revisions, (select count(*)::int from wo_build) as builds'
+        )
+      ).rows[0]
+    const started = Date.now()
+    await assert.rejects(w.deps.clientDemo.prepare({ accountId: w.account, actionId }), (failure) => {
+      assert.equal(failure.code, PICTURE_LABELS_PENDING)
+      assert.equal(failure.status, 409)
+      assert.ok(Date.parse(failure.retryAt) > w.deps.now())
+      return true
+    })
+    assert.ok(Date.now() - started < 2_000, 'prepare never waits for the labelling')
+    assert.deepEqual(await counts(), { revisions: 0, builds: 0 }, 'no brief while its photos are labelled')
+    const selection = (await w.pool.query('select selection from wo_demo_action where id=$1', [actionId]))
+      .rows[0].selection
+    assert.equal(selection.pictureLabels.state, 'requested')
+    // Still labelling: the runner asks again and makes nothing.
+    await w.advance()
+    await w.runner().drain()
+    assert.deepEqual(await counts(), { revisions: 0, builds: 0 })
+    settle({ labels: new Map(), note: { status: 'none', asked: 0, labelled: 0, cached: 0, max: 60 } })
+    await w.deps.clientDemo.pictureRuns.idle()
+    // Nobody reads the demo again: the runner prepares it once the labelling settled.
+    await w.advance()
+    await w.runner().drain()
+    assert.deepEqual(await counts(), { revisions: 1, builds: 1 })
+    assert.equal(asked.length, 1, 'labelled once')
+    const prepared = await w.deps.clientDemo.prepare({ accountId: w.account, actionId })
+    assert.ok(prepared.brief.hash)
+  }
+)
+
+test(
   'a client demo whose logo research answers in time is briefed from the place read again',
   opts,
   async () => {
@@ -3016,6 +3088,8 @@ test(
     const leased = (await w.pool.query('select lease_until,lease_token from wo_demo_action')).rows[0]
     assert.ok(leased.lease_until, 'the hung run holds its lease')
     await w.pool.query("update wo_demo_action set accepted_at = accepted_at - interval '3 hours'")
+    // Its chat turn shows no life either (no write, no check beat, opened long ago): the deadline holds (#247).
+    await w.pool.query("update site_turn set opened_at = opened_at - interval '3 hours'")
     await runner.tick()
     assert.deepEqual(await w.status(), { status: 'failed', error: 'DEMO_STEP_TIMEOUT' })
     w.deps.clientDemo = real
@@ -3041,6 +3115,40 @@ test(
     const w = await clientSendWorld()
     w.deps.switchOn = async () => false
     await w.pool.query("update wo_demo_action set accepted_at = accepted_at - interval '3 hours'")
+    await w.pool.query("update site_turn set opened_at = opened_at - interval '3 hours'")
+    await w.advance()
+    await w.runner().tick()
+    assert.deepEqual(await w.status(), { status: 'failed', error: 'DEMO_STEP_TIMEOUT' })
+  }
+)
+
+test(
+  'the 2 h deadline waits while the build chat is alive, so status and chat agree, and holds past twice that (#247)',
+  opts,
+  async () => {
+    const w = await clientSendWorld()
+    await w.pool.query("update wo_demo_action set accepted_at = accepted_at - interval '2 hours 10 minutes'")
+    await w.pool.query("update site_turn set opened_at = opened_at - interval '2 hours'")
+    // The agent repairs: a write of its turn ten minutes ago.
+    await w.pool.query(
+      `insert into site_write (site_key, at, turn_id, session_id, action, outcome)
+       values ($1, now() - interval '10 minutes', 'wo-turn:1', $2, 'content.update', 'ok')`,
+      [w.prepared.chat.siteKey, w.prepared.chat.sessionId]
+    )
+    const real = w.deps.clientDemo
+    w.deps.clientDemo = { ...real, reconcile: async () => ({ state: 'awaiting-agent', step: 'build' }) }
+    await w.advance()
+    await w.runner().drain()
+    assert.equal((await w.status()).status, 'queued', 'the chat still works: the action is not timed out')
+    // A running check beats instead of writing: alive too.
+    await w.pool.query("delete from site_write where turn_id = 'wo-turn:1'")
+    await w.pool.query(`update wo_build set qa = qa || jsonb_build_object('clientCheck',
+      jsonb_build_object('state', 'running', 'beatAt', to_char(now() at time zone 'UTC', 'YYYY-MM-DD"T"HH24:MI:SS.MS"Z"')))`)
+    await w.advance()
+    await w.runner().drain()
+    assert.equal((await w.status()).status, 'queued')
+    // Past four hours an open turn row no longer holds it: a dsh that died never keeps an action open.
+    await w.pool.query("update wo_demo_action set accepted_at = accepted_at - interval '2 hours'")
     await w.advance()
     await w.runner().tick()
     assert.deepEqual(await w.status(), { status: 'failed', error: 'DEMO_STEP_TIMEOUT' })
