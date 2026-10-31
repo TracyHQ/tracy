@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-272-host-read-line",
+  "kind": "fix",
+  "title": "tracy-host's read-line test reads the timing snippet in the stdin form webroot-sync.sh prints",
+  "pr": 272,
+  "area": "tracy-host/webroot",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: find the read's timing snippet in webroot-sync.sh and run it with a read answer on stdin.",
+    "S2: give syncProgressLine that line, the spaced form of older scripts, and lines that are not the read's."
+  ],
+  "expect": [
+    "S1: the snippet is found in its stdin form (#219) and prints one JSON line.",
+    "S2: the two read lines are kept as printed; the others are null."
+  ],
+  "selectors": {
+    "file": "apps/tracy-host/src/webroot.js",
+    "exports": "syncProgressLine"
+  },
+  "evidence": "develop red after #245: the test still looked for the argv form webroot-sync.sh no longer prints",
+  "fence": "Sync from live progress",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=syncProgressLine",
+      "apps/tracy-host/test/webroot.test.mjs"
+    ],
+    "tests": [
+      "syncProgressLine keeps the read line the real script prints, and the spaced form of older scripts"
+    ]
+  }
+}
