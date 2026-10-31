@@ -352,6 +352,26 @@
       "path": "packages/locale/tracy-locale-vi/lib/client.js",
       "oid": "9baca3d53d7dcd1eb0e9975da7e11b2101ae7135",
       "reason": "Exact generated Vietnamese interface bundle of PR #263, final build after merging develop at commit f6747de67: the turn card's and Site changes' word for a static front page (`undo.home`, `event.target.home`). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "58066cf077b5a75ec4d792659be6fa68a2295b71",
+      "reason": "Exact generated Vietnamese interface bundle of PR #264, first build at commit 371619240: the Add site words for the photo labelling wait and the business reading (`own_pictures`, `own_progress_reading`). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "a88eefbab45ee58c5584f5edc5863eb2f678f35f",
+      "reason": "Exact generated interface translation bundle of PR #264, first build at commit 371619240: the Add site words for the photo labelling wait and the business reading (`own_pictures`, `own_progress_reading`). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "23e4f01266bd6524be85625dbe05f2f14b9a919c",
+      "reason": "Exact generated Vietnamese interface bundle of PR #264, final build after merging develop at commit cbb9e056e: the Add site words for the photo labelling wait and the business reading (`own_pictures`, `own_progress_reading`). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "3d9572a94dd6150ce95c143b180e71ec4bd37390",
+      "reason": "Exact generated interface translation bundle of PR #264, final build after merging develop at commit cbb9e056e: the Add site words for the photo labelling wait and the business reading (`own_pictures`, `own_progress_reading`). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source. Different bytes require a separate review."
     }
   ]
 }
