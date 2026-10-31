@@ -119,7 +119,7 @@ import {
   designSystemRequest
 } from './chat-design-route.mjs'
 import { designRoutesAt } from './chat-design-switch.mjs'
-import { callOrigin } from './call-origin.mjs'
+import { callOrigin, createInternalOrigin } from './call-origin.mjs'
 import { captureWishes, mayHoldWish, notesNotice, readNotes, storeDirOf, WISH_KEPT } from './site-notes.mjs'
 import {
   COMMENT_KEY,
@@ -889,9 +889,15 @@ let latest: Viewer | null = null
  * on dev 30–40 % of fresh connections stalled there and the agent told the customer their site was not
  * answering (#208). Only the address the call is SENT to changes: words the customer reads keep the
  * public origin. A test that names its own origin (`config.origin`) keeps it.
+ *
+ * Unset on a fleet dsh, it is found by itself (`createInternalOrigin`): tracy-web on dsh's own network.
  */
-function apiOriginOf(publicOrigin: string): string {
-  return callOrigin(publicOrigin, gatewaySetting('MCP_TRACY_ORIGIN'), gatewaySetting('MCP_TRACY_API_ORIGIN'))
+const internalOrigin = createInternalOrigin({
+  configured: () => gatewaySetting('MCP_TRACY_API_ORIGIN'),
+  fleet: () => process.env.MCP_TRACY_FLEET?.trim() === '1'
+})
+async function apiOriginOf(publicOrigin: string): Promise<string> {
+  return callOrigin(publicOrigin, gatewaySetting('MCP_TRACY_ORIGIN'), await internalOrigin())
 }
 
 /**
@@ -1193,7 +1199,7 @@ async function applyDoorOnce(
   let text: string
   try {
     res = await (config.fetch ?? fetch)(
-      `${apiOriginOf(plan.origin)}/api/sites/${encodeURIComponent(key)}/apply`,
+      `${await apiOriginOf(plan.origin)}/api/sites/${encodeURIComponent(key)}/apply`,
       {
         method: 'POST',
         headers,

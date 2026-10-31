@@ -24669,8 +24669,36 @@ async function designRoutesAt(origin, fetchImpl) {
 }
 
 // src/host/call-origin.mjs
+import { lookup } from "node:dns/promises";
 function callOrigin(origin, publicOrigin, internal) {
   return internal && /^https?:\/\/[^/\s]+$/.test(internal) && origin === publicOrigin ? internal : origin;
+}
+var FLEET_TRACY_WEB = "http://tracy-web:8080";
+function createInternalOrigin({
+  configured,
+  fleet,
+  resolve = (host) => lookup(host),
+  now = Date.now
+}) {
+  let held = null;
+  return async () => {
+    const named3 = configured();
+    if (named3) return named3;
+    if (!fleet()) return null;
+    if (held && now() - held.at < (held.origin ? 3e5 : 3e4)) return held.origin;
+    let origin = null;
+    try {
+      await Promise.race([
+        resolve("tracy-web"),
+        new Promise((_, reject) => setTimeout(() => reject(new Error("slow")), 1e3).unref?.())
+      ]);
+      origin = FLEET_TRACY_WEB;
+    } catch {
+      origin = null;
+    }
+    held = { at: now(), origin };
+    return origin;
+  };
 }
 
 // src/host/site-notes.mjs
@@ -46959,8 +46987,12 @@ function actorHeader(plan) {
 }
 var bySession = /* @__PURE__ */ new Map();
 var latest = null;
-function apiOriginOf(publicOrigin) {
-  return callOrigin(publicOrigin, gatewaySetting("MCP_TRACY_ORIGIN"), gatewaySetting("MCP_TRACY_API_ORIGIN"));
+var internalOrigin = createInternalOrigin({
+  configured: () => gatewaySetting("MCP_TRACY_API_ORIGIN"),
+  fleet: () => process.env.MCP_TRACY_FLEET?.trim() === "1"
+});
+async function apiOriginOf(publicOrigin) {
+  return callOrigin(publicOrigin, gatewaySetting("MCP_TRACY_ORIGIN"), await internalOrigin());
 }
 function gatewaySetting(name2) {
   const value = process.env[name2]?.trim() || null;
@@ -47096,7 +47128,7 @@ async function applyDoorOnce(config, plan, key, action, params, target, headers,
   let text6;
   try {
     res = await (config.fetch ?? fetch)(
-      `${apiOriginOf(plan.origin)}/api/sites/${encodeURIComponent(key)}/apply`,
+      `${await apiOriginOf(plan.origin)}/api/sites/${encodeURIComponent(key)}/apply`,
       {
         method: "POST",
         headers,

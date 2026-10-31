@@ -521,6 +521,8 @@ token_mount_custody() {
       lit("  web:")
       ok(valued(at(p), "    image: ", IMG))
       lit("    restart: unless-stopped")
+      # `init: true` (#205): written since 31/10/2026 by render-compose.sh, absent from older files.
+      if (at(p) == "    init: true") p++
       lit("    security_opt: [\"no-new-privileges:true\"]")
       lit("    shm_size: 512m")
       lim = limits()

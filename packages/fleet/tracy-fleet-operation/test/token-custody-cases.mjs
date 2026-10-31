@@ -129,7 +129,8 @@ export function emdashCompose(
     networks = 'generator',
     alias,
     mail = null,
-    limits = null
+    limits = null,
+    init = false
   } = {}
 ) {
   const label = path.basename(siteDir)
@@ -139,6 +140,8 @@ export function emdashCompose(
     '  web:',
     `    image: ${image}`,
     '    restart: unless-stopped',
+    // `init: true` (#205): the generator writes it since 31/10/2026.
+    ...(init ? ['    init: true'] : []),
     '    security_opt: ["no-new-privileges:true"]',
     '    shm_size: 512m',
     ...limitsRun(limits, 'emdash'),
