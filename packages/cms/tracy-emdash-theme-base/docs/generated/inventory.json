@@ -4,7 +4,7 @@
   "template": {
     "id": "tracy-base",
     "label": "Tracy Base",
-    "version": "0.5.6"
+    "version": "0.5.8"
   },
   "locales": {
     "default": "en",
@@ -2949,7 +2949,7 @@
   ],
   "inputs": {
     "astro.config.mjs": "sha256:81b84d0f0e6516da5f3e30c7b604a4459c1e61955d41199cacac48b5b56b57bf",
-    "package.json": "sha256:ec16249df20343b52b93df2d26ba9f4a48ccd17685d82f4c011fdac28f829798",
+    "package.json": "sha256:a2397992095c8cf18fbc8cb06c20ce8d6b41945e3078c010f645ccb76a4311ce",
     "pnpm-lock.yaml": "sha256:44492a3082560e8c25b4ae27cd923fd8afbd9e0e4989ad07ef3ef6fa0e6bb832",
     "seed/field-map.json": "sha256:1f6871b8028eda81b8400a7cb9982aa6259be060d556730edb45e2f25587ec46",
     "seed/media-map.json": "sha256:f06f5537626627d4e71f82535fe660846d353fffc79b7113d62302fa3a9f085f",
@@ -3064,7 +3064,7 @@
     "src/views/Sitemap.astro": "sha256:48092cdfc87db7d4e81edbf1a509f907eee1fc7204b66387c4e826c61b612407",
     "src/views/Team.astro": "sha256:77de9eb369cc3385ee27015d119b0330aa3a97621397e8e12d7390b745306f25",
     "src/views/Topics.astro": "sha256:4ca937075a139c3c32e546573a12ac3f64aa7bf7217021cc4516bcf67a78f26c",
-    "template.config.json": "sha256:719706b8be5dced05e6e628ae2c09a8399a302952f1ba770e045faf4d74387f5",
+    "template.config.json": "sha256:11329dd3377475fe463e309653d415d78dd1f9bdedda9efe5ddd384fbbba212e",
     "tools/forms.json": "sha256:a9c78a8909278efb02bf7b690dd1460d9ed94fa2602df9a9fb2964c6cb9d983f",
     "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
   }
