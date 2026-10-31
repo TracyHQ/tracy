@@ -1,0 +1,33 @@
+{
+  "id": "REG-PR-254-sync-screen-words",
+  "kind": "fix",
+  "title": "The Sync to live screen shows an unknown write apart, an expired Undo once with no button, push-own live-site words, and one change as one",
+  "pr": 254,
+  "area": "publish/sync-to-live",
+  "cms": ["any"],
+  "steps": [
+    "Mount the real Publish wizard with a pushed result holding a WRITE_OUTCOME_UNKNOWN and a LIVE_BLOCKED item; with an undo answered NOT_PUSHED; under a newer preview."
+  ],
+  "expect": [
+    "May already be on your live site (1) with its hint, Could not be written (1) with the firewall note, 1 change reached your live site.",
+    "The NOT_PUSHED words once, no Undo button; nothing of it under a newer preview.",
+    "LIVE_BLOCKED and LIVE_PHP_TOO_OLD on Sync to live say live site, on Sync from live original site."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#226",
+      "packages/core/tracy-core/test/publish-push-dom.test.mjs"
+    ],
+    "tests": [
+      "a write with no answer is",
+      "an Undo answering that nothing is left to undo",
+      "blocked or too old on the Sync to live screen is the live site"
+    ]
+  },
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {}
+}

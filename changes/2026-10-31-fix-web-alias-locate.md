@@ -1,0 +1,2 @@
+- **A model alias can no longer name another vendor's model, and an EmDash site's locate snapshot is read gently and kept instead of thrown away** — site agent (Claude, for David) · #266 · `fix/web-alias-locate` · 2026-10-31
+  **Affects:** tracy-web's model catalogue (`/ops` › Model & AI aliases, the model chip) and the content locate snapshot (Browser tab Edit, the agent's `content.locate`). Live once the tracy-web image is rebuilt and deployed.

@@ -692,11 +692,17 @@ COMPOSE
 # EmDash: one Node container, SQLite inside the site dir, no database service at all.
 tracy_compose_emdash() {
   {
+    # `init: true` (#205): the image runs `node` as PID 1 (`exec gosu www-data node …`), and PID 1
+    # gets no default action for SIGTERM, so every `docker stop` / recreate waited out Docker's
+    # timeout before the kill (measured: 5.0 s on Docker Desktop's, 0.8 s with an init in front).
+    # The init forwards the signal and Node ends at once. The custody matchers accept the line in
+    # this one place (`mint-agent-token.sh`, tracy-host `webroot.js` `EMDASH_COMPOSE_FORM`).
     cat <<COMPOSE
 services:
   web:
     image: $WEB_IMAGE
     restart: unless-stopped
+    init: true
 COMPOSE
     tracy_web_confinement
     cat <<COMPOSE

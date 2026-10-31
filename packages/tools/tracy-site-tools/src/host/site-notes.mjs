@@ -179,9 +179,20 @@ function nextId(notes) {
  */
 const PAGE_BLOCK = /```tracy-(?:element|page)\n[\s\S]*?(?:\n```|$)/g
 
-/** @param {string} text */
+/**
+ * What the person typed in a message: the comment blocks cut, and with them the hint the chat input
+ * appends after the LAST block (`comment-turn.mjs`: "the hint still follows the last block"). Each
+ * comment's words stand above its own block, so nothing the person wrote comes after the last one.
+ * 🔒 THE HINT IS TRACY'S (#256, 29/10/2026): it says "never write one…", "never edit theme…", and left in,
+ * every comment turn opened the wish gate and started a side call, and a proposal quoting one of those
+ * lines passed `quoteIsSaid` as the customer's own words.
+ * @param {string} text
+ */
 export function withoutPageBlocks(text) {
-  return text.replace(PAGE_BLOCK, '').trim()
+  const blocks = [...text.matchAll(PAGE_BLOCK)]
+  const last = blocks.at(-1)
+  const typed = last === undefined ? text : text.slice(0, (last.index ?? 0) + last[0].length)
+  return typed.replace(PAGE_BLOCK, '').trim()
 }
 
 /**
@@ -640,11 +651,24 @@ export function capturesSettled() {
  */
 
 /**
+ * A capture that failed, on `job.warn` (dsh's logger): where and why by code, nothing of the wish.
+ * @param {{ storeDir: string, warn?: (line: string) => void }} job
+ * @param {string} stage
+ * @param {unknown} e
+ */
+function said_(job, stage, e) {
+  const code = /** @type {any} */ (e)?.code ?? /** @type {any} */ (e)?.name ?? 'ERROR'
+  job.warn?.(
+    `site-notes: ${stage} failed in ${path.basename(String(job.storeDir))}: ${String(code).slice(0, 40)}`
+  )
+}
+
+/**
  * One customer message → the notes it changes. Starts the side call and returns at once; the outcome lands
  * in the store and one line of `log.md` (with the tokens it cost, so its price is never hidden). Never throws,
  * never waits on the customer's step.
  * @param {{ llm: SideLlm, route: { provider: string, model: string }, storeDir: string, message: string,
- *   session?: string | null, now?: () => Date, timeoutMs?: number }} job
+ *   session?: string | null, now?: () => Date, timeoutMs?: number, warn?: (line: string) => void }} job
  * @returns {Promise<{ proposed: number, kept: number, usage: Record<string, number> | null, error?: string }>}
  */
 export function captureWishes(job) {
@@ -710,10 +734,15 @@ export function captureWishes(job) {
     await fs
       .mkdir(job.storeDir, { recursive: true })
       .then(() => fs.appendFile(path.join(job.storeDir, LOG_FILE), line, { mode: 0o600 }))
-      .catch(() => {})
+      .catch((e) => said_(job, 'log', e))
     return { proposed: proposals.length, kept, usage, ...(error ? { error } : {}) }
   }
-  const p = run().catch(() => ({ proposed: 0, kept: 0, usage: null, error: 'CRASH' }))
+  // A store that cannot be written (a host whose sites root dsh does not own: EACCES, #210) is said on
+  // the host's log, by its code and the store's folder — never as silence, never with the wish itself.
+  const p = run().catch((e) => {
+    said_(job, 'capture', e)
+    return { proposed: 0, kept: 0, usage: null, error: 'CRASH' }
+  })
   inFlight.add(p)
   p.finally(() => inFlight.delete(p))
   return p

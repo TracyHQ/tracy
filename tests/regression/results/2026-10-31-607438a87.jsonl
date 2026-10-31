@@ -1,0 +1,2 @@
+{"id":"REG-PR-267-emdash-init","verdict":"PASS","commit":"607438a8748f3972db16807f45ce455e6cb170d4","ran_at":"2026-10-31T12:33:52.968Z","evidence":"tests/regression/.runs/2026-10-31-607438a87/REG-PR-267-emdash-init.log"}
+{"id":"REG-PR-267-fleet-internal-origin","verdict":"PASS","commit":"607438a8748f3972db16807f45ce455e6cb170d4","ran_at":"2026-10-31T12:33:53.052Z","evidence":"tests/regression/.runs/2026-10-31-607438a87/REG-PR-267-fleet-internal-origin.log"}

@@ -1,0 +1,2 @@
+- **The language policy approves the exact rebuilt bundles of #248 and #254** — CI maintainer (Claude, for David) · `chore/language-policy-bugfix-1031` · 2026-10-31
+  **Affects:** the `language-policy` check of #248 (assistant bundle) and #254 (interface translation bundles). Merge this first, then update those two branches so the check reads the policy from their new merge base. Replaces #260, whose first commit carried non-English words the check reads.

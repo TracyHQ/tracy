@@ -40,6 +40,11 @@ QUOTED = {"host", "user", "password", "db", "secret", "log_path", "tmp_path", "l
 BARE = {"force_ssl", "behind_loadbalancer", "offline"}
 
 
+# A setting's value as PHP reads it on one line: a single- or double-quoted string (escapes and all,
+# a `;` inside included) or a bare value up to the `;`.
+_VALUE = r"""(?:'(?:[^'\\\n]|\\.)*'|"(?:[^"\\\n]|\\.)*"|[^;'"\n]*)"""
+
+
 def _literal(name: str, value: str) -> str:
     return f"'{value}'" if name in QUOTED else value
 
@@ -64,10 +69,18 @@ def substitute(source: str, values: dict[str, str]) -> tuple[str, list[str]]:
     for name, value in values.items():
         # Joomla writes one setting per line as `public $name = <value>;`. Anchoring on the
         # name rather than the old value is what lets this run on a real config and a
-        # placeholder template alike.
-        pattern = re.compile(rf"(^\s*public\s+\${re.escape(name)}\s*=\s*).*?;\s*$", re.M)
+        # placeholder template alike. The old value is read as PHP reads it — a quoted string
+        # may hold a `;` — and whatever follows the `;` stays: a hand-edited file often says
+        # `public $host = 'localhost'; // db host`. That line was once not matched, a second
+        # `$host` was appended, and the copy answered 500 "Cannot redeclare JConfig::$host" (#218).
+        pattern = re.compile(rf"(^[ \t]*(?:public|var)[ \t]+\${re.escape(name)}[ \t]*=[ \t]*){_VALUE}[ \t]*;", re.M)
         out, count = pattern.subn(lambda m: f"{m.group(1)}{_literal(name, value)};", out)
         if count:
+            continue
+        # Declared in a shape not read above (a value over several lines): appending would declare it
+        # twice, which PHP refuses for the whole file. Not set, said.
+        if re.search(rf"^[ \t]*(?:public|var|static|private|protected)[ \t]+(?:static[ \t]+)?\${re.escape(name)}\b", out, re.M):
+            unset.append(name)
             continue
 
         # Append just inside the class's closing brace.

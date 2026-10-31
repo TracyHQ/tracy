@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-263-wp-library-draw",
+  "kind": "fix",
+  "title": "A bound WordPress site keeps a picture drawn to its own shape in the media library",
+  "pr": 263,
+  "area": "site-tools/draw",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: media.draw {prompt, aspect} on a bound WordPress site, no slot.",
+    "S2: media.draw {prompt} with no slot and no shape on the same site."
+  ],
+  "expect": [
+    "S1: the picture is drawn to 3:2, uploaded under wp-content/uploads/tracy-content/ with an apply id that is not contract-, and the answer says it is in the media library, placed on no page.",
+    "S2: SLOT_REQUIRED before the picture model is paid, naming both roads: a slot to place it, an aspect to keep it in the library."
+  ],
+  "selectors": {
+    "file": "packages/tools/tracy-site-tools/src/host/draw.mjs",
+    "exports": "mediaDraw"
+  },
+  "evidence": "Issue #255: \"draw a picture for the media library\" was refused SLOT_REQUIRED on a bound WordPress site; EmDash did it in 22 s",
+  "fence": "Site agent pictures",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=\\(#255\\)|no slot and no shape",
+      "packages/tools/tracy-site-tools/test/draw.test.mjs"
+    ],
+    "tests": [
+      "a bound WordPress site asked for a picture with no slot and no shape is answered with its image slots",
+      "a bound WordPress site with no slot and no shape says both roads before anything is paid for",
+      "a bound WordPress site keeps a picture drawn to its own shape in the media library, placed nowhere (#255)"
+    ]
+  }
+}

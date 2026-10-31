@@ -401,6 +401,12 @@ export async function runReplace(input) {
       ),
       pageHtml: (path) => /** @type {any} */ (pageHtml(path)),
       mint: (prefix) => memory.mint(prefix),
+      // The contact records a site-wide replace reaches too (#204): listed through the raw relay, as the
+      // open road lists them, and written through `runSiteCall`.
+      read: (/** @type {string} */ action, /** @type {Record<string, unknown>} */ params) =>
+        input.send(action, params),
+      write: (/** @type {string} */ action, /** @type {Record<string, unknown>} */ params) =>
+        input.siteCall(action, params),
       // Every message the customer typed, latest first: the words a slot needs as evidence may have
       // come a message before the one asking for the change (the engine reads an array, P9).
       evidenceText: customerMessages(events),
@@ -435,6 +441,8 @@ export async function runReplace(input) {
       confirmed,
       removes: latestCustomerWords(events),
       bound: input.contractBound === true || memory.learned(label).contractBound,
+      // The front page the read found: its writes are named as the home page's (#257).
+      onFront: (/** @type {number} */ id) => memory.rememberFront?.(sessionId, id),
       // The identity a token prints is set through the contract where the surface has that door.
       contractDoor: key === 'wordpress-contract'
     })

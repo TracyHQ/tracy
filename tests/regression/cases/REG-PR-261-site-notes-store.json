@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-261-site-notes-store",
+  "kind": "fix",
+  "title": "A host dsh can keep the site agent's notes, and a store it cannot create is said on the log",
+  "pr": 261,
+  "area": "fleet/host-dsh",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run the host dsh init with a sites root.",
+    "S2: capture a note where the store's folder cannot be created (EACCES)."
+  ],
+  "expect": [
+    "S1: the init makes .site-notes under the sites root, mode 0700, owned by www-data (33:33), which dsh runs as.",
+    "S2: the job's warn log names the stage, the site and the code; nothing is thrown."
+  ],
+  "selectors": {
+    "file": "packages/tools/tracy-site-tools/src/host/site-notes.mjs",
+    "exports": "captureWishes, storeDirOf"
+  },
+  "evidence": "Issue #210: on a host dsh the notes store under the root-owned sites root could not be created, and every capture failed without a word",
+  "fence": "Site notes",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=\\(#210\\)",
+      "packages/fleet/tracy-fleet-operation/test/host-dsh-init.test.mjs",
+      "packages/tools/tracy-site-tools/test/site-notes.test.mjs"
+    ],
+    "tests": [
+      "the site agent’s notes store is made under the sites root, dsh’s own (www-data), so wishes are kept (#210)",
+      "capture: a store the host process cannot create is said on the log by its code, never silently (#210)"
+    ]
+  }
+}

@@ -136,7 +136,7 @@ symptom seen: a white nav next to dsh's dark cards, text fading out.
 - **No hard-coded colours.** No `#hex`, `rgb()`, `oklch()` in components. Get this wrong and dark
   mode breaks **silently**: it still shows, just in the wrong colour.
 - **Brand is NOT mapped — the opposite direction is right.** `--primary` and `--ring` keep
-  **terracotta `oklch(0.588 0.136 37.4)` (#bf5b3d)** instead of taking `--dsw-alias-brand-primary`.
+  **terracotta `oklch(0.565 0.136 37.4)` (#b75436)** instead of taking `--dsw-alias-brand-primary` — one step darker than the brand mark `#bf5b3d`, so a label on it and it as text on white read at WCAG AA (#228); `--ring` keeps `#bf5b3d`.
   Inside dsh, `@tracy/dsh-brand` is the one that sets `--dsw-alias-brand-primary` (and `--primary`
   inline on `<body>`) from the colour the user picks in Settings › Primary color; the default is that
   same terracotta (`DEFAULT_PRIMARY`, `packages/brand/tracy-brand/src/shared/settings.mjs`).

@@ -20,7 +20,7 @@
  * (`@tracy/core/ui-switches`): off, `help` leaves the menu and `/help …` is an ordinary message.
  */
 import { tracyWebFetch } from '@tracy/core/web-path'
-import { draftActions, draftIsCurrent, latestDraftTurn } from './onboarding'
+import { draftActions, draftIsCurrent, latestDraftTurn, rowStarts } from './onboarding'
 import { inputActivity } from '@tracy/core/input-activity'
 import { ActivityPieces } from '@tracy/core/input-activity/react'
 import { uiSwitches } from '@tracy/core/ui-switches'
@@ -146,28 +146,37 @@ export function apply(
       })
     )
   }
-  // A start action pressed in an answer (`tracy-action:` link, HelpNode.tsx): the same event as a card.
   const prepareAction = draftActions(tracyWebFetch)
+  /**
+   * A start with the conversation behind it: its latest request prepared as the editable draft
+   * (`prepareAction`, the draft API), then the matching tab opened with it. Throws when the request
+   * moved on or could not be prepared.
+   */
+  const startPrepared = async (sessionId: string, press: NonNullable<ReturnType<typeof startPressOf>>) => {
+    // The wizard's design step keeps the chat draft while the customer chooses a template.
+    const intent = press.action === 'templates' ? { action: 'create' as const } : press
+    const rows = () => ctx.chatLocal.for(sessionId).nodes.getSnapshot()
+    const latest = latestDraftTurn(rows(), sessionId)
+    if (!latest) throw new Error('DRAFT_CHANGED')
+    const current = () => draftIsCurrent(rows(), latest)
+    const draft = await prepareAction(latest, intent, current)
+    startFrom(intent.action, '', typeof draft.platform === 'string' ? draft.platform : press.platform, draft)
+  }
+  // A start action pressed in an answer (`tracy-action:` link, HelpNode.tsx): the same event as a card.
   const onAction = onboarding
     ? async (href: string, turn?: HelpData) => {
         const press = startPressOf(href)
         if (!press) return
-        // The wizard's design step keeps the chat draft while the customer chooses a template.
-        const intent = press.action === 'templates' ? { action: 'create' as const } : press
         if (!turn) throw new Error('DRAFT_CHANGED')
-        const rows = () => ctx.chatLocal.for(turn.sessionId).nodes.getSnapshot()
-        const latest = latestDraftTurn(rows(), turn.sessionId)
-        if (!latest) throw new Error('DRAFT_CHANGED')
-        const current = () => draftIsCurrent(rows(), latest)
-        const draft = await prepareAction(latest, intent, current)
-        startFrom(
-          intent.action,
-          '',
-          typeof draft.platform === 'string' ? draft.platform : press.platform,
-          draft
-        )
+        await startPrepared(turn.sessionId, press)
       }
     : undefined
+  // Create or Import in the row above the composer: the same draft as an answer's action (#203).
+  const startFromRow = rowStarts({
+    rows: (sessionId) => ctx.chatLocal.for(sessionId).nodes.getSnapshot(),
+    prepared: startPrepared,
+    plain: (action, answered) => startFrom(action, answered)
+  })
   const switches = uiSwitches()
   const t = ctx.locale.bind(NS)
   // The thumbs carry the words dsh gives an agent reply's (its `feedback` namespace, translated in every
@@ -274,7 +283,7 @@ export function apply(
             key={sessionId}
             t={t}
             hasQuestion={hasQuestion}
-            startRow={<StartRow t={t} onStart={(action) => startFrom(action, answered)} />}
+            startRow={<StartRow t={t} onStart={(action) => startFromRow(sessionId, action, answered)} />}
             enabled={enabled}
             activity={
               <HelpStop

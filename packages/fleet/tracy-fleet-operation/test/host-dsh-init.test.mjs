@@ -487,3 +487,11 @@ test('step 6 signs with seconds x 1000, never date +%s%3N (uutils prints nanosec
   assert.ok(!/date \+%s%3N/.test(text), 'no `date +%s%3N` left in the script')
   assert.ok(text.includes('TS="$(( $(date +%s) * 1000 ))"'), 'the smoke test timestamp is seconds x 1000')
 })
+
+test('the site agent’s notes store is made under the sites root, dsh’s own (www-data), so wishes are kept (#210)', (t) => {
+  const dir = scratch(t)
+  const { status, out, err } = dryRun(dir, ['s1', '--tracy-origin', 'https://s1.tracy.ai', ...actor(dir)])
+  assert.equal(status, 0, err)
+  const sites = path.join(dir, 'sites')
+  assert.ok(out.includes(`install -d -m 0700 -o 33 -g 33 ${sites}/.site-notes`), out)
+})

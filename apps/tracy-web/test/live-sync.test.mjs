@@ -1037,6 +1037,54 @@ test(
   }
 )
 
+test(
+  'a sync read back while the host does not answer keeps its lease: a chat stays refused until it ends (#224)',
+  opts,
+  async () => {
+    const { pool } = db
+    const net = network()
+    net.held.on = true
+    const { send, cookieFor } = harness(pool, net.fetchImpl)
+    await importedSite(pool)
+    const owner = await cookieFor('owner@x.y')
+    assert.equal((await send('POST', '/api/sites/shop.example/sync', owner)).status, 202)
+    await pool.query(
+      "update site_write_lease set wrote_at = now() - interval '100 seconds' where site_key = $1",
+      ['shop.example']
+    )
+    let hostDown = true
+    const flaky = async (input, init) => {
+      if (hostDown && /\/_host\/jobs\//.test(String(input))) throw new TypeError('fetch failed')
+      return net.fetchImpl(input, init)
+    }
+    const again = liveSync({
+      pool,
+      config: readConfig(env),
+      host: { hostCall, hostJob },
+      fetchImpl: flaky,
+      currentComponent,
+      writeComponent,
+      watchEveryMs: 0
+    })
+    assert.equal(await again.resume(), 1)
+    const chat = await takeWriteLease(pool, {
+      siteKey: 'shop.example',
+      sessionId: 'chat-1',
+      actor: 'owner@x.y'
+    })
+    assert.equal(chat.ok, false, 'the chat may not write while the sync may still run')
+    hostDown = false
+    net.held.on = false
+    assert.equal(await again.resume(), 1)
+    const { rows } = await pool.query('select state from site_sync where site_key = $1', ['shop.example'])
+    assert.notEqual(rows[0].state, 'running')
+    assert.equal(
+      (await takeWriteLease(pool, { siteKey: 'shop.example', sessionId: 'chat-1', actor: 'owner@x.y' })).ok,
+      true
+    )
+  }
+)
+
 test('a sync row names what the live site has that a sync does not bring, names only (#120)', () => {
   const row = {
     id: 's1',

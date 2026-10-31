@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-248-help-ended-state",
+  "kind": "fix",
+  "title": "A stopped or cut Help answer is restored as stopped or cut, with Retry",
+  "pr": 248,
+  "area": "assistant/help",
+  "cms": ["any"],
+  "steps": [
+    "Stream a Help answer the provider cuts after two words, and one the asker stops; read the conversation back.",
+    "Restore those turns in the Help client."
+  ],
+  "expect": [
+    "The stored answers keep their words with ended cut / stopped; a finished answer has no ended field.",
+    "The client restores status error + error.cut and status stopped; a finished one is done."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-concurrency=1",
+      "--test-name-pattern=#206",
+      "apps/tracy-web/test/assistant.test.mjs",
+      "packages/ui/tracy-assistant/test/help.test.mjs"
+    ],
+    "tests": [
+      "Help: an answer the asker stopped, or the provider cut",
+      "restore keeps a stopped answer stopped and a cut one cut"
+    ],
+    "needs": ["postgres"]
+  },
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {}
+}

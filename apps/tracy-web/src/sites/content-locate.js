@@ -58,6 +58,8 @@ export const LOCATE_MAX_AGE_MS = 10 * 60 * 1000
 export const LOCATE_BUDGET_MS = 8_000
 /** How long a build may run on after the call that started it has answered. */
 export const LOCATE_BUILD_LIMIT_MS = 120_000
+/** The longest pause between two gentle reads (`locateReads` `pause`), whatever one read took. */
+export const LOCATE_PAUSE_MAX_MS = 10_000
 /** Records one snapshot reads in detail; a larger site is answered `incomplete`. */
 export const LOCATE_MAX_RECORDS = 1_500
 /**
@@ -74,14 +76,21 @@ export const LOCATE_BATCH = 40
  * `{ids}` since Joomla 0.18.3 / WordPress 0.14.3, so both read `LOCATE_BATCH` ids per call; an older
  * plugin refuses `ids` and the build falls back to one id per call (`readDetails`). Joomla's reader
  * refused overlapping reads on one site before 0.18.3 (see `contentProbe`): one call at a time
- * there. EmDash answers no `{ids}`: one id per call, four at a time.
+ * there.
+ *
+ * 🔒 EMDASH IS READ GENTLY (#252, survey 29–30/10/2026). It answers no `{ids}`, and each one-id read
+ * projects the whole site inside the site's single Node process: four at a time held it at 100–135 %
+ * CPU for two minutes, its home page took 5–17 s for every visitor, the agent's `page.text` timed out,
+ * and the build (41 records in 128 s) passed `LOCATE_BUILD_LIMIT_MS` and was thrown away. One read at a
+ * time, then a pause as long as that read took (`pause: 1`), so the process serves pages at least
+ * half of the time; what a build read before its limit is kept and the next warm reads only the rest.
  * @param {string|undefined} platform
- * @returns {{ concurrency: number, batch: number }}
+ * @returns {{ concurrency: number, batch: number, pause?: number }}
  */
 export function locateReads(platform) {
   if (platform === 'joomla') return { concurrency: 1, batch: LOCATE_BATCH }
   if (platform === 'wordpress') return { concurrency: 4, batch: LOCATE_BATCH }
-  return { concurrency: 4, batch: 0 }
+  return { concurrency: 1, batch: 0, pause: 1 }
 }
 /** Candidates an answer lists. */
 const MAX_CANDIDATES = 5
@@ -2078,10 +2087,17 @@ const isBatchAnswer = (answer) =>
  * @param {Ask} ask
  * @param {any[]} rows
  * @param {Map<string, any>} into
- * @param {{ concurrency: number, batch?: number, deadline: number, now: () => number }} options
+ * `pause` > 0 waits that many times the length of each one-id read before the next (EmDash, #252).
+ * @param {{ concurrency: number, batch?: number, pause?: number, deadline: number, now: () => number,
+ *   sleep?: (ms: number) => Promise<void> }} options
  * @returns {Promise<boolean>} whether every row was read in full
  */
-async function readDetails(ask, rows, into, { concurrency, batch = 0, deadline, now }) {
+async function readDetails(
+  ask,
+  rows,
+  into,
+  { concurrency, batch = 0, pause = 0, deadline, now, sleep = after }
+) {
   let whole = true
   /** @param {any} answer @param {string} id */
   const keep = (answer, id) => {
@@ -2091,7 +2107,9 @@ async function readDetails(ask, rows, into, { concurrency, batch = 0, deadline, 
     return content.detailState === 'complete'
   }
   const one = async (id) => {
+    const began = now()
     if (!keep(await ask({ id }).catch(() => null), id)) whole = false
+    if (pause > 0) await sleep(Math.min(LOCATE_PAUSE_MAX_MS, pause * Math.max(0, now() - began)))
   }
   let queue = rows.map((row) => row.id)
   if (batch > 0 && queue.length > 0) {
@@ -2229,8 +2247,15 @@ function readingOrder(rows, pageUrl, siteUrl) {
  * @param {{ now?: () => number, maxAgeMs?: number, budgetMs?: number, buildLimitMs?: number,
  *   maxRecords?: number, headMaxAgeMs?: number, headRetryMs?: number,
  *   onBuilt?: (built: { siteKey: string, locale: string|null, records: number,
- *   kept: boolean, ms: number }) => void }} [options] - `onBuilt` hears each build from nothing as
- *   it ends (the door logs it: one line per build is how a stand shows a warm and a pick shared one).
+ *   kept: boolean, ms: number, resumed?: number }) => void, sleep?: (ms: number) => Promise<void> }} [options]
+ *   - `onBuilt` hears each build from nothing as it ends (the door logs it: one line per build is how
+ *   a stand shows a warm and a pick shared one); `resumed`: records taken over from an earlier build.
+ *
+ * 🔒 A BUILD THAT RAN OUT OF TIME IS NOT THROWN AWAY (#252). Its complete records, with the revisions
+ * they were read at, are held `maxAgeMs` as a partial; the next build takes over every one whose
+ * revision the listing still shows and reads only the rest, so a site too slow to read whole in one
+ * `buildLimitMs` finishes over a few warms instead of starting from nothing each time. A partial is
+ * never answered as complete: it only spares reads.
  */
 export function createLocateStore(options = {}) {
   const {
@@ -2241,10 +2266,16 @@ export function createLocateStore(options = {}) {
     buildLimitMs = LOCATE_BUILD_LIMIT_MS,
     maxRecords = LOCATE_MAX_RECORDS,
     headMaxAgeMs = LOCATE_HEAD_MAX_AGE_MS,
-    headRetryMs = LOCATE_HEAD_RETRY_MS
+    headRetryMs = LOCATE_HEAD_RETRY_MS,
+    sleep = after
   } = options
   /** @type {Map<string, Snapshot>} */
   const kept = new Map()
+  /**
+   * What a build that did not finish read in full, by key: taken over by the next build (#252).
+   * @type {Map<string, { at: number, details: Map<string, any>, revisions: Map<string, unknown> }>}
+   */
+  const partial = new Map()
   /** @type {Map<string, { progress: Map<string, any>, siteUrl: string|null, done: Promise<void> }>} */
   const building = new Map()
 
@@ -2258,7 +2289,7 @@ export function createLocateStore(options = {}) {
    * @param {Record<string, unknown>} scope
    * @param {{ locale: string|null, ask: Ask, concurrency: number, batch: number }} input
    */
-  async function revalidate(key, held, scope, { locale, ask, concurrency, batch }) {
+  async function revalidate(key, held, scope, { locale, ask, concurrency, batch, pause }) {
     // One deadline for the whole recheck, taken before the listing: measured from after it, a slow
     // listing bought the detail reads a FULL budget of their own on top of the time it had already
     // spent (28/09).
@@ -2273,7 +2304,14 @@ export function createLocateStore(options = {}) {
     const { changed, removed } = changesBetween(held.revisions, rows)
     const details = new Map(held.details)
     for (const id of removed) details.delete(id)
-    const whole = await readDetails(ask, changed, details, { concurrency, batch, deadline, now })
+    const whole = await readDetails(ask, changed, details, {
+      concurrency,
+      batch,
+      pause,
+      deadline,
+      now,
+      sleep
+    })
     const index = indexContents([...details.values()], { siteUrl: held.siteUrl })
     if (!whole) return { index, incomplete: true, cached: false }
     kept.set(key, {
@@ -2293,12 +2331,21 @@ export function createLocateStore(options = {}) {
   /**
    * The index to answer one call from.
    * @param {{ siteKey: string, locale: string|null, principalClass: string, pageUrl: string,
-   *   ask: Ask, concurrency?: number, batch?: number }} input - `batch`: ids per detail read
-   *   (`content.read {ids}`), 0 for one read per record (`readDetails`)
+   *   ask: Ask, concurrency?: number, batch?: number, pause?: number }} input - `batch`: ids per detail
+   *   read (`content.read {ids}`), 0 for one read per record (`readDetails`); `pause`: see `locateReads`
    * @returns {Promise<{ index: ValueIndex, incomplete: boolean, cached: boolean, refusal?: any }>}
    *   `cached`: answered from a kept snapshot that the listing showed unchanged (nothing re-read).
    */
-  async function snapshotFor({ siteKey, locale, principalClass, pageUrl, ask, concurrency = 1, batch = 0 }) {
+  async function snapshotFor({
+    siteKey,
+    locale,
+    principalClass,
+    pageUrl,
+    ask,
+    concurrency = 1,
+    batch = 0,
+    pause = 0
+  }) {
     const key = keyOf({ siteKey, locale, principalClass })
     const scope = {
       site: siteKey,
@@ -2311,7 +2358,7 @@ export function createLocateStore(options = {}) {
       // picking at once, share one listing walk and one re-read of what moved.
       let check = checking.get(key)
       if (!check) {
-        check = revalidate(key, held, scope, { locale, ask, concurrency, batch }).finally(() =>
+        check = revalidate(key, held, scope, { locale, ask, concurrency, batch, pause }).finally(() =>
           checking.delete(key)
         )
         checking.set(key, check)
@@ -2338,6 +2385,7 @@ export function createLocateStore(options = {}) {
       const progress = new Map()
       const state = { progress, siteUrl: null, refusal: null, done: Promise.resolve() }
       const started = now()
+      let resumed = 0
       state.done = (async () => {
         const walk = await listRows(ask, locale)
         const rows = walk.rows
@@ -2347,13 +2395,34 @@ export function createLocateStore(options = {}) {
           return
         }
         const ordered = readingOrder(rows, pageUrl, state.siteUrl).slice(0, maxRecords)
-        const whole = await readDetails(ask, ordered, progress, {
-          concurrency,
-          batch,
-          deadline: started + buildLimitMs,
-          now
-        })
-        if (!whole || walk.refusal !== null || walk.truncated || rows.length > maxRecords) return
+        // Every record an earlier build read whole, at the revision the listing still shows: taken over.
+        const earlier = partial.get(key)
+        if (earlier && now() - earlier.at <= maxAgeMs)
+          for (const row of ordered) {
+            const content = earlier.details.get(row.id)
+            if (content && earlier.revisions.get(row.id) === (row.revision ?? null)) {
+              progress.set(row.id, content)
+              resumed += 1
+            }
+          }
+        const whole = await readDetails(
+          ask,
+          ordered.filter((row) => !progress.has(row.id)),
+          progress,
+          { concurrency, batch, pause, deadline: started + buildLimitMs, now, sleep }
+        )
+        if (!whole || walk.refusal !== null || walk.truncated || rows.length > maxRecords) {
+          const revision = new Map(rows.map((row) => [row.id, row.revision ?? null]))
+          const done = new Map([...progress].filter(([, content]) => content?.detailState === 'complete'))
+          if (done.size > 0)
+            partial.set(key, {
+              at: now(),
+              details: done,
+              revisions: new Map([...done.keys()].map((id) => [id, revision.get(id)]))
+            })
+          return
+        }
+        partial.delete(key)
         kept.set(key, {
           at: now(),
           version: versionOf(scope, rows),
@@ -2367,7 +2436,14 @@ export function createLocateStore(options = {}) {
         .finally(() => {
           building.delete(key)
           try {
-            onBuilt({ siteKey, locale, records: progress.size, kept: kept.has(key), ms: now() - started })
+            onBuilt({
+              siteKey,
+              locale,
+              records: progress.size,
+              kept: kept.has(key),
+              ms: now() - started,
+              resumed
+            })
           } catch {}
         })
       building.set(key, state)
@@ -2426,6 +2502,7 @@ export function createLocateStore(options = {}) {
     /** Forget every snapshot and head (tests; a deploy restarts the process anyway). */
     clear() {
       kept.clear()
+      partial.clear()
       heads.clear()
     }
   }
