@@ -29,7 +29,8 @@ import { siteContext } from '../src/host/site-context.mjs'
 const tracyUi =
   (hidden, status = 200, shown = false) =>
   async (url) => {
-    if (/\/api\/design-systems$/.test(String(url))) return new Response(JSON.stringify({ shown }), { status })
+    if (String(url).endsWith('/api/design-systems'))
+      return new Response(JSON.stringify({ shown }), { status })
     assert.match(String(url), /\/api\/ui$/)
     return new Response(JSON.stringify({ hidden }), { status })
   }
