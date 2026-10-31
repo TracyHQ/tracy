@@ -1,0 +1,320 @@
+TAP version 13
+# (node:21356) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: canonical POST becomes an internal GET on the native reader with authority headers
+ok 1 - canonical POST becomes an internal GET on the native reader with authority headers
+  ---
+  duration_ms: 13.99825
+  type: 'test'
+  ...
+# Subtest: a GET keeps its query and never forwards caller authority headers
+ok 2 - a GET keeps its query and never forwards caller authority headers
+  ---
+  duration_ms: 0.342042
+  type: 'test'
+  ...
+# Subtest: canonical body shape is strict
+ok 3 - canonical body shape is strict
+  ---
+  duration_ms: 0.242
+  type: 'test'
+  ...
+# Subtest: authority headers count only for the relay PAT; editorial needs the probe switch
+ok 4 - authority headers count only for the relay PAT; editorial needs the probe switch
+  ---
+  duration_ms: 0.587458
+  type: 'test'
+  ...
+# Subtest: relay digest: environment first, else only a root-owned file nobody else can write
+ok 5 - relay digest: environment first, else only a root-owned file nobody else can write
+  ---
+  duration_ms: 2.6335
+  type: 'test'
+  ...
+# Subtest: identity CLI: init stamps repeater rows; the guard-installing migrate command is gone
+ok 6 - identity CLI: init stamps repeater rows; the guard-installing migrate command is gone
+  ---
+  duration_ms: 79.595583
+  type: 'test'
+  ...
+# Subtest: the reach check tells an ARG-only switch from one the container keeps
+ok 7 - the reach check tells an ARG-only switch from one the container keeps
+  ---
+  duration_ms: 1.305625
+  type: 'test'
+  ...
+# Subtest: a rebuild inside the container sees the content API switch the image was built with
+ok 8 - a rebuild inside the container sees the content API switch the image was built with # SKIP this template ships no Dockerfile
+  ---
+  duration_ms: 1.234459
+  type: 'test'
+  ...
+# Subtest: the Content API is on in an image built without build args, which is how the fleet builds
+ok 9 - the Content API is on in an image built without build args, which is how the fleet builds # SKIP this template ships no Dockerfile
+  ---
+  duration_ms: 0.1695
+  type: 'test'
+  ...
+# Subtest: a package with the reader, its switch on, the stamps and a full map passes
+ok 10 - a package with the reader, its switch on, the stamps and a full map passes
+  ---
+  duration_ms: 11.070542
+  type: 'test'
+  ...
+# Subtest: a missing piece is named
+ok 11 - a missing piece is named
+  ---
+  duration_ms: 3.520292
+  type: 'test'
+  ...
+# Subtest: an image the fleet builds with the reader off is refused
+ok 12 - an image the fleet builds with the reader off is refused
+  ---
+  duration_ms: 10.016875
+  type: 'test'
+  ...
+# Subtest: a config without the integration, or without the switch, is refused
+ok 13 - a config without the integration, or without the switch, is refused
+  ---
+  duration_ms: 7.320209
+  type: 'test'
+  ...
+# Subtest: a middleware that lets a stamped page into a shared cache is refused
+ok 14 - a middleware that lets a stamped page into a shared cache is refused
+  ---
+  duration_ms: 3.410834
+  type: 'test'
+  ...
+# Subtest: a collection of the model with no Content API type is refused
+ok 15 - a collection of the model with no Content API type is refused
+  ---
+  duration_ms: 3.027333
+  type: 'test'
+  ...
+# Subtest: this template passes the gate
+ok 16 - this template passes the gate # SKIP the kit fixture is not a template with a site
+  ---
+  duration_ms: 0.070542
+  type: 'test'
+  ...
+# Subtest: the kit scaffold copied into a package keeps passing
+ok 17 - the kit scaffold copied into a package keeps passing
+  ---
+  duration_ms: 8.955958
+  type: 'test'
+  ...
+# (node:21361) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+# (Use `node --trace-warnings ...` to show where the warning was created)
+# Subtest: install stamps missing, invalid and duplicated row ids, keeps pointers and reruns without changes
+ok 18 - install stamps missing, invalid and duplicated row ids, keeps pointers and reruns without changes
+  ---
+  duration_ms: 10.019
+  type: 'test'
+  ...
+# Subtest: option A: ids survive edits and reorders, a deleted and recreated row gets a new id
+ok 19 - option A: ids survive edits and reorders, a deleted and recreated row gets a new id
+  ---
+  duration_ms: 1.550667
+  type: 'test'
+  ...
+# Subtest: nothing is refused: a revert that brings old rows back keeps their ids
+ok 20 - nothing is refused: a revert that brings old rows back keeps their ids
+  ---
+  duration_ms: 1.48825
+  type: 'test'
+  ...
+# Subtest: the old guard triggers are replaced, not kept beside the stamp
+ok 21 - the old guard triggers are replaced, not kept beside the stamp
+  ---
+  duration_ms: 1.191
+  type: 'test'
+  ...
+# Subtest: fork retries keep the new seed; same-site restore only rotates cursor epoch
+ok 22 - fork retries keep the new seed; same-site restore only rotates cursor epoch
+  ---
+  duration_ms: 3.90975
+  type: 'test'
+  ...
+# Subtest: a failed install rolls back everything and can retry
+ok 23 - a failed install rolls back everything and can retry
+  ---
+  duration_ms: 1.037458
+  type: 'test'
+  ...
+# Subtest: opt-in rejects explicit source and static collisions
+ok 24 - opt-in rejects explicit source and static collisions
+  ---
+  duration_ms: 4.060375
+  type: 'test'
+  ...
+# Subtest: sourceRows gives the per-entry scan's records, byte for byte: published scope
+ok 25 - sourceRows gives the per-entry scan's records, byte for byte: published scope
+  ---
+  duration_ms: 789.860875
+  type: 'test'
+  ...
+# Subtest: sourceRows gives the per-entry scan's records, byte for byte: editorial scope
+ok 26 - sourceRows gives the per-entry scan's records, byte for byte: editorial scope
+  ---
+  duration_ms: 810.936417
+  type: 'test'
+  ...
+# Subtest: sourceRows gives the per-entry scan's records, byte for byte: caller without read_drafts
+ok 27 - sourceRows gives the per-entry scan's records, byte for byte: caller without read_drafts
+  ---
+  duration_ms: 754.504792
+  type: 'test'
+  ...
+# Subtest: a listing summary is the full projection with its detail dropped
+ok 28 - a listing summary is the full projection with its detail dropped
+  ---
+  duration_ms: 53.465833
+  type: 'test'
+  ...
+# Subtest: a draft whose overlay failed still fails closed
+ok 29 - a draft whose overlay failed still fails closed
+  ---
+  duration_ms: 1.896667
+  type: 'test'
+  ...
+# Subtest: reference-free schema avoids per-entry hydration and retains exact native revisions
+ok 30 - reference-free schema avoids per-entry hydration and retains exact native revisions
+  ---
+  duration_ms: 67.876125
+  type: 'test'
+  ...
+# Subtest: a reference collection falls back independently without disabling safe sibling collections
+ok 31 - a reference collection falls back independently without disabling safe sibling collections
+  ---
+  duration_ms: 48.458666
+  type: 'test'
+  ...
+# Subtest: query rejects ambiguous or unsupported input
+ok 32 - query rejects ambiguous or unsupported input
+  ---
+  duration_ms: 1.583541
+  type: 'test'
+  ...
+# Subtest: entry ID survives slug/value change; recreated entry differs
+ok 33 - entry ID survives slug/value change; recreated entry differs
+  ---
+  duration_ms: 4.385667
+  type: 'test'
+  ...
+# Subtest: structured data is unresolved, never index/hash-derived row IDs
+ok 34 - structured data is unresolved, never index/hash-derived row IDs
+  ---
+  duration_ms: 1.075292
+  type: 'test'
+  ...
+# Subtest: cursor binds full scope revision including a shared edit outside page filter
+ok 35 - cursor binds full scope revision including a shared edit outside page filter
+  ---
+  duration_ms: 7.724625
+  type: 'test'
+  ...
+# Subtest: cursor binds principal/filter and rejects expired/tampered signatures
+ok 36 - cursor binds principal/filter and rejects expired/tampered signatures
+  ---
+  duration_ms: 0.795583
+  type: 'test'
+  ...
+# Subtest: oversized scalar returns field identity, never silently truncates
+ok 37 - oversized scalar returns field identity, never silently truncates
+  ---
+  duration_ms: 8.699792
+  type: 'test'
+  ...
+# Subtest: chrome references only the explicit template binding, not every shared record
+ok 38 - chrome references only the explicit template binding, not every shared record
+  ---
+  duration_ms: 0.4215
+  type: 'test'
+  ...
+# Subtest: chrome may name several entries; each one is a shared occurrence on a page
+ok 39 - chrome may name several entries; each one is a shared occurrence on a page
+  ---
+  duration_ms: 0.297417
+  type: 'test'
+  ...
+# Subtest: urlField takes a page path from its data; a value that is not a path falls back to the pattern
+ok 40 - urlField takes a page path from its data; a value that is not a path falls back to the pattern
+  ---
+  duration_ms: 0.396708
+  type: 'test'
+  ...
+# Subtest: identified repeaters paginate with stable IDs and expire on reorder
+ok 41 - identified repeaters paginate with stable IDs and expire on reorder
+  ---
+  duration_ms: 1.249083
+  type: 'test'
+  ...
+# Subtest: oversized body discovers signed block scan with explicit terminal partial state
+ok 42 - oversized body discovers signed block scan with explicit terminal partial state
+  ---
+  duration_ms: 8.179666
+  type: 'test'
+  ...
+# Subtest: images: the field keeps its key and URL, images[] names the block and item that hold it
+ok 43 - images: the field keeps its key and URL, images[] names the block and item that hold it
+  ---
+  duration_ms: 1.025792
+  type: 'test'
+  ...
+# Subtest: prose (multi-line text) reads as text, at the top level and inside a repeater
+ok 44 - prose (multi-line text) reads as text, at the top level and inside a repeater
+  ---
+  duration_ms: 0.288708
+  type: 'test'
+  ...
+# Subtest: budget conformance: 2 KB, 40 KB, 3 KB at maxBytes 8192 page by content, the big one cut
+ok 45 - budget conformance: 2 KB, 40 KB, 3 KB at maxBytes 8192 page by content, the big one cut
+  ---
+  duration_ms: 2.873584
+  type: 'test'
+  ...
+# Subtest: budget: a detail read cuts the longest field, flags it, keeps the revision
+ok 46 - budget: a detail read cuts the longest field, flags it, keeps the revision
+  ---
+  duration_ms: 6.3735
+  type: 'test'
+  ...
+# Subtest: budget: default 65536; limit still applies; out of range or malformed is refused by name
+ok 47 - budget: default 65536; limit still applies; out of range or malformed is refused by name
+  ---
+  duration_ms: 3.5595
+  type: 'test'
+  ...
+# Subtest: budget: the cursor is not bound to maxBytes; a scan at any budget covers total once
+ok 48 - budget: the cursor is not bound to maxBytes; a scan at any budget covers total once
+  ---
+  duration_ms: 1.726958
+  type: 'test'
+  ...
+# Subtest: budget: without an explicit maxBytes nothing is cut, as before the budget existed
+ok 49 - budget: without an explicit maxBytes nothing is cut, as before the budget existed
+  ---
+  duration_ms: 13.543083
+  type: 'test'
+  ...
+# Subtest: prose: a plain string is one text value, Portable Text one value per block keyed by its _key
+ok 50 - prose: a plain string is one text value, Portable Text one value per block keyed by its _key
+  ---
+  duration_ms: 0.827083
+  type: 'test'
+  ...
+# Subtest: prose: blocks without a usable _key are unresolved, never index-derived
+ok 51 - prose: blocks without a usable _key are unresolved, never index-derived
+  ---
+  duration_ms: 0.391792
+  type: 'test'
+  ...
+1..51
+# tests 51
+# suites 0
+# pass 48
+# fail 0
+# cancelled 0
+# skipped 3
+# todo 0
+# duration_ms 2602.823625

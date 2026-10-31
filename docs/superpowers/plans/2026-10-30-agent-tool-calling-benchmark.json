@@ -1,0 +1,129 @@
+{
+  "baseline": "76e7f114fa4ce6ac2e1b5b9d1c3ff9857c90c14e",
+  "baselineEngineHash": "a5c288a88bda12eb77239238b14759d42caa9d9026bfd4faee1a23163b2db9b8",
+  "candidate": "packages/tools/tracy-site-tools/src/host/replace-wordpress.mjs",
+  "engineOnly": true,
+  "sharedDependencies": "current checkout",
+  "candidateRevision": "76e7f114fa4ce6ac2e1b5b9d1c3ff9857c90c14e",
+  "candidateWorkingTree": true,
+  "candidateEngineHash": "bab23694833967ddef56c58385d302735d706103e91eeb2e84cb20bb4f1ca5d1",
+  "fixtureHash": "4cec014f972f8d0441abe895b9e73ad6da62c40694ee30db73a4718ff833e081",
+  "repeats": 7,
+  "injectedReadDelayMs": 5,
+  "model": null,
+  "actualCost": null,
+  "results": [
+    {
+      "cohort": "direct-page",
+      "arms": [
+        {
+          "arm": "baseline",
+          "verified": 7,
+          "reads": 16,
+          "medianMs": 47.70275000000015,
+          "counts": {
+            "[\"content.list\",{\"kind\":\"templatePart\"}]": 1,
+            "[\"content.get\",{\"kind\":\"option\",\"key\":\"blogname\"}]": 1,
+            "[\"content.get\",{\"kind\":\"option\",\"key\":\"blogdescription\"}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":904}]": 2,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":521}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":26}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":28}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":29}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":30}]": 1,
+            "[\"content.get\",{\"kind\":\"templatePart\",\"key\":\"footer\"}]": 1,
+            "[\"content.get\",{\"kind\":\"templatePart\",\"key\":\"header\"}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":70}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":71}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":69}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":68}]": 1
+          }
+        },
+        {
+          "arm": "candidate",
+          "verified": 7,
+          "reads": 16,
+          "medianMs": 50.52329200000008,
+          "counts": {
+            "[\"content.list\",{\"kind\":\"templatePart\"}]": 1,
+            "[\"content.get\",{\"kind\":\"option\",\"key\":\"blogname\"}]": 1,
+            "[\"content.get\",{\"kind\":\"option\",\"key\":\"blogdescription\"}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":904}]": 2,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":521}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":26}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":28}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":29}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":30}]": 1,
+            "[\"content.get\",{\"kind\":\"templatePart\",\"key\":\"footer\"}]": 1,
+            "[\"content.get\",{\"kind\":\"templatePart\",\"key\":\"header\"}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":70}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":71}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":69}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":68}]": 1
+          }
+        }
+      ],
+      "readReductionPct": 0,
+      "syntheticLatencyReductionPct": -5.912745072348913
+    },
+    {
+      "cohort": "template-widening",
+      "arms": [
+        {
+          "arm": "baseline",
+          "verified": 7,
+          "reads": 34,
+          "medianMs": 109.45133299999998,
+          "counts": {
+            "[\"content.list\",{\"kind\":\"templatePart\"}]": 2,
+            "[\"content.get\",{\"kind\":\"option\",\"key\":\"blogname\"}]": 2,
+            "[\"content.get\",{\"kind\":\"option\",\"key\":\"blogdescription\"}]": 2,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":904}]": 2,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":521}]": 2,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":26}]": 2,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":28}]": 2,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":29}]": 2,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":30}]": 2,
+            "[\"content.get\",{\"kind\":\"templatePart\",\"key\":\"footer\"}]": 2,
+            "[\"content.get\",{\"kind\":\"templatePart\",\"key\":\"header\"}]": 2,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":70}]": 2,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":71}]": 2,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":69}]": 2,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":68}]": 2,
+            "[\"content.list\",{\"kind\":\"template\"}]": 1,
+            "[\"content.get\",{\"kind\":\"template\",\"key\":\"index\"}]": 1,
+            "[\"content.get\",{\"kind\":\"template\",\"key\":\"page\"}]": 2
+          }
+        },
+        {
+          "arm": "candidate",
+          "verified": 7,
+          "reads": 19,
+          "medianMs": 83.06825000000003,
+          "counts": {
+            "[\"content.list\",{\"kind\":\"templatePart\"}]": 1,
+            "[\"content.get\",{\"kind\":\"option\",\"key\":\"blogname\"}]": 1,
+            "[\"content.get\",{\"kind\":\"option\",\"key\":\"blogdescription\"}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":904}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":521}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":26}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":28}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":29}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":30}]": 1,
+            "[\"content.get\",{\"kind\":\"templatePart\",\"key\":\"footer\"}]": 1,
+            "[\"content.get\",{\"kind\":\"templatePart\",\"key\":\"header\"}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":70}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":71}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":69}]": 1,
+            "[\"content.get\",{\"kind\":\"post\",\"id\":68}]": 1,
+            "[\"content.list\",{\"kind\":\"template\"}]": 1,
+            "[\"content.get\",{\"kind\":\"template\",\"key\":\"index\"}]": 1,
+            "[\"content.get\",{\"kind\":\"template\",\"key\":\"page\"}]": 2
+          }
+        }
+      ],
+      "readReductionPct": 44.11764705882353,
+      "syntheticLatencyReductionPct": 24.104853067435872
+    }
+  ]
+}

@@ -35,9 +35,11 @@
  *   TRACY_DSH_CONTAINER=tracy-dsh node scripts/agent-turn-cost.mjs
  */
 import { execFileSync } from 'node:child_process'
+import { createHash } from 'node:crypto'
 import { mkdtempSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import path from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 import { newestSessionLog, parseSessionBytes, restoreSession } from './measure/session-metrics.mjs'
 
@@ -106,12 +108,56 @@ const unrestored = []
  * @param {{name?: unknown, arguments?: unknown}} call
  */
 function verbOf(call) {
-  if (call?.name !== 'tracy_site') return String(call?.name ?? '?')
+  if (!['tracy_site', 'tracy_emdash'].includes(call?.name)) return String(call?.name ?? '?')
   try {
-    return `tracy_site:${JSON.parse(String(call.arguments ?? '{}')).action}`
+    const args = typeof call.arguments === 'string' ? JSON.parse(call.arguments) : call.arguments
+    return `${call.name}:${args?.action ?? '?'}`
   } catch {
-    return 'tracy_site:?'
+    return `${call.name}:?`
   }
+}
+
+/** A refusal can be correct protection; retain the code instead of calling every refusal waste. */
+export function failureClass(code) {
+  if (['BAD_PARAMS', 'INVALID_ARGUMENTS', 'UNKNOWN_ACTION', 'NOT_ON_THIS_PLATFORM'].includes(code))
+    return 'arguments'
+  if (
+    [
+      'CONFIRM_FIRST',
+      'NO_VIEWER',
+      'FORBIDDEN',
+      'SITE_OUTSIDE_CONVERSATION',
+      'NOT_EDITABLE',
+      'NOT_SUPPORTED_HERE',
+      'BODY_SHRINK'
+    ].includes(code)
+  )
+    return 'protection'
+  if (['STORE_CHANGED', 'STALE_REVISION', 'SITE_BUSY', 'RATE_LIMITED'].includes(code)) return 'contention'
+  if (['OUTCOME_UNKNOWN', 'WRITE_OUTCOME_UNKNOWN'].includes(code)) return 'uncertain-write'
+  if (['COWORK_WEB_UNREACHABLE', 'TOOL_FAILED', 'READ_FAILED'].includes(code)) return 'execution'
+  if (['NOT_FOUND', 'AMBIGUOUS'].includes(code)) return 'targeting'
+  return 'unclassified'
+}
+
+/** Parse the outer receipt only: nested failed items do not make a successful batch a refusal. */
+function resultOutcome(text) {
+  try {
+    const result = JSON.parse(text)
+    if (result?.ok === true) return { outcome: 'ok', code: null, failureClass: null }
+    if (result?.ok === false) {
+      const code =
+        typeof result.code === 'string'
+          ? result.code
+          : typeof result.error === 'string'
+            ? result.error
+            : '(no code)'
+      return { outcome: 'refused', code, failureClass: failureClass(code) }
+    }
+  } catch {
+    // Plain text and mixed content have no trustworthy outer receipt.
+  }
+  return { outcome: 'unknown', code: null, failureClass: null }
 }
 
 /** Every text fragment in a content structure, however deeply nested. */
@@ -129,7 +175,7 @@ function textIn(node, out = []) {
  * in, one answer out. The step is the model's unit, and the step count is what produces the cost.
  * @param {string} file
  */
-function turnsIn(file) {
+export function turnsIn(file) {
   const rows = []
   let head = null
   let prompter = null
@@ -137,6 +183,7 @@ function turnsIn(file) {
   // (`designer-wordpress` for every site), and `presetForSite` changes it once the page knows which CMS the site
   // runs — the turn must carry the preset the agent ACTUALLY holds. See `livePreset` below.
   let livePreset = null
+  let liveRequest = null
   const turns = new Map()
   // Every log is read in V4 shape (restored through the rc.2 catalog), so a converted session and its
   // V3 original count the same turns; `textIn` below reads either tool-result shape regardless.
@@ -150,6 +197,21 @@ function turnsIn(file) {
       continue
     }
     const data = event.data ?? {}
+    // Headers have no turn number. Keep the effective header for each answered model step,
+    // including additions and resumed sessions; do not copy arguments or descriptions into reports.
+    if (event.type === 'request/header' && data.header) {
+      const tools = data.header.tools ?? []
+      const schema = JSON.stringify(tools)
+      const config = data.header.config ?? {}
+      liveRequest = {
+        provider: config.provider ?? null,
+        model: config.model ?? null,
+        reasoningEffort: config.reasoningEffort ?? null,
+        toolNames: tools.map((tool) => tool.name),
+        schemaChars: schema.length,
+        schemaHash: createHash('sha256').update(schema).digest('hex')
+      }
+    }
     // 🔒 THE PRESET CHANGES MID-SESSION, AND `session.agentPreset` DOES NOT FOLLOW. Measured 19/09 on
     // `--site-demojlnam--` (a real Joomla site, `site.platform = joomla`): all three sessions carry
     // `agentPreset: designer-wordpress` in the `session` event, but two of the three emit
@@ -188,6 +250,8 @@ function turnsIn(file) {
         callAt: new Map(),
         callVerb: new Map(),
         callTimes: [],
+        results: [],
+        requests: [],
         toolSpans: [],
         lastStepEnd: null
       })
@@ -213,6 +277,7 @@ function turnsIn(file) {
         turn.callVerb.set(data.callId, verbOf(data))
       }
     } else if (event.type === 'assistant/message') {
+      turn.requests.push(liveRequest)
       // The model's part of a step: from the step's start to its answer (the request built and streamed).
       if (turn.stepAt !== null && typeof event.time === 'number') turn.modelMs += event.time - turn.stepAt
       turn.stepAt = null
@@ -229,12 +294,15 @@ function turnsIn(file) {
       }
       const text = textIn(data.message?.content).join('')
       turn.resultChars += text.length
-      // A refusal is a call that changed nothing — the measurable waste of a turn. Its code
-      // is kept, because "45% of calls refused" is a useless figure until you know WHAT was refused.
-      if (/"ok"\s*:\s*false/.test(text)) {
+      const outcome = resultOutcome(text)
+      turn.results.push({
+        verb: turn.callVerb.get(id) ?? '(unmatched)',
+        chars: text.length,
+        ...outcome
+      })
+      if (outcome.outcome === 'refused') {
         turn.refused += 1
-        const code = /"(?:code|error)"\s*:\s*"([^"]{1,40})"/.exec(text)
-        turn.codes.push(code === null ? '(no code)' : code[1])
+        turn.codes.push(outcome.code)
       }
     }
   }
@@ -259,9 +327,16 @@ function turnsIn(file) {
       calls: turn.verbs.length,
       refused: turn.refused,
       resultChars: turn.resultChars,
+      results: turn.results,
+      requests: turn.requests,
       input: sum('inputTokens'),
       output: sum('outputTokens'),
       cacheRead: sum('cacheReadTokens'),
+      cacheWrite: sum('cacheWriteTokens'),
+      usageComplete:
+        turn.steps > 0 &&
+        turn.usage.length === turn.steps &&
+        turn.usage.every((u) => Number.isFinite(u.inputTokens) && Number.isFinite(u.outputTokens)),
       reason: turn.reason ?? '(unfinished)',
       verbs: turn.verbs,
       codes: turn.codes,
@@ -428,8 +503,14 @@ function main() {
   process.stdout.write('\nverbs called, and how many characters they pour into the context\n')
   const verbs = new Map()
   for (const row of rows) for (const verb of row.verbs) verbs.set(verb, (verbs.get(verb) ?? 0) + 1)
+  const charsByVerb = new Map()
+  for (const row of rows)
+    for (const result of row.results)
+      charsByVerb.set(result.verb, (charsByVerb.get(result.verb) ?? 0) + result.chars)
   for (const [verb, count] of [...verbs].sort((a, b) => b[1] - a[1]).slice(0, 15)) {
-    process.stdout.write(`${String(count).padStart(5)}  ${verb}\n`)
+    process.stdout.write(
+      `${String(count).padStart(5)}  ${String(charsByVerb.get(verb) ?? 0).padStart(10)} chars  ${verb}\n`
+    )
   }
   // Which calls hold a turn longest, per platform (#1403 item 16): count, p50 and p90 seconds of each call.
   process.stdout.write('\nslowest calls by platform (sec)             n    p50    p90\n')
@@ -454,7 +535,7 @@ function main() {
       )
   }
 
-  process.stdout.write('\nREFUSED calls — measurable waste, with the code and whether anyone typed\n')
+  process.stdout.write('\nREFUSED calls — includes protective refusals; code and whether anyone typed\n')
   const codes = new Map()
   for (const row of rows) {
     for (const code of row.codes) {
@@ -479,4 +560,4 @@ function main() {
   )
 }
 
-main()
+if (process.argv[1] && import.meta.url === pathToFileURL(path.resolve(process.argv[1])).href) main()

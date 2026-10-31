@@ -1,0 +1,20 @@
+{
+  "origin": "http://127.0.0.1:57509",
+  "wordpress": {
+    "id": "0270425f3074ac31bf90c0c2dcfd505ca8e851f409a69237c48d425dc507bf7b",
+    "image": "sha256:4e202dbb837d751f7c5367a7e9ad4f55e960a823167494cffc4b8598961800f2",
+    "startedAt": "2026-10-30T15:02:30.200123296Z",
+    "pidInDockerVM": 13218,
+    "name": "toolbench-1793372549870-wp"
+  },
+  "database": {
+    "id": "ad7a0dfcb15d6af2f634fd3d8f76422e7aa25c489998c414f413c1de7f2a9781",
+    "image": "sha256:3853ff4da2eb76058a3a112ae8026e5a094990c5341f1aedd76a903fd171176e",
+    "startedAt": "2026-10-30T15:02:29.982689129Z",
+    "pidInDockerVM": 13094,
+    "name": "toolbench-1793372549870-db"
+  },
+  "php": "8.3.36",
+  "borrowedCredentialSource": "tracy-dsh; read only",
+  "cleanup": "Owned WordPress/database containers, volumes, network and private fixture config removed after evidence capture; borrowed processes preserved"
+}

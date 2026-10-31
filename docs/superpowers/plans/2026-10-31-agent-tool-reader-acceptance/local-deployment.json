@@ -1,0 +1,18 @@
+{
+  "name": "tracy-agent-tools-local",
+  "gate": "http://127.0.0.1:61588",
+  "direct": "http://127.0.0.1:61587",
+  "containerId": "145fc65e16fd71568a9307891430a848151ae341641c649d2cc6af99086b42c0",
+  "pidInDockerVM": 27783,
+  "startedAt": "2026-10-31T09:42:13.79019771Z",
+  "image": "sha256:cf12a02e54fa5470880bbc9c0f6f661ee6f6901afb58843c35cc87b4f605f869",
+  "bundleSha256": "34fe0a9d32f2e5eb79c5c369ee574c2da17c5e6f1db225876b83a939876a9614",
+  "bundleMatchesWorkingTree": true,
+  "update": "Bundle copied into the existing owned container, then that container alone restarted. Base image unchanged. Docker reassigned its dynamic host ports; access configuration was refreshed from actual bindings.",
+  "scope": "isolated local candidate; borrowed services unchanged",
+  "launchTokenRefreshed": true,
+  "gatewayLoginStatus": 302,
+  "gatewayPageStatus": 200,
+  "graphEntries": 74,
+  "scriptBatchesVerified": 3
+}

@@ -1,0 +1,64 @@
+{
+  "repeat": 0,
+  "task": "id-recovery",
+  "verified": false,
+  "failure": null,
+  "ms": 2232.2852089999997,
+  "idValid": false,
+  "noWrites": true,
+  "continuation": true,
+  "recovery": true,
+  "language": true,
+  "seededRefusal": {
+    "action": "content.read",
+    "params": {
+      "id": "99999999"
+    }
+  },
+  "calls": [
+    {
+      "name": "tracy_site",
+      "arguments": {
+        "action": "content.read",
+        "params": {
+          "view": "pages",
+          "search": "Inventory 399"
+        }
+      }
+    }
+  ],
+  "provider": [
+    {
+      "step": 2,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7372,
+        "completion_tokens": 69,
+        "total_tokens": 7441,
+        "prompt_tokens_details": {
+          "cached_tokens": 3968
+        },
+        "prompt_cache_hit_tokens": 3968,
+        "prompt_cache_miss_tokens": 3404
+      },
+      "firstChunkMs": 471.5287499999995,
+      "ms": 1031.1757909999997,
+      "promptHash": "00dfa028945184c46e34b1b5322966039a59744ff4e3b5df659d2cbe3ecdc639",
+      "finalText": null
+    },
+    {
+      "step": 3,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": null,
+      "firstChunkMs": 298.47541699999965,
+      "ms": null,
+      "promptHash": "eb049dff5d056bd1ff5c9a2ddd88ca61c215919a7109249b5ceaa0be74ef8e5f"
+    }
+  ],
+  "final": "",
+  "toolResults": "[{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"seed-refusal\"},\"toolCallId\":\"seed-refusal\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"ok\\\":false,\\\"httpStatus\\\":404,\\\"error\\\":{\\\"code\\\":\\\"CONTENT_NOT_FOUND\\\",\\\"message\\\":\\\"Content not found.\\\"},\\\"next\\\":\\\"99999999 is a CMS number, not a content id: those are opaque, as content.read lists them. Find the page by its address, {view:\\\\\\\"pages\\\\\\\", url:\\\\\\\"/…\\\\\\\"}; a row's native holds the CMS ids.\\\"}\"}],\"isError\":false,\"id\":\"a0ca3ec5-d641-4563-80ae-b4461c98b023\"},{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"seed-refusal\"},\"toolCallId\":\"seed-refusal\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"ok\\\":false,\\\"httpStatus\\\":404,\\\"error\\\":{\\\"code\\\":\\\"CONTENT_NOT_FOUND\\\",\\\"message\\\":\\\"Content not found.\\\"},\\\"next\\\":\\\"99999999 is a CMS number, not a content id: those are opaque, as content.read lists them. Find the page by its address, {view:\\\\\\\"pages\\\\\\\", url:\\\\\\\"/…\\\\\\\"}; a row's native holds the CMS ids.\\\"}\"}],\"isError\":false,\"id\":\"a0ca3ec5-d641-4563-80ae-b4461c98b023\"},{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_6DWD1pNvSt9f8mOgMB6Z0176\"},\"toolCallId\":\"call_00_6DWD1pNvSt9f8mOgMB6Z0176\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"schemaVersion\\\":\\\"tracy-content-pages/v1\\\",\\\"site\\\":{\\\"id\\\":\\\"sa2debb5755c0809935a9e83a98\\\",\\\"name\\\":\\\"Tool benchmark\\\",\\\"url\\\":\\\"http://127.0.0.1:59939\\\",\\\"defaultLocale\\\":\\\"en-US\\\",\\\"locales\\\":[\\\"en-US\\\"]},\\\"truncated\\\":false,\\\"version\\\":\\\"cv1.9e0360ff72e9265bd0287d49134e3e1c\\\",\\\"later\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"changedSince\\\":\\\"cv1.9e0360ff72e9265bd0287d49134e3e1c\\\"},\\\"why\\\":\\\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\\\"},\\\"columns\\\":[\\\"title\\\",\\\"path\\\",\\\"id\\\",\\\"record\\\"],\\\"pages\\\":[[\\\"Inventory 399: Reference material for the independent tool calling benchmark\\\",\\\"/?page_id=404\\\",\\\"c33cbef4f01021095c8c249fda1\\\",\\\"post:404\\\"]],\\\"pagination\\\":{\\\"offset\\\":0,\\\"returned\\\":1,\\\"total\\\":1,\\\"totalIsComplete\\\":true,\\\"nextOffset\\\":null},\\\"idNamespace\\\":\\\"content-api\\\",\\\"idMeaning\\\":\\\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\\\"}\"}],\"isError\":false,\"id\":\"47c42ccf-5268-4980-b150-0f06aa1f3b60\"}]",
+  "backendReads": 2,
+  "nativeSourceCalls": 0
+}

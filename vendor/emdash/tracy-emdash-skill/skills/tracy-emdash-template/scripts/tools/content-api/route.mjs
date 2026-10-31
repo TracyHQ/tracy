@@ -83,7 +83,20 @@ async function read(context, authority = { contentPrincipal: null, contentScope:
           delete published.draftRevisionId
           return { ...r.data, item: published }
         }
+        // Inspect current native schema, not the seed map: an administrator may add references.
+        // This reads metadata only; content and draft hydration still use the public handlers.
+        const schemas = await trx.selectFrom('_emdash_collections').select(['id', 'slug']).execute()
+        const references = await trx
+          .selectFrom('_emdash_fields')
+          .select('collection_id')
+          .where('type', '=', 'reference')
+          .execute()
+        const withReferences = new Set(references.map((field) => field.collection_id))
+        const referenceFree = new Set(
+          schemas.filter((schema) => !withReferences.has(schema.id)).map((schema) => schema.slug)
+        )
         const rows = await sourceRows({
+          referenceFree,
           collections: Object.keys(options.mapping.collections),
           list,
           get,

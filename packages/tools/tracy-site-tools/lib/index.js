@@ -2175,6 +2175,25 @@ var require_jpeg_js = __commonJS({
   }
 });
 
+// src/host/page-read-flights.mjs
+function createPageReadFlights() {
+  const pending = /* @__PURE__ */ new Map();
+  return async (key, read) => {
+    if (key === null) return read();
+    let flight = pending.get(key);
+    if (!flight) {
+      if (pending.size >= 128) return read();
+      flight = Promise.resolve().then(read);
+      pending.set(key, flight);
+    }
+    try {
+      return structuredClone(await flight);
+    } finally {
+      if (pending.get(key) === flight) pending.delete(key);
+    }
+  };
+}
+
 // src/host/build-turns.mjs
 var CLOSED = /* @__PURE__ */ new Set(["AGENT_DEMO_NOT_GRANTED", "AGENT_DEMO_ACTION_CLOSED", "AGENT_DEMO_TURN_NOT_BOUND"]);
 function createBuildTurns(most = 500) {
@@ -4299,10 +4318,12 @@ var VIEW_PARAMS = Object.freeze({
 });
 function takeViewParams(action, params) {
   const p = isRecord4(params) ? params : {};
-  const own = (
+  const pageRows = action === "content.read" && p.view === "pages" && p.url === void 0 && p.changedSince === void 0;
+  const base3 = (
     /** @type {Record<string, readonly string[]>} */
     VIEW_PARAMS[action]
   );
+  const own = pageRows ? [...base3, "search", "offset", "limit"] : base3;
   if (own === void 0) return { params: p, view: null };
   const rest = {};
   const taken = {};
@@ -4320,9 +4341,11 @@ function takeViewParams(action, params) {
       full: taken.full === true || taken.full === "true",
       blockKinds: taken.blockKinds === true || taken.blockKinds === "true",
       search: str(taken.search).slice(0, 80),
+      ...pageRows && Array.isArray(taken.search) ? { pageSearches: taken.search.map(str) } : {},
       type: str(taken.type).slice(0, 40),
       offset: whole(taken.offset, 0, 0),
-      limit: Math.min(whole(taken.limit, LIST_ROWS, 1), LIST_ROWS_MAX)
+      limit: Math.min(whole(taken.limit, LIST_ROWS, 1), LIST_ROWS_MAX),
+      pageRows: pageRows && ["search", "offset", "limit"].some((key) => p[key] !== void 0)
     }
   };
 }
@@ -4342,7 +4365,7 @@ var recordOf = (native) => {
   const id = first.id ?? first.key;
   return typeof id === "string" || typeof id === "number" ? `${first.kind}:${id}` : first.kind;
 };
-function compactPageList(answer, params, { home: home3 = "" } = {}) {
+function compactPageList(answer, params, { home: home3 = "", view: view2 = null } = {}) {
   if (!isPageList(answer, params)) return answer;
   const a = (
     /** @type {Record<string, any>} */
@@ -4373,7 +4396,17 @@ function compactPageList(answer, params, { home: home3 = "" } = {}) {
           locale
         ] ?? 0) + 1;
     }
-  const pages = shown3.filter(isRecord4);
+  const words = (view2?.search ?? "").toLowerCase();
+  const searches = view2?.pageSearches?.map((word) => word.toLowerCase()) ?? (words ? [words] : []);
+  const matched = shown3.filter(isRecord4).filter(
+    (page) => searches.length === 0 || searches.some(
+      (term) => [page.title, page.path, page.url, page.id, recordOf(page.native)].some(
+        (value) => typeof value === "string" && value.toLowerCase().includes(term)
+      )
+    )
+  );
+  const offset = view2?.pageRows ? view2.offset : 0;
+  const pages = view2?.pageRows ? matched.slice(offset, offset + view2.limit) : matched;
   const columns = ["title", "path", "id", "record"];
   const anyType = pages.some((page) => typeof page.type === "string" && page.type !== "page");
   const anyStatus = pages.some((page) => typeof page.status === "string" && page.status !== "published");
@@ -4396,10 +4429,18 @@ function compactPageList(answer, params, { home: home3 = "" } = {}) {
   const leftOut = Object.values(elsewhere2).reduce((sum, n) => sum + n, 0);
   const { pages: _pages, truncatedCount: _count, next: _next, ...rest } = a;
   const build = (count) => {
-    const cut4 = rows.length - count;
+    const cut4 = matched.length - offset - count;
+    const more = Math.max(0, cut4);
+    const continuation = {
+      view: "pages",
+      ...typeof p.locale === "string" ? { locale: p.locale } : {},
+      ...view2?.pageSearches ? { search: view2.pageSearches } : words ? { search: view2?.search } : {},
+      offset: offset + count,
+      limit: view2?.pageRows ? view2.limit : Math.min(count, LIST_ROWS_MAX)
+    };
     const parts = [
       leftOut > 0 ? `Pages of ${home3} and of every language; ${leftOut} more in ${Object.keys(elsewhere2).length} other language${Object.keys(elsewhere2).length === 1 ? "" : "s"} (otherLanguages): the same call with locale lists one.` : "",
-      cut4 > 0 ? `${cut4} more pages not shown: find one by its link with url.` : "",
+      more > 0 ? `${more} more pages not shown: next.params gives the next rows; search finds a title or path; url reads one known link.` : "",
       'A page by its link: {view:"pages", url}. Every language and field as the site gave them: full:true.'
     ].filter((x) => x !== "");
     return {
@@ -4407,12 +4448,23 @@ function compactPageList(answer, params, { home: home3 = "" } = {}) {
       columns,
       pages: rows.slice(0, count),
       ...leftOut > 0 ? { otherLanguages: elsewhere2 } : {},
-      ...cut4 > 0 ? { truncated: true, truncatedCount: cut4 } : {},
+      ...more > 0 ? { truncated: true, truncatedCount: more } : {},
+      ...view2?.pageRows || more > 0 ? {
+        pagination: {
+          offset,
+          returned: count,
+          total: matched.length,
+          totalIsComplete: a.truncated !== true,
+          nextOffset: more > 0 ? offset + count : null
+        }
+      } : {},
+      ...a.truncated === true && a.next !== void 0 ? { sourceNext: a.next } : {},
+      ...a.truncated === true && a.truncatedCount !== void 0 ? { sourceTruncatedCount: a.truncatedCount } : {},
       // A whole list in one language says nothing more: every page is a row.
-      ...leftOut > 0 || cut4 > 0 ? {
+      ...leftOut > 0 || more > 0 ? {
         next: {
           action: "content.read",
-          params: leftOut > 0 ? { view: "pages", locale: "<a locale of otherLanguages>" } : { view: "pages", url: "<the link>" },
+          params: more > 0 ? continuation : { view: "pages", locale: "<a locale of otherLanguages>" },
           why: parts.join(" ")
         }
       } : {}
@@ -4596,6 +4648,46 @@ function pageListRows(answer, view2) {
     total: matched.length,
     ...Object.keys(byType).length > 1 ? { byType } : {},
     next
+  };
+}
+function nativePageIdAdvice(answer, params, platform) {
+  if (platform !== "wordpress" || !isRecord4(answer) || answer.ok !== true || !Array.isArray(answer.items))
+    return answer;
+  if (params.post_type !== "page" && !(answer.items.length > 0 && answer.items.every((row) => isRecord4(row) && row.type === "page")))
+    return answer;
+  if (answer.kind !== void 0 && answer.kind !== "post") return answer;
+  const one = answer.items.length === 1 ? answer.items[0] : null;
+  const path22 = isRecord4(one) ? str(one.path) : "";
+  const search = str(params.search);
+  return {
+    ...answer,
+    idNamespace: "wordpress:post",
+    contentIdLookup: {
+      action: "content.read",
+      params: {
+        view: "pages",
+        ...path22.startsWith("/") && !path22.startsWith("//") ? { url: path22 } : search ? { search } : {}
+      },
+      why: "items[].id is a native post ID for content.get/update. This read returns opaque Content API IDs."
+    }
+  };
+}
+function pageSearchProblem(action, params) {
+  if (action !== "content.read" || !isRecord4(params) || params.view !== "pages" || !Array.isArray(params.search))
+    return null;
+  if (params.url !== void 0 || params.changedSince !== void 0)
+    return "A search array is only for a page list without url or changedSince.";
+  if (params.search.length < 1 || params.search.length > 8 || params.search.some((word) => typeof word !== "string" || word.trim() === "" || word.length > 80))
+    return "search must contain 1 to 8 nonempty title or path fragments, at most 80 characters each.";
+  return null;
+}
+function pageIdAdvice(answer) {
+  if (!isRecord4(answer) || answer.schemaVersion !== CONTENT_PAGES || !Array.isArray(answer.pages))
+    return answer;
+  return {
+    ...answer,
+    idNamespace: "content-api",
+    idMeaning: "Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID."
   };
 }
 
@@ -18085,7 +18177,21 @@ function cutPagesList(answer, params) {
   }
   return cut4(lo);
 }
-function contentReadNext(answer, describeSeen) {
+function contentReadNext(answer, describeSeen, params = null) {
+  if (isRecord12(answer) && !("next" in answer) && isRecord12(params) && isRecord12(answer.error) && answer.error.code === "CONTENT_BAD_QUERY" && typeof params.type === "string" && /type/i.test(String(answer.error.message ?? "")) && params.id === void 0 && params.cursor === void 0 && params.blocksCursor === void 0) {
+    return {
+      ...answer,
+      next: {
+        action: "content.read",
+        params: {
+          view: "pages",
+          ...typeof params.locale === "string" ? { locale: params.locale } : {},
+          ...typeof params.search === "string" ? { search: params.search } : {}
+        },
+        why: "Find the requested page by title or URL first. view:pages includes articles, services and projects too; do not infer type:page from the word page. Use the returned Content API id only when reading fields."
+      }
+    };
+  }
   if (!isRecord12(answer) || "next" in answer) return answer;
   if (answer.schemaVersion === CONTENT_PAGES2 && Array.isArray(answer.pages) && answer.pages.length === 0 && typeof answer.link === "string") {
     const site = isRecord12(answer.site) ? answer.site : {};
@@ -18424,6 +18530,9 @@ async function runSiteCall(input) {
     expectedBodyRevision = expanded.expected;
     keptBlocks = expanded.kept;
   }
+  const searchProblem = pageSearchProblem(plan.action, plan.params);
+  if (searchProblem)
+    return finish({ ok: false, code: "CONTENT_BAD_QUERY", error: searchProblem }, planNotes, nextFacts);
   const taken = takeViewParams(plan.action, plan.params);
   if (taken.view !== null) plan = { ...plan, params: taken.params };
   const view2 = taken.view;
@@ -18862,6 +18971,7 @@ async function runSiteCall(input) {
       facts.actions,
       sealed2
     );
+  if (n.action === "content.list") answer = nativePageIdAdvice(answer, n.params, platform);
   if (n.action === "content.read") {
     if (isRecord12(answer) && answer.schemaVersion === CONTENT_DESCRIBE2)
       memory?.rememberDescribe(sessionId, label);
@@ -18878,12 +18988,14 @@ async function runSiteCall(input) {
         } catch {
         }
       }
-      listed = compactPageList(a, n.params, { home: home3 });
+      listed = compactPageList(a, n.params, { home: home3, view: view2 });
     }
     answer = contentReadNext(
       listed ?? cutContentList(answer, n.params),
-      memory ? memory.describeSeen(sessionId, label) : null
+      memory ? memory.describeSeen(sessionId, label) : null,
+      compactView ? n.params : null
     );
+    if (compactView) answer = pageIdAdvice(answer);
     memory?.rememberContentRevisions(sessionId, label, answer, readGeneration);
     memory?.rememberSiteHost(label, answer);
     if (n.params.view === "pages" && typeof n.params.url === "string")
@@ -41081,7 +41193,15 @@ async function locateOnWordPress(deps) {
   const hrefs = whole.changes.filter((c) => c.href === true);
   const plan = hrefs.length > 0 ? { ...whole, changes: whole.changes.filter((c) => c.href !== true) } : whole;
   const contractDoor = deps.contractDoor === true;
-  const read = safe(deps.read);
+  const door = safe(deps.read);
+  const snapshot = /* @__PURE__ */ new Map();
+  const read = async (action, params) => {
+    const key = JSON.stringify([action, params]);
+    if (snapshot.has(key)) return structuredClone(snapshot.get(key));
+    const got2 = await door(action, params);
+    if (isRecord17(got2) && got2.ok === true && snapshot.size < 256) snapshot.set(key, structuredClone(got2));
+    return got2;
+  };
   let page = null;
   const got = await deps.pageHtml(plan.path);
   if (isRecord17(got) && got.ok === true && typeof got.html === "string")
@@ -45081,17 +45201,16 @@ var PAGE_TEXT_BLOCK = `page.text: the words a visitor reads on a page of THIS si
 var TURN_ONLY_ACTIONS = Object.freeze(["content.locate", "look.revert"]);
 var CONTEXT_TOLD_ACTIONS = Object.freeze([...TURN_ONLY_ACTIONS, "look.set"]);
 var NOT_IN_LEAD = /* @__PURE__ */ new Set(["content.replace", "page.create", ...CONTEXT_TOLD_ACTIONS]);
-var PAGE_FIRST = 'Call {view:"pages", url} first for a page the customer names, then {id}; {describe:true} for types, block kinds, where SEO/menus/forms live; {type:"page", locale} lists one type; follow links.next.';
-var DESCRIBE_FIRST = 'Call {describe:true} once, then {type:"page", locale} or {view:"pages", url:link}; then {id}; follow links.next.';
-var contentReadBlock = (bridge, refusals = "", call = PAGE_FIRST) => `content.read: THIS site's map: pages, articles, shared parts. Use it to find page fields. Not for writing. ${call} Returns ids; native: CMS {kind, id|key}${bridge}. Read-only. Refusals: CONTENT_BAD_QUERY names the field${refusals}.`;
+var PAGE_FIRST = 'Call {view:"pages", url} or {view:"pages", search:"<title>"}; use known locale; batch: search:[\u2026\u22648]. offset/limit: rows. {id} only for fields; {describe:true}: types; links.next: segments.';
+var contentReadBlock = (bridge, refusals = "", call = PAGE_FIRST) => `content.read: THIS site's map: pages, articles, shared parts. Use when reading fields. Not for writing. ${call} Returns opaque Content API ids; native: CMS {kind, id|key}${bridge}. Read-only. Refusals: CONTENT_BAD_QUERY names the field${refusals}.`;
 var CONTENT_READ_BLOCK = contentReadBlock("");
 var CONTRACT_CONTENT_READ_BLOCK = contentReadBlock(
   "; slotKey is a field's key in content.contract apply changes; a writable:true field's next is that apply (\u2264constraints.maxCharacters; leave expected_revision out: Tracy fills it)"
 );
 var EMDASH_CONTENT_READ_BLOCK = contentReadBlock(
-  "; a field's key is its tracy_emdash field, slug its entry id: content_get {collection, id:<slug>, locale} (collection: the site context's rule; a shared part: site)",
+  "; tracy_emdash content_get {collection, id:<slug>, locale}: key=field; slug=id; collection: context; shared: site",
   "; CONTENT_ADAPTER_UNSUPPORTED \u2192 no map here: tracy_emdash content_get",
-  DESCRIBE_FIRST
+  'Call {view:"pages", locale:"<requested>", search:"<title>"}; batch: search:[\u2026\u22648]; url replaces search. offset/limit: page rows. {id} only for fields; links.next: segments.'
 );
 var APPLY_LIST_RULE = "never after a write: the write's answer is the receipt; with no apply_id before any write: the site's recent changes";
 var CONTRACT_BLOCK = `content.contract: reads and changes this quickstart site slot by slot. Use when content.replace cannot: a picture, a link, words it refused. Not for structure or settings (content.update) or a read-only question (content.read). Call: after content.read showed the slot (field.next), ONE {operation:"apply", changes:{"<slot key>":"<value>", \u2026}} carrying every change \u2014 no inspect, Tracy sends the revisions it read; a slot marked requiresEvidence also takes evidence:{"<key>":"<the customer's words>"}. Only when content.read did not show the slot: {operation:"inspect", page, slots:"text", match} (10\u201320 s at first), then apply with expected_revision:<its revision>. ` + CONTRACT_IDS_RULE + ` A slot's language: the site context's rule. Apart from Site identity, an occupied slot cannot be emptied and an empty one cannot be filled; nothing is created or deleted. Returns the apply's receipt: read nothing afterwards. Pictures: media.draw {prompt, slot}, then apply the path. Languages: content.contract {operation:"multilingual.retire", keep:[<tags to keep>], apply_id:"mlang-<new>"} hides the rest (repeat until completed); tracy_site_build_joomla request language.add adds one. Undo: apply.revert {apply_id} (the latest contract apply; a retire: multilingual.restore, same id). Refusals: contract_failed \u2192 its next; writer_busy \u2192 Tracy already retried: tell the customer.`;
@@ -47867,6 +47986,7 @@ function apply(ctx, config = {}) {
     return facts;
   }
   const memory = createCallMemory();
+  const pageReadFlight = createPageReadFlights();
   async function demoWriteGuard(args, exec, clientOnly = false) {
     if (!clientOnly && !changesSite({ name: "tracy_emdash", arguments: args })) return null;
     const result = await demoGuard(exec, clientOnly);
@@ -48024,7 +48144,25 @@ function apply(ctx, config = {}) {
     const writes = relayWrites(action, params);
     if (writes) memory.invalidateSite(site);
     const title = writes ? memory.titleOf(sessionId, params) : null;
-    const answer = await applyDoor(config, plan, key, action, params, target, label, sessionId, preset, title);
+    const share = action === "content.read" && params.view === "pages" && params.url === void 0 && params.changedSince === void 0 && sessionId !== null && !turnSignal.getStore()?.aborted;
+    const flightKey = share ? createHash11("sha256").update(
+      JSON.stringify([
+        plan,
+        key,
+        target,
+        label,
+        sessionId,
+        preset,
+        memory.turnOf(sessionId),
+        memory.generationOf(site),
+        answeringComment.getStore(),
+        Object.fromEntries(Object.entries(params).sort(([a], [b]) => a.localeCompare(b)))
+      ])
+    ).digest("hex") : null;
+    const answer = await pageReadFlight(
+      flightKey,
+      () => applyDoor(config, plan, key, action, params, target, label, sessionId, preset, title)
+    );
     if (writes) memory.invalidateSite(site);
     if (sessionId && doorTakesLease(action, params) && !isLeaseBusy(answer) && !isTurnStopped(answer))
       leaseHolders.set(sessionId, { key, label });

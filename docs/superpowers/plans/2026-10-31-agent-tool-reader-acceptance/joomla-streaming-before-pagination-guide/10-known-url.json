@@ -1,0 +1,69 @@
+{
+  "repeat": 1,
+  "task": "known-url",
+  "verified": true,
+  "failure": null,
+  "ms": 2484.324375000004,
+  "idValid": true,
+  "noWrites": true,
+  "continuation": true,
+  "recovery": true,
+  "language": true,
+  "seededRefusal": null,
+  "calls": [
+    {
+      "name": "tracy_site",
+      "arguments": {
+        "action": "content.read",
+        "params": {
+          "view": "pages",
+          "url": "/index.php/component/content/article/inventory-031?catid=2"
+        }
+      }
+    }
+  ],
+  "provider": [
+    {
+      "step": 1,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7288,
+        "completion_tokens": 92,
+        "total_tokens": 7380,
+        "prompt_tokens_details": {
+          "cached_tokens": 3968
+        },
+        "prompt_cache_hit_tokens": 3968,
+        "prompt_cache_miss_tokens": 3320
+      },
+      "firstChunkMs": 379.5987499999974,
+      "ms": 1190.9683339999974,
+      "promptHash": "00421a6d0b9ab6abf7c132dc5b115041639585e757765809ae304935433272d4",
+      "finalText": null
+    },
+    {
+      "step": 2,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7715,
+        "completion_tokens": 58,
+        "total_tokens": 7773,
+        "prompt_tokens_details": {
+          "cached_tokens": 7296
+        },
+        "prompt_cache_hit_tokens": 7296,
+        "prompt_cache_miss_tokens": 419
+      },
+      "firstChunkMs": 267.3244579999955,
+      "ms": 911.9280829999989,
+      "promptHash": "b149d11374569b18a398bcb3596708074ede6690d537550b0af89fd82d60ea11",
+      "finalText": "That address is the article \"Inventory 031\".\n\n- Content API ID: content_ff783075bf1a988b5280611a6514f162\n- Path: /index.php/component/content/article/inventory-031?catid=2\n\nIt's published."
+    }
+  ],
+  "final": "That address is the article \"Inventory 031\".\n\n- Content API ID: content_ff783075bf1a988b5280611a6514f162\n- Path: /index.php/component/content/article/inventory-031?catid=2\n\nIt's published.",
+  "toolResults": "[{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_c1DDDx8AtXu1yXdG8lOW5619\"},\"toolCallId\":\"call_00_c1DDDx8AtXu1yXdG8lOW5619\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"schemaVersion\\\":\\\"tracy-content-pages/v1\\\",\\\"site\\\":{\\\"id\\\":\\\"site_decbd480e6cf7ba26040354547f6a634\\\",\\\"name\\\":null,\\\"url\\\":\\\"http://127.0.0.1:59944\\\",\\\"defaultLocale\\\":null,\\\"locales\\\":[]},\\\"link\\\":\\\"/index.php/component/content/article/inventory-031?catid=2\\\",\\\"pages\\\":[{\\\"id\\\":\\\"content_ff783075bf1a988b5280611a6514f162\\\",\\\"type\\\":\\\"article\\\",\\\"title\\\":\\\"Inventory 031\\\",\\\"url\\\":\\\"http://127.0.0.1:59944/index.php/component/content/article/inventory-031?catid=2\\\",\\\"path\\\":\\\"/index.php/component/content/article/inventory-031?catid=2\\\",\\\"locale\\\":null,\\\"translationGroupId\\\":null,\\\"status\\\":\\\"published\\\",\\\"native\\\":[{\\\"kind\\\":\\\"article\\\",\\\"id\\\":32}]}],\\\"truncated\\\":false,\\\"version\\\":\\\"cv1.1deb2a1e818e2980d215d9be39c78ac6\\\",\\\"later\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"changedSince\\\":\\\"cv1.1deb2a1e818e2980d215d9be39c78ac6\\\"},\\\"why\\\":\\\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\\\"},\\\"idNamespace\\\":\\\"content-api\\\",\\\"idMeaning\\\":\\\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\\\"}\"}],\"isError\":false,\"id\":\"71eec47a-1c72-4990-be23-2b0aed7c1c6f\"}]",
+  "backendReads": 2,
+  "nativeSourceCalls": 0
+}

@@ -317,3 +317,71 @@ test('a turn is split into model, tools (calls side by side counted once) and th
   assert.match(table, /time \(sec, p50 \/ p90\)/)
   assert.match(table, /joomla\s+1\s+9 \/ 9\s+3 \/ 3\s+3 \/ 3\s+3 \/ 3/)
 })
+
+test('per-action results distinguish protective refusals, nested failures and unknown text', () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'turn-cost-'))
+  const events = [
+    { type: 'session', version: 3, id: 'outcomes', createdAt: 1000 },
+    JSON.parse(line('turn/start', 1000, { turn: 1 })),
+    JSON.parse(line('step/start', 1001, { turn: 1, step: 1 })),
+    JSON.parse(
+      line('request/header', 1002, {
+        header: {
+          config: { provider: 'fixture', model: 'fixed' },
+          tools: [{ name: 'tracy_emdash', parameters: { type: 'object' } }]
+        }
+      })
+    )
+  ]
+  for (const [i, text] of [
+    '{"ok":true,"items":[{"ok":false,"code":"NOT_FOUND"}]}',
+    '{"ok":false,"code":"CONFIRM_FIRST"}',
+    'Text mentioning "ok":false is not an outer receipt'
+  ].entries()) {
+    events.push(
+      JSON.parse(
+        line('tool/call', 1010 + i * 2, {
+          turn: 1,
+          callId: `c${i}`,
+          name: 'tracy_emdash',
+          arguments: '{"action":"content.read"}'
+        })
+      )
+    )
+    events.push(
+      JSON.parse(
+        line('tool/result', 1011 + i * 2, {
+          turn: 1,
+          message: { source: { callId: `c${i}` }, content: [{ type: 'text', text }] }
+        })
+      )
+    )
+  }
+  events.push(
+    JSON.parse(
+      line('assistant/message', 1020, {
+        turn: 1,
+        usage: { inputTokens: 20, outputTokens: 10, cacheWriteTokens: 5 }
+      })
+    )
+  )
+  events.push(JSON.parse(line('turn/end', 1030, { turn: 1 })))
+  writeFileSync(path.join(root, 'outcomes.jsonl'), events.map((e) => JSON.stringify(e)).join('\n'))
+  const [turn] = measure(root)
+  assert.equal(turn.refused, 1)
+  assert.deepEqual(
+    turn.results.map((r) => r.outcome),
+    ['ok', 'refused', 'unknown']
+  )
+  assert.equal(turn.results[1].failureClass, 'protection')
+  assert.ok(turn.results.every((r) => r.verb === 'tracy_emdash:content.read'))
+  assert.equal(
+    turn.results.reduce((n, r) => n + r.chars, 0),
+    turn.resultChars
+  )
+  assert.equal(turn.cacheWrite, 5)
+  assert.equal(turn.usageComplete, true)
+  assert.equal(turn.requests[0].model, 'fixed')
+  assert.equal(turn.requests[0].schemaHash.length, 64)
+  assert.deepEqual(turn.requests[0].toolNames, ['tracy_emdash'])
+})

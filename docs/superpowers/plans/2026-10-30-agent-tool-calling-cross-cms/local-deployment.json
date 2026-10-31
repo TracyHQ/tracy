@@ -1,0 +1,18 @@
+{
+  "name": "tracy-agent-tools-local",
+  "gate": "http://127.0.0.1:61570",
+  "direct": "http://127.0.0.1:61571",
+  "containerId": "145fc65e16fd71568a9307891430a848151ae341641c649d2cc6af99086b42c0",
+  "pidInDockerVM": 79427,
+  "startedAt": "2026-10-30T16:12:21.484589173Z",
+  "image": "sha256:cf12a02e54fa5470880bbc9c0f6f661ee6f6901afb58843c35cc87b4f605f869",
+  "bundleSha256": "14d19374f19b9719db99a811fd1a04c168ce943fd3f0a621802a7e72d51a23a8",
+  "bundleMatchesWorkingTree": true,
+  "gatewaySetupStatus": 302,
+  "gatewayPageStatus": 200,
+  "graphInGatewayPage": true,
+  "scope": "isolated local candidate; existing tracy-dsh was not restarted",
+  "gatewayLoginStatus": 302,
+  "graphEntries": 74,
+  "scriptBatchesVerified": 3
+}

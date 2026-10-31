@@ -1,0 +1,76 @@
+{
+  "repeat": 0,
+  "task": "language",
+  "verified": true,
+  "failure": null,
+  "ms": 2133.6372919999994,
+  "idValid": true,
+  "noWrites": true,
+  "continuation": true,
+  "recovery": true,
+  "language": true,
+  "seededRefusal": null,
+  "calls": [
+    {
+      "name": "tracy_site",
+      "arguments": {
+        "action": "content.list",
+        "params": {
+          "kind": "language",
+          "limit": 200
+        }
+      }
+    },
+    {
+      "name": "tracy_site",
+      "arguments": {
+        "action": "info",
+        "params": {}
+      }
+    }
+  ],
+  "provider": [
+    {
+      "step": 1,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7284,
+        "completion_tokens": 119,
+        "total_tokens": 7403,
+        "prompt_tokens_details": {
+          "cached_tokens": 3968
+        },
+        "prompt_cache_hit_tokens": 3968,
+        "prompt_cache_miss_tokens": 3316
+      },
+      "firstChunkMs": 291.9565829999992,
+      "ms": 987.0866659999992,
+      "promptHash": "4b8d070f3b701ef2fb161f4c1221a01446a6469d76675e7c46019477b03df439",
+      "finalText": null
+    },
+    {
+      "step": 2,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7731,
+        "completion_tokens": 56,
+        "total_tokens": 7787,
+        "prompt_tokens_details": {
+          "cached_tokens": 7296
+        },
+        "prompt_cache_hit_tokens": 7296,
+        "prompt_cache_miss_tokens": 435
+      },
+      "firstChunkMs": 288.28016699999716,
+      "ms": 1002.1487499999967,
+      "promptHash": "aec8cb0e1f6a6081ff4bd67992ab92acd7e39a86661b808d695d7a747ab02cdc",
+      "finalText": "No — this site has no Vietnamese edition.\n\nThe only language installed and published here is English (en-GB). There is no Vietnamese language in the site's language list, so there are no Vietnamese pages, menu items or articles either. I haven't created or translated anything."
+    }
+  ],
+  "final": "No — this site has no Vietnamese edition.\n\nThe only language installed and published here is English (en-GB). There is no Vietnamese language in the site's language list, so there are no Vietnamese pages, menu items or articles either. I haven't created or translated anything.",
+  "toolResults": "[{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_aHtIzLaWtaYwilt9H8qc0279\"},\"toolCallId\":\"call_00_aHtIzLaWtaYwilt9H8qc0279\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"ok\\\":true,\\\"kind\\\":\\\"language\\\",\\\"offset\\\":0,\\\"items\\\":[{\\\"lang_id\\\":1,\\\"lang_code\\\":\\\"en-GB\\\",\\\"title\\\":\\\"English (en-GB)\\\",\\\"published\\\":1,\\\"sef\\\":\\\"en\\\",\\\"id\\\":1}]}\"}],\"isError\":false,\"id\":\"916651d3-8c69-4297-b715-b8ac1020ba40\"},{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_01_YOVGUlvIPFabqOBTJYZA7406\"},\"toolCallId\":\"call_01_YOVGUlvIPFabqOBTJYZA7406\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"ok\\\":true,\\\"info\\\":{\\\"php\\\":\\\"8.4.26\\\",\\\"joomla\\\":\\\"6.1.4\\\",\\\"component\\\":\\\"0.24.66\\\",\\\"upload\\\":\\\"curl\\\",\\\"db_prefix\\\":\\\"jos_\\\",\\\"db_dump_many\\\":{\\\"max_tables\\\":5000,\\\"max_bytes\\\":8388608,\\\"max_seconds\\\":20},\\\"site_fingerprint\\\":{\\\"version\\\":2,\\\"max_files\\\":50000},\\\"files_list\\\":{\\\"stat\\\":true,\\\"max_stat_limit\\\":5000},\\\"files_hash\\\":{\\\"max_paths\\\":500},\\\"files_pack\\\":{\\\"max_paths\\\":2000},\\\"template_files\\\":{\\\"version\\\":1,\\\"enabled\\\":true,\\\"php\\\":false,\\\"actions\\\":[\\\"template.files.status\\\",\\\"template.files.write\\\",\\\"template.files.undo\\\"],\\\"max_file_bytes\\\":2097152,\\\"max_bytes\\\":8388608,\\\"max_files\\\":100,\\\"max_status_paths\\\":500,\\\"extensions\\\":[\\\"css\\\",\\\"scss\\\",\\\"sass\\\",\\\"less\\\",\\\"js\\\",\\\"mjs\\\",\\\"json\\\",\\\"map\\\",\\\"php\\\",\\\"html\\\",\\\"htm\\\",\\\"svg\\\",\\\"png\\\",\\\"jpg\\\",\\\"jpeg\\\",\\\"gif\\\",\\\"webp\\\",\\\"avif\\\",\\\"ico\\\",\\\"woff\\\",\\\"woff2\\\",\\\"ttf\\\",\\\"otf\\\",\\\"eot\\\"],\\\"php_lint\\\":\\\"cli\\\"}}}\"}],\"isError\":false,\"id\":\"44afe292-8345-498f-a4ea-996f0f827e86\"}]",
+  "backendReads": 2,
+  "nativeSourceCalls": 0
+}

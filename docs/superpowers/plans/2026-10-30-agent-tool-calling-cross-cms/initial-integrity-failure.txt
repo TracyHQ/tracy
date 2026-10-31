@@ -1,0 +1,5 @@
+Initial EmDash benchmark: all 24 lookup tasks returned the requested IDs, but the aggregate non-auth SQLite hash changed. This run failed the final integrity assertion and is retained as failed evidence.
+Before: 31bfaf530bd70dc91140adb7cb7bec37e6852ba13c587275cde7fae0dd1c2c18
+After: 47d93e7336e5650470c612f1a13e436c26cb0408a7a74b6b8b52dd8aca8fbb80
+The initial recorder kept only the aggregate before-hash, so this observation alone cannot identify the changed table or establish content integrity.
+A subsequent diagnostic pair records hashes for each table and an explicit content/identity/menu/media/revision subset. Both strategies returned the requested IDs, every recorded table hash stayed equal, and the content subset hash stayed equal. A full twelve-pair repeat uses this more specific recorder; it does not erase the initial failed run.

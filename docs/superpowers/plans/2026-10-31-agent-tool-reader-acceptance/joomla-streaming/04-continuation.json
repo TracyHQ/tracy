@@ -1,0 +1,101 @@
+{
+  "repeat": 0,
+  "task": "continuation",
+  "verified": true,
+  "failure": null,
+  "ms": 4219.949375,
+  "idValid": true,
+  "noWrites": true,
+  "continuation": true,
+  "recovery": true,
+  "language": true,
+  "seededRefusal": null,
+  "calls": [
+    {
+      "name": "tracy_site",
+      "arguments": {
+        "action": "content.read",
+        "params": {
+          "view": "pages",
+          "search": "Inventory",
+          "limit": 2
+        }
+      }
+    },
+    {
+      "name": "tracy_site",
+      "arguments": {
+        "action": "content.read",
+        "params": {
+          "view": "pages",
+          "search": "Inventory",
+          "offset": 2,
+          "limit": 2
+        }
+      }
+    }
+  ],
+  "provider": [
+    {
+      "step": 1,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7284,
+        "completion_tokens": 90,
+        "total_tokens": 7374,
+        "prompt_tokens_details": {
+          "cached_tokens": 3968
+        },
+        "prompt_cache_hit_tokens": 3968,
+        "prompt_cache_miss_tokens": 3316
+      },
+      "firstChunkMs": 263.8265420000007,
+      "ms": 1370.7378329999992,
+      "promptHash": "aaae5a78fcac685e395727b48716783f8a51a3bdba00160f8eae9e6975348c9e",
+      "finalText": null
+    },
+    {
+      "step": 2,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7817,
+        "completion_tokens": 78,
+        "total_tokens": 7895,
+        "prompt_tokens_details": {
+          "cached_tokens": 7296
+        },
+        "prompt_cache_hit_tokens": 7296,
+        "prompt_cache_miss_tokens": 521
+      },
+      "firstChunkMs": 345.1036669999994,
+      "ms": 978.3311670000003,
+      "promptHash": "7ea49ae3f27bb66ff351f726d7faef2b1a9d9358592aa4a46589b1f4e4794376",
+      "finalText": null
+    },
+    {
+      "step": 3,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 8343,
+        "completion_tokens": 237,
+        "total_tokens": 8580,
+        "prompt_tokens_details": {
+          "cached_tokens": 7808
+        },
+        "prompt_cache_hit_tokens": 7808,
+        "prompt_cache_miss_tokens": 535
+      },
+      "firstChunkMs": 372.45358300000044,
+      "ms": 1547.2175829999996,
+      "promptHash": "a94a61fab0d9d06aecb8df4d5262504ee6e0f0ccf0b73d104bd7abc9868fae37",
+      "finalText": "Here are four distinct Inventory pages, read two at a time:\n\n1. **Inventory 051** — `/index.php/component/content/article/inventory-051?catid=2` — ID `content_00084765efe64a31692bdc4cdde39ab8`\n2. **Inventory 341** — `/index.php/component/content/article/inventory-341?catid=2` — ID `content_00d49163408fd1e1e5084a0e0fabf36a`\n3. **Inventory 119** — `/index.php/component/content/article/inventory-119?catid=2` — ID `content_019ad2b25fb1478e7b8e45e2f53b433e`\n4. **Inventory 337** — `/index.php/component/content/article/inventory-337?catid=2` — ID `content_01c7a70286147d8a1d426e3caee1649e`\n\nThe site holds 401 pages matching \"Inventory\" in total, so there are plenty more if you want them."
+    }
+  ],
+  "final": "Here are four distinct Inventory pages, read two at a time:\n\n1. **Inventory 051** — `/index.php/component/content/article/inventory-051?catid=2` — ID `content_00084765efe64a31692bdc4cdde39ab8`\n2. **Inventory 341** — `/index.php/component/content/article/inventory-341?catid=2` — ID `content_00d49163408fd1e1e5084a0e0fabf36a`\n3. **Inventory 119** — `/index.php/component/content/article/inventory-119?catid=2` — ID `content_019ad2b25fb1478e7b8e45e2f53b433e`\n4. **Inventory 337** — `/index.php/component/content/article/inventory-337?catid=2` — ID `content_01c7a70286147d8a1d426e3caee1649e`\n\nThe site holds 401 pages matching \"Inventory\" in total, so there are plenty more if you want them.",
+  "toolResults": "[{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_1XvKKcgDWfVDGY5IjVa46086\"},\"toolCallId\":\"call_00_1XvKKcgDWfVDGY5IjVa46086\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"schemaVersion\\\":\\\"tracy-content-pages/v1\\\",\\\"site\\\":{\\\"id\\\":\\\"site_decbd480e6cf7ba26040354547f6a634\\\",\\\"name\\\":null,\\\"url\\\":\\\"http://127.0.0.1:59944\\\",\\\"defaultLocale\\\":null,\\\"locales\\\":[]},\\\"truncated\\\":true,\\\"version\\\":\\\"cv1.8d284d86d59d2732cae5ea0c9a436c2d\\\",\\\"later\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"changedSince\\\":\\\"cv1.8d284d86d59d2732cae5ea0c9a436c2d\\\"},\\\"why\\\":\\\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\\\"},\\\"columns\\\":[\\\"title\\\",\\\"path\\\",\\\"id\\\",\\\"record\\\",\\\"type\\\"],\\\"pages\\\":[[\\\"Inventory 051\\\",\\\"/index.php/component/content/article/inventory-051?catid=2\\\",\\\"content_00084765efe64a31692bdc4cdde39ab8\\\",\\\"article:52\\\",\\\"article\\\"],[\\\"Inventory 341\\\",\\\"/index.php/component/content/article/inventory-341?catid=2\\\",\\\"content_00d49163408fd1e1e5084a0e0fabf36a\\\",\\\"article:342\\\",\\\"article\\\"]],\\\"truncatedCount\\\":399,\\\"pagination\\\":{\\\"offset\\\":0,\\\"returned\\\":2,\\\"total\\\":401,\\\"totalIsComplete\\\":true,\\\"nextOffset\\\":2},\\\"next\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"view\\\":\\\"pages\\\",\\\"search\\\":\\\"Inventory\\\",\\\"offset\\\":2,\\\"limit\\\":2},\\\"why\\\":\\\"399 more pages not shown: next.params gives the next rows; search finds a title or path; url reads one known link. A page by its link: {view:\\\\\\\"pages\\\\\\\", url}. Every language and field as the site gave them: full:true.\\\"},\\\"idNamespace\\\":\\\"content-api\\\",\\\"idMeaning\\\":\\\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\\\"}\"}],\"isError\":false,\"id\":\"a016ef68-9b7e-4f5b-b350-c978eb4aa029\"},{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_1XvKKcgDWfVDGY5IjVa46086\"},\"toolCallId\":\"call_00_1XvKKcgDWfVDGY5IjVa46086\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"schemaVersion\\\":\\\"tracy-content-pages/v1\\\",\\\"site\\\":{\\\"id\\\":\\\"site_decbd480e6cf7ba26040354547f6a634\\\",\\\"name\\\":null,\\\"url\\\":\\\"http://127.0.0.1:59944\\\",\\\"defaultLocale\\\":null,\\\"locales\\\":[]},\\\"truncated\\\":true,\\\"version\\\":\\\"cv1.8d284d86d59d2732cae5ea0c9a436c2d\\\",\\\"later\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"changedSince\\\":\\\"cv1.8d284d86d59d2732cae5ea0c9a436c2d\\\"},\\\"why\\\":\\\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\\\"},\\\"columns\\\":[\\\"title\\\",\\\"path\\\",\\\"id\\\",\\\"record\\\",\\\"type\\\"],\\\"pages\\\":[[\\\"Inventory 051\\\",\\\"/index.php/component/content/article/inventory-051?catid=2\\\",\\\"content_00084765efe64a31692bdc4cdde39ab8\\\",\\\"article:52\\\",\\\"article\\\"],[\\\"Inventory 341\\\",\\\"/index.php/component/content/article/inventory-341?catid=2\\\",\\\"content_00d49163408fd1e1e5084a0e0fabf36a\\\",\\\"article:342\\\",\\\"article\\\"]],\\\"truncatedCount\\\":399,\\\"pagination\\\":{\\\"offset\\\":0,\\\"returned\\\":2,\\\"total\\\":401,\\\"totalIsComplete\\\":true,\\\"nextOffset\\\":2},\\\"next\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"view\\\":\\\"pages\\\",\\\"search\\\":\\\"Inventory\\\",\\\"offset\\\":2,\\\"limit\\\":2},\\\"why\\\":\\\"399 more pages not shown: next.params gives the next rows; search finds a title or path; url reads one known link. A page by its link: {view:\\\\\\\"pages\\\\\\\", url}. Every language and field as the site gave them: full:true.\\\"},\\\"idNamespace\\\":\\\"content-api\\\",\\\"idMeaning\\\":\\\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\\\"}\"}],\"isError\":false,\"id\":\"a016ef68-9b7e-4f5b-b350-c978eb4aa029\"},{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_t7c0ard1098rfKKDVJE73092\"},\"toolCallId\":\"call_00_t7c0ard1098rfKKDVJE73092\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"schemaVersion\\\":\\\"tracy-content-pages/v1\\\",\\\"site\\\":{\\\"id\\\":\\\"site_decbd480e6cf7ba26040354547f6a634\\\",\\\"name\\\":null,\\\"url\\\":\\\"http://127.0.0.1:59944\\\",\\\"defaultLocale\\\":null,\\\"locales\\\":[]},\\\"truncated\\\":true,\\\"version\\\":\\\"cv1.8d284d86d59d2732cae5ea0c9a436c2d\\\",\\\"later\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"changedSince\\\":\\\"cv1.8d284d86d59d2732cae5ea0c9a436c2d\\\"},\\\"why\\\":\\\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\\\"},\\\"columns\\\":[\\\"title\\\",\\\"path\\\",\\\"id\\\",\\\"record\\\",\\\"type\\\"],\\\"pages\\\":[[\\\"Inventory 119\\\",\\\"/index.php/component/content/article/inventory-119?catid=2\\\",\\\"content_019ad2b25fb1478e7b8e45e2f53b433e\\\",\\\"article:120\\\",\\\"article\\\"],[\\\"Inventory 337\\\",\\\"/index.php/component/content/article/inventory-337?catid=2\\\",\\\"content_01c7a70286147d8a1d426e3caee1649e\\\",\\\"article:338\\\",\\\"article\\\"]],\\\"truncatedCount\\\":397,\\\"pagination\\\":{\\\"offset\\\":2,\\\"returned\\\":2,\\\"total\\\":401,\\\"totalIsComplete\\\":true,\\\"nextOffset\\\":4},\\\"next\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"view\\\":\\\"pages\\\",\\\"search\\\":\\\"Inventory\\\",\\\"offset\\\":4,\\\"limit\\\":2},\\\"why\\\":\\\"397 more pages not shown: next.params gives the next rows; search finds a title or path; url reads one known link. A page by its link: {view:\\\\\\\"pages\\\\\\\", url}. Every language and field as the site gave them: full:true.\\\"},\\\"idNamespace\\\":\\\"content-api\\\",\\\"idMeaning\\\":\\\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\\\"}\"}],\"isError\":false,\"id\":\"8ce6594a-083a-491b-9673-62645566c783\"}]",
+  "backendReads": 2,
+  "nativeSourceCalls": 0
+}

@@ -1,0 +1,101 @@
+{
+  "siteTools": {
+    "command": "pnpm --filter @tracy/dsh-site-tools test",
+    "exitCode": 0,
+    "tests": 4322,
+    "pass": 4322,
+    "fail": 0,
+    "tail": [
+      "  duration_ms: 2.539167",
+      "  type: 'test'",
+      "  ...",
+      "1..4322",
+      "# tests 4322",
+      "# suites 0",
+      "# pass 4322",
+      "# fail 0",
+      "# cancelled 0",
+      "# skipped 0",
+      "# todo 0",
+      "# duration_ms 192829.812791"
+    ]
+  },
+  "compactRegression": {
+    "exitCode": 0,
+    "tail": [
+      "ok - S4 grep -c 'function takeViewParams' = 1",
+      "ok - S6 product AgentLoop and scoped CMS tools: exit code = 0",
+      "ok - S6 product AgentLoop and scoped CMS tools: fail = 0",
+      "ok - S6 product AgentLoop and scoped CMS tools: cancelled = 0",
+      "ok - S6 product AgentLoop and scoped CMS tools: skipped = 0",
+      "ok - S6 product AgentLoop and scoped CMS tools: pass = 11",
+      "ok - S7 in-flight inventory isolation: exit code = 0",
+      "ok - S7 in-flight inventory isolation: fail = 0",
+      "ok - S7 in-flight inventory isolation: cancelled = 0",
+      "ok - S7 in-flight inventory isolation: skipped = 0",
+      "ok - S7 in-flight inventory isolation: pass = 4",
+      "ALL CHECKS PASSED"
+    ]
+  },
+  "lint": {
+    "command": "node --import tsx scripts/check-lint.ts",
+    "exitCode": 0,
+    "tail": [
+      "Found 542 warnings.",
+      "check-lint: time \u2014 format:check (biome format + biome lint, one figure): 5721 ms (ok)",
+      "check-lint: time \u2014 total: 39410 ms (ok)",
+      "check-lint: 3 steps green."
+    ]
+  },
+  "testQuality": {
+    "exitCode": 0,
+    "tail": [
+      "check-test-quality: 7 test file(s) added or edited since 76e7f114fa4c (merge-base of HEAD and origin/develop), 1.1s: no new assertion that cannot fail"
+    ]
+  },
+  "selectedGates": {
+    "command": "pnpm build:check -- --skip turbo-config --skip tests",
+    "otherGatesPassed": 62,
+    "initialFailure": "lint: formatting of new benchmark JSON artifacts; corrected, then lint passed separately.",
+    "excluded": ["turbo-config", "tests"],
+    "bootGraph": {
+      "webEntries": 58,
+      "nativeEntries": 75
+    }
+  },
+  "packageTypecheck": {
+    "command": "pnpm --filter @tracy/dsh-site-tools typecheck",
+    "exitCode": 2,
+    "diagnostics": 59,
+    "scope": "Existing package debt; the same 59 diagnostics were present before this iteration. No package typecheck-green claim."
+  },
+  "publicationScan": {
+    "ref": "76e7f114fa4ce6ac2e1b5b9d1c3ff9857c90c14e",
+    "blockingFindings": 49,
+    "scope": "Existing committed baseline, not a clean-publication claim for this repository.",
+    "tail": [
+      "ref 76e7f114fa4ce6ac2e1b5b9d1c3ff9857c90c14e  gitleaks 8.28.0",
+      "category         hits  allowed",
+      "secret              8      206  blocking",
+      "email              32     5460  blocking",
+      "ip                  0      428  blocking",
+      "machine-path        0       63  blocking",
+      "cloud-account       0        0  blocking",
+      "phone               8      178  blocking",
+      "archive             0     2807  blocking",
+      "source-map          0        4  blocking",
+      "symlink             0       31  blocking",
+      "lfs-pointer         0        0  blocking",
+      "submodule           1        0  blocking",
+      "vietnamese          0     1245  report only (0 lines)",
+      "",
+      "49 blocking hit(s)"
+    ]
+  },
+  "artifactSecretScan": {
+    "gitleaksVersion": "8.28.0",
+    "exitCode": 0,
+    "tail": ["12:49AM INF scanned ~2431338 bytes (2.43 MB) in 29.1ms", "12:49AM INF no leaks found"]
+  },
+  "ownedSuspendedScansRemaining": 0
+}

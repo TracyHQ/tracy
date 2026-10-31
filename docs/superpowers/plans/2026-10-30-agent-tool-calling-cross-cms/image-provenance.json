@@ -1,0 +1,12 @@
+{
+  "baseImage": "sha256:ad7a8dd478c3a0d14be74cf5478bd4f6e6ef2900aa7c070412ba3d29f75007af",
+  "baseLabels": {
+    "ai.tracy.dsh-commit": "626ef50d882b24e25c1675899a67ebfa00f2689a",
+    "org.opencontainers.image.revision": "unknown",
+    "org.opencontainers.image.source": "https://github.com/TracyHQ/tch",
+    "org.opencontainers.image.title": "tracy-dsh",
+    "tracy.commit": "352d3556a80a35cc14582cf0810f0158257d48bd"
+  },
+  "bundleSha256": "14d19374f19b9719db99a811fd1a04c168ce943fd3f0a621802a7e72d51a23a8",
+  "scope": "local candidate; only site-tools package over the existing installation image; not an official release"
+}

@@ -1,0 +1,2 @@
+REG-PR-926-compact-site-reads PASS (script, 2 s)
+results: tests/regression/results/2026-10-31-76e7f114f.jsonl

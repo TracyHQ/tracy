@@ -1,0 +1,237 @@
+--- a/packages/tools/tracy-site-tools/src/host/replace-wordpress.mjs
++++ b/packages/tools/tracy-site-tools/src/host/replace-wordpress.mjs
+@@ -3549,7 +3549,20 @@
+   const hrefs = whole.changes.filter((c) => c.href === true)
+   const plan = hrefs.length > 0 ? { ...whole, changes: whole.changes.filter((c) => c.href !== true) } : whole
+   const contractDoor = deps.contractDoor === true
+-  const read = safe(deps.read)
++  // Widening discovery adds templates to the same snapshot. Reuse successful reads only within
++  // this locate call; writeRecords still revalidates through the original door, and a retry gets
++  // a new snapshot. Clone on both sides because readStores builds mutable sets from these values.
++  const door = safe(deps.read)
++  /** @type {Map<string, any>} */
++  const snapshot = new Map()
++  /** @type {Door} */
++  const read = async (action, params) => {
++    const key = JSON.stringify([action, params])
++    if (snapshot.has(key)) return structuredClone(snapshot.get(key))
++    const got = await door(action, params)
++    if (isRecord(got) && got.ok === true && snapshot.size < 256) snapshot.set(key, structuredClone(got))
++    return got
++  }
+   /** @type {PageFacts | null} */
+   let page = null
+   const got = await deps.pageHtml(plan.path)
+--- a/packages/tools/tracy-site-tools/src/host/site-call.mjs
++++ b/packages/tools/tracy-site-tools/src/host/site-call.mjs
+@@ -35,6 +35,7 @@
+   isPageList,
+   LISTED_ACTIONS,
+   narrowDescribe,
++  nativePageIdAdvice,
+   pageListRows,
+   takeViewParams,
+   workingLocale
+@@ -2464,6 +2465,7 @@
+       facts.actions,
+       sealed
+     )
++  if (n.action === 'content.list') answer = nativePageIdAdvice(answer, n.params, platform)
+   if (n.action === 'content.read') {
+     if (isRecord(answer) && answer.schemaVersion === CONTENT_DESCRIBE)
+       memory?.rememberDescribe(sessionId, label)
+@@ -2479,7 +2481,7 @@
+           // facts that cannot be read are no facts: nothing is guessed in their place
+         }
+       }
+-      listed = compactPageList(a, n.params, { home })
++      listed = compactPageList(a, n.params, { home, view })
+     }
+     answer = contentReadNext(
+       listed ?? cutContentList(answer, n.params),
+--- a/packages/tools/tracy-site-tools/src/host/read-compact.mjs
++++ b/packages/tools/tracy-site-tools/src/host/read-compact.mjs
+@@ -74,7 +74,7 @@
+ })
+ 
+ /**
+- * @typedef {{ full: boolean, blockKinds: boolean, search: string, type: string, offset: number, limit: number }} ReadView
++ * @typedef {{ full: boolean, blockKinds: boolean, search: string, type: string, offset: number, limit: number, pageRows?: boolean }} ReadView
+  */
+ 
+ /**
+@@ -86,7 +86,11 @@
+  */
+ export function takeViewParams(action, params) {
+   const p = isRecord(params) ? params : {}
+-  const own = /** @type {Record<string, readonly string[]>} */ (VIEW_PARAMS)[action]
++  const pageRows =
++    action === 'content.read' && p.view === 'pages' && p.url === undefined && p.changedSince === undefined
++  const base = /** @type {Record<string, readonly string[]>} */ (VIEW_PARAMS)[action]
++  // Listing envelopes already own cursor/limit. Only the page-address view is filtered here.
++  const own = pageRows ? [...base, 'search', 'offset', 'limit'] : base
+   if (own === undefined) return { params: p, view: null }
+   /** @type {Record<string, unknown>} */
+   const rest = {}
+@@ -108,7 +112,8 @@
+       search: str(taken.search).slice(0, 80),
+       type: str(taken.type).slice(0, 40),
+       offset: whole(taken.offset, 0, 0),
+-      limit: Math.min(whole(taken.limit, LIST_ROWS, 1), LIST_ROWS_MAX)
++      limit: Math.min(whole(taken.limit, LIST_ROWS, 1), LIST_ROWS_MAX),
++      pageRows: pageRows && ['search', 'offset', 'limit'].some((key) => p[key] !== undefined)
+     }
+   }
+ }
+@@ -167,10 +172,10 @@
+  * rows still do not fit. Anything that is not a page list is returned as it came.
+  * @param {unknown} answer
+  * @param {unknown} params - the call as sent.
+- * @param {{ home?: string }} [opts] - the working language (`workingLocale`), or ''.
++ * @param {{ home?: string, view?: ReadView | null }} [opts] - the working language and host query.
+  * @returns {unknown}
+  */
+-export function compactPageList(answer, params, { home = '' } = {}) {
++export function compactPageList(answer, params, { home = '', view = null } = {}) {
+   if (!isPageList(answer, params)) return answer
+   const a = /** @type {Record<string, any>} */ (answer)
+   const p = isRecord(params) ? params : {}
+@@ -192,7 +197,18 @@
+       if (!everyLanguage(locale) && locale !== home)
+         elsewhere[/** @type {string} */ (locale)] = (elsewhere[/** @type {string} */ (locale)] ?? 0) + 1
+     }
+-  const pages = shown.filter(isRecord)
++  const words = (view?.search ?? '').toLowerCase()
++  const matched = shown
++    .filter(isRecord)
++    .filter(
++      (page) =>
++        words === '' ||
++        [page.title, page.path, page.url, page.id, recordOf(page.native)].some(
++          (value) => typeof value === 'string' && value.toLowerCase().includes(words)
++        )
++    )
++  const offset = view?.pageRows ? view.offset : 0
++  const pages = view?.pageRows ? matched.slice(offset, offset + view.limit) : matched
+   const columns = ['title', 'path', 'id', 'record']
+   const anyType = pages.some((page) => typeof page.type === 'string' && page.type !== 'page')
+   const anyStatus = pages.some((page) => typeof page.status === 'string' && page.status !== 'published')
+@@ -216,12 +232,22 @@
+   const { pages: _pages, truncatedCount: _count, next: _next, ...rest } = a
+   /** @param {number} count */
+   const build = (count) => {
+-    const cut = rows.length - count
++    const cut = matched.length - offset - count
++    const more = Math.max(0, cut)
++    const continuation = {
++      view: 'pages',
++      ...(typeof p.locale === 'string' ? { locale: p.locale } : {}),
++      ...(words ? { search: view?.search } : {}),
++      offset: offset + count,
++      limit: view?.pageRows ? view.limit : Math.min(count, LIST_ROWS_MAX)
++    }
+     const parts = [
+       leftOut > 0
+         ? `Pages of ${home} and of every language; ${leftOut} more in ${Object.keys(elsewhere).length} other language${Object.keys(elsewhere).length === 1 ? '' : 's'} (otherLanguages): the same call with locale lists one.`
+         : '',
+-      cut > 0 ? `${cut} more pages not shown: find one by its link with url.` : '',
++      more > 0
++        ? `${more} more pages not shown: next.params gives the next rows; search finds a title or path; url reads one known link.`
++        : '',
+       'A page by its link: {view:"pages", url}. Every language and field as the site gave them: full:true.'
+     ].filter((x) => x !== '')
+     return {
+@@ -229,16 +255,28 @@
+       columns,
+       pages: rows.slice(0, count),
+       ...(leftOut > 0 ? { otherLanguages: elsewhere } : {}),
+-      ...(cut > 0 ? { truncated: true, truncatedCount: cut } : {}),
++      ...(more > 0 ? { truncated: true, truncatedCount: more } : {}),
++      ...(view?.pageRows || more > 0
++        ? {
++            pagination: {
++              offset,
++              returned: count,
++              total: matched.length,
++              totalIsComplete: a.truncated !== true,
++              nextOffset: more > 0 ? offset + count : null
++            }
++          }
++        : {}),
++      ...(a.truncated === true && a.next !== undefined ? { sourceNext: a.next } : {}),
++      ...(a.truncated === true && a.truncatedCount !== undefined
++        ? { sourceTruncatedCount: a.truncatedCount }
++        : {}),
+       // A whole list in one language says nothing more: every page is a row.
+-      ...(leftOut > 0 || cut > 0
++      ...(leftOut > 0 || more > 0
+         ? {
+             next: {
+               action: 'content.read',
+-              params:
+-                leftOut > 0
+-                  ? { view: 'pages', locale: '<a locale of otherLanguages>' }
+-                  : { view: 'pages', url: '<the link>' },
++              params: more > 0 ? continuation : { view: 'pages', locale: '<a locale of otherLanguages>' },
+               why: parts.join(' ')
+             }
+           }
+@@ -538,3 +576,38 @@
+     next
+   }
+ }
++
++/**
++ * A WordPress page listing names native post IDs, not Content API IDs. Keep those IDs intact for
++ * record operations and put the map lookup beside the rows so a lookup cannot silently use either
++ * namespace as the other. No extra read is performed; the model chooses whether it needs the map.
++ * @param {unknown} answer
++ * @param {Record<string, unknown>} params
++ * @param {unknown} platform
++ * @returns {unknown}
++ */
++export function nativePageIdAdvice(answer, params, platform) {
++  if (platform !== 'wordpress' || !isRecord(answer) || answer.ok !== true || !Array.isArray(answer.items))
++    return answer
++  if (
++    params.post_type !== 'page' &&
++    !(answer.items.length > 0 && answer.items.every((row) => isRecord(row) && row.type === 'page'))
++  )
++    return answer
++  if (answer.kind !== undefined && answer.kind !== 'post') return answer
++  const one = answer.items.length === 1 ? answer.items[0] : null
++  const path = isRecord(one) ? str(one.path) : ''
++  const search = str(params.search)
++  return {
++    ...answer,
++    idNamespace: 'wordpress:post',
++    contentIdLookup: {
++      action: 'content.read',
++      params: {
++        view: 'pages',
++        ...(path.startsWith('/') && !path.startsWith('//') ? { url: path } : search ? { search } : {})
++      },
++      why: 'items[].id is a native post ID for content.get/update. This read returns opaque Content API IDs.'
++    }
++  }
++}
+--- a/packages/tools/tracy-site-tools/src/host/surface.mjs
++++ b/packages/tools/tracy-site-tools/src/host/surface.mjs
+@@ -424,7 +424,7 @@
+  * WordPress surfaces; EmDash keeps its own sentence.
+  */
+ const PAGE_FIRST =
+-  'Call {view:"pages", url} first for a page the customer names, then {id}; {describe:true} for types, block kinds, where SEO/menus/forms live; {type:"page", locale} lists one type; follow links.next.'
++  'Call {view:"pages", url} for a known URL or {view:"pages", search:"<title>"} to find a page; then {id}. {describe:true} for types/fields; {type:"page", locale} lists one type; follow links.next.'
+ /** EmDash keeps the describe-first sentence: its add road is `tracy_emdash` and measured 4–5 steps. */
+ const DESCRIBE_FIRST =
+   'Call {describe:true} once, then {type:"page", locale} or {view:"pages", url:link}; then {id}; follow links.next.'
+@@ -462,7 +462,7 @@
+   /** @type {string} */ refusals = '',
+   /** @type {string} */ call = PAGE_FIRST
+ ) =>
+-  `content.read: THIS site's map: pages, articles, shared parts. Use it to find page fields. Not for writing. ${call} Returns ids; native: CMS {kind, id|key}${bridge}. Read-only. Refusals: CONTENT_BAD_QUERY names the field${refusals}.`
++  `content.read: THIS site's map: pages, articles, shared parts. Use it to find page fields. Not for writing. ${call} Returns opaque Content API ids; native: CMS {kind, id|key}${bridge}. Read-only. Refusals: CONTENT_BAD_QUERY names the field${refusals}.`
+ 
+ /** On a site whose words change by record (open Joomla/WordPress, sealed WordPress with no binding). */
+ export const CONTENT_READ_BLOCK = contentReadBlock('')

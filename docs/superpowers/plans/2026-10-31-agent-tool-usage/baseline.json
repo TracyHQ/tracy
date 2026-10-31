@@ -1,0 +1,9 @@
+{
+  "baselineBundleSha256": "14d19374f19b9719db99a811fd1a04c168ce943fd3f0a621802a7e72d51a23a8",
+  "candidateBundleSha256": "ea6f4236ca2aba7325e9871f2a032752ed5aaec29c1d26fdfbb1eca37e8952d9",
+  "develop": "76e7f114fa4ce6ac2e1b5b9d1c3ff9857c90c14e",
+  "source": "pre-iteration working tree; reconstruct by reversing incremental patch on final implementation, then rebuild host bundle",
+  "scriptedModelUsage": "synthetic adapter usage is not billing; provider usage comes from recorded Chat Completions responses",
+  "baselineReconstructionVerified": true,
+  "reconstructedBundleSha256": "14d19374f19b9719db99a811fd1a04c168ce943fd3f0a621802a7e72d51a23a8"
+}

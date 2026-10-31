@@ -1,0 +1,57 @@
+Real daemon boot gate after local dependency repair:
+materialize-profile: web — 34 package(s) linked
+materialize-profile: native — 62 package(s) linked
+check-boot-graph: [web] 58 entries, all 7 declared Tracy plugins present
+check-boot-graph: [native] 75 entries, all 23 declared Tracy plugins present
+
+Final six AgentLoop integration cases:
+  ...
+1..6
+# tests 6
+# suites 0
+# pass 6
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1863.888417
+Joomla/EmDash boundary and replacement suites:
+  ...
+1..737
+# tests 737
+# suites 0
+# pass 737
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 64475.333875
+Local password-gateway deployment: see local-deployment.json. Setup/login, HTML graph and three script batches verified through the gateway.
+
+Final real boot rerun:
+materialize-profile: web — 34 package(s) linked
+materialize-profile: native — 62 package(s) linked
+check-boot-graph: [web] 58 entries, all 7 declared Tracy plugins present
+check-boot-graph: [native] 75 entries, all 23 declared Tracy plugins present
+
+Compact-read regression including real product-loop step:
+ok - S3: skipped = 0
+ok - S4 grep -c 'blockKindsOmitted' lib/index.js = 1
+ok - S4 grep -c 'var BODY_SHOWN_MAX = 4e3' = 1
+ok - S4 grep -c 'function takeViewParams' = 1
+ok - S6 product AgentLoop and scoped CMS tools: exit code = 0
+ok - S6 product AgentLoop and scoped CMS tools: fail = 0
+ok - S6 product AgentLoop and scoped CMS tools: cancelled = 0
+ok - S6 product AgentLoop and scoped CMS tools: skipped = 0
+ok - S6 product AgentLoop and scoped CMS tools: pass = 6
+ALL CHECKS PASSED
+Test quality:
+check-test-quality: 6 test file(s) added or edited since 76e7f114fa4c (merge-base of HEAD and origin/develop), 1.6s: no new assertion that cannot fail
+
+Full gate audit: WordPress-quickstart task failed; incomplete audit stopped. No claim of full-gate acceptance.
+Local browser: password login succeeded, graph 74 entries, zero page errors; workspace chooser shown, no configured customer/provider state.
+Initial EmDash aggregate integrity check failed and is preserved. Final repeat content subset passes; changed tables: options, _emdash_revision_prune_queue, _emdash_media_usage_cleanup.
+
+Remaining gate run: all selected gates passed except stale generated agent-tools catalogue. Regenerated eight descriptions only; agent-tools --check passes after correction. No actions, routing or schemas changed.
+Host bundle --check passes. Summary regenerated and validated; git diff --check passes.
+Catalogue tests: 5 passed, zero failures/cancellations/skips. Final documentation link check: 523 files, no broken links. Local candidate remains running.

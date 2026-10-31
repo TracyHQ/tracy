@@ -1,0 +1,325 @@
+{
+  "metadata": {
+    "producer": "real vendored AgentLoop + ToolRuntime + shipped Tracy plugin; scripted model; real HTTP WordPress listing I/O",
+    "strategyComparison": "same candidate bundle: four existing string searches versus one bounded OR search; not two complete deployed revisions",
+    "repeats": 12,
+    "targets": [
+      {
+        "id": "cc8a4d7f74ca19af768923eb336",
+        "path": "/?page_id=401",
+        "title": "Inventory 396: Reference material for the independent tool calling benchmark"
+      },
+      {
+        "id": "ca8baab13f73e18e8ae84e49e08",
+        "path": "/?page_id=402",
+        "title": "Inventory 397: Reference material for the independent tool calling benchmark"
+      },
+      {
+        "id": "c3112b6fe257710c476c83575b3",
+        "path": "/?page_id=403",
+        "title": "Inventory 398: Reference material for the independent tool calling benchmark"
+      },
+      {
+        "id": "cd6f62f9303b655026ab863a2e7",
+        "path": "/?page_id=404",
+        "title": "Inventory 399: Reference material for the independent tool calling benchmark"
+      }
+    ],
+    "bundleSha256": "14d19374f19b9719db99a811fd1a04c168ce943fd3f0a621802a7e72d51a23a8",
+    "siteToolsVersion": "0.1.6",
+    "wordPress": "7.1.4",
+    "component": "0.18.37",
+    "origin": "http://127.0.0.1:58298",
+    "injectedDelayMs": 0
+  },
+  "rows": [
+    {
+      "repeat": 0,
+      "arm": "independent",
+      "verified": true,
+      "backendReads": 20,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4,
+      "elapsedMs": 370.472167,
+      "startedAt": "2026-10-30T15:56:58.475Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 0,
+      "arm": "batch",
+      "verified": true,
+      "backendReads": 5,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1,
+      "elapsedMs": 29146.542,
+      "startedAt": "2026-10-30T15:57:27.625Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 1,
+      "arm": "batch",
+      "verified": true,
+      "backendReads": 5,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1,
+      "elapsedMs": 1254.5732910000006,
+      "startedAt": "2026-10-30T15:57:28.880Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 1,
+      "arm": "independent",
+      "verified": true,
+      "backendReads": 20,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4,
+      "elapsedMs": 838.3194580000018,
+      "startedAt": "2026-10-30T15:57:29.719Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 2,
+      "arm": "independent",
+      "verified": true,
+      "backendReads": 20,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4,
+      "elapsedMs": 510.734292000001,
+      "startedAt": "2026-10-30T15:57:30.231Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 2,
+      "arm": "batch",
+      "verified": true,
+      "backendReads": 5,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1,
+      "elapsedMs": 280.4944170000017,
+      "startedAt": "2026-10-30T15:57:30.512Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 3,
+      "arm": "batch",
+      "verified": true,
+      "backendReads": 5,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1,
+      "elapsedMs": 315.86499999999796,
+      "startedAt": "2026-10-30T15:57:30.828Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 3,
+      "arm": "independent",
+      "verified": true,
+      "backendReads": 20,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4,
+      "elapsedMs": 439.939750000005,
+      "startedAt": "2026-10-30T15:57:31.269Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 4,
+      "arm": "independent",
+      "verified": true,
+      "backendReads": 20,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4,
+      "elapsedMs": 626.9240419999987,
+      "startedAt": "2026-10-30T15:57:31.897Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 4,
+      "arm": "batch",
+      "verified": true,
+      "backendReads": 5,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1,
+      "elapsedMs": 899.0259579999984,
+      "startedAt": "2026-10-30T15:57:32.797Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 5,
+      "arm": "batch",
+      "verified": true,
+      "backendReads": 5,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1,
+      "elapsedMs": 468.9098339999982,
+      "startedAt": "2026-10-30T15:57:33.267Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 5,
+      "arm": "independent",
+      "verified": true,
+      "backendReads": 20,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4,
+      "elapsedMs": 575.0690420000028,
+      "startedAt": "2026-10-30T15:57:33.843Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 6,
+      "arm": "independent",
+      "verified": true,
+      "backendReads": 20,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4,
+      "elapsedMs": 670.4205419999998,
+      "startedAt": "2026-10-30T15:57:34.514Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 6,
+      "arm": "batch",
+      "verified": true,
+      "backendReads": 5,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1,
+      "elapsedMs": 376.3172909999994,
+      "startedAt": "2026-10-30T15:57:34.891Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 7,
+      "arm": "batch",
+      "verified": true,
+      "backendReads": 5,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1,
+      "elapsedMs": 368.40699999999924,
+      "startedAt": "2026-10-30T15:57:35.260Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 7,
+      "arm": "independent",
+      "verified": true,
+      "backendReads": 20,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4,
+      "elapsedMs": 396.61441699999705,
+      "startedAt": "2026-10-30T15:57:35.657Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 8,
+      "arm": "independent",
+      "verified": true,
+      "backendReads": 20,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4,
+      "elapsedMs": 315.3599580000009,
+      "startedAt": "2026-10-30T15:57:35.973Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 8,
+      "arm": "batch",
+      "verified": true,
+      "backendReads": 5,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1,
+      "elapsedMs": 249.53812499999913,
+      "startedAt": "2026-10-30T15:57:36.223Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 9,
+      "arm": "batch",
+      "verified": true,
+      "backendReads": 5,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1,
+      "elapsedMs": 575.7211670000033,
+      "startedAt": "2026-10-30T15:57:36.800Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 9,
+      "arm": "independent",
+      "verified": true,
+      "backendReads": 20,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4,
+      "elapsedMs": 365.65908299999865,
+      "startedAt": "2026-10-30T15:57:37.167Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 10,
+      "arm": "independent",
+      "verified": true,
+      "backendReads": 20,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4,
+      "elapsedMs": 393.61387500000274,
+      "startedAt": "2026-10-30T15:57:37.562Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 10,
+      "arm": "batch",
+      "verified": true,
+      "backendReads": 5,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1,
+      "elapsedMs": 413.5671250000014,
+      "startedAt": "2026-10-30T15:57:37.978Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 11,
+      "arm": "batch",
+      "verified": true,
+      "backendReads": 5,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1,
+      "elapsedMs": 312.76400000000285,
+      "startedAt": "2026-10-30T15:57:38.291Z",
+      "requestedTerms": 4
+    },
+    {
+      "repeat": 11,
+      "arm": "independent",
+      "verified": true,
+      "backendReads": 20,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4,
+      "elapsedMs": 486.690125000001,
+      "startedAt": "2026-10-30T15:57:38.778Z",
+      "requestedTerms": 4
+    }
+  ]
+}

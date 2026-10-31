@@ -2198,3 +2198,19 @@ test('confirm-count weighs only the places no expect counts: a counted pair besi
   assert.equal(overlap.out.change, 1)
   assert.deepEqual(overlap.site.writes(), [])
 })
+
+test('wider template discovery reuses its snapshot but keeps the final write revalidation', async () => {
+  const { discoveryTrial } = await import('./fixtures/replace/discovery-bench.mjs')
+  const wide = await discoveryTrial(replaceOnWordPress)
+  const direct = await discoveryTrial(replaceOnWordPress, { wide: false })
+  assert.equal(wide.reads, 19, 'baseline made 34 backend reads for this same verified change')
+  assert.equal(direct.reads, 16, 'ordinary edits do not add backend calls')
+  const counts = wide.counts
+  assert.equal(counts[JSON.stringify(['content.get', { kind: 'option', key: 'blogname' }])], 1)
+  assert.equal(
+    counts[JSON.stringify(['content.get', { kind: 'template', key: 'page' }])],
+    2,
+    'the template is read during discovery and again immediately before writing'
+  )
+  assert.equal(wide.undoVerified, true)
+})

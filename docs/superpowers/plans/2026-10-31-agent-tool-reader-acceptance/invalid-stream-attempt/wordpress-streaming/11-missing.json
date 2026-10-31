@@ -1,0 +1,29 @@
+{
+  "repeat": 1,
+  "task": "missing",
+  "verified": false,
+  "failure": null,
+  "ms": 881.4792080000007,
+  "idValid": true,
+  "noWrites": true,
+  "continuation": true,
+  "recovery": true,
+  "language": true,
+  "seededRefusal": null,
+  "calls": [],
+  "provider": [
+    {
+      "step": 1,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": null,
+      "firstChunkMs": 299.25008300000263,
+      "ms": null,
+      "promptHash": "cfce15b63203d8a023452d7a43a3b96902adf466ecebd096e54fd420db0e8aac"
+    }
+  ],
+  "final": "",
+  "toolResults": "[]",
+  "backendReads": 0,
+  "nativeSourceCalls": 0
+}

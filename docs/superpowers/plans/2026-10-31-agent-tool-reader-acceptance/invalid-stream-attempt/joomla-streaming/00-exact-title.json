@@ -1,0 +1,59 @@
+{
+  "repeat": 0,
+  "task": "exact-title",
+  "verified": false,
+  "failure": null,
+  "ms": 2140.110208,
+  "idValid": false,
+  "noWrites": true,
+  "continuation": true,
+  "recovery": true,
+  "language": true,
+  "seededRefusal": null,
+  "calls": [
+    {
+      "name": "tracy_site",
+      "arguments": {
+        "action": "content.read",
+        "params": {
+          "view": "pages",
+          "search": "Inventory 031"
+        }
+      }
+    }
+  ],
+  "provider": [
+    {
+      "step": 1,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7271,
+        "completion_tokens": 69,
+        "total_tokens": 7340,
+        "prompt_tokens_details": {
+          "cached_tokens": 3968
+        },
+        "prompt_cache_hit_tokens": 3968,
+        "prompt_cache_miss_tokens": 3303
+      },
+      "firstChunkMs": 436.43975000000046,
+      "ms": 1151.788375,
+      "promptHash": "6a2cf25fc65f3d0d496f6b30ae3f94d2fac708353cb820dc3c499cac53c8afa3",
+      "finalText": null
+    },
+    {
+      "step": 2,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": null,
+      "firstChunkMs": 263.3111659999995,
+      "ms": null,
+      "promptHash": "76e230162d9262686e821821998d6a48099d9247a8948959edf0daa62ea8f071"
+    }
+  ],
+  "final": "",
+  "toolResults": "[{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_d2emylivfiEl0wYF3S7f8914\"},\"toolCallId\":\"call_00_d2emylivfiEl0wYF3S7f8914\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"schemaVersion\\\":\\\"tracy-content-pages/v1\\\",\\\"site\\\":{\\\"id\\\":\\\"site_decbd480e6cf7ba26040354547f6a634\\\",\\\"name\\\":null,\\\"url\\\":\\\"http://127.0.0.1:59944\\\",\\\"defaultLocale\\\":null,\\\"locales\\\":[]},\\\"truncated\\\":false,\\\"version\\\":\\\"cv1.796f557c8c4ebd088c0fc9f4fcb21f61\\\",\\\"later\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"changedSince\\\":\\\"cv1.796f557c8c4ebd088c0fc9f4fcb21f61\\\"},\\\"why\\\":\\\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\\\"},\\\"columns\\\":[\\\"title\\\",\\\"path\\\",\\\"id\\\",\\\"record\\\",\\\"type\\\"],\\\"pages\\\":[[\\\"Inventory 031\\\",\\\"/index.php/component/content/article/inventory-031?catid=2\\\",\\\"content_ff783075bf1a988b5280611a6514f162\\\",\\\"article:32\\\",\\\"article\\\"]],\\\"pagination\\\":{\\\"offset\\\":0,\\\"returned\\\":1,\\\"total\\\":1,\\\"totalIsComplete\\\":true,\\\"nextOffset\\\":null},\\\"idNamespace\\\":\\\"content-api\\\",\\\"idMeaning\\\":\\\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\\\"}\"}],\"isError\":false,\"id\":\"a0aae7ba-a71e-4bcf-bb9b-56e39300f49c\"}]",
+  "backendReads": 1,
+  "nativeSourceCalls": 0
+}

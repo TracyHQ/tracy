@@ -287,7 +287,14 @@ import {
   locateReads,
   roadToolsets
 } from './content-locate.js'
-import { fitPages, localeOfLink, narrowerPagesCall, pagesDocument, walkListing } from './content-pages.js'
+import {
+  fitPages,
+  localeOfLink,
+  narrowerPagesCall,
+  pagesDocument,
+  indexedPageCandidates
+} from './content-pages.js'
+import { createPageInventoryReader } from './page-inventory.js'
 import { contractToolset, emdashTemplate, siteAuthority, slotToolset } from './content-profile.js'
 import { createStringStore } from './content-strings.js'
 import { changesBetween, createVersionStore, queryScope, versionOf } from './content-versions.js'
@@ -5718,6 +5725,7 @@ export function sitesRoutes({
   const VERSION_SHAPE = new RegExp(VERSION_PATTERN)
   /** Walks this process answered (cut short or not), for `changedSince`. */
   const contentVersions = createVersionStore({ now })
+  const readPageInventory = createPageInventoryReader({ now })
 
   function contentQueryProblem(params) {
     // The names and ranges are one list with the public API reference (`lib/content-query.js`).
@@ -6881,6 +6889,23 @@ export function sitesRoutes({
         fetchImpl(cred.config.endpoint, componentRequest(query))
           .then((answer) => answer.json())
           .catch(() => null)
+      const inventory = (filter) =>
+        readPageInventory(
+          createHmac('sha256', config.sessionSecret)
+            .update(
+              JSON.stringify([
+                cred.config.endpoint,
+                cred.config.token,
+                contentPrincipal,
+                contentScope,
+                queryScope(filter)
+              ])
+            )
+            .digest('hex'),
+          askCowork,
+          filter,
+          { requireInventoryRevision: site?.platform === 'joomla', reusable: paging }
+        )
       // A pasted link usually names its language (`/es/investors`): walk that language only, and the
       // whole site only when it holds no such page (`content-pages.js` `localeOfLink`).
       let filter = asked
@@ -6899,18 +6924,21 @@ export function sitesRoutes({
           typeof head?.site?.url === 'string' ? head.site.url : null
         )
         if (guessed) {
-          const narrow = await walkListing(askCowork, { ...asked, locale: guessed })
+          const narrow = await inventory({ ...asked, locale: guessed })
           const found =
             narrow.refusal === null &&
-            pagesDocument(narrow.listings, { truncated: narrow.truncated, link: link.trim() }).pages.length >
-              0
+            pagesDocument(narrow.listings, {
+              truncated: narrow.truncated,
+              link: link.trim(),
+              candidates: indexedPageCandidates(narrow.index, link.trim(), narrow.listings[0]?.site?.url)
+            }).pages.length > 0
           if (found) {
             walk = narrow
             filter = { ...asked, locale: guessed }
           }
         }
       }
-      walk ??= await walkListing(askCowork, filter)
+      walk ??= await inventory(filter)
       await recordApply(walk.refusal === null)
       if (walk.refusal !== null) {
         const refused = CONTENT_ERROR_STATUS[walk.refusal?.error?.code]
@@ -6950,6 +6978,11 @@ export function sitesRoutes({
               ...pagesDocument(walk.listings, {
                 truncated: walk.truncated,
                 link: typeof link === 'string' ? link.trim() : null,
+                candidates: indexedPageCandidates(
+                  walk.index,
+                  typeof link === 'string' ? link.trim() : null,
+                  walk.listings[0]?.site?.url
+                ),
                 // Twins only from a walk that listed every language: one language's walk holds none.
                 alternates: filter.locale === undefined
               }),

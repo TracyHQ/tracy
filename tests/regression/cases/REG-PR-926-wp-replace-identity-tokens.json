@@ -16,7 +16,8 @@
     "'a footer line printing the legal name through a token: written in one call, and the receipt says it no longer follows the identity' passes: one content.update of the footer part, the line holds the new words, the other line that prints the legal name keeps its token, a note says the first no longer follows the identity, and the tracy_site_identity option is untouched.",
     "'a word beside a token is changed and the token stays: the line still follows the identity' passes: the written line still reads {site.legalName} and no note says otherwise.",
     "'words that are the legal name itself' and 'a phone a header line prints through a token' pass: code SITE_IDENTITY, nothing written, next names content.contract {operation:\"apply\", changes:{\"identity.legalName\":\"<new>\"}} (identity.contact.phone for a phone), never 'that is an answer'.",
-    "'on a site without the contract door the identity answer names the option write and carries the identity' and 'no identity option: token lines are read as stored, as before' pass; the road test 'a WordPress site with the contract door' passes."
+    "'on a site without the contract door the identity answer names the option write and carries the identity' and 'no identity option: token lines are read as stored, as before' pass; the road test 'a WordPress site with the contract door' passes.",
+    "'wider template discovery reuses its snapshot but keeps the final write revalidation' passes: 19 backend reads rather than the baseline's 34, one exact write, an unchanged ordinary-edit read count, a fresh target read before writing, and complete Undo."
   ],
   "selectors": {
     "answer": "content.replace answer fields code, token, field, value, slot, next",
@@ -31,6 +32,11 @@
       "--test-reporter=tap",
       "packages/tools/tracy-site-tools/test/replace-wordpress.test.mjs",
       "packages/tools/tracy-site-tools/test/replace-road.test.mjs"
+    ],
+    "tests": [
+      "a footer line printing the legal name through a token",
+      "a word beside a token is changed and the token stays",
+      "wider template discovery reuses its snapshot but keeps the final write revalidation"
     ]
   }
 }

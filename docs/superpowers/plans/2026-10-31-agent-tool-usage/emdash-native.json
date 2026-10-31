@@ -1,0 +1,1955 @@
+{
+  "metadata": {
+    "platform": "emdash",
+    "repeats": 8,
+    "native": true,
+    "onlyArm": null,
+    "model": "scripted",
+    "thinking": "disabled",
+    "temperature": 0,
+    "producer": "real shipped plugin + vendored AgentLoop/ToolRuntime; injected relay with real CMS HTTP; provider adapter uses nonstreaming Chat Completions",
+    "scope": "read discovery; no authenticated production relay, writes or Undo acceptance claimed",
+    "inventoryPages": 43,
+    "targets": [
+      {
+        "id": "Zbe3CZ3Ht62hd_jD_pOn4he0t2u8fE693eT8ceAMy7o",
+        "title": "Transactional emails",
+        "path": "/kit-email"
+      },
+      {
+        "id": "Z8REvI6No5ECoO4gNRTt2KYfTzA73pN3v61mwDb5tto",
+        "title": "Metalworking shop refurbishment",
+        "path": "/projects/metalworking-shop-refurbishment"
+      },
+      {
+        "id": "xw6-g2fnPlHH2hNgtPeTDWVQBRMZxIv-4uFclxni8vo",
+        "title": "Privacy",
+        "path": "/privacy"
+      },
+      {
+        "id": "WQuI3jw1hkypMwKM4cs1czEq8atj6tnjfRbyeQbKQc0",
+        "title": "Zavolzhye logistics building",
+        "path": "/projects/zavolzhye-logistics-building"
+      }
+    ],
+    "origin": "http://127.0.0.1:54150",
+    "image": "sha256:96711fec9d763d8daaacee6da83770668335a16ee20a19d01b9fb31e790fbe54",
+    "harnessFixtureHash": "06390a44684fa1ff27307a508cb824e627fb138c57dfc2147bd405b126e144b6",
+    "baselineBundle": "14d19374f19b9719db99a811fd1a04c168ce943fd3f0a621802a7e72d51a23a8",
+    "candidateBundle": "ea6f4236ca2aba7325e9871f2a032752ed5aaec29c1d26fdfbb1eca37e8952d9",
+    "guideHashes": {
+      "baseline": "07d28abb39b28c8f4c409b8c0c2943ff487425d58a0cbec737b35351c8f70fe1",
+      "candidate": "ec88e3794e8d51294bf17e32999c4830c8a630b1b29ae2a13af37c6c90d261c2"
+    },
+    "contentBefore": {
+      "_emdash_menu_items": "512835a8fe9bc716bb5e8a6986099323159eec9b7b3af429ff994b70feb7d36b",
+      "_emdash_menus": "3c2be307d44a2168f49575065890feede1edd8f8d7e6260a1ab13482778cecc3",
+      "_tracy_content_identity": "bdc4e95b372d20e494e0791f20ddcd674746a51d94d356fbdcd72a3d7e8e8ced",
+      "_tracy_identity_fields": "8c31f9bbe781cfcaedbfc596118ce30c0320642227afaf7535f832e31e81765e",
+      "_tracy_identity_operations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "content_taxonomies": "b07ad5479c8d51dd1338e5d8399f0adbf276ec97c7efdb2669da7af8a3157919",
+      "ec_about": "1a884ef8cc56f8c77632c072ed9c194ab18be62b5a291472679c2d466059be11",
+      "ec_careers": "b697a9a8865a7c70219ab274a2b5a4c3683015a2db40f896b79bbf9287a30dc0",
+      "ec_contact": "a87fe379ac0fef952e08cc3df46014f66ccc95b437f9cfbf07fa177bb846e105",
+      "ec_home": "5ebcbbec93e5b13838e61dd492dd5096d900339f31415e325c15fa7e1fa0b2ba",
+      "ec_investors": "2aea9676984f8f04ea0945a43eb02a60a8e51f19ff559bc33a2ae83e3814b68b",
+      "ec_news_page": "e39ff914bdff6f7c06bc5e9334029f696540f2f1279ac0e06763c8200977e01e",
+      "ec_pages": "4de2a6d11f0320970120f4a1cbc8748984617b6b601aec1fcb73d894f0dc5bcd",
+      "ec_posts": "1cbda1d33d56927ec2b4980e8319e79f0927bae1506db2cb6dd1d7f344e6801e",
+      "ec_projects": "0591bc6ad7e5c066ddf3cd44b0c6915b9ecc66f35a83cde3487abdc3788628c3",
+      "ec_projects_page": "a65bc23d48266eccacd5f749f93a711071259716d3fa373f38e715ceec7f70e4",
+      "ec_services": "88e5d91048b3dc2e23c60fd0a2708fc0d6fbed15510712376eebc66a501704a1",
+      "ec_services_page": "d289509afa4dd4bb91b88616359f920b23ec391cfe0230282964f39954b95d78",
+      "ec_site": "9fb24112aa753efc442176fba0dc2a9249e715ad72feb381308ac447d64dd063",
+      "ec_vacancies": "0fb92f70be8c2fec072a8edbaff107662426722343624f2fe065163efe1809c9",
+      "media": "3de0325d20b310a206dd145003a1e1daed7eb1da843f368e04ff52b62b861ee7",
+      "revisions": "e48e8cabb2d410c488a3d08b0eb98598c79cf2c522c373d3ab5fe2981f1e3df2",
+      "taxonomies": "1c018712af47c26c5fe8f39d763cc7785124b18695163974a64687056bb1db09"
+    },
+    "startedAt": "2026-10-30T17:37:36.683Z",
+    "contentAfter": {
+      "_emdash_menu_items": "512835a8fe9bc716bb5e8a6986099323159eec9b7b3af429ff994b70feb7d36b",
+      "_emdash_menus": "3c2be307d44a2168f49575065890feede1edd8f8d7e6260a1ab13482778cecc3",
+      "_tracy_content_identity": "bdc4e95b372d20e494e0791f20ddcd674746a51d94d356fbdcd72a3d7e8e8ced",
+      "_tracy_identity_fields": "8c31f9bbe781cfcaedbfc596118ce30c0320642227afaf7535f832e31e81765e",
+      "_tracy_identity_operations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "content_taxonomies": "b07ad5479c8d51dd1338e5d8399f0adbf276ec97c7efdb2669da7af8a3157919",
+      "ec_about": "1a884ef8cc56f8c77632c072ed9c194ab18be62b5a291472679c2d466059be11",
+      "ec_careers": "b697a9a8865a7c70219ab274a2b5a4c3683015a2db40f896b79bbf9287a30dc0",
+      "ec_contact": "a87fe379ac0fef952e08cc3df46014f66ccc95b437f9cfbf07fa177bb846e105",
+      "ec_home": "5ebcbbec93e5b13838e61dd492dd5096d900339f31415e325c15fa7e1fa0b2ba",
+      "ec_investors": "2aea9676984f8f04ea0945a43eb02a60a8e51f19ff559bc33a2ae83e3814b68b",
+      "ec_news_page": "e39ff914bdff6f7c06bc5e9334029f696540f2f1279ac0e06763c8200977e01e",
+      "ec_pages": "4de2a6d11f0320970120f4a1cbc8748984617b6b601aec1fcb73d894f0dc5bcd",
+      "ec_posts": "1cbda1d33d56927ec2b4980e8319e79f0927bae1506db2cb6dd1d7f344e6801e",
+      "ec_projects": "0591bc6ad7e5c066ddf3cd44b0c6915b9ecc66f35a83cde3487abdc3788628c3",
+      "ec_projects_page": "a65bc23d48266eccacd5f749f93a711071259716d3fa373f38e715ceec7f70e4",
+      "ec_services": "88e5d91048b3dc2e23c60fd0a2708fc0d6fbed15510712376eebc66a501704a1",
+      "ec_services_page": "d289509afa4dd4bb91b88616359f920b23ec391cfe0230282964f39954b95d78",
+      "ec_site": "9fb24112aa753efc442176fba0dc2a9249e715ad72feb381308ac447d64dd063",
+      "ec_vacancies": "0fb92f70be8c2fec072a8edbaff107662426722343624f2fe065163efe1809c9",
+      "media": "3de0325d20b310a206dd145003a1e1daed7eb1da843f368e04ff52b62b861ee7",
+      "revisions": "e48e8cabb2d410c488a3d08b0eb98598c79cf2c522c373d3ab5fe2981f1e3df2",
+      "taxonomies": "1c018712af47c26c5fe8f39d763cc7785124b18695163974a64687056bb1db09"
+    },
+    "finishedAt": "2026-10-30T17:38:34.256Z"
+  },
+  "rows": [
+    {
+      "repeat": 0,
+      "task": "four-independent",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:37:36.684Z",
+      "elapsedMs": 3719.947041,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 3253,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 4,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 2007.99775,
+          "ms": 853.829416
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 2009.178666,
+          "ms": 1802.600209
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 2010.354791,
+          "ms": 2630.0361250000005
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 2011.2585,
+          "ms": 3552.9106659999998
+        }
+      ],
+      "backendReads": 4,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 2008.002458,
+          "ms": 853.3847920000003,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 2009.18175,
+          "ms": 1802.1725,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 2010.358125,
+          "ms": 2629.758541,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 2011.26125,
+          "ms": 3552.3615000000004,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 8108
+    },
+    {
+      "repeat": 0,
+      "task": "four-independent",
+      "arm": "D",
+      "startedAt": "2026-10-30T17:37:40.404Z",
+      "elapsedMs": 1128.1747500000001,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 3849,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 5687.741625,
+          "ms": 1004.592541
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 5687.74575,
+          "ms": 1004.2827079999997,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 0,
+      "task": "four-batch",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:37:41.533Z",
+      "elapsedMs": 979.4363750000002,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 1186,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 6802.454666,
+          "ms": 876.724209
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 6802.458875,
+          "ms": 875.951916,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 0,
+      "task": "four-batch",
+      "arm": "D",
+      "startedAt": "2026-10-30T17:37:42.513Z",
+      "elapsedMs": 1005.3262080000004,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 1335,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 7775.94425,
+          "ms": 910.8064999999997
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 7775.948041,
+          "ms": 910.3377920000003,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 1,
+      "task": "four-independent",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:37:43.519Z",
+      "elapsedMs": 3817.0904580000006,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 3253,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 4,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 8788.955208,
+          "ms": 850.060958
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 8790.359833,
+          "ms": 1716.7360829999998
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 8791.444666,
+          "ms": 2673.62075
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 8792.425208,
+          "ms": 3708.7335829999993
+        }
+      ],
+      "backendReads": 4,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 8788.959291,
+          "ms": 849.5075000000015,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 8790.363583,
+          "ms": 1716.4659169999995,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 8791.447541,
+          "ms": 2673.270125000001,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 8792.428625,
+          "ms": 3708.419249999999,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 8108
+    },
+    {
+      "repeat": 1,
+      "task": "four-independent",
+      "arm": "D",
+      "startedAt": "2026-10-30T17:37:47.336Z",
+      "elapsedMs": 997.9879170000004,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 3849,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 12624.566166,
+          "ms": 875.4893339999999
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 12624.58425,
+          "ms": 875.224166,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 1,
+      "task": "four-batch",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:37:48.337Z",
+      "elapsedMs": 1089.1235000000015,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 1186,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 13599.987541,
+          "ms": 992.7009170000001
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 13599.992333,
+          "ms": 991.747374999999,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 1,
+      "task": "four-batch",
+      "arm": "D",
+      "startedAt": "2026-10-30T17:37:49.427Z",
+      "elapsedMs": 1154.4362499999988,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 1335,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 14692.00175,
+          "ms": 1051.7825410000005
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 14692.00575,
+          "ms": 1051.3752910000003,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 2,
+      "task": "four-independent",
+      "arm": "D",
+      "startedAt": "2026-10-30T17:37:50.582Z",
+      "elapsedMs": 1064.313500000002,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 3849,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 15875.88425,
+          "ms": 937.692583
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 15875.889458,
+          "ms": 937.4845420000001,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 2,
+      "task": "four-independent",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:37:51.647Z",
+      "elapsedMs": 3792.172375000002,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 3253,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 4,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 16986.1285,
+          "ms": 874.4158750000024
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 16989.424375,
+          "ms": 1702.989625000002
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 16990.948291,
+          "ms": 2736.704958999999
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 16992.216458,
+          "ms": 3612.5491250000014
+        }
+      ],
+      "backendReads": 4,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 16986.133875,
+          "ms": 874.219165999999,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 16989.427958,
+          "ms": 1702.7820829999982,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 16990.952166,
+          "ms": 2736.271917000002,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 16992.218875,
+          "ms": 3612.202583000002,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 8108
+    },
+    {
+      "repeat": 2,
+      "task": "four-batch",
+      "arm": "D",
+      "startedAt": "2026-10-30T17:37:55.440Z",
+      "elapsedMs": 1416.6628329999985,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 1335,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 20765.679333,
+          "ms": 1255.5020829999994
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 20765.687625,
+          "ms": 1255.2410410000011,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 2,
+      "task": "four-batch",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:37:56.858Z",
+      "elapsedMs": 1036.2134159999987,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 1186,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 22160.271458,
+          "ms": 903.5295829999995
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 22160.282583,
+          "ms": 903.2952079999995,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 3,
+      "task": "four-independent",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:37:57.896Z",
+      "elapsedMs": 4044.171707999998,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 3253,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 4,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 23230.708958,
+          "ms": 1066.4595000000008
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 23232.285791,
+          "ms": 1999.0642090000001
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 23231.199416,
+          "ms": 2858.115958999999
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 23231.811375,
+          "ms": 3873.928749999999
+        }
+      ],
+      "backendReads": 4,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 23230.712708,
+          "ms": 1066.2118330000012,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 23232.287416,
+          "ms": 1998.6933339999996,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 23231.201083,
+          "ms": 2857.626708,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 23231.8135,
+          "ms": 3873.723665999998,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 8108
+    },
+    {
+      "repeat": 3,
+      "task": "four-independent",
+      "arm": "D",
+      "startedAt": "2026-10-30T17:38:01.940Z",
+      "elapsedMs": 1019.2417080000014,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 3849,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 27229.225291,
+          "ms": 894.5164590000022
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 27229.232708,
+          "ms": 894.1291249999995,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 3,
+      "task": "four-batch",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:38:02.960Z",
+      "elapsedMs": 883.9975410000006,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 1186,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 28209.48875,
+          "ms": 804.5359160000007
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 28209.493,
+          "ms": 804.3552500000005,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 3,
+      "task": "four-batch",
+      "arm": "D",
+      "startedAt": "2026-10-30T17:38:03.844Z",
+      "elapsedMs": 920.9677080000001,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 1335,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 29100.257541,
+          "ms": 831.0230420000007
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 29100.285916,
+          "ms": 830.6672919999983,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 4,
+      "task": "four-independent",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:38:04.766Z",
+      "elapsedMs": 3524.008791999997,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 3253,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 4,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 30041.23575,
+          "ms": 895.5541249999987
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 30041.679458,
+          "ms": 1766.5878330000014
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 30043.721916,
+          "ms": 2587.4692920000016
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 30045.180875,
+          "ms": 3404.497374999999
+        }
+      ],
+      "backendReads": 4,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 30041.240291,
+          "ms": 895.3252090000024,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 30041.681333,
+          "ms": 1766.403792000001,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 30043.724375,
+          "ms": 2587.274458,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 30045.183125,
+          "ms": 3404.1972080000014,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 8108
+    },
+    {
+      "repeat": 4,
+      "task": "four-independent",
+      "arm": "D",
+      "startedAt": "2026-10-30T17:38:08.291Z",
+      "elapsedMs": 1116.4864589999997,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 3849,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 33620.446958,
+          "ms": 949.9701669999995
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 33620.454583,
+          "ms": 949.536583000001,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 4,
+      "task": "four-batch",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:38:09.409Z",
+      "elapsedMs": 1026.7679579999967,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 1186,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 34676.364583,
+          "ms": 924.7554579999996
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 34676.369416,
+          "ms": 924.4149590000015,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 4,
+      "task": "four-batch",
+      "arm": "D",
+      "startedAt": "2026-10-30T17:38:10.436Z",
+      "elapsedMs": 1005.3499589999992,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 1335,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 35715.969958,
+          "ms": 891.9699169999949
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 35715.976916,
+          "ms": 891.2924590000039,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 5,
+      "task": "four-independent",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:38:11.442Z",
+      "elapsedMs": 3764.2466249999998,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 3253,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 4,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 36722.474875,
+          "ms": 981.2127079999991
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 36723.009416,
+          "ms": 1836.2865420000016
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 36723.746583,
+          "ms": 2689.756207999999
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 36724.236041,
+          "ms": 3645.194042000003
+        }
+      ],
+      "backendReads": 4,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 36722.478791,
+          "ms": 980.7917089999974,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 36723.011333,
+          "ms": 1836.0943750000006,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 36723.748833,
+          "ms": 2689.3358750000043,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 36724.237791,
+          "ms": 3644.481584000001,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 8108
+    },
+    {
+      "repeat": 5,
+      "task": "four-independent",
+      "arm": "D",
+      "startedAt": "2026-10-30T17:38:15.209Z",
+      "elapsedMs": 1038.6304999999993,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 3849,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 40509.746416,
+          "ms": 904.4717089999976
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 40509.750416,
+          "ms": 904.1164589999971,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 5,
+      "task": "four-batch",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:38:16.248Z",
+      "elapsedMs": 955.1000409999979,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 1186,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 41512.789125,
+          "ms": 857.2921249999999
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 41512.793291,
+          "ms": 857.0961249999964,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 5,
+      "task": "four-batch",
+      "arm": "D",
+      "startedAt": "2026-10-30T17:38:17.204Z",
+      "elapsedMs": 920.2312910000037,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 1335,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 42468.230833,
+          "ms": 824.807541999995
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 42468.235333,
+          "ms": 824.601917,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 6,
+      "task": "four-independent",
+      "arm": "D",
+      "startedAt": "2026-10-30T17:38:18.124Z",
+      "elapsedMs": 1053.306875000002,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 3849,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 43422.923041,
+          "ms": 920.1309589999946
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 43422.926916,
+          "ms": 919.9345420000027,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 6,
+      "task": "four-independent",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:38:19.185Z",
+      "elapsedMs": 3764.1480420000007,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 3253,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 4,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 44467.490708,
+          "ms": 992.7947920000006
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 44468.917333,
+          "ms": 1851.747000000003
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 44468.241166,
+          "ms": 2745.8437919999997
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 44469.318666,
+          "ms": 3644.270209000002
+        }
+      ],
+      "backendReads": 4,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 44467.494583,
+          "ms": 992.599291999999,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 44468.919291,
+          "ms": 1851.5710840000029,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 44468.244375,
+          "ms": 2745.6540830000013,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 44469.320333,
+          "ms": 3643.866707999994,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 8108
+    },
+    {
+      "repeat": 6,
+      "task": "four-batch",
+      "arm": "D",
+      "startedAt": "2026-10-30T17:38:22.950Z",
+      "elapsedMs": 1356.472332999998,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 1335,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 48217.387916,
+          "ms": 1102.4687919999997
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 48217.39725,
+          "ms": 1101.8392909999966,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 6,
+      "task": "four-batch",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:38:24.325Z",
+      "elapsedMs": 1604.2821659999972,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 1186,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 49747.998916,
+          "ms": 1344.8832500000062
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 49748.006958,
+          "ms": 1344.5399170000019,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 7,
+      "task": "four-independent",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:38:25.931Z",
+      "elapsedMs": 4301.886041000005,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 3253,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 4,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 51238.410833,
+          "ms": 928.3982499999984
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 51238.948,
+          "ms": 1832.702833000003
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 51239.749208,
+          "ms": 3252.3082920000015
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 51240.06625,
+          "ms": 4153.675332999999
+        }
+      ],
+      "backendReads": 4,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 51238.423875,
+          "ms": 927.8864160000012,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 51238.949791,
+          "ms": 1832.5032090000022,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 51239.751,
+          "ms": 3251.8367080000025,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 51240.06775,
+          "ms": 4151.593540999995,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 8108
+    },
+    {
+      "repeat": 7,
+      "task": "four-independent",
+      "arm": "D",
+      "startedAt": "2026-10-30T17:38:30.234Z",
+      "elapsedMs": 1312.8073339999974,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 3849,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 55566.984416,
+          "ms": 1140.6049590000039
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 55567.018041,
+          "ms": 1140.2315839999937,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 7,
+      "task": "four-batch",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:38:31.548Z",
+      "elapsedMs": 1218.4873339999976,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 1186,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 56843.95325,
+          "ms": 1089.8317910000042
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 56843.958416,
+          "ms": 1089.621708999999,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 7,
+      "task": "four-batch",
+      "arm": "D",
+      "startedAt": "2026-10-30T17:38:32.767Z",
+      "elapsedMs": 1012.7619170000035,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": null,
+      "toolResultChars": 1335,
+      "modelRequests": 2,
+      "provider": [],
+      "calls": [],
+      "relayRequests": 1,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 58039.29525,
+          "ms": 904.7653749999954
+        }
+      ],
+      "backendReads": 1,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 58039.299375,
+          "ms": 904.3390409999993,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    }
+  ]
+}

@@ -1,0 +1,127 @@
+{
+  "scanner": "gitleaks 8.28.0",
+  "findings": 20,
+  "classification": "Generic API Key false positives in model prose labeled Content API ID; each detected value also appears in the same attempt tool evidence. No provider credentials are stored. No scanner rule or repository allow list changed.",
+  "reviewed": [
+    {
+      "file": "emdash-streaming/01-known-url.json",
+      "line": 63,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    },
+    {
+      "file": "emdash-streaming/01-known-url.json",
+      "line": 66,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    },
+    {
+      "file": "emdash-streaming/10-known-url.json",
+      "line": 62,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    },
+    {
+      "file": "emdash-streaming/10-known-url.json",
+      "line": 65,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    },
+    {
+      "file": "emdash-streaming-before-pagination-guide/10-known-url.json",
+      "line": 63,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    },
+    {
+      "file": "emdash-streaming-before-pagination-guide/10-known-url.json",
+      "line": 66,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    },
+    {
+      "file": "wordpress-streaming/10-known-url.json",
+      "line": 62,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    },
+    {
+      "file": "wordpress-streaming/10-known-url.json",
+      "line": 65,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    },
+    {
+      "file": "wordpress-streaming/01-known-url.json",
+      "line": 62,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    },
+    {
+      "file": "wordpress-streaming/01-known-url.json",
+      "line": 65,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    },
+    {
+      "file": "wordpress-streaming-before-pagination-guide/01-known-url.json",
+      "line": 62,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    },
+    {
+      "file": "wordpress-streaming-before-pagination-guide/01-known-url.json",
+      "line": 65,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    },
+    {
+      "file": "emdash-streaming-before-recovery/16-refusal-recovery.json",
+      "line": 98,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    },
+    {
+      "file": "emdash-streaming-before-recovery/16-refusal-recovery.json",
+      "line": 101,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    },
+    {
+      "file": "wordpress-streaming/09-exact-title.json",
+      "line": 91,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    },
+    {
+      "file": "wordpress-streaming/09-exact-title.json",
+      "line": 94,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    },
+    {
+      "file": "wordpress-streaming-before-pagination-guide/10-known-url.json",
+      "line": 62,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    },
+    {
+      "file": "wordpress-streaming-before-pagination-guide/10-known-url.json",
+      "line": 65,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    },
+    {
+      "file": "wordpress-streaming-before-pagination-guide/09-exact-title.json",
+      "line": 91,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    },
+    {
+      "file": "wordpress-streaming-before-pagination-guide/09-exact-title.json",
+      "line": 94,
+      "rule": "generic-api-key",
+      "sameValueInToolEvidence": true
+    }
+  ]
+}

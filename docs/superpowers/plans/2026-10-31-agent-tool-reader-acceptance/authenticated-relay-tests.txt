@@ -1,0 +1,672 @@
+TAP version 13
+# Subtest: component-credential: an editor or viewer is refused NOT_SITE_OWNER; the owner registers one and the response never carries the token
+ok 1 - component-credential: an editor or viewer is refused NOT_SITE_OWNER; the owner registers one and the response never carries the token
+  ---
+  duration_ms: 11091.867416
+  type: 'test'
+  ...
+# Subtest: component-credential: a bad endpoint, a short token, and an unparsable body are all a plain 400 INVALID_REQUEST
+ok 2 - component-credential: a bad endpoint, a short token, and an unparsable body are all a plain 400 INVALID_REQUEST
+  ---
+  duration_ms: 572.578292
+  type: 'test'
+  ...
+# Subtest: component-credential: append-only — registering twice writes two rows, and the newest wins
+ok 3 - component-credential: append-only — registering twice writes two rows, and the newest wins
+  ---
+  duration_ms: 399.398584
+  type: 'test'
+  ...
+# Subtest: apply: no seat on the site is refused before anything else runs
+ok 4 - apply: no seat on the site is refused before anything else runs
+  ---
+  duration_ms: 416.735542
+  type: 'test'
+  ...
+# Subtest: apply: a missing or unknown action is a plain 400, not a 500
+ok 5 - apply: a missing or unknown action is a plain 400, not a 500
+  ---
+  duration_ms: 334.380125
+  type: 'test'
+  ...
+# Subtest: apply: with no component ever registered, a read action still answers COMPONENT_NOT_REGISTERED (409), not a crash
+ok 6 - apply: with no component ever registered, a read action still answers COMPONENT_NOT_REGISTERED (409), not a crash
+  ---
+  duration_ms: 330.394625
+  type: 'test'
+  ...
+# Subtest: apply: a fleet-born site with no row pairs itself on the spot when its component answers
+ok 7 - apply: a fleet-born site with no row pairs itself on the spot when its component answers
+  ---
+  duration_ms: 403.375667
+  type: 'test'
+  ...
+# Subtest: apply: a site whose component cannot be paired is refused as before, with the reason
+ok 8 - apply: a site whose component cannot be paired is refused as before, with the reason
+  ---
+  duration_ms: 269.473959
+  type: 'test'
+  ...
+# Subtest: apply: no pairing is minted while the site is still being built
+ok 9 - apply: no pairing is minted while the site is still being built
+  ---
+  duration_ms: 285.947583
+  type: 'test'
+  ...
+# Subtest: apply (ADR 0028): an editor takes code-tier and content-tier actions; a viewer is refused TOOLSET_NOT_GRANTED for both
+ok 10 - apply (ADR 0028): an editor takes code-tier and content-tier actions; a viewer is refused TOOLSET_NOT_GRANTED for both
+  ---
+  duration_ms: 444.677958
+  type: 'test'
+  ...
+# Subtest: apply: a site declared into a workspace answers by the fixed role sets — the workspace changes nothing
+ok 11 - apply: a site declared into a workspace answers by the fixed role sets — the workspace changes nothing
+  ---
+  duration_ms: 272.533708
+  type: 'test'
+  ...
+# Subtest: apply: a read action bypasses the toolset gate for any live seat
+ok 12 - apply: a read action bypasses the toolset gate for any live seat
+  ---
+  duration_ms: 249.445
+  type: 'test'
+  ...
+# Subtest: apply: forwards {token, action, params} to the registered endpoint, and the reply back to the caller never carries the token
+ok 13 - apply: forwards {token, action, params} to the registered endpoint, and the reply back to the caller never carries the token
+  ---
+  duration_ms: 250.022666
+  type: 'test'
+  ...
+# Subtest: apply: an imported site registered on its live endpoint writes to the fleet copy, and the live site is never called
+ok 14 - apply: an imported site registered on its live endpoint writes to the fleet copy, and the live site is never called
+  ---
+  duration_ms: 239.398084
+  type: 'test'
+  ...
+# [fleet-copy] fijitrips-example-5254d120 not verified: refused (try 1/2, 30000 ms)
+# Subtest: apply: an imported site whose copy does not verify is refused COMPONENT_NOT_ON_FLEET_COPY — never written live
+ok 15 - apply: an imported site whose copy does not verify is refused COMPONENT_NOT_ON_FLEET_COPY — never written live
+  ---
+  duration_ms: 239.544708
+  type: 'test'
+  ...
+# Subtest: pairing: a copy provisioned with its own Claude Cowork token is reached with it, and the live token is kept apart for Sync from live
+ok 16 - pairing: a copy provisioned with its own Claude Cowork token is reached with it, and the live token is kept apart for Sync from live
+  ---
+  duration_ms: 293.228667
+  type: 'test'
+  ...
+# [fleet-copy] fijitrips-example-5254d120 does not hold its own token — it still holds the live site's
+# Subtest: pairing: a copy that still holds the live token (a host from before the copy token) is reached with that one
+ok 17 - pairing: a copy that still holds the live token (a host from before the copy token) is reached with that one
+  ---
+  duration_ms: 277.316208
+  type: 'test'
+  ...
+# Subtest: apply: an imported copy whose first check times out is checked again, and the write goes through
+ok 18 - apply: an imported copy whose first check times out is checked again, and the write goes through
+  ---
+  duration_ms: 282.719
+  type: 'test'
+  ...
+# Subtest: apply: an imported copy that times out twice is refused as warming up — retry, never written live
+ok 19 - apply: an imported copy that times out twice is refused as warming up — retry, never written live
+  ---
+  duration_ms: 252.617041
+  type: 'test'
+  ...
+# Subtest: apply: a re-imported Joomla copy whose registered administrator door redirects is reached on its front door
+ok 20 - apply: a re-imported Joomla copy whose registered administrator door redirects is reached on its front door
+  ---
+  duration_ms: 237.419292
+  type: 'test'
+  ...
+# Subtest: apply: Joomla imported from a subdirectory verifies its root front door and keeps the live endpoint for sync
+ok 21 - apply: Joomla imported from a subdirectory verifies its root front door and keeps the live endpoint for sync
+  ---
+  duration_ms: 241.639875
+  type: 'test'
+  ...
+# Subtest: apply: Joomla imported from a subdirectory verifies its root administrator door and keeps the live endpoint for sync
+ok 22 - apply: Joomla imported from a subdirectory verifies its root administrator door and keeps the live endpoint for sync
+  ---
+  duration_ms: 304.188791
+  type: 'test'
+  ...
+# Subtest: apply: a copy whose doors redirect and answer a page is refused as such, not as warming up
+ok 23 - apply: a copy whose doors redirect and answer a page is refused as such, not as warming up
+  ---
+  duration_ms: 312.978917
+  type: 'test'
+  ...
+# Subtest: apply: an imported copy that refuses the token is refused unauthorized on the first answer — no retry
+ok 24 - apply: an imported copy that refuses the token is refused unauthorized on the first answer — no retry
+  ---
+  duration_ms: 334.355541
+  type: 'test'
+  ...
+# Subtest: apply: an imported copy that answers as another CMS is refused platform_mismatch — never written
+ok 25 - apply: an imported copy that answers as another CMS is refused platform_mismatch — never written
+  ---
+  duration_ms: 316.893292
+  type: 'test'
+  ...
+# Subtest: apply: an imported site is bound to its derived contract — an editor applies its slots, and no seat may derive (29/09)
+ok 26 - apply: an imported site is bound to its derived contract — an editor applies its slots, and no seat may derive (29/09)
+  ---
+  duration_ms: 319.814042
+  type: 'test'
+  ...
+# Subtest: apply: a non-empty target is refused APPLY_TARGET_NOT_ALLOWED, and the component is never called
+ok 27 - apply: a non-empty target is refused APPLY_TARGET_NOT_ALLOWED, and the component is never called
+  ---
+  duration_ms: 279.522459
+  type: 'test'
+  ...
+# Subtest: apply: no target still succeeds, and an empty-string target behaves exactly as absent
+ok 28 - apply: no target still succeeds, and an empty-string target behaves exactly as absent
+  ---
+  duration_ms: 262.440917
+  type: 'test'
+  ...
+# Subtest: apply: the component being unreachable is a 502 COMPONENT_UNREACHABLE, not a thrown error
+ok 29 - apply: the component being unreachable is a 502 COMPONENT_UNREACHABLE, not a thrown error
+  ---
+  duration_ms: 320.806416
+  type: 'test'
+  ...
+# Subtest: apply: a non-JSON component reply is a 502 COMPONENT_BAD_RESPONSE
+ok 30 - apply: a non-JSON component reply is a 502 COMPONENT_BAD_RESPONSE
+  ---
+  duration_ms: 423.30075
+  type: 'test'
+  ...
+# Subtest: apply: a component that reports its own token as invalid maps to 409 COMPONENT_UNAUTHORIZED, not a generic failure
+ok 31 - apply: a component that reports its own token as invalid maps to 409 COMPONENT_UNAUTHORIZED, not a generic failure
+  ---
+  duration_ms: 348.22825
+  type: 'test'
+  ...
+# Subtest: apply: a content.list that carried `search` and came back with no `search` key is 501 LIST_SEARCH_UNSUPPORTED — the KEY, not its value, decides; no rows; audited as not ok
+ok 32 - apply: a content.list that carried `search` and came back with no `search` key is 501 LIST_SEARCH_UNSUPPORTED — the KEY, not its value, decides; no rows; audited as not ok
+  ---
+  duration_ms: 1147.334833
+  type: 'test'
+  ...
+# Subtest: apply: a content.list whose answer echoes `search` passes as the plugin sent it — `matched` and the rows included, whatever the echo says
+ok 33 - apply: a content.list whose answer echoes `search` passes as the plugin sent it — `matched` and the rows included, whatever the echo says
+  ---
+  duration_ms: 1162.283667
+  type: 'test'
+  ...
+# Subtest: apply: a content.list with no `search` key is answered as before, whatever the plugin says — and so is any other action that carries one
+ok 34 - apply: a content.list with no `search` key is answered as before, whatever the plugin says — and so is any other action that carries one
+  ---
+  duration_ms: 233.480875
+  type: 'test'
+  ...
+# Subtest: apply: a plugin that refuses the search itself is passed on as it said it — never turned into LIST_SEARCH_UNSUPPORTED
+ok 35 - apply: a plugin that refuses the search itself is passed on as it said it — never turned into LIST_SEARCH_UNSUPPORTED
+  ---
+  duration_ms: 244.726666
+  type: 'test'
+  ...
+# Subtest: apply: the guard is the door’s, not a role’s — an owner and an editor are refused a search the same way
+ok 36 - apply: the guard is the door’s, not a role’s — an owner and an editor are refused a search the same way
+  ---
+  duration_ms: 229.266708
+  type: 'test'
+  ...
+# Subtest: apply: a content.update param the door has no rule for (expected_body_revision) reaches the plugin unchanged, and its answer comes back as sent
+ok 37 - apply: a content.update param the door has no rule for (expected_body_revision) reaches the plugin unchanged, and its answer comes back as sent
+  ---
+  duration_ms: 474.134667
+  type: 'test'
+  ...
+# Subtest: apply: a seat that may read may read the registered patterns — content.list {kind:"pattern"} and content.get {kind:"pattern", key} are reads
+ok 38 - apply: a seat that may read may read the registered patterns — content.list {kind:"pattern"} and content.get {kind:"pattern", key} are reads
+  ---
+  duration_ms: 247.293792
+  type: 'test'
+  ...
+# Subtest: Apply accepts a signed prompter and rechecks their seat; other doors remain cookie-only
+ok 39 - Apply accepts a signed prompter and rechecks their seat; other doors remain cookie-only
+  ---
+  duration_ms: 228.376042
+  type: 'test'
+  ...
+# Subtest: content.renderedWords is taken from the agent host alone: a cookie or a seat key is refused before the site (24/10/2026)
+ok 40 - content.renderedWords is taken from the agent host alone: a cookie or a seat key is refused before the site (24/10/2026)
+  ---
+  duration_ms: 253.297959
+  type: 'test'
+  ...
+# Subtest: apply: a read that needs a privileged toolset does not take the write lease
+ok 41 - apply: a read that needs a privileged toolset does not take the write lease
+  ---
+  duration_ms: 260.135042
+  type: 'test'
+  ...
+# Subtest: apply: a contract operation that is not `inspect` does take the lease
+ok 42 - apply: a contract operation that is not `inspect` does take the lease
+  ---
+  duration_ms: 241.879291
+  type: 'test'
+  ...
+# Subtest: apply: a refusal from the component gives the lease straight back
+ok 43 - apply: a refusal from the component gives the lease straight back
+  ---
+  duration_ms: 238.217458
+  type: 'test'
+  ...
+# Subtest: apply: a refusal in the MIDDLE of a request keeps the lease — only the call that opened it may give it back
+ok 44 - apply: a refusal in the MIDDLE of a request keeps the lease — only the call that opened it may give it back
+  ---
+  duration_ms: 249.80675
+  type: 'test'
+  ...
+# Subtest: apply: silence from the component keeps the lease — the write may have landed
+ok 45 - apply: silence from the component keeps the lease — the write may have landed
+  ---
+  duration_ms: 261.4035
+  type: 'test'
+  ...
+# Subtest: apply: the second chat is told who has the site and how long it has to wait
+ok 46 - apply: the second chat is told who has the site and how long it has to wait
+  ---
+  duration_ms: 254.142417
+  type: 'test'
+  ...
+# Subtest: apply: a new conversation of the same account takes the lease over, and the audit says so
+ok 47 - apply: a new conversation of the same account takes the lease over, and the audit says so
+  ---
+  duration_ms: 245.725875
+  type: 'test'
+  ...
+# Subtest: lease/release: the finished conversation’s hold goes back; nobody else’s does
+ok 48 - lease/release: the finished conversation’s hold goes back; nobody else’s does
+  ---
+  duration_ms: 249.385875
+  type: 'test'
+  ...
+# Subtest: lease/release: a late release of an earlier turn keeps the hold the next turn renewed
+ok 49 - lease/release: a late release of an earlier turn keeps the hold the next turn renewed
+  ---
+  duration_ms: 260.024125
+  type: 'test'
+  ...
+# Subtest: SITE_BUSY never reads out a count of conversations
+ok 50 - SITE_BUSY never reads out a count of conversations
+  ---
+  duration_ms: 250.131458
+  type: 'test'
+  ...
+# Subtest: applies: the Apply door records the chat session, and the read door lists what it changed
+ok 51 - applies: the Apply door records the chat session, and the read door lists what it changed
+  ---
+  duration_ms: 253.281833
+  type: 'test'
+  ...
+# Subtest: applies: a session token in the header never reaches the audit trail
+ok 52 - applies: a session token in the header never reaches the audit trail
+  ---
+  duration_ms: 232.374125
+  type: 'test'
+  ...
+# Subtest: applies: an editor sees every caller’s calls, a viewer only its own; a bad session id and a stranger are refused
+ok 53 - applies: an editor sees every caller’s calls, a viewer only its own; a bad session id and a stranger are refused
+  ---
+  duration_ms: 250.976541
+  type: 'test'
+  ...
+# Subtest: apply.list with no apply_id answers the site’s recent changes from every conversation, without asking the site
+ok 54 - apply.list with no apply_id answers the site’s recent changes from every conversation, without asking the site
+  ---
+  duration_ms: 385.785958
+  type: 'test'
+  ...
+# Subtest: content.read: server authority, protocol probe and unsupported Claude Cowork plugins fail closed
+ok 55 - content.read: server authority, protocol probe and unsupported Claude Cowork plugins fail closed
+  ---
+  duration_ms: 551.046917
+  type: 'test'
+  ...
+# Subtest: content.read on EmDash: Bearer read PAT from the host, canonical body, other actions still unpaired
+ok 56 - content.read on EmDash: Bearer read PAT from the host, canonical body, other actions still unpaired
+  ---
+  duration_ms: 247.4485
+  type: 'test'
+  ...
+# Subtest: content.read describe: a sealed Joomla site, read by its owner
+ok 57 - content.read describe: a sealed Joomla site, read by its owner
+  ---
+  duration_ms: 299.518125
+  type: 'test'
+  ...
+# Subtest: content.read describe: Joomla counts survive a Claude Cowork plugin that refuses overlapping reads
+ok 58 - content.read describe: Joomla counts survive a Claude Cowork plugin that refuses overlapping reads
+  ---
+  duration_ms: 277.5865
+  type: 'test'
+  ...
+# Subtest: content.read describe: an editor seat reads it; describe mixed with a query is refused
+ok 59 - content.read describe: an editor seat reads it; describe mixed with a query is refused
+  ---
+  duration_ms: 235.101375
+  type: 'test'
+  ...
+# Subtest: apply: content reads are the content toolset; an editor applies every contract slot, a viewer none (ADR 0028)
+ok 60 - apply: content reads are the content toolset; an editor applies every contract slot, a viewer none (ADR 0028)
+  ---
+  duration_ms: 368.757458
+  type: 'test'
+  ...
+# Subtest: content.read describe: a Claude Cowork plugin without v1 still gets a describe, marked unsupported
+ok 61 - content.read describe: a Claude Cowork plugin without v1 still gets a describe, marked unsupported
+  ---
+  duration_ms: 237.397833
+  type: 'test'
+  ...
+# Subtest: content.read describe: a site no contract seals has no slots and no provenance
+ok 62 - content.read describe: a site no contract seals has no slots and no provenance
+  ---
+  duration_ms: 240.637125
+  type: 'test'
+  ...
+# Subtest: content.read describe on EmDash: kinds from the template site model, reading only
+ok 63 - content.read describe on EmDash: kinds from the template site model, reading only
+  ---
+  duration_ms: 240.3905
+  type: 'test'
+  ...
+# Subtest: content.read describe on EmDash: a reader that predates maxBytes is still described as v1
+ok 64 - content.read describe on EmDash: a reader that predates maxBytes is still described as v1
+  ---
+  duration_ms: 235.659625
+  type: 'test'
+  ...
+# Subtest: content.read: the envelope carries writable, constraints and next from the contract
+ok 65 - content.read: the envelope carries writable, constraints and next from the contract
+  ---
+  duration_ms: 235.125042
+  type: 'test'
+  ...
+# Subtest: content.contract apply: expected_content_revisions reaches the Claude Cowork plugin as sent, and its errors[] and contentRevisions come back whole
+ok 66 - content.contract apply: expected_content_revisions reaches the Claude Cowork plugin as sent, and its errors[] and contentRevisions come back whole
+  ---
+  duration_ms: 224.857833
+  type: 'test'
+  ...
+# Subtest: content.read describe on EmDash with no reader: described from the template alone
+ok 67 - content.read describe on EmDash with no reader: described from the template alone
+  ---
+  duration_ms: 232.094917
+  type: 'test'
+  ...
+# Subtest: content.read view=pages: every row with an address, across the listing, in one answer
+ok 68 - content.read view=pages: every row with an address, across the listing, in one answer
+  ---
+  duration_ms: 230.119542
+  type: 'test'
+  ...
+# Subtest: content.read view=pages with url: the page a pasted link shows, however the customer copied it
+ok 69 - content.read view=pages with url: the page a pasted link shows, however the customer copied it
+  ---
+  duration_ms: 254.588666
+  type: 'test'
+  ...
+# Subtest: content.read view=pages larger than one answer: cut at whole rows within the budget, with the narrower call to make
+ok 70 - content.read view=pages larger than one answer: cut at whole rows within the budget, with the narrower call to make
+  ---
+  duration_ms: 476.802417
+  type: 'test'
+  ...
+# Subtest: content.read fields: only the keys asked for come back, with the ids that address them
+ok 71 - content.read fields: only the keys asked for come back, with the ids that address them
+  ---
+  duration_ms: 245.269125
+  type: 'test'
+  ...
+# Subtest: content.read ifVersion: an unchanged read answers notModified, a changed one answers in full
+ok 72 - content.read ifVersion: an unchanged read answers notModified, a changed one answers in full
+  ---
+  duration_ms: 241.456125
+  type: 'test'
+  ...
+# Subtest: content.read changedSince: only what moved since a full walk, and what is gone
+ok 73 - content.read changedSince: only what moved since a full walk, and what is gone
+  ---
+  duration_ms: 243.989333
+  type: 'test'
+  ...
+# Subtest: content.read changedSince against a walk cut short: its version answers, over the rows that walk saw
+ok 74 - content.read changedSince against a walk cut short: its version answers, over the rows that walk saw
+  ---
+  duration_ms: 259.860666
+  type: 'test'
+  ...
+# Subtest: content.read native: page rows, change rows and a fields projection name each content's CMS records
+ok 75 - content.read native: page rows, change rows and a fields projection name each content's CMS records
+  ---
+  duration_ms: 290.774583
+  type: 'test'
+  ...
+# Subtest: content.read view=pages with url walks the language the link names, and the whole site only when it finds nothing
+ok 76 - content.read view=pages with url walks the language the link names, and the whole site only when it finds nothing
+  ---
+  duration_ms: 234.632666
+  type: 'test'
+  ...
+# Subtest: content.read view=pages: a walk of every language names each page's twins, one language's walk names none
+ok 77 - content.read view=pages: a walk of every language names each page's twins, one language's walk names none
+  ---
+  duration_ms: 228.956042
+  type: 'test'
+  ...
+# Subtest: POST /apply/{action} is the same door as POST /apply {action, params}
+ok 78 - POST /apply/{action} is the same door as POST /apply {action, params}
+  ---
+  duration_ms: 235.775875
+  type: 'test'
+  ...
+# Subtest: content.read ids: several contents in one read, with maxBytes only, refused by name otherwise
+ok 79 - content.read ids: several contents in one read, with maxBytes only, refused by name otherwise
+  ---
+  duration_ms: 232.8215
+  type: 'test'
+  ...
+# Subtest: a seat key cannot send content.renderedWords: only the agent host may (24/10/2026)
+ok 80 - a seat key cannot send content.renderedWords: only the agent host may (24/10/2026)
+  ---
+  duration_ms: 291.879667
+  type: 'test'
+  ...
+# Subtest: api host: a key writes its own site, is refused on another, and never exceeds its scopes — owner included
+ok 81 - api host: a key writes its own site, is refused on another, and never exceeds its scopes — owner included
+  ---
+  duration_ms: 322.560625
+  type: 'test'
+  ...
+# Subtest: api host: a seat demoted to viewer after the mint narrows its key to nothing on the next call (ADR 0028)
+ok 82 - api host: a seat demoted to viewer after the mint narrows its key to nothing on the next call (ADR 0028)
+  ---
+  duration_ms: 264.052041
+  type: 'test'
+  ...
+# Subtest: api host: revoked → KEY_REVOKED, expired → KEY_EXPIRED, garbage → KEY_INVALID, none → NOT_SIGNED_IN (cookie ignored), seat revoked → 403
+ok 83 - api host: revoked → KEY_REVOKED, expired → KEY_EXPIRED, garbage → KEY_INVALID, none → NOT_SIGNED_IN (cookie ignored), seat revoked → 403
+  ---
+  duration_ms: 258.539791
+  type: 'test'
+  ...
+# Subtest: cowork host: a Bearer seat key is ignored — 401 NOT_SIGNED_IN exactly as before
+ok 84 - cowork host: a Bearer seat key is ignored — 401 NOT_SIGNED_IN exactly as before
+  ---
+  duration_ms: 215.380208
+  type: 'test'
+  ...
+# Subtest: api host: describe.permissions reports the seat ∩ scopes, not the seat
+ok 85 - api host: describe.permissions reports the seat ∩ scopes, not the seat
+  ---
+  duration_ms: 235.811125
+  type: 'test'
+  ...
+# Subtest: api host: a key over its hourly cap is refused 429 RATE_LIMITED with Retry-After, before the site is called
+ok 86 - api host: a key over its hourly cap is refused 429 RATE_LIMITED with Retry-After, before the site is called
+  ---
+  duration_ms: 242.029959
+  type: 'test'
+  ...
+# Subtest: api host: the lease is keyed by the key — two keys interleaving → SITE_BUSY; caller-chosen headers are ignored
+ok 87 - api host: the lease is keyed by the key — two keys interleaving → SITE_BUSY; caller-chosen headers are ignored
+  ---
+  duration_ms: 256.4015
+  type: 'test'
+  ...
+# Subtest: applyDoor: the function the /v1 layer calls answers exactly what the HTTP door answers for the same key
+ok 88 - applyDoor: the function the /v1 layer calls answers exactly what the HTTP door answers for the same key
+  ---
+  duration_ms: 234.100834
+  type: 'test'
+  ...
+# Subtest: apply + x-tracy-turn: a write leaves a site_write row and the turn in its audit line; a read leaves none
+ok 89 - apply + x-tracy-turn: a write leaves a site_write row and the turn in its audit line; a read leaves none
+  ---
+  duration_ms: 236.9865
+  type: 'test'
+  ...
+# Subtest: apply: a write that CREATED a row is recorded under the new id and as a create (\#1182, J5.8)
+ok 90 - apply: a write that CREATED a row is recorded under the new id and as a create (\#1182, J5.8)
+  ---
+  duration_ms: 232.380458
+  type: 'test'
+  ...
+# Subtest: apply + x-tracy-write-title: the dsh host's title of the record labels the write; a cookie, a revert and a bad encoding keep none
+ok 91 - apply + x-tracy-write-title: the dsh host's title of the record labels the write; a cookie, a revert and a bad encoding keep none
+  ---
+  duration_ms: 263.876667
+  type: 'test'
+  ...
+# Subtest: apply: an update, or a create whose answer names no usable id, keeps the call id and action
+ok 92 - apply: an update, or a create whose answer names no usable id, keeps the call id and action
+  ---
+  duration_ms: 443.358375
+  type: 'test'
+  ...
+# Subtest: apply + x-tracy-turn: a clean refusal is "refused", silence is "unknown"; a malformed turn is dropped, never refused
+ok 93 - apply + x-tracy-turn: a clean refusal is "refused", silence is "unknown"; a malformed turn is dropped, never refused
+  ---
+  duration_ms: 672.789209
+  type: 'test'
+  ...
+# Subtest: /changed + x-tracy-turn: an EmDash or look write outside the Apply door is a site_write of its turn, named by how it went
+ok 94 - /changed + x-tracy-turn: an EmDash or look write outside the Apply door is a site_write of its turn, named by how it went
+  ---
+  duration_ms: 255.62425
+  type: 'test'
+  ...
+# Subtest: lease/acquire: the host takes the Apply door’s own lease; another conversation is refused SITE_BUSY at both doors
+ok 95 - lease/acquire: the host takes the Apply door’s own lease; another conversation is refused SITE_BUSY at both doors
+  ---
+  duration_ms: 248.8885
+  type: 'test'
+  ...
+# Subtest: turn/stopped: the writes of a stopped turn are kept by name and told once, to the same conversation and person
+ok 96 - turn/stopped: the writes of a stopped turn are kept by name and told once, to the same conversation and person
+  ---
+  duration_ms: 244.322875
+  type: 'test'
+  ...
+# Subtest: a language prefix names the language; no prefix is the default language
+ok 97 - a language prefix names the language; no prefix is the default language
+  ---
+  duration_ms: 0.718792
+  type: 'test'
+  ...
+# Subtest: a prefix that is a region-less form of a full tag still names it; anything unsure names none
+ok 98 - a prefix that is a region-less form of a full tag still names it; anything unsure names none
+  ---
+  duration_ms: 0.0825
+  type: 'test'
+  ...
+# Subtest: the address index preserves ambiguous query addresses, tracking, Unicode and missing paths
+ok 99 - the address index preserves ambiguous query addresses, tracking, Unicode and missing paths
+  ---
+  duration_ms: 1.207916
+  type: 'test'
+  ...
+# Subtest: a version is the same for the same read and moves with a revision, a seat or a query
+ok 100 - a version is the same for the same read and moves with a revision, a seat or a query
+  ---
+  duration_ms: 1.184083
+  type: 'test'
+  ...
+# Subtest: a walk is recalled only in its own scope and only while fresh
+ok 101 - a walk is recalled only in its own scope and only while fresh
+  ---
+  duration_ms: 0.138541
+  type: 'test'
+  ...
+# Subtest: the store keeps a bounded number of walks, oldest out first
+ok 102 - the store keeps a bounded number of walks, oldest out first
+  ---
+  duration_ms: 1.04675
+  type: 'test'
+  ...
+# Subtest: changes are the moved and new rows, and the ids that are gone
+ok 103 - changes are the moved and new rows, and the ids that are gone
+  ---
+  duration_ms: 0.176666
+  type: 'test'
+  ...
+# Subtest: a domain directory imports only lib/ and db/, never another domain
+ok 104 - a domain directory imports only lib/ and db/, never another domain
+  ---
+  duration_ms: 465.489791
+  type: 'test'
+  ...
+# Subtest: a fresh snapshot replaces repeat walks, content changes force the complete walk
+ok 105 - a fresh snapshot replaces repeat walks, content changes force the complete walk
+  ---
+  duration_ms: 1.668916
+  type: 'test'
+  ...
+# Subtest: different authority scopes, expiry and bounded memory never reuse an unchecked inventory
+ok 106 - different authority scopes, expiry and bounded memory never reuse an unchecked inventory
+  ---
+  duration_ms: 0.487917
+  type: 'test'
+  ...
+# Subtest: missing snapshots and oversized inventories keep ordinary fresh walks
+ok 107 - missing snapshots and oversized inventories keep ordinary fresh walks
+  ---
+  duration_ms: 0.225541
+  type: 'test'
+  ...
+# Subtest: Joomla requires a complete inventory fingerprint, including addresses outside content revisions
+ok 108 - Joomla requires a complete inventory fingerprint, including addresses outside content revisions
+  ---
+  duration_ms: 0.264709
+  type: 'test'
+  ...
+# Subtest: partial, unavailable and mixed snapshots are never remembered; recovery reads everything
+ok 109 - partial, unavailable and mixed snapshots are never remembered; recovery reads everything
+  ---
+  duration_ms: 2.101959
+  type: 'test'
+  ...
+# Subtest: changedSince can require fresh rows without reusing dynamic lock metadata
+ok 110 - changedSince can require fresh rows without reusing dynamic lock metadata
+  ---
+  duration_ms: 0.203458
+  type: 'test'
+  ...
+1..110
+# tests 110
+# suites 0
+# pass 110
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 43641.737166

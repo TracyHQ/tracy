@@ -1,0 +1,16 @@
+{
+  "results": [
+    {
+      "arm": "before",
+      "rows": 2000,
+      "calls": 2027,
+      "sha256": "29f5b07788fff4c70367555c0565055b663fd7511fd4fc6a0c6716133c08926d"
+    },
+    {
+      "arm": "after",
+      "rows": 2000,
+      "calls": 119,
+      "sha256": "29f5b07788fff4c70367555c0565055b663fd7511fd4fc6a0c6716133c08926d"
+    }
+  ]
+}

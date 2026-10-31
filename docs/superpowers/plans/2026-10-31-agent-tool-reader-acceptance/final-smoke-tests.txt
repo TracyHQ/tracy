@@ -1,0 +1,133 @@
+TAP version 13
+# Subtest: a fresh snapshot replaces repeat walks, content changes force the complete walk
+ok 1 - a fresh snapshot replaces repeat walks, content changes force the complete walk
+  ---
+  duration_ms: 2.597833
+  type: 'test'
+  ...
+# Subtest: different authority scopes, expiry and bounded memory never reuse an unchecked inventory
+ok 2 - different authority scopes, expiry and bounded memory never reuse an unchecked inventory
+  ---
+  duration_ms: 0.556667
+  type: 'test'
+  ...
+# Subtest: missing snapshots and oversized inventories keep ordinary fresh walks
+ok 3 - missing snapshots and oversized inventories keep ordinary fresh walks
+  ---
+  duration_ms: 0.238417
+  type: 'test'
+  ...
+# Subtest: Joomla requires a complete inventory fingerprint, including addresses outside content revisions
+ok 4 - Joomla requires a complete inventory fingerprint, including addresses outside content revisions
+  ---
+  duration_ms: 0.272166
+  type: 'test'
+  ...
+# Subtest: partial, unavailable and mixed snapshots are never remembered; recovery reads everything
+ok 5 - partial, unavailable and mixed snapshots are never remembered; recovery reads everything
+  ---
+  duration_ms: 1.086333
+  type: 'test'
+  ...
+# Subtest: changedSince can require fresh rows without reusing dynamic lock metadata
+ok 6 - changedSince can require fresh rows without reusing dynamic lock metadata
+  ---
+  duration_ms: 0.154417
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: real AgentLoop scopes the joomla tool and preserves OR page IDs
+ok 7 - real AgentLoop scopes the joomla tool and preserves OR page IDs
+  ---
+  duration_ms: 132.699333
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: real AgentLoop scopes the emdash tool and preserves OR page IDs
+ok 8 - real AgentLoop scopes the emdash tool and preserves OR page IDs
+  ---
+  duration_ms: 71.2115
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: real AgentLoop uses the scoped shipped tool: two titles, one relay, complete IDs, stable schema and logged results
+ok 9 - real AgentLoop uses the scoped shipped tool: two titles, one relay, complete IDs, stable schema and logged results
+  ---
+  duration_ms: 71.64
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: real AgentLoop preserves independent string calls; invalid batches never relay
+ok 10 - real AgentLoop preserves independent string calls; invalid batches never relay
+  ---
+  duration_ms: 132.22375
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: real AgentLoop preserves seat refusal; batching supplies no guessed IDs or alternative write
+ok 11 - real AgentLoop preserves seat refusal; batching supplies no guessed IDs or alternative write
+  ---
+  duration_ms: 61.379833
+  type: 'test'
+  ...
+# Subtest: the shipped registry keeps read batching parallel and write/browser actions exclusive
+ok 12 - the shipped registry keeps read batching parallel and write/browser actions exclusive
+  ---
+  duration_ms: 0.379334
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: concurrent wordpress searches preserve independent results when inventory may be shared
+ok 13 - concurrent wordpress searches preserve independent results when inventory may be shared
+  ---
+  duration_ms: 97.927333
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: concurrent joomla searches preserve independent results when inventory may be shared
+ok 14 - concurrent joomla searches preserve independent results when inventory may be shared
+  ---
+  duration_ms: 101.348709
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: concurrent emdash searches preserve independent results when inventory may be shared
+ok 15 - concurrent emdash searches preserve independent results when inventory may be shared
+  ---
+  duration_ms: 89.939
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: settled page searches refresh on a subsequent model step
+ok 16 - settled page searches refresh on a subsequent model step
+  ---
+  duration_ms: 59.455625
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: different locales and known URLs retain separate relay requests
+ok 17 - different locales and known URLs retain separate relay requests
+  ---
+  duration_ms: 71.595583
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: invalid listing types recover through a page lookup across CMSs, while full:true preserves the refusal
+ok 18 - invalid listing types recover through a page lookup across CMSs, while full:true preserves the refusal
+  ---
+  duration_ms: 273.343042
+  type: 'test'
+  ...
+1..18
+# tests 18
+# suites 0
+# pass 18
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 1361.513208

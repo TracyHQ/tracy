@@ -1,0 +1,2545 @@
+TAP version 13
+# Subtest: a language prefix names the language; no prefix is the default language
+ok 1 - a language prefix names the language; no prefix is the default language
+  ---
+  duration_ms: 0.697125
+  type: 'test'
+  ...
+# Subtest: a prefix that is a region-less form of a full tag still names it; anything unsure names none
+ok 2 - a prefix that is a region-less form of a full tag still names it; anything unsure names none
+  ---
+  duration_ms: 0.084625
+  type: 'test'
+  ...
+# Subtest: the address index preserves ambiguous query addresses, tracking, Unicode and missing paths
+ok 3 - the address index preserves ambiguous query addresses, tracking, Unicode and missing paths
+  ---
+  duration_ms: 1.222792
+  type: 'test'
+  ...
+# Subtest: a version is the same for the same read and moves with a revision, a seat or a query
+ok 4 - a version is the same for the same read and moves with a revision, a seat or a query
+  ---
+  duration_ms: 2.383458
+  type: 'test'
+  ...
+# Subtest: a walk is recalled only in its own scope and only while fresh
+ok 5 - a walk is recalled only in its own scope and only while fresh
+  ---
+  duration_ms: 0.148333
+  type: 'test'
+  ...
+# Subtest: the store keeps a bounded number of walks, oldest out first
+ok 6 - the store keeps a bounded number of walks, oldest out first
+  ---
+  duration_ms: 10.374375
+  type: 'test'
+  ...
+# Subtest: changes are the moved and new rows, and the ids that are gone
+ok 7 - changes are the moved and new rows, and the ids that are gone
+  ---
+  duration_ms: 0.216042
+  type: 'test'
+  ...
+# Subtest: a fresh snapshot replaces repeat walks, content changes force the complete walk
+ok 8 - a fresh snapshot replaces repeat walks, content changes force the complete walk
+  ---
+  duration_ms: 1.71825
+  type: 'test'
+  ...
+# Subtest: different authority scopes, expiry and bounded memory never reuse an unchecked inventory
+ok 9 - different authority scopes, expiry and bounded memory never reuse an unchecked inventory
+  ---
+  duration_ms: 0.495541
+  type: 'test'
+  ...
+# Subtest: missing snapshots and oversized inventories keep ordinary fresh walks
+ok 10 - missing snapshots and oversized inventories keep ordinary fresh walks
+  ---
+  duration_ms: 0.2305
+  type: 'test'
+  ...
+# Subtest: Joomla requires a complete inventory fingerprint, including addresses outside content revisions
+ok 11 - Joomla requires a complete inventory fingerprint, including addresses outside content revisions
+  ---
+  duration_ms: 0.269209
+  type: 'test'
+  ...
+# Subtest: partial, unavailable and mixed snapshots are never remembered; recovery reads everything
+ok 12 - partial, unavailable and mixed snapshots are never remembered; recovery reads everything
+  ---
+  duration_ms: 4.444375
+  type: 'test'
+  ...
+# Subtest: changedSince can require fresh rows without reusing dynamic lock metadata
+ok 13 - changedSince can require fresh rows without reusing dynamic lock metadata
+  ---
+  duration_ms: 0.22125
+  type: 'test'
+  ...
+# Subtest: the relay words the locale refusal the way this tool reads it (apps/tracy-web route.js)
+ok 14 - the relay words the locale refusal the way this tool reads it (apps/tracy-web route.js)
+  ---
+  duration_ms: 2.25975
+  type: 'test'
+  ...
+# Subtest: localeAgain: only a refusal that names ONE tag, and only for the locale that was sent
+ok 15 - localeAgain: only a refusal that names ONE tag, and only for the locale that was sent
+  ---
+  duration_ms: 0.594167
+  type: 'test'
+  ...
+# Subtest: 🔒 a locale the site lists under another tag is read with that tag in the same call, and said
+ok 16 - 🔒 a locale the site lists under another tag is read with that tag in the same call, and said
+  ---
+  duration_ms: 3.490916
+  type: 'test'
+  ...
+# Subtest: a refusal that names no tag, or a second refusal, goes to the model as the relay worded it
+ok 17 - a refusal that names no tag, or a second refusal, goes to the model as the relay worded it
+  ---
+  duration_ms: 0.839708
+  type: 'test'
+  ...
+# Subtest: the locale next names the tag the relay named, or the tags it listed — within T10
+ok 18 - the locale next names the tag the relay named, or the tags it listed — within T10
+  ---
+  duration_ms: 0.11625
+  type: 'test'
+  ...
+# Subtest: 🔒 a CMS number given as a content id is said to be one, with the road to the real id
+ok 19 - 🔒 a CMS number given as a content id is said to be one, with the road to the real id
+  ---
+  duration_ms: 0.806625
+  type: 'test'
+  ...
+# Subtest: 🔒 a link that shows no page says what to try: the language prefix, or one language’s list
+ok 20 - 🔒 a link that shows no page says what to try: the language prefix, or one language’s list
+  ---
+  duration_ms: 0.249584
+  type: 'test'
+  ...
+# Subtest: the empty pages answer reaches the model with that next, through the tool
+ok 21 - the empty pages answer reaches the model with that next, through the tool
+  ---
+  duration_ms: 0.47775
+  type: 'test'
+  ...
+# Subtest: the describe’s next shows a `fields` call the relay accepts and the tool sends as it is
+ok 22 - the describe’s next shows a `fields` call the relay accepts and the tool sends as it is
+  ---
+  duration_ms: 0.418458
+  type: 'test'
+  ...
+# Subtest: 🔒 addressAgain: an address with no prefix is sent again under the prefix of the default language the site names
+ok 23 - 🔒 addressAgain: an address with no prefix is sent again under the prefix of the default language the site names
+  ---
+  duration_ms: 0.662792
+  type: 'test'
+  ...
+# Subtest: addressAgain: no default language known for sure, no retry — the order of the listed locales is not an answer
+ok 24 - addressAgain: no default language known for sure, no retry — the order of the listed locales is not an answer
+  ---
+  duration_ms: 0.200833
+  type: 'test'
+  ...
+# Subtest: addressAgain: two listed locales that share a language have no short code to guess — the prefix is the site’s to say
+ok 25 - addressAgain: two listed locales that share a language have no short code to guess — the prefix is the site’s to say
+  ---
+  duration_ms: 0.075083
+  type: 'test'
+  ...
+# Subtest: addressAgain: only the call and the answer it is for — no language asked, a path, no page, several languages
+ok 26 - addressAgain: only the call and the answer it is for — no language asked, a path, no page, several languages
+  ---
+  duration_ms: 0.094958
+  type: 'test'
+  ...
+# Subtest: unprefixedMiss: the cheap look before any facts are read — the same call and answer, nothing else
+ok 27 - unprefixedMiss: the cheap look before any facts are read — the same call and answer, nothing else
+  ---
+  duration_ms: 0.043708
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: real AgentLoop scopes the joomla tool and preserves OR page IDs
+ok 28 - real AgentLoop scopes the joomla tool and preserves OR page IDs
+  ---
+  duration_ms: 184.466666
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: real AgentLoop scopes the emdash tool and preserves OR page IDs
+ok 29 - real AgentLoop scopes the emdash tool and preserves OR page IDs
+  ---
+  duration_ms: 78.883208
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: real AgentLoop uses the scoped shipped tool: two titles, one relay, complete IDs, stable schema and logged results
+ok 30 - real AgentLoop uses the scoped shipped tool: two titles, one relay, complete IDs, stable schema and logged results
+  ---
+  duration_ms: 86.418459
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: real AgentLoop preserves independent string calls; invalid batches never relay
+ok 31 - real AgentLoop preserves independent string calls; invalid batches never relay
+  ---
+  duration_ms: 257.485833
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: real AgentLoop preserves seat refusal; batching supplies no guessed IDs or alternative write
+ok 32 - real AgentLoop preserves seat refusal; batching supplies no guessed IDs or alternative write
+  ---
+  duration_ms: 98.822292
+  type: 'test'
+  ...
+# Subtest: the shipped registry keeps read batching parallel and write/browser actions exclusive
+ok 33 - the shipped registry keeps read batching parallel and write/browser actions exclusive
+  ---
+  duration_ms: 0.364625
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: concurrent wordpress searches preserve independent results when inventory may be shared
+ok 34 - concurrent wordpress searches preserve independent results when inventory may be shared
+  ---
+  duration_ms: 331.020542
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: concurrent joomla searches preserve independent results when inventory may be shared
+ok 35 - concurrent joomla searches preserve independent results when inventory may be shared
+  ---
+  duration_ms: 99.861125
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: concurrent emdash searches preserve independent results when inventory may be shared
+ok 36 - concurrent emdash searches preserve independent results when inventory may be shared
+  ---
+  duration_ms: 240.16325
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: settled page searches refresh on a subsequent model step
+ok 37 - settled page searches refresh on a subsequent model step
+  ---
+  duration_ms: 63.66325
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: different locales and known URLs retain separate relay requests
+ok 38 - different locales and known URLs retain separate relay requests
+  ---
+  duration_ms: 166.323917
+  type: 'test'
+  ...
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# [site-tools] owned: Tracy did not keep the visual check of page-search-harness:1 (404)
+# Subtest: invalid listing types recover through a page lookup across CMSs, while full:true preserves the refusal
+ok 39 - invalid listing types recover through a page lookup across CMSs, while full:true preserves the refusal
+  ---
+  duration_ms: 785.478375
+  type: 'test'
+  ...
+# Subtest: READ_ACTIONS is the read class of the site context’s ACTION_CLASS, on the relay
+ok 40 - READ_ACTIONS is the read class of the site context’s ACTION_CLASS, on the relay
+  ---
+  duration_ms: 2.026917
+  type: 'test'
+  ...
+# Subtest: inspect: filters are not relayed — the door is asked for the whole inspect
+ok 41 - inspect: filters are not relayed — the door is asked for the whole inspect
+  ---
+  duration_ms: 6.56175
+  type: 'test'
+  ...
+# Subtest: inspect: a second inspect in the same turn is served from the snapshot, not the door: an entity filter
+ok 42 - inspect: a second inspect in the same turn is served from the snapshot, not the door: an entity filter
+  ---
+  duration_ms: 2.080875
+  type: 'test'
+  ...
+# Subtest: inspect: a second inspect in the same turn is served from the snapshot, not the door: an offset page
+ok 43 - inspect: a second inspect in the same turn is served from the snapshot, not the door: an offset page
+  ---
+  duration_ms: 0.963541
+  type: 'test'
+  ...
+# Subtest: inspect: the snapshot is never another person’s, another turn’s, older than a write, a refused apply or a build: another person
+ok 44 - inspect: the snapshot is never another person’s, another turn’s, older than a write, a refused apply or a build: another person
+  ---
+  duration_ms: 0.784375
+  type: 'test'
+  ...
+# Subtest: inspect: the snapshot is never another person’s, another turn’s, older than a write, a refused apply or a build: a write in between
+ok 45 - inspect: the snapshot is never another person’s, another turn’s, older than a write, a refused apply or a build: a write in between
+  ---
+  duration_ms: 2.941333
+  type: 'test'
+  ...
+# Subtest: inspect: the snapshot is never another person’s, another turn’s, older than a write, a refused apply or a build: a new customer message
+ok 46 - inspect: the snapshot is never another person’s, another turn’s, older than a write, a refused apply or a build: a new customer message
+  ---
+  duration_ms: 1.090916
+  type: 'test'
+  ...
+# Subtest: inspect: the snapshot is never another person’s, another turn’s, older than a write, a refused apply or a build: a build that wrote the site
+ok 47 - inspect: the snapshot is never another person’s, another turn’s, older than a write, a refused apply or a build: a build that wrote the site
+  ---
+  duration_ms: 1.271542
+  type: 'test'
+  ...
+# Subtest: inspect: the snapshot is never another person’s, another turn’s, older than a write, a refused apply or a build: a call with no conversation
+ok 48 - inspect: the snapshot is never another person’s, another turn’s, older than a write, a refused apply or a build: a call with no conversation
+  ---
+  duration_ms: 1.237334
+  type: 'test'
+  ...
+# Subtest: inspect: the snapshot is never another person’s, another turn’s, older than a write, a refused apply or a build: an apply refused "Content changed"
+ok 49 - inspect: the snapshot is never another person’s, another turn’s, older than a write, a refused apply or a build: an apply refused "Content changed"
+  ---
+  duration_ms: 1.524708
+  type: 'test'
+  ...
+# Subtest: inspect: an answer that lands after a concurrent write is not remembered
+ok 50 - inspect: an answer that lands after a concurrent write is not remembered
+  ---
+  duration_ms: 0.658583
+  type: 'test'
+  ...
+# Subtest: retry: a lock miss is retried at 3/6/10 s ± 20 % with the same ids, within 19 s, then given up
+ok 51 - retry: a lock miss is retried at 3/6/10 s ± 20 % with the same ids, within 19 s, then given up
+  ---
+  duration_ms: 0.47
+  type: 'test'
+  ...
+# Subtest: retry: a lock miss then an answer is one more send, waited once within ± 20 %
+ok 52 - retry: a lock miss then an answer is one more send, waited once within ± 20 %
+  ---
+  duration_ms: 0.507459
+  type: 'test'
+  ...
+# Subtest: retry: a busy answer is not retried when it is another writer_busy message, a destructive action, or the first send used up 150 s: another writer_busy message: not a lock miss
+ok 53 - retry: a busy answer is not retried when it is another writer_busy message, a destructive action, or the first send used up 150 s: another writer_busy message: not a lock miss
+  ---
+  duration_ms: 0.163542
+  type: 'test'
+  ...
+# Subtest: retry: a busy answer is not retried when it is another writer_busy message, a destructive action, or the first send used up 150 s: content.delete
+ok 54 - retry: a busy answer is not retried when it is another writer_busy message, a destructive action, or the first send used up 150 s: content.delete
+  ---
+  duration_ms: 1.992041
+  type: 'test'
+  ...
+# Subtest: retry: a busy answer is not retried when it is another writer_busy message, a destructive action, or the first send used up 150 s: a first send that took 149 s
+ok 55 - retry: a busy answer is not retried when it is another writer_busy message, a destructive action, or the first send used up 150 s: a first send that took 149 s
+  ---
+  duration_ms: 0.221125
+  type: 'test'
+  ...
+# Subtest: apply: an apply the site already holds under that id is re-sent once under a new id, and the answer names it
+ok 56 - apply: an apply the site already holds under that id is re-sent once under a new id, and the answer names it
+  ---
+  duration_ms: 0.297458
+  type: 'test'
+  ...
+# Subtest: apply.list with no id reads the newest receipt of this conversation
+ok 57 - apply.list with no id reads the newest receipt of this conversation
+  ---
+  duration_ms: 0.24425
+  type: 'test'
+  ...
+# Subtest: body guard: every recorded r2 truncating write is refused with nothing sent, every other one passes
+ok 58 - body guard: every recorded r2 truncating write is refused with nothing sent, every other one passes
+  ---
+  duration_ms: 21.897542
+  type: 'test'
+  ...
+# Subtest: body guard: a length refusal says what was read and sent; a write with no read is sent to the read: read at 26,847, sent 4,155
+ok 59 - body guard: a length refusal says what was read and sent; a write with no read is sent to the read: read at 26,847, sent 4,155
+  ---
+  duration_ms: 0.232583
+  type: 'test'
+  ...
+# Subtest: body guard: a length refusal says what was read and sent; a write with no read is sent to the read: never read
+ok 60 - body guard: a length refusal says what was read and sent; a write with no read is sent to the read: never read
+  ---
+  duration_ms: 0.0895
+  type: 'test'
+  ...
+# Subtest: body guard: `removes` opens it only when it quotes the customer’s latest message, verb included, 3+ words: quotes the request
+ok 61 - body guard: `removes` opens it only when it quotes the customer’s latest message, verb included, 3+ words: quotes the request
+  ---
+  duration_ms: 0.478375
+  type: 'test'
+  ...
+# Subtest: body guard: `removes` opens it only when it quotes the customer’s latest message, verb included, 3+ words: quotes the whole removal
+ok 62 - body guard: `removes` opens it only when it quotes the customer’s latest message, verb included, 3+ words: quotes the whole removal
+  ---
+  duration_ms: 0.284666
+  type: 'test'
+  ...
+# Subtest: body guard: `removes` opens it only when it quotes the customer’s latest message, verb included, 3+ words: Vietnamese quote with the verb
+ok 63 - body guard: `removes` opens it only when it quotes the customer’s latest message, verb included, 3+ words: Vietnamese quote with the verb
+  ---
+  duration_ms: 0.935375
+  type: 'test'
+  ...
+# Subtest: body guard: `removes` opens it only when it quotes the customer’s latest message, verb included, 3+ words: words the customer never wrote
+ok 64 - body guard: `removes` opens it only when it quotes the customer’s latest message, verb included, 3+ words: words the customer never wrote
+  ---
+  duration_ms: 0.249875
+  type: 'test'
+  ...
+# Subtest: body guard: `removes` opens it only when it quotes the customer’s latest message, verb included, 3+ words: fewer than 3 words
+ok 65 - body guard: `removes` opens it only when it quotes the customer’s latest message, verb included, 3+ words: fewer than 3 words
+  ---
+  duration_ms: 0.155292
+  type: 'test'
+  ...
+# Subtest: body guard: `removes` opens it only when it quotes the customer’s latest message, verb included, 3+ words: a two-word quote that has the verb
+ok 66 - body guard: `removes` opens it only when it quotes the customer’s latest message, verb included, 3+ words: a two-word quote that has the verb
+  ---
+  duration_ms: 0.182917
+  type: 'test'
+  ...
+# Subtest: body guard: `removes` opens it only when it quotes the customer’s latest message, verb included, 3+ words: the non-removal half of the request
+ok 67 - body guard: `removes` opens it only when it quotes the customer’s latest message, verb included, 3+ words: the non-removal half of the request
+  ---
+  duration_ms: 0.415
+  type: 'test'
+  ...
+# Subtest: body guard: `removes` opens it only when it quotes the customer’s latest message, verb included, 3+ words: Vietnamese quote without the verb
+ok 68 - body guard: `removes` opens it only when it quotes the customer’s latest message, verb included, 3+ words: Vietnamese quote without the verb
+  ---
+  duration_ms: 0.602417
+  type: 'test'
+  ...
+# Subtest: body guard: `removes` opens it only when it quotes the customer’s latest message, verb included, 3+ words: a request that removes nothing
+ok 69 - body guard: `removes` opens it only when it quotes the customer’s latest message, verb included, 3+ words: a request that removes nothing
+  ---
+  duration_ms: 0.159209
+  type: 'test'
+  ...
+# Subtest: body guard: the refusal next hands out padding never, and names the drop-by-blocks road only for a real removal: no removes given
+ok 70 - body guard: the refusal next hands out padding never, and names the drop-by-blocks road only for a real removal: no removes given
+  ---
+  duration_ms: 0.140875
+  type: 'test'
+  ...
+# Subtest: body guard: the refusal next hands out padding never, and names the drop-by-blocks road only for a real removal: customer asked a removal, model quoted the wrong half
+ok 71 - body guard: the refusal next hands out padding never, and names the drop-by-blocks road only for a real removal: customer asked a removal, model quoted the wrong half
+  ---
+  duration_ms: 0.105042
+  type: 'test'
+  ...
+# Subtest: asksRemoval: the verb decides, in English and Vietnamese: "please remove the banner"
+ok 72 - asksRemoval: the verb decides, in English and Vietnamese: "please remove the banner"
+  ---
+  duration_ms: 0.027542
+  type: 'test'
+  ...
+# Subtest: asksRemoval: the verb decides, in English and Vietnamese: "Delete the second paragraph"
+ok 73 - asksRemoval: the verb decides, in English and Vietnamese: "Delete the second paragraph"
+  ---
+  duration_ms: 0.019208
+  type: 'test'
+  ...
+# Subtest: asksRemoval: the verb decides, in English and Vietnamese: "drop the pricing table"
+ok 74 - asksRemoval: the verb decides, in English and Vietnamese: "drop the pricing table"
+  ---
+  duration_ms: 0.066083
+  type: 'test'
+  ...
+# Subtest: asksRemoval: the verb decides, in English and Vietnamese: "hide the footer links"
+ok 75 - asksRemoval: the verb decides, in English and Vietnamese: "hide the footer links"
+  ---
+  duration_ms: 0.023417
+  type: 'test'
+  ...
+# Subtest: asksRemoval: the verb decides, in English and Vietnamese: "take out the old address"
+ok 76 - asksRemoval: the verb decides, in English and Vietnamese: "take out the old address"
+  ---
+  duration_ms: 0.056042
+  type: 'test'
+  ...
+# Subtest: asksRemoval: the verb decides, in English and Vietnamese: "get rid of the popup"
+ok 77 - asksRemoval: the verb decides, in English and Vietnamese: "get rid of the popup"
+  ---
+  duration_ms: 0.065084
+  type: 'test'
+  ...
+# Subtest: asksRemoval: the verb decides, in English and Vietnamese: "Xóa dòng này"
+ok 78 - asksRemoval: the verb decides, in English and Vietnamese: "Xóa dòng này"
+  ---
+  duration_ms: 0.035125
+  type: 'test'
+  ...
+# Subtest: asksRemoval: the verb decides, in English and Vietnamese: "xoá ảnh cũ"
+ok 79 - asksRemoval: the verb decides, in English and Vietnamese: "xoá ảnh cũ"
+  ---
+  duration_ms: 0.036667
+  type: 'test'
+  ...
+# Subtest: asksRemoval: the verb decides, in English and Vietnamese: "Bỏ phần giá"
+ok 80 - asksRemoval: the verb decides, in English and Vietnamese: "Bỏ phần giá"
+  ---
+  duration_ms: 0.029708
+  type: 'test'
+  ...
+# Subtest: asksRemoval: the verb decides, in English and Vietnamese: "gỡ banner"
+ok 81 - asksRemoval: the verb decides, in English and Vietnamese: "gỡ banner"
+  ---
+  duration_ms: 0.037167
+  type: 'test'
+  ...
+# Subtest: asksRemoval: the verb decides, in English and Vietnamese: "Ẩn phần dự án đi"
+ok 82 - asksRemoval: the verb decides, in English and Vietnamese: "Ẩn phần dự án đi"
+  ---
+  duration_ms: 0.026166
+  type: 'test'
+  ...
+# Subtest: asksRemoval: the verb decides, in English and Vietnamese: "Giấu phần giá đi"
+ok 83 - asksRemoval: the verb decides, in English and Vietnamese: "Giấu phần giá đi"
+  ---
+  duration_ms: 0.026208
+  type: 'test'
+  ...
+# Subtest: asksRemoval: the verb decides, in English and Vietnamese: "gỡ bỏ banner"
+ok 84 - asksRemoval: the verb decides, in English and Vietnamese: "gỡ bỏ banner"
+  ---
+  duration_ms: 0.022458
+  type: 'test'
+  ...
+# Subtest: asksRemoval: the verb decides, in English and Vietnamese: "Change the hero headline"
+ok 85 - asksRemoval: the verb decides, in English and Vietnamese: "Change the hero headline"
+  ---
+  duration_ms: 0.024667
+  type: 'test'
+  ...
+# Subtest: asksRemoval: the verb decides, in English and Vietnamese: "hidden gems"
+ok 86 - asksRemoval: the verb decides, in English and Vietnamese: "hidden gems"
+  ---
+  duration_ms: 0.026625
+  type: 'test'
+  ...
+# Subtest: asksRemoval: the verb decides, in English and Vietnamese: "removal of doubt"
+ok 87 - asksRemoval: the verb decides, in English and Vietnamese: "removal of doubt"
+  ---
+  duration_ms: 0.022292
+  type: 'test'
+  ...
+# Subtest: asksRemoval: the verb decides, in English and Vietnamese: "bố cục mới"
+ok 88 - asksRemoval: the verb decides, in English and Vietnamese: "bố cục mới"
+  ---
+  duration_ms: 0.025
+  type: 'test'
+  ...
+# Subtest: asksRemoval: the verb decides, in English and Vietnamese: "phần ẩnh"
+ok 89 - asksRemoval: the verb decides, in English and Vietnamese: "phần ẩnh"
+  ---
+  duration_ms: 0.033834
+  type: 'test'
+  ...
+# Subtest: asksRemoval: the verb decides, in English and Vietnamese: ""
+ok 90 - asksRemoval: the verb decides, in English and Vietnamese: ""
+  ---
+  duration_ms: 0.044708
+  type: 'test'
+  ...
+# Subtest: body guard: the second length refusal on one record in a turn sends the model to the customer
+ok 91 - body guard: the second length refusal on one record in a turn sends the model to the customer
+  ---
+  duration_ms: 0.338917
+  type: 'test'
+  ...
+# Subtest: body guard: the refusal count is per record and per customer message, and a read-first refusal is not counted: another record
+ok 92 - body guard: the refusal count is per record and per customer message, and a read-first refusal is not counted: another record
+  ---
+  duration_ms: 0.170625
+  type: 'test'
+  ...
+# Subtest: body guard: the refusal count is per record and per customer message, and a read-first refusal is not counted: a new customer message
+ok 93 - body guard: the refusal count is per record and per customer message, and a read-first refusal is not counted: a new customer message
+  ---
+  duration_ms: 0.197708
+  type: 'test'
+  ...
+# Subtest: body guard: the refusal count is per record and per customer message, and a read-first refusal is not counted: a refusal that asked for a read first
+ok 94 - body guard: the refusal count is per record and per customer message, and a read-first refusal is not counted: a refusal that asked for a read first
+  ---
+  duration_ms: 0.136708
+  type: 'test'
+  ...
+# Subtest: body guard: a malformed id or a body that is not one string is refused before the relay, with nothing sent: wordpress ["<p>x</p>"]
+ok 95 - body guard: a malformed id or a body that is not one string is refused before the relay, with nothing sent: wordpress ["<p>x</p>"]
+  ---
+  duration_ms: 0.235
+  type: 'test'
+  ...
+# Subtest: body guard: a malformed id or a body that is not one string is refused before the relay, with nothing sent: wordpress 7
+ok 96 - body guard: a malformed id or a body that is not one string is refused before the relay, with nothing sent: wordpress 7
+  ---
+  duration_ms: 0.056084
+  type: 'test'
+  ...
+# Subtest: body guard: a malformed id or a body that is not one string is refused before the relay, with nothing sent: wordpress {"rendered":"<p>x</p>"}
+ok 97 - body guard: a malformed id or a body that is not one string is refused before the relay, with nothing sent: wordpress {"rendered":"<p>x</p>"}
+  ---
+  duration_ms: 0.050666
+  type: 'test'
+  ...
+# Subtest: body guard: a malformed id or a body that is not one string is refused before the relay, with nothing sent: unknown ["<p>x</p>"]
+ok 98 - body guard: a malformed id or a body that is not one string is refused before the relay, with nothing sent: unknown ["<p>x</p>"]
+  ---
+  duration_ms: 0.078167
+  type: 'test'
+  ...
+# Subtest: body guard: a malformed id or a body that is not one string is refused before the relay, with nothing sent: unknown 7
+ok 99 - body guard: a malformed id or a body that is not one string is refused before the relay, with nothing sent: unknown 7
+  ---
+  duration_ms: 0.052583
+  type: 'test'
+  ...
+# Subtest: body guard: a malformed id or a body that is not one string is refused before the relay, with nothing sent: unknown {"rendered":"<p>x</p>"}
+ok 100 - body guard: a malformed id or a body that is not one string is refused before the relay, with nothing sent: unknown {"rendered":"<p>x</p>"}
+  ---
+  duration_ms: 0.049666
+  type: 'test'
+  ...
+# Subtest: body guard: a malformed id or a body that is not one string is refused before the relay, with nothing sent: id "42abc" (PHP would cast "42abc" to 42)
+ok 101 - body guard: a malformed id or a body that is not one string is refused before the relay, with nothing sent: id "42abc" (PHP would cast "42abc" to 42)
+  ---
+  duration_ms: 0.174334
+  type: 'test'
+  ...
+# Subtest: body guard: a malformed id or a body that is not one string is refused before the relay, with nothing sent: id 42.5 (PHP would cast "42abc" to 42)
+ok 102 - body guard: a malformed id or a body that is not one string is refused before the relay, with nothing sent: id 42.5 (PHP would cast "42abc" to 42)
+  ---
+  duration_ms: 0.0515
+  type: 'test'
+  ...
+# Subtest: body guard: a malformed id or a body that is not one string is refused before the relay, with nothing sent: id true (PHP would cast "42abc" to 42)
+ok 103 - body guard: a malformed id or a body that is not one string is refused before the relay, with nothing sent: id true (PHP would cast "42abc" to 42)
+  ---
+  duration_ms: 0.121625
+  type: 'test'
+  ...
+# Subtest: body guard: a REST `content:{raw}` body is unwrapped, then measured: short raw body
+ok 104 - body guard: a REST `content:{raw}` body is unwrapped, then measured: short raw body
+  ---
+  duration_ms: 0.118542
+  type: 'test'
+  ...
+# Subtest: body guard: a REST `content:{raw}` body is unwrapped, then measured: whole raw body
+ok 105 - body guard: a REST `content:{raw}` body is unwrapped, then measured: whole raw body
+  ---
+  duration_ms: 0.246208
+  type: 'test'
+  ...
+# Subtest: body guard: a site whose platform could not be read still guards a WordPress-shaped write; a site known to be Joomla does not: unknown platform, never read
+ok 106 - body guard: a site whose platform could not be read still guards a WordPress-shaped write; a site known to be Joomla does not: unknown platform, never read
+  ---
+  duration_ms: 0.081375
+  type: 'test'
+  ...
+# Subtest: body guard: a site whose platform could not be read still guards a WordPress-shaped write; a site known to be Joomla does not: unknown platform, read, then cut
+ok 107 - body guard: a site whose platform could not be read still guards a WordPress-shaped write; a site known to be Joomla does not: unknown platform, read, then cut
+  ---
+  duration_ms: 0.581083
+  type: 'test'
+  ...
+# Subtest: body guard: a site whose platform could not be read still guards a WordPress-shaped write; a site known to be Joomla does not: a site known to be Joomla
+ok 108 - body guard: a site whose platform could not be read still guards a WordPress-shaped write; a site known to be Joomla does not: a site known to be Joomla
+  ---
+  duration_ms: 0.125833
+  type: 'test'
+  ...
+# Subtest: body guard: with no conversation a whole-body write is refused with a stop, not a read loop
+ok 109 - body guard: with no conversation a whole-body write is refused with a stop, not a read loop
+  ---
+  duration_ms: 0.435291
+  type: 'test'
+  ...
+# Subtest: body guard: the baseline is what the site held at the start of the turn — never ratcheted down within a turn, reset by an undo, moved at once by a removal: same turn: 80 % of 26,884 accepted, then judged against 26,884 not the 21,600 now stored
+ok 110 - body guard: the baseline is what the site held at the start of the turn — never ratcheted down within a turn, reset by an undo, moved at once by a removal: same turn: 80 % of 26,884 accepted, then judged against 26,884 not the 21,600 now stored
+  ---
+  duration_ms: 1.519458
+  type: 'test'
+  ...
+# Subtest: body guard: the baseline is what the site held at the start of the turn — never ratcheted down within a turn, reset by an undo, moved at once by a removal: next turn starts from what the site holds: 80 % of 21,600
+ok 111 - body guard: the baseline is what the site held at the start of the turn — never ratcheted down within a turn, reset by an undo, moved at once by a removal: next turn starts from what the site holds: 80 % of 21,600
+  ---
+  duration_ms: 0.882583
+  type: 'test'
+  ...
+# Subtest: body guard: the baseline is what the site held at the start of the turn — never ratcheted down within a turn, reset by an undo, moved at once by a removal: an accepted removal is the new baseline at once
+ok 112 - body guard: the baseline is what the site held at the start of the turn — never ratcheted down within a turn, reset by an undo, moved at once by a removal: an accepted removal is the new baseline at once
+  ---
+  duration_ms: 0.578875
+  type: 'test'
+  ...
+# Subtest: body guard: the baseline is what the site held at the start of the turn — never ratcheted down within a turn, reset by an undo, moved at once by a removal: after an undo the remembered length is forgotten: read again, never "holds 60,000"
+ok 113 - body guard: the baseline is what the site held at the start of the turn — never ratcheted down within a turn, reset by an undo, moved at once by a removal: after an undo the remembered length is forgotten: read again, never "holds 60,000"
+  ---
+  duration_ms: 0.836291
+  type: 'test'
+  ...
+# Subtest: body guard: a post this conversation created may be rewritten shorter
+ok 114 - body guard: a post this conversation created may be rewritten shorter
+  ---
+  duration_ms: 0.613041
+  type: 'test'
+  ...
+# Subtest: Joomla body guard: a read of article 5 is not a read of module 5 — each record and field by its own name
+ok 115 - Joomla body guard: a read of article 5 is not a read of module 5 — each record and field by its own name
+  ---
+  duration_ms: 0.420208
+  type: 'test'
+  ...
+# Subtest: Joomla body guard: a short module text read first is written shorter as sent (under SHRINK_JUDGED_FROM)
+ok 116 - Joomla body guard: a short module text read first is written shorter as sent (under SHRINK_JUDGED_FROM)
+  ---
+  duration_ms: 0.422459
+  type: 'test'
+  ...
+# Subtest: Joomla body guard: a create has no body to cut, and the agent may rewrite its own article shorter
+ok 117 - Joomla body guard: a create has no body to cut, and the agent may rewrite its own article shorter
+  ---
+  duration_ms: 0.459125
+  type: 'test'
+  ...
+# Subtest: verify: a whole body is read back once — the answer reports what the site holds, and is not verified when it holds less: stored whole
+ok 118 - verify: a whole body is read back once — the answer reports what the site holds, and is not verified when it holds less: stored whole
+  ---
+  duration_ms: 0.343333
+  type: 'test'
+  ...
+# Subtest: verify: a whole body is read back once — the answer reports what the site holds, and is not verified when it holds less: the component stripped markup
+ok 119 - verify: a whole body is read back once — the answer reports what the site holds, and is not verified when it holds less: the component stripped markup
+  ---
+  duration_ms: 0.316625
+  type: 'test'
+  ...
+# Subtest: verify: a whole body is read back once — the answer reports what the site holds, and is not verified when it holds less: the read-back failed
+ok 120 - verify: a whole body is read back once — the answer reports what the site holds, and is not verified when it holds less: the read-back failed
+  ---
+  duration_ms: 0.112916
+  type: 'test'
+  ...
+# Subtest: BLOCK_MARKUP: a menu whose `/-->` were retyped `/>` is refused with the offset, nothing sent
+ok 121 - BLOCK_MARKUP: a menu whose `/-->` were retyped `/>` is refused with the offset, nothing sent
+  ---
+  duration_ms: 0.543625
+  type: 'test'
+  ...
+# Subtest: BLOCK_MARKUP: a menu with its delimiters kept is sent once, read back and verified; one the site mangled is not verified though its length is whole: stored as sent
+ok 122 - BLOCK_MARKUP: a menu with its delimiters kept is sent once, read back and verified; one the site mangled is not verified though its length is whole: stored as sent
+  ---
+  duration_ms: 0.326958
+  type: 'test'
+  ...
+# Subtest: BLOCK_MARKUP: a menu with its delimiters kept is sent once, read back and verified; one the site mangled is not verified though its length is whole: mangled by the site
+ok 123 - BLOCK_MARKUP: a menu with its delimiters kept is sent once, read back and verified; one the site mangled is not verified though its length is whole: mangled by the site
+  ---
+  duration_ms: 0.177792
+  type: 'test'
+  ...
+# Subtest: blockMarkupProblem: where the first unreadable block comment is, or null — and no delimiter the site accepted is refused
+ok 124 - blockMarkupProblem: where the first unreadable block comment is, or null — and no delimiter the site accepted is refused
+  ---
+  duration_ms: 1.530792
+  type: 'test'
+  ...
+# Subtest: BLOCK_MARKUP: a template part and a create are guarded too, and the part keeps its key: template part
+ok 125 - BLOCK_MARKUP: a template part and a create are guarded too, and the part keeps its key: template part
+  ---
+  duration_ms: 0.182209
+  type: 'test'
+  ...
+# Subtest: BLOCK_MARKUP: a template part and a create are guarded too, and the part keeps its key: create
+ok 126 - BLOCK_MARKUP: a template part and a create are guarded too, and the part keeps its key: create
+  ---
+  duration_ms: 0.090042
+  type: 'test'
+  ...
+# Subtest: template part: a part the site stores no copy of reads as its theme file — path and length, never its text: the active theme’s file
+ok 127 - template part: a part the site stores no copy of reads as its theme file — path and length, never its text: the active theme’s file
+  ---
+  duration_ms: 0.454125
+  type: 'test'
+  ...
+# Subtest: template part: a part the site stores no copy of reads as its theme file — path and length, never its text: a child theme without the part serves its parent’s
+ok 128 - template part: a part the site stores no copy of reads as its theme file — path and length, never its text: a child theme without the part serves its parent’s
+  ---
+  duration_ms: 0.239166
+  type: 'test'
+  ...
+# Subtest: template part: a part the site stores no copy of reads as its theme file — path and length, never its text: no theme file has it
+ok 129 - template part: a part the site stores no copy of reads as its theme file — path and length, never its text: no theme file has it
+  ---
+  duration_ms: 0.08675
+  type: 'test'
+  ...
+# Subtest: template part: a write is judged against the theme file visitors see — a cut is refused, the whole markup passes, a part no theme has is a create: header cut to 14 chars
+ok 130 - template part: a write is judged against the theme file visitors see — a cut is refused, the whole markup passes, a part no theme has is a create: header cut to 14 chars
+  ---
+  duration_ms: 0.190417
+  type: 'test'
+  ...
+# Subtest: template part: a write is judged against the theme file visitors see — a cut is refused, the whole markup passes, a part no theme has is a create: header markup with the words changed
+ok 131 - template part: a write is judged against the theme file visitors see — a cut is refused, the whole markup passes, a part no theme has is a create: header markup with the words changed
+  ---
+  duration_ms: 0.206375
+  type: 'test'
+  ...
+# Subtest: template part: a write is judged against the theme file visitors see — a cut is refused, the whole markup passes, a part no theme has is a create: child theme footer cut to 500
+ok 132 - template part: a write is judged against the theme file visitors see — a cut is refused, the whole markup passes, a part no theme has is a create: child theme footer cut to 500
+  ---
+  duration_ms: 0.271375
+  type: 'test'
+  ...
+# Subtest: template part: a write is judged against the theme file visitors see — a cut is refused, the whole markup passes, a part no theme has is a create: theme that cannot be read
+ok 133 - template part: a write is judged against the theme file visitors see — a cut is refused, the whole markup passes, a part no theme has is a create: theme that cannot be read
+  ---
+  duration_ms: 0.191958
+  type: 'test'
+  ...
+# Subtest: template part: a write is judged against the theme file visitors see — a cut is refused, the whole markup passes, a part no theme has is a create: a slug no theme file has
+ok 134 - template part: a write is judged against the theme file visitors see — a cut is refused, the whole markup passes, a part no theme has is a create: a slug no theme file has
+  ---
+  duration_ms: 0.174542
+  type: 'test'
+  ...
+# Subtest: template part: a part read at 7,848 chars is not overwritten with 19
+ok 135 - template part: a part read at 7,848 chars is not overwritten with 19
+  ---
+  duration_ms: 0.122041
+  type: 'test'
+  ...
+# Subtest: template part: looked up by its slug alone — another record’s id beside it never decides: the footer’s id beside the header slug
+ok 136 - template part: looked up by its slug alone — another record’s id beside it never decides: the footer’s id beside the header slug
+  ---
+  duration_ms: 0.418959
+  type: 'test'
+  ...
+# Subtest: template part: looked up by its slug alone — another record’s id beside it never decides: a small post’s id beside a header never read
+ok 137 - template part: looked up by its slug alone — another record’s id beside it never decides: a small post’s id beside a header never read
+  ---
+  duration_ms: 0.129041
+  type: 'test'
+  ...
+# Subtest: template part: the id never reaches the component — a part is written by its key
+ok 138 - template part: the id never reaches the component — a part is written by its key
+  ---
+  duration_ms: 0.165542
+  type: 'test'
+  ...
+# Subtest: template part: written by its row number, the write goes under the slug the read named and is judged against that read: read as a post, written whole
+ok 139 - template part: written by its row number, the write goes under the slug the read named and is judged against that read: read as a post, written whole
+  ---
+  duration_ms: 0.483
+  type: 'test'
+  ...
+# Subtest: template part: written by its row number, the write goes under the slug the read named and is judged against that read: read as a post, cut to 19
+ok 140 - template part: written by its row number, the write goes under the slug the read named and is judged against that read: read as a post, cut to 19
+  ---
+  duration_ms: 0.154333
+  type: 'test'
+  ...
+# Subtest: template part: written by its row number, the write goes under the slug the read named and is judged against that read: never read: fails closed after one read that names the part
+ok 141 - template part: written by its row number, the write goes under the slug the read named and is judged against that read: never read: fails closed after one read that names the part
+  ---
+  duration_ms: 0.137583
+  type: 'test'
+  ...
+# Subtest: list: rows are cut by field, not record — r2’s 21-row list keeps every row within 4,000 chars
+ok 142 - list: rows are cut by field, not record — r2’s 21-row list keeps every row within 4,000 chars
+  ---
+  duration_ms: 0.517334
+  type: 'test'
+  ...
+# Subtest: list: a body list is cut at a record boundary — valid JSON, whole rows, the narrowing named
+ok 143 - list: a body list is cut at a record boundary — valid JSON, whole rows, the narrowing named
+  ---
+  duration_ms: 0.593959
+  type: 'test'
+  ...
+# Subtest: an empty list points at content.replace, once, and nothing else about a list changes
+ok 144 - an empty list points at content.replace, once, and nothing else about a list changes
+  ---
+  duration_ms: 0.075
+  type: 'test'
+  ...
+# Subtest: an imported site’s refused words point at its slot index, and only when the refusal leaves a road open
+ok 145 - an imported site’s refused words point at its slot index, and only when the refusal leaves a road open
+  ---
+  duration_ms: 0.225917
+  type: 'test'
+  ...
+# Subtest: list: an empty answer through the whole call carries the hint, a full one does not
+ok 146 - list: an empty answer through the whole call carries the hint, a full one does not
+  ---
+  duration_ms: 0.385833
+  type: 'test'
+  ...
+# Subtest: list: a body read through a list is remembered whole, so a cut of it is refused
+ok 147 - list: a body read through a list is remembered whole, so a cut of it is refused
+  ---
+  duration_ms: 0.409334
+  type: 'test'
+  ...
+# Subtest: get: a 60,000-char post is answered whole — a cut body cannot be written back
+ok 148 - get: a 60,000-char post is answered whole — a cut body cannot be written back
+  ---
+  duration_ms: 0.224292
+  type: 'test'
+  ...
+# Subtest: db.dump: an over-budget dump is cut and names table, limit and cursor
+ok 149 - db.dump: an over-budget dump is cut and names table, limit and cursor
+  ---
+  duration_ms: 0.391084
+  type: 'test'
+  ...
+# Subtest: budgetFor: media.scan and reads with no narrowing parameter are not capped
+ok 150 - budgetFor: media.scan and reads with no narrowing parameter are not capped
+  ---
+  duration_ms: 0.034917
+  type: 'test'
+  ...
+# Subtest: budgetFor: media.scan and reads with no narrowing parameter are not capped: "info"
+ok 151 - budgetFor: media.scan and reads with no narrowing parameter are not capped: "info"
+  ---
+  duration_ms: 0.078666
+  type: 'test'
+  ...
+# Subtest: budgetFor: media.scan and reads with no narrowing parameter are not capped: "content.get"
+ok 152 - budgetFor: media.scan and reads with no narrowing parameter are not capped: "content.get"
+  ---
+  duration_ms: 0.017417
+  type: 'test'
+  ...
+# Subtest: budgetFor: media.scan and reads with no narrowing parameter are not capped: "extension.list"
+ok 153 - budgetFor: media.scan and reads with no narrowing parameter are not capped: "extension.list"
+  ---
+  duration_ms: 0.016166
+  type: 'test'
+  ...
+# Subtest: budgetFor: media.scan and reads with no narrowing parameter are not capped: "plugin.list"
+ok 154 - budgetFor: media.scan and reads with no narrowing parameter are not capped: "plugin.list"
+  ---
+  duration_ms: 0.015208
+  type: 'test'
+  ...
+# Subtest: budgetFor: media.scan and reads with no narrowing parameter are not capped: "theme.list"
+ok 155 - budgetFor: media.scan and reads with no narrowing parameter are not capped: "theme.list"
+  ---
+  duration_ms: 0.016
+  type: 'test'
+  ...
+# Subtest: budgetFor: media.scan and reads with no narrowing parameter are not capped: "db.tables"
+ok 156 - budgetFor: media.scan and reads with no narrowing parameter are not capped: "db.tables"
+  ---
+  duration_ms: 0.015459
+  type: 'test'
+  ...
+# Subtest: a refused call is never sent: wrong platform, unknown parameter, missing address
+ok 157 - a refused call is never sent: wrong platform, unknown parameter, missing address
+  ---
+  duration_ms: 0.351583
+  type: 'test'
+  ...
+# Subtest: no wp_navigation menus reads the classic nav_menu_item rows
+ok 158 - no wp_navigation menus reads the classic nav_menu_item rows
+  ---
+  duration_ms: 0.140541
+  type: 'test'
+  ...
+# Subtest: a slug is looked up, then read by its id
+ok 159 - a slug is looked up, then read by its id
+  ---
+  duration_ms: 0.137125
+  type: 'test'
+  ...
+# Subtest: normalized: none on a clean call, at most 6 entries of 90 chars on a noisy one
+ok 160 - normalized: none on a clean call, at most 6 entries of 90 chars on a noisy one
+  ---
+  duration_ms: 0.177583
+  type: 'test'
+  ...
+# Subtest: flight: a write waits for an inspect in flight on the same site instead of overlapping it
+ok 161 - flight: a write waits for an inspect in flight on the same site instead of overlapping it
+  ---
+  duration_ms: 23.0015
+  type: 'test'
+  ...
+# Subtest: a relay that throws is an answer, never a throw; Tracy already asked twice, so it is not told to retry
+ok 162 - a relay that throws is an answer, never a throw; Tracy already asked twice, so it is not told to retry
+  ---
+  duration_ms: 0.334
+  type: 'test'
+  ...
+# Subtest: lost read: every lost class is asked once more after 2 s; an answer the component did give is never asked again: {"ok":false,"code":"COMPONENT_UNREACHABLE","error":"the site did not answer"}
+ok 163 - lost read: every lost class is asked once more after 2 s; an answer the component did give is never asked again: {"ok":false,"code":"COMPONENT_UNREACHABLE","error":"the site did not answer"}
+  ---
+  duration_ms: 0.176375
+  type: 'test'
+  ...
+# Subtest: lost read: every lost class is asked once more after 2 s; an answer the component did give is never asked again: {"ok":false,"code":"COMPONENT_BAD_RESPONSE","error":"the site did not answer"}
+ok 164 - lost read: every lost class is asked once more after 2 s; an answer the component did give is never asked again: {"ok":false,"code":"COMPONENT_BAD_RESPONSE","error":"the site did not answer"}
+  ---
+  duration_ms: 0.097375
+  type: 'test'
+  ...
+# Subtest: lost read: every lost class is asked once more after 2 s; an answer the component did give is never asked again: {"ok":false,"code":"COWORK_WEB_UNREACHABLE","error":"the site did not answer"}
+ok 165 - lost read: every lost class is asked once more after 2 s; an answer the component did give is never asked again: {"ok":false,"code":"COWORK_WEB_UNREACHABLE","error":"the site did not answer"}
+  ---
+  duration_ms: 0.148375
+  type: 'test'
+  ...
+# Subtest: lost read: every lost class is asked once more after 2 s; an answer the component did give is never asked again: {"ok":false,"httpStatus":502,"error":"Bad Gateway"}
+ok 166 - lost read: every lost class is asked once more after 2 s; an answer the component did give is never asked again: {"ok":false,"httpStatus":502,"error":"Bad Gateway"}
+  ---
+  duration_ms: 0.089708
+  type: 'test'
+  ...
+# Subtest: lost read: every lost class is asked once more after 2 s; an answer the component did give is never asked again: {"ok":false,"httpStatus":503,"code":"SITE_DOWN","error":"x"}
+ok 167 - lost read: every lost class is asked once more after 2 s; an answer the component did give is never asked again: {"ok":false,"httpStatus":503,"code":"SITE_DOWN","error":"x"}
+  ---
+  duration_ms: 0.148583
+  type: 'test'
+  ...
+# Subtest: lost read: every lost class is asked once more after 2 s; an answer the component did give is never asked again: {"ok":false,"httpStatus":504,"error":"Gateway Timeout"}
+ok 168 - lost read: every lost class is asked once more after 2 s; an answer the component did give is never asked again: {"ok":false,"httpStatus":504,"error":"Gateway Timeout"}
+  ---
+  duration_ms: 0.079875
+  type: 'test'
+  ...
+# Subtest: lost read: every lost class is asked once more after 2 s; an answer the component did give is never asked again: {"ok":false,"error":"not_found","message":"no post 99"}
+ok 169 - lost read: every lost class is asked once more after 2 s; an answer the component did give is never asked again: {"ok":false,"error":"not_found","message":"no post 99"}
+  ---
+  duration_ms: 0.152166
+  type: 'test'
+  ...
+# Subtest: lost apply: a contract apply whose answer was lost is re-sent once with the same ids
+ok 170 - lost apply: a contract apply whose answer was lost is re-sent once with the same ids
+  ---
+  duration_ms: 0.6525
+  type: 'test'
+  ...
+# Subtest: lost apply: a re-send that meets the lock past its retries is OUTCOME_UNKNOWN, never "nothing was written"
+ok 171 - lost apply: a re-send that meets the lock past its retries is OUTCOME_UNKNOWN, never "nothing was written"
+  ---
+  duration_ms: 0.560166
+  type: 'test'
+  ...
+# Subtest: 🔒 C2: a contract apply on the wire when the customer stops is not replayed — its lost answer is OUTCOME_UNKNOWN
+ok 172 - 🔒 C2: a contract apply on the wire when the customer stops is not replayed — its lost answer is OUTCOME_UNKNOWN
+  ---
+  duration_ms: 0.697917
+  type: 'test'
+  ...
+# Subtest: 🔒 C2: a lost WordPress write after Stop is not counted on its receipt nor sent again
+ok 173 - 🔒 C2: a lost WordPress write after Stop is not counted on its receipt nor sent again
+  ---
+  duration_ms: 0.228792
+  type: 'test'
+  ...
+# Subtest: 🔒 C2: a lost read after Stop is not asked again
+ok 174 - 🔒 C2: a lost read after Stop is not asked again
+  ---
+  duration_ms: 0.148625
+  type: 'test'
+  ...
+# Subtest: 🔒 C2: Stop during a lock-miss pause ends the pause at once; the retry the relay refuses is not a write
+ok 175 - 🔒 C2: Stop during a lock-miss pause ends the pause at once; the retry the relay refuses is not a write
+  ---
+  duration_ms: 0.408
+  type: 'test'
+  ...
+# Subtest: 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["media.upload",{"path":"a.png","content_b64":"AA=="}]
+ok 176 - 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["media.upload",{"path":"a.png","content_b64":"AA=="}]
+  ---
+  duration_ms: 0.048209
+  type: 'test'
+  ...
+# Subtest: 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["media.delete",{"id":9}]
+ok 177 - 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["media.delete",{"id":9}]
+  ---
+  duration_ms: 0.023084
+  type: 'test'
+  ...
+# Subtest: 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["media.delete",{"id":9,"dry_run":true}]
+ok 178 - 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["media.delete",{"id":9,"dry_run":true}]
+  ---
+  duration_ms: 0.045084
+  type: 'test'
+  ...
+# Subtest: 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["content.update",{"kind":"post","id":42}]
+ok 179 - 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["content.update",{"kind":"post","id":42}]
+  ---
+  duration_ms: 0.02075
+  type: 'test'
+  ...
+# Subtest: 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["content.read",{}]
+ok 180 - 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["content.read",{}]
+  ---
+  duration_ms: 0.021167
+  type: 'test'
+  ...
+# Subtest: 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["apply.list",{"apply_id":"x"}]
+ok 181 - 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["apply.list",{"apply_id":"x"}]
+  ---
+  duration_ms: 0.019167
+  type: 'test'
+  ...
+# Subtest: 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["db.dump",{}]
+ok 182 - 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["db.dump",{}]
+  ---
+  duration_ms: 0.043458
+  type: 'test'
+  ...
+# Subtest: 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["content.contract",{"operation":"inspect"}]
+ok 183 - 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["content.contract",{"operation":"inspect"}]
+  ---
+  duration_ms: 0.018709
+  type: 'test'
+  ...
+# Subtest: 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["content.contract",{"operation":"multilingual.plan"}]
+ok 184 - 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["content.contract",{"operation":"multilingual.plan"}]
+  ---
+  duration_ms: 0.069958
+  type: 'test'
+  ...
+# Subtest: 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["content.contract",{"operation":"apply"}]
+ok 185 - 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["content.contract",{"operation":"apply"}]
+  ---
+  duration_ms: 0.01775
+  type: 'test'
+  ...
+# Subtest: 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["site.identity",{"operation":"read"}]
+ok 186 - 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["site.identity",{"operation":"read"}]
+  ---
+  duration_ms: 0.043375
+  type: 'test'
+  ...
+# Subtest: 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["site.identity",{"operation":"set","fields":{"sitename":"x"}}]
+ok 187 - 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["site.identity",{"operation":"set","fields":{"sitename":"x"}}]
+  ---
+  duration_ms: 0.019458
+  type: 'test'
+  ...
+# Subtest: 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["template.siteSettings",{}]
+ok 188 - 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["template.siteSettings",{}]
+  ---
+  duration_ms: 0.017958
+  type: 'test'
+  ...
+# Subtest: 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["apply.revert",{"apply_id":"x"}]
+ok 189 - 🔒 C3: the calls that take the write lease are the ones tracy-web's changesSite counts: ["apply.revert",{"apply_id":"x"}]
+  ---
+  duration_ms: 0.017041
+  type: 'test'
+  ...
+# Subtest: lost write: a lost second write to one WordPress record is judged by the receipt — re-sent if it did not land, else reported landed: did not land
+ok 190 - lost write: a lost second write to one WordPress record is judged by the receipt — re-sent if it did not land, else reported landed: did not land
+  ---
+  duration_ms: 0.361209
+  type: 'test'
+  ...
+# Subtest: lost write: a lost second write to one WordPress record is judged by the receipt — re-sent if it did not land, else reported landed: landed
+ok 191 - lost write: a lost second write to one WordPress record is judged by the receipt — re-sent if it did not land, else reported landed: landed
+  ---
+  duration_ms: 0.210667
+  type: 'test'
+  ...
+# Subtest: lost write: a lost create, delete or install is never sent again — OUTCOME_UNKNOWN names the receipt: "content.update"
+ok 192 - lost write: a lost create, delete or install is never sent again — OUTCOME_UNKNOWN names the receipt: "content.update"
+  ---
+  duration_ms: 0.155958
+  type: 'test'
+  ...
+# Subtest: lost write: a lost create, delete or install is never sent again — OUTCOME_UNKNOWN names the receipt: "content.delete"
+ok 193 - lost write: a lost create, delete or install is never sent again — OUTCOME_UNKNOWN names the receipt: "content.delete"
+  ---
+  duration_ms: 1.0815
+  type: 'test'
+  ...
+# Subtest: lost write: a lost create, delete or install is never sent again — OUTCOME_UNKNOWN names the receipt: "plugin.install"
+ok 194 - lost write: a lost create, delete or install is never sent again — OUTCOME_UNKNOWN names the receipt: "plugin.install"
+  ---
+  duration_ms: 0.224333
+  type: 'test'
+  ...
+# Subtest: lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.get"
+ok 195 - lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.get"
+  ---
+  duration_ms: 0.226667
+  type: 'test'
+  ...
+# Subtest: lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.contract"
+ok 196 - lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.contract"
+  ---
+  duration_ms: 0.056958
+  type: 'test'
+  ...
+# Subtest: lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.contract"
+ok 197 - lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.contract"
+  ---
+  duration_ms: 0.068125
+  type: 'test'
+  ...
+# Subtest: lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.contract"
+ok 198 - lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.contract"
+  ---
+  duration_ms: 0.136416
+  type: 'test'
+  ...
+# Subtest: lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.contract"
+ok 199 - lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.contract"
+  ---
+  duration_ms: 0.024833
+  type: 'test'
+  ...
+# Subtest: lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.batch"
+ok 200 - lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.batch"
+  ---
+  duration_ms: 0.021417
+  type: 'test'
+  ...
+# Subtest: lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.update"
+ok 201 - lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.update"
+  ---
+  duration_ms: 0.023333
+  type: 'test'
+  ...
+# Subtest: lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.update"
+ok 202 - lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.update"
+  ---
+  duration_ms: 0.021667
+  type: 'test'
+  ...
+# Subtest: lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.update"
+ok 203 - lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.update"
+  ---
+  duration_ms: 0.02225
+  type: 'test'
+  ...
+# Subtest: lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.update"
+ok 204 - lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "content.update"
+  ---
+  duration_ms: 0.024709
+  type: 'test'
+  ...
+# Subtest: lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "apply.revert"
+ok 205 - lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: "apply.revert"
+  ---
+  duration_ms: 0.020209
+  type: 'test'
+  ...
+# Subtest: lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: {"ok":false,"httpStatus":409,"code":"SITE_BUSY"}
+ok 206 - lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: {"ok":false,"httpStatus":409,"code":"SITE_BUSY"}
+  ---
+  duration_ms: 0.104166
+  type: 'test'
+  ...
+# Subtest: lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: {"ok":false,"error":"writer_busy","message":"another writer is changing this sit
+ok 207 - lost answers: which calls are re-asked, replayed or counted (lostAnswerRoad), and that the door’s busy answers are never lost: {"ok":false,"error":"writer_busy","message":"another writer is changing this sit
+  ---
+  duration_ms: 0.050583
+  type: 'test'
+  ...
+# Subtest: lost write: a delete leaves the same step as an update — a lost write after it that did not land is re-sent
+ok 208 - lost write: a delete leaves the same step as an update — a lost write after it that did not land is re-sent
+  ---
+  duration_ms: 0.500875
+  type: 'test'
+  ...
+# Subtest: lost write: a template part reset is recorded by its slug, so a lost rewrite of it is re-sent
+ok 209 - lost write: a template part reset is recorded by its slug, so a lost rewrite of it is re-sent
+  ---
+  duration_ms: 0.465708
+  type: 'test'
+  ...
+# Subtest: lost write: a write whose outcome stayed unknown is never counted past — the next lost write is OUTCOME_UNKNOWN
+ok 210 - lost write: a write whose outcome stayed unknown is never counted past — the next lost write is OUTCOME_UNKNOWN
+  ---
+  duration_ms: 0.30125
+  type: 'test'
+  ...
+# Subtest: lost write: a create whose outcome is unknown blocks the receipt count for every record
+ok 211 - lost write: a create whose outcome is unknown blocks the receipt count for every record
+  ---
+  duration_ms: 0.220041
+  type: 'test'
+  ...
+# Subtest: 🔒 one apply id per write (owner, 26/10/2026): two agent writes of one turn go out under two ids of one stem, on WordPress and on open Joomla; an id the call sets is sent as given
+ok 212 - 🔒 one apply id per write (owner, 26/10/2026): two agent writes of one turn go out under two ids of one stem, on WordPress and on open Joomla; an id the call sets is sent as given
+  ---
+  duration_ms: 0.83275
+  type: 'test'
+  ...
+# Subtest: lost write: with one apply id per write (26/10/2026) the lost write's own receipt is read, and an earlier write to the record does not count in it: did not land
+ok 213 - lost write: with one apply id per write (26/10/2026) the lost write's own receipt is read, and an earlier write to the record does not count in it: did not land
+  ---
+  duration_ms: 0.272709
+  type: 'test'
+  ...
+# Subtest: lost write: with one apply id per write (26/10/2026) the lost write's own receipt is read, and an earlier write to the record does not count in it: landed
+ok 214 - lost write: with one apply id per write (26/10/2026) the lost write's own receipt is read, and an earlier write to the record does not count in it: landed
+  ---
+  duration_ms: 0.201041
+  type: 'test'
+  ...
+# Subtest: lost write: with one apply id per write, an earlier write whose outcome stayed unknown no longer blocks the count — its steps live under its own id
+ok 215 - lost write: with one apply id per write, an earlier write whose outcome stayed unknown no longer blocks the count — its steps live under its own id
+  ---
+  duration_ms: 2.699
+  type: 'test'
+  ...
+# Subtest: clock: a read that timed out at 180 s is not asked again (one clock for the whole call)
+ok 216 - clock: a read that timed out at 180 s is not asked again (one clock for the whole call)
+  ---
+  duration_ms: 0.289375
+  type: 'test'
+  ...
+# Subtest: clock: a contract apply that timed out at 180 s is not replayed — OUTCOME_UNKNOWN
+ok 217 - clock: a contract apply that timed out at 180 s is not replayed — OUTCOME_UNKNOWN
+  ---
+  duration_ms: 0.600708
+  type: 'test'
+  ...
+# Subtest: clock: a replay’s lock retries count from the FIRST send — 150 s is the call’s, not each send’s
+ok 218 - clock: a replay’s lock retries count from the FIRST send — 150 s is the call’s, not each send’s
+  ---
+  duration_ms: 0.658375
+  type: 'test'
+  ...
+# Subtest: same call: a refusal repeated verbatim in one turn is answered here, nothing sent: an UNKNOWN_PARAM refusal
+ok 219 - same call: a refusal repeated verbatim in one turn is answered here, nothing sent: an UNKNOWN_PARAM refusal
+  ---
+  duration_ms: 0.254042
+  type: 'test'
+  ...
+# Subtest: same call: a refusal repeated verbatim in one turn is answered here, nothing sent: a BODY_SHRINK that judged a read
+ok 220 - same call: a refusal repeated verbatim in one turn is answered here, nothing sent: a BODY_SHRINK that judged a read
+  ---
+  duration_ms: 0.266958
+  type: 'test'
+  ...
+# Subtest: same call: a refusal repeated verbatim in one turn is answered here, nothing sent: a contract apply refused twice (the ids Tracy makes stay out of the key)
+ok 221 - same call: a refusal repeated verbatim in one turn is answered here, nothing sent: a contract apply refused twice (the ids Tracy makes stay out of the key)
+  ---
+  duration_ms: 0.860791
+  type: 'test'
+  ...
+# Subtest: same call: a repeat is judged again, not answered from memory, when it could now be right or was never final: a new customer message
+ok 222 - same call: a repeat is judged again, not answered from memory, when it could now be right or was never final: a new customer message
+  ---
+  duration_ms: 0.198042
+  type: 'test'
+  ...
+# Subtest: same call: a repeat is judged again, not answered from memory, when it could now be right or was never final: a write to the site in between
+ok 223 - same call: a repeat is judged again, not answered from memory, when it could now be right or was never final: a write to the site in between
+  ---
+  duration_ms: 0.280333
+  type: 'test'
+  ...
+# Subtest: same call: a repeat is judged again, not answered from memory, when it could now be right or was never final: a transient COMPONENT_UNREACHABLE
+ok 224 - same call: a repeat is judged again, not answered from memory, when it could now be right or was never final: a transient COMPONENT_UNREACHABLE
+  ---
+  duration_ms: 0.1965
+  type: 'test'
+  ...
+# Subtest: same call: a repeat is judged again, not answered from memory, when it could now be right or was never final: a lock miss past its retries (it asks for the same call once more)
+ok 225 - same call: a repeat is judged again, not answered from memory, when it could now be right or was never final: a lock miss past its retries (it asks for the same call once more)
+  ---
+  duration_ms: 0.257708
+  type: 'test'
+  ...
+# Subtest: same call: a repeat is judged again, not answered from memory, when it could now be right or was never final: a BODY_SHRINK that only asked for a read first
+ok 226 - same call: a repeat is judged again, not answered from memory, when it could now be right or was never final: a BODY_SHRINK that only asked for a read first
+  ---
+  duration_ms: 0.315667
+  type: 'test'
+  ...
+# Subtest: same call: an id the MODEL gave is part of the call — the corrected id a refusal asked for is sent: a Joomla update refused under a receipt id the site keeps for another kind of write
+ok 227 - same call: an id the MODEL gave is part of the call — the corrected id a refusal asked for is sent: a Joomla update refused under a receipt id the site keeps for another kind of write
+  ---
+  duration_ms: 0.830333
+  type: 'test'
+  ...
+# Subtest: same call: an id the MODEL gave is part of the call — the corrected id a refusal asked for is sent: a sealed Joomla undo of another receipt
+ok 228 - same call: an id the MODEL gave is part of the call — the corrected id a refusal asked for is sent: a sealed Joomla undo of another receipt
+  ---
+  duration_ms: 1.095833
+  type: 'test'
+  ...
+# Subtest: same call: an id the MODEL gave is part of the call — the corrected id a refusal asked for is sent: a language job asked for an mlang- id
+ok 229 - same call: an id the MODEL gave is part of the call — the corrected id a refusal asked for is sent: a language job asked for an mlang- id
+  ---
+  duration_ms: 0.857417
+  type: 'test'
+  ...
+# Subtest: same call: an id the MODEL gave is part of the call — the corrected id a refusal asked for is sent: a sealed media upload refused under a contract- receipt
+ok 230 - same call: an id the MODEL gave is part of the call — the corrected id a refusal asked for is sent: a sealed media upload refused under a contract- receipt
+  ---
+  duration_ms: 0.265959
+  type: 'test'
+  ...
+# Subtest: learned: an action the component answered bad_action for is refused here for every conversation — until an hour has passed: same conversation, next turn
+ok 231 - learned: an action the component answered bad_action for is refused here for every conversation — until an hour has passed: same conversation, next turn
+  ---
+  duration_ms: 0.469208
+  type: 'test'
+  ...
+# Subtest: learned: an action the component answered bad_action for is refused here for every conversation — until an hour has passed: another conversation on the site
+ok 232 - learned: an action the component answered bad_action for is refused here for every conversation — until an hour has passed: another conversation on the site
+  ---
+  duration_ms: 0.19775
+  type: 'test'
+  ...
+# Subtest: learned: an action the component answered bad_action for is refused here for every conversation — until an hour has passed: an hour later the component is asked again
+ok 233 - learned: an action the component answered bad_action for is refused here for every conversation — until an hour has passed: an hour later the component is asked again
+  ---
+  duration_ms: 0.143833
+  type: 'test'
+  ...
+# Subtest: learned: a plugin install that went through forgets it at once
+ok 234 - learned: a plugin install that went through forgets it at once
+  ---
+  duration_ms: 0.291083
+  type: 'test'
+  ...
+# Subtest: learned: only a "bound to its quickstart contract" refusal is learned — nothing is refused before the relay: bound to its contract
+ok 235 - learned: only a "bound to its quickstart contract" refusal is learned — nothing is refused before the relay: bound to its contract
+  ---
+  duration_ms: 0.707125
+  type: 'test'
+  ...
+# Subtest: learned: only a "bound to its quickstart contract" refusal is learned — nothing is refused before the relay: a picture path refusal
+ok 236 - learned: only a "bound to its quickstart contract" refusal is learned — nothing is refused before the relay: a picture path refusal
+  ---
+  duration_ms: 0.655167
+  type: 'test'
+  ...
+# Subtest: list search: the relay refusing it is learned for the site — the next search is refused before the relay, a plain list still goes, and fifteen minutes later it is asked again
+ok 237 - list search: the relay refusing it is learned for the site — the next search is refused before the relay, a plain list still goes, and fifteen minutes later it is asked again
+  ---
+  duration_ms: 0.581
+  type: 'test'
+  ...
+# Subtest: list search: an ok answer with no `search` key — an older relay, a plugin that never read it — is refused the same way, learned, and its rows are not shown
+ok 238 - list search: an ok answer with no `search` key — an older relay, a plugin that never read it — is refused the same way, learned, and its rows are not shown
+  ---
+  duration_ms: 0.16125
+  type: 'test'
+  ...
+# Subtest: list search: a recorded answer of a plugin that reads it — the echo and `matched` — passes with both, its rows shaped as any list, and the site is not learned as dead
+ok 239 - list search: a recorded answer of a plugin that reads it — the echo and `matched` — passes with both, its rows shaped as any list, and the site is not learned as dead
+  ---
+  duration_ms: 0.196959
+  type: 'test'
+  ...
+# Subtest: list search: the KEY is what proves the plugin read it, never its value or the rows — an echo of the empty string, a number or null passes
+ok 240 - list search: the KEY is what proves the plugin read it, never its value or the rows — an echo of the empty string, a number or null passes
+  ---
+  duration_ms: 0.3505
+  type: 'test'
+  ...
+# Subtest: list search: a plugin that refuses the search itself (bad_params) is not a dead road — its own word is the answer and nothing is learned
+ok 241 - list search: a plugin that refuses the search itself (bad_params) is not a dead road — its own word is the answer and nothing is learned
+  ---
+  duration_ms: 0.16325
+  type: 'test'
+  ...
+# Subtest: list search: Joomla is told the same, and a call that carried no search never meets the guard
+ok 242 - list search: Joomla is told the same, and a call that carried no search never meets the guard
+  ---
+  duration_ms: 0.171709
+  type: 'test'
+  ...
+# Subtest: list search: on a plugin that ignores it, a Joomla kind content.read does not list is told the same call paged — from the relay and from this host’s memory — and an article keeps content.read
+ok 243 - list search: on a plugin that ignores it, a Joomla kind content.read does not list is told the same call paged — from the relay and from this host’s memory — and an article keeps content.read
+  ---
+  duration_ms: 0.188625
+  type: 'test'
+  ...
+# Subtest: list search: an empty search is dropped and the plain list answers — even on a site that learned the dead road
+ok 244 - list search: an empty search is dropped and the plain list answers — even on a site that learned the dead road
+  ---
+  duration_ms: 0.142584
+  type: 'test'
+  ...
+# Subtest: list: a cut plain list names the way to one record by its title, after the rows that follow — a Joomla article, category and menu item, a WordPress post
+ok 245 - list: a cut plain list names the way to one record by its title, after the rows that follow — a Joomla article, category and menu item, a WordPress post
+  ---
+  duration_ms: 3.672083
+  type: 'test'
+  ...
+# Subtest: list: a cut list of a Joomla kind with no title names the rows that follow and no search
+ok 246 - list: a cut list of a Joomla kind with no title names the rows that follow and no search
+  ---
+  duration_ms: 3.556625
+  type: 'test'
+  ...
+# Subtest: list: a cut answer to a call that already searched, one with bodies, and a site that learned its plugin ignores search say no more about it
+ok 247 - list: a cut answer to a call that already searched, one with bodies, and a site that learned its plugin ignores search say no more about it
+  ---
+  duration_ms: 3.627125
+  type: 'test'
+  ...
+# Subtest: budgetFor: only a plain content.list of a kind with a title carries the search sentence, and a site that cannot search does not
+ok 248 - budgetFor: only a plain content.list of a kind with a title carries the search sentence, and a site that cannot search does not
+  ---
+  duration_ms: 0.183417
+  type: 'test'
+  ...
+# Subtest: a search-like key on a list is refused with the road to search — unless this site learned its plugin ignores it, and then the roads that work
+ok 249 - a search-like key on a list is refused with the road to search — unless this site learned its plugin ignores it, and then the roads that work
+  ---
+  duration_ms: 0.363542
+  type: 'test'
+  ...
+# Subtest: an apply with no revision, in a conversation that read none, is answered with one inspect and the values it changes
+ok 250 - an apply with no revision, in a conversation that read none, is answered with one inspect and the values it changes
+  ---
+  duration_ms: 0.364209
+  type: 'test'
+  ...
+# Subtest: an apply is sent on the revision an inspect showed, then on the afterRevision an accepted apply names — else it inspects again: the receipt names afterRevision
+ok 251 - an apply is sent on the revision an inspect showed, then on the afterRevision an accepted apply names — else it inspects again: the receipt names afterRevision
+  ---
+  duration_ms: 1.109666
+  type: 'test'
+  ...
+# Subtest: an apply is sent on the revision an inspect showed, then on the afterRevision an accepted apply names — else it inspects again: an older plugin without the field
+ok 252 - an apply is sent on the revision an inspect showed, then on the afterRevision an accepted apply names — else it inspects again: an older plugin without the field
+  ---
+  duration_ms: 0.639167
+  type: 'test'
+  ...
+# Subtest: an apply is sent on the revision an inspect showed, then on the afterRevision an accepted apply names — else it inspects again: a refused apply never teaches a revision
+ok 253 - an apply is sent on the revision an inspect showed, then on the afterRevision an accepted apply names — else it inspects again: a refused apply never teaches a revision
+  ---
+  duration_ms: 0.485583
+  type: 'test'
+  ...
+# Subtest: an afterRevision from a map-only apply is not remembered — the next site-wide apply inspects first
+ok 254 - an afterRevision from a map-only apply is not remembered — the next site-wide apply inspects first
+  ---
+  duration_ms: 1.150125
+  type: 'test'
+  ...
+# Subtest: a bare phone becomes a tel: link and evidence is the customer’s own sentence
+ok 255 - a bare phone becomes a tel: link and evidence is the customer’s own sentence
+  ---
+  duration_ms: 1.442125
+  type: 'test'
+  ...
+# Subtest: an apply sent on afterRevision, with no inspect after the write, still gets its tel: link and evidence
+ok 256 - an apply sent on afterRevision, with no inspect after the write, still gets its tel: link and evidence
+  ---
+  duration_ms: 0.838333
+  type: 'test'
+  ...
+# Subtest: content.read then apply — the apply carries the revisions read, and no inspect is sent
+ok 257 - content.read then apply — the apply carries the revisions read, and no inspect is sent
+  ---
+  duration_ms: 0.328292
+  type: 'test'
+  ...
+# Subtest: when the map read cannot be built — a slot content.read did not show, or no contentRevisions came back — the apply goes the old road: a slot the read did not show
+ok 258 - when the map read cannot be built — a slot content.read did not show, or no contentRevisions came back — the apply goes the old road: a slot the read did not show
+  ---
+  duration_ms: 0.28575
+  type: 'test'
+  ...
+# Subtest: when the map read cannot be built — a slot content.read did not show, or no contentRevisions came back — the apply goes the old road: the receipt named no contentRevisions
+ok 259 - when the map read cannot be built — a slot content.read did not show, or no contentRevisions came back — the apply goes the old road: the receipt named no contentRevisions
+  ---
+  duration_ms: 0.308333
+  type: 'test'
+  ...
+# Subtest: the receipt’s contentRevisions keep the page current — a second apply needs no read either
+ok 260 - the receipt’s contentRevisions keep the page current — a second apply needs no read either
+  ---
+  duration_ms: 0.644875
+  type: 'test'
+  ...
+# Subtest: an older plugin that ignores the map is asked once more the old way — never in a loop
+ok 261 - an older plugin that ignores the map is asked once more the old way — never in a loop
+  ---
+  duration_ms: 0.633541
+  type: 'test'
+  ...
+# Subtest: what was learned about an older plugin sticks — the next apply after a read sends no map
+ok 262 - what was learned about an older plugin sticks — the next apply after a read sends no map
+  ---
+  duration_ms: 0.707041
+  type: 'test'
+  ...
+# Subtest: an older plugin and no revision this conversation read — the fallback is INSPECT_FIRST, once
+ok 263 - an older plugin and no revision this conversation read — the fallback is INSPECT_FIRST, once
+  ---
+  duration_ms: 0.349
+  type: 'test'
+  ...
+# Subtest: a new plugin’s REVISION_STALE is its answer — never the older-plugin fallback
+ok 264 - a new plugin’s REVISION_STALE is its answer — never the older-plugin fallback
+  ---
+  duration_ms: 0.363834
+  type: 'test'
+  ...
+# Subtest: JIT: a content.read listing before any describe in this conversation points at {describe:true}
+ok 265 - JIT: a content.read listing before any describe in this conversation points at {describe:true}
+  ---
+  duration_ms: 0.179541
+  type: 'test'
+  ...
+# Subtest: JIT: what the next points at after describe, a refusal or a call with no conversation: describe → the pages in the default language
+ok 266 - JIT: what the next points at after describe, a refusal or a call with no conversation: describe → the pages in the default language
+  ---
+  duration_ms: 0.253292
+  type: 'test'
+  ...
+# Subtest: JIT: what the next points at after describe, a refusal or a call with no conversation: an old plugin’s describe → the type, no language invented
+ok 267 - JIT: what the next points at after describe, a refusal or a call with no conversation: an old plugin’s describe → the type, no language invented
+  ---
+  duration_ms: 3.277125
+  type: 'test'
+  ...
+# Subtest: JIT: what the next points at after describe, a refusal or a call with no conversation: a refusal keeps its own next
+ok 268 - JIT: what the next points at after describe, a refusal or a call with no conversation: a refusal keeps its own next
+  ---
+  duration_ms: 0.201417
+  type: 'test'
+  ...
+# Subtest: JIT: what the next points at after describe, a refusal or a call with no conversation: no conversation remembers nothing, so it is never nudged
+ok 269 - JIT: what the next points at after describe, a refusal or a call with no conversation: no conversation remembers nothing, so it is never nudged
+  ---
+  duration_ms: 0.094417
+  type: 'test'
+  ...
+# Subtest: JIT: once described, a conversation’s listings are not nudged again — a write does not change describe: the same conversation
+ok 270 - JIT: once described, a conversation’s listings are not nudged again — a write does not change describe: the same conversation
+  ---
+  duration_ms: 0.168167
+  type: 'test'
+  ...
+# Subtest: JIT: once described, a conversation’s listings are not nudged again — a write does not change describe: after a write made snapshots stale
+ok 271 - JIT: once described, a conversation’s listings are not nudged again — a write does not change describe: after a write made snapshots stale
+  ---
+  duration_ms: 0.109
+  type: 'test'
+  ...
+# Subtest: JIT: once described, a conversation’s listings are not nudged again — a write does not change describe: another conversation on the site
+ok 272 - JIT: once described, a conversation’s listings are not nudged again — a write does not change describe: another conversation on the site
+  ---
+  duration_ms: 0.100334
+  type: 'test'
+  ...
+# Subtest: content.read: a listing over 24,000 chars loses whole contents from its end and says how to get them
+ok 273 - content.read: a listing over 24,000 chars loses whole contents from its end and says how to get them
+  ---
+  duration_ms: 0.533083
+  type: 'test'
+  ...
+# Subtest: content.read: a detail, a describe and a small listing come back whole, however large: a detail of 60,000 chars
+ok 274 - content.read: a detail, a describe and a small listing come back whole, however large: a detail of 60,000 chars
+  ---
+  duration_ms: 0.097708
+  type: 'test'
+  ...
+# Subtest: content.read: a detail, a describe and a small listing come back whole, however large: a describe with 40,000 chars of guidance
+ok 275 - content.read: a detail, a describe and a small listing come back whole, however large: a describe with 40,000 chars of guidance
+  ---
+  duration_ms: 0.058792
+  type: 'test'
+  ...
+# Subtest: content.read: a detail, a describe and a small listing come back whole, however large: a small listing
+ok 276 - content.read: a detail, a describe and a small listing come back whole, however large: a small listing
+  ---
+  duration_ms: 0.114959
+  type: 'test'
+  ...
+# Subtest: content.read view=pages: a long page list is cut to the listing budget and points at url
+ok 277 - content.read view=pages: a long page list is cut to the listing budget and points at url
+  ---
+  duration_ms: 0.60375
+  type: 'test'
+  ...
+# Subtest: 🔒 content.read view=pages on a site in several languages, too long for the budget: the default language’s pages are what is shown, the rest counted
+ok 278 - 🔒 content.read view=pages on a site in several languages, too long for the budget: the default language’s pages are what is shown, the rest counted
+  ---
+  duration_ms: 0.489583
+  type: 'test'
+  ...
+# Subtest: B7: when the default language alone is too long, its head is shown; pages in no language and in "all" stay with it
+ok 279 - B7: when the default language alone is too long, its head is shown; pages in no language and in "all" stay with it
+  ---
+  duration_ms: 0.625792
+  type: 'test'
+  ...
+# Subtest: B7: it only ever changes WHICH pages the head holds — a site with one language, no known default, or none of its own pages is cut as before
+ok 280 - B7: it only ever changes WHICH pages the head holds — a site with one language, no known default, or none of its own pages is cut as before
+  ---
+  duration_ms: 1.456417
+  type: 'test'
+  ...
+# Subtest: B7: a call that named a language keeps the relay’s list of that language — narrowing to the site default is for a call that named none
+ok 281 - B7: a call that named a language keeps the relay’s list of that language — narrowing to the site default is for a call that named none
+  ---
+  duration_ms: 1.502667
+  type: 'test'
+  ...
+# Subtest: B7: a list that fits the budget, and a single link, are returned as they came — narrowing is for a cut only
+ok 282 - B7: a list that fits the budget, and a single link, are returned as they came — narrowing is for a cut only
+  ---
+  duration_ms: 0.188667
+  type: 'test'
+  ...
+# Subtest: withReadBudget: a listing and a single content carry their byte budget; the model’s own and the special reads stand
+ok 283 - withReadBudget: a listing and a single content carry their byte budget; the model’s own and the special reads stand
+  ---
+  duration_ms: 0.125125
+  type: 'test'
+  ...
+# Subtest: withReadBudget: a listing and a single content carry their byte budget; the model’s own and the special reads stand: {"describe":true}
+ok 284 - withReadBudget: a listing and a single content carry their byte budget; the model’s own and the special reads stand: {"describe":true}
+  ---
+  duration_ms: 0.034625
+  type: 'test'
+  ...
+# Subtest: withReadBudget: a listing and a single content carry their byte budget; the model’s own and the special reads stand: {"view":"pages"}
+ok 285 - withReadBudget: a listing and a single content carry their byte budget; the model’s own and the special reads stand: {"view":"pages"}
+  ---
+  duration_ms: 0.024959
+  type: 'test'
+  ...
+# Subtest: withReadBudget: a listing and a single content carry their byte budget; the model’s own and the special reads stand: {"changedSince":"cv1.x"}
+ok 286 - withReadBudget: a listing and a single content carry their byte budget; the model’s own and the special reads stand: {"changedSince":"cv1.x"}
+  ---
+  duration_ms: 0.01925
+  type: 'test'
+  ...
+# Subtest: content.read: the relay call carries the byte budget
+ok 287 - content.read: the relay call carries the byte budget
+  ---
+  duration_ms: 0.519458
+  type: 'test'
+  ...
+# Subtest: cutContentList: an unbudgeted listing is cut here; a one-link view or a plugin-budgeted answer is returned as it came: unbudgeted
+ok 288 - cutContentList: an unbudgeted listing is cut here; a one-link view or a plugin-budgeted answer is returned as it came: unbudgeted
+  ---
+  duration_ms: 0.435834
+  type: 'test'
+  ...
+# Subtest: cutContentList: an unbudgeted listing is cut here; a one-link view or a plugin-budgeted answer is returned as it came: budgeted by the plugin
+ok 289 - cutContentList: an unbudgeted listing is cut here; a one-link view or a plugin-budgeted answer is returned as it came: budgeted by the plugin
+  ---
+  duration_ms: 0.02125
+  type: 'test'
+  ...
+# Subtest: cutContentList: an unbudgeted listing is cut here; a one-link view or a plugin-budgeted answer is returned as it came: one link of the pages view
+ok 290 - cutContentList: an unbudgeted listing is cut here; a one-link view or a plugin-budgeted answer is returned as it came: one link of the pages view
+  ---
+  duration_ms: 0.019833
+  type: 'test'
+  ...
+# Subtest: media.delete previews first, then deletes once only after the door confirmation is answered
+ok 291 - media.delete previews first, then deletes once only after the door confirmation is answered
+  ---
+  duration_ms: 1.014875
+  type: 'test'
+  ...
+# Subtest: media.delete dry_run remains a preview even when confirm is present
+ok 292 - media.delete dry_run remains a preview even when confirm is present
+  ---
+  duration_ms: 0.571542
+  type: 'test'
+  ...
+# Subtest: a preview-only media.delete exchange cannot confirm a different attachment
+ok 293 - a preview-only media.delete exchange cannot confirm a different attachment
+  ---
+  duration_ms: 0.266458
+  type: 'test'
+  ...
+# Subtest: media.delete with storageDeleted:false lists filesLeft and never claims storage or URL removal
+ok 294 - media.delete with storageDeleted:false lists filesLeft and never claims storage or URL removal
+  ---
+  duration_ms: 0.352709
+  type: 'test'
+  ...
+# Subtest: media.delete refuses before confirmation when dry run exceeds undo-copy cap
+ok 295 - media.delete refuses before confirmation when dry run exceeds undo-copy cap
+  ---
+  duration_ms: 0.116833
+  type: 'test'
+  ...
+# Subtest: media.delete on an old Claude Cowork plugin reports its refusal and never falls back
+ok 296 - media.delete on an old Claude Cowork plugin reports its refusal and never falls back
+  ---
+  duration_ms: 0.152125
+  type: 'test'
+  ...
+# Subtest: tiers: a destructive call is refused CONFIRM_FIRST — nothing sent, the model’s own confirm:true is no answer
+ok 297 - tiers: a destructive call is refused CONFIRM_FIRST — nothing sent, the model’s own confirm:true is no answer
+  ---
+  duration_ms: 0.495958
+  type: 'test'
+  ...
+# Subtest: tiers: after the customer answered, the call runs once without confirm; the next message does not unlock it again
+ok 298 - tiers: after the customer answered, the call runs once without confirm; the next message does not unlock it again
+  ---
+  duration_ms: 0.386208
+  type: 'test'
+  ...
+# Subtest: 🔒 tiers: a question the agent wrote opens no delete, whatever it names and whatever the customer answered — the door asks its own question once
+ok 299 - 🔒 tiers: a question the agent wrote opens no delete, whatever it names and whatever the customer answered — the door asks its own question once
+  ---
+  duration_ms: 2.172917
+  type: 'test'
+  ...
+# Subtest: 🔒 tiers: Joomla — a delete the customer confirmed gets an apply_id of Tracy’s own, so the component never answers "apply_id required" after the yes
+ok 300 - 🔒 tiers: Joomla — a delete the customer confirmed gets an apply_id of Tracy’s own, so the component never answers "apply_id required" after the yes
+  ---
+  duration_ms: 0.295542
+  type: 'test'
+  ...
+# Subtest: 🔒 tiers: the confirmation is keyed on what the delete does, not on the name its receipt goes by
+ok 301 - 🔒 tiers: the confirmation is keyed on what the delete does, not on the name its receipt goes by
+  ---
+  duration_ms: 0.187958
+  type: 'test'
+  ...
+# Subtest: tiers: a mutating call is never asked to confirm, and confirm:true on it is dropped, not relayed
+ok 302 - tiers: a mutating call is never asked to confirm, and confirm:true on it is dropped, not relayed
+  ---
+  duration_ms: 0.1305
+  type: 'test'
+  ...
+# Subtest: the receipt next is one short line that keeps a several-item job going
+ok 303 - the receipt next is one short line that keeps a several-item job going
+  ---
+  duration_ms: 0.031375
+  type: 'test'
+  ...
+# Subtest: withReceipt: a write that went through says it is the receipt; reads, dry runs, refusals and own nexts do not change: "content.update"
+ok 304 - withReceipt: a write that went through says it is the receipt; reads, dry runs, refusals and own nexts do not change: "content.update"
+  ---
+  duration_ms: 0.03325
+  type: 'test'
+  ...
+# Subtest: withReceipt: a write that went through says it is the receipt; reads, dry runs, refusals and own nexts do not change: "content.contract"
+ok 305 - withReceipt: a write that went through says it is the receipt; reads, dry runs, refusals and own nexts do not change: "content.contract"
+  ---
+  duration_ms: 0.021584
+  type: 'test'
+  ...
+# Subtest: withReceipt: a write that went through says it is the receipt; reads, dry runs, refusals and own nexts do not change: "content.contract"
+ok 306 - withReceipt: a write that went through says it is the receipt; reads, dry runs, refusals and own nexts do not change: "content.contract"
+  ---
+  duration_ms: 0.016584
+  type: 'test'
+  ...
+# Subtest: withReceipt: a write that went through says it is the receipt; reads, dry runs, refusals and own nexts do not change: "content.replace"
+ok 307 - withReceipt: a write that went through says it is the receipt; reads, dry runs, refusals and own nexts do not change: "content.replace"
+  ---
+  duration_ms: 0.017791
+  type: 'test'
+  ...
+# Subtest: withReceipt: a write that went through says it is the receipt; reads, dry runs, refusals and own nexts do not change: "page.text"
+ok 308 - withReceipt: a write that went through says it is the receipt; reads, dry runs, refusals and own nexts do not change: "page.text"
+  ---
+  duration_ms: 0.018375
+  type: 'test'
+  ...
+# Subtest: withReceipt: a write that went through says it is the receipt; reads, dry runs, refusals and own nexts do not change: "content.update"
+ok 309 - withReceipt: a write that went through says it is the receipt; reads, dry runs, refusals and own nexts do not change: "content.update"
+  ---
+  duration_ms: 0.015958
+  type: 'test'
+  ...
+# Subtest: withReceipt: a write that went through says it is the receipt; reads, dry runs, refusals and own nexts do not change: "content.update"
+ok 310 - withReceipt: a write that went through says it is the receipt; reads, dry runs, refusals and own nexts do not change: "content.update"
+  ---
+  duration_ms: 0.0165
+  type: 'test'
+  ...
+# Subtest: fallback nexts never ask for the same call again or say nothing was written: "Change what the earlier refusal named, or tell the customer why it cannot be do
+ok 311 - fallback nexts never ask for the same call again or say nothing was written: "Change what the earlier refusal named, or tell the customer why it cannot be do
+  ---
+  duration_ms: 0.102166
+  type: 'test'
+  ...
+# Subtest: fallback nexts never ask for the same call again or say nothing was written: "It may have landed: read what it would have changed before anything else; do no
+ok 312 - fallback nexts never ask for the same call again or say nothing was written: "It may have landed: read what it would have changed before anything else; do no
+  ---
+  duration_ms: 0.042833
+  type: 'test'
+  ...
+# Subtest: apply.revert with no apply_id is refused before the relay — it lists this conversation’s receipts, or says never to guess: two receipts
+ok 313 - apply.revert with no apply_id is refused before the relay — it lists this conversation’s receipts, or says never to guess: two receipts
+  ---
+  duration_ms: 0.124541
+  type: 'test'
+  ...
+# Subtest: apply.revert with no apply_id is refused before the relay — it lists this conversation’s receipts, or says never to guess: no write in this conversation
+ok 314 - apply.revert with no apply_id is refused before the relay — it lists this conversation’s receipts, or says never to guess: no write in this conversation
+  ---
+  duration_ms: 0.044625
+  type: 'test'
+  ...
+# Subtest: a body over 16,000 characters is read as its outline, its length remembered whole
+ok 315 - a body over 16,000 characters is read as its outline, its length remembered whole
+  ---
+  duration_ms: 0.204667
+  type: 'test'
+  ...
+# Subtest: 🔒 content.get {outline:true} on a page that lists posts answers what the listing shows — no block read after it
+ok 316 - 🔒 content.get {outline:true} on a page that lists posts answers what the listing shows — no block read after it
+  ---
+  duration_ms: 0.271458
+  type: 'test'
+  ...
+# Subtest: a whole-body write made from the part of a long post it could see is cut, and refused
+ok 317 - a whole-body write made from the part of a long post it could see is cut, and refused
+  ---
+  duration_ms: 0.302875
+  type: 'test'
+  ...
+# Subtest: a body of one block is shown whole — it has nothing to name but itself
+ok 318 - a body of one block is shown whole — it has nothing to name but itself
+  ---
+  duration_ms: 0.160209
+  type: 'test'
+  ...
+# Subtest: one block is read by its index, and block is never relayed
+ok 319 - one block is read by its index, and block is never relayed
+  ---
+  duration_ms: 0.1815
+  type: 'test'
+  ...
+# Subtest: one block changed — the body is spliced host-side and written whole through the guard
+ok 320 - one block changed — the body is spliced host-side and written whole through the guard
+  ---
+  duration_ms: 1.048292
+  type: 'test'
+  ...
+# Subtest: blocks that name no such position, sit beside a whole body, or would cut the page are refused with nothing written: no such position
+ok 321 - blocks that name no such position, sit beside a whole body, or would cut the page are refused with nothing written: no such position
+  ---
+  duration_ms: 0.147625
+  type: 'test'
+  ...
+# Subtest: blocks that name no such position, sit beside a whole body, or would cut the page are refused with nothing written: blocks beside a whole body
+ok 322 - blocks that name no such position, sit beside a whole body, or would cut the page are refused with nothing written: blocks beside a whole body
+  ---
+  duration_ms: 0.100083
+  type: 'test'
+  ...
+# Subtest: blocks that name no such position, sit beside a whole body, or would cut the page are refused with nothing written: block 2 dropped with block 1 cut to a line
+ok 323 - blocks that name no such position, sit beside a whole body, or would cut the page are refused with nothing written: block 2 dropped with block 1 cut to a line
+  ---
+  duration_ms: 0.226666
+  type: 'test'
+  ...
+# Subtest: blocks that name no such position, sit beside a whole body, or would cut the page are refused with nothing written: every block dropped
+ok 324 - blocks that name no such position, sit beside a whole body, or would cut the page are refused with nothing written: every block dropped
+  ---
+  duration_ms: 0.499958
+  type: 'test'
+  ...
+# Subtest: blocks:{"<i>":null} drops a section without removes, in any language: "Ẩn phần dự án đi"
+ok 325 - blocks:{"<i>":null} drops a section without removes, in any language: "Ẩn phần dự án đi"
+  ---
+  duration_ms: 0.392083
+  type: 'test'
+  ...
+# Subtest: blocks:{"<i>":null} drops a section without removes, in any language: "把联系部分去掉"
+ok 326 - blocks:{"<i>":null} drops a section without removes, in any language: "把联系部分去掉"
+  ---
+  duration_ms: 0.235167
+  type: 'test'
+  ...
+# Subtest: blocks:{"<i>":null} drops a section without removes, in any language: "Entferne den Kontaktbereich"
+ok 327 - blocks:{"<i>":null} drops a section without removes, in any language: "Entferne den Kontaktbereich"
+  ---
+  duration_ms: 0.216834
+  type: 'test'
+  ...
+# Subtest: a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: nested jatools-config lost its last }
+ok 328 - a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: nested jatools-config lost its last }
+  ---
+  duration_ms: 0.331959
+  type: 'test'
+  ...
+# Subtest: a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: params broken at top level
+ok 329 - a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: params broken at top level
+  ---
+  duration_ms: 0.117666
+  type: 'test'
+  ...
+# Subtest: a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: article attribs with a trailing comma
+ok 330 - a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: article attribs with a trailing comma
+  ---
+  duration_ms: 0.085792
+  type: 'test'
+  ...
+# Subtest: a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: a closed nested list that does not parse
+ok 331 - a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: a closed nested list that does not parse
+  ---
+  duration_ms: 0.109625
+  type: 'test'
+  ...
+# Subtest: a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: a nested object that does not parse
+ok 332 - a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: a nested object that does not parse
+  ---
+  duration_ms: 0.071583
+  type: 'test'
+  ...
+# Subtest: a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: params as an object would replace the whole column
+ok 333 - a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: params as an object would replace the whole column
+  ---
+  duration_ms: 0.095541
+  type: 'test'
+  ...
+# Subtest: a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: a bigger object is no kinder
+ok 334 - a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: a bigger object is no kinder
+  ---
+  duration_ms: 0.058125
+  type: 'test'
+  ...
+# Subtest: a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: the same params with the brace kept, byte for byte
+ok 335 - a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: the same params with the brace kept, byte for byte
+  ---
+  duration_ms: 0.222542
+  type: 'test'
+  ...
+# Subtest: a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: square-bracket header text
+ok 336 - a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: square-bracket header text
+  ---
+  duration_ms: 0.085875
+  type: 'test'
+  ...
+# Subtest: a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: a loadposition tag and empty JSON words
+ok 337 - a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: a loadposition tag and empty JSON words
+  ---
+  duration_ms: 0.08025
+  type: 'test'
+  ...
+# Subtest: a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: a footnote marker
+ok 338 - a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: a footnote marker
+  ---
+  duration_ms: 0.069125
+  type: 'test'
+  ...
+# Subtest: a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: a Vietnamese footnote marker
+ok 339 - a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: a Vietnamese footnote marker
+  ---
+  duration_ms: 0.127667
+  type: 'test'
+  ...
+# Subtest: a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: a bracketed brand
+ok 340 - a JSON column is JSON down to its nested strings — a broken or whole-column write is refused, words that only look like JSON pass: a bracketed brand
+  ---
+  duration_ms: 0.060667
+  type: 'test'
+  ...
+# Subtest: params {patch} changes one key and keeps every other, nested jatools-config included
+ok 341 - params {patch} changes one key and keeps every other, nested jatools-config included
+  ---
+  duration_ms: 0.335916
+  type: 'test'
+  ...
+# Subtest: a patch that re-types a stored JSON text as a string and drops one of its keys is refused, nothing written
+ok 342 - a patch that re-types a stored JSON text as a string and drops one of its keys is refused, nothing written
+  ---
+  duration_ms: 0.299958
+  type: 'test'
+  ...
+# Subtest: the same change sent as an object merges into the stored JSON text and keeps ":type"
+ok 343 - the same change sent as an object merges into the stored JSON text and keeps ":type"
+  ---
+  duration_ms: 0.182167
+  type: 'test'
+  ...
+# Subtest: a JSON text re-typed as a string that keeps every key of the stored one still replaces it
+ok 344 - a JSON text re-typed as a string that keeps every key of the stored one still replaces it
+  ---
+  duration_ms: 0.143125
+  type: 'test'
+  ...
+# Subtest: a patch needs an id and a stored column that is JSON; a failed read is answered as it came: no id
+ok 345 - a patch needs an id and a stored column that is JSON; a failed read is answered as it came: no id
+  ---
+  duration_ms: 0.124917
+  type: 'test'
+  ...
+# Subtest: a patch needs an id and a stored column that is JSON; a failed read is answered as it came: stored column is not JSON
+ok 346 - a patch needs an id and a stored column that is JSON; a failed read is answered as it came: stored column is not JSON
+  ---
+  duration_ms: 0.069041
+  type: 'test'
+  ...
+# Subtest: a patch needs an id and a stored column that is JSON; a failed read is answered as it came: the read failed
+ok 347 - a patch needs an id and a stored column that is JSON; a failed read is answered as it came: the read failed
+  ---
+  duration_ms: 0.064708
+  type: 'test'
+  ...
+# Subtest: a patch needs an id and a stored column that is JSON; a failed read is answered as it came: an empty column takes the patch
+ok 348 - a patch needs an id and a stored column that is JSON; a failed read is answered as it came: an empty column takes the patch
+  ---
+  duration_ms: 0.077541
+  type: 'test'
+  ...
+# Subtest: a patch needs an id and a stored column that is JSON; a failed read is answered as it came: a patch beside a bare key
+ok 349 - a patch needs an id and a stored column that is JSON; a failed read is answered as it came: a patch beside a bare key
+  ---
+  duration_ms: 0.0525
+  type: 'test'
+  ...
+# Subtest: global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: the measured write that lost one } (answered ok and dropped every user style)
+ok 350 - global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: the measured write that lost one } (answered ok and dropped every user style)
+  ---
+  duration_ms: 0.3125
+  type: 'test'
+  ...
+# Subtest: global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: the brace put back at the end closes settings round the flag
+ok 351 - global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: the brace put back at the end closes settings round the flag
+  ---
+  duration_ms: 0.158125
+  type: 'test'
+  ...
+# Subtest: global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: the brace put back where it was dropped
+ok 352 - global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: the brace put back where it was dropped
+  ---
+  duration_ms: 0.170917
+  type: 'test'
+  ...
+# Subtest: global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: JSON without its flag
+ok 353 - global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: JSON without its flag
+  ---
+  duration_ms: 0.159125
+  type: 'test'
+  ...
+# Subtest: global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: flag false
+ok 354 - global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: flag false
+  ---
+  duration_ms: 0.134959
+  type: 'test'
+  ...
+# Subtest: global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: a list, not one object
+ok 355 - global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: a list, not one object
+  ---
+  duration_ms: 0.386416
+  type: 'test'
+  ...
+# Subtest: global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: sound JSON that keeps its flag
+ok 356 - global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: sound JSON that keeps its flag
+  ---
+  duration_ms: 0.234209
+  type: 'test'
+  ...
+# Subtest: global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: a create by post_type
+ok 357 - global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: a create by post_type
+  ---
+  duration_ms: 0.199292
+  type: 'test'
+  ...
+# Subtest: global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: a create with the flag named in the text
+ok 358 - global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: a create with the flag named in the text
+  ---
+  duration_ms: 0.101083
+  type: 'test'
+  ...
+# Subtest: global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: an ordinary post whose words open with a brace
+ok 359 - global styles: theme.json in a global-styles post must stay whole JSON with its flag — refused by name, nothing sent: an ordinary post whose words open with a brace
+  ---
+  duration_ms: 0.092334
+  type: 'test'
+  ...
+# Subtest: 🔒 first call of an add, Joomla: a pages read by address answers the page’s lists — one more read, told nowhere
+ok 360 - 🔒 first call of an add, Joomla: a pages read by address answers the page’s lists — one more read, told nowhere
+  ---
+  duration_ms: 0.675666
+  type: 'test'
+  ...
+# Subtest: 🔒 first call of an add, WordPress: the page’s own post is read and its query says what it lists
+ok 361 - 🔒 first call of an add, WordPress: the page’s own post is read and its query says what it lists
+  ---
+  duration_ms: 0.339084
+  type: 'test'
+  ...
+# Subtest: first call of an add, WordPress: the include/exclude taxQuery of WordPress 6.8+ (the seeder’s, on a category with archived articles) names its category
+ok 362 - first call of an add, WordPress: the include/exclude taxQuery of WordPress 6.8+ (the seeder’s, on a category with archived articles) names its category
+  ---
+  duration_ms: 0.22225
+  type: 'test'
+  ...
+# Subtest: 🔒 first call of an add, WordPress: a page that holds a listing the host cannot reduce says where to read it — no create, and the note is what the model reads
+ok 363 - 🔒 first call of an add, WordPress: a page that holds a listing the host cannot reduce says where to read it — no create, and the note is what the model reads
+  ---
+  duration_ms: 0.205
+  type: 'test'
+  ...
+# Subtest: the inner reads run on a pages read by address only — not on a describe, a listing, an id or the whole page list
+ok 364 - the inner reads run on a pages read by address only — not on a describe, a listing, an id or the whole page list
+  ---
+  duration_ms: 0.293375
+  type: 'test'
+  ...
+# Subtest: a failed inner read leaves the pages answer exactly as the relay gave it
+ok 365 - a failed inner read leaves the pages answer exactly as the relay gave it
+  ---
+  duration_ms: 0.110542
+  type: 'test'
+  ...
+# Subtest: a page whose menu item lists only what carries a tag gets no lists — the tag is in the link, where Joomla stores it
+ok 366 - a page whose menu item lists only what carries a tag gets no lists — the tag is in the link, where Joomla stores it
+  ---
+  duration_ms: 0.182917
+  type: 'test'
+  ...
+# Subtest: 🔒 an address with no language prefix is asked again under the default language, and the answer says so
+ok 367 - 🔒 an address with no language prefix is asked again under the default language, and the answer says so
+  ---
+  duration_ms: 0.394875
+  type: 'test'
+  ...
+# Subtest: the retry reads no further when it finds no page: the answer is the first one, with its way on
+ok 368 - the retry reads no further when it finds no page: the answer is the first one, with its way on
+  ---
+  duration_ms: 0.175042
+  type: 'test'
+  ...
+# Subtest: the retry is not made when the default language is not known for sure, or the address is not the kind that needs it
+ok 369 - the retry is not made when the default language is not known for sure, or the address is not the kind that needs it
+  ---
+  duration_ms: 0.513209
+  type: 'test'
+  ...
+# Subtest: a site that names its own default asks again with no facts at all — WordPress under a language prefix
+ok 370 - a site that names its own default asks again with no facts at all — WordPress under a language prefix
+  ---
+  duration_ms: 0.171375
+  type: 'test'
+  ...
+# Subtest: a retry the site refuses or loses is not asked again: the first answer stands, no waiting
+ok 371 - a retry the site refuses or loses is not asked again: the first answer stands, no waiting
+  ---
+  duration_ms: 0.2525
+  type: 'test'
+  ...
+# Subtest: the model’s own write to a shared record asks first, nothing sent; the same write as a door’s step runs
+ok 372 - the model’s own write to a shared record asks first, nothing sent; the same write as a door’s step runs
+  ---
+  duration_ms: 0.323166
+  type: 'test'
+  ...
+# Subtest: a WordPress template part written by the model asks first, naming it, with nothing sent
+ok 373 - a WordPress template part written by the model asks first, naming it, with nothing sent
+  ---
+  duration_ms: 0.270792
+  type: 'test'
+  ...
+# Subtest: a whole body that changes two blocks is refused BODY_WIDE, nothing written, and sent to blocks with the rev
+ok 374 - a whole body that changes two blocks is refused BODY_WIDE, nothing written, and sent to blocks with the rev
+  ---
+  duration_ms: 0.447375
+  type: 'test'
+  ...
+# Subtest: a whole body that changes one block, or adds one, goes on; a door’s own step is not held to it
+ok 375 - a whole body that changes one block, or adds one, goes on; a door’s own step is not held to it
+  ---
+  duration_ms: 0.289583
+  type: 'test'
+  ...
+# Subtest: 🔒 a delete names its record on the question, read by Tracy; an unreadable record is not asked about
+ok 376 - 🔒 a delete names its record on the question, read by Tracy; an unreadable record is not asked about
+  ---
+  duration_ms: 0.203667
+  type: 'test'
+  ...
+# Subtest: 🔒 a hide names its record too, and the card must say hide, not delete, in the conversation’s language
+ok 377 - 🔒 a hide names its record too, and the card must say hide, not delete, in the conversation’s language
+  ---
+  duration_ms: 0.596084
+  type: 'test'
+  ...
+# Subtest: private demo reads and plans take no content lease; frozen asset imports take the write lease
+ok 378 - private demo reads and plans take no content lease; frozen asset imports take the write lease
+  ---
+  duration_ms: 2.485042
+  type: 'test'
+  ...
+# Subtest: a build whose saved plan agreed is not asked about a shared write; a delete in it still asks
+ok 379 - a build whose saved plan agreed is not asked about a shared write; a delete in it still asks
+  ---
+  duration_ms: 0.382792
+  type: 'test'
+  ...
+# Subtest: 🔒 the sweep cuts a one-block template body to its placeholder on a read made for the write
+ok 380 - 🔒 the sweep cuts a one-block template body to its placeholder on a read made for the write
+  ---
+  duration_ms: 0.575
+  type: 'test'
+  ...
+# Subtest: 🔒 the same write outside the sweep, over a customer's own words, is still refused BODY_SHRINK
+ok 381 - 🔒 the same write outside the sweep, over a customer's own words, is still refused BODY_SHRINK
+  ---
+  duration_ms: 0.2265
+  type: 'test'
+  ...
+# Subtest: 🔒 a block write that replaces the template's lorem may leave the body shorter, outside the sweep too
+ok 382 - 🔒 a block write that replaces the template's lorem may leave the body shorter, outside the sweep too
+  ---
+  duration_ms: 0.314583
+  type: 'test'
+  ...
+# Subtest: 🔒 the sweep with a rev from an older body is refused REVISION_STALE, nothing sent
+ok 383 - 🔒 the sweep with a rev from an older body is refused REVISION_STALE, nothing sent
+  ---
+  duration_ms: 0.126667
+  type: 'test'
+  ...
+# Subtest: 🔒 the sweep writes a Joomla template article's research body on a read made for the write
+ok 384 - 🔒 the sweep writes a Joomla template article's research body on a read made for the write
+  ---
+  duration_ms: 0.228042
+  type: 'test'
+  ...
+# Subtest: 🔒 the same Joomla write outside the sweep, or inside it with no read, is still refused BODY_SHRINK
+ok 385 - 🔒 the same Joomla write outside the sweep, or inside it with no read, is still refused BODY_SHRINK
+  ---
+  duration_ms: 0.210209
+  type: 'test'
+  ...
+# Subtest: a site is sent only the tools that act on its own platform
+ok 386 - a site is sent only the tools that act on its own platform
+  ---
+  duration_ms: 0.942458
+  type: 'test'
+  ...
+# Subtest: an unread platform hides nothing, and nothing is named that the agent cannot see
+ok 387 - an unread platform hides nothing, and nothing is named that the agent cannot see
+  ---
+  duration_ms: 0.067416
+  type: 'test'
+  ...
+# Subtest: which description a site gets
+ok 388 - which description a site gets
+  ---
+  duration_ms: 0.401667
+  type: 'test'
+  ...
+# Subtest: every action a surface names is one planCall accepts
+ok 389 - every action a surface names is one planCall accepts
+  ---
+  duration_ms: 0.223917
+  type: 'test'
+  ...
+# Subtest: the replace job joins a surface only through the gate the site context reads
+ok 390 - the replace job joins a surface only through the gate the site context reads
+  ---
+  duration_ms: 0.069125
+  type: 'test'
+  ...
+# Subtest: 🔒 a description names its own actions and no other
+ok 391 - 🔒 a description names its own actions and no other
+  ---
+  duration_ms: 4.815917
+  type: 'test'
+  ...
+# Subtest: 🔒 unbound WordPress is never told about a contract, and a quickstart site has the open surface
+ok 392 - 🔒 unbound WordPress is never told about a contract, and a quickstart site has the open surface
+  ---
+  duration_ms: 0.332958
+  type: 'test'
+  ...
+# Subtest: 🔒 content.read is on every surface, described once, bridged to that surface's write door
+ok 393 - 🔒 content.read is on every surface, described once, bridged to that surface's write door
+  ---
+  duration_ms: 0.622708
+  type: 'test'
+  ...
+# Subtest: 🔒 content.locate is on every surface and accepted before the relay, yet no description names it
+ok 394 - 🔒 content.locate is on every surface and accepted before the relay, yet no description names it
+  ---
+  duration_ms: 0.420458
+  type: 'test'
+  ...
+# Subtest: 🔒 the page map distinguishes known URLs, title search and opaque IDs without a describe round trip
+ok 395 - 🔒 the page map distinguishes known URLs, title search and opaque IDs without a describe round trip
+  ---
+  duration_ms: 0.447833
+  type: 'test'
+  ...
+# Subtest: page lookup guidance batches named titles and reuses IDs before reading fields on every CMS
+ok 396 - page lookup guidance batches named titles and reuses IDs before reading fields on every CMS
+  ---
+  duration_ms: 0.151916
+  type: 'test'
+  ...
+# Subtest: 🔒 every content.read block says native holds the CMS ids
+ok 397 - 🔒 every content.read block says native holds the CMS ids
+  ---
+  duration_ms: 0.049625
+  type: 'test'
+  ...
+# Subtest: 🔒 on a contract surface, content.read names slotKey as the key of content.contract apply changes
+ok 398 - 🔒 on a contract surface, content.read names slotKey as the key of content.contract apply changes
+  ---
+  duration_ms: 0.173458
+  type: 'test'
+  ...
+# Subtest: 🔒 on EmDash, content.read is accepted before the relay and names the tracy_emdash entry
+ok 399 - 🔒 on EmDash, content.read is accepted before the relay and names the tracy_emdash entry
+  ---
+  duration_ms: 0.076125
+  type: 'test'
+  ...
+# Subtest: 🔒 a bound WordPress site is told the contract, on top of the open WordPress writes
+ok 400 - 🔒 a bound WordPress site is told the contract, on top of the open WordPress writes
+  ---
+  duration_ms: 0.183792
+  type: 'test'
+  ...
+# Subtest: 🔒 an imported copy with a derived contract keeps its open surface and gets the derived door
+ok 401 - 🔒 an imported copy with a derived contract keeps its open surface and gets the derived door
+  ---
+  duration_ms: 0.237625
+  type: 'test'
+  ...
+# Subtest: 🔒 every surface takes the customer's own file by name, and a quickstart keeps the slot picture road
+ok 402 - 🔒 every surface takes the customer's own file by name, and a quickstart keeps the slot picture road
+  ---
+  duration_ms: 0.357166
+  type: 'test'
+  ...
+# Subtest: 🔒 the pictures block offers a draw a slot on a quickstart, like or aspect on an open site
+ok 403 - 🔒 the pictures block offers a draw a slot on a quickstart, like or aspect on an open site
+  ---
+  duration_ms: 0.174125
+  type: 'test'
+  ...
+# Subtest: 🔒 the read blocks offer content.list search with the release that reads it and the road an older plugin sends the model to
+ok 404 - 🔒 the read blocks offer content.list search with the release that reads it and the road an older plugin sends the model to
+  ---
+  duration_ms: 0.184667
+  type: 'test'
+  ...
+# Subtest: 🔒 the contract block is T13: T6 replaces the id-making sentences, T11 is quoted verbatim
+ok 405 - 🔒 the contract block is T13: T6 replaces the id-making sentences, T11 is quoted verbatim
+  ---
+  duration_ms: 0.234667
+  type: 'test'
+  ...
+# Subtest: 🔒 only the Joomla record writes ask for an apply_id per item, and every id the model fills is listed
+ok 406 - 🔒 only the Joomla record writes ask for an apply_id per item, and every id the model fills is listed
+  ---
+  duration_ms: 3.192834
+  type: 'test'
+  ...
+# Subtest: 🔒 WordPress reads: lists are posts only, an option is read by its key
+ok 407 - 🔒 WordPress reads: lists are posts only, an option is read by its key
+  ---
+  duration_ms: 0.322958
+  type: 'test'
+  ...
+# Subtest: 🔒 the WordPress write says post_content replaces the whole body, and every write names its key
+ok 408 - 🔒 the WordPress write says post_content replaces the whole body, and every write names its key
+  ---
+  duration_ms: 0.127417
+  type: 'test'
+  ...
+# Subtest: the WordPress read-back fallback changes only the write block, and says the read the context says
+ok 409 - the WordPress read-back fallback changes only the write block, and says the read the context says
+  ---
+  duration_ms: 0.203958
+  type: 'test'
+  ...
+# Subtest: an EmDash site is told only the page tools, and where its content door is
+ok 410 - an EmDash site is told only the page tools, and where its content door is
+  ---
+  duration_ms: 0.129125
+  type: 'test'
+  ...
+# Subtest: every surface says the page read, the normalized fact and the apply.list rule the same way
+ok 411 - every surface says the page read, the normalized fact and the apply.list rule the same way
+  ---
+  duration_ms: 0.223042
+  type: 'test'
+  ...
+# Subtest: open Joomla's write block names add, edit, move and trash in the component's own shapes
+ok 412 - open Joomla's write block names add, edit, move and trash in the component's own shapes
+  ---
+  duration_ms: 0.06925
+  type: 'test'
+  ...
+# Subtest: every action block follows T12: its parts in order, each missing one listed, within its budget
+ok 413 - every action block follows T12: its parts in order, each missing one listed, within its budget
+  ---
+  duration_ms: 1.535875
+  type: 'test'
+  ...
+# Subtest: each description stays within its budget, the replace job left out
+ok 414 - each description stays within its budget, the replace job left out
+  ---
+  duration_ms: 0.40825
+  type: 'test'
+  ...
+# Subtest: the action parameter is an enum of the surface, and siteKey is gone
+ok 415 - the action parameter is an enum of the surface, and siteKey is gone
+  ---
+  duration_ms: 0.2475
+  type: 'test'
+  ...
+# Subtest: 🔒 two sites of one kind get byte-identical tools, free of either site
+ok 416 - 🔒 two sites of one kind get byte-identical tools, free of either site
+  ---
+  duration_ms: 1.99075
+  type: 'test'
+  ...
+# Subtest: the full description is the fallback, with the per-surface corrections in it
+ok 417 - the full description is the fallback, with the per-surface corrections in it
+  ---
+  duration_ms: 0.247416
+  type: 'test'
+  ...
+# Subtest: T-D roster: every plugin a generated preset mounts is known, and registers the tools named here
+ok 418 - T-D roster: every plugin a generated preset mounts is known, and registers the tools named here
+  ---
+  duration_ms: 24.604375
+  type: 'test'
+  ...
+# Subtest: T-D roster: the bundle default mounts every tool of every generated preset
+ok 419 - T-D roster: the bundle default mounts every tool of every generated preset
+  ---
+  duration_ms: 1.218291
+  type: 'test'
+  ...
+# Subtest: the site tool never offers content.renderedWords: content.replace calls it itself
+ok 420 - the site tool never offers content.renderedWords: content.replace calls it itself
+  ---
+  duration_ms: 0.147333
+  type: 'test'
+  ...
+1..420
+# tests 420
+# suites 0
+# pass 420
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2647.509334

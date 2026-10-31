@@ -1,0 +1,1210 @@
+check-all: lint
+check-lint: time — oxlint: 4193 ms (ok)
+check-lint: cache — restore: unknown (no restore outputs were passed to this run)
+check-lint: typecheck — 14 project(s), 4 at a time
+check-lint: tsc -p packages/brand/tracy-brand ok (1403 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/ui/tracy-chat-input ok (2918 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/ui/tracy-settings ok (7130 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/ui/tracy-sidebar ok (6276 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/ui/tracy-ui ok (11241 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/site/tracy-add-site ok (5463 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/site/tracy-my-sites ok (5529 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/site/tracy-inbox ok (3765 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/ui/tracy-mode-picker ok (2000 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/site/tracy-site-tabs ok (6096 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/core/tracy-core ok (4760 ms) [build-info before start: disabled]
+check-lint: tsc -p tsconfig.scripts.json ok (4222 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/dev/tracy-design ok (20448 ms) [build-info before start: disabled]
+check-lint: tsc -p packages/web/tracy-harness ok (9096 ms) [build-info before start: disabled]
+check-lint: cache — build-info: disabled (no TRACY_TSC_CACHE_DIR, or the sequential fallback: no --incremental was passed)
+check-lint: time — typecheck (whole stage): 24308 ms (ok)
+$ biome format && biome lint
+Checked 11704 files in 3s. No fixes applied.
+packages/brand/tracy-brand/src/client/appearance-row.tsx:35:41 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    33 │ function Window({ dark }: { dark: boolean }) {
+    34 │   return (
+  > 35 │     <span className={`tb-pv-win${dark ? ' tb-pv-dark' : ''}`}>
+       │                                         ^^^^^^^^^^^^^
+    36 │       <span className="tb-pv-side" />
+    37 │       <span className="tb-pv-body">
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    35 │ ····<span·className={`tb-pv-win${dark·?·'·tb-pv-dark'·:·''}`}>
+       │                                          -                    
+
+packages/brand/tracy-brand/src/client/appearance-row.tsx:86:56 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    84 │             onClick={() => theme.setTheme(id)}
+    85 │           >
+  > 86 │             <span className={`tb-pv${id === 'system' ? ' tb-pv-split' : ''}`} aria-hidden="true">
+       │                                                        ^^^^^^^^^^^^^^
+    87 │               {id === 'system' ? (
+    88 │                 <>
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    86 │ ············<span·className={`tb-pv${id·===·'system'·?·'·tb-pv-split'·:·''}`}·aria-hidden="true">
+       │                                                         -                                        
+
+packages/core/tracy-core/src/site-tabs/DownloadBackupDialog.tsx:319:25 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    317 │             <p
+    318 │               role="status"
+  > 319 │               className="m-0 flex items-center gap-2 text-sm text-emerald-700 dark:text-emerald-400"
+        │                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    320 │               data-download-done
+    321 │             >
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    317 317 │               <p
+    318 318 │                 role="status"
+    319     │ - ··············className="m-0·flex·items-center·gap-2·text-sm·text-emerald-700·dark:text-emerald-400"
+        319 │ + ··············className="m-0·flex·items-center·gap-2·text-emerald-700·text-sm·dark:text-emerald-400"
+    320 320 │                 data-download-done
+    321 321 │               >
+  
+
+packages/core/tracy-core/src/team/team.tsx:366:39 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    364 │                       )}
+    365 │                       {/* Narrow panel: Role and Status ride under the name, Approve beside them. */}
+  > 366 │                       <span className="mt-0.5 hidden flex-wrap items-center gap-1 @max-[526px]:flex!">
+        │                                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    367 │                         <RoleBadge role={seat.role} t={t} />
+    368 │                         <StatusBadge seat={seat} t={t} />
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    364 364 │                         )}
+    365 365 │                         {/* Narrow panel: Role and Status ride under the name, Approve beside them. */}
+    366     │ - ······················<span·className="mt-0.5·hidden·flex-wrap·items-center·gap-1·@max-[526px]:flex!">
+        366 │ + ······················<span·className="@max-[526px]:flex!·mt-0.5·hidden·flex-wrap·items-center·gap-1">
+    367 367 │                           <RoleBadge role={seat.role} t={t} />
+    368 368 │                           <StatusBadge seat={seat} t={t} />
+  
+
+packages/core/tracy-core/src/team/team.tsx:413:37 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    411 │                       {isEditRequest(seat) && (
+    412 │                         <span
+  > 413 │                           className="mt-0.5 flex flex-wrap items-center gap-1 @max-[526px]:hidden!"
+        │                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    414 │                           data-edit-request=""
+    415 │                         >
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    411 411 │                         {isEditRequest(seat) && (
+    412 412 │                           <span
+    413     │ - ··························className="mt-0.5·flex·flex-wrap·items-center·gap-1·@max-[526px]:hidden!"
+        413 │ + ··························className="@max-[526px]:hidden!·mt-0.5·flex·flex-wrap·items-center·gap-1"
+    414 414 │                             data-edit-request=""
+    415 415 │                           >
+  
+
+packages/design/tracy-design-inspiration/src/client/SystemPreviewDialog.tsx:86:3 suppressions/unused ━━━━━━━━━━
+
+  ! Suppression comment has no effect. Remove the suppression or make sure you are suppressing the correct rule.
+  
+    84 │   /** The side pressed in Light | Dark; null: the side the page opens on (`previewModeOf`). A new system starts over. */
+    85 │   const [picked, setPicked] = useState<StageTheme | null>(null)
+  > 86 │   // biome-ignore lint/correctness/useExhaustiveDependencies: a new system opens on its own side again.
+       │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    87 │   useEffect(() => setPicked(null), [s.id])
+    88 │   useEffect(() => {
+  
+
+packages/design/tracy-design-inspiration/src/client/preview-stage.tsx:194:3 suppressions/unused ━━━━━━━━━━
+
+  ! Suppression comment has no effect. Remove the suppression or make sure you are suppressing the correct rule.
+  
+    192 │    */
+    193 │   const [at, setAt] = useState<string | null>(null)
+  > 194 │   // biome-ignore lint/correctness/useExhaustiveDependencies: a new document forgets where the last one was.
+        │   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    195 │   useEffect(() => setAt(null), [doc, src])
+    196 │   /**
+  
+
+packages/dev/tracy-design/src/mockups/better-sidebar-start.mock.stories.tsx:64:20 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    62 │   return (
+    63 │     <main className="min-h-dvh bg-muted/30 p-10 text-foreground">
+  > 64 │       <p className="mx-auto mb-3 max-w-[760px] text-sm text-muted-foreground">
+       │                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    65 │         Mockup · the old + launcher in the current Better Sidebar tab strip
+    66 │       </p>
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+     62  62 │     return (
+     63  63 │       <main className="min-h-dvh bg-muted/30 p-10 text-foreground">
+     64     │ - ······<p·className="mx-auto·mb-3·max-w-[760px]·text-sm·text-muted-foreground">
+         64 │ + ······<p·className="mx-auto·mb-3·max-w-[760px]·text-muted-foreground·text-sm">
+     65  65 │           Mockup · the old + launcher in the current Better Sidebar tab strip
+     66  66 │         </p>
+  
+
+packages/dev/tracy-design/src/mockups/better-sidebar-start.mock.stories.tsx:161:24 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    159 │           </div>
+    160 │         </div>
+  > 161 │         <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
+        │                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    162 │           {selected && active === 'Selected'
+    163 │             ? `${selected.label} opens in a tab`
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    159 159 │             </div>
+    160 160 │           </div>
+    161     │ - ········<div·className="flex·flex-1·items-center·justify-center·text-sm·text-muted-foreground">
+        161 │ + ········<div·className="flex·flex-1·items-center·justify-center·text-muted-foreground·text-sm">
+    162 162 │             {selected && active === 'Selected'
+    163 163 │               ? `${selected.label} opens in a tab`
+  
+
+packages/dev/tracy-design/src/mockups/browser-site-picker.mock.stories.tsx:174:20 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    172 │   return (
+    173 │     <main className="min-h-dvh bg-muted/30 p-10 text-foreground">
+  > 174 │       <p className="mx-auto mb-3 max-w-[760px] text-sm text-muted-foreground">
+        │                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    175 │         Mockup · Browser tab site picker · choosing a site also switches the workspace
+    176 │       </p>
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    172 172 │     return (
+    173 173 │       <main className="min-h-dvh bg-muted/30 p-10 text-foreground">
+    174     │ - ······<p·className="mx-auto·mb-3·max-w-[760px]·text-sm·text-muted-foreground">
+        174 │ + ······<p·className="mx-auto·mb-3·max-w-[760px]·text-muted-foreground·text-sm">
+    175 175 │           Mockup · Browser tab site picker · choosing a site also switches the workspace
+    176 176 │         </p>
+  
+
+packages/dev/tracy-design/src/mockups/browser-site-picker.mock.stories.tsx:216:50 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    214 │                   </DropdownMenuTrigger>
+    215 │                   <DropdownMenuContent align="start" sideOffset={6} className="w-64">
+  > 216 │                     <DropdownMenuLabel className="text-xs text-muted-foreground">
+        │                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    217 │                       Choose a site action
+    218 │                     </DropdownMenuLabel>
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    214 214 │                     </DropdownMenuTrigger>
+    215 215 │                     <DropdownMenuContent align="start" sideOffset={6} className="w-64">
+    216     │ - ····················<DropdownMenuLabel·className="text-xs·text-muted-foreground">
+        216 │ + ····················<DropdownMenuLabel·className="text-muted-foreground·text-xs">
+    217 217 │                         Choose a site action
+    218 218 │                       </DropdownMenuLabel>
+  
+
+packages/dev/tracy-design/src/mockups/browser-site-picker.mock.stories.tsx:316:28 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    314 │         <div className="flex flex-1 flex-col">
+    315 │           {activeTab !== 'Browser' ? (
+  > 316 │             <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
+        │                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    317 │               {activeTab}
+    318 │             </div>
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    314 314 │           <div className="flex flex-1 flex-col">
+    315 315 │             {activeTab !== 'Browser' ? (
+    316     │ - ············<div·className="flex·flex-1·items-center·justify-center·text-sm·text-muted-foreground">
+        316 │ + ············<div·className="flex·flex-1·items-center·justify-center·text-muted-foreground·text-sm">
+    317 317 │                 {activeTab}
+    318 318 │               </div>
+  
+
+packages/dev/tracy-design/src/mockups/browser-site-picker.mock.stories.tsx:323:30 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    321 │           ) : (
+    322 │             <>
+  > 323 │               <div className="flex items-center gap-2 border-b border-border px-4 py-3 text-sm font-medium">
+        │                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    324 │                 {view === 'Team' ? (
+    325 │                   <Users className="size-4" />
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    321 321 │             ) : (
+    322 322 │               <>
+    323     │ - ··············<div·className="flex·items-center·gap-2·border-b·border-border·px-4·py-3·text-sm·font-medium">
+        323 │ + ··············<div·className="flex·items-center·gap-2·border-border·border-b·px-4·py-3·font-medium·text-sm">
+    324 324 │                   {view === 'Team' ? (
+    325 325 │                     <Users className="size-4" />
+  
+
+packages/dev/tracy-design/src/mockups/browser-site-picker.mock.stories.tsx:335:30 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    333 │                 {view === 'Team' || view === 'Site changes' ? view : liveEdit ? 'Live Edit' : view} · {site}
+    334 │               </div>
+  > 335 │               <div className="flex flex-1 items-center justify-center text-sm text-muted-foreground">
+        │                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    336 │                 {view === 'Team'
+    337 │                   ? `Team for ${site}`
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    333 333 │                   {view === 'Team' || view === 'Site changes' ? view : liveEdit ? 'Live Edit' : view} · {site}
+    334 334 │                 </div>
+    335     │ - ··············<div·className="flex·flex-1·items-center·justify-center·text-sm·text-muted-foreground">
+        335 │ + ··············<div·className="flex·flex-1·items-center·justify-center·text-muted-foreground·text-sm">
+    336 336 │                   {view === 'Team'
+    337 337 │                     ? `Team for ${site}`
+  
+
+packages/dev/tracy-design/src/mockups/browser-site-picker.mock.stories.tsx:359:22 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    357 │   return (
+    358 │     <div className="min-h-0 flex-1 overflow-auto">
+  > 359 │       <div className="flex items-center gap-2 border-b border-border px-4 py-3">
+        │                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    360 │         <Settings2 className="size-4" />
+    361 │         <span className="font-medium text-sm">Settings</span>
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    357 357 │     return (
+    358 358 │       <div className="min-h-0 flex-1 overflow-auto">
+    359     │ - ······<div·className="flex·items-center·gap-2·border-b·border-border·px-4·py-3">
+        359 │ + ······<div·className="flex·items-center·gap-2·border-border·border-b·px-4·py-3">
+    360 360 │           <Settings2 className="size-4" />
+    361 361 │           <span className="font-medium text-sm">Settings</span>
+  
+
+packages/dev/tracy-design/src/mockups/browser-site-picker.mock.stories.tsx:368:27 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    366 │           <span className="font-medium text-sm">{site}</span>
+    367 │           <Badge variant="outline">Published</Badge>
+  > 368 │           <span className="ml-auto text-xs text-muted-foreground">Illustrative CMS values</span>
+        │                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    369 │         </div>
+    370 │         <section className="rounded-lg border border-border bg-card">
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    366 366 │             <span className="font-medium text-sm">{site}</span>
+    367 367 │             <Badge variant="outline">Published</Badge>
+    368     │ - ··········<span·className="ml-auto·text-xs·text-muted-foreground">Illustrative·CMS·values</span>
+        368 │ + ··········<span·className="ml-auto·text-muted-foreground·text-xs">Illustrative·CMS·values</span>
+    369 369 │           </div>
+    370 370 │           <section className="rounded-lg border border-border bg-card">
+  
+
+packages/dev/tracy-design/src/mockups/build-with.mock.stories.tsx:582:24 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    580 │     <Card className="gap-0 py-0">
+    581 │       <CardContent className="flex flex-col gap-2 px-4 py-3">
+  > 582 │         <div className="text-sm font-medium">{title}</div>
+        │                        ^^^^^^^^^^^^^^^^^^^^^
+    583 │         <ul className="flex flex-col gap-1.5 text-sm">
+    584 │           {stages.map((s) => (
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    580 580 │       <Card className="gap-0 py-0">
+    581 581 │         <CardContent className="flex flex-col gap-2 px-4 py-3">
+    582     │ - ········<div·className="text-sm·font-medium">{title}</div>
+        582 │ + ········<div·className="font-medium·text-sm">{title}</div>
+    583 583 │           <ul className="flex flex-col gap-1.5 text-sm">
+    584 584 │             {stages.map((s) => (
+  
+
+packages/dev/tracy-design/src/mockups/fork-site.mock.stories.tsx:347:29 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    345 │               autoFocus
+    346 │             />
+  > 347 │             <span className="inline-flex items-center rounded-r-md border border-l-0 border-border bg-muted px-3 text-muted-foreground text-sm">
+        │                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    348 │               .tracy.ai
+    349 │             </span>
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    345 345 │                 autoFocus
+    346 346 │               />
+    347     │ - ············<span·className="inline-flex·items-center·rounded-r-md·border·border-l-0·border-border·bg-muted·px-3·text-muted-foreground·text-sm">
+        347 │ + ············<span·className="inline-flex·items-center·rounded-r-md·border·border-border·border-l-0·bg-muted·px-3·text-muted-foreground·text-sm">
+    348 348 │                 .tracy.ai
+    349 349 │               </span>
+  
+
+packages/dev/tracy-design/src/mockups/fork-site.mock.stories.tsx:561:27 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    559 │         <div className="flex">
+    560 │           <Input placeholder="my-site" className="rounded-r-none" />
+  > 561 │           <span className="inline-flex items-center rounded-r-md border border-l-0 border-border bg-muted px-3 text-muted-foreground text-sm">
+        │                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    562 │             .tracy.ai
+    563 │           </span>
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    559 559 │           <div className="flex">
+    560 560 │             <Input placeholder="my-site" className="rounded-r-none" />
+    561     │ - ··········<span·className="inline-flex·items-center·rounded-r-md·border·border-l-0·border-border·bg-muted·px-3·text-muted-foreground·text-sm">
+        561 │ + ··········<span·className="inline-flex·items-center·rounded-r-md·border·border-border·border-l-0·bg-muted·px-3·text-muted-foreground·text-sm">
+    562 562 │               .tracy.ai
+    563 563 │             </span>
+  
+
+packages/dev/tracy-design/src/mockups/language-box.tsx:165:27 lint/nursery/useSortedClasses  FIXABLE  ━━━━━━━━━━
+
+  ! These CSS classes should be sorted.
+  
+    163 │               <button
+    164 │                 type="button"
+  > 165 │                 className="rounded-md border border-dashed border-border px-2 py-1 text-muted-foreground"
+        │                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    166 │                 onClick={() => setExpanded(true)}
+    167 │               >
+  
+  i This rule is still being actively worked on, so it may be missing features or have rough edges. Visit https://github.com/biomejs/biome/issues/1274 for more information or to report possible bugs.
+  
+  i This rule belongs to the nursery group, which means it is not yet stable and may change in the future. Visit https://biomejs.dev/linter/#nursery for more information.
+  
+  i Safe fix: Sort the classes.
+  
+    163 163 │                 <button
+    164 164 │                   type="button"
+    165     │ - ················className="rounded-md·border·border-dashed·border-border·px-2·py-1·text-muted-foreground"
+        165 │ + ················className="rounded-md·border·border-border·border-dashed·px-2·py-1·text-muted-foreground"
+    166 166 │                   onClick={() => setExpanded(true)}
+    167 167 │                 >
+  
+
+The number of diagnostics exceeds the limit allowed. Use --max-diagnostics to increase it.
+Diagnostics not shown: 522.
+Checked 2640 files in 357ms. No fixes applied.
+Found 542 warnings.
+check-lint: time — format:check (biome format + biome lint, one figure): 5189 ms (ok)
+check-lint: time — total: 33691 ms (ok)
+check-lint: 3 steps green.
+check-all: doc-links
+Links into internal paths not in this tree (public export), not checked: docs/references/may-dev.md, tasks/, docs/references/ban-do-fleet.md, docs/references/phat-hanh-app-desktop.md, docs/references/may-staging.md, docs/references/ha-tang-bi-mat-deploy.md
+Doc links: 524 files, no broken links.
+check-all: doc-frontmatter
+Doc frontmatter: 48 files, all with description and sources.
+check-all: doc-index
+Doc index: 114 entries, matches the generated index.
+check-all: env-example
+Env example: 193 keys, matching the code in both directions.
+check-all: compose-yaml
+check-compose-yaml: deploy/compose.emdash-business.local.yml parses
+check-compose-yaml: deploy/compose.macos.yml parses
+check-compose-yaml: deploy/compose.qa.yml parses
+check-compose-yaml: deploy/compose.server.yml parses
+check-compose-yaml: deploy/compose.shard.yml parses
+check-compose-yaml: deploy/compose.yml parses
+check-all: skills
+skills:check passed (8 skills).
+check-all: workflow-scripts
+check-workflow-scripts: xanh (16 workflow).
+check-all: self-contained
+check-self-contained: 109 files, clean (3 declared exceptions).
+check-all: plugin-identity
+check-plugin-identity: 28 plugin(s) consistent
+check-all: plugin-contracts
+check-plugin-contracts: every cross-file contract holds
+check-all: language
+Language gate: 4748 files + 10 files installed into customer sites + 26 AGENTS.md going to customer sites + 25 workflows + 109 scripts (==> lines) + 49 API docs site files + 12421 files' comments + 2158 owned vendor files, clean (ledger: 51 older hits in 29 files, scripts/language-debt.json).
+check-all: wo-public
+check-public: clean (tree packages/wo/website-opportunities)
+check-all: vocabulary
+Vocabulary gate: 9531 files, 8 retired words, clean. Coined words: 9851 files, clean. Packages: 56 declared, all match.
+check-all: test-quality
+check-test-quality: 9 test file(s) added or edited since 76e7f114fa4c (merge-base of HEAD and origin/develop), 0.7s: no new assertion that cannot fail
+check-all: dsh-paths
+check-dsh-paths: 527 client files, no absolute dsh paths.
+check-all: tailwind-source
+@source gate: 2075 CSS files, 72 declarations, all exist.
+check-all: dsh-locale
+Tracy translation gate: 20 namespaces, 5031 strings, clean.
+check-all: kept-terms
+kept-terms: every translation keeps every listed term.
+check-all: interface-languages
+check-interface-languages: 8 languages, 20 Tracy + 37 dsh namespaces, known debt {"vi":0,"de":0,"it":0,"fr":0,"nl":0,"zh":0,"es":0}
+check-all: guide-coverage
+check-guide-coverage: every customer-visible switch has a guide article or a reasoned exemption
+check-all: web-languages
+web-languages: 555 strings complete in 7 languages (apps/tracy-web/src/lib/i18n)
+check-all: ops-languages
+ops-languages: 27 namespace(s), 5213 strings complete in 7 languages
+check-all: dsh-tokens
+dsh token gate: 360 references, 49 tokens, all exist. Plugin variables: 51 references, all declared.
+check-all: seat-door
+Seat door gate: 3 rules + 7 files scanned for signing, clean.
+check-all: refusal-next
+check-refusal-next: 29 refusal code(s) of the Apply door, each with a next step.
+check-all: origins
+check-origins: apps/ and packages/ are clean — no Tracy address pinned outside config.
+check-all: presets
+Preset gate: 4 files match the matrix.
+check-all: story-kinds
+gen-story-kinds: 121 stories, labels match.
+check-all: od-slots
+build-od-slots: slots.json and artifact-slots.json match the fixtures.
+check-all: design-tokens
+build-design-tokens: design-tokens.json matches 154 systems.
+check-all: od-dark
+build-od-dark: dark.json matches the fixtures.
+check-all: agent-tools
+build-agent-tools: agent-tools.json matches the site-tools plugin.
+check-all: infra-contracts
+check-infra-contracts: every cross-file contract holds
+check-all: cms-sections
+build: 16 sections, both themes match the source.
+check-all: cms-motion
+build: motion library 2, every generated file matches the source.
+check-all: cms-preview
+build: preview contract 1, every generated file matches the source.
+check-all: joomla-template
+build: 154 design systems, generated files match the vendor library.
+check-all: wordpress-theme
+build: tracy: 154 design systems, generated files match the vendor library.
+build: tracy-base: 2 design systems, generated files match the vendor library.
+build: wp-ja-diner: 1 design systems, generated files match the vendor library.
+build: wp-ja-essence: 1 design systems, generated files match the vendor library.
+build: wp-ja-fresco: 1 design systems, generated files match the vendor library.
+build: wp-ja-impact: 1 design systems, generated files match the vendor library.
+build: wp-ja-kinetic: 1 design systems, generated files match the vendor library.
+build: wp-ja-morgan: 1 design systems, generated files match the vendor library.
+build: wp-ja-nova: 1 design systems, generated files match the vendor library.
+build: wp-ja-restaurant: 1 design systems, generated files match the vendor library.
+build: wp-ja-vega: 1 design systems, generated files match the vendor library.
+build: wp-tracy-business: 1 design systems, generated files match the vendor library.
+check-all: joomla-multilingual
+build-joomla-multilingual: skipped 2 design(s) declaring multilingual: false (ja-voyara, ja-kinetic)
+build-joomla-multilingual: skipped 5 quickstart(s) declaring multilingual: false (quickstart/ja-spa/j6, quickstart/ja-trip/j6, quickstart/ja-space/j6, quickstart/ja-essence/j6, quickstart/ja-cagox/j6)
+tracy-airbnb/j6/1.2.0: 173 translated, 25 shared; capabilities offer af-ZA, be-BY, bg-BG, ca-ES, cs-CZ, cy-GB, da-DK, de-AT, de-CH, de-DE, de-LI, de-LU, el-GR, en-AU, en-CA, en-NZ, en-US, es-ES, et-EE, fi-FI, fr-CA, fr-FR, ga-IE, hr-HR, hu-HU, it-IT, ja-JP, ka-GE, lo-LA, lt-LT, lv-LV, ms-MY, nb-NO, nl-BE, nl-NL, pl-PL, pt-BR, pt-PT, ro-RO, ru-RU, sk-SK, sl-SI, sr-RS, sr-YU, sv-SE, ta-IN, th-TH, tr-TR, uk-UA, vi-VN, zh-CN, zh-TW
+tracy-apple/j6/1.3.1: 173 translated, 25 shared; capabilities offer af-ZA, be-BY, bg-BG, ca-ES, cs-CZ, cy-GB, da-DK, de-AT, de-CH, de-DE, de-LI, de-LU, el-GR, en-AU, en-CA, en-NZ, en-US, es-ES, et-EE, fi-FI, fr-CA, fr-FR, ga-IE, hr-HR, hu-HU, it-IT, ja-JP, ka-GE, lo-LA, lt-LT, lv-LV, ms-MY, nb-NO, nl-BE, nl-NL, pl-PL, pt-BR, pt-PT, ro-RO, ru-RU, sk-SK, sl-SI, sr-RS, sr-YU, sv-SE, ta-IN, th-TH, tr-TR, uk-UA, vi-VN, zh-CN, zh-TW
+tracy-business/j6/1.2.6: 157 translated, 211 shared; capabilities offer af-ZA, be-BY, bg-BG, ca-ES, cs-CZ, cy-GB, da-DK, de-AT, de-CH, de-DE, de-LI, de-LU, el-GR, en-AU, en-CA, en-NZ, en-US, es-ES, et-EE, fi-FI, fr-CA, fr-FR, ga-IE, hr-HR, hu-HU, it-IT, ja-JP, ka-GE, lo-LA, lt-LT, lv-LV, ms-MY, nb-NO, nl-BE, nl-NL, pl-PL, pt-BR, pt-PT, ro-RO, ru-RU, sk-SK, sl-SI, sr-RS, sr-YU, sv-SE, ta-IN, th-TH, tr-TR, uk-UA, vi-VN, zh-CN, zh-TW
+check-all: joomla-demo-trim
+ja-kinetic/j6/1.0.9  hides 9 menuItem, 240 article · keeps 10 page(s)
+tracy-business/j6/1.2.6  hides 14 menuItem, 62 article · keeps 24 page(s)
+check-all: joomla-showcase-nav
+ja-boxing/j6/1.0.3  checked · hides 15 item(s), 0 module(s) · keeps 21 · unresolved 0
+ja-boxing/j6/1.0.4  checked · hides 15 item(s), 0 module(s) · keeps 21 · unresolved 0
+ja-boxing/j6/1.0.5  checked · hides 15 item(s), 0 module(s) · keeps 21 · unresolved 0
+ja-boxing/j6/1.0.6  checked · hides 15 item(s), 0 module(s) · keeps 21 · unresolved 0
+ja-boxing/j6/1.0.7  checked · hides 15 item(s), 0 module(s) · keeps 21 · unresolved 0
+ja-boxing/j6/1.0.8  checked · hides 15 item(s), 0 module(s) · keeps 21 · unresolved 0
+ja-cagox/j6/1.0.2  checked · hides 27 item(s), 0 module(s), 6 T3 mega sub(s) · keeps 24 · unresolved 0
+ja-conf/j6/1.0.3  checked · hides 20 item(s), 1 module(s), 6 T3 mega sub(s) · keeps 6 · unresolved 6
+ja-diner/j6/1.0.4  checked · hides 18 item(s), 1 module(s), 5 T3 mega sub(s) · keeps 11 · unresolved 5
+ja-directory/j6/1.0.3  checked · hides 4 item(s), 0 module(s) · keeps 13 · unresolved 2
+ja-donate/j6/1.0.7  checked · hides 10 item(s), 0 module(s), 4 T3 mega column(s) · keeps 20 · unresolved 5
+ja-essence/j6/1.0.10  checked · hides 12 item(s), 0 module(s) · keeps 21 · unresolved 9
+ja-essence/j6/1.0.9  checked · hides 12 item(s), 0 module(s) · keeps 21 · unresolved 9
+ja-fresco/j6/1.0.4  checked · hides 3 item(s), 0 module(s) · keeps 14 · unresolved 0
+ja-impact/j6/1.0.5  checked · hides 6 item(s), 0 module(s) · keeps 35 · unresolved 3
+ja-kinetic/j6/1.0.10  checked · hides 3 item(s), 0 module(s) · keeps 43 · unresolved 3
+ja-kinetic/j6/1.0.9  checked · hides 3 item(s), 0 module(s) · keeps 43 · unresolved 3
+ja-mood/j6/1.0.4  checked · hides 8 item(s), 0 module(s) · keeps 18 · unresolved 8
+ja-morgan/j6/1.0.9  checked · hides 18 item(s), 0 module(s) · keeps 40 · unresolved 1
+ja-nova/j6/1.0.9  checked · hides 6 item(s), 0 module(s) · keeps 28 · unresolved 0
+ja-phio/j6/1.0.8  checked · hides 10 item(s), 0 module(s) · keeps 40 · unresolved 2
+ja-podcast/j6/1.0.7  checked · hides 6 item(s), 0 module(s) · keeps 27 · unresolved 9
+ja-prodex/j6/1.0.5  checked · hides 8 item(s), 0 module(s) · keeps 30 · unresolved 2
+ja-rent/j6/1.0.5  checked · hides 13 item(s), 0 module(s), 10 T3 mega column(s) · keeps 21 · unresolved 1
+ja-resort/j6/1.0.8  checked · hides 9 item(s), 0 module(s) · keeps 17 · unresolved 1
+ja-restaurant/j6/1.0.6  checked · hides 16 item(s), 0 module(s), 5 T3 mega column(s) · keeps 24 · unresolved 12
+ja-resume/j6/1.0.7  checked · hides 13 item(s), 0 module(s) · keeps 21 · unresolved 37
+ja-sensei/j6/1.0.6  checked · hides 7 item(s), 0 module(s) · keeps 42 · unresolved 1
+ja-seven/j6/1.0.5  checked · hides 12 item(s), 0 module(s) · keeps 43 · unresolved 8
+ja-smallbiz/j6/1.0.4  checked · hides 19 item(s), 0 module(s), 4 T3 mega sub(s), 8 T3 mega column(s) · keeps 10 · unresolved 0
+ja-social-ii/j6/1.0.5  checked · hides 11 item(s), 0 module(s), 8 T3 mega column(s) · keeps 28 · unresolved 1
+ja-spa/j6/1.0.7  checked · hides 7 item(s), 0 module(s) · keeps 40 · unresolved 1
+ja-spa/j6/1.0.8  checked · hides 7 item(s), 0 module(s) · keeps 40 · unresolved 1
+ja-space/j6/1.0.3  checked · hides 14 item(s), 0 module(s), 4 T3 mega column(s) · keeps 15 · unresolved 2
+ja-space/j6/1.0.7  checked · hides 14 item(s), 0 module(s), 4 T3 mega column(s) · keeps 15 · unresolved 2
+ja-symphony/j6/1.0.5  checked · hides 10 item(s), 0 module(s) · keeps 21 · unresolved 0
+ja-tour/j6/1.0.5  checked · hides 8 item(s), 0 module(s) · keeps 45 · unresolved 0
+ja-trip/j6/1.0.7  checked · hides 3 item(s), 0 module(s) · keeps 26 · unresolved 6
+ja-trip/j6/1.0.8  checked · hides 3 item(s), 0 module(s) · keeps 26 · unresolved 6
+ja-vega/j6/1.0.8  checked · hides 3 item(s), 0 module(s) · keeps 40 · unresolved 0
+ja-vital/j6/1.0.7  checked · hides 7 item(s), 0 module(s) · keeps 32 · unresolved 0
+ja-vogue/j6/1.0.8  checked · hides 8 item(s), 0 module(s) · keeps 19 · unresolved 12
+ja-voyara/j6/1.0.10  checked · hides 3 item(s), 0 module(s) · keeps 55 · unresolved 8
+ja-voyara/j6/1.0.11  checked · hides 3 item(s), 0 module(s) · keeps 55 · unresolved 8
+tracy-airbnb/j6/1.2.0  checked · hides 4 item(s), 0 module(s) · keeps 27 · unresolved 0
+tracy-apple/j6/1.3.1  checked · hides 4 item(s), 0 module(s) · keeps 27 · unresolved 0
+tracy-base/j6/1.0.5  checked · hides 4 item(s), 0 module(s) · keeps 42 · unresolved 8
+tracy-business/j6/1.2.6  checked · hides 6 item(s), 0 module(s) · keeps 92 · unresolved 0
+check-all: wordpress-editions
+ja-diner/wp7/1.0.0: editions.json up to date (0 editions, 0 missing slot targets)
+ja-diner/wp7/1.0.1: editions.json up to date (0 editions, 0 missing slot targets)
+ja-fresco/wp7/1.0.0: editions.json up to date (0 editions, 0 missing slot targets)
+ja-fresco/wp7/1.0.1: editions.json up to date (0 editions, 0 missing slot targets)
+ja-kinetic/wp7/1.0.11: editions.json up to date (0 editions, 0 missing slot targets)
+ja-kinetic/wp7/1.0.12: editions.json up to date (0 editions, 0 missing slot targets)
+ja-morgan/wp7/1.1.16: editions.json up to date (0 editions, 0 missing slot targets)
+ja-restaurant/wp7/1.0.0: editions.json up to date (0 editions, 0 missing slot targets)
+ja-restaurant/wp7/1.0.1: editions.json up to date (0 editions, 0 missing slot targets)
+tracy-business/wp7/1.1.0: editions.json up to date (41 editions, 18 missing slot targets)
+  ru: missing 18 — page-about:stats.item.2.meta, page-home:projects.cta.1, page-home:projects.heading …
+tracy-business/wp7/1.2.0: editions.json up to date (41 editions, 18 missing slot targets)
+  ru: missing 18 — page-about:stats.item.2.meta, page-home:projects.cta.1, page-home:projects.heading …
+tracy-business/wp7/1.3.0: editions.json up to date (41 editions, 18 missing slot targets)
+  ru: missing 18 — page-about:stats.item.2.meta, page-home:projects.cta.1, page-home:projects.heading …
+tracy-business/wp7/1.3.1: editions.json up to date (41 editions, 18 missing slot targets)
+  ru: missing 18 — page-about:stats.item.2.meta, page-home:projects.cta.1, page-home:projects.heading …
+tracy-business/wp7/1.3.2: editions.json up to date (41 editions, 18 missing slot targets)
+  ru: missing 18 — page-about:stats.item.2.meta, page-home:projects.cta.1, page-home:projects.heading …
+tracy-business/wp7/1.3.4: editions.json up to date (41 editions, 18 missing slot targets)
+  ru: missing 18 — page-about:stats.item.2.meta, page-home:projects.cta.1, page-home:projects.heading …
+tracy-business/wp7/1.3.5: editions.json up to date (41 editions, 19 missing slot targets)
+  ru: missing 19 — page-about:stats.item.2.meta, page-home:projects.cta.1, page-home:projects.cta.1 …
+tracy-business/wp7/1.3.6: editions.json up to date (41 editions, 19 missing slot targets)
+  ru: missing 19 — page-about:stats.item.2.meta, page-home:projects.cta.1, page-home:projects.cta.1 …
+tracy-business/wp7/1.3.7: editions.json up to date (41 editions, 19 missing slot targets)
+  ru: missing 19 — page-about:stats.item.2.meta, page-home:projects.cta.1, page-home:projects.cta.1 …
+tracy-business/wp7/1.3.8: editions.json up to date (41 editions, 19 missing slot targets)
+  ru: missing 19 — page-about:stats.item.2.meta, page-home:projects.cta.1, page-home:projects.cta.1 …
+check-all: wordpress-demo-trim
+ja-diner/wp7/1.0.0: demo-trim-map.json up to date (22 hidden, 30 kept)
+ja-diner/wp7/1.0.1: demo-trim-map.json up to date (22 hidden, 30 kept)
+ja-fresco/wp7/1.0.0: demo-trim-map.json up to date (10 hidden, 26 kept)
+ja-fresco/wp7/1.0.1: demo-trim-map.json up to date (10 hidden, 26 kept)
+ja-kinetic/wp7/1.0.11: demo-trim-map.json up to date (240 hidden, 32 kept)
+ja-kinetic/wp7/1.0.12: demo-trim-map.json up to date (240 hidden, 32 kept)
+ja-morgan/wp7/1.1.16: demo-trim-map.json up to date (26 hidden, 31 kept)
+ja-restaurant/wp7/1.0.0: demo-trim-map.json up to date (21 hidden, 36 kept)
+ja-restaurant/wp7/1.0.1: demo-trim-map.json up to date (21 hidden, 36 kept)
+tracy-business/wp7/1.1.0: demo-trim-map.json up to date (205 hidden, 657 kept)
+tracy-business/wp7/1.2.0: demo-trim-map.json up to date (205 hidden, 657 kept)
+tracy-business/wp7/1.3.0: demo-trim-map.json up to date (205 hidden, 698 kept)
+tracy-business/wp7/1.3.1: demo-trim-map.json up to date (205 hidden, 698 kept)
+tracy-business/wp7/1.3.2: demo-trim-map.json up to date (205 hidden, 698 kept)
+tracy-business/wp7/1.3.4: demo-trim-map.json up to date (205 hidden, 698 kept)
+tracy-business/wp7/1.3.5: demo-trim-map.json up to date (205 hidden, 698 kept)
+tracy-business/wp7/1.3.6: demo-trim-map.json up to date (205 hidden, 698 kept)
+tracy-business/wp7/1.3.7: demo-trim-map.json up to date (205 hidden, 698 kept)
+tracy-business/wp7/1.3.8: demo-trim-map.json up to date (205 hidden, 698 kept)
+check-all: wordpress-showcase-nav
+ja-diner/wp7/1.0.1  checked · removes 7 link(s), 0 template-part edit(s) · keeps 18 · unresolved 0
+ja-essence/wp7/1.0.20  checked · removes 8 link(s), 0 template-part edit(s) · keeps 22 · unresolved 9
+ja-fresco/wp7/1.0.1  checked · removes 3 link(s), 0 template-part edit(s) · keeps 11 · unresolved 0
+ja-impact/wp7/1.0.11  checked · removes 3 link(s), 0 template-part edit(s) · keeps 34 · unresolved 0
+ja-kinetic/wp7/1.0.12  checked · removes 2 link(s), 2 template-part edit(s) · keeps 44 · unresolved 0
+ja-morgan/wp7/1.1.16  checked · removes 11 link(s), 0 template-part edit(s) · keeps 42 · unresolved 0
+ja-nova/wp7/1.1.13  checked · removes 3 link(s), 0 template-part edit(s) · keeps 25 · unresolved 0
+ja-restaurant/wp7/1.0.1  checked · removes 1 link(s), 0 template-part edit(s) · keeps 18 · unresolved 0
+ja-vega/wp7/1.1.16  checked · removes 3 link(s), 0 template-part edit(s) · keeps 31 · unresolved 0
+tracy-base/wp7/1.1.5  checked · removes 1 link(s), 0 template-part edit(s) · keeps 28 · unresolved 5
+tracy-base/wp7/1.1.6  checked · removes 0 link(s), 0 template-part edit(s) · keeps 31 · unresolved 1
+tracy-business/wp7/1.1.0  checked · removes 0 link(s), 2 template-part edit(s) · keeps 574 · unresolved 0
+tracy-business/wp7/1.3.8  checked · removes 0 link(s), 1 template-part edit(s) · keeps 615 · unresolved 1
+check-all: wordpress-superseded
+WordPress superseded profiles: every profile names its current bytes.
+check-all: emdash-diagrams
+README.md diagrams are current
+check-all: design-templates
+  · skipped — template-profiles.json and tracy_site_pages.json against the gallery: no TRACY_RELEASES_GITHUB_TOKEN — JoomlArt-Products/joomlart-products is private, not compared
+Design registry gate: 4 designs over 154 inspirations, canonical copy and mirror match.
+check-all: quickstart-overrides
+Quickstart override gate: 1 override(s) match the bytes in every served profile, skipped 2 design(s) declaring preparedTemplate: false (ja-voyara, ja-kinetic). 141 template-patch files match their release's newest profile.
+check-all: contracts
+Content contract gate: 304 profiles, sealing 304 (quickstart, version) pairs, none claimed twice.
+check-all: slot-roles
+slot-roles check passed (8 contract(s) verified).
+slot fit: 3 content map(s) declare it; 301 do not (356908 text and image slots without a fit).
+check-all: content-api
+TAP version 13
+# Subtest: joomla: extracted fixture and synthetic graph conform
+ok 1 - joomla: extracted fixture and synthetic graph conform
+  ---
+  duration_ms: 2.63225
+  type: 'test'
+  ...
+# Subtest: joomla: summary omits unloaded data and keeps identity/revision
+ok 2 - joomla: summary omits unloaded data and keeps identity/revision
+  ---
+  duration_ms: 0.599042
+  type: 'test'
+  ...
+# Subtest: joomla: block and item continuations use partial state
+ok 3 - joomla: block and item continuations use partial state
+  ---
+  duration_ms: 0.926667
+  type: 'test'
+  ...
+# Subtest: wordpress: extracted fixture and synthetic graph conform
+ok 4 - wordpress: extracted fixture and synthetic graph conform
+  ---
+  duration_ms: 0.760833
+  type: 'test'
+  ...
+# Subtest: wordpress: summary omits unloaded data and keeps identity/revision
+ok 5 - wordpress: summary omits unloaded data and keeps identity/revision
+  ---
+  duration_ms: 0.490292
+  type: 'test'
+  ...
+# Subtest: wordpress: block and item continuations use partial state
+ok 6 - wordpress: block and item continuations use partial state
+  ---
+  duration_ms: 0.758959
+  type: 'test'
+  ...
+# Subtest: emdash: extracted fixture and synthetic graph conform
+ok 7 - emdash: extracted fixture and synthetic graph conform
+  ---
+  duration_ms: 0.68875
+  type: 'test'
+  ...
+# Subtest: emdash: summary omits unloaded data and keeps identity/revision
+ok 8 - emdash: summary omits unloaded data and keeps identity/revision
+  ---
+  duration_ms: 0.370709
+  type: 'test'
+  ...
+# Subtest: emdash: block and item continuations use partial state
+ok 9 - emdash: block and item continuations use partial state
+  ---
+  duration_ms: 1.324833
+  type: 'test'
+  ...
+# Subtest: source provenance: joomla.json
+ok 10 - source provenance: joomla.json
+  ---
+  duration_ms: 6.408333
+  type: 'test'
+  ...
+# Subtest: source provenance: wordpress.json
+ok 11 - source provenance: wordpress.json
+  ---
+  duration_ms: 1.330458
+  type: 'test'
+  ...
+# Subtest: source provenance: emdash.json
+ok 12 - source provenance: emdash.json
+  ---
+  duration_ms: 24.38875
+  type: 'test'
+  ...
+# Subtest: source provenance: joomla.v2.json
+ok 13 - source provenance: joomla.v2.json
+  ---
+  duration_ms: 0.400916
+  type: 'test'
+  ...
+# Subtest: source provenance: wordpress.v2.json
+ok 14 - source provenance: wordpress.v2.json
+  ---
+  duration_ms: 0.298709
+  type: 'test'
+  ...
+# Subtest: source provenance: emdash.v2.json
+ok 15 - source provenance: emdash.v2.json
+  ---
+  duration_ms: 0.486917
+  type: 'test'
+  ...
+# Subtest: source provenance: joomla.describe.json
+ok 16 - source provenance: joomla.describe.json
+  ---
+  duration_ms: 5.265542
+  type: 'test'
+  ...
+# Subtest: source provenance: wordpress.describe.json
+ok 17 - source provenance: wordpress.describe.json
+  ---
+  duration_ms: 1.264625
+  type: 'test'
+  ...
+# Subtest: source provenance: emdash.describe.json
+ok 18 - source provenance: emdash.describe.json
+  ---
+  duration_ms: 19.533583
+  type: 'test'
+  ...
+# Subtest: missing required envelope field
+ok 19 - missing required envelope field
+  ---
+  duration_ms: 0.319208
+  type: 'test'
+  ...
+# Subtest: missing nullable field is not null
+ok 20 - missing nullable field is not null
+  ---
+  duration_ms: 0.187542
+  type: 'test'
+  ...
+# Subtest: unknown visibility is explicit
+ok 21 - unknown visibility is explicit
+  ---
+  duration_ms: 0.366833
+  type: 'test'
+  ...
+# Subtest: unknown field type
+ok 22 - unknown field type
+  ---
+  duration_ms: 0.241334
+  type: 'test'
+  ...
+# Subtest: wrong typed field value
+ok 23 - wrong typed field value
+  ---
+  duration_ms: 0.266958
+  type: 'test'
+  ...
+# Subtest: zero media size is not unknown
+ok 24 - zero media size is not unknown
+  ---
+  duration_ms: 0.23925
+  type: 'test'
+  ...
+# Subtest: negative position
+ok 25 - negative position
+  ---
+  duration_ms: 0.211292
+  type: 'test'
+  ...
+# Subtest: unknown major
+ok 26 - unknown major
+  ---
+  duration_ms: 0.075417
+  type: 'test'
+  ...
+# Subtest: public feed not enabled
+ok 27 - public feed not enabled
+  ---
+  duration_ms: 0.199083
+  type: 'test'
+  ...
+# Subtest: duplicate content
+ok 28 - duplicate content
+  ---
+  duration_ms: 0.317041
+  type: 'test'
+  ...
+# Subtest: duplicate block
+ok 29 - duplicate block
+  ---
+  duration_ms: 0.680459
+  type: 'test'
+  ...
+# Subtest: duplicate item
+ok 30 - duplicate item
+  ---
+  duration_ms: 0.315417
+  type: 'test'
+  ...
+# Subtest: duplicate field
+ok 31 - duplicate field
+  ---
+  duration_ms: 0.220208
+  type: 'test'
+  ...
+# Subtest: duplicate media
+ok 32 - duplicate media
+  ---
+  duration_ms: 0.197667
+  type: 'test'
+  ...
+# Subtest: shared source must not be copied into occurrence
+ok 33 - shared source must not be copied into occurrence
+  ---
+  duration_ms: 0.200041
+  type: 'test'
+  ...
+# Subtest: missing detail payload
+ok 34 - missing detail payload
+  ---
+  duration_ms: 0.178209
+  type: 'test'
+  ...
+# Subtest: complete with continuation
+ok 35 - complete with continuation
+  ---
+  duration_ms: 0.223875
+  type: 'test'
+  ...
+# Subtest: invalid locale
+ok 36 - invalid locale
+  ---
+  duration_ms: 0.219875
+  type: 'test'
+  ...
+# Subtest: undeclared locale
+ok 37 - undeclared locale
+  ---
+  duration_ms: 0.179083
+  type: 'test'
+  ...
+# Subtest: duplicate locales
+ok 38 - duplicate locales
+  ---
+  duration_ms: 0.179917
+  type: 'test'
+  ...
+# Subtest: unknown default locale
+ok 39 - unknown default locale
+  ---
+  duration_ms: 0.176833
+  type: 'test'
+  ...
+# Subtest: external continuation
+ok 40 - external continuation
+  ---
+  duration_ms: 0.207583
+  type: 'test'
+  ...
+# Subtest: script link
+ok 41 - script link
+  ---
+  duration_ms: 0.204833
+  type: 'test'
+  ...
+# Subtest: credential in link
+ok 42 - credential in link
+  ---
+  duration_ms: 0.202417
+  type: 'test'
+  ...
+# Subtest: unknown total differs from false count
+ok 43 - unknown total differs from false count
+  ---
+  duration_ms: 0.187042
+  type: 'test'
+  ...
+# Subtest: limit exceeded
+ok 44 - limit exceeded
+  ---
+  duration_ms: 0.198792
+  type: 'test'
+  ...
+# Subtest: zero limit
+ok 45 - zero limit
+  ---
+  duration_ms: 0.198625
+  type: 'test'
+  ...
+# Subtest: over maximum limit
+ok 46 - over maximum limit
+  ---
+  duration_ms: 0.200083
+  type: 'test'
+  ...
+# Subtest: complete coverage contradicts unresolved
+ok 47 - complete coverage contradicts unresolved
+  ---
+  duration_ms: 0.216834
+  type: 'test'
+  ...
+# Subtest: invalid date
+ok 48 - invalid date
+  ---
+  duration_ms: 0.192042
+  type: 'test'
+  ...
+# Subtest: mixed success and error
+ok 49 - mixed success and error
+  ---
+  duration_ms: 0.190792
+  type: 'test'
+  ...
+# Subtest: null scalars, typed values, unknown optional fields and empty known arrays
+ok 50 - null scalars, typed values, unknown optional fields and empty known arrays
+  ---
+  duration_ms: 0.755625
+  type: 'test'
+  ...
+# Subtest: non-JSON values cannot turn into misleading null/omitted data
+ok 51 - non-JSON values cannot turn into misleading null/omitted data
+  ---
+  duration_ms: 0.255167
+  type: 'test'
+  ...
+# Subtest: UTF-8 byte budget counts multibyte values without truncating
+ok 52 - UTF-8 byte budget counts multibyte values without truncating
+  ---
+  duration_ms: 1.006917
+  type: 'test'
+  ...
+# Subtest: error envelope: CONTENT_BAD_QUERY
+ok 53 - error envelope: CONTENT_BAD_QUERY
+  ---
+  duration_ms: 0.086667
+  type: 'test'
+  ...
+# Subtest: error envelope: CONTENT_UNAUTHENTICATED
+ok 54 - error envelope: CONTENT_UNAUTHENTICATED
+  ---
+  duration_ms: 0.058625
+  type: 'test'
+  ...
+# Subtest: error envelope: CONTENT_FORBIDDEN
+ok 55 - error envelope: CONTENT_FORBIDDEN
+  ---
+  duration_ms: 0.057042
+  type: 'test'
+  ...
+# Subtest: error envelope: CONTENT_NOT_FOUND
+ok 56 - error envelope: CONTENT_NOT_FOUND
+  ---
+  duration_ms: 0.056375
+  type: 'test'
+  ...
+# Subtest: error envelope: CONTENT_SOURCE_UNAVAILABLE
+ok 57 - error envelope: CONTENT_SOURCE_UNAVAILABLE
+  ---
+  duration_ms: 0.0555
+  type: 'test'
+  ...
+# Subtest: error envelope: CONTENT_ADAPTER_UNSUPPORTED
+ok 58 - error envelope: CONTENT_ADAPTER_UNSUPPORTED
+  ---
+  duration_ms: 0.055
+  type: 'test'
+  ...
+# Subtest: error envelope: CONTENT_SNAPSHOT_EXPIRED
+ok 59 - error envelope: CONTENT_SNAPSHOT_EXPIRED
+  ---
+  duration_ms: 0.054666
+  type: 'test'
+  ...
+# Subtest: error envelope: CONTENT_FIELD_TOO_LARGE
+ok 60 - error envelope: CONTENT_FIELD_TOO_LARGE
+  ---
+  duration_ms: 0.066167
+  type: 'test'
+  ...
+# Subtest: references across pages are checked only in collected authorized scope
+ok 61 - references across pages are checked only in collected authorized scope
+  ---
+  duration_ms: 0.676666
+  type: 'test'
+  ...
+# Subtest: shared target must be shared and cannot point to self
+ok 62 - shared target must be shared and cannot point to self
+  ---
+  duration_ms: 0.25725
+  type: 'test'
+  ...
+# Subtest: dangling item, relation, media block and media item references fail
+ok 63 - dangling item, relation, media block and media item references fail
+  ---
+  duration_ms: 0.961458
+  type: 'test'
+  ...
+# Subtest: translation fixture has independent identity, confirmed group and different locale
+ok 64 - translation fixture has independent identity, confirmed group and different locale
+  ---
+  duration_ms: 1.007833
+  type: 'test'
+  ...
+# Subtest: schema vocabulary fails closed when extended beyond implemented keywords
+ok 65 - schema vocabulary fails closed when extended beyond implemented keywords
+  ---
+  duration_ms: 0.283666
+  type: 'test'
+  ...
+# Subtest: publication shape only: draft
+ok 66 - publication shape only: draft
+  ---
+  duration_ms: 0.313833
+  type: 'test'
+  ...
+# Subtest: publication shape only: private
+ok 67 - publication shape only: private
+  ---
+  duration_ms: 0.212833
+  type: 'test'
+  ...
+# Subtest: publication shape only: scheduled
+ok 68 - publication shape only: scheduled
+  ---
+  duration_ms: 0.155625
+  type: 'test'
+  ...
+# Subtest: publication shape only: published
+ok 69 - publication shape only: published
+  ---
+  duration_ms: 0.144583
+  type: 'test'
+  ...
+# Subtest: publication shape only: archived
+ok 70 - publication shape only: archived
+  ---
+  duration_ms: 0.159
+  type: 'test'
+  ...
+# Subtest: publication shape only: unknown
+ok 71 - publication shape only: unknown
+  ---
+  duration_ms: 0.146292
+  type: 'test'
+  ...
+# Subtest: nested pagination must agree with returned items and blocks
+ok 72 - nested pagination must agree with returned items and blocks
+  ---
+  duration_ms: 0.323625
+  type: 'test'
+  ...
+# Subtest: invalid time and too-large field errors cannot omit their field identity
+ok 73 - invalid time and too-large field errors cannot omit their field identity
+  ---
+  duration_ms: 0.295375
+  type: 'test'
+  ...
+# Subtest: oversized body discovery carries a snapshot and credential-free first block link
+ok 74 - oversized body discovery carries a snapshot and credential-free first block link
+  ---
+  duration_ms: 0.861375
+  type: 'test'
+  ...
+1..74
+# tests 74
+# suites 0
+# pass 74
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 145.420125
+check-all: api-spec
+api-spec: public API v1 matches the snapshot (305 operations, recorded 2026-10-27)
+check-all: questions
+Questionnaire gate: 13 questionnaires valid, covering 8 languages, mirrors match, catalogue matches the releases.
+check-all: templates
+  · skipped — tracy_design_inspiration.json on 4 releases: not enabled — run with TRACY_CHECK_TEMPLATES_PROBE=1
+Design templates card gate: 2 picture folders clean, 4 releases carry a template, 1 measurements skipped (named).
+check-all: story-strings
+Story string gate: 3 sentences, each one real in the Worker code.
+check-all: site-model
+Source contract tracy-site-model/v1: all three skills declare it; the WordPress skill's Joomla adapter (4 types · 7 records) and the Joomla skill's HTML adapter both pass the EmDash validator + compiler, with no trace of another CMS.
+check-all: emdash-kit-sync
+  tracy-emdash-theme-base: 88 identical · 13 same code, different prose or wrapping · 0 same code in a different order · 0 CODE DIFFERS · 0 missing · 17 template-only
+  tracy-emdash-theme-business: 96 identical · 12 same code, different prose or wrapping · 1 same code in a different order · 0 CODE DIFFERS · 0 missing · 34 template-only
+  tracy-emdash-theme-saas: 105 identical · 9 same code, different prose or wrapping · 0 same code in a different order · 0 CODE DIFFERS · 0 missing · 13 template-only
+check-emdash-kit-sync: 3 templates match the kit.
+check-all: emdash-inventory
+  tracy-emdash-theme-base: inventory current
+  tracy-emdash-theme-business: inventory current
+  tracy-emdash-theme-saas: inventory current
+check-emdash-inventory: 3 template inventories current.
+check-all: bundles
+Bundle gate: 23 packages, 32 builds, all match their source.
+check-all: image-profile
+check-image-profile: fleet image profile invariants hold
+check-all: passwords-core-diff
+passwords-core-diff: core matches upstream d9a327c outside 16 hook files.
+check-all: boot-graph
+materialize-profile: web — 34 package(s) linked
+materialize-profile: native — 62 package(s) linked
+check-boot-graph: [web] 58 entries, all 7 declared Tracy plugins present
+check-boot-graph: [native] 75 entries, all 23 declared Tracy plugins present
+check-all: 63 gate(s) passed (2 skipped by --skip: tests, turbo-config)

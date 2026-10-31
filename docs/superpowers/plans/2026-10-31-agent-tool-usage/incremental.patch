@@ -1,0 +1,159 @@
+--- a/packages/tools/tracy-site-tools/src/host/index.ts
++++ b/packages/tools/tracy-site-tools/src/host/index.ts
+@@ -1,3 +1,4 @@
++import { createPageReadFlights } from './page-read-flights.mjs'
+ import { createBuildTurns } from './build-turns.mjs'
+ import { copyWritten, demoToolNeedsReady, runDemoLifecycle } from './demo-lifecycle.mjs'
+ import { resolveSweepCall } from './sweep-resolve.mjs'
+@@ -2783,6 +2784,7 @@
+    * by site and conversation inside, never shared by accident.
+    */
+   const memory = createCallMemory()
++  const pageReadFlight = createPageReadFlights()
+   async function demoWriteGuard(args: unknown, exec: ToolRun, clientOnly = false): Promise<unknown | null> {
+     if (!clientOnly && !changesSite({ name: 'tracy_emdash', arguments: args })) return null
+     const result = (await demoGuard(exec, clientOnly)) as { code?: string } | null
+@@ -3069,7 +3071,37 @@
+     const writes = relayWrites(action, params)
+     if (writes) memory.invalidateSite(site)
+     const title = writes ? memory.titleOf(sessionId, params) : null
+-    const answer = await applyDoor(config, plan, key, action, params, target, label, sessionId, preset, title)
++    // Only simultaneous address inventories share I/O. Search/row parameters were removed by
++    // runSiteCall and each caller still shapes its own answer. Known URLs and all other reads retain
++    // their path. Exact credentials, routing, comment, session/turn and site generation fence reuse.
++    const share =
++      action === 'content.read' &&
++      params.view === 'pages' &&
++      params.url === undefined &&
++      params.changedSince === undefined &&
++      sessionId !== null &&
++      !turnSignal.getStore()?.aborted
++    const flightKey = share
++      ? createHash('sha256')
++          .update(
++            JSON.stringify([
++              plan,
++              key,
++              target,
++              label,
++              sessionId,
++              preset,
++              memory.turnOf(sessionId),
++              memory.generationOf(site),
++              answeringComment.getStore(),
++              Object.fromEntries(Object.entries(params).sort(([a], [b]) => a.localeCompare(b)))
++            ])
++          )
++          .digest('hex')
++      : null
++    const answer = await pageReadFlight(flightKey, () =>
++      applyDoor(config, plan, key, action, params, target, label, sessionId, preset, title)
++    )
+     if (writes) memory.invalidateSite(site)
+     // A write the door took holds the site's lease for this conversation until its turn ends.
+     // 🔒 A WRITE BY THE DOOR'S OWN RULE (`doorTakesLease`, review C3), not "makes reads stale": a media
+--- a/packages/tools/tracy-site-tools/src/host/surface.mjs
++++ b/packages/tools/tracy-site-tools/src/host/surface.mjs
+@@ -421,13 +421,10 @@
+  * `{view:"pages", url}` finds the page and, for a listing page, answers what it lists and the call that adds
+  * to it (`page-lists.mjs`); the describe stays the read for what the map cannot say — the types, the block
+  * kinds, where SEO, menus and forms live. It costs +85 characters (316 → 401) on every step of the Joomla and
+- * WordPress surfaces; EmDash keeps its own sentence.
++ * WordPress surfaces. Page discovery now uses the same direct guidance on EmDash; its native field bridge remains below.
+  */
+ const PAGE_FIRST =
+-  'Call {view:"pages", url} for a known URL or {view:"pages", search:"<title>"} to find a page (OR: search:[…], ≤8); then {id}. {describe:true} for types/fields; follow links.next.'
+-/** EmDash keeps the describe-first sentence: its add road is `tracy_emdash` and measured 4–5 steps. */
+-const DESCRIBE_FIRST =
+-  'Call {describe:true} once, then {type:"page", locale} or {view:"pages", url:link}; then {id}; follow links.next.'
++  'Call {view:"pages", url} or {view:"pages", search:"<title>"}; use known locale; batch: search:[…≤8]. {id} only for fields; {describe:true} for types; links.next for more.'
+ 
+ /**
+  * `content.read` — the Content API read (#347, tracy-content/v1), on every Joomla and WordPress
+@@ -462,7 +459,7 @@
+   /** @type {string} */ refusals = '',
+   /** @type {string} */ call = PAGE_FIRST
+ ) =>
+-  `content.read: THIS site's map: pages, articles, shared parts. Use it to find page fields. Not for writing. ${call} Returns opaque Content API ids; native: CMS {kind, id|key}${bridge}. Read-only. Refusals: CONTENT_BAD_QUERY names the field${refusals}.`
++  `content.read: THIS site's map: pages, articles, shared parts. Use when reading fields. Not for writing. ${call} Returns opaque Content API ids; native: CMS {kind, id|key}${bridge}. Read-only. Refusals: CONTENT_BAD_QUERY names the field${refusals}.`
+ 
+ /** On a site whose words change by record (open Joomla/WordPress, sealed WordPress with no binding). */
+ export const CONTENT_READ_BLOCK = contentReadBlock('')
+@@ -497,9 +494,9 @@
+  * refusal names the road that always works.
+  */
+ export const EMDASH_CONTENT_READ_BLOCK = contentReadBlock(
+-  "; a field's key is its tracy_emdash field, slug its entry id: content_get {collection, id:<slug>, locale} (collection: the site context's rule; a shared part: site)",
++  '; tracy_emdash content_get {collection, id:<slug>, locale}: key=field; slug=id; collection: context; shared: site',
+   '; CONTENT_ADAPTER_UNSUPPORTED → no map here: tracy_emdash content_get',
+-  DESCRIBE_FIRST
++  'Call {view:"pages", locale:"<requested>", search:"<title>"}; batch: search:[…≤8]; url replaces search. {id} only for fields; {describe:true} for types; links.next: more.'
+ )
+ 
+ /**
+--- /dev/null
++++ b/packages/tools/tracy-site-tools/src/host/page-read-flights.mjs
+@@ -0,0 +1,25 @@
++/**
++ * Share only an equivalent page inventory already on the wire. The caller supplies the complete
++ * route/identity/turn/generation key; settled answers are never cached. Each consumer receives a
++ * private copy because host-side filtering and revision bookkeeping may change the answer.
++ */
++export function createPageReadFlights() {
++  /** @type {Map<string, Promise<unknown>>} */
++  const pending = new Map()
++  /** @param {string | null} key @param {() => Promise<unknown>} read */
++  return async (key, read) => {
++    if (key === null) return read()
++    let flight = pending.get(key)
++    if (!flight) {
++      // Bound retained work on a busy host; excess distinct requests keep their ordinary path.
++      if (pending.size >= 128) return read()
++      flight = Promise.resolve().then(read)
++      pending.set(key, flight)
++    }
++    try {
++      return structuredClone(await flight)
++    } finally {
++      if (pending.get(key) === flight) pending.delete(key)
++    }
++  }
++}
+--- a/packages/tools/tracy-site-tools/src/host/read-compact.mjs
++++ b/packages/tools/tracy-site-tools/src/host/read-compact.mjs
+@@ -640,3 +640,17 @@
+   return null
+ }
+ 
++/** Label the two ID namespaces where the agent reads them, without changing either identifier.
++ * @param {unknown} answer
++ * @returns {unknown}
++ */
++export function pageIdAdvice(answer) {
++  if (!isRecord(answer) || answer.schemaVersion !== CONTENT_PAGES || !Array.isArray(answer.pages))
++    return answer
++  return {
++    ...answer,
++    idNamespace: 'content-api',
++    idMeaning:
++      'Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.'
++  }
++}
+--- a/packages/tools/tracy-site-tools/src/host/site-call.mjs
++++ b/packages/tools/tracy-site-tools/src/host/site-call.mjs
+@@ -37,6 +37,7 @@
+   narrowDescribe,
+   nativePageIdAdvice,
+   pageSearchProblem,
++  pageIdAdvice,
+   pageListRows,
+   takeViewParams,
+   workingLocale
+@@ -2491,6 +2492,7 @@
+       listed ?? cutContentList(answer, n.params),
+       memory ? memory.describeSeen(sessionId, label) : null
+     )
++    if (compactView) answer = pageIdAdvice(answer)
+     // D1: only what the model was shown (after the listing cut) is a base an apply may name.
+     memory?.rememberContentRevisions(sessionId, label, answer, readGeneration)
+     // The site's own host, for a picture the model writes as an address (`libraryPath`).

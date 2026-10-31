@@ -1,0 +1,13 @@
+{
+  "ownedCmsFixturesRemoved": true,
+  "ownedCrossCmsContainers": [
+    "toolbench-crosscms-joomla",
+    "toolbench-crosscms-joomla-db",
+    "toolbench-crosscms-emdash"
+  ],
+  "ownedCrossCmsNetwork": "toolbench-usage-net",
+  "wordpressCleanup": "Validated ownership and removed its two owned containers, network, private config and fixture directory using live-tool-calling-fixture.mjs --cleanup.",
+  "privateCrossCmsConfigsAndDataRemoved": true,
+  "localCandidateKeptRunning": "tracy-agent-tools-local",
+  "borrowedServicesRestarted": false
+}

@@ -1,0 +1,10 @@
+{
+  "label": "previous optimized working tree before lookup-discovery follow-up",
+  "baselineRef": "76e7f114fa4ce6ac2e1b5b9d1c3ff9857c90c14e",
+  "hashes": {
+    "replace-wordpress.mjs": "bab23694833967ddef56c58385d302735d706103e91eeb2e84cb20bb4f1ca5d1",
+    "site-call.mjs": "297dd40ff2eb596c56e5e7b800faed7403cec840af8ccc8d02a29031a63ce234",
+    "read-compact.mjs": "cfb504cbb847aa6a75a2dde0ec6992bbf437bfd28ab3cce7b32dc52031144347",
+    "surface.mjs": "bc6f6972a3a0c4fee8ee97f3454b7f134d65ff51aa1d883e7a1f46392bb408e0"
+  }
+}

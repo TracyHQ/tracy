@@ -1,7 +1,7 @@
 {
   "name": "tracy-emdash-template",
   "license": "MIT",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "private": true,
   "type": "module",
   "description": "Skill kit: tools and regression tests for building and accepting an EmDash template.",

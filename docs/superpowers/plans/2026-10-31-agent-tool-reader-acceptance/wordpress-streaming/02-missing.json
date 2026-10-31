@@ -1,0 +1,69 @@
+{
+  "repeat": 0,
+  "task": "missing",
+  "verified": true,
+  "failure": null,
+  "ms": 2683.812667,
+  "idValid": true,
+  "noWrites": true,
+  "continuation": true,
+  "recovery": true,
+  "language": true,
+  "seededRefusal": null,
+  "calls": [
+    {
+      "name": "tracy_site",
+      "arguments": {
+        "action": "content.read",
+        "params": {
+          "view": "pages",
+          "search": "NoSuchPage_91ec3c42"
+        }
+      }
+    }
+  ],
+  "provider": [
+    {
+      "step": 1,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7193,
+        "completion_tokens": 75,
+        "total_tokens": 7268,
+        "prompt_tokens_details": {
+          "cached_tokens": 3968
+        },
+        "prompt_cache_hit_tokens": 3968,
+        "prompt_cache_miss_tokens": 3225
+      },
+      "firstChunkMs": 275.7534169999999,
+      "ms": 1011.5169579999992,
+      "promptHash": "b9a03576ada70ac92e277ce0cda9f2f9db5fb21b12989a2d09e5063ada0f0fd9",
+      "finalText": null
+    },
+    {
+      "step": 2,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7525,
+        "completion_tokens": 39,
+        "total_tokens": 7564,
+        "prompt_tokens_details": {
+          "cached_tokens": 7168
+        },
+        "prompt_cache_hit_tokens": 7168,
+        "prompt_cache_miss_tokens": 357
+      },
+      "firstChunkMs": 368.8897500000003,
+      "ms": 1302.3229170000013,
+      "promptHash": "deb2b3ac4dd94bbdeaf30560efda8ced94000d38306808ffb2df0ecd6b7b6f73",
+      "finalText": "There's no page titled NoSuchPage_91ec3c42 on the site. I searched the page list and found nothing matching that title, so I haven't created or changed anything."
+    }
+  ],
+  "final": "There's no page titled NoSuchPage_91ec3c42 on the site. I searched the page list and found nothing matching that title, so I haven't created or changed anything.",
+  "toolResults": "[{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_TFVu5HhpB0FUhD1kswGT9570\"},\"toolCallId\":\"call_00_TFVu5HhpB0FUhD1kswGT9570\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"schemaVersion\\\":\\\"tracy-content-pages/v1\\\",\\\"site\\\":{\\\"id\\\":\\\"sa2debb5755c0809935a9e83a98\\\",\\\"name\\\":\\\"Tool benchmark\\\",\\\"url\\\":\\\"http://127.0.0.1:59939\\\",\\\"defaultLocale\\\":\\\"en-US\\\",\\\"locales\\\":[\\\"en-US\\\"]},\\\"truncated\\\":false,\\\"version\\\":\\\"cv1.60ccb5295a45da7b7c3830f9b2a35ac7\\\",\\\"later\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"changedSince\\\":\\\"cv1.60ccb5295a45da7b7c3830f9b2a35ac7\\\"},\\\"why\\\":\\\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\\\"},\\\"columns\\\":[\\\"title\\\",\\\"path\\\",\\\"id\\\",\\\"record\\\"],\\\"pages\\\":[],\\\"pagination\\\":{\\\"offset\\\":0,\\\"returned\\\":0,\\\"total\\\":0,\\\"totalIsComplete\\\":true,\\\"nextOffset\\\":null},\\\"idNamespace\\\":\\\"content-api\\\",\\\"idMeaning\\\":\\\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\\\"}\"}],\"isError\":false,\"id\":\"456a56f9-0758-4071-842e-c8bc99cdbe14\"}]",
+  "backendReads": 1,
+  "nativeSourceCalls": 0
+}

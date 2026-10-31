@@ -394,6 +394,47 @@ calls **the Claude Cowork plugin installed in the site's CMS** (endpoint and tok
 come from Tracy's ledger (the audit table and `site_write`, 30 days, at most 15 apply_ids, newest first), so the agent
 can undo changes from an earlier conversation too, including `site.identity` (the site name).
 
+The host shapes `content.read {view:"pages"}` after the authenticated relay responds: `search`, `offset`
+and `limit` filter the model-facing page rows (a bounded array of up to eight `search` fragments
+returns their union in one walk), with explicit continuation and an incomplete-total marker
+when the upstream walk was capped. These parameters are host-owned only for an address list; ordinary
+content listings retain their CMS cursor/limit semantics. `full:true` keeps the existing full-response path. Compact page-map answers explicitly label
+the Content API ID namespace and distinguish the `id` field/column from native CMS locators.
+WordPress native page listings keep their CMS post IDs and label that namespace; a result-local
+`contentIdLookup` points to the page map when an opaque Content API ID is needed, without performing
+an extra hidden read. The tool description offers title search directly alongside known-URL lookup
+on all three CMSs, carries a known language into the initial lookup, groups two to eight title fragments and reuses returned IDs/paths without a detail
+read unless fields are needed. EmDash retains its native collection/entry bridge without a mandatory
+describe call for page discovery.
+
+Simultaneous equivalent page-inventory relay reads may share one in-flight request within the same
+plugin instance. The key includes exact relay credentials/origin, site route/target, workspace label,
+session/turn, preset, comment context, site generation and all upstream parameters. Known-URL reads,
+changes-since reads, stopped calls and calls without a session keep their own path. Every consumer
+receives an independent answer before host-side filtering. Settlement or failure removes the entry;
+there is no persistent inventory cache. Writes invalidate the existing site generation before and
+after sending, separating reads that start across a write. Seat authorization remains at the Apply
+door for each actual outbound request.
+The relay also maintains a bounded page inventory index for `view:"pages"` (64 authority/query scopes,
+16 MiB serialized rows and index, 60 seconds maximum). Every request first asks the authenticated CMS
+for a fresh first page. Only an identical global snapshot and first-page metadata can reuse a complete,
+consistent prior walk; refused, capped, mixed-revision or unsupported walks are never held. The key
+binds exact endpoint/token, seat principal, published scope and canonical filters. Known URLs select
+candidate row positions through a pathname index, then retain the existing query-parameter predicate
+and ambiguity behavior. Joomla additionally requires `snapshot.inventoryRevision`, which fingerprints
+its whole projection including routed URLs; older components retain fresh full walks. `changedSince`
+continues walking fresh rows so dynamic CMS lock metadata cannot be replayed.
+
+The EmDash Content API reader reads current native reference-field metadata in the same SQLite
+transaction as its inventory. Reference-bearing collections and draft entries retain native individual
+GETs. Reference-free collections reproduce the native empty references envelope and calibrate list/GET
+bytes independently per collection; an incompatible shape falls back for that collection. Projection,
+record revisions, native authorization and published/draft visibility keep their existing semantics.
+
+For WordPress `content.replace`, widening discovery to theme templates reuses successful reads within
+that single locate attempt. Each write still rereads its target through the original door; retries and
+later tool calls start a new snapshot. No discovery snapshot crosses a site, actor, call or write.
+
 **d. Writes outside Apply, reported afterwards.** Three kinds of write do not go through Apply: EmDash's own MCP
 (`tracy_emdash`), look changes via file tools, and `look.revert`. `tracy-site-tools` reports each
 success to `POST /api/sites/:key/changed`. Since 20/10/2026: before **every** EmDash write

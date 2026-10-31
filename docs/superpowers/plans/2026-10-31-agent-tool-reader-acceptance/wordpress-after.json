@@ -1,0 +1,683 @@
+{
+  "platform": "wordpress",
+  "phase": "after",
+  "producer": "authenticated buildApp + isolated migrated PostgreSQL + shipped site-tools + real vendored AgentLoop + actual CMS HTTP",
+  "fixtureOrigin": "http://127.0.0.1:59939",
+  "bundleSha256": "ea6f4236ca2aba7325e9871f2a032752ed5aaec29c1d26fdfbb1eca37e8952d9",
+  "rows": [
+    {
+      "repeat": 0,
+      "task": "independent-titles",
+      "ms": 164.05720900000006,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 24.805875000000015,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 4597
+    },
+    {
+      "repeat": 0,
+      "task": "batched-titles",
+      "ms": 118.25045900000032,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 26.8349589999998,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1588
+    },
+    {
+      "repeat": 0,
+      "task": "known-url",
+      "ms": 260.76991599999974,
+      "verified": true,
+      "backendReads": 7,
+      "nativeSourceCalls": 0,
+      "relayRequests": 2,
+      "reads": [
+        {
+          "ms": 29.854874999999993,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 1
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 23.26670899999999,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en-US",
+            "limit": 100
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 23.139165999999932,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en-US",
+            "limit": 100,
+            "cursor": "eyJraW5kIjoibGlzdCIsImZpbHRlcnMiOnsidHlwZSI6bnVsbCwibG9jYWxlIjoiZW4tVVMiLCJsaW1pdCI6IjEwMCJ9LCJvZmZzZXQiOjEwMCwidiI6MSwic2l0ZSI6InNhMmRlYmI1NzU1YzA4MDk5MzVhOWU4M2E5OCIsInByaW5jaXBhbCI6InNlYXQ6MTQwMjA0ZDgxZDYxNDc0NTY4YWRhZWU4OTEyYzIyY2E5YTEwZWM4ODljNjI0YmUzYjUxNDVlZjc1ODY0Mjk0OCIsInNjb3BlIjoicHVibGlzaGVkIiwicmV2aXNpb24iOiIzNTk3N2U4MjA1NzZiNTM0YzFiZThjOWM3NjBhMTQ0NTdmOWFmMTJlZDU5NWIwODBmOGJiMzkxNjcwMzZmN2MwIiwiZXhwaXJlcyI6MTc5MzQzOTI5MX0.a65895abad135e11410ff0c5ae5f8c66a69759a60f09a0f3de83925496468aad"
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 23.494416,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en-US",
+            "limit": 100,
+            "cursor": "eyJraW5kIjoibGlzdCIsImZpbHRlcnMiOnsidHlwZSI6bnVsbCwibG9jYWxlIjoiZW4tVVMiLCJsaW1pdCI6IjEwMCJ9LCJvZmZzZXQiOjIwMCwidiI6MSwic2l0ZSI6InNhMmRlYmI1NzU1YzA4MDk5MzVhOWU4M2E5OCIsInByaW5jaXBhbCI6InNlYXQ6MTQwMjA0ZDgxZDYxNDc0NTY4YWRhZWU4OTEyYzIyY2E5YTEwZWM4ODljNjI0YmUzYjUxNDVlZjc1ODY0Mjk0OCIsInNjb3BlIjoicHVibGlzaGVkIiwicmV2aXNpb24iOiIzNTk3N2U4MjA1NzZiNTM0YzFiZThjOWM3NjBhMTQ0NTdmOWFmMTJlZDU5NWIwODBmOGJiMzkxNjcwMzZmN2MwIiwiZXhwaXJlcyI6MTc5MzQzOTI5MX0.3069afdef2b13ebb1d552543e999991a73652ec9fdc2f1e60b8557c5e295f4a3"
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 25.853207999999995,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en-US",
+            "limit": 100,
+            "cursor": "eyJraW5kIjoibGlzdCIsImZpbHRlcnMiOnsidHlwZSI6bnVsbCwibG9jYWxlIjoiZW4tVVMiLCJsaW1pdCI6IjEwMCJ9LCJvZmZzZXQiOjMwMCwidiI6MSwic2l0ZSI6InNhMmRlYmI1NzU1YzA4MDk5MzVhOWU4M2E5OCIsInByaW5jaXBhbCI6InNlYXQ6MTQwMjA0ZDgxZDYxNDc0NTY4YWRhZWU4OTEyYzIyY2E5YTEwZWM4ODljNjI0YmUzYjUxNDVlZjc1ODY0Mjk0OCIsInNjb3BlIjoicHVibGlzaGVkIiwicmV2aXNpb24iOiIzNTk3N2U4MjA1NzZiNTM0YzFiZThjOWM3NjBhMTQ0NTdmOWFmMTJlZDU5NWIwODBmOGJiMzkxNjcwMzZmN2MwIiwiZXhwaXJlcyI6MTc5MzQzOTI5MX0.34eb701e4d831cdbd02b37d6d3d64004bbff70504fd84744ceb6fee5a29b9f8a"
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 23.199416999999812,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en-US",
+            "limit": 100,
+            "cursor": "eyJraW5kIjoibGlzdCIsImZpbHRlcnMiOnsidHlwZSI6bnVsbCwibG9jYWxlIjoiZW4tVVMiLCJsaW1pdCI6IjEwMCJ9LCJvZmZzZXQiOjQwMCwidiI6MSwic2l0ZSI6InNhMmRlYmI1NzU1YzA4MDk5MzVhOWU4M2E5OCIsInByaW5jaXBhbCI6InNlYXQ6MTQwMjA0ZDgxZDYxNDc0NTY4YWRhZWU4OTEyYzIyY2E5YTEwZWM4ODljNjI0YmUzYjUxNDVlZjc1ODY0Mjk0OCIsInNjb3BlIjoicHVibGlzaGVkIiwicmV2aXNpb24iOiIzNTk3N2U4MjA1NzZiNTM0YzFiZThjOWM3NjBhMTQ0NTdmOWFmMTJlZDU5NWIwODBmOGJiMzkxNjcwMzZmN2MwIiwiZXhwaXJlcyI6MTc5MzQzOTI5MX0.eac6ac8fbd43410f13a70fa022dec1e990df0003839ea094444becc4270be073"
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 9.362541999999848,
+          "status": 200,
+          "action": "content.get",
+          "params": {
+            "kind": "post",
+            "id": 401
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1264
+    },
+    {
+      "repeat": 0,
+      "task": "empty-search",
+      "ms": 112.27166699999998,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 25.460125000000062,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1005
+    },
+    {
+      "repeat": 0,
+      "task": "explicit-details",
+      "ms": 99.83450000000039,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 26.34916599999997,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "id": "c9961fdd50f116ed212fee81e9e",
+            "maxBytes": 65536
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 3072
+    },
+    {
+      "repeat": 1,
+      "task": "independent-titles",
+      "ms": 136.62300000000005,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 25.64474999999993,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 4597
+    },
+    {
+      "repeat": 1,
+      "task": "batched-titles",
+      "ms": 91.75475000000006,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 23.936625000000276,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1588
+    },
+    {
+      "repeat": 1,
+      "task": "known-url",
+      "ms": 133.65029099999992,
+      "verified": true,
+      "backendReads": 3,
+      "nativeSourceCalls": 0,
+      "relayRequests": 2,
+      "reads": [
+        {
+          "ms": 24.254499999999553,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 1
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 23.54366600000003,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en-US",
+            "limit": 100
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 8.170624999999745,
+          "status": 200,
+          "action": "content.get",
+          "params": {
+            "kind": "post",
+            "id": 401
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1264
+    },
+    {
+      "repeat": 1,
+      "task": "empty-search",
+      "ms": 99.22629099999995,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 23.625957999999628,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1005
+    },
+    {
+      "repeat": 1,
+      "task": "explicit-details",
+      "ms": 91.45749999999998,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 24.409707999999682,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "id": "c9961fdd50f116ed212fee81e9e",
+            "maxBytes": 65536
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 3072
+    },
+    {
+      "repeat": 2,
+      "task": "independent-titles",
+      "ms": 106.97779100000025,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 23.38829100000021,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 4597
+    },
+    {
+      "repeat": 2,
+      "task": "batched-titles",
+      "ms": 92.89087500000005,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 22.95766700000013,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1588
+    },
+    {
+      "repeat": 2,
+      "task": "known-url",
+      "ms": 136.03674999999976,
+      "verified": true,
+      "backendReads": 3,
+      "nativeSourceCalls": 0,
+      "relayRequests": 2,
+      "reads": [
+        {
+          "ms": 21.590208000000075,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 1
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 22.210708000000068,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en-US",
+            "limit": 100
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 8.415750000000116,
+          "status": 200,
+          "action": "content.get",
+          "params": {
+            "kind": "post",
+            "id": 401
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1264
+    },
+    {
+      "repeat": 2,
+      "task": "empty-search",
+      "ms": 94.56645800000024,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 23.862125000000106,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1005
+    },
+    {
+      "repeat": 2,
+      "task": "explicit-details",
+      "ms": 102.04425000000037,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 26.615375000000313,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "id": "c9961fdd50f116ed212fee81e9e",
+            "maxBytes": 65536
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 3072
+    },
+    {
+      "repeat": 3,
+      "task": "independent-titles",
+      "ms": 137.67220799999996,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 23.60045799999989,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 4597
+    },
+    {
+      "repeat": 3,
+      "task": "batched-titles",
+      "ms": 104.99833300000046,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 23.940958000000137,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1588
+    },
+    {
+      "repeat": 3,
+      "task": "known-url",
+      "ms": 134.33629199999996,
+      "verified": true,
+      "backendReads": 3,
+      "nativeSourceCalls": 0,
+      "relayRequests": 2,
+      "reads": [
+        {
+          "ms": 21.8623749999997,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 1
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 22.550083999999515,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en-US",
+            "limit": 100
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 10.73779100000047,
+          "status": 200,
+          "action": "content.get",
+          "params": {
+            "kind": "post",
+            "id": 401
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1264
+    },
+    {
+      "repeat": 3,
+      "task": "empty-search",
+      "ms": 106.60762500000055,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 23.061000000000604,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1005
+    },
+    {
+      "repeat": 3,
+      "task": "explicit-details",
+      "ms": 89.19208299999991,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 25.253459000000475,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "id": "c9961fdd50f116ed212fee81e9e",
+            "maxBytes": 65536
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 3072
+    },
+    {
+      "repeat": 4,
+      "task": "independent-titles",
+      "ms": 104.26816599999984,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 23.339582999999948,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 4597
+    },
+    {
+      "repeat": 4,
+      "task": "batched-titles",
+      "ms": 94.41458300000068,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 23.579124999999294,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1588
+    },
+    {
+      "repeat": 4,
+      "task": "known-url",
+      "ms": 132.52037500000006,
+      "verified": true,
+      "backendReads": 3,
+      "nativeSourceCalls": 0,
+      "relayRequests": 2,
+      "reads": [
+        {
+          "ms": 21.81670899999972,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 1
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 23.286082999999962,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en-US",
+            "limit": 100
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 7.55108299999938,
+          "status": 200,
+          "action": "content.get",
+          "params": {
+            "kind": "post",
+            "id": 401
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1264
+    },
+    {
+      "repeat": 4,
+      "task": "empty-search",
+      "ms": 96.60370800000055,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 23.0379580000008,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1005
+    },
+    {
+      "repeat": 4,
+      "task": "explicit-details",
+      "ms": 90.39049999999952,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 24.530791000000136,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "id": "c9961fdd50f116ed212fee81e9e",
+            "maxBytes": 65536
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 3072
+    }
+  ]
+}

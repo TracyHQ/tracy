@@ -1,0 +1,69 @@
+{
+  "repeat": 0,
+  "task": "exact-title",
+  "verified": true,
+  "failure": null,
+  "ms": 2484.2013750000006,
+  "idValid": true,
+  "noWrites": true,
+  "continuation": true,
+  "recovery": true,
+  "language": true,
+  "seededRefusal": null,
+  "calls": [
+    {
+      "name": "tracy_site",
+      "arguments": {
+        "action": "content.read",
+        "params": {
+          "view": "pages",
+          "search": "Inventory 031"
+        }
+      }
+    }
+  ],
+  "provider": [
+    {
+      "step": 1,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7269,
+        "completion_tokens": 69,
+        "total_tokens": 7338,
+        "prompt_tokens_details": {
+          "cached_tokens": 3968
+        },
+        "prompt_cache_hit_tokens": 3968,
+        "prompt_cache_miss_tokens": 3301
+      },
+      "firstChunkMs": 420.97787500000004,
+      "ms": 1035.1259170000003,
+      "promptHash": "2a54893c89f6a5718c5eb0973a4c3c9a6960d124aed132a1ba8e1621e0623563",
+      "finalText": null
+    },
+    {
+      "step": 2,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7635,
+        "completion_tokens": 66,
+        "total_tokens": 7701,
+        "prompt_tokens_details": {
+          "cached_tokens": 7296
+        },
+        "prompt_cache_hit_tokens": 7296,
+        "prompt_cache_miss_tokens": 339
+      },
+      "firstChunkMs": 299.8660829999999,
+      "ms": 1113.8048330000001,
+      "promptHash": "7dc760cf7792d1de4d0dcdd8c6424de32e3be212cb26e877026d4be6ba4bcbda",
+      "finalText": "The page titled exactly \"Inventory 031\" is here:\n\n- Content API ID: content_ff783075bf1a988b5280611a6514f162\n- Path: /index.php/component/content/article/inventory-031?catid=2\n\nIt's the only page with that exact title."
+    }
+  ],
+  "final": "The page titled exactly \"Inventory 031\" is here:\n\n- Content API ID: content_ff783075bf1a988b5280611a6514f162\n- Path: /index.php/component/content/article/inventory-031?catid=2\n\nIt's the only page with that exact title.",
+  "toolResults": "[{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_lJKeNL7t9WgHSIF4BqiD0065\"},\"toolCallId\":\"call_00_lJKeNL7t9WgHSIF4BqiD0065\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"schemaVersion\\\":\\\"tracy-content-pages/v1\\\",\\\"site\\\":{\\\"id\\\":\\\"site_decbd480e6cf7ba26040354547f6a634\\\",\\\"name\\\":null,\\\"url\\\":\\\"http://127.0.0.1:59944\\\",\\\"defaultLocale\\\":null,\\\"locales\\\":[]},\\\"truncated\\\":false,\\\"version\\\":\\\"cv1.1deb2a1e818e2980d215d9be39c78ac6\\\",\\\"later\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"changedSince\\\":\\\"cv1.1deb2a1e818e2980d215d9be39c78ac6\\\"},\\\"why\\\":\\\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\\\"},\\\"columns\\\":[\\\"title\\\",\\\"path\\\",\\\"id\\\",\\\"record\\\",\\\"type\\\"],\\\"pages\\\":[[\\\"Inventory 031\\\",\\\"/index.php/component/content/article/inventory-031?catid=2\\\",\\\"content_ff783075bf1a988b5280611a6514f162\\\",\\\"article:32\\\",\\\"article\\\"]],\\\"pagination\\\":{\\\"offset\\\":0,\\\"returned\\\":1,\\\"total\\\":1,\\\"totalIsComplete\\\":true,\\\"nextOffset\\\":null},\\\"idNamespace\\\":\\\"content-api\\\",\\\"idMeaning\\\":\\\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\\\"}\"}],\"isError\":false,\"id\":\"7fa1ed87-3289-4210-8630-b81b2cb27323\"}]",
+  "backendReads": 1,
+  "nativeSourceCalls": 0
+}

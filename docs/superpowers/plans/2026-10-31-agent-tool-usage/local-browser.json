@@ -1,0 +1,10 @@
+{
+  "url": "http://127.0.0.1:56341",
+  "observed": {
+    "entries": 74,
+    "rev": "9538bd3563a2",
+    "editable": true,
+    "bodyText": "What would you like to change today?\nDefault workspace\nDescribe what you want to build, / commands, @ files or sessions"
+  },
+  "pageErrors": []
+}

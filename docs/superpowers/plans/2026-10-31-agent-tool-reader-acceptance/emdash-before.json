@@ -1,0 +1,559 @@
+{
+  "platform": "emdash",
+  "phase": "before",
+  "producer": "authenticated buildApp + isolated migrated PostgreSQL + shipped site-tools + real vendored AgentLoop + actual CMS HTTP",
+  "fixtureOrigin": "http://127.0.0.1:59965",
+  "bundleSha256": "ea6f4236ca2aba7325e9871f2a032752ed5aaec29c1d26fdfbb1eca37e8952d9",
+  "rows": [
+    {
+      "repeat": 0,
+      "task": "independent-titles",
+      "ms": 795.2706670000007,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 631.6074580000004,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 5748
+    },
+    {
+      "repeat": 0,
+      "task": "batched-titles",
+      "ms": 772.933916,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 621.2883750000001,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 1887
+    },
+    {
+      "repeat": 0,
+      "task": "known-url",
+      "ms": 815.8760000000002,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 695.4953749999995,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 1466
+    },
+    {
+      "repeat": 0,
+      "task": "empty-search",
+      "ms": 727.2401249999994,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 650.4330420000006,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 1292
+    },
+    {
+      "repeat": 0,
+      "task": "explicit-details",
+      "ms": 777.8715830000001,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 696.0104999999994,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "id": "yPoynZlZYpbNnBxr7Ap8ONbMNTF6ocoBUxE69Y-FzGM",
+            "maxBytes": 65536
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 7473
+    },
+    {
+      "repeat": 1,
+      "task": "independent-titles",
+      "ms": 727.7013749999987,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 618.1025000000009,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 5748
+    },
+    {
+      "repeat": 1,
+      "task": "batched-titles",
+      "ms": 690.8520420000004,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 606.8857500000013,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 1887
+    },
+    {
+      "repeat": 1,
+      "task": "known-url",
+      "ms": 767.4646670000002,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 691.187833,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 1466
+    },
+    {
+      "repeat": 1,
+      "task": "empty-search",
+      "ms": 685.6387500000001,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 607.0350830000007,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 1292
+    },
+    {
+      "repeat": 1,
+      "task": "explicit-details",
+      "ms": 728.553167,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 649.3326250000009,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "id": "yPoynZlZYpbNnBxr7Ap8ONbMNTF6ocoBUxE69Y-FzGM",
+            "maxBytes": 65536
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 7473
+    },
+    {
+      "repeat": 2,
+      "task": "independent-titles",
+      "ms": 806.1666249999998,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 686.5922499999997,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 5748
+    },
+    {
+      "repeat": 2,
+      "task": "batched-titles",
+      "ms": 760.5888749999995,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 655.2866670000003,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 1887
+    },
+    {
+      "repeat": 2,
+      "task": "known-url",
+      "ms": 782.4669590000012,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 700.2994589999998,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 1466
+    },
+    {
+      "repeat": 2,
+      "task": "empty-search",
+      "ms": 729.9208330000001,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 630.4317499999997,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 1292
+    },
+    {
+      "repeat": 2,
+      "task": "explicit-details",
+      "ms": 767.6550000000007,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 628.253666999999,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "id": "yPoynZlZYpbNnBxr7Ap8ONbMNTF6ocoBUxE69Y-FzGM",
+            "maxBytes": 65536
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 7473
+    },
+    {
+      "repeat": 3,
+      "task": "independent-titles",
+      "ms": 799.3266249999997,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 688.4241659999989,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 5748
+    },
+    {
+      "repeat": 3,
+      "task": "batched-titles",
+      "ms": 761.6496670000015,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 682.0683329999993,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 1887
+    },
+    {
+      "repeat": 3,
+      "task": "known-url",
+      "ms": 824.5347089999996,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 688.1472919999978,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 1466
+    },
+    {
+      "repeat": 3,
+      "task": "empty-search",
+      "ms": 787.0146249999998,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 685.9850829999996,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 1292
+    },
+    {
+      "repeat": 3,
+      "task": "explicit-details",
+      "ms": 737.9370830000007,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 646.1820829999997,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "id": "yPoynZlZYpbNnBxr7Ap8ONbMNTF6ocoBUxE69Y-FzGM",
+            "maxBytes": 65536
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 7473
+    },
+    {
+      "repeat": 4,
+      "task": "independent-titles",
+      "ms": 1094.546875,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 932.7126250000001,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 5748
+    },
+    {
+      "repeat": 4,
+      "task": "batched-titles",
+      "ms": 725.1453340000007,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 644.3238749999982,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 1887
+    },
+    {
+      "repeat": 4,
+      "task": "known-url",
+      "ms": 756.8888330000009,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 659.0084999999999,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 1466
+    },
+    {
+      "repeat": 4,
+      "task": "empty-search",
+      "ms": 793.0689590000002,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 695.5064999999995,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 1292
+    },
+    {
+      "repeat": 4,
+      "task": "explicit-details",
+      "ms": 760.0369590000009,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 669.1987499999996,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "id": "yPoynZlZYpbNnBxr7Ap8ONbMNTF6ocoBUxE69Y-FzGM",
+            "maxBytes": 65536
+          },
+          "sourceCalls": 2027
+        }
+      ],
+      "resultChars": 7473
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "joomla": [
+    {
+      "name": "toolbench-crosscms-joomla",
+      "id": "66aa92d34853b104b0baedd849b8ae14a3487945ae91ee67edad353fe4a7ef33",
+      "image": "sha256:d60bf9116d715257eff6e6d9c6aaafa6822acbed5d3933517428133e280e403c",
+      "startedAt": "2026-10-30T16:06:06.52711143Z",
+      "pidInDockerVM": 75637
+    },
+    {
+      "name": "toolbench-crosscms-joomla-db",
+      "id": "eda19f9cc26d62034accce78c73126d831efd0857a8773566dd196ac93562414",
+      "image": "sha256:3853ff4da2eb76058a3a112ae8026e5a094990c5341f1aedd76a903fd171176e",
+      "startedAt": "2026-10-30T16:05:58.859559552Z",
+      "pidInDockerVM": 75159
+    }
+  ],
+  "emdash": [
+    {
+      "name": "toolbench-crosscms-emdash",
+      "id": "2a741735102768dae89d1be235a6946fe5ab26226de9730339163da84dffa152",
+      "image": "sha256:96711fec9d763d8daaacee6da83770668335a16ee20a19d01b9fb31e790fbe54",
+      "startedAt": "2026-10-30T16:08:28.251627676Z",
+      "pidInDockerVM": 77078
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "files": {
+    "pilot-unavailable-doors.json": "/tmp/tracy-agent-usage-wp-model/raw.json",
+    "pilot-abbreviated-guidance.json": "/tmp/tracy-agent-usage-wp-model-final/raw.json",
+    "pilot-interrupted-guidance.json": "/tmp/tracy-agent-usage-wp-model-corrected/raw.json",
+    "diagnostic-wordpress-model-competing-scan.json": "/tmp/tracy-agent-usage-wordpress-model-v2/raw.json",
+    "diagnostic-joomla-native-competing-scan.json": "/tmp/tracy-agent-usage-joomla-native-final/raw.json",
+    "diagnostic-joomla-id-confusion.json": "/tmp/tracy-agent-usage-joomla-model-v2/raw.json",
+    "diagnostic-emdash-interrupted.json": "/tmp/tracy-agent-usage-emdash-native-final/raw.json",
+    "diagnostic-emdash-missing-locale.json": "/tmp/tracy-agent-usage-emdash-model-accepted/raw.json",
+    "diagnostic-emdash-implicit-locale.json": "/tmp/tracy-agent-usage-emdash-model-accepted-v3/raw.json",
+    "probe-emdash-explicit-locale.json": "/tmp/tracy-agent-usage-emdash-explicit-locale-probe/raw.json"
+  },
+  "excludedFromFinalComparison": [
+    "pilot-unavailable-doors.json",
+    "pilot-abbreviated-guidance.json",
+    "pilot-interrupted-guidance.json",
+    "diagnostic-wordpress-model-competing-scan.json",
+    "diagnostic-joomla-native-competing-scan.json",
+    "diagnostic-joomla-id-confusion.json",
+    "diagnostic-emdash-interrupted.json",
+    "diagnostic-emdash-missing-locale.json",
+    "diagnostic-emdash-implicit-locale.json",
+    "probe-emdash-explicit-locale.json"
+  ],
+  "reason": "Adapter/protocol revisions, preceding bundle/guidance, competing scans, incomplete runs or a one-arm development probe. Every original failure is retained. Final comparison uses six separate complete runs with one frozen bundle and guide."
+}

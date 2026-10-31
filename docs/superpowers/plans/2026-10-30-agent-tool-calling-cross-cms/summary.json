@@ -1,0 +1,60 @@
+{
+  "joomla": {
+    "inventoryPages": 402,
+    "contentUnchanged": true,
+    "changedTables": null,
+    "arms": {
+      "independent": {
+        "attempts": 12,
+        "verified": 12,
+        "backendReads": [20],
+        "nativeSourceCalls": [null],
+        "toolCalls": [4],
+        "modelRequests": [4],
+        "elapsedP50Ms": 2762.648833499996,
+        "elapsedP90Ms": 4087.4230499999976
+      },
+      "batch": {
+        "attempts": 12,
+        "verified": 12,
+        "backendReads": [5],
+        "nativeSourceCalls": [null],
+        "toolCalls": [1],
+        "modelRequests": [4],
+        "elapsedP50Ms": 3465.7017290000003,
+        "elapsedP90Ms": 4419.3985423
+      }
+    },
+    "elapsedMedianChangePercent": 25.44850749667331
+  },
+  "emdash": {
+    "inventoryPages": 43,
+    "contentUnchanged": true,
+    "changedTables": ["options", "_emdash_revision_prune_queue", "_emdash_media_usage_cleanup"],
+    "arms": {
+      "independent": {
+        "attempts": 12,
+        "verified": 12,
+        "backendReads": [4, 5],
+        "nativeSourceCalls": [8108],
+        "toolCalls": [4, 5],
+        "modelRequests": [4],
+        "elapsedP50Ms": 11466.013895999997,
+        "elapsedP90Ms": 13162.224925
+      },
+      "batch": {
+        "attempts": 12,
+        "verified": 12,
+        "backendReads": [1],
+        "nativeSourceCalls": [2027],
+        "toolCalls": [1],
+        "modelRequests": [4],
+        "elapsedP50Ms": 3439.5633334999984,
+        "elapsedP90Ms": 7958.675816400002
+      }
+    },
+    "elapsedMedianChangePercent": -70.0021004274213
+  },
+  "method": "Twelve pairs per CMS; independent versus OR strategy on the same candidate bundle; real HTTP CMS reader, real library AgentLoop, scripted model; injected relay; balanced order; every timed observation retained; linearly interpolated p90. Concurrent full-gate audit competed for CPU. No model-billing, production-latency or statistical-significance claim.",
+  "initialEmdashIntegrityFailure": "Retained separately. All 24 initial lookups returned IDs, but the aggregate database hash changed. Per-table integrity instrumentation and a full repeat are reported separately; the first run is not counted as passing integrity."
+}

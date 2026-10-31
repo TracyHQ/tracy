@@ -1,20 +1,20 @@
 {
 	"templateId": "tracy-business",
 	"label": "Tracy Business",
-	"version": "1.7.0",
+	"version": "1.7.24",
 	"package": {
 		"name": "@tracy/emdash-theme-business",
-		"version": "1.7.0"
+		"version": "1.7.24"
 	},
 	"demoContent": "Northgate Industrial",
-	"generatedAt": "2026-10-07T18:28:27.635Z",
+	"generatedAt": "2026-10-31T11:28:45.924Z",
 	"cms": {
 		"name": "emdash",
 		"version": "1.1.0"
 	},
 	"runtime": {
 		"node": ">=22.16",
-		"astro": "7.0.0",
+		"astro": "7.2.8",
 		"adapter": "@astrojs/node standalone",
 		"database": "sqlite (data/data.db)",
 		"storage": "local (uploads/)"
@@ -154,15 +154,15 @@
 		"docs/content-model.md": "sha256:f6384fb348581709ee3f7869934270a14cc1176b0ec54936e20db6097a196861",
 		"docs/content-rules.md": "sha256:e240519da730f44c9fa0ef2e90a99f11f2b7c2d5776d43e6b6741affd3f86202",
 		"docs/design-system.md": "sha256:90626d6c8cd84669be1977a419a37dddd23465a832a7865cce2bcc72cca3df93",
-		"docs/generated/inventory.json": "sha256:7458abd88fc5a7e1fc71d26e8697b413e29963743ccdb7b12bbf67bb83d89e8f",
-		"docs/generated/inventory.md": "sha256:4050c4bb5f08f104d2087ee1340c7b96020474a131b99394a00f208779677932",
+		"docs/generated/inventory.json": "sha256:8761436d1630d583b03f2626fa360c10194f47f7a82ea0c8182fc5739e124a73",
+		"docs/generated/inventory.md": "sha256:b2cd619bc2690aeb94891aa18b9284c6097375c99b245c388af1b1f232b4f2e9",
 		"docs/install.md": "sha256:db5def2f8ab8c908c6fb33814b74658d9452d3f1b29f87c5776ce342436a2771",
 		"docs/languages.md": "sha256:8d9fa744009add75c9d847c26121ef3f98f77727388545372da98713309b1b33",
-		"template.config.json": "sha256:9fe656f86fd6383b970af74d7772a1904a6c179d86271e3649f2e93a102554bc",
-		"seed/seed.json": "sha256:1933c2b5a9505bb615f2d6dfc2b86beb7e5483fbcb0f91dbade97d5f2f3058df",
+		"template.config.json": "sha256:e13df416f6bf8313659737b6a4b734b76e704db9b8ea714209f62bb7dab33925",
+		"seed/seed.json": "sha256:f269c81281f22c5918ff298a0511b954c71813c0d44c61fcd19eabe37a20e7cf",
 		"seed/media-map.json": "sha256:f62125be2fda732dfc8a4a9d05ff341d2f4ec4dab7cbf08f5900d9e12a929bd6",
-		"seed/field-map.json": "sha256:afa40e3ba81c5084f4cdff24c763fe8b30c531bd612a0f528e8cb4510f7ae4e4",
-		"pnpm-lock.yaml": "sha256:2002b14f3aeab81f5aca2917e02bdc887b9773f2f7247d8b75f8d59efe3b7f90",
+		"seed/field-map.json": "sha256:b463bc104be5dcf058893c8d2b9e333de95faf7791dd945dc2f28345af30d334",
+		"pnpm-lock.yaml": "sha256:604c8a85fa3fe073389043da5dca2f78cb69aa33764b867de68a5b2024168610",
 		"tools/forms.json": "sha256:75b8fadc91e8dc4991d588c06a9219b07fc4e36b7719eee6ebcb3ad3f49cdc85",
 		"seed/media/*": "sha256:ca0909c701f80ac1144fc633ff4668b66ce3499790c3c985ba402e80397fd81b (39 files)"
 	}

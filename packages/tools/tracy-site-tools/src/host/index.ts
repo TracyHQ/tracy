@@ -1,3 +1,4 @@
+import { createPageReadFlights } from './page-read-flights.mjs'
 import { createBuildTurns } from './build-turns.mjs'
 import { copyWritten, demoToolNeedsReady, runDemoLifecycle } from './demo-lifecycle.mjs'
 import { resolveSweepCall } from './sweep-resolve.mjs'
@@ -2783,6 +2784,7 @@ export function apply(ctx: HostContext, config: Config = {}): void {
    * by site and conversation inside, never shared by accident.
    */
   const memory = createCallMemory()
+  const pageReadFlight = createPageReadFlights()
   async function demoWriteGuard(args: unknown, exec: ToolRun, clientOnly = false): Promise<unknown | null> {
     if (!clientOnly && !changesSite({ name: 'tracy_emdash', arguments: args })) return null
     const result = (await demoGuard(exec, clientOnly)) as { code?: string } | null
@@ -3069,7 +3071,37 @@ export function apply(ctx: HostContext, config: Config = {}): void {
     const writes = relayWrites(action, params)
     if (writes) memory.invalidateSite(site)
     const title = writes ? memory.titleOf(sessionId, params) : null
-    const answer = await applyDoor(config, plan, key, action, params, target, label, sessionId, preset, title)
+    // Only simultaneous address inventories share I/O. Search/row parameters were removed by
+    // runSiteCall and each caller still shapes its own answer. Known URLs and all other reads retain
+    // their path. Exact credentials, routing, comment, session/turn and site generation fence reuse.
+    const share =
+      action === 'content.read' &&
+      params.view === 'pages' &&
+      params.url === undefined &&
+      params.changedSince === undefined &&
+      sessionId !== null &&
+      !turnSignal.getStore()?.aborted
+    const flightKey = share
+      ? createHash('sha256')
+          .update(
+            JSON.stringify([
+              plan,
+              key,
+              target,
+              label,
+              sessionId,
+              preset,
+              memory.turnOf(sessionId),
+              memory.generationOf(site),
+              answeringComment.getStore(),
+              Object.fromEntries(Object.entries(params).sort(([a], [b]) => a.localeCompare(b)))
+            ])
+          )
+          .digest('hex')
+      : null
+    const answer = await pageReadFlight(flightKey, () =>
+      applyDoor(config, plan, key, action, params, target, label, sessionId, preset, title)
+    )
     if (writes) memory.invalidateSite(site)
     // A write the door took holds the site's lease for this conversation until its turn ends.
     // 🔒 A WRITE BY THE DOOR'S OWN RULE (`doorTakesLease`, review C3), not "makes reads stale": a media

@@ -24,3 +24,39 @@ test('a prefix that is a region-less form of a full tag still names it; anything
   assert.equal(localeOfLink('/es/x', [], null, null), null)
   assert.equal(localeOfLink('/about', ['en', 'es'], null, null), null)
 })
+
+test('the address index preserves ambiguous query addresses, tracking, Unicode and missing paths', async () => {
+  const { pageAddressIndex, indexedPageCandidates, pagesDocument } = await import(
+    '../src/sites/content-pages.js'
+  )
+  const listings = [
+    {
+      site: { url: 'https://example.test/sub' },
+      contents: [
+        { id: 'one', url: 'https://example.test/sub/index.php?Itemid=1' },
+        { id: 'two', url: 'https://example.test/sub/index.php?Itemid=2' },
+        { id: 'alias', url: 'https://example.test/sub/index.php?Itemid=1' },
+        { id: 'unicode', url: 'https://example.test/sub/caf%C3%A9' }
+      ]
+    }
+  ]
+  const index = pageAddressIndex(listings)
+  for (const link of [
+    'https://example.test/sub/index.php?Itemid=1&utm_source=test',
+    'https://example.test/sub/café/',
+    '/missing'
+  ]) {
+    const ordinary = pagesDocument(listings, { truncated: false, link })
+    const indexed = pagesDocument(listings, {
+      truncated: false,
+      link,
+      candidates: indexedPageCandidates(index, link, listings[0].site.url)
+    })
+    assert.deepEqual(indexed, ordinary)
+  }
+  assert.equal(
+    pagesDocument(listings, { truncated: false, link: 'https://example.test/sub/index.php?Itemid=1' }).pages
+      .length,
+    2
+  )
+})

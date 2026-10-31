@@ -1,0 +1,306 @@
+{
+  "metadata": {
+    "platform": "emdash",
+    "repeats": 12,
+    "origin": "http://127.0.0.1:60073",
+    "producer": "real shipped Tracy bundle + real vendored AgentLoop/ToolRuntime/ToolRegistry, scripted model, real CMS HTTP reader; injected relay transport",
+    "strategyComparison": "four existing independent string queries versus one bounded OR query on the same candidate bundle",
+    "inventoryPages": 43,
+    "filter": {
+      "locale": "en"
+    },
+    "targets": [
+      {
+        "id": "yzuVdjXoNGWh9HkJQXqPiLCeY_CVpTshZue_5kaNGxg",
+        "title": "Home",
+        "path": "/"
+      },
+      {
+        "id": "ysXvIu0vVxtLZwRUIm5Wse-BftuYa9cLXYI-JsGwygI",
+        "title": "Change in the composition of the board",
+        "path": "/news/change-in-the-composition-of-the-board"
+      },
+      {
+        "id": "XFUGDasY0LfDUpNqALTCGsAbMgDXEjf_yxHD62KUgLc",
+        "title": "Dividend payment for 2025",
+        "path": "/news/dividend-payment-for-2025"
+      },
+      {
+        "id": "Xfhaw0ttfLmJKGqNhDXawVPF1UXY7oxFo229cAIdEuE",
+        "title": "Checking anchor bolts before steel erection",
+        "path": "/news/checking-anchor-bolts-before-steel-erection"
+      }
+    ],
+    "bundleSha256": "14d19374f19b9719db99a811fd1a04c168ce943fd3f0a621802a7e72d51a23a8",
+    "image": "sha256:96711fec9d763d8daaacee6da83770668335a16ee20a19d01b9fb31e790fbe54",
+    "contentBeforeHash": "31bfaf530bd70dc91140adb7cb7bec37e6852ba13c587275cde7fae0dd1c2c18",
+    "injectedDelayMs": 0,
+    "modelBilling": null
+  },
+  "rows": [
+    {
+      "repeat": 0,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 18352.331417,
+      "backendReads": 4,
+      "nativeSourceCalls": 8108,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 0,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 4060.8987499999967,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 1,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 3557.4317500000034,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 1,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 13800.709083000002,
+      "backendReads": 4,
+      "nativeSourceCalls": 8108,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 2,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 12016.861459,
+      "backendReads": 4,
+      "nativeSourceCalls": 8108,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 2,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 2414.1733749999985,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 3,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 2560.9380419999943,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 3,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 12046.334833,
+      "backendReads": 4,
+      "nativeSourceCalls": 8108,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 4,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 14980.065707999995,
+      "backendReads": 4,
+      "nativeSourceCalls": 8108,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 4,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 14684.638834000012,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 5,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 11066.008917,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 5,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 22942.358833999984,
+      "backendReads": 4,
+      "nativeSourceCalls": 8108,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 6,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 14736.625250000012,
+      "backendReads": 4,
+      "nativeSourceCalls": 8108,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 6,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 3287.130124999996,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 7,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 3138.286542000016,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 7,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 10182.954583999992,
+      "backendReads": 4,
+      "nativeSourceCalls": 8108,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 8,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 12933.89287500002,
+      "backendReads": 4,
+      "nativeSourceCalls": 8108,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 8,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 2294.786708999978,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 9,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 3994.1361669999897,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 9,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 14251.225124999997,
+      "backendReads": 4,
+      "nativeSourceCalls": 8108,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 10,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 12482.009082999983,
+      "backendReads": 4,
+      "nativeSourceCalls": 8108,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 10,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 4121.246375000017,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 11,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 3311.5295409999962,
+      "backendReads": 1,
+      "nativeSourceCalls": 2027,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 11,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 11909.62275000001,
+      "backendReads": 4,
+      "nativeSourceCalls": 8108,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    }
+  ]
+}

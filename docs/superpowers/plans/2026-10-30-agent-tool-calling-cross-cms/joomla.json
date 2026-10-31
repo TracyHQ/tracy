@@ -1,0 +1,305 @@
+{
+  "metadata": {
+    "platform": "joomla",
+    "repeats": 12,
+    "origin": "http://127.0.0.1:59735",
+    "producer": "real shipped Tracy bundle + real vendored AgentLoop/ToolRuntime/ToolRegistry, scripted model, real CMS HTTP reader; injected relay transport",
+    "strategyComparison": "four existing independent string queries versus one bounded OR query on the same candidate bundle",
+    "inventoryPages": 402,
+    "filter": {},
+    "targets": [
+      {
+        "id": "content_fe0fc46f7c940b0dbf4c789f057eaec9",
+        "title": "Inventory 391: Independent tool benchmark",
+        "path": "/index.php/component/content/article/toolbench-391?catid=2"
+      },
+      {
+        "id": "content_fdf73feaa9654a28958cf695bf959948",
+        "title": "Inventory 366: Independent tool benchmark",
+        "path": "/index.php/component/content/article/toolbench-366?catid=2"
+      },
+      {
+        "id": "content_fc406560d5e497caa364f36357512d9a",
+        "title": "Inventory 020: Independent tool benchmark",
+        "path": "/index.php/component/content/article/toolbench-20?catid=2"
+      },
+      {
+        "id": "content_fc0d5d0fcb8be5dbe72f1c6f2e42206d",
+        "title": "Inventory 299: Independent tool benchmark",
+        "path": "/index.php/component/content/article/toolbench-299?catid=2"
+      }
+    ],
+    "bundleSha256": "14d19374f19b9719db99a811fd1a04c168ce943fd3f0a621802a7e72d51a23a8",
+    "image": "sha256:d60bf9116d715257eff6e6d9c6aaafa6822acbed5d3933517428133e280e403c",
+    "contentBeforeHash": "5066afa7b8e7d7177db04bb2bd8827fe1d72577e63c4a1b18788cdf48abae62e",
+    "injectedDelayMs": 0,
+    "modelBilling": null,
+    "contentAfterHash": "5066afa7b8e7d7177db04bb2bd8827fe1d72577e63c4a1b18788cdf48abae62e"
+  },
+  "rows": [
+    {
+      "repeat": 0,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 6630.7876670000005,
+      "backendReads": 20,
+      "nativeSourceCalls": null,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 0,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 3548.66575,
+      "backendReads": 5,
+      "nativeSourceCalls": null,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 1,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 7878.426457999998,
+      "backendReads": 5,
+      "nativeSourceCalls": null,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 1,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 3062.233541999998,
+      "backendReads": 20,
+      "nativeSourceCalls": null,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 2,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 2139.7246659999983,
+      "backendReads": 20,
+      "nativeSourceCalls": null,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 2,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 2670.304165999998,
+      "backendReads": 5,
+      "nativeSourceCalls": null,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 3,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 3180.819374999999,
+      "backendReads": 5,
+      "nativeSourceCalls": null,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 3,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 3104.160624999997,
+      "backendReads": 20,
+      "nativeSourceCalls": null,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 4,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 2125.481749999999,
+      "backendReads": 20,
+      "nativeSourceCalls": null,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 4,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 4234.872292,
+      "backendReads": 5,
+      "nativeSourceCalls": null,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 5,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 4006.7819999999992,
+      "backendReads": 5,
+      "nativeSourceCalls": null,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 5,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 3702.113249999995,
+      "backendReads": 20,
+      "nativeSourceCalls": null,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 6,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 2329.6500000000015,
+      "backendReads": 20,
+      "nativeSourceCalls": null,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 6,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 2418.249625000004,
+      "backendReads": 5,
+      "nativeSourceCalls": null,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 7,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 2712.303458000002,
+      "backendReads": 5,
+      "nativeSourceCalls": null,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 7,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 1972.198832999995,
+      "backendReads": 20,
+      "nativeSourceCalls": null,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 8,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 1658.7653340000033,
+      "backendReads": 20,
+      "nativeSourceCalls": null,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 8,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 1975.9542920000094,
+      "backendReads": 5,
+      "nativeSourceCalls": null,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 9,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 3382.7377080000006,
+      "backendReads": 5,
+      "nativeSourceCalls": null,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 9,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 2952.93637499999,
+      "backendReads": 20,
+      "nativeSourceCalls": null,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 10,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 2572.3612920000014,
+      "backendReads": 20,
+      "nativeSourceCalls": null,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    },
+    {
+      "repeat": 10,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 3691.141709000003,
+      "backendReads": 5,
+      "nativeSourceCalls": null,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 11,
+      "arm": "batch",
+      "verified": true,
+      "elapsedMs": 4439.901459000001,
+      "backendReads": 5,
+      "nativeSourceCalls": null,
+      "toolCalls": 1,
+      "modelRequests": 4,
+      "resultEvents": 1
+    },
+    {
+      "repeat": 11,
+      "arm": "independent",
+      "verified": true,
+      "elapsedMs": 4130.235249999998,
+      "backendReads": 20,
+      "nativeSourceCalls": null,
+      "toolCalls": 4,
+      "modelRequests": 4,
+      "resultEvents": 4
+    }
+  ]
+}

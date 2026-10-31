@@ -1,0 +1,21 @@
+{
+  "observedAfterRun": true,
+  "origin": "http://127.0.0.1:56956",
+  "wordpress": {
+    "id": "3dc250c89a52aca5a637f3eaf84eae9ebd8a617ae49cc557a5074d1cebfa8515",
+    "image": "sha256:4e202dbb837d751f7c5367a7e9ad4f55e960a823167494cffc4b8598961800f2",
+    "startedAt": "2026-10-30T14:45:02.618788589Z",
+    "pidInDockerVM": 43958,
+    "name": "toolbench-1793371502244-wp"
+  },
+  "database": {
+    "id": "4cb25172b9523064976b12de78be14f440fee7b51cf63bbb31777e3f19f4faaf",
+    "image": "sha256:3853ff4da2eb76058a3a112ae8026e5a094990c5341f1aedd76a903fd171176e",
+    "startedAt": "2026-10-30T14:45:02.411880088Z",
+    "pidInDockerVM": 43895,
+    "name": "toolbench-1793371502244-db"
+  },
+  "php": "8.3.36",
+  "borrowedCredentialSource": "tracy-dsh; read only",
+  "cleanup": "Owned fixture removed after artifact capture; borrowed processes preserved"
+}

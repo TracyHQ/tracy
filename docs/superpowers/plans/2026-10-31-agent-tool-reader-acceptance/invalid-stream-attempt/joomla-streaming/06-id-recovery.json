@@ -1,0 +1,64 @@
+{
+  "repeat": 0,
+  "task": "id-recovery",
+  "verified": false,
+  "failure": null,
+  "ms": 2004.6092499999995,
+  "idValid": false,
+  "noWrites": true,
+  "continuation": true,
+  "recovery": true,
+  "language": true,
+  "seededRefusal": {
+    "action": "content.read",
+    "params": {
+      "id": "99999999"
+    }
+  },
+  "calls": [
+    {
+      "name": "tracy_site",
+      "arguments": {
+        "action": "content.read",
+        "params": {
+          "view": "pages",
+          "search": "Inventory 031"
+        }
+      }
+    }
+  ],
+  "provider": [
+    {
+      "step": 2,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7450,
+        "completion_tokens": 69,
+        "total_tokens": 7519,
+        "prompt_tokens_details": {
+          "cached_tokens": 3968
+        },
+        "prompt_cache_hit_tokens": 3968,
+        "prompt_cache_miss_tokens": 3482
+      },
+      "firstChunkMs": 254.32829200000015,
+      "ms": 821.3012920000001,
+      "promptHash": "b9d3a592a1712d343f4aaf9467d59ac612ce1fdefe926bcbea7afa5dc4515ded",
+      "finalText": null
+    },
+    {
+      "step": 3,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": null,
+      "firstChunkMs": 260.7389999999996,
+      "ms": null,
+      "promptHash": "805b5598004126b6c73037ac0ed12ad653400f4e7dc193f66640df29f8a732bc"
+    }
+  ],
+  "final": "",
+  "toolResults": "[{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"seed-refusal\"},\"toolCallId\":\"seed-refusal\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"ok\\\":false,\\\"httpStatus\\\":404,\\\"error\\\":{\\\"code\\\":\\\"CONTENT_NOT_FOUND\\\",\\\"message\\\":\\\"Content not found\\\"},\\\"next\\\":\\\"99999999 is a CMS number, not a content id: those are opaque, as content.read lists them. Find the page by its address, {view:\\\\\\\"pages\\\\\\\", url:\\\\\\\"/…\\\\\\\"}; a row's native holds the CMS ids.\\\"}\"}],\"isError\":false,\"id\":\"b39d4faf-1540-46ef-a77b-cdfc9a13230e\"},{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"seed-refusal\"},\"toolCallId\":\"seed-refusal\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"ok\\\":false,\\\"httpStatus\\\":404,\\\"error\\\":{\\\"code\\\":\\\"CONTENT_NOT_FOUND\\\",\\\"message\\\":\\\"Content not found\\\"},\\\"next\\\":\\\"99999999 is a CMS number, not a content id: those are opaque, as content.read lists them. Find the page by its address, {view:\\\\\\\"pages\\\\\\\", url:\\\\\\\"/…\\\\\\\"}; a row's native holds the CMS ids.\\\"}\"}],\"isError\":false,\"id\":\"b39d4faf-1540-46ef-a77b-cdfc9a13230e\"},{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_Z2T4dV85ZQnzc8Ab7orL6106\"},\"toolCallId\":\"call_00_Z2T4dV85ZQnzc8Ab7orL6106\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"schemaVersion\\\":\\\"tracy-content-pages/v1\\\",\\\"site\\\":{\\\"id\\\":\\\"site_decbd480e6cf7ba26040354547f6a634\\\",\\\"name\\\":null,\\\"url\\\":\\\"http://127.0.0.1:59944\\\",\\\"defaultLocale\\\":null,\\\"locales\\\":[]},\\\"truncated\\\":false,\\\"version\\\":\\\"cv1.796f557c8c4ebd088c0fc9f4fcb21f61\\\",\\\"later\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"changedSince\\\":\\\"cv1.796f557c8c4ebd088c0fc9f4fcb21f61\\\"},\\\"why\\\":\\\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\\\"},\\\"columns\\\":[\\\"title\\\",\\\"path\\\",\\\"id\\\",\\\"record\\\",\\\"type\\\"],\\\"pages\\\":[[\\\"Inventory 031\\\",\\\"/index.php/component/content/article/inventory-031?catid=2\\\",\\\"content_ff783075bf1a988b5280611a6514f162\\\",\\\"article:32\\\",\\\"article\\\"]],\\\"pagination\\\":{\\\"offset\\\":0,\\\"returned\\\":1,\\\"total\\\":1,\\\"totalIsComplete\\\":true,\\\"nextOffset\\\":null},\\\"idNamespace\\\":\\\"content-api\\\",\\\"idMeaning\\\":\\\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\\\"}\"}],\"isError\":false,\"id\":\"8974540b-1bef-4b3f-9840-cd95dde5c33b\"}]",
+  "backendReads": 2,
+  "nativeSourceCalls": 0
+}

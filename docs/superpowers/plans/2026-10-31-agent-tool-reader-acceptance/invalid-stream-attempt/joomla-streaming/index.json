@@ -1,0 +1,15 @@
+{
+  "platform": "joomla",
+  "producer": "real streamed DeepSeek inference, shipped Tracy tools, vendored AgentLoop, authenticated product relay, isolated database, actual CMS HTTP",
+  "runs": [
+    "00-exact-title.json",
+    "01-known-url.json",
+    "02-missing.json",
+    "03-ambiguity.json",
+    "04-continuation.json",
+    "05-details.json",
+    "06-id-recovery.json",
+    "07-refusal-recovery.json",
+    "08-language.json"
+  ]
+}

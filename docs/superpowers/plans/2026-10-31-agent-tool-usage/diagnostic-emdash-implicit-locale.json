@@ -1,0 +1,1709 @@
+{
+  "metadata": {
+    "platform": "emdash",
+    "repeats": 3,
+    "native": false,
+    "model": "deepseek-flash",
+    "thinking": "disabled",
+    "temperature": 0,
+    "producer": "real shipped plugin + vendored AgentLoop/ToolRuntime; injected relay with real CMS HTTP; provider adapter uses nonstreaming Chat Completions",
+    "scope": "read discovery; no authenticated production relay, writes or Undo acceptance claimed",
+    "inventoryPages": 43,
+    "targets": [
+      {
+        "id": "Zbe3CZ3Ht62hd_jD_pOn4he0t2u8fE693eT8ceAMy7o",
+        "title": "Transactional emails",
+        "path": "/kit-email"
+      },
+      {
+        "id": "Z8REvI6No5ECoO4gNRTt2KYfTzA73pN3v61mwDb5tto",
+        "title": "Metalworking shop refurbishment",
+        "path": "/projects/metalworking-shop-refurbishment"
+      },
+      {
+        "id": "xw6-g2fnPlHH2hNgtPeTDWVQBRMZxIv-4uFclxni8vo",
+        "title": "Privacy",
+        "path": "/privacy"
+      },
+      {
+        "id": "WQuI3jw1hkypMwKM4cs1czEq8atj6tnjfRbyeQbKQc0",
+        "title": "Zavolzhye logistics building",
+        "path": "/projects/zavolzhye-logistics-building"
+      }
+    ],
+    "origin": "http://127.0.0.1:54150",
+    "image": "sha256:96711fec9d763d8daaacee6da83770668335a16ee20a19d01b9fb31e790fbe54",
+    "harnessFixtureHash": "06390a44684fa1ff27307a508cb824e627fb138c57dfc2147bd405b126e144b6",
+    "baselineBundle": "14d19374f19b9719db99a811fd1a04c168ce943fd3f0a621802a7e72d51a23a8",
+    "candidateBundle": "8b09596469cdd97ef29f43c4d96f534979e316d96f7a30ce63fedc240da292d8",
+    "guideHashes": {
+      "baseline": "07d28abb39b28c8f4c409b8c0c2943ff487425d58a0cbec737b35351c8f70fe1",
+      "candidate": "547bbc302a3b5b5849b6320d864e81cd0a3ec0a53f857c1889d88acb48680c75"
+    },
+    "contentBefore": {
+      "_emdash_menu_items": "512835a8fe9bc716bb5e8a6986099323159eec9b7b3af429ff994b70feb7d36b",
+      "_emdash_menus": "3c2be307d44a2168f49575065890feede1edd8f8d7e6260a1ab13482778cecc3",
+      "_tracy_content_identity": "bdc4e95b372d20e494e0791f20ddcd674746a51d94d356fbdcd72a3d7e8e8ced",
+      "_tracy_identity_fields": "8c31f9bbe781cfcaedbfc596118ce30c0320642227afaf7535f832e31e81765e",
+      "_tracy_identity_operations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "content_taxonomies": "b07ad5479c8d51dd1338e5d8399f0adbf276ec97c7efdb2669da7af8a3157919",
+      "ec_about": "1a884ef8cc56f8c77632c072ed9c194ab18be62b5a291472679c2d466059be11",
+      "ec_careers": "b697a9a8865a7c70219ab274a2b5a4c3683015a2db40f896b79bbf9287a30dc0",
+      "ec_contact": "a87fe379ac0fef952e08cc3df46014f66ccc95b437f9cfbf07fa177bb846e105",
+      "ec_home": "5ebcbbec93e5b13838e61dd492dd5096d900339f31415e325c15fa7e1fa0b2ba",
+      "ec_investors": "2aea9676984f8f04ea0945a43eb02a60a8e51f19ff559bc33a2ae83e3814b68b",
+      "ec_news_page": "e39ff914bdff6f7c06bc5e9334029f696540f2f1279ac0e06763c8200977e01e",
+      "ec_pages": "4de2a6d11f0320970120f4a1cbc8748984617b6b601aec1fcb73d894f0dc5bcd",
+      "ec_posts": "1cbda1d33d56927ec2b4980e8319e79f0927bae1506db2cb6dd1d7f344e6801e",
+      "ec_projects": "0591bc6ad7e5c066ddf3cd44b0c6915b9ecc66f35a83cde3487abdc3788628c3",
+      "ec_projects_page": "a65bc23d48266eccacd5f749f93a711071259716d3fa373f38e715ceec7f70e4",
+      "ec_services": "88e5d91048b3dc2e23c60fd0a2708fc0d6fbed15510712376eebc66a501704a1",
+      "ec_services_page": "d289509afa4dd4bb91b88616359f920b23ec391cfe0230282964f39954b95d78",
+      "ec_site": "9fb24112aa753efc442176fba0dc2a9249e715ad72feb381308ac447d64dd063",
+      "ec_vacancies": "0fb92f70be8c2fec072a8edbaff107662426722343624f2fe065163efe1809c9",
+      "media": "3de0325d20b310a206dd145003a1e1daed7eb1da843f368e04ff52b62b861ee7",
+      "revisions": "e48e8cabb2d410c488a3d08b0eb98598c79cf2c522c373d3ab5fe2981f1e3df2",
+      "taxonomies": "1c018712af47c26c5fe8f39d763cc7785124b18695163974a64687056bb1db09"
+    },
+    "startedAt": "2026-10-30T17:29:58.290Z"
+  },
+  "rows": [
+    {
+      "repeat": 0,
+      "task": "four-titles",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:29:58.291Z",
+      "elapsedMs": 27665.032417000002,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": "All four are in the English edition. Nothing was changed.\n\n- **Transactional emails** — content ID `Zbe3CZ3Ht62hd_jD_pOn4he0t2u8fE693eT8ceAMy7o`, path `/kit-email`\n- **Metalworking shop refurbishment** — content ID `Z8REvI6No5ECoO4gNRTt2KYfTzA73pN3v61mwDb5tto`, path `/projects/metalworking-shop-refurbishment`\n- **Privacy** — content ID `xw6-g2fnPlHH2hNgtPeTDWVQBRMZxIv-4uFclxni8vo`, path `/privacy`\n- **Zavolzhye logistics building** — content ID `WQuI3jw1hkypMwKM4cs1czEq8atj6tnjfRbyeQbKQc0`, path `/projects/zavolzhye-logistics-building`",
+      "toolResultChars": 11281,
+      "modelRequests": 4,
+      "provider": [
+        {
+          "ms": 1006.5169169999999,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 6974,
+            "completion_tokens": 71,
+            "total_tokens": 7045,
+            "prompt_tokens_details": {
+              "cached_tokens": 3712
+            },
+            "prompt_cache_hit_tokens": 3712,
+            "prompt_cache_miss_tokens": 3262
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "c0dfb88e4ac69993f7b7fed03c5ca1d91cffe2f55485845208784b5b8cdd596a",
+          "requestId": "69a9f56c-838c-497e-ac28-33084f834c25"
+        },
+        {
+          "ms": 3148.4362499999997,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 7125,
+            "completion_tokens": 61,
+            "total_tokens": 7186,
+            "prompt_tokens_details": {
+              "cached_tokens": 6912
+            },
+            "prompt_cache_hit_tokens": 6912,
+            "prompt_cache_miss_tokens": 213
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "8438bd4978c5fcc3f8091a8fd7bcabbb53a950110af4bb8cc442163575c9e60e",
+          "requestId": "21b78c2e-6f33-427d-a6cc-0ddbac5d28be"
+        },
+        {
+          "ms": 851.2637910000012,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 8848,
+            "completion_tokens": 67,
+            "total_tokens": 8915,
+            "prompt_tokens_details": {
+              "cached_tokens": 7168
+            },
+            "prompt_cache_hit_tokens": 7168,
+            "prompt_cache_miss_tokens": 1680
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "01bf7e2c9bb50d981d11808af25eecbe9a61a0b2066b2aacd5eb4722aa87e8f5",
+          "requestId": "e71d0cc2-5f00-44a2-bd19-cb1e68f40774"
+        },
+        {
+          "ms": 1353.674750000002,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 11351,
+            "completion_tokens": 218,
+            "total_tokens": 11569,
+            "prompt_tokens_details": {
+              "cached_tokens": 8832
+            },
+            "prompt_cache_hit_tokens": 8832,
+            "prompt_cache_miss_tokens": 2519
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "a974e590a8fd32c3011de78337cc1e388039dc5c1ff3de2399c31f9d3d92d808",
+          "requestId": "eef7f2fd-71ab-457a-b5bd-ad93b7bda72b"
+        }
+      ],
+      "calls": [
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "describe": true
+            }
+          }
+        },
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "view": "pages"
+            }
+          }
+        },
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "view": "pages",
+              "locale": "en"
+            }
+          }
+        }
+      ],
+      "relayRequests": 3,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "describe": true
+          },
+          "startMs": 4088.097334,
+          "ms": 87.6055409999999
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages"
+          },
+          "startMs": 7343.795584,
+          "ms": 19810.089291
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 28014.6415,
+          "ms": 962.5054999999993
+        }
+      ],
+      "backendReads": 22,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "describe": true
+          },
+          "startMs": 4088.100084,
+          "ms": 87.58470799999986,
+          "status": 400,
+          "sourceCalls": 0
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "startMs": 7343.8985,
+          "ms": 1377.1625840000006,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo5MiwiZXhwaXJlcyI6MTc5MzM4MTcwNDI5N30.gqhuHbUc8Fq3A2DJg_0RuOQy6HZCrAEBzXaXi4IxUxg"
+          },
+          "startMs": 8721.110417,
+          "ms": 842.9492919999993,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxODQsImV4cGlyZXMiOjE3OTMzODE3MDQyOTd9.N49-Xt-YcGHwhwrSaoKG1lmvraJFxH2coGIV9ywhLVU"
+          },
+          "startMs": 9564.117167,
+          "ms": 929.801958,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoyNzcsImV4cGlyZXMiOjE3OTMzODE3MDQyOTd9.9gtomcrRQIpAwQMtRL1270y0FqRRt3m6G1sqgQBVmwU"
+          },
+          "startMs": 10493.967917,
+          "ms": 1052.7305419999993,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjozNjgsImV4cGlyZXMiOjE3OTMzODE3MDQyOTd9.w6MPM_YW2mVjowjPs4UcOHGdwAQA2v1yoUxUcEwyI_A"
+          },
+          "startMs": 11546.752542,
+          "ms": 863.762666999999,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo0NTgsImV4cGlyZXMiOjE3OTMzODE3MDQyOTd9.70ACHJpkCcc_Z7t4fdZ8bMG3AXNo_7-y2cyMc3W--mc"
+          },
+          "startMs": 12410.546709,
+          "ms": 907.6293750000004,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo1NDksImV4cGlyZXMiOjE3OTMzODE3MDQyOTd9.AxE3VJylA_gQa4VIorcHj8Dmkd08g2oTy6XCMxVuaIA"
+          },
+          "startMs": 13318.208792,
+          "ms": 883.0560830000013,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo2NDEsImV4cGlyZXMiOjE3OTMzODE3MDQyOTd9.XMS_PvJJ22dhjcvAzlFvcd78b17m0y4Kah-L_nW2z1o"
+          },
+          "startMs": 14201.551375,
+          "ms": 866.6062920000004,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo3MzMsImV4cGlyZXMiOjE3OTMzODE3MDQyOTd9.rZVGp-tPlPL385hMXRl_h3kf6TwadPKphEDOIT3MHds"
+          },
+          "startMs": 15068.208167,
+          "ms": 908.0616249999985,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo4MjUsImV4cGlyZXMiOjE3OTMzODE3MDQyOTd9.usFzDfCL5jh-elw38g0WH4lvJRBc0UzOgDW90ZHSo3U"
+          },
+          "startMs": 15976.319959,
+          "ms": 1118.7052079999994,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo5MTYsImV4cGlyZXMiOjE3OTMzODE3MDQyOTd9.cLRCFDD1AMDN10BDAgjqmGW5AmcYm8UcXJs9W-T2b3o"
+          },
+          "startMs": 17095.1035,
+          "ms": 1143.1116669999974,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMDA4LCJleHBpcmVzIjoxNzkzMzgxNzA0Mjk3fQ.BtSeucpFMcZKkQuGCAR-isyjL0DFVu5gbHy2wUWTY-A"
+          },
+          "startMs": 18238.242292,
+          "ms": 994.135792000001,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMDk5LCJleHBpcmVzIjoxNzkzMzgxNzA0Mjk3fQ.ww4AhL55GbHx4xQyszwW8BPYx3xK1dmweTFbSJ68hZk"
+          },
+          "startMs": 19232.424542,
+          "ms": 1038.7426669999986,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMTkxLCJleHBpcmVzIjoxNzkzMzgxNzA0Mjk3fQ.w_GcPb8CgE2dopy1rMyXbyeZIU1FckDd2haH31OKz2Y"
+          },
+          "startMs": 20271.205584,
+          "ms": 945.2671250000021,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMjgzLCJleHBpcmVzIjoxNzkzMzgxNzA0Mjk3fQ.Xxs9IoZi_gSwCFrob-S2qKnMIcPu8UCKHH3GKrL9LuM"
+          },
+          "startMs": 21216.499584,
+          "ms": 857.6687500000007,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMzc0LCJleHBpcmVzIjoxNzkzMzgxNzA0Mjk3fQ.etJ0YEic3XFjr8lcsAVj7rVW_PqMH_Kuni_iwaeVfk8"
+          },
+          "startMs": 22074.204334,
+          "ms": 1000.5069580000018,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNDY2LCJleHBpcmVzIjoxNzkzMzgxNzA0Mjk3fQ.rYQ7Tn-Su4FqJuipAcp0mkBozvvgSUTq6xXeeytsK1k"
+          },
+          "startMs": 23074.883167,
+          "ms": 960.885291999999,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNTU4LCJleHBpcmVzIjoxNzkzMzgxNzA0Mjk3fQ.FNrLW_ubG7GxSvJtb9cWXGyTdpwg4J6Fr5IE5I7o4yo"
+          },
+          "startMs": 24035.794,
+          "ms": 1385.3338749999966,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNjQ5LCJleHBpcmVzIjoxNzkzMzgxNzA0Mjk3fQ.avGZwoCm2Fqxmzd1CO3XSyjJJXLezh_pqFolivBS-ic"
+          },
+          "startMs": 25421.152042,
+          "ms": 883.2608749999999,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNzQwLCJleHBpcmVzIjoxNzkzMzgxNzA0Mjk3fQ.LC2dkpsbJmVqkFtdikO4eZ753wCv9imK8u9OLwElvAo"
+          },
+          "startMs": 26304.436459,
+          "ms": 835.7272499999999,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 28014.657375,
+          "ms": 959.0204169999997,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 42567
+    },
+    {
+      "repeat": 0,
+      "task": "four-titles",
+      "arm": "B",
+      "startedAt": "2026-10-30T17:30:25.957Z",
+      "elapsedMs": 8966.631166999996,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": "All four are in the English edition. Nothing was edited.\n\n| Page | Content ID | Path |\n|---|---|---|\n| Transactional emails | Zbe3CZ3Ht62hd_jD_pOn4he0t2u8fE693eT8ceAMy7o | /kit-email |\n| Metalworking shop refurbishment | Z8REvI6No5ECoO4gNRTt2KYfTzA73pN3v61mwDb5tto | /projects/metalworking-shop-refurbishment |\n| Privacy | xw6-g2fnPlHH2hNgtPeTDWVQBRMZxIv-4uFclxni8vo | /privacy |\n| Zavolzhye logistics building | WQuI3jw1hkypMwKM4cs1czEq8atj6tnjfRbyeQbKQc0 | /projects/zavolzhye-logistics-building |\n\nTwo of them are ordinary pages (Transactional emails and Privacy), and the other two are project entries listed under the projects page.",
+      "toolResultChars": 32805,
+      "modelRequests": 6,
+      "provider": [
+        {
+          "ms": 895.3037499999991,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 6972,
+            "completion_tokens": 70,
+            "total_tokens": 7042,
+            "prompt_tokens_details": {
+              "cached_tokens": 3712
+            },
+            "prompt_cache_hit_tokens": 3712,
+            "prompt_cache_miss_tokens": 3260
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "3907c8e67c43651540de6bc179c01d1f74a68d770a29bf5ad3f990edf59fb07e",
+          "requestId": "85970fd2-52f7-4a70-9b79-b36b04936417"
+        },
+        {
+          "ms": 970.6086670000004,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 7122,
+            "completion_tokens": 67,
+            "total_tokens": 7189,
+            "prompt_tokens_details": {
+              "cached_tokens": 6912
+            },
+            "prompt_cache_hit_tokens": 6912,
+            "prompt_cache_miss_tokens": 210
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "7e465ac74cc9804be830b8dda224abf95a337f7df98b8a2a0ba85d9cf66d7991",
+          "requestId": "7d1e402c-5a25-4e45-be56-e530ba1a0c69"
+        },
+        {
+          "ms": 980.6237079999992,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 11699,
+            "completion_tokens": 72,
+            "total_tokens": 11771,
+            "prompt_tokens_details": {
+              "cached_tokens": 7168
+            },
+            "prompt_cache_hit_tokens": 7168,
+            "prompt_cache_miss_tokens": 4531
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "e344601c94d0b3e3102c26e312b0969929e382b1a3210c900f5126717c674f17",
+          "requestId": "d166cda4-f81a-4e64-8cc5-c0a5380c2922"
+        },
+        {
+          "ms": 1033.6964169999992,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 15808,
+            "completion_tokens": 87,
+            "total_tokens": 15895,
+            "prompt_tokens_details": {
+              "cached_tokens": 11648
+            },
+            "prompt_cache_hit_tokens": 11648,
+            "prompt_cache_miss_tokens": 4160
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "ab7a5e4b000715171ff2f73208c228b4819c588679468937a1888d4710e1d6a1",
+          "requestId": "c0b2fef2-74e5-48ab-99b2-44698c36a136"
+        },
+        {
+          "ms": 850.0737500000032,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 15969,
+            "completion_tokens": 72,
+            "total_tokens": 16041,
+            "prompt_tokens_details": {
+              "cached_tokens": 15744
+            },
+            "prompt_cache_hit_tokens": 15744,
+            "prompt_cache_miss_tokens": 225
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "f54f022b5811505a2aa4783c3f50fb2e516748f77145fa7d6f453cb44ef67b65",
+          "requestId": "f0a8e1cc-e755-4c22-a7f9-ed2d6318d644"
+        },
+        {
+          "ms": 1378.7463750000024,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 19389,
+            "completion_tokens": 231,
+            "total_tokens": 19620,
+            "prompt_tokens_details": {
+              "cached_tokens": 16000
+            },
+            "prompt_cache_hit_tokens": 16000,
+            "prompt_cache_miss_tokens": 3389
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "b78d5e5f257f4a7ce8cd5815fa7f9a42428591a91db084c821e8329c61fb9b03",
+          "requestId": "54e0142e-b1d5-447d-b4aa-8c794a9e9f7c"
+        }
+      ],
+      "calls": [
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "describe": true
+            }
+          }
+        },
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "type": "page",
+              "locale": "en"
+            }
+          }
+        },
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "type": "post",
+              "locale": "en",
+              "limit": 100
+            }
+          }
+        },
+        {
+          "name": "tracy_emdash",
+          "arguments": {
+            "tool": "schema_list_collections",
+            "arguments": {}
+          }
+        },
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "type": "project",
+              "locale": "en",
+              "limit": 100
+            }
+          }
+        }
+      ],
+      "relayRequests": 4,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "describe": true
+          },
+          "startMs": 31382.433625,
+          "ms": 29.313124999996944
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "page",
+            "locale": "en",
+            "maxBytes": 32768
+          },
+          "startMs": 32389.291792,
+          "ms": 929.8137919999972
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "article",
+            "locale": "en",
+            "limit": 100,
+            "maxBytes": 32768
+          },
+          "startMs": 34305.893375,
+          "ms": 833.991667000002
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "project",
+            "locale": "en",
+            "limit": 100,
+            "maxBytes": 32768
+          },
+          "startMs": 37083.162292,
+          "ms": 849.6857079999972
+        }
+      ],
+      "backendReads": 4,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "describe": true
+          },
+          "startMs": 31382.438417,
+          "ms": 29.286707999999635,
+          "status": 400,
+          "sourceCalls": 0
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "page",
+            "locale": "en",
+            "maxBytes": 32768
+          },
+          "startMs": 32389.294209,
+          "ms": 929.7832500000004,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "article",
+            "locale": "en",
+            "limit": 100,
+            "maxBytes": 32768
+          },
+          "startMs": 34305.897584,
+          "ms": 833.9669160000049,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "project",
+            "locale": "en",
+            "limit": 100,
+            "maxBytes": 32768
+          },
+          "startMs": 37083.168084,
+          "ms": 849.6616250000006,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 6081
+    },
+    {
+      "repeat": 0,
+      "task": "four-titles",
+      "arm": "C",
+      "startedAt": "2026-10-30T17:30:34.925Z",
+      "elapsedMs": 25157.072957999997,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": "All four are in the English edition. Nothing was changed.\n\n- **Transactional emails** — content ID `Zbe3CZ3Ht62hd_jD_pOn4he0t2u8fE693eT8ceAMy7o`, path `/kit-email`\n- **Metalworking shop refurbishment** — content ID `Z8REvI6No5ECoO4gNRTt2KYfTzA73pN3v61mwDb5tto`, path `/projects/metalworking-shop-refurbishment`\n- **Privacy** — content ID `xw6-g2fnPlHH2hNgtPeTDWVQBRMZxIv-4uFclxni8vo`, path `/privacy`\n- **Zavolzhye logistics building** — content ID `WQuI3jw1hkypMwKM4cs1czEq8atj6tnjfRbyeQbKQc0`, path `/projects/zavolzhye-logistics-building`",
+      "toolResultChars": 8030,
+      "modelRequests": 3,
+      "provider": [
+        {
+          "ms": 776.9828330000018,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 6979,
+            "completion_tokens": 98,
+            "total_tokens": 7077,
+            "prompt_tokens_details": {
+              "cached_tokens": 2688
+            },
+            "prompt_cache_hit_tokens": 2688,
+            "prompt_cache_miss_tokens": 4291
+          },
+          "effectiveToolsHash": "5b6c8f0b3317a997ef02247cc02d316dde94ad4aab181e0bd43575c886e229c2",
+          "promptHash": "85f28fb86a46a3e1dd1d989c9390e0f3aba99a15f8773ec092c409aa261b8e9d",
+          "requestId": "6ee214e9-bdbe-4109-8b86-8e4d06a2d7ed"
+        },
+        {
+          "ms": 1011.3328750000001,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 7586,
+            "completion_tokens": 67,
+            "total_tokens": 7653,
+            "prompt_tokens_details": {
+              "cached_tokens": 7040
+            },
+            "prompt_cache_hit_tokens": 7040,
+            "prompt_cache_miss_tokens": 546
+          },
+          "effectiveToolsHash": "5b6c8f0b3317a997ef02247cc02d316dde94ad4aab181e0bd43575c886e229c2",
+          "promptHash": "51b6ed2b2cb85c80dcd00cf6db389977d5979f1b69c52e82a1971e722f9be65b",
+          "requestId": "e2256ae0-ad3d-4880-8751-e59ef16d0021"
+        },
+        {
+          "ms": 2677.761624999999,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 10089,
+            "completion_tokens": 218,
+            "total_tokens": 10307,
+            "prompt_tokens_details": {
+              "cached_tokens": 7552
+            },
+            "prompt_cache_hit_tokens": 7552,
+            "prompt_cache_miss_tokens": 2537
+          },
+          "effectiveToolsHash": "5b6c8f0b3317a997ef02247cc02d316dde94ad4aab181e0bd43575c886e229c2",
+          "promptHash": "c112a0f02fa41c5b45d590ab510a44da8ea8ec19917900f121e888eeed100562",
+          "requestId": "2a71be48-8169-40c0-b7a3-34a64401eeff"
+        }
+      ],
+      "calls": [
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "view": "pages",
+              "search": [
+                "Transactional emails",
+                "Metalworking shop refurbishment",
+                "Privacy",
+                "Zavolzhye logistics building"
+              ]
+            }
+          }
+        },
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "view": "pages",
+              "locale": "en"
+            }
+          }
+        }
+      ],
+      "relayRequests": 2,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages"
+          },
+          "startMs": 40197.962084,
+          "ms": 19536.123416000002
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 60762.435084,
+          "ms": 1025.3176250000033
+        }
+      ],
+      "backendReads": 21,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "startMs": 40197.968917,
+          "ms": 1186.031167000001,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo5MiwiZXhwaXJlcyI6MTc5MzM4MTczNjk3N30.HNi3h6d1ii0inhni7pG_hij5JJ61HFEecEZG5oGGb1M"
+          },
+          "startMs": 41384.032292,
+          "ms": 889.3841669999965,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxODQsImV4cGlyZXMiOjE3OTMzODE3MzY5Nzd9.-Gb2V7r3oIhDyijUTobopGADuJoF2ssby2fzQgikmVc"
+          },
+          "startMs": 42273.440709,
+          "ms": 862.6721659999967,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoyNzcsImV4cGlyZXMiOjE3OTMzODE3MzY5Nzd9.ZTnpLnKjt0Hbh6VIjXZODSBHBCmTrMERg0_aUeCETWQ"
+          },
+          "startMs": 43136.141459,
+          "ms": 912.8344580000048,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjozNjgsImV4cGlyZXMiOjE3OTMzODE3MzY5Nzd9.xo9aMP0lc2HzT8vxelIb8xh0Y_u-5SeQ74oPpB3Q2NY"
+          },
+          "startMs": 44049.029375,
+          "ms": 928.4694999999992,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo0NTgsImV4cGlyZXMiOjE3OTMzODE3MzY5Nzd9.BoF9ZCC38QbadSim2iDNGKMythm4KS_zZFS-NvhdcTo"
+          },
+          "startMs": 44977.526125,
+          "ms": 850.0945840000059,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo1NDksImV4cGlyZXMiOjE3OTMzODE3MzY5Nzd9.mZF17H10K2iakH-NF5dgQCa89SYN5JwoD7tQefuuvBE"
+          },
+          "startMs": 45827.635459,
+          "ms": 1266.7885000000024,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo2NDEsImV4cGlyZXMiOjE3OTMzODE3MzY5Nzd9.RBZmgTiFeUaMMGzF3ZCf9XYnRMmAsmZD-KJgqNg3aUI"
+          },
+          "startMs": 47094.450167,
+          "ms": 1503.292582999995,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo3MzMsImV4cGlyZXMiOjE3OTMzODE3MzY5Nzd9.fzGq5fARJDVzdxUE2wkYErplqfLn8-cF2cwTWO0C6i8"
+          },
+          "startMs": 48597.766167,
+          "ms": 1343.4282919999969,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo4MjUsImV4cGlyZXMiOjE3OTMzODE3MzY5Nzd9.5aGy1oIcihdZXN6FfsLLIXScr3DK0-D63n880HYVFCY"
+          },
+          "startMs": 49941.206042,
+          "ms": 1114.9381250000006,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo5MTYsImV4cGlyZXMiOjE3OTMzODE3MzY5Nzd9.TSDxoZiGAkGCAS7K7Zk6h8ESgH3kcObeYIYoBm-7WnY"
+          },
+          "startMs": 51056.156125,
+          "ms": 853.4879589999982,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMDA4LCJleHBpcmVzIjoxNzkzMzgxNzM2OTc3fQ.4na7uCFc1xgido6E5NG3WujkaM2acU80f3hxusGjjBw"
+          },
+          "startMs": 51909.655167,
+          "ms": 804.3314170000012,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMDk5LCJleHBpcmVzIjoxNzkzMzgxNzM2OTc3fQ.ZFV6L2WFkf9PAa8DKq53UnxU-PoR__q-Um1weJETz64"
+          },
+          "startMs": 52714.008417,
+          "ms": 825.4563750000016,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMTkxLCJleHBpcmVzIjoxNzkzMzgxNzM2OTc3fQ.5-8zEpqNndc4yqWRxcBkvbQZV8KGjBi9UtV1dXkduQ0"
+          },
+          "startMs": 53539.479792,
+          "ms": 877.8830830000006,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMjgzLCJleHBpcmVzIjoxNzkzMzgxNzM2OTc3fQ.aSdqaH0iW4yFtPxZaWkfq2orIgaJgYYgW1oNm9f2JxE"
+          },
+          "startMs": 54417.387,
+          "ms": 895.6891669999968,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMzc0LCJleHBpcmVzIjoxNzkzMzgxNzM2OTc3fQ.falfd6bmn0Dp8apVIcxNYPLcsLlmI4SwnpzehZdvwNA"
+          },
+          "startMs": 55313.101084,
+          "ms": 908.5857079999987,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNDY2LCJleHBpcmVzIjoxNzkzMzgxNzM2OTc3fQ.x6b8HO4A6Hoo7-RTrgEYnEVGFiSujRtT1RlCXiPYuCQ"
+          },
+          "startMs": 56221.708459,
+          "ms": 827.2781249999971,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNTU4LCJleHBpcmVzIjoxNzkzMzgxNzM2OTc3fQ.6aGX6RPfkf3Lsb4I8Cp5bwkGxVsNOG7WhEWhDIp0CmM"
+          },
+          "startMs": 57048.99775,
+          "ms": 847.150916999999,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNjQ5LCJleHBpcmVzIjoxNzkzMzgxNzM2OTc3fQ.c7g-29kE9Nhhj6iyRZcJngSVwMSQ5TQJ-N0lQnljb3Q"
+          },
+          "startMs": 57896.162375,
+          "ms": 966.9329169999983,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNzQwLCJleHBpcmVzIjoxNzkzMzgxNzM2OTc3fQ.Bb2zitsTtso81vhwxfCjVijjXxvy9wz6LQwtk13C8E0"
+          },
+          "startMs": 58863.1125,
+          "ms": 859.028833999997,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 60762.450459,
+          "ms": 1024.922832999997,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 42567
+    },
+    {
+      "repeat": 0,
+      "task": "four-titles",
+      "arm": "D",
+      "startedAt": "2026-10-30T17:31:00.083Z",
+      "elapsedMs": 23993.443541,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": "All four are in the English edition. Nothing was changed.\n\n| Page | Content ID | Path |\n|---|---|---|\n| Transactional emails | Zbe3CZ3Ht62hd_jD_pOn4he0t2u8fE693eT8ceAMy7o | /kit-email |\n| Metalworking shop refurbishment | Z8REvI6No5ECoO4gNRTt2KYfTzA73pN3v61mwDb5tto | /projects/metalworking-shop-refurbishment |\n| Privacy | xw6-g2fnPlHH2hNgtPeTDWVQBRMZxIv-4uFclxni8vo | /privacy |\n| Zavolzhye logistics building | WQuI3jw1hkypMwKM4cs1czEq8atj6tnjfRbyeQbKQc0 | /projects/zavolzhye-logistics-building |\n\nThe first is a page, the last two are project entries, and Privacy is a page.",
+      "toolResultChars": 8328,
+      "modelRequests": 3,
+      "provider": [
+        {
+          "ms": 1224.4257920000018,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 6979,
+            "completion_tokens": 98,
+            "total_tokens": 7077,
+            "prompt_tokens_details": {
+              "cached_tokens": 3712
+            },
+            "prompt_cache_hit_tokens": 3712,
+            "prompt_cache_miss_tokens": 3267
+          },
+          "effectiveToolsHash": "5b6c8f0b3317a997ef02247cc02d316dde94ad4aab181e0bd43575c886e229c2",
+          "promptHash": "67a99f0d718c085e57922fdd7237d70f341d3940ea19176ed4cd647745503908",
+          "requestId": "cc9007ab-9886-45ff-bee6-47bbca9d5d70"
+        },
+        {
+          "ms": 881.3218330000091,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 7623,
+            "completion_tokens": 67,
+            "total_tokens": 7690,
+            "prompt_tokens_details": {
+              "cached_tokens": 7040
+            },
+            "prompt_cache_hit_tokens": 7040,
+            "prompt_cache_miss_tokens": 583
+          },
+          "effectiveToolsHash": "5b6c8f0b3317a997ef02247cc02d316dde94ad4aab181e0bd43575c886e229c2",
+          "promptHash": "8bbe64d943ea33fd71a6aebbc8b8b8cc17769ec2ba11ea737917759ad3bb2e49",
+          "requestId": "e9a22ef9-dc45-47ed-b657-03568ebe6589"
+        },
+        {
+          "ms": 1660.539374999993,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 10161,
+            "completion_tokens": 225,
+            "total_tokens": 10386,
+            "prompt_tokens_details": {
+              "cached_tokens": 7680
+            },
+            "prompt_cache_hit_tokens": 7680,
+            "prompt_cache_miss_tokens": 2481
+          },
+          "effectiveToolsHash": "5b6c8f0b3317a997ef02247cc02d316dde94ad4aab181e0bd43575c886e229c2",
+          "promptHash": "d32ed0d3fd990ead782481d5639c491e6556344a80401601308b214038179d25",
+          "requestId": "933966b3-351e-4cfa-bb63-7398d71b7430"
+        }
+      ],
+      "calls": [
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "view": "pages",
+              "search": [
+                "Transactional emails",
+                "Metalworking shop refurbishment",
+                "Privacy",
+                "Zavolzhye logistics building"
+              ]
+            }
+          }
+        },
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "view": "pages",
+              "locale": "en"
+            }
+          }
+        }
+      ],
+      "relayRequests": 2,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages"
+          },
+          "startMs": 65825.693334,
+          "ms": 19181.039416
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 85905.353209,
+          "ms": 897.6177080000052
+        }
+      ],
+      "backendReads": 21,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "startMs": 65825.704084,
+          "ms": 1172.3315830000065,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo5MiwiZXhwaXJlcyI6MTc5MzM4MTc2MjU5MH0.URecsXmmeiE975ItL85WY3iLgA6ChyFt3s8fMpWNttU"
+          },
+          "startMs": 66998.083792,
+          "ms": 821.9788750000007,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxODQsImV4cGlyZXMiOjE3OTMzODE3NjI1OTB9.bCPbFd99upt8LvptpgGioE9y3hKWr9t2huduJg7Frr0"
+          },
+          "startMs": 67820.081834,
+          "ms": 828.119166000004,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoyNzcsImV4cGlyZXMiOjE3OTMzODE3NjI1OTB9.PY-MT_boprDGUnOd4qsU5g_AdrP3gg60JgXFXUdeaBg"
+          },
+          "startMs": 68648.212459,
+          "ms": 848.6672079999989,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjozNjgsImV4cGlyZXMiOjE3OTMzODE3NjI1OTB9.yvk2OZNQzUT9CNx2gCzByRrVj7qPhcqsWEEt6IUCiE8"
+          },
+          "startMs": 69496.900334,
+          "ms": 826.4075829999929,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo0NTgsImV4cGlyZXMiOjE3OTMzODE3NjI1OTB9.D7Kv0Y_mBD1ueRdvgZoR13sg7YIn4QSyzZB8dX-6VSM"
+          },
+          "startMs": 70323.33375,
+          "ms": 881.3160419999913,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo1NDksImV4cGlyZXMiOjE3OTMzODE3NjI1OTB9.McGiAMSA6JMnRhfk4VCeFnc2TAtXfko67f_bhGEhZSI"
+          },
+          "startMs": 71204.668625,
+          "ms": 839.6472089999879,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo2NDEsImV4cGlyZXMiOjE3OTMzODE3NjI1OTB9.EdLsjiPsFXgkP7cfEYbHGNuQMxa5Qq_kzt9_5TVwrqk"
+          },
+          "startMs": 72044.326292,
+          "ms": 814.0445420000033,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo3MzMsImV4cGlyZXMiOjE3OTMzODE3NjI1OTB9.H6CoY1rljoL3kt_Oxq5i-fmf7HQxvtVEBwIE5TSgv5g"
+          },
+          "startMs": 72858.4175,
+          "ms": 937.9360000000015,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo4MjUsImV4cGlyZXMiOjE3OTMzODE3NjI1OTB9.oelsZJYUjB4WXm2e0X_zdIAFann35sjy3S3rjlaEsig"
+          },
+          "startMs": 73796.374625,
+          "ms": 1452.863292000009,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo5MTYsImV4cGlyZXMiOjE3OTMzODE3NjI1OTB9.qSxvqN4UmUAGJA1ybn1b46GBs9Ol3oCwySTieqA1wVg"
+          },
+          "startMs": 75249.256917,
+          "ms": 1610.5955829999875,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMDA4LCJleHBpcmVzIjoxNzkzMzgxNzYyNTkwfQ.G5qXcYeDYLxhVHEA6a2YUiGnZuiNxvqJ0FvZrAct4FI"
+          },
+          "startMs": 76859.874084,
+          "ms": 1159.1375000000116,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMDk5LCJleHBpcmVzIjoxNzkzMzgxNzYyNTkwfQ.GMT5HE4hRoXP7sdtOpqjsKhMJna8pJUlE4kvGX4AaVI"
+          },
+          "startMs": 78019.0395,
+          "ms": 1092.952999999994,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMTkxLCJleHBpcmVzIjoxNzkzMzgxNzYyNTkwfQ.DnoZM7fHXGQYrVmwWYilAhxGF8aBg6WhWARfOXW1JaE"
+          },
+          "startMs": 79112.01475,
+          "ms": 927.6988750000019,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMjgzLCJleHBpcmVzIjoxNzkzMzgxNzYyNTkwfQ.vK2Z3M86LSA3izdY1g5Ctz2A_X5x_k3obAyYUX-M4YA"
+          },
+          "startMs": 80039.737875,
+          "ms": 847.901583999992,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMzc0LCJleHBpcmVzIjoxNzkzMzgxNzYyNTkwfQ.T1ki1tp3zLAFxt0yQHZlREIAh7dZxa8d4bhXCJCStPU"
+          },
+          "startMs": 80887.650584,
+          "ms": 913.6641249999957,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNDY2LCJleHBpcmVzIjoxNzkzMzgxNzYyNTkwfQ.Lp-bqHfoUEPqIKBVwcovIIzyVEhzwJS-PXRgz1kT7DM"
+          },
+          "startMs": 81801.341209,
+          "ms": 810.4190830000007,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNTU4LCJleHBpcmVzIjoxNzkzMzgxNzYyNTkwfQ.7s0nTiL0Qy9jfitbS4LBvFS0H1ZZG_qvIL1wNXonKvI"
+          },
+          "startMs": 82611.772,
+          "ms": 782.1513750000013,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNjQ5LCJleHBpcmVzIjoxNzkzMzgxNzYyNTkwfQ.BgozIWag_fSw16HqKZGrd5wJ_YuI2uwacz6nauj-JGY"
+          },
+          "startMs": 83393.952417,
+          "ms": 817.8144170000014,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNzQwLCJleHBpcmVzIjoxNzkzMzgxNzYyNTkwfQ.j_dJ6cdchg3877HFTM5ln1qHP8oH-FC0Z5pFxn0Aqbc"
+          },
+          "startMs": 84211.785417,
+          "ms": 787.250749999992,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 85905.363959,
+          "ms": 897.195040999999,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 42567
+    },
+    {
+      "repeat": 0,
+      "task": "single-title",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:31:24.078Z",
+      "elapsedMs": 4120.891457999998,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": "The page titled \"Transactional emails\" is in the English edition:\n\n- **Content ID:** Zbe3CZ3Ht62hd_jD_pOn4he0t2u8fE693eT8ceAMy7o\n- **Path:** /kit-email (full address: http://127.0.0.1:54150/kit-email)\n\nIt's published. I didn't change anything.",
+      "toolResultChars": 12352,
+      "modelRequests": 3,
+      "provider": [
+        {
+          "ms": 1036.337790999998,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 6956,
+            "completion_tokens": 69,
+            "total_tokens": 7025,
+            "prompt_tokens_details": {
+              "cached_tokens": 3712
+            },
+            "prompt_cache_hit_tokens": 3712,
+            "prompt_cache_miss_tokens": 3244
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "59ce30a78f2253d920848b3c4e5a0037c8d5502491e8268c704c28b683c99a37",
+          "requestId": "2b1f6318-3aa6-4555-a28f-712c5f2794fb"
+        },
+        {
+          "ms": 845.8194590000057,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 7105,
+            "completion_tokens": 67,
+            "total_tokens": 7172,
+            "prompt_tokens_details": {
+              "cached_tokens": 6912
+            },
+            "prompt_cache_hit_tokens": 6912,
+            "prompt_cache_miss_tokens": 193
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "7bb5ff67162e758a66bcc91d2d7a44f9639d9dbe21143c696bc8f5a9e1c2cf8b",
+          "requestId": "b5699fae-0256-4829-a7cb-220fc4d45482"
+        },
+        {
+          "ms": 1065.590584000005,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 11682,
+            "completion_tokens": 89,
+            "total_tokens": 11771,
+            "prompt_tokens_details": {
+              "cached_tokens": 7168
+            },
+            "prompt_cache_hit_tokens": 7168,
+            "prompt_cache_miss_tokens": 4514
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "ee26218213433758fb2163268d3caf5baf1e4d1f623a60a56715c8cc112f2b38",
+          "requestId": "34f540d1-d94c-4a8e-9da5-bfd3d9401b86"
+        }
+      ],
+      "calls": [
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "describe": true
+            }
+          }
+        },
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "type": "page",
+              "locale": "en"
+            }
+          }
+        }
+      ],
+      "relayRequests": 2,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "describe": true
+          },
+          "startMs": 89606.50525,
+          "ms": 12.377999999996973
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "page",
+            "locale": "en",
+            "maxBytes": 32768
+          },
+          "startMs": 90469.228084,
+          "ms": 1046.281124999994
+        }
+      ],
+      "backendReads": 2,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "describe": true
+          },
+          "startMs": 89606.513875,
+          "ms": 12.362249999991036,
+          "status": 400,
+          "sourceCalls": 0
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "page",
+            "locale": "en",
+            "maxBytes": 32768
+          },
+          "startMs": 90469.238542,
+          "ms": 1046.2574999999924,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 0,
+      "task": "single-title",
+      "arm": "B",
+      "startedAt": "2026-10-30T17:31:28.200Z",
+      "elapsedMs": 4129.543208000003,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": "The page titled \"Transactional emails\" is in the English edition.\n\n- Content ID: Zbe3CZ3Ht62hd_jD_pOn4he0t2u8fE693eT8ceAMy7o\n- Path: /kit-email\n\nIt's published. I didn't change anything.",
+      "toolResultChars": 12352,
+      "modelRequests": 3,
+      "provider": [
+        {
+          "ms": 1344.4067499999946,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 6954,
+            "completion_tokens": 69,
+            "total_tokens": 7023,
+            "prompt_tokens_details": {
+              "cached_tokens": 3712
+            },
+            "prompt_cache_hit_tokens": 3712,
+            "prompt_cache_miss_tokens": 3242
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "dd84d6b6896498c3271a62d578d132c9cee69354cf2aced9b6ea37393cc2af9b",
+          "requestId": "4fb48f20-3f28-411d-ac49-d12cf65bf463"
+        },
+        {
+          "ms": 1024.1507500000007,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 7103,
+            "completion_tokens": 67,
+            "total_tokens": 7170,
+            "prompt_tokens_details": {
+              "cached_tokens": 6912
+            },
+            "prompt_cache_hit_tokens": 6912,
+            "prompt_cache_miss_tokens": 191
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "fd60a18c6d006864e187aa29766d42283143dd6e53408fdfb1912d26af095a60",
+          "requestId": "d954519b-3642-4368-8b13-55f4769cd029"
+        },
+        {
+          "ms": 811.7646249999962,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 11680,
+            "completion_tokens": 67,
+            "total_tokens": 11747,
+            "prompt_tokens_details": {
+              "cached_tokens": 7168
+            },
+            "prompt_cache_hit_tokens": 7168,
+            "prompt_cache_miss_tokens": 4512
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "1f3066fb33c463c6df1aa6f921f9ac75a28e7e8cc19390845f24274e8252ed72",
+          "requestId": "58c3c7fd-6579-4392-a246-1f71a9ae7e0a"
+        }
+      ],
+      "calls": [
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "describe": true
+            }
+          }
+        },
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "type": "page",
+              "locale": "en"
+            }
+          }
+        }
+      ],
+      "relayRequests": 2,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "describe": true
+          },
+          "startMs": 94037.980875,
+          "ms": 9.150792000000365
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "page",
+            "locale": "en",
+            "maxBytes": 32768
+          },
+          "startMs": 95076.39175,
+          "ms": 827.5058750000026
+        }
+      ],
+      "backendReads": 2,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "describe": true
+          },
+          "startMs": 94037.983209,
+          "ms": 9.14079099999799,
+          "status": 400,
+          "sourceCalls": 0
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "page",
+            "locale": "en",
+            "maxBytes": 32768
+          },
+          "startMs": 95076.396584,
+          "ms": 827.4842499999941,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    }
+  ]
+}

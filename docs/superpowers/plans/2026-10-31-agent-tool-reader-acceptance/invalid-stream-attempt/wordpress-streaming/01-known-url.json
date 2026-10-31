@@ -1,0 +1,59 @@
+{
+  "repeat": 0,
+  "task": "known-url",
+  "verified": false,
+  "failure": null,
+  "ms": 2013.180042,
+  "idValid": false,
+  "noWrites": true,
+  "continuation": true,
+  "recovery": true,
+  "language": true,
+  "seededRefusal": null,
+  "calls": [
+    {
+      "name": "tracy_site",
+      "arguments": {
+        "action": "content.read",
+        "params": {
+          "view": "pages",
+          "url": "http://127.0.0.1:59939/?page_id=404"
+        }
+      }
+    }
+  ],
+  "provider": [
+    {
+      "step": 1,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7191,
+        "completion_tokens": 83,
+        "total_tokens": 7274,
+        "prompt_tokens_details": {
+          "cached_tokens": 3968
+        },
+        "prompt_cache_hit_tokens": 3968,
+        "prompt_cache_miss_tokens": 3223
+      },
+      "firstChunkMs": 394.9023339999994,
+      "ms": 923.9912919999997,
+      "promptHash": "a25c6386400242ede7a284c55b29b77a35804eb99f6c1a18fa943e7da26e039e",
+      "finalText": null
+    },
+    {
+      "step": 2,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": null,
+      "firstChunkMs": 300.5348329999997,
+      "ms": null,
+      "promptHash": "1ac97707579564004d0223534922fe84a616fb51e284ff19d6a5e006763291c2"
+    }
+  ],
+  "final": "",
+  "toolResults": "[{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_1lE3GzS4BNb5I8Skhsng9394\"},\"toolCallId\":\"call_00_1lE3GzS4BNb5I8Skhsng9394\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"schemaVersion\\\":\\\"tracy-content-pages/v1\\\",\\\"site\\\":{\\\"id\\\":\\\"sa2debb5755c0809935a9e83a98\\\",\\\"name\\\":\\\"Tool benchmark\\\",\\\"url\\\":\\\"http://127.0.0.1:59939\\\",\\\"defaultLocale\\\":\\\"en-US\\\",\\\"locales\\\":[\\\"en-US\\\"]},\\\"link\\\":\\\"http://127.0.0.1:59939/?page_id=404\\\",\\\"pages\\\":[{\\\"id\\\":\\\"c33cbef4f01021095c8c249fda1\\\",\\\"type\\\":\\\"page\\\",\\\"title\\\":\\\"Inventory 399: Reference material for the independent tool calling benchmark\\\",\\\"url\\\":\\\"http://127.0.0.1:59939/?page_id=404\\\",\\\"path\\\":\\\"/?page_id=404\\\",\\\"locale\\\":\\\"en-US\\\",\\\"translationGroupId\\\":null,\\\"status\\\":\\\"published\\\",\\\"native\\\":[{\\\"kind\\\":\\\"post\\\",\\\"id\\\":404}]}],\\\"truncated\\\":false,\\\"version\\\":\\\"cv1.1d672130bdf1da0fcf62a4d67b99dec2\\\",\\\"later\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"changedSince\\\":\\\"cv1.1d672130bdf1da0fcf62a4d67b99dec2\\\",\\\"locale\\\":\\\"en-US\\\"},\\\"why\\\":\\\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\\\"},\\\"idNamespace\\\":\\\"content-api\\\",\\\"idMeaning\\\":\\\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\\\"}\"}],\"isError\":false,\"id\":\"ccd003ff-2deb-4a27-bb5a-0842a8e4f0f6\"}]",
+  "backendReads": 7,
+  "nativeSourceCalls": 0
+}

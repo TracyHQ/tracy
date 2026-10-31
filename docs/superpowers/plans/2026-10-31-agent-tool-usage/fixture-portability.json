@@ -1,0 +1,7 @@
+{
+  "measurementFixtureSha256": "06390a44684fa1ff27307a508cb824e627fb138c57dfc2147bd405b126e144b6",
+  "currentFixtureSha256": "8cb792cfe653ba1b1fa3abb463abd60b71804b3a30cc17e28371bbbbc1081370",
+  "correction": "After measurement, resolve the vendored agent-loop relative to the fixture file instead of cwd. Both resolve the same product modules from the repository root; package-directory test invocation now works too. No executor, guide, provider adapter or task input changed.",
+  "rootCwdTests": 11,
+  "packageCwdTests": 11
+}

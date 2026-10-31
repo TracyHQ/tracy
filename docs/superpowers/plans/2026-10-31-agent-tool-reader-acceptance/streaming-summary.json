@@ -1,0 +1,29 @@
+{
+  "wordpress": {
+    "passed": 17,
+    "attempts": 18,
+    "exceptions": [
+      {
+        "task": "continuation",
+        "repeat": 1,
+        "classification": "continuation planning miss"
+      }
+    ]
+  },
+  "joomla": {
+    "passed": 17,
+    "attempts": 18,
+    "exceptions": [
+      {
+        "task": "exact-title",
+        "repeat": 0,
+        "classification": "incomplete provider attempt"
+      }
+    ]
+  },
+  "emdash": {
+    "passed": 18,
+    "attempts": 18,
+    "exceptions": []
+  }
+}

@@ -1,0 +1,107 @@
+--- a/packages/tools/tracy-site-tools/src/host/site-call.mjs
++++ b/packages/tools/tracy-site-tools/src/host/site-call.mjs
+@@ -36,6 +36,7 @@
+   LISTED_ACTIONS,
+   narrowDescribe,
+   nativePageIdAdvice,
++  pageSearchProblem,
+   pageListRows,
+   takeViewParams,
+   workingLocale
+@@ -1700,6 +1701,9 @@
+   // 🔒 A READ'S VIEW IS TRACY'S (05/10/2026, `read-compact.mjs`): `full`, `blockKinds` and a whole list's
+   // `search`/`type`/`offset`/`limit` shape what the model is shown; taken off before the call is normalised,
+   // they are never judged as a door's parameter nor relayed. The replace job reads whole (`bodiesWhole`).
++  const searchProblem = pageSearchProblem(plan.action, plan.params)
++  if (searchProblem)
++    return finish({ ok: false, code: 'CONTENT_BAD_QUERY', error: searchProblem }, planNotes, nextFacts)
+   const taken = takeViewParams(plan.action, plan.params)
+   if (taken.view !== null) plan = { ...plan, params: taken.params }
+   const view = taken.view
+--- a/packages/tools/tracy-site-tools/src/host/read-compact.mjs
++++ b/packages/tools/tracy-site-tools/src/host/read-compact.mjs
+@@ -74,7 +74,7 @@
+ })
+ 
+ /**
+- * @typedef {{ full: boolean, blockKinds: boolean, search: string, type: string, offset: number, limit: number, pageRows?: boolean }} ReadView
++ * @typedef {{ full: boolean, blockKinds: boolean, search: string, type: string, offset: number, limit: number, pageRows?: boolean, pageSearches?: string[] }} ReadView
+  */
+ 
+ /**
+@@ -110,6 +110,7 @@
+       full: taken.full === true || taken.full === 'true',
+       blockKinds: taken.blockKinds === true || taken.blockKinds === 'true',
+       search: str(taken.search).slice(0, 80),
++      ...(pageRows && Array.isArray(taken.search) ? { pageSearches: taken.search.map(str) } : {}),
+       type: str(taken.type).slice(0, 40),
+       offset: whole(taken.offset, 0, 0),
+       limit: Math.min(whole(taken.limit, LIST_ROWS, 1), LIST_ROWS_MAX),
+@@ -198,13 +199,16 @@
+         elsewhere[/** @type {string} */ (locale)] = (elsewhere[/** @type {string} */ (locale)] ?? 0) + 1
+     }
+   const words = (view?.search ?? '').toLowerCase()
++  const searches = view?.pageSearches?.map((word) => word.toLowerCase()) ?? (words ? [words] : [])
+   const matched = shown
+     .filter(isRecord)
+     .filter(
+       (page) =>
+-        words === '' ||
+-        [page.title, page.path, page.url, page.id, recordOf(page.native)].some(
+-          (value) => typeof value === 'string' && value.toLowerCase().includes(words)
++        searches.length === 0 ||
++        searches.some((term) =>
++          [page.title, page.path, page.url, page.id, recordOf(page.native)].some(
++            (value) => typeof value === 'string' && value.toLowerCase().includes(term)
++          )
+         )
+     )
+   const offset = view?.pageRows ? view.offset : 0
+@@ -237,7 +241,7 @@
+     const continuation = {
+       view: 'pages',
+       ...(typeof p.locale === 'string' ? { locale: p.locale } : {}),
+-      ...(words ? { search: view?.search } : {}),
++      ...(view?.pageSearches ? { search: view.pageSearches } : words ? { search: view?.search } : {}),
+       offset: offset + count,
+       limit: view?.pageRows ? view.limit : Math.min(count, LIST_ROWS_MAX)
+     }
+@@ -611,3 +615,27 @@
+     }
+   }
+ }
++
++/** A bounded OR query on page-address rows only; other search contracts remain unchanged.
++ * @param {string} action
++ * @param {unknown} params
++ * @returns {string | null}
++ */
++export function pageSearchProblem(action, params) {
++  if (
++    action !== 'content.read' ||
++    !isRecord(params) ||
++    params.view !== 'pages' ||
++    !Array.isArray(params.search)
++  )
++    return null
++  if (params.url !== undefined || params.changedSince !== undefined)
++    return 'A search array is only for a page list without url or changedSince.'
++  if (
++    params.search.length < 1 ||
++    params.search.length > 8 ||
++    params.search.some((word) => typeof word !== 'string' || word.trim() === '' || word.length > 80)
++  )
++    return 'search must contain 1 to 8 nonempty title or path fragments, at most 80 characters each.'
++  return null
++}
+--- a/packages/tools/tracy-site-tools/src/host/surface.mjs
++++ b/packages/tools/tracy-site-tools/src/host/surface.mjs
+@@ -424,7 +424,7 @@
+  * WordPress surfaces; EmDash keeps its own sentence.
+  */
+ const PAGE_FIRST =
+-  'Call {view:"pages", url} for a known URL or {view:"pages", search:"<title>"} to find a page; then {id}. {describe:true} for types/fields; {type:"page", locale} lists one type; follow links.next.'
++  'Call {view:"pages", url} for a known URL or {view:"pages", search:"<title>"} to find a page (OR: search:[…], ≤8); then {id}. {describe:true} for types/fields; follow links.next.'
+ /** EmDash keeps the describe-first sentence: its add road is `tracy_emdash` and measured 4–5 steps. */
+ const DESCRIBE_FIRST =
+   'Call {describe:true} once, then {type:"page", locale} or {view:"pages", url:link}; then {id}; follow links.next.'

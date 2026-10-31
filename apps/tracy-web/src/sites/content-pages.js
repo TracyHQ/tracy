@@ -89,13 +89,13 @@ function twinsOf(rows) {
  *   only the page it shows. `alternates`: the walk listed every language, so each row can name its
  *   twins (`twinsOf`); a walk of one language, or one cut short, cannot, and names none.
  */
-export function pagesDocument(listings, { truncated, link = null, alternates = false }) {
+export function pagesDocument(listings, { truncated, link = null, alternates = false, candidates = null }) {
   const site = listings[0]?.site ?? null
   const rows = listings.flatMap((listing) => (Array.isArray(listing?.contents) ? listing.contents : []))
   const twins = alternates && !truncated ? twinsOf(rows) : () => null
   const pages = []
   const seen = new Set()
-  for (const row of rows) {
+  for (const row of candidates === null ? rows : candidates.map((i) => rows[i])) {
     if (typeof row?.url !== 'string' || row.url === '' || seen.has(row.id)) continue
     if (link !== null && !linkShowsPage(link, row.url, site?.url)) continue
     seen.add(row.id)
@@ -193,7 +193,14 @@ export async function walkListing(ask, filter) {
   let params = first
   for (let call = 0; call < PAGES_MAX_CALLS; call += 1) {
     const answer = await ask(params)
-    if (answer?.schemaVersion !== 'tracy-content/v1') return { listings, truncated: false, refusal: answer }
+    if (answer?.schemaVersion !== 'tracy-content/v1')
+      return {
+        listings,
+        truncated: false,
+        refusal: answer ?? {
+          error: { code: 'CONTENT_SOURCE_UNAVAILABLE', message: 'The content reader did not answer.' }
+        }
+      }
     listings.push(answer)
     const next = answer.pagination?.nextCursor
     if (typeof next !== 'string' || next === '') return { listings, truncated: false, refusal: null }
@@ -258,4 +265,36 @@ export function localeOfLink(link, locales, defaultLocale, siteUrl) {
     if (short.length > 1) return null
   }
   return defaultLocale && locales.includes(defaultLocale) ? defaultLocale : null
+}
+
+/** Index only already-authorized rows. The final link predicate still checks required query params.
+ * @param {any[]} listings
+ */
+export function pageAddressIndex(listings) {
+  const site = listings[0]?.site?.url
+  const index = new Map()
+  const rows = listings.flatMap((p) => p.contents ?? [])
+  rows.forEach((row, i) => {
+    const key = addressKey(row.url, site)
+    if (key === null) return
+    if (!index.has(key)) index.set(key, [])
+    index.get(key).push(i)
+  })
+  return index
+}
+/** @param {Map<string,number[]>} index @param {string|null} link @param {string|null} site */
+export function indexedPageCandidates(index, link, site) {
+  return link === null ? null : (index.get(addressKey(link, site)) ?? [])
+}
+/** @param {unknown} address @param {string|null} site */
+function addressKey(address, site) {
+  if (typeof address !== 'string' || !address) return null
+  try {
+    const absolute =
+      /^[a-z][a-z0-9+.-]*:\/\//i.test(address) || address.startsWith('/') ? address : `https://${address}`
+    const url = new URL(absolute, site ?? undefined)
+    return pagePath(`${url.origin}${url.pathname}`, site)
+  } catch {
+    return null
+  }
 }

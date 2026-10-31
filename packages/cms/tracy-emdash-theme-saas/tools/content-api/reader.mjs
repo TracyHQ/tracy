@@ -111,21 +111,33 @@ function cutToBudget(owner, budget, size) {
  * A native list item is the same row, mapped by the same code, as the native GET's item, with
  * one difference: the GET overlays a pending draft (`liveData`) and hides draft fields from a
  * caller who may not read drafts. So only an entry with a draft revision is fetched on its own,
- * and the first entry without one is fetched too and compared byte for byte with its list item:
- * if they differ (another EmDash version, another caller role), every entry is fetched as before.
+ * and the first entry without one in each collection is fetched too and compared byte for byte with its list item:
+ * if they differ (another EmDash version, another caller role), that collection is fetched as before.
+ * When current transactional schema is provided, reference-bearing collections always use GET;
+ * reference-free collections reproduce the native empty references object before comparison.
  * A listing that took one GET per entry (~2000 on the Business seed) now takes one per list page.
  */
-export async function sourceRows({ collections, list, get, published }) {
+export async function sourceRows({ collections, list, get, published, referenceFree = null }) {
   const rows = []
   // null: not yet compared; true: list items equal native GET items on this site and caller.
-  let listed = null
   for (const collection of collections) {
+    let listed = null
     let cursor
     do {
       const page = await list(collection, cursor)
-      for (const entry of page.items) {
+      for (const nativeEntry of page.items) {
+        // Schema is read in the same transaction as these rows. Native GET appends an empty
+        // reference object only for a translation group in a collection without reference fields.
+        const entry =
+          referenceFree?.has(collection) && nativeEntry.translationGroup
+            ? { ...nativeEntry, references: {} }
+            : nativeEntry
         let item = entry
-        if (entry.draftRevisionId || listed !== true) {
+        if (
+          entry.draftRevisionId ||
+          listed !== true ||
+          (referenceFree !== null && !referenceFree.has(collection))
+        ) {
           item = (await get(collection, entry.id)).item
           if (listed === null && !entry.draftRevisionId)
             listed = JSON.stringify(entry) === JSON.stringify(item)

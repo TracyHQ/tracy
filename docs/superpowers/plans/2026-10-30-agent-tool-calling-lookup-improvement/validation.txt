@@ -1,0 +1,13 @@
+Targeted surface/read tests: 55 passed, 0 failed.
+Site-call and replacement integration tests: 535 passed, 0 failed.
+Metrics and conservative benchmark-report tests: 14 passed, 0 failed.
+REG-PR-926-compact-site-reads: ALL CHECKS PASSED (20 compact-read tests plus related suites and committed bundle assertions).
+Package build: passed; lib/index.js rebuilt.
+Targeted oxlint: passed.
+Repository lint gate: passed (14 selected TypeScript projects, oxlint, format checks; 542 existing Biome warnings, not errors).
+Bundle gate: 23 packages / 32 builds match source.
+Doc-link gate: 519 files, no broken links; configured public-export exclusions remain.
+Boot-graph check: failed before dsh boot; missing node-addon-require-builtin-darwin-arm64 native binding. No running borrowed dsh process was stopped.
+Baseline reconstruction patch: all four frozen source hashes reproduced.
+Standalone site-tools typecheck: 59 diagnostics, identical to the previous-candidate captured diagnostics after normalizing source positions. No diagnostic added by this follow-up. This package is not among the repository lint gate selected TypeScript projects.
+Final artifact validation: all 216 operations form complete pairs; identical fixture-reset hashes; all required Undo checks pass. Candidate source hashes match the measured snapshot. Exact provider/fixture credentials absent from artifacts. Report rejects incomplete pairs, missing provider usage and wrong frozen-baseline hashes. Owned fixture cleaned up.

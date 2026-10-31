@@ -35,6 +35,9 @@ import {
   isPageList,
   LISTED_ACTIONS,
   narrowDescribe,
+  nativePageIdAdvice,
+  pageSearchProblem,
+  pageIdAdvice,
   pageListRows,
   takeViewParams,
   workingLocale
@@ -1064,9 +1067,35 @@ function cutPagesList(answer, params) {
  * (a refusal's, a cut's) keeps it, and one that is neither document (a refusal) is left alone.
  * @param {unknown} answer
  * @param {boolean | null} describeSeen - `memory.describeSeen(…)`; null (no conversation) never nudges.
+ * @param {Record<string, unknown> | null} [params]
  * @returns {unknown}
  */
-export function contentReadNext(answer, describeSeen) {
+export function contentReadNext(answer, describeSeen, params = null) {
+  if (
+    isRecord(answer) &&
+    !('next' in answer) &&
+    isRecord(params) &&
+    isRecord(answer.error) &&
+    answer.error.code === 'CONTENT_BAD_QUERY' &&
+    typeof params.type === 'string' &&
+    /type/i.test(String(answer.error.message ?? '')) &&
+    params.id === undefined &&
+    params.cursor === undefined &&
+    params.blocksCursor === undefined
+  ) {
+    return {
+      ...answer,
+      next: {
+        action: 'content.read',
+        params: {
+          view: 'pages',
+          ...(typeof params.locale === 'string' ? { locale: params.locale } : {}),
+          ...(typeof params.search === 'string' ? { search: params.search } : {})
+        },
+        why: 'Find the requested page by title or URL first. view:pages includes articles, services and projects too; do not infer type:page from the word page. Use the returned Content API id only when reading fields.'
+      }
+    }
+  }
   if (!isRecord(answer) || 'next' in answer) return answer
   // 🔒 A LINK THAT SHOWS NO PAGE SAYS WHAT TO TRY (round 7): `{view:"pages", url:"/"}` answered `pages: []`
   // on a multilingual Joomla site, whose home is `/en`, and the model went on to list every page of a
@@ -1699,6 +1728,9 @@ export async function runSiteCall(input) {
   // 🔒 A READ'S VIEW IS TRACY'S (05/10/2026, `read-compact.mjs`): `full`, `blockKinds` and a whole list's
   // `search`/`type`/`offset`/`limit` shape what the model is shown; taken off before the call is normalised,
   // they are never judged as a door's parameter nor relayed. The replace job reads whole (`bodiesWhole`).
+  const searchProblem = pageSearchProblem(plan.action, plan.params)
+  if (searchProblem)
+    return finish({ ok: false, code: 'CONTENT_BAD_QUERY', error: searchProblem }, planNotes, nextFacts)
   const taken = takeViewParams(plan.action, plan.params)
   if (taken.view !== null) plan = { ...plan, params: taken.params }
   const view = taken.view
@@ -2464,6 +2496,7 @@ export async function runSiteCall(input) {
       facts.actions,
       sealed
     )
+  if (n.action === 'content.list') answer = nativePageIdAdvice(answer, n.params, platform)
   if (n.action === 'content.read') {
     if (isRecord(answer) && answer.schemaVersion === CONTENT_DESCRIBE)
       memory?.rememberDescribe(sessionId, label)
@@ -2479,12 +2512,14 @@ export async function runSiteCall(input) {
           // facts that cannot be read are no facts: nothing is guessed in their place
         }
       }
-      listed = compactPageList(a, n.params, { home })
+      listed = compactPageList(a, n.params, { home, view })
     }
     answer = contentReadNext(
       listed ?? cutContentList(answer, n.params),
-      memory ? memory.describeSeen(sessionId, label) : null
+      memory ? memory.describeSeen(sessionId, label) : null,
+      compactView ? n.params : null
     )
+    if (compactView) answer = pageIdAdvice(answer)
     // D1: only what the model was shown (after the listing cut) is a base an apply may name.
     memory?.rememberContentRevisions(sessionId, label, answer, readGeneration)
     // The site's own host, for a picture the model writes as an address (`libraryPath`).

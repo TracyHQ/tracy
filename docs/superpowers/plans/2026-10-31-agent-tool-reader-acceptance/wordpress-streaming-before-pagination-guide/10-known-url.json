@@ -1,0 +1,69 @@
+{
+  "repeat": 1,
+  "task": "known-url",
+  "verified": true,
+  "failure": null,
+  "ms": 2713.3287920000002,
+  "idValid": true,
+  "noWrites": true,
+  "continuation": true,
+  "recovery": true,
+  "language": true,
+  "seededRefusal": null,
+  "calls": [
+    {
+      "name": "tracy_site",
+      "arguments": {
+        "action": "content.read",
+        "params": {
+          "view": "pages",
+          "url": "http://127.0.0.1:59939/?page_id=404"
+        }
+      }
+    }
+  ],
+  "provider": [
+    {
+      "step": 1,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7190,
+        "completion_tokens": 83,
+        "total_tokens": 7273,
+        "prompt_tokens_details": {
+          "cached_tokens": 3968
+        },
+        "prompt_cache_hit_tokens": 3968,
+        "prompt_cache_miss_tokens": 3222
+      },
+      "firstChunkMs": 275.2541249999995,
+      "ms": 955.9040410000016,
+      "promptHash": "406be2df126c69e393e817ba7065bf36bc1d0c366f74a36176baf598ea627074",
+      "finalText": null
+    },
+    {
+      "step": 2,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7603,
+        "completion_tokens": 50,
+        "total_tokens": 7653,
+        "prompt_tokens_details": {
+          "cached_tokens": 7168
+        },
+        "prompt_cache_hit_tokens": 7168,
+        "prompt_cache_miss_tokens": 435
+      },
+      "firstChunkMs": 292.1992919999975,
+      "ms": 948.9396669999987,
+      "promptHash": "5ba5044084a793742263de840c2d4f90977931a63326ba01ce2f321e0672d169",
+      "finalText": "That address is the page \"Inventory 399: Reference material for the independent tool calling benchmark\".\n\n- Content API ID: c33cbef4f01021095c8c249fda1\n- Path: /?page_id=404"
+    }
+  ],
+  "final": "That address is the page \"Inventory 399: Reference material for the independent tool calling benchmark\".\n\n- Content API ID: c33cbef4f01021095c8c249fda1\n- Path: /?page_id=404",
+  "toolResults": "[{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_DP6QxkqutzMrfDDBPsRe4647\"},\"toolCallId\":\"call_00_DP6QxkqutzMrfDDBPsRe4647\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"schemaVersion\\\":\\\"tracy-content-pages/v1\\\",\\\"site\\\":{\\\"id\\\":\\\"sa2debb5755c0809935a9e83a98\\\",\\\"name\\\":\\\"Tool benchmark\\\",\\\"url\\\":\\\"http://127.0.0.1:59939\\\",\\\"defaultLocale\\\":\\\"en-US\\\",\\\"locales\\\":[\\\"en-US\\\"]},\\\"link\\\":\\\"http://127.0.0.1:59939/?page_id=404\\\",\\\"pages\\\":[{\\\"id\\\":\\\"c33cbef4f01021095c8c249fda1\\\",\\\"type\\\":\\\"page\\\",\\\"title\\\":\\\"Inventory 399: Reference material for the independent tool calling benchmark\\\",\\\"url\\\":\\\"http://127.0.0.1:59939/?page_id=404\\\",\\\"path\\\":\\\"/?page_id=404\\\",\\\"locale\\\":\\\"en-US\\\",\\\"translationGroupId\\\":null,\\\"status\\\":\\\"published\\\",\\\"native\\\":[{\\\"kind\\\":\\\"post\\\",\\\"id\\\":404}]}],\\\"truncated\\\":false,\\\"version\\\":\\\"cv1.f459f1c4d6338b01123e082860a28b4b\\\",\\\"later\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"changedSince\\\":\\\"cv1.f459f1c4d6338b01123e082860a28b4b\\\",\\\"locale\\\":\\\"en-US\\\"},\\\"why\\\":\\\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\\\"},\\\"idNamespace\\\":\\\"content-api\\\",\\\"idMeaning\\\":\\\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\\\"}\"}],\"isError\":false,\"id\":\"6c892916-f835-47d3-9a2e-efd2d9cd9bc8\"}]",
+  "backendReads": 3,
+  "nativeSourceCalls": 0
+}

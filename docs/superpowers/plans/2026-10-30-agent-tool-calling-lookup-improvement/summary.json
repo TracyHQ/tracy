@@ -1,0 +1,522 @@
+{
+  "costBasis": "Estimated from actual provider token usage at published off-peak USD/1M rates: cache hit 0.003, cache miss 0.15, output 0.60. Not settled billed cost.",
+  "percentileMethod": "Linear interpolation, inclusive of failed attempts. Timing is descriptive; no production or statistical-significance verdict.",
+  "settledCostUsd": null,
+  "experiments": {
+    "native": {
+      "metadata": {
+        "startedAt": "2026-10-30T15:03:19.818Z",
+        "driver": "bounded real DeepSeek tool loop using production site-tool schemas and native executors; not the complete dsh customer profile",
+        "baselineRef": "76e7f114fa4ce6ac2e1b5b9d1c3ff9857c90c14e",
+        "baselineSnapshot": {
+          "label": "previous optimized working tree before lookup-discovery follow-up",
+          "baselineRef": "76e7f114fa4ce6ac2e1b5b9d1c3ff9857c90c14e",
+          "hashes": {
+            "replace-wordpress.mjs": "bab23694833967ddef56c58385d302735d706103e91eeb2e84cb20bb4f1ca5d1",
+            "site-call.mjs": "297dd40ff2eb596c56e5e7b800faed7403cec840af8ccc8d02a29031a63ce234",
+            "read-compact.mjs": "cfb504cbb847aa6a75a2dde0ec6992bbf437bfd28ab3cce7b32dc52031144347",
+            "surface.mjs": "bc6f6972a3a0c4fee8ee97f3454b7f134d65ff51aa1d883e7a1f46392bb408e0"
+          }
+        },
+        "candidateWorkingTree": true,
+        "hashes": {
+          "baseline": {
+            "replace-wordpress.mjs": "bab23694833967ddef56c58385d302735d706103e91eeb2e84cb20bb4f1ca5d1",
+            "site-call.mjs": "297dd40ff2eb596c56e5e7b800faed7403cec840af8ccc8d02a29031a63ce234",
+            "read-compact.mjs": "cfb504cbb847aa6a75a2dde0ec6992bbf437bfd28ab3cce7b32dc52031144347",
+            "surface.mjs": "bc6f6972a3a0c4fee8ee97f3454b7f134d65ff51aa1d883e7a1f46392bb408e0"
+          },
+          "candidate": {
+            "replace-wordpress.mjs": "bab23694833967ddef56c58385d302735d706103e91eeb2e84cb20bb4f1ca5d1",
+            "site-call.mjs": "e31f8d4b96aca0fa2c6ea7d68fa6d52c4b2ce9842f89a7ccf49086128af0ea11",
+            "read-compact.mjs": "6e7e544c87b93e0dda63f49c3727ef98352d25b86782159086db9be30424a8c0",
+            "surface.mjs": "50cf399334ead08b2b40033bef8be3a6c0a6e087d34385e199fc31720f48fd15"
+          }
+        },
+        "model": "deepseek-flash",
+        "thinking": "disabled",
+        "temperature": 0,
+        "toolSchemaHash": null,
+        "toolSchemaHashes": {
+          "baseline": "631a33a4e752facf7f028cdae537aaca16120decbf14361c433462d602956c48",
+          "candidate": "419e1026b73ca857462b696437235f258c9802c8c393da45fef5cf2d1d9281e7"
+        },
+        "toolDescriptionChars": {
+          "baseline": 7715,
+          "candidate": 7731
+        },
+        "systemPrompt": "You are a website assistant working only on this disposable WordPress site. Use tracy_site to complete the requested task. Use the native content.replace operation for wording edits. Do not change anything else. Return a concise JSON answer after using tools. For a lookup return {\"id\":\"the content id\",\"path\":\"the page path\"}. A content ID is the opaque Content API id, not a numeric WordPress post id. Never invent an id. When a tool refuses, follow its supported recovery. Do not claim a successful write unless the tool confirms it.",
+        "tasks": [
+          {
+            "id": "template-replace",
+            "prompt": "On page /?page_id=4, change \"Built with Tracy on WordPress\" to \"Made with Tracy\".",
+            "write": true,
+            "wide": true
+          },
+          {
+            "id": "page-replace-control",
+            "prompt": "On page /?page_id=4, change \"Keep this short line.\" to \"Keep this fresh line.\".",
+            "write": true,
+            "wide": false
+          },
+          {
+            "id": "title-lookup",
+            "prompt": "Find the page titled \"Inventory 399: Reference material for the independent tool calling benchmark\". Return its content ID and path. Do not edit the site.",
+            "write": false
+          },
+          {
+            "id": "known-url-control",
+            "prompt": "Find the content ID and path for the existing page /?page_id=404. Do not edit the site.",
+            "write": false
+          }
+        ],
+        "maxSteps": 8,
+        "maxOutputTokens": 1200,
+        "driverHash": "b7597dc10945462c4aca26ab53822e3eff8998587e74d792bb0aa8cdf25b8cef",
+        "fixture": {
+          "wordpress": "7.1.4",
+          "component": "0.18.37",
+          "pages": 401,
+          "wpImage": "sha256:4e202dbb837d751f7c5367a7e9ad4f55e960a823167494cffc4b8598961800f2",
+          "dbImage": "sha256:3853ff4da2eb76058a3a112ae8026e5a094990c5341f1aedd76a903fd171176e"
+        },
+        "repeats": 30,
+        "nativeOnly": true,
+        "injectedDelayMs": 0,
+        "settledCostUsd": null
+      },
+      "attempts": 120,
+      "groups": {
+        "template-replace": {
+          "baseline": {
+            "attempts": 30,
+            "successes": 30,
+            "undoPassed": 30,
+            "undoRequired": 30,
+            "elapsedP50Ms": 332.37860400000227,
+            "elapsedP90Ms": 477.31563330000023,
+            "toolP50Ms": 146.66335400000025,
+            "modelP50Ms": 0,
+            "backendReads": 300,
+            "backendReadsP50": 10,
+            "modelCalls": 0,
+            "toolCalls": 30,
+            "resultChars": 24180,
+            "cacheHitTokens": 0,
+            "cacheMissTokens": 0,
+            "outputTokens": 0,
+            "estimatedUsd": 0,
+            "estimatedUsdPerVerifiedSuccess": 0,
+            "failures": []
+          },
+          "candidate": {
+            "attempts": 30,
+            "successes": 30,
+            "undoPassed": 30,
+            "undoRequired": 30,
+            "elapsedP50Ms": 337.05424999999946,
+            "elapsedP90Ms": 464.58045860000243,
+            "toolP50Ms": 150.80650000000037,
+            "modelP50Ms": 0,
+            "backendReads": 300,
+            "backendReadsP50": 10,
+            "modelCalls": 0,
+            "toolCalls": 30,
+            "resultChars": 24180,
+            "cacheHitTokens": 0,
+            "cacheMissTokens": 0,
+            "outputTokens": 0,
+            "estimatedUsd": 0,
+            "estimatedUsdPerVerifiedSuccess": 0,
+            "failures": []
+          },
+          "pairedElapsedDifferenceP50Ms": 4.460749499998201,
+          "candidateFasterPairs": 13,
+          "latencyMedianChangePercent": 1.406722918902803
+        },
+        "page-replace-control": {
+          "baseline": {
+            "attempts": 30,
+            "successes": 30,
+            "undoPassed": 30,
+            "undoRequired": 30,
+            "elapsedP50Ms": 291.0784585000001,
+            "elapsedP90Ms": 320.4383002999995,
+            "toolP50Ms": 103.67414600000484,
+            "modelP50Ms": 0,
+            "backendReads": 210,
+            "backendReadsP50": 7,
+            "modelCalls": 0,
+            "toolCalls": 30,
+            "resultChars": 16950,
+            "cacheHitTokens": 0,
+            "cacheMissTokens": 0,
+            "outputTokens": 0,
+            "estimatedUsd": 0,
+            "estimatedUsdPerVerifiedSuccess": 0,
+            "failures": []
+          },
+          "candidate": {
+            "attempts": 30,
+            "successes": 30,
+            "undoPassed": 30,
+            "undoRequired": 30,
+            "elapsedP50Ms": 292.55487500000163,
+            "elapsedP90Ms": 323.51027020000186,
+            "toolP50Ms": 109.03510449999885,
+            "modelP50Ms": 0,
+            "backendReads": 210,
+            "backendReadsP50": 7,
+            "modelCalls": 0,
+            "toolCalls": 30,
+            "resultChars": 16950,
+            "cacheHitTokens": 0,
+            "cacheMissTokens": 0,
+            "outputTokens": 0,
+            "estimatedUsd": 0,
+            "estimatedUsdPerVerifiedSuccess": 0,
+            "failures": []
+          },
+          "pairedElapsedDifferenceP50Ms": -6.117104499993729,
+          "candidateFasterPairs": 18,
+          "latencyMedianChangePercent": 0.5072228661680667
+        }
+      }
+    },
+    "model": {
+      "metadata": {
+        "startedAt": "2026-10-30T15:10:45.538Z",
+        "driver": "bounded real DeepSeek tool loop using production site-tool schemas and native executors; not the complete dsh customer profile",
+        "baselineRef": "76e7f114fa4ce6ac2e1b5b9d1c3ff9857c90c14e",
+        "baselineSnapshot": {
+          "label": "previous optimized working tree before lookup-discovery follow-up",
+          "baselineRef": "76e7f114fa4ce6ac2e1b5b9d1c3ff9857c90c14e",
+          "hashes": {
+            "replace-wordpress.mjs": "bab23694833967ddef56c58385d302735d706103e91eeb2e84cb20bb4f1ca5d1",
+            "site-call.mjs": "297dd40ff2eb596c56e5e7b800faed7403cec840af8ccc8d02a29031a63ce234",
+            "read-compact.mjs": "cfb504cbb847aa6a75a2dde0ec6992bbf437bfd28ab3cce7b32dc52031144347",
+            "surface.mjs": "bc6f6972a3a0c4fee8ee97f3454b7f134d65ff51aa1d883e7a1f46392bb408e0"
+          }
+        },
+        "candidateWorkingTree": true,
+        "hashes": {
+          "baseline": {
+            "replace-wordpress.mjs": "bab23694833967ddef56c58385d302735d706103e91eeb2e84cb20bb4f1ca5d1",
+            "site-call.mjs": "297dd40ff2eb596c56e5e7b800faed7403cec840af8ccc8d02a29031a63ce234",
+            "read-compact.mjs": "cfb504cbb847aa6a75a2dde0ec6992bbf437bfd28ab3cce7b32dc52031144347",
+            "surface.mjs": "bc6f6972a3a0c4fee8ee97f3454b7f134d65ff51aa1d883e7a1f46392bb408e0"
+          },
+          "candidate": {
+            "replace-wordpress.mjs": "bab23694833967ddef56c58385d302735d706103e91eeb2e84cb20bb4f1ca5d1",
+            "site-call.mjs": "e31f8d4b96aca0fa2c6ea7d68fa6d52c4b2ce9842f89a7ccf49086128af0ea11",
+            "read-compact.mjs": "6e7e544c87b93e0dda63f49c3727ef98352d25b86782159086db9be30424a8c0",
+            "surface.mjs": "50cf399334ead08b2b40033bef8be3a6c0a6e087d34385e199fc31720f48fd15"
+          }
+        },
+        "model": "deepseek-flash",
+        "thinking": "disabled",
+        "temperature": 0,
+        "toolSchemaHash": null,
+        "toolSchemaHashes": {
+          "baseline": "631a33a4e752facf7f028cdae537aaca16120decbf14361c433462d602956c48",
+          "candidate": "419e1026b73ca857462b696437235f258c9802c8c393da45fef5cf2d1d9281e7"
+        },
+        "toolDescriptionChars": {
+          "baseline": 7715,
+          "candidate": 7731
+        },
+        "systemPrompt": "You are a website assistant working only on this disposable WordPress site. Use tracy_site to complete the requested task. Use the native content.replace operation for wording edits. Do not change anything else. Return a concise JSON answer after using tools. For a lookup return {\"id\":\"the content id\",\"path\":\"the page path\"}. A content ID is the opaque Content API id, not a numeric WordPress post id. Never invent an id. When a tool refuses, follow its supported recovery. Do not claim a successful write unless the tool confirms it.",
+        "tasks": [
+          {
+            "id": "template-replace",
+            "prompt": "On page /?page_id=4, change \"Built with Tracy on WordPress\" to \"Made with Tracy\".",
+            "write": true,
+            "wide": true
+          },
+          {
+            "id": "page-replace-control",
+            "prompt": "On page /?page_id=4, change \"Keep this short line.\" to \"Keep this fresh line.\".",
+            "write": true,
+            "wide": false
+          },
+          {
+            "id": "title-lookup",
+            "prompt": "Find the page titled \"Inventory 399: Reference material for the independent tool calling benchmark\". Return its content ID and path. Do not edit the site.",
+            "write": false
+          },
+          {
+            "id": "known-url-control",
+            "prompt": "Find the content ID and path for the existing page /?page_id=404. Do not edit the site.",
+            "write": false
+          }
+        ],
+        "maxSteps": 8,
+        "maxOutputTokens": 1200,
+        "driverHash": "b7597dc10945462c4aca26ab53822e3eff8998587e74d792bb0aa8cdf25b8cef",
+        "fixture": {
+          "wordpress": "7.1.4",
+          "component": "0.18.37",
+          "pages": 401,
+          "wpImage": "sha256:4e202dbb837d751f7c5367a7e9ad4f55e960a823167494cffc4b8598961800f2",
+          "dbImage": "sha256:3853ff4da2eb76058a3a112ae8026e5a094990c5341f1aedd76a903fd171176e"
+        },
+        "repeats": 12,
+        "nativeOnly": false,
+        "injectedDelayMs": 0,
+        "settledCostUsd": null
+      },
+      "attempts": 96,
+      "groups": {
+        "template-replace": {
+          "baseline": {
+            "attempts": 12,
+            "successes": 12,
+            "undoPassed": 12,
+            "undoRequired": 12,
+            "elapsedP50Ms": 3320.244312499999,
+            "elapsedP90Ms": 4209.299050299998,
+            "toolP50Ms": 382.63906200000747,
+            "modelP50Ms": 2706.925707500006,
+            "backendReads": 162,
+            "backendReadsP50": 16,
+            "modelCalls": 31,
+            "toolCalls": 19,
+            "resultChars": 12976,
+            "cacheHitTokens": 87680,
+            "cacheMissTokens": 8339,
+            "outputTokens": 2043,
+            "estimatedUsd": 0.0027396900000000004,
+            "estimatedUsdPerVerifiedSuccess": 0.00022830750000000003,
+            "failures": []
+          },
+          "candidate": {
+            "attempts": 12,
+            "successes": 12,
+            "undoPassed": 12,
+            "undoRequired": 12,
+            "elapsedP50Ms": 3325.0368125000005,
+            "elapsedP90Ms": 4059.6682298,
+            "toolP50Ms": 381.94089600000007,
+            "modelP50Ms": 2690.283686499999,
+            "backendReads": 180,
+            "backendReadsP50": 16,
+            "modelCalls": 35,
+            "toolCalls": 24,
+            "resultChars": 14822,
+            "cacheHitTokens": 100608,
+            "cacheMissTokens": 9302,
+            "outputTokens": 2325,
+            "estimatedUsd": 0.003092124,
+            "estimatedUsdPerVerifiedSuccess": 0.000257677,
+            "failures": []
+          },
+          "pairedElapsedDifferenceP50Ms": -92.1339999999982,
+          "candidateFasterPairs": 6,
+          "latencyMedianChangePercent": 0.14434178780033946
+        },
+        "page-replace-control": {
+          "baseline": {
+            "attempts": 12,
+            "successes": 12,
+            "undoPassed": 12,
+            "undoRequired": 12,
+            "elapsedP50Ms": 2081.9162294999915,
+            "elapsedP90Ms": 2529.855495899999,
+            "toolP50Ms": 160.35231249999924,
+            "modelP50Ms": 1689.8452499999985,
+            "backendReads": 84,
+            "backendReadsP50": 7,
+            "modelCalls": 24,
+            "toolCalls": 12,
+            "resultChars": 6780,
+            "cacheHitTokens": 66048,
+            "cacheMissTokens": 5750,
+            "outputTokens": 1268,
+            "estimatedUsd": 0.0018214439999999998,
+            "estimatedUsdPerVerifiedSuccess": 0.000151787,
+            "failures": []
+          },
+          "candidate": {
+            "attempts": 12,
+            "successes": 12,
+            "undoPassed": 12,
+            "undoRequired": 12,
+            "elapsedP50Ms": 2424.5741045000104,
+            "elapsedP90Ms": 2963.495204199993,
+            "toolP50Ms": 152.4899585000021,
+            "modelP50Ms": 2034.8098129999998,
+            "backendReads": 84,
+            "backendReadsP50": 7,
+            "modelCalls": 24,
+            "toolCalls": 12,
+            "resultChars": 6780,
+            "cacheHitTokens": 67584,
+            "cacheMissTokens": 4442,
+            "outputTokens": 1412,
+            "estimatedUsd": 0.0017162520000000001,
+            "estimatedUsdPerVerifiedSuccess": 0.000143021,
+            "failures": []
+          },
+          "pairedElapsedDifferenceP50Ms": 346.9855419999949,
+          "candidateFasterPairs": 3,
+          "latencyMedianChangePercent": 16.458773419635353
+        },
+        "title-lookup": {
+          "baseline": {
+            "attempts": 12,
+            "successes": 0,
+            "undoPassed": 0,
+            "undoRequired": 0,
+            "elapsedP50Ms": 1933.3706465000141,
+            "elapsedP90Ms": 2021.9069580000128,
+            "toolP50Ms": 37.034208500001114,
+            "modelP50Ms": 1682.4545205000177,
+            "backendReads": 12,
+            "backendReadsP50": 1,
+            "modelCalls": 24,
+            "toolCalls": 12,
+            "resultChars": 4476,
+            "cacheHitTokens": 66048,
+            "cacheMissTokens": 4920,
+            "outputTokens": 996,
+            "estimatedUsd": 0.0015337439999999994,
+            "estimatedUsdPerVerifiedSuccess": null,
+            "failures": [
+              {
+                "repeat": 0,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 1,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 2,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 3,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 4,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 5,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 6,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 7,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 8,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 9,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 10,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 11,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              }
+            ]
+          },
+          "candidate": {
+            "attempts": 12,
+            "successes": 12,
+            "undoPassed": 0,
+            "undoRequired": 0,
+            "elapsedP50Ms": 2095.182896000013,
+            "elapsedP90Ms": 2429.2870542000105,
+            "toolP50Ms": 173.93466649999027,
+            "modelP50Ms": 1701.396061499996,
+            "backendReads": 60,
+            "backendReadsP50": 5,
+            "modelCalls": 24,
+            "toolCalls": 12,
+            "resultChars": 5784,
+            "cacheHitTokens": 66048,
+            "cacheMissTokens": 5748,
+            "outputTokens": 1164,
+            "estimatedUsd": 0.0017587440000000002,
+            "estimatedUsdPerVerifiedSuccess": 0.000146562,
+            "failures": []
+          },
+          "pairedElapsedDifferenceP50Ms": 211.15860399999656,
+          "candidateFasterPairs": 4,
+          "latencyMedianChangePercent": 8.369437582645013
+        },
+        "known-url-control": {
+          "baseline": {
+            "attempts": 12,
+            "successes": 12,
+            "undoPassed": 0,
+            "undoRequired": 0,
+            "elapsedP50Ms": 2351.822667000015,
+            "elapsedP90Ms": 3140.3456048000025,
+            "toolP50Ms": 205.24681300001976,
+            "modelP50Ms": 1825.6861455000326,
+            "backendReads": 72,
+            "backendReadsP50": 6,
+            "modelCalls": 24,
+            "toolCalls": 12,
+            "resultChars": 6492,
+            "cacheHitTokens": 66048,
+            "cacheMissTokens": 5649,
+            "outputTokens": 1197,
+            "estimatedUsd": 0.0017636940000000003,
+            "estimatedUsdPerVerifiedSuccess": 0.00014697450000000003,
+            "failures": []
+          },
+          "candidate": {
+            "attempts": 12,
+            "successes": 12,
+            "undoPassed": 0,
+            "undoRequired": 0,
+            "elapsedP50Ms": 2230.8641250000073,
+            "elapsedP90Ms": 2759.215633900004,
+            "toolP50Ms": 207.77766650001286,
+            "modelP50Ms": 1700.3468119999889,
+            "backendReads": 72,
+            "backendReadsP50": 6,
+            "modelCalls": 24,
+            "toolCalls": 12,
+            "resultChars": 6492,
+            "cacheHitTokens": 66048,
+            "cacheMissTokens": 5856,
+            "outputTokens": 1188,
+            "estimatedUsd": 0.0017893440000000007,
+            "estimatedUsdPerVerifiedSuccess": 0.00014911200000000005,
+            "failures": []
+          },
+          "pairedElapsedDifferenceP50Ms": -71.33770899999945,
+          "candidateFasterPairs": 6,
+          "latencyMedianChangePercent": -5.143182931998114
+        }
+      }
+    }
+  }
+}

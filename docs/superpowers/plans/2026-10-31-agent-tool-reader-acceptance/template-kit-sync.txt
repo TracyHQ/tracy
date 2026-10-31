@@ -1,0 +1,4 @@
+  tracy-emdash-theme-base: 88 identical · 13 same code, different prose or wrapping · 0 same code in a different order · 0 CODE DIFFERS · 0 missing · 17 template-only
+  tracy-emdash-theme-business: 96 identical · 12 same code, different prose or wrapping · 1 same code in a different order · 0 CODE DIFFERS · 0 missing · 34 template-only
+  tracy-emdash-theme-saas: 105 identical · 9 same code, different prose or wrapping · 0 same code in a different order · 0 CODE DIFFERS · 0 missing · 13 template-only
+check-emdash-kit-sync: 3 templates match the kit.

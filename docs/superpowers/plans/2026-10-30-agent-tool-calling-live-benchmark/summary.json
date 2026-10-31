@@ -1,0 +1,455 @@
+{
+  "costBasis": "Estimated from actual provider token usage at published off-peak USD/1M rates: cache hit 0.003, cache miss 0.15, output 0.60. Not settled billed cost.",
+  "percentileMethod": "Linear interpolation, inclusive of failed attempts. Timing is descriptive; no production or statistical-significance verdict.",
+  "settledCostUsd": null,
+  "experiments": {
+    "native": {
+      "metadata": {
+        "startedAt": "2026-10-30T14:52:43.012Z",
+        "driver": "bounded real DeepSeek tool loop using production site-tool schemas and native executors; not the complete dsh customer profile",
+        "baselineRef": "76e7f114fa4ce6ac2e1b5b9d1c3ff9857c90c14e",
+        "candidateWorkingTree": true,
+        "hashes": {
+          "baseline": {
+            "replace-wordpress.mjs": "a5c288a88bda12eb77239238b14759d42caa9d9026bfd4faee1a23163b2db9b8",
+            "site-call.mjs": "20e5998934b8e47b45827a53404f004c2808e79e9ed8a9e3e4f97bda0323184b",
+            "read-compact.mjs": "6298877a198b1fd8c24bdb86159a1672e4b3c3656a41987daceeaf1bdc3c997e"
+          },
+          "candidate": {
+            "replace-wordpress.mjs": "bab23694833967ddef56c58385d302735d706103e91eeb2e84cb20bb4f1ca5d1",
+            "site-call.mjs": "297dd40ff2eb596c56e5e7b800faed7403cec840af8ccc8d02a29031a63ce234",
+            "read-compact.mjs": "cfb504cbb847aa6a75a2dde0ec6992bbf437bfd28ab3cce7b32dc52031144347"
+          }
+        },
+        "model": "deepseek-flash",
+        "thinking": "disabled",
+        "temperature": 0,
+        "toolSchemaHash": "631a33a4e752facf7f028cdae537aaca16120decbf14361c433462d602956c48",
+        "fixture": {
+          "wordpress": "7.1.4",
+          "component": "0.18.37",
+          "pages": 401,
+          "wpImage": "sha256:4e202dbb837d751f7c5367a7e9ad4f55e960a823167494cffc4b8598961800f2",
+          "dbImage": "sha256:3853ff4da2eb76058a3a112ae8026e5a094990c5341f1aedd76a903fd171176e"
+        },
+        "repeats": 30,
+        "nativeOnly": true,
+        "injectedDelayMs": 0,
+        "settledCostUsd": null
+      },
+      "attempts": 120,
+      "groups": {
+        "template-replace": {
+          "baseline": {
+            "attempts": 30,
+            "successes": 30,
+            "undoPassed": 30,
+            "undoRequired": 30,
+            "elapsedP50Ms": 296.9727085000013,
+            "elapsedP90Ms": 484.96067940000023,
+            "toolP50Ms": 124.38916649999919,
+            "modelP50Ms": 0,
+            "backendReads": 480,
+            "backendReadsP50": 16,
+            "modelCalls": 0,
+            "toolCalls": 30,
+            "resultChars": 24180,
+            "cacheHitTokens": 0,
+            "cacheMissTokens": 0,
+            "outputTokens": 0,
+            "estimatedUsd": 0,
+            "estimatedUsdPerVerifiedSuccess": 0,
+            "failures": []
+          },
+          "candidate": {
+            "attempts": 30,
+            "successes": 30,
+            "undoPassed": 30,
+            "undoRequired": 30,
+            "elapsedP50Ms": 285.8042295000014,
+            "elapsedP90Ms": 349.2538545000029,
+            "toolP50Ms": 116.4281664999944,
+            "modelP50Ms": 0,
+            "backendReads": 300,
+            "backendReadsP50": 10,
+            "modelCalls": 0,
+            "toolCalls": 30,
+            "resultChars": 24180,
+            "cacheHitTokens": 0,
+            "cacheMissTokens": 0,
+            "outputTokens": 0,
+            "estimatedUsd": 0,
+            "estimatedUsdPerVerifiedSuccess": 0,
+            "failures": []
+          },
+          "pairedElapsedDifferenceP50Ms": -7.681104499995854,
+          "candidateFasterPairs": 21,
+          "latencyMedianChangePercent": -3.7607762196100514
+        },
+        "page-replace-control": {
+          "baseline": {
+            "attempts": 30,
+            "successes": 30,
+            "undoPassed": 30,
+            "undoRequired": 30,
+            "elapsedP50Ms": 265.86954200000037,
+            "elapsedP90Ms": 408.2133287999961,
+            "toolP50Ms": 93.21308349999163,
+            "modelP50Ms": 0,
+            "backendReads": 210,
+            "backendReadsP50": 7,
+            "modelCalls": 0,
+            "toolCalls": 30,
+            "resultChars": 16950,
+            "cacheHitTokens": 0,
+            "cacheMissTokens": 0,
+            "outputTokens": 0,
+            "estimatedUsd": 0,
+            "estimatedUsdPerVerifiedSuccess": 0,
+            "failures": []
+          },
+          "candidate": {
+            "attempts": 30,
+            "successes": 30,
+            "undoPassed": 30,
+            "undoRequired": 30,
+            "elapsedP50Ms": 263.43404100000043,
+            "elapsedP90Ms": 426.71545800000024,
+            "toolP50Ms": 90.80206250000629,
+            "modelP50Ms": 0,
+            "backendReads": 210,
+            "backendReadsP50": 7,
+            "modelCalls": 0,
+            "toolCalls": 30,
+            "resultChars": 16950,
+            "cacheHitTokens": 0,
+            "cacheMissTokens": 0,
+            "outputTokens": 0,
+            "estimatedUsd": 0,
+            "estimatedUsdPerVerifiedSuccess": 0,
+            "failures": []
+          },
+          "pairedElapsedDifferenceP50Ms": 1.4884579999998095,
+          "candidateFasterPairs": 13,
+          "latencyMedianChangePercent": -0.9160511511318359
+        }
+      }
+    },
+    "model": {
+      "metadata": {
+        "startedAt": "2026-10-30T14:54:37.110Z",
+        "driver": "bounded real DeepSeek tool loop using production site-tool schemas and native executors; not the complete dsh customer profile",
+        "baselineRef": "76e7f114fa4ce6ac2e1b5b9d1c3ff9857c90c14e",
+        "candidateWorkingTree": true,
+        "hashes": {
+          "baseline": {
+            "replace-wordpress.mjs": "a5c288a88bda12eb77239238b14759d42caa9d9026bfd4faee1a23163b2db9b8",
+            "site-call.mjs": "20e5998934b8e47b45827a53404f004c2808e79e9ed8a9e3e4f97bda0323184b",
+            "read-compact.mjs": "6298877a198b1fd8c24bdb86159a1672e4b3c3656a41987daceeaf1bdc3c997e"
+          },
+          "candidate": {
+            "replace-wordpress.mjs": "bab23694833967ddef56c58385d302735d706103e91eeb2e84cb20bb4f1ca5d1",
+            "site-call.mjs": "297dd40ff2eb596c56e5e7b800faed7403cec840af8ccc8d02a29031a63ce234",
+            "read-compact.mjs": "cfb504cbb847aa6a75a2dde0ec6992bbf437bfd28ab3cce7b32dc52031144347"
+          }
+        },
+        "model": "deepseek-flash",
+        "thinking": "disabled",
+        "temperature": 0,
+        "toolSchemaHash": "631a33a4e752facf7f028cdae537aaca16120decbf14361c433462d602956c48",
+        "systemPrompt": "You are a website assistant working only on this disposable WordPress site. Use tracy_site to complete the requested task. Use the native content.replace operation for wording edits. Do not change anything else. Return a concise JSON answer after using tools. For a lookup return {\"id\":\"the content id\",\"path\":\"the page path\"}. A content ID is the opaque Content API id, not a numeric WordPress post id. Never invent an id. When a tool refuses, follow its supported recovery. Do not claim a successful write unless the tool confirms it.",
+        "tasks": [
+          {
+            "id": "template-replace",
+            "prompt": "On page /?page_id=4, change \"Built with Tracy on WordPress\" to \"Made with Tracy\".",
+            "write": true,
+            "wide": true
+          },
+          {
+            "id": "page-replace-control",
+            "prompt": "On page /?page_id=4, change \"Keep this short line.\" to \"Keep this fresh line.\".",
+            "write": true,
+            "wide": false
+          },
+          {
+            "id": "title-lookup",
+            "prompt": "Find the page titled \"Inventory 399: Reference material for the independent tool calling benchmark\". Return its content ID and path. Do not edit the site.",
+            "write": false
+          },
+          {
+            "id": "known-url-control",
+            "prompt": "Find the content ID and path for the existing page /?page_id=404. Do not edit the site.",
+            "write": false
+          }
+        ],
+        "maxSteps": 8,
+        "maxOutputTokens": 1200,
+        "driverHash": "71a01c22b76834c03c0359699b1160cf4088eb84a3e25e745bb4dd855ec3d1a6",
+        "fixture": {
+          "wordpress": "7.1.4",
+          "component": "0.18.37",
+          "pages": 401,
+          "wpImage": "sha256:4e202dbb837d751f7c5367a7e9ad4f55e960a823167494cffc4b8598961800f2",
+          "dbImage": "sha256:3853ff4da2eb76058a3a112ae8026e5a094990c5341f1aedd76a903fd171176e"
+        },
+        "repeats": 6,
+        "nativeOnly": false,
+        "injectedDelayMs": 0,
+        "settledCostUsd": null
+      },
+      "attempts": 48,
+      "groups": {
+        "template-replace": {
+          "baseline": {
+            "attempts": 6,
+            "successes": 6,
+            "undoPassed": 6,
+            "undoRequired": 6,
+            "elapsedP50Ms": 2704.2911454999994,
+            "elapsedP90Ms": 3686.3561040000004,
+            "toolP50Ms": 236.03239600000143,
+            "modelP50Ms": 2250.132958500001,
+            "backendReads": 114,
+            "backendReadsP50": 19,
+            "modelCalls": 15,
+            "toolCalls": 9,
+            "resultChars": 6252,
+            "cacheHitTokens": 42496,
+            "cacheMissTokens": 3835,
+            "outputTokens": 1034,
+            "estimatedUsd": 0.0013231380000000002,
+            "estimatedUsdPerVerifiedSuccess": 0.00022052300000000003,
+            "failures": []
+          },
+          "candidate": {
+            "attempts": 6,
+            "successes": 6,
+            "undoPassed": 6,
+            "undoRequired": 6,
+            "elapsedP50Ms": 2183.5519999999997,
+            "elapsedP90Ms": 5271.880333499999,
+            "toolP50Ms": 188.86589550000008,
+            "modelP50Ms": 1782.225604000001,
+            "backendReads": 72,
+            "backendReadsP50": 10,
+            "modelCalls": 14,
+            "toolCalls": 8,
+            "resultChars": 5780,
+            "cacheHitTokens": 39296,
+            "cacheMissTokens": 3654,
+            "outputTokens": 948,
+            "estimatedUsd": 0.001234788,
+            "estimatedUsdPerVerifiedSuccess": 0.00020579799999999998,
+            "failures": []
+          },
+          "pairedElapsedDifferenceP50Ms": -422.13216600000305,
+          "candidateFasterPairs": 4,
+          "latencyMedianChangePercent": -19.25603115502268
+        },
+        "page-replace-control": {
+          "baseline": {
+            "attempts": 6,
+            "successes": 6,
+            "undoPassed": 6,
+            "undoRequired": 6,
+            "elapsedP50Ms": 1971.0754585000032,
+            "elapsedP90Ms": 3529.9534375000003,
+            "toolP50Ms": 99.95508300000074,
+            "modelP50Ms": 1682.9216664999985,
+            "backendReads": 48,
+            "backendReadsP50": 7,
+            "modelCalls": 13,
+            "toolCalls": 7,
+            "resultChars": 3862,
+            "cacheHitTokens": 36224,
+            "cacheMissTokens": 3068,
+            "outputTokens": 767,
+            "estimatedUsd": 0.0010290720000000002,
+            "estimatedUsdPerVerifiedSuccess": 0.00017151200000000005,
+            "failures": []
+          },
+          "candidate": {
+            "attempts": 6,
+            "successes": 6,
+            "undoPassed": 6,
+            "undoRequired": 6,
+            "elapsedP50Ms": 1996.7403959999974,
+            "elapsedP90Ms": 2470.8604170000035,
+            "toolP50Ms": 100.89968749999753,
+            "modelP50Ms": 1696.9092500000006,
+            "backendReads": 42,
+            "backendReadsP50": 7,
+            "modelCalls": 12,
+            "toolCalls": 6,
+            "resultChars": 3390,
+            "cacheHitTokens": 33024,
+            "cacheMissTokens": 2886,
+            "outputTokens": 666,
+            "estimatedUsd": 0.0009315720000000001,
+            "estimatedUsdPerVerifiedSuccess": 0.000155262,
+            "failures": []
+          },
+          "pairedElapsedDifferenceP50Ms": 43.87664550000409,
+          "candidateFasterPairs": 3,
+          "latencyMedianChangePercent": 1.3020778778061182
+        },
+        "title-lookup": {
+          "baseline": {
+            "attempts": 6,
+            "successes": 0,
+            "undoPassed": 0,
+            "undoRequired": 0,
+            "elapsedP50Ms": 1802.5254580000037,
+            "elapsedP90Ms": 1940.5214789999955,
+            "toolP50Ms": 21.8250210000042,
+            "modelP50Ms": 1594.6549579999992,
+            "backendReads": 6,
+            "backendReadsP50": 1,
+            "modelCalls": 12,
+            "toolCalls": 6,
+            "resultChars": 2238,
+            "cacheHitTokens": 33024,
+            "cacheMissTokens": 2460,
+            "outputTokens": 498,
+            "estimatedUsd": 0.0007668719999999998,
+            "estimatedUsdPerVerifiedSuccess": null,
+            "failures": [
+              {
+                "repeat": 0,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 1,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 2,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 3,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 4,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 5,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              }
+            ]
+          },
+          "candidate": {
+            "attempts": 6,
+            "successes": 0,
+            "undoPassed": 0,
+            "undoRequired": 0,
+            "elapsedP50Ms": 1828.117624999999,
+            "elapsedP90Ms": 3386.6012499999924,
+            "toolP50Ms": 21.564083499994013,
+            "modelP50Ms": 1628.789853999995,
+            "backendReads": 6,
+            "backendReadsP50": 1,
+            "modelCalls": 12,
+            "toolCalls": 6,
+            "resultChars": 2238,
+            "cacheHitTokens": 33024,
+            "cacheMissTokens": 2460,
+            "outputTokens": 498,
+            "estimatedUsd": 0.0007668719999999998,
+            "estimatedUsdPerVerifiedSuccess": null,
+            "failures": [
+              {
+                "repeat": 0,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 1,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 2,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 3,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 4,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              },
+              {
+                "repeat": 5,
+                "reason": "Opaque content ID, path, returned evidence or record integrity check failed",
+                "final": "{\"id\":\"404\",\"path\":\"/?page_id=404\"}"
+              }
+            ]
+          },
+          "pairedElapsedDifferenceP50Ms": 26.56512500000099,
+          "candidateFasterPairs": 1,
+          "latencyMedianChangePercent": 1.4197950373689094
+        },
+        "known-url-control": {
+          "baseline": {
+            "attempts": 6,
+            "successes": 6,
+            "undoPassed": 0,
+            "undoRequired": 0,
+            "elapsedP50Ms": 1999.3181870000044,
+            "elapsedP90Ms": 2081.882291999995,
+            "toolP50Ms": 157.08950000000914,
+            "modelP50Ms": 1666.8333125000063,
+            "backendReads": 36,
+            "backendReadsP50": 6,
+            "modelCalls": 12,
+            "toolCalls": 6,
+            "resultChars": 3246,
+            "cacheHitTokens": 33536,
+            "cacheMissTokens": 2323,
+            "outputTokens": 591,
+            "estimatedUsd": 0.0008036580000000001,
+            "estimatedUsdPerVerifiedSuccess": 0.000133943,
+            "failures": []
+          },
+          "candidate": {
+            "attempts": 6,
+            "successes": 6,
+            "undoPassed": 0,
+            "undoRequired": 0,
+            "elapsedP50Ms": 2142.979395999995,
+            "elapsedP90Ms": 2209.4196669999947,
+            "toolP50Ms": 153.48020850000466,
+            "modelP50Ms": 1750.098771500001,
+            "backendReads": 36,
+            "backendReadsP50": 6,
+            "modelCalls": 12,
+            "toolCalls": 6,
+            "resultChars": 3246,
+            "cacheHitTokens": 33408,
+            "cacheMissTokens": 2451,
+            "outputTokens": 591,
+            "estimatedUsd": 0.0008224740000000001,
+            "estimatedUsdPerVerifiedSuccess": 0.00013707900000000002,
+            "failures": []
+          },
+          "pairedElapsedDifferenceP50Ms": 121.33287500000006,
+          "candidateFasterPairs": 1,
+          "latencyMedianChangePercent": 7.18551003707697
+        }
+      }
+    }
+  }
+}

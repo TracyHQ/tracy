@@ -1,0 +1,105 @@
+Validation captured 2026-10-30. Logs below are summary excerpts, not unique test totals.
+Full site-tools suite
+ok 4309 - {pictures} swaps a picture in a block — img, srcset, url() and its attachment — without retyping it
+  ---
+  duration_ms: 1.850791
+  type: 'test'
+  ...
+1..4309
+# tests 4309
+# suites 0
+# pass 4309
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 195949.41225
+
+Focused existing product boundary suites
+ok 509 - 🔒 a resumed conversation keeps every tool it was already sent: no removal of a tool in its history
+  ---
+  duration_ms: 4.400041
+  type: 'test'
+  ...
+1..509
+# tests 509
+# suites 0
+# pass 509
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 10406.805042
+
+Final shipped-plugin AgentLoop integration tests
+ok 4 - the shipped registry keeps read batching parallel and write/browser actions exclusive
+  ---
+  duration_ms: 2.137666
+  type: 'test'
+  ...
+1..4
+# tests 4
+# suites 0
+# pass 4
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2532.455542
+
+Compact-read regression script
+ok - S2: exit code = 0
+ok - S2: fail = 0
+ok - S2: cancelled = 0
+ok - S2: skipped = 0
+ok - S2: pass = 22
+ok - S3: exit code = 0
+ok - S3: fail = 0
+ok - S3: cancelled = 0
+ok - S3: skipped = 0
+ok - S4 grep -c 'blockKindsOmitted' lib/index.js = 1
+ok - S4 grep -c 'var BODY_SHOWN_MAX = 4e3' = 1
+ok - S4 grep -c 'function takeViewParams' = 1
+ALL CHECKS PASSED
+
+Lint and committed bundle gates
+    166 166 │                   onClick={() => setExpanded(true)}
+    167 167 │                 >
+  
+
+The number of diagnostics exceeds the limit allowed. Use --max-diagnostics to increase it.
+Diagnostics not shown: 522.
+Checked 2640 files in 603ms. No fixes applied.
+Found 542 warnings.
+check-lint: time — format:check (biome format + biome lint, one figure): 923373 ms (ok)
+check-lint: time — total: 1235778 ms (ok)
+check-lint: 3 steps green.
+check-all: bundles
+Bundle gate: 23 packages, 32 builds, all match their source.
+check-all: 2 gate(s) passed (--only: 63 of 65 left to the other CI jobs)
+
+Targeted oxlint and Biome format: four current harness/benchmark modules pass.
+Package typecheck: 59 pre-existing diagnostics, same diagnostic messages as preceding lookup candidate after ignoring line positions.
+Full boot graph remains blocked by missing local node-addon-require-builtin-darwin-arm64 binding.
+Baseline reconstruction patch successfully reapplied; all four hashes match.
+Native rerun: 40/40 exact-content, unrelated-record, receipt and Undo checks pass.
+Real model: 120 attempts retained; 98 verified, 22 provider fetch failures; all 48 model-driven writes and Undo pass.
+Product loop with real WordPress reads: 24/24 verified, four titles each.
+
+Final combined focused rerun (22 compact + 4 product-harness cases):
+  ...
+1..26
+# tests 26
+# suites 0
+# pass 26
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 692.66825
+All runtime source hashes and shipped bundle SHA256 match recorded runs.
+Owned fixture containers, volumes, network and private config removed.
+
+Documentation links: 522 files, no broken links.
+Final targeted formatting: eight runtime/harness/benchmark modules pass, no fixes applied.
+Final git diff --check: pass.

@@ -1,0 +1,1566 @@
+{
+  "metadata": {
+    "platform": "emdash",
+    "repeats": 3,
+    "native": false,
+    "model": "deepseek-flash",
+    "thinking": "disabled",
+    "temperature": 0,
+    "producer": "real shipped plugin + vendored AgentLoop/ToolRuntime; injected relay with real CMS HTTP; provider adapter uses nonstreaming Chat Completions",
+    "scope": "read discovery; no authenticated production relay, writes or Undo acceptance claimed",
+    "inventoryPages": 43,
+    "targets": [
+      {
+        "id": "Zbe3CZ3Ht62hd_jD_pOn4he0t2u8fE693eT8ceAMy7o",
+        "title": "Transactional emails",
+        "path": "/kit-email"
+      },
+      {
+        "id": "Z8REvI6No5ECoO4gNRTt2KYfTzA73pN3v61mwDb5tto",
+        "title": "Metalworking shop refurbishment",
+        "path": "/projects/metalworking-shop-refurbishment"
+      },
+      {
+        "id": "xw6-g2fnPlHH2hNgtPeTDWVQBRMZxIv-4uFclxni8vo",
+        "title": "Privacy",
+        "path": "/privacy"
+      },
+      {
+        "id": "WQuI3jw1hkypMwKM4cs1czEq8atj6tnjfRbyeQbKQc0",
+        "title": "Zavolzhye logistics building",
+        "path": "/projects/zavolzhye-logistics-building"
+      }
+    ],
+    "origin": "http://127.0.0.1:54150",
+    "image": "sha256:96711fec9d763d8daaacee6da83770668335a16ee20a19d01b9fb31e790fbe54",
+    "harnessFixtureHash": "06390a44684fa1ff27307a508cb824e627fb138c57dfc2147bd405b126e144b6",
+    "baselineBundle": "14d19374f19b9719db99a811fd1a04c168ce943fd3f0a621802a7e72d51a23a8",
+    "candidateBundle": "c656e8d1d89a6848ce877711dc7b9a12d56ed9bc2e98313f1771baf7d68fb4a8",
+    "guideHashes": {
+      "baseline": "07d28abb39b28c8f4c409b8c0c2943ff487425d58a0cbec737b35351c8f70fe1",
+      "candidate": "adcf183139eebc1933710c851caa8c01c76e00db793e95bc44dc6fa9b599392e"
+    },
+    "contentBefore": {
+      "_emdash_menu_items": "512835a8fe9bc716bb5e8a6986099323159eec9b7b3af429ff994b70feb7d36b",
+      "_emdash_menus": "3c2be307d44a2168f49575065890feede1edd8f8d7e6260a1ab13482778cecc3",
+      "_tracy_content_identity": "bdc4e95b372d20e494e0791f20ddcd674746a51d94d356fbdcd72a3d7e8e8ced",
+      "_tracy_identity_fields": "8c31f9bbe781cfcaedbfc596118ce30c0320642227afaf7535f832e31e81765e",
+      "_tracy_identity_operations": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "content_taxonomies": "b07ad5479c8d51dd1338e5d8399f0adbf276ec97c7efdb2669da7af8a3157919",
+      "ec_about": "1a884ef8cc56f8c77632c072ed9c194ab18be62b5a291472679c2d466059be11",
+      "ec_careers": "b697a9a8865a7c70219ab274a2b5a4c3683015a2db40f896b79bbf9287a30dc0",
+      "ec_contact": "a87fe379ac0fef952e08cc3df46014f66ccc95b437f9cfbf07fa177bb846e105",
+      "ec_home": "5ebcbbec93e5b13838e61dd492dd5096d900339f31415e325c15fa7e1fa0b2ba",
+      "ec_investors": "2aea9676984f8f04ea0945a43eb02a60a8e51f19ff559bc33a2ae83e3814b68b",
+      "ec_news_page": "e39ff914bdff6f7c06bc5e9334029f696540f2f1279ac0e06763c8200977e01e",
+      "ec_pages": "4de2a6d11f0320970120f4a1cbc8748984617b6b601aec1fcb73d894f0dc5bcd",
+      "ec_posts": "1cbda1d33d56927ec2b4980e8319e79f0927bae1506db2cb6dd1d7f344e6801e",
+      "ec_projects": "0591bc6ad7e5c066ddf3cd44b0c6915b9ecc66f35a83cde3487abdc3788628c3",
+      "ec_projects_page": "a65bc23d48266eccacd5f749f93a711071259716d3fa373f38e715ceec7f70e4",
+      "ec_services": "88e5d91048b3dc2e23c60fd0a2708fc0d6fbed15510712376eebc66a501704a1",
+      "ec_services_page": "d289509afa4dd4bb91b88616359f920b23ec391cfe0230282964f39954b95d78",
+      "ec_site": "9fb24112aa753efc442176fba0dc2a9249e715ad72feb381308ac447d64dd063",
+      "ec_vacancies": "0fb92f70be8c2fec072a8edbaff107662426722343624f2fe065163efe1809c9",
+      "media": "3de0325d20b310a206dd145003a1e1daed7eb1da843f368e04ff52b62b861ee7",
+      "revisions": "e48e8cabb2d410c488a3d08b0eb98598c79cf2c522c373d3ab5fe2981f1e3df2",
+      "taxonomies": "1c018712af47c26c5fe8f39d763cc7785124b18695163974a64687056bb1db09"
+    },
+    "startedAt": "2026-10-30T17:27:06.601Z"
+  },
+  "rows": [
+    {
+      "repeat": 0,
+      "task": "four-titles",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:27:06.602Z",
+      "elapsedMs": 9486.050749999999,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": "All four are in the English edition. Nothing was changed.\n\n**Pages**\n- Transactional emails — content ID `Zbe3CZ3Ht62hd_jD_pOn4he0t2u8fE693eT8ceAMy7o` — path `/kit-email`\n- Privacy — content ID `xw6-g2fnPlHH2hNgtPeTDWVQBRMZxIv-4uFclxni8vo` — path `/privacy`\n\n**Project entries** (these sit under the projects section, not as standalone pages)\n- Metalworking shop refurbishment — content ID `Z8REvI6No5ECoO4gNRTt2KYfTzA73pN3v61mwDb5tto` — path `/projects/metalworking-shop-refurbishment`\n- Zavolzhye logistics building — content ID `WQuI3jw1hkypMwKM4cs1czEq8atj6tnjfRbyeQbKQc0` — path `/projects/zavolzhye-logistics-building`",
+      "toolResultChars": 33676,
+      "modelRequests": 6,
+      "provider": [
+        {
+          "ms": 1255.2885,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 6974,
+            "completion_tokens": 70,
+            "total_tokens": 7044,
+            "prompt_tokens_details": {
+              "cached_tokens": 3712
+            },
+            "prompt_cache_hit_tokens": 3712,
+            "prompt_cache_miss_tokens": 3262
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "c47e5dfc9a296455666ba052bdde3ea19ff3440d3b9be257ebc2d45246776af0",
+          "requestId": "0279f993-3c65-47cd-a995-28fd05535c2c"
+        },
+        {
+          "ms": 1128.7414160000003,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 7124,
+            "completion_tokens": 67,
+            "total_tokens": 7191,
+            "prompt_tokens_details": {
+              "cached_tokens": 6912
+            },
+            "prompt_cache_hit_tokens": 6912,
+            "prompt_cache_miss_tokens": 212
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "0cf3343d60a9e8cd82e16849b163a414fa1d98a80eea6c5c348f1256ae6f2a2f",
+          "requestId": "996a32d1-2b17-42e7-8680-5a7276ea36ec"
+        },
+        {
+          "ms": 877.1038330000001,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 11701,
+            "completion_tokens": 72,
+            "total_tokens": 11773,
+            "prompt_tokens_details": {
+              "cached_tokens": 7168
+            },
+            "prompt_cache_hit_tokens": 7168,
+            "prompt_cache_miss_tokens": 4533
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "a64a3bd8679eea9948a1cd225bdac25f5b96708ba525429a355a28cf8e3c518d",
+          "requestId": "6095af3c-4ecb-411a-b8d7-861a31332d9d"
+        },
+        {
+          "ms": 957.6282920000003,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 16283,
+            "completion_tokens": 104,
+            "total_tokens": 16387,
+            "prompt_tokens_details": {
+              "cached_tokens": 11648
+            },
+            "prompt_cache_hit_tokens": 11648,
+            "prompt_cache_miss_tokens": 4635
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "99ad081f001890a47aade129e0d342553ae2d562d551fb5521438733fb2501b8",
+          "requestId": "dd2c9506-5514-4e24-b965-dcb5c6d3a89a"
+        },
+        {
+          "ms": 889.5872500000005,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 16461,
+            "completion_tokens": 72,
+            "total_tokens": 16533,
+            "prompt_tokens_details": {
+              "cached_tokens": 16256
+            },
+            "prompt_cache_hit_tokens": 16256,
+            "prompt_cache_miss_tokens": 205
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "59889b9b01462eb7aa4f743c682aafd94c403a02ce6755f2cf709a49745d1414",
+          "requestId": "42370de1-5b67-42fd-a9c8-a2b4bb0c443f"
+        },
+        {
+          "ms": 1527.1007500000014,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 19881,
+            "completion_tokens": 235,
+            "total_tokens": 20116,
+            "prompt_tokens_details": {
+              "cached_tokens": 16512
+            },
+            "prompt_cache_hit_tokens": 16512,
+            "prompt_cache_miss_tokens": 3369
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "10fcb6ceaeb8b12aa3f9c1b3081f41e2739d82f668767e3df8934e539d9007a2",
+          "requestId": "81f217c7-e245-426f-a2b7-2d863d027677"
+        }
+      ],
+      "calls": [
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "describe": true
+            }
+          }
+        },
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "type": "page",
+              "locale": "en"
+            }
+          }
+        },
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "type": "page",
+              "locale": "en",
+              "limit": 100
+            }
+          }
+        },
+        {
+          "name": "tracy_emdash",
+          "arguments": {
+            "tool": "content_list",
+            "arguments": {
+              "collection": "projects",
+              "locale": "en"
+            }
+          }
+        },
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "type": "project",
+              "locale": "en",
+              "limit": 100
+            }
+          }
+        }
+      ],
+      "relayRequests": 4,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "describe": true
+          },
+          "startMs": 3385.102375,
+          "ms": 14.588334000000032
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "page",
+            "locale": "en",
+            "maxBytes": 32768
+          },
+          "startMs": 4537.1435,
+          "ms": 822.8557499999997
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "page",
+            "locale": "en",
+            "limit": 100,
+            "maxBytes": 32768
+          },
+          "startMs": 6251.4275,
+          "ms": 839.451959
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "project",
+            "locale": "en",
+            "limit": 100,
+            "maxBytes": 32768
+          },
+          "startMs": 9021.178417,
+          "ms": 911.3066250000011
+        }
+      ],
+      "backendReads": 4,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "describe": true
+          },
+          "startMs": 3385.105042,
+          "ms": 14.571124999999938,
+          "status": 400,
+          "sourceCalls": 0
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "page",
+            "locale": "en",
+            "maxBytes": 32768
+          },
+          "startMs": 4537.153959,
+          "ms": 822.788708,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "page",
+            "locale": "en",
+            "limit": 100,
+            "maxBytes": 32768
+          },
+          "startMs": 6251.431584,
+          "ms": 839.4305000000004,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "project",
+            "locale": "en",
+            "limit": 100,
+            "maxBytes": 32768
+          },
+          "startMs": 9021.181875,
+          "ms": 911.2707090000004,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 6081
+    },
+    {
+      "repeat": 0,
+      "task": "four-titles",
+      "arm": "B",
+      "startedAt": "2026-10-30T17:27:16.089Z",
+      "elapsedMs": 7856.325832999999,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": "All four are in the English edition. Nothing was changed.\n\n| Page | Content ID | Path |\n|---|---|---|\n| Transactional emails | Zbe3CZ3Ht62hd_jD_pOn4he0t2u8fE693eT8ceAMy7o | /kit-email |\n| Metalworking shop refurbishment | Z8REvI6No5ECoO4gNRTt2KYfTzA73pN3v61mwDb5tto | /projects/metalworking-shop-refurbishment |\n| Privacy | xw6-g2fnPlHH2hNgtPeTDWVQBRMZxIv-4uFclxni8vo | /privacy |\n| Zavolzhye logistics building | WQuI3jw1hkypMwKM4cs1czEq8atj6tnjfRbyeQbKQc0 | /projects/zavolzhye-logistics-building |\n\nThe first is a page, the second and fourth are project entries, and Privacy is a page.",
+      "toolResultChars": 32545,
+      "modelRequests": 5,
+      "provider": [
+        {
+          "ms": 1083.5639580000006,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 6974,
+            "completion_tokens": 70,
+            "total_tokens": 7044,
+            "prompt_tokens_details": {
+              "cached_tokens": 3712
+            },
+            "prompt_cache_hit_tokens": 3712,
+            "prompt_cache_miss_tokens": 3262
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "769d157686af13c27913868c2467ef71a7b4b6413fc54ff9db4cac4e3feb54b1",
+          "requestId": "3745cf56-8a8e-4872-a5cc-83f5cfcfed60"
+        },
+        {
+          "ms": 626.8927500000009,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 7124,
+            "completion_tokens": 67,
+            "total_tokens": 7191,
+            "prompt_tokens_details": {
+              "cached_tokens": 6912
+            },
+            "prompt_cache_hit_tokens": 6912,
+            "prompt_cache_miss_tokens": 212
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "501054cc40ef757b36992b601c093dff9cb423aec2a065cb2a549b8be73322e4",
+          "requestId": "a9868efe-fb57-42ee-9f86-eaf0577c8392"
+        },
+        {
+          "ms": 1025.6359170000014,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 11701,
+            "completion_tokens": 72,
+            "total_tokens": 11773,
+            "prompt_tokens_details": {
+              "cached_tokens": 7168
+            },
+            "prompt_cache_hit_tokens": 7168,
+            "prompt_cache_miss_tokens": 4533
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "e8f12ff3f064386d26f7d6147cf2a79db529ee871a786d6c6be15d96d37ba8e6",
+          "requestId": "951e8ec5-5ae4-43dd-a816-423187e0c891"
+        },
+        {
+          "ms": 956.3779159999995,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 15810,
+            "completion_tokens": 72,
+            "total_tokens": 15882,
+            "prompt_tokens_details": {
+              "cached_tokens": 11648
+            },
+            "prompt_cache_hit_tokens": 11648,
+            "prompt_cache_miss_tokens": 4162
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "d257546e9361a0d036e82e75c38081a826303634a2a38552963dd598c71ffb61",
+          "requestId": "079453b5-73ea-4263-9ae3-46740e041ead"
+        },
+        {
+          "ms": 1391.6818329999987,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 19230,
+            "completion_tokens": 226,
+            "total_tokens": 19456,
+            "prompt_tokens_details": {
+              "cached_tokens": 15872
+            },
+            "prompt_cache_hit_tokens": 15872,
+            "prompt_cache_miss_tokens": 3358
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "94f004dcee5dcbf66fc21ff7cefc564409ef4887bedc3a63b1ca6d16486a9573",
+          "requestId": "4fb81e08-1b2a-4825-ad5a-f501beadb15d"
+        }
+      ],
+      "calls": [
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "describe": true
+            }
+          }
+        },
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "type": "page",
+              "locale": "en"
+            }
+          }
+        },
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "type": "post",
+              "locale": "en",
+              "limit": 100
+            }
+          }
+        },
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "type": "project",
+              "locale": "en",
+              "limit": 100
+            }
+          }
+        }
+      ],
+      "relayRequests": 4,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "describe": true
+          },
+          "startMs": 12686.723917,
+          "ms": 11.226000000000568
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "page",
+            "locale": "en",
+            "maxBytes": 32768
+          },
+          "startMs": 13335.20375,
+          "ms": 820.9243339999994
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "article",
+            "locale": "en",
+            "limit": 100,
+            "maxBytes": 32768
+          },
+          "startMs": 15186.465584,
+          "ms": 908.9996250000004
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "project",
+            "locale": "en",
+            "limit": 100,
+            "maxBytes": 32768
+          },
+          "startMs": 17058.152709,
+          "ms": 866.5921659999985
+        }
+      ],
+      "backendReads": 4,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "describe": true
+          },
+          "startMs": 12686.727,
+          "ms": 11.200917000000118,
+          "status": 400,
+          "sourceCalls": 0
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "page",
+            "locale": "en",
+            "maxBytes": 32768
+          },
+          "startMs": 13335.208667,
+          "ms": 820.8993329999994,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "article",
+            "locale": "en",
+            "limit": 100,
+            "maxBytes": 32768
+          },
+          "startMs": 15186.467625,
+          "ms": 908.9651670000003,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "project",
+            "locale": "en",
+            "limit": 100,
+            "maxBytes": 32768
+          },
+          "startMs": 17058.154417,
+          "ms": 866.2427919999973,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 6081
+    },
+    {
+      "repeat": 0,
+      "task": "four-titles",
+      "arm": "C",
+      "startedAt": "2026-10-30T17:27:23.947Z",
+      "elapsedMs": 22017.477917000004,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": "All four are in the English edition:\n\n- **Transactional emails** — content ID `Zbe3CZ3Ht62hd_jD_pOn4he0t2u8fE693eT8ceAMy7o`, path `/kit-email`\n- **Metalworking shop refurbishment** — content ID `Z8REvI6No5ECoO4gNRTt2KYfTzA73pN3v61mwDb5tto`, path `/projects/metalworking-shop-refurbishment`\n- **Privacy** — content ID `xw6-g2fnPlHH2hNgtPeTDWVQBRMZxIv-4uFclxni8vo`, path `/privacy`\n- **Zavolzhye logistics building** — content ID `WQuI3jw1hkypMwKM4cs1czEq8atj6tnjfRbyeQbKQc0`, path `/projects/zavolzhye-logistics-building`\n\nNothing was changed.",
+      "toolResultChars": 8030,
+      "modelRequests": 3,
+      "provider": [
+        {
+          "ms": 937.2053750000014,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 6981,
+            "completion_tokens": 98,
+            "total_tokens": 7079,
+            "prompt_tokens_details": {
+              "cached_tokens": 3712
+            },
+            "prompt_cache_hit_tokens": 3712,
+            "prompt_cache_miss_tokens": 3269
+          },
+          "effectiveToolsHash": "c91354c9a33514576f2c03804bab3dfff9ab8b24bee24e30a4f89556f1817642",
+          "promptHash": "9aba4b5435f9fa7beb3c0e50cae61346168bf9d503810e4ab8b6944225a9c974",
+          "requestId": "3deab348-b5cd-4865-acc2-92c742545fec"
+        },
+        {
+          "ms": 861.9487910000025,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 7588,
+            "completion_tokens": 67,
+            "total_tokens": 7655,
+            "prompt_tokens_details": {
+              "cached_tokens": 7040
+            },
+            "prompt_cache_hit_tokens": 7040,
+            "prompt_cache_miss_tokens": 548
+          },
+          "effectiveToolsHash": "c91354c9a33514576f2c03804bab3dfff9ab8b24bee24e30a4f89556f1817642",
+          "promptHash": "76649208daedacc9d6fda4c7b9941b94f0038110d2dc85ddce2cd824d074754c",
+          "requestId": "311cad89-2948-45aa-886b-6ff1c69d9d8c"
+        },
+        {
+          "ms": 1452.1834589999999,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 10091,
+            "completion_tokens": 218,
+            "total_tokens": 10309,
+            "prompt_tokens_details": {
+              "cached_tokens": 7552
+            },
+            "prompt_cache_hit_tokens": 7552,
+            "prompt_cache_miss_tokens": 2539
+          },
+          "effectiveToolsHash": "c91354c9a33514576f2c03804bab3dfff9ab8b24bee24e30a4f89556f1817642",
+          "promptHash": "097d9186d9d8c276e756ba60b0973965b990e2861a07726b880ce7657ff91b13",
+          "requestId": "c8424823-4e73-4b47-b503-54aa37878bcf"
+        }
+      ],
+      "calls": [
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "view": "pages",
+              "search": [
+                "Transactional emails",
+                "Metalworking shop refurbishment",
+                "Privacy",
+                "Zavolzhye logistics building"
+              ]
+            }
+          }
+        },
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "view": "pages",
+              "locale": "en"
+            }
+          }
+        }
+      ],
+      "relayRequests": 2,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages"
+          },
+          "startMs": 20408.149,
+          "ms": 17398.046667
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 38682.78125,
+          "ms": 1211.2615839999999
+        }
+      ],
+      "backendReads": 21,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "startMs": 20408.160917,
+          "ms": 957.416541999999,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo5MiwiZXhwaXJlcyI6MTc5MzM4MTU0NTk0OH0.b92sbBfAraCQw3zMCcyI9jqqVGgpy-d3zpqNzD2J_n8"
+          },
+          "startMs": 21365.628917,
+          "ms": 965.7051670000001,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxODQsImV4cGlyZXMiOjE3OTMzODE1NDU5NDh9.W7hfZsj_GNrW9D_ItGbWRILsedPfWEBnL7mpeZi9D9Q"
+          },
+          "startMs": 22331.360667,
+          "ms": 800.2924999999996,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoyNzcsImV4cGlyZXMiOjE3OTMzODE1NDU5NDh9.F-ATri8hPY9yg3ETeztrWCx7Ak_Xo_zlC1AXl8lZY5U"
+          },
+          "startMs": 23131.686167,
+          "ms": 794.2598330000001,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjozNjgsImV4cGlyZXMiOjE3OTMzODE1NDU5NDh9.nd5Xh-GmuO0lgnty5mmf3MaFIXzdxnueehtRvBV90p8"
+          },
+          "startMs": 23925.985459,
+          "ms": 805.1671249999999,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo0NTgsImV4cGlyZXMiOjE3OTMzODE1NDU5NDh9.GLV9NHm7XTq_WmDoI9fnrYLqP2qw46O9u7v_iShRnlU"
+          },
+          "startMs": 24731.199167,
+          "ms": 833.1112080000021,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo1NDksImV4cGlyZXMiOjE3OTMzODE1NDU5NDh9.7AJ15DX_vzVEOeA884yuXfNf2yMQivjknoQGWsFnYh4"
+          },
+          "startMs": 25564.359667,
+          "ms": 836.4971669999977,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo2NDEsImV4cGlyZXMiOjE3OTMzODE1NDU5NDh9.FyQILCqvOnRe2OVwZGOdjA4HQk7sT0d5mmeeZrtQnzk"
+          },
+          "startMs": 26400.874209,
+          "ms": 803.8549160000002,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo3MzMsImV4cGlyZXMiOjE3OTMzODE1NDU5NDh9.MgPpGfcso5a63OlUKwo-WCGBk0QCl8VNV7fndYb0oGI"
+          },
+          "startMs": 27204.756584,
+          "ms": 786.2224160000005,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo4MjUsImV4cGlyZXMiOjE3OTMzODE1NDU5NDh9.9M__E4dnuVHaCd2sAFMOKON_KtAX7LHYwbJaF-ThDF0"
+          },
+          "startMs": 27991.019084,
+          "ms": 807.3299580000021,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo5MTYsImV4cGlyZXMiOjE3OTMzODE1NDU5NDh9.A9TNb4-geyJw6kyTdNbhKjlVCUrZCdN9U1Ea3T11zUQ"
+          },
+          "startMs": 28798.386917,
+          "ms": 820.7127499999988,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMDA4LCJleHBpcmVzIjoxNzkzMzgxNTQ1OTQ4fQ.hjsF2H_TUAzFjMBVqXUojzUYlhOyZsQsiSeQfQ-N4_I"
+          },
+          "startMs": 29619.252625,
+          "ms": 849.2013750000006,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMDk5LCJleHBpcmVzIjoxNzkzMzgxNTQ1OTQ4fQ.1seRpa2yv582iTygCIwYZp9M4e_sDXfoo9uKFGyH718"
+          },
+          "startMs": 30468.510042,
+          "ms": 1004.0717499999992,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMTkxLCJleHBpcmVzIjoxNzkzMzgxNTQ1OTQ4fQ.Q9c42s3d_mJetdQBkghQWSLsoDiH3pxmaLz8wkw3MaE"
+          },
+          "startMs": 31472.615292,
+          "ms": 933.327833000003,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMjgzLCJleHBpcmVzIjoxNzkzMzgxNTQ1OTQ4fQ.gWNZlO0qAm8QccRlbsOq7fEKEfhGzMQ1jO1BJwsjZew"
+          },
+          "startMs": 32406.0025,
+          "ms": 831.0230420000044,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMzc0LCJleHBpcmVzIjoxNzkzMzgxNTQ1OTQ4fQ.EHUJQOgTHyQ7CdcNdY7zfabXyDu7gfFSbPpPIeM_KGw"
+          },
+          "startMs": 33237.048542,
+          "ms": 851.8107080000045,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNDY2LCJleHBpcmVzIjoxNzkzMzgxNTQ1OTQ4fQ.sWtrnk20LkZBC8GXGw9NPfUtYaAVdc5vm4Wv5C91En0"
+          },
+          "startMs": 34088.880625,
+          "ms": 870.2917090000046,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNTU4LCJleHBpcmVzIjoxNzkzMzgxNTQ1OTQ4fQ.dsweZihZ-FjFQvKwpAxEEd-ETHUDPZEtvKvfRI3qoAE"
+          },
+          "startMs": 34959.214875,
+          "ms": 855.0446250000023,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNjQ5LCJleHBpcmVzIjoxNzkzMzgxNTQ1OTQ4fQ.ho54bb8f_xArugayN8z1k4JfC4JUaE48W1nAqvuhFz4"
+          },
+          "startMs": 35814.282459,
+          "ms": 930.6415409999972,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNzQwLCJleHBpcmVzIjoxNzkzMzgxNTQ1OTQ4fQ.tdYnVHJtEhzAgKITHQPsiab8NqnXrjbT861z-NGfyHQ"
+          },
+          "startMs": 36744.937292,
+          "ms": 1041.152750000001,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 38682.803584,
+          "ms": 1211.0072910000017,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 42567
+    },
+    {
+      "repeat": 0,
+      "task": "four-titles",
+      "arm": "D",
+      "startedAt": "2026-10-30T17:27:45.967Z",
+      "elapsedMs": 23033.549708,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": "All four are in the English edition. Nothing was changed.\n\n| Page | Content ID | Path |\n|---|---|---|\n| Transactional emails | Zbe3CZ3Ht62hd_jD_pOn4he0t2u8fE693eT8ceAMy7o | /kit-email |\n| Metalworking shop refurbishment | Z8REvI6No5ECoO4gNRTt2KYfTzA73pN3v61mwDb5tto | /projects/metalworking-shop-refurbishment |\n| Privacy | xw6-g2fnPlHH2hNgtPeTDWVQBRMZxIv-4uFclxni8vo | /privacy |\n| Zavolzhye logistics building | WQuI3jw1hkypMwKM4cs1czEq8atj6tnjfRbyeQbKQc0 | /projects/zavolzhye-logistics-building |\n\nThe first is a page, the second and fourth are project entries, and Privacy is a page.",
+      "toolResultChars": 8328,
+      "modelRequests": 3,
+      "provider": [
+        {
+          "ms": 1516.9494999999952,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 6980,
+            "completion_tokens": 98,
+            "total_tokens": 7078,
+            "prompt_tokens_details": {
+              "cached_tokens": 3712
+            },
+            "prompt_cache_hit_tokens": 3712,
+            "prompt_cache_miss_tokens": 3268
+          },
+          "effectiveToolsHash": "c91354c9a33514576f2c03804bab3dfff9ab8b24bee24e30a4f89556f1817642",
+          "promptHash": "926921bcd1206cf17a182309bec447a6e6085c7838d8ce2b7779b4922e608bab",
+          "requestId": "db0dffaa-9a04-419d-af0c-e459bd656702"
+        },
+        {
+          "ms": 892.2492919999931,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 7624,
+            "completion_tokens": 67,
+            "total_tokens": 7691,
+            "prompt_tokens_details": {
+              "cached_tokens": 7040
+            },
+            "prompt_cache_hit_tokens": 7040,
+            "prompt_cache_miss_tokens": 584
+          },
+          "effectiveToolsHash": "c91354c9a33514576f2c03804bab3dfff9ab8b24bee24e30a4f89556f1817642",
+          "promptHash": "c528261f50fcc097a49f9e347c864a57182f04b8969c47cad8b21b31b60ed115",
+          "requestId": "a38624fc-77d6-4216-8fcf-b7486553b280"
+        },
+        {
+          "ms": 1582.656458999998,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 10162,
+            "completion_tokens": 226,
+            "total_tokens": 10388,
+            "prompt_tokens_details": {
+              "cached_tokens": 7680
+            },
+            "prompt_cache_hit_tokens": 7680,
+            "prompt_cache_miss_tokens": 2482
+          },
+          "effectiveToolsHash": "c91354c9a33514576f2c03804bab3dfff9ab8b24bee24e30a4f89556f1817642",
+          "promptHash": "807ef24098a3f464ede699f3731b6c3c3ca8d4379fba51887d790b3841a9164f",
+          "requestId": "9d2604fb-e48f-467a-a819-96d0f02a2ae1"
+        }
+      ],
+      "calls": [
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "view": "pages",
+              "search": [
+                "Transactional emails",
+                "Metalworking shop refurbishment",
+                "Privacy",
+                "Zavolzhye logistics building"
+              ]
+            }
+          }
+        },
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "view": "pages",
+              "locale": "en"
+            }
+          }
+        }
+      ],
+      "relayRequests": 2,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages"
+          },
+          "startMs": 43025.848209,
+          "ms": 17989.869040999998
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "view": "pages",
+            "locale": "en"
+          },
+          "startMs": 61929.454959,
+          "ms": 868.5797499999971
+        }
+      ],
+      "backendReads": 21,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "startMs": 43025.857084,
+          "ms": 896.2271659999969,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo5MiwiZXhwaXJlcyI6MTc5MzM4MTU2ODUwNX0.eRhIv8I-dEjC28zGr7eeD94J3lWv7CSeAtcWrA6DpI8"
+          },
+          "startMs": 43922.112375,
+          "ms": 928.7205840000024,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxODQsImV4cGlyZXMiOjE3OTMzODE1Njg1MDV9.ynLssHAq1_QmnBjLdiHjcFV4zNba6nuUOU7JU1j5sYE"
+          },
+          "startMs": 44850.864834,
+          "ms": 1235.1416660000032,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoyNzcsImV4cGlyZXMiOjE3OTMzODE1Njg1MDV9.2HyXRj5nr7QWwGBLkNu4ffxiaeSYiwx6Ek8WyVmhj3A"
+          },
+          "startMs": 46086.019542,
+          "ms": 869.5284580000007,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjozNjgsImV4cGlyZXMiOjE3OTMzODE1Njg1MDV9.8S449VDiTjrxGqtHNnYeCXswLlhaSD_cCT5x2FzfuhU"
+          },
+          "startMs": 46955.578042,
+          "ms": 999.8895419999972,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo0NTgsImV4cGlyZXMiOjE3OTMzODE1Njg1MDV9.nNXI8O3jQdWCdxD64l1a0rM46Idm70KIShybsP6025Q"
+          },
+          "startMs": 47955.512084,
+          "ms": 836.6939579999962,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo1NDksImV4cGlyZXMiOjE3OTMzODE1Njg1MDV9.rB1vYH5R9MaUXAWIzXDgeAI_5t02xF3714G6k_09nMk"
+          },
+          "startMs": 48792.229209,
+          "ms": 877.9754580000008,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo2NDEsImV4cGlyZXMiOjE3OTMzODE1Njg1MDV9.ZRiCrcwSmZIu0U6_ZaNebgr3t6fqkJbDuNyD4l1eEeo"
+          },
+          "startMs": 49670.237834,
+          "ms": 842.239791,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo3MzMsImV4cGlyZXMiOjE3OTMzODE1Njg1MDV9.lxaEkR9T7aJ4WPSFde--4GX1QHfQW_F80zgP2E-1pbk"
+          },
+          "startMs": 50512.502167,
+          "ms": 996.7617499999978,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo4MjUsImV4cGlyZXMiOjE3OTMzODE1Njg1MDV9.SYJWipegYy4AjjbzuX2k_guyWf1Qs3N5ssG8YLKiZnY"
+          },
+          "startMs": 51509.302334,
+          "ms": 895.3072909999973,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0Ijo5MTYsImV4cGlyZXMiOjE3OTMzODE1Njg1MDV9.AQLXf8yv__3JVOhLGuyYoq_kHMkgCdL5OFlN2-Jh9mU"
+          },
+          "startMs": 52404.648417,
+          "ms": 830.4781250000015,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMDA4LCJleHBpcmVzIjoxNzkzMzgxNTY4NTA1fQ.W0KpCYrAfuMAq_bFmuy8qaXQMGAHNzq2fI1uZSUDlbY"
+          },
+          "startMs": 53235.157334,
+          "ms": 931.7742909999943,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMDk5LCJleHBpcmVzIjoxNzkzMzgxNTY4NTA1fQ.pPR9uRecRTnj3c-XHI3R2aMHk2WwHQCCQgLpx23lS-E"
+          },
+          "startMs": 54166.956875,
+          "ms": 890.3506669999988,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMTkxLCJleHBpcmVzIjoxNzkzMzgxNTY4NTA1fQ.atQaM5GfeNbmUHl_KNbv4nCitHTlz618hOHESRIT3AU"
+          },
+          "startMs": 55057.337875,
+          "ms": 1000.8011670000051,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMjgzLCJleHBpcmVzIjoxNzkzMzgxNTY4NTA1fQ.UPTmfp5qHjpeWS8aS9Gt7KcqjMPYJICW5poAYvva4QA"
+          },
+          "startMs": 56058.161542,
+          "ms": 841.0402079999985,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxMzc0LCJleHBpcmVzIjoxNzkzMzgxNTY4NTA1fQ.oTkkhftDoiSqu3XCAs4P1Lom6XkgaspulVFFVwDew24"
+          },
+          "startMs": 56899.220917,
+          "ms": 803.6455419999984,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNDY2LCJleHBpcmVzIjoxNzkzMzgxNTY4NTA1fQ.ehuyxaLPBhi6dJMPoqnvwBhj0FCvOqvrQLwO2x2UzNI"
+          },
+          "startMs": 57702.893709,
+          "ms": 807.9316659999968,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNTU4LCJleHBpcmVzIjoxNzkzMzgxNTY4NTA1fQ.1aBF7E_ub5qD1_Bfc4NrmRn9soXEH9-2Wa92YGSDfYE"
+          },
+          "startMs": 58510.8565,
+          "ms": 830.9885839999988,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNjQ5LCJleHBpcmVzIjoxNzkzMzgxNTY4NTA1fQ.c_32vWCusjDwG4v8OODbjTRDeRSjWc-IIFbwxWEovWM"
+          },
+          "startMs": 59341.877084,
+          "ms": 845.0555000000022,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "limit": 100,
+            "cursor": "eyJmaWx0ZXJzIjp7ImlkIjpudWxsLCJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJwcmluY2lwYWwiOiJpb05pN0tGV3h1YlU3WTF4dDRaU2dhSXV6ZXhua0drbC1IRWlNMGgzbFpzIiwicmV2aXNpb24iOiJWRFpwUy0xSHJuY2NiN2xDN2VTMVJIRDhYNUFTd1oyaU5icUhEMUlKMG5ZIiwib2Zmc2V0IjoxNzQwLCJleHBpcmVzIjoxNzkzMzgxNTY4NTA1fQ.3A48cH3vj5Nm3hwZWUvxCaXCxYAMOZOfhGZ_kaV1hJM"
+          },
+          "startMs": 60186.981209,
+          "ms": 809.9456250000003,
+          "status": 200,
+          "sourceCalls": 2027
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "locale": "en",
+            "limit": 100
+          },
+          "startMs": 61929.4605,
+          "ms": 868.078333999998,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 42567
+    },
+    {
+      "repeat": 0,
+      "task": "single-title",
+      "arm": "A",
+      "startedAt": "2026-10-30T17:28:09.003Z",
+      "elapsedMs": 3798.991666999995,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": "The page titled \"Transactional emails\" is in the English edition.\n\n- Content ID: Zbe3CZ3Ht62hd_jD_pOn4he0t2u8fE693eT8ceAMy7o\n- Path: /kit-email (full address: http://127.0.0.1:54150/kit-email)\n\nIt's published, and I haven't changed anything.",
+      "toolResultChars": 12352,
+      "modelRequests": 3,
+      "provider": [
+        {
+          "ms": 832.1066659999997,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 6953,
+            "completion_tokens": 69,
+            "total_tokens": 7022,
+            "prompt_tokens_details": {
+              "cached_tokens": 3712
+            },
+            "prompt_cache_hit_tokens": 3712,
+            "prompt_cache_miss_tokens": 3241
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "9a76580f1ff81cd644e657c9c9e88d491b5b47d5bfd54cf8756c90a1cfd2a64b",
+          "requestId": "ad23a8ba-4ce8-4dba-b4d5-6f1fdc400996"
+        },
+        {
+          "ms": 831.192916,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 7102,
+            "completion_tokens": 67,
+            "total_tokens": 7169,
+            "prompt_tokens_details": {
+              "cached_tokens": 6912
+            },
+            "prompt_cache_hit_tokens": 6912,
+            "prompt_cache_miss_tokens": 190
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "64296f8e295ba69d381014b075f02e20db43e1f0f73ceea1edb838b8789ffb8e",
+          "requestId": "5d364971-0435-422a-8f14-554e5035e396"
+        },
+        {
+          "ms": 895.1647079999966,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 11679,
+            "completion_tokens": 88,
+            "total_tokens": 11767,
+            "prompt_tokens_details": {
+              "cached_tokens": 7168
+            },
+            "prompt_cache_hit_tokens": 7168,
+            "prompt_cache_miss_tokens": 4511
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "7c714ce258cce7da4962c976b022299a35335b6c98a0b61cca3851fcbc7abe3d",
+          "requestId": "2b4042a6-af65-493c-90a7-7942836fd58c"
+        }
+      ],
+      "calls": [
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "describe": true
+            }
+          }
+        },
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "type": "page",
+              "locale": "en"
+            }
+          }
+        }
+      ],
+      "relayRequests": 2,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "describe": true
+          },
+          "startMs": 65363.464417,
+          "ms": 23.277791999993497
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "page",
+            "locale": "en",
+            "maxBytes": 32768
+          },
+          "startMs": 66225.269334,
+          "ms": 1057.4236250000104
+        }
+      ],
+      "backendReads": 2,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "describe": true
+          },
+          "startMs": 65363.468167,
+          "ms": 23.228416999998444,
+          "status": 400,
+          "sourceCalls": 0
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "page",
+            "locale": "en",
+            "maxBytes": 32768
+          },
+          "startMs": 66225.275709,
+          "ms": 1057.364207999999,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    },
+    {
+      "repeat": 0,
+      "task": "single-title",
+      "arm": "B",
+      "startedAt": "2026-10-30T17:28:12.805Z",
+      "elapsedMs": 3751.5891249999986,
+      "verified": true,
+      "evidenceValid": true,
+      "finalValid": true,
+      "failure": null,
+      "final": "The page titled \"Transactional emails\" is in the English edition:\n\n- Content ID: Zbe3CZ3Ht62hd_jD_pOn4he0t2u8fE693eT8ceAMy7o\n- Path: /kit-email\n\nI only read the page list; nothing was changed.",
+      "toolResultChars": 12352,
+      "modelRequests": 3,
+      "provider": [
+        {
+          "ms": 904.6124589999963,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 6954,
+            "completion_tokens": 69,
+            "total_tokens": 7023,
+            "prompt_tokens_details": {
+              "cached_tokens": 3712
+            },
+            "prompt_cache_hit_tokens": 3712,
+            "prompt_cache_miss_tokens": 3242
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "f5dab5a1a185acb1f5fbc5fa0ca814635ba0e4288ba0c855786c0753075fac4a",
+          "requestId": "7e61f200-db1d-449a-9f05-58b18e3bc5fc"
+        },
+        {
+          "ms": 822.5072500000097,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 7103,
+            "completion_tokens": 67,
+            "total_tokens": 7170,
+            "prompt_tokens_details": {
+              "cached_tokens": 6912
+            },
+            "prompt_cache_hit_tokens": 6912,
+            "prompt_cache_miss_tokens": 191
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "21a59641efc2bc49055c597affb818c1d32661344e5a2b767489cf236064d35f",
+          "requestId": "60c01ee0-e494-41d5-ae72-90308660e34a"
+        },
+        {
+          "ms": 945.7635420000006,
+          "status": 200,
+          "model": "deepseek-flash",
+          "usage": {
+            "prompt_tokens": 11680,
+            "completion_tokens": 68,
+            "total_tokens": 11748,
+            "prompt_tokens_details": {
+              "cached_tokens": 7168
+            },
+            "prompt_cache_hit_tokens": 7168,
+            "prompt_cache_miss_tokens": 4512
+          },
+          "effectiveToolsHash": "99edb1375ebf884fbaec2cf17c62b2644dfe2c0556209b006af68f3a54d64c42",
+          "promptHash": "9b294015faa4dc188c43e1ad08a68648dd976c1a2ae7041ce9caa459b0e0dfc3",
+          "requestId": "a37e05f8-9210-4a63-937e-1a732f1d1167"
+        }
+      ],
+      "calls": [
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "describe": true
+            }
+          }
+        },
+        {
+          "name": "tracy_site",
+          "arguments": {
+            "action": "content.read",
+            "params": {
+              "type": "page",
+              "locale": "en"
+            }
+          }
+        }
+      ],
+      "relayRequests": 2,
+      "relays": [
+        {
+          "action": "content.read",
+          "params": {
+            "describe": true
+          },
+          "startMs": 69250.671375,
+          "ms": 9.90625
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "page",
+            "locale": "en",
+            "maxBytes": 32768
+          },
+          "startMs": 70088.854625,
+          "ms": 894.8969589999906
+        }
+      ],
+      "backendReads": 2,
+      "reads": [
+        {
+          "action": "content.read",
+          "params": {
+            "describe": true
+          },
+          "startMs": 69250.67325,
+          "ms": 9.878541999991285,
+          "status": 400,
+          "sourceCalls": 0
+        },
+        {
+          "action": "content.read",
+          "params": {
+            "type": "page",
+            "locale": "en",
+            "maxBytes": 32768
+          },
+          "startMs": 70088.857959,
+          "ms": 894.869749999998,
+          "status": 200,
+          "sourceCalls": 2027
+        }
+      ],
+      "nativeSourceCalls": 2027
+    }
+  ]
+}

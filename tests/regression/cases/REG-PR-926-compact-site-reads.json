@@ -1,7 +1,7 @@
 {
   "id": "REG-PR-926-compact-site-reads",
   "kind": "fix",
-  "title": "Site reads answer compact by default — page list in the working language as rows, describe without blockKinds, one shared field next, WordPress bodies over 4,000 characters as outlines, extension.list 20 rows with search — and full:true answers as before",
+  "title": "Site reads answer compact by default \u2014 page list in the working language as rows, describe without blockKinds, one shared field next, WordPress bodies over 4,000 characters as outlines, extension.list 20 rows with search \u2014 and full:true answers as before",
   "pr": 926,
   "area": "site-tools/site-call",
   "cms": ["any"],
@@ -9,23 +9,32 @@
   "flaky_model": false,
   "steps": [
     "S1: No stand, no browser, no model. Work in the TCH checkout at the commit under test, with its dependencies installed (pnpm install) and the deepseek-harness submodule initialised.",
-    "S2: From the checkout root run: node --test packages/tools/tracy-site-tools/test/read-compact.test.mjs — keep its last 12 lines and its exit code.",
-    "S3: Run: node --test packages/tools/tracy-site-tools/test/describe-compact.test.mjs packages/tools/tracy-site-tools/test/site-call.test.mjs packages/tools/tracy-site-tools/test/content-read-grammar.test.mjs — keep its last 12 lines and its exit code.",
-    "S4: Run: grep -c 'blockKindsOmitted' packages/tools/tracy-site-tools/lib/index.js; grep -c 'var BODY_SHOWN_MAX = 4e3' packages/tools/tracy-site-tools/lib/index.js; grep -c 'function takeViewParams' packages/tools/tracy-site-tools/lib/index.js — keep the three numbers.",
-    "S5: Read the 'ℹ pass' and 'ℹ fail' lines of S2 and S3. A command that cannot start (missing module) is BLOCKED, not FAIL."
+    "S2: From the checkout root run: node --test packages/tools/tracy-site-tools/test/read-compact.test.mjs \u2014 keep its last 12 lines and its exit code.",
+    "S3: Run: node --test packages/tools/tracy-site-tools/test/describe-compact.test.mjs packages/tools/tracy-site-tools/test/site-call.test.mjs packages/tools/tracy-site-tools/test/content-read-grammar.test.mjs \u2014 keep its last 12 lines and its exit code.",
+    "S4: Run: grep -c 'blockKindsOmitted' packages/tools/tracy-site-tools/lib/index.js; grep -c 'var BODY_SHOWN_MAX = 4e3' packages/tools/tracy-site-tools/lib/index.js; grep -c 'function takeViewParams' packages/tools/tracy-site-tools/lib/index.js \u2014 keep the three numbers.",
+    "S5: Read the '\u2139 pass' and '\u2139 fail' lines of S2 and S3. A command that cannot start (missing module) is BLOCKED, not FAIL.",
+    "S6: Run node --test packages/tools/tracy-site-tools/test/page-search-harness.test.mjs with the built vendored dsh dependencies; retain the summary and exit code.",
+    "S7: Run node --test packages/tools/tracy-site-tools/test/page-read-flights.test.mjs; retain the summary and exit code.",
+    "S8: Run node --test apps/tracy-web/test/page-inventory.test.mjs apps/tracy-web/test/content-pages.test.mjs apps/tracy-web/test/content-versions.test.mjs; retain summary and exit code."
   ],
   "expect": [
-    "S2: pass 14, fail 0. Through runSiteCall with neutral relay-shaped fixtures: a Joomla page list in three languages shows only the working language (facts.siteLanguage when defaultLocale is null) and the every-language pages as [title, path, id, record] rows, counts the others in otherLanguages, and is under 20% of the relayed size; a describe has no blockKinds (blockKindsOmitted names blockKinds:true) and keeps where whole; a page read has no per-field next, a fieldNext template that gives every field's next back, constraints of maxCharacters only, no blocks without fields, and is under 55% of the relayed size; a WordPress body of 6k is an outline; extension.list shows 20 of 240 unique rows with byType and reads search/type/offset/limit itself; with full:true every one of these is the answer as before, and full, blockKinds, search, type, offset and limit are never relayed. Before the fix: 13 of the 14 fail.",
+    "S2: pass 23, fail 0. Through runSiteCall with neutral relay-shaped fixtures: a Joomla page list in three languages shows only the working language (facts.siteLanguage when defaultLocale is null) and the every-language pages as [title, path, id, record] rows, counts the others in otherLanguages, and is under 20% of the relayed size; a describe has no blockKinds (blockKindsOmitted names blockKinds:true) and keeps where whole; a page read has no per-field next, a fieldNext template that gives every field's next back, constraints of maxCharacters only, no blocks without fields, and is under 55% of the relayed size; a WordPress body of 6k is an outline; extension.list shows 20 of 240 unique rows with byType and reads search/type/offset/limit itself; with full:true every one of these is the answer as before, and full, blockKinds, search, type, offset and limit are never relayed. Before the fix: 13 of the 14 fail.",
     "S3: fail 0: the describe's lossless compaction, the WordPress body-by-blocks rules and the content.read grammar still hold.",
     "S4: 1, 1, 1: the committed lib/index.js carries the change (RULE #3: the image copies lib/ as it is).",
-    "Every command exits 0."
+    "Every command exits 0.",
+    "Page-map results label the Content API ID namespace without changing the opaque id, the native locator or full:true recovery. Page query: searching an omitted title returns the exact id in under one tenth of the unfiltered result; continuation visits every selected-language row exactly once; upstream truncation remains explicit; full:true preserves recovery; titles in all eight interface languages remain searchable. WordPress native page listings retain their numeric record IDs, label their namespace and give the exact Content API lookup without adding a hidden read; ambiguous matches and empty results remain intact. A bounded OR title query returns the union once with complete continuation in one relay call; invalid batches fail before the relay.",
+    "S6: pass 12, fail 0, cancelled 0. The real AgentLoop uses the shipped bundle and platform-scoped tracy_site description on Joomla, EmDash and WordPress; OR results preserve exact IDs; independent calls, invalid-query refusal, seat refusal, stable schemas, persisted results and scheduler classifications hold. Overlapping same-scope searches share transport with independent results; different locales/known URLs stay separate, and settled searches refresh.",
+    "S7: pass 4, fail 0, cancelled 0, skipped 0. Pending reads have independent answer copies; different scopes, failures and excess work preserve ordinary fresh reads.",
+    "S8: pass 13, fail 0. Inventory hits require fresh authenticated source reads and unchanged complete snapshots. Authority scopes, expiry, capacity, refusal, null replies, capped/mixed walks and mutable consumer copies cannot replay an unsafe inventory. Joomla requires an inventory fingerprint that includes addresses; older adapters walk fresh. URL index preserves query-dependent ambiguity and Unicode path matching. Changes-since never reuses cached dynamic rows."
   ],
   "selectors": {
     "module": "packages/tools/tracy-site-tools/src/host/read-compact.mjs (takeViewParams, compactPageList, narrowDescribe, compactContents, pageListRows)",
-    "wiring": "packages/tools/tracy-site-tools/src/host/site-call.mjs runSiteCall — takeViewParams before normalizeCall; compactPageList before contentReadNext; narrowDescribe/compactContents/pageListRows after compactDescribe; BODY_SHOWN_MAX",
+    "wiring": "packages/tools/tracy-site-tools/src/host/site-call.mjs runSiteCall \u2014 takeViewParams before normalizeCall; compactPageList before contentReadNext; narrowDescribe/compactContents/pageListRows after compactDescribe; BODY_SHOWN_MAX",
     "test": "packages/tools/tracy-site-tools/test/read-compact.test.mjs"
   },
   "evidence": "Flow D of the Apply audit, 05/10/2026 (55 runs on benchwpapply02, benchemdashapply01, benchjoomlaapply01): site-read answers were 15.6% of all prompt tokens. Recorded answers re-run through the new code: Joomla page list 23,455 -> ~2,500 characters, Joomla page read 27,584 -> 14,802, WordPress describe 23,776 -> 11,026, EmDash describe 19,488 -> 3,218, extension.list 49,932 -> 3,024; all site reads 556k -> 192k characters (-65%).",
   "fence": "Mechanism only: what the model is shown of a site read, and that full:true and the replace job's reads are unchanged. Not covered: whether a model then needs one more call to reach what was left out (a bench measure, flaky by nature).",
-  "run": { "cmd": ["node", "tests/regression/scripts/REG-PR-926-compact-site-reads.mjs"] }
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-926-compact-site-reads.mjs"]
+  }
 }

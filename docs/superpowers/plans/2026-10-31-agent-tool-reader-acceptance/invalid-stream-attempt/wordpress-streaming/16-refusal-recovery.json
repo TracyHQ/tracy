@@ -1,0 +1,64 @@
+{
+  "repeat": 1,
+  "task": "refusal-recovery",
+  "verified": false,
+  "failure": null,
+  "ms": 2246.9225829999996,
+  "idValid": false,
+  "noWrites": true,
+  "continuation": true,
+  "recovery": true,
+  "language": true,
+  "seededRefusal": {
+    "action": "content.read",
+    "params": {
+      "type": "not-a-content-type"
+    }
+  },
+  "calls": [
+    {
+      "name": "tracy_site",
+      "arguments": {
+        "action": "content.read",
+        "params": {
+          "view": "pages",
+          "search": "Inventory 399"
+        }
+      }
+    }
+  ],
+  "provider": [
+    {
+      "step": 2,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7383,
+        "completion_tokens": 69,
+        "total_tokens": 7452,
+        "prompt_tokens_details": {
+          "cached_tokens": 3968
+        },
+        "prompt_cache_hit_tokens": 3968,
+        "prompt_cache_miss_tokens": 3415
+      },
+      "firstChunkMs": 207.36987500000032,
+      "ms": 1001.5007909999986,
+      "promptHash": "eb5eef68b8454ee6f3e274bf42f461ffe0f9b52319f25c0e3829056547af0165",
+      "finalText": null
+    },
+    {
+      "step": 3,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": null,
+      "firstChunkMs": 276.6749170000003,
+      "ms": null,
+      "promptHash": "0171c062139e9bfbed6cccabca31c8f14e09f710b41bed296f25403e874cc6db"
+    }
+  ],
+  "final": "",
+  "toolResults": "[{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"seed-refusal\"},\"toolCallId\":\"seed-refusal\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"ok\\\":false,\\\"httpStatus\\\":400,\\\"error\\\":{\\\"code\\\":\\\"CONTENT_BAD_QUERY\\\",\\\"message\\\":\\\"type must be one of page, article, service, project, shared, generic (blog posts are \\\\\\\"article\\\\\\\"; template parts, menus and the site identity are \\\\\\\"shared\\\\\\\")\\\"},\\\"next\\\":\\\"Fix the one field its message names (type, limit 1–100, a locale from site.locales, id alone) and retry once; ids are content.read's own, not CMS ids.\\\"}\"}],\"isError\":false,\"id\":\"edbf1b51-c912-43c2-aeb5-b9f3e50d5cd6\"},{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"seed-refusal\"},\"toolCallId\":\"seed-refusal\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"ok\\\":false,\\\"httpStatus\\\":400,\\\"error\\\":{\\\"code\\\":\\\"CONTENT_BAD_QUERY\\\",\\\"message\\\":\\\"type must be one of page, article, service, project, shared, generic (blog posts are \\\\\\\"article\\\\\\\"; template parts, menus and the site identity are \\\\\\\"shared\\\\\\\")\\\"},\\\"next\\\":\\\"Fix the one field its message names (type, limit 1–100, a locale from site.locales, id alone) and retry once; ids are content.read's own, not CMS ids.\\\"}\"}],\"isError\":false,\"id\":\"edbf1b51-c912-43c2-aeb5-b9f3e50d5cd6\"},{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_EGHCtl59RblvhE6dKbQR3110\"},\"toolCallId\":\"call_00_EGHCtl59RblvhE6dKbQR3110\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"schemaVersion\\\":\\\"tracy-content-pages/v1\\\",\\\"site\\\":{\\\"id\\\":\\\"sa2debb5755c0809935a9e83a98\\\",\\\"name\\\":\\\"Tool benchmark\\\",\\\"url\\\":\\\"http://127.0.0.1:59939\\\",\\\"defaultLocale\\\":\\\"en-US\\\",\\\"locales\\\":[\\\"en-US\\\"]},\\\"truncated\\\":false,\\\"version\\\":\\\"cv1.9e0360ff72e9265bd0287d49134e3e1c\\\",\\\"later\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"changedSince\\\":\\\"cv1.9e0360ff72e9265bd0287d49134e3e1c\\\"},\\\"why\\\":\\\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\\\"},\\\"columns\\\":[\\\"title\\\",\\\"path\\\",\\\"id\\\",\\\"record\\\"],\\\"pages\\\":[[\\\"Inventory 399: Reference material for the independent tool calling benchmark\\\",\\\"/?page_id=404\\\",\\\"c33cbef4f01021095c8c249fda1\\\",\\\"post:404\\\"]],\\\"pagination\\\":{\\\"offset\\\":0,\\\"returned\\\":1,\\\"total\\\":1,\\\"totalIsComplete\\\":true,\\\"nextOffset\\\":null},\\\"idNamespace\\\":\\\"content-api\\\",\\\"idMeaning\\\":\\\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\\\"}\"}],\"isError\":false,\"id\":\"768cc294-8db5-409c-92c3-828c0683a39c\"}]",
+  "backendReads": 1,
+  "nativeSourceCalls": 0
+}

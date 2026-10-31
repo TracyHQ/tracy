@@ -1,0 +1,24 @@
+{
+  "platform": "wordpress",
+  "producer": "real streamed DeepSeek inference, shipped Tracy tools, vendored AgentLoop, authenticated product relay, isolated database, actual CMS HTTP",
+  "runs": [
+    "00-exact-title.json",
+    "01-known-url.json",
+    "02-missing.json",
+    "03-ambiguity.json",
+    "04-continuation.json",
+    "05-details.json",
+    "06-id-recovery.json",
+    "07-refusal-recovery.json",
+    "08-language.json",
+    "09-exact-title.json",
+    "10-known-url.json",
+    "11-missing.json",
+    "12-ambiguity.json",
+    "13-continuation.json",
+    "14-details.json",
+    "15-id-recovery.json",
+    "16-refusal-recovery.json",
+    "17-language.json"
+  ]
+}

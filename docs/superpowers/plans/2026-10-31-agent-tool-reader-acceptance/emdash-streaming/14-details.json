@@ -1,0 +1,129 @@
+{
+  "repeat": 1,
+  "task": "details",
+  "verified": true,
+  "failure": null,
+  "ms": 5877.621416999988,
+  "idValid": true,
+  "noWrites": true,
+  "continuation": true,
+  "recovery": true,
+  "language": true,
+  "seededRefusal": null,
+  "calls": [
+    {
+      "name": "tracy_site",
+      "arguments": {
+        "action": "content.read",
+        "params": {
+          "view": "pages",
+          "search": "General contracting",
+          "locale": "en"
+        }
+      }
+    },
+    {
+      "name": "tracy_emdash",
+      "arguments": {
+        "tool": "content_get",
+        "arguments": {
+          "collection": "service",
+          "id": "zzTHmozs7bBPGAEq0RojMa3NLJwaOHs7C-ZYm88WNSQ",
+          "locale": "en"
+        }
+      }
+    },
+    {
+      "name": "tracy_site",
+      "arguments": {
+        "action": "content.read",
+        "params": {
+          "id": "zzTHmozs7bBPGAEq0RojMa3NLJwaOHs7C-ZYm88WNSQ",
+          "locale": "en"
+        }
+      }
+    }
+  ],
+  "provider": [
+    {
+      "step": 1,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 6969,
+        "completion_tokens": 89,
+        "total_tokens": 7058,
+        "prompt_tokens_details": {
+          "cached_tokens": 3712
+        },
+        "prompt_cache_hit_tokens": 3712,
+        "prompt_cache_miss_tokens": 3257
+      },
+      "firstChunkMs": 289.04595800000243,
+      "ms": 892.3593330000003,
+      "promptHash": "43860271847a8736b8516b782b4eb825bd123b8f94177c07859caa0c2b6962c2",
+      "finalText": null
+    },
+    {
+      "step": 2,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7501,
+        "completion_tokens": 100,
+        "total_tokens": 7601,
+        "prompt_tokens_details": {
+          "cached_tokens": 7040
+        },
+        "prompt_cache_hit_tokens": 7040,
+        "prompt_cache_miss_tokens": 461
+      },
+      "firstChunkMs": 255.37383400001272,
+      "ms": 1207.9365420000104,
+      "promptHash": "4beac920a2be0478e95e48c2b67aecd493b684eee2917ea096c73e97663af1bc",
+      "finalText": null
+    },
+    {
+      "step": 3,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7675,
+        "completion_tokens": 93,
+        "total_tokens": 7768,
+        "prompt_tokens_details": {
+          "cached_tokens": 7424
+        },
+        "prompt_cache_hit_tokens": 7424,
+        "prompt_cache_miss_tokens": 251
+      },
+      "firstChunkMs": 269.2129589999968,
+      "ms": 878.8030419999996,
+      "promptHash": "091f295f58c64d31944934fb64a14661f5af8e6f1491fa16b635edac3d6116e2",
+      "finalText": null
+    },
+    {
+      "step": 4,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 11115,
+        "completion_tokens": 188,
+        "total_tokens": 11303,
+        "prompt_tokens_details": {
+          "cached_tokens": 7680
+        },
+        "prompt_cache_hit_tokens": 7680,
+        "prompt_cache_miss_tokens": 3435
+      },
+      "firstChunkMs": 285.79829200000677,
+      "ms": 1710.6703340000095,
+      "promptHash": "0c67cb9a5001b9a9ead835b0e0966691ee03d932aa4343859d4ca2d9282fee03",
+      "finalText": "The page is \"General contracting\" at /services/general-contracting, and its Content API ID is `zzTHmozs7bBPGAEq0RojMa3NLJwaOHs7C-ZYm88WNSQ`. I requested that exact ID, and here is what it holds in the English edition:\n\n**Title:** General contracting\n\n**Description:** One contract for the whole facility: design, structure, envelope, services, external works and handover. We hold the schedule and carry responsibility for the result end to end.\n\n**Timeline:** Timeline: 10–18 months for a 20–60k m² facility\n\n**Includes** (four items):\n- Single schedule and budget\n- Subcontractor management\n- As-built documentation\n- Final acceptance\n\nIt is published, has no summary, no tags and no pictures, and it is linked to translations in the site's other languages."
+    }
+  ],
+  "final": "The page is \"General contracting\" at /services/general-contracting, and its Content API ID is `zzTHmozs7bBPGAEq0RojMa3NLJwaOHs7C-ZYm88WNSQ`. I requested that exact ID, and here is what it holds in the English edition:\n\n**Title:** General contracting\n\n**Description:** One contract for the whole facility: design, structure, envelope, services, external works and handover. We hold the schedule and carry responsibility for the result end to end.\n\n**Timeline:** Timeline: 10–18 months for a 20–60k m² facility\n\n**Includes** (four items):\n- Single schedule and budget\n- Subcontractor management\n- As-built documentation\n- Final acceptance\n\nIt is published, has no summary, no tags and no pictures, and it is linked to translations in the site's other languages.",
+  "toolResults": "[{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_GrHdw7ziNTBbsaqxnVq13899\"},\"toolCallId\":\"call_00_GrHdw7ziNTBbsaqxnVq13899\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"schemaVersion\\\":\\\"tracy-content-pages/v1\\\",\\\"site\\\":{\\\"id\\\":\\\"GHrPxw-5KRvBykx0dppe3U1WSEJbE9jGmmuLSY1PUtU\\\",\\\"name\\\":null,\\\"url\\\":\\\"http://127.0.0.1:60619\\\",\\\"defaultLocale\\\":\\\"en\\\",\\\"locales\\\":[\\\"en\\\",\\\"af\\\",\\\"be\\\",\\\"bg\\\",\\\"ca\\\",\\\"cs\\\",\\\"cy\\\",\\\"da\\\",\\\"de\\\",\\\"el\\\",\\\"es\\\",\\\"et\\\",\\\"fi\\\",\\\"fr\\\",\\\"ga\\\",\\\"hr\\\",\\\"hu\\\",\\\"it\\\",\\\"ja\\\",\\\"ka\\\",\\\"lo\\\",\\\"lt\\\",\\\"lv\\\",\\\"ms\\\",\\\"nb\\\",\\\"nl\\\",\\\"pl\\\",\\\"pt\\\",\\\"ro\\\",\\\"ru\\\",\\\"sk\\\",\\\"sl\\\",\\\"sr\\\",\\\"sv\\\",\\\"ta\\\",\\\"th\\\",\\\"tr\\\",\\\"uk\\\",\\\"vi\\\",\\\"zh\\\"]},\\\"truncated\\\":false,\\\"version\\\":\\\"cv1.6d949077a7062e3bed9e3250a0b37c51\\\",\\\"later\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"changedSince\\\":\\\"cv1.6d949077a7062e3bed9e3250a0b37c51\\\",\\\"locale\\\":\\\"en\\\"},\\\"why\\\":\\\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\\\"},\\\"columns\\\":[\\\"title\\\",\\\"path\\\",\\\"id\\\",\\\"record\\\",\\\"type\\\"],\\\"pages\\\":[[\\\"Full-cycle general contracting, or single stages\\\",\\\"/services\\\",\\\"y0Xw6t5AqKA5UtL25SBiJ9-guO-KBUavGz54lhJ0d4s\\\",null,\\\"page\\\"],[\\\"General contracting\\\",\\\"/services/general-contracting\\\",\\\"zzTHmozs7bBPGAEq0RojMa3NLJwaOHs7C-ZYm88WNSQ\\\",null,\\\"service\\\"]],\\\"pagination\\\":{\\\"offset\\\":0,\\\"returned\\\":2,\\\"total\\\":2,\\\"totalIsComplete\\\":true,\\\"nextOffset\\\":null},\\\"idNamespace\\\":\\\"content-api\\\",\\\"idMeaning\\\":\\\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\\\"}\"}],\"isError\":false,\"id\":\"c96d895a-6ba2-4a61-bd6c-e255aab6d414\"},{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_GrHdw7ziNTBbsaqxnVq13899\"},\"toolCallId\":\"call_00_GrHdw7ziNTBbsaqxnVq13899\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"schemaVersion\\\":\\\"tracy-content-pages/v1\\\",\\\"site\\\":{\\\"id\\\":\\\"GHrPxw-5KRvBykx0dppe3U1WSEJbE9jGmmuLSY1PUtU\\\",\\\"name\\\":null,\\\"url\\\":\\\"http://127.0.0.1:60619\\\",\\\"defaultLocale\\\":\\\"en\\\",\\\"locales\\\":[\\\"en\\\",\\\"af\\\",\\\"be\\\",\\\"bg\\\",\\\"ca\\\",\\\"cs\\\",\\\"cy\\\",\\\"da\\\",\\\"de\\\",\\\"el\\\",\\\"es\\\",\\\"et\\\",\\\"fi\\\",\\\"fr\\\",\\\"ga\\\",\\\"hr\\\",\\\"hu\\\",\\\"it\\\",\\\"ja\\\",\\\"ka\\\",\\\"lo\\\",\\\"lt\\\",\\\"lv\\\",\\\"ms\\\",\\\"nb\\\",\\\"nl\\\",\\\"pl\\\",\\\"pt\\\",\\\"ro\\\",\\\"ru\\\",\\\"sk\\\",\\\"sl\\\",\\\"sr\\\",\\\"sv\\\",\\\"ta\\\",\\\"th\\\",\\\"tr\\\",\\\"uk\\\",\\\"vi\\\",\\\"zh\\\"]},\\\"truncated\\\":false,\\\"version\\\":\\\"cv1.6d949077a7062e3bed9e3250a0b37c51\\\",\\\"later\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"changedSince\\\":\\\"cv1.6d949077a7062e3bed9e3250a0b37c51\\\",\\\"locale\\\":\\\"en\\\"},\\\"why\\\":\\\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\\\"},\\\"columns\\\":[\\\"title\\\",\\\"path\\\",\\\"id\\\",\\\"record\\\",\\\"type\\\"],\\\"pages\\\":[[\\\"Full-cycle general contracting, or single stages\\\",\\\"/services\\\",\\\"y0Xw6t5AqKA5UtL25SBiJ9-guO-KBUavGz54lhJ0d4s\\\",null,\\\"page\\\"],[\\\"General contracting\\\",\\\"/services/general-contracting\\\",\\\"zzTHmozs7bBPGAEq0RojMa3NLJwaOHs7C-ZYm88WNSQ\\\",null,\\\"service\\\"]],\\\"pagination\\\":{\\\"offset\\\":0,\\\"returned\\\":2,\\\"total\\\":2,\\\"totalIsComplete\\\":true,\\\"nextOffset\\\":null},\\\"idNamespace\\\":\\\"content-api\\\",\\\"idMeaning\\\":\\\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\\\"}\"}],\"isError\":false,\"id\":\"c96d895a-6ba2-4a61-bd6c-e255aab6d414\"},{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_HLxoUX6NvI9T94ZPm2K52020\"},\"toolCallId\":\"call_00_HLxoUX6NvI9T94ZPm2K52020\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"ok\\\":false,\\\"code\\\":\\\"NOT_EMDASH\\\",\\\"error\\\":\\\"owned does not run EmDash (no template/artifact.json naming it). For Joomla or WordPress use tracy_site.\\\",\\\"next\\\":\\\"This site does not run EmDash: its content door is tracy_site.\\\"}\"}],\"isError\":false,\"id\":\"661b75c8-015b-4102-ac60-d04414e561ec\"},{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_GrHdw7ziNTBbsaqxnVq13899\"},\"toolCallId\":\"call_00_GrHdw7ziNTBbsaqxnVq13899\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"schemaVersion\\\":\\\"tracy-content-pages/v1\\\",\\\"site\\\":{\\\"id\\\":\\\"GHrPxw-5KRvBykx0dppe3U1WSEJbE9jGmmuLSY1PUtU\\\",\\\"name\\\":null,\\\"url\\\":\\\"http://127.0.0.1:60619\\\",\\\"defaultLocale\\\":\\\"en\\\",\\\"locales\\\":[\\\"en\\\",\\\"af\\\",\\\"be\\\",\\\"bg\\\",\\\"ca\\\",\\\"cs\\\",\\\"cy\\\",\\\"da\\\",\\\"de\\\",\\\"el\\\",\\\"es\\\",\\\"et\\\",\\\"fi\\\",\\\"fr\\\",\\\"ga\\\",\\\"hr\\\",\\\"hu\\\",\\\"it\\\",\\\"ja\\\",\\\"ka\\\",\\\"lo\\\",\\\"lt\\\",\\\"lv\\\",\\\"ms\\\",\\\"nb\\\",\\\"nl\\\",\\\"pl\\\",\\\"pt\\\",\\\"ro\\\",\\\"ru\\\",\\\"sk\\\",\\\"sl\\\",\\\"sr\\\",\\\"sv\\\",\\\"ta\\\",\\\"th\\\",\\\"tr\\\",\\\"uk\\\",\\\"vi\\\",\\\"zh\\\"]},\\\"truncated\\\":false,\\\"version\\\":\\\"cv1.6d949077a7062e3bed9e3250a0b37c51\\\",\\\"later\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"changedSince\\\":\\\"cv1.6d949077a7062e3bed9e3250a0b37c51\\\",\\\"locale\\\":\\\"en\\\"},\\\"why\\\":\\\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\\\"},\\\"columns\\\":[\\\"title\\\",\\\"path\\\",\\\"id\\\",\\\"record\\\",\\\"type\\\"],\\\"pages\\\":[[\\\"Full-cycle general contracting, or single stages\\\",\\\"/services\\\",\\\"y0Xw6t5AqKA5UtL25SBiJ9-guO-KBUavGz54lhJ0d4s\\\",null,\\\"page\\\"],[\\\"General contracting\\\",\\\"/services/general-contracting\\\",\\\"zzTHmozs7bBPGAEq0RojMa3NLJwaOHs7C-ZYm88WNSQ\\\",null,\\\"service\\\"]],\\\"pagination\\\":{\\\"offset\\\":0,\\\"returned\\\":2,\\\"total\\\":2,\\\"totalIsComplete\\\":true,\\\"nextOffset\\\":null},\\\"idNamespace\\\":\\\"content-api\\\",\\\"idMeaning\\\":\\\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\\\"}\"}],\"isError\":false,\"id\":\"c96d895a-6ba2-4a61-bd6c-e255aab6d414\"},{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_HLxoUX6NvI9T94ZPm2K52020\"},\"toolCallId\":\"call_00_HLxoUX6NvI9T94ZPm2K52020\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"ok\\\":false,\\\"code\\\":\\\"NOT_EMDASH\\\",\\\"error\\\":\\\"owned does not run EmDash (no template/artifact.json naming it). For Joomla or WordPress use tracy_site.\\\",\\\"next\\\":\\\"This site does not run EmDash: its content door is tracy_site.\\\"}\"}],\"isError\":false,\"id\":\"661b75c8-015b-4102-ac60-d04414e561ec\"},{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_t4eorKACYHytzLvVpveC6310\"},\"toolCallId\":\"call_00_t4eorKACYHytzLvVpveC6310\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"schemaVersion\\\":\\\"tracy-content/v1\\\",\\\"view\\\":\\\"authenticated\\\",\\\"site\\\":{\\\"id\\\":\\\"GHrPxw-5KRvBykx0dppe3U1WSEJbE9jGmmuLSY1PUtU\\\",\\\"name\\\":null,\\\"url\\\":\\\"http://127.0.0.1:60619\\\",\\\"defaultLocale\\\":\\\"en\\\",\\\"locales\\\":[\\\"en\\\",\\\"af\\\",\\\"be\\\",\\\"bg\\\",\\\"ca\\\",\\\"cs\\\",\\\"cy\\\",\\\"da\\\",\\\"de\\\",\\\"el\\\",\\\"es\\\",\\\"et\\\",\\\"fi\\\",\\\"fr\\\",\\\"ga\\\",\\\"hr\\\",\\\"hu\\\",\\\"it\\\",\\\"ja\\\",\\\"ka\\\",\\\"lo\\\",\\\"lt\\\",\\\"lv\\\",\\\"ms\\\",\\\"nb\\\",\\\"nl\\\",\\\"pl\\\",\\\"pt\\\",\\\"ro\\\",\\\"ru\\\",\\\"sk\\\",\\\"sl\\\",\\\"sr\\\",\\\"sv\\\",\\\"ta\\\",\\\"th\\\",\\\"tr\\\",\\\"uk\\\",\\\"vi\\\",\\\"zh\\\"]},\\\"provenance\\\":null,\\\"snapshot\\\":{\\\"revision\\\":\\\"NlcOkobi-HOeoZIC4F8qqUW8W2gs0Z1RbABIimqp4TY\\\",\\\"readAt\\\":\\\"2026-10-31T09:42:24.218Z\\\"},\\\"pagination\\\":{\\\"limit\\\":30,\\\"nextCursor\\\":null,\\\"total\\\":1,\\\"budget\\\":65536,\\\"bytes\\\":6715},\\\"completeness\\\":{\\\"scope\\\":\\\"mapped-content\\\",\\\"status\\\":\\\"partial\\\",\\\"unresolved\\\":[{\\\"code\\\":\\\"RICH_TEXT_AND_MENUS_UNSUPPORTED\\\",\\\"message\\\":\\\"Mapped scalars, long text (one value per Portable Text block with a stored key), images with their usages, repeater rows with a stored row identity and shared references; other rich-text blocks, references, menus and unmapped collections remain unsupported.\\\"}]},\\\"contents\\\":[{\\\"id\\\":\\\"zzTHmozs7bBPGAEq0RojMa3NLJwaOHs7C-ZYm88WNSQ\\\",\\\"type\\\":\\\"service\\\",\\\"title\\\":\\\"General contracting\\\",\\\"slug\\\":\\\"general-contracting\\\",\\\"url\\\":\\\"http://127.0.0.1:60619/services/general-contracting\\\",\\\"locale\\\":\\\"en\\\",\\\"translationGroupId\\\":\\\"y3gOCuVP9rY6uBZjcriForKaK_4X6vE1Tw-8CGO3IAw\\\",\\\"summary\\\":null,\\\"publishedAt\\\":\\\"2026-10-31T09:19:11.396Z\\\",\\\"createdAt\\\":\\\"2026-10-31T09:19:11.396Z\\\",\\\"updatedAt\\\":\\\"2026-10-31T09:19:11.397Z\\\",\\\"revision\\\":\\\"KDmvHz-AtjSCdui9KDL2Ds5HdNYJma8fK_7t5ik-3d4\\\",\\\"publication\\\":{\\\"status\\\":\\\"published\\\",\\\"valueSource\\\":\\\"published\\\",\\\"scheduledAt\\\":null},\\\"detailState\\\":\\\"complete\\\",\\\"bodyHtml\\\":null,\\\"tags\\\":[],\\\"fields\\\":[{\\\"key\\\":\\\"title\\\",\\\"type\\\":\\\"text\\\",\\\"value\\\":\\\"General contracting\\\",\\\"slotKey\\\":null,\\\"semanticKey\\\":null,\\\"writable\\\":true,\\\"constraints\\\":null,\\\"next\\\":{\\\"tool\\\":\\\"tracy_emdash\\\",\\\"action\\\":\\\"content_update\\\",\\\"arguments\\\":{\\\"collection\\\":null,\\\"id\\\":\\\"general-contracting\\\",\\\"locale\\\":\\\"en\\\",\\\"data\\\":{\\\"title\\\":null},\\\"status\\\":\\\"published\\\"}}},{\\\"key\\\":\\\"description\\\",\\\"type\\\":\\\"text\\\",\\\"value\\\":\\\"One contract for the whole facility: design, structure, envelope, services, external works and handover. We hold the schedule and carry responsibility for the result end to end.\\\",\\\"slotKey\\\":null,\\\"semanticKey\\\":null,\\\"writable\\\":true,\\\"constraints\\\":null,\\\"next\\\":{\\\"tool\\\":\\\"tracy_emdash\\\",\\\"action\\\":\\\"content_update\\\",\\\"arguments\\\":{\\\"collection\\\":null,\\\"id\\\":\\\"general-contracting\\\",\\\"locale\\\":\\\"en\\\",\\\"data\\\":{\\\"description\\\":null},\\\"status\\\":\\\"published\\\"}}},{\\\"key\\\":\\\"term\\\",\\\"type\\\":\\\"text\\\",\\\"value\\\":\\\"Timeline: 10–18 months for a 20–60k m² facility\\\",\\\"slotKey\\\":null,\\\"semanticKey\\\":null,\\\"writable\\\":true,\\\"constraints\\\":null,\\\"next\\\":{\\\"tool\\\":\\\"tracy_emdash\\\",\\\"action\\\":\\\"content_update\\\",\\\"arguments\\\":{\\\"collection\\\":null,\\\"id\\\":\\\"general-contracting\\\",\\\"locale\\\":\\\"en\\\",\\\"data\\\":{\\\"term\\\":null},\\\"status\\\":\\\"published\\\"}}},{\\\"key\\\":\\\"sort\\\",\\\"type\\\":\\\"number\\\",\\\"value\\\":0,\\\"slotKey\\\":null,\\\"semanticKey\\\":null,\\\"writable\\\":true,\\\"constraints\\\":null,\\\"next\\\":{\\\"tool\\\":\\\"tracy_emdash\\\",\\\"action\\\":\\\"content_update\\\",\\\"arguments\\\":{\\\"collection\\\":null,\\\"id\\\":\\\"general-contracting\\\",\\\"locale\\\":\\\"en\\\",\\\"data\\\":{\\\"sort\\\":null},\\\"status\\\":\\\"published\\\"}}}],\\\"blocks\\\":[{\\\"id\\\":\\\"MMqGNqePUQjy_tM4runQkg6yurnJ7pMC3Pa7UeInw1E\\\",\\\"key\\\":\\\"includes\\\",\\\"role\\\":null,\\\"position\\\":0,\\\"sharedContentId\\\":null,\\\"visibility\\\":\\\"unknown\\\",\\\"fields\\\":[],\\\"items\\\":[{\\\"id\\\":\\\"UMhRaHdT1W5DvjXIBBlx-Td5fpfK5lrkGNU8h03YS4M\\\",\\\"position\\\":0,\\\"contentId\\\":null,\\\"fields\\\":[{\\\"key\\\":\\\"item\\\",\\\"type\\\":\\\"text\\\",\\\"value\\\":\\\"Single schedule and budget\\\",\\\"slotKey\\\":null,\\\"semanticKey\\\":null,\\\"writable\\\":true,\\\"constraints\\\":null,\\\"next\\\":{\\\"tool\\\":\\\"tracy_emdash\\\",\\\"action\\\":\\\"content_update\\\",\\\"arguments\\\":{\\\"collection\\\":null,\\\"id\\\":\\\"general-contracting\\\",\\\"locale\\\":\\\"en\\\",\\\"data\\\":{\\\"includes\\\":{\\\"0\\\":{\\\"item\\\":null}}},\\\"status\\\":\\\"published\\\"}}}]},{\\\"id\\\":\\\"C7_sSpY6Y6E_Qtn8dOBJjNYII_G0oQVp3bme663D8dw\\\",\\\"position\\\":1,\\\"contentId\\\":null,\\\"fields\\\":[{\\\"key\\\":\\\"item\\\",\\\"type\\\":\\\"text\\\",\\\"value\\\":\\\"Subcontractor management\\\",\\\"slotKey\\\":null,\\\"semanticKey\\\":null,\\\"writable\\\":true,\\\"constraints\\\":null,\\\"next\\\":{\\\"tool\\\":\\\"tracy_emdash\\\",\\\"action\\\":\\\"content_update\\\",\\\"arguments\\\":{\\\"collection\\\":null,\\\"id\\\":\\\"general-contracting\\\",\\\"locale\\\":\\\"en\\\",\\\"data\\\":{\\\"includes\\\":{\\\"1\\\":{\\\"item\\\":null}}},\\\"status\\\":\\\"published\\\"}}}]},{\\\"id\\\":\\\"Ye3-IKezUAHLJ2VyhwDBnaOhsV_l4oSt5pQOZZ99Cus\\\",\\\"position\\\":2,\\\"contentId\\\":null,\\\"fields\\\":[{\\\"key\\\":\\\"item\\\",\\\"type\\\":\\\"text\\\",\\\"value\\\":\\\"As-built documentation\\\",\\\"slotKey\\\":null,\\\"semanticKey\\\":null,\\\"writable\\\":true,\\\"constraints\\\":null,\\\"next\\\":{\\\"tool\\\":\\\"tracy_emdash\\\",\\\"action\\\":\\\"content_update\\\",\\\"arguments\\\":{\\\"collection\\\":null,\\\"id\\\":\\\"general-contracting\\\",\\\"locale\\\":\\\"en\\\",\\\"data\\\":{\\\"includes\\\":{\\\"2\\\":{\\\"item\\\":null}}},\\\"status\\\":\\\"published\\\"}}}]},{\\\"id\\\":\\\"wO5YLPmOgqchHV3UsS49AWMA0FWAJwRi32W0tA0Ztoo\\\",\\\"position\\\":3,\\\"contentId\\\":null,\\\"fields\\\":[{\\\"key\\\":\\\"item\\\",\\\"type\\\":\\\"text\\\",\\\"value\\\":\\\"Final acceptance\\\",\\\"slotKey\\\":null,\\\"semanticKey\\\":null,\\\"writable\\\":true,\\\"constraints\\\":null,\\\"next\\\":{\\\"tool\\\":\\\"tracy_emdash\\\",\\\"action\\\":\\\"content_update\\\",\\\"arguments\\\":{\\\"collection\\\":null,\\\"id\\\":\\\"general-contracting\\\",\\\"locale\\\":\\\"en\\\",\\\"data\\\":{\\\"includes\\\":{\\\"3\\\":{\\\"item\\\":null}}},\\\"status\\\":\\\"published\\\"}}}]}],\\\"itemsPagination\\\":{\\\"limit\\\":30,\\\"total\\\":4,\\\"nextCursor\\\":null},\\\"writable\\\":true}],\\\"images\\\":[],\\\"relations\\\":[{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"4hX0U4Qw84AfLO0rTqNRRvdrYYq9cvDRl2LLshFaPbA\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"5doULY8C-mjOIooFef0bXYkfqFkbNcm_tAqRArXVpLM\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"6nphxw_wJLL1nDwNcKIplbZgmdq7E9KdhnC-GS9U2wE\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"7k3wh7LY9B_oM_2WkZle4kQx1pT5CCh92VwFYQU8Srw\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"7m20k37eUyG2lR8vRuCFGlUa2dVYCV5bO-j5KZS5od4\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"7YlsT879GEHKnuKtFjPeAWgg2RBGgGNEiB5JAJZGbz8\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"8y0-T1BBfkzqMcm8cqovpUc2RzVdpQhI7VRRCKt19-U\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"9oh2uI_FHbRjrB8Ax9Wfbit8HL2yWiqDaqInxe5nnX8\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"BnwwIuSCNKDW9cW8ol1zBjuJn4QqlsaNnamDwfxXvzE\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"BQExAiuNKXL57rAzFeyneZR2TBjYL6Z5cgyARtenvhY\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"BTTaLG9IwXZDk8m2IE35suti2udTSJ-svPtgTLU6DKk\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"DEPApWNqKYqOoGsk_k3JOBYapTVpnG1MALYTJzFZK9A\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"eXWr59e8GdOuCCi7Xn5WT9RADWZnJmEthVrnwabpUUo\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"f89qoE055QArTzv_mXDPxJGMB7sIz4qPrlPLr5rKoM4\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"fneTpuedXzrXzSTGgL1joiCcbeC83BKK-dwcX-bu2E4\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"g6F4MV_LGqtawWwsRt60lTuQC81c9xnSvqx_S2oILjQ\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"h_jqLretsVPj_qHUdZyYrGIjDOMXzP6JfInnwEcj_u8\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"hCCf9ZjnS8gs_f0fVjySOLrChyyIbnwZxzLVIQUAf74\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"jjLa7QrijSWW0WJqKVakB_swfI5iMJ0XF28ahu34TS8\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"k43lK6qLBMDob6F0SeMCpMtrPC1cSOJRUEXXBtEofxk\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"KGcYG7IAWmVo107MvtBbarrblfmctOkKGpOK9h1pHJA\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"lTd20KcTkWP-veQvJr3syEIwUy8zzbjMHE-2q2H3LEs\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"Mas8aWK_QITFnXxEB6sRzt54vunlDS4E9tDxvJzKoEk\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"Nnxd27TwZpCDq_cKmYgB_dhffnRRbaW2SPWmbdaThlM\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"pZTcFRtmP1-mKFcbBqwujuqtisqovljNX1kikDvuHik\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"R5c7sRkpvadj8_jH8is2szp55zbgJWpFGIdMjvAgLG4\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"Rh2wazND4wlWgyFGKDknwyBvEM8Qhv9yKsrYHItHx9Q\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"rWQDHRfNvhSV9drgARbHu4pDD1wPhiXndu0he3CJXmY\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"syTMVvmN0_CJmwRalI2TDetG0gk-tcObNWNqbyx29Qc\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"T6bPijQ57z5oxE3ndmKOY9wOlfqLye2pbIOkqTJyxq4\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"TLy2Gjblek0iMeSLg2dmOm7Kf4B_H_rMYHBxy0hUCM8\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"U_8y_5u-gvj2urRo8Fd7CSC7ZKmEZvJ4yjIdy5aF12U\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"u2Wv8Sz4VhNGUyd4RqoGghKkxlWeuJLioEj42PNtRcg\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"uvrlDGy2pFUChOimrItMJhgjrbUAR8HAZKXtPuuOlwU\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"vN5BqWtvAtHk38cVB5IMSGTSMUrwW77WUVBqGFGLN58\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"vzodUBOLcGIe2Ug-VNEicRpdHtSmacn7ryE-V1hwkbQ\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"WA29NgEwcwTXu8JAnfgw68UoXaalKDtkNUx0QlTrLO0\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"wL2VPePouAhpKQqSYbg42n6Uc7K6JqTi4G3WUsv1_Yc\\\"},{\\\"type\\\":\\\"translation\\\",\\\"contentId\\\":\\\"XetbbrXL55gT9jpZlDN76gM38hYu85AGdFlhgqq3248\\\"}],\\\"links\\\":{\\\"self\\\":\\\"/_emdash/api/content/tracy-content-v1.json?id=zzTHmozs7bBPGAEq0RojMa3NLJwaOHs7C-ZYm88WNSQ\\\"},\\\"writable\\\":true}],\\\"protocol\\\":{\\\"selected\\\":\\\"tracy-content/v1\\\",\\\"relayExtensions\\\":[\\\"writable\\\",\\\"constraints\\\",\\\"next\\\",\\\"protocol\\\"],\\\"cowork\\\":{\\\"kind\\\":\\\"emdash\\\",\\\"capability\\\":\\\"v1\\\"}},\\\"version\\\":\\\"cv1.3cef7833de56d220ae66bd0cad44f17d\\\",\\\"next\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"describe\\\":true},\\\"why\\\":\\\"Once per site: the types, block kinds with their fields and limits, and what this seat may edit.\\\"},\\\"omitted\\\":\\\"Left out: 1 block holding no field (site chrome; its words are in the shared contents {type:\\\\\\\"shared\\\\\\\"} lists). The same read with full:true shows the answer as the site gave it.\\\",\\\"normalized\\\":[\\\"params.locale dropped: id reads one content\\\"]}\"}],\"isError\":false,\"id\":\"28510644-6996-459b-abd0-08e3be10e8b2\"}]",
+  "backendReads": 2,
+  "nativeSourceCalls": 238
+}

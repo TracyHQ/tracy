@@ -1,0 +1,101 @@
+{
+  "repeat": 1,
+  "task": "continuation",
+  "verified": true,
+  "failure": null,
+  "ms": 3910.555124999999,
+  "idValid": true,
+  "noWrites": true,
+  "continuation": true,
+  "recovery": true,
+  "language": true,
+  "seededRefusal": null,
+  "calls": [
+    {
+      "name": "tracy_site",
+      "arguments": {
+        "action": "content.list",
+        "params": {
+          "search": "Inventory",
+          "post_type": "page",
+          "limit": 2
+        }
+      }
+    },
+    {
+      "name": "tracy_site",
+      "arguments": {
+        "action": "content.list",
+        "params": {
+          "search": "Inventory",
+          "post_type": "page",
+          "limit": 2,
+          "offset": 2
+        }
+      }
+    }
+  ],
+  "provider": [
+    {
+      "step": 1,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7193,
+        "completion_tokens": 91,
+        "total_tokens": 7284,
+        "prompt_tokens_details": {
+          "cached_tokens": 3968
+        },
+        "prompt_cache_hit_tokens": 3968,
+        "prompt_cache_miss_tokens": 3225
+      },
+      "firstChunkMs": 268.6424590000024,
+      "ms": 1034.9957090000025,
+      "promptHash": "17d79fcbc552a592d6cf2a5ee0c7559d6051aa0330e6388ce5a30f96cd513e90",
+      "finalText": null
+    },
+    {
+      "step": 2,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7495,
+        "completion_tokens": 79,
+        "total_tokens": 7574,
+        "prompt_tokens_details": {
+          "cached_tokens": 7168
+        },
+        "prompt_cache_hit_tokens": 7168,
+        "prompt_cache_miss_tokens": 327
+      },
+      "firstChunkMs": 320.223708000005,
+      "ms": 1250.3835410000029,
+      "promptHash": "12ab9720f05c463bc1a79e4cd3abcb917b27e96dedfe96b08f08791b00301a5d",
+      "finalText": null
+    },
+    {
+      "step": 3,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7785,
+        "completion_tokens": 149,
+        "total_tokens": 7934,
+        "prompt_tokens_details": {
+          "cached_tokens": 7552
+        },
+        "prompt_cache_hit_tokens": 7552,
+        "prompt_cache_miss_tokens": 233
+      },
+      "firstChunkMs": 336.84037499999977,
+      "ms": 1228.3840419999979,
+      "promptHash": "de9b865d0cbcecfe214890c7069c8a3c5d4b2f2de647bc00426b8f3d492bcf19",
+      "finalText": "Here are four distinct Inventory pages, read two at a time:\n\n| ID | Title | Path |\n|---|---|---|\n| 5 | Inventory 000: Reference material for the independent tool calling benchmark | /?page_id=5 |\n| 6 | Inventory 001: Reference material for the independent tool calling benchmark | /?page_id=6 |\n| 7 | Inventory 002: Reference material for the independent tool calling benchmark | /?page_id=7 |\n| 8 | Inventory 003: Reference material for the independent tool calling benchmark | /?page_id=8 |\n\nAll four are published pages. The site holds many more matches — 400 in total — so if you want the next ones, just say so."
+    }
+  ],
+  "final": "Here are four distinct Inventory pages, read two at a time:\n\n| ID | Title | Path |\n|---|---|---|\n| 5 | Inventory 000: Reference material for the independent tool calling benchmark | /?page_id=5 |\n| 6 | Inventory 001: Reference material for the independent tool calling benchmark | /?page_id=6 |\n| 7 | Inventory 002: Reference material for the independent tool calling benchmark | /?page_id=7 |\n| 8 | Inventory 003: Reference material for the independent tool calling benchmark | /?page_id=8 |\n\nAll four are published pages. The site holds many more matches — 400 in total — so if you want the next ones, just say so.",
+  "toolResults": "[{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_ft9KFUcF28EkNwcvG2Gh8607\"},\"toolCallId\":\"call_00_ft9KFUcF28EkNwcvG2Gh8607\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"ok\\\":true,\\\"kind\\\":\\\"post\\\",\\\"offset\\\":0,\\\"search\\\":\\\"Inventory\\\",\\\"matched\\\":400,\\\"items\\\":[{\\\"id\\\":5,\\\"title\\\":\\\"Inventory 000: Reference material for the independent tool calling benchmark\\\",\\\"slug\\\":\\\"inventory-000\\\",\\\"type\\\":\\\"page\\\",\\\"status\\\":\\\"publish\\\",\\\"path\\\":\\\"/?page_id=5\\\"},{\\\"id\\\":6,\\\"title\\\":\\\"Inventory 001: Reference material for the independent tool calling benchmark\\\",\\\"slug\\\":\\\"inventory-001\\\",\\\"type\\\":\\\"page\\\",\\\"status\\\":\\\"publish\\\",\\\"path\\\":\\\"/?page_id=6\\\"}],\\\"note\\\":\\\"rows are cut to id, title, slug, type, status, path; content.get {kind:\\\\\\\"post\\\\\\\", id} gives every field.\\\",\\\"idNamespace\\\":\\\"wordpress:post\\\",\\\"contentIdLookup\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"view\\\":\\\"pages\\\",\\\"search\\\":\\\"Inventory\\\"},\\\"why\\\":\\\"items[].id is a native post ID for content.get/update. This read returns opaque Content API IDs.\\\"}}\"}],\"isError\":false,\"id\":\"7de3bea2-c1a4-419a-9f59-ddada84bd6ff\"},{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_ft9KFUcF28EkNwcvG2Gh8607\"},\"toolCallId\":\"call_00_ft9KFUcF28EkNwcvG2Gh8607\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"ok\\\":true,\\\"kind\\\":\\\"post\\\",\\\"offset\\\":0,\\\"search\\\":\\\"Inventory\\\",\\\"matched\\\":400,\\\"items\\\":[{\\\"id\\\":5,\\\"title\\\":\\\"Inventory 000: Reference material for the independent tool calling benchmark\\\",\\\"slug\\\":\\\"inventory-000\\\",\\\"type\\\":\\\"page\\\",\\\"status\\\":\\\"publish\\\",\\\"path\\\":\\\"/?page_id=5\\\"},{\\\"id\\\":6,\\\"title\\\":\\\"Inventory 001: Reference material for the independent tool calling benchmark\\\",\\\"slug\\\":\\\"inventory-001\\\",\\\"type\\\":\\\"page\\\",\\\"status\\\":\\\"publish\\\",\\\"path\\\":\\\"/?page_id=6\\\"}],\\\"note\\\":\\\"rows are cut to id, title, slug, type, status, path; content.get {kind:\\\\\\\"post\\\\\\\", id} gives every field.\\\",\\\"idNamespace\\\":\\\"wordpress:post\\\",\\\"contentIdLookup\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"view\\\":\\\"pages\\\",\\\"search\\\":\\\"Inventory\\\"},\\\"why\\\":\\\"items[].id is a native post ID for content.get/update. This read returns opaque Content API IDs.\\\"}}\"}],\"isError\":false,\"id\":\"7de3bea2-c1a4-419a-9f59-ddada84bd6ff\"},{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_pkrFHFQxRrEIKSJKEDht6423\"},\"toolCallId\":\"call_00_pkrFHFQxRrEIKSJKEDht6423\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"ok\\\":true,\\\"kind\\\":\\\"post\\\",\\\"offset\\\":2,\\\"search\\\":\\\"Inventory\\\",\\\"matched\\\":400,\\\"items\\\":[{\\\"id\\\":7,\\\"title\\\":\\\"Inventory 002: Reference material for the independent tool calling benchmark\\\",\\\"slug\\\":\\\"inventory-002\\\",\\\"type\\\":\\\"page\\\",\\\"status\\\":\\\"publish\\\",\\\"path\\\":\\\"/?page_id=7\\\"},{\\\"id\\\":8,\\\"title\\\":\\\"Inventory 003: Reference material for the independent tool calling benchmark\\\",\\\"slug\\\":\\\"inventory-003\\\",\\\"type\\\":\\\"page\\\",\\\"status\\\":\\\"publish\\\",\\\"path\\\":\\\"/?page_id=8\\\"}],\\\"note\\\":\\\"rows are cut to id, title, slug, type, status, path; content.get {kind:\\\\\\\"post\\\\\\\", id} gives every field.\\\",\\\"idNamespace\\\":\\\"wordpress:post\\\",\\\"contentIdLookup\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"view\\\":\\\"pages\\\",\\\"search\\\":\\\"Inventory\\\"},\\\"why\\\":\\\"items[].id is a native post ID for content.get/update. This read returns opaque Content API IDs.\\\"}}\"}],\"isError\":false,\"id\":\"e4f56421-4384-4671-8bc2-4915f8c4aa29\"}]",
+  "backendReads": 2,
+  "nativeSourceCalls": 0
+}

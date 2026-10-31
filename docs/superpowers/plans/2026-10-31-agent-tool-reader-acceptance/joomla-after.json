@@ -1,0 +1,593 @@
+{
+  "platform": "joomla",
+  "phase": "after",
+  "producer": "authenticated buildApp + isolated migrated PostgreSQL + shipped site-tools + real vendored AgentLoop + actual CMS HTTP",
+  "fixtureOrigin": "http://127.0.0.1:59944",
+  "bundleSha256": "ea6f4236ca2aba7325e9871f2a032752ed5aaec29c1d26fdfbb1eca37e8952d9",
+  "rows": [
+    {
+      "repeat": 0,
+      "task": "independent-titles",
+      "ms": 262.26358400000026,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 114.38612499999999,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 4600
+    },
+    {
+      "repeat": 0,
+      "task": "batched-titles",
+      "ms": 217.01266699999996,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 121.78354200000012,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1618
+    },
+    {
+      "repeat": 0,
+      "task": "known-url",
+      "ms": 325.55695799999967,
+      "verified": true,
+      "backendReads": 2,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 114.6991250000001,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 1
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 127.37495800000033,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1311
+    },
+    {
+      "repeat": 0,
+      "task": "empty-search",
+      "ms": 204.75870899999973,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 121.16833299999962,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 987
+    },
+    {
+      "repeat": 0,
+      "task": "explicit-details",
+      "ms": 215.07958300000064,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 116.25475000000006,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "id": "content_fc7f4994a0429a3cc071f83031584d8b",
+            "maxBytes": 65536
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 3965
+    },
+    {
+      "repeat": 1,
+      "task": "independent-titles",
+      "ms": 240.12637500000073,
+      "verified": true,
+      "backendReads": 2,
+      "nativeSourceCalls": 0,
+      "relayRequests": 2,
+      "reads": [
+        {
+          "ms": 132.81024999999954,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 131.16654199999994,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 4600
+    },
+    {
+      "repeat": 1,
+      "task": "batched-titles",
+      "ms": 223.88824999999997,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 118.14266700000007,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1618
+    },
+    {
+      "repeat": 1,
+      "task": "known-url",
+      "ms": 329.40558300000066,
+      "verified": true,
+      "backendReads": 2,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 118.04433299999982,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 1
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 118.45458299999973,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1311
+    },
+    {
+      "repeat": 1,
+      "task": "empty-search",
+      "ms": 220.18554200000017,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 112.13349999999991,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 987
+    },
+    {
+      "repeat": 1,
+      "task": "explicit-details",
+      "ms": 193.92166699999962,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 121.87904100000014,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "id": "content_fc7f4994a0429a3cc071f83031584d8b",
+            "maxBytes": 65536
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 3965
+    },
+    {
+      "repeat": 2,
+      "task": "independent-titles",
+      "ms": 224.89454099999966,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 117.03383400000075,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 4600
+    },
+    {
+      "repeat": 2,
+      "task": "batched-titles",
+      "ms": 210.46729099999993,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 121.74583299999995,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1618
+    },
+    {
+      "repeat": 2,
+      "task": "known-url",
+      "ms": 354.44716700000026,
+      "verified": true,
+      "backendReads": 2,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 121.38704199999938,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 1
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 109.06212499999947,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1311
+    },
+    {
+      "repeat": 2,
+      "task": "empty-search",
+      "ms": 318.76274999999987,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 231.00629199999912,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 987
+    },
+    {
+      "repeat": 2,
+      "task": "explicit-details",
+      "ms": 261.5167499999998,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 137.58737500000007,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "id": "content_fc7f4994a0429a3cc071f83031584d8b",
+            "maxBytes": 65536
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 3965
+    },
+    {
+      "repeat": 3,
+      "task": "independent-titles",
+      "ms": 310.23820799999976,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 191.0809589999999,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 4600
+    },
+    {
+      "repeat": 3,
+      "task": "batched-titles",
+      "ms": 219.1758749999999,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 126.3146659999993,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1618
+    },
+    {
+      "repeat": 3,
+      "task": "known-url",
+      "ms": 402.23870799999986,
+      "verified": true,
+      "backendReads": 2,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 134.84749999999985,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 1
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 164.74083400000018,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1311
+    },
+    {
+      "repeat": 3,
+      "task": "empty-search",
+      "ms": 440.0590829999992,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 336.7542080000003,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 987
+    },
+    {
+      "repeat": 3,
+      "task": "explicit-details",
+      "ms": 212.0416669999995,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 100.9986659999995,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "id": "content_fc7f4994a0429a3cc071f83031584d8b",
+            "maxBytes": 65536
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 3965
+    },
+    {
+      "repeat": 4,
+      "task": "independent-titles",
+      "ms": 254.97420899999997,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 134.39600000000064,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 4600
+    },
+    {
+      "repeat": 4,
+      "task": "batched-titles",
+      "ms": 202.42549999999937,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 114.76129199999923,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1618
+    },
+    {
+      "repeat": 4,
+      "task": "known-url",
+      "ms": 325.1894169999996,
+      "verified": true,
+      "backendReads": 2,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 120.5318329999991,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 1
+          },
+          "sourceCalls": 0
+        },
+        {
+          "ms": 115.58537500000057,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 1311
+    },
+    {
+      "repeat": 4,
+      "task": "empty-search",
+      "ms": 181.14745800000128,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 107.20808299999953,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "limit": 100
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 987
+    },
+    {
+      "repeat": 4,
+      "task": "explicit-details",
+      "ms": 218.57320900000013,
+      "verified": true,
+      "backendReads": 1,
+      "nativeSourceCalls": 0,
+      "relayRequests": 1,
+      "reads": [
+        {
+          "ms": 146.99162500000057,
+          "status": 200,
+          "action": "content.read",
+          "params": {
+            "id": "content_fc7f4994a0429a3cc071f83031584d8b",
+            "maxBytes": 65536
+          },
+          "sourceCalls": 0
+        }
+      ],
+      "resultChars": 3965
+    }
+  ]
+}

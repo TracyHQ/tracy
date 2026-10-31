@@ -1,0 +1,59 @@
+{
+  "repeat": 0,
+  "task": "missing",
+  "verified": true,
+  "failure": null,
+  "ms": 2117.4031250000007,
+  "idValid": true,
+  "noWrites": true,
+  "continuation": true,
+  "recovery": true,
+  "language": true,
+  "seededRefusal": null,
+  "calls": [
+    {
+      "name": "tracy_site",
+      "arguments": {
+        "action": "content.read",
+        "params": {
+          "view": "pages",
+          "search": "NoSuchPage_91ec3c42"
+        }
+      }
+    }
+  ],
+  "provider": [
+    {
+      "step": 1,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": {
+        "prompt_tokens": 7275,
+        "completion_tokens": 75,
+        "total_tokens": 7350,
+        "prompt_tokens_details": {
+          "cached_tokens": 3968
+        },
+        "prompt_cache_hit_tokens": 3968,
+        "prompt_cache_miss_tokens": 3307
+      },
+      "firstChunkMs": 304.2184160000006,
+      "ms": 796.7438329999995,
+      "promptHash": "9ea67bc64d82a1e0b7f10e8906013ebe96fcb9684cbf0dcf4ac96cf3236780c1",
+      "finalText": null
+    },
+    {
+      "step": 2,
+      "model": "deepseek-flash",
+      "status": 200,
+      "usage": null,
+      "firstChunkMs": 285.5332500000004,
+      "ms": null,
+      "promptHash": "0208ec52a0a82b434961b378e7f0f2eff16c9cabc6f92b9181d2de65a918e97d"
+    }
+  ],
+  "final": "",
+  "toolResults": "[{\"role\":\"tool\",\"source\":{\"kind\":\"tool\",\"callId\":\"call_00_olvLZVIeHIzUGWjSSLCq7823\"},\"toolCallId\":\"call_00_olvLZVIeHIzUGWjSSLCq7823\",\"content\":[{\"type\":\"text\",\"text\":\"{\\\"schemaVersion\\\":\\\"tracy-content-pages/v1\\\",\\\"site\\\":{\\\"id\\\":\\\"site_decbd480e6cf7ba26040354547f6a634\\\",\\\"name\\\":null,\\\"url\\\":\\\"http://127.0.0.1:59944\\\",\\\"defaultLocale\\\":null,\\\"locales\\\":[]},\\\"truncated\\\":false,\\\"version\\\":\\\"cv1.796f557c8c4ebd088c0fc9f4fcb21f61\\\",\\\"later\\\":{\\\"action\\\":\\\"content.read\\\",\\\"params\\\":{\\\"changedSince\\\":\\\"cv1.796f557c8c4ebd088c0fc9f4fcb21f61\\\"},\\\"why\\\":\\\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\\\"},\\\"columns\\\":[\\\"title\\\",\\\"path\\\",\\\"id\\\",\\\"record\\\"],\\\"pages\\\":[],\\\"pagination\\\":{\\\"offset\\\":0,\\\"returned\\\":0,\\\"total\\\":0,\\\"totalIsComplete\\\":true,\\\"nextOffset\\\":null},\\\"idNamespace\\\":\\\"content-api\\\",\\\"idMeaning\\\":\\\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\\\"}\"}],\"isError\":false,\"id\":\"9d295a19-c79c-47cd-bb81-2dcd63aec4d5\"}]",
+  "backendReads": 1,
+  "nativeSourceCalls": 0
+}

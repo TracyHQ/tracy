@@ -1,0 +1,429 @@
+{
+  "platform": "joomla",
+  "before": "6529c421ac726499e1caffc2ddac1b48356c883a5e16cb7edc9d3476439071e4",
+  "after": "6529c421ac726499e1caffc2ddac1b48356c883a5e16cb7edc9d3476439071e4",
+  "restored": true,
+  "actuallyChanged": true,
+  "applyId": "reader-acceptance-33e4e7d2-4428-4daf-827c-ef238a7b9cbd",
+  "receipt": {
+    "ok": true,
+    "apply_id": "reader-acceptance-33e4e7d2-4428-4daf-827c-ef238a7b9cbd",
+    "steps": []
+  },
+  "changes": [
+    {
+      "action": "content.update",
+      "outcome": "ok"
+    },
+    {
+      "action": "apply.revert",
+      "outcome": "ok"
+    }
+  ],
+  "observed": [
+    {
+      "after": 1,
+      "hash": "6529c421ac726499e1caffc2ddac1b48356c883a5e16cb7edc9d3476439071e4",
+      "messages": [
+        [
+          {
+            "type": "text",
+            "text": "{\"schemaVersion\":\"tracy-content-pages/v1\",\"site\":{\"id\":\"site_decbd480e6cf7ba26040354547f6a634\",\"name\":null,\"url\":\"http://127.0.0.1:59944\",\"defaultLocale\":null,\"locales\":[]},\"truncated\":false,\"version\":\"cv1.720bef0402badfb4869c8b96918473cc\",\"later\":{\"action\":\"content.read\",\"params\":{\"changedSince\":\"cv1.720bef0402badfb4869c8b96918473cc\"},\"why\":\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\"},\"columns\":[\"title\",\"path\",\"id\",\"record\",\"type\"],\"pages\":[[\"Inventory 051\",\"/index.php/component/content/article/inventory-051?catid=2\",\"content_00084765efe64a31692bdc4cdde39ab8\",\"article:52\",\"article\"]],\"pagination\":{\"offset\":0,\"returned\":1,\"total\":1,\"totalIsComplete\":true,\"nextOffset\":null},\"idNamespace\":\"content-api\",\"idMeaning\":\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\"}"
+          }
+        ]
+      ]
+    },
+    {
+      "after": 2,
+      "hash": "335f03e10495cfe369bda815975c9a5b9d202d9b4156128ea6d96328440828f4",
+      "messages": [
+        [
+          {
+            "type": "text",
+            "text": "{\"schemaVersion\":\"tracy-content-pages/v1\",\"site\":{\"id\":\"site_decbd480e6cf7ba26040354547f6a634\",\"name\":null,\"url\":\"http://127.0.0.1:59944\",\"defaultLocale\":null,\"locales\":[]},\"truncated\":false,\"version\":\"cv1.720bef0402badfb4869c8b96918473cc\",\"later\":{\"action\":\"content.read\",\"params\":{\"changedSince\":\"cv1.720bef0402badfb4869c8b96918473cc\"},\"why\":\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\"},\"columns\":[\"title\",\"path\",\"id\",\"record\",\"type\"],\"pages\":[[\"Inventory 051\",\"/index.php/component/content/article/inventory-051?catid=2\",\"content_00084765efe64a31692bdc4cdde39ab8\",\"article:52\",\"article\"]],\"pagination\":{\"offset\":0,\"returned\":1,\"total\":1,\"totalIsComplete\":true,\"nextOffset\":null},\"idNamespace\":\"content-api\",\"idMeaning\":\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\"}"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "text": "{\"ok\":true,\"kind\":\"article\",\"id\":52,\"created\":false,\"next\":\"This is the receipt: nothing to read back. When every change asked is made, tell the customer what changed, in plain words. Keep the apply_id to yourself: apply.revert with it if they ask to undo.\"}"
+          }
+        ]
+      ]
+    },
+    {
+      "after": 3,
+      "hash": "335f03e10495cfe369bda815975c9a5b9d202d9b4156128ea6d96328440828f4",
+      "messages": [
+        [
+          {
+            "type": "text",
+            "text": "{\"schemaVersion\":\"tracy-content-pages/v1\",\"site\":{\"id\":\"site_decbd480e6cf7ba26040354547f6a634\",\"name\":null,\"url\":\"http://127.0.0.1:59944\",\"defaultLocale\":null,\"locales\":[]},\"truncated\":false,\"version\":\"cv1.720bef0402badfb4869c8b96918473cc\",\"later\":{\"action\":\"content.read\",\"params\":{\"changedSince\":\"cv1.720bef0402badfb4869c8b96918473cc\"},\"why\":\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\"},\"columns\":[\"title\",\"path\",\"id\",\"record\",\"type\"],\"pages\":[[\"Inventory 051\",\"/index.php/component/content/article/inventory-051?catid=2\",\"content_00084765efe64a31692bdc4cdde39ab8\",\"article:52\",\"article\"]],\"pagination\":{\"offset\":0,\"returned\":1,\"total\":1,\"totalIsComplete\":true,\"nextOffset\":null},\"idNamespace\":\"content-api\",\"idMeaning\":\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\"}"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "text": "{\"ok\":true,\"kind\":\"article\",\"id\":52,\"created\":false,\"next\":\"This is the receipt: nothing to read back. When every change asked is made, tell the customer what changed, in plain words. Keep the apply_id to yourself: apply.revert with it if they ask to undo.\"}"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "text": "{\"schemaVersion\":\"tracy-content-pages/v1\",\"site\":{\"id\":\"site_decbd480e6cf7ba26040354547f6a634\",\"name\":null,\"url\":\"http://127.0.0.1:59944\",\"defaultLocale\":null,\"locales\":[]},\"truncated\":false,\"version\":\"cv1.cc6ceeb90f1c4bbf46cecb6b7bcdf1f6\",\"later\":{\"action\":\"content.read\",\"params\":{\"changedSince\":\"cv1.cc6ceeb90f1c4bbf46cecb6b7bcdf1f6\"},\"why\":\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\"},\"columns\":[\"title\",\"path\",\"id\",\"record\",\"type\"],\"pages\":[[\"Inventory 051 acceptance edit\",\"/index.php/component/content/article/inventory-051?catid=2\",\"content_00084765efe64a31692bdc4cdde39ab8\",\"article:52\",\"article\"]],\"pagination\":{\"offset\":0,\"returned\":1,\"total\":1,\"totalIsComplete\":true,\"nextOffset\":null},\"idNamespace\":\"content-api\",\"idMeaning\":\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\",\"afterWrite\":\"The write just before this (content.update) answered with its receipt: that is the check. Read again only for a next change, or for a head, code or translation-link change.\"}"
+          }
+        ]
+      ]
+    },
+    {
+      "after": 4,
+      "hash": "335f03e10495cfe369bda815975c9a5b9d202d9b4156128ea6d96328440828f4",
+      "messages": [
+        [
+          {
+            "type": "text",
+            "text": "{\"schemaVersion\":\"tracy-content-pages/v1\",\"site\":{\"id\":\"site_decbd480e6cf7ba26040354547f6a634\",\"name\":null,\"url\":\"http://127.0.0.1:59944\",\"defaultLocale\":null,\"locales\":[]},\"truncated\":false,\"version\":\"cv1.720bef0402badfb4869c8b96918473cc\",\"later\":{\"action\":\"content.read\",\"params\":{\"changedSince\":\"cv1.720bef0402badfb4869c8b96918473cc\"},\"why\":\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\"},\"columns\":[\"title\",\"path\",\"id\",\"record\",\"type\"],\"pages\":[[\"Inventory 051\",\"/index.php/component/content/article/inventory-051?catid=2\",\"content_00084765efe64a31692bdc4cdde39ab8\",\"article:52\",\"article\"]],\"pagination\":{\"offset\":0,\"returned\":1,\"total\":1,\"totalIsComplete\":true,\"nextOffset\":null},\"idNamespace\":\"content-api\",\"idMeaning\":\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\"}"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "text": "{\"ok\":true,\"kind\":\"article\",\"id\":52,\"created\":false,\"next\":\"This is the receipt: nothing to read back. When every change asked is made, tell the customer what changed, in plain words. Keep the apply_id to yourself: apply.revert with it if they ask to undo.\"}"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "text": "{\"schemaVersion\":\"tracy-content-pages/v1\",\"site\":{\"id\":\"site_decbd480e6cf7ba26040354547f6a634\",\"name\":null,\"url\":\"http://127.0.0.1:59944\",\"defaultLocale\":null,\"locales\":[]},\"truncated\":false,\"version\":\"cv1.cc6ceeb90f1c4bbf46cecb6b7bcdf1f6\",\"later\":{\"action\":\"content.read\",\"params\":{\"changedSince\":\"cv1.cc6ceeb90f1c4bbf46cecb6b7bcdf1f6\"},\"why\":\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\"},\"columns\":[\"title\",\"path\",\"id\",\"record\",\"type\"],\"pages\":[[\"Inventory 051 acceptance edit\",\"/index.php/component/content/article/inventory-051?catid=2\",\"content_00084765efe64a31692bdc4cdde39ab8\",\"article:52\",\"article\"]],\"pagination\":{\"offset\":0,\"returned\":1,\"total\":1,\"totalIsComplete\":true,\"nextOffset\":null},\"idNamespace\":\"content-api\",\"idMeaning\":\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\",\"afterWrite\":\"The write just before this (content.update) answered with its receipt: that is the check. Read again only for a next change, or for a head, code or translation-link change.\"}"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "text": "{\"ok\":true,\"apply_id\":\"reader-acceptance-33e4e7d2-4428-4daf-827c-ef238a7b9cbd\",\"steps\":[{\"op\":\"content\",\"created\":false,\"kind\":\"article\",\"id\":52}]}"
+          }
+        ]
+      ]
+    },
+    {
+      "after": 5,
+      "hash": "6529c421ac726499e1caffc2ddac1b48356c883a5e16cb7edc9d3476439071e4",
+      "messages": [
+        [
+          {
+            "type": "text",
+            "text": "{\"schemaVersion\":\"tracy-content-pages/v1\",\"site\":{\"id\":\"site_decbd480e6cf7ba26040354547f6a634\",\"name\":null,\"url\":\"http://127.0.0.1:59944\",\"defaultLocale\":null,\"locales\":[]},\"truncated\":false,\"version\":\"cv1.720bef0402badfb4869c8b96918473cc\",\"later\":{\"action\":\"content.read\",\"params\":{\"changedSince\":\"cv1.720bef0402badfb4869c8b96918473cc\"},\"why\":\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\"},\"columns\":[\"title\",\"path\",\"id\",\"record\",\"type\"],\"pages\":[[\"Inventory 051\",\"/index.php/component/content/article/inventory-051?catid=2\",\"content_00084765efe64a31692bdc4cdde39ab8\",\"article:52\",\"article\"]],\"pagination\":{\"offset\":0,\"returned\":1,\"total\":1,\"totalIsComplete\":true,\"nextOffset\":null},\"idNamespace\":\"content-api\",\"idMeaning\":\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\"}"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "text": "{\"ok\":true,\"kind\":\"article\",\"id\":52,\"created\":false,\"next\":\"This is the receipt: nothing to read back. When every change asked is made, tell the customer what changed, in plain words. Keep the apply_id to yourself: apply.revert with it if they ask to undo.\"}"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "text": "{\"schemaVersion\":\"tracy-content-pages/v1\",\"site\":{\"id\":\"site_decbd480e6cf7ba26040354547f6a634\",\"name\":null,\"url\":\"http://127.0.0.1:59944\",\"defaultLocale\":null,\"locales\":[]},\"truncated\":false,\"version\":\"cv1.cc6ceeb90f1c4bbf46cecb6b7bcdf1f6\",\"later\":{\"action\":\"content.read\",\"params\":{\"changedSince\":\"cv1.cc6ceeb90f1c4bbf46cecb6b7bcdf1f6\"},\"why\":\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\"},\"columns\":[\"title\",\"path\",\"id\",\"record\",\"type\"],\"pages\":[[\"Inventory 051 acceptance edit\",\"/index.php/component/content/article/inventory-051?catid=2\",\"content_00084765efe64a31692bdc4cdde39ab8\",\"article:52\",\"article\"]],\"pagination\":{\"offset\":0,\"returned\":1,\"total\":1,\"totalIsComplete\":true,\"nextOffset\":null},\"idNamespace\":\"content-api\",\"idMeaning\":\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\",\"afterWrite\":\"The write just before this (content.update) answered with its receipt: that is the check. Read again only for a next change, or for a head, code or translation-link change.\"}"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "text": "{\"ok\":true,\"apply_id\":\"reader-acceptance-33e4e7d2-4428-4daf-827c-ef238a7b9cbd\",\"steps\":[{\"op\":\"content\",\"created\":false,\"kind\":\"article\",\"id\":52}]}"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "text": "{\"ok\":true,\"reverted\":1,\"next\":\"This is the receipt: nothing to read back. When every change asked is made, tell the customer what changed, in plain words. Keep the apply_id to yourself: apply.revert with it if they ask to undo.\"}"
+          }
+        ]
+      ]
+    },
+    {
+      "after": 6,
+      "hash": "6529c421ac726499e1caffc2ddac1b48356c883a5e16cb7edc9d3476439071e4",
+      "messages": [
+        [
+          {
+            "type": "text",
+            "text": "{\"schemaVersion\":\"tracy-content-pages/v1\",\"site\":{\"id\":\"site_decbd480e6cf7ba26040354547f6a634\",\"name\":null,\"url\":\"http://127.0.0.1:59944\",\"defaultLocale\":null,\"locales\":[]},\"truncated\":false,\"version\":\"cv1.720bef0402badfb4869c8b96918473cc\",\"later\":{\"action\":\"content.read\",\"params\":{\"changedSince\":\"cv1.720bef0402badfb4869c8b96918473cc\"},\"why\":\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\"},\"columns\":[\"title\",\"path\",\"id\",\"record\",\"type\"],\"pages\":[[\"Inventory 051\",\"/index.php/component/content/article/inventory-051?catid=2\",\"content_00084765efe64a31692bdc4cdde39ab8\",\"article:52\",\"article\"]],\"pagination\":{\"offset\":0,\"returned\":1,\"total\":1,\"totalIsComplete\":true,\"nextOffset\":null},\"idNamespace\":\"content-api\",\"idMeaning\":\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\"}"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "text": "{\"ok\":true,\"kind\":\"article\",\"id\":52,\"created\":false,\"next\":\"This is the receipt: nothing to read back. When every change asked is made, tell the customer what changed, in plain words. Keep the apply_id to yourself: apply.revert with it if they ask to undo.\"}"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "text": "{\"schemaVersion\":\"tracy-content-pages/v1\",\"site\":{\"id\":\"site_decbd480e6cf7ba26040354547f6a634\",\"name\":null,\"url\":\"http://127.0.0.1:59944\",\"defaultLocale\":null,\"locales\":[]},\"truncated\":false,\"version\":\"cv1.cc6ceeb90f1c4bbf46cecb6b7bcdf1f6\",\"later\":{\"action\":\"content.read\",\"params\":{\"changedSince\":\"cv1.cc6ceeb90f1c4bbf46cecb6b7bcdf1f6\"},\"why\":\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\"},\"columns\":[\"title\",\"path\",\"id\",\"record\",\"type\"],\"pages\":[[\"Inventory 051 acceptance edit\",\"/index.php/component/content/article/inventory-051?catid=2\",\"content_00084765efe64a31692bdc4cdde39ab8\",\"article:52\",\"article\"]],\"pagination\":{\"offset\":0,\"returned\":1,\"total\":1,\"totalIsComplete\":true,\"nextOffset\":null},\"idNamespace\":\"content-api\",\"idMeaning\":\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\",\"afterWrite\":\"The write just before this (content.update) answered with its receipt: that is the check. Read again only for a next change, or for a head, code or translation-link change.\"}"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "text": "{\"ok\":true,\"apply_id\":\"reader-acceptance-33e4e7d2-4428-4daf-827c-ef238a7b9cbd\",\"steps\":[{\"op\":\"content\",\"created\":false,\"kind\":\"article\",\"id\":52}]}"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "text": "{\"ok\":true,\"reverted\":1,\"next\":\"This is the receipt: nothing to read back. When every change asked is made, tell the customer what changed, in plain words. Keep the apply_id to yourself: apply.revert with it if they ask to undo.\"}"
+          }
+        ],
+        [
+          {
+            "type": "text",
+            "text": "{\"schemaVersion\":\"tracy-content-pages/v1\",\"site\":{\"id\":\"site_decbd480e6cf7ba26040354547f6a634\",\"name\":null,\"url\":\"http://127.0.0.1:59944\",\"defaultLocale\":null,\"locales\":[]},\"truncated\":false,\"version\":\"cv1.c6e34044c7aeb780cd1e2741ac660b4b\",\"later\":{\"action\":\"content.read\",\"params\":{\"changedSince\":\"cv1.c6e34044c7aeb780cd1e2741ac660b4b\"},\"why\":\"Later in this conversation: what changed on the site since this list (edited, new, removed pages).\"},\"columns\":[\"title\",\"path\",\"id\",\"record\",\"type\"],\"pages\":[[\"Inventory 051\",\"/index.php/component/content/article/inventory-051?catid=2\",\"content_00084765efe64a31692bdc4cdde39ab8\",\"article:52\",\"article\"]],\"pagination\":{\"offset\":0,\"returned\":1,\"total\":1,\"totalIsComplete\":true,\"nextOffset\":null},\"idNamespace\":\"content-api\",\"idMeaning\":\"Content ID = id. record or native[].id is only the CMS locator; never return it as the Content ID.\",\"afterWrite\":\"The write just before this (apply.revert) answered with its receipt: that is the check. Read again only for a next change, or for a head, code or translation-link change.\"}"
+          }
+        ]
+      ]
+    }
+  ],
+  "sent": [
+    {
+      "action": "content.read",
+      "params": {
+        "view": "pages"
+      }
+    },
+    {
+      "action": "content.update",
+      "params": {
+        "kind": "article",
+        "id": 52,
+        "fields": {
+          "title": "Inventory 051 acceptance edit"
+        },
+        "apply_id": "reader-acceptance-33e4e7d2-4428-4daf-827c-ef238a7b9cbd"
+      }
+    },
+    {
+      "action": "content.read",
+      "params": {
+        "view": "pages"
+      }
+    },
+    {
+      "action": "apply.list",
+      "params": {
+        "apply_id": "reader-acceptance-33e4e7d2-4428-4daf-827c-ef238a7b9cbd"
+      }
+    },
+    {
+      "action": "apply.revert",
+      "params": {
+        "apply_id": "reader-acceptance-33e4e7d2-4428-4daf-827c-ef238a7b9cbd"
+      }
+    },
+    {
+      "action": "content.read",
+      "params": {
+        "view": "pages"
+      }
+    }
+  ],
+  "reads": [
+    {
+      "ms": 189.13324999999986,
+      "status": 200,
+      "action": "content.read",
+      "params": {
+        "limit": 100
+      },
+      "sourceCalls": 0
+    },
+    {
+      "ms": 139.95466699999997,
+      "status": 200,
+      "action": "content.read",
+      "params": {
+        "limit": 100,
+        "cursor": "eyJzaXRlIjoic2l0ZV9kZWNiZDQ4MGU2Y2Y3YmEyNjA0MDM1NDU0N2Y2YTYzNCIsInByaW5jaXBhbCI6ImQ5ODBhNTAyYzM2NzgyNmFkZjBiYTMwMGZkNDc2YjUwNWUyNjE4YjFhMTA2OWRjNmJiNmVmNjM0ZjY2OGM0MjciLCJyZXZpc2lvbiI6ImNjODljYzVmNWEwMGYyZjQ0MjQ1YTIwOTVlYTBkZGYyYjYwMDhlYzcyZWY0YjVlNDYwNzI4ZWIzNDYyNmJkMzEiLCJleHBpcmVzIjoxNzkzNDM5NDM5LCJxdWVyeSI6eyJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJvZmZzZXQiOjkzfQ.f231522976bb3758786f40fcdfe9fe70350bbc60a0943cbebc42cd27978d14ba"
+      },
+      "sourceCalls": 0
+    },
+    {
+      "ms": 132.53337499999998,
+      "status": 200,
+      "action": "content.read",
+      "params": {
+        "limit": 100,
+        "cursor": "eyJzaXRlIjoic2l0ZV9kZWNiZDQ4MGU2Y2Y3YmEyNjA0MDM1NDU0N2Y2YTYzNCIsInByaW5jaXBhbCI6ImQ5ODBhNTAyYzM2NzgyNmFkZjBiYTMwMGZkNDc2YjUwNWUyNjE4YjFhMTA2OWRjNmJiNmVmNjM0ZjY2OGM0MjciLCJyZXZpc2lvbiI6ImNjODljYzVmNWEwMGYyZjQ0MjQ1YTIwOTVlYTBkZGYyYjYwMDhlYzcyZWY0YjVlNDYwNzI4ZWIzNDYyNmJkMzEiLCJleHBpcmVzIjoxNzkzNDM5NDM5LCJxdWVyeSI6eyJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJvZmZzZXQiOjE4Nn0.c3e26f477cbfc3b311ce9c999659f431242a9b61367bf47e677c97ed2e6009a3"
+      },
+      "sourceCalls": 0
+    },
+    {
+      "ms": 124.73149999999987,
+      "status": 200,
+      "action": "content.read",
+      "params": {
+        "limit": 100,
+        "cursor": "eyJzaXRlIjoic2l0ZV9kZWNiZDQ4MGU2Y2Y3YmEyNjA0MDM1NDU0N2Y2YTYzNCIsInByaW5jaXBhbCI6ImQ5ODBhNTAyYzM2NzgyNmFkZjBiYTMwMGZkNDc2YjUwNWUyNjE4YjFhMTA2OWRjNmJiNmVmNjM0ZjY2OGM0MjciLCJyZXZpc2lvbiI6ImNjODljYzVmNWEwMGYyZjQ0MjQ1YTIwOTVlYTBkZGYyYjYwMDhlYzcyZWY0YjVlNDYwNzI4ZWIzNDYyNmJkMzEiLCJleHBpcmVzIjoxNzkzNDM5NDM5LCJxdWVyeSI6eyJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJvZmZzZXQiOjI3OX0.b3dfcf3a011d8d391cfe4e2f0ef77b18aab4582c2b6f68bf3bcb1b86541eeb80"
+      },
+      "sourceCalls": 0
+    },
+    {
+      "ms": 121.9129170000001,
+      "status": 200,
+      "action": "content.read",
+      "params": {
+        "limit": 100,
+        "cursor": "eyJzaXRlIjoic2l0ZV9kZWNiZDQ4MGU2Y2Y3YmEyNjA0MDM1NDU0N2Y2YTYzNCIsInByaW5jaXBhbCI6ImQ5ODBhNTAyYzM2NzgyNmFkZjBiYTMwMGZkNDc2YjUwNWUyNjE4YjFhMTA2OWRjNmJiNmVmNjM0ZjY2OGM0MjciLCJyZXZpc2lvbiI6ImNjODljYzVmNWEwMGYyZjQ0MjQ1YTIwOTVlYTBkZGYyYjYwMDhlYzcyZWY0YjVlNDYwNzI4ZWIzNDYyNmJkMzEiLCJleHBpcmVzIjoxNzkzNDM5NDM5LCJxdWVyeSI6eyJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJvZmZzZXQiOjM3Mn0.e3856199dd995308cd723126c4b2f84d98fa1bb8e402f6615eac891665c3c0e5"
+      },
+      "sourceCalls": 0
+    },
+    {
+      "ms": 143.60741700000017,
+      "status": 200,
+      "action": "content.read",
+      "params": {
+        "limit": 100
+      },
+      "sourceCalls": 0
+    },
+    {
+      "ms": 79.71691699999974,
+      "status": 200,
+      "action": "content.update",
+      "params": {
+        "kind": "article",
+        "id": 52,
+        "fields": {
+          "title": "Inventory 051 acceptance edit"
+        },
+        "apply_id": "reader-acceptance-33e4e7d2-4428-4daf-827c-ef238a7b9cbd"
+      },
+      "sourceCalls": 0
+    },
+    {
+      "ms": 132.79629099999966,
+      "status": 200,
+      "action": "content.read",
+      "params": {
+        "limit": 100
+      },
+      "sourceCalls": 0
+    },
+    {
+      "ms": 133.94162499999948,
+      "status": 200,
+      "action": "content.read",
+      "params": {
+        "limit": 100,
+        "cursor": "eyJzaXRlIjoic2l0ZV9kZWNiZDQ4MGU2Y2Y3YmEyNjA0MDM1NDU0N2Y2YTYzNCIsInByaW5jaXBhbCI6ImQ5ODBhNTAyYzM2NzgyNmFkZjBiYTMwMGZkNDc2YjUwNWUyNjE4YjFhMTA2OWRjNmJiNmVmNjM0ZjY2OGM0MjciLCJyZXZpc2lvbiI6ImMwOGJhYzM4OWZkMGJhYWM4Yzg2YmVhZWMxM2U0NWQ3YWQ3YTkyZjY4MDNmOGRiZTE3MDVmNmUxYTRlNjk2MDgiLCJleHBpcmVzIjoxNzkzNDM5NDQxLCJxdWVyeSI6eyJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJvZmZzZXQiOjkzfQ.d4fb28129af4987e6006178094a7240cc9030e0fa6e0418a5a82d7cf231e7219"
+      },
+      "sourceCalls": 0
+    },
+    {
+      "ms": 124.63233300000047,
+      "status": 200,
+      "action": "content.read",
+      "params": {
+        "limit": 100,
+        "cursor": "eyJzaXRlIjoic2l0ZV9kZWNiZDQ4MGU2Y2Y3YmEyNjA0MDM1NDU0N2Y2YTYzNCIsInByaW5jaXBhbCI6ImQ5ODBhNTAyYzM2NzgyNmFkZjBiYTMwMGZkNDc2YjUwNWUyNjE4YjFhMTA2OWRjNmJiNmVmNjM0ZjY2OGM0MjciLCJyZXZpc2lvbiI6ImMwOGJhYzM4OWZkMGJhYWM4Yzg2YmVhZWMxM2U0NWQ3YWQ3YTkyZjY4MDNmOGRiZTE3MDVmNmUxYTRlNjk2MDgiLCJleHBpcmVzIjoxNzkzNDM5NDQxLCJxdWVyeSI6eyJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJvZmZzZXQiOjE4Nn0.f8f4b911342abd1361650411bd895556db17fd1ef3e56fa4d69472e929e07409"
+      },
+      "sourceCalls": 0
+    },
+    {
+      "ms": 122.12804200000028,
+      "status": 200,
+      "action": "content.read",
+      "params": {
+        "limit": 100,
+        "cursor": "eyJzaXRlIjoic2l0ZV9kZWNiZDQ4MGU2Y2Y3YmEyNjA0MDM1NDU0N2Y2YTYzNCIsInByaW5jaXBhbCI6ImQ5ODBhNTAyYzM2NzgyNmFkZjBiYTMwMGZkNDc2YjUwNWUyNjE4YjFhMTA2OWRjNmJiNmVmNjM0ZjY2OGM0MjciLCJyZXZpc2lvbiI6ImMwOGJhYzM4OWZkMGJhYWM4Yzg2YmVhZWMxM2U0NWQ3YWQ3YTkyZjY4MDNmOGRiZTE3MDVmNmUxYTRlNjk2MDgiLCJleHBpcmVzIjoxNzkzNDM5NDQxLCJxdWVyeSI6eyJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJvZmZzZXQiOjI3OX0.15fed705e7919b215e66b9561c8dea923ea01e143aa6d2782d54314acfdc6d14"
+      },
+      "sourceCalls": 0
+    },
+    {
+      "ms": 119.18683400000009,
+      "status": 200,
+      "action": "content.read",
+      "params": {
+        "limit": 100,
+        "cursor": "eyJzaXRlIjoic2l0ZV9kZWNiZDQ4MGU2Y2Y3YmEyNjA0MDM1NDU0N2Y2YTYzNCIsInByaW5jaXBhbCI6ImQ5ODBhNTAyYzM2NzgyNmFkZjBiYTMwMGZkNDc2YjUwNWUyNjE4YjFhMTA2OWRjNmJiNmVmNjM0ZjY2OGM0MjciLCJyZXZpc2lvbiI6ImMwOGJhYzM4OWZkMGJhYWM4Yzg2YmVhZWMxM2U0NWQ3YWQ3YTkyZjY4MDNmOGRiZTE3MDVmNmUxYTRlNjk2MDgiLCJleHBpcmVzIjoxNzkzNDM5NDQxLCJxdWVyeSI6eyJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJvZmZzZXQiOjM3Mn0.76ee3be96357c9167e7b4741984cb2b0fe2cf3c0a1d52aec90d0f8851af2e38c"
+      },
+      "sourceCalls": 0
+    },
+    {
+      "ms": 7.884750000000167,
+      "status": 200,
+      "action": "apply.list",
+      "params": {
+        "apply_id": "reader-acceptance-33e4e7d2-4428-4daf-827c-ef238a7b9cbd"
+      },
+      "sourceCalls": 0
+    },
+    {
+      "ms": 33.66675000000032,
+      "status": 200,
+      "action": "apply.revert",
+      "params": {
+        "apply_id": "reader-acceptance-33e4e7d2-4428-4daf-827c-ef238a7b9cbd"
+      },
+      "sourceCalls": 0
+    },
+    {
+      "ms": 158.01116700000057,
+      "status": 200,
+      "action": "content.read",
+      "params": {
+        "limit": 100
+      },
+      "sourceCalls": 0
+    },
+    {
+      "ms": 146.40487500000017,
+      "status": 200,
+      "action": "content.read",
+      "params": {
+        "limit": 100,
+        "cursor": "eyJzaXRlIjoic2l0ZV9kZWNiZDQ4MGU2Y2Y3YmEyNjA0MDM1NDU0N2Y2YTYzNCIsInByaW5jaXBhbCI6ImQ5ODBhNTAyYzM2NzgyNmFkZjBiYTMwMGZkNDc2YjUwNWUyNjE4YjFhMTA2OWRjNmJiNmVmNjM0ZjY2OGM0MjciLCJyZXZpc2lvbiI6IjVhMzUyNTQwY2IwOGFmZjViZGIzY2RjMWM2NGVlZWUzOGUyZTkzOWZiZjEzODA1ODU5MjM0NzM4ZDAyYTJmMTciLCJleHBpcmVzIjoxNzkzNDM5NDQyLCJxdWVyeSI6eyJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJvZmZzZXQiOjkzfQ.79e391ecd84c66476cee24a83108963c255deddda64108b3ea7fc52a33f56a49"
+      },
+      "sourceCalls": 0
+    },
+    {
+      "ms": 122.3115829999997,
+      "status": 200,
+      "action": "content.read",
+      "params": {
+        "limit": 100,
+        "cursor": "eyJzaXRlIjoic2l0ZV9kZWNiZDQ4MGU2Y2Y3YmEyNjA0MDM1NDU0N2Y2YTYzNCIsInByaW5jaXBhbCI6ImQ5ODBhNTAyYzM2NzgyNmFkZjBiYTMwMGZkNDc2YjUwNWUyNjE4YjFhMTA2OWRjNmJiNmVmNjM0ZjY2OGM0MjciLCJyZXZpc2lvbiI6IjVhMzUyNTQwY2IwOGFmZjViZGIzY2RjMWM2NGVlZWUzOGUyZTkzOWZiZjEzODA1ODU5MjM0NzM4ZDAyYTJmMTciLCJleHBpcmVzIjoxNzkzNDM5NDQyLCJxdWVyeSI6eyJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJvZmZzZXQiOjE4Nn0.b2579ae82ce19d0489ca80c4ad2b11f3a166ce2cd825537289541b69371a3808"
+      },
+      "sourceCalls": 0
+    },
+    {
+      "ms": 129.10624999999982,
+      "status": 200,
+      "action": "content.read",
+      "params": {
+        "limit": 100,
+        "cursor": "eyJzaXRlIjoic2l0ZV9kZWNiZDQ4MGU2Y2Y3YmEyNjA0MDM1NDU0N2Y2YTYzNCIsInByaW5jaXBhbCI6ImQ5ODBhNTAyYzM2NzgyNmFkZjBiYTMwMGZkNDc2YjUwNWUyNjE4YjFhMTA2OWRjNmJiNmVmNjM0ZjY2OGM0MjciLCJyZXZpc2lvbiI6IjVhMzUyNTQwY2IwOGFmZjViZGIzY2RjMWM2NGVlZWUzOGUyZTkzOWZiZjEzODA1ODU5MjM0NzM4ZDAyYTJmMTciLCJleHBpcmVzIjoxNzkzNDM5NDQyLCJxdWVyeSI6eyJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJvZmZzZXQiOjI3OX0.adc5801a583c47de0e47ff21a5af62942d0a6a3d677f67e76faaa56bb084cc10"
+      },
+      "sourceCalls": 0
+    },
+    {
+      "ms": 121.92104199999994,
+      "status": 200,
+      "action": "content.read",
+      "params": {
+        "limit": 100,
+        "cursor": "eyJzaXRlIjoic2l0ZV9kZWNiZDQ4MGU2Y2Y3YmEyNjA0MDM1NDU0N2Y2YTYzNCIsInByaW5jaXBhbCI6ImQ5ODBhNTAyYzM2NzgyNmFkZjBiYTMwMGZkNDc2YjUwNWUyNjE4YjFhMTA2OWRjNmJiNmVmNjM0ZjY2OGM0MjciLCJyZXZpc2lvbiI6IjVhMzUyNTQwY2IwOGFmZjViZGIzY2RjMWM2NGVlZWUzOGUyZTkzOWZiZjEzODA1ODU5MjM0NzM4ZDAyYTJmMTciLCJleHBpcmVzIjoxNzkzNDM5NDQyLCJxdWVyeSI6eyJ0eXBlIjpudWxsLCJsb2NhbGUiOm51bGwsImxpbWl0IjoxMDB9LCJvZmZzZXQiOjM3Mn0.1c9c308d971c6e2b27d2ebb690bf721cb0c2efa17cb6b4eaaf0275142826381b"
+      },
+      "sourceCalls": 0
+    },
+    {
+      "ms": 12.77283400000033,
+      "status": 200,
+      "action": "apply.list",
+      "params": {
+        "apply_id": "reader-acceptance-33e4e7d2-4428-4daf-827c-ef238a7b9cbd"
+      },
+      "sourceCalls": 0
+    }
+  ]
+}

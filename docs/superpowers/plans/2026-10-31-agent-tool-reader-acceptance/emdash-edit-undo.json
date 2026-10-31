@@ -1,0 +1,78 @@
+{
+  "platform": "emdash",
+  "before": "faf1ca3e9ffaee8804c77eb9e7033518bee13c6e35e2df7176822fce61c4b9a8",
+  "after": "faf1ca3e9ffaee8804c77eb9e7033518bee13c6e35e2df7176822fce61c4b9a8",
+  "restored": true,
+  "actuallyChanged": true,
+  "undo": {
+    "action": "content.replace",
+    "params": {
+      "restore": [
+        {
+          "at": "about/about@en#title",
+          "value": "Building Russian industrial infrastructure since 2004",
+          "now": "Building industrial infrastructure since 2004"
+        }
+      ]
+    }
+  },
+  "observed": [
+    {
+      "step": 1,
+      "hash": "6214ca0587cedda48c9261d0ae4034a110542ef0cab0d101630f2d3bc4ad5ec9",
+      "answer": "{\"ok\":true,\"platform\":\"emdash\",\"path\":\"/about\",\"changed\":[{\"at\":\"about/about@en#title\",\"where\":\"main\",\"label\":\"about · title\",\"before\":\"Building Russian industrial infrastructure since 2004\",\"after\":\"Building industrial infrastructure since 2004\"}],\"undo\":{\"action\":\"content.replace\",\"params\":{\"restore\":[{\"at\":\"about/about@en#title\",\"value\":\"Building Russian industrial infrastructure since 2004\",\"now\":\"Building industrial infrastructure since 2004\"}]}},\"next\":\"This is the receipt: tell the customer in plain words what changed and where, and what it says now. Keep the undo for yourself until they ask. Read nothing back.\",\"verified\":\"shown on /about\"}"
+    },
+    {
+      "step": 2,
+      "hash": "faf1ca3e9ffaee8804c77eb9e7033518bee13c6e35e2df7176822fce61c4b9a8",
+      "answer": "{\"ok\":true,\"platform\":\"emdash\",\"path\":\"/\",\"changed\":[{\"at\":\"about/about@en#title\",\"where\":null,\"before\":\"Building industrial infrastructure since 2004\",\"after\":\"Building Russian industrial infrastructure since 2004\"}],\"undo\":{\"action\":\"content.replace\",\"params\":{\"restore\":[{\"at\":\"about/about@en#title\",\"value\":\"Building industrial infrastructure since 2004\",\"now\":\"Building Russian industrial infrastructure since 2004\"}]}},\"next\":\"The old words are back: tell the customer. Read nothing back.\"}"
+    }
+  ],
+  "execs": [
+    {
+      "stdin": "",
+      "command": ["exec", "-u", "www-data", "owned-web-1", "node", "-e"]
+    },
+    {
+      "stdin": null,
+      "command": ["exec", "-u", "www-data", "owned-web-1", "curl", "-q"]
+    },
+    {
+      "stdin": null,
+      "command": ["exec", "-u", "www-data", "-e", "HOME=/tmp", "owned-web-1"]
+    },
+    {
+      "stdin": null,
+      "command": ["exec", "-u", "www-data", "owned-web-1", "curl", "-q"]
+    },
+    {
+      "stdin": null,
+      "command": ["exec", "-u", "www-data", "-e", "HOME=/tmp", "owned-web-1"]
+    },
+    {
+      "stdin": null,
+      "command": ["exec", "-u", "www-data", "owned-web-1", "curl", "-q"]
+    },
+    {
+      "stdin": "{\"locales\":[\"en\"],\"menus\":true,\"terms\":true,\"settings\":true}",
+      "command": ["exec", "-i", "-u", "0", "owned-web-1", "node"]
+    },
+    {
+      "stdin": "{\"ops\":[{\"tool\":\"content_update\",\"args\":{\"collection\":\"about\",\"id\":\"01M68M31CV69YMVNGJRXS63Q9C\",\"locale\":\"en\",\"_rev\":\"NDoyMDI2LTEwLTMxVDA5OjE5OjI3LjE1Nlo=\",\"data\":{\"title\":\"Building industrial infrastructure since 2004\"},\"status\":\"published\"}}]}",
+      "command": ["exec", "-i", "-u", "0", "owned-web-1", "node"]
+    },
+    {
+      "stdin": null,
+      "command": ["exec", "-u", "www-data", "owned-web-1", "curl", "-q"]
+    },
+    {
+      "stdin": "{\"locales\":[\"en\"],\"collections\":[\"about\"],\"menus\":false,\"terms\":false,\"settings\":false}",
+      "command": ["exec", "-i", "-u", "0", "owned-web-1", "node"]
+    },
+    {
+      "stdin": "{\"ops\":[{\"tool\":\"content_update\",\"args\":{\"collection\":\"about\",\"id\":\"01M68M31CV69YMVNGJRXS63Q9C\",\"locale\":\"en\",\"_rev\":\"NjoyMDI2LTEwLTMxVDA5OjMzOjE4LjIzNlo=\",\"data\":{\"title\":\"Building Russian industrial infrastructure since 2004\"},\"status\":\"published\"}}]}",
+      "command": ["exec", "-i", "-u", "0", "owned-web-1", "node"]
+    }
+  ],
+  "relayRequests": []
+}

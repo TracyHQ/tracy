@@ -1,0 +1,4357 @@
+{
+  "metadata": {
+    "startedAt": "2026-10-30T14:52:43.012Z",
+    "driver": "bounded real DeepSeek tool loop using production site-tool schemas and native executors; not the complete dsh customer profile",
+    "baselineRef": "76e7f114fa4ce6ac2e1b5b9d1c3ff9857c90c14e",
+    "candidateWorkingTree": true,
+    "hashes": {
+      "baseline": {
+        "replace-wordpress.mjs": "a5c288a88bda12eb77239238b14759d42caa9d9026bfd4faee1a23163b2db9b8",
+        "site-call.mjs": "20e5998934b8e47b45827a53404f004c2808e79e9ed8a9e3e4f97bda0323184b",
+        "read-compact.mjs": "6298877a198b1fd8c24bdb86159a1672e4b3c3656a41987daceeaf1bdc3c997e"
+      },
+      "candidate": {
+        "replace-wordpress.mjs": "bab23694833967ddef56c58385d302735d706103e91eeb2e84cb20bb4f1ca5d1",
+        "site-call.mjs": "297dd40ff2eb596c56e5e7b800faed7403cec840af8ccc8d02a29031a63ce234",
+        "read-compact.mjs": "cfb504cbb847aa6a75a2dde0ec6992bbf437bfd28ab3cce7b32dc52031144347"
+      }
+    },
+    "model": "deepseek-flash",
+    "thinking": "disabled",
+    "temperature": 0,
+    "toolSchemaHash": "631a33a4e752facf7f028cdae537aaca16120decbf14361c433462d602956c48",
+    "fixture": {
+      "wordpress": "7.1.4",
+      "component": "0.18.37",
+      "pages": 401,
+      "wpImage": "sha256:4e202dbb837d751f7c5367a7e9ad4f55e960a823167494cffc4b8598961800f2",
+      "dbImage": "sha256:3853ff4da2eb76058a3a112ae8026e5a094990c5341f1aedd76a903fd171176e"
+    },
+    "repeats": 30,
+    "nativeOnly": true,
+    "injectedDelayMs": 0,
+    "settledCostUsd": null
+  },
+  "rows": [
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:52:43.907Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "3bf53660a8de28603db64ec05b1cc723577e3383c7b69dbb5c278ed22a140cd5",
+      "verificationFailure": null,
+      "repeat": 0,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 1075.5825829999999,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 576.1422500000001,
+      "backendCalls": 17,
+      "backendMs": 616.3846270000004,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 576.1422500000001,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:52:46.675Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "c5d73612bc8b1737350884c37435cbaf4a02d020c85da9dde1260bfacf6f95f2",
+      "verificationFailure": null,
+      "repeat": 0,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 975.9536669999998,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 687.1192499999997,
+      "backendCalls": 11,
+      "backendMs": 1051.918125000002,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 687.1192499999997,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:52:49.583Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "559e640aa5ba4930297ed119a36a8e288caf939a9e47f78c0d477fe7e12cb94b",
+      "verificationFailure": null,
+      "repeat": 1,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 881.4267499999996,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 204.35108299999956,
+      "backendCalls": 11,
+      "backendMs": 198.43991599999936,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 204.35108299999956,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:52:51.947Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "1ba73383d4daf1a8c2661d9914049254366e349635e1ce5d5853922e29785176",
+      "verificationFailure": null,
+      "repeat": 1,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 901.9387500000012,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 643.0134580000013,
+      "backendCalls": 17,
+      "backendMs": 1643.7076269999998,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 643.0134580000013,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:52:53.635Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "d61e173b958ba39054ecc623479c98aa3682000857834a6a5a0cbd1ce16086bb",
+      "verificationFailure": null,
+      "repeat": 2,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 476.43766700000015,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 188.63904100000036,
+      "backendCalls": 17,
+      "backendMs": 252.90837699999975,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 188.63904100000036,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:52:54.802Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "d6f25e700b12ee6a75b5b03e9a35a4282346a4f46269b9cce4f659c4784386c3",
+      "verificationFailure": null,
+      "repeat": 2,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 327.2697500000013,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 142.66345799999908,
+      "backendCalls": 11,
+      "backendMs": 169.48745999999664,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 142.66345799999908,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:52:55.895Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "936ce147b69f8b8be891248623a965b5e6a98fca9a39c5b26153c8f9a5e82b8c",
+      "verificationFailure": null,
+      "repeat": 3,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 302.5439170000009,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 115.78829200000109,
+      "backendCalls": 11,
+      "backendMs": 126.8114149999983,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 115.78829200000109,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:52:56.761Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "3addaea3755374d98d204c8315d4c7ca204edb8e31859cda0b43f892343cd974",
+      "verificationFailure": null,
+      "repeat": 3,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 561.6677909999999,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 242.89199999999983,
+      "backendCalls": 17,
+      "backendMs": 345.78462500000205,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 242.89199999999983,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:52:57.924Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b1561c997ce84be2544d836b93cb4ff1d3c1ab9028ee18f208b80b751eb2744d",
+      "verificationFailure": null,
+      "repeat": 4,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 304.46145799999977,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 124.406332999999,
+      "backendCalls": 17,
+      "backendMs": 181.78233200000614,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 124.406332999999,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:52:58.752Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "ca03f2ba8bb9b9bd7ef981206aec71d72a331f13069d0fab35aeb38bc19a273a",
+      "verificationFailure": null,
+      "repeat": 4,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 281.92925000000105,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 105.36262499999793,
+      "backendCalls": 11,
+      "backendMs": 111.56883399999424,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 105.36262499999793,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:52:59.616Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "a5e8e0b2eee87927d386900ab0cd2ec543fc69aa3b88982c9ba811285d064f25",
+      "verificationFailure": null,
+      "repeat": 5,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 287.25758399999904,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 106.45166699999754,
+      "backendCalls": 11,
+      "backendMs": 112.70996000000741,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 106.45166699999754,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:00.428Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "637f2ff0957859f31c48e87c0236049a8253eff22a648b368ddd8b69be067be6",
+      "verificationFailure": null,
+      "repeat": 5,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 287.86012499999924,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 118.66766600000119,
+      "backendCalls": 17,
+      "backendMs": 181.69996099999844,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 118.66766600000119,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:01.256Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "e81e989d44dc1e6b47b3c2804a0d48d26ad953c476f2f284a08db88727fcaa6c",
+      "verificationFailure": null,
+      "repeat": 6,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 359.4656250000007,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 136.2711249999993,
+      "backendCalls": 17,
+      "backendMs": 198.98737500001153,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 136.2711249999993,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:02.175Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "3dd702c644da30416b3fee13f46105ee6be2a0cfcc8cbb96f5c6075d72becf85",
+      "verificationFailure": null,
+      "repeat": 6,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 354.57341700000325,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 123.8194169999988,
+      "backendCalls": 11,
+      "backendMs": 133.353625000007,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 123.8194169999988,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:03.081Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "54b01a55d1dd3ead0503801becea4f5285fcb3d9f16dd7300815535f3fa1e25d",
+      "verificationFailure": null,
+      "repeat": 7,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 274.39074999999866,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 109.82004199999938,
+      "backendCalls": 11,
+      "backendMs": 132.31995899999674,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 109.82004199999938,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:03.911Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "43e93cc5d8e8e6769daca468bfcf1927637aa6106cee32aa437ea3e3a45040a4",
+      "verificationFailure": null,
+      "repeat": 7,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 275.5001669999983,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 111.51070800000161,
+      "backendCalls": 17,
+      "backendMs": 159.9357480000035,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 111.51070800000161,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:04.707Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "ad45866a8b01ab810769e63b95950c56f697aff66f3c60c0cbaf75bb09699ab6",
+      "verificationFailure": null,
+      "repeat": 8,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 301.67070800000147,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 124.70049999999901,
+      "backendCalls": 17,
+      "backendMs": 191.51916700000584,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 124.70049999999901,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:05.560Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "7ec4513d3dcedb962616cab5b94c377fd8805133164b50bce5b46f288951dcad",
+      "verificationFailure": null,
+      "repeat": 8,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 278.304583000001,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 119.48312499999884,
+      "backendCalls": 11,
+      "backendMs": 120.8338320000039,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 119.48312499999884,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:06.304Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "c34cf1a56833978077ed4454767cde38e410054498dad604676517c42b32068a",
+      "verificationFailure": null,
+      "repeat": 9,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 267.5316249999996,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 100.21899999999732,
+      "backendCalls": 11,
+      "backendMs": 105.66637799999808,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 100.21899999999732,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:07.117Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "2b1eb69d4bc6779dc3e0aea460a373b56c39a8e49fdf559fd42acee09fb71a32",
+      "verificationFailure": null,
+      "repeat": 9,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 286.5378750000018,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 124.37199999999939,
+      "backendCalls": 17,
+      "backendMs": 193.02399899999364,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 124.37199999999939,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:07.927Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "4ae5e2f6202b4ab9622b94d194b6a626f0f10c91d1eb87213da86e76d635f4d8",
+      "verificationFailure": null,
+      "repeat": 10,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 269.89829199999804,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 116.6095830000013,
+      "backendCalls": 17,
+      "backendMs": 168.9703770000051,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 116.6095830000013,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:08.758Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9cd2ead9b46930817d998e67133fb690f502966fc666e7f152e07b1804077e5",
+      "verificationFailure": null,
+      "repeat": 10,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 282.9359169999989,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 118.41812500000015,
+      "backendCalls": 11,
+      "backendMs": 125.57987700000012,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 118.41812500000015,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:09.551Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "eefd2493ada8e050d716b48d47cb502edb4875f2a8f96ed530cca60d58ee2770",
+      "verificationFailure": null,
+      "repeat": 11,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 316.3914169999989,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 149.08312500000102,
+      "backendCalls": 11,
+      "backendMs": 103.83641599999828,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 149.08312500000102,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:10.395Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "23ad9744cab2afa35a32d7ef4b965c5fdd3f7bbed293bb1e951bc28bb0f0e7a3",
+      "verificationFailure": null,
+      "repeat": 11,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 304.6609580000004,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 117.72658299999966,
+      "backendCalls": 17,
+      "backendMs": 179.56433499999548,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 117.72658299999966,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:11.232Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "c24e6844d0d1d2a8f866b225c0a1c53297b12512d9159a486849d4348a98f70e",
+      "verificationFailure": null,
+      "repeat": 12,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 286.411250000001,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 122.06941700000243,
+      "backendCalls": 17,
+      "backendMs": 187.6111260000107,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 122.06941700000243,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:12.053Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "327a5480f15ab2ff89235fe7ee90c0ac6ef42ffc27cc257b18ae12ec7aa70960",
+      "verificationFailure": null,
+      "repeat": 12,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 273.11175000000003,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 112.56000000000131,
+      "backendCalls": 11,
+      "backendMs": 118.7257929999978,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 112.56000000000131,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:12.838Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "dbdabf90cead61cf634370da7ef4dd0813ad973ee69cd180a30ddd12c4b787ea",
+      "verificationFailure": null,
+      "repeat": 13,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 282.2589169999992,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 110.28083400000105,
+      "backendCalls": 11,
+      "backendMs": 125.90404100000524,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 110.28083400000105,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:13.637Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "912ec6f9d0b4e81d749d24af36f1e2ddf4077b7ff452c180e6a0ea208de6efc9",
+      "verificationFailure": null,
+      "repeat": 13,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 286.60483399999794,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 116.00524999999834,
+      "backendCalls": 17,
+      "backendMs": 176.74504300000626,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 116.00524999999834,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:14.447Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "932d851bbaf6ae40e955e9026d1278af0ed381fb07eb78ba46a78c8e5256df90",
+      "verificationFailure": null,
+      "repeat": 14,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 284.88170900000114,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 111.6977079999997,
+      "backendCalls": 17,
+      "backendMs": 167.47633300000234,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 111.6977079999997,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:15.268Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "a9d623e21ad69ddd83cfb87c1f1e94c1997e9bddd77b640cd69452f6693ff083",
+      "verificationFailure": null,
+      "repeat": 14,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 301.24866699999984,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 117.34287499999482,
+      "backendCalls": 11,
+      "backendMs": 116.95100000000093,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 117.34287499999482,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:16.085Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "52457404bd9ec4876633ef4b7bcb10117eb337b940cb8fdc8dd06b51a943bbf9",
+      "verificationFailure": null,
+      "repeat": 15,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 284.3508750000037,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 115.90945799999463,
+      "backendCalls": 11,
+      "backendMs": 124.68925099998887,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 115.90945799999463,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:16.914Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "fbf40bc0f049d99077969dbd5b0b72e01ec79443f7d28db7942772db85deb871",
+      "verificationFailure": null,
+      "repeat": 15,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 295.5997500000012,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 118.86829200000648,
+      "backendCalls": 17,
+      "backendMs": 186.0669179999968,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 118.86829200000648,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:17.744Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "0376c6a2df18448066703403bb31baad5d2ffa4669e725d5cb362720e302d356",
+      "verificationFailure": null,
+      "repeat": 16,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 311.98304199999984,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 135.1471670000028,
+      "backendCalls": 17,
+      "backendMs": 195.8412499999904,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 135.1471670000028,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:18.583Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b991a36b55bcf569a8d8bb22ddc6dcff637b67ed02edaa6d7c54b280f6c15ede",
+      "verificationFailure": null,
+      "repeat": 16,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 312.84404099999665,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 133.74029199999495,
+      "backendCalls": 11,
+      "backendMs": 144.6976250000007,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 133.74029199999495,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:19.410Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "ddfb0f6ba71e8f433e11ea8402472675ac8142c85d44109ee2309fc192fdf53c",
+      "verificationFailure": null,
+      "repeat": 17,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 271.2465830000001,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 108.56904199999553,
+      "backendCalls": 11,
+      "backendMs": 116.86037499997474,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 108.56904199999553,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:20.200Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "bc46ce15c8e47f2dd8f98d329d351cede3e57aeaec6c409339354d0fea551287",
+      "verificationFailure": null,
+      "repeat": 17,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 277.66949999999633,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 115.2477910000016,
+      "backendCalls": 17,
+      "backendMs": 170.5729169999904,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 115.2477910000016,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:20.995Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "0a6a940feb948ea90c85cbd71562804efa3d8e6662daeefdbab248feb50d75de",
+      "verificationFailure": null,
+      "repeat": 18,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 288.5961249999964,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 117.49054199999955,
+      "backendCalls": 17,
+      "backendMs": 174.5381259999922,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 117.49054199999955,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:21.798Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "82b4530e40e4bcc53819ef62c33b1c8ebce9a7303aa27fc3761104055c59d04a",
+      "verificationFailure": null,
+      "repeat": 18,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 291.07195800000045,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 122.4254590000055,
+      "backendCalls": 11,
+      "backendMs": 120.35612499999843,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 122.4254590000055,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:22.612Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "0f56bd06e121dd310ab3f61fcb3d88437a856cd24ef309dda60d4b13ef8c0a29",
+      "verificationFailure": null,
+      "repeat": 19,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 265.7137500000026,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 112.40487500000017,
+      "backendCalls": 11,
+      "backendMs": 133.28679200000624,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 112.40487500000017,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:23.416Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "9829b9513c804f92d31bdb1d13bcb6edd1d5c5d2ecd95be75040d2b96940cdfc",
+      "verificationFailure": null,
+      "repeat": 19,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 292.45700000000215,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 113.24395799999911,
+      "backendCalls": 17,
+      "backendMs": 168.55208400000993,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 113.24395799999911,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:24.241Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "df18d76fbaede2c0756112eb4cebc0d52fb7012ab51d5d34c138cf7935f7ab61",
+      "verificationFailure": null,
+      "repeat": 20,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 309.1209999999992,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 129.82441599999584,
+      "backendCalls": 17,
+      "backendMs": 189.57178799998655,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 129.82441599999584,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:25.078Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "54d5389b1e430b35a77bf12942fae565249a478769f27562eceda19ba6f9e471",
+      "verificationFailure": null,
+      "repeat": 20,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 288.6582500000004,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 106.55437499999971,
+      "backendCalls": 11,
+      "backendMs": 117.0659999999989,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 106.55437499999971,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:25.917Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "efd1a736adfe06abeabc54ceab22220d3c8ace542710068f3d67452c94261d8e",
+      "verificationFailure": null,
+      "repeat": 21,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 292.30662499999744,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 117.11883300000045,
+      "backendCalls": 11,
+      "backendMs": 135.3132499999847,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 117.11883300000045,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:26.754Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "2f19facb39a43b7bb36297517f0002b1fac30ab44f331b1b2ea779f8409874d5",
+      "verificationFailure": null,
+      "repeat": 21,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 286.87395800000377,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 114.07016699999804,
+      "backendCalls": 17,
+      "backendMs": 166.32108199999493,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 114.07016699999804,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:27.575Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "cd0af90adc4f0dd24c15dfc83ce2e792800a1150f2d9342574b0ae7b39a0466f",
+      "verificationFailure": null,
+      "repeat": 22,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 298.3456670000014,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 126.93941700000141,
+      "backendCalls": 17,
+      "backendMs": 199.0989589999881,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 126.93941700000141,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:28.387Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "c48572fc6f8fa0a694709b22e1aa0956ec685ef8d1291834e4751fb11a71c2ee",
+      "verificationFailure": null,
+      "repeat": 22,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 272.86483299999963,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 104.13324999999895,
+      "backendCalls": 11,
+      "backendMs": 115.48150299999543,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 104.13324999999895,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:29.188Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "f412a40ef1602a397700489bb64b4517909dc297abf6482f9387048e93d7bb8e",
+      "verificationFailure": null,
+      "repeat": 23,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 278.40841699999874,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 108.14241600000241,
+      "backendCalls": 11,
+      "backendMs": 114.08004200000141,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 108.14241600000241,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:29.947Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "2a2905eefd6dc3fabb2ce0ba2815239528ba1a5c9238aa8b3cd881aee169773a",
+      "verificationFailure": null,
+      "repeat": 23,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 283.7145410000012,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 119.71108300000196,
+      "backendCalls": 17,
+      "backendMs": 178.29550199999358,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 119.71108300000196,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:30.757Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "380addc42d3c5d7a75100510fab6d72e4c1eee1328045fad5d3a066a1c70308c",
+      "verificationFailure": null,
+      "repeat": 24,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 289.6584589999984,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 116.78366700000333,
+      "backendCalls": 17,
+      "backendMs": 168.09766399998625,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 116.78366700000333,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:31.627Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "373714ec139652eb63099e098ab3e758a83c54fe3f7ec56da173d6aa98820aad",
+      "verificationFailure": null,
+      "repeat": 24,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 280.7191670000029,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 113.80033399999957,
+      "backendCalls": 11,
+      "backendMs": 121.63145899999654,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 113.80033399999957,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:32.456Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "0641e4e2d194b3bd2acc6010497f1cb0f9b4c98b41f93b4f300a92f7637a050c",
+      "verificationFailure": null,
+      "repeat": 25,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 348.6627920000028,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 134.44837499999994,
+      "backendCalls": 11,
+      "backendMs": 145.1213749999879,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 134.44837499999994,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:33.353Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "f88e3c99b6006699ac8876885d02c2a7979f34a6887476dfa8a89591df64384b",
+      "verificationFailure": null,
+      "repeat": 25,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 334.16399999999703,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 138.7340419999964,
+      "backendCalls": 17,
+      "backendMs": 206.63654299998598,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 138.7340419999964,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:34.207Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b1ed3f754e6b7548803b2844df5e9ae93cd2857884976c33886a8ce88396a4c9",
+      "verificationFailure": null,
+      "repeat": 26,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 299.1992079999982,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 133.8599169999943,
+      "backendCalls": 17,
+      "backendMs": 203.55379299999913,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 133.8599169999943,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:35.031Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "774283f4b81a1242f60f755061aca1066becd0e2a579c06e416c4a47618746ba",
+      "verificationFailure": null,
+      "repeat": 26,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 304.54995799999597,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 126.01612499999464,
+      "backendCalls": 11,
+      "backendMs": 135.6292079999912,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 126.01612499999464,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:35.867Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "a94b4448b9557fd0de583d5c1cf42ec4bf437b8024f9e7d87fdeded23f61395c",
+      "verificationFailure": null,
+      "repeat": 27,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 279.1315420000028,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 111.14079099999799,
+      "backendCalls": 11,
+      "backendMs": 118.38579300001584,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 111.14079099999799,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:36.680Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "a789a09ce07582428c46a8f9d1d65259e408f03c20e1431ec479ec0249735736",
+      "verificationFailure": null,
+      "repeat": 27,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 360.1331250000003,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 145.42499999999563,
+      "backendCalls": 17,
+      "backendMs": 241.5572519999987,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 145.42499999999563,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:37.572Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "0806e700810a7aca506a5f40198d695fa0661e405d1e4e7e6c3ac5ac7372e6e6",
+      "verificationFailure": null,
+      "repeat": 28,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 287.02395799999795,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 130.1934160000019,
+      "backendCalls": 17,
+      "backendMs": 204.16662500001257,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 130.1934160000019,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:38.396Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "d6095934832accc4ad35dcc24a44499aac0fe25686290176308430235b6d6383",
+      "verificationFailure": null,
+      "repeat": 28,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 320.60166699999536,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 129.64012499999808,
+      "backendCalls": 11,
+      "backendMs": 141.24270900000556,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 129.64012499999808,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:39.248Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "e87c49d1742ba78b1743a5e206ff65e2aef70a4977fb76f42d0eecb32e73b866",
+      "verificationFailure": null,
+      "repeat": 29,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 277.58016599999974,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 116.94687499999418,
+      "backendCalls": 11,
+      "backendMs": 125.1486659999864,
+      "backendReads": 10,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 116.94687499999418,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "template-replace",
+      "startedAt": "2026-10-30T14:53:40.055Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "56b60123178098643e142efbaeb25972fafe3824a4386e6e457365f201297bbb",
+      "verificationFailure": null,
+      "repeat": 29,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 299.19454200000473,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 130.17583300000115,
+      "backendCalls": 17,
+      "backendMs": 195.98187599998346,
+      "backendReads": 16,
+      "resultChars": 806,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Built with Tracy on WordPress",
+            "replace": "Made with Tracy"
+          },
+          "ms": 130.17583300000115,
+          "chars": 806,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:53:40.892Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 0,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 362.403333000002,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 166.5077089999977,
+      "backendCalls": 8,
+      "backendMs": 191.95712500000081,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 166.5077089999977,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:53:41.783Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 0,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 259.1365420000002,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 91.99504200000229,
+      "backendCalls": 8,
+      "backendMs": 95.2560850000009,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 91.99504200000229,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:53:42.574Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 1,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 278.84825000000274,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 105.31758300000365,
+      "backendCalls": 8,
+      "backendMs": 110.73929100000532,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 105.31758300000365,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:53:43.357Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 1,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 254.47104200000467,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 94.40079100000003,
+      "backendCalls": 8,
+      "backendMs": 97.56195900000603,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 94.40079100000003,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:53:44.206Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 2,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 318.6514590000006,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 111.67599999999948,
+      "backendCalls": 8,
+      "backendMs": 116.6203749999986,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 111.67599999999948,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:53:45.198Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 2,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 409.9127079999962,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 208.55741699999635,
+      "backendCalls": 8,
+      "backendMs": 303.70945600000414,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 208.55741699999635,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:53:46.320Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 3,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 412.65658399999666,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 160.76141700000153,
+      "backendCalls": 8,
+      "backendMs": 164.7518329999948,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 160.76141700000153,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:53:47.434Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 3,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 416.708166000004,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 151.34720899999957,
+      "backendCalls": 8,
+      "backendMs": 142.48666699997557,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 151.34720899999957,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:53:48.496Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 4,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 438.03279199999815,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 178.51987499999814,
+      "backendCalls": 8,
+      "backendMs": 199.11624900001334,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 178.51987499999814,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:53:49.605Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 4,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 470.98087499999383,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 230.52391699999862,
+      "backendCalls": 8,
+      "backendMs": 185.7680830000172,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 230.52391699999862,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:53:51.136Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 5,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 431.96358299998974,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 178.0485420000041,
+      "backendCalls": 8,
+      "backendMs": 168.80424800000037,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 178.0485420000041,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:53:52.323Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 5,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 528.1201660000079,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 199.44704199999978,
+      "backendCalls": 8,
+      "backendMs": 233.17112499999348,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 199.44704199999978,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:53:53.638Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 6,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 407.2694579999952,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 187.1500420000084,
+      "backendCalls": 8,
+      "backendMs": 189.50395700002264,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 187.1500420000084,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:53:54.806Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 6,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 477.938083999994,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 205.16904100000102,
+      "backendCalls": 8,
+      "backendMs": 286.5382900000259,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 205.16904100000102,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:53:55.958Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 7,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 426.1323330000014,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 163.13575000000128,
+      "backendCalls": 8,
+      "backendMs": 172.17941599999904,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 163.13575000000128,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:53:57.062Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 7,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 265.32137499999953,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 92.8432499999908,
+      "backendCalls": 8,
+      "backendMs": 95.41945600003237,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 92.8432499999908,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:53:57.872Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 8,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 275.44304199999897,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 95.57220800001232,
+      "backendCalls": 8,
+      "backendMs": 97.10808300001372,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 95.57220800001232,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:53:58.719Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 8,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 270.06191599999147,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 91.51516699999047,
+      "backendCalls": 8,
+      "backendMs": 91.04970799999137,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 91.51516699999047,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:53:59.538Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 9,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 264.9744159999973,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 91.63741599999776,
+      "backendCalls": 8,
+      "backendMs": 93.47087600000668,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 91.63741599999776,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:00.321Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 9,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 254.20720900000015,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 88.52279200000339,
+      "backendCalls": 8,
+      "backendMs": 92.50958200001332,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 88.52279200000339,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:01.109Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 10,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 270.976250000007,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 100.90249999999651,
+      "backendCalls": 8,
+      "backendMs": 95.92262600001413,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 100.90249999999651,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:01.911Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 10,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 265.8910840000026,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 86.74025000000256,
+      "backendCalls": 8,
+      "backendMs": 84.56895699999586,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 86.74025000000256,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:02.673Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 11,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 258.5541669999948,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 84.27262500001234,
+      "backendCalls": 8,
+      "backendMs": 80.32791599999473,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 84.27262500001234,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:03.461Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 11,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 257.3509170000034,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 84.04883300000802,
+      "backendCalls": 8,
+      "backendMs": 80.4906270000065,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 84.04883300000802,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:04.239Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 12,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 251.52854200000002,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 87.6339580000058,
+      "backendCalls": 8,
+      "backendMs": 87.10425099999702,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 87.6339580000058,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:05.031Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 12,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 262.4326250000013,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 88.03758400000515,
+      "backendCalls": 8,
+      "backendMs": 100.17245700000785,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 88.03758400000515,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:05.812Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 13,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 261.6711249999935,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 90.69433300000674,
+      "backendCalls": 8,
+      "backendMs": 89.6202520000079,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 90.69433300000674,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:06.600Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 13,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 266.9477909999987,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 94.53283300000476,
+      "backendCalls": 8,
+      "backendMs": 104.80683600000339,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 94.53283300000476,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:07.443Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 14,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 261.5102499999921,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 86.7642909999995,
+      "backendCalls": 8,
+      "backendMs": 90.0939169999765,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 86.7642909999995,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:08.236Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 14,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 261.77254200000607,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 87.4321670000063,
+      "backendCalls": 8,
+      "backendMs": 87.79104199998255,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 87.4321670000063,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:09.026Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 15,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 254.21612499999173,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 84.67329200000677,
+      "backendCalls": 8,
+      "backendMs": 85.63529100002779,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 84.67329200000677,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:09.799Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 15,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 266.4837499999994,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 91.95808299999044,
+      "backendCalls": 8,
+      "backendMs": 89.02374799999234,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 91.95808299999044,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:10.569Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 16,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 288.2323749999923,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 97.07474999999977,
+      "backendCalls": 8,
+      "backendMs": 95.97203999997873,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 97.07474999999977,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:11.363Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 16,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 243.54504100000486,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 83.76979200000642,
+      "backendCalls": 8,
+      "backendMs": 83.29824900001404,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 83.76979200000642,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:12.122Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 17,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 250.63012499999604,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 85.0354159999988,
+      "backendCalls": 8,
+      "backendMs": 85.00579100000323,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 85.0354159999988,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:12.902Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 17,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 252.6477920000034,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 86.72499999999127,
+      "backendCalls": 8,
+      "backendMs": 84.83141700000851,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 86.72499999999127,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:13.661Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 18,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 252.9677079999965,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 90.76420800000778,
+      "backendCalls": 8,
+      "backendMs": 92.65912500002014,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 90.76420800000778,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:14.448Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 18,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 259.6683340000018,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 85.16575000000012,
+      "backendCalls": 8,
+      "backendMs": 83.98391799998353,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 85.16575000000012,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:15.272Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 19,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 263.9002499999915,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 90.99308299999393,
+      "backendCalls": 8,
+      "backendMs": 89.1765000000014,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 90.99308299999393,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:16.072Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 19,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 257.70274999999674,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 97.26849999999104,
+      "backendCalls": 8,
+      "backendMs": 95.52041499999177,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 97.26849999999104,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:16.854Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 20,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 276.620041999995,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 102.45441700000083,
+      "backendCalls": 8,
+      "backendMs": 130.81475099998352,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 102.45441700000083,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:17.648Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 20,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 259.56341599998996,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 89.98962500000198,
+      "backendCalls": 8,
+      "backendMs": 93.28900099998282,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 89.98962500000198,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:18.460Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 21,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 263.87466600000334,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 89.93249999999534,
+      "backendCalls": 8,
+      "backendMs": 90.86650100002589,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 89.93249999999534,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:19.249Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 21,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 262.1009999999951,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 93.58291699999245,
+      "backendCalls": 8,
+      "backendMs": 90.71762399999716,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 93.58291699999245,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:20.028Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 22,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 266.4177090000012,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 90.61620800000674,
+      "backendCalls": 8,
+      "backendMs": 90.03542000000016,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 90.61620800000674,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:20.815Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 22,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 256.73249999999825,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 82.86137499999313,
+      "backendCalls": 8,
+      "backendMs": 80.49183300002187,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 82.86137499999313,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:21.602Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 23,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 257.2525000000023,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 83.04283299999952,
+      "backendCalls": 8,
+      "backendMs": 78.99587499999325,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 83.04283299999952,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:22.386Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 23,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 261.9620830000058,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 92.17174999999406,
+      "backendCalls": 8,
+      "backendMs": 93.24383399999351,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 92.17174999999406,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:23.179Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 24,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 274.50125000000116,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 86.45524999999907,
+      "backendCalls": 8,
+      "backendMs": 86.88216799999645,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 86.45524999999907,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:23.962Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 24,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 325.2382499999949,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 127.84795799999847,
+      "backendCalls": 8,
+      "backendMs": 104.40845799997624,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 127.84795799999847,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:24.902Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 25,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 275.2447909999901,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 90.08208300000115,
+      "backendCalls": 8,
+      "backendMs": 89.54804000002332,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 90.08208300000115,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:25.745Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 25,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 264.9470419999998,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 87.10754199999792,
+      "backendCalls": 8,
+      "backendMs": 82.88791700000002,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 87.10754199999792,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:26.558Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 26,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 297.3489169999957,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 103.42387499999313,
+      "backendCalls": 8,
+      "backendMs": 105.01712399999087,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 103.42387499999313,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:27.386Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 26,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 240.72004200000083,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 92.47579100000439,
+      "backendCalls": 8,
+      "backendMs": 95.63608300000487,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 92.47579100000439,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:28.149Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 27,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 262.9934159999975,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 90.90979200000584,
+      "backendCalls": 8,
+      "backendMs": 88.37545900000259,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 90.90979200000584,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:28.923Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 27,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 233.28016700000444,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 80.41154200000165,
+      "backendCalls": 8,
+      "backendMs": 82.62837399999262,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 80.41154200000165,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:29.663Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 28,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 244.6937920000055,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 80.65870899999572,
+      "backendCalls": 8,
+      "backendMs": 83.53583300001628,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 80.65870899999572,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:30.438Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 28,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 258.2215419999993,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 89.38779199999408,
+      "backendCalls": 8,
+      "backendMs": 83.67404100000567,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 89.38779199999408,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:31.214Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 29,
+      "arm": "candidate",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 301.37583400000585,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 106.4340419999935,
+      "backendCalls": 8,
+      "backendMs": 103.66920899998513,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 106.4340419999935,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    },
+    {
+      "task": "page-replace-control",
+      "startedAt": "2026-10-30T14:54:32.020Z",
+      "contentBeforeHash": "348d9bd85dc61c771159ab30eb50b3ef5ba08a55dc03dbe2025e02c911e55e3a",
+      "contentAfterHash": "b9ce3c60030ce938c0e0a223cd8115659673a38cc69ba4dc8b22a3cb834f96b7",
+      "verificationFailure": null,
+      "repeat": 29,
+      "arm": "baseline",
+      "verified": true,
+      "undoVerified": true,
+      "failure": null,
+      "elapsedMs": 242.58104200000525,
+      "steps": 0,
+      "modelMs": 0,
+      "toolMs": 80.86299999999756,
+      "backendCalls": 8,
+      "backendMs": 88.7922910000052,
+      "backendReads": 7,
+      "resultChars": 565,
+      "requests": [],
+      "calls": [
+        {
+          "action": "content.replace",
+          "params": {
+            "path": "/?page_id=4",
+            "find": "Keep this short line.",
+            "replace": "Keep this fresh line."
+          },
+          "ms": 80.86299999999756,
+          "chars": 565,
+          "ok": true,
+          "code": null
+        }
+      ],
+      "final": ""
+    }
+  ]
+}

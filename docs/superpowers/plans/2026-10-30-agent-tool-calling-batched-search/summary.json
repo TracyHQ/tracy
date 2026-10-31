@@ -1,0 +1,412 @@
+{
+  "percentileMethod": "Linear interpolation; all attempts retained. Verified-only metrics are explicitly conditional, not overall latency or cost per success.",
+  "costBasis": "Known provider usage at off-peak USD per million tokens: hit .003, miss .15, output .60. Transport failures have unknown usage/charge, never assumed zero. Scripted harness has no model billing.",
+  "harness": {
+    "page-group": {
+      "batch": {
+        "attempts": 12,
+        "verified": 12,
+        "undoPassed": 0,
+        "elapsedP50MsAllAttempts": 394.9422080000004,
+        "elapsedP90MsAllAttempts": 1219.0185577000004,
+        "elapsedP50MsVerifiedOnly": 394.9422080000004,
+        "backendReadsP50VerifiedOnly": 5.0,
+        "toolCallsP50VerifiedOnly": 1.0,
+        "modelRequestsP50VerifiedOnly": 4.0,
+        "knownUsageSubtotalEstimatedUsd": 0,
+        "verifiedOnlyUsageEstimatedUsdPerTask": null,
+        "unpricedAttempts": 0,
+        "totalEstimatedUsd": null,
+        "settledCostUsd": null,
+        "failures": []
+      },
+      "independent": {
+        "attempts": 12,
+        "verified": 12,
+        "undoPassed": 0,
+        "elapsedP50MsAllAttempts": 463.314937500003,
+        "elapsedP90MsAllAttempts": 666.0708919999997,
+        "elapsedP50MsVerifiedOnly": 463.314937500003,
+        "backendReadsP50VerifiedOnly": 20.0,
+        "toolCallsP50VerifiedOnly": 4.0,
+        "modelRequestsP50VerifiedOnly": 4.0,
+        "knownUsageSubtotalEstimatedUsd": 0,
+        "verifiedOnlyUsageEstimatedUsdPerTask": null,
+        "unpricedAttempts": 0,
+        "totalEstimatedUsd": null,
+        "settledCostUsd": null,
+        "failures": []
+      }
+    }
+  },
+  "model": {
+    "known-url-control": {
+      "baseline": {
+        "attempts": 12,
+        "verified": 12,
+        "undoPassed": 0,
+        "elapsedP50MsAllAttempts": 2492.785353999934,
+        "elapsedP90MsAllAttempts": 2706.220458600065,
+        "elapsedP50MsVerifiedOnly": 2492.785353999934,
+        "backendReadsP50VerifiedOnly": 6.0,
+        "toolCallsP50VerifiedOnly": 1.0,
+        "modelRequestsP50VerifiedOnly": 2.0,
+        "knownUsageSubtotalEstimatedUsd": 0.0017911440000000004,
+        "verifiedOnlyUsageEstimatedUsdPerTask": 0.00014926200000000002,
+        "unpricedAttempts": 0,
+        "totalEstimatedUsd": 0.0017911440000000004,
+        "settledCostUsd": null,
+        "failures": []
+      },
+      "candidate": {
+        "attempts": 12,
+        "verified": 12,
+        "undoPassed": 0,
+        "elapsedP50MsAllAttempts": 2602.353562499862,
+        "elapsedP90MsAllAttempts": 2898.097878899961,
+        "elapsedP50MsVerifiedOnly": 2602.353562499862,
+        "backendReadsP50VerifiedOnly": 6.0,
+        "toolCallsP50VerifiedOnly": 1.0,
+        "modelRequestsP50VerifiedOnly": 2.0,
+        "knownUsageSubtotalEstimatedUsd": 0.001780344,
+        "verifiedOnlyUsageEstimatedUsdPerTask": 0.000148362,
+        "unpricedAttempts": 0,
+        "totalEstimatedUsd": 0.001780344,
+        "settledCostUsd": null,
+        "failures": []
+      }
+    },
+    "page-replace-control": {
+      "baseline": {
+        "attempts": 12,
+        "verified": 12,
+        "undoPassed": 12,
+        "elapsedP50MsAllAttempts": 2217.4818545000016,
+        "elapsedP90MsAllAttempts": 2347.1783203000086,
+        "elapsedP50MsVerifiedOnly": 2217.4818545000016,
+        "backendReadsP50VerifiedOnly": 7.0,
+        "toolCallsP50VerifiedOnly": 1.0,
+        "modelRequestsP50VerifiedOnly": 2.0,
+        "knownUsageSubtotalEstimatedUsd": 0.001711752,
+        "verifiedOnlyUsageEstimatedUsdPerTask": 0.000142646,
+        "unpricedAttempts": 0,
+        "totalEstimatedUsd": 0.001711752,
+        "settledCostUsd": null,
+        "failures": []
+      },
+      "candidate": {
+        "attempts": 12,
+        "verified": 12,
+        "undoPassed": 12,
+        "elapsedP50MsAllAttempts": 2253.246854499994,
+        "elapsedP90MsAllAttempts": 2970.2192545000025,
+        "elapsedP50MsVerifiedOnly": 2253.246854499994,
+        "backendReadsP50VerifiedOnly": 7.0,
+        "toolCallsP50VerifiedOnly": 1.0,
+        "modelRequestsP50VerifiedOnly": 2.0,
+        "knownUsageSubtotalEstimatedUsd": 0.0017758679999999997,
+        "verifiedOnlyUsageEstimatedUsdPerTask": 0.00014798899999999998,
+        "unpricedAttempts": 0,
+        "totalEstimatedUsd": 0.0017758679999999997,
+        "settledCostUsd": null,
+        "failures": []
+      }
+    },
+    "template-replace": {
+      "baseline": {
+        "attempts": 12,
+        "verified": 12,
+        "undoPassed": 12,
+        "elapsedP50MsAllAttempts": 3887.2216255000003,
+        "elapsedP90MsAllAttempts": 4506.3407253,
+        "elapsedP50MsVerifiedOnly": 3887.2216255000003,
+        "backendReadsP50VerifiedOnly": 16.0,
+        "toolCallsP50VerifiedOnly": 2.0,
+        "modelRequestsP50VerifiedOnly": 3.0,
+        "knownUsageSubtotalEstimatedUsd": 0.002660484,
+        "verifiedOnlyUsageEstimatedUsdPerTask": 0.000221707,
+        "unpricedAttempts": 0,
+        "totalEstimatedUsd": 0.002660484,
+        "settledCostUsd": null,
+        "failures": []
+      },
+      "candidate": {
+        "attempts": 12,
+        "verified": 12,
+        "undoPassed": 12,
+        "elapsedP50MsAllAttempts": 3884.940625000003,
+        "elapsedP90MsAllAttempts": 5150.0679122,
+        "elapsedP50MsVerifiedOnly": 3884.940625000003,
+        "backendReadsP50VerifiedOnly": 16.0,
+        "toolCallsP50VerifiedOnly": 2.0,
+        "modelRequestsP50VerifiedOnly": 3.0,
+        "knownUsageSubtotalEstimatedUsd": 0.0031328399999999996,
+        "verifiedOnlyUsageEstimatedUsdPerTask": 0.00026106999999999997,
+        "unpricedAttempts": 0,
+        "totalEstimatedUsd": 0.0031328399999999996,
+        "settledCostUsd": null,
+        "failures": []
+      }
+    },
+    "title-group": {
+      "baseline": {
+        "attempts": 12,
+        "verified": 11,
+        "undoPassed": 0,
+        "elapsedP50MsAllAttempts": 3944.331750000012,
+        "elapsedP90MsAllAttempts": 6404.600445499947,
+        "elapsedP50MsVerifiedOnly": 3986.9162500000093,
+        "backendReadsP50VerifiedOnly": 20,
+        "toolCallsP50VerifiedOnly": 4,
+        "modelRequestsP50VerifiedOnly": 2,
+        "knownUsageSubtotalEstimatedUsd": 0.0043512479999999985,
+        "verifiedOnlyUsageEstimatedUsdPerTask": 0.00039556799999999984,
+        "unpricedAttempts": 1,
+        "totalEstimatedUsd": null,
+        "settledCostUsd": null,
+        "failures": [
+          {
+            "repeat": 0,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          }
+        ]
+      },
+      "candidate": {
+        "attempts": 12,
+        "verified": 11,
+        "undoPassed": 0,
+        "elapsedP50MsAllAttempts": 2821.696208499954,
+        "elapsedP90MsAllAttempts": 6354.516962499964,
+        "elapsedP50MsVerifiedOnly": 2878.097542000003,
+        "backendReadsP50VerifiedOnly": 5,
+        "toolCallsP50VerifiedOnly": 1,
+        "modelRequestsP50VerifiedOnly": 2,
+        "knownUsageSubtotalEstimatedUsd": 0.0025788059999999995,
+        "verifiedOnlyUsageEstimatedUsdPerTask": 0.00023443690909090905,
+        "unpricedAttempts": 1,
+        "totalEstimatedUsd": null,
+        "settledCostUsd": null,
+        "failures": [
+          {
+            "repeat": 0,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          }
+        ]
+      }
+    },
+    "title-lookup": {
+      "baseline": {
+        "attempts": 12,
+        "verified": 3,
+        "undoPassed": 0,
+        "elapsedP50MsAllAttempts": 964.4773334999918,
+        "elapsedP90MsAllAttempts": 9558.572775600003,
+        "elapsedP50MsVerifiedOnly": 10362.516959,
+        "backendReadsP50VerifiedOnly": 5,
+        "toolCallsP50VerifiedOnly": 1,
+        "modelRequestsP50VerifiedOnly": 2,
+        "knownUsageSubtotalEstimatedUsd": 0.00044013600000000004,
+        "verifiedOnlyUsageEstimatedUsdPerTask": 0.00014671200000000001,
+        "unpricedAttempts": 9,
+        "totalEstimatedUsd": null,
+        "settledCostUsd": null,
+        "failures": [
+          {
+            "repeat": 3,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          },
+          {
+            "repeat": 4,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          },
+          {
+            "repeat": 5,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          },
+          {
+            "repeat": 6,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          },
+          {
+            "repeat": 7,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          },
+          {
+            "repeat": 8,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          },
+          {
+            "repeat": 9,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          },
+          {
+            "repeat": 10,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          },
+          {
+            "repeat": 11,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          }
+        ]
+      },
+      "candidate": {
+        "attempts": 12,
+        "verified": 1,
+        "undoPassed": 0,
+        "elapsedP50MsAllAttempts": 835.5724579999805,
+        "elapsedP90MsAllAttempts": 5991.0486750000055,
+        "elapsedP50MsVerifiedOnly": 6362.168000000005,
+        "backendReadsP50VerifiedOnly": 5,
+        "toolCallsP50VerifiedOnly": 1,
+        "modelRequestsP50VerifiedOnly": 2,
+        "knownUsageSubtotalEstimatedUsd": 0.00013374600000000002,
+        "verifiedOnlyUsageEstimatedUsdPerTask": 0.00013374600000000002,
+        "unpricedAttempts": 11,
+        "totalEstimatedUsd": null,
+        "settledCostUsd": null,
+        "failures": [
+          {
+            "repeat": 1,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          },
+          {
+            "repeat": 2,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          },
+          {
+            "repeat": 3,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          },
+          {
+            "repeat": 4,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          },
+          {
+            "repeat": 5,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          },
+          {
+            "repeat": 6,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          },
+          {
+            "repeat": 7,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          },
+          {
+            "repeat": 8,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          },
+          {
+            "repeat": 9,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          },
+          {
+            "repeat": 10,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          },
+          {
+            "repeat": 11,
+            "failure": "fetch failed",
+            "reason": "fetch failed"
+          }
+        ]
+      }
+    }
+  },
+  "native": {
+    "page-replace-control": {
+      "baseline": {
+        "attempts": 10,
+        "verified": 10,
+        "undoPassed": 10,
+        "elapsedP50MsAllAttempts": 322.3962915000011,
+        "elapsedP90MsAllAttempts": 343.5717246999975,
+        "elapsedP50MsVerifiedOnly": 322.3962915000011,
+        "backendReadsP50VerifiedOnly": 7.0,
+        "toolCallsP50VerifiedOnly": 1.0,
+        "modelRequestsP50VerifiedOnly": 0.0,
+        "knownUsageSubtotalEstimatedUsd": 0,
+        "verifiedOnlyUsageEstimatedUsdPerTask": 0.0,
+        "unpricedAttempts": 0,
+        "totalEstimatedUsd": 0,
+        "settledCostUsd": null,
+        "failures": []
+      },
+      "candidate": {
+        "attempts": 10,
+        "verified": 10,
+        "undoPassed": 10,
+        "elapsedP50MsAllAttempts": 333.8473959999974,
+        "elapsedP90MsAllAttempts": 335.84235030000127,
+        "elapsedP50MsVerifiedOnly": 333.8473959999974,
+        "backendReadsP50VerifiedOnly": 7.0,
+        "toolCallsP50VerifiedOnly": 1.0,
+        "modelRequestsP50VerifiedOnly": 0.0,
+        "knownUsageSubtotalEstimatedUsd": 0,
+        "verifiedOnlyUsageEstimatedUsdPerTask": 0.0,
+        "unpricedAttempts": 0,
+        "totalEstimatedUsd": 0,
+        "settledCostUsd": null,
+        "failures": []
+      }
+    },
+    "template-replace": {
+      "baseline": {
+        "attempts": 10,
+        "verified": 10,
+        "undoPassed": 10,
+        "elapsedP50MsAllAttempts": 359.1292710000007,
+        "elapsedP90MsAllAttempts": 504.01011689999956,
+        "elapsedP50MsVerifiedOnly": 359.1292710000007,
+        "backendReadsP50VerifiedOnly": 10.0,
+        "toolCallsP50VerifiedOnly": 1.0,
+        "modelRequestsP50VerifiedOnly": 0.0,
+        "knownUsageSubtotalEstimatedUsd": 0,
+        "verifiedOnlyUsageEstimatedUsdPerTask": 0.0,
+        "unpricedAttempts": 0,
+        "totalEstimatedUsd": 0,
+        "settledCostUsd": null,
+        "failures": []
+      },
+      "candidate": {
+        "attempts": 10,
+        "verified": 10,
+        "undoPassed": 10,
+        "elapsedP50MsAllAttempts": 390.06943800000136,
+        "elapsedP90MsAllAttempts": 554.9129999999991,
+        "elapsedP50MsVerifiedOnly": 390.06943800000136,
+        "backendReadsP50VerifiedOnly": 10.0,
+        "toolCallsP50VerifiedOnly": 1.0,
+        "modelRequestsP50VerifiedOnly": 0.0,
+        "knownUsageSubtotalEstimatedUsd": 0,
+        "verifiedOnlyUsageEstimatedUsdPerTask": 0.0,
+        "unpricedAttempts": 0,
+        "totalEstimatedUsd": 0,
+        "settledCostUsd": null,
+        "failures": []
+      }
+    }
+  }
+}
