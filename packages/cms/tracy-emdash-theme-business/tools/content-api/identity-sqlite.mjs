@@ -2,6 +2,7 @@
 import { DatabaseSync } from 'node:sqlite'
 import { randomUUID, randomBytes } from 'node:crypto'
 import { pathToFileURL } from 'node:url'
+import { CHANGES_TABLE, changeTriggers, watchedTables } from './reader.mjs'
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
 const ident = (s) => {
   if (!/^[a-z][a-z0-9_]*$/.test(s)) throw Error('Invalid schema identifier')
@@ -25,6 +26,25 @@ const needs = (rows) =>
   `(json_type(${rows})='array' AND NOT EXISTS(SELECT 1 FROM json_each(${rows}) e WHERE e.type<>'object') AND EXISTS(SELECT 1 FROM json_each(${rows}) j WHERE NOT ${keeps(rows)}))`
 const stamped = (rows) =>
   `(SELECT json_group_array(json_set(j.value,'$._rowId',CASE WHEN ${keeps(rows)} THEN ${rowId('j')} ELSE ${newUuid} END) ORDER BY j.key) FROM json_each(${rows}) j)`
+// The change counter the reader keeps its rows under (reader.mjs, `changesWatched`): one row,
+// whose nonce is new whenever the row is, and three triggers on every watched table. Triggers of an
+// earlier set that no longer match are replaced; those on tables no longer watched are dropped.
+function watchChanges(db) {
+  db.exec(
+    `CREATE TABLE IF NOT EXISTS ${CHANGES_TABLE} (id INTEGER PRIMARY KEY CHECK(id=1), nonce TEXT NOT NULL, n INTEGER NOT NULL)`
+  )
+  db.prepare(`INSERT OR IGNORE INTO ${CHANGES_TABLE} VALUES(1,?,0)`).run(randomBytes(16).toString('hex'))
+  const master = db.prepare('SELECT type,name,tbl_name,sql FROM sqlite_master').all()
+  const tables = watchedTables(master)
+  const wanted = new Map(tables.flatMap(changeTriggers).map((t) => [t.name, t.sql]))
+  const quote = (name) => '"' + name.replaceAll('"', '""') + '"'
+  for (const r of master)
+    if (r.type === 'trigger' && r.name.startsWith('tracy_change_') && wanted.get(r.name) !== r.sql)
+      db.exec(`DROP TRIGGER ${quote(r.name)}`)
+  const present = new Set(master.filter((r) => r.type === 'trigger').map((r) => r.name + '\0' + r.sql))
+  for (const [name, sql] of wanted) if (!present.has(name + '\0' + sql)) db.exec(sql)
+  return tables.length
+}
 export function migrateIdentity(
   db,
   { newSite = false, operationId = null, restore = false, repeaters = true } = {}
@@ -101,6 +121,7 @@ export function migrateIdentity(
       db.prepare('INSERT OR IGNORE INTO _tracy_identity_fields VALUES(?,?)').run(f.collection, f.field)
       result.fields.push(f.collection + '.' + f.field)
     }
+    result.watched = watchChanges(db)
     db.exec('COMMIT')
     return result
   } catch (e) {

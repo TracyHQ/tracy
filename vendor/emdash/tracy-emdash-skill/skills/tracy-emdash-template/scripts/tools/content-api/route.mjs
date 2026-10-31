@@ -1,7 +1,16 @@
 import { hasPermission } from '@emdash-cms/auth'
 import { getRequestContext, runWithContext } from 'emdash/request-context'
 import options from 'virtual:tracy-content-map'
-import { ContentError, queryOf, envelope, hasher, sourceRows } from './reader.mjs'
+import {
+  ContentError,
+  queryOf,
+  envelope,
+  hasher,
+  sourceRows as freshRows,
+  cachedRows,
+  changeKey,
+  CHANGES_TABLE
+} from './reader.mjs'
 import { CommandError, requestAuthority } from './command.mjs'
 export const prerender = false
 const headers = { 'Content-Type': 'application/json', 'Cache-Control': 'private, no-store' }
@@ -17,6 +26,17 @@ const error = (status, code, field, extras = {}) =>
     },
     { status, headers }
   )
+// Source rows per caller rights, kept while the database is unchanged (reader.mjs, cachedRows).
+const kept = new Map()
+const coverage = { schema: null, watched: false }
+// The identity tool's change counter, the schema cookie and sqlite_master, read in `trx`.
+const changeSource = (trx) => ({
+  counter: () => trx.selectFrom(CHANGES_TABLE).select(['nonce', 'n']).where('id', '=', 1).executeTakeFirst(),
+  schema: async () =>
+    (await trx.selectFrom('pragma_schema_version').select('schema_version').executeTakeFirst())
+      ?.schema_version,
+  master: () => trx.selectFrom('sqlite_master').select(['type', 'name', 'tbl_name', 'sql']).execute()
+})
 async function read(context, authority = { contentPrincipal: null, contentScope: 'published' }) {
   context.cache?.set(false)
   const { locals } = context
@@ -68,6 +88,15 @@ async function read(context, authority = { contentPrincipal: null, contentScope:
             )
           return r.data
         }
+        // The rows this transaction would read, taken from `kept` when they were read in the same
+        // database state; the key is read first, in this transaction's snapshot.
+        const change = await changeKey(changeSource(trx), coverage)
+        let hit = false
+        const sourceRows = async (args) => {
+          const answer = await cachedRows(kept, `${drafts}:${args.published}`, change, () => freshRows(args))
+          hit = answer.hit
+          return answer.rows
+        }
         const get = async (collection, id) => {
           const r = await locals.emdash.handleContentGet(collection, id, undefined, { includeDrafts: drafts })
           calls++
@@ -83,7 +112,20 @@ async function read(context, authority = { contentPrincipal: null, contentScope:
           delete published.draftRevisionId
           return { ...r.data, item: published }
         }
+        // Inspect current native schema, not the seed map: an administrator may add references.
+        // This reads metadata only; content and draft hydration still use the public handlers.
+        const schemas = await trx.selectFrom('_emdash_collections').select(['id', 'slug']).execute()
+        const references = await trx
+          .selectFrom('_emdash_fields')
+          .select('collection_id')
+          .where('type', '=', 'reference')
+          .execute()
+        const withReferences = new Set(references.map((field) => field.collection_id))
+        const referenceFree = new Set(
+          schemas.filter((schema) => !withReferences.has(schema.id)).map((schema) => schema.slug)
+        )
         const rows = await sourceRows({
+          referenceFree,
           collections: Object.keys(options.mapping.collections),
           list,
           get,
@@ -110,6 +152,7 @@ async function read(context, authority = { contentPrincipal: null, contentScope:
         // Serialize while the transaction is still open; no async I/O after its last read.
         const response = new Response(JSON.stringify(body), { headers })
         response.headers.set('X-Tracy-Source-Calls', String(calls))
+        response.headers.set('X-Tracy-Source-Cache', hit ? 'hit' : 'miss')
         response.headers.set(
           'Server-Timing',
           `content;dur=${(performance.now() - start).toFixed(2)}, source;desc="${calls} native calls"`
