@@ -4,7 +4,7 @@
   "template": {
     "id": "tracy-saas",
     "label": "Tracy SaaS",
-    "version": "1.4.14"
+    "version": "1.4.16"
   },
   "locales": {
     "default": "en",
@@ -1273,7 +1273,7 @@
   ],
   "inputs": {
     "astro.config.mjs": "sha256:7cc314c4b87820302748be68e12231909682818b8a5c3169af1bd70659b2cb9e",
-    "package.json": "sha256:2957904b4a770800333d3272f86cacbc611fd3857807dff4f155d5dbdec0d3d4",
+    "package.json": "sha256:3f469d9e9c165a96ddef2f22927e73ebbab73f831a603232d9414b9f83e007b5",
     "pnpm-lock.yaml": "sha256:604c8a85fa3fe073389043da5dca2f78cb69aa33764b867de68a5b2024168610",
     "seed/field-map.json": "sha256:26b1953aa4492dc523b83fce3c98e9a2de279a003f9e6e038f29a8619d6f885f",
     "seed/media-map.json": "sha256:39f24f782e8ddeea43591a63dcebba5d0f22d96e17ba34eccc655fe5ce1b8990",
@@ -1364,7 +1364,7 @@
     "src/views/Search.astro": "sha256:8d1f6f822c0829026efcaa8c4aa700b1047b3a4687be0d53686ef9d3887815b1",
     "src/views/Sections.astro": "sha256:a0234e9c87b62ca95db0196825eecdf6c53657a96bc22fdac5606ee61cf69533",
     "src/views/Terms.astro": "sha256:e41a9001d5c49612da6aa361048e500de4054015dc2c62f61b81eb944b5626d1",
-    "template.config.json": "sha256:1bc366ae8ff4d3d6b04dd57535a2bf42a12bafea9042297591b0029a9f1d61f2",
+    "template.config.json": "sha256:cb0f3ab813ce95f22028c358d2b1626aeeab1bc48d3e6a12ea08922cf7d1e704",
     "tools/forms.json": "sha256:0569d2bb0f4f243d6620c952bfbef389a13b033a6bbbf5edaf1064c796bbf390",
     "tools/generate-docs.mjs": "sha256:71c09e89379bec8f70ebbf9d1adf3dc280df819a16281d1742fcef09ba13c867"
   }

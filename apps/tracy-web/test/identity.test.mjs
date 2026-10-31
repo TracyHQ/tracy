@@ -259,7 +259,7 @@ test('GET /login: carries the shared shell — token block, color-scheme, favico
   const { app } = harness()
   const html = await loginHtml(app)
   assert.match(html, /<meta name="color-scheme" content="light dark">/)
-  assert.match(html, /--primary:oklch\(0\.588 0\.136 37\.4\)/)
+  assert.match(html, /--primary:oklch\(0\.565 0\.136 37\.4\)/)
   assert.match(html, /<link rel="icon" href="data:image\/svg\+xml,/)
 })
 
