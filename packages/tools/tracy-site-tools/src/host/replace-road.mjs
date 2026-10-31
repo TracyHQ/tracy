@@ -435,6 +435,8 @@ export async function runReplace(input) {
       confirmed,
       removes: latestCustomerWords(events),
       bound: input.contractBound === true || memory.learned(label).contractBound,
+      // The front page the read found: its writes are named as the home page's (#257).
+      onFront: (/** @type {number} */ id) => memory.rememberFront?.(sessionId, id),
       // The identity a token prints is set through the contract where the surface has that door.
       contractDoor: key === 'wordpress-contract'
     })

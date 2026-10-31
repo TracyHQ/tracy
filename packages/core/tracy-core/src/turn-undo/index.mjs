@@ -18,7 +18,7 @@
  */
 
 /**
- * @typedef {{ kind: string | null, id: string | null, title: string | null }} Target
+ * @typedef {{ kind: string | null, id: string | null, title: string | null, front?: boolean }} Target
  * @typedef {{ applyId: string, action: string, target: Target | null, at: string | null }} ContentWrite
  * @typedef {{ undo: string, at: string | null }} LookWrite
  * @typedef {{ code: string, [field: string]: unknown }} Reason
@@ -812,6 +812,8 @@ export function laterTurns(answer, n) {
  * @returns {string}
  */
 export function targetText(target, say, action = null) {
+  // The site's static front page (#257): its record's title is often a template demo's no visitor sees.
+  if (target.front === true) return say('undo.home')
   // Own keys only: a kind is data from the site, and `constructor` must read "an item", not Object's.
   const own = (/** @type {Record<string, string>} */ map, /** @type {string | null} */ key) =>
     key !== null && Object.hasOwn(map, key) ? map[key] : undefined

@@ -396,6 +396,7 @@
   "event.type.category": "分类",
   "event.type.entry": "条目",
   "event.type.item": "对象",
+  "event.target.home": "首页",
   "event.type.media": "媒体 file",
   "event.type.menu": "菜单",
   "event.type.page": "页面",

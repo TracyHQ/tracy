@@ -2742,6 +2742,7 @@ function createCallMemory(opts = {}) {
         slotShapes: /* @__PURE__ */ new Map(),
         reads: /* @__PURE__ */ new Map(),
         titles: /* @__PURE__ */ new Map(),
+        front: null,
         partKeys: /* @__PURE__ */ new Map(),
         receipts: /* @__PURE__ */ new Map(),
         wp: /* @__PURE__ */ new Map(),
@@ -3134,6 +3135,26 @@ ${typeof key.actor === "string" ? key.actor : ""}`;
       const kind = typeof address?.kind === "string" ? address.kind : "";
       if (kind === "" || !Number.isInteger(id) || id <= 0) return null;
       return session(sessionId).titles.get(`${kind}:${id}`) ?? null;
+    },
+    /**
+     * The site's static front page, as a read found it (#257: `replace-wordpress.mjs` `onFront`).
+     * @param {unknown} sessionId
+     * @param {unknown} id - its post id
+     */
+    rememberFront(sessionId, id) {
+      const n = Number(id);
+      if (named3(sessionId) && Number.isInteger(n) && n > 0) session(sessionId).front = n;
+    },
+    /**
+     * Whether a write names the site's static front page: a WordPress `post` or `page` of that id. The
+     * write is then labelled the home page (`x-tracy-write-front`), whatever title its record keeps.
+     * @param {unknown} sessionId
+     * @param {{ kind?: unknown, id?: unknown }} address
+     */
+    isFront(sessionId, address) {
+      if (!named3(sessionId)) return false;
+      const front = session(sessionId).front;
+      return typeof front === "number" && (address?.kind === "post" || address?.kind === "page") && Number(address?.id) === front;
     },
     /**
      * A record's title Tracy read itself, by its kind and id (`site-call.mjs` `recordTitleOf`).
@@ -39269,11 +39290,11 @@ function storeUnits(shape, raw) {
   const v2 = views(raw);
   return /[\p{L}\p{N}]/u.test(v2.cased) ? [{ ...v2, unitKind: "plain", tag: "p", block: null, slot: null }] : [];
 }
-function postStores(item, { id, family, lang }) {
+function postStores(item, { id, family, lang, front = false }) {
   const title = String(item.post_title ?? item.title ?? "");
   const body = item.post_content ?? item.content;
   const excerpt = item.post_excerpt ?? item.excerpt;
-  const name2 = title ? `"${title.slice(0, 40)}"` : `post ${id}`;
+  const name2 = front ? "the home page" : title ? `"${title.slice(0, 40)}"` : `post ${id}`;
   const group = `post:${id}`;
   const base3 = {
     kind: (
@@ -39632,6 +39653,7 @@ function pageFactsOf(html, status = 200) {
     lang: r.lang,
     pageId: idTok ? Number(idTok[1]) : null,
     blog: body.includes("blog"),
+    front: body.includes("home"),
     theme,
     themeVersion,
     posts: [...posts],
@@ -39823,6 +39845,17 @@ async function readStores(read, page, { site, lang, theme = false, posts: extraP
         });
     });
   const postIds = /* @__PURE__ */ new Set([...page?.pageId ? [page.pageId] : [], ...page?.posts ?? [], ...extraPosts]);
+  const frontRead = page?.front === true && page.pageId ? Promise.resolve(page.pageId) : !site ? Promise.resolve(null) : Promise.all([
+    read("content.get", { kind: "option", key: "page_on_front" }),
+    read("content.get", { kind: "option", key: "show_on_front" })
+  ]).then(
+    ([on, shows]) => {
+      const value = (a) => isRecord17(a) && a.ok === true && isRecord17(a.item) ? a.item.value : null;
+      const id = positive2(value(on));
+      return id > 0 && value(shows) === "page" ? id : null;
+    },
+    () => null
+  );
   let postsPage = null;
   if (page?.blog)
     wave1.push(async () => {
@@ -39832,10 +39865,16 @@ async function readStores(read, page, { site, lang, theme = false, posts: extraP
   for (const id of postIds)
     wave1.push(async () => {
       const got = await read("content.get", { kind: "post", id });
+      const front = await frontRead;
       if (cut4(got)) cutWhat.push(`post ${id}`);
       else if (ok(got) && isRecord17(got.item))
         stores.push(
-          ...postStores(got.item, { id, family: id === page?.pageId ? "page" : "post", lang: null })
+          ...postStores(got.item, {
+            id,
+            family: id === page?.pageId ? "page" : "post",
+            lang: null,
+            front: id === front
+          })
         );
     });
   for (const id of page?.forms ?? [])
@@ -39906,7 +39945,7 @@ async function readStores(read, page, { site, lang, theme = false, posts: extraP
           if (!isRecord17(row) || row.status !== "publish" || typeof row.content !== "string") continue;
           const id = positive2(row.id);
           if (id === 0 || postIds.has(id)) continue;
-          stores.push(...postStores(row, { id, family: "site", lang }));
+          stores.push(...postStores(row, { id, family: "site", lang, front: id === await frontRead }));
         }
         if (got.items.length < SITE_PAGE_ROWS) return;
         if (n === SITE_PAGES_MAX - 1) capped = true;
@@ -40170,6 +40209,7 @@ async function readStores(read, page, { site, lang, theme = false, posts: extraP
       scanned,
       capped,
       postsPage,
+      front: await frontRead,
       identity: identity2
     }
   };
@@ -41353,6 +41393,7 @@ async function replaceOnWordPress(deps) {
       /** @type {WordPressPlan} */
       located
     );
+    if (typeof located0.set.front === "number") deps.onFront?.(located0.set.front);
     const rewrite = rewriteRecords(located0.results, located0.storeById, {
       identity: located0.set.identity,
       contractDoor: located0.contractDoor
@@ -43505,6 +43546,8 @@ async function runReplace(input) {
       confirmed,
       removes: latestCustomerWords(events),
       bound: input.contractBound === true || memory.learned(label).contractBound,
+      // The front page the read found: its writes are named as the home page's (#257).
+      onFront: (id) => memory.rememberFront?.(sessionId, id),
       // The identity a token prints is set through the contract where the surface has that door.
       contractDoor: key === "wordpress-contract"
     });
@@ -46882,7 +46925,7 @@ function withTurn(headers, sessionId) {
   const turn = turnIdOf(sessionId);
   if (turn !== null) headers["x-tracy-turn"] = turn;
 }
-async function applyDoor(config, plan, key, action, params, target, label = null, sessionId = null, preset = null, title = null) {
+async function applyDoor(config, plan, key, action, params, target, label = null, sessionId = null, preset = null, title = null, front = false) {
   const headers = plan.as === "prompter" ? (
     // The signature is added per send below, never here: one header for the whole call is V5S-1.
     { "content-type": "application/json", accept: "application/json" }
@@ -46892,6 +46935,7 @@ async function applyDoor(config, plan, key, action, params, target, label = null
   withTurn(headers, sessionId);
   if (preset) headers["x-tracy-preset"] = preset;
   if (title) headers["x-tracy-write-title"] = encodeURIComponent(title.slice(0, 120));
+  if (front) headers["x-tracy-write-front"] = "1";
   const comment = answeringComment.getStore();
   const sendOnce = () => applyDoorOnce(
     config,
@@ -48037,7 +48081,20 @@ function apply(ctx, config = {}) {
     const writes = relayWrites(action, params);
     if (writes) memory.invalidateSite(site);
     const title = writes ? memory.titleOf(sessionId, params) : null;
-    const answer = await applyDoor(config, plan, key, action, params, target, label, sessionId, preset, title);
+    const front = writes && memory.isFront(sessionId, params);
+    const answer = await applyDoor(
+      config,
+      plan,
+      key,
+      action,
+      params,
+      target,
+      label,
+      sessionId,
+      preset,
+      title,
+      front
+    );
     if (writes) memory.invalidateSite(site);
     if (sessionId && doorTakesLease(action, params) && !isLeaseBusy(answer) && !isTurnStopped(answer))
       leaseHolders.set(sessionId, { key, label });

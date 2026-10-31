@@ -249,6 +249,11 @@ test('the what line: zones in a fixed order, a count of files, titles quoted, at
     'Design, Function, Other files · 3 files; Content · a page or post, page “Home”, a menu item, +1 more'
   )
   assert.equal(targetText({ kind: null, id: null, title: 'X' }, say), '“X”')
+  // #257: the site's static front page is the home page, whatever title its record keeps.
+  assert.equal(
+    targetText({ kind: 'post', id: '97', title: 'Read the latest News + Blog', front: true }, say),
+    'the home page'
+  )
 })
 
 /**

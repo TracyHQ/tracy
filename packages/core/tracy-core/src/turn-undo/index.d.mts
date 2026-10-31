@@ -96,6 +96,8 @@ export interface Target {
   kind: string | null
   id: string | null
   title: string | null
+  /** The site's static front page (#257): said as the home page, whatever its title. */
+  front?: boolean
 }
 export interface ContentWrite {
   applyId: string

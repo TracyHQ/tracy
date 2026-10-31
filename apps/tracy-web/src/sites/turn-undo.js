@@ -96,12 +96,14 @@ export function sortReasons(reasons) {
  */
 export function targetOf(target) {
   if (!target || typeof target !== 'object') return null
-  const t = /** @type {{ kind?: unknown, id?: unknown, title?: unknown }} */ (target)
+  const t = /** @type {{ kind?: unknown, id?: unknown, title?: unknown, front?: unknown }} */ (target)
   if (typeof t.kind !== 'string' && typeof t.id !== 'string') return null
   return {
     kind: typeof t.kind === 'string' ? t.kind : null,
     id: typeof t.id === 'string' ? t.id : null,
-    title: typeof t.title === 'string' && t.title.trim() !== '' ? t.title : null
+    title: typeof t.title === 'string' && t.title.trim() !== '' ? t.title : null,
+    // The site's static front page (#257): the card says "the home page", whatever its title.
+    ...(t.front === true ? { front: true } : {})
   }
 }
 
