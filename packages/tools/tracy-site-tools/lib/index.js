@@ -14783,6 +14783,10 @@ function chatRouteLine(routes) {
   if (!routes || routes.chat) return null;
   return `- Design systems through the chat: OFF (the operator's switch). When the customer asks to apply or switch to a design system \u2014 by name, from a design template, or by pasting a DESIGN.md \u2014 or for a whole new look of the site (redesign, restyle, "make the whole site look like \u2026"), change nothing, propose nothing, and ${routeSentence(routes.button)}; a new site gets its design when it is created (Add site). This is not an element edit: a button, a colour, a section or one page is still changed as asked, relative to the design system the site wears.`;
 }
+function libraryLine(routes) {
+  if (routes?.library !== false) return null;
+  return "- Design systems: OFF (the operator's switch): no design system is offered, read or previewed. A request to see design styles or a new look is answered from the finished templates published on Design templates, which the design library answers with at once: read nothing of the site first.";
+}
 var DESIGN_SYSTEM_DESCRIPTION = `The site's design system through the Design system tab's own door. action "read": what the site wears and whether its template can wear one. action "apply" {id}: put a library design template (refero:<uuid>) on the running site, no rebuild; toolbar Undo reverts it. CONFIRM_FIRST asks the customer first. Refused CHAT_DESIGN_SYSTEM_OFF while the operator keeps the chat route off.`;
 var DESIGN_SYSTEM_PARAMETERS = Object.freeze({
   type: "object",
@@ -16471,6 +16475,8 @@ async function siteContext(folder, label, detectPlatform2, presetId, options = {
   if (worn) lines.push(worn);
   const route = chatRouteLine(options?.chatDesign ?? null);
   if (route) lines.push(route);
+  const library = libraryLine(options?.chatDesign ?? null);
+  if (library) lines.push(library);
   const answered = answersLine(job);
   if (answered)
     lines.push(
@@ -24730,8 +24736,24 @@ async function readHidden(call) {
 
 // src/host/chat-design-switch.mjs
 async function designRoutesAt(origin, fetchImpl) {
-  const on = await switchesAtTracy(origin, { ...fetchImpl ? { fetch: fetchImpl } : {}, timeoutMs: 2500 });
-  return { chat: on?.(CHAT_DS_SWITCH) === true, button: on === null ? true : on(BUTTON_SWITCH) };
+  const [on, library] = await Promise.all([
+    switchesAtTracy(origin, { ...fetchImpl ? { fetch: fetchImpl } : {}, timeoutMs: 2500 }),
+    libraryShownAt(origin, fetchImpl ?? fetch)
+  ]);
+  return { chat: on?.(CHAT_DS_SWITCH) === true, button: on === null ? true : on(BUTTON_SWITCH), library };
+}
+async function libraryShownAt(origin, fetchImpl) {
+  if (!origin) return false;
+  try {
+    const response = await fetchImpl(`${origin.replace(/\/+$/, "")}/api/design-systems`, {
+      headers: { accept: "application/json" },
+      signal: AbortSignal.timeout(2500)
+    });
+    if (!response.ok) return false;
+    return (await response.json())?.shown === true;
+  } catch {
+    return false;
+  }
 }
 
 // src/host/site-notes.mjs

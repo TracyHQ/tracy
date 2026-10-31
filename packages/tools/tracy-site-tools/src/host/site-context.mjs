@@ -10,7 +10,7 @@
  *
  * Pure apart from the file reads, so `test/site-context.test.mjs` pins the wording rules.
  */
-import { chatRouteLine } from './chat-design-route.mjs'
+import { chatRouteLine, libraryLine } from './chat-design-route.mjs'
 import { promises as fs, readFileSync } from 'node:fs'
 import path from 'node:path'
 
@@ -1886,6 +1886,9 @@ export async function siteContext(folder, label, detectPlatform, presetId, optio
   // asked for a new look, a named system or a pasted DESIGN.md, the agent points at the button instead.
   const route = chatRouteLine(options?.chatDesign ?? null)
   if (route) lines.push(route)
+  // The design-system library itself, closed by the operator (#259): said before the first step.
+  const library = libraryLine(options?.chatDesign ?? null)
+  if (library) lines.push(library)
   // The build's state is NOT here: it changes while the conversation runs, so it travels as its own
   // notice (`siteStateNotice`) and the rules below are not re-sent each time a stage moves — unless
   // the build sends no such notice (`buildInBlock`, the last site line below).
