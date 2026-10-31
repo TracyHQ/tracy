@@ -1,0 +1,41 @@
+{
+  "id": "REG-PR-271-emdash-reader-cache",
+  "kind": "fix",
+  "title": "An EmDash Content API read reuses its source rows while the site database is unchanged, and any watched write or an unwatched table reads fresh",
+  "pr": 271,
+  "area": "emdash/content-api",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: From the checkout run: node --test packages/cms/tracy-emdash-theme-business/tests/content-api-cache.test.mjs",
+    "S2: Read the pass/fail counts and the four tests named below."
+  ],
+  "expect": [
+    "0 failures.",
+    "A second read with the same change key makes no native list or GET call; a listing over kept rows projects no record again and an id read projects only its own record.",
+    "Answers over kept rows equal the per-entry scan byte for byte for listings, filters, maxBytes cuts, cursors and id reads, in three scopes and caller rights.",
+    "Writes to content rows, revisions, SEO, bylines, media, options, fields and an ALTER change the key; token use, redirect state, the media-usage index, the scheduler stamp and FTS do not.",
+    "A new table, a dropped trigger or a trigger that counts nothing gives a null key (read fresh) until identity-sqlite.mjs runs again; a recreated counter row has a new nonce."
+  ],
+  "selectors": {
+    "function": "packages/cms/tracy-emdash-theme-business/tools/content-api/reader.mjs cachedRows, changeKey, changesWatched, envelope; tools/content-api/identity-sqlite.mjs migrateIdentity",
+    "test": "packages/cms/tracy-emdash-theme-business/tests/content-api-cache.test.mjs"
+  },
+  "evidence": "Issue #252: each one-id read projected the whole site in the site's only Node process (about 3 s on dev, 2,027 native calls on the Business seed), so a 41-record locate snapshot pegged the site for 128 s.",
+  "fence": "The change key read in the read's own transaction (identity-sqlite counting triggers, schema cookie, trigger coverage) decides whether kept rows may answer.",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "packages/cms/tracy-emdash-theme-business/tests/content-api-cache.test.mjs"
+    ],
+    "tests": [
+      "the second read takes the kept rows: no native call, no record projected again",
+      "answers over kept rows are byte-identical to fresh ones",
+      "a write wherever a native read looks changes the key; routine bookkeeping does not",
+      "a table without its triggers reads fresh until the identity tool runs again"
+    ]
+  }
+}
