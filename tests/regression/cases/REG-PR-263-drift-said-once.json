@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-263-drift-said-once",
+  "kind": "fix",
+  "title": "A site's presentation drift is said once a conversation",
+  "pr": 263,
+  "area": "site-tools/site-call",
+  "cms": ["jo"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: two contract inspects and an apply on a Joomla site whose answers carry the same 17 PRESENTATION_DRIFT warnings, the apply one more.",
+    "S2: another conversation's first inspect.",
+    "S3: an answer with a LENGTH_RATIO warning beside a drift line."
+  ],
+  "expect": [
+    "S1: the first inspect says 17 lines; the second one folded line with said:17; the apply the new line whole and the 17 folded.",
+    "S2: all 17 lines.",
+    "S3: the LENGTH_RATIO warning is never folded, and the answer object is never changed."
+  ],
+  "selectors": {
+    "file": "packages/tools/tracy-site-tools/src/host/site-call.mjs",
+    "exports": "driftSaidOnce"
+  },
+  "evidence": "Issue #258: 17,874 of 22,425 characters of a phone-number turn's contract answers were the same drift warnings",
+  "fence": "Contract answers",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=\\(#258\\)",
+      "packages/tools/tracy-site-tools/test/site-call.test.mjs"
+    ],
+    "tests": [
+      "a site’s presentation drift is said once a conversation, a new line whole, the rest as one count (#258)"
+    ]
+  }
+}
