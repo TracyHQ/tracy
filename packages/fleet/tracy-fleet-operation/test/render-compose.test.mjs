@@ -15,6 +15,7 @@
  * their absence here says nothing.
  */
 
+import { withInit } from '../scripts/webroot/site-frame-policy.mjs'
 import assert from 'node:assert/strict'
 import { execFileSync, spawnSync } from 'node:child_process'
 import { existsSync, mkdtempSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
@@ -779,6 +780,9 @@ for (const [[labelName, longLabel], [name, env, mail, limits]] of CUSTODY_COMBOS
     const INIT = '    init: true\n'
     assert.ok(out.includes(`    restart: unless-stopped\n${INIT}`), 'the render runs an init')
     variants.push({ name: 'no init (before #205)', text: out.replace(INIT, ''), expect: 'protected' })
+    // The frame-policy recreate puts it back in that one place (`withInit`): the generator's own file.
+    assert.equal(withInit(out.replace(INIT, '')), out)
+    assert.equal(withInit(out), out, 'never twice')
     variants.push({
       name: 'init out of place',
       text: out.replace(INIT, '').replace('    shm_size: 512m\n', `    shm_size: 512m\n${INIT}`),
