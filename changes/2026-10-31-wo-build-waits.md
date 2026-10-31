@@ -1,0 +1,2 @@
+- **Build from my business stops waiting where it need not: pressing build no longer waits on photo labelling, the research says when it reads the business, and a `tracy_demo check` keeps unchanged page reads and reads the site once** — David (Claude) · `fix/wo-build-waits` · 2026-10-31
+  **Affects:** Build from my business (tracy-web `opportunities-build`, `website-opportunities` research, tracy-host demo QA reads). Reaches a deployment only with the next image build and deploy.
