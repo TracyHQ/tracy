@@ -849,7 +849,8 @@ export const OPS_B_ROUTES = [
         providerAlias: { type: 'string', maxLength: 120 }
       }
     },
-    answers: '`aliases`, or `INVALID_MODEL_ALIASES` / `NO_SUCH_PROVIDER`'
+    answers:
+      '`aliases`, or `INVALID_MODEL_ALIASES` / `ALIAS_NAMES_ANOTHER_MAKER` (a display name naming a model maker the route does not, listed by model with the word) / `NO_SUCH_PROVIDER`'
   },
   // src/ops/llm.js
   {

@@ -1,0 +1,38 @@
+{
+  "id": "REG-PR-266-emdash-locate-gentle",
+  "kind": "fix",
+  "title": "An EmDash site's locate snapshot is read gently and a build past its limit is not thrown away",
+  "pr": 266,
+  "area": "tracy-web/locate",
+  "cms": ["em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: build a snapshot of five records with the EmDash read plan, a clock moving 40 per read.",
+    "S2: build with a 25 limit and 10 per read, then move one read record and build again."
+  ],
+  "expect": [
+    "S1: never two reads at once; each read is followed by a pause of 40.",
+    "S2: the first build reads three and is not kept; the second reads only the moved one and the two never read, takes over two, and is kept."
+  ],
+  "selectors": {
+    "file": "apps/tracy-web/src/sites/content-locate.js",
+    "exports": "locateReads, createLocateStore"
+  },
+  "evidence": "Issue #252: \"41 records in 128058 ms, not kept (incomplete)\" while the site's home page took 5-17 s",
+  "fence": "Content locate",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=\\(#252\\)|locateReads:",
+      "apps/tracy-web/test/content-locate.test.mjs"
+    ],
+    "tests": [
+      "locateReads: both Claude Cowork plugins read in batches, one call at a time only on Joomla",
+      "snapshot: an EmDash-like site is read one record at a time, each read followed by a pause as long as it took (#252)",
+      "snapshot: a build past its limit keeps what it read whole; the next build reads only the rest (#252)"
+    ]
+  }
+}
