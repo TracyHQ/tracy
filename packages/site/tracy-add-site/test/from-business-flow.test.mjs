@@ -196,6 +196,43 @@ test('the logo line goes when the walk stops while the research is still pending
   assert.deepEqual(said, [true, false])
 })
 
+test('a chat whose photos are still being labelled is asked again, with its own line, never failed (#250)', async () => {
+  const pending = {
+    ok: false,
+    body: { code: 'DEMO_PICTURE_LABELS_PENDING', retryAt: '2026-10-31T10:00:04.000Z' }
+  }
+  const answers = [pending, pending]
+  const said = []
+  const waits = []
+  const done = await followBusiness({
+    api: {
+      state: async () => ({ ok: true, body: { business: { phase: 'build', action: { id: 'a1' } } } }),
+      prepare: async (id) => {
+        said.push('prepare')
+        return (
+          answers.shift() ?? {
+            ok: true,
+            body: { action: { id }, chat: { siteKey: 'k', sessionId: 's', href: '/k/s/s' } }
+          }
+        )
+      }
+    },
+    id: 'b1',
+    onState: () => {},
+    onLogoWait: (waiting) => said.push(waiting ? 'logo line shown' : 'logo line gone'),
+    onPicturesWait: (waiting) => said.push(waiting ? 'photos line shown' : 'photos line gone'),
+    open: () => said.push('open'),
+    signal: new AbortController().signal,
+    now: () => Date.parse('2026-10-31T10:00:00Z'),
+    wait: async (ms) => {
+      waits.push(ms)
+    }
+  })
+  assert.deepEqual(done, { opened: true })
+  assert.deepEqual(waits, [4_000, 4_000])
+  assert.deepEqual(said, ['prepare', 'photos line shown', 'prepare', 'prepare', 'photos line gone', 'open'])
+})
+
 test('a failed research, a refused chat and Stop each end the walk, said with their own message', async () => {
   const signal = new AbortController().signal
   const wait = async () => {}
@@ -292,6 +329,7 @@ test('researchProgressOf: the source being read, the photos saved and the minute
     researchProgressOf(job({ collecting: 'instagram', media: { done: 45, total: 101 } }), start + 190_000),
     {
       source: 'Instagram',
+      reading: false,
       photos: { done: 45, total: 101 },
       minutes: 3
     }
@@ -302,11 +340,22 @@ test('researchProgressOf: the source being read, the photos saved and the minute
     researchProgressOf(job({ collecting: 'x-internal', media: { done: 0, total: 0 } }), start),
     {
       source: null,
+      reading: false,
       photos: null,
       minutes: 0
     }
   )
-  assert.deepEqual(researchProgressOf(null), { source: null, photos: null, minutes: null })
+  assert.deepEqual(researchProgressOf(null), { source: null, reading: false, photos: null, minutes: null })
+})
+
+// #251: the profile stage waited ~110 s on the business reading while the page still said "Now reading Instagram".
+test('researchProgressOf: while the research reads the business it says so, and names no source left behind', async () => {
+  const { researchProgressOf } = await import('../src/client/from-business-flow.mjs')
+  const job = { progress: { collecting: 'instagram', media: { done: 49, total: 49 }, reading: 'business' } }
+  const read = researchProgressOf(job)
+  assert.equal(read.reading, true)
+  assert.equal(read.source, null)
+  assert.deepEqual(read.photos, { done: 49, total: 49 })
 })
 
 // Local stand 24/10/2026: a reload ten minutes into a research showed the empty form.

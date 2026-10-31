@@ -226,13 +226,18 @@ const SOURCE_NAMES = Object.freeze({
  * What the research wait shows besides its sentence (`own_progress_*`), read off the job the state door answers: the
  * source being read, the photos saved so far, and the whole minutes since it started. Measured 24/10/2026 on a local
  * stand: a bakery's research took ten minutes with a spinner and one sentence, while its job counted 101 photos.
+ * `reading`: the research reads what the business offers and who it is for (`progress.reading`, #251), the step that
+ * took most of a research while the page still named the last source collected.
  * @param {any} job The `job` of `GET /api/sites/from-business/:id` in phase `research`.
  * @param {number} [now]
- * @returns {{ source: string | null, photos: { done: number, total: number } | null, minutes: number | null }}
+ * @returns {{ source: string | null, reading: boolean, photos: { done: number, total: number } | null,
+ *   minutes: number | null }}
  */
 export function researchProgressOf(job, now = Date.now()) {
   const progress = job?.progress && typeof job.progress === 'object' ? job.progress : {}
-  const source = typeof progress.collecting === 'string' ? (SOURCE_NAMES[progress.collecting] ?? null) : null
+  const reading = progress.reading === 'business'
+  const source =
+    !reading && typeof progress.collecting === 'string' ? (SOURCE_NAMES[progress.collecting] ?? null) : null
   const media = progress.media
   const photos =
     media && Number.isInteger(media.done) && Number.isInteger(media.total) && media.total > 0
@@ -240,7 +245,7 @@ export function researchProgressOf(job, now = Date.now()) {
       : null
   const started = Date.parse(job?.createdAt ?? '')
   const minutes = Number.isFinite(started) && now >= started ? Math.floor((now - started) / 60_000) : null
-  return { source, photos, minutes }
+  return { source, reading, photos, minutes }
 }
 
 /**
@@ -333,23 +338,40 @@ export function startOutcome(answer) {
  * answer; at `choose` hand the business back for the person to pick its template (`{ choose }`); once its build
  * was accepted prepare the chat and open it. Stops when `signal` aborts. `onLogoWait(true)` while the chat waits
  * for the demo's logo research, `onLogoWait(false)` once that wait is over; that wait lasts until the answer's
- * `retryAt` when it names one.
+ * `retryAt` when it names one. `onPicturesWait` alike while the brief's photos are still being labelled (#250).
  * @param {{ api: ReturnType<typeof fromBusinessApi>, id: string, onState(state: any): void,
  *   open(href: string): void, signal: AbortSignal, wait?: (ms: number) => Promise<void>,
- *   now?: () => number, onLogoWait?: (waiting: boolean) => void }} deps
+ *   now?: () => number, onLogoWait?: (waiting: boolean) => void,
+ *   onPicturesWait?: (waiting: boolean) => void }} deps
  * @returns {Promise<{ opened: true } | { failed: string } | { choose: any }>}
  */
-export async function followBusiness({ api, id, onState, open, signal, wait, now = Date.now, onLogoWait }) {
+export async function followBusiness({
+  api,
+  id,
+  onState,
+  open,
+  signal,
+  wait,
+  now = Date.now,
+  onLogoWait,
+  onPicturesWait
+}) {
   const pause = wait ?? ((/** @type {number} */ ms) => new Promise((resolve) => setTimeout(resolve, ms)))
   let waiting = false
+  let picturesWaiting = false
   /** @param {boolean} now */
   const logoWait = (now) => {
     if (now !== waiting) onLogoWait?.((waiting = now))
+  }
+  /** @param {boolean} now */
+  const picturesWait = (now) => {
+    if (now !== picturesWaiting) onPicturesWait?.((picturesWaiting = now))
   }
   try {
     return await walk()
   } finally {
     logoWait(false)
+    picturesWait(false)
   }
   /** @returns {Promise<{ opened: true } | { failed: string } | { choose: any }>} */
   async function walk() {
@@ -368,11 +390,20 @@ export async function followBusiness({ api, id, onState, open, signal, wait, now
         // 🔒 The server never holds the request while the demo's logo research may still answer (tracy-web
         // `logo-research.js`): it says so at once, and the walk asks again on its next beat.
         if (!prepared.ok && prepared.body?.code === 'DEMO_LOGO_RESEARCH_PENDING') {
+          picturesWait(false)
           logoWait(true)
           await pause(pendingDelay(prepared.body?.retryAt, now()))
           continue
         }
+        // 🔒 Nor while the brief's photos are still being labelled (#250): the same answer at once, asked again.
+        if (!prepared.ok && prepared.body?.code === 'DEMO_PICTURE_LABELS_PENDING') {
+          logoWait(false)
+          picturesWait(true)
+          await pause(pendingDelay(prepared.body?.retryAt, now()))
+          continue
+        }
         logoWait(false)
+        picturesWait(false)
         const href = prepared.ok ? chatEntryOf(prepared.body) : null
         if (!href) return { failed: prepared.body?.code ?? 'CHAT_UNAVAILABLE' }
         open(href)

@@ -820,9 +820,13 @@ export const en: Record<string, string> = {
   own_progress_source: 'Now reading {source}',
   own_progress_photos: 'Photos saved: {done} of {total}',
   own_progress_minutes: '{minutes} min so far',
+  // While the research reads what the business offers and who it is for (`researchProgressOf`, #251).
+  own_progress_reading: 'Now reading what {name} offers and who it is for',
   own_opening: 'Opening the chat where Tracy builds your site…',
   // While the chat waits for the research of the business's logo (`followBusiness`).
   own_logo: 'Looking for your logo…',
+  // While the chat waits for Tracy to look at the business's photos (`followBusiness`, #250).
+  own_pictures: 'Looking at your photos…',
   own_failed: 'Tracy could not build a site from this business. Try again, or paste its website.',
   own_limit: 'You have started all of today’s sites. Come back tomorrow.',
   own_rate: 'Too many searches this hour. Wait a little, or paste the website.',

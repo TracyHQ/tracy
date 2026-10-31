@@ -72,7 +72,7 @@ type Stage =
       ranking: TemplateRanking | null
       card?: ReturnType<typeof suggestionCardOf>
     }
-  | { at: 'opening'; logo?: boolean }
+  | { at: 'opening'; logo?: boolean; pictures?: boolean }
   | { at: 'failed'; key: string }
 
 /** "A, B and C" in the interface language; a plain comma list where the locale is not one the browser knows. */
@@ -283,7 +283,8 @@ export function FromBusiness({
               : now
           )
       },
-      onLogoWait: (logo) => setStage((now) => (now.at === 'opening' ? { at: 'opening', logo } : now)),
+      onLogoWait: (logo) => setStage((now) => (now.at === 'opening' ? { ...now, logo } : now)),
+      onPicturesWait: (pictures) => setStage((now) => (now.at === 'opening' ? { ...now, pictures } : now)),
       open: (href) => {
         // The chat is where it goes on from here; the kept business has done its work.
         keepBusiness(storage, null)
@@ -465,7 +466,7 @@ export function FromBusiness({
         <p className="flex items-center gap-2 text-sm" role="status" data-own-progress="1">
           <Loader2 className="animate-spin" aria-hidden="true" />
           {stage.at === 'opening'
-            ? t(stage.logo ? 'own_logo' : 'own_opening')
+            ? t(stage.logo ? 'own_logo' : stage.pictures ? 'own_pictures' : 'own_opening')
             : stage.sources?.length
               ? t('own_research_links', {
                   name: stage.name,
@@ -476,6 +477,9 @@ export function FromBusiness({
       ) : null}
       {stage.at === 'research' && stage.progress ? (
         <p className="text-muted-foreground grid gap-0.5 pl-6 text-xs" data-own-research-progress="1">
+          {stage.progress.reading ? (
+            <span>{t('own_progress_reading', { name: stage.name || text.trim() })}</span>
+          ) : null}
           {stage.progress.source ? (
             <span>
               {stage.progress.source === 'website'
