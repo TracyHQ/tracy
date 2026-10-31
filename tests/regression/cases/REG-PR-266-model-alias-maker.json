@@ -1,0 +1,36 @@
+{
+  "id": "REG-PR-266-model-alias-maker",
+  "kind": "fix",
+  "title": "A model or provider alias never names another maker's model",
+  "pr": 266,
+  "area": "tracy-web/models",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: check alias words against a route's own names: another maker's, its own, one the model id names, a word inside another.",
+    "S2: build the picker catalogue and the model identity from a DeepSeek route aliased \"Claude Opus 5.5\" under provider alias \"Anthropic\", and an OpenRouter Claude model aliased \"Claude Sonnet\"."
+  ],
+  "expect": [
+    "S1: claude, gpt and gemini are refused where the route does not name them; DeepSeek on DeepSeek, Claude on an anthropic/ model id and \"Immersive\" pass.",
+    "S2: the DeepSeek route shows DeepSeek and DeepSeek Flash; the OpenRouter route keeps Tracy AI and Claude Sonnet."
+  ],
+  "selectors": {
+    "file": "apps/tracy-web/src/lib/model-providers.js",
+    "exports": "foreignMakerIn, shownModelAlias, shownProviderAlias, aliasModelCatalog, tracyModelIdentity"
+  },
+  "evidence": "Issue #249: the picker named \"Claude Opus 5.5\" for the deepseek-flash route on dev",
+  "fence": "Model picker",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=\\(#249\\)",
+      "apps/tracy-web/test/model-aliases.test.mjs"
+    ],
+    "tests": [
+      "an alias that names another maker is never shown: the model and provider keep their own names (#249)"
+    ]
+  }
+}

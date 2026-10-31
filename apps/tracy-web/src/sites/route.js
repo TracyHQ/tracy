@@ -5969,9 +5969,9 @@ export function sitesRoutes({
     now,
     // A head is kept as long as the describe probe (`contentProbes`), which answers it first.
     headMaxAgeMs: CONTENT_PROBE_TTL_MS,
-    onBuilt: ({ siteKey, locale, records, kept, ms }) =>
+    onBuilt: ({ siteKey, locale, records, kept, ms, resumed = 0 }) =>
       console.info(
-        `[locate] snapshot built for ${siteKey} (${locale ?? 'all languages'}): ${records} records in ${ms} ms, ${kept ? 'kept' : 'not kept (incomplete)'}`
+        `[locate] snapshot built for ${siteKey} (${locale ?? 'all languages'}): ${records} records in ${ms} ms${resumed > 0 ? ` (${resumed} taken over from the last build)` : ''}, ${kept ? 'kept' : `not kept (incomplete)${records > 0 ? '; its complete records wait for the next build' : ''}`}`
       )
   })
   /** Its second source: each site's language strings and template files (`content-strings.js`). */
