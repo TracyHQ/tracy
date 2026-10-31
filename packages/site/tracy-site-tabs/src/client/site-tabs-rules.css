@@ -723,16 +723,20 @@
 .tracy-site-tabs .tv-pub-strip[data-severity="waiting"] { --tv-strip-tone: var(--foreground); --tv-strip-mix: 6%; }
 .tracy-site-tabs .tv-pub-strip[data-severity="waiting"] > [data-slot="spinner"] { color: var(--primary); }
 .tracy-site-tabs .tv-pub-strip[data-severity="info"] { --tv-strip-tone: var(--foreground); --tv-strip-mix: 6%; }
+/* The icon and the quieter words of a strip sit on its tint, not on the page: each is moved 30 % toward
+   the text colour, darker in light, lighter in dark. The warning amber read 1.9:1 and the muted words
+   3.1–4.2:1 on a light strip (#228); now ≥ 3.7:1 for an icon and ≥ 5.3:1 for words, both themes. */
+.tracy-site-tabs .tv-pub-strip { --tv-strip-quiet: color-mix(in oklab, var(--muted-foreground), var(--foreground) 30%); }
 .tracy-site-tabs .tv-pub-strip > svg,
-.tracy-site-tabs .tv-pub-strip > [data-slot="spinner"] { width: 14px; height: 14px; flex: none; margin-top: 3px; color: var(--tv-strip-tone); }
-.tracy-site-tabs .tv-pub-strip[data-severity="info"] > svg { color: var(--muted-foreground); }
+.tracy-site-tabs .tv-pub-strip > [data-slot="spinner"] { width: 14px; height: 14px; flex: none; margin-top: 3px; color: color-mix(in oklab, var(--tv-strip-tone), var(--foreground) 30%); }
+.tracy-site-tabs .tv-pub-strip[data-severity="info"] > svg { color: var(--tv-strip-quiet); }
 .tracy-site-tabs .tv-pub-strip > .tas-create-live { margin: 7px 4px 0; }
 .tracy-site-tabs .tv-pub-strip > span { min-width: 0; }
 .tracy-site-tabs .tv-pub-strip-body { display: grid; gap: 2px; flex: 1 1 auto; min-width: 0; }
 .tracy-site-tabs .tv-pub-strip-body p { margin: 0; }
 .tracy-site-tabs .tv-pub-strip-title { font-weight: 600; color: var(--foreground); }
-.tracy-site-tabs .tv-pub-strip-title ~ p { color: var(--muted-foreground); }
-.tracy-site-tabs .tv-pub-strip .tv-pub-small { color: var(--muted-foreground); }
+.tracy-site-tabs .tv-pub-strip-title ~ p { color: var(--tv-strip-quiet); }
+.tracy-site-tabs .tv-pub-strip .tv-pub-small { color: var(--tv-strip-quiet); }
 .tracy-site-tabs .tv-pub-strip .tv-pub-list { margin: 2px 0 0; }
 .tracy-site-tabs .tv-pub-notice-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
 /* Older lines that became strips keep their hooks; the strip's type wins over theirs. */

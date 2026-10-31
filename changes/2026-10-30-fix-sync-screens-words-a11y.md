@@ -1,0 +1,2 @@
+- **The Sync to live and Sync from live screens say what an unknown write outcome, an expired Undo and a blocked live site mean in plain words, count one change as one, and show keyboard focus and readable contrast** — product (Claude, for David) · #254 · `fix/sync-screens-words-a11y` · 2026-10-30
+  **Affects:** the publish screens of `@tracy/core` site tabs, `@tracy/ui` buttons and checkbox, the strip colours in `tracy-site-tabs`, and the interface translations in eight languages (locale bundles rebuilt). Live once the tracy-dsh image is rebuilt and deployed.
