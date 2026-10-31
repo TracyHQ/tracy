@@ -1,0 +1,3 @@
+- **Slot fit gives a text drawn at font size 0 one line instead of an unreadable `Infinity` fit** — Claude (agent) · `feat/ja-kidscorner-1-0-3` · 2026-10-31
+  **Affects:** whoever runs content coverage with `--fit`: a slot whose text is drawn at font size 0 (T3's `text-hide` credit "Powered By T3 Framework") now gets `lines: 1` and `maxChars` of its own words; before, its lines came back `Infinity` and `scripts/slot-roles/check.mjs` refused the map.
+  **Why / Measured:** JA Kids Corner 1.0.3: `languageString-9531873.0` and `languageString-99519298.0` (`div.poweredby.text-hide`) measured `lines: { desktop: Infinity, phone: Infinity }`.

@@ -1,0 +1,3909 @@
+{
+  "schemaVersion": "tracy-content-coverage/v1",
+  "tool": {
+    "name": "@tracy/quickstart-tools content-coverage",
+    "version": "1.5.0"
+  },
+  "contract": {
+    "id": "ja-kidscorner/j6/1.0.3",
+    "contentMapSha256": "76aed1963bbe1689aa2e5bc0b4ff438919325cc74a16e0864b578a8ab9602457",
+    "presentationLockSha256": "ec12e72eebe6a864951a7e1085f2f9732d43ceeb4349bcafb59c91de457ee37f"
+  },
+  "measuredAt": "2026-10-31T09:53:57.528Z",
+  "viewports": [
+    "desktop",
+    "phone"
+  ],
+  "pages": {
+    "audited": 91,
+    "inMap": 21,
+    "notInMap": 70,
+    "failed": 0,
+    "capReached": false
+  },
+  "counts": {
+    "text": {
+      "total": 750,
+      "matched": 525,
+      "locked": 0,
+      "capture": 1,
+      "captureLocked": 1,
+      "template": 2,
+      "core": 216,
+      "unknown": 6,
+      "catalogue": 0,
+      "ignored": 7
+    },
+    "images": {
+      "total": 95,
+      "matched": 87,
+      "locked": 7,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 0,
+      "core": 1,
+      "unknown": 0,
+      "catalogue": 0,
+      "ignored": 0
+    },
+    "links": {
+      "total": 15,
+      "matched": 12,
+      "locked": 0,
+      "capture": 0,
+      "captureLocked": 0,
+      "template": 0,
+      "core": 2,
+      "unknown": 1,
+      "catalogue": 0,
+      "ignored": 78
+    }
+  },
+  "coverage": {
+    "text": 98.3,
+    "images": 100,
+    "links": 92.3
+  },
+  "holes": [
+    {
+      "kind": "text",
+      "value": "https://joomlart.com",
+      "class": "capture",
+      "lock": "locked",
+      "cause": "table contact_details.params (not a contract entity kind)",
+      "evidence": "contact_details#1.params -> linka",
+      "pages": 4,
+      "firstPage": "/index.php?Itemid=142",
+      "accepted": "Printed copy of the contact webpage url slot contact-1.5 / contact-4.5; K8 matches url slots to links only"
+    },
+    {
+      "kind": "attr:alt",
+      "value": "street",
+      "class": "template",
+      "cause": "template: template language file, placeholder filled with slot text (whole block, around slot text) (language/en-GB/en-GB.tpl_ja_kidscorner.ini)",
+      "evidence": "language/en-GB/en-GB.tpl_ja_kidscorner.ini TPL_MAP_STATIC_ALT=\"Street map of %s\"",
+      "pages": 4,
+      "firstPage": "/index.php?Itemid=142",
+      "accepted": "Filled from language string slot languageString-175507332.0 (Street map of %s) with the map place slot languageString-199211394.0"
+    },
+    {
+      "kind": "text",
+      "value": "Username *",
+      "class": "template",
+      "cause": "template: template layout override (html/) (templates/ja_kidscorner/html/com_dtregister)",
+      "evidence": "templates/ja_kidscorner/html/com_dtregister/event/list.php",
+      "pages": 4,
+      "firstPage": "/index.php/user-page/login",
+      "accepted": "Joomla core login form label (com_users), not template demo content"
+    },
+    {
+      "kind": "text",
+      "value": "Confirm Password *",
+      "class": "unknown",
+      "cause": "unknown source",
+      "evidence": "",
+      "pages": 2,
+      "firstPage": "/index.php?Itemid=128",
+      "accepted": "Joomla core registration form label (com_users), not template demo content"
+    },
+    {
+      "kind": "link",
+      "value": "https://www.google.com/maps/search/?api=1&query=London%2C%20UK",
+      "class": "unknown",
+      "cause": "unknown source",
+      "evidence": "",
+      "pages": 4,
+      "firstPage": "/index.php?Itemid=142",
+      "accepted": "Built by the template from the map place slot languageString-199211394.0"
+    },
+    {
+      "kind": "text",
+      "value": "Message *",
+      "class": "unknown",
+      "cause": "unknown source",
+      "evidence": "",
+      "pages": 4,
+      "firstPage": "/index.php?Itemid=142",
+      "accepted": "Joomla core contact form label (com_contact), not template demo content"
+    },
+    {
+      "kind": "text",
+      "value": "Name *",
+      "class": "unknown",
+      "cause": "unknown source",
+      "evidence": "",
+      "pages": 6,
+      "firstPage": "/index.php?Itemid=128",
+      "accepted": "Joomla core registration form label (com_users), not template demo content"
+    },
+    {
+      "kind": "text",
+      "value": "Password *",
+      "class": "unknown",
+      "cause": "unknown source",
+      "evidence": "",
+      "pages": 4,
+      "firstPage": "/index.php/user-page/login",
+      "accepted": "Joomla core login form label (com_users), not template demo content"
+    },
+    {
+      "kind": "text",
+      "value": "Subject *",
+      "class": "unknown",
+      "cause": "unknown source",
+      "evidence": "",
+      "pages": 4,
+      "firstPage": "/index.php?Itemid=142",
+      "accepted": "Joomla core contact form label (com_contact), not template demo content"
+    },
+    {
+      "kind": "text",
+      "value": "Terms & Conditions *",
+      "class": "unknown",
+      "cause": "unknown source",
+      "evidence": "",
+      "pages": 2,
+      "firstPage": "/index.php?Itemid=128",
+      "accepted": "Joomla core registration form label (plg_user_terms), not template demo content"
+    }
+  ],
+  "hygiene": [],
+  "labelRules": {
+    "version": "label-rules/1",
+    "roleVocabularyVersion": "place-content-roles/3",
+    "applies": true,
+    "r1": {
+      "facts": 214,
+      "slots": 1227,
+      "percent": 17.4
+    },
+    "rules": {
+      "R2": {
+        "title": "fact-like sample without a contact or price role",
+        "count": 0,
+        "keys": []
+      },
+      "R3": {
+        "title": "URL slot without a role",
+        "count": 0,
+        "keys": []
+      },
+      "R4": {
+        "title": "repeat or CTA not grouped",
+        "count": 19,
+        "keys": [
+          "module-108.3",
+          "article-2.11",
+          "article-3.11",
+          "article-4.11",
+          "article-25.11",
+          "article-26.11",
+          "article-27.11",
+          "article-32.11",
+          "article-33.11",
+          "article-34.11",
+          "article-35.11",
+          "article-36.11"
+        ]
+      },
+      "R5": {
+        "title": "keep on a fact role, or a face, signature or cut-out without a person, quote or business role",
+        "count": 3,
+        "keys": [
+          "module-101.23",
+          "article-18.5",
+          "article-18.17"
+        ]
+      },
+      "R6": {
+        "title": "link or list item inside a fact slot",
+        "count": 0,
+        "keys": []
+      },
+      "R7": {
+        "title": "siblings with different roles",
+        "count": 0,
+        "keys": []
+      },
+      "R8": {
+        "title": "adjacent short slots on one line (a cut heading)",
+        "count": 3,
+        "keys": [
+          "module-101.4 + module-101.5",
+          "module-101.5 + module-101.6",
+          "module-101.6 + module-101.7"
+        ]
+      },
+      "R9": {
+        "title": "fact-like hole",
+        "count": 0,
+        "keys": []
+      }
+    }
+  },
+  "labelJudge": {
+    "version": "label-judge/1",
+    "roleVocabularyVersion": "place-content-roles/3",
+    "applies": true,
+    "judgedBy": "agent",
+    "state": "judged",
+    "reason": null,
+    "counts": {
+      "slots": 1426,
+      "located": 729,
+      "notLocated": 697,
+      "judged": 729,
+      "notJudged": 0,
+      "right": 729,
+      "wrongGroup": 0,
+      "mismatch": 0
+    },
+    "slots": [
+      {
+        "key": "article-1.17",
+        "hash": "68ca58d2a323c339",
+        "verdict": "right"
+      },
+      {
+        "key": "article-1.25",
+        "hash": "467f75462b796107",
+        "verdict": "right"
+      },
+      {
+        "key": "article-10.0",
+        "hash": "1fa153841ef9ae0a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-10.1",
+        "hash": "7c3b2d985bd43b16",
+        "verdict": "right"
+      },
+      {
+        "key": "article-10.19",
+        "hash": "206ad1bc8829af32",
+        "verdict": "right"
+      },
+      {
+        "key": "article-10.2",
+        "hash": "d91cf5c93eb1ceeb",
+        "verdict": "right"
+      },
+      {
+        "key": "article-10.26",
+        "hash": "83a9782fd5fcbebf",
+        "verdict": "right"
+      },
+      {
+        "key": "article-10.27",
+        "hash": "3817700e8ebdf83f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-10.28",
+        "hash": "fc8bc209251ed4af",
+        "verdict": "right"
+      },
+      {
+        "key": "article-10.3",
+        "hash": "22b3edc260dd9ed6",
+        "verdict": "right"
+      },
+      {
+        "key": "article-11.0",
+        "hash": "f177885177c87827",
+        "verdict": "right"
+      },
+      {
+        "key": "article-11.1",
+        "hash": "52ea5570703ac34e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-11.19",
+        "hash": "49c132022ec65523",
+        "verdict": "right"
+      },
+      {
+        "key": "article-11.2",
+        "hash": "62f435c983d5efc1",
+        "verdict": "right"
+      },
+      {
+        "key": "article-11.26",
+        "hash": "c35a19731e215ee5",
+        "verdict": "right"
+      },
+      {
+        "key": "article-11.27",
+        "hash": "2d9981ab58b33c45",
+        "verdict": "right"
+      },
+      {
+        "key": "article-11.28",
+        "hash": "e5094f3d77866613",
+        "verdict": "right"
+      },
+      {
+        "key": "article-11.3",
+        "hash": "2661df881af1c779",
+        "verdict": "right"
+      },
+      {
+        "key": "article-12.0",
+        "hash": "24f4bf385483b233",
+        "verdict": "right"
+      },
+      {
+        "key": "article-12.1",
+        "hash": "6e637077090181a3",
+        "verdict": "right"
+      },
+      {
+        "key": "article-12.19",
+        "hash": "1101e9d48ba2aab7",
+        "verdict": "right"
+      },
+      {
+        "key": "article-12.2",
+        "hash": "2d31dbfa014d11ea",
+        "verdict": "right"
+      },
+      {
+        "key": "article-12.26",
+        "hash": "7afd66a3e1d7e3e4",
+        "verdict": "right"
+      },
+      {
+        "key": "article-12.27",
+        "hash": "6abc566ec15a947d",
+        "verdict": "right"
+      },
+      {
+        "key": "article-12.28",
+        "hash": "6620300037d18a6c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-12.3",
+        "hash": "8915fc467fe6d2de",
+        "verdict": "right"
+      },
+      {
+        "key": "article-13.0",
+        "hash": "cac2dcf0721f9c2a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-13.1",
+        "hash": "903302c108f31e85",
+        "verdict": "right"
+      },
+      {
+        "key": "article-13.19",
+        "hash": "d809f9521cc0da6e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-13.2",
+        "hash": "fd9af247d6981e7a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-13.20",
+        "hash": "58cf80767f7a73d3",
+        "verdict": "right"
+      },
+      {
+        "key": "article-13.26",
+        "hash": "9d305fff070bdd5b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-13.27",
+        "hash": "8feb2b43bb491d55",
+        "verdict": "right"
+      },
+      {
+        "key": "article-13.28",
+        "hash": "52b9412fb7ba1a85",
+        "verdict": "right"
+      },
+      {
+        "key": "article-13.3",
+        "hash": "081bd3b3ba1bf035",
+        "verdict": "right"
+      },
+      {
+        "key": "article-13.4",
+        "hash": "6db2d92d94414a81",
+        "verdict": "right"
+      },
+      {
+        "key": "article-13.5",
+        "hash": "f629aeebe333ee1c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-13.7",
+        "hash": "b4e8d2f02c18c1d7",
+        "verdict": "right"
+      },
+      {
+        "key": "article-13.8",
+        "hash": "7f1396cfddea3f1c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-13.9",
+        "hash": "b04fb73f90f29bf2",
+        "verdict": "right"
+      },
+      {
+        "key": "article-14.0",
+        "hash": "1cccba9cc2b7af01",
+        "verdict": "right"
+      },
+      {
+        "key": "article-14.1",
+        "hash": "c8d35e753244a155",
+        "verdict": "right"
+      },
+      {
+        "key": "article-14.19",
+        "hash": "5cbbd5087db8256e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-14.2",
+        "hash": "7792615500b1d458",
+        "verdict": "right"
+      },
+      {
+        "key": "article-14.26",
+        "hash": "2579f2e398e0d2e3",
+        "verdict": "right"
+      },
+      {
+        "key": "article-14.27",
+        "hash": "0861059b4905ab9e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-14.28",
+        "hash": "da4b9a0fe5fdd729",
+        "verdict": "right"
+      },
+      {
+        "key": "article-14.3",
+        "hash": "2e0fb5ec2d0b0c25",
+        "verdict": "right"
+      },
+      {
+        "key": "article-15.0",
+        "hash": "7d0019a2b3b069d3",
+        "verdict": "right"
+      },
+      {
+        "key": "article-15.1",
+        "hash": "79fbac9b88be747c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-15.19",
+        "hash": "f1414e6d59f1f8da",
+        "verdict": "right"
+      },
+      {
+        "key": "article-15.2",
+        "hash": "dbb7d51e7780c6af",
+        "verdict": "right"
+      },
+      {
+        "key": "article-15.26",
+        "hash": "196e156d82cb7134",
+        "verdict": "right"
+      },
+      {
+        "key": "article-15.27",
+        "hash": "a001df36ec1104b4",
+        "verdict": "right"
+      },
+      {
+        "key": "article-15.28",
+        "hash": "26236f12ae653054",
+        "verdict": "right"
+      },
+      {
+        "key": "article-15.3",
+        "hash": "57c21f0c52f6b793",
+        "verdict": "right"
+      },
+      {
+        "key": "article-16.26",
+        "hash": "3b3dbee86e6c7d67",
+        "verdict": "right"
+      },
+      {
+        "key": "article-16.27",
+        "hash": "6acb255928f52520",
+        "verdict": "right"
+      },
+      {
+        "key": "article-17.0",
+        "hash": "e5ff68bbc5d59f9f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-17.1",
+        "hash": "161d0dc6611052ba",
+        "verdict": "right"
+      },
+      {
+        "key": "article-17.19",
+        "hash": "2775fc2e95855202",
+        "verdict": "right"
+      },
+      {
+        "key": "article-17.2",
+        "hash": "b20deaf00f017c49",
+        "verdict": "right"
+      },
+      {
+        "key": "article-17.26",
+        "hash": "ffb19791c51981ba",
+        "verdict": "right"
+      },
+      {
+        "key": "article-17.27",
+        "hash": "93e94f8517fa2d4b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-17.28",
+        "hash": "9d67f558323e9d85",
+        "verdict": "right"
+      },
+      {
+        "key": "article-17.3",
+        "hash": "2cf4f07ae3fcc577",
+        "verdict": "right"
+      },
+      {
+        "key": "article-18.0",
+        "hash": "998a2478687fb73f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-18.1",
+        "hash": "de4c7f22eaf88a91",
+        "verdict": "right"
+      },
+      {
+        "key": "article-18.19",
+        "hash": "cb2ba97943ce008e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-18.2",
+        "hash": "3c224cb8a9078bc6",
+        "verdict": "right"
+      },
+      {
+        "key": "article-18.26",
+        "hash": "342dd343acb34657",
+        "verdict": "right"
+      },
+      {
+        "key": "article-18.27",
+        "hash": "340ffa65bccad2c1",
+        "verdict": "right"
+      },
+      {
+        "key": "article-18.28",
+        "hash": "b745e72a26a3e3ea",
+        "verdict": "right"
+      },
+      {
+        "key": "article-18.3",
+        "hash": "54ee266ddb9be930",
+        "verdict": "right"
+      },
+      {
+        "key": "article-19.0",
+        "hash": "872b61bf052729ae",
+        "verdict": "right"
+      },
+      {
+        "key": "article-19.1",
+        "hash": "ca67e49883f55e7f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-19.19",
+        "hash": "f13662515eb7480f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-19.2",
+        "hash": "7e84416bcf88c101",
+        "verdict": "right"
+      },
+      {
+        "key": "article-19.26",
+        "hash": "9df7e8176f66cb09",
+        "verdict": "right"
+      },
+      {
+        "key": "article-19.27",
+        "hash": "8efcc59ae38cef1c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-19.28",
+        "hash": "c6acf22b17deca75",
+        "verdict": "right"
+      },
+      {
+        "key": "article-19.3",
+        "hash": "9ad9965f3f909608",
+        "verdict": "right"
+      },
+      {
+        "key": "article-2.0",
+        "hash": "20926a55731b6b51",
+        "verdict": "right"
+      },
+      {
+        "key": "article-2.1",
+        "hash": "0c2258d288030091",
+        "verdict": "right"
+      },
+      {
+        "key": "article-2.13",
+        "hash": "5569e417a45abadc",
+        "verdict": "right"
+      },
+      {
+        "key": "article-2.14",
+        "hash": "fe16a7ac0f44e147",
+        "verdict": "right"
+      },
+      {
+        "key": "article-2.15",
+        "hash": "8c7e4824df886791",
+        "verdict": "right"
+      },
+      {
+        "key": "article-2.16",
+        "hash": "13b6434c6eae6956",
+        "verdict": "right"
+      },
+      {
+        "key": "article-2.17",
+        "hash": "a274c19dd0066142",
+        "verdict": "right"
+      },
+      {
+        "key": "article-2.18",
+        "hash": "e7478cc4bd73dd73",
+        "verdict": "right"
+      },
+      {
+        "key": "article-2.19",
+        "hash": "29be2b5c7a6f0d18",
+        "verdict": "right"
+      },
+      {
+        "key": "article-2.2",
+        "hash": "17c70bdc00d65d43",
+        "verdict": "right"
+      },
+      {
+        "key": "article-2.3",
+        "hash": "5c91c5d546f22e53",
+        "verdict": "right"
+      },
+      {
+        "key": "article-2.4",
+        "hash": "ad814233f43dd298",
+        "verdict": "right"
+      },
+      {
+        "key": "article-2.5",
+        "hash": "0d21131030e4605e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-2.6",
+        "hash": "8bb5c604f6daf2fd",
+        "verdict": "right"
+      },
+      {
+        "key": "article-20.0",
+        "hash": "1566d71cfe3a8fd6",
+        "verdict": "right"
+      },
+      {
+        "key": "article-20.1",
+        "hash": "7a67be341da41f3e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-20.19",
+        "hash": "dcf9b32476bfef88",
+        "verdict": "right"
+      },
+      {
+        "key": "article-20.2",
+        "hash": "862cc194c01f0333",
+        "verdict": "right"
+      },
+      {
+        "key": "article-20.26",
+        "hash": "d85df0c438ecbccb",
+        "verdict": "right"
+      },
+      {
+        "key": "article-20.27",
+        "hash": "2e77f18e9e000c40",
+        "verdict": "right"
+      },
+      {
+        "key": "article-20.28",
+        "hash": "4b2c51d2b92ad119",
+        "verdict": "right"
+      },
+      {
+        "key": "article-20.3",
+        "hash": "7a2d1a1070ed6eac",
+        "verdict": "right"
+      },
+      {
+        "key": "article-21.0",
+        "hash": "f8055fa889a9b8b4",
+        "verdict": "right"
+      },
+      {
+        "key": "article-21.1",
+        "hash": "96a3f46195a0803d",
+        "verdict": "right"
+      },
+      {
+        "key": "article-21.19",
+        "hash": "8de7cc27063412b9",
+        "verdict": "right"
+      },
+      {
+        "key": "article-21.2",
+        "hash": "cfde60f5d03abff1",
+        "verdict": "right"
+      },
+      {
+        "key": "article-21.26",
+        "hash": "1836cadea4d35937",
+        "verdict": "right"
+      },
+      {
+        "key": "article-21.27",
+        "hash": "da12599cde3911af",
+        "verdict": "right"
+      },
+      {
+        "key": "article-21.28",
+        "hash": "aaebb42966c5323d",
+        "verdict": "right"
+      },
+      {
+        "key": "article-21.3",
+        "hash": "4e489b7a5fe27f6e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-22.0",
+        "hash": "b23bfaf372862b82",
+        "verdict": "right"
+      },
+      {
+        "key": "article-22.1",
+        "hash": "63cbfbef3ec192ce",
+        "verdict": "right"
+      },
+      {
+        "key": "article-22.19",
+        "hash": "e5e6837421a632ab",
+        "verdict": "right"
+      },
+      {
+        "key": "article-22.2",
+        "hash": "818a2f309827a2c2",
+        "verdict": "right"
+      },
+      {
+        "key": "article-22.26",
+        "hash": "6d4adff6fc4af30b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-22.27",
+        "hash": "ff3a27939ab2a7d3",
+        "verdict": "right"
+      },
+      {
+        "key": "article-22.28",
+        "hash": "2e17bbb5dac7d73f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-22.3",
+        "hash": "d6e37187acfd22bc",
+        "verdict": "right"
+      },
+      {
+        "key": "article-23.26",
+        "hash": "f75d74caa99f47c8",
+        "verdict": "right"
+      },
+      {
+        "key": "article-23.27",
+        "hash": "98600e22c1ada279",
+        "verdict": "right"
+      },
+      {
+        "key": "article-24.0",
+        "hash": "9a2bdfd782ffa086",
+        "verdict": "right"
+      },
+      {
+        "key": "article-24.1",
+        "hash": "3ee5442990f5ead8",
+        "verdict": "right"
+      },
+      {
+        "key": "article-24.19",
+        "hash": "f2dfdd1eceac1057",
+        "verdict": "right"
+      },
+      {
+        "key": "article-24.2",
+        "hash": "eef0d1fd14d176ed",
+        "verdict": "right"
+      },
+      {
+        "key": "article-24.26",
+        "hash": "e1de053230a80c7a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-24.27",
+        "hash": "382c1552349181b3",
+        "verdict": "right"
+      },
+      {
+        "key": "article-24.28",
+        "hash": "9d6bd9f9cc7596e0",
+        "verdict": "right"
+      },
+      {
+        "key": "article-24.3",
+        "hash": "01230b3e159edd84",
+        "verdict": "right"
+      },
+      {
+        "key": "article-25.0",
+        "hash": "df5cf3ca8c808124",
+        "verdict": "right"
+      },
+      {
+        "key": "article-25.1",
+        "hash": "1c32ef36b27ea684",
+        "verdict": "right"
+      },
+      {
+        "key": "article-25.14",
+        "hash": "bd50ec9950fe90ba",
+        "verdict": "right"
+      },
+      {
+        "key": "article-25.15",
+        "hash": "44879061a5c105a6",
+        "verdict": "right"
+      },
+      {
+        "key": "article-25.16",
+        "hash": "267af3287d8f1cf0",
+        "verdict": "right"
+      },
+      {
+        "key": "article-25.17",
+        "hash": "93d53f85285cb16e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-25.2",
+        "hash": "b01588fcacf76f5f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-25.3",
+        "hash": "4f852f21e071efa8",
+        "verdict": "right"
+      },
+      {
+        "key": "article-26.0",
+        "hash": "74633270c18e1e97",
+        "verdict": "right"
+      },
+      {
+        "key": "article-26.1",
+        "hash": "dfe8748b96c3e18f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-26.13",
+        "hash": "74531527f4e94246",
+        "verdict": "right"
+      },
+      {
+        "key": "article-26.14",
+        "hash": "e827bfc72668cd24",
+        "verdict": "right"
+      },
+      {
+        "key": "article-26.15",
+        "hash": "cf13bbc73fbde1d9",
+        "verdict": "right"
+      },
+      {
+        "key": "article-26.16",
+        "hash": "eed200e4fa92e710",
+        "verdict": "right"
+      },
+      {
+        "key": "article-26.17",
+        "hash": "7a01247a070ddef4",
+        "verdict": "right"
+      },
+      {
+        "key": "article-26.2",
+        "hash": "b791fbffb46ee963",
+        "verdict": "right"
+      },
+      {
+        "key": "article-26.3",
+        "hash": "13c1905ae01e217d",
+        "verdict": "right"
+      },
+      {
+        "key": "article-27.0",
+        "hash": "7429bdd2f79c738c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-27.1",
+        "hash": "7b17ac9bc57fd652",
+        "verdict": "right"
+      },
+      {
+        "key": "article-27.13",
+        "hash": "ed4abcd9cb25bd79",
+        "verdict": "right"
+      },
+      {
+        "key": "article-27.14",
+        "hash": "60e99b9fad490c10",
+        "verdict": "right"
+      },
+      {
+        "key": "article-27.15",
+        "hash": "42352df98f03ee2d",
+        "verdict": "right"
+      },
+      {
+        "key": "article-27.16",
+        "hash": "5aedee5fed615862",
+        "verdict": "right"
+      },
+      {
+        "key": "article-27.17",
+        "hash": "0713a14ad79832d7",
+        "verdict": "right"
+      },
+      {
+        "key": "article-27.2",
+        "hash": "213f22ec83571250",
+        "verdict": "right"
+      },
+      {
+        "key": "article-27.3",
+        "hash": "918437e743960335",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.1",
+        "hash": "43de36681a0809ee",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.10",
+        "hash": "31e474e210593194",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.100",
+        "hash": "d26ee2c31cded136",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.102",
+        "hash": "a2a4f6bdceb78a39",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.104",
+        "hash": "9297710bf2d26bb0",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.106",
+        "hash": "cfe854d97fc0411e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.108",
+        "hash": "8eb6de85232e8c4a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.11",
+        "hash": "dfb98a818997ad95",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.110",
+        "hash": "23092adf7cd7df46",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.113",
+        "hash": "f88b7a3602765a87",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.114",
+        "hash": "820ad4a5356dde8e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.118",
+        "hash": "cd5c39c77c70bf17",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.119",
+        "hash": "4534ab7fcdfe56d2",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.12",
+        "hash": "95484ffb04d3f52b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.121",
+        "hash": "9613ba43951e33c9",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.128",
+        "hash": "e8233e9162aa12a5",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.129",
+        "hash": "37157ca3d01fc076",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.130",
+        "hash": "d5fc2a3508656d02",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.131",
+        "hash": "46cadac19df2fa78",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.132",
+        "hash": "69f203eafffd4cba",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.133",
+        "hash": "86f39360afca6fa5",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.134",
+        "hash": "3eeefa70922df89c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.135",
+        "hash": "a059ca47de404a70",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.136",
+        "hash": "aa8b6d1395ba4969",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.138",
+        "hash": "6962214f623ba817",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.14",
+        "hash": "e02603cccb990e8e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.140",
+        "hash": "69e49622d351c818",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.142",
+        "hash": "cb66d5455f025a4a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.144",
+        "hash": "cc9b3923eb8fb3e5",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.146",
+        "hash": "220410ed777657f3",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.15",
+        "hash": "2b5c038ab0dee754",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.156",
+        "hash": "748175ae5f4ef6b8",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.157",
+        "hash": "cf1c5d65284196eb",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.158",
+        "hash": "a29314e58ac59137",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.159",
+        "hash": "b96ce3a36e600106",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.16",
+        "hash": "dd2cdcf22e8cec2c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.160",
+        "hash": "ac859b08bec49c7b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.162",
+        "hash": "b051ae3d996aa420",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.163",
+        "hash": "84eb82b8a123c664",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.164",
+        "hash": "4baef37d9d1f05c9",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.165",
+        "hash": "45d4d52292d6f6d6",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.166",
+        "hash": "df00035c35a15203",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.167",
+        "hash": "af93ab0ef9cc451d",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.168",
+        "hash": "10ed5ee88f67db76",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.169",
+        "hash": "6d246388001854e3",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.17",
+        "hash": "94cbbe1dc7b1c760",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.170",
+        "hash": "3d263937870e0b62",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.171",
+        "hash": "cf175bd7e0635059",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.173",
+        "hash": "cd1de08df2b490d8",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.176",
+        "hash": "0f309ef77af66244",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.178",
+        "hash": "49485ba7bf3d705c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.18",
+        "hash": "f38101cfef68cdf4",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.180",
+        "hash": "a32cd0dea450220f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.181",
+        "hash": "b561fc194faf7825",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.183",
+        "hash": "2a30aa929c58a1ac",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.185",
+        "hash": "c043503e7c4248e0",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.186",
+        "hash": "b99324f99ee2aa93",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.187",
+        "hash": "0681295ce7e4bd1d",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.188",
+        "hash": "c7f66107d4a096b3",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.189",
+        "hash": "1df8571765cc5a56",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.19",
+        "hash": "28f1d2311c086b0c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.190",
+        "hash": "987f37fbace1b374",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.191",
+        "hash": "af25429cc7dfa037",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.193",
+        "hash": "9939bb3e639ff21b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.194",
+        "hash": "6d686a217826cf75",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.195",
+        "hash": "108887271d0494a0",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.197",
+        "hash": "701102b4f2b61a2c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.2",
+        "hash": "862daafdfb02172f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.20",
+        "hash": "ac8340fcf68a544c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.202",
+        "hash": "d980d632dd336e48",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.204",
+        "hash": "012c16d9be4cd2a7",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.206",
+        "hash": "ab61d9ae534c9a47",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.208",
+        "hash": "f60d2cd1aac53fd8",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.210",
+        "hash": "1af1e94e162faba6",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.211",
+        "hash": "965aca876618eabf",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.212",
+        "hash": "e3e4c6fca172fe2b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.213",
+        "hash": "1dffd29c30321257",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.214",
+        "hash": "f3806acd37f16c24",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.215",
+        "hash": "b09f8888bcf82fce",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.216",
+        "hash": "7b51f787255a2d56",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.218",
+        "hash": "778a878c710c20fd",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.219",
+        "hash": "5200cd0b6e763f30",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.220",
+        "hash": "adb8550ed7cafacb",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.221",
+        "hash": "7db45edec2393c15",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.222",
+        "hash": "eb21538aa0c43750",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.223",
+        "hash": "db3b370ab28b4a13",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.224",
+        "hash": "6008378fa950be07",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.225",
+        "hash": "c861db29b9503688",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.226",
+        "hash": "aadbbf370d1944ae",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.227",
+        "hash": "c9b6d748ac41766b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.228",
+        "hash": "53f667d9298cebc6",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.229",
+        "hash": "2705d4d70bdca145",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.23",
+        "hash": "82dcac5f5ef5ce47",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.230",
+        "hash": "aedaab4d0c0b23e5",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.232",
+        "hash": "e3fe11fe694c2f14",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.233",
+        "hash": "1fa3d99ee76aeaf4",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.234",
+        "hash": "b52198992c336c0d",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.235",
+        "hash": "74512e39d56f753b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.24",
+        "hash": "e0bd007af1ec4392",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.25",
+        "hash": "f2e14ed46dab9681",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.26",
+        "hash": "e9ee27894a98221e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.27",
+        "hash": "ad68b9d89aaa4738",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.29",
+        "hash": "72b1fd2333c2b7ba",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.3",
+        "hash": "24db8f5872caec2f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.30",
+        "hash": "613184fb6a050c2f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.31",
+        "hash": "ca0af18bea1792b7",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.35",
+        "hash": "fd7ac682d05c342a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.36",
+        "hash": "49a3f32ad940ad79",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.37",
+        "hash": "e311a9cfba46b447",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.38",
+        "hash": "66e6734f9640490d",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.39",
+        "hash": "5eea096d63a870cd",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.4",
+        "hash": "cf18d5258ba8aaf2",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.40",
+        "hash": "27242e3a3cbcb9a8",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.41",
+        "hash": "feb980b5684b39e1",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.42",
+        "hash": "375661528829c132",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.43",
+        "hash": "536bbd1ae551bd3e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.44",
+        "hash": "967ac33fad6ee3a4",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.45",
+        "hash": "c9712b46233a9e07",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.46",
+        "hash": "586b1bc459e0e096",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.47",
+        "hash": "459b5625b91c9609",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.49",
+        "hash": "4c81951832c2bb9c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.5",
+        "hash": "50b380bfed0b7d5c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.50",
+        "hash": "b37cb8cb9211ac2b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.52",
+        "hash": "3274a83f23866311",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.53",
+        "hash": "70ca3c2409410189",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.55",
+        "hash": "a21ac6ad763bb58d",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.57",
+        "hash": "14916e76d16afcac",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.59",
+        "hash": "79d4b2ebaff2c623",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.6",
+        "hash": "9432b776a3c329e2",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.61",
+        "hash": "16a182dcdfcced52",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.63",
+        "hash": "62d3e98944c6b997",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.65",
+        "hash": "184dfdc1a6524827",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.67",
+        "hash": "b30a8918a1b27194",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.69",
+        "hash": "3adf344075b78cad",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.7",
+        "hash": "62f235840dcd7e6e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.70",
+        "hash": "6b768a4a4fa79e2e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.71",
+        "hash": "03f9296a03b49924",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.72",
+        "hash": "a9186a3399060019",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.73",
+        "hash": "dc9e3926cec97fc5",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.74",
+        "hash": "7e5e3e53f9f6f79c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.75",
+        "hash": "6c1daaef15d73f31",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.76",
+        "hash": "0d9ae1d1630c801c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.77",
+        "hash": "0e2a9e9805ef8236",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.78",
+        "hash": "32c664db71a3340e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.79",
+        "hash": "e8174f2ca4f51b43",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.8",
+        "hash": "42a2b775afeaf298",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.80",
+        "hash": "9f4530c7d560e0b9",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.81",
+        "hash": "2d804adc34781120",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.82",
+        "hash": "18788814ec44e631",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.84",
+        "hash": "de8e92bb5570b83b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.85",
+        "hash": "f6605b149b9b3510",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.86",
+        "hash": "4661276b083335d8",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.87",
+        "hash": "1c7cc2100fe6e24b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.88",
+        "hash": "c327122d2e9581f4",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.89",
+        "hash": "79554735fa8a4cde",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.9",
+        "hash": "38f1b67735974896",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.90",
+        "hash": "79a730adfbbefc8c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.91",
+        "hash": "81c3cada65a1ae13",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.92",
+        "hash": "75f5b36d507f28ab",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.93",
+        "hash": "24f5cf7e3539adb6",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.94",
+        "hash": "775308aa87e12676",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.95",
+        "hash": "dc66db51fb5faca6",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.96",
+        "hash": "3a2ccc0fda45245a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-28.98",
+        "hash": "2b93893cf158e314",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.0",
+        "hash": "dd0ccb25801157ba",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.100",
+        "hash": "4f507560f80169b5",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.101",
+        "hash": "77d3a8a5b49b629c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.107",
+        "hash": "92e077c2ddde937b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.108",
+        "hash": "32d2a3735566d871",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.109",
+        "hash": "6b7684a24e2ea5b3",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.11",
+        "hash": "44807c7ce1e8b330",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.12",
+        "hash": "b8d02b2729458be1",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.14",
+        "hash": "30dd620601654a5b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.15",
+        "hash": "5f40e2adefca6b55",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.16",
+        "hash": "c6dbed614750b034",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.18",
+        "hash": "6289fd57899df81f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.19",
+        "hash": "60eedef7c1fd99c4",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.2",
+        "hash": "df3179d345e8b2dd",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.20",
+        "hash": "8f39a2a4b58112fb",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.21",
+        "hash": "2276696515109507",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.22",
+        "hash": "651535b9799039af",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.23",
+        "hash": "a32b1f37009a825c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.24",
+        "hash": "8042bc0890d1d46b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.25",
+        "hash": "53dfe74373fb8209",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.27",
+        "hash": "eb624b7eaa2c1352",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.28",
+        "hash": "0962017347859f45",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.29",
+        "hash": "433ef4495a91c1b5",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.3",
+        "hash": "31877a380136b44d",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.30",
+        "hash": "2c02b13a6426af67",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.31",
+        "hash": "3352f159428a412c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.32",
+        "hash": "29cdd90c0c8f5d87",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.33",
+        "hash": "d6b7460c3f6a1644",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.34",
+        "hash": "bb879a312c133514",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.36",
+        "hash": "dc006361ff1698aa",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.37",
+        "hash": "e082d622f4066efa",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.38",
+        "hash": "55e474c26bdde884",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.39",
+        "hash": "9ea5d6a1b92ab6c1",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.4",
+        "hash": "3ba379a75bb7e17c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.40",
+        "hash": "4748235daea60739",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.41",
+        "hash": "362de5233108388a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.42",
+        "hash": "bea2778858bfabf4",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.43",
+        "hash": "4a610e1a239cbf2d",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.44",
+        "hash": "23fa05d9d7cbbdff",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.45",
+        "hash": "04072e7b24cef01c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.51",
+        "hash": "4cb54a484a93abe3",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.52",
+        "hash": "e75af8d31423f0ee",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.53",
+        "hash": "34db635b58700626",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.59",
+        "hash": "8e9a0c4dd7eb6cda",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.6",
+        "hash": "af00fbc309370187",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.60",
+        "hash": "6e7067a5f8f9ed1a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.61",
+        "hash": "764b36e6a287350a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.67",
+        "hash": "7db2faf874df59a0",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.68",
+        "hash": "4f38839d96e35821",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.69",
+        "hash": "51ba817275d86950",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.7",
+        "hash": "f24fed60de67aa52",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.75",
+        "hash": "10a044216762ddb9",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.76",
+        "hash": "3880be41f0b16b04",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.77",
+        "hash": "363a17f053e9c2b1",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.8",
+        "hash": "1f4d04db0bda5f8d",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.83",
+        "hash": "9de05ae23db91a79",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.84",
+        "hash": "42820c354a236762",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.85",
+        "hash": "59bbc27c8e1cda06",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.9",
+        "hash": "d768e7a482248f8f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.91",
+        "hash": "26e851fbd715faf2",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.92",
+        "hash": "cee176d6011dca35",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.93",
+        "hash": "234192934f73932f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-29.99",
+        "hash": "9ee1b25c02445571",
+        "verdict": "right"
+      },
+      {
+        "key": "article-3.0",
+        "hash": "4001163ed3411748",
+        "verdict": "right"
+      },
+      {
+        "key": "article-3.1",
+        "hash": "89969c8bc57a172b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-3.13",
+        "hash": "48fe7f4d851c029a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-3.14",
+        "hash": "4938880030aa7dd1",
+        "verdict": "right"
+      },
+      {
+        "key": "article-3.15",
+        "hash": "67c988b142a57ccb",
+        "verdict": "right"
+      },
+      {
+        "key": "article-3.16",
+        "hash": "8f8d90d6dc4cbe92",
+        "verdict": "right"
+      },
+      {
+        "key": "article-3.17",
+        "hash": "4015024209ae6ea2",
+        "verdict": "right"
+      },
+      {
+        "key": "article-3.18",
+        "hash": "9da8dfba04d7cbbd",
+        "verdict": "right"
+      },
+      {
+        "key": "article-3.19",
+        "hash": "edcdddac45416098",
+        "verdict": "right"
+      },
+      {
+        "key": "article-3.2",
+        "hash": "e292808c4c0c245e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-3.3",
+        "hash": "83c64b10252b773a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-3.4",
+        "hash": "cba9d34261613b73",
+        "verdict": "right"
+      },
+      {
+        "key": "article-3.5",
+        "hash": "d2e771d14d5ed173",
+        "verdict": "right"
+      },
+      {
+        "key": "article-30.0",
+        "hash": "9f6fc52986236fe1",
+        "verdict": "right"
+      },
+      {
+        "key": "article-30.1",
+        "hash": "83d5bdb4c91b2585",
+        "verdict": "right"
+      },
+      {
+        "key": "article-30.2",
+        "hash": "71c6c497df136b33",
+        "verdict": "right"
+      },
+      {
+        "key": "article-30.3",
+        "hash": "cc8bbc7bf1543cf9",
+        "verdict": "right"
+      },
+      {
+        "key": "article-30.5",
+        "hash": "9ff2a3f2ac61f482",
+        "verdict": "right"
+      },
+      {
+        "key": "article-31.2",
+        "hash": "4cc1fa08cdd86b17",
+        "verdict": "right"
+      },
+      {
+        "key": "article-31.3",
+        "hash": "3e20a6f58929a7b6",
+        "verdict": "right"
+      },
+      {
+        "key": "article-31.5",
+        "hash": "73b55911def5035b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-32.0",
+        "hash": "004193bb5dde6531",
+        "verdict": "right"
+      },
+      {
+        "key": "article-32.1",
+        "hash": "fc2cef7c3ec8d870",
+        "verdict": "right"
+      },
+      {
+        "key": "article-32.13",
+        "hash": "83dda2819fc0cc2a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-32.14",
+        "hash": "ada42f2d2f54e4a5",
+        "verdict": "right"
+      },
+      {
+        "key": "article-32.15",
+        "hash": "dd3a196ea25fb443",
+        "verdict": "right"
+      },
+      {
+        "key": "article-32.16",
+        "hash": "3ba2b4aaa0caa5a5",
+        "verdict": "right"
+      },
+      {
+        "key": "article-32.17",
+        "hash": "42bc0ffad8da3773",
+        "verdict": "right"
+      },
+      {
+        "key": "article-32.18",
+        "hash": "cc3ca068a24ee346",
+        "verdict": "right"
+      },
+      {
+        "key": "article-32.2",
+        "hash": "5aa4c364c16ef184",
+        "verdict": "right"
+      },
+      {
+        "key": "article-32.3",
+        "hash": "e08b9688eaf5a476",
+        "verdict": "right"
+      },
+      {
+        "key": "article-32.4",
+        "hash": "3adb7a35c6902d30",
+        "verdict": "right"
+      },
+      {
+        "key": "article-33.0",
+        "hash": "d3cc57b6b38babea",
+        "verdict": "right"
+      },
+      {
+        "key": "article-33.1",
+        "hash": "e107267ac119a7af",
+        "verdict": "right"
+      },
+      {
+        "key": "article-33.13",
+        "hash": "7e915fc1d858fde0",
+        "verdict": "right"
+      },
+      {
+        "key": "article-33.14",
+        "hash": "ee32d2177468567c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-33.15",
+        "hash": "0daccafa169fd5a2",
+        "verdict": "right"
+      },
+      {
+        "key": "article-33.16",
+        "hash": "9937f9ee165b9ef6",
+        "verdict": "right"
+      },
+      {
+        "key": "article-33.17",
+        "hash": "c56c3aa9e040e98f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-33.18",
+        "hash": "0d43015fb441133c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-33.2",
+        "hash": "e7b78e81608c672f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-33.3",
+        "hash": "a075f9f3841c030b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-33.4",
+        "hash": "4f51c9816219c78a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-34.0",
+        "hash": "fa4cc6c44f994dce",
+        "verdict": "right"
+      },
+      {
+        "key": "article-34.1",
+        "hash": "ccca48b406bafc52",
+        "verdict": "right"
+      },
+      {
+        "key": "article-34.13",
+        "hash": "7e61bb593894f8ca",
+        "verdict": "right"
+      },
+      {
+        "key": "article-34.14",
+        "hash": "ae13fdf0a2bd690d",
+        "verdict": "right"
+      },
+      {
+        "key": "article-34.15",
+        "hash": "db44b772f4fb164d",
+        "verdict": "right"
+      },
+      {
+        "key": "article-34.16",
+        "hash": "3a9078a0a88eea34",
+        "verdict": "right"
+      },
+      {
+        "key": "article-34.17",
+        "hash": "965d0a120b43f480",
+        "verdict": "right"
+      },
+      {
+        "key": "article-34.18",
+        "hash": "2ab345fe0562b381",
+        "verdict": "right"
+      },
+      {
+        "key": "article-34.2",
+        "hash": "9912241fd5db3432",
+        "verdict": "right"
+      },
+      {
+        "key": "article-34.3",
+        "hash": "e573b08add7a48aa",
+        "verdict": "right"
+      },
+      {
+        "key": "article-35.0",
+        "hash": "9714f7b354d2d3cc",
+        "verdict": "right"
+      },
+      {
+        "key": "article-35.1",
+        "hash": "b64cb7d9fe1ed15a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-35.13",
+        "hash": "f2e05df087efbd75",
+        "verdict": "right"
+      },
+      {
+        "key": "article-35.14",
+        "hash": "41f079de58eda627",
+        "verdict": "right"
+      },
+      {
+        "key": "article-35.15",
+        "hash": "19265e5f97612241",
+        "verdict": "right"
+      },
+      {
+        "key": "article-35.16",
+        "hash": "46b0bba11ceba526",
+        "verdict": "right"
+      },
+      {
+        "key": "article-35.17",
+        "hash": "81e23cd02ddda931",
+        "verdict": "right"
+      },
+      {
+        "key": "article-35.18",
+        "hash": "939400f270c96097",
+        "verdict": "right"
+      },
+      {
+        "key": "article-35.19",
+        "hash": "3eb78ef8f331a9ac",
+        "verdict": "right"
+      },
+      {
+        "key": "article-35.2",
+        "hash": "31c6a6a227d0410c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-35.3",
+        "hash": "6f8c19c8784d3b85",
+        "verdict": "right"
+      },
+      {
+        "key": "article-35.4",
+        "hash": "5a91179933941e31",
+        "verdict": "right"
+      },
+      {
+        "key": "article-35.5",
+        "hash": "a4ae2bd4ebeb24b1",
+        "verdict": "right"
+      },
+      {
+        "key": "article-36.0",
+        "hash": "b5bf07f82fa9ddd3",
+        "verdict": "right"
+      },
+      {
+        "key": "article-36.1",
+        "hash": "eacc30ecbb027a9d",
+        "verdict": "right"
+      },
+      {
+        "key": "article-36.14",
+        "hash": "d076bc9ff6aff243",
+        "verdict": "right"
+      },
+      {
+        "key": "article-36.15",
+        "hash": "83c330502288e07d",
+        "verdict": "right"
+      },
+      {
+        "key": "article-36.16",
+        "hash": "74ba3dc35967f9d7",
+        "verdict": "right"
+      },
+      {
+        "key": "article-36.17",
+        "hash": "ccc77206fcbb8289",
+        "verdict": "right"
+      },
+      {
+        "key": "article-36.18",
+        "hash": "a4cbde2c4fc8a988",
+        "verdict": "right"
+      },
+      {
+        "key": "article-36.2",
+        "hash": "f4924fe76e9913aa",
+        "verdict": "right"
+      },
+      {
+        "key": "article-36.3",
+        "hash": "6b09c89bd9a61946",
+        "verdict": "right"
+      },
+      {
+        "key": "article-37.0",
+        "hash": "94f516f53439341e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-37.1",
+        "hash": "a4de72a640055454",
+        "verdict": "right"
+      },
+      {
+        "key": "article-37.14",
+        "hash": "6c9bfbb6b03b59b6",
+        "verdict": "right"
+      },
+      {
+        "key": "article-37.15",
+        "hash": "0f9a6e8bb7374d40",
+        "verdict": "right"
+      },
+      {
+        "key": "article-37.16",
+        "hash": "e436bb574fcd9256",
+        "verdict": "right"
+      },
+      {
+        "key": "article-37.17",
+        "hash": "d5c099e14274e5cf",
+        "verdict": "right"
+      },
+      {
+        "key": "article-37.2",
+        "hash": "042feefe31f3f152",
+        "verdict": "right"
+      },
+      {
+        "key": "article-37.3",
+        "hash": "4d132a87cb17acc2",
+        "verdict": "right"
+      },
+      {
+        "key": "article-37.4",
+        "hash": "0107328087a960ce",
+        "verdict": "right"
+      },
+      {
+        "key": "article-38.0",
+        "hash": "5fd65cdeac657551",
+        "verdict": "right"
+      },
+      {
+        "key": "article-38.1",
+        "hash": "e34702b19aa157a4",
+        "verdict": "right"
+      },
+      {
+        "key": "article-38.13",
+        "hash": "6ed10b5df94fe0f0",
+        "verdict": "right"
+      },
+      {
+        "key": "article-38.14",
+        "hash": "23aeeb189b56b743",
+        "verdict": "right"
+      },
+      {
+        "key": "article-38.15",
+        "hash": "3647f609a34d7129",
+        "verdict": "right"
+      },
+      {
+        "key": "article-38.16",
+        "hash": "bee2cc887a073723",
+        "verdict": "right"
+      },
+      {
+        "key": "article-38.17",
+        "hash": "b8f8a9a2408e12aa",
+        "verdict": "right"
+      },
+      {
+        "key": "article-38.2",
+        "hash": "2cba9418c4477c57",
+        "verdict": "right"
+      },
+      {
+        "key": "article-38.3",
+        "hash": "d0f94b9e8acedea9",
+        "verdict": "right"
+      },
+      {
+        "key": "article-38.4",
+        "hash": "af1926355ad40125",
+        "verdict": "right"
+      },
+      {
+        "key": "article-39.0",
+        "hash": "555b9add81c8ee0a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-39.1",
+        "hash": "3a8109b75e84dfc5",
+        "verdict": "right"
+      },
+      {
+        "key": "article-39.13",
+        "hash": "7d39b830079611e2",
+        "verdict": "right"
+      },
+      {
+        "key": "article-39.14",
+        "hash": "e59eb28ddde2268f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-39.15",
+        "hash": "5ffe71e884dcb4a8",
+        "verdict": "right"
+      },
+      {
+        "key": "article-39.16",
+        "hash": "f57389b3320bf69b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-39.17",
+        "hash": "0598d065d50866ff",
+        "verdict": "right"
+      },
+      {
+        "key": "article-39.2",
+        "hash": "c1b454c199167359",
+        "verdict": "right"
+      },
+      {
+        "key": "article-39.3",
+        "hash": "8370e7f65895d6e3",
+        "verdict": "right"
+      },
+      {
+        "key": "article-39.4",
+        "hash": "44fe894aff0607cc",
+        "verdict": "right"
+      },
+      {
+        "key": "article-4.0",
+        "hash": "ed1043087cb230e4",
+        "verdict": "right"
+      },
+      {
+        "key": "article-4.1",
+        "hash": "1988d31d1347cd4e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-4.13",
+        "hash": "be1e2aecec9a9800",
+        "verdict": "right"
+      },
+      {
+        "key": "article-4.14",
+        "hash": "5800d008de82601b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-4.15",
+        "hash": "4c1d528037e164b6",
+        "verdict": "right"
+      },
+      {
+        "key": "article-4.16",
+        "hash": "a2496d1b4fcc235c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-4.17",
+        "hash": "77259187ad84d13a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-4.18",
+        "hash": "961825d893c229bd",
+        "verdict": "right"
+      },
+      {
+        "key": "article-4.2",
+        "hash": "f994b2be1954f4bd",
+        "verdict": "right"
+      },
+      {
+        "key": "article-4.3",
+        "hash": "622a61c281ee2625",
+        "verdict": "right"
+      },
+      {
+        "key": "article-4.4",
+        "hash": "b9e19e365c4f03a9",
+        "verdict": "right"
+      },
+      {
+        "key": "article-40.0",
+        "hash": "4b5b8f07731e4dc3",
+        "verdict": "right"
+      },
+      {
+        "key": "article-40.1",
+        "hash": "7152104d2f2983bb",
+        "verdict": "right"
+      },
+      {
+        "key": "article-40.13",
+        "hash": "9118ffe73687377e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-40.14",
+        "hash": "3c175f618bce7bea",
+        "verdict": "right"
+      },
+      {
+        "key": "article-40.15",
+        "hash": "a8a435e1e89a0ee0",
+        "verdict": "right"
+      },
+      {
+        "key": "article-40.16",
+        "hash": "e2d80b02358cb86f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-40.17",
+        "hash": "c17de5b4a2fdd384",
+        "verdict": "right"
+      },
+      {
+        "key": "article-40.2",
+        "hash": "bda0d6b0a1600ceb",
+        "verdict": "right"
+      },
+      {
+        "key": "article-40.3",
+        "hash": "8e424d5d900d1656",
+        "verdict": "right"
+      },
+      {
+        "key": "article-40.4",
+        "hash": "b42b237adbc1c1db",
+        "verdict": "right"
+      },
+      {
+        "key": "article-41.0",
+        "hash": "27c1fa25390f341f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-41.1",
+        "hash": "aae471a587a1761e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-41.13",
+        "hash": "e5c05215096949a0",
+        "verdict": "right"
+      },
+      {
+        "key": "article-41.14",
+        "hash": "4735ca2ac0c1b4fd",
+        "verdict": "right"
+      },
+      {
+        "key": "article-41.15",
+        "hash": "b9403fc5b93b291f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-41.16",
+        "hash": "b4a605352d3e9c4a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-41.17",
+        "hash": "e0644a3585bdd5a3",
+        "verdict": "right"
+      },
+      {
+        "key": "article-41.2",
+        "hash": "f04e8a24caa6850f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-41.3",
+        "hash": "3f159b634cd45ebb",
+        "verdict": "right"
+      },
+      {
+        "key": "article-41.4",
+        "hash": "0ed1e437bc9ce407",
+        "verdict": "right"
+      },
+      {
+        "key": "article-5.0",
+        "hash": "ff5379e9f9f62a9d",
+        "verdict": "right"
+      },
+      {
+        "key": "article-5.1",
+        "hash": "d941ce354581d49e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-5.19",
+        "hash": "563c1169f4310906",
+        "verdict": "right"
+      },
+      {
+        "key": "article-5.2",
+        "hash": "b382011772cb32b4",
+        "verdict": "right"
+      },
+      {
+        "key": "article-5.26",
+        "hash": "57435b21a67407f9",
+        "verdict": "right"
+      },
+      {
+        "key": "article-5.27",
+        "hash": "89e15cb1f560c154",
+        "verdict": "right"
+      },
+      {
+        "key": "article-5.28",
+        "hash": "5b1a4e8984bbfba5",
+        "verdict": "right"
+      },
+      {
+        "key": "article-5.3",
+        "hash": "403058d16372ae67",
+        "verdict": "right"
+      },
+      {
+        "key": "article-6.0",
+        "hash": "fca98c65ccad4de0",
+        "verdict": "right"
+      },
+      {
+        "key": "article-6.1",
+        "hash": "090f159669c93ddd",
+        "verdict": "right"
+      },
+      {
+        "key": "article-6.19",
+        "hash": "8cbc8aed7327a2c9",
+        "verdict": "right"
+      },
+      {
+        "key": "article-6.2",
+        "hash": "797052b7414dfd69",
+        "verdict": "right"
+      },
+      {
+        "key": "article-6.27",
+        "hash": "6750d3ae8fdb4e02",
+        "verdict": "right"
+      },
+      {
+        "key": "article-6.28",
+        "hash": "40316250edddc615",
+        "verdict": "right"
+      },
+      {
+        "key": "article-6.3",
+        "hash": "0b7f46cfe4476327",
+        "verdict": "right"
+      },
+      {
+        "key": "article-7.0",
+        "hash": "7ed4eceb47c359b7",
+        "verdict": "right"
+      },
+      {
+        "key": "article-7.1",
+        "hash": "abbcdadddcbe92de",
+        "verdict": "right"
+      },
+      {
+        "key": "article-7.19",
+        "hash": "b30676e756434ec6",
+        "verdict": "right"
+      },
+      {
+        "key": "article-7.2",
+        "hash": "d7fe393246d90321",
+        "verdict": "right"
+      },
+      {
+        "key": "article-7.26",
+        "hash": "5a3741bfbe28326f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-7.27",
+        "hash": "4317a4cb1d5ad74f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-7.28",
+        "hash": "c829ea1cbd36c297",
+        "verdict": "right"
+      },
+      {
+        "key": "article-7.3",
+        "hash": "9336d7be91339def",
+        "verdict": "right"
+      },
+      {
+        "key": "article-8.0",
+        "hash": "88ef290cf491218a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-8.1",
+        "hash": "b33fbea776946650",
+        "verdict": "right"
+      },
+      {
+        "key": "article-8.19",
+        "hash": "10d90736f12d6071",
+        "verdict": "right"
+      },
+      {
+        "key": "article-8.2",
+        "hash": "e766ef522eb134cf",
+        "verdict": "right"
+      },
+      {
+        "key": "article-8.26",
+        "hash": "0274192457a6043b",
+        "verdict": "right"
+      },
+      {
+        "key": "article-8.27",
+        "hash": "c88a1bf23896932c",
+        "verdict": "right"
+      },
+      {
+        "key": "article-8.28",
+        "hash": "09f5bd3bfffe0808",
+        "verdict": "right"
+      },
+      {
+        "key": "article-8.3",
+        "hash": "8ee0a2a2d2dcbbc5",
+        "verdict": "right"
+      },
+      {
+        "key": "article-9.0",
+        "hash": "c7da121f0e79200e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-9.1",
+        "hash": "6812fe3e8601a44e",
+        "verdict": "right"
+      },
+      {
+        "key": "article-9.19",
+        "hash": "187acb15ced42992",
+        "verdict": "right"
+      },
+      {
+        "key": "article-9.2",
+        "hash": "350e7eb22b4c3f6f",
+        "verdict": "right"
+      },
+      {
+        "key": "article-9.26",
+        "hash": "4d8ceec3183d113a",
+        "verdict": "right"
+      },
+      {
+        "key": "article-9.27",
+        "hash": "f3267f6b9ee716bd",
+        "verdict": "right"
+      },
+      {
+        "key": "article-9.28",
+        "hash": "c3aa74d0d59dfd83",
+        "verdict": "right"
+      },
+      {
+        "key": "article-9.3",
+        "hash": "58baa55547398d0e",
+        "verdict": "right"
+      },
+      {
+        "key": "category-10.0",
+        "hash": "95e8f27f3673c749",
+        "verdict": "right"
+      },
+      {
+        "key": "category-11.0",
+        "hash": "9c4185167fd101ac",
+        "verdict": "right"
+      },
+      {
+        "key": "category-12.0",
+        "hash": "768b41130029d093",
+        "verdict": "right"
+      },
+      {
+        "key": "category-13.0",
+        "hash": "8feb3d2c2b750712",
+        "verdict": "right"
+      },
+      {
+        "key": "category-8.0",
+        "hash": "9d2dc3ae12b2f3c6",
+        "verdict": "right"
+      },
+      {
+        "key": "category-9.0",
+        "hash": "d018077be5bf0a43",
+        "verdict": "right"
+      },
+      {
+        "key": "contact-1.0",
+        "hash": "73be7fb0899b7d54",
+        "verdict": "right"
+      },
+      {
+        "key": "contact-1.11",
+        "hash": "120dbc3f134d94fc",
+        "verdict": "right"
+      },
+      {
+        "key": "contact-1.7",
+        "hash": "b09c217f174c4a3f",
+        "verdict": "right"
+      },
+      {
+        "key": "contact-4.0",
+        "hash": "1d6ae79d327c7b8c",
+        "verdict": "right"
+      },
+      {
+        "key": "contact-4.1",
+        "hash": "8ccd4740828cf206",
+        "verdict": "right"
+      },
+      {
+        "key": "contact-4.11",
+        "hash": "0f5f60ab3844074c",
+        "verdict": "right"
+      },
+      {
+        "key": "contact-4.2",
+        "hash": "e75b206af08c1318",
+        "verdict": "right"
+      },
+      {
+        "key": "contact-4.3",
+        "hash": "47d72985b6b24410",
+        "verdict": "right"
+      },
+      {
+        "key": "contact-4.7",
+        "hash": "48e03be5a78f8216",
+        "verdict": "right"
+      },
+      {
+        "key": "languageString-129210608.0",
+        "hash": "cf5153eac08c6d77",
+        "verdict": "right"
+      },
+      {
+        "key": "languageString-1313918.0",
+        "hash": "e95522302d3b33f7",
+        "verdict": "right"
+      },
+      {
+        "key": "languageString-13180607.0",
+        "hash": "f57580ba3ccb86a4",
+        "verdict": "right"
+      },
+      {
+        "key": "languageString-158444135.0",
+        "hash": "6ba77019729b295d",
+        "verdict": "right"
+      },
+      {
+        "key": "languageString-18614246.0",
+        "hash": "8e47651f0c6e19e3",
+        "verdict": "right"
+      },
+      {
+        "key": "languageString-186268624.0",
+        "hash": "70e9772971df7962",
+        "verdict": "right"
+      },
+      {
+        "key": "languageString-186873007.1",
+        "hash": "5ec9f16296af4c93",
+        "verdict": "right"
+      },
+      {
+        "key": "languageString-186873007.2",
+        "hash": "9831cd4e5f5aaea7",
+        "verdict": "right"
+      },
+      {
+        "key": "languageString-186873007.4",
+        "hash": "df6d56fb5c4c287a",
+        "verdict": "right"
+      },
+      {
+        "key": "languageString-199211394.0",
+        "hash": "3a054579c8647a58",
+        "verdict": "right"
+      },
+      {
+        "key": "languageString-204331590.0",
+        "hash": "32c0850e298fec92",
+        "verdict": "right"
+      },
+      {
+        "key": "languageString-230321395.0",
+        "hash": "5b1d325c116bdec3",
+        "verdict": "right"
+      },
+      {
+        "key": "languageString-246092030.0",
+        "hash": "021f794e34b16012",
+        "verdict": "right"
+      },
+      {
+        "key": "languageString-67130045.0",
+        "hash": "18afedb5798f0647",
+        "verdict": "right"
+      },
+      {
+        "key": "languageString-70319338.0",
+        "hash": "cdf9ad9df606880a",
+        "verdict": "right"
+      },
+      {
+        "key": "languageString-76089964.0",
+        "hash": "ecfb2a566787629b",
+        "verdict": "right"
+      },
+      {
+        "key": "languageString-9531873.0",
+        "hash": "8573beafcd2bdd26",
+        "verdict": "right"
+      },
+      {
+        "key": "languageString-95563480.0",
+        "hash": "153936d03a04933b",
+        "verdict": "right"
+      },
+      {
+        "key": "languageString-99519298.0",
+        "hash": "4d6b5ff4216ad19e",
+        "verdict": "right"
+      },
+      {
+        "key": "menuItem-101.0",
+        "hash": "471a3f25931cdfee",
+        "verdict": "right"
+      },
+      {
+        "key": "menuItem-127.0",
+        "hash": "a2c8410f9f6aea0a",
+        "verdict": "right"
+      },
+      {
+        "key": "menuItem-128.0",
+        "hash": "e20cb409101fb166",
+        "verdict": "right"
+      },
+      {
+        "key": "menuItem-129.0",
+        "hash": "b476304541289c7b",
+        "verdict": "right"
+      },
+      {
+        "key": "menuItem-133.0",
+        "hash": "6100b881e8e45bc8",
+        "verdict": "right"
+      },
+      {
+        "key": "menuItem-134.0",
+        "hash": "e8cfe342e9144470",
+        "verdict": "right"
+      },
+      {
+        "key": "menuItem-135.0",
+        "hash": "57a3aa91ec2e6727",
+        "verdict": "right"
+      },
+      {
+        "key": "menuItem-138.0",
+        "hash": "23a98907e0412260",
+        "verdict": "right"
+      },
+      {
+        "key": "menuItem-139.0",
+        "hash": "5ea5eea529165e88",
+        "verdict": "right"
+      },
+      {
+        "key": "menuItem-140.0",
+        "hash": "19976136427cb2d9",
+        "verdict": "right"
+      },
+      {
+        "key": "menuItem-141.0",
+        "hash": "25183145ce5cb75f",
+        "verdict": "right"
+      },
+      {
+        "key": "menuItem-142.0",
+        "hash": "44c19ea54d250352",
+        "verdict": "right"
+      },
+      {
+        "key": "menuItem-143.0",
+        "hash": "525dbce765ba2fdf",
+        "verdict": "right"
+      },
+      {
+        "key": "menuItem-145.0",
+        "hash": "d1f49a70e42d85bc",
+        "verdict": "right"
+      },
+      {
+        "key": "menuItem-146.0",
+        "hash": "89cf867b43e4932d",
+        "verdict": "right"
+      },
+      {
+        "key": "menuItem-148.0",
+        "hash": "a5e4a4c1937edec7",
+        "verdict": "right"
+      },
+      {
+        "key": "menuItem-149.0",
+        "hash": "23d493d3a918e1b8",
+        "verdict": "right"
+      },
+      {
+        "key": "menuItem-150.0",
+        "hash": "4d052eee434ddd3d",
+        "verdict": "right"
+      },
+      {
+        "key": "menuItem-151.0",
+        "hash": "ed0ccffb77a63569",
+        "verdict": "right"
+      },
+      {
+        "key": "module-100.0",
+        "hash": "1592fa4d5ef20820",
+        "verdict": "right"
+      },
+      {
+        "key": "module-100.1",
+        "hash": "3df194897e278ef9",
+        "verdict": "right"
+      },
+      {
+        "key": "module-100.2",
+        "hash": "96a5a2d6d185ac95",
+        "verdict": "right"
+      },
+      {
+        "key": "module-101.0",
+        "hash": "7434c76eedf10c22",
+        "verdict": "right"
+      },
+      {
+        "key": "module-101.1",
+        "hash": "783451ad31d47b3b",
+        "verdict": "right"
+      },
+      {
+        "key": "module-101.15",
+        "hash": "773b34523e26b404",
+        "verdict": "right"
+      },
+      {
+        "key": "module-101.16",
+        "hash": "ed583a61d2033b4f",
+        "verdict": "right"
+      },
+      {
+        "key": "module-101.17",
+        "hash": "d6ce69ce3d5a2955",
+        "verdict": "right"
+      },
+      {
+        "key": "module-101.18",
+        "hash": "40ad442d0d350071",
+        "verdict": "right"
+      },
+      {
+        "key": "module-101.19",
+        "hash": "d71b4ce0e483eaca",
+        "verdict": "right"
+      },
+      {
+        "key": "module-101.20",
+        "hash": "90db83addcc8304d",
+        "verdict": "right"
+      },
+      {
+        "key": "module-101.21",
+        "hash": "eea018cf8796aed1",
+        "verdict": "right"
+      },
+      {
+        "key": "module-101.22",
+        "hash": "60c28b2e827e5096",
+        "verdict": "right"
+      },
+      {
+        "key": "module-101.23",
+        "hash": "9fe1523055f1fd13",
+        "verdict": "right"
+      },
+      {
+        "key": "module-101.3",
+        "hash": "fc8f1792197391df",
+        "verdict": "right"
+      },
+      {
+        "key": "module-101.4",
+        "hash": "3dee6778c8c8cc3c",
+        "verdict": "right"
+      },
+      {
+        "key": "module-101.5",
+        "hash": "6cfeeb5103a8ddbe",
+        "verdict": "right"
+      },
+      {
+        "key": "module-101.6",
+        "hash": "4384397c8a082550",
+        "verdict": "right"
+      },
+      {
+        "key": "module-101.7",
+        "hash": "7b2ad6441208ff82",
+        "verdict": "right"
+      },
+      {
+        "key": "module-101.8",
+        "hash": "23ccb0f804f811d2",
+        "verdict": "right"
+      },
+      {
+        "key": "module-102.0",
+        "hash": "0286768bf5f9c08c",
+        "verdict": "right"
+      },
+      {
+        "key": "module-102.1",
+        "hash": "4839b845f97b9ccd",
+        "verdict": "right"
+      },
+      {
+        "key": "module-103.0",
+        "hash": "40dcdfad5f26fa4e",
+        "verdict": "right"
+      },
+      {
+        "key": "module-103.1",
+        "hash": "221adef8ec9f3f0f",
+        "verdict": "right"
+      },
+      {
+        "key": "module-103.10",
+        "hash": "5e2d611752d19269",
+        "verdict": "right"
+      },
+      {
+        "key": "module-103.11",
+        "hash": "9b87ba7abed97f03",
+        "verdict": "right"
+      },
+      {
+        "key": "module-103.12",
+        "hash": "e3527182c068b849",
+        "verdict": "right"
+      },
+      {
+        "key": "module-103.13",
+        "hash": "c916578e33db40ce",
+        "verdict": "right"
+      },
+      {
+        "key": "module-103.14",
+        "hash": "f1b24af5638fc88c",
+        "verdict": "right"
+      },
+      {
+        "key": "module-103.2",
+        "hash": "165dd6359743342a",
+        "verdict": "right"
+      },
+      {
+        "key": "module-103.20",
+        "hash": "7732dd040fe97088",
+        "verdict": "right"
+      },
+      {
+        "key": "module-103.21",
+        "hash": "09df565200b58c9a",
+        "verdict": "right"
+      },
+      {
+        "key": "module-103.3",
+        "hash": "9da75313218c4600",
+        "verdict": "right"
+      },
+      {
+        "key": "module-103.4",
+        "hash": "d603662bd1db0294",
+        "verdict": "right"
+      },
+      {
+        "key": "module-103.5",
+        "hash": "58ecf5fb8426e308",
+        "verdict": "right"
+      },
+      {
+        "key": "module-103.6",
+        "hash": "027bf9b2dcf00c63",
+        "verdict": "right"
+      },
+      {
+        "key": "module-103.7",
+        "hash": "0637a1d29e0ab125",
+        "verdict": "right"
+      },
+      {
+        "key": "module-103.8",
+        "hash": "6501d6f019b3d518",
+        "verdict": "right"
+      },
+      {
+        "key": "module-103.9",
+        "hash": "85a65101712895f0",
+        "verdict": "right"
+      },
+      {
+        "key": "module-104.0",
+        "hash": "9077d1f51f4771e4",
+        "verdict": "right"
+      },
+      {
+        "key": "module-104.1",
+        "hash": "36f4a898ac71fa17",
+        "verdict": "right"
+      },
+      {
+        "key": "module-105.1",
+        "hash": "11a8ea22aa1b1ccf",
+        "verdict": "right"
+      },
+      {
+        "key": "module-105.10",
+        "hash": "e62fe85ce712859b",
+        "verdict": "right"
+      },
+      {
+        "key": "module-105.2",
+        "hash": "f754d9fb16c38cb2",
+        "verdict": "right"
+      },
+      {
+        "key": "module-105.3",
+        "hash": "3f2b1722ae6af27c",
+        "verdict": "right"
+      },
+      {
+        "key": "module-105.4",
+        "hash": "56d89c29593a5faa",
+        "verdict": "right"
+      },
+      {
+        "key": "module-105.5",
+        "hash": "0feda107870191ee",
+        "verdict": "right"
+      },
+      {
+        "key": "module-105.6",
+        "hash": "7d349293adaf8a6e",
+        "verdict": "right"
+      },
+      {
+        "key": "module-105.7",
+        "hash": "16b6d6968eae283d",
+        "verdict": "right"
+      },
+      {
+        "key": "module-105.8",
+        "hash": "a3036a01a3178edf",
+        "verdict": "right"
+      },
+      {
+        "key": "module-105.9",
+        "hash": "a536bee9aeef466c",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.0",
+        "hash": "a8c5b86eac9417aa",
+        "verdict": "right"
+      },
+      {
+        "key": "module-106.1",
+        "hash": "afa5df24410dce48",
+        "verdict": "right"
+      },
+      {
+        "key": "module-107.0",
+        "hash": "16cd5665b0bb2da0",
+        "verdict": "right"
+      },
+      {
+        "key": "module-107.1",
+        "hash": "2ed263fe7109b4ed",
+        "verdict": "right"
+      },
+      {
+        "key": "module-107.3",
+        "hash": "8cb6f4bad3865f73",
+        "verdict": "right"
+      },
+      {
+        "key": "module-107.4",
+        "hash": "d80cc0e538c37fcd",
+        "verdict": "right"
+      },
+      {
+        "key": "module-107.5",
+        "hash": "62e9abcc81d61dd8",
+        "verdict": "right"
+      },
+      {
+        "key": "module-108.1",
+        "hash": "fdf0b116b0f2cc56",
+        "verdict": "right"
+      },
+      {
+        "key": "module-108.2",
+        "hash": "46a4cf7d42ce4dbb",
+        "verdict": "right"
+      },
+      {
+        "key": "module-108.4",
+        "hash": "1b9496f4bcd41f1f",
+        "verdict": "right"
+      },
+      {
+        "key": "module-108.5",
+        "hash": "a3b20f16b6553e3d",
+        "verdict": "right"
+      },
+      {
+        "key": "module-110.1",
+        "hash": "4bacfab77d590f22",
+        "verdict": "right"
+      },
+      {
+        "key": "module-110.10",
+        "hash": "7ac724103e890ec3",
+        "verdict": "right"
+      },
+      {
+        "key": "module-110.11",
+        "hash": "8e87fa93d6acea4b",
+        "verdict": "right"
+      },
+      {
+        "key": "module-110.12",
+        "hash": "f6d5a4fbd0929f50",
+        "verdict": "right"
+      },
+      {
+        "key": "module-110.13",
+        "hash": "c95e34f3ccf9db43",
+        "verdict": "right"
+      },
+      {
+        "key": "module-110.2",
+        "hash": "72e7f2c57c4b2656",
+        "verdict": "right"
+      },
+      {
+        "key": "module-110.4",
+        "hash": "d82df236b2732e92",
+        "verdict": "right"
+      },
+      {
+        "key": "module-110.8",
+        "hash": "f8d8eeb0223f6138",
+        "verdict": "right"
+      },
+      {
+        "key": "module-110.9",
+        "hash": "d3caf2ec9eec59bd",
+        "verdict": "right"
+      },
+      {
+        "key": "module-115.0",
+        "hash": "f2722341414647d2",
+        "verdict": "right"
+      },
+      {
+        "key": "module-118.0",
+        "hash": "0e772d7e0ae924e8",
+        "verdict": "right"
+      },
+      {
+        "key": "module-119.0",
+        "hash": "a198d19fee0b6b10",
+        "verdict": "right"
+      },
+      {
+        "key": "module-122.0",
+        "hash": "6fdde4f41d429654",
+        "verdict": "right"
+      },
+      {
+        "key": "module-123.0",
+        "hash": "b32d87dc77fdbe4e",
+        "verdict": "right"
+      },
+      {
+        "key": "module-124.1",
+        "hash": "a86f1fbbb7c9d07e",
+        "verdict": "right"
+      },
+      {
+        "key": "module-124.10",
+        "hash": "c60ca85f8858683c",
+        "verdict": "right"
+      },
+      {
+        "key": "module-124.11",
+        "hash": "87c4dfba83f80712",
+        "verdict": "right"
+      },
+      {
+        "key": "module-124.12",
+        "hash": "e392fbdd312920a5",
+        "verdict": "right"
+      },
+      {
+        "key": "module-124.2",
+        "hash": "e5f79d790a667d5f",
+        "verdict": "right"
+      },
+      {
+        "key": "module-124.3",
+        "hash": "b2ee86509441dc64",
+        "verdict": "right"
+      },
+      {
+        "key": "module-124.4",
+        "hash": "3224a067ddca961a",
+        "verdict": "right"
+      },
+      {
+        "key": "module-124.5",
+        "hash": "e4e44f325a38567d",
+        "verdict": "right"
+      },
+      {
+        "key": "module-124.6",
+        "hash": "1d5caa317f67578e",
+        "verdict": "right"
+      },
+      {
+        "key": "module-124.7",
+        "hash": "32d67dbce61c8ebf",
+        "verdict": "right"
+      },
+      {
+        "key": "module-124.8",
+        "hash": "6b53abd7a07e1af6",
+        "verdict": "right"
+      },
+      {
+        "key": "module-124.9",
+        "hash": "e8414605e42cc4c7",
+        "verdict": "right"
+      },
+      {
+        "key": "module-125.1",
+        "hash": "79c87ba3d6558205",
+        "verdict": "right"
+      },
+      {
+        "key": "module-125.3",
+        "hash": "cf965488c3ebd4fb",
+        "verdict": "right"
+      },
+      {
+        "key": "module-125.5",
+        "hash": "a1469282b433ba3a",
+        "verdict": "right"
+      },
+      {
+        "key": "module-95.0",
+        "hash": "e9351fe2a9451b37",
+        "verdict": "right"
+      },
+      {
+        "key": "module-95.1",
+        "hash": "df7823f4af57c02c",
+        "verdict": "right"
+      },
+      {
+        "key": "module-96.0",
+        "hash": "bb317d79f99e609b",
+        "verdict": "right"
+      },
+      {
+        "key": "module-96.1",
+        "hash": "13658d5c0fe0d22f",
+        "verdict": "right"
+      },
+      {
+        "key": "module-96.10",
+        "hash": "c8d8d8c18cfa2b64",
+        "verdict": "right"
+      },
+      {
+        "key": "module-96.11",
+        "hash": "a71c086c2bf323ad",
+        "verdict": "right"
+      },
+      {
+        "key": "module-96.2",
+        "hash": "182aefb6b030e1bf",
+        "verdict": "right"
+      },
+      {
+        "key": "module-96.3",
+        "hash": "8c71a70391936d16",
+        "verdict": "right"
+      },
+      {
+        "key": "module-96.4",
+        "hash": "7d7b7cded7765e1d",
+        "verdict": "right"
+      },
+      {
+        "key": "module-96.5",
+        "hash": "c088273d4068e7cb",
+        "verdict": "right"
+      },
+      {
+        "key": "module-96.9",
+        "hash": "6062dba42b8cec7a",
+        "verdict": "right"
+      },
+      {
+        "key": "module-97.0",
+        "hash": "ef1c0b8b1296c6ad",
+        "verdict": "right"
+      },
+      {
+        "key": "module-97.1",
+        "hash": "f2d8a782885947cd",
+        "verdict": "right"
+      },
+      {
+        "key": "module-97.3",
+        "hash": "e38c85b467968a32",
+        "verdict": "right"
+      },
+      {
+        "key": "module-97.4",
+        "hash": "0e2887ae476d9947",
+        "verdict": "right"
+      },
+      {
+        "key": "module-97.5",
+        "hash": "d634cee32b318345",
+        "verdict": "right"
+      },
+      {
+        "key": "module-97.6",
+        "hash": "12b462eeff716bdb",
+        "verdict": "right"
+      },
+      {
+        "key": "module-97.7",
+        "hash": "0332855ad36b79f0",
+        "verdict": "right"
+      },
+      {
+        "key": "module-97.8",
+        "hash": "2c8853e9d59dcf16",
+        "verdict": "right"
+      },
+      {
+        "key": "module-98.0",
+        "hash": "95aabc8dc6e7e47f",
+        "verdict": "right"
+      },
+      {
+        "key": "module-99.1",
+        "hash": "5dd293e38066b75a",
+        "verdict": "right"
+      },
+      {
+        "key": "module-99.3",
+        "hash": "cd103036e57ccbf6",
+        "verdict": "right"
+      },
+      {
+        "key": "module-99.5",
+        "hash": "b9e1cda0f7a45ffe",
+        "verdict": "right"
+      },
+      {
+        "key": "tag-2.0",
+        "hash": "6b972c120f190237",
+        "verdict": "right"
+      },
+      {
+        "key": "tag-3.0",
+        "hash": "1123232e5a6b4319",
+        "verdict": "right"
+      },
+      {
+        "key": "tag-4.0",
+        "hash": "a32e1b2775a013da",
+        "verdict": "right"
+      },
+      {
+        "key": "tag-5.0",
+        "hash": "4092d1e7b4d214e5",
+        "verdict": "right"
+      },
+      {
+        "key": "tag-6.0",
+        "hash": "d81d2fe1c0c3934f",
+        "verdict": "right"
+      }
+    ]
+  }
+}

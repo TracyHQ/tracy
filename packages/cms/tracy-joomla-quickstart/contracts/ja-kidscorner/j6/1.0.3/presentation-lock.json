@@ -2656,6 +2656,18 @@
       "language": "en-GB",
       "value": "Location"
     },
+    "languageString-175507332": {
+      "extension": "tpl_ja_kidscorner",
+      "key": "TPL_MAP_STATIC_ALT",
+      "language": "en-GB",
+      "value": "Street map of %s"
+    },
+    "languageString-158444135": {
+      "extension": "tpl_ja_kidscorner",
+      "key": "TPL_MAP_STATIC_OPEN",
+      "language": "en-GB",
+      "value": "Open in Google Maps"
+    },
     "languageString-120261246": {
       "extension": "tpl_ja_kidscorner",
       "key": "TPL_MONTH",

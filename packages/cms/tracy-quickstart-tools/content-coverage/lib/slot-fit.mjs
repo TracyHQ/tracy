@@ -36,7 +36,11 @@ const area = (b) => b.width * b.height
 /** How many characters a text box holds in its demo lines (0 when its characters were not measured). */
 const perLine = (look, box) =>
   look?.charWidth > 0 ? Math.floor((look.width || box.width) / look.charWidth) : 0
-const linesOf = (look) => Math.max(1, Math.round(Number(look?.lines) || 1))
+// A text drawn at font size 0 (T3's `text-hide` credit) measures its line height as 0: its lines come back Infinity or NaN.
+const linesOf = (look) => {
+  const lines = Math.round(Number(look?.lines))
+  return Number.isFinite(lines) && lines > 1 ? lines : 1
+}
 const capacity = (look, box) => perLine(look, box) * linesOf(look)
 
 /**

@@ -243,9 +243,9 @@
     "quickstart/ja-kidscorner/j6": "1.0.1"
   },
   "maxVersion": {
-    "quickstart/ja-kidscorner/j6": "1.0.2"
+    "quickstart/ja-kidscorner/j6": "1.0.3"
   },
-  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json).",
+  "maxVersionNote": "1.0.2 16/10/2026 (#1375): re-cut of 1.0.1 with --move-only: a status colour set as text reads the slot's readable shade (--ds-c-<status>-text); nothing else moved, and unworn the page is the release's own (VERIFICATION.json). 1.0.3 31/10/2026 (installer pack, not published yet): the template source reads the role variables itself, keeping each old value as fallback; template-design-system-readiness on the pack: CSS-1 (11 of 11 palette stylesheets read the slot, 1133 reads), CSS-2, DEF-1, BAND-1, PLAT-1, VARS-1, PIC-1, TEXT-1 pass; var(--ds-c- reads 2427 -> 3320 across the template's css, the only drop is css/bootstrap.css 244 -> 241, the three .navbar-brand colours of .navbar-default / .navbar-inverse, which no file of the template, its layouts or the T3 Bootstrap 3 layouts prints (its logo is .logo).",
   "inlineNote": "the demo content writes its section titles, kickers and one caption colour inline (style=\"color:#403d75\" …): inlineColours gives each its role, or the titles stayed indigo on a dark system's page (round 1, judged by eye); the logo is a dark-ink image, inverted with hues kept under a dark system (selectors.inkImages)",
   "bands": {
     ".t3-topbar": {

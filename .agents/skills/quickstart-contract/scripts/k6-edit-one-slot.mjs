@@ -4,7 +4,7 @@
 // door can accept a change the page never shows, so the page itself is read before and after.
 //
 // Slot rule: type "text", requiresEvidence false, current value plain [A-Za-z0-9 ]+, maxCharacters
-// >= 20, not contained in the new text, and found exactly once on the home page. The page text right after it is
+// >= 20, not contained in the new text, held by no other slot, and found exactly once on the home page. The page text right after it is
 // kept as an anchor, so the after-check proves the same spot changed.
 //
 // Usage: node k6-edit-one-slot.mjs --site <DDEV project dir> --token-file <file> --contract-id <id>
@@ -147,8 +147,11 @@ const before = await page(url)
 if (count(before, newText) !== 0)
   fail(`new text ${newText} already shows on ${url}`, { inspect: inspectSummary })
 // A slot whose current words sit inside the new text would still count as "old found" after a
-// correct edit, so such a slot is skipped.
-const slot = (inspect.slots ?? []).find(
+// correct edit, so such a slot is skipped. So is one whose words another slot also holds: the page
+// cannot tell which of them it shows (JA Kids Corner 1.0.3: category "Blog" and menu item "Blog").
+const slots = inspect.slots ?? []
+const holders = (words) => slots.filter((t) => t.current === words).length
+const slot = slots.find(
   (s) =>
     s.type === 'text' &&
     s.requiresEvidence === false &&
@@ -159,6 +162,7 @@ const slot = (inspect.slots ?? []).find(
     s.maxCharacters >= 20 &&
     s.maxCharacters >= newText.length &&
     !newText.includes(s.current) &&
+    holders(s.current) === 1 &&
     count(before, s.current) === 1
 )
 if (!slot) fail(`no slot matches the K6 rule on ${url}`, { inspect: inspectSummary, url })
