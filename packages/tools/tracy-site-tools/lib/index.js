@@ -4568,9 +4568,9 @@ function pageListRows(answer, view2) {
     return true;
   });
   const words = v2.search.toLowerCase();
-  const textOf2 = (row) => Object.values(row).filter((x) => typeof x === "string").join(" ").toLowerCase();
+  const textOf3 = (row) => Object.values(row).filter((x) => typeof x === "string").join(" ").toLowerCase();
   const matched = unique.filter(
-    (row) => (words === "" || textOf2(row).includes(words)) && (v2.type === "" || str(row.type).toLowerCase() === v2.type.toLowerCase())
+    (row) => (words === "" || textOf3(row).includes(words)) && (v2.type === "" || str(row.type).toLowerCase() === v2.type.toLowerCase())
   );
   const rows = matched.slice(v2.offset, v2.offset + v2.limit);
   const narrowed = words !== "" || v2.type !== "" || v2.offset > 0;
@@ -18723,7 +18723,9 @@ async function runSiteCall(input) {
     .../** @type {Record<string, unknown>} */
     isRecord12(lost) ? lost : { ok: false, code: "COWORK_WEB_UNREACHABLE" },
     asked,
-    next: asked === 2 ? "Tracy asked the site twice, 2 s apart, and its content door answered neither time: tell the customer the site is not answering now; do not call it again or change the site another way." : `The site's content door gave no answer in ${Math.round(ms / 1e3)} s, too long to ask again: tell the customer the site is not answering now; do not call it again or change the site another way.`
+    // The call never reached Tracy's own server (`COWORK_WEB_UNREACHABLE`: the way from this host to
+    // tracy-web failed): the site was never asked, so it is not "the site not answering" (#208).
+    next: !isRecord12(lost) || lost.code === "COWORK_WEB_UNREACHABLE" ? "The call did not reach Tracy's own server, so the site was not asked at all: tell the customer Tracy had a connection problem and to ask again in a minute; never say their site is not answering." : asked === 2 ? "Tracy asked the site twice, 2 s apart, and its content door answered neither time: tell the customer the site is not answering now; do not call it again or change the site another way." : `The site's content door gave no answer in ${Math.round(ms / 1e3)} s, too long to ask again: tell the customer the site is not answering now; do not call it again or change the site another way.`
   });
   const countedResend = async (action, params, lost, started) => {
     const applyId = str4(params.apply_id);
@@ -24666,6 +24668,11 @@ async function designRoutesAt(origin, fetchImpl) {
   return { chat: on?.(CHAT_DS_SWITCH) === true, button: on === null ? true : on(BUTTON_SWITCH) };
 }
 
+// src/host/call-origin.mjs
+function callOrigin(origin, publicOrigin, internal) {
+  return internal && /^https?:\/\/[^/\s]+$/.test(internal) && origin === publicOrigin ? internal : origin;
+}
+
 // src/host/site-notes.mjs
 import { promises as fs3 } from "node:fs";
 import path12 from "node:path";
@@ -25059,6 +25066,16 @@ var inFlight = /* @__PURE__ */ new Set();
 function capturesSettled() {
   return Promise.allSettled(inFlight).then(() => void 0);
 }
+function said_(job, stage, e) {
+  const code = (
+    /** @type {any} */
+    e?.code ?? /** @type {any} */
+    e?.name ?? "ERROR"
+  );
+  job.warn?.(
+    `site-notes: ${stage} failed in ${path12.basename(String(job.storeDir))}: ${String(code).slice(0, 40)}`
+  );
+}
 function captureWishes(job) {
   const run = async () => {
     const typed = withoutPageBlocks(String(job.message ?? ""));
@@ -25118,11 +25135,13 @@ function captureWishes(job) {
     const cost = usage ? ` in=${usage.inputTokens ?? 0} cache=${usage.cacheReadTokens ?? 0} out=${usage.outputTokens ?? 0}` : "";
     const line = `## ${now().toISOString()} capture proposed=${proposals.length} kept=${kept}${cost}${error ? ` error=${error}` : ""}
 `;
-    await fs3.mkdir(job.storeDir, { recursive: true }).then(() => fs3.appendFile(path12.join(job.storeDir, LOG_FILE), line, { mode: 384 })).catch(() => {
-    });
+    await fs3.mkdir(job.storeDir, { recursive: true }).then(() => fs3.appendFile(path12.join(job.storeDir, LOG_FILE), line, { mode: 384 })).catch((e) => said_(job, "log", e));
     return { proposed: proposals.length, kept, usage, ...error ? { error } : {} };
   };
-  const p = run().catch(() => ({ proposed: 0, kept: 0, usage: null, error: "CRASH" }));
+  const p = run().catch((e) => {
+    said_(job, "capture", e);
+    return { proposed: 0, kept: 0, usage: null, error: "CRASH" };
+  });
   inFlight.add(p);
   p.finally(() => inFlight.delete(p));
   return p;
@@ -29472,6 +29491,54 @@ function turnWrites(events) {
   const all = lines.join("\n");
   return all.length <= WRITES_MAX ? all : `${all.slice(0, WRITES_MAX - 1)}\u2026`;
 }
+function writesShownInTurn(events) {
+  if (!Array.isArray(events)) return false;
+  const writes = /* @__PURE__ */ new Map();
+  const results = /* @__PURE__ */ new Map();
+  for (let i = events.length - 1; i >= 0; i -= 1) {
+    const event = events[i];
+    if (event?.type === "turn/start") break;
+    if (event?.type === "tool/result") {
+      const id = event.data?.message?.source?.callId;
+      if (typeof id === "string") results.set(id, textOf2(event.data?.message?.content));
+      continue;
+    }
+    if (event?.type !== "tool/call" || !callChangedSite(event.data)) continue;
+    const { action } = canonicalCall(argsOf2(event.data));
+    writes.set(
+      String(event.data?.callId ?? i),
+      event.data?.name === "tracy_site" && action === "content.replace"
+    );
+  }
+  if (writes.size === 0) return false;
+  for (const [id, replace] of writes) {
+    if (!replace) return false;
+    let answer = null;
+    try {
+      answer = JSON.parse(results.get(id) ?? "");
+    } catch {
+      return false;
+    }
+    if (answer?.ok !== true || typeof answer.verified !== "string" || !answer.verified.startsWith("shown on "))
+      return false;
+    if (Array.isArray(answer.companions) && answer.companions.length || answer.contactsFailed) return false;
+  }
+  return true;
+}
+function argsOf2(call) {
+  const args = call?.arguments;
+  if (typeof args !== "string") return args ?? {};
+  try {
+    return JSON.parse(args);
+  } catch {
+    return {};
+  }
+}
+function textOf2(content) {
+  if (typeof content === "string") return content;
+  if (!Array.isArray(content)) return "";
+  return content.map((part) => typeof part?.text === "string" ? part.text : "").join("");
+}
 function usableBefore(ask) {
   const before = ask?.before;
   if (before === null || before === void 0 || before.loaded !== true) return false;
@@ -29678,6 +29745,7 @@ async function runVisualCheck(job) {
     if (job.mode === "off") return skip("off");
     if (ask === void 0 || ask.turn !== job.turn) return skip("no-ask");
     if (!siteChangedInTurn(job.events)) return skip("no-write");
+    if (!ask.extras?.length && writesShownInTurn(job.events)) return skip("verified-on-page");
     const before = ask.before ?? ask.fallback ?? null;
     if (before === null)
       return skip(`no-before: ${ask.missing ?? (ask.hold === void 0 ? "not-held" : "none")}`);
@@ -35967,2114 +36035,6 @@ function contractPrecheckOn(env = process.env) {
   return String(env?.TRACY_CONTRACT_PRECHECK ?? "").trim().toLowerCase() !== "off";
 }
 
-// src/host/fragment-groups.mjs
-var INLINE_STEP = /\/(?:span|strong|em|b|i|u|mark|small|sup|sub|a|font|abbr|code|q|s)(?:\[\d+\])?$/;
-function blockOf(xpath) {
-  if (typeof xpath !== "string") return null;
-  let p = xpath.replace(/\/text\(\)(?:\[\d+\])?$/, "");
-  if (p === xpath) return null;
-  while (INLINE_STEP.test(p)) p = p.replace(INLINE_STEP, "");
-  return p;
-}
-function fragmentGroups(units) {
-  const out = [];
-  let run = [];
-  let runKey = null;
-  let last = -1;
-  for (const u of units) {
-    const block = blockOf(u.slot.xpath);
-    const n = Number(u.at.slice(u.at.lastIndexOf(".") + 1));
-    const key = block === null ? null : `${u.entity}\0${u.slot.column ?? ""}\0${JSON.stringify(u.slot.jsonPath ?? null)}\0${block}`;
-    if (key !== null && key === runKey && n === last + 1) run.push(u);
-    else {
-      if (run.length > 1) out.push(run);
-      run = key === null ? [] : [u];
-    }
-    runKey = key;
-    last = n;
-  }
-  if (run.length > 1) out.push(run);
-  return out;
-}
-function wordsOf5(raws) {
-  const out = [];
-  raws.forEach((raw, k) => {
-    for (const m of raw.matchAll(/\S+/g)) {
-      const fold2 = foldForMatch(m[0]);
-      if (fold2 !== "") out.push({ k, s: m.index, e: m.index + m[0].length, fold: fold2 });
-    }
-  });
-  return out;
-}
-var foldedWords = (s) => s.split(/\s+/).map(foldForMatch).filter((w) => w !== "");
-function quoteInFragments(raws, find) {
-  const words = wordsOf5(raws);
-  const q = foldedWords(find);
-  if (q.length < 2) return null;
-  for (let i = 0; i + q.length <= words.length; i += 1) {
-    if (!q.every((w, j) => words[i + j].fold === w)) continue;
-    if (words[i].k === words[i + q.length - 1].k) return null;
-    return { words, i0: i, i1: i + q.length };
-  }
-  return null;
-}
-function allocate(held, needs, n) {
-  const counts = needs.map((x) => x ? 1 : 0);
-  let left = n - counts.reduce((a, b) => a + b, 0);
-  if (left < 0) return null;
-  const total = held.reduce((a, b) => a + b, 0) || 1;
-  while (left > 0) {
-    let best = 0;
-    let bestGap = Number.NEGATIVE_INFINITY;
-    for (let k = 0; k < held.length; k += 1) {
-      const gap = held[k] * n / total - counts[k];
-      if (gap > bestGap) {
-        best = k;
-        bestGap = gap;
-      }
-    }
-    counts[best] += 1;
-    left -= 1;
-  }
-  return counts;
-}
-function spreadOverFragments(raws, find, replace) {
-  const at = quoteInFragments(raws, find);
-  if (at === null) return null;
-  const { words, i0, i1 } = at;
-  const plain = replace.split(/\s+/).filter((w) => w !== "");
-  const folded = plain.map(foldForMatch);
-  let p = 0;
-  while (i0 + p < i1 && p < plain.length && words[i0 + p].fold === folded[p]) p += 1;
-  let q = 0;
-  while (i1 - q - 1 >= i0 + p && plain.length - q - 1 >= p && words[i1 - q - 1].fold === folded[plain.length - q - 1])
-    q += 1;
-  const a = i0 + p;
-  const b = i1 - q;
-  const mid = plain.slice(p, plain.length - q);
-  const midFold = folded.slice(p, plain.length - q);
-  const out = [...raws];
-  if (a === b) {
-    if (mid.length === 0) return out;
-    const w = a > 0 && a > i0 ? words[a - 1] : words[a];
-    const raw = raws[w.k];
-    out[w.k] = w === words[a - 1] ? `${raw.slice(0, w.e)} ${mid.join(" ")}${raw.slice(w.e)}` : `${raw.slice(0, w.s)}${mid.join(" ")} ${raw.slice(w.s)}`;
-    return out;
-  }
-  const kA = words[a].k;
-  const kB = words[b - 1].k;
-  const span = [];
-  for (let k = kA; k <= kB; k += 1) span.push(k);
-  const first = words[a];
-  const lastWord = words[b - 1];
-  const lead = (k) => k === kA ? raws[k].slice(0, first.s) : /^\s*/.exec(raws[k])?.[0] ?? "";
-  const tail = (k) => k === kB ? raws[k].slice(lastWord.e) : /\s*$/.exec(raws[k])?.[0] ?? "";
-  const held = span.map((k) => words.slice(a, b).filter((w) => w.k === k).length);
-  const needs = span.map((k) => `${lead(k)}${tail(k)}`.trim() === "");
-  const spread = (pins) => {
-    const pinned = [];
-    if (pins)
-      span.forEach((k, j) => {
-        const own = words.slice(a, b).filter((w) => w.k === k);
-        const all = words.filter((w) => w.k === k);
-        if (own.length === 0 || own.length !== all.length) return;
-        const seq = own.map((w) => w.fold);
-        const hits = [];
-        for (let x2 = 0; x2 + seq.length <= midFold.length; x2 += 1)
-          if (seq.every((s, y) => midFold[x2 + y] === s)) hits.push(x2);
-        if (hits.length === 0 && seq.length === 1 && /\d/.test(seq[0])) {
-          const figures = midFold.flatMap((w, x2) => /\d/.test(w) ? [x2] : []);
-          if (figures.length === 1) hits.push(figures[0]);
-        }
-        const prev = pinned[pinned.length - 1];
-        if (hits.length === 1 && (!prev || hits[0] >= prev.at + prev.len))
-          pinned.push({ j, at: hits[0], len: seq.length });
-      });
-    const counts2 = Array.from({ length: span.length }, () => 0);
-    let j0 = 0;
-    let x0 = 0;
-    for (const pin of [...pinned, { j: span.length, at: mid.length, len: 0 }]) {
-      const segHeld = held.slice(j0, pin.j);
-      const segNeeds = needs.slice(j0, pin.j);
-      const n = pin.at - x0;
-      if (segHeld.length === 0) {
-        if (n > 0) return null;
-      } else {
-        const got = allocate(segHeld, segNeeds, n);
-        if (got === null) return null;
-        got.forEach((c, y) => {
-          counts2[j0 + y] = c;
-        });
-      }
-      if (pin.j < span.length) counts2[pin.j] = pin.len;
-      j0 = pin.j + 1;
-      x0 = pin.at + pin.len;
-    }
-    return counts2;
-  };
-  const counts = spread(true) ?? spread(false);
-  if (counts === null) return null;
-  let x = 0;
-  span.forEach((k, j) => {
-    const these = mid.slice(x, x + counts[j]).join(" ");
-    x += counts[j];
-    const l = lead(k);
-    const t = tail(k);
-    out[k] = these === "" ? `${l.trimEnd()}${/\s$/.test(l) || /^\s/.test(t) ? " " : ""}${t.trimStart()}` : `${l}${these}${t}`;
-  });
-  return out;
-}
-
-// src/host/replace-joomla.mjs
-var JOOMLA_REPLACE_NEXT = Object.freeze({
-  notSealedError: "this Joomla site has no content contract: the replace job places words only on a quickstart site with one",
-  notSealedNext: "content.list {kind} finds the record, then content.update {kind, id, fields} changes it",
-  restoreError: "restore is the undo of an EmDash receipt; a Joomla site undoes an apply with apply.revert",
-  restoreNext: 'apply.revert {apply_id:"<the apply_id the receipt gave>"} restores the site as it was before that apply',
-  pageMissingError: 'path "{path}" answered {status}: no such page on this site; nothing was written',
-  pageMissingNext: "the same call with the path of the page the words are on, or without path for the home page",
-  textOnlyError: '"{find}" is only part of a stored text, and the page could not be read; nothing was written',
-  // 🔒 `at` IS WHAT LETS PART OF A TEXT BE WRITTEN, and the sentence has to say so (round 7): read as "…or
-  // with all the words of that place", it sent a model that had only the sentence to remove to read the
-  // whole paragraph twice (`content.get`, `page.text`) and send it all back — two steps for a call that
-  // was one word short.
-  textOnlyNext: 'the same call with at:["{at}"] added: it names the place, and only the words of find change inside it',
-  // 🔒 WITH SEVERAL PLACES THE SENTENCE NAMES NONE (adversarial review of round 7, RL-4). A refusal reaches
-  // here with more than one place only when `all` or a `where` already chose to write more than one (without
-  // them `locate` answers AMBIGUOUS first, with its own next), and then `at:["<the first>"]` — the first
-  // loose target, not the one meant — read as an instruction and narrowed a call that wanted them all to
-  // one place. The candidates are listed beside it: the model picks the place its customer's words mean.
-  // ONE place, and one call for each other: measured on the fixture, `at:[a, b]` still answers AMBIGUOUS
-  // ("places > 1 and no all", replace.mjs) and `at` beside `all` is BAD_PARAMS ("at goes alone"), so a list
-  // of every candidate's `at` — the obvious next — would send the model round the same refusal.
-  textOnlyManyNext: 'the same call with at:["<the at of the place meant, from candidates>"] added: it names the one place, and only the words of find change inside it; another place is another call',
-  identityTokenError: `"{find}" runs across the site's {field} and the words beside it; nothing was written`,
-  identityTokenNext: 'two changes in one call: changes:[{find:"<the other words>", replace:"<their new words>"}, {find:"{value}", replace:"<the new {field}>"}]',
-  nameTokenNext: 'for a new {field} on every page: the same call with find:"{value}", replace:"<the new {field}>"; else change only the words beside it',
-  evidenceError: `{at} needs the customer's own words, and "{words}" is not in their messages`,
-  // 🔒 BOTH ROADS, AS `refusalNext` GIVES THEM (site.mjs, "Customer evidence required"): the words
-  // may be the customer's from an earlier message — claiming them invented would be false.
-  evidenceNext: `send apply, adding evidence: the customer's words from the message that gave them, or if you wrote them "${INVENTED_EVIDENCE}"`,
-  otherLanguageError: '"{find}" is not on this page: it is on {page}, in another language; nothing was written',
-  otherLanguageNext: 'words change in the language of their own page: the same call with path:"{page}"',
-  otherLanguageAtNext: 'words change in the language of their own page: the same call with at:["{at}"] if that copy is meant',
-  factWordsError: '"{find}" changes the {field} and other words; nothing was written',
-  factWordsNext: 'two changes in one call, so the {field} reaches its copies and links: changes:[{find:"{wf}", replace:"{wr}"}, {find:"{lf}", replace:"{lr}"}]',
-  factWordsNextLong: "two changes in one call, so the {field} reaches its copies and links: the words beside it in one, the whole line with only the {field} new in the other",
-  linkAddressError: '"{find}" is the words of a link, and the new value is an address; nothing was written',
-  linkAddressNext: "an address goes in the link, not in its words: send apply, which sets {label}; the words stay as they are",
-  linkFactError: 'the new value is a link address, and "{find}" is words a visitor reads; nothing was written',
-  linkFactNext: 'the same call with replace:"{value}", as the customer wrote it: the words change, and their link follows them',
-  linkFixedError: '"{find}" is the words of a link whose address cannot change on this site',
-  linkFixedNext: "tell the customer this link's address cannot change here, only its words: that is an answer",
-  // 🔒 THE SITE NAME HAS A RECORDED DOOR, SO "CANNOT CHANGE" IS FALSE (ladder DL14/DL15, 14/10/2026): with
-  // the core's next ("do not look for another way in"), a contract with no Site identity block left the
-  // agent the shell's `config:set`, whose change no receipt lists for the customer's later undo.
-  siteNameNext: 'site.identity {operation:"set", fields:{sitename:"<the new name>"}} changes it on every page; apply.revert undoes it',
-  cannotEmptyError: "{at} holds words in this design and cannot be left empty; nothing was written",
-  cannotEmptyNext: "tell the customer this text can be changed but not removed, and ask what it should say: that is an answer",
-  cannotFillError: "{at} is empty in this design, so the content door cannot fill it; nothing was written",
-  cannotFillNext: "this place is not part of the quickstart's layout: adding it is a layout change through Joomla itself (its CLI or template files), never SQL",
-  noMarkupError: "{at} takes plain text, and its new value has < > or a control character; nothing was written",
-  noMarkupNext: "the same call with replace in plain words: no tags, no < or >",
-  noDirectiveError: "{at} takes no {\u2026} directive but the site tokens ({site.name}, {contact.*}); nothing was written",
-  noDirectiveNext: "the same call with replace in plain words, without the braces",
-  urlError: 'the link {at} would become "{value}", which this site does not take; nothing was written',
-  urlNext: "a link takes https://\u2026, mailto:\u2026, tel:+digits, /path or #anchor: send a number or address that fits, or tell the customer",
-  overlapError: "two changes of this call change the same words in {at}",
-  storeChangedError: "the site changed twice while this change was being written; nothing was written",
-  storeChangedNext: "someone else is editing this site: tell the customer and offer to try again in a minute",
-  // 🔒 "IN ABOUT 30 s", AS `refusalNext`'s OUTCOME_UNKNOWN SAYS: a lost apply may still be running in
-  // PHP under the component's lock, and a dryRun sent at once meets that lock (writer_busy).
-  outcomeUnknownNext: "the answer was lost and the change may still land: in about 30 s the same call with dryRun:true and the NEW words as find shows it; do not repeat",
-  identityNote: "Site identity / {field}: every page and every language shows the new value",
-  tokenLineNote: "{at} showed Site identity / {field} through a token; it now holds its own words and no longer follows it",
-  notReached: "{n} language editions of this site are outside its content contract: their copies are unchanged",
-  fragmentsError: '"{find}" is one line of {n} styled parts, each needing a word; nothing was written',
-  fragmentsNext: "the same call with at least {n} new words, or tell the customer the line needs {n} words so its accent part keeps one",
-  already: "already so: nothing needed writing",
-  shown: "shown on {path}",
-  notShown: "not yet shown on {path}: the page may still come from a cache",
-  unread: "not checked: the page could not be read"
-});
-var QUOTED4 = /* @__PURE__ */ new Set(["find", "replace", "words", "value", "path"]);
-function joomlaText(key, facts = {}) {
-  return JOOMLA_REPLACE_NEXT[key].replace(/\{(\w+)\}/g, (whole, name2) => {
-    if (!(name2 in facts)) return whole;
-    const v2 = String(facts[name2]);
-    return QUOTED4.has(name2) && v2.length > 60 ? `${v2.slice(0, 59)}\u2026` : v2;
-  });
-}
-var refuse4 = (code, error, next, extra = {}) => ({ ok: false, code, verdict: code, error, next, ...extra });
-var NAV_FILE = "file:navigation";
-var TRACY_BUSINESS = Object.freeze({
-  name: "tracy-business",
-  /**
-   * The module positions of tracy_business (1.0.0–1.2.0 declare the same 46 in `pages[]`). Measured on
-   * the saved pages: `topbar-l/r` inside `div.tb-topbar`, `header-cta` and the search panel inside
-   * `header.tb-header`, `footer-a…d` and `copyright` inside `footer.tb-footer`, `breadcrumbs` in the
-   * crumb band; every band of a page (`top-a`, `contact-page`, `about-page`, …) prints in the page
-   * body. `off-canvas` and `mega-N` render as the drawer's and the mega menu's copies.
-   * @param {string} p
-   * @returns {Region}
-   */
-  positionRegion(p) {
-    if (p.startsWith("topbar-")) return "topbar";
-    if (/^(header-cta|off-canvas|mega-\d+|search|language-switcher)$/.test(p)) return "header";
-    if (/^(footer-[a-d]|copyright)$/.test(p)) return "footer";
-    if (p === "breadcrumbs") return "title";
-    return "main";
-  },
-  switcher: /(^|[\s_-])tb-lang|mod-languages/,
-  moduleTitle: /footcol__title|module-title|mod-title/,
-  category: /chip|filter|__cat|category/,
-  switcherItem: /\btb-lang__item\b/g
-});
-var GENERIC2 = Object.freeze({
-  name: "generic",
-  /**
-   * A position read by its name alone, for a template no table knows: fewer places anchor, so more
-   * answers are AMBIGUOUS or NOT_EDITABLE — never a write the page did not show.
-   * @param {string} p
-   * @returns {Region | null}
-   */
-  positionRegion(p) {
-    if (p === "") return null;
-    if (/(^|[-_])(topbar|top-bar)([-_]|$)/.test(p)) return "topbar";
-    if (/(^|[-_])(header|navbar|menu|logo|search|language)([-_\d]|$)/.test(p)) return "header";
-    if (/(^|[-_])(footer|copyright)([-_\d]|$)/.test(p)) return "footer";
-    if (/breadcrumb/.test(p)) return "title";
-    return "main";
-  },
-  switcher: /mod-languages/,
-  moduleTitle: /module-title|mod-title/,
-  category: /category/,
-  switcherItem: null
-});
-var JOOMLA_TEMPLATES = Object.freeze({
-  "tracy-business/j6": Object.freeze({
-    versions: Object.freeze(["1.0.0", "1.1.0", "1.2.0"]),
-    table: TRACY_BUSINESS
-  })
-});
-function contractOf(snap) {
-  const id = typeof snap?.contract === "string" ? snap.contract : "";
-  const m = /^(.+)\/(\d+\.\d+\.\d+)$/.exec(id);
-  const template = m ? m[1] : id;
-  const version = m ? m[2] : null;
-  const entry = (
-    /** @type {Record<string, { versions: readonly string[], table: JoomlaTable }>} */
-    JOOMLA_TEMPLATES[template]
-  );
-  const table = entry && version !== null && entry.versions.includes(version) ? entry.table : GENERIC2;
-  return { id, template, version, table, known: table !== GENERIC2 };
-}
-var WHY = Object.freeze({
-  navFile: "a mega-menu caption in the template's locked navigation file",
-  brand: "the site identity in the template's locked settings file",
-  // Not "locked" since Claude Cowork for Joomla 0.22.0: `site.identity` writes it, with a receipt
-  // (`siteNameNext`, said by `planOn`). Here only the slot door cannot.
-  siteName: "the site name, kept in Joomla's global configuration, not a slot",
-  switcher: "the language switcher, which the template prints",
-  moduleTitle: "a module title, which has no content slot",
-  menuHeading: "a page heading from the menu item's settings, which has no slot",
-  category: "a category title, which has no content slot",
-  date: "a date the site prints",
-  outside: "a block outside the content contract (another language or structure)"
-});
-var NAME_IN_QUOTE = "line";
-var DERIVED = /^([a-z]{2,3}-[A-Za-z]{2,4})::(.+)$/;
-var NAME_TOKENS = /* @__PURE__ */ new Set(["site.name", "site.legalName", "site.slogan", "site.monogram"]);
-var BRAND_TOKENS = /* @__PURE__ */ new Set(["site.name", "site.slogan", "site.monogram"]);
-var BRAND = /(^|\s)navbar-brand(\s|$)/;
-var FACT_FIELD = /^(phone|email|e-mail|address|addr\d*|hours|tel)$/;
-var TOKEN_FIELD = Object.freeze({
-  ...Object.fromEntries(Object.entries(IDENTITY_FIELDS).map(([field, name2]) => [name2, field])),
-  "contact.tel": "phone"
-});
-function indexPages(pages) {
-  const out = {
-    lang: /* @__PURE__ */ new Map(),
-    path: /* @__PURE__ */ new Map(),
-    homes: /* @__PURE__ */ new Map(),
-    includedIn: /* @__PURE__ */ new Map(),
-    articlePage: /* @__PURE__ */ new Map(),
-    multilingual: false
-  };
-  for (const p of pages) {
-    const entity = String(p.entity);
-    const mods = Array.isArray(p.assignedModules) ? p.assignedModules : [];
-    const own = new Set(
-      mods.filter((m) => m.assignmentMode === "include").map((m) => langOf2(m.language)).filter((l) => l !== null)
-    );
-    if (own.size === 1) out.lang.set(
-      entity,
-      /** @type {string} */
-      [...own][0]
-    );
-    for (const m of mods)
-      if (m.assignmentMode === "include" && !out.includedIn.has(String(m.entity)))
-        out.includedIn.set(String(m.entity), entity);
-    const link = String(p.link ?? "");
-    const query = new URLSearchParams(link.includes("?") ? link.slice(link.indexOf("?") + 1) : "");
-    if (query.get("view") === "article" && /^\d+$/.test(query.get("id") ?? ""))
-      out.articlePage.set(`article-${query.get("id")}`, entity);
-  }
-  out.multilingual = new Set(out.lang.values()).size > 1;
-  for (const p of pages) {
-    const entity = String(p.entity);
-    const lang = out.lang.get(entity) ?? null;
-    const route = String(p.route ?? "").replace(/^\/+|\/+$/g, "");
-    const base3 = out.multilingual && lang ? `/${lang}/` : "/";
-    const home3 = route === "home";
-    out.path.set(entity, home3 ? base3 : `${base3}${route}`);
-    if (home3 && lang && !out.homes.has(lang)) out.homes.set(lang, base3);
-  }
-  return out;
-}
-function unitPath(store2, u) {
-  const ix = store2.pageIndex;
-  const home3 = () => u.lang ? ix.homes.get(u.lang) ?? (ix.multilingual ? `/${u.lang}/` : null) : null;
-  if (u.identity || u.derived) return u.identity ? null : home3();
-  if (u.kind === "menuItem") return ix.path.get(u.source) ?? null;
-  if (u.kind === "article") {
-    const page = ix.articlePage.get(u.source);
-    return page ? ix.path.get(page) ?? null : null;
-  }
-  if (u.kind === "module") {
-    const page = ix.includedIn.get(u.source);
-    if (page) return ix.path.get(page) ?? null;
-  }
-  return home3();
-}
-var langOf2 = (tag) => {
-  const t = String(tag ?? "").trim();
-  return t === "" || t === "*" ? null : t.toLowerCase().split(/[-_]/)[0];
-};
-var cleanLabel = (label) => String(label ?? "").replace(/^\[[^\]]*\]\s*/, "");
-function fieldOf2(slot) {
-  const label = String(slot.label ?? "");
-  if (label.includes(" / ")) return label.slice(label.lastIndexOf(" / ") + 3).trim();
-  if (!Array.isArray(slot.jsonPath)) return null;
-  for (let k = slot.jsonPath.length - 1; k >= 0; k -= 1) {
-    const step = slot.jsonPath[k];
-    if (typeof step !== "string") continue;
-    return /\[([^\]]+)\]$/.exec(step)?.[1] ?? step;
-  }
-  return null;
-}
-function twinKey(slot, position) {
-  const where = Array.isArray(slot.jsonPath) ? slot.jsonPath.join(".") : String(slot.xpath ?? "");
-  return where === "" || !position ? null : `${position}|${String(slot.column ?? "")}|${where}`;
-}
-function tagOf(slot) {
-  const steps = String(slot.xpath ?? "").split("/");
-  const last = steps[steps.length - 1] ?? "";
-  if (last === "" || last.startsWith("@")) return null;
-  return last.replace(/\[\d+\]$/, "").toLowerCase() || null;
-}
-function expand(current, values) {
-  const tokens = [];
-  let text6 = "";
-  let i = 0;
-  for (const m of current.matchAll(/\{([a-zA-Z.]+)\}/g)) {
-    const name2 = m[1];
-    if (!values.has(name2)) continue;
-    const at = (
-      /** @type {number} */
-      m.index
-    );
-    text6 += current.slice(i, at);
-    const xs = text6.length;
-    text6 += values.get(name2) ?? "";
-    tokens.push({ name: name2, rs: at, re: at + m[0].length, xs, xe: text6.length });
-    i = at + m[0].length;
-  }
-  return { text: text6 + current.slice(i), tokens };
-}
-function toStored(u, x) {
-  let shift = 0;
-  for (const t of u.tokens) if (t.xe <= x) shift += t.re - t.rs - (t.xe - t.xs);
-  return x + shift;
-}
-function joomlaStore(snap, table) {
-  const slots = Array.isArray(snap.slots) ? snap.slots : [];
-  const pages = Array.isArray(snap.pages) ? snap.pages : [];
-  const modules = /* @__PURE__ */ new Map();
-  for (const p of pages)
-    for (const m of Array.isArray(p.assignedModules) ? p.assignedModules : [])
-      if (!modules.has(String(m.entity)))
-        modules.set(String(m.entity), {
-          position: String(m.position ?? ""),
-          language: String(m.language ?? "*")
-        });
-  const byKey = new Map(slots.map((s) => [String(s.key), s]));
-  const entities = new Set(slots.map((s) => String(s.entity)));
-  const pageIndex = indexPages(pages);
-  const values = /* @__PURE__ */ new Map();
-  const identitySlots = /* @__PURE__ */ new Map();
-  const idSlots = slots.filter(isIdentitySlot);
-  if (idSlots.length > 0) {
-    for (const name2 of IDENTITY_TOKENS) values.set(name2, "");
-    for (const s of idSlots) {
-      const name2 = IDENTITY_FIELDS[
-        /** @type {keyof typeof IDENTITY_FIELDS} */
-        fieldOf2(s) ?? ""
-      ];
-      if (!name2) continue;
-      values.set(name2, typeof s.current === "string" ? s.current : "");
-      identitySlots.set(name2, s);
-    }
-    values.set("contact.tel", (values.get("contact.phone") ?? "").replace(/[^0-9+]/g, ""));
-  }
-  const units = [];
-  for (const s of slots) {
-    if (s.type !== "text") continue;
-    const key = String(s.key);
-    const current = typeof s.current === "string" ? s.current : "";
-    if (phpTrim(current) === "") continue;
-    const derived = DERIVED.exec(key);
-    const sourceKey = derived ? derived[2] : key;
-    const source = sourceKey.replace(/\.\d+$/, "");
-    const kind = source.split("-")[0];
-    const isId = isIdentitySlot(s);
-    const field = fieldOf2(s);
-    const identity2 = isId ? IDENTITY_FIELDS[
-      /** @type {keyof typeof IDENTITY_FIELDS} */
-      field ?? ""
-    ] ?? null : null;
-    const shown3 = isId || values.size === 0 ? { text: current, tokens: [] } : expand(current, values);
-    const labelLang = kind === "module" ? /\(([a-z]{2})\)/i.exec(String(s.label ?? ""))?.[1] : void 0;
-    const rowLang = kind === "module" ? langOf2(modules.get(source)?.language) : null;
-    const pageOfArticle = pageIndex.articlePage.get(source);
-    const lang = derived ? langOf2(derived[1]) : isId ? null : rowLang ? rowLang : labelLang ? labelLang.toLowerCase() : kind === "menuItem" ? pageIndex.lang.get(source) ?? null : kind === "article" && pageOfArticle ? pageIndex.lang.get(pageOfArticle) ?? null : null;
-    const position = modules.get(source)?.position;
-    const u = {
-      ...views(shown3.text, { decode: false }),
-      at: key,
-      raw: shown3.text,
-      record: String(s.entity),
-      label: cleanLabel(s.label),
-      region: isId ? null : kind === "article" ? "main" : position ? table.positionRegion(position) : null,
-      lang,
-      writable: true,
-      slot: s,
-      entity: String(s.entity),
-      source,
-      kind,
-      derived: derived !== null,
-      tokens: shown3.tokens,
-      identity: identity2,
-      field,
-      twinGroup: null
-    };
-    if (shown3.tokens.length === 0 && Number.isFinite(s.maxCharacters)) u.max = Number(s.maxCharacters);
-    const tag = tagOf(s);
-    if (tag) u.tag = tag;
-    if (FACT_FIELD.test(field ?? "") && (!isId || !NAME_TOKENS.has(identity2 ?? ""))) u.fact = true;
-    if (lang !== null && !isId && kind === "module")
-      u.twinGroup = twinKey(byKey.get(sourceKey) ?? s, position);
-    units.push(u);
-  }
-  const identityUnits = /* @__PURE__ */ new Map();
-  const tokenUnits = /* @__PURE__ */ new Map();
-  const groups = /* @__PURE__ */ new Map();
-  for (const u of units) {
-    if (u.identity) identityUnits.set(u.identity, u);
-    for (const t of u.tokens) {
-      const list = tokenUnits.get(t.name) ?? [];
-      if (!list.includes(u)) list.push(u);
-      tokenUnits.set(t.name, list);
-    }
-    if (u.twinGroup) groups.set(u.twinGroup, [...groups.get(u.twinGroup) ?? [], u]);
-  }
-  const pairs = [];
-  const byEntity = /* @__PURE__ */ new Map();
-  for (const u of units) byEntity.set(u.entity, [...byEntity.get(u.entity) ?? [], u]);
-  for (const list of byEntity.values())
-    for (const a of list) {
-      const b = list.find(
-        (x) => Number(x.at.slice(x.at.lastIndexOf(".") + 1)) === Number(a.at.slice(a.at.lastIndexOf(".") + 1)) + 1
-      );
-      if (b && a.field && b.field === `${a.field}-accent` && a.tokens.length === 0 && b.tokens.length === 0)
-        pairs.push([a, b]);
-    }
-  return {
-    units,
-    byKey,
-    identity: identityUnits,
-    tokenUnits,
-    groups,
-    pairs,
-    // one line printed from several text-node slots (an accent span): `fragment-groups.mjs`
-    fragments: fragmentGroups(units.filter((u) => u.tokens.length === 0 && u.identity === null)),
-    urls: slots.filter((s) => s.type === "url"),
-    entities,
-    modules,
-    pages,
-    languages: Array.isArray(snap.languages) ? snap.languages.map(String) : [],
-    hasIdentity: values.size > 0,
-    values,
-    identitySlots,
-    pageIndex
-  };
-}
-function pageFacts(store2, page, path22) {
-  let lang = page ? langOf2(page.lang) : null;
-  if (lang === null) {
-    const seg = /^\/([a-z]{2})(?:[/-]|$)/i.exec(path22)?.[1]?.toLowerCase() ?? null;
-    const known = store2.units.map((u) => u.lang).filter((l) => l !== null);
-    lang = seg !== null && known.includes(seg) ? seg : known[0] ?? null;
-  }
-  const item = page ? /(^|\s)item-(\d+)(\s|$)/.exec(page.body)?.[2] ?? null : null;
-  const pageItem = item ? `menuItem-${item}` : null;
-  const entry = pageItem ? store2.pages.find((p) => String(p.entity) === pageItem) : null;
-  const onPage = entry ? new Set(
-    (Array.isArray(entry.assignedModules) ? entry.assignedModules : []).filter((m) => m.published === void 0 || m.published === null || String(m.published) === "1").map((m) => String(m.entity))
-  ) : null;
-  let article = null;
-  if (page && /(^|\s)view-article(\s|$)/.test(page.body)) {
-    const link = String(entry?.link ?? "");
-    const query = new URLSearchParams(link.includes("?") ? link.slice(link.indexOf("?") + 1) : "");
-    const id = query.get("view") === "article" && /^\d+$/.test(query.get("id") ?? "") ? query.get("id") : /\/(\d+)-[^/]*\/?$/.exec(path22)?.[1] ?? null;
-    article = id ? `article-${id}` : null;
-  }
-  const category = page ? /(^|\s)view-category(\s|$)/.test(page.body) : false;
-  let listed = null;
-  if (page && category) {
-    const html = page.html ?? "";
-    const ids2 = [
-      ...[...html.matchAll(/\shref=["'][^"'#?]*\/(\d+)-[^"'/#?]*\/?["'#?]/g)].map((m) => m[1]),
-      ...[...html.matchAll(/\shref=["'][^"']*[?&](?:amp;)?view=article&(?:amp;)?id=(\d+)/g)].map((m) => m[1])
-    ];
-    listed = ids2.length > 0 ? new Set(ids2.map((id) => `article-${id}`)) : null;
-  }
-  return {
-    lang,
-    pageItem,
-    onPage,
-    category,
-    article,
-    listed
-  };
-}
-function markersOf(chain) {
-  const out = [];
-  for (const el of chain) {
-    const mod = /^Mod(\d+)$/.exec(el.id) ?? /^tb-[a-z][a-z-]*?-(\d+)$/.exec(el.id);
-    if (mod) out.push(`module-${mod[1]}`);
-    if (el.tag === "li") {
-      const id = /(^|\s)item-(\d+)(\s|$)/.exec(el.cls)?.[2] ?? (/^\d+$/.test(el.data) ? el.data : null);
-      if (id) out.push(`menuItem-${id}`);
-    }
-    if (/(^|\s)(mega-caption|menu-item-caption|mega-col-title)(\s|$)/.test(el.cls)) out.push(NAV_FILE);
-  }
-  return out;
-}
-var titleHolds = (title, v2) => title === v2 || title.endsWith(` - ${v2}`) || title.startsWith(`${v2} - `);
-function joomlaHooks(store2, table, pf) {
-  const base3 = (u, occ) => {
-    const chain = occ.unit.chainAt(occ.a);
-    const ms = markersOf(chain);
-    if (ms[0] === NAV_FILE) return false;
-    if (u.lang !== null && pf.lang !== null && u.lang !== pf.lang) return false;
-    if (u.kind === "module") {
-      const mod = ms.find((m) => m.startsWith("module-"));
-      const info = store2.modules.get(u.source);
-      const regionOk = info !== void 0 && table.positionRegion(info.position) === occ.unit.region;
-      if (mod) return u.derived ? !store2.entities.has(mod) && regionOk : mod === u.source;
-      if (!u.derived && pf.onPage !== null && !pf.onPage.has(u.source)) return false;
-      return regionOk;
-    }
-    if (u.kind === "menuItem") {
-      const li = ms.find((m) => m.startsWith("menuItem-"));
-      if (li) return u.derived ? !store2.entities.has(li) : li === u.source;
-      if (u.source !== pf.pageItem) return false;
-      if (chain.some((el) => el.tag === "title")) return titleHolds(occ.unit.lower, u.lower);
-      if (chain.some((el) => el.tag === "h1") || occ.unit.region === "title")
-        return occ.unit.lower === u.lower;
-      return false;
-    }
-    if (u.kind !== "article") return false;
-    if (ms.some((m) => m.startsWith("module-"))) return true;
-    if (pf.article !== null) return u.source === pf.article;
-    return pf.listed === null || pf.listed.has(String(u.source));
-  };
-  const identity2 = (u, occ) => {
-    const name2 = (
-      /** @type {string} */
-      u.identity
-    );
-    const chain = occ.unit.chainAt(occ.a);
-    if (BRAND_TOKENS.has(name2) && chain.some((el) => BRAND.test(el.cls))) return true;
-    if (name2 === "site.name" && chain.some((el) => el.tag === "title")) return true;
-    for (const t of store2.tokenUnits.get(name2) ?? [])
-      if (occ.unit.lower.includes(t.lower) && base3(t, occ)) return true;
-    return false;
-  };
-  return {
-    base: base3,
-    anchor: (hit, occ) => {
-      const u = (
-        /** @type {JoomlaUnit} */
-        hit.unit
-      );
-      return u.identity ? identity2(u, occ) : base3(u, occ);
-    },
-    why: (occ) => {
-      const chain = occ.unit.chainAt(occ.a);
-      const ms = markersOf(chain);
-      const idc2 = chain.map((el) => `${el.id} ${el.cls}`).join(" ").toLowerCase();
-      if (ms[0] === NAV_FILE) return WHY.navFile;
-      if (!store2.hasIdentity && chain.some((el) => BRAND.test(el.cls) || /tb-brand|tb-logo/.test(el.cls)))
-        return WHY.brand;
-      if (table.switcher.test(idc2)) return WHY.switcher;
-      if (chain.some((el) => el.tag === "title")) return store2.hasIdentity ? REPLACE_WHY.title : WHY.siteName;
-      if (occ.unit.region === "title") return REPLACE_WHY.title;
-      if (table.moduleTitle.test(idc2)) return WHY.moduleTitle;
-      if (pf.category && chain.some((el) => el.tag === "h1")) return WHY.menuHeading;
-      if (table.category.test(idc2)) return WHY.category;
-      if (chain.some((el) => el.tag === "time") || /(^|[\s_-])date([\s_-]|$)/.test(idc2)) return WHY.date;
-      if (occ.unit.inForm) return REPLACE_WHY.form;
-      const mod = ms.find((m) => m.startsWith("module-"));
-      if (mod && !store2.entities.has(mod)) return WHY.outside;
-      return REPLACE_WHY.template;
-    },
-    pairs: (stored) => {
-      const have = new Set(stored);
-      return store2.pairs.filter(([a, b]) => have.has(a) && have.has(b));
-    },
-    twins: (unit) => {
-      const u = (
-        /** @type {JoomlaUnit} */
-        unit
-      );
-      const group = u.twinGroup ? store2.groups.get(u.twinGroup) ?? [] : [];
-      return group.filter((x) => x !== u && x.lang !== u.lang);
-    }
-  };
-}
-function storedFor(store2, pf, find) {
-  const pageLang = pf.lang;
-  const holds2 = /* @__PURE__ */ new Map();
-  const pageCopyHolds = (group) => {
-    let v2 = holds2.get(group);
-    if (v2 === void 0) {
-      const own = (store2.groups.get(group) ?? []).filter((x) => x.lang === pageLang);
-      v2 = own.length > 0 && matchUnits(own, find).hits.length > 0;
-      holds2.set(group, v2);
-    }
-    return v2;
-  };
-  const list = store2.units.filter(
-    (u) => u.lang === null || pageLang === null || u.lang === pageLang || !u.twinGroup || !pageCopyHolds(u.twinGroup)
-  );
-  const insideOnly = /* @__PURE__ */ new Map();
-  for (const h of matchUnits(list, find).hits) {
-    const u = h.unit;
-    if (u.tokens.length === 0) continue;
-    const [s, e] = rawSpan(u, h);
-    const inside = u.tokens.some((t) => t.xs <= s && e <= t.xe);
-    insideOnly.set(u, (insideOnly.get(u) ?? true) && inside);
-  }
-  return list.filter((u) => insideOnly.get(u) !== true);
-}
-function locateJoomla(ctx, plan) {
-  const results = [];
-  for (let i = 0; i < plan.changes.length; i += 1) {
-    const change = plan.changes[i];
-    const stored = storedFor(ctx.store, ctx.pf, change.find);
-    let r = locate({
-      page: ctx.page ? { units: ctx.page.units, lang: ctx.page.lang } : null,
-      stored,
-      change,
-      path: plan.path,
-      pathGiven: plan.pathGiven,
-      where: plan.where,
-      at: plan.at,
-      all: plan.all,
-      countRules: false,
-      mustKeepTwo: true,
-      hooks: ctx.hooks
-    });
-    if (!r.ok) r = emptiedIdentity(ctx, plan, change, stored, r);
-    if (!r.ok)
-      r = acrossLines(ctx, plan, change, stored, r) ?? acrossFragments(ctx, plan, change, stored, r) ?? copiesOnly(ctx, r, change.find);
-    if (r.ok) r = asFact(ctx, plan, change, stored, r);
-    r = elsewhere(ctx, plan, change, stored, r);
-    if (!r.ok) return plan1(withPages(ctx, r, stored), plan.changes.length, i);
-    if (ctx.page === null && plan.at === null) {
-      const loose2 = r.targets.find(
-        (t) => t.kind === "unit" && !t.hits.every((h) => h.mode === "phone" || h.whole && h.caseExact) && !(isEmail(change.find) && t.hits.every((h) => h.caseExact))
-      );
-      if (loose2)
-        return refuse4(
-          "AMBIGUOUS",
-          joomlaText("textOnlyError", { find: change.find }),
-          joomlaText(r.targets.length > 1 ? "textOnlyManyNext" : "textOnlyNext", { at: loose2.at }),
-          {
-            find: change.find,
-            // The candidate's text around the words asked for, so the model can see that this place holds them.
-            candidates: r.targets.slice(0, 8).map((t) => ({
-              at: t.at,
-              where: t.where,
-              text: t.kind === "unit" ? clip2(t.unit.cased, t.hits[0].a, t.hits[0].b, 90) : ""
-            })),
-            ...plan.changes.length > 1 ? { change: i } : {}
-          }
-        );
-    }
-    results.push(r);
-  }
-  const spans = /* @__PURE__ */ new Map();
-  for (let i = 0; i < results.length; i += 1)
-    for (const t of results[i].targets) {
-      const list = t.kind === "split" ? [
-        [t.a.at, 0, Number.POSITIVE_INFINITY],
-        [t.b.at, 0, Number.POSITIVE_INFINITY]
-      ] : [{ unit: t.unit, hits: t.hits }, ...t.twins].flatMap(
-        ({ unit, hits }) => hits.map((h) => [unit.at, ...rawSpan(unit, h)])
-      );
-      for (
-        const [key, s, e] of
-        /** @type {[string, number, number][]} */
-        list
-      ) {
-        const got = spans.get(key) ?? [];
-        const clash = got.find((x) => x.i !== i && x.s < e && s < x.e);
-        if (clash)
-          return refuse4(
-            "BAD_PARAMS",
-            replaceText("overlapError", { i: clash.i, j: i, at: key }),
-            replaceText("overlapNext"),
-            { change: i, param: `changes[${i}].find` }
-          );
-        got.push({ i, s, e });
-        spans.set(key, got);
-      }
-    }
-  const refusal2 = countRefusal(results, {
-    all: plan.all,
-    expect: plan.expect,
-    confirmed: ctx.confirmed,
-    dryRun: plan.dryRun
-  });
-  return refusal2 ?? { ok: true, results };
-}
-function copiesOnly(ctx, r, find) {
-  if (ctx.page === null || r.code !== "NOT_FOUND" || r.error !== replaceText("notFoundError", { find }))
-    return r;
-  const occ = matchUnits(ctx.page.units, find).hits;
-  if (occ.length === 0) return r;
-  const why = ctx.hooks.why(occ[0]);
-  return refuse4(
-    "NOT_EDITABLE",
-    replaceText("notEditableError", { find, why }),
-    replaceText("notEditableNext", { why }),
-    {
-      find,
-      unchanged: [
-        { text: clip2(occ[0].unit.shown || occ[0].unit.cased, 0, 0, 80), where: occ[0].unit.region, why }
-      ]
-    }
-  );
-}
-function emptiedIdentity(ctx, plan, change, stored, r) {
-  if (r.rule !== "cannot-empty" || change.replace !== "") return r;
-  if (!ctx.store.units.some((u) => u.at === r.at && u.identity !== null)) return r;
-  const input = {
-    page: ctx.page ? { units: ctx.page.units, lang: ctx.page.lang } : null,
-    stored,
-    path: plan.path,
-    where: plan.where,
-    all: plan.all,
-    countRules: false,
-    mustKeepTwo: true,
-    hooks: ctx.hooks
-  };
-  const again = locate({ ...input, change: { find: change.find, replace: "x" }, at: plan.at });
-  if (!again.ok) return r;
-  const others = again.targets.filter((t) => t.kind !== "unit" || /** @type {JoomlaUnit} */
-  t.unit.identity === null).map((t) => t.at);
-  if (others.length > 0) {
-    const rest = locate({ ...input, change, at: others });
-    if (!rest.ok) return rest;
-  }
-  return { ...again, change };
-}
-var startIn = (u, i) => i < u.cased.length ? u.map[i][0] : u.cased.length > 0 ? u.map[u.cased.length - 1][1] : 0;
-var endIn = (u, i) => i > 0 ? u.map[Math.min(i, u.cased.length) - 1][1] : 0;
-var oneLine2 = (s) => s.replace(/\s*\n\s*/g, " ");
-function newHeading(a, b, change) {
-  const la = a.cased.length;
-  const joined = `${a.cased} ${b.cased}`;
-  const hit = matchUnits([views(joined, { decode: false })], change.find).hits.find(
-    (h) => h.mode === "text" && !h.whole && h.a < la && h.b > la + 1
-  );
-  if (!hit) return null;
-  const replace = change.replace;
-  const theirBreak = replace.includes("\n");
-  const old = joined.slice(hit.a, hit.b);
-  const rv = views(replace, { decode: false });
-  const n = rv.cased;
-  const same = (x, y) => x === y || x.toLowerCase() === y.toLowerCase();
-  let p = 0;
-  let q = 0;
-  if (!theirBreak) {
-    while (p < old.length && p < n.length && same(old[p], n[p])) p += 1;
-    while (q < old.length - p && q < n.length - p && same(old[old.length - 1 - q], n[n.length - 1 - q]))
-      q += 1;
-  }
-  const S = hit.a + p;
-  const E = hit.b - q;
-  const mid = theirBreak ? replace : n.length - q > p ? replace.slice(rv.map[p][0], rv.map[n.length - q - 1][1]) : "";
-  if (!theirBreak && (E <= la || S >= la + 1)) {
-    const inA = E <= la;
-    const u = inA ? a : b;
-    const off = inA ? 0 : la + 1;
-    const s = startIn(u, S - off);
-    const e = E > S ? endIn(u, E - off) : s;
-    const line = oneLine2(u.raw.slice(0, s) + mid + u.raw.slice(e));
-    if (phpTrim(line) !== "") return inA ? `${line}
-${oneLine2(b.raw)}` : `${oneLine2(a.raw)}
-${line}`;
-  }
-  const cut4 = theirBreak ? null : keptBreak(joined.slice(hit.a, la), joined.slice(la + 1, hit.b), n);
-  if (cut4 !== null) {
-    const line1 = oneLine2(a.raw.slice(0, startIn(a, hit.a))) + replace.slice(0, rv.map[cut4 - 1][1]).trimStart();
-    const line2 = replace.slice(rv.map[cut4 + 1][0]).trimEnd() + oneLine2(b.raw.slice(startIn(b, hit.b - la - 1)));
-    if (phpTrim(line1) !== "" && phpTrim(line2) !== "") return `${line1}
-${line2}`;
-  }
-  const before = S <= la ? a.raw.slice(0, startIn(a, S)) : `${a.raw} ${b.raw.slice(0, startIn(b, S - la - 1))}`;
-  const after = E >= la + 1 ? b.raw.slice(startIn(b, E - la - 1)) : `${a.raw.slice(endIn(a, E))} ${b.raw}`;
-  return oneLine2(before) + mid + oneLine2(after);
-}
-function keptBreak(left, right, n) {
-  const at = (w) => {
-    const out = [];
-    const lw = w.toLowerCase();
-    for (let k = 0; w !== "" && k + w.length <= n.length; k += 1)
-      if ((k === 0 || n[k - 1] === " ") && (k + w.length === n.length || n[k + w.length] === " ") && n.slice(k, k + w.length).toLowerCase() === lw)
-        out.push(k);
-    return out;
-  };
-  const w1 = left.slice(left.lastIndexOf(" ") + 1);
-  const ends = at(w1);
-  if (ends.length === 1 && ends[0] + w1.length < n.length) return ends[0] + w1.length;
-  const w2 = right.split(" ")[0];
-  const starts = at(w2);
-  if (starts.length === 1 && starts[0] > 0) return starts[0] - 1;
-  return null;
-}
-function acrossLines(ctx, plan, change, stored, r) {
-  const named3 = plan.at !== null;
-  if (r.code !== "NOT_FOUND" && r.code !== "NOT_EDITABLE" && !(named3 && r.code === "STORE_CHANGED"))
-    return null;
-  const occs = ctx.page ? matchUnits(ctx.page.units, change.find).hits.filter(
-    (o) => !o.unit.hidden && o.unit.region !== "drawer" && (plan.where === null || o.unit.region === plan.where)
-  ) : [];
-  const found = [];
-  for (const [pa, pb] of ctx.hooks.pairs(stored)) {
-    const a = (
-      /** @type {JoomlaUnit} */
-      pa
-    );
-    const b = (
-      /** @type {JoomlaUnit} */
-      pb
-    );
-    const key = `${a.at}+${b.at}`;
-    if (a.writable === false || b.writable === false) continue;
-    if (named3 && !(plan.at ?? []).some((x) => x === key || x === a.at)) continue;
-    const heading = newHeading(a, b, change);
-    if (heading === null) continue;
-    const probe = { unit: a, a: 0, b: a.cased.length, mode: "text", whole: true, caseExact: true };
-    const lower = `${a.lower} ${b.lower}`;
-    const shown3 = occs.some((o) => o.unit.lower.includes(lower) && ctx.hooks.anchor(probe, o));
-    if (ctx.page !== null && !named3 && !shown3) continue;
-    found.push({ key, a, b, heading });
-  }
-  if (found.length === 0) return null;
-  const candidates = found.slice(0, 8).map((f) => ({
-    at: f.key,
-    where: typeof f.a.region === "string" ? f.a.region : null,
-    label: f.a.label,
-    text: clip2(`${f.a.cased} / ${f.b.cased}`, 0, 0, 90)
-  }));
-  if (ctx.page === null && !named3)
-    return refuse4(
-      "AMBIGUOUS",
-      joomlaText("textOnlyError", { find: change.find }),
-      joomlaText(found.length > 1 ? "textOnlyManyNext" : "textOnlyNext", { at: found[0].key }),
-      { find: change.find, candidates }
-    );
-  if (found.length > 1 && plan.all === false && !named3)
-    return refuse4(
-      "AMBIGUOUS",
-      replaceText("ambiguousError", {
-        find: change.find,
-        n: found.length,
-        list: [...new Set(candidates.map((c) => c.where ?? "unknown"))].join(", ")
-      }),
-      replaceText("ambiguousNext", { at: found[0].key, allForm: '"page"' }),
-      { find: change.find, candidates }
-    );
-  const targets = [];
-  const notes = [];
-  for (const f of found) {
-    const got = locate({
-      page: ctx.page ? { units: ctx.page.units, lang: ctx.page.lang } : null,
-      stored,
-      change: { find: `${f.a.cased} ${f.b.cased}`, replace: f.heading },
-      path: plan.path,
-      where: plan.where,
-      at: [f.key],
-      all: false,
-      countRules: false,
-      mustKeepTwo: true,
-      hooks: ctx.hooks
-    });
-    if (!got.ok) return got;
-    targets.push(...got.targets);
-    for (const note of got.notes) if (!notes.includes(note)) notes.push(note);
-  }
-  return {
-    ok: true,
-    verdict: targets.length === 1 ? "WRITE_SPLIT" : "WRITE",
-    change,
-    targets,
-    places: targets.length,
-    unchanged: [],
-    alsoIn: [],
-    notes,
-    scope: "page",
-    languagesKept: 0,
-    glyph: null
-  };
-}
-function acrossFragments(ctx, plan, change, stored, r) {
-  const named3 = plan.at !== null;
-  if (r.code !== "NOT_FOUND" && r.code !== "NOT_EDITABLE" && !(named3 && r.code === "STORE_CHANGED"))
-    return null;
-  const have = new Set(stored);
-  const occs = ctx.page ? matchUnits(ctx.page.units, change.find).hits.filter(
-    (o) => !o.unit.hidden && o.unit.region !== "drawer" && (plan.where === null || o.unit.region === plan.where)
-  ) : [];
-  const found = [];
-  for (const group of ctx.store.fragments) {
-    if (!group.every((u) => have.has(u) && u.writable !== false)) continue;
-    if (named3 && !group.some((u) => (plan.at ?? []).includes(u.at))) continue;
-    const raws = group.map((u) => u.raw);
-    if (quoteInFragments(raws, change.find) === null) continue;
-    const probe = {
-      unit: group[0],
-      a: 0,
-      b: group[0].cased.length,
-      mode: "text",
-      whole: true,
-      caseExact: true
-    };
-    const occ = occs.find((o) => ctx.hooks.anchor(probe, o)) ?? null;
-    if (ctx.page !== null && !named3 && occ === null) continue;
-    found.push({ group, values: spreadOverFragments(raws, change.find, change.replace), occ });
-  }
-  if (found.length === 0) return null;
-  const candidates = found.slice(0, 8).map((f) => ({
-    at: f.group[0].at,
-    where: typeof f.group[0].region === "string" ? f.group[0].region : null,
-    label: f.group[0].label,
-    text: clip2(f.group.map((u) => u.raw).join(""), 0, 0, 90)
-  }));
-  if (ctx.page === null && !named3)
-    return refuse4(
-      "AMBIGUOUS",
-      joomlaText("textOnlyError", { find: change.find }),
-      joomlaText(found.length > 1 ? "textOnlyManyNext" : "textOnlyNext", { at: found[0].group[0].at }),
-      { find: change.find, candidates }
-    );
-  if (found.length > 1 && plan.all === false && !named3)
-    return refuse4(
-      "AMBIGUOUS",
-      replaceText("ambiguousError", {
-        find: change.find,
-        n: found.length,
-        list: [...new Set(candidates.map((c) => c.where ?? "unknown"))].join(", ")
-      }),
-      replaceText("ambiguousNext", { at: found[0].group[0].at, allForm: '"page"' }),
-      { find: change.find, candidates }
-    );
-  const targets = [];
-  for (const f of found) {
-    if (f.values === null)
-      return refuse4(
-        "VALUE_NOT_ALLOWED",
-        joomlaText("fragmentsError", { find: change.find, n: f.group.length }),
-        joomlaText("fragmentsNext", { n: f.group.length }),
-        { rule: "cannot-empty", find: change.find, at: f.group.map((u) => u.at).join("+") }
-      );
-    f.group.forEach((u, k) => {
-      const value = (
-        /** @type {string[]} */
-        f.values[k]
-      );
-      if (value === u.raw) return;
-      targets.push({
-        kind: "unit",
-        at: u.at,
-        place: u.at,
-        unit: u,
-        hits: [{ unit: u, a: 0, b: u.cased.length, mode: "text", whole: true, caseExact: true }],
-        where: f.occ ? f.occ.unit.region : typeof u.region === "string" ? u.region : null,
-        rendered: ctx.page ? f.occ !== null : null,
-        occ: f.occ,
-        rank: 0,
-        exact: true,
-        twins: [],
-        whole: value
-      });
-    });
-  }
-  return {
-    ok: true,
-    verdict: "WRITE",
-    change,
-    targets,
-    places: found.length,
-    unchanged: [],
-    alsoIn: [],
-    notes: [],
-    scope: "page",
-    languagesKept: 0,
-    glyph: null
-  };
-}
-function factOf({ find, replace }) {
-  let p = 0;
-  while (p < find.length && p < replace.length && find[p] === replace[p]) p += 1;
-  let q = 0;
-  while (q < find.length - p && q < replace.length - p && find[find.length - 1 - q] === replace[replace.length - 1 - q])
-    q += 1;
-  const kinds = [
-    [isPhone, /[\d\s().+\-\u2010-\u2015]/, /^([\s.)\-\u2010-\u2015]*)([\s\S]*?)([\s.()+\-\u2010-\u2015]*)$/],
-    [isEmail, /[\w.+@-]/, /^([.+@-]*)([\s\S]*?)([.+@-]*)$/]
-  ];
-  for (const [is, char, shape] of kinds) {
-    let a = p;
-    let b = q;
-    while (a > 0 && char.test(find[a - 1])) a -= 1;
-    while (b > 0 && char.test(find[find.length - b])) b -= 1;
-    const was = shape.exec(find.slice(a, find.length - b));
-    const now = shape.exec(replace.slice(a, replace.length - b));
-    if (!was || !now || was[1] !== now[1] || was[3] !== now[3]) continue;
-    if (was[2] !== find.trim() && is(was[2]) && is(now[2])) return { find: was[2], replace: now[2] };
-  }
-  return null;
-}
-var FACT_TOKENS = Object.freeze([
-  ["phone", /[+(]?\d[\d\s().\-\u2010-\u2015]{5,}\d/g, isPhone],
-  ["e-mail", /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g, isEmail]
-]);
-function factWithWords(ctx, change, r) {
-  const { find, replace } = change;
-  for (const [field, pattern, is] of FACT_TOKENS) {
-    const olds = [...find.matchAll(pattern)].filter((m) => is(m[0]));
-    const news = [...replace.matchAll(pattern)].filter((m) => is(m[0]));
-    if (olds.length !== 1 || news.length !== 1 || olds[0][0] === news[0][0]) continue;
-    const was = olds[0][0];
-    const now = news[0][0];
-    const i = (
-      /** @type {number} */
-      olds[0].index
-    );
-    const j = (
-      /** @type {number} */
-      news[0].index
-    );
-    const pre = [find.slice(0, i).trim(), replace.slice(0, j).trim()];
-    const post = [find.slice(i + was.length).trim(), replace.slice(j + now.length).trim()];
-    if (pre[0] === pre[1] && post[0] === post[1]) return null;
-    const follows = r.targets.some((t) => {
-      if (t.kind !== "unit") return false;
-      const u = (
-        /** @type {JoomlaUnit} */
-        t.unit
-      );
-      if (ctx.hooks.twins(u).some((x) => matchUnits([x], was).hits.length > 0)) return true;
-      return ctx.store.urls.some((s) => {
-        const href = typeof s.current === "string" ? s.current : "";
-        if (String(s.entity) !== u.entity || /\{[a-zA-Z.]+\}/.test(readBraces(href))) return false;
-        const moved = followHref(href, was, now);
-        return moved !== null && moved !== href;
-      });
-    });
-    if (!follows) return null;
-    const line = { find, replace: find.slice(0, i) + now + find.slice(i + was.length) };
-    const words = pre[0] !== pre[1] && post[0] === post[1] && pre[0] !== "" && pre[1] !== "" ? { find: pre[0], replace: pre[1] } : post[0] !== post[1] && pre[0] === pre[1] && post[0] !== "" && post[1] !== "" ? { find: post[0], replace: post[1] } : null;
-    const next = words ? joomlaText("factWordsNext", {
-      field,
-      wf: words.find,
-      wr: words.replace,
-      lf: line.find,
-      lr: line.replace
-    }) : "";
-    return refuse4(
-      "VALUE_NOT_ALLOWED",
-      joomlaText("factWordsError", { find, field }),
-      // a next is a call to send whole: one that would not fit is said in words instead
-      next !== "" && next.length <= 200 ? next : joomlaText("factWordsNextLong", { field }),
-      { rule: "fact-in-words", at: r.targets[0].at }
-    );
-  }
-  return null;
-}
-function asFact(ctx, plan, change, stored, r) {
-  if (r.targets.some((t) => t.kind !== "unit" || /** @type {JoomlaUnit} */
-  t.unit.tokens.length > 0))
-    return r;
-  const fact = factOf(change);
-  if (fact === null) return factWithWords(ctx, change, r) ?? r;
-  const base3 = {
-    page: ctx.page ? { units: ctx.page.units, lang: ctx.page.lang } : null,
-    change: fact,
-    path: plan.path,
-    pathGiven: plan.pathGiven,
-    where: plan.where,
-    countRules: false,
-    mustKeepTwo: true,
-    hooks: ctx.hooks
-  };
-  if (plan.all !== false)
-    return locate({ ...base3, stored: storedFor(ctx.store, ctx.pf, fact.find), at: null, all: plan.all });
-  const f = locate({ ...base3, stored, at: plan.at ?? r.targets.map((t) => t.at), all: false });
-  if (!f.ok) return r;
-  const written = /* @__PURE__ */ new Set();
-  for (const t of f.targets)
-    if (t.kind === "unit") for (const at of [t.at, ...t.twins.map((x) => x.unit.at)]) written.add(at);
-  const more = /* @__PURE__ */ new Map();
-  for (const h of matchUnits(stored, fact.find).hits) {
-    const u = (
-      /** @type {JoomlaUnit} */
-      h.unit
-    );
-    if (written.has(u.at) || more.has(u.at) || u.writable === false || u.identity || h.mode === "bare")
-      continue;
-    if (u.lang !== null && ctx.pf.lang !== null && u.lang !== ctx.pf.lang) continue;
-    more.set(u.at, {
-      at: u.at,
-      where: typeof u.region === "string" ? u.region : null,
-      text: clip2(u.cased, h.a, h.b, 80)
-    });
-  }
-  return { ...f, unchanged: r.unchanged, alsoIn: [...r.alsoIn, ...more.values()] };
-}
-function withPages(ctx, r, stored) {
-  if (!Array.isArray(r.candidates)) return r;
-  const candidates = r.candidates.map((c) => {
-    if (c.onPage !== false || c.page) return c;
-    const u = stored.find((x) => x.at === String(c.at).split("+")[0]);
-    const page = u ? unitPath(ctx.store, u) : null;
-    return page ? { ...c, page } : c;
-  });
-  return { ...r, candidates };
-}
-function elsewhere(ctx, plan, change, stored, r) {
-  const pageLang = ctx.pf.lang;
-  if (plan.at !== null || plan.all === true || pageLang === null) return r;
-  const notFound = !r.ok && r.code === "NOT_FOUND" && r.error === replaceText("notFoundError", { find: change.find });
-  const offPage = r.ok && r.scope === "page" && r.targets.every((t) => t.rendered !== true);
-  if (!notFound && !offPage) return r;
-  const where = plan.where ?? null;
-  const have = /* @__PURE__ */ new Set();
-  if (r.ok)
-    for (const t of r.targets)
-      for (const at of t.kind === "split" ? [t.a.at, t.b.at] : [t.at, ...t.twins.map((x) => x.unit.at)])
-        have.add(at);
-  const pool = stored.filter(
-    (u) => u.lang !== null && u.lang !== pageLang && !u.identity && u.writable !== false && !have.has(u.at) && (where === null || u.region === where)
-  );
-  const others = /* @__PURE__ */ new Map();
-  for (const h of matchUnits(pool, change.find).hits)
-    if (h.mode !== "bare" && (h.whole || h.caseExact)) others.set(h.unit.at, h.unit);
-  if (others.size === 0) return r;
-  const candidate = (u, whereShown) => {
-    const page = unitPath(ctx.store, u);
-    return {
-      at: u.at,
-      where: Array.isArray(whereShown) ? whereShown[0] ?? null : whereShown ?? null,
-      label: u.label,
-      text: clip2(u.cased, 0, 0, 90),
-      onPage: false,
-      ...page ? { page } : {}
-    };
-  };
-  const list = [...others.values()];
-  if (notFound && list.length === 1) {
-    const u = list[0];
-    const page = unitPath(ctx.store, u);
-    return refuse4(
-      "NOT_FOUND",
-      joomlaText("otherLanguageError", { find: change.find, page: page ?? "another page" }),
-      page ? joomlaText("otherLanguageNext", { page }) : joomlaText("otherLanguageAtNext", { at: u.at }),
-      { find: change.find, candidates: [candidate(u, u.region)] }
-    );
-  }
-  const candidates = [];
-  if (r.ok)
-    for (const t of r.targets) {
-      const u = (
-        /** @type {JoomlaUnit} */
-        t.kind === "split" ? t.a : t.unit
-      );
-      candidates.push({
-        ...candidate(u, t.where),
-        at: t.at,
-        text: t.kind === "split" ? clip2(`${t.a.cased} / ${t.b.cased}`, 0, 0, 90) : clip2(u.cased, 0, 0, 90)
-      });
-    }
-  for (const u of list) candidates.push(candidate(u, u.region));
-  return refuse4(
-    "AMBIGUOUS",
-    replaceText("ambiguousError", {
-      find: change.find,
-      n: candidates.length,
-      // pages, not regions: which page is the question here (three at most, inside T10's 160)
-      list: [...new Set(candidates.map((c) => c.page ?? c.where ?? "unknown"))].slice(0, 3).join(", ")
-    }),
-    replaceText("ambiguousNext", { at: candidates[0].at, allForm: "true" }),
-    { find: change.find, candidates: candidates.slice(0, 8) }
-  );
-}
-function plainReplace2(replace, glyph) {
-  let r = replace;
-  if (glyph?.trail && r.endsWith(glyph.trail)) r = r.slice(0, -glyph.trail.length).trimEnd();
-  if (glyph?.lead && r.startsWith(glyph.lead)) r = r.slice(glyph.lead.length).trimStart();
-  return r;
-}
-function placeInTokens(store2, u, s, e, text6, find, opts = {}) {
-  const shown3 = u.raw;
-  const field = (t) => TOKEN_FIELD[
-    /** @type {keyof typeof TOKEN_FIELD} */
-    t.name
-  ];
-  const skip = { ok: (
-    /** @type {const} */
-    true
-  ), skip: true, identity: null, s, e, text: text6, detached: null };
-  const named3 = (t) => String(field(t)).replace(/-/g, " ");
-  const tokenRefusal = (t) => opts.probe ? skip : {
-    ok: (
-      /** @type {const} */
-      false
-    ),
-    refusal: refuse4(
-      "VALUE_NOT_ALLOWED",
-      joomlaText("identityTokenError", { find, field: named3(t) }),
-      joomlaText(NAME_TOKENS.has(t.name) ? "nameTokenNext" : "identityTokenNext", {
-        value: shown3.slice(t.xs, t.xe),
-        field: named3(t)
-      }),
-      { rule: "identity-token", at: u.at }
-    )
-  };
-  const inside = u.tokens.find((t) => t.xs <= s && e <= t.xe && e > s);
-  if (inside) {
-    const id = store2.identity.get(inside.name);
-    if (!id) return tokenRefusal(inside);
-    return { ok: true, identity: id, s: s - inside.xs, e: e - inside.xs, text: text6, detached: null };
-  }
-  const was = shown3.slice(s, e);
-  let p = 0;
-  while (p < was.length && p < text6.length && was[p] === text6[p]) p += 1;
-  let q = 0;
-  while (q < was.length - p && q < text6.length - p && was[was.length - 1 - q] === text6[text6.length - 1 - q])
-    q += 1;
-  const a = s + p;
-  const b = e - q;
-  const mid = text6.slice(p, text6.length - q);
-  const crossed = u.tokens.filter((t) => a < b ? a < t.xe && t.xs < b : t.xs < a && a < t.xe);
-  if (crossed.length === 0)
-    return { ok: true, identity: null, s: toStored(u, a), e: toStored(u, b), text: mid, detached: null };
-  const contact = crossed.find((t) => !NAME_TOKENS.has(t.name));
-  if (contact && crossed.length === 1 && a >= contact.xs && b <= contact.xe) {
-    const id = store2.identity.get(contact.name);
-    if (!id) return tokenRefusal(contact);
-    return { ok: true, identity: id, s: a - contact.xs, e: b - contact.xs, text: mid, detached: null };
-  }
-  const A = Math.min(a, ...crossed.map((t) => t.xs));
-  const B = Math.max(b, ...crossed.map((t) => t.xe));
-  let fresh = shown3.slice(A, a) + mid + shown3.slice(b, B);
-  const lost = [];
-  for (const t of crossed) {
-    const now = opts.newIdentity?.get(t.name) ?? "";
-    const was2 = shown3.slice(t.xs, t.xe);
-    const value = now !== "" && fresh.includes(now) ? now : was2 !== "" && fresh.includes(was2) ? was2 : null;
-    if (value !== null) fresh = fresh.replace(value, () => `{${t.name}}`);
-    else lost.push(t);
-  }
-  const plain = { ok: (
-    /** @type {const} */
-    true
-  ), identity: null, s: toStored(u, A), e: toStored(u, B) };
-  if (lost.length === 0) return { ...plain, text: fresh, detached: null };
-  const fact = lost.find((t) => !NAME_TOKENS.has(t.name));
-  if (fact) return tokenRefusal(fact);
-  if (opts.probe) return skip;
-  if ((opts.nameInQuote ?? NAME_IN_QUOTE) === "refuse") return tokenRefusal(lost[0]);
-  return { ...plain, text: fresh, detached: field(lost[0]) };
-}
-function joomlaWrites(store2, results, options = {}) {
-  const probe = writesOnce(store2, results, { probe: true });
-  const newIdentity = /* @__PURE__ */ new Map();
-  if (probe.ok) {
-    for (const w of probe.writes) if (w.unit.identity) newIdentity.set(w.unit.identity, w.value);
-  }
-  return writesOnce(store2, results, { ...options, newIdentity });
-}
-function writesOnce(store2, results, opts) {
-  const byAt = /* @__PURE__ */ new Map();
-  const redirect = /* @__PURE__ */ new Map();
-  const notes = [];
-  const writeOf = (u) => {
-    let w = byAt.get(u.at);
-    if (!w) {
-      const before = typeof u.slot.current === "string" ? u.slot.current : "";
-      w = {
-        at: u.at,
-        unit: u,
-        slot: u.slot,
-        before,
-        value: before,
-        changes: /* @__PURE__ */ new Set(),
-        edits: [],
-        whole: null
-      };
-      byAt.set(u.at, w);
-    }
-    return w;
-  };
-  for (let i = 0; i < results.length; i += 1) {
-    const r = results[i];
-    const text6 = plainReplace2(r.change.replace, r.glyph).replace(/\s*\n\s*/g, " ");
-    for (const t of r.targets) {
-      if (t.kind === "unit" && typeof t.whole === "string") {
-        const w = writeOf(
-          /** @type {JoomlaUnit} */
-          t.unit
-        );
-        w.whole = t.whole;
-        w.changes.add(i);
-        continue;
-      }
-      if (t.kind === "split") {
-        const parts = t.parts ?? { a: text6, b: "" };
-        for (
-          const [u, v2] of
-          /** @type {[JoomlaUnit, string][]} */
-          [
-            [t.a, parts.a],
-            [t.b, parts.b]
-          ]
-        ) {
-          const w = writeOf(u);
-          w.whole = v2;
-          w.changes.add(i);
-        }
-        continue;
-      }
-      for (const { unit, hits } of [{ unit: t.unit, hits: t.hits }, ...t.twins]) {
-        const u = (
-          /** @type {JoomlaUnit} */
-          unit
-        );
-        for (const h of hits) {
-          const [s, e] = rawSpan(u, h);
-          let place = {
-            identity: (
-              /** @type {JoomlaUnit | null} */
-              null
-            ),
-            s,
-            e,
-            text: text6,
-            detached: (
-              /** @type {string | null} */
-              null
-            )
-          };
-          if (u.tokens.length > 0) {
-            const got = placeInTokens(store2, u, s, e, text6, r.change.find, opts);
-            if (!got.ok) return plan1(got.refusal, results.length, i);
-            if (got.skip) continue;
-            place = got;
-          }
-          const w = writeOf(place.identity ?? u);
-          if (!w.edits.some((x) => x.s === place.s && x.e === place.e && x.text === place.text))
-            w.edits.push({ s: place.s, e: place.e, text: place.text });
-          w.changes.add(i);
-          if (place.identity && u === t.unit) redirect.set(t.at, place.identity.at);
-          if (place.detached) {
-            const note = joomlaText("tokenLineNote", { at: u.at, field: place.detached });
-            if (!notes.includes(note)) notes.push(note);
-          }
-        }
-      }
-    }
-  }
-  const writes = [];
-  for (const w of byAt.values()) {
-    if (w.whole !== null && w.edits.length > 0)
-      return refuse4("BAD_PARAMS", joomlaText("overlapError", { at: w.at }), replaceText("overlapNext"), {
-        at: w.at
-      });
-    try {
-      w.value = w.whole ?? spliceRaw(w.before, w.edits);
-    } catch {
-      return refuse4("BAD_PARAMS", joomlaText("overlapError", { at: w.at }), replaceText("overlapNext"), {
-        at: w.at
-      });
-    }
-    if (w.value !== w.before) writes.push(w);
-  }
-  return { ok: true, writes, redirect, notes };
-}
-var plan1 = (r, n, i) => n > 1 ? { ...r, change: i } : r;
-function companionsOf(store2, results, writes) {
-  const out = [];
-  for (let i = 0; i < results.length; i += 1) {
-    const { find, replace } = results[i].change;
-    const phone = isPhone(find) && isPhone(replace);
-    if (!phone && !(isEmail(find) && isEmail(replace))) continue;
-    const blocks = new Set(
-      writes.filter((w) => w.changes.has(i) && !w.unit.identity).map((w) => w.unit.entity)
-    );
-    for (const s of store2.urls) {
-      if (!blocks.has(String(s.entity))) continue;
-      const before = typeof s.current === "string" ? s.current : "";
-      if (/\{[a-zA-Z.]+\}/.test(readBraces(before))) continue;
-      const value = followHref(before, find, replace);
-      if (value === null || value === before) continue;
-      const got = out.find((c) => c.at === String(s.key));
-      if (got) got.changes.add(i);
-      else
-        out.push({
-          at: String(s.key),
-          slot: s,
-          before,
-          value,
-          changes: /* @__PURE__ */ new Set([i]),
-          why: phone ? "the link follows the number" : "the link follows the e-mail"
-        });
-    }
-  }
-  return out;
-}
-var isAddress = (s) => /^(https?:\/\/|mailto:|tel:)\S+$/i.test(s.trim()) || /^(www\.[^\s/]+\.[a-z]{2,}|[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}\/)\S*$/i.test(s.trim());
-var acmField = (path22) => Array.isArray(path22) && typeof path22[1] === "string" ? /\[([^\]]+)\]$/.exec(path22[1])?.[1] ?? null : null;
-var stem = (f) => f.includes("-") ? f.slice(0, f.lastIndexOf("-")) : f;
-var readBraces = (v2) => String(v2 ?? "").replace(/%7B/gi, "{").replace(/%7D/gi, "}");
-var socialToken = (v2) => /^\{(social\.[a-z]+)\}$/.exec(readBraces(v2).trim())?.[1] ?? null;
-function linkSlotOf(store2, slot) {
-  const xpath = typeof slot.xpath === "string" ? slot.xpath : "";
-  for (const url of store2.urls) {
-    if (String(url.entity) !== String(slot.entity)) continue;
-    if (xpath.endsWith("/text()") && url.xpath === `${xpath.slice(0, -7)}/@href`) return url;
-    const tf = acmField(slot.jsonPath);
-    const uf = acmField(url.jsonPath);
-    if (!tf || !uf || slot.jsonPath[0] !== url.jsonPath[0] || slot.jsonPath[2] !== url.jsonPath[2]) continue;
-    if (stem(tf) === stem(uf) && tf !== uf) return url;
-    if (/^(text|label)$/.test(tf) && /^(link|url|href)$/.test(uf)) return url;
-    if (socialToken(url.current)) return url;
-  }
-  return null;
-}
-function linkAddressRefusal(ctx, results, revision, precheck) {
-  const { store: store2 } = ctx;
-  for (let i = 0; i < results.length; i += 1) {
-    const { find, replace } = results[i].change;
-    if (!isAddress(replace) || isAddress(find)) continue;
-    const bare = isPhone(find) && /^tel:/i.test(replace.trim()) ? replace.trim().slice(4) : isEmail(find) && /^mailto:/i.test(replace.trim()) ? replace.trim().slice(7).split("?")[0] : null;
-    if (bare !== null && results[i].targets.length > 0)
-      return plan1(
-        refuse4(
-          "VALUE_NOT_ALLOWED",
-          joomlaText("linkFactError", { find }),
-          joomlaText("linkFactNext", { value: bare }),
-          { rule: "link-address", at: results[i].targets[0].at }
-        ),
-        results.length,
-        i
-      );
-    for (const t of results[i].targets) {
-      if (t.kind !== "unit") continue;
-      const u = (
-        /** @type {JoomlaUnit} */
-        t.unit
-      );
-      const printed = u.tokens.find((x) => x.name.startsWith("social."));
-      const link = linkSlotOf(store2, u.slot);
-      const onPage = t.occ ? t.occ.unit.chainAt(t.occ.a).some((el) => el.tag === "a" && el.href) : false;
-      if (!printed && !link && tagOf(u.slot) !== "a" && !onPage) continue;
-      const token = printed?.name ?? socialToken(link?.current) ?? /\{(contact\.(?:tel|email))\}/.exec(readBraces(link?.current))?.[1] ?? null;
-      const idSlot = token ? store2.identitySlots.get(token === "contact.tel" ? "contact.phone" : token) ?? null : null;
-      const slot = idSlot ?? (token ? null : link);
-      if (!slot)
-        return plan1(
-          refuse4("NOT_EDITABLE", joomlaText("linkFixedError", { find }), joomlaText("linkFixedNext"), {
-            find,
-            at: u.at
-          }),
-          results.length,
-          i
-        );
-      const value = idSlot && /^contact\.(tel|email)$/.test(String(token)) && /^(tel|mailto):/i.test(replace.trim()) ? replace.trim().replace(/^(tel|mailto):/i, "") : replace.trim();
-      const bad2 = precheck ? checkSlotValue(
-        /** @type {any} */
-        slot,
-        value
-      ) : null;
-      if (bad2) return plan1(valueRefusal(bad2, value, value), results.length, i);
-      return plan1(
-        refuse4(
-          "VALUE_NOT_ALLOWED",
-          joomlaText("linkAddressError", { find, replace }),
-          joomlaText("linkAddressNext", { label: cleanLabel(slot.label) || String(slot.key) }),
-          {
-            rule: "link-address",
-            at: u.at,
-            apply: {
-              action: "content.contract",
-              params: {
-                operation: "apply",
-                expected_revision: revision,
-                changes: { [String(slot.key)]: value }
-              }
-            }
-          }
-        ),
-        results.length,
-        i
-      );
-    }
-  }
-  return null;
-}
-function newWords({ find, replace }) {
-  let p = 0;
-  while (p < find.length && p < replace.length && find[p] === replace[p]) p += 1;
-  let q = 0;
-  while (q < find.length - p && q < replace.length - p && find[find.length - 1 - q] === replace[replace.length - 1 - q])
-    q += 1;
-  let a = p;
-  let b = replace.length - q;
-  if (a >= b) return "";
-  const word = (c) => /[\p{L}\p{N}]/u.test(c);
-  while (a > 0 && word(replace[a - 1])) a -= 1;
-  while (b < replace.length && word(replace[b])) b += 1;
-  const mid = replace.slice(a, b).trim();
-  return /[\p{L}\p{N}]/u.test(mid) ? mid : "";
-}
-function cutBytes(s, max = 8e3) {
-  if (Buffer.byteLength(s, "utf8") <= max) return s;
-  let out = "";
-  let n = 0;
-  for (const ch of s) {
-    const len = Buffer.byteLength(ch, "utf8");
-    if (n + len > max) break;
-    out += ch;
-    n += len;
-  }
-  return out;
-}
-function customerSentence2(message2, words, { digits = false } = {}) {
-  if (Array.isArray(message2)) {
-    for (const m of message2) {
-      const got = customerSentence2(m, words, { digits });
-      if (got !== null) return got;
-    }
-    return null;
-  }
-  if (typeof message2 !== "string" || phpTrim(message2) === "") return null;
-  if (words === "") return cutBytes(message2.trim());
-  const fold2 = digits ? (s) => s.replace(/\D/g, "") : foldForMatch;
-  const want = fold2(words);
-  if (want === "") return null;
-  for (const s of message2.split(/(?<=[.!?…])\s+|\n+/)) if (fold2(s).includes(want)) return cutBytes(s.trim());
-  return fold2(message2).includes(want) ? cutBytes(message2.trim()) : null;
-}
-function valueRefusal(r, value, replace) {
-  const extra = { rule: r.rule, at: r.key, value: clip2(value, 0, 0, 80) };
-  switch (r.rule) {
-    case "max-characters": {
-      const len = Number(r.length);
-      const limit = Number(r.limit);
-      const room = limit - (len - [...replace].length);
-      return refuse4(
-        "VALUE_NOT_ALLOWED",
-        replaceText("maxCharactersError", { what: "the new text", len, at: r.key, limit }),
-        replaceText("maxCharactersNext", { limit: room > 0 ? room : limit }),
-        { ...extra, limit }
-      );
-    }
-    case "cannot-empty":
-      return refuse4(
-        "VALUE_NOT_ALLOWED",
-        joomlaText("cannotEmptyError", { at: r.key }),
-        joomlaText("cannotEmptyNext"),
-        extra
-      );
-    case "cannot-fill":
-      return refuse4(
-        "VALUE_NOT_ALLOWED",
-        joomlaText("cannotFillError", { at: r.key }),
-        joomlaText("cannotFillNext"),
-        extra
-      );
-    case "no-markup":
-      return refuse4(
-        "VALUE_NOT_ALLOWED",
-        joomlaText("noMarkupError", { at: r.key }),
-        joomlaText("noMarkupNext"),
-        extra
-      );
-    case "no-directive":
-      return refuse4(
-        "VALUE_NOT_ALLOWED",
-        joomlaText("noDirectiveError", { at: r.key }),
-        joomlaText("noDirectiveNext"),
-        extra
-      );
-    case "evidence":
-      return refuse4(
-        "VALUE_NOT_ALLOWED",
-        joomlaText("evidenceError", { at: r.key, words: replace }),
-        joomlaText("evidenceNext"),
-        extra
-      );
-    default:
-      return refuse4(
-        "VALUE_NOT_ALLOWED",
-        joomlaText("urlError", { at: r.key, value }),
-        joomlaText("urlNext"),
-        extra
-      );
-  }
-}
-function shownIn(ctx, t, find) {
-  if (ctx.page === null) return [];
-  const u = (
-    /** @type {JoomlaUnit} */
-    t.kind === "split" ? t.a : t.unit
-  );
-  const lower = t.kind === "split" ? `${t.a.lower} ${t.b.lower}` : t.unit.lower;
-  const probe = { unit: u, a: 0, b: u.cased.length, mode: "text", whole: true, caseExact: true };
-  const out = [];
-  for (const o of matchUnits(ctx.page.units, find).hits) {
-    if (o.unit.hidden || o.unit.region === "drawer" || !o.unit.lower.includes(lower)) continue;
-    if (ctx.hooks.anchor(probe, o) && !out.includes(o.unit.region)) out.push(o.unit.region);
-  }
-  return out;
-}
-function rowsOf(ctx, results, redirect, path22, writes) {
-  const values = valuesAfter(ctx.store, writes);
-  const rows = [];
-  const madeFor = /* @__PURE__ */ new Map();
-  for (const r of results)
-    for (const t of r.targets) {
-      const row = wouldOf(t, r.change);
-      const to = redirect.get(t.at);
-      if (to) {
-        row.at = to;
-        row.label = cleanLabel(ctx.store.byKey.get(to)?.label);
-      } else if (row.onPage === false) {
-        const page = unitPath(
-          ctx.store,
-          /** @type {JoomlaUnit} */
-          t.kind === "split" ? t.a : t.unit
-        );
-        if (page && page !== path22) row.page = page;
-      }
-      const where = shownIn(ctx, t, r.change.find);
-      if (where.length > 1) row.where = where.join(", ");
-      const same = rows.find((x) => x.at === row.at);
-      if (same) {
-        const all = [
-          .../* @__PURE__ */ new Set([...String(same.where ?? "").split(", "), ...String(row.where ?? "").split(", ")])
-        ];
-        same.where = all.filter(Boolean).join(", ") || null;
-        const w = writes.find((x) => x.at === same.at);
-        if (w && t.kind === "unit" && madeFor.get(same) !== r) {
-          const shown3 = (v2) => views(expand(v2, values).text, { decode: false }).cased;
-          same.before = clip2(shown3(w.before), 0, 0);
-          same.after = clip2(shown3(w.value), 0, 0);
-        }
-        continue;
-      }
-      rows.push(row);
-      madeFor.set(row, r);
-    }
-  return rows;
-}
-function notReachedOf(ctx, results, writes) {
-  if (ctx.page === null) return null;
-  const fact = writes.some(
-    (w) => !w.unit.identity && [...w.changes].some((i) => w.unit.fact === true || isFact(results[i].change.find))
-  );
-  if (!fact) return null;
-  const hreflang = new Set(
-    [...ctx.page.html.matchAll(/hreflang="([^"]+)"/gi)].map((m) => m[1].toLowerCase()).filter((l) => l !== "x-default")
-  );
-  const served2 = hreflang.size > 0 ? hreflang.size : ctx.table.switcherItem ? (ctx.page.html.match(ctx.table.switcherItem) ?? []).length : 0;
-  const governed = new Set(ctx.store.units.map((u) => u.lang).filter((l) => l !== null));
-  for (const l of ctx.store.languages) governed.add(
-    /** @type {string} */
-    langOf2(l)
-  );
-  const n = served2 - governed.size;
-  return n > 0 ? joomlaText("notReached", { n }) : null;
-}
-function pageOf4(html) {
-  const r = renderedUnits(html);
-  const copy = (u) => u.hidden || u.region === "drawer";
-  return { ...r, units: [...r.units.filter((u) => !copy(u)), ...r.units.filter(copy)], html };
-}
-function answerOf3(x) {
-  const o = (
-    /** @type {Record<string, any>} */
-    x && typeof x === "object" ? x : {}
-  );
-  return o.answer && typeof o.answer === "object" && Array.isArray(o.answer.slots) ? o.answer : o;
-}
-function planOn(deps, plan, snap, page) {
-  const { table } = contractOf(snap);
-  const store2 = joomlaStore(snap, table);
-  const pf = pageFacts(store2, page, plan.path);
-  const ctx = {
-    store: store2,
-    table,
-    pf,
-    page,
-    hooks: joomlaHooks(store2, table, pf),
-    confirmed: deps.confirmed === true
-  };
-  const located = locateJoomla(ctx, plan);
-  if (!located.ok) {
-    const first = located.code === "NOT_EDITABLE" && Array.isArray(located.unchanged) ? located.unchanged[0] : null;
-    return first?.why === WHY.siteName ? { ...located, next: joomlaText("siteNameNext") } : located;
-  }
-  const { results } = located;
-  const revision = String(snap.revision ?? "");
-  const precheck = contractPrecheckOn(deps.env ?? process.env);
-  const linkRefusal = linkAddressRefusal(ctx, results, revision, precheck);
-  if (linkRefusal) return linkRefusal;
-  const built = joomlaWrites(store2, results, { nameInQuote: deps.nameInQuote });
-  if (!built.ok) return built;
-  const { writes, redirect } = built;
-  const companions = companionsOf(store2, results, writes);
-  const rows = rowsOf(ctx, results, redirect, plan.path, writes);
-  const evidence = {};
-  const needsEvidence = [];
-  let missing = null;
-  for (const w of [...writes, ...companions]) {
-    if (!w.slot.requiresEvidence || w.slot.requiresEvidence === "0" || w.value === w.slot.sample) continue;
-    const sentences = [];
-    let lacking = false;
-    for (const i of w.changes) {
-      const words = newWords(results[i].change);
-      const got = customerSentence2(deps.evidenceText, words, { digits: /^tel:/i.test(w.value) });
-      if (got === null) {
-        lacking = true;
-        if (precheck) missing ??= { at: w.at, i, words };
-      } else if (!sentences.includes(got)) sentences.push(got);
-    }
-    if (lacking && precheck) needsEvidence.push(w.at);
-    else if (sentences.length > 0) evidence[w.at] = cutBytes(sentences.join(" "));
-  }
-  const changes = {};
-  for (const w of [...writes, ...companions]) changes[w.at] = w.value;
-  const apply2 = {
-    action: "content.contract",
-    params: {
-      operation: "apply",
-      expected_revision: revision,
-      changes,
-      ...Object.keys(evidence).length > 0 ? { evidence } : {}
-    }
-  };
-  if (missing && !plan.dryRun)
-    return plan1(
-      refuse4(
-        "VALUE_NOT_ALLOWED",
-        joomlaText("evidenceError", { at: missing.at, words: missing.words }),
-        joomlaText("evidenceNext"),
-        {
-          rule: "evidence",
-          at: missing.at,
-          value: clip2(changes[missing.at] ?? "", 0, 0, 80),
-          needsEvidence,
-          apply: apply2
-        }
-      ),
-      results.length,
-      missing.i
-    );
-  if (precheck)
-    for (const w of [...writes, ...companions]) {
-      const given = needsEvidence.includes(w.at) ? { ...evidence, [w.at]: "dryRun" } : evidence;
-      const r = checkSlotValue(
-        /** @type {import('./contract-check.mjs').ContractSlot} */
-        w.slot,
-        w.value,
-        {
-          evidence: given
-        }
-      );
-      if (r) {
-        const i = [...w.changes][0] ?? 0;
-        return plan1(valueRefusal(r, w.value, results[i]?.change.replace ?? ""), results.length, i);
-      }
-    }
-  const notes = [...new Set(results.flatMap((r) => r.notes))];
-  for (const w of writes)
-    if (w.unit.identity) {
-      const note = joomlaText("identityNote", { field: w.unit.field ?? w.unit.identity });
-      if (!notes.includes(note)) notes.push(note);
-    }
-  for (const note of built.notes) if (!notes.includes(note)) notes.push(note);
-  return {
-    ok: (
-      /** @type {const} */
-      true
-    ),
-    ctx,
-    results,
-    writes,
-    companions,
-    rows,
-    changes,
-    evidence,
-    needsEvidence,
-    apply: apply2,
-    notes,
-    notReached: notReachedOf(ctx, results, writes),
-    revision
-  };
-}
-function fitDryRun(out) {
-  const size2 = () => Buffer.byteLength(JSON.stringify(out), "utf8");
-  if (size2() <= RECEIPT_MAX_BYTES) return out;
-  for (const key of ["alsoIn", "unchanged", "companions", "notes"]) {
-    if (!(key in out)) continue;
-    delete out[key];
-    if (size2() <= RECEIPT_MAX_BYTES) return out;
-  }
-  const rows = (Array.isArray(out.would) ? out.would : []).map(
-    (row) => Object.fromEntries(Object.entries(row).filter(([key]) => key !== "label"))
-  );
-  out.would = rows;
-  if (size2() <= RECEIPT_MAX_BYTES) return out;
-  const before = Number(out.more ?? 0);
-  for (let keep = Math.min(rows.length, 6); keep >= 1; keep -= 1) {
-    out.would = rows.slice(0, keep);
-    out.more = before + rows.length - keep;
-    if (size2() <= RECEIPT_MAX_BYTES) return out;
-  }
-  return out;
-}
-var conflicted = (a) => a.ok === false && /Content changed; inspect again|conflict at operation/.test(String(a.message ?? a.error ?? ""));
-async function replaceOnJoomla(deps) {
-  if (typeof deps.mint !== "function")
-    throw new TypeError("replaceOnJoomla: deps.mint is required \u2014 call-memory's minter (D7)");
-  const mint = deps.mint;
-  const plan = deps.plan ?? planReplace(deps.params);
-  if (!plan.ok) return plan;
-  if (plan.mode === "restore")
-    return refuse4("BAD_PARAMS", joomlaText("restoreError"), joomlaText("restoreNext"), { param: "restore" });
-  const [first, read] = await Promise.all([deps.snapshot(false), deps.pageHtml(plan.path)]);
-  let page = null;
-  const r0 = (
-    /** @type {Record<string, any>} */
-    read ?? {}
-  );
-  if (r0.ok === true && typeof r0.html === "string") {
-    const status = Number(r0.status ?? 200);
-    if (status === 404 || status === 410)
-      return refuse4(
-        "NOT_FOUND",
-        joomlaText("pageMissingError", { path: plan.path, status }),
-        joomlaText("pageMissingNext"),
-        { path: plan.path }
-      );
-    if (status < 400) page = pageOf4(r0.html);
-  }
-  let snap = answerOf3(first);
-  for (let attempt = 0; ; attempt += 1) {
-    if (snap.ok === false) return snap;
-    if (!Array.isArray(snap.slots) || typeof snap.contract !== "string" || snap.contract === "")
-      return refuse4("NOT_SUPPORTED_HERE", joomlaText("notSealedError"), joomlaText("notSealedNext"));
-    const planned = planOn(deps, plan, snap, page);
-    if (!planned.ok) return planned;
-    const { rows, companions, writes, notes } = planned;
-    const companionRows = companions.map((c) => ({ at: c.at, before: c.before, after: c.value, why: c.why }));
-    if (plan.dryRun) {
-      const out = (
-        /** @type {Record<string, any>} */
-        dryRunAnswer({ platform: "joomla", path: plan.path, results: planned.results, all: plan.all })
-      );
-      out.would = rows.slice(0, Array.isArray(out.would) ? out.would.length : rows.length);
-      if (companionRows.length > 0) out.companions = companionRows;
-      if (notes.length > 0) out.notes = notes;
-      if (plan.normalized.length > 0) out.normalized = plan.normalized;
-      if (planned.needsEvidence.length > 0) {
-        out.needsEvidence = planned.needsEvidence;
-        out.apply = planned.apply;
-        out.next = joomlaText("evidenceNext");
-      }
-      return fitDryRun(out);
-    }
-    if (writes.length === 0)
-      return {
-        ok: true,
-        platform: "joomla",
-        path: plan.path,
-        changed: [],
-        notes: [joomlaText("already")],
-        next: REPLACE_NEXT.receipt
-      };
-    const applyId = mint("contract-replace");
-    const { changes } = planned;
-    const evidence = Object.keys(planned.evidence).length > 0 ? planned.evidence : void 0;
-    const params = {
-      operation: "apply",
-      expected_revision: planned.revision,
-      apply_id: applyId,
-      request_id: requestIdOf(changes, evidence, planned.revision),
-      changes,
-      ...evidence ? { evidence } : {}
-    };
-    let answer;
-    try {
-      answer = /** @type {Record<string, any>} */
-      await deps.apply(params) ?? {};
-    } catch (error) {
-      answer = {
-        ok: false,
-        code: "COWORK_WEB_UNREACHABLE",
-        error: (error instanceof Error ? error.message : String(error)).slice(0, 160)
-      };
-    }
-    if (answer.ok === true) {
-      if (answer.unchanged === true)
-        return {
-          ok: true,
-          platform: "joomla",
-          path: plan.path,
-          apply_id: applyId,
-          changed: [],
-          notes: [joomlaText("already")],
-          next: REPLACE_NEXT.receipt
-        };
-      let verified = null;
-      if (planned.ctx.page === null) verified = joomlaText("unread");
-      else if (deps.verify !== false && planned.results.some((r) => r.targets.some((t) => t.rendered === true))) {
-        let read2 = null;
-        try {
-          read2 = await deps.pageHtml(plan.path);
-        } catch {
-          read2 = null;
-        }
-        verified = verifyOn(
-          read2,
-          planned.results,
-          plan.path,
-          planned.ctx.page,
-          valuesAfter(planned.ctx.store, writes)
-        );
-      }
-      const out = receipt({
-        platform: "joomla",
-        path: plan.path,
-        applyId,
-        changed: (
-          /** @type {any} */
-          rows
-        ),
-        removal: plan.changes.every((c) => c.replace === ""),
-        companions: companionRows,
-        stillHolds: leadLeftovers(
-          plan.changes,
-          planned.ctx.store.units.filter((u) => u.lang === null || u.lang === planned.ctx.pf.lang),
-          rows.map((x) => String(
-            /** @type {any} */
-            x.at
-          ))
-        ),
-        unchanged: planned.results.flatMap((r) => r.unchanged).slice(0, 4),
-        alsoIn: planned.results.flatMap((r) => r.alsoIn).slice(0, 5),
-        notes,
-        notReached: planned.notReached,
-        undo: undoOf({ platform: "joomla", applyId })
-      });
-      if (verified) out.verified = verified;
-      if (plan.normalized.length > 0) out.normalized = plan.normalized;
-      return out;
-    }
-    const planRows = rows.slice(0, 6).map((row) => ({ at: row.at, before: row.before, after: row.after }));
-    if (conflicted(answer)) {
-      if (attempt === 0) {
-        snap = answerOf3(await deps.snapshot(true));
-        continue;
-      }
-      return refuse4("STORE_CHANGED", joomlaText("storeChangedError"), joomlaText("storeChangedNext"), {
-        planned: planRows
-      });
-    }
-    if (outcomeUnknown(answer))
-      return { ...answer, apply_id: applyId, planned: planRows, next: joomlaText("outcomeUnknownNext") };
-    return {
-      .../** @type {Record<string, unknown>} */
-      withNext(answer, { platform: "joomla", sealed: true, action: "content.contract" }),
-      planned: planRows
-    };
-  }
-}
-function valuesAfter(store2, writes) {
-  const values = new Map(store2.values);
-  for (const w of writes) if (w.unit.identity) values.set(w.unit.identity, w.value);
-  if (values.has("contact.phone"))
-    values.set("contact.tel", (values.get("contact.phone") ?? "").replace(/[^0-9+]/g, ""));
-  return values;
-}
-function countIn(lines, needle) {
-  let n = 0;
-  for (const line of lines)
-    for (let i = line.indexOf(needle); i !== -1; i = line.indexOf(needle, i + needle.length)) n += 1;
-  return n;
-}
-function verifyOn(read, results, path22, before, values = /* @__PURE__ */ new Map()) {
-  const r = (
-    /** @type {Record<string, any>} */
-    read ?? {}
-  );
-  if (r.ok !== true || typeof r.html !== "string") return joomlaText("unread", { path: path22 });
-  const visible2 = (units) => units.filter((u) => !u.hidden).map((u) => u.lower);
-  const now = visible2(renderedUnits(r.html).units);
-  const was = visible2(before.units);
-  let checked = 0;
-  for (const res of results) {
-    if (!res.targets.some((t) => t.rendered === true)) continue;
-    const words = plainReplace2(res.change.replace, res.glyph).replace(/\s*\n\s*/g, " ");
-    const want = words.trim() === "" ? "" : views(values.size > 0 ? expand(words, values).text : words).lower;
-    const old = views(res.change.find).lower;
-    checked += 1;
-    const grew = want !== "" && countIn(now, want) > countIn(was, want);
-    const kept = want === "" || countIn(now, want) >= countIn(was, want);
-    const gone = old !== "" && countIn(now, old) < countIn(was, old);
-    if (!grew && !(gone && kept)) return joomlaText("notShown", { path: path22 });
-  }
-  return checked > 0 ? joomlaText("shown", { path: path22 }) : null;
-}
-
 // src/host/rendered-words.mjs
 import { createHash as createHash9 } from "node:crypto";
 var RENDERED_WORDS_ACTION = "content.renderedWords";
@@ -38143,7 +36103,7 @@ function renderedText(key, facts = {}) {
   });
 }
 var isRecord16 = (v2) => v2 !== null && typeof v2 === "object" && !Array.isArray(v2);
-var refuse5 = (code, error, next, extra = {}) => ({ ok: false, code, verdict: code, error, next, ...extra });
+var refuse4 = (code, error, next, extra = {}) => ({ ok: false, code, verdict: code, error, next, ...extra });
 function renderedSupport(info) {
   if (!isRecord16(info) || info.ok === false) return null;
   const rw = isRecord16(info.rendered_words) ? info.rendered_words : isRecord16(info.info) && isRecord16(info.info.rendered_words) ? info.info.rendered_words : null;
@@ -38461,7 +36421,7 @@ function renderedTargets(changes, page) {
     if (c.href === true) {
       if (!page.href) return { ok: false, older: true };
       if (!linkTargetOk(c.replace))
-        return refuse5(
+        return refuse4(
           "VALUE_NOT_ALLOWED",
           renderedText("hrefValueError", { replace: c.replace }),
           renderedText("hrefValueNext"),
@@ -38474,7 +36434,7 @@ function renderedTargets(changes, page) {
       continue;
     }
     if (c.replace.trim() === "")
-      return refuse5(
+      return refuse4(
         "VALUE_NOT_ALLOWED",
         renderedText("emptyError", { find: c.find }),
         renderedText("emptyNext"),
@@ -38523,7 +36483,7 @@ async function replaceRendered(input) {
   const { plan, path: path22, changes, read, write } = input;
   const findOf = (i) => changes[i]?.find ?? "";
   const support = renderedSupport(await read("info", {}));
-  const older = () => changes.every((c) => c.href !== true) ? stayAnswer(input, "olderNext") : refuse5(
+  const older = () => changes.every((c) => c.href !== true) ? stayAnswer(input, "olderNext") : refuse4(
     "NOT_SUPPORTED_HERE",
     renderedText("olderError", { find: findOf(0) }),
     renderedText("olderNext"),
@@ -38584,12 +36544,12 @@ async function replaceRendered(input) {
       if (usable.some(
         (c) => c.replaces_rule !== void 0 && (!support.composition || typeof c.replaces_rule !== "string" || !/^[a-f0-9]{16}$/.test(c.replaces_rule))
       ))
-        return refuse5("READ_FAILED", renderedText("readError", { path: path22 }), renderedText("readNext"));
+        return refuse4("READ_FAILED", renderedText("readError", { path: path22 }), renderedText("readNext"));
       const seen = placesOfTarget(scanned, t);
       const named3 = t.kind === "attribute" && !t.follows;
       const regions = [...new Set([...seen.values()].map((p) => p.region))];
       if (named3 && plan.where !== null && regions.some((r) => r !== plan.where))
-        return refuse5(
+        return refuse4(
           "NOT_FOUND",
           replaceText("notInWhereError", { find: t.old, where: plan.where, seen: regions.join(", ") }),
           replaceText("notInWhereNext", { region: regions.find((r) => r !== plan.where) }),
@@ -38602,7 +36562,7 @@ async function replaceRendered(input) {
           continue;
         }
         if (usable.length > 0 || seen.size > 0)
-          return refuse5(
+          return refuse4(
             "NOT_EDITABLE",
             renderedText("placeError", { find: findOf(t.change) }),
             renderedText("placeNext", { path: path22 }),
@@ -38617,19 +36577,19 @@ async function replaceRendered(input) {
     }
     for (const [i, c] of changes.entries()) {
       if (found.some((f) => f.t.change === i && !f.t.follows)) continue;
-      return c.href === true ? refuse5(
+      return c.href === true ? refuse4(
         "NOT_FOUND",
         renderedText("hrefMissingError", { find: c.find, path: path22 }),
         renderedText("hrefMissingNext", { path: path22 }),
         {
           find: c.find
         }
-      ) : refuse5("NOT_EDITABLE", renderedText("notOneError", { find: c.find }), renderedText("notOneNext"), {
+      ) : refuse4("NOT_EDITABLE", renderedText("notOneError", { find: c.find }), renderedText("notOneNext"), {
         find: c.find
       });
     }
     if (found.length > support.maxRules)
-      return refuse5(
+      return refuse4(
         "TOO_MANY",
         renderedText("tooManyError", { n: found.length, max: support.maxRules, path: path22 }),
         renderedText("tooManyNext"),
@@ -38651,7 +36611,7 @@ async function replaceRendered(input) {
     if (plan.all === false && plan.expect === null) {
       for (const [i, c] of changes.entries())
         if (c.expect === void 0 && placesOf2(i) > 1)
-          return refuse5(
+          return refuse4(
             "AMBIGUOUS",
             renderedText("ambiguousError", { find: c.find, n: placesOf2(i), path: path22 }),
             renderedText("ambiguousNext"),
@@ -38660,7 +36620,7 @@ async function replaceRendered(input) {
     }
     for (const [i, c] of changes.entries())
       if (c.expect !== void 0 && placesOf2(i) !== c.expect)
-        return refuse5(
+        return refuse4(
           "COUNT_MISMATCH",
           replaceText("countMismatchError", { expect: c.expect, n: placesOf2(i), find: c.find }),
           replaceText("countMismatchNext", { n: placesOf2(i) }),
@@ -38668,7 +36628,7 @@ async function replaceRendered(input) {
         );
     const unconfirmed = changes.reduce((n, c, i) => n + (c.expect === void 0 ? placesOf2(i) : 0), 0);
     if (plan.expect !== null && places !== plan.expect)
-      return refuse5(
+      return refuse4(
         "COUNT_MISMATCH",
         replaceText("countMismatchError", {
           expect: plan.expect,
@@ -38679,7 +36639,7 @@ async function replaceRendered(input) {
         { would: shown3, count: places }
       );
     if (plan.all && plan.expect === null && input.confirmed !== true && !plan.dryRun && unconfirmed > REPLACE_CONFIRM_OVER)
-      return refuse5(
+      return refuse4(
         "VALUE_NOT_ALLOWED",
         replaceText("confirmCountError", { n: unconfirmed, how: "" }),
         replaceText("confirmCountNext", { n: unconfirmed }),
@@ -38696,7 +36656,7 @@ async function replaceRendered(input) {
         seenIds.add(r.id);
         return false;
       }))
-        return refuse5("STORE_CHANGED", renderedText("rebaseError", { path: path22 }), renderedText("rebaseNext"));
+        return refuse4("STORE_CHANGED", renderedText("rebaseError", { path: path22 }), renderedText("rebaseNext"));
     }
     const notes = [
       renderedText("themeNote", { path: path22 }),
@@ -38760,10 +36720,10 @@ async function replaceRendered(input) {
     const code = isRecord16(applied) ? String(applied.code ?? applied.error ?? "") : "";
     if (code === "stale_proof" || code === "drift" || code === "conflict" || code === "CONFLICT") {
       if (attempt === 0) continue;
-      return refuse5("STORE_CHANGED", renderedText("changedError", { path: path22 }), renderedText("changedNext"));
+      return refuse4("STORE_CHANGED", renderedText("changedError", { path: path22 }), renderedText("changedNext"));
     }
     if (code === "too_large" || code === "write_failed" || code === "bad_params")
-      return refuse5(
+      return refuse4(
         "WRITE_FAILED",
         renderedText("writeError", { path: path22, why: messageOf(applied) || code }),
         renderedText("writeNext")
@@ -38773,7 +36733,7 @@ async function replaceRendered(input) {
       applied
     );
   }
-  return refuse5("STORE_CHANGED", renderedText("changedError", { path: path22 }), renderedText("changedNext"));
+  return refuse4("STORE_CHANGED", renderedText("changedError", { path: path22 }), renderedText("changedNext"));
 }
 function stayAnswer(input, key) {
   return closedAnswer(input.fallback, input.changes[0]?.find ?? "", key, { path: input.path });
@@ -38791,19 +36751,19 @@ var messageOf = (a) => isRecord16(a) && typeof a.message === "string" ? a.messag
 function inspectRefusal(answer, input) {
   const code = isRecord16(answer) ? String(answer.code ?? answer.error ?? "") : "";
   if (code === "unsupported" || code === "unavailable" || code === "ACTION_AGENT_ONLY")
-    return input.changes.every((c) => c.href !== true) ? stayAnswer(input, code === "ACTION_AGENT_ONLY" ? "viewerNext" : "unsupportedNext") : refuse5(
+    return input.changes.every((c) => c.href !== true) ? stayAnswer(input, code === "ACTION_AGENT_ONLY" ? "viewerNext" : "unsupportedNext") : refuse4(
       "NOT_SUPPORTED_HERE",
       renderedText("olderError", { find: input.changes[0]?.find ?? "" }),
       renderedText("olderNext")
     );
   if (code === "conflict" || code === "CONFLICT")
-    return refuse5(
+    return refuse4(
       "STORE_CHANGED",
       renderedText("changedError", { path: input.path }),
       renderedText("changedNext")
     );
   if (code === "read_failed")
-    return refuse5("READ_FAILED", renderedText("readError", { path: input.path }), renderedText("readNext"));
+    return refuse4("READ_FAILED", renderedText("readError", { path: input.path }), renderedText("readNext"));
   return (
     /** @type {Record<string, unknown>} */
     answer
@@ -38947,7 +36907,7 @@ var QUOTED_WIDTH = Object.freeze({
   new: 32,
   old: 32
 });
-var WHY2 = Object.freeze({
+var WHY = Object.freeze({
   date: "a post date, which changes on the post itself",
   computed: "a count or page number WordPress computes",
   author: "the author's name, which no door here changes",
@@ -38975,7 +36935,7 @@ var WHY2 = Object.freeze({
    */
   untraced: (theme) => `words in no record this call reads for theme ${theme.length > 24 ? `${theme.slice(0, 23)}\u2026` : theme}`
 });
-var refuse6 = (code, error, next, extra = {}) => ({ ok: false, code, verdict: code, error, next, ...extra });
+var refuse5 = (code, error, next, extra = {}) => ({ ok: false, code, verdict: code, error, next, ...extra });
 var isRecord17 = (v2) => v2 !== null && typeof v2 === "object" && !Array.isArray(v2);
 var codeOf = (a) => isRecord17(a) ? String(a.code || a.error || "") : "";
 var positive2 = (v2) => {
@@ -39378,7 +37338,7 @@ function unitsOfStores(stores, identity2 = null) {
 var IDENTITY_OPTION = "tracy_site_identity";
 var IDENTITY_TOKEN_SOURCE = `\\{(${IDENTITY_TOKENS.map((n) => n.replace(".", "\\.")).join("|")})\\}`;
 var hasIdentityToken = (text6) => new RegExp(IDENTITY_TOKEN_SOURCE).test(text6);
-var NAME_TOKENS2 = /* @__PURE__ */ new Set(["site.name", "site.legalName", "site.slogan", "site.monogram"]);
+var NAME_TOKENS = /* @__PURE__ */ new Set(["site.name", "site.legalName", "site.slogan", "site.monogram"]);
 var TOKEN_LABEL = Object.freeze({
   "site.name": "name",
   "site.legalName": "legal name",
@@ -39519,7 +37479,7 @@ function tokenSpan(u, ra, rb, mid) {
     if (k >= 0) text6 = `${text6.slice(0, k)}{${t.name}}${text6.slice(k + t.value.length)}`;
     else dropped.push(t);
   }
-  const fact = dropped.find((t) => !NAME_TOKENS2.has(t.name));
+  const fact = dropped.find((t) => !NAME_TOKENS.has(t.name));
   if (fact)
     return {
       ok: false,
@@ -39544,7 +37504,7 @@ function identityAnswer({
   const across = value === null;
   const typed = value !== null && value !== "" && value.length <= IDENTITY_VALUE_IN_CALL && !/["\\\n]/.test(value) ? value : `<the new ${field}>`;
   const next = across ? wpText(contractDoor ? "identityContractAcrossNext" : "identityOptionAcrossNext", { slot, field, key }) : wpText(contractDoor ? "identityContractNext" : "identityOptionNext", { slot, key, value: typed });
-  return refuse6(
+  return refuse5(
     "SITE_IDENTITY",
     wpText(across ? "identityAcrossError" : "identityError", { find, field }),
     next,
@@ -39903,7 +37863,7 @@ async function readStores(read, page, { site, lang, theme = false, posts: extraP
   if (cutWhat.length > 0)
     return {
       ok: false,
-      answer: refuse6("READ_FAILED", wpText("cutError", { what: cutWhat[0] }), wpText("cutNext"))
+      answer: refuse5("READ_FAILED", wpText("cutError", { what: cutWhat[0] }), wpText("cutNext"))
     };
   if (stop !== null) return { ok: false, answer: stop };
   const partAreas = /* @__PURE__ */ new Set();
@@ -40014,7 +37974,7 @@ async function readStores(read, page, { site, lang, theme = false, posts: extraP
   if (cutWhat.length > 0)
     return {
       ok: false,
-      answer: refuse6("READ_FAILED", wpText("cutError", { what: cutWhat[0] }), wpText("cutNext"))
+      answer: refuse5("READ_FAILED", wpText("cutError", { what: cutWhat[0] }), wpText("cutNext"))
     };
   if (stop !== null) return { ok: false, answer: stop };
   const navRefs = [];
@@ -40071,7 +38031,7 @@ async function readStores(read, page, { site, lang, theme = false, posts: extraP
   if (cutWhat.length > 0)
     return {
       ok: false,
-      answer: refuse6("READ_FAILED", wpText("cutError", { what: cutWhat[0] }), wpText("cutNext"))
+      answer: refuse5("READ_FAILED", wpText("cutError", { what: cutWhat[0] }), wpText("cutNext"))
     };
   if (stop !== null) return { ok: false, answer: stop };
   const patternUses = /* @__PURE__ */ new Map();
@@ -40101,7 +38061,7 @@ async function readStores(read, page, { site, lang, theme = false, posts: extraP
   if (cutWhat.length > 0)
     return {
       ok: false,
-      answer: refuse6("READ_FAILED", wpText("cutError", { what: cutWhat[0] }), wpText("cutNext"))
+      answer: refuse5("READ_FAILED", wpText("cutError", { what: cutWhat[0] }), wpText("cutNext"))
     };
   const patternRefs = /* @__PURE__ */ new Map();
   for (const [key, { host, slug, spans }] of patternUses) {
@@ -40127,7 +38087,7 @@ async function readStores(read, page, { site, lang, theme = false, posts: extraP
       body: true,
       // Inserted twice in one body, the words show twice: which copy was meant is not this call's to guess.
       writable: host.writable && once,
-      ...once ? {} : { why: WHY2.patternTwice }
+      ...once ? {} : { why: WHY.patternTwice }
     });
     patternRefs.set(host.id, [...patternRefs.get(host.id) ?? [], `pattern:${key}`]);
   }
@@ -40135,7 +38095,7 @@ async function readStores(read, page, { site, lang, theme = false, posts: extraP
   for (const s of stores)
     if (s.shape === "blocks" && blockMarkupProblem(s.raw) !== null) {
       s.writable = false;
-      s.why = WHY2.unreadable;
+      s.why = WHY.unreadable;
     }
   const byId = new Map(stores.map((s) => [s.id, s]));
   const resolved = fallback.filter((id) => byId.has(`nav:${id}`));
@@ -40324,32 +38284,32 @@ function whyOf(occ, page, set, whyNext) {
   };
   const chain = occ.unit.chainAt(occ.a);
   const text6 = chain.map((el) => ` ${el.cls} ${el.id} `).join(" ");
-  if (chain.some((el) => el.tag === "time") || /\swp-block-post-date\s/.test(text6)) return WHY2.date;
+  if (chain.some((el) => el.tag === "time") || /\swp-block-post-date\s/.test(text6)) return WHY.date;
   if (/\s(wp-block-query-total|wp-block-query-pagination[\w-]*|page-numbers)\s/.test(text6))
-    return WHY2.computed;
-  if (/\swp-block-post-author[\w-]*\s/.test(text6)) return WHY2.author;
-  if (/(\s|-)(lang|language|lang-item|pll-[\w-]+)(\s|_|-)/.test(text6)) return WHY2.languages;
+    return WHY.computed;
+  if (/\swp-block-post-author[\w-]*\s/.test(text6)) return WHY.author;
+  if (/(\s|-)(lang|language|lang-item|pll-[\w-]+)(\s|_|-)/.test(text6)) return WHY.languages;
   const part = chain.find((el) => /(^|\s)wp-block-template-part(\s|$)/.test(el.cls));
   if (part) {
     const area = partAreaAt(chain, part, occ.unit.region);
     const stored = area === "other" ? [...set.partAreas].some((a) => a !== "header" && a !== "footer") : set.partAreas.has(area);
     if (!stored)
-      return occ.unit.inNav && set.navUnresolved ? road(WHY2.menu, wpText("menuNext")) : WHY2.themeFile;
+      return occ.unit.inNav && set.navUnresolved ? road(WHY.menu, wpText("menuNext")) : WHY.themeFile;
   }
   if (/\s(wp-block-post-terms|wp-block-categories[\w-]*|cat-item|tag-cloud-link)\s/.test(text6)) {
     const href = chain.find((el) => el.tag === "a" && el.href)?.href ?? null;
-    return road(WHY2.term, wpText("unreadNext", { path: pathOf4(href) ?? "<the category's own page>" }));
+    return road(WHY.term, wpText("unreadNext", { path: pathOf4(href) ?? "<the category's own page>" }));
   }
   const post = chain.map((el) => /(?:^|\s)post-(\d+)(?:\s|$)/.exec(el.cls)?.[1]).find(Boolean);
   if (post && !set.stores.some((s) => s.group === `post:${post}`))
-    return road(WHY2.unread, wpText("unreadNext", { path: "<that post's own page>" }));
-  if (occ.unit.region === "main" && page.pageId === null && set.postsPage === null) return WHY2.themeFile;
+    return road(WHY.unread, wpText("unreadNext", { path: "<that post's own page>" }));
+  if (occ.unit.region === "main" && page.pageId === null && set.postsPage === null) return WHY.themeFile;
   if (occ.unit.inForm) return REPLACE_WHY.form;
   if (occ.unit.region === "title") return REPLACE_WHY.title;
-  if (occ.unit.inNav) return road(WHY2.menu, wpText("menuNext"));
+  if (occ.unit.inNav) return road(WHY.menu, wpText("menuNext"));
   const theme = page.theme ? `${page.theme}@${page.themeVersion ?? "?"}` : "unknown";
-  if (!(theme in WP_THEME_STORES)) return road(WHY2.untraced(theme), wpText("untracedNext"));
-  return WHY2.theme;
+  if (!(theme in WP_THEME_STORES)) return road(WHY.untraced(theme), wpText("untracedNext"));
+  return WHY.theme;
 }
 function pathOf4(href) {
   if (!href) return null;
@@ -40726,7 +38686,7 @@ function rewriteRecords(results, storeById, ctx = {}) {
         u.unitKind
       );
       if ((kind === "cf7-label" || kind === "cf7-option") && /[[\]]/.test(text6))
-        return refuse6(
+        return refuse5(
           "VALUE_NOT_ALLOWED",
           wpText("bracketError", { replace: r.change.replace }),
           wpText("bracketNext"),
@@ -40814,7 +38774,7 @@ function rewriteRecords(results, storeById, ctx = {}) {
                 continue;
               }
               const runs = seg && "runs" in seg ? seg.runs : [oldMid, ""];
-              return refuse6(
+              return refuse5(
                 "VALUE_NOT_ALLOWED",
                 wpText("marksError", { find: r.change.find, tags: kept.join(" ") }),
                 wpText("marksNext", { a: runs[0] ?? "", b: runs[1] ?? "" }),
@@ -40849,13 +38809,13 @@ function rewriteRecords(results, storeById, ctx = {}) {
     try {
       after = spliceEdits(store2.raw, unique);
     } catch {
-      return refuse6("VALUE_NOT_ALLOWED", wpText("markupError", { what: store2.label }), wpText("markupNext"), {
+      return refuse5("VALUE_NOT_ALLOWED", wpText("markupError", { what: store2.label }), wpText("markupNext"), {
         rule: "would-break-markup"
       });
     }
     const proof = proveRewrite(store2, after, expect, unique);
     if (proof !== null)
-      return refuse6("VALUE_NOT_ALLOWED", wpText("markupError", { what: store2.label }), wpText("markupNext"), {
+      return refuse5("VALUE_NOT_ALLOWED", wpText("markupError", { what: store2.label }), wpText("markupNext"), {
         rule: "would-break-markup",
         ...proof
       });
@@ -40883,7 +38843,7 @@ function expandPatterns(writes, storeById) {
     const host = w.store.host ? storeById.get(w.store.host) : void 0;
     const span = w.store.refSpan;
     if (!host || !span)
-      return refuse6(
+      return refuse5(
         "VALUE_NOT_ALLOWED",
         wpText("markupError", { what: w.store.label }),
         wpText("markupNext"),
@@ -40907,7 +38867,7 @@ function expandPatterns(writes, storeById) {
     try {
       hw.after = spliceEdits(hw.store.raw, hw.edits);
     } catch {
-      return refuse6(
+      return refuse5(
         "VALUE_NOT_ALLOWED",
         wpText("markupError", { what: hw.store.label }),
         wpText("markupNext"),
@@ -40918,7 +38878,7 @@ function expandPatterns(writes, storeById) {
     }
     const proof = proveRewrite(hw.store, hw.after, hw.expect, hw.edits, grown.get(hw.store.id) ?? 0);
     if (proof !== null)
-      return refuse6(
+      return refuse5(
         "VALUE_NOT_ALLOWED",
         wpText("markupError", { what: hw.store.label }),
         wpText("markupNext"),
@@ -41043,7 +39003,7 @@ async function inAnotherLanguage(plan, page, refusal2, pageHtml) {
   }
   if (found.length === 0) return null;
   const pages = found.slice(0, 2);
-  return refuse6(
+  return refuse5(
     "NOT_FOUND",
     replaceText("otherLanguageError", { page: pages.join(", ") }),
     replaceText(pages.length === 1 ? "otherLanguageNext" : "notHereNext", {
@@ -41055,7 +39015,7 @@ async function inAnotherLanguage(plan, page, refusal2, pageHtml) {
 var RENDERED = Symbol("renderedWords");
 function mixedRefusal(rendered) {
   const finds = rendered.map((c) => `"${c.find.length > 40 ? `${c.find.slice(0, 39)}\u2026` : c.find}"`);
-  return refuse6(
+  return refuse5(
     "BAD_PARAMS",
     RENDERED_TEXT.mixedError,
     renderedText("mixedNext", { find: finds.slice(0, 3).join(", ") }),
@@ -41067,13 +39027,13 @@ function mixedRefusal(rendered) {
 function isThemeWords(refusal2) {
   const unchanged = Array.isArray(refusal2.unchanged) ? refusal2.unchanged : [];
   return refusal2.code === "NOT_EDITABLE" && unchanged.length > 0 && unchanged.every(
-    (u) => isRecord17(u) && typeof u.why === "string" && (u.why === WHY2.themeFile || u.why === WHY2.theme || u.why.startsWith(WHY2.untraced("")))
+    (u) => isRecord17(u) && typeof u.why === "string" && (u.why === WHY.themeFile || u.why === WHY.theme || u.why.startsWith(WHY.untraced("")))
   );
 }
 function isGenericThemeWords(refusal2) {
   const unchanged = Array.isArray(refusal2.unchanged) ? refusal2.unchanged : [];
   return unchanged.length > 0 && unchanged.every(
-    (u) => isRecord17(u) && typeof u.why === "string" && (u.why === WHY2.theme || u.why.startsWith(WHY2.untraced("")))
+    (u) => isRecord17(u) && typeof u.why === "string" && (u.why === WHY.theme || u.why.startsWith(WHY.untraced("")))
   );
 }
 async function locateOnWordPress(deps) {
@@ -41114,7 +39074,7 @@ async function locateOnWordPress(deps) {
       ...base3,
       why: (occ) => {
         for (const [u, t] of left)
-          if (occ.unit.lower.includes(u.lower)) return WHY2.identity(labelOf(t.name));
+          if (occ.unit.lower.includes(u.lower)) return WHY.identity(labelOf(t.name));
         return (
           /** @type {any} */
           base3.why(occ)
@@ -41151,7 +39111,7 @@ async function locateOnWordPress(deps) {
     for (const c of hrefs) {
       const what = storeHoldingLink(set2.stores, c.find);
       if (what !== null)
-        return refuse6(
+        return refuse5(
           "NOT_EDITABLE",
           renderedText("hrefStoredError", { find: c.find, what }),
           renderedText("hrefStoredNext"),
@@ -41163,7 +39123,7 @@ async function locateOnWordPress(deps) {
     return null;
   };
   if (plan.changes.length === 0) {
-    const missing = refuse6(
+    const missing = refuse5(
       "NOT_FOUND",
       renderedText("hrefMissingError", { find: hrefs[0]?.find ?? "", path: whole.path }),
       renderedText("hrefMissingNext", { path: whole.path }),
@@ -41178,7 +39138,7 @@ async function locateOnWordPress(deps) {
     const held = heldLink(r.set);
     if (held) return held;
     if (r.set.navUnresolved)
-      return refuse6(
+      return refuse5(
         "NOT_EDITABLE",
         renderedText("hrefStoredError", { find: hrefs[0].find, what: "a menu this call could not trace" }),
         wpText("menuNext")
@@ -41203,7 +39163,7 @@ async function locateOnWordPress(deps) {
     const ci = typeof located.change === "number" ? located.change : 0;
     const hit = inside[ci]?.first;
     const why0 = located.code === "NOT_EDITABLE" && Array.isArray(located.unchanged) ? located.unchanged[0]?.why : null;
-    if (hit && set.identity !== null && (located.code === "NOT_FOUND" || typeof why0 === "string" && why0 === WHY2.identity(labelOf(hit.token.name)))) {
+    if (hit && set.identity !== null && (located.code === "NOT_FOUND" || typeof why0 === "string" && why0 === WHY.identity(labelOf(hit.token.name)))) {
       const change = plan.changes[ci];
       const t = hit.token;
       return identityAnswer({
@@ -41293,7 +39253,7 @@ async function replaceOnWordPress(deps) {
     plan
   );
   if (plan.mode === "restore")
-    return refuse6("BAD_PARAMS", wpText("restoreError"), wpText("restoreNext"), { param: "restore" });
+    return refuse5("BAD_PARAMS", wpText("restoreError"), wpText("restoreNext"), { param: "restore" });
   const replacePlan = (
     /** @type {ReplacePlan} */
     plan
@@ -41301,7 +39261,7 @@ async function replaceOnWordPress(deps) {
   if (typeof deps.write !== "function")
     throw new TypeError("replaceOnWordPress: `write` is required (the relay with the body guard)");
   if (deps.bound === true)
-    return refuse6("NOT_SUPPORTED_HERE", wpText("boundError"), wpText("boundNext"), { door: "bound" });
+    return refuse5("NOT_SUPPORTED_HERE", wpText("boundError"), wpText("boundNext"), { door: "bound" });
   const read = safe(deps.read);
   const write = safeWrite(deps.write);
   const mint = deps.mintApplyId ?? mintReplaceId;
@@ -41356,7 +39316,7 @@ async function replaceOnWordPress(deps) {
     );
     const writes = every.filter((x) => x.after !== x.before);
     if (writes.length === 0)
-      return refuse6(
+      return refuse5(
         "BAD_PARAMS",
         wpText("sameError", { replace: replacePlan.changes[0]?.replace ?? "" }),
         wpText("sameNext"),
@@ -41383,7 +39343,7 @@ async function replaceOnWordPress(deps) {
     for (const x of writes) {
       if (!x.store.body || x.after.length >= SHRINK_RATIO * x.before.length) continue;
       if (removal || loremOnly(x)) continue;
-      return refuse6(
+      return refuse5(
         "VALUE_NOT_ALLOWED",
         wpText("shrinkError", {
           what: x.store.label,
@@ -41397,7 +39357,7 @@ async function replaceOnWordPress(deps) {
     const would = w.results.flatMap(
       (r) => r.targets.map((t) => typographyWould(wouldOf(t, r.change), stored))
     );
-    const reach = notReachedOf2(w, writes);
+    const reach = notReachedOf(w, writes);
     if (replacePlan.dryRun) {
       const out2 = dryRunAnswer({
         platform: "wordpress",
@@ -41469,7 +39429,7 @@ async function replaceOnWordPress(deps) {
       out.verified = await verifyShown2(deps.pageHtml, replacePlan.path, w.results);
     return withNormalized2(out, replacePlan);
   }
-  return refuse6("STORE_CHANGED", wpText("changedError", { what: "a record" }), wpText("changedNext"));
+  return refuse5("STORE_CHANGED", wpText("changedError", { what: "a record" }), wpText("changedNext"));
 }
 var mintReplaceId = () => `replace-${Date.now().toString(36)}-${Math.floor(Math.random() * 16777216).toString(16).padStart(6, "0")}`;
 var bytesOf = (v2) => new TextEncoder().encode(JSON.stringify(v2)).length;
@@ -41544,7 +39504,7 @@ async function writeRecords({ read, write, writes, applyId, removes, would, chan
         /** @type {const} */
         false
       ),
-      answer: refuse6(
+      answer: refuse5(
         "PARTIAL",
         wpText("partialError", { n: written, m: ordered.length, failed: what }),
         wpText("partialNext", { applyId }),
@@ -41596,14 +39556,14 @@ async function writeRecords({ read, write, writes, applyId, removes, would, chan
         return {
           ok: false,
           retry: true,
-          answer: refuse6(
+          answer: refuse5(
             "STORE_CHANGED",
             wpText("changedError", { what: store2.label }),
             wpText("changedNext")
           )
         };
       return undone(
-        refuse6(
+        refuse5(
           "STORE_CHANGED",
           wpText("changedUndoneError", { what: store2.label, n: written }),
           wpText("changedNext")
@@ -41620,7 +39580,7 @@ async function writeRecords({ read, write, writes, applyId, removes, would, chan
     if (outcomeUnknown(got)) return lost(got, store2);
     if (written === 0 && isBound(got))
       return undone(
-        refuse6("NOT_SUPPORTED_HERE", wpText("boundError"), wpText("boundNext"), { door: "bound" })
+        refuse5("NOT_SUPPORTED_HERE", wpText("boundError"), wpText("boundNext"), { door: "bound" })
       );
     if (got.ok !== true) return undone(
       /** @type {Record<string, unknown>} */
@@ -41636,17 +39596,17 @@ function notVerified(got, store2) {
   const sent = Number(counts?.chars_sent);
   const stored = Number(counts?.chars_stored);
   if (counts === null || !Number.isFinite(sent) || !Number.isFinite(stored))
-    return refuse6("READ_FAILED", wpText("uncheckedError", { what: store2.label }), wpText("uncheckedNext"), {
+    return refuse5("READ_FAILED", wpText("uncheckedError", { what: store2.label }), wpText("uncheckedNext"), {
       rule: "not-checked"
     });
   if (stored < VERIFY_RATIO * sent)
-    return refuse6(
+    return refuse5(
       "VALUE_NOT_ALLOWED",
       wpText("keptError", { stored, sent, what: store2.label }),
       wpText("keptNext"),
       { rule: "not-kept" }
     );
-  return refuse6("VALUE_NOT_ALLOWED", wpText("keptMarkupError", { what: store2.label }), wpText("keptNext"), {
+  return refuse5("VALUE_NOT_ALLOWED", wpText("keptMarkupError", { what: store2.label }), wpText("keptNext"), {
     rule: "not-kept",
     markup: true
   });
@@ -41659,7 +39619,7 @@ function languageNotes(w, writes) {
     ...writes.some((x) => x.store.kind === "option") ? [wpText("optionShared")] : []
   ];
 }
-function notReachedOf2(w, writes) {
+function notReachedOf(w, writes) {
   const out = [];
   if (w.set.capped) out.push(wpText("siteCapped", { n: w.set.scanned }));
   if (w.page && w.page.alternates >= 2) {
@@ -41798,8 +39758,8 @@ var JOOMLA_OPEN_WHY = Object.freeze({
   /** @param {number} id */
   module: (id) => `words of module ${id} this call does not read (its settings)`
 });
-var WHY3 = JOOMLA_OPEN_WHY;
-var refuse7 = (code, error, next, extra = {}) => ({ ok: false, code, verdict: code, error, next, ...extra });
+var WHY2 = JOOMLA_OPEN_WHY;
+var refuse6 = (code, error, next, extra = {}) => ({ ok: false, code, verdict: code, error, next, ...extra });
 var isRecord18 = (v2) => v2 !== null && typeof v2 === "object" && !Array.isArray(v2);
 var codeOf2 = (a) => isRecord18(a) ? String(a.code || a.error || "") : "";
 var positive3 = (v2) => {
@@ -42325,7 +40285,7 @@ async function readStores2(read, page, { site, plan }) {
       /** @type {const} */
       false
     ),
-    answer: refuse7("READ_FAILED", joText("cutError", { what: cutWhat[0] }), joText("cutNext"))
+    answer: refuse6("READ_FAILED", joText("cutError", { what: cutWhat[0] }), joText("cutNext"))
   } : stop !== null ? { ok: (
     /** @type {const} */
     false
@@ -42582,8 +40542,8 @@ async function readStores2(read, page, { site, plan }) {
     }
   };
 }
-var titleHolds2 = (title, v2) => title === v2 || title.endsWith(` - ${v2}`) || title.startsWith(`${v2} - `);
-var BRAND2 = /(^|\s)(navbar-brand|brand-logo|site-title|tracy-brand|logo)(\s|$)/;
+var titleHolds = (title, v2) => title === v2 || title.endsWith(` - ${v2}`) || title.startsWith(`${v2} - `);
+var BRAND = /(^|\s)(navbar-brand|brand-logo|site-title|tracy-brand|logo)(\s|$)/;
 var SWITCHER = /(^|\s)(mod-languages|lang-inline|lang-block|lang-active)(\s|$)/;
 var SHIPPED = /(^|\s)(readmore|pagination|counter|mod-breadcrumbs__here|article-info-term|icons)(\s|$)/;
 function occFacts(occ) {
@@ -42598,7 +40558,7 @@ function occFacts(occ) {
     if (item === 0) item = menuItemIdOf(el);
     if (href === null && el.tag === "a" && el.href) href = el.href;
     if (/^h[1-6]$/.test(el.tag)) heading = true;
-    if (BRAND2.test(el.cls)) brand = true;
+    if (BRAND.test(el.cls)) brand = true;
   }
   const cls = chain.map((el) => ` ${el.id} ${el.cls} `).join(" ");
   return {
@@ -42647,12 +40607,12 @@ function openHooks(set, whyNext, lang) {
             if (route !== null && (route === s.route || route === "")) return true;
           }
           if (s.recordId !== set.pageItem) return false;
-          if (inTitle) return titleHolds2(occ.unit.lower, u.lower);
+          if (inTitle) return titleHolds(occ.unit.lower, u.lower);
           if (region === "title") return occ.unit.lower === u.lower;
           return set.pageHeading && !set.ownHeading && f.heading && region === "main" && occ.unit.lower === u.lower;
         }
         if (f.item > 0 || f.mod > 0) return false;
-        if (u.paramKey === "page_title") return inTitle && titleHolds2(occ.unit.lower, u.lower);
+        if (u.paramKey === "page_title") return inTitle && titleHolds(occ.unit.lower, u.lower);
         return set.pageHeading && f.heading && region === "main";
       }
       if (s.kind === "module") {
@@ -42667,7 +40627,7 @@ function openHooks(set, whyNext, lang) {
         if (f.item > 0 || f.mod > 0 && custom(f.mod)) return false;
         const own = set.pageArticles.size === 0 || set.pageArticles.has(s.recordId);
         if (inTitle || region === "title")
-          return s.field === "title" && own && s.recordId !== set.itemArticle && (inTitle ? titleHolds2(occ.unit.lower, u.lower) : occ.unit.lower === u.lower);
+          return s.field === "title" && own && s.recordId !== set.itemArticle && (inTitle ? titleHolds(occ.unit.lower, u.lower) : occ.unit.lower === u.lower);
         return own;
       }
       if (s.kind === "category") {
@@ -42691,19 +40651,19 @@ function whyOf2(f, occ, set, whyNext) {
     if (!whyNext.has(why)) whyNext.set(why, next);
     return why;
   };
-  if (f.chain.some((el) => el.tag === "time")) return WHY3.date;
-  if (SHIPPED.test(f.cls)) return road(WHY3.shipped, joText("shippedNext"));
-  if (SWITCHER.test(f.cls)) return road(WHY3.switcher, joText("switcherNext"));
-  if (f.item > 0) return road(WHY3.menuItem(f.item), joText("menuNext", { id: f.item }));
-  if (f.mod > 0) return road(WHY3.module(f.mod), joText("moduleNext", { id: f.mod }));
+  if (f.chain.some((el) => el.tag === "time")) return WHY2.date;
+  if (SHIPPED.test(f.cls)) return road(WHY2.shipped, joText("shippedNext"));
+  if (SWITCHER.test(f.cls)) return road(WHY2.switcher, joText("switcherNext"));
+  if (f.item > 0) return road(WHY2.menuItem(f.item), joText("menuNext", { id: f.item }));
+  if (f.mod > 0) return road(WHY2.module(f.mod), joText("moduleNext", { id: f.mod }));
   if (occ.unit.inTitle)
     return set.pageItem > 0 ? road(REPLACE_WHY.title, joText("menuNext", { id: set.pageItem })) : REPLACE_WHY.title;
-  if (occ.unit.region === "title") return road(WHY3.crumb, joText("crumbNext"));
-  if (f.brand) return road(WHY3.siteName, joText("siteNameNext"));
+  if (occ.unit.region === "title") return road(WHY2.crumb, joText("crumbNext"));
+  if (f.brand) return road(WHY2.siteName, joText("siteNameNext"));
   if (occ.unit.inForm) return road(REPLACE_WHY.form, joText("shippedNext"));
-  if (f.nav) return road(WHY3.menuUntraced, joText("menuListNext"));
-  if (occ.unit.region === "main") return road(WHY3.unread, joText("unreadNext"));
-  return road(WHY3.shipped, joText("shippedNext"));
+  if (f.nav) return road(WHY2.menuUntraced, joText("menuListNext"));
+  if (occ.unit.region === "main") return road(WHY2.unread, joText("unreadNext"));
+  return road(WHY2.shipped, joText("shippedNext"));
 }
 var isHtmlUnit = (u) => u.unitKind === "html" || u.unitKind === "attr";
 var jsonText = (t) => JSON.stringify(t).slice(1, -1);
@@ -42761,7 +40721,7 @@ function rewriteValues(results, storeById) {
     try {
       after = spliceRaw(s.raw, edits);
     } catch {
-      return refuse7("VALUE_NOT_ALLOWED", joText("markupError", { what: s.label }), joText("markupNext"), {
+      return refuse6("VALUE_NOT_ALLOWED", joText("markupError", { what: s.label }), joText("markupNext"), {
         rule: "would-break-markup"
       });
     }
@@ -42774,7 +40734,7 @@ function rewriteValues(results, storeById) {
         parsed = null;
       }
       if (!isRecord18(parsed))
-        return refuse7("VALUE_NOT_ALLOWED", joText("markupError", { what: s.label }), joText("markupNext"), {
+        return refuse6("VALUE_NOT_ALLOWED", joText("markupError", { what: s.label }), joText("markupNext"), {
           rule: "would-break-markup",
           found: "params not JSON"
         });
@@ -42783,7 +40743,7 @@ function rewriteValues(results, storeById) {
     const text6 = foldForMatch(words);
     const lost = expect.find((w) => !text6.includes(foldForMatch(w)));
     if (lost !== void 0)
-      return refuse7("VALUE_NOT_ALLOWED", joText("markupError", { what: s.label }), joText("markupNext"), {
+      return refuse6("VALUE_NOT_ALLOWED", joText("markupError", { what: s.label }), joText("markupNext"), {
         rule: "would-break-markup",
         found: "new words not readable",
         words: clip2(lost, 0, 0, 60)
@@ -42893,7 +40853,7 @@ async function replaceOnJoomlaOpen(deps) {
     plan
   );
   if (plan.mode === "restore")
-    return refuse7("BAD_PARAMS", joText("restoreError"), joText("restoreNext"), { param: "restore" });
+    return refuse6("BAD_PARAMS", joText("restoreError"), joText("restoreNext"), { param: "restore" });
   const replacePlan = (
     /** @type {ReplacePlan} */
     plan
@@ -42930,7 +40890,7 @@ async function replaceOnJoomlaOpen(deps) {
     );
     const writes = every.filter((x) => x.after !== x.before);
     if (writes.length === 0)
-      return refuse7(
+      return refuse6(
         "BAD_PARAMS",
         joText("sameError", { replace: replacePlan.changes[0]?.replace ?? "" }),
         joText("sameNext"),
@@ -42955,7 +40915,7 @@ async function replaceOnJoomlaOpen(deps) {
     const would = w.results.flatMap(
       (r) => r.targets.map((t) => typographyWould2(wouldOf(t, r.change), stored))
     );
-    const reach = notReachedOf3(w, writes, replacePlan);
+    const reach = notReachedOf2(w, writes, replacePlan);
     if (replacePlan.dryRun) {
       const out2 = dryRunAnswer({
         platform: "joomla",
@@ -43020,7 +40980,7 @@ async function replaceOnJoomlaOpen(deps) {
       out.verified = await verifyShown3(deps.pageHtml, replacePlan.path, w.results);
     return withNormalized3(out, replacePlan);
   }
-  return refuse7("STORE_CHANGED", joText("changedError", { what: "a record" }), joText("changedNext"));
+  return refuse6("STORE_CHANGED", joText("changedError", { what: "a record" }), joText("changedNext"));
 }
 var mintReplaceId2 = () => `replace-${Date.now().toString(36)}-${Math.floor(Math.random() * 16777216).toString(16).padStart(6, "0")}`;
 var bytesOf2 = (v2) => new TextEncoder().encode(JSON.stringify(v2)).length;
@@ -43094,7 +41054,7 @@ async function writeRecords2({ read, write, writes, applyId, would, changeOf }) 
         /** @type {const} */
         false
       ),
-      answer: refuse7(
+      answer: refuse6(
         "PARTIAL",
         joText("partialError", { n: written, m: ordered.length, failed: what }),
         joText("partialNext", { applyId }),
@@ -43147,10 +41107,10 @@ async function writeRecords2({ read, write, writes, applyId, would, changeOf }) 
         return {
           ok: false,
           retry: true,
-          answer: refuse7("STORE_CHANGED", joText("changedError", { what: s.label }), joText("changedNext"))
+          answer: refuse6("STORE_CHANGED", joText("changedError", { what: s.label }), joText("changedNext"))
         };
       return undone(
-        refuse7(
+        refuse6(
           "STORE_CHANGED",
           joText("changedUndoneError", { what: s.label, n: written }),
           joText("changedNext")
@@ -43176,7 +41136,7 @@ function languageNotes2(w, writes) {
   const shared = writes.find((x) => x.store.lang === null);
   return shared ? [joText("sharedLanguages", { what: shared.store.label })] : [];
 }
-function notReachedOf3(w, writes, plan) {
+function notReachedOf2(w, writes, plan) {
   const out = [];
   if (w.set.capped) out.push(joText("siteCapped", { n: w.set.scanned }));
   if (w.set.languages >= 2 && plan.all !== true) {
@@ -43204,6 +41164,2217 @@ async function verifyShown3(pageHtml, path22, results) {
     }
   }
   return joText("shownOn", { path: path22 });
+}
+
+// src/host/replace-joomla-contacts.mjs
+var PAGE = 50;
+var PAGES = 4;
+var CONTACT_FIELDS = Object.freeze([...CONTACT_WORDS.map(([field]) => field), "misc"]);
+async function readContacts(read) {
+  const rows = [];
+  for (let n = 0; n < PAGES; n += 1) {
+    const got = (
+      /** @type {any} */
+      await read("content.list", { kind: "contact", limit: PAGE, offset: n * PAGE, include_body: true })
+    );
+    if (!got || got.ok !== true || !Array.isArray(got.items)) return { rows, whole: false };
+    for (const row of got.items) if (row && typeof row === "object") rows.push(row);
+    if (got.items.length < PAGE) return { rows, whole: true };
+  }
+  return { rows, whole: false };
+}
+var published = (row) => String(row.published ?? row.state ?? "1") === "1";
+function contactChanges(rows, changes) {
+  const out = [];
+  for (const row of rows) {
+    const id = Number(row.id);
+    if (!(id > 0) || !published(row)) continue;
+    const fields = {};
+    const places = [];
+    for (const field of CONTACT_FIELDS) {
+      const before = row[field];
+      if (typeof before !== "string" || before === "") continue;
+      let after = before;
+      for (const c of changes)
+        if (c.find !== "" && after.includes(c.find)) after = after.split(c.find).join(c.replace);
+      if (after === before) continue;
+      fields[field] = after;
+      const name2 = typeof row.name === "string" && row.name ? `contact "${row.name.slice(0, 60)}"` : `contact ${id}`;
+      places.push({
+        at: `contact:${id}.${field}`,
+        before: before.slice(0, 200),
+        after: after.slice(0, 200),
+        label: `${name2}, ${field}`
+      });
+    }
+    if (places.length) out.push({ id, fields, places });
+  }
+  return out;
+}
+var CONTACT_NOTE = {
+  dryRun: (n) => `${n} contact field(s) hold these words too (a contact record is not a contract slot): the same call without dryRun writes them through content.update, beside the slots. They are listed in contacts, not counted in count or expect.`,
+  written: (n) => `${n} contact field(s) written too, through content.update; their undo is contactsUndo.`,
+  partial: 'some contact records were not written: contactsFailed names them; write each with content.update {kind:"contact", id, fields}.',
+  cut: "the site has more contacts than one replace reads: a contact past the first 200 was not looked at."
+};
+async function writeContacts(write, mintApplyId, contacts) {
+  const applyId = mintApplyId();
+  const written = [];
+  const failed = [];
+  for (const c of contacts) {
+    let answer;
+    try {
+      answer = await write("content.update", {
+        kind: "contact",
+        id: c.id,
+        fields: c.fields,
+        apply_id: applyId
+      });
+    } catch {
+      answer = { ok: false, code: "COWORK_WEB_UNREACHABLE" };
+    }
+    if (answer?.ok === true) written.push(...c.places);
+    else failed.push({ id: c.id, code: String(answer?.code ?? answer?.error ?? "WRITE_FAILED").slice(0, 60) });
+  }
+  return { applyId, written, failed };
+}
+
+// src/host/fragment-groups.mjs
+var INLINE_STEP = /\/(?:span|strong|em|b|i|u|mark|small|sup|sub|a|font|abbr|code|q|s)(?:\[\d+\])?$/;
+function blockOf(xpath) {
+  if (typeof xpath !== "string") return null;
+  let p = xpath.replace(/\/text\(\)(?:\[\d+\])?$/, "");
+  if (p === xpath) return null;
+  while (INLINE_STEP.test(p)) p = p.replace(INLINE_STEP, "");
+  return p;
+}
+function fragmentGroups(units) {
+  const out = [];
+  let run = [];
+  let runKey = null;
+  let last = -1;
+  for (const u of units) {
+    const block = blockOf(u.slot.xpath);
+    const n = Number(u.at.slice(u.at.lastIndexOf(".") + 1));
+    const key = block === null ? null : `${u.entity}\0${u.slot.column ?? ""}\0${JSON.stringify(u.slot.jsonPath ?? null)}\0${block}`;
+    if (key !== null && key === runKey && n === last + 1) run.push(u);
+    else {
+      if (run.length > 1) out.push(run);
+      run = key === null ? [] : [u];
+    }
+    runKey = key;
+    last = n;
+  }
+  if (run.length > 1) out.push(run);
+  return out;
+}
+function wordsOf5(raws) {
+  const out = [];
+  raws.forEach((raw, k) => {
+    for (const m of raw.matchAll(/\S+/g)) {
+      const fold2 = foldForMatch(m[0]);
+      if (fold2 !== "") out.push({ k, s: m.index, e: m.index + m[0].length, fold: fold2 });
+    }
+  });
+  return out;
+}
+var foldedWords = (s) => s.split(/\s+/).map(foldForMatch).filter((w) => w !== "");
+function quoteInFragments(raws, find) {
+  const words = wordsOf5(raws);
+  const q = foldedWords(find);
+  if (q.length < 2) return null;
+  for (let i = 0; i + q.length <= words.length; i += 1) {
+    if (!q.every((w, j) => words[i + j].fold === w)) continue;
+    if (words[i].k === words[i + q.length - 1].k) return null;
+    return { words, i0: i, i1: i + q.length };
+  }
+  return null;
+}
+function allocate(held, needs, n) {
+  const counts = needs.map((x) => x ? 1 : 0);
+  let left = n - counts.reduce((a, b) => a + b, 0);
+  if (left < 0) return null;
+  const total = held.reduce((a, b) => a + b, 0) || 1;
+  while (left > 0) {
+    let best = 0;
+    let bestGap = Number.NEGATIVE_INFINITY;
+    for (let k = 0; k < held.length; k += 1) {
+      const gap = held[k] * n / total - counts[k];
+      if (gap > bestGap) {
+        best = k;
+        bestGap = gap;
+      }
+    }
+    counts[best] += 1;
+    left -= 1;
+  }
+  return counts;
+}
+function spreadOverFragments(raws, find, replace) {
+  const at = quoteInFragments(raws, find);
+  if (at === null) return null;
+  const { words, i0, i1 } = at;
+  const plain = replace.split(/\s+/).filter((w) => w !== "");
+  const folded = plain.map(foldForMatch);
+  let p = 0;
+  while (i0 + p < i1 && p < plain.length && words[i0 + p].fold === folded[p]) p += 1;
+  let q = 0;
+  while (i1 - q - 1 >= i0 + p && plain.length - q - 1 >= p && words[i1 - q - 1].fold === folded[plain.length - q - 1])
+    q += 1;
+  const a = i0 + p;
+  const b = i1 - q;
+  const mid = plain.slice(p, plain.length - q);
+  const midFold = folded.slice(p, plain.length - q);
+  const out = [...raws];
+  if (a === b) {
+    if (mid.length === 0) return out;
+    const w = a > 0 && a > i0 ? words[a - 1] : words[a];
+    const raw = raws[w.k];
+    out[w.k] = w === words[a - 1] ? `${raw.slice(0, w.e)} ${mid.join(" ")}${raw.slice(w.e)}` : `${raw.slice(0, w.s)}${mid.join(" ")} ${raw.slice(w.s)}`;
+    return out;
+  }
+  const kA = words[a].k;
+  const kB = words[b - 1].k;
+  const span = [];
+  for (let k = kA; k <= kB; k += 1) span.push(k);
+  const first = words[a];
+  const lastWord = words[b - 1];
+  const lead = (k) => k === kA ? raws[k].slice(0, first.s) : /^\s*/.exec(raws[k])?.[0] ?? "";
+  const tail = (k) => k === kB ? raws[k].slice(lastWord.e) : /\s*$/.exec(raws[k])?.[0] ?? "";
+  const held = span.map((k) => words.slice(a, b).filter((w) => w.k === k).length);
+  const needs = span.map((k) => `${lead(k)}${tail(k)}`.trim() === "");
+  const spread = (pins) => {
+    const pinned = [];
+    if (pins)
+      span.forEach((k, j) => {
+        const own = words.slice(a, b).filter((w) => w.k === k);
+        const all = words.filter((w) => w.k === k);
+        if (own.length === 0 || own.length !== all.length) return;
+        const seq = own.map((w) => w.fold);
+        const hits = [];
+        for (let x2 = 0; x2 + seq.length <= midFold.length; x2 += 1)
+          if (seq.every((s, y) => midFold[x2 + y] === s)) hits.push(x2);
+        if (hits.length === 0 && seq.length === 1 && /\d/.test(seq[0])) {
+          const figures = midFold.flatMap((w, x2) => /\d/.test(w) ? [x2] : []);
+          if (figures.length === 1) hits.push(figures[0]);
+        }
+        const prev = pinned[pinned.length - 1];
+        if (hits.length === 1 && (!prev || hits[0] >= prev.at + prev.len))
+          pinned.push({ j, at: hits[0], len: seq.length });
+      });
+    const counts2 = Array.from({ length: span.length }, () => 0);
+    let j0 = 0;
+    let x0 = 0;
+    for (const pin of [...pinned, { j: span.length, at: mid.length, len: 0 }]) {
+      const segHeld = held.slice(j0, pin.j);
+      const segNeeds = needs.slice(j0, pin.j);
+      const n = pin.at - x0;
+      if (segHeld.length === 0) {
+        if (n > 0) return null;
+      } else {
+        const got = allocate(segHeld, segNeeds, n);
+        if (got === null) return null;
+        got.forEach((c, y) => {
+          counts2[j0 + y] = c;
+        });
+      }
+      if (pin.j < span.length) counts2[pin.j] = pin.len;
+      j0 = pin.j + 1;
+      x0 = pin.at + pin.len;
+    }
+    return counts2;
+  };
+  const counts = spread(true) ?? spread(false);
+  if (counts === null) return null;
+  let x = 0;
+  span.forEach((k, j) => {
+    const these = mid.slice(x, x + counts[j]).join(" ");
+    x += counts[j];
+    const l = lead(k);
+    const t = tail(k);
+    out[k] = these === "" ? `${l.trimEnd()}${/\s$/.test(l) || /^\s/.test(t) ? " " : ""}${t.trimStart()}` : `${l}${these}${t}`;
+  });
+  return out;
+}
+
+// src/host/replace-joomla.mjs
+var JOOMLA_REPLACE_NEXT = Object.freeze({
+  notSealedError: "this Joomla site has no content contract: the replace job places words only on a quickstart site with one",
+  notSealedNext: "content.list {kind} finds the record, then content.update {kind, id, fields} changes it",
+  restoreError: "restore is the undo of an EmDash receipt; a Joomla site undoes an apply with apply.revert",
+  restoreNext: 'apply.revert {apply_id:"<the apply_id the receipt gave>"} restores the site as it was before that apply',
+  pageMissingError: 'path "{path}" answered {status}: no such page on this site; nothing was written',
+  pageMissingNext: "the same call with the path of the page the words are on, or without path for the home page",
+  textOnlyError: '"{find}" is only part of a stored text, and the page could not be read; nothing was written',
+  // 🔒 `at` IS WHAT LETS PART OF A TEXT BE WRITTEN, and the sentence has to say so (round 7): read as "…or
+  // with all the words of that place", it sent a model that had only the sentence to remove to read the
+  // whole paragraph twice (`content.get`, `page.text`) and send it all back — two steps for a call that
+  // was one word short.
+  textOnlyNext: 'the same call with at:["{at}"] added: it names the place, and only the words of find change inside it',
+  // 🔒 WITH SEVERAL PLACES THE SENTENCE NAMES NONE (adversarial review of round 7, RL-4). A refusal reaches
+  // here with more than one place only when `all` or a `where` already chose to write more than one (without
+  // them `locate` answers AMBIGUOUS first, with its own next), and then `at:["<the first>"]` — the first
+  // loose target, not the one meant — read as an instruction and narrowed a call that wanted them all to
+  // one place. The candidates are listed beside it: the model picks the place its customer's words mean.
+  // ONE place, and one call for each other: measured on the fixture, `at:[a, b]` still answers AMBIGUOUS
+  // ("places > 1 and no all", replace.mjs) and `at` beside `all` is BAD_PARAMS ("at goes alone"), so a list
+  // of every candidate's `at` — the obvious next — would send the model round the same refusal.
+  textOnlyManyNext: 'the same call with at:["<the at of the place meant, from candidates>"] added: it names the one place, and only the words of find change inside it; another place is another call',
+  identityTokenError: `"{find}" runs across the site's {field} and the words beside it; nothing was written`,
+  identityTokenNext: 'two changes in one call: changes:[{find:"<the other words>", replace:"<their new words>"}, {find:"{value}", replace:"<the new {field}>"}]',
+  nameTokenNext: 'for a new {field} on every page: the same call with find:"{value}", replace:"<the new {field}>"; else change only the words beside it',
+  evidenceError: `{at} needs the customer's own words, and "{words}" is not in their messages`,
+  // 🔒 BOTH ROADS, AS `refusalNext` GIVES THEM (site.mjs, "Customer evidence required"): the words
+  // may be the customer's from an earlier message — claiming them invented would be false.
+  evidenceNext: `send apply, adding evidence: the customer's words from the message that gave them, or if you wrote them "${INVENTED_EVIDENCE}"`,
+  otherLanguageError: '"{find}" is not on this page: it is on {page}, in another language; nothing was written',
+  otherLanguageNext: 'words change in the language of their own page: the same call with path:"{page}"',
+  otherLanguageAtNext: 'words change in the language of their own page: the same call with at:["{at}"] if that copy is meant',
+  factWordsError: '"{find}" changes the {field} and other words; nothing was written',
+  factWordsNext: 'two changes in one call, so the {field} reaches its copies and links: changes:[{find:"{wf}", replace:"{wr}"}, {find:"{lf}", replace:"{lr}"}]',
+  factWordsNextLong: "two changes in one call, so the {field} reaches its copies and links: the words beside it in one, the whole line with only the {field} new in the other",
+  linkAddressError: '"{find}" is the words of a link, and the new value is an address; nothing was written',
+  linkAddressNext: "an address goes in the link, not in its words: send apply, which sets {label}; the words stay as they are",
+  linkFactError: 'the new value is a link address, and "{find}" is words a visitor reads; nothing was written',
+  linkFactNext: 'the same call with replace:"{value}", as the customer wrote it: the words change, and their link follows them',
+  linkFixedError: '"{find}" is the words of a link whose address cannot change on this site',
+  linkFixedNext: "tell the customer this link's address cannot change here, only its words: that is an answer",
+  // 🔒 THE SITE NAME HAS A RECORDED DOOR, SO "CANNOT CHANGE" IS FALSE (ladder DL14/DL15, 14/10/2026): with
+  // the core's next ("do not look for another way in"), a contract with no Site identity block left the
+  // agent the shell's `config:set`, whose change no receipt lists for the customer's later undo.
+  siteNameNext: 'site.identity {operation:"set", fields:{sitename:"<the new name>"}} changes it on every page; apply.revert undoes it',
+  cannotEmptyError: "{at} holds words in this design and cannot be left empty; nothing was written",
+  cannotEmptyNext: "tell the customer this text can be changed but not removed, and ask what it should say: that is an answer",
+  cannotFillError: "{at} is empty in this design, so the content door cannot fill it; nothing was written",
+  cannotFillNext: "this place is not part of the quickstart's layout: adding it is a layout change through Joomla itself (its CLI or template files), never SQL",
+  noMarkupError: "{at} takes plain text, and its new value has < > or a control character; nothing was written",
+  noMarkupNext: "the same call with replace in plain words: no tags, no < or >",
+  noDirectiveError: "{at} takes no {\u2026} directive but the site tokens ({site.name}, {contact.*}); nothing was written",
+  noDirectiveNext: "the same call with replace in plain words, without the braces",
+  urlError: 'the link {at} would become "{value}", which this site does not take; nothing was written',
+  urlNext: "a link takes https://\u2026, mailto:\u2026, tel:+digits, /path or #anchor: send a number or address that fits, or tell the customer",
+  overlapError: "two changes of this call change the same words in {at}",
+  storeChangedError: "the site changed twice while this change was being written; nothing was written",
+  storeChangedNext: "someone else is editing this site: tell the customer and offer to try again in a minute",
+  // 🔒 "IN ABOUT 30 s", AS `refusalNext`'s OUTCOME_UNKNOWN SAYS: a lost apply may still be running in
+  // PHP under the component's lock, and a dryRun sent at once meets that lock (writer_busy).
+  outcomeUnknownNext: "the answer was lost and the change may still land: in about 30 s the same call with dryRun:true and the NEW words as find shows it; do not repeat",
+  identityNote: "Site identity / {field}: every page and every language shows the new value",
+  tokenLineNote: "{at} showed Site identity / {field} through a token; it now holds its own words and no longer follows it",
+  notReached: "{n} language editions of this site are outside its content contract: their copies are unchanged",
+  fragmentsError: '"{find}" is one line of {n} styled parts, each needing a word; nothing was written',
+  fragmentsNext: "the same call with at least {n} new words, or tell the customer the line needs {n} words so its accent part keeps one",
+  already: "already so: nothing needed writing",
+  shown: "shown on {path}",
+  notShown: "not yet shown on {path}: the page may still come from a cache",
+  unread: "not checked: the page could not be read"
+});
+var QUOTED4 = /* @__PURE__ */ new Set(["find", "replace", "words", "value", "path"]);
+function joomlaText(key, facts = {}) {
+  return JOOMLA_REPLACE_NEXT[key].replace(/\{(\w+)\}/g, (whole, name2) => {
+    if (!(name2 in facts)) return whole;
+    const v2 = String(facts[name2]);
+    return QUOTED4.has(name2) && v2.length > 60 ? `${v2.slice(0, 59)}\u2026` : v2;
+  });
+}
+var refuse7 = (code, error, next, extra = {}) => ({ ok: false, code, verdict: code, error, next, ...extra });
+var NAV_FILE = "file:navigation";
+var TRACY_BUSINESS = Object.freeze({
+  name: "tracy-business",
+  /**
+   * The module positions of tracy_business (1.0.0–1.2.0 declare the same 46 in `pages[]`). Measured on
+   * the saved pages: `topbar-l/r` inside `div.tb-topbar`, `header-cta` and the search panel inside
+   * `header.tb-header`, `footer-a…d` and `copyright` inside `footer.tb-footer`, `breadcrumbs` in the
+   * crumb band; every band of a page (`top-a`, `contact-page`, `about-page`, …) prints in the page
+   * body. `off-canvas` and `mega-N` render as the drawer's and the mega menu's copies.
+   * @param {string} p
+   * @returns {Region}
+   */
+  positionRegion(p) {
+    if (p.startsWith("topbar-")) return "topbar";
+    if (/^(header-cta|off-canvas|mega-\d+|search|language-switcher)$/.test(p)) return "header";
+    if (/^(footer-[a-d]|copyright)$/.test(p)) return "footer";
+    if (p === "breadcrumbs") return "title";
+    return "main";
+  },
+  switcher: /(^|[\s_-])tb-lang|mod-languages/,
+  moduleTitle: /footcol__title|module-title|mod-title/,
+  category: /chip|filter|__cat|category/,
+  switcherItem: /\btb-lang__item\b/g
+});
+var GENERIC2 = Object.freeze({
+  name: "generic",
+  /**
+   * A position read by its name alone, for a template no table knows: fewer places anchor, so more
+   * answers are AMBIGUOUS or NOT_EDITABLE — never a write the page did not show.
+   * @param {string} p
+   * @returns {Region | null}
+   */
+  positionRegion(p) {
+    if (p === "") return null;
+    if (/(^|[-_])(topbar|top-bar)([-_]|$)/.test(p)) return "topbar";
+    if (/(^|[-_])(header|navbar|menu|logo|search|language)([-_\d]|$)/.test(p)) return "header";
+    if (/(^|[-_])(footer|copyright)([-_\d]|$)/.test(p)) return "footer";
+    if (/breadcrumb/.test(p)) return "title";
+    return "main";
+  },
+  switcher: /mod-languages/,
+  moduleTitle: /module-title|mod-title/,
+  category: /category/,
+  switcherItem: null
+});
+var JOOMLA_TEMPLATES = Object.freeze({
+  "tracy-business/j6": Object.freeze({
+    versions: Object.freeze(["1.0.0", "1.1.0", "1.2.0"]),
+    table: TRACY_BUSINESS
+  })
+});
+function contractOf(snap) {
+  const id = typeof snap?.contract === "string" ? snap.contract : "";
+  const m = /^(.+)\/(\d+\.\d+\.\d+)$/.exec(id);
+  const template = m ? m[1] : id;
+  const version = m ? m[2] : null;
+  const entry = (
+    /** @type {Record<string, { versions: readonly string[], table: JoomlaTable }>} */
+    JOOMLA_TEMPLATES[template]
+  );
+  const table = entry && version !== null && entry.versions.includes(version) ? entry.table : GENERIC2;
+  return { id, template, version, table, known: table !== GENERIC2 };
+}
+var WHY3 = Object.freeze({
+  navFile: "a mega-menu caption in the template's locked navigation file",
+  brand: "the site identity in the template's locked settings file",
+  // Not "locked" since Claude Cowork for Joomla 0.22.0: `site.identity` writes it, with a receipt
+  // (`siteNameNext`, said by `planOn`). Here only the slot door cannot.
+  siteName: "the site name, kept in Joomla's global configuration, not a slot",
+  switcher: "the language switcher, which the template prints",
+  moduleTitle: "a module title, which has no content slot",
+  menuHeading: "a page heading from the menu item's settings, which has no slot",
+  category: "a category title, which has no content slot",
+  date: "a date the site prints",
+  outside: "a block outside the content contract (another language or structure)"
+});
+var NAME_IN_QUOTE = "line";
+var DERIVED = /^([a-z]{2,3}-[A-Za-z]{2,4})::(.+)$/;
+var NAME_TOKENS2 = /* @__PURE__ */ new Set(["site.name", "site.legalName", "site.slogan", "site.monogram"]);
+var BRAND_TOKENS = /* @__PURE__ */ new Set(["site.name", "site.slogan", "site.monogram"]);
+var BRAND2 = /(^|\s)navbar-brand(\s|$)/;
+var FACT_FIELD = /^(phone|email|e-mail|address|addr\d*|hours|tel)$/;
+var TOKEN_FIELD = Object.freeze({
+  ...Object.fromEntries(Object.entries(IDENTITY_FIELDS).map(([field, name2]) => [name2, field])),
+  "contact.tel": "phone"
+});
+function indexPages(pages) {
+  const out = {
+    lang: /* @__PURE__ */ new Map(),
+    path: /* @__PURE__ */ new Map(),
+    homes: /* @__PURE__ */ new Map(),
+    includedIn: /* @__PURE__ */ new Map(),
+    articlePage: /* @__PURE__ */ new Map(),
+    multilingual: false
+  };
+  for (const p of pages) {
+    const entity = String(p.entity);
+    const mods = Array.isArray(p.assignedModules) ? p.assignedModules : [];
+    const own = new Set(
+      mods.filter((m) => m.assignmentMode === "include").map((m) => langOf2(m.language)).filter((l) => l !== null)
+    );
+    if (own.size === 1) out.lang.set(
+      entity,
+      /** @type {string} */
+      [...own][0]
+    );
+    for (const m of mods)
+      if (m.assignmentMode === "include" && !out.includedIn.has(String(m.entity)))
+        out.includedIn.set(String(m.entity), entity);
+    const link = String(p.link ?? "");
+    const query = new URLSearchParams(link.includes("?") ? link.slice(link.indexOf("?") + 1) : "");
+    if (query.get("view") === "article" && /^\d+$/.test(query.get("id") ?? ""))
+      out.articlePage.set(`article-${query.get("id")}`, entity);
+  }
+  out.multilingual = new Set(out.lang.values()).size > 1;
+  for (const p of pages) {
+    const entity = String(p.entity);
+    const lang = out.lang.get(entity) ?? null;
+    const route = String(p.route ?? "").replace(/^\/+|\/+$/g, "");
+    const base3 = out.multilingual && lang ? `/${lang}/` : "/";
+    const home3 = route === "home";
+    out.path.set(entity, home3 ? base3 : `${base3}${route}`);
+    if (home3 && lang && !out.homes.has(lang)) out.homes.set(lang, base3);
+  }
+  return out;
+}
+function unitPath(store2, u) {
+  const ix = store2.pageIndex;
+  const home3 = () => u.lang ? ix.homes.get(u.lang) ?? (ix.multilingual ? `/${u.lang}/` : null) : null;
+  if (u.identity || u.derived) return u.identity ? null : home3();
+  if (u.kind === "menuItem") return ix.path.get(u.source) ?? null;
+  if (u.kind === "article") {
+    const page = ix.articlePage.get(u.source);
+    return page ? ix.path.get(page) ?? null : null;
+  }
+  if (u.kind === "module") {
+    const page = ix.includedIn.get(u.source);
+    if (page) return ix.path.get(page) ?? null;
+  }
+  return home3();
+}
+var langOf2 = (tag) => {
+  const t = String(tag ?? "").trim();
+  return t === "" || t === "*" ? null : t.toLowerCase().split(/[-_]/)[0];
+};
+var cleanLabel = (label) => String(label ?? "").replace(/^\[[^\]]*\]\s*/, "");
+function fieldOf2(slot) {
+  const label = String(slot.label ?? "");
+  if (label.includes(" / ")) return label.slice(label.lastIndexOf(" / ") + 3).trim();
+  if (!Array.isArray(slot.jsonPath)) return null;
+  for (let k = slot.jsonPath.length - 1; k >= 0; k -= 1) {
+    const step = slot.jsonPath[k];
+    if (typeof step !== "string") continue;
+    return /\[([^\]]+)\]$/.exec(step)?.[1] ?? step;
+  }
+  return null;
+}
+function twinKey(slot, position) {
+  const where = Array.isArray(slot.jsonPath) ? slot.jsonPath.join(".") : String(slot.xpath ?? "");
+  return where === "" || !position ? null : `${position}|${String(slot.column ?? "")}|${where}`;
+}
+function tagOf(slot) {
+  const steps = String(slot.xpath ?? "").split("/");
+  const last = steps[steps.length - 1] ?? "";
+  if (last === "" || last.startsWith("@")) return null;
+  return last.replace(/\[\d+\]$/, "").toLowerCase() || null;
+}
+function expand(current, values) {
+  const tokens = [];
+  let text6 = "";
+  let i = 0;
+  for (const m of current.matchAll(/\{([a-zA-Z.]+)\}/g)) {
+    const name2 = m[1];
+    if (!values.has(name2)) continue;
+    const at = (
+      /** @type {number} */
+      m.index
+    );
+    text6 += current.slice(i, at);
+    const xs = text6.length;
+    text6 += values.get(name2) ?? "";
+    tokens.push({ name: name2, rs: at, re: at + m[0].length, xs, xe: text6.length });
+    i = at + m[0].length;
+  }
+  return { text: text6 + current.slice(i), tokens };
+}
+function toStored(u, x) {
+  let shift = 0;
+  for (const t of u.tokens) if (t.xe <= x) shift += t.re - t.rs - (t.xe - t.xs);
+  return x + shift;
+}
+function joomlaStore(snap, table) {
+  const slots = Array.isArray(snap.slots) ? snap.slots : [];
+  const pages = Array.isArray(snap.pages) ? snap.pages : [];
+  const modules = /* @__PURE__ */ new Map();
+  for (const p of pages)
+    for (const m of Array.isArray(p.assignedModules) ? p.assignedModules : [])
+      if (!modules.has(String(m.entity)))
+        modules.set(String(m.entity), {
+          position: String(m.position ?? ""),
+          language: String(m.language ?? "*")
+        });
+  const byKey = new Map(slots.map((s) => [String(s.key), s]));
+  const entities = new Set(slots.map((s) => String(s.entity)));
+  const pageIndex = indexPages(pages);
+  const values = /* @__PURE__ */ new Map();
+  const identitySlots = /* @__PURE__ */ new Map();
+  const idSlots = slots.filter(isIdentitySlot);
+  if (idSlots.length > 0) {
+    for (const name2 of IDENTITY_TOKENS) values.set(name2, "");
+    for (const s of idSlots) {
+      const name2 = IDENTITY_FIELDS[
+        /** @type {keyof typeof IDENTITY_FIELDS} */
+        fieldOf2(s) ?? ""
+      ];
+      if (!name2) continue;
+      values.set(name2, typeof s.current === "string" ? s.current : "");
+      identitySlots.set(name2, s);
+    }
+    values.set("contact.tel", (values.get("contact.phone") ?? "").replace(/[^0-9+]/g, ""));
+  }
+  const units = [];
+  for (const s of slots) {
+    if (s.type !== "text") continue;
+    const key = String(s.key);
+    const current = typeof s.current === "string" ? s.current : "";
+    if (phpTrim(current) === "") continue;
+    const derived = DERIVED.exec(key);
+    const sourceKey = derived ? derived[2] : key;
+    const source = sourceKey.replace(/\.\d+$/, "");
+    const kind = source.split("-")[0];
+    const isId = isIdentitySlot(s);
+    const field = fieldOf2(s);
+    const identity2 = isId ? IDENTITY_FIELDS[
+      /** @type {keyof typeof IDENTITY_FIELDS} */
+      field ?? ""
+    ] ?? null : null;
+    const shown3 = isId || values.size === 0 ? { text: current, tokens: [] } : expand(current, values);
+    const labelLang = kind === "module" ? /\(([a-z]{2})\)/i.exec(String(s.label ?? ""))?.[1] : void 0;
+    const rowLang = kind === "module" ? langOf2(modules.get(source)?.language) : null;
+    const pageOfArticle = pageIndex.articlePage.get(source);
+    const lang = derived ? langOf2(derived[1]) : isId ? null : rowLang ? rowLang : labelLang ? labelLang.toLowerCase() : kind === "menuItem" ? pageIndex.lang.get(source) ?? null : kind === "article" && pageOfArticle ? pageIndex.lang.get(pageOfArticle) ?? null : null;
+    const position = modules.get(source)?.position;
+    const u = {
+      ...views(shown3.text, { decode: false }),
+      at: key,
+      raw: shown3.text,
+      record: String(s.entity),
+      label: cleanLabel(s.label),
+      region: isId ? null : kind === "article" ? "main" : position ? table.positionRegion(position) : null,
+      lang,
+      writable: true,
+      slot: s,
+      entity: String(s.entity),
+      source,
+      kind,
+      derived: derived !== null,
+      tokens: shown3.tokens,
+      identity: identity2,
+      field,
+      twinGroup: null
+    };
+    if (shown3.tokens.length === 0 && Number.isFinite(s.maxCharacters)) u.max = Number(s.maxCharacters);
+    const tag = tagOf(s);
+    if (tag) u.tag = tag;
+    if (FACT_FIELD.test(field ?? "") && (!isId || !NAME_TOKENS2.has(identity2 ?? ""))) u.fact = true;
+    if (lang !== null && !isId && kind === "module")
+      u.twinGroup = twinKey(byKey.get(sourceKey) ?? s, position);
+    units.push(u);
+  }
+  const identityUnits = /* @__PURE__ */ new Map();
+  const tokenUnits = /* @__PURE__ */ new Map();
+  const groups = /* @__PURE__ */ new Map();
+  for (const u of units) {
+    if (u.identity) identityUnits.set(u.identity, u);
+    for (const t of u.tokens) {
+      const list = tokenUnits.get(t.name) ?? [];
+      if (!list.includes(u)) list.push(u);
+      tokenUnits.set(t.name, list);
+    }
+    if (u.twinGroup) groups.set(u.twinGroup, [...groups.get(u.twinGroup) ?? [], u]);
+  }
+  const pairs = [];
+  const byEntity = /* @__PURE__ */ new Map();
+  for (const u of units) byEntity.set(u.entity, [...byEntity.get(u.entity) ?? [], u]);
+  for (const list of byEntity.values())
+    for (const a of list) {
+      const b = list.find(
+        (x) => Number(x.at.slice(x.at.lastIndexOf(".") + 1)) === Number(a.at.slice(a.at.lastIndexOf(".") + 1)) + 1
+      );
+      if (b && a.field && b.field === `${a.field}-accent` && a.tokens.length === 0 && b.tokens.length === 0)
+        pairs.push([a, b]);
+    }
+  return {
+    units,
+    byKey,
+    identity: identityUnits,
+    tokenUnits,
+    groups,
+    pairs,
+    // one line printed from several text-node slots (an accent span): `fragment-groups.mjs`
+    fragments: fragmentGroups(units.filter((u) => u.tokens.length === 0 && u.identity === null)),
+    urls: slots.filter((s) => s.type === "url"),
+    entities,
+    modules,
+    pages,
+    languages: Array.isArray(snap.languages) ? snap.languages.map(String) : [],
+    hasIdentity: values.size > 0,
+    values,
+    identitySlots,
+    pageIndex
+  };
+}
+function pageFacts(store2, page, path22) {
+  let lang = page ? langOf2(page.lang) : null;
+  if (lang === null) {
+    const seg = /^\/([a-z]{2})(?:[/-]|$)/i.exec(path22)?.[1]?.toLowerCase() ?? null;
+    const known = store2.units.map((u) => u.lang).filter((l) => l !== null);
+    lang = seg !== null && known.includes(seg) ? seg : known[0] ?? null;
+  }
+  const item = page ? /(^|\s)item-(\d+)(\s|$)/.exec(page.body)?.[2] ?? null : null;
+  const pageItem = item ? `menuItem-${item}` : null;
+  const entry = pageItem ? store2.pages.find((p) => String(p.entity) === pageItem) : null;
+  const onPage = entry ? new Set(
+    (Array.isArray(entry.assignedModules) ? entry.assignedModules : []).filter((m) => m.published === void 0 || m.published === null || String(m.published) === "1").map((m) => String(m.entity))
+  ) : null;
+  let article = null;
+  if (page && /(^|\s)view-article(\s|$)/.test(page.body)) {
+    const link = String(entry?.link ?? "");
+    const query = new URLSearchParams(link.includes("?") ? link.slice(link.indexOf("?") + 1) : "");
+    const id = query.get("view") === "article" && /^\d+$/.test(query.get("id") ?? "") ? query.get("id") : /\/(\d+)-[^/]*\/?$/.exec(path22)?.[1] ?? null;
+    article = id ? `article-${id}` : null;
+  }
+  const category = page ? /(^|\s)view-category(\s|$)/.test(page.body) : false;
+  let listed = null;
+  if (page && category) {
+    const html = page.html ?? "";
+    const ids2 = [
+      ...[...html.matchAll(/\shref=["'][^"'#?]*\/(\d+)-[^"'/#?]*\/?["'#?]/g)].map((m) => m[1]),
+      ...[...html.matchAll(/\shref=["'][^"']*[?&](?:amp;)?view=article&(?:amp;)?id=(\d+)/g)].map((m) => m[1])
+    ];
+    listed = ids2.length > 0 ? new Set(ids2.map((id) => `article-${id}`)) : null;
+  }
+  return {
+    lang,
+    pageItem,
+    onPage,
+    category,
+    article,
+    listed
+  };
+}
+function markersOf(chain) {
+  const out = [];
+  for (const el of chain) {
+    const mod = /^Mod(\d+)$/.exec(el.id) ?? /^tb-[a-z][a-z-]*?-(\d+)$/.exec(el.id);
+    if (mod) out.push(`module-${mod[1]}`);
+    if (el.tag === "li") {
+      const id = /(^|\s)item-(\d+)(\s|$)/.exec(el.cls)?.[2] ?? (/^\d+$/.test(el.data) ? el.data : null);
+      if (id) out.push(`menuItem-${id}`);
+    }
+    if (/(^|\s)(mega-caption|menu-item-caption|mega-col-title)(\s|$)/.test(el.cls)) out.push(NAV_FILE);
+  }
+  return out;
+}
+var titleHolds2 = (title, v2) => title === v2 || title.endsWith(` - ${v2}`) || title.startsWith(`${v2} - `);
+function joomlaHooks(store2, table, pf) {
+  const base3 = (u, occ) => {
+    const chain = occ.unit.chainAt(occ.a);
+    const ms = markersOf(chain);
+    if (ms[0] === NAV_FILE) return false;
+    if (u.lang !== null && pf.lang !== null && u.lang !== pf.lang) return false;
+    if (u.kind === "module") {
+      const mod = ms.find((m) => m.startsWith("module-"));
+      const info = store2.modules.get(u.source);
+      const regionOk = info !== void 0 && table.positionRegion(info.position) === occ.unit.region;
+      if (mod) return u.derived ? !store2.entities.has(mod) && regionOk : mod === u.source;
+      if (!u.derived && pf.onPage !== null && !pf.onPage.has(u.source)) return false;
+      return regionOk;
+    }
+    if (u.kind === "menuItem") {
+      const li = ms.find((m) => m.startsWith("menuItem-"));
+      if (li) return u.derived ? !store2.entities.has(li) : li === u.source;
+      if (u.source !== pf.pageItem) return false;
+      if (chain.some((el) => el.tag === "title")) return titleHolds2(occ.unit.lower, u.lower);
+      if (chain.some((el) => el.tag === "h1") || occ.unit.region === "title")
+        return occ.unit.lower === u.lower;
+      return false;
+    }
+    if (u.kind !== "article") return false;
+    if (ms.some((m) => m.startsWith("module-"))) return true;
+    if (pf.article !== null) return u.source === pf.article;
+    return pf.listed === null || pf.listed.has(String(u.source));
+  };
+  const identity2 = (u, occ) => {
+    const name2 = (
+      /** @type {string} */
+      u.identity
+    );
+    const chain = occ.unit.chainAt(occ.a);
+    if (BRAND_TOKENS.has(name2) && chain.some((el) => BRAND2.test(el.cls))) return true;
+    if (name2 === "site.name" && chain.some((el) => el.tag === "title")) return true;
+    for (const t of store2.tokenUnits.get(name2) ?? [])
+      if (occ.unit.lower.includes(t.lower) && base3(t, occ)) return true;
+    return false;
+  };
+  return {
+    base: base3,
+    anchor: (hit, occ) => {
+      const u = (
+        /** @type {JoomlaUnit} */
+        hit.unit
+      );
+      return u.identity ? identity2(u, occ) : base3(u, occ);
+    },
+    why: (occ) => {
+      const chain = occ.unit.chainAt(occ.a);
+      const ms = markersOf(chain);
+      const idc2 = chain.map((el) => `${el.id} ${el.cls}`).join(" ").toLowerCase();
+      if (ms[0] === NAV_FILE) return WHY3.navFile;
+      if (!store2.hasIdentity && chain.some((el) => BRAND2.test(el.cls) || /tb-brand|tb-logo/.test(el.cls)))
+        return WHY3.brand;
+      if (table.switcher.test(idc2)) return WHY3.switcher;
+      if (chain.some((el) => el.tag === "title")) return store2.hasIdentity ? REPLACE_WHY.title : WHY3.siteName;
+      if (occ.unit.region === "title") return REPLACE_WHY.title;
+      if (table.moduleTitle.test(idc2)) return WHY3.moduleTitle;
+      if (pf.category && chain.some((el) => el.tag === "h1")) return WHY3.menuHeading;
+      if (table.category.test(idc2)) return WHY3.category;
+      if (chain.some((el) => el.tag === "time") || /(^|[\s_-])date([\s_-]|$)/.test(idc2)) return WHY3.date;
+      if (occ.unit.inForm) return REPLACE_WHY.form;
+      const mod = ms.find((m) => m.startsWith("module-"));
+      if (mod && !store2.entities.has(mod)) return WHY3.outside;
+      return REPLACE_WHY.template;
+    },
+    pairs: (stored) => {
+      const have = new Set(stored);
+      return store2.pairs.filter(([a, b]) => have.has(a) && have.has(b));
+    },
+    twins: (unit) => {
+      const u = (
+        /** @type {JoomlaUnit} */
+        unit
+      );
+      const group = u.twinGroup ? store2.groups.get(u.twinGroup) ?? [] : [];
+      return group.filter((x) => x !== u && x.lang !== u.lang);
+    }
+  };
+}
+function storedFor(store2, pf, find) {
+  const pageLang = pf.lang;
+  const holds2 = /* @__PURE__ */ new Map();
+  const pageCopyHolds = (group) => {
+    let v2 = holds2.get(group);
+    if (v2 === void 0) {
+      const own = (store2.groups.get(group) ?? []).filter((x) => x.lang === pageLang);
+      v2 = own.length > 0 && matchUnits(own, find).hits.length > 0;
+      holds2.set(group, v2);
+    }
+    return v2;
+  };
+  const list = store2.units.filter(
+    (u) => u.lang === null || pageLang === null || u.lang === pageLang || !u.twinGroup || !pageCopyHolds(u.twinGroup)
+  );
+  const insideOnly = /* @__PURE__ */ new Map();
+  for (const h of matchUnits(list, find).hits) {
+    const u = h.unit;
+    if (u.tokens.length === 0) continue;
+    const [s, e] = rawSpan(u, h);
+    const inside = u.tokens.some((t) => t.xs <= s && e <= t.xe);
+    insideOnly.set(u, (insideOnly.get(u) ?? true) && inside);
+  }
+  return list.filter((u) => insideOnly.get(u) !== true);
+}
+function locateJoomla(ctx, plan) {
+  const results = [];
+  for (let i = 0; i < plan.changes.length; i += 1) {
+    const change = plan.changes[i];
+    const stored = storedFor(ctx.store, ctx.pf, change.find);
+    let r = locate({
+      page: ctx.page ? { units: ctx.page.units, lang: ctx.page.lang } : null,
+      stored,
+      change,
+      path: plan.path,
+      pathGiven: plan.pathGiven,
+      where: plan.where,
+      at: plan.at,
+      all: plan.all,
+      countRules: false,
+      mustKeepTwo: true,
+      hooks: ctx.hooks
+    });
+    if (!r.ok) r = emptiedIdentity(ctx, plan, change, stored, r);
+    if (!r.ok)
+      r = acrossLines(ctx, plan, change, stored, r) ?? acrossFragments(ctx, plan, change, stored, r) ?? copiesOnly(ctx, r, change.find);
+    if (r.ok) r = asFact(ctx, plan, change, stored, r);
+    r = elsewhere(ctx, plan, change, stored, r);
+    if (!r.ok) return plan1(withPages(ctx, r, stored), plan.changes.length, i);
+    if (ctx.page === null && plan.at === null) {
+      const loose2 = r.targets.find(
+        (t) => t.kind === "unit" && !t.hits.every((h) => h.mode === "phone" || h.whole && h.caseExact) && !(isEmail(change.find) && t.hits.every((h) => h.caseExact))
+      );
+      if (loose2)
+        return refuse7(
+          "AMBIGUOUS",
+          joomlaText("textOnlyError", { find: change.find }),
+          joomlaText(r.targets.length > 1 ? "textOnlyManyNext" : "textOnlyNext", { at: loose2.at }),
+          {
+            find: change.find,
+            // The candidate's text around the words asked for, so the model can see that this place holds them.
+            candidates: r.targets.slice(0, 8).map((t) => ({
+              at: t.at,
+              where: t.where,
+              text: t.kind === "unit" ? clip2(t.unit.cased, t.hits[0].a, t.hits[0].b, 90) : ""
+            })),
+            ...plan.changes.length > 1 ? { change: i } : {}
+          }
+        );
+    }
+    results.push(r);
+  }
+  const spans = /* @__PURE__ */ new Map();
+  for (let i = 0; i < results.length; i += 1)
+    for (const t of results[i].targets) {
+      const list = t.kind === "split" ? [
+        [t.a.at, 0, Number.POSITIVE_INFINITY],
+        [t.b.at, 0, Number.POSITIVE_INFINITY]
+      ] : [{ unit: t.unit, hits: t.hits }, ...t.twins].flatMap(
+        ({ unit, hits }) => hits.map((h) => [unit.at, ...rawSpan(unit, h)])
+      );
+      for (
+        const [key, s, e] of
+        /** @type {[string, number, number][]} */
+        list
+      ) {
+        const got = spans.get(key) ?? [];
+        const clash = got.find((x) => x.i !== i && x.s < e && s < x.e);
+        if (clash)
+          return refuse7(
+            "BAD_PARAMS",
+            replaceText("overlapError", { i: clash.i, j: i, at: key }),
+            replaceText("overlapNext"),
+            { change: i, param: `changes[${i}].find` }
+          );
+        got.push({ i, s, e });
+        spans.set(key, got);
+      }
+    }
+  const refusal2 = countRefusal(results, {
+    all: plan.all,
+    expect: plan.expect,
+    confirmed: ctx.confirmed,
+    dryRun: plan.dryRun
+  });
+  return refusal2 ?? { ok: true, results };
+}
+function copiesOnly(ctx, r, find) {
+  if (ctx.page === null || r.code !== "NOT_FOUND" || r.error !== replaceText("notFoundError", { find }))
+    return r;
+  const occ = matchUnits(ctx.page.units, find).hits;
+  if (occ.length === 0) return r;
+  const why = ctx.hooks.why(occ[0]);
+  return refuse7(
+    "NOT_EDITABLE",
+    replaceText("notEditableError", { find, why }),
+    replaceText("notEditableNext", { why }),
+    {
+      find,
+      unchanged: [
+        { text: clip2(occ[0].unit.shown || occ[0].unit.cased, 0, 0, 80), where: occ[0].unit.region, why }
+      ]
+    }
+  );
+}
+function emptiedIdentity(ctx, plan, change, stored, r) {
+  if (r.rule !== "cannot-empty" || change.replace !== "") return r;
+  if (!ctx.store.units.some((u) => u.at === r.at && u.identity !== null)) return r;
+  const input = {
+    page: ctx.page ? { units: ctx.page.units, lang: ctx.page.lang } : null,
+    stored,
+    path: plan.path,
+    where: plan.where,
+    all: plan.all,
+    countRules: false,
+    mustKeepTwo: true,
+    hooks: ctx.hooks
+  };
+  const again = locate({ ...input, change: { find: change.find, replace: "x" }, at: plan.at });
+  if (!again.ok) return r;
+  const others = again.targets.filter((t) => t.kind !== "unit" || /** @type {JoomlaUnit} */
+  t.unit.identity === null).map((t) => t.at);
+  if (others.length > 0) {
+    const rest = locate({ ...input, change, at: others });
+    if (!rest.ok) return rest;
+  }
+  return { ...again, change };
+}
+var startIn = (u, i) => i < u.cased.length ? u.map[i][0] : u.cased.length > 0 ? u.map[u.cased.length - 1][1] : 0;
+var endIn = (u, i) => i > 0 ? u.map[Math.min(i, u.cased.length) - 1][1] : 0;
+var oneLine2 = (s) => s.replace(/\s*\n\s*/g, " ");
+function newHeading(a, b, change) {
+  const la = a.cased.length;
+  const joined = `${a.cased} ${b.cased}`;
+  const hit = matchUnits([views(joined, { decode: false })], change.find).hits.find(
+    (h) => h.mode === "text" && !h.whole && h.a < la && h.b > la + 1
+  );
+  if (!hit) return null;
+  const replace = change.replace;
+  const theirBreak = replace.includes("\n");
+  const old = joined.slice(hit.a, hit.b);
+  const rv = views(replace, { decode: false });
+  const n = rv.cased;
+  const same = (x, y) => x === y || x.toLowerCase() === y.toLowerCase();
+  let p = 0;
+  let q = 0;
+  if (!theirBreak) {
+    while (p < old.length && p < n.length && same(old[p], n[p])) p += 1;
+    while (q < old.length - p && q < n.length - p && same(old[old.length - 1 - q], n[n.length - 1 - q]))
+      q += 1;
+  }
+  const S = hit.a + p;
+  const E = hit.b - q;
+  const mid = theirBreak ? replace : n.length - q > p ? replace.slice(rv.map[p][0], rv.map[n.length - q - 1][1]) : "";
+  if (!theirBreak && (E <= la || S >= la + 1)) {
+    const inA = E <= la;
+    const u = inA ? a : b;
+    const off = inA ? 0 : la + 1;
+    const s = startIn(u, S - off);
+    const e = E > S ? endIn(u, E - off) : s;
+    const line = oneLine2(u.raw.slice(0, s) + mid + u.raw.slice(e));
+    if (phpTrim(line) !== "") return inA ? `${line}
+${oneLine2(b.raw)}` : `${oneLine2(a.raw)}
+${line}`;
+  }
+  const cut4 = theirBreak ? null : keptBreak(joined.slice(hit.a, la), joined.slice(la + 1, hit.b), n);
+  if (cut4 !== null) {
+    const line1 = oneLine2(a.raw.slice(0, startIn(a, hit.a))) + replace.slice(0, rv.map[cut4 - 1][1]).trimStart();
+    const line2 = replace.slice(rv.map[cut4 + 1][0]).trimEnd() + oneLine2(b.raw.slice(startIn(b, hit.b - la - 1)));
+    if (phpTrim(line1) !== "" && phpTrim(line2) !== "") return `${line1}
+${line2}`;
+  }
+  const before = S <= la ? a.raw.slice(0, startIn(a, S)) : `${a.raw} ${b.raw.slice(0, startIn(b, S - la - 1))}`;
+  const after = E >= la + 1 ? b.raw.slice(startIn(b, E - la - 1)) : `${a.raw.slice(endIn(a, E))} ${b.raw}`;
+  return oneLine2(before) + mid + oneLine2(after);
+}
+function keptBreak(left, right, n) {
+  const at = (w) => {
+    const out = [];
+    const lw = w.toLowerCase();
+    for (let k = 0; w !== "" && k + w.length <= n.length; k += 1)
+      if ((k === 0 || n[k - 1] === " ") && (k + w.length === n.length || n[k + w.length] === " ") && n.slice(k, k + w.length).toLowerCase() === lw)
+        out.push(k);
+    return out;
+  };
+  const w1 = left.slice(left.lastIndexOf(" ") + 1);
+  const ends = at(w1);
+  if (ends.length === 1 && ends[0] + w1.length < n.length) return ends[0] + w1.length;
+  const w2 = right.split(" ")[0];
+  const starts = at(w2);
+  if (starts.length === 1 && starts[0] > 0) return starts[0] - 1;
+  return null;
+}
+function acrossLines(ctx, plan, change, stored, r) {
+  const named3 = plan.at !== null;
+  if (r.code !== "NOT_FOUND" && r.code !== "NOT_EDITABLE" && !(named3 && r.code === "STORE_CHANGED"))
+    return null;
+  const occs = ctx.page ? matchUnits(ctx.page.units, change.find).hits.filter(
+    (o) => !o.unit.hidden && o.unit.region !== "drawer" && (plan.where === null || o.unit.region === plan.where)
+  ) : [];
+  const found = [];
+  for (const [pa, pb] of ctx.hooks.pairs(stored)) {
+    const a = (
+      /** @type {JoomlaUnit} */
+      pa
+    );
+    const b = (
+      /** @type {JoomlaUnit} */
+      pb
+    );
+    const key = `${a.at}+${b.at}`;
+    if (a.writable === false || b.writable === false) continue;
+    if (named3 && !(plan.at ?? []).some((x) => x === key || x === a.at)) continue;
+    const heading = newHeading(a, b, change);
+    if (heading === null) continue;
+    const probe = { unit: a, a: 0, b: a.cased.length, mode: "text", whole: true, caseExact: true };
+    const lower = `${a.lower} ${b.lower}`;
+    const shown3 = occs.some((o) => o.unit.lower.includes(lower) && ctx.hooks.anchor(probe, o));
+    if (ctx.page !== null && !named3 && !shown3) continue;
+    found.push({ key, a, b, heading });
+  }
+  if (found.length === 0) return null;
+  const candidates = found.slice(0, 8).map((f) => ({
+    at: f.key,
+    where: typeof f.a.region === "string" ? f.a.region : null,
+    label: f.a.label,
+    text: clip2(`${f.a.cased} / ${f.b.cased}`, 0, 0, 90)
+  }));
+  if (ctx.page === null && !named3)
+    return refuse7(
+      "AMBIGUOUS",
+      joomlaText("textOnlyError", { find: change.find }),
+      joomlaText(found.length > 1 ? "textOnlyManyNext" : "textOnlyNext", { at: found[0].key }),
+      { find: change.find, candidates }
+    );
+  if (found.length > 1 && plan.all === false && !named3)
+    return refuse7(
+      "AMBIGUOUS",
+      replaceText("ambiguousError", {
+        find: change.find,
+        n: found.length,
+        list: [...new Set(candidates.map((c) => c.where ?? "unknown"))].join(", ")
+      }),
+      replaceText("ambiguousNext", { at: found[0].key, allForm: '"page"' }),
+      { find: change.find, candidates }
+    );
+  const targets = [];
+  const notes = [];
+  for (const f of found) {
+    const got = locate({
+      page: ctx.page ? { units: ctx.page.units, lang: ctx.page.lang } : null,
+      stored,
+      change: { find: `${f.a.cased} ${f.b.cased}`, replace: f.heading },
+      path: plan.path,
+      where: plan.where,
+      at: [f.key],
+      all: false,
+      countRules: false,
+      mustKeepTwo: true,
+      hooks: ctx.hooks
+    });
+    if (!got.ok) return got;
+    targets.push(...got.targets);
+    for (const note of got.notes) if (!notes.includes(note)) notes.push(note);
+  }
+  return {
+    ok: true,
+    verdict: targets.length === 1 ? "WRITE_SPLIT" : "WRITE",
+    change,
+    targets,
+    places: targets.length,
+    unchanged: [],
+    alsoIn: [],
+    notes,
+    scope: "page",
+    languagesKept: 0,
+    glyph: null
+  };
+}
+function acrossFragments(ctx, plan, change, stored, r) {
+  const named3 = plan.at !== null;
+  if (r.code !== "NOT_FOUND" && r.code !== "NOT_EDITABLE" && !(named3 && r.code === "STORE_CHANGED"))
+    return null;
+  const have = new Set(stored);
+  const occs = ctx.page ? matchUnits(ctx.page.units, change.find).hits.filter(
+    (o) => !o.unit.hidden && o.unit.region !== "drawer" && (plan.where === null || o.unit.region === plan.where)
+  ) : [];
+  const found = [];
+  for (const group of ctx.store.fragments) {
+    if (!group.every((u) => have.has(u) && u.writable !== false)) continue;
+    if (named3 && !group.some((u) => (plan.at ?? []).includes(u.at))) continue;
+    const raws = group.map((u) => u.raw);
+    if (quoteInFragments(raws, change.find) === null) continue;
+    const probe = {
+      unit: group[0],
+      a: 0,
+      b: group[0].cased.length,
+      mode: "text",
+      whole: true,
+      caseExact: true
+    };
+    const occ = occs.find((o) => ctx.hooks.anchor(probe, o)) ?? null;
+    if (ctx.page !== null && !named3 && occ === null) continue;
+    found.push({ group, values: spreadOverFragments(raws, change.find, change.replace), occ });
+  }
+  if (found.length === 0) return null;
+  const candidates = found.slice(0, 8).map((f) => ({
+    at: f.group[0].at,
+    where: typeof f.group[0].region === "string" ? f.group[0].region : null,
+    label: f.group[0].label,
+    text: clip2(f.group.map((u) => u.raw).join(""), 0, 0, 90)
+  }));
+  if (ctx.page === null && !named3)
+    return refuse7(
+      "AMBIGUOUS",
+      joomlaText("textOnlyError", { find: change.find }),
+      joomlaText(found.length > 1 ? "textOnlyManyNext" : "textOnlyNext", { at: found[0].group[0].at }),
+      { find: change.find, candidates }
+    );
+  if (found.length > 1 && plan.all === false && !named3)
+    return refuse7(
+      "AMBIGUOUS",
+      replaceText("ambiguousError", {
+        find: change.find,
+        n: found.length,
+        list: [...new Set(candidates.map((c) => c.where ?? "unknown"))].join(", ")
+      }),
+      replaceText("ambiguousNext", { at: found[0].group[0].at, allForm: '"page"' }),
+      { find: change.find, candidates }
+    );
+  const targets = [];
+  for (const f of found) {
+    if (f.values === null)
+      return refuse7(
+        "VALUE_NOT_ALLOWED",
+        joomlaText("fragmentsError", { find: change.find, n: f.group.length }),
+        joomlaText("fragmentsNext", { n: f.group.length }),
+        { rule: "cannot-empty", find: change.find, at: f.group.map((u) => u.at).join("+") }
+      );
+    f.group.forEach((u, k) => {
+      const value = (
+        /** @type {string[]} */
+        f.values[k]
+      );
+      if (value === u.raw) return;
+      targets.push({
+        kind: "unit",
+        at: u.at,
+        place: u.at,
+        unit: u,
+        hits: [{ unit: u, a: 0, b: u.cased.length, mode: "text", whole: true, caseExact: true }],
+        where: f.occ ? f.occ.unit.region : typeof u.region === "string" ? u.region : null,
+        rendered: ctx.page ? f.occ !== null : null,
+        occ: f.occ,
+        rank: 0,
+        exact: true,
+        twins: [],
+        whole: value
+      });
+    });
+  }
+  return {
+    ok: true,
+    verdict: "WRITE",
+    change,
+    targets,
+    places: found.length,
+    unchanged: [],
+    alsoIn: [],
+    notes: [],
+    scope: "page",
+    languagesKept: 0,
+    glyph: null
+  };
+}
+function factOf({ find, replace }) {
+  let p = 0;
+  while (p < find.length && p < replace.length && find[p] === replace[p]) p += 1;
+  let q = 0;
+  while (q < find.length - p && q < replace.length - p && find[find.length - 1 - q] === replace[replace.length - 1 - q])
+    q += 1;
+  const kinds = [
+    [isPhone, /[\d\s().+\-\u2010-\u2015]/, /^([\s.)\-\u2010-\u2015]*)([\s\S]*?)([\s.()+\-\u2010-\u2015]*)$/],
+    [isEmail, /[\w.+@-]/, /^([.+@-]*)([\s\S]*?)([.+@-]*)$/]
+  ];
+  for (const [is, char, shape] of kinds) {
+    let a = p;
+    let b = q;
+    while (a > 0 && char.test(find[a - 1])) a -= 1;
+    while (b > 0 && char.test(find[find.length - b])) b -= 1;
+    const was = shape.exec(find.slice(a, find.length - b));
+    const now = shape.exec(replace.slice(a, replace.length - b));
+    if (!was || !now || was[1] !== now[1] || was[3] !== now[3]) continue;
+    if (was[2] !== find.trim() && is(was[2]) && is(now[2])) return { find: was[2], replace: now[2] };
+  }
+  return null;
+}
+var FACT_TOKENS = Object.freeze([
+  ["phone", /[+(]?\d[\d\s().\-\u2010-\u2015]{5,}\d/g, isPhone],
+  ["e-mail", /[\w.+-]+@[\w-]+(?:\.[\w-]+)+/g, isEmail]
+]);
+function factWithWords(ctx, change, r) {
+  const { find, replace } = change;
+  for (const [field, pattern, is] of FACT_TOKENS) {
+    const olds = [...find.matchAll(pattern)].filter((m) => is(m[0]));
+    const news = [...replace.matchAll(pattern)].filter((m) => is(m[0]));
+    if (olds.length !== 1 || news.length !== 1 || olds[0][0] === news[0][0]) continue;
+    const was = olds[0][0];
+    const now = news[0][0];
+    const i = (
+      /** @type {number} */
+      olds[0].index
+    );
+    const j = (
+      /** @type {number} */
+      news[0].index
+    );
+    const pre = [find.slice(0, i).trim(), replace.slice(0, j).trim()];
+    const post = [find.slice(i + was.length).trim(), replace.slice(j + now.length).trim()];
+    if (pre[0] === pre[1] && post[0] === post[1]) return null;
+    const follows = r.targets.some((t) => {
+      if (t.kind !== "unit") return false;
+      const u = (
+        /** @type {JoomlaUnit} */
+        t.unit
+      );
+      if (ctx.hooks.twins(u).some((x) => matchUnits([x], was).hits.length > 0)) return true;
+      return ctx.store.urls.some((s) => {
+        const href = typeof s.current === "string" ? s.current : "";
+        if (String(s.entity) !== u.entity || /\{[a-zA-Z.]+\}/.test(readBraces(href))) return false;
+        const moved = followHref(href, was, now);
+        return moved !== null && moved !== href;
+      });
+    });
+    if (!follows) return null;
+    const line = { find, replace: find.slice(0, i) + now + find.slice(i + was.length) };
+    const words = pre[0] !== pre[1] && post[0] === post[1] && pre[0] !== "" && pre[1] !== "" ? { find: pre[0], replace: pre[1] } : post[0] !== post[1] && pre[0] === pre[1] && post[0] !== "" && post[1] !== "" ? { find: post[0], replace: post[1] } : null;
+    const next = words ? joomlaText("factWordsNext", {
+      field,
+      wf: words.find,
+      wr: words.replace,
+      lf: line.find,
+      lr: line.replace
+    }) : "";
+    return refuse7(
+      "VALUE_NOT_ALLOWED",
+      joomlaText("factWordsError", { find, field }),
+      // a next is a call to send whole: one that would not fit is said in words instead
+      next !== "" && next.length <= 200 ? next : joomlaText("factWordsNextLong", { field }),
+      { rule: "fact-in-words", at: r.targets[0].at }
+    );
+  }
+  return null;
+}
+function asFact(ctx, plan, change, stored, r) {
+  if (r.targets.some((t) => t.kind !== "unit" || /** @type {JoomlaUnit} */
+  t.unit.tokens.length > 0))
+    return r;
+  const fact = factOf(change);
+  if (fact === null) return factWithWords(ctx, change, r) ?? r;
+  const base3 = {
+    page: ctx.page ? { units: ctx.page.units, lang: ctx.page.lang } : null,
+    change: fact,
+    path: plan.path,
+    pathGiven: plan.pathGiven,
+    where: plan.where,
+    countRules: false,
+    mustKeepTwo: true,
+    hooks: ctx.hooks
+  };
+  if (plan.all !== false)
+    return locate({ ...base3, stored: storedFor(ctx.store, ctx.pf, fact.find), at: null, all: plan.all });
+  const f = locate({ ...base3, stored, at: plan.at ?? r.targets.map((t) => t.at), all: false });
+  if (!f.ok) return r;
+  const written = /* @__PURE__ */ new Set();
+  for (const t of f.targets)
+    if (t.kind === "unit") for (const at of [t.at, ...t.twins.map((x) => x.unit.at)]) written.add(at);
+  const more = /* @__PURE__ */ new Map();
+  for (const h of matchUnits(stored, fact.find).hits) {
+    const u = (
+      /** @type {JoomlaUnit} */
+      h.unit
+    );
+    if (written.has(u.at) || more.has(u.at) || u.writable === false || u.identity || h.mode === "bare")
+      continue;
+    if (u.lang !== null && ctx.pf.lang !== null && u.lang !== ctx.pf.lang) continue;
+    more.set(u.at, {
+      at: u.at,
+      where: typeof u.region === "string" ? u.region : null,
+      text: clip2(u.cased, h.a, h.b, 80)
+    });
+  }
+  return { ...f, unchanged: r.unchanged, alsoIn: [...r.alsoIn, ...more.values()] };
+}
+function withPages(ctx, r, stored) {
+  if (!Array.isArray(r.candidates)) return r;
+  const candidates = r.candidates.map((c) => {
+    if (c.onPage !== false || c.page) return c;
+    const u = stored.find((x) => x.at === String(c.at).split("+")[0]);
+    const page = u ? unitPath(ctx.store, u) : null;
+    return page ? { ...c, page } : c;
+  });
+  return { ...r, candidates };
+}
+function elsewhere(ctx, plan, change, stored, r) {
+  const pageLang = ctx.pf.lang;
+  if (plan.at !== null || plan.all === true || pageLang === null) return r;
+  const notFound = !r.ok && r.code === "NOT_FOUND" && r.error === replaceText("notFoundError", { find: change.find });
+  const offPage = r.ok && r.scope === "page" && r.targets.every((t) => t.rendered !== true);
+  if (!notFound && !offPage) return r;
+  const where = plan.where ?? null;
+  const have = /* @__PURE__ */ new Set();
+  if (r.ok)
+    for (const t of r.targets)
+      for (const at of t.kind === "split" ? [t.a.at, t.b.at] : [t.at, ...t.twins.map((x) => x.unit.at)])
+        have.add(at);
+  const pool = stored.filter(
+    (u) => u.lang !== null && u.lang !== pageLang && !u.identity && u.writable !== false && !have.has(u.at) && (where === null || u.region === where)
+  );
+  const others = /* @__PURE__ */ new Map();
+  for (const h of matchUnits(pool, change.find).hits)
+    if (h.mode !== "bare" && (h.whole || h.caseExact)) others.set(h.unit.at, h.unit);
+  if (others.size === 0) return r;
+  const candidate = (u, whereShown) => {
+    const page = unitPath(ctx.store, u);
+    return {
+      at: u.at,
+      where: Array.isArray(whereShown) ? whereShown[0] ?? null : whereShown ?? null,
+      label: u.label,
+      text: clip2(u.cased, 0, 0, 90),
+      onPage: false,
+      ...page ? { page } : {}
+    };
+  };
+  const list = [...others.values()];
+  if (notFound && list.length === 1) {
+    const u = list[0];
+    const page = unitPath(ctx.store, u);
+    return refuse7(
+      "NOT_FOUND",
+      joomlaText("otherLanguageError", { find: change.find, page: page ?? "another page" }),
+      page ? joomlaText("otherLanguageNext", { page }) : joomlaText("otherLanguageAtNext", { at: u.at }),
+      { find: change.find, candidates: [candidate(u, u.region)] }
+    );
+  }
+  const candidates = [];
+  if (r.ok)
+    for (const t of r.targets) {
+      const u = (
+        /** @type {JoomlaUnit} */
+        t.kind === "split" ? t.a : t.unit
+      );
+      candidates.push({
+        ...candidate(u, t.where),
+        at: t.at,
+        text: t.kind === "split" ? clip2(`${t.a.cased} / ${t.b.cased}`, 0, 0, 90) : clip2(u.cased, 0, 0, 90)
+      });
+    }
+  for (const u of list) candidates.push(candidate(u, u.region));
+  return refuse7(
+    "AMBIGUOUS",
+    replaceText("ambiguousError", {
+      find: change.find,
+      n: candidates.length,
+      // pages, not regions: which page is the question here (three at most, inside T10's 160)
+      list: [...new Set(candidates.map((c) => c.page ?? c.where ?? "unknown"))].slice(0, 3).join(", ")
+    }),
+    replaceText("ambiguousNext", { at: candidates[0].at, allForm: "true" }),
+    { find: change.find, candidates: candidates.slice(0, 8) }
+  );
+}
+function plainReplace2(replace, glyph) {
+  let r = replace;
+  if (glyph?.trail && r.endsWith(glyph.trail)) r = r.slice(0, -glyph.trail.length).trimEnd();
+  if (glyph?.lead && r.startsWith(glyph.lead)) r = r.slice(glyph.lead.length).trimStart();
+  return r;
+}
+function placeInTokens(store2, u, s, e, text6, find, opts = {}) {
+  const shown3 = u.raw;
+  const field = (t) => TOKEN_FIELD[
+    /** @type {keyof typeof TOKEN_FIELD} */
+    t.name
+  ];
+  const skip = { ok: (
+    /** @type {const} */
+    true
+  ), skip: true, identity: null, s, e, text: text6, detached: null };
+  const named3 = (t) => String(field(t)).replace(/-/g, " ");
+  const tokenRefusal = (t) => opts.probe ? skip : {
+    ok: (
+      /** @type {const} */
+      false
+    ),
+    refusal: refuse7(
+      "VALUE_NOT_ALLOWED",
+      joomlaText("identityTokenError", { find, field: named3(t) }),
+      joomlaText(NAME_TOKENS2.has(t.name) ? "nameTokenNext" : "identityTokenNext", {
+        value: shown3.slice(t.xs, t.xe),
+        field: named3(t)
+      }),
+      { rule: "identity-token", at: u.at }
+    )
+  };
+  const inside = u.tokens.find((t) => t.xs <= s && e <= t.xe && e > s);
+  if (inside) {
+    const id = store2.identity.get(inside.name);
+    if (!id) return tokenRefusal(inside);
+    return { ok: true, identity: id, s: s - inside.xs, e: e - inside.xs, text: text6, detached: null };
+  }
+  const was = shown3.slice(s, e);
+  let p = 0;
+  while (p < was.length && p < text6.length && was[p] === text6[p]) p += 1;
+  let q = 0;
+  while (q < was.length - p && q < text6.length - p && was[was.length - 1 - q] === text6[text6.length - 1 - q])
+    q += 1;
+  const a = s + p;
+  const b = e - q;
+  const mid = text6.slice(p, text6.length - q);
+  const crossed = u.tokens.filter((t) => a < b ? a < t.xe && t.xs < b : t.xs < a && a < t.xe);
+  if (crossed.length === 0)
+    return { ok: true, identity: null, s: toStored(u, a), e: toStored(u, b), text: mid, detached: null };
+  const contact = crossed.find((t) => !NAME_TOKENS2.has(t.name));
+  if (contact && crossed.length === 1 && a >= contact.xs && b <= contact.xe) {
+    const id = store2.identity.get(contact.name);
+    if (!id) return tokenRefusal(contact);
+    return { ok: true, identity: id, s: a - contact.xs, e: b - contact.xs, text: mid, detached: null };
+  }
+  const A = Math.min(a, ...crossed.map((t) => t.xs));
+  const B = Math.max(b, ...crossed.map((t) => t.xe));
+  let fresh = shown3.slice(A, a) + mid + shown3.slice(b, B);
+  const lost = [];
+  for (const t of crossed) {
+    const now = opts.newIdentity?.get(t.name) ?? "";
+    const was2 = shown3.slice(t.xs, t.xe);
+    const value = now !== "" && fresh.includes(now) ? now : was2 !== "" && fresh.includes(was2) ? was2 : null;
+    if (value !== null) fresh = fresh.replace(value, () => `{${t.name}}`);
+    else lost.push(t);
+  }
+  const plain = { ok: (
+    /** @type {const} */
+    true
+  ), identity: null, s: toStored(u, A), e: toStored(u, B) };
+  if (lost.length === 0) return { ...plain, text: fresh, detached: null };
+  const fact = lost.find((t) => !NAME_TOKENS2.has(t.name));
+  if (fact) return tokenRefusal(fact);
+  if (opts.probe) return skip;
+  if ((opts.nameInQuote ?? NAME_IN_QUOTE) === "refuse") return tokenRefusal(lost[0]);
+  return { ...plain, text: fresh, detached: field(lost[0]) };
+}
+function joomlaWrites(store2, results, options = {}) {
+  const probe = writesOnce(store2, results, { probe: true });
+  const newIdentity = /* @__PURE__ */ new Map();
+  if (probe.ok) {
+    for (const w of probe.writes) if (w.unit.identity) newIdentity.set(w.unit.identity, w.value);
+  }
+  return writesOnce(store2, results, { ...options, newIdentity });
+}
+function writesOnce(store2, results, opts) {
+  const byAt = /* @__PURE__ */ new Map();
+  const redirect = /* @__PURE__ */ new Map();
+  const notes = [];
+  const writeOf = (u) => {
+    let w = byAt.get(u.at);
+    if (!w) {
+      const before = typeof u.slot.current === "string" ? u.slot.current : "";
+      w = {
+        at: u.at,
+        unit: u,
+        slot: u.slot,
+        before,
+        value: before,
+        changes: /* @__PURE__ */ new Set(),
+        edits: [],
+        whole: null
+      };
+      byAt.set(u.at, w);
+    }
+    return w;
+  };
+  for (let i = 0; i < results.length; i += 1) {
+    const r = results[i];
+    const text6 = plainReplace2(r.change.replace, r.glyph).replace(/\s*\n\s*/g, " ");
+    for (const t of r.targets) {
+      if (t.kind === "unit" && typeof t.whole === "string") {
+        const w = writeOf(
+          /** @type {JoomlaUnit} */
+          t.unit
+        );
+        w.whole = t.whole;
+        w.changes.add(i);
+        continue;
+      }
+      if (t.kind === "split") {
+        const parts = t.parts ?? { a: text6, b: "" };
+        for (
+          const [u, v2] of
+          /** @type {[JoomlaUnit, string][]} */
+          [
+            [t.a, parts.a],
+            [t.b, parts.b]
+          ]
+        ) {
+          const w = writeOf(u);
+          w.whole = v2;
+          w.changes.add(i);
+        }
+        continue;
+      }
+      for (const { unit, hits } of [{ unit: t.unit, hits: t.hits }, ...t.twins]) {
+        const u = (
+          /** @type {JoomlaUnit} */
+          unit
+        );
+        for (const h of hits) {
+          const [s, e] = rawSpan(u, h);
+          let place = {
+            identity: (
+              /** @type {JoomlaUnit | null} */
+              null
+            ),
+            s,
+            e,
+            text: text6,
+            detached: (
+              /** @type {string | null} */
+              null
+            )
+          };
+          if (u.tokens.length > 0) {
+            const got = placeInTokens(store2, u, s, e, text6, r.change.find, opts);
+            if (!got.ok) return plan1(got.refusal, results.length, i);
+            if (got.skip) continue;
+            place = got;
+          }
+          const w = writeOf(place.identity ?? u);
+          if (!w.edits.some((x) => x.s === place.s && x.e === place.e && x.text === place.text))
+            w.edits.push({ s: place.s, e: place.e, text: place.text });
+          w.changes.add(i);
+          if (place.identity && u === t.unit) redirect.set(t.at, place.identity.at);
+          if (place.detached) {
+            const note = joomlaText("tokenLineNote", { at: u.at, field: place.detached });
+            if (!notes.includes(note)) notes.push(note);
+          }
+        }
+      }
+    }
+  }
+  const writes = [];
+  for (const w of byAt.values()) {
+    if (w.whole !== null && w.edits.length > 0)
+      return refuse7("BAD_PARAMS", joomlaText("overlapError", { at: w.at }), replaceText("overlapNext"), {
+        at: w.at
+      });
+    try {
+      w.value = w.whole ?? spliceRaw(w.before, w.edits);
+    } catch {
+      return refuse7("BAD_PARAMS", joomlaText("overlapError", { at: w.at }), replaceText("overlapNext"), {
+        at: w.at
+      });
+    }
+    if (w.value !== w.before) writes.push(w);
+  }
+  return { ok: true, writes, redirect, notes };
+}
+var plan1 = (r, n, i) => n > 1 ? { ...r, change: i } : r;
+function companionsOf(store2, results, writes) {
+  const out = [];
+  for (let i = 0; i < results.length; i += 1) {
+    const { find, replace } = results[i].change;
+    const phone = isPhone(find) && isPhone(replace);
+    if (!phone && !(isEmail(find) && isEmail(replace))) continue;
+    const blocks = new Set(
+      writes.filter((w) => w.changes.has(i) && !w.unit.identity).map((w) => w.unit.entity)
+    );
+    for (const s of store2.urls) {
+      if (!blocks.has(String(s.entity))) continue;
+      const before = typeof s.current === "string" ? s.current : "";
+      if (/\{[a-zA-Z.]+\}/.test(readBraces(before))) continue;
+      const value = followHref(before, find, replace);
+      if (value === null || value === before) continue;
+      const got = out.find((c) => c.at === String(s.key));
+      if (got) got.changes.add(i);
+      else
+        out.push({
+          at: String(s.key),
+          slot: s,
+          before,
+          value,
+          changes: /* @__PURE__ */ new Set([i]),
+          why: phone ? "the link follows the number" : "the link follows the e-mail"
+        });
+    }
+  }
+  return out;
+}
+var isAddress = (s) => /^(https?:\/\/|mailto:|tel:)\S+$/i.test(s.trim()) || /^(www\.[^\s/]+\.[a-z]{2,}|[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}\/)\S*$/i.test(s.trim());
+var acmField = (path22) => Array.isArray(path22) && typeof path22[1] === "string" ? /\[([^\]]+)\]$/.exec(path22[1])?.[1] ?? null : null;
+var stem = (f) => f.includes("-") ? f.slice(0, f.lastIndexOf("-")) : f;
+var readBraces = (v2) => String(v2 ?? "").replace(/%7B/gi, "{").replace(/%7D/gi, "}");
+var socialToken = (v2) => /^\{(social\.[a-z]+)\}$/.exec(readBraces(v2).trim())?.[1] ?? null;
+function linkSlotOf(store2, slot) {
+  const xpath = typeof slot.xpath === "string" ? slot.xpath : "";
+  for (const url of store2.urls) {
+    if (String(url.entity) !== String(slot.entity)) continue;
+    if (xpath.endsWith("/text()") && url.xpath === `${xpath.slice(0, -7)}/@href`) return url;
+    const tf = acmField(slot.jsonPath);
+    const uf = acmField(url.jsonPath);
+    if (!tf || !uf || slot.jsonPath[0] !== url.jsonPath[0] || slot.jsonPath[2] !== url.jsonPath[2]) continue;
+    if (stem(tf) === stem(uf) && tf !== uf) return url;
+    if (/^(text|label)$/.test(tf) && /^(link|url|href)$/.test(uf)) return url;
+    if (socialToken(url.current)) return url;
+  }
+  return null;
+}
+function linkAddressRefusal(ctx, results, revision, precheck) {
+  const { store: store2 } = ctx;
+  for (let i = 0; i < results.length; i += 1) {
+    const { find, replace } = results[i].change;
+    if (!isAddress(replace) || isAddress(find)) continue;
+    const bare = isPhone(find) && /^tel:/i.test(replace.trim()) ? replace.trim().slice(4) : isEmail(find) && /^mailto:/i.test(replace.trim()) ? replace.trim().slice(7).split("?")[0] : null;
+    if (bare !== null && results[i].targets.length > 0)
+      return plan1(
+        refuse7(
+          "VALUE_NOT_ALLOWED",
+          joomlaText("linkFactError", { find }),
+          joomlaText("linkFactNext", { value: bare }),
+          { rule: "link-address", at: results[i].targets[0].at }
+        ),
+        results.length,
+        i
+      );
+    for (const t of results[i].targets) {
+      if (t.kind !== "unit") continue;
+      const u = (
+        /** @type {JoomlaUnit} */
+        t.unit
+      );
+      const printed = u.tokens.find((x) => x.name.startsWith("social."));
+      const link = linkSlotOf(store2, u.slot);
+      const onPage = t.occ ? t.occ.unit.chainAt(t.occ.a).some((el) => el.tag === "a" && el.href) : false;
+      if (!printed && !link && tagOf(u.slot) !== "a" && !onPage) continue;
+      const token = printed?.name ?? socialToken(link?.current) ?? /\{(contact\.(?:tel|email))\}/.exec(readBraces(link?.current))?.[1] ?? null;
+      const idSlot = token ? store2.identitySlots.get(token === "contact.tel" ? "contact.phone" : token) ?? null : null;
+      const slot = idSlot ?? (token ? null : link);
+      if (!slot)
+        return plan1(
+          refuse7("NOT_EDITABLE", joomlaText("linkFixedError", { find }), joomlaText("linkFixedNext"), {
+            find,
+            at: u.at
+          }),
+          results.length,
+          i
+        );
+      const value = idSlot && /^contact\.(tel|email)$/.test(String(token)) && /^(tel|mailto):/i.test(replace.trim()) ? replace.trim().replace(/^(tel|mailto):/i, "") : replace.trim();
+      const bad2 = precheck ? checkSlotValue(
+        /** @type {any} */
+        slot,
+        value
+      ) : null;
+      if (bad2) return plan1(valueRefusal(bad2, value, value), results.length, i);
+      return plan1(
+        refuse7(
+          "VALUE_NOT_ALLOWED",
+          joomlaText("linkAddressError", { find, replace }),
+          joomlaText("linkAddressNext", { label: cleanLabel(slot.label) || String(slot.key) }),
+          {
+            rule: "link-address",
+            at: u.at,
+            apply: {
+              action: "content.contract",
+              params: {
+                operation: "apply",
+                expected_revision: revision,
+                changes: { [String(slot.key)]: value }
+              }
+            }
+          }
+        ),
+        results.length,
+        i
+      );
+    }
+  }
+  return null;
+}
+function newWords({ find, replace }) {
+  let p = 0;
+  while (p < find.length && p < replace.length && find[p] === replace[p]) p += 1;
+  let q = 0;
+  while (q < find.length - p && q < replace.length - p && find[find.length - 1 - q] === replace[replace.length - 1 - q])
+    q += 1;
+  let a = p;
+  let b = replace.length - q;
+  if (a >= b) return "";
+  const word = (c) => /[\p{L}\p{N}]/u.test(c);
+  while (a > 0 && word(replace[a - 1])) a -= 1;
+  while (b < replace.length && word(replace[b])) b += 1;
+  const mid = replace.slice(a, b).trim();
+  return /[\p{L}\p{N}]/u.test(mid) ? mid : "";
+}
+function cutBytes(s, max = 8e3) {
+  if (Buffer.byteLength(s, "utf8") <= max) return s;
+  let out = "";
+  let n = 0;
+  for (const ch of s) {
+    const len = Buffer.byteLength(ch, "utf8");
+    if (n + len > max) break;
+    out += ch;
+    n += len;
+  }
+  return out;
+}
+function customerSentence2(message2, words, { digits = false } = {}) {
+  if (Array.isArray(message2)) {
+    for (const m of message2) {
+      const got = customerSentence2(m, words, { digits });
+      if (got !== null) return got;
+    }
+    return null;
+  }
+  if (typeof message2 !== "string" || phpTrim(message2) === "") return null;
+  if (words === "") return cutBytes(message2.trim());
+  const fold2 = digits ? (s) => s.replace(/\D/g, "") : foldForMatch;
+  const want = fold2(words);
+  if (want === "") return null;
+  for (const s of message2.split(/(?<=[.!?…])\s+|\n+/)) if (fold2(s).includes(want)) return cutBytes(s.trim());
+  return fold2(message2).includes(want) ? cutBytes(message2.trim()) : null;
+}
+function valueRefusal(r, value, replace) {
+  const extra = { rule: r.rule, at: r.key, value: clip2(value, 0, 0, 80) };
+  switch (r.rule) {
+    case "max-characters": {
+      const len = Number(r.length);
+      const limit = Number(r.limit);
+      const room = limit - (len - [...replace].length);
+      return refuse7(
+        "VALUE_NOT_ALLOWED",
+        replaceText("maxCharactersError", { what: "the new text", len, at: r.key, limit }),
+        replaceText("maxCharactersNext", { limit: room > 0 ? room : limit }),
+        { ...extra, limit }
+      );
+    }
+    case "cannot-empty":
+      return refuse7(
+        "VALUE_NOT_ALLOWED",
+        joomlaText("cannotEmptyError", { at: r.key }),
+        joomlaText("cannotEmptyNext"),
+        extra
+      );
+    case "cannot-fill":
+      return refuse7(
+        "VALUE_NOT_ALLOWED",
+        joomlaText("cannotFillError", { at: r.key }),
+        joomlaText("cannotFillNext"),
+        extra
+      );
+    case "no-markup":
+      return refuse7(
+        "VALUE_NOT_ALLOWED",
+        joomlaText("noMarkupError", { at: r.key }),
+        joomlaText("noMarkupNext"),
+        extra
+      );
+    case "no-directive":
+      return refuse7(
+        "VALUE_NOT_ALLOWED",
+        joomlaText("noDirectiveError", { at: r.key }),
+        joomlaText("noDirectiveNext"),
+        extra
+      );
+    case "evidence":
+      return refuse7(
+        "VALUE_NOT_ALLOWED",
+        joomlaText("evidenceError", { at: r.key, words: replace }),
+        joomlaText("evidenceNext"),
+        extra
+      );
+    default:
+      return refuse7(
+        "VALUE_NOT_ALLOWED",
+        joomlaText("urlError", { at: r.key, value }),
+        joomlaText("urlNext"),
+        extra
+      );
+  }
+}
+function shownIn(ctx, t, find) {
+  if (ctx.page === null) return [];
+  const u = (
+    /** @type {JoomlaUnit} */
+    t.kind === "split" ? t.a : t.unit
+  );
+  const lower = t.kind === "split" ? `${t.a.lower} ${t.b.lower}` : t.unit.lower;
+  const probe = { unit: u, a: 0, b: u.cased.length, mode: "text", whole: true, caseExact: true };
+  const out = [];
+  for (const o of matchUnits(ctx.page.units, find).hits) {
+    if (o.unit.hidden || o.unit.region === "drawer" || !o.unit.lower.includes(lower)) continue;
+    if (ctx.hooks.anchor(probe, o) && !out.includes(o.unit.region)) out.push(o.unit.region);
+  }
+  return out;
+}
+function rowsOf(ctx, results, redirect, path22, writes) {
+  const values = valuesAfter(ctx.store, writes);
+  const rows = [];
+  const madeFor = /* @__PURE__ */ new Map();
+  for (const r of results)
+    for (const t of r.targets) {
+      const row = wouldOf(t, r.change);
+      const to = redirect.get(t.at);
+      if (to) {
+        row.at = to;
+        row.label = cleanLabel(ctx.store.byKey.get(to)?.label);
+      } else if (row.onPage === false) {
+        const page = unitPath(
+          ctx.store,
+          /** @type {JoomlaUnit} */
+          t.kind === "split" ? t.a : t.unit
+        );
+        if (page && page !== path22) row.page = page;
+      }
+      const where = shownIn(ctx, t, r.change.find);
+      if (where.length > 1) row.where = where.join(", ");
+      const same = rows.find((x) => x.at === row.at);
+      if (same) {
+        const all = [
+          .../* @__PURE__ */ new Set([...String(same.where ?? "").split(", "), ...String(row.where ?? "").split(", ")])
+        ];
+        same.where = all.filter(Boolean).join(", ") || null;
+        const w = writes.find((x) => x.at === same.at);
+        if (w && t.kind === "unit" && madeFor.get(same) !== r) {
+          const shown3 = (v2) => views(expand(v2, values).text, { decode: false }).cased;
+          same.before = clip2(shown3(w.before), 0, 0);
+          same.after = clip2(shown3(w.value), 0, 0);
+        }
+        continue;
+      }
+      rows.push(row);
+      madeFor.set(row, r);
+    }
+  return rows;
+}
+function notReachedOf3(ctx, results, writes) {
+  if (ctx.page === null) return null;
+  const fact = writes.some(
+    (w) => !w.unit.identity && [...w.changes].some((i) => w.unit.fact === true || isFact(results[i].change.find))
+  );
+  if (!fact) return null;
+  const hreflang = new Set(
+    [...ctx.page.html.matchAll(/hreflang="([^"]+)"/gi)].map((m) => m[1].toLowerCase()).filter((l) => l !== "x-default")
+  );
+  const served2 = hreflang.size > 0 ? hreflang.size : ctx.table.switcherItem ? (ctx.page.html.match(ctx.table.switcherItem) ?? []).length : 0;
+  const governed = new Set(ctx.store.units.map((u) => u.lang).filter((l) => l !== null));
+  for (const l of ctx.store.languages) governed.add(
+    /** @type {string} */
+    langOf2(l)
+  );
+  const n = served2 - governed.size;
+  return n > 0 ? joomlaText("notReached", { n }) : null;
+}
+function pageOf4(html) {
+  const r = renderedUnits(html);
+  const copy = (u) => u.hidden || u.region === "drawer";
+  return { ...r, units: [...r.units.filter((u) => !copy(u)), ...r.units.filter(copy)], html };
+}
+function answerOf3(x) {
+  const o = (
+    /** @type {Record<string, any>} */
+    x && typeof x === "object" ? x : {}
+  );
+  return o.answer && typeof o.answer === "object" && Array.isArray(o.answer.slots) ? o.answer : o;
+}
+function planOn(deps, plan, snap, page) {
+  const { table } = contractOf(snap);
+  const store2 = joomlaStore(snap, table);
+  const pf = pageFacts(store2, page, plan.path);
+  const ctx = {
+    store: store2,
+    table,
+    pf,
+    page,
+    hooks: joomlaHooks(store2, table, pf),
+    confirmed: deps.confirmed === true
+  };
+  const located = locateJoomla(ctx, plan);
+  if (!located.ok) {
+    const first = located.code === "NOT_EDITABLE" && Array.isArray(located.unchanged) ? located.unchanged[0] : null;
+    return first?.why === WHY3.siteName ? { ...located, next: joomlaText("siteNameNext") } : located;
+  }
+  const { results } = located;
+  const revision = String(snap.revision ?? "");
+  const precheck = contractPrecheckOn(deps.env ?? process.env);
+  const linkRefusal = linkAddressRefusal(ctx, results, revision, precheck);
+  if (linkRefusal) return linkRefusal;
+  const built = joomlaWrites(store2, results, { nameInQuote: deps.nameInQuote });
+  if (!built.ok) return built;
+  const { writes, redirect } = built;
+  const companions = companionsOf(store2, results, writes);
+  const rows = rowsOf(ctx, results, redirect, plan.path, writes);
+  const evidence = {};
+  const needsEvidence = [];
+  let missing = null;
+  for (const w of [...writes, ...companions]) {
+    if (!w.slot.requiresEvidence || w.slot.requiresEvidence === "0" || w.value === w.slot.sample) continue;
+    const sentences = [];
+    let lacking = false;
+    for (const i of w.changes) {
+      const words = newWords(results[i].change);
+      const got = customerSentence2(deps.evidenceText, words, { digits: /^tel:/i.test(w.value) });
+      if (got === null) {
+        lacking = true;
+        if (precheck) missing ??= { at: w.at, i, words };
+      } else if (!sentences.includes(got)) sentences.push(got);
+    }
+    if (lacking && precheck) needsEvidence.push(w.at);
+    else if (sentences.length > 0) evidence[w.at] = cutBytes(sentences.join(" "));
+  }
+  const changes = {};
+  for (const w of [...writes, ...companions]) changes[w.at] = w.value;
+  const apply2 = {
+    action: "content.contract",
+    params: {
+      operation: "apply",
+      expected_revision: revision,
+      changes,
+      ...Object.keys(evidence).length > 0 ? { evidence } : {}
+    }
+  };
+  if (missing && !plan.dryRun)
+    return plan1(
+      refuse7(
+        "VALUE_NOT_ALLOWED",
+        joomlaText("evidenceError", { at: missing.at, words: missing.words }),
+        joomlaText("evidenceNext"),
+        {
+          rule: "evidence",
+          at: missing.at,
+          value: clip2(changes[missing.at] ?? "", 0, 0, 80),
+          needsEvidence,
+          apply: apply2
+        }
+      ),
+      results.length,
+      missing.i
+    );
+  if (precheck)
+    for (const w of [...writes, ...companions]) {
+      const given = needsEvidence.includes(w.at) ? { ...evidence, [w.at]: "dryRun" } : evidence;
+      const r = checkSlotValue(
+        /** @type {import('./contract-check.mjs').ContractSlot} */
+        w.slot,
+        w.value,
+        {
+          evidence: given
+        }
+      );
+      if (r) {
+        const i = [...w.changes][0] ?? 0;
+        return plan1(valueRefusal(r, w.value, results[i]?.change.replace ?? ""), results.length, i);
+      }
+    }
+  const notes = [...new Set(results.flatMap((r) => r.notes))];
+  for (const w of writes)
+    if (w.unit.identity) {
+      const note = joomlaText("identityNote", { field: w.unit.field ?? w.unit.identity });
+      if (!notes.includes(note)) notes.push(note);
+    }
+  for (const note of built.notes) if (!notes.includes(note)) notes.push(note);
+  return {
+    ok: (
+      /** @type {const} */
+      true
+    ),
+    ctx,
+    results,
+    writes,
+    companions,
+    rows,
+    changes,
+    evidence,
+    needsEvidence,
+    apply: apply2,
+    notes,
+    notReached: notReachedOf3(ctx, results, writes),
+    revision
+  };
+}
+function fitDryRun(out) {
+  const size2 = () => Buffer.byteLength(JSON.stringify(out), "utf8");
+  if (size2() <= RECEIPT_MAX_BYTES) return out;
+  for (const key of ["alsoIn", "unchanged", "companions", "notes"]) {
+    if (!(key in out)) continue;
+    delete out[key];
+    if (size2() <= RECEIPT_MAX_BYTES) return out;
+  }
+  const rows = (Array.isArray(out.would) ? out.would : []).map(
+    (row) => Object.fromEntries(Object.entries(row).filter(([key]) => key !== "label"))
+  );
+  out.would = rows;
+  if (size2() <= RECEIPT_MAX_BYTES) return out;
+  const before = Number(out.more ?? 0);
+  for (let keep = Math.min(rows.length, 6); keep >= 1; keep -= 1) {
+    out.would = rows.slice(0, keep);
+    out.more = before + rows.length - keep;
+    if (size2() <= RECEIPT_MAX_BYTES) return out;
+  }
+  return out;
+}
+var conflicted = (a) => a.ok === false && /Content changed; inspect again|conflict at operation/.test(String(a.message ?? a.error ?? ""));
+async function replaceOnJoomla(deps) {
+  if (typeof deps.mint !== "function")
+    throw new TypeError("replaceOnJoomla: deps.mint is required \u2014 call-memory's minter (D7)");
+  const mint = deps.mint;
+  const plan = deps.plan ?? planReplace(deps.params);
+  if (!plan.ok) return plan;
+  if (plan.mode === "restore")
+    return refuse7("BAD_PARAMS", joomlaText("restoreError"), joomlaText("restoreNext"), { param: "restore" });
+  const [first, read] = await Promise.all([deps.snapshot(false), deps.pageHtml(plan.path)]);
+  let page = null;
+  const r0 = (
+    /** @type {Record<string, any>} */
+    read ?? {}
+  );
+  if (r0.ok === true && typeof r0.html === "string") {
+    const status = Number(r0.status ?? 200);
+    if (status === 404 || status === 410)
+      return refuse7(
+        "NOT_FOUND",
+        joomlaText("pageMissingError", { path: plan.path, status }),
+        joomlaText("pageMissingNext"),
+        { path: plan.path }
+      );
+    if (status < 400) page = pageOf4(r0.html);
+  }
+  let snap = answerOf3(first);
+  const listDoor = deps.read;
+  const contactRead = plan.all === true && listDoor ? await readContacts(listDoor) : { rows: [], whole: true };
+  const contacts = contactChanges(contactRead.rows, plan.changes);
+  const contactPlaces = contacts.flatMap((c) => c.places);
+  const withContacts = async (out) => {
+    if (!contactRead.whole) out.notes = [...out.notes ?? [], CONTACT_NOTE.cut];
+    if (contacts.length === 0) return out;
+    if (plan.dryRun) {
+      out.contacts = contactPlaces.slice(0, 10);
+      out.notes = [...out.notes ?? [], CONTACT_NOTE.dryRun(contactPlaces.length)];
+      return out;
+    }
+    const write = deps.write;
+    if (!write) return out;
+    const done = await writeContacts(write, () => mint("replace"), contacts);
+    if (done.written.length) {
+      out.contacts = done.written.slice(0, 10);
+      out.contactsUndo = { action: "apply.revert", params: { apply_id: done.applyId } };
+      out.notes = [...out.notes ?? [], CONTACT_NOTE.written(done.written.length)];
+    }
+    if (done.failed.length) {
+      out.contactsFailed = done.failed;
+      out.notes = [...out.notes ?? [], CONTACT_NOTE.partial];
+    }
+    return out;
+  };
+  for (let attempt = 0; ; attempt += 1) {
+    if (snap.ok === false) return snap;
+    if (!Array.isArray(snap.slots) || typeof snap.contract !== "string" || snap.contract === "")
+      return refuse7("NOT_SUPPORTED_HERE", joomlaText("notSealedError"), joomlaText("notSealedNext"));
+    const planned = planOn(deps, plan, snap, page);
+    if (!planned.ok && planned.code === "NOT_FOUND" && contacts.length > 0)
+      return await withContacts(
+        plan.dryRun ? { ok: true, dryRun: true, platform: "joomla", path: plan.path, count: 0, would: [] } : { ok: true, platform: "joomla", path: plan.path, changed: [], next: REPLACE_NEXT.receipt }
+      );
+    if (!planned.ok) return planned;
+    const { rows, companions, writes, notes } = planned;
+    const companionRows = companions.map((c) => ({ at: c.at, before: c.before, after: c.value, why: c.why }));
+    if (plan.dryRun) {
+      const out = (
+        /** @type {Record<string, any>} */
+        dryRunAnswer({ platform: "joomla", path: plan.path, results: planned.results, all: plan.all })
+      );
+      out.would = rows.slice(0, Array.isArray(out.would) ? out.would.length : rows.length);
+      if (companionRows.length > 0) out.companions = companionRows;
+      if (notes.length > 0) out.notes = notes;
+      if (plan.normalized.length > 0) out.normalized = plan.normalized;
+      if (planned.needsEvidence.length > 0) {
+        out.needsEvidence = planned.needsEvidence;
+        out.apply = planned.apply;
+        out.next = joomlaText("evidenceNext");
+      }
+      return fitDryRun(await withContacts(out));
+    }
+    if (writes.length === 0)
+      return await withContacts({
+        ok: true,
+        platform: "joomla",
+        path: plan.path,
+        changed: [],
+        notes: [joomlaText("already")],
+        next: REPLACE_NEXT.receipt
+      });
+    const applyId = mint("contract-replace");
+    const { changes } = planned;
+    const evidence = Object.keys(planned.evidence).length > 0 ? planned.evidence : void 0;
+    const params = {
+      operation: "apply",
+      expected_revision: planned.revision,
+      apply_id: applyId,
+      request_id: requestIdOf(changes, evidence, planned.revision),
+      changes,
+      ...evidence ? { evidence } : {}
+    };
+    let answer;
+    try {
+      answer = /** @type {Record<string, any>} */
+      await deps.apply(params) ?? {};
+    } catch (error) {
+      answer = {
+        ok: false,
+        code: "COWORK_WEB_UNREACHABLE",
+        error: (error instanceof Error ? error.message : String(error)).slice(0, 160)
+      };
+    }
+    if (answer.ok === true) {
+      if (answer.unchanged === true)
+        return {
+          ok: true,
+          platform: "joomla",
+          path: plan.path,
+          apply_id: applyId,
+          changed: [],
+          notes: [joomlaText("already")],
+          next: REPLACE_NEXT.receipt
+        };
+      let verified = null;
+      if (planned.ctx.page === null) verified = joomlaText("unread");
+      else if (deps.verify !== false && planned.results.some((r) => r.targets.some((t) => t.rendered === true))) {
+        let read2 = null;
+        try {
+          read2 = await deps.pageHtml(plan.path);
+        } catch {
+          read2 = null;
+        }
+        verified = verifyOn(
+          read2,
+          planned.results,
+          plan.path,
+          planned.ctx.page,
+          valuesAfter(planned.ctx.store, writes)
+        );
+      }
+      const out = receipt({
+        platform: "joomla",
+        path: plan.path,
+        applyId,
+        changed: (
+          /** @type {any} */
+          rows
+        ),
+        removal: plan.changes.every((c) => c.replace === ""),
+        companions: companionRows,
+        stillHolds: leadLeftovers(
+          plan.changes,
+          planned.ctx.store.units.filter((u) => u.lang === null || u.lang === planned.ctx.pf.lang),
+          rows.map((x) => String(
+            /** @type {any} */
+            x.at
+          ))
+        ),
+        unchanged: planned.results.flatMap((r) => r.unchanged).slice(0, 4),
+        alsoIn: planned.results.flatMap((r) => r.alsoIn).slice(0, 5),
+        notes,
+        notReached: planned.notReached,
+        undo: undoOf({ platform: "joomla", applyId })
+      });
+      if (verified) out.verified = verified;
+      if (plan.normalized.length > 0) out.normalized = plan.normalized;
+      return await withContacts(out);
+    }
+    const planRows = rows.slice(0, 6).map((row) => ({ at: row.at, before: row.before, after: row.after }));
+    if (conflicted(answer)) {
+      if (attempt === 0) {
+        snap = answerOf3(await deps.snapshot(true));
+        continue;
+      }
+      return refuse7("STORE_CHANGED", joomlaText("storeChangedError"), joomlaText("storeChangedNext"), {
+        planned: planRows
+      });
+    }
+    if (outcomeUnknown(answer))
+      return { ...answer, apply_id: applyId, planned: planRows, next: joomlaText("outcomeUnknownNext") };
+    return {
+      .../** @type {Record<string, unknown>} */
+      withNext(answer, { platform: "joomla", sealed: true, action: "content.contract" }),
+      planned: planRows
+    };
+  }
+}
+function valuesAfter(store2, writes) {
+  const values = new Map(store2.values);
+  for (const w of writes) if (w.unit.identity) values.set(w.unit.identity, w.value);
+  if (values.has("contact.phone"))
+    values.set("contact.tel", (values.get("contact.phone") ?? "").replace(/[^0-9+]/g, ""));
+  return values;
+}
+function countIn(lines, needle) {
+  let n = 0;
+  for (const line of lines)
+    for (let i = line.indexOf(needle); i !== -1; i = line.indexOf(needle, i + needle.length)) n += 1;
+  return n;
+}
+function verifyOn(read, results, path22, before, values = /* @__PURE__ */ new Map()) {
+  const r = (
+    /** @type {Record<string, any>} */
+    read ?? {}
+  );
+  if (r.ok !== true || typeof r.html !== "string") return joomlaText("unread", { path: path22 });
+  const visible2 = (units) => units.filter((u) => !u.hidden).map((u) => u.lower);
+  const now = visible2(renderedUnits(r.html).units);
+  const was = visible2(before.units);
+  let checked = 0;
+  for (const res of results) {
+    if (!res.targets.some((t) => t.rendered === true)) continue;
+    const words = plainReplace2(res.change.replace, res.glyph).replace(/\s*\n\s*/g, " ");
+    const want = words.trim() === "" ? "" : views(values.size > 0 ? expand(words, values).text : words).lower;
+    const old = views(res.change.find).lower;
+    checked += 1;
+    const grew = want !== "" && countIn(now, want) > countIn(was, want);
+    const kept = want === "" || countIn(now, want) >= countIn(was, want);
+    const gone = old !== "" && countIn(now, old) < countIn(was, old);
+    if (!grew && !(gone && kept)) return joomlaText("notShown", { path: path22 });
+  }
+  return checked > 0 ? joomlaText("shown", { path: path22 }) : null;
 }
 
 // src/host/replace-road.mjs
@@ -43457,6 +43628,10 @@ async function runReplace(input) {
         pageHtml(path22)
       ),
       mint: (prefix) => memory.mint(prefix),
+      // The contact records a site-wide replace reaches too (#204): listed through the raw relay, as the
+      // open road lists them, and written through `runSiteCall`.
+      read: (action, params) => input.send(action, params),
+      write: (action, params) => input.siteCall(action, params),
       // Every message the customer typed, latest first: the words a slot needs as evidence may have
       // come a message before the one asking for the change (the engine reads an array, P9).
       evidenceText: customerMessages(events),
@@ -46784,6 +46959,9 @@ function actorHeader(plan) {
 }
 var bySession = /* @__PURE__ */ new Map();
 var latest = null;
+function apiOriginOf(publicOrigin) {
+  return callOrigin(publicOrigin, gatewaySetting("MCP_TRACY_ORIGIN"), gatewaySetting("MCP_TRACY_API_ORIGIN"));
+}
 function gatewaySetting(name2) {
   const value = process.env[name2]?.trim() || null;
   if (value === null) {
@@ -46915,25 +47093,30 @@ function isActorRefused(answer) {
 }
 async function applyDoorOnce(config, plan, key, action, params, target, headers, comment) {
   let res;
+  let text6;
   try {
-    res = await (config.fetch ?? fetch)(`${plan.origin}/api/sites/${encodeURIComponent(key)}/apply`, {
-      method: "POST",
-      headers,
-      // `target` sits beside `action`, not inside `params`: the Apply door reads it there, and it is
-      // omitted entirely when absent so a call with no target keeps the exact shape it always had.
-      // `comment` beside `action` too, and only when the call answers one: the door then writes the
-      // words a comment points at for whoever commented (`apps/tracy-web/src/sites/comment-answer.js`,
-      // Brian 29/09/2026), after checking the number is that person's own sent comment on the site.
-      body: JSON.stringify({
-        action,
-        params,
-        ...target === null ? {} : { target },
-        ...comment === void 0 ? {} : { comment }
-      }),
-      signal: AbortSignal.timeout(
-        action === "demo.research" && params.operation === "check" ? DEMO_CHECK_TIMEOUT_MS : APPLY_TIMEOUT_MS
-      )
-    });
+    res = await (config.fetch ?? fetch)(
+      `${apiOriginOf(plan.origin)}/api/sites/${encodeURIComponent(key)}/apply`,
+      {
+        method: "POST",
+        headers,
+        // `target` sits beside `action`, not inside `params`: the Apply door reads it there, and it is
+        // omitted entirely when absent so a call with no target keeps the exact shape it always had.
+        // `comment` beside `action` too, and only when the call answers one: the door then writes the
+        // words a comment points at for whoever commented (`apps/tracy-web/src/sites/comment-answer.js`,
+        // Brian 29/09/2026), after checking the number is that person's own sent comment on the site.
+        body: JSON.stringify({
+          action,
+          params,
+          ...target === null ? {} : { target },
+          ...comment === void 0 ? {} : { comment }
+        }),
+        signal: AbortSignal.timeout(
+          action === "demo.research" && params.operation === "check" ? DEMO_CHECK_TIMEOUT_MS : APPLY_TIMEOUT_MS
+        )
+      }
+    );
+    text6 = await res.text();
   } catch (error) {
     return {
       ok: false,
@@ -46941,7 +47124,6 @@ async function applyDoorOnce(config, plan, key, action, params, target, headers,
       error: error instanceof Error ? error.message : String(error)
     };
   }
-  const text6 = await res.text();
   let body;
   try {
     body = JSON.parse(text6);
@@ -48742,6 +48924,7 @@ ${text6}`);
                 storeDir: store2,
                 message: wish,
                 session: typeof sessionId === "string" ? sessionId : null,
+                warn,
                 // The plugin's own clock, like the today notice above: a note's date is the day the
                 // host says it is, never a second clock read behind it.
                 ...config.now ? { now: config.now } : {}
@@ -50954,11 +51137,11 @@ ${text6}`);
       const known = platform === "joomla" || platform === "wordpress" || platform === "emdash";
       if (known && typeof sessionId === "string" && typeof tools?.restrict === "function") {
         const visible2 = ctx.tools.schemas?.(agent) ?? [];
-        const textOf2 = (tool) => typeof tool.description === "string" ? tool.description : "";
+        const textOf3 = (tool) => typeof tool.description === "string" ? tool.description : "";
         const kept = visible2.filter((tool) => !DEFERRED_NAMES.includes(tool.name));
-        const described = kept.map(textOf2).concat(fitted3 ?? []);
+        const described = kept.map(textOf3).concat(fitted3 ?? []);
         const links = Object.fromEntries(
-          visible2.filter((tool) => DEFERRED_NAMES.includes(tool.name)).map((tool) => [tool.name, namedDeferredTools(textOf2(tool)).filter((name2) => name2 !== tool.name)])
+          visible2.filter((tool) => DEFERRED_NAMES.includes(tool.name)).map((tool) => [tool.name, namedDeferredTools(textOf3(tool)).filter((name2) => name2 !== tool.name)])
         );
         let sent = null;
         try {
