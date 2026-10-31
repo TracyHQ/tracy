@@ -1,0 +1,20 @@
+{
+  "containerId": "145fc65e16fd71568a9307891430a848151ae341641c649d2cc6af99086b42c0",
+  "imageId": "sha256:cf12a02e54fa5470880bbc9c0f6f661ee6f6901afb58843c35cc87b4f605f869",
+  "startedAt": "2026-10-31T12:42:03.625837217Z",
+  "pidInDockerVM": 13156,
+  "gate": "http://127.0.0.1:49583",
+  "direct": "http://127.0.0.1:49582",
+  "siteToolsBundleSha256": "4cb35c6aacc4afaf52f09f096b421989dcc8c7f133a9b5aa7b47195bc78a0716",
+  "bundleMatchesWorkingTree": true,
+  "scope": "The final site-tools bundle was copied into the existing isolated candidate. This does not claim a rebuild of every other image component.",
+  "gatewayLoginStatus": 302,
+  "gatewayPageStatus": 200,
+  "scriptBatchesVerified": 3,
+  "observed": {
+    "entries": 74,
+    "rev": "9538bd3563a2",
+    "editable": true
+  },
+  "pageErrors": []
+}
