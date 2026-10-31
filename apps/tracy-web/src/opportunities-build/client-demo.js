@@ -909,9 +909,14 @@ export function createClientDemoService(deps) {
       incremental && Array.isArray(measured.body.reused) ? new Set(measured.body.reused) : new Set()
     // `look: 'whole'`: look only when this read kept no page, as a full read does (`measure`).
     const looks = look === true || (look === 'whole' && reused.size === 0)
-    const lastLook = incremental
-      ? (state.build.qa?.clientCheck?.result?.checks ?? []).find((c) => c?.id === 'looks-finished')
-      : null
+    // 🔒 THE LOOK KEEPS WHAT IT SAW ACROSS CHECKS, FULL ONES TOO (#247). A full read reads every page anew, and the host
+    // still says which had not changed since their last read (`unchanged`); a page seen whole by the last look and
+    // unchanged since keeps that verdict. A full read that dropped them started the look from the first page again, and
+    // a 29-page site was never seen whole in 300 s (dev 30/10/2026: six checks, "looked partly", 0 pages seen).
+    const unchanged = Array.isArray(measured.body.unchanged) ? new Set(measured.body.unchanged) : reused
+    const lastLook = (state.build.qa?.clientCheck?.result?.checks ?? []).find(
+      (c) => c?.id === 'looks-finished'
+    )
     const sourced = checkResearchSourced(state.build.content.agentDemo.structure.inventory, inventory, {
       research: checkedResearch(state.revision),
       business: state.revision.brief?.business ?? null
@@ -1027,9 +1032,9 @@ export function createClientDemoService(deps) {
     let kept = []
     let fresh = []
     let judged = null
-    if (sweeping || !looks) judged = lookCarried(lastLook, readPages, reused)
+    if (sweeping || !looks) judged = lookCarried(lastLook, readPages, unchanged)
     else {
-      kept = reusableLookPages(lastLook, readPages, reused)
+      kept = reusableLookPages(lastLook, readPages, unchanged)
       const sample = lookSample(
         readPages.filter((p) => !kept.includes(p)),
         templatePostPaths(state.build, routesNow.postRoutes),

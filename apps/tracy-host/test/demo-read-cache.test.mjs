@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { DemoReadCache, pagesWithFindings } from '../src/demo-read-cache.js'
+import { DemoReadCache, keptForFinding, pagesWithFindings } from '../src/demo-read-cache.js'
 
 test('QA cache is bounded by bytes and entries and evicts least recently used reads', () => {
   const cache = new DemoReadCache({ maxBytes: 400, maxEntries: 2 })
@@ -63,6 +63,19 @@ test('every page a failing check or the residue ledger names is read in full nex
   assert.deepEqual([...pages].sort(), ['/about/', '/blog/a-post/', '/blog/b-post/', '/menu/'])
   assert.deepEqual([...pagesWithFindings({ checks: [{ id: 'pages-load', pass: true }] })], [])
   assert.deepEqual([...pagesWithFindings(null)], [])
+})
+
+// #247: dropping every page a finding named left a build mid-repair nothing to keep: every incremental read of a
+// 48-page site read all 48 again. A read whose fingerprint holds all its page shows stays; a dynamic page's does not.
+test('a finding keeps a read whose fingerprint holds the whole page; a dynamic or unknown one is read anew', () => {
+  assert.equal(keptForFinding({ fingerprint: 'f', read: {}, asks: '[]', dynamic: false }), true)
+  assert.equal(keptForFinding({ fingerprint: 'f', read: {}, asks: '[]', dynamic: true }), false)
+  assert.equal(
+    keptForFinding({ fingerprint: 'f', read: {}, asks: '[]' }),
+    false,
+    'kept before dynamic was known'
+  )
+  assert.equal(keptForFinding(null), false)
 })
 
 test('host QA serializes different sites so decoded page images do not multiply across requests', async () => {

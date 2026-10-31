@@ -507,6 +507,30 @@ test('a look names the pages it saw whole: a page cut by the time budget is not 
   assert.deepEqual(cut.seen, first)
 })
 
+// #247 (dev 30/10/2026): one call cut by the provider threw away every page of its stream, so six checks of a 29-page
+// build ended "looked partly" with 0 pages seen. A page every tile of which was answered is seen.
+test('a page is seen once every tile of it is answered, even when a later call of its stream fails', async () => {
+  const fake = await fakes({ faults: [] }, { height: 700 })
+  let calls = 0
+  const fetchImpl = async (url, init) => {
+    calls++
+    // The first call answers home at both widths and the menu's desktop; every later one fails.
+    if (calls > 1) return new Response('provider down', { status: 500 })
+    return fake.fetchImpl(url, init)
+  }
+  const r = await createDemoLook({ ...fake, fetchImpl, visionFor: door, callsAtOnce: 1 })(
+    {},
+    { pages: ['/', '/menu'] }
+  )
+  assert.equal(r.looked, 'partly')
+  assert.equal(r.pass, false)
+  assert.deepEqual(r.seen, ['/'])
+  assert.deepEqual(
+    r.unlooked.map((u) => [u.page, u.viewports]),
+    [['/menu', ['phone']]]
+  )
+})
+
 test('a clean verdict without a readable image code cannot acknowledge any tiles', async () => {
   for (const imageCode of [undefined, null, 'WRONG123']) {
     const fake = await fakes({ faults: [], imageCode })
