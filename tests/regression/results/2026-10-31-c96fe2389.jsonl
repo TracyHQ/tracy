@@ -1,0 +1,2 @@
+{"id":"REG-PR-266-emdash-locate-gentle","verdict":"PASS","commit":"c96fe238982d9f1684f3ab77faa63456bfd341a9","ran_at":"2026-10-31T10:38:33.989Z","evidence":"tests/regression/.runs/2026-10-31-c96fe2389/REG-PR-266-emdash-locate-gentle.log"}
+{"id":"REG-PR-266-model-alias-maker","verdict":"PASS","commit":"c96fe238982d9f1684f3ab77faa63456bfd341a9","ran_at":"2026-10-31T10:38:34.066Z","evidence":"tests/regression/.runs/2026-10-31-c96fe2389/REG-PR-266-model-alias-maker.log"}
