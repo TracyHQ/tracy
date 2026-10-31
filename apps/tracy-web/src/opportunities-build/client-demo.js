@@ -789,8 +789,20 @@ export function createClientDemoService(deps) {
       // left it one answer. A caller gone before the result is saved costs no attempt. (An older dsh's road;
       // a current one starts the check and polls it, `check.start`.)
       if (signal?.aborted) throw error('AGENT_DEMO_CHECK_UNHEARD')
-      return { ok: true, ...(await settle(state, outcome)) }
+      return { ok: true, ...(await settle(state, outcome)), ...(await siteAddressOf(state.build.site_key)) }
     })
+  }
+  /**
+   * 🔒 THE SITE'S ADDRESS IS HANDED, NEVER TYPED (#247): a build's last reply told the customer the site was live at
+   * `https://zuni-cafe.tracy.sit`, an address the model wrote from memory with its last letter missing. Every finished
+   * check answers the site's exact address, as the site row holds it, for the reply to copy (`clientSendSteps`).
+   */
+  async function siteAddressOf(siteKey) {
+    if (!siteKey) return {}
+    const row = (await pool.query('select address from site where site_key=$1', [siteKey])).rows[0]
+    return typeof row?.address === 'string' && /^https?:\/\//.test(row.address)
+      ? { siteAddress: row.address }
+      : {}
   }
   function checkAllowed(state) {
     if ((state.build.qa?.clientCheckAttempts ?? 0) >= DEMO_CHECKS) throw error('DEMO_CHECK_BUDGET_EXHAUSTED')
@@ -826,10 +838,18 @@ export function createClientDemoService(deps) {
     // 🔒 AN INCREMENTAL READ LEAVES THE LOOK TO THE FULL ONE (29/10/2026): its look is never the answer — a pass is
     // confirmed by a full read, a counted failure is read again in full, and a round that sweeps is not looked at — so
     // a WordPress check looked twice, ~190 s each. The verdicts are the same; the full read looks.
-    const first = await measureOnce(auth, state, incremental, { ...sweep, look: !incremental })
+    // 🔒 AN INCREMENTAL READ THAT KEPT NO PAGE WAS A FULL READ (#247): every page read anew is what the full read would
+    // do again, ~100 s on a 48-page site for the same answer (dev 30/10/2026: six reads in one check answered "0
+    // unchanged", each then read again in full). Such a read looks as a full one does (`look: 'whole'`) and its answer
+    // stands; one that kept a page still leaves the look to the full read.
+    const first = await measureOnce(auth, state, incremental, {
+      ...sweep,
+      look: incremental ? 'whole' : true
+    })
     if (!incremental) return first
     const attempts = state.build.qa?.clientCheckAttempts ?? 0
     if (!first.pass && sweepDecision(state.build.qa?.residueSweeps, attempts, first.sweep).go) return first
+    if (first.readWhole) return first
     return measureOnce(auth, state, false, sweep)
   }
   async function measureOnce(auth, state, incremental, { batches = false, look = true } = {}) {
@@ -887,6 +907,8 @@ export function createClientDemoService(deps) {
     ]
     const reused =
       incremental && Array.isArray(measured.body.reused) ? new Set(measured.body.reused) : new Set()
+    // `look: 'whole'`: look only when this read kept no page, as a full read does (`measure`).
+    const looks = look === true || (look === 'whole' && reused.size === 0)
     const lastLook = incremental
       ? (state.build.qa?.clientCheck?.result?.checks ?? []).find((c) => c?.id === 'looks-finished')
       : null
@@ -1005,7 +1027,7 @@ export function createClientDemoService(deps) {
     let kept = []
     let fresh = []
     let judged = null
-    if (sweeping || !look) judged = lookCarried(lastLook, readPages, reused)
+    if (sweeping || !looks) judged = lookCarried(lastLook, readPages, reused)
     else {
       kept = reusableLookPages(lastLook, readPages, reused)
       const sample = lookSample(
@@ -1037,7 +1059,7 @@ export function createClientDemoService(deps) {
     // Where a check's minutes go, one line per check (28/10/2026: nothing said it before).
     const secs = (ms) => (ms / 1000).toFixed(1)
     console.info(
-      `[demo-check] ${site.site_key} ${incremental ? 'incremental' : 'full'}${sweeping ? ' sweep round' : ''}: inventory ${secs(inventoryAt - started)}s, page reads ${secs(readAt - inventoryAt)}s (${readPages.length} page(s), ${reused.size} unchanged), ${sweeping ? 'look skipped' : !look ? 'look left to the full read' : `look ${secs(now() - lookStarted)}s (${fresh.length} page(s) looked at, ${kept.length} kept)`}`
+      `[demo-check] ${site.site_key} ${incremental ? 'incremental' : 'full'}${sweeping ? ' sweep round' : ''}: inventory ${secs(inventoryAt - started)}s, page reads ${secs(readAt - inventoryAt)}s (${readPages.length} page(s), ${reused.size} unchanged), ${sweeping ? 'look skipped' : !looks ? 'look left to the full read' : `look ${secs(now() - lookStarted)}s (${fresh.length} page(s) looked at, ${kept.length} kept)`}`
     )
     return {
       checks: checksForAgent(checks),
@@ -1045,7 +1067,9 @@ export function createClientDemoService(deps) {
       sweep,
       // What a sweep with no call to run still names unresolved (a slot the replace job refuses to empty, a linked
       // title with no sourced words): kept on the check's answer, so the QA lists it (`sweepUnresolvedOf`).
-      unswept: worn.calls.length === 0 ? worn.unresolved : []
+      unswept: worn.calls.length === 0 ? worn.unresolved : [],
+      // Every page was read anew and looked at: what a full read would answer (`measure`).
+      readWhole: incremental && reused.size === 0 && !sweeping && looks
     }
   }
   /**
@@ -1241,7 +1265,12 @@ export function createClientDemoService(deps) {
       return { ok: true, running: true, checkId: job.id }
     }
     if (job.state === 'error') throw error(job.code ?? 'DEMO_QA_UNAVAILABLE')
-    return { ok: true, checkId: job.id, ...(job.resultText ? JSON.parse(job.resultText) : job.result) }
+    return {
+      ok: true,
+      checkId: job.id,
+      ...(job.resultText ? JSON.parse(job.resultText) : job.result),
+      ...(await siteAddressOf(build.site_key))
+    }
   }
   /**
    * Starts labelling the photographs of an own-site business's research as soon as it is done (#250), so the brief
