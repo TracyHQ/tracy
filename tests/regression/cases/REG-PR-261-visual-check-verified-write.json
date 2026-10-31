@@ -1,0 +1,40 @@
+{
+  "id": "REG-PR-261-visual-check-verified-write",
+  "kind": "fix",
+  "title": "A turn whose every write read its words back on the page is not redrawn and judged again",
+  "pr": 261,
+  "area": "site-tools/visual-check",
+  "cms": ["wp", "jo", "em"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: run the visual check on a turn whose only writes are content.replace answers verified \"shown on …\".",
+    "S2: the same with a write that did not verify, or that wrote companions or failed a contact.",
+    "S3: a verified write to a shared part whose pages are held as extras."
+  ],
+  "expect": [
+    "S1: the check is skipped as verified-on-page; no picture is drawn and no judge is asked.",
+    "S2: the check runs.",
+    "S3: the check runs."
+  ],
+  "selectors": {
+    "file": "packages/tools/tracy-site-tools/src/host/visual-check.mjs",
+    "exports": "runVisualCheck, writesShownInTurn"
+  },
+  "evidence": "Issue #209: a one-word replace already read back on the page waited for a redraw and a judge that reported it not shown",
+  "fence": "Visual check pictures",
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=\\(#209\\)",
+      "packages/tools/tracy-site-tools/test/visual-check.test.mjs"
+    ],
+    "tests": [
+      "a turn whose every write read its words back on the page is not redrawn or judged (#209)",
+      "the check still runs when a write did not prove itself, or touched more than its words (#209)",
+      "a verified write to a shared part (pages of it held as extras) is still checked (#209)"
+    ]
+  }
+}

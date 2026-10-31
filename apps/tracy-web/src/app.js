@@ -31,7 +31,7 @@ import { placeIngestRoutes } from 'website-opportunities/src/place-ingest-door.j
 import { memoryDiscordStore, pgDiscordStore } from './discord/store.js'
 import { docsHostRoutes, docsRedirects, REFERENCE_FILES } from './docs/route.js'
 import { createRepoFor, deleteRepoFor, githubRoutes, mintGitToken } from './github/route.js'
-import { managedFramePolicy } from './host/frame-policy.js'
+import { managedFramePolicy, warmFramePolicies } from './host/frame-policy.js'
 import { localAccessBook, localAccessRoutes } from './identity/local-access.js'
 import { generateCode, hashCode } from './identity/otp.js'
 import { identityRoutes } from './identity/route.js'
@@ -598,8 +598,17 @@ export function buildApp(deps) {
   // would have been a regression this task's own global constraint forbids.
   if (deps.config && deps.pool) {
     const dsLivePages = designSystemLivePages()
+    const ensureFramePolicy = managedFramePolicy({ config: deps.config, fetchImpl: deps.fetchImpl })
+    // A serving process brings every EmDash site's frame policy up to date once, in the background,
+    // so an owner's open never recreates the site's container (#205).
+    if (deps.resumeLiveJobs === true)
+      setTimeout(() => {
+        warmFramePolicies({ pool: deps.pool, ensure: ensureFramePolicy, log: deps.log }).catch((error) =>
+          deps.log?.warn?.(`[frame-policy] start check failed: ${error?.message ?? error}`)
+        )
+      }, 5_000).unref?.()
     const bar = barRoutes({
-      ensureFramePolicy: managedFramePolicy({ config: deps.config, fetchImpl: deps.fetchImpl }),
+      ensureFramePolicy,
       pool: deps.pool,
       config: deps.config,
       sites: {
