@@ -5,8 +5,18 @@
 #
 # Only the npmjs content store is cached, never node_modules, credentials or test verdicts.
 # dsh and workspace installs have separate keys so a dsh-only install cannot freeze an incomplete
-# workspace cache. GitHub scopes PR writes to refs/pull/N/merge; these callers admit same-repo PRs
-# only, and no privileged workflow consumes this cache. No restore prefix crosses an input change.
+# workspace cache. These callers admit same-repo PRs only, and no privileged workflow consumes this
+# cache.
+#
+# PULL REQUESTS RESTORE ONLY (30/10/2026). A save from a pull request lands in its own scope
+# (refs/pull/N/merge), readable by that pull request alone: ~870 MB per PR, which pushed everything
+# else (the Turbo cache included) out of the repository's 10 GB. So off the default branch this
+# action restores and never saves: the exact key, else the newest store of the same OS,
+# architecture and scope by prefix (a pull request that changes the lockfile then downloads only
+# the difference; nothing it restores is saved again, so a prefix match cannot freeze anything).
+# On the default branch it only LOOKS UP the key (`cache-hit`) and restores nothing: the one caller
+# there is Tracy CI's `pnpm-store-seed` job, which fills the store with `pnpm fetch` and saves it
+# under `key` when it was not there. A pull request finds that entry in the `main` scope.
 name: Hosted pnpm
 description: Pin Corepack's default and cache pnpm downloads on a GitHub-hosted runner.
 
@@ -14,6 +24,17 @@ inputs:
   scope:
     description: Separate the dsh toolchain store from the complete workspace store.
     required: true
+
+outputs:
+  key:
+    description: The store's cache key, the same for the job that saves it and the jobs that restore it
+    value: ${{ steps.key.outputs.key }}
+  path:
+    description: The pnpm content store
+    value: ${{ steps.store.outputs.path }}
+  cache-hit:
+    description: "On the default branch: whether an entry already holds `key`"
+    value: ${{ steps.probe.outputs.cache-hit }}
 
 runs:
   using: composite
@@ -27,8 +48,32 @@ runs:
         echo "path=$(pnpm store path --silent)" >> "$GITHUB_OUTPUT"
         echo "dsh=$(git rev-parse HEAD:vendor/tracy/deepseek-harness)" >> "$GITHUB_OUTPUT"
 
-    - name: Cache the pnpm content store
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+    # The one definition of the key. `PREFIX` is what a pull request falls back to.
+    - name: Compute the store key
+      id: key
+      shell: bash
+      env:
+        PREFIX: hosted-pnpm-v1-${{ runner.os }}-${{ runner.arch }}-${{ inputs.scope }}-
+        INPUTS: ${{ hashFiles('.node-version', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', '.npmrc', 'vendor/tracy/deepseek-harness/pnpm-lock.yaml') }}
+        DSH: ${{ steps.store.outputs.dsh }}
+      run: |
+        set -euo pipefail
+        echo "prefix=$PREFIX" >> "$GITHUB_OUTPUT"
+        echo "key=$PREFIX$INPUTS-$DSH" >> "$GITHUB_OUTPUT"
+
+    - name: Restore the pnpm content store
+      if: github.ref != format('refs/heads/{0}', github.event.repository.default_branch)
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
       with:
         path: ${{ steps.store.outputs.path }}
-        key: hosted-pnpm-v1-${{ runner.os }}-${{ runner.arch }}-${{ inputs.scope }}-${{ hashFiles('.node-version', 'package.json', 'pnpm-lock.yaml', 'pnpm-workspace.yaml', '.npmrc', 'vendor/tracy/deepseek-harness/pnpm-lock.yaml') }}-${{ steps.store.outputs.dsh }}
+        key: ${{ steps.key.outputs.key }}
+        restore-keys: ${{ steps.key.outputs.prefix }}
+
+    - name: Look up the pnpm content store (default branch)
+      id: probe
+      if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+      uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ${{ steps.store.outputs.path }}
+        key: ${{ steps.key.outputs.key }}
+        lookup-only: true

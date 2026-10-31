@@ -1371,23 +1371,46 @@ class IdMap:
                 crowded[side].add(nat)  # two new rows for one record on one side: left as they are
             new[side][nat] = number
         same, pairs = set(), []
+        # A live row under a number the map gave it (`apply`) is the copy's record under that number,
+        # never a row to move aside.
+        remembered = self.applied.get(theirs, {}).get(table, {})
         for nat, copy in new[0].items():
             live = new[1].get(nat)
             if live is None or nat in crowded[0] or nat in crowded[1]:
                 continue
             if live == copy:
                 same.add(copy)
-            elif copy not in t and live not in o:
+            elif copy not in t or copy not in remembered:
                 pairs.append((live, copy))
                 same.add(copy)
+        # The numbers may cross: each side added other rows first, so the live site holds the copy's
+        # number for a row of its own (re-test of #118: the copy's template under 3, the live site's
+        # under 4 and another row of the live site's under 3). That row is a new one both sites gave
+        # one number: it goes under a fresh number, as `clash` would number it, in the same move.
+        # Skipped instead, the two templates stayed two rows on the copy with no conflict.
+        sources = {live for live, _ in pairs}
+        aside = []
+        taken = set(self.seen[table])
+        for number in sorted(copy for _, copy in pairs if copy in t and copy not in sources):
+            fresh = self.fresh(table, taken)
+            taken.add(fresh)
+            self.seen[table].add(fresh)
+            aside.append((number, fresh))
+        for number, fresh in aside:
+            raw = self.moved(theirs, table, number, fresh)
+            self.map.setdefault(table, {})[raw] = fresh
+            self.added.append({"table": table, "live": raw, "copy": fresh, "why": "created-on-both"})
         for live, copy in pairs:
             raw = self.moved(theirs, table, live, copy)
             self.map.setdefault(table, {})[raw] = copy
             self.seen[table].add(copy)
             self.added.append({"table": table, "live": raw, "copy": copy, "why": "same-record"})
         if pairs:
-            self.renumber(theirs, table, rule, pairs)
-            t = (t - {live for live, _ in pairs}) | {copy for _, copy in pairs}
+            self.held += self.unhandled_refs(base, theirs, table, aside)
+            # One move: `renumber` goes through a far offset, so a swap or a chain never meets itself.
+            self.renumber(theirs, table, rule, aside + pairs)
+            t = ((t - sources - {n for n, _ in aside}) | {copy for _, copy in pairs}
+                 | {fresh for _, fresh in aside})
         return same, t
 
     def moved(self, schema: str, table: str, number: int, to: int) -> int:
@@ -1874,6 +1897,14 @@ class DbMerge:
                 if sets:
                     script.append(f"UPDATE {self.ref('base', table)} bb, {self.ref(side, table)} s SET {sets}"
                                   f" WHERE {self._match('bb', match)} AND {self._match('s', match)};")
+                # The times the live site stamped on a record the push created: the base holds the
+                # copy's, so the live site's come over as its change and the two rows agree (#223).
+                stamps = [c for c in rec.get("stamps", []) if isinstance(c, str) and c in all_columns
+                          and c in self.writable_columns("base", table)] if rec.get("create") else []
+                if stamps:
+                    script.append(f"UPDATE {self.ref('base', table)} bb, {self.ref('ours', table)} s SET "
+                                  + ", ".join(f"bb.{q(c)} = s.{q(c)}" for c in stamps)
+                                  + f" WHERE {self._match('bb', match)} AND {self._match('s', match)};")
                 continue
             # dependents: the rows of a created record that the live site made with it.
             if not rec.get("create") or rec.get("entity") not in entities or rec.get("id") is None:

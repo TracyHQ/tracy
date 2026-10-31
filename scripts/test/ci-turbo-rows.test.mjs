@@ -285,14 +285,11 @@ test('plan keeps time for the fallback, and never leaves the deploy key behind',
   assert.ok(limit(ask.run) > 0, 'the dry run has no time limit')
   // The cache action's own wait, read from the action (50 tries of 0.2 s since the dependency-free
   // server); what is left of the job's minutes is the fallback's.
-  const action = readFileSync(
-    new URL('../../.github/actions/turbo-cache/action.yml', import.meta.url),
-    'utf8'
-  )
-  const tries = /for _ in \$\(seq 1 (\d+)\)/.exec(action)
-  const nap = /sleep ([0-9.]+)/.exec(action)
+  const action = readFileSync(new URL('../../.github/actions/turbo-cache/start.mjs', import.meta.url), 'utf8')
+  const tries = /export const TRIES = (\d+)/.exec(action)
+  const nap = /export const NAP_MS = (\d+)/.exec(action)
   assert.ok(tries && nap, 'the cache action no longer waits in a counted loop')
-  const cacheWait = Math.ceil(Number(tries[1]) * Number(nap[1]))
+  const cacheWait = Math.ceil((Number(tries[1]) * Number(nap[1])) / 1000)
   const budget = cacheWait + limit(fetch.run) + limit(ask.run)
   assert.ok(
     budget <= workflow.jobs.plan['timeout-minutes'] * 60 - 45,

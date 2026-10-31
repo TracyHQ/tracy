@@ -1,0 +1,35 @@
+{
+  "id": "REG-PR-253-undo-retry",
+  "kind": "fix",
+  "title": "Undo finishes after a failed or lost undo write, and an unreachable site is LIVE_UNREACHABLE",
+  "pr": 253,
+  "area": "sync/push-undo",
+  "cms": ["wp"],
+  "steps": [
+    "Undo with a 503 on the first undo write, then Undo again.",
+    "Undo with an undo write that lands but loses its answer and a later read refused, then Undo again.",
+    "Undo with the live site down."
+  ],
+  "expect": [
+    "First Undo answers WRITE_OUTCOME_UNKNOWN having restored the rest; the second ends undone with both restored, three undo writes in all.",
+    "The second Undo ends undone, nothing kept, post 2 not written again.",
+    "The answer code is LIVE_UNREACHABLE."
+  ],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#227",
+      "packages/fleet/tracy-fleet-operation/test/live-write.test.mjs"
+    ],
+    "tests": [
+      "an Undo write a proxy answered 503",
+      "an Undo write that landed with its answer lost",
+      "an Undo that cannot reach the live site says LIVE_UNREACHABLE"
+    ]
+  },
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {}
+}
