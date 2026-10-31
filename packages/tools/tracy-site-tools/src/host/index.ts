@@ -5739,7 +5739,8 @@ export function apply(ctx: HostContext, config: Config = {}): void {
               facts.platform === 'wordpress' || facts.platform === 'joomla'
                 ? facts.platform
                 : await detectPlatform(webroot),
-            // A bound WordPress site: a picture lands in an image slot or nowhere.
+            // A bound WordPress site: a picture placed on a page lands in an image slot; one drawn with a
+            // shape of its own is kept in the media library only (#255).
             slotOnly: facts.platform === 'wordpress' && facts.contractDoor === true,
             door: pictureDoor(process.env),
             draw: drawPicture,

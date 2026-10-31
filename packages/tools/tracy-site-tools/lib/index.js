@@ -26449,6 +26449,7 @@ function slotChoices(slots) {
   });
   return { slots: lines, ...slots.length > SLOTS_LISTED ? { moreSlots: slots.length - SLOTS_LISTED } : {} };
 }
+var SLOT_OR_LIBRARY = 'On this quickstart site a picture placed on a page goes into an image slot: media.draw {prompt, slot:"<image slot key>"}. A picture kept in the media library only takes its own shape: media.draw {prompt, aspect:"<w>:<h>"}.';
 async function slotRefusal({ code, slot, imageSlots }) {
   let found = [];
   if (imageSlots) {
@@ -26463,12 +26464,12 @@ async function slotRefusal({ code, slot, imageSlots }) {
     return {
       ok: false,
       code,
-      error: slot === null ? 'On this quickstart site a picture goes into an image slot: media.draw {prompt, slot:"<image slot key>"}. content.read names the slot of a picture (field.slotKey), or content.contract {operation:"inspect", slots:"image"} lists them.' : `${slot} is not an image slot of this site's contract; list them with content.contract {operation:"inspect", slots:"image"}`
+      error: slot === null ? `${SLOT_OR_LIBRARY} content.read names the slot of a picture (field.slotKey), or content.contract {operation:"inspect", slots:"image"} lists them.` : `${slot} is not an image slot of this site's contract; list them with content.contract {operation:"inspect", slots:"image"}`
     };
   return {
     ok: false,
     code,
-    error: slot === null ? 'On this quickstart site a picture goes into an image slot: media.draw {prompt, slot:"<image slot key>"}.' : `${slot} is not an image slot of this site.`,
+    error: slot === null ? SLOT_OR_LIBRARY : `${slot} is not an image slot of this site.`,
     ...slotChoices(found),
     next: slot === null ? "Take the slot the picture replaces from slots and call media.draw again with it: the shape comes with the slot, so no aspect or like." : 'Call media.draw again with one of slots: the shape comes with the slot. None fits: content.contract {operation:"inspect", slots:"image", page:"<route>"}.'
   };
@@ -26533,7 +26534,8 @@ async function mediaDraw({
       error: "replaces is for EmDash sites: here the shape is a contract image slot (slot) or a picture on the site (like)."
     };
   }
-  if (slotOnly && plan.slot === null) return slotRefusal({ code: "SLOT_REQUIRED", slot: null, imageSlots });
+  if (slotOnly && plan.slot === null && plan.like === null && plan.aspect === null)
+    return slotRefusal({ code: "SLOT_REQUIRED", slot: null, imageSlots });
   if (!door?.imageModel)
     return {
       ok: false,
@@ -26584,6 +26586,14 @@ async function mediaDraw({
       next: `${emdashPlacedNext(id, url, picture.path)}${id ? ` To look at it: media.scan {id:"${id}"}.` : ""} ${DRAWN_RULES}`
     });
   }
+  if (slotOnly && plan.slot === null)
+    return said({
+      ok: true,
+      path: picture.path,
+      width: picture.width,
+      height: picture.height,
+      next: `The picture is in the media library as ${picture.path}, placed on no page. To show a picture in an image slot, draw it with that slot (media.draw {prompt, slot}): the slot brings the shape its apply checks. ${DRAWN_RULES}`
+    });
   return said({
     ok: true,
     path: picture.path,
@@ -45110,16 +45120,16 @@ var UPLOAD_CALL = "media.upload {file, alt?} (Files-tab name) | {attachment, alt
 var DRAW_CALL = {
   open: ' \xB7 media.draw {prompt, like?:"<a site picture>" | aspect?:"16/10"}',
   "joomla-slot": ' \xB7 media.draw {prompt, slot:"module-441.8"}',
-  "wordpress-slot": ' \xB7 media.draw {prompt, slot:"home.hero.img"}',
+  "wordpress-slot": ' \xB7 media.draw {prompt, slot:"home.hero.img" | aspect (library only)}',
   emdash: ' \xB7 media.draw {prompt, replaces:{collection, id, field} | aspect:"<w>:<h>" (a new picture)}'
 };
-var SLOT_KEY_FROM = ' (key: inspect {slots:"image", page}; the slot sets the shape: no aspect, like or media.scan)';
+var SLOT_KEY_FROM = ' (key: inspect {slots:"image", page}; a slot sets its shape: no like/media.scan)';
 var picturesBlock = (mode) => {
   const emdash = mode === "emdash";
   const slot = mode === "joomla-slot" || mode === "wordpress-slot";
   const mediaDelete = emdash ? "" : " \xB7 media.delete: preview, confirm; no shell/files; report refusals.";
   const style = " \xB7 style: each prop's value, rule and var(--token) source";
-  const effects = emdash ? "Effects: media.draw adds one picture per call: write its id with tracy_emdash content_update." : slot ? "Effects: media.draw adds ONE picture per call: apply its path to the slot." : "Effects: media.draw adds ONE picture per call: write its path where it belongs.";
+  const effects = emdash ? "Effects: media.draw adds one picture per call: write its id with tracy_emdash content_update." : slot ? "Effects: media.draw adds ONE picture per call: apply its path." : "Effects: media.draw adds ONE picture per call: write its path where it belongs.";
   return `page.look \xB7 media.scan \xB7 media.draw \xB7 media.upload: a page's look, the site's pictures. Use when asked about either. Not for words (page.text). Call page.look {path:"/", style?:{text|selector, nth?:0 = the first, props?, viewport?}} \xB7 media.scan {${emdash ? "limit?:\u2264100 | id" : "limit?:\u2264100"}}${DRAW_CALL[mode]}${slot ? SLOT_KEY_FROM : ""} \xB7 ${UPLOAD_CALL}${mediaDelete}. ${emdash ? `Returns {file, url}${style} \xB7 {id, alt, url}, id: the picture \xB7 {id, url}` : `Returns {file, url, description?}: follow its next${style} \xB7 the largest images {path, url, width, height} \xB7 {path}`}. ${effects} Refusals: NO_BROWSER \u2192 page.text.`;
 };
 var wordpressWriteBlock = (readBack, replace = false) => (
@@ -49893,7 +49903,8 @@ ${text6}`);
             webroot,
             // The folder the site's Claude Cowork plugin takes an upload into differs by CMS.
             platform: facts.platform === "wordpress" || facts.platform === "joomla" ? facts.platform : await detectPlatform(webroot),
-            // A bound WordPress site: a picture lands in an image slot or nowhere.
+            // A bound WordPress site: a picture placed on a page lands in an image slot; one drawn with a
+            // shape of its own is kept in the media library only (#255).
             slotOnly: facts.platform === "wordpress" && facts.contractDoor === true,
             door: pictureDoor(process.env),
             draw: drawPicture,

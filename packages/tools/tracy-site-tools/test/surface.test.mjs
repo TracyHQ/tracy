@@ -537,21 +537,23 @@ test("🔒 every surface takes the customer's own file by name, and a quickstart
  * a bound WordPress site refuses anything but a slot, a Joomla quickstart's apply refuses a picture cut to
  * the wrong shape, and 20 picture runs spent 2–8 calls finding the slot key or were refused for sending
  * the slot beside an aspect. A quickstart says `slot` (its own key form, where the key is, that the slot
- * brings the shape); an open site keeps `like` and `aspect`.
+ * brings the shape); an open site keeps `like` and `aspect`. A bound WordPress site also keeps a picture
+ * in the media library only, with a shape of its own (#255: its Claude Cowork plugin takes that upload), so
+ * its block names `aspect (library only)` beside the slot; the slot still fixes a placed picture's shape.
  */
 test('🔒 the pictures block offers a draw a slot on a quickstart, like or aspect on an open site', () => {
   const pictures = (/** @type {any} */ s) =>
     siteToolBlocks(s).find((b) => b.text.startsWith(PICTURES))?.text ?? ''
-  const KEY_FROM =
-    /\(key: inspect \{slots:"image", page\}; the slot sets the shape: no aspect, like or media\.scan\)/
+  const KEY_FROM = /\(key: inspect \{slots:"image", page\}; a slot sets its shape: no like\/media\.scan\)/
   const joomla = pictures('joomla-sealed')
   const wordpress = pictures('wordpress-contract')
   assert.match(joomla, /media\.draw \{prompt, slot:"module-441\.8"\}/)
-  assert.match(wordpress, /media\.draw \{prompt, slot:"home\.hero\.img"\}/)
+  assert.match(wordpress, /media\.draw \{prompt, slot:"home\.hero\.img" \| aspect \(library only\)\}/)
+  assert.doesNotMatch(joomla, /library only/, 'Joomla draws without a slot already; its block says the slot')
   for (const text of [joomla, wordpress]) {
     assert.match(text, KEY_FROM)
     assert.doesNotMatch(text, /like\?|aspect\?|16\/10/, 'a quickstart draw offers neither like nor aspect')
-    assert.match(text, /Effects: media\.draw adds ONE picture per call: apply its path to the slot\./)
+    assert.match(text, /Effects: media\.draw adds ONE picture per call: apply its path\./)
   }
   // Each says its own CMS's key form only.
   assert.doesNotMatch(joomla, /home\.hero\.img/)

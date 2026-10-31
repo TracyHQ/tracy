@@ -317,14 +317,14 @@ test('an unknown slot is answered with the image slots of the block it names, el
   }
 })
 
-test('a bound WordPress site asked for a picture with no slot is answered with its image slots', async () => {
+test('a bound WordPress site asked for a picture with no slot and no shape is answered with its image slots', async () => {
   const wordpress = [
     { key: 'home.hero.img', current: 'wp-content/uploads/2026/09/hero.png' },
     { key: 'about.team.img', current: 'wp-content/uploads/2026/09/team.png' }
   ]
   let asked = 'not asked'
   const answer = await mediaDraw({
-    params: { prompt: 'x', aspect: '4:5' },
+    params: { prompt: 'x' },
     webroot: null,
     platform: 'wordpress',
     slotOnly: true,
@@ -342,7 +342,7 @@ test('a bound WordPress site asked for a picture with no slot is answered with i
   assert.equal(asked, null, 'no key was given, so every picture is listed')
   assert.equal(
     answer.error,
-    'On this quickstart site a picture goes into an image slot: media.draw {prompt, slot:"<image slot key>"}.'
+    'On this quickstart site a picture placed on a page goes into an image slot: media.draw {prompt, slot:"<image slot key>"}. A picture kept in the media library only takes its own shape: media.draw {prompt, aspect:"<w>:<h>"}.'
   )
   assert.deepEqual(answer.slots, ['home.hero.img: hero.png', 'about.team.img: team.png'])
   assert.match(
@@ -422,12 +422,12 @@ test('on WordPress the picture is drawn into wp-content/uploads/tracy-content, f
   assert.match(planDraw({ prompt: 'x', slot: 'hero' }).error, /slot must be/)
 })
 
-// On a bound WordPress site a picture has nowhere to land but an image slot, and a Claude Cowork plugin older
-// than image slots names none: without a slot the draw would be paid for and then refused.
-test('a bound WordPress site draws for a slot only, and says so before anything is paid for', async () => {
+// On a bound WordPress site a picture placed on a page lands in an image slot, and a Claude Cowork plugin
+// older than image slots names none: a draw with no slot and no shape is refused before it is paid for.
+test('a bound WordPress site with no slot and no shape says both roads before anything is paid for', async () => {
   let drew = false
   const answer = await mediaDraw({
-    params: { prompt: 'x', aspect: '4:5' },
+    params: { prompt: 'x' },
     webroot: null,
     platform: 'wordpress',
     slotOnly: true,
@@ -441,7 +441,64 @@ test('a bound WordPress site draws for a slot only, and says so before anything 
   assert.equal(drew, false)
   assert.equal(answer.code, 'SLOT_REQUIRED')
   assert.match(answer.error, /media\.draw \{prompt, slot:"<image slot key>"\}/)
+  assert.match(answer.error, /media\.draw \{prompt, aspect:"<w>:<h>"\}/)
   assert.match(answer.error, /slots:"image"/)
+})
+
+// #255 (survey 29/10/2026): "draw a picture and add it to the media library, put it on no page" was refused
+// SLOT_REQUIRED on a bound WordPress site, and the agent borrowed an unrelated slot for its shape. The
+// site's Claude Cowork plugin takes a content-addressed upload under its own apply id on a bound site
+// (`wordpress/cowork/lib/Engine.php`; its tests/contracts.php "bound: a content-addressed image under its
+// own apply lands"), so a draw with its own shape is kept in the library, as on EmDash and Joomla.
+test('a bound WordPress site keeps a picture drawn to its own shape in the media library, placed nowhere (#255)', async () => {
+  let drawnWith = null
+  let sent = null
+  let slotsAsked = false
+  const answer = await mediaDraw({
+    params: { prompt: 'Three carne asada tacos on a wooden board', aspect: '3:2' },
+    webroot: null,
+    platform: 'wordpress',
+    slotOnly: true,
+    door: { imageModel: 'm' },
+    imageSlots: async () => {
+      slotsAsked = true
+      return []
+    },
+    resolveSlot: async () => {
+      throw new Error('no slot was named')
+    },
+    draw: async (args) => {
+      drawnWith = args
+      return {
+        ok: true,
+        bytes: Buffer.from('j'),
+        ext: 'jpg',
+        path: `${args.folder}/t.jpg`,
+        width: 1200,
+        height: 800
+      }
+    },
+    upload: async (params) => {
+      sent = params
+      return { ok: true }
+    }
+  })
+  assert.equal(answer.ok, true)
+  assert.equal(slotsAsked, false, 'no refusal, so no slot list is read')
+  assert.equal(drawnWith.aspect, 1.5)
+  assert.equal(drawnWith.folder, 'wp-content/uploads/tracy-content')
+  assert.equal(sent.path, 'wp-content/uploads/tracy-content/t.jpg')
+  assert.doesNotMatch(sent.apply_id, /^contract-/, 'the plugin refuses a library upload under a contract- id')
+  assert.match(
+    answer.next,
+    /in the media library as wp-content\/uploads\/tracy-content\/t\.jpg, placed on no page/
+  )
+  assert.match(answer.next, /draw it with that slot/)
+  assert.doesNotMatch(
+    answer.next,
+    /content\.contract \{operation:"apply"/,
+    'nothing to apply for a library picture'
+  )
 })
 
 // EmDash (26/09/2026): the one CMS with no draw road — rounds 3, 4 and 5 all refused D4 "redraw the
