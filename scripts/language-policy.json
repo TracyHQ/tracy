@@ -332,6 +332,26 @@
       "path": "docs/superpowers/plans/2026-10-31-agent-tool-reader-acceptance/site-tools-tests.txt",
       "oid": "b379c51580015ae624c607e820977960f54d69d3",
       "reason": "Exact captured multilingual agent acceptance transcript or test output. Localized model responses and existing fixture labels are retained verbatim as measured evidence; authored reports are English."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "a6b4e9a3f39ab91f20e878b89b19ae89691db7d0",
+      "reason": "Exact generated interface translation bundle of PR #263, first build (the two home-page words) at commit 10a4b900d: the turn card's and Site changes' word for a static front page (`undo.home`, `event.target.home`). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "beff70b3f2c3e6d9669a403b98746ec08a664cc3",
+      "reason": "Exact generated Vietnamese interface bundle of PR #263, first build (the two home-page words) at commit 10a4b900d: the turn card's and Site changes' word for a static front page (`undo.home`, `event.target.home`). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "a424b488f840d1d4d38088263c80ef0aad349925",
+      "reason": "Exact generated interface translation bundle of PR #263, final build after merging develop at commit f6747de67: the turn card's and Site changes' word for a static front page (`undo.home`, `event.target.home`). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "9baca3d53d7dcd1eb0e9975da7e11b2101ae7135",
+      "reason": "Exact generated Vietnamese interface bundle of PR #263, final build after merging develop at commit f6747de67: the turn card's and Site changes' word for a static front page (`undo.home`, `event.target.home`). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source. Different bytes require a separate review."
     }
   ]
 }

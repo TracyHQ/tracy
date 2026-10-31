@@ -1,12 +1,12 @@
 /*
  * Tracy's accent on Starlight's own theme. Only the accent scale is changed: the system-wide
- * primary is terracotta `#bf5b3d` (packages/ui/tracy-ui/src/tokens.css, 14/09/2026), and
+ * primary is terracotta `#b75436` (packages/ui/tracy-ui/src/tokens.css; one step darker than the brand mark for WCAG AA, #228), and
  * Starlight derives buttons, links and the active sidebar item from these three variables.
  * Everything else — type, spacing, dark mode — stays Starlight's, so the site follows its upgrades.
  */
 :root {
   --sl-color-accent-low: #3b1a10;
-  --sl-color-accent: #bf5b3d;
+  --sl-color-accent: #b75436;
   --sl-color-accent-high: #f1c9b8;
 }
 
