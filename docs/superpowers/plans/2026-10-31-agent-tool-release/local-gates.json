@@ -1,0 +1,39 @@
+{
+  "fullLocalGate": {
+    "status": "interrupted",
+    "exitCode": 143,
+    "cause": "Real MariaDB suite retries exhausted Docker VM storage; local trace also found ignored generated-input gaps and file timeouts.",
+    "countsAsGreen": false
+  },
+  "selectedLocalGates": {
+    "passed": 63,
+    "failed": 0,
+    "explicitlyExcluded": [
+      "turbo-config",
+      "tests"
+    ],
+    "bundles": {
+      "packages": 23,
+      "builds": 32
+    },
+    "bootGraphs": {
+      "webEntries": 58,
+      "nativeEntries": 75
+    }
+  },
+  "docLinks": {
+    "files": 528,
+    "broken": 0
+  },
+  "timingTests": {
+    "hostTargetPassed": 1,
+    "webPassed": 8
+  },
+  "postMergeCmsSmoke": {
+    "passed": 15,
+    "total": 15
+  },
+  "trustedPolicyPrerequisite": "https://github.com/TracyHQ/tracy/pull/269",
+  "optimizationPullRequest": "https://github.com/TracyHQ/tracy/pull/270",
+  "tracyMain": "excluded"
+}
