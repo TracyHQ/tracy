@@ -403,7 +403,8 @@ export async function runReplace(input) {
       mint: (prefix) => memory.mint(prefix),
       // The contact records a site-wide replace reaches too (#204): listed through the raw relay, as the
       // open road lists them, and written through `runSiteCall`.
-      read: (/** @type {string} */ action, /** @type {Record<string, unknown>} */ params) => input.send(action, params),
+      read: (/** @type {string} */ action, /** @type {Record<string, unknown>} */ params) =>
+        input.send(action, params),
       write: (/** @type {string} */ action, /** @type {Record<string, unknown>} */ params) =>
         input.siteCall(action, params),
       // Every message the customer typed, latest first: the words a slot needs as evidence may have

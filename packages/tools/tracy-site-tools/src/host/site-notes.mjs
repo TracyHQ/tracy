@@ -647,7 +647,9 @@ export function capturesSettled() {
  */
 function said_(job, stage, e) {
   const code = /** @type {any} */ (e)?.code ?? /** @type {any} */ (e)?.name ?? 'ERROR'
-  job.warn?.(`site-notes: ${stage} failed in ${path.basename(String(job.storeDir))}: ${String(code).slice(0, 40)}`)
+  job.warn?.(
+    `site-notes: ${stage} failed in ${path.basename(String(job.storeDir))}: ${String(code).slice(0, 40)}`
+  )
 }
 
 /**

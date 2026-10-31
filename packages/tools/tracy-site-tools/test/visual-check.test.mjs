@@ -680,12 +680,17 @@ function replaceTurn(answers) {
       data: {
         name: 'tracy_site',
         callId: `r${i}`,
-        arguments: { action: 'content.replace', params: { find: 'Tacos', replace: 'Tacos made fresh every day' } }
+        arguments: {
+          action: 'content.replace',
+          params: { find: 'Tacos', replace: 'Tacos made fresh every day' }
+        }
       }
     })
     events.push({
       type: 'tool/result',
-      data: { message: { source: { callId: `r${i}` }, content: [{ type: 'text', text: JSON.stringify(answer) }] } }
+      data: {
+        message: { source: { callId: `r${i}` }, content: [{ type: 'text', text: JSON.stringify(answer) }] }
+      }
     })
   })
   events.push({
@@ -695,7 +700,12 @@ function replaceTurn(answers) {
   return events
 }
 
-const SHOWN = { ok: true, platform: 'wordpress', changed: [{ at: 'post:2.post_title' }], verified: 'shown on /' }
+const SHOWN = {
+  ok: true,
+  platform: 'wordpress',
+  changed: [{ at: 'post:2.post_title' }],
+  verified: 'shown on /'
+}
 
 test('a turn whose every write read its words back on the page is not redrawn or judged (#209)', async () => {
   let drawn = 0
@@ -727,7 +737,10 @@ test('the check still runs when a write did not prove itself, or touched more th
     assert.equal(writesShownInTurn(replaceTurn([SHOWN, other])), false, JSON.stringify(other))
   // Another kind of write in the same turn (a shell command): checked as before.
   const mixed = replaceTurn([SHOWN])
-  mixed.splice(1, 0, { type: 'tool/call', data: { name: 'bash', callId: 'b1', arguments: { command: 'wp option update x y' } } })
+  mixed.splice(1, 0, {
+    type: 'tool/call',
+    data: { name: 'bash', callId: 'b1', arguments: { command: 'wp option update x y' } }
+  })
   assert.equal(writesShownInTurn(mixed), false)
   assert.equal(writesShownInTurn(log()), false, 'a shell write alone')
 })

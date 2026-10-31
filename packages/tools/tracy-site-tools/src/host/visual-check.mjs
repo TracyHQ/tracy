@@ -213,7 +213,10 @@ export function writesShownInTurn(events) {
     }
     if (event?.type !== 'tool/call' || !callChangedSite(event.data)) continue
     const { action } = canonicalCall(argsOf(event.data))
-    writes.set(String(event.data?.callId ?? i), event.data?.name === 'tracy_site' && action === 'content.replace')
+    writes.set(
+      String(event.data?.callId ?? i),
+      event.data?.name === 'tracy_site' && action === 'content.replace'
+    )
   }
   if (writes.size === 0) return false
   for (const [id, replace] of writes) {
@@ -225,7 +228,11 @@ export function writesShownInTurn(events) {
     } catch {
       return false
     }
-    if (answer?.ok !== true || typeof answer.verified !== 'string' || !answer.verified.startsWith('shown on '))
+    if (
+      answer?.ok !== true ||
+      typeof answer.verified !== 'string' ||
+      !answer.verified.startsWith('shown on ')
+    )
       return false
     if ((Array.isArray(answer.companions) && answer.companions.length) || answer.contactsFailed) return false
   }
@@ -701,7 +708,7 @@ export async function runVisualCheck(job) {
     if (ask === undefined || ask.turn !== job.turn) return skip('no-ask')
     if (!siteChangedInTurn(job.events)) return skip('no-write')
     // Every write read its own words back on its page, and no shared part was written: proven (#209).
-    if (!(ask.extras?.length) && writesShownInTurn(job.events)) return skip('verified-on-page')
+    if (!ask.extras?.length && writesShownInTurn(job.events)) return skip('verified-on-page')
     // The page drawn as the turn began, kept by a write that named no page, when nothing better came.
     const before = ask.before ?? ask.fallback ?? null
     // 🔒 A MISSING "BEFORE" ALWAYS SAYS WHY (beta report, 28/10/2026: 10 customer turns on production

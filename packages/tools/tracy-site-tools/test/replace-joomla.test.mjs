@@ -2070,13 +2070,19 @@ test('sealed Joomla, all:true: the dry run names the contact record that holds t
       ['contact:1.misc', '<p>Call us on (212) 555-0147 on weekdays.</p>']
     ]
   )
-  assert.ok(r.notes.some((n) => /2 contact field\(s\)/.test(n)), JSON.stringify(r.notes))
+  assert.ok(
+    r.notes.some((n) => /2 contact field\(s\)/.test(n)),
+    JSON.stringify(r.notes)
+  )
   assert.equal(writes.length, 0, 'a dry run writes nothing')
   assert.equal(lists[0][1].kind, 'contact')
 })
 
 test('sealed Joomla, all:true: the write reaches the contact too, under its own undo (#204)', async () => {
-  const { r, applies, writes } = await runWithContacts({ find: PHONE, replace: '(212) 555-0147', all: true }, [CONTACT])
+  const { r, applies, writes } = await runWithContacts(
+    { find: PHONE, replace: '(212) 555-0147', all: true },
+    [CONTACT]
+  )
   assert.equal(r.ok, true, JSON.stringify(r).slice(0, 400))
   assert.equal(applies.length, 1, 'the slots, through the contract')
   assert.deepEqual(writes, [
@@ -2096,7 +2102,10 @@ test('sealed Joomla, all:true: the write reaches the contact too, under its own 
 
 test('sealed Joomla, all:true: words only a contact holds are written there, not refused NOT_FOUND (#204)', async () => {
   const only = { id: 3, name: 'Shop', published: 1, telephone: '+1 000 111 2222' }
-  const { r, applies, writes } = await runWithContacts({ find: '+1 000 111 2222', replace: '+1 999', all: true }, [only])
+  const { r, applies, writes } = await runWithContacts(
+    { find: '+1 000 111 2222', replace: '+1 999', all: true },
+    [only]
+  )
   assert.equal(r.ok, true, JSON.stringify(r).slice(0, 400))
   assert.equal(applies.length, 0)
   assert.deepEqual(writes[0][1].fields, { telephone: '+1 999' })

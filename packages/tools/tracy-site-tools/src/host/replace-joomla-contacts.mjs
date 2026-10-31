@@ -26,7 +26,9 @@ export async function readContacts(read) {
   /** @type {Record<string, any>[]} */
   const rows = []
   for (let n = 0; n < PAGES; n += 1) {
-    const got = /** @type {any} */ (await read('content.list', { kind: 'contact', limit: PAGE, offset: n * PAGE, include_body: true }))
+    const got = /** @type {any} */ (
+      await read('content.list', { kind: 'contact', limit: PAGE, offset: n * PAGE, include_body: true })
+    )
     if (!got || got.ok !== true || !Array.isArray(got.items)) return { rows, whole: false }
     for (const row of got.items) if (row && typeof row === 'object') rows.push(row)
     if (got.items.length < PAGE) return { rows, whole: true }
@@ -35,7 +37,8 @@ export async function readContacts(read) {
 }
 
 /** A published contact (`published` 1), as the open road counts one. */
-const published = (/** @type {Record<string, any>} */ row) => String(row.published ?? row.state ?? '1') === '1'
+const published = (/** @type {Record<string, any>} */ row) =>
+  String(row.published ?? row.state ?? '1') === '1'
 
 /**
  * What the changes do to each contact: its id, the fields that change (new values) and one row per
@@ -57,11 +60,18 @@ export function contactChanges(rows, changes) {
       const before = row[field]
       if (typeof before !== 'string' || before === '') continue
       let after = before
-      for (const c of changes) if (c.find !== '' && after.includes(c.find)) after = after.split(c.find).join(c.replace)
+      for (const c of changes)
+        if (c.find !== '' && after.includes(c.find)) after = after.split(c.find).join(c.replace)
       if (after === before) continue
       fields[field] = after
-      const name = typeof row.name === 'string' && row.name ? `contact "${row.name.slice(0, 60)}"` : `contact ${id}`
-      places.push({ at: `contact:${id}.${field}`, before: before.slice(0, 200), after: after.slice(0, 200), label: `${name}, ${field}` })
+      const name =
+        typeof row.name === 'string' && row.name ? `contact "${row.name.slice(0, 60)}"` : `contact ${id}`
+      places.push({
+        at: `contact:${id}.${field}`,
+        before: before.slice(0, 200),
+        after: after.slice(0, 200),
+        label: `${name}, ${field}`
+      })
     }
     if (places.length) out.push({ id, fields, places })
   }
@@ -72,8 +82,10 @@ export function contactChanges(rows, changes) {
 export const CONTACT_NOTE = {
   dryRun: (/** @type {number} */ n) =>
     `${n} contact field(s) hold these words too (a contact record is not a contract slot): the same call without dryRun writes them through content.update, beside the slots. They are listed in contacts, not counted in count or expect.`,
-  written: (/** @type {number} */ n) => `${n} contact field(s) written too, through content.update; their undo is contactsUndo.`,
-  partial: 'some contact records were not written: contactsFailed names them; write each with content.update {kind:"contact", id, fields}.',
+  written: (/** @type {number} */ n) =>
+    `${n} contact field(s) written too, through content.update; their undo is contactsUndo.`,
+  partial:
+    'some contact records were not written: contactsFailed names them; write each with content.update {kind:"contact", id, fields}.',
   cut: 'the site has more contacts than one replace reads: a contact past the first 200 was not looked at.'
 }
 
@@ -92,7 +104,12 @@ export async function writeContacts(write, mintApplyId, contacts) {
     /** @type {any} */
     let answer
     try {
-      answer = await write('content.update', { kind: 'contact', id: c.id, fields: c.fields, apply_id: applyId })
+      answer = await write('content.update', {
+        kind: 'contact',
+        id: c.id,
+        fields: c.fields,
+        apply_id: applyId
+      })
     } catch {
       answer = { ok: false, code: 'COWORK_WEB_UNREACHABLE' }
     }
