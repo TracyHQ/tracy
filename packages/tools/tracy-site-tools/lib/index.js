@@ -2743,6 +2743,7 @@ function createCallMemory(opts = {}) {
         reads: /* @__PURE__ */ new Map(),
         titles: /* @__PURE__ */ new Map(),
         front: null,
+        drift: /* @__PURE__ */ new Set(),
         partKeys: /* @__PURE__ */ new Map(),
         receipts: /* @__PURE__ */ new Map(),
         wp: /* @__PURE__ */ new Map(),
@@ -3135,6 +3136,25 @@ ${typeof key.actor === "string" ? key.actor : ""}`;
       const kind = typeof address?.kind === "string" ? address.kind : "";
       if (kind === "" || !Number.isInteger(id) || id <= 0) return null;
       return session(sessionId).titles.get(`${kind}:${id}`) ?? null;
+    },
+    /**
+     * The presentation drift lines of `messages` this conversation has not been told yet (#258), which
+     * from now on count as told. A site's drift is permanent once built, and the Joomla Claude Cowork
+     * plugin repeats its whole list in every contract answer (`site-call.mjs` `driftSaidOnce`).
+     * @param {unknown} sessionId
+     * @param {string[]} messages
+     * @returns {string[]}
+     */
+    unsaidDrift(sessionId, messages) {
+      if (!named3(sessionId)) return messages;
+      const s = session(sessionId);
+      const fresh = messages.filter((m) => !s.drift.has(m));
+      for (const m of fresh) s.drift.add(m);
+      while (s.drift.size > MAX_TITLES) s.drift.delete(
+        /** @type {string} */
+        s.drift.values().next().value
+      );
+      return fresh;
     },
     /**
      * The site's static front page, as a read found it (#257: `replace-wordpress.mjs` `onFront`).
@@ -18791,7 +18811,7 @@ async function runSiteCall(input) {
   if (n.action === "content.read") n = { ...n, params: withReadBudget(n.params) };
   if (expectedBodyRevision !== null && n.action === "content.update")
     n = { ...n, params: { ...n.params, expected_body_revision: expectedBodyRevision } };
-  if (n.action === "content.contract") answer = await contractCall(n);
+  if (n.action === "content.contract") answer = driftSaidOnce(await contractCall(n), memory, sessionId);
   else if (wholeGroup !== null && n.action === "content.delete") answer = await deleteGroup(n, wholeGroup);
   else if (BUSY_RETRY_ACTIONS.has(n.action) && platform === "joomla" && memory)
     answer = await memory.flight(label, () => sendLost(n.action, n.params));
@@ -19848,6 +19868,33 @@ function judgeWholeBody({
       // 🔒 WHAT THIS CONVERSATION READ, NOT WHAT THE SITE HOLDS: the site may have changed since.
       error: read.theme !== null ? `${field} is ${chars(length)} chars; ${what}'s theme file holds ${chars(baseline)}` : baseline > read.baseline ? `${field} is ${chars(length)} chars; ${what} holds ${chars(baseline)} now` : `${field} is ${chars(length)} chars; this conversation last read ${what} at ${chars(baseline)}`
     }
+  };
+}
+function driftSaidOnce(answer, memory, sessionId) {
+  if (!isRecord12(answer) || !Array.isArray(answer.warnings) || typeof memory?.unsaidDrift !== "function")
+    return answer;
+  const isDrift = (w) => isRecord12(w) && w.code === "PRESENTATION_DRIFT" && typeof w.message === "string";
+  const drift = answer.warnings.filter(isDrift);
+  if (drift.length === 0) return answer;
+  const fresh = new Set(
+    memory.unsaidDrift(
+      sessionId,
+      drift.map((w) => w.message)
+    )
+  );
+  const repeated = drift.filter((w) => !fresh.has(w.message)).length;
+  if (repeated === 0) return answer;
+  return {
+    ...answer,
+    warnings: [
+      ...answer.warnings.filter((w) => !isDrift(w) || fresh.has(w.message)),
+      {
+        code: "PRESENTATION_DRIFT",
+        severity: "warning",
+        said: repeated,
+        message: `${repeated} presentation drift ${repeated === 1 ? "line" : "lines"} already said in this conversation: where the site's design differs from its quickstart; unchanged, and not about this call.`
+      }
+    ]
   };
 }
 async function recordTitleOf(send, platform, params) {

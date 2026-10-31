@@ -33,7 +33,7 @@ import {
   withReceipt,
   WRITE_RECEIPT_NEXT
 } from '../src/host/site-call.mjs'
-import { withSweepRead } from '../src/host/site-call.mjs'
+import { driftSaidOnce, withSweepRead } from '../src/host/site-call.mjs'
 import { ACTION_CLASSES } from '../src/host/site-context.mjs'
 import { stoppedAnswer } from '../src/host/turn-stop.mjs'
 
@@ -5570,3 +5570,53 @@ test('a build whose saved plan agreed is not asked about a shared write; a delet
     assert.equal(site.row.introtext, LOREM)
   })
 }
+
+// #258 (survey 29/10/2026): every content.contract answer of a JA Vital site carried the same 17
+// PRESENTATION_DRIFT warnings — 17,874 of 22,425 characters over one phone-number turn. A built site's
+// drift is permanent, so it is said once a conversation; a line it was not told yet stays whole.
+test('a site’s presentation drift is said once a conversation, a new line whole, the rest as one count (#258)', async () => {
+  const drift = Array.from({ length: 17 }, (_, i) => ({
+    code: 'PRESENTATION_DRIFT',
+    message: `Presentation drift: article-${i + 1} — images [want a.jpg got b.jpg]`,
+    severity: 'warning'
+  }))
+  const fresh = {
+    code: 'PRESENTATION_DRIFT',
+    message: 'Presentation asset changed: images/logo.png',
+    severity: 'warning'
+  }
+  const { send } = relay((/** @type {string} */ _action, /** @type {any} */ params) =>
+    params.operation === 'apply'
+      ? { ok: true, revision: 'r2', warnings: [...drift, fresh] }
+      : { ...HOME, warnings: drift }
+  )
+  const ctx = joomla({ send })
+  const driftOf = (/** @type {any} */ answer) =>
+    (answer.warnings ?? []).filter((/** @type {any} */ w) => w.code === 'PRESENTATION_DRIFT')
+  const first = await call(ctx, INSPECT_HOME)
+  assert.equal(driftOf(first).length, 17, 'the first answer says every line')
+  const again = await call(ctx, {
+    action: 'content.contract',
+    params: { operation: 'inspect', page: 'about' }
+  })
+  assert.equal(driftOf(again).length, 1)
+  assert.equal(driftOf(again)[0].said, 17)
+  assert.match(driftOf(again)[0].message, /^17 presentation drift lines already said in this conversation/)
+  const applied = await call(ctx, applyContract())
+  assert.equal(applied.ok, true, JSON.stringify(applied))
+  assert.deepEqual(
+    driftOf(applied).map((/** @type {any} */ w) => w.said ?? w.message),
+    ['Presentation asset changed: images/logo.png', 17],
+    'the line it was not told stays whole'
+  )
+  // Another conversation was told nothing: it hears every line.
+  const other = await call({ ...ctx, sessionId: 'session-b' }, INSPECT_HOME)
+  assert.equal(driftOf(other).length, 17)
+  // Other warnings are never folded.
+  const memory = createCallMemory({ now: () => 1_000 })
+  const length = { code: 'LENGTH_RATIO', slot: 'module-428.1' }
+  const answer = { ok: true, warnings: [length, drift[0]] }
+  assert.equal(driftSaidOnce(answer, memory, 's'), answer, 'first time: the very answer')
+  assert.deepEqual(driftSaidOnce(answer, memory, 's').warnings[0], length)
+  assert.equal(answer.warnings.length, 2, 'the answer itself is never changed')
+})
