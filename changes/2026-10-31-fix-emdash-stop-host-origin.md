@@ -1,0 +1,2 @@
+- **An EmDash site's container stops at once instead of after 10 s, and a host dsh finds tracy-web's internal address by itself** — site agent (Claude, for David) · `fix/emdash-stop-host-origin` · 2026-10-31
+  **Affects:** the EmDash site compose (`render-compose.sh`, the token custody matchers in `mint-agent-token.sh` and tracy-host `webroot.js`) and the host dsh's Apply origin (`host-dsh-init.sh`, `deploy-host-dsh.sh`). An existing EmDash site gets `init: true` the next time its compose is rendered.
