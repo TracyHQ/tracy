@@ -1,0 +1,25 @@
+{
+  "id": "REG-PR-253-record-cut-undone",
+  "kind": "fix",
+  "title": "record-cut never records an undone push again and records a create settled after its push answered",
+  "pr": 253,
+  "area": "sync/push",
+  "cms": ["jo"],
+  "steps": [
+    "Run record-cut over an undone cut-off push and an answered push, then after the answered push gains a settled create."
+  ],
+  "expect": ["Nothing is recorded at first; then only the settled create joins the id map, once."],
+  "run": {
+    "cmd": [
+      "node",
+      "--test",
+      "--test-reporter=tap",
+      "--test-name-pattern=#222",
+      "packages/fleet/tracy-fleet-operation/test/live-push-changeset.test.mjs"
+    ],
+    "tests": ["record-cut never records an undone push again"]
+  },
+  "needs": [],
+  "flaky_model": false,
+  "selectors": {}
+}

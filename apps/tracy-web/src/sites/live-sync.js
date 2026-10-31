@@ -236,6 +236,36 @@ export function liveSync({
     setTimeout(tick, watchEveryMs).unref?.()
   }
 
+  /**
+   * The lease of a running sync, renewed on every read of it, whether the host answered or not: read
+   * back by a tracy-web that restarted while the host was unreachable, it went stale at 90 s and a
+   * chat's write was accepted mid-sync (#224). Another holder that took it in such a window is named in
+   * the audit log; the next read asks again.
+   */
+  async function keepLease(site, row) {
+    const kept = await takeWriteLease(pool, {
+      siteKey: site.site_key,
+      sessionId: `sync:${row.id}`,
+      actor: row.created_by ?? 'sync'
+    })
+    if (!kept.ok)
+      await audit(pool, {
+        actor: null,
+        action: 'site.sync.lease_held_by_other',
+        siteKey: site.site_key,
+        detail: { syncId: row.id, holder: kept.holder?.holder_session ?? null }
+      })
+    return kept.ok
+  }
+
+  async function dbAgeMs(at) {
+    const { rows } = await pool.query(
+      `select (extract(epoch from (now() - $1::timestamptz)) * 1000)::float8 as ms`,
+      [at]
+    )
+    return Number(rows[0]?.ms ?? 0)
+  }
+
   /** The newest sync of a site, read back from the host while it runs. */
   async function read(site) {
     const row = await latest(site.site_key)
@@ -244,16 +274,15 @@ export function liveSync({
     const polled = await host.hostJob(config, site.host, row.host_job, { fetchImpl })
     const job = polled.ok ? polled.body : null
     if (!job) {
-      if (now() - new Date(row.updated_at).getTime() > STUCK_MS)
+      // The row's age by the database's clock, the clock that stamped it (live-push.js `ageMs`).
+      if ((await dbAgeMs(row.updated_at)) > STUCK_MS)
         return view(await update(row.id, { state: 'failed', error: 'SYNC_LOST' }))
+      // The host did not answer: the sync may still be restoring there, so the site stays the sync's (#224).
+      await keepLease(site, row)
       return view(row)
     }
     if (job.state === 'running' || job.state === 'queued') {
-      await takeWriteLease(pool, {
-        siteKey: site.site_key,
-        sessionId: `sync:${row.id}`,
-        actor: row.created_by ?? 'sync'
-      })
+      await keepLease(site, row)
       // The step and the time so far, from the lines the host keeps while the job runs (#1649): the
       // row said `starting` with no timing for a whole 26-minute sync.
       const timing = Array.isArray(job.progress) ? timingOf(job.progress.join('\n')) : null
