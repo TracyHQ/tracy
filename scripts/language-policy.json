@@ -244,13 +244,13 @@
     },
     {
       "path": "packages/locale/tracy-locales/lib/client.js",
-      "oid": "5ffa78015f45f05c3c2a4e8fa40c38a9cb9cf782",
-      "reason": "Exact generated interface translation bundle for PR #254 (Sync to live words: unknown write outcome, expired Undo, live site and original site refusals, one/other forms). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source. Different bytes require a separate review."
+      "oid": "8e6429454af2acfe09ec5e5dbc8ac2d5d46da29e",
+      "reason": "Exact generated interface translation bundle for PR #254 (Sync to live words: unknown write outcome, expired Undo, live site and original site refusals, one/other forms, the kept terms site and plugin). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source. Different bytes require a separate review."
     },
     {
       "path": "packages/locale/tracy-locale-vi/lib/client.js",
       "oid": "f7c7a3eca99034147fd467c1cde015d1900b2b70",
-      "reason": "Exact generated Vietnamese interface bundle for PR #254 (Sync to live words, site thật / site gốc). Rebuilt from its localized JSON dictionary; the bundles gate verifies it matches its source. Different bytes require a separate review."
+      "reason": "Exact generated Vietnamese interface bundle for PR #254 (Sync to live words: its own words for the live site and the original site). Rebuilt from its localized JSON dictionary; the bundles gate verifies it matches its source. Different bytes require a separate review."
     },
     {
       "path": "packages/ui/tracy-assistant/lib/client.js",
