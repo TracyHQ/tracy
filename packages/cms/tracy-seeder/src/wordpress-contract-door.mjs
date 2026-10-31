@@ -21,6 +21,7 @@
  */
 import { createHash } from 'node:crypto'
 import { setBlockValue } from './apply-wordpress-contract.mjs'
+import { byPosition, readSlotValue } from './wordpress-block-address.mjs'
 import { doorOps } from './site-ops.mjs'
 import { isNoValue, plainText } from './plain-text.mjs'
 
@@ -220,11 +221,17 @@ export async function editionContentMap(contentMap, editions, slug, readContent)
       if (slot.target.field === undefined) slots.push(slot)
       continue
     }
-    const sample = slot.target?.block
-      ? getBlockValue(contents.get(slot.entity), slot.target.block, slot.target.attr ?? 'content')
-      : slot.sample
-    if (slot.target?.block && sample === null) {
-      missing.push(`${slot.entity}:${slot.target.block}`)
+    // A block found by position (`wordpress-block-address.mjs`) is read in the edition's copy the same way.
+    const located = byPosition(slot.target) || (slot.target?.block && slot.target.field !== undefined)
+    const sample = located
+      ? readSlotValue(contents.get(slot.entity), slot.target)
+      : slot.target?.block
+        ? getBlockValue(contents.get(slot.entity), slot.target.block, slot.target.attr ?? 'content')
+        : slot.sample
+    if ((slot.target?.block || located) && sample === null) {
+      missing.push(
+        `${slot.entity}:${slot.target.block ?? `${slot.target.blockType}.${slot.target.occurrence}`}`
+      )
       continue
     }
     slots.push({ ...slot, sample: sample ?? slot.sample })

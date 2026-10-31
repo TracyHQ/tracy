@@ -1,0 +1,27 @@
+{
+  "id": "REG-PR-151-wordpress-fill-plan-position-slots",
+  "kind": "feat",
+  "title": "WordPress builds place brief photos through the fill plan; the WordPress writer reaches position slots and the header and footer, which the sweep then leaves to the contract",
+  "pr": 151,
+  "area": "wordpress/contract",
+  "cms": ["wp"],
+  "needs": [],
+  "flaky_model": false,
+  "steps": [
+    "S1: Run node --test apps/tracy-web/test/brief-wp-fill-plan.test.mjs and apps/tracy-web/test/brief-wp-parts-in-map.test.mjs (a fictional tea room and racket club on WordPress-shaped v3 maps, plus the released ja-essence 1.0.12 map).",
+    "S2: Run node --test packages/cms/tracy-seeder/test/wordpress-block-address.test.mjs (capture and writer share one walker; position slots written and read back)."
+  ],
+  "expect": [
+    "S1: exit 0, no failed or skipped test; each WordPress card takes its own offering photo with the Joomla reason codes, a released map keeps the old planner, the sweep leaves a part the map covers untouched and sweeps the others.",
+    "S2: exit 0, no failed or skipped test; every captured slot reads back its sample, each position slot is written and reads back equal, a position past the last block is refused, the header part is written in one read and one write."
+  ],
+  "selectors": {
+    "files": "apps/tracy-web/src/sites/brief-engines/real-pictures.js, apps/tracy-web/src/sites/brief-engines/wp-residue.js, packages/cms/tracy-seeder/src/wordpress-block-address.mjs",
+    "tool": "tests/regression/scripts/REG-PR-151-wordpress-fill-plan-position-slots.mjs"
+  },
+  "evidence": "Before this change WordPress builds guessed picture roles from slot names, the seeder could not write a slot addressed by position, and the header and footer were outside every WordPress content map.",
+  "fence": "shapeReal takes the fill plan for any v3 map with a brief; writeSlotValue locates a block by name or by blockType + occurrence through blockUnits, the walker the capture uses",
+  "run": {
+    "cmd": ["node", "tests/regression/scripts/REG-PR-151-wordpress-fill-plan-position-slots.mjs"]
+  }
+}

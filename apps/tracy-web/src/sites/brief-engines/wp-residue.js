@@ -73,6 +73,20 @@ export const PROTECTED = new Set([
 ])
 
 /**
+ * The template parts the content map covers: the slug of each of its `templatePart` entities (TracyHQ/tracy#139). Their
+ * words are the contract's slots, written by the build like a page's; the sweep never rewrites them.
+ * @param {{ entities?: any[] }} contentMap
+ * @returns {Set<string>}
+ */
+export function partsInMap(contentMap) {
+  return new Set(
+    (contentMap.entities ?? [])
+      .filter((e) => e?.kind === 'templatePart' && typeof e.identity?.slug === 'string')
+      .map((e) => String(e.identity.slug))
+  )
+}
+
+/**
  * The blocks the contract writes into, by the slug of the page that holds them: the `target.block` of every slot of a page
  * entity. The Claude Cowork plugin finds a slot by the first block of that name on its page, and a slot whose block is gone
  * is a PROBLEM of its inspect, not a warning: every `content.contract apply` of the site is refused until it is back
@@ -1068,6 +1082,8 @@ export async function listAll(call, postType, withBody) {
  *   answer says, so their URLs keep working
  * @param {boolean} [input.wo] - whether an opportunity built the site (Website Opportunities): its menus also lose the demo
  *   kit's own dropdowns, and a reservation dropdown leads to the contact page (`demoKitOff`)
+ * @param {Set<string>} [input.mapParts] - the template parts the content map covers (`partsInMap`): their words are the
+ *   contract's, written by the build through the fill plan, so the sweep leaves those parts as the contract wrote them
  * @returns {Promise<{ cut: number, pages: number, parts: number, navs: number, forms: number, mailboxes: number, options: number, contacts: number, edited: number, dropped: number, hidden: string[], posts: number, relabelled: number, titles: number, unlinked: number, blocksHidden: number, factsWritten: number, sections: Record<string, string[]>, dishLines: number, notes: string[] }>}
  */
 export async function sweepWordPress({
@@ -1099,7 +1115,8 @@ export async function sweepWordPress({
   categories = [],
   woFill = null,
   showcase = new Set(),
-  wo = false
+  wo = false,
+  mapParts = new Set()
 }) {
   const checked = async (/** @type {string} */ action, /** @type {Record<string, unknown>} */ params) => {
     const answer = await call(action, params)
@@ -1563,6 +1580,9 @@ export async function sweepWordPress({
   }
   for (const [key, body] of partBodies) {
     if (!body) continue
+    // 🔒 A PART THE CONTENT MAP COVERS IS THE CONTRACT'S (TracyHQ/tracy#139): its words are slots the build wrote, some
+    // found by position, so no step here rewrites, relabels or cuts one of its blocks.
+    if (mapParts.has(key)) continue
     const settled = settle(body.content, (h) => h.part === key)
     const out = prune
       ? pruneBody(settled.markup, { written: new Set(), names, fill: pruneFill })

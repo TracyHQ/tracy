@@ -166,10 +166,11 @@ export async function shapeReal({
   started = Date.now()
   const labels = real.pictures.map((p) => domain.labelPicture(p))
   const labelOf = new Map(labels.map((l) => [l.id, l]))
-  // A Joomla contract whose map says each slot's v3 role (ADR 0040) is filled by the fill plan from the brief's links:
-  // a card takes only its own offering's photo, a general slot only a general one; no role is guessed from a name.
+  // A contract whose map says each slot's v3 role (ADR 0040), Joomla or WordPress alike, is filled by the fill plan from
+  // the brief's links: a card takes only its own offering's photo, a general slot only a general one; no role is guessed
+  // from a name. One planner and one set of reason codes for both CMSs (TracyHQ/tracy#138).
   let made
-  if (cms === 'joomla' && real.brief && domain.roleDecidesKeep(contentMap)) {
+  if (real.brief && domain.roleDecidesKeep(contentMap)) {
     const readable = new Map(real.pictures.map((p) => [p.id, p]))
     const assets = (real.brief.assets ?? [])
       .filter((a) => readable.has(a?.id))

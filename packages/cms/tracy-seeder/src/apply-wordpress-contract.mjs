@@ -5,16 +5,18 @@
  * WordPress plugin has no such door, so this module is the writer: it reads the contract the
  * seeder ships (`dist/data/quickstart-contracts/<id>/content-map.json`), turns the inputs a Build
  * collected into one value per slot, and writes each value into the WordPress object the slot names
- * — an option (`blogname`), or one block inside a synced pattern located by its `metadata.name`.
+ * — an option (`blogname`), or one block inside a synced pattern, a page or a template part, located by its
+ * `metadata.name` or by its position (`wordpress-block-address.mjs`).
  *
  * 🔒 A SLOT WITH NO INPUT IS LEFT AS THE QUICKSTART SHIPPED IT. Nothing here invents a phone number
  * or a call to action; "not written" is reported, and the site keeps its own words.
  */
 import { existsSync, readFileSync } from 'node:fs'
 import path from 'node:path'
+import { byPosition, escapeHtml, writeAt } from './wordpress-block-address.mjs'
 
 /**
- * @typedef {{ key: string, entity: string, target: { option?: string, themeMod?: string, block?: string, attr?: string }, type: string, maxCharacters: number, input: string }} Slot
+ * @typedef {{ key: string, entity: string, target: { option?: string, themeMod?: string, block?: string, blockType?: string, occurrence?: number, attr?: string, field?: string, link?: number }, type: string, maxCharacters: number, input: string }} Slot
  * @typedef {{ key: string, kind: string, identity: Record<string, string> }} Entity
  * @typedef {{ entities: Entity[], slots: Slot[] }} ContentMap
  */
@@ -132,15 +134,13 @@ export function planContractWrites(contentMap, inputs) {
   return { writes, skipped }
 }
 
-const escapeHtml = (s) =>
-  s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
-
 /**
  * Set one attribute of the block named `name` inside block markup, and return the new markup.
  *
  * `content`/`text` replace the text of the block's element (`<h1>…</h1>`, `<p>…</p>`, a button's
  * `<a>…</a>`); `url` rewrites the anchor's `href` and the block's own `url` attribute when it has
- * one. Located by `"name":"<name>"` in the opening comment — never by position — and the block's
+ * one. Located by `"name":"<name>"` in the opening comment (a slot found by position goes through
+ * `writeSlotValue`), and the block's
  * own comments are kept, so the editor still recognises it.
  *
  * `src` puts a picture into a `core/image` block: the img `src`, the block's `"id"` and the
@@ -201,6 +201,18 @@ export function setBlockValue(markup, name, attr, value, imageId) {
 }
 
 /**
+ * Write one slot's value wherever its target names it: a block by its name (`setBlockValue`, unchanged) or by its position
+ * (`blockType` + `occurrence`, `wordpress-block-address.mjs`), so a value written reads back equal.
+ * @param {string} markup
+ * @param {import('./wordpress-block-address.mjs').SlotTarget} target
+ * @param {string} value
+ * @param {number} [imageId] the picture's attachment id, required for `src`
+ */
+export function writeSlotValue(markup, target, value, imageId) {
+  return writeAt(markup, target, value, setBlockValue, imageId)
+}
+
+/**
  * Write the planned values through the door. Options one by one; a pattern's blocks together, from
  * one read to one write, so a pattern with three slots is one revision on the site.
  * @param {{ ops: { setOption: (name: string, value: string) => Promise<void>, find: (type: string, slug: string) => Promise<number | null>, readContent: (id: number) => Promise<string | null>, setContent: (id: number, content: string) => Promise<void> }, writes: ReturnType<typeof planContractWrites>['writes'], log?: (s: string) => void }} deps
@@ -216,7 +228,7 @@ export async function applyWordPressContract({ ops, writes, log = () => {} }) {
       written.push({ slot: w.slot, option: w.target.option })
       continue
     }
-    if (w.target.block) {
+    if (w.target.block || byPosition(w.target)) {
       const group = patterns.get(w.entity.key) ?? { entity: w.entity, writes: [] }
       group.writes.push(w)
       patterns.set(w.entity.key, group)
@@ -226,16 +238,25 @@ export async function applyWordPressContract({ ops, writes, log = () => {} }) {
   }
   for (const { entity, writes: group } of patterns.values()) {
     const slug = entity.identity.slug
+    // A template part (the header, the footer) is read and written by its slug, as the plugin's contract does.
+    const part = entity.kind === 'templatePart'
     // An entity re-addressed by `editionContentMap` carries the post id of its edition; the slug
     // lookup (`content.list {name}`) cannot tell the 41 Polylang copies of `home` apart.
-    const id = Number.isInteger(entity.identity.id)
-      ? entity.identity.id
-      : await ops.find(entity.identity.postType ?? 'wp_block', slug)
+    const id = part
+      ? slug
+      : Number.isInteger(entity.identity.id)
+        ? entity.identity.id
+        : await ops.find(entity.identity.postType ?? 'wp_block', slug)
     if (id === null) {
       for (const w of group) skipped.push({ slot: w.slot, reason: `pattern ${slug} is not on the site` })
       continue
     }
-    const current = await ops.readContent(id)
+    if (part && (!ops.readPart || !ops.setPart)) {
+      for (const w of group)
+        skipped.push({ slot: w.slot, reason: `the door has no template part write for ${slug}` })
+      continue
+    }
+    const current = part ? await ops.readPart(slug) : await ops.readContent(id)
     if (typeof current !== 'string') {
       for (const w of group)
         skipped.push({ slot: w.slot, reason: `the door did not return the content of ${slug}` })
@@ -245,14 +266,15 @@ export async function applyWordPressContract({ ops, writes, log = () => {} }) {
     const done = []
     for (const w of group) {
       try {
-        next = setBlockValue(next, String(w.target.block), String(w.target.attr ?? 'content'), w.value)
+        next = writeSlotValue(next, w.target, w.value)
         done.push(w)
       } catch (error) {
         skipped.push({ slot: w.slot, reason: error instanceof Error ? error.message : String(error) })
       }
     }
     if (next !== current) {
-      await ops.setContent(id, next)
+      if (part) await ops.setPart(slug, next)
+      else await ops.setContent(id, next)
       for (const w of done) written.push({ slot: w.slot, pattern: slug, block: w.target.block })
       log(`contract: ${done.length} slot(s) written into ${slug}`)
     }
