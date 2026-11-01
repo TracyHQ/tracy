@@ -270,7 +270,7 @@
           "field": {
             "type": "string",
             "minLength": 1,
-            "description": "name, branch, address, phone, email, hours, serviceAreas, services, menu, team, audience, story, googleRating, rating, socialFigures, whatsapp, website, booking, socials or otherPhones."
+            "description": "name, branch, address, phone, email, hours, serviceAreas, services, menu, team, audience, story, googleRating, rating, socialFigures, whatsapp, website, booking, socials or otherPhones; for an observed fact, facility, activity or atmosphere."
           },
           "value": {},
           "evidence": {
@@ -288,7 +288,17 @@
           "confidence": { "enum": ["corroborated", "single-source", "inferred"] },
           "onSite": { "type": "boolean" },
           "decidedBy": { "enum": ["rule", "owner"] },
-          "reasons": { "type": "array", "items": { "type": "string" } }
+          "reasons": { "type": "array", "items": { "type": "string" } },
+          "sourceKind": {
+            "enum": ["stated", "observed"],
+            "description": "Where the fact comes from. Absent or stated: words a source states (evidence quotes them). observed: what the business's own sharp, on-topic photos show about the business (a facility, an activity, the atmosphere; never the people in them), with assetIds naming every photo it rests on. Facts with sourceKind observed come from what the business's photos show. Use them only for angles and for describing the picture a frame needs, never for hard claims: no counts (of courts, rooms, classes), no size, no prices, no hours, no \"largest\" or \"only\". The photos may be customer uploads, and counts cannot be read reliably from photos."
+          },
+          "assetIds": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string" },
+            "description": "observed facts only: the ids of the brief's assets the fact was seen in. Readers get the fact, never the photos or their per-photo descriptions."
+          }
         }
       }
     },

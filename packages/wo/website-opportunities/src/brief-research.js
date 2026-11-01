@@ -296,6 +296,8 @@ export function makeSiteBrief(domain, read, { opportunity, madeAt, placeProfile 
       posts: read.posts,
       // One observation: the website's when there is one, else the social profiles'.
       brand: briefBrand(read.brand),
+      // What the labelled photos show about the business (`observed-facts.mjs`), held again by the brief.
+      ...(Array.isArray(read.observedFacts) ? { observedFacts: read.observedFacts } : {}),
       madeAt
     }),
     read.profile

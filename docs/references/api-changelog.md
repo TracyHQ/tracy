@@ -10,6 +10,10 @@ sources:
 
 # Tracy API changelog
 
+## 2026-11-01: Template kit on the Road to live
+
+Staff-only doors under `/api/ops`. Added: step `template-kit` in `road` on each row of `GET /api/ops/quickstarts`, between `content-coverage` and `customize` (eleven steps), read from `template-kit.json` beside the contract that seals the release's version. Codes `kit-not-needed`, `kit-waiting`, `kit-missing`, `kit-invalid`, `kit-stale`, `kit-incomplete`, `kit-gaps`, `kit-not-approved`, `kit-approval-stale`, `kit-approved`; `params` `{ version, platform, contract, live, kitVersion, kitQuickstartVersion, templateVersion, images, pages, blocks, errors, approvedBy, approvedAt, reason, missingPictures, gaps, gapsByKind, gapsShown, gapsAccepted, gapsAcceptedShown }` (the fields each code carries). Changed: `POST /api/ops/quickstart/inspiration/publish` refuses with `TEMPLATE_KIT_NOT_READY` while a release not yet published has no kit of its own version, an incomplete one, template gaps the kit measured (a page without an h1, a dead link or page path, a row packed to the left) without an accepted reason, or one not approved on the images it lists; a published release only warns.
+
 ## 2026-10-28: The name the site goes by while the business name is held
 
 Changed (internal, not in the public reference): `GET /api/website-opportunities/:id/place-profile` also answers `siteName` while the latest brief holds the business name off the site and the owner has not shown it since: the neutral identity the site goes by instead (the brief's home page title made without the name). Absent otherwise.

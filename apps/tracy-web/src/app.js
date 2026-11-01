@@ -2478,6 +2478,8 @@ export function buildApp(deps) {
         ...(deps.fitOf ? { fitOf: deps.fitOf } : {}),
         // The committed content coverage of a release (Content coverage); a test hands in its own answer.
         ...(deps.coverageOf ? { coverageOf: deps.coverageOf } : {}),
+        // The committed template kit of a release (Template kit); a test hands in its own answer.
+        ...(deps.templateKitOf ? { templateKitOf: deps.templateKitOf } : {}),
         workspaces: {
           app: workspacesRoutes({
             pool: deps.pool,

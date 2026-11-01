@@ -34,6 +34,8 @@ export function mergeViewports(byViewport, siteUrl) {
       }
       // Printed inside a shop's catalogue markup on any viewport: the zone holds for the merged item.
       if (it.zone && !m.zone) m.zone = it.zone
+      // The blocks every copy sits in (the item lists read them).
+      if (it.scopes?.length) m.scopes = [...new Set([...(m.scopes ?? []), ...it.scopes])]
       const v = (m.viewports[vp] ??= { visible: false, count: 0, rect: null, selector: it.selector })
       v.count++
       // What the page measured of the picture's own file (Slot fit), the same on every viewport.

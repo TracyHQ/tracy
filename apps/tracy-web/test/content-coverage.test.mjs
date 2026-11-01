@@ -389,9 +389,9 @@ test('the caller may hand the coverage in (the door reads the same file once)', 
 
 const live = () => release({ inspiration: { template: 'ja-boxing' }, inspirationHidden: false })
 
-test('the road has ten steps and no separate Slot roles step', () => {
+test('the road has eleven steps (Template kit after Content coverage) and no separate Slot roles step', () => {
   const steps = roadOf(release(), { contracts: profile(doc()).contracts }).map((s) => s.step)
-  assert.equal(steps.length, 10)
+  assert.equal(steps.length, 11)
   assert.equal(steps.includes('slot-roles'), false)
   assert.deepEqual(steps, [...ROAD_STEPS])
 })

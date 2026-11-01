@@ -10,6 +10,14 @@ import { findHygiene } from './hygiene.mjs'
 import { normText } from './normalize.mjs'
 
 const log = (...a) => console.error('[audit]', ...a)
+const pathOfUrl = (url) => {
+  try {
+    const u = new URL(url)
+    return u.pathname + u.search
+  } catch {
+    return String(url)
+  }
+}
 const signature = (cls) => {
   const item = String(cls ?? '').match(/\bitem(?:id)?-(\d+)\b/)
   const view = String(cls ?? '').match(/\bview-([a-z]+)\b/)
@@ -45,6 +53,10 @@ export async function runAudit({
   const failures = []
   const seedSigs = new Map()
   const duplicates = []
+  // The header for the site map: the home page's (desktop, the first viewport), else the first page that has one.
+  let header = null
+  let headerFromHome = false
+  const homeUrl = new URL('./', siteUrl).href
   try {
     for (let job = plan.next(); job; job = plan.next()) {
       const first = await renderPage(ctx[viewports[0]], job.url)
@@ -133,6 +145,11 @@ export async function runAudit({
         // Page hygiene: raw constants and placeholders in any viewport's items, PHP errors in the served HTML.
         hygiene: findHygiene({ html: first.html, items })
       }
+      const isHome = job.url === homeUrl || job.mapPage?.home === true
+      if (first.data.header?.found && (!header || (isHome && !headerFromHome))) {
+        header = { ...first.data.header, measuredOn: pathOfUrl(first.finalUrl), viewport: viewports[0] }
+        headerFromHome = isHome
+      }
       pages.push(page)
       const c = count(items)
       log(
@@ -157,6 +174,7 @@ export async function runAudit({
     skipped: plan.skipped,
     offsite: plan.offsite,
     capReached: plan.capReached,
+    header,
     summary: summarize(pages)
   }
 }

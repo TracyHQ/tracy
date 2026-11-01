@@ -15,6 +15,8 @@
 //               picture's keep flag by its kind (in a place-content-roles/3 map every keep flag follows the role,
 //               ADR 0040); with --write the content map gets them, BEFORE content-coverage.json is built, so the
 //               coverage file names the map with its fit. Without --write: <out>/content-map.fit.json.
+//               It also writes `itemLists` and `itemPages`: each block whose settings name a category, with the items
+//               it shows and the fields of each card (lib/item-lists.mjs).
 //     [--no-judge]
 //               The label judge (spec #37): no model is called. For every component with a slot whose verdict is not
 //               cached in content-coverage.json, the audit writes <out>/label-judge/request.json (the question, the
@@ -107,9 +109,12 @@ const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..'
 /** Slot fit from this run's findings into the content map (or beside the evidence), formatted as capture formats it. */
 function writeSlotFit({ result, contractDir, outDir, write }) {
   const mapFile = join(contractDir, 'content-map.json')
+  // The blocks' settings (which category a block lists) come from the presentation lock: item lists need them.
+  const lockFile = join(contractDir, 'presentation-lock.json')
   const { map, summary } = measureSlotFit({
     map: JSON.parse(readFileSync(mapFile, 'utf8')),
-    findings: result
+    findings: result,
+    lock: existsSync(lockFile) ? JSON.parse(readFileSync(lockFile, 'utf8')) : undefined
   })
   const file = write ? mapFile : join(outDir, 'content-map.fit.json')
   writeFileSync(file, `${JSON.stringify(map, null, 2)}\n`)

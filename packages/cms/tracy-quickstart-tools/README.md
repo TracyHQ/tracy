@@ -160,6 +160,36 @@ node packages/cms/tracy-quickstart-tools/content-coverage/cli.mjs \
   file `/ops` reads: tool version, the contract id and sha256 of the map and lock it measured,
   counts per class, coverage per kind, and one line per distinct hole (`kind`, `value`, `class`,
   `lock`, `cause`, `evidence`, `pages`, `firstPage`).
+- **Site map and header (audit 1.6.0).** The same file carries `sitePages`: one row per page the content map declares,
+  in map order, none dropped, with `opens` (`live` with its HTTP status and path, `broken` with the status it answered,
+  `no-page` for a menu group or a `#` link, `link` for a menu entry to another address, `unpublished`, `offsite`, or
+  `not-checked` when the run never reached it), `aliasOf` for an alias, its `menu`, `level` and `parent`, `inMainMenu`
+  (its menu is the menu of the home item; null without menus, as on WordPress), `shownInMenu: false` for a hidden item,
+  and `inHeader` (the header menu measured on the home page lists it; null when no header was measured). `header` is
+  what the home page shows at the top on desktop: the `logo` (image, alt, text, link, slots), every `menu` entry (text,
+  href, depth, whether visible without hover, where it leads, the page it opens), the `buttons` and the other `texts`,
+  each with the slots that declare it (`editable: false` when none does). The extraction is
+  `content-coverage/lib/browser-header.js`; the decisions are `content-coverage/lib/site-map.mjs`.
+- **Repeated lists (`--fit`).** Each `fitGroups` entry of the content map carries `min` and `max` beside `items` and
+  `shown`: `max` is the demo count (`maxFrom: "demo-count"`), `min` is `null` with `minFrom: "unknown"`, because one demo
+  shows one count and nothing proves the fewest items a layout holds.
+- **Item lists (`--fit`).** A block whose own settings name a category (any settings key such as `catid` or
+  `category`, read from `presentation-lock.json`, never the block's type or title) gets `itemLists["<block>.items"]`:
+  `rowKind: "items"`, `source` (`kind: "category"`, `id`, `title`, the category's `page` and `route`), `min`/`max`
+  (`max` from the block's count setting, `maxFrom: "block-setting"`, else the demo count), `shown` (item ids in
+  display order), `rowSlots` (each card field, such as `title`, `summary`, `image:<name>`, `custom:<path>` and the
+  `link` to the item's page with its template `labels`, mapped per item to its own slot with the slot-fit
+  `maxCharacters`; `inferred: true` where the findings merged a copy of words two cards share) and `demoOwned` (the
+  card slots with a fact role). `itemPages` ties each shown item's detail page to its category page, so a kit puts it
+  in that page group. The cards are read from the findings: each item carries `scopes` (the ids of its ancestors,
+  such as a block's `Mod160`); findings without them fall back to the pages the block is assigned to
+  (`observedBy: "page"`). Source: `content-coverage/lib/item-lists.mjs`.
+- **Menu blocks (`--fit`).** A block whose own settings name a menu (`menutype`, any menu, not only the main one)
+  gets `menuBlocks["<block>"]`: `menu`, `titleSlot`, `startLevel`/`endLevel`, `orderFrom` (`menu-tree` from the
+  lock's `lft`, else `item-id`: depth first, siblings by id) and `items[]`: `item`, `level`, `parent`, `type`,
+  `label` (`slot`, `text`, `maxCharacters` with `limitFrom` `slot-fit` or `store`) and `target` (`kind` `page`,
+  `alias`, `link`, `url`, `heading`, `separator` or `none`; `page`, `path`, `link` or `url`; `alive` and `status`
+  from the crawl, `alive: null` when the crawl did not reach it). Source: `content-coverage/lib/menu-blocks.mjs`.
 - **Page hygiene, same crawl.** Things a customer must never see, one line per distinct problem in
   the `hygiene` list of `content-coverage.json` (`kind`, `value`, `where`, `visible`, `pages`,
   `firstPage`), and a Page hygiene card in `report.html`: `language-constant` (a raw Joomla key such
@@ -250,3 +280,144 @@ and module boxes already in `<out>/.audit`. Open `<out>/index.html`; nothing it 
 It reuses the audit (`runAudit`, so the same lazy-content wake and the same smooth-scroll handling as `--fit`),
 is read-only on the site, and covers the Joomla module wrappers (`Mod<N>`) of the T4 template.
 `packages/cms/tracy-quickstart-tools/test/content-map-verify-viewer.test.mjs` covers the locating and the page.
+
+## `template-kit/` — the pack a site build reuses: page and block images, what each block allows, a version stamp
+
+Made once per template version, from a site restored from that version's quickstart (never the public demo:
+the kit must match the contract it describes). Read-only on the site, but for one measurement that puts the site
+back as it was (fixed CMS text, below). One file, `template-kit.json`, beside
+`images/`, in CMS-neutral words: a block is `block-<n>`, `header` or `body-<page>`; the content map key stays only
+in a block's `source`.
+
+### Make a kit for a new template
+
+1. Restore the template's quickstart into a local site (skill `tracy-dev:restore`); never use the public demo.
+2. Run the whole pipeline (several minutes per width; read-only on the site but for the fixed-text measurement):
+   ```
+   node packages/cms/tracy-quickstart-tools/template-kit/cli.mjs build --full \
+     --site <url of the restored site> [--host-header <name the site is served under>] \
+     --contract packages/cms/tracy-joomla-quickstart/contracts/<slug>/j6/<version> \
+     --out <empty folder outside the repo> [--trade "<what the demo business does>"] \
+     [--db-command "<database client prefix>"] [--files-command "<prefix>" --webroot <dir>]
+   ```
+   The database and file reads feed the site part (`site-cli.mjs`: logo spots, favicon, brand colours, head,
+   forms, main titles); without them it reads the pages only and names what it could not read in `errors`.
+   With `TRACY_VISION_API_KEY` set (the vision door of `apps/tracy-web/src/lib/picture-vision.js`), icons are
+   classified by the model; without it they stay unclassified and are listed in `errors`.
+3. If `template-fixes.json` lists `fixes` (its `skipped` names what was left out and why): apply the fixes in the template, release a new quickstart, restore it
+   and rebuild the kit (a fix changes what the lists' minimums are).
+4. Open `contact-sheet/review-*.png` (icons with their class, every frame whole and emptied, every template fix
+   tried) and the block sheets. To overrule: `icon-classes.json` (`{"<frame id>": {"class": "fixed"|"demo",
+   "reason": "...", "by": "human"}}`, wins over the model) and `frame-review.json` (`{"<frame id>": {"canHide":
+   true|false, "reason": "..."}}`), then `cli.mjs assemble ...`. A template gap that is right by design is
+   accepted in `gap-accepts.json` (`{"<gap id>": {"reason": "...", "by": "<login>"}}`, one entry per gap id, never
+  by kind, so a new dead link is never accepted unseen); the kit never accepts one.
+5. `cli.mjs pack --out <kit dir>` (`build --full` runs it last) writes `pack/` and `template-kit-<template>-<quickstart
+   version>.zip`: only the images a site build reads. Per page group one representative page
+   (`pageGroups[].representative` and `representativeWhy`: the page covering the most of the group's blocks, a tie
+   to a main menu page, then the shortest path) with its full-page shots; one shot per block per width (a shared
+   block once; a block of a page that is no representative keeps its shot). Pages share a layout by what they render,
+   site-wide and never by menu group: the same kind of main content, the same body skeleton (read at capture) and a
+   body shot whose edge grid correlates (`layout-profiles.json`, written by `cli.mjs layouts`, which `build --full`
+   runs after capture; `SAME_LAYOUT` in `lib/layout-profiles.mjs` says what was measured). One body shot stands for
+   them (the others carry `shotOf` and `shotSimilarity`); a further result page (`?start=6`) of page 1's kind and
+   skeleton uses page 1's body and full-page shots (`paginationOf`), and no shot of its own is packed. Their frames are emptied once, on that page; a frame in the same place on another
+   page (same role, same order) takes its `canHide` (`canHideFrom`), and a frame with no counterpart is measured on
+   its own page (`lib/layouts.mjs`). Emptied shots, fixed-text before/after shots, crops, minimum evidence and
+   contact sheets stay in the full set for review; the pack json drops every reference to them and keeps the flags. The
+   pack's own `template-kit.json` is the file committed beside the contract and read by /ops and the planner: it
+   lists only the packed images (its `imagesSha256` is over them), and a page that is no representative points at
+   its representative's full-page shots (`fullShotOf`). The full one records `pack` (`file`, `sha256`, `bytes`,
+   `images`, `approved`, `blocksWithoutImage`). `approve` seals the pack (step 5 runs after this one) and remakes
+   the zip; packing again keeps the approval only while the image set is the same. A block a page lists with no shot at a
+   width it is shown at fails the pack (exit 1). The zip carries a fixed date, so the same files give the same sha256.
+6. `cli.mjs approve --out <kit dir> --by <login>` (a person, after the review sheet) seals the pack's image set.
+
+Other commands: `build` without `--full` (capture and assemble only), `--reuse-capture` (keep the capture,
+measure the rest), `--remeasure` (measure the pipeline's own list minimums again), `assemble`, `sheet [--evidence |
+--review]`, and `measure-min --list <id> --page <path> --max <n> [--rows <css>]` (a person's measurement of one
+list, kept by every later run).
+
+- **Every page.** The crawl starts from every route of the content map and the front page, then follows every
+  same-site link of every page reached until no new address appears (pagination, author and tag pages included).
+  `/index.php/` or not, a trailing slash and query noise merge into one page (`aliases`); a redirect lands on its
+  page. A content map path that does not answer 200 is a template gap (`dead-path`). The page cap (`--max-pages`) is reported, never applied silently.
+- **No test data.** A restored site carries accounts the quickstart does not ship (the one the restore signs in
+  with). An account page (`/author/<name>`, `/user/<name>`...) whose account the content map does not declare and
+  which links to no content of its own is left out, so is a page that lists only left-out pages, a page reached only
+  through them, and any page matching `--exclude-path` (`*` matches any run of characters). Links to them are
+  removed from every page in the browser before it is shot, with the row that holds them. The kit counts what was
+  left out by reason (`excludedPages`) and never names it.
+- **Images** (`images/<id>.jpg`, named by image id): per page `page-<page>-<width>`, per block `<block>-<width>`,
+  cut once per width from the first page that shows the block, out of that page's one full-page image. Blocks:
+  `#Mod<N>`, ACM blocks with only `#acm-<name>-<N>`, a block whose position renders with no wrapper (`.t4-<position>`,
+  only when the map assigns one block there), the header and the component area (`#t4-main-body`, or `main` when it
+  holds only the component). Sticky and fixed headers are frozen at the top before boxes are read; floating widgets
+  are hidden. A block hidden at a width (the off-canvas menu) has no image there and says so in `notShownAt`.
+- **`template-kit.json`**: `template` (version read from `templates/<template>/templateDetails.xml` on the site, or
+  `--template-version`), `quickstart`, `pageGroups[]` (a listing page with its posts, further result pages, author and
+  tag pages), `pages[]` (`group`, `path`, `inMainMenu`, `blocks` and `images` per width), `blocks[]` (`role`, `shared`,
+  `images`, `lists[]` with `rowKind`, `min`, `max`, `rowSlots`, `frames[]`, `links[]`, `fixedText[]`, `demoOwned[]`),
+  `images[]` (`id`, `path`, `sha256`), `imagesSha256` (the digest an approval seals, `imagesDigest` of the /ops reader),
+  `site` (the site part, `site.json`), `pages[].h1` (where each page's main title comes from), `lists[].holds`,
+  `links[].action`, `templateGaps[]` (below), `errors[]` (failed captures, and every field the kit could not
+  measure, with its path and the reason) and `approval` (null until `approve`).
+- **Template gaps** (`templateGaps[]`: `id, kind, where, detail, evidence, accepted`): real defects of the template
+  or its demo, for /ops to judge: `page-without-h1`, `dead-link` (a block link to nothing, `#`, or a path that
+  does not answer 200; one per target and block), `dead-path` (a content map page that does not answer 200) and
+  `sparse-row-left-packed` (each proposed template fix). The id hashes kind and place, so it survives a rebuild.
+- **Site part** (`site`, from `site-cli.mjs`). `navigationGroups[]`: every menu block of the content map
+  (`menuBlocks`), each item with `label`, `maxCharacters`, `target` (`kind`, `page`/`path`), `alive` and `status`;
+  `orderFrom` is passed through and `"item-id"` gets an `orderNote` (a stand-in order, not the menu's own); what a
+  footer column holds (`holds`, `itemsOf`) is joined in from the pages, and a link column that is no menu block is
+  kept as read (`from: "page"`). An off-canvas menu the pages never show takes its links from its menu block.
+  `fixedTexts[]` (also `blocks[].fixedText`, whose other entries carry `source: null`): a sentence the CMS prints from
+  a language file (rendered text that is no content slot and matches a string of the site language's `.ini` files,
+  placeholders such as `%s` and `%date%` taken as wildcards), with `source: {file, constant}`. A string that prints
+  the site name (`%sitename%`) is not fixed text: it is a `nameSlots` entry with `source: {setting, through}`.
+  `canHide` is measured: the constant is set to an empty value in the language override file, the block shot before
+  and after (`evidence`), and the file put back as it was, removed when it did not exist; the write path
+  (`lib/site/adapters/site-writer.mjs`) refuses any file outside `language/overrides`. `--no-hide-measure` skips it
+  (each `canHide` is then an error).
+- **List minimum.** A measured one (`measure-min`: rows removed from the DOM one at a time, each count shot at every
+  width and checked: the last line full or centered) wins, with `minEvidence` (image ids and check per count); else
+  the rows on the first line at 1440 (`row-count`), or 1 in a slider or tabs (`slider-or-tab`); else null and an error
+  that says why: rows in a closed tab (read, never measured), a count that leaves a hole at every size (the template's
+  defect, with `sparseRow`), or no row set found.
+  Every count from 1 to the maximum is measured and the minimum is the smallest that looks right (no broken card,
+  no hole: a partial last line is right only when centered). `layoutOkAt` lists every count that looked right, and
+  `layoutOkContiguous` says whether every count from the minimum to the maximum did (right at 4 and 8 only: false).
+- **Every list, on its own.** `--full` measures the minimum of every list whose rows it finds on the page (a row
+  set of the list's size, not in a slider or tabs; a listing's item rows). A short last line pressed to the left
+  while the heading is centered is caught: the list says `sparseRow: "left-packed"` (else `centers` or `fills`)
+  and `minIfCentered`, and `template-fixes.json` proposes (`fixes`) one entry per row element, only for card rows
+  of a block (`rowKind: slots`) whose minimum the fix would lower; paginated listings (a short last row is normal
+  there) and pagination controls go to `skipped` with the reason. A proposal is a CSS selector derived from its
+  classes, the measured gap, the rule (`justify-content: center` for flex rows, centered tracks for grid rows),
+  the lists it unlocks, and its trial (the rule injected in the browser, the layout checked again, before and
+  after images): `verified`. The tool never edits the template.
+- **Frames** (`frames[]`: `id, shape, width, height, kind, canHide, twinOf, fixed`, measured; plus evidence).
+  Each frame is found on the page by the picture file the map names. `width`/`height` are its box at desktop
+  width and `shape` comes from them. `kind`: `icon` (128 px or smaller, or a mostly clear drawing up to 320 px),
+  `cutout` (a mostly clear picture over another picture), `photo`, or `logo` (named by the site part:
+  `business.logo` slots and every logo spot's frame; who owns it is the brand step's, so `fixed` is null). An
+  `<img>` kept at opacity 0 while its holder paints a mask or background over it is shown through that painter
+  (`paintedBy`) and measured from it. A frame in a closed tab, slide or accordion is opened first, the way a
+  visitor would (`revealed`); a picture not in its own block is looked for in the other blocks of the pages
+  (`measuredIn`). `canHide`: the frame is emptied in the browser and the block shot again at every width
+  (`<frame>-hidden-<width>`); a picture repeated by every row of a list is emptied in every row at once
+  (`measuredAs: "row-slot"`, one verdict for the slot). If emptying changes (almost) no pixel in the frame's box,
+  its painters are emptied too; if still nothing changes the measurement is invalid: canHide null, an error, and
+  "no visible change, measurement invalid" on the review sheet. It is false when an empty box stays, a card
+  shrinks or loses its picture while the others keep theirs, rows wrap differently or the block (single frames)
+  loses half its height. `twinOf`: a frame not shown whose markup carries the other theme marker (light/dark) of
+  a shown frame in the same row of the same block. `fixed`: from `icon-classes.json`; icons of the demo's trade (`demo`) are listed
+  in the block's `demoOwned`. Twins follow their main frame.
+- **Listing maximum.** A listing page's `items` list takes the page size: from the pager when a later list position
+  exists (`?start=N`: `maxSource: "page-size"`), else the item rows the demo shows (`captured-rows`; item rows are
+  the biggest set whose every row opens a different content item). `maxEvidence` says which.
+- **`contact-sheet/`**: every block image (and with `--evidence` every minimum image) on HTML and PNG sheets, to spot
+  images that are misaligned, blank, cut by a header or doubled.
+
+Where a kit is stored is not decided yet: the tool writes `--out` only. Tests: `test/template-kit-crawl.test.mjs`,
+`test/template-kit-assemble.test.mjs`, `test/template-kit-blocks.test.mjs`.

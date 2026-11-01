@@ -249,7 +249,8 @@ export function opsRoutes(deps) {
       doorHealth: deps.doorHealth ?? null,
       ...(deps.rolesOf ? { rolesOf: deps.rolesOf } : {}),
       ...(deps.fitOf ? { fitOf: deps.fitOf } : {}),
-      ...(deps.coverageOf ? { coverageOf: deps.coverageOf } : {})
+      ...(deps.coverageOf ? { coverageOf: deps.coverageOf } : {}),
+      ...(deps.templateKitOf ? { templateKitOf: deps.templateKitOf } : {})
     })
   )
   // Admin attention (04/10/2026): read-only.

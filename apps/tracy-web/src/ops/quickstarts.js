@@ -15,6 +15,7 @@ import { defaultContracts } from '../lib/contracts.js'
 import { fitOfRelease } from '../lib/content-coverage/fit.js'
 import { coverageOfRelease } from '../lib/content-coverage/road-step.js'
 import { rolesOfRelease } from '../lib/content-coverage/roles.js'
+import { kitOfRelease } from '../lib/template-kit/road-step.js'
 import { checkAgain, kickReadiness, readinessForRoad, readinessRows } from '../lib/customize-readiness.js'
 import { kickBlurbTranslations } from '../lib/template-blurb-translations.js'
 import {
@@ -164,7 +165,9 @@ export function quickstartRoutes({
   // The Slot fit group of Content coverage (ADR 0039), the same way: released contracts never gain Slot fit.
   fitOf = fitOfRelease,
   // The committed content-coverage.json of a release's contract, the same way: a released contract never gains one.
-  coverageOf = coverageOfRelease
+  coverageOf = coverageOfRelease,
+  // The committed template-kit.json beside a release's contract (Template kit step), the same way.
+  templateKitOf = kitOfRelease
 }) {
   const app = new Hono()
 
@@ -264,6 +267,7 @@ export function quickstartRoutes({
         roles: rolesOf(r, contracts),
         fit: fitOf(r, contracts),
         coverage: coverageOf(r, contracts),
+        templateKit: templateKitOf(r, contracts),
         siblings: id ? sameTemplate(releases, id) : [],
         readiness: readinessForRoad(checks, r),
         dsReadiness: dsReadinessOf(dsChecks, r)
@@ -853,7 +857,9 @@ export function quickstartRoutes({
     // never for a listing already published), NO_CONTRACT (a Joomla
     // or WordPress release of the template has no content contract, ADR 0022 addendum 04/10/2026),
     // CONTENT_COVERAGE_NOT_READY (the contract leaves demo content a visitor sees undeclared, or its
-    // content-coverage.json is missing or stale, `lib/content-coverage/`), CUSTOMIZE_NOT_READY (must-fix rules of the Customize your site check remain, or this version is
+    // content-coverage.json is missing or stale, `lib/content-coverage/`), TEMPLATE_KIT_NOT_READY (the
+    // template-kit.json beside the contract is missing, of another version, incomplete or not approved on its
+    // images, `lib/template-kit/`), CUSTOMIZE_NOT_READY (must-fix rules of the Customize your site check remain, or this version is
     // not checked yet, ADR 0029 §4), DESIGN_SYSTEM_NOT_READY (the same for the Design system check,
     // ADR 0031) and NOT_SHOWABLE (the card would stay off once the mark is gone).
     const templateId = cardIdOf(release)
@@ -868,6 +874,7 @@ export function quickstartRoutes({
       roles: rolesOf(release, contracts),
       fit: fitOf(release, contracts),
       coverage: coverageOf(release, contracts),
+      templateKit: templateKitOf(release, contracts),
       siblings: builds,
       readiness: readinessForRoad(await readinessRows(pool), release),
       dsReadiness: dsReadinessOf(await dsReadinessRows(pool), release),

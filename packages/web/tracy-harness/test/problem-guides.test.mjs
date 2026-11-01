@@ -257,6 +257,41 @@ const COVERAGE_HOLES = {
   ]
 }
 
+/** Template kit of ja-restaurant 1.0.2, as `template-kit/road-step.js` sends it. */
+const KIT_BASE = {
+  version: '1.0.2',
+  platform: 'joomla',
+  contract: 'quickstart/ja-restaurant/j6/1.0.2',
+  live: false,
+  kitVersion: '1.0.0',
+  kitQuickstartVersion: '1.0.2',
+  images: 4,
+  pages: 1,
+  blocks: 1,
+  errors: 0,
+  approvedBy: 'reviewer-one',
+  approvedAt: '2026-10-30T10:00:00.000Z'
+}
+
+/** Template kit gaps, as `template-kit/road-step.js` sends them: three open, one accepted. */
+const KIT_GAPS = {
+  ...KIT_BASE,
+  gaps: 3,
+  gapsByKind: [
+    { kind: 'dead-link', count: 2 },
+    { kind: 'page-without-h1', count: 1 }
+  ],
+  gapsShown: [
+    { id: 'g1', kind: 'dead-link', where: { blockId: 'hero', selector: 'a.more' }, detail: 'href is #' },
+    { id: 'g2', kind: 'dead-link', where: { path: '/about' }, detail: 'answers 404' },
+    { id: 'g3', kind: 'page-without-h1', where: { pageId: 'contact', path: '/contact' }, detail: null }
+  ],
+  gapsAccepted: 1,
+  gapsAcceptedShown: [
+    { id: 'g4', kind: 'dead-path', reason: 'The demo keeps this path for a later page.', by: 'reviewer-one' }
+  ]
+}
+
 const EVERY_CODE = [
   ['release', 'release-published', {}],
   ['release', 'release-draft', {}],
@@ -332,6 +367,30 @@ const EVERY_CODE = [
     'coverage-judge-warn',
     { ...JUDGE_WRONG, live: true, judgeHolds: false, judgeWarns: true }
   ],
+  ['template-kit', 'kit-not-needed', {}],
+  ['template-kit', 'kit-waiting', {}],
+  ['template-kit', 'kit-approved', KIT_BASE],
+  ['template-kit', 'kit-missing', { version: '1.0.2', live: false }],
+  ['template-kit', 'kit-missing', { version: '1.0.2', live: true }],
+  [
+    'template-kit',
+    'kit-invalid',
+    { version: '1.0.2', live: false, reason: 'template-kit.json lists no images' }
+  ],
+  ['template-kit', 'kit-stale', { ...KIT_BASE, reason: 'it was captured for 1.0.1, not 1.0.2' }],
+  [
+    'template-kit',
+    'kit-incomplete',
+    {
+      ...KIT_BASE,
+      reason: '1 picture is missing: block hero at 390',
+      missingPictures: [{ kind: 'block', id: 'hero', missing: [390] }]
+    }
+  ],
+  ['template-kit', 'kit-gaps', KIT_GAPS],
+  ['template-kit', 'kit-gaps', { ...KIT_GAPS, live: true }],
+  ['template-kit', 'kit-not-approved', { ...KIT_BASE, approvedBy: null }],
+  ['template-kit', 'kit-approval-stale', KIT_BASE],
   ['customize', 'customize-waiting', { passed: 0, total: 0, mustFix: [], worthFixing: [] }],
   ['customize', 'customize-not-checked', { passed: 0, total: 0, mustFix: [], worthFixing: [] }],
   ['customize', 'customize-checking', { passed: 0, total: 0, mustFix: [], worthFixing: [] }],
@@ -478,6 +537,9 @@ const DONE_CODES = new Set([
   'coverage-not-needed',
   'coverage-waiting',
   'coverage-ready',
+  'kit-not-needed',
+  'kit-waiting',
+  'kit-approved',
   'customize-waiting',
   'customize-checking',
   'customize-ready',
@@ -549,6 +611,7 @@ test('the road is in the order steps finish: the contract third, Content coverag
     'install-file',
     'contract',
     'content-coverage',
+    'template-kit',
     'customize',
     'design-system',
     'demo',
@@ -556,6 +619,38 @@ test('the road is in the order steps finish: the contract third, Content coverag
     'published',
     'polish'
   ])
+})
+
+test('Template kit: a short title per verdict, live only warns, ONE prompt that never writes the approval', () => {
+  const missing = mod.guideOf(
+    { step: 'template-kit', state: 'todo', code: 'kit-missing', params: { version: '1.0.2' } },
+    JOOMLA
+  )
+  assert.equal(missing.title, 'Template kit missing')
+  assert.match(missing.outside.text, /template-kit\.json/)
+  assert.match(missing.outside.text, /1440 and 390/)
+  assert.match(missing.outside.text, /Do not write the approval yourself/)
+  assert.doesNotMatch(missing.outside.text, /module/i)
+  const live = mod.guideOf(
+    {
+      step: 'template-kit',
+      state: 'warn',
+      code: 'kit-not-approved',
+      params: { version: '1.0.2', live: true }
+    },
+    JOOMLA
+  )
+  assert.match(live.detail, /stays published/)
+  const done = mod.guideOf(
+    { step: 'template-kit', state: 'done', code: 'kit-approved', params: KIT_BASE },
+    JOOMLA
+  )
+  assert.equal(done.outside, undefined)
+  assert.match(done.detail, /reviewer-one/)
+  for (const [step, code, params] of EVERY_CODE.filter(([s]) => s === 'template-kit')) {
+    const g = mod.guideOf({ step, state: 'todo', code, params }, JOOMLA)
+    for (const w of [g.title, g.why, g.detail ?? '']) assert.doesNotMatch(w, /module/i, `${code}: "${w}"`)
+  }
 })
 
 test('Customize your site not checked: the rule, the reason and when, then Check again; live only warns', () => {
@@ -578,7 +673,7 @@ test('Customize your site not checked: the rule, the reason and when, then Check
   assert.equal(live.detail, 'Live, so it stays published. Check again once it can be read.')
 })
 
-test('ja-restaurant: the failed demo is step 7, one short line, retry twice then report once', () => {
+test('ja-restaurant: the failed demo is step 8, one short line, retry twice then report once', () => {
   const demo = mod.guideOf({ ...DEMO, state: 'todo' }, JOOMLA)
   assert.equal(demo.title, 'Demo install failed')
   assert.equal(demo.why, 'Customers preview the live demo from the card.')
@@ -608,9 +703,9 @@ test('ja-restaurant: the failed demo is step 7, one short line, retry twice then
     1,
     'said once'
   )
-  assert.equal(mod.stepNumber('demo'), 7)
+  assert.equal(mod.stepNumber('demo'), 8)
   assert.equal(mod.waitingLine(DEMO), 'Waiting for step 3: the contract may make a new version.')
-  assert.equal(mod.waitingLine(LISTING), 'Waiting for step 7: Demo site')
+  assert.equal(mod.waitingLine(LISTING), 'Waiting for step 8: Demo site')
 })
 
 test('no listing yet: with a demo, Create listing in two short steps; without one, install the demo first', () => {
@@ -764,7 +859,7 @@ test('Publish says how far it reaches, in one line', () => {
       params: { waiting: ['contract', 'listing'] },
       blockedBy: 'listing'
     }),
-    'Waiting for steps 3 and 8: Content contract, Listing'
+    'Waiting for steps 3 and 9: Content contract, Listing'
   )
   assert.equal(
     mod.waitingLine({
@@ -1379,7 +1474,7 @@ test('Content coverage with page problems only: the title and the fact line say 
 
 test('Slot roles group of Content coverage: guides, lists and ONE prompt that binds roles in content-map.json', () => {
   assert.equal(mod.ROAD_ORDER.includes('slot-roles'), false)
-  assert.equal(mod.ROAD_ORDER.length, 10)
+  assert.equal(mod.ROAD_ORDER.length, 11)
 
   const missing = mod.guideOf(
     { step: 'content-coverage', state: 'todo', code: 'coverage-roles', params: ROLES_MISSING },
@@ -1757,4 +1852,54 @@ test('label judge of Content coverage: lists the wrongly labelled slots with the
   assert.match(unjudged.outside.text, /label-judge\/request\.json under --out: look at each crop yourself/)
   assert.match(unjudged.outside.text, /record-judge\.mjs/)
   assert.doesNotMatch(unjudged.outside.text, /TRACY_VISION|API_KEY|vision key/)
+})
+
+test('Template kit gaps: counted in the title, one list per kind, accepted ones listed apart, ONE prompt to fix or accept', () => {
+  const g = mod.guideOf({ step: 'template-kit', state: 'todo', code: 'kit-gaps', params: KIT_GAPS }, JOOMLA)
+  assert.equal(g.title, 'Template kit: 3 template gaps')
+  assert.equal(
+    g.detail,
+    'Fix them in the template or quickstart and capture again, or record an accepted reason.'
+  )
+  assert.deepEqual(
+    g.lists.map((l) => [l.heading, l.count]),
+    [
+      ['Dead links', 2],
+      ['Pages without an h1', 1],
+      ['Accepted with a reason', 1]
+    ]
+  )
+  assert.deepEqual(g.lists[0].lines, ['hero a.more: href is #', '/about: answers 404'])
+  assert.deepEqual(g.lists[1].lines, ['contact /contact'])
+  assert.deepEqual(g.lists[2].lines, ['dead-path: The demo keeps this path for a later page.'])
+  assert.match(g.outside.text, /3 template gaps/)
+  assert.match(g.outside.text, /dead-link/)
+  assert.match(g.outside.text, /capture the kit again/)
+  assert.match(g.outside.text, /accepted reason/)
+  for (const w of [g.title, g.detail, ...g.lists.flatMap((l) => [l.heading, ...l.lines]), g.outside.text])
+    assert.doesNotMatch(w, /[\u2013\u2014]|module/i, w)
+  const one = mod.guideOf(
+    { step: 'template-kit', state: 'todo', code: 'kit-gaps', params: { ...KIT_GAPS, gaps: 1 } },
+    JOOMLA
+  )
+  assert.equal(one.title, 'Template kit: 1 template gap')
+  const live = mod.guideOf(
+    { step: 'template-kit', state: 'warn', code: 'kit-gaps', params: { ...KIT_GAPS, live: true } },
+    JOOMLA
+  )
+  assert.match(live.detail, /stays published/)
+  // Accepted gaps stay visible once the kit is approved.
+  const done = mod.guideOf(
+    {
+      step: 'template-kit',
+      state: 'done',
+      code: 'kit-approved',
+      params: { ...KIT_GAPS, gaps: 0, gapsByKind: [], gapsShown: [] }
+    },
+    JOOMLA
+  )
+  assert.deepEqual(
+    done.lists.map((l) => l.heading),
+    ['Accepted with a reason']
+  )
 })

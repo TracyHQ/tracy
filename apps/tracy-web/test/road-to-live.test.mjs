@@ -19,6 +19,7 @@ import { test } from 'node:test'
 import { readContracts } from '../src/lib/contracts.js'
 import { DS_READY_CODE } from '../src/lib/design-system-ready-templates.js'
 import { publishRefusalOf, ROAD_STEPS, roadOf } from '../src/lib/road-to-live.js'
+import { imagesDigest } from '../src/lib/template-kit/reader.js'
 import { DS_SEVERITY, phaseTwoOf } from '../src/lib/template-design-system-readiness/severity.js'
 
 /**
@@ -49,6 +50,25 @@ function writeCleanCoverage(at, id, { roles = true } = {}) {
       hygiene: []
     })
   )
+  writeApprovedKit(at, id.split('/').at(-1))
+}
+
+/** An approved template kit of `version` beside the contract, so Template kit passes unless a test says otherwise. */
+function writeApprovedKit(at, version) {
+  writeFileSync(path.join(at, 'template-kit.json'), JSON.stringify(approvedKit(version)))
+}
+
+/** An approved template kit of `version`, as `template-kit.json` holds it. */
+function approvedKit(version) {
+  const images = [{ path: 'pages/home-1440.png', sha256: 'a'.repeat(64) }]
+  return {
+    kitVersion: '1.0.0',
+    quickstart: { version },
+    images,
+    pages: [{ id: 'home', images: { 1440: 'home-1440', 390: 'home-390' } }],
+    blocks: [{ id: 'hero', images: { 1440: 'hero-1440', 390: 'hero-390' } }],
+    approval: { by: 'reviewer', at: '2026-10-30T00:00:00.000Z', imagesSha256: imagesDigest(images) }
+  }
 }
 
 /** A contract index holding one profile for `tag` at each version. */
@@ -155,6 +175,7 @@ test('the steps come in one fixed order, each with a state and a code', () => {
       'install-file',
       'contract',
       'content-coverage',
+      'template-kit',
       'customize',
       'design-system',
       'demo',
@@ -220,6 +241,7 @@ test('ja-restaurant on dev: release ok, demo failed on 1.0.0, no listing, no con
   assert.deepEqual(published.params.waiting, [
     'contract',
     'content-coverage',
+    'template-kit',
     'customize',
     'design-system',
     'listing'
@@ -399,7 +421,7 @@ test('a shown listing is published, and with nothing to polish every step is don
   })
   assert.deepEqual(
     road.map((s) => s.state),
-    ['done', 'done', 'done', 'done', 'done', 'done', 'done', 'done', 'done', 'done']
+    ['done', 'done', 'done', 'done', 'done', 'done', 'done', 'done', 'done', 'done', 'done']
   )
   assert.deepEqual(stepOf(road, 'customize').params, {
     passed: 2,
@@ -451,7 +473,9 @@ test('EmDash needs no contract; a lower profile warns and does not hold Publish'
     demo: { url: 'https://d/', version: '1.0.2', platform: 'joomla' },
     contracts: lower,
     readiness: READY,
-    dsReadiness: DS_READY
+    dsReadiness: DS_READY,
+    // The kit is per quickstart version: the one beside the 1.0.0 contract is stale for 1.0.2, so hand in its own.
+    templateKit: { state: 'read', doc: approvedKit('1.0.2') }
   })
   assert.deepEqual(
     [stepOf(warned, 'contract').state, stepOf(warned, 'contract').code, stepOf(warned, 'contract').params],
