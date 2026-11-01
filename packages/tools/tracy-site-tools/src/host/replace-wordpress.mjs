@@ -3584,7 +3584,20 @@ export async function locateOnWordPress(deps) {
   const hrefs = whole.changes.filter((c) => c.href === true)
   const plan = hrefs.length > 0 ? { ...whole, changes: whole.changes.filter((c) => c.href !== true) } : whole
   const contractDoor = deps.contractDoor === true
-  const read = safe(deps.read)
+  // Widening discovery adds templates to the same snapshot. Reuse successful reads only within
+  // this locate call; writeRecords still revalidates through the original door, and a retry gets
+  // a new snapshot. Clone on both sides because readStores builds mutable sets from these values.
+  const door = safe(deps.read)
+  /** @type {Map<string, any>} */
+  const snapshot = new Map()
+  /** @type {Door} */
+  const read = async (action, params) => {
+    const key = JSON.stringify([action, params])
+    if (snapshot.has(key)) return structuredClone(snapshot.get(key))
+    const got = await door(action, params)
+    if (isRecord(got) && got.ok === true && snapshot.size < 256) snapshot.set(key, structuredClone(got))
+    return got
+  }
   /** @type {PageFacts | null} */
   let page = null
   const got = await deps.pageHtml(plan.path)

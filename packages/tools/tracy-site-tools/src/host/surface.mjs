@@ -421,13 +421,10 @@ const NOT_IN_LEAD = new Set(['content.replace', 'page.create', ...CONTEXT_TOLD_A
  * `{view:"pages", url}` finds the page and, for a listing page, answers what it lists and the call that adds
  * to it (`page-lists.mjs`); the describe stays the read for what the map cannot say — the types, the block
  * kinds, where SEO, menus and forms live. It costs +85 characters (316 → 401) on every step of the Joomla and
- * WordPress surfaces; EmDash keeps its own sentence.
+ * WordPress surfaces. Page discovery now uses the same direct guidance on EmDash; its native field bridge remains below.
  */
 const PAGE_FIRST =
-  'Call {view:"pages", url} first for a page the customer names, then {id}; {describe:true} for types, block kinds, where SEO/menus/forms live; {type:"page", locale} lists one type; follow links.next.'
-/** EmDash keeps the describe-first sentence: its add road is `tracy_emdash` and measured 4–5 steps. */
-const DESCRIBE_FIRST =
-  'Call {describe:true} once, then {type:"page", locale} or {view:"pages", url:link}; then {id}; follow links.next.'
+  'Call {view:"pages", url} or {view:"pages", search:"<title>"}; use known locale; batch: search:[…≤8]. offset/limit: rows. {id} only for fields; {describe:true}: types; links.next: segments.'
 
 /**
  * `content.read` — the Content API read (#347, tracy-content/v1), on every Joomla and WordPress
@@ -462,7 +459,7 @@ const contentReadBlock = (
   /** @type {string} */ refusals = '',
   /** @type {string} */ call = PAGE_FIRST
 ) =>
-  `content.read: THIS site's map: pages, articles, shared parts. Use it to find page fields. Not for writing. ${call} Returns ids; native: CMS {kind, id|key}${bridge}. Read-only. Refusals: CONTENT_BAD_QUERY names the field${refusals}.`
+  `content.read: THIS site's map: pages, articles, shared parts. Use when reading fields. Not for writing. ${call} Returns opaque Content API ids; native: CMS {kind, id|key}${bridge}. Read-only. Refusals: CONTENT_BAD_QUERY names the field${refusals}.`
 
 /** On a site whose words change by record (open Joomla/WordPress, sealed WordPress with no binding). */
 export const CONTENT_READ_BLOCK = contentReadBlock('')
@@ -497,9 +494,9 @@ export const CONTRACT_CONTENT_READ_BLOCK = contentReadBlock(
  * refusal names the road that always works.
  */
 export const EMDASH_CONTENT_READ_BLOCK = contentReadBlock(
-  "; a field's key is its tracy_emdash field, slug its entry id: content_get {collection, id:<slug>, locale} (collection: the site context's rule; a shared part: site)",
+  '; tracy_emdash content_get {collection, id:<slug>, locale}: key=field; slug=id; collection: context; shared: site',
   '; CONTENT_ADAPTER_UNSUPPORTED → no map here: tracy_emdash content_get',
-  DESCRIBE_FIRST
+  'Call {view:"pages", locale:"<requested>", search:"<title>"}; batch: search:[…≤8]; url replaces search. offset/limit: page rows. {id} only for fields; links.next: segments.'
 )
 
 /**

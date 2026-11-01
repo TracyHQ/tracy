@@ -318,15 +318,14 @@ test('🔒 content.locate is on every surface and accepted before the relay, yet
  * WordPress and Joomla the ones that read it first took 11.3 steps against 6.9 for the ones that did not. A
  * page the customer names is found by its address (`view=pages`, Content API v2), and that answer is where
  * the page's lists and the call that adds to it are read (`page-lists.mjs`); the describe stays the answer
- * for what the map cannot say: the types, the block kinds, where SEO, menus and forms live. EmDash keeps
- * the describe-first wording: its add road is `tracy_emdash` and measured 4–5 steps.
+ * for what the map cannot say: the types, the block kinds, where SEO, menus and forms live. EmDash now uses the direct page lookup too; its native
+ * collection/entry bridge still describes how fields are read.
  */
-test('🔒 the Joomla and WordPress content.read blocks send a named page to {view:"pages", url} first; the describe is for what the map cannot say', () => {
-  for (const block of [CONTENT_READ_BLOCK, CONTRACT_CONTENT_READ_BLOCK]) {
-    assert.match(
-      block,
-      /Call \{view:"pages", url\} first for a page the customer names, then \{id\}; \{describe:true\} for types, block kinds, where SEO\/menus\/forms live; \{type:"page", locale\} lists one type; follow links\.next\./
-    )
+test('🔒 the page map distinguishes known URLs, title search and opaque IDs without a describe round trip', () => {
+  for (const block of [CONTENT_READ_BLOCK, CONTRACT_CONTENT_READ_BLOCK, EMDASH_CONTENT_READ_BLOCK]) {
+    assert.match(block, /Call \{view:"pages", url\}|url replaces search/)
+    assert.match(block, /\{view:"pages", (?:locale:"<requested>", )?search:"<title>"\}/)
+    assert.match(block, /Returns opaque Content API ids/)
     assert.doesNotMatch(
       block,
       /once|describe:true\} first|Call \{describe/,
@@ -336,11 +335,13 @@ test('🔒 the Joomla and WordPress content.read blocks send a named page to {vi
   assert.doesNotMatch(CONTENT_READ_BLOCK, /writable|content\.contract/, 'no slot door off the contract')
 })
 
-test('🔒 the EmDash content.read block keeps {describe:true} first, then the filtered list or the link, then one id', () => {
-  assert.match(
-    EMDASH_CONTENT_READ_BLOCK,
-    /Call \{describe:true\} once, then \{type:"page", locale\} or \{view:"pages", url:link\}; then \{id\}/
-  )
+test('page lookup guidance batches named titles and reuses IDs before reading fields on every CMS', () => {
+  for (const block of [CONTENT_READ_BLOCK, CONTRACT_CONTENT_READ_BLOCK, EMDASH_CONTENT_READ_BLOCK]) {
+    assert.match(block, /batch: search:\[…≤8\]/)
+    assert.match(block, /\{id\} only for fields/)
+    assert.match(block, /use known locale|locale:"<requested>"/)
+    assert.doesNotMatch(block, /describe:true\} once/)
+  }
 })
 
 /**
@@ -351,7 +352,7 @@ test('🔒 the EmDash content.read block keeps {describe:true} first, then the f
  */
 test('🔒 every content.read block says native holds the CMS ids', () => {
   for (const block of [CONTENT_READ_BLOCK, CONTRACT_CONTENT_READ_BLOCK, EMDASH_CONTENT_READ_BLOCK]) {
-    assert.match(block, /Returns ids; native: CMS \{kind, id\|key\}/)
+    assert.match(block, /Returns opaque Content API ids; native: CMS \{kind, id\|key\}/)
     assert.doesNotMatch(block, /never CMS ids/)
   }
 })
@@ -398,7 +399,7 @@ test('🔒 on EmDash, content.read is accepted before the relay and names the tr
   assert.equal(siteToolDescription('emdash').split(EMDASH_CONTENT_READ_BLOCK).length - 1, 1)
   assert.match(
     EMDASH_CONTENT_READ_BLOCK,
-    /field's key is its tracy_emdash field, slug its entry id: content_get \{collection, id:<slug>, locale\}/
+    /tracy_emdash content_get \{collection, id:<slug>, locale\}: key=field; slug=id/
   )
   assert.match(
     EMDASH_CONTENT_READ_BLOCK,
@@ -1106,8 +1107,7 @@ test('each description stays within its budget, the replace job left out', () =>
   // +85 (30/09/2026, first call of an add): the plain block names a page the customer names as the first read,
   // 316 → 401 characters, and keeps {describe:true} for what the map cannot say. The two Joomla/WordPress rows of
   // the site context, which name the same read, got 6 and 2 characters shorter; and the steps it takes away are
-  // the reason: the add-by-chat runs that read the describe first took 11.3 steps against 6.9. EmDash is
-  // unchanged (`EMDASH_CONTENT_READ` below).
+  // the reason: the add-by-chat runs that read the describe first took 11.3 steps against 6.9. EmDash originally kept describe-first; the current common guidance fits its existing budget.
   const CONTENT_READ = 402
   const SLOT_BRIDGE = 178
   // Content API v2 (26/09/2026): the three content.read blocks became describe-first — the types,
