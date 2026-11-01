@@ -113,8 +113,8 @@
   "selectors": {
     "displaySize": "h1",
     "heading": [".t3-wrapper h2", "main h2"],
-    "button": [".btn", "a.btn.btn-primary"],
-    "buttonPrimary": [".btn-primary", "a.btn.btn-primary"],
+    "button": [".btn:not(.example-button *)", "a.btn.btn-primary:not(.example-button *)"],
+    "buttonPrimary": [".btn-primary:not(.example-button *)", "a.btn.btn-primary:not(.example-button *)"],
     "card": ["div.ext-field-flex.ext-field-list", ".card"],
     "container": ["#t3-mainbody .container, .container", "div.features-image div.owl-carousel.owl-theme"],
     "bodyFace": ["body"],
@@ -269,6 +269,12 @@
         },
         ".t3-module .module-inner": {
           "background-color": "card"
+        },
+        ".t3-module": {
+          "background-color": "card"
+        },
+        "#back-to-top button": {
+          "color": "text"
         }
       },
       "important": true,
@@ -284,6 +290,16 @@
       "paint": {
         ".icon": {
           "background-color": "accent-fill"
+        },
+        ".features-image .item": {
+          "background-color": "card"
+        },
+        ".features-image .item .feature-title h3": {
+          "color": "text",
+          "border-bottom-color": "ground"
+        },
+        ".features-image .item:hover .feature-title h3": {
+          "border-bottom-color": "accent"
         }
       },
       "important": true
@@ -304,8 +320,258 @@
       "words": [".content-text", ".title-header h2"]
     }
   },
+  "followRules": {
+    ".star, .registration #jform_spacer-lbl .red, .registration .form-group .control-label .text label, .profile-edit .form-group .control-label .text label, .profile .form-group .control-label .text label": {
+      "color": "warn-text"
+    },
+    ".btn.btn-secondary": {
+      "background-color": "surface",
+      "border-color": "border",
+      "color": "fg-2"
+    },
+    ".btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active": {
+      "background-color": "accent-hover!",
+      "border-color": "accent-hover!",
+      "color": "accent-on!"
+    },
+    ".btn-info": {
+      "background-color": "accent!",
+      "border-color": "accent!",
+      "color": "accent-on!"
+    },
+    ".btn-info:hover, .btn-info:focus, .btn-info:active, .btn-info.active": {
+      "background-color": "accent-hover!",
+      "border-color": "accent-hover!",
+      "color": "accent-on!"
+    },
+    ".contact .contact-links ul li a.vimeo": {
+      "color": "accent-on"
+    },
+    ".example-colors :is(.color-brand-primary, .color-brand-secondary, .color-brand-info)": {
+      "color": "accent-on"
+    },
+    ".example-colors .color-brand-info": {
+      "background-color": "accent"
+    },
+    ".example-colors .color-brand-success": {
+      "background-color": "success"
+    },
+    ".example-colors .color-brand-danger": {
+      "background-color": "danger"
+    },
+    ".example-colors .color-brand-warning": {
+      "background-color": "warn"
+    },
+    ".example-colors :is(.color-gray-darker, .color-gray-dark, .color-gray)": {
+      "background-color": "ink",
+      "color": "on-ink"
+    }
+  },
+  "sideRules": {
+    "light": {
+      ".contact .contact-links ul li a:is(.google-plus, .facebook, .twitter, .youtube, .instagram)": {
+        "color": "#ffffff"
+      },
+      ".t3-footer #back-to-top button": {
+        "bottom": "6px"
+      },
+      ".blog .box-content .readmore, .blog-featured .box-content .readmore": {
+        "margin-bottom": "12px"
+      },
+      ".example-colors .color-brand-success": {
+        "color": "oklch(from var(--ds-c-success) clamp(0, (0.6 - l) * 1000, 1) 0 0)"
+      },
+      ".example-colors .color-brand-danger": {
+        "color": "oklch(from var(--ds-c-danger) clamp(0, (0.6 - l) * 1000, 1) 0 0)"
+      },
+      ".example-colors .color-brand-warning": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.6 - l) * 1000, 1) 0 0)"
+      },
+      ".panel-success": {
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-success > .panel-heading": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".label-success": {
+        "color": "var(--ds-c-success-text) !important",
+        "background-color": "var(--ds-c-success-bg) !important"
+      },
+      ".alert-success": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".alert-success :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".panel-info": {
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-info > .panel-heading": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".label-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background-color": "var(--ds-c-info-bg) !important"
+      },
+      ".alert-info": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".alert-info :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".panel-warning": {
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-warning > .panel-heading": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".label-warning": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background-color": "var(--ds-c-warn-bg) !important"
+      },
+      ".alert-warning": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".alert-warning :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".panel-danger": {
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-danger > .panel-heading": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".label-danger": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background-color": "var(--ds-c-danger-bg) !important"
+      },
+      ".alert-danger": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".alert-danger :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-danger-text)"
+      }
+    },
+    "dark": {
+      ".contact .contact-links ul li a:is(.google-plus, .facebook, .twitter, .youtube, .instagram)": {
+        "color": "#ffffff"
+      },
+      ".t3-footer #back-to-top button": {
+        "bottom": "6px"
+      },
+      ".blog .box-content .readmore, .blog-featured .box-content .readmore": {
+        "margin-bottom": "12px"
+      },
+      ".example-colors .color-brand-success": {
+        "color": "oklch(from var(--ds-c-success) clamp(0, (0.6 - l) * 1000, 1) 0 0)"
+      },
+      ".example-colors .color-brand-danger": {
+        "color": "oklch(from var(--ds-c-danger) clamp(0, (0.6 - l) * 1000, 1) 0 0)"
+      },
+      ".example-colors .color-brand-warning": {
+        "color": "oklch(from var(--ds-c-warn) clamp(0, (0.6 - l) * 1000, 1) 0 0)"
+      },
+      ".panel-success": {
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".panel-success > .panel-heading": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".label-success": {
+        "color": "var(--ds-c-success-text) !important",
+        "background-color": "var(--ds-c-success-bg) !important"
+      },
+      ".alert-success": {
+        "color": "var(--ds-c-success-text)",
+        "background-color": "var(--ds-c-success-bg)",
+        "border-color": "var(--ds-c-success-bg)"
+      },
+      ".alert-success :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-success-text)"
+      },
+      ".panel-info": {
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".panel-info > .panel-heading": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".label-info": {
+        "color": "var(--ds-c-info-text) !important",
+        "background-color": "var(--ds-c-info-bg) !important"
+      },
+      ".alert-info": {
+        "color": "var(--ds-c-info-text)",
+        "background-color": "var(--ds-c-info-bg)",
+        "border-color": "var(--ds-c-info-bg)"
+      },
+      ".alert-info :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-info-text)"
+      },
+      ".panel-warning": {
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".panel-warning > .panel-heading": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".label-warning": {
+        "color": "var(--ds-c-warn-text) !important",
+        "background-color": "var(--ds-c-warn-bg) !important"
+      },
+      ".alert-warning": {
+        "color": "var(--ds-c-warn-text)",
+        "background-color": "var(--ds-c-warn-bg)",
+        "border-color": "var(--ds-c-warn-bg)"
+      },
+      ".alert-warning :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-warn-text)"
+      },
+      ".panel-danger": {
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".panel-danger > .panel-heading": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".label-danger": {
+        "color": "var(--ds-c-danger-text) !important",
+        "background-color": "var(--ds-c-danger-bg) !important"
+      },
+      ".alert-danger": {
+        "color": "var(--ds-c-danger-text)",
+        "background-color": "var(--ds-c-danger-bg)",
+        "border-color": "var(--ds-c-danger-bg)"
+      },
+      ".alert-danger :is(h4, p, strong, a)": {
+        "color": "var(--ds-c-danger-text)"
+      }
+    }
+  },
   "bandsNote": "drafted 2026-10-12 by scripts/bands.mjs off the released default page (/): each kept band that is not a picture wears the system's ground (src/bands.mjs), its words keep their colours; blocks of the template’s own colour it was missing drafted 14/10/2026 off its home page and the inner pages the sweep measured (scripts/bands.mjs --draft --fills): the visual review saw them keep the template colour, or white words on a ground that took a light accent; the purple bands (.mod-bg-secondary, the \"Largest Indoor Activity Centre\" section, and the footer, painted by .footer-inner) were drafted as pictures for their background image, but bg-decor.png is a transparent pattern of faint white shapes over the template’s flat #403d75: as pictures they kept the template purple under every system (visual review 14/10/2026), and the footer’s accent links, judged on a photo that runs lighter, came out near black on the purple (1.8:1 under 13 of the 15 featured systems). They are bands of the system’s (picture: false): the footer’s ground is its .footer-inner, its three module cards (.t3-module .module-inner, a darker purple of their own) take the band ground, and its links the accent made readable on it. The drafted .module-inner fill was removed (it named every module of the site); the inner pages’ page-title band (.ja-masthead, the same purple, its title white on a ground that took a light accent) is a fill whose title takes the words that read on the system’s ground; 14/10/2026 (visual review, round 3): the footer’s three module cards took the footer’s own ground and were no longer set apart from it (the template draws them a step off its purple: #3b386f on #403d75). The footer band hands its worn ground and words to two variables (vars --kc-band-ground / --kc-band-text, read inside the band where --ds-c-* are reset) and the cards are the ground moved 10% toward the band’s words (sideRules, both sides): a step lighter on a dark ground, darker on a light one, never a colour of a system",
   "rolesNote": "container: the first div.container (13/10/2026) — the features carousel measured before sits in a grid column and never shows the page width",
   "sideNote": "14/10/2026 (visual review, round 3): footer module cards — see bandsNote (.t3-footer); 15/10/2026 (final measure on the develop merge): the cards were the band ground mixed a tenth toward the band's words, white on Notion's blue at 3.91:1 on 10 of 15 systems: they take the band's card role (bands.mjs), a tenth away from its words",
-  "reviewV8Note": "15/10/2026 (look review v8): the About page’s welcome box (.box-welcome) is tokenized to the accent while its words stay white: a fill band, so its words take the accent’s own text"
+  "reviewV8Note": "15/10/2026 (look review v8): the About page’s welcome box (.box-welcome) is tokenized to the accent while its words stay white: a fill band, so its words take the accent’s own text",
+  "readiness103Note": "01/11/2026 (Design system readiness on the 1.0.3 installer, preview probe v10, Moxie and Figma, light and dark): eight must-fix findings fixed here. The footer band's module cards (.t3-footer .t3-module, the template paints them in .t3-footnav) and the activity band's carousel cards (.mod-bg-secondary .features-image .item, their titles and underline) take the band's card, text and ground roles: inside a kept band --ds-c-* are reset, so they kept #3b386f, white and indigo (ACCENT-LEAK, TPL-1, ROLE-1 page follows 81% -> 96% under Moxie). The required-field marks (#ffcc00) read warn-text. Joomla core's .btn-secondary (password toggle, Advanced Search) had no template paint and drew the browser's own grey under a dark system: it takes surface, border and fg-2 (ICON-1, CON-2). The contact page's social glyphs read --ds-c-fg on the network's own colour: white on both sides (ICON-1). The Back to Top arrow and the blog's Read more button touched the block under them (LAYOUT-1, the template's own spacing): 6 px and 12 px of room under a system only. Typography page (a demo page, measured like any other): .btn-info, the btn-primary hover and the brand swatches take the accent, status swatches, panels, labels and alerts the system's status colours (BTN-1, ACCENT-LEAK, TPL-1, CON-2); its six sample buttons (.example-button) are left out of selectors.button and selectors.buttonPrimary, so they keep the template's size, type and corner and wrap in two rows as on the template's page, while their colours follow (the template's .btn-primary reads var(--ds-c-accent) and var(--ds-c-accent-on), and followRules give .btn-info and the hovers their roles) — with the system's compact buttons the row fit on one line and the section halved (LAYOUT-2, 228 -> 112 px)"
 }
