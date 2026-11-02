@@ -574,7 +574,21 @@ function fakeInstaller({
       const page = `${php ? `<h1 class="p">PHP Version ${php}</h1>` : ''}${rows ? `<table>${rows}</table>` : ''}`
       return withUrl(new Response(page || '<p>disabled</p>'), url)
     }
-    if (url === `${ADMIN}?option=com_admin&view=sysinfo&format=json`) {
+    // System Information, with its export links carrying the session's form token (Joomla 3 to 6).
+    if (url === `${ADMIN}?option=com_admin&view=sysinfo`) {
+      state.sysinfoAsked = true
+      return withUrl(
+        new Response(
+          `<a href="/administrator/index.php?option=com_admin&amp;view=sysinfo&amp;format=text&amp;${CSRF}=1">Download as text</a>` +
+            `<a href="/administrator/index.php?option=com_admin&amp;view=sysinfo&amp;format=json&amp;${CSRF}=1">Download as JSON</a>`
+        ),
+        url
+      )
+    }
+    // The export checks that token (com_admin's controller): without it, a 303 back to the page.
+    if (url === `${ADMIN}?option=com_admin&view=sysinfo&format=json`)
+      return withUrl(new Response('', { status: 303, headers: { location: `${ADMIN}?option=com_admin&view=sysinfo` } }), url)
+    if (url === `${ADMIN}?option=com_admin&view=sysinfo&format=json&${CSRF}=1`) {
       if (!sysinfoPhp) return withUrl(new Response('Not found', { status: 404 }), url)
       // On PHP 7 a disabled phpinfo() warns ahead of the JSON when display_errors is on.
       return withUrl(
