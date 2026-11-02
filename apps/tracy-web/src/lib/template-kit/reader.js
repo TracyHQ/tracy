@@ -5,8 +5,11 @@
  * it; the kit is captured by `packages/cms/tracy-quickstart-tools/template-kit`.
  *
  * A template kit is made once per template version: full page and per block screenshots at 1440 and 390, a per page
- * summary of the content map, and a version stamp. The images themselves are stored elsewhere; this file is the text
- * part. The shape this reader uses (every other key is kept and ignored):
+ * summary of the content map, and a version stamp. The images are not in this repo: `cli.mjs pack` (in
+ * `packages/cms/tracy-quickstart-tools/template-kit`) zips them with this file as `template-kit-<template>-<version>.zip`,
+ * published as an asset of the quickstart's GitHub release in `RELEASES_REPO` (`quickstart-releases.js`), for example
+ * tag `quickstart/ja-boxing/j6`, asset `template-kit-ja-boxing-1.0.10.zip`; `approval.imagesSha256` is checked with
+ * `imagesDigest`. This file is the text part. The shape this reader uses (every other key is kept and ignored):
  *
  *   {
  *     "kitVersion": "1.0.0",

@@ -581,5 +581,9 @@ list, kept by every later run).
 - **`contact-sheet/`**: every block image on HTML sheets (no screenshot), to spot
   images that are misaligned, blank, cut by a header or doubled.
 
-Where a kit is stored is not decided yet: the tool writes `--out` only. Tests: `test/template-kit-crawl.test.mjs`,
+The kit's images are published as a zip asset on the quickstart's GitHub release in `JoomlArt-Products/joomlart-products`
+(the repo `RELEASES_REPO` in `apps/tracy-web/src/lib/quickstart-releases.js` reads), named
+`template-kit-<template>-<version>.zip` (for example tag `quickstart/ja-boxing/j6`, asset
+`template-kit-ja-boxing-1.0.10.zip`). `cli.mjs pack --out <kit dir>` writes it: `template-kit.json` plus `images/`, and
+`approval.imagesSha256` is checked against those images with `imagesDigest`. Tests: `test/template-kit-crawl.test.mjs`,
 `test/template-kit-assemble.test.mjs`, `test/template-kit-blocks.test.mjs`.
