@@ -169,7 +169,17 @@ test('Joomla: a new article in a new category is two creates, the category first
       entity: 'content',
       id: 3,
       // The times Joomla stamps on it by itself: the next sync's base holds the copy's (#223).
-      stamps: ['created', 'created_time', 'modified', 'modified_time'],
+      // The author columns too: the engine writes as the first Super User (#223 re-test).
+      stamps: [
+        'created',
+        'created_by',
+        'created_time',
+        'created_user_id',
+        'modified',
+        'modified_by',
+        'modified_time',
+        'modified_user_id'
+      ],
       // Its asset, which Joomla numbers on its own, aligned by name on the next sync (#172).
       align: { entity: 'assets', match: { name: 'com_content.article.3' } }
     }
@@ -615,6 +625,8 @@ test('Joomla: a menu both sides renamed since the last sync is a conflict — th
 
 // ── WordPress ────────────────────────────────────────────────────────────────────────────────
 const HOMES = ['https://shop.example', 'https://shop-com.tracy.ai']
+/** What WordPress stamps itself on a record it makes, as a create's seed names it (lib/live_push.py `W_CREATE_STAMPS`). */
+const WP_CREATE_STAMPS = ['guid', 'post_author', 'post_date', 'post_date_gmt', 'post_modified', 'post_modified_gmt']
 const post = (id, fields = {}) => ({
   ID: String(id),
   post_type: 'page',
@@ -1255,6 +1267,60 @@ test('WordPress: a new page with a new picture, a new category and a menu entry 
     !answer.unsupported.some((u) => u.path?.includes('300x200')),
     'a size of the picture is not named'
   )
+  // What WordPress stamps itself on each record it makes: the next sync's base holds the copy's, so a
+  // live delete of it is taken, never held as a false delete-modify (#223). The post sends its date.
+  const stampsOf = (id) => items[id].seed.find((s) => s.create)?.stamps
+  assert.deepEqual(stampsOf('post:new:61'), ['guid', 'post_author', 'post_date_gmt', 'post_modified', 'post_modified_gmt'])
+  assert.deepEqual(stampsOf('media:new:60'), WP_CREATE_STAMPS)
+  // An item with no title is named after its number by WordPress.
+  assert.deepEqual(stampsOf('menuItem:new:62'), [...WP_CREATE_STAMPS, 'post_name'].sort())
+})
+
+test('WordPress: a new template part, Additional CSS and synced pattern name what WordPress stamps on them (#223)', () => {
+  const row = (id, type, name, content) => ({
+    ID: String(id),
+    post_name: name,
+    post_title: name,
+    post_status: 'publish',
+    post_type: type,
+    post_content: content
+  })
+  const answer = changeset('wordpress', {
+    homes: HOMES,
+    entities: { posts: { base: [10], copy: [10, 13, 15, 17] } },
+    kinds: {
+      templatePart: kind(
+        [],
+        [{ ...row(13, 'wp_template_part', 'header', '<!-- wp:site-title /-->'), area: 'header' }],
+        ['post_name']
+      ),
+      blockPost: kind([], [row(15, 'wp_block', 'call-to-action', '<p>Buy now</p>')], ['ID']),
+      customCss: kind([], [row(17, 'custom_css', 'twentytwentyfive', 'body{color:#123456}')], ['ID'])
+    }
+  })
+  const creates = answer.items.filter((i) => i.op === 'create')
+  assert.equal(creates.length, 3, JSON.stringify(answer.items.map((i) => i.id)))
+  for (const item of creates)
+    assert.deepEqual(item.seed.find((s) => s.create)?.stamps, WP_CREATE_STAMPS, item.id)
+})
+
+test('Joomla: a new redirect names the dates Joomla stamps on it (#223)', () => {
+  const link = (id, fields = {}) => ({
+    id: String(id),
+    old_url: `/old-${id}`,
+    new_url: `/new-${id}`,
+    comment: '',
+    published: '1',
+    header: '301',
+    ...fields
+  })
+  const answer = changeset('joomla', {
+    entities: { redirect_links: { base: [1], copy: [1, 2] } },
+    kinds: { redirect: kind([link(1)], [link(1), link(2)]) }
+  })
+  const created = byId(answer)['redirect:new:2']
+  assert.ok(created, JSON.stringify(answer.items.map((i) => i.id)))
+  assert.deepEqual(created.seed[0].stamps, ['created_date', 'modified_date'])
 })
 
 test('WordPress: a post put in another category writes slugs and checks the live site’s category ids', () => {
