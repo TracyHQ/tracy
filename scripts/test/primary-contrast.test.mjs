@@ -50,6 +50,38 @@ for (const [where, css] of [
     assert.ok(contrast(primary, 1) >= 4.5, `primary on white ${contrast(primary, 1).toFixed(2)}:1`)
   })
 
+/** `#rrggbb` → linear sRGB. */
+const hexToLinear = (hex) =>
+  [1, 3, 5]
+    .map((i) => Number.parseInt(hex.slice(i, i + 2), 16) / 255)
+    .map((c) => (c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4))
+const toHex = (linear) =>
+  `#${linear
+    .map((c) => (c <= 0.0031308 ? 12.92 * c : 1.055 * c ** (1 / 2.4) - 0.055))
+    .map((c) => Math.round(c * 255).toString(16).padStart(2, '0'))
+    .join('')}`
+
+test('the tracy-brand theme layer paints the same AA primary over tokens.css, the mark and rings kept (#228)', async () => {
+  // The layer is written inline on <body> by dsh's theme service, after tokens.css: its default is
+  // what every primary button shows.
+  const { primaryTokens } = await import(new URL('packages/brand/tracy-brand/src/shared/theme.mjs', ROOT).href)
+  const { DEFAULT_PRIMARY } = await import(new URL('packages/brand/tracy-brand/src/shared/settings.mjs', ROOT).href)
+  const layer = primaryTokens('')
+  const tokensPrimary = toHex(oklchToLinear(token(read('packages/ui/tracy-ui/src/tokens.css'), '--primary')))
+  const label = luminance(oklchToLinear(token(read('packages/ui/tracy-ui/src/tokens.css'), '--primary-foreground')))
+  for (const name of ['--primary', '--dsw-alias-button-primary-fill', '--dsw-alias-brand-text']) {
+    for (const mode of ['light', 'dark']) {
+      const value = layer[name][mode]
+      assert.equal(value, tokensPrimary, `${name} (${mode}) is tokens.css --primary`)
+      const fill = luminance(hexToLinear(value))
+      assert.ok(contrast(fill, label) >= 4.5, `${name}: label on it ${contrast(fill, label).toFixed(2)}:1`)
+      assert.ok(contrast(fill, 1) >= 4.5, `${name}: it on white ${contrast(fill, 1).toFixed(2)}:1`)
+    }
+  }
+  assert.equal(layer['--ring'].light, DEFAULT_PRIMARY)
+  assert.equal(layer['--dsw-alias-brand-primary'].light, DEFAULT_PRIMARY)
+})
+
 test('page-shell.js redeclares the same primary as tokens.css', () => {
   assert.equal(
     token(read('apps/tracy-web/src/lib/page-shell.js'), '--primary'),
