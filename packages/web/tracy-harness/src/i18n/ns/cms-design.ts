@@ -239,6 +239,7 @@ export const en = {
   'cms-design.rules.kind.mustFix': 'Must fix',
   'cms-design.rules.kind.worthFixing': 'Worth fixing',
   'cms-design.rules.kind.notMeasured': 'Not measured yet',
+  'cms-design.rules.brand': 'Brand mode, not counted in the grade',
   'cms-design.rules.kind.passed': 'Passed',
   'cms-design.rules.verdict.mustFix_one': '<b>{count}</b> must fix',
   'cms-design.rules.verdict.mustFix_other': '<b>{count}</b> must fix',

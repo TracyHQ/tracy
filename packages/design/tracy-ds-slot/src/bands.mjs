@@ -59,7 +59,7 @@
  *
  * PURE: the worn 56 tokens in, CSS rules out. Every colour is a hex the colour module can check.
  */
-import { contrast, luminance, mix, parseHex, readable } from './colour.mjs'
+import { contrast, luminance, mix, parseHex, readable, readableLightness } from './colour.mjs'
 
 /** A band key: one of keepScopes, narrowed by classes / ids / :not(.x) only (as keptButtons). */
 const BAND_KEY = /^([.#][\w-]+)((?:[.#][\w-]+|:not\([.#][\w-]+\))*)$/
@@ -190,7 +190,8 @@ export function groundCandidates(tokens, kind, opts = {}) {
  * colour of the system reads under every text the band shows (the band then stays the template's).
  * @param {Record<string, string>} tokens
  * @param {{ ground?: string, texts?: string[], kind?: string, repaint?: boolean }} band
- * @param {{ page?: string }} [opts]  page: the template's own page colour, from which a panel stood apart
+ * @param {{ page?: string, brand?: boolean }} [opts]  page: the template's own page colour, from which a panel stood apart;
+ *   brand: brand mode (brand.mjs), a photo band's accent judged on its recorded ground
  * @returns {{ kind: string, keptGround: boolean, buttonGround: string, ground: string, accent: string, accentLarge: string, accentFill: string, line: string | null, text: string, text2: string } | null}
  */
 export function bandColours(tokens, band, opts = {}) {
@@ -281,6 +282,11 @@ export function bandColours(tokens, band, opts = {}) {
   // the library, scripts/matrix.mjs 14/10/2026). Where the first side reaches, nothing changes
   const other = toward === '#ffffff' ? '#000000' : '#ffffff'
   const readableEither = (c, g, min) => readable(c, g, toward, min) ?? readable(c, g, other, min)
+  // brand mode: the brand accent keeps its hue, shifted by lightness alone (colour.mjs readableLightness)
+  const shift =
+    opts.brand === true
+      ? (c, g, min) => readableLightness(c, [g], min) ?? readableEither(c, g, min)
+      : readableEither
   // on a band painted with the accent itself, the accent's words are its own text colour
   const onAccent = picked === tokens['--accent'] && parseHex(tokens['--accent-on'])
   const accentBase = onAccent ? tokens['--accent-on'] : tokens['--accent']
@@ -288,7 +294,10 @@ export function bandColours(tokens, band, opts = {}) {
   // them too (JA Candidate's section title read 4.5 on the white measured on a desktop, 3.4–4.0 on
   // the photo's pale grey under it on a phone; at 15% JA Titan's slide links still read 2.5–2.75 on
   // its mid-grey photo, 13/10/2026)
-  const judged = keptGround ? (mix(picked, toward, 0.3) ?? picked) : picked
+  // In brand mode (brand.mjs) the customer's own colour is the point: it is judged on the ground the band
+  // records, not moved a further 30% toward the photo's light, which turned a bronze #a78f45 that reads 5.98:1
+  // on JA Boxing's hero into a pale #d8cead
+  const judged = keptGround && opts.brand !== true ? (mix(picked, toward, 0.3) ?? picked) : picked
   // a photo band whose words are both light and dark sits on both (JA Beauty's testimonials: its title
   // on white on a desktop, on the photo's dark on a phone, 1.68:1 there with an accent made for white,
   // 13/10/2026): its accent is the system's own moved to the tone that reads best on both
@@ -314,14 +323,14 @@ export function bandColours(tokens, band, opts = {}) {
       ? balanced(accentBase)
       : greyAccent
         ? own(picked)
-        : readableEither(accentBase, judged, 4.5)
+        : shift(accentBase, judged, 4.5)
     : null
   const accentFill = parseHex(accentBase)
     ? bothSides
       ? accent
       : greyAccent
         ? own(picked)
-        : readableEither(accentBase, judged, 3)
+        : shift(accentBase, judged, 3)
     : null
   const text = own(picked)
   const text2 = readable(mix(text, picked, 0.28) ?? text, picked, text, 4.5) ?? text
@@ -393,7 +402,8 @@ export function wornBands(contract) {
  * @param {{ keepScopes?: string[], bands?: Record<string, any> }} contract
  * @param {Record<string, string>} tokens  the worn 56 tokens
  * @param {string} prefix  the emitter's specificity prefix (`:root`×6)
- * @param {{ page?: string }} [opts]  page: the template's own page colour (bandColours)
+ * @param {{ page?: string, brand?: boolean }} [opts]  page: the template's own page colour (bandColours); brand:
+ *   brand mode (brand.mjs), the accent judged on the band's recorded ground
  * @returns {{ rules: string[], grounds: Record<string, string>, media: Record<string, { ground: string, media: string }> }}
  *   rules, each band key's ground, and the ground of each band that is one only at some widths
  */

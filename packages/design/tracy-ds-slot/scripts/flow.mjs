@@ -21,6 +21,7 @@ import { fileURLToPath } from 'node:url'
 import { buttonPair } from '../src/colour.mjs'
 import { templateSizes } from '../src/emit.mjs'
 import { contractBase, loadContract, loadProfile } from '../src/library.mjs'
+import { brandProfile, parseBrandId } from '../src/brand.mjs'
 import { browser } from './cdp.mjs'
 import { gate } from '../src/normalise.mjs'
 import {
@@ -714,7 +715,14 @@ const slug = (s) =>
     .replace(/^-|-$/g, '')
     .slice(0, 20)
 
-const profiles = IDS.map((id) => loadProfile(ROOT, id))
+// a brand id (`brand:<bg>-<fg>-<accent>`, Joomla): the brand step's profile, which ds-slot.mjs wears in brand mode
+const profiles = IDS.map((id) => {
+  const colours = parseBrandId(id)
+  if (!colours) return loadProfile(ROOT, id)
+  const made = brandProfile(colours, CONTRACT, BASE)
+  if ('refused' in made) throw new Error(`${id}: ${made.refused.join(', ')}`)
+  return made.profile
+})
 /**
  * The Google families a system loads for its body and display faces, by profile id. The mono face is
  * left out: a page loads it only where it shows code, and BMW's or Stripe's substituted mono (JetBrains

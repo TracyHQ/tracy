@@ -3,7 +3,8 @@
  * node packages/design/tracy-ds-slot/scripts/ds-slot.mjs apply <id> --emdash <dataDir> [--template emdash-<name>]   write the slot
  *                                                         clear      --emdash <dataDir>   remove it
  *                                                         profile <id>                    print the profile
- * `<id>` is `refero:<uuid>` or `od:<id>`. The same two calls the build tools make on a site.
+ * `<id>` is `refero:<uuid>` or `od:<id>`; for `joomla` also `brand:<bg>-<fg>-<accent>` (hex without #, fg empty =
+ * the template's): the brand step's profile (src/brand.mjs), worn in brand mode. The same calls the build tools make.
  */
 import { existsSync, mkdirSync, renameSync, rmSync, writeFileSync } from 'node:fs'
 import { dirname, join, resolve } from 'node:path'
@@ -12,6 +13,7 @@ import { emdashCss } from '../src/emit.mjs'
 import { contractBase, googleFontFaces, loadContract, loadProfile } from '../src/library.mjs'
 import { wordpressVariation } from '../src/wordpress.mjs'
 import { joomlaSlot } from '../src/joomla.mjs'
+import { brandProfile, parseBrandId } from '../src/brand.mjs'
 import { fontsHref } from '../src/emit.mjs'
 import { gate } from '../src/normalise.mjs'
 
@@ -81,9 +83,17 @@ if (cmd === 'profile') {
     )
 } else if (cmd === 'joomla') {
   // the HTML the site module carries: written to --out, or printed
-  const p = loadProfile(ROOT, rest[0])
   const contract = loadContract(flag('--template') ?? 'joomla-tracy-base')
-  const r = joomlaSlot(p, contractBase(ROOT, contract), contract)
+  const base = contractBase(ROOT, contract)
+  // a brand id: the brand step's profile, worn in brand mode (the kept bands take its accent)
+  const colours = parseBrandId(rest[0])
+  const made = colours ? brandProfile(colours, contract, base) : null
+  if (made && 'refused' in made) {
+    console.error(`refused: ${made.refused.join(', ')}`)
+    process.exit(2)
+  }
+  const p = made ? made.profile : loadProfile(ROOT, rest[0])
+  const r = joomlaSlot(p, base, contract, { brand: Boolean(made) })
   if ('refused' in r) {
     console.error(`refused: ${r.refused.join(', ')}`)
     process.exit(2)
@@ -99,7 +109,7 @@ if (cmd === 'profile') {
         name: p.name,
         module: contract.module,
         bytes: r.html.length,
-        adjusted: r.adjusted,
+        adjusted: [...(made?.adjusted ?? []), ...r.adjusted],
         ms: Math.round(performance.now() - t0)
       })
     )

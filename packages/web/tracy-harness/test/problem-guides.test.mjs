@@ -1758,3 +1758,54 @@ test('label judge of Content coverage: lists the wrongly labelled slots with the
   assert.match(unjudged.outside.text, /record-judge\.mjs/)
   assert.doesNotMatch(unjudged.outside.text, /TRACY_VISION|API_KEY|vision key/)
 })
+
+test('Design system lists the brand rules apart, and a live-only one puts its measuring command in the prompt', () => {
+  const brand = [
+    {
+      rule: 'BRAND-1',
+      status: 'pass',
+      text: 'Kept bands follow the brand accent.',
+      question: 'Brand colours',
+      owner: 'contract',
+      message: 'ok',
+      fix: null
+    },
+    {
+      rule: 'BRAND-3',
+      status: 'live-only',
+      text: 'Brand mode on a built site.',
+      question: 'Brand colours',
+      owner: 'contract',
+      message: 'Not measured on a built site yet.',
+      fix: 'node packages/design/tracy-ds-slot/scripts/brand-measure.mjs --template x'
+    },
+    {
+      rule: 'BRAND-2',
+      status: 'not-applicable',
+      text: 'n/a',
+      question: 'Brand colours',
+      owner: 'template',
+      message: '',
+      fix: null
+    }
+  ]
+  const g = mod.guideOf(
+    {
+      step: 'design-system',
+      state: 'done',
+      code: 'ds-ready',
+      params: { passed: 7, total: 7, mustFix: [], worthFixing: [], brand }
+    },
+    JOOMLA
+  )
+  assert.deepEqual(
+    g.rules.brand.map((r) => [r.rule, r.status]),
+    [
+      ['BRAND-1', 'pass'],
+      ['BRAND-3', 'live-only']
+    ]
+  )
+  assert.match(g.outside.text, /BRAND-3 \(brand mode, measure on a built site, not counted in the grade\)/)
+  assert.match(g.outside.text, /brand-measure\.mjs/)
+  assert.ok(!/BRAND-1/.test(g.outside.text), 'a passing brand rule is not in the prompt')
+})

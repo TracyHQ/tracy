@@ -47,7 +47,8 @@ const remoteAssets = assetSettings
  * (`template-design-system-readiness/`), which judges a release's stylesheets with the tokenizer itself;
  * `measurement` scores its built-site rules from a release's measurement file; `role-variables` is the
  * one list of role variables its rule VARS-1 judges a release's role scan against; `preview-probe-version`
- * is the probe version its built-site rules name in an unmeasured message.
+ * is the probe version its built-site rules name in an unmeasured message; `brand-check` judges a release's
+ * brand-mode measurement (BRAND-3).
  */
 export const DS_SLOT_MODULES = Object.freeze([
   'library',
@@ -61,7 +62,8 @@ export const DS_SLOT_MODULES = Object.freeze([
   'derive',
   'role-variables',
   'preview-probe-version',
-  'text-roles'
+  'text-roles',
+  'brand-check'
 ])
 
 /** @type {Map<string, Promise<any>>} */
