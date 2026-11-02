@@ -1,7 +1,8 @@
 // template-kit.json from what is on disk in the kit folder: capture-index.json, min-evidence.json,
 // frame-evidence.json, icon-classes.json, frame-review.json (a person's canHide verdicts), site.json (the site
 // part), template-fixes.json, gap-accepts.json (a person's accepted template gaps) and card-fields.json (a person's
-// decision of which item field a card prints), plus the stamp.
+// decision of which item field a card prints), text-fit.json (the character limit each text frame holds), plus the
+// stamp.
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
@@ -10,6 +11,7 @@ import { buildKit } from './kit.mjs'
 import { mergeSite } from './kit-site.mjs'
 import { templateGaps } from './template-gaps.mjs'
 import { fixesOf } from './template-fixes.mjs'
+import { showcaseViewFor } from './site/adapters/index.mjs'
 import { logoFrameIds } from './site/logo-spots.mjs'
 import { buildStamp, imageChecksums, templateVersionOf } from './stamp.mjs'
 
@@ -62,6 +64,8 @@ export async function assembleKit(o, out, tool) {
       logoIds: logoFrameIds(map, siteDoc?.site)
     },
     wordsLinks,
+    textFit: readIf(join(out, 'text-fit.json')) ?? {},
+    showcaseView: showcaseViewFor(manifest.platform),
     siteUrl: o.site,
     aliasHosts: host ? [host] : []
   })

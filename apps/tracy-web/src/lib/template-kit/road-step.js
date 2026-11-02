@@ -9,7 +9,8 @@
  *             (`kit-not-needed`);
  *   blocked   the contract is not passed yet: the kit sits beside it (`kit-waiting`);
  *   todo      no kit (`kit-missing`), unreadable (`kit-invalid`), captured for another quickstart version
- *             (`kit-stale`), without pages or blocks or a picture at either width (`kit-incomplete`), with template
+ *             (`kit-stale`), without pages or blocks or a picture at either width, or with a self-check of its own
+ *             above 0 (`kit-incomplete`), with template
  *             gaps the kit measured that carry no accepted reason (`kit-gaps`, judged like the holes of Content
  *             coverage), not approved (`kit-not-approved`), or approved on another image set (`kit-approval-stale`);
  *   warn      the same on a release already published: it is never taken off for it, as Content coverage does.
@@ -82,6 +83,21 @@ export function kitOfRelease(release, contracts) {
 }
 
 /**
+ * The kit's own self-checks (`checks`: counts that must be 0 for a planner to use the kit, such as a slot listed by
+ * two blocks or a showcase page left in): a kit with any of them above 0 is incomplete. Null when all are 0.
+ * @param {any} doc
+ */
+function failingChecksOf(doc) {
+  const checks = doc.checks && typeof doc.checks === 'object' ? doc.checks : {}
+  const failing = Object.entries(checks).filter(([, n]) => typeof n === 'number' && n > 0)
+  if (failing.length === 0) return null
+  return {
+    reason: `its self-checks fail: ${failing.map(([name, n]) => `${name} ${n}`).join(', ')}`,
+    missing: []
+  }
+}
+
+/**
  * What a kit lacks before anyone can approve it: no pages, no blocks, or a page or block without a picture at
  * one of the two widths. A block may skip a width it is not shown at (an off canvas menu, a block the template hides
  * on small or wide screens) when it lists that width in `notShownAt` and gives a non-empty `notShownBecause`; a page
@@ -105,7 +121,7 @@ function incompleteOf(doc) {
       const missing = KIT_WIDTHS.filter((w) => !have.has(w) && !excused.has(w))
       if (missing.length > 0) gaps.push({ kind, id: String(item?.id ?? '?'), missing })
     }
-  if (gaps.length === 0) return null
+  if (gaps.length === 0) return failingChecksOf(doc)
   const named = gaps
     .slice(0, SHOWN_GAPS)
     .map((g) => `${g.kind} ${g.id} at ${g.missing.join(' and ')}`)

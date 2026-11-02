@@ -36,8 +36,10 @@ export function templateGaps({ kit, mainHeadings = [], dead = [], fixes = [], ac
     })
   }
   const pageImages = new Map(kit.pages.map((p) => [p.id, Object.values(p.images ?? {})]))
+  // Only pages the kit keeps: a showcase page left out (excludedPages) is not a gap of the template.
+  const kept = new Set(kit.pages.map((p) => p.id))
   for (const h of mainHeadings)
-    if (!h.via && /no h1/.test(h.reason ?? ''))
+    if (kept.has(h.pageId) && !h.via && /no h1/.test(h.reason ?? ''))
       add('page-without-h1', { pageId: h.pageId }, `${h.path}: ${h.reason}`, pageImages.get(h.pageId) ?? [])
   const deadPaths = new Map(dead.map((d) => [d.path, d]))
   for (const b of kit.blocks)

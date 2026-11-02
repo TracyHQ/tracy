@@ -23,11 +23,18 @@ export const withEmptyOverride = (original, constant) =>
     .map((c) => `${c}=""\n`)
     .join('')}`
 
-/** The verdict of one measurement. */
+/** How many times `text` shows as whole words in `within` ("Prev" is not inside "Previous"). */
+export function wholeWordCount(within, text) {
+  const want = norm(text).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  if (!want) return 0
+  return [...norm(within).matchAll(new RegExp(`(?<![\\p{L}\\p{N}])${want}(?![\\p{L}\\p{N}])`, 'gu'))].length
+}
+
+/** The verdict of one measurement: the words left when they show fewer times, as whole words, than before. */
 export function judgeHide({ textBefore, textAfter, text, changed }) {
-  if (!norm(textBefore).includes(norm(text)))
-    return { canHide: null, reason: 'the sentence was not on the page before the change' }
-  if (norm(textAfter).includes(norm(text)))
+  const before = wholeWordCount(textBefore, text)
+  if (!before) return { canHide: null, reason: 'the sentence was not on the page before the change' }
+  if (wholeWordCount(textAfter, text) >= before)
     return { canHide: false, reason: 'the sentence still shows with the override set' }
   if (!changed) return { canHide: null, reason: 'nothing in the block changed: measurement invalid' }
   return { canHide: true, reason: 'the sentence left the page and the block changed with it' }

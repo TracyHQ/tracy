@@ -10,8 +10,11 @@ import { applyLayouts } from './layouts.mjs'
 import { listingMax } from './listing-rows.mjs'
 import { indexMap, ownerOfPath } from './map-index.mjs'
 import { noMinReason } from './min-evidence.mjs'
-
-const LISTING = /^(category listing|featured articles|tag listing|author listing)/
+import { representativeChecks } from './pack.mjs'
+import { detailPageChecks, groupPages, LISTING, mixedGroupChecks } from './page-groups.mjs'
+import { judgeShowcase, showcaseChecks } from './showcase-pages.mjs'
+import { assignSlotOwners, slotOwnerChecks } from './slot-owners.mjs'
+import { harmonizeLimits, limitChecks } from './text-limits.mjs'
 
 /** Whether each page path is in the main menu: from the coverage file's site map, else from the map's menus. */
 function mainMenuPaths(map, coverage) {
@@ -35,46 +38,12 @@ function mainMenuPaths(map, coverage) {
   return { paths, from: 'content map menus' }
 }
 
-/**
- * Page groups: a listing page with the pages under it (its posts, further result pages, author and tag pages it leads
- * to). `itemParent` (item page path -> category page path) puts a content item's page under its category's page.
- */
-export function groupPages(pages, itemParent = new Map()) {
-  const byPath = new Map(pages.map((p) => [p.path, p]))
-  const roots = pages
-    .filter((p) => LISTING.test(p.kind) && !p.path.includes('?'))
-    .sort((a, b) => b.path.length - a.path.length)
-  const groupOf = new Map()
-  const rootOf = (p) => {
-    // A content item's detail page belongs to its category's page (the map's itemPages).
-    const parent = byPath.get(itemParent.get(p.path))
-    if (parent && parent !== p) return parent
-    if (p.path.includes('?')) return byPath.get(p.path.split('?')[0]) ?? null
-    const prefix = roots.find((r) => r !== p && r.path !== '/' && p.path.startsWith(`${r.path}/`))
-    if (prefix) return prefix
-    const from = byPath.get(p.from?.find((f) => byPath.has(f)))
-    if (!from || from === p) return null
-    const base = from.path.includes('?') ? (byPath.get(from.path.split('?')[0]) ?? from) : from
-    // A post joins the listing that leads to it; a tag or author page joins whatever page leads to it.
-    if (p.kind.startsWith('article') && LISTING.test(from.kind)) return base
-    if (/^(tag listing|author listing)/.test(p.kind)) return base
-    return null
-  }
-  for (const p of pages) groupOf.set(p.path, rootOf(p) ?? p)
-  const groups = new Map()
-  for (const p of pages) {
-    let root = groupOf.get(p.path)
-    for (let hop = 0; hop < 5 && groupOf.get(root.path) !== root; hop++) root = groupOf.get(root.path)
-    const id = `group-${root.id.replace(/^page-/, '')}`
-    if (!groups.has(id)) groups.set(id, { id, root: root.id, children: [] })
-    if (p !== root) groups.get(id).children.push(p.id)
-    p.group = id
-  }
-  return [...groups.values()]
-}
+export { groupPages } from './page-groups.mjs'
 
 /**
- * @param {{map: object, capture: object, stamp: object, coverage?: object, minEvidence?: object, cardFields?: object, frameKit?: {evidence: object, classes: object, review: object}, siteUrl: string, aliasHosts?: string[]}} o
+ * @param {{map: object, capture: object, stamp: object, coverage?: object, minEvidence?: object, cardFields?: object, frameKit?: {evidence: object, classes: object, review: object}, wordsLinks?: object, textFit?: Record<string, {limit: number}>, showcaseView?: (kind: string) => string|null, siteUrl: string, aliasHosts?: string[]}} o
+ *   `textFit`: slot id -> the character limit its frame holds (text-fit.json); `showcaseView`: the platform
+ *   adapter's rule for page views that only show a CMS feature off
  */
 export function buildKit({
   map,
@@ -85,6 +54,8 @@ export function buildKit({
   cardFields = {},
   frameKit,
   wordsLinks = {},
+  textFit = {},
+  showcaseView = () => null,
   siteUrl,
   aliasHosts = []
 }) {
@@ -118,7 +89,7 @@ export function buildKit({
   const kindByPath = new Map()
   const pathOfBody = new Map()
   const pagePaths = capture.pages.map((p) => p.path)
-  const pages = capture.pages.map((p) => {
+  const allPages = capture.pages.map((p) => {
     const { owner, kind } = ownerOfPath(idx, p.path)
     owners.set(`body-${p.slug}`, { owner, kind })
     kindByPath.set(p.path, kind)
@@ -144,12 +115,50 @@ export function buildKit({
       from: p.from ?? []
     }
   })
+  // Template showcase pages (showcase-pages.mjs) leave the kit; the blocks only they show leave with them. Their
+  // content items keep their owner above, so they are not reported as content no link reaches.
+  const desk = widths[0]
+  const slugOf = new Map(capture.pages.map((p) => [p.path, p.slug]))
+  const showcase = judgeShowcase({
+    pages: allPages.map((p) => ({ ...p, owner: owners.get(`body-${slugOf.get(p.path)}`)?.owner ?? null })),
+    map,
+    linksOf: (path) => capture.blocks[`body-${slugOf.get(path)}`]?.widths?.[desk]?.details?.links ?? null,
+    viewOf: showcaseView
+  })
+  const pages = allPages.filter((p) => !showcase.has(p.path))
+  const keptSlugs = new Set(capture.pages.filter((p) => !showcase.has(p.path)).map((p) => p.slug))
+  // A block leaves only when every page it was seen on left (a block seen on no page stays, as before).
+  const recs = Object.values(capture.blocks).filter((rec) => {
+    const seen = Object.values(rec.widths ?? {}).flatMap((at) => at?.pages ?? [])
+    return !seen.length || seen.some((s) => keptSlugs.has(s))
+  })
+  const showcaseExcluded = [...Map.groupBy(showcase, ([, why]) => why)].map(([reason, rows]) => ({
+    reason: `template showcase page: ${reason}`,
+    count: rows.length,
+    paths: rows.map(([path]) => path)
+  }))
   const itemParent = new Map(
     itemParents(map).map((x) => [canonicalPath(x.path, siteUrl, aliasHosts), pathOfRoute(x.categoryRoute)])
   )
-  const pageGroups = groupPages(pages, itemParent)
+  // The pages each kept page's repeated rows link to (a list of people linking to each person's page). A block
+  // shown on most pages (a header or footer menu) navigates; it lists nothing.
+  const pathOfSlug = new Map(capture.pages.map((p) => [p.slug, p.path]))
+  const keptPaths = new Set(pages.map((p) => p.path))
+  const listedBy = new Map()
+  for (const rec of recs) {
+    const at = rec.widths?.[desk]
+    if ((at?.pages ?? []).filter((s) => keptSlugs.has(s)).length > keptSlugs.size / 2) continue
+    for (const href of (at?.details?.repeats ?? []).flatMap((r) => r.rowLinks ?? [])) {
+      const target = canonicalPath(href, siteUrl, aliasHosts)
+      if (!target || !keptPaths.has(target)) continue
+      if (!listedBy.has(target)) listedBy.set(target, new Set())
+      for (const slug of at.pages ?? [])
+        if (keptSlugs.has(slug)) listedBy.get(target).add(pathOfSlug.get(slug))
+    }
+  }
+  const pageGroups = groupPages(pages, itemParent, { listedBy })
   const samples = sampleIndex(map)
-  const blocks = Object.values(capture.blocks).map((rec) => {
+  const blocks = recs.map((rec) => {
     const body = owners.get(rec.id)
     const entity = body ? body.owner : rec.id === 'header' ? null : rec.source
     const block = buildBlock({
@@ -240,12 +249,36 @@ export function buildKit({
   })
   // Pages of one layout: one body shot and one canHide measurement stand for all of them (layouts.mjs).
   const skeletons = new Map(
-    Object.values(capture.blocks)
-      .map((r) => [r.id, r.widths?.[widths[0]]?.details?.skeleton])
-      .filter(([, sk]) => sk)
+    recs.map((r) => [r.id, r.widths?.[widths[0]]?.details?.skeleton]).filter(([, sk]) => sk)
   )
+  // One limit per slot kind of a list, measured from the frame (text-limits.mjs).
+  for (const b of blocks) for (const l of b.lists ?? []) harmonizeLimits(l, textFit)
+  // One block per slot: the block that renders it, read from the shown words of the read pass (slot-owners.mjs).
+  const wordsOf = new Map(
+    recs.map((r) => [
+      r.id,
+      (r.widths?.[desk]?.details?.texts ?? [])
+        .map((t) => String(t).replace(/\s+/g, ' ').trim().toLowerCase())
+        .join(' | ')
+    ])
+  )
+  const slotByKitId = new Map((map.slots ?? []).map((sl) => [neutralKey(sl.key), sl]))
+  assignSlotOwners({
+    blocks,
+    slotOf: (id) => slotByKitId.get(id) ?? null,
+    textsOf: (id) => wordsOf.get(id) ?? ''
+  })
   const { checks: layoutChecks } = applyLayouts({ pages, pageGroups, blocks, errors }, { skeletons })
-  const checks = itemsListChecks({ pages, blocks, errors })
+  const excludedPages = [...(capture.excluded ?? []), ...showcaseExcluded]
+  const checks = {
+    ...itemsListChecks({ pages, blocks, errors }),
+    listLimitsDiffering: limitChecks({ blocks, errors }),
+    showcasePagesNotExcluded: showcaseChecks({ judged: showcase, pages, excludedPages, errors }),
+    mixedPageGroups: mixedGroupChecks({ pages, pageGroups, itemParent, listedBy, errors }),
+    detailPagesOutsideListing: detailPageChecks({ pages, pageGroups, listedBy, errors }),
+    representativesNotListing: representativeChecks({ pages, pageGroups, errors }),
+    slotsInTwoBlocks: slotOwnerChecks({ blocks, errors })
+  }
   for (const p of pages) {
     delete p.kind
   }
@@ -281,8 +314,9 @@ export function buildKit({
     checks,
     images,
     imagesSha256: imagesDigest(images),
-    // Test-data pages left out of the kit, counted by reason and never named (see exclude.mjs).
-    excludedPages: capture.excluded ?? [],
+    // Pages left out of the kit: test-data pages counted by reason and never named (exclude.mjs), and template
+    // showcase pages with their paths (showcase-pages.mjs).
+    excludedPages,
     errors,
     approval: null
   }

@@ -37,7 +37,7 @@ function gym() {
     page('page-blog_hook', '/blog/hook', ['header', 'body-blog_hook'], 'article'),
     // In the blog's menu group, an article too, but a notice in a box: not the posts' layout.
     page('page-blog_offline', '/blog/offline', ['header', 'body-blog_offline'], 'article'),
-    // Another menu group, the posts' layout: the blog's representative (most blocks) stands for it.
+    // Another menu group, the posts' layout: a representative (the about page) stands for the posts.
     page('page-about', '/about', ['header', 'body-about'], 'article', true),
     page('page-classes_kids', '/classes/kids', ['header', 'body-classes_kids'], 'article', true),
     page('page-classes_pro', '/classes/pro', ['header', 'body-classes_pro'], 'article')
@@ -84,8 +84,8 @@ test('a layout is what the DOM renders, not the menu group; a further result pag
   const { layouts, checks } = applyLayouts(kit, { skeletons })
   assert.deepEqual(shotOfMap(kit), {
     'body-blog--start-6': 'body-blog',
-    'body-blog_hook': 'body-blog_jab',
-    'body-about': 'body-blog_jab'
+    'body-blog_jab': 'body-about',
+    'body-blog_hook': 'body-about'
   })
   assert.equal(layouts.get('body-blog_offline').exemplar, 'body-blog_offline', 'a notice is its own layout')
   assert.equal(kit.pages.find((p) => p.id === 'page-blog--start-6').paginationOf, 'page-blog')
@@ -121,7 +121,7 @@ test('the shoot plan: representatives in full, each block id once per width, not
       Object.keys(at)
         .filter((s) => at[s].full)
         .sort(),
-      ['about', 'blog_jab', 'classes_kids'],
+      ['about', 'blog', 'classes_kids'],
       'one full-page shot per page group'
     )
     const cut = Object.values(at).flatMap((j) => j.blocks)
@@ -133,7 +133,7 @@ test('the shoot plan: representatives in full, each block id once per width, not
         .map((b) => b.id)
         .sort()
     )
-    const reps = ['about', 'blog_jab', 'classes_kids']
+    const reps = ['about', 'blog', 'classes_kids']
     assert.ok(
       reps.some((s) => at[s].blocks.includes('header')),
       'a shared block is cut from a representative'

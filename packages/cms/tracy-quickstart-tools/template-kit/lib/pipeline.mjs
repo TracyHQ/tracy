@@ -13,6 +13,7 @@ import { urlOfPath } from './kit-paths.mjs'
 import { assignedAt, indexMap } from './map-index.mjs'
 import { measureFrames } from './measure-frames.mjs'
 import { measureMin } from './measure-min.mjs'
+import { measureTextFit } from './measure-text-fit.mjs'
 import { measureWordsLinks } from './measure-words-links.mjs'
 import { pictureBytes } from './picture-bytes.mjs'
 import { matchRepeat } from './rows.mjs'
@@ -180,6 +181,24 @@ export async function runFull({ o, out, tool, chromium, log }) {
     })
   } catch (e) {
     log('words and links failed', e.message)
+  }
+  t.done()
+  // The character limit each list row's text frame holds (DOM only), so a list gets one limit per slot kind.
+  t = phase(log, 'text limits')
+  try {
+    await measureTextFit({
+      chromium,
+      siteUrl: o.site,
+      hostHeader: host,
+      kit,
+      capture,
+      map,
+      out,
+      hide: hideArg,
+      log
+    })
+  } catch (e) {
+    log('text limits failed', e.message)
   }
   t.done()
   kit = await assembleKit(o, out, tool)

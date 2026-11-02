@@ -17,13 +17,21 @@ const blocksOf = (page) => [
 ]
 
 /**
- * The page that stands for its group: the one whose blocks cover the most of the group's blocks; a tie goes to a
- * main menu page, then the shortest path, then the id.
+ * The page that stands for its group: its root, the listing page whose items the others are (page-groups.mjs). With
+ * no root among the pages, the one whose blocks cover the most of the group's blocks; a tie goes to a main menu page,
+ * then the shortest path, then the id.
  * @returns {{page: string, why: string}|null}
  */
 export function representativeOf(group, pageById) {
   const members = [group.root, ...(group.children ?? [])].filter((id) => pageById.has(id))
   if (!members.length) return null
+  if (pageById.has(group.root) && !firstPageOf(pageById.get(group.root).path ?? ''))
+    return {
+      page: group.root,
+      why: (group.children ?? []).length
+        ? `the group's listing page, with its ${group.children.length} item page${group.children.length === 1 ? '' : 's'}`
+        : 'the only page of the group'
+    }
   // A further result page (`?start=6`) never stands for its group: page 1 does.
   const firsts = members.filter((id) => !firstPageOf(pageById.get(id).path ?? ''))
   const ids = firsts.length ? firsts : members
@@ -53,6 +61,27 @@ export function representativeOf(group, pageById) {
     page: best.id,
     why: `covers ${best.covers} of the group's ${all.size} blocks (${ids.length} page${ids.length === 1 ? '' : 's'}; chosen by ${by})`
   }
+}
+
+/**
+ * Self-check: a group with item pages is represented by its root, the listing page (`representative` when the pack
+ * set it, else the one `representativeOf` picks). Returns how many groups are not.
+ */
+export function representativeChecks({ pages, pageGroups, errors }) {
+  const pageById = new Map(pages.map((p) => [p.id, p]))
+  let wrong = 0
+  for (const g of pageGroups) {
+    if (!(g.children ?? []).length || !pageById.has(g.root)) continue
+    const rep = g.representative ?? representativeOf(g, pageById)?.page
+    if (rep === g.root) continue
+    wrong++
+    errors.push({
+      kind: 'representative-not-listing',
+      field: `pageGroups[${g.id}].representative`,
+      reason: `the group is represented by ${rep}, not by its listing page ${g.root}`
+    })
+  }
+  return wrong
 }
 
 /**

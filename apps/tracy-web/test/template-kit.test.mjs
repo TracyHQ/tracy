@@ -177,6 +177,15 @@ test('a kit with no pages, no blocks, or a page or block without both widths is 
   assert.match(String(step.params.reason), /390/)
 })
 
+test('a kit whose self-checks count anything is incomplete, and the step names the failing checks', () => {
+  const k = kit({ checks: { slotsInTwoBlocks: 2, listLimitsDiffering: 0 } })
+  assert.deepEqual(verdictOf(k), ['todo', 'kit-incomplete'])
+  const step = stepOf(roadOf(release(), world(contractsWith(k))))
+  assert.match(String(step.params.reason), /slotsInTwoBlocks/)
+  assert.doesNotMatch(String(step.params.reason), /listLimitsDiffering/)
+  assert.notDeepEqual(verdictOf(kit({ checks: { slotsInTwoBlocks: 0 } })), ['todo', 'kit-incomplete'])
+})
+
 test('a block the template does not show at a width, with a reason, needs no picture there', () => {
   // Shown at 1440 only, declared with a reason: complete.
   const desktopOnly = kit()

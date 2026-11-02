@@ -74,10 +74,10 @@ export function shortPattern(value) {
 }
 
 /**
- * @param {{lines: Array<{block: string, text: string, pageId?: string, path?: string, raw?: string}>, files: Array<{file: string, text: string}>, slotTexts?: string[]}} o
+ * @param {{lines: Array<{block: string, text: string, pageId?: string, path?: string, raw?: string}>, files: Array<{file: string, text: string}>, slotTexts?: string[], rankFile?: (file: string) => number}} o
  * @returns {{fixedTexts: object[], nameLines: object[]}} each `{block, text, pages, source: {file, constant}, placeholders}`
  */
-export function matchCmsStrings({ lines, files, slotTexts = [] }) {
+export function matchCmsStrings({ lines, files, slotTexts = [], rankFile = () => 0 }) {
   const strings = []
   for (const f of files)
     for (const s of parseIni(f.text)) {
@@ -85,16 +85,25 @@ export function matchCmsStrings({ lines, files, slotTexts = [] }) {
       const short = pattern ? null : shortPattern(s.value)
       if (pattern || short) strings.push({ ...s, file: f.file, pattern: pattern ?? short, short: !pattern })
     }
+  // When several constants share a value, the platform's rank of their files names the line (the template's or the
+  // CMS's own before an add-on's); the order of the files breaks a tie.
+  const rank = new Map(files.map((f) => [f.file, rankFile(f.file)]))
+  strings.sort((a, b) => (rank.get(a.file) ?? 0) - (rank.get(b.file) ?? 0))
   const slots = new Set(slotTexts.map(norm))
   const by = new Map()
   for (const l of lines) {
     const text = norm(l.text)
-    if (!text || slots.has(text)) continue
-    const long = strings.find((s) => !s.short && s.pattern.test(text))
+    if (!text) continue
+    // A line equal to a content sample is content when a long sentence matches. A short value ("Next") also equals
+    // samples on other pages, so it stays a candidate: the measurement empties its constants and sees whether the
+    // words leave (hide-cms-text.mjs).
+    const long = slots.has(text) ? null : strings.find((s) => !s.short && s.pattern.test(text))
     const hits = long ? [long] : strings.filter((s) => s.short && s.pattern.test(text))
     const hit = hits[0]
     if (!hit) continue
-    const key = `${l.block}|${hit.constant}`
+    // A short value is keyed by its line too: a content line that only seems to fit it is measured
+    // and ruled out on its own, never taking a real CMS line of that value in the block down with it.
+    const key = hit.short ? `${l.block}|${hit.constant}|${text}` : `${l.block}|${hit.constant}`
     const constants = [...new Set(hits.map((h) => h.constant))]
     const rec = by.get(key) ?? {
       block: l.block,
@@ -156,7 +165,12 @@ export function siteCmsTexts({ reads, idOf, cms, slotTexts, nameSetting }) {
       .filter((l) => l.block)
       .map((l) => ({ block: idOf(l.block, r), raw: l.block, path: r.path, text: l.text, pageId: r.pageId }))
   )
-  const { fixedTexts, nameLines } = matchCmsStrings({ lines, files: cms.files, slotTexts })
+  const { fixedTexts, nameLines } = matchCmsStrings({
+    lines,
+    files: cms.files,
+    slotTexts,
+    rankFile: cms.rankFile
+  })
   return {
     fixedTexts: fixedTexts.map((f) => ({ ...f, canHide: null, hiddenBy: null, evidence: null })),
     nameLines: nameLines.map((n) => ({ ...n, setting: nameSetting })),

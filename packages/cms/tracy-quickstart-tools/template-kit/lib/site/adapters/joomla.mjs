@@ -162,6 +162,7 @@ export function joomlaAdapter(source) {
       return {
         tag,
         files: source.readMany(rels).filter((f) => f.text),
+        rankFile: (file) => languageFileRank(file, state.template),
         override: { file: `language/overrides/${tag}.override.ini`, setting: 'cms language override' }
       }
     },
@@ -176,4 +177,32 @@ function safeJson(text) {
   } catch {
     return {}
   }
+}
+
+/**
+ * Whether a Joomla page view exists only to show a CMS feature off, and why: a search results page (Smart Search or
+ * the legacy search) is reached through the site's search box, never planned as a page of its own. Null otherwise.
+ * `kind` is the page kind of `map-index.mjs` (`<component> <view>` for views it does not name).
+ * @param {string} kind
+ */
+export function showcaseViewOf(kind) {
+  if (/^(finder|search) /.test(String(kind ?? ''))) return 'a search results page: the search box reaches it'
+  return null
+}
+
+/**
+ * Which language file names a line when several constants share its value (lower first): the language override and
+ * the template's own files, then Joomla's core files (`joomla.ini`, `lib_joomla.ini`), then core extensions
+ * (`com_users.ini`, `mod_footer.ini`), then add-ons, which Joomla 4 and later still ship as `<tag>.<extension>.ini`.
+ * @param {string} file the file path under the web root
+ * @param {string|null} template the template's name
+ */
+export function languageFileRank(file, template) {
+  const f = String(file ?? '')
+  const base = f.split('/').pop() ?? ''
+  if (f.includes('/overrides/') || f.startsWith('templates/')) return 0
+  if (template && base.endsWith(`tpl_${template}.ini`)) return 0
+  if (/^[a-z]{2,3}-[A-Z]{2}\./.test(base)) return 3
+  if (/^(com|mod|plg|tpl|pkg|files)_/.test(base)) return 2
+  return 1
 }

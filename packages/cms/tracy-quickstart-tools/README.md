@@ -387,14 +387,49 @@ list, kept by every later run).
   `image-file` or `css-background`, whether it can be changed, measured by setting one row's icon class to
   another's), `frames[]`, `links[]` (every shown link by `position`, repeats of one label and address included,
   with `icon` when the link draws one: `mechanism`, `classes`/`file`,
-  `network`), `fixedText[]`, `demoOwned[]`), `checks` (`itemsListsWithoutCardFields`, which must be 0: a listing's
-  items list takes the content map's list and its card fields, a further result page takes page 1's),
+  `network`), `fixedText[]`, `demoOwned[]`), `checks` (counts that must all be 0, or /ops marks the kit
+  `kit-incomplete` and it cannot be approved: `itemsListsWithoutCardFields` (a listing's items list takes the content
+  map's list and its card fields, a further result page takes page 1's), and the planner rules below:
+  `listLimitsDiffering`, `showcasePagesNotExcluded`, `mixedPageGroups`, `detailPagesOutsideListing`,
+  `representativesNotListing`, `slotsInTwoBlocks`, `fixedTextIdsInvalid`),
   `images[]` (`id`, `path`, `sha256`), `imagesSha256` (the digest an approval seals, `imagesDigest` of the /ops reader),
   `site` (the site part, `site.json`), `pages[].h1` (where each page's main title comes from), `lists[].holds`,
   `links[].action` (`contact` for a phone, e-mail or messenger link, also by its slot, its label or its icon when the
   demo's address is `#`; `external-profile` for a social profile by its address, its slot, or the network its icon
   or label names), `templateGaps[]` (below), `errors[]` (failed captures, and every field the kit could not
   measure, with its path and the reason) and `approval` (null until `approve`).
+- **Planner rules.** Each is generic (measured or read from structure, never a list of names) and has a self-check
+  in `checks` whose failures are also listed in `errors`:
+  1. *One character limit per slot kind of a list* (`lib/text-limits.mjs`, `checks.listLimitsDiffering`). Each list
+     row's text box is filled in the DOM with longer and longer text until it needs more lines than the demo used,
+     makes the block taller or runs past its right edge (`read-text-fit.js`, phase `text limits`, `text-fit.json`),
+     at every kit width; the smallest is the frame's limit, whatever the demo text length. The slots at one place of
+     every row (same role and type, same order) then share the smallest limit across rows, and the row template
+     (`rowSlots`) carries it with `maxCharactersFrom` (`frame`, `frame and content map`, `content map` when no frame
+     was filled). Items lists do the same per card field.
+  2. *Template showcase pages leave the kit* (`lib/showcase-pages.mjs`, `checks.showcasePagesNotExcluded`): a page
+     whose content the content map marks demo-only, a page view the platform adapter says only shows a CMS feature
+     off (`showcaseViewFor`, for Joomla a search results page), and an article with its own menu item and no link of
+     its own in a menu section where two pages were judged so (a picture of the offline or error page). They are
+     listed in `excludedPages` with their `paths`, together with the blocks only they show; their errors and
+     template gaps are dropped. The template's real not-found page stays in `site.systemPages.notFound`.
+  3. *Page groups follow the real structure* (`lib/page-groups.mjs`, `checks.mixedPageGroups`): a listing page is
+     a group with its own items (the content items it lists, by the map's item pages, its path or the link that
+     leads to them, its further result pages, and the author or tag pages it leads to). Any other page, and any page
+     with its own main menu item, is a group of its own, so a listing nested under another page in a menu is its own
+     group. The check names a group holding a second listing or an unrelated page.
+     A detail page (a person, an item) that a repeated list on the page one path level up links to is one of that
+     page's items, even with a menu item of its own (`checks.detailPagesOutsideListing` names one grouped elsewhere).
+     A group's root, its listing page, is its representative: its full-page shot stands for the group
+     (`checks.representativesNotListing` names a group with items represented by another page).
+  4. *A slot belongs to one block* (`lib/slot-owners.mjs`, `checks.slotsInTwoBlocks`): a slot listed by several
+     blocks (`demoOwned`, `frames`, list rows) goes to the block that renders it, read from the shown words and
+     measured frames of the read pass, the block of the slot's own entity first; the others are named on it
+     (`alsoShownIn`). An items list's card fields only point at their items' slots and are not ownership.
+- **Fixed text ids** (`checks.fixedTextIdsInvalid`): every `blocks[].fixedText[]` entry carries `id`, `text` and
+  `canHide`, the shape the planner reads. The id is stable across rebuilds: `<block>.fixed-<constant>` for a CMS
+  line (the words around its placeholder may change), `<block>.fixed-<words>-<hash>` for template words. The check
+  names an entry without an id or two with one id.
 - **Template gaps** (`templateGaps[]`: `id, kind, where, detail, evidence, accepted`): real defects of the template
   or its demo, for /ops to judge: `page-without-h1`, `dead-link` (a block link to nothing, `#`, or a path that
   does not answer 200; one per target and block), `dead-path` (a content map page that does not answer 200) and
@@ -408,7 +443,12 @@ list, kept by every later run).
   no content slot and matches a string of the site language's `.ini` files, placeholders such as `%s` and `%date%`
   taken as wildcards), with `source: {file, constant}`. A short value (a form label, `Page %s of %s`) matches only a
   whole line and names every constant with that value (`source.short`, `source.constants`); the measurement empties
-  them all, and words that still show are the template's own. Shown words that are a content slot's (whole, cut short
+  them all, and words that still show (counted as whole words: `Prev` is not inside `Previous`) are the template's
+  own. When several constants share a value, the platform adapter's file rank names the line: for Joomla the
+  override and the template's files, then core files, then core extensions, then add-ons (`<tag>.<extension>.ini`),
+  so the article navigation's `Next` is `JNEXT`, never a mailing add-on's constant. A short value equal to a content
+  sample on another page (a typography page's `Next`) is still measured; a long
+  sentence equal to a content sample stays content. Shown words that are a content slot's (whole, cut short
   with an ellipsis, or split by inline markup) are content, never fixed text: another entity's goes to `demoOwned`
   (`kind: "text"`). The other entries are the template's words (`source: {kind: "template"}`), each with a `canHide`
   measured in the DOM (`measure-words-links.mjs`, `words-links.json`): the words emptied, the block read before and

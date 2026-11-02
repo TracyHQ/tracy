@@ -65,23 +65,33 @@ function kitOf() {
   }
 }
 
-test('the representative covers the most blocks; ties go to a main menu page, then the shortest path', () => {
+test('the root of a group (its listing page) stands for it; without it, the page covering the most blocks does', () => {
   const kit = kitOf()
   const byId = new Map(kit.pages.map((p) => [p.id, p]))
+  // The posts cover more blocks, but the listing is what the group is.
   const r = representativeOf(kit.pageGroups[1], byId)
-  assert.equal(r.page, 'page-lessons_boxing')
-  assert.match(r.why, /covers 4 of the group's 6 blocks/)
+  assert.equal(r.page, 'page-lessons')
+  assert.match(r.why, /listing/)
+  byId.delete('page-lessons')
+  assert.equal(
+    representativeOf(kit.pageGroups[1], byId).page,
+    'page-lessons_boxing',
+    'most blocks without the root'
+  )
   byId.get('page-lessons_boxing').blocks = { 1440: ['header', 'body-boxing', 'footer'] }
-  assert.equal(representativeOf(kit.pageGroups[1], byId).page, 'page-lessons', 'a main menu page wins a tie')
-  byId.get('page-lessons').inMainMenu = false
-  assert.equal(representativeOf(kit.pageGroups[1], byId).page, 'page-lessons', 'then the shortest path')
+  byId.get('page-lessons_jump-rope').inMainMenu = true
+  assert.equal(
+    representativeOf(kit.pageGroups[1], byId).page,
+    'page-lessons_jump-rope',
+    'a main menu page wins a tie'
+  )
 })
 
 test('one shot per block, blocks of left-out pages kept, emptied shots, crops and evidence left out', () => {
   const kit = kitOf()
   const plan = packPlan(kit)
   const ids = [...plan.imageIds]
-  assert.ok(ids.includes('page-home-1440') && ids.includes('page-lessons_boxing-390'))
+  assert.ok(ids.includes('page-home-1440') && ids.includes('page-lessons-390'))
   assert.ok(
     !ids.includes('page-lessons_jump-rope-1440'),
     'a page that does not stand for its group has no full shot'
@@ -116,8 +126,8 @@ test('the pack folder and zip hold only the packed images, and the zip is the sa
     assert.equal(readdirSync(join(out, 'pack/images')).length, 20)
     const packed = JSON.parse(readFileSync(join(out, 'pack/template-kit.json'), 'utf8'))
     assert.equal(packed.images.length, 20)
-    assert.equal(packed.pageGroups[1].representative, 'page-lessons_boxing')
-    assert.equal(packed.pages.find((p) => p.id === 'page-lessons').fullShotOf, 'page-lessons_boxing')
+    assert.equal(packed.pageGroups[1].representative, 'page-lessons')
+    assert.equal(packed.pages.find((p) => p.id === 'page-lessons_boxing').fullShotOf, 'page-lessons')
     const full = JSON.parse(readFileSync(join(out, 'template-kit.json'), 'utf8'))
     assert.equal(full.pack.sha256, a.sha256)
     assert.equal(full.images.length, kit.images.length, 'the full kit keeps every image')
@@ -148,7 +158,7 @@ test('the pack is what /ops reads: every page points at a packed shot, approval 
     const packed = JSON.parse(readFileSync(packFile, 'utf8'))
     const inPack = new Set(packed.images.map((i) => i.id))
     const jump = packed.pages.find((p) => p.id === 'page-lessons_jump-rope')
-    assert.equal(jump.fullShotOf, 'page-lessons_boxing')
+    assert.equal(jump.fullShotOf, 'page-lessons')
     for (const p of packed.pages) for (const id of Object.values(p.images)) assert.ok(inPack.has(id), id)
     const judge = (doc) =>
       templateKitStep(
