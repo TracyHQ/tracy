@@ -11,12 +11,17 @@
  *                       in the contract (`bands.<band>.paint`, or `vars` for a variable set on the band);
  *   BRAND-2 (template)  no kept band paints the accent where no role paint reaches (a gradient, a shadow,
  *                       an inline picture): only a release reading it through the slot fixes those;
- *   BRAND-3 (live)      on a built site the brand accent reads on every kept band and no template accent is
- *                       left: only a run of `flow.mjs` with brand ids can tell, so it is `live-only`.
+ *   BRAND-3 (live)      on a built site the accent words read at 4.5:1 in the brand's own hue, accent fills stand
+ *                       out at 3:1, and no template accent is left: scored from `brand-measurement.json`
+ *                       (`scripts/brand-measure.mjs`), `live-only` with its command until one is here.
  *
  * Joomla only: brand mode exists on the Joomla slot (`joomlaSlot(…, { brand: true })`) for now.
  */
+import { readFileSync } from 'node:fs'
+
+import { dsSlotModule } from '../../ds-slot.js'
 import { keptBandAccents } from '../readers/kept-band-accents.js'
+import { BRAND_MEASUREMENT_FILE, treeMeasurementFiles } from '../readers/measurement.js'
 import { slotOf } from '../readers/slot.js'
 
 const PLATFORMS = ['joomla']
@@ -96,10 +101,28 @@ export const brand2KeptAccentReachable = {
 /** One accent that reads on most grounds, one that reads on almost none, so the automatic shift is exercised. */
 const TEST_ACCENTS = ['a78f45', '042515']
 
+/** The brand-mode measurement of this version, judged, or null when none is here. */
+async function brandMeasured(/** @type {import('../index.js').RuleContext} */ context) {
+  const { tag, version } = context.release
+  for (const file of treeMeasurementFiles({ tag, version }, BRAND_MEASUREMENT_FILE)) {
+    let doc
+    try {
+      doc = JSON.parse(readFileSync(file, 'utf8'))
+    } catch {
+      continue
+    }
+    if (doc?.version !== version) continue
+    const { judgeBrandMeasurement } = await dsSlotModule('brand-check')
+    return { doc, judged: judgeBrandMeasurement(doc) }
+  }
+  return null
+}
+
 /** @type {import('../index.js').Rule} */
 export const brand3BrandReadsOnBands = {
   id: 'BRAND-3',
-  title: 'On a built site the brand accent reads on every kept band and no template accent is left',
+  title:
+    'On a built site the brand accent reads in its own hue, its fills stand out, and no template accent is left',
   platforms: PLATFORMS,
   owner: 'contract',
   async run(context) {
@@ -107,21 +130,48 @@ export const brand3BrandReadsOnBands = {
     if (!slot.contract) return { status: 'not-applicable', message: 'Waits for SLOT-1: no contract.' }
     const { tag, version } = context.release
     const bg = String(slot.palettes[0]?.bg ?? '').replace(/^#/, '')
-    const ids = /^[0-9a-f]{6}$/i.test(bg) ? TEST_ACCENTS.map((a) => `brand:${bg.toLowerCase()}--${a}`) : []
+    const ids = /^[0-9a-f]{6}$/i.test(bg)
+      ? [
+          ...TEST_ACCENTS.map((a) => `brand:${bg.toLowerCase()}--${a}`),
+          ...TEST_ACCENTS.map((a) => `brand:ffffff--${a}`)
+        ]
+      : []
     const ds = 'packages/design/tracy-ds-slot'
     const work = '/tmp/ds-brand'
+    const folder = `the contract folder of ${version} (beside design-system-measurement.json)`
     const command = [
       '# run from the root of a tch checkout (pnpm install done); Docker for the stand, Chrome for the probes',
       `node ${ds}/scripts/stand.mjs up ${tag ?? '<release tag>'} --version ${version} --port 52990 --name ds-brand --dir ${work}`,
-      `node ${ds}/scripts/flow.mjs --cms joomla --template ${slot.name} --joomla-db ds-brand-db --joomla-prefix "$(node -p 'require("${work}/ds-brand/dl/manifest.json").prefix || "tr_"')" --joomla-login site --site http://127.0.0.1:52990 --out ${work}/flow ${ids.join(' ') || 'brand:<page hex>--<accent hex>'}`,
+      `node ${ds}/scripts/brand-measure.mjs --template ${slot.name} --site http://127.0.0.1:52990 --joomla-db ds-brand-db --joomla-prefix "$(node -p 'require("${work}/ds-brand/dl/manifest.json").prefix || "tr_"')" --tag ${tag ?? '<release tag>'} --version ${version} --out ${work}/out ${ids.join(' ') || 'brand:<page hex>--<accent hex>'}`,
       `node ${ds}/scripts/stand.mjs down --name ds-brand --dir ${work}`,
-      `# then read ${work}/flow/report.md: contrast of the accent words and fills in each kept band, and "Template colours left"`
+      `# then commit ${work}/out/brand-measurement.json into ${folder}`
     ].join('\n')
+    const measured = await brandMeasured(context)
+    if (!measured)
+      return {
+        status: 'live-only',
+        message:
+          'Not measured on a built site yet: whether the brand accent reads in its own hue (4.5:1), its fills stand out (3:1) and no template accent is left is only known there.',
+        fix: `Measure brand mode with the tdsr skill:\n${command}`
+      }
+    const { doc, judged } = measured
+    const stamp = `Measured on ${version}, ${String(doc.measuredAt ?? '').slice(0, 10)}, ${doc.machine ?? 'a machine'}.`
+    if (judged.problem)
+      return {
+        status: 'fail',
+        message: `The brand measurement cannot be read: ${judged.problem}.`,
+        fix: `Measure again:\n${command}`
+      }
+    if (judged.ok)
+      return {
+        status: 'pass',
+        message: `${judged.runs} brand run${judged.runs === 1 ? '' : 's'}: accent words read in the brand hue, fills stand out, no template accent left. ${stamp}`
+      }
     return {
-      status: 'live-only',
-      message:
-        'Whether the brand accent reads on each kept band, and how much of the template accent is left, is only known on a built site.',
-      fix: `Measure brand mode with the tdsr skill:\n${command}`
+      status: 'fail',
+      message: `${judged.findings.length} finding${judged.findings.length === 1 ? '' : 's'} over ${judged.runs} brand runs: ${judged.findings.slice(0, SHOWN).join('; ')}${judged.findings.length > SHOWN ? '; …' : ''}. ${stamp}`,
+      fix: `A template accent left: name it in the contract (BRAND-1) or release the template (BRAND-2). Words or fills that do not read: the door shifts the brand accent on the page's own ground, so a template that paints them on another ground names that ground in "bands" of the contract. Then measure again:\n${command}`,
+      details: judged.findings
     }
   }
 }

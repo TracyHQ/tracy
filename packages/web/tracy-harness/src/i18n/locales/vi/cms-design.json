@@ -102,6 +102,7 @@
   "cms-design.rule.source": "Nguồn",
   "cms-design.rule.systems": "Hệ",
   "cms-design.rule.why": "Vì sao",
+  "cms-design.rules.brand": "Chế độ brand, không tính vào điểm",
   "cms-design.rules.copied": "Đã chép",
   "cms-design.rules.copy": "Chép prompt",
   "cms-design.rules.details_one": "Chi tiết ({count} luật)",

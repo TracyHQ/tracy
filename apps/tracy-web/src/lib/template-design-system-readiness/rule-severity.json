@@ -63,21 +63,21 @@
       "question": "Brand colours",
       "text": "A kept band paints the template accent where the contract does not hand it to the brand accent.",
       "fix": "Name each spot in bands.<band>.paint (or vars) of the slot contract with the role accent / accent-fill, then measure brand mode (tdsr skill).",
-      "reason": "Brand mode (ADR 0031 revision 02/11/2026) is new: no template was graded for it before, and a kept band left in the template accent is a leftover on a site that still reads, not a break. Worth fixing until every published Joomla line passes it once; then it moves to must-fix with one line here, as BAND-1 did."
+      "reason": "Brand mode (ADR 0031 revision 02/11/2026) is graded apart: /ops lists the BRAND rules under their own heading on the Design system step, and they never change its grade, its counts or ds-ready, which opens the Design system picker to customers (counted as worth-fixing they would have locked it on 17 Joomla lines). The group here only sorts them when they move into the grade, once every published Joomla line passes BRAND-1 and BRAND-2."
     },
     "BRAND-2": {
       "group": "worth-fixing",
       "question": "Brand colours",
       "text": "A kept band paints the template accent in a gradient, shadow or picture the slot cannot repaint.",
       "fix": "Release the template with those colours read through var(--ds-c-accent, <its value>), like CSS-2.",
-      "reason": "Brand mode (ADR 0031 revision 02/11/2026) is new: no template was graded for it before, and a kept band left in the template accent is a leftover on a site that still reads, not a break. Worth fixing until every published Joomla line passes it once; then it moves to must-fix with one line here, as BAND-1 did."
+      "reason": "Brand mode (ADR 0031 revision 02/11/2026) is graded apart: /ops lists the BRAND rules under their own heading on the Design system step, and they never change its grade, its counts or ds-ready, which opens the Design system picker to customers (counted as worth-fixing they would have locked it on 17 Joomla lines). The group here only sorts them when they move into the grade, once every published Joomla line passes BRAND-1 and BRAND-2."
     },
     "BRAND-3": {
       "group": "worth-fixing",
       "question": "Brand colours",
-      "text": "Brand mode was not measured on a built site.",
-      "fix": "Run flow.mjs with brand ids on a stand of this release (tdsr skill).",
-      "reason": "Brand mode (ADR 0031 revision 02/11/2026) is new: no template was graded for it before, and a kept band left in the template accent is a leftover on a site that still reads, not a break. Worth fixing until every published Joomla line passes it once; then it moves to must-fix with one line here, as BAND-1 did. Live-only while no measurement file carries brand mode: it is counted in neither number, so it never changes the grade or holds Publish."
+      "text": "On a built site the brand accent words lose their hue or do not read, a brand fill sinks into its ground, or a template accent is left.",
+      "fix": "Run scripts/brand-measure.mjs with brand ids on a stand of this release and commit brand-measurement.json beside the version's measurement (tdsr skill).",
+      "reason": "Brand mode (ADR 0031 revision 02/11/2026) is graded apart: /ops lists the BRAND rules under their own heading on the Design system step, and they never change its grade, its counts or ds-ready, which opens the Design system picker to customers (counted as worth-fixing they would have locked it on 17 Joomla lines). The group here only sorts them when they move into the grade, once every published Joomla line passes BRAND-1 and BRAND-2."
     },
     "PIC-1": {
       "group": "must-fix",

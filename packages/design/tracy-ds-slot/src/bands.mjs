@@ -59,7 +59,7 @@
  *
  * PURE: the worn 56 tokens in, CSS rules out. Every colour is a hex the colour module can check.
  */
-import { contrast, luminance, mix, parseHex, readable } from './colour.mjs'
+import { contrast, luminance, mix, parseHex, readable, readableLightness } from './colour.mjs'
 
 /** A band key: one of keepScopes, narrowed by classes / ids / :not(.x) only (as keptButtons). */
 const BAND_KEY = /^([.#][\w-]+)((?:[.#][\w-]+|:not\([.#][\w-]+\))*)$/
@@ -282,6 +282,11 @@ export function bandColours(tokens, band, opts = {}) {
   // the library, scripts/matrix.mjs 14/10/2026). Where the first side reaches, nothing changes
   const other = toward === '#ffffff' ? '#000000' : '#ffffff'
   const readableEither = (c, g, min) => readable(c, g, toward, min) ?? readable(c, g, other, min)
+  // brand mode: the brand accent keeps its hue, shifted by lightness alone (colour.mjs readableLightness)
+  const shift =
+    opts.brand === true
+      ? (c, g, min) => readableLightness(c, [g], min) ?? readableEither(c, g, min)
+      : readableEither
   // on a band painted with the accent itself, the accent's words are its own text colour
   const onAccent = picked === tokens['--accent'] && parseHex(tokens['--accent-on'])
   const accentBase = onAccent ? tokens['--accent-on'] : tokens['--accent']
@@ -318,14 +323,14 @@ export function bandColours(tokens, band, opts = {}) {
       ? balanced(accentBase)
       : greyAccent
         ? own(picked)
-        : readableEither(accentBase, judged, 4.5)
+        : shift(accentBase, judged, 4.5)
     : null
   const accentFill = parseHex(accentBase)
     ? bothSides
       ? accent
       : greyAccent
         ? own(picked)
-        : readableEither(accentBase, judged, 3)
+        : shift(accentBase, judged, 3)
     : null
   const text = own(picked)
   const text2 = readable(mix(text, picked, 0.28) ?? text, picked, text, 4.5) ?? text

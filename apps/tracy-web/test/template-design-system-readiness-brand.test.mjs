@@ -124,27 +124,31 @@ test('BRAND-2 fails on the accent in a gradient or an inline picture of a kept b
   assert.equal(of(r, 'BRAND-1').status, 'pass')
 })
 
-test('BRAND-3 is live-only with the brand-mode measuring command, and counts in neither number', async () => {
+test('BRAND-3 is live-only with the brand-mode measuring command', async () => {
   const results = await run('')
   const b3 = of(results, 'BRAND-3')
   assert.equal(b3.status, 'live-only')
-  assert.match(
-    b3.fix,
-    /flow\.mjs --cms joomla --template joomla-ja-boxing-modes .* brand:121111--a78f45 brand:121111--042515/
-  )
-  const s = summarizeDsReadiness({ results })
-  assert.equal(s.total, 2)
-  assert.equal(s.passed, 2)
-  assert.equal(s.mustFix.length, 0)
-  assert.deepEqual(s.unmeasured, [])
+  assert.match(b3.fix, /brand-measure\.mjs .*brand:121111--a78f45 brand:121111--042515/)
 })
 
-test('a failing BRAND-1 shows on the step as worth-fixing, never must-fix', async () => {
+test('/ops lists the brand rules under their own heading, the live-only one with its command', async () => {
   const s = summarizeDsReadiness({ results: await run('.acm-cta .x{border-color:#f44141}') })
   assert.deepEqual(
-    s.worthFixing.map((x) => x.rule),
-    ['BRAND-1']
+    s.brand.map((/** @type {any} */ b) => [b.rule, b.status]),
+    [
+      ['BRAND-1', 'fail'],
+      ['BRAND-2', 'pass'],
+      ['BRAND-3', 'live-only']
+    ]
   )
+  assert.match(s.brand[2].fix ?? '', /brand-measure\.mjs/)
+})
+
+test('a failing brand rule never changes the Design system grade, its counts or ds-ready', async () => {
+  const s = summarizeDsReadiness({ results: await run('.acm-cta .x{border-color:#f44141}') })
+  assert.equal(s.total, 0)
   assert.equal(s.mustFix.length, 0)
-  assert.equal(s.grade, 'B')
+  assert.equal(s.worthFixing.length, 0)
+  assert.deepEqual(s.unmeasured, [])
+  assert.equal(s.grade, null)
 })

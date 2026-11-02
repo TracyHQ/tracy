@@ -131,6 +131,73 @@ test('BRAND B: an inline SVG painted in the template accent inside a kept band f
   assert.doesNotMatch(/** @type {any} */ (joomlaSlot(profile, base, modes)).css, /\[fill="#f44141" i\]/)
 })
 
+/** The page's own variables on the side whose ground is `bg` (the side block that sets --ds-c-bg to it). */
+const sideValues = (/** @type {string} */ css, /** @type {string} */ bg) => {
+  for (const m of css.matchAll(/\{([^{}]*)\}/g))
+    if (new RegExp(`--ds-c-bg:${bg}[;}]`).test(`${m[1]}}`)) {
+      const get = (/** @type {string} */ n) => new RegExp(`${n}:(#[0-9a-f]{6})`).exec(m[1])?.[1] ?? null
+      return {
+        fg: get('--ds-c-fg'),
+        accent: get('--ds-c-accent'),
+        on: get('--ds-c-accent-on'),
+        text: get('--ds-c-accent-text')
+      }
+    }
+  return null
+}
+/** Hue in degrees of a #rrggbb colour. */
+const hueOf = (/** @type {string} */ hex) => {
+  const [r, g, b] = [1, 3, 5].map((i) => Number.parseInt(hex.slice(i, i + 2), 16) / 255)
+  const max = Math.max(r, g, b)
+  const d = max - Math.min(r, g, b)
+  if (d === 0) return null
+  const h = max === r ? ((g - b) / d) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4
+  return (h * 60 + 360) % 360
+}
+const near = (/** @type {number|null} */ a, /** @type {number|null} */ b) =>
+  a !== null && b !== null && Math.min(Math.abs(a - b), 360 - Math.abs(a - b)) <= 20
+
+test('BRAND page: accent words that do not read keep the brand hue, never the body text colour', () => {
+  for (const [bg, accent] of [
+    ['#121111', MOSS],
+    ['#ffffff', GOLD]
+  ]) {
+    const { profile } = /** @type {any} */ (brandProfile({ bg, accent }, modes, base))
+    const r = /** @type {any} */ (joomlaSlot(profile, base, modes, { brand: true }))
+    const v = /** @type {any} */ (sideValues(r.css, bg))
+    assert.ok(v, bg)
+    assert.ok(contrast(v.text, bg) >= 4.5, `${bg} ${v.text}`)
+    assert.notEqual(v.text, v.fg, `${bg}: accent words are not the body text colour`)
+    assert.ok(near(hueOf(v.text), hueOf(accent)), `${bg}: ${v.text} keeps the hue of ${accent}`)
+    assert.ok(
+      r.adjusted.some((/** @type {string} */ a) => a.startsWith('brand:page:accent-text:')),
+      r.adjusted.join(' ')
+    )
+  }
+})
+
+test('BRAND page: a filled shape reaches 3:1 on its ground, keeping the hue (moss #042515 on #121111)', () => {
+  const { profile } = /** @type {any} */ (brandProfile({ bg: '#121111', accent: MOSS }, modes, base))
+  const r = /** @type {any} */ (joomlaSlot(profile, base, modes, { brand: true }))
+  const v = /** @type {any} */ (sideValues(r.css, '#121111'))
+  assert.ok(contrast(v.accent, '#121111') >= 3, v.accent)
+  assert.ok(near(hueOf(v.accent), hueOf(MOSS)), v.accent)
+  assert.ok(contrast(v.on, v.accent) >= 4.5, `${v.on} on ${v.accent}`)
+  assert.ok(
+    r.adjusted.some((/** @type {string} */ a) => /^brand:page:accent-fill:1\.\d\d→3\.\d\d$/.test(a)),
+    r.adjusted.join(' ')
+  )
+})
+
+test('BRAND page: an accent that already reads is worn as it is', () => {
+  const { profile } = /** @type {any} */ (brandProfile({ bg: '#121111', accent: GOLD }, modes, base))
+  const r = /** @type {any} */ (joomlaSlot(profile, base, modes, { brand: true }))
+  const v = /** @type {any} */ (sideValues(r.css, '#121111'))
+  assert.equal(v.accent, GOLD)
+  assert.equal(v.text, GOLD)
+  assert.ok(!r.adjusted.some((/** @type {string} */ a) => a.startsWith('brand:page:')), r.adjusted.join(' '))
+})
+
 test('BRAND B: without brand mode the kept bands keep the template accent (no brand rule)', () => {
   const { profile } = /** @type {any} */ (brandProfile({ bg: '#121111', accent: GOLD }, modes, base))
   const r = /** @type {any} */ (joomlaSlot(profile, base, modes))

@@ -48,9 +48,9 @@ Several releases in one run: download each into `<cache>/<tag with / as _>/`, th
 | DEF-1 | **must** | A `var(--ds-…)` without the template's value as fallback: a site with no system chosen loses that value | Tokenize again instead of hand-editing; use only the 16 colour roles |
 | BAND-1 | worth (becomes must once `bands` is locked into develop) | A band the template paints itself (header, hero, CTA, footer) stays the same under every system: the first screen "is still the old UI" | Declare `bands` for the band (background + every text colour measured on the released page: `discover.mjs`), or `keepWhole: {"<band>": "<reason>"}` when the band must stay |
 | PLAT-1 | **must** | The template lacks its CMS's slot part: WordPress does not call `tracy_apply_inspiration`; EmDash lacks `src/lib/ds-slot.ts` or the layout does not load it; Joomla no longer has the `module.position` | Theme in `packages/cms/tracy-wordpress-theme/src`; the slot reader of the base EmDash theme; re-measure the earliest position (`pass-joomla.mjs`) |
-| BRAND-1 | worth (Joomla) | Brand mode (the brand step paints the site in the customer's colours, `src/brand.mjs`): a kept band's stylesheet paints the template accent as a literal the contract does not hand to the brand accent, so that spot stays the template's colour under any brand | **The slot contract.** Name the spot in `bands.<band>.paint` (`{"<selector inside the band>": {"color": "accent"}}`; `accent-fill` for a fill or line), or `bands.<band>.vars` for a variable set on the band. No `bands` entry yet: add one (`ground`, `texts` from `scripts/bands.mjs`). No template release |
-| BRAND-2 | worth (Joomla) | The same, but the accent sits in a gradient, a shadow or an inline SVG picture: no role paint reaches it | **The template** (the only BRAND rule that needs a release): read that colour through `var(--ds-c-accent, <its value>)` (an inline picture becomes a mask painted with `background-color`), re-release, move `maxVersion` |
-| BRAND-3 | live-only | Whether the brand accent reads on each kept band and how much template accent is left: only a built site tells | Run the command in the rule's fix (`flow.mjs` with `brand:<bg>-<fg>-<accent>` ids, §3). A spot still red: inside an image → leave it; painted by the stylesheet → BRAND-1/BRAND-2; painted by layout markup (inline SVG in an ACM layout) → the template, like BRAND-2 |
+| BRAND-1 | brand (Joomla) | Brand mode (the brand step paints the site in the customer's colours, `src/brand.mjs`): a kept band's stylesheet paints the template accent as a literal the contract does not hand to the brand accent, so that spot stays the template's colour under any brand | **The slot contract.** Name the spot in `bands.<band>.paint` (`{"<selector inside the band>": {"color": "accent"}}`; `accent-fill` for a fill or line), or `bands.<band>.vars` for a variable set on the band. No `bands` entry yet: add one (`ground`, `texts` from `scripts/bands.mjs`). No template release |
+| BRAND-2 | brand (Joomla) | The same, but the accent sits in a gradient, a shadow or an inline SVG picture: no role paint reaches it | **The template** (the only BRAND rule that needs a release): read that colour through `var(--ds-c-accent, <its value>)` (an inline picture becomes a mask painted with `background-color`), re-release, move `maxVersion` |
+| BRAND-3 | brand, live-only until measured | On a built site: accent words read at 4.5:1 (3:1 large) in the brand's own hue, never the body text grey; accent fills (buttons, their borders) stand out at 3:1 on their ground; no template accent left | Run the command in the rule's fix (`scripts/brand-measure.mjs` with `brand:<bg>-<fg>-<accent>` ids, §3) and commit `brand-measurement.json` beside `design-system-measurement.json` of the version: /ops scores it. Words or fills that fail: the door already shifts the brand accent on the page's own ground, so the template paints them on another ground; name that ground in `bands` of the contract. A spot still in the template accent: inside an image → leave it; a stylesheet literal → BRAND-1/BRAND-2; inline SVG `fill`/`stroke` in layout markup is repainted by the door; any other markup colour → the template, like BRAND-2 |
 | ROLE-1, SCREEN-1, CON-1, UNDO-1, FONT-1 | (built site only) | Cannot be scored statically | Measure with `flow.mjs` / `pass-*.mjs` (§3) |
 
 ### Guidelines when writing or fixing a template (wearing a system must look good and balanced, not just have the right colours)
@@ -200,10 +200,20 @@ node scripts/stand.mjs down --name <name>                   # always tear the st
 
 A brand id stands for the brand step's profile: `brand:<bg>-<fg>-<accent>`, hex without `#`, `fg` empty to keep the
 template's (`brand:121111--a78f45`). `ds-slot.mjs joomla <brand id> --template <contract>` writes the module in brand mode
-and prints `adjusted`: every colour shifted to read, `brand:<band>:accent-text:<before>→<after>` for the accent inside a
-kept band (words 4.5:1, fills 3:1). `flow.mjs --cms joomla … <brand id> …` wears it on a stand like any system. Measure
-one accent that reads on the template ground and one that does not (the rule's command passes `a78f45` and `042515`), so
-the shift is exercised. Brand mode is Joomla only for now.
+and prints `adjusted`: every colour shifted to read. The door does two contrast fixes on every template, generic, in brand
+mode only, both keeping the brand's hue (a lightness shift, never a swap to the body text colour):
+
+- accent words reach 4.5:1 on the page and its surface (`brand:page:accent-text:<before>→<after>`), and inside each kept
+  band on the band's ground (`brand:<band>:accent-text:…`);
+- accent fills (buttons, their borders) reach 3:1 on their ground (`brand:page:accent-fill:…`, `brand:<band>:accent-fill:…`),
+  and the button text is made to read on the shifted fill.
+
+`scripts/brand-measure.mjs` checks both on a stand, with any template accent left, and writes `brand-measurement.json`
+(`src/brand-check.mjs` is its probe and its judge). Measure one accent that reads on the template ground and one that does
+not, on the template's ground and on white (the rule's command passes `a78f45` and `042515` on both). Commit the file
+beside `design-system-measurement.json` of the version; /ops then shows BRAND-3 pass or fail with what failed. The BRAND
+rules have their own heading on /ops and never change the Design system grade or open/lock the picker for customers.
+Brand mode is Joomla only for now.
 
 ### Re-measure the preview / a whole released version
 

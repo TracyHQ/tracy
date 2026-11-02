@@ -19,7 +19,7 @@
  * (test/brand-mode-default-unchanged.test.mjs).
  */
 import { bandColours } from './bands.mjs'
-import { contrast, luminance, mix, parseHex, readable, readableOn } from './colour.mjs'
+import { contrast, luminance, mix, parseHex, readable, readableLightness, readableOn } from './colour.mjs'
 import { fromOpenDesign, gate } from './normalise.mjs'
 import { keptScopes } from './tokens56.mjs'
 
@@ -180,9 +180,70 @@ function bandAccent(contract, tokens, base, scope, opts) {
   if (!ground || !parseHex(accent)) return null
   return {
     ground,
-    text: readableEither(accent, ground, 4.5) ?? /** @type {string} */ (readableOn(ground)),
-    fill: readableEither(accent, ground, 3) ?? /** @type {string} */ (readableOn(ground))
+    text:
+      readableLightness(accent, [ground], 4.5) ??
+      readableEither(accent, ground, 4.5) ??
+      /** @type {string} */ (readableOn(ground)),
+    fill:
+      readableLightness(accent, [ground], 3) ??
+      readableEither(accent, ground, 3) ??
+      /** @type {string} */ (readableOn(ground))
   }
+}
+
+/**
+ * In brand mode, the accent role on the page itself (outside the kept bands), made readable keeping the brand's
+ * hue: the same lightness shift the kept bands get. Without it the slot's generic clamp moves accent words
+ * toward the body text colour, so a brand accent that does not read as words (bronze on white, moss on near
+ * black) came out as the body text grey and lost its colour (measured on JA Boxing 1.0.10, 02/11/2026). And a
+ * filled shape in the accent (a button, its border) must stand out from its ground at 3:1 (WCAG non-text
+ * contrast): moss #042515 on #121111 was 1.15:1, a button that sank into the page.
+ *
+ *   words  `--ds-accent-text` (and its hover) reach 4.5:1 on the page and its surface;
+ *   fills  `--accent` (and hover, pressed) reach 3:1 on both, and the button text is made to read on them.
+ *
+ * Mutates `tokens` and `text.colours` of one side (joomlaSheet calls it after the kept bands are computed from
+ * the brand accent as stated). Each shift is recorded `brand:page:accent-text:a→b` / `brand:page:accent-fill:a→b`.
+ * @param {Record<string, string>} tokens  the worn 56 tokens of the side
+ * @param {{ colours: Record<string, string> }} text  readableText of the side
+ * @returns {string[]} adjusted
+ */
+export function brandPageAccent(tokens, text) {
+  /** @type {string[]} */
+  const adjusted = []
+  const accent = tokens['--accent']
+  const bg = tokens['--bg']
+  if (!parseHex(accent) || !parseHex(bg)) return adjusted
+  const grounds = [bg, text.colours['--color-surface'] ?? tokens['--surface']].filter((g) => parseHex(g))
+  const worst = (/** @type {string} */ c) => Math.min(...grounds.map((g) => contrast(c, g) ?? 0))
+  const far = towardOf(bg)
+  /** `c` shifted by lightness alone (keeping its hue) until it reads at `min` on every ground. */
+  const onAll = (/** @type {string} */ c, /** @type {number} */ min) => readableLightness(c, grounds, min)
+  const words = onAll(accent, 4.5)
+  if (words && words !== accent) {
+    text.colours['--ds-accent-text'] = words
+    // the hover one step further from the ground: still readable, and apart from the words at rest
+    text.colours['--ds-accent-text-hover'] =
+      onAll(/** @type {string} */ (mix(words, far, 0.15)), 4.5) ?? words
+    adjusted.push(`brand:page:accent-text:${ratio(accent, bg)}→${ratio(words, bg)}`)
+  }
+  const fill = onAll(accent, 3)
+  if (fill && fill !== accent) {
+    const on =
+      (contrast(tokens['--accent-on'], fill) ?? 0) >= 4.5
+        ? tokens['--accent-on']
+        : /** @type {string} */ (readableOn(fill))
+    const step = (/** @type {number} */ t) => {
+      const c = /** @type {string} */ (mix(fill, far, t))
+      return worst(c) >= 3 && (contrast(on, c) ?? 0) >= 4.5 ? c : fill
+    }
+    tokens['--accent'] = fill
+    tokens['--accent-on'] = on
+    tokens['--accent-hover'] = step(0.1)
+    tokens['--accent-active'] = step(0.18)
+    adjusted.push(`brand:page:accent-fill:${ratio(accent, bg)}→${ratio(fill, bg)}`)
+  }
+  return adjusted
 }
 
 /**

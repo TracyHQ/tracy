@@ -224,7 +224,11 @@ resets every role and gives the template's own values back (`keepDefaults`), so 
     the given-back variables that carried the template accent. The band's picture, words and layout stay. The accent is
     made readable on the band's recorded ground (words 4.5:1, fills 3:1) and each shift is recorded in `adjusted`.
     An inline SVG of the band's markup filled or stroked in a template accent (`fill="#F44141"`) takes the band's
-    accent fill too: a presentation attribute loses to any stylesheet rule, so the band matches it by attribute. Without `brand` the module is byte for byte what it was (control test
+    accent fill too: a presentation attribute loses to any stylesheet rule, so the band matches it by attribute.
+    Outside the kept bands the same promise holds on the page and its surface: accent words reach 4.5:1 and accent
+    fills (buttons, their borders) 3:1 by a lightness shift that keeps the brand's hue, never by the generic clamp
+    toward the body text colour (which turned bronze on white and moss on near black into body text grey), and the
+    button text is made to read on the shifted fill (`brandPageAccent`, recorded `brand:page:…`). Without `brand` the module is byte for byte what it was (control test
     `test/brand-mode-default-unchanged.test.mjs`). Joomla only for now. A profile is named `brand:<bg>-<fg>-<accent>`,
     which `ds-slot.mjs joomla` and `flow.mjs` accept.
 19. **Three rules grade a release for brand mode** (Joomla):
@@ -233,10 +237,11 @@ resets every role and gives the template's own values back (`keepDefaults`), so 
     shadow or an inline picture, which only a release can fix. BRAND-3 (`live-only`): whether the brand accent reads on
     each kept band and how much template accent is left, with the `flow.mjs` command that measures it. `live-only` is
     counted in neither number, so BRAND-3 never changes the grade or holds Publish.
-20. **All three are worth-fixing.** Brand mode is new and no template was graded for it before; a kept band left in the
-    template accent is a leftover on a site that still reads, not a break. They move to must-fix (one line each in
-    `rule-severity.json`) once every published Joomla line passes BRAND-1 and BRAND-2, and BRAND-3 once a measurement
-    file carries brand mode and /ops scores it.
+20. **The BRAND rules are graded apart.** /ops lists them under their own heading on the Design system step, every
+    status shown, a live-only one with its command. They never change the Design system grade, its counts or
+    `ds-ready`, which opens the Design system picker to customers: a template not ready for the brand step still serves
+    every design system. (Counted as worth-fixing they would have locked the picker on 17 Joomla lines.) Their entries in
+    `rule-severity.json` keep the plain line and question /ops shows.
 
 ### Consequences
 

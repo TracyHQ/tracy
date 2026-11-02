@@ -28,7 +28,7 @@ import {
 } from './emit.mjs'
 import { autoPaletteCss, roleValues, splitTop } from './auto-palette.mjs'
 import { bandColours, bandRules } from './bands.mjs'
-import { brandKeptRules } from './brand.mjs'
+import { brandKeptRules, brandPageAccent } from './brand.mjs'
 import { gate } from './normalise.mjs'
 import { addWornRoles, facesOf } from './role-values.mjs'
 import { omittedRoles } from './role-variables.mjs'
@@ -443,6 +443,9 @@ function joomlaSheet(profile, base, contract, brandMode = false) {
   const bands = bandRules(contract, tokens, HI, brandMode ? { ...page, brand: true } : page)
   // brand mode: the accent role inside each kept band (brand.mjs), after keepRules so it wins at the same weight
   const branded = brandMode ? brandKeptRules(contract, tokens, base, HI, page) : { rules: [], adjusted: [] }
+  // brand mode: the page's own accent words and fills made readable keeping the brand hue (brand.mjs), after
+  // the kept bands, which judge the brand accent as stated on their own grounds
+  if (brandMode) branded.adjusted.push(...brandPageAccent(tokens, text))
   const wornKeys = [...Object.keys(bands.grounds), ...Object.keys(bands.media ?? {})]
 
   // A template that reads the 56 names (tracy-base) gets them; a JA template may define those short

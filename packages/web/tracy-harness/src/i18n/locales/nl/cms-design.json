@@ -102,6 +102,7 @@
   "cms-design.rule.source": "Bron",
   "cms-design.rule.systems": "Systemen",
   "cms-design.rule.why": "Waarom",
+  "cms-design.rules.brand": "Brand-modus, telt niet mee in het cijfer",
   "cms-design.rules.copied": "Gekopieerd",
   "cms-design.rules.copy": "Prompt kopiëren",
   "cms-design.rules.details_one": "Details ({count} regel)",
