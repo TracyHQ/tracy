@@ -46,6 +46,7 @@ export type StepName =
   | 'install-file'
   | 'contract'
   | 'content-coverage'
+  | 'template-kit'
   | 'customize'
   | 'design-system'
   | 'demo'
@@ -73,6 +74,7 @@ export const ROAD_ORDER: readonly StepName[] = [
   'install-file',
   'contract',
   'content-coverage',
+  'template-kit',
   'customize',
   'design-system',
   'demo',
@@ -102,6 +104,9 @@ export const STEP_TITLE: Readonly<Record<StepName, string>> = {
   },
   get 'content-coverage'() {
     return tr('cms-readiness.step.contentCoverage.title')
+  },
+  get 'template-kit'() {
+    return tr('cms-readiness.step.templateKit.title')
   },
   get customize() {
     return tr('cms-readiness.step.customize.title')
@@ -137,6 +142,9 @@ export const STEP_WHY: Readonly<Record<StepName, string>> = {
   get 'content-coverage'() {
     return tr('cms-readiness.step.contentCoverage.why')
   },
+  get 'template-kit'() {
+    return tr('cms-readiness.step.templateKit.why')
+  },
   get customize() {
     return tr('cms-readiness.step.customize.why')
   },
@@ -159,6 +167,7 @@ export const STEP_TAB: Record<StepName, 'card' | 'settings'> = {
   listing: 'card',
   contract: 'settings',
   'content-coverage': 'settings',
+  'template-kit': 'settings',
   customize: 'settings',
   'design-system': 'settings',
   published: 'card',
@@ -545,6 +554,110 @@ function coverageOutside(ctx: GuideContext, p: Record<string, unknown>, problem:
     doc: COVERAGE_SKILL_DOC
   }
 }
+
+const KIT_TOOL = 'packages/cms/tracy-quickstart-tools/template-kit/cli.mjs'
+const KIT_DOC = { label: KIT_TOOL, href: `${DOCS}${KIT_TOOL}` }
+
+/**
+ * The Template kit fix as ONE prompt: capture the kit of this version with the template kit tool, commit
+ * template-kit.json beside the contract, and leave the approval to a person who looked at the pictures.
+ */
+function kitOutside(
+  ctx: GuideContext,
+  p: Record<string, unknown>,
+  problem: string,
+  extra: string[] = []
+): OutsideFix {
+  const version = str(p.version) ?? ctx.version ?? '<version>'
+  return {
+    label: claudeCode(),
+    text: [
+      `The template kit of the release ${ctx.tag} (${ctx.cms} ${version}) ${problem}`,
+      ...extra,
+      `Work in a tch checkout. The kit is captured once per quickstart version with the template kit tool (${KIT_TOOL}; read its usage first): build a local site from this release (tracy-dev restore), capture every page and every block at 1440 and 390, and write template-kit.json beside the contract of ${version}${str(p.contract) ? ` (${str(p.contract)})` : ''}.`,
+      'Check that quickstart.version in template-kit.json is the release version, that every page and block has a picture at both widths, and that every image has its sha256.',
+      'Do not write the approval yourself. Show me the pictures and wait: a person approves them, and the approval names the image set it saw (approval.imagesSha256).',
+      'Stop before every commit, push and PR, and wait for my go.',
+      'Once the PR is merged and CI has deployed this server, Template kit on the Road to live reads the new file.'
+    ].join('\n'),
+    doc: KIT_DOC
+  }
+}
+
+/** One template gap as the server names it. */
+interface KitGap {
+  id: string
+  kind: string
+  where: Record<string, unknown> | null
+  detail: string | null
+}
+
+const kitGapsOf = (v: unknown): KitGap[] =>
+  Array.isArray(v)
+    ? v.filter((x): x is KitGap => !!x && typeof x === 'object' && typeof x.kind === 'string')
+    : []
+
+/** The heading of a list of template gaps of one kind; a kind the panel does not know reads as itself. */
+const GAP_KIND_HEADING: Record<string, string> = {
+  'page-without-h1': 'cms-readiness.kit.gap.pageWithoutH1',
+  'dead-link': 'cms-readiness.kit.gap.deadLink',
+  'dead-path': 'cms-readiness.kit.gap.deadPath',
+  'sparse-row-left-packed': 'cms-readiness.kit.gap.sparseRowLeftPacked'
+}
+const gapKindHeading = (kind: string) => (GAP_KIND_HEADING[kind] ? tr(GAP_KIND_HEADING[kind]) : kind)
+
+/** Where a gap is, in the words the kit used: the block or page, then the path or selector. */
+function gapWhere(where: Record<string, unknown> | null): string {
+  if (!where) return ''
+  return ['blockId', 'pageId', 'path', 'selector']
+    .map((k) => str(where[k]))
+    .filter((x): x is string => x !== null)
+    .join(' ')
+}
+
+const gapLine = (gap: KitGap) => {
+  const where = gapWhere(gap.where)
+  return gap.detail ? (where ? `${where}: ${gap.detail}` : gap.detail) : where || gap.id
+}
+
+/** The template gaps as lists: one per kind with its count (first eight named), then the accepted ones apart. */
+function kitGapLists(p: Record<string, unknown>) {
+  const shown = kitGapsOf(p.gapsShown)
+  const byKind = (Array.isArray(p.gapsByKind) ? p.gapsByKind : []) as { kind: string; count: number }[]
+  const accepted = (Array.isArray(p.gapsAcceptedShown) ? p.gapsAcceptedShown : []) as {
+    kind: string
+    reason: string
+  }[]
+  return [
+    ...byKind.map((k) => ({
+      heading: gapKindHeading(String(k.kind)),
+      count: Number(k.count ?? 0),
+      lines: shown.filter((g) => g.kind === k.kind).map(gapLine)
+    })),
+    ...(Number(p.gapsAccepted ?? 0) > 0
+      ? [
+          {
+            heading: tr('cms-readiness.kit.list.accepted'),
+            count: Number(p.gapsAccepted),
+            lines: accepted.map((a) => `${a.kind}: ${a.reason}`)
+          }
+        ]
+      : [])
+  ]
+}
+
+/** The lists a Template kit step shows, only when there is one. */
+const withKitLists = (p: Record<string, unknown>) => {
+  const lists = kitGapLists(p)
+  return lists.length > 0 ? { lists } : {}
+}
+
+/** The fact line of a Template kit step that asks for work: live first, else what the server said. */
+const kitDetail = (p: Record<string, unknown>, fallback: string) =>
+  (p.live === true ? tr('cms-readiness.kit.live') : str(p.reason) ? `${str(p.reason)}.` : fallback).slice(
+    0,
+    90
+  )
 
 /** The slot keys a roles group names (the first eight the server sends). */
 function slotKeysOf(p: Record<string, unknown>): string[] {
@@ -1248,6 +1361,91 @@ export function guideOf(s: RoadStep, ctx: GuideContext): StepGuide {
         )
       })
     }
+    // 3c. Template kit: template-kit.json beside the contract, approved on the pictures it lists
+    case 'kit-not-needed':
+      return g(tr('cms-readiness.kit.notNeeded'), { detail: tr('cms-readiness.kit.notNeeded.detail') })
+    case 'kit-waiting':
+      return g(STEP_TITLE['template-kit'])
+    case 'kit-approved':
+      return g(tr('cms-readiness.kit.approved'), {
+        detail: str(p.approvedBy)
+          ? tr('cms-readiness.kit.approved.by', { by: String(p.approvedBy) }).slice(0, 90)
+          : undefined,
+        ...withKitLists(p)
+      })
+    case 'kit-gaps': {
+      const count = Number(p.gaps ?? 0)
+      const kinds = ((Array.isArray(p.gapsByKind) ? p.gapsByKind : []) as { kind: string; count: number }[])
+        .map((k) => `${k.count} ${k.kind}`)
+        .join(', ')
+      return g(tr('cms-readiness.kit.gaps', { count }), {
+        detail: p.live === true ? tr('cms-readiness.kit.live') : tr('cms-readiness.kit.gaps.detail'),
+        ...withKitLists(p),
+        outside: kitOutside(
+          ctx,
+          p,
+          `found ${count} template gap${count === 1 ? '' : 's'}${kinds ? ` (${kinds})` : ''}, defects of the template every site built from it would carry.`,
+          [
+            `First gaps: ${kitGapsOf(p.gapsShown)
+              .map((gap) => `${gap.kind} at ${gapLine(gap)}`)
+              .join('; ')}.`,
+            'For each gap: fix it in the template source or the quickstart, build the next quickstart version, and capture the kit again. Only a gap that is truly not a defect gets an accepted reason ("accepted": { "reason": at least 12 characters, "by": who decided }) on its entry in templateGaps of template-kit.json.'
+          ]
+        )
+      })
+    }
+    case 'kit-missing':
+      return g(tr('cms-readiness.kit.missing'), {
+        detail: kitDetail(p, tr('cms-readiness.kit.missing.detail')),
+        outside: kitOutside(ctx, p, 'is missing, so Publish waits for it. Capture it.')
+      })
+    case 'kit-invalid':
+      return g(tr('cms-readiness.kit.invalid'), {
+        detail: kitDetail(p, tr('cms-readiness.kit.invalid.detail')),
+        outside: kitOutside(
+          ctx,
+          p,
+          `cannot be read: ${str(p.reason) ?? 'no reason given'}. Capture it again.`
+        )
+      })
+    case 'kit-stale':
+      return g(tr('cms-readiness.kit.stale'), {
+        detail: kitDetail(p, tr('cms-readiness.kit.stale.detail')),
+        outside: kitOutside(
+          ctx,
+          p,
+          `is out of date: ${str(p.reason) ?? 'it was captured for another version'}. Capture it again.`
+        )
+      })
+    case 'kit-incomplete':
+      return g(tr('cms-readiness.kit.incomplete'), {
+        detail: kitDetail(p, tr('cms-readiness.kit.incomplete.detail')),
+        outside: kitOutside(
+          ctx,
+          p,
+          `is incomplete: ${str(p.reason) ?? 'pictures are missing'}. Capture it again.`
+        )
+      })
+    case 'kit-not-approved':
+      return g(tr('cms-readiness.kit.notApproved'), {
+        detail: p.live === true ? tr('cms-readiness.kit.live') : tr('cms-readiness.kit.notApproved.detail'),
+        ...withKitLists(p),
+        outside: kitOutside(
+          ctx,
+          p,
+          'is captured but nobody approved it yet. Show me its pictures for approval.'
+        )
+      })
+    case 'kit-approval-stale':
+      return g(tr('cms-readiness.kit.approvalStale'), {
+        detail: p.live === true ? tr('cms-readiness.kit.live') : tr('cms-readiness.kit.approvalStale.detail'),
+        ...withKitLists(p),
+        outside: kitOutside(
+          ctx,
+          p,
+          'was approved on a different set of pictures. Show me the current pictures for approval again.'
+        )
+      })
     // 3b. Content coverage: the audit's file committed beside the contract (owner, 24/10/2026)
     case 'coverage-not-needed':
       return g(tr('cms-readiness.coverage.notNeeded'), {

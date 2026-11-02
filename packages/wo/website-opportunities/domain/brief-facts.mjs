@@ -9,12 +9,15 @@ import { factDecisions } from './fact-assessment.mjs'
 import { ratingShownForms } from './google-rating.mjs'
 import { comparable, labelQuoted } from './business-reading.mjs'
 import { cleanSocialUrl } from './social-links.mjs'
+import { OBSERVED_USE_RULE } from './pictures/observed-facts.mjs'
 
 // The brief names a source by its platform: Google's two collectors are one Google.
 const SOURCE_NAME = { 'google-places': 'google', 'google-maps': 'google' }
 const sourceName = (kind) => SOURCE_NAME[kind] ?? kind ?? 'unknown'
 
 export const CONFIDENCE = Object.freeze(['corroborated', 'single-source', 'inferred'])
+/** Where a fact comes from: words a source states (the default, no field), or what the business's photos show. */
+export const SOURCE_KINDS = Object.freeze(['stated', 'observed'])
 // What the brief states of the business block: Google's raw duplicates (national number, components) are not repeated.
 const STATED_BUSINESS = new Set(['name', 'branch', 'address', 'phone', 'email', 'hours', 'serviceAreas'])
 const SOCIAL_COUNTS = new Set(['followers', 'likes', 'subscribers', 'posts'])
@@ -413,7 +416,17 @@ export function briefFactErrors(brief) {
   }
   if (!Array.isArray(brief.facts)) return [{ path: 'facts', message: 'must be a list of fact envelopes' }]
   const ids = new Set()
+  const assetIds = new Set((Array.isArray(brief.assets) ? brief.assets : []).map((a) => a?.id))
   brief.facts.forEach((f, i) => {
+    // An observed fact names the brief's photos it rests on (`observed-facts.mjs`).
+    if (isObj(f) && 'sourceKind' in f && !SOURCE_KINDS.includes(f.sourceKind))
+      out.push({ path: `facts[${i}].sourceKind`, message: `must be one of ${SOURCE_KINDS.join(', ')}` })
+    if (
+      isObj(f) &&
+      f.sourceKind === 'observed' &&
+      !(Array.isArray(f.assetIds) && f.assetIds.length && f.assetIds.every((a) => assetIds.has(a)))
+    )
+      out.push({ path: `facts[${i}].assetIds`, message: 'must name at least one asset of this brief' })
     const ok =
       isObj(f) &&
       text(f.id) &&
@@ -510,7 +523,9 @@ export function renderBriefFacts(brief, line, q) {
   line(
     'One line per fact: its value, how sure Tracy is (corroborated, single source, inferred) and whether it goes on the site. A fact off the site appears nowhere on it.'
   )
-  for (const f of facts) {
+  const stated = facts.filter((f) => f.sourceKind !== 'observed')
+  const observed = facts.filter((f) => f.sourceKind === 'observed')
+  for (const f of stated) {
     const from = [...new Set(f.evidence.map((e) => e.source))].join(', ')
     const where = f.onSite
       ? 'on the site'
@@ -519,5 +534,13 @@ export function renderBriefFacts(brief, line, q) {
       `- ${f.field}: ${valueLine(f.value, q)} · ${CONFIDENCE_WORDS[f.confidence] ?? f.confidence}${from ? ` (${from})` : ''} · ${where}${f.decidedBy === 'owner' ? ', by the owner' : ''}`
     )
   }
+  line()
+  if (!observed.length) return
+  line('## What the photos show')
+  line(OBSERVED_USE_RULE)
+  for (const f of observed)
+    line(
+      `- ${f.field}: ${valueLine(f.value, q)} · observed in ${f.assetIds.length} photo${f.assetIds.length === 1 ? '' : 's'}`
+    )
   line()
 }

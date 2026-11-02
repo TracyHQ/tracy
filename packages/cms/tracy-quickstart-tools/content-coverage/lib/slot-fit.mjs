@@ -21,6 +21,10 @@ import {
   pictureKindOf,
   pictureReplaceOf
 } from '../../../../wo/website-opportunities/domain/content-map-fit.mjs'
+import { authorListsOf } from './author-lists.mjs'
+import { itemListsOf } from './item-lists.mjs'
+import { listingListsOf } from './listing-lists.mjs'
+import { menuBlocksOf } from './menu-blocks.mjs'
 
 const round4 = (n) => Math.round(n * 10000) / 10000
 const fileOf = (sample) =>
@@ -205,16 +209,25 @@ function textFit(slot, ev) {
   }
 }
 
-/** Collections of role groups (`module-4.item.0` → `module-4.item`): items shown and whether their photos share a shape. */
+/**
+ * Collections of role groups (`module-4.item.0` -> `module-4.item`): items in the map, items some page shows, whether
+ * their photos share a shape, and the bounds a build may grow or shrink the list within.
+ *
+ * Bounds rule: `max` is the demo's own count (`maxFrom: "demo-count"`): the template renders that many, so the layout is
+ * known to hold them; more is never measured. `min` is `null` with `minFrom: "unknown"`: one demo shows one count, and
+ * nothing in a render proves the fewest items a layout still holds, so no number is invented. A later rule that has
+ * real evidence for a floor sets both fields together.
+ */
 function fitGroupsOf(slots) {
-  /** @type {Map<string, {items: Set<number>, aspects: number[]}>} */
+  /** @type {Map<string, {items: Set<number>, shown: Set<number>, aspects: number[]}>} */
   const groups = new Map()
   for (const slot of slots) {
     const id = slot.group?.id
     if (typeof id !== 'string' || !/\.\d+$/.test(id)) continue
     const collection = id.replace(/\.\d+$/, '')
-    const g = groups.get(collection) ?? { items: new Set(), aspects: [] }
+    const g = groups.get(collection) ?? { items: new Set(), shown: new Set(), aspects: [] }
     g.items.add(slot.group.item)
+    if (slot.fit?.measured) g.shown.add(slot.group.item)
     if (slot.type === 'image' && slot.fit?.measured && slot.fit.replace === 'photo')
       g.aspects.push(slot.fit.aspect)
     groups.set(collection, g)
@@ -224,8 +237,13 @@ function fitGroupsOf(slots) {
     const [a0] = g.aspects
     out[id] = {
       items: g.items.size,
+      shown: g.shown.size,
       uniform: g.aspects.every((a) => Math.abs(a / a0 - 1) <= SLOT_FIT_TOLERANCE),
-      whenFewer: 'neutral'
+      whenFewer: 'neutral',
+      min: null,
+      minFrom: 'unknown',
+      max: g.items.size,
+      maxFrom: 'demo-count'
     }
   }
   return out
@@ -242,10 +260,12 @@ function settleCustomizeByRole(slot) {
 /**
  * The content map with a `fit` on every text and image slot, `slotFitVersion` and `fitGroups`, and each picture's keep
  * flag set from its kind (a version 2 map) or every slot's keep flag from its role (a version 3 map, ADR 0040); plus a
- * summary for the packaging report. The input map is not changed.
- * @param {{map: any, findings: any}} input
+ * summary for the packaging report. Given the presentation lock (the blocks' settings), the map also gets `itemLists`
+ * and `itemPages` (`item-lists.mjs`) when some block pulls items from a category, and `menuBlocks` (`menu-blocks.mjs`)
+ * when some block shows a menu. The input map is not changed.
+ * @param {{map: any, findings: any, lock?: any}} input
  */
-export function measureSlotFit({ map, findings }) {
+export function measureSlotFit({ map, findings, lock }) {
   const evidence = evidenceOf(findings, new Map((map.slots ?? []).map((s) => [s.key, s.sample])))
   const out = structuredClone(map)
   const byRole = roleDecidesKeep(out)
@@ -278,5 +298,30 @@ export function measureSlotFit({ map, findings }) {
   }
   out.slotFitVersion = SLOT_FIT_VERSION
   out.fitGroups = fitGroupsOf(out.slots ?? [])
+  if (lock) {
+    delete out.itemLists
+    delete out.itemPages
+    const { itemLists, itemPages } = itemListsOf({ map: out, lock, findings })
+    // Listing pages (a category, the featured items, the authors) declare their lists the same way.
+    const listings = listingListsOf({ map: out, lock, findings })
+    Object.assign(itemLists, listings.itemLists)
+    for (const [item, row] of Object.entries(listings.itemPages)) {
+      if (!itemPages[item]) itemPages[item] = row
+      else
+        for (const from of row.linkedFrom)
+          if (!itemPages[item].linkedFrom.includes(from)) itemPages[item].linkedFrom.push(from)
+    }
+    // Author pages (one author's articles, reached from an author list) too.
+    Object.assign(itemLists, authorListsOf({ map: out, lock, findings }).itemLists)
+    if (Object.keys(itemLists).length) {
+      out.itemLists = itemLists
+      out.itemPages = itemPages
+    }
+    summary.itemLists = Object.keys(itemLists).length
+    delete out.menuBlocks
+    const { menuBlocks } = menuBlocksOf({ map: out, lock, findings })
+    if (Object.keys(menuBlocks).length) out.menuBlocks = menuBlocks
+    summary.menuBlocks = Object.keys(menuBlocks).length
+  }
   return { map: out, summary }
 }

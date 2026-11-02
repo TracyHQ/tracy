@@ -8,8 +8,17 @@ import { createMatcher } from './match.mjs'
 import { createClassifier } from './classify.mjs'
 import { findHygiene } from './hygiene.mjs'
 import { normText } from './normalize.mjs'
+import { standUserFilter } from './stand-users.mjs'
 
 const log = (...a) => console.error('[audit]', ...a)
+const pathOfUrl = (url) => {
+  try {
+    const u = new URL(url)
+    return u.pathname + u.search
+  } catch {
+    return String(url)
+  }
+}
 const signature = (cls) => {
   const item = String(cls ?? '').match(/\bitem(?:id)?-(\d+)\b/)
   const view = String(cls ?? '').match(/\bview-([a-z]+)\b/)
@@ -38,6 +47,8 @@ export async function runAudit({
   const match = createMatcher(contract, siteUrl)
   const classify = createClassifier(contract, dbIndex, sourceIndex)
   const plan = new PagePlan(siteUrl, contract, cap)
+  // The stand's own accounts (absent from the release database) are never crawled nor reported.
+  const stand = standUserFilter({ users: dbIndex?.users ?? null })
   const browser = await chromium.launch()
   const ctx = {}
   for (const vp of viewports) ctx[vp] = await openContext(browser, vp)
@@ -45,6 +56,10 @@ export async function runAudit({
   const failures = []
   const seedSigs = new Map()
   const duplicates = []
+  // The header for the site map: the home page's (desktop, the first viewport), else the first page that has one.
+  let header = null
+  let headerFromHome = false
+  const homeUrl = new URL('./', siteUrl).href
   try {
     for (let job = plan.next(); job; job = plan.next()) {
       const first = await renderPage(ctx[viewports[0]], job.url)
@@ -96,11 +111,20 @@ export async function runAudit({
       if (plan.land(job, first.finalUrl)) continue // same page reached twice
       const n = pages.length + 1
       plan.addLinks(
-        first.data.items.filter((i) => i.kind === 'link' && i.source === 'a').map((i) => i.value),
+        first.data.items
+          .filter((i) => i.kind === 'link' && i.source === 'a' && !stand.isStandLink(i.value))
+          .map((i) => i.value),
         first.finalUrl
       )
       const results = { [viewports[0]]: first }
       for (const vp of viewports.slice(1)) results[vp] = await renderPage(ctx[vp], first.finalUrl)
+      {
+        const vps = Object.keys(results).filter((vp) => results[vp]?.data?.items)
+        const kept = stand.dropItems(vps.map((vp) => results[vp].data.items))
+        vps.forEach((vp, i) => {
+          results[vp].data.items = kept[i]
+        })
+      }
       const shots = {}
       for (const [vp, r] of Object.entries(results)) {
         if (!r.shot) continue
@@ -133,6 +157,11 @@ export async function runAudit({
         // Page hygiene: raw constants and placeholders in any viewport's items, PHP errors in the served HTML.
         hygiene: findHygiene({ html: first.html, items })
       }
+      const isHome = job.url === homeUrl || job.mapPage?.home === true
+      if (first.data.header?.found && (!header || (isHome && !headerFromHome))) {
+        header = { ...first.data.header, measuredOn: pathOfUrl(first.finalUrl), viewport: viewports[0] }
+        headerFromHome = isHome
+      }
       pages.push(page)
       const c = count(items)
       log(
@@ -157,6 +186,7 @@ export async function runAudit({
     skipped: plan.skipped,
     offsite: plan.offsite,
     capReached: plan.capReached,
+    header,
     summary: summarize(pages)
   }
 }

@@ -20,7 +20,7 @@ export class PagePlan {
     this.seen = new Set() // normalized request URLs
     this.byFinal = new Map() // normalized final URL -> page record
     this.skipped = []
-    this.offsite = [] // {url, landedOn}: requests that a redirect took to another host
+    this.offsite = [] // {url, landedOn, mapPage?}: requests that a redirect took to another host
     this.capReached = false
     for (const p of contract.pages) {
       if (NO_PAGE_TYPES.has(p.type)) {
@@ -96,7 +96,11 @@ export class PagePlan {
       return false
     }
     if (host === this.site.host) return false
-    this.offsite.push({ url: job.url, landedOn: finalUrl })
+    this.offsite.push({
+      url: job.url,
+      landedOn: finalUrl,
+      ...(job.mapPage ? { mapPage: job.mapPage.entity } : {})
+    })
     return true
   }
 

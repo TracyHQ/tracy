@@ -38,6 +38,64 @@ function flatten(value, path, out) {
   return out
 }
 
+/**
+ * The user names and logins of a dump's users table (Joomla `#__users` or `<prefix>users`, WordPress `wp_users`):
+ * the accounts the release ships. A user the measured site has beyond them belongs to the machine, not the demo.
+ * @param {Map<string, Record<string, any>[]>} tables
+ * @param {string} prefix
+ * @returns {string[]}
+ */
+export function usersOfDump(tables, prefix = '') {
+  const out = []
+  for (const [full, rows] of tables) {
+    const table = (prefix && full.startsWith(prefix) ? full.slice(prefix.length) : full).replace(/^#__/, '')
+    if (table !== 'users') continue
+    for (const row of rows)
+      for (const column of ['username', 'name', 'user_login', 'display_name', 'user_nicename'])
+        if (typeof row[column] === 'string' && row[column].trim()) out.push(row[column])
+  }
+  return out
+}
+
+/**
+ * The accounts a dump ships, by user id: only the login and the display name (an author page names one of them), never
+ * an e-mail, a password or a group.
+ * @param {Map<string, Record<string, any>[]>} tables
+ * @param {string} prefix
+ * @returns {Record<string, {username: string, name: string}>}
+ */
+export function accountsOfDump(tables, prefix = '') {
+  const out = {}
+  for (const [full, rows] of tables) {
+    const table = (prefix && full.startsWith(prefix) ? full.slice(prefix.length) : full).replace(/^#__/, '')
+    if (table !== 'users') continue
+    for (const row of rows)
+      if (row.id != null)
+        out[String(row.id)] = { username: String(row.username ?? ''), name: String(row.name ?? '') }
+  }
+  return out
+}
+
+/**
+ * The author of each article in a dump's content table (Joomla `#__content.created_by`), by article id: which
+ * articles an author page may list. An article with no author (`0`) names none.
+ * @param {Map<string, Record<string, any>[]>} tables
+ * @param {string} prefix
+ * @returns {Record<string, string>}
+ */
+export function authorsOfDump(tables, prefix = '') {
+  const out = {}
+  for (const [full, rows] of tables) {
+    const table = (prefix && full.startsWith(prefix) ? full.slice(prefix.length) : full).replace(/^#__/, '')
+    if (table !== 'content') continue
+    for (const row of rows) {
+      const by = String(row.created_by ?? '').trim()
+      if (row.id != null && /^\d+$/.test(by) && by !== '0') out[String(row.id)] = by
+    }
+  }
+  return out
+}
+
 export function buildDbIndex(dumpFile, siteConfig = {}) {
   const { tables, prefix } = readDump(dumpFile)
   const cells = []
@@ -78,7 +136,14 @@ export function buildDbIndex(dumpFile, siteConfig = {}) {
         row: null
       })
   }
-  return { cells, prefix, tableCount: tables.size }
+  return {
+    cells,
+    prefix,
+    tableCount: tables.size,
+    users: usersOfDump(tables, prefix),
+    authors: authorsOfDump(tables, prefix),
+    accounts: accountsOfDump(tables, prefix)
+  }
 }
 
 /**

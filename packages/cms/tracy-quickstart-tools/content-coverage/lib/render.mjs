@@ -1,5 +1,6 @@
 // Open one page at one viewport, read-only, wake lazy content, extract items, take a full-page shot.
 import { extractPage, measurePictures } from './browser-extract.js'
+import { extractHeader } from './browser-header.js'
 
 export const VIEWPORTS = {
   desktop: { width: 1440, height: 900, isMobile: false, deviceScaleFactor: 1 },
@@ -72,6 +73,8 @@ export async function renderPage(ctx, url, { screenshot = true } = {}) {
     await wakeLazyContent(page)
     await page.waitForLoadState('networkidle', { timeout: 5000 }).catch(() => {})
     const data = await page.evaluate(extractPage)
+    // The header a visitor sees (logo, menu, buttons, text): the site map reads it from the home page.
+    data.header = await page.evaluate(extractHeader).catch(() => null)
     const rasters = [
       ...new Set(
         data.items

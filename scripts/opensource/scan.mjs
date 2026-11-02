@@ -142,6 +142,10 @@ const ATTRIBUTION_LINE =
 
 const ATTRIBUTION = { kind: 'attribution', reason: 'licence or authorship notice' }
 
+// A regex match is a slice of the whole file's string and keeps all of it alive; a hit stores its own copy
+// so a few hits in a multi-megabyte file do not pin that file in memory for the rest of the scan.
+const own = (s) => Buffer.from(s, 'utf8').toString('utf8')
+
 function scanText(path, text) {
   const hits = []
   const lines = text.split('\n')
@@ -152,7 +156,7 @@ function scanText(path, text) {
     const line = lines[i]
     for (const m of line.matchAll(EMAIL_RE)) {
       if (emailIsReserved(m[0])) continue
-      const hit = { category: 'email', path, line: i + 1, match: m[0] }
+      const hit = { category: 'email', path, line: i + 1, match: own(m[0]) }
       if (attributionFile || ATTRIBUTION_LINE.test(line)) hit.allowed = ATTRIBUTION
       hits.push(hit)
     }
@@ -162,20 +166,20 @@ function scanText(path, text) {
       if (octets.some((o) => o > 255) || raw.some((o) => o.length > 1 && o[0] === '0')) continue
       if (ipIsHarmless(octets) || WELL_KNOWN_IPS.has(m[0])) continue
       if (NOT_AN_ADDRESS_BEFORE.test(line.slice(Math.max(0, m.index - 24), m.index))) continue
-      hits.push({ category: 'ip', path, line: i + 1, match: m[0] })
+      hits.push({ category: 'ip', path, line: i + 1, match: own(m[0]) })
     }
     for (const m of line.matchAll(MACHINE_PATH_RE)) {
       if (PLACEHOLDER_USER.test(asSlashPath(m[0]))) continue
-      hits.push({ category: 'machine-path', path, line: i + 1, match: m[0] })
+      hits.push({ category: 'machine-path', path, line: i + 1, match: own(m[0]) })
     }
     for (const m of line.matchAll(AWS_ACCOUNT_RE)) {
       const account = m[1] ?? m[2]
       if (EXAMPLE_AWS_ACCOUNTS.has(account)) continue
-      hits.push({ category: 'cloud-account', path, line: i + 1, match: account })
+      hits.push({ category: 'cloud-account', path, line: i + 1, match: own(account) })
     }
     if (testPath) {
       for (const m of line.matchAll(PHONE_RE)) {
-        if (!phoneIsFictional(m[0])) hits.push({ category: 'phone', path, line: i + 1, match: m[0] })
+        if (!phoneIsFictional(m[0])) hits.push({ category: 'phone', path, line: i + 1, match: own(m[0]) })
       }
     }
     if (VIETNAMESE_RE.test(line)) vietnameseLines++
@@ -244,6 +248,53 @@ function listTree(repo, ref) {
     })
 }
 
+// Splits a `git cat-file --batch` stream into blobs. Each blob body is copied once into a buffer of its
+// exact size, so memory stays near the largest single blob. (Concatenating the pending bytes on every
+// chunk copied a large blob quadratically and left gigabytes of dead buffers for the GC.)
+export function catFileBatchParser() {
+  let header = null // bytes of an unfinished header line
+  let body = null // { data, filled } while a blob body is being read
+  let trailer = false // the newline after a body is still due
+  return function* push(chunk) {
+    let pos = 0
+    while (pos < chunk.length) {
+      if (trailer) {
+        pos++
+        trailer = false
+        continue
+      }
+      if (body) {
+        const take = Math.min(body.data.length - body.filled, chunk.length - pos)
+        chunk.copy(body.data, body.filled, pos, pos + take)
+        body.filled += take
+        pos += take
+        if (body.filled === body.data.length) {
+          const { data } = body
+          body = null
+          trailer = true
+          yield data
+        }
+        continue
+      }
+      const nl = chunk.indexOf(10, pos)
+      const part = chunk.subarray(pos, nl < 0 ? chunk.length : nl)
+      header = header ? Buffer.concat([header, part]) : Buffer.from(part)
+      if (nl < 0) return
+      pos = nl + 1
+      const fields = header.toString().split(' ')
+      header = null
+      if (fields[1] === 'missing') throw new Error(`git cat-file: ${fields[0]} missing`)
+      const size = Number(fields[2])
+      body = { data: Buffer.allocUnsafe(size), filled: 0 }
+      if (size === 0) {
+        body = null
+        trailer = true
+        yield Buffer.alloc(0)
+      }
+    }
+  }
+}
+
 // Streams blob contents through one `git cat-file --batch`, in the order given.
 async function* readBlobs(repo, entries) {
   const child = spawn('git', ['-C', repo, 'cat-file', '--batch'], { stdio: ['pipe', 'pipe', 'inherit'] })
@@ -254,18 +305,10 @@ async function* readBlobs(repo, entries) {
     }
     child.stdin.end()
   })()
-  let buf = Buffer.alloc(0)
+  const push = catFileBatchParser()
   let idx = 0
   for await (const chunk of child.stdout) {
-    buf = buf.length ? Buffer.concat([buf, chunk]) : chunk
-    while (idx < entries.length) {
-      const nl = buf.indexOf(10)
-      if (nl < 0) break
-      const size = Number(buf.subarray(0, nl).toString().split(' ')[2])
-      if (buf.length < nl + 1 + size + 1) break
-      yield { entry: entries[idx++], data: buf.subarray(nl + 1, nl + 1 + size) }
-      buf = buf.subarray(nl + 1 + size + 1)
-    }
+    for (const data of push(chunk)) yield { entry: entries[idx++], data }
   }
 }
 

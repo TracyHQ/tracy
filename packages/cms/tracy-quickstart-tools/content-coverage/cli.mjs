@@ -15,6 +15,8 @@
 //               picture's keep flag by its kind (in a place-content-roles/3 map every keep flag follows the role,
 //               ADR 0040); with --write the content map gets them, BEFORE content-coverage.json is built, so the
 //               coverage file names the map with its fit. Without --write: <out>/content-map.fit.json.
+//               It also writes `itemLists` and `itemPages`: each block whose settings name a category, with the items
+//               it shows and the fields of each card (lib/item-lists.mjs).
 //     [--no-judge]
 //               The label judge (spec #37): no model is called. For every component with a slot whose verdict is not
 //               cached in content-coverage.json, the audit writes <out>/label-judge/request.json (the question, the
@@ -72,6 +74,9 @@ function loadIndexes(o, contract) {
   return { siteConfig, dbIndex, sourceIndex }
 }
 
+/** Who wrote each article and the accounts the dump ships: an author page lists its author's articles (`author-lists.mjs`). */
+const dumpPeopleOf = (dbIndex) => ({ contentAuthors: dbIndex.authors, contentUsers: dbIndex.accounts })
+
 /** Match and classify again the items of an earlier findings.json (new rules, no browser run). */
 function reclassify(result, contract, siteUrl, o) {
   const { dbIndex, sourceIndex } = loadIndexes(o, contract)
@@ -91,6 +96,7 @@ function reclassify(result, contract, siteUrl, o) {
     'lockState',
     '_n'
   ]
+  if (dbIndex) Object.assign(result, dumpPeopleOf(dbIndex))
   for (const p of result.pages) {
     for (const it of p.items) for (const k of derived) delete it[k]
     annotate(p.items, match, classify)
@@ -107,9 +113,12 @@ const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..'
 /** Slot fit from this run's findings into the content map (or beside the evidence), formatted as capture formats it. */
 function writeSlotFit({ result, contractDir, outDir, write }) {
   const mapFile = join(contractDir, 'content-map.json')
+  // The blocks' settings (which category a block lists) come from the presentation lock: item lists need them.
+  const lockFile = join(contractDir, 'presentation-lock.json')
   const { map, summary } = measureSlotFit({
     map: JSON.parse(readFileSync(mapFile, 'utf8')),
-    findings: result
+    findings: result,
+    lock: existsSync(lockFile) ? JSON.parse(readFileSync(lockFile, 'utf8')) : undefined
   })
   const file = write ? mapFile : join(outDir, 'content-map.fit.json')
   writeFileSync(file, `${JSON.stringify(map, null, 2)}\n`)
@@ -155,6 +164,8 @@ async function main() {
   if (o['report-only'] || o.reclassify) {
     result = JSON.parse(readFileSync(findings, 'utf8'))
     if (o.reclassify) result = reclassify(result, contract, siteUrl, o)
+    else if (o['db-dump'] && existsSync(o['db-dump']))
+      Object.assign(result, dumpPeopleOf(buildDbIndex(o['db-dump'])))
   } else {
     const t0 = Date.now()
     const { dbIndex, sourceIndex } = loadIndexes(o, contract)
@@ -172,6 +183,8 @@ async function main() {
       seconds: Math.round((Date.now() - t0) / 1000),
       ...run
     }
+    // Who wrote each article (from the dump): an author page lists only that author's articles (`author-lists.mjs`).
+    if (dbIndex) Object.assign(result, dumpPeopleOf(dbIndex))
   }
   const unique = new Map()
   for (const p of result.pages)

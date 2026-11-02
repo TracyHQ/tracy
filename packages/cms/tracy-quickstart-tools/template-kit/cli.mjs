@@ -1,0 +1,159 @@
+#!/usr/bin/env node
+// Template kit: the pack made once per template version and reused by every site build, in one file
+// (template-kit.json) beside its images. Every page is read (DOM only), grouped by layout, and only what the pack
+// holds is shot: per page group one overview image and per block id one clean image, at 1440 and 390; per block its lists (with measured minimums), picture frames (kind, size, canHide, twins, fixed),
+// links, template words and demo facts; a version stamp and every gap in `errors`. Read-only on the site.
+//
+//   cli.mjs build --site <url> [--host-header <host>] --contract <dir> --out <dir> --full
+//                 [--reuse-capture] [--trade <words>] [--widths 1440,390] [--max-pages 400] [--only /,/a]
+//                 [--template-version x.y.z] [--exclude-path '/test-*,/other']
+//                 [--db-command '<client prefix>' | --db mysql://...] [--files-command '<prefix>' --webroot <dir>]
+//       --full: the whole pipeline (README "Make a kit for a new template"); without it, read + shoot + assemble only.
+//       The database and file reads feed the site part (site-cli.mjs); without them it reads the pages only.
+//   cli.mjs assemble ...  (template-kit.json again from the files in --out, no browser)
+//   cli.mjs measure-min ... --list <id> --page <path> --max <rows> [--block <id>] [--rows <css>] [--row-kind items]
+//                 [--note <why>]   (an override: a person's measurement of one list; the pipeline keeps it)
+//   cli.mjs sheet --out <dir> [--review]   (HTML pages of the kit's own images; nothing is shot)
+//   cli.mjs approve --out <dir> --by <login>   (ONLY a person, after the review sheet: seals the PACK's image set,
+//                 in pack/template-kit.json, the file committed beside the contract)
+//   cli.mjs pack --out <dir>   (pack/ and <name>.zip: only the images a site build reads; fails on a block without
+//                 its shot; build --full runs it last)
+//
+// Exit: 0 kit written · 1 written, but a page failed to capture or the page cap was reached · 2 usage or run error.
+import { mkdirSync } from 'node:fs'
+import { join, resolve } from 'node:path'
+
+import { assembleKit, readIf, readJson, writeJson } from './lib/assemble.mjs'
+import { captureSite } from './lib/capture-site.mjs'
+import { urlOfPath } from './lib/kit-paths.mjs'
+import { assignedAt, indexMap } from './lib/map-index.mjs'
+import { measureMin } from './lib/measure-min.mjs'
+import { approvePack, packKitFolder } from './lib/pack.mjs'
+import { runFull } from './lib/pipeline.mjs'
+import { writeSheets } from './lib/sheets.mjs'
+import { fixesOf, templateFixes } from './lib/template-fixes.mjs'
+
+const TOOL = 'template-kit 3.0.0'
+const COMMANDS = ['build', 'assemble', 'measure-min', 'sheet', 'approve', 'pack']
+
+export function parseArgs(argv) {
+  const o = { _: [] }
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i]
+    if (!a.startsWith('--')) o._.push(a)
+    else o[a.slice(2)] = argv[i + 1] && !argv[i + 1].startsWith('--') ? argv[++i] : true
+  }
+  return o
+}
+
+const str = (v) => (typeof v === 'string' ? v : undefined)
+const log = (...a) => console.error('[template-kit]', ...a)
+
+async function chromiumOf() {
+  const mod = await import(process.env.PLAYWRIGHT_MODULE ?? '@playwright/test')
+  return mod.chromium ?? mod.default?.chromium
+}
+
+async function sheet(o, out) {
+  const kind = o.review ? 'review' : 'blocks'
+  const fixes = fixesOf(readIf(join(out, 'template-fixes.json')))
+  const kit = readJson(join(out, 'template-kit.json'))
+  const r = await writeSheets({ out, kit, kind, fixes })
+  console.log(`${r.count} items on ${r.files.length} sheet(s) in ${join(out, 'contact-sheet')}`)
+}
+
+/** A person's approval of the image set they looked at; refused when any image on disk differs from the kit. */
+function approve(o, out) {
+  if (!str(o.by)) throw new Error('approve needs --by <login>')
+  const { approval, pack } = approvePack(out, o.by)
+  console.log(
+    `pack approved by ${o.by}: ${pack.images} images, ${approval.imagesSha256}; ${pack.file} ${pack.sha256}`
+  )
+  return 0
+}
+
+/** The pack (pack.mjs): exit 1 when a block a page lists has no shot, or a packed image is not in the kit. */
+function pack(out) {
+  const p = packKitFolder(out)
+  const mb = (p.bytes / 1024 / 1024).toFixed(1)
+  console.log(`${p.file}: ${p.images} images, ${mb} MB, sha256 ${p.sha256}`)
+  for (const m of p.blocksWithoutImage) console.error(`block ${m.block} has no shot at ${m.width}`)
+  for (const u of p.unknownImages) console.error(`packed image ${u} is not in the kit's images`)
+  return p.blocksWithoutImage.length || p.unknownImages.length ? 1 : 0
+}
+
+async function main() {
+  const o = parseArgs(process.argv.slice(2))
+  const cmd = o._[0]
+  const needSite = !['sheet', 'approve', 'pack'].includes(cmd)
+  if (!o.out || !COMMANDS.includes(cmd) || (needSite && (!o.site || !o.contract))) {
+    console.error(
+      `usage: cli.mjs ${COMMANDS.join('|')} --out <dir> [--site <url> --contract <dir>] (see the head of this file)`
+    )
+    return 2
+  }
+  const out = resolve(o.out)
+  mkdirSync(join(out, 'images'), { recursive: true })
+  if (cmd === 'sheet') return sheet(o, out).then(() => 0)
+  if (cmd === 'approve') return approve(o, out)
+  if (cmd === 'pack') return pack(out)
+  const map = readJson(join(o.contract, 'content-map.json'))
+  const hostHeader = str(o['host-header'])
+  const widths = String(o.widths ?? '1440,390')
+    .split(',')
+    .map(Number)
+    .filter(Boolean)
+  if (cmd === 'measure-min') {
+    if (!str(o.list) || !str(o.page) || !Number(o.max))
+      throw new Error('measure-min needs --list, --page and --max')
+    const listId = o.list
+    const source = (str(o.block) ?? listId.split('.')[0]).replace(/^block-/, 'module-')
+    const evidence = await measureMin({
+      chromium: await chromiumOf(),
+      siteUrl: o.site,
+      hostHeader,
+      url: urlOfPath(o.page, o.site),
+      assigned: assignedAt(indexMap(map), o.page),
+      source,
+      listId,
+      max: Number(o.max),
+      css: str(o.rows),
+      widths,
+      note: str(o.note)
+    })
+    const file = join(out, 'min-evidence.json')
+    if (str(o['row-kind'])) evidence.rowKind = o['row-kind']
+    evidence.by = 'person'
+    writeJson(file, { ...readIf(file), [listId]: evidence })
+    console.log(
+      `${listId}: min ${evidence.min ?? 'none'} of ${evidence.max}, layout right at ${evidence.okCounts.join(', ') || 'no count'}`
+    )
+    return 0
+  }
+  let capture
+  if (cmd === 'build' && o.full) {
+    const r = await runFull({ o, out, tool: TOOL, chromium: await chromiumOf(), log })
+    capture = r.capture
+  } else {
+    if (cmd === 'build')
+      await captureSite({ o, out, tool: TOOL, chromium: await chromiumOf(), map, widths, log })
+    capture = readJson(join(out, 'capture-index.json'))
+    await assembleKit(o, out, TOOL)
+    writeJson(join(out, 'template-fixes.json'), templateFixes(readIf(join(out, 'min-evidence.json')) ?? {}))
+    if (cmd === 'build') await sheet(o, out)
+  }
+  const kit = readJson(join(out, 'template-kit.json'))
+  console.log(
+    `${kit.pages.length} pages in ${kit.pageGroups.length} groups, ${kit.blocks.length} blocks, ${kit.images.length} images, ${kit.errors.length} errors; template ${kit.template.version ?? '?'}, quickstart ${kit.quickstart.version ?? '?'}`
+  )
+  return capture.failures?.length || capture.capReached ? 1 : 0
+}
+
+if (import.meta.url === `file://${process.argv[1]}`)
+  main().then(
+    (code) => process.exit(code),
+    (e) => {
+      console.error(e.message ?? e)
+      process.exit(2)
+    }
+  )

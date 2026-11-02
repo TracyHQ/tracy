@@ -234,3 +234,26 @@ test('article body copy is a paragraph in any tag, an indexed text node still re
   const w = proposeContentMapRoles(wordpress, { cms: 'wordpress' })
   assert.equal(roleOf(w.contentMap, 'home.slideshow.title.2'), 'editorial.heading')
 })
+
+test('the icon class of a repeatable row is an item icon in version 3; a single icon option stays with the agent', () => {
+  const icon = (key, jsonPath, sample) => ({
+    key,
+    entity: 'module-9',
+    column: 'params',
+    type: 'text',
+    sample,
+    jsonPath
+  })
+  const map = () => ({
+    slots: [
+      icon('module-9.0', ['social', 'social-intro[font-icon]', 0], 'fa fa-kite'),
+      icon('module-9.1', ['social', 'heading-icon'], 'fa fa-star')
+    ]
+  })
+  const v3 = proposeContentMapRoles(map(), { cms: 'joomla', vocabulary: 'place-content-roles/3' })
+  assert.equal(roleOf(v3.contentMap, 'module-9.0'), 'editorial.item_icon')
+  assert.equal(roleOf(v3.contentMap, 'module-9.1'), null)
+  // Version 2 has no icon role: the slot stays on the agent's list.
+  const v2 = proposeContentMapRoles(map(), { cms: 'joomla' })
+  assert.equal(roleOf(v2.contentMap, 'module-9.0'), null)
+})

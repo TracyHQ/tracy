@@ -28,6 +28,17 @@ export const KIND_TABLE = {
 const isWordpress = (manifest) =>
   manifest.platform === 'wordpress' || /\/wp\d+\//.test(String(manifest.id ?? ''))
 
+/** A Joomla params column (a JSON string or an object), or an empty object when it cannot be read. */
+function paramsOf(raw) {
+  if (raw && typeof raw === 'object') return raw
+  try {
+    const v = JSON.parse(String(raw ?? '{}'))
+    return v && typeof v === 'object' ? v : {}
+  } catch {
+    return {}
+  }
+}
+
 export function loadContract(dir, siteUrl) {
   const manifest = readJson(dir, 'manifest.json')
   const map = readJson(dir, 'content-map.json')
@@ -109,7 +120,16 @@ export function loadContract(dir, siteUrl) {
   const pages = mapPages.map((p) => {
     const ent = entityByKey.get(p.entity)
     const initial = lock.entities?.[p.entity] ?? {}
+    const params = paramsOf(initial.params)
+    const whole = (v) => (v === undefined || v === null || v === '' ? null : Number(v))
     return {
+      // Where the item sits in the site's menus (Joomla; a WordPress page has none): read by the site map.
+      menu: initial.menutype ?? null,
+      level: whole(initial.level),
+      parentId: whole(initial.parent_id),
+      home: String(initial.home ?? '0') === '1',
+      aliasOf: initial.type === 'alias' ? whole(params.aliasoptions) : null,
+      menuShow: params.menu_show === undefined ? true : String(params.menu_show) !== '0',
       entity: p.entity,
       sourceId: ent?.sourceId,
       route: p.route,

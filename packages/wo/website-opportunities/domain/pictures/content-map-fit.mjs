@@ -27,10 +27,12 @@
 // and, at the top level of the map:
 //
 //   "slotFitVersion": "slot-fit/1"
-//   "fitGroups": { "module-163.person": { "items": 4, "uniform": true, "whenFewer": "neutral" } }
+//   "fitGroups": { "module-163.person": { "items": 4, "shown": 4, "uniform": true, "whenFewer": "neutral",
+//                                        "min": null, "minFrom": "unknown", "max": 4, "maxFrom": "demo-count" } }
 //            one entry per collection of role groups (ADR 0038 `group.id` without its item number): how many items the
-//            demo shows, whether every picture of it has one shape, and what a build does when the brief has fewer
-//            (ADR 0037: the layout stays, a missing item takes neutral words).
+//            demo has and how many a page shows, whether every picture of it has one shape, what a build does when the
+//            brief has fewer (ADR 0037: the layout stays, a missing item takes neutral words), and the measured bounds:
+//            `max` is the demo count, `min` is null with `minFrom: "unknown"` until real evidence of a floor exists.
 //
 // Released content maps are never edited (their hash is bound on every site), so Slot fit appears only in contract
 // versions captured after ADR 0039.

@@ -166,8 +166,21 @@ export function extractPage() {
     } catch {}
     return undefined
   }
+  // The ids of an element's ancestors that hold a number (a block's chrome id such as Mod160): which block an item
+  // sits in, for the item lists of the content map.
+  const scopeCache = new Map()
+  const scopesOf = (el) => {
+    if (!el || el.nodeType !== 1) return []
+    if (scopeCache.has(el)) return scopeCache.get(el)
+    const up = scopesOf(el.parentElement)
+    const own = el.id && /\d/.test(el.id) ? [el.id, ...up] : up
+    scopeCache.set(el, own)
+    return own
+  }
   const add = (kind, el, extra) => {
+    const scopes = el ? scopesOf(el) : []
     items.push({
+      scopes,
       kind,
       tag: el ? el.tagName.toLowerCase() : null,
       selector: el ? selectorOf(el) : null,

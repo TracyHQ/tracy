@@ -45,6 +45,14 @@ p.add_argument('--list-items',action='store_true')
 # (PAGE-5) and its target is never checked (PAGE-4). Off by default so every published profile
 # re-captures byte for byte.
 p.add_argument('--link-fields-by-role',action='store_true')
+# An ACM icon field inside a repeatable row (a social block's `social-intro[font-icon]`: one icon class per network)
+# is part of the row a visitor reads: a fourth network the customer adds needs its icon. The name rule below drops
+# every field named like an option (`icon`), so without this flag the row is declared without its icon. With it a
+# text field whose name holds `icon` and whose value sits in a list (a row of a repeatable fieldset) is declared as a
+# text slot kept from Customize, after the module's other slots so the keys the old rules made stay what they were.
+# A single option named like an icon (`heading-icon`) stays out. Off by default so every published profile
+# re-captures byte for byte.
+p.add_argument('--repeat-icons',action='store_true')
 # The one module a Tracy quickstart keeps its identity in (name, contact, social links), found by its
 # note. Its entity and every slot of it are flagged `siteIdentity` (not `identity`: every entity already
 # has an `identity` — the fields the Claude Cowork plugin finds it by): the Claude Cowork plugin (0.17.0+) lets those slots
@@ -360,6 +368,7 @@ for kind,table in tables.items():
   identity={k:row[k] for k in identity_fields[kind]}
   # Modules agreeing on all five fields (JA Space's two Hero, two Clients) make the plugin refuse the whole contract, so only they carry the release's id.
   if kind=='module' and module_keys[module_key(row)]>1:identity['id']=row['id']
+  icons=[]
   entity={'key':eid,'kind':kind,'identity':identity,'sourceId':int(row['id']),'initial':{k:v for k,v in row.items() if k not in volatile}}
   if kind=='article':entity['identityReferences']={'catid':'category-'+row['catid']}
   entities.append(entity)
@@ -384,6 +393,8 @@ for kind,table in tables.items():
       add('params','text',node,jsonPath=path,nestedJson='jatools-config',label=row['title']+' / '+name+' row '+str(path[-2]+1))
       return
      if ft not in ['text','textarea','media','url','email']:return
+     if a.repeat_icons and ft=='text' and 'icon' in name and path and isinstance(path[-1],int):
+      icons.append((node,path,name));return
      if re.search(r'color|class|style|layout|icon|width|height|column|align|animation',name) and not (a.full_coverage and ft=='media'):return
      link=r'(link|url|href)[-_]?\d*$' if a.link_fields_by_role else r'link$|url$'
      typ='image' if ft=='media' else 'url' if re.search(link,name) or ft=='url' else 'text'
@@ -404,6 +415,8 @@ for kind,table in tables.items():
   # Labels remain content; identities use stable aliases rather than mutable titles.
   if kind in ['article','menuItem']:add('title','text',row['title'],label=row['title'])
   if a.full_coverage:declare_everything(kind,row,add)
+  # Row icons (--repeat-icons) come after every other slot of the entity, so no key an older rule made moves.
+  for node,path,name in icons:add('params','text',node,jsonPath=path,nestedJson='jatools-config',label=row['title']+' / '+name+' '+str(path[-1]+1),customize='keep')
 # Authors (--full-coverage): a visitor reads each post's author name, and on the author pages the picture, bio and job
 # title. A `user` entity per author of a captured article (identity: username; only name and username are kept, never
 # the account), and a `userProfile` entity per profile value the plugin lists (\UserProfileKey: user_id x 100 + the

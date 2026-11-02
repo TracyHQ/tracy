@@ -5,6 +5,7 @@
 import { labelRulesOf } from './label-rules.mjs'
 import { normText } from './normalize.mjs'
 import { rootCause } from './root-cause.mjs'
+import { headerOf, sitePagesOf } from './site-map.mjs'
 
 export const SCHEMA = 'tracy-content-coverage/v1'
 /** Bump when a change makes the audit see more (or less): /ops can then ask for a new measurement. */
@@ -13,7 +14,9 @@ export const SCHEMA = 'tracy-content-coverage/v1'
 // 1.3.0 (28/10/2026): the LLM label judge's verdicts (`labelJudge`, `label-judge.mjs`); a 1.2.0 file has none.
 // 1.4.0 (28/10/2026): the label judge is the agent that runs the release (record-judge.mjs); the block names it in
 //   `judgedBy` and carries no model, calls or cents.
-export const TOOL_VERSION = '1.5.0'
+// 1.6.0 (01/11/2026): the site map (`sitePages`: whether each map page opens and where it sits in the menus) and the
+//   `header` a visitor sees (logo, menu items, buttons, text); a 1.5.0 file has neither.
+export const TOOL_VERSION = '1.6.0'
 export const COVERAGE_FILE = 'content-coverage.json'
 
 /** The prototype's letters, in the words the policy and /ops use. */
@@ -182,6 +185,10 @@ export function buildCoverageFile({
     coverage: Object.fromEntries(Object.entries(counts).map(([k, c]) => [k, percent(c)])),
     holes,
     hygiene: hygieneOf(result, previous),
+    // Every map page: does it open (HTTP 2xx), is it a menu group or a `#` link, is it in the main menu and the header.
+    sitePages: sitePagesOf({ contract, result }),
+    // The header of the home page (desktop): null when the run measured none.
+    header: headerOf({ contract, result }),
     // Rules R2 to R9 over the map, the page snapshots and every hole found (core strings are skipped by R9 itself).
     labelRules: labelRulesOf({
       map: contract.map,

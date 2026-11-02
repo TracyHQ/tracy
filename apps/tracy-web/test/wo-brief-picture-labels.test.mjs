@@ -100,6 +100,8 @@ test(
       pool: db.pool,
       objects,
       visionFor: async () => VISION,
+      // Labelling only: the observation that follows it has its own test (wo-brief-picture-observations).
+      observe: null,
       label,
       chargeable: async (spec, invoke) => {
         charged.push(spec)
@@ -134,6 +136,8 @@ test(
       pool: db.pool,
       objects,
       visionFor: async () => VISION,
+      // Labelling only: the observation that follows it has its own test (wo-brief-picture-observations).
+      observe: null,
       label: again.label,
       maxPictures: 24
     })({ media, brand, accountId: null, trade: 'fitness' })
@@ -175,6 +179,8 @@ test("an opportunity's own picture keeps its label on its row, as a build does",
     pool: db.pool,
     objects,
     visionFor: async () => VISION,
+    // Labelling only: the observation that follows it has its own test (wo-brief-picture-observations).
+    observe: null,
     label
   })({
     media: [{ id: row.id, kind: 'image', sha256: row.sha256, width: 1200, height: 800, labels: null }],
@@ -196,6 +202,8 @@ test('a vision failure labels nothing, frees its claims for a later build, and s
     pool: db.pool,
     objects,
     visionFor: async () => VISION,
+    // Labelling only: the observation that follows it has its own test (wo-brief-picture-observations).
+    observe: null,
     label: async () => {
       throw Object.assign(new Error('the vision model answered 503'), { code: 'LLM_HTTP_503' })
     },

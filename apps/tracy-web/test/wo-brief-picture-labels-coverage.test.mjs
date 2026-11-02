@@ -133,6 +133,8 @@ test(
       pool: db.pool,
       objects,
       visionFor: async () => VISION,
+      // Labelling only: the observation that follows it has its own test (wo-brief-picture-observations).
+      observe: null,
       label
     })({
       media,
@@ -158,7 +160,13 @@ test('every own photo is labelled even past 60; no customer photo then', opts, a
   const objects = store()
   const media = await seed(objects, [...guests(3), ...own(62)])
   const { sent, label } = fakeLabel()
-  await createBriefPictureLabels({ pool: db.pool, objects, visionFor: async () => VISION, label })({
+  await createBriefPictureLabels({
+    pool: db.pool,
+    objects,
+    visionFor: async () => VISION,
+    label,
+    observe: null
+  })({
     media,
     brand: null,
     accountId: null,
@@ -193,6 +201,8 @@ test(
       pool: db.pool,
       objects,
       visionFor: async () => VISION,
+      // Labelling only: the observation that follows it has its own test (wo-brief-picture-observations).
+      observe: null,
       label,
       maxPictures: 1
     })({ media, brand: null, accountId: null, trade: 'fitness', closedList: LIST, businessName: NAME })
@@ -207,7 +217,13 @@ test(
     const objects = store()
     const media = await seed(objects, own(5))
     const make = (label) =>
-      createBriefPictureLabels({ pool: db.pool, objects, visionFor: async () => VISION, label })
+      createBriefPictureLabels({
+        pool: db.pool,
+        objects,
+        visionFor: async () => VISION,
+        label,
+        observe: null
+      })
     const input = {
       media,
       brand: null,

@@ -1,9 +1,9 @@
 /**
- * The road to live: the ten steps one release walks before customers can pick it on Design
+ * The road to live: the eleven steps one release walks before customers can pick it on Design
  * inspiration, in the order they FINISH (not the order they start: several run side by side).
  *
- *   release → install-file → contract → content-coverage → customize → design-system → demo → listing
- *   → published → polish
+ *   release → install-file → contract → content-coverage → template-kit → customize → design-system → demo
+ *   → listing → published → polish
  *
  * 🔒 ONE ROAD FOR THE SCREEN AND THE DOOR. Each step is decided by the very functions the publish
  * door and the listing already use (`cardRefusal`, `cardOf`/`shownOnInspiration`, `contractStatus`,
@@ -42,7 +42,11 @@
  *     commits `content-coverage.json` beside it (`content-coverage/road-step.js`, owner 24/10/2026).
  *     Unexplained holes, slot roles missing from the content map (ADR 0038), and on Joomla a content map
  *     without Slot fit (ADR 0039), hold Publish; a release already published only warns;
- *   - Publish needs the release, the install file, the listing, the contract, Content coverage,
+ *   - Template kit waits for the contract too: the kit (screenshots of every page and block at 1440 and 390, a per
+ *     page summary of the content map, a version stamp) is committed as `template-kit.json` beside it
+ *     (`template-kit/road-step.js`). A kit that is missing, of another version, incomplete, or not approved on the
+ *     images it lists holds Publish; a release already published only warns;
+ *   - Publish needs the release, the install file, the listing, the contract, Content coverage, Template kit,
  *     Customize your site and Design system, never a demo (a warning never takes a card off, 04/10/2026); the one
  *     exception is Design system's DEMO-1 (14/10/2026: must-fix): with no demo the preview door has
  *     nothing to dress, so the Add site panel offers no Design system picker at all. It adds no new
@@ -70,12 +74,14 @@ import {
 } from './quickstart-releases.js'
 import { summarizeReadiness } from './template-customization-question-readiness/severity.js'
 import { summarizeDsReadiness } from './template-design-system-readiness/severity.js'
+import { KIT_STEP, kitOfRelease, templateKitRefusal, templateKitStep } from './template-kit/road-step.js'
 
 export const ROAD_STEPS = Object.freeze([
   'release',
   'install-file',
   'contract',
   'content-coverage',
+  'template-kit',
   'customize',
   'design-system',
   'demo',
@@ -91,6 +97,7 @@ const PUBLISH_NEEDS = Object.freeze([
   'listing',
   'contract',
   'content-coverage',
+  'template-kit',
   'customize',
   'design-system'
 ])
@@ -151,13 +158,15 @@ function batchScopeOf(release) {
  *   doorHealth?: { checkedAt: number, assets: number, failed: { path: string, status: number }[] } | null,
  *   coverage?: import('./content-coverage/reader.js').Coverage,
  *   roles?: import('./content-coverage/roles.js').Roles,
- *   fit?: import('./content-coverage/fit.js').Fit
+ *   fit?: import('./content-coverage/fit.js').Fit,
+ *   templateKit?: import('./template-kit/reader.js').Kit
  * }} world this server's live demo of the release, its failed demo job, the pictures it holds,
  *   the contract index, every choosable release of the same template (the door asks a contract of
  *   each of them), and the stored Customize your site and Design system checks of this release's version.
  *   `coverage`: the content coverage of the sealing contract; read from its folder when left out.
  *   `roles`: its slot roles, the third group of Content coverage; read the same way when left out.
  *   `fit`: the Slot fit of its content map, the fourth group (ADR 0039); read the same way when left out.
+ *   `templateKit`: the template kit beside the sealing contract; read from its folder when left out.
  * @returns {{ step: string, state: 'done' | 'blocked' | 'todo' | 'warn' | 'checking', code: string, params: Record<string, unknown>, blockedBy?: string }[] | null}
  */
 export function roadOf(
@@ -174,7 +183,8 @@ export function roadOf(
     doorHealth = null,
     coverage = undefined,
     roles = undefined,
-    fit = undefined
+    fit = undefined,
+    templateKit = undefined
   }
 ) {
   if (!release || release.kind === 'design-pack') return null
@@ -266,6 +276,14 @@ export function roadOf(
     coverage: coverage ?? coverageOfRelease(release, contracts),
     roles: roles ?? rolesOfRelease(release, contracts),
     fit: fit ?? fitOfRelease(release, contracts)
+  })
+
+  // 3c. Template kit: the kit committed beside the same contract, approved on the images it lists.
+  templateKitStep(put, waitingOn, {
+    release,
+    version,
+    contractId: own.profile,
+    kit: templateKit ?? kitOfRelease(release, contracts)
   })
 
   // 4. Customize your site: the stored readiness check of this version (see the 🔒 above).
@@ -395,6 +413,7 @@ export function publishRefusalOf(road, release) {
       return { error: 'NO_CONTRACT', tags, reason: contractRefusalText(tags) }
     }
     if (published.blockedBy === COVERAGE_STEP) return contentCoverageRefusal(by)
+    if (published.blockedBy === KIT_STEP) return templateKitRefusal(by)
     if (published.blockedBy === 'customize') return customizeRefusal(by)
     if (published.blockedBy === 'design-system') return designSystemRefusal(by)
   }
