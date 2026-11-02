@@ -396,6 +396,16 @@
       "path": "packages/locale/tracy-locales/lib/client.js",
       "oid": "3d9572a94dd6150ce95c143b180e71ec4bd37390",
       "reason": "Exact generated interface translation bundle of PR #264, final build after merging develop at commit cbb9e056e: the Add site words for the photo labelling wait and the business reading (`own_pictures`, `own_progress_reading`). Rebuilt from its localized JSON dictionaries; the bundles gate verifies it matches its source. Different bytes require a separate review."
+    },
+    {
+      "path": "packages/locale/tracy-locales/lib/client.js",
+      "oid": "959e287c414f87c85b0163b2cd458a2e34c78cbd",
+      "reason": "Exact generated interface translation bundle of PR #294 at commit ac09666c4: the Sync to live result words for writes sent with no answer back (push.status.unknown, unknownBody, unknownAlso) in de, es, fr, it, nl and zh; reviewed build output."
+    },
+    {
+      "path": "packages/locale/tracy-locale-vi/lib/client.js",
+      "oid": "8514c56b9ba4e82bd7ddbfb5732e34171a207616",
+      "reason": "Exact generated Vietnamese interface bundle of PR #294 at commit ac09666c4: the same Sync to live result words in Vietnamese; reviewed build output."
     }
   ]
 }
