@@ -102,6 +102,7 @@
   "cms-design.rule.source": "Fonte",
   "cms-design.rule.systems": "Sistemi",
   "cms-design.rule.why": "Perché",
+  "cms-design.rules.brand": "Modalità brand, non conta nel voto",
   "cms-design.rules.copied": "Copiato",
   "cms-design.rules.copy": "Copia il prompt",
   "cms-design.rules.details_one": "Dettagli ({count} regola)",

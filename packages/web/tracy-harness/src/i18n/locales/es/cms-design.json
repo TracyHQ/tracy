@@ -102,6 +102,7 @@
   "cms-design.rule.source": "Origen",
   "cms-design.rule.systems": "Sistemas",
   "cms-design.rule.why": "Por qué",
+  "cms-design.rules.brand": "Modo brand, no cuenta en la nota",
   "cms-design.rules.copied": "Copiado",
   "cms-design.rules.copy": "Copiar prompt",
   "cms-design.rules.details_one": "Detalles ({count} regla)",

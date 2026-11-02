@@ -215,6 +215,8 @@ export interface StepGuide {
     unmeasured?: CustomizeRule[]
     /** Design system only: the built-site rules that passed on the measured run. */
     passed?: CustomizeRule[]
+    /** Design system only: the brand-mode rules (ADR 0031 revision 02/11/2026), every status, not in the grade. */
+    brand?: BrandRule[]
   }
   /** Design system only: the screenshots of the measured run, when the measurement file names them. */
   evidence?: { label: string; href: string }
@@ -226,6 +228,9 @@ export interface StepGuide {
    */
   lists?: { heading: string; count: number; lines: string[] }[]
 }
+
+/** A brand-mode rule as the road sends it: a rule with its status (`pass`, `fail`, `live-only`). */
+export type BrandRule = CustomizeRule & { status: string }
 
 /** One failing rule of the Customize your site check, as the road sends it. */
 export interface CustomizeRule {
@@ -975,6 +980,16 @@ const rulesOf = (v: unknown): CustomizeRule[] =>
         }))
     : []
 
+/** The brand-mode rules a Design system step carries, each with its status; a not-applicable one is left out. */
+const brandRulesOf = (v: unknown): BrandRule[] =>
+  Array.isArray(v)
+    ? v.flatMap((x) => {
+        const [r] = rulesOf([x])
+        const status = str((x as Record<string, unknown> | null)?.status) ?? 'live-only'
+        return r && status !== 'not-applicable' ? [{ ...r, status }] : []
+      })
+    : []
+
 const strings = (v: unknown): string[] =>
   Array.isArray(v) ? v.filter((x): x is string => typeof x === 'string' && x !== '') : []
 
@@ -1127,9 +1142,15 @@ function customizeOutside(
  */
 function designSystemOutside(
   ctx: GuideContext,
-  rules: { mustFix: CustomizeRule[]; worthFixing: CustomizeRule[]; unmeasured?: CustomizeRule[] }
+  rules: {
+    mustFix: CustomizeRule[]
+    worthFixing: CustomizeRule[]
+    unmeasured?: CustomizeRule[]
+    brand?: BrandRule[]
+  }
 ): OutsideFix {
   const unmeasured = rules.unmeasured ?? []
+  const brand = (rules.brand ?? []).filter((r) => r.status !== 'pass')
   const where = (owner: string) =>
     owner === 'ops'
       ? '/ops on this server (Road to live step Demo, or Demo Site; no code change)'
@@ -1154,6 +1175,10 @@ function designSystemOutside(
       ...lines(rules.mustFix, 'must fix'),
       ...lines(rules.worthFixing, 'worth fixing'),
       ...unmeasured.map((r) => `${r.rule} (not measured yet, ${r.question}): ${r.message}`),
+      ...brand.map(
+        (r) =>
+          `${r.rule} (brand mode, ${r.status === 'live-only' ? 'measure on a built site' : 'fails'}, not counted in the grade): ${r.message}${r.fix ? ` Fix: ${r.fix}` : ''}`
+      ),
       'Use the tdsr skill (.agents/skills/tdsr/SKILL.md in tch).',
       ...(unmeasured.length
         ? [
@@ -1750,9 +1775,11 @@ export function guideOf(s: RoadStep, ctx: GuideContext): StepGuide {
         mustFix: rulesOf(p.mustFix),
         worthFixing: rulesOf(p.worthFixing),
         unmeasured: rulesOf(p.unmeasured),
-        passed: rulesOf(p.measuredPassed)
+        passed: rulesOf(p.measuredPassed),
+        brand: brandRulesOf(p.brand)
       }
       const failing = [...rules.mustFix, ...rules.worthFixing, ...rules.unmeasured]
+      const brandOpen = rules.brand.filter((r) => r.status !== 'pass')
       const grade = str(p.grade)
       const measuredOn = str(p.measuredOn)
       const evidence = str(p.evidence)
@@ -1775,13 +1802,14 @@ export function guideOf(s: RoadStep, ctx: GuideContext): StepGuide {
                     : tr('cms-readiness.ds.notMeasured', { version: own.version })
                   : undefined,
           // the rows carry "Measured on" each, so a pass is listed too: pass, fail, Not measured yet
-          rules: failing.length > 0 || rules.passed.length > 0 ? rules : undefined,
+          rules: failing.length > 0 || rules.passed.length > 0 || rules.brand.length > 0 ? rules : undefined,
           evidence:
             evidence && /^[\w./-]+$/.test(evidence) && !evidence.includes('..')
               ? { label: tr('cms-readiness.evidence.label'), href: `${DOCS}${evidence}` }
               : undefined,
           checkAgain: true,
-          outside: failing.length === 0 ? undefined : designSystemOutside(ctx, rules)
+          outside:
+            failing.length === 0 && brandOpen.length === 0 ? undefined : designSystemOutside(ctx, rules)
         }
       )
     }

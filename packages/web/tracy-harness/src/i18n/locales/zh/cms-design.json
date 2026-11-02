@@ -102,6 +102,7 @@
   "cms-design.rule.source": "来源",
   "cms-design.rule.systems": "系统",
   "cms-design.rule.why": "原因",
+  "cms-design.rules.brand": "Brand 模式，不计入评级",
   "cms-design.rules.copied": "已复制",
   "cms-design.rules.copy": "复制 prompt",
   "cms-design.rules.details_one": "详情（{count} 条规则）",
