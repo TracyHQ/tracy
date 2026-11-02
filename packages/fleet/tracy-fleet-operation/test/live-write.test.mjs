@@ -273,6 +273,11 @@ function engine({
           else state.records.postmeta[address] = receipt.before
           delete state.metaReceipts[params.apply_id]
         }
+        // The revert lands, and the read after it meets the firewall's 403 on every try.
+        if (state.failReadbackAfterRevert) {
+          state.failReadbackAfterRevert = false
+          state.failGetId = Number(receipt?.id)
+        }
         if (state.dropAfterRevert) {
           state.dropAfterRevert = false
           req.socket.destroy()
@@ -2464,6 +2469,63 @@ for (const scenario of ['changed', 'empty-receipt', 'native-conflict']) {
       assert.equal(live.records.post[id].post_status, 'publish')
       assert.equal(live.records.postmeta[`${id}:_thumbnail_id`].value, scenario === 'changed' ? '300' : '200')
       assert.equal(live.calls.filter((c) => c.action === 'content.delete').length, 0)
+    } finally {
+      await live.close()
+    }
+  })
+}
+
+for (const scenario of ['revert-503', 'revert-landed-read-unanswered']) {
+  test(`WordPress Undo of a new page with its metadata: ${scenario} — unfinished, then pressed again it finishes (#227)`, async () => {
+    const live = await engine({ platform: 'wordpress', records: { post: {} } })
+    try {
+      const parent = {
+        id: 'post:new:50',
+        kind: 'post',
+        spec: 'post',
+        op: 'create',
+        ident: 0,
+        creates: 'posts:50',
+        key: null,
+        write: { post_title: 'New page', post_status: 'publish' },
+        expect: {},
+        dependsOn: [],
+        seed: []
+      }
+      const child = createPostMeta({ $new: 'posts:50' }, 'subtitle', 'Fresh', [parent.id])
+      const dir = pushDir([parent, child], 'wordpress')
+      const applied = (await apply(live, dir)).answer
+      assert.equal(applied.written.length, 2)
+      const id = applied.created['posts:50']
+      const reverts = () => live.calls.filter((c) => c.action === 'apply.revert').length
+      if (scenario === 'revert-503') live.refuse['apply.revert'] = 503
+      else {
+        live.dropAfterRevert = true
+        live.failReadbackAfterRevert = true
+      }
+      const first = (await undo(live, dir)).answer
+      assert.equal(first.ok, false, JSON.stringify(first))
+      assert.equal(
+        first.code,
+        scenario === 'revert-503' ? 'WRITE_OUTCOME_UNKNOWN' : 'LIVE_BLOCKED',
+        'unfinished, never closed as partial'
+      )
+      assert.equal(live.records.post[id].post_status, 'publish', 'the page waits for its metadata')
+      assert.equal(
+        live.records.postmeta[`${id}:subtitle`]?.value,
+        scenario === 'revert-503' ? 'Fresh' : undefined
+      )
+      live.failGetId = null
+      const again = (await undo(live, dir)).answer
+      assert.equal(again.ok, true, JSON.stringify(again))
+      assert.equal(again.state, 'undone', JSON.stringify(again))
+      assert.deepEqual(again.restored.map((r) => r.id).sort(), [child.id, parent.id].sort())
+      assert.equal(live.records.postmeta[`${id}:subtitle`], undefined)
+      assert.notEqual(live.records.post[id]?.post_status, 'publish', 'the page is taken back too')
+      // The 503 was sent again once; a revert that landed is never sent twice.
+      assert.equal(reverts(), scenario === 'revert-503' ? 2 : 1)
+      await undo(live, dir)
+      assert.equal(reverts(), scenario === 'revert-503' ? 2 : 1, 'a third press sends nothing')
     } finally {
       await live.close()
     }

@@ -1666,9 +1666,10 @@ async function undo(pushDir) {
   let undoItemId = 'template-files'
   // An Undo's write sets values back, after reading that the live site still holds what the push
   // left: sent again when an earlier run's went unanswered (a proxy's 503, the site down), rather
-  // than refused for ever (#227). A record made again (`id: 0`) and an engine revert are not.
-  const resendable = (action, params) =>
-    !(action === 'content.update' && Number(params?.id) === 0) && action !== 'apply.revert'
+  // than refused for ever (#227). A record made again (`id: 0`) is not. An engine revert is: it is
+  // one metadata row's own receipt (`nativeApplyId`), sent only after reading that row still as the
+  // push wrote it, and one that landed reads as gone before it is sent (#227 re-test).
+  const resendable = (action, params) => !(action === 'content.update' && Number(params?.id) === 0)
   const ask = (action, params) =>
     retried(() =>
       mutation(action, params)
@@ -1812,7 +1813,9 @@ async function undo(pushDir) {
     undoItemId = out.id
     try {
       // Its own undo write was answered in an earlier run of this Undo, cut before it ended: back (#227).
-      if (undoReceipts.get(out.id) === 'acknowledged') {
+      // Not new metadata's engine revert: an answered one may have removed nothing (an empty or
+      // expired receipt), so the row is read again below.
+      if (undoReceipts.get(out.id) === 'acknowledged' && !before.items[out.id]?.nativeApplyId) {
         restored.push(out)
         continue
       }
@@ -2009,12 +2012,14 @@ async function undo(pushDir) {
           continue
         }
         // Empty or expired native receipts can report success without removing the metadata.
-        // Read back even after a lost response; the durable request must never be sent twice.
+        // Read back even after a lost response. A read the live site did not answer says nothing:
+        // this item is left for the next press (`pending`, below).
         let absent = false
         try {
           await ask('content.get', params)
         } catch (error) {
-          absent = error instanceof Refused && error.reply.error === 'not_found'
+          if (!(error instanceof Refused)) throw error
+          absent = error.reply.error === 'not_found'
         }
         if (absent) restored.push(out)
         else if (revertError instanceof Refused) {
@@ -2023,6 +2028,11 @@ async function undo(pushDir) {
             error: String(revertError.reply.error ?? 'refused').slice(0, 60),
             message: String(revertError.reply.message ?? '').slice(0, 300)
           })
+        } else if (RETRY_UNDO.includes(revertError?.code)) {
+          // The revert went unanswered (a proxy's 503) or was blocked, and the row is still on the
+          // live site: not taken back yet, so the Undo answers unfinished and sends it again on the
+          // next press, instead of closing as partial with the row kept for good (#227 re-test).
+          throw revertError
         } else {
           failed.push({ ...out, error: 'WRITE_OUTCOME_UNKNOWN' })
         }
