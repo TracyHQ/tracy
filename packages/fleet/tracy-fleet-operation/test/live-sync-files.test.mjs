@@ -240,6 +240,61 @@ test("configuration.php merges setting by setting; the environment's settings st
   assert.match(read(whole.tree, 'configuration.php'), /public \$password = 'copy-secret';/)
 })
 
+test("configuration.php in Joomla 3's -dist layout (comments after the `;`, the class brace on its own line) merges by setting (#285)", () => {
+  // As Joomla 3.10's own configuration.php-dist writes it; a `//` or `;` inside a value is not a comment.
+  const DIST = (s) => `<?php
+/**
+ * @package    Joomla.Site
+ *
+ * Now edit this file and configure the parameters for your site and
+ * database.
+ */
+class JConfig
+{
+\t/* Site Settings */
+\tpublic $offline = '0';
+\tpublic $sitename = ${s.sitename};            // Name of Joomla site
+\tpublic $MetaDesc = ${s.MetaDesc}; # what search engines show; keep it short
+${s.offset === undefined ? '' : `\tpublic $offset = ${s.offset}; /* the site's time zone */\n`}\t/* Database Settings */
+\tpublic $dbtype = 'mysqli';               // Normally mysqli
+\tpublic $host = ${s.host};              // This is normally set to localhost
+\tpublic $password = ${s.password};                   // DB password
+\tpublic $live_site = ${s.live_site}; // Optional, Full URL to Joomla install.
+\tpublic $secret = 'FBVtggIk5lAzEU9H'; // Change this to something more secure
+}
+`
+  const live = {
+    sitename: "'Shop'",
+    MetaDesc: "'old; or older'",
+    offset: "'UTC'",
+    host: "'localhost'",
+    password: "'live-secret'",
+    live_site: "'https://shop.example'"
+  }
+  const copy = { ...live, host: "'db'", password: "'copy-secret'", live_site: "'https://shop-com.tracy.ai'" }
+  const now = { ...live, sitename: "'Shop // & Co'", MetaDesc: "'new; description'", offset: undefined }
+  const base = commit({ 'configuration.php': DIST(live) })
+  const ours = commit({ 'configuration.php': DIST(copy) })
+  const theirs = commit({ 'configuration.php': DIST(now) })
+  const answer = merge(base, ours, theirs)
+  assert.deepEqual(answer.conflicts, [], JSON.stringify(answer.conflicts))
+  assert.deepEqual(answer.kept ?? [], [])
+  const text = read(answer.tree, 'configuration.php')
+  assert.match(text, /\tpublic \$sitename = 'Shop \/\/ & Co';            \/\/ Name of Joomla site\n/)
+  assert.match(text, /\tpublic \$MetaDesc = 'new; description'; # what search engines show; keep it short\n/)
+  assert.doesNotMatch(text, /\$offset|time zone/, 'the setting the live site removed goes, with its comment')
+  assert.match(text, /\tpublic \$host = 'db';              \/\/ This is normally set to localhost\n/)
+  assert.match(text, /\tpublic \$password = 'copy-secret';/)
+  assert.match(text, /\tpublic \$live_site = 'https:\/\/shop-com\.tracy\.ai'; \/\/ Optional/)
+  assert.match(text, /^class JConfig\n\{\n/m)
+  // Both changed one setting: the clash is that setting, never the whole file.
+  const clash = merge(base, commit({ 'configuration.php': DIST({ ...copy, sitename: "'Shop (Tracy)'" }) }), theirs)
+  assert.deepEqual(
+    clash.conflicts.flatMap((c) => (c.settings ?? [c]).map((x) => x.id)),
+    ['file:configuration.php#sitename']
+  )
+})
+
 test('--prefer ours: the clashing lines are Tracy’s, the rest of the live file comes over, nothing is left open', () => {
   const lines = (edit = {}) => Array.from({ length: 12 }, (_, i) => edit[i] ?? `line ${i}`).join('\n') + '\n'
   const base = commit({ 'a.css': lines(), 'logo.png': Buffer.from([0, 1, 2]), 'old.php': 'a' })

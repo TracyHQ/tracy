@@ -185,23 +185,31 @@ def favour_ours(merged: bytes) -> tuple[bytes, bool]:
 
 
 SETTING = re.compile(r"^\s*public\s+\$(\w+)\s*=\s*(.*?);\s*$")
+# The same with a comment after the `;`, as Joomla 3's own configuration.php-dist writes
+# (`public $sitename = 'Joomla!';  // Name of Joomla site`): the value is read as PHP reads it, so a
+# `//` or `;` inside a quoted string is not taken for the comment (#285).
+SETTING_NOTED = re.compile(rf"^\s*public\s+\$(\w+)\s*=\s*({_RENDER._VALUE})\s*;\s*(?://|#|/\*).*$")
 
 
 def joomla_settings(text: str) -> dict[str, str] | None:
     """Joomla's configuration.php as setting → its PHP literal, or None when a line inside the class
-    is not a one-line `public $name = value;` (then the file is not one this can merge by setting)."""
+    is not a one-line `public $name = value;` (then the file is not one this can merge by setting).
+    The class's brace may stand on the line after `class JConfig`, as in configuration.php-dist."""
     settings = {}
-    inside = False
+    inside = named = False
     for line in text.splitlines():
         stripped = line.strip()
         if not inside:
-            inside = stripped.startswith("class ") and "{" in stripped
+            if stripped.startswith("class "):
+                inside, named = "{" in stripped, "{" not in stripped
+            elif named and stripped:
+                inside, named = stripped == "{", False
             continue
         if stripped in ("}", "};"):
             break
         if not stripped or stripped.startswith(("//", "#", "/*", "*")):
             continue
-        match = SETTING.match(line)
+        match = SETTING_NOTED.match(line) or SETTING.match(line)
         if not match:
             return None
         settings[match.group(1)] = match.group(2)
@@ -209,7 +217,8 @@ def joomla_settings(text: str) -> dict[str, str] | None:
 
 
 def remove_setting(text: str, name: str) -> str:
-    return re.sub(rf"^\s*public\s+\${re.escape(name)}\s*=.*?;\s*\n", "", text, flags=re.M)
+    # The whole line: a comment after the `;` goes with its setting.
+    return re.sub(rf"^\s*public\s+\${re.escape(name)}\s*=.*?;.*\n", "", text, flags=re.M)
 
 
 def merge_joomla_config(base: bytes, ours: bytes, theirs: bytes, decisions: dict, path: str):
