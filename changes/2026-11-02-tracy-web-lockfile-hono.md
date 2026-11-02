@@ -1,0 +1,2 @@
+- **tracy-web's own lockfile records `@hono/node-server` 2.1.3, matching its package.json** — hano-xbt · `chore/tracy-web-lockfile-hono` · 2026-11-02
+  **Affects:** build-app-images on develop. Since 158b7a3d1 the tracy-web image stopped at `ERR_PNPM_OUTDATED_LOCKFILE`, so no develop image was built and dev was not redeployed; after this merge the next develop build runs again. Whoever bumps a dependency in `apps/tracy-web/package.json` regenerates `apps/tracy-web/pnpm-lock.yaml` with `pnpm install --lockfile-only --ignore-workspace` in the same change.
