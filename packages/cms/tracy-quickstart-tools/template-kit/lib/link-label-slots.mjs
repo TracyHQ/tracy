@@ -3,13 +3,15 @@
 // of the link's own address group (a button's label and address are one row of the content map), a slot the block
 // declares, a slot of the block's own entities, and last the one content map slot with those words (an item's title
 // on a listing that links to the item). Words two unrelated slots share are a coincidence and pick nothing; words
-// no slot prints (a CMS string such as "Read more") are the template's and need no label slot.
+// no slot prints (a CMS string such as "Read more") are the template's and need no label slot. Words without a letter
+// (a phone number) pick only a slot of the link's own address group or block: a number alone proves nothing wider.
 import { normText } from '../../content-coverage/lib/normalize.mjs'
 import { neutralKey } from './ids.mjs'
 import { declaredIn } from './page-coverage.mjs'
 
 const LABEL_ROLE = /(_label|\.title|\.name)$/
 const hasLetters = (s) => /\p{L}/u.test(s)
+const hasDigits = (s) => /\p{N}/u.test(s)
 
 /** A resolver: (block, link, declared ids of the block, ids its links already name) -> the label slot id, or null. */
 function labelResolver(map) {
@@ -32,7 +34,8 @@ function labelResolver(map) {
   }
   return (b, l, declared, used = new Set()) => {
     const n = normText(l.label ?? '')
-    if (!n || !hasLetters(n)) return null
+    const letters = hasLetters(n)
+    if (!n || (!letters && !hasDigits(n))) return null
     const same = byWords.get(n) ?? []
     if (!same.length) return null
     const group = urlGroup.get(l.id)
@@ -44,7 +47,7 @@ function labelResolver(map) {
     const pick =
       (group ? same.find((s) => s.group?.id === group) : null) ??
       first(near, used) ??
-      (same.length === 1 ? same[0] : null)
+      (letters && same.length === 1 ? same[0] : null)
     return pick ? neutralKey(pick.key) : null
   }
 }

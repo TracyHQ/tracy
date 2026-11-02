@@ -161,7 +161,10 @@ test('a link label owned by another block is listed in the link block as a refer
     ['block-4.1', 'block-4']
   ])
   const ref = kit.blocks[0].slots[2]
-  assert.deepEqual([ref.labelOf, ref.paragraphs, ref.maxCharacters], [['header.link-3'], 1, 24])
+  assert.deepEqual([ref.paragraphs, ref.maxCharacters], [1, 24])
+  // Which link prints the slot is said once, by the link's labelId; no slot carries a copy.
+  assert.equal(kit.blocks[0].links.find((l) => l.labelId === 'block-4.1')?.id, 'header.link-3')
+  assert.ok(!JSON.stringify(kit).includes('labelOf'))
   assert.equal(kit.blocks[0].slots[0].sample, 'Home')
 })
 

@@ -16,6 +16,8 @@
 //   cli.mjs sheet --out <dir> [--review]   (HTML pages of the kit's own images; nothing is shot)
 //   cli.mjs approve --out <dir> --by <login>   (ONLY a person, after the review sheet: seals the PACK's image set,
 //                 in pack/template-kit.json, the file committed beside the contract)
+//   cli.mjs relabel --out <dir> --contract <dir>   (the link labels of the template-kit.json in --out settled
+//                 again from the content map: labelId or a fixed-text reason per link; no browser, no capture, no image)
 //   cli.mjs pack --out <dir>   (pack/ and <name>.zip: only the images a site build reads; fails on a block without
 //                 its shot; build --full runs it last)
 //
@@ -27,6 +29,8 @@ import { assembleKit, readIf, readJson, writeJson } from './lib/assemble.mjs'
 import { captureSite } from './lib/capture-site.mjs'
 import { urlOfPath } from './lib/kit-paths.mjs'
 import { assignedAt, indexMap } from './lib/map-index.mjs'
+import { linkLabelSlots } from './lib/link-label-slots.mjs'
+import { relabelKit } from './lib/link-label-reasons.mjs'
 import { measureMin } from './lib/measure-min.mjs'
 import { approvePack, packKitFolder } from './lib/pack.mjs'
 import { runFull } from './lib/pipeline.mjs'
@@ -34,7 +38,7 @@ import { writeSheets } from './lib/sheets.mjs'
 import { fixesOf, templateFixes } from './lib/template-fixes.mjs'
 
 const TOOL = 'template-kit 3.0.0'
-const COMMANDS = ['build', 'assemble', 'measure-min', 'sheet', 'approve', 'pack']
+const COMMANDS = ['build', 'assemble', 'measure-min', 'sheet', 'approve', 'pack', 'relabel']
 
 export function parseArgs(argv) {
   const o = { _: [] }
@@ -82,11 +86,30 @@ function pack(out) {
   return p.blocksWithoutImage.length || p.unknownImages.length ? 1 : 0
 }
 
+/** Settle the link labels of the kit in `out` again (link-label-reasons.mjs); exit 1 when some link has neither. */
+function relabel(o, out) {
+  const file = join(out, 'template-kit.json')
+  const kit = readJson(file)
+  const r = relabelKit(kit, { map: readJson(join(o.contract, 'content-map.json')), linkLabelSlots })
+  writeJson(file, kit)
+  const links = kit.blocks.flatMap((b) => b.links ?? [])
+  console.log(
+    `${links.filter((l) => l.labelId).length} links name their label slot, ${links.filter((l) => l.fixedLabel).length} carry a fixed-text reason (${r.set} label slots named now), linksWithoutLabel ${r.wrong}`
+  )
+  for (const e of kit.errors.filter((x) => x.kind === 'link-label')) console.error(`${e.field}: ${e.reason}`)
+  return r.wrong ? 1 : 0
+}
+
 async function main() {
   const o = parseArgs(process.argv.slice(2))
   const cmd = o._[0]
-  const needSite = !['sheet', 'approve', 'pack'].includes(cmd)
-  if (!o.out || !COMMANDS.includes(cmd) || (needSite && (!o.site || !o.contract))) {
+  const needSite = !['sheet', 'approve', 'pack', 'relabel'].includes(cmd)
+  if (
+    !o.out ||
+    !COMMANDS.includes(cmd) ||
+    (needSite && !o.site) ||
+    ((needSite || cmd === 'relabel') && !o.contract)
+  ) {
     console.error(
       `usage: cli.mjs ${COMMANDS.join('|')} --out <dir> [--site <url> --contract <dir>] (see the head of this file)`
     )
@@ -97,6 +120,7 @@ async function main() {
   if (cmd === 'sheet') return sheet(o, out).then(() => 0)
   if (cmd === 'approve') return approve(o, out)
   if (cmd === 'pack') return pack(out)
+  if (cmd === 'relabel') return relabel(o, out)
   const map = readJson(join(o.contract, 'content-map.json'))
   const hostHeader = str(o['host-header'])
   const widths = String(o.widths ?? '1440,390')

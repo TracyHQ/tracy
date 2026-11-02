@@ -342,7 +342,7 @@ in a block's `source`.
 6. `cli.mjs approve --out <kit dir> --by <login>` (a person, after the review sheet) seals the pack's image set.
 
 Other commands: `build` without `--full` (read, shoot and assemble only), `--reuse-capture` (keep the capture's
-shots, read every page's DOM again with the current reader, measure the rest), `--remeasure` (measure the pipeline's own list minimums again), `assemble`, `sheet [--review]`, and `measure-min --list <id> --page <path> --max <n> [--rows <css>]` (a person's measurement of one
+shots, read every page's DOM again with the current reader, measure the rest), `--remeasure` (measure the pipeline's own list minimums again), `assemble`, `sheet [--review]`, `relabel --out <dir> --contract <dir>` (settle the link labels of a written kit again from the content map, no browser and no image touched, then `pack`: an approval stays while the image set is the same), and `measure-min --list <id> --page <path> --max <n> [--rows <css>]` (a person's measurement of one
 list, kept by every later run).
 
 - **Every page.** The crawl starts from every route of the content map and the front page, then follows every
@@ -387,13 +387,16 @@ list, kept by every later run).
   `image-file` or `css-background`, whether it can be changed, measured by setting one row's icon class to
   another's), `frames[]`, `links[]` (every shown link by `position`, repeats of one label and address included,
   with `icon` when the link draws one: `mechanism`, `classes`/`file`,
-  `network`; `labelId` when the label is another entity's slot, a menu item's title), `slots[]` (planner rule 5),
+  `network`; `labelId`, the one place that says which text slot is the link's label (no slot carries a copy), or
+  `fixedLabel: {rule, reason}` when its words are not the customer's: `template-words` (the block's fixed text),
+  `icon-name` (an icon-only link's accessible name) or `pagination` (a CMS page number or step)), `slots[]` (planner rule 5),
   `fixedText[]`, `demoOwned[]`), `checks` (counts that must all be 0, or /ops marks the kit
   `kit-incomplete` and it cannot be approved: `itemsListsWithoutCardFields` (a listing's items list takes the content
   map's list and its card fields, a further result page takes page 1's), and the planner rules below:
   `listLimitsDiffering`, `showcasePagesNotExcluded`, `mixedPageGroups`, `detailPagesOutsideListing`,
-  `representativesNotListing`, `slotsInTwoBlocks`, `orphanTexts`, `paragraphsMissing`, `fixedTextIdsInvalid`, and the
-  coverage gate `slotCoverage`),
+  `representativesNotListing`, `slotsInTwoBlocks`, `orphanTexts`, `paragraphsMissing`, `fixedTextIdsInvalid`, the
+  coverage gate `slotCoverage`, and `linksWithoutLabel` (`lib/link-label-reasons.mjs`: a link that shows words with
+  neither a `labelId` naming a slot of its own block nor a `fixedLabel` reason)),
   `images[]` (`id`, `path`, `sha256`), `imagesSha256` (the digest an approval seals, `imagesDigest` of the /ops reader),
   `site` (the site part, `site.json`), `pages[].h1` (where each page's main title comes from), `lists[].holds`,
   `links[].action` (`contact` for a phone, e-mail or messenger link, also by its slot, its label or its icon when the
