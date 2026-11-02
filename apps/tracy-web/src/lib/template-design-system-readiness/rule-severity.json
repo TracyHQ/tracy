@@ -58,6 +58,27 @@
       "fix": "Paint the words with the text role of that ground: --ds-c-accent-text (and -hover) for accent words, --ds-c-accent-on or --ds-c-on-ink for words on a fill or a band, --ds-c-accent-on-ink for accent words on an ink band, --ds-c-<status>-text for a status.",
       "reason": "20/10/2026, code review of JA Restaurant: a text color read var(--ds-c-accent) in the ja-products sources. A fill role is only held to contrast as a ground, so under a system with a light accent (or a dark page) those words fade. A leftover on some systems, not a break of every page, so it does not hold Publish. Static, so it runs on Check again with no measurement."
     },
+    "BRAND-1": {
+      "group": "worth-fixing",
+      "question": "Brand colours",
+      "text": "A kept band paints the template accent where the contract does not hand it to the brand accent.",
+      "fix": "Name each spot in bands.<band>.paint (or vars) of the slot contract with the role accent / accent-fill, then measure brand mode (tdsr skill).",
+      "reason": "Brand mode (ADR 0031 revision 02/11/2026) is new: no template was graded for it before, and a kept band left in the template accent is a leftover on a site that still reads, not a break. Worth fixing until every published Joomla line passes it once; then it moves to must-fix with one line here, as BAND-1 did."
+    },
+    "BRAND-2": {
+      "group": "worth-fixing",
+      "question": "Brand colours",
+      "text": "A kept band paints the template accent in a gradient, shadow or picture the slot cannot repaint.",
+      "fix": "Release the template with those colours read through var(--ds-c-accent, <its value>), like CSS-2.",
+      "reason": "Brand mode (ADR 0031 revision 02/11/2026) is new: no template was graded for it before, and a kept band left in the template accent is a leftover on a site that still reads, not a break. Worth fixing until every published Joomla line passes it once; then it moves to must-fix with one line here, as BAND-1 did."
+    },
+    "BRAND-3": {
+      "group": "worth-fixing",
+      "question": "Brand colours",
+      "text": "Brand mode was not measured on a built site.",
+      "fix": "Run flow.mjs with brand ids on a stand of this release (tdsr skill).",
+      "reason": "Brand mode (ADR 0031 revision 02/11/2026) is new: no template was graded for it before, and a kept band left in the template accent is a leftover on a site that still reads, not a break. Worth fixing until every published Joomla line passes it once; then it moves to must-fix with one line here, as BAND-1 did. Live-only while no measurement file carries brand mode: it is counted in neither number, so it never changes the grade or holds Publish."
+    },
     "PIC-1": {
       "group": "must-fix",
       "question": "Pictures",

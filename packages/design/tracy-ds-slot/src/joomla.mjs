@@ -28,6 +28,7 @@ import {
 } from './emit.mjs'
 import { autoPaletteCss, roleValues, splitTop } from './auto-palette.mjs'
 import { bandColours, bandRules } from './bands.mjs'
+import { brandKeptRules } from './brand.mjs'
 import { gate } from './normalise.mjs'
 import { addWornRoles, facesOf } from './role-values.mjs'
 import { omittedRoles } from './role-variables.mjs'
@@ -238,9 +239,16 @@ const notJoined = (/** @type {string | string[]} */ list) =>
 /**
  * `css` is the readable sheet (each side of a two-mode template whole); `sheet` is what the module's <style>
  * carries before nestNots (for two modes: side-merge.mjs, the same rules on each side in fewer bytes).
+ * `options.brand`: brand mode (src/brand.mjs) — the bands the contract keeps take the profile's accent in the
+ * accent role; off (the Design system button), the module is byte for byte what it was before brand mode.
+ * @param {any} profile
+ * @param {Record<string, string>} base
+ * @param {Record<string, any>} contract
+ * @param {{ brand?: boolean }} [options]
  * @returns {{ html: string, css: string, sheet: string, fontsHref: string | null, adjusted: string[] } | { refused: string[] }}
  */
-export function joomlaSlot(profile, base, contract) {
+export function joomlaSlot(profile, base, contract, options = {}) {
+  const brand = options?.brand === true
   const g = gate(profile)
   if (!g.ok) return { refused: g.reasons }
   const href = fontsHref(profile)
@@ -253,13 +261,13 @@ export function joomlaSlot(profile, base, contract) {
   let mode
   if (contract.modes === true) {
     // a template with a light/dark switch (sides.mjs): both modes, the switch kept
-    const two = twoSides(profile, (p) => joomlaSheet(p, base, contract), contract, { shared: true })
+    const two = twoSides(profile, (p) => joomlaSheet(p, base, contract, brand), contract, { shared: true })
     css = `${head}\n${two.css}`
     sheet = `${head}\n${two.shared}`
     adjusted = [...two.own.adjusted, ...two.derived.adjusted.map((a) => `derived:${a}`)]
     mode = two.mode
   } else {
-    const one = joomlaSheet(profile, base, contract)
+    const one = joomlaSheet(profile, base, contract, brand)
     css = `${head}\n${one.css}`
     sheet = css
     adjusted = one.adjusted
@@ -354,9 +362,10 @@ function trailingNot(s) {
 /**
  * The module sheet for one profile, without its header line. A one-look contract hides the
  * template's switch; a two-mode one (`modes`) leaves it, each side written by its own call.
+ * `brandMode`: brand mode (joomlaSlot).
  * @returns {{ css: string, adjusted: string[] }}
  */
-function joomlaSheet(profile, base, contract) {
+function joomlaSheet(profile, base, contract, brandMode = false) {
   const { tokens, text, palette: wornPalette } = tokens56(profile, base)
   const sv = slotVars(profile, templateSizes(contract))
   const sel = contract.selectors ?? {}
@@ -431,7 +440,9 @@ function joomlaSheet(profile, base, contract) {
   // system that states its display size (every OpenDesign one since 13/10/2026) wore it nowhere on a
   // contract without displaySize (JA Company: 36px under BMW's 60)
   const displaySize = sel.displaySize ?? contract.roles?.display ?? null
-  const bands = bandRules(contract, tokens, HI, page)
+  const bands = bandRules(contract, tokens, HI, brandMode ? { ...page, brand: true } : page)
+  // brand mode: the accent role inside each kept band (brand.mjs), after keepRules so it wins at the same weight
+  const branded = brandMode ? brandKeptRules(contract, tokens, base, HI, page) : { rules: [], adjusted: [] }
   const wornKeys = [...Object.keys(bands.grounds), ...Object.keys(bands.media ?? {})]
 
   // A template that reads the 56 names (tracy-base) gets them; a JA template may define those short
@@ -552,6 +563,7 @@ function joomlaSheet(profile, base, contract) {
     // system band): a dark system's page is dark however the visitor's own system is set
     `${HI}{color-scheme:${wornPalette.dark === true ? 'dark' : 'light'}}`,
     ...keepRules(contract, HI),
+    ...branded.rules,
     // every colour of the template's own stylesheets, mapped to the system by role (auto-palette.mjs);
     // before the contract's named rules, which win where they state something
     autoPaletteCss(contract.autoPalette, {
@@ -858,5 +870,5 @@ function joomlaSheet(profile, base, contract) {
   ]
     .filter(Boolean)
     .join('\n')
-  return { css, adjusted: text.adjusted }
+  return { css, adjusted: brandMode ? [...text.adjusted, ...branded.adjusted] : text.adjusted }
 }

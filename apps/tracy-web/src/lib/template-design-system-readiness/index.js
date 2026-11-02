@@ -10,7 +10,8 @@
  *   // { template, cms, version, tag, results: [{ id, status, message, fix, owner, details? }] }
  *
  * `status` is `pass`, `fail`, `unmeasured` (a built-site rule with no measurement file for this
- * version: "Not measured yet", never a pass) or `not-applicable`. `owner`
+ * version: "Not measured yet", never a pass), `live-only` (only a built site can tell and no measurement
+ * file carries it yet: in neither number, its fix is the measuring command; BRAND-3) or `not-applicable`. `owner`
  * says who fixes a failure: `template` (a new release of the template, repo `joomlart-products` or the
  * theme's home) or `contract` (the slot contract in `packages/design/tracy-ds-slot/templates/`, a
  * tch PR).
@@ -25,6 +26,11 @@ import { UnreadableContent } from '../template-customization-question-readiness/
 import { readText } from '../template-customization-question-readiness/release-source.js'
 import { validateSetting } from '../tracy-setting.mjs'
 import { band1BandsFollow } from './rules/band-1-bands-follow.js'
+import {
+  brand1KeptAccentDeclared,
+  brand2KeptAccentReachable,
+  brand3BrandReadsOnBands
+} from './rules/brand-kept-bands.js'
 import {
   btn1ButtonsKeepShape,
   con1TextReads,
@@ -76,7 +82,7 @@ import { text1TextReadsTextRole } from './rules/text-1-text-reads-text-role.js'
 import { vars1RoleVariables } from './rules/vars-1-role-variables.js'
 
 /**
- * @typedef {'pass' | 'fail' | 'unmeasured' | 'not-applicable'} Status
+ * @typedef {'pass' | 'fail' | 'unmeasured' | 'live-only' | 'not-applicable'} Status
  * @typedef {'template' | 'contract'} Owner
  * @typedef {{ id: string, status: Status, message: string, fix: string | null, owner: Owner, details?: string[], kinds?: any[] }} RuleResult
  * @typedef {{
@@ -139,6 +145,9 @@ export const RULES = /** @type {Rule[]} */ ([
   border1LinesStayFaint,
   foreign1NoStrayColour,
   text1TextReadsTextRole,
+  brand1KeptAccentDeclared,
+  brand2KeptAccentReachable,
+  brand3BrandReadsOnBands,
   ...probeNextRules
 ])
 
