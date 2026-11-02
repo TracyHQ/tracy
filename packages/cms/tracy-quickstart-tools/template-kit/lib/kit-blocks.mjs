@@ -130,6 +130,10 @@ export function buildBlock({
       if (g.min != null) Object.assign(list, { min: g.min, minSource: g.minFrom ?? 'content map' })
       else if (measured?.okCounts?.length) Object.assign(list, measuredMin(measured))
       else if (rule) Object.assign(list, rule)
+      // Rows of uneven shapes (a masonry gallery) form no row set to measure: the demo's own count is the safe
+      // minimum, said as not measured.
+      else if (list.uniform === false && repeat?.shownCount !== 0 && Number.isFinite(list.shown ?? max))
+        Object.assign(list, { min: list.shown ?? max, minSource: 'demo count (not measured)' })
       else
         missing(
           `lists[${listId}].min`,
@@ -200,6 +204,25 @@ export function buildBlock({
   addIconSlots(lists, links, iconProbe, slots, neutralKey)
   // The slot each text link's label comes from: the block's own menu item, or the one slot printing its words.
   labelLinks({ links, menuBlocks: idx.map.menuBlocks, mapSlots: idx.map.slots, siteUrl, aliasHosts })
+  // A clickable element without an address (a button opening a modal or a tab panel, a form's submit) is listed like a
+  // link when a slot prints its label, with what it opens (`opens`), so its label and its target are both declared.
+  const buttons = (desk?.clickables ?? []).map((c) => ({
+    id: `${id}.button-${c.position + 1}`,
+    position: c.position,
+    label: c.label,
+    target: null,
+    element: c.tag,
+    opens: opensOf(c.target)
+  }))
+  labelLinks({ links: buttons, menuBlocks: {}, mapSlots: idx.map.slots, siteUrl, aliasHosts })
+  for (const b of buttons) {
+    const own = labelSlot.get(normText(b.label))
+    if (!b.labelId && own) b.labelId = neutralKey(own.key)
+    // A tab or menu heading read as a link too (its address is a #fragment or a script) takes what it opens there.
+    const same = links.find((l) => !l.target && !l.opens && normText(l.label ?? '') === normText(b.label))
+    if (same && b.opens) same.opens = b.opens
+    else if (b.labelId) links.push(b)
+  }
   const labelOf = new Map(links.filter((l) => l.labelId).map((l) => [normText(l.label), l.labelId]))
   const mapSlot = new Map((idx.map.slots ?? []).map((x) => [neutralKey(x.key), x]))
   // A menu the pages never show (an off-canvas menu) has its links in the content map's menu block.
@@ -242,6 +265,17 @@ export function buildBlock({
     // already; words only a looser match recognizes (cut short, split, run together) are named as the demo's.
     else if (!ownKeys.has(m.slot.key) && !/^(whole|piece)$/.test(m.how))
       shownContent.push({ slot: m.slot, text, how: m.how })
+  }
+  // A text printed by several elements is several slots: each further element takes the next slot of the block's
+  // own entities with those words, in content map order, never the first one again.
+  const counts = desk?.textCounts ?? {}
+  for (const t of textsShown.slice()) {
+    const k = counts[t.text] ?? 1
+    if (k < 2 || !t.source || t.label || !ownKeys.has(t.source.key) || t.how !== 'whole') continue
+    const n = normText(t.text)
+    const twins = slots.filter((x) => x.type === 'text' && x.key !== t.source.key && normText(x.sample) === n)
+    for (const x of twins.slice(0, k - 1))
+      textsShown.push({ text: t.text, slot: neutralKey(x.key), source: x, how: 'whole' })
   }
   // Each paragraph the page shows, the slot it comes from, and whether the shown texts read all of its words (a
   // paragraph split by inline markup is read in pieces): orphan-text.mjs paragraphChecks.
@@ -362,6 +396,27 @@ const entityOfKey = (key) => String(key).replace(/\.[^.]*$/, '')
 /** A map page's route as the capture names pages ("about-us/contact" is "about-us_contact"). */
 const pageIdOf = (route) => String(route ?? '').replace(/\//g, '_')
 const pagesOf = (rec, widths) => new Set(widths.flatMap((w) => rec.widths[w]?.pages ?? []))
+
+/**
+ * What a clickable element without an address opens, as the read pass found it: a modal (a map drawn from the
+ * page's settings, which no content map slot holds, says so), a tab or collapse panel, a menu heading's submenu, the
+ * form it sends, or a script.
+ */
+function opensOf(t) {
+  if (!t) return null
+  if (t.kind === 'form') return { kind: 'form', action: t.action ?? null }
+  if (t.kind === 'script') return { kind: 'script' }
+  if (t.kind === 'submenu') return { kind: 'submenu' }
+  const out = { kind: t.kind === 'modal' ? 'modal' : 'panel', element: t.element }
+  if (t.shows === 'map')
+    Object.assign(out, {
+      shows: 'map',
+      writable: false,
+      writableReason:
+        'the button opens a map the page draws from its own settings, which no content map slot holds; a planner cannot point it at the customer address'
+    })
+  return out
+}
 
 /** A slot as a block declares it. */
 const slotOut = (x) => ({

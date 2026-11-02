@@ -75,15 +75,20 @@ export async function assembleKit(o, out, tool) {
   mergeSite(kit, siteDoc, map, wordsLinks)
   // The coverage gate (coverage-gate.mjs): complete the kit from the contract, then count what it still lacks. The
   // list and owner checks run again over the completed kit.
+  const desk = String(capture.widths?.[0] ?? '1440')
+  const readings = new Map(
+    Object.entries(capture.blocks ?? {}).map(([id, r]) => [id, r.widths?.[desk]?.details ?? null])
+  )
   applyCoverage(kit, {
     map,
+    readings,
     textFit: readIf(join(out, 'text-fit.json')) ?? {},
     rowFit: readIf(join(out, 'row-fit.json')) ?? {}
   })
   kit.errors = kit.errors.filter((e) => !/^(list-limits-differ|slot-in-two-blocks)$/.test(e.kind))
   kit.checks.listLimitsDiffering = limitChecks({ blocks: kit.blocks, errors: kit.errors })
   kit.checks.slotsInTwoBlocks = slotOwnerChecks({ blocks: kit.blocks, errors: kit.errors })
-  kit.checks.slotCoverage = coverageGate(kit, { map })
+  kit.checks.slotCoverage = coverageGate(kit, { map, readings })
   const unchecked = kit.blocks.flatMap((b) => b.frames.filter((f) => f.faces === null && !f.twinOf))
   if (unchecked.length)
     kit.errors.push({

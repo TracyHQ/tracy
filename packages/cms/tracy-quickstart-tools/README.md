@@ -460,6 +460,27 @@ list, kept by every later run).
      that is only the box of the demo words (within three characters of them) is no limit and is never lent to the
      group; a frame reading that never runs out of room, or reads below the demo words, is set aside;
      `limitsBelowDemo`, no place holds a limit below the characters its demo words show (they show fine on the page);
+     `textsWithoutSlot` (`lib/page-coverage.mjs`), a slot is one element on the page, never one text: the read pass
+     counts the shown elements printing each text (`details.textCounts`), and a text printed by k elements of a
+     block whose own entities hold n slots with those words needs min(k, n) distinct slots in the block (the
+     generator gives each further element the next slot with those words, in content map order);
+     `linksWithoutTarget`, every clickable element without an address (`details.clickables`: a button, a tab, a
+     menu heading, a submit) whose label a slot of its block prints is a link of the block with what it opens
+     (`links[].opens`: `modal` or `panel` with its `element` (a tab's own `#fragment` included), `submenu`, `form`
+     with its `action`, `script`; a modal drawing a map from the page's own settings says `writable: false` with
+     the reason);
+     `linksWithoutLabelSlot` (`lib/link-label-slots.mjs`), every link whose shown words a slot prints names it
+     (`links[].labelId`): the text slot of the link's own address group first, then a slot the block declares or
+     one of its own entities (links repeating the same words take each its own twin slot), then the one content
+     map slot with those words (an item's title on a listing); words two unrelated slots share pick nothing, and
+     words no slot prints (a CMS string) need no label slot;
+     `imagesWithoutFrame` (`lib/picture-frames.mjs`), every picture a block shows at least 40px each way
+     (`details.pictures`: an `<img>`, a CSS background of an element of the block or its `::before`/`::after`, and a
+     background painted behind the block by an ancestor or a layer outside every block that shows through it, with
+     nothing opaque between) is a frame of the block or a declared image slot; a picture none holds becomes a frame
+     (`<block>.picture-N`, `shownAs`, `painter`, `paintedBehind`, `twinOf` when the same painter shows it in an
+     earlier block, `canHide: true` for a background, which takes no room) with `writable: false` and the reason,
+     since no content map slot holds it;
      `textFormatMissing`, every text slot gives `paragraphs`, `bullets`, `formatFrom` and a sample with the first
      words of each paragraph and bullet (`lib/text-format.mjs`), read from the block's real page, including the row
      template of a list with no sample row and the items of a card field; `mainMenuRowLimitMissing`, the main menu
@@ -513,7 +534,9 @@ list, kept by every later run).
 - **List minimum.** A measured one (`measure-min`: on one loaded page, rows removed from the DOM one at a time and,
   at every width (the page resized), the row boxes read: the last line full or centered) wins, with `minEvidence`
   (the check per count; no image); else
-  the rows on the first line at 1440 (`row-count`), or 1 in a slider or tabs (`slider-or-tab`); else null and an error
+  the rows on the first line at 1440 (`row-count`), or 1 in a slider or tabs (`slider-or-tab`); rows of uneven shapes
+  (`uniform: false`, a masonry gallery) that form no row set take the demo's own count (`demo count (not measured)`,
+  no error); else null and an error
   that says why: rows in a closed tab (read, never measured), a count that leaves a hole at every size (the template's
   defect, with `sparseRow`), or no row set found.
   Every count from 1 to the maximum is measured and the minimum is the smallest that looks right (no broken card,

@@ -55,6 +55,22 @@ test('a title shown on one line takes the lines its group shows elsewhere', asyn
   })
 })
 
+test('an address split by a forced break is filled as words on its lines, the break read as a space', async (t) => {
+  // A 200px column (about 20 monospace characters a line): street and city on two forced lines.
+  const html = `<style>${FACE}.col{width:200px}</style>
+    <div data-kit-block="foot"><div class="col"><p>12 Lane Rd.<br>Poolton, ST 10001</p><p>(555) 0100</p></div></div>`
+  await withPage(t, html, 800, async (page) => {
+    const fit = await page.evaluate(readTextFit, {
+      block: 'foot',
+      texts: [{ id: 'addr', text: '12 Lane Rd. Poolton, ST 10001' }]
+    })
+    assert.equal(fit.addr.demo, '12 Lane Rd. Poolton, ST 10001'.length)
+    assert.deepEqual([fit.addr.lines, fit.addr.allowed], [2, 2])
+    // Two lines of about 20 characters, past the 29 demo characters (words run together would wrap early).
+    assert.ok(fit.addr.limit >= 34 && fit.addr.limit <= 42, JSON.stringify(fit))
+  })
+})
+
 test('a box that never runs out of room has no reading', async (t) => {
   const html = `<style>${FACE}.clip{width:100px;overflow:hidden;white-space:nowrap;position:absolute}</style>
     <div data-kit-block="b"><span class="clip">Clipped</span></div>`

@@ -85,8 +85,8 @@ export function kitOfRelease(release, contracts) {
 /**
  * The kit's own self-checks (`checks`: counts that must be 0 for a planner to use the kit, such as a slot listed by
  * two blocks or a showcase page left in): a kit with any of them above 0 is incomplete. The coverage gate
- * (`checks.slotCoverage`) lists its failures in `coverage.failures` (`{part, where, reason}`); the first ones are
- * named, so the failing slots show without opening the file. Null when all are 0.
+ * (`checks.slotCoverage`) lists its failures in `coverage.failures` (`{part, where, reason}`); the first ones of
+ * every part are named, so the failing blocks and slots show without opening the file. Null when all are 0.
  * @param {any} doc
  */
 function failingChecksOf(doc) {
@@ -94,10 +94,23 @@ function failingChecksOf(doc) {
   const failing = Object.entries(checks).filter(([, n]) => typeof n === 'number' && n > 0)
   if (failing.length === 0) return null
   const failures = Array.isArray(doc.coverage?.failures) ? doc.coverage.failures : []
-  const named = failures.slice(0, SHOWN_GAPS).map((f) => `${String(f?.part)} ${String(f?.where)}`)
+  // Taken part by part in turn (the first failure of each part, then the second...), so a part with hundreds of
+  // failures never hides another part; every failing part is named at least once.
+  const byPart = new Map()
+  for (const f of failures) {
+    const part = String(f?.part)
+    if (!byPart.has(part)) byPart.set(part, [])
+    byPart.get(part).push(f)
+  }
+  const turns = []
+  for (let i = 0; turns.length < failures.length; i++)
+    for (const list of byPart.values()) if (list[i]) turns.push(list[i])
+  const named = turns
+    .slice(0, Math.max(SHOWN_GAPS, byPart.size))
+    .map((f) => `${String(f?.part)} ${String(f?.where)}`)
   return {
     reason: `its self-checks fail: ${failing.map(([name, n]) => `${name} ${n}`).join(', ')}${
-      named.length ? ` (${named.join(', ')}${failures.length > SHOWN_GAPS ? ', ...' : ''})` : ''
+      named.length ? ` (${named.join(', ')}${failures.length > named.length ? ', ...' : ''})` : ''
     }`,
     missing: []
   }

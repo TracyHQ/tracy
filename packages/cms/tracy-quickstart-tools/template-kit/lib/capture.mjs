@@ -112,6 +112,9 @@ export async function openFrozen(ctx, url, assigned, hide, { wake = 'full' } = {
     await page.waitForLoadState('load', { timeout: 5000 }).catch(() => {})
     await quickWake(page)
   }
+  // Text is measured in the template's own fonts, never in a fallback that happens to show while they load.
+  if (wake !== 'full')
+    await page.evaluate(() => Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 2000))]))
   await page.evaluate(freezeFloating)
   if (hide?.paths?.length) await page.evaluate(dropLinksTo, { paths: hide.paths, hosts: hide.hosts ?? [] })
   await page.waitForTimeout(wake === 'full' ? 300 : 50)

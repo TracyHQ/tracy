@@ -202,6 +202,29 @@ test('a kit failing a coverage gate part is incomplete, and the step names the p
   }
 })
 
+test('every failing coverage part is named, however many failures another part has', () => {
+  const many = Array.from({ length: 20 }, (_, i) => ({
+    part: 'linksWithoutLabelSlot',
+    where: `blocks[block-1].links[block-1.link-${i + 1}] block-1.${i}`,
+    reason: 'made up'
+  }))
+  const k = kit({
+    checks: { slotCoverage: 21 },
+    coverage: {
+      parts: { linksWithoutLabelSlot: 20, imagesWithoutFrame: 1 },
+      failures: [
+        ...many,
+        { part: 'imagesWithoutFrame', where: 'blocks[block-2] media/hall.jpg', reason: 'made up' }
+      ]
+    }
+  })
+  const step = stepOf(roadOf(release(), world(contractsWith(k))))
+  assert.ok(String(step.params.reason).includes('imagesWithoutFrame blocks[block-2] media/hall.jpg'))
+  assert.ok(
+    String(step.params.reason).includes('linksWithoutLabelSlot blocks[block-1].links[block-1.link-1]')
+  )
+})
+
 test('a block the template does not show at a width, with a reason, needs no picture there', () => {
   // Shown at 1440 only, declared with a reason: complete.
   const desktopOnly = kit()

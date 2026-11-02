@@ -533,3 +533,21 @@ test('a listing max is its page size from the pager, else the item rows the demo
   assert.deepEqual(listingMax({ ...opts, path: '/news', pagePaths: ['/news'] }).maxSource, 'captured-rows')
   assert.equal(listingMax({ ...opts, repeats: [], path: '/news', pagePaths: ['/news'] }), null)
 })
+
+test('rows of uneven shapes with no row set to measure take the demo count as their minimum, said as not measured', () => {
+  const map = structuredClone(MAP)
+  const capture = structuredClone(CAPTURE)
+  capture.blocks['block-11'].widths[1440].details.repeats = []
+  const list = (m) =>
+    buildKit({ map: m, capture, stamp: STAMP, siteUrl: SITE, aliasHosts: [] }).blocks.find(
+      (b) => b.id === 'block-11'
+    )
+  // Even rows that were not found stay an error: their minimum can still be measured.
+  const even = buildKit({ map, capture, stamp: STAMP, siteUrl: SITE, aliasHosts: [] })
+  assert.ok(even.errors.some((e) => e.field === 'blocks[block-11].lists[block-11.person].min'))
+  map.fitGroups['module-11.person'].uniform = false
+  const masonry = list(map).lists.find((l) => l.id === 'block-11.person')
+  assert.deepEqual([masonry.min, masonry.minSource], [2, 'demo count (not measured)'])
+  const kit = buildKit({ map, capture, stamp: STAMP, siteUrl: SITE, aliasHosts: [] })
+  assert.ok(!kit.errors.some((e) => e.field === 'blocks[block-11].lists[block-11.person].min'))
+})

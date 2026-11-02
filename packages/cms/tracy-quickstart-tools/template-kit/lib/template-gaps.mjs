@@ -47,6 +47,8 @@ export function templateGaps({ kit, mainHeadings = [], dead = [], fixes = [], ac
       const t = String(l.target ?? '').trim()
       const d = deadPaths.get(t)
       if (t && t !== '#' && !d) continue
+      // A tab, a menu heading or a button that opens something on the page has no address and needs none.
+      if (!d && l.opens?.kind) continue
       const why = d ? `answers ${d.status}` : t ? 'points nowhere (#)' : 'has no target'
       add(
         'dead-link',

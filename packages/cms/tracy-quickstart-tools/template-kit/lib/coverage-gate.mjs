@@ -1,10 +1,15 @@
 // The coverage gate: the kit carries every content map slot its pages show, faithfully copied from the contract.
 // `applyCoverage` completes the kit from what the contract and the kit already read (nothing is measured again):
-// each link's label becomes a slot of the block holding the link (a reference when another block owns it), each
-// contact field the contract can write names its slot and one the page prints but the contract cannot write says so,
+// every link showing a slot's words names it (link-label-slots.mjs), each link's label becomes a slot of the block
+// holding the link (a reference when another block owns it), every picture a block shows is a frame
+// (picture-frames.mjs), each contact field the contract can write names its slot and one the page prints but the
+// contract cannot write says so,
 // every text slot gets its one limit (slot-limits.mjs), and the main menu row its whole-row limit. `coverageGate`
 // then counts what is still missing, part by part, and lists every failure: green (0) means the kit is final.
+import { linkLabelSlots, linksWithoutLabelSlot } from './link-label-slots.mjs'
+import { imagesWithoutFrame, pictureFrames } from './picture-frames.mjs'
 import { menuLinkChecks, whatElseChanges } from './link-labels.mjs'
+import { linksWithoutTarget, textsWithoutSlot } from './page-coverage.mjs'
 import { neutralKey } from './ids.mjs'
 import { demoLength, slotLimitChecks, slotPlaces, unifyLimits } from './slot-limits.mjs'
 import { formatOf, textFormatChecks } from './text-format.mjs'
@@ -119,9 +124,11 @@ function mainMenuRow(kit, mapOf, rowFit) {
  * @param {object} kit changed in place
  * @param {{map: object, textFit?: object, rowFit?: object}} o
  */
-export function applyCoverage(kit, { map, textFit = {}, rowFit = {} }) {
+export function applyCoverage(kit, { map, textFit = {}, rowFit = {}, readings = new Map() }) {
   const mapSlots = map.slots ?? []
   const mapOf = new Map(mapSlots.map((s) => [neutralKey(s.key), s]))
+  linkLabelSlots(kit, map)
+  pictureFrames(kit, map, readings)
   labelSlots(kit, mapOf)
   contactFields(kit, mapSlots)
   unifyLimits(kit, { mapSlots, textFit })
@@ -131,10 +138,11 @@ export function applyCoverage(kit, { map, textFit = {}, rowFit = {} }) {
 }
 
 /**
- * Count what the kit still lacks against the content map (`map`), part by part (`kit.coverage.parts`), list every failure
+ * Count what the kit still lacks against the content map (`map`) and the read pass (`readings`: block id -> the
+ * block's reading at the widest width), part by part (`kit.coverage.parts`), list every failure
  * (`kit.coverage.failures`, also in `kit.errors`) and return the total: 0 means every shown slot is covered.
  */
-export function coverageGate(kit, { map }) {
+export function coverageGate(kit, { map, readings = new Map() }) {
   const mapOf = new Map((map.slots ?? []).map((s) => [neutralKey(s.key), s]))
   const failures = []
   const fail = (part, where, reason) => failures.push({ part, where, reason })
@@ -200,6 +208,12 @@ export function coverageGate(kit, { map }) {
       `limit ${entry.maxCharacters} is below the ${demo} characters the demo shows`
     )
   }
+  // Against the page's own reading: every element printing the block's content is a slot of its own, and every
+  // clickable element whose label is a slot says what it opens (page-coverage.mjs).
+  parts.textsWithoutSlot = textsWithoutSlot({ kit, map, readings, fail })
+  parts.linksWithoutTarget = linksWithoutTarget({ kit, map, readings, fail })
+  parts.linksWithoutLabelSlot = linksWithoutLabelSlot({ kit, map, fail })
+  parts.imagesWithoutFrame = imagesWithoutFrame({ kit, map, readings, fail })
   // 4. The main menu row has its whole-row limit.
   const block = mainMenuBlock(kit)
   const main = (kit.site?.navigationGroups ?? []).find((g) => g.block === block)

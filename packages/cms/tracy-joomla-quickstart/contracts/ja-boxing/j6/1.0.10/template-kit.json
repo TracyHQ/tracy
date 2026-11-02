@@ -2782,6 +2782,21 @@
           }
         },
         {
+          "id": "block-162.0",
+          "type": "text",
+          "role": "business.name",
+          "sample": "JA Boxing",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "content map",
+          "ownedBy": "block-162",
+          "labelOf": [
+            "header.link-1"
+          ],
+          "maxCharacters": 40,
+          "maxCharactersFrom": "content map declared"
+        },
+        {
           "id": "block-176.1",
           "type": "text",
           "role": "editorial.button_label",
@@ -2793,8 +2808,8 @@
           "labelOf": [
             "header.link-7"
           ],
-          "maxCharacters": 26,
-          "maxCharactersFrom": "kit frame (390px 26, 1440px 66)"
+          "maxCharacters": 40,
+          "maxCharactersFrom": "content map declared"
         }
       ],
       "lists": [],
@@ -2923,7 +2938,8 @@
             "title": "JA Boxing",
             "network": null
           },
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "block-162.0"
         },
         {
           "id": "header.link-2",
@@ -2973,6 +2989,9 @@
           "labelId": "menuItem-152.0",
           "menuItem": "menuItem-152",
           "menu": "module-1",
+          "opens": {
+            "kind": "submenu"
+          },
           "action": "page-control"
         },
         {
@@ -3023,7 +3042,7 @@
           "id": "block-176.1",
           "role": "editorial.button_label",
           "type": "text",
-          "maxCharacters": 26,
+          "maxCharacters": 40,
           "sample": "Contact us",
           "labelOf": [
             "block-176.link-1"
@@ -3034,7 +3053,7 @@
           "alsoShownIn": [
             "header"
           ],
-          "maxCharactersFrom": "kit frame (390px 26, 1440px 66)",
+          "maxCharactersFrom": "content map declared",
           "alsoChanges": {
             "blocks": [
               "header"
@@ -4000,7 +4019,8 @@
           "position": 0,
           "label": "GET A FREE (30MIN) INTRO SESSION",
           "target": "/about-us/contact",
-          "action": "primary-cta"
+          "action": "primary-cta",
+          "labelId": "block-156.5"
         }
       ],
       "fixedText": [],
@@ -5761,7 +5781,8 @@
           "position": 3,
           "label": "Beginner Boxing",
           "target": "/classes/beginner-boxing",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-14.4"
         },
         {
           "id": "block-160.link-5",
@@ -6266,7 +6287,8 @@
           "position": 0,
           "label": "SIGN UP FOR FREE TRIAL",
           "target": "/about-us/contact",
-          "action": "primary-cta"
+          "action": "primary-cta",
+          "labelId": "block-161.3"
         }
       ],
       "fixedText": [],
@@ -6989,7 +7011,8 @@
           "position": 1,
           "label": "Darlene Robertson",
           "target": "/about-us/our-trainers/darlene-robertson",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "block-163.4"
         },
         {
           "id": "block-163.link-3",
@@ -7062,7 +7085,8 @@
           "position": 7,
           "label": "Cameron Williamson",
           "target": "/about-us/our-trainers/darlene-robertson",
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "block-163.5"
         },
         {
           "id": "block-163.link-9",
@@ -7135,7 +7159,8 @@
           "position": 13,
           "label": "Marvin McKinney",
           "target": "/about-us/our-trainers/darlene-robertson",
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "block-163.6"
         },
         {
           "id": "block-163.link-15",
@@ -7208,7 +7233,8 @@
           "position": 19,
           "label": "Kathryn Murphy",
           "target": "/about-us/our-trainers/darlene-robertson",
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "block-163.7"
         },
         {
           "id": "block-163.link-21",
@@ -7616,7 +7642,60 @@
           "classReason": "boxing action or scene picture, no one presented as staff (agent)"
         }
       ],
-      "links": [],
+      "links": [
+        {
+          "id": "block-165.button-1",
+          "position": 0,
+          "label": "TRIAL PRACTICE",
+          "target": null,
+          "element": "button",
+          "opens": {
+            "kind": "panel",
+            "element": "#features-165-0"
+          },
+          "labelId": "block-165.2",
+          "action": "page-control"
+        },
+        {
+          "id": "block-165.button-2",
+          "position": 1,
+          "label": "BASIC",
+          "target": null,
+          "element": "button",
+          "opens": {
+            "kind": "panel",
+            "element": "#features-165-1"
+          },
+          "labelId": "block-165.3",
+          "action": "page-control"
+        },
+        {
+          "id": "block-165.button-3",
+          "position": 2,
+          "label": "ADVANCED",
+          "target": null,
+          "element": "button",
+          "opens": {
+            "kind": "panel",
+            "element": "#features-165-2"
+          },
+          "labelId": "block-165.4",
+          "action": "page-control"
+        },
+        {
+          "id": "block-165.button-4",
+          "position": 3,
+          "label": "MAINTENANCE",
+          "target": null,
+          "element": "button",
+          "opens": {
+            "kind": "panel",
+            "element": "#features-165-3"
+          },
+          "labelId": "block-165.5",
+          "action": "page-control"
+        }
+      ],
       "fixedText": [],
       "demoOwned": [
         {
@@ -7793,7 +7872,7 @@
         {
           "id": "block-166.gallery",
           "rowKind": "slots",
-          "min": null,
+          "min": 6,
           "max": 6,
           "rowSlots": [
             {
@@ -7952,6 +8031,7 @@
               ]
             }
           ],
+          "minSource": "demo count (not measured)",
           "holds": null
         },
         {
@@ -8592,7 +8672,8 @@
           "position": 6,
           "label": "SIGN UP FOR FREE TRIAL",
           "target": "/about-us/contact",
-          "action": "primary-cta"
+          "action": "primary-cta",
+          "labelId": "block-166.19"
         }
       ],
       "fixedText": [],
@@ -8925,12 +9006,12 @@
               "id": "block-171.0",
               "role": "contact.social_label",
               "type": "text",
-              "maxCharacters": 9,
+              "maxCharacters": 40,
               "paragraphs": 1,
               "bullets": 0,
               "formatFrom": "content map",
               "sample": "Facebook",
-              "maxCharactersFrom": "kit frame (390px 9, 1440px 9)"
+              "maxCharactersFrom": "content map declared; the content map fit (desktop 8, phone 8) is the box of the demo words, not a limit"
             },
             {
               "id": "block-171.4",
@@ -8956,12 +9037,12 @@
                   "id": "block-171.0",
                   "role": "contact.social_label",
                   "type": "text",
-                  "maxCharacters": 9,
+                  "maxCharacters": 40,
                   "sample": "Facebook",
                   "paragraphs": 1,
                   "bullets": 0,
                   "formatFrom": "content map",
-                  "maxCharactersFrom": "kit frame (390px 9, 1440px 9)"
+                  "maxCharactersFrom": "content map declared; the content map fit (desktop 8, phone 8) is the box of the demo words, not a limit"
                 },
                 {
                   "id": "block-171.4",
@@ -8988,12 +9069,12 @@
                   "id": "block-171.1",
                   "role": "contact.social_label",
                   "type": "text",
-                  "maxCharacters": 9,
+                  "maxCharacters": 40,
                   "sample": "Instagram",
                   "paragraphs": 1,
                   "bullets": 0,
                   "formatFrom": "content map",
-                  "maxCharactersFrom": "kit frame of block-171.0 (390px 9, 1440px 9)"
+                  "maxCharactersFrom": "content map declared of block-171.0; the content map fit (desktop 8, phone 8) is the box of the demo words, not a limit"
                 },
                 {
                   "id": "block-171.5",
@@ -9020,12 +9101,12 @@
                   "id": "block-171.2",
                   "role": "contact.social_label",
                   "type": "text",
-                  "maxCharacters": 9,
+                  "maxCharacters": 40,
                   "sample": "Twitter",
                   "paragraphs": 1,
                   "bullets": 0,
                   "formatFrom": "content map",
-                  "maxCharactersFrom": "kit frame of block-171.0 (390px 9, 1440px 9)"
+                  "maxCharactersFrom": "content map declared of block-171.0; the content map fit (desktop 8, phone 8) is the box of the demo words, not a limit"
                 },
                 {
                   "id": "block-171.6",
@@ -9052,12 +9133,12 @@
                   "id": "block-171.3",
                   "role": "contact.social_label",
                   "type": "text",
-                  "maxCharacters": 9,
+                  "maxCharacters": 40,
                   "sample": "Telegram",
                   "paragraphs": 1,
                   "bullets": 0,
                   "formatFrom": "content map",
-                  "maxCharactersFrom": "kit frame of block-171.0 (390px 9, 1440px 9)"
+                  "maxCharactersFrom": "content map declared of block-171.0; the content map fit (desktop 8, phone 8) is the box of the demo words, not a limit"
                 },
                 {
                   "id": "block-171.7",
@@ -9133,7 +9214,8 @@
             "title": "Facebook",
             "network": "facebook"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "labelId": "block-171.0"
         },
         {
           "id": "block-171.5",
@@ -9146,7 +9228,8 @@
             "title": "Instagram",
             "network": "instagram"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "labelId": "block-171.1"
         },
         {
           "id": "block-171.6",
@@ -9159,7 +9242,8 @@
             "title": "Twitter",
             "network": "twitter"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "labelId": "block-171.2"
         },
         {
           "id": "block-171.7",
@@ -9172,7 +9256,8 @@
             "title": "Telegram",
             "network": "telegram"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "labelId": "block-171.3"
         }
       ],
       "fixedText": [],
@@ -9185,8 +9270,8 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "content map",
-          "maxCharacters": 9,
-          "maxCharactersFrom": "kit frame (390px 9, 1440px 9)"
+          "maxCharacters": 40,
+          "maxCharactersFrom": "content map declared; the content map fit (desktop 8, phone 8) is the box of the demo words, not a limit"
         },
         {
           "id": "block-171.1",
@@ -9196,8 +9281,8 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "content map",
-          "maxCharacters": 9,
-          "maxCharactersFrom": "kit frame of block-171.0 (390px 9, 1440px 9)"
+          "maxCharacters": 40,
+          "maxCharactersFrom": "content map declared of block-171.0; the content map fit (desktop 8, phone 8) is the box of the demo words, not a limit"
         },
         {
           "id": "block-171.2",
@@ -9207,8 +9292,8 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "content map",
-          "maxCharacters": 9,
-          "maxCharactersFrom": "kit frame of block-171.0 (390px 9, 1440px 9)"
+          "maxCharacters": 40,
+          "maxCharactersFrom": "content map declared of block-171.0; the content map fit (desktop 8, phone 8) is the box of the demo words, not a limit"
         },
         {
           "id": "block-171.3",
@@ -9218,8 +9303,8 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "content map",
-          "maxCharacters": 9,
-          "maxCharactersFrom": "kit frame of block-171.0 (390px 9, 1440px 9)"
+          "maxCharacters": 40,
+          "maxCharactersFrom": "content map declared of block-171.0; the content map fit (desktop 8, phone 8) is the box of the demo words, not a limit"
         },
         {
           "id": "block-171.4",
@@ -9291,7 +9376,8 @@
           "position": 1,
           "label": "sale@getfit.com",
           "target": null,
-          "action": "contact"
+          "action": "contact",
+          "labelId": "block-175.4"
         }
       ],
       "fixedText": [],
@@ -9315,8 +9401,8 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "maxCharacters": 60,
-          "maxCharactersFrom": "content map fit (desktop 60, phone 72)"
+          "maxCharacters": 50,
+          "maxCharactersFrom": "kit frame (390px 85, 1440px 50)"
         },
         {
           "id": "block-175.4",
@@ -9811,7 +9897,7 @@
               "bullets": 0,
               "formatFrom": "content map",
               "sample": "Today Contact Us",
-              "maxCharactersFrom": "content map fit of block-162.3 (phone 18)"
+              "maxCharactersFrom": "content map fit of block-162.7 (phone 18)"
             },
             {
               "id": "block-162.17",
@@ -9842,7 +9928,7 @@
                   "paragraphs": 1,
                   "bullets": 0,
                   "formatFrom": "content map",
-                  "maxCharactersFrom": "content map fit of block-162.3 (phone 18)"
+                  "maxCharactersFrom": "content map fit of block-162.7 (phone 18)"
                 },
                 {
                   "id": "block-162.17",
@@ -9869,7 +9955,7 @@
                   "paragraphs": 1,
                   "bullets": 0,
                   "formatFrom": "content map",
-                  "maxCharactersFrom": "content map fit (phone 18)"
+                  "maxCharactersFrom": "content map fit of block-162.7 (phone 18)"
                 },
                 {
                   "id": "block-162.18",
@@ -9896,7 +9982,7 @@
                   "paragraphs": 1,
                   "bullets": 0,
                   "formatFrom": "content map",
-                  "maxCharactersFrom": "content map fit of block-162.3 (phone 18)"
+                  "maxCharactersFrom": "content map fit of block-162.7 (phone 18)"
                 },
                 {
                   "id": "block-162.19",
@@ -9939,7 +10025,7 @@
                   "paragraphs": 1,
                   "bullets": 0,
                   "formatFrom": "content map",
-                  "maxCharactersFrom": "content map fit of block-162.3 (phone 18)"
+                  "maxCharactersFrom": "content map fit of block-162.7 (phone 18)"
                 },
                 {
                   "id": "block-162.21",
@@ -9966,7 +10052,7 @@
                   "paragraphs": 1,
                   "bullets": 0,
                   "formatFrom": "content map",
-                  "maxCharactersFrom": "content map fit of block-162.3 (phone 18)"
+                  "maxCharactersFrom": "content map fit (phone 18)"
                 },
                 {
                   "id": "block-162.22",
@@ -9993,7 +10079,7 @@
                   "paragraphs": 1,
                   "bullets": 0,
                   "formatFrom": "content map",
-                  "maxCharactersFrom": "content map fit of block-162.3 (phone 18)"
+                  "maxCharactersFrom": "content map fit of block-162.7 (phone 18)"
                 },
                 {
                   "id": "block-162.23",
@@ -10020,7 +10106,7 @@
                   "paragraphs": 1,
                   "bullets": 0,
                   "formatFrom": "content map",
-                  "maxCharactersFrom": "content map fit of block-162.3 (phone 18)"
+                  "maxCharactersFrom": "content map fit of block-162.7 (phone 18)"
                 },
                 {
                   "id": "block-162.24",
@@ -10047,7 +10133,7 @@
                   "paragraphs": 1,
                   "bullets": 0,
                   "formatFrom": "content map",
-                  "maxCharactersFrom": "content map fit of block-162.3 (phone 18)"
+                  "maxCharactersFrom": "content map fit of block-162.7 (phone 18)"
                 },
                 {
                   "id": "block-162.25",
@@ -10074,7 +10160,7 @@
                   "paragraphs": 1,
                   "bullets": 0,
                   "formatFrom": "content map",
-                  "maxCharactersFrom": "content map fit of block-162.3 (phone 18)"
+                  "maxCharactersFrom": "content map fit of block-162.7 (phone 18)"
                 },
                 {
                   "id": "block-162.26",
@@ -10101,7 +10187,7 @@
                   "paragraphs": 1,
                   "bullets": 0,
                   "formatFrom": "content map",
-                  "maxCharactersFrom": "content map fit of block-162.3 (phone 18)"
+                  "maxCharactersFrom": "content map fit of block-162.7 (phone 18)"
                 },
                 {
                   "id": "block-162.27",
@@ -10128,7 +10214,7 @@
                   "paragraphs": 1,
                   "bullets": 0,
                   "formatFrom": "content map",
-                  "maxCharactersFrom": "content map fit of block-162.3 (phone 18)"
+                  "maxCharactersFrom": "content map fit of block-162.7 (phone 18)"
                 },
                 {
                   "id": "block-162.28",
@@ -10155,7 +10241,7 @@
                   "paragraphs": 1,
                   "bullets": 0,
                   "formatFrom": "content map",
-                  "maxCharactersFrom": "content map fit of block-162.3 (phone 18)"
+                  "maxCharactersFrom": "content map fit of block-162.7 (phone 18)"
                 },
                 {
                   "id": "block-162.29",
@@ -10182,7 +10268,7 @@
                   "paragraphs": 1,
                   "bullets": 0,
                   "formatFrom": "content map",
-                  "maxCharactersFrom": "content map fit of block-162.3 (phone 18)"
+                  "maxCharactersFrom": "content map fit of block-162.7 (phone 18)"
                 },
                 {
                   "id": "block-162.30",
@@ -10359,6 +10445,47 @@
           "role": "stat.proof_image",
           "faces": true,
           "classReason": "strip of customer avatar faces (agent)"
+        },
+        {
+          "id": "block-162.picture-1",
+          "shape": {
+            "name": "landscape",
+            "aspect": 1.5
+          },
+          "width": 1440,
+          "height": 960,
+          "kind": "photo",
+          "canHide": true,
+          "twinOf": null,
+          "fixed": false,
+          "hideEvidence": {
+            "measured": null,
+            "checks": {
+              "all": "a CSS background takes no room in the layout, so emptying it moves nothing"
+            },
+            "measuredAs": "single",
+            "invalid": false,
+            "judgedBy": "automatic check"
+          },
+          "kindEvidence": {
+            "clearShare": null,
+            "overPicture": false,
+            "paintedBy": "div.bg-mask",
+            "box": {
+              "width": 1440,
+              "height": 960
+            }
+          },
+          "picture": "images/joomlart/others/bg-cta.jpg",
+          "role": null,
+          "shownAs": "background",
+          "painter": "div.bg-mask",
+          "paintedBehind": true,
+          "writable": false,
+          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
+          "faces": false,
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
         }
       ],
       "links": [],
@@ -10493,7 +10620,49 @@
         }
       ],
       "lists": [],
-      "frames": [],
+      "frames": [
+        {
+          "id": "body-pages_users_login-form.picture-1",
+          "shape": {
+            "name": "landscape",
+            "aspect": 1.5
+          },
+          "width": 1440,
+          "height": 960,
+          "kind": "photo",
+          "canHide": true,
+          "twinOf": "block-162.picture-1",
+          "fixed": false,
+          "hideEvidence": {
+            "measured": null,
+            "checks": {
+              "all": "a CSS background takes no room in the layout, so emptying it moves nothing"
+            },
+            "measuredAs": "single",
+            "invalid": false,
+            "judgedBy": "automatic check"
+          },
+          "kindEvidence": {
+            "clearShare": null,
+            "overPicture": false,
+            "paintedBy": "div.bg-mask",
+            "box": {
+              "width": 1440,
+              "height": 960
+            }
+          },
+          "picture": "images/joomlart/others/bg-cta.jpg",
+          "role": null,
+          "shownAs": "background",
+          "painter": "div.bg-mask",
+          "paintedBehind": true,
+          "writable": false,
+          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
+          "faces": false,
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+        }
+      ],
       "links": [
         {
           "id": "body-pages_users_login-form.link-1",
@@ -10545,6 +10714,34 @@
             "textOverlaps": 0
           },
           "id": "body-pages_users_login-form.fixed-yes-8a7988"
+        },
+        {
+          "text": "Forgot your username?",
+          "source": {
+            "kind": "template"
+          },
+          "canHide": false,
+          "reason": "a link or a button would be left with no words",
+          "measuredBy": "dom",
+          "evidence": {
+            "emptied": 1,
+            "blockBefore": {
+              "left": 0,
+              "top": 549,
+              "width": 1440,
+              "height": 720
+            },
+            "blockAfter": {
+              "left": 0,
+              "top": 549,
+              "width": 1440,
+              "height": 696
+            },
+            "heightChange": -24,
+            "textMoved": 98,
+            "textOverlaps": 0
+          },
+          "id": "body-pages_users_login-form.fixed-forgot-your-username-d2aab0"
         },
         {
           "text": "SHOW PASSWORD",
@@ -10715,50 +10912,6 @@
             "reason": "the sentence left the page and the block changed with it"
           },
           "id": "body-pages_users_login-form.fixed-com-users-login-reset"
-        },
-        {
-          "text": "Forgot your username?",
-          "source": {
-            "file": "language/en-GB/com_users.ini",
-            "constant": "COM_USERS_LOGIN_REMIND",
-            "short": true,
-            "constants": [
-              "COM_USERS_LOGIN_REMIND",
-              "MOD_LOGIN_FORGOT_YOUR_USERNAME"
-            ]
-          },
-          "placeholders": [],
-          "pages": 1,
-          "canHide": true,
-          "hiddenBy": {
-            "setting": "cms language override",
-            "file": "language/overrides/en-GB.override.ini",
-            "constant": [
-              "COM_USERS_LOGIN_REMIND",
-              "MOD_LOGIN_FORGOT_YOUR_USERNAME"
-            ],
-            "value": ""
-          },
-          "evidence": {
-            "blockBefore": {
-              "left": 0,
-              "top": 549,
-              "width": 1440,
-              "height": 720
-            },
-            "blockAfter": {
-              "left": 0,
-              "top": 549,
-              "width": 1440,
-              "height": 696
-            },
-            "heightChange": -24,
-            "textGone": 14,
-            "textMoved": 0,
-            "textOverlaps": 0,
-            "reason": "the sentence left the page and the block changed with it"
-          },
-          "id": "body-pages_users_login-form.fixed-com-users-login-remind"
         },
         {
           "text": "Don't have an account?",
@@ -11735,7 +11888,49 @@
         }
       ],
       "lists": [],
-      "frames": [],
+      "frames": [
+        {
+          "id": "block-17.picture-1",
+          "shape": {
+            "name": "landscape",
+            "aspect": 1.5
+          },
+          "width": 1440,
+          "height": 960,
+          "kind": "photo",
+          "canHide": true,
+          "twinOf": "block-162.picture-1",
+          "fixed": false,
+          "hideEvidence": {
+            "measured": null,
+            "checks": {
+              "all": "a CSS background takes no room in the layout, so emptying it moves nothing"
+            },
+            "measuredAs": "single",
+            "invalid": false,
+            "judgedBy": "automatic check"
+          },
+          "kindEvidence": {
+            "clearShare": null,
+            "overPicture": false,
+            "paintedBy": "div.bg-mask",
+            "box": {
+              "width": 1440,
+              "height": 960
+            }
+          },
+          "picture": "images/joomlart/others/bg-cta.jpg",
+          "role": null,
+          "shownAs": "background",
+          "painter": "div.bg-mask",
+          "paintedBehind": true,
+          "writable": false,
+          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
+          "faces": false,
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+        }
+      ],
       "links": [
         {
           "id": "block-17.link-1",
@@ -11826,7 +12021,96 @@
         "390": "body-pages_j-content_category-blog-390",
         "1440": "body-pages_j-content_category-blog-1440"
       },
-      "slots": [],
+      "slots": [
+        {
+          "id": "article-8.15",
+          "type": "text",
+          "role": "article.title",
+          "sample": "Boxing's Finest Moments",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_category-blog_boxings-finest-moments",
+          "labelOf": [
+            "body-pages_j-content_category-blog.link-7"
+          ],
+          "maxCharacters": 46,
+          "maxCharactersFrom": "content map declared of article-28.7",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_boxings-finest-moments"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-9.15",
+          "type": "text",
+          "role": "article.title",
+          "sample": "Boxing's Ultimate Showdown",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_category-blog_boxings-ultimate-showdown",
+          "labelOf": [
+            "body-pages_j-content_category-blog.link-8"
+          ],
+          "maxCharacters": 27,
+          "maxCharactersFrom": "kit frame (390px 27, 1440px 43)",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_boxings-ultimate-showdown"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-10.15",
+          "type": "text",
+          "role": "article.title",
+          "sample": "Boxing's Impact on Culture",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_category-blog_boxings-impact-on-culture",
+          "labelOf": [
+            "body-pages_j-content_category-blog.link-9"
+          ],
+          "maxCharacters": 50,
+          "maxCharactersFrom": "kit frame of article-26.12 (390px 52, 1440px 50)",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_boxings-impact-on-culture"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-11.15",
+          "type": "text",
+          "role": "article.title",
+          "sample": "Boxing and Mental Toughness",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_category-blog_boxing-and-mental-toughness",
+          "labelOf": [
+            "body-pages_j-content_category-blog.link-10"
+          ],
+          "maxCharacters": 46,
+          "maxCharactersFrom": "content map declared of article-28.7",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_boxing-and-mental-toughness"
+            ],
+            "menus": []
+          }
+        }
+      ],
       "lists": [
         {
           "id": "menuItem-163.items",
@@ -12143,70 +12427,80 @@
           "position": 0,
           "label": "Never boxed before",
           "target": "/pages/j-content/category-blog/never-boxed-before",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-1.15"
         },
         {
           "id": "body-pages_j-content_category-blog.link-2",
           "position": 1,
           "label": "Boxing Legends Remembered",
           "target": "/pages/j-content/category-blog/boxing-legends-remembered",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-3.15"
         },
         {
           "id": "body-pages_j-content_category-blog.link-3",
           "position": 2,
           "label": "Title Defense Strategies",
           "target": "/pages/j-content/category-blog/title-defense-strategies",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-4.15"
         },
         {
           "id": "body-pages_j-content_category-blog.link-4",
           "position": 3,
           "label": "Inside Boxing Techniques",
           "target": "/pages/j-content/category-blog/inside-boxing-techniques",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-5.15"
         },
         {
           "id": "body-pages_j-content_category-blog.link-5",
           "position": 4,
           "label": "The Boxing World Tour",
           "target": "/pages/j-content/blog-detail",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-6.15"
         },
         {
           "id": "body-pages_j-content_category-blog.link-6",
           "position": 5,
           "label": "Classic Boxing Rivalries",
           "target": "/pages/j-content/category-blog/classic-boxing-rivalries",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-7.15"
         },
         {
           "id": "body-pages_j-content_category-blog.link-7",
           "position": 6,
           "label": "Boxing's Finest Moments",
           "target": "/pages/j-content/category-blog/boxings-finest-moments",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-8.15"
         },
         {
           "id": "body-pages_j-content_category-blog.link-8",
           "position": 7,
           "label": "Boxing's Ultimate Showdown",
           "target": "/pages/j-content/category-blog/boxings-ultimate-showdown",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-9.15"
         },
         {
           "id": "body-pages_j-content_category-blog.link-9",
           "position": 8,
           "label": "Boxing's Impact on Culture",
           "target": "/pages/j-content/category-blog/boxings-impact-on-culture",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-10.15"
         },
         {
           "id": "body-pages_j-content_category-blog.link-10",
           "position": 9,
           "label": "Boxing and Mental Toughness",
           "target": "/pages/j-content/category-blog/boxing-and-mental-toughness",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-11.15"
         },
         {
           "id": "body-pages_j-content_category-blog.link-11",
@@ -12342,7 +12636,96 @@
         "390": "body-pages_j-content_featured-articles-390",
         "1440": "body-pages_j-content_featured-articles-1440"
       },
-      "slots": [],
+      "slots": [
+        {
+          "id": "article-8.15",
+          "type": "text",
+          "role": "article.title",
+          "sample": "Boxing's Finest Moments",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_category-blog_boxings-finest-moments",
+          "labelOf": [
+            "body-pages_j-content_featured-articles.link-7"
+          ],
+          "maxCharacters": 46,
+          "maxCharactersFrom": "content map declared of article-28.7",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_boxings-finest-moments"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-9.15",
+          "type": "text",
+          "role": "article.title",
+          "sample": "Boxing's Ultimate Showdown",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_category-blog_boxings-ultimate-showdown",
+          "labelOf": [
+            "body-pages_j-content_featured-articles.link-8"
+          ],
+          "maxCharacters": 27,
+          "maxCharactersFrom": "kit frame (390px 27, 1440px 43)",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_boxings-ultimate-showdown"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-10.15",
+          "type": "text",
+          "role": "article.title",
+          "sample": "Boxing's Impact on Culture",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_category-blog_boxings-impact-on-culture",
+          "labelOf": [
+            "body-pages_j-content_featured-articles.link-9"
+          ],
+          "maxCharacters": 50,
+          "maxCharactersFrom": "kit frame of article-26.12 (390px 52, 1440px 50)",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_boxings-impact-on-culture"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-11.15",
+          "type": "text",
+          "role": "article.title",
+          "sample": "Boxing and Mental Toughness",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_category-blog_boxing-and-mental-toughness",
+          "labelOf": [
+            "body-pages_j-content_featured-articles.link-10"
+          ],
+          "maxCharacters": 46,
+          "maxCharactersFrom": "content map declared of article-28.7",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_boxing-and-mental-toughness"
+            ],
+            "menus": []
+          }
+        }
+      ],
       "lists": [
         {
           "id": "menuItem-164.items",
@@ -12659,70 +13042,80 @@
           "position": 0,
           "label": "Never boxed before",
           "target": "/pages/j-content/category-blog/never-boxed-before",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-1.15"
         },
         {
           "id": "body-pages_j-content_featured-articles.link-2",
           "position": 1,
           "label": "Boxing Legends Remembered",
           "target": "/pages/j-content/category-blog/boxing-legends-remembered",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-3.15"
         },
         {
           "id": "body-pages_j-content_featured-articles.link-3",
           "position": 2,
           "label": "Title Defense Strategies",
           "target": "/pages/j-content/category-blog/title-defense-strategies",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-4.15"
         },
         {
           "id": "body-pages_j-content_featured-articles.link-4",
           "position": 3,
           "label": "Inside Boxing Techniques",
           "target": "/pages/j-content/category-blog/inside-boxing-techniques",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-5.15"
         },
         {
           "id": "body-pages_j-content_featured-articles.link-5",
           "position": 4,
           "label": "The Boxing World Tour",
           "target": "/pages/j-content/blog-detail",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-6.15"
         },
         {
           "id": "body-pages_j-content_featured-articles.link-6",
           "position": 5,
           "label": "Classic Boxing Rivalries",
           "target": "/pages/j-content/category-blog/classic-boxing-rivalries",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-7.15"
         },
         {
           "id": "body-pages_j-content_featured-articles.link-7",
           "position": 6,
           "label": "Boxing's Finest Moments",
           "target": "/pages/j-content/category-blog/boxings-finest-moments",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-8.15"
         },
         {
           "id": "body-pages_j-content_featured-articles.link-8",
           "position": 7,
           "label": "Boxing's Ultimate Showdown",
           "target": "/pages/j-content/category-blog/boxings-ultimate-showdown",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-9.15"
         },
         {
           "id": "body-pages_j-content_featured-articles.link-9",
           "position": 8,
           "label": "Boxing's Impact on Culture",
           "target": "/pages/j-content/category-blog/boxings-impact-on-culture",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-10.15"
         },
         {
           "id": "body-pages_j-content_featured-articles.link-10",
           "position": 9,
           "label": "Boxing and Mental Toughness",
           "target": "/pages/j-content/category-blog/boxing-and-mental-toughness",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-11.15"
         },
         {
           "id": "body-pages_j-content_featured-articles.link-11",
@@ -12871,6 +13264,9 @@
           "alsoShownIn": [
             "body-pages_j-content_author-listting_author_drew_stokes"
           ],
+          "labelOf": [
+            "body-pages_j-content_author-listting.link-8"
+          ],
           "maxCharactersFrom": "kit frame (390px 33, 1440px 49)",
           "alsoChanges": {
             "blocks": [
@@ -12893,6 +13289,9 @@
           "formatFrom": "page",
           "alsoShownIn": [
             "body-pages_j-content_author-listting_author_daniel_vasquez"
+          ],
+          "labelOf": [
+            "body-pages_j-content_author-listting.link-14"
           ],
           "maxCharactersFrom": "kit frame of user-44.0 (390px 33, 1440px 49)",
           "alsoChanges": {
@@ -12917,6 +13316,9 @@
           "alsoShownIn": [
             "body-pages_j-content_author-listting_author_franklin_wagner"
           ],
+          "labelOf": [
+            "body-pages_j-content_author-listting.link-20"
+          ],
           "maxCharactersFrom": "kit frame of user-44.0 (390px 33, 1440px 49)",
           "alsoChanges": {
             "blocks": [
@@ -12939,6 +13341,9 @@
           "formatFrom": "page",
           "alsoShownIn": [
             "body-pages_j-content_author-listting_author_lorene_bass"
+          ],
+          "labelOf": [
+            "body-pages_j-content_author-listting.link-26"
           ],
           "maxCharactersFrom": "kit frame of user-44.0 (390px 33, 1440px 49)",
           "alsoChanges": {
@@ -12963,6 +13368,9 @@
           "alsoShownIn": [
             "body-pages_j-content_author-listting_author_corey_gibson"
           ],
+          "labelOf": [
+            "body-pages_j-content_author-listting.link-32"
+          ],
           "maxCharactersFrom": "kit frame of user-44.0 (390px 33, 1440px 49)",
           "alsoChanges": {
             "blocks": [
@@ -12986,6 +13394,9 @@
           "alsoShownIn": [
             "body-pages_j-content_author-listting_author_cora_stephens"
           ],
+          "labelOf": [
+            "body-pages_j-content_author-listting.link-38"
+          ],
           "maxCharactersFrom": "kit frame of user-44.0 (390px 33, 1440px 49)",
           "alsoChanges": {
             "blocks": [
@@ -13008,6 +13419,9 @@
           "formatFrom": "page",
           "alsoShownIn": [
             "body-pages_j-content_author-listting_author_gene_roberts"
+          ],
+          "labelOf": [
+            "body-pages_j-content_author-listting.link-44"
           ],
           "maxCharactersFrom": "kit frame of user-44.0 (390px 33, 1440px 49)",
           "alsoChanges": {
@@ -13222,7 +13636,49 @@
           "holds": null
         }
       ],
-      "frames": [],
+      "frames": [
+        {
+          "id": "body-pages_j-content_author-listting.picture-1",
+          "shape": {
+            "name": "landscape",
+            "aspect": 1.5
+          },
+          "width": 1440,
+          "height": 960,
+          "kind": "photo",
+          "canHide": true,
+          "twinOf": "block-162.picture-1",
+          "fixed": false,
+          "hideEvidence": {
+            "measured": null,
+            "checks": {
+              "all": "a CSS background takes no room in the layout, so emptying it moves nothing"
+            },
+            "measuredAs": "single",
+            "invalid": false,
+            "judgedBy": "automatic check"
+          },
+          "kindEvidence": {
+            "clearShare": null,
+            "overPicture": false,
+            "paintedBy": "div.bg-mask",
+            "box": {
+              "width": 1440,
+              "height": 960
+            }
+          },
+          "picture": "images/joomlart/others/bg-cta.jpg",
+          "role": null,
+          "shownAs": "background",
+          "painter": "div.bg-mask",
+          "paintedBehind": true,
+          "writable": false,
+          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
+          "faces": false,
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+        }
+      ],
       "links": [
         {
           "id": "body-pages_j-content_author-listting.link-1",
@@ -13316,7 +13772,8 @@
           "position": 7,
           "label": "Drew Stokes",
           "target": "/pages/j-content/author-listting/author/drew_stokes",
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "user-44.0"
         },
         {
           "id": "body-pages_j-content_author-listting.link-9",
@@ -13389,7 +13846,8 @@
           "position": 13,
           "label": "Daniel Vasquez",
           "target": "/pages/j-content/author-listting/author/daniel vasquez",
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "user-45.0"
         },
         {
           "id": "body-pages_j-content_author-listting.link-15",
@@ -13462,7 +13920,8 @@
           "position": 19,
           "label": "Franklin Wagner",
           "target": "/pages/j-content/author-listting/author/franklin wagner",
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "user-46.0"
         },
         {
           "id": "body-pages_j-content_author-listting.link-21",
@@ -13535,7 +13994,8 @@
           "position": 25,
           "label": "Lorene Bass",
           "target": "/pages/j-content/author-listting/author/lorene bass",
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "user-47.0"
         },
         {
           "id": "body-pages_j-content_author-listting.link-27",
@@ -13608,7 +14068,8 @@
           "position": 31,
           "label": "Corey Gibson",
           "target": "/pages/j-content/author-listting/author/corey gibson",
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "user-48.0"
         },
         {
           "id": "body-pages_j-content_author-listting.link-33",
@@ -13681,7 +14142,8 @@
           "position": 37,
           "label": "Cora Stephens",
           "target": "/pages/j-content/author-listting/author/cora stephens",
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "user-49.0"
         },
         {
           "id": "body-pages_j-content_author-listting.link-39",
@@ -13754,7 +14216,8 @@
           "position": 43,
           "label": "Gene Roberts",
           "target": "/pages/j-content/author-listting/author/gene roberts",
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "user-51.0"
         },
         {
           "id": "body-pages_j-content_author-listting.link-45",
@@ -14165,6 +14628,17 @@
           "bullets": 0,
           "formatFrom": "page",
           "maxCharactersFrom": "kit frame (390px 678, 1440px 767)"
+        },
+        {
+          "id": "article-6.14",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 506,
+          "sample": "It is a long established fact that a…",
+          "paragraphs": 3,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 528, phone 506)"
         }
       ],
       "lists": [],
@@ -14752,6 +15226,48 @@
           "bullets": 0,
           "formatFrom": "page",
           "maxCharactersFrom": "kit frame (390px 118, 1440px 135)"
+        },
+        {
+          "id": "article-1.15",
+          "type": "text",
+          "sample": "Never boxed before",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_category-blog",
+          "labelOf": [
+            "block-158.link-2"
+          ],
+          "maxCharacters": 46,
+          "maxCharactersFrom": "content map declared of article-28.7",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_never-boxed-before"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-3.15",
+          "type": "text",
+          "sample": "Boxing Legends Remembered",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_category-blog",
+          "labelOf": [
+            "block-158.link-4"
+          ],
+          "maxCharacters": 46,
+          "maxCharactersFrom": "content map declared of article-28.7",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_boxing-legends-remembered"
+            ],
+            "menus": []
+          }
         }
       ],
       "lists": [],
@@ -14776,7 +15292,8 @@
           "position": 1,
           "label": "Never boxed before",
           "target": "/pages/j-content/category-blog/never-boxed-before",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-1.15"
         },
         {
           "id": "block-158.link-3",
@@ -14797,7 +15314,8 @@
           "position": 3,
           "label": "Boxing Legends Remembered",
           "target": "/pages/j-content/category-blog/boxing-legends-remembered",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-3.15"
         }
       ],
       "fixedText": [],
@@ -15415,7 +15933,8 @@
           "position": 2,
           "label": "Beginner Boxing",
           "target": "/classes/beginner-boxing",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-14.4"
         },
         {
           "id": "body-classes.link-4",
@@ -15576,6 +16095,9 @@
           "type": "text",
           "maxCharacters": 26,
           "sample": "open in google maps",
+          "labelOf": [
+            "body-about-us_contact.button-1"
+          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -15642,6 +16164,9 @@
           "type": "text",
           "maxCharacters": 26,
           "sample": "Submit",
+          "labelOf": [
+            "body-about-us_contact.button-2"
+          ],
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
@@ -15649,14 +16174,86 @@
         }
       ],
       "lists": [],
-      "frames": [],
+      "frames": [
+        {
+          "id": "body-about-us_contact.picture-1",
+          "shape": {
+            "name": "landscape",
+            "aspect": 1.5
+          },
+          "width": 1440,
+          "height": 960,
+          "kind": "photo",
+          "canHide": true,
+          "twinOf": "block-162.picture-1",
+          "fixed": false,
+          "hideEvidence": {
+            "measured": null,
+            "checks": {
+              "all": "a CSS background takes no room in the layout, so emptying it moves nothing"
+            },
+            "measuredAs": "single",
+            "invalid": false,
+            "judgedBy": "automatic check"
+          },
+          "kindEvidence": {
+            "clearShare": null,
+            "overPicture": false,
+            "paintedBy": "div.bg-mask",
+            "box": {
+              "width": 1440,
+              "height": 960
+            }
+          },
+          "picture": "images/joomlart/others/bg-cta.jpg",
+          "role": null,
+          "shownAs": "background",
+          "painter": "div.bg-mask",
+          "paintedBehind": true,
+          "writable": false,
+          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
+          "faces": false,
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+        }
+      ],
       "links": [
         {
           "id": "body-about-us_contact.link-1",
           "position": 0,
           "label": "sale@getfit.com",
           "target": "mailto:sale@getfit.com",
-          "action": "contact"
+          "action": "contact",
+          "labelId": "contact-1.3"
+        },
+        {
+          "id": "body-about-us_contact.button-1",
+          "position": 0,
+          "label": "OPEN IN GOOGLE MAPS",
+          "target": null,
+          "element": "button",
+          "opens": {
+            "kind": "modal",
+            "element": "#modalMap",
+            "shows": "map",
+            "writable": false,
+            "writableReason": "the button opens a map the page draws from its own settings, which no content map slot holds; a planner cannot point it at the customer address"
+          },
+          "labelId": "languageString-30910664.0",
+          "action": "page-control"
+        },
+        {
+          "id": "body-about-us_contact.button-2",
+          "position": 1,
+          "label": "SUBMIT",
+          "target": null,
+          "element": "button",
+          "opens": {
+            "kind": "form",
+            "action": "/index.php/about-us/contact"
+          },
+          "labelId": "languageString-139204367.0",
+          "action": "page-control"
         }
       ],
       "fixedText": [
@@ -15937,6 +16534,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "block-184.link-2"
+          ],
           "maxCharactersFrom": "kit frame (390px 24, 1440px 81)"
         },
         {
@@ -15970,6 +16570,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "block-184.link-1"
+          ],
           "maxCharactersFrom": "kit frame (390px 42, 1440px 91)"
         },
         {
@@ -15981,6 +16584,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "block-184.link-3"
+          ],
           "maxCharactersFrom": "kit frame (390px 45, 1440px 94)"
         }
       ],
@@ -17174,56 +17780,117 @@
           "holds": null
         }
       ],
-      "frames": [],
+      "frames": [
+        {
+          "id": "block-184.picture-1",
+          "shape": {
+            "name": "landscape",
+            "aspect": 1.5
+          },
+          "width": 1440,
+          "height": 960,
+          "kind": "photo",
+          "canHide": true,
+          "twinOf": "block-162.picture-1",
+          "fixed": false,
+          "hideEvidence": {
+            "measured": null,
+            "checks": {
+              "all": "a CSS background takes no room in the layout, so emptying it moves nothing"
+            },
+            "measuredAs": "single",
+            "invalid": false,
+            "judgedBy": "automatic check"
+          },
+          "kindEvidence": {
+            "clearShare": null,
+            "overPicture": false,
+            "paintedBy": "div.bg-mask",
+            "box": {
+              "width": 1440,
+              "height": 960
+            }
+          },
+          "picture": "images/joomlart/others/bg-cta.jpg",
+          "role": null,
+          "shownAs": "background",
+          "painter": "div.bg-mask",
+          "paintedBehind": true,
+          "writable": false,
+          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
+          "faces": false,
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+        }
+      ],
       "links": [
         {
           "id": "block-184.link-1",
           "position": 0,
           "label": "Credit Bundles",
           "target": null,
-          "action": "page-control"
+          "opens": {
+            "kind": "panel",
+            "element": "#mod-167_184"
+          },
+          "action": "page-control",
+          "labelId": "block-167.24"
         },
         {
           "id": "block-184.link-2",
           "position": 1,
           "label": "Memberships",
           "target": null,
-          "action": "page-control"
+          "opens": {
+            "kind": "panel",
+            "element": "#mod-188_184"
+          },
+          "action": "page-control",
+          "labelId": "block-188.24"
         },
         {
           "id": "block-184.link-3",
           "position": 2,
           "label": "Kids credits",
           "target": null,
-          "action": "page-control"
+          "opens": {
+            "kind": "panel",
+            "element": "#mod-189_184"
+          },
+          "action": "page-control",
+          "labelId": "block-189.24"
         },
         {
           "id": "block-184.link-4",
           "position": 3,
           "label": "SELECT PLAN",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "block-167.12"
         },
         {
           "id": "block-184.link-5",
           "position": 4,
           "label": "SELECT PLAN",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "block-167.13"
         },
         {
           "id": "block-184.link-6",
           "position": 5,
           "label": "SELECT PLAN",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "block-167.14"
         },
         {
           "id": "block-184.link-7",
           "position": 6,
           "label": "SELECT PLAN",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "block-167.15"
         }
       ],
       "fixedText": [],
@@ -18279,14 +18946,16 @@
           "position": 0,
           "label": "LOG IN TO PURCHASE",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "block-172.6"
         },
         {
           "id": "block-172.link-2",
           "position": 1,
           "label": "LOG IN TO PURCHASE",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "block-172.7"
         }
       ],
       "fixedText": [],
@@ -18445,6 +19114,17 @@
           "bullets": 0,
           "formatFrom": "page",
           "maxCharactersFrom": "kit frame (390px 287, 1440px 329)"
+        },
+        {
+          "id": "block-183.8",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles…",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map declared; the content map fit (desktop 255, phone 255) is the box of the demo words, not a limit"
         }
       ],
       "lists": [
@@ -18703,6 +19383,47 @@
           "picture": "images/joomlart/others/sign-light.png",
           "role": "quote.author_image",
           "classReason": "handwritten signature of the demo trainer (agent)"
+        },
+        {
+          "id": "block-183.picture-1",
+          "shape": {
+            "name": "landscape",
+            "aspect": 1.5
+          },
+          "width": 1440,
+          "height": 960,
+          "kind": "photo",
+          "canHide": true,
+          "twinOf": "block-162.picture-1",
+          "fixed": false,
+          "hideEvidence": {
+            "measured": null,
+            "checks": {
+              "all": "a CSS background takes no room in the layout, so emptying it moves nothing"
+            },
+            "measuredAs": "single",
+            "invalid": false,
+            "judgedBy": "automatic check"
+          },
+          "kindEvidence": {
+            "clearShare": null,
+            "overPicture": false,
+            "paintedBy": "div.bg-mask",
+            "box": {
+              "width": 1440,
+              "height": 960
+            }
+          },
+          "picture": "images/joomlart/others/bg-cta.jpg",
+          "role": null,
+          "shownAs": "background",
+          "painter": "div.bg-mask",
+          "paintedBehind": true,
+          "writable": false,
+          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
+          "faces": false,
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
         }
       ],
       "links": [],
@@ -20157,7 +20878,8 @@
           "position": 1,
           "label": "sale@no-reply.com",
           "target": "mailto:sale@no-reply.com",
-          "action": "contact"
+          "action": "contact",
+          "labelId": "block-177.11"
         },
         {
           "id": "block-177.link-3",
@@ -20171,14 +20893,16 @@
           "position": 3,
           "label": "CORPORATE",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "block-177.3"
         },
         {
           "id": "block-177.link-5",
           "position": 4,
           "label": "sale@no-reply.com",
           "target": "mailto:sale@no-reply.com",
-          "action": "contact"
+          "action": "contact",
+          "labelId": "block-177.10"
         },
         {
           "id": "block-177.link-6",
@@ -20310,7 +21034,92 @@
         "390": "body-pages_j-content_category-blog-390",
         "1440": "body-pages_j-content_category-blog-1440"
       },
-      "slots": [],
+      "slots": [
+        {
+          "id": "article-24.12",
+          "type": "text",
+          "sample": "Global Perspectives on the Sport of Boxing",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_author-listting_author_gene_roberts",
+          "labelOf": [
+            "body-about-us_learning-center.link-7"
+          ],
+          "maxCharacters": 43,
+          "maxCharactersFrom": "kit frame (390px 43, 1440px 51)",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-about-us_learning-center_global-perspectives-on-the-sport-of-boxing"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-25.12",
+          "type": "text",
+          "sample": "The Business of Professional Boxing Promotions",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_author-listting_author_lorene_bass",
+          "labelOf": [
+            "body-about-us_learning-center.link-8"
+          ],
+          "maxCharacters": 50,
+          "maxCharactersFrom": "kit frame of article-26.12 (390px 52, 1440px 50)",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-about-us_learning-center_the-business-of-professional-boxing-promotions"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-26.12",
+          "type": "text",
+          "sample": "The Evolution of Boxing Equipment and Gear",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_author-listting_author_lorene_bass",
+          "labelOf": [
+            "body-about-us_learning-center.link-9"
+          ],
+          "maxCharacters": 50,
+          "maxCharactersFrom": "kit frame (390px 52, 1440px 50)",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-27.12",
+          "type": "text",
+          "sample": "In-Depth Analysis of Classic Boxing Matches",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_author-listting_author_corey_gibson",
+          "labelOf": [
+            "body-about-us_learning-center.link-10"
+          ],
+          "maxCharacters": 46,
+          "maxCharactersFrom": "content map declared of article-28.7",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches"
+            ],
+            "menus": []
+          }
+        }
+      ],
       "lists": [
         {
           "id": "menuItem-194.items",
@@ -20545,70 +21354,80 @@
           "position": 0,
           "label": "Every champ was a beginner at some point!",
           "target": "/about-us/learning-center/every-champ-was-a-beginner-at-some-point",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-18.12"
         },
         {
           "id": "body-about-us_learning-center.link-2",
           "position": 1,
           "label": "Unforgettable Moments in Boxing History",
           "target": "/about-us/learning-center/unforgettable-moments-in-boxing-history",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-19.12"
         },
         {
           "id": "body-about-us_learning-center.link-3",
           "position": 2,
           "label": "The Art and Science of Boxing Strategy",
           "target": "/about-us/learning-center/the-art-and-science-of-boxing-strategy",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-20.12"
         },
         {
           "id": "body-about-us_learning-center.link-4",
           "position": 3,
           "label": "Boxing Legends: Stories of Great Fighters",
           "target": "/about-us/learning-center/boxing-legends-stories-of-great-fighters",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-21.12"
         },
         {
           "id": "body-about-us_learning-center.link-5",
           "position": 4,
           "label": "Behind the Scenes of Boxing Training Camps",
           "target": "/about-us/learning-center/behind-the-scenes-of-boxing-training-camps",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-22.12"
         },
         {
           "id": "body-about-us_learning-center.link-6",
           "position": 5,
           "label": "The Impact of Boxing on Popular Culture",
           "target": "/about-us/learning-center/the-impact-of-boxing-on-popular-culture",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-23.12"
         },
         {
           "id": "body-about-us_learning-center.link-7",
           "position": 6,
           "label": "Global Perspectives on the Sport of Boxing",
           "target": "/about-us/learning-center/global-perspectives-on-the-sport-of-boxing",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-24.12"
         },
         {
           "id": "body-about-us_learning-center.link-8",
           "position": 7,
           "label": "The Business of Professional Boxing Promotions",
           "target": "/about-us/learning-center/the-business-of-professional-boxing-promotions",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-25.12"
         },
         {
           "id": "body-about-us_learning-center.link-9",
           "position": 8,
           "label": "The Evolution of Boxing Equipment and Gear",
           "target": "/about-us/learning-center/the-evolution-of-boxing-equipment-and-gear",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-26.12"
         },
         {
           "id": "body-about-us_learning-center.link-10",
           "position": 9,
           "label": "In-Depth Analysis of Classic Boxing Matches",
           "target": "/about-us/learning-center/in-depth-analysis-of-classic-boxing-matches",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-27.12"
         },
         {
           "id": "body-about-us_learning-center.link-11",
@@ -21879,6 +22698,47 @@
           "role": "person.image",
           "faces": true,
           "classReason": "trainer portrait presented as staff (agent)"
+        },
+        {
+          "id": "block-178.picture-1",
+          "shape": {
+            "name": "landscape",
+            "aspect": 1.5
+          },
+          "width": 1440,
+          "height": 960,
+          "kind": "photo",
+          "canHide": true,
+          "twinOf": "block-162.picture-1",
+          "fixed": false,
+          "hideEvidence": {
+            "measured": null,
+            "checks": {
+              "all": "a CSS background takes no room in the layout, so emptying it moves nothing"
+            },
+            "measuredAs": "single",
+            "invalid": false,
+            "judgedBy": "automatic check"
+          },
+          "kindEvidence": {
+            "clearShare": null,
+            "overPicture": false,
+            "paintedBy": "div.bg-mask",
+            "box": {
+              "width": 1440,
+              "height": 960
+            }
+          },
+          "picture": "images/joomlart/others/bg-cta.jpg",
+          "role": null,
+          "shownAs": "background",
+          "painter": "div.bg-mask",
+          "paintedBehind": true,
+          "writable": false,
+          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
+          "faces": false,
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
         }
       ],
       "links": [
@@ -21977,7 +22837,8 @@
           "position": 7,
           "label": "Cameron Williamson",
           "target": "/about-us/our-trainers/darlene-robertson",
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "block-178.14"
         },
         {
           "id": "block-178.link-9",
@@ -22050,7 +22911,8 @@
           "position": 13,
           "label": "Marvin McKinney",
           "target": "/about-us/our-trainers/darlene-robertson",
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "block-178.13"
         },
         {
           "id": "block-178.link-15",
@@ -22123,7 +22985,8 @@
           "position": 19,
           "label": "Kathryn Murphy",
           "target": "/about-us/our-trainers/darlene-robertson",
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "block-178.12"
         },
         {
           "id": "block-178.link-21",
@@ -22196,7 +23059,8 @@
           "position": 25,
           "label": "Kathryn Murphy",
           "target": "/about-us/our-trainers/darlene-robertson",
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "block-178.11"
         },
         {
           "id": "block-178.link-27",
@@ -22269,7 +23133,8 @@
           "position": 31,
           "label": "Marvin McKinney",
           "target": "/about-us/our-trainers/darlene-robertson",
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "block-178.10"
         },
         {
           "id": "block-178.link-33",
@@ -22342,7 +23207,8 @@
           "position": 37,
           "label": "Cameron Williamson",
           "target": "/about-us/our-trainers/darlene-robertson",
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "block-178.9"
         },
         {
           "id": "block-178.link-39",
@@ -22992,6 +23858,47 @@
           "role": "person.image",
           "faces": true,
           "classReason": "trainer portrait presented as staff (agent)"
+        },
+        {
+          "id": "block-180.picture-1",
+          "shape": {
+            "name": "landscape",
+            "aspect": 1.5
+          },
+          "width": 1440,
+          "height": 960,
+          "kind": "photo",
+          "canHide": true,
+          "twinOf": "block-162.picture-1",
+          "fixed": false,
+          "hideEvidence": {
+            "measured": null,
+            "checks": {
+              "all": "a CSS background takes no room in the layout, so emptying it moves nothing"
+            },
+            "measuredAs": "single",
+            "invalid": false,
+            "judgedBy": "automatic check"
+          },
+          "kindEvidence": {
+            "clearShare": null,
+            "overPicture": false,
+            "paintedBy": "div.bg-mask",
+            "box": {
+              "width": 1440,
+              "height": 960
+            }
+          },
+          "picture": "images/joomlart/others/bg-cta.jpg",
+          "role": null,
+          "shownAs": "background",
+          "painter": "div.bg-mask",
+          "paintedBehind": true,
+          "writable": false,
+          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
+          "faces": false,
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
         }
       ],
       "links": [
@@ -23006,7 +23913,8 @@
             "title": "Who the hell is Darlene Robertson?",
             "network": "facebook"
           },
-          "action": "external-profile"
+          "action": "external-profile",
+          "labelId": "block-180.1"
         },
         {
           "id": "block-180.8",
@@ -23986,7 +24894,8 @@
           "position": 0,
           "label": "BOOK TRAINER NOW",
           "target": "/about-us/contact",
-          "action": "primary-cta"
+          "action": "primary-cta",
+          "labelId": "block-181.20"
         }
       ],
       "fixedText": [],
@@ -24736,7 +25645,8 @@
           "position": 1,
           "label": "Darlene Robertson",
           "target": "/about-us/our-trainers/darlene-robertson",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "block-182.4"
         },
         {
           "id": "block-182.link-3",
@@ -24809,7 +25719,8 @@
           "position": 7,
           "label": "Cameron Williamson",
           "target": "/about-us/our-trainers/darlene-robertson",
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "block-182.5"
         },
         {
           "id": "block-182.link-9",
@@ -24882,7 +25793,8 @@
           "position": 13,
           "label": "Marvin McKinney",
           "target": "/about-us/our-trainers/darlene-robertson",
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "block-182.6"
         },
         {
           "id": "block-182.link-15",
@@ -24955,7 +25867,8 @@
           "position": 19,
           "label": "Kathryn Murphy",
           "target": "/about-us/our-trainers/darlene-robertson",
-          "action": "navigation"
+          "action": "navigation",
+          "labelId": "block-182.7"
         },
         {
           "id": "block-182.link-21",
@@ -25152,12 +26065,12 @@
           "id": "article-16.13",
           "role": "editorial.heading",
           "type": "text",
-          "maxCharacters": 28,
+          "maxCharacters": 46,
           "sample": "WHAT TO BRING",
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "content map",
-          "maxCharactersFrom": "content map fit (desktop 54, phone 28)"
+          "maxCharactersFrom": "content map declared"
         },
         {
           "id": "article-16.14",
@@ -25411,6 +26324,50 @@
           "bullets": 0,
           "formatFrom": "page",
           "maxCharactersFrom": "kit frame (390px 33, 1440px 19)"
+        },
+        {
+          "id": "article-16.50",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 20,
+          "sample": "Rest 30 seconds",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 20, phone 33)"
+        },
+        {
+          "id": "article-16.58",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 20,
+          "sample": "Rest 30 seconds",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 20, phone 33)"
+        },
+        {
+          "id": "article-16.51",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 19,
+          "sample": "Repeat 5X",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 19, phone 33)"
+        },
+        {
+          "id": "article-16.59",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 19,
+          "sample": "Repeat 5X",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 19, phone 33)"
         }
       ],
       "lists": [
@@ -27327,7 +28284,8 @@
           "position": 2,
           "label": "Beginner Boxing",
           "target": "/classes/beginner-boxing",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-14.4"
         },
         {
           "id": "block-159.link-4",
@@ -27440,12 +28398,12 @@
           "id": "article-14.13",
           "role": "editorial.heading",
           "type": "text",
-          "maxCharacters": 28,
+          "maxCharacters": 46,
           "sample": "WHAT TO BRING",
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "content map",
-          "maxCharactersFrom": "content map fit (desktop 54, phone 28)"
+          "maxCharactersFrom": "content map declared"
         },
         {
           "id": "article-14.14",
@@ -27699,6 +28657,50 @@
           "bullets": 0,
           "formatFrom": "page",
           "maxCharactersFrom": "kit frame (390px 33, 1440px 19)"
+        },
+        {
+          "id": "article-14.50",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 20,
+          "sample": "Rest 30 seconds",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 20, phone 33)"
+        },
+        {
+          "id": "article-14.58",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 20,
+          "sample": "Rest 30 seconds",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 20, phone 33)"
+        },
+        {
+          "id": "article-14.51",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 19,
+          "sample": "Repeat 5X",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 19, phone 33)"
+        },
+        {
+          "id": "article-14.59",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 19,
+          "sample": "Repeat 5X",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 19, phone 33)"
         }
       ],
       "lists": [
@@ -28893,12 +29895,12 @@
           "id": "article-2.16",
           "role": "editorial.heading",
           "type": "text",
-          "maxCharacters": 28,
+          "maxCharacters": 46,
           "sample": "WHAT TO BRING",
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "content map",
-          "maxCharactersFrom": "content map fit (desktop 54, phone 28)"
+          "maxCharactersFrom": "content map declared"
         },
         {
           "id": "article-2.17",
@@ -29162,7 +30164,54 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-classes_group-boxing.link-2"
+          ],
           "maxCharactersFrom": "kit frame (390px 32, 1440px 152)"
+        },
+        {
+          "id": "article-2.53",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 20,
+          "sample": "Rest 30 seconds",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 20, phone 33)"
+        },
+        {
+          "id": "article-2.61",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 20,
+          "sample": "Rest 30 seconds",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 20, phone 33)"
+        },
+        {
+          "id": "article-2.54",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 19,
+          "sample": "Repeat 5X",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 19, phone 33)"
+        },
+        {
+          "id": "article-2.62",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 19,
+          "sample": "Repeat 5X",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 19, phone 33)"
         }
       ],
       "lists": [
@@ -29365,13 +30414,13 @@
                   "left": 0,
                   "top": 485,
                   "width": 390,
-                  "height": 2290
+                  "height": 2170
                 },
                 "blockAfter": {
                   "left": 0,
                   "top": 485,
                   "width": 390,
-                  "height": 2290
+                  "height": 2170
                 },
                 "rowSets": 2,
                 "textMoved": 0,
@@ -29386,13 +30435,13 @@
                   "left": 0,
                   "top": 683,
                   "width": 1440,
-                  "height": 1725
+                  "height": 1786
                 },
                 "blockAfter": {
                   "left": 0,
                   "top": 683,
                   "width": 1440,
-                  "height": 1725
+                  "height": 1786
                 },
                 "rowSets": 2,
                 "textMoved": 0,
@@ -30402,7 +31451,8 @@
           "position": 1,
           "label": "BOOK YOUR TRIAL CLASS NOW",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "languageString-76896395.0"
         },
         {
           "id": "body-classes_group-boxing.link-3",
@@ -30806,12 +31856,12 @@
           "id": "article-15.11",
           "role": "editorial.heading",
           "type": "text",
-          "maxCharacters": 28,
+          "maxCharacters": 46,
           "sample": "WHAT TO BRING",
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "content map",
-          "maxCharactersFrom": "content map fit (desktop 54, phone 28)"
+          "maxCharactersFrom": "content map declared"
         },
         {
           "id": "article-15.12",
@@ -31065,6 +32115,50 @@
           "bullets": 0,
           "formatFrom": "page",
           "maxCharactersFrom": "kit frame (390px 33, 1440px 19)"
+        },
+        {
+          "id": "article-15.48",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 20,
+          "sample": "Rest 30 seconds",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 20, phone 33)"
+        },
+        {
+          "id": "article-15.56",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 20,
+          "sample": "Rest 30 seconds",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 20, phone 33)"
+        },
+        {
+          "id": "article-15.49",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 19,
+          "sample": "Repeat 5X",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 19, phone 33)"
+        },
+        {
+          "id": "article-15.57",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 19,
+          "sample": "Repeat 5X",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 19, phone 33)"
         }
       ],
       "lists": [
@@ -31267,13 +32361,13 @@
                   "left": 0,
                   "top": 485,
                   "width": 390,
-                  "height": 2290
+                  "height": 2170
                 },
                 "blockAfter": {
                   "left": 0,
                   "top": 485,
                   "width": 390,
-                  "height": 2290
+                  "height": 2170
                 },
                 "rowSets": 2,
                 "textMoved": 0,
@@ -31288,13 +32382,13 @@
                   "left": 0,
                   "top": 683,
                   "width": 1440,
-                  "height": 1725
+                  "height": 1786
                 },
                 "blockAfter": {
                   "left": 0,
                   "top": 683,
                   "width": 1440,
-                  "height": 1725
+                  "height": 1786
                 },
                 "rowSets": 2,
                 "textMoved": 0,
@@ -31323,7 +32417,7 @@
               "width": 688,
               "height": 295,
               "left": 16,
-              "top": 1997
+              "top": 2045
             }
           },
           "picture": "images/joomlart/classes/intro-4.jpg",
@@ -32356,6 +33450,17 @@
           "bullets": 0,
           "formatFrom": "page",
           "maxCharactersFrom": "kit frame (390px 678, 1440px 767)"
+        },
+        {
+          "id": "article-1.14",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 506,
+          "sample": "It is a long established fact that a…",
+          "paragraphs": 3,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 528, phone 506)"
         }
       ],
       "lists": [],
@@ -32691,6 +33796,48 @@
           "bullets": 0,
           "formatFrom": "page",
           "maxCharactersFrom": "kit frame (390px 118, 1440px 135)"
+        },
+        {
+          "id": "article-18.12",
+          "type": "text",
+          "sample": "Every champ was a beginner at some point!",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-about-us_learning-center",
+          "labelOf": [
+            "block-191.link-2"
+          ],
+          "maxCharacters": 46,
+          "maxCharactersFrom": "content map declared of article-28.7",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-about-us_learning-center_every-champ-was-a-beginner-at-some-point"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-19.12",
+          "type": "text",
+          "sample": "Unforgettable Moments in Boxing History",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-about-us_learning-center",
+          "labelOf": [
+            "block-191.link-4"
+          ],
+          "maxCharacters": 46,
+          "maxCharactersFrom": "content map declared of article-28.7",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-about-us_learning-center_unforgettable-moments-in-boxing-history"
+            ],
+            "menus": []
+          }
         }
       ],
       "lists": [],
@@ -32715,7 +33862,8 @@
           "position": 1,
           "label": "Every champ was a beginner at some point!",
           "target": "/about-us/learning-center/every-champ-was-a-beginner-at-some-point",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-18.12"
         },
         {
           "id": "block-191.link-3",
@@ -32736,7 +33884,8 @@
           "position": 3,
           "label": "Unforgettable Moments in Boxing History",
           "target": "/about-us/learning-center/unforgettable-moments-in-boxing-history",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-19.12"
         }
       ],
       "fixedText": [],
@@ -32912,6 +34061,17 @@
           "bullets": 0,
           "formatFrom": "page",
           "maxCharactersFrom": "kit frame (390px 678, 1440px 767)"
+        },
+        {
+          "id": "article-3.14",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 506,
+          "sample": "It is a long established fact that a…",
+          "paragraphs": 3,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 528, phone 506)"
         }
       ],
       "lists": [],
@@ -33470,6 +34630,17 @@
           "bullets": 0,
           "formatFrom": "page",
           "maxCharactersFrom": "kit frame (390px 678, 1440px 767)"
+        },
+        {
+          "id": "article-4.14",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 506,
+          "sample": "It is a long established fact that a…",
+          "paragraphs": 3,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 528, phone 506)"
         }
       ],
       "lists": [],
@@ -34028,6 +35199,17 @@
           "bullets": 0,
           "formatFrom": "page",
           "maxCharactersFrom": "kit frame (390px 678, 1440px 767)"
+        },
+        {
+          "id": "article-5.14",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 506,
+          "sample": "It is a long established fact that a…",
+          "paragraphs": 3,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 528, phone 506)"
         }
       ],
       "lists": [],
@@ -34590,6 +35772,17 @@
           "bullets": 0,
           "formatFrom": "page",
           "maxCharactersFrom": "kit frame (390px 678, 1440px 767)"
+        },
+        {
+          "id": "article-7.14",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 506,
+          "sample": "It is a long established fact that a…",
+          "paragraphs": 3,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 528, phone 506)"
         }
       ],
       "lists": [],
@@ -35152,6 +36345,17 @@
           "bullets": 0,
           "formatFrom": "page",
           "maxCharactersFrom": "kit frame (390px 678, 1440px 767)"
+        },
+        {
+          "id": "article-8.14",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 506,
+          "sample": "It is a long established fact that a…",
+          "paragraphs": 3,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 528, phone 506)"
         }
       ],
       "lists": [],
@@ -35713,6 +36917,17 @@
           "bullets": 0,
           "formatFrom": "page",
           "maxCharactersFrom": "kit frame (390px 678, 1440px 767)"
+        },
+        {
+          "id": "article-9.14",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 506,
+          "sample": "It is a long established fact that a…",
+          "paragraphs": 3,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 528, phone 506)"
         }
       ],
       "lists": [],
@@ -36274,6 +37489,17 @@
           "bullets": 0,
           "formatFrom": "page",
           "maxCharactersFrom": "kit frame (390px 678, 1440px 767)"
+        },
+        {
+          "id": "article-10.14",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 506,
+          "sample": "It is a long established fact that a…",
+          "paragraphs": 3,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 528, phone 506)"
         }
       ],
       "lists": [],
@@ -36836,6 +38062,17 @@
           "bullets": 0,
           "formatFrom": "page",
           "maxCharactersFrom": "kit frame (390px 678, 1440px 767)"
+        },
+        {
+          "id": "article-11.14",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 506,
+          "sample": "It is a long established fact that a…",
+          "paragraphs": 3,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 528, phone 506)"
         }
       ],
       "lists": [],
@@ -37244,7 +38481,138 @@
         "390": "body-pages_j-content_category-blog-390",
         "1440": "body-pages_j-content_category-blog-1440"
       },
-      "slots": [],
+      "slots": [
+        {
+          "id": "article-8.15",
+          "type": "text",
+          "role": "article.title",
+          "sample": "Boxing's Finest Moments",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_category-blog_boxings-finest-moments",
+          "labelOf": [
+            "body-pages_j-content_category-blog--start-6.link-1"
+          ],
+          "maxCharacters": 46,
+          "maxCharactersFrom": "content map declared of article-28.7",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_boxings-finest-moments"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-9.15",
+          "type": "text",
+          "role": "article.title",
+          "sample": "Boxing's Ultimate Showdown",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_category-blog_boxings-ultimate-showdown",
+          "labelOf": [
+            "body-pages_j-content_category-blog--start-6.link-2"
+          ],
+          "maxCharacters": 27,
+          "maxCharactersFrom": "kit frame (390px 27, 1440px 43)",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_boxings-ultimate-showdown"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-10.15",
+          "type": "text",
+          "role": "article.title",
+          "sample": "Boxing's Impact on Culture",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_category-blog_boxings-impact-on-culture",
+          "labelOf": [
+            "body-pages_j-content_category-blog--start-6.link-3"
+          ],
+          "maxCharacters": 50,
+          "maxCharactersFrom": "kit frame of article-26.12 (390px 52, 1440px 50)",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_boxings-impact-on-culture"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-11.15",
+          "type": "text",
+          "role": "article.title",
+          "sample": "Boxing and Mental Toughness",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_category-blog_boxing-and-mental-toughness",
+          "labelOf": [
+            "body-pages_j-content_category-blog--start-6.link-4"
+          ],
+          "maxCharacters": 46,
+          "maxCharactersFrom": "content map declared of article-28.7",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_boxing-and-mental-toughness"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-12.15",
+          "type": "text",
+          "sample": "Boxing's Undisputed Champs",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_author-listting_author_gene_roberts",
+          "labelOf": [
+            "body-pages_j-content_category-blog--start-6.link-5"
+          ],
+          "maxCharacters": 43,
+          "maxCharactersFrom": "kit frame of article-24.12 (390px 43, 1440px 51)",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_boxings-undisputed-champs"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-13.15",
+          "type": "text",
+          "sample": "The Evolution of Boxing",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_author-listting_author_franklin_wagner",
+          "labelOf": [
+            "body-pages_j-content_category-blog--start-6.link-6"
+          ],
+          "maxCharacters": 46,
+          "maxCharactersFrom": "content map declared of article-28.7",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_the-evolution-of-boxing"
+            ],
+            "menus": []
+          }
+        }
+      ],
       "lists": [
         {
           "id": "body-pages_j-content_category-blog--start-6.items",
@@ -37545,42 +38913,48 @@
           "position": 0,
           "label": "Boxing's Finest Moments",
           "target": "/pages/j-content/category-blog/boxings-finest-moments",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-8.15"
         },
         {
           "id": "body-pages_j-content_category-blog--start-6.link-2",
           "position": 1,
           "label": "Boxing's Ultimate Showdown",
           "target": "/pages/j-content/category-blog/boxings-ultimate-showdown",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-9.15"
         },
         {
           "id": "body-pages_j-content_category-blog--start-6.link-3",
           "position": 2,
           "label": "Boxing's Impact on Culture",
           "target": "/pages/j-content/category-blog/boxings-impact-on-culture",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-10.15"
         },
         {
           "id": "body-pages_j-content_category-blog--start-6.link-4",
           "position": 3,
           "label": "Boxing and Mental Toughness",
           "target": "/pages/j-content/category-blog/boxing-and-mental-toughness",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-11.15"
         },
         {
           "id": "body-pages_j-content_category-blog--start-6.link-5",
           "position": 4,
           "label": "Boxing's Undisputed Champs",
           "target": "/pages/j-content/category-blog/boxings-undisputed-champs",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-12.15"
         },
         {
           "id": "body-pages_j-content_category-blog--start-6.link-6",
           "position": 5,
           "label": "The Evolution of Boxing",
           "target": "/pages/j-content/category-blog/the-evolution-of-boxing",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-13.15"
         },
         {
           "id": "body-pages_j-content_category-blog--start-6.link-7",
@@ -37689,7 +39063,138 @@
         "390": "body-pages_j-content_featured-articles-390",
         "1440": "body-pages_j-content_featured-articles-1440"
       },
-      "slots": [],
+      "slots": [
+        {
+          "id": "article-8.15",
+          "type": "text",
+          "role": "article.title",
+          "sample": "Boxing's Finest Moments",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_category-blog_boxings-finest-moments",
+          "labelOf": [
+            "body-pages_j-content_featured-articles--start-6.link-1"
+          ],
+          "maxCharacters": 46,
+          "maxCharactersFrom": "content map declared of article-28.7",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_boxings-finest-moments"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-9.15",
+          "type": "text",
+          "role": "article.title",
+          "sample": "Boxing's Ultimate Showdown",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_category-blog_boxings-ultimate-showdown",
+          "labelOf": [
+            "body-pages_j-content_featured-articles--start-6.link-2"
+          ],
+          "maxCharacters": 27,
+          "maxCharactersFrom": "kit frame (390px 27, 1440px 43)",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_boxings-ultimate-showdown"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-10.15",
+          "type": "text",
+          "role": "article.title",
+          "sample": "Boxing's Impact on Culture",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_category-blog_boxings-impact-on-culture",
+          "labelOf": [
+            "body-pages_j-content_featured-articles--start-6.link-3"
+          ],
+          "maxCharacters": 50,
+          "maxCharactersFrom": "kit frame of article-26.12 (390px 52, 1440px 50)",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_boxings-impact-on-culture"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-11.15",
+          "type": "text",
+          "role": "article.title",
+          "sample": "Boxing and Mental Toughness",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_category-blog_boxing-and-mental-toughness",
+          "labelOf": [
+            "body-pages_j-content_featured-articles--start-6.link-4"
+          ],
+          "maxCharacters": 46,
+          "maxCharactersFrom": "content map declared of article-28.7",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_boxing-and-mental-toughness"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-12.15",
+          "type": "text",
+          "sample": "Boxing's Undisputed Champs",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_author-listting_author_gene_roberts",
+          "labelOf": [
+            "body-pages_j-content_featured-articles--start-6.link-5"
+          ],
+          "maxCharacters": 43,
+          "maxCharactersFrom": "kit frame of article-24.12 (390px 43, 1440px 51)",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_boxings-undisputed-champs"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-13.15",
+          "type": "text",
+          "sample": "The Evolution of Boxing",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_author-listting_author_franklin_wagner",
+          "labelOf": [
+            "body-pages_j-content_featured-articles--start-6.link-6"
+          ],
+          "maxCharacters": 46,
+          "maxCharactersFrom": "content map declared of article-28.7",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-pages_j-content_category-blog_the-evolution-of-boxing"
+            ],
+            "menus": []
+          }
+        }
+      ],
       "lists": [
         {
           "id": "body-pages_j-content_featured-articles--start-6.items",
@@ -37990,42 +39495,48 @@
           "position": 0,
           "label": "Boxing's Finest Moments",
           "target": "/pages/j-content/category-blog/boxings-finest-moments",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-8.15"
         },
         {
           "id": "body-pages_j-content_featured-articles--start-6.link-2",
           "position": 1,
           "label": "Boxing's Ultimate Showdown",
           "target": "/pages/j-content/category-blog/boxings-ultimate-showdown",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-9.15"
         },
         {
           "id": "body-pages_j-content_featured-articles--start-6.link-3",
           "position": 2,
           "label": "Boxing's Impact on Culture",
           "target": "/pages/j-content/category-blog/boxings-impact-on-culture",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-10.15"
         },
         {
           "id": "body-pages_j-content_featured-articles--start-6.link-4",
           "position": 3,
           "label": "Boxing and Mental Toughness",
           "target": "/pages/j-content/category-blog/boxing-and-mental-toughness",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-11.15"
         },
         {
           "id": "body-pages_j-content_featured-articles--start-6.link-5",
           "position": 4,
           "label": "Boxing's Undisputed Champs",
           "target": "/pages/j-content/category-blog/boxings-undisputed-champs",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-12.15"
         },
         {
           "id": "body-pages_j-content_featured-articles--start-6.link-6",
           "position": 5,
           "label": "The Evolution of Boxing",
           "target": "/pages/j-content/category-blog/the-evolution-of-boxing",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-13.15"
         },
         {
           "id": "body-pages_j-content_featured-articles--start-6.link-7",
@@ -38732,7 +40243,49 @@
           "holds": null
         }
       ],
-      "frames": [],
+      "frames": [
+        {
+          "id": "body-pages_j-content_author-listting_author_admin.picture-4",
+          "shape": {
+            "name": "landscape",
+            "aspect": 1.5
+          },
+          "width": 1440,
+          "height": 960,
+          "kind": "photo",
+          "canHide": true,
+          "twinOf": "block-162.picture-1",
+          "fixed": false,
+          "hideEvidence": {
+            "measured": null,
+            "checks": {
+              "all": "a CSS background takes no room in the layout, so emptying it moves nothing"
+            },
+            "measuredAs": "single",
+            "invalid": false,
+            "judgedBy": "automatic check"
+          },
+          "kindEvidence": {
+            "clearShare": null,
+            "overPicture": false,
+            "paintedBy": "div.bg-mask",
+            "box": {
+              "width": 1440,
+              "height": 960
+            }
+          },
+          "picture": "images/joomlart/others/bg-cta.jpg",
+          "role": null,
+          "shownAs": "background",
+          "painter": "div.bg-mask",
+          "paintedBehind": true,
+          "writable": false,
+          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
+          "faces": false,
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+        }
+      ],
       "links": [
         {
           "id": "body-pages_j-content_author-listting_author_admin.link-1",
@@ -38821,21 +40374,24 @@
           "position": 7,
           "label": "Never boxed before",
           "target": "/pages/j-content/category-blog/never-boxed-before",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-1.15"
         },
         {
           "id": "body-pages_j-content_author-listting_author_admin.link-9",
           "position": 8,
           "label": "Boxing Legends Remembered",
           "target": "/pages/j-content/category-blog/boxing-legends-remembered",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-3.15"
         },
         {
           "id": "body-pages_j-content_author-listting_author_admin.link-10",
           "position": 9,
           "label": "Boxing and Mental Toughness",
           "target": "/pages/j-content/category-blog/boxing-and-mental-toughness",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-11.15"
         }
       ],
       "fixedText": [
@@ -39124,7 +40680,49 @@
           "holds": null
         }
       ],
-      "frames": [],
+      "frames": [
+        {
+          "id": "body-pages_j-content_author-listting_author_drew_stokes.picture-3",
+          "shape": {
+            "name": "landscape",
+            "aspect": 1.5
+          },
+          "width": 1440,
+          "height": 960,
+          "kind": "photo",
+          "canHide": true,
+          "twinOf": "block-162.picture-1",
+          "fixed": false,
+          "hideEvidence": {
+            "measured": null,
+            "checks": {
+              "all": "a CSS background takes no room in the layout, so emptying it moves nothing"
+            },
+            "measuredAs": "single",
+            "invalid": false,
+            "judgedBy": "automatic check"
+          },
+          "kindEvidence": {
+            "clearShare": null,
+            "overPicture": false,
+            "paintedBy": "div.bg-mask",
+            "box": {
+              "width": 1440,
+              "height": 960
+            }
+          },
+          "picture": "images/joomlart/others/bg-cta.jpg",
+          "role": null,
+          "shownAs": "background",
+          "painter": "div.bg-mask",
+          "paintedBehind": true,
+          "writable": false,
+          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
+          "faces": false,
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+        }
+      ],
       "links": [
         {
           "id": "body-pages_j-content_author-listting_author_drew_stokes.link-1",
@@ -39183,14 +40781,16 @@
           "position": 4,
           "label": "Classic Boxing Rivalries",
           "target": "/pages/j-content/category-blog/classic-boxing-rivalries",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-7.15"
         },
         {
           "id": "body-pages_j-content_author-listting_author_drew_stokes.link-6",
           "position": 5,
           "label": "Behind the Scenes of Boxing Training Camps",
           "target": "/about-us/learning-center/behind-the-scenes-of-boxing-training-camps",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-22.12"
         }
       ],
       "fixedText": [],
@@ -39347,7 +40947,49 @@
           "holds": null
         }
       ],
-      "frames": [],
+      "frames": [
+        {
+          "id": "body-pages_j-content_author-listting_author_daniel_vasquez.picture-3",
+          "shape": {
+            "name": "landscape",
+            "aspect": 1.5
+          },
+          "width": 1440,
+          "height": 960,
+          "kind": "photo",
+          "canHide": true,
+          "twinOf": "block-162.picture-1",
+          "fixed": false,
+          "hideEvidence": {
+            "measured": null,
+            "checks": {
+              "all": "a CSS background takes no room in the layout, so emptying it moves nothing"
+            },
+            "measuredAs": "single",
+            "invalid": false,
+            "judgedBy": "automatic check"
+          },
+          "kindEvidence": {
+            "clearShare": null,
+            "overPicture": false,
+            "paintedBy": "div.bg-mask",
+            "box": {
+              "width": 1440,
+              "height": 960
+            }
+          },
+          "picture": "images/joomlart/others/bg-cta.jpg",
+          "role": null,
+          "shownAs": "background",
+          "painter": "div.bg-mask",
+          "paintedBehind": true,
+          "writable": false,
+          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
+          "faces": false,
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+        }
+      ],
       "links": [
         {
           "id": "body-pages_j-content_author-listting_author_daniel_vasquez.link-1",
@@ -39406,14 +41048,16 @@
           "position": 4,
           "label": "The Boxing World Tour",
           "target": "/pages/j-content/blog-detail",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-6.15"
         },
         {
           "id": "body-pages_j-content_author-listting_author_daniel_vasquez.link-6",
           "position": 5,
           "label": "Boxing Legends: Stories of Great Fighters",
           "target": "/about-us/learning-center/boxing-legends-stories-of-great-fighters",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-21.12"
         }
       ],
       "fixedText": [],
@@ -39597,7 +41241,49 @@
           "holds": null
         }
       ],
-      "frames": [],
+      "frames": [
+        {
+          "id": "body-pages_j-content_author-listting_author_franklin_wagner.picture-4",
+          "shape": {
+            "name": "landscape",
+            "aspect": 1.5
+          },
+          "width": 1440,
+          "height": 960,
+          "kind": "photo",
+          "canHide": true,
+          "twinOf": "block-162.picture-1",
+          "fixed": false,
+          "hideEvidence": {
+            "measured": null,
+            "checks": {
+              "all": "a CSS background takes no room in the layout, so emptying it moves nothing"
+            },
+            "measuredAs": "single",
+            "invalid": false,
+            "judgedBy": "automatic check"
+          },
+          "kindEvidence": {
+            "clearShare": null,
+            "overPicture": false,
+            "paintedBy": "div.bg-mask",
+            "box": {
+              "width": 1440,
+              "height": 960
+            }
+          },
+          "picture": "images/joomlart/others/bg-cta.jpg",
+          "role": null,
+          "shownAs": "background",
+          "painter": "div.bg-mask",
+          "paintedBehind": true,
+          "writable": false,
+          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
+          "faces": false,
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+        }
+      ],
       "links": [
         {
           "id": "body-pages_j-content_author-listting_author_franklin_wagner.link-1",
@@ -39656,21 +41342,24 @@
           "position": 4,
           "label": "Boxing's Finest Moments",
           "target": "/pages/j-content/category-blog/boxings-finest-moments",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-8.15"
         },
         {
           "id": "body-pages_j-content_author-listting_author_franklin_wagner.link-6",
           "position": 5,
           "label": "The Evolution of Boxing",
           "target": "/pages/j-content/category-blog/the-evolution-of-boxing",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-13.15"
         },
         {
           "id": "body-pages_j-content_author-listting_author_franklin_wagner.link-7",
           "position": 6,
           "label": "The Impact of Boxing on Popular Culture",
           "target": "/about-us/learning-center/the-impact-of-boxing-on-popular-culture",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-23.12"
         }
       ],
       "fixedText": [],
@@ -39853,7 +41542,49 @@
           "holds": null
         }
       ],
-      "frames": [],
+      "frames": [
+        {
+          "id": "body-pages_j-content_author-listting_author_lorene_bass.picture-4",
+          "shape": {
+            "name": "landscape",
+            "aspect": 1.5
+          },
+          "width": 1440,
+          "height": 960,
+          "kind": "photo",
+          "canHide": true,
+          "twinOf": "block-162.picture-1",
+          "fixed": false,
+          "hideEvidence": {
+            "measured": null,
+            "checks": {
+              "all": "a CSS background takes no room in the layout, so emptying it moves nothing"
+            },
+            "measuredAs": "single",
+            "invalid": false,
+            "judgedBy": "automatic check"
+          },
+          "kindEvidence": {
+            "clearShare": null,
+            "overPicture": false,
+            "paintedBy": "div.bg-mask",
+            "box": {
+              "width": 1440,
+              "height": 960
+            }
+          },
+          "picture": "images/joomlart/others/bg-cta.jpg",
+          "role": null,
+          "shownAs": "background",
+          "painter": "div.bg-mask",
+          "paintedBehind": true,
+          "writable": false,
+          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
+          "faces": false,
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+        }
+      ],
       "links": [
         {
           "id": "body-pages_j-content_author-listting_author_lorene_bass.link-1",
@@ -39912,21 +41643,24 @@
           "position": 4,
           "label": "Boxing's Impact on Culture",
           "target": "/pages/j-content/category-blog/boxings-impact-on-culture",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-10.15"
         },
         {
           "id": "body-pages_j-content_author-listting_author_lorene_bass.link-6",
           "position": 5,
           "label": "The Business of Professional Boxing Promotions",
           "target": "/about-us/learning-center/the-business-of-professional-boxing-promotions",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-25.12"
         },
         {
           "id": "body-pages_j-content_author-listting_author_lorene_bass.link-7",
           "position": 6,
           "label": "The Evolution of Boxing Equipment and Gear",
           "target": "/about-us/learning-center/the-evolution-of-boxing-equipment-and-gear",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-26.12"
         }
       ],
       "fixedText": [],
@@ -40109,7 +41843,49 @@
           "holds": null
         }
       ],
-      "frames": [],
+      "frames": [
+        {
+          "id": "body-pages_j-content_author-listting_author_corey_gibson.picture-4",
+          "shape": {
+            "name": "landscape",
+            "aspect": 1.5
+          },
+          "width": 1440,
+          "height": 960,
+          "kind": "photo",
+          "canHide": true,
+          "twinOf": "block-162.picture-1",
+          "fixed": false,
+          "hideEvidence": {
+            "measured": null,
+            "checks": {
+              "all": "a CSS background takes no room in the layout, so emptying it moves nothing"
+            },
+            "measuredAs": "single",
+            "invalid": false,
+            "judgedBy": "automatic check"
+          },
+          "kindEvidence": {
+            "clearShare": null,
+            "overPicture": false,
+            "paintedBy": "div.bg-mask",
+            "box": {
+              "width": 1440,
+              "height": 960
+            }
+          },
+          "picture": "images/joomlart/others/bg-cta.jpg",
+          "role": null,
+          "shownAs": "background",
+          "painter": "div.bg-mask",
+          "paintedBehind": true,
+          "writable": false,
+          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
+          "faces": false,
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+        }
+      ],
       "links": [
         {
           "id": "body-pages_j-content_author-listting_author_corey_gibson.link-1",
@@ -40168,21 +41944,24 @@
           "position": 4,
           "label": "Title Defense Strategies",
           "target": "/pages/j-content/category-blog/title-defense-strategies",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-4.15"
         },
         {
           "id": "body-pages_j-content_author-listting_author_corey_gibson.link-6",
           "position": 5,
           "label": "The Art and Science of Boxing Strategy",
           "target": "/about-us/learning-center/the-art-and-science-of-boxing-strategy",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-20.12"
         },
         {
           "id": "body-pages_j-content_author-listting_author_corey_gibson.link-7",
           "position": 6,
           "label": "In-Depth Analysis of Classic Boxing Matches",
           "target": "/about-us/learning-center/in-depth-analysis-of-classic-boxing-matches",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-27.12"
         }
       ],
       "fixedText": [],
@@ -40365,7 +42144,49 @@
           "holds": null
         }
       ],
-      "frames": [],
+      "frames": [
+        {
+          "id": "body-pages_j-content_author-listting_author_cora_stephens.picture-4",
+          "shape": {
+            "name": "landscape",
+            "aspect": 1.5
+          },
+          "width": 1440,
+          "height": 960,
+          "kind": "photo",
+          "canHide": true,
+          "twinOf": "block-162.picture-1",
+          "fixed": false,
+          "hideEvidence": {
+            "measured": null,
+            "checks": {
+              "all": "a CSS background takes no room in the layout, so emptying it moves nothing"
+            },
+            "measuredAs": "single",
+            "invalid": false,
+            "judgedBy": "automatic check"
+          },
+          "kindEvidence": {
+            "clearShare": null,
+            "overPicture": false,
+            "paintedBy": "div.bg-mask",
+            "box": {
+              "width": 1440,
+              "height": 960
+            }
+          },
+          "picture": "images/joomlart/others/bg-cta.jpg",
+          "role": null,
+          "shownAs": "background",
+          "painter": "div.bg-mask",
+          "paintedBehind": true,
+          "writable": false,
+          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
+          "faces": false,
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+        }
+      ],
       "links": [
         {
           "id": "body-pages_j-content_author-listting_author_cora_stephens.link-1",
@@ -40424,21 +42245,24 @@
           "position": 4,
           "label": "Inside Boxing Techniques",
           "target": "/pages/j-content/category-blog/inside-boxing-techniques",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-5.15"
         },
         {
           "id": "body-pages_j-content_author-listting_author_cora_stephens.link-6",
           "position": 5,
           "label": "Every champ was a beginner at some point!",
           "target": "/about-us/learning-center/every-champ-was-a-beginner-at-some-point",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-18.12"
         },
         {
           "id": "body-pages_j-content_author-listting_author_cora_stephens.link-7",
           "position": 6,
           "label": "Unforgettable Moments in Boxing History",
           "target": "/about-us/learning-center/unforgettable-moments-in-boxing-history",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-19.12"
         }
       ],
       "fixedText": [],
@@ -40493,32 +42317,32 @@
               "type": "text",
               "role": "article.title",
               "demoOwned": false,
-              "maxCharacters": 54,
+              "maxCharacters": 43,
               "slots": [
                 {
                   "item": "article-12",
                   "id": "article-12.15",
-                  "maxCharacters": 54,
+                  "maxCharacters": 43,
                   "type": "text",
                   "paragraphs": 1,
                   "bullets": 0,
                   "formatFrom": "page",
                   "sample": "Boxing's Undisputed Champs",
-                  "maxCharactersFrom": "kit frame of article-24.12 (390px 55, 1440px 54)"
+                  "maxCharactersFrom": "kit frame of article-24.12 (390px 43, 1440px 51)"
                 },
                 {
                   "item": "article-24",
                   "id": "article-24.12",
-                  "maxCharacters": 54,
+                  "maxCharacters": 43,
                   "type": "text",
                   "paragraphs": 1,
                   "bullets": 0,
                   "formatFrom": "page",
                   "sample": "Global Perspectives on the Sport of Boxing",
-                  "maxCharactersFrom": "kit frame (390px 55, 1440px 54)"
+                  "maxCharactersFrom": "kit frame (390px 43, 1440px 51)"
                 }
               ],
-              "maxCharactersFrom": "kit frame of article-24.12 (390px 55, 1440px 54)"
+              "maxCharactersFrom": "kit frame of article-24.12 (390px 43, 1440px 51)"
             },
             {
               "field": "link",
@@ -40596,7 +42420,49 @@
           "holds": null
         }
       ],
-      "frames": [],
+      "frames": [
+        {
+          "id": "body-pages_j-content_author-listting_author_gene_roberts.picture-3",
+          "shape": {
+            "name": "landscape",
+            "aspect": 1.5
+          },
+          "width": 1440,
+          "height": 960,
+          "kind": "photo",
+          "canHide": true,
+          "twinOf": "block-162.picture-1",
+          "fixed": false,
+          "hideEvidence": {
+            "measured": null,
+            "checks": {
+              "all": "a CSS background takes no room in the layout, so emptying it moves nothing"
+            },
+            "measuredAs": "single",
+            "invalid": false,
+            "judgedBy": "automatic check"
+          },
+          "kindEvidence": {
+            "clearShare": null,
+            "overPicture": false,
+            "paintedBy": "div.bg-mask",
+            "box": {
+              "width": 1440,
+              "height": 960
+            }
+          },
+          "picture": "images/joomlart/others/bg-cta.jpg",
+          "role": null,
+          "shownAs": "background",
+          "painter": "div.bg-mask",
+          "paintedBehind": true,
+          "writable": false,
+          "writableReason": "the picture is painted behind the block by the template's own page settings, which no content map slot holds; a planner cannot replace it through the contract",
+          "sameFileAs": "a content map slot shows the same file elsewhere; replacing that slot does not change this one",
+          "faces": false,
+          "classReason": "boxing action or scene picture, no one presented as staff (agent)"
+        }
+      ],
       "links": [
         {
           "id": "body-pages_j-content_author-listting_author_gene_roberts.link-1",
@@ -40655,14 +42521,16 @@
           "position": 4,
           "label": "Boxing's Undisputed Champs",
           "target": "/pages/j-content/category-blog/boxings-undisputed-champs",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-12.15"
         },
         {
           "id": "body-pages_j-content_author-listting_author_gene_roberts.link-6",
           "position": 5,
           "label": "Global Perspectives on the Sport of Boxing",
           "target": "/about-us/learning-center/global-perspectives-on-the-sport-of-boxing",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-24.12"
         }
       ],
       "fixedText": [],
@@ -40877,6 +42745,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_every-champ-was-a-beginner-at-some-point.link-2"
+          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -40888,6 +42759,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_every-champ-was-a-beginner-at-some-point.link-3"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -40899,6 +42773,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_every-champ-was-a-beginner-at-some-point.link-4"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -40910,6 +42787,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_every-champ-was-a-beginner-at-some-point.link-5"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -40921,6 +42801,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_every-champ-was-a-beginner-at-some-point.link-6"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -40932,7 +42815,21 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_every-champ-was-a-beginner-at-some-point.link-7"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
+        },
+        {
+          "id": "article-18.2",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles…",
+          "paragraphs": 2,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map declared; the content map fit (desktop 255, phone 255) is the box of the demo words, not a limit"
         }
       ],
       "lists": [],
@@ -41265,42 +43162,48 @@
           "position": 1,
           "label": "Jab",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-18.16"
         },
         {
           "id": "body-about-us_learning-center_every-champ-was-a-beginner-at-some-point.link-3",
           "position": 2,
           "label": "Cross",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-18.20"
         },
         {
           "id": "body-about-us_learning-center_every-champ-was-a-beginner-at-some-point.link-4",
           "position": 3,
           "label": "Lead Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-18.24"
         },
         {
           "id": "body-about-us_learning-center_every-champ-was-a-beginner-at-some-point.link-5",
           "position": 4,
           "label": "Rear Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-18.28"
         },
         {
           "id": "body-about-us_learning-center_every-champ-was-a-beginner-at-some-point.link-6",
           "position": 5,
           "label": "Lead Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-18.32"
         },
         {
           "id": "body-about-us_learning-center_every-champ-was-a-beginner-at-some-point.link-7",
           "position": 6,
           "label": "Rear Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-18.36"
         }
       ],
       "fixedText": [
@@ -41653,6 +43556,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_unforgettable-moments-in-boxing-history.link-3"
+          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -41664,6 +43570,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_unforgettable-moments-in-boxing-history.link-4"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -41675,6 +43584,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_unforgettable-moments-in-boxing-history.link-5"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -41686,6 +43598,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_unforgettable-moments-in-boxing-history.link-6"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -41697,6 +43612,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_unforgettable-moments-in-boxing-history.link-7"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -41708,7 +43626,21 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_unforgettable-moments-in-boxing-history.link-8"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
+        },
+        {
+          "id": "article-19.2",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles…",
+          "paragraphs": 2,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map declared; the content map fit (desktop 255, phone 255) is the box of the demo words, not a limit"
         }
       ],
       "lists": [],
@@ -42054,42 +43986,48 @@
           "position": 2,
           "label": "Jab",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-19.16"
         },
         {
           "id": "body-about-us_learning-center_unforgettable-moments-in-boxing-history.link-4",
           "position": 3,
           "label": "Cross",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-19.20"
         },
         {
           "id": "body-about-us_learning-center_unforgettable-moments-in-boxing-history.link-5",
           "position": 4,
           "label": "Lead Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-19.24"
         },
         {
           "id": "body-about-us_learning-center_unforgettable-moments-in-boxing-history.link-6",
           "position": 5,
           "label": "Rear Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-19.28"
         },
         {
           "id": "body-about-us_learning-center_unforgettable-moments-in-boxing-history.link-7",
           "position": 6,
           "label": "Lead Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-19.32"
         },
         {
           "id": "body-about-us_learning-center_unforgettable-moments-in-boxing-history.link-8",
           "position": 7,
           "label": "Rear Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-19.36"
         }
       ],
       "fixedText": [
@@ -42520,6 +44458,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-art-and-science-of-boxing-strategy.link-3"
+          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -42531,6 +44472,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-art-and-science-of-boxing-strategy.link-4"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -42542,6 +44486,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-art-and-science-of-boxing-strategy.link-5"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -42553,6 +44500,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-art-and-science-of-boxing-strategy.link-6"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -42564,6 +44514,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-art-and-science-of-boxing-strategy.link-7"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -42575,7 +44528,21 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-art-and-science-of-boxing-strategy.link-8"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
+        },
+        {
+          "id": "article-20.2",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles…",
+          "paragraphs": 2,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map declared; the content map fit (desktop 255, phone 255) is the box of the demo words, not a limit"
         }
       ],
       "lists": [],
@@ -43277,42 +45244,48 @@
           "position": 2,
           "label": "Jab",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-20.16"
         },
         {
           "id": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy.link-4",
           "position": 3,
           "label": "Cross",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-20.20"
         },
         {
           "id": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy.link-5",
           "position": 4,
           "label": "Lead Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-20.24"
         },
         {
           "id": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy.link-6",
           "position": 5,
           "label": "Rear Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-20.28"
         },
         {
           "id": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy.link-7",
           "position": 6,
           "label": "Lead Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-20.32"
         },
         {
           "id": "body-about-us_learning-center_the-art-and-science-of-boxing-strategy.link-8",
           "position": 7,
           "label": "Rear Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-20.36"
         }
       ],
       "fixedText": [
@@ -43750,6 +45723,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_boxing-legends-stories-of-great-fighters.link-3"
+          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -43761,6 +45737,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_boxing-legends-stories-of-great-fighters.link-4"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -43772,6 +45751,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_boxing-legends-stories-of-great-fighters.link-5"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -43783,6 +45765,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_boxing-legends-stories-of-great-fighters.link-6"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -43794,6 +45779,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_boxing-legends-stories-of-great-fighters.link-7"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -43805,7 +45793,21 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_boxing-legends-stories-of-great-fighters.link-8"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
+        },
+        {
+          "id": "article-21.2",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles…",
+          "paragraphs": 2,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map declared; the content map fit (desktop 255, phone 255) is the box of the demo words, not a limit"
         }
       ],
       "lists": [],
@@ -44151,42 +46153,48 @@
           "position": 2,
           "label": "Jab",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-21.16"
         },
         {
           "id": "body-about-us_learning-center_boxing-legends-stories-of-great-fighters.link-4",
           "position": 3,
           "label": "Cross",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-21.20"
         },
         {
           "id": "body-about-us_learning-center_boxing-legends-stories-of-great-fighters.link-5",
           "position": 4,
           "label": "Lead Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-21.24"
         },
         {
           "id": "body-about-us_learning-center_boxing-legends-stories-of-great-fighters.link-6",
           "position": 5,
           "label": "Rear Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-21.28"
         },
         {
           "id": "body-about-us_learning-center_boxing-legends-stories-of-great-fighters.link-7",
           "position": 6,
           "label": "Lead Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-21.32"
         },
         {
           "id": "body-about-us_learning-center_boxing-legends-stories-of-great-fighters.link-8",
           "position": 7,
           "label": "Rear Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-21.36"
         }
       ],
       "fixedText": [
@@ -44617,6 +46625,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps.link-3"
+          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -44628,6 +46639,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps.link-4"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -44639,6 +46653,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps.link-5"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -44650,6 +46667,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps.link-6"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -44661,6 +46681,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps.link-7"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -44672,7 +46695,21 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps.link-8"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
+        },
+        {
+          "id": "article-22.2",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles…",
+          "paragraphs": 2,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map declared; the content map fit (desktop 255, phone 255) is the box of the demo words, not a limit"
         }
       ],
       "lists": [],
@@ -45018,42 +47055,48 @@
           "position": 2,
           "label": "Jab",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-22.16"
         },
         {
           "id": "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps.link-4",
           "position": 3,
           "label": "Cross",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-22.20"
         },
         {
           "id": "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps.link-5",
           "position": 4,
           "label": "Lead Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-22.24"
         },
         {
           "id": "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps.link-6",
           "position": 5,
           "label": "Rear Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-22.28"
         },
         {
           "id": "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps.link-7",
           "position": 6,
           "label": "Lead Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-22.32"
         },
         {
           "id": "body-about-us_learning-center_behind-the-scenes-of-boxing-training-camps.link-8",
           "position": 7,
           "label": "Rear Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-22.36"
         }
       ],
       "fixedText": [
@@ -45488,6 +47531,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture.link-3"
+          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -45499,6 +47545,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture.link-4"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -45510,6 +47559,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture.link-5"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -45521,6 +47573,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture.link-6"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -45532,6 +47587,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture.link-7"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -45543,7 +47601,21 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture.link-8"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
+        },
+        {
+          "id": "article-23.2",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles…",
+          "paragraphs": 2,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map declared; the content map fit (desktop 255, phone 255) is the box of the demo words, not a limit"
         }
       ],
       "lists": [],
@@ -45889,42 +47961,48 @@
           "position": 2,
           "label": "Jab",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-23.16"
         },
         {
           "id": "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture.link-4",
           "position": 3,
           "label": "Cross",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-23.20"
         },
         {
           "id": "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture.link-5",
           "position": 4,
           "label": "Lead Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-23.24"
         },
         {
           "id": "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture.link-6",
           "position": 5,
           "label": "Rear Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-23.28"
         },
         {
           "id": "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture.link-7",
           "position": 6,
           "label": "Lead Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-23.32"
         },
         {
           "id": "body-about-us_learning-center_the-impact-of-boxing-on-popular-culture.link-8",
           "position": 7,
           "label": "Rear Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-23.36"
         }
       ],
       "fixedText": [
@@ -46211,12 +48289,12 @@
           "id": "article-24.12",
           "role": "article.title",
           "type": "text",
-          "maxCharacters": 54,
+          "maxCharacters": 43,
           "sample": "Global Perspectives on the Sport of Boxing",
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "maxCharactersFrom": "kit frame (390px 55, 1440px 54)",
+          "maxCharactersFrom": "kit frame (390px 43, 1440px 51)",
           "alsoChanges": {
             "blocks": [],
             "pageTitles": [
@@ -46355,6 +48433,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing.link-3"
+          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -46366,6 +48447,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing.link-4"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -46377,6 +48461,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing.link-5"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -46388,6 +48475,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing.link-6"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -46399,6 +48489,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing.link-7"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -46410,7 +48503,21 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing.link-8"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
+        },
+        {
+          "id": "article-24.2",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles…",
+          "paragraphs": 2,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map declared; the content map fit (desktop 255, phone 255) is the box of the demo words, not a limit"
         }
       ],
       "lists": [],
@@ -46756,42 +48863,48 @@
           "position": 2,
           "label": "Jab",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-24.16"
         },
         {
           "id": "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing.link-4",
           "position": 3,
           "label": "Cross",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-24.20"
         },
         {
           "id": "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing.link-5",
           "position": 4,
           "label": "Lead Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-24.24"
         },
         {
           "id": "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing.link-6",
           "position": 5,
           "label": "Rear Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-24.28"
         },
         {
           "id": "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing.link-7",
           "position": 6,
           "label": "Lead Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-24.32"
         },
         {
           "id": "body-about-us_learning-center_global-perspectives-on-the-sport-of-boxing.link-8",
           "position": 7,
           "label": "Rear Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-24.36"
         }
       ],
       "fixedText": [
@@ -47222,6 +49335,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-business-of-professional-boxing-promotions.link-3"
+          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -47233,6 +49349,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-business-of-professional-boxing-promotions.link-4"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -47244,6 +49363,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-business-of-professional-boxing-promotions.link-5"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -47255,6 +49377,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-business-of-professional-boxing-promotions.link-6"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -47266,6 +49391,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-business-of-professional-boxing-promotions.link-7"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -47277,7 +49405,21 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-business-of-professional-boxing-promotions.link-8"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
+        },
+        {
+          "id": "article-25.2",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles…",
+          "paragraphs": 2,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map declared; the content map fit (desktop 255, phone 255) is the box of the demo words, not a limit"
         }
       ],
       "lists": [],
@@ -47623,42 +49765,48 @@
           "position": 2,
           "label": "Jab",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-25.16"
         },
         {
           "id": "body-about-us_learning-center_the-business-of-professional-boxing-promotions.link-4",
           "position": 3,
           "label": "Cross",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-25.20"
         },
         {
           "id": "body-about-us_learning-center_the-business-of-professional-boxing-promotions.link-5",
           "position": 4,
           "label": "Lead Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-25.24"
         },
         {
           "id": "body-about-us_learning-center_the-business-of-professional-boxing-promotions.link-6",
           "position": 5,
           "label": "Rear Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-25.28"
         },
         {
           "id": "body-about-us_learning-center_the-business-of-professional-boxing-promotions.link-7",
           "position": 6,
           "label": "Lead Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-25.32"
         },
         {
           "id": "body-about-us_learning-center_the-business-of-professional-boxing-promotions.link-8",
           "position": 7,
           "label": "Rear Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-25.36"
         }
       ],
       "fixedText": [
@@ -48089,6 +50237,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear.link-3"
+          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -48100,6 +50251,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear.link-4"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -48111,6 +50265,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear.link-5"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -48122,6 +50279,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear.link-6"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -48133,6 +50293,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear.link-7"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -48144,7 +50307,21 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear.link-8"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
+        },
+        {
+          "id": "article-26.2",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles…",
+          "paragraphs": 2,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map declared; the content map fit (desktop 255, phone 255) is the box of the demo words, not a limit"
         }
       ],
       "lists": [],
@@ -48490,42 +50667,48 @@
           "position": 2,
           "label": "Jab",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-26.16"
         },
         {
           "id": "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear.link-4",
           "position": 3,
           "label": "Cross",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-26.20"
         },
         {
           "id": "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear.link-5",
           "position": 4,
           "label": "Lead Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-26.24"
         },
         {
           "id": "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear.link-6",
           "position": 5,
           "label": "Rear Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-26.28"
         },
         {
           "id": "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear.link-7",
           "position": 6,
           "label": "Lead Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-26.32"
         },
         {
           "id": "body-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear.link-8",
           "position": 7,
           "label": "Rear Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-26.36"
         }
       ],
       "fixedText": [
@@ -48956,6 +51139,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches.link-2"
+          ],
           "maxCharactersFrom": "kit frame (390px 40, 1440px 38)"
         },
         {
@@ -48967,6 +51153,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches.link-3"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
         },
         {
@@ -48978,6 +51167,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches.link-4"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 35)"
         },
         {
@@ -48989,6 +51181,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches.link-5"
+          ],
           "maxCharactersFrom": "kit frame (390px 35, 1440px 33)"
         },
         {
@@ -49000,6 +51195,9 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches.link-6"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 34)"
         },
         {
@@ -49011,7 +51209,21 @@
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
+          "labelOf": [
+            "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches.link-7"
+          ],
           "maxCharactersFrom": "kit frame (390px 34, 1440px 33)"
+        },
+        {
+          "id": "article-27.2",
+          "role": "editorial.paragraph",
+          "type": "text",
+          "maxCharacters": 530,
+          "sample": "10-rounds and 45 minutes split between two styles…",
+          "paragraphs": 2,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map declared; the content map fit (desktop 255, phone 255) is the box of the demo words, not a limit"
         }
       ],
       "lists": [],
@@ -49344,42 +51556,48 @@
           "position": 1,
           "label": "Jab",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-27.16"
         },
         {
           "id": "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches.link-3",
           "position": 2,
           "label": "Cross",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-27.20"
         },
         {
           "id": "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches.link-4",
           "position": 3,
           "label": "Lead Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-27.24"
         },
         {
           "id": "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches.link-5",
           "position": 4,
           "label": "Rear Hook",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-27.28"
         },
         {
           "id": "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches.link-6",
           "position": 5,
           "label": "Lead Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-27.32"
         },
         {
           "id": "body-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches.link-7",
           "position": 6,
           "label": "Rear Uppercut",
           "target": null,
-          "action": "page-control"
+          "action": "page-control",
+          "labelId": "article-27.36"
         }
       ],
       "fixedText": [
@@ -49575,7 +51793,92 @@
         "390": "body-pages_j-content_category-blog-390",
         "1440": "body-pages_j-content_category-blog-1440"
       },
-      "slots": [],
+      "slots": [
+        {
+          "id": "article-24.12",
+          "type": "text",
+          "sample": "Global Perspectives on the Sport of Boxing",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_author-listting_author_gene_roberts",
+          "labelOf": [
+            "body-about-us_learning-center--start-6.link-1"
+          ],
+          "maxCharacters": 43,
+          "maxCharactersFrom": "kit frame (390px 43, 1440px 51)",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-about-us_learning-center_global-perspectives-on-the-sport-of-boxing"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-25.12",
+          "type": "text",
+          "sample": "The Business of Professional Boxing Promotions",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_author-listting_author_lorene_bass",
+          "labelOf": [
+            "body-about-us_learning-center--start-6.link-2"
+          ],
+          "maxCharacters": 50,
+          "maxCharactersFrom": "kit frame of article-26.12 (390px 52, 1440px 50)",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-about-us_learning-center_the-business-of-professional-boxing-promotions"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-26.12",
+          "type": "text",
+          "sample": "The Evolution of Boxing Equipment and Gear",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_author-listting_author_lorene_bass",
+          "labelOf": [
+            "body-about-us_learning-center--start-6.link-3"
+          ],
+          "maxCharacters": 50,
+          "maxCharactersFrom": "kit frame (390px 52, 1440px 50)",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-about-us_learning-center_the-evolution-of-boxing-equipment-and-gear"
+            ],
+            "menus": []
+          }
+        },
+        {
+          "id": "article-27.12",
+          "type": "text",
+          "sample": "In-Depth Analysis of Classic Boxing Matches",
+          "paragraphs": 1,
+          "bullets": 0,
+          "formatFrom": "page",
+          "ownedBy": "body-pages_j-content_author-listting_author_corey_gibson",
+          "labelOf": [
+            "body-about-us_learning-center--start-6.link-4"
+          ],
+          "maxCharacters": 46,
+          "maxCharactersFrom": "content map declared of article-28.7",
+          "alsoChanges": {
+            "blocks": [],
+            "pageTitles": [
+              "page-about-us_learning-center_in-depth-analysis-of-classic-boxing-matches"
+            ],
+            "menus": []
+          }
+        }
+      ],
       "lists": [
         {
           "id": "body-about-us_learning-center--start-6.items",
@@ -49785,28 +52088,32 @@
           "position": 0,
           "label": "Global Perspectives on the Sport of Boxing",
           "target": "/about-us/learning-center/global-perspectives-on-the-sport-of-boxing",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-24.12"
         },
         {
           "id": "body-about-us_learning-center--start-6.link-2",
           "position": 1,
           "label": "The Business of Professional Boxing Promotions",
           "target": "/about-us/learning-center/the-business-of-professional-boxing-promotions",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-25.12"
         },
         {
           "id": "body-about-us_learning-center--start-6.link-3",
           "position": 2,
           "label": "The Evolution of Boxing Equipment and Gear",
           "target": "/about-us/learning-center/the-evolution-of-boxing-equipment-and-gear",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-26.12"
         },
         {
           "id": "body-about-us_learning-center--start-6.link-4",
           "position": 3,
           "label": "In-Depth Analysis of Classic Boxing Matches",
           "target": "/about-us/learning-center/in-depth-analysis-of-classic-boxing-matches",
-          "action": "go-to-item"
+          "action": "go-to-item",
+          "labelId": "article-27.12"
         },
         {
           "id": "body-about-us_learning-center--start-6.link-5",
@@ -49920,12 +52227,12 @@
           "id": "article-12.15",
           "role": "article.title",
           "type": "text",
-          "maxCharacters": 54,
+          "maxCharacters": 43,
           "sample": "Boxing's Undisputed Champs",
           "paragraphs": 1,
           "bullets": 0,
           "formatFrom": "page",
-          "maxCharactersFrom": "kit frame of article-24.12 (390px 55, 1440px 54)",
+          "maxCharactersFrom": "kit frame of article-24.12 (390px 43, 1440px 51)",
           "alsoChanges": {
             "blocks": [],
             "pageTitles": [
@@ -50065,6 +52372,17 @@
           "bullets": 0,
           "formatFrom": "page",
           "maxCharactersFrom": "kit frame (390px 678, 1440px 767)"
+        },
+        {
+          "id": "article-12.14",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 506,
+          "sample": "It is a long established fact that a…",
+          "paragraphs": 3,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 528, phone 506)"
         }
       ],
       "lists": [],
@@ -50627,6 +52945,17 @@
           "bullets": 0,
           "formatFrom": "page",
           "maxCharactersFrom": "kit frame (390px 678, 1440px 767)"
+        },
+        {
+          "id": "article-13.14",
+          "role": "article.lead",
+          "type": "text",
+          "maxCharacters": 506,
+          "sample": "It is a long established fact that a…",
+          "paragraphs": 3,
+          "bullets": 0,
+          "formatFrom": "page",
+          "maxCharactersFrom": "content map fit (desktop 528, phone 506)"
         }
       ],
       "lists": [],
@@ -51647,11 +53976,6 @@
     }
   ],
   "errors": [
-    {
-      "kind": "missing",
-      "field": "blocks[block-166].lists[block-166.gallery].min",
-      "reason": "no row set with this many rows was found on the page at desktop width"
-    },
     {
       "kind": "missing",
       "field": "blocks[block-162].lists[block-162.page].min",
@@ -55220,54 +57544,6 @@
           "constant": [
             "COM_USERS_LOGIN_RESET",
             "MOD_LOGIN_FORGOT_YOUR_PASSWORD"
-          ],
-          "value": ""
-        },
-        "evidence": {
-          "blockBefore": {
-            "left": 0,
-            "top": 549,
-            "width": 1440,
-            "height": 720
-          },
-          "blockAfter": {
-            "left": 0,
-            "top": 549,
-            "width": 1440,
-            "height": 696
-          },
-          "heightChange": -24,
-          "textGone": 14,
-          "textMoved": 0,
-          "textOverlaps": 0,
-          "reason": "the sentence left the page and the block changed with it"
-        }
-      },
-      {
-        "block": "body-pages_users_login-form",
-        "text": "Forgot your username?",
-        "source": {
-          "file": "language/en-GB/com_users.ini",
-          "constant": "COM_USERS_LOGIN_REMIND",
-          "short": true,
-          "constants": [
-            "COM_USERS_LOGIN_REMIND",
-            "MOD_LOGIN_FORGOT_YOUR_USERNAME"
-          ]
-        },
-        "placeholders": [],
-        "at": {
-          "path": "/pages/users/login-form",
-          "raw": "main-body"
-        },
-        "pages": 1,
-        "canHide": true,
-        "hiddenBy": {
-          "setting": "cms language override",
-          "file": "language/overrides/en-GB.override.ini",
-          "constant": [
-            "COM_USERS_LOGIN_REMIND",
-            "MOD_LOGIN_FORGOT_YOUR_USERNAME"
           ],
           "value": ""
         },
@@ -61952,13 +64228,17 @@
     ]
   },
   "coverage": {
-    "shownTextSlots": 639,
+    "shownTextSlots": 704,
     "parts": {
       "slotsMissing": 0,
       "linkLabelsOutsideBlock": 0,
       "slotLimitsDiffering": 0,
       "textFormatMissing": 0,
       "limitsBelowDemo": 0,
+      "textsWithoutSlot": 0,
+      "linksWithoutTarget": 0,
+      "linksWithoutLabelSlot": 0,
+      "imagesWithoutFrame": 0,
       "mainMenuRowLimitMissing": 0,
       "contactFieldsUnresolved": 0,
       "orphanTexts": 0
@@ -61966,23 +64246,6 @@
     "failures": []
   },
   "templateGaps": [
-    {
-      "id": "gap-7656314a3683",
-      "kind": "dead-link",
-      "where": {
-        "blockId": "header",
-        "path": null
-      },
-      "detail": "link \"PAGES\" has no target",
-      "evidence": [
-        "header-390",
-        "header-1440"
-      ],
-      "accepted": {
-        "reason": "Demo placeholder link; the site build replaces it with the customer's own target.",
-        "by": "akemi"
-      }
-    },
     {
       "id": "gap-49eb5cdab85e",
       "kind": "dead-link",
@@ -62075,7 +64338,7 @@
         "blockId": "block-184",
         "path": null
       },
-      "detail": "link \"Credit Bundles\" has no target",
+      "detail": "link \"SELECT PLAN\" has no target",
       "evidence": [
         "block-184-390",
         "block-184-1440"

@@ -39,6 +39,123 @@ export function readDetails() {
       idx.unshift([...x.parentElement.children].indexOf(x))
     return idx
   }
+  // Pictures: the file a URL names (no query or fragment, no leading slash), and what each element paints.
+  const fileOf = (u) => {
+    // A data: URI is an inline icon, not a picture file.
+    if (/^data:/i.test(String(u).trim())) return ''
+    try {
+      return decodeURIComponent(new URL(u, location.href).pathname).replace(/^\/+/, '')
+    } catch {
+      return ''
+    }
+  }
+  const URL_RE = /url\(["']?([^"')]+)["']?\)/g
+  const MIN_PICTURE = 40
+  const bgFiles = (el, pseudo) => {
+    const s = getComputedStyle(el, pseudo)
+    if (pseudo && (s.content === 'none' || s.content === 'normal')) return []
+    return [...String(s.backgroundImage).matchAll(URL_RE)].map((m) => fileOf(m[1])).filter(Boolean)
+  }
+  const visible = (el) => {
+    for (let e = el; e && e !== document.documentElement; e = e.parentElement) {
+      const s = getComputedStyle(e)
+      if (s.display === 'none' || s.visibility === 'hidden' || Number(s.opacity) === 0) return false
+    }
+    return true
+  }
+  const opaque = (el) => {
+    const m = getComputedStyle(el).backgroundColor.match(/rgba?\(([^)]+)\)/)
+    if (!m) return false
+    const parts = m[1].split(/[ ,/]+/).filter(Boolean)
+    return parts.length < 4 || Number(parts[3]) >= 0.95
+  }
+  const describe = (el) =>
+    `${el.tagName.toLowerCase()}${el.id ? `#${el.id}` : ''}${[...el.classList]
+      .filter((c) => !STATE.test(c))
+      .map((c) => `.${c}`)
+      .join('')}`
+  // Layers outside every block that paint a picture (a page-wide background drawn by the template's settings): read
+  // once, then each block checks whether one shows through it.
+  const layers = []
+  for (const el of document.body.querySelectorAll('*')) {
+    if (el.closest('[data-kit-block]') || el.querySelector('[data-kit-block]')) continue
+    const pos = getComputedStyle(el).position
+    if (pos !== 'fixed' && pos !== 'absolute') continue
+    const files = [...bgFiles(el, null), ...bgFiles(el, '::before'), ...bgFiles(el, '::after')]
+    const r = el.getBoundingClientRect()
+    if (!files.length || r.width < MIN_PICTURE || r.height < MIN_PICTURE || !visible(el)) continue
+    layers.push({ el, files, fixed: pos === 'fixed' })
+  }
+  /**
+   * Every picture a block shows at least 40px each way: an <img> or a CSS background (the element's own, its ::before
+   * or ::after) inside the block, and a background painted behind the block by an ancestor or a layer outside every
+   * block that shows through it (nothing opaque between them). `painter` names the element; `behind` marks one
+   * outside the block.
+   */
+  const picturesOf = (root) => {
+    const out = []
+    const seen = new Set()
+    const add = (file, via, el, behind, r) => {
+      const key = `${file}|${describe(el)}`
+      if (!file || seen.has(key)) return
+      seen.add(key)
+      out.push({
+        position: out.length,
+        file,
+        via,
+        painter: describe(el),
+        behind,
+        box: { width: Math.round(r.width), height: Math.round(r.height) }
+      })
+    }
+    for (const el of [root, ...root.querySelectorAll('*')]) {
+      const r = el.getBoundingClientRect()
+      if (r.width < MIN_PICTURE || r.height < MIN_PICTURE || !visible(el)) continue
+      if (el.tagName === 'IMG')
+        add(fileOf(el.currentSrc || el.getAttribute('src') || ''), 'img', el, false, r)
+      for (const pseudo of [null, '::before', '::after'])
+        for (const f of bgFiles(el, pseudo)) add(f, 'background', el, false, r)
+    }
+    // Is anything opaque between the block and a painter behind it (the block itself, its ancestors below `stop`,
+    // or a child covering most of the block)?
+    const rb = root.getBoundingClientRect()
+    // A picture or a solid colour covering most of the block hides what lies behind it.
+    const coverChild = [root, ...root.querySelectorAll('*')].some((c) => {
+      const r = c.getBoundingClientRect()
+      return (
+        (opaque(c) || bgFiles(c, null).length > 0) &&
+        r.width * r.height >= 0.9 * rb.width * rb.height &&
+        visible(c)
+      )
+    })
+    if (coverChild) return out
+    const coveredBelow = (stop) => {
+      for (let e = root; e && e !== stop; e = e.parentElement) if (opaque(e)) return true
+      return false
+    }
+    for (let a = root.parentElement; a && a !== document.documentElement; a = a.parentElement) {
+      const files = bgFiles(a, null)
+      if (files.length && !coveredBelow(a))
+        for (const f of files) add(f, 'background', a, true, a.getBoundingClientRect())
+    }
+    for (const { el, files, fixed } of layers) {
+      const r = el.getBoundingClientRect()
+      const top = r.top + (fixed ? 0 : scrollY)
+      const btop = rb.top + scrollY
+      // A fixed layer stays behind whatever scrolls past it; another layer must overlap most of the block.
+      const over = fixed
+        ? 1
+        : (Math.max(0, Math.min(r.right, rb.right) - Math.max(r.left, rb.left)) *
+            Math.max(0, Math.min(top + r.height, btop + rb.height) - Math.max(top, btop))) /
+          Math.max(1, rb.width * rb.height)
+      if (over < 0.5) continue
+      let common = el.parentElement
+      while (common && !common.contains(root)) common = common.parentElement
+      if (coveredBelow(common)) continue
+      for (const f of files) add(f, 'background', el, true, r)
+    }
+    return out
+  }
   const out = {}
   for (const root of document.querySelectorAll('[data-kit-block]')) {
     if (!shown(root)) continue
@@ -53,6 +170,8 @@ export function readDetails() {
       links.push({ position: links.length, label, href: a.getAttribute('href') })
     }
     const texts = new Set()
+    // How many shown elements print each text: a text printed by three elements is three slots, never one.
+    const textCounts = {}
     for (const el of root.querySelectorAll('*')) {
       if (!shown(el) || /^(SCRIPT|STYLE|NOSCRIPT|SVG)$/i.test(el.tagName)) continue
       const own = [...el.childNodes]
@@ -61,11 +180,62 @@ export function readDetails() {
         .join(' ')
         .replace(/\s+/g, ' ')
         .trim()
-      if (own.length >= 2) texts.add(own)
+      if (own.length >= 2) {
+        texts.add(own)
+        textCounts[own] = (textCounts[own] ?? 0) + 1
+      }
       for (const attr of ['placeholder', 'value']) {
         const v = el.tagName === 'INPUT' || el.tagName === 'BUTTON' ? el.getAttribute(attr) : null
         if (v && v.trim().length >= 2 && el.type !== 'hidden') texts.add(v.trim())
       }
+    }
+    // Every shown clickable element that is not a link with an address (a button, an element acting as one, a submit
+    // input) with its label and what it opens: a modal or panel it targets, the form it sends, or a script.
+    const clickables = []
+    for (const el of root.querySelectorAll(
+      'button, [role="button"], [role="tab"], a:not([href]), a[href^="#"][data-bs-toggle], a[href^="javascript:" i], input[type="submit"], input[type="button"]'
+    )) {
+      if (!shown(el)) continue
+      const label = (
+        el.innerText ||
+        el.value ||
+        el.getAttribute('aria-label') ||
+        el.getAttribute('title') ||
+        ''
+      )
+        .replace(/\s+/g, ' ')
+        .trim()
+      if (!label) continue
+      // A link with a real address is read as a link, even when it also toggles a menu.
+      const href = el.tagName === 'A' ? (el.getAttribute('href') ?? '').trim() : ''
+      if (href && !/^(#|javascript:)/i.test(href)) continue
+      // A toggle names its panel by data-bs-target, aria-controls, or (a tab or collapse link) its own #fragment.
+      const opens =
+        el.getAttribute('data-bs-target') ||
+        el.getAttribute('aria-controls') ||
+        (el.getAttribute('data-bs-toggle') && /^#[\w-]/.test(href) ? href : null) ||
+        null
+      // A menu heading opens the submenu next to it.
+      const submenu =
+        el.getAttribute('aria-haspopup') === 'true' &&
+        !!el.parentElement?.querySelector(':scope > .dropdown-menu, :scope > ul, :scope > div > ul')
+      let target = null
+      if (submenu && !opens) target = { kind: 'submenu' }
+      else if (opens) {
+        let held = null
+        try {
+          held = document.querySelector(opens.startsWith('#') || opens.startsWith('.') ? opens : `#${opens}`)
+        } catch {}
+        const map = !!held?.querySelector('iframe[src*="map"], [id*="map" i], [class*="map" i]')
+        target = {
+          kind: el.getAttribute('data-bs-toggle') || 'panel',
+          element: opens,
+          shows: map ? 'map' : null
+        }
+      } else if (el.type === 'submit' && el.form)
+        target = { kind: 'form', action: el.form.getAttribute('action') }
+      else if (el.getAttribute('onclick')) target = { kind: 'script' }
+      clickables.push({ position: clickables.length, label, tag: el.tagName.toLowerCase(), target })
     }
     const repeats = []
     for (const parent of [root, ...root.querySelectorAll('*')]) {
@@ -141,6 +311,9 @@ export function readDetails() {
     out[root.getAttribute('data-kit-block')] = {
       links,
       texts: [...texts],
+      textCounts,
+      clickables,
+      pictures: picturesOf(root),
       paragraphs,
       bullets,
       repeats,

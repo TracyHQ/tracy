@@ -7,8 +7,9 @@
  * those lines need, the text or any other text of the block runs past the block's right edge, or another text of the
  * block wraps onto more lines (an item that grows with its words, a tab or a chip, pushing its neighbours). The
  * longest fill that passes is the limit, so two rows of one list in frames of one size get one limit whatever their
- * demo lengths. Allowed lines: the demo's own, or `lines` when the slot shows on more lines elsewhere (a title that
- * wraps nicely on another card). The box is put back as it was.
+ * demo lengths. Allowed lines: the demo's own (a demo split by a forced line break, an address's street over its
+ * city, is filled as words on that many lines, the break read as a space), or `lines` when the slot shows on more
+ * lines elsewhere (a title that wraps nicely on another card). The box is put back as it was.
  * @param {{block: string, texts: {id: string, text: string, lines?: number}[]}} o
  * @returns {Record<string, {limit: number, lines: number, allowed: number, demo: number}>} only the texts found and shown
  */
@@ -33,8 +34,9 @@ export function readTextFit({ block, texts }) {
   const boxOf = (text) => {
     const want = norm(text)
     if (!want) return null
+    // innerText reads a line break (a forced second line of an address) as a space between the words.
     const hits = all.filter((el) => {
-      const have = norm(el.textContent)
+      const have = norm(el.innerText ?? el.textContent)
       return have === want || (want.length >= 40 && have.startsWith(want))
     })
     // The innermost element that shows the whole text.
@@ -61,7 +63,8 @@ export function readTextFit({ block, texts }) {
     if (!el || used.has(el)) continue
     used.add(el)
     const saved = el.innerHTML
-    const demo = el.textContent.replace(/\s+/g, ' ').trim()
+    // innerText, not textContent: a forced line break (<br>) is a space between the words, never words run together.
+    const demo = (el.innerText || el.textContent).replace(/\s+/g, ' ').trim()
     const lines = linesOf(el)
     const allowed = Math.max(lines, Number(wanted) || 0)
     const lineHeight = el.getBoundingClientRect().height / lines

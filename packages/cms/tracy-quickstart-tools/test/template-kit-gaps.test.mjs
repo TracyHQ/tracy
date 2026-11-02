@@ -186,3 +186,29 @@ test('a block says each CMS sentence once, with its source; the name line is a n
   assert.equal(b.fixedText[0].canHide, null, 'not measured: an error names it')
   assert.ok(kit.errors.some((e) => e.field === 'blocks[block-3].fixedText[Members only].canHide'))
 })
+
+test('a link with no address that opens something on the page (a tab, a menu heading) is no dead link', () => {
+  const kit = {
+    pages: [],
+    blocks: [
+      {
+        id: 'block-7',
+        images: {},
+        links: [
+          {
+            id: 'block-7.link-1',
+            label: 'Day passes',
+            target: null,
+            opens: { kind: 'panel', element: '#day' }
+          },
+          { id: 'block-7.link-2', label: 'Lanes', target: null }
+        ]
+      }
+    ]
+  }
+  const gaps = templateGaps({ kit, mainHeadings: [], dead: [], fixes: [] })
+  assert.deepEqual(
+    gaps.map((g) => g.detail),
+    ['link "Lanes" has no target']
+  )
+})
