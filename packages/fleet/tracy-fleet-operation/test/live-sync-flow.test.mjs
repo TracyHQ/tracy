@@ -1104,6 +1104,49 @@ test('`sync` keeps thousands of places both sides changed: its answer never goes
   }
 })
 
+test('`merge` then `apply` with thousands of kept places: the ready merge keeps its live read (#287)', {
+  ...opts,
+  timeout: 600_000
+}, () => {
+  // The same 8000 titles, through tracy-host's `webroot-sync-merge` door: the merge's own state test
+  // passed its answer as one argument, failed, and swept the live read the apply then needs.
+  const s = stack(
+    "INSERT INTO jos_content (id, title, introtext, hits, modified) SELECT seq, CONCAT('Post ', seq), 'x', 0, '2026-01-01' FROM seq_100_to_8099;"
+  )
+  try {
+    sql("UPDATE jos_content SET title=CONCAT(title, ' (Tracy)') WHERE id >= 100", 'joomla')
+    sql("UPDATE jos_content SET title=CONCAT(title, ' (live)') WHERE id >= 100", 'livesrc')
+    sql("UPDATE jos_content SET introtext='Edited on live' WHERE id=1", 'livesrc')
+    const dir = s.read()
+    const merged = s.merge(dir)
+    assert.equal(merged.state, 'ready', JSON.stringify(merged).slice(0, 2000))
+    assert.equal(merged.kept.length, 8000)
+    assert.ok(existsSync(join(dir, 'live', 'db.sql.gz')), 'the live read stays for the apply')
+    assert.equal(s.apply(dir).ok, true)
+    assert.deepEqual(rows('SELECT introtext FROM jos_content WHERE id=1'), [['Edited on live']])
+    // The read became the next sync's base: the same live site again has nothing new.
+    assert.equal(s.sync(s.read()).unchanged, 'merge')
+  } finally {
+    s.dispose()
+  }
+})
+
+test('an `apply` whose live read is gone refuses before anything is put in place (#287)', opts, () => {
+  const s = stack()
+  try {
+    sql("UPDATE jos_content SET title='Edited on live' WHERE id=1", 'livesrc')
+    const dir = s.read()
+    assert.equal(s.merge(dir).state, 'ready')
+    rmSync(join(dir, 'live'), { recursive: true, force: true })
+    const refused = s.apply(dir)
+    assert.equal(refused.ok, false, JSON.stringify(refused))
+    assert.equal(refused.code, 'NOT_MERGED')
+    assert.deepEqual(rows('SELECT title FROM jos_content WHERE id=1'), [['Hello']], 'the copy is as it was')
+  } finally {
+    s.dispose()
+  }
+})
+
 test(
   'a read that carries only what changed is laid over the last read; its manifest is kept for the next',
   opts,

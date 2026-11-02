@@ -1039,6 +1039,9 @@ pre = sys.argv[2]
 names = ",".join(t[len(pre):] if t.startswith(pre) else t for t in m.get("rebuild", []))
 print(m["oursCommit"], m["theirsCommit"], m["version"] or "-", names or "-", m.get("mergedCommit") or "-")' "$DIR/merge.json" "$PREFIX")
   [[ "$version" != - ]] || { answer_refusal NOT_READY "the merge left conflicts"; return; }
+  # The live read becomes the next sync's base once the merge is in place (`remember_read`): without
+  # it the apply would answer ok and leave the next sync merging on an old base (#287).
+  [[ -f "$DIR/live/db.sql.gz" ]] || { answer_refusal NOT_MERGED "the live read is gone: merge again"; return; }
 
   # The copy must be what `merge` read: nothing sealed since (files) and the same checksums (database).
   # The database's two readings — its substance, and every table's checksum that marks the apply
@@ -1686,6 +1689,12 @@ sweep_runs() {
   find "$runs" -mindepth 1 -maxdepth 1 -type d -mmin +1440 ! -path "$DIR" ${pending:+! -path "$pending"} -exec rm -rf {} + 2>/dev/null || true
 }
 
+# An answer's state, read on stdin: a merge that names many kept places is past the kernel's limit
+# for one argument (`Argument list too long`, #219, #287).
+answer_state() {
+  printf '%s' "$1" | python3 -c 'import json,sys; print(json.load(sys.stdin).get("state", ""))'
+}
+
 case "$OP" in merge|apply|sync) recover_first || exit 0 ;; esac
 sweep_runs
 case "$OP" in
@@ -1694,7 +1703,7 @@ case "$OP" in
     if live_unchanged; then answer_unchanged; tidy; exit 0; fi
     answer="$(run_heavy webroot_locked merge | tail -1)"
     # Only a ready merge is applied from this folder; any other end keeps none of the live read.
-    [[ "$(python3 -c 'import json,sys; print(json.loads(sys.argv[1]).get("state", ""))' "$answer")" == ready ]] || tidy
+    [[ "$(answer_state "$answer")" == ready ]] || tidy
     printf '%s\n' "$answer" ;;
   apply) run_heavy webroot_locked apply ;;
   copy-token) webroot_locked copy_token ;;
@@ -1707,7 +1716,7 @@ case "$OP" in
     # Whatever the end — applied, refused, failed — the live read goes: a press after a failed sync
     # reads the live site again. A held one keeps its read and merge for the Sync anyway that names
     # it (`keep_held`); any other press finds them swept within a day.
-    if [[ -f "$DIR/held.json" ]] && [[ "$(python3 -c 'import json,sys; print(json.loads(sys.argv[1]).get("state", ""))' "$answer")" == needs_attention ]]; then
+    if [[ -f "$DIR/held.json" ]] && [[ "$(answer_state "$answer")" == needs_attention ]]; then
       tidy_held
     else
       tidy
